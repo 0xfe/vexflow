@@ -3,6 +3,8 @@
  * VexFlow Engraver __VEX_VERSION__
  * A library for rendering musical notation and guitar tablature in HTML5.
  *
+ *                    http://www.vexflow.com
+ *
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
