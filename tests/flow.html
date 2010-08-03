@@ -1,0 +1,161 @@
+<html>
+
+<head>
+  <title>VexFlow Tests</title>
+  <style type="text/css">
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #554;
+      margin: 0px;
+      height: 80%;
+    }
+
+    a {
+      color: #554;
+      text-decoration: none;
+      border-bottom: dotted 2px;
+    }
+
+    a.button {
+      color: #green;
+      background: #bfb;
+      text-decoration: none;
+      padding: 5px;
+      margin: 2px;
+      border: 5px solid #aea;
+    }
+
+    div#error {
+      width: 60%;
+      padding: 10px;
+      color: red;
+      background: #faa;
+      border: 15px solid #d99;
+    }
+
+    div.testcanvas {
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      padding: 10px;
+      color: #554;
+    }
+
+    div.testcanvas .vex-tabdiv {
+      background: #eed;
+      padding: 10px;
+      border: 10px solid #ddc;
+    }
+
+    div.testcanvas .name {
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      padding: 10px;
+      color: #554;
+    }
+
+  </style>
+
+  <!-- VexFlow Sources -->
+  <script src="../src/vex.js"></script>
+  <script src="../src/flow.js"></script>
+  <script src="../src/fonts/vexflow_font.js"></script>
+  <script src="../src/glyph.js"></script>
+  <script src="../src/tables.js"></script>
+  <script src="../src/stave.js"></script>
+  <script src="../src/tabstave.js"></script>
+  <script src="../src/voice.js"></script>
+  <script src="../src/modifier.js"></script>
+  <script src="../src/modifiercontext.js"></script>
+  <script src="../src/accidental.js"></script>
+  <script src="../src/tickcontext.js"></script>
+  <script src="../src/tickable.js"></script>
+  <script src="../src/note.js"></script>
+  <script src="../src/bend.js"></script>
+  <script src="../src/stavenote.js"></script>
+  <script src="../src/tabnote.js"></script>
+  <script src="../src/barnote.js"></script>
+  <script src="../src/ghostnote.js"></script>
+  <script src="../src/formatter.js"></script>
+  <script src="../src/stavetie.js"></script>
+  <script src="../src/tabtie.js"></script>
+  <script src="../src/tabslide.js"></script>
+  <script src="../src/beam.js"></script>
+  <script src="../src/vibrato.js"></script>
+  <script src="../src/annotation.js"></script>
+  <script src="../src/tuning.js"></script>
+  <script src="../src/renderer.js"></script>
+  <script src="../src/raphaelcontext.js"></script>
+
+  <!-- Compiled Source -->
+  <script src="../vexflow.js"></script>
+
+  <!-- VexTab Source -->
+  <script src="../vextab/vextab.js"></script>
+
+  <!-- Test Sources -->
+  <link rel="stylesheet" href="support/qunit.css"
+    type="text/css" media="screen" />
+  <script src="support/jquery.js"></script>
+  <script src="support/qunit.js"></script>
+  <script src="support/raphael.js"></script>
+  <script src="vexflow_test_helpers.js"></script>
+  <script src="mocks.js"></script>
+  <script src="stave_tests.js"></script>
+  <script src="tabstave_tests.js"></script>
+  <script src="voice_tests.js"></script>
+  <script src="stavenote_tests.js"></script>
+  <script src="tabnote_tests.js"></script>
+  <script src="tickcontext_tests.js"></script>
+  <script src="modifier_tests.js"></script>
+  <script src="accidental_tests.js"></script>
+  <script src="bend_tests.js"></script>
+  <script src="formatter_tests.js"></script>
+  <script src="stavetie_tests.js"></script>
+  <script src="tabtie_tests.js"></script>
+  <script src="tabslide_tests.js"></script>
+  <script src="beam_tests.js"></script>
+  <script src="vibrato_tests.js"></script>
+  <script src="annotation_tests.js"></script>
+  <script src="tuning_tests.js"></script>
+  <script src="../vextab/vextab_tests.js"></script>
+
+  <script>
+    $(function() {
+      Vex.Flow.Test.Stave.Start();
+      Vex.Flow.Test.TabStave.Start();
+      Vex.Flow.Test.Voice.Start();
+      Vex.Flow.Test.StaveNote.Start();
+      Vex.Flow.Test.TabNote.Start();
+      Vex.Flow.Test.TickContext.Start();
+      Vex.Flow.Test.ModifierContext.Start();
+      Vex.Flow.Test.Accidental.Start();
+      Vex.Flow.Test.Bend.Start();
+      Vex.Flow.Test.Formatter.Start();
+      Vex.Flow.Test.StaveTie.Start();
+      Vex.Flow.Test.TabTie.Start();
+      Vex.Flow.Test.TabSlide.Start();
+      Vex.Flow.Test.Beam.Start();
+      Vex.Flow.Test.Vibrato.Start();
+      Vex.Flow.Test.Annotation.Start();
+      Vex.Flow.Test.VexTab.Start();
+      Vex.Flow.Test.Tuning.Start();
+    });
+  </script>
+</head>
+
+<body>
+  <center>
+    <h1 id="qunit-header">VexFlow Tests</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+
+    <div id="vexflow_testoutput"></div>
+
+    <p> Version 0.1 by <a href="http://0xfe.blogspot.com">0xfe</a> </p>
+  </center>
+</body>
+
+</html>

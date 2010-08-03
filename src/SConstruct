@@ -1,0 +1,47 @@
+"""
+VexFlow / TabDiv Build Script
+Requires: SCons, Git, and Google Closure Compiler
+
+Copyright Mohit Cheppudira 2010
+"""
+
+from vexflow_scons import *
+
+vexflow_sources = [
+    "header.js",
+    "vex.js",
+    "tea.js",
+    "vexcrypt.js",
+    "flow.js",
+    "tables.js",
+    "fonts/vexflow_font.js",
+    "glyph.js",
+    "stave.js",
+    "tabstave.js",
+    "tickcontext.js",
+    "tickable.js",
+    "note.js",
+    "barnote.js",
+    "ghostnote.js",
+    "stavenote.js",
+    "tabnote.js",
+    "beam.js",
+    "voice.js",
+    "modifier.js",
+    "modifiercontext.js",
+    "accidental.js",
+    "formatter.js",
+    "stavetie.js",
+    "tabtie.js",
+    "tabslide.js",
+    "bend.js",
+    "vibrato.js",
+    "annotation.js",
+    "tuning.js",
+    "renderer.js",
+    "raphaelcontext.js"
+    ]
+
+Import('dbg opt')
+build_and_stamp("vexflow-dbg.js", vexflow_sources, dbg);
+build_and_stamp("vexflow-free.js", vexflow_sources, opt);

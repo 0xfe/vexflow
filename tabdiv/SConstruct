@@ -1,0 +1,22 @@
+"""
+VexFlow / TabDiv Build Script
+Requires: SCons, Git, and Google Closure Compiler
+
+Copyright Mohit Cheppudira 2010
+"""
+
+from vexflow_scons import *
+
+tabdiv_sources = [
+    "header.js",
+    "#vextab/vextab.js",
+    "tabdiv.js"
+    ]
+
+Import("dbg opt")
+
+tabdiv_dbg = dbg.Clone(JS_DEFINES = {})
+tabdiv_opt = opt.Clone(JS_DEFINES = {})
+
+build_and_stamp("vextabdiv-dbg.js", tabdiv_sources, tabdiv_dbg);
+build_and_stamp("vextabdiv-free.js", tabdiv_sources, tabdiv_opt);

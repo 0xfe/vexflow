@@ -1,0 +1,122 @@
+<html>
+
+<head>
+  <title>Vex Glyphs</title>
+  <script src="../tests/support/jquery.js"
+    type="text/javascript" charset="utf-8"></script>
+  <style type="text/css">
+    body {
+      padding: 20px;
+      background: white;
+      font-family: Caslon, Garamond, Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      color: green;
+      margin: 0px;
+      height: 80%;
+    }
+
+    a {
+      color: #green;
+      text-decoration: none;
+      border-bottom: dotted 2px;
+    }
+
+    a.button {
+      color: #green;
+      background: #bfb;
+      text-decoration: none;
+      padding: 5px;
+      margin: 2px;
+      border: 5px solid #aea;
+    }
+
+    div#error {
+      width: 60%;
+      padding: 10px;
+      color: red;
+      background: #faa;
+      border: 15px solid #d99;
+    }
+  </style>
+
+  <script src="vex.js"></script>
+  <script src="flow.js"></script>
+  <script src="fonts/gonville_all.js"></script>
+  <script src="glyph.js"></script>
+  <script>
+    $(function() {
+      var canvas = document.getElementById("glyphs");
+      var x = 0;
+
+      // Get number of glyphs and rename elements
+      var counter = 0;
+      for (var glyph in Vex.Flow.Font.glyphs) {
+        Vex.Flow.Font.glyphs[glyph] = Vex.Flow.Font.glyphs[glyph];
+        counter++;
+      }
+
+      var canvas_height = ((counter + 1) / (800 / (60 * 2))) * 40;
+      canvas.height = canvas_height;
+      canvas.width = 800;
+
+      var ctx = canvas.getContext("2d");
+      ctx.font = "16pt Arial";
+
+      var y = 60;
+      for (var glyph in Vex.Flow.Font.glyphs) {
+        ctx.fillStyle = "#666";
+        ctx.fillText(glyph, x, y);
+        x += 60;
+
+        ctx.strokeStyle = "#888";
+        ctx.beginPath();
+        ctx.moveTo(x - 5, y);
+        ctx.lineTo(x + 5, y);
+        ctx.stroke()
+
+        ctx.beginPath();
+        ctx.moveTo(x, y - 5);
+        ctx.lineTo(x, y + 5);
+        ctx.stroke()
+
+        ctx.fillStyle = "green";
+
+        if (Vex.Flow.Font.glyphs[glyph].o) {
+          g = new Vex.Flow.Glyph(glyph, 40);
+          g.render(ctx, x, y);
+          ctx.save();
+          ctx.font = "6pt Arial";
+          var metrics = g.getMetrics();
+          ctx.fillText(Math.floor(g.getMetrics().width), x - 25, y - 15 );
+          ctx.restore();
+        }
+        x += 60;
+
+        if (x >= 800) {
+          x = 0;
+          y += 40;
+        }
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <center>
+    <h1>Vex Glyphs</h1>
+    <p>
+      <i>Cross indicates render coordinates.</i>
+    </p>
+
+  <canvas id="glyphs" width="800" height="1600">
+    HTML5 Canvas not supported on this browser.
+  </canvas>
+
+  <p>
+  For more information visit <a href="http://0xfe.blogspot.com">0xfe.blogspot.com</a>.
+  </p>
+
+  </center>
+</body>
+
+</html>

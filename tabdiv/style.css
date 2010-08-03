@@ -1,0 +1,68 @@
+body {
+  padding: 20px;
+  font-family: 'OFL Sorts Mill Goudy TT', Arial, sans-serif;
+  font-size: 16px;
+  color: #554;
+  height: 80%;
+  background: white;
+  margin: 0px;
+}
+
+a {
+  color: green;
+  text-decoration: none;
+  border-bottom: solid 2px green;
+}
+
+b { color: green }
+
+h1 {
+  font-family: 'Tangerine', 'OFL Sorts Mill Goudy TT', Arial, sans-serif;
+  font-size: 84px;
+  text-shadow: 4px 4px 4px #aaa;
+}
+
+h1 { margin: 0px; }
+
+div.vex {
+  color: #ccc;
+  position: absolute;
+  font-family: 'Yanone Kaffeesatz', courier;
+  top: 0px;
+  right: 0px;
+  background: #eee;;
+  padding: 5px 5px 8px 10px;
+  border-bottom: solid 3px #ccc;
+  border-left: solid 3px #ccc;
+}
+
+div.vex a { color: green; text-decoration: none; border: none; }
+div.vex a:hover { border-bottom: 5px solid #ccc; }
+
+div.header {
+  text-align: center;
+  width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.content {
+  padding: 20px;
+  padding-left: 2%;
+  width: 660px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.code {
+  background: #cfc;
+  border: 10px solid #afa;
+  font-family: Courier;
+  font-size: 12px;
+  text-align: left;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+code { color: green; }
