@@ -23,13 +23,13 @@ This library makes use of Simon Tatham's awesome font - Gonville.
 
 ----------------
 
-To build a minimized version, you need the JRE:
+For performing full builds, you need the following:
 
-   $ apt-get install sun-java6-bin (or sun-java6-jdk)
-
-This makes use of the Google Closure Compiler.
-
-You also need SCons and git for a full build.
+  - JRE
+  - Google Closure Compiler (included in support/)
+  - SCons
+  - git
+  - zip
 
 Build with:
 

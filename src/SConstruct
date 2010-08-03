@@ -10,8 +10,6 @@ from vexflow_scons import *
 vexflow_sources = [
     "header.js",
     "vex.js",
-    "tea.js",
-    "vexcrypt.js",
     "flow.js",
     "tables.js",
     "fonts/vexflow_font.js",

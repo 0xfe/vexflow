@@ -1,0 +1,12 @@
+ruby_sess.*
+.*.swp
+.*.swo
+.swp
+.hi
+.[oa]
+*.pyc
+.svn
+.class
+# except foo.o which is hand maintained
+!foo.o
+.DS_Store
