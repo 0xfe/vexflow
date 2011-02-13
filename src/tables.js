@@ -217,6 +217,13 @@ Vex.Flow.durationToGlyph = function(duration) {
   return Vex.Flow.durationToGlyph.duration_codes[duration];
 }
 
+Vex.Flow.durationIsDotted = function(duration) {
+  var ret = Vex.Flow.durationToGlyph.duration_codes[duration].dot;
+  if (ret == undefined)
+    return false;
+  return ret;
+}
+
 Vex.Flow.durationToGlyph.duration_codes = {
   "w": { // Whole note
     code_head: "v1d",

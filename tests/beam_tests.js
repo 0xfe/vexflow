@@ -12,6 +12,7 @@ Vex.Flow.Test.Beam.Start = function() {
   Vex.Flow.Test.runTest("Sixteenth Beam", Vex.Flow.Test.Beam.sixteenth);
   Vex.Flow.Test.runTest("Slopey Beam", Vex.Flow.Test.Beam.slopey);
   Vex.Flow.Test.runTest("Mixed Beam", Vex.Flow.Test.Beam.mixed);
+  Vex.Flow.Test.runTest("Dotted Beam", Vex.Flow.Test.Beam.dotted);
 }
 
 Vex.Flow.Test.Beam.beamNotes = function(notes, stave, ctx) {
@@ -258,4 +259,43 @@ Vex.Flow.Test.Beam.mixed = function(options) {
   beam2_1.setContext(c.context).draw();
   beam2_2.setContext(c.context).draw();
   ok(true, "Multi Test");
+}
+
+Vex.Flow.Test.Beam.dotted = function(options) {
+  var c = Vex.Flow.Test.Beam.setupContext(options);
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+  var notes = [
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "8"}),
+
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
+
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "8d"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice], 300);
+  var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4));
+  var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8));
+  var beam1_3 = new Vex.Flow.Beam(notes.slice(8, 12));
+
+  voice.draw(c.context, c.stave);
+  beam1_1.setContext(c.context).draw();
+  beam1_2.setContext(c.context).draw();
+  beam1_3.setContext(c.context).draw();
+
+  ok(true, "Dotted Test");
 }

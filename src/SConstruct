@@ -28,6 +28,7 @@ vexflow_sources = [
     "modifier.js",
     "modifiercontext.js",
     "accidental.js",
+    "dot.js",
     "formatter.js",
     "stavetie.js",
     "tabtie.js",

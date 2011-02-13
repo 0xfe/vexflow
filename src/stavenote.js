@@ -32,6 +32,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
     throw new Vex.RuntimeError("BadArguments",
         "Invalid duration string (No glyph found): " + this.duration);
   }
+  this.dotted = Vex.Flow.durationIsDotted(this.duration);
 
   this.keyProps = [];             // per-note properties
 
@@ -64,6 +65,11 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
 
   // Drawing
   this.modifiers = [];
+  if (this.dotted) {
+    for (var i = 0; i < this.keys.length; ++i)
+      this.addDot(i);
+  }
+
   this.render_options = {
     glyph_font_scale: 38, // font size for note heads and rests
     stem_height: 35,      // in pixels
@@ -196,6 +202,15 @@ Vex.Flow.StaveNote.prototype.addAccidental = function(index, accidental) {
   return this;
 }
 
+Vex.Flow.StaveNote.prototype.addDot = function(index) {
+  var dot = new Vex.Flow.Dot();
+  dot.setNote(this);
+  dot.setIndex(index);
+  this.modifiers.push(dot);
+  this.setPreFormatted(false);
+  return this;
+}
+
 Vex.Flow.StaveNote.prototype.getAccidentals = function() {
   return this.modifierContext.getModifiers("accidentals");
 }
@@ -255,6 +270,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
   var start_i = 0;
   var end_i = keys.length;
   var step_i = 1;
+
 
   // For down-stem notes, we draw from top to bottom.
   if (stem_direction == Vex.Flow.StaveNote.STEM_DOWN) {
@@ -379,10 +395,10 @@ Vex.Flow.StaveNote.prototype.draw = function() {
         this.render_options.glyph_font_scale, flag_code);
   }
 
-  // Draw the accidentals
+  // Draw the modifiers
   for (var i = 0; i < this.modifiers.length; ++i) {
-    var accidental = this.modifiers[i];
-    accidental.setContext(this.context);
-    accidental.draw();
+    var mod = this.modifiers[i];
+    mod.setContext(this.context);
+    mod.draw();
   }
 }
