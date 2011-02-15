@@ -165,18 +165,23 @@ Vex.Flow.Test.StaveNote.displacements = function(options, contextBuilder) {
 
   var showNote = Vex.Flow.Test.StaveNote.showNote;
   var notes = [
+    { keys: ["c/4", "d/4", "e/4"], duration: "w"},
+    { keys: ["d/4", "e/4", "f/4"], duration: "h"},
+    { keys: ["f/4", "g/4", "a/4", "b/4"], duration: "q"},
+    { keys: ["c/4", "d/4", "e/4", "f/4", "g/4", "a/4"], duration: "8"},
+    { keys: ["c/4", "d/4", "e/4", "g/4", "a/4", "b/4"], duration: "16"},
+    { keys: ["c/4", "e/4", "a/4"], duration: "32"},
     { keys: ["c/4", "e/4", "a/4"], duration: "w"},
     { keys: ["c/4", "e/4", "a/4"], duration: "h"},
     { keys: ["c/4", "e/4", "a/4"], duration: "q"},
     { keys: ["c/4", "e/4", "a/4"], duration: "8"},
     { keys: ["c/4", "e/4", "a/4"], duration: "16"},
     { keys: ["c/4", "e/4", "a/4"], duration: "32"},
-    { keys: ["c/4", "e/4", "a/4"], duration: "h", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "q", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "8", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "16", stem_direction: -1},
+    { keys: ["c/4", "d/4", "e/4"], duration: "h", stem_direction: -1},
+    { keys: ["d/4", "e/4", "f/4"], duration: "q", stem_direction: -1},
+    { keys: ["f/4", "g/4", "a/4", "b/4"], duration: "8", stem_direction: -1},
+    { keys: ["c/4", "d/4", "e/4", "f/4", "g/4", "a/4"], duration: "16", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "32", stem_direction: -1},
-
   ];
   
   for (var i = 0; i < notes.length; ++i) {
