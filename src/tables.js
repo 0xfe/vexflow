@@ -41,7 +41,8 @@ Vex.Flow.keyProperties = function(key) {
     accidental: value.accidental,
     code: value.code,
     stroke: stroke,
-    shift_right: value.shift_right
+    shift_right: value.shift_right,
+    displaced: false
   };
 };
 

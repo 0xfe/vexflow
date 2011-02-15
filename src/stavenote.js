@@ -55,8 +55,16 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
     if (last_line == null) {
       last_line = line;
     } else {
-      if (Math.abs(last_line - line) == 0.5)
+      if (Math.abs(last_line - line) == 0.5) {
         this.displaced = true;
+        props.displaced = true;
+
+        // Have to mark the previous note as 
+        // displaced as well, for modifier placement
+        if (this.keyProps.length > 0) {
+            this.keyProps[i-1].displaced = true;
+        }
+      }
     }
 
     last_line = line;
@@ -231,12 +239,14 @@ Vex.Flow.StaveNote.prototype.getVoiceShiftWidth = function() {
 // Pre-render formatting
 Vex.Flow.StaveNote.prototype.preFormat = function() {
   if (this.preFormatted) return;
-  if (this.modifierContext) this.modifierContext.preFormat();
 
   this.setExtraLeftPx((this.displaced && this.stem_direction == -1) ?
       this.glyph.head_width : 0);
   this.setExtraRightPx((this.displaced && this.stem_direction == 1) ?
       this.glyph.head_width : 0);
+
+  // This has to go after we set the extra left and right pixels
+  if (this.modifierContext) this.modifierContext.preFormat();
 
   this.setWidth(this.glyph.head_width + this.extraLeftPx + this.extraRightPx);
   this.setPreFormatted(true);

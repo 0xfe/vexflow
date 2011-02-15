@@ -96,8 +96,10 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
   var dot_list = [];
   for (var i = 0; i < dots.length; ++i) {
     var dot = dots[i];
-    var line = dot.getNote().getKeyProps()[dot.getIndex()].line;
-    dot_list.push({ line: line, dot: dot });
+    var note = dot.getNote();
+    var props = note.getKeyProps()[dot.getIndex()];
+    var shift = (props.displaced ? note.getExtraRightPx() : 0);
+    dot_list.push({ line: props.line, shift: shift, note: note, dot: dot });
   }
 
   // Sort dots by line number.
@@ -107,19 +109,23 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
   var x_width = 0;
   var top_line = dot_list[0].line;
   var last_line = null;
+  var last_note = null;
   for (var i = 0; i < dot_list.length; ++i) {
     var dot = dot_list[i].dot;
+    var note = dot_list[i].note;
     var line = dot_list[i].line;
+    var shift = dot_list[i].shift;
 
     // Reset the position of the dot every line.
-    if (line != last_line) {
-      dot_shift = right_shift;
+    if (note != last_note || line != last_line) {
+      dot_shift = right_shift + shift;
     }
 
     dot.setXShift(dot_shift);
     dot_shift += dot.getWidth() + dot_spacing; // spacing
     x_width = (dot_shift > x_width) ? dot_shift : x_width;
     last_line = line;
+    last_note = line;
   }
 
   this.state.right_shift += x_width;
@@ -136,8 +142,10 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
   var acc_list = [];
   for (var i = 0; i < accidentals.length; ++i) {
     var acc = accidentals[i];
-    var line = acc.getNote().getKeyProps()[acc.getIndex()].line;
-    acc_list.push({ line: line, acc: acc });
+    var note = acc.getNote();
+    var props = note.getKeyProps()[acc.getIndex()];
+    var shift = (props.displaced ? note.getExtraLeftPx() : 0);
+    acc_list.push({ line: props.line, shift: shift, acc: acc });
   }
 
   // Sort accidentals by line number.
@@ -149,12 +157,13 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
   for (var i = 0; i < acc_list.length; ++i) {
     var acc = acc_list[i].acc;
     var line = acc_list[i].line;
+    var shift = acc_list[i].shift;
 
     // Once you hit three stave lines, you can reset the position of the
     // accidental.
     if (line < top_line - 3.0) {
       top_line = line;
-      acc_shift = left_shift;
+      acc_shift = left_shift + shift;
     }
 
     acc.setXShift(acc_shift);

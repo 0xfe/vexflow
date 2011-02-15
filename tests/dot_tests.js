@@ -1,19 +1,19 @@
 /**
- * VexFlow - Accidental Tests
+ * VexFlow - Dot Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-Vex.Flow.Test.Accidental = {}
+Vex.Flow.Test.Dot = {}
 
-Vex.Flow.Test.Accidental.Start = function() {
-  module("Accidental");
-  Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Accidental.basic);
+Vex.Flow.Test.Dot.Start = function() {
+  module("Dot");
+  Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Dot.basic);
   Vex.Flow.Test.runRaphaelTest("Basic (Raphael)",
-      Vex.Flow.Test.Accidental.basic);
-  Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
+      Vex.Flow.Test.Dot.basic);
+  //Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Dot.multiVoice);
 }
 
-Vex.Flow.Test.Accidental.showNote = function(note, stave, ctx, x) {
+Vex.Flow.Test.Dot.showNote = function(note, stave, ctx, x) {
   var mc = new Vex.Flow.ModifierContext();
   note.addToModifierContext(mc);
 
@@ -35,7 +35,7 @@ Vex.Flow.Test.Accidental.showNote = function(note, stave, ctx, x) {
   return note;
 }
 
-Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
+Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 700, 240);
   ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   var stave = new Vex.Flow.Stave(10, 10, 550);
@@ -43,48 +43,38 @@ Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
   stave.draw();
 
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+  function newAcc(type) { return new Vex.Flow.Dot(type); }
 
   var notes = [
     newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
-      addAccidental(0, newAcc("b")).
-      addAccidental(1, newAcc("#")),
+      addDotToAll(),
 
     newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
         duration: "h"}).
-      addAccidental(0, newAcc("##")).
-      addAccidental(1, newAcc("n")).
-      addAccidental(2, newAcc("bb")).
-      addAccidental(3, newAcc("b")).
-      addAccidental(4, newAcc("#")).
-      addAccidental(5, newAcc("n")).
-      addAccidental(6, newAcc("bb")),
-
+      addDotToAll().
+      addDotToAll(),
+      
     newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
         duration: "16", stem_direction: -1}).
-      addAccidental(0, newAcc("n")).
-      addAccidental(1, newAcc("#")).
-      addAccidental(2, newAcc("#")).
-      addAccidental(3, newAcc("b")).
-      addAccidental(4, newAcc("bb")).
-      addAccidental(5, newAcc("##")).
-      addAccidental(6, newAcc("#")),
+      addDotToAll().
+      addDotToAll().
+      addDotToAll()
   ];
 
   for (var i = 0; i < notes.length; ++i) {
-    Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 125));
-    var accidentals = notes[i].getAccidentals();
+    Vex.Flow.Test.Dot.showNote(notes[i], stave, ctx, 30 + (i * 125));
+    var accidentals = notes[i].getDots();
     ok(accidentals.length > 0, "Note " + i + " has accidentals");
 
     for (var j = 0; j < accidentals.length; ++j) {
-      ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
+      ok(accidentals[j].width > 0, "Dot " + j + " has set width");
     }
   }
 
-  ok(true, "Full Accidental");
+  ok(true, "Full Dot");
 }
 
-Vex.Flow.Test.Accidental.showNotes = function(note1, note2, stave, ctx, x) {
+Vex.Flow.Test.Dot.showNotes = function(note1, note2, stave, ctx, x) {
   var mc = new Vex.Flow.ModifierContext();
   note1.addToModifierContext(mc);
   note2.addToModifierContext(mc);
@@ -108,7 +98,7 @@ Vex.Flow.Test.Accidental.showNotes = function(note1, note2, stave, ctx, x) {
   ctx.restore();
 }
 
-Vex.Flow.Test.Accidental.multiVoice = function(options) {
+Vex.Flow.Test.Dot.multiVoice = function(options) {
   Vex.Flow.Test.resizeCanvas(options.canvas_sel, 400, 150);
   var ctx = Vex.getCanvasContext(options.canvas_sel);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
@@ -117,41 +107,41 @@ Vex.Flow.Test.Accidental.multiVoice = function(options) {
   stave.draw();
 
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+  function newAcc(type) { return new Vex.Flow.Dot(type); }
 
   var note1 = newNote(
       { keys: ["c/4", "e/4", "a/4"], duration: "h", stem_direction: -1}).
-      addAccidental(0, newAcc("b")).
-      addAccidental(1, newAcc("n")).
-      addAccidental(2, newAcc("#"));
+      addDot(0, newAcc("b")).
+      addDot(1, newAcc("n")).
+      addDot(2, newAcc("#"));
   var note2 = newNote(
       { keys: ["d/5", "a/5", "b/5"], duration: "h", stem_direction: 1}).
-      addAccidental(0, newAcc("b")).
-      addAccidental(1, newAcc("bb")).
-      addAccidental(2, newAcc("##"));
+      addDot(0, newAcc("b")).
+      addDot(1, newAcc("bb")).
+      addDot(2, newAcc("##"));
 
-  Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 60);
+  Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 60);
 
   note1 = newNote(
       { keys: ["c/4", "e/4", "c/5"], duration: "h", stem_direction: -1}).
-      addAccidental(0, newAcc("b")).
-      addAccidental(1, newAcc("n")).
-      addAccidental(2, newAcc("#"));
+      addDot(0, newAcc("b")).
+      addDot(1, newAcc("n")).
+      addDot(2, newAcc("#"));
   note2 = newNote(
       { keys: ["d/5", "a/5", "b/5"], duration: "q", stem_direction: 1}).
-      addAccidental(0, newAcc("b"));
+      addDot(0, newAcc("b"));
 
-  Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 150);
+  Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 150);
 
   note1 = newNote(
       { keys: ["d/4", "c/5", "d/5"], duration: "h", stem_direction: -1}).
-      addAccidental(0, newAcc("b")).
-      addAccidental(1, newAcc("n")).
-      addAccidental(2, newAcc("#"));
+      addDot(0, newAcc("b")).
+      addDot(1, newAcc("n")).
+      addDot(2, newAcc("#"));
   note2 = newNote(
       { keys: ["d/5", "a/5", "b/5"], duration: "q", stem_direction: 1}).
-      addAccidental(0, newAcc("b"));
+      addDot(0, newAcc("b"));
 
-  Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 250);
-  ok(true, "Full Accidental");
+  Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 250);
+  ok(true, "Full Dot");
 }

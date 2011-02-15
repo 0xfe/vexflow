@@ -22,7 +22,7 @@ Vex.Flow.Dot.prototype.init = function() {
   this.position = Vex.Flow.Modifier.Position.RIGHT;
 
   this.radius = 2;
-  this.setWidth(4);
+  this.setWidth(5);
 }
 
 Vex.Flow.Dot.prototype.getCategory = function() { return "dots"; }
@@ -40,7 +40,7 @@ Vex.Flow.Dot.prototype.draw = function() {
     "Can't draw dot without a note and index.");
 
   var start = this.note.getModifierStartXY(this.position, this.index);
-  var dot_x = (start.x + this.x_shift) + this.width;
+  var dot_x = (start.x + this.x_shift) + this.width - this.radius;
   var dot_y = start.y + this.y_shift;
 
   var ctx = this.context;
