@@ -14,6 +14,7 @@ Vex.Flow.RaphaelContext.prototype.init = function(element) {
   this.element = element;
   this.paper = Raphael(element);
   this.path = "";
+  this.pen = {x: 0, y: 0};
 
   this.state = {
     scale: { x: 1, y: 1 },
@@ -82,16 +83,22 @@ Vex.Flow.RaphaelContext.prototype.fillRect = function(x, y, width, height) {
 
 Vex.Flow.RaphaelContext.prototype.beginPath = function() {
   this.path = "";
+  this.pen.x = 0;
+  this.pen.y = 0;
   return this;
 }
 
 Vex.Flow.RaphaelContext.prototype.moveTo = function(x, y) {
   this.path += "M" + x + "," + y;
+  this.pen.x = x;
+  this.pen.y = y;
   return this;
 }
 
 Vex.Flow.RaphaelContext.prototype.lineTo = function(x, y) {
   this.path += "L" + x + "," + y;
+  this.pen.x = x;
+  this.pen.y = y;
   return this;
 }
 
@@ -104,6 +111,8 @@ Vex.Flow.RaphaelContext.prototype.bezierCurveTo =
     y2 + "," +
     x + "," +
     y;
+  this.pen.x = x;
+  this.pen.y = y;
   return this;
 }
 
@@ -114,6 +123,63 @@ Vex.Flow.RaphaelContext.prototype.quadraticCurveTo =
     y1 + "," +
     x + "," +
     y;
+  this.pen.x = x;
+  this.pen.y = y;
+  return this;
+}
+
+// This is an attempt (hack) to simulate the HTML5 canvas
+// arc method.
+Vex.Flow.RaphaelContext.prototype.arc = 
+  function(x, y, radius, startAngle, endAngle, antiClockwise) {
+
+  function normalizeAngle(angle) {
+    while (angle < 0) {
+      angle += Math.PI * 2;
+    }
+
+    while (angle > Math.PI * 2) {
+      angle -= Math.PI * 2;
+    }
+    return angle;
+  }
+
+  startAngle = normalizeAngle(startAngle);
+  endAngle = normalizeAngle(endAngle);
+
+  var x1 = x + radius * Math.cos(startAngle);
+  var y1 = y + radius * Math.sin(startAngle);
+
+  var x2 = x + radius * Math.cos(endAngle);
+  var y2 = y + radius * Math.sin(endAngle);
+
+  var largeArcFlag = 0;
+  var sweepFlag = 0;
+  if (antiClockwise) {
+    sweepFlag = 1;
+    if ((endAngle > startAngle && endAngle - startAngle < Math.PI)
+        || (startAngle > endAngle && startAngle - endAngle > Math.PI))
+      largeArcFlag = 1;
+  }
+  else {
+    if ((endAngle > startAngle && endAngle - startAngle > Math.PI)
+        || (startAngle > endAngle && startAngle - endAngle < Math.PI))
+      largeArcFlag = 1;
+  }
+
+  this.path += "M"  
+    + x1 + "," 
+    + y1 + "," 
+    + "A" +
+    + radius + "," 
+    + radius + ","
+    + "0,"
+    + largeArcFlag + ","
+    + sweepFlag + ","
+    + x2 + "," + y2
+    + "M"
+    + this.pen.x
+    + this.pen.y;
   return this;
 }
 

@@ -21,11 +21,7 @@ Vex.Flow.Dot.prototype.init = function() {
   this.index = null;
   this.position = Vex.Flow.Modifier.Position.RIGHT;
 
-  this.render_options = {
-    font_scale: 32
-  };
-
-  this.dotCode = "v6a";
+  this.radius = 2;
   this.setWidth(4);
 }
 
@@ -47,8 +43,15 @@ Vex.Flow.Dot.prototype.draw = function() {
   var dot_x = (start.x + this.x_shift) + this.width;
   var dot_y = start.y + this.y_shift;
 
+  var ctx = this.context;
+  ctx.beginPath();
+  ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
+  ctx.fill();
+
+  /*
   Vex.Flow.renderGlyph(this.context, dot_x, dot_y,
                        this.render_options.font_scale, this.dotCode);
+                       */
 
   /**
    * Dots need no stroking...

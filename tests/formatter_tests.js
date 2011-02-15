@@ -12,6 +12,8 @@ Vex.Flow.Test.Formatter.Start = function() {
       Vex.Flow.Test.Formatter.formatStaveNotes);
   Vex.Flow.Test.runTest("StaveNote Justification",
       Vex.Flow.Test.Formatter.justifyStaveNotes);
+  Vex.Flow.Test.runTest("StaveNote Justification With Dots",
+      Vex.Flow.Test.Formatter.justifyStaveNotesWithDots);
   Vex.Flow.Test.runTest("Notes with Tab",
       Vex.Flow.Test.Formatter.notesWithTab);
 }
@@ -137,6 +139,36 @@ Vex.Flow.Test.Formatter.getNotes = function(options) {
   return [notes1, notes2];
 }
 
+Vex.Flow.Test.Formatter.getNotes = function(options) {
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+  var notes1 = [
+    newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
+      addAccidental(0, newAcc("bb")).
+      addAccidental(1, newAcc("n")),
+    newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["d/4", "f/4", "a/4"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "q"}).
+      addAccidental(0, newAcc("n")).
+      addAccidental(1, newAcc("#")),
+  ];
+
+  var notes2 = [
+    newNote({ keys: ["b/4", "e/5", "a/5"], stem_direction: 1,  duration: "q"}).
+      addAccidental(0, newAcc("b")).
+      addAccidental(1, newAcc("#")),
+    newNote({ keys: ["d/5", "e/5", "f/5"], stem_direction: 1, duration: "h"}),
+    newNote({ keys: ["f/5", "a/5", "c/5"], stem_direction: 1, duration: "q"}).
+      addAccidental(0, newAcc("##")).
+      addAccidental(1, newAcc("b")),
+  ];
+
+  return [notes1, notes2];
+}
+
+
+
 Vex.Flow.Test.Formatter.justifyStaveNotes = function(options) {
   Vex.Flow.Test.resizeCanvas(options.canvas_sel, 420, 400);
   var ctx = Vex.getCanvasContext(options.canvas_sel);
@@ -160,6 +192,31 @@ Vex.Flow.Test.Formatter.justifyStaveNotes = function(options) {
   Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave3, 400);
   ok(true);
 }
+
+Vex.Flow.Test.Formatter.justifyStaveNotesWithDots = function(options) {
+  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 420, 400);
+  var ctx = Vex.getCanvasContext(options.canvas_sel);
+  ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+
+  // Get test voices.
+  var notes = Vex.Flow.Test.Formatter.getNotes();
+
+  var stave = new Vex.Flow.Stave(10, 10, 400).addTrebleGlyph().
+    setContext(ctx).draw();
+  Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave);
+  ok(true);
+
+  var stave2 = new Vex.Flow.Stave(10, 150, 400).addTrebleGlyph().
+    setContext(ctx).draw();
+  Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave2, 300);
+  ok(true);
+
+  var stave3 = new Vex.Flow.Stave(10, 300, 400).addTrebleGlyph().
+    setContext(ctx).draw();
+  Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave3, 400);
+  ok(true);
+}
+
 
 Vex.Flow.Test.Formatter.getTabNotes = function(options) {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }

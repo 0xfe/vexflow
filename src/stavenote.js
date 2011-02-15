@@ -65,11 +65,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
 
   // Drawing
   this.modifiers = [];
-  if (this.dotted) {
-    for (var i = 0; i < this.keys.length; ++i)
-      this.addDot(i);
-  }
-
+ 
   this.render_options = {
     glyph_font_scale: 38, // font size for note heads and rests
     stem_height: 35,      // in pixels
@@ -211,9 +207,21 @@ Vex.Flow.StaveNote.prototype.addDot = function(index) {
   return this;
 }
 
+// Convenience method to add dot to all notes in chord
+Vex.Flow.StaveNote.prototype.addDotToAll = function() {
+  for (var i = 0; i < this.keys.length; ++i)
+    this.addDot(i);
+  return this;
+}
+
 Vex.Flow.StaveNote.prototype.getAccidentals = function() {
   return this.modifierContext.getModifiers("accidentals");
 }
+
+Vex.Flow.StaveNote.prototype.getDots = function() {
+  return this.modifierContext.getModifiers("dots");
+}
+
 
 Vex.Flow.StaveNote.prototype.getVoiceShiftWidth = function() {
   // TODO: may need to accomodate for dot here.

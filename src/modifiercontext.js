@@ -86,6 +86,46 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   return this;
 }
 
+Vex.Flow.ModifierContext.prototype.formatDots = function() {
+  var right_shift = this.state.right_shift;
+  var dots = this.modifiers['dots'];
+  var dot_spacing = 2;
+
+  if (!dots || dots.length == 0) return this;
+
+  var dot_list = [];
+  for (var i = 0; i < dots.length; ++i) {
+    var dot = dots[i];
+    var line = dot.getNote().getKeyProps()[dot.getIndex()].line;
+    dot_list.push({ line: line, dot: dot });
+  }
+
+  // Sort dots by line number.
+  dot_list.sort(function(a, b) { return (b.line - a.line); });
+
+  var dot_shift = right_shift;
+  var x_width = 0;
+  var top_line = dot_list[0].line;
+  var last_line = null;
+  for (var i = 0; i < dot_list.length; ++i) {
+    var dot = dot_list[i].dot;
+    var line = dot_list[i].line;
+
+    // Reset the position of the dot every line.
+    if (line != last_line) {
+      dot_shift = right_shift;
+    }
+
+    dot.setXShift(dot_shift);
+    dot_shift += dot.getWidth() + dot_spacing; // spacing
+    x_width = (dot_shift > x_width) ? dot_shift : x_width;
+    last_line = line;
+  }
+
+  this.state.right_shift += x_width;
+  return this;
+}
+
 Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
   var left_shift = this.state.left_shift;
   var accidentals = this.modifiers['accidentals'];
@@ -204,8 +244,8 @@ Vex.Flow.ModifierContext.prototype.preFormat = function() {
   if (this.preFormatted) return;
 
   // Format modifiers in the following order:
-  this.formatNotes().formatAccidentals().formatAnnotations().
-    formatBends().formatVibratos();
+  this.formatNotes().formatAccidentals().formatDots().
+      formatAnnotations().formatBends().formatVibratos();
 
   // Update width of this modifier context
   this.width = this.state.left_shift + this.state.right_shift;

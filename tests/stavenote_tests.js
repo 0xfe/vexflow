@@ -92,14 +92,12 @@ Vex.Flow.Test.StaveNote.showNote = function(note_struct, stave, ctx, x) {
 }
 
 Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
-  expect(56);
+  expect(36);
   var ctx = new contextBuilder(options.canvas_sel, 600, 280);
   var stave = new Vex.Flow.Stave(10, 10, 550);
   var stave2 = new Vex.Flow.Stave(10, 150, 550);
   stave.setContext(ctx);
-  stave2.setContext(ctx);
   stave.draw();
-  stave2.draw();
 
   var showNote = Vex.Flow.Test.StaveNote.showNote;
   var notes = [
@@ -124,30 +122,9 @@ Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
     { keys: ["x/4"], duration: "h"}
   ];
 
-  var notes2 = [
-    { keys: ["c/4", "e/4", "a/4"], duration: "hd"},
-    { keys: ["c/4", "e/4", "a/4"], duration: "qd"},
-    { keys: ["c/4", "e/4", "a/4"], duration: "8d"},
-    { keys: ["c/4", "e/4", "a/4"], duration: "16d"},
-    { keys: ["c/4", "e/4", "a/4"], duration: "32d"},
-    { keys: ["c/4", "e/4", "a/4"], duration: "hd", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "qd", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "8d", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "16d", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "32d", stem_direction: -1},
-  ];
-
   for (var i = 0; i < notes.length; ++i) {
     var note = notes[i];
     var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
-
-    ok(staveNote.getX() > 0, "Note " + i + " has X value");
-    ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
-  }
-  
-  for (var i = 0; i < notes2.length; ++i) {
-    var note = notes2[i];
-    var staveNote = showNote(note, stave2, ctx, (i + 1) * 25);
 
     ok(staveNote.getX() > 0, "Note " + i + " has X value");
     ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
