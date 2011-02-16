@@ -64,6 +64,10 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   var notes = this.modifiers['stavenotes'];
   if (!notes || notes.length < 2) return this;
 
+  // Assumption: only two notes
+  Vex.Assert(notes.length == 2, 
+      "Got more than two notes in Vex.Flow.ModifierContext.formatNotes!");
+
   var top_note = notes[0];
   var bottom_note = notes[1];
 
@@ -76,6 +80,7 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   var top_keys = top_note.getKeyProps();
   var bottom_keys = bottom_note.getKeyProps();
 
+  // XXX: Do this right (by key, not whole note).
   var x_shift = 0;
   if (top_keys[0].line <= (bottom_keys[bottom_keys.length - 1].line + 0.5)) {
      x_shift = top_note.getVoiceShiftWidth();
@@ -89,7 +94,7 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
 Vex.Flow.ModifierContext.prototype.formatDots = function() {
   var right_shift = this.state.right_shift;
   var dots = this.modifiers['dots'];
-  var dot_spacing = 2;
+  var dot_spacing = 1;
 
   if (!dots || dots.length == 0) return this;
 
@@ -112,12 +117,11 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
   var last_note = null;
   for (var i = 0; i < dot_list.length; ++i) {
     var dot = dot_list[i].dot;
-    var note = dot_list[i].note;
     var line = dot_list[i].line;
     var shift = dot_list[i].shift;
 
     // Reset the position of the dot every line.
-    if (note != last_note || line != last_line) {
+    if (line != last_line) {
       dot_shift = right_shift + shift;
     }
 

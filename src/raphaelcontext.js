@@ -147,6 +147,32 @@ Vex.Flow.RaphaelContext.prototype.arc =
   startAngle = normalizeAngle(startAngle);
   endAngle = normalizeAngle(endAngle);
 
+  if (startAngle > endAngle) {
+      var tmp = startAngle;
+      startAngle = endAngle;
+      endAngle = tmp;
+      antiClockwise = !antiClockwise;
+  }
+
+  var delta = endAngle - startAngle;
+
+  if (delta > Math.PI) {
+      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2, antiClockwise);
+      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle, antiClockwise);
+  }
+  else {
+      this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
+  }
+  return this;
+}
+
+Vex.Flow.RaphaelContext.prototype.arcHelper = 
+  function(x, y, radius, startAngle, endAngle, antiClockwise) {
+
+  Vex.Assert(endAngle > startAngle, "end angle " + endAngle + " less than or equal to start angle " + startAngle);
+  Vex.Assert(startAngle >= 0 && startAngle <= Math.PI * 2);
+  Vex.Assert(endAngle >= 0 && endAngle <= Math.PI * 2);
+
   var x1 = x + radius * Math.cos(startAngle);
   var y1 = y + radius * Math.sin(startAngle);
 
@@ -157,13 +183,10 @@ Vex.Flow.RaphaelContext.prototype.arc =
   var sweepFlag = 0;
   if (antiClockwise) {
     sweepFlag = 1;
-    if ((endAngle > startAngle && endAngle - startAngle < Math.PI)
-        || (startAngle > endAngle && startAngle - endAngle > Math.PI))
+    if (endAngle - startAngle < Math.PI)
       largeArcFlag = 1;
   }
-  else {
-    if ((endAngle > startAngle && endAngle - startAngle > Math.PI)
-        || (startAngle > endAngle && startAngle - endAngle < Math.PI))
+  else if (endAngle - startAngle > Math.PI) {
       largeArcFlag = 1;
   }
 
@@ -178,10 +201,11 @@ Vex.Flow.RaphaelContext.prototype.arc =
     + sweepFlag + ","
     + x2 + "," + y2
     + "M"
-    + this.pen.x
+    + this.pen.x + ","
     + this.pen.y;
-  return this;
 }
+
+
 
 Vex.Flow.RaphaelContext.prototype.fill = function() {
   this.paper.path(this.path).

@@ -10,7 +10,7 @@ Vex.Flow.Test.Dot.Start = function() {
   Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Dot.basic);
   Vex.Flow.Test.runRaphaelTest("Basic (Raphael)",
       Vex.Flow.Test.Dot.basic);
-  //Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Dot.multiVoice);
+  Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Dot.multiVoice);
 }
 
 Vex.Flow.Test.Dot.showNote = function(note, stave, ctx, x) {
@@ -111,36 +111,36 @@ Vex.Flow.Test.Dot.multiVoice = function(options) {
 
   var note1 = newNote(
       { keys: ["c/4", "e/4", "a/4"], duration: "h", stem_direction: -1}).
-      addDot(0, newAcc("b")).
-      addDot(1, newAcc("n")).
-      addDot(2, newAcc("#"));
+      addDotToAll().
+      addDotToAll();
   var note2 = newNote(
       { keys: ["d/5", "a/5", "b/5"], duration: "h", stem_direction: 1}).
-      addDot(0, newAcc("b")).
-      addDot(1, newAcc("bb")).
-      addDot(2, newAcc("##"));
+      addDotToAll();
 
   Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 60);
 
   note1 = newNote(
       { keys: ["c/4", "e/4", "c/5"], duration: "h", stem_direction: -1}).
-      addDot(0, newAcc("b")).
-      addDot(1, newAcc("n")).
-      addDot(2, newAcc("#"));
+      addDot(0).
+      addDot(0).
+      addDot(2).
+      addDot(2).
+      addDot(2);
   note2 = newNote(
       { keys: ["d/5", "a/5", "b/5"], duration: "q", stem_direction: 1}).
-      addDot(0, newAcc("b"));
+      addDotToAll().
+      addDotToAll();
 
   Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 150);
 
   note1 = newNote(
       { keys: ["d/4", "c/5", "d/5"], duration: "h", stem_direction: -1}).
-      addDot(0, newAcc("b")).
-      addDot(1, newAcc("n")).
-      addDot(2, newAcc("#"));
+      addDotToAll().
+      addDotToAll().
+      addDot(0);
   note2 = newNote(
       { keys: ["d/5", "a/5", "b/5"], duration: "q", stem_direction: 1}).
-      addDot(0, newAcc("b"));
+      addDotToAll();
 
   Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 250);
   ok(true, "Full Dot");

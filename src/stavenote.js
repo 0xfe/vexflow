@@ -82,6 +82,9 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   }
 
   this.setStemDirection(note_struct.stem_direction);
+
+  // Calculate left/right padding
+  this.calcExtraPx();
 }
 
 Vex.Flow.StaveNote.prototype.setStave = function(stave) {
@@ -236,19 +239,22 @@ Vex.Flow.StaveNote.prototype.getVoiceShiftWidth = function() {
   return this.glyph.head_width * (this.displaced ? 2 : 1);
 }
 
-// Pre-render formatting
-Vex.Flow.StaveNote.prototype.preFormat = function() {
-  if (this.preFormatted) return;
-
+// I moved this into init() to avoid having to ensure that notes
+// are preformatted before their modifiers.
+Vex.Flow.StaveNote.prototype.calcExtraPx = function() {
   this.setExtraLeftPx((this.displaced && this.stem_direction == -1) ?
       this.glyph.head_width : 0);
   this.setExtraRightPx((this.displaced && this.stem_direction == 1) ?
       this.glyph.head_width : 0);
+}
 
-  // This has to go after we set the extra left and right pixels
+// Pre-render formatting
+Vex.Flow.StaveNote.prototype.preFormat = function() {
+  if (this.preFormatted) return;
   if (this.modifierContext) this.modifierContext.preFormat();
 
   this.setWidth(this.glyph.head_width + this.extraLeftPx + this.extraRightPx);
+
   this.setPreFormatted(true);
 }
 
