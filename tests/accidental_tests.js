@@ -10,6 +10,9 @@ Vex.Flow.Test.Accidental.Start = function() {
   Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Accidental.basic);
   Vex.Flow.Test.runRaphaelTest("Basic (Raphael)",
       Vex.Flow.Test.Accidental.basic);
+  Vex.Flow.Test.runTest("Stem Down", Vex.Flow.Test.Accidental.basicStemDown);
+  Vex.Flow.Test.runRaphaelTest("Stem Down (Raphael)",
+      Vex.Flow.Test.Accidental.basicStemDown);
   Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
 }
 
@@ -61,6 +64,55 @@ Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
       addAccidental(6, newAcc("bb")),
 
     newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
+        duration: "16"}).
+      addAccidental(0, newAcc("n")).
+      addAccidental(1, newAcc("#")).
+      addAccidental(2, newAcc("#")).
+      addAccidental(3, newAcc("b")).
+      addAccidental(4, newAcc("bb")).
+      addAccidental(5, newAcc("##")).
+      addAccidental(6, newAcc("#")),
+  ];
+
+  for (var i = 0; i < notes.length; ++i) {
+    Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 125));
+    var accidentals = notes[i].getAccidentals();
+    ok(accidentals.length > 0, "Note " + i + " has accidentals");
+
+    for (var j = 0; j < accidentals.length; ++j) {
+      ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
+    }
+  }
+
+  ok(true, "Full Accidental");
+}
+
+Vex.Flow.Test.Accidental.basicStemDown = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 700, 240);
+  ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
+  var stave = new Vex.Flow.Stave(10, 10, 550);
+  stave.setContext(ctx);
+  stave.draw();
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+  var notes = [
+    newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w", stem_direction: -1}).
+      addAccidental(0, newAcc("b")).
+      addAccidental(1, newAcc("#")),
+
+    newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
+        duration: "h", stem_direction: -1}).
+      addAccidental(0, newAcc("##")).
+      addAccidental(1, newAcc("n")).
+      addAccidental(2, newAcc("bb")).
+      addAccidental(3, newAcc("b")).
+      addAccidental(4, newAcc("#")).
+      addAccidental(5, newAcc("n")).
+      addAccidental(6, newAcc("bb")),
+
+    newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
         duration: "16", stem_direction: -1}).
       addAccidental(0, newAcc("n")).
       addAccidental(1, newAcc("#")).
@@ -83,6 +135,7 @@ Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
 
   ok(true, "Full Accidental");
 }
+
 
 Vex.Flow.Test.Accidental.showNotes = function(note1, note2, stave, ctx, x) {
   var mc = new Vex.Flow.ModifierContext();

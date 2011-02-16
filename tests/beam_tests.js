@@ -268,18 +268,22 @@ Vex.Flow.Test.Beam.dotted = function(options) {
 
   var notes = [
     newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}).
+        addDotToAll(),
     newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["c/5"], stem_direction: 1, duration: "8"}),
 
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}).
+        addDotToAll(),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
 
-    newNote({ keys: ["c/5"], stem_direction: 1, duration: "8d"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "8d"}).
+        addDotToAll(),
     newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}).
+        addDotToAll(),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"})
   ];
 

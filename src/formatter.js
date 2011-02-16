@@ -142,7 +142,7 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     if (minTicks < this.minTicks) this.minTicks = minTicks;
   }
 
-  if (justifyWidth < this.minTotalWidh) throw new Vex.RERR("NoRoomForNotes",
+  if (justifyWidth < this.minTotalWidth) throw new Vex.RERR("NoRoomForNotes",
       "Justification width too small to fit all notes.");
 
   // Figure out how many pixels to allocate per tick.

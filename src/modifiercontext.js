@@ -118,10 +118,11 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
   for (var i = 0; i < dot_list.length; ++i) {
     var dot = dot_list[i].dot;
     var line = dot_list[i].line;
+    var note = dot_list[i].note;
     var shift = dot_list[i].shift;
 
     // Reset the position of the dot every line.
-    if (line != last_line) {
+    if (line != last_line || note != last_note) {
       dot_shift = right_shift + shift;
     }
 
@@ -129,7 +130,7 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
     dot_shift += dot.getWidth() + dot_spacing; // spacing
     x_width = (dot_shift > x_width) ? dot_shift : x_width;
     last_line = line;
-    last_note = line;
+    last_note = note;
   }
 
   this.state.right_shift += x_width;
