@@ -37,6 +37,9 @@ vexflow_sources = [
     "vibrato.js",
     "annotation.js",
     "tuning.js",
+    "stavemodifier.js",
+    "keysignature.js",
+    "clef.js",
     "renderer.js",
     "raphaelcontext.js"
     ]
