@@ -7,15 +7,21 @@
 /**
  * @constructor
  */
-Vex.Flow.StaveModifier = function() {}
+Vex.Flow.StaveModifier = function() { 
+  this.init();
+}
 
-Vex.Flow.StaveModifier.prototype.makeSpacer = function() {
+Vex.Flow.StaveModifier.prototype.init = function() {
+  this.padding = 10;
+}
+
+Vex.Flow.StaveModifier.prototype.makeSpacer = function(padding) {
   return {
     getContext: function() {return true;},
     setStave: function() {},
     renderToStave: function() {},
     getMetrics: function() {
-      return {width: 10};
+      return {width: padding};
     }
   };
 }
@@ -24,9 +30,13 @@ Vex.Flow.StaveModifier.prototype.placeGlyphOnLine = function(glyph, stave, line)
   glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs());
 }
 
+Vex.Flow.StaveModifier.prototype.setPadding = function(padding) {
+  this.padding = padding;
+}
+
 Vex.Flow.StaveModifier.prototype.addToStave = function(stave, firstGlyph) {
   if (!firstGlyph) {
-    stave.addGlyph(this.makeSpacer());
+    stave.addGlyph(this.makeSpacer(this.padding));
   }
 
   this.addModifier(stave);

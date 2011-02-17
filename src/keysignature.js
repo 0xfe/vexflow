@@ -15,6 +15,8 @@ Vex.Flow.KeySignature.prototype.constructor = Vex.Flow.KeySignature;
 Vex.Flow.KeySignature.superclass = Vex.Flow.StaveModifier.prototype;
 
 Vex.Flow.KeySignature.prototype.init = function(key_spec) {
+  Vex.Flow.KeySignature.superclass.init();
+
   this.glyphFontScale = 38;
   this.accList = Vex.Flow.keySignature(key_spec);
 }
@@ -37,7 +39,7 @@ Vex.Flow.KeySignature.prototype.addToStave = function(stave, firstGlyph) {
     return this;
 
   if (!firstGlyph) {
-      stave.addGlyph(this.makeSpacer());
+    stave.addGlyph(this.makeSpacer(this.padding));
   }
 
   this.addModifier(stave);

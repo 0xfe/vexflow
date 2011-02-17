@@ -33,6 +33,8 @@ Vex.Flow.Clef.prototype.constructor = Vex.Flow.Clef;
 Vex.Flow.Clef.superclass = Vex.Flow.StaveModifier.prototype;
 
 Vex.Flow.Clef.prototype.init = function(clef) {
+  Vex.Flow.Clef.superclass.init();
+
   this.clef = Vex.Flow.Clef.types[clef];
 }
 
