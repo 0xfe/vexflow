@@ -112,10 +112,12 @@ Vex.Flow.TimeSignature.prototype.makeTimeSignatureGlyph = function(topNums, botN
     };
   }
 
+  var topStartX = (width - topWidth) / 2.0;
+  var botStartX = (width - botWidth) / 2.0;
+
   var that = this;
-  // XXX: make multi-number time signatures center correctly
   glyph.renderToStave = function(x) {
-    var start_x = x;
+    var start_x = x + topStartX;
     for (var i = 0; i < this.topGlyphs.length; ++i) {
       var g = this.topGlyphs[i];
       Vex.Flow.Glyph.renderOutline(this.context, g.metrics.outline,
@@ -123,7 +125,7 @@ Vex.Flow.TimeSignature.prototype.makeTimeSignatureGlyph = function(topNums, botN
       start_x += g.getMetrics().width;
     }
 
-    start_x = x;
+    start_x = x + botStartX;
     for (var i = 0; i < this.botGlyphs.length; ++i) {
       var g = this.botGlyphs[i];
       that.placeGlyphOnLine(g, this.stave, g.line);
