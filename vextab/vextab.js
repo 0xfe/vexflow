@@ -210,7 +210,6 @@ Vex.Flow.VexTab.prototype.parseKeyValue = function(token) {
 Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
   var has_standard_notation = false;
   var has_tablature = true;
-  // XXX must make it so you can't have both has_tablature & has_notation false
   for (var i = 1; i < tokens.length; ++i) {
     var pair = this.parseKeyValue(tokens[i]);
     if (pair.key.toLowerCase() == "notation") {
@@ -230,6 +229,10 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
     } else {
       this.parseError("Invalid parameter for tabstave: " + pair.key)
     }
+  }
+
+  if (!has_tablature && !has_standard_notation) {
+    this.parseError('notation & tablature cannot both be "false"');
   }
 
   this.genTabStave({ notation: has_standard_notation, tablature: has_tablature });
