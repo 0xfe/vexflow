@@ -197,7 +197,7 @@ Vex.Flow.keySignature = function(spec) {
   var keySpec = Vex.Flow.keySignature.keySpecs[spec];
 
   if (keySpec == undefined) {
-    throw new Vex.RERR("BadKeySignatureError", "Bad key signature spec: '" + spec + "'");
+    throw new Vex.RERR("BadKeySignature", "Bad key signature spec: '" + spec + "'");
   }
 
   if (!keySpec.acc) {
@@ -237,11 +237,11 @@ Vex.Flow.keySignature.keySpecs = {
   "Em": {acc: "#", num: 1},
   "D": {acc: "#", num: 2},
   "Bm": {acc: "#", num: 2},
-  "A#": {acc: "#", num: 3},
+  "A": {acc: "#", num: 3},
   "F#m": {acc: "#", num: 3},
-  "E#": {acc: "#", num: 4},
+  "E": {acc: "#", num: 4},
   "C#m": {acc: "#", num: 4},
-  "B#": {acc: "#", num: 5},
+  "B": {acc: "#", num: 5},
   "G#m": {acc: "#", num: 5},
   "F#": {acc: "#", num: 6},
   "D#m": {acc: "#", num: 6},

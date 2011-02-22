@@ -36,7 +36,6 @@ Vex.Flow.StaveModifier.prototype.setPadding = function(padding) {
 
 Vex.Flow.StaveModifier.prototype.addToStave = function(stave, firstGlyph) {
 
-  Vex.LogDebug("firstGlyph: " + firstGlyph);    
   if (!firstGlyph) {
     stave.addGlyph(this.makeSpacer(this.padding));
   }

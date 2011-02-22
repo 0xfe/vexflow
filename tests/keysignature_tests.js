@@ -13,9 +13,9 @@ Vex.Flow.Test.KeySignature.MAJOR_KEYS = [
   "Cb",
   "G",
   "D",
-  "A#",
-  "E#",
-  "B#",
+  "A",
+  "E",
+  "B",
   "F#",
   "C#"];
 
@@ -39,6 +39,7 @@ Vex.Flow.Test.KeySignature.MINOR_KEYS = [
 
 Vex.Flow.Test.KeySignature.Start = function() {
   module("KeySignature");
+  Vex.Flow.Test.runTest("Key Parser Test", Vex.Flow.Test.KeySignature.parser);
   Vex.Flow.Test.runTest("Major Key Test", Vex.Flow.Test.KeySignature.majorKeys);
   Vex.Flow.Test.runRaphaelTest("Major Key Test (Raphael)", 
       Vex.Flow.Test.KeySignature.majorKeys);
@@ -49,6 +50,39 @@ Vex.Flow.Test.KeySignature.Start = function() {
 
 }
 
+Vex.Flow.Test.KeySignature.catchError = function(spec) {
+  try {
+    Vex.Flow.keySignature(spec);
+  } catch (e) {  
+    equals(e.code, "BadKeySignature", e.message); 
+  }
+}
+
+Vex.Flow.Test.KeySignature.parser = function(options) {
+  expect(11);
+  Vex.Flow.Test.KeySignature.catchError("asdf");
+  Vex.Flow.Test.KeySignature.catchError("D!");
+  Vex.Flow.Test.KeySignature.catchError("E#");
+  Vex.Flow.Test.KeySignature.catchError("D#");
+  Vex.Flow.Test.KeySignature.catchError("#");
+  Vex.Flow.Test.KeySignature.catchError("b");
+  Vex.Flow.Test.KeySignature.catchError("Kb");
+  Vex.Flow.Test.KeySignature.catchError("Fb");
+  Vex.Flow.Test.KeySignature.catchError("Ab");
+  Vex.Flow.Test.KeySignature.catchError("Dbm");
+  Vex.Flow.Test.KeySignature.catchError("B#m");
+
+  Vex.Flow.keySignature("B");
+  Vex.Flow.keySignature("C");
+  Vex.Flow.keySignature("Fm");
+  Vex.Flow.keySignature("Ab");
+  Vex.Flow.keySignature("Abm");
+  Vex.Flow.keySignature("F#");
+  Vex.Flow.keySignature("G#m");
+
+  ok(true, "all pass");
+}
+ 
 Vex.Flow.Test.KeySignature.majorKeys = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 400, 240);
   var stave = new Vex.Flow.Stave(10, 10, 350);

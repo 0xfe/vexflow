@@ -7,8 +7,8 @@
 /** 
  * @constructor 
  */
-Vex.Flow.TimeSignature = function(keySpec) { 
-  if (arguments.length > 0) this.init(keySpec); 
+Vex.Flow.TimeSignature = function(timeSpec) { 
+  if (arguments.length > 0) this.init(timeSpec); 
 }
 
 
@@ -60,8 +60,20 @@ Vex.Flow.TimeSignature.prototype.parseTimeSpec = function(timeSpec) {
           "Invalid time spec: " + timeSpec);
     }
   }
+  
+  if (i == 0) {
+    throw new Vex.RERR("BadTimeSignature", 
+          "Invalid time spec: " + timeSpec);
+  }
 
+  // skip the "/"
   ++i;
+
+  if (i == timeSpec.length) {
+    throw new Vex.RERR("BadTimeSignature", 
+          "Invalid time spec: " + timeSpec);
+  }
+
 
   var botNums = new Array();
   for (; i < timeSpec.length; ++i) {
@@ -74,6 +86,7 @@ Vex.Flow.TimeSignature.prototype.parseTimeSpec = function(timeSpec) {
           "Invalid time spec: " + timeSpec);
     }
   }
+
 
   return {num: true, glyph: this.makeTimeSignatureGlyph(topNums, botNums)};
 }
