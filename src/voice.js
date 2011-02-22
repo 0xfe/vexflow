@@ -72,19 +72,22 @@ Vex.Flow.Voice.prototype.getTickables = function() {
 
 Vex.Flow.Voice.prototype.addTickable = function(tickable) {
   var time = this.time;
-  var numTicks = tickable.getTicks();
 
-  // Update the total ticks for this line
-  this.ticksUsed += numTicks;
+  if (!tickable.shouldIgnoreTicks()) {
+    var numTicks = tickable.getTicks();
 
-  if (this.strict && this.ticksUsed > this.totalTicks) {
-    this.totalTicks -= numTicks;
-    throw new Vex.RERR("BadArgument", "Too many ticks.");
+    // Update the total ticks for this line
+    this.ticksUsed += numTicks;
+
+    if (this.strict && this.ticksUsed > this.totalTicks) {
+      this.totalTicks -= numTicks;
+      throw new Vex.RERR("BadArgument", "Too many ticks.");
+    }
+
+    // Track the smallest tickable for formatting
+    if (numTicks < this.smallestTickCount)
+      this.smallestTickCount = numTicks;
   }
-
-  // Track the smallest tickable for formatting
-  if (numTicks < this.smallestTickCount)
-    this.smallestTickCount = numTicks;
 
   /* Can't do this without formatting modifier context
 

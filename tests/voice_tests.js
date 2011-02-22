@@ -8,6 +8,7 @@ Vex.Flow.Test.Voice = {}
 Vex.Flow.Test.Voice.Start = function() {
   module("Voice");
   test("Basic Test", Vex.Flow.Test.Voice.basic);
+  test("Ignore Test", Vex.Flow.Test.Voice.ignore);
 }
 
 Vex.Flow.Test.Voice.basic = function(options) {
@@ -41,4 +42,26 @@ Vex.Flow.Test.Voice.basic = function(options) {
   }
 
   equals(voice.getSmallestTickCount(), BEAT, "Smallest tick count is BEAT");
+}
+
+Vex.Flow.Test.Voice.ignore = function(options) {
+  function createTickable() {
+    return new Vex.Flow.Test.MockTickable(Vex.Flow.Test.TIME4_4);
+  }
+
+  var R = Vex.Flow.RESOLUTION;
+  var BEAT = 1 * R / 4;
+
+  var tickables = [
+    createTickable().setTicks(BEAT),
+    createTickable().setTicks(BEAT),
+    createTickable().setTicks(BEAT).setIgnoreTicks(true),
+    createTickable().setTicks(BEAT),
+    createTickable().setTicks(BEAT).setIgnoreTicks(true),
+    createTickable().setTicks(BEAT)
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  voice.addTickables(tickables);
+  ok(true, "all pass");
 }
