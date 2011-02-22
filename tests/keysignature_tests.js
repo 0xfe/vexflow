@@ -39,7 +39,7 @@ Vex.Flow.Test.KeySignature.MINOR_KEYS = [
 
 Vex.Flow.Test.KeySignature.Start = function() {
   module("KeySignature");
-  Vex.Flow.Test.runTest("Key Parser Test", Vex.Flow.Test.KeySignature.parser);
+  test("Key Parser Test", Vex.Flow.Test.KeySignature.parser);
   Vex.Flow.Test.runTest("Major Key Test", Vex.Flow.Test.KeySignature.majorKeys);
   Vex.Flow.Test.runRaphaelTest("Major Key Test (Raphael)", 
       Vex.Flow.Test.KeySignature.majorKeys);
