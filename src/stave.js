@@ -94,10 +94,31 @@ Vex.Flow.Stave.prototype.addGlyph= function(glyph) {
   return this;
 }
 
+Vex.Flow.Stave.prototype.addModifier = function(modifier) {
+  modifier.addToStave(this, (this.glyphs.length == 0));
+  return this;
+}
+
+Vex.Flow.Stave.prototype.addKeySignature = function(keySpec) {
+  this.addModifier(new Vex.Flow.KeySignature(keySpec));
+  return this;
+}
+
+Vex.Flow.Stave.prototype.addClef = function(clef) {
+  this.addModifier(new Vex.Flow.Clef(clef));
+  return this;
+}
+
+Vex.Flow.Stave.prototype.addTimeSignature = function(timeSpec) {
+  this.addModifier(new Vex.Flow.TimeSignature(timeSpec));
+  return this;
+}
+
 Vex.Flow.Stave.prototype.addTrebleGlyph = function() {
   this.addGlyph(new Vex.Flow.Glyph("v83", 40));
   return this;
 }
+
 
 /**
  * All drawing functions below need the context to be set.

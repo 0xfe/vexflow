@@ -193,6 +193,70 @@ Vex.Flow.accidentalCodes.accidentals = {
   }
 };
 
+Vex.Flow.keySignature = function(spec) {
+  var keySpec = Vex.Flow.keySignature.keySpecs[spec];
+
+  if (keySpec == undefined) {
+    throw new Vex.RERR("BadKeySignature", "Bad key signature spec: '" + spec + "'");
+  }
+
+  if (!keySpec.acc) {
+    return [];
+  }
+
+  var code = Vex.Flow.accidentalCodes.accidentals[keySpec.acc].code;
+  var notes = Vex.Flow.keySignature.accidentalList(keySpec.acc);
+
+  var acc_list = new Array();
+  for (var i = 0; i < keySpec.num; ++i) {
+    var line = notes[i];
+    acc_list.push({glyphCode: code, line: line});
+  }
+        
+  return acc_list;
+}
+
+Vex.Flow.keySignature.keySpecs = {
+  "C": {acc: null, num: 0},
+  "Am": {acc: null, num: 0},
+  "F": {acc: "b", num: 1},
+  "Dm": {acc: "b", num: 1},
+  "Bb": {acc: "b", num: 2},
+  "Gm": {acc: "b", num: 2},
+  "Eb": {acc: "b", num: 3},
+  "Cm": {acc: "b", num: 3},
+  "Ab": {acc: "b", num: 4},
+  "Fm": {acc: "b", num: 4},
+  "Db": {acc: "b", num: 5},
+  "Bbm": {acc: "b", num: 5},
+  "Gb": {acc: "b", num: 6},
+  "Ebm": {acc: "b", num: 6},
+  "Cb": {acc: "b", num: 7},
+  "Abm": {acc: "b", num: 7},
+  "G": {acc: "#", num: 1},
+  "Em": {acc: "#", num: 1},
+  "D": {acc: "#", num: 2},
+  "Bm": {acc: "#", num: 2},
+  "A": {acc: "#", num: 3},
+  "F#m": {acc: "#", num: 3},
+  "E": {acc: "#", num: 4},
+  "C#m": {acc: "#", num: 4},
+  "B": {acc: "#", num: 5},
+  "G#m": {acc: "#", num: 5},
+  "F#": {acc: "#", num: 6},
+  "D#m": {acc: "#", num: 6},
+  "C#": {acc: "#", num: 7},
+  "A#m": {acc: "#", num: 7}
+};
+
+Vex.Flow.keySignature.accidentalList = function(acc) {
+  if (acc == "b") {
+    return [2, 0.5, 2.5, 1, 3, 1.5, 3.5];
+  }
+  else if (acc == "#") {
+    return [0, 1.5, -0.5, 1, 2.5, 0.5, 2]; }
+}
+
 Vex.Flow.durationToTicks = {
   "w":    Vex.Flow.RESOLUTION / 1,
   "wr":   Vex.Flow.RESOLUTION / 1,
