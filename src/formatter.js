@@ -31,12 +31,13 @@ Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes, width) {
 // Helper function to format and draw a single voice
 Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
     tabstave, stave, tabnotes, notes, width) {
+
   var tabvoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
   tabvoice.addTickables(tabnotes);
 
   var notevoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
   notevoice.addTickables(notes);
- 
+
   var formatter = new Vex.Flow.Formatter().
     joinVoices([tabvoice]).
     joinVoices([notevoice]).

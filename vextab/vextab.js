@@ -84,6 +84,7 @@ Vex.Flow.VexTab.prototype.init = function() {
     current_stave: -1,
     current_duration: "8",
     has_notation: false,
+    has_tab: true,
     beam_start: null
   };
 
@@ -208,6 +209,7 @@ Vex.Flow.VexTab.prototype.parseKeyValue = function(token) {
 
 Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
   var has_standard_notation = false;
+  var has_tablature = true;
   for (var i = 1; i < tokens.length; ++i) {
     var pair = this.parseKeyValue(tokens[i]);
     if (pair.key.toLowerCase() == "notation") {
@@ -217,12 +219,23 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
         default: this.parseError(
                      'notation must be "true" or "false": ' + pair.value);
       }
+    } else if (pair.key.toLowerCase() == "tablature") {
+      switch (pair.value.toLowerCase()) {
+        case "true": has_tablature = true; break;
+        case "false": has_tablature = false; break;
+        default: this.parseError(
+                     'tablature must be "true" or "false": ' + pair.value);
+      }
     } else {
       this.parseError("Invalid parameter for tabstave: " + pair.key)
     }
   }
 
-  this.genTabStave({ notation: has_standard_notation });
+  if (!has_tablature && !has_standard_notation) {
+    this.parseError('notation & tablature cannot both be "false"');
+  }
+
+  this.genTabStave({ notation: has_standard_notation, tablature: has_tablature });
 }
 
 /**
@@ -766,6 +779,7 @@ Vex.Flow.VexTab.prototype.genElements = function() {
   for (var i = 0; i < positions.length; ++i) {
     var position = positions[i];
     var duration = durations[i];
+
     var tabnote = new Vex.Flow.TabNote(
         {positions: position, duration: duration});
     tabnotes.push({note: tabnote, persist: true});
@@ -800,28 +814,28 @@ Vex.Flow.VexTab.prototype.genElements = function() {
   // Add bends.
   var bends = this.parse_state.bends;
   for (var i = 0; i < bends.length; ++i) {
-    var bend = bends[i];
-    var from_fret = parseInt(positions[bend.position][bend.index].fret);
-    var to_fret;
+      var bend = bends[i];
+      var from_fret = parseInt(positions[bend.position][bend.index].fret);
+      var to_fret;
 
-    // Bent notes must not persist in position list.
-    if (bends[i].to_fret) {
+      // Bent notes must not persist in position list.
+      if (bends[i].to_fret) {
       to_fret = bends[i].to_fret;
-    } else {
+      } else {
       to_fret = parseInt(positions[bend.position + 1][bend.index].fret);
 
       for (var count = 1; count <= bend.count; ++count) {
-        tabnotes[bend.position + count].persist = false;
+          tabnotes[bend.position + count].persist = false;
       }
-    }
+      }
 
-    var release = false;
-    if (bend.count > 1) release = true;
+      var release = false;
+      if (bend.count > 1) release = true;
 
-    var bent_note = tabnotes[bend.position].note;
+      var bent_note = tabnotes[bend.position].note;
 
-    // Calculate bend amount and annotate appropriately.
-    switch (to_fret - from_fret) {
+      // Calculate bend amount and annotate appropriately.
+      switch (to_fret - from_fret) {
       case 1: bent_note.addModifier(
                   new Vex.Flow.Bend("1/2", release), bend.index); break;
       case 2: bent_note.addModifier(
@@ -832,7 +846,7 @@ Vex.Flow.VexTab.prototype.genElements = function() {
                   new Vex.Flow.Bend("2 Steps", release), bend.index); break;
       default: bent_note.addModifier(
                   new Vex.Flow.Bend("Bend to " + to_fret, release), bend.index);
-    }
+      }
   }
 
   function persistentPosition(pos) {
@@ -858,24 +872,27 @@ Vex.Flow.VexTab.prototype.genElements = function() {
         new Vex.Flow.Annotation(annotation.text));
   }
 
+
   // Add ties
   var ties = this.parse_state.ties;
   for (var i = 0; i < ties.length; ++i) {
     var tie = ties[i];
-    var effect;
+    var effect = null;
     var pos = persistentPosition(tie.position);
 
-    if (tie.effect == "S") {
-      // Slides are a special case.
-      effect = new Vex.Flow.TabSlide({
-        first_note: tabnotes[pos].note,
-        last_note: tabnotes[tie.position + 1].note
-      });
-    } else {
-      effect = new Vex.Flow.TabTie({
-        first_note: tabnotes[pos].note,
-        last_note: tabnotes[tie.position + 1].note
-      }, tie.effect);
+    if (this.state.has_tablature) {
+      if (tie.effect == "S") {
+        // Slides are a special case.
+        effect = new Vex.Flow.TabSlide({
+          first_note: tabnotes[pos].note,
+          last_note: tabnotes[tie.position + 1].note
+        });
+      } else {
+        effect = new Vex.Flow.TabTie({
+          first_note: tabnotes[pos].note,
+          last_note: tabnotes[tie.position + 1].note
+        }, tie.effect);
+      }
     }
 
     if (this.state.has_notation) {
@@ -885,8 +902,8 @@ Vex.Flow.VexTab.prototype.genElements = function() {
             last_note: notes[tie.position + 1]
           }));
     }
+    if (effect) this.elements.ties[this.state.current_stave].push(effect);
 
-    this.elements.ties[this.state.current_stave].push(effect);
   }
 
   // Add chord ties
@@ -925,21 +942,23 @@ Vex.Flow.VexTab.prototype.genElements = function() {
       last_indices.push(index.to);
     }
 
-    if (tie.effect == "S") {
-      // Slides are a special case.
-      effect = new Vex.Flow.TabSlide({
-        first_note: tabnotes[pos].note,
-        last_note: tabnotes[tie.position + 1].note,
-        first_indices: first_indices,
-        last_indices: last_indices
-      });
-    } else {
-      effect = new Vex.Flow.TabTie({
-        first_note: tabnotes[pos].note,
-        last_note: tabnotes[tie.position + 1].note,
-        first_indices: first_indices,
-        last_indices: last_indices
-      }, tie.effect);
+    if (this.state.has_tablature) {
+      if (tie.effect == "S") {
+        // Slides are a special case.
+        effect = new Vex.Flow.TabSlide({
+          first_note: tabnotes[pos].note,
+          last_note: tabnotes[tie.position + 1].note,
+          first_indices: first_indices,
+          last_indices: last_indices
+        });
+      } else {
+        effect = new Vex.Flow.TabTie({
+          first_note: tabnotes[pos].note,
+          last_note: tabnotes[tie.position + 1].note,
+          first_indices: first_indices,
+          last_indices: last_indices
+        }, tie.effect);
+      }
     }
 
     if (this.state.has_notation) {
@@ -979,23 +998,27 @@ Vex.Flow.VexTab.prototype.genElements = function() {
  */
 Vex.Flow.VexTab.prototype.genTabStave = function(params) {
   var notation = false;
+  var tablature = true;
   if (params) notation = params.notation;
+  if (params) tablature = params.tablature;
 
   var notestave = notation ?
     new Vex.Flow.Stave(
         20, this.height, 380).addTrebleGlyph().setNoteStartX(40) :
     null;
 
-  var tabstave = new Vex.Flow.TabStave(20,
+  var tabstave = tablature ? 
+    new Vex.Flow.TabStave(20,
       notation ? notestave.getHeight() + this.height : this.height, 380).
-    addTabGlyph().setNoteStartX(40);
+    addTabGlyph().setNoteStartX(40) : null;
 
   this.elements.staves.push({tab: tabstave, note: notestave});
-  this.height += tabstave.getHeight() +
+  this.height += (tablature ? tabstave.getHeight() : null) +
     (notation ? notestave.getHeight() : null);
 
   this.state.current_stave++;
   this.state.has_notation = notation;
+  this.state.has_tablature = tablature;
   this.elements.tabnotes[this.state.current_stave] = [];
   this.elements.notes[this.state.current_stave] = [];
   this.elements.ties[this.state.current_stave] = [];
