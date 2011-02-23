@@ -47,30 +47,4 @@ Vex.Flow.Dot.prototype.draw = function() {
   ctx.beginPath();
   ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
   ctx.fill();
-
-  /*
-  Vex.Flow.renderGlyph(this.context, dot_x, dot_y,
-                       this.render_options.font_scale, this.dotCode);
-                       */
-
-  /**
-   * Dots need no stroking...
-
-  var keyProps = this.note.getKeyProps();
-  if (keyProps[this.index].stroke != 0) {
-     var stroke_begin_y = start.y;
-     for (var j = 0; j < 5; ++j) {
-       this.context.fillRect(
-           acc_x - this.render_options.stroke_px, stroke_begin_y,
-           this.width + (this.render_options.stroke_px * 2), 1);
-
-       stroke_begin_y -= (this.render_options.stroke_spacing * keyProps.stroke);
-       if (stroke_begin_y >= this.note.getStave().getYForLine(0) &&
-           stroke_begin_y <= this.note.getStave().getYForLine(6)) {
-         break;
-       }
-     } // for j = 0 -> 4
-  }
-
-  */
 }
