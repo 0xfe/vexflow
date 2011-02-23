@@ -24,6 +24,7 @@ Vex.Flow.Test.VexTab.Start = function() {
   test("Tapping Test", Vex.Flow.Test.VexTab.tapping);
   test("Chord Ties Test", Vex.Flow.Test.VexTab.chordTies);
   test("Duration Test", Vex.Flow.Test.VexTab.duration);
+  test("Notation Only Test", Vex.Flow.Test.VexTab.notationOnly);
 }
 
 Vex.Flow.Test.VexTab.catchError = function(tab, code) {
@@ -201,6 +202,27 @@ Vex.Flow.Test.VexTab.duration = function() {
 
   tab.parse("notes :h (1/2.2/3)s(3/2.4/3) :q 1/2");
   ok(true, "Duration changes duration.");
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.VexTab.notationOnly = function() {
+  var tab = new Vex.Flow.VexTab();
+
+
+  tab.parse("tabstave notation=true");
+  ok(true, "tabstave notation and tablature");
+
+  tab.parse("notes :w 1/2 | 1/3 | 1/5 | 1/4");
+  ok(true, "Simple stave with bars, notes and tabs.");
+  
+  tab.parse("tabstave notation=true tablature=false");
+  ok(true, "tabstave just notation");
+
+  tab.parse("notes :w 1/2 | 1/3 | 1/5 | 1/4");
+  ok(true, "Simple stave with bars, notes and no tabs.");
+
+  Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=false tablature=false");
 
   ok(true, "all pass");
 }
