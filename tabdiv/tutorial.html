@@ -7,42 +7,43 @@
   <link href="style.css" media="screen" rel="Stylesheet" type="text/css" /> 
 
   <!-- VexFlow Uncompiled Sources -->
-  <script src="../src/vex.js"></script>
-  <script src="../src/tea.js"></script>
-  <script src="../src/vexcrypt.js"></script>
-  <script src="../src/flow.js"></script>
-  <script src="../src/fonts/vexflow_font.js"></script>
-  <script src="../src/glyph.js"></script>
-  <script src="../src/tables.js"></script>
-  <script src="../src/stave.js"></script>
-  <script src="../src/tabstave.js"></script>
-  <script src="../src/voice.js"></script>
-  <script src="../src/modifier.js"></script>
-  <script src="../src/modifiercontext.js"></script>
-  <script src="../src/accidental.js"></script>
-  <script src="../src/tickcontext.js"></script>
-  <script src="../src/tickable.js"></script>
-  <script src="../src/note.js"></script>
-  <script src="../src/barnote.js"></script>
-  <script src="../src/ghostnote.js"></script>
-  <script src="../src/bend.js"></script>
-  <script src="../src/stavenote.js"></script>
-  <script src="../src/tabnote.js"></script>
-  <script src="../src/formatter.js"></script>
-  <script src="../src/stavetie.js"></script>
-  <script src="../src/tabtie.js"></script>
-  <script src="../src/tabslide.js"></script>
-  <script src="../src/beam.js"></script>
-  <script src="../src/vibrato.js"></script>
-  <script src="../src/annotation.js"></script>
-  <script src="../src/tuning.js"></script>
-  <script src="../src/renderer.js"></script>
-  <script src="../src/raphaelcontext.js"></script>
+	<script src="../src/header.js"></script>
+	<script src="../src/vex.js"></script>
+	<script src="../src/flow.js"></script>
+	<script src="../src/tables.js"></script>
+	<script src="../src/fonts/vexflow_font.js"></script>
+	<script src="../src/glyph.js"></script>
+	<script src="../src/stave.js"></script>
+	<script src="../src/tabstave.js"></script>
+	<script src="../src/tickcontext.js"></script>
+	<script src="../src/tickable.js"></script>
+	<script src="../src/note.js"></script>
+	<script src="../src/barnote.js"></script>
+	<script src="../src/ghostnote.js"></script>
+	<script src="../src/stavenote.js"></script>
+	<script src="../src/tabnote.js"></script>
+	<script src="../src/beam.js"></script>
+	<script src="../src/voice.js"></script>
+	<script src="../src/modifier.js"></script>
+	<script src="../src/modifiercontext.js"></script>
+	<script src="../src/accidental.js"></script>
+	<script src="../src/dot.js"></script>
+	<script src="../src/formatter.js"></script>
+	<script src="../src/stavetie.js"></script>
+	<script src="../src/tabtie.js"></script>
+	<script src="../src/tabslide.js"></script>
+	<script src="../src/bend.js"></script>
+	<script src="../src/vibrato.js"></script>
+	<script src="../src/annotation.js"></script>
+	<script src="../src/tuning.js"></script>
+	<script src="../src/stavemodifier.js"></script>
+	<script src="../src/keysignature.js"></script>
+	<script src="../src/timesignature.js"></script>
+	<script src="../src/clef.js"></script>
+	<script src="../src/renderer.js"></script>
+	<script src="../src/raphaelcontext.js"></script>
 
-  <!-- VexFlow Compiled Source -->
-  <script src="../vexflow.js"></script>
-
-  <!-- VexTab Source -->
+	<!-- VexTab Source -->
   <script src="../vextab/vextab.js"></script>
 
   <!-- Support Sources -->
@@ -56,7 +57,6 @@
     don't, it uses HTML5 canvas.
   -->
   <script src="tabdiv.js"></script>
-  <script src="../vextabdiv.js"></script>
 </head>
 
 <body>
@@ -86,7 +86,10 @@
       <p/>
       <code>tabstave</code> takes keyword arguments. For example, the string
       <code>tabstave notation=true</code> renders a standard notation stave
-      above the tab stave. Try this on the tab stave below.
+      above the tab stave. 
+			<code>tabstave notation=true tablature=false</code> only renders the notation stave. 
+			<code>tabstave notation=true clef=alto</code> changes the clef to alto (treble/alto/bass).
+			Try these on the tab stave below.
     </div>
 
     <div style="width:420; margin-left: auto; margin-right: auto;">

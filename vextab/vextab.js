@@ -210,6 +210,7 @@ Vex.Flow.VexTab.prototype.parseKeyValue = function(token) {
 Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
   var has_standard_notation = false;
   var has_tablature = true;
+  var has_clef = "treble";
   for (var i = 1; i < tokens.length; ++i) {
     var pair = this.parseKeyValue(tokens[i]);
     if (pair.key.toLowerCase() == "notation") {
@@ -226,6 +227,14 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
         default: this.parseError(
                      'tablature must be "true" or "false": ' + pair.value);
       }
+    } else if (pair.key.toLowerCase() == "clef") {
+      switch (pair.value.toLowerCase()) {
+        case "treble": has_clef = "treble"; break;
+        case "alto": has_clef = "alto"; break;
+        case "bass": has_clef = "bass"; break;
+        default: this.parseError(
+                     'clef must be "treble", "alto", or "bass": ' + pair.value);
+      }
     } else {
       this.parseError("Invalid parameter for tabstave: " + pair.key)
     }
@@ -235,7 +244,7 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
     this.parseError('notation & tablature cannot both be "false"');
   }
 
-  this.genTabStave({ notation: has_standard_notation, tablature: has_tablature });
+  this.genTabStave({ notation: has_standard_notation, tablature: has_tablature, clef: has_clef });
 }
 
 /**
@@ -999,12 +1008,14 @@ Vex.Flow.VexTab.prototype.genElements = function() {
 Vex.Flow.VexTab.prototype.genTabStave = function(params) {
   var notation = false;
   var tablature = true;
+  var clef = "treble";
   if (params) notation = params.notation;
   if (params) tablature = params.tablature;
+  if (params) clef = params.clef;
 
   var notestave = notation ?
     new Vex.Flow.Stave(
-        20, this.height, 380).addTrebleGlyph().setNoteStartX(40) :
+        20, this.height, 380).addClef(clef).setNoteStartX(40) :
     null;
 
   var tabstave = tablature ? 
