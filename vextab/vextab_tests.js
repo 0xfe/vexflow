@@ -222,6 +222,25 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
   tab.parse("notes :w 1/2 | 1/3 | 1/5 | 1/4");
   ok(true, "Simple stave with bars, notes and no tabs.");
 
+	tab.parse("tabstave notation=true clef=treble")
+	ok(true, "Simple stave with treble clef")
+
+	tab.parse("tabstave notation=true clef=alto")
+	ok(true, "Simple stave with alto clef")
+
+	tab.parse("tabstave notation=true clef=bass")
+	ok(true, "Simple stave with bass clef")
+
+	tab.parse("tabstave clef=treble")
+	ok(true, "Simple stave with treble clef but notation off")
+
+	tab.parse("tabstave clef=alto")
+	ok(true, "Simple stave with alto clef but notation off")
+
+	tab.parse("tabstave clef=bass")
+	ok(true, "Simple stave with bass clef but notation off")
+
+
   Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=false tablature=false");
 
   ok(true, "all pass");
