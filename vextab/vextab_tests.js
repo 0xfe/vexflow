@@ -240,7 +240,8 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
 	tab.parse("tabstave clef=bass")
 	ok(true, "Simple stave with bass clef but notation off")
 
-
+	Vex.Flow.Test.VexTab.catchError(tab, "tabstave clef=blah")
+	
   Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=false tablature=false");
 
   ok(true, "all pass");
