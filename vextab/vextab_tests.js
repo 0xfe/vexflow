@@ -209,7 +209,6 @@ Vex.Flow.Test.VexTab.duration = function() {
 Vex.Flow.Test.VexTab.notationOnly = function() {
   var tab = new Vex.Flow.VexTab();
 
-
   tab.parse("tabstave notation=true");
   ok(true, "tabstave notation and tablature");
 
@@ -222,30 +221,48 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
   tab.parse("notes :w 1/2 | 1/3 | 1/5 | 1/4");
   ok(true, "Simple stave with bars, notes and no tabs.");
 
-	tab.parse("tabstave notation=true clef=treble")
-	ok(true, "Simple stave with treble clef")
+  Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=false tablature=false");
 
-	tab.parse("tabstave notation=true clef=alto")
-	ok(true, "Simple stave with alto clef")
+	/* CLEF TESTS */
+	clefs = ["treble", "alto", "tenor", "bass"]
+	for (var i = 0; i < clefs.lenght; i++) {
+		clef = clefs[i];
+		tab.parse("tabstave notation=true clef=" + clef)
+		ok(true, "Simple stave with " + clef + " clef")
 
-	tab.parse("tabstave notation=true clef=tenor")
-	ok(true, "Simple stave with tenor clef")
-
-	tab.parse("tabstave notation=true clef=bass")
-	ok(true, "Simple stave with bass clef")
-
-	tab.parse("tabstave clef=treble")
-	ok(true, "Simple stave with treble clef but notation off")
-
-	tab.parse("tabstave clef=alto")
-	ok(true, "Simple stave with alto clef but notation off")
-
-	tab.parse("tabstave clef=bass")
-	ok(true, "Simple stave with bass clef but notation off")
-
+		tab.parse("tabstave clef=" + clef)
+		ok(true, "Simple stave with " + clef + " clef but notation off")
+	}
 	Vex.Flow.Test.VexTab.catchError(tab, "tabstave clef=blah")
 	
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=false tablature=false");
+	/* KEY SIGNATURE TESTS */
+	for (var key in Vex.Flow.keySignature.keySpecs) { 
+		tab.parse("tabstave key=" + key)
+		ok(true, "Notation plus Key Signature for " + key)
+
+		tab.parse("tabstave notation=true key=" + key)
+		ok(true, "Notation plus Key Signature for " + key)
+
+		tab.parse("tabstave notation=true tablature=true key=" + key)
+		ok(true, "Notation plust Tablature plus Key Signature for " + key)
+	}
+	Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=true key=rrr")
+	
+	/* TIME SIGNATURE TESTS */
+	times = ["C", "C|", "2/4", "4/4", "100/4"];
+	for (var i = 0; i < times.length; i++ ) {
+		time = times[i];
+		tab.parse("tabstave time=" + time)
+		ok(true, "Notation plus Time Signature for " + time)
+
+		tab.parse("tabstave notation=true time=" + time)
+		ok(true, "Notation plus Time Signature for " + time)
+
+		tab.parse("tabstave notation=true tablature=true time=" + time)
+		ok(true, "Notation plust Tablature plus Time Signature for " + time)
+	}
+	Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=true time=rrr")
+	
 
   ok(true, "all pass");
 }
