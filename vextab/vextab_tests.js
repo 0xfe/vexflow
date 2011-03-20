@@ -228,6 +228,9 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
 	tab.parse("tabstave notation=true clef=alto")
 	ok(true, "Simple stave with alto clef")
 
+	tab.parse("tabstave notation=true clef=tenor")
+	ok(true, "Simple stave with tenor clef")
+
 	tab.parse("tabstave notation=true clef=bass")
 	ok(true, "Simple stave with bass clef")
 

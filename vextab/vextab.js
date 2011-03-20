@@ -231,9 +231,10 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
       switch (pair.value.toLowerCase()) {
         case "treble": has_clef = "treble"; break;
         case "alto": has_clef = "alto"; break;
+				case "tenor": has_clef = "tenor"; break;
         case "bass": has_clef = "bass"; break;
         default: this.parseError(
-                     'clef must be "treble", "alto", or "bass": ' + pair.value);
+                     'clef must be treble, alto, tenor or bass: ' + pair.value);
       }
     } else {
       this.parseError("Invalid parameter for tabstave: " + pair.key)
