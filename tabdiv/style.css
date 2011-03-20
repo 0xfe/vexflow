@@ -66,3 +66,6 @@ div.code {
 }
 
 code { color: green; }
+
+table.tabstave-keywords { font-family:monospace; margin:20px;}
+table.tabstave-keywords td {padding-right:30px;}

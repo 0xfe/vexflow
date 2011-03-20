@@ -84,11 +84,43 @@
       stave. The green code box below is editable - try adding another
       stave by typing <code>tabstave</code> on a new line.
       <p/>
-      <code>tabstave</code> takes keyword arguments. For example, the string
-      <code>tabstave notation=true</code> renders a standard notation stave
-      above the tab stave. 
-			<code>tabstave notation=true tablature=false</code> only renders the notation stave. 
-			<code>tabstave notation=true clef=alto</code> changes the clef to alto (treble/alto/bass).
+      <code>tabstave</code> takes keyword arguments that can be combined.
+
+			<table class="tabstave-keywords">
+				<thead>
+					<tr><td><strong>keyword</strong></td><td><strong>values</strong></td></tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><code>notation</code></td>
+						<td>true/<code>false</code></td>
+					</tr>
+					<tr>
+						<td><code>tablature</code></td>
+						<td><code>true</code>/false</td>
+					</tr>
+					<tr>
+						<td><code>clef</code></td>
+						<td><code>treble</code>, alto, tenor, bass</td>
+					</tr>
+					<tr>
+						<td><code>key</code></td>
+						<td><code>C</code>, Am, F, Dm, Bb, Gm, Eb, Cm, Ab, Fm, Db, Bbm, Gb, Ebm, Cb, Abm, G, Em, D, Bm, A, F#m, E, C#m, B, G#m, F#, D#m, C#, A#m</td>
+					</tr>
+					<tr>
+						<td><code>time</code></td>
+						<td>C, C|, #/#</td>
+					</tr>
+				</tbody>
+			</table>
+			For example
+			<ul>
+				<li><code>tabstave notation=true</code> renders a standard notation stave
+	      above the tab stave.</li>
+	    	<li><code>tabstave notation=true tablature=false</code> only renders the notation stave.</li>
+				<li><code>tabstave notation=true clef=alto</code> changes the clef to alto.</li>
+				<li><code>tabstave notation=true clef=bass key=C# time=C|</code> would create two staves (one notation, one tab), bass clef in the key of C# and half common time</li>
+			</ul>
 			Try these on the tab stave below.
     </div>
 
