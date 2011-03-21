@@ -26,11 +26,11 @@ Vex.Flow.Clef.types = {
     point: 40,
     line: 2
   },
-	"tenor": {
-		code: "vad",
-		point: 40,
-		line: 1
-	}
+  "tenor": {
+    code: "vad",
+    point: 40,
+    line: 1
+  }
 };
 
 Vex.Flow.Clef.prototype = new Vex.Flow.StaveModifier();

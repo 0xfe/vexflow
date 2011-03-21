@@ -211,8 +211,8 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
   var has_standard_notation = false;
   var has_tablature = true;
   var has_clef = "treble";
-	var has_key = "C";
-	var has_time = "";
+  var has_key = "C";
+  var has_time = "";
   for (var i = 1; i < tokens.length; ++i) {
     var pair = this.parseKeyValue(tokens[i]);
     if (pair.key.toLowerCase() == "notation") {
@@ -233,27 +233,27 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
       switch (pair.value.toLowerCase()) {
         case "treble": has_clef = "treble"; break;
         case "alto": has_clef = "alto"; break;
-				case "tenor": has_clef = "tenor"; break;
+        case "tenor": has_clef = "tenor"; break;
         case "bass": has_clef = "bass"; break;
         default: this.parseError(
                      'clef must be treble, alto, tenor or bass: ' + pair.value);
       }
-		} else if (pair.key.toLowerCase() == "key") {
-			if (Vex.Flow.keySignature.keySpecs[pair.value]) {
-				has_key = pair.value;
-			} else {
-				var keys = ""
-				for (var i in Vex.Flow.keySignature.keySpecs) { keys += i + " " }
-				this.parseError('key must be one of these: ' + keys)
-			}
-		} else if (pair.key.toLowerCase() == "time") {
-			var ts = new Vex.Flow.TimeSignature();
-		  try {
-		    ts.parseTimeSpec(pair.value);
-				has_time = pair.value;
-		  } catch (e) {  
-				this.parseError('time signature must be: C, C|, or number/number (example 4/4)')
-		  }
+    } else if (pair.key.toLowerCase() == "key") {
+      if (Vex.Flow.keySignature.keySpecs[pair.value]) {
+        has_key = pair.value;
+      } else {
+        var keys = ""
+        for (var i in Vex.Flow.keySignature.keySpecs) { keys += i + " " }
+        this.parseError('key must be one of these: ' + keys)
+      }
+    } else if (pair.key.toLowerCase() == "time") {
+      var ts = new Vex.Flow.TimeSignature();
+      try {
+        ts.parseTimeSpec(pair.value);
+        has_time = pair.value;
+      } catch (e) {  
+        this.parseError('time signature must be: C, C|, or number/number (example 4/4)')
+      }
     } else {
       this.parseError("Invalid parameter for tabstave: " + pair.key)
     }
@@ -1028,23 +1028,23 @@ Vex.Flow.VexTab.prototype.genTabStave = function(params) {
   var notation = false;
   var tablature = true;
   var clef = "treble";
-	var key_signature = "C";
-	var time_signature = "";
+  var key_signature = "C";
+  var time_signature = "";
   if (params) {
-		notation = params.notation;
-		tablature = params.tablature;
- 		clef = params.clef;
-		key_signature = params.key_signature;
-		time_signature = params.time_signature;
-	}
-	
-	var notestave = null;
-	var tabstave_start_x = 40; // line up tab stave after clef/key/time in notestave
-	if (notation) {
-	  notestave = new Vex.Flow.Stave(20, this.height, 380).addClef(clef).addKeySignature(key_signature);
-		if (time_signature != "") notestave.addTimeSignature(time_signature);
-		tabstave_start_x = notestave.start_x;
-	}
+    notation = params.notation;
+    tablature = params.tablature;
+     clef = params.clef;
+    key_signature = params.key_signature;
+    time_signature = params.time_signature;
+  }
+  
+  var notestave = null;
+  var tabstave_start_x = 40; // line up tab stave after clef/key/time in notestave
+  if (notation) {
+    notestave = new Vex.Flow.Stave(20, this.height, 380).addClef(clef).addKeySignature(key_signature);
+    if (time_signature != "") notestave.addTimeSignature(time_signature);
+    tabstave_start_x = notestave.start_x;
+  }
 
   var tabstave = tablature ? 
     new Vex.Flow.TabStave(20,
