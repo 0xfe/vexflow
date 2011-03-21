@@ -79,12 +79,41 @@
   <div class="content">
     <h2>Step 1: The Stave</h2>
 
-    <div class="description">
+    <div class="description"> 
       The <code>tabstave</code> keyword is used to create a new tab
       stave. The green code box below is editable - try adding another
       stave by typing <code>tabstave</code> on a new line.
-      <p/>
-      <code>tabstave</code> takes keyword arguments that can be combined.
+      <p/> 
+      <code>tabstave</code> takes keyword arguments. For example, the string
+      <code>tabstave notation=true</code> renders a standard notation stave
+      above the tab stave. Try this on the tab stave below.
+    </div>
+    
+    <div style="width:420; margin-left: auto; margin-right: auto;">
+    <div class="vex-tabdiv"
+      width=400 scale=1.0 editor="true"
+      editor_width=420 editor_height=80>tabstave</div>
+    </div>
+
+    <h2>Step 2: Add some notes</h2>
+    <div class="description">
+      The <code>notes</code> keyword can be used to add notes. Notes are
+      represented in the format <code>fret/string</code>. To add a long
+      line of notes on the same string, you can use the format
+      <code>fret-fret-fret/string</code>. Add a few more frets and
+      notice how the notes are auto-justified.
+    </div>
+
+    <div style="width:420; margin-left: auto; margin-right: auto;">
+    <div class="vex-tabdiv"
+      width=400 scale=1.0 editor="true"
+      editor_width=420 editor_height=100>tabstave notation=true
+notes 4-5-6/3 10/4</div>
+    </div>
+
+    <h2>Step 3: Stave keywords</h2>
+    <div class="description">
+      <p><code>tabstave</code> takes keyword arguments that can be combined.</p>
 
       <table class="tabstave-keywords">
         <thead>
@@ -127,26 +156,11 @@
     <div style="width:420; margin-left: auto; margin-right: auto;">
     <div class="vex-tabdiv"
       width=400 scale=1.0 editor="true"
-      editor_width=420 editor_height=80>tabstave</div>
+      editor_width=420 editor_height=80>tabstave notation=true clef=bass key=C# time=C|
+notes 4-5/3</div>
     </div>
-
-    <h2>Step 2: Add some notes</h2>
-    <div class="description">
-      The <code>notes</code> keyword can be used to add notes. Notes are
-      represented in the format <code>fret/string</code>. To add a long
-      line of notes on the same string, you can use the format
-      <code>fret-fret-fret/string</code>. Add a few more frets and
-      notice how the notes are auto-justified.
-    </div>
-
-    <div style="width:420; margin-left: auto; margin-right: auto;">
-    <div class="vex-tabdiv"
-      width=400 scale=1.0 editor="true"
-      editor_width=420 editor_height=100>tabstave notation=true
-notes 4-5-6/3 10/4</div>
-    </div>
-
-    <h2>Step 3: Add bar-lines</h2>
+    
+    <h2>Step 4: Add bar-lines</h2>
     <div class="description">
       The <code>|</code> character places a bar-line between the notes. You
       can add as many bars as you want to a stave. Note that a space is
@@ -163,7 +177,7 @@ tabstave
 notes 6-7-8-9/3 | 9-8-7-6/2</div>
     </div>
 
-    <h2>Step 4: Bend a few notes</h2>
+    <h2>Step 5: Bend a few notes</h2>
     <div class="description">
       To draw bends, separate two frets with a <code>b</code> character. The
       difference between the frets determines how much to bend. E.g.,
@@ -183,7 +197,7 @@ tabstave
 notes 6-7b9b7/3 7/4 | 9-8-7-6/2</div>
     </div>
 
-    <h2>Step 5: Add some vibrato</h2>
+    <h2>Step 6: Add some vibrato</h2>
     <div class="description">
       Adding a <code>v</code> to the end of a note signifies
       a vibrato. A capital v (<code>V</code>) signifies a harsh vibrato. You
@@ -200,7 +214,7 @@ tabstave
 notes 6-7b9b7/3 7/4 | 9-8-7-6V/2</div>
     </div>
 
-    <h2>Step 6: Add some chords</h2>
+    <h2>Step 7: Add some chords</h2>
     <div class="description">
       To render chords, group notes in parenthesis and separate each
       string/fret combination with a period. E.g., <code>(4/5.5/6)</code>.
@@ -220,7 +234,7 @@ notes (8/2.7b9b7/3) (5b6/2.5b6/3) 7/4 |
 notes (5/2.6/3.7/4)</div>
     </div>
 
-    <h2>Step 7: Add some hammer-ons, pull-offs, taps, and slides</h2>
+    <h2>Step 8: Add some hammer-ons, pull-offs, taps, and slides</h2>
     <div class="description">
       To render hammer-ons, pull-offs, taps, or slides, use the characters
       <code>h</code>, <code>p</code>, <code>t</code> or <code>s</code>,
@@ -246,7 +260,7 @@ notes (5/4.5/5)s(7/4.7/5)s(5/4.5/5) (5/4.5/5)h(7/5) |
 notes t(12/5.12/4)s(5/5.5/4) 3b4/5 5V/6</div>
     </div>
 
-    <h2>Step 8: Add durations and beams.</h2>
+    <h2>Step 9: Add durations and beams.</h2>
     <div class="description">
       By default, note durations are set to 8th notes. To change the duration
       of the following notes you can use the colon character <code>:</code> followed

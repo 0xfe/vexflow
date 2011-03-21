@@ -244,7 +244,7 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
     ok(true, "Notation plus Key Signature for " + key)
 
     tab.parse("tabstave notation=true tablature=true key=" + key)
-    ok(true, "Notation plust Tablature plus Key Signature for " + key)
+    ok(true, "Notation plus Tablature plus Key Signature for " + key)
   }
   Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=true key=rrr")
   
@@ -259,7 +259,7 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
     ok(true, "Notation plus Time Signature for " + time)
 
     tab.parse("tabstave notation=true tablature=true time=" + time)
-    ok(true, "Notation plust Tablature plus Time Signature for " + time)
+    ok(true, "Notation plus Tablature plus Time Signature for " + time)
   }
   Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=true time=rrr")
   

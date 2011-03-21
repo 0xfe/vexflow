@@ -236,7 +236,7 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
         case "tenor": has_clef = "tenor"; break;
         case "bass": has_clef = "bass"; break;
         default: this.parseError(
-                     'clef must be treble, alto, tenor or bass: ' + pair.value);
+                     'clef must be treble, alto, tenor, or bass: ' + pair.value);
       }
     } else if (pair.key.toLowerCase() == "key") {
       if (Vex.Flow.keySignature.keySpecs[pair.value]) {
@@ -263,7 +263,8 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
     this.parseError('notation & tablature cannot both be "false"');
   }
 
-  this.genTabStave({ notation: has_standard_notation, tablature: has_tablature, clef: has_clef, key_signature: has_key, time_signature: has_time});
+  this.genTabStave({ notation: has_standard_notation, tablature: has_tablature, 
+										clef: has_clef, key_signature: has_key, time_signature: has_time});
 }
 
 /**
@@ -1033,7 +1034,7 @@ Vex.Flow.VexTab.prototype.genTabStave = function(params) {
   if (params) {
     notation = params.notation;
     tablature = params.tablature;
-     clef = params.clef;
+    clef = params.clef;
     key_signature = params.key_signature;
     time_signature = params.time_signature;
   }
