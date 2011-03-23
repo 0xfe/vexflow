@@ -154,7 +154,7 @@ Vex.Flow.Test.StaveNote.displacements = function(options, contextBuilder) {
     { keys: ["c/4", "d/4", "e/4", "f/4", "g/4", "a/4"], duration: "16", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "32", stem_direction: -1},
   ];
-  
+
   for (var i = 0; i < notes.length; ++i) {
     var note = notes[i];
     var staveNote = showNote(note, stave, ctx, (i + 1) * 45);

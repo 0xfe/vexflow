@@ -1,0 +1,294 @@
+<html>
+<head>
+  <title>The VexFlow Tutorial</title>
+  <link href='http://fonts.googleapis.com/css?family=OFL+Sorts+Mill+Goudy+TT|Yanone+Kaffeesatz|Tangerine'
+   rel='stylesheet' type='text/css'>
+  <link href="../tabdiv/style.css" media="screen" rel="Stylesheet"
+    type="text/css" />
+
+  <!-- VexFlow Uncompiled Sources -->
+  <script src="../src/header.js"></script>
+  <script src="../src/vex.js"></script>
+  <script src="../src/flow.js"></script>
+  <script src="../src/tables.js"></script>
+  <script src="../src/fonts/vexflow_font.js"></script>
+  <script src="../src/glyph.js"></script>
+  <script src="../src/stave.js"></script>
+  <script src="../src/tabstave.js"></script>
+  <script src="../src/tickcontext.js"></script>
+  <script src="../src/tickable.js"></script>
+  <script src="../src/note.js"></script>
+  <script src="../src/barnote.js"></script>
+  <script src="../src/ghostnote.js"></script>
+  <script src="../src/stavenote.js"></script>
+  <script src="../src/tabnote.js"></script>
+  <script src="../src/beam.js"></script>
+  <script src="../src/voice.js"></script>
+  <script src="../src/modifier.js"></script>
+  <script src="../src/modifiercontext.js"></script>
+  <script src="../src/accidental.js"></script>
+  <script src="../src/dot.js"></script>
+  <script src="../src/formatter.js"></script>
+  <script src="../src/stavetie.js"></script>
+  <script src="../src/tabtie.js"></script>
+  <script src="../src/tabslide.js"></script>
+  <script src="../src/bend.js"></script>
+  <script src="../src/vibrato.js"></script>
+  <script src="../src/annotation.js"></script>
+  <script src="../src/tuning.js"></script>
+  <script src="../src/stavemodifier.js"></script>
+  <script src="../src/keysignature.js"></script>
+  <script src="../src/timesignature.js"></script>
+  <script src="../src/clef.js"></script>
+  <script src="../src/renderer.js"></script>
+  <script src="../src/raphaelcontext.js"></script>
+
+  <!-- VexFlow Compiled Source -->
+  <script src="../vexflow.js"></script>
+
+  <!-- Support Sources -->
+  <script src="../tabdiv/support/jquery.js"></script>
+  <script src="../tabdiv/support/raphael.js"></script>
+
+  <style type="text/css">
+    canvas {
+      background: #eed;
+      padding: 10px;
+      border: 10px solid #ddc;
+    }
+
+    code.example, code.html {
+      font-size: 14;
+    }
+  </style>
+
+  <script>
+    /* Take raw javascript code, and return moderately useful HTML */
+    function prettify_code(code) {
+      var lines = code.split("\n");
+      var new_lines = [];
+      for (var j = 0; j < lines.length; ++j) {
+        code = lines[j];
+        code = code.replace(/\s/g, "&nbsp;");
+        code = code.replace(/>/g, "&gt;");
+        code = code.replace(/</g, "&lt;");
+        new_lines.push(code);
+      }
+
+      pretty_code = new_lines.join("<br/>");
+      return pretty_code;
+    }
+
+    /*
+       Find all the javascript examples and copy their source code
+       into the associated <code> blocks.
+    */
+    $(function() {
+      $("div.description").each(function(index, sel) {
+        codes = $(sel).find("code.example");
+        codes.each(function(i, s) {
+          var example = $(s).attr("example");
+          var code = $($(sel).find(
+            "div.example." + example + " script")[0]).html();
+          $(s).html(prettify_code(code));
+         })
+      })
+    })
+  </script>
+</head>
+
+<body>
+  <div class="vex">
+    <a href="http://vexflow.com">VexFlow</a> |
+    <a href="http://vexflow.com/vextab">VexTab</a> |
+    <a href="http://vexflow.com/tabdiv">TabDiv</a> |
+    <a href="http://vexmachines.com">VexMachines</a> |
+    <a href="http://wickedmeanposters.com">Posters</a> |
+    <a href="http://0xfe.blogspot.com">0xfe</a>
+  </div>
+
+  <div class="header">
+    <h1>The VexFlow Tutorial</h1>
+    <div class="main">
+      <b>An n-step guide to programming with VexFlow</b>
+    </div>pre-pre-pre-alpha by <a href="http://0xfe.blogspot.com">0xfe</a>.
+  </div>
+
+  <div class="content">
+    <h2>Step 1: The Basics</h2>
+
+    <div class="description one">
+      VexFlow is a rendering engine for music notation, which can be used
+      as a backed to all kinds of online music tools. It runs on HTML5
+      <a href="http://en.wikipedia.org/wiki/Canvas_element">Canvas</a>
+      and <a href="http://en.wikipedia.org/wiki/Scalable_Vector_Graphics">SVG</a>, with a mostly consistent experience across them.
+      <p/>
+      Lets start with a quick example. Below, we have a canvas created with
+      the following code:
+      <p/>
+      <code class="html">
+        &nbsp;&nbsp;&lt;canvas width=700 height=100"&gt;&lt;/canvas&gt;
+      </code>
+      <p/>
+      Let's draw an empty treble stave on with the following code:
+      <br/>
+      <code class="example a" example="a"></code>
+      <br/>
+      Here's what it looks like.
+      <div class="example a" example="a">
+        <canvas width=525 height=120></canvas>
+        <p/>
+        <script>
+  var canvas = $("div.one div.a canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+
+  var ctx = renderer.getContext();
+  var stave = new Vex.Flow.Stave(10, 0, 500);
+  stave.addClef("treble").setContext(ctx).draw();
+        </script>
+      </div>
+      In the above code, we start by creating a rendering context from the
+      canvas element. We then create a new stave positioned at
+      <code>0, 0</code> with a width of <code>500</code> pixels.
+      <p/>
+      We pass the context to the stave and call <code>draw</code>, which
+      renders the stave on the context.
+      <p/>
+      Notice that the stave is not exactly drawn in position <code>0, 0</code>.
+      This is because it reserves some head-room for higher notes.
+      <p/>
+    </div>
+    <h2>Step 2: Add Some Notes</h2>
+    <div class="description two">
+      Adding notes to the stave is a slightly more involved process. To
+      understand code, you need to understand the data model of the
+      renderer.
+      <p/>
+      A <code>StaveNote</code> is a set of notes that belong on a stem. It
+      can be a single note, or a chord. It's stem can be up, or down. All
+      <code>StaveNote</code> instances have an associated duration.
+      <p/>
+      These <code>StaveNote</code>s are grouped into a <code>Voice</code>.
+      Voices have a time signature, and the set of notes in the voice
+      (including the rests) must utilize all beats in the voce. So, a voice
+      with only three quarter-notes is invalid - you'll need to add another
+      note or rest.
+      <p/>
+      Voices are grouped into <code>VoiceGroups</code>. This is particularly
+      useful when you have multi-voice music. Upon rendering, the voices in
+      the group are aligned on the stave. You can have a <code>VoiceGroup</code>
+      with only one voice.
+      <p/>
+      Finally, you have a <code>Formatter</code>, which takes a voice group
+      and justifies them based on configurable rules, so that all the
+      voices in the group look pretty on the stave.
+      <p/>
+      In the code below, we create a voice with two notes and a chord, and
+      render it on the stave.
+      <br/>
+      <code class="example a" example="a"></code>
+      <div class="example a" example="a">
+        <canvas width=525 height=120></canvas>
+        <p/>
+        <script>
+  var canvas = $("div.two div.a canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+
+  var ctx = renderer.getContext();
+  var stave = new Vex.Flow.Stave(10, 0, 500);
+  stave.addClef("treble").setContext(ctx).draw();
+
+  // Create a quarter C, a half C, and a quarter C-Major chord.
+  var notes = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "h" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })
+  ];
+
+  // Create a voice in 4/4
+  var voice = new Vex.Flow.Voice({
+    num_beats: 4,
+    beat_value: 4,
+    resolution: Vex.Flow.RESOLUTION
+  });
+
+  // Add notes to voice
+  voice.addTickables(notes);
+
+  // Format and justify the notes to 500 pixels
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([voice]).format([voice], 500);
+
+  // Render voice
+  voice.draw(ctx, stave);
+</script>
+      Notice how the notes are justified evenly on the stave based on the
+      duration of the note? This is the formatter in action, aligning notes
+      based on their duration.
+      <p/>
+      Lets add another voice to this tune.
+      <br/>
+      <code class="example b" example="b"></code>
+      <div class="example b" example="b">
+        <canvas width=525 height=120></canvas>
+        <p/>
+        <script>
+  var canvas = $("div.two div.b canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+
+  var ctx = renderer.getContext();
+  var stave = new Vex.Flow.Stave(10, 0, 500);
+
+  // Add a treble clef
+  stave.addClef("treble");
+  stave.setContext(ctx).draw();
+
+  // Create a quarter C, a half C, and a quarter C-Major chord.
+  var notes = [
+    new Vex.Flow.StaveNote({ keys: ["e/5"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["d/5"], duration: "h" }),
+    new Vex.Flow.StaveNote({ keys: ["c/5", "e/5", "g/5"], duration: "q" })
+  ];
+
+  // Create a second voice, with just one whole note
+  var notes2 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "w" })
+  ];
+
+  // Create a voice in 4/4
+  function create_4_4_voice() {
+    return new Vex.Flow.Voice({
+      num_beats: 4,
+      beat_value: 4,
+      resolution: Vex.Flow.RESOLUTION
+    });
+  }
+
+  // Create voices and add notes to each of them.
+  var voice = create_4_4_voice().addTickables(notes);
+  var voice2 = create_4_4_voice().addTickables(notes2);
+
+  // Format and justify the notes to 500 pixels
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([voice, voice2]).format([voice, voice2], 500);
+
+  // Render voice
+  voice.draw(ctx, stave);
+  voice2.draw(ctx, stave);
+</script>
+      </div>
+
+    </div>
+
+    <center>
+    <h2>Step N + 1: Coming soon</h2>
+      <p/>
+      <a href="http://0xfe.blogspot.com">The Blog</a><p/>
+    </center>
+  </div>
+</body>
+
+</html>
