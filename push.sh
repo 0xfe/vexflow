@@ -12,6 +12,7 @@ curdir=`pwd`
 mkdir -p $TARGET
 mkdir -p $TARGET/licensed
 mkdir -p $TARGET/downloads
+mkdir -p $TARGET/docs
 
 echo Copying over compiled sources...
 cp build/vexflow/vexflow-free.js $TARGET/vexflow.js
@@ -41,5 +42,8 @@ cp tabdiv/tutorial.html $TARGET/vextab
 cp tabdiv/tutorial.html $TARGET/tabdiv
 cp tabdiv/playground.html $TARGET/vextab
 cp tabdiv/*.css $TARGET/vextab
+
+echo Copy over docs...
+cp -r docs $TARGET
 
 echo Done.
