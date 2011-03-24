@@ -119,9 +119,12 @@
 
     <div class="description one">
       VexFlow is a rendering engine for music notation, which can be used
-      as a backed to all kinds of online music tools. It runs on HTML5
+      as a backend to all kinds of online music tools. It is designed to
+      run on HTML5
       <a href="http://en.wikipedia.org/wiki/Canvas_element">Canvas</a>
-      and <a href="http://en.wikipedia.org/wiki/Scalable_Vector_Graphics">SVG</a>, with a mostly consistent experience across them.
+      and
+      <a href="http://en.wikipedia.org/wiki/Scalable_Vector_Graphics">SVG</a>,
+      with a mostly consistent experience across them.
       <p/>
       Lets start with a quick example. Below, we have a canvas created with
       the following code:
@@ -130,7 +133,7 @@
         &nbsp;&nbsp;&lt;canvas width=700 height=100"&gt;&lt;/canvas&gt;
       </code>
       <p/>
-      Let's draw an empty treble stave on with the following code:
+      Let's draw an empty treble stave on this canvas with VexFlow.
       <br/>
       <code class="example a" example="a"></code>
       <br/>
@@ -148,8 +151,11 @@
   stave.addClef("treble").setContext(ctx).draw();
         </script>
       </div>
-      In the above code, we start by creating a rendering context from the
-      canvas element. We then create a new stave positioned at
+      In the above code first create a rendering context from the
+      canvas element. This rendering context gives VexFlow a consistent
+      2D drawing interface, which is modeled on HTML5 Canvas.
+      <p/>
+      We then create a new <code>Vex.Flow.Stave</code> positioned at
       <code>0, 0</code> with a width of <code>500</code> pixels.
       <p/>
       We pass the context to the stave and call <code>draw</code>, which
@@ -162,26 +168,26 @@
     <h2>Step 2: Add Some Notes</h2>
     <div class="description two">
       Adding notes to the stave is a slightly more involved process. To
-      understand code, you need to understand the data model of the
+      understand the code, you need to understand the data model of the
       renderer.
       <p/>
       A <code>StaveNote</code> is a set of notes that belong on a stem. It
-      can be a single note, or a chord. It's stem can be up, or down. All
+      can be a single note, or a chord. Its stem can be up, or down. All
       <code>StaveNote</code> instances have an associated duration.
       <p/>
       These <code>StaveNote</code>s are grouped into a <code>Voice</code>.
       Voices have a time signature, and the set of notes in the voice
-      (including the rests) must utilize all beats in the voce. So, a voice
+      (including the rests) must utilize all beats in the voice. So, a voice
       with only three quarter-notes is invalid - you'll need to add another
-      note or rest.
+      quarter note or rest.
       <p/>
-      Voices are grouped into <code>VoiceGroups</code>. This is particularly
-      useful when you have multi-voice music. Upon rendering, the voices in
-      the group are aligned on the stave. You can have a <code>VoiceGroup</code>
-      with only one voice.
+      Voices are grouped into <code>VoiceGroup</code>s. This is particularly
+      useful when you have multi-voice music. Upon rendering, the notes
+      in each voice of the group aligned on the stave.
+      A <code>VoiceGroup</code> must contain at least one voice.
       <p/>
       Finally, you have a <code>Formatter</code>, which takes a voice group
-      and justifies them based on configurable rules, so that all the
+      and justifies the voices based on configurable rules, so that all the
       voices in the group look pretty on the stave.
       <p/>
       In the code below, we create a voice with two notes and a chord, and
@@ -225,8 +231,8 @@
   voice.draw(ctx, stave);
 </script>
       Notice how the notes are justified evenly on the stave based on the
-      duration of the note? This is the formatter in action, aligning notes
-      based on their duration.
+      duration of each note? This is the formatter in action - keeping voices
+      aligned, while balancing the spacing between the notes.
       <p/>
       Lets add another voice to this tune.
       <br/>
