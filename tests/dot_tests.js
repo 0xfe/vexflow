@@ -53,7 +53,7 @@ Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
         duration: "h"}).
       addDotToAll().
       addDotToAll(),
-      
+
     newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
         duration: "16", stem_direction: -1}).
       addDotToAll().

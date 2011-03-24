@@ -209,6 +209,16 @@ Vex.Flow.StaveNote.prototype.addAccidental = function(index, accidental) {
   return this;
 }
 
+/* This tends to not work too well on StaveNotes.
+ * TODO(0xfe): position annotations below */
+Vex.Flow.StaveNote.prototype.addAnnotation = function(index, annotation) {
+  annotation.setNote(this);
+  annotation.setIndex(index);
+  this.modifiers.push(annotation);
+  this.setPreFormatted(false);
+  return this;
+}
+
 Vex.Flow.StaveNote.prototype.addDot = function(index) {
   var dot = new Vex.Flow.Dot();
   dot.setNote(this);

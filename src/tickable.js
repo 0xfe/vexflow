@@ -33,8 +33,9 @@ Vex.Flow.Tickable.prototype.addToModifierContext = function(mc) {
 
 /** optional, if tickable has modifiers **/
 Vex.Flow.Tickable.prototype.addModifier = function(mod) {
-  this.modifiers.push(mc);
+  this.modifiers.push(mod);
   this.preFormatted = false;
+  return this;
 }
 
 Vex.Flow.Tickable.prototype.setTickContext = function(tc) {
