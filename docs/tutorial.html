@@ -426,9 +426,114 @@
   // Render voice
   voice.draw(ctx, stave);
 </script>
+    </div>
     Above, the accidentals are positioned such that they don't overlap but
     maintain their X-relation to the associated note.
     </div>
+
+    <h2>Step 4: Beams and Ties</h2>
+    <div class="description four">
+      VexFlow can beam your notes for you, but only if you ask it to. The
+      <code>Beam</code> class, when passed a set of contiguous notes (in
+      a shared voice), is responsible for rendering beams based on the
+      durations of each contained note.
+      <p/>
+      Let's create a melody.
+      <br/>
+      <code class="example a" example="a"></code>
+      <div class="example a" example="a">
+        <canvas width=525 height=120></canvas>
+        <p/>
+        <script>
+  var canvas = $("div.four div.a canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+
+  var ctx = renderer.getContext();
+  var stave = new Vex.Flow.Stave(10, 0, 500);
+
+  // Add a treble clef
+  stave.addClef("treble");
+  stave.setContext(ctx).draw();
+
+  var notes = [
+    // Dotted sixteenth E##
+    new Vex.Flow.StaveNote({ keys: ["e##/5"], duration: "8d" }).
+      addAccidental(0, new Vex.Flow.Accidental("##")).addDotToAll(),
+
+    // Sixteenth Eb
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "16" }).
+      addAccidental(0, new Vex.Flow.Accidental("b"))
+  ];
+
+  var notes2 = [
+    // Dotted sixteenth E##
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+
+    // Dotted sixteenth E##
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
+
+    // Sixteenth Eb
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "16" }).
+      addAccidental(0, new Vex.Flow.Accidental("b"))
+  ]
+
+  var notes3 = [
+    // Dotted sixteenth E##
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
+
+    // Sixteenth Eb
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "16" }).
+      addAccidental(0, new Vex.Flow.Accidental("#")),
+
+    // Sixteenth Eb
+    new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "16" }),
+
+    // 32nd notes
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "32" }),
+
+    // Sixteenth Eb
+    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "32" })
+  ]
+
+  var notes4 = [ new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }) ];
+
+
+  // Create the beams
+  var beam = new Vex.Flow.Beam(notes);
+  var beam2 = new Vex.Flow.Beam(notes2);
+  var beam3 = new Vex.Flow.Beam(notes3);
+
+  // Create a voice in 4/4
+  function create_4_4_voice() {
+    return new Vex.Flow.Voice({
+      num_beats: 4,
+      beat_value: 4,
+      resolution: Vex.Flow.RESOLUTION
+    });
+  }
+
+  // Create voices and add notes to each of them.
+  var voice = create_4_4_voice().
+    addTickables(notes).
+    addTickables(notes2).
+    addTickables(notes3).
+    addTickables(notes4);
+
+  // Format and justify the notes to 500 pixels
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([voice]).format([voice], 550);
+
+  // Render voice
+  voice.draw(ctx, stave);
+
+  // Render beams
+  beam.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+  beam3.setContext(ctx).draw();
+</script>
+    </div>
+  </div>
 
 
     <center>
