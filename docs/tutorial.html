@@ -431,6 +431,36 @@
     maintain their X-relation to the associated note.
     </div>
 
+    <h2>Step 3.5: An Interlude</h2>
+    We've covered a bit of ground here, and you're probably asking for
+    lists of valid note names, accidentals, durations, etc., that you
+    can use with the API.
+    <p/>
+    Fortunately for you, there's a canonical location where this stuff
+    is kept.
+    <center>
+      <a href="https://github.com/0xfe/vexflow/blob/master/src/tables.js">
+      VexFlow Tables (vexflow/src/tables.js)
+    </a>
+    </center>
+    <p/>
+    The following tables are available:
+    <p/>
+    <ul>
+      <li>
+        <code>Vex.Flow.keyProperties.note_values</code> -
+          The list of valid note names.
+      </li>
+      <li>
+      <code>Vex.Flow.accidentalCodes.accidentals</code> -
+          The list of valid accidental names.
+      </li>
+      <li><code>Vex.Flow.keySignatures.keySpecs</code> -
+        The list of valid keys.</li>
+      <li><code>Vex.Flow.durationToTicks</code> -
+        The list of valid duration codes.</li>
+    </ul>
+
     <h2>Step 4: Beams and Ties</h2>
     <div class="description four">
       VexFlow can beam your notes for you, but only if you ask it to. The
@@ -457,70 +487,47 @@
   stave.setContext(ctx).draw();
 
   var notes = [
-    // Dotted sixteenth E##
     new Vex.Flow.StaveNote({ keys: ["e##/5"], duration: "8d" }).
       addAccidental(0, new Vex.Flow.Accidental("##")).addDotToAll(),
-
-    // Sixteenth Eb
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "16" }).
       addAccidental(0, new Vex.Flow.Accidental("b"))
   ];
 
   var notes2 = [
-    // Dotted sixteenth E##
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
-
-    // Dotted sixteenth E##
     new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
-
-    // Sixteenth Eb
     new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "16" }).
       addAccidental(0, new Vex.Flow.Accidental("b"))
-  ]
+  ];
 
   var notes3 = [
-    // Dotted sixteenth E##
     new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
-
-    // Sixteenth Eb
     new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "16" }).
       addAccidental(0, new Vex.Flow.Accidental("#")),
-
-    // Sixteenth Eb
-    new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "16" }),
-
-    // 32nd notes
     new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "32" }),
-
-    // Sixteenth Eb
-    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "32" })
-  ]
+    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "32" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "16" })
+  ];
 
   var notes4 = [ new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }) ];
-
 
   // Create the beams
   var beam = new Vex.Flow.Beam(notes);
   var beam2 = new Vex.Flow.Beam(notes2);
   var beam3 = new Vex.Flow.Beam(notes3);
 
-  // Create a voice in 4/4
-  function create_4_4_voice() {
-    return new Vex.Flow.Voice({
+  // Create voice and add notes
+  var voice = new Vex.Flow.Voice({
       num_beats: 4,
       beat_value: 4,
       resolution: Vex.Flow.RESOLUTION
-    });
-  }
-
-  // Create voices and add notes to each of them.
-  var voice = create_4_4_voice().
+    }).
     addTickables(notes).
     addTickables(notes2).
     addTickables(notes3).
     addTickables(notes4);
 
-  // Format and justify the notes to 500 pixels
+  // Format and justify the notes to 550 pixels
   var formatter = new Vex.Flow.Formatter().
     joinVoices([voice]).format([voice], 550);
 
@@ -533,8 +540,112 @@
   beam3.setContext(ctx).draw();
 </script>
     </div>
-  </div>
+    In the above example, we created three groups of notes with beams. The
+    slope of the beams is a function of the direction of the music, and the
+    number of beams for each group is dependent on the duration of the
+    notes underneath.
+    <p/>
+    <code>Tie</code>ing notes involves a similar set of operations. To render
+    a tie, you create a <code>StaveTie</code> instance, and pass it the
+    two <code>StaveNote</code>s to tie together. Since each
+    <code>StaveNote</code> can be a chord, you also need to pass in the
+    indices of the specific notes you want to tie.
+    <p/>
+    For example:
+      <br/>
+      <code class="example b" example="b"></code>
+      <div class="example b" example="b">
+        <canvas width=525 height=120></canvas>
+        <p/>
+        <script>
+  var canvas = $("div.four div.b canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
 
+  var ctx = renderer.getContext();
+  var stave = new Vex.Flow.Stave(10, 0, 500);
+
+  // Add a treble clef
+  stave.addClef("treble");
+  stave.setContext(ctx).draw();
+
+  var notes = [
+    new Vex.Flow.StaveNote({ keys: ["e##/5"], duration: "8d" }).
+      addAccidental(0, new Vex.Flow.Accidental("##")).addDotToAll(),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "16" }).
+      addAccidental(0, new Vex.Flow.Accidental("b"))
+  ];
+
+  var notes2 = [
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "16" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4"], duration: "16" }).
+      addAccidental(0, new Vex.Flow.Accidental("b"))
+  ];
+
+  var notes3 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4"], duration: "16" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "16" }).
+      addAccidental(0, new Vex.Flow.Accidental("#")),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "32" }),
+    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "32" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "16" })
+  ];
+
+  var notes4 = [ new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }) ];
+
+  // Create the beams
+  var beam = new Vex.Flow.Beam(notes);
+  var beam2 = new Vex.Flow.Beam(notes2);
+  var beam3 = new Vex.Flow.Beam(notes3);
+
+  // Create a tie between the last note of the first group and the
+  // first note of the last group.
+  var tie = new Vex.Flow.StaveTie({
+    first_note: notes[1],
+    last_note: notes2[0],
+    first_indices: [0],
+    last_indices: [0]
+  });
+
+  // Create another tie between the two chords in the tune
+  var tie2 = new Vex.Flow.StaveTie({
+    first_note: notes2[2],
+    last_note: notes3[0],
+    first_indices: [0, 1],
+    last_indices: [0, 1]
+  });
+
+  // Create voice and add notes
+  var voice = new Vex.Flow.Voice({
+      num_beats: 4,
+      beat_value: 4,
+      resolution: Vex.Flow.RESOLUTION
+    }).
+    addTickables(notes).
+    addTickables(notes2).
+    addTickables(notes3).
+    addTickables(notes4);
+
+  // Format and justify the notes to 550 pixels
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([voice]).format([voice], 550);
+
+  // Render voice
+  voice.draw(ctx, stave);
+
+  // Render beams
+  beam.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+  beam3.setContext(ctx).draw();
+
+  // Render ties
+  tie.setContext(ctx).draw();
+  tie2.setContext(ctx).draw();
+</script>
+    </div>
+    And there you have ties and beams!
+  </div>
 
     <center>
     <h2>Step N + 1: Coming soon</h2>
