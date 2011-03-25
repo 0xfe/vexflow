@@ -123,6 +123,17 @@ Vex.Merge = function(destination, source) {
 };
 
 /**
+ * Min / Max: If you don't know what this does, you should be ashamed of yourself.
+ */
+Vex.Min = function(a, b) {
+  return (a > b) ? b : a;
+};
+
+Vex.Max = function(a, b) {
+  return (a > b) ? a : b;
+};
+
+/**
  * Take 'arr' and return a new list consisting of the sorted, unique,
  * contents of arr.
  */

@@ -79,6 +79,12 @@ Vex.Flow.Note.prototype.getYs = function() {
   return this.ys;
 }
 
+Vex.Flow.Note.prototype.getYForTopText = function(text_line) {
+  if (!this.stave) throw new Vex.RERR("NoStave",
+      "No stave attached to this note.");
+  return this.stave.getYForTopText(text_line);
+}
+
 Vex.Flow.Note.prototype.getVoice = function() {
   if (!this.voice) throw new Vex.RERR("NoVoice", "Note has no voice.");
   return this.voice;

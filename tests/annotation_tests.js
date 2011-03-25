@@ -10,6 +10,8 @@ Vex.Flow.Test.Annotation.Start = function() {
   Vex.Flow.Test.runTest("Simple Annotation", Vex.Flow.Test.Annotation.simple);
   Vex.Flow.Test.runRaphaelTest("Simple Annotation",
       Vex.Flow.Test.Annotation.simple);
+  Vex.Flow.Test.runTest("Standard Notation Annotation",
+      Vex.Flow.Test.Annotation.standard);
   Vex.Flow.Test.runTest("Harmonics", Vex.Flow.Test.Annotation.harmonic);
   Vex.Flow.Test.runRaphaelTest("Harmonics", Vex.Flow.Test.Annotation.harmonic);
   Vex.Flow.Test.runTest("Fingerpicking", Vex.Flow.Test.Annotation.picking);
@@ -40,6 +42,27 @@ Vex.Flow.Test.Annotation.simple = function(options, contextBuilder) {
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 200);
   ok(true, "Simple Annotation");
+}
+
+Vex.Flow.Test.Annotation.standard = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 500, 240);
+  ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  var stave = new Vex.Flow.Stave(10, 10, 450).
+    addClef("treble").setContext(ctx).draw();
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAnnotation(text) {
+    return (new Vex.Flow.Annotation(text)).setFont("Times", 8, "italic"); }
+
+  var notes = [
+    newNote({ keys: ["c/4", "e/4"], duration: "h"}).
+      addAnnotation(0, newAnnotation("quiet")),
+    newNote({ keys: ["c/4", "e/4", "c/5"], duration: "h"}).
+      addAnnotation(2, newAnnotation("Allegro"))
+  ];
+
+  Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 200);
+  ok(true, "Standard Notation Annotation");
 }
 
 Vex.Flow.Test.Annotation.harmonic = function(options, contextBuilder) {

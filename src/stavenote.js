@@ -78,13 +78,20 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
     glyph_font_scale: 38, // font size for note heads and rests
     stem_height: 35,      // in pixels
     stroke_px: 3,         // number of stroke px to the left and right of head
-    stroke_spacing: 10    // spacing between strokes (TODO: take from stave)
+    stroke_spacing: 10,    // spacing between strokes (TODO: take from stave)
+    annotation_spacing: 5 // spacing above note for annotations
   }
 
   this.setStemDirection(note_struct.stem_direction);
 
   // Calculate left/right padding
   this.calcExtraPx();
+}
+
+Vex.Flow.StaveNote.prototype.getYForTopText = function(text_line) {
+  var extents = this.getStemExtents();
+  return Vex.Min(this.stave.getYForTopText(text_line),
+      extents.topY - (this.render_options.annotation_spacing * (text_line + 1)));
 }
 
 Vex.Flow.StaveNote.prototype.setStave = function(stave) {
