@@ -115,16 +115,42 @@
   </div>
 
   <div class="content">
+    <a href="http://vexflow.com">VexFlow</a> is an engraving engine for music
+    notation, and can be used
+    as a rendering backend to various kinds of online music tools, libraries,
+    and applications. It is designed to run on HTML5
+    <a href="http://en.wikipedia.org/wiki/Canvas_element">Canvas</a>
+    and
+    <a href="http://en.wikipedia.org/wiki/Scalable_Vector_Graphics">SVG</a>.
+    <p/>
+    It is important to note that VexFlow is a low-level rendering API;
+    most applications will want to use something like
+    <a href="http://vexflow.com/vextab">VexTab</a> which is a
+    higher-level language for rendering guitar tablature and music notation.
+    <p/>
+    VexFlow is written completely in JavaScript and when using it with
+    HTML5 Canvas, requires no external libraries or dependencies. For SVG
+    support, you will need to include the
+    <a href="http://raphaeljs.com">Raphael</a> JavaScript library into
+    your sources. That said, this tutorial also makes use of the jQuery
+    library to select and manipulate DOM elements.
+    <p/>
+    Finally, before we begin, this tutorial expects you to have some
+    experience with programming in JavaScript and working with music
+    notation.
+    <p/>
+    This source-code to this tutorial, including all the examples, is available
+    in the
+    <a href="http://github.com/0xfe/vexflow/blob/master/docs/tutorial.html">GitHub repository</a>.
+    Feel free to send your corrections, enhancements, or random rants to
+    <a href="http://0xfe.blogspot.com">0xFE</a>
+     / <code class="example"><a href="http://twitter.com/11111110b">@11111110b</a></code>.
+    <p/>
+    Enjoy the show!
+
     <h2>Step 1: The Basics</h2>
 
     <div class="description one">
-      VexFlow is a rendering engine for music notation, which can be used
-      as a backend to all kinds of online music tools. It is designed to
-      run on HTML5
-      <a href="http://en.wikipedia.org/wiki/Canvas_element">Canvas</a>
-      and
-      <a href="http://en.wikipedia.org/wiki/Scalable_Vector_Graphics">SVG</a>,
-      with a mostly consistent experience across them.
       <p/>
       Lets start with a quick example. Below, we have a canvas created with
       the following code:
