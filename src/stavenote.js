@@ -43,7 +43,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
     var key = this.keys[i];
 
     // All rests use the same position on the line.
-    if (this.glyph.rest) key = this.glyph.position;
+    // if (this.glyph.rest) key = this.glyph.position;
     var props = Vex.Flow.keyProperties(key);
     if (!props) {
       throw new Vex.RuntimeError("BadArguments",

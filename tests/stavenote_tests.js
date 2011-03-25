@@ -113,12 +113,12 @@ Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
     { keys: ["c/4", "e/4", "a/4"], duration: "16", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "32", stem_direction: -1},
 
-    { keys: ["c/4"], duration: "wr"},
-    { keys: ["c/4"], duration: "hr"},
-    { keys: ["c/4"], duration: "qr"},
-    { keys: ["c/4"], duration: "8r"},
-    { keys: ["c/4"], duration: "16r"},
-    { keys: ["c/4"], duration: "32r"},
+    { keys: ["b/4"], duration: "wr"},
+    { keys: ["b/4"], duration: "hr"},
+    { keys: ["b/4"], duration: "qr"},
+    { keys: ["b/4"], duration: "8r"},
+    { keys: ["b/4"], duration: "16r"},
+    { keys: ["b/4"], duration: "32r"},
     { keys: ["x/4"], duration: "h"}
   ];
 

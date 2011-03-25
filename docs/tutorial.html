@@ -206,10 +206,19 @@
   var stave = new Vex.Flow.Stave(10, 0, 500);
   stave.addClef("treble").setContext(ctx).draw();
 
-  // Create a quarter C, a half C, and a quarter C-Major chord.
+  // Create the notes
   var notes = [
+    // A quarter-note C.
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
-    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "h" }),
+
+    // A quarter-note D.
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+
+    // A quarter-note rest. Note that the key (b/4) specifies the vertical
+    // position of the rest.
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" }),
+
+    // A C-Major chord.
     new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })
   ];
 

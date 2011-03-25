@@ -91,6 +91,7 @@ Vex.Flow.keyProperties.note_values = {
   'B##': { index: 6, int_val: 13, accidental: "##" },
   'BB': { index: 6, int_val: 10, accidental: "b" },
   'BBB': { index: 6, int_val: 9, accidental: "bb" },
+  'R': { index: 6, int_val: 9, rest: true }, // Rest
   'X':  {
     index: 6,
     accidental: "",
@@ -199,7 +200,8 @@ Vex.Flow.keySignature = function(spec) {
   var keySpec = Vex.Flow.keySignature.keySpecs[spec];
 
   if (keySpec == undefined) {
-    throw new Vex.RERR("BadKeySignature", "Bad key signature spec: '" + spec + "'");
+    throw new Vex.RERR("BadKeySignature",
+        "Bad key signature spec: '" + spec + "'");
   }
 
   if (!keySpec.acc) {
@@ -214,7 +216,7 @@ Vex.Flow.keySignature = function(spec) {
     var line = notes[i];
     acc_list.push({glyphCode: code, line: line});
   }
-        
+
   return acc_list;
 }
 
@@ -294,6 +296,7 @@ Vex.Flow.durationIsDotted = function(duration) {
 Vex.Flow.durationToGlyph.duration_codes = {
   "w": { // Whole note
     code_head: "v1d",
+    code_rest: "v5c",
     head_width: 16.5,
     stem: false,
     flag: false
@@ -308,6 +311,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "h": { // Half note
     code_head: "v81",
+    code_rest: "vc",
     head_width: 10.5,
     stem: true,
     flag: false
@@ -322,6 +326,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "hd": { // Dotted half note
     code_head: "v81",
+    code_rest: "vc",
     head_width: 10.5,
     stem: true,
     flag: false,
@@ -329,6 +334,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "q": { // Quarter note
     code_head: "vb",
+    code_rest: "v7c",
     head_width: 10.5,
     stem: true,
     flag: false
@@ -343,6 +349,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "qd": { // Dotted quarter note
     code_head: "vb",
+    code_rest: "v7c",
     head_width: 10.5,
     stem: true,
     flag: false,
@@ -350,6 +357,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "8": { // Eighth note
     code_head: "vb",
+    code_rest: "va5",
     head_width: 10.5,
     stem: true,
     flag: true,
@@ -368,6 +376,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "8d": {
     code_head: "vb",
+    code_rest: "va5",
     head_width: 10.5,
     stem: true,
     flag: true,
@@ -379,6 +388,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "16": {
     beam_count: 2,
     code_head: "vb",
+    code_rest: "v3c",
     head_width: 10.5,
     stem: true,
     flag: true,
@@ -397,6 +407,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "16d": {
     beam_count: 2,
     code_head: "vb",
+    code_rest: "v3c",
     head_width: 10.5,
     stem: true,
     flag: true,
@@ -407,6 +418,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "32": {
     beam_count: 3,
     code_head: "vb",
+    code_rest: "v55",
     head_width: 10.5,
     stem: true,
     flag: true,
@@ -416,6 +428,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "32d": {
     beam_count: 3,
     code_head: "vb",
+    code_rest: "v55",
     head_width: 10.5,
     dot: true,
     flag: true,
