@@ -59,7 +59,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
         this.displaced = true;
         props.displaced = true;
 
-        // Have to mark the previous note as 
+        // Have to mark the previous note as
         // displaced as well, for modifier placement
         if (this.keyProps.length > 0) {
             this.keyProps[i-1].displaced = true;
@@ -73,7 +73,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
 
   // Drawing
   this.modifiers = [];
- 
+
   this.render_options = {
     glyph_font_scale: 38, // font size for note heads and rests
     stem_height: 35,      // in pixels
@@ -327,8 +327,11 @@ Vex.Flow.StaveNote.prototype.draw = function() {
     if (last_line == null) {
       last_line = line;
     } else {
-      if (Math.abs(last_line - line) == 0.5)
+      if (Math.abs(last_line - line) == 0.5) {
         displaced = !displaced;
+      } else {
+        displaced = false;
+      }
     }
     last_line = line;
 
