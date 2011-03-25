@@ -24,7 +24,7 @@ cp build/tabdiv-free.zip $TARGET/downloads
 
 echo Copying over tests...
 cp -r build/tests $TARGET
-cp -r build/tests/flow.html $TARGET/index.html
+cp -r build/tests/flow.html $TARGET/tests/index.html
 
 echo Copying over vextab...
 cp -r build/vextab $TARGET
