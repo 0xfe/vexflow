@@ -132,7 +132,7 @@ Vex.Flow.StaveTie.prototype.renderText = function(first_x_px, last_x_px) {
   this.context.setFont(this.font.family, this.font.size, this.font.style);
   this.context.fillText(
       this.text, center_x + this.render_options.text_shift_x,
-      (this.first_note || this.last_note).getStave().getYForTopText());
+      (this.first_note || this.last_note).getStave().getYForTopText() - 1);
   this.context.restore();
 }
 
