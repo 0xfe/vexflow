@@ -23,8 +23,8 @@ Vex.Flow.Annotation.prototype.init = function(text) {
   this.text = text;
   this.font = {
     family: "Arial",
-    size: 8,
-    weight: "bold"
+    size: 10,
+    weight: ""
   };
 
   this.setWidth(Vex.Flow.textWidth(text));

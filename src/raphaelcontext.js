@@ -26,13 +26,13 @@ Vex.Flow.RaphaelContext.prototype.init = function(element) {
   this.attributes = {
     "stroke-width": 0.3,
     "fill": "black",
-    "font": "8pt Arial"
+    "font": "10pt Arial"
   };
 
   this.background_attributes = {
     "stroke-width": 0,
     "fill": "white",
-    "font": "8pt Arial"
+    "font": "10pt Arial"
   };
 
   this.state_stack= [];

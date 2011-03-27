@@ -19,7 +19,7 @@ Vex.Flow.Bend.prototype.init = function(text, release) {
 
   this.text = text;
   this.release = release || false;
-  this.font = "bold 8pt Arial";
+  this.font = "10pt Arial";
   this.render_options = {
     bend_width: 8,
     release_width: 8
