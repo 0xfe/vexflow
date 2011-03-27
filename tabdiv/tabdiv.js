@@ -39,8 +39,10 @@ Vex.Flow.TabDiv.prototype.init = function(sel) {
         Vex.Flow.Renderer.Backends.RAPHAEL);
   }
 
+  this.ctx_sel = $(sel).find(".vex-canvas");
   this.renderer.resize(this.width, this.height);
   this.ctx = this.renderer.getContext();
+  this.ctx.setBackgroundFillStyle(this.ctx_sel.css("background-color"));
   this.ctx.scale(this.scale, this.scale);
 
   // Grab editor properties
@@ -111,7 +113,7 @@ Vex.Flow.TabDiv.prototype.drawInternal = function() {
   this.height = this.parser.getHeight() + this.extra_height;
   this.resize(this.width, this.height);
   this.ctx.clear();
-  this.ctx.setFont("Arial", 8, "Bold");
+  this.ctx.setFont("Arial", 10, "");
 
   for (var i = 0; i < staves.length; ++i) {
     var tabstave = staves[i].tab;
@@ -134,7 +136,7 @@ Vex.Flow.TabDiv.prototype.drawInternal = function() {
       Vex.Flow.Formatter.FormatAndDrawTab(
         this.ctx,
         tabstave, notestave,
-        voice_tabnotes, 
+        voice_tabnotes,
         voice_notes,
         this.width - 100);
     } else if (tabstave) {

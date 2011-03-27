@@ -57,10 +57,11 @@ Vex.Flow.Bend.prototype.draw = function() {
 
   var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.RIGHT,
       this.index);
+  start.x += 1;
 
   var ctx = this.context;
   var that = this;
-  var bend_height = this.note.getStave().getYForTopText(this.text_line) + 2;
+  var bend_height = this.note.getStave().getYForTopText(this.text_line) + 3;
 
   function renderBend(x, y) {
     var cp_x = x + that.bend_width;
@@ -99,7 +100,7 @@ Vex.Flow.Bend.prototype.draw = function() {
         start.y + 0.5, -1);
   }
 
-  var annotation_y = this.note.getStave().getYForTopText(this.text_line);
+  var annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
   var text_x = start.x + this.bend_width - (Vex.Flow.textWidth(this.text) / 2);
   ctx.save();
   ctx.font = this.font;

@@ -84,7 +84,7 @@ Vex.Flow.Test.StaveTie.stemUp = function(options) {
 Vex.Flow.Test.StaveTie.noEndNote = function(options, contextBuilder) {
   var ctx = contextBuilder(options.canvas_sel, 350, 140);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = "bold 8pt Arial";
+  ctx.font = "10pt Arial";
   var stave = new Vex.Flow.Stave(10, 10, 350).setContext(ctx).draw();
 
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
@@ -117,7 +117,7 @@ Vex.Flow.Test.StaveTie.noEndNote = function(options, contextBuilder) {
 Vex.Flow.Test.StaveTie.noStartNote = function(options, contextBuilder) {
   var ctx = contextBuilder(options.canvas_sel, 350, 140);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = "bold 8pt Arial";
+  ctx.font = "10pt Arial";
   var stave = new Vex.Flow.Stave(10, 10, 350).addTrebleGlyph().
     setContext(ctx).draw();
 

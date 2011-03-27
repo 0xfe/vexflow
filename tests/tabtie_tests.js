@@ -45,7 +45,7 @@ Vex.Flow.Test.TabTie.tieNotes = function(notes, indices, stave, ctx, text) {
 Vex.Flow.Test.TabTie.setupContext = function(options, x, y) {
   var ctx = options.contextBuilder(options.canvas_sel, x || 350, y || 160);
   ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.setFont("Arial", 8, "bold");
+  ctx.setFont("Arial", Vex.Flow.Test.Font.size, "");
   var stave = new Vex.Flow.TabStave(10, 10, x || 350).addTabGlyph().
     setContext(ctx).draw();
 

@@ -31,7 +31,7 @@ Vex.Flow.Test.Beam.setupContext = function(options, x, y) {
   Vex.Flow.Test.resizeCanvas(options.canvas_sel, x || 350, y || 140);
   var ctx = Vex.getCanvasContext(options.canvas_sel);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = "bold 8pt Arial";
+  ctx.font = " 10pt Arial";
   var stave = new Vex.Flow.Stave(10, 10, x || 350).addTrebleGlyph().
     setContext(ctx).draw();
 
@@ -166,7 +166,7 @@ Vex.Flow.Test.Beam.slopey = function(options) {
   Vex.Flow.Test.resizeCanvas(options.canvas_sel, 350, 140);
   var ctx = Vex.getCanvasContext(options.canvas_sel);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = "bold 8pt Arial";
+  ctx.font = " 10pt Arial";
   var stave = new Vex.Flow.Stave(10, 30, 350).addTrebleGlyph().
     setContext(ctx).draw();
 

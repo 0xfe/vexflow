@@ -15,7 +15,7 @@ Vex.Flow.TabStave.superclass = Vex.Flow.Stave.prototype;
 Vex.Flow.TabStave.prototype.init = function(x, y, width, options) {
   var superclass = Vex.Flow.TabStave.superclass;
   var tab_options = {
-    spacing_between_lines_px: 10,
+    spacing_between_lines_px: 13,
     num_lines: 6,
     top_text_position: 1
   };
@@ -29,6 +29,6 @@ Vex.Flow.TabStave.prototype.getYForGlyphs = function() {
 }
 
 Vex.Flow.TabStave.prototype.addTabGlyph = function() {
-  this.addGlyph(new Vex.Flow.Glyph("v2f", 30));
+  this.addGlyph(new Vex.Flow.Glyph("v2f", 40));
   return this;
 }

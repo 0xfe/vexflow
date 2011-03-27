@@ -213,7 +213,7 @@ Vex.Flow.Test.Formatter.notesWithTab = function(options) {
   Vex.Flow.Test.resizeCanvas(options.canvas_sel, 420, 400);
   var ctx = Vex.getCanvasContext(options.canvas_sel);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = "bold 8pt Arial";
+  ctx.font = "10pt Arial";
 
   // Get test voices.
   var notes = Vex.Flow.Test.Formatter.getTabNotes();

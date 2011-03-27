@@ -144,7 +144,7 @@ Vex.Flow.tabToGlyph = function(fret) {
     width = 7;
     shift_y = -4.5;
   } else {
-    width = 5 * fret.toString().length;
+    width = Vex.Flow.textWidth(fret.toString());
   }
 
   return {
@@ -156,7 +156,7 @@ Vex.Flow.tabToGlyph = function(fret) {
 };
 
 Vex.Flow.textWidth = function(text) {
-  return 5 * text.toString().length;
+  return 6 * text.toString().length;
 }
 
 Vex.Flow.accidentalCodes = function(acc) {

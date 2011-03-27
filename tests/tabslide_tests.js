@@ -34,7 +34,7 @@ Vex.Flow.Test.TabSlide.tieNotes = function(notes, indices, stave, ctx) {
 Vex.Flow.Test.TabSlide.setupContext = function(options, x, y) {
   var ctx = options.contextBuilder(options.canvas_sel, 350, 140);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = "bold 8pt Arial";
+  ctx.font = "10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, x || 350).addTabGlyph().
     setContext(ctx).draw();
 

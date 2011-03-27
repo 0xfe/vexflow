@@ -66,7 +66,7 @@ Vex.Flow.Test.TabNote.tickContext = function(options) {
   tickContext.setX(10);
   tickContext.setPadding(0);
 
-  equals(tickContext.getWidth(), 5);
+  equals(tickContext.getWidth(), 6);
 }
 
 Vex.Flow.Test.TabNote.showNote = function(tab_struct, stave, ctx, x) {
@@ -81,7 +81,7 @@ Vex.Flow.Test.TabNote.showNote = function(tab_struct, stave, ctx, x) {
 Vex.Flow.Test.TabNote.draw = function(options) {
   Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 140);
   var ctx = Vex.getCanvasContext(options.canvas_sel);
-  ctx.font = "bold 8pt Arial";
+  ctx.font = "10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();

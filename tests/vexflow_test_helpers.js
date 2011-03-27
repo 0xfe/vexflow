@@ -5,6 +5,8 @@
 
 Vex.Flow.Test = {}
 
+Vex.Flow.Test.Font = {size: 10}
+
 Vex.Flow.Test.genID = function() {
   return Vex.Flow.Test.genID.ID++;
 }

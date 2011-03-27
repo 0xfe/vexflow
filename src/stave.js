@@ -25,10 +25,11 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
     space_below_staff_ln: 4,  // in staff lines
     top_text_position: 1 // in staff lines
   };
+  Vex.Merge(this.options, options);
+
   this.height =
     (this.options.num_lines + this.options.space_above_staff_ln) *
     this.options.spacing_between_lines_px;
-  Vex.Merge(this.options, options);
 }
 
 Vex.Flow.Stave.prototype.setNoteStartX = function(x) {

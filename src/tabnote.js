@@ -126,12 +126,14 @@ Vex.Flow.TabNote.prototype.draw = function() {
     var glyph = this.glyphs[i];
     var tab_x = x - (glyph.width/2);
 
+    ctx.clearRect(tab_x - 2, y - 3, glyph.width + 6, 6);
+
     if (glyph.code) {
       Vex.Flow.renderGlyph(ctx, tab_x, y + 5 + glyph.shift_y,
           this.render_options.glyph_font_scale, glyph.code);
     } else {
       var text = glyph.text.toString();
-      ctx.fillText(text, tab_x, y + 4 );
+      ctx.fillText(text, tab_x, y + 4);
     }
   }
 

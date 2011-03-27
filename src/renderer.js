@@ -17,27 +17,32 @@ Vex.Flow.Renderer.Backends = {
   VML: 4
 }
 
-Vex.Flow.Renderer.buildContext = function(sel, backend, width, height) {
+Vex.Flow.Renderer.buildContext = function(sel,
+    backend, width, height, background) {
   var renderer = new Vex.Flow.Renderer(sel, backend);
   if (width && height) { renderer.resize(width, height); }
-  return renderer.getContext();
+
+  if (!background) background == "#eed";
+  var ctx = renderer.getContext();
+  ctx.setBackgroundFillStyle("#EEEEDD");
+  return ctx;
 }
 
-Vex.Flow.Renderer.getCanvasContext = function(sel, width, height) {
+Vex.Flow.Renderer.getCanvasContext = function(sel, width, height, background) {
   return Vex.Flow.Renderer.buildContext(sel,
       Vex.Flow.Renderer.Backends.CANVAS,
-      width, height);
+      width, height, background);
 }
 
-Vex.Flow.Renderer.getRaphaelContext = function(sel, width, height) {
+Vex.Flow.Renderer.getRaphaelContext = function(sel, width, height, background) {
   return Vex.Flow.Renderer.buildContext(sel,
       Vex.Flow.Renderer.Backends.RAPHAEL,
-      width, height);
+      width, height, background);
 }
 
 Vex.Flow.Renderer.bolsterCanvasContext = function(ctx) {
   ctx.clear = function() {
-    // TODO: get real widht and height of context.
+    // TODO: get real width and height of context.
     ctx.clearRect(0, 0, 2000,2000);
   }
   ctx.setFont = function(family, size, weight) {
@@ -46,6 +51,10 @@ Vex.Flow.Renderer.bolsterCanvasContext = function(ctx) {
   }
   ctx.setFillStyle = function(style) {
     this.fillStyle = style;
+    return this;
+  }
+  ctx.setBackgroundFillStyle = function(style) {
+    this.background_fillStyle = style;
     return this;
   }
   ctx.setStrokeStyle = function(style) {

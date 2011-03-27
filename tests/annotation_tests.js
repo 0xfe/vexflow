@@ -22,7 +22,7 @@ Vex.Flow.Test.Annotation.Start = function() {
 Vex.Flow.Test.Annotation.simple = function(options, contextBuilder) {
   var ctx = contextBuilder(options.canvas_sel, 500, 240);
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = "bold 8pt Arial";
+  ctx.font = " 10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, 450).
     addTabGlyph().setContext(ctx).draw();
 
@@ -52,7 +52,8 @@ Vex.Flow.Test.Annotation.standard = function(options, contextBuilder) {
 
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAnnotation(text) {
-    return (new Vex.Flow.Annotation(text)).setFont("Times", 8, "italic"); }
+    return (new Vex.Flow.Annotation(text)).setFont("Times",
+        Vex.Flow.Test.Font.size, "italic"); }
 
   var notes = [
     newNote({ keys: ["c/4", "e/4"], duration: "h"}).
@@ -68,7 +69,7 @@ Vex.Flow.Test.Annotation.standard = function(options, contextBuilder) {
 Vex.Flow.Test.Annotation.harmonic = function(options, contextBuilder) {
   var ctx = contextBuilder(options.canvas_sel, 500, 240);
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = "bold 8pt Arial";
+  ctx.font = " 10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, 450).
     addTabGlyph().setContext(ctx).draw();
 
@@ -82,7 +83,8 @@ Vex.Flow.Test.Annotation.harmonic = function(options, contextBuilder) {
       addModifier(newAnnotation("Harm."), 0),
     newNote({
       positions: [{str: 2, fret: 9}], duration: "h" }).
-        addModifier(newAnnotation("(8va)").setFont("Times", 8, "italic"), 0).
+        addModifier(newAnnotation("(8va)").setFont("Times",
+              Vex.Flow.Test.Font.size, "italic"), 0).
         addModifier(newAnnotation("A.H."), 0)
   ];
 
@@ -93,14 +95,14 @@ Vex.Flow.Test.Annotation.harmonic = function(options, contextBuilder) {
 Vex.Flow.Test.Annotation.picking = function(options, contextBuilder) {
   var ctx = contextBuilder(options.canvas_sel, 500, 240);
   ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-  ctx.setFont("Arial", 8, "bold");
+  ctx.setFont("Arial", Vex.Flow.Test.Font.size, "");
   var stave = new Vex.Flow.TabStave(10, 10, 450).
     addTabGlyph().setContext(ctx).draw();
 
   function newNote(tab_struct) { return new Vex.Flow.TabNote(tab_struct); }
   function newBend(text) { return new Vex.Flow.Bend(text); }
   function newAnnotation(text) { return new Vex.Flow.Annotation(text).
-    setFont("Times", 8, "italic"); }
+    setFont("Times", Vex.Flow.Test.Font.size, "italic"); }
 
   var notes = [
     newNote({
