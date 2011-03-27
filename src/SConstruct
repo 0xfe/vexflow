@@ -15,6 +15,7 @@ vexflow_sources = [
     "fonts/vexflow_font.js",
     "glyph.js",
     "stave.js",
+    "staveconnector.js",
     "tabstave.js",
     "tickcontext.js",
     "tickable.js",

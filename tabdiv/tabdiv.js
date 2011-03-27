@@ -139,6 +139,9 @@ Vex.Flow.TabDiv.prototype.drawInternal = function() {
         voice_tabnotes,
         voice_notes,
         this.width - 100);
+
+      (new Vex.Flow.StaveConnector(notestave, tabstave)).
+        setContext(this.ctx).draw();
     } else if (tabstave) {
       if (voice_tabnotes) Vex.Flow.Formatter.FormatAndDraw(
           this.ctx, tabstave, voice_tabnotes, this.width - 100);

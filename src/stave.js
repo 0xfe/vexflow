@@ -42,6 +42,12 @@ Vex.Flow.Stave.prototype.getTieEndX = function() {
   return this.x + this.width; }
 Vex.Flow.Stave.prototype.setContext = function(context) {
   this.context = context; return this; }
+Vex.Flow.Stave.prototype.getX = function() {
+  return this.x;
+}
+Vex.Flow.Stave.prototype.getNumLines = function() {
+  return this.options.num_lines;
+}
 Vex.Flow.Stave.prototype.setY = function(y) {
   this.y = y; return this;
 }
