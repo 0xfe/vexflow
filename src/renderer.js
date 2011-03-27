@@ -22,9 +22,9 @@ Vex.Flow.Renderer.buildContext = function(sel,
   var renderer = new Vex.Flow.Renderer(sel, backend);
   if (width && height) { renderer.resize(width, height); }
 
-  if (!background) background == "#eed";
+  if (!background) background = "#eed";
   var ctx = renderer.getContext();
-  ctx.setBackgroundFillStyle("#EEEEDD");
+  ctx.setBackgroundFillStyle(background);
   return ctx;
 }
 
