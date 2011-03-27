@@ -144,7 +144,8 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   }
 
   if (justifyWidth < this.minTotalWidth) throw new Vex.RERR("NoRoomForNotes",
-      "Justification width too small to fit all notes.");
+      "Justification width too small to fit all notes: " +
+      justifyWidth + " < " + this.minTotalWidth);
 
   // Figure out how many pixels to allocate per tick.
   var justified = false;

@@ -36,6 +36,8 @@ Vex.Flow.Stave.prototype.setNoteStartX = function(x) {
   this.start_x = x; return this; }
 Vex.Flow.Stave.prototype.getNoteStartX = function() {
   return this.start_x; }
+Vex.Flow.Stave.prototype.getNoteEndX = function() {
+  return this.x + this.width; }
 Vex.Flow.Stave.prototype.getTieStartX = function() {
   return this.start_x; }
 Vex.Flow.Stave.prototype.getTieEndX = function() {
@@ -94,7 +96,7 @@ Vex.Flow.Stave.prototype.getYForGlyphs = function() {
   return this.getYForLine(3);
 }
 
-Vex.Flow.Stave.prototype.addGlyph= function(glyph) {
+Vex.Flow.Stave.prototype.addGlyph = function(glyph) {
   glyph.setStave(this);
   this.glyphs.push(glyph);
   this.start_x += glyph.getMetrics().width;

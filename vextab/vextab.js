@@ -1048,7 +1048,7 @@ Vex.Flow.VexTab.prototype.genTabStave = function(params) {
     notestave = new Vex.Flow.Stave(20, this.height, 380).
       addClef(clef).addKeySignature(key_signature);
     if (time_signature != "") notestave.addTimeSignature(time_signature);
-    tabstave_start_x = notestave.start_x;
+    tabstave_start_x = notestave.getNoteStartX();
   }
 
   var tabstave = tablature ?
