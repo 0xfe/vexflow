@@ -26,12 +26,14 @@ Vex.Flow.RaphaelContext.prototype.init = function(element) {
   this.attributes = {
     "stroke-width": 0.3,
     "fill": "black",
+    "stroke": "black",
     "font": "10pt Arial"
   };
 
   this.background_attributes = {
     "stroke-width": 0,
     "fill": "white",
+    "stroke": "white",
     "font": "10pt Arial"
   };
 
@@ -55,6 +57,7 @@ Vex.Flow.RaphaelContext.prototype.setFillStyle = function(style) {
 
 Vex.Flow.RaphaelContext.prototype.setBackgroundFillStyle = function(style) {
   this.background_attributes.fill = style;
+  this.background_attributes.stroke = style;
   return this;
 }
 
