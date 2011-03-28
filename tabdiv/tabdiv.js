@@ -122,9 +122,6 @@ Vex.Flow.TabDiv.prototype.drawInternal = function() {
     var voice_ties = ties[i];
     var voice_notes = notes[i];
 
-    var justify_offset = 25;
-    var tab_justify_offset = 80;
-
     if(tabstave) {
       tabstave.setWidth(this.width - 50);
       tabstave.setContext(this.ctx).draw();
@@ -162,7 +159,7 @@ Vex.Flow.TabDiv.prototype.drawInternal = function() {
   }
 
   if (this.message) {
-    this.ctx.setFont("Times", 10, "bold italic");
+    this.ctx.setFont("Times", 10, "italic");
     this.ctx.fillText(this.message, (this.width / 2) - 40, this.height - 10);
   }
 
