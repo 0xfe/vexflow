@@ -134,7 +134,7 @@ Vex.Flow.VexTab.prototype.parse = function(code) {
   this.init();
 
   // Separate code into lines
-  var lines = code.split("\n");
+  var lines = code.split(/\r\n|\r|\n/);
   for (var i = 0; i < lines.length; ++i) {
     var line = lines[i];
     this.state.current_line++;
