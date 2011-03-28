@@ -3,6 +3,7 @@ div.vex-tabdiv {
   font-size: 18px;
   padding: 10px;
   color: #554;
+  white-space: pre;
 }
 
 div.vex-tabdiv .vex-canvas {
