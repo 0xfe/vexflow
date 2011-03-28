@@ -204,7 +204,7 @@ Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth) {
 }
 
 Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave) {
-  var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 10;
+  var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 20;
   this.createTickContexts(voices);
   this.preFormat(voice_width);
   return this;
