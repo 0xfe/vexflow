@@ -122,7 +122,6 @@ Vex.Flow.TabDiv.prototype.drawInternal = function() {
     var voice_ties = ties[i];
     var voice_notes = notes[i];
 
-    var voice_width = 0;
     var justify_offset = 25;
     var tab_justify_offset = 80;
 
@@ -134,25 +133,21 @@ Vex.Flow.TabDiv.prototype.drawInternal = function() {
     if (notestave) {
       notestave.setWidth(this.width - 50);
       notestave.setContext(this.ctx).draw();
-      voice_width = notestave.getNoteEndX() - notestave.getNoteStartX();
     }
 
     if (notestave && tabstave) {
       Vex.Flow.Formatter.FormatAndDrawTab(
         this.ctx,
-        tabstave, notestave,
+        tabstave,
+        notestave,
         voice_tabnotes,
-        voice_notes,
-        voice_width - justify_offset);
-
-      (new Vex.Flow.StaveConnector(notestave, tabstave)).
-        setContext(this.ctx).draw();
+        voice_notes);
     } else if (tabstave) {
       if (voice_tabnotes) Vex.Flow.Formatter.FormatAndDraw(
-          this.ctx, tabstave, voice_tabnotes, this.width - tab_justify_offset);
+          this.ctx, tabstave, voice_tabnotes);
     } else if (notestave) {
       if (voice_notes) Vex.Flow.Formatter.FormatAndDraw(
-          this.ctx, notestave, voice_notes, voice_width - justify_offset);
+          this.ctx, notestave, voice_notes);
     }
 
     // Draw ties

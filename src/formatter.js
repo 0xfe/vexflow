@@ -18,19 +18,19 @@ Vex.Flow.Formatter = function(){
 }
 
 // Helper function to format and draw a single voice
-Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes, width) {
+Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes) {
   var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    format([voice], width);
+    formatToStave([voice], stave);
 
   voice.draw(ctx, stave);
 }
 
 // Helper function to format and draw a single voice
 Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
-    tabstave, stave, tabnotes, notes, width) {
+    tabstave, stave, tabnotes, notes) {
 
   var tabvoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
   tabvoice.addTickables(tabnotes);
@@ -41,10 +41,13 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
   var formatter = new Vex.Flow.Formatter().
     joinVoices([tabvoice]).
     joinVoices([notevoice]).
-    format([tabvoice, notevoice], width);
+    formatToStave([tabvoice, notevoice], stave);
 
   tabvoice.draw(ctx, tabstave);
   notevoice.draw(ctx, stave);
+
+  // Draw a connector between tab and note staves.
+  (new Vex.Flow.StaveConnector(stave, tabstave)).setContext(ctx).draw();
 }
 
 Vex.Flow.Formatter.prototype.getMinTotalWidth = function() {
@@ -197,5 +200,12 @@ Vex.Flow.Formatter.prototype.joinVoices = function(voices) {
 Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth) {
   this.createTickContexts(voices);
   this.preFormat(justifyWidth);
+  return this;
+}
+
+Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave) {
+  var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 10;
+  this.createTickContexts(voices);
+  this.preFormat(voice_width);
   return this;
 }
