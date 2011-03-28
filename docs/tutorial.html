@@ -374,24 +374,8 @@
       addAccidental(2, new Vex.Flow.Accidental("#"))
   ];
 
-  // Create a voice in 4/4
-  function create_4_4_voice() {
-    return new Vex.Flow.Voice({
-      num_beats: 4,
-      beat_value: 4,
-      resolution: Vex.Flow.RESOLUTION
-    });
-  }
-
-  // Create voices and add notes to each of them.
-  var voice = create_4_4_voice().addTickables(notes);
-
-  // Format and justify the notes to 500 pixels
-  var formatter = new Vex.Flow.Formatter().
-    joinVoices([voice]).format([voice], 500);
-
-  // Render voice
-  voice.draw(ctx, stave);
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
 </script>
       </div>
       In the above example, note that even though we set the note names and
@@ -410,6 +394,10 @@
       This enables higher level tools and libraries
       (such as <a href="http://vexflow.com/vextab">VexTab</a>) to make rendering
       decisions based on their own notational semantics.
+      <p/>
+      Also notice that we used the <code>FormatAndDraw</code> helper function
+      to create a 4/4 voice out of the notes, justify it to the stave, and
+      render all of it.
       <p/>
       Lets add a few more modifiers and see how they position themselves.
       <br/>
@@ -430,7 +418,6 @@
   stave.setContext(ctx).draw();
 
   var notes = [
-    // Quarter Cm#5
     new Vex.Flow.StaveNote(
       { keys: ["g/4", "b/4", "cb/5", "e/5", "g#/5", "b/5"],
         duration: "h" }).
@@ -443,24 +430,8 @@
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "h" })
   ];
 
-  // Create a voice in 4/4
-  function create_4_4_voice() {
-    return new Vex.Flow.Voice({
-      num_beats: 4,
-      beat_value: 4,
-      resolution: Vex.Flow.RESOLUTION
-    });
-  }
-
-  // Create voices and add notes to each of them.
-  var voice = create_4_4_voice().addTickables(notes);
-
-  // Format and justify the notes to 500 pixels
-  var formatter = new Vex.Flow.Formatter().
-    joinVoices([voice]).format([voice], 500);
-
-  // Render voice
-  voice.draw(ctx, stave);
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
 </script>
     </div>
     Above, the accidentals are positioned such that they don't overlap but
@@ -552,23 +523,10 @@
   var beam2 = new Vex.Flow.Beam(notes2);
   var beam3 = new Vex.Flow.Beam(notes3);
 
-  // Create voice and add notes
-  var voice = new Vex.Flow.Voice({
-      num_beats: 4,
-      beat_value: 4,
-      resolution: Vex.Flow.RESOLUTION
-    }).
-    addTickables(notes).
-    addTickables(notes2).
-    addTickables(notes3).
-    addTickables(notes4);
+  var all_notes = notes.concat(notes2).concat(notes3).concat(notes4);
 
-  // Format and justify the notes to 550 pixels
-  var formatter = new Vex.Flow.Formatter().
-    joinVoices([voice]).format([voice], 550);
-
-  // Render voice
-  voice.draw(ctx, stave);
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, stave, all_notes);
 
   // Render beams
   beam.setContext(ctx).draw();
@@ -620,20 +578,21 @@
   ];
 
   var notes3 = [
-    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4"], duration: "16" }),
-    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "16" }).
-      addAccidental(0, new Vex.Flow.Accidental("#")),
-    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "32" }),
-    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "32" }),
-    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "16" })
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" }).
+      addAccidental(0, new Vex.Flow.Accidental("#"))
   ];
 
-  var notes4 = [ new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }) ];
+  var notes4 = [ 
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" }),
+  ];
 
   // Create the beams
   var beam = new Vex.Flow.Beam(notes);
   var beam2 = new Vex.Flow.Beam(notes2);
   var beam3 = new Vex.Flow.Beam(notes3);
+  var beam4 = new Vex.Flow.Beam(notes4);
 
   // Create a tie between the last note of the first group and the
   // first note of the last group.
@@ -652,28 +611,16 @@
     last_indices: [0, 1]
   });
 
-  // Create voice and add notes
-  var voice = new Vex.Flow.Voice({
-      num_beats: 4,
-      beat_value: 4,
-      resolution: Vex.Flow.RESOLUTION
-    }).
-    addTickables(notes).
-    addTickables(notes2).
-    addTickables(notes3).
-    addTickables(notes4);
+  var all_notes = notes.concat(notes2).concat(notes3).concat(notes4);
 
-  // Format and justify the notes to 550 pixels
-  var formatter = new Vex.Flow.Formatter().
-    joinVoices([voice]).format([voice], 550);
-
-  // Render voice
-  voice.draw(ctx, stave);
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, stave, all_notes);
 
   // Render beams
   beam.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
   beam3.setContext(ctx).draw();
+  beam4.setContext(ctx).draw();
 
   // Render ties
   tie.setContext(ctx).draw();
@@ -683,6 +630,67 @@
     And there you have ties and beams!
   </div>
 
+    <h2>Step 5: Guitar Tablature</h2>
+    <div class="description five">
+      VexFlow can also render guitar tablature. The mechanics for displaying
+      tabs are the same as those for standard notation, except that you
+      use different classes for staves and notes.
+      <p/>
+      Let's write some tab.
+      <br/>
+      <code class="example a" example="a"></code>
+      <div class="example a" example="a">
+        <canvas width=525 height=160></canvas>
+        <p/>
+        <script>
+  // Get the rendering context
+  var canvas = $("div.five div.a canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+  var ctx = renderer.getContext();
+  ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+
+  // Create and draw the tablature stave
+  var tabstave = new Vex.Flow.TabStave(10, 0, 500);
+  tabstave.addTabGlyph();
+  tabstave.setContext(ctx).draw();
+
+  // Create some notes
+  var notes = [
+    // A single note
+    new Vex.Flow.TabNote({
+      positions: [{str: 3, fret: 7}],
+      duration: "q"}),
+
+    // A chord with the note on the 3rd string bent
+    new Vex.Flow.TabNote({
+      positions: [{str: 2, fret: 10},
+                  {str: 3, fret: 9}],
+      duration: "q"}).
+    addModifier(new Vex.Flow.Bend("Full"), 1),
+
+    // A single note with a harsh vibrato
+    new Vex.Flow.TabNote({
+      positions: [{str: 2, fret: 5}],
+      duration: "h"}).
+    addModifier(new Vex.Flow.Vibrato().setHarsh(true).setVibratoWidth(70), 0)
+  ];
+
+  Vex.Flow.Formatter.FormatAndDraw(ctx, tabstave, notes);
+        </script>
+      </div>
+      Above, we replaced <code>Stave</code> with <code>TabStave</code> and
+      <code>StaveNote</code> with <code>TabNote</code>. We also added some
+      bend and vibrato modifiers.
+      <p/>
+      There are two things we have to manually specify here -- the font style,
+      and the background fill color. The former is used to display fret numbers,
+      annotations, and other text. The latter is only required
+      for the SVG backend (although using it with Canvas is harmless), and is
+      used to create an internal implementation of <code>clearRect</code>.  A
+      custom <code>clearRect</code> is required to clear sections of the
+      canvas. This is not supported by SVG because it has no "clear" semantics.
+    </div>
     <center>
     <h2>Step N + 1: Coming soon</h2>
       <p/>
