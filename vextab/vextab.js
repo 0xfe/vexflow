@@ -83,6 +83,7 @@ Vex.Flow.VexTab.prototype.init = function() {
     current_line: 0,
     current_stave: -1,
     current_duration: "8",
+    current_key: "C",
     has_notation: false,
     has_tab: true,
     beam_start: null
@@ -213,6 +214,7 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
   var has_clef = "treble";
   var has_key = "C";
   var has_time = "";
+
   for (var i = 1; i < tokens.length; ++i) {
     var pair = this.parseKeyValue(tokens[i]);
     if (pair.key.toLowerCase() == "notation") {
@@ -236,15 +238,14 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
         case "tenor": has_clef = "tenor"; break;
         case "bass": has_clef = "bass"; break;
         default: this.parseError(
-                     'clef must be treble, alto, tenor, or bass: ' + pair.value);
+                   'clef must be treble, alto, tenor, or bass: ' + pair.value);
       }
     } else if (pair.key.toLowerCase() == "key") {
       if (Vex.Flow.keySignature.keySpecs[pair.value]) {
         has_key = pair.value;
+        this.state.current_key = pair.value;
       } else {
-        var keys = ""
-        for (var i in Vex.Flow.keySignature.keySpecs) { keys += i + " " }
-        this.parseError('key must be one of these: ' + keys)
+        this.parseError('Invalid key signature: ' + pair.value);
       }
     } else if (pair.key.toLowerCase() == "time") {
       var ts = new Vex.Flow.TimeSignature();
@@ -253,7 +254,7 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
         has_time = pair.value;
       } catch (e) {
         this.parseError(
-            'time signature must be: C, C|, or number/number (example 4/4)')
+            'Invalid time signature: ' + pair.value)
       }
     } else {
       this.parseError("Invalid parameter for tabstave: " + pair.key)
@@ -845,28 +846,28 @@ Vex.Flow.VexTab.prototype.genElements = function() {
   // Add bends.
   var bends = this.parse_state.bends;
   for (var i = 0; i < bends.length; ++i) {
-      var bend = bends[i];
-      var from_fret = parseInt(positions[bend.position][bend.index].fret);
-      var to_fret;
+    var bend = bends[i];
+    var from_fret = parseInt(positions[bend.position][bend.index].fret);
+    var to_fret;
 
-      // Bent notes must not persist in position list.
-      if (bends[i].to_fret) {
+    // Bent notes must not persist in position list.
+    if (bends[i].to_fret) {
       to_fret = bends[i].to_fret;
-      } else {
+    } else {
       to_fret = parseInt(positions[bend.position + 1][bend.index].fret);
 
       for (var count = 1; count <= bend.count; ++count) {
           tabnotes[bend.position + count].persist = false;
       }
-      }
+    }
 
-      var release = false;
-      if (bend.count > 1) release = true;
+    var release = false;
+    if (bend.count > 1) release = true;
 
-      var bent_note = tabnotes[bend.position].note;
+    var bent_note = tabnotes[bend.position].note;
 
-      // Calculate bend amount and annotate appropriately.
-      switch (to_fret - from_fret) {
+    // Calculate bend amount and annotate appropriately.
+    switch (to_fret - from_fret) {
       case 1: bent_note.addModifier(
                   new Vex.Flow.Bend("1/2", release), bend.index); break;
       case 2: bent_note.addModifier(
@@ -877,7 +878,7 @@ Vex.Flow.VexTab.prototype.genElements = function() {
                   new Vex.Flow.Bend("2 Steps", release), bend.index); break;
       default: bent_note.addModifier(
                   new Vex.Flow.Bend("Bend to " + to_fret, release), bend.index);
-      }
+    }
   }
 
   function persistentPosition(pos) {
