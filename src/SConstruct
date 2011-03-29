@@ -42,6 +42,7 @@ vexflow_sources = [
     "keysignature.js",
     "timesignature.js",
     "clef.js",
+    "music.js",
     "renderer.js",
     "raphaelcontext.js"
     ]

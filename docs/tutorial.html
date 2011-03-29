@@ -66,7 +66,7 @@
   <script>
     /* Take raw javascript code, and return moderately useful HTML */
     function prettify_code(code) {
-      var lines = code.split("\n");
+      var lines = code.split(/\r\n|\n|\r/);
       var new_lines = [];
       for (var j = 0; j < lines.length; ++j) {
         code = lines[j];

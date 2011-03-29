@@ -156,6 +156,19 @@ Vex.SortAndUnique = function(arr, cmp) {
 }
 
 /**
+ * Check if array "a" contains "obj"
+ */
+Vex.Contains = function(a, obj) {
+  var i = a.length;
+  while (i--) {
+    if (a[i] === obj) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * @param {string} canvas_sel The selector id for the canvas.
  * @return {!Object} A 2D canvas context.
  */
