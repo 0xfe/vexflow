@@ -46,7 +46,9 @@ Vex.Flow.KeyManager.prototype.reset = function() {
       this.music.getNoteValue(this.keyString),
       Vex.Flow.KeyManager.scales[this.keyParts.type]);
 
-  this.scaleMap = {}
+  this.scaleMap = {};
+  this.scaleMapByValue = {};
+  this.originalScaleMapByValue = {};
 
   var noteLocation = Vex.Flow.Music.root_indices[this.keyParts.root];
 
@@ -56,9 +58,10 @@ Vex.Flow.KeyManager.prototype.reset = function() {
 
     var noteName = this.music.getRelativeNoteName(rootName, this.scale[i]);
     this.scaleMap[rootName] = noteName;
+    this.scaleMapByValue[this.scale[i]] = noteName;
+    this.originalScaleMapByValue[this.scale[i]] = noteName;
   }
 
-  Vex.L(this.scaleMap);
   return this;
 }
 
@@ -76,21 +79,65 @@ Vex.Flow.KeyManager.prototype.selectNote = function(note) {
   note = note.toLowerCase();
   var parts = this.music.getNoteParts(note);
 
-  // First look for matching note
+  // First look for matching note in our altered scale
   var scaleNote = this.scaleMap[parts.root];
+  var modparts = this.music.getNoteParts(scaleNote);
 
-  if (scaleNote == note) {
-    return scaleNote;
+  if (scaleNote == note) return {
+    "note": scaleNote,
+    "accidental": parts.accidental,
+    "change": false
   }
 
-  // Then look for equavalent note
-  for (var i = 0; i < this.scale.length; ++i) {
-    if (this.music.getNoteValue(note) == this.scale[i]) {
-      return note;
+  // Then search for a note of equivalent value in our altered scale
+  var valueNote = this.scaleMapByValue[this.music.getNoteValue(note)];
+  if (valueNote != null) {
+    return {
+      "note": valueNote,
+      "accidental": this.music.getNoteParts(valueNote).accidental,
+      "change": false
+    }
+  }
+
+  // Then search for a note of equivalent value in the original scale
+  var originalValueNote = this.originalScaleMapByValue[
+    this.music.getNoteValue(note)];
+  if (originalValueNote != null) {
+    this.scaleMap[modparts.root] = originalValueNote;
+    delete this.scaleMapByValue[this.music.getNoteValue(scaleNote)];
+    this.scaleMapByValue[this.music.getNoteValue(note)] = originalValueNote;
+    return {
+      "note": originalValueNote,
+      "accidental": this.music.getNoteParts(originalValueNote).accidental,
+      "change": true
     }
   }
 
   // Then try to unmodify a currently modified note.
-  // var modparts = this.music.getNoteParts(scaleNote);
-  // if (modparts.root == note)
+  if (modparts.root == note) {
+    delete this.scaleMapByValue[
+      this.music.getNoteValue(this.scaleMap[parts.root])];
+    this.scaleMapByValue[this.music.getNoteValue(modparts.root)] =
+      modparts.root;
+    this.scaleMap[modparts.root] = modparts.root;
+    return {
+      "note": modparts.root,
+      "accidental": null,
+      "change": true
+    }
+  }
+
+  // Last resort -- shitshoot
+  delete this.scaleMapByValue[
+    this.music.getNoteValue(this.scaleMap[parts.root])];
+  this.scaleMapByValue[this.music.getNoteValue(note)] = note;
+
+  delete this.scaleMap[modparts.root];
+  this.scaleMap[modparts.root] = note;
+
+  return {
+    "note": note,
+    "accidental": parts.accidental,
+    "change": true
+  }
 }
