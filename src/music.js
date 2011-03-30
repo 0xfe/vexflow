@@ -12,40 +12,42 @@ Vex.Flow.Music = function() {
   this.init();
 }
 
+Vex.Flow.Music.NUM_TONES = 12;
+
 Vex.Flow.Music.roots = [ "c", "d", "e", "f", "g", "a", "b" ];
 
-Vex.Flow.Music.notes = [
-  "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"
+Vex.Flow.Music.canonical_notes = [
+  "c", "c#", "d", "d#",
+  "e", "f", "f#", "g",
+  "g#", "a", "a#", "b"
+];
+
+Vex.Flow.Music.diatonic_intervals = [
+  "unison", "m2", "M2", "m3", "M3",
+  "p4", "dim5", "p5", "aug5", "M6",
+  "b7", "M7", "octave"
 ];
 
 Vex.Flow.Music.intervals = {
-  "u":  0,
-  "m2": 1,
-  "b2": 1,
-  "2": 2,
-  "M2": 2,
-  "m3": 3,
-  "b3": 3,
-  "M3": 4,
-  "3": 4,
-  "4":  5,
-  "p4":  5,
-  "#4": 6,
-  "b5": 6,
-  "5":  7,
-  "p5":  7,
-  "#5": 8,
-  "b6": 8,
-  "6":  9,
-  "M6":  9,
-  "b7": 10,
-  "m7": 10,
-  "M7": 11
+  "u":  0, "unison": 0,
+  "m2": 1, "b2": 1, "min2": 1, "S": 1, "H": 1,
+  "2": 2, "M2": 2, "maj2": 2, "T": 2, "W": 2,
+  "m3": 3, "b3": 3, "min3": 3,
+  "M3": 4, "3": 4, "maj3": 4,
+  "4":  5, "p4":  5,
+  "#4": 6, "b5": 6, "aug4": 6, "dim5": 6,
+  "5":  7, "p5":  7,
+  "#5": 8, "b6": 8, "aug5": 8,
+  "6":  9, "M6":  9, "maj6": 9,
+  "b7": 10, "m7": 10, "min7": 10, "dom7": 10,
+  "M7": 11, "maj7": 11,
+  "8": 12, "octave": 12
 };
 
 Vex.Flow.Music.scales = {
-  major: ["M2", "M2", "m2", "M2", "M2", "M2", "m2"]
-}
+  major: [2, 2, 1, 2, 2, 2, 1],
+  dorian: [2, 1, 2, 2, 2, 1, 2]
+};
 
 Vex.Flow.Music.accidentals = [ "bb", "b", "n", "#", "##" ];
 
@@ -92,8 +94,7 @@ Vex.Flow.Music.noteValues = {
   'b##': { root_index: 6, int_val: 13 },
   'bb':  { root_index: 6, int_val: 10 },
   'bbb': { root_index: 6, int_val: 9 }
-}
-
+};
 
 Vex.Flow.Music.prototype.init = function() {}
 
@@ -139,6 +140,24 @@ Vex.Flow.Music.prototype.getIntervalValue = function(intervalString) {
   return value;
 }
 
+Vex.Flow.Music.prototype.getCanonicalNoteName = function(noteValue) {
+  if (noteValue == null || noteValue < 0 ||
+      noteValue > (Vex.Flow.Music.NUM_TONES - 1))
+    throw new Vex.RERR("BadArguments",
+                       "Invalid note value: " + noteValue);
+
+  return Vex.Flow.Music.canonical_notes[noteValue];
+}
+
+Vex.Flow.Music.prototype.getCanonicalIntervalName = function(intervalValue) {
+  if (intervalValue == null || intervalValue < 0 ||
+      intervalValue > (Vex.Flow.Music.NUM_TONES - 1))
+    throw new Vex.RERR("BadArguments",
+                       "Invalid interval value: " + intervalValue);
+
+  return Vex.Flow.Music.diatonic_intervals[intervalValue];
+}
+
 /* Given a note, interval, and interval direction, product the
  * relative note.
  */
@@ -148,8 +167,33 @@ Vex.Flow.Music.prototype.getRelativeNoteValue =
   if (direction != 1 && direction != -1)
     throw new Vex.RERR("BadArguments", "Invalid direction: " + direction);
 
-  var sum = (noteValue + (direction * intervalValue)) % 12;
-  if (sum < 0) sum = 12 + sum;
+  var sum = (noteValue + (direction * intervalValue)) %
+    Vex.Flow.Music.NUM_TONES;
+  if (sum < 0) sum += Vex.Flow.Music.NUM_TONES;
 
   return sum;
+}
+
+Vex.Flow.Music.prototype.getScaleTones = function(key, intervals) {
+  var tones = [];
+  tones.push(key);
+
+  var nextNote = key;
+  for (var i = 0; i < intervals.length; ++i) {
+    nextNote = this.getRelativeNoteValue(nextNote,
+                                         intervals[i]);
+    tones.push(nextNote);
+  }
+
+  return tones;
+}
+
+/* Returns the interval of a note, given a diatonic scale.
+ *
+ * E.g., Given the scale C, and the note E, returns M3
+ */
+Vex.Flow.Music.prototype.getIntervalBetween = function(note1, note2) {
+  var difference = note2 - note1;
+  if (difference < 0) difference += Vex.Flow.Music.NUM_TONES;
+  return difference;
 }

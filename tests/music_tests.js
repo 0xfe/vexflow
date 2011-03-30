@@ -11,6 +11,10 @@ Vex.Flow.Test.Music.Start = function() {
   test("Note Values", Vex.Flow.Test.Music.noteValue);
   test("Interval Values", Vex.Flow.Test.Music.intervalValue);
   test("Relative Notes", Vex.Flow.Test.Music.relativeNotes);
+  test("Canonical Notes", Vex.Flow.Test.Music.canonicalNotes);
+  test("Canonical Intervals", Vex.Flow.Test.Music.canonicalNotes);
+  test("Scale Tones", Vex.Flow.Test.Music.scaleTones);
+  test("Scale Intervals", Vex.Flow.Test.Music.scaleIntervals);
 }
 
 Vex.Flow.Test.Music.validNotes = function(options) {
@@ -129,4 +133,65 @@ Vex.Flow.Test.Music.relativeNotes = function(options) {
   var value = music.getRelativeNoteValue(music.getNoteValue("g"),
       music.getIntervalValue("p5"));
   equals(value, 2);
+}
+
+Vex.Flow.Test.Music.canonicalNotes = function(options) {
+  expect(3);
+
+  var music = new Vex.Flow.Music();
+
+  equals(music.getCanonicalNoteName(0), "c");
+  equals(music.getCanonicalNoteName(2), "d");
+
+  try {
+    music.getCanonicalNoteName(-1);
+  } catch(e) {
+    ok(true, "Invalid note value");
+  }
+}
+
+Vex.Flow.Test.Music.canonicalIntervals = function(options) {
+  expect(3);
+
+  var music = new Vex.Flow.Music();
+
+  equals(music.getCanonicalIntervalName(0), "unison");
+  equals(music.getCanonicalIntervalName(2), "M2");
+
+  try {
+    music.getCanonicalIntervalName(-1);
+  } catch(e) {
+    ok(true, "Invalid interval value");
+  }
+}
+
+Vex.Flow.Test.Music.scaleTones = function(options) {
+  expect(9);
+
+  var music = new Vex.Flow.Music();
+
+  var c_major = music.getScaleTones(
+      music.getNoteValue("c"), Vex.Flow.Music.scales.major);
+  var values = ["c", "d", "e", "f", "g", "a", "b", "c"];
+
+  equals(c_major.length, 8);
+
+  for (var i = 0; i < c_major.length; ++i) {
+    equals(music.getCanonicalNoteName(c_major[i]), values[i]);
+  }
+}
+
+Vex.Flow.Test.Music.scaleIntervals = function(options) {
+  expect(4);
+
+  var music = new Vex.Flow.Music();
+
+  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+         music.getNoteValue("c"), music.getNoteValue("d"))), "M2");
+  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+         music.getNoteValue("g"), music.getNoteValue("c"))), "p4");
+  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+         music.getNoteValue("c"), music.getNoteValue("c"))), "unison");
+  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+         music.getNoteValue("f"), music.getNoteValue("cb"))), "dim5");
 }
