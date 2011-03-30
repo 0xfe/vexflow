@@ -44,7 +44,6 @@ Vex.Flow.Music.diatonic_accidentals = {
   "octave": {note: 7, accidental: 0}
 }
 
-
 Vex.Flow.Music.intervals = {
   "u":  0, "unison": 0,
   "m2": 1, "b2": 1, "min2": 1, "S": 1, "H": 1,
@@ -63,7 +62,8 @@ Vex.Flow.Music.intervals = {
 
 Vex.Flow.Music.scales = {
   major: [2, 2, 1, 2, 2, 2, 1],
-  dorian: [2, 1, 2, 2, 2, 1, 2]
+  dorian: [2, 1, 2, 2, 2, 1, 2],
+  minor: [2, 1, 2, 2, 1, 2, 2]
 };
 
 Vex.Flow.Music.accidentals = [ "bb", "b", "n", "#", "##" ];
@@ -199,6 +199,14 @@ Vex.Flow.Music.prototype.getRelativeNoteValue =
   return sum;
 }
 
+/* Return scale tones, given intervals. Each successive interval is
+ * relative to the previous one, e.g., Major Scale:
+ *
+ *   TTSTTTS = [2,2,1,2,2,2,1]
+ *
+ * When used with key = 0, returns C scale (which is isomorphic to
+ * interval list).
+ */
 Vex.Flow.Music.prototype.getScaleTones = function(key, intervals) {
   var tones = [];
   tones.push(key);
