@@ -182,7 +182,7 @@ Vex.Flow.Test.Music.scaleTones = function(options) {
 }
 
 Vex.Flow.Test.Music.scaleIntervals = function(options) {
-  expect(4);
+  expect(6);
 
   var music = new Vex.Flow.Music();
 
@@ -194,4 +194,10 @@ Vex.Flow.Test.Music.scaleIntervals = function(options) {
          music.getNoteValue("c"), music.getNoteValue("c"))), "unison");
   equals(music.getCanonicalIntervalName(music.getIntervalBetween(
          music.getNoteValue("f"), music.getNoteValue("cb"))), "dim5");
+
+  // Forwards and backwards
+  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+         music.getNoteValue("d"), music.getNoteValue("c"), 1)), "b7");
+  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+         music.getNoteValue("d"), music.getNoteValue("c"), -1)), "M2");
 }
