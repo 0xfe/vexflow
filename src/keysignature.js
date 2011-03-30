@@ -3,11 +3,11 @@
 //
 // Requires vex.js.
 
-/** 
- * @constructor 
+/**
+ * @constructor
  */
-Vex.Flow.KeySignature = function(keySpec) { 
-  if (arguments.length > 0) this.init(keySpec); 
+Vex.Flow.KeySignature = function(keySpec) {
+  if (arguments.length > 0) this.init(keySpec);
 }
 
 Vex.Flow.KeySignature.prototype = new Vex.Flow.StaveModifier();
@@ -33,7 +33,6 @@ Vex.Flow.KeySignature.prototype.addModifier = function(stave) {
   }
 }
 
-
 Vex.Flow.KeySignature.prototype.addToStave = function(stave, firstGlyph) {
   if (this.accList.length == 0)
     return this;
@@ -45,4 +44,3 @@ Vex.Flow.KeySignature.prototype.addToStave = function(stave, firstGlyph) {
   this.addModifier(stave);
   return this;
 }
-

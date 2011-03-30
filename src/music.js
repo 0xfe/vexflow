@@ -3,7 +3,8 @@
 //
 // This class implements some standard music theory routines.
 //
-// requires: vex.js
+// requires: vex.js   (Vex)
+// requires: flow.js  (Vex.Flow)
 
 /**
  * @constructor
@@ -15,6 +16,16 @@ Vex.Flow.Music = function() {
 Vex.Flow.Music.NUM_TONES = 12;
 
 Vex.Flow.Music.roots = [ "c", "d", "e", "f", "g", "a", "b" ];
+Vex.Flow.Music.root_values = [ 0, 2, 4, 5, 7, 9, 11 ];
+Vex.Flow.Music.root_indices = {
+  "c": 0,
+  "d": 1,
+  "e": 2,
+  "f": 3,
+  "g": 4,
+  "a": 5,
+  "b": 6
+};
 
 Vex.Flow.Music.canonical_notes = [
   "c", "c#", "d", "d#",
@@ -150,6 +161,34 @@ Vex.Flow.Music.prototype.getNoteParts = function(noteString) {
   }
 }
 
+Vex.Flow.Music.prototype.getKeyParts = function(keyString) {
+  if (!keyString || keyString.length < 1)
+    throw new Vex.RERR("BadArguments", "Invalid key: " + keyString);
+
+  var key = keyString.toLowerCase();
+
+  // Support Major, Minor, Melodic Minor, and Harmonic Minor key types.
+  var regex = /^([cdefgab])(b|#)?(mel|harm|m|M)?$/;
+  var match = regex.exec(key);
+
+  if (match != null) {
+    var root = match[1];
+    var accidental = match[2];
+    var type = match[3];
+
+    // Unspecified type implies major
+    if (!type) type = "M";
+
+    return {
+      'root': root,
+      'accidental': accidental,
+      'type': type
+    }
+  } else {
+    throw new Vex.RERR("BadArguments", "Invalid key: " + keyString);
+  }
+}
+
 Vex.Flow.Music.prototype.getNoteValue = function(noteString) {
   var value = Vex.Flow.Music.noteValues[noteString];
   if (value == null)
@@ -199,6 +238,44 @@ Vex.Flow.Music.prototype.getRelativeNoteValue =
   return sum;
 }
 
+Vex.Flow.Music.prototype.getRelativeNoteName =
+  function(root, noteValue) {
+  var parts = this.getNoteParts(root);
+  var rootValue = this.getNoteValue(parts.root);
+  var interval = noteValue - rootValue;
+
+  if (Math.abs(interval) > Vex.Flow.Music.NUM_TONES - 3) {
+    var multiplier = 1;
+    if (interval > 0 ) multiplier = -1;
+
+    // Possibly wrap around. (Add +1 for modulo operator)
+    var reverse_interval = (((noteValue + 1) + (rootValue + 1)) %
+      Vex.Flow.Music.NUM_TONES) * multiplier;
+
+    if (Math.abs(reverse_interval) > 2) {
+      throw new Vex.RERR("BadArguments", "Notes not related: " + root + ", " +
+                        noteValue);
+    } else {
+      interval = reverse_interval;
+    }
+  }
+
+  if (Math.abs(interval) > 2)
+      throw new Vex.RERR("BadArguments", "Notes not related: " + root + ", " +
+                        noteValue);
+
+  var relativeNoteName = parts.root;
+  if (interval > 0) {
+    for (var i = 1; i <= interval; ++i)
+      relativeNoteName += "#";
+  } else if (interval < 0) {
+    for (var i = -1; i >= interval; --i)
+      relativeNoteName += "b";
+  }
+
+  return relativeNoteName;
+}
+
 /* Return scale tones, given intervals. Each successive interval is
  * relative to the previous one, e.g., Major Scale:
  *
@@ -215,7 +292,7 @@ Vex.Flow.Music.prototype.getScaleTones = function(key, intervals) {
   for (var i = 0; i < intervals.length; ++i) {
     nextNote = this.getRelativeNoteValue(nextNote,
                                          intervals[i]);
-    tones.push(nextNote);
+    if (nextNote != key) tones.push(nextNote);
   }
 
   return tones;
