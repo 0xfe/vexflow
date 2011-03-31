@@ -570,7 +570,7 @@ Vex.Flow.VexTab.prototype.parseChordBend = function() {
   if (isNaN(fret)) this.parseError("Expecting fret: " + this.parse_state.value);
 
   // If we're already inside a bend, then mark this as a release, otherwise
-  // create a new bendj
+  // create a new bend
   if (this.parse_state.inside_bend) {
     var this_bend = this.parse_state.bends.length - 1;
     // We're actually incrementing a bend count here because we want to

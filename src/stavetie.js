@@ -40,7 +40,7 @@ Vex.Flow.StaveTie.prototype.init = function(notes, text) {
       text_shift_x: 0,
       first_x_shift: 0,
       last_x_shift: 0,
-      y_shift: 3,
+      y_shift: 7,
       tie_spacing: 0,
       font: { family: "Arial", size: 10, style: "" }
     };
@@ -94,6 +94,11 @@ Vex.Flow.StaveTie.prototype.renderTie = function(params) {
   var ctx = this.context;
   var cp1 = this.render_options.cp1;
   var cp2 = this.render_options.cp2;
+
+  if (Math.abs(params.last_x_px - params.first_x_px) < 10) {
+    cp1 = 2; cp2 = 8;
+  }
+
   var first_x_shift = this.render_options.first_x_shift;
   var last_x_shift = this.render_options.last_x_shift;
   var y_shift = this.render_options.y_shift * params.direction;
