@@ -80,6 +80,7 @@ Vex.Flow.VexTab.prototype.init = function() {
   // Pre-parser state. This is used for error-reporting and
   // element generation.
   this.state = {
+    key_manager: new Vex.Flow.KeyManager("c"),
     current_line: 0,
     current_stave: -1,
     current_duration: "8",
@@ -89,6 +90,7 @@ Vex.Flow.VexTab.prototype.init = function() {
     beam_start: null
   };
 
+  this.music = new Vex.Flow.Music();
   this.valid = false;         // Valid (parseable) VexTab?
   this.last_error = "";       // Last error message generated.
   this.last_error_line = 0;   // Line number of last error.
@@ -215,6 +217,8 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
   var has_key = "C";
   var has_time = "";
 
+  this.state.key_manager.reset();
+
   for (var i = 1; i < tokens.length; ++i) {
     var pair = this.parseKeyValue(tokens[i]);
     if (pair.key.toLowerCase() == "notation") {
@@ -244,6 +248,7 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
       if (Vex.Flow.keySignature.keySpecs[pair.value]) {
         has_key = pair.value;
         this.state.current_key = pair.value;
+        this.state.key_manager.setKey(pair.value);
       } else {
         this.parseError('Invalid key signature: ' + pair.value);
       }
@@ -823,10 +828,32 @@ Vex.Flow.VexTab.prototype.genElements = function() {
       for (var j = 0; j < position.length; ++j) {
         var notefret = position[j];
         var spec = this.tuning.getNoteForFret(notefret.fret, notefret.str);
+        var spec_props = Vex.Flow.keyProperties(spec);
 
-        var props = Vex.Flow.keyProperties(spec);
-        accidentals.push(props.accidental);
-        keys.push(spec);
+        var selected_note = this.state.key_manager.selectNote(spec_props.key);
+
+        if (selected_note.change) {
+          if (selected_note.accidental == null)
+            accidentals.push("n")
+          else accidentals.push(selected_note.accidental);
+        } else {
+          accidentals.push(null);
+        }
+
+        var new_note = selected_note.note;
+        var new_octave = spec_props.octave;
+
+        if (this.music.getNoteParts(selected_note.note).root == "b" &&
+            this.music.getNoteParts(spec_props.key).root == "c") {
+            new_octave--;
+        }
+        else if (this.music.getNoteParts(selected_note.note).root == "c" &&
+            this.music.getNoteParts(spec_props.key).root == "b") {
+            new_octave++;
+        }
+
+        var new_spec = new_note + "/" + new_octave;
+        keys.push(new_spec);
       }
 
       var note = new Vex.Flow.StaveNote({ keys: keys, duration: duration });

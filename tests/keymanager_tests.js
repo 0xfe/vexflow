@@ -21,6 +21,11 @@ Vex.Flow.Test.KeyManager.works = function(options) {
   equals(manager.getAccidental("c").accidental, "#");
   equals(manager.getAccidental("a").accidental, null);
   equals(manager.getAccidental("f").accidental, "#");
+
+  manager.setKey("A");
+  equals(manager.getAccidental("c").accidental, "#");
+  equals(manager.getAccidental("a").accidental, null);
+  equals(manager.getAccidental("f").accidental, "#");
 }
 
 Vex.Flow.Test.KeyManager.selectNotes = function(options) {
@@ -54,6 +59,9 @@ Vex.Flow.Test.KeyManager.selectNotes = function(options) {
   equals(manager.selectNote("g#").change, true);
 
   manager.reset();
+  note = manager.selectNote("bb");
+  equals(note.change, false);
+  equals(note.accidental, "b");
   note = manager.selectNote("g");
   equals(note.change, false);
   equals(note.accidental, null);
