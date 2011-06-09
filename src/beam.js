@@ -5,17 +5,6 @@
 //
 // Requires: vex.js, vexmusic.js, note.js
 
-// maximum and minimum beam slope
-Vex.Flow.MAX_BEAM_SLOPE = 0.25;
-Vex.Flow.MIN_BEAM_SLOPE = -Vex.Flow.MAX_BEAM_SLOPE;
-
-// number of iterations to find the best slope. more iterations means
-// better results but will slow down beam rendering
-Vex.Flow.BEAM_SLOPE_ITERATIONS = 20;
-
-// weighting constants for beam fitting algorithm
-Vex.Flow.BEAM_SLOPE_COST = 25;
-
 /**
  * Create a new beam from the specified notes. The notes must
  * be part of the same line, and have the same duration (in ticks).
@@ -74,7 +63,13 @@ Vex.Flow.Beam.prototype.init = function(notes) {
   this.notes = notes;
   this.beam_count =
     Vex.Flow.durationToGlyph(this.notes[0].getDuration()).beam_count;
-  this.render_options = { beam_width: 5 };
+  this.render_options = { 
+    beam_width: 5, 
+    max_slope: 0.25, 
+    min_slope: -0.25, 
+    slope_iterations: 20,
+    slope_cost: 25
+  };
 }
 
 Vex.Flow.Beam.prototype.setContext = function(context) {
@@ -106,17 +101,15 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
   function getSlopeY(x) {
     return first_y_px + ((x - first_x_px) * slope);
   }
-  
-  //interesting weighting example: A B C, all octave 4
-  
-  var inc = (Vex.Flow.MAX_BEAM_SLOPE - Vex.Flow.MIN_BEAM_SLOPE) / 
-  		Vex.Flow.BEAM_SLOPE_ITERATIONS;
+    
+  var inc = (this.render_options.max_slope - this.render_options.min_slope) / 
+      this.render_options.slope_iterations;
   var min_cost = Number.MAX_VALUE;
   var best_slope = 0;
   var y_shift = 0;
 
   // iterate through slope values to find best weighted fit
-  for (var slope = Vex.Flow.MIN_BEAM_SLOPE; slope <= Vex.Flow.MAX_BEAM_SLOPE; 
+  for (var slope = this.render_options.min_slope; slope <= this.render_options.max_slope; 
   	  slope += inc) {
   	var total_stem_extension = 0;
   	var y_shift_tmp = 0;
@@ -133,14 +126,14 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
   	  if (y_px * this.stem_direction <
           slope_y_px * this.stem_direction) {
         var diff =  Math.abs(y_px - slope_y_px);
-      	y_shift_tmp += diff * -this.stem_direction;
-      	total_stem_extension += (diff * i);
+        y_shift_tmp += diff * -this.stem_direction;
+        total_stem_extension += (diff * i);
       } else { // beam overshoots note, account for the difference
-    	total_stem_extension += (y_px - slope_y_px) * this.stem_direction;
+        total_stem_extension += (y_px - slope_y_px) * this.stem_direction;
       }
 
   	}
-  	var cost = Vex.Flow.BEAM_SLOPE_COST * Math.abs(slope) +
+  	var cost = this.render_options.slope_cost * Math.abs(slope) +
   		Math.abs(total_stem_extension);
 
 	// update state when a more ideal slope is found
