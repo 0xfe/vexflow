@@ -148,7 +148,7 @@ Vex.Flow.Test.Annotation.bottom = function(options, contextBuilder) {
         new Vex.Flow.Annotation(text)).
         setFont("Times", Vex.Flow.Test.Font.size).
         setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM);
-  }
+    }
 
   var notes = [
     newNote({ keys: ["f/4"], duration: "w"}).
