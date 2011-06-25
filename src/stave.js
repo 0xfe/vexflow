@@ -23,7 +23,8 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
     spacing_between_lines_px: 10, // in pixels
     space_above_staff_ln: 4, // in staff lines
     space_below_staff_ln: 4,  // in staff lines
-    top_text_position: 1 // in staff lines
+    top_text_position: 1, // in staff lines
+    bottom_text_position: 7 // in staff lines
   };
   Vex.Merge(this.options, options);
 
@@ -83,6 +84,11 @@ Vex.Flow.Stave.prototype.getYForTopText = function(line) {
   return this.getYForLine(-l - this.options.top_text_position);
 }
 
+Vex.Flow.Stave.prototype.getYForBottomText = function(line) {
+  var l = line || 0;
+  return this.getYForLine(this.options.bottom_text_position + l);
+}
+
 Vex.Flow.Stave.prototype.getYForNote = function(line) {
   var options = this.options;
   var spacing = options.spacing_between_lines_px;
@@ -95,6 +101,7 @@ Vex.Flow.Stave.prototype.getYForNote = function(line) {
 Vex.Flow.Stave.prototype.getYForGlyphs = function() {
   return this.getYForLine(3);
 }
+
 
 Vex.Flow.Stave.prototype.addGlyph = function(glyph) {
   glyph.setStave(this);
