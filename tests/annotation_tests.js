@@ -17,6 +17,8 @@ Vex.Flow.Test.Annotation.Start = function() {
   Vex.Flow.Test.runTest("Fingerpicking", Vex.Flow.Test.Annotation.picking);
   Vex.Flow.Test.runRaphaelTest("Fingerpicking (Raphael)",
       Vex.Flow.Test.Annotation.picking);
+  Vex.Flow.Test.runTest("Bottom Annotation",
+      Vex.Flow.Test.Annotation.bottom);
 }
 
 Vex.Flow.Test.Annotation.simple = function(options, contextBuilder) {
@@ -131,3 +133,30 @@ Vex.Flow.Test.Annotation.picking = function(options, contextBuilder) {
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 200);
   ok(true, "Fingerpicking");
 }
+
+Vex.Flow.Test.Annotation.bottom = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 500, 240);
+  ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  var stave = new Vex.Flow.Stave(10, 10, 300).
+    addClef("treble").setContext(ctx).draw();
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAnnotation(text) {
+    return (new Vex.Flow.Annotation(text)).setFont("Times",
+        Vex.Flow.Test.Font.size).setBottom(true); }
+
+  var notes = [
+    newNote({ keys: ["f/4"], duration: "w"}).
+      addAnnotation(0, newAnnotation("F")),
+    newNote({ keys: ["a/4"], duration: "w"}).
+      addAnnotation(0, newAnnotation("A")),
+    newNote({ keys: ["c/5"], duration: "w"}).
+      addAnnotation(0, newAnnotation("C")),
+    newNote({ keys: ["e/5"], duration: "w"}).
+      addAnnotation(0, newAnnotation("E"))
+  ];
+
+  Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 100);
+  ok(true, "Bottom Annotation");
+}
+

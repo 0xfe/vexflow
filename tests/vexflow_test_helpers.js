@@ -56,12 +56,3 @@ Vex.Flow.Test.runRaphaelTest = function(name, func, params) {
         Vex.Flow.Renderer.getRaphaelContext);
     });
 }
-
-/*
-Vex.Flow.Test.exec = function(name, func, params) {
-  test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
-  test_canvas = Vex.Flow.Test.createTestCanvas(test_canvas_sel, name);
-  func({ canvas_sel: test_canvas_sel, params: params },
-      Vex.Flow.Renderer.getRaphaelContext);
-}
-*/
