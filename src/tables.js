@@ -6,10 +6,10 @@
 // Requires vex.js.
 
 Vex.Flow.clefProperties = function(clef) {
-  if (!clef) throw new Vex.RERR("BadArguments", "Invalid clef: " + clef);
+  if (!clef) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
   var props = Vex.Flow.clefProperties.values[clef];
-  if (!props) throw new Vex.RERR("BadArguments", "Invalid clef: " + clef);
+  if (!props) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
   return props;
 }
@@ -22,8 +22,11 @@ Vex.Flow.clefProperties.values = {
   'percussion': { line_shift: 0 }
 };
 
+/*
+  Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
+*/
 Vex.Flow.keyProperties = function(key, clef) {
-  if(clef === undefined) {
+  if (clef === undefined) {
     clef = 'treble';
   }
 
