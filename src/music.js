@@ -154,7 +154,7 @@ Vex.Flow.Music.prototype.getNoteParts = function(noteString) {
 
     return {
       'root': root,
-      'accidental': accidental,
+      'accidental': accidental
     }
   } else {
     throw new Vex.RERR("BadArguments", "Invalid note name: " + noteString);
