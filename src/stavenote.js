@@ -25,6 +25,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   superclass.init.call(this, note_struct.duration);
 
   this.keys = note_struct.keys;
+  this.clef = note_struct.clef;
 
   // Pull note rendering properties from duration.
   this.glyph = Vex.Flow.durationToGlyph(this.duration);
@@ -44,7 +45,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
 
     // All rests use the same position on the line.
     // if (this.glyph.rest) key = this.glyph.position;
-    var props = Vex.Flow.keyProperties(key);
+    var props = Vex.Flow.keyProperties(key, this.clef);
     if (!props) {
       throw new Vex.RuntimeError("BadArguments",
           "Invalid key for note properties: " + key);
