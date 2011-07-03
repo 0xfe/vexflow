@@ -10,7 +10,11 @@
 
   Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
 */
-Vex.Flow.keyProperties = function(key) {
+Vex.Flow.keyProperties = function(key, clef) {
+  if(clef === undefined) {
+    clef = 'treble';
+  }
+  
   var pieces = key.split("/");
 
   if (pieces.length != 2) {
@@ -26,6 +30,19 @@ Vex.Flow.keyProperties = function(key) {
   var o = pieces[1];
   var base_index = (o * 7) - (4 * 7);
   var line = (base_index + value.index) / 2;
+  
+  switch(clef){
+    case 'treble':
+      // no adjustment
+      break;
+    case 'bass':
+      line += 6;
+      break;
+    default:
+      throw new Vex.RERR("BadArguments",
+        "Unimplemented clef: " + clef);
+  }
+  
   var stroke = 0;
 
   if (line <= 0 && (((line * 2) % 2) == 0)) stroke = 1;  // stroke up
