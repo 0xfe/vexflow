@@ -312,18 +312,18 @@ Vex.Flow.Test.Beam.tradeoffs = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
-  
+
   var notes = [
-  	newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-	newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"}),
-  	newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
-  	newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
-  	newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
-  	newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-  	newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"})
+  newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"})
   ];
-  
+
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
   voice.addTickables(notes);
 
@@ -343,18 +343,18 @@ Vex.Flow.Test.Beam.insane = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
-  
+
   var notes = [
-  	newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["g/5"], stem_direction: 1, duration: "8"}),
-	newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"}),
-  	newNote({ keys: ["b/5"], stem_direction: 1, duration: "8"}),
-  	newNote({ keys: ["g/4"], stem_direction: -1, duration: "8"}),
-  	newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}),
-  	newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"}),
-  	newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"})
+    newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["b/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["g/4"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"})
   ];
-  
+
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
   voice.addTickables(notes);
 
@@ -374,14 +374,14 @@ Vex.Flow.Test.Beam.lenghty = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
-  
+
   var notes = [
-  	newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
-	newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
-	newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"})
+    newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
+  newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
+  newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"})
   ];
-  
+
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
   voice.addTickables(notes);
 
@@ -399,23 +399,24 @@ Vex.Flow.Test.Beam.outlier = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
-  
+
   var notes = [
-  	newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["f/4"], stem_direction: 1, duration: "8"}),
-	newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
-	newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"}),
-	newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}),
-	newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}),
-	newNote({ keys: ["c/5"], stem_direction: -1, duration: "8"}),
-	newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"})
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["c/5"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"})
   ];
-  
+
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
   voice.addTickables(notes);
 
-  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    format([voice], 300);
+  var formatter = new Vex.Flow.Formatter().
+                    joinVoices([voice]).
+                    format([voice], 300);
   var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4));
   var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8));
 
