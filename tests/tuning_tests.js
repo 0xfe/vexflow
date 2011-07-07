@@ -33,9 +33,13 @@ Vex.Flow.Test.Tuning.checkStandard = function(tuning) {
 }
 
 Vex.Flow.Test.Tuning.standard = function(options) {
-  expect(8);
+  expect(16);
 
   var tuning = new Vex.Flow.Tuning();
+  Vex.Flow.Test.Tuning.checkStandard(tuning);
+
+  // Test named tuning
+  tuning.setTuning("standard");
   Vex.Flow.Test.Tuning.checkStandard(tuning);
 }
 

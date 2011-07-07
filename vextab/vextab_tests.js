@@ -25,6 +25,7 @@ Vex.Flow.Test.VexTab.Start = function() {
   test("Chord Ties Test", Vex.Flow.Test.VexTab.chordTies);
   test("Duration Test", Vex.Flow.Test.VexTab.duration);
   test("Notation Only Test", Vex.Flow.Test.VexTab.notationOnly);
+  test("Tuning Test", Vex.Flow.Test.VexTab.tuning);
 }
 
 Vex.Flow.Test.VexTab.catchError = function(tab, code) {
@@ -207,6 +208,7 @@ Vex.Flow.Test.VexTab.duration = function() {
 }
 
 Vex.Flow.Test.VexTab.notationOnly = function() {
+  expect(114);
   var tab = new Vex.Flow.VexTab();
 
   tab.parse("tabstave notation=true");
@@ -262,6 +264,34 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
     ok(true, "Notation plus Tablature plus Time Signature for " + time)
   }
   Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=true time=rrr")
+  ok(true, "all pass");
+}
+
+
+Vex.Flow.Test.VexTab.tuning = function() {
+  expect(9);
+  var tab = new Vex.Flow.VexTab();
+
+  tab.parse("tabstave tuning=E/5,B/4,G/4,D/4,A/3,E/3");
+  ok(true, "tabstave tuning=E/5,B/4,G/4,D/4,A/3,E/3");
+
+  tab.parse("tabstave tuning=standard");
+  ok(true, "tabstave tuning=standard");
+
+  tab.parse("tabstave tuning=eb");
+  ok(true, "tabstave tuning=eb");
+
+  tab.parse("tabstave tuning=dropd");
+  ok(true, "tabstave tuning=dropd");
+
+  Vex.Flow.Test.VexTab.catchError(tab,
+      "tabstave tuning=,B/4,G/4,D/4,A/3,E/3");
+  Vex.Flow.Test.VexTab.catchError(tab,
+      "tabstave tuning=/4,G/4,D/4,A/3,E/3");
+  Vex.Flow.Test.VexTab.catchError(tab,
+      "tabstave tuning=E,B,G,D,A,E");
+  Vex.Flow.Test.VexTab.catchError(tab,
+      "tabstave tuning=T/5,B/4,G/4,D/4,A/3,E/3");
 
   ok(true, "all pass");
 }

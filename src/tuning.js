@@ -10,6 +10,13 @@ Vex.Flow.Tuning = function(tuningString) {
   this.init(tuningString);
 }
 
+Vex.Flow.Tuning.names = {
+  "standard": "E/5,B/4,G/4,D/4,A/3,E/3",
+  "dagdad": "D/5,A/4,G/4,D/4,A/3,D/3",
+  "dropd": "E/5,B/4,G/4,D/4,A/3,D/3",
+  "eb": "Eb/5,Bb/4,Gb/4,Db/4,Ab/3,Db/3"
+}
+
 Vex.Flow.Tuning.prototype.init = function(tuningString) {
   // Default to standard tuning.
   this.setTuning(tuningString || "E/5,B/4,G/4,D/4,A/3,E/3");
@@ -20,6 +27,9 @@ Vex.Flow.Tuning.prototype.noteToInteger = function(noteString) {
 }
 
 Vex.Flow.Tuning.prototype.setTuning = function(noteString) {
+  if (Vex.Flow.Tuning.names[noteString])
+    noteString = Vex.Flow.Tuning.names[noteString];
+
   this.tuningString = noteString;
   this.tuningValues = [];
   this.numStrings = 0;
