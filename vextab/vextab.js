@@ -217,6 +217,7 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
   var stave_clef = "treble";
   var stave_key = "C";
   var stave_time = "";
+  var stave_tuning = "";
 
   this.state.key_manager.reset();
 
@@ -261,6 +262,13 @@ Vex.Flow.VexTab.prototype.parseTabStave = function(tokens) {
       } catch (e) {
         this.parseError(
             'Invalid time signature: ' + pair.value)
+      }
+    } else if (pair.key.toLowerCase() == "tuning") {
+      try {
+        this.tuning.setTuning(pair.value);
+      } catch (e) {
+        this.parseError(
+            'Invalid tuning: ' + pair.value)
       }
     } else {
       this.parseError("Invalid parameter for tabstave: " + pair.key)
