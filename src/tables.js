@@ -5,16 +5,27 @@
 //
 // Requires vex.js.
 
-/*
-  NoteToGlyph:
+Vex.Flow.clefProperties = function(clef) {
+  if (!clef) throw new Vex.RERR("BadArguments", "Invalid clef: " + clef);
 
-  Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
-*/
+  var props = Vex.Flow.clefProperties.values[clef];
+  if (!props) throw new Vex.RERR("BadArguments", "Invalid clef: " + clef);
+
+  return props;
+}
+
+Vex.Flow.clefProperties.values = {
+  'treble':  { line_shift: 0 },
+  'bass':    { line_shift: 6 },
+  'tenor':   { line_shift: 0 },
+  'alto':    { line_shift: 0 }
+};
+
 Vex.Flow.keyProperties = function(key, clef) {
   if(clef === undefined) {
     clef = 'treble';
   }
-  
+
   var pieces = key.split("/");
 
   if (pieces.length != 2) {
@@ -30,19 +41,8 @@ Vex.Flow.keyProperties = function(key, clef) {
   var o = pieces[1];
   var base_index = (o * 7) - (4 * 7);
   var line = (base_index + value.index) / 2;
-  
-  switch(clef){
-    case 'treble':
-      // no adjustment
-      break;
-    case 'bass':
-      line += 6;
-      break;
-    default:
-      throw new Vex.RERR("BadArguments",
-        "Unimplemented clef: " + clef);
-  }
-  
+  line += Vex.Flow.clefProperties(clef).line_shift;
+
   var stroke = 0;
 
   if (line <= 0 && (((line * 2) % 2) == 0)) stroke = 1;  // stroke up
