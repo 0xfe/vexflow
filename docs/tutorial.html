@@ -694,6 +694,78 @@
       custom <code>clearRect</code> is required to clear sections of the
       canvas. This is not supported by SVG because it has no "clear" semantics.
     </div>
+    
+    <h2>Step 6: Adding Bar Lines / Measures</h2>
+    <div class="description six">
+      The <code>Stave</code> APIs were designed such that you don't have more than 
+      one bar per stave. With this design you render a new stave for every bar, and 
+      either attach it by juxtaposing it to an existing stave or rendering it in a 
+      new vertical position.
+      <p/>
+      Let's create a couple bars and position them next to each other. 
+      <br/>
+      <code class="example a" example="a"></code>
+      <div class="example a" example="a">
+        <canvas width=525 height=160></canvas>
+        <p/>
+<script>
+  // Get the rendering context
+  var canvas = $("div.six div.a canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+  var ctx = renderer.getContext();
+
+  // bar 1
+  var staveBar1 = new Vex.Flow.Stave(10, 0, 200);
+  staveBar1.addClef("treble").setContext(ctx).draw();
+
+  var notesBar1 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })
+  ];
+
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+
+
+  // bar 2 - juxtaposing second bar next to first bar
+  var staveBar2 = new Vex.Flow.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
+  staveBar2.setContext(ctx).draw();
+   
+  var notesBar2_part1 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
+  ];
+   
+  var notesBar2_part2 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
+  ];
+   
+  // create the beams for 8th notes in 2nd measure
+  var beam1 = new Vex.Flow.Beam(notesBar2_part1);
+  var beam2 = new Vex.Flow.Beam(notesBar2_part2);
+  var notesBar2 = notesBar2_part1.concat(notesBar2_part2);
+
+  // Helper function to justify and draw a 4/4 voice 
+  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+   
+  // Render beams
+  beam1.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+</script>
+      </div>
+      Above, we used the first stave's position and width properties 
+      to position our second stave. 
+      <p/>
+    </div>
+
     <center>
     <h2>Step N + 1: Coming soon</h2>
       <p/>
