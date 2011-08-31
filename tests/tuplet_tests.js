@@ -45,11 +45,12 @@ Vex.Flow.Test.Tuplet.simple = function(options) {
   
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     format([voice], 300);
-  
+
   voice.draw(c.context, c.stave);
   
   var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
   var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6));
+  
   tuplet1.setContext(c.context).draw();
   tuplet2.setContext(c.context).draw();
   
@@ -81,13 +82,19 @@ Vex.Flow.Test.Tuplet.beamed = function(options) {
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     format([voice], 300);
   
-  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3), {beamed: true});
-  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 10), {beamed: true});
+  var beam1 = new Vex.Flow.Beam(notes.slice(0, 3));
+  var beam2 = new Vex.Flow.Beam(notes.slice(3, 10));
+
+  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 10));
   
   voice.draw(c.context, c.stave);
   
   tuplet1.setContext(c.context).draw();
   tuplet2.setContext(c.context).draw();
+  
+  beam1.setContext(c.context).draw();
+  beam2.setContext(c.context).draw();
   
   ok(true, "Beamed Test");
 }
@@ -113,13 +120,18 @@ Vex.Flow.Test.Tuplet.ratio = function(options) {
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     format([voice], 300);
   
-  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3), {show_ratio: true});
-  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6), {beamed: true, show_ratio: true});
+  var beam = new Vex.Flow.Beam(notes.slice(3, 6));
+  
+  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6));
+  tuplet2.setBeatsOccupied(4);
   
   voice.draw(c.context, c.stave);
   
-  tuplet1.setContext(c.context).draw();
-  tuplet2.setContext(c.context).draw();
+  beam.setContext(c.context).draw();
+  
+  tuplet1.setRatioed(true).setContext(c.context).draw();
+  tuplet2.setRatioed(true).setContext(c.context).draw();
   
   ok(true, "Ratioed Test");
 }
@@ -145,12 +157,17 @@ Vex.Flow.Test.Tuplet.bottom = function(options) {
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     format([voice], 300);
   
+  var beam = new Vex.Flow.Beam(notes.slice(3, 6));
+  
   var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
-  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6), {beamed: true, show_ratio: false});
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6));
+  
   tuplet1.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
   tuplet2.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
   
   voice.draw(c.context, c.stave);
+  
+  beam.setContext(c.context).draw();
   
   tuplet1.setContext(c.context).draw();
   tuplet2.setContext(c.context).draw();
@@ -179,16 +196,21 @@ Vex.Flow.Test.Tuplet.bottom_ratio = function(options) {
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     format([voice], 300);
   
-  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3), {show_ratio: true});
-  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6), {beamed: true, show_ratio: true});
+  var beam = new Vex.Flow.Beam(notes.slice(3, 6));
+  
+  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6));
+  
   tuplet2.setBeatsOccupied(1);
   tuplet1.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
   tuplet2.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
   
   voice.draw(c.context, c.stave);
   
-  tuplet1.setContext(c.context).draw();
-  tuplet2.setContext(c.context).draw();
+  beam.setContext(c.context).draw();
+  
+  tuplet1.setRatioed(true).setContext(c.context).draw();
+  tuplet2.setRatioed(true).setContext(c.context).draw();
   
   ok(true, "Bottom Ratioed Test");
 }
@@ -219,12 +241,15 @@ Vex.Flow.Test.Tuplet.awkward = function(options) {
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     format([voice], 300);
   
-  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 11), {beamed: false, show_ratio: true});
+  var beam = new Vex.Flow.Beam(notes);
+  
+  var tuplet1 = new Vex.Flow.Tuplet(notes);
   tuplet1.setBeatsOccupied(142);
   
   voice.draw(c.context, c.stave);
   
-  tuplet1.setContext(c.context).draw();
+  beam.setContext(c.context).draw();
+  tuplet1.setRatioed(true).setContext(c.context).draw();
   
   ok(true, "Awkward Test");
 }
