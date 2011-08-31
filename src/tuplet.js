@@ -1,11 +1,22 @@
-Vex.Flow.Tuplet = function(notes, options) {
-  if (arguments.length > 0) 
-    this.init(notes, options);
+/**
+ * Create a new tuplet from the specified notes. The notes must
+ * be part of the same line, and have the same duration (in ticks).
+ *
+ * @constructor
+ * @param {Array.<Vex.Flow.StaveNote>} A set of notes.
+ */
+Vex.Flow.Tuplet = function(notes) {
+  if (arguments.length > 0) this.init(notes);
 }
 
 Vex.Flow.Tuplet.LOCATION_TOP = 1;
 Vex.Flow.Tuplet.LOCATION_BOTTOM = -1;
 
+/**
+ * Set the notes to attach this tuplet to.
+ *
+ * @param {Array.<Vex.Flow.StaveNote>} The notes.
+ */
 Vex.Flow.Tuplet.prototype.init = function(notes, options) {
   if (!notes || notes == []) {
     throw new Vex.RuntimeError("BadArguments", "No notes provided for tuplet.");
@@ -14,23 +25,34 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
   if (notes.length == 1) {
     throw new Vex.RuntimeError("BadArguments", "Too few notes for tuplet.");
   }
+  
+  /*var stem_direction = notes[0].getStemDirection();
+  var ticks = notes[0].getTicks();
+  
+  for (var i = 1; i < notes.length; ++i) {
+    var note = notes[i];
+	  if (note.getStemDirection() != this.stem_direction) {
+		  throw new Vex.RuntimeError("BadArguments",
+		  "Notes in a tuplet all have the same stem direction");
+	  }
+
+	  if (note.getTicks() != this.ticks) {
+		  throw new Vex.RuntimeError("BadArguments",
+		  "Notes in a tuplet should have the same duration.");
+	  }
+
+  }*/
 
   this.notes = notes;
   this.num_notes = notes.length;
+  this.bracketed = (notes[0].beam == null);
+  this.ratioed = false;
   this.beats_occupied = 2;
   this.point = 28;
   this.y_pos = 16;
   this.x_pos = 100;
   this.width = 200;
   this.location = Vex.Flow.Tuplet.LOCATION_TOP;
-  this.options = {
-      beamed: false,
-      show_ratio: false
-  };
-  Vex.Merge(this.options, options);
-  if (this.options.beamed) {
-    this.beam = new Vex.Flow.Beam(notes);
-  }
 
   this.num_glyphs = [];
   var n = this.num_notes;
@@ -39,13 +61,11 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
     n = parseInt(n / 10);
   }
 
-  if (this.options.show_ratio) {
-    this.denom_glyphs = [];
-    n = this.beats_occupied;
-    while (n >= 1) {
-      this.denom_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
-      n = parseInt(n / 10);
-    }
+  this.denom_glyphs = [];
+  n = this.beats_occupied;
+  while (n >= 1) {
+    this.denom_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
+    n = parseInt(n / 10);
   }
 
 }
@@ -53,6 +73,22 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
 Vex.Flow.Tuplet.prototype.setContext = function(context) {
   this.context = context; 
   return this; 
+}
+
+/**
+ * Set whether or not the bracket is drawn.
+ */
+Vex.Flow.Tuplet.prototype.setBracketed = function(bracketed) {
+	this.bracketed = bracketed ? true : false;
+	return this;
+}
+
+/**
+ * Set whether or not the ratio is shown.
+ */
+Vex.Flow.Tuplet.prototype.setRatioed = function(ratioed) {
+	this.ratioed = ratioed ? true : false;
+	return this;
 }
 
 //set the tuplet to be displayed either on the top or bottom of the stave
@@ -70,27 +106,23 @@ Vex.Flow.Tuplet.prototype.setTupletLocation = function(location) {
 //set the number of beats occupied by the tuplet
 Vex.Flow.Tuplet.prototype.setBeatsOccupied = function (beats) {
   this.beats_occupied = beats;
-  if (this.options.show_ratio) {
-    this.denom_glyphs = [];
-    n = this.beats_occupied;
-    while (n >= 1) {
-      this.denom_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
-      n = parseInt(n / 10);
-    }
+  this.denom_glyphs = [];
+  n = this.beats_occupied;
+  while (n >= 1) {
+    this.denom_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
+    n = parseInt(n / 10);
   }
 }
 
 Vex.Flow.Tuplet.prototype.draw = function() {
-
-  // draw the beam if it is a beamed tuplet
-  if (this.options.beamed) {
-    this.beam.setContext(this.context).draw();
-  }
+  if (!this.context) throw new Vex.RERR("NoCanvasContext",
+      "Can't draw without a canvas context.");
 
   // determine x value of left bound of tuplet
   var first_note = this.notes[0];
   var last_note = this.notes[this.notes.length - 1];
-  if (this.options.beamed) {
+  
+  if (!this.bracketed) {
     this.x_pos = first_note.getStemX();
     this.width = last_note.getStemX() - this.x_pos;
   }
@@ -125,7 +157,7 @@ Vex.Flow.Tuplet.prototype.draw = function() {
   for (var glyph in this.num_glyphs) {
     width += this.num_glyphs[glyph].getMetrics().width;
   }
-  if (this.options.show_ratio) {
+  if (this.ratioed) {
     for (var glyph in this.denom_glyphs) {
       width += this.denom_glyphs[glyph].getMetrics().width;
     }
@@ -135,7 +167,7 @@ Vex.Flow.Tuplet.prototype.draw = function() {
   var notation_start_x = notation_center_x - (width/2);
 
   // draw bracket if the tuplet is not beamed
-  if (!this.options.beamed) {
+  if (this.bracketed) {
     var line_width = this.width/2 - width/2 - 5;
 
     // only draw the bracket if it has positive length
@@ -156,7 +188,7 @@ Vex.Flow.Tuplet.prototype.draw = function() {
   }
 
   // display colon and denominator if the ratio is to be shown
-  if (this.options.show_ratio) {
+  if (this.ratioed) {
     var colon_x = notation_start_x + x_offset + this.point*0.16;
     var colon_radius = this.point * 0.06;
     this.context.beginPath();
