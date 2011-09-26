@@ -24,6 +24,10 @@ Vex.Flow.TabStave.prototype.init = function(x, y, width, options) {
   superclass.init.call(this, x, y, width, tab_options);
 }
 
+Vex.Flow.TabStave.prototype.setNumberOfLines = function(lines) {
+  this.options.num_lines = lines; return this;
+}
+
 Vex.Flow.TabStave.prototype.getYForGlyphs = function() {
   return this.getYForLine(2.5);
 }
