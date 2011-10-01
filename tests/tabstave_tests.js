@@ -38,17 +38,13 @@ Vex.Flow.Test.TabStave.drawVerticalBar = function(options, contextBuilder) {
       400, 160);
 
   var stave = new Vex.Flow.TabStave(10, 10, 300);
-  stave.setNumberOfLines(4);
+  stave.setNumberOfLines(6);
   stave.setContext(ctx);
-  stave.draw();
-  stave.drawSignoFixed(50, 0);
   stave.drawVerticalBar(50, true);
-  stave.drawRepeatBar(100, true);
-  stave.drawRepeatBar(150, false);
-  stave.drawRepeatBar(150, true);
-  stave.drawCodaFixed(150, 0);
-  stave.drawDoubleVerticalBar(250, true);
-  stave.drawVerticalEndBar(300);
+  stave.drawVerticalBar(100, true);
+  stave.drawVerticalBar(150, false);
+  stave.setEndBarType(Vex.Flow.Barline.type.END);
+  stave.draw();
 
   ok(true, "all pass");
 }
