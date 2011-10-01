@@ -15,7 +15,8 @@ Vex.Flow.RaphaelContext.prototype.init = function(element) {
   this.paper = Raphael(element);
   this.path = "";
   this.pen = {x: 0, y: 0};
-
+  this.lineWidth = 1.0;
+  
   this.state = {
     scale: { x: 1, y: 1 },
     font_family: "Arial",
@@ -87,6 +88,17 @@ Vex.Flow.RaphaelContext.prototype.resize = function(width, height) {
   return this;
 }
 
+Vex.Flow.RaphaelContext.prototype.rect = function(x, y, width, height) {
+  if (height < 0) {
+    y += height;
+    height = -height
+  }
+
+  var r = this.paper.rect(x, y, width - 0.5, height - 0.5).
+    attr(this.attributes).
+    attr("fill", "none").
+    attr("stroke-width", this.lineWidth); return this;
+}
 Vex.Flow.RaphaelContext.prototype.fillRect = function(x, y, width, height) {
   if (height < 0) {
     y += height;
@@ -246,7 +258,7 @@ Vex.Flow.RaphaelContext.prototype.stroke = function() {
   this.paper.path(this.path).
     attr(this.attributes).
     attr("fill", "none").
-    attr("stroke-width", 1.0);
+    attr("stroke-width", this.lineWidth);
   return this;
 }
 
@@ -255,12 +267,25 @@ Vex.Flow.RaphaelContext.prototype.closePath = function() {
   return this;
 }
 
+Vex.Flow.RaphaelContext.prototype.measureText = function(text) {
+  var txt = this.paper.text(0, 0, text).
+    attr(this.attributes);
+
+  return {
+    width: txt.getBBox().width,
+    height: txt.getBBox().height
+  };
+}
+
 Vex.Flow.RaphaelContext.prototype.fillText = function(text, x, y) {
   var shift = 0;
-  if (this.state.font_size == 9) shift = 1;
+//  var shift = -2;
+//  if (this.state.font_size == 9) shift = 1;
 
-  this.paper.text(x + (Vex.Flow.textWidth(text) / 2) + 2,
-      (y - (this.state.font_size / (3.5 * this.state.scale.y))) + shift, text).
+//  this.paper.text(x + (Vex.Flow.textWidth(text) / 2) + 2,
+    this.paper.text(x + (this.measureText(text).width / 2),
+//      (y - (this.state.font_size / (3.5 * this.state.scale.y))) + shift, text).
+      (y - (this.state.font_size / (2.25 * this.state.scale.y))) + shift, text).
     attr(this.attributes);
   return this;
 }
