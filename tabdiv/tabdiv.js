@@ -88,6 +88,7 @@ Vex.Flow.TabDiv.prototype.redraw = function() {
 }
 
 Vex.Flow.TabDiv.prototype.resize = function(width, height) {
+  this.ctx.scale(this.scale, this.scale);
   this.renderer.resize(this.width * this.scale, this.height * this.scale);
   this.ctx = this.renderer.getContext();
 }
