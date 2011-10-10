@@ -15,8 +15,7 @@ Vex.Flow.RaphaelContext.prototype.init = function(element) {
   this.paper = Raphael(element);
   this.path = "";
   this.pen = {x: 0, y: 0};
-  this.lineWidth = 1.0;
-  
+
   this.state = {
     scale: { x: 1, y: 1 },
     font_family: "Arial",
@@ -269,7 +268,9 @@ Vex.Flow.RaphaelContext.prototype.closePath = function() {
 
 Vex.Flow.RaphaelContext.prototype.measureText = function(text) {
   var txt = this.paper.text(0, 0, text).
-    attr(this.attributes);
+    attr(this.attributes).
+    attr("fill", "none").
+    attr("stroke", "none");
 
   return {
     width: txt.getBBox().width,
@@ -278,14 +279,15 @@ Vex.Flow.RaphaelContext.prototype.measureText = function(text) {
 }
 
 Vex.Flow.RaphaelContext.prototype.fillText = function(text, x, y) {
-  var shift = 0;
-//  var shift = -2;
+//  var shift = 0;
 //  if (this.state.font_size == 9) shift = 1;
 
 //  this.paper.text(x + (Vex.Flow.textWidth(text) / 2) + 2,
-    this.paper.text(x + (this.measureText(text).width / 2),
 //      (y - (this.state.font_size / (3.5 * this.state.scale.y))) + shift, text).
-      (y - (this.state.font_size / (2.25 * this.state.scale.y))) + shift, text).
+//    attr(this.attributes);
+//  return this;
+    this.paper.text(x + (this.measureText(text).width / 2),
+      (y - (this.state.font_size / (2.25 * this.state.scale.y))), text).
     attr(this.attributes);
   return this;
 }
