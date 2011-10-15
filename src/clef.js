@@ -13,22 +13,22 @@ Vex.Flow.Clef = function(clef) {
 Vex.Flow.Clef.types = {
   "treble": {
     code: "v83",
-    point: 40,
+    point: 50,
     line: 3
   },
   "bass": {
     code: "v79",
-    point: 40,
+    point: 50,
     line: 1
   },
   "alto": {
     code: "vad",
-    point: 40,
+    point: 50,
     line: 2
   },
   "tenor": {
     code: "vad",
-    point: 40,
+    point: 50,
     line: 1
   }
 };
