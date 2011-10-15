@@ -42,10 +42,10 @@ Vex.Flow.Test.ClefKeySignature.Start = function() {
   test("Key Parser Test", Vex.Flow.Test.ClefKeySignature.parser);
   Vex.Flow.Test.runTest("Major Key Clef Test", Vex.Flow.Test.ClefKeySignature.majorKeys);
   Vex.Flow.Test.runRaphaelTest("Major Key Clef Test (Raphael)", 
-      Vex.Flow.Test.ClefKeySignature.majorKeys);
+  Vex.Flow.Test.ClefKeySignature.majorKeys);
   Vex.Flow.Test.runTest("Minor Key Clef Test", Vex.Flow.Test.ClefKeySignature.minorKeys);
   Vex.Flow.Test.runRaphaelTest("Minor Key Clef Test (Raphael)", 
-      Vex.Flow.Test.ClefKeySignature.minorKeys);
+  Vex.Flow.Test.ClefKeySignature.minorKeys);
   Vex.Flow.Test.runTest("Stave Helper", Vex.Flow.Test.ClefKeySignature.staveHelper);
 
 }
@@ -97,16 +97,16 @@ Vex.Flow.Test.ClefKeySignature.majorKeys = function(options, contextBuilder) {
 
   for (var i = 0; i < 8; ++i) {
     var keySig = new Vex.Flow.KeySignature(keys[i]);
-	var keySig2 = new Vex.Flow.KeySignature(keys[i]);
+    var keySig2 = new Vex.Flow.KeySignature(keys[i]);
     keySig.addToStave(stave);
-	keySig2.addToStave(stave2);
+    keySig2.addToStave(stave2);
   }
 
   for (var i = 8; i < keys.length; ++i) {
     var keySig3 = new Vex.Flow.KeySignature(keys[i]);
-	var keySig4 = new Vex.Flow.KeySignature(keys[i]);
+    var keySig4 = new Vex.Flow.KeySignature(keys[i]);
     keySig3.addToStave(stave3);
-	keySig4.addToStave(stave4);
+    keySig4.addToStave(stave4);
   }
 
 
@@ -136,16 +136,16 @@ Vex.Flow.Test.ClefKeySignature.minorKeys = function(options, contextBuilder) {
 
   for (var i = 0; i < 8; ++i) {
     var keySig3 = new Vex.Flow.KeySignature(keys[i]);
-	var keySig4 = new Vex.Flow.KeySignature(keys[i]);
+    var keySig4 = new Vex.Flow.KeySignature(keys[i]);
     keySig3.addToStave(stave3);
-	keySig4.addToStave(stave4);
+    keySig4.addToStave(stave4);
   }
 
   for (var i = 8; i < keys.length; ++i) {
     var keySig = new Vex.Flow.KeySignature(keys[i]);
-	var keySig2 = new Vex.Flow.KeySignature(keys[i]);
-	keySig.addToStave(stave);
-	keySig2.addToStave(stave2);
+    var keySig2 = new Vex.Flow.KeySignature(keys[i]);
+    keySig.addToStave(stave);
+    keySig2.addToStave(stave2);
   }
 
 
@@ -176,12 +176,12 @@ Vex.Flow.Test.ClefKeySignature.staveHelper = function(options, contextBuilder) {
 
   for (var i = 0; i < 8; ++i) {
     stave.addKeySignature(keys[i]);
-	stave2.addKeySignature(keys[i]);
+    stave2.addKeySignature(keys[i]);
   }
 
   for (var i = 8; i < keys.length; ++i) {
     stave3.addKeySignature(keys[i]);
-	stave4.addKeySignature(keys[i]);
+    stave4.addKeySignature(keys[i]);
   }
 
   stave.setContext(ctx);
