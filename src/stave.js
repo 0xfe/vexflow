@@ -103,17 +103,6 @@ Vex.Flow.Stave.prototype.getYForGlyphs = function() {
   return this.getYForLine(3);
 }
 
-/*
-Vex.Flow.Stave.prototype.getClef = function() {
-  return this.clef;
-}
-
-Vex.Flow.Stave.prototype.setClef = function(clef) {
-  this.clef = clef;
-  return this;
-}
-*/
-
 Vex.Flow.Stave.prototype.addGlyph = function(glyph) {
   glyph.setStave(this);
   this.glyphs.push(glyph);
