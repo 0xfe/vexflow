@@ -46,7 +46,6 @@ Vex.Flow.Clef.prototype.init = function(clef) {
 
 Vex.Flow.Clef.prototype.addModifier = function(stave) {
   var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
-  console.log("clef.point: " + this.clef.point);
   this.placeGlyphOnLine(glyph, stave, this.clef.line);
   stave.addGlyph(glyph);
 }
