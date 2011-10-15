@@ -13,22 +13,22 @@ Vex.Flow.Clef = function(clef) {
 Vex.Flow.Clef.types = {
   "treble": {
     code: "v83",
-    point: 50,
+    point: 40,
     line: 3
   },
   "bass": {
     code: "v79",
-    point: 50,
+    point: 40,
     line: 1
   },
   "alto": {
     code: "vad",
-    point: 50,
+    point: 40,
     line: 2
   },
   "tenor": {
     code: "vad",
-    point: 50,
+    point: 40,
     line: 1
   }
 };
@@ -46,6 +46,7 @@ Vex.Flow.Clef.prototype.init = function(clef) {
 
 Vex.Flow.Clef.prototype.addModifier = function(stave) {
   var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
+  console.log("clef.point: " + this.clef.point);
   this.placeGlyphOnLine(glyph, stave, this.clef.line);
   stave.addGlyph(glyph);
 }
