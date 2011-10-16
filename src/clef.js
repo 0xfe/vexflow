@@ -40,7 +40,7 @@ Vex.Flow.Clef.superclass = Vex.Flow.StaveModifier.prototype;
 Vex.Flow.Clef.prototype.init = function(clef) {
   var superclass = Vex.Flow.Clef.superclass;
   superclass.init.call(this);
-
+  
   this.clef = Vex.Flow.Clef.types[clef];
 }
 
