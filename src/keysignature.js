@@ -16,7 +16,6 @@ Vex.Flow.KeySignature.superclass = Vex.Flow.StaveModifier.prototype;
 
 Vex.Flow.KeySignature.prototype.init = function(key_spec) {
   Vex.Flow.KeySignature.superclass.init();
-
   this.glyphFontScale = 38;
   this.accList = Vex.Flow.keySignature(key_spec);
 }
