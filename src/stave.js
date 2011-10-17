@@ -148,7 +148,7 @@ Vex.Flow.Stave.prototype.draw = function(context) {
   var width = this.width;
   var x = this.x;
 
-  //this.drawVerticalBar(0);
+  this.drawVerticalBar(0);
 
   for (var line=0; line < num_lines; line++) {
     var y = this.getYForLine(line);
@@ -163,7 +163,7 @@ Vex.Flow.Stave.prototype.draw = function(context) {
     x += glyph.getMetrics().width;
   }
 
-  //this.drawVerticalBar(this.width);
+  this.drawVerticalBar(this.width);
 
   return this;
 }
