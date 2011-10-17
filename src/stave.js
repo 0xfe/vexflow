@@ -166,6 +166,7 @@ Vex.Flow.Stave.prototype.getYForGlyphs = function() {
   return this.getYForLine(3);
 }
 
+
 Vex.Flow.Stave.prototype.addGlyph = function(glyph) {
   glyph.setStave(this);
   this.glyphs.push(glyph);
