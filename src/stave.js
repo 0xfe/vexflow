@@ -31,7 +31,7 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
     space_above_staff_ln: 4,      // in staff lines
     space_below_staff_ln: 4,      // in staff lines
     top_text_position: 1,         // in staff lines
-    bottom_text_position: 7,      // in staff lines
+    bottom_text_position: 7       // in staff lines
   };
   Vex.Merge(this.options, options);
 

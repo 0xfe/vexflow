@@ -1,6 +1,6 @@
 // Vex Flow Notation
 // Author Larry Kuhns 2011
-// Implements barlmes (single, double, repeat, end)
+// Implements barlines (single, double, repeat, end)
 //
 // Requires vex.js.
 
@@ -58,12 +58,12 @@ Vex.Flow.Barline.prototype.draw = function(stave, x) {
   }
 }
 
-Vex.Flow.Barline.prototype.drawVerticalBar = function(stave, x, double) {
+Vex.Flow.Barline.prototype.drawVerticalBar = function(stave, x, double_bar) {
   if (!stave.context) throw new Vex.RERR("NoCanvasContext",
       "Can't draw stave without canvas context.");
   var top_line = stave.getYForLine(0);
   var bottom_line = stave.getYForLine(stave.options.num_lines - 1);
-  if (double)
+  if (double_bar)
     stave.context.fillRect(x - 3, top_line, 1, bottom_line - top_line + 1);
   stave.context.fillRect(x, top_line, 1, bottom_line - top_line + 1);
 }
