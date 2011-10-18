@@ -101,9 +101,9 @@ Vex.Flow.Bend.prototype.draw = function() {
   }
 
   var annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
-  var text_x = start.x + this.bend_width - (Vex.Flow.textWidth(this.text) / 2);
   ctx.save();
   ctx.font = this.font;
+  var text_x = start.x + this.bend_width - (ctx.measureText(this.text).width / 2);
   ctx.fillText(this.text, text_x, annotation_y);
   ctx.restore();
 }

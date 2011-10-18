@@ -1,7 +1,7 @@
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 //
-// This class implements varies types of modifiers to notes (e.g. bends, 
+// This class implements varies types of modifiers to notes (e.g. bends,
 // fingering positions etc.) Accidentals should also be implemented as
 // modifiers, eventually.
 
@@ -65,7 +65,7 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   if (!notes || notes.length < 2) return this;
 
   // Assumption: only two notes
-  Vex.Assert(notes.length == 2, 
+  Vex.Assert(notes.length == 2,
       "Got more than two notes in Vex.Flow.ModifierContext.formatNotes!");
 
   var top_note = notes[0];
@@ -180,6 +180,37 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
   return this;
 }
 
+Vex.Flow.ModifierContext.prototype.formatStrokes = function() {
+  var left_shift = this.state.left_shift;
+  var strokes = this.modifiers['strokes'];
+  var stroke_spacing = 0;
+
+  if (!strokes || strokes.length == 0) return this;
+
+  var str_list = [];
+  for (var i = 0; i < strokes.length; ++i) {
+    var str = strokes[i];
+    var note = str.getNote();
+    var props = note.getKeyProps()[str.getIndex()];
+    var shift = (props.displaced ? note.getExtraLeftPx() : 0);
+    str_list.push({ line: props.line, shift: shift, str: str });
+  }
+
+  var str_shift = left_shift;
+  var x_shift = 0;
+  // There can only be one stroke .. if more than one, they overlay each other
+  for (var i = 0; i < str_list.length; ++i) {
+    var str = str_list[i].str;
+    var line = str_list[i].line;
+    var shift = str_list[i].shift;
+    str.setXShift(str_shift);
+    x_shift += str.getWidth() + stroke_spacing; // spacing
+  }
+
+  this.state.left_shift += x_shift;
+  return this;
+}
+
 Vex.Flow.ModifierContext.prototype.formatBends = function() {
   var right_shift = this.state.right_shift;
   var bends = this.modifiers['bends'];
@@ -258,7 +289,7 @@ Vex.Flow.ModifierContext.prototype.preFormat = function() {
   if (this.preFormatted) return;
 
   // Format modifiers in the following order:
-  this.formatNotes().formatAccidentals().formatDots().
+  this.formatNotes().formatAccidentals().formatDots().formatStrokes().
       formatAnnotations().formatBends().formatVibratos();
 
   // Update width of this modifier context
