@@ -15,6 +15,7 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
   this.glyph_start_x = x + 5;
   this.start_x = this.glyph_start_x + 5;
   this.context = null;
+  this.clef = "treble";
   this.glyphs = [];
   this.modifiers = [];  // non-glyph stave items (barlines, coda, segno, etc.)
   this.measure = 0;
@@ -177,6 +178,7 @@ Vex.Flow.Stave.prototype.addKeySignature = function(keySpec) {
 }
 
 Vex.Flow.Stave.prototype.addClef = function(clef) {
+  this.clef = clef;
   this.addModifier(new Vex.Flow.Clef(clef));
   return this;
 }
