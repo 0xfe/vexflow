@@ -95,6 +95,12 @@ Vex.Flow.StaveNote.prototype.getYForTopText = function(text_line) {
       extents.topY - (this.render_options.annotation_spacing * (text_line + 1)));
 }
 
+Vex.Flow.StaveNote.prototype.getYForBottomText = function(text_line) {
+  var extents = this.getStemExtents();
+  return Vex.Max(this.stave.getYForTopText(text_line),
+      extents.baseY + (this.render_options.annotation_spacing * (text_line + 1)));
+}
+
 Vex.Flow.StaveNote.prototype.setStave = function(stave) {
   var superclass = Vex.Flow.StaveNote.superclass;
   superclass.setStave.call(this, stave);
@@ -176,6 +182,9 @@ Vex.Flow.StaveNote.prototype.getModifierStartXY = function(position, index) {
     x = -1 * 2;  // extra_left_px
   } else if (position == Vex.Flow.Modifier.Position.RIGHT) {
     x = this.glyph.head_width + this.x_shift + 2; // extra_right_px
+  } else if (position == Vex.Flow.Modifier.Position.BELOW ||
+             position == Vex.Flow.Modifier.Position.ABOVE) {
+    x = this.glyph.head_width / 2;
   }
 
   return { x: this.getAbsoluteX() + x, y: this.ys[index] };
@@ -209,10 +218,35 @@ Vex.Flow.StaveNote.prototype.addToModifierContext = function(mc) {
   this.setPreFormatted(false);
 }
 
+// Generic functions to add modifiers to a note
+Vex.Flow.StaveNote.prototype.addModifier = function(index, modifier) {
+  modifier.setNote(this);
+  modifier.setIndex(index);
+  this.modifiers.push(modifier);
+  this.setPreFormatted(false);
+  return this;
+}
+
 Vex.Flow.StaveNote.prototype.addAccidental = function(index, accidental) {
   accidental.setNote(this);
   accidental.setIndex(index);
   this.modifiers.push(accidental);
+  this.setPreFormatted(false);
+  return this;
+}
+
+Vex.Flow.StaveNote.prototype.addStroke = function(index, stroke) {
+  stroke.setNote(this);
+  stroke.setIndex(index);
+  this.modifiers.push(stroke);
+  this.setPreFormatted(false);
+  return this;
+}
+
+Vex.Flow.StaveNote.prototype.addArticulation = function(index, articulation) {
+  articulation.setNote(this);
+  articulation.setIndex(index);
+  this.modifiers.push(articulation);
   this.setPreFormatted(false);
   return this;
 }
@@ -290,6 +324,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
   var keys = this.keys;
   var glyph = this.glyph;
   var stem_direction = this.stem_direction;
+  var default_head_x = null;
 
   // What elements do we render?
   var render_head = true;
@@ -316,7 +351,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
 
   // For down-stem notes, we draw from top to bottom.
   if (stem_direction == Vex.Flow.StaveNote.STEM_DOWN) {
-    start_i = keys.length -1;
+    start_i = keys.length - 1;
     end_i = -1;
     step_i = -1;
   }
@@ -339,6 +374,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
         displaced = !displaced;
       } else {
         displaced = false;
+        default_head_x = x;
       }
     }
     last_line = line;
@@ -367,6 +403,19 @@ Vex.Flow.StaveNote.prototype.draw = function() {
     if (render_head) {
       Vex.Flow.renderGlyph(ctx, head_x,
           y, this.render_options.glyph_font_scale, code_head);
+      // If note above/below the sraff, draw the small staff
+      if (line <= 0 || line >= 6) {
+        var line_y = y;
+        var floor = Math.floor(line);
+        if (line < 0 && floor - line == -0.5)
+          line_y -= 5;
+        else if (line > 6 &&  floor - line == -0.5)
+          line_y += 5;
+        ctx.fillRect(
+          head_x - this.render_options.stroke_px, line_y,
+          ((head_x + glyph.head_width) - head_x) +
+          (this.render_options.stroke_px * 2), 1);
+      }
     }
   }
 
@@ -377,8 +426,9 @@ Vex.Flow.StaveNote.prototype.draw = function() {
   // applicable to non-rests.
   if (!glyph.rest) {
     var that = this;
-
+    
     function stroke(y) {
+      if (default_head_x != null) head_x = default_head_x;
       ctx.fillRect(
         head_x - that.render_options.stroke_px, y,
         ((head_x + glyph.head_width) - head_x) +
@@ -405,10 +455,18 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       // Down stems are rendered to the left of the head.
       stem_x = x_begin;
       stem_y = y_top;
+      // Shorten stem length for 1/2 & 1/4 dead note heads (X)
+      if (glyph.code_head == "v95" ||
+          glyph.code_head == "v3e")
+       stem_y += 4;
     } else {
       // Up stems are rendered to the right of the head.
       stem_x = x_end;
       stem_y = y_bottom;
+      // Shorten stem length for 1/2 & 1/4 dead note heads (X)
+      if (glyph.code_head == "v95" ||
+          glyph.code_head == "v3e")
+       stem_y -= 4;
     }
 
     // Draw the stem

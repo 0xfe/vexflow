@@ -36,6 +36,16 @@ Vex.Flow.TabNote.prototype.init = function(tab_struct) {
 Vex.Flow.TabNote.prototype.setStave = function(stave) {
   var superclass = Vex.Flow.TabNote.superclass;
   superclass.setStave.call(this, stave);
+  this.context = stave.context;
+  this.width = 0;
+  if (this.context) {
+    for (var i = 0; i < this.glyphs.length; ++i) {
+      var text = "" + this.glyphs[i].text;
+      if (text.toUpperCase() != "X")
+        this.glyphs[i].width = this.context.measureText(text).width;
+      this.width = (this.glyphs[i].width > this.width) ? this.glyphs[i].width : this.width;
+    }
+  }
 
   var ys = [];
 
@@ -98,7 +108,7 @@ Vex.Flow.TabNote.prototype.getModifierStartXY = function(position, index) {
     x = (this.width / 2) + 2; // extra_right_px
   }
 
-  return { x: this.getAbsoluteX() + x, y: this.ys[index] };
+  return {x: this.getAbsoluteX() + x, y: this.ys[index]};
 }
 
 // Pre-render formatting
@@ -133,7 +143,7 @@ Vex.Flow.TabNote.prototype.draw = function() {
           this.render_options.glyph_font_scale, glyph.code);
     } else {
       var text = glyph.text.toString();
-      ctx.fillText(text, tab_x, y + 4);
+      ctx.fillText(text, tab_x, y + 5);
     }
   }
 

@@ -4,11 +4,11 @@
 //
 // Requires vex.js.
 
-/** 
- * @constructor 
+/**
+ * @constructor
  */
-Vex.Flow.Barline = function(type, x) { 
-  if (arguments.length > 0) this.init(type, x); 
+Vex.Flow.Barline = function(type, x) {
+  if (arguments.length > 0) this.init(type, x);
 }
 
 Vex.Flow.Barline.type = {
@@ -32,6 +32,7 @@ Vex.Flow.Barline.prototype.init = function(type, x) {
 }
 
 Vex.Flow.Barline.prototype.getCategory = function() {return "barlines";}
+Vex.Flow.Barline.prototype.setX = function(x) {this.x = x; return this;}
 
   // Draw barlines
 Vex.Flow.Barline.prototype.draw = function(stave, x) {
@@ -83,25 +84,25 @@ Vex.Flow.Barline.prototype.drawRepeatBar = function(stave, x, begin) {
 
   var top_line = stave.getYForLine(0);
   var bottom_line = stave.getYForLine(stave.options.num_lines - 1);
-  var x_shift = 3; 
+  var x_shift = 3;
   if (!begin) {
-    x_shift = -5; 
+    x_shift = -5;
   }
   stave.context.fillRect(x + x_shift, top_line, 1, bottom_line - top_line + 1);
   stave.context.fillRect(x - 2, top_line, 3, bottom_line - top_line + 1);
-  
+
   var dot_radius = 2;
     // Shift dots left or right
   if (begin) {
-    x_shift += 4; 
+    x_shift += 4;
   } else {
     x_shift -= 4;
   }
-  
+
   var dot_x = (x + x_shift) + (dot_radius / 2);
     // calculate the y offset based on number of stave lines
   var y_offset = (stave.options.num_lines -1) * stave.options.spacing_between_lines_px;
-  y_offset = (y_offset / 2) - 
+  y_offset = (y_offset / 2) -
              (stave.options.spacing_between_lines_px / 2);
   var dot_y = top_line + y_offset + (dot_radius / 2);
     // draw the top repeat dot
