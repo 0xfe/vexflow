@@ -38,8 +38,11 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
   this.height =
     (this.options.num_lines + this.options.space_above_staff_ln) *
      this.options.spacing_between_lines_px;
-  this.modifiers.push(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, this.x));              // beg bar
-  this.modifiers.push(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, this.x + this.width)); // end bar
+  this.modifiers.push(
+      new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, this.x)); // beg bar
+  this.modifiers.push(
+      new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE,
+                           this.x + this.width)); // end bar
 }
 
 Vex.Flow.Stave.prototype.setNoteStartX = function(x) {
@@ -71,10 +74,11 @@ Vex.Flow.Stave.prototype.setWidth = function(width) {
 }
 Vex.Flow.Stave.prototype.setMeasure = function(measure) {
   this.measure = measure; return this;
-	}
-  // Bar Line functions
+}
+
+// Bar Line functions
 Vex.Flow.Stave.prototype.setBegBarType = function(type) {
-    // Only valid bar types at beginning of stave is single or begin repeat
+  // Only valid bar types at beginning of stave is single or begin repeat
   if (type == Vex.Flow.Barline.type.SINGLE ||
       type == Vex.Flow.Barline.type.REPEAT_BEGIN) {
       this.modifiers[0] = new Vex.Flow.Barline(type, this.x);
@@ -82,34 +86,38 @@ Vex.Flow.Stave.prototype.setBegBarType = function(type) {
   return this;
 }
 Vex.Flow.Stave.prototype.setEndBarType = function(type) {
-    // Repeat end not valid at end of stave
+  // Repeat end not valid at end of stave
   if (type != Vex.Flow.Barline.type.REPEAT_BEGIN)
     this.modifiers[1] = new Vex.Flow.Barline(type, this.x + this.width);
   return this;
 }
-  // Coda & Segno Symbol functions
+
+// Coda & Segno Symbol functions
 Vex.Flow.Stave.prototype.setRepetitionTypeLeft = function(type, y) {
   this.modifiers.push(new Vex.Flow.Repetition(type, this.x, y));
   return this;
 }
 Vex.Flow.Stave.prototype.setRepetitionTypeRight = function(type, y) {
-  this.modifiers.push( new Vex.Flow.Repetition(type, this.x, y) );
+  this.modifiers.push(new Vex.Flow.Repetition(type, this.x, y) );
   return this;
 }
-  // Volta functions
-Vex.Flow.Stave.prototype.setVoltaType = function(type, number, y) {
-  this.modifiers.push( new Vex.Flow.Volta(type, number, this.x, y));
+
+// Volta functions
+Vex.Flow.Stave.prototype.setVoltaType = function(type, number_t, y) {
+  this.modifiers.push(new Vex.Flow.Volta(type, number_t, this.x, y));
   return this;
 }
+
 // Section functions
 Vex.Flow.Stave.prototype.setSection = function(section, y) {
-  this.modifiers.push( new Vex.Flow.StaveSection(section, this.x, y));
+  this.modifiers.push(new Vex.Flow.StaveSection(section, this.x, y));
   return this;
 }
 
 Vex.Flow.Stave.prototype.getHeight = function(width) {
   return this.height;
 }
+
 Vex.Flow.Stave.prototype.getBottomY = function() {
   var options = this.options;
   var spacing = options.spacing_between_lines_px;
@@ -228,11 +236,12 @@ Vex.Flow.Stave.prototype.draw = function(context) {
   return this;
 }
 
-    // Draw Simple barlines for backward compatability
-    // Do not delete - draws the beginning bar of the stave
+// Draw Simple barlines for backward compatability
+// Do not delete - draws the beginning bar of the stave
 Vex.Flow.Stave.prototype.drawVertical = function(x, isDouble) {
   this.drawVerticalFixed(this.x + x, isDouble);
 }
+
 Vex.Flow.Stave.prototype.drawVerticalFixed = function(x, isDouble) {
   if (!this.context) throw new Vex.RERR("NoCanvasContext",
       "Can't draw stave without canvas context.");
@@ -247,6 +256,7 @@ Vex.Flow.Stave.prototype.drawVerticalFixed = function(x, isDouble) {
 Vex.Flow.Stave.prototype.drawVerticalBar = function(x) {
   this.drawVerticalBarFixed(this.x + x, false);
 }
+
 Vex.Flow.Stave.prototype.drawVerticalBarFixed = function(x) {
   if (!this.context) throw new Vex.RERR("NoCanvasContext",
       "Can't draw stave without canvas context.");

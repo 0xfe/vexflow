@@ -85,14 +85,17 @@ Vex.Flow.Barline.prototype.drawRepeatBar = function(stave, x, begin) {
   var top_line = stave.getYForLine(0);
   var bottom_line = stave.getYForLine(stave.options.num_lines - 1);
   var x_shift = 3;
+
   if (!begin) {
     x_shift = -5;
   }
+
   stave.context.fillRect(x + x_shift, top_line, 1, bottom_line - top_line + 1);
   stave.context.fillRect(x - 2, top_line, 3, bottom_line - top_line + 1);
 
   var dot_radius = 2;
-    // Shift dots left or right
+
+  // Shift dots left or right
   if (begin) {
     x_shift += 4;
   } else {
@@ -100,16 +103,20 @@ Vex.Flow.Barline.prototype.drawRepeatBar = function(stave, x, begin) {
   }
 
   var dot_x = (x + x_shift) + (dot_radius / 2);
-    // calculate the y offset based on number of stave lines
-  var y_offset = (stave.options.num_lines -1) * stave.options.spacing_between_lines_px;
+
+  // calculate the y offset based on number of stave lines
+  var y_offset = (stave.options.num_lines -1) *
+    stave.options.spacing_between_lines_px;
   y_offset = (y_offset / 2) -
              (stave.options.spacing_between_lines_px / 2);
   var dot_y = top_line + y_offset + (dot_radius / 2);
-    // draw the top repeat dot
+
+  // draw the top repeat dot
   stave.context.beginPath();
   stave.context.arc(dot_x, dot_y, dot_radius, 0, Math.PI * 2, false);
   stave.context.fill();
-    //draw the bottom repeat dot
+
+  //draw the bottom repeat dot
   dot_y += stave.options.spacing_between_lines_px;
   stave.context.beginPath();
   stave.context.arc(dot_x, dot_y, dot_radius, 0, Math.PI * 2, false);

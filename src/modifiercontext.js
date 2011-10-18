@@ -1,7 +1,7 @@
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 //
-// This class implements varies types of modifiers to notes (e.g. bends,
+// This class implements various types of modifiers to notes (e.g. bends,
 // fingering positions etc.) Accidentals should also be implemented as
 // modifiers, eventually.
 
@@ -198,7 +198,8 @@ Vex.Flow.ModifierContext.prototype.formatStrokes = function() {
 
   var str_shift = left_shift;
   var x_shift = 0;
-  // There can only be one stroke .. if more than one, they overlay each other
+
+  // There can only be one stroke. Multiple strokes overlay each other.
   for (var i = 0; i < str_list.length; ++i) {
     var str = str_list[i].str;
     var line = str_list[i].line;
@@ -289,8 +290,13 @@ Vex.Flow.ModifierContext.prototype.preFormat = function() {
   if (this.preFormatted) return;
 
   // Format modifiers in the following order:
-  this.formatNotes().formatAccidentals().formatDots().formatStrokes().
-      formatAnnotations().formatBends().formatVibratos();
+  this.formatNotes().
+       formatAccidentals().
+       formatDots().
+       formatStrokes().
+       formatAnnotations().
+       formatBends().
+       formatVibratos();
 
   // Update width of this modifier context
   this.width = this.state.left_shift + this.state.right_shift;

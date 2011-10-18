@@ -3,8 +3,6 @@
 //
 // Copyright Mohit Muthanna 2010
 //
-// Oct 2011 :: added harmonic & muted note heads
-// Oct 2011 :: added articulation properties
 // Requires vex.js.
 
 Vex.Flow.clefProperties = function(clef) {

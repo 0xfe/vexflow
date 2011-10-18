@@ -48,7 +48,8 @@ Vex.Flow.Annotation.prototype.setBottom = function(bottom) {
   this.bottom = bottom;
   return this;
 }
-Vex.Flow.Modifier.prototype.getJustification = function() { return this.justification; }
+Vex.Flow.Modifier.prototype.getJustification = function() {
+  return this.justification; }
 Vex.Flow.Modifier.prototype.setJustification = function(justification) {
   this.justification = justification; return this; }
 
@@ -57,18 +58,21 @@ Vex.Flow.Annotation.prototype.draw = function() {
     "Can't draw text annotation without a context.");
   if (!this.note) throw new Vex.RERR("NoNoteForAnnotation",
     "Can't draw text annotation without an attached note.");
-    
+
   var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.ABOVE,
       this.index);
   this.context.save();
   this.context.setFont(this.font.family, this.font.size, this.font.weight);
 
   var text_width = this.context.measureText(this.text).width;
-  if (this.justification == Vex.Flow.Annotation.Justify.LEFT)
+  if (this.justification == Vex.Flow.Annotation.Justify.LEFT) {
     var x = start.x;
-  else // CENTER is other option
+  } else {
     var x = start.x - text_width / 2;
-  if(this.bottom) {
+  }
+
+  if (this.bottom) {
+    // TODO(0xfe): Fix this demeter violation
     var y = this.note.stave.getYForBottomText(this.text_line);
   } else {
     var y = this.note.getYForTopText(this.text_line) - 1;

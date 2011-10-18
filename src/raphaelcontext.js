@@ -72,7 +72,8 @@ Vex.Flow.RaphaelContext.prototype.scale = function(x, y) {
   this.attributes.font = this.state.font_size * this.state.scale.x + "pt " +
     this.state.font_family;
   this.background_attributes.scale = x + "," + y + ",0,0";
-  this.background_attributes.font = this.state.font_size * this.state.scale.x + "pt " +
+  this.background_attributes.font = this.state.font_size *
+    this.state.scale.x + "pt " +
     this.state.font_family;
   return this;
 }
@@ -196,8 +197,10 @@ Vex.Flow.RaphaelContext.prototype.arc =
   var delta = endAngle - startAngle;
 
   if (delta > Math.PI) {
-      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2, antiClockwise);
-      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle, antiClockwise);
+      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
+                     antiClockwise);
+      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
+                     antiClockwise);
   }
   else {
       this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
@@ -208,7 +211,8 @@ Vex.Flow.RaphaelContext.prototype.arc =
 Vex.Flow.RaphaelContext.prototype.arcHelper =
   function(x, y, radius, startAngle, endAngle, antiClockwise) {
 
-  Vex.Assert(endAngle > startAngle, "end angle " + endAngle + " less than or equal to start angle " + startAngle);
+  Vex.Assert(endAngle > startAngle, "end angle " + endAngle +
+             " less than or equal to start angle " + startAngle);
   Vex.Assert(startAngle >= 0 && startAngle <= Math.PI * 2);
   Vex.Assert(endAngle >= 0 && endAngle <= Math.PI * 2);
 
@@ -279,13 +283,6 @@ Vex.Flow.RaphaelContext.prototype.measureText = function(text) {
 }
 
 Vex.Flow.RaphaelContext.prototype.fillText = function(text, x, y) {
-//  var shift = 0;
-//  if (this.state.font_size == 9) shift = 1;
-
-//  this.paper.text(x + (Vex.Flow.textWidth(text) / 2) + 2,
-//      (y - (this.state.font_size / (3.5 * this.state.scale.y))) + shift, text).
-//    attr(this.attributes);
-//  return this;
   this.paper.text(x + (this.measureText(text).width / 2),
       (y - (this.state.font_size / (2.25 * this.state.scale.y))), text).
     attr(this.attributes);
@@ -306,10 +303,9 @@ Vex.Flow.RaphaelContext.prototype.save = function() {
 }
 
 Vex.Flow.RaphaelContext.prototype.restore = function() {
-  // TODO(mmuthanna): State needs to be deep-restored.
+  // TODO(0xfe): State needs to be deep-restored.
   var state = this.state_stack.pop();
   this.state.font_family = state.state.font_family;
   this.attributes.font = state.attributes.font;
-
   return this;
 }
