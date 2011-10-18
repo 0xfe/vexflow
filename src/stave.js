@@ -64,7 +64,10 @@ Vex.Flow.Stave.prototype.setY = function(y) {
   this.y = y; return this;
 }
 Vex.Flow.Stave.prototype.setWidth = function(width) {
-  this.width = width; return this;
+  this.width = width;
+  // reset the x position of the end barline
+  this.modifiers[1].setX(this.x + this.width);
+  return this;
 }
 Vex.Flow.Stave.prototype.setMeasure = function(measure) {
   this.measure = measure; return this;
@@ -191,9 +194,9 @@ Vex.Flow.Stave.prototype.draw = function(context) {
   var width = this.width;
   var x = this.x;
 
-  this.drawVerticalBar(0, false);
+  this.drawVertical(0, false);
   for (var line=0; line < num_lines; line++) {
-  
+
     var y = this.getYForLine(line);
     this.context.fillRect(x, y, width, 1);
   }
@@ -207,9 +210,9 @@ Vex.Flow.Stave.prototype.draw = function(context) {
     x += glyph.getMetrics().width;
     bar_x_shift += glyph.getMetrics().width;
   }
-    // Add padding after clef, time sig, key sig
+  // Add padding after clef, time sig, key sig
   if (bar_x_shift > 0) bar_x_shift += this.options.vertical_bar_width;
-    // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
+  // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
   for (var i = 0; i < this.modifiers.length; i++) {
     this.modifiers[i].draw(this, bar_x_shift);
   }
@@ -227,19 +230,28 @@ Vex.Flow.Stave.prototype.draw = function(context) {
 
     // Draw Simple barlines for backward compatability
     // Do not delete - draws the beginning bar of the stave
-Vex.Flow.Stave.prototype.drawVertical = function(x) {
-  this.drawVerticalBarFixed(this.x + x, false);
+Vex.Flow.Stave.prototype.drawVertical = function(x, isDouble) {
+  this.drawVerticalFixed(this.x + x, isDouble);
 }
-Vex.Flow.Stave.prototype.drawVerticalBar = function(x, double) {
-  this.drawVerticalBarFixed(this.x + x, double);
-}
-Vex.Flow.Stave.prototype.drawVerticalBarFixed = function(x, double) {
+Vex.Flow.Stave.prototype.drawVerticalFixed = function(x, isDouble) {
   if (!this.context) throw new Vex.RERR("NoCanvasContext",
       "Can't draw stave without canvas context.");
 
   var top_line = this.getYForLine(0);
   var bottom_line = this.getYForLine(this.options.num_lines - 1);
-  if (double)
+  if (isDouble)
     this.context.fillRect(x - 3, top_line, 1, bottom_line - top_line + 1);
+  this.context.fillRect(x, top_line, 1, bottom_line - top_line + 1);
+}
+
+Vex.Flow.Stave.prototype.drawVerticalBar = function(x) {
+  this.drawVerticalBarFixed(this.x + x, false);
+}
+Vex.Flow.Stave.prototype.drawVerticalBarFixed = function(x) {
+  if (!this.context) throw new Vex.RERR("NoCanvasContext",
+      "Can't draw stave without canvas context.");
+
+  var top_line = this.getYForLine(0);
+  var bottom_line = this.getYForLine(this.options.num_lines - 1);
   this.context.fillRect(x, top_line, 1, bottom_line - top_line + 1);
 }
