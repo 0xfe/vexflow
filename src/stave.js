@@ -186,7 +186,7 @@ Vex.Flow.Stave.prototype.addKeySignature = function(keySpec) {
 }
 
 Vex.Flow.Stave.prototype.addClef = function(clef) {
-  this.clef = "clef";
+  this.clef = clef;
   this.addModifier(new Vex.Flow.Clef(clef));
   return this;
 }
