@@ -41,11 +41,11 @@ Vex.Flow.Test.ClefKeySignature.Start = function() {
   module("KeySignature");
   test("Key Parser Test", Vex.Flow.Test.ClefKeySignature.parser);
   Vex.Flow.Test.runTest("Major Key Clef Test", 
-  	Vex.Flow.Test.ClefKeySignature.majorKeys);
+    Vex.Flow.Test.ClefKeySignature.majorKeys);
   Vex.Flow.Test.runRaphaelTest("Major Key Clef Test (Raphael)",
   Vex.Flow.Test.ClefKeySignature.majorKeys);
   Vex.Flow.Test.runTest("Minor Key Clef Test", 
-  	Vex.Flow.Test.ClefKeySignature.minorKeys);
+    Vex.Flow.Test.ClefKeySignature.minorKeys);
   Vex.Flow.Test.runRaphaelTest("Minor Key Clef Test (Raphael)",
   Vex.Flow.Test.ClefKeySignature.minorKeys);
   Vex.Flow.Test.runTest("Stave Helper", Vex.Flow.Test.ClefKeySignature.staveHelper);
