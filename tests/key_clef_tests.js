@@ -48,7 +48,8 @@ Vex.Flow.Test.ClefKeySignature.Start = function() {
     Vex.Flow.Test.ClefKeySignature.minorKeys);
   Vex.Flow.Test.runRaphaelTest("Minor Key Clef Test (Raphael)",
   Vex.Flow.Test.ClefKeySignature.minorKeys);
-  Vex.Flow.Test.runTest("Stave Helper", Vex.Flow.Test.ClefKeySignature.staveHelper);
+  Vex.Flow.Test.runTest("Stave Helper", 
+    Vex.Flow.Test.ClefKeySignature.staveHelper);
 
 }
 
