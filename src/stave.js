@@ -18,7 +18,7 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
   this.glyphs = [];
   this.modifiers = [];  // non-glyph stave items (barlines, coda, segno, etc.)
   this.measure = 0;
-	this.clef = "treble";
+  this.clef = "treble";
   this.font = {
     family: "sans-serif",
     size: 8,
@@ -186,7 +186,7 @@ Vex.Flow.Stave.prototype.addKeySignature = function(keySpec) {
 }
 
 Vex.Flow.Stave.prototype.addClef = function(clef) {
-	this.clef = "clef";
+  this.clef = "clef";
   this.addModifier(new Vex.Flow.Clef(clef));
   return this;
 }
@@ -197,7 +197,7 @@ Vex.Flow.Stave.prototype.addTimeSignature = function(timeSpec) {
 }
 
 Vex.Flow.Stave.prototype.addTrebleGlyph = function() {
-	this.clef = "treble";
+  this.clef = "treble";
   this.addGlyph(new Vex.Flow.Glyph("v83", 40));
   return this;
 }
