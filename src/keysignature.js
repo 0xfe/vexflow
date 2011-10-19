@@ -28,7 +28,7 @@ Vex.Flow.KeySignature.prototype.addAccToStave = function(stave, acc) {
 }
 
 Vex.Flow.KeySignature.prototype.addModifier = function(stave) {
-	this.convertAccLines(stave.clef, this.accList[0].glyphCode);
+  this.convertAccLines(stave.clef, this.accList[0].glyphCode);
   for (var i = 0; i < this.accList.length; ++i) {
     this.addAccToStave(stave, this.accList[i]);
   }
