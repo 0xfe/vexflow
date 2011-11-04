@@ -44,9 +44,11 @@ Vex.Flow.Note.prototype.init = function(duration) {
 
   // Positioning variables
   this.width = 0;             // Width in pixels calculated after preFormat
-  this.extraLeftPx = 0;       // Extra room on left
-  this.extraRightPx = 0;      // Extra room on right
+  this.extraLeftPx = 0;       // Extra room on left for offset note head
+  this.extraRightPx = 0;      // Extra room on right for offset note head
   this.x_shift = 0;           // X shift from tick context X
+  this.left_modPx = 0;        // Max width of left modifiers
+  this.right_modPx = 0;       // Max width of right modifiers
   this.voice = null;          // The voice that this note is in
   this.preFormatted = false;  // Is this note preFormatted?
   this.ys = [];               // list of y coordinates for each note
@@ -54,6 +56,14 @@ Vex.Flow.Note.prototype.init = function(duration) {
   // Drawing
   this.context = null;
   this.stave = null;
+}
+
+Vex.Flow.Note.prototype.addStroke = function(index, stroke) {
+  stroke.setNote(this);
+  stroke.setIndex(index);
+  this.modifiers.push(stroke);
+  this.setPreFormatted(false);
+  return this;
 }
 
 Vex.Flow.Note.prototype.setYs = function(ys) {
@@ -112,6 +122,23 @@ Vex.Flow.Note.prototype.setModifierContext = function(mc) {
   return this;
 }
 
+Vex.Flow.Note.prototype.getMetrics = function() {
+  if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+      "Can't call getMetrics on an unformatted note.");
+  var modLeftPx = 0;
+  var modRightPx = 0;
+  if (this.modifierContext != null) {
+    modLeftPx = this.modifierContext.state.left_shift;
+    modRightPx = this.modifierContext.state.right_shift;
+  }
+  return { noteWidth: this.getWidth() -
+                      modLeftPx - modRightPx -
+                      this.extraLeftPx - this.extraRightPx,
+           left_shift: this.x_shift,
+           modLeftPx: modLeftPx, modRightPx: modRightPx,
+           extraLeftPx: this.extraLeftPx, extraRightPx: this.extraRightPx };
+}
+
 Vex.Flow.Note.prototype.getWidth = function() {
   if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
       "Can't call GetWidth on an unformatted note.");
@@ -136,21 +163,21 @@ Vex.Flow.Note.prototype.getAbsoluteX = function(x) {
   if (!this.tickContext) throw new Vex.RERR("NoTickContext",
       "Note needs a TickContext assigned for an X-Value");
 
-  // Center the note in the tick context
-  var x = this.tickContext.getX() +
-    (this.tickContext.getPixelsUsed() / 2) +
-    (this.extraLeftPx / 2) -
-    (this.extraRightPx / 2);
-
-  if (this.modifierContext)
-    x += (this.modifierContext.getExtraLeftPx() / 2) -
-         (this.modifierContext.getExtraRightPx() / 2);
-
-  if (this.stave) x += this.stave.getNoteStartX();
+  // position note to left edge of tick context.
+  var x = this.tickContext.getX();
+  // add padding at beginning of stave
+  if (this.stave) x += this.stave.getNoteStartX() + 12;
 
   return x;
 }
 
 Vex.Flow.Note.prototype.setPreFormatted = function(value) {
   this.preFormatted = value;
+
+  // Maintain the width of left and right modifiers in pizels
+  if (this.preFormatted) {
+    var extra = this.tickContext.getExtraPx();
+    this.left_modPx = Math.max(this.left_modPx, extra.left);
+    this.right_modPx = Math.max(this.right_modPx, extra.right);
+  }
 }

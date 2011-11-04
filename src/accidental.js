@@ -33,12 +33,15 @@ Vex.Flow.Accidental.prototype.init = function(type) {
 }
 
 Vex.Flow.Accidental.prototype.getCategory = function() { return "accidentals"; }
+
+/* Redundant functions defined in modifier.js
 Vex.Flow.Accidental.prototype.getNote = function() { return this.note; }
 Vex.Flow.Accidental.prototype.setNote = function(note)
   { this.note = note; return this; }
 Vex.Flow.Accidental.prototype.getIndex = function() { return this.index; }
 Vex.Flow.Accidental.prototype.setIndex = function(index) {
   this.index = index; return this; }
+*/
 
 Vex.Flow.Accidental.prototype.draw = function() {
   if (!this.context) throw new Vex.RERR("NoContext",

@@ -64,6 +64,9 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   var notes = this.modifiers['stavenotes'];
   if (!notes || notes.length < 2) return this;
 
+  if (notes[0].getStave() != null)
+    return this.formatNotesByY(notes);
+
   // Assumption: only two notes
   Vex.Assert(notes.length == 2,
       "Got more than two notes in Vex.Flow.ModifierContext.formatNotes!");
@@ -85,6 +88,45 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   if (top_keys[0].line <= (bottom_keys[bottom_keys.length - 1].line + 0.5)) {
      x_shift = top_note.getVoiceShiftWidth();
      bottom_note.setXShift(x_shift);
+  }
+
+  this.state.right_shift += x_shift;
+  return this;
+}
+
+Vex.Flow.ModifierContext.prototype.formatNotesByY = function(notes) {
+  // Called from formatNotes when more than two voices
+  var hasStave = true;
+
+  for (var i = 0; i < notes.length; i++) {
+    hasStave = hasStave && notes[i].getStave() != null;
+  }
+
+  if (!hasStave) throw new Vex.RERR("Stave Missing",
+    "All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!");
+
+  var x_shift = 0;
+
+  for (var i = 0; i < notes.length - 1; i++) {
+    var top_note = notes[i];
+    var bottom_note = notes[i + 1];
+
+    if (top_note.getStemDirection() == Vex.Flow.StaveNote.STEM_DOWN) {
+      top_note = notes[i + 1];
+      bottom_note = notes[i];
+    }
+
+    var top_keys = top_note.getKeyProps();
+    var bottom_keys = bottom_note.getKeyProps();
+
+    var topY = top_note.getStave().getYForLine(top_keys[0].line);
+    var bottomY = bottom_note.getStave().getYForLine(bottom_keys[bottom_keys.length - 1].line);
+
+    var line_space = top_note.getStave().options.spacing_between_lines_px;
+    if (Math.abs(topY - bottomY) == line_space / 2) {
+      x_shift = top_note.getVoiceShiftWidth();
+      bottom_note.setXShift(x_shift);
+    }
   }
 
   this.state.right_shift += x_shift;
@@ -145,18 +187,33 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
   if (!accidentals || accidentals.length == 0) return this;
 
   var acc_list = [];
+  var hasStave = false;
+
   for (var i = 0; i < accidentals.length; ++i) {
     var acc = accidentals[i];
     var note = acc.getNote();
+    var stave = note.getStave();
     var props = note.getKeyProps()[acc.getIndex()];
     var shift = (props.displaced ? note.getExtraLeftPx() : 0);
-    acc_list.push({ line: props.line, shift: shift, acc: acc });
+    if (stave != null) {
+      hasStave = true;
+      var line_space = stave.options.spacing_between_lines_px;
+      var y = stave.getYForLine(props.line);
+      acc_list.push({ y: y, shift: shift, acc: acc, lineSpace: line_space });
+    } else {
+      acc_list.push({ line: props.line, shift: shift, acc: acc });
+    }
   }
+
+  // If stave assigned, format based on note y-position
+  if (hasStave)
+    return this.formatAccidentalsByY(acc_list);
 
   // Sort accidentals by line number.
   acc_list.sort(function(a, b) { return (b.line - a.line); });
 
-  var acc_shift = left_shift;
+  // If first note left shift in case it is displaced
+  var acc_shift = left_shift + acc_list[0].shift;
   var x_width = 0;
   var top_line = acc_list[0].line;
   for (var i = 0; i < acc_list.length; ++i) {
@@ -168,6 +225,39 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
     // accidental.
     if (line < top_line - 3.0) {
       top_line = line;
+      acc_shift = left_shift + shift;
+    }
+
+    acc.setXShift(acc_shift);
+    acc_shift += acc.getWidth() + accidental_spacing; // spacing
+    x_width = (acc_shift > x_width) ? acc_shift : x_width;
+  }
+
+  this.state.left_shift += x_width;
+  return this;
+}
+
+Vex.Flow.ModifierContext.prototype.formatAccidentalsByY = function(acc_list) {
+  var left_shift = this.state.left_shift;
+  var accidental_spacing = 2;
+
+  // Sort accidentals by Y-position.
+  acc_list.sort(function(a, b) { return (b.y - a.y); });
+
+  // If first note is displaced, get the correct left shift
+  var acc_shift = left_shift + acc_list[0].shift;
+  var x_width = 0;
+  var top_y = acc_list[0].y;
+
+  for (var i = 0; i < acc_list.length; ++i) {
+    var acc = acc_list[i].acc;
+    var y = acc_list[i].y;
+    var shift = acc_list[i].shift;
+
+    // Once you hit three stave lines, you can reset the position of the
+    // accidental.
+    if (top_y - y > 3 * acc_list[i].lineSpace) {
+      top_y = y;
       acc_shift = left_shift + shift;
     }
 
@@ -199,13 +289,13 @@ Vex.Flow.ModifierContext.prototype.formatStrokes = function() {
   var str_shift = left_shift;
   var x_shift = 0;
 
-  // There can only be one stroke. Multiple strokes overlay each other.
+  // There can only be one stroke .. if more than one, they overlay each other
   for (var i = 0; i < str_list.length; ++i) {
     var str = str_list[i].str;
     var line = str_list[i].line;
     var shift = str_list[i].shift;
     str.setXShift(str_shift);
-    x_shift += str.getWidth() + stroke_spacing; // spacing
+    x_shift = Math.max(str.getWidth() + stroke_spacing, x_shift);
   }
 
   this.state.left_shift += x_shift;
