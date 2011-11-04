@@ -1,7 +1,7 @@
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 //
-// This class implements varies types of modifiers to notes (e.g. bends, 
+// This class implements varies types of modifiers to notes (e.g. bends,
 // fingering positions etc.) Accidentals should also be implemented as
 // modifiers, eventually.
 
@@ -51,6 +51,9 @@ Vex.Flow.Modifier.prototype.setModifierContext = function(c) {
   this.modifier_context = c; return this; }
 Vex.Flow.Modifier.prototype.setTextLine = function(line)
   { this.text_line = line; return this; }
+// Shift y pixels in vertical direction
+Vex.Flow.Modifier.prototype.setYShift = function(y)
+  { this.y_shift = y; return this; }
 
 // Shift x pixels in the direction of the modifier
 Vex.Flow.Modifier.prototype.setXShift = function(x) {

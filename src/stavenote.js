@@ -72,6 +72,9 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
     this.keyProps.push(props);
   }
 
+  // Sort the notes from lowest line to highest line
+  this.keyProps.sort(function(a, b) {return a.line - b.line});
+
   // Drawing
   this.modifiers = [];
 
@@ -166,7 +169,6 @@ Vex.Flow.StaveNote.prototype.getTieRightX = function() {
 Vex.Flow.StaveNote.prototype.getTieLeftX = function() {
   var tieEndX = this.getAbsoluteX();
   tieEndX += this.x_shift - this.extraLeftPx;
-  // if (this.modifierContext) tieEndX -= this.modifierContext.getExtraLeftPx();
   return tieEndX;
 }
 
@@ -218,7 +220,7 @@ Vex.Flow.StaveNote.prototype.addToModifierContext = function(mc) {
   this.setPreFormatted(false);
 }
 
-// Generic functions to add modifiers to a note
+// Generic function to add modifiers to a note
 Vex.Flow.StaveNote.prototype.addModifier = function(index, modifier) {
   modifier.setNote(this);
   modifier.setIndex(index);
@@ -235,14 +237,14 @@ Vex.Flow.StaveNote.prototype.addAccidental = function(index, accidental) {
   return this;
 }
 
-Vex.Flow.StaveNote.prototype.addStroke = function(index, stroke) {
-  stroke.setNote(this);
-  stroke.setIndex(index);
-  this.modifiers.push(stroke);
-  this.setPreFormatted(false);
-  return this;
-}
-
+//Vex.Flow.StaveNote.prototype.addStroke = function(index, stroke) {
+//  stroke.setNote(this);
+//  stroke.setIndex(index);
+//  this.modifiers.push(stroke);
+//  this.setPreFormatted(false);
+//  return this;
+//}
+//
 Vex.Flow.StaveNote.prototype.addArticulation = function(index, articulation) {
   articulation.setNote(this);
   articulation.setIndex(index);
@@ -305,7 +307,14 @@ Vex.Flow.StaveNote.prototype.preFormat = function() {
   if (this.preFormatted) return;
   if (this.modifierContext) this.modifierContext.preFormat();
 
-  this.setWidth(this.glyph.head_width + this.extraLeftPx + this.extraRightPx);
+  var width = this.glyph.head_width + this.extraLeftPx + this.extraRightPx;
+
+  // For upward flagged notes, the width of the flag needs to be added
+  if (this.glyph.flag && this.beam == null && this.stem_direction == 1) {
+    width += this.glyph.head_width;
+  }
+
+  this.setWidth(width);
 
   this.setPreFormatted(true);
 }
@@ -426,7 +435,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
   // applicable to non-rests.
   if (!glyph.rest) {
     var that = this;
-    
+
     function stroke(y) {
       if (default_head_x != null) head_x = default_head_x;
       ctx.fillRect(
