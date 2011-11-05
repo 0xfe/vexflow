@@ -13,7 +13,7 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
   this.y = y;
   this.width = width;
   this.glyph_start_x = x + 5;
-  this.start_x = this.glyph_start_x + 5;
+  this.start_x = this.glyph_start_x;
   this.context = null;
   this.glyphs = [];
   this.modifiers = [];  // non-glyph stave items (barlines, coda, segno, etc.)
@@ -42,13 +42,19 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
       new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, this.x)); // beg bar
   this.modifiers.push(
       new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE,
-                           this.x + this.width)); // end bar
+      this.x + this.width)); // end bar
 }
 
 Vex.Flow.Stave.prototype.setNoteStartX = function(x) {
   this.start_x = x; return this; }
 Vex.Flow.Stave.prototype.getNoteStartX = function() {
-  return this.start_x; }
+  var start_x = this.start_x;
+
+  // Add additional space if left barline is REPEAT_BEGIN
+  if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN)
+    start_x += 10;
+  return start_x;
+}
 Vex.Flow.Stave.prototype.getNoteEndX = function() {
   return this.x + this.width; }
 Vex.Flow.Stave.prototype.getTieStartX = function() {
@@ -76,11 +82,12 @@ Vex.Flow.Stave.prototype.setMeasure = function(measure) {
   this.measure = measure; return this;
 }
 
-// Bar Line functions
+  // Bar Line functions
 Vex.Flow.Stave.prototype.setBegBarType = function(type) {
-  // Only valid bar types at beginning of stave is single or begin repeat
+  // Only valid bar types at beginning of stave is none, single or begin repeat
   if (type == Vex.Flow.Barline.type.SINGLE ||
-      type == Vex.Flow.Barline.type.REPEAT_BEGIN) {
+      type == Vex.Flow.Barline.type.REPEAT_BEGIN ||
+      type == Vex.Flow.Barline.type.NONE) {
       this.modifiers[0] = new Vex.Flow.Barline(type, this.x);
   }
   return this;
@@ -202,7 +209,6 @@ Vex.Flow.Stave.prototype.draw = function(context) {
   var width = this.width;
   var x = this.x;
 
-  this.drawVertical(0, false);
   for (var line=0; line < num_lines; line++) {
 
     var y = this.getYForLine(line);
