@@ -17,6 +17,12 @@ Vex.Flow.Test.MockTickable.prototype.getX = function() {
 Vex.Flow.Test.MockTickable.prototype.getTicks = function() {return this.ticks;}
 Vex.Flow.Test.MockTickable.prototype.setTicks = function(t) {
   this.ticks = t; return this; };
+Vex.Flow.Test.MockTickable.prototype.getMetrics = function() {
+  return { noteWidth: this.width,
+           left_shift: 0,
+           modLeftPx: 0, modRightPx: 0,
+           extraLeftPx: 0, extraRightPx: 0 };
+}
 Vex.Flow.Test.MockTickable.prototype.getWidth = function() {return this.width;}
 Vex.Flow.Test.MockTickable.prototype.setWidth = function(w) {
   this.width = w; return this; }

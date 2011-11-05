@@ -17,11 +17,20 @@ Vex.Flow.TickContext.prototype.init = function() {
   this.padding = 3;     // padding on each side (width += padding * 2)
   this.pixelsUsed = 0;
   this.x = 0;
-  this.tickables = []; // Notes, tabs, chords, lyrics.
+  this.tickables = [];   // Notes, tabs, chords, lyrics.
+  this.notePx = 0;       // width of widest note in this context
+  this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
+  this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
 
   // Ignore this tick context for formatting and justification
   this.ignore_ticks = true;
   this.preFormatted = false;
+}
+
+// Get widths context, note and left/right modifiers for formatting
+Vex.Flow.TickContext.prototype.getMetrics = function() {
+  return { width: this.width, notePx: this.notePx,
+           extraLeftPx: this.extraLeftPx, extraRightPx: this.extraRightPx };
 }
 
 Vex.Flow.TickContext.prototype.setCurrentTick = function(tick) {
@@ -48,6 +57,25 @@ Vex.Flow.TickContext.prototype.getX = function() {
 Vex.Flow.TickContext.prototype.setX = function(x) {
   this.x = x;
   return this;
+}
+
+// Get left & right pixels used for modifiers
+Vex.Flow.TickContext.prototype.getExtraPx = function() {
+  var left_shift = 0;
+  var right_shift = 0;
+  var extraLeftPx = 0;
+  var extraRightPx = 0;
+  for (var i = 0; i < this.tickables.length; i++) {
+    extraLeftPx = Math.max(this.tickables[i].extraLeftPx, extraLeftPx);
+    extraRightPx = Math.max(this.tickables[i].extraRightPx, extraRightPx);
+    var mContext = this.tickables[i].modifierContext;
+    if (mContext && mContext != null) {
+      left_shift = Math.max( left_shift, mContext.state.left_shift);
+      right_shift = Math.max( right_shift, mContext.state.right_shift);
+    }
+  }
+  return { left: left_shift, right: right_shift,
+           extraLeft: extraLeftPx, extraRight: extraRightPx };
 }
 
 Vex.Flow.TickContext.prototype.getPixelsUsed = function() {
@@ -97,11 +125,25 @@ Vex.Flow.TickContext.prototype.addTickable = function(tickable) {
 Vex.Flow.TickContext.prototype.preFormat = function() {
   if (this.preFormatted) return;
 
+  var note_width = 0;
   for (var i = 0; i < this.tickables.length; ++i) {
     var tickable = this.tickables[i];
     tickable.preFormat();
-    var width = tickable.getWidth();
-    if (width > this.width) this.width = width;
+    var metrics = tickable.getMetrics();
+
+    // Maintain max extra pixels from all tickables in the context
+    this.extraLeftPx = Math.max(this.extraLeftPx,
+                                metrics.extraLeftPx + metrics.modLeftPx);
+    this.extraRightPx = Math.max(this.extraRightPx,
+                                 metrics.extraRightPx + metrics.modRightPx);
+
+    // Maintain the widest note for all tickables in the context
+    this.notePx = Math.max(this.notePx, metrics.noteWidth);
+
+    // Recalculate the tick context total width
+    this.width = this.notePx +
+                 this.extraLeftPx +
+                 this.extraRightPx;
   }
 
   return this;

@@ -10,6 +10,7 @@ Vex.Flow.Formatter = function(){
   this.pixelsPerTick = 0;
   this.totalTicks = 0;
   this.tContexts = null;
+  this.mContexts = null;
 
   this.render_options = {
     perTickableWidth: 15,
@@ -32,19 +33,19 @@ Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes) {
 Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
     tabstave, stave, tabnotes, notes) {
 
-  var tabvoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
-  tabvoice.addTickables(tabnotes);
-
   var notevoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
   notevoice.addTickables(notes);
 
-  var formatter = new Vex.Flow.Formatter().
-    joinVoices([tabvoice]).
-    joinVoices([notevoice]).
-    formatToStave([tabvoice, notevoice], stave);
+  var tabvoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
+  tabvoice.addTickables(tabnotes);
 
-  tabvoice.draw(ctx, tabstave);
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([notevoice]).
+    joinVoices([tabvoice]).
+    formatToStave([notevoice,tabvoice], stave);
+
   notevoice.draw(ctx, stave);
+  tabvoice.draw(ctx, tabstave);
 
   // Draw a connector between tab and note staves.
   (new Vex.Flow.StaveConnector(stave, tabstave)).setContext(ctx).draw();
@@ -104,6 +105,7 @@ Vex.Flow.Formatter.prototype.createModifierContexts = function(voices) {
       function(tickable, context) {
         tickable.addToModifierContext(context);
       });
+  this.mContexts = contexts;
   return contexts;
 }
 
@@ -122,7 +124,7 @@ Vex.Flow.Formatter.prototype.createTickContexts = function(voices) {
 }
 
 /**
- * Take a set of tick contexts and align thier X-positions and space usage.
+ * Take a set of tick contexts and align their X-positions and space usage.
  */
 Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   var contexts = this.tContexts;
@@ -162,33 +164,66 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   // Now distribute the ticks to each tick context, and assign them their
   // own X positions.
   var x = 0;
+  var white_space = 0; // White space to right of previous note
+  var tick_space = 0;  // Pixels from prev note x-pos to curent note x-pos
+  var prev_tick = 0;
+  var prev_width = 0;
+  var lastMetrics = null;
+
   for (var i = 0; i < contextList.length; ++i) {
     var tick = contextList[i];
     var context = contextMap[tick];
+    var thisMetrics = context.getMetrics();
     var width = context.getWidth();
     var minTicks = context.getMinTicks();
+    var min_x = 0;
 
     var pixels_used = Math.max(width, minTicks * this.pixelsPerTick);
     pixels_used = Math.min(width + 20, pixels_used);
 
-    var set_x = x;
+    // Pixels to next note x position
+    tick_space = (tick - prev_tick) * this.pixelsPerTick;
 
-    if (!justified) {
-      // Rate limit pixel usage
-      var maxWidth = width + this.render_options.maxExtraWidthPerTickable;
-      if (pixels_used > maxWidth) pixels_used = maxWidth;
-    } else {
-      set_x = tick * this.pixelsPerTick;
+    // Calculate note x position
+    var new_set_x = x + tick_space;
+    var set_x = new_set_x;
 
-      // Make way for accidentals, etc. Prefer pushing out over the edge
-      // to overlapping over other notes.
-      if (set_x < x) set_x += (x - set_x);
+    // Calculate the minimum next note position to allow for right modifiers
+    if (lastMetrics != null)
+      min_x = x + prev_width - lastMetrics.extraLeftPx;
+
+    // Determine the space required for the previous tick
+    set_x = Math.max(set_x, min_x);
+
+    // Determine pixels needed for left modifiers
+    var left_px = thisMetrics.extraLeftPx;
+
+    // Determine white space to right of previous tick
+    if (lastMetrics != null) {
+      white_space = (set_x - x) - (prev_width -
+                                   lastMetrics.extraLeftPx);
+    }
+    if (i > 0) {
+      if (white_space > 0) {
+        if (white_space >= left_px) {
+          // Have enough white space for left modifiers - no offset needed
+          left_px = 0;
+        } else {
+          // Decrease left modifier offset by amount of white space
+          left_px -= white_space;
+        }
+      }
     }
 
-    context.setX(set_x);
-    context.setPixelsUsed(pixels_used);
+    // Adjust the tick x position with the left modifier offset
+    set_x += left_px;
 
-    x += pixels_used;
+    context.setX(set_x);
+    context.setPixelsUsed(pixels_used);  // ??? Not sure this is neeeded
+    lastMetrics = thisMetrics;
+    prev_width = width;
+    prev_tick = tick;
+    x = set_x;
   }
 }
 

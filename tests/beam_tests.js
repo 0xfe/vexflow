@@ -32,11 +32,11 @@ Vex.Flow.Test.Beam.beamNotes = function(notes, stave, ctx) {
 }
 
 Vex.Flow.Test.Beam.setupContext = function(options, x, y) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, x || 350, y || 140);
+  Vex.Flow.Test.resizeCanvas(options.canvas_sel, x || 450, y || 140);
   var ctx = Vex.getCanvasContext(options.canvas_sel);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = " 10pt Arial";
-  var stave = new Vex.Flow.Stave(10, 10, x || 350).addTrebleGlyph().
+  var stave = new Vex.Flow.Stave(10, 10, x || 450).addTrebleGlyph().
     setContext(ctx).draw();
 
   return {context: ctx, stave: stave};
@@ -248,7 +248,7 @@ Vex.Flow.Test.Beam.mixed = function(options) {
   voice2.addTickables(notes2);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice, voice2]).
-    format([voice, voice2], 300);
+    format([voice, voice2], 450);
   var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4));
   var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8));
 
@@ -295,7 +295,7 @@ Vex.Flow.Test.Beam.dotted = function(options) {
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    format([voice], 300);
+    format([voice], 450);
   var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4));
   var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8));
   var beam1_3 = new Vex.Flow.Beam(notes.slice(8, 12));
