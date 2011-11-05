@@ -4,11 +4,11 @@
 // representation
 //
 
-/** 
- * @constructor 
+/**
+ * @constructor
  */
-Vex.Flow.TimeSignature = function(timeSpec) { 
-  if (arguments.length > 0) this.init(timeSpec); 
+Vex.Flow.TimeSignature = function(timeSpec) {
+  if (arguments.length > 0) this.init(timeSpec);
 }
 
 
@@ -16,7 +16,7 @@ Vex.Flow.TimeSignature.glyphs = {
   "C": {
     code: "v41",
     point: 40,
-    line: 2 
+    line: 2
   },
   "C|": {
     code: "vb6",
@@ -25,7 +25,7 @@ Vex.Flow.TimeSignature.glyphs = {
   }
 }
 Vex.Flow.TimeSignature.prototype = new Vex.Flow.StaveModifier();
-Vex.Flow.TimeSignature.prototype.constructor = Vex.Flow.KeySignature;
+Vex.Flow.TimeSignature.prototype.constructor = Vex.Flow.TimeSignature;
 Vex.Flow.TimeSignature.superclass = Vex.Flow.StaveModifier.prototype;
 
 Vex.Flow.TimeSignature.prototype.init = function(timeSpec) {
@@ -41,7 +41,7 @@ Vex.Flow.TimeSignature.prototype.init = function(timeSpec) {
 Vex.Flow.TimeSignature.prototype.parseTimeSpec = function(timeSpec) {
   if (timeSpec == "C" || timeSpec == "C|") {
     var glyphInfo = Vex.Flow.TimeSignature.glyphs[timeSpec];
-    return {num: false, line: glyphInfo.line, 
+    return {num: false, line: glyphInfo.line,
       glyph: new Vex.Flow.Glyph(glyphInfo.code, glyphInfo.point)};
   }
 
@@ -51,18 +51,18 @@ Vex.Flow.TimeSignature.prototype.parseTimeSpec = function(timeSpec) {
     var c = timeSpec.charAt(i);
     if (c == "/") {
       break;
-    } 
+    }
     else if (/[0-9]/.test(c)) {
       topNums.push(c);
     }
     else {
-      throw new Vex.RERR("BadTimeSignature", 
+      throw new Vex.RERR("BadTimeSignature",
           "Invalid time spec: " + timeSpec);
     }
   }
-  
+
   if (i == 0) {
-    throw new Vex.RERR("BadTimeSignature", 
+    throw new Vex.RERR("BadTimeSignature",
           "Invalid time spec: " + timeSpec);
   }
 
@@ -70,7 +70,7 @@ Vex.Flow.TimeSignature.prototype.parseTimeSpec = function(timeSpec) {
   ++i;
 
   if (i == timeSpec.length) {
-    throw new Vex.RERR("BadTimeSignature", 
+    throw new Vex.RERR("BadTimeSignature",
           "Invalid time spec: " + timeSpec);
   }
 
@@ -82,7 +82,7 @@ Vex.Flow.TimeSignature.prototype.parseTimeSpec = function(timeSpec) {
       botNums.push(c);
     }
     else {
-      throw new Vex.RERR("BadTimeSignature", 
+      throw new Vex.RERR("BadTimeSignature",
           "Invalid time spec: " + timeSpec);
     }
   }
@@ -104,7 +104,7 @@ Vex.Flow.TimeSignature.prototype.makeTimeSignatureGlyph = function(topNums, botN
     glyph.topGlyphs.push(topGlyph);
     topWidth += topGlyph.getMetrics().width;
   }
- 
+
   var botWidth = 0;
   for (var i = 0; i < botNums.length; ++i) {
     var num = botNums[i];
@@ -117,7 +117,7 @@ Vex.Flow.TimeSignature.prototype.makeTimeSignatureGlyph = function(topNums, botN
   var width = (topWidth > botWidth ? topWidth : botWidth);
   var xMin = glyph.getMetrics().x_min;
 
-  glyph.getMetrics = function() { 
+  glyph.getMetrics = function() {
     return {
       x_min: xMin,
       x_max: xMin + width,
@@ -147,7 +147,7 @@ Vex.Flow.TimeSignature.prototype.makeTimeSignatureGlyph = function(topNums, botN
       start_x += g.getMetrics().width;
     }
   }
- 
+
   return glyph;
 }
 

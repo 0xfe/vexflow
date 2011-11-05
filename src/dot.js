@@ -26,12 +26,14 @@ Vex.Flow.Dot.prototype.init = function() {
 }
 
 Vex.Flow.Dot.prototype.getCategory = function() { return "dots"; }
+/*  Redundant functions defined in modifier.js
 Vex.Flow.Dot.prototype.getNote = function() { return this.note; }
 Vex.Flow.Dot.prototype.setNote = function(note)
   { this.note = note; return this; }
 Vex.Flow.Dot.prototype.getIndex = function() { return this.index; }
 Vex.Flow.Dot.prototype.setIndex = function(index) {
   this.index = index; return this; }
+*/
 
 Vex.Flow.Dot.prototype.draw = function() {
   if (!this.context) throw new Vex.RERR("NoContext",

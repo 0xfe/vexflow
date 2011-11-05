@@ -16,7 +16,8 @@ Vex.Flow.Barline.type = {
   DOUBLE: 2,
   END: 3,
   REPEAT_BEGIN: 4,
-  REPEAT_END: 5
+  REPEAT_END: 5,
+  NONE: 6
 };
 
 Vex.Flow.Barline.prototype = new Vex.Flow.StaveModifier();
@@ -48,12 +49,16 @@ Vex.Flow.Barline.prototype.draw = function(stave, x) {
       this.drawVerticalEndBar(stave, this.x);
       break;
     case Vex.Flow.Barline.type.REPEAT_BEGIN:
+      // If repeat begin is not at start of stave, draw single barline
+      if (x > 0)
+        this.drawVerticalBar(stave, this.x, false);
       this.drawRepeatBar(stave, this.x + x, true);
       break;
     case Vex.Flow.Barline.type.REPEAT_END:
       this.drawRepeatBar(stave, this.x, false);
       break;
     default:
+      // Default is NONE, so nothing to draw
       break;
   }
 }

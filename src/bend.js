@@ -34,10 +34,16 @@ Vex.Flow.Bend.prototype.init = function(text, release) {
 Vex.Flow.Bend.prototype.getCategory = function() { return "bends"; }
 Vex.Flow.Bend.prototype.getText = function() { return this.text; }
 Vex.Flow.Bend.prototype.updateWidth = function() {
+  var text_width = Vex.Flow.textWidth(this.text);
+  if (this.context) {
+    text_width = this.context.measureText(this.text).width;
+  }
+
+  var text_width
   this.setWidth(
       this.bend_width +
       this.release_width +
-      (Vex.Flow.textWidth(this.text) / 2));
+      text_width / 2);
 }
 Vex.Flow.Bend.prototype.setBendWidth = function(width) {
   this.bend_width = width; this.updateWidth();
@@ -57,7 +63,7 @@ Vex.Flow.Bend.prototype.draw = function() {
 
   var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.RIGHT,
       this.index);
-  start.x += 1;
+  start.x += 3;
 
   var ctx = this.context;
   var that = this;

@@ -112,7 +112,7 @@ Vex.Flow.Test.Bend.reverseBends = function(options) {
     note.addToModifierContext(mc);
 
     var tickContext = new Vex.Flow.TickContext();
-    tickContext.addTickable(note).preFormat().setX(50 * i).setPixelsUsed(95);
+    tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
 
     note.setStave(stave).setContext(ctx).draw();
     ok(true, "Bend " + i);
