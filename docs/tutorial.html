@@ -66,9 +66,11 @@
       border: 10px solid #ddc;
     }
 
-    code.example, code.html {
-      font-size: 14;
+    div.egcode {
+      font-family: Courier;
+      font-size: 14px;
     }
+
   </style>
 
   <script>
@@ -84,7 +86,7 @@
         new_lines.push(code);
       }
 
-      pretty_code = new_lines.join("<br/>");
+      pretty_code = "<div class='egcode'>" + new_lines.join("<br/>") + "</div>";
       return pretty_code;
     }
 
