@@ -237,14 +237,6 @@ Vex.Flow.StaveNote.prototype.addAccidental = function(index, accidental) {
   return this;
 }
 
-//Vex.Flow.StaveNote.prototype.addStroke = function(index, stroke) {
-//  stroke.setNote(this);
-//  stroke.setIndex(index);
-//  this.modifiers.push(stroke);
-//  this.setPreFormatted(false);
-//  return this;
-//}
-//
 Vex.Flow.StaveNote.prototype.addArticulation = function(index, articulation) {
   articulation.setNote(this);
   articulation.setIndex(index);
