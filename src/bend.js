@@ -34,12 +34,13 @@ Vex.Flow.Bend.prototype.init = function(text, release) {
 Vex.Flow.Bend.prototype.getCategory = function() { return "bends"; }
 Vex.Flow.Bend.prototype.getText = function() { return this.text; }
 Vex.Flow.Bend.prototype.updateWidth = function() {
-  var text_width = Vex.Flow.textWidth(this.text);
+  var text_width;
   if (this.context) {
     text_width = this.context.measureText(this.text).width;
+  } else {
+    text_width = Vex.Flow.textWidth(this.text);
   }
 
-  var text_width
   this.setWidth(
       this.bend_width +
       this.release_width +

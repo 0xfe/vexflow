@@ -37,6 +37,7 @@ vexflow_sources = [
     "bend.js",
     "vibrato.js",
     "annotation.js",
+    "articulation.js",
     "tuning.js",
     "stavemodifier.js",
     "keysignature.js",

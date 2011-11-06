@@ -147,10 +147,7 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
     var base_y_px = y_extents.baseY;
 
     // For harmonic note heads, shorten stem length by 3 pixels
-    if (note.glyph.code_head == "v92" ||
-        note.glyph.code_head == "v95" ||
-        note.glyph.code_head == "v3e")
-      base_y_px -= this.stem_direction * 3;
+    base_y_px += this.stem_direction * note.glyph.stem_offset;
 
     // Draw the stem
     this.context.fillRect(x_px, base_y_px, 1,

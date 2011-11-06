@@ -34,15 +34,6 @@ Vex.Flow.Accidental.prototype.init = function(type) {
 
 Vex.Flow.Accidental.prototype.getCategory = function() { return "accidentals"; }
 
-/* Redundant functions defined in modifier.js
-Vex.Flow.Accidental.prototype.getNote = function() { return this.note; }
-Vex.Flow.Accidental.prototype.setNote = function(note)
-  { this.note = note; return this; }
-Vex.Flow.Accidental.prototype.getIndex = function() { return this.index; }
-Vex.Flow.Accidental.prototype.setIndex = function(index) {
-  this.index = index; return this; }
-*/
-
 Vex.Flow.Accidental.prototype.draw = function() {
   if (!this.context) throw new Vex.RERR("NoContext",
     "Can't draw accidental without a context.");
@@ -55,25 +46,4 @@ Vex.Flow.Accidental.prototype.draw = function() {
 
   Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
                        this.render_options.font_scale, this.accidental.code);
-
-  /**
-   * Accidentals need no stroking...
-
-  var keyProps = this.note.getKeyProps();
-  if (keyProps[this.index].stroke != 0) {
-     var stroke_begin_y = start.y;
-     for (var j = 0; j < 5; ++j) {
-       this.context.fillRect(
-           acc_x - this.render_options.stroke_px, stroke_begin_y,
-           this.width + (this.render_options.stroke_px * 2), 1);
-
-       stroke_begin_y -= (this.render_options.stroke_spacing * keyProps.stroke);
-       if (stroke_begin_y >= this.note.getStave().getYForLine(0) &&
-           stroke_begin_y <= this.note.getStave().getYForLine(6)) {
-         break;
-       }
-     } // for j = 0 -> 4
-  }
-
-  */
 }

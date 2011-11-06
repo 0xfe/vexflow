@@ -412,6 +412,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v5c",
     head_width: 16.5,
     stem: false,
+    stem_offset: 0,
     flag: false
   },
   "wh": { // Whole note harmonic
@@ -419,6 +420,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v5c",
     head_width: 16.5,
     stem: false,
+    stem_offset: 0,
     flag: false
   },
   "wm": { // Whole note muted
@@ -426,12 +428,14 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v5c",
     head_width: 16.5,
     stem: false,
+    stem_offset: -3,
     flag: false
   },
   "wr": { // Whole rest
     code_head: "v5c",
     head_width: 10.5,
     stem: false,
+    stem_offset: 0,
     flag: false,
     rest: true,
     position: "D/5"
@@ -441,6 +445,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "vc",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: false
   },
   "hh": { // Half note harmonic
@@ -448,6 +453,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "vc",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: false
   },
   "hm": { // Half note muted
@@ -455,12 +461,14 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "vc",
     head_width: 10.5,
     stem: true,
+    stem_offset: -3,
     flag: false
   },
   "hr": { // Half rest
     code_head: "vc",
     head_width: 10.5,
     stem: false,
+    stem_offset: 0,
     flag: false,
     rest: true,
     position: "B/4"
@@ -470,6 +478,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "vc",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: false,
     dot: true
   },
@@ -478,6 +487,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v7c",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: false
   },
   "qh": { // Quarter harmonic
@@ -485,6 +495,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v7c",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: false
   },
   "qm": { // Quarter harmonic muted
@@ -492,6 +503,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v7c",
     head_width: 10.5,
     stem: true,
+    stem_offset: -3,
     flag: false
   },
   "qr": { // Quarter rest
@@ -500,6 +512,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     rest: true,
     position: "B/4",
     stem: false,
+    stem_offset: 0,
     flag: false
   },
   "qd": { // Dotted quarter note
@@ -507,6 +520,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v7c",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: false,
     dot: true
   },
@@ -515,6 +529,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "va5",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     beam_count: 1,
     code_flag_upstem: "v54",
@@ -525,6 +540,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "va5",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     beam_count: 1,
     code_flag_upstem: "v54",
@@ -535,6 +551,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "va5",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     beam_count: 1,
     code_flag_upstem: "v54",
@@ -544,6 +561,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_head: "va5",
     head_width: 10.5,
     stem: false,
+    stem_offset: 0,
     flag: false,
     rest: true,
     beam_count: 1,
@@ -554,6 +572,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "va5",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     beam_count: 1,
     code_flag_upstem: "v54",
@@ -566,6 +585,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v3c",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     code_flag_upstem: "v3f",
     code_flag_downstem: "v8f"
@@ -576,6 +596,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v3c",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     code_flag_upstem: "v3f",
     code_flag_downstem: "v8f"
@@ -586,6 +607,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v3c",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     code_flag_upstem: "v3f",
     code_flag_downstem: "v8f"
@@ -595,6 +617,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_head: "v3c",
     head_width: 10.5,
     stem: false,
+    stem_offset: 0,
     flag: false,
     rest: true,
     position: "B/4"
@@ -605,6 +628,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v3c",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     code_flag_upstem: "v3f",
     code_flag_downstem: "v8f",
@@ -616,6 +640,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v55",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     code_flag_upstem: "v47",
     code_flag_downstem: "v2a"
@@ -626,6 +651,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v55",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     code_flag_upstem: "v47",
     code_flag_downstem: "v2a"
@@ -636,6 +662,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_rest: "v55",
     head_width: 10.5,
     stem: true,
+    stem_offset: 0,
     flag: true,
     code_flag_upstem: "v47",
     code_flag_downstem: "v2a"
@@ -656,6 +683,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_head: "v55",
     head_width: 10.5,
     stem: false,
+    stem_offset: 0,
     flag: false,
     rest: true,
     position: "B/4"

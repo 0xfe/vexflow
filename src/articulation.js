@@ -32,8 +32,12 @@ Vex.Flow.Articulation.prototype.init = function(type) {
   this.setWidth(this.articulation.width);
 }
 
-Vex.Flow.Articulation.prototype.getCategory = function() { return "articulations"; }
-Vex.Flow.Articulation.prototype.getPosition = function() {return this.position; }
+Vex.Flow.Articulation.prototype.getCategory = function() {
+  return "articulations";
+}
+Vex.Flow.Articulation.prototype.getPosition = function() {
+  return this.position;
+}
 Vex.Flow.Articulation.prototype.setPosition = function(position) {
   if (position == Vex.Flow.Modifier.Position.ABOVE ||
       position == Vex.Flow.Modifier.Position.BELOW)
