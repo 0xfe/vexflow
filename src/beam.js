@@ -201,7 +201,7 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
     return beam_lines;
   }
 
-  var valid_beam_durations = ["8d", "16d", "32d"];
+  var valid_beam_durations = ["8d", "16d", "32d", "64d"];
 
   // Draw the beams.
   for (var i = 0; i < valid_beam_durations.length; ++i) {
