@@ -95,7 +95,7 @@ Vex.Flow.Test.StaveNote.showNote = function(note_struct, stave, ctx, x) {
 }
 
 Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
-  expect(40);
+  expect(42);
   var ctx = new contextBuilder(options.canvas_sel, 600, 280);
   var stave = new Vex.Flow.Stave(10, 10, 550);
   var stave2 = new Vex.Flow.Stave(10, 150, 550);
@@ -116,6 +116,7 @@ Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
     { keys: ["c/4", "e/4", "a/4"], duration: "8", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "16", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "32", stem_direction: -1},
+    { keys: ["c/4", "e/4", "a/4"], duration: "64", stem_direction: -1},
 
     { keys: ["b/4"], duration: "wr"},
     { keys: ["b/4"], duration: "hr"},
