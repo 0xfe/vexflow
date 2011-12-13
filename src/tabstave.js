@@ -33,7 +33,7 @@ Vex.Flow.TabStave.prototype.getYForGlyphs = function() {
 }
 
 Vex.Flow.TabStave.prototype.addTabGlyph = function() {
-	var glyphScale = 40,
+	var glyphScale = 40;
 	var glyphOffset = 0;
 
 	if (this.options.num_lines === 5) {
