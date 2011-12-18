@@ -5,7 +5,7 @@ Vex.Flow.Test.Clef = {}
 Vex.Flow.Test.Clef.Start = function() {
   module("Clef");
   Vex.Flow.Test.runTest("Clef Test", Vex.Flow.Test.Clef.draw);
-  Vex.Flow.Test.runRaphaelTest("Clef Test (Raphael)", 
+  Vex.Flow.Test.runRaphaelTest("Clef Test (Raphael)",
       Vex.Flow.Test.Clef.draw);
 }
 

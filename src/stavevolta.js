@@ -4,11 +4,11 @@
 //
 // Requires vex.js.
 
-/** 
- * @constructor 
+/**
+ * @constructor
  */
-Vex.Flow.Volta = function(type, number, x, y_shift) { 
-  if (arguments.length > 0) this.init(type, number, x, y_shift); 
+Vex.Flow.Volta = function(type, number, x, y_shift) {
+  if (arguments.length > 0) this.init(type, number, x, y_shift);
 }
 
 Vex.Flow.Volta.type = {
@@ -49,7 +49,7 @@ Vex.Flow.Volta.prototype.draw = function(stave, x) {
     "Can't draw stave without canvas context.");
   var ctx = stave.context;
   var width = stave.width;
-  var top_y = stave.getYForTopText(stave.options.num_lines) 
+  var top_y = stave.getYForTopText(stave.options.num_lines)
             + this.y_shift;
   var vert_height = 1.5 * stave.options.spacing_between_lines_px;
   switch(this.volta) {
@@ -75,5 +75,5 @@ Vex.Flow.Volta.prototype.draw = function(stave, x) {
     ctx.restore();
   }
   ctx.fillRect(this.x + x, top_y, width, 1);
-  return this;    
+  return this;
 }

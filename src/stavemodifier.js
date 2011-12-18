@@ -7,7 +7,7 @@
 /**
  * @constructor
  */
-Vex.Flow.StaveModifier = function() { 
+Vex.Flow.StaveModifier = function() {
   this.init();
 }
 

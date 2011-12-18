@@ -7,28 +7,28 @@ Vex.Flow.Test.StaveConnector = {}
 
 Vex.Flow.Test.StaveConnector.Start = function() {
   module("StaveConnector");
-  Vex.Flow.Test.runTest("StaveConnector Single Draw Test (Canvas)", 
-    Vex.Flow.Test.StaveConnector.drawSingle);  
+  Vex.Flow.Test.runTest("StaveConnector Single Draw Test (Canvas)",
+    Vex.Flow.Test.StaveConnector.drawSingle);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Single Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawSingle);
-  Vex.Flow.Test.runTest("StaveConnector Double Draw Test (Canvas)", 
-    Vex.Flow.Test.StaveConnector.drawDouble);  
+  Vex.Flow.Test.runTest("StaveConnector Double Draw Test (Canvas)",
+    Vex.Flow.Test.StaveConnector.drawDouble);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Double Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawDouble);
-  Vex.Flow.Test.runTest("StaveConnector Brace Draw Test (Canvas)", 
-    Vex.Flow.Test.StaveConnector.drawBrace);  
+  Vex.Flow.Test.runTest("StaveConnector Brace Draw Test (Canvas)",
+    Vex.Flow.Test.StaveConnector.drawBrace);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Brace Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawBrace);
-  Vex.Flow.Test.runTest("StaveConnector Brace Wide Draw Test (Canvas)", 
-    Vex.Flow.Test.StaveConnector.drawBraceWide);  
+  Vex.Flow.Test.runTest("StaveConnector Brace Wide Draw Test (Canvas)",
+    Vex.Flow.Test.StaveConnector.drawBraceWide);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Wide Brace Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawBraceWide);
-  Vex.Flow.Test.runTest("StaveConnector Bracket Draw Test (Canvas)", 
-    Vex.Flow.Test.StaveConnector.drawBracket);  
+  Vex.Flow.Test.runTest("StaveConnector Bracket Draw Test (Canvas)",
+    Vex.Flow.Test.StaveConnector.drawBracket);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Bracket Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawBracket);
-  Vex.Flow.Test.runTest("StaveConnector Combined Draw Test (Canvas)", 
-    Vex.Flow.Test.StaveConnector.drawCombined);  
+  Vex.Flow.Test.runTest("StaveConnector Combined Draw Test (Canvas)",
+    Vex.Flow.Test.StaveConnector.drawCombined);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Combined Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawCombined);
 }
@@ -36,7 +36,7 @@ Vex.Flow.Test.StaveConnector.Start = function() {
 Vex.Flow.Test.StaveConnector.drawSingle = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 400, 300);
   var stave = new Vex.Flow.Stave(25, 10, 300);
-  var stave2 = new Vex.Flow.Stave(25, 120, 300);  
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);
   stave.setContext(ctx);
   stave2.setContext(ctx);
   var connector = new Vex.Flow.StaveConnector(stave, stave2);
@@ -44,7 +44,7 @@ Vex.Flow.Test.StaveConnector.drawSingle = function(options, contextBuilder) {
   connector.setContext(ctx);
   stave.draw();
   stave2.draw();
-  connector.draw();  
+  connector.draw();
 
   ok(true, "all pass");
 }
@@ -52,7 +52,7 @@ Vex.Flow.Test.StaveConnector.drawSingle = function(options, contextBuilder) {
 Vex.Flow.Test.StaveConnector.drawDouble = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 400, 300);
   var stave = new Vex.Flow.Stave(25, 10, 300);
-  var stave2 = new Vex.Flow.Stave(25, 120, 300);  
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);
   stave.setContext(ctx);
   stave2.setContext(ctx);
   var connector = new Vex.Flow.StaveConnector(stave, stave2);
@@ -64,7 +64,7 @@ Vex.Flow.Test.StaveConnector.drawDouble = function(options, contextBuilder) {
   line.setContext(ctx);
   stave.draw();
   stave2.draw();
-  connector.draw(); 
+  connector.draw();
   line.draw();
 
   ok(true, "all pass");
@@ -73,7 +73,7 @@ Vex.Flow.Test.StaveConnector.drawDouble = function(options, contextBuilder) {
 Vex.Flow.Test.StaveConnector.drawBrace = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 400, 300);
   var stave = new Vex.Flow.Stave(25, 10, 300);
-  var stave2 = new Vex.Flow.Stave(25, 120, 300);  
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);
   stave.setContext(ctx);
   stave2.setContext(ctx);
   var connector = new Vex.Flow.StaveConnector(stave, stave2);
@@ -85,7 +85,7 @@ Vex.Flow.Test.StaveConnector.drawBrace = function(options, contextBuilder) {
   line.setContext(ctx);
   stave.draw();
   stave2.draw();
-  connector.draw(); 
+  connector.draw();
   line.draw();
 
   ok(true, "all pass");
@@ -106,7 +106,7 @@ Vex.Flow.Test.StaveConnector.drawBraceWide = function(options, contextBuilder) {
   line.setContext(ctx);
   stave.draw();
   stave2.draw();
-  connector.draw(); 
+  connector.draw();
   line.draw();
 
   ok(true, "all pass");
@@ -115,7 +115,7 @@ Vex.Flow.Test.StaveConnector.drawBraceWide = function(options, contextBuilder) {
 Vex.Flow.Test.StaveConnector.drawBracket = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 400, 300);
   var stave = new Vex.Flow.Stave(25, 10, 300);
-  var stave2 = new Vex.Flow.Stave(25, 120, 300);  
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);
   stave.setContext(ctx);
   stave2.setContext(ctx);
   var connector = new Vex.Flow.StaveConnector(stave, stave2);
@@ -127,7 +127,7 @@ Vex.Flow.Test.StaveConnector.drawBracket = function(options, contextBuilder) {
   line.setContext(ctx);
   stave.draw();
   stave2.draw();
-  connector.draw(); 
+  connector.draw();
   line.draw();
 
   ok(true, "all pass");
@@ -158,7 +158,7 @@ Vex.Flow.Test.StaveConnector.drawCombined = function(options, contextBuilder) {
   conn_bracket.setType(Vex.Flow.StaveConnector.type.BRACKET);
   conn_brace.setType(Vex.Flow.StaveConnector.type.BRACE);
   conn_single.setContext(ctx);
-  conn_double.setContext(ctx);  
+  conn_double.setContext(ctx);
   conn_bracket.setContext(ctx);
   conn_brace.setContext(ctx);
   stave.draw();
