@@ -18,7 +18,7 @@ Vex.Flow.clefProperties.values = {
   'treble':  { line_shift: 0 },
   'bass':    { line_shift: 6 },
   'tenor':   { line_shift: 0 },
-  'alto':    { line_shift: 0 }
+  'alto':    { line_shift: 3 },
 };
 
 Vex.Flow.keyProperties = function(key, clef) {
@@ -392,7 +392,12 @@ Vex.Flow.durationToTicks = {
   "32m":  Vex.Flow.RESOLUTION / 32,
   "32d":  (Vex.Flow.RESOLUTION / 32) + (Vex.Flow.RESOLUTION / 64),
   "32r":  Vex.Flow.RESOLUTION / 32,
-  "b":    Vex.Flow.RESOLUTION / 32
+  "b":    Vex.Flow.RESOLUTION / 32,
+  "64":   Vex.Flow.RESOLUTION / 64,
+  "64h":  Vex.Flow.RESOLUTION / 64,
+  "64m":  Vex.Flow.RESOLUTION / 64,
+  "64d":  (Vex.Flow.RESOLUTION / 64) + (Vex.Flow.RESOLUTION / 128),
+  "64r":  Vex.Flow.RESOLUTION / 64
 };
 
 Vex.Flow.durationToGlyph = function(duration) {
@@ -681,6 +686,60 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "32r": { // Thirty-second rest
     beam_count: 3,
     code_head: "v55",
+    head_width: 10.5,
+    stem: false,
+    stem_offset: 0,
+    flag: false,
+    rest: true,
+    position: "B/4"
+  },
+  "64": { // Sixty-fourth note
+    beam_count: 3,
+    code_head: "vb",
+    code_rest: "v38",
+    head_width: 10.5,
+    stem: true,
+    stem_offset: 0,
+    flag: true,
+    code_flag_upstem: "va9",
+    code_flag_downstem: "v58"
+  },
+  "64h": { // Sixty-fourth harmonic
+    beam_count: 3,
+    code_head: "v22",
+    code_rest: "v38",
+    head_width: 10.5,
+    stem: true,
+    stem_offset: 0,
+    flag: true,
+    code_flag_upstem: "va9",
+    code_flag_downstem: "v58"
+  },
+  "64m": { // Sixty-fourth muted
+    beam_count: 3,
+    code_head: "v3e",
+    code_rest: "v38",
+    head_width: 10.5,
+    stem: true,
+    stem_offset: 0,
+    flag: true,
+    code_flag_upstem: "va9",
+    code_flag_downstem: "v58"
+  },
+  "64d": { // Dotted Sixty-fourth note
+    beam_count: 3,
+    code_head: "vb",
+    code_rest: "v38",
+    head_width: 10.5,
+    dot: true,
+    flag: true,
+    code_flag_upstem: "va9",
+    code_flag_downstem: "v58",
+    stem: true
+  },
+  "64r": { // Sixty-fourth rest
+    beam_count: 3,
+    code_head: "v38",
     head_width: 10.5,
     stem: false,
     stem_offset: 0,
