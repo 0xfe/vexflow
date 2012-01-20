@@ -4,11 +4,11 @@
 //
 // Requires vex.js.
 
-/** 
- * @constructor 
+/**
+ * @constructor
  */
-Vex.Flow.Repetition = function(type, x, y_shift) { 
-  if (arguments.length > 0) this.init(type, x, y_shift); 
+Vex.Flow.Repetition = function(type, x, y_shift) {
+  if (arguments.length > 0) this.init(type, x, y_shift);
 }
 
 Vex.Flow.Repetition.type = {
@@ -104,7 +104,7 @@ Vex.Flow.Repetition.prototype.drawCodaFixed = function(stave, x) {
       "Can't draw stave without canvas context.");
 
   var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-  Vex.Flow.renderGlyph(stave.context, this.x + x + this.x_shift, 
+  Vex.Flow.renderGlyph(stave.context, this.x + x + this.x_shift,
                        y + 25, 40, "v4d", true);
   return this;
 }
@@ -113,7 +113,7 @@ Vex.Flow.Repetition.prototype.drawSignoFixed = function(stave, x) {
   if (!stave.context) throw new Vex.RERR("NoCanvasContext",
       "Can't draw stave without canvas context.");
   var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-  Vex.Flow.renderGlyph(stave.context, this.x + x + this.x_shift, 
+  Vex.Flow.renderGlyph(stave.context, this.x + x + this.x_shift,
                        y + 25, 30, "v8c", true);
   return this;
 }
@@ -141,7 +141,7 @@ Vex.Flow.Repetition.prototype.drawSymbolText = function(stave, x, text, draw_cod
   if (draw_coda) {
     Vex.Flow.renderGlyph(ctx, symbol_x, y, 40, "v4d", true);
   }
-  
+
   ctx.fillText(text, text_x, y + 5);
   ctx.restore();
 

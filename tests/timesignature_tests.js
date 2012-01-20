@@ -6,10 +6,10 @@ Vex.Flow.Test.TimeSignature.Start = function() {
   module("TimeSignature");
   test("Time Signature Parser", Vex.Flow.Test.TimeSignature.parser);
   Vex.Flow.Test.runTest("Basic Time Signatures", Vex.Flow.Test.TimeSignature.basic);
-  Vex.Flow.Test.runRaphaelTest("Basic Time Signatures (Raphael)", 
+  Vex.Flow.Test.runRaphaelTest("Basic Time Signatures (Raphael)",
       Vex.Flow.Test.TimeSignature.basic);
   Vex.Flow.Test.runTest("Big Signature Test", Vex.Flow.Test.TimeSignature.big);
-  Vex.Flow.Test.runRaphaelTest("Big Signature Test (Raphael)", 
+  Vex.Flow.Test.runRaphaelTest("Big Signature Test (Raphael)",
       Vex.Flow.Test.TimeSignature.big);
 
 }
@@ -17,15 +17,15 @@ Vex.Flow.Test.TimeSignature.Start = function() {
 Vex.Flow.Test.TimeSignature.catchError = function(ts, spec) {
   try {
     ts.parseTimeSpec(spec);
-  } catch (e) {  
-    equals(e.code, "BadTimeSignature", e.message); 
+  } catch (e) {
+    equals(e.code, "BadTimeSignature", e.message);
   }
 }
 
 Vex.Flow.Test.TimeSignature.parser = function(options) {
   expect(6);
   var ts = new Vex.Flow.TimeSignature();
-  
+
   // Invalid time signatures
   Vex.Flow.Test.TimeSignature.catchError(ts, "asdf");
   Vex.Flow.Test.TimeSignature.catchError(ts, "123/");

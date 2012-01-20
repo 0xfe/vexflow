@@ -3,11 +3,11 @@
 //
 // Requires vex.js.
 
-/** 
- * @constructor 
+/**
+ * @constructor
  */
-Vex.Flow.Clef = function(clef) { 
-  if (arguments.length > 0) this.init(clef); 
+Vex.Flow.Clef = function(clef) {
+  if (arguments.length > 0) this.init(clef);
 }
 
 Vex.Flow.Clef.types = {

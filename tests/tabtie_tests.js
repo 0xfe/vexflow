@@ -68,7 +68,7 @@ Vex.Flow.Test.TabTie.simple = function(options, contextBuilder) {
 
   ok(true, "Simple Test");
 }
- 
+
 Vex.Flow.Test.TabTie.tap = function(options, contextBuilder) {
   options.contextBuilder = contextBuilder;
   function newNote(tab_struct) { return new Vex.Flow.TabNote(tab_struct); }

@@ -81,21 +81,21 @@ Vex.Flow.Test.Stave.drawMultipleMeasures = function(options, contextBuilder) {
       staveBar2.setSection("B", 0);
       staveBar2.setEndBarType(Vex.Flow.Barline.type.END);
       staveBar2.setContext(ctx).draw();
-       
+
       var notesBar2_part1 = [
         new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
       ];
-       
+
       var notesBar2_part2 = [
         new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
       ];
-       
+
       // create the beams for 8th notes in 2nd measure
       var beam1 = new Vex.Flow.Beam(notesBar2_part1);
       var beam2 = new Vex.Flow.Beam(notesBar2_part2);
@@ -103,10 +103,10 @@ Vex.Flow.Test.Stave.drawMultipleMeasures = function(options, contextBuilder) {
 
       // Helper function to justify and draw a 4/4 voice
       Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
-       
+
       // Render beams
       beam1.setContext(ctx).draw();
-      beam2.setContext(ctx).draw();    
+      beam2.setContext(ctx).draw();
 }
 
 Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
@@ -136,14 +136,14 @@ Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
       staveBar2.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
       staveBar2.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
       staveBar2.setContext(ctx).draw();
-       
+
       var notesBar2_part1 = [
         new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
       ];
-       
+
       var notesBar2_part2 = [
         new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
         new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
@@ -160,10 +160,10 @@ Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
 
       // Helper function to justify and draw a 4/4 voice
       Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
-       
+
       // Render beams
       beam1.setContext(ctx).draw();
-      beam2.setContext(ctx).draw();    
+      beam2.setContext(ctx).draw();
 }
 Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
     // Get the rendering context
@@ -205,7 +205,7 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
       ];
       // Helper function to justify and draw a 4/4 voice
       Vex.Flow.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
-      
+
       // bar 4 - juxtapose fourth measure
       var mm4 = new Vex.Flow.Stave(mm3.width + mm3.x, mm1.y, 60);
       mm4.setVoltaType(Vex.Flow.Volta.type.MID, "", -5);
@@ -216,7 +216,7 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
       ];
       // Helper function to justify and draw a 4/4 voice
       Vex.Flow.Formatter.FormatAndDraw(ctx, mm4, notesmm4);
-      
+
       // bar 5 - juxtapose fifth measure
       var mm5 = new Vex.Flow.Stave(mm4.width + mm4.x, mm1.y, 60);
       mm5.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
@@ -228,7 +228,7 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
       ];
       // Helper function to justify and draw a 4/4 voice
       Vex.Flow.Formatter.FormatAndDraw(ctx, mm5, notesmm5);
-      
+
       // bar 6 - juxtapose sixth measure
       var mm6 = new Vex.Flow.Stave(mm5.width + mm5.x, mm1.y, 60);
       mm6.setVoltaType(Vex.Flow.Volta.type.BEGIN_END, "2.", -5);
@@ -251,7 +251,7 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
       ];
       // Helper function to justify and draw a 4/4 voice
       Vex.Flow.Formatter.FormatAndDraw(ctx, mm7, notesmm7);
-      
+
       // bar 8 - juxtapose eighth measure
       var mm8 = new Vex.Flow.Stave(mm7.width + mm7.x, mm1.y, 60);
       mm8.setEndBarType(Vex.Flow.Barline.type.DOUBLE);

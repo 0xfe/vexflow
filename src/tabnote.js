@@ -38,7 +38,7 @@ Vex.Flow.TabNote.prototype.setStave = function(stave) {
   superclass.setStave.call(this, stave);
   this.context = stave.context;
   this.width = 0;
-  
+
   // Calculate the fret number width based on font used
   if (this.context) {
     for (var i = 0; i < this.glyphs.length; ++i) {

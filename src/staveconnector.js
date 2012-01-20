@@ -91,7 +91,7 @@ Vex.Flow.StaveConnector.prototype.draw = function() {
       topX -= (this.width + 2);
       break;
   }
-  
+
   if (this.type != Vex.Flow.StaveConnector.type.BRACE) {
     this.ctx.fillRect(topX , topY, width, attachment_height);
   }
