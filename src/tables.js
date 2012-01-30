@@ -18,7 +18,8 @@ Vex.Flow.clefProperties.values = {
   'treble':  { line_shift: 0 },
   'bass':    { line_shift: 6 },
   'tenor':   { line_shift: 0 },
-  'alto':    { line_shift: 3 }
+  'alto':    { line_shift: 3 },
+  'percussion': { line_shift: 0 },
 };
 
 Vex.Flow.keyProperties = function(key, clef) {
@@ -28,7 +29,7 @@ Vex.Flow.keyProperties = function(key, clef) {
 
   var pieces = key.split("/");
 
-  if (pieces.length != 2) {
+  if (pieces.length < 2) {
     throw new Vex.RERR("BadArguments",
         "Key must have note + octave: " + key);
   }
@@ -52,15 +53,31 @@ Vex.Flow.keyProperties = function(key, clef) {
   var int_value = (typeof(value.int_val)!='undefined') ? (o * 12) +
     value.int_val : null;
 
+  /* Check if the user specified a glyph. */
+  var code = value.code;
+  var shift_right = value.shift_right;
+  if (pieces[2]) {
+    var l = pieces[2].toUpperCase();
+    var note_glyph = Vex.Flow.keyProperties.note_glyph[l];
+    if (!note_glyph) {
+      /* Allow the user to specify the vXX code explictly. */
+      code = pieces[2];
+      shift_right = -0.5;
+    } else {
+      code = note_glyph.code;
+      shift_right = note_glyph.shift_right;
+    }
+  }
+
   return {
     key: k,
     octave: o,
     line: line,
     int_value: int_value,
     accidental: value.accidental,
-    code: value.code,
+    code: code,
     stroke: stroke,
-    shift_right: value.shift_right,
+    shift_right: shift_right,
     displaced: false
   };
 };
@@ -118,6 +135,25 @@ Vex.Flow.keyProperties.note_values = {
   }
 }
 
+Vex.Flow.keyProperties.note_glyph = {
+  /* Diamond */
+  'DW':  { code: "v27", shift_right: -0.5 },
+  'DH':  { code: "v2d", shift_right: -0.5 },
+  'DQ':  { code: "v22", shift_right: -0.5 },
+  'DE':  { code: "v70", shift_right: -0.5 },
+
+  /* Triangle */
+  'TW':  { code: "v49", shift_right: -0.5 },
+  'TH':  { code: "v93", shift_right: -0.5 },
+  'TQ':  { code: "v40", shift_right: -0.5 },
+  'TE':  { code: "v7d", shift_right: -0.5 },
+
+  /* Cross */
+  'XW':  { code: "v92", shift_right: -0.5 },
+  'XH':  { code: "v95", shift_right: -0.5 },
+  'XQ':  { code: "v7f", shift_right: -0.5 },
+  'XE':  { code: "v3b", shift_right: -0.5 },
+}
 
 Vex.Flow.integerToNote = function(integer) {
   if (typeof(integer) == "undefined")
@@ -503,7 +539,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     stem_offset: 0,
     flag: false
   },
-  "qm": { // Quarter harmonic muted
+  "qm": { // Quarter muted
     code_head: "v3e",
     code_rest: "v7c",
     head_width: 10.5,
