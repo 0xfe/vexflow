@@ -21,6 +21,7 @@ Vex.Flow.Test.TabStave.draw = function(options, contextBuilder) {
       400, 160);
 
   var stave = new Vex.Flow.TabStave(10, 10, 300);
+  stave.setNumberOfLines(6);
   stave.setContext(ctx);
   stave.draw();
 
@@ -37,11 +38,13 @@ Vex.Flow.Test.TabStave.drawVerticalBar = function(options, contextBuilder) {
       400, 160);
 
   var stave = new Vex.Flow.TabStave(10, 10, 300);
+  stave.setNumberOfLines(6);
   stave.setContext(ctx);
+  stave.drawVerticalBar(50, true);
+  stave.drawVerticalBar(100, true);
+  stave.drawVerticalBar(150, false);
+  stave.setEndBarType(Vex.Flow.Barline.type.END);
   stave.draw();
-  stave.drawVerticalBar(100);
-  stave.drawVerticalBar(150);
-  stave.drawVerticalBar(300);
 
   ok(true, "all pass");
 }

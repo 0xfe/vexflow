@@ -146,6 +146,9 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
     var y_extents = note.getStemExtents();
     var base_y_px = y_extents.baseY;
 
+    // For harmonic note heads, shorten stem length by 3 pixels
+    base_y_px += this.stem_direction * note.glyph.stem_offset;
+
     // Draw the stem
     this.context.fillRect(x_px, base_y_px, 1,
         ((Math.abs(base_y_px - (getSlopeY(x_px) + y_shift)))) *
@@ -198,7 +201,7 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
     return beam_lines;
   }
 
-  var valid_beam_durations = ["8d", "16d", "32d"];
+  var valid_beam_durations = ["8d", "16d", "32d", "64d"];
 
   // Draw the beams.
   for (var i = 0; i < valid_beam_durations.length; ++i) {

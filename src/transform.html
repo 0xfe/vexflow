@@ -41,7 +41,7 @@
   <script src="vex.js"></script>
   <script src="flow.js"></script>
   <!-- Replace font below with transform font -->
-  <script src="fonts/gonville_original.js"></script>
+  <script src="fonts/gonville_all.js"></script>
   <script src="glyph.js"></script>
   <script>
     $(function() {
@@ -53,33 +53,47 @@
       var valid_glyphs = {
         "v0": true, "v1": true, "v2": true, "v3": true,
         "v4": true, "v5": true, "v6": true, "v7": true,
-        "v8": true, "v9": true, "vb": true, "vc": true,
-        "v18": true, "v1d": true, "v2a": true, "v26": true,
-        "v2f": true, "v3c": true, "v3e": true, "v3f": true,
-        "v41": true,
-        "v44": true, "v47": true, "v4e": true, "v54": true,
-        "v55": true, "v5c": true, "v79": true, "v7c": true, 
-        "v7f": true, "v81": true, "v83": true, "v8f": true, 
-        "v9a": true, "va5": true, "vad": true, "vb6": true };
+        "v8": true, "v9": true, "va": true, "vb": true,
+        "vc": true, "v10": true, "v11": true, "v18": true, "v1b": true, 
+        "v1d": true, "v1e": true, "v1f": true, "v22": true, 
+        "v23": true, "v25": true, "v26": true,
+        "v28": true, "v2a": true, "v2d": true, "v2f": true,
+        "v33": true, "v38": true, "v3c": true, "v3e": true, "v3f": true,
+        "v41": true, "v42": true, "v43": true,
+        "v44": true, "v45": true, "v46": true, "v47": true, 
+        "v4a": true, "v4d": true, "v4e": true, "v52": true, 
+        "v54": true, "v55": true, "v58": true, "v5b": true, "v5c": true,
+        "v62": true, "v72": true, "v75": true,
+        "v79": true, "v7c": true, "v7f": true, "v80": true,
+        "v81": true, "v83": true, "v84": true, "v8b": true,
+        "v8c": true, "v8f": true, "v92": true, "v94": true,
+        "v95": true, "v97": true, "v9a": true, "v9c": true, 
+        "va3": true, "va5": true, "va9": true, "vad": true, "vb6": true,
+        "vba": true, "vbc": true, "vbf": true, "vc3": true };
 
       // Get number of glyphs and rename elements
       var counter = 0;
       var valid_counter = 1;
+      var tmp = null;
       for (var glyph in Vex.Flow.Font.glyphs) {
         var counter_key = "v" + (counter++).toString(16); // to hex
 
         if (counter_key in valid_glyphs) {
           valid_counter++;
-          Vex.Flow.Font.glyphs[counter_key] = Vex.Flow.Font.glyphs[glyph];
+          tmp = Vex.Flow.Font.glyphs[glyph];
         }
 
         delete Vex.Flow.Font.glyphs[glyph];
+        if (tmp != null) {
+            Vex.Flow.Font.glyphs[counter_key] = tmp;
+            tmp = null;
+        }
       }
 
       delete Vex.Flow.Font.original_font_information;
       Vex.Flow.Font.familyName = "VexFlow-18";
 
-      var canvas_height = ((valid_counter + 1) / (800 / (60 * 2))) * 40;
+      var canvas_height = ((valid_counter + 1) / (800 / (60 * 2))) * 60;
       canvas.height = canvas_height + 25;
       canvas.width = 800;
 
@@ -108,7 +122,7 @@
 
         if (x >= 800) {
           x = 0;
-          y += 40;
+          y += 60;
         }
       }
 

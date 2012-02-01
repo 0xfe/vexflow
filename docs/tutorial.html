@@ -37,6 +37,7 @@
   <script src="../src/bend.js"></script>
   <script src="../src/vibrato.js"></script>
   <script src="../src/annotation.js"></script>
+  <script src="../src/articulation.js"></script>
   <script src="../src/tuning.js"></script>
   <script src="../src/stavemodifier.js"></script>
   <script src="../src/keysignature.js"></script>
@@ -46,6 +47,10 @@
   <script src="../src/keymanager.js"></script>
   <script src="../src/renderer.js"></script>
   <script src="../src/raphaelcontext.js"></script>
+  <script src="../src/stavevolta.js"></script>
+  <script src="../src/staverepetition.js"></script>
+  <script src="../src/stavebarline.js"></script>
+  <script src="../src/stavesection.js"></script>
 
   <!-- VexFlow Compiled Source -->
   <script src="../vexflow.js"></script>
@@ -61,9 +66,11 @@
       border: 10px solid #ddc;
     }
 
-    code.example, code.html {
-      font-size: 14;
+    div.egcode {
+      font-family: Courier;
+      font-size: 14px;
     }
+
   </style>
 
   <script>
@@ -79,7 +86,7 @@
         new_lines.push(code);
       }
 
-      pretty_code = new_lines.join("<br/>");
+      pretty_code = "<div class='egcode'>" + new_lines.join("<br/>") + "</div>";
       return pretty_code;
     }
 

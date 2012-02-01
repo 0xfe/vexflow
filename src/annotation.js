@@ -13,6 +13,12 @@ Vex.Flow.Annotation.prototype = new Vex.Flow.Modifier();
 Vex.Flow.Annotation.prototype.constructor = Vex.Flow.Annotation;
 Vex.Flow.Annotation.superclass = Vex.Flow.Modifier.prototype;
 
+Vex.Flow.Annotation.Justify = {
+  LEFT: 1,
+  CENTER: 2,
+  RIGHT: 3
+};
+
 Vex.Flow.Annotation.prototype.init = function(text) {
   var superclass = Vex.Flow.Annotation.superclass;
   superclass.init.call(this);
@@ -21,6 +27,7 @@ Vex.Flow.Annotation.prototype.init = function(text) {
   this.index = null;
   this.text_line = 0;
   this.text = text;
+  this.justification = Vex.Flow.Annotation.Justify.CENTER;
   this.font = {
     family: "Arial",
     size: 10,
@@ -41,24 +48,36 @@ Vex.Flow.Annotation.prototype.setBottom = function(bottom) {
   this.bottom = bottom;
   return this;
 }
+Vex.Flow.Modifier.prototype.getJustification = function() {
+  return this.justification; }
+Vex.Flow.Modifier.prototype.setJustification = function(justification) {
+  this.justification = justification; return this; }
 
 Vex.Flow.Annotation.prototype.draw = function() {
   if (!this.context) throw new Vex.RERR("NoContext",
-    "Can't draw vibrato without a context.");
+    "Can't draw text annotation without a context.");
   if (!this.note) throw new Vex.RERR("NoNoteForAnnotation",
-    "Can't draw vibrato without an attached note.");
+    "Can't draw text annotation without an attached note.");
 
-  var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.LEFT,
+  var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.ABOVE,
       this.index);
-  var x = start.x - (this.getWidth() / 2) + 10;
-  if(this.bottom) {
+  this.context.save();
+  this.context.setFont(this.font.family, this.font.size, this.font.weight);
+
+  var text_width = this.context.measureText(this.text).width;
+  if (this.justification == Vex.Flow.Annotation.Justify.LEFT) {
+    var x = start.x;
+  } else {
+    var x = start.x - text_width / 2;
+  }
+
+  if (this.bottom) {
+    // TODO(0xfe): Fix this demeter violation
     var y = this.note.stave.getYForBottomText(this.text_line);
   } else {
     var y = this.note.getYForTopText(this.text_line) - 1;
   }
 
-  this.context.save();
-  this.context.setFont(this.font.family, this.font.size, this.font.weight);
   this.context.fillText(this.text, x, y);
   this.context.restore();
 }
