@@ -26,6 +26,7 @@ vexflow_sources = [
     "tabnote.js",
     "beam.js",
     "voice.js",
+    "voicegroup.js",
     "modifier.js",
     "modifiercontext.js",
     "accidental.js",
