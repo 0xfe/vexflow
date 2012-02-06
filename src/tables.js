@@ -262,6 +262,13 @@ Vex.Flow.articulationCodes.articulations = {
     shift_up: -4,
     shift_down: 4
   },
+  "ah": {   // Natural harmonic or open note
+    code: "vb9",
+    width: 7,
+    shift_right: 0,
+    shift_up: -4,
+    shift_down: 4
+  },
   "a@a": {   // Fermata above staff
     code: "v43",
     width: 25,
@@ -289,6 +296,13 @@ Vex.Flow.articulationCodes.articulations = {
     shift_right: 0,
     shift_up: 0,
     shift_down: 14
+  },
+  "a,": {   // Choked
+    code: "vb3",
+    width: 6,
+    shift_right: 8,
+    shift_up: -4,
+    shift_down: 4
   }
 };
 
