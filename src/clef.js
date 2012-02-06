@@ -35,7 +35,7 @@ Vex.Flow.Clef.types = {
     code: "v59",
     point: 40,
     line: 2
-  },
+  }
 };
 
 Vex.Flow.Clef.prototype = new Vex.Flow.StaveModifier();

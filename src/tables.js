@@ -19,7 +19,7 @@ Vex.Flow.clefProperties.values = {
   'bass':    { line_shift: 6 },
   'tenor':   { line_shift: 0 },
   'alto':    { line_shift: 3 },
-  'percussion': { line_shift: 0 },
+  'percussion': { line_shift: 0 }
 };
 
 Vex.Flow.keyProperties = function(key, clef) {
@@ -31,7 +31,7 @@ Vex.Flow.keyProperties = function(key, clef) {
 
   if (pieces.length < 2) {
     throw new Vex.RERR("BadArguments",
-        "Key must have note + octave: " + key);
+        "Key must have note + octave and an optional glyph: " + key);
   }
 
   var k = pieces[0].toUpperCase();
@@ -56,14 +56,10 @@ Vex.Flow.keyProperties = function(key, clef) {
   /* Check if the user specified a glyph. */
   var code = value.code;
   var shift_right = value.shift_right;
-  if (pieces[2]) {
-    var l = pieces[2].toUpperCase();
-    var note_glyph = Vex.Flow.keyProperties.note_glyph[l];
-    if (!note_glyph) {
-      /* Allow the user to specify the vXX code explictly. */
-      code = pieces[2];
-      shift_right = -0.5;
-    } else {
+  if ((pieces.length > 2) && (pieces[2])) {
+    var glyph_name = pieces[2].toUpperCase();
+    var note_glyph = Vex.Flow.keyProperties.note_glyph[glyph_name];
+    if (note_glyph) {
       code = note_glyph.code;
       shift_right = note_glyph.shift_right;
     }
@@ -137,22 +133,22 @@ Vex.Flow.keyProperties.note_values = {
 
 Vex.Flow.keyProperties.note_glyph = {
   /* Diamond */
-  'DW':  { code: "v27", shift_right: -0.5 },
-  'DH':  { code: "v2d", shift_right: -0.5 },
-  'DQ':  { code: "v22", shift_right: -0.5 },
-  'DE':  { code: "v70", shift_right: -0.5 },
+  'D0':  { code: "v27", shift_right: -0.5 },
+  'D1':  { code: "v2d", shift_right: -0.5 },
+  'D2':  { code: "v22", shift_right: -0.5 },
+  'D3':  { code: "v70", shift_right: -0.5 },
 
   /* Triangle */
-  'TW':  { code: "v49", shift_right: -0.5 },
-  'TH':  { code: "v93", shift_right: -0.5 },
-  'TQ':  { code: "v40", shift_right: -0.5 },
-  'TE':  { code: "v7d", shift_right: -0.5 },
+  'T0':  { code: "v49", shift_right: -2 },
+  'T1':  { code: "v93", shift_right: 0.5 },
+  'T2':  { code: "v40", shift_right: 0.5 },
+  'T3':  { code: "v7d", shift_right: 0.5 },
 
   /* Cross */
-  'XW':  { code: "v92", shift_right: -0.5 },
-  'XH':  { code: "v95", shift_right: -0.5 },
-  'XQ':  { code: "v7f", shift_right: -0.5 },
-  'XE':  { code: "v3b", shift_right: -0.5 },
+  'X0':  { code: "v92", shift_right: -2 },
+  'X1':  { code: "v95", shift_right: -0.5 },
+  'X2':  { code: "v7f", shift_right: 0.5 },
+  'X3':  { code: "v3b", shift_right: -2 },
 }
 
 Vex.Flow.integerToNote = function(integer) {
