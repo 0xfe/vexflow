@@ -24,6 +24,8 @@ Vex.Flow.Test.Percussion.Start = function() {
     Vex.Flow.Test.Percussion.drawSnare0);
   Vex.Flow.Test.Percussion.runBoth("Percussion Snare1",
     Vex.Flow.Test.Percussion.drawSnare1);
+  Vex.Flow.Test.Percussion.runBoth("Percussion Snare2",
+    Vex.Flow.Test.Percussion.drawSnare2);
 }
 
 Vex.Flow.Test.Percussion.runBoth = function(title, func) {
@@ -38,6 +40,10 @@ Vex.Flow.Test.Percussion.newModifier = function(s) {
 
 Vex.Flow.Test.Percussion.newArticulation = function(s) {
   return new Vex.Flow.Articulation(s).setPosition(Vex.Flow.Modifier.Position.ABOVE);
+}
+
+Vex.Flow.Test.Percussion.newTremelo = function(s) {
+  return new Vex.Flow.Tremelo(s);
 }
 
 Vex.Flow.Test.Percussion.draw = function(options, contextBuilder) {
@@ -371,6 +377,52 @@ Vex.Flow.Test.Percussion.drawSnare1 = function(options, contextBuilder) {
       new Vex.Flow.StaveNote({ keys: ["a/5/x3"], duration: "q",
         stem_direction: -1 }).
         addArticulation(0, Vex.Flow.Test.Percussion.newArticulation("a,")),
+    ];
+    var voiceDown = new Vex.Flow.Voice({ num_beats: 4, beat_value: 4,
+        resolution: Vex.Flow.RESOLUTION });
+    voiceDown.addTickables(notesDown);
+
+    var formatter = new Vex.Flow.Formatter().
+      joinVoices([voiceDown]).formatToStave([voiceDown], stave);
+
+    voiceDown.draw(ctx, stave);
+
+    x += stave.width;
+  }
+
+  ok(true, "");
+}
+
+Vex.Flow.Test.Percussion.drawSnare2 = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 600, 120);
+  ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+    ctx.setFont("Arial", 15, "");
+
+  x = 10;
+  y = 10;
+  w = 280;
+
+  {
+    var stave = new Vex.Flow.Stave(x, y, w);
+    stave.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+    stave.setEndBarType(Vex.Flow.Barline.type.SINGLE);
+    stave.addClef("percussion");
+    stave.setContext(ctx);
+    stave.draw();
+
+    notesDown = [
+      new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q",
+        stem_direction: -1 }).
+        addArticulation(0, Vex.Flow.Test.Percussion.newTremelo(0)),
+      new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q",
+        stem_direction: -1 }).
+        addArticulation(0, Vex.Flow.Test.Percussion.newTremelo(1)),
+      new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q",
+        stem_direction: -1 }).
+        addArticulation(0, Vex.Flow.Test.Percussion.newTremelo(3)),
+      new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q",
+        stem_direction: -1 }).
+        addArticulation(0, Vex.Flow.Test.Percussion.newTremelo(5)),
     ];
     var voiceDown = new Vex.Flow.Voice({ num_beats: 4, beat_value: 4,
         resolution: Vex.Flow.RESOLUTION });
