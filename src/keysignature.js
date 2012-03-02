@@ -47,7 +47,7 @@ Vex.Flow.KeySignature.prototype.addToStave = function(stave, firstGlyph) {
 }
 
 Vex.Flow.KeySignature.prototype.convertAccLines = function(clef, code) {
-  var offset = 0.0; //if clef === "treble"
+  var offset = 0.0; // if clef === "treble"
   var tenorSharps;
   var isTenorSharps = ((clef === "tenor") && (code === "v18")) ? true : false;
 
@@ -64,6 +64,8 @@ Vex.Flow.KeySignature.prototype.convertAccLines = function(clef, code) {
       }
       break;
   }
+
+  // Special-case for TenorSharps
   if (isTenorSharps) {
     tenorSharps = [3, 1, 2.5, 0.5, 2, 0, 1.5];
     for (var i = 0; i < this.accList.length; ++i) {
