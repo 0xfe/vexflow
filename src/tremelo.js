@@ -1,5 +1,5 @@
 // VexFlow - Music Engraving for HTML5
-// Copyright Mike Corrigan 2012 <corrigan@gmail.com>
+// Author: Mike Corrigan <corrigan@gmail.com>
 //
 // This class implements tremelo notation.
 
