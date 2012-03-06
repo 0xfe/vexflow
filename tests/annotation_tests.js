@@ -19,6 +19,8 @@ Vex.Flow.Test.Annotation.Start = function() {
       Vex.Flow.Test.Annotation.picking);
   Vex.Flow.Test.runTest("Bottom Annotation",
       Vex.Flow.Test.Annotation.bottom);
+  Vex.Flow.Test.runTest("Test Justification Annotation",
+      Vex.Flow.Test.Annotation.justification);
 }
 
 Vex.Flow.Test.Annotation.simple = function(options, contextBuilder) {
@@ -143,7 +145,8 @@ Vex.Flow.Test.Annotation.bottom = function(options, contextBuilder) {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAnnotation(text) {
     return (new Vex.Flow.Annotation(text)).setFont("Times",
-        Vex.Flow.Test.Font.size).setBottom(true); }
+        Vex.Flow.Test.Font.size).
+	setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM); }
 
   var notes = [
     newNote({ keys: ["f/4"], duration: "w"}).
@@ -158,5 +161,33 @@ Vex.Flow.Test.Annotation.bottom = function(options, contextBuilder) {
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 100);
   ok(true, "Bottom Annotation");
+}
+
+Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 650, 650);
+  ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAnnotation(text, hJustifcation, vJustifcation) {
+    return (new Vex.Flow.Annotation(text)).setFont("Arial",
+        Vex.Flow.Test.Font.size).
+	setJustification(hJustifcation).
+	setVerticalJustification(vJustifcation); }
+
+  for (var v = 1; v <= 4; ++v) {
+    var stave = new Vex.Flow.Stave(10, (v-1) * 100 + 10, 400).
+      addClef("treble").setContext(ctx).draw();
+
+    notes = [];
+
+    for (var h = 1; h <= 4; ++h) {
+      notes.push(newNote({ keys: ["a/4"], duration: "q"}).
+        addAnnotation(0, newAnnotation("Text", h, v)));
+    }
+
+    Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 100);
+  }
+
+  ok(true, "Test Justification Annotation");
 }
 
