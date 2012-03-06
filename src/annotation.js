@@ -78,8 +78,13 @@ Vex.Flow.Annotation.prototype.draw = function() {
   this.context.save();
   this.context.setFont(this.font.family, this.font.size, this.font.weight);
   var text_width = this.context.measureText(this.text).width;
+
   // Estimate text height to be the same as the width of an 'm'.
+  //
+  // This is a hack to work around the inability to measure text height
+  // in HTML5 Canvas.
   var text_height = this.context.measureText("m").width;
+
   if (this.justification == Vex.Flow.Annotation.Justify.LEFT) {
     var x = start.x;
   } else if (this.justification == Vex.Flow.Annotation.Justify.RIGHT) {
