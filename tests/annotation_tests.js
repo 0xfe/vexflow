@@ -144,9 +144,11 @@ Vex.Flow.Test.Annotation.bottom = function(options, contextBuilder) {
 
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAnnotation(text) {
-    return (new Vex.Flow.Annotation(text)).setFont("Times",
-        Vex.Flow.Test.Font.size).
-	setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM); }
+    return (
+        new Vex.Flow.Annotation(text)).
+        setFont("Times", Vex.Flow.Test.Font.size).
+        setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM);
+  }
 
   var notes = [
     newNote({ keys: ["f/4"], duration: "w"}).
