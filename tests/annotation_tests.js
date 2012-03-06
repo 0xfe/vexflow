@@ -169,10 +169,11 @@ Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
 
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAnnotation(text, hJustifcation, vJustifcation) {
-    return (new Vex.Flow.Annotation(text)).setFont("Arial",
-        Vex.Flow.Test.Font.size).
-	setJustification(hJustifcation).
-	setVerticalJustification(vJustifcation); }
+    return (
+        new Vex.Flow.Annotation(text)).
+          setFont("Arial", Vex.Flow.Test.Font.size).
+          setJustification(hJustifcation).
+          setVerticalJustification(vJustifcation); }
 
   for (var v = 1; v <= 4; ++v) {
     var stave = new Vex.Flow.Stave(10, (v-1) * 100 + 10, 400).
@@ -190,4 +191,3 @@ Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
 
   ok(true, "Test Justification Annotation");
 }
-

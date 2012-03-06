@@ -57,7 +57,8 @@ Vex.Flow.Annotation.prototype.setBottom = function(bottom) {
   this.vert_justification = Vex.Flow.Annotation.VerticalJustify.BOTTOM
   return this;
 }
-Vex.Flow.Annotation.prototype.setVerticalJustification = function(vert_justification) {
+Vex.Flow.Annotation.prototype.setVerticalJustification = function(
+    vert_justification) {
   this.vert_justification = vert_justification;
   return this;
 }
@@ -92,15 +93,18 @@ Vex.Flow.Annotation.prototype.draw = function() {
   if (this.vert_justification == Vex.Flow.Annotation.VerticalJustify.BOTTOM) {
     // TODO(0xfe): Fix this demeter violation
     var y = this.note.stave.getYForBottomText(this.text_line);
-  } else if (this.vert_justification == Vex.Flow.Annotation.VerticalJustify.CENTER) {
+  } else if (this.vert_justification ==
+             Vex.Flow.Annotation.VerticalJustify.CENTER) {
     var yt = this.note.getYForTopText(this.text_line) - 1;
     var yb = this.note.stave.getYForBottomText(this.text_line);
     var y = yt + ( yb - yt ) / 2 + text_height / 2;
-  } else if (this.vert_justification == Vex.Flow.Annotation.VerticalJustify.TOP) {
+  } else if (this.vert_justification ==
+             Vex.Flow.Annotation.VerticalJustify.TOP) {
     var y = this.note.stave.getYForTopText(this.text_line);
   } else /* CENTER_STEM */{
     var extents = this.note.getStemExtents();
-    var y = extents.topY + ( extents.baseY - extents.topY ) / 2 + text_height / 2;
+    var y = extents.topY + ( extents.baseY - extents.topY ) / 2 +
+      text_height / 2;
   }
 
   this.context.fillText(this.text, x, y);
