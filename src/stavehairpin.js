@@ -40,9 +40,9 @@ Vex.Flow.StaveHairpin.prototype.init = function(notes, type) {
 
   this.render_options = {
       height: 10,
-      vo: 20, //vertical offset
-      left_ho: 0, //left horizontal offset
-      right_ho: 0 // right horizontal offset
+      y_shift: 0, //vertical offset
+      left_shift_px: 0, //left horizontal offset
+      right_shift_px: 0 // right horizontal offset
     };
 
   this.setNotes(notes);
@@ -61,9 +61,9 @@ Vex.Flow.StaveHairpin.prototype.setPosition = function(position) {
 
 Vex.Flow.StaveHairpin.prototype.setRenderOptions = function(options) {
   if (options.height != undefined && 
-      options.vo != undefined && 
-      options.left_ho != undefined && 
-      options.right_ho != undefined){ 
+      options.y_shift != undefined && 
+      options.left_shift_px != undefined && 
+      options.right_shift_px != undefined){ 
     this.render_options = options;}
   return this;
 }
@@ -88,7 +88,7 @@ Vex.Flow.StaveHairpin.prototype.renderHairpin = function(params) {
 
   var ctx = this.context;
   
-  var dis = this.render_options.vo;
+  var dis = this.render_options.y_shift + 20;
   var y_shift = params.first_y;
   
   if (this.position == Vex.Flow.Modifier.Position.ABOVE) {
@@ -96,19 +96,19 @@ Vex.Flow.StaveHairpin.prototype.renderHairpin = function(params) {
     y_shift = params.first_y - params.staff_height;
   }
   
-  var l_ho = this.render_options.left_ho;
-  var r_ho = this.render_options.right_ho;
+  var l_shift = this.render_options.left_shift_px;
+  var r_shift = this.render_options.right_shift_px;
   
   switch (this.hairpin) {
     case Vex.Flow.StaveHairpin.type.CRESC:
-      ctx.moveTo(params.last_x + r_ho, y_shift + dis);
-      ctx.lineTo(params.first_x + l_ho, y_shift +(this.render_options.height/2) + dis); 
-      ctx.lineTo(params.last_x + r_ho, y_shift + this.render_options.height + dis);
+      ctx.moveTo(params.last_x + r_shift, y_shift + dis);
+      ctx.lineTo(params.first_x + l_shift, y_shift +(this.render_options.height/2) + dis); 
+      ctx.lineTo(params.last_x + r_shift, y_shift + this.render_options.height + dis);
       break;
     case Vex.Flow.StaveHairpin.type.DECRESC:
-      ctx.moveTo(params.first_x + l_ho, y_shift + dis);
-      ctx.lineTo(params.last_x + r_ho, y_shift +(this.render_options.height/2) + dis); 
-      ctx.lineTo(params.first_x + l_ho, y_shift + this.render_options.height + dis);
+      ctx.moveTo(params.first_x + l_shift, y_shift + dis);
+      ctx.lineTo(params.last_x + r_shift, y_shift +(this.render_options.height/2) + dis); 
+      ctx.lineTo(params.first_x + l_shift, y_shift + this.render_options.height + dis);
       break;
     default:
       // Default is NONE, so nothing to draw
@@ -125,17 +125,50 @@ Vex.Flow.StaveHairpin.prototype.draw = function() {
   var first_note = this.first_note;
   var last_note = this.last_note;
   
-  var start = first_note.getModifierStartXY(this.position, this.index);
-  var end = last_note.getModifierStartXY(this.position, this.index);
+  var start = first_note.getModifierStartXY(this.position, 0);
+  var end = last_note.getModifierStartXY(this.position, 0);
   
   this.renderHairpin({
     first_x: start.x,
     last_x: end.x,
-    first_y: first_note.getStave().y + first_note.getStave().height,
-    last_y: last_note.getStave().y + last_note.getStave().height,
+    first_y: start.y + this.render_options.y_shift + 20,
+    last_y: end.y + this.render_options.y_shift + 20,
     staff_height: first_note.getStave().height
   });
 
  return true;
  
+}
+
+/* Helper function to convert ticks into pixels. 
+Requires a Formatter with voices joined and formatted (to get pixels per tick)
+*/
+ /**
+   * options is struct that has:
+   *
+   *  {
+   *   height: px,
+   *   y_shift: px, //vertical offset
+   *   left_shift_ticks: 0, //left horizontal offset expressed in ticks
+   *   right_shift_ticks: 0 // right horizontal offset expressed in ticks
+   *  }
+   *
+   **/
+Vex.Flow.StaveHairpin.FormatByTicksAndDraw = function(ctx, formatter, notes, type, position, options) {
+  
+  ppt = formatter.pixelsPerTick;
+  
+  if (ppt == undefined){
+    throw new Vex.RuntimeError("BadArguments",
+        "A valid Formatter must be provide to draw offsets by ticks.");} 
+  
+  l_shift_px = ppt * options.left_shift_ticks;
+  r_shift_px = ppt * options.right_shift_ticks;
+  
+  hairpin_options = {height: options.height, y_shift:options.y_shift, left_shift_px:l_shift_px, right_shift_px:r_shift_px};
+                
+  new Vex.Flow.StaveHairpin({
+    first_note: notes.first_note,
+    last_note: notes.last_note
+  }, type).setContext(ctx).setRenderOptions(hairpin_options).setPosition(position).draw();
 }

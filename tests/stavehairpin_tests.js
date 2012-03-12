@@ -90,9 +90,9 @@ Vex.Flow.Test.StaveHairpin.ho = function(options) {
   
   render_options = {
       height: 10,
-      vo: 20, //vertical offset
-      left_ho: 0, //left horizontal offset
-      right_ho: 120 // right horizontal offset
+      y_shift: 20, //vertical offset
+      left_shift_px: 0, //left horizontal offset
+      right_shift_px: 120 // right horizontal offset
     };  
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[3], last_note:notes[3]}, render[0], render[1], 2, 4, render_options);
   
@@ -115,17 +115,17 @@ Vex.Flow.Test.StaveHairpin.vo = function(options) {
   render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
   render_options = {
       height: 10,
-      vo: 20, //vertical offset
-      left_ho: 0, //left horizontal offset
-      right_ho: 0 // right horizontal offset
+      y_shift: 20, //vertical offset
+      left_shift_px: 0, //left horizontal offset
+      right_shift_px: 0 // right horizontal offset
     };
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[0], last_note:notes[2]}, render[0], render[1], 1, 4, render_options);
   
   render_options = {
       height: 10,
-      vo: 5, //vertical offset
-      left_ho: 2, //left horizontal offset
-      right_ho: 0 // right horizontal offset
+      y_shift: 5, //vertical offset
+      left_shift_px: 2, //left horizontal offset
+      right_shift_px: 0 // right horizontal offset
     };  
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[2], last_note:notes[3]}, render[0], render[1], 2, 4, render_options);
   
@@ -148,17 +148,17 @@ Vex.Flow.Test.StaveHairpin.height = function(options) {
   render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
   render_options = {
       height: 10,
-      vo: 20, //vertical offset
-      left_ho: 0, //left horizontal offset
-      right_ho: 0 // right horizontal offset
+      y_shift: 20, //vertical offset
+      left_shift_px: 0, //left horizontal offset
+      right_shift_px: 0 // right horizontal offset
     };
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[0], last_note:notes[2]}, render[0], render[1], 1, 4, render_options);
   
   render_options = {
       height: 15,
-      vo: 20, //vertical offset
-      left_ho: 2, //left horizontal offset
-      right_ho: 0 // right horizontal offset
+      y_shift: 20, //vertical offset
+      left_shift_px: 2, //left horizontal offset
+      right_shift_px: 0 // right horizontal offset
     };  
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[2], last_note:notes[3]}, render[0], render[1], 2, 4, render_options);
   
