@@ -14,16 +14,24 @@ Vex.Flow.Note.prototype = new Vex.Flow.Tickable();
 Vex.Flow.Note.superclass = Vex.Flow.Tickable.prototype;
 Vex.Flow.Note.constructor = Vex.Flow.Note;
 
-Vex.Flow.Note.prototype.init = function(duration) {
+Vex.Flow.Note.prototype.init = function(identifierString) {
   var superclass = Vex.Flow.Note.superclass;
   superclass.init.call(this);
 
   // Note properties
-  this.duration = duration;
+  this.identifierString = identifierString;
 
   // Sanity check
-  if (!this.duration)
-    throw new Vex.RuntimeError("BadArguments", "Note must have duration.");
+  if (!this.identifierString) {
+    throw new Vex.RuntimeError("BadArguments",
+        "Note must have an identifier string.");
+  }
+
+  this.identifier = Vex.Flow.parseNoteIdentifier(identifierString);
+  if (!this.identifier) {
+    throw new Vex.RuntimeError("BadArguments",
+        "Invalid note identifier string: " + identifierString);
+  }
 
   if (this.positions &&
       (typeof(this.positions) != "object" || !this.positions.length)) {
@@ -31,11 +39,8 @@ Vex.Flow.Note.prototype.init = function(duration) {
       "BadArguments", "Note keys must be array type.");
   }
 
-  this.ticks = Vex.Flow.durationToTicks[this.duration];
-  if (!this.ticks) {
-    throw new Vex.RuntimeError("BadArguments",
-        "Invalid duration string (No ticks found): " + this.duration);
-  }
+  this.duration = this.identifier.duration;
+  this.ticks = this.identifier.ticks;
 
 
   // Positioning contexts
@@ -111,6 +116,14 @@ Vex.Flow.Note.prototype.setTickContext = function(tc) {
   this.tickContext = tc;
   this.preFormatted = false;
   return this;
+}
+
+Vex.Flow.Note.prototype.getIdentifierString = function() {
+  return this.identifierString;
+}
+
+Vex.Flow.Note.prototype.getIdentifier = function() {
+  return this.identifier;
 }
 
 Vex.Flow.Note.prototype.getDuration = function() {
