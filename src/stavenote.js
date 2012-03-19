@@ -28,12 +28,13 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   this.clef = note_struct.clef;
 
   // Pull note rendering properties from duration.
-  this.glyph = Vex.Flow.durationToGlyph(this.duration);
+  this.glyph = Vex.Flow.durationToGlyph(this.duration, this.identifier.type);
   if (!this.glyph) {
     throw new Vex.RuntimeError("BadArguments",
-        "Invalid duration string (No glyph found): " + this.duration);
+        "Invalid note identifier string (No glyph found): " +
+        this.identifierString);
   }
-  this.dotted = Vex.Flow.durationIsDotted(this.duration);
+  this.dotted = (this.identifier.dots > 0);
 
   this.keyProps = [];             // per-note properties
 
@@ -209,6 +210,10 @@ Vex.Flow.StaveNote.prototype.setStemDirection = function(direction) {
 Vex.Flow.StaveNote.prototype.setBeam = function(beam) {
   this.beam = beam;
   return this;
+}
+
+Vex.Flow.StaveNote.prototype.getGlyph = function() {
+  return this.glyph;
 }
 
 Vex.Flow.StaveNote.prototype.addToModifierContext = function(mc) {

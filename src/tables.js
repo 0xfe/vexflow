@@ -408,390 +408,325 @@ Vex.Flow.keySignature.accidentalList = function(acc) {
     return [0, 1.5, -0.5, 1, 2.5, 0.5, 2]; }
 }
 
-Vex.Flow.durationToTicks = {
-  "w":    Vex.Flow.RESOLUTION / 1,
-  "wh":   Vex.Flow.RESOLUTION / 1,
-  "wm":   Vex.Flow.RESOLUTION / 1,
-  "wr":   Vex.Flow.RESOLUTION / 1,
-  "h":    Vex.Flow.RESOLUTION / 2,
-  "hh":   Vex.Flow.RESOLUTION / 2,
-  "hm":   Vex.Flow.RESOLUTION / 2,
-  "hr":   Vex.Flow.RESOLUTION / 2,
-  "hd":   (Vex.Flow.RESOLUTION / 2) + (Vex.Flow.RESOLUTION / 4),
-  "q":    Vex.Flow.RESOLUTION / 4,
-  "qh":   Vex.Flow.RESOLUTION / 4,
-  "qm":   Vex.Flow.RESOLUTION / 4,
-  "qr":   Vex.Flow.RESOLUTION / 4,
-  "qd":   (Vex.Flow.RESOLUTION / 4) + (Vex.Flow.RESOLUTION / 8),
+Vex.Flow.parseNoteIdentifier = function(noteIdentifier) {
+  if (noteIdentifier == null || noteIdentifier.length == 0) {
+    return null;
+  }
+
+  var stripCharCount = 0;
+
+  var type = "n";
+  if (noteIdentifier.length > 1) {
+    var c = noteIdentifier.charAt(noteIdentifier.length - 1);
+    if (c == "r" || c == "h" || c == "m") {
+      stripCharCount++;
+      type = c;
+    }
+  }
+
+  var dots = 0;
+
+  for (var i = noteIdentifier.length - (stripCharCount + 1); i >= 0; i--) {
+    var c = noteIdentifier.charAt(i);
+    if (c != "d") {
+      break;
+    }
+
+    stripCharCount++;
+    dots++;
+  }
+
+  var duration = noteIdentifier.substring(0,
+    noteIdentifier.length - stripCharCount);
+
+  var ticks = Vex.Flow.durationToTicks(duration);
+  if (ticks == null) {
+    return null;
+  }
+
+  var currentTicks = ticks;
+  for (var i = 0; i < dots; i++) {
+    if (currentTicks <= 1) {
+      return null;
+    }
+
+    currentTicks = currentTicks / 2;
+    ticks += currentTicks;
+  }
+
+  return {
+    duration: duration,
+    type: type,
+    dots: dots,
+    ticks: ticks
+  };
+}
+
+Vex.Flow.durationToTicks = function(duration) {
+  var alias = Vex.Flow.durationAliases[duration];
+  if (alias != undefined) {
+    duration = alias;
+  }
+
+  var ticks = Vex.Flow.durationToTicks.durations[duration];
+  if (ticks == undefined) {
+    return null;
+  }
+
+  return ticks;
+}
+
+Vex.Flow.durationToTicks.durations = {
+  "1":    Vex.Flow.RESOLUTION / 1,
+  "2":    Vex.Flow.RESOLUTION / 2,
+  "4":    Vex.Flow.RESOLUTION / 4,
   "8":    Vex.Flow.RESOLUTION / 8,
-  "8h":   Vex.Flow.RESOLUTION / 8,
-  "8m":   Vex.Flow.RESOLUTION / 8,
-  "8r":   Vex.Flow.RESOLUTION / 8,
-  "8d":   (Vex.Flow.RESOLUTION / 8) + (Vex.Flow.RESOLUTION / 16),
   "16":   Vex.Flow.RESOLUTION / 16,
-  "16h":  Vex.Flow.RESOLUTION / 16,
-  "16m":  Vex.Flow.RESOLUTION / 16,
-  "16r":  Vex.Flow.RESOLUTION / 16,
-  "16d":  (Vex.Flow.RESOLUTION / 16) + (Vex.Flow.RESOLUTION / 32),
   "32":   Vex.Flow.RESOLUTION / 32,
-  "32h":  Vex.Flow.RESOLUTION / 32,
-  "32m":  Vex.Flow.RESOLUTION / 32,
-  "32d":  (Vex.Flow.RESOLUTION / 32) + (Vex.Flow.RESOLUTION / 64),
-  "32r":  Vex.Flow.RESOLUTION / 32,
-  "b":    Vex.Flow.RESOLUTION / 32,
-  "64":   Vex.Flow.RESOLUTION / 64,
-  "64h":  Vex.Flow.RESOLUTION / 64,
-  "64m":  Vex.Flow.RESOLUTION / 64,
-  "64d":  (Vex.Flow.RESOLUTION / 64) + (Vex.Flow.RESOLUTION / 128),
-  "64r":  Vex.Flow.RESOLUTION / 64
+  "64":   Vex.Flow.RESOLUTION / 64
 };
 
-Vex.Flow.durationToGlyph = function(duration) {
-  return Vex.Flow.durationToGlyph.duration_codes[duration];
+Vex.Flow.durationAliases = {
+  "w": "1",
+  "h": "2",
+  "q": "4",
+  "b": "32" // TODO: Where is this used and why?
+}
+
+Vex.Flow.durationToGlyph = function(duration, type) {
+  var alias = Vex.Flow.durationAliases[duration];
+  if (alias != undefined) {
+    duration = alias;
+  }
+
+  var code = Vex.Flow.durationToGlyph.duration_codes[duration];
+  if (code == undefined) {
+    return null;
+  }
+
+  if (type == undefined) {
+    type = "n";
+  }
+
+  glyphTypeProperties = code.type[type];
+  if (glyphTypeProperties == undefined) {
+    return null;
+  }
+
+  return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
 }
 
 Vex.Flow.durationIsDotted = function(duration) {
-  var ret = Vex.Flow.durationToGlyph.duration_codes[duration].dot;
-  if (ret == undefined)
+  var alias = Vex.Flow.durationAliases[duration];
+  if (alias != undefined) {
+    duration = alias;
+  }
+
+  var duration_code = Vex.Flow.durationToGlyph.duration_codes[duration];
+  if (duration_code == undefined)
     return false;
-  return ret;
+
+  var dots = duration_code.dots;
+  if (dots == undefined)
+    return false;
+
+  return (dots > 0);
 }
 
 Vex.Flow.durationToGlyph.duration_codes = {
-  "w": { // Whole note
-    code_head: "v1d",
-    code_rest: "v5c",
-    head_width: 16.5,
-    stem: false,
-    stem_offset: 0,
-    flag: false
+  "1": {
+    common: {
+      head_width: 16.5,
+      stem: false,
+      stem_offset: 0,
+      flag: false
+    },
+    type: {
+      "n": { // Whole note
+        code_head: "v1d"
+      },
+      "h": { // Whole note harmonic
+        code_head: "v46"
+      },
+      "m": { // Whole note muted
+        code_head: "v92",
+        stem_offset: -3
+      },
+      "r": { // Whole rest
+        code_head: "v5c",
+        head_width: 10.5,
+        rest: true,
+        position: "D/5"
+      }
+    }
   },
-  "wh": { // Whole note harmonic
-    code_head: "v46",
-    code_rest: "v5c",
-    head_width: 16.5,
-    stem: false,
-    stem_offset: 0,
-    flag: false
+  "2": {
+    common: {
+      head_width: 10.5,
+      stem: true,
+      stem_offset: 0,
+      flag: false
+    },
+    type: {
+      "n": { // Half note
+        code_head: "v81"
+      },
+      "h": { // Half note harmonic
+        code_head: "v2d"
+      },
+      "m": { // Half note muted
+        code_head: "v95",
+        stem_offset: -3
+      },
+      "r": { // Half rest
+        code_head: "vc",
+        stem: false,
+        rest: true,
+        position: "B/4"
+      }
+    }
   },
-  "wm": { // Whole note muted
-    code_head: "v92",
-    code_rest: "v5c",
-    head_width: 16.5,
-    stem: false,
-    stem_offset: -3,
-    flag: false
+  "4": {
+    common: {
+      head_width: 10.5,
+      stem: true,
+      stem_offset: 0,
+      flag: false
+    },
+    type: {
+      "n": { // Quarter note
+        code_head: "vb",
+      },
+      "h": { // Quarter harmonic
+        code_head: "v22",
+      },
+      "m": { // Quarter muted
+        code_head: "v3e",
+        stem_offset: -3,
+      },
+      "r": { // Quarter rest
+        code_head: "v7c",
+        stem: false,
+        rest: true,
+        position: "B/4"
+      }
+    }
   },
-  "wr": { // Whole rest
-    code_head: "v5c",
-    head_width: 10.5,
-    stem: false,
-    stem_offset: 0,
-    flag: false,
-    rest: true,
-    position: "D/5"
+  "8": {
+    common: {
+      head_width: 10.5,
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      beam_count: 1,
+      code_flag_upstem: "v54",
+      code_flag_downstem: "v9a"
+    },
+    type: {
+      "n": { // Eighth note
+        code_head: "vb"
+      },
+      "h": { // Eighth note harmonic
+        code_head: "v22"
+      },
+      "m": { // Eighth note muted
+        code_head: "v3e"
+      },
+      "r": { // Eighth rest
+        code_head: "va5",
+        stem: false,
+        flag: false,
+        rest: true,
+        position: "B/4"
+      }
+    }
   },
-  "h": { // Half note
-    code_head: "v81",
-    code_rest: "vc",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: false
+  "16": {
+    common: {
+      beam_count: 2,
+      head_width: 10.5,
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      code_flag_upstem: "v3f",
+      code_flag_downstem: "v8f"
+    },
+    type: {
+      "n": { // Sixteenth note
+        code_head: "vb"
+      },
+      "h": { // Sixteenth note harmonic
+        code_head: "v22"
+      },
+      "m": { // Sixteenth note muted
+        code_head: "v3e"
+      },
+      "r": { // Sixteenth rest
+        code_head: "v3c",
+        stem: false,
+        flag: false,
+        rest: true,
+        position: "B/4"
+      }
+    }
   },
-  "hh": { // Half note harmonic
-    code_head: "v2d",
-    code_rest: "vc",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: false
+  "32": {
+    common: {
+      beam_count: 3,
+      head_width: 10.5,
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      code_flag_upstem: "v47",
+      code_flag_downstem: "v2a"
+    },
+    type: {
+      "n": { // Thirty-second note
+        code_head: "vb"
+      },
+      "h": { // Thirty-second harmonic
+        code_head: "v22"
+      },
+      "m": { // Thirty-second muted
+        code_head: "v3e"
+      },
+      "r": { // Thirty-second rest
+        code_head: "v55",
+        stem: false,
+        flag: false,
+        rest: true,
+        position: "B/4"
+      }
+    }
   },
-  "hm": { // Half note muted
-    code_head: "v95",
-    code_rest: "vc",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: -3,
-    flag: false
-  },
-  "hr": { // Half rest
-    code_head: "vc",
-    head_width: 10.5,
-    stem: false,
-    stem_offset: 0,
-    flag: false,
-    rest: true,
-    position: "B/4"
-  },
-  "hd": { // Dotted half note
-    code_head: "v81",
-    code_rest: "vc",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: false,
-    dot: true
-  },
-  "q": { // Quarter note
-    code_head: "vb",
-    code_rest: "v7c",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: false
-  },
-  "qh": { // Quarter harmonic
-    code_head: "v22",
-    code_rest: "v7c",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: false
-  },
-  "qm": { // Quarter muted
-    code_head: "v3e",
-    code_rest: "v7c",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: -3,
-    flag: false
-  },
-  "qr": { // Quarter rest
-    code_head: "v7c",
-    head_width: 10.5,
-    rest: true,
-    position: "B/4",
-    stem: false,
-    stem_offset: 0,
-    flag: false
-  },
-  "qd": { // Dotted quarter note
-    code_head: "vb",
-    code_rest: "v7c",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: false,
-    dot: true
-  },
-  "8": { // Eighth note
-    code_head: "vb",
-    code_rest: "va5",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    beam_count: 1,
-    code_flag_upstem: "v54",
-    code_flag_downstem: "v9a"
-  },
-  "8h": { // Eighth note harmonic
-    code_head: "v22",
-    code_rest: "va5",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    beam_count: 1,
-    code_flag_upstem: "v54",
-    code_flag_downstem: "v9a"
-  },
-  "8m": { // Eighth note muted
-    code_head: "v3e",
-    code_rest: "va5",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    beam_count: 1,
-    code_flag_upstem: "v54",
-    code_flag_downstem: "v9a"
-  },
-  "8r": { // Eighth rest
-    code_head: "va5",
-    head_width: 10.5,
-    stem: false,
-    stem_offset: 0,
-    flag: false,
-    rest: true,
-    beam_count: 1,
-    position: "B/4"
-  },
-  "8d": { // Dotted eighth note
-    code_head: "vb",
-    code_rest: "va5",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    beam_count: 1,
-    code_flag_upstem: "v54",
-    code_flag_downstem: "v9a",
-    dot: true
-  },
-  "16": { // Sixteenth note
-    beam_count: 2,
-    code_head: "vb",
-    code_rest: "v3c",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "v3f",
-    code_flag_downstem: "v8f"
-  },
-  "16h": { // Sixteenth note harmonic
-    beam_count: 2,
-    code_head: "v22",
-    code_rest: "v3c",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "v3f",
-    code_flag_downstem: "v8f"
-  },
-  "16m": { // Sixteenth note muted
-    beam_count: 2,
-    code_head: "v3e",
-    code_rest: "v3c",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "v3f",
-    code_flag_downstem: "v8f"
-  },
-  "16r": { // Sixteenth rest
-    beam_count: 2,
-    code_head: "v3c",
-    head_width: 10.5,
-    stem: false,
-    stem_offset: 0,
-    flag: false,
-    rest: true,
-    position: "B/4"
-  },
-  "16d": { // Dotted Sixteenth note
-    beam_count: 2,
-    code_head: "vb",
-    code_rest: "v3c",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "v3f",
-    code_flag_downstem: "v8f",
-    dot: true
-  },
-  "32": { // Thirty-second note
-    beam_count: 3,
-    code_head: "vb",
-    code_rest: "v55",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "v47",
-    code_flag_downstem: "v2a"
-  },
-  "32h": { // Thirty-second harmonic
-    beam_count: 3,
-    code_head: "v22",
-    code_rest: "v55",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "v47",
-    code_flag_downstem: "v2a"
-  },
-  "32m": { // Thirty-second muted
-    beam_count: 3,
-    code_head: "v3e",
-    code_rest: "v55",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "v47",
-    code_flag_downstem: "v2a"
-  },
-  "32d": { // Dotted Thirty-second note
-    beam_count: 3,
-    code_head: "vb",
-    code_rest: "v55",
-    head_width: 10.5,
-    dot: true,
-    flag: true,
-    code_flag_upstem: "v47",
-    code_flag_downstem: "v2a",
-    stem: true
-  },
-  "32r": { // Thirty-second rest
-    beam_count: 3,
-    code_head: "v55",
-    head_width: 10.5,
-    stem: false,
-    stem_offset: 0,
-    flag: false,
-    rest: true,
-    position: "B/4"
-  },
-  "64": { // Sixty-fourth note
-    beam_count: 3,
-    code_head: "vb",
-    code_rest: "v38",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "va9",
-    code_flag_downstem: "v58"
-  },
-  "64h": { // Sixty-fourth harmonic
-    beam_count: 3,
-    code_head: "v22",
-    code_rest: "v38",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "va9",
-    code_flag_downstem: "v58"
-  },
-  "64m": { // Sixty-fourth muted
-    beam_count: 3,
-    code_head: "v3e",
-    code_rest: "v38",
-    head_width: 10.5,
-    stem: true,
-    stem_offset: 0,
-    flag: true,
-    code_flag_upstem: "va9",
-    code_flag_downstem: "v58"
-  },
-  "64d": { // Dotted Sixty-fourth note
-    beam_count: 3,
-    code_head: "vb",
-    code_rest: "v38",
-    head_width: 10.5,
-    dot: true,
-    flag: true,
-    code_flag_upstem: "va9",
-    code_flag_downstem: "v58",
-    stem: true
-  },
-  "64r": { // Sixty-fourth rest
-    beam_count: 3,
-    code_head: "v38",
-    head_width: 10.5,
-    stem: false,
-    stem_offset: 0,
-    flag: false,
-    rest: true,
-    position: "B/4"
+  "64": {
+    common: {
+      beam_count: 3,
+      head_width: 10.5,
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      code_flag_upstem: "va9",
+      code_flag_downstem: "v58"
+    },
+    type: {
+      "n": { // Sixty-fourth note
+        code_head: "vb"
+      },
+      "h": { // Sixty-fourth harmonic
+        code_head: "v22"
+      },
+      "m": { // Sixty-fourth muted
+        code_head: "v3e"
+      },
+      "r": { // Sixty-fourth rest
+        code_head: "v38",
+        stem: false,
+        flag: false,
+        rest: true,
+        position: "B/4"
+      }
+    }
   }
 };
 
