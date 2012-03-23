@@ -131,8 +131,8 @@ Vex.Flow.StaveHairpin.prototype.draw = function() {
   this.renderHairpin({
     first_x: start.x,
     last_x: end.x,
-    first_y: start.y + this.render_options.y_shift + 20,
-    last_y: end.y + this.render_options.y_shift + 20,
+    first_y: first_note.getStave().y + first_note.getStave().height + 20,
+    last_y: last_note.getStave().y + last_note.getStave().height + 20,
     staff_height: first_note.getStave().height
   });
 
