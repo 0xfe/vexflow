@@ -90,7 +90,7 @@ Vex.Flow.Test.StaveHairpin.ho = function(options) {
   
   render_options = {
       height: 10,
-      y_shift: 20, //vertical offset
+      y_shift: 0, //vertical offset
       left_shift_px: 0, //left horizontal offset
       right_shift_px: 120 // right horizontal offset
     };  
@@ -115,7 +115,7 @@ Vex.Flow.Test.StaveHairpin.vo = function(options) {
   render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
   render_options = {
       height: 10,
-      y_shift: 20, //vertical offset
+      y_shift: 0, //vertical offset
       left_shift_px: 0, //left horizontal offset
       right_shift_px: 0 // right horizontal offset
     };
@@ -123,7 +123,7 @@ Vex.Flow.Test.StaveHairpin.vo = function(options) {
   
   render_options = {
       height: 10,
-      y_shift: 5, //vertical offset
+      y_shift: -15, //vertical offset
       left_shift_px: 2, //left horizontal offset
       right_shift_px: 0 // right horizontal offset
     };  
@@ -148,7 +148,7 @@ Vex.Flow.Test.StaveHairpin.height = function(options) {
   render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
   render_options = {
       height: 10,
-      y_shift: 20, //vertical offset
+      y_shift: 0, //vertical offset
       left_shift_px: 0, //left horizontal offset
       right_shift_px: 0 // right horizontal offset
     };
@@ -156,7 +156,7 @@ Vex.Flow.Test.StaveHairpin.height = function(options) {
   
   render_options = {
       height: 15,
-      y_shift: 20, //vertical offset
+      y_shift: 0, //vertical offset
       left_shift_px: 2, //left horizontal offset
       right_shift_px: 0 // right horizontal offset
     };  
