@@ -15,7 +15,8 @@ Vex.Flow.TabNote.constructor = Vex.Flow.TabNote;
 
 Vex.Flow.TabNote.prototype.init = function(tab_struct) {
   var superclass = Vex.Flow.TabNote.superclass;
-  superclass.init.call(this, tab_struct.duration);
+  superclass.init.call(this, tab_struct);
+
   // Note properties
   this.positions = tab_struct.positions; // [{ str: X, fret: X }]
   this.modifiers = [];
@@ -24,7 +25,12 @@ Vex.Flow.TabNote.prototype.init = function(tab_struct) {
   }
 
   this.noteGlyph =
-    Vex.Flow.durationToGlyph(this.duration, this.identifier.type);
+    Vex.Flow.durationToGlyph(this.duration, this.noteType);
+  if (!this.noteGlyph) {
+    throw new Vex.RuntimeError("BadArguments",
+        "Invalid note initialization data (No glyph found): " +
+        JSON.stringify(tab_struct));
+  }
 
   this.glyphs = [];
   this.width = 0;

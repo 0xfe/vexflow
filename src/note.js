@@ -6,41 +6,42 @@
 // Requires vex.js.
 
 /** @constructor */
-Vex.Flow.Note = function(duration) {
-  if (arguments.length > 0) this.init(duration); }
+Vex.Flow.Note = function(note_struct) {
+  if (arguments.length > 0) this.init(note_struct); }
 
 // Inherits from Vex.Flow.Tickable
 Vex.Flow.Note.prototype = new Vex.Flow.Tickable();
 Vex.Flow.Note.superclass = Vex.Flow.Tickable.prototype;
 Vex.Flow.Note.constructor = Vex.Flow.Note;
 
-Vex.Flow.Note.prototype.init = function(identifierString) {
+Vex.Flow.Note.prototype.init = function(note_struct) {
   var superclass = Vex.Flow.Note.superclass;
   superclass.init.call(this);
 
-  // Note properties
-  this.identifierString = identifierString;
-
   // Sanity check
-  if (!this.identifierString) {
+  if (!note_struct) {
     throw new Vex.RuntimeError("BadArguments",
-        "Note must have an identifier string.");
+        "Note must have valid initialization data to identify " +
+        "duration and type.");
   }
 
-  this.identifier = Vex.Flow.parseNoteIdentifier(identifierString);
-  if (!this.identifier) {
+  var initData = Vex.Flow.parseNoteData(note_struct);
+  if (!initData) {
     throw new Vex.RuntimeError("BadArguments",
-        "Invalid note identifier string: " + identifierString);
+        "Invalid note initialization object: " + JSON.stringify(note_struct));
   }
+
+  // Note properties
+  this.duration = initData.duration;
+  this.dots = initData.dots;
+  this.noteType = initData.type;
+  this.ticks = initData.ticks;
 
   if (this.positions &&
       (typeof(this.positions) != "object" || !this.positions.length)) {
     throw new Vex.RuntimeError(
       "BadArguments", "Note keys must be array type.");
   }
-
-  this.duration = this.identifier.duration;
-  this.ticks = this.identifier.ticks;
 
 
   // Positioning contexts
@@ -118,16 +119,20 @@ Vex.Flow.Note.prototype.setTickContext = function(tc) {
   return this;
 }
 
-Vex.Flow.Note.prototype.getIdentifierString = function() {
-  return this.identifierString;
-}
-
-Vex.Flow.Note.prototype.getIdentifier = function() {
-  return this.identifier;
-}
-
 Vex.Flow.Note.prototype.getDuration = function() {
   return this.duration;
+}
+
+Vex.Flow.Note.prototype.isDotted = function() {
+  return (this.dots > 0);
+}
+
+Vex.Flow.Note.prototype.getDots = function() {
+  return this.dots;
+}
+
+Vex.Flow.Note.prototype.getNoteType = function() {
+  return this.noteType;
 }
 
 Vex.Flow.Note.prototype.setModifierContext = function(mc) {
