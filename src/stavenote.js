@@ -22,19 +22,18 @@ Vex.Flow.StaveNote.STEM_DOWN = -1;
 Vex.Flow.StaveNote.prototype.getCategory = function() { return "stavenotes"; }
 Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   var superclass = Vex.Flow.StaveNote.superclass;
-  superclass.init.call(this, note_struct.duration);
+  superclass.init.call(this, note_struct);
 
   this.keys = note_struct.keys;
   this.clef = note_struct.clef;
 
-  // Pull note rendering properties from duration.
-  this.glyph = Vex.Flow.durationToGlyph(this.duration, this.identifier.type);
+  // Pull note rendering properties
+  this.glyph = Vex.Flow.durationToGlyph(this.duration, this.noteType);
   if (!this.glyph) {
     throw new Vex.RuntimeError("BadArguments",
-        "Invalid note identifier string (No glyph found): " +
-        this.identifierString);
+        "Invalid note initialization data (No glyph found): " +
+        JSON.stringify(note_struct));
   }
-  this.dotted = (this.identifier.dots > 0);
 
   this.keyProps = [];             // per-note properties
 

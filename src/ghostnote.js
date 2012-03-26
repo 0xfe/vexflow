@@ -12,9 +12,29 @@ Vex.Flow.GhostNote.prototype = new Vex.Flow.Note();
 Vex.Flow.GhostNote.superclass = Vex.Flow.Note.prototype;
 Vex.Flow.GhostNote.constructor = Vex.Flow.GhostNote;
 
-Vex.Flow.GhostNote.prototype.init = function(duration) {
+Vex.Flow.GhostNote.prototype.init = function(parameter) {
+  // Sanity check
+  if (!parameter) {
+    throw new Vex.RuntimeError("BadArguments",
+        "Ghost note must have valid initialization data to identify " +
+        "duration.");
+  }
+
+  var note_struct;
+
+  // Preserve backwards-compatibility
+  if (typeof(parameter) === "string") {
+    note_struct = { duration: parameter };
+  } else if (typeof(parameter) === "object") {
+    note_struct = parameter;
+  } else {
+    throw new Vex.RuntimeError("BadArguments",
+        "Ghost note must have valid initialization data to identify " +
+        "duration.");
+  }
+
   var superclass = Vex.Flow.GhostNote.superclass;
-  superclass.init.call(this, duration);
+  superclass.init.call(this, note_struct);
 
   // Note properties
   this.setWidth(0);

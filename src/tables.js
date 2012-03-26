@@ -408,43 +408,69 @@ Vex.Flow.keySignature.accidentalList = function(acc) {
     return [0, 1.5, -0.5, 1, 2.5, 0.5, 2]; }
 }
 
-Vex.Flow.parseNoteIdentifier = function(noteIdentifier) {
-  if (noteIdentifier == null || noteIdentifier.length == 0) {
+Vex.Flow.parseNoteDurationString = function(durationString) {
+  if (typeof(durationString) !== "string") {
     return null;
   }
 
-  var stripCharCount = 0;
+  var regexp = /(\d+|[a-z])(d*)([nrhm]?)/;
 
-  var type = "n";
-  if (noteIdentifier.length > 1) {
-    var c = noteIdentifier.charAt(noteIdentifier.length - 1);
-    if (c == "r" || c == "h" || c == "m") {
-      stripCharCount++;
-      type = c;
-    }
+  var result = regexp.exec(durationString);
+  if (!result) {
+    return null;
   }
 
-  var dots = 0;
+  var duration = result[1];
+  var dots = result[2].length;
+  var type = result[3];
 
-  for (var i = noteIdentifier.length - (stripCharCount + 1); i >= 0; i--) {
-    var c = noteIdentifier.charAt(i);
-    if (c != "d") {
-      break;
-    }
-
-    stripCharCount++;
-    dots++;
+  if (type.length === 0) {
+    type = "n";
   }
 
-  var duration = noteIdentifier.substring(0,
-    noteIdentifier.length - stripCharCount);
+  return {
+    duration: duration,
+    dots: dots,
+    type: type
+  };
+}
 
-  var ticks = Vex.Flow.durationToTicks(duration);
+Vex.Flow.parseNoteData = function(noteData) {
+  var duration = noteData.duration;
+
+  // Preserve backwards-compatibility
+  var durationStringData = Vex.Flow.parseNoteDurationString(duration);
+  if (!durationStringData) {
+    return null;
+  }
+
+  var ticks = Vex.Flow.durationToTicks(durationStringData.duration);
   if (ticks == null) {
     return null;
   }
 
+  var type = noteData.type;
+
+  if (type) {
+    if (!(type === "n" || type === "r" || type === "h" || type === "m")) {
+      return null;
+    }
+  } else {
+    type = durationStringData.type;
+    if (!type) {
+      type = "n";
+    }
+  }
+
+  var dots = 0;
+  if (noteData.dots) {
+    dots = noteData.dots;
+  } else {
+    dots = durationStringData.dots;
+  }
+
   var currentTicks = ticks;
+
   for (var i = 0; i < dots; i++) {
     if (currentTicks <= 1) {
       return null;
@@ -455,7 +481,7 @@ Vex.Flow.parseNoteIdentifier = function(noteIdentifier) {
   }
 
   return {
-    duration: duration,
+    duration: durationStringData.duration,
     type: type,
     dots: dots,
     ticks: ticks
@@ -464,12 +490,12 @@ Vex.Flow.parseNoteIdentifier = function(noteIdentifier) {
 
 Vex.Flow.durationToTicks = function(duration) {
   var alias = Vex.Flow.durationAliases[duration];
-  if (alias != undefined) {
+  if (alias !== undefined) {
     duration = alias;
   }
 
   var ticks = Vex.Flow.durationToTicks.durations[duration];
-  if (ticks == undefined) {
+  if (ticks === undefined) {
     return null;
   }
 
@@ -489,27 +515,26 @@ Vex.Flow.durationToTicks.durations = {
 Vex.Flow.durationAliases = {
   "w": "1",
   "h": "2",
-  "q": "4",
-  "b": "32" // TODO: Where is this used and why?
+  "q": "4"
 }
 
 Vex.Flow.durationToGlyph = function(duration, type) {
   var alias = Vex.Flow.durationAliases[duration];
-  if (alias != undefined) {
+  if (alias !== undefined) {
     duration = alias;
   }
 
   var code = Vex.Flow.durationToGlyph.duration_codes[duration];
-  if (code == undefined) {
+  if (code === undefined) {
     return null;
   }
 
-  if (type == undefined) {
+  if (!type) {
     type = "n";
   }
 
   glyphTypeProperties = code.type[type];
-  if (glyphTypeProperties == undefined) {
+  if (glyphTypeProperties === undefined) {
     return null;
   }
 
@@ -518,17 +543,19 @@ Vex.Flow.durationToGlyph = function(duration, type) {
 
 Vex.Flow.durationIsDotted = function(duration) {
   var alias = Vex.Flow.durationAliases[duration];
-  if (alias != undefined) {
+  if (alias !== undefined) {
     duration = alias;
   }
 
   var duration_code = Vex.Flow.durationToGlyph.duration_codes[duration];
-  if (duration_code == undefined)
+  if (duration_code === undefined) {
     return false;
+  }
 
   var dots = duration_code.dots;
-  if (dots == undefined)
+  if (dots === undefined) {
     return false;
+  }
 
   return (dots > 0);
 }
