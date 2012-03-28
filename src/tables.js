@@ -17,7 +17,7 @@ Vex.Flow.clefProperties = function(clef) {
 Vex.Flow.clefProperties.values = {
   'treble':  { line_shift: 0 },
   'bass':    { line_shift: 6 },
-  'tenor':   { line_shift: 0 },
+  'tenor':   { line_shift: 4 },
   'alto':    { line_shift: 3 },
   'percussion': { line_shift: 0 }
 };
@@ -413,7 +413,7 @@ Vex.Flow.parseNoteDurationString = function(durationString) {
     return null;
   }
 
-  var regexp = /(\d+|[a-z])(d*)([nrhm]?)/;
+  var regexp = /(\d+|[a-z])(d*)([nrhm]|$)/;
 
   var result = regexp.exec(durationString);
   if (!result) {
@@ -467,6 +467,10 @@ Vex.Flow.parseNoteData = function(noteData) {
     dots = noteData.dots;
   } else {
     dots = durationStringData.dots;
+  }
+
+  if (typeof(dots) !== "number") {
+    return null;
   }
 
   var currentTicks = ticks;
