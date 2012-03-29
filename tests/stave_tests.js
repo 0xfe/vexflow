@@ -14,6 +14,8 @@ Vex.Flow.Test.Stave.Start = function() {
       Vex.Flow.Test.Stave.draw);
   Vex.Flow.Test.runRaphaelTest("Vertical Bar Test (Raphael)",
       Vex.Flow.Test.Stave.drawVerticalBar);
+  Vex.Flow.Test.runTest("Tempo Test (Canvas)",
+      Vex.Flow.Test.Stave.drawTempo);
   Vex.Flow.Test.runTest("Multiple Stave Barline Test (Canvas)",
       Vex.Flow.Test.Stave.drawMultipleMeasures);
   Vex.Flow.Test.runTest("Multiple Stave Repeats Test (Canvas)",
@@ -53,6 +55,44 @@ Vex.Flow.Test.Stave.drawVerticalBar = function(options, contextBuilder) {
   stave.drawVertical(300);
 
   ok(true, "all pass");
+}
+
+Vex.Flow.Test.Stave.drawTempo = function(options, contextBuilder) {
+  // Get the rendering context
+  var ctx = contextBuilder(options.canvas_sel, 725, 200);
+  var padding = 10, x = 0, y = 50;
+
+  function drawTempoStaveBar(width, tempo, tempo_y, notes) {
+    var staveBar = new Vex.Flow.Stave(padding + x, y, width);
+    staveBar.setTempo(tempo, tempo_y);
+    if (x == 0) staveBar.addClef("treble");
+    staveBar.setContext(ctx).draw();
+
+    var notesBar = notes || [
+      new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+      new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "q" }),
+      new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" })
+    ];
+
+    Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar, notesBar);
+    x += width;
+  }
+
+  drawTempoStaveBar(120, { note: "qd", bpm: 80 }, 0);
+  drawTempoStaveBar(100, { note: "8d", bpm: 90 }, 0);
+  drawTempoStaveBar(100, { note: "16d", bpm: 96 }, 0);
+  drawTempoStaveBar(100, { note: "32", bpm: 70 }, 0);
+  drawTempoStaveBar(250, { name: "Andante", note: "8", bpm: 120 }, -15, [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/5"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
+  ]);
 }
 
 Vex.Flow.Test.Stave.drawMultipleMeasures = function(options, contextBuilder) {
@@ -165,6 +205,7 @@ Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
       beam1.setContext(ctx).draw();
       beam2.setContext(ctx).draw();    
 }
+
 Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
     // Get the rendering context
       var ctx = contextBuilder(options.canvas_sel, 725, 200);

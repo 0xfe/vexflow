@@ -740,7 +740,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     position: "B/4"
   },
   "64": { // Sixty-fourth note
-    beam_count: 3,
+    beam_count: 4,
     code_head: "vb",
     code_rest: "v38",
     head_width: 10.5,
@@ -751,7 +751,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_flag_downstem: "v58"
   },
   "64h": { // Sixty-fourth harmonic
-    beam_count: 3,
+    beam_count: 4,
     code_head: "v22",
     code_rest: "v38",
     head_width: 10.5,
@@ -762,7 +762,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_flag_downstem: "v58"
   },
   "64m": { // Sixty-fourth muted
-    beam_count: 3,
+    beam_count: 4,
     code_head: "v3e",
     code_rest: "v38",
     head_width: 10.5,
@@ -773,7 +773,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     code_flag_downstem: "v58"
   },
   "64d": { // Dotted Sixty-fourth note
-    beam_count: 3,
+    beam_count: 4,
     code_head: "vb",
     code_rest: "v38",
     head_width: 10.5,
@@ -784,7 +784,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
     stem: true
   },
   "64r": { // Sixty-fourth rest
-    beam_count: 3,
+    beam_count: 4,
     code_head: "v38",
     head_width: 10.5,
     stem: false,
