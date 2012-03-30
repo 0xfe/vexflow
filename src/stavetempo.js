@@ -52,33 +52,32 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
 
   var x = this.x + shift_x + 10;
   var y = stave.getYForTopText(3) + this.shift_y;
+  var y_text = y + 16;
   var name = this.tempo.name;
+  var note = this.tempo.note;
+  var bpm = this.tempo.bpm;
 
   if (name) {
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    var text_width = ctx.measureText("" + this.tempo.name).width;
-    ctx.fillText("" + name, x, y + 16);
-    x += text_width;
+    ctx.fillText(name, x, y_text);
+    x += ctx.measureText(this.tempo.name).width;
   }
-
-  var note = this.tempo.note;
-  var bpm = this.tempo.bpm;
 
   if (note && bpm) {
     ctx.setFont(this.font.family, this.font.size, 'normal');
 
     if (name) {
       x += 6;
-      ctx.fillText("(", x, y + 16);
+      ctx.fillText("(", x, y_text);
       x += ctx.measureText("(").width;
     }
 
     var code = Vex.Flow.durationToGlyph.duration_codes[note];
-    var y_offset = 18;
+    var y_note = y + 18;
 
     x += 3;
 
-    Vex.Flow.renderGlyph(ctx, x, y + y_offset, 38, code.code_head);
+    Vex.Flow.renderGlyph(ctx, x, y_note, 38, code.code_head);
 
     x += code.head_width;
 
@@ -86,16 +85,16 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
 
       // Draw the stem and flags
 
-      var note_stem_height = 30;
+      var stem_height = 30;
 
       if (code.beam_count)
-        note_stem_height += 3 * (code.beam_count - 1);
+        stem_height += 3 * (code.beam_count - 1);
 
       if (code.dot)
-        note_stem_height += 2;
+        stem_height += 2;
 
-      var y_top = y + y_offset - note_stem_height;
-      ctx.fillRect(x, y_top, 1, note_stem_height);
+      var y_top = y_note - stem_height;
+      ctx.fillRect(x, y_top, 1, stem_height);
 
       if (code.flag)
         Vex.Flow.renderGlyph(ctx, x + 1, y_top, 38, code.code_flag_upstem);
@@ -108,13 +107,11 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
 
     if (code.dot) {
       ctx.beginPath();
-      ctx.arc(x, y + y_offset, 2, 0, Math.PI * 2, false);
+      ctx.arc(x, y_note, 2, 0, Math.PI * 2, false);
       ctx.fill();
     }
 
-    x += 3;
-
-    ctx.fillText(" = " + bpm + (name ? ")" : ""), x, y + 16);
+    ctx.fillText(" = " + bpm + (name ? ")" : ""), x + 3, y_text);
   }
 
   ctx.restore();
