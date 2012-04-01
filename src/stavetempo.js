@@ -30,7 +30,7 @@ Vex.Flow.StaveTempo.prototype.init = function(tempo, x, shift_y) {
   };
 }
 
-Vex.Flow.StaveTempo.prototype.getCategory = function() { return "StaveTempo"; }
+Vex.Flow.StaveTempo.prototype.getCategory = function() { return "stavetempo"; }
 Vex.Flow.StaveTempo.prototype.setStaveTempo = function(tempo) {
   this.tempo = tempo;
   return this;
