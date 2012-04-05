@@ -193,3 +193,4 @@ Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
 
   ok(true, "Test Justification Annotation");
 }
+
