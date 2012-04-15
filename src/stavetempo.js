@@ -94,8 +94,8 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
       ctx.fillRect(x, y_top, scale, stem_height);
 
       if (code.flag) {
-        Vex.Flow.renderGlyph(ctx, x + 1 * scale, y_top,
-                             options.glyph_font_scale, code.code_flag_upstem);
+        Vex.Flow.renderGlyph(ctx, x + scale, y_top, options.glyph_font_scale,
+                             code.code_flag_upstem);
       }
     }
 
