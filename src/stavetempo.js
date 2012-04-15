@@ -21,19 +21,21 @@ Vex.Flow.StaveTempo.prototype.init = function(tempo, x, shift_y) {
   this.tempo = tempo;
   this.position = Vex.Flow.Modifier.Position.ABOVE;
   this.x = x;
-  this.shift_x = 0;
+  this.shift_x = 10;
   this.shift_y = shift_y;
   this.font = {
     family: "times",
-    size: 16,
+    size: 14,
     weight: "bold"
+  };
+  this.render_options = {
+    glyph_font_scale: 30, // font size for note
   };
 }
 
 Vex.Flow.StaveTempo.prototype.getCategory = function() { return "stavetempo"; }
-Vex.Flow.StaveTempo.prototype.setStaveTempo = function(tempo) {
-  this.tempo = tempo;
-  return this;
+Vex.Flow.StaveTempo.prototype.setTempo = function(tempo) {
+  this.tempo = tempo; return this;
 }
 Vex.Flow.StaveTempo.prototype.setShiftX = function(x) {
   this.shift_x = x; return this;
@@ -46,72 +48,68 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
   if (!stave.context) throw new Vex.RERR("NoContext",
     "Can't draw stave tempo without a context.");
 
-  var ctx = stave.context;
-
-  ctx.save();
-
-  var x = this.x + shift_x + 10;
-  var y = stave.getYForTopText(3) + this.shift_y;
-  var y_text = y + 16;
+  var options = this.render_options;
+  var scale = options.glyph_font_scale / 38;
   var name = this.tempo.name;
   var note = this.tempo.note;
   var bpm = this.tempo.bpm;
+  var font = this.font;
+  var ctx = stave.context;
+  var x = this.x + this.shift_x + shift_x;
+  var y = stave.getYForTopText(1) + this.shift_y;
+
+  ctx.save();
 
   if (name) {
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    ctx.fillText(name, x, y_text);
-    x += ctx.measureText(this.tempo.name).width;
+    ctx.setFont(font.family, font.size, font.weight);
+    ctx.fillText(name, x, y);
+    x += ctx.measureText(name).width;
   }
 
   if (note && bpm) {
-    ctx.setFont(this.font.family, this.font.size, 'normal');
+    ctx.setFont(font.family, font.size, 'normal');
 
     if (name) {
-      x += 6;
-      ctx.fillText("(", x, y_text);
+      x += ctx.measureText(" ").width;
+      ctx.fillText("(", x, y);
       x += ctx.measureText("(").width;
     }
 
-    var code = Vex.Flow.durationToGlyph.duration_codes[note];
-    var y_note = y + 18;
+    var code = Vex.Flow.durationToGlyph(note);
 
-    x += 3;
+    x += 3 * scale;
+    Vex.Flow.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
+    x += code.head_width * scale;
 
-    Vex.Flow.renderGlyph(ctx, x, y_note, 38, code.code_head);
-
-    x += code.head_width;
-
+    // Draw stem and flags
     if (code.stem) {
-
-      // Draw the stem and flags
-
       var stem_height = 30;
 
       if (code.beam_count)
-        stem_height += 3 * (code.beam_count - 1);
+        stem_height += 3 * (code.beam_count - 1) + (code.dot ? 2 : 0);
 
-      if (code.dot)
-        stem_height += 2;
+      stem_height *= scale;
 
-      var y_top = y_note - stem_height;
-      ctx.fillRect(x, y_top, 1, stem_height);
+      var y_top = y - stem_height;
+      ctx.fillRect(x, y_top, scale, stem_height);
 
-      if (code.flag)
-        Vex.Flow.renderGlyph(ctx, x + 1, y_top, 38, code.code_flag_upstem);
+      if (code.flag) {
+        Vex.Flow.renderGlyph(ctx, x + 1 * scale, y_top,
+                             options.glyph_font_scale, code.code_flag_upstem);
+      }
     }
 
     if (code.flag || code.dot)
-      x += 5;
+      x += 5 * scale;
 
     // Draw dot
-
     if (code.dot) {
       ctx.beginPath();
-      ctx.arc(x, y_note, 2, 0, Math.PI * 2, false);
+      ctx.arc(x, y, 2 * scale, 0, Math.PI * 2, false);
       ctx.fill();
     }
 
-    ctx.fillText(" = " + bpm + (name ? ")" : ""), x + 3, y_text);
+    ctx.fillText(" = " + bpm + (name ? ")" : ""), x + 3 * scale, y);
   }
 
   ctx.restore();
