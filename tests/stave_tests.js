@@ -26,6 +26,8 @@ Vex.Flow.Test.Stave.Start = function() {
       Vex.Flow.Test.Stave.drawVoltaTest);
   Vex.Flow.Test.runRaphaelTest("Multiple Staves Volta Test (Raphael)",
       Vex.Flow.Test.Stave.drawVoltaTest);
+  Vex.Flow.Test.runTest("Tempo Test (Canvas)",
+      Vex.Flow.Test.Stave.drawTempo);
 }
 
 Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {
@@ -165,6 +167,7 @@ Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
       beam1.setContext(ctx).draw();
       beam2.setContext(ctx).draw();    
 }
+
 Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
     // Get the rendering context
       var ctx = contextBuilder(options.canvas_sel, 725, 200);
@@ -278,4 +281,58 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
       // Helper function to justify and draw a 4/4 voice
       Vex.Flow.Formatter.FormatAndDraw(ctx, mm9, notesmm9);
 
+}
+
+Vex.Flow.Test.Stave.drawTempo = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 725, 350);
+  var padding = 10, x = 0, y = 50;
+
+  function drawTempoStaveBar(width, tempo, tempo_y, notes) {
+    var staveBar = new Vex.Flow.Stave(padding + x, y, width);
+    if (x == 0) staveBar.addClef("treble");
+    staveBar.setTempo(tempo, tempo_y);
+    staveBar.setContext(ctx).draw();
+
+    var notesBar = notes || [
+      new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+      new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+      new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "q" }),
+      new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" })
+    ];
+
+    Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar, notesBar);
+    x += width;
+  }
+
+  drawTempoStaveBar(120, { duration: "q", dots: 1, bpm: 80 }, 0);
+  drawTempoStaveBar(100, { duration: "8", dots: 2, bpm: 90 }, 0);
+  drawTempoStaveBar(100, { duration: "16", dots: 1, bpm: 96 }, 0);
+  drawTempoStaveBar(100, { duration: "32", bpm: 70 }, 0);
+  drawTempoStaveBar(250, { name: "Andante", note: "8", bpm: 120 }, -20, [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/5"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
+  ]);
+
+  x = 0; y += 150;
+
+  drawTempoStaveBar(120, { duration: "w", bpm: 80 }, 0);
+  drawTempoStaveBar(100, { duration: "h", bpm: 90 }, 0);
+  drawTempoStaveBar(100, { duration: "q", bpm: 96 }, 0);
+  drawTempoStaveBar(100, { duration: "8", bpm: 70 }, 0);
+  drawTempoStaveBar(250, { name: "Andante grazioso" }, 0, [
+		new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+		new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+		new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+		new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" }),
+		new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+		new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+		new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+		new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
+  ]);
 }

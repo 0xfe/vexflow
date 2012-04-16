@@ -552,25 +552,6 @@ Vex.Flow.durationToGlyph = function(duration, type) {
   return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
 }
 
-Vex.Flow.durationIsDotted = function(duration) {
-  var alias = Vex.Flow.durationAliases[duration];
-  if (alias !== undefined) {
-    duration = alias;
-  }
-
-  var duration_code = Vex.Flow.durationToGlyph.duration_codes[duration];
-  if (duration_code === undefined) {
-    return false;
-  }
-
-  var dots = duration_code.dots;
-  if (dots === undefined) {
-    return false;
-  }
-
-  return (dots > 0);
-}
-
 Vex.Flow.durationToGlyph.duration_codes = {
   "1": {
     common: {
