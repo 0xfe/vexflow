@@ -513,13 +513,20 @@ Vex.Flow.durationToTicks.durations = {
   "8":    Vex.Flow.RESOLUTION / 8,
   "16":   Vex.Flow.RESOLUTION / 16,
   "32":   Vex.Flow.RESOLUTION / 32,
-  "64":   Vex.Flow.RESOLUTION / 64
+  "64":   Vex.Flow.RESOLUTION / 64,
+  "256":   Vex.Flow.RESOLUTION / 256
 };
 
 Vex.Flow.durationAliases = {
   "w": "1",
   "h": "2",
-  "q": "4"
+  "q": "4",
+
+  // This is the default duration used to render bars (BarNote). Bars no longer
+  // consume ticks, so this should be a no-op.
+  //
+  // TODO(0xfe): This needs to be cleaned up.
+  "b": "256"
 }
 
 Vex.Flow.durationToGlyph = function(duration, type) {
