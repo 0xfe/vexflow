@@ -86,8 +86,7 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
     if (code.stem) {
       var stem_height = 30;
 
-      if (code.beam_count)
-        stem_height += 3 * (code.beam_count - 1);
+      if (code.beam_count) stem_height += 3 * (code.beam_count - 1);
 
       stem_height *= scale;
 
@@ -98,8 +97,7 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
         Vex.Flow.renderGlyph(ctx, x + scale, y_top, options.glyph_font_scale,
                              code.code_flag_upstem);
 
-        if (!dots)
-          x += 6 * scale;
+        if (!dots) x += 6 * scale;
       }
     }
 

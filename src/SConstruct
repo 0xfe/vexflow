@@ -52,7 +52,7 @@ vexflow_sources = [
     "stavevolta.js",
     "staverepetition.js",
     "stavesection.js",
-	"stavetempo.js"
+    "stavetempo.js"
     "tremelo.js",
     ]
 
