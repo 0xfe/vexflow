@@ -15,12 +15,21 @@ Vex.Flow.TabNote.constructor = Vex.Flow.TabNote;
 
 Vex.Flow.TabNote.prototype.init = function(tab_struct) {
   var superclass = Vex.Flow.TabNote.superclass;
-  superclass.init.call(this, tab_struct.duration);
+  superclass.init.call(this, tab_struct);
+
   // Note properties
   this.positions = tab_struct.positions; // [{ str: X, fret: X }]
   this.modifiers = [];
   this.render_options = {
     glyph_font_scale: 30 // font size for note heads and rests
+  }
+
+  this.noteGlyph =
+    Vex.Flow.durationToGlyph(this.duration, this.noteType);
+  if (!this.noteGlyph) {
+    throw new Vex.RuntimeError("BadArguments",
+        "Invalid note initialization data (No glyph found): " +
+        JSON.stringify(tab_struct));
   }
 
   this.glyphs = [];
@@ -85,7 +94,7 @@ Vex.Flow.TabNote.prototype.addModifier = function(modifier, index) {
 
 Vex.Flow.TabNote.prototype.getTieRightX = function() {
   var tieStartX = this.getAbsoluteX();
-  var note_glyph_width = Vex.Flow.durationToGlyph(this.duration).head_width;
+  var note_glyph_width = this.noteGlyph.head_width;
   tieStartX += (note_glyph_width / 2);
   tieStartX += ((-this.width / 2) + this.width + 2);
 
@@ -94,7 +103,7 @@ Vex.Flow.TabNote.prototype.getTieRightX = function() {
 
 Vex.Flow.TabNote.prototype.getTieLeftX = function() {
   var tieEndX = this.getAbsoluteX();
-  var note_glyph_width = Vex.Flow.durationToGlyph(this.duration).head_width;
+  var note_glyph_width = this.noteGlyph.head_width;
   tieEndX += (note_glyph_width / 2);
   tieEndX -= ((this.width / 2) + 2);
 
@@ -115,7 +124,7 @@ Vex.Flow.TabNote.prototype.getModifierStartXY = function(position, index) {
     x = this.width + 2; // extra_right_px
   } else if (position == Vex.Flow.Modifier.Position.BELOW ||
              position == Vex.Flow.Modifier.Position.ABOVE) {
-      var note_glyph_width = Vex.Flow.durationToGlyph(this.duration).head_width;
+      var note_glyph_width = this.noteGlyph.head_width;
       x = note_glyph_width / 2;
   }
 
@@ -147,7 +156,7 @@ Vex.Flow.TabNote.prototype.draw = function() {
     var glyph = this.glyphs[i];
 
     // Center the fret text beneath the notation note head
-    var note_glyph_width = Vex.Flow.durationToGlyph(this.duration).head_width;
+    var note_glyph_width = this.noteGlyph.head_width;
     var tab_x = x + (note_glyph_width / 2) - (glyph.width / 2);
 
     ctx.clearRect(tab_x - 2, y - 3, glyph.width + 4, 6);
