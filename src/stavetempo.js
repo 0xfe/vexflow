@@ -5,7 +5,7 @@
 
 /**
  * @constructor
- * @param {Object} tempo Tempo parameters: { name, note, bpm }
+ * @param {Object} tempo Tempo parameters: { name, duration, dots, bpm }
  */
 Vex.Flow.StaveTempo = function(tempo, x, shift_y) {
   if (arguments.length > 0) this.init(tempo, x, shift_y);
@@ -51,7 +51,8 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
   var options = this.render_options;
   var scale = options.glyph_font_scale / 38;
   var name = this.tempo.name;
-  var note = this.tempo.note;
+  var duration = this.tempo.duration;
+  var dots = this.tempo.dots;
   var bpm = this.tempo.bpm;
   var font = this.font;
   var ctx = stave.context;
@@ -66,7 +67,7 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
     x += ctx.measureText(name).width;
   }
 
-  if (note && bpm) {
+  if (duration && bpm) {
     ctx.setFont(font.family, font.size, 'normal');
 
     if (name) {
@@ -75,7 +76,7 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
       x += ctx.measureText("(").width;
     }
 
-    var code = Vex.Flow.durationToGlyph(note);
+    var code = Vex.Flow.durationToGlyph(duration);
 
     x += 3 * scale;
     Vex.Flow.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
@@ -86,7 +87,7 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
       var stem_height = 30;
 
       if (code.beam_count)
-        stem_height += 3 * (code.beam_count - 1) + (code.dot ? 2 : 0);
+        stem_height += 3 * (code.beam_count - 1);
 
       stem_height *= scale;
 
@@ -96,16 +97,17 @@ Vex.Flow.StaveTempo.prototype.draw = function(stave, shift_x) {
       if (code.flag) {
         Vex.Flow.renderGlyph(ctx, x + scale, y_top, options.glyph_font_scale,
                              code.code_flag_upstem);
+
+        if (!dots)
+          x += 6 * scale;
       }
     }
 
-    if (code.flag || code.dot)
-      x += 5 * scale;
-
     // Draw dot
-    if (code.dot) {
+    for (var i = 0; i < dots; i++) {
+      x += 6 * scale;
       ctx.beginPath();
-      ctx.arc(x, y, 2 * scale, 0, Math.PI * 2, false);
+      ctx.arc(x, y + 2 * scale, 2 * scale, 0, Math.PI * 2, false);
       ctx.fill();
     }
 

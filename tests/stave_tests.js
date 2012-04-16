@@ -304,10 +304,10 @@ Vex.Flow.Test.Stave.drawTempo = function(options, contextBuilder) {
     x += width;
   }
 
-  drawTempoStaveBar(120, { note: "qd", bpm: 80 }, 0);
-  drawTempoStaveBar(100, { note: "8d", bpm: 90 }, 0);
-  drawTempoStaveBar(100, { note: "16d", bpm: 96 }, 0);
-  drawTempoStaveBar(100, { note: "32", bpm: 70 }, 0);
+  drawTempoStaveBar(120, { duration: "q", dots: 1, bpm: 80 }, 0);
+  drawTempoStaveBar(100, { duration: "8", dots: 2, bpm: 90 }, 0);
+  drawTempoStaveBar(100, { duration: "16", dots: 1, bpm: 96 }, 0);
+  drawTempoStaveBar(100, { duration: "32", bpm: 70 }, 0);
   drawTempoStaveBar(250, { name: "Andante", note: "8", bpm: 120 }, -20, [
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
     new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
@@ -321,10 +321,10 @@ Vex.Flow.Test.Stave.drawTempo = function(options, contextBuilder) {
 
   x = 0; y += 150;
 
-  drawTempoStaveBar(120, { note: "w", bpm: 80 }, 0);
-  drawTempoStaveBar(100, { note: "h", bpm: 90 }, 0);
-  drawTempoStaveBar(100, { note: "q", bpm: 96 }, 0);
-  drawTempoStaveBar(100, { note: "8", bpm: 70 }, 0);
+  drawTempoStaveBar(120, { duration: "w", bpm: 80 }, 0);
+  drawTempoStaveBar(100, { duration: "h", bpm: 90 }, 0);
+  drawTempoStaveBar(100, { duration: "q", bpm: 96 }, 0);
+  drawTempoStaveBar(100, { duration: "8", bpm: 70 }, 0);
   drawTempoStaveBar(250, { name: "Andante grazioso" }, 0, [
 		new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
 		new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),

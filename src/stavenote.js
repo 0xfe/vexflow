@@ -22,18 +22,18 @@ Vex.Flow.StaveNote.STEM_DOWN = -1;
 Vex.Flow.StaveNote.prototype.getCategory = function() { return "stavenotes"; }
 Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   var superclass = Vex.Flow.StaveNote.superclass;
-  superclass.init.call(this, note_struct.duration);
+  superclass.init.call(this, note_struct);
 
   this.keys = note_struct.keys;
   this.clef = note_struct.clef;
 
-  // Pull note rendering properties from duration.
-  this.glyph = Vex.Flow.durationToGlyph(this.duration);
+  // Pull note rendering properties
+  this.glyph = Vex.Flow.durationToGlyph(this.duration, this.noteType);
   if (!this.glyph) {
     throw new Vex.RuntimeError("BadArguments",
-        "Invalid duration string (No glyph found): " + this.duration);
+        "Invalid note initialization data (No glyph found): " +
+        JSON.stringify(note_struct));
   }
-  this.dotted = Vex.Flow.durationIsDotted(this.duration);
 
   this.keyProps = [];             // per-note properties
 
@@ -209,6 +209,10 @@ Vex.Flow.StaveNote.prototype.setStemDirection = function(direction) {
 Vex.Flow.StaveNote.prototype.setBeam = function(beam) {
   this.beam = beam;
   return this;
+}
+
+Vex.Flow.StaveNote.prototype.getGlyph = function() {
+  return this.glyph;
 }
 
 Vex.Flow.StaveNote.prototype.addToModifierContext = function(mc) {

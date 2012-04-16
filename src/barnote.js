@@ -13,7 +13,7 @@ Vex.Flow.BarNote.constructor = Vex.Flow.BarNote;
 
 Vex.Flow.BarNote.prototype.init = function() {
   var superclass = Vex.Flow.BarNote.superclass;
-  superclass.init.call(this, "b");
+  superclass.init.call(this, {duration: "b"});
 
   // Note properties
   this.setWidth(8);
