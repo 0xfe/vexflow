@@ -238,9 +238,11 @@ Vex.Flow.Test.Music.canonicalIntervals = function(options) {
 }
 
 Vex.Flow.Test.Music.scaleTones = function(options) {
-  expect(8);
+  expect(24);
 
+  // C Major
   var music = new Vex.Flow.Music();
+  var manager = new Vex.Flow.KeyManager("CM");
 
   var c_major = music.getScaleTones(
       music.getNoteValue("c"), Vex.Flow.Music.scales.major);
@@ -250,6 +252,29 @@ Vex.Flow.Test.Music.scaleTones = function(options) {
 
   for (var i = 0; i < c_major.length; ++i) {
     equals(music.getCanonicalNoteName(c_major[i]), values[i]);
+  }
+
+  // Dorian
+  var c_dorian = music.getScaleTones(
+      music.getNoteValue("c"), Vex.Flow.Music.scales.dorian);
+  var values = ["c", "d", "eb", "f", "g", "a", "bb"];
+
+  equals(c_dorian.length,  7);
+  for (var i = 0; i < c_dorian.length; ++i) {
+      var note = music.getCanonicalNoteName(c_dorian[i]);
+      equals(manager.selectNote(note).note, values[i]);
+  }
+
+  // Mixolydian
+  var c_mixolydian = music.getScaleTones(
+      music.getNoteValue("c"), Vex.Flow.Music.scales.mixolydian);
+  var values = ["c", "d", "e", "f", "g", "a", "bb"];
+
+  equals(c_mixolydian.length,  7);
+
+  for (var i = 0; i < c_mixolydian.length; ++i) {
+      var note = music.getCanonicalNoteName(c_mixolydian[i]);
+      equals(manager.selectNote(note).note, values[i]);
   }
 }
 
