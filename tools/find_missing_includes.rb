@@ -22,18 +22,17 @@ end
 # Extract .js files from SCONSTRUCT
 includes = File.readlines(SCONSTRUCT).
                 grep(/^\s+.*\.js.*/).
-                map { |f| f.chomp.gsub(/^.*"(.+)".*$/, '\1') }
+                map { |f| f.chomp.gsub(/^.*"(.+)".*$/, '\1') }.
+                reject {|f| f.match(/^fonts\//) } # Exclude fonts/
 
-# Extract all .js files in src/
+# Extract all .js files in src/ (non recursive)
 files = Dir.glob("#{SRCDIR}/*.js").map { |f| f.gsub(SRCDIR + "/", "")}
-
 
 puts "Files in #{SCONSTRUCT} but not in #{SRCDIR}:"
 pp includes - files
 
 puts "\nFiles in #{SRCDIR} but not in #{SCONSTRUCT}:"
 pp files - includes
-
 
 # Work through HTML files and print out missing includes
 HTML_FILES.each do |html|
