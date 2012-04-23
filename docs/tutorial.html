@@ -705,6 +705,144 @@
       custom <code>clearRect</code> is required to clear sections of the
       canvas. This is not supported by SVG because it has no "clear" semantics.
     </div>
+    <h2>Step 6: Adding Bar Lines / Measures</h2>
+    <div class="description six">
+      <h3>Technique #1</h3>
+      The <code>Stave</code> APIs were designed such that you don't have more than 
+      one bar per stave. With this design you render a new stave for every bar, and 
+      either attach it by juxtaposing it to an existing stave or rendering it in a 
+      new vertical position.
+      <p/>
+      Let's create a couple bars and position them next to each other. 
+      <br/>
+      <code class="example a" example="a"></code>
+      <div class="example a" example="a">
+        <canvas width=525 height=160></canvas>
+        <p/>
+<script>
+  // Get the rendering context
+  var canvas = $("div.six div.a canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+  var ctx = renderer.getContext();
+
+  // bar 1
+  var staveBar1 = new Vex.Flow.Stave(10, 0, 200);
+  staveBar1.addClef("treble").setContext(ctx).draw();
+
+  var notesBar1 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })
+  ];
+
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+
+
+  // bar 2 - juxtaposing second bar next to first bar
+  var staveBar2 = new Vex.Flow.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
+  staveBar2.setContext(ctx).draw();
+   
+  var notesBar2_part1 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
+  ];
+   
+  var notesBar2_part2 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
+  ];
+   
+  // create the beams for 8th notes in 2nd measure
+  var beam1 = new Vex.Flow.Beam(notesBar2_part1);
+  var beam2 = new Vex.Flow.Beam(notesBar2_part2);
+  var notesBar2 = notesBar2_part1.concat(notesBar2_part2);
+
+  // Helper function to justify and draw a 4/4 voice 
+  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+   
+  // Render beams
+  beam1.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+</script>
+      </div>
+      Above, we used the first stave's position and width properties 
+      to position our second stave. 
+      <p/>
+
+      <h3>Technique #2</h3>
+      <p/>
+      Another technique for adding bar lines is to use a single stave
+      and voice for multiple bars. This approach requires disabling
+      strict timing for the <code>voice</code> and using the <code>BarNote</code>
+      object to draw bar lines.
+      <p/>
+      Let's create one stave and add a couple bars to it. 
+      <br/>
+      <code class="example b" example="b"></code>
+      <div class="example b" example="b">
+        <canvas width=525 height=160></canvas>
+        <p/>
+<script>
+  // Get the rendering context
+  var canvas = $("div.six div.b canvas")[0];
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+  var ctx = renderer.getContext();
+  
+  // Create single stave
+  var stave = new Vex.Flow.Stave(10, 0, 500);
+  stave.addClef("treble").setContext(ctx).draw();
+
+  // Create the notes
+  var notes = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" }),
+
+    // start new measure
+    new Vex.Flow.BarNote(),
+
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })
+  ];
+
+  // Create a voice in 4/4
+  var voice = new Vex.Flow.Voice({
+    num_beats: 4,
+    beat_value: 4,
+    resolution: Vex.Flow.RESOLUTION
+  });
+
+  // disable strict timing
+  voice.setStrict(false);
+
+  // Add notes to voice
+  voice.addTickables(notes);
+
+  // Format and justify the notes
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([voice]).format([voice], 450);
+
+  // Render voice
+  voice.draw(ctx, stave);
+</script>
+      </div>
+      This technique with using a single <code>stave</code> works well
+      for some use cases but can be problematic for others that require
+      full control over each bar. For example, it's difficult to beam 
+      notes or add time signatures for each bar using this technique.
+      <p/>
+    </div>
     <center>
     <h2>Step N + 1: Coming soon</h2>
       <p/>
