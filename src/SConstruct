@@ -49,10 +49,11 @@ vexflow_sources = [
     "renderer.js",
     "raphaelcontext.js",
     "stavebarline.js",
+    "stavehairpin.js",
     "stavevolta.js",
     "staverepetition.js",
     "stavesection.js",
-    "stavetempo.js"
+    "stavetempo.js",
     "tremelo.js",
     ]
 

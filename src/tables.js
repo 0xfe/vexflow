@@ -614,14 +614,14 @@ Vex.Flow.durationToGlyph.duration_codes = {
     },
     type: {
       "n": { // Quarter note
-        code_head: "vb",
+        code_head: "vb"
       },
       "h": { // Quarter harmonic
-        code_head: "v22",
+        code_head: "v22"
       },
       "m": { // Quarter muted
         code_head: "v3e",
-        stem_offset: -3,
+        stem_offset: -3
       },
       "r": { // Quarter rest
         code_head: "v7c",

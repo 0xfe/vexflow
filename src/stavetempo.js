@@ -29,7 +29,7 @@ Vex.Flow.StaveTempo.prototype.init = function(tempo, x, shift_y) {
     weight: "bold"
   };
   this.render_options = {
-    glyph_font_scale: 30, // font size for note
+    glyph_font_scale: 30  // font size for note
   };
 }
 
