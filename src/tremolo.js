@@ -1,20 +1,20 @@
 // VexFlow - Music Engraving for HTML5
 // Author: Mike Corrigan <corrigan@gmail.com>
 //
-// This class implements tremelo notation.
+// This class implements tremolo notation.
 
 /**
  * @constructor
  */
-Vex.Flow.Tremelo = function(num) {
+Vex.Flow.Tremolo = function(num) {
   if (arguments.length > 0) this.init(num);
 }
-Vex.Flow.Tremelo.prototype = new Vex.Flow.Modifier();
-Vex.Flow.Tremelo.prototype.constructor = Vex.Flow.Tremelo;
-Vex.Flow.Tremelo.superclass = Vex.Flow.Modifier.prototype;
+Vex.Flow.Tremolo.prototype = new Vex.Flow.Modifier();
+Vex.Flow.Tremolo.prototype.constructor = Vex.Flow.Tremolo;
+Vex.Flow.Tremolo.superclass = Vex.Flow.Modifier.prototype;
 
-Vex.Flow.Tremelo.prototype.init = function(num) {
-  var superclass = Vex.Flow.Tremelo.superclass;
+Vex.Flow.Tremolo.prototype.init = function(num) {
+  var superclass = Vex.Flow.Tremolo.superclass;
   superclass.init.call(this);
 
   this.num = num;
@@ -38,13 +38,13 @@ Vex.Flow.Tremelo.prototype.init = function(num) {
   };
 }
 
-Vex.Flow.Tremelo.prototype.getCategory = function() { return "tremelo"; }
+Vex.Flow.Tremolo.prototype.getCategory = function() { return "tremolo"; }
 
-Vex.Flow.Tremelo.prototype.draw = function() {
+Vex.Flow.Tremolo.prototype.draw = function() {
   if (!this.context) throw new Vex.RERR("NoContext",
-    "Can't draw Tremelo without a context.");
+    "Can't draw Tremolo without a context.");
   if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
-    "Can't draw Tremelo without a note and index.");
+    "Can't draw Tremolo without a note and index.");
 
   var start = this.note.getModifierStartXY(this.position, this.index);
   var x = start.x;
