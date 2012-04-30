@@ -723,7 +723,7 @@
   var renderer = new Vex.Flow.Renderer(canvas,
     Vex.Flow.Renderer.Backends.CANVAS);
   var ctx = renderer.getContext();
-  ctx.clearRect(canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
   // Create and draw the tablature stave
@@ -768,15 +768,20 @@
         </style>
         <script>
 
+        var timeout;
 
         function live_code() {
-          
+
           var code = $("#sandbox").val();
           eval(code);
 
         }
 
-        $('#sandbox').live('blur keyup paste', live_code);
+        $('#sandbox').live('blur keyup paste', function() {
+          if (timeout) clearTimeout(timeout);
+          timeout = setTimeout(live_code, 200);
+        });
+
         live_code();
 
         </script>
