@@ -705,6 +705,85 @@
       custom <code>clearRect</code> is required to clear sections of the
       canvas. This is not supported by SVG because it has no "clear" semantics.
     </div>
+
+    <h2>Step 6: Try out yourself</h2>
+
+    <div class="description sandbox">
+      One of the most important thing is to try out the code sniplets yourself.
+      <p/>
+      Start writing some code.
+      <br/>
+
+      
+      <div class="example sandbox" example="sandbox">
+        <textarea id="sandbox" class="editor" style="width: 565px; height: 180px; ">
+  // Get the rendering context
+  var canvas = $("div.sandbox div.sandbox canvas")[0];
+
+  var renderer = new Vex.Flow.Renderer(canvas,
+    Vex.Flow.Renderer.Backends.CANVAS);
+  var ctx = renderer.getContext();
+  ctx.clearRect(canvas.width, canvas.height);
+  ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+
+  // Create and draw the tablature stave
+  var tabstave = new Vex.Flow.TabStave(10, 0, 500);
+  tabstave.addTabGlyph();
+  tabstave.setContext(ctx).draw();
+
+  // Create some notes
+  var notes = [
+    // A single note
+    new Vex.Flow.TabNote({
+      positions: [{str: 3, fret: 7}],
+      duration: "q"}),
+
+    // A chord with the note on the 3rd string bent
+    new Vex.Flow.TabNote({
+      positions: [{str: 2, fret: 10},
+                  {str: 3, fret: 9}],
+      duration: "q"}).
+    addModifier(new Vex.Flow.Bend("Full"), 1),
+
+    // A single note with a harsh vibrato
+    new Vex.Flow.TabNote({
+      positions: [{str: 2, fret: 5}],
+      duration: "h"}).
+    addModifier(new Vex.Flow.Vibrato().setHarsh(true).setVibratoWidth(70), 0)
+  ];
+
+  Vex.Flow.Formatter.FormatAndDraw(ctx, tabstave, notes);
+        </textarea>
+        
+        <p/>
+        <canvas width=525 height=160></canvas>
+
+        <style>
+        .editor {
+          background: #cfc;
+          border: 10px solid #afa;
+          font-family: Courier;
+          font-size: 14px;
+        }
+        </style>
+        <script>
+
+
+        function live_code() {
+          
+          var code = $("#sandbox").val();
+          eval(code);
+
+        }
+
+        $('#sandbox').live('blur keyup paste', live_code);
+        live_code();
+
+        </script>
+        <p/>
+      Go forth and have fun!
+      </div>
+
     <center>
     <h2>Step N + 1: Coming soon</h2>
       <p/>
