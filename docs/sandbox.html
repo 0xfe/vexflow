@@ -139,10 +139,12 @@
       <p/>
       Start changing some code, and resulting vexflow will appear.
       <br/>
-
-      
+      <div class="editor-error"><span class="text"></span></div>
+      <p/>
       <div class="example sandbox" example="sandbox">
-        <textarea id="sandbox" class="editor" style="width: 565px; height: 180px; ">
+        
+
+        <textarea id="sandbox" class="editor" style="width: 541px; height: 180px; ">
   // Get the rendering context
   var canvas = $("div.sandbox div.sandbox canvas")[0];
 
@@ -191,15 +193,32 @@
           font-family: Courier;
           font-size: 14px;
         }
+
+
+        div.editor-error .text {
+          background: #faa;
+          border: 5px solid #f88;
+          font-family: Courier;
+          font-size: 14px;
+          padding: 3px;
+          display: none;
+        }
+
         </style>
         <script>
 
         var timeout;
+        var msg = $('div.editor-error .text');
 
         function live_code() {
-
           var code = $("#sandbox").val();
-          eval(code);
+          
+          try {
+            eval(code);
+            msg.html('').hide();
+          } catch (e) {
+            msg.html(e.toString()).show();
+          }
 
         }
 
