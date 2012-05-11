@@ -24,6 +24,7 @@ default_env = Environment(
     JS_COMPILER = "support/compiler.jar",
     JS_DEFINES = {},
     JS_COMPILATION_LEVEL = "SIMPLE_OPTIMIZATIONS",
+    JS_EXTRA_FLAGS = "",
     ENV = os.environ)
 
 def js_builder(target, source, env):
@@ -31,6 +32,8 @@ def js_builder(target, source, env):
 
   cmd = env.subst(
       "$JAVA -jar $JS_COMPILER --compilation_level $JS_COMPILATION_LEVEL");
+
+  cmd += " " + env['JS_EXTRA_FLAGS']
 
   # Add defines to the command
   for define in env['JS_DEFINES'].keys():
