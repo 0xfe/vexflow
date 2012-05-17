@@ -238,7 +238,7 @@ Vex.Flow.Test.Music.canonicalIntervals = function(options) {
 }
 
 Vex.Flow.Test.Music.scaleTones = function(options) {
-  expect(24);
+  expect(36);
 
   // C Major
   var music = new Vex.Flow.Music();
@@ -274,6 +274,30 @@ Vex.Flow.Test.Music.scaleTones = function(options) {
 
   for (var i = 0; i < c_mixolydian.length; ++i) {
       var note = music.getCanonicalNoteName(c_mixolydian[i]);
+      equals(manager.selectNote(note).note, values[i]);
+  }
+
+  // Major Pentatonic
+  var c_major_pentatonic = music.getScaleTones(
+      music.getNoteValue("c"), Vex.Flow.Music.scales.majorPentatonic);
+  var values = ["c", "d", "e", "g", "a"];
+
+  equals(c_major_pentatonic.length,  5);
+
+  for (var i = 0; i < c_major_pentatonic.length; ++i) {
+      var note = music.getCanonicalNoteName(c_major_pentatonic[i]);
+      equals(manager.selectNote(note).note, values[i]);
+  }
+
+  // Minor Pentatonic
+  var c_minor_pentatonic = music.getScaleTones(
+      music.getNoteValue("c"), Vex.Flow.Music.scales.minorPentatonic);
+  var values = ["c", "eb", "f", "g", "bb"];
+
+  equals(c_minor_pentatonic.length,  5);
+
+  for (var i = 0; i < c_minor_pentatonic.length; ++i) {
+      var note = music.getCanonicalNoteName(c_minor_pentatonic[i]);
       equals(manager.selectNote(note).note, values[i]);
   }
 }
