@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -w
+#!/usr/bin/ruby
 
 # VexFlow - Copyright Mohit Muthanna Cheppudira 2012
 #
@@ -10,7 +10,8 @@ require 'pp'
 SRCDIR = "../src"
 SCONSTRUCT = "#{SRCDIR}/SConstruct"
 HTML_FILES = [
-  "../tests/flow.html", "../docs/tutorial.html",
+  "../tests/flow.html",
+  "../docs/tutorial.html", "../docs/sandbox.html",
   "../tabdiv/playground.html", "../tabdiv/tutorial.html",
   "../tabdiv/vextab.html" ]
 
@@ -38,7 +39,8 @@ pp files - includes
 HTML_FILES.each do |html|
   test_includes = File.readlines(html).
                        grep(/^.*script\ssrc.*\.\.\/src.*\.js.*/).
-                       map { |f| f.chomp.gsub(/^.*"(.+)".*$/, '\1').gsub(SRCDIR + "/", "") }
+                       map { |f| f.chomp.gsub(/^.*"(.+)".*$/, '\1').
+                           gsub(SRCDIR + "/", "") }
 
   puts "\nFiles in #{SRCDIR} but not in #{html}:"
   pp files - test_includes
