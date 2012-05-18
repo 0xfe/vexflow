@@ -72,9 +72,8 @@
 
     div.egcode {
       font-family: Courier;
-      font-size: 14px;
+      font-size: 12px;
     }
-
   </style>
 
   <script>
@@ -130,61 +129,56 @@
   </div>
 
   <div class="content">
-    
+
 
     <h2>Have some fun!</h2>
 
     <div class="description sandbox">
-      With this Vexflow live editor, you can try out some code sniplets online.
+      Try out the VexFlow API in this live editor.
       <p/>
-      Start changing some code, and resulting vexflow will appear.
-      <br/>
       <div class="editor-error"><span class="text"></span></div>
       <p/>
       <div class="example sandbox" example="sandbox">
-        
+        <textarea id="sandbox" class="editor"
+                  style="width: 641px; height: 180px; ">
+// Get the rendering context
+var canvas = $("div.sandbox div.sandbox canvas")[0];
 
-        <textarea id="sandbox" class="editor" style="width: 541px; height: 180px; ">
-  // Get the rendering context
-  var canvas = $("div.sandbox div.sandbox canvas")[0];
+var renderer = new Vex.Flow.Renderer(canvas,
+  Vex.Flow.Renderer.Backends.CANVAS);
+var ctx = renderer.getContext();
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
-  var renderer = new Vex.Flow.Renderer(canvas,
-    Vex.Flow.Renderer.Backends.CANVAS);
-  var ctx = renderer.getContext();
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+// Create and draw the tablature stave
+var tabstave = new Vex.Flow.TabStave(10, 0, 500);
+tabstave.addTabGlyph();
+tabstave.setContext(ctx).draw();
 
-  // Create and draw the tablature stave
-  var tabstave = new Vex.Flow.TabStave(10, 0, 500);
-  tabstave.addTabGlyph();
-  tabstave.setContext(ctx).draw();
+// Create some notes
+var notes = [
+  // A single note
+  new Vex.Flow.TabNote({
+    positions: [{str: 3, fret: 7}],
+    duration: "q"}),
 
-  // Create some notes
-  var notes = [
-    // A single note
-    new Vex.Flow.TabNote({
-      positions: [{str: 3, fret: 7}],
-      duration: "q"}),
+  // A chord with the note on the 3rd string bent
+  new Vex.Flow.TabNote({
+    positions: [{str: 2, fret: 10},
+                {str: 3, fret: 9}],
+    duration: "q"}).
+  addModifier(new Vex.Flow.Bend("Full"), 1),
 
-    // A chord with the note on the 3rd string bent
-    new Vex.Flow.TabNote({
-      positions: [{str: 2, fret: 10},
-                  {str: 3, fret: 9}],
-      duration: "q"}).
-    addModifier(new Vex.Flow.Bend("Full"), 1),
+  // A single note with a harsh vibrato
+  new Vex.Flow.TabNote({
+    positions: [{str: 2, fret: 5}],
+    duration: "h"}).
+  addModifier(new Vex.Flow.Vibrato().setHarsh(true).setVibratoWidth(70), 0)
+];
 
-    // A single note with a harsh vibrato
-    new Vex.Flow.TabNote({
-      positions: [{str: 2, fret: 5}],
-      duration: "h"}).
-    addModifier(new Vex.Flow.Vibrato().setHarsh(true).setVibratoWidth(70), 0)
-  ];
-
-  Vex.Flow.Formatter.FormatAndDraw(ctx, tabstave, notes);
-        </textarea>
-        
+Vex.Flow.Formatter.FormatAndDraw(ctx, tabstave, notes);</textarea>
         <p/>
-        <canvas width=525 height=160></canvas>
+        <canvas width=625 height=160></canvas>
 
         <style>
         .editor {
@@ -212,7 +206,7 @@
 
         function live_code() {
           var code = $("#sandbox").val();
-          
+
           try {
             eval(code);
             msg.html('').hide();
@@ -234,9 +228,9 @@
       </div>
 
     <center>
-    <h2>For help, please read the tutorial</h2>
-      <p/>
-      <a href="tutorial.html">Tutorial</a><p/>
+      <h2>
+        Confused? Go read the <a href="tutorial.html">tutorial</a>.
+      </h2>
     </center>
   </div>
 </body>
