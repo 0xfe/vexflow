@@ -122,6 +122,12 @@ Vex.Flow.Stave.prototype.setSection = function(section, y) {
   return this;
 }
 
+// Tempo functions
+Vex.Flow.Stave.prototype.setTempo = function(tempo, y) {
+  this.modifiers.push(new Vex.Flow.StaveTempo(tempo, this.x, y));
+  return this;
+}
+
 Vex.Flow.Stave.prototype.getHeight = function(width) {
   return this.height;
 }
