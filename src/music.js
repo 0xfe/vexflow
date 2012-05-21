@@ -86,10 +86,10 @@ Vex.Flow.Music.scales = {
   blues: [3, 2, 1, 1, 3]
 };
 
-Vex.Flow.Music.Temp = {
+Vex.Flow.Music.scaleIntervalUp = {
   major: "unison",
   ionian: "unison",
-  dorian: "M2",
+  dorian: "2",
   phrygian: "M3",
   lydian: "p4",
   mixolydian: "p5",
@@ -102,7 +102,10 @@ Vex.Flow.Music.Temp = {
 };
 
 Vex.Flow.Music.PreferredKey = {
-  'a#':'bb'
+  'a#':'bb',
+  'c#':'db',
+  'd#':'eb',
+  'g#':'ab'
 };
 
 //Vex.Flow.Music.scaleInfo = {
@@ -385,16 +388,17 @@ Vex.Flow.Music.prototype.getScaleNotes =
 
   var relNoteValue = this.getRelativeNoteValue(
     this.getNoteValue(tonalCenter),
-    this.getIntervalValue(Vex.Flow.Music.Temp[scale]), -1);
+    this.getIntervalValue(Vex.Flow.Music.scaleIntervalUp[scale]), -1);
 
   var canNoteName = this.getCanonicalNoteName(relNoteValue);
 
   if(Vex.Flow.Music.PreferredKey[canNoteName]) {
     canNoteName = Vex.Flow.Music.PreferredKey[canNoteName];
   }
+
   var manager = new Vex.Flow.KeyManager(canNoteName + 'M');
 
-  var scaleTones = this.getScaleTones(this.getNoteValue(canNoteName), Vex.Flow.Music.scales[scale]);
+  var scaleTones = this.getScaleTones(this.getNoteValue(tonalCenter), Vex.Flow.Music.scales[scale]);
 
   for (var i = 0; i < scaleTones.length; ++i) {
     var note = this.getCanonicalNoteName(scaleTones[i]);
