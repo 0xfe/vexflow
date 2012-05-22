@@ -242,23 +242,36 @@ Vex.Flow.Test.Music.scaleTones = function(options) {
 
   var music = new Vex.Flow.Music();
 
-  equals(music.getScaleNotes("c","major").join(),["c", "d", "e", "f", "g", "a", "b"].join());
-  equals(music.getScaleNotes("c","dorian").join(),["c","d","eb","f","g","a","bb"].join());
-  equals(music.getScaleNotes("c","phrygian").join(),["c","db","eb","f","g","ab","bb"].join());
-  equals(music.getScaleNotes("c","lydian").join(),["c","d","e","f#","g","a","b"].join());
-  equals(music.getScaleNotes("c","mixolydian").join(),["c", "d", "e", "f", "g", "a", "bb"].join());
-  equals(music.getScaleNotes("c","minor").join(),["c", "d", "eb", "f", "g", "ab", "bb"].join());
-  equals(music.getScaleNotes("c","aeolian").join(),["c", "d", "eb", "f", "g", "ab", "bb"].join());
-  equals(music.getScaleNotes("c","locrian").join(),["c", "db", "eb", "f", "gb", "ab", "bb"].join());
+  equals(music.getScaleNotes("c","major").join(),["c", "d", "e", "f", "g", "a", "b"].join(),"c major");
+  equals(music.getScaleNotes("d","major").join(),["d", "e", "f#", "g", "a", "b","c#"].join(),"d major");
+  equals(music.getScaleNotes("g","major").join(),["g","a","b","c","d","e","f#"].join(),"g major");
+  equals(music.getScaleNotes("a","major").join(),["a","b","c#","d","e","f#","g#"].join(),"a major");
+  equals(music.getScaleNotes("e","major").join(),["e", "f#", "g#", "a", "b","c#","d#"].join(),"e major");
+  equals(music.getScaleNotes("b","major").join(),["b","c#","d#","e","f#","g#","a#"].join(),"b major");
 
-  equals(music.getScaleNotes("c","majorPentatonic").join(),["c", "d", "e", "g", "a"].join());
-  equals(music.getScaleNotes("c","minorPentatonic").join(),["c", "eb", "f", "g", "bb"].join());
-  equals(music.getScaleNotes("c","blues").join(),["c","eb","f","gb","g","bb"].join());
+  equals(music.getScaleNotes("f","major").join(),["f", "g", "a", "bb","c","d","e"].join(),"f major");
 
-  equals(music.getScaleNotes("d","major").join(),["d", "e", "f#", "g", "a", "b","c#"].join());
-  equals(music.getScaleNotes("d","minor").join(),["d", "e", "f", "g", "a", "bb","c"].join());
-  equals(music.getScaleNotes("d","mixolydian").join(),["d", "e", "f#", "g", "a", "b","c"].join());
-  equals(music.getScaleNotes("d","dorian").join(),["d", "e", "f", "g", "a", "b","c"].join());
+  equals(music.getScaleNotes("c","dorian").join(),["c","d","eb","f","g","a","bb"].join(),"c dorian");
+  equals(music.getScaleNotes("c","phrygian").join(),["c","db","eb","f","g","ab","bb"].join(),"c phrygian");
+  equals(music.getScaleNotes("c","lydian").join(),["c","d","e","f#","g","a","b"].join(),"c lydian");
+  equals(music.getScaleNotes("c","mixolydian").join(),["c", "d", "e", "f", "g", "a", "bb"].join(),"c mixolydian");
+  equals(music.getScaleNotes("c","minor").join(),["c", "d", "eb", "f", "g", "ab", "bb"].join(),"c minor");
+  equals(music.getScaleNotes("c","aeolian").join(),["c", "d", "eb", "f", "g", "ab", "bb"].join(),"c aeolian");
+  equals(music.getScaleNotes("c","locrian").join(),["c", "db", "eb", "f", "gb", "ab", "bb"].join(),"c locrian");
+
+  equals(music.getScaleNotes("c","majorPentatonic").join(),["c", "d", "e", "g", "a"].join(),"c major pentatonic");
+  equals(music.getScaleNotes("c","minorPentatonic").join(),["c", "eb", "f", "g", "bb"].join(),"c minor pentatonic");
+  equals(music.getScaleNotes("c","blues").join(),["c","eb","f","gb","g","bb"].join(),"c blues");
+
+  equals(music.getScaleNotes("d","major").join(),["d", "e", "f#", "g", "a", "b","c#"].join(),"d major");
+  equals(music.getScaleNotes("d","dorian").join(),["d", "e", "f", "g", "a", "b","c"].join(),"d dorian");
+  equals(music.getScaleNotes("d","phrygian").join(),["d", "eb", "f", "g", "a", "bb","c"].join(),"d phrygian");
+  equals(music.getScaleNotes("d","lydian").join(),["d", "e", "f#", "g#", "a", "b","c#"].join(),"d lydian");
+  equals(music.getScaleNotes("d","mixolydian").join(),["d", "e", "f#", "g", "a", "b","c"].join(),"d mixolydian");
+  equals(music.getScaleNotes("d","minor").join(),["d", "e", "f", "g", "a", "bb","c"].join(),"d minor");
+
+  equals(music.getScaleNotes("ab","major").join(),["ab", "bb", "c", "db", "eb", "f","g"].join(),"ab major");
+
 }
 
 Vex.Flow.Test.Music.scaleIntervals = function(options) {
