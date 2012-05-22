@@ -293,7 +293,4 @@ Vex.Flow.Test.Music.scaleIntervals = function(options) {
          music.getNoteValue("d"), music.getNoteValue("c"), 1)), "b7");
   equals(music.getCanonicalIntervalName(music.getIntervalBetween(
          music.getNoteValue("d"), music.getNoteValue("c"), -1)), "M2");
-
-
-
 }
