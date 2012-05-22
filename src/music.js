@@ -364,3 +364,35 @@ Vex.Flow.Music.prototype.getIntervalBetween =
   if (difference < 0) difference += Vex.Flow.Music.NUM_TONES;
   return difference;
 }
+
+
+
+/* Returns the notes of a scale.
+ *
+ */
+
+Vex.Flow.Music.prototype.getScaleNotes = function(tonalCenter, scale) {
+
+  var scaleNotes = [];
+
+  var relNoteValue = this.getRelativeNoteValue(
+    this.getNoteValue(tonalCenter),
+    this.getIntervalValue(Vex.Flow.Music.scaleIntervalUp[scale]), -1);
+
+  var canNoteName = this.getCanonicalNoteName(relNoteValue);
+
+  if(Vex.Flow.Music.PreferredKey[canNoteName]) {
+    canNoteName = Vex.Flow.Music.PreferredKey[canNoteName];
+  }
+
+  var manager = new Vex.Flow.KeyManager(canNoteName + 'M');
+
+  var scaleTones = this.getScaleTones(this.getNoteValue(tonalCenter), Vex.Flow.Music.scales[scale]);
+
+  for (var i = 0; i < scaleTones.length; ++i) {
+    var note = this.getCanonicalNoteName(scaleTones[i]);
+    scaleNotes.push(manager.selectNote(note).note);
+  }
+
+  return scaleNotes;
+}
