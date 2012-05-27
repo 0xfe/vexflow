@@ -38,9 +38,9 @@ Vex.Flow.Test.StaveNote.Start = function() {
       Vex.Flow.Test.StaveNote.draw,
       { clef: "bass", octaveShift: -2, restKey: "d/3" });
 
-  Vex.Flow.Test.runTest("StaveNote Draw - Harmonic And Muted", Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Harmonic And Muted (Raphael)",
-      Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
+  Vex.Flow.Test.runTest("StaveNote Draw - Harmonic And Muted and Slash", Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash);
+  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Harmonic And Muted And Slash (Raphael)",
+      Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash);
 
   Vex.Flow.Test.runTest("Displacements", Vex.Flow.Test.StaveNote.displacements);
   Vex.Flow.Test.runRaphaelTest("Displacements (Raphael)",
@@ -399,7 +399,7 @@ Vex.Flow.Test.StaveNote.displacements = function(options, contextBuilder) {
     { keys: ["b/3", "c/4", "e/4", "a/4", "b/5", "c/6", "e/6"], duration: "32",
       stem_direction: -1},
     { keys: ["b/3", "c/4", "e/4", "a/4", "b/5", "c/6", "e/6", "e/6"],
-      duration: "64", stem_direction: -1},
+      duration: "64", stem_direction: -1}
   ];
   expect(notes.length * 2);
 
@@ -412,9 +412,9 @@ Vex.Flow.Test.StaveNote.displacements = function(options, contextBuilder) {
   }
 }
 
-Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 800, 180);
-  var stave = new Vex.Flow.Stave(10, 10, 750);
+Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 1150, 180);
+  var stave = new Vex.Flow.Stave(10, 10, 1100);
   stave.setContext(ctx);
   stave.draw();
 
@@ -449,6 +449,21 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options, contextBuilder)
     { keys: ["c/4", "e/4", "a/4"], duration: "16m", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "32m", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "64m", stem_direction: -1},
+
+    { keys: ["b/4"], duration: "ws"},
+    { keys: ["b/4"], duration: "hs"},
+    { keys: ["b/4"], duration: "qs"},
+    { keys: ["b/4"], duration: "8s"},
+    { keys: ["b/4"], duration: "16s"},
+    { keys: ["b/4"], duration: "32s"},
+    { keys: ["b/4"], duration: "64s"},
+    { keys: ["b/4"], duration: "ws", stem_direction: -1},
+    { keys: ["b/4"], duration: "hs", stem_direction: -1},
+    { keys: ["b/4"], duration: "qs", stem_direction: -1},
+    { keys: ["b/4"], duration: "8s", stem_direction: -1},
+    { keys: ["b/4"], duration: "16s", stem_direction: -1},
+    { keys: ["b/4"], duration: "32s", stem_direction: -1},
+    { keys: ["b/4"], duration: "64s", stem_direction: -1}
   ];
   expect(notes.length * 2);
 
