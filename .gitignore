@@ -10,3 +10,17 @@ ruby_sess.*
 # except foo.o which is hand maintained
 !foo.o
 .DS_Store
+
+.idea/VexFlow.iml
+
+.idea/encodings.xml
+
+.idea/misc.xml
+
+.idea/modules.xml
+
+.idea/scopes/scope_settings.xml
+
+.idea/vcs.xml
+
+.idea/workspace.xml
