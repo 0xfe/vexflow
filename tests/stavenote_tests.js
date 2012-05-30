@@ -38,9 +38,13 @@ Vex.Flow.Test.StaveNote.Start = function() {
       Vex.Flow.Test.StaveNote.draw,
       { clef: "bass", octaveShift: -2, restKey: "d/3" });
 
-  Vex.Flow.Test.runTest("StaveNote Draw - Harmonic And Muted and Slash", Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash);
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Harmonic And Muted And Slash (Raphael)",
-      Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash);
+  Vex.Flow.Test.runTest("StaveNote Draw - Harmonic And Muted", Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
+  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Harmonic And Muted (Raphael)",
+      Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
+
+  Vex.Flow.Test.runTest("StaveNote Draw - Slash", Vex.Flow.Test.StaveNote.drawSlash);
+  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Slash (Raphael)",
+      Vex.Flow.Test.StaveNote.drawSlash);
 
   Vex.Flow.Test.runTest("Displacements", Vex.Flow.Test.StaveNote.displacements);
   Vex.Flow.Test.runRaphaelTest("Displacements (Raphael)",
@@ -412,9 +416,9 @@ Vex.Flow.Test.StaveNote.displacements = function(options, contextBuilder) {
   }
 }
 
-Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 1150, 180);
-  var stave = new Vex.Flow.Stave(10, 10, 1100);
+Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 300, 180);
+  var stave = new Vex.Flow.Stave(10, 10, 280);
   stave.setContext(ctx);
   stave.draw();
 
@@ -448,8 +452,29 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash = function(options, context
     { keys: ["c/4", "e/4", "a/4"], duration: "8m", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "16m", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "32m", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "64m", stem_direction: -1},
+    { keys: ["c/4", "e/4", "a/4"], duration: "64m", stem_direction: -1}
 
+  ];
+  expect(notes.length * 2);
+
+  for (var i = 0; i < notes.length; ++i) {
+    var note = notes[i];
+    var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+
+    ok(staveNote.getX() > 0, "Note " + i + " has X value");
+    ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
+  }
+}
+
+Vex.Flow.Test.StaveNote.drawSlash = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+  var stave = new Vex.Flow.Stave(10, 10, 650);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var showNote = Vex.Flow.Test.StaveNote.showNote;
+  var notes = [
+/* According to a Berkless book on notation slashes must be stems go down.
     { keys: ["b/4"], duration: "ws"},
     { keys: ["b/4"], duration: "hs"},
     { keys: ["b/4"], duration: "qs"},
@@ -457,6 +482,7 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash = function(options, context
     { keys: ["b/4"], duration: "16s"},
     { keys: ["b/4"], duration: "32s"},
     { keys: ["b/4"], duration: "64s"},
+*/
     { keys: ["b/4"], duration: "ws", stem_direction: -1},
     { keys: ["b/4"], duration: "hs", stem_direction: -1},
     { keys: ["b/4"], duration: "qs", stem_direction: -1},
@@ -475,4 +501,3 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMutedAndSlash = function(options, context
     ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
   }
 }
-
