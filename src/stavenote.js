@@ -460,10 +460,18 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       // Down stems are rendered to the left of the head.
       stem_x = x_begin;
       stem_y = y_top;
+
       // Shorten stem length for 1/2 & 1/4 dead note heads (X)
       if (glyph.code_head == "v95" ||
-          glyph.code_head == "v3e")
+          glyph.code_head == "v3e") {
        stem_y += 4;
+      }
+
+      // Slash heads need an adjustment for stem height
+      // vbb = quarter note head, v63 = half note head
+      if (glyph.code_head =="vbb" || glyph.code_head == "v63") {
+        stem_y += 8;
+      }
     } else {
       // Up stems are rendered to the right of the head.
       stem_x = x_end;
@@ -491,6 +499,12 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       flag_x = x_begin + 1;
       flag_y = y_top - note_stem_height;
       flag_code = glyph.code_flag_downstem;
+
+      // Slash heads need an adjustment for flag positioning
+      // vbb = quarter note head, v63 = half note head
+      if (glyph.code_head =="vbb" || glyph.code_head == "v63") {
+        flag_y += 8;
+      }
     } else {
       // Up stems have flags on the left.
       flag_x = x_end + 1;
