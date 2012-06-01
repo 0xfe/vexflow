@@ -150,6 +150,27 @@ Vex.Flow.Test.StaveNote.ticks = function(options) {
     equals(e.code, "BadArguments",
         "Invalid note type 'Z' for dotted note throws BadArguments exception");
   }
+
+  // TODO catch all the invalid slash lookups
+/* According to a Berklee's book on notation slashes must be stems go down.
+    { keys: ["b/4"], duration: "ws"},
+    { keys: ["b/4"], duration: "hs"},
+    { keys: ["b/4"], duration: "qs"},
+    { keys: ["b/4"], duration: "8s"},
+    { keys: ["b/4"], duration: "16s"},
+    { keys: ["b/4"], duration: "32s"},
+    { keys: ["b/4"], duration: "64s"},
+*/
+
+  try {
+    new Vex.Flow.StaveNote(
+        { keys: ["b/4"], duration: "4s"});
+    throw new Error();
+  } catch (e) {
+    equals(e.code, "BadArguments",
+        "Invalid note type 'Z' for dotted note throws BadArguments exception");
+  }
+
 }
 
 Vex.Flow.Test.StaveNote.ticksNewApi = function(options) {
@@ -224,6 +245,31 @@ Vex.Flow.Test.StaveNote.ticksNewApi = function(options) {
       { keys: ["c/4", "e/4", "g/4"], duration: "8", dots: 3, type: "m"});
   equals(note.getTicks(), BEAT * 0.9375, "Triple-dotted muted 8th note has 0.9375 beats");
   equals(note.getNoteType(), "m", "Note type is 'm' for muted note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "1s"});
+  equals(note.getTicks(), BEAT * 4, "Whole note has 4 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "4s"});
+  equals(note.getTicks(), BEAT, "Quarter note has 1 beats");
+  equals(note.getNoteType(), "n", "Note type is 's' for slash note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "2s", dots: 1});
+  equals(note.getTicks(), BEAT * 3, "Dotted half note has 3 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "2s", dots: 2});
+  equals(note.getTicks(), BEAT * 3.5, "Double-dotted half note has 3.5 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "2s", dots: 3});
+  equals(note.getTicks(), BEAT * 3.75, "Triple-dotted half note has 3.75 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
 
   try {
     new Vex.Flow.StaveNote(
