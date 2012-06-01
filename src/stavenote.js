@@ -79,7 +79,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   this.modifiers = [];
 
   this.render_options = {
-    glyph_font_scale: 38, // font size for note heads and rests
+    glyph_font_scale: 38, // font size for note heads and rests (TODO: Slash heads should be a bit bigger)
     stem_height: 35,      // in pixels
     stroke_px: 3,         // number of stroke px to the left and right of head
     stroke_spacing: 10,    // spacing between strokes (TODO: take from stave)
@@ -153,6 +153,12 @@ Vex.Flow.StaveNote.prototype.getStemExtents = function() {
     } else {
       top_pixel = (top_pixel < stem_top) ? top_pixel : stem_top;
       base_pixel = (base_pixel > this.ys[i]) ? base_pixel : this.ys[i];
+    }
+
+    // TODO Seems a bit of a hack - is the a good place?
+    if(this.noteType == "s") {
+      top_pixel += 8;
+      base_pixel += 8;
     }
   }
 
@@ -504,6 +510,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       // vbb = quarter note head, v63 = half note head
       if (glyph.code_head =="vbb" || glyph.code_head == "v63") {
         flag_y += 8;
+
       }
     } else {
       // Up stems have flags on the left.
