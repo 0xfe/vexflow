@@ -34,10 +34,17 @@ Vex.Flow.Bend.prototype.init = function(text, release) {
 Vex.Flow.Bend.prototype.getCategory = function() { return "bends"; }
 Vex.Flow.Bend.prototype.getText = function() { return this.text; }
 Vex.Flow.Bend.prototype.updateWidth = function() {
+  var text_width;
+  if (this.context) {
+    text_width = this.context.measureText(this.text).width;
+  } else {
+    text_width = Vex.Flow.textWidth(this.text);
+  }
+
   this.setWidth(
       this.bend_width +
       this.release_width +
-      (Vex.Flow.textWidth(this.text) / 2));
+      text_width / 2);
 }
 Vex.Flow.Bend.prototype.setBendWidth = function(width) {
   this.bend_width = width; this.updateWidth();
@@ -57,7 +64,7 @@ Vex.Flow.Bend.prototype.draw = function() {
 
   var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.RIGHT,
       this.index);
-  start.x += 1;
+  start.x += 3;
 
   var ctx = this.context;
   var that = this;
@@ -101,9 +108,9 @@ Vex.Flow.Bend.prototype.draw = function() {
   }
 
   var annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
-  var text_x = start.x + this.bend_width - (Vex.Flow.textWidth(this.text) / 2);
   ctx.save();
   ctx.font = this.font;
+  var text_x = start.x + this.bend_width - (ctx.measureText(this.text).width / 2);
   ctx.fillText(this.text, text_x, annotation_y);
   ctx.restore();
 }

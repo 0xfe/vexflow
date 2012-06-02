@@ -20,7 +20,7 @@
     }
 
     a.button {
-      color: #green;
+      color: green;
       background: #bfb;
       text-decoration: none;
       padding: 5px;
@@ -59,6 +59,7 @@
   </style>
 
   <!-- VexFlow Sources -->
+  <script src="../src/header.js"></script>
   <script src="../src/vex.js"></script>
   <script src="../src/flow.js"></script>
   <script src="../src/fonts/vexflow_font.js"></script>
@@ -68,6 +69,7 @@
   <script src="../src/staveconnector.js"></script>
   <script src="../src/tabstave.js"></script>
   <script src="../src/voice.js"></script>
+  <script src="../src/voicegroup.js"></script>
   <script src="../src/modifier.js"></script>
   <script src="../src/modifiercontext.js"></script>
   <script src="../src/accidental.js"></script>
@@ -82,6 +84,7 @@
   <script src="../src/ghostnote.js"></script>
   <script src="../src/formatter.js"></script>
   <script src="../src/stavetie.js"></script>
+  <script src="../src/stavehairpin.js"></script>
   <script src="../src/tabtie.js"></script>
   <script src="../src/tabslide.js"></script>
   <script src="../src/beam.js"></script>
@@ -95,6 +98,13 @@
   <script src="../src/music.js"></script>
   <script src="../src/keymanager.js"></script>
   <script src="../src/renderer.js"></script>
+  <script src="../src/stavebarline.js"></script>
+  <script src="../src/stavevolta.js"></script>
+  <script src="../src/staverepetition.js"></script>
+  <script src="../src/stavesection.js"></script>
+  <script src="../src/stavetempo.js"></script>
+  <script src="../src/articulation.js"></script>
+  <script src="../src/tremolo.js"></script>
   <script src="../src/raphaelcontext.js"></script>
   <script src="../src/tuplet.js"></script>
 
@@ -136,6 +146,11 @@
   <script src="music_tests.js"></script>
   <script src="keymanager_tests.js"></script>
   <script src="tuplet_tests.js"></script>
+  <script src="articulation_tests.js"></script>
+  <script src="staveconnector_tests.js"></script>
+  <script src="percussion_tests.js"></script>
+  <script src="key_clef_tests.js"></script>
+  <script src="stavehairpin_tests.js"></script>
   <script src="../vextab/vextab_tests.js"></script>
 
   <script>
@@ -165,12 +180,17 @@
       Vex.Flow.Test.Music.Start();
       Vex.Flow.Test.KeyManager.Start();
       Vex.Flow.Test.Tuplet.Start();
+      Vex.Flow.Test.Articulation.Start();
+      Vex.Flow.Test.StaveConnector.Start();
+      Vex.Flow.Test.Percussion.Start();
+      Vex.Flow.Test.ClefKeySignature.Start();
+      Vex.Flow.Test.StaveHairpin.Start();
     });
   </script>
 </head>
 
 <body>
-  <center>
+  <div style="text-align: center;">
     <h1 id="qunit-header">VexFlow Tests</h1>
     <h2 id="qunit-banner"></h2>
     <h2 id="qunit-userAgent"></h2>
@@ -179,7 +199,7 @@
     <div id="vexflow_testoutput"></div>
 
     <p> Version 0.1 by <a href="http://0xfe.blogspot.com">0xfe</a> </p>
-  </center>
+  </div>
 </body>
 
 </html>

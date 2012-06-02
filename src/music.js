@@ -74,6 +74,7 @@ Vex.Flow.Music.intervals = {
 Vex.Flow.Music.scales = {
   major: [2, 2, 1, 2, 2, 2, 1],
   dorian: [2, 1, 2, 2, 2, 1, 2],
+  mixolydian: [2, 2, 1, 2, 2, 1, 2],
   minor: [2, 1, 2, 2, 1, 2, 2]
 };
 

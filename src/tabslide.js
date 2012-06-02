@@ -86,8 +86,8 @@ Vex.Flow.TabSlide.prototype.renderTie = function(params) {
       throw new Vex.RERR("BadArguments", "Bad indices for slide rendering.");
 
     ctx.beginPath();
-    ctx.moveTo(first_x_px + 5, slide_y + (3 * direction));
-    ctx.lineTo(last_x_px - 5, slide_y - (3 * direction));
+    ctx.moveTo(first_x_px, slide_y + (3 * direction));
+    ctx.lineTo(last_x_px, slide_y - (3 * direction));
     ctx.closePath();
     ctx.stroke();
   }

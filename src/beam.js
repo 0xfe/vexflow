@@ -34,9 +34,9 @@ Vex.Flow.Beam.prototype.init = function(notes) {
   this.stem_direction = notes[0].getStemDirection();
   this.ticks = notes[0].getTicks();
 
-  if (this.ticks > Vex.Flow.durationToTicks["8d"]) {
+  if (this.ticks >= Vex.Flow.durationToTicks("4")) {
     throw new Vex.RuntimeError("BadArguments",
-        "Beams can be at most dotted eighth notes.");
+        "Beams can only be applied to notes shorter than a quarter note.");
   }
 
   for (var i = 1; i < notes.length; ++i) {
@@ -45,13 +45,6 @@ Vex.Flow.Beam.prototype.init = function(notes) {
       throw new Vex.RuntimeError("BadArguments",
           "Notes in a beam all have the same stem direction");
     }
-
-    /*
-    if (note.getTicks() != this.ticks) {
-      throw new Vex.RuntimeError("BadArguments",
-          "Notes in a beam should have the same duration.");
-    }
-    */
   }
 
   // Success. Lets grab 'em notes.
@@ -61,12 +54,11 @@ Vex.Flow.Beam.prototype.init = function(notes) {
   }
 
   this.notes = notes;
-  this.beam_count =
-    Vex.Flow.durationToGlyph(this.notes[0].getDuration()).beam_count;
-  this.render_options = { 
-    beam_width: 5, 
-    max_slope: 0.25, 
-    min_slope: -0.25, 
+  this.beam_count = this.notes[0].getGlyph().beam_count;
+  this.render_options = {
+    beam_width: 5,
+    max_slope: 0.25,
+    min_slope: -0.25,
     slope_iterations: 20,
     slope_cost: 25
   };
@@ -96,35 +88,35 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
   var last_x_px = last_note.getStemX();
 
   var beam_width = this.render_options.beam_width * this.stem_direction;
-  
+
   // Returns the Y coordinate for the slope at position X.
   function getSlopeY(x) {
     return first_y_px + ((x - first_x_px) * slope);
   }
-    
-  var inc = (this.render_options.max_slope - this.render_options.min_slope) / 
+
+  var inc = (this.render_options.max_slope - this.render_options.min_slope) /
       this.render_options.slope_iterations;
   var min_cost = Number.MAX_VALUE;
   var best_slope = 0;
   var y_shift = 0;
 
   // iterate through slope values to find best weighted fit
-  for (var slope = this.render_options.min_slope; slope <= this.render_options.max_slope; 
-  	  slope += inc) {
-  	var total_stem_extension = 0;
-  	var y_shift_tmp = 0;
-  	
-  	// iterate through notes, calculating y shift and stem extension
-  	for (var i = 1; i < this.notes.length; ++i) {
-  	  var note = this.notes[i];
-  		
-  	  var x_px = note.getStemX();
-  	  var y_px = note.getStemExtents().topY;
-  	  var slope_y_px = getSlopeY(x_px) + y_shift_tmp;
-  		
-  	  // beam needs to be shifted up to accommodate note
-  	  if (y_px * this.stem_direction <
-          slope_y_px * this.stem_direction) {
+  for (var slope = this.render_options.min_slope;
+       slope <= this.render_options.max_slope;
+       slope += inc) {
+    var total_stem_extension = 0;
+    var y_shift_tmp = 0;
+
+    // iterate through notes, calculating y shift and stem extension
+    for (var i = 1; i < this.notes.length; ++i) {
+      var note = this.notes[i];
+
+      var x_px = note.getStemX();
+      var y_px = note.getStemExtents().topY;
+      var slope_y_px = getSlopeY(x_px) + y_shift_tmp;
+
+      // beam needs to be shifted up to accommodate note
+      if (y_px * this.stem_direction < slope_y_px * this.stem_direction) {
         var diff =  Math.abs(y_px - slope_y_px);
         y_shift_tmp += diff * -this.stem_direction;
         total_stem_extension += (diff * i);
@@ -132,16 +124,16 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
         total_stem_extension += (y_px - slope_y_px) * this.stem_direction;
       }
 
-  	}
-  	var cost = this.render_options.slope_cost * Math.abs(slope) +
-  		Math.abs(total_stem_extension);
+    }
+    var cost = this.render_options.slope_cost * Math.abs(slope) +
+      Math.abs(total_stem_extension);
 
-	// update state when a more ideal slope is found
-  	if (cost < min_cost) {
-  	  min_cost = cost;
-  	  best_slope = slope;
-  	  y_shift = y_shift_tmp;
-  	}
+    // update state when a more ideal slope is found
+    if (cost < min_cost) {
+      min_cost = cost;
+      best_slope = slope;
+      y_shift = y_shift_tmp;
+    }
   }
 
   slope = best_slope;
@@ -149,9 +141,18 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
   // Draw the stems
   for (var i = 0; i < this.notes.length; ++i) {
     var note = this.notes[i];
+
+    // Do not draw stem for rests
+    if (note.glyph.rest) {
+      continue;
+    }
+
     var x_px = note.getStemX();
     var y_extents = note.getStemExtents();
     var base_y_px = y_extents.baseY;
+
+    // For harmonic note heads, shorten stem length by 3 pixels
+    base_y_px += this.stem_direction * note.glyph.stem_offset;
 
     // Draw the stem
     this.context.fillRect(x_px, base_y_px, 1,
@@ -168,8 +169,8 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
       var note = that.notes[i];
       var ticks = note.getTicks();
 
-      // Atleast 8th note
-      if (ticks <= Vex.Flow.durationToTicks[duration]) {
+      // Check whether to apply beam(s)
+      if (ticks < Vex.Flow.durationToTicks(duration)) {
         if (!beam_started) {
           beam_lines.push({start: note.getStemX(), end: null});
           beam_started = true;
@@ -205,7 +206,7 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
     return beam_lines;
   }
 
-  var valid_beam_durations = ["8d", "16d", "32d"];
+  var valid_beam_durations = ["4", "8", "16", "32"];
 
   // Draw the beams.
   for (var i = 0; i < valid_beam_durations.length; ++i) {

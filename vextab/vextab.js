@@ -975,8 +975,8 @@ Vex.Flow.VexTab.prototype.genElements = function() {
             last_note: notes[tie.position + 1]
           }));
     }
-    if (effect) this.elements.ties[this.state.current_stave].push(effect);
 
+    if (effect) this.elements.ties[this.state.current_stave].push(effect);
   }
 
   // Add chord ties

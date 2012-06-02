@@ -131,8 +131,8 @@ Vex.Flow.StaveTie.prototype.renderTie = function(params) {
 Vex.Flow.StaveTie.prototype.renderText = function(first_x_px, last_x_px) {
   if (!this.text) return;
   var center_x = (first_x_px + last_x_px) / 2;
-  center_x -= Vex.Flow.textWidth(this.text) / 2;
-
+  center_x -= this.context.measureText(this.text).width / 2;
+  
   this.context.save();
   this.context.setFont(this.font.family, this.font.size, this.font.style);
   this.context.fillText(

@@ -15,6 +15,7 @@ Vex.Flow.StaveModifier.prototype.init = function() {
   this.padding = 10;
 }
 
+Vex.Flow.StaveModifier.prototype.getCategory = function() {return "";}
 Vex.Flow.StaveModifier.prototype.makeSpacer = function(padding) {
   return {
     getContext: function() {return true;},

@@ -26,6 +26,7 @@ vexflow_sources = [
     "tabnote.js",
     "beam.js",
     "voice.js",
+    "voicegroup.js",
     "modifier.js",
     "modifiercontext.js",
     "accidental.js",
@@ -37,6 +38,7 @@ vexflow_sources = [
     "bend.js",
     "vibrato.js",
     "annotation.js",
+    "articulation.js",
     "tuning.js",
     "stavemodifier.js",
     "keysignature.js",
@@ -45,7 +47,14 @@ vexflow_sources = [
     "music.js",
     "keymanager.js",
     "renderer.js",
-    "raphaelcontext.js"
+    "raphaelcontext.js",
+    "stavebarline.js",
+    "stavehairpin.js",
+    "stavevolta.js",
+    "staverepetition.js",
+    "stavesection.js",
+    "stavetempo.js",
+    "tremolo.js",
     ]
 
 Import('dbg opt')
