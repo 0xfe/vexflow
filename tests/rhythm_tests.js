@@ -27,6 +27,11 @@ Vex.Flow.Test.Rhythm.Start = function() {
     Vex.Flow.Test.Rhythm.drawSixtenthWithScratches);
   Vex.Flow.Test.runRaphaelTest("Rhythm Draw - 16th note rhythm with scratches (Raphael)",
     Vex.Flow.Test.Rhythm.drawSixtenthWithScratches);
+
+  Vex.Flow.Test.runTest("Rhythm Draw - 32nd note rhythm with scratches",
+    Vex.Flow.Test.Rhythm.drawThirtySecondWithScratches);
+  Vex.Flow.Test.runRaphaelTest("Rhythm Draw - 32nd note rhythm with scratches (Raphael)",
+    Vex.Flow.Test.Rhythm.drawThirtySecondWithScratches);
 }
 
 Vex.Flow.Test.Rhythm.drawSlash = function(options, contextBuilder) {
@@ -236,8 +241,6 @@ Vex.Flow.Test.Rhythm.drawSlashAndBeamAndRests  = function(options, contextBuilde
 
 }
 
-
-
 Vex.Flow.Test.Rhythm.drawSixtenthWithScratches  = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 800, 150);
 
@@ -281,17 +284,45 @@ Vex.Flow.Test.Rhythm.drawSixtenthWithScratches  = function(options, contextBuild
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
 
-    // bar 2 - juxtaposing second bar next to first bar
-//  var staveBar2 = new Vex.Flow.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 120);
-//  staveBar2.setContext(ctx).draw();
-//
-//  var notesBar2 = [
-//    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "1s", stem_direction: -1 })
-//  ];
-//
-//  notesBar2[0].addModifier(0, (new Vex.Flow.Annotation("F")).setFont("Times",
-//          Vex.Flow.Test.Font.size + 2));
-//  // Helper function to justify and draw a 4/4 voice
-//  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+}
+
+
+Vex.Flow.Test.Rhythm.drawThirtySecondWithScratches  = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+
+  // bar 1
+  var staveBar1 = new Vex.Flow.Stave(10, 30, 300);
+  staveBar1.setBegBarType(Vex.Flow.Barline.type.DOUBLE);
+  staveBar1.setEndBarType(Vex.Flow.Barline.type.SINGLE);
+  staveBar1.addClef("treble")
+  staveBar1.addTimeSignature("4/4");
+  staveBar1.addKeySignature("F");
+  staveBar1.setContext(ctx).draw();
+
+  // bar 1
+  var notesBar1_part1 = [
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32m",stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32m",stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32r",stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",stem_direction: -1 })
+
+  ];
+
+  notesBar1_part1[0].addModifier(0, (new Vex.Flow.Annotation("C7")).setFont("Times",
+          Vex.Flow.Test.Font.size + 3));
+
+  // create the beams for 8th notes in 2nd measure
+  var beam1 = new Vex.Flow.Beam(notesBar1_part1);
+
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1_part1);
+
+    // Render beams
+  beam1.setContext(ctx).draw();
+
 
 }
