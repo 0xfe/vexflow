@@ -79,7 +79,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   this.modifiers = [];
 
   this.render_options = {
-    glyph_font_scale: 38, // font size for note heads and rests (TODO: Slash heads should be a bit bigger)
+    glyph_font_scale: 38, // font size for note heads and rests
     stem_height: 35,      // in pixels
     stroke_px: 3,         // number of stroke px to the left and right of head
     stroke_spacing: 10,    // spacing between strokes (TODO: take from stave)
@@ -155,7 +155,6 @@ Vex.Flow.StaveNote.prototype.getStemExtents = function() {
       base_pixel = (base_pixel > this.ys[i]) ? base_pixel : this.ys[i];
     }
 
-    // TODO Seems a bit of a hack - is the a good place?
     if(this.noteType == "s" || this.noteType == 'x') {
       top_pixel += 8;
       base_pixel += 8;
@@ -414,7 +413,6 @@ Vex.Flow.StaveNote.prototype.draw = function() {
     // Draw the head.
     if (render_head) {
       // if a slash note, draw 'manually' as font glyphs do not slant enough
-      // TODO (rochbu):
       head_x = Math.round(head_x);
 
       if (this.noteType == "s") {
