@@ -425,7 +425,6 @@ Vex.Flow.StaveNote.prototype.draw = function() {
         ctx.lineTo(head_x, y + 11);
         ctx.closePath();
 
-        console.log(this.duration);
         if(this.duration != 1 && this.duration !=  2) {
           ctx.fill();
         } else {
