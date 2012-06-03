@@ -156,7 +156,7 @@ Vex.Flow.StaveNote.prototype.getStemExtents = function() {
     }
 
     // TODO Seems a bit of a hack - is the a good place?
-    if(this.noteType == "s") {
+    if(this.noteType == "s" || this.noteType == 'x') {
       top_pixel += 8;
       base_pixel += 8;
     }
@@ -412,9 +412,32 @@ Vex.Flow.StaveNote.prototype.draw = function() {
 
     // Draw the head.
     if (render_head) {
-      Vex.Flow.renderGlyph(ctx, head_x,
-          y, this.render_options.glyph_font_scale, code_head);
-      // If note above/below the sraff, draw the small staff
+      // if a slash note, draw 'manually' as font glyphs do not slant enough
+      // TODO (rochbu):
+      head_x = Math.round(head_x);
+
+      if (this.noteType == "s") {
+        ctx.beginPath();
+        ctx.moveTo(head_x, y + 11);
+        ctx.lineTo(head_x, y + 1);
+        ctx.lineTo(head_x + 15, y - 10);
+        ctx.lineTo(head_x + 15, y);
+        ctx.lineTo(head_x, y + 11);
+        ctx.closePath();
+
+        console.log(this.duration);
+        if(this.duration != 1 && this.duration !=  2) {
+          ctx.fill();
+        } else {
+          ctx.stroke();
+        }
+
+      } else {
+        Vex.Flow.renderGlyph(ctx, head_x,
+            y, this.render_options.glyph_font_scale, code_head);
+      }
+
+      // If note above/below the staff, draw the small staff
       if (line <= 0 || line >= 6) {
         var line_y = y;
         var floor = Math.floor(line);
@@ -482,6 +505,8 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       // Up stems are rendered to the right of the head.
       stem_x = x_end;
       stem_y = y_bottom;
+
+
       // Shorten stem length for 1/2 & 1/4 dead note heads (X)
       if (glyph.code_head == "v95" ||
           glyph.code_head == "v3e")
