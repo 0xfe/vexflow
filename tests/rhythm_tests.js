@@ -30,8 +30,8 @@ Vex.Flow.Test.Rhythm.Start = function() {
 }
 
 Vex.Flow.Test.Rhythm.drawSlash = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 300, 180);
-  var stave = new Vex.Flow.Stave(10, 10, 250);
+  var ctx = new contextBuilder(options.canvas_sel, 350, 180);
+  var stave = new Vex.Flow.Stave(10, 10, 350);
   stave.setContext(ctx);
   stave.draw();
 
@@ -93,7 +93,7 @@ Vex.Flow.Test.Rhythm.drawBasic = function(options, contextBuilder) {
 
 
   // bar 3 - juxtaposing second bar next to first bar
-  var staveBar3 = new Vex.Flow.Stave(staveBar2.width + staveBar2.x, staveBar2.y, 120);
+  var staveBar3 = new Vex.Flow.Stave(staveBar2.width + staveBar2.x, staveBar2.y, 170);
   staveBar3.setContext(ctx).draw();
 
   // bar 3
@@ -108,7 +108,7 @@ Vex.Flow.Test.Rhythm.drawBasic = function(options, contextBuilder) {
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
 
   // bar 4 - juxtaposing second bar next to first bar
-  var staveBar4 = new Vex.Flow.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 160);
+  var staveBar4 = new Vex.Flow.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 200);
   staveBar4.setContext(ctx).draw();
 
   // bar 4
@@ -142,7 +142,7 @@ Vex.Flow.Test.Rhythm.drawBeamedSlashNotes = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 800, 150);
 
   // bar 1
-  var staveBar1 = new Vex.Flow.Stave(10, 30, 250);
+  var staveBar1 = new Vex.Flow.Stave(10, 30, 300);
   staveBar1.setBegBarType(Vex.Flow.Barline.type.DOUBLE);
   staveBar1.setEndBarType(Vex.Flow.Barline.type.SINGLE);
   staveBar1.addClef("treble")
@@ -185,7 +185,7 @@ Vex.Flow.Test.Rhythm.drawSlashAndBeamAndRests  = function(options, contextBuilde
   var ctx = new contextBuilder(options.canvas_sel, 800, 150);
 
   // bar 1
-  var staveBar1 = new Vex.Flow.Stave(10, 30, 250);
+  var staveBar1 = new Vex.Flow.Stave(10, 30, 300);
   staveBar1.setBegBarType(Vex.Flow.Barline.type.DOUBLE);
   staveBar1.setEndBarType(Vex.Flow.Barline.type.SINGLE);
   staveBar1.addClef("treble")
@@ -222,7 +222,7 @@ Vex.Flow.Test.Rhythm.drawSlashAndBeamAndRests  = function(options, contextBuilde
   beam1.setContext(ctx).draw();
 
     // bar 2 - juxtaposing second bar next to first bar
-  var staveBar2 = new Vex.Flow.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 120);
+  var staveBar2 = new Vex.Flow.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 220);
   staveBar2.setContext(ctx).draw();
 
   var notesBar2 = [
@@ -242,7 +242,7 @@ Vex.Flow.Test.Rhythm.drawSixtenthWithScratches  = function(options, contextBuild
   var ctx = new contextBuilder(options.canvas_sel, 800, 150);
 
   // bar 1
-  var staveBar1 = new Vex.Flow.Stave(10, 30, 250);
+  var staveBar1 = new Vex.Flow.Stave(10, 30, 300);
   staveBar1.setBegBarType(Vex.Flow.Barline.type.DOUBLE);
   staveBar1.setEndBarType(Vex.Flow.Barline.type.SINGLE);
   staveBar1.addClef("treble")
