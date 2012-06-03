@@ -585,6 +585,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "s": { // Whole note slash
         code_head: "v96",
+        head_width: 15,
         position: "B/4"
       }
     }
@@ -615,6 +616,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "s": { // Half note slash
         code_head: "v63",
+        head_width: 15,
         position: "B/4"
       }
     }
@@ -645,6 +647,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "s": { // Quarter slash
          code_head: "vbb",
+         head_width: 15,
          position: "B/4"
       }
     }
@@ -678,6 +681,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "s": { // Eight slash
         code_head: "vbb",
+        head_width: 15,
         position: "B/4"
       }
     }
@@ -711,6 +715,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "s": { // Sixteenth slash
         code_head: "vbb",
+        head_width: 15,
         position: "B/4"
       }
     }
@@ -744,6 +749,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "s": { // Thirty-second slash
         code_head: "vbb",
+        head_width: 15,
         position: "B/4"
       }
     }
@@ -777,6 +783,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "s": { // Sixty-fourth slash
         code_head: "vbb",
+        head_width: 15,
         position: "B/4"
       }
     }
