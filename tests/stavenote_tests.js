@@ -151,26 +151,6 @@ Vex.Flow.Test.StaveNote.ticks = function(options) {
         "Invalid note type 'Z' for dotted note throws BadArguments exception");
   }
 
-  // TODO catch all the invalid slash lookups
-/* According to a Berklee's book on notation slashes must be stems go down.
-    { keys: ["b/4"], duration: "ws"},
-    { keys: ["b/4"], duration: "hs"},
-    { keys: ["b/4"], duration: "qs"},
-    { keys: ["b/4"], duration: "8s"},
-    { keys: ["b/4"], duration: "16s"},
-    { keys: ["b/4"], duration: "32s"},
-    { keys: ["b/4"], duration: "64s"},
-*/
-
-  try {
-    new Vex.Flow.StaveNote(
-        { keys: ["b/4"], duration: "4s"});
-    throw new Error();
-  } catch (e) {
-    equals(e.code, "BadArguments",
-        "Invalid note type 'Z' for dotted note throws BadArguments exception");
-  }
-
 }
 
 Vex.Flow.Test.StaveNote.ticksNewApi = function(options) {
@@ -254,7 +234,7 @@ Vex.Flow.Test.StaveNote.ticksNewApi = function(options) {
   var note = new Vex.Flow.StaveNote(
       { keys: ["b/4"], duration: "4s"});
   equals(note.getTicks(), BEAT, "Quarter note has 1 beats");
-  equals(note.getNoteType(), "n", "Note type is 's' for slash note");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["b/4"], duration: "2s", dots: 1});
