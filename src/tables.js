@@ -148,13 +148,8 @@ Vex.Flow.keyProperties.note_glyph = {
   'X0':  { code: "v92", shift_right: -2 },
   'X1':  { code: "v95", shift_right: -0.5 },
   'X2':  { code: "v7f", shift_right: 0.5 },
-  'X3':  { code: "v3b", shift_right: -2 },
+  'X3':  { code: "v3b", shift_right: -2 }
 
-  /* Slash */
-  'S0':  { code: "v96", shift_right: -2 },
-  'S1':  { code: "v63", shift_right: -0.5 },
-  'S2':  { code: "vbb", shift_right: 0.5 },
-  'S3':  { code: "v3b", shift_right: -2 }
 }
 
 Vex.Flow.integerToNote = function(integer) {
@@ -584,7 +579,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
         position: "D/5"
       },
       "s": { // Whole note slash
-        code_head: "v96", // Drawn with canvas primitives
+        // Drawn with canvas primitives
         head_width: 15,
         position: "B/4"
       }
@@ -615,7 +610,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
         position: "B/4"
       },
       "s": { // Half note slash
-        code_head: "v63", // Drawn with canvas primitives
+        // Drawn with canvas primitives
         head_width: 15,
         position: "B/4"
       }
@@ -646,7 +641,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
         position: "B/4"
       },
       "s": { // Quarter slash
-         code_head: "vbb", // Drawn with canvas primitives
+         // Drawn with canvas primitives
          head_width: 15,
          position: "B/4"
       }
@@ -680,7 +675,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
         position: "B/4"
       },
       "s": { // Eight slash
-        code_head: "vbb", // Drawn with canvas primitives
+        // Drawn with canvas primitives
         head_width: 15,
         position: "B/4"
       }
@@ -714,7 +709,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
         position: "B/4"
       },
       "s": { // Sixteenth slash
-        code_head: "vbb", // Drawn with canvas primitives
+        // Drawn with canvas primitives
         head_width: 15,
         position: "B/4"
       }
@@ -748,7 +743,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
         position: "B/4"
       },
       "s": { // Thirty-second slash
-        code_head: "vbb", // Drawn with canvas primitives
+        // Drawn with canvas primitives
         head_width: 15,
         position: "B/4"
       }
@@ -782,7 +777,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
         position: "B/4"
       },
       "s": { // Sixty-fourth slash
-        code_head: "vbb", // Drawn with canvas primitives
+        // Drawn with canvas primitives
         head_width: 15,
         position: "B/4"
       }
