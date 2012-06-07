@@ -154,6 +154,11 @@ Vex.Flow.StaveNote.prototype.getStemExtents = function() {
       top_pixel = (top_pixel < stem_top) ? top_pixel : stem_top;
       base_pixel = (base_pixel > this.ys[i]) ? base_pixel : this.ys[i];
     }
+
+    if(this.noteType == "s" || this.noteType == 'x') {
+      top_pixel += 8;
+      base_pixel += 8;
+    }
   }
 
   return { topY: top_pixel, baseY: base_pixel };
@@ -364,6 +369,25 @@ Vex.Flow.StaveNote.prototype.draw = function() {
   // Keep track of highest and lowest lines for drawing strokes.
   var highest_line = 5;
   var lowest_line = 1;
+
+  // private function to draw slash note heads, glyphs were not slanted enough and too small
+  function drawSlashNoteHead(stavenote, ctx, x, y) {
+    ctx.beginPath();
+    ctx.moveTo(x, y + 11);
+    ctx.lineTo(x, y + 1);
+    ctx.lineTo(x + 15, y - 10);
+    ctx.lineTo(x + 15, y);
+    ctx.lineTo(x, y + 11);
+    ctx.closePath();
+
+    // only fill if quarter note or smaller
+    if (stavenote.duration != 1 && stavenote.duration != 2) {
+      ctx.fill();
+    } else {
+      ctx.stroke();
+    }
+  }
+
   for (var i = start_i; i != end_i; i += step_i) {
     var note_props = this.keyProps[i];
     var line = note_props.line;
@@ -406,9 +430,17 @@ Vex.Flow.StaveNote.prototype.draw = function() {
 
     // Draw the head.
     if (render_head) {
-      Vex.Flow.renderGlyph(ctx, head_x,
-          y, this.render_options.glyph_font_scale, code_head);
-      // If note above/below the sraff, draw the small staff
+     head_x = Math.round(head_x);
+
+      // if a slash note, draw 'manually' as font glyphs do not slant enough and are too small
+      if (this.noteType == "s") {
+        drawSlashNoteHead(this, ctx, head_x, y);
+      } else {
+        Vex.Flow.renderGlyph(ctx, head_x,
+            y, this.render_options.glyph_font_scale, code_head);
+      }
+
+      // If note above/below the staff, draw the small staff
       if (line <= 0 || line >= 6) {
         var line_y = y;
         var floor = Math.floor(line);
@@ -460,14 +492,19 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       // Down stems are rendered to the left of the head.
       stem_x = x_begin;
       stem_y = y_top;
+
       // Shorten stem length for 1/2 & 1/4 dead note heads (X)
       if (glyph.code_head == "v95" ||
-          glyph.code_head == "v3e")
+          glyph.code_head == "v3e") {
        stem_y += 4;
+      }
+
     } else {
       // Up stems are rendered to the right of the head.
       stem_x = x_end;
       stem_y = y_bottom;
+
+
       // Shorten stem length for 1/2 & 1/4 dead note heads (X)
       if (glyph.code_head == "v95" ||
           glyph.code_head == "v3e")
@@ -491,6 +528,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       flag_x = x_begin + 1;
       flag_y = y_top - note_stem_height;
       flag_code = glyph.code_flag_downstem;
+
     } else {
       // Up stems have flags on the left.
       flag_x = x_end + 1;

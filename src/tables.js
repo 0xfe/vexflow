@@ -149,6 +149,7 @@ Vex.Flow.keyProperties.note_glyph = {
   'X1':  { code: "v95", shift_right: -0.5 },
   'X2':  { code: "v7f", shift_right: 0.5 },
   'X3':  { code: "v3b", shift_right: -2 }
+
 }
 
 Vex.Flow.integerToNote = function(integer) {
@@ -413,7 +414,7 @@ Vex.Flow.parseNoteDurationString = function(durationString) {
     return null;
   }
 
-  var regexp = /(\d+|[a-z])(d*)([nrhm]|$)/;
+  var regexp = /(\d+|[a-z])(d*)([nrhms]|$)/;
 
   var result = regexp.exec(durationString);
   if (!result) {
@@ -452,7 +453,7 @@ Vex.Flow.parseNoteData = function(noteData) {
   var type = noteData.type;
 
   if (type) {
-    if (!(type === "n" || type === "r" || type === "h" || type === "m")) {
+    if (!(type === "n" || type === "r" || type === "h" || type === "m" || type === "s")) {
       return null;
     }
   } else {
@@ -576,6 +577,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
         head_width: 10.5,
         rest: true,
         position: "D/5"
+      },
+      "s": { // Whole note slash
+        // Drawn with canvas primitives
+        head_width: 15,
+        position: "B/4"
       }
     }
   },
@@ -601,6 +607,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
         code_head: "vc",
         stem: false,
         rest: true,
+        position: "B/4"
+      },
+      "s": { // Half note slash
+        // Drawn with canvas primitives
+        head_width: 15,
         position: "B/4"
       }
     }
@@ -628,6 +639,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
         stem: false,
         rest: true,
         position: "B/4"
+      },
+      "s": { // Quarter slash
+         // Drawn with canvas primitives
+         head_width: 15,
+         position: "B/4"
       }
     }
   },
@@ -656,6 +672,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
         stem: false,
         flag: false,
         rest: true,
+        position: "B/4"
+      },
+      "s": { // Eight slash
+        // Drawn with canvas primitives
+        head_width: 15,
         position: "B/4"
       }
     }
@@ -686,6 +707,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
         flag: false,
         rest: true,
         position: "B/4"
+      },
+      "s": { // Sixteenth slash
+        // Drawn with canvas primitives
+        head_width: 15,
+        position: "B/4"
       }
     }
   },
@@ -715,6 +741,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
         flag: false,
         rest: true,
         position: "B/4"
+      },
+      "s": { // Thirty-second slash
+        // Drawn with canvas primitives
+        head_width: 15,
+        position: "B/4"
       }
     }
   },
@@ -743,6 +774,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
         stem: false,
         flag: false,
         rest: true,
+        position: "B/4"
+      },
+      "s": { // Sixty-fourth slash
+        // Drawn with canvas primitives
+        head_width: 15,
         position: "B/4"
       }
     }
