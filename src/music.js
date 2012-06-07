@@ -72,40 +72,10 @@ Vex.Flow.Music.intervals = {
 };
 
 Vex.Flow.Music.scales = {
-  major:[2, 2, 1, 2, 2, 2, 1],
-  ionian:[2, 2, 1, 2, 2, 2, 1],
-  dorian:[2, 1, 2, 2, 2, 1, 2],
-  phrygian:[1, 2, 2, 2, 1, 2, 2],
-  lydian:[2, 2, 2, 1, 2, 2, 1],
-  mixolydian:[2, 2, 1, 2, 2, 1, 2],
-  minor:[2, 1, 2, 2, 1, 2, 2],
-  aeolian:[2, 1, 2, 2, 1, 2, 2],
-  locrian:[1, 2, 2, 1, 2, 2, 2],
-  majorPentatonic:[2, 2, 3, 2],
-  minorPentatonic:[3, 2, 2, 3],
-  blues:[3, 2, 1, 1, 3]
-};
-
-Vex.Flow.Music.scaleIntervalUp = {
-  major:"unison",
-  ionian:"unison",
-  dorian:"2",
-  phrygian:"M3",
-  lydian:"p4",
-  mixolydian:"p5",
-  minor:"M6",
-  aeolian:"M6",
-  locrian:"M7",
-  minorPentatonic:"unison",
-  majorPentatonic:"M6",
-  blues:"M6"
-};
-
-Vex.Flow.Music.PreferredKey = {
-  'a#':'bb',
-  'c#':'db',
-  'd#':'eb',
-  'g#':'ab'
+  major: [2, 2, 1, 2, 2, 2, 1],
+  dorian: [2, 1, 2, 2, 2, 1, 2],
+  mixolydian: [2, 2, 1, 2, 2, 1, 2],
+  minor: [2, 1, 2, 2, 1, 2, 2]
 };
 
 Vex.Flow.Music.accidentals = [ "bb", "b", "n", "#", "##" ];
@@ -348,33 +318,4 @@ Vex.Flow.Music.prototype.getIntervalBetween =
 
   if (difference < 0) difference += Vex.Flow.Music.NUM_TONES;
   return difference;
-}
-
-/* Returns the notes of a scale.
- *
- */
-Vex.Flow.Music.prototype.getScaleNotes = function (tonalCenter, scale) {
-
-  var scaleNotes = [];
-
-  var relNoteValue = this.getRelativeNoteValue(
-    this.getNoteValue(tonalCenter),
-    this.getIntervalValue(Vex.Flow.Music.scaleIntervalUp[scale]), -1);
-
-  var canNoteName = this.getCanonicalNoteName(relNoteValue);
-
-  if (Vex.Flow.Music.PreferredKey[canNoteName]) {
-    canNoteName = Vex.Flow.Music.PreferredKey[canNoteName];
-  }
-
-  var manager = new Vex.Flow.KeyManager(canNoteName + 'M');
-
-  var scaleTones = this.getScaleTones(this.getNoteValue(tonalCenter), Vex.Flow.Music.scales[scale]);
-
-  for (var i = 0; i < scaleTones.length; ++i) {
-    var note = this.getCanonicalNoteName(scaleTones[i]);
-    scaleNotes.push(manager.selectNote(note).note);
-  }
-
-  return scaleNotes;
 }
