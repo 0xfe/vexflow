@@ -14,8 +14,9 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   var stave = new Vex.Flow.Stave(10, 10, 300);
 
   stave.addClef("treble");
-  stave.addClef("bass");
   stave.addClef("alto");
+  stave.addClef("tenor");
+  stave.addClef("bass");
 
   stave.setContext(ctx);
   stave.draw();

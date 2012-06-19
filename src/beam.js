@@ -34,9 +34,9 @@ Vex.Flow.Beam.prototype.init = function(notes) {
   this.stem_direction = notes[0].getStemDirection();
   this.ticks = notes[0].getTicks();
 
-  if (this.ticks > Vex.Flow.durationToTicks["8d"]) {
+  if (this.ticks >= Vex.Flow.durationToTicks("4")) {
     throw new Vex.RuntimeError("BadArguments",
-        "Beams can be at most dotted eighth notes.");
+        "Beams can only be applied to notes shorter than a quarter note.");
   }
 
   for (var i = 1; i < notes.length; ++i) {
@@ -54,8 +54,7 @@ Vex.Flow.Beam.prototype.init = function(notes) {
   }
 
   this.notes = notes;
-  this.beam_count =
-    Vex.Flow.durationToGlyph(this.notes[0].getDuration()).beam_count;
+  this.beam_count = this.notes[0].getGlyph().beam_count;
   this.render_options = {
     beam_width: 5,
     max_slope: 0.25,
@@ -142,6 +141,12 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
   // Draw the stems
   for (var i = 0; i < this.notes.length; ++i) {
     var note = this.notes[i];
+
+    // Do not draw stem for rests
+    if (note.glyph.rest) {
+      continue;
+    }
+
     var x_px = note.getStemX();
     var y_extents = note.getStemExtents();
     var base_y_px = y_extents.baseY;
@@ -164,8 +169,8 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
       var note = that.notes[i];
       var ticks = note.getTicks();
 
-      // Atleast 8th note
-      if (ticks <= Vex.Flow.durationToTicks[duration]) {
+      // Check whether to apply beam(s)
+      if (ticks < Vex.Flow.durationToTicks(duration)) {
         if (!beam_started) {
           beam_lines.push({start: note.getStemX(), end: null});
           beam_started = true;
@@ -201,7 +206,7 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
     return beam_lines;
   }
 
-  var valid_beam_durations = ["8d", "16d", "32d", "64d"];
+  var valid_beam_durations = ["4", "8", "16", "32"];
 
   // Draw the beams.
   for (var i = 0; i < valid_beam_durations.length; ++i) {
