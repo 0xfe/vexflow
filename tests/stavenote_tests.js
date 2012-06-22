@@ -52,72 +52,72 @@ Vex.Flow.Test.StaveNote.ticks = function(options) {
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "w"});
-  equals(note.getTicks(), BEAT * 4, "Whole note has 4 beats");
+  equals(note.getTicks().value(), BEAT * 4, "Whole note has 4 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "q"});
-  equals(note.getTicks(), BEAT, "Quarter note has 1 beats");
+  equals(note.getTicks().value(), BEAT, "Quarter note has 1 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "hd"});
-  equals(note.getTicks(), BEAT * 3, "Dotted half note has 3 beats");
+  equals(note.getTicks().value(), BEAT * 3, "Dotted half note has 3 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "hdd"});
-  equals(note.getTicks(), BEAT * 3.5, "Double-dotted half note has 3.5 beats");
+  equals(note.getTicks().value(), BEAT * 3.5, "Double-dotted half note has 3.5 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "hddd"});
-  equals(note.getTicks(), BEAT * 3.75, "Triple-dotted half note has 3.75 beats");
+  equals(note.getTicks().value(), BEAT * 3.75, "Triple-dotted half note has 3.75 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "hdr"});
-  equals(note.getTicks(), BEAT * 3, "Dotted half rest has 3 beats");
+  equals(note.getTicks().value(), BEAT * 3, "Dotted half rest has 3 beats");
   equals(note.getNoteType(), "r", "Note type is 'r' for rest");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "hddr"});
-  equals(note.getTicks(), BEAT * 3.5, "Double-dotted half rest has 3.5 beats");
+  equals(note.getTicks().value(), BEAT * 3.5, "Double-dotted half rest has 3.5 beats");
   equals(note.getNoteType(), "r", "Note type is 'r' for rest");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "hdddr"});
-  equals(note.getTicks(), BEAT * 3.75, "Triple-dotted half rest has 3.75 beats");
+  equals(note.getTicks().value(), BEAT * 3.75, "Triple-dotted half rest has 3.75 beats");
   equals(note.getNoteType(), "r", "Note type is 'r' for rest");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "qdh"});
-  equals(note.getTicks(), BEAT * 1.5, "Dotted harmonic quarter note has 1.5 beats");
+  equals(note.getTicks().value(), BEAT * 1.5, "Dotted harmonic quarter note has 1.5 beats");
   equals(note.getNoteType(), "h", "Note type is 'h' for harmonic note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "qddh"});
-  equals(note.getTicks(), BEAT * 1.75, "Double-dotted harmonic quarter note has 1.75 beats");
+  equals(note.getTicks().value(), BEAT * 1.75, "Double-dotted harmonic quarter note has 1.75 beats");
   equals(note.getNoteType(), "h", "Note type is 'h' for harmonic note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "qdddh"});
-  equals(note.getTicks(), BEAT * 1.875, "Triple-dotted harmonic quarter note has 1.875 beats");
+  equals(note.getTicks().value(), BEAT * 1.875, "Triple-dotted harmonic quarter note has 1.875 beats");
   equals(note.getNoteType(), "h", "Note type is 'h' for harmonic note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "8dm"});
-  equals(note.getTicks(), BEAT * 0.75, "Dotted muted 8th note has 0.75 beats");
+  equals(note.getTicks().value(), BEAT * 0.75, "Dotted muted 8th note has 0.75 beats");
   equals(note.getNoteType(), "m", "Note type is 'm' for muted note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "8ddm"});
-  equals(note.getTicks(), BEAT * 0.875, "Double-dotted muted 8th note has 0.875 beats");
+  equals(note.getTicks().value(), BEAT * 0.875, "Double-dotted muted 8th note has 0.875 beats");
   equals(note.getNoteType(), "m", "Note type is 'm' for muted note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "8dddm"});
-  equals(note.getTicks(), BEAT * 0.9375, "Triple-dotted muted 8th note has 0.9375 beats");
+  equals(note.getTicks().value(), BEAT * 0.9375, "Triple-dotted muted 8th note has 0.9375 beats");
   equals(note.getNoteType(), "m", "Note type is 'm' for muted note");
 
   try {
@@ -153,72 +153,72 @@ Vex.Flow.Test.StaveNote.ticksNewApi = function(options) {
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "1"});
-  equals(note.getTicks(), BEAT * 4, "Whole note has 4 beats");
+  equals(note.getTicks().value(), BEAT * 4, "Whole note has 4 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "4"});
-  equals(note.getTicks(), BEAT, "Quarter note has 1 beats");
+  equals(note.getTicks().value(), BEAT, "Quarter note has 1 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "2", dots: 1});
-  equals(note.getTicks(), BEAT * 3, "Dotted half note has 3 beats");
+  equals(note.getTicks().value(), BEAT * 3, "Dotted half note has 3 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "2", dots: 2});
-  equals(note.getTicks(), BEAT * 3.5, "Double-dotted half note has 3.5 beats");
+  equals(note.getTicks().value(), BEAT * 3.5, "Double-dotted half note has 3.5 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "2", dots: 3});
-  equals(note.getTicks(), BEAT * 3.75, "Triple-dotted half note has 3.75 beats");
+  equals(note.getTicks().value(), BEAT * 3.75, "Triple-dotted half note has 3.75 beats");
   equals(note.getNoteType(), "n", "Note type is 'n' for normal note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "2", dots: 1, type: "r"});
-  equals(note.getTicks(), BEAT * 3, "Dotted half rest has 3 beats");
+  equals(note.getTicks().value(), BEAT * 3, "Dotted half rest has 3 beats");
   equals(note.getNoteType(), "r", "Note type is 'r' for rest");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "2", dots: 2, type: "r"});
-  equals(note.getTicks(), BEAT * 3.5, "Double-dotted half rest has 3.5 beats");
+  equals(note.getTicks().value(), BEAT * 3.5, "Double-dotted half rest has 3.5 beats");
   equals(note.getNoteType(), "r", "Note type is 'r' for rest");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "2", dots: 3, type: "r"});
-  equals(note.getTicks(), BEAT * 3.75, "Triple-dotted half rest has 3.75 beats");
+  equals(note.getTicks().value(), BEAT * 3.75, "Triple-dotted half rest has 3.75 beats");
   equals(note.getNoteType(), "r", "Note type is 'r' for rest");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "4", dots: 1, type: "h"});
-  equals(note.getTicks(), BEAT * 1.5, "Dotted harmonic quarter note has 1.5 beats");
+  equals(note.getTicks().value(), BEAT * 1.5, "Dotted harmonic quarter note has 1.5 beats");
   equals(note.getNoteType(), "h", "Note type is 'h' for harmonic note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "4", dots: 2, type: "h"});
-  equals(note.getTicks(), BEAT * 1.75, "Double-dotted harmonic quarter note has 1.75 beats");
+  equals(note.getTicks().value(), BEAT * 1.75, "Double-dotted harmonic quarter note has 1.75 beats");
   equals(note.getNoteType(), "h", "Note type is 'h' for harmonic note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "4", dots: 3, type: "h"});
-  equals(note.getTicks(), BEAT * 1.875, "Triple-dotted harmonic quarter note has 1.875 beats");
+  equals(note.getTicks().value(), BEAT * 1.875, "Triple-dotted harmonic quarter note has 1.875 beats");
   equals(note.getNoteType(), "h", "Note type is 'h' for harmonic note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "8", dots: 1, type: "m"});
-  equals(note.getTicks(), BEAT * 0.75, "Dotted muted 8th note has 0.75 beats");
+  equals(note.getTicks().value(), BEAT * 0.75, "Dotted muted 8th note has 0.75 beats");
   equals(note.getNoteType(), "m", "Note type is 'm' for muted note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "8", dots: 2, type: "m"});
-  equals(note.getTicks(), BEAT * 0.875, "Double-dotted muted 8th note has 0.875 beats");
+  equals(note.getTicks().value(), BEAT * 0.875, "Double-dotted muted 8th note has 0.875 beats");
   equals(note.getNoteType(), "m", "Note type is 'm' for muted note");
 
   var note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "8", dots: 3, type: "m"});
-  equals(note.getTicks(), BEAT * 0.9375, "Triple-dotted muted 8th note has 0.9375 beats");
+  equals(note.getTicks().value(), BEAT * 0.9375, "Triple-dotted muted 8th note has 0.9375 beats");
   equals(note.getNoteType(), "m", "Note type is 'm' for muted note");
 
   try {

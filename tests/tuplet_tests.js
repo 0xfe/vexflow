@@ -38,6 +38,9 @@ Vex.Flow.Test.Tuplet.simple = function(options) {
     newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"})
   ];
   
+  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6));
+
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   
   voice.setStrict(false);
@@ -47,10 +50,7 @@ Vex.Flow.Test.Tuplet.simple = function(options) {
     format([voice], 300);
 
   voice.draw(c.context, c.stave);
-  
-  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
-  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6));
-  
+    
   tuplet1.setContext(c.context).draw();
   tuplet2.setContext(c.context).draw();
   
@@ -74,20 +74,20 @@ Vex.Flow.Test.Tuplet.beamed = function(options) {
     newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"})
   ];
   
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-  
-  voice.setStrict(false);
-  voice.addTickables(notes);
-  
-  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    format([voice], 300);
-  
   var beam1 = new Vex.Flow.Beam(notes.slice(0, 3));
   var beam2 = new Vex.Flow.Beam(notes.slice(3, 10));
 
   var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
   var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 10));
   
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  
+  voice.setStrict(false);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice], 300);
+    
   voice.draw(c.context, c.stave);
   
   tuplet1.setContext(c.context).draw();
@@ -112,20 +112,20 @@ Vex.Flow.Test.Tuplet.ratio = function(options) {
     newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"})
   ];
   
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-  
-  voice.setStrict(false);
-  voice.addTickables(notes);
-  
-  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    format([voice], 300);
-  
   var beam = new Vex.Flow.Beam(notes.slice(3, 6));
   
   var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
   var tuplet2 = new Vex.Flow.Tuplet(notes.slice(3, 6));
   tuplet2.setBeatsOccupied(4);
   
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  
+  voice.setStrict(false);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice], 300);
+    
   voice.draw(c.context, c.stave);
   
   beam.setContext(c.context).draw();
@@ -148,15 +148,7 @@ Vex.Flow.Test.Tuplet.bottom = function(options) {
     newNote({ keys: ["g/5"], stem_direction: -1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"})
   ];
-  
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-  
-  voice.setStrict(false);
-  voice.addTickables(notes);
-  
-  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    format([voice], 300);
-  
+    
   var beam = new Vex.Flow.Beam(notes.slice(3, 6));
   
   var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
@@ -164,7 +156,15 @@ Vex.Flow.Test.Tuplet.bottom = function(options) {
   
   tuplet1.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
   tuplet2.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   
+  voice.setStrict(false);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice], 300);
+    
   voice.draw(c.context, c.stave);
   
   beam.setContext(c.context).draw();
@@ -187,15 +187,7 @@ Vex.Flow.Test.Tuplet.bottom_ratio = function(options) {
     newNote({ keys: ["g/5"], stem_direction: -1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"})
   ];
-  
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-  
-  voice.setStrict(false);
-  voice.addTickables(notes);
-  
-  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    format([voice], 300);
-  
+      
   var beam = new Vex.Flow.Beam(notes.slice(3, 6));
   
   var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
@@ -205,6 +197,14 @@ Vex.Flow.Test.Tuplet.bottom_ratio = function(options) {
   tuplet1.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
   tuplet2.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
   
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  
+  voice.setStrict(false);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice], 300);
+
   voice.draw(c.context, c.stave);
   
   beam.setContext(c.context).draw();
@@ -230,26 +230,32 @@ Vex.Flow.Test.Tuplet.awkward = function(options) {
     newNote({ keys: ["c/4"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["f/4"], stem_direction: 1, duration: "16"})
+    newNote({ keys: ["f/4"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"})
   ];
+      
+  var beam = new Vex.Flow.Beam(notes.slice(0, 11));
+  
+  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 11));
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(11, 14));
+  tuplet1.setBeatsOccupied(142);
   
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   
   voice.setStrict(false);
   voice.addTickables(notes);
-  
+
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     format([voice], 300);
-  
-  var beam = new Vex.Flow.Beam(notes);
-  
-  var tuplet1 = new Vex.Flow.Tuplet(notes);
-  tuplet1.setBeatsOccupied(142);
-  
+
   voice.draw(c.context, c.stave);
   
   beam.setContext(c.context).draw();
   tuplet1.setRatioed(true).setContext(c.context).draw();
+  tuplet2.setRatioed(true).setBracketed(true).setContext(c.context).draw();
   
   ok(true, "Awkward Test");
 }
+

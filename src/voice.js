@@ -14,13 +14,15 @@ Vex.Flow.Voice.prototype.init = function(time) {
   this.time = time;
 
   // Recalculate total ticks.
-  this.totalTicks = this.time.num_beats *
-    (this.time.resolution / this.time.beat_value);
+  this.totalTicks = new Vex.Flow.Fraction(
+    this.time.num_beats * (this.time.resolution / this.time.beat_value), 1);
+
+  this.resolutionMultiplier = 1;
 
   // Set defaults
   this.tickables = [];
-  this.ticksUsed = 0;
-  this.smallestTickCount = this.totalTicks;
+  this.ticksUsed = new Vex.Flow.Fraction(0, 1);
+  this.smallestTickCount = this.totalTicks.clone();
   this.largestTickWidth = 0;
   this.strict = true; // Do we care about strictly timed notes
 
@@ -41,13 +43,21 @@ Vex.Flow.Voice.prototype.setVoiceGroup = function(g) {
   return this;
 }
 
+Vex.Flow.Voice.prototype.getResolutionMultiplier = function() {
+  return this.resolutionMultiplier;
+}
+
+Vex.Flow.Voice.prototype.getActualResolution = function() {
+  return this.resolutionMultiplier * this.time.resolution;
+}
+
 Vex.Flow.Voice.prototype.setStrict = function(strict) {
   this.strict = strict;
   return this;
 }
 
 Vex.Flow.Voice.prototype.isComplete = function() {
-  return (this.ticksUsed == this.totalTicks) || !this.strict;
+  return !this.strict || this.ticksUsed.equals(this.totalTicks);
 }
 
 Vex.Flow.Voice.prototype.getTotalTicks = function() {
@@ -71,22 +81,26 @@ Vex.Flow.Voice.prototype.getTickables = function() {
 }
 
 Vex.Flow.Voice.prototype.addTickable = function(tickable) {
-  var time = this.time;
-
   if (!tickable.shouldIgnoreTicks()) {
-    var numTicks = tickable.getTicks();
+    var ticks = tickable.getTicks();
 
     // Update the total ticks for this line
-    this.ticksUsed += numTicks;
+    this.ticksUsed.add(ticks);
 
-    if (this.strict && this.ticksUsed > this.totalTicks) {
-      this.totalTicks -= numTicks;
+    if (this.strict && (this.ticksUsed.value() > this.totalTicks.value())) {
+      this.ticksUsed.subtract(ticks);
       throw new Vex.RERR("BadArgument", "Too many ticks.");
     }
 
     // Track the smallest tickable for formatting
-    if (numTicks < this.smallestTickCount)
-      this.smallestTickCount = numTicks;
+    if (ticks.value() < this.smallestTickCount.value()) {
+      this.smallestTickCount = ticks.clone();
+    }
+
+    this.resolutionMultiplier = this.ticksUsed.denominator;
+
+    // Expand total ticks using denominator from ticks used
+    this.totalTicks.add(0, this.ticksUsed.denominator);
   }
 
   /* Can't do this without formatting modifier context
@@ -117,3 +131,4 @@ Vex.Flow.Voice.prototype.draw = function(context, stave) {
     this.tickables[i].draw();
   }
 }
+

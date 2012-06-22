@@ -27,6 +27,8 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   this.keys = note_struct.keys;
   this.clef = note_struct.clef;
 
+  this.tuplet = null;
+
   // Pull note rendering properties
   this.glyph = Vex.Flow.durationToGlyph(this.duration, this.noteType);
   if (!this.glyph) {
@@ -90,6 +92,33 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
 
   // Calculate left/right padding
   this.calcExtraPx();
+}
+
+Vex.Flow.StaveNote.prototype.getTuplet = function() {
+  return this.tuplet;
+}
+
+Vex.Flow.StaveNote.prototype.setTuplet = function(tuplet) {
+  // Detach from previous tuplet
+  if (this.tuplet) {
+    var noteCount = this.tuplet.getNoteCount();
+    var beatsOccupied = this.tuplet.getBeatsOccupied();
+
+    // Revert old multiplier
+    this.applyTickMultiplier(noteCount, beatsOccupied);
+  }
+
+  // Attach to new tuplet
+  if (tuplet) {
+    var noteCount = tuplet.getNoteCount();
+    var beatsOccupied = tuplet.getBeatsOccupied();
+
+    this.applyTickMultiplier(beatsOccupied, noteCount);
+  }
+
+  this.tuplet = tuplet;
+  
+  return this;
 }
 
 Vex.Flow.StaveNote.prototype.getYForTopText = function(text_line) {
