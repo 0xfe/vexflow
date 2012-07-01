@@ -22,7 +22,7 @@ Vex.Flow.Fraction.prototype.simplify = function() {
   var u = this.numerator;
   var d = this.denominator;
 
-  var gcd = Vex.GCD(u, d);
+  var gcd = Vex.Flow.Fraction.GCD(u, d);
   u /= gcd;
   d /= gcd;
 
@@ -54,7 +54,7 @@ Vex.Flow.Fraction.prototype.add = function(param1, param2) {
     }
   }
 
-  var lcm = Vex.LCM(this.denominator, otherDenominator);
+  var lcm = Vex.Flow.Fraction.LCM(this.denominator, otherDenominator);
   var a = lcm / this.denominator;
   var b = lcm / otherDenominator;
 
@@ -83,7 +83,7 @@ Vex.Flow.Fraction.prototype.subtract = function(param1, param2) {
     }
   }
 
-  var lcm = Vex.LCM(this.denominator, otherDenominator);
+  var lcm = Vex.Flow.Fraction.LCM(this.denominator, otherDenominator);
   var a = lcm / this.denominator;
   var b = lcm / otherDenominator;
 
@@ -225,5 +225,48 @@ Vex.Flow.Fraction.prototype.parse = function(str) {
   var d = (i[1]) ? parseInt(i[1], 0) : 1;
 
   return this.set(n, d);
+}
+
+/**
+ * GCD: Find greatest common divisor using Euclidean algorithm
+ */
+Vex.Flow.Fraction.GCD = function(a, b) {
+  if (typeof a !== "number" || typeof b !== "number") {
+    throw new Vex.RERR("BadArgument", "Invalid numbers: " + a + ", " + b);
+  }
+
+  var t;
+
+  while (b != 0) {
+    t = b;
+    b = a % b;
+    a = t;
+  }
+
+  return a;
+}
+
+/**
+ * LCM: Lowest common multiple
+ */
+Vex.Flow.Fraction.LCM = function(a, b) {
+  return ((a * b) / Vex.Flow.Fraction.GCD(a, b));
+}
+
+/**
+ * LCMM: Lowest common multiple for more than two numbers
+ */
+Vex.Flow.Fraction.LCMM = function(args) {
+  if (args.length == 0) {
+    return 0;
+  } else if (args.length == 1) {
+    return args[0];
+  } else if (args.length == 2) {
+    return Vex.Flow.Fraction.LCM(args[0], args[1]);
+  } else {
+    var arg0 = args[0];
+    args.shift();
+    return Vex.Flow.Fraction.LCM(arg0, Vex.Flow.Fraction.LCMM(args));
+  }
 }
 

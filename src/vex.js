@@ -134,49 +134,6 @@ Vex.Max = function(a, b) {
 };
 
 /**
- * GCD: Find greatest common divisor using Euclidean algorithm
- */
-Vex.GCD = function(a, b) {
-  if (typeof a !== "number" || typeof b !== "number") {
-    throw new Vex.RERR("BadArgument", "Invalid numbers: " + a + ", " + b);
-  }
-
-  var t;
-
-  while (b != 0) {
-    t = b;
-    b = a % b;
-    a = t;
-  }
-
-  return a;
-}
-
-/**
- * LCM: Lowest common multiple
- */
-Vex.LCM = function(a, b) {
-  return ((a * b) / Vex.GCD(a, b));
-}
-
-/**
- * LCMM: Lowest common multiple for more than two numbers
- */
-Vex.LCMM = function(args) {
-  if (args.length == 0) {
-    return 0;
-  } else if (args.length == 1) {
-    return args[0];
-  } else if (args.length == 2) {
-    return Vex.LCM(args[0], args[1]);
-  } else {
-    var arg0 = args[0];
-    args.shift();
-    return Vex.LCM(arg0, Vex.LCMM(args));
-  }
-}
-
-/**
  * Take 'arr' and return a new list consisting of the sorted, unique,
  * contents of arr.
  */

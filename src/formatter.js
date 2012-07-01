@@ -83,7 +83,8 @@ Vex.Flow.Formatter.createContexts = function(voices, context_type, add_fn) {
         "Voice does not have enough notes.");
     }
 
-    var lcm = Vex.LCM(resolutionMultiplier, voice.getResolutionMultiplier());
+    var lcm = Vex.Flow.Fraction.LCM(resolutionMultiplier,
+        voice.getResolutionMultiplier());
     if (resolutionMultiplier < lcm) {
       resolutionMultiplier = lcm;
     }
