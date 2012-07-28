@@ -7,11 +7,12 @@ Vex.Flow.Test.Voice = {}
 
 Vex.Flow.Test.Voice.Start = function() {
   module("Voice");
-  test("Basic Test", Vex.Flow.Test.Voice.basic);
+  test("Strict Test", Vex.Flow.Test.Voice.strict);
   test("Ignore Test", Vex.Flow.Test.Voice.ignore);
+  Vex.Flow.Test.runTest("Full Voice Mode Test", Vex.Flow.Test.Voice.full);
 }
 
-Vex.Flow.Test.Voice.basic = function(options) {
+Vex.Flow.Test.Voice.strict = function(options) {
   expect(7);
   function createTickable() {
     return new Vex.Flow.Test.MockTickable(Vex.Flow.Test.TIME4_4);
@@ -64,4 +65,32 @@ Vex.Flow.Test.Voice.ignore = function(options) {
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   voice.addTickables(tickables);
   ok(true, "all pass");
+}
+
+Vex.Flow.Test.Voice.full = function(options, contextBuilder) {
+  var ctx  = contextBuilder(options.canvas_sel, 550, 200);
+  
+  var stave = new Vex.Flow.Stave(10, 50, 500);
+  stave.addClef("treble").addTimeSignature("4/4").
+    setEndBarType(Vex.Flow.Barline.type.END).setContext(ctx).draw();
+
+  var notes = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" })
+  ];
+  
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode("full");
+  voice.addTickables(notes);
+  
+  new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 500);
+  voice.draw(ctx, stave);
+
+  try {
+    voice.addTickable(
+      new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "h" })
+    );
+  } catch (e) {
+    equals(e.code, "BadArgument", "Too many ticks exception");
+  }
 }

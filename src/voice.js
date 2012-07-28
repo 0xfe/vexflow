@@ -22,7 +22,9 @@ Vex.Flow.Voice.prototype.init = function(time) {
   this.ticksUsed = 0;
   this.smallestTickCount = this.totalTicks;
   this.largestTickWidth = 0;
-  this.strict = true; // Do we care about strictly timed notes
+  // Do we care about strictly timed notes
+  // Modes can be (strict || soft || full)
+  this.mode = 'strict';
 
   // This must belong to a VoiceGroup
   this.voiceGroup = null;
@@ -41,13 +43,18 @@ Vex.Flow.Voice.prototype.setVoiceGroup = function(g) {
   return this;
 }
 
-Vex.Flow.Voice.prototype.setStrict = function(strict) {
-  this.strict = strict;
+Vex.Flow.Voice.prototype.setMode = function(mode) {
+  this.mode = mode;
   return this;
 }
 
+Vex.Flow.Voice.prototype.getMode = function() {
+  return this.mode;
+}
+
 Vex.Flow.Voice.prototype.isComplete = function() {
-  return (this.ticksUsed == this.totalTicks) || !this.strict;
+  return (this.mode === "strict" || this.mode === "full") ?
+    (this.ticksUsed == this.totalTicks) : true;
 }
 
 Vex.Flow.Voice.prototype.getTotalTicks = function() {
@@ -79,7 +86,8 @@ Vex.Flow.Voice.prototype.addTickable = function(tickable) {
     // Update the total ticks for this line
     this.ticksUsed += numTicks;
 
-    if (this.strict && this.ticksUsed > this.totalTicks) {
+    if ((this.mode === "strict" || this.mode === "full") && 
+      this.ticksUsed > this.totalTicks) {
       this.totalTicks -= numTicks;
       throw new Vex.RERR("BadArgument", "Too many ticks.");
     }
