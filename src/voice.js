@@ -43,6 +43,11 @@ Vex.Flow.Voice.prototype.setVoiceGroup = function(g) {
   return this;
 }
 
+Vex.Flow.Voice.prototype.setStrict = function(strict) {
+  this.mode = strict ? 'strict' : 'soft';
+  return this;
+}
+
 Vex.Flow.Voice.prototype.setMode = function(mode) {
   this.mode = mode;
   return this;
