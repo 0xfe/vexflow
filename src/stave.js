@@ -36,6 +36,11 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
   };
   Vex.Merge(this.options, options);
 
+  // If a line_spec is provided, dynamically calculate the num_lines option
+  if (this.options.line_spec) {
+    this.options.num_lines = this.options.line_spec.length;
+  }
+
   this.height =
     (this.options.num_lines + this.options.space_above_staff_ln) *
      this.options.spacing_between_lines_px;
@@ -222,7 +227,10 @@ Vex.Flow.Stave.prototype.draw = function(context) {
   for (var line=0; line < num_lines; line++) {
 
     var y = this.getYForLine(line);
-    this.context.fillRect(x, y, width, 1);
+
+    if (this.options.line_spec[line].visible) {
+      this.context.fillRect(x, y, width, 1);
+    }
   }
 
   x = this.glyph_start_x;
