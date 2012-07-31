@@ -30,6 +30,14 @@ Vex.Flow.Test.Stave.Start = function() {
       Vex.Flow.Test.Stave.drawTempo);
   Vex.Flow.Test.runRaphaelTest("Tempo Test (Raphael)",
       Vex.Flow.Test.Stave.drawTempo);
+  Vex.Flow.Test.runTest("Single Line Configuration Test (Canvas)",
+      Vex.Flow.Test.Stave.configureSingleLine);
+  Vex.Flow.Test.runRaphaelTest("Single Line Configuration Test (Raphael)",
+      Vex.Flow.Test.Stave.configureSingleLine);
+  Vex.Flow.Test.runTest("Batch Line Configuration Test (Canvas)",
+      Vex.Flow.Test.Stave.configureAllLines);
+  Vex.Flow.Test.runRaphaelTest("Batch Line Configuration Test (Raphael)",
+      Vex.Flow.Test.Stave.configureAllLines);
 }
 
 Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {
@@ -338,4 +346,45 @@ Vex.Flow.Test.Stave.drawTempo = function(options, contextBuilder) {
     new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "8" }),
     new Vex.Flow.StaveNote({ keys: ["e/4"], duration: "8" })
   ]);
+}
+
+Vex.Flow.Test.Stave.configureSingleLine = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 300);
+  stave.setLineConfiguration(0, { visible: true })
+    .setLineConfiguration(1, { visible: false })
+    .setLineConfiguration(2, { visible: true })
+    .setLineConfiguration(3, { visible: false })
+    .setLineConfiguration(4, { visible: true });
+  stave.setContext(ctx).draw();
+
+  var config = stave.getLinesConfiguration();
+  equals(config[0].visible, true, "getLinesConfiguration() - Line 0");
+  equals(config[1].visible, false, "getLinesConfiguration() - Line 1");
+  equals(config[2].visible, true, "getLinesConfiguration() - Line 2");
+  equals(config[3].visible, false, "getLinesConfiguration() - Line 3");
+  equals(config[4].visible, true, "getLinesConfiguration() - Line 4");
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.Stave.configureAllLines = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 300);
+  stave.setLinesConfiguration([
+    { visible: false },
+    null,
+    { visible: false },
+    { visible: true },
+    { visible: false }
+  ]).setContext(ctx).draw();
+
+  var config = stave.getLinesConfiguration();
+  equals(config[0].visible, false, "getLinesConfiguration() - Line 0");
+  equals(config[1].visible, true, "getLinesConfiguration() - Line 1");
+  equals(config[2].visible, false, "getLinesConfiguration() - Line 2");
+  equals(config[3].visible, true, "getLinesConfiguration() - Line 3");
+  equals(config[4].visible, false, "getLinesConfiguration() - Line 4");
+
+  ok(true, "all pass");
 }

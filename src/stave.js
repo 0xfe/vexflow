@@ -38,7 +38,7 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
 
   this.options.line_config = [];
   for (var i = 0; i < this.options.num_lines; i++) {
-    this.options.line_config.push(Vex.Flow.Stave.default_line_configuration);
+    this.options.line_config.push({ visible: true });
   }
 
   this.height =
@@ -293,9 +293,13 @@ Vex.Flow.Stave.prototype.drawVerticalBarFixed = function(x) {
   this.context.fillRect(x, top_line, 1, bottom_line - top_line + 1);
 }
 
-Vex.Flow.Stave.default_line_configuration = {
-  visible: true
-};
+/**
+ * Get the current configuration for the Stave.
+ * @return {Array} An array of configuration objects.
+ */
+Vex.Flow.Stave.prototype.getLinesConfiguration = function() {
+  return this.options.line_config;
+}
 
 /**
  * Configure properties of the lines in the Stave
@@ -319,6 +323,7 @@ Vex.Flow.Stave.prototype.setLineConfiguration = function(line_number, line_confi
  * Set the staff line configuration array for all of the lines at once.
  * @param lines_configuration An array of line configuration objects.  These objects
  *   are of the same format as the single one passed in to setLineConfiguration().
+ *   The caller can set null for any line config entry if it is desired that the default be used
  * @throws Vex.RERR "StaveConfigError" When the lines_configuration array does not have
  *   exactly the same number of elements as the num_lines configuration object set in
  *   the constructor.
@@ -332,7 +337,11 @@ Vex.Flow.Stave.prototype.setLinesConfiguration = function(lines_configuration) {
   // Make sure the defaults are present in case an incomplete set of
   //  configuration options were supplied.
   for (var line_config in lines_configuration) {
-    Vex.Merge(Vex.Flow.Stave.default_line_configuration, lines_configuration[line_config]);
+    // Allow 'null' to be used if the caller just wants the default for a particular node.
+    if (!lines_configuration[line_config]) {
+      lines_configuration[line_config] = this.options.line_config[line_config];
+    }
+    Vex.Merge(this.options.line_config[line_config], lines_configuration[line_config]);
   }
 
   this.options.line_config = lines_configuration;
