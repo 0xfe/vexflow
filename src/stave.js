@@ -36,9 +36,9 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
   };
   Vex.Merge(this.options, options);
 
-  // If a line_spec is provided, dynamically calculate the num_lines option
-  if (this.options.line_spec) {
-    this.options.num_lines = this.options.line_spec.length;
+  this.options.line_config = [];
+  for (var i = 0; i < this.options.num_lines; i++) {
+    this.options.line_config.push(Vex.Flow.Stave.default_line_configuration);
   }
 
   this.height =
@@ -228,7 +228,7 @@ Vex.Flow.Stave.prototype.draw = function(context) {
 
     var y = this.getYForLine(line);
 
-    if (this.options.line_spec[line].visible) {
+    if (this.options.line_config && this.options.line_config[line].visible) {
       this.context.fillRect(x, y, width, 1);
     }
   }
@@ -288,4 +288,51 @@ Vex.Flow.Stave.prototype.drawVerticalBarFixed = function(x) {
   var top_line = this.getYForLine(0);
   var bottom_line = this.getYForLine(this.options.num_lines - 1);
   this.context.fillRect(x, top_line, 1, bottom_line - top_line + 1);
+}
+
+Vex.Flow.Stave.default_line_configuration = {
+  visible: true
+};
+
+/**
+ * Configure properties of the lines in the Stave
+ * @param line_number The index of the line to configure.
+ * @param line_config An configuration object for the specified line.
+ * @throws Vex.RERR "StaveConfigError" When the specified line number is out of
+ *   range of the number of lines specified in the constructor.
+ */
+Vex.Flow.Stave.prototype.setLineConfiguration = function(line_number, line_config) {
+  if (line_number >= this.options.num_lines || line_number < 0) {
+    throw new Vex.RERR("StaveConfigError",
+      "The line number must be within the range of the number of lines in the Stave.");
+  }
+
+  this.options.line_config[line_number] = line_config;
+
+  return this;
+}
+
+/**
+ * Set the staff line configuration array for all of the lines at once.
+ * @param lines_configuration An array of line configuration objects.  These objects
+ *   are of the same format as the single one passed in to setLineConfiguration().
+ * @throws Vex.RERR "StaveConfigError" When the lines_configuration array does not have
+ *   exactly the same number of elements as the num_lines configuration object set in
+ *   the constructor.
+ */
+Vex.Flow.Stave.prototype.setLinesConfiguration = function(lines_configuration) {
+  if (lines_configuration.length !== this.options.num_lines) {
+    throw new Vex.RERR("StaveConfigError",
+      "The length of the lines configuration array must match the number of lines in the Stave");
+  }
+
+  // Make sure the defaults are present in case an incomplete set of
+  //  configuration options were supplied.
+  for (var line_config in lines_configuration) {
+    Vex.Merge(Vex.Flow.Stave.default_line_configuration, lines_configuration[line_config]);
+  }
+
+  this.options.line_config = lines_configuration;
+
+  return this;
 }
