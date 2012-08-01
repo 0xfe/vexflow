@@ -228,7 +228,7 @@ Vex.Flow.Stave.prototype.draw = function(context) {
 
     var y = this.getYForLine(line);
 
-    if (this.options.line_config && this.options.line_config[line].visible) {
+    if (this.options.line_config[line].visible) {
       this.context.fillRect(x, y, width, 1);
     }
   }
@@ -294,7 +294,7 @@ Vex.Flow.Stave.prototype.drawVerticalBarFixed = function(x) {
  * Get the current configuration for the Stave.
  * @return {Array} An array of configuration objects.
  */
-Vex.Flow.Stave.prototype.getLinesConfiguration = function() {
+Vex.Flow.Stave.prototype.getConfigForLines = function() {
   return this.options.line_config;
 }
 
@@ -305,10 +305,18 @@ Vex.Flow.Stave.prototype.getLinesConfiguration = function() {
  * @throws Vex.RERR "StaveConfigError" When the specified line number is out of
  *   range of the number of lines specified in the constructor.
  */
-Vex.Flow.Stave.prototype.setLineConfiguration = function(line_number, line_config) {
+Vex.Flow.Stave.prototype.setConfigForLine = function(line_number, line_config) {
   if (line_number >= this.options.num_lines || line_number < 0) {
     throw new Vex.RERR("StaveConfigError",
       "The line number must be within the range of the number of lines in the Stave.");
+  }
+  if (!line_config.hasOwnProperty('visible')) {
+    throw new Vex.RERR("StaveConfigError",
+      "The line configuration object is missing the 'visible' property.");
+  }
+  if (typeof(line_config.visible) !== 'boolean') {
+    throw new Vex.RERR("StaveConfigError",
+      "The line configuration objects 'visible' property must be true or false.");
   }
 
   this.options.line_config[line_number] = line_config;
@@ -325,7 +333,7 @@ Vex.Flow.Stave.prototype.setLineConfiguration = function(line_number, line_confi
  *   exactly the same number of elements as the num_lines configuration object set in
  *   the constructor.
  */
-Vex.Flow.Stave.prototype.setLinesConfiguration = function(lines_configuration) {
+Vex.Flow.Stave.prototype.setConfigForLines = function(lines_configuration) {
   if (lines_configuration.length !== this.options.num_lines) {
     throw new Vex.RERR("StaveConfigError",
       "The length of the lines configuration array must match the number of lines in the Stave");

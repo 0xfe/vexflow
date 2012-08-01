@@ -351,14 +351,14 @@ Vex.Flow.Test.Stave.drawTempo = function(options, contextBuilder) {
 Vex.Flow.Test.Stave.configureSingleLine = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 400, 120);
   var stave = new Vex.Flow.Stave(10, 10, 300);
-  stave.setLineConfiguration(0, { visible: true })
-    .setLineConfiguration(1, { visible: false })
-    .setLineConfiguration(2, { visible: true })
-    .setLineConfiguration(3, { visible: false })
-    .setLineConfiguration(4, { visible: true });
+  stave.setConfigForLine(0, { visible: true })
+    .setConfigForLine(1, { visible: false })
+    .setConfigForLine(2, { visible: true })
+    .setConfigForLine(3, { visible: false })
+    .setConfigForLine(4, { visible: true });
   stave.setContext(ctx).draw();
 
-  var config = stave.getLinesConfiguration();
+  var config = stave.getConfigForLines();
   equals(config[0].visible, true, "getLinesConfiguration() - Line 0");
   equals(config[1].visible, false, "getLinesConfiguration() - Line 1");
   equals(config[2].visible, true, "getLinesConfiguration() - Line 2");
@@ -371,7 +371,7 @@ Vex.Flow.Test.Stave.configureSingleLine = function(options, contextBuilder) {
 Vex.Flow.Test.Stave.configureAllLines = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 400, 120);
   var stave = new Vex.Flow.Stave(10, 10, 300);
-  stave.setLinesConfiguration([
+  stave.setConfigForLines([
     { visible: false },
     null,
     { visible: false },
@@ -379,7 +379,7 @@ Vex.Flow.Test.Stave.configureAllLines = function(options, contextBuilder) {
     { visible: false }
   ]).setContext(ctx).draw();
 
-  var config = stave.getLinesConfiguration();
+  var config = stave.getConfigForLines();
   equals(config[0].visible, false, "getLinesConfiguration() - Line 0");
   equals(config[1].visible, true, "getLinesConfiguration() - Line 1");
   equals(config[2].visible, false, "getLinesConfiguration() - Line 2");
