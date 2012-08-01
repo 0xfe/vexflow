@@ -265,6 +265,7 @@ Vex.Flow.StaveNote.prototype.addDot = function(index) {
   dot.setIndex(index);
   this.modifiers.push(dot);
   this.setPreFormatted(false);
+  this.dots++;
   return this;
 }
 
