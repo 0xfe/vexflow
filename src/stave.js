@@ -182,6 +182,7 @@ Vex.Flow.Stave.prototype.addGlyph = function(glyph) {
 }
 
 Vex.Flow.Stave.prototype.addModifier = function(modifier) {
+  this.modifiers.push(modifier);
   modifier.addToStave(this, (this.glyphs.length == 0));
   return this;
 }
@@ -238,7 +239,9 @@ Vex.Flow.Stave.prototype.draw = function(context) {
   if (bar_x_shift > 0) bar_x_shift += this.options.vertical_bar_width;
   // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
   for (var i = 0; i < this.modifiers.length; i++) {
-    this.modifiers[i].draw(this, bar_x_shift);
+    // Only draw modifier if it has a draw function
+    if (typeof this.modifiers[i].draw == "function")
+      this.modifiers[i].draw(this, bar_x_shift);
   }
   if (this.measure > 0) {
     this.context.save()
