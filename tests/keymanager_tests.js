@@ -11,70 +11,70 @@ Vex.Flow.Test.KeyManager.Start = function() {
   test("Select Notes", Vex.Flow.Test.KeyManager.selectNotes);
 }
 
-Vex.Flow.Test.KeyManager.works = function(options) {
+Vex.Flow.Test.KeyManager.works = function() {
   // expect(1);
 
-  manager = new Vex.Flow.KeyManager("g");
-  equals(manager.getAccidental("f").accidental, "#");
+  var manager = new Vex.Flow.KeyManager("g");
+  equal(manager.getAccidental("f").accidental, "#");
 
   manager.setKey("a");
-  equals(manager.getAccidental("c").accidental, "#");
-  equals(manager.getAccidental("a").accidental, null);
-  equals(manager.getAccidental("f").accidental, "#");
+  equal(manager.getAccidental("c").accidental, "#");
+  equal(manager.getAccidental("a").accidental, null);
+  equal(manager.getAccidental("f").accidental, "#");
 
   manager.setKey("A");
-  equals(manager.getAccidental("c").accidental, "#");
-  equals(manager.getAccidental("a").accidental, null);
-  equals(manager.getAccidental("f").accidental, "#");
+  equal(manager.getAccidental("c").accidental, "#");
+  equal(manager.getAccidental("a").accidental, null);
+  equal(manager.getAccidental("f").accidental, "#");
 }
 
 Vex.Flow.Test.KeyManager.selectNotes = function(options) {
-  manager = new Vex.Flow.KeyManager("f");
-  equals(manager.selectNote("bb").note, "bb");
-  equals(manager.selectNote("bb").accidental, "b");
-  equals(manager.selectNote("g").note, "g");
-  equals(manager.selectNote("g").accidental, null);
-  equals(manager.selectNote("b").note, "b");
-  equals(manager.selectNote("b").accidental, null);
-  equals(manager.selectNote("a#").note, "bb");
-  equals(manager.selectNote("g#").note, "g#");
+  var manager = new Vex.Flow.KeyManager("f");
+  equal(manager.selectNote("bb").note, "bb");
+  equal(manager.selectNote("bb").accidental, "b");
+  equal(manager.selectNote("g").note, "g");
+  equal(manager.selectNote("g").accidental, null);
+  equal(manager.selectNote("b").note, "b");
+  equal(manager.selectNote("b").accidental, null);
+  equal(manager.selectNote("a#").note, "bb");
+  equal(manager.selectNote("g#").note, "g#");
 
   // Changes have no effect?
-  equals(manager.selectNote("g#").note, "g#");
-  equals(manager.selectNote("bb").note, "bb");
-  equals(manager.selectNote("bb").accidental, "b");
-  equals(manager.selectNote("g").note, "g");
-  equals(manager.selectNote("g").accidental, null);
-  equals(manager.selectNote("b").note, "b");
-  equals(manager.selectNote("b").accidental, null);
-  equals(manager.selectNote("a#").note, "bb");
-  equals(manager.selectNote("g#").note, "g#");
+  equal(manager.selectNote("g#").note, "g#");
+  equal(manager.selectNote("bb").note, "bb");
+  equal(manager.selectNote("bb").accidental, "b");
+  equal(manager.selectNote("g").note, "g");
+  equal(manager.selectNote("g").accidental, null);
+  equal(manager.selectNote("b").note, "b");
+  equal(manager.selectNote("b").accidental, null);
+  equal(manager.selectNote("a#").note, "bb");
+  equal(manager.selectNote("g#").note, "g#");
 
   // Changes should propagate
   manager.reset();
-  equals(manager.selectNote("g#").change, true);
-  equals(manager.selectNote("g#").change, false);
-  equals(manager.selectNote("g").change, true);
-  equals(manager.selectNote("g").change, false);
-  equals(manager.selectNote("g#").change, true);
+  equal(manager.selectNote("g#").change, true);
+  equal(manager.selectNote("g#").change, false);
+  equal(manager.selectNote("g").change, true);
+  equal(manager.selectNote("g").change, false);
+  equal(manager.selectNote("g#").change, true);
 
   manager.reset();
-  note = manager.selectNote("bb");
-  equals(note.change, false);
-  equals(note.accidental, "b");
+  var note = manager.selectNote("bb");
+  equal(note.change, false);
+  equal(note.accidental, "b");
   note = manager.selectNote("g");
-  equals(note.change, false);
-  equals(note.accidental, null);
+  equal(note.change, false);
+  equal(note.accidental, null);
   note = manager.selectNote("g#");
-  equals(note.change, true);
-  equals(note.accidental, "#");
+  equal(note.change, true);
+  equal(note.accidental, "#");
   note = manager.selectNote("g");
-  equals(note.change, true);
-  equals(note.accidental, null);
+  equal(note.change, true);
+  equal(note.accidental, null);
   note = manager.selectNote("g");
-  equals(note.change, false);
-  equals(note.accidental, null);
+  equal(note.change, false);
+  equal(note.accidental, null);
   note = manager.selectNote("g#");
-  equals(note.change, true);
-  equals(note.accidental, "#");
+  equal(note.change, true);
+  equal(note.accidental, "#");
 }

@@ -11,12 +11,12 @@ Vex.Flow.Test.TickContext.Start = function() {
   test("Tracking Test", Vex.Flow.Test.TickContext.tracking);
 }
 
-Vex.Flow.Test.TickContext.currentTick = function(options) {
+Vex.Flow.Test.TickContext.currentTick = function() {
   var tc = new Vex.Flow.TickContext();
-  equals(tc.getCurrentTick(), 0, "New tick context has no ticks");
+  equal(tc.getCurrentTick(), 0, "New tick context has no ticks");
 }
 
-Vex.Flow.Test.TickContext.tracking = function(options) {
+Vex.Flow.Test.TickContext.tracking = function() {
   function createTickable() {
     return new Vex.Flow.Test.MockTickable(Vex.Flow.Test.TIME4_4);
   }
@@ -34,15 +34,15 @@ Vex.Flow.Test.TickContext.tracking = function(options) {
   tc.setPadding(0);
 
   tc.addTickable(tickables[0]);
-  equals(tc.getMaxTicks(), BEAT);
+  equal(tc.getMaxTicks(), BEAT);
 
   tc.addTickable(tickables[1]);
-  equals(tc.getMaxTicks(), BEAT * 2);
+  equal(tc.getMaxTicks(), BEAT * 2);
 
   tc.addTickable(tickables[2]);
-  equals(tc.getMaxTicks(), BEAT * 2);
+  equal(tc.getMaxTicks(), BEAT * 2);
 
-  equals(tc.getWidth(), 0);
+  equal(tc.getWidth(), 0);
   tc.preFormat();
-  equals(tc.getWidth(), 30);
+  equal(tc.getWidth(), 30);
 }

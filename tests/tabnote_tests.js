@@ -19,32 +19,32 @@ Vex.Flow.Test.TabNote.ticks = function() {
 
   var note = new Vex.Flow.TabNote(
       { positions: [{str: 6, fret: 6 }], duration: "w"});
-  equals(note.getTicks(), BEAT * 4, "Whole note has 4 beats");
+  equal(note.getTicks(), BEAT * 4, "Whole note has 4 beats");
 
-  var note = new Vex.Flow.TabNote(
+  note = new Vex.Flow.TabNote(
       { positions: [{str: 3, fret: 4 }], duration: "q"});
-  equals(note.getTicks(), BEAT, "Quarter note has 1 beat");
+  equal(note.getTicks(), BEAT, "Quarter note has 1 beat");
 }
 
 Vex.Flow.Test.TabNote.tabStaveLine = function() {
   var note = new Vex.Flow.TabNote(
       { positions: [{str: 6, fret: 6 }, {str: 4, fret: 5}], duration: "w"});
   var positions = note.getPositions();
-  equals(positions[0].str, 6, "String 6, Fret 6");
-  equals(positions[0].fret, 6, "String 6, Fret 6");
-  equals(positions[1].str, 4, "String 4, Fret 5");
-  equals(positions[1].fret, 5, "String 4, Fret 5");
+  equal(positions[0].str, 6, "String 6, Fret 6");
+  equal(positions[0].fret, 6, "String 6, Fret 6");
+  equal(positions[1].str, 4, "String 4, Fret 5");
+  equal(positions[1].fret, 5, "String 4, Fret 5");
 
   var stave = new Vex.Flow.Stave(10, 10, 300);
   note.setStave(stave);
 
   var ys = note.getYs();
-  equals(ys.length, 2, "Chord should be rendered on two lines");
-  equals(ys[0], 100, "Line for String 6, Fret 6");
-  equals(ys[1], 80, "Line for String 4, Fret 5");
+  equal(ys.length, 2, "Chord should be rendered on two lines");
+  equal(ys[0], 100, "Line for String 6, Fret 6");
+  equal(ys[1], 80, "Line for String 4, Fret 5");
 }
 
-Vex.Flow.Test.TabNote.width = function(options) {
+Vex.Flow.Test.TabNote.width = function() {
   expect(1);
   var note = new Vex.Flow.TabNote(
       { positions: [{str: 6, fret: 6 }, {str: 4, fret: 5}], duration: "w"});
@@ -52,12 +52,12 @@ Vex.Flow.Test.TabNote.width = function(options) {
   try {
     var width = note.getWidth();
   } catch (e) {
-    equals(e.code, "UnformattedNote",
+    equal(e.code, "UnformattedNote",
         "Unformatted note should have no width");
   }
 }
 
-Vex.Flow.Test.TabNote.tickContext = function(options) {
+Vex.Flow.Test.TabNote.tickContext = function() {
   var note = new Vex.Flow.TabNote(
       { positions: [{str: 6, fret: 6 }, {str: 4, fret: 5}], duration: "w"});
   var tickContext = new Vex.Flow.TickContext();
@@ -66,7 +66,7 @@ Vex.Flow.Test.TabNote.tickContext = function(options) {
   tickContext.setX(10);
   tickContext.setPadding(0);
 
-  equals(tickContext.getWidth(), 6);
+  equal(tickContext.getWidth(), 6);
 }
 
 Vex.Flow.Test.TabNote.showNote = function(tab_struct, stave, ctx, x) {
