@@ -18,11 +18,11 @@ Vex.Flow.Test.TimeSignature.catchError = function(ts, spec) {
   try {
     ts.parseTimeSpec(spec);
   } catch (e) {  
-    equals(e.code, "BadTimeSignature", e.message); 
+    equal(e.code, "BadTimeSignature", e.message);
   }
 }
 
-Vex.Flow.Test.TimeSignature.parser = function(options) {
+Vex.Flow.Test.TimeSignature.parser = function() {
   expect(6);
   var ts = new Vex.Flow.TimeSignature();
   
@@ -34,12 +34,12 @@ Vex.Flow.Test.TimeSignature.parser = function(options) {
   Vex.Flow.Test.TimeSignature.catchError(ts, "4567");
   Vex.Flow.Test.TimeSignature.catchError(ts, "C+");
 
-  ts.parseTimeSpec("4/4")
-  ts.parseTimeSpec("10/12")
-  ts.parseTimeSpec("1/8")
-  ts.parseTimeSpec("1234567890/1234567890")
-  ts.parseTimeSpec("C")
-  ts.parseTimeSpec("C|")
+  ts.parseTimeSpec("4/4");
+  ts.parseTimeSpec("10/12");
+  ts.parseTimeSpec("1/8");
+  ts.parseTimeSpec("1234567890/1234567890");
+  ts.parseTimeSpec("C");
+  ts.parseTimeSpec("C|");
 
   ok(true, "all pass");
 }

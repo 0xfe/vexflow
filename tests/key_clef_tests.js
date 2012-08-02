@@ -57,11 +57,11 @@ Vex.Flow.Test.ClefKeySignature.catchError = function(spec) {
   try {
     Vex.Flow.keySignature(spec);
   } catch (e) {
-    equals(e.code, "BadKeySignature", e.message);
+    equal(e.code, "BadKeySignature", e.message);
   }
 }
 
-Vex.Flow.Test.ClefKeySignature.parser = function(options) {
+Vex.Flow.Test.ClefKeySignature.parser = function() {
   expect(11);
   Vex.Flow.Test.ClefKeySignature.catchError("asdf");
   Vex.Flow.Test.ClefKeySignature.catchError("D!");
@@ -98,9 +98,9 @@ Vex.Flow.Test.ClefKeySignature.majorKeys = function(options, contextBuilder) {
   stave4.addClef("tenor");
   var keys = Vex.Flow.Test.ClefKeySignature.MAJOR_KEYS;
 
-  for (var i = 0; i < 8; ++i) {
-    var keySig = new Vex.Flow.KeySignature(keys[i]);
-    var keySig2 = new Vex.Flow.KeySignature(keys[i]);
+  for (var n = 0; n < 8; ++n) {
+    var keySig = new Vex.Flow.KeySignature(keys[n]);
+    var keySig2 = new Vex.Flow.KeySignature(keys[n]);
     keySig.addToStave(stave);
     keySig2.addToStave(stave2);
   }
@@ -137,9 +137,9 @@ Vex.Flow.Test.ClefKeySignature.minorKeys = function(options, contextBuilder) {
   stave4.addClef("tenor");
   var keys = Vex.Flow.Test.ClefKeySignature.MINOR_KEYS;
 
-  for (var i = 0; i < 8; ++i) {
-    var keySig3 = new Vex.Flow.KeySignature(keys[i]);
-    var keySig4 = new Vex.Flow.KeySignature(keys[i]);
+  for (var n = 0; n < 8; ++n) {
+    var keySig3 = new Vex.Flow.KeySignature(keys[n]);
+    var keySig4 = new Vex.Flow.KeySignature(keys[n]);
     keySig3.addToStave(stave3);
     keySig4.addToStave(stave4);
   }
@@ -177,9 +177,9 @@ Vex.Flow.Test.ClefKeySignature.staveHelper = function(options, contextBuilder) {
   stave3.addClef("alto");
   stave4.addClef("tenor");
 
-  for (var i = 0; i < 8; ++i) {
-    stave.addKeySignature(keys[i]);
-    stave2.addKeySignature(keys[i]);
+  for (var n = 0; n < 8; ++n) {
+    stave.addKeySignature(keys[n]);
+    stave2.addKeySignature(keys[n]);
   }
 
   for (var i = 8; i < keys.length; ++i) {

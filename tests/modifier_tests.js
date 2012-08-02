@@ -13,10 +13,10 @@ Vex.Flow.Test.ModifierContext.Start = function() {
 
 Vex.Flow.Test.ModifierContext.width = function() {
   var mc = new Vex.Flow.ModifierContext();
-  equals(mc.getWidth(), 0, "New modifier context has no width");
+  equal(mc.getWidth(), 0, "New modifier context has no width");
 }
 
-Vex.Flow.Test.ModifierContext.management = function(options) {
+Vex.Flow.Test.ModifierContext.management = function() {
   var mc = new Vex.Flow.ModifierContext();
   var modifier1 = new Vex.Flow.Test.MockModifier;
   var modifier2 = new Vex.Flow.Test.MockModifier;
@@ -26,5 +26,5 @@ Vex.Flow.Test.ModifierContext.management = function(options) {
 
   var accidentals = mc.getModifiers("none");
 
-  equals(accidentals.length, 2, "Added two modifiers");
+  equal(accidentals.length, 2, "Added two modifiers");
 }
