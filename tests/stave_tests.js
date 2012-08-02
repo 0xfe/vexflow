@@ -38,10 +38,10 @@ Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {
   stave.setContext(ctx);
   stave.draw();
 
-  equals(stave.getYForNote(0), 100, "getYForNote(0)");
-  equals(stave.getYForLine(5), 100, "getYForLine(5)");
-  equals(stave.getYForLine(0), 50, "getYForLine(0) - Top Line");
-  equals(stave.getYForLine(4), 90, "getYForLine(4) - Bottom Line");
+  equal(stave.getYForNote(0), 100, "getYForNote(0)");
+  equal(stave.getYForLine(5), 100, "getYForLine(5)");
+  equal(stave.getYForLine(0), 50, "getYForLine(0) - Top Line");
+  equal(stave.getYForLine(4), 90, "getYForLine(4) - Bottom Line");
 
   ok(true, "all pass");
 }
@@ -60,6 +60,8 @@ Vex.Flow.Test.Stave.drawVerticalBar = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.Stave.drawMultipleMeasures = function(options, contextBuilder) {
+  expect(0);
+
   // Get the rendering context
   var ctx = contextBuilder(options.canvas_sel, 550, 200);
 
@@ -114,6 +116,8 @@ Vex.Flow.Test.Stave.drawMultipleMeasures = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
+  expect(0);
+
   // Get the rendering context
   var ctx = contextBuilder(options.canvas_sel, 550, 120);
 
@@ -172,6 +176,8 @@ Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
+  expect(0);
+
   // Get the rendering context
   var ctx = contextBuilder(options.canvas_sel, 725, 200);
 
@@ -185,7 +191,7 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
   mm1.setSection("A", 0);
   mm1.setContext(ctx).draw();
   var notesmm1 = [
-    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "w" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "w" })
   ];
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, mm1, notesmm1);
@@ -287,6 +293,8 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.Stave.drawTempo = function(options, contextBuilder) {
+  expect(0);
+
   var ctx = contextBuilder(options.canvas_sel, 725, 350);
   var padding = 10, x = 0, y = 50;
 

@@ -20,7 +20,7 @@ Vex.Flow.Test.Formatter.Start = function() {
       Vex.Flow.Test.Formatter.multiStaves, {justify: 188});
 }
 
-Vex.Flow.Test.Formatter.buildTickContexts = function(options) {
+Vex.Flow.Test.Formatter.buildTickContexts = function() {
   function createTickable() {
     return new Vex.Flow.Test.MockTickable();
   }
@@ -49,14 +49,14 @@ Vex.Flow.Test.Formatter.buildTickContexts = function(options) {
   var formatter = new Vex.Flow.Formatter();
   var tContexts = formatter.createTickContexts([voice1, voice2]);
 
-  equals(tContexts.list.length, 4, "Voices should have four tick contexts");
+  equal(tContexts.list.length, 4, "Voices should have four tick contexts");
 
   formatter.preFormat();
-  equals(formatter.getMinTotalWidth(), 104, "Minimum total width");
+  equal(formatter.getMinTotalWidth(), 104, "Minimum total width");
 
-  equals(tickables1[0].getX(), tickables2[0].getX(),
+  equal(tickables1[0].getX(), tickables2[0].getX(),
       "First notes of both voices have the same X");
-  equals(tickables1[2].getX(), tickables2[2].getX(),
+  equal(tickables1[2].getX(), tickables2[2].getX(),
       "Last notes of both voices have the same X");
   ok(tickables1[1].getX() < tickables2[1].getX(),
       "Second note of voice 2 is to the right of the second note of voice 1");
@@ -70,7 +70,7 @@ Vex.Flow.Test.Formatter.renderNotes = function(
   voice1.addTickables(notes1);
   voice2.addTickables(notes2);
 
-  var formatter = new Vex.Flow.Formatter().joinVoices([voice1, voice2]).
+  new Vex.Flow.Formatter().joinVoices([voice1, voice2]).
     format([voice1, voice2], justify);
 
   voice1.draw(ctx, stave);
@@ -95,7 +95,7 @@ Vex.Flow.Test.Formatter.formatStaveNotes = function(options) {
     newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "q"}),
     newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "q"}).
       addAccidental(0, newAcc("n")).
-      addAccidental(1, newAcc("#")),
+      addAccidental(1, newAcc("#"))
   ];
 
   var notes2 = [
@@ -105,7 +105,7 @@ Vex.Flow.Test.Formatter.formatStaveNotes = function(options) {
     newNote({ keys: ["d/5", "e/5", "f/5"], stem_direction: 1, duration: "q"}),
     newNote({ keys: ["f/5", "a/5", "c/5"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("n")).
-      addAccidental(1, newAcc("#")),
+      addAccidental(1, newAcc("#"))
   ];
 
   Vex.Flow.Test.Formatter.renderNotes(notes1, notes2, ctx, stave);
@@ -113,7 +113,7 @@ Vex.Flow.Test.Formatter.formatStaveNotes = function(options) {
   ok(true);
 }
 
-Vex.Flow.Test.Formatter.getNotes = function(options) {
+Vex.Flow.Test.Formatter.getNotes = function() {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
@@ -125,7 +125,7 @@ Vex.Flow.Test.Formatter.getNotes = function(options) {
     newNote({ keys: ["d/4", "f/4", "a/4"], stem_direction: -1, duration: "8"}),
     newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "q"}).
       addAccidental(0, newAcc("n")).
-      addAccidental(1, newAcc("#")),
+      addAccidental(1, newAcc("#"))
   ];
 
   var notes2 = [
@@ -135,7 +135,7 @@ Vex.Flow.Test.Formatter.getNotes = function(options) {
     newNote({ keys: ["d/5", "e/5", "f/5"], stem_direction: 1, duration: "h"}),
     newNote({ keys: ["f/5", "a/5", "c/5"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("##")).
-      addAccidental(1, newAcc("b")),
+      addAccidental(1, newAcc("b"))
   ];
 
   return [notes1, notes2];
@@ -167,7 +167,7 @@ Vex.Flow.Test.Formatter.justifyStaveNotes = function(options) {
   ok(true);
 }
 
-Vex.Flow.Test.Formatter.getTabNotes = function(options) {
+Vex.Flow.Test.Formatter.getTabNotes = function() {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newTabNote(tab_struct) { return new Vex.Flow.TabNote(tab_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
@@ -178,7 +178,7 @@ Vex.Flow.Test.Formatter.getTabNotes = function(options) {
     newNote({ keys: ["c/4", "d/4"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["c/4", "a/4", "e/4"], stem_direction: 1, duration: "q"}).
-      addAccidental(0, newAcc("#")),
+      addAccidental(0, newAcc("#"))
   ];
 
   var tabs1 = [
@@ -190,7 +190,7 @@ Vex.Flow.Test.Formatter.getTabNotes = function(options) {
     newTabNote({ positions: [{str: 3, fret: 7}], duration: "8"}),
     newTabNote({ positions: [{str: 3, fret: 6},
                              {str: 4, fret: 7},
-                             {str: 2, fret: 5}], duration: "q"}),
+                             {str: 2, fret: 5}], duration: "q"})
 
   ];
 
@@ -205,7 +205,7 @@ Vex.Flow.Test.Formatter.renderNotesWithTab =
   voice.addTickables(notes.notes);
   tabVoice.addTickables(notes.tabs);
 
-  var formatter = new Vex.Flow.Formatter().
+  new Vex.Flow.Formatter().
     joinVoices([voice]).joinVoices([tabVoice]).
     format([voice, tabVoice], justify);
 
@@ -260,7 +260,7 @@ Vex.Flow.Test.Formatter.multiStaves = function(options) {
     addClef("bass").
     addTimeSignature("6/8").
     setContext(ctx).draw();
-  var connector = new Vex.Flow.StaveConnector(stave21, stave31).
+  new Vex.Flow.StaveConnector(stave21, stave31).
     setType(Vex.Flow.StaveConnector.type.BRACE).
     setContext(ctx).draw();
 
@@ -269,7 +269,7 @@ Vex.Flow.Test.Formatter.multiStaves = function(options) {
     newNote({ keys: ["d/4"], duration: "8"}).setStave(stave11),
     newNote({ keys: ["g/4"], duration: "q"}).setStave(stave11),
     newNote({ keys: ["e/4"], duration: "8"}).setStave(stave11).
-      addAccidental(0, newAcc("b")),
+      addAccidental(0, newAcc("b"))
   ];
   var notes21 = [
     newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}).setStave(stave21),
@@ -279,7 +279,7 @@ Vex.Flow.Test.Formatter.multiStaves = function(options) {
     newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"}).setStave(stave21).
       addAccidental(0, newAcc("b")),
     newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"}).setStave(stave21).
-      addAccidental(0, newAcc("b")),
+      addAccidental(0, newAcc("b"))
   ];
   var notes31 = [
     newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
@@ -287,7 +287,7 @@ Vex.Flow.Test.Formatter.multiStaves = function(options) {
     newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
     newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
     newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
-    newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
+    newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31)
   ];
 
   var voice11 = new Vex.Flow.Voice(Vex.Flow.Test.Formatter.TIME6_8);
@@ -303,10 +303,10 @@ Vex.Flow.Test.Formatter.multiStaves = function(options) {
   var beam31b = new Vex.Flow.Beam(notes31.slice(3, 6));
 
   if (options.params.justify > 0) {
-    var formatter = new Vex.Flow.Formatter().joinVoices( [voice11, voice21, voice31] ).
+    new Vex.Flow.Formatter().joinVoices( [voice11, voice21, voice31] ).
       format([voice11, voice21, voice31], options.params.justify);
   } else {
-    var formatter = new Vex.Flow.Formatter().joinVoices( [voice11, voice21, voice31] ).
+    new Vex.Flow.Formatter().joinVoices( [voice11, voice21, voice31] ).
       format([voice11, voice21, voice31]);
   }
 
@@ -345,7 +345,7 @@ Vex.Flow.Test.Formatter.multiStaves = function(options) {
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("b")),
     newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}).setStave(stave22).
-      addAccidental(0, newAcc("b")),
+      addAccidental(0, newAcc("b"))
   ];
   var notes32 = [
     newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32),
@@ -363,10 +363,10 @@ Vex.Flow.Test.Formatter.multiStaves = function(options) {
   voice32.addTickables(notes32);
 
   if (options.params.justify > 0) {
-    var formatter = new Vex.Flow.Formatter().joinVoices([voice12, voice22, voice32]).
+    new Vex.Flow.Formatter().joinVoices([voice12, voice22, voice32]).
       format([voice12, voice22, voice32], 188);
   } else {
-    var formatter = new Vex.Flow.Formatter().joinVoices([voice12, voice22, voice32]).
+    new Vex.Flow.Formatter().joinVoices([voice12, voice22, voice32]).
       format([voice12, voice22, voice32]);
   }
   var beam32a = new Vex.Flow.Beam(notes32.slice(0, 3));

@@ -54,11 +54,11 @@ Vex.Flow.Test.KeySignature.catchError = function(spec) {
   try {
     Vex.Flow.keySignature(spec);
   } catch (e) {  
-    equals(e.code, "BadKeySignature", e.message); 
+    equal(e.code, "BadKeySignature", e.message);
   }
 }
 
-Vex.Flow.Test.KeySignature.parser = function(options) {
+Vex.Flow.Test.KeySignature.parser = function() {
   expect(11);
   Vex.Flow.Test.KeySignature.catchError("asdf");
   Vex.Flow.Test.KeySignature.catchError("D!");
@@ -89,13 +89,14 @@ Vex.Flow.Test.KeySignature.majorKeys = function(options, contextBuilder) {
   var stave2 = new Vex.Flow.Stave(10, 90, 350);
   var keys = Vex.Flow.Test.KeySignature.MAJOR_KEYS;
 
+  var keySig = null;
   for (var i = 0; i < 8; ++i) {
-    var keySig = new Vex.Flow.KeySignature(keys[i]);
+    keySig = new Vex.Flow.KeySignature(keys[i]);
     keySig.addToStave(stave);
   }
 
-  for (var i = 8; i < keys.length; ++i) {
-    var keySig = new Vex.Flow.KeySignature(keys[i]);
+  for (var n = 8; n < keys.length; ++n) {
+    keySig = new Vex.Flow.KeySignature(keys[n]);
     keySig.addToStave(stave2);
   }
 
@@ -114,13 +115,14 @@ Vex.Flow.Test.KeySignature.minorKeys = function(options, contextBuilder) {
   var stave2 = new Vex.Flow.Stave(10, 90, 350);
   var keys = Vex.Flow.Test.KeySignature.MINOR_KEYS;
 
+  var keySig = null;
   for (var i = 0; i < 8; ++i) {
-    var keySig = new Vex.Flow.KeySignature(keys[i]);
+    keySig = new Vex.Flow.KeySignature(keys[i]);
     keySig.addToStave(stave);
   }
 
-  for (var i = 8; i < keys.length; ++i) {
-    var keySig = new Vex.Flow.KeySignature(keys[i]);
+  for (var n = 8; n < keys.length; ++n) {
+    keySig = new Vex.Flow.KeySignature(keys[n]);
     keySig.addToStave(stave2);
   }
 
@@ -143,8 +145,8 @@ Vex.Flow.Test.KeySignature.staveHelper = function(options, contextBuilder) {
     stave.addKeySignature(keys[i]);
   }
 
-  for (var i = 8; i < keys.length; ++i) {
-    stave2.addKeySignature(keys[i]);
+  for (var n = 8; n < keys.length; ++n) {
+    stave2.addKeySignature(keys[n]);
   }
 
   stave.setContext(ctx);

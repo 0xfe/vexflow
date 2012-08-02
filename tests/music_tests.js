@@ -19,201 +19,201 @@ Vex.Flow.Test.Music.Start = function() {
   test("Scale Intervals", Vex.Flow.Test.Music.scaleIntervals);
 }
 
-Vex.Flow.Test.Music.validNotes = function(options) {
+Vex.Flow.Test.Music.validNotes = function() {
   expect(10);
 
   var music = new Vex.Flow.Music();
 
   var parts = music.getNoteParts("c");
-  equals(parts.root, "c");
-  equals(parts.accidental, null);
+  equal(parts.root, "c");
+  equal(parts.accidental, null);
 
-  var parts = music.getNoteParts("C");
-  equals(parts.root, "c");
-  equals(parts.accidental, null);
+  parts = music.getNoteParts("C");
+  equal(parts.root, "c");
+  equal(parts.accidental, null);
 
-  var parts = music.getNoteParts("c#");
-  equals(parts.root, "c");
-  equals(parts.accidental, "#");
+  parts = music.getNoteParts("c#");
+  equal(parts.root, "c");
+  equal(parts.accidental, "#");
 
-  var parts = music.getNoteParts("c##");
-  equals(parts.root, "c");
-  equals(parts.accidental, "##");
+  parts = music.getNoteParts("c##");
+  equal(parts.root, "c");
+  equal(parts.accidental, "##");
 
   try {
     music.getNoteParts("r");
   } catch (e) {
-    equals(e.code, "BadArguments", "Invalid note: r");
+    equal(e.code, "BadArguments", "Invalid note: r");
   }
 
   try {
     music.getNoteParts("");
   } catch (e) {
-    equals(e.code, "BadArguments", "Invalid note: ''");
+    equal(e.code, "BadArguments", "Invalid note: ''");
   }
 }
 
-Vex.Flow.Test.Music.validKeys = function(options) {
+Vex.Flow.Test.Music.validKeys = function() {
   expect(18);
 
   var music = new Vex.Flow.Music();
 
   var parts = music.getKeyParts("c");
-  equals(parts.root, "c");
-  equals(parts.accidental, null);
-  equals(parts.type, "M");
+  equal(parts.root, "c");
+  equal(parts.accidental, null);
+  equal(parts.type, "M");
 
-  var parts = music.getKeyParts("d#");
-  equals(parts.root, "d");
-  equals(parts.accidental, "#");
-  equals(parts.type, "M");
+  parts = music.getKeyParts("d#");
+  equal(parts.root, "d");
+  equal(parts.accidental, "#");
+  equal(parts.type, "M");
 
-  var parts = music.getKeyParts("fbm");
-  equals(parts.root, "f");
-  equals(parts.accidental, "b");
-  equals(parts.type, "m");
+  parts = music.getKeyParts("fbm");
+  equal(parts.root, "f");
+  equal(parts.accidental, "b");
+  equal(parts.type, "m");
 
-  var parts = music.getKeyParts("c#mel");
-  equals(parts.root, "c");
-  equals(parts.accidental, "#");
-  equals(parts.type, "mel");
+  parts = music.getKeyParts("c#mel");
+  equal(parts.root, "c");
+  equal(parts.accidental, "#");
+  equal(parts.type, "mel");
 
-  var parts = music.getKeyParts("g#harm");
-  equals(parts.root, "g");
-  equals(parts.accidental, "#");
-  equals(parts.type, "harm");
+  parts = music.getKeyParts("g#harm");
+  equal(parts.root, "g");
+  equal(parts.accidental, "#");
+  equal(parts.type, "harm");
 
   try {
     music.getKeyParts("r");
   } catch (e) {
-    equals(e.code, "BadArguments", "Invalid key: r");
+    equal(e.code, "BadArguments", "Invalid key: r");
   }
 
   try {
     music.getKeyParts("");
   } catch (e) {
-    equals(e.code, "BadArguments", "Invalid key: ''");
+    equal(e.code, "BadArguments", "Invalid key: ''");
   }
 
   try {
     music.getKeyParts("#m");
   } catch (e) {
-    equals(e.code, "BadArguments", "Invalid key: #m");
+    equal(e.code, "BadArguments", "Invalid key: #m");
   }
 }
 
-Vex.Flow.Test.Music.noteValue = function(options) {
+Vex.Flow.Test.Music.noteValue = function() {
   expect(3);
 
   var music = new Vex.Flow.Music();
 
   var note = music.getNoteValue("c");
-  equals(note, 0);
+  equal(note, 0);
 
   try {
-    var note = music.getNoteValue("r");
+    music.getNoteValue("r");
   } catch(e) {
     ok(true, "Invalid note");
   }
 
-  var note = music.getNoteValue("f#");
-  equals(note, 6);
+  note = music.getNoteValue("f#");
+  equal(note, 6);
 }
 
-Vex.Flow.Test.Music.intervalValue = function(options) {
+Vex.Flow.Test.Music.intervalValue = function() {
   expect(2);
 
   var music = new Vex.Flow.Music();
 
   var value = music.getIntervalValue("b2");
-  equals(value, 1);
+  equal(value, 1);
 
   try {
-    value = music.getIntervalValue("7");
+    music.getIntervalValue("7");
   } catch(e) {
     ok(true, "Invalid note");
   }
 }
 
-Vex.Flow.Test.Music.relativeNotes = function(options) {
+Vex.Flow.Test.Music.relativeNotes = function() {
   expect(8);
 
   var music = new Vex.Flow.Music();
 
   var value = music.getRelativeNoteValue(music.getNoteValue("c"),
       music.getIntervalValue("b5"));
-  equals(value, 6);
+  equal(value, 6);
 
   try {
-    value = music.getRelativeNoteValue(music.getNoteValue("bc"),
+    music.getRelativeNoteValue(music.getNoteValue("bc"),
         music.getIntervalValue("b2"));
   } catch(e) {
     ok(true, "Invalid note");
   }
 
   try {
-    value = music.getRelativeNoteValue(music.getNoteValue("b"),
+    music.getRelativeNoteValue(music.getNoteValue("b"),
         music.getIntervalValue("p3"));
   } catch(e) {
     ok(true, "Invalid interval");
   }
 
   // Direction
-  var value = music.getRelativeNoteValue(music.getNoteValue("d"),
+  value = music.getRelativeNoteValue(music.getNoteValue("d"),
       music.getIntervalValue("2"), -1);
-  equals(value, 0);
+  equal(value, 0);
 
   try {
-    value = music.getRelativeNoteValue(music.getNoteValue("b"),
+    music.getRelativeNoteValue(music.getNoteValue("b"),
         music.getIntervalValue("p4"), 0);
   } catch(e) {
     ok(true, "Invalid direction");
   }
 
   // Rollover
-  var value = music.getRelativeNoteValue(music.getNoteValue("b"),
+  value = music.getRelativeNoteValue(music.getNoteValue("b"),
       music.getIntervalValue("b5"));
-  equals(value, 5);
+  equal(value, 5);
 
   // Reverse rollover
-  var value = music.getRelativeNoteValue(music.getNoteValue("c"),
+  value = music.getRelativeNoteValue(music.getNoteValue("c"),
       music.getIntervalValue("b2"), -1);
-  equals(value, 11);
+  equal(value, 11);
 
   // Practical tests
-  var value = music.getRelativeNoteValue(music.getNoteValue("g"),
+  value = music.getRelativeNoteValue(music.getNoteValue("g"),
       music.getIntervalValue("p5"));
-  equals(value, 2);
+  equal(value, 2);
 }
 
-Vex.Flow.Test.Music.relativeNoteNames = function(options) {
+Vex.Flow.Test.Music.relativeNoteNames = function() {
   expect(9);
 
   var music = new Vex.Flow.Music();
-  equals(music.getRelativeNoteName("c", music.getNoteValue("c")), "c");
-  equals(music.getRelativeNoteName("c", music.getNoteValue("db")), "c#");
-  equals(music.getRelativeNoteName("c#", music.getNoteValue("db")), "c#");
-  equals(music.getRelativeNoteName("e", music.getNoteValue("f#")), "e##");
-  equals(music.getRelativeNoteName("e", music.getNoteValue("d#")), "eb");
-  equals(music.getRelativeNoteName("e", music.getNoteValue("fb")), "e");
+  equal(music.getRelativeNoteName("c", music.getNoteValue("c")), "c");
+  equal(music.getRelativeNoteName("c", music.getNoteValue("db")), "c#");
+  equal(music.getRelativeNoteName("c#", music.getNoteValue("db")), "c#");
+  equal(music.getRelativeNoteName("e", music.getNoteValue("f#")), "e##");
+  equal(music.getRelativeNoteName("e", music.getNoteValue("d#")), "eb");
+  equal(music.getRelativeNoteName("e", music.getNoteValue("fb")), "e");
 
   try {
-    v = music.getRelativeNoteName("e", music.getNoteValue("g#"));
+    music.getRelativeNoteName("e", music.getNoteValue("g#"));
   } catch(e) {
     ok(true, "Too far");
   }
 
-  equals(music.getRelativeNoteName("b", music.getNoteValue("c#")), "b##");
-  equals(music.getRelativeNoteName("c", music.getNoteValue("b")), "cb");
+  equal(music.getRelativeNoteName("b", music.getNoteValue("c#")), "b##");
+  equal(music.getRelativeNoteName("c", music.getNoteValue("b")), "cb");
 }
 
-Vex.Flow.Test.Music.canonicalNotes = function(options) {
+Vex.Flow.Test.Music.canonicalNotes = function() {
   expect(3);
 
   var music = new Vex.Flow.Music();
 
-  equals(music.getCanonicalNoteName(0), "c");
-  equals(music.getCanonicalNoteName(2), "d");
+  equal(music.getCanonicalNoteName(0), "c");
+  equal(music.getCanonicalNoteName(2), "d");
 
   try {
     music.getCanonicalNoteName(-1);
@@ -222,13 +222,13 @@ Vex.Flow.Test.Music.canonicalNotes = function(options) {
   }
 }
 
-Vex.Flow.Test.Music.canonicalIntervals = function(options) {
+Vex.Flow.Test.Music.canonicalIntervals = function() {
   expect(3);
 
   var music = new Vex.Flow.Music();
 
-  equals(music.getCanonicalIntervalName(0), "unison");
-  equals(music.getCanonicalIntervalName(2), "M2");
+  equal(music.getCanonicalIntervalName(0), "unison");
+  equal(music.getCanonicalIntervalName(2), "M2");
 
   try {
     music.getCanonicalIntervalName(-1);
@@ -237,7 +237,7 @@ Vex.Flow.Test.Music.canonicalIntervals = function(options) {
   }
 }
 
-Vex.Flow.Test.Music.scaleTones = function(options) {
+Vex.Flow.Test.Music.scaleTones = function() {
   expect(24);
 
   // C Major
@@ -248,53 +248,54 @@ Vex.Flow.Test.Music.scaleTones = function(options) {
       music.getNoteValue("c"), Vex.Flow.Music.scales.major);
   var values = ["c", "d", "e", "f", "g", "a", "b"];
 
-  equals(c_major.length, 7);
+  equal(c_major.length, 7);
 
-  for (var i = 0; i < c_major.length; ++i) {
-    equals(music.getCanonicalNoteName(c_major[i]), values[i]);
+  for (var cm = 0; cm < c_major.length; ++cm) {
+    equal(music.getCanonicalNoteName(c_major[cm]), values[cm]);
   }
 
   // Dorian
   var c_dorian = music.getScaleTones(
       music.getNoteValue("c"), Vex.Flow.Music.scales.dorian);
-  var values = ["c", "d", "eb", "f", "g", "a", "bb"];
+  values = ["c", "d", "eb", "f", "g", "a", "bb"];
 
-  equals(c_dorian.length,  7);
-  for (var i = 0; i < c_dorian.length; ++i) {
-      var note = music.getCanonicalNoteName(c_dorian[i]);
-      equals(manager.selectNote(note).note, values[i]);
+  var note = null;
+  equal(c_dorian.length,  7);
+  for (var cd = 0; cd < c_dorian.length; ++cd) {
+      note = music.getCanonicalNoteName(c_dorian[cd]);
+      equal(manager.selectNote(note).note, values[cd]);
   }
 
   // Mixolydian
   var c_mixolydian = music.getScaleTones(
       music.getNoteValue("c"), Vex.Flow.Music.scales.mixolydian);
-  var values = ["c", "d", "e", "f", "g", "a", "bb"];
+  values = ["c", "d", "e", "f", "g", "a", "bb"];
 
-  equals(c_mixolydian.length,  7);
+  equal(c_mixolydian.length,  7);
 
   for (var i = 0; i < c_mixolydian.length; ++i) {
-      var note = music.getCanonicalNoteName(c_mixolydian[i]);
-      equals(manager.selectNote(note).note, values[i]);
+      note = music.getCanonicalNoteName(c_mixolydian[i]);
+      equal(manager.selectNote(note).note, values[i]);
   }
 }
 
-Vex.Flow.Test.Music.scaleIntervals = function(options) {
+Vex.Flow.Test.Music.scaleIntervals = function() {
   expect(6);
 
   var music = new Vex.Flow.Music();
 
-  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+  equal(music.getCanonicalIntervalName(music.getIntervalBetween(
          music.getNoteValue("c"), music.getNoteValue("d"))), "M2");
-  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+  equal(music.getCanonicalIntervalName(music.getIntervalBetween(
          music.getNoteValue("g"), music.getNoteValue("c"))), "p4");
-  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+  equal(music.getCanonicalIntervalName(music.getIntervalBetween(
          music.getNoteValue("c"), music.getNoteValue("c"))), "unison");
-  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+  equal(music.getCanonicalIntervalName(music.getIntervalBetween(
          music.getNoteValue("f"), music.getNoteValue("cb"))), "dim5");
 
   // Forwards and backwards
-  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+  equal(music.getCanonicalIntervalName(music.getIntervalBetween(
          music.getNoteValue("d"), music.getNoteValue("c"), 1)), "b7");
-  equals(music.getCanonicalIntervalName(music.getIntervalBetween(
+  equal(music.getCanonicalIntervalName(music.getIntervalBetween(
          music.getNoteValue("d"), music.getNoteValue("c"), -1)), "M2");
 }

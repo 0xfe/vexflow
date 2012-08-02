@@ -36,22 +36,24 @@ Vex.Flow.Test.Articulation.Start = function() {
 
 Vex.Flow.Test.Articulation.runTest = function(name, sym1, sym2, func, params) {
   test(name, function() {
-      test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
-      test_canvas = Vex.Flow.Test.createTestCanvas(test_canvas_sel, name);
+      var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
+      Vex.Flow.Test.createTestCanvas(test_canvas_sel, name);
       func({ canvas_sel: test_canvas_sel, params: params },
         Vex.Flow.Renderer.getCanvasContext, sym1, sym2);
     });
 }
 Vex.Flow.Test.Articulation.runRaphaelTest = function(name, sym1, sym2, func, params) {
   test(name, function() {
-      test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
-      test_canvas = Vex.Flow.Test.createTestRaphael(test_canvas_sel, name);
+      var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
+      Vex.Flow.Test.createTestRaphael(test_canvas_sel, name);
       func({ canvas_sel: test_canvas_sel, params: params },
         Vex.Flow.Renderer.getRaphaelContext, sym1, sym2);
     });
 }
 
 Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder, sym1, sym2) {
+  expect(0);
+
   // Get the rendering context
   var ctx = contextBuilder(options.canvas_sel, 625, 175);
 
@@ -62,7 +64,7 @@ Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder,
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", stem_direction: 1 }),
-    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 }),
+    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 })
   ];
   notesBar1[0].addArticulation(0, new Vex.Flow.Articulation(sym1).setPosition(4));
   notesBar1[1].addArticulation(0, new Vex.Flow.Articulation(sym1).setPosition(4));
@@ -81,7 +83,7 @@ Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder,
     new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: -1 })
   ];
   notesBar2[0].addArticulation(0, new Vex.Flow.Articulation(sym1).setPosition(3));
   notesBar2[1].addArticulation(0, new Vex.Flow.Articulation(sym1).setPosition(3));
@@ -99,7 +101,7 @@ Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder,
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", stem_direction: 1 }),
-    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 }),
+    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 })
   ];
   notesBar3[0].addArticulation(0, new Vex.Flow.Articulation(sym2).setPosition(4));
   notesBar3[1].addArticulation(0, new Vex.Flow.Articulation(sym2).setPosition(4));
@@ -117,7 +119,7 @@ Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder,
     new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: -1 })
   ];
   notesBar4[0].addArticulation(0, new Vex.Flow.Articulation(sym2).setPosition(3));
   notesBar4[1].addArticulation(0, new Vex.Flow.Articulation(sym2).setPosition(3));
@@ -129,6 +131,8 @@ Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder,
 }
 
 Vex.Flow.Test.Articulation.drawFermata = function(options, contextBuilder, sym1, sym2) {
+  expect(0);
+
   // Get the rendering context
   var ctx = contextBuilder(options.canvas_sel, 400, 200);
 
@@ -139,7 +143,7 @@ Vex.Flow.Test.Articulation.drawFermata = function(options, contextBuilder, sym1,
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: -1 })
   ];
   notesBar1[0].addArticulation(0, new Vex.Flow.Articulation(sym1).setPosition(3));
   notesBar1[1].addArticulation(0, new Vex.Flow.Articulation(sym1).setPosition(3));
@@ -158,7 +162,7 @@ Vex.Flow.Test.Articulation.drawFermata = function(options, contextBuilder, sym1,
     new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: -1 }),
+    new Vex.Flow.StaveNote({ keys: ["a/5"], duration: "q", stem_direction: -1 })
   ];
   notesBar2[0].addArticulation(0, new Vex.Flow.Articulation(sym1).setPosition(3));
   notesBar2[1].addArticulation(0, new Vex.Flow.Articulation(sym1).setPosition(3));
