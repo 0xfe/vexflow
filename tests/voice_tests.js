@@ -80,7 +80,8 @@ Vex.Flow.Test.Voice.full = function(options, contextBuilder) {
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" })
   ];
   
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode("full");
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.FULL);
   voice.addTickables(notes);
   
   new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 500);
