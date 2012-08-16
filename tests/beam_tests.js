@@ -291,7 +291,8 @@ Vex.Flow.Test.Beam.dotted = function(options) {
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"})
   ];
 
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode('soft');
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
@@ -324,7 +325,8 @@ Vex.Flow.Test.Beam.tradeoffs = function(options) {
     newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"})
   ];
 
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode('soft');
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
@@ -355,7 +357,8 @@ Vex.Flow.Test.Beam.insane = function(options) {
     newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"})
   ];
 
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode('soft');
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
@@ -382,7 +385,8 @@ Vex.Flow.Test.Beam.lenghty = function(options) {
   newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"})
   ];
 
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode('soft');
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
@@ -411,7 +415,8 @@ Vex.Flow.Test.Beam.outlier = function(options) {
     newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"})
   ];
 
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode('soft');
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().
