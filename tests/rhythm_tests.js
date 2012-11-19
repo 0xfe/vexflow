@@ -151,6 +151,7 @@ Vex.Flow.Test.Rhythm.drawBasic = function(options, contextBuilder) {
 
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+  expect(0);
 }
 
 Vex.Flow.Test.Rhythm.drawBeamedSlashNotes = function(options, contextBuilder) {
@@ -202,6 +203,7 @@ Vex.Flow.Test.Rhythm.drawBeamedSlashNotes = function(options, contextBuilder) {
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
 
+  expect(0);
 }
 
 Vex.Flow.Test.Rhythm.drawSlashAndBeamAndRests  = function(options,
@@ -268,6 +270,7 @@ Vex.Flow.Test.Rhythm.drawSlashAndBeamAndRests  = function(options,
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
+  expect(0);
 }
 
 Vex.Flow.Test.Rhythm.drawSixtenthWithScratches  = function(options,
@@ -323,6 +326,7 @@ Vex.Flow.Test.Rhythm.drawSixtenthWithScratches  = function(options,
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
 
+  expect(0);
 }
 
 
@@ -372,5 +376,5 @@ Vex.Flow.Test.Rhythm.drawThirtySecondWithScratches  = function(options,
     // Render beams
   beam1.setContext(ctx).draw();
 
-
+  expect(0);
 }

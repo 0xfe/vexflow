@@ -367,11 +367,11 @@ Vex.Flow.Test.Stave.configureSingleLine = function(options, contextBuilder) {
   stave.setContext(ctx).draw();
 
   var config = stave.getConfigForLines();
-  equals(config[0].visible, true, "getLinesConfiguration() - Line 0");
-  equals(config[1].visible, false, "getLinesConfiguration() - Line 1");
-  equals(config[2].visible, true, "getLinesConfiguration() - Line 2");
-  equals(config[3].visible, false, "getLinesConfiguration() - Line 3");
-  equals(config[4].visible, true, "getLinesConfiguration() - Line 4");
+  equal(config[0].visible, true, "getLinesConfiguration() - Line 0");
+  equal(config[1].visible, false, "getLinesConfiguration() - Line 1");
+  equal(config[2].visible, true, "getLinesConfiguration() - Line 2");
+  equal(config[3].visible, false, "getLinesConfiguration() - Line 3");
+  equal(config[4].visible, true, "getLinesConfiguration() - Line 4");
 
   ok(true, "all pass");
 }
@@ -388,11 +388,11 @@ Vex.Flow.Test.Stave.configureAllLines = function(options, contextBuilder) {
   ]).setContext(ctx).draw();
 
   var config = stave.getConfigForLines();
-  equals(config[0].visible, false, "getLinesConfiguration() - Line 0");
-  equals(config[1].visible, true, "getLinesConfiguration() - Line 1");
-  equals(config[2].visible, false, "getLinesConfiguration() - Line 2");
-  equals(config[3].visible, true, "getLinesConfiguration() - Line 3");
-  equals(config[4].visible, false, "getLinesConfiguration() - Line 4");
+  equal(config[0].visible, false, "getLinesConfiguration() - Line 0");
+  equal(config[1].visible, true, "getLinesConfiguration() - Line 1");
+  equal(config[2].visible, false, "getLinesConfiguration() - Line 2");
+  equal(config[3].visible, true, "getLinesConfiguration() - Line 3");
+  equal(config[4].visible, false, "getLinesConfiguration() - Line 4");
 
   ok(true, "all pass");
 }

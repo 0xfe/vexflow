@@ -19,10 +19,10 @@ Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {
   stave.setContext(ctx);
   stave.draw();
 
-  equals(stave.getYForNote(0), 100, "getYForNote(0)");
-  equals(stave.getYForLine(5), 100, "getYForLine(5)");
-  equals(stave.getYForLine(0), 50, "getYForLine(0) - Top Line");
-  equals(stave.getYForLine(4), 90, "getYForLine(4) - Bottom Line");
+  equal(stave.getYForNote(0), 100, "getYForNote(0)");
+  equal(stave.getYForLine(5), 100, "getYForLine(5)");
+  equal(stave.getYForLine(0), 50, "getYForLine(0) - Top Line");
+  equal(stave.getYForLine(4), 90, "getYForLine(4) - Bottom Line");
 
   ok(true, "all pass");
 }

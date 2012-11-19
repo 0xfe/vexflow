@@ -92,6 +92,6 @@ Vex.Flow.Test.Voice.full = function(options, contextBuilder) {
       new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "h" })
     );
   } catch (e) {
-    equals(e.code, "BadArgument", "Too many ticks exception");
+    equal(e.code, "BadArgument", "Too many ticks exception");
   }
 }
