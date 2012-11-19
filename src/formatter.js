@@ -6,7 +6,7 @@
 /** @constructor */
 Vex.Flow.Formatter = function(){
   this.minTotalWidth = 0;
-  this.minTotalWidthFlag = false;
+  this.hasMinTotalWidth = false;
   this.minTicks = null;
   this.pixelsPerTick = 0;
   this.totalTicks = 0;
@@ -55,13 +55,14 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
   (new Vex.Flow.StaveConnector(stave, tabstave)).setContext(ctx).draw();
 }
 
-Vex.Flow.Formatter.prototype.setMinTotalWidth = function(voices) {
-  if (this.minTotalWidthFlag)
-    return;
+Vex.Flow.Formatter.prototype.preCalculateMinTotalWidth = function(voices) {
+  if (this.hasMinTotalWidth) return;
 
   if (!this.tContexts) {
-    if (!voices)
-      throw new Vex.RERR("BadArgument", "voices required to run setMinTotalWidth");
+    if (!voices) {
+      throw new Vex.RERR("BadArgument",
+                         "'voices' required to run preCalculateMinTotalWidth");
+    }
 
     this.createTickContexts(voices);
   }
@@ -82,18 +83,16 @@ Vex.Flow.Formatter.prototype.setMinTotalWidth = function(voices) {
     this.minTotalWidth += context.getWidth();
   }
 
-  this.minTotalWidthFlag = true;
+  this.hasMinTotalWidth = true;
 
   return this.minTotalWidth;
 }
 
-Vex.Flow.Formatter.prototype.getMinTotalWidth = function(voices) {
-  if (!this.minTotalWidthFlag) {
-      // voices required if minTotalWidth hasn't calculate yet
-      if (!voices)
-          throw new Vex.RERR("BadArgument", "Voices required to run setMinTotalWidth");
-
-      this.setMinTotalWidth(voices);
+Vex.Flow.Formatter.prototype.getMinTotalWidth = function() {
+  if (!this.hasMinTotalWidth) {
+    throw new Vex.RERR("NoMinTotalWidth",
+        "Need to call 'preCalculateMinTotalWidth' or 'preFormat' before" +
+        " calling 'getMinTotalWidth'");
   }
 
   return this.minTotalWidth;
@@ -178,10 +177,8 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   var contextList = contexts.list;
   var contextMap = contexts.map;
 
-  if (!this.minTotalWidthFlag)
-    throw new Vex.RERR("NoMinTotalWidth",
-            "minTotalWidth needs calculation; perhaps needs to run setMinTotalWidth");
 
+  this.minTotalWidth = 0;
   // Go through each tick context and calculate smallest ticks.
   for (var i = 0; i < contextList.length; ++i) {
     var context = contextMap[contextList[i]];
@@ -189,11 +186,14 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     // preFormat() gets them to descend down to their tickables and modifier
     // contexts, and calculate their widths.
     context.preFormat();
+    this.minTotalWidth += context.getWidth();
 
     var minTicks = context.getMinTicks();
     if (i == 0) this.minTicks = minTicks;
     if (minTicks < this.minTicks) this.minTicks = minTicks;
   }
+
+  this.hasMinTotalWidth = true;
 
   if (justifyWidth < this.minTotalWidth) throw new Vex.RERR("NoRoomForNotes",
       "Justification width too small to fit all notes: " +
@@ -276,16 +276,12 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
 
 Vex.Flow.Formatter.prototype.joinVoices = function(voices) {
   this.createModifierContexts(voices);
-  // unset minTotalWidthFlag as needs calculation again
-  if (this.minTotalWidthFlag)
-    this.minTotalWidthFlag = false;
-
+  this.hasMinTotalWidth = false;
   return this;
 }
 
 Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth) {
   this.createTickContexts(voices);
-  this.setMinTotalWidth(voices);
   this.preFormat(justifyWidth);
   return this;
 }
@@ -293,7 +289,6 @@ Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth) {
 Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave) {
   var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 20;
   this.createTickContexts(voices);
-  this.setMinTotalWidth(voices);
   this.preFormat(voice_width);
   return this;
 }

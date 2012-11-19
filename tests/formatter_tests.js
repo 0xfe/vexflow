@@ -58,12 +58,10 @@ Vex.Flow.Test.Formatter.buildTickContexts = function(options) {
   //   "Expected to throw exception"
   // );
 
-  ok(formatter.setMinTotalWidth([voice1, voice2]), 'Successfully runs setMinTotalWidth');
-  equal(formatter.getMinTotalWidth(), 104, "Get minimum total width without passing voices");
-
-  // To force getMinTotalWidth to ask for voices
-  formatter.minTotalWidthFlag = false;
-  equal(formatter.getMinTotalWidth([voice1, voice2]), 104, "Get minimum total width by passing voices");
+  ok(formatter.preCalculateMinTotalWidth([voice1, voice2]),
+      'Successfully runs preCalculateMinTotalWidth');
+  equal(formatter.getMinTotalWidth(), 104,
+      "Get minimum total width without passing voices");
 
   formatter.preFormat();
 
