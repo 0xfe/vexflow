@@ -172,11 +172,9 @@ Vex.Flow.Formatter.prototype.createTickContexts = function(voices) {
  * Take a set of tick contexts and align their X-positions and space usage.
  */
 Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
-
   var contexts = this.tContexts;
   var contextList = contexts.list;
   var contextMap = contexts.map;
-
 
   this.minTotalWidth = 0;
   // Go through each tick context and calculate smallest ticks.
@@ -232,15 +230,15 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     tick_space = (tick - prev_tick) * this.pixelsPerTick;
 
     // Calculate note x position
-    var new_set_x = x + tick_space;
-    var set_x = new_set_x;
+    var set_x = x + tick_space;
 
     // Calculate the minimum next note position to allow for right modifiers
-    if (lastMetrics != null)
-      min_x = x + prev_width - lastMetrics.extraLeftPx;
+    if (lastMetrics != null) {
+      min_x = x + (prev_width - lastMetrics.extraLeftPx);
+    }
 
     // Determine the space required for the previous tick
-    set_x = Math.max(set_x, min_x);
+    set_x = context.shouldIgnoreTicks() ? min_x : Math.max(set_x, min_x);
 
     // Determine pixels needed for left modifiers
     var left_px = thisMetrics.extraLeftPx;
@@ -250,6 +248,7 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
       white_space = (set_x - x) - (prev_width -
                                    lastMetrics.extraLeftPx);
     }
+
     if (i > 0) {
       if (white_space > 0) {
         if (white_space >= left_px) {
@@ -267,6 +266,7 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
 
     context.setX(set_x);
     context.setPixelsUsed(pixels_used);  // ??? Not sure this is neeeded
+
     lastMetrics = thisMetrics;
     prev_width = width;
     prev_tick = tick;
@@ -287,7 +287,7 @@ Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth) {
 }
 
 Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave) {
-  var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 20;
+  var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 10;
   this.createTickContexts(voices);
   this.preFormat(voice_width);
   return this;

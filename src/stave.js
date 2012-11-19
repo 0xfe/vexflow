@@ -178,7 +178,6 @@ Vex.Flow.Stave.prototype.getYForGlyphs = function() {
   return this.getYForLine(3);
 }
 
-
 Vex.Flow.Stave.prototype.addGlyph = function(glyph) {
   glyph.setStave(this);
   this.glyphs.push(glyph);
@@ -226,7 +225,6 @@ Vex.Flow.Stave.prototype.draw = function(context) {
   var x = this.x;
 
   for (var line=0; line < num_lines; line++) {
-
     var y = this.getYForLine(line);
 
     if (this.options.line_config[line].visible) {
