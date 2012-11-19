@@ -42,6 +42,10 @@ Vex.Flow.Test.StaveNote.Start = function() {
   Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Harmonic And Muted (Raphael)",
       Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
 
+  Vex.Flow.Test.runTest("StaveNote Draw - Slash", Vex.Flow.Test.StaveNote.drawSlash);
+  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Slash (Raphael)",
+      Vex.Flow.Test.StaveNote.drawSlash);
+
   Vex.Flow.Test.runTest("Displacements", Vex.Flow.Test.StaveNote.displacements);
   Vex.Flow.Test.runRaphaelTest("Displacements (Raphael)",
       Vex.Flow.Test.StaveNote.displacements);
@@ -146,6 +150,7 @@ Vex.Flow.Test.StaveNote.ticks = function(options) {
     equals(e.code, "BadArguments",
         "Invalid note type 'Z' for dotted note throws BadArguments exception");
   }
+
 }
 
 Vex.Flow.Test.StaveNote.ticksNewApi = function(options) {
@@ -220,6 +225,31 @@ Vex.Flow.Test.StaveNote.ticksNewApi = function(options) {
       { keys: ["c/4", "e/4", "g/4"], duration: "8", dots: 3, type: "m"});
   equals(note.getTicks(), BEAT * 0.9375, "Triple-dotted muted 8th note has 0.9375 beats");
   equals(note.getNoteType(), "m", "Note type is 'm' for muted note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "1s"});
+  equals(note.getTicks(), BEAT * 4, "Whole note has 4 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "4s"});
+  equals(note.getTicks(), BEAT, "Quarter note has 1 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "2s", dots: 1});
+  equals(note.getTicks(), BEAT * 3, "Dotted half note has 3 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "2s", dots: 2});
+  equals(note.getTicks(), BEAT * 3.5, "Double-dotted half note has 3.5 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
+
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "2s", dots: 3});
+  equals(note.getTicks(), BEAT * 3.75, "Triple-dotted half note has 3.75 beats");
+  equals(note.getNoteType(), "s", "Note type is 's' for slash note");
 
   try {
     new Vex.Flow.StaveNote(
@@ -399,7 +429,7 @@ Vex.Flow.Test.StaveNote.displacements = function(options, contextBuilder) {
     { keys: ["b/3", "c/4", "e/4", "a/4", "b/5", "c/6", "e/6"], duration: "32",
       stem_direction: -1},
     { keys: ["b/3", "c/4", "e/4", "a/4", "b/5", "c/6", "e/6", "e/6"],
-      duration: "64", stem_direction: -1},
+      duration: "64", stem_direction: -1}
   ];
   expect(notes.length * 2);
 
@@ -413,8 +443,8 @@ Vex.Flow.Test.StaveNote.displacements = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 800, 180);
-  var stave = new Vex.Flow.Stave(10, 10, 750);
+  var ctx = new contextBuilder(options.canvas_sel, 300, 180);
+  var stave = new Vex.Flow.Stave(10, 10, 280);
   stave.setContext(ctx);
   stave.draw();
 
@@ -448,7 +478,8 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options, contextBuilder)
     { keys: ["c/4", "e/4", "a/4"], duration: "8m", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "16m", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "32m", stem_direction: -1},
-    { keys: ["c/4", "e/4", "a/4"], duration: "64m", stem_direction: -1},
+    { keys: ["c/4", "e/4", "a/4"], duration: "64m", stem_direction: -1}
+
   ];
   expect(notes.length * 2);
 
@@ -461,3 +492,38 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options, contextBuilder)
   }
 }
 
+Vex.Flow.Test.StaveNote.drawSlash = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+  var stave = new Vex.Flow.Stave(10, 10, 650);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var showNote = Vex.Flow.Test.StaveNote.showNote;
+  var notes = [
+/* According to a Berkless book on notation slashes must be stems go down.
+    { keys: ["b/4"], duration: "ws"},
+    { keys: ["b/4"], duration: "hs"},
+    { keys: ["b/4"], duration: "qs"},
+    { keys: ["b/4"], duration: "8s"},
+    { keys: ["b/4"], duration: "16s"},
+    { keys: ["b/4"], duration: "32s"},
+    { keys: ["b/4"], duration: "64s"},
+*/
+    { keys: ["b/4"], duration: "ws", stem_direction: -1},
+    { keys: ["b/4"], duration: "hs", stem_direction: -1},
+    { keys: ["b/4"], duration: "qs", stem_direction: -1},
+    { keys: ["b/4"], duration: "8s", stem_direction: -1},
+    { keys: ["b/4"], duration: "16s", stem_direction: -1},
+    { keys: ["b/4"], duration: "32s", stem_direction: -1},
+    { keys: ["b/4"], duration: "64s", stem_direction: -1}
+  ];
+  expect(notes.length * 2);
+
+  for (var i = 0; i < notes.length; ++i) {
+    var note = notes[i];
+    var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+
+    ok(staveNote.getX() > 0, "Note " + i + " has X value");
+    ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
+  }
+}
