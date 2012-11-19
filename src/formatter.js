@@ -241,7 +241,8 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     // The shouldIgnoreTicks part is a dirty heuristic to accomodate for bar
     // lines. Really, there shouldn't be bar lines inside measures. Bar lines
     // should be implemented with distinct measures.
-    set_x = context.shouldIgnoreTicks() ? min_x : Math.max(set_x, min_x);
+    set_x = context.shouldIgnoreTicks() ?
+        (min_x + context.getWidth()) : Math.max(set_x, min_x);
 
     // Determine pixels needed for left modifiers
     var left_px = thisMetrics.extraLeftPx;
