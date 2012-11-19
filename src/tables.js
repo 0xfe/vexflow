@@ -149,7 +149,6 @@ Vex.Flow.keyProperties.note_glyph = {
   'X1':  { code: "v95", shift_right: -0.5 },
   'X2':  { code: "v7f", shift_right: 0.5 },
   'X3':  { code: "v3b", shift_right: -2 }
-
 }
 
 Vex.Flow.integerToNote = function(integer) {
@@ -453,7 +452,8 @@ Vex.Flow.parseNoteData = function(noteData) {
   var type = noteData.type;
 
   if (type) {
-    if (!(type === "n" || type === "r" || type === "h" || type === "m" || type === "s")) {
+    if (!(type === "n" || type === "r" || type === "h" ||
+          type === "m" || type === "s")) {
       return null;
     }
   } else {

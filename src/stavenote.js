@@ -371,7 +371,8 @@ Vex.Flow.StaveNote.prototype.draw = function() {
   var highest_line = 5;
   var lowest_line = 1;
 
-  // private function to draw slash note heads, glyphs were not slanted enough and too small
+  // Private function to draw slash note heads, glyphs were not slanted enough
+  // and too small.
   function drawSlashNoteHead(stavenote, ctx, x, y) {
     ctx.beginPath();
     ctx.moveTo(x, y + 11);
@@ -433,7 +434,8 @@ Vex.Flow.StaveNote.prototype.draw = function() {
     if (render_head) {
      head_x = Math.round(head_x);
 
-      // if a slash note, draw 'manually' as font glyphs do not slant enough and are too small
+      // if a slash note, draw 'manually' as font glyphs do not slant enough
+      // and are too small.
       if (this.noteType == "s") {
         drawSlashNoteHead(this, ctx, head_x, y);
       } else {
