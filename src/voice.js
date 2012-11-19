@@ -12,10 +12,10 @@ Vex.Flow.Voice = function(time) {
 
 // Modes allow the addition of ticks in three different ways:
 //
-// STRICT: by default. Ticks must fill the voice
-// SOFT:   ticks can be added without restrictions
-// FULL:   ticks can be added until the voice is complete, 
-//         but filling it (as in STRICT mode) is not required
+// STRICT: This is the default. Ticks must fill the voice.
+// SOFT:   Ticks can be added without restrictions.
+// FULL:   Ticks do not need to fill the voice, but can't exceed the maximum
+//         tick length.
 Vex.Flow.Voice.Mode = {
   STRICT: 1,
   SOFT:   2,
@@ -107,8 +107,8 @@ Vex.Flow.Voice.prototype.addTickable = function(tickable) {
     this.ticksUsed += numTicks;
 
     if ((this.mode == Vex.Flow.Voice.Mode.STRICT ||
-        this.mode == Vex.Flow.Voice.Mode.FULL) && 
-        this.ticksUsed > this.totalTicks) {
+         this.mode == Vex.Flow.Voice.Mode.FULL) &&
+         this.ticksUsed > this.totalTicks) {
       this.totalTicks -= numTicks;
       throw new Vex.RERR("BadArgument", "Too many ticks.");
     }

@@ -75,7 +75,7 @@ Vex.Flow.Formatter.createContexts = function(voices, context_type, add_fn) {
       throw new Vex.RERR("TickMismatch",
           "Voices should have same time signature.");
 
-    if (voice.mode == Vex.Flow.Voice.Mode.STRICT && !voice.isComplete())
+    if (voice.getMode() == Vex.Flow.Voice.Mode.STRICT && !voice.isComplete())
       throw new Vex.RERR("IncompleteVoice",
         "Voice does not have enough notes.")
 

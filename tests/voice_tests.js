@@ -69,7 +69,7 @@ Vex.Flow.Test.Voice.ignore = function(options) {
 
 Vex.Flow.Test.Voice.full = function(options, contextBuilder) {
   var ctx  = contextBuilder(options.canvas_sel, 550, 200);
-  
+
   var stave = new Vex.Flow.Stave(10, 50, 500);
   stave.addClef("treble").addTimeSignature("4/4").
     setEndBarType(Vex.Flow.Barline.type.END).setContext(ctx).draw();
@@ -79,11 +79,11 @@ Vex.Flow.Test.Voice.full = function(options, contextBuilder) {
     new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" })
   ];
-  
+
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).
     setMode(Vex.Flow.Voice.Mode.FULL);
   voice.addTickables(notes);
-  
+
   new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 500);
   voice.draw(ctx, stave);
 
