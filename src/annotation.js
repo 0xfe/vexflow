@@ -54,6 +54,7 @@ Vex.Flow.Annotation.prototype.setFont = function(family, size, weight) {
   return this;
 }
 Vex.Flow.Annotation.prototype.setBottom = function(bottom) {
+  this.bottom = bottom;
   this.vert_justification = Vex.Flow.Annotation.VerticalJustify.BOTTOM
   return this;
 }
@@ -67,6 +68,7 @@ Vex.Flow.Modifier.prototype.getJustification = function() {
 Vex.Flow.Modifier.prototype.setJustification = function(justification) {
   this.justification = justification; return this; }
 
+
 Vex.Flow.Annotation.prototype.draw = function() {
   if (!this.context) throw new Vex.RERR("NoContext",
     "Can't draw text annotation without a context.");
@@ -75,6 +77,13 @@ Vex.Flow.Annotation.prototype.draw = function() {
 
   var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.ABOVE,
       this.index);
+  var x = start.x - (this.getWidth() / 2) + 10;
+  if(this.bottom) {
+    var y = this.note.stave.getYForBottomText(this.text_line);
+  } else {
+    var y = this.note.getYForTopText(this.text_line) - 1;
+  }
+
   this.context.save();
   this.context.setFont(this.font.family, this.font.size, this.font.weight);
   var text_width = this.context.measureText(this.text).width;
