@@ -20,7 +20,8 @@ Vex.Flow.Formatter = function(){
 
 // Helper function to format and draw a single voice
 Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes) {
-  var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
+  var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
@@ -33,10 +34,12 @@ Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes) {
 Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
     tabstave, stave, tabnotes, notes) {
 
-  var notevoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
+  var notevoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
   notevoice.addTickables(notes);
 
-  var tabvoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
+  var tabvoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
   tabvoice.addTickables(tabnotes);
 
   var formatter = new Vex.Flow.Formatter().
@@ -72,8 +75,9 @@ Vex.Flow.Formatter.createContexts = function(voices, context_type, add_fn) {
       throw new Vex.RERR("TickMismatch",
           "Voices should have same time signature.");
 
-    if (!voice.isComplete()) throw new Vex.RERR("IncompleteVoice",
-        "Voice does not have enough notes.");
+    if (voice.mode == Vex.Flow.Voice.Mode.STRICT && !voice.isComplete())
+      throw new Vex.RERR("IncompleteVoice",
+        "Voice does not have enough notes.")
 
     var tickables = voice.getTickables();
     var ticksUsed = 0;

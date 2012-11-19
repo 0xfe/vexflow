@@ -10,6 +10,18 @@ Vex.Flow.Voice = function(time) {
   this.init(time);
 }
 
+// Modes allow the addition of ticks in three different ways:
+//
+// STRICT: by default. Ticks must fill the voice
+// SOFT:   ticks can be added without restrictions
+// FULL:   ticks can be added until the voice is complete, 
+//         but filling it (as in STRICT mode) is not required
+Vex.Flow.Voice.Mode = {
+  STRICT: 1,
+  SOFT:   2,
+  FULL:   3
+}
+
 Vex.Flow.Voice.prototype.init = function(time) {
   this.time = time;
 
@@ -22,7 +34,8 @@ Vex.Flow.Voice.prototype.init = function(time) {
   this.ticksUsed = 0;
   this.smallestTickCount = this.totalTicks;
   this.largestTickWidth = 0;
-  this.strict = true; // Do we care about strictly timed notes
+  // Do we care about strictly timed notes
+  this.mode = Vex.Flow.Voice.Mode.STRICT;
 
   // This must belong to a VoiceGroup
   this.voiceGroup = null;
@@ -42,12 +55,26 @@ Vex.Flow.Voice.prototype.setVoiceGroup = function(g) {
 }
 
 Vex.Flow.Voice.prototype.setStrict = function(strict) {
-  this.strict = strict;
+  this.mode = strict ? Vex.Flow.Voice.Mode.STRICT : Vex.Flow.Voice.Mode.SOFT;
   return this;
 }
 
+Vex.Flow.Voice.prototype.setMode = function(mode) {
+  this.mode = mode;
+  return this;
+}
+
+Vex.Flow.Voice.prototype.getMode = function() {
+  return this.mode;
+}
+
 Vex.Flow.Voice.prototype.isComplete = function() {
-  return (this.ticksUsed == this.totalTicks) || !this.strict;
+  if (this.mode == Vex.Flow.Voice.Mode.STRICT ||
+      this.mode == Vex.Flow.Voice.Mode.FULL) {
+    return this.ticksUsed == this.totalTicks
+  } else {
+    return true;
+  }
 }
 
 Vex.Flow.Voice.prototype.getTotalTicks = function() {
@@ -79,7 +106,9 @@ Vex.Flow.Voice.prototype.addTickable = function(tickable) {
     // Update the total ticks for this line
     this.ticksUsed += numTicks;
 
-    if (this.strict && this.ticksUsed > this.totalTicks) {
+    if ((this.mode == Vex.Flow.Voice.Mode.STRICT ||
+        this.mode == Vex.Flow.Voice.Mode.FULL) && 
+        this.ticksUsed > this.totalTicks) {
       this.totalTicks -= numTicks;
       throw new Vex.RERR("BadArgument", "Too many ticks.");
     }
