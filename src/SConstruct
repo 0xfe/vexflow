@@ -55,6 +55,7 @@ vexflow_sources = [
     "stavesection.js",
     "stavetempo.js",
     "tremolo.js",
+    "tuplet.js"
     ]
 
 Import('dbg opt')
