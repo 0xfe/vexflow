@@ -51,8 +51,21 @@ Vex.Flow.Test.Formatter.buildTickContexts = function(options) {
 
   equals(tContexts.list.length, 4, "Voices should have four tick contexts");
 
+  // TODO: add this after pull request #68 is merged to master
+  // throws(
+  //   function() { formatter.getMinTotalWidth(); },
+  //   Vex.RERR,
+  //   "Expected to throw exception"
+  // );
+
+  ok(formatter.setMinTotalWidth([voice1, voice2]), 'Successfully runs setMinTotalWidth');
+  equal(formatter.getMinTotalWidth(), 104, "Get minimum total width without passing voices");
+
+  // To force getMinTotalWidth to ask for voices
+  formatter.minTotalWidthFlag = false;
+  equal(formatter.getMinTotalWidth([voice1, voice2]), 104, "Get minimum total width by passing voices");
+
   formatter.preFormat();
-  equals(formatter.getMinTotalWidth(), 104, "Minimum total width");
 
   equals(tickables1[0].getX(), tickables2[0].getX(),
       "First notes of both voices have the same X");
