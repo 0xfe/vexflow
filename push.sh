@@ -6,6 +6,7 @@
 TARGET=~/www/vexflow
 
 echo Building...
+scons -c
 ./build.sh
 
 curdir=`pwd`
