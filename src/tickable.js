@@ -10,7 +10,9 @@ Vex.Flow.Tickable = function() {
 }
 
 Vex.Flow.Tickable.prototype.init = function() {
-  this.ticks = 0;
+  this.intrinsicTicks = 0;
+  this.tickMultiplier = new Vex.Flow.Fraction(1, 1);
+  this.ticks = new Vex.Flow.Fraction(0, 1);
   this.width = 0;
   this.x_shift = 0; // Shift from tick context
   this.voice = null;
@@ -55,11 +57,31 @@ Vex.Flow.Tickable.prototype.preFormat = function() {
   // Calculate any extra width required.
 }
 
+Vex.Flow.Tickable.prototype.getIntrinsicTicks = function() {
+  return this.intrinsicTicks;
+}
+Vex.Flow.Tickable.prototype.setIntrinsicTicks = function(intrinsicTicks) {
+  this.intrinsicTicks = intrinsicTicks;
+  this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
+}
+
+Vex.Flow.Tickable.prototype.getTickMultiplier = function() {
+  return this.tickMultiplier;
+}
+Vex.Flow.Tickable.prototype.applyTickMultiplier = function(numerator, denominator) {
+  this.tickMultiplier.multiply(numerator, denominator);
+  this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
+}
+
 // Formatters and preformatters use ticks and width to calculate the position
 // of these tickables.
-Vex.Flow.Tickable.prototype.getTicks = function() { return this.ticks; }
+Vex.Flow.Tickable.prototype.getTicks = function() {
+  return this.ticks;
+}
 Vex.Flow.Tickable.prototype.shouldIgnoreTicks = function() {
-  return this.ignore_ticks; }
+  return this.ignore_ticks;
+}
+
 Vex.Flow.Tickable.prototype.getWidth = function() { return this.width; }
 
 // Formatters will set the X value of the tickable.
@@ -71,5 +93,5 @@ Vex.Flow.Tickable.prototype.getVoice = function() {
   if (!this.voice) throw new Vex.RERR("NoVoice", "Tickable has no voice.");
   return this.voice;
 }
-Vex.Flow.Tickable.prototype.setVoice = function(voice) { this.voice= voice; }
+Vex.Flow.Tickable.prototype.setVoice = function(voice) { this.voice = voice; }
 

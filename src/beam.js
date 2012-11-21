@@ -32,7 +32,7 @@ Vex.Flow.Beam.prototype.init = function(notes) {
 
   // Validate beam line, direction and ticks.
   this.stem_direction = notes[0].getStemDirection();
-  this.ticks = notes[0].getTicks();
+  this.ticks = notes[0].getIntrinsicTicks();
 
   if (this.ticks >= Vex.Flow.durationToTicks("4")) {
     throw new Vex.RuntimeError("BadArguments",
@@ -167,7 +167,7 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
 
     for (var i = 0; i < that.notes.length; ++i) {
       var note = that.notes[i];
-      var ticks = note.getTicks();
+      var ticks = note.getIntrinsicTicks();
 
       // Check whether to apply beam(s)
       if (ticks < Vex.Flow.durationToTicks(duration)) {
