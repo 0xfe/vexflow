@@ -5,8 +5,8 @@
  * @constructor
  * @param {Array.<Vex.Flow.StaveNote>} A set of notes.
  */
-Vex.Flow.Tuplet = function(notes, beats_occupied) {
-  if (arguments.length > 0) this.init(notes, beats_occupied);
+Vex.Flow.Tuplet = function(notes, options) {
+  if (arguments.length > 0) this.init(notes, options);
 }
 
 Vex.Flow.Tuplet.LOCATION_TOP = 1;
@@ -17,7 +17,7 @@ Vex.Flow.Tuplet.LOCATION_BOTTOM = -1;
  *
  * @param {Array.<Vex.Flow.StaveNote>} The notes.
  */
-Vex.Flow.Tuplet.prototype.init = function(notes, beats_occupied, options) {
+Vex.Flow.Tuplet.prototype.init = function(notes, options) {
   if (!notes || notes == []) {
     throw new Vex.RuntimeError("BadArguments", "No notes provided for tuplet.");
   }
@@ -25,27 +25,11 @@ Vex.Flow.Tuplet.prototype.init = function(notes, beats_occupied, options) {
   if (notes.length == 1) {
     throw new Vex.RuntimeError("BadArguments", "Too few notes for tuplet.");
   }
-  
-  /*var stem_direction = notes[0].getStemDirection();
-  var ticks = notes[0].getTicks();
-  
-  for (var i = 1; i < notes.length; ++i) {
-    var note = notes[i];
-	  if (note.getStemDirection() != this.stem_direction) {
-		  throw new Vex.RuntimeError("BadArguments",
-		  "Notes in a tuplet all have the same stem direction");
-	  }
 
-	  if (note.getTicks() != this.ticks) {
-		  throw new Vex.RuntimeError("BadArguments",
-		  "Notes in a tuplet should have the same duration.");
-	  }
-
-  }*/
-
+  this.options = Vex.Merge({}, options);
   this.notes = notes;
-  this.num_notes = notes.length;
-  this.beats_occupied = (beats_occupied != null) ? beats_occupied : 2;
+  this.num_notes = 'num_notes' in this.options ? this.options.num_notes : notes.length;
+  this.beats_occupied = 'beats_occupied' in this.options ? this.options.beats_occupied : 2;
   this.bracketed = (notes[0].beam == null);
   this.ratioed = false;
   this.point = 28;
