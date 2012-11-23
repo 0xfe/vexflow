@@ -11,6 +11,7 @@ vexflow_sources = [
     "header.js",
     "vex.js",
     "flow.js",
+    "fraction.js",
     "tables.js",
     "fonts/vexflow_font.js",
     "glyph.js",

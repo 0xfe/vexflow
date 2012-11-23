@@ -16,7 +16,6 @@ Vex.Flow.Test.MockTickable.prototype.getX = function() {
   return this.tickContext.getX();}
 Vex.Flow.Test.MockTickable.prototype.getIntrinsicTicks = function() {return this.ticks;}
 Vex.Flow.Test.MockTickable.prototype.getTicks = function() {return this.ticks;}
-// TODO: FIXME: Fix tests!
 Vex.Flow.Test.MockTickable.prototype.setTicks = function(t) {
   this.ticks = new Vex.Flow.Fraction(t, 1); return this; };
 Vex.Flow.Test.MockTickable.prototype.getMetrics = function() {
