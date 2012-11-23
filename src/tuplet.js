@@ -28,8 +28,10 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
 
   this.options = Vex.Merge({}, options);
   this.notes = notes;
-  this.num_notes = 'num_notes' in this.options ? this.options.num_notes : notes.length;
-  this.beats_occupied = 'beats_occupied' in this.options ? this.options.beats_occupied : 2;
+  this.num_notes = 'num_notes' in this.options
+                 ? this.options.num_notes : notes.length;
+  this.beats_occupied = 'beats_occupied' in this.options
+                      ? this.options.beats_occupied : 2;
   this.bracketed = (notes[0].beam == null);
   this.ratioed = false;
   this.point = 28;
