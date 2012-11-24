@@ -5,8 +5,8 @@
  * @constructor
  * @param {Array.<Vex.Flow.StaveNote>} A set of notes.
  */
-Vex.Flow.Tuplet = function(notes) {
-  if (arguments.length > 0) this.init(notes);
+Vex.Flow.Tuplet = function(notes, options) {
+  if (arguments.length > 0) this.init(notes, options);
 }
 
 Vex.Flow.Tuplet.LOCATION_TOP = 1;
@@ -26,31 +26,37 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
     throw new Vex.RuntimeError("BadArguments", "Too few notes for tuplet.");
   }
 
+  this.options = Vex.Merge({}, options);
   this.notes = notes;
-  this.num_notes = notes.length;
+  this.num_notes = 'num_notes' in this.options
+                 ? this.options.num_notes : notes.length;
+  this.beats_occupied = 'beats_occupied' in this.options
+                      ? this.options.beats_occupied : 2;
   this.bracketed = (notes[0].beam == null);
   this.ratioed = false;
-  this.beats_occupied = 2;
   this.point = 28;
   this.y_pos = 16;
   this.x_pos = 100;
   this.width = 200;
   this.location = Vex.Flow.Tuplet.LOCATION_TOP;
 
-  this.num_glyphs = [];
-  var n = this.num_notes;
-  while (n >= 1) {
-    this.num_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
-    n = parseInt(n / 10);
-  }
+  this.resolveGlyphs();
 
-  this.denom_glyphs = [];
-  n = this.beats_occupied;
-  while (n >= 1) {
-    this.denom_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
-    n = parseInt(n / 10);
-  }
+  this.attach();
+}
 
+Vex.Flow.Tuplet.prototype.attach = function () {
+  for (var i = 0; i < this.notes.length; i++) {
+    var note = this.notes[i];
+    note.setTuplet(this);
+  }
+}
+
+Vex.Flow.Tuplet.prototype.detach = function () {
+  for (var i = 0; i < this.notes.length; i++) {
+    var note = this.notes[i];
+    note.setTuplet(null);
+  }
 }
 
 Vex.Flow.Tuplet.prototype.setContext = function(context) {
@@ -74,7 +80,9 @@ Vex.Flow.Tuplet.prototype.setRatioed = function(ratioed) {
   return this;
 }
 
-//set the tuplet to be displayed either on the top or bottom of the stave
+/**
+ * Set the tuplet to be displayed either on the top or bottom of the stave
+ */
 Vex.Flow.Tuplet.prototype.setTupletLocation = function(location) {
   if (!location) location = Vex.Flow.Tuplet.LOCATION_TOP;
   else if (location != Vex.Flow.Tuplet.LOCATION_TOP &&
@@ -86,9 +94,36 @@ Vex.Flow.Tuplet.prototype.setTupletLocation = function(location) {
   return this;
 }
 
-//set the number of beats occupied by the tuplet
-Vex.Flow.Tuplet.prototype.setBeatsOccupied = function (beats) {
+Vex.Flow.Tuplet.prototype.getNotes = function() {
+  return this.notes;
+}
+
+Vex.Flow.Tuplet.prototype.getNoteCount = function() {
+  return this.num_notes;
+}
+
+Vex.Flow.Tuplet.prototype.getBeatsOccupied = function() {
+  return this.beats_occupied;
+}
+
+Vex.Flow.Tuplet.prototype.setBeatsOccupied = function(beats) {
+  this.detach();
+
   this.beats_occupied = beats;
+
+  this.resolveGlyphs();
+
+  this.attach();
+}
+
+Vex.Flow.Tuplet.prototype.resolveGlyphs = function() {
+  this.num_glyphs = [];
+  var n = this.num_notes;
+  while (n >= 1) {
+    this.num_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
+    n = parseInt(n / 10);
+  }
+
   this.denom_glyphs = [];
   n = this.beats_occupied;
   while (n >= 1) {

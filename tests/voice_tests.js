@@ -28,12 +28,12 @@ Vex.Flow.Test.Voice.strict = function(options) {
   ];
 
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-  equal(voice.totalTicks, BEAT * 4, "4/4 Voice has 4 beats");
-  equal(voice.ticksUsed, BEAT * 0, "No beats in voice");
+  equal(voice.totalTicks.value(), BEAT * 4, "4/4 Voice has 4 beats");
+  equal(voice.ticksUsed.value(), BEAT * 0, "No beats in voice");
   voice.addTickables(tickables);
-  equal(voice.ticksUsed, BEAT * 3, "Three beats in voice");
+  equal(voice.ticksUsed.value(), BEAT * 3, "Three beats in voice");
   voice.addTickable(createTickable().setTicks(BEAT));
-  equal(voice.ticksUsed, BEAT * 4, "Four beats in voice");
+  equal(voice.ticksUsed.value(), BEAT * 4, "Four beats in voice");
   equal(voice.isComplete(), true, "Voice is complete");
 
   try {
@@ -42,7 +42,7 @@ Vex.Flow.Test.Voice.strict = function(options) {
     equal(e.code, "BadArgument", "Too many ticks exception");
   }
 
-  equal(voice.getSmallestTickCount(), BEAT, "Smallest tick count is BEAT");
+  equal(voice.getSmallestTickCount().value(), BEAT, "Smallest tick count is BEAT");
 }
 
 Vex.Flow.Test.Voice.ignore = function() {

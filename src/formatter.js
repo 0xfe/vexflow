@@ -9,7 +9,7 @@ Vex.Flow.Formatter = function(){
   this.hasMinTotalWidth = false;
   this.minTicks = null;
   this.pixelsPerTick = 0;
-  this.totalTicks = 0;
+  this.totalTicks = new Vex.Flow.Fraction(0, 1);
   this.tContexts = null;
   this.mContexts = null;
 
@@ -110,37 +110,65 @@ Vex.Flow.Formatter.createContexts = function(voices, context_type, add_fn) {
   var tickToContextMap = {};
   var tickList = [];
 
+  var resolutionMultiplier = 1;
+
+  // Find out highest common multiple of resolution multipliers.
+  // The purpose of this is to find out a common denominator
+  // for all fractional tick values in all tickables of all voices,
+  // so that the values can be expanded and the numerator used
+  // as an integer tick value.
   for (var i = 0; i < voices.length; ++i) {
     var voice = voices[i];
-    if (voice.getTotalTicks() != totalTicks)
+    if (voice.getTotalTicks().value() != totalTicks.value()) {
       throw new Vex.RERR("TickMismatch",
           "Voices should have same time signature.");
+    }
 
     if (voice.getMode() == Vex.Flow.Voice.Mode.STRICT && !voice.isComplete())
       throw new Vex.RERR("IncompleteVoice",
         "Voice does not have enough notes.")
 
+    var lcm = Vex.Flow.Fraction.LCM(resolutionMultiplier,
+        voice.getResolutionMultiplier());
+    if (resolutionMultiplier < lcm) {
+      resolutionMultiplier = lcm;
+    }
+  }
+
+  for (var i = 0; i < voices.length; ++i) {
+    var voice = voices[i];
+
     var tickables = voice.getTickables();
-    var ticksUsed = 0;
+
+    // Use resolution multiplier as denominator to expand ticks
+    // to suitable integer values, so that no additional expansion
+    // of fractional tick values is needed.
+    var ticksUsed = new Vex.Flow.Fraction(0, resolutionMultiplier);
+
     for (var j = 0; j < tickables.length; ++j) {
       var tickable = tickables[j];
 
+      var integerTicks = ticksUsed.numerator;
+
       // If we have no tick context for this tick, create one
-      if (!tickToContextMap[ticksUsed])
-        tickToContextMap[ticksUsed] = new context_type();
+      if (!tickToContextMap[integerTicks])
+        tickToContextMap[integerTicks] = new context_type();
 
       // Add this tickable to the TickContext
-      add_fn(tickable, tickToContextMap[ticksUsed]);
+      add_fn(tickable, tickToContextMap[integerTicks]);
 
       // Maintain a sorted list of tick contexts
-      tickList.push(ticksUsed);
-      ticksUsed += tickable.getTicks();
+      tickList.push(integerTicks);
+
+      ticksUsed.add(tickable.getTicks());
     }
   }
 
   return {
     map: tickToContextMap,
-    list: Vex.SortAndUnique(tickList, function(a, b) { return a - b; })
+    list: Vex.SortAndUnique(tickList, function(a, b) { return a - b; },
+        function(a, b) { return a === b; } ),
+    resolutionMultiplier: resolutionMultiplier
   };
 }
 
@@ -163,7 +191,7 @@ Vex.Flow.Formatter.prototype.createTickContexts = function(voices) {
       Vex.Flow.TickContext,
       function(tickable, context) { context.addTickable(tickable); });
 
-  this.totalTicks = voices[0].getTicksUsed();
+  this.totalTicks = voices[0].getTicksUsed().clone();
   this.tContexts = contexts;
   return contexts;
 }
@@ -188,7 +216,10 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
 
     var minTicks = context.getMinTicks();
     if (i == 0) this.minTicks = minTicks;
-    if (minTicks < this.minTicks) this.minTicks = minTicks;
+    if (this.minTicks == null || (minTicks != null
+                                  && minTicks.value() < this.minTicks.value())) {
+      this.minTicks = minTicks;
+    }
   }
 
   this.hasMinTotalWidth = true;
@@ -200,10 +231,12 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   // Figure out how many pixels to allocate per tick.
   var justified = false;
   if (justifyWidth) {
-    this.pixelsPerTick = justifyWidth / this.totalTicks;
+    this.pixelsPerTick = justifyWidth /
+      (this.totalTicks.value() * contexts.resolutionMultiplier);
     justified = true;
   } else {
-    this.pixelsPerTick = this.render_options.perTickableWidth / this.minTicks;
+    this.pixelsPerTick = this.render_options.perTickableWidth /
+      (this.minTicks.value() * contexts.resolutionMultiplier);
   }
 
   // Now distribute the ticks to each tick context, and assign them their
@@ -221,8 +254,11 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     var thisMetrics = context.getMetrics();
     var width = context.getWidth();
     var minTicks = context.getMinTicks();
+    if (minTicks != null) minTicks = minTicks.value();
+    else minTicks = 0;
     var min_x = 0;
 
+    // TODO: Try modifying (minTicks * this.pixelsPerTick) to adjust spacing
     var pixels_used = Math.max(width, minTicks * this.pixelsPerTick);
     pixels_used = Math.min(width + 20, pixels_used);
 
@@ -233,9 +269,8 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     var set_x = x + tick_space;
 
     // Calculate the minimum next note position to allow for right modifiers
-    if (lastMetrics != null) {
-      min_x = x + (prev_width - lastMetrics.extraLeftPx);
-    }
+    if (lastMetrics != null)
+      min_x = x + prev_width - lastMetrics.extraLeftPx;
 
     // Determine the space required for the previous tick
     // The shouldIgnoreTicks part is a dirty heuristic to accomodate for bar

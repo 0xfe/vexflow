@@ -35,14 +35,13 @@ Vex.Flow.Note.prototype.init = function(note_struct) {
   this.duration = initData.duration;
   this.dots = initData.dots;
   this.noteType = initData.type;
-  this.ticks = initData.ticks;
+  this.setIntrinsicTicks(initData.ticks);
 
   if (this.positions &&
       (typeof(this.positions) != "object" || !this.positions.length)) {
     throw new Vex.RuntimeError(
       "BadArguments", "Note keys must be array type.");
   }
-
 
   // Positioning contexts
   this.tickContext = null;    // The current tick context
@@ -74,12 +73,12 @@ Vex.Flow.Note.prototype.addStroke = function(index, stroke) {
 
 Vex.Flow.Note.prototype.setYs = function(ys) {
   this.ys = ys; return this; }
-Vex.Flow.Note.prototype.getStave = function() { return this.stave; }
+Vex.Flow.Note.prototype.getStave = function() {
+  return this.stave; }
 Vex.Flow.Note.prototype.setStave = function(stave) {
   this.stave = stave; return this; }
 Vex.Flow.Note.prototype.setContext = function(context) {
   this.context = context; return this; }
-Vex.Flow.Note.prototype.getTicks = function() { return this.ticks; }
 Vex.Flow.Note.prototype.getExtraLeftPx = function() {
   return this.extraLeftPx; }
 Vex.Flow.Note.prototype.getExtraRightPx = function() {
@@ -112,7 +111,10 @@ Vex.Flow.Note.prototype.setVoice = function(voice) {
   return this;
 }
 
-Vex.Flow.Note.prototype.getTickContext = function() { return this.tickContext; }
+Vex.Flow.Note.prototype.getTickContext = function() {
+  return this.tickContext;
+}
+
 Vex.Flow.Note.prototype.setTickContext = function(tc) {
   this.tickContext = tc;
   this.preFormatted = false;

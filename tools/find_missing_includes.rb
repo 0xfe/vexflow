@@ -13,7 +13,8 @@ HTML_FILES = [
   "../tests/flow.html",
   "../docs/tutorial.html", "../docs/sandbox.html",
   "../tabdiv/playground.html", "../tabdiv/tutorial.html",
-  "../tabdiv/vextab.html" ]
+  "../tabdiv/vextab.html",
+  "../vextab/runtest.html" ]
 
 unless File.exists?(SRCDIR)
   puts "This script needs to be run from the tools/ directory."

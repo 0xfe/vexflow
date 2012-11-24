@@ -19,11 +19,11 @@ Vex.Flow.Test.TabNote.ticks = function() {
 
   var note = new Vex.Flow.TabNote(
       { positions: [{str: 6, fret: 6 }], duration: "w"});
-  equal(note.getTicks(), BEAT * 4, "Whole note has 4 beats");
+  equal(note.getTicks().value(), BEAT * 4, "Whole note has 4 beats");
 
   note = new Vex.Flow.TabNote(
       { positions: [{str: 3, fret: 4 }], duration: "q"});
-  equal(note.getTicks(), BEAT, "Quarter note has 1 beat");
+  equal(note.getTicks().value(), BEAT, "Quarter note has 1 beat");
 }
 
 Vex.Flow.Test.TabNote.tabStaveLine = function() {

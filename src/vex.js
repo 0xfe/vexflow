@@ -137,16 +137,17 @@ Vex.Max = function(a, b) {
  * Take 'arr' and return a new list consisting of the sorted, unique,
  * contents of arr.
  */
-Vex.SortAndUnique = function(arr, cmp) {
+Vex.SortAndUnique = function(arr, cmp, eq) {
   if (arr.length > 1) {
     var newArr = [];
-    var last_tick;
+    var last;
     arr.sort(cmp);
+
     for (var i = 0; i < arr.length; ++i) {
-      if (i == 0 || arr[i] != last_tick) {
+      if (i == 0 || !eq(arr[i], last)) {
         newArr.push(arr[i]);
       }
-      last_tick = arr[i];
+      last = arr[i];
     }
 
     return newArr;
