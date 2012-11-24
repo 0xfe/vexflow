@@ -216,7 +216,8 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
 
     var minTicks = context.getMinTicks();
     if (i == 0) this.minTicks = minTicks;
-    if (minTicks.value() < this.minTicks.value()) {
+    if (this.minTicks == null || (minTicks != null
+                                  && minTicks.value() < this.minTicks.value())) {
       this.minTicks = minTicks;
     }
   }
@@ -252,7 +253,9 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     var context = contextMap[tick];
     var thisMetrics = context.getMetrics();
     var width = context.getWidth();
-    var minTicks = context.getMinTicks().value();
+    var minTicks = context.getMinTicks();
+    if (minTicks != null) minTicks = minTicks.value();
+    else minTicks = 0;
     var min_x = 0;
 
     // TODO: Try modifying (minTicks * this.pixelsPerTick) to adjust spacing
