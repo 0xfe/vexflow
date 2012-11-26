@@ -47,7 +47,7 @@ Vex.Flow.TabDiv.prototype.init = function(sel) {
 
   // Grab editor properties
   this.editor = $(sel).attr("editor") || "";
-  this.show_errors = $(sel).attr("editor") || "";
+  this.show_errors = $(sel).attr("show-errors") || "";
   this.editor_width= $(sel).attr("editor_width") || this.width;
   this.editor_height= $(sel).attr("editor_height") || 200;
 
@@ -78,8 +78,13 @@ Vex.Flow.TabDiv.prototype.init = function(sel) {
 
   // Initialize parser.
   this.parser = new Vex.Flow.VexTab();
-  this.message = "vexflow.com";
-  if (!this.message) this.extra_height = 10; else this.extra_height = 20;
+  if (!Vex.Flow.TabDiv.NOLOGO) {
+    this.message = "vexflow.com";
+    this.extra_height = 20;
+  } else {
+    this.extra_height = 10;
+  }
+
   this.redraw();
 }
 
