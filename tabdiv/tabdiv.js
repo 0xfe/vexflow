@@ -47,6 +47,7 @@ Vex.Flow.TabDiv.prototype.init = function(sel) {
 
   // Grab editor properties
   this.editor = $(sel).attr("editor") || "";
+  this.show_errors = $(sel).attr("editor") || "";
   this.editor_width= $(sel).attr("editor_width") || this.width;
   this.editor_height= $(sel).attr("editor_height") || 200;
 
@@ -70,6 +71,9 @@ Vex.Flow.TabDiv.prototype.init = function(sel) {
             }
           }, 150);
     });
+  } if (this.show_errors == "true") {
+    this.editor_error = $('<div></div>').addClass("editor-error");
+    $(sel).append($('<p/>')).append(this.editor_error);
   }
 
   // Initialize parser.
