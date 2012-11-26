@@ -183,7 +183,8 @@ Vex.Flow.TabDiv.prototype.parseInternal = function() {
     if (this.editor_error) {
       this.editor_error.empty();
       this.editor_error.append(
-          $('<span></span>').addClass("text").html(e.message));
+          $('<span></span>').addClass("text").html(
+            "Sucky VexTab: " + e.message));
     }
   }
   return this;
