@@ -42,7 +42,6 @@ Vex.Flow.BoundingBox.prototype.mergeWith = function(boundingBox) {
 
 Vex.Flow.BoundingBox.prototype.draw = function(ctx) {
   ctx.rect(this.x, this.y, this.w, this.h);
-  ctx.rect(10,10,10,10);
   ctx.stroke();
 }
 

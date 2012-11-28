@@ -41,10 +41,11 @@ Vex.Flow.Test.Stave.Start = function() {
 }
 
 Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 400, 120);
+  var ctx = new contextBuilder(options.canvas_sel, 400, 150);
   var stave = new Vex.Flow.Stave(10, 10, 300);
   stave.setContext(ctx);
   stave.draw();
+  stave.getBoundingBox().draw(ctx);
 
   equal(stave.getYForNote(0), 100, "getYForNote(0)");
   equal(stave.getYForLine(5), 100, "getYForLine(5)");

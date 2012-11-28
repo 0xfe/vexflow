@@ -142,6 +142,11 @@ Vex.Flow.Stave.prototype.getSpacingBetweenLines = function() {
   return this.options.spacing_between_lines_px;
 }
 
+Vex.Flow.Stave.prototype.getBoundingBox = function() {
+  return new Vex.Flow.BoundingBox(this.x, this.y, this.width, this.getBottomY() - this.y);
+  // body...
+};
+
 Vex.Flow.Stave.prototype.getBottomY = function() {
   var options = this.options;
   var spacing = options.spacing_between_lines_px;
