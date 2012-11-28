@@ -138,10 +138,9 @@ Vex.Flow.Stave.prototype.getHeight = function() {
   return this.height;
 }
 
-Vex.Flow.Stave.prototype.getBounds = function() {
-  return {x: 0, y: 0, w: 0, h: 0};
+Vex.Flow.Stave.prototype.getSpacingBetweenLines = function() {
+  return this.options.spacing_between_lines_px;
 }
-
 
 Vex.Flow.Stave.prototype.getBottomY = function() {
   var options = this.options;

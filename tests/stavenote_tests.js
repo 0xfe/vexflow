@@ -20,6 +20,13 @@ Vex.Flow.Test.StaveNote.Start = function() {
       Vex.Flow.Test.StaveNote.draw,
       { clef: "treble", octaveShift: 0, restKey: "b/4" });
 
+  Vex.Flow.Test.runTest("StaveNote BoundingBoxes - Treble", Vex.Flow.Test.StaveNote.drawBoundingBoxes,
+      { clef: "treble", octaveShift: 0, restKey: "b/4" });
+  Vex.Flow.Test.runRaphaelTest("StaveNote BoundingBoxes - Treble (Raphael)",
+      Vex.Flow.Test.StaveNote.drawBoundingBoxes,
+      { clef: "treble", octaveShift: 0, restKey: "b/4" });
+
+
   Vex.Flow.Test.runTest("StaveNote Draw - Alto", Vex.Flow.Test.StaveNote.draw,
       { clef: "alto", octaveShift: -1, restKey: "c/4" });
   Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Alto (Raphael)",
@@ -347,12 +354,16 @@ Vex.Flow.Test.StaveNote.tickContext = function() {
   equal(tickContext.getWidth(), 16.5);
 }
 
-Vex.Flow.Test.StaveNote.showNote = function(note_struct, stave, ctx, x) {
+Vex.Flow.Test.StaveNote.showNote = function(note_struct, stave, ctx, x, drawBoundingBox) {
   var note = new Vex.Flow.StaveNote(note_struct);
   var tickContext = new Vex.Flow.TickContext();
   tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(20);
   note.setContext(ctx).setStave(stave);
   note.draw();
+
+  if (drawBoundingBox) {
+    note.getBoundingBox().draw(ctx);
+  }
   return note;
 }
 
@@ -415,6 +426,71 @@ Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
   for (var i = 0; i < notes.length; ++i) {
     var note = notes[i];
     var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+
+    ok(staveNote.getX() > 0, "Note " + i + " has X value");
+    ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
+  }
+}
+
+Vex.Flow.Test.StaveNote.drawBoundingBoxes = function(options, contextBuilder) {
+  var clef = options.params.clef;
+  var octaveShift = options.params.octaveShift;
+  var restKey = options.params.restKey;
+
+  var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+  var stave = new Vex.Flow.Stave(10, 10, 650);
+
+  stave.setContext(ctx);
+  stave.addClef(clef);
+  stave.draw();
+
+  var lowerKeys = ["c/", "e/", "a/"];
+  var higherKeys = ["c/", "e/", "a/"];
+  for (var k = 0; k < lowerKeys.length; k++) {
+    lowerKeys[k] = lowerKeys[k] + (4 + octaveShift);
+    higherKeys[k] = higherKeys[k] + (5 + octaveShift);
+  }
+
+  var restKeys = [ restKey ];
+
+  var showNote = Vex.Flow.Test.StaveNote.showNote;
+  var notes = [
+    { clef: clef, keys: lowerKeys, duration: "w"},
+    { clef: clef, keys: higherKeys, duration: "h"},
+    { clef: clef, keys: lowerKeys, duration: "q"},
+    { clef: clef, keys: higherKeys, duration: "8"},
+    { clef: clef, keys: lowerKeys, duration: "16"},
+    { clef: clef, keys: higherKeys, duration: "32"},
+    { clef: clef, keys: higherKeys, duration: "64"},
+    { clef: clef, keys: lowerKeys, duration: "w",
+      stem_direction: -1},
+    { clef: clef, keys: lowerKeys, duration: "h",
+      stem_direction: -1},
+    { clef: clef, keys: lowerKeys, duration: "q",
+      stem_direction: -1},
+    { clef: clef, keys: lowerKeys, duration: "8",
+      stem_direction: -1},
+    { clef: clef, keys: lowerKeys, duration: "16",
+      stem_direction: -1},
+    { clef: clef, keys: lowerKeys, duration: "32",
+      stem_direction: -1},
+    { clef: clef, keys: lowerKeys, duration: "64",
+      stem_direction: -1},
+
+    { clef: clef, keys: restKeys, duration: "wr"},
+    { clef: clef, keys: restKeys, duration: "hr"},
+    { clef: clef, keys: restKeys, duration: "qr"},
+    { clef: clef, keys: restKeys, duration: "8r"},
+    { clef: clef, keys: restKeys, duration: "16r"},
+    { clef: clef, keys: restKeys, duration: "32r"},
+    { clef: clef, keys: restKeys, duration: "64r"},
+    { keys: ["x/4"], duration: "h"}
+  ];
+  expect(notes.length * 2);
+
+  for (var i = 0; i < notes.length; ++i) {
+    var note = notes[i];
+    var staveNote = showNote(note, stave, ctx, (i + 1) * 25, true);
 
     ok(staveNote.getX() > 0, "Note " + i + " has X value");
     ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");

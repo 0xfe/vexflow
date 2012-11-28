@@ -100,6 +100,29 @@ Vex.Flow.Note.prototype.getYForTopText = function(text_line) {
   return this.stave.getYForTopText(text_line);
 }
 
+Vex.Flow.Note.prototype.getBoundingBox = function() {
+  if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+      "Can't call getMetrics on an unformatted note.");
+
+  var w = this.getWidth();
+  var x = this.stave.getNoteStartX() + this.getX() - this.extraLeftPx;
+
+  var min_y = null;
+  var max_y = null;
+
+  ys = this.getYs();
+  for (var i=0; i < ys.length; ++i) {
+    var y = ys[i];
+    if (min_y == null) min_y = y;
+    if (max_y == null) max_y = y;
+
+    min_y = y < min_y ? y : min_y;
+    max_y = y > max_y ? y : max_y;
+  }
+
+  return new Vex.Flow.BoundingBox(x, min_y, w, max_y - min_y);
+}
+
 Vex.Flow.Note.prototype.getVoice = function() {
   if (!this.voice) throw new Vex.RERR("NoVoice", "Note has no voice.");
   return this.voice;

@@ -12,11 +12,14 @@ Vex.Flow.Test.BoundingBox.Start = function() {
 }
 
 Vex.Flow.Test.BoundingBox.initialization = function() {
-  var bb = new Vex.Flow.BoundingBox();
+  var bb = new Vex.Flow.BoundingBox(0, 0, 0, 0);
   equal(bb.getX(), 0, "Bad X");
   equal(bb.getY(), 0, "Bad Y");
   equal(bb.getW(), 0, "Bad W");
   equal(bb.getH(), 0, "Bad H");
+
+  bb.setX(5)
+  equal(bb.getX(), 5, "Bad X");
 }
 
 Vex.Flow.Test.BoundingBox.merging = function() {

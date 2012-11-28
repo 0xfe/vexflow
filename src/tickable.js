@@ -57,6 +57,11 @@ Vex.Flow.Tickable.prototype.preFormat = function() {
   // Calculate any extra width required.
 }
 
+Vex.Flow.Tickable.prototype.getBoundingBox = function() {
+  throw new Vex.Flow.RERR("BoundingBoxNotAvailable",
+    "No bounding box calculation defined for this instance");
+}
+
 Vex.Flow.Tickable.prototype.getIntrinsicTicks = function() {
   return this.intrinsicTicks;
 }

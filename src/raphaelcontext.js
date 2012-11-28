@@ -99,6 +99,7 @@ Vex.Flow.RaphaelContext.prototype.rect = function(x, y, width, height) {
     attr("fill", "none").
     attr("stroke-width", this.lineWidth); return this;
 }
+
 Vex.Flow.RaphaelContext.prototype.fillRect = function(x, y, width, height) {
   if (height < 0) {
     y += height;

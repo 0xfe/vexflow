@@ -94,6 +94,21 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   this.calcExtraPx();
 }
 
+Vex.Flow.StaveNote.prototype.getBoundingBox = function() {
+  if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+      "Can't call getMetrics on an unformatted note.");
+
+  var w = this.getWidth();
+  var x = this.getAbsoluteX() - this.extraLeftPx;
+
+  ys = this.getStemExtents();
+  ys.baseY += (this.getStave().getSpacingBetweenLines() / 2) * this.stem_direction;
+  min_y = Vex.Min(ys.topY, ys.baseY);
+  max_y = Vex.Max(ys.topY, ys.baseY);
+
+  return new Vex.Flow.BoundingBox(x, min_y, w, max_y - min_y);
+}
+
 Vex.Flow.StaveNote.prototype.getTuplet = function() {
   return this.tuplet;
 }
@@ -117,7 +132,7 @@ Vex.Flow.StaveNote.prototype.setTuplet = function(tuplet) {
   }
 
   this.tuplet = tuplet;
-  
+
   return this;
 }
 
