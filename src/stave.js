@@ -34,6 +34,7 @@ Vex.Flow.Stave.prototype.init = function(x, y, width, options) {
     top_text_position: 1,         // in staff lines
     bottom_text_position: 7       // in staff lines
   };
+  this.bounds = {x: this.x, y: this.y, w: this.width, h: 0};
   Vex.Merge(this.options, options);
 
   this.options.line_config = [];
@@ -133,9 +134,14 @@ Vex.Flow.Stave.prototype.setTempo = function(tempo, y) {
   return this;
 }
 
-Vex.Flow.Stave.prototype.getHeight = function(width) {
+Vex.Flow.Stave.prototype.getHeight = function() {
   return this.height;
 }
+
+Vex.Flow.Stave.prototype.getBounds = function() {
+  return {x: 0, y: 0, w: 0, h: 0};
+}
+
 
 Vex.Flow.Stave.prototype.getBottomY = function() {
   var options = this.options;
