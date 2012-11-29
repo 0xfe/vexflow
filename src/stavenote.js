@@ -88,7 +88,19 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
     annotation_spacing: 5 // spacing above note for annotations
   }
 
-  this.setStemDirection(note_struct.stem_direction);
+  var auto_stem_direction;
+  if (note_struct.auto_stem) {
+    // Figure out optimal stem direction based on given notes
+    this.min_line = this.keyProps[0].line;
+    if (this.min_line < 3) {
+      auto_stem_direction = 1;
+    } else {
+      auto_stem_direction = -1;
+    }
+    this.setStemDirection(auto_stem_direction);
+  } else {
+    this.setStemDirection(note_struct.stem_direction);
+  }
 
   // Calculate left/right padding
   this.calcExtraPx();
@@ -275,7 +287,9 @@ Vex.Flow.StaveNote.prototype.setStemDirection = function(direction) {
 
   this.stem_direction = direction;
   this.beam = null;
-  this.setPreFormatted(false);
+  if (this.preFormatted) {
+    this.preFormat();
+  }
   return this;
 }
 

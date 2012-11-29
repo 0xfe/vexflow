@@ -871,7 +871,7 @@ Vex.Flow.VexTab.prototype.genElements = function() {
       }
 
       var note = new Vex.Flow.StaveNote({
-          keys: keys, duration: duration, clef: clef });
+          keys: keys, duration: duration, clef: clef, auto_stem: true });
 
       for (var j = 0; j < accidentals.length; ++j) {
         var acc = accidentals[j];
@@ -1134,7 +1134,7 @@ Vex.Flow.VexTab.prototype.parseCloseBeam = function() {
     beam_notes.push(this.elements.notes[this.state.current_stave][i]);
   }
 
-  this.elements.beams.push(new Vex.Flow.Beam(beam_notes));
+  this.elements.beams.push(new Vex.Flow.Beam(beam_notes, true));
   this.state.beam_start = null;
 }
 

@@ -10,6 +10,7 @@ Vex.Flow.Test.StaveNote.Start = function() {
   test("Tick", Vex.Flow.Test.StaveNote.ticks);
   test("Tick - New API", Vex.Flow.Test.StaveNote.ticksNewApi);
   test("Stem", Vex.Flow.Test.StaveNote.stem);
+  test("Automatic Stem Direction", Vex.Flow.Test.StaveNote.autoStem);
   test("StaveLine", Vex.Flow.Test.StaveNote.staveLine);
   test("Width", Vex.Flow.Test.StaveNote.width);
   test("TickContext", Vex.Flow.Test.StaveNote.tickContext);
@@ -309,6 +310,34 @@ Vex.Flow.Test.StaveNote.stem = function() {
       { keys: ["c/4", "e/4", "g/4"], duration: "w"});
   equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_UP,
       "Default note has UP stem");
+}
+
+Vex.Flow.Test.StaveNote.autoStem = function() {
+  var note = new Vex.Flow.StaveNote(
+      { keys: ["c/5", "e/5", "g/5"], duration: "8", auto_stem: true});
+  equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_DOWN,
+      "Stem must be down");
+
+  note = new Vex.Flow.StaveNote(
+      { keys: ["c/5", "e/4", "g/4"], duration: "8", auto_stem: true});
+  equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_UP,
+      "Stem must be up");
+
+  note = new Vex.Flow.StaveNote(
+      { keys: ["c/5"], duration: "8", auto_stem: true});
+  equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_DOWN,
+      "Stem must be up");
+
+  note = new Vex.Flow.StaveNote(
+      { keys: ["a/4", "e/5", "g/5"], duration: "8", auto_stem: true});
+  equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_UP,
+      "Stem must be up");
+
+  note = new Vex.Flow.StaveNote(
+      { keys: ["b/4"], duration: "8", auto_stem: true});
+  equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_DOWN,
+      "Stem must be up");
+
 }
 
 Vex.Flow.Test.StaveNote.staveLine = function() {

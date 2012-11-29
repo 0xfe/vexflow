@@ -11,6 +11,7 @@ Vex.Flow.Test.Beam.Start = function() {
   Vex.Flow.Test.runTest("Multi Beam", Vex.Flow.Test.Beam.multi);
   Vex.Flow.Test.runTest("Sixteenth Beam", Vex.Flow.Test.Beam.sixteenth);
   Vex.Flow.Test.runTest("Slopey Beam", Vex.Flow.Test.Beam.slopey);
+  Vex.Flow.Test.runTest("Automatic Beam", Vex.Flow.Test.Beam.auto);
   Vex.Flow.Test.runTest("Mixed Beam", Vex.Flow.Test.Beam.mixed);
   Vex.Flow.Test.runTest("Dotted Beam", Vex.Flow.Test.Beam.dotted);
   Vex.Flow.Test.runTest("Close Trade-offs Beam", Vex.Flow.Test.Beam.tradeoffs);
@@ -195,6 +196,43 @@ Vex.Flow.Test.Beam.slopey = function(options) {
     format([voice], 300);
   var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4));
   var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8));
+
+  voice.draw(ctx, stave);
+  beam1_1.setContext(ctx).draw();
+  beam1_2.setContext(ctx).draw();
+
+  ok(true, "Slopey Test");
+}
+
+Vex.Flow.Test.Beam.auto = function(options) {
+  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 350, 140);
+  var ctx = Vex.getCanvasContext(options.canvas_sel);
+  ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  ctx.font = " 10pt Arial";
+  var stave = new Vex.Flow.Stave(10, 30, 350).addTrebleGlyph().
+    setContext(ctx).draw();
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+  var notes = [
+    newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["g/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/6"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["g/5"], stem_direction: 1, duration: "8"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice], 300);
+  var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4), true);
+  var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8), true);
 
   voice.draw(ctx, stave);
   beam1_1.setContext(ctx).draw();

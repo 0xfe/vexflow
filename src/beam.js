@@ -12,16 +12,17 @@
  * @constructor
  * @param {Array.<Vex.Flow.StaveNote>} A set of notes.
  */
-Vex.Flow.Beam = function(notes) {
-  if (arguments.length > 0) this.init(notes);
+Vex.Flow.Beam = function(notes, auto_stem) {
+  if (arguments.length > 0) this.init(notes, auto_stem);
 }
 
 /**
  * Set the notes to attach this beam to.
  *
  * @param {Array.<Vex.Flow.StaveNote>} The notes.
+ * @param auto_stem If true, will automatically set stem direction.
  */
-Vex.Flow.Beam.prototype.init = function(notes) {
+Vex.Flow.Beam.prototype.init = function(notes, auto_stem) {
   if (!notes || notes == []) {
     throw new Vex.RuntimeError("BadArguments", "No notes provided for beam.");
   }
@@ -39,17 +40,36 @@ Vex.Flow.Beam.prototype.init = function(notes) {
         "Beams can only be applied to notes shorter than a quarter note.");
   }
 
-  for (var i = 1; i < notes.length; ++i) {
-    var note = notes[i];
-    if (note.getStemDirection() != this.stem_direction) {
-      throw new Vex.RuntimeError("BadArguments",
-          "Notes in a beam all have the same stem direction");
+  if (!auto_stem) {
+    for (var i = 1; i < notes.length; ++i) {
+      var note = notes[i];
+      if (note.getStemDirection() != this.stem_direction) {
+        throw new Vex.RuntimeError("BadArguments",
+            "Notes in a beam all have the same stem direction");
+      }
     }
   }
 
-  // Success. Lets grab 'em notes.
+  var stem_direction = -1;
+
+  if (auto_stem)  {
+    // Figure out optimal stem direction based on given notes
+    this.min_line = 1000;
+
+    for (var i = 0; i < notes.length; ++i) {
+      var note = notes[i];
+      this.min_line = Vex.Min(note.getKeyProps()[0].line, this.min_line);
+    }
+
+    if (this.min_line < 3) stem_direction = 1;
+  }
+
   for (var i = 0; i < notes.length; ++i) {
     var note = notes[i];
+    if (auto_stem) {
+      note.setStemDirection(stem_direction);
+      this.stem_direction = stem_direction;
+    }
     note.setBeam(this);
   }
 
