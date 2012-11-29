@@ -155,12 +155,17 @@ Vex.Flow.Note.prototype.getMetrics = function() {
     modLeftPx = this.modifierContext.state.left_shift;
     modRightPx = this.modifierContext.state.right_shift;
   }
-  return { noteWidth: this.getWidth() -
-                      modLeftPx - modRightPx -
+
+  var width = this.getWidth();
+  return { width: width,
+           noteWidth: width -
+                      modLeftPx - modRightPx -  // used by accidentals and modifiers
                       this.extraLeftPx - this.extraRightPx,
            left_shift: this.x_shift,
-           modLeftPx: modLeftPx, modRightPx: modRightPx,
-           extraLeftPx: this.extraLeftPx, extraRightPx: this.extraRightPx };
+           modLeftPx: modLeftPx,
+           modRightPx: modRightPx,
+           extraLeftPx: this.extraLeftPx,
+           extraRightPx: this.extraRightPx };
 }
 
 Vex.Flow.Note.prototype.getWidth = function() {

@@ -148,6 +148,8 @@ Vex.Flow.Test.Accidental.showNotes = function(note1, note2, stave, ctx, x) {
 
   note1.setContext(ctx).setStave(stave).draw();
   note2.setContext(ctx).setStave(stave).draw();
+  note1.getBoundingBox().draw(ctx);
+  note2.getBoundingBox().draw(ctx);
 
   ctx.save();
   ctx.font = "10pt Arial"; ctx.strokeStyle = "#579"; ctx.fillStyle = "#345";

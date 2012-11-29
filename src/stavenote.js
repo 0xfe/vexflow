@@ -98,8 +98,10 @@ Vex.Flow.StaveNote.prototype.getBoundingBox = function() {
   if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
       "Can't call getBoundingBox on an unformatted note.");
 
-  var w = this.getWidth();
-  var x = this.getAbsoluteX() - this.extraLeftPx;
+  var metrics = this.getMetrics();
+
+  var w = metrics.width;
+  var x = this.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
 
   var min_y = 0;
   var max_y = 0;
