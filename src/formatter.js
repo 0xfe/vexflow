@@ -282,6 +282,13 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     set_x = context.shouldIgnoreTicks() ?
         (min_x + context.getWidth()) : Math.max(set_x, min_x);
 
+    if (context.shouldIgnoreTicks() && justifyWidth) {
+        // This note stole room... recalculate with new justification width.
+        justifyWidth -= context.getWidth();
+        this.pixelsPerTick = justifyWidth /
+          (this.totalTicks.value() * contexts.resolutionMultiplier);
+    }
+
     // Determine pixels needed for left modifiers
     var left_px = thisMetrics.extraLeftPx;
 
