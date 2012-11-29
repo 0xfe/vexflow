@@ -25,6 +25,10 @@ Vex.Flow.BarNote.prototype.setStave = function(stave) {
   superclass.setStave.call(this, stave);
 }
 
+Vex.Flow.BarNote.prototype.getBoundingBox = function() {
+  return new Vex.Flow.BoundingBox(0, 0, 0, 0);
+}
+
 Vex.Flow.BarNote.prototype.addToModifierContext = function(mc) {
   return this;
 }

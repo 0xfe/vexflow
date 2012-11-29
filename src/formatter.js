@@ -19,7 +19,7 @@ Vex.Flow.Formatter = function(){
   };
 }
 
-// Helper function to format and draw a single voice
+// Helper function to format and draw a single voice. Returns a bounding box for the notation.
 Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes) {
   var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
     setMode(Vex.Flow.Voice.Mode.SOFT);
@@ -28,7 +28,10 @@ Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes) {
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], stave);
 
+  voice.setStave(stave);
+
   voice.draw(ctx, stave);
+  return voice.getBoundingBox();
 }
 
 // Helper function to format and draw a single voice

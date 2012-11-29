@@ -36,6 +36,7 @@ Vex.Flow.Voice.prototype.init = function(time) {
   this.ticksUsed = new Vex.Flow.Fraction(0, 1);
   this.smallestTickCount = this.totalTicks.clone();
   this.largestTickWidth = 0;
+  this.stave = null;
   this.boundingBox = null;
   // Do we care about strictly timed notes
   this.mode = Vex.Flow.Voice.Mode.STRICT;
@@ -44,7 +45,32 @@ Vex.Flow.Voice.prototype.init = function(time) {
   this.voiceGroup = null;
 }
 
+Vex.Flow.Voice.prototype.setStave = function(stave) {
+  this.stave = stave;
+  this.boundingBox = null; // Reset bounding box so we can reformat
+  return this;
+}
+
 Vex.Flow.Voice.prototype.getBoundingBox = function() {
+  if (!this.boundingBox) {
+    if (!this.stave) throw Vex.RERR("NoStave", "Can't get bounding box without stave.");
+    stave = this.stave;
+
+    var boundingBox = null;
+    if (this.tickables[0]) {
+      this.tickables[0].setStave(stave);
+      boundingBox = this.tickables[0].getBoundingBox();
+    }
+
+    for (var i = 0; i < this.tickables.length; ++i) {
+      this.tickables[i].setStave(stave);
+      if (i > 0 && boundingBox) {
+        boundingBox.mergeWith(this.tickables[i].getBoundingBox());
+      }
+    }
+
+    this.boundingBox = boundingBox;
+  }
   return this.boundingBox;
 }
 
@@ -163,13 +189,13 @@ Vex.Flow.Voice.prototype.draw = function(context, stave) {
   if (this.tickables[0]) {
     this.tickables[0].setStave(stave);
     boundingBox = this.tickables[0].getBoundingBox();
-    if (context && boundingBox) boundingBox.draw(context);
   }
 
   for (var i = 0; i < this.tickables.length; ++i) {
     this.tickables[i].setStave(stave);
     if (i > 0 && boundingBox) {
-      boundingBox.mergeWith(this.tickables[i].getBoundingBox());
+      tickable_bb = this.tickables[i].getBoundingBox();
+      boundingBox.mergeWith(tickable_bb);
     }
     this.tickables[i].setContext(context);
     this.tickables[i].setStave(stave);
