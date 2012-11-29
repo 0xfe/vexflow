@@ -12,11 +12,11 @@ Vex.Flow.Test.BoundingBox.Start = function() {
 }
 
 Vex.Flow.Test.BoundingBox.initialization = function() {
-  var bb = new Vex.Flow.BoundingBox(0, 0, 0, 0);
-  equal(bb.getX(), 0, "Bad X");
-  equal(bb.getY(), 0, "Bad Y");
-  equal(bb.getW(), 0, "Bad W");
-  equal(bb.getH(), 0, "Bad H");
+  var bb = new Vex.Flow.BoundingBox(4, 5, 6, 7);
+  equal(bb.getX(), 4, "Bad X");
+  equal(bb.getY(), 5, "Bad Y");
+  equal(bb.getW(), 6, "Bad W");
+  equal(bb.getH(), 7, "Bad H");
 
   bb.setX(5)
   equal(bb.getX(), 5, "Bad X");

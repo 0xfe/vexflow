@@ -36,11 +36,16 @@ Vex.Flow.Voice.prototype.init = function(time) {
   this.ticksUsed = new Vex.Flow.Fraction(0, 1);
   this.smallestTickCount = this.totalTicks.clone();
   this.largestTickWidth = 0;
+  this.boundingBox = null;
   // Do we care about strictly timed notes
   this.mode = Vex.Flow.Voice.Mode.STRICT;
 
   // This must belong to a VoiceGroup
   this.voiceGroup = null;
+}
+
+Vex.Flow.Voice.prototype.getBoundingBox = function() {
+  return this.boundingBox;
 }
 
 // Every tickable must be associated with a voiceGroup. This allows formatters
@@ -154,9 +159,22 @@ Vex.Flow.Voice.prototype.addTickables = function(tickables) {
 }
 
 Vex.Flow.Voice.prototype.draw = function(context, stave) {
+  var boundingBox = null;
+  if (this.tickables[0]) {
+    this.tickables[0].setStave(stave);
+    boundingBox = this.tickables[0].getBoundingBox();
+    if (context && boundingBox) boundingBox.draw(context);
+  }
+
   for (var i = 0; i < this.tickables.length; ++i) {
+    this.tickables[i].setStave(stave);
+    if (i > 0 && boundingBox) {
+      boundingBox.mergeWith(this.tickables[i].getBoundingBox());
+    }
     this.tickables[i].setContext(context);
     this.tickables[i].setStave(stave);
     this.tickables[i].draw();
   }
+
+  this.boundingBox = boundingBox;
 }

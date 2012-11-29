@@ -96,15 +96,37 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
 
 Vex.Flow.StaveNote.prototype.getBoundingBox = function() {
   if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
-      "Can't call getMetrics on an unformatted note.");
+      "Can't call getBoundingBox on an unformatted note.");
 
   var w = this.getWidth();
   var x = this.getAbsoluteX() - this.extraLeftPx;
 
-  ys = this.getStemExtents();
-  ys.baseY += (this.getStave().getSpacingBetweenLines() / 2) * this.stem_direction;
-  min_y = Vex.Min(ys.topY, ys.baseY);
-  max_y = Vex.Max(ys.topY, ys.baseY);
+  var min_y = 0;
+  var max_y = 0;
+  var half_line_spacing = this.getStave().getSpacingBetweenLines() / 2;
+
+  if (this.glyph.stem) {
+    var ys = this.getStemExtents();
+    ys.baseY += half_line_spacing * this.stem_direction;
+    min_y = Vex.Min(ys.topY, ys.baseY);
+    max_y = Vex.Max(ys.topY, ys.baseY);
+  } else {
+    min_y = null;
+    max_y = null;
+
+    for (var i=0; i < this.ys.length; ++i) {
+      var yy = this.ys[i];
+      if (i == 0) {
+        min_y = yy;
+        max_y = yy;
+      } else {
+        min_y = Vex.Min(yy, min_y);
+        max_y = Vex.Max(yy, max_y);
+      }
+      min_y -= half_line_spacing;
+      max_y += half_line_spacing;
+    }
+  }
 
   return new Vex.Flow.BoundingBox(x, min_y, w, max_y - min_y);
 }

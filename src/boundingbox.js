@@ -27,21 +27,27 @@ Vex.Flow.BoundingBox.prototype.setH = function(h) { return this.h = h; }
 
 // Merge my box with given box. Creates a bigger bounding box unless
 // the given box is contained in this one.
-Vex.Flow.BoundingBox.prototype.mergeWith = function(boundingBox) {
+Vex.Flow.BoundingBox.prototype.mergeWith = function(boundingBox, ctx) {
   var that = boundingBox;
+  // Vex.L("Merging this: " + this.y + ", " + this.h);
+  // Vex.L("Merging that: " + that.y + ", " + that.h);
+
   new_x = this.x < that.x ? this.x : that.x;
   new_y = this.y < that.y ? this.y : that.y;
-  new_w = (this.x + this.w) < (that.x + that.w) ? (that.x + that.w) - this.x : (this.x + this.w) - that.x;
-  new_h = (this.y + this.h) < (that.y + that.h) ? (that.y + that.h) - this.y : (this.y + this.h) - that.y;
+  new_w = (this.x + this.w) < (that.x + that.w) ? (that.x + that.w) - this.x : (this.x + this.w) - Vex.Min(this.x, that.x);
+  new_h = (this.y + this.h) < (that.y + that.h) ? (that.y + that.h) - this.y : (this.y + this.h) - Vex.Min(this.y, that.y);
 
   this.x = new_x;
   this.y = new_y;
   this.w = new_w;
   this.h = new_h;
+
+  // Vex.L("Merging BOOO: " + new_y + ", " + new_h);
+  if (ctx) this.draw(ctx);
+  return this;
 }
 
 Vex.Flow.BoundingBox.prototype.draw = function(ctx) {
   ctx.rect(this.x, this.y, this.w, this.h);
   ctx.stroke();
 }
-

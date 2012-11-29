@@ -86,6 +86,7 @@ Vex.Flow.Test.Voice.full = function(options, contextBuilder) {
 
   new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 500);
   voice.draw(ctx, stave);
+  voice.getBoundingBox().draw(ctx);
 
   try {
     voice.addTickable(

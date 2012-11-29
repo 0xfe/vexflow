@@ -90,7 +90,6 @@ Vex.Flow.Test.Stave.drawMultipleMeasures = function(options, contextBuilder) {
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
-
   // bar 2 - juxtaposing second bar next to first bar
   var staveBar2 = new Vex.Flow.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
   staveBar2.setSection("B", 0);

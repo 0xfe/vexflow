@@ -58,8 +58,7 @@ Vex.Flow.Tickable.prototype.preFormat = function() {
 }
 
 Vex.Flow.Tickable.prototype.getBoundingBox = function() {
-  throw new Vex.Flow.RERR("BoundingBoxNotAvailable",
-    "No bounding box calculation defined for this instance");
+  return null;
 }
 
 Vex.Flow.Tickable.prototype.getIntrinsicTicks = function() {
