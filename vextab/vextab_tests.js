@@ -37,7 +37,7 @@ Vex.Flow.Test.VexTab.catchError = function(tab, code) {
 Vex.Flow.Test.VexTab.basic = function() {
   expect(2);
   var tab = new Vex.Flow.VexTab();
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes /2 10/3");
+  Vex.Flow.Test.VexTab.catchError(tab, "xyz");
 
   ok(true, "all pass");
 }
@@ -46,12 +46,12 @@ Vex.Flow.Test.VexTab.stringFret = function() {
   expect(5);
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes 10/2 10/3");
+  tab.parse("notes 10/2 10/3");
   ok(true, "One fret per string.");
 
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes /2 10/3");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes j/2 10/3");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 4");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes /2 10/3");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes j/2 10/3");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 4");
 
   ok(true, "all pass");
 }
@@ -60,14 +60,14 @@ Vex.Flow.Test.VexTab.multiFret = function() {
   expect(5);
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes 10-11/3");
+  tab.parse("notes 10-11/3");
   ok(true, "Multiple frets per string.");
 
-  tab.parse("tabstave\n notes 10-11-12-13-15/3 5-4-3-2-1/2");
+  tab.parse("notes 10-11-12-13-15/3 5-4-3-2-1/2");
   ok(true, "Lots of frets");
 
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 10/2-10");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 10-/2");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 10/2-10");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 10-/2");
   ok(true, "all pass");
 }
 
@@ -75,14 +75,14 @@ Vex.Flow.Test.VexTab.tie = function() {
   expect(5);
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes 10s11/3");
+  tab.parse("notes 10s11/3");
   ok(true, "Simple slide.");
 
-  tab.parse("tabstave\n notes 10s11h12p10/3");
+  tab.parse("notes 10s11h12p10/3");
   ok(true, "Effect mix - 10s11h12p10.");
 
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 10/2s10");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 10s");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 10/2s10");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 10s");
 
   ok(true, "all pass");
 }
@@ -91,16 +91,16 @@ Vex.Flow.Test.VexTab.bend = function() {
   expect(5);
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes 10b11/3");
+  tab.parse("notes 10b11/3");
   ok(true, "Simple bend.");
 
-  tab.parse("tabstave\n notes 10b11s12/3");
+  tab.parse("notes 10b11s12/3");
   ok(true, "Bend then slide.");
 
-  tab.parse("tabstave\n notes 10s11b12/3");
+  tab.parse("notes 10s11b12/3");
   ok(true, "Slide then bend.");
 
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 10b12b10b-/2");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 10b12b10b-/2");
 
   ok(true, "all pass");
 }
@@ -109,27 +109,27 @@ Vex.Flow.Test.VexTab.vibrato = function() {
   expect(10);
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes 10v/3");
+  tab.parse("notes 10v/3");
   ok(true, "Simple vibrato.");
 
-  tab.parse("tabstave\n notes 10-11v-12v/3");
+  tab.parse("notes 10-11v-12v/3");
   ok(true, "Multi-note vibrato");
 
-  tab.parse("tabstave\n notes 10b11v-12/3");
+  tab.parse("notes 10b11v-12/3");
   ok(true, "Bend then vibrato");
 
-  tab.parse("tabstave\n notes 10b11b10v-12/3");
+  tab.parse("notes 10b11b10v-12/3");
   ok(true, "Bend then release then vibrato");
 
-  tab.parse("tabstave\n notes 10s11v-12/3");
+  tab.parse("notes 10s11v-12/3");
   ok(true, "Slide then vibrato");
 
-  tab.parse("tabstave\n notes 10s11vs4s12vh15p10-1/2");
+  tab.parse("notes 10s11vs4s12vh15p10-1/2");
   ok(true, "Big mix");
 
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 10v");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 10vb/1");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 10-b11/3");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 10v");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 10vb/1");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 10-b11/3");
 
   ok(true, "all pass");
 }
@@ -138,16 +138,16 @@ Vex.Flow.Test.VexTab.chord = function() {
   expect(7);
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes (4/6)");
+  tab.parse("notes (4/6)");
   ok(true, "One note chord.");
 
-  tab.parse("tabstave\n notes (4/5.6/7)");
+  tab.parse("notes (4/5.6/7)");
   ok(true, "Two note chord.");
 
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes (4");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes (4/)");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes (/5)");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes (4/5.)");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes (4");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes (4/)");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes (/5)");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes (4/5.)");
 
   ok(true, "all pass");
 }
@@ -156,39 +156,41 @@ Vex.Flow.Test.VexTab.tapping = function() {
   expect(5);
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes t5p4p3/3");
+  tab.parse("notes t5p4p3/3");
   ok(true, "Start with tap.");
 
-  tab.parse("tabstave\n notes 5t12p5-4-3/1");
+  tab.parse("notes 5t12p5-4-3/1");
   ok(true, "Tap in the middle.");
 
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes 5t/4");
-  Vex.Flow.Test.VexTab.catchError(tab, "tabstave\n notes t-4-4h5/3");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes 5t/4");
+  Vex.Flow.Test.VexTab.catchError(tab, "notes t-4-4h5/3");
 
   ok(true, "all pass");
 }
 
 Vex.Flow.Test.VexTab.chordTies = function() {
-  expect(7);
+  expect(8);
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes (1/2.2/3)s(3/2.4/3)");
+  tab.parse("notes (1/2.2/3)s(3/2.4/3)");
   ok(true, "Simple chord slide.");
 
-  tab.parse("tabstave\n notes (1/2.2/3.3/4)s(3/2.4/3.5/4)");
+  tab.parse("notes (1/2.2/3.3/4)s(3/2.4/3.5/4)");
   ok(true, "Four note chord slide.");
 
-  tab.parse("tabstave\n notes (4/5.1/2.2/3)s(3/2.4/3)");
+  tab.parse("notes (4/5.1/2.2/3)s(3/2.4/3)");
   ok(true, "Mixed note count chord slide.");
 
-  tab.parse("tabstave\n notes (1/2.2/3)s(3/2.5/5.4/3)");
+  tab.parse("notes (1/2.2/3)s(3/2.5/5.4/3)");
   ok(true, "Reverse note count chord slide.");
 
-  tab.parse("tabstave\n notes (1/2.2/3)s(3/2.4/3)h(6/2.7/3)");
+  tab.parse("notes (1/2.2/3)s(3/2.4/3)h(6/2.7/3)");
   ok(true, "Slide then hammer");
 
-  tab.parse("tabstave\n notes t(1/2.2/3)s(3/2.4/3)h(6/2.7/3)");
+  tab.parse("notes t(1/2.2/3)s(3/2.4/3)h(6/2.7/3)");
   ok(true, "Tap a chord, then slide and hammer");
+
+  Vex.Flow.Test.VexTab.catchError(tab, "notes (1/2.2/3)s3/3");
 
   ok(true, "all pass");
 }
@@ -196,10 +198,10 @@ Vex.Flow.Test.VexTab.chordTies = function() {
 Vex.Flow.Test.VexTab.duration = function() {
   var tab = new Vex.Flow.VexTab();
 
-  tab.parse("tabstave\n notes :w (1/2.2/3)s(3/2.4/3)");
+  tab.parse("notes :w (1/2.2/3)s(3/2.4/3)");
   ok(true, "Simple duration.");
 
-  tab.parse("tabstave\n notes :h (1/2.2/3)s(3/2.4/3) :q 1/2");
+  tab.parse("notes :h (1/2.2/3)s(3/2.4/3) :q 1/2");
   ok(true, "Duration changes duration.");
 
   ok(true, "all pass");
@@ -211,13 +213,13 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
   tab.parse("tabstave notation=true");
   ok(true, "tabstave notation and tablature");
 
-  tab.parse("tabstave\n notes :w 1/2 | 1/3 | 1/5 | 1/4");
+  tab.parse("notes :w 1/2 | 1/3 | 1/5 | 1/4");
   ok(true, "Simple stave with bars, notes and tabs.");
 
   tab.parse("tabstave notation=true tablature=false");
   ok(true, "tabstave just notation");
 
-  tab.parse("tabstave\n notes :w 1/2 | 1/3 | 1/5 | 1/4");
+  tab.parse("notes :w 1/2 | 1/3 | 1/5 | 1/4");
   ok(true, "Simple stave with bars, notes and no tabs.");
 
   Vex.Flow.Test.VexTab.catchError(tab, "tabstave notation=false tablature=false");
@@ -264,6 +266,7 @@ Vex.Flow.Test.VexTab.notationOnly = function() {
   ok(true, "all pass");
 }
 
+
 Vex.Flow.Test.VexTab.tuning = function() {
   expect(9);
   var tab = new Vex.Flow.VexTab();
@@ -280,9 +283,6 @@ Vex.Flow.Test.VexTab.tuning = function() {
   tab.parse("tabstave tuning=dropd");
   ok(true, "tabstave tuning=dropd");
 
-  /*
-  Uncomment these when tuning code is written:
-
   Vex.Flow.Test.VexTab.catchError(tab,
       "tabstave tuning=,B/4,G/4,D/4,A/3,E/3");
   Vex.Flow.Test.VexTab.catchError(tab,
@@ -291,7 +291,6 @@ Vex.Flow.Test.VexTab.tuning = function() {
       "tabstave tuning=E,B,G,D,A,E");
   Vex.Flow.Test.VexTab.catchError(tab,
       "tabstave tuning=T/5,B/4,G/4,D/4,A/3,E/3");
-  */
 
   ok(true, "all pass");
 }
