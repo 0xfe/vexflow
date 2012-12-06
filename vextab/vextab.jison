@@ -8,12 +8,17 @@
   a hand-rolled recursive descent parser.
 */
 
+%{
+  Vex.L("Starting parser.");
+%}
+
 %lex
 %s notes
 %%
 
-"notes"               { this.begin('notes'); return 'NOTES'; }
-"tabstave"            return 'TABSTAVE'
+"notes"                        { this.begin('notes'); return 'NOTES'; }
+"tabstave"                       return 'TABSTAVE'
+<INITIAL>[^\s=]+       return 'WORD'
 "/"                   return '/'
 "-"                   return '-'
 "+"                   return '+'
@@ -23,11 +28,8 @@
 ")"                   return ')'
 "["                   return '['
 "]"                   return ']'
-"#"                   return '#'
 "|"                   return '|'
 "."                   return '.'
-"v"                   return 'v'
-"V"                   return 'V'
 
 /* These are valid inside fret/string expressions only */
 <notes>[b]            return 'b'
@@ -39,11 +41,12 @@
 <notes>[w]            return 'w'
 <notes>[h]            return 'h'
 <notes>[d]            return 'd'
+<notes>[v]            return 'v'
+<notes>[V]            return 'V'
 <notes>[0-9]+         return 'NUMBER'
 
 /* New lines reset your state */
 [\r\n]+               { this.begin('INITIAL'); }
-<INITIAL>[a-zA-Z#/0-9]+\b      return 'WORD'
 \s+                   /* skip whitespace */
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
@@ -70,15 +73,22 @@ vextab
   ;
 
 stave
-  : TABSTAVE
-  | TABSTAVE options
-  | TABSTAVE notelist
-  | TABSTAVE options notelist
+  : TABSTAVE maybe_options maybe_notelist
+  ;
+
+maybe_options
+  :
+  | options
   ;
 
 options
   : WORD '=' WORD
   | options WORD '=' WORD
+  ;
+
+maybe_notelist
+  :
+  | notelist
   ;
 
 notelist
@@ -117,14 +127,13 @@ maybe_dot
   ;
 
 line
-  : frets decorator '/' string
+  : frets maybe_decorator '/' string
   | time
   | '|'
   ;
 
-
 chord
-  : '(' chord_line ')' decorator
+  : '(' chord_line ')' maybe_decorator
   | articulation chord
   ;
 
@@ -136,11 +145,11 @@ chord_line
 frets
   : NUMBER
   | articulation timed_fret
-  | frets articulation timed_fret
+  | frets maybe_decorator articulation timed_fret
   ;
 
 timed_fret
-  : ':' time_values ':' NUMBER
+  : ':' time_values maybe_dot ':' NUMBER
   |  NUMBER
   ;
 
@@ -157,7 +166,7 @@ articulation
   | 'p'
   ;
 
-decorator
+maybe_decorator
   : 'v'
   | 'V'
   |
