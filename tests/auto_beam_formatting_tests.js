@@ -2,9 +2,9 @@ Vex.Flow.Test.AutoBeamFormatting = {};
 
 Vex.Flow.Test.AutoBeamFormatting.Start = function() {
 	Vex.Flow.Test.runTest("Simple Auto Beaming", Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
-  Vex.Flow.Test.runTest("More Simple Auto Beaming", Vex.Flow.Test.AutoBeamFormatting.stemDirections1);
-  Vex.Flow.Test.runTest("Simple Tuplet Beaming", Vex.Flow.Test.AutoBeamFormatting.stemDirections2);
-	Vex.Flow.Test.runTest("Simple Tuplet Beaming", Vex.Flow.Test.AutoBeamFormatting.stemDirections3);
+  Vex.Flow.Test.runTest("More Simple Auto Beaming", Vex.Flow.Test.AutoBeamFormatting.moreSimple);
+  Vex.Flow.Test.runTest("Simple Tuplet Beaming", Vex.Flow.Test.AutoBeamFormatting.simpleTuplets);
+	Vex.Flow.Test.runTest("More beaming", Vex.Flow.Test.AutoBeamFormatting.moreBeaming);
 }
 
 Vex.Flow.Test.AutoBeamFormatting.setupContext = function(options, x, y) {
@@ -58,7 +58,7 @@ Vex.Flow.Test.AutoBeamFormatting.simpleAuto = function(options) {
 
 }
 
-Vex.Flow.Test.AutoBeamFormatting.stemDirections1 = function(options) {
+Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
 
   var notes = [
@@ -90,7 +90,7 @@ Vex.Flow.Test.AutoBeamFormatting.stemDirections1 = function(options) {
 
 }
 
-Vex.Flow.Test.AutoBeamFormatting.stemDirections2 = function(options) {
+Vex.Flow.Test.AutoBeamFormatting.simpleTuplets = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
 
   var notes = [
@@ -130,7 +130,7 @@ Vex.Flow.Test.AutoBeamFormatting.stemDirections2 = function(options) {
 
 }
 
-Vex.Flow.Test.AutoBeamFormatting.stemDirections3 = function(options) {
+Vex.Flow.Test.AutoBeamFormatting.moreBeaming = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
 
   var notes = [
