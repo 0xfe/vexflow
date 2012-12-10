@@ -43,7 +43,6 @@ Vex.Flow.Test.Beam.setupContext = function(options, x, y) {
   return {context: ctx, stave: stave};
 }
 
-
 Vex.Flow.Test.Beam.simple = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
