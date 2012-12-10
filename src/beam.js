@@ -256,3 +256,109 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
 
   return true;
 }
+
+
+Vex.Flow.Beam.applyAndGetBeams = function(voice) {
+  var unprocessedNotes = voice.tickables;
+  var ticksPerGroup    = 4096;
+  var noteGroups       = [];
+  var currentGroup     = [];
+
+  function getTotalTicks(vf_notes){
+    return vf_notes.reduce(function(memo,note){
+      return note.getTicks().value() + memo;
+    }, 0);
+  }
+
+  function createGroups(){
+    var nextGroup = [];
+
+    unprocessedNotes.forEach(function(unprocessedNote){
+      nextGroup    = [];
+
+      currentGroup.push(unprocessedNote);
+
+      // If the note that was just added overflows the group tick total
+      if (getTotalTicks(currentGroup) > ticksPerGroup) {
+        nextGroup.push(currentGroup.pop());
+        noteGroups.push(currentGroup);
+        currentGroup = nextGroup;
+      } else if (getTotalTicks(currentGroup) == ticksPerGroup) {
+        noteGroups.push(currentGroup);
+        currentGroup = nextGroup;
+      }
+    });
+
+    // Adds any remainder notes
+    if (currentGroup.length > 0)
+      noteGroups.push(currentGroup);
+  }
+
+  function getBeamGroups() {
+    return noteGroups.filter(function(group){
+        return group.length > 1;
+    });
+  }
+
+  function formatStems() {
+    noteGroups.forEach(function(group){
+      var stemDirection = determineStemDirection(group);
+
+      applyStemDirection(group, stemDirection);
+    });
+  }
+
+  function determineStemDirection(group) {
+    var lineSum = 0;
+
+    group.forEach(function(note) {
+      note.keyProps.forEach(function(keyProp){
+        lineSum += (keyProp.line - 3);
+      });
+    });
+
+    if (lineSum > 0)
+      return -1;
+    return 1;
+  }
+
+  function applyStemDirection(group, direction) {
+    group.forEach(function(note){
+      note.setStemDirection(direction);
+    });
+  }
+
+  function getTupletGroups() {
+    return noteGroups.filter(function(group){
+      return group[0].tuplet;
+    });
+  }
+
+  // Using closures to store the variables throughout the various functions
+  // IMO Keeps it this process lot cleaner - but not super consistent with 
+  // the rest of the API's style - Silverwolf90 (Cyril)
+  createGroups();
+  formatStems();
+
+  // Get the notes to be beamed
+  var beamedNoteGroups = getBeamGroups();
+
+  // Get the tuplets in order to format them accurately
+  var tupletGroups = getTupletGroups();
+
+  // Create a Vex.Flow.Beam from each group of notes to be beamed
+  var beams = [];
+  beamedNoteGroups.forEach(function(group){
+    beams.push(new Vex.Flow.Beam(group));
+  });
+
+  // Reformat tuplets
+  tupletGroups.forEach(function(group){
+    var firstNote = group[0];
+    var tuplet = firstNote.tuplet;
+    if (firstNote.beam) tuplet.setBracketed(false);
+    if (firstNote.stem_direction == -1) tuplet.setTupletLocation( Vex.Flow.Tuplet.LOCATION_BOTTOM);
+  });
+
+  return beams;
+};
