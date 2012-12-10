@@ -1,10 +1,14 @@
 Vex.Flow.Test.AutoBeamFormatting = {};
 
 Vex.Flow.Test.AutoBeamFormatting.Start = function() {
-	Vex.Flow.Test.runTest("Simple Auto Beaming", Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
-  Vex.Flow.Test.runTest("More Simple Auto Beaming", Vex.Flow.Test.AutoBeamFormatting.moreSimple);
-  Vex.Flow.Test.runTest("Simple Tuplet Beaming", Vex.Flow.Test.AutoBeamFormatting.simpleTuplets);
-	Vex.Flow.Test.runTest("More beaming", Vex.Flow.Test.AutoBeamFormatting.moreBeaming);
+  Vex.Flow.Test.runTest("Simple Auto Beaming",
+                        Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
+  Vex.Flow.Test.runTest("More Simple Auto Beaming",
+                        Vex.Flow.Test.AutoBeamFormatting.moreSimple);
+  Vex.Flow.Test.runTest("Simple Tuplet Beaming",
+                        Vex.Flow.Test.AutoBeamFormatting.simpleTuplets);
+  Vex.Flow.Test.runTest("More Automatic Beaming",
+                        Vex.Flow.Test.AutoBeamFormatting.moreBeaming);
 }
 
 Vex.Flow.Test.AutoBeamFormatting.setupContext = function(options, x, y) {
@@ -19,7 +23,6 @@ Vex.Flow.Test.AutoBeamFormatting.setupContext = function(options, x, y) {
 }
 
 function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-
 
 Vex.Flow.Test.AutoBeamFormatting.simpleAuto = function(options) {
   var c = Vex.Flow.Test.Beam.setupContext(options);
@@ -55,7 +58,6 @@ Vex.Flow.Test.AutoBeamFormatting.simpleAuto = function(options) {
   });
 
   ok(true, "Auto Beam Applicator Test");
-
 }
 
 Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options) {
@@ -72,7 +74,6 @@ Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options) {
     newNote({ keys: ["a/5"], duration: "8"})
   ];
 
-
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   voice.addTickables(notes);
 
@@ -87,7 +88,6 @@ Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options) {
     beam.setContext(c.context).draw();
   });
   ok(true, "Auto Beam Applicator Test");
-
 }
 
 Vex.Flow.Test.AutoBeamFormatting.simpleTuplets = function(options) {
@@ -127,7 +127,6 @@ Vex.Flow.Test.AutoBeamFormatting.simpleTuplets = function(options) {
   triplet1.setContext(c.context).draw();
   quintuplet.setContext(c.context).draw();
   ok(true, "Auto Beam Applicator Test");
-
 }
 
 Vex.Flow.Test.AutoBeamFormatting.moreBeaming = function(options) {
@@ -143,7 +142,6 @@ Vex.Flow.Test.AutoBeamFormatting.moreBeaming = function(options) {
     newNote({ keys: ["c/5", "e/5"], duration: "16"}),
     newNote({ keys: ["a/5"], duration: "8"})
     ];
-
 
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   voice.setStrict(false);
@@ -161,5 +159,4 @@ Vex.Flow.Test.AutoBeamFormatting.moreBeaming = function(options) {
   });
 
   ok(true, "Auto Beam Applicator Test");
-
 }

@@ -357,7 +357,9 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice) {
     var firstNote = group[0];
     var tuplet = firstNote.tuplet;
     if (firstNote.beam) tuplet.setBracketed(false);
-    if (firstNote.stem_direction == -1) tuplet.setTupletLocation( Vex.Flow.Tuplet.LOCATION_BOTTOM);
+    if (firstNote.stem_direction == -1) {
+      tuplet.setTupletLocation( Vex.Flow.Tuplet.LOCATION_BOTTOM);
+    }
   });
 
   return beams;
