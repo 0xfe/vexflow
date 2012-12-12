@@ -20,10 +20,14 @@ Vex.Flow.Formatter = function(){
 }
 
 // Helper function to format and draw a single voice. Returns a bounding box for the notation.
-Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes) {
+Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes, autobeam) {
   var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
     setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
+  var beams = null;
+  if (autobeam == true) {
+    beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+  }
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], stave);
@@ -31,12 +35,18 @@ Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes) {
   voice.setStave(stave);
 
   voice.draw(ctx, stave);
+  if (beams != null) {
+    for (var i=0; i<beams.length; ++i) {
+      beams[i].setContext(ctx).draw();
+    }
+  }
+
   return voice.getBoundingBox();
 }
 
 // Helper function to format and draw a single voice
 Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
-    tabstave, stave, tabnotes, notes) {
+    tabstave, stave, tabnotes, notes, autobeam) {
 
   var notevoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
     setMode(Vex.Flow.Voice.Mode.SOFT);
@@ -46,6 +56,12 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
     setMode(Vex.Flow.Voice.Mode.SOFT);
   tabvoice.addTickables(tabnotes);
 
+  var beams = null;
+
+  if (autobeam == true) {
+    beams = Vex.Flow.Beam.applyAndGetBeams(notevoice);
+  }
+
   var formatter = new Vex.Flow.Formatter().
     joinVoices([notevoice]).
     joinVoices([tabvoice]).
@@ -53,6 +69,11 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
 
   notevoice.draw(ctx, stave);
   tabvoice.draw(ctx, tabstave);
+  if (beams != null) {
+    for (var i=0; i<beams.length; ++i) {
+      beams[i].setContext(ctx).draw();
+    }
+  }
 
   // Draw a connector between tab and note staves.
   (new Vex.Flow.StaveConnector(stave, tabstave)).setContext(ctx).draw();

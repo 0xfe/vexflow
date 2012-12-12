@@ -46,6 +46,7 @@ Vex.Flow.Note.prototype.init = function(note_struct) {
   // Positioning contexts
   this.tickContext = null;    // The current tick context
   this.modifierContext = null;
+  this.ignore_ticks = false;
 
   // Positioning variables
   this.width = 0;             // Width in pixels calculated after preFormat
@@ -87,6 +88,9 @@ Vex.Flow.Note.prototype.setExtraLeftPx = function(x) {
   this.extraLeftPx = x; return this; }
 Vex.Flow.Note.prototype.setExtraRightPx = function(x) {
   this.extraRightPx = x; return this; }
+Vex.Flow.Note.prototype.shouldIgnoreTicks = function() {
+  return this.ignore_ticks;
+}
 
 Vex.Flow.Note.prototype.getYs = function() {
   if (this.ys.length == 0) throw new Vex.RERR("NoYValues",
