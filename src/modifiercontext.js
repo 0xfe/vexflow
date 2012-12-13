@@ -308,19 +308,18 @@ Vex.Flow.ModifierContext.prototype.formatBends = function() {
   if (!bends || bends.length == 0) return this;
 
   var width = 0;
+  var last_width = 0;
   var text_line = this.state.text_line;
 
   // Format Bends
   for (var i = 0; i < bends.length; ++i) {
     var bend = bends[i];
-    var text_width = Vex.Flow.textWidth(bend.getText());
-    width += bend.render_options.bend_width + text_width / 2;
-    bend.setBendWidth(width);
-    width += bend.release_width + text_width / 2;
+    bend.setXShift(last_width);
+    last_width = bend.getWidth();
     bend.setTextLine(text_line);
   }
 
-  this.state.right_shift += width;
+  this.state.right_shift += last_width;
   this.state.text_line += 1;
   return this;
 }
