@@ -32,10 +32,22 @@ Vex.Flow.TabNote.prototype.init = function(tab_struct) {
         JSON.stringify(tab_struct));
   }
 
+  this.ghost = false; // Renders parenthesis around notes
+  this.updateWidth();
+}
+
+Vex.Flow.TabNote.prototype.setGhost = function(ghost) {
+  this.ghost = ghost;
+  this.updateWidth();
+  return this;
+}
+
+Vex.Flow.TabNote.prototype.updateWidth = function() {
   this.glyphs = [];
   this.width = 0;
   for (var i = 0; i < this.positions.length; ++i) {
     var fret = this.positions[i].fret;
+    if (this.ghost) fret = "(" + fret + ")";
     var glyph = Vex.Flow.tabToGlyph(fret);
     this.glyphs.push(glyph);
     this.width = (glyph.width > this.width) ? glyph.width : this.width;

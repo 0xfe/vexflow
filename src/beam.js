@@ -331,7 +331,7 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice) {
 
   function getTupletGroups() {
     return noteGroups.filter(function(group){
-      return group[0].tuplet;
+      if (group[0]) return group[0].tuplet;
     });
   }
 
@@ -357,6 +357,7 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice) {
   tupletGroups.forEach(function(group){
     var firstNote = group[0];
     var tuplet = firstNote.tuplet;
+
     if (firstNote.beam) tuplet.setBracketed(false);
     if (firstNote.stem_direction == -1) {
       tuplet.setTupletLocation( Vex.Flow.Tuplet.LOCATION_BOTTOM);
