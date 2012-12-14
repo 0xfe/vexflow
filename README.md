@@ -3,12 +3,20 @@
 A JavaScript library for rendering music notation.
 Copyright (c) 2010 Mohit Muthanna Cheppudira
 
+If you're not a developer and just want to write music, go to
+[My VexFlow](http://my.vexflow.com)
+
 ## On The Web
 
 * [VexFlow Home](http://vexflow.com)
 * [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html)
 * [VexTab Home](http://vextab.com)
 * [The VexTab Tutorial](http://vexflow.com/vextab/tutorial.html)
+
+## Where is VexTab?
+
+VexTab has been overhauled and has moved to a new repository. Go
+to [github/0xfe/vextab](http://github.com/0xfe/vextab).
 
 ## To Contribute
 

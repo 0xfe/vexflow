@@ -15,7 +15,6 @@ env = default_env.Clone(VEX_VERSION = "1.0-pre2")
 
 mkdir_with_cleanup("build", env)
 mkdir_with_cleanup("build/vexflow", env)
-mkdir_with_cleanup("build/tabdiv", env)
 
 dbg = env.Clone(
     JS_DEFINES = {
@@ -36,17 +35,5 @@ Export("dbg opt")
 # Build VexFlow
 SConscript("src/SConstruct", variant_dir="build/vexflow", duplicate=0)
 
-# Build TabDiv
-SConscript("tabdiv/SConstruct", variant_dir="build/tabdiv", duplicate=0)
-
-# Create Zip archives for distribution
-
-Zip("build/tabdiv-free.zip",
-      ["build/vexflow/vexflow-free.js",
-       "build/tabdiv/vextabdiv-free.js",
-       "tabdiv/tabdiv.css"])
-
 # Copy over tests for distribution
-
 cpdir_with_cleanup("build/tests", "tests", env)
-cpdir_with_cleanup("build/vextab", "vextab", env)
