@@ -20,10 +20,38 @@ Vex.Flow.Tickable.prototype.init = function() {
   this.modifierContext = null;
   this.modifiers = [];
   this.preFormatted = false;
+  this.tuplet = null;
 
   // This flag tells the formatter to ignore this tickable during
   // formatting and justification. It is set by tickables such as BarNote.
   this.ignore_ticks = false;
+}
+
+Vex.Flow.Tickable.prototype.getTuplet = function() {
+  return this.tuplet;
+}
+
+Vex.Flow.Tickable.prototype.setTuplet = function(tuplet) {
+  // Detach from previous tuplet
+  if (this.tuplet) {
+    var noteCount = this.tuplet.getNoteCount();
+    var beatsOccupied = this.tuplet.getBeatsOccupied();
+
+    // Revert old multiplier
+    this.applyTickMultiplier(noteCount, beatsOccupied);
+  }
+
+  // Attach to new tuplet
+  if (tuplet) {
+    var noteCount = tuplet.getNoteCount();
+    var beatsOccupied = tuplet.getBeatsOccupied();
+
+    this.applyTickMultiplier(beatsOccupied, noteCount);
+  }
+
+  this.tuplet = tuplet;
+
+  return this;
 }
 
 /** optional, if tickable has modifiers **/
