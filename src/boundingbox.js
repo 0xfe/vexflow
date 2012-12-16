@@ -29,8 +29,6 @@ Vex.Flow.BoundingBox.prototype.setH = function(h) { return this.h = h; }
 // the given box is contained in this one.
 Vex.Flow.BoundingBox.prototype.mergeWith = function(boundingBox, ctx) {
   var that = boundingBox;
-  // Vex.L("Merging this: " + this.y + ", " + this.h);
-  // Vex.L("Merging that: " + that.y + ", " + that.h);
 
   new_x = this.x < that.x ? this.x : that.x;
   new_y = this.y < that.y ? this.y : that.y;
@@ -42,7 +40,6 @@ Vex.Flow.BoundingBox.prototype.mergeWith = function(boundingBox, ctx) {
   this.w = new_w;
   this.h = new_h;
 
-  // Vex.L("Merging BOOO: " + new_y + ", " + new_h);
   if (ctx) this.draw(ctx);
   return this;
 }

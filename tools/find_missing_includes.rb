@@ -10,11 +10,12 @@ require 'pp'
 SRCDIR = "../src"
 SCONSTRUCT = "#{SRCDIR}/SConstruct"
 HTML_FILES = [
-  "../tests/flow.html",
-  "../docs/tutorial.html", "../docs/sandbox.html",
-  "../tabdiv/playground.html", "../tabdiv/tutorial.html",
-  "../tabdiv/vextab.html",
-  "../vextab/runtest.html" ]
+  "../tests/flow.html"
+
+  # Might not need these anymore.
+  # "../docs/tutorial.html",
+  # "../docs/sandbox.html"
+]
 
 unless File.exists?(SRCDIR)
   puts "This script needs to be run from the tools/ directory."

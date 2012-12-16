@@ -11,7 +11,12 @@ echo Building...
 scons -c
 ./build.sh
 
-ssh $SSH_TO mkdir -p $TARGET; mkdir -p $TARGET/support
+ssh $SSH_TO "mkdir -p $TARGET; mkdir -p $TARGET/support"
+if [ "$?" != "0" ]
+  then
+  echo "Cannot create remote directory."
+  exit 1
+fi
 
 echo Copying over compiled sources...
 scp build/vexflow/vexflow-min.js $SCP_TO/support
