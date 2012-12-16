@@ -1,28 +1,27 @@
 #!/bin/bash
-
-# Simple deployment script.
+# Simple deployment script for vexflow.com.
+#
 # Pushes only JavaScript, tests, and supporting HTML (tutorial, playground)
 
-TARGET=~/www/vexflow
+TARGET='/home/mohit/www/vexflow'
+SSH_TO="mohit@my.vexflow.com source ~/.bash_profile; cd $TARGET;"
+SCP_TO="mohit@my.vexflow.com:$TARGET"
 
 echo Building...
 scons -c
 ./build.sh
 
-curdir=`pwd`
-mkdir -p $TARGET
-mkdir -p $TARGET/docs
-mkdir -p $TARGET/support
+ssh $SSH_TO mkdir -p $TARGET; mkdir -p $TARGET/support
 
 echo Copying over compiled sources...
-cp build/vexflow/vexflow-min.js $TARGET/support
+scp build/vexflow/vexflow-min.js $SCP_TO/support
 
 echo Copying over tests...
-cp -r build/tests $TARGET
-cp -r build/tests/flow.html $TARGET/tests/index.html
+ssh $SSH_TO rm -rf tests/
+scp -r build/tests $SCP_TO
+scp build/tests/flow.html $SCP_TO/tests/index.html
 
 echo Copy over docs...
-cp -r docs $TARGET
-cp -r docs/index.html $TARGET
+scp -r docs $SCP_TO
 
 echo Done.
