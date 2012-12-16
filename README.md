@@ -3,20 +3,22 @@
 A JavaScript library for rendering music notation.
 Copyright (c) 2010 Mohit Muthanna Cheppudira
 
-If you're not a developer and just want to write music, go to
-[My VexFlow](http://my.vexflow.com)
+## What is VexFlow?
 
-## On The Web
+VexFlow is an open-source web-based music notation rendering API. It is written completely in JavaScript, and runs right in the browser. VexFlow supports HTML5 Canvas and SVG.
 
-* [VexFlow Home](http://vexflow.com)
-* [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html)
-* [VexTab Home](http://vextab.com)
-* [The VexTab Tutorial](http://vexflow.com/vextab/tutorial.html)
+Go try out [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html) to learn how to use VexFlow.
+
+If you're not a developer and just want to write and share your music, go to
+[My VexFlow](http://my.vexflow.com).
+
 
 ## Where is VexTab?
 
 VexTab has been overhauled and has moved to a new repository. Go
 to [github/0xfe/vextab](http://github.com/0xfe/vextab).
+
+VexTab 2.0 now supports all VexTab 1.0 features, and [includes a few new ones](http://my.vexflow.com/articles/53?source=enabled).
 
 ## To Contribute
 
@@ -34,8 +36,8 @@ to [github/0xfe/vextab](http://github.com/0xfe/vextab).
 
 For performing full builds, you need the following:
 
-* JRE
 * Google Closure Compiler (included in support/)
+  * This requires a JRE to be installed.
 * SCons
 * git
 * zip
@@ -56,6 +58,8 @@ Quiet build:
 
 ## Links
 
-The site: http://www.vexflow.com
-The blog: http://0xfe.blogspot.com
-The discussions: https://groups.google.com/forum/?fromgroups#!forum/vexflow
+* [VexFlow Home](http://vexflow.com)
+* [My VexFlow](http://my.vexflow.com)
+* [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html)
+* [VexFlow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow)
+* [Me](http://0xfe.muthanna.com)
