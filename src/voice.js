@@ -65,7 +65,8 @@ Vex.Flow.Voice.prototype.getBoundingBox = function() {
     for (var i = 0; i < this.tickables.length; ++i) {
       this.tickables[i].setStave(stave);
       if (i > 0 && boundingBox) {
-        boundingBox.mergeWith(this.tickables[i].getBoundingBox());
+        var bb = this.tickables[i].getBoundingBox();
+        if (bb) boundingBox.mergeWith(bb);
       }
     }
 
@@ -195,7 +196,7 @@ Vex.Flow.Voice.prototype.draw = function(context, stave) {
     this.tickables[i].setStave(stave);
     if (i > 0 && boundingBox) {
       tickable_bb = this.tickables[i].getBoundingBox();
-      boundingBox.mergeWith(tickable_bb);
+      if (tickable_bb) boundingBox.mergeWith(tickable_bb);
     }
     this.tickables[i].setContext(context);
     this.tickables[i].setStave(stave);
