@@ -61,5 +61,4 @@ vexflow_sources = [
     ]
 
 Import('dbg opt')
-build_and_stamp("vexflow-dbg.js", vexflow_sources, dbg);
-build_and_stamp("vexflow-free.js", vexflow_sources, opt);
+build_and_stamp("vexflow-min.js", vexflow_sources, opt);

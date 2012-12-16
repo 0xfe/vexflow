@@ -12,9 +12,10 @@ scons -c
 curdir=`pwd`
 mkdir -p $TARGET
 mkdir -p $TARGET/docs
+mkdir -p $TARGET/support
 
 echo Copying over compiled sources...
-cp build/vexflow/vexflow-free.js $TARGET/vexflow.js
+cp build/vexflow/vexflow-min.js $TARGET/support
 
 echo Copying over tests...
 cp -r build/tests $TARGET
@@ -22,5 +23,6 @@ cp -r build/tests/flow.html $TARGET/tests/index.html
 
 echo Copy over docs...
 cp -r docs $TARGET
+cp -r docs/index.html $TARGET
 
 echo Done.
