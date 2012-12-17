@@ -3,13 +3,13 @@
   <title>VexFlow - HTML5 Music Engraving</title>
   <link href='http://fonts.googleapis.com/css?family=OFL+Sorts+Mill+Goudy+TT|Yanone+Kaffeesatz|Tangerine'
    rel='stylesheet' type='text/css'>
-  <link href="vextab/tabdiv.css" media="screen" rel="Stylesheet" type="text/css" /> 
-  <link href="vextab/style.css" media="screen" rel="Stylesheet" type="text/css" /> 
+  <link href="vextab/tabdiv.css" media="screen" rel="Stylesheet" type="text/css" />
+  <link href="vextab/style.css" media="screen" rel="Stylesheet" type="text/css" />
 
   <!-- VexFlow Compiled Source -->
   <script src="vextab/support/vexflow-min.js"></script>
   <script src="vextab/support/jquery.js"></script>
-  <script src="vextab/support/raphael.js"></script>
+  <!-- <script src="vextab/support/raphael.js"></script> -->
   <script src="vextab/support/underscore-min.js"></script>
   <script src="vextab/support/tabdiv-min.js"></script>
 </head>
@@ -43,15 +43,16 @@
 
     <div style="width:680; margin-left: auto; margin-right: auto;">
     <div class="vex-tabdiv"
-      width=660 scale=1.0 editor="false"
+      width=700 scale=0.9 editor="false"
       editor_width=640 editor_height=230>tabstave notation=true key=A time=4/4
-notes :q (5/2.5/3.7/4) 5h6/3 7/4 |
-notes :8 [ t12p7p5h7/4 ] :q 7v/5 :8 [ 3s:16:5-7/5 ]
+notes :q (5/2.5/3.7/4) :8 7p5h6/3 ^3^ 5h6h7/5 ^3^ :q 7V/4 |
+notes :8 t12p7/4 s5s3/4 :8 3s:16:5-7/5 :h p5/4 
 
 tabstave notation=true
-notes :q (5/4.5/5)s(7/4.7/5)s(5/4.5/5)
-notes :8 [ (5/4.5/5)h(7/5) ] |
-notes :8 [ t(12/5.12/4)s(5/5.5/4) 3b4/5 ] :h 5V/6</div>
+notes :q (5/4.5/5)s(7/4.7/5)s(5/4.5/5) ^3^
+notes :8 7p5/4 (5/4.5/5)h(7/5) |
+notes :8 t(12/5.12/4)s(5/5.5/4) 3b4/5
+notes :h (5V/6.5/4.6/3.7/2) $.medium.A13$ $.italic.let ring$</div>
 
     <p/>
     <h2>Where Do I Start?</h2>
