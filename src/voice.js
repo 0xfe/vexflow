@@ -7,7 +7,7 @@
 
 /** @constructor */
 Vex.Flow.Voice = function(time) {
-  this.init(time);
+  if (arguments.length > 0) this.init(time);
 }
 
 // Modes allow the addition of ticks in three different ways:
