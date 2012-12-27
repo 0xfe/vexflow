@@ -17,7 +17,7 @@ Vex.Flow.Test.Formatter.Start = function() {
   Vex.Flow.Test.runTest("Format Multiple Staves - No Justification",
       Vex.Flow.Test.Formatter.multiStaves, {justify: 0});
   Vex.Flow.Test.runTest("Format Multiple Staves - Justified",
-      Vex.Flow.Test.Formatter.multiStaves, {justify: 188});
+      Vex.Flow.Test.Formatter.multiStaves, {justify: 168});
 }
 
 Vex.Flow.Test.Formatter.buildTickContexts = function() {

@@ -228,39 +228,12 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   var contextList = contexts.list;
   var contextMap = contexts.map;
 
-  this.minTotalWidth = 0;
   // Go through each tick context and calculate smallest ticks.
-  for (var i = 0; i < contextList.length; ++i) {
-    var context = contextMap[contextList[i]];
-
-    // preFormat() gets them to descend down to their tickables and modifier
-    // contexts, and calculate their widths.
-    context.preFormat();
-    this.minTotalWidth += context.getWidth();
-
-    var minTicks = context.getMinTicks();
-    if (i == 0) this.minTicks = minTicks;
-    if (this.minTicks == null || (minTicks != null
-                                  && minTicks.value() < this.minTicks.value())) {
-      this.minTicks = minTicks;
-    }
-  }
-
-  this.hasMinTotalWidth = true;
-
-  if (justifyWidth < this.minTotalWidth) throw new Vex.RERR("NoRoomForNotes",
-      "Justification width too small to fit all notes: " +
-      justifyWidth + " < " + this.minTotalWidth);
-
-  // Figure out how many pixels to allocate per tick.
-  var justified = false;
-  if (justifyWidth) {
-    this.pixelsPerTick = justifyWidth /
-      (this.totalTicks.value() * contexts.resolutionMultiplier);
-    justified = true;
+  if (!justifyWidth) {
+    justifyWidth = 0;
+    this.pixelsPerTick = 0;
   } else {
-    this.pixelsPerTick = this.render_options.perTickableWidth /
-      (this.minTicks.value() * contexts.resolutionMultiplier);
+    this.pixelsPerTick = justifyWidth / (this.totalTicks.value() * contexts.resolutionMultiplier);
   }
 
   // Now distribute the ticks to each tick context, and assign them their
@@ -271,30 +244,30 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   var prev_tick = 0;
   var prev_width = 0;
   var lastMetrics = null;
+  this.minTotalWidth = 0;
 
+  // Pass 1: Give each note maximum width requested by context.
   for (var i = 0; i < contextList.length; ++i) {
     var tick = contextList[i];
     var context = contextMap[tick];
+    context.preFormat();
     var thisMetrics = context.getMetrics();
     var width = context.getWidth();
-    var minTicks = context.getMinTicks();
-    if (minTicks != null) minTicks = minTicks.value();
-    else minTicks = 0;
+    this.minTotalWidth += width;
     var min_x = 0;
 
-    // TODO: Try modifying (minTicks * this.pixelsPerTick) to adjust spacing
-    var pixels_used = Math.max(width, minTicks * this.pixelsPerTick);
-    pixels_used = Math.min(width + 20, pixels_used);
+    var pixels_used = width;
 
     // Pixels to next note x position
-    tick_space = (tick - prev_tick) * this.pixelsPerTick;
+    tick_space = Math.min((tick - prev_tick) * this.pixelsPerTick, pixels_used);
 
     // Calculate note x position
     var set_x = x + tick_space;
 
     // Calculate the minimum next note position to allow for right modifiers
-    if (lastMetrics != null)
+    if (lastMetrics != null) {
       min_x = x + prev_width - lastMetrics.extraLeftPx;
+    }
 
     // Determine the space required for the previous tick
     // The shouldIgnoreTicks part is a dirty heuristic to accomodate for bar
@@ -341,6 +314,26 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     prev_width = width;
     prev_tick = tick;
     x = set_x;
+  }
+
+  this.hasMinTotalWidth = true;
+
+  if (justifyWidth > 0) {
+    // Pass 2: Take leftover width, and distribute it to proportionately to
+    // all notes.
+    var remaining_x = justifyWidth - x;
+    var leftover_pixels_per_tick = remaining_x / (this.totalTicks.value() * contexts.resolutionMultiplier);
+    var prev_tick = 0;
+    var accumulated_space = 0;
+
+    for (var i = 0; i < contextList.length; ++i) {
+      var tick = contextList[i];
+      var context = contextMap[tick];
+      var tick_space = (tick - prev_tick) * leftover_pixels_per_tick;
+      accumulated_space = accumulated_space + tick_space;
+      context.setX(context.getX() + accumulated_space);
+      prev_tick = tick;
+    }
   }
 }
 

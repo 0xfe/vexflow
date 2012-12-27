@@ -285,7 +285,7 @@ Vex.Flow.Test.Beam.mixed = function(options) {
   voice2.addTickables(notes2);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice, voice2]).
-    format([voice, voice2], 450);
+    format([voice, voice2], 390);
   var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4));
   var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8));
 
@@ -333,7 +333,7 @@ Vex.Flow.Test.Beam.dotted = function(options) {
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    format([voice], 450);
+    format([voice], 390);
   var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4));
   var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8));
   var beam1_3 = new Vex.Flow.Beam(notes.slice(8, 12));
