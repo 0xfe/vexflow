@@ -228,7 +228,6 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   var contextList = contexts.list;
   var contextMap = contexts.map;
 
-  // Go through each tick context and calculate smallest ticks.
   if (!justifyWidth) {
     justifyWidth = 0;
     this.pixelsPerTick = 0;
@@ -244,6 +243,7 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   var prev_tick = 0;
   var prev_width = 0;
   var lastMetrics = null;
+  var initial_justify_width = justifyWidth;
   this.minTotalWidth = 0;
 
   // Pass 1: Give each note maximum width requested by context.
@@ -251,6 +251,7 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
     var tick = contextList[i];
     var context = contextMap[tick];
     context.preFormat();
+
     var thisMetrics = context.getMetrics();
     var width = context.getWidth();
     this.minTotalWidth += width;
@@ -321,7 +322,7 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   if (justifyWidth > 0) {
     // Pass 2: Take leftover width, and distribute it to proportionately to
     // all notes.
-    var remaining_x = justifyWidth - x;
+    var remaining_x = initial_justify_width - (x + prev_width);
     var leftover_pixels_per_tick = remaining_x / (this.totalTicks.value() * contexts.resolutionMultiplier);
     var prev_tick = 0;
     var accumulated_space = 0;
