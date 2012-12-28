@@ -276,6 +276,7 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice) {
     unprocessedNotes.forEach(function(unprocessedNote){
       nextGroup    = [];
       if (unprocessedNote.shouldIgnoreTicks()) return; // Ignore untickables (like bar notes)
+      if (!unprocessedNote.hasStem()) return; // Ignore untickables (like bar notes)
 
       currentGroup.push(unprocessedNote);
 

@@ -143,6 +143,14 @@ Vex.Flow.StaveNote.prototype.getBoundingBox = function() {
   return new Vex.Flow.BoundingBox(x, min_y, w, max_y - min_y);
 }
 
+Vex.Flow.StaveNote.prototype.isRest = function() {
+  return this.glyph.rest;
+}
+
+Vex.Flow.StaveNote.prototype.hasStem = function() {
+  return this.glyph.stem;
+}
+
 Vex.Flow.StaveNote.prototype.getYForTopText = function(text_line) {
   var extents = this.getStemExtents();
   return Vex.Min(this.stave.getYForTopText(text_line),
