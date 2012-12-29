@@ -19,7 +19,6 @@ Vex.Flow.TabNote.prototype.init = function(tab_struct) {
 
   // Note properties
   this.positions = tab_struct.positions; // [{ str: X, fret: X }]
-  this.modifiers = [];
   this.render_options = {
     glyph_font_scale: 30 // font size for note heads and rests
   }
@@ -93,14 +92,6 @@ Vex.Flow.TabNote.prototype.addToModifierContext = function(mc) {
     this.modifierContext.addModifier(this.modifiers[i]);
   }
   this.preFormatted = false;
-  return this;
-}
-
-Vex.Flow.TabNote.prototype.addModifier = function(modifier, index) {
-  modifier.setNote(this);
-  modifier.setIndex(index || 0);
-  this.modifiers.push(modifier);
-  this.setPreFormatted(false);
   return this;
 }
 

@@ -56,5 +56,11 @@ Vex.Flow.GhostNote.prototype.preFormat = function() {
 
 Vex.Flow.GhostNote.prototype.draw = function() {
   if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-  // Nothing to draw
+
+  // Draw the modifiers
+  for (var i = 0; i < this.modifiers.length; ++i) {
+    var modifier = this.modifiers[i];
+    modifier.setContext(this.context);
+    modifier.draw();
+  }
 }

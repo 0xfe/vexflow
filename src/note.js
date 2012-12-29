@@ -36,6 +36,7 @@ Vex.Flow.Note.prototype.init = function(note_struct) {
   this.dots = initData.dots;
   this.noteType = initData.type;
   this.setIntrinsicTicks(initData.ticks);
+  this.modifiers = []
 
   if (this.positions &&
       (typeof(this.positions) != "object" || !this.positions.length)) {
@@ -77,7 +78,10 @@ Vex.Flow.Note.prototype.setYs = function(ys) {
 Vex.Flow.Note.prototype.getStave = function() {
   return this.stave; }
 Vex.Flow.Note.prototype.setStave = function(stave) {
-  this.stave = stave; return this; }
+  this.stave = stave;
+  this.setYs([stave.getYForLine(0)]);
+  return this;
+}
 Vex.Flow.Note.prototype.setContext = function(context) {
   this.context = context; return this; }
 Vex.Flow.Note.prototype.getExtraLeftPx = function() {
@@ -148,6 +152,22 @@ Vex.Flow.Note.prototype.getNoteType = function() {
 Vex.Flow.Note.prototype.setModifierContext = function(mc) {
   this.modifierContext = mc;
   return this;
+}
+
+Vex.Flow.Note.prototype.addModifier = function(modifier, index) {
+  modifier.setNote(this);
+  modifier.setIndex(index || 0);
+  this.modifiers.push(modifier);
+  this.setPreFormatted(false);
+  return this;
+}
+
+Vex.Flow.Note.prototype.getModifierStartXY = function(position, index) {
+  if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+      "Can't call GetModifierStartXY on an unformatted note");
+  var x = 0;
+
+  return {x: this.getAbsoluteX() + x, y: this.ys[0]};
 }
 
 Vex.Flow.Note.prototype.getMetrics = function() {
