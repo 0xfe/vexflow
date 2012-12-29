@@ -31,6 +31,13 @@ Vex.Flow.Beam.prototype.init = function(notes, auto_stem) {
     throw new Vex.RuntimeError("BadArguments", "Too few notes for beam.");
   }
 
+  this.unbeamable = false;
+  // Quit if first or last note is a rest.
+  if (!notes[0].hasStem() || !notes[notes.length-1].hasStem()) {
+    this.unbeamable = true;
+    return;
+  }
+
   // Validate beam line, direction and ticks.
   this.stem_direction = notes[0].getStemDirection();
   this.ticks = notes[0].getIntrinsicTicks();
@@ -98,6 +105,8 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
   if (!this.context) throw new Vex.RERR("NoCanvasContext",
       "Can't draw without a canvas context.");
 
+  if (this.unbeamable) return;
+
   var first_note = this.notes[0];
   var last_note = this.notes[this.notes.length - 1];
 
@@ -163,7 +172,7 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
     var note = this.notes[i];
 
     // Do not draw stem for rests
-    if (note.glyph.rest) {
+    if (!note.hasStem()) {
       continue;
     }
 
@@ -276,7 +285,6 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice) {
     unprocessedNotes.forEach(function(unprocessedNote){
       nextGroup    = [];
       if (unprocessedNote.shouldIgnoreTicks()) return; // Ignore untickables (like bar notes)
-      if (!unprocessedNote.hasStem()) return; // Ignore untickables (like bar notes)
 
       currentGroup.push(unprocessedNote);
 
@@ -337,7 +345,7 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice) {
   }
 
   // Using closures to store the variables throughout the various functions
-  // IMO Keeps it this process lot cleaner - but not super consistent with 
+  // IMO Keeps it this process lot cleaner - but not super consistent with
   // the rest of the API's style - Silverwolf90 (Cyril)
   createGroups();
   formatStems();
