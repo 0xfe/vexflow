@@ -444,7 +444,10 @@ Vex.Flow.StaveNote.prototype.draw = function() {
     ctx.closePath();
 
     // only fill if quarter note or smaller
-    if (stavenote.duration != 1 && stavenote.duration != 2) {
+    if (stavenote.duration != 1 &&
+        stavenote.duration != 2 &&
+        stavenote.duration != "h" &&
+        stavenote.duration != "w") {
       ctx.fill();
     } else {
       ctx.stroke();
