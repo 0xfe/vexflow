@@ -70,6 +70,8 @@ Vex.Flow.Stave.prototype.getTieEndX = function() {
   return this.x + this.width; }
 Vex.Flow.Stave.prototype.setContext = function(context) {
   this.context = context; return this; }
+Vex.Flow.Stave.prototype.getContext = function() {
+  return this.context; }
 Vex.Flow.Stave.prototype.getX = function() {
   return this.x;
 }

@@ -25,6 +25,16 @@ Vex.Flow.TickContext.prototype.init = function() {
   // Ignore this tick context for formatting and justification
   this.ignore_ticks = true;
   this.preFormatted = false;
+  this.context = null; // Rendering context
+}
+
+Vex.Flow.TickContext.prototype.setContext = function(context) {
+  this.context = context;
+  return this;
+}
+
+Vex.Flow.TickContext.prototype.getContext = function() {
+  return this.context;
 }
 
 // Get widths context, note and left/right modifiers for formatting

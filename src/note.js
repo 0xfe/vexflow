@@ -80,6 +80,7 @@ Vex.Flow.Note.prototype.getStave = function() {
 Vex.Flow.Note.prototype.setStave = function(stave) {
   this.stave = stave;
   this.setYs([stave.getYForLine(0)]);
+  this.context = this.stave.context;
   return this;
 }
 Vex.Flow.Note.prototype.setContext = function(context) {

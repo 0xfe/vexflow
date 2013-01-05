@@ -3,8 +3,6 @@
 //
 // Copyright Mohit Muthanna 2010
 
-// TODO: Add preFormat()... then getLargestTickWidth()
-
 /** @constructor */
 Vex.Flow.Voice = function(time) {
   if (arguments.length > 0) this.init(time);
@@ -163,13 +161,6 @@ Vex.Flow.Voice.prototype.addTickable = function(tickable) {
     // Expand total ticks using denominator from ticks used
     this.totalTicks.add(0, this.ticksUsed.denominator);
   }
-
-  /* Can't do this without formatting modifier context
-
-  // Track the largest tickable width for formatting
-  var width = tickable.getWidth();
-  if (width > this.largestTickWidth) this.largestTickWidth = width;
-  */
 
   // Add the tickable to the line
   this.tickables.push(tickable);

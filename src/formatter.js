@@ -223,7 +223,7 @@ Vex.Flow.Formatter.prototype.createTickContexts = function(voices) {
 /**
  * Take a set of tick contexts and align their X-positions and space usage.
  */
-Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
+Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth, rendering_context) {
   var contexts = this.tContexts;
   var contextList = contexts.list;
   var contextMap = contexts.map;
@@ -250,6 +250,7 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth) {
   for (var i = 0; i < contextList.length; ++i) {
     var tick = contextList[i];
     var context = contextMap[tick];
+    if (rendering_context) context.setContext(rendering_context);
     context.preFormat();
 
     var thisMetrics = context.getMetrics();
@@ -353,6 +354,6 @@ Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth) {
 Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave) {
   var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 10;
   this.createTickContexts(voices);
-  this.preFormat(voice_width);
+  this.preFormat(voice_width, stave.getContext());
   return this;
 }

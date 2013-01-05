@@ -28,5 +28,6 @@ scp build/tests/flow.html $SCP_TO/tests/index.html
 
 echo Copy over docs...
 scp -r docs $SCP_TO
+scp -r docs/index.html $SCP_TO
 
 echo Done.
