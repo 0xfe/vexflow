@@ -215,8 +215,8 @@ Vex.Flow.StaveNote.prototype.getStemExtents = function() {
     }
 
     if(this.noteType == "s" || this.noteType == 'x') {
-      top_pixel += 8;
-      base_pixel += 8;
+      top_pixel -= this.stem_direction * 7;
+      base_pixel -= this.stem_direction * 7;
     }
   }
 
@@ -498,7 +498,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       // if a slash note, draw 'manually' as font glyphs do not slant enough
       // and are too small.
       if (this.noteType == "s") {
-        drawSlashNoteHead(this, ctx, head_x, y);
+        drawSlashNoteHead(this, ctx, head_x + (this.stem_direction == 1 ? 1:0), y);
       } else {
         Vex.Flow.renderGlyph(ctx, head_x,
             y, this.render_options.glyph_font_scale, code_head);

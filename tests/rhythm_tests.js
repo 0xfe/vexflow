@@ -346,21 +346,21 @@ Vex.Flow.Test.Rhythm.drawThirtySecondWithScratches  = function(options,
   // bar 1
   var notesBar1_part1 = [
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",
-                             stem_direction: -1 }),
+                             stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",
-                             stem_direction: -1 }),
+                             stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32m",
-                             stem_direction: -1 }),
+                             stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",
-                             stem_direction: -1 }),
+                             stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32m",
-                             stem_direction: -1 }),
+                             stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",
-                             stem_direction: -1 }),
+                             stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32r",
-                             stem_direction: -1 }),
+                             stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "32s",
-                             stem_direction: -1 })
+                             stem_direction: 1 })
 
   ];
 
