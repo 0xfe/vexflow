@@ -25,6 +25,11 @@ Vex.Flow.Tickable.prototype.init = function() {
   // This flag tells the formatter to ignore this tickable during
   // formatting and justification. It is set by tickables such as BarNote.
   this.ignore_ticks = false;
+  this.context = null;
+}
+
+Vex.Flow.Tickable.prototype.setContext = function(context) {
+  this.context = context;
 }
 
 Vex.Flow.Tickable.prototype.getTuplet = function() {

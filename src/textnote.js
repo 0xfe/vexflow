@@ -31,7 +31,8 @@ Vex.Flow.TextNote.prototype.init = function(text_struct) {
 
   if (text_struct.font) this.font = text_struct.font;
   this.setWidth(Vex.Flow.textWidth(this.text));
-  this.line = 0;
+  this.line = text_struct.line || 0;
+  this.smooth = text_struct.smooth || false;
   this.justification = Vex.Flow.TextNote.Justification.LEFT;
 }
 
@@ -49,12 +50,19 @@ Vex.Flow.TextNote.prototype.preFormat = function() {
   if (!this.context) throw new Vex.RERR("NoRenderContext",
       "Can't measure text without rendering context.");
   if (this.preFormatted) return;
-  this.setWidth(this.context.measureText(this.text).width);
-  if (this.justification = Vex.Flow.TextNote.Justification.CENTER) {
+
+  if (this.smooth) {
+    this.setWidth(10);
+  } else {
+    this.setWidth(this.context.measureText(this.text).width);
+  }
+
+  if (this.justification == Vex.Flow.TextNote.Justification.CENTER) {
     this.extraLeftPx = this.width / 2;
-  } else if (this.justification = Vex.Flow.TextNote.Justification.RIGHT) {
+  } else if (this.justification == Vex.Flow.TextNote.Justification.RIGHT) {
     this.extraLeftPx = this.width;
   }
+
   this.setPreFormatted(true);
 }
 
