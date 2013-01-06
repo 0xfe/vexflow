@@ -33,6 +33,7 @@ Vex.Flow.TextNote.prototype.init = function(text_struct) {
   this.setWidth(Vex.Flow.textWidth(this.text));
   this.line = text_struct.line || 0;
   this.smooth = text_struct.smooth || false;
+  this.ignore_ticks = text_struct.ignore_ticks || false;
   this.justification = Vex.Flow.TextNote.Justification.LEFT;
 }
 
