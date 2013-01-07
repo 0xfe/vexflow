@@ -166,7 +166,7 @@ Vex.Flow.Test.Annotation.bottom = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
-  var ctx = contextBuilder(options.canvas_sel, 650, 650);
+  var ctx = contextBuilder(options.canvas_sel, 650, 950);
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
 
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
@@ -178,15 +178,15 @@ Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
           setVerticalJustification(vJustifcation); }
 
   for (var v = 1; v <= 4; ++v) {
-    var stave = new Vex.Flow.Stave(10, (v-1) * 100 + 10, 400).
+    var stave = new Vex.Flow.Stave(10, (v-1) * 150 + 40, 400).
       addClef("treble").setContext(ctx).draw();
 
     notes = [];
 
-    for (var h = 1; h <= 4; ++h) {
-      notes.push(newNote({ keys: ["a/4"], duration: "q"}).
-        addAnnotation(0, newAnnotation("Text", h, v)));
-    }
+    notes.push(newNote({ keys: ["c/3"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 1, v)));
+    notes.push(newNote({ keys: ["c/4"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 2, v)));
+    notes.push(newNote({ keys: ["c/5"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 3, v)));
+    notes.push(newNote({ keys: ["c/6"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 4, v)));
 
     Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 100);
   }
