@@ -29,6 +29,9 @@ Vex.Flow.Articulation.prototype.init = function(type) {
   };
 
   this.articulation = Vex.Flow.articulationCodes(this.type);
+  if (!this.articulation) throw new Vex.RERR("InvalidArticulation",
+     "Articulation not found: '" + this.type + "'");
+
   this.setWidth(this.articulation.width);
 }
 
