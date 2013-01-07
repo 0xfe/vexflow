@@ -80,7 +80,7 @@ Vex.Flow.Annotation.prototype.draw = function() {
   var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.ABOVE,
       this.index);
   var x = start.x - (this.getWidth() / 2) + 10;
-  if (this.vert_justification = Vex.Flow.Annotation.VerticalJustify.BOTTOM) {
+  if (this.vert_justification == Vex.Flow.Annotation.VerticalJustify.BOTTOM) {
     var y = this.note.stave.getYForBottomText(this.text_line);
   } else {
     var y = this.note.getYForTopText(this.text_line) - 1;
