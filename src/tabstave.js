@@ -17,7 +17,8 @@ Vex.Flow.TabStave.prototype.init = function(x, y, width, options) {
   var tab_options = {
     spacing_between_lines_px: 13,
     num_lines: 6,
-    top_text_position: 1
+    top_text_position: 1,
+    bottom_text_position: 7
   };
 
   Vex.Merge(tab_options, options);

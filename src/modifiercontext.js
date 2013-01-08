@@ -375,6 +375,28 @@ Vex.Flow.ModifierContext.prototype.formatAnnotations = function() {
   return this;
 }
 
+Vex.Flow.ModifierContext.prototype.formatArticulations = function() {
+  var articulations = this.modifiers['articulations'];
+  if (!articulations || articulations.length == 0) return this;
+
+  var text_line = this.state.text_line;
+  var max_width = 0;
+
+  // Format Articulations
+  for (var i = 0; i < articulations.length; ++i) {
+    var articulation = articulations[i];
+    articulation.setTextLine(text_line);
+    var width = articulation.getWidth() > max_width ?
+      articulation.getWidth() : max_width;
+    text_line += 1.5;
+  }
+
+  this.state.left_shift += width / 2;
+  this.state.right_shift += width / 2;
+  this.state.text_line = text_line;
+  return this;
+}
+
 Vex.Flow.ModifierContext.prototype.preFormat = function() {
   if (this.preFormatted) return;
 
@@ -383,6 +405,7 @@ Vex.Flow.ModifierContext.prototype.preFormat = function() {
        formatAccidentals().
        formatDots().
        formatStrokes().
+       formatArticulations().
        formatAnnotations().
        formatBends().
        formatVibratos();

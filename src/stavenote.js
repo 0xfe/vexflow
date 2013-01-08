@@ -160,7 +160,7 @@ Vex.Flow.StaveNote.prototype.getYForTopText = function(text_line) {
 Vex.Flow.StaveNote.prototype.getYForBottomText = function(text_line) {
   var extents = this.getStemExtents();
   return Vex.Max(this.stave.getYForTopText(text_line),
-      extents.baseY + (this.render_options.annotation_spacing * (text_line + 1)));
+      extents.baseY + (this.render_options.annotation_spacing * (text_line)));
 }
 
 Vex.Flow.StaveNote.prototype.setStave = function(stave) {

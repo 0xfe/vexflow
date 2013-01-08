@@ -55,13 +55,13 @@ Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder,
   expect(0);
 
   // Get the rendering context
-  var ctx = contextBuilder(options.canvas_sel, 625, 175);
+  var ctx = contextBuilder(options.canvas_sel, 625, 195);
 
   // bar 1
   var staveBar1 = new Vex.Flow.Stave(10, 30, 125);
   staveBar1.setContext(ctx).draw();
   var notesBar1 = [
-    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", stem_direction: 1 }),
+    new Vex.Flow.StaveNote({ keys: ["a/3"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", stem_direction: 1 }),
     new Vex.Flow.StaveNote({ keys: ["a/4"], duration: "q", stem_direction: 1 })
