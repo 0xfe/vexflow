@@ -22,21 +22,56 @@ Vex.Flow.TextNote.GLYPHS = {
     code: "v8c",
     point: 40,
     x_shift: 0,
-    y_shift: -10,
+    y_shift: -10
     // width: 10 // optional
   },
-  "trill": {
+  "tr": {
     code: "v1f",
     point: 40,
     x_shift: 0,
-    y_shift: 0,
+    y_shift: 0
+    // width: 10 // optional
+  },
+  "mordent": {
+    code: "v1e",
+    point: 40,
+    x_shift: 0,
+    y_shift: 0
+    // width: 10 // optional
+  },
+  "f": {
+    code: "vba",
+    point: 40,
+    x_shift: 0,
+    y_shift: 0
+    // width: 10 // optional
+  },
+  "p": {
+    code: "vbf",
+    point: 40,
+    x_shift: 0,
+    y_shift: 0
+    // width: 10 // optional
+  },
+  "m": {
+    code: "v62",
+    point: 40,
+    x_shift: 0,
+    y_shift: 0
+    // width: 10 // optional
+  },
+  "s": {
+    code: "v4a",
+    point: 40,
+    x_shift: 0,
+    y_shift: 0
     // width: 10 // optional
   },
   "coda": {
     code: "v4d",
     point: 40,
     x_shift: 0,
-    y_shift: -8,
+    y_shift: -8
     // width: 10 // optional
   }
 }
