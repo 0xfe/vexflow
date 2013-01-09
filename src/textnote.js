@@ -17,12 +17,38 @@ Vex.Flow.TextNote.Justification = {
   RIGHT: 3
 };
 
+Vex.Flow.TextNote.GLYPHS = {
+  "segno": {
+    code: "v8c",
+    point: 40,
+    x_shift: 0,
+    y_shift: -10,
+    // width: 10 // optional
+  },
+  "trill": {
+    code: "v1f",
+    point: 40,
+    x_shift: 0,
+    y_shift: 0,
+    // width: 10 // optional
+  },
+  "coda": {
+    code: "v4d",
+    point: 40,
+    x_shift: 0,
+    y_shift: -8,
+    // width: 10 // optional
+  }
+}
+
 Vex.Flow.TextNote.prototype.init = function(text_struct) {
   var superclass = Vex.Flow.TextNote.superclass;
   superclass.init.call(this, text_struct);
 
   // Note properties
   this.text = text_struct.text;
+  this.glyph_type = text_struct.glyph;
+  this.glyph = null;
   this.font = {
     family: "Arial",
     size: 12,
@@ -30,7 +56,22 @@ Vex.Flow.TextNote.prototype.init = function(text_struct) {
   }
 
   if (text_struct.font) this.font = text_struct.font;
-  this.setWidth(Vex.Flow.textWidth(this.text));
+
+  if (this.glyph_type) {
+    var struct = Vex.Flow.TextNote.GLYPHS[this.glyph_type];
+    if (!struct) throw new Vex.RERR("Invalid glyph type: " + this.glyph_type);
+
+    this.glyph = new Vex.Flow.Glyph(struct.code, struct.point, {cache: false});
+
+    if (struct.width)
+      this.setWidth(struct.width)
+    else
+      this.setWidth(this.glyph.getMetrics().width);
+
+    this.glyph_struct = struct;
+  } else {
+    this.setWidth(Vex.Flow.textWidth(this.text));
+  }
   this.line = text_struct.line || 0;
   this.smooth = text_struct.smooth || false;
   this.ignore_ticks = text_struct.ignore_ticks || false;
@@ -41,6 +82,7 @@ Vex.Flow.TextNote.prototype.setJustification = function(just) {
   this.justification = just;
   return this;
 }
+
 Vex.Flow.TextNote.prototype.setLine = function(line) {
   this.line = line;
   return this;
@@ -53,9 +95,13 @@ Vex.Flow.TextNote.prototype.preFormat = function() {
   if (this.preFormatted) return;
 
   if (this.smooth) {
-    this.setWidth(10);
+    this.setWidth(0);
   } else {
-    this.setWidth(this.context.measureText(this.text).width);
+    if (this.glyph) {
+      // Width already set.
+    } else {
+      this.setWidth(this.context.measureText(this.text).width);
+    }
   }
 
   if (this.justification == Vex.Flow.TextNote.Justification.CENTER) {
@@ -79,10 +125,17 @@ Vex.Flow.TextNote.prototype.draw = function() {
   } else if (this.justification == Vex.Flow.TextNote.Justification.RIGHT) {
     x -= this.getWidth();
   }
-  var y = this.stave.getYForLine(this.line + (-3));
 
-  ctx.save();
-  ctx.setFont(this.font.family, this.font.size, this.font.weight);
-  ctx.fillText(this.text, x, y);
-  ctx.restore();
+  if (this.glyph) {
+    var y = this.stave.getYForLine(this.line + (-3));
+    this.glyph.render(this.context,
+                      x + this.glyph_struct.x_shift,
+                      y + this.glyph_struct.y_shift)
+  } else {
+    var y = this.stave.getYForLine(this.line + (-3));
+    ctx.save();
+    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.fillText(this.text, x, y);
+    ctx.restore();
+  }
 }
