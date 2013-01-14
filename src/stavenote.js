@@ -177,6 +177,12 @@ Vex.Flow.StaveNote.prototype.setStave = function(stave) {
   return this.setYs(ys);
 }
 
+// Get individual note/octave pairs for all notes in this
+// chord.
+Vex.Flow.StaveNote.prototype.getKeys = function() {
+  return this.keys;
+}
+
 // Get the Key Properties for each note in chord
 Vex.Flow.StaveNote.prototype.getKeyProps = function() {
   return this.keyProps;

@@ -267,7 +267,7 @@ Vex.Flow.Beam.prototype.draw = function(notes) {
 }
 
 
-Vex.Flow.Beam.applyAndGetBeams = function(voice) {
+Vex.Flow.Beam.applyAndGetBeams = function(voice, stem_direction) {
   var unprocessedNotes = voice.tickables;
   var ticksPerGroup    = 4096;
   var noteGroups       = [];
@@ -319,6 +319,8 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice) {
   }
 
   function determineStemDirection(group) {
+    if (stem_direction) return stem_direction;
+
     var lineSum = 0;
 
     group.forEach(function(note) {
