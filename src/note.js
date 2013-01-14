@@ -44,6 +44,9 @@ Vex.Flow.Note.prototype.init = function(note_struct) {
       "BadArguments", "Note keys must be array type.");
   }
 
+  // Note to play for audio players
+  this.playNote = null;
+
   // Positioning contexts
   this.tickContext = null;    // The current tick context
   this.modifierContext = null;
@@ -63,6 +66,20 @@ Vex.Flow.Note.prototype.init = function(note_struct) {
   // Drawing
   this.context = null;
   this.stave = null;
+}
+
+Vex.Flow.Note.prototype.setPlayNote = function(note) {
+  this.playNote = note;
+  return this;
+}
+
+Vex.Flow.Note.prototype.getPlayNote = function() {
+  return this.playNote;
+}
+
+// Don't play notes by default, call them rests.
+Vex.Flow.Note.prototype.isRest = function() {
+  return false;
 }
 
 Vex.Flow.Note.prototype.addStroke = function(index, stroke) {

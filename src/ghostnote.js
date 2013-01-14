@@ -40,6 +40,10 @@ Vex.Flow.GhostNote.prototype.init = function(parameter) {
   this.setWidth(0);
 }
 
+Vex.Flow.GhostNote.prototype.isRest = function() {
+  return true;
+}
+
 Vex.Flow.GhostNote.prototype.setStave = function(stave) {
   var superclass = Vex.Flow.GhostNote.superclass;
   superclass.setStave.call(this, stave);
