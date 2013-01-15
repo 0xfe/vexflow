@@ -41,10 +41,6 @@ Vex.Flow.TabNote.prototype.setGhost = function(ghost) {
   return this;
 }
 
-Vex.Flow.TabNote.prototype.isRest = function() {
-  return false;
-}
-
 Vex.Flow.TabNote.prototype.updateWidth = function() {
   this.glyphs = [];
   this.width = 0;
