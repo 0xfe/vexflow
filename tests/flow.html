@@ -110,6 +110,9 @@
   <script src="../src/tuplet.js"></script>
   <script src="../src/boundingbox.js"></script>
   <script src="../src/textnote.js"></script>
+  <script src="../src/strokes.js"></script>
+  <script src="../src/stringnumber.js"></script>
+  <script src="../src/frethandfinger.js"></script>
 
   <!-- Compiled Source -->
   <script src="../support/vexflow-min.js"></script>
@@ -155,6 +158,8 @@
   <script src="tuplet_tests.js"></script>
   <script src="boundingbox_tests.js"></script>
   <script src="textnote_tests.js"></script>
+  <script src="strokes_tests.js"></script>
+  <script src="stringnumber_tests.js"></script>
 
   <script>
     $(function() {
@@ -190,7 +195,11 @@
       Vex.Flow.Test.Rhythm.Start();
       Vex.Flow.Test.Tuplet.Start();
       Vex.Flow.Test.BoundingBox.Start();
+      Vex.Flow.Test.StringNumber.Start();
+      Vex.Flow.Test.Strokes.Start();
+/*
       Vex.Flow.Test.TextNote.Start();
+*/
     });
   </script>
 </head>
