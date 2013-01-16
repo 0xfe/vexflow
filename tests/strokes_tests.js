@@ -14,16 +14,10 @@ Vex.Flow.Test.Strokes.Start = function() {
       Vex.Flow.Test.Strokes.drawMultipleMeasures);
   Vex.Flow.Test.runTest("Strokes - Multi Voice (Canvas)",
       Vex.Flow.Test.Strokes.multi);
-//  Vex.Flow.Test.runRaphaelTest("Strokes - Multi Voice (Raphael)",
-//      Vex.Flow.Test.Strokes.multi);
-//  Vex.Flow.Test.runTest("Strokes - Tab (Canvas)",
-//      Vex.Flow.Test.Strokes.drawTabStrokes);
   Vex.Flow.Test.runRaphaelTest("Strokes - Tab (Raphael)",
       Vex.Flow.Test.Strokes.drawTabStrokes);
   Vex.Flow.Test.runTest("Strokes - Notation and Tab (Canvas)",
       Vex.Flow.Test.Strokes.notesWithTab);
-//  Vex.Flow.Test.runRaphaelTest("Strokes - Notation and Tab (Raphael)",
-//      Vex.Flow.Test.Strokes.notesWithTab);
 };
 
 Vex.Flow.Test.Strokes.drawMultipleMeasures = function(options, contextBuilder) {

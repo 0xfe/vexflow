@@ -58,7 +58,10 @@ vexflow_sources = [
     "tremolo.js",
     "tuplet.js",
     "boundingbox.js",
-    "textnote.js"
+    "textnote.js",
+    "frethandfinger.js",
+    "stringnumber.js",
+    "strokes.js"
     ]
 
 Import('dbg opt')
