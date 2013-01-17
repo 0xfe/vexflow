@@ -96,10 +96,10 @@ Vex.Flow.StringNumber.prototype.draw = function() {
       break;
     case Vex.Flow.Modifier.Position.BELOW:
       var text_line = this.note.getStemDirection() == Vex.Flow.StaveNote.STEM_UP ? 2 : 12;
-      dot_y = this.note.getYForBottomText(text_line);
+      dot_y = this.note.getYForBottomText(text_line) + 5;
       break;
     case Vex.Flow.Modifier.Position.LEFT:
-      dot_x -= (this.radius / 2) + 4;
+      dot_x -= (this.radius / 2) + 5;
       break;
     case Vex.Flow.Modifier.Position.RIGHT:
       dot_x += (this.radius / 2) + 6;

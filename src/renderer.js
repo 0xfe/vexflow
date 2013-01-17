@@ -122,30 +122,30 @@ Vex.Flow.Renderer.prototype.getContext = function() {
 //dashPattern = [3,3] draws a 3 pixel dash followed by a three pixel space.
 //setting the second number to 0 draws a solid line.
 Vex.Flow.Renderer.drawDashedLine = function(context, fromX, fromY, toX, toY, dashPattern) {
-context.beginPath();
+  context.beginPath();
+	
+  var dx = toX - fromX;
+  var dy = toY - fromY;
+  var angle = Math.atan2(dy, dx);
+  var x = fromX;
+  var y = fromY;
+  context.moveTo(fromX, fromY);
+  var idx = 0;
+  var draw = true;
+  while (!((dx < 0 ? x <= toX : x >= toX) && (dy < 0 ? y <= toY : y >= toY))) {
+    var dashLength = dashPattern[idx++ % dashPattern.length];
+    var nx = x + (Math.cos(angle) * dashLength);
+    x = dx < 0 ? Math.max(toX, nx) : Math.min(toX, nx);
+    var ny = y + (Math.sin(angle) * dashLength);
+    y = dy < 0 ? Math.max(toY, ny) : Math.min(toY, ny);
+    if (draw) {
+      context.lineTo(x, y);
+    } else {
+      context.moveTo(x, y);
+    }
+      draw = !draw;
+  }
 
-var dx = toX - fromX;
-var dy = toY - fromY;
-var angle = Math.atan2(dy, dx);
-var x = fromX;
-var y = fromY;
-context.moveTo(fromX, fromY);
-var idx = 0;
-var draw = true;
-while (!((dx < 0 ? x <= toX : x >= toX) && (dy < 0 ? y <= toY : y >= toY))) {
- var dashLength = dashPattern[idx++ % dashPattern.length];
- var nx = x + (Math.cos(angle) * dashLength);
- x = dx < 0 ? Math.max(toX, nx) : Math.min(toX, nx);
- var ny = y + (Math.sin(angle) * dashLength);
- y = dy < 0 ? Math.max(toY, ny) : Math.min(toY, ny);
- if (draw) {
-   context.lineTo(x, y);
- } else {
-   context.moveTo(x, y);
- }
- draw = !draw;
-}
-
-context.closePath();
-context.stroke();
+  context.closePath();
+  context.stroke();
 }

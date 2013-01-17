@@ -188,20 +188,29 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
 
   var acc_list = [];
   var hasStave = false;
-
+  var prev_note = null;
+  var shiftL = 0;
+  
   for (var i = 0; i < accidentals.length; ++i) {
     var acc = accidentals[i];
     var note = acc.getNote();
     var stave = note.getStave();
     var props = note.getKeyProps()[acc.getIndex()];
-    var shift = (props.displaced ? note.getExtraLeftPx() : 0);
+    if (note != prev_note) {
+       // Iterate through all notes to get the displaced pixels
+       for (var n = 0; n < note.keys.length; ++n) {
+          props_tmp = note.getKeyProps()[n];
+          shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+        }
+        prev_note = note;
+    }
     if (stave != null) {
       hasStave = true;
       var line_space = stave.options.spacing_between_lines_px;
       var y = stave.getYForLine(props.line);
       acc_list.push({ y: y, shift: shift, acc: acc, lineSpace: line_space });
     } else {
-      acc_list.push({ line: props.line, shift: shift, acc: acc });
+      acc_list.push({ line: props.line, shift: shiftL, acc: acc });
     }
   }
 
@@ -213,7 +222,7 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
   acc_list.sort(function(a, b) { return (b.line - a.line); });
 
   // If first note left shift in case it is displaced
-  var acc_shift = left_shift + acc_list[0].shift;
+  var acc_shift = acc_list[0].shift;
   var x_width = 0;
   var top_line = acc_list[0].line;
   for (var i = 0; i < acc_list.length; ++i) {
@@ -225,10 +234,10 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
     // accidental.
     if (line < top_line - 3.0) {
       top_line = line;
-      acc_shift = left_shift + shift;
+      acc_shift = shift;
     }
 
-    acc.setXShift(acc_shift);
+    acc.setXShift(left_shift + acc_shift);
     acc_shift += acc.getWidth() + accidental_spacing; // spacing
     x_width = (acc_shift > x_width) ? acc_shift : x_width;
   }
@@ -245,7 +254,7 @@ Vex.Flow.ModifierContext.prototype.formatAccidentalsByY = function(acc_list) {
   acc_list.sort(function(a, b) { return (b.y - a.y); });
 
   // If first note is displaced, get the correct left shift
-  var acc_shift = left_shift + acc_list[0].shift;
+  var acc_shift = acc_list[0].shift;
   var x_width = 0;
   var top_y = acc_list[0].y;
 
@@ -258,10 +267,10 @@ Vex.Flow.ModifierContext.prototype.formatAccidentalsByY = function(acc_list) {
     // accidental.
     if (top_y - y > 3 * acc_list[i].lineSpace) {
       top_y = y;
-      acc_shift = left_shift + shift;
+      acc_shift = shift;
     }
 
-    acc.setXShift(acc_shift);
+    acc.setXShift(acc_shift + left_shift);
     acc_shift += acc.getWidth() + accidental_spacing; // spacing
     x_width = (acc_shift > x_width) ? acc_shift : x_width;
   }
@@ -316,12 +325,13 @@ Vex.Flow.ModifierContext.prototype.formatStringNumbers = function() {
   if (!nums || nums.length == 0) return this;
 
   var nums_list = [];
+  var prev_note = null;
+  var shift_left = 0;
+  var shift_right = 0;
+
   for (var i = 0; i < nums.length; ++i) {
     var num = nums[i];
     var note = num.getNote();
-    var prev_note = null;
-    var shift_left = 0;
-    var shift_right = 0;
     
     for (var i = 0; i < nums.length; ++i) {
       var num = nums[i];
@@ -331,8 +341,10 @@ Vex.Flow.ModifierContext.prototype.formatStringNumbers = function() {
       if (note != prev_note) {
         for (n = 0; n < note.keys.length; ++n) {
           props_tmp = note.getKeyProps()[n];
-          shift_left = (props_tmp.displaced ? note.getExtraLeftPx() : 0);
-          shift_right = (props_tmp.displaced ? note.getExtraRightPx() : 0);
+          if (left_shift == 0)
+            shift_left = (props_tmp.displaced ? note.getExtraLeftPx() : shift_left);
+          if (right_shift == 0)
+            shift_right = (props_tmp.displaced ? note.getExtraRightPx() : shift_right);
         }
         prev_note = note;
       }
@@ -341,7 +353,7 @@ Vex.Flow.ModifierContext.prototype.formatStringNumbers = function() {
     }
   }
   
-  // Sort dots by line number.
+  // Sort string numbers by line number.
   nums_list.sort(function(a, b) { return (b.line - a.line); });
 
   var num_shiftL = 0;
@@ -364,12 +376,15 @@ Vex.Flow.ModifierContext.prototype.formatStringNumbers = function() {
       num_shiftL = left_shift + shiftL;
       num_shiftR = right_shift + shiftR;
     }
-    num_shift += num.getWidth() + num_spacing; // spacing
+    
+    var num_width = num.getWidth() + num_spacing;
     if (pos == Vex.Flow.Modifier.Position.LEFT) {
       num.setXShift(left_shift);
+      num_shift = shift_left + num_width; // spacing
       x_widthL = (num_shift > x_widthL) ? num_shift : x_widthL;
-    } else {
-      num.setXShift(right_shift + num_shiftR);
+    } else if (pos == Vex.Flow.Modifier.Position.RIGHT) {
+      num.setXShift(num_shiftR);
+      num_shift += num_width; // spacing
       x_widthR = (num_shift > x_widthR) ? num_shift : x_widthR;
     }
     last_line = line;
@@ -386,7 +401,7 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
   var right_shift = this.state.right_shift;
   var nums = this.modifiers['frethandfinger'];
   var num_spacing = 1;
-  var prev_note = null;
+
   if (!nums || nums.length == 0) return this;
 
   var nums_list = [];
@@ -402,8 +417,10 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
     if (note != prev_note) {
       for (n = 0; n < note.keys.length; ++n) {
         props_tmp = note.getKeyProps()[n];
-        shift_left = (props_tmp.displaced ? note.getExtraLeftPx() : 0);
-        shift_right = (props_tmp.displaced ? note.getExtraRightPx() : 0);
+        if (left_shift == 0)
+          shift_left = (props_tmp.displaced ? note.getExtraLeftPx() : shift_left);
+        if (right_shift == 0)
+          shift_right = (props_tmp.displaced ? note.getExtraRightPx() : shift_right);
       }
       prev_note = note;
     }
@@ -411,7 +428,7 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
     nums_list.push({ line: props.line, pos: pos, shiftL: shift_left, shiftR: shift_right, note: note, num: num });
   }
   
-  // Sort dots by line number.
+  // Sort fingernumbers by line number.
   nums_list.sort(function(a, b) { return (b.line - a.line); });
 
   var num_shiftL = 0;
@@ -420,6 +437,7 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
   var x_widthR = 0;
   var last_line = null;
   var last_note = null;
+  
   for (var i = 0; i < nums_list.length; ++i) {
     var num_shift = 0;
     var num = nums_list[i].num;
@@ -434,12 +452,15 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
       num_shiftL = left_shift + shiftL;
       num_shiftR = right_shift + shiftR;
     }
-    num_shift += num.getWidth() + num_spacing; // spacing
+    
+    var num_width = num.getWidth() + num_spacing;
     if (pos == Vex.Flow.Modifier.Position.LEFT) {
       num.setXShift(left_shift + num_shiftL);
+      num_shift = left_shift + num_width; // spacing
       x_widthL = (num_shift > x_widthL) ? num_shift : x_widthL;
-    } else {
-      num.setXShift(right_shift + num_shiftR);
+    } else if (pos == Vex.Flow.Modifier.Position.RIGHT) {
+      num.setXShift(num_shiftR);
+      num_shift = shift_right + num_width; // spacing
       x_widthR = (num_shift > x_widthR) ? num_shift : x_widthR;
     }
     last_line = line;
@@ -551,9 +572,9 @@ Vex.Flow.ModifierContext.prototype.preFormat = function() {
 
   // Format modifiers in the following order:
   this.formatNotes().
+       formatDots().
        formatFretHandFingers(). 
        formatAccidentals().
-       formatDots().
        formatStrokes().
        formatStringNumbers().
        formatArticulations().
