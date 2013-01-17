@@ -15,6 +15,10 @@ Vex.Flow.Test.StringNumber.Start = function() {
       Vex.Flow.Test.StringNumber.drawFretHandFingers);
   Vex.Flow.Test.runRaphaelTest("Fret Hand Finger In Notation (Raphael)",
       Vex.Flow.Test.StringNumber.drawFretHandFingers);
+  Vex.Flow.Test.runTest("Multi Voice With Strokes, String & Finger Numbers",
+      Vex.Flow.Test.StringNumber.multi);
+  Vex.Flow.Test.runTest("Complex Measure With String & Finger Numbers",
+      Vex.Flow.Test.StringNumber.drawAccidentals);
 };
 
 Vex.Flow.Test.StringNumber.drawMultipleMeasures = function(options, contextBuilder) {
@@ -30,8 +34,8 @@ Vex.Flow.Test.StringNumber.drawMultipleMeasures = function(options, contextBuild
   staveBar1.addClef("treble").setContext(ctx).draw();
   staveBar1.setContext(ctx).draw();
   var notesBar1 = [
-    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: -1, duration: "q" }),
-    new Vex.Flow.StaveNote({ keys: ["c/5", "e/5", "g/5"], stem_direction: -1, duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: -1, duration: "q" }).addDotToAll(),
+    new Vex.Flow.StaveNote({ keys: ["c/5", "e/5", "g/5"], stem_direction: -1, duration: "8" }),
     new Vex.Flow.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: -1, duration: "q" }),
     new Vex.Flow.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: -1, duration: "q" }),
   ];
@@ -50,6 +54,7 @@ Vex.Flow.Test.StringNumber.drawMultipleMeasures = function(options, contextBuild
                                        setLineEndType(Vex.Flow.Renderer.LineEndType.DOWN));
   
   notesBar1[2].
+    addModifier(0, newStringNumber("5", Vex.Flow.Modifier.Position.LEFT)).
     addModifier(2, newStringNumber("3", Vex.Flow.Modifier.Position.LEFT)).
     addAccidental(1, new Vex.Flow.Accidental("#"));
    
@@ -91,7 +96,6 @@ Vex.Flow.Test.StringNumber.drawMultipleMeasures = function(options, contextBuild
   notesBar2[2].
     addModifier(2, newStringNumber("3", Vex.Flow.Modifier.Position.LEFT)).
     addAccidental(1, new Vex.Flow.Accidental("#"));
-  //  addAccidental(0, new Vex.Flow.Accidental("#"));
    
   notesBar2[3].
     // Position 4 below default
@@ -110,12 +114,8 @@ Vex.Flow.Test.StringNumber.drawMultipleMeasures = function(options, contextBuild
 Vex.Flow.Test.StringNumber.drawFretHandFingers = function(options, contextBuilder) {
   // Get the rendering context
   var ctx = contextBuilder(options.canvas_sel, 600, 200);
-  function newFinger(num, pos) { 
-    return new Vex.Flow.FretHandFinger(num).setPosition(pos); 
-  }
-  function newStringNumber(num, pos) { 
-    return new Vex.Flow.StringNumber(num).setPosition(pos); 
-  }
+  function newFinger(num, pos) { return new Vex.Flow.FretHandFinger(num).setPosition(pos); }
+  function newStringNumber(num, pos) { return new Vex.Flow.StringNumber(num).setPosition(pos);}
 
   // bar 1
   var staveBar1 = new Vex.Flow.Stave(10, 50, 290);
@@ -132,7 +132,7 @@ Vex.Flow.Test.StringNumber.drawFretHandFingers = function(options, contextBuilde
   notesBar1[0].
     addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.LEFT)).
     addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.LEFT)).
-    addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.Left));
+    addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.LEFT));
     
    notesBar1[1].
     addAccidental(0, new Vex.Flow.Accidental("#")).
@@ -140,10 +140,11 @@ Vex.Flow.Test.StringNumber.drawFretHandFingers = function(options, contextBuilde
     addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.LEFT)).
     addAccidental(1, new Vex.Flow.Accidental("#")).
     addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.LEFT));
-  
+//  
   notesBar1[2].
     addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.BELOW)).
     addModifier(1, newFinger("4", Vex.Flow.Modifier.Position.LEFT)).
+    addModifier(1, newStringNumber("4", Vex.Flow.Modifier.Position.LEFT)).  
     addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.ABOVE)).
     addAccidental(1, new Vex.Flow.Accidental("#"));
    
@@ -168,38 +169,200 @@ Vex.Flow.Test.StringNumber.drawFretHandFingers = function(options, contextBuilde
   staveBar2.setContext(ctx).draw();
 
   var notesBar2 = [
-    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: 1, duration: "q" }),
-    new Vex.Flow.StaveNote({ keys: ["c/5", "e/5", "g/5"], stem_direction: 1, duration: "q" }),
-    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: 1, duration: "q" }),
-    new Vex.Flow.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: 1, duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: 1, duration: "q" }).addDotToAll(),
+    new Vex.Flow.StaveNote({ keys: ["c/5", "e/5", "g/5"], stem_direction: 1, duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: 1, duration: "8" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: -1, duration: "q" }).addDotToAll(),
   ];
 
-  notesBar2[0].
-  addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.LEFT)).
+ notesBar2[0].
+  addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.RIGHT)).
   addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.LEFT)).
-  addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.Left));
+  addModifier(1, newStringNumber("4", Vex.Flow.Modifier.Position.RIGHT)).
+  addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.RIGHT));
   
  notesBar2[1].
   addAccidental(0, new Vex.Flow.Accidental("#")).
   addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.RIGHT)).
-  addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.RIGHT)).
+  addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.LEFT)).
   addAccidental(1, new Vex.Flow.Accidental("#")).
-  addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.RIGHT));
+  addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.LEFT));
 
 notesBar2[2].
   addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.BELOW)).
-  addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.RIGHT)).
-  addModifier(2, newFinger("1", Vex.Flow.Modifier.Position.ABOVE)).
+  addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.LEFT)).
+  addModifier(1, newStringNumber("4", Vex.Flow.Modifier.Position.LEFT)).
+//  addModifier(2, newFinger("1", Vex.Flow.Modifier.Position.ABOVE)).
+  addModifier(2, newFinger("1", Vex.Flow.Modifier.Position.RIGHT)).
   addAccidental(2, new Vex.Flow.Accidental("#"));
  
 notesBar2[3].
   addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.RIGHT)).
-  // Position 5 below default
-  addModifier(1, newFinger("4", Vex.Flow.Modifier.Position.RIGHT)).  
-  addModifier(2, newFinger("1", Vex.Flow.Modifier.Position.RIGHT).setOffsetY(-5)); 
+  addModifier(1, newFinger("4", Vex.Flow.Modifier.Position.RIGHT)).
+  addModifier(2, newFinger("1", Vex.Flow.Modifier.Position.RIGHT).setOffsetY(-5)).
+  addModifier(0, newStringNumber("5", Vex.Flow.Modifier.Position.RIGHT).setOffsetY(4)).
+  addModifier(1, newStringNumber("4", Vex.Flow.Modifier.Position.RIGHT).setOffsetY(4)).
+  addModifier(2, newStringNumber("3", Vex.Flow.Modifier.Position.RIGHT).setOffsetY(-6));
 
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
  
+  ok(true, "String Number");
+}
+
+Vex.Flow.Test.StringNumber.multi = function(options, contextBuilder) {
+  var c = new contextBuilder(options.canvas_sel, 600, 200);
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+  function newFinger(num, pos) { return new Vex.Flow.FretHandFinger(num).setPosition(pos); }
+  function newStringNumber(num, pos) { return new Vex.Flow.StringNumber(num).setPosition(pos);}
+  var stave = new Vex.Flow.Stave(50, 10, 500);
+  stave.setContext(c);
+  stave.draw();
+
+  var notes = [
+    newNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" }),
+    newNote({ keys: ["e/4", "a/3", "g/4"], duration: "q" }),
+    newNote({ keys: ["c/4", "d/4", "a/4"], duration: "q" }),
+    newNote({ keys: ["c/4", "d/4", "a/4"], duration: "q" })
+  ];
+  // Create the strokes
+  var stroke1 = new Vex.Flow.Stroke(5);
+  var stroke2 = new Vex.Flow.Stroke(6);
+  var stroke3 = new Vex.Flow.Stroke(2);
+  var stroke4 = new Vex.Flow.Stroke(1);
+  notes[0].addStroke(0, stroke1);
+  notes[0].addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.LEFT));
+  notes[0].addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.LEFT));
+  notes[0].addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.LEFT));
+  notes[0].addModifier(2, newStringNumber("3", Vex.Flow.Modifier.Position.RIGHT));
+  notes[0].addModifier(1, newStringNumber("4", Vex.Flow.Modifier.Position.LEFT));
+  notes[1].addStroke(0, stroke2);
+  notes[1].addModifier(2, newStringNumber("3", Vex.Flow.Modifier.Position.RIGHT));
+  notes[1].addModifier(1, newStringNumber("4", Vex.Flow.Modifier.Position.LEFT));
+  notes[1].addAccidental(0, new Vex.Flow.Accidental("#"));
+  notes[1].addAccidental(1, new Vex.Flow.Accidental("#"));
+  notes[1].addAccidental(2, new Vex.Flow.Accidental("#"));
+  notes[2].addStroke(0, stroke3);
+  notes[2].addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.LEFT));
+  notes[2].addModifier(1, newFinger("0", Vex.Flow.Modifier.Position.RIGHT));
+  notes[2].addModifier(2, newFinger("1", Vex.Flow.Modifier.Position.LEFT));
+  notes[2].addModifier(2, newStringNumber("3", Vex.Flow.Modifier.Position.LEFT));
+  notes[2].addModifier(1, newStringNumber("4", Vex.Flow.Modifier.Position.RIGHT));
+  notes[3].addStroke(0, stroke4);
+  notes[3].addModifier(2, newStringNumber("3", Vex.Flow.Modifier.Position.LEFT));
+  notes[3].addModifier(1, newStringNumber("4", Vex.Flow.Modifier.Position.RIGHT));
+
+  var notes2 = [
+    newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"})
+  ];
+  notes2[0].addModifier(0, newFinger("0", Vex.Flow.Modifier.Position.LEFT));
+  notes2[0].addModifier(0, newStringNumber("6", Vex.Flow.Modifier.Position.RIGHT));
+  notes2[2].addAccidental(0, new Vex.Flow.Accidental("#"));
+  notes2[4].addModifier(0, newFinger("0", Vex.Flow.Modifier.Position.RIGHT));
+  notes2[4].addModifier(0, newStringNumber("6", Vex.Flow.Modifier.Position.LEFT).
+                               setOffsetX(15).
+                               setOffsetY(18));
+  
+  stroke1.addEndNote(notes2[0]);
+  stroke2.addEndNote(notes2[2]);
+  stroke3.addEndNote(notes2[3]);
+  stroke4.addEndNote(notes2[4]);
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  voice.addTickables(notes);
+  voice2.addTickables(notes2);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice, voice2]).
+    format([voice, voice2], 400);
+
+  var beam2_1 = new Vex.Flow.Beam(notes2.slice(0, 4));
+  var beam2_2 = new Vex.Flow.Beam(notes2.slice(4, 8));
+
+  voice2.draw(c, stave);
+  beam2_1.setContext(c).draw();
+  beam2_2.setContext(c).draw();
+  voice.draw(c, stave);
+
+  ok(true, "Strokes Test Multi Voice");
+};
+
+Vex.Flow.Test.StringNumber.drawAccidentals = function(options, contextBuilder) {
+  // Get the rendering context
+  var ctx = contextBuilder(options.canvas_sel, 600, 200);
+  function newFinger(num, pos) { return new Vex.Flow.FretHandFinger(num).setPosition(pos); }
+  function newStringNumber(num, pos) { return new Vex.Flow.StringNumber(num).setPosition(pos);}
+
+  // bar 1
+  var staveBar1 = new Vex.Flow.Stave(10, 50, 475);
+  staveBar1.setEndBarType(Vex.Flow.Barline.type.DOUBLE);
+  staveBar1.addClef("treble").setContext(ctx).draw();
+  staveBar1.setContext(ctx).draw();
+  var notesBar1 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4", "c/5", "e/5", "g/5"], stem_direction: 1, duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4", "d/5", "e/5", "g/5"], stem_direction: 1, duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4", "d/5", "e/5", "g/5"], stem_direction: -1, duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4", "d/5", "e/5", "g/5"], stem_direction: -1, duration: "q" }),
+  ];
+  
+  notesBar1[0].
+    addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(0, new Vex.Flow.Accidental("#")).
+    addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.LEFT)).
+    addModifier(1, newStringNumber("2", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(1, new Vex.Flow.Accidental("#")).
+    addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(2, new Vex.Flow.Accidental("#")).    
+    addModifier(3, newFinger("3", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(3, new Vex.Flow.Accidental("#")).
+    addModifier(4, newFinger("2", Vex.Flow.Modifier.Position.RIGHT)).
+    addModifier(4, newStringNumber("3", Vex.Flow.Modifier.Position.RIGHT)).
+    addAccidental(4, new Vex.Flow.Accidental("#")).
+    addModifier(5, newFinger("0", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(5, new Vex.Flow.Accidental("#"));    
+
+  notesBar1[1].
+    addAccidental(0, new Vex.Flow.Accidental("#")).
+    addAccidental(1, new Vex.Flow.Accidental("#")).
+    addAccidental(2, new Vex.Flow.Accidental("#")).    
+    addAccidental(3, new Vex.Flow.Accidental("#")).
+    addAccidental(4, new Vex.Flow.Accidental("#")).
+    addAccidental(5, new Vex.Flow.Accidental("#"));    
+
+  notesBar1[2].
+    addModifier(0, newFinger("3", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(0, new Vex.Flow.Accidental("#")).
+    addModifier(1, newFinger("2", Vex.Flow.Modifier.Position.LEFT)).
+    addModifier(1, newStringNumber("2", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(1, new Vex.Flow.Accidental("#")).
+    addModifier(2, newFinger("0", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(2, new Vex.Flow.Accidental("#")).    
+    addModifier(3, newFinger("3", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(3, new Vex.Flow.Accidental("#")).
+    addModifier(4, newFinger("2", Vex.Flow.Modifier.Position.RIGHT)).
+    addModifier(4, newStringNumber("3", Vex.Flow.Modifier.Position.RIGHT)).
+    addAccidental(4, new Vex.Flow.Accidental("#")).
+    addModifier(5, newFinger("0", Vex.Flow.Modifier.Position.LEFT)).
+    addAccidental(5, new Vex.Flow.Accidental("#"));    
+
+  notesBar1[3].
+    addAccidental(0, new Vex.Flow.Accidental("#")).
+    addAccidental(1, new Vex.Flow.Accidental("#")).
+    addAccidental(2, new Vex.Flow.Accidental("#")).    
+    addAccidental(3, new Vex.Flow.Accidental("#")).
+    addAccidental(4, new Vex.Flow.Accidental("#")).
+    addAccidental(5, new Vex.Flow.Accidental("#"));    
+
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+
   ok(true, "String Number");
 }
