@@ -190,7 +190,7 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
   var hasStave = false;
   var prev_note = null;
   var shiftL = 0;
-  
+
   for (var i = 0; i < accidentals.length; ++i) {
     var acc = accidentals[i];
     var note = acc.getNote();
@@ -208,7 +208,7 @@ Vex.Flow.ModifierContext.prototype.formatAccidentals = function() {
       hasStave = true;
       var line_space = stave.options.spacing_between_lines_px;
       var y = stave.getYForLine(props.line);
-      acc_list.push({ y: y, shift: shift, acc: acc, lineSpace: line_space });
+      acc_list.push({ y: y, shift: shiftL, acc: acc, lineSpace: line_space });
     } else {
       acc_list.push({ line: props.line, shift: shiftL, acc: acc });
     }
@@ -332,7 +332,7 @@ Vex.Flow.ModifierContext.prototype.formatStringNumbers = function() {
   for (var i = 0; i < nums.length; ++i) {
     var num = nums[i];
     var note = num.getNote();
-    
+
     for (var i = 0; i < nums.length; ++i) {
       var num = nums[i];
       var note = num.getNote();
@@ -348,11 +348,11 @@ Vex.Flow.ModifierContext.prototype.formatStringNumbers = function() {
         }
         prev_note = note;
       }
-      
+
       nums_list.push({ line: props.line, pos: pos, shiftL: shift_left, shiftR: shift_right, note: note, num: num });
     }
   }
-  
+
   // Sort string numbers by line number.
   nums_list.sort(function(a, b) { return (b.line - a.line); });
 
@@ -370,13 +370,13 @@ Vex.Flow.ModifierContext.prototype.formatStringNumbers = function() {
     var shiftL = nums_list[i].shiftL;
     var shiftR = nums_list[i].shiftR;
     var pos = nums_list[i].pos;
-    
+
     // Reset the position of the string number every line.
     if (line != last_line || note != last_note) {
       num_shiftL = left_shift + shiftL;
       num_shiftR = right_shift + shiftR;
     }
-    
+
     var num_width = num.getWidth() + num_spacing;
     if (pos == Vex.Flow.Modifier.Position.LEFT) {
       num.setXShift(left_shift);
@@ -408,7 +408,7 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
   var prev_note = null;
   var shift_left = 0;
   var shift_right = 0;
-  
+
   for (var i = 0; i < nums.length; ++i) {
     var num = nums[i];
     var note = num.getNote();
@@ -424,10 +424,10 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
       }
       prev_note = note;
     }
-    
+
     nums_list.push({ line: props.line, pos: pos, shiftL: shift_left, shiftR: shift_right, note: note, num: num });
   }
-  
+
   // Sort fingernumbers by line number.
   nums_list.sort(function(a, b) { return (b.line - a.line); });
 
@@ -437,7 +437,7 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
   var x_widthR = 0;
   var last_line = null;
   var last_note = null;
-  
+
   for (var i = 0; i < nums_list.length; ++i) {
     var num_shift = 0;
     var num = nums_list[i].num;
@@ -446,13 +446,13 @@ Vex.Flow.ModifierContext.prototype.formatFretHandFingers = function() {
     var shiftL = nums_list[i].shiftL;
     var shiftR = nums_list[i].shiftR;
     var pos = nums_list[i].pos;
-    
+
     // Reset the position of the string number every line.
     if (line != last_line || note != last_note) {
       num_shiftL = left_shift + shiftL;
       num_shiftR = right_shift + shiftR;
     }
-    
+
     var num_width = num.getWidth() + num_spacing;
     if (pos == Vex.Flow.Modifier.Position.LEFT) {
       num.setXShift(left_shift + num_shiftL);
@@ -573,7 +573,7 @@ Vex.Flow.ModifierContext.prototype.preFormat = function() {
   // Format modifiers in the following order:
   this.formatNotes().
        formatDots().
-       formatFretHandFingers(). 
+       formatFretHandFingers().
        formatAccidentals().
        formatStrokes().
        formatStringNumbers().
