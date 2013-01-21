@@ -29,10 +29,25 @@ Vex.Flow.Accidental.prototype.init = function(type) {
   };
 
   this.accidental = Vex.Flow.accidentalCodes(this.type);
+
+  this.cautionary = false;      // true - draw as cautionary accidental
+  this.paren_left = null;
+  this.paren_right = null;
+
   this.setWidth(this.accidental.width);
 }
 
 Vex.Flow.Accidental.prototype.getCategory = function() { return "accidentals"; }
+Vex.Flow.Accidental.prototype.setAsCautionary = function() { 
+  this.cautionary = true;
+  // Set accidental size smaller than normal
+  this.render_options.font_scale = 28;
+  this.paren_left = Vex.Flow.accidentalCodes("{");
+  this.paren_right = Vex.Flow.accidentalCodes("}");
+  var width_adjust = (this.type == "##" || this.type == "bb") ? 6 : 4;
+  this.setWidth(this.paren_left.width + this.accidental.width + this.paren_right.width - width_adjust);
+  return this;
+}
 
 Vex.Flow.Accidental.prototype.draw = function() {
   if (!this.context) throw new Vex.RERR("NoContext",
@@ -44,6 +59,19 @@ Vex.Flow.Accidental.prototype.draw = function() {
   var acc_x = (start.x + this.x_shift) - this.width;
   var acc_y = start.y + this.y_shift;
 
-  Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
-                       this.render_options.font_scale, this.accidental.code);
+  if (!this.cautionary) {
+    Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
+                         this.render_options.font_scale, this.accidental.code);
+  } else {
+    acc_x += 3;
+    Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
+                         this.render_options.font_scale, this.paren_left.code);
+    acc_x += 2;
+    Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
+                         this.render_options.font_scale, this.accidental.code);
+    acc_x += this.accidental.width - 2;
+    if (this.type == "##" || this.type == "bb") acc_x -= 2;
+    Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
+                         this.render_options.font_scale, this.paren_right.code);
+  }
 }

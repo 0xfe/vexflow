@@ -343,6 +343,18 @@ Vex.Flow.accidentalCodes.accidentals = {
     width: 8,
     shift_right: 0,
     shift_down: 0
+  },
+  "{": {   // Left paren for cautionary accidentals
+    code: "v9c",
+    width: 5,
+    shift_right: 2,
+    shift_down: 0
+  },
+  "}": {   // Right paren for cautionary accidentals
+    code: "v84",
+    width: 5,
+    shift_right: 0,
+    shift_down: 0
   }
 };
 
