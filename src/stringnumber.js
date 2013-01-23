@@ -21,7 +21,7 @@ Vex.Flow.StringNumber.prototype.init = function(number) {
   this.last_note = null;
   this.index = null;
   this.string_number = number;
-  this.setWidth(18);                                 // ???
+  this.setWidth(20);                                 // ???
   this.position = Vex.Flow.Modifier.Position.ABOVE;  // Default position above stem or note head
   this.x_shift = 0;
   this.y_shift = 0;
@@ -29,11 +29,11 @@ Vex.Flow.StringNumber.prototype.init = function(number) {
   this.y_offset = 0;                               // Vertical offset from default
   this.dashed = true;                              // true - draw dashed extension  false - no extension
   this.leg = Vex.Flow.Renderer.LineEndType.NONE;   // draw upward/downward leg at the of extension line
-  this.radius = 7;
+  this.radius = 8;
   this.font = {
     family: "sans-serif",
-    size: 9,
-    weight: ""
+    size: 10,
+    weight: "bold"
   };
 }
 
@@ -62,8 +62,8 @@ Vex.Flow.StringNumber.prototype.setStringNumber = function(number) {
   return this;
 }
 Vex.Flow.StringNumber.prototype.setOffsetX = function(x) {
-	this.x_offset = x;
-	return this;
+  this.x_offset = x;
+  return this;
 }
 Vex.Flow.StringNumber.prototype.setOffsetY = function(y) {
   this.y_offset = y;
@@ -85,18 +85,34 @@ Vex.Flow.StringNumber.prototype.draw = function() {
     "Can't draw string number without a note and index.");
 
   var ctx = this.context;
+  var line_space = this.note.stave.options.spacing_between_lines_px;
 
   var start = this.note.getModifierStartXY(this.position, this.index);
   var dot_x = (start.x + this.x_shift + this.x_offset);
   var dot_y = start.y + this.y_shift + this.y_offset;
-  
+
   switch (this.position) {
     case Vex.Flow.Modifier.Position.ABOVE:
-      dot_y = this.note.getYForTopText(1);
-      break;
     case Vex.Flow.Modifier.Position.BELOW:
-      var text_line = this.note.getStemDirection() == Vex.Flow.StaveNote.STEM_UP ? 2 : 12;
-      dot_y = this.note.getYForBottomText(text_line) + 5;
+      var stem_ext = this.note.getStemExtents();
+      var top = stem_ext.topY;
+      var bottom = stem_ext.baseY + 2;
+
+      if (this.note.stem_direction == Vex.Flow.StaveNote.STEM_DOWN) {
+        top = stem_ext.baseY;
+        bottom = stem_ext.topY - 2;
+      }
+
+      if (this.position == Vex.Flow.Modifier.Position.ABOVE) {
+        dot_y = this.note.hasStem() ? top - (line_space * 1.75)
+                                    : start.y - (line_space * 1.75);
+    } else {
+        dot_y = this.note.hasStem() ? bottom + (line_space * 1.5)
+                                    : start.y + (line_space * 1.75);
+      }
+
+      dot_y += this.y_shift + this.y_offset;
+
       break;
     case Vex.Flow.Modifier.Position.LEFT:
       dot_x -= (this.radius / 2) + 5;
@@ -113,8 +129,8 @@ Vex.Flow.StringNumber.prototype.draw = function() {
   ctx.stroke();
   ctx.setFont(this.font.family, this.font.size, this.font.weight);
   var x = dot_x - ctx.measureText(this.string_number).width / 2;
-  ctx.fillText("" + this.string_number, x, dot_y + 5);
-  
+  ctx.fillText("" + this.string_number, x, dot_y + 4.5);
+
   if (this.last_note != null) {
     var end = this.last_note.getStemX() - this.note.getX() + 5;
     ctx.strokeStyle="#000000";
@@ -137,6 +153,6 @@ Vex.Flow.StringNumber.prototype.draw = function() {
         break;
     }
   }
-  
+
   ctx.restore();
 }
