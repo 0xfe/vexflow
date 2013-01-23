@@ -73,7 +73,7 @@ Vex.Flow.FretHandFinger.prototype.draw = function() {
   
   switch (this.position) {
     case Vex.Flow.Modifier.Position.ABOVE:
-      dot_x -= 2;
+      dot_x -= 4;
       dot_y -= 12;
       break;
     case Vex.Flow.Modifier.Position.BELOW:
@@ -84,7 +84,7 @@ Vex.Flow.FretHandFinger.prototype.draw = function() {
       dot_x -= this.width;
       break;
     case Vex.Flow.Modifier.Position.RIGHT:
-      dot_x += 2;
+      dot_x += 1;
       break;
   }
 
