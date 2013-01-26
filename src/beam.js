@@ -290,12 +290,6 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice, stem_direction) {
         return; // Ignore untickables (like bar notes)
       }
 
-      if (unprocessedNote.getIntrinsicTicks() >= Vex.Flow.durationToTicks("4")) {
-        noteGroups.push(currentGroup);
-        currentGroup = nextGroup;
-        return; // Can't beam quarter notes or higher.
-      }
-
       currentGroup.push(unprocessedNote);
 
       // If the note that was just added overflows the group tick total
@@ -316,7 +310,16 @@ Vex.Flow.Beam.applyAndGetBeams = function(voice, stem_direction) {
 
   function getBeamGroups() {
     return noteGroups.filter(function(group){
-        return group.length > 1;
+        if (group.length > 1) {
+          var beamable = true;
+          group.forEach(function(note) {
+            if (note.getIntrinsicTicks() >= Vex.Flow.durationToTicks("4")) {
+              beamable = false;
+            }
+          });
+          return beamable;
+        }
+        return false;
     });
   }
 
