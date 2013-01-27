@@ -23,11 +23,11 @@ scp build/vexflow/vexflow-min.js $SCP_TO/support
 
 echo Copying over tests...
 ssh $SSH_TO rm -rf tests/
-scp -r build/tests $SCP_TO
+rsync -przvl --delete --stats build/tests $SCP_TO
 scp build/tests/flow.html $SCP_TO/tests/index.html
 
 echo Copy over docs...
-scp -r docs $SCP_TO
+rsync -przvl --delete --stats docs $SCP_TO
 scp -r docs/index.html $SCP_TO
 
 echo Done.
