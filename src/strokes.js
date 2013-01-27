@@ -6,8 +6,8 @@
 /**
  * @constructor
  */
-Vex.Flow.Stroke = function(type) {
-  if (arguments.length > 0) this.init(type);
+Vex.Flow.Stroke = function(type, options) {
+  if (arguments.length > 0) this.init(type, options);
 }
 Vex.Flow.Stroke.prototype = new Vex.Flow.Modifier();
 Vex.Flow.Stroke.prototype.constructor = Vex.Flow.Stroke;
@@ -22,12 +22,20 @@ Vex.Flow.Stroke.Type = {
   RASQUEDO_UP: 6
 }
 
-Vex.Flow.Stroke.prototype.init = function(type) {
+Vex.Flow.Stroke.prototype.init = function(type, options) {
   var superclass = Vex.Flow.Stroke.superclass;
   superclass.init.call(this);
 
   this.note = null;
+  this.options = Vex.Merge({}, options);
+
+  // multi voice - span stroke across all voices if true
+  this.all_voices = 'all_voices' in this.options
+                  ? this.options.all_voices : true;
+
+  // multi voice - end note of stroke, set in draw()
   this.note_end = null;
+
   this.index = null;
   this.type = type;
   this.position = Vex.Flow.Modifier.Position.LEFT;
@@ -50,7 +58,7 @@ Vex.Flow.Stroke.prototype.init = function(type) {
 
 Vex.Flow.Stroke.prototype.getCategory = function() { return "strokes"; }
 Vex.Flow.Stroke.prototype.getPosition = function() { return this.position; }
-Vex.Flow.Stroke.prototype.addEndNote = function(note)
+Vex.Flow.Stroke.prototype.addEndNote = function(note)  // Deprecated
   { this.note_end = note; return this; }
 
 Vex.Flow.Stroke.prototype.draw = function() {
@@ -65,15 +73,15 @@ Vex.Flow.Stroke.prototype.draw = function() {
   var x = start.x - 5
   var line_space = this.note.stave.options.spacing_between_lines_px;
 
-  for (var i = 0; i < ys.length; i++) {
-    topY = Vex.Min(topY, ys[i]);
-    botY = Vex.Max(botY, ys[i]);
-  }
-  if (this.note_end != null) {
-    ys = this.note_end.getYs();
-    for (var i = 0; i < ys.length; i++) {
-      topY = Vex.Min(topY, ys[i]);
-      botY = Vex.Max(botY, ys[i]);
+  var notes = this.getModifierContext().getModifiers(this.note.getCategory());
+
+  for (var i = 0; i < notes.length; i++) {
+    ys = notes[i].getYs();
+    for (var n = 0; n < ys.length; n++) {
+      if (this.note == notes[i] || this.all_voices) {
+        topY = Vex.Min(topY, ys[n]);
+        botY = Vex.Max(botY, ys[n]);
+      }
     }
   }
 
@@ -132,7 +140,7 @@ Vex.Flow.Stroke.prototype.draw = function() {
       }
       break;
   }
-  
+
   // Draw the stroke
   if (this.type == Vex.Flow.Stroke.Type.BRUSH_DOWN ||
       this.type == Vex.Flow.Stroke.Type.BRUSH_UP) {
@@ -154,7 +162,7 @@ Vex.Flow.Stroke.prototype.draw = function() {
         text_y = i + .25 * line_space;
     }
   }
-  
+
   // Draw the arrow head
   Vex.Flow.renderGlyph(this.context, x + this.x_shift + arrow_shift_x, arrow_y,
                        this.render_options.font_scale, arrow);

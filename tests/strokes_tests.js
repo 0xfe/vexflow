@@ -18,6 +18,8 @@ Vex.Flow.Test.Strokes.Start = function() {
       Vex.Flow.Test.Strokes.drawTabStrokes);
   Vex.Flow.Test.runTest("Strokes - Notation and Tab (Canvas)",
       Vex.Flow.Test.Strokes.notesWithTab);
+  Vex.Flow.Test.runTest("Strokes - Multi-Voice Notation and Tab (Canvas)",
+      Vex.Flow.Test.Strokes.multiNotationAndTab);
 };
 
 Vex.Flow.Test.Strokes.drawMultipleMeasures = function(options, contextBuilder) {
@@ -71,7 +73,7 @@ Vex.Flow.Test.Strokes.drawMultipleMeasures = function(options, contextBuilder) {
 
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
-  
+
   ok(true, "Brush/Roll/Rasquedo");
 
 };
@@ -112,10 +114,6 @@ Vex.Flow.Test.Strokes.multi = function(options, contextBuilder) {
     newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
     newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"})
   ];
-  stroke1.addEndNote(notes2[0]);
-  stroke2.addEndNote(notes2[2]);
-  stroke3.addEndNote(notes2[3]);
-  stroke4.addEndNote(notes2[4]);
 
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
@@ -134,6 +132,98 @@ Vex.Flow.Test.Strokes.multi = function(options, contextBuilder) {
   voice.draw(c, stave);
 
   ok(true, "Strokes Test Multi Voice");
+};
+
+Vex.Flow.Test.Strokes.multiNotationAndTab = function(options, contextBuilder) {
+  var c = new contextBuilder(options.canvas_sel, 400, 275);
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newTabNote(tab_struct) { return new Vex.Flow.TabNote(tab_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+  var stave = new Vex.Flow.Stave(10, 10, 400).addTrebleGlyph().
+    setContext(c).draw();
+  var tabstave = new Vex.Flow.TabStave(10, 125, 400).addTabGlyph().
+    setNoteStartX(stave.getNoteStartX()).setContext(c).draw();
+
+  // notation upper voice notes
+  var notes = [
+    newNote({ keys: ["g/4", "b/4", "e/5"], duration: "q" }),
+    newNote({ keys: ["g/4", "b/4", "e/5"], duration: "q" }),
+    newNote({ keys: ["g/4", "b/4", "e/5"], duration: "q" }),
+    newNote({ keys: ["g/4", "b/4", "e/5"], duration: "q" })
+  ];
+
+  // tablature upper voice notes
+  var notes3 = [
+    newTabNote({ positions: [{str: 3, fret: 0},
+                             {str: 2, fret: 0},
+                             {str: 1, fret: 1}], duration: "q"}),
+    newTabNote({ positions: [{str: 3, fret: 0},
+                             {str: 2, fret: 0},
+                             {str: 1, fret: 1}], duration: "q"}),
+    newTabNote({ positions: [{str: 3, fret: 0},
+                             {str: 2, fret: 0},
+                             {str: 1, fret: 1}], duration: "q"}),
+    newTabNote({ positions: [{str: 3, fret: 0},
+                             {str: 2, fret: 0},
+                             {str: 1, fret: 1}], duration: "q"})
+  ];
+
+  // Create the strokes for notation
+  var stroke1 = new Vex.Flow.Stroke(3, {all_voices: false});
+  var stroke2 = new Vex.Flow.Stroke(6);
+  var stroke3 = new Vex.Flow.Stroke(2, {all_voices: false});
+  var stroke4 = new Vex.Flow.Stroke(1);
+  // add strokes to notation
+  notes[0].addStroke(0, stroke1);
+  notes[1].addStroke(0, stroke2);
+  notes[2].addStroke(0, stroke3);
+  notes[3].addStroke(0, stroke4);
+
+  // creae strokes for tab
+  var stroke5 = new Vex.Flow.Stroke(3, {all_voices: false});
+  var stroke6 = new Vex.Flow.Stroke(6);
+  var stroke7 = new Vex.Flow.Stroke(2, {all_voices: false});
+  var stroke8 = new Vex.Flow.Stroke(1);
+  // add strokes to tab
+  notes3[0].addStroke(0, stroke5);
+  notes3[1].addStroke(0, stroke6);
+  notes3[2].addStroke(0, stroke7);
+  notes3[3].addStroke(0, stroke8);
+
+  // notation lower voice notes
+  var notes2 = [
+    newNote({ keys: ["g/3"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["g/3"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["g/3"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["g/3"], stem_direction: -1, duration: "q"})
+  ];
+
+  // tablature lower voice notes
+  var notes4 = [
+    newTabNote({ positions: [{str: 6, fret: 3}], duration: "q"}),
+    newTabNote({ positions: [{str: 6, fret: 3}], duration: "q"}),
+    newTabNote({ positions: [{str: 6, fret: 3}], duration: "q"}),
+    newTabNote({ positions: [{str: 6, fret: 3}], duration: "q"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  var voice3 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  var voice4 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  voice.addTickables(notes);
+  voice2.addTickables(notes2);
+  voice4.addTickables(notes4);
+  voice3.addTickables(notes3);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice, voice2, voice3, voice4]).
+    format([voice, voice2, voice3, voice4], 275);
+
+  voice2.draw(c, stave);
+  voice.draw(c, stave);
+  voice4.draw(c, tabstave);
+  voice3.draw(c, tabstave);
+
+  ok(true, "Strokes Test Notation & Tab Multi Voice");
 };
 
 Vex.Flow.Test.Strokes.drawTabStrokes = function(options, contextBuilder) {
@@ -256,7 +346,7 @@ Vex.Flow.Test.Strokes.getTabNotes = function() {
   var noteStr4 = new Vex.Flow.Stroke(4);
   var noteStr5 = new Vex.Flow.Stroke(5);
   var noteStr6 = new Vex.Flow.Stroke(6);
-  
+
   notes1[0].addStroke(0, noteStr1);
   notes1[1].addStroke(0, noteStr2);
   notes1[2].addStroke(0, noteStr3);
@@ -270,7 +360,7 @@ Vex.Flow.Test.Strokes.getTabNotes = function() {
   var tabStr4 = new Vex.Flow.Stroke(4);
   var tabStr5 = new Vex.Flow.Stroke(5);
   var tabStr6 = new Vex.Flow.Stroke(6);
-  
+
   tabs1[0].addStroke(0, tabStr1);
   tabs1[1].addStroke(0, tabStr2);
   tabs1[2].addStroke(0, tabStr3);
@@ -321,7 +411,7 @@ Vex.Flow.Test.Strokes.notesWithTab = function(options, contextBuilder) {
   line.setType(Vex.Flow.StaveConnector.type.SINGLE);
   connector.setContext(ctx);
   line.setContext(ctx);
-  connector.draw(); 
+  connector.draw();
   line.draw();
 
   Vex.Flow.Test.Strokes.renderNotesWithTab(notes, ctx,
@@ -339,7 +429,7 @@ Vex.Flow.Test.Strokes.notesWithTab = function(options, contextBuilder) {
   line.setType(Vex.Flow.StaveConnector.type.SINGLE);
   connector.setContext(ctx);
   line.setContext(ctx);
-  connector.draw(); 
+  connector.draw();
   line.draw();
 
   Vex.Flow.Test.Strokes.renderNotesWithTab(notes, ctx,

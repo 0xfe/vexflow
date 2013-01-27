@@ -28,8 +28,8 @@ Vex.Flow.FretHandFinger.prototype.init = function(number) {
   this.y_offset = 0;       // Vertical offset from default
   this.font = {
     family: "sans-serif",
-    size: 8,
-    weight: ""
+    size: 9,
+    weight: "bold"
   };
 }
 
@@ -70,7 +70,7 @@ Vex.Flow.FretHandFinger.prototype.draw = function() {
   var start = this.note.getModifierStartXY(this.position, this.index);
   var dot_x = (start.x + this.x_shift + this.x_offset);
   var dot_y = start.y + this.y_shift + this.y_offset + 5;
-  
+
   switch (this.position) {
     case Vex.Flow.Modifier.Position.ABOVE:
       dot_x -= 4;
@@ -91,6 +91,6 @@ Vex.Flow.FretHandFinger.prototype.draw = function() {
   ctx.save();
   ctx.setFont(this.font.family, this.font.size, this.font.weight);
   ctx.fillText("" + this.finger, dot_x, dot_y);
-    
+
   ctx.restore();
 }

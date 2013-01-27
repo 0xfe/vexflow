@@ -298,11 +298,6 @@ Vex.Flow.Test.StringNumber.multi = function(options, contextBuilder) {
                                setOffsetX(15).
                                setOffsetY(18));
 
-  stroke1.addEndNote(notes2[0]);
-  stroke2.addEndNote(notes2[2]);
-  stroke3.addEndNote(notes2[3]);
-  stroke4.addEndNote(notes2[4]);
-
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
   voice.addTickables(notes);
