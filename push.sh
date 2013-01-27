@@ -8,7 +8,6 @@ SSH_TO="mohit@my.vexflow.com source ~/.bash_profile; cd $TARGET;"
 SCP_TO="mohit@my.vexflow.com:$TARGET"
 
 echo Building...
-scons -c
 ./build.sh
 
 ssh $SSH_TO "mkdir -p $TARGET; mkdir -p $TARGET/support"
