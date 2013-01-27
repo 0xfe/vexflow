@@ -35,6 +35,8 @@ Vex.Flow.TabNote.prototype.init = function(tab_struct) {
   this.updateWidth();
 }
 
+Vex.Flow.TabNote.prototype.getCategory = function() { return "tabnotes"; }
+
 Vex.Flow.TabNote.prototype.setGhost = function(ghost) {
   this.ghost = ghost;
   this.updateWidth();
@@ -91,6 +93,7 @@ Vex.Flow.TabNote.prototype.addToModifierContext = function(mc) {
   for (var i = 0; i < this.modifiers.length; ++i) {
     this.modifierContext.addModifier(this.modifiers[i]);
   }
+  this.modifierContext.addModifier(this);
   this.preFormatted = false;
   return this;
 }
