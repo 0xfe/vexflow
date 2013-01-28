@@ -164,7 +164,7 @@ Vex.Flow.Tuplet.prototype.draw = function() {
     this.y_pos = first_note.getStave().getYForLine(4) + 20;
 
     for (var i=0; i<this.notes.length; ++i) {
-      var bottom_y = this.notes[i].getYs()[0] + 20;
+      var bottom_y = this.notes[i].getStemExtents().topY + 15;
       if (bottom_y > this.y_pos)
         this.y_pos = bottom_y;
     }

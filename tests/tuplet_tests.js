@@ -148,15 +148,15 @@ Vex.Flow.Test.Tuplet.ratio = function(options) {
 }
 
 Vex.Flow.Test.Tuplet.bottom = function(options) {
-  var c = Vex.Flow.Test.Beam.setupContext(options);
+  var c = Vex.Flow.Test.Beam.setupContext(options, 350, 160);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
-    newNote({ keys: ["f/5"], stem_direction: -1, duration: "q"}),
-    newNote({ keys: ["c/5"], stem_direction: -1, duration: "q"}),
-    newNote({ keys: ["d/5"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["f/4"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["g/4"], stem_direction: -1, duration: "q"}),
     newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}),
-    newNote({ keys: ["g/5"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["g/3"], stem_direction: -1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"})
   ];
     
@@ -190,13 +190,13 @@ Vex.Flow.Test.Tuplet.bottom = function(options) {
 }
 
 Vex.Flow.Test.Tuplet.bottom_ratio = function(options) {
-  var c = Vex.Flow.Test.Beam.setupContext(options);
+  var c = Vex.Flow.Test.Beam.setupContext(options, 350, 160);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
-    newNote({ keys: ["f/5"], stem_direction: -1, duration: "q"}),
-    newNote({ keys: ["c/5"], stem_direction: -1, duration: "q"}),
-    newNote({ keys: ["d/5"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["f/4"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "q"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "q"}),
     newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}),
     newNote({ keys: ["g/5"], stem_direction: -1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"})
