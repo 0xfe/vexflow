@@ -23,9 +23,11 @@ Vex.Flow.Dot.prototype.init = function() {
 
   this.radius = 2;
   this.setWidth(5);
+  this.dot_shiftY = 0;
 }
 
 Vex.Flow.Dot.prototype.getCategory = function() { return "dots"; }
+Vex.Flow.Dot.prototype.setDotShiftY = function(y) { this.dot_shiftY = y; return this; }
 
 Vex.Flow.Dot.prototype.draw = function() {
   if (!this.context) throw new Vex.RERR("NoContext",
@@ -33,11 +35,13 @@ Vex.Flow.Dot.prototype.draw = function() {
   if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
     "Can't draw dot without a note and index.");
 
+  var line_space = this.note.stave.options.spacing_between_lines_px;
+
   var start = this.note.getModifierStartXY(this.position, this.index);
   var dot_x = (start.x + this.x_shift) + this.width - this.radius;
-  var dot_y = start.y + this.y_shift;
-
+  var dot_y = start.y + this.y_shift + (this.dot_shiftY * line_space);
   var ctx = this.context;
+
   ctx.beginPath();
   ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
   ctx.fill();

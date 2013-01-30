@@ -574,7 +574,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       head_width: 16.5,
       stem: false,
       stem_offset: 0,
-      flag: false
+      flag: false,
+      dot_shiftY: 0
     },
     type: {
       "n": { // Whole note
@@ -589,9 +590,10 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "r": { // Whole rest
         code_head: "v5c",
-        head_width: 10.5,
+        head_width: 12.5,
         rest: true,
-        position: "D/5"
+        position: "D/5,",
+        dot_shiftY: 0.5
       },
       "s": { // Whole note slash
         // Drawn with canvas primitives
@@ -605,7 +607,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       head_width: 10.5,
       stem: true,
       stem_offset: 0,
-      flag: false
+      flag: false,
+      dot_shiftY: 0
     },
     type: {
       "n": { // Half note
@@ -620,9 +623,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "r": { // Half rest
         code_head: "vc",
+        head_width: 12.5,
         stem: false,
         rest: true,
-        position: "B/4"
+        position: "B/4",
+        dot_shiftY: -0.5
       },
       "s": { // Half note slash
         // Drawn with canvas primitives
@@ -636,7 +641,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       head_width: 10.5,
       stem: true,
       stem_offset: 0,
-      flag: false
+      flag: false,
+      dot_shiftY: 0
     },
     type: {
       "n": { // Quarter note
@@ -651,9 +657,11 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "r": { // Quarter rest
         code_head: "v7c",
+        head_width: 8,
         stem: false,
         rest: true,
-        position: "B/4"
+        position: "B/4",
+        dot_shiftY: -0.5
       },
       "s": { // Quarter slash
          // Drawn with canvas primitives
@@ -670,7 +678,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       beam_count: 1,
       code_flag_upstem: "v54",
-      code_flag_downstem: "v9a"
+      code_flag_downstem: "v9a",
+      dot_shiftY: 0
     },
     type: {
       "n": { // Eighth note
@@ -687,7 +696,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
         stem: false,
         flag: false,
         rest: true,
-        position: "B/4"
+        position: "B/4",
+        dot_shiftY: -0.5
       },
       "s": { // Eight slash
         // Drawn with canvas primitives
@@ -704,7 +714,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem_offset: 0,
       flag: true,
       code_flag_upstem: "v3f",
-      code_flag_downstem: "v8f"
+      code_flag_downstem: "v8f",
+      dot_shiftY: 0
     },
     type: {
       "n": { // Sixteenth note
@@ -718,10 +729,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "r": { // Sixteenth rest
         code_head: "v3c",
+        head_width: 13,
         stem: false,
         flag: false,
         rest: true,
-        position: "B/4"
+        position: "B/4",
+        dot_shiftY: -0.5
       },
       "s": { // Sixteenth slash
         // Drawn with canvas primitives
@@ -738,7 +751,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem_offset: 0,
       flag: true,
       code_flag_upstem: "v47",
-      code_flag_downstem: "v2a"
+      code_flag_downstem: "v2a",
+      dot_shiftY: 0
     },
     type: {
       "n": { // Thirty-second note
@@ -752,10 +766,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "r": { // Thirty-second rest
         code_head: "v55",
+        head_width: 16,
         stem: false,
         flag: false,
         rest: true,
-        position: "B/4"
+        position: "B/4",
+        dot_shiftY: -1.5
       },
       "s": { // Thirty-second slash
         // Drawn with canvas primitives
@@ -772,7 +788,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem_offset: 0,
       flag: true,
       code_flag_upstem: "va9",
-      code_flag_downstem: "v58"
+      code_flag_downstem: "v58",
+      dot_shiftY: 0
     },
     type: {
       "n": { // Sixty-fourth note
@@ -786,10 +803,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "r": { // Sixty-fourth rest
         code_head: "v38",
+        head_width: 18,
         stem: false,
         flag: false,
         rest: true,
-        position: "B/4"
+        position: "B/4",
+        dot_shiftY: -1.5
       },
       "s": { // Sixty-fourth slash
         // Drawn with canvas primitives

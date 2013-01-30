@@ -42,6 +42,45 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
 
   this.resolveGlyphs();
 
+  // align rests with notes
+  for (var i = 0; i < notes.length; ++i) {
+    var note = notes[i];
+    if (note.glyph.rest) {
+      var props = notes[i].getKeyProps()[0];
+
+      // get line for rest from the appropriate note group
+      if (i == 0) {
+        // first tuplet get from next valid note group
+        var g = 0;
+        while (g < notes.length && notes[g].glyph.rest) {
+          g++;
+        }
+        var rest_line = notes[g].getLineForRest();
+      } else {
+        // All other tuplets get from next valid note group
+        var rest_line  = notes[i-1].getLineForRest();
+        var next_rest_line = rest_line;
+        var g = i;
+        // skip consecutive rests
+        while (g < notes.length -1) {
+          g++;
+          if (!notes[g].glyph.rest) {
+            next_rest_line = notes[g].getLineForRest();
+            break;
+          }
+        }
+        // get midpoint between valid note groups
+        if (rest_line != next_rest_line) {
+          var top = Vex.Max(rest_line, next_rest_line);
+          var bot = Vex.Min(rest_line, next_rest_line);
+          rest_line = Vex.MidLine(top, bot);
+        }
+      }
+
+      props.line = rest_line;
+    }
+  }
+
   this.attach();
 }
 
@@ -164,7 +203,7 @@ Vex.Flow.Tuplet.prototype.draw = function() {
     this.y_pos = first_note.getStave().getYForLine(4) + 20;
 
     for (var i=0; i<this.notes.length; ++i) {
-      var bottom_y = this.notes[i].getStemExtents().topY + 15;
+      var bottom_y = this.notes[i].getStemExtents().topY + 9;
       if (bottom_y > this.y_pos)
         this.y_pos = bottom_y;
     }

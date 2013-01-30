@@ -77,6 +77,42 @@ Vex.Flow.Beam.prototype.init = function(notes, auto_stem) {
       note.setStemDirection(stem_direction);
       this.stem_direction = stem_direction;
     }
+
+    // align rests with beamed notes
+    var note = notes[i];
+    if (note.glyph.rest && note.glyph.position == "B/4") {
+      var props = notes[i].getKeyProps()[0];
+      if (i > 0 && i < notes.length - 1) {
+        // if previous note a rest, use it's line number
+        if (notes[i-1].glyph.rest) {
+          var rest_line = notes[i-1].getKeyProps()[0].line;
+          props.line = rest_line;
+        } else {
+          var rest_line = notes[i-1].getLineForRest();
+
+          if (!notes[i+1].glyph.rest) {
+            var next_rest_line = rest_line;
+            // get the rest line for next valid non-rest note group
+            var g = i;
+            while (g < notes.length) {
+              g++;
+              if (!notes[g].glyph.rest) {
+                next_rest_line = notes[g].getLineForRest();
+                break;
+              }
+            }
+
+            // locate the mid point between two lines
+            if (rest_line != next_rest_line) {
+              var top = Vex.Max(rest_line, next_rest_line);
+              var bot = Vex.Min(rest_line, next_rest_line);
+              rest_line = Vex.MidLine(top, bot);
+            }
+          }
+          props.line = rest_line;
+        }
+      }
+    }
     note.setBeam(this);
   }
 
