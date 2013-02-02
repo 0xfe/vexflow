@@ -133,6 +133,20 @@ Vex.Max = function(a, b) {
   return (a > b) ? a : b;
 };
 
+// Round number to neasest fractional value (.5, .25, etc.)
+Vex.RoundN = function(x, n) {
+  return (x % n) >= (n/2) ? parseInt(x / n) * n + n : parseInt(x / n) * n;
+};
+
+// Locate the mid point between stave lines. Returns a fractional line if a space
+Vex.MidLine = function(a, b) {
+  var mid_line = b + (a - b) / 2;
+  if (mid_line % 2 > 0) {
+    mid_line = Vex.RoundN(mid_line * 10, 5) / 10;
+  }
+  return mid_line;
+};
+
 /**
  * Take 'arr' and return a new list consisting of the sorted, unique,
  * contents of arr.

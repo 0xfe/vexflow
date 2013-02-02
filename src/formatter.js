@@ -19,18 +19,39 @@ Vex.Flow.Formatter = function(){
   };
 }
 
-// Helper function to format and draw a single voice. Returns a bounding box for the notation.
-Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes, autobeam) {
+  // Helper function to format and draw a single voice. Returns a bounding box for the notation.
+Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes, params) {
   var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
     setMode(Vex.Flow.Voice.Mode.SOFT);
-  voice.addTickables(notes);
+  voice.addTickables(notes)
+
+  // For backward compatability, params has three forms:
+  //   1. Setting autobeam only (context, stave, notes, true) or (ctx, stave, notes, {autobeam: true})
+  //   2. Setting align_rests a struct is needed (context, stave, notes, {align_rests: true})
+  //   3. Setting both a struct is needed (context, stave, notes, {autobeam: true, align_rests: true});
+  //
+  // The default for autobam and align_rests is false
+  //
+  var opts = {
+    auto_beam: false,
+    align_rests: false
+  };
+
+  if (typeof params == "object") {
+    Vex.Merge(opts, params);
+  } else if (typeof params == "boolean") {
+    opts.auto_beam = params;
+  }
+
   var beams = null;
-  if (autobeam == true) {
+
+  if (opts.auto_beam == true) {
     beams = Vex.Flow.Beam.applyAndGetBeams(voice);
   }
 
-  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    formatToStave([voice], stave);
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([voice], opts.rest_align).
+    formatToStave([voice], stave, opts.rest_align);
 
   voice.setStave(stave);
 
@@ -56,16 +77,35 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
     setMode(Vex.Flow.Voice.Mode.SOFT);
   tabvoice.addTickables(tabnotes);
 
-  var beams = null;
+  // For backward compatability, params has three forms:
+  //   1. Setting autobeam only (context, stave, notes, true) or (ctx, stave, notes, {autobeam: true})
+  //   2. Setting align_rests a struct is needed (context, stave, notes, {align_rests: true})
+  //   3. Setting both a struct is needed (context, stave, notes, {autobeam: true, align_rests: true});
+  //
+  // The default for autobam and align_rests is false
+  //
+  var opts = {
+    auto_beam: false,
+    align_rests: false
+  };
 
-  if (autobeam == true) {
-    beams = Vex.Flow.Beam.applyAndGetBeams(notevoice);
+  if (typeof params == "object") {
+    Vex.Merge(opts, params);
+  } else if (typeof params == "boolean") {
+    opts.auto_beam = params;
   }
 
+  var beams = null;
+
+  if (opts.auto_beam == true) {
+    beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+  }
+
+
   var formatter = new Vex.Flow.Formatter().
-    joinVoices([notevoice]).
+    joinVoices([notevoice], opts.rest_align).
     joinVoices([tabvoice]).
-    formatToStave([notevoice,tabvoice], stave);
+    formatToStave([notevoice,tabvoice], stave, opts.rest_align);
 
   notevoice.draw(ctx, stave);
   tabvoice.draw(ctx, tabstave);
@@ -77,6 +117,77 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
 
   // Draw a connector between tab and note staves.
   (new Vex.Flow.StaveConnector(stave, tabstave)).setContext(ctx).draw();
+}
+
+Vex.Flow.Formatter.prototype.AlignRests = function(voices, all_notes) {
+  if (!voices || !voices.length) throw new Vex.RERR("BadArgument",
+      "No voices to format rests");
+  for (var i = 0; i < voices.length; i++) {
+    new Vex.Flow.Formatter.alignRestsToNotes(voices[i].tickables, all_notes);
+  }
+}
+
+  // Helper function to locate the next non-rest note(s)
+ Vex.Flow.Formatter.prototype.LookAhead = function(notes, rest_line, i, compare) {
+  // If no valid next not group, next_rest_line is same as current
+  var next_rest_line = rest_line;
+  // get the rest line for next valid non-rest note group
+  i++;
+  while (i < notes.length) {
+    if (!notes[i].isRest()) {
+      next_rest_line = notes[i].getLineForRest();
+      break;
+    }
+    i++;
+  }
+
+  // locate the mid point between two lines
+  if (compare && rest_line != next_rest_line) {
+    var top = Vex.Max(rest_line, next_rest_line);
+    var bot = Vex.Min(rest_line, next_rest_line);
+    next_rest_line = Vex.MidLine(top, bot);
+  }
+  return next_rest_line;
+}
+
+// Auto position rests based on previous/next note positions
+Vex.Flow.Formatter.alignRestsToNotes = function(notes, all_notes) {
+
+  for (var i = 0; i < notes.length; ++i) {
+    if (notes[i] instanceof Vex.Flow.StaveNote && notes[i].isRest()) {
+      var note = notes[i];
+
+      // Beamed notes and tuplets are positioned in corresponding classes
+      if (note.tuplet != null) {
+        continue;
+      }
+
+      // If activated rests not on default can be rendered as specified
+      if (note.glyph.position.toUpperCase() != "B/4") {
+        continue;
+      }
+
+    if (all_notes || note.beam != null) {
+      // align rests with previous/next notes
+      var props = notes[i].getKeyProps()[0];
+      if (i == 0) {
+        props.line = new Vex.Flow.Formatter().LookAhead(notes, props.line, i, false);
+      } else if (i > 0 && i < notes.length) {
+        // if previous note is a rest, use it's line number
+        if (notes[i-1].isRest()) {
+          var rest_line = notes[i-1].getKeyProps()[0].line;
+          props.line = rest_line;
+        } else {
+          var rest_line = notes[i-1].getLineForRest();
+          // get the rest line for next valid non-rest note group
+          props.line = new Vex.Flow.Formatter().LookAhead(notes, rest_line, i, true);
+        }
+      }
+    }
+    }
+  }
+
+  return this;
 }
 
 Vex.Flow.Formatter.prototype.preCalculateMinTotalWidth = function(voices) {
@@ -339,19 +450,31 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth, rendering_contex
   }
 }
 
-Vex.Flow.Formatter.prototype.joinVoices = function(voices) {
+Vex.Flow.Formatter.prototype.joinVoices = function(voices, rest_opts) {
+  var opts = {rest_align: false};
+  Vex.Merge(opts, rest_opts);
+
+  this.AlignRests(voices, opts.rest_align);
   this.createModifierContexts(voices);
   this.hasMinTotalWidth = false;
   return this;
 }
 
-Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth) {
+Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth, rest_opts) {
+  var opts = {rest_align: false};
+  Vex.Merge(opts, rest_opts);
+
+  this.AlignRests(voices, opts.rest_align);
   this.createTickContexts(voices);
   this.preFormat(justifyWidth);
   return this;
 }
 
-Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave) {
+Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave, rest_opts) {
+  var opts = {rest_align: false};
+  Vex.Merge(opts, rest_opts);
+
+  this.AlignRests(voices, opts.rest_align);
   var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 10;
   this.createTickContexts(voices);
   this.preFormat(voice_width, stave.getContext());
