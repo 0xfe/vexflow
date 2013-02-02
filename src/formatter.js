@@ -50,8 +50,8 @@ Vex.Flow.Formatter.FormatAndDraw = function(ctx, stave, notes, params) {
   }
 
   var formatter = new Vex.Flow.Formatter().
-    joinVoices([voice], opts.rest_align).
-    formatToStave([voice], stave, opts.rest_align);
+    joinVoices([voice], {align_rests: opts.align_rests}).
+    formatToStave([voice], stave, {align_rests: opts.align_rests});
 
   voice.setStave(stave);
 
@@ -103,9 +103,9 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
 
 
   var formatter = new Vex.Flow.Formatter().
-    joinVoices([notevoice], opts.rest_align).
+    joinVoices([notevoice], {align_rests: opts.align_rests}).
     joinVoices([tabvoice]).
-    formatToStave([notevoice,tabvoice], stave, opts.rest_align);
+    formatToStave([notevoice,tabvoice], stave, {align_rests: opts.align_rests});
 
   notevoice.draw(ctx, stave);
   tabvoice.draw(ctx, tabstave);
@@ -451,30 +451,30 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth, rendering_contex
 }
 
 Vex.Flow.Formatter.prototype.joinVoices = function(voices, rest_opts) {
-  var opts = {rest_align: false};
+  var opts = {align_rests: false};
   Vex.Merge(opts, rest_opts);
 
-  this.AlignRests(voices, opts.rest_align);
+  this.AlignRests(voices, opts.align_rests);
   this.createModifierContexts(voices);
   this.hasMinTotalWidth = false;
   return this;
 }
 
 Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth, rest_opts) {
-  var opts = {rest_align: false};
+  var opts = {align_rests: false};
   Vex.Merge(opts, rest_opts);
 
-  this.AlignRests(voices, opts.rest_align);
+  this.AlignRests(voices, opts.align_rests);
   this.createTickContexts(voices);
   this.preFormat(justifyWidth);
   return this;
 }
 
 Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave, rest_opts) {
-  var opts = {rest_align: false};
+  var opts = {align_rests: false};
   Vex.Merge(opts, rest_opts);
 
-  this.AlignRests(voices, opts.rest_align);
+  this.AlignRests(voices, opts.align_rests);
   var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 10;
   this.createTickContexts(voices);
   this.preFormat(voice_width, stave.getContext());

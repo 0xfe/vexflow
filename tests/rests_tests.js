@@ -394,7 +394,7 @@ Vex.Flow.Test.Rests.multi = function(options, contextBuilder) {
 
   // Set option to position rests near the notes in each voice
   var formatter = new Vex.Flow.Formatter().
-    joinVoices([voice, voice2], {rest_align: true}).
+    joinVoices([voice, voice2], {align_rests: true}).
     format([voice, voice2], 400);
 
   var beam2_1 = new Vex.Flow.Beam(notes2.slice(0, 4));
