@@ -42,6 +42,28 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
 
   this.resolveGlyphs();
 
+  // align rests with notes
+  for (var i = 0; i < notes.length; ++i) {
+    var note = notes[i];
+    if (note.isRest()) {
+      var props = notes[i].getKeyProps()[0];
+
+      // get line for rest from the appropriate note group
+      if (i == 0) {
+        // first tuplet get from next valid note group
+        var g = 0;
+        while (g < notes.length && notes[g].isRest()) {
+          g++;
+        }
+        props.line = notes[g].getLineForRest();
+      } else {
+        // All other tuplets get from next valid note group
+        var rest_line  = notes[i-1].getLineForRest();
+        props.line = new Vex.Flow.Formatter().LookAhead(notes, rest_line, i, true);
+      }
+    }
+  }
+
   this.attach();
 }
 
@@ -164,7 +186,7 @@ Vex.Flow.Tuplet.prototype.draw = function() {
     this.y_pos = first_note.getStave().getYForLine(4) + 20;
 
     for (var i=0; i<this.notes.length; ++i) {
-      var bottom_y = this.notes[i].getStemExtents().topY + 15;
+      var bottom_y = this.notes[i].getStemExtents().topY + 10;
       if (bottom_y > this.y_pos)
         this.y_pos = bottom_y;
     }

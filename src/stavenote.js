@@ -35,6 +35,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
         JSON.stringify(note_struct));
   }
 
+  this.dot_shiftY = 0;
   this.keyProps = [];             // per-note properties
 
   // Pull per-note location and other rendering properties.
@@ -242,6 +243,18 @@ Vex.Flow.StaveNote.prototype.getTieLeftX = function() {
   return tieEndX;
 }
 
+Vex.Flow.StaveNote.prototype.getLineForRest = function() {
+  var rest_line = this.keyProps[0].line;
+  if (this.keyProps.length > 1) {
+    var last_line  = this.keyProps[this.keyProps.length - 1].line;
+    var top = Vex.Max(rest_line, last_line);
+    var bot = Vex.Min(rest_line, last_line);
+    rest_line = Vex.MidLine(top, bot)
+  }
+
+  return rest_line;
+}
+
 Vex.Flow.StaveNote.prototype.getModifierStartXY = function(position, index) {
   if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
       "Can't call GetModifierStartXY on an unformatted note");
@@ -335,6 +348,7 @@ Vex.Flow.StaveNote.prototype.addDot = function(index) {
   var dot = new Vex.Flow.Dot();
   dot.setNote(this);
   dot.setIndex(index);
+  dot.setDotShiftY(this.glyph.dot_shiftY);
   this.modifiers.push(dot);
   this.setPreFormatted(false);
   this.dots++;
