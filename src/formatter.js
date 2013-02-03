@@ -158,23 +158,23 @@ Vex.Flow.Formatter.AlignRestsToNotes = function(notes, align_all_notes) {
         continue;
       }
 
-    if (align_all_notes || note.beam != null) {
-      // align rests with previous/next notes
-      var props = notes[i].getKeyProps()[0];
-      if (i == 0) {
-        props.line = Vex.Flow.Formatter.LookAhead(notes, props.line, i, false);
-      } else if (i > 0 && i < notes.length) {
-        // if previous note is a rest, use it's line number
-        if (notes[i-1].isRest()) {
-          var rest_line = notes[i-1].getKeyProps()[0].line;
-          props.line = rest_line;
-        } else {
-          var rest_line = notes[i-1].getLineForRest();
-          // get the rest line for next valid non-rest note group
-          props.line = Vex.Flow.Formatter.LookAhead(notes, rest_line, i, true);
+      if (align_all_notes || note.beam != null) {
+        // align rests with previous/next notes
+        var props = notes[i].getKeyProps()[0];
+        if (i == 0) {
+          props.line = Vex.Flow.Formatter.LookAhead(notes, props.line, i, false);
+        } else if (i > 0 && i < notes.length) {
+          // if previous note is a rest, use it's line number
+          if (notes[i-1].isRest()) {
+            var rest_line = notes[i-1].getKeyProps()[0].line;
+            props.line = rest_line;
+          } else {
+            var rest_line = notes[i-1].getLineForRest();
+            // get the rest line for next valid non-rest note group
+            props.line = Vex.Flow.Formatter.LookAhead(notes, rest_line, i, true);
+          }
         }
       }
-    }
     }
   }
 
@@ -458,24 +458,21 @@ Vex.Flow.Formatter.prototype.joinVoices = function(voices) {
 Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth, options) {
   var opts = {
     align_rests: false,
-    stave: null
+    context: null
   };
 
   Vex.Merge(opts, options);
 
   this.alignRests(voices, opts.align_rests);
   this.createTickContexts(voices);
-
-  if (opts.stave) {
-    this.preFormat(justifyWidth, opts.stave.getContext());
-  } else {
-    this.preFormat(justifyWidth);
-  }
+  this.preFormat(justifyWidth, opts.context);
 
   return this;
 }
 
 Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave, options) {
   var justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
-  return this.format(voices, justifyWidth, options);
+  var opts = {context: stave.getContext()};
+  Vex.Merge(opts, options);
+  return this.format(voices, justifyWidth, opts);
 }
