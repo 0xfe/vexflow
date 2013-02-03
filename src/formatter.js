@@ -148,17 +148,12 @@ Vex.Flow.Formatter.AlignRestsToNotes = function(notes, align_all_notes) {
     if (notes[i] instanceof Vex.Flow.StaveNote && notes[i].isRest()) {
       var note = notes[i];
 
-      // Beamed notes and tuplets are positioned in corresponding classes
-      if (note.tuplet != null) {
-        continue;
-      }
-
       // If activated rests not on default can be rendered as specified
       if (note.glyph.position.toUpperCase() != "B/4") {
         continue;
       }
 
-      if (align_all_notes || note.beam != null) {
+      if (align_all_notes || note.beam != null || note.tuplet != null) {
         // align rests with previous/next notes
         var props = notes[i].getKeyProps()[0];
         if (i == 0) {
