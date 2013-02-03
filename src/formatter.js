@@ -449,33 +449,33 @@ Vex.Flow.Formatter.prototype.preFormat = function(justifyWidth, rendering_contex
   }
 }
 
-Vex.Flow.Formatter.prototype.joinVoices = function(voices, rest_opts) {
-  var opts = {align_rests: false};
-  Vex.Merge(opts, rest_opts);
-
-  this.alignRests(voices, opts.align_rests);
+Vex.Flow.Formatter.prototype.joinVoices = function(voices) {
   this.createModifierContexts(voices);
   this.hasMinTotalWidth = false;
   return this;
 }
 
-Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth, rest_opts) {
-  var opts = {align_rests: false};
-  Vex.Merge(opts, rest_opts);
+Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth, options) {
+  var opts = {
+    align_rests: false,
+    stave: null
+  };
+
+  Vex.Merge(opts, options);
 
   this.alignRests(voices, opts.align_rests);
   this.createTickContexts(voices);
-  this.preFormat(justifyWidth);
+
+  if (opts.stave) {
+    this.preFormat(justifyWidth, opts.stave.getContext());
+  } else {
+    this.preFormat(justifyWidth);
+  }
+
   return this;
 }
 
-Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave, rest_opts) {
-  var opts = {align_rests: false};
-  Vex.Merge(opts, rest_opts);
-
-  this.alignRests(voices, opts.align_rests);
-  var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 10;
-  this.createTickContexts(voices);
-  this.preFormat(voice_width, stave.getContext());
-  return this;
+Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave, options) {
+  var justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
+  return this.format(voices, justifyWidth, options);
 }
