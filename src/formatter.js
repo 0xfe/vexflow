@@ -155,7 +155,7 @@ Vex.Flow.Formatter.AlignRestsToNotes = function(notes, align_all_notes) {
 
       if (align_all_notes || note.beam != null || note.tuplet != null) {
         // align rests with previous/next notes
-        var props = notes[i].getKeyProps()[0];
+        var props = note.getKeyProps()[0];
         if (i == 0) {
           props.line = Vex.Flow.Formatter.LookAhead(notes, props.line, i, false);
         } else if (i > 0 && i < notes.length) {
