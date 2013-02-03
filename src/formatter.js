@@ -119,16 +119,8 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
   (new Vex.Flow.StaveConnector(stave, tabstave)).setContext(ctx).draw();
 }
 
-Vex.Flow.Formatter.prototype.AlignRests = function(voices, all_notes) {
-  if (!voices || !voices.length) throw new Vex.RERR("BadArgument",
-      "No voices to format rests");
-  for (var i = 0; i < voices.length; i++) {
-    new Vex.Flow.Formatter.alignRestsToNotes(voices[i].tickables, all_notes);
-  }
-}
-
-  // Helper function to locate the next non-rest note(s)
- Vex.Flow.Formatter.prototype.LookAhead = function(notes, rest_line, i, compare) {
+// Helper function to locate the next non-rest note(s)
+Vex.Flow.Formatter.LookAhead = function(notes, rest_line, i, compare) {
   // If no valid next not group, next_rest_line is same as current
   var next_rest_line = rest_line;
   // get the rest line for next valid non-rest note group
@@ -151,8 +143,7 @@ Vex.Flow.Formatter.prototype.AlignRests = function(voices, all_notes) {
 }
 
 // Auto position rests based on previous/next note positions
-Vex.Flow.Formatter.alignRestsToNotes = function(notes, all_notes) {
-
+Vex.Flow.Formatter.AlignRestsToNotes = function(notes, align_all_notes) {
   for (var i = 0; i < notes.length; ++i) {
     if (notes[i] instanceof Vex.Flow.StaveNote && notes[i].isRest()) {
       var note = notes[i];
@@ -167,11 +158,11 @@ Vex.Flow.Formatter.alignRestsToNotes = function(notes, all_notes) {
         continue;
       }
 
-    if (all_notes || note.beam != null) {
+    if (align_all_notes || note.beam != null) {
       // align rests with previous/next notes
       var props = notes[i].getKeyProps()[0];
       if (i == 0) {
-        props.line = new Vex.Flow.Formatter().LookAhead(notes, props.line, i, false);
+        props.line = Vex.Flow.Formatter.LookAhead(notes, props.line, i, false);
       } else if (i > 0 && i < notes.length) {
         // if previous note is a rest, use it's line number
         if (notes[i-1].isRest()) {
@@ -180,7 +171,7 @@ Vex.Flow.Formatter.alignRestsToNotes = function(notes, all_notes) {
         } else {
           var rest_line = notes[i-1].getLineForRest();
           // get the rest line for next valid non-rest note group
-          props.line = new Vex.Flow.Formatter().LookAhead(notes, rest_line, i, true);
+          props.line = Vex.Flow.Formatter.LookAhead(notes, rest_line, i, true);
         }
       }
     }
@@ -188,6 +179,14 @@ Vex.Flow.Formatter.alignRestsToNotes = function(notes, all_notes) {
   }
 
   return this;
+}
+
+Vex.Flow.Formatter.prototype.alignRests = function(voices, align_all_notes) {
+  if (!voices || !voices.length) throw new Vex.RERR("BadArgument",
+      "No voices to format rests");
+  for (var i = 0; i < voices.length; i++) {
+    new Vex.Flow.Formatter.AlignRestsToNotes(voices[i].tickables, align_all_notes);
+  }
 }
 
 Vex.Flow.Formatter.prototype.preCalculateMinTotalWidth = function(voices) {
@@ -454,7 +453,7 @@ Vex.Flow.Formatter.prototype.joinVoices = function(voices, rest_opts) {
   var opts = {align_rests: false};
   Vex.Merge(opts, rest_opts);
 
-  this.AlignRests(voices, opts.align_rests);
+  this.alignRests(voices, opts.align_rests);
   this.createModifierContexts(voices);
   this.hasMinTotalWidth = false;
   return this;
@@ -464,7 +463,7 @@ Vex.Flow.Formatter.prototype.format = function(voices, justifyWidth, rest_opts) 
   var opts = {align_rests: false};
   Vex.Merge(opts, rest_opts);
 
-  this.AlignRests(voices, opts.align_rests);
+  this.alignRests(voices, opts.align_rests);
   this.createTickContexts(voices);
   this.preFormat(justifyWidth);
   return this;
@@ -474,7 +473,7 @@ Vex.Flow.Formatter.prototype.formatToStave = function(voices, stave, rest_opts) 
   var opts = {align_rests: false};
   Vex.Merge(opts, rest_opts);
 
-  this.AlignRests(voices, opts.align_rests);
+  this.alignRests(voices, opts.align_rests);
   var voice_width = (stave.getNoteEndX() - stave.getNoteStartX()) - 10;
   this.createTickContexts(voices);
   this.preFormat(voice_width, stave.getContext());

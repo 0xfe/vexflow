@@ -41,6 +41,12 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
   this.location = Vex.Flow.Tuplet.LOCATION_TOP;
 
   this.resolveGlyphs();
+  this.alignRests();
+  this.attach();
+}
+
+Vex.Flow.Tuplet.prototype.alignRests = function() {
+  var notes = this.notes;
 
   // align rests with notes
   for (var i = 0; i < notes.length; ++i) {
@@ -59,12 +65,10 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
       } else {
         // All other tuplets get from next valid note group
         var rest_line  = notes[i-1].getLineForRest();
-        props.line = new Vex.Flow.Formatter().LookAhead(notes, rest_line, i, true);
+        props.line = Vex.Flow.Formatter.LookAhead(notes, rest_line, i, true);
       }
     }
   }
-
-  this.attach();
 }
 
 Vex.Flow.Tuplet.prototype.attach = function () {
