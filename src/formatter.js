@@ -143,17 +143,20 @@ Vex.Flow.Formatter.LookAhead = function(notes, rest_line, i, compare) {
 }
 
 // Auto position rests based on previous/next note positions
-Vex.Flow.Formatter.AlignRestsToNotes = function(notes, align_all_notes) {
+Vex.Flow.Formatter.AlignRestsToNotes = function(notes, align_all_notes, align_tuplets) {
   for (var i = 0; i < notes.length; ++i) {
     if (notes[i] instanceof Vex.Flow.StaveNote && notes[i].isRest()) {
       var note = notes[i];
 
+      if (note.tuplet && !align_tuplets) continue;
+
       // If activated rests not on default can be rendered as specified
-      if (note.glyph.position.toUpperCase() != "B/4") {
+      var position = note.glyph.position.toUpperCase();
+      if (position != "R/4" && position != "B/4") {
         continue;
       }
 
-      if (align_all_notes || note.beam != null || note.tuplet != null) {
+      if (align_all_notes || note.beam != null) {
         // align rests with previous/next notes
         var props = note.getKeyProps()[0];
         if (i == 0) {

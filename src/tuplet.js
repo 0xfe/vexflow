@@ -40,6 +40,7 @@ Vex.Flow.Tuplet.prototype.init = function(notes, options) {
   this.width = 200;
   this.location = Vex.Flow.Tuplet.LOCATION_TOP;
 
+  Vex.Flow.Formatter.AlignRestsToNotes(notes, true, true);
   this.resolveGlyphs();
   this.attach();
 }
