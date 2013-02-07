@@ -36,9 +36,9 @@ Vex.Flow.Test.Dot.showNote = function(note, stave, ctx, x) {
 }
 
 Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 700, 240);
+  var ctx = new contextBuilder(options.canvas_sel, 1000, 240);
   ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-  var stave = new Vex.Flow.Stave(10, 10, 550);
+  var stave = new Vex.Flow.Stave(10, 10, 975);
   stave.setContext(ctx);
   stave.draw();
 
@@ -46,7 +46,23 @@ Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
   function newAcc(type) { return new Vex.Flow.Dot(type); }
 
   var notes = [
-    newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
+    newNote({ keys: ["c/4", "e/4", "a/4", "b/4"], duration: "w"}).
+      addDotToAll(),
+
+    newNote({ keys: ["c/5", "b/4", "f/4", "e/4"],
+        duration: "q"}).
+      addDotToAll(),
+
+    newNote({ keys: ["g/5", "e/5", "d/5", "a/4", "g/4"],
+        duration: "q", stem_direction: -1}).
+      addDotToAll(),
+
+    newNote({ keys: ["e/5", "d/5", "b/4", "g/4"],
+        duration: "q", stem_direction: -1}).
+      addDotToAll(),
+
+    newNote({ keys: ["c/5", "b/4", "g/4", "e/4"],
+        duration: "q"}).
       addDotToAll(),
 
     newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
@@ -62,7 +78,7 @@ Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
   ];
 
   for (var i = 0; i < notes.length; ++i) {
-    Vex.Flow.Test.Dot.showNote(notes[i], stave, ctx, 30 + (i * 125));
+    Vex.Flow.Test.Dot.showNote(notes[i], stave, ctx, 30 + (i * 75));
     var accidentals = notes[i].getDots();
     ok(accidentals.length > 0, "Note " + i + " has accidentals");
 
@@ -123,6 +139,8 @@ Vex.Flow.Test.Dot.multiVoice = function(options) {
       { keys: ["c/4", "e/4", "c/5"], duration: "h", stem_direction: -1}).
       addDot(0).
       addDot(0).
+      addDot(1).
+      addDot(1).
       addDot(2).
       addDot(2).
       addDot(2);

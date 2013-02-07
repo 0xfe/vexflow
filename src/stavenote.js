@@ -87,6 +87,10 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
     annotation_spacing: 5 // spacing above note for annotations
   }
 
+  // Lengthen 32nd & 64th note stems for additional flags/beams
+  if (this.duration == "32") this.render_options.stem_height = 45;
+  if (this.duration == "64") this.render_options.stem_height = 50;
+
   var auto_stem_direction;
   if (note_struct.auto_stem) {
     // Figure out optimal stem direction based on given notes
@@ -202,7 +206,12 @@ Vex.Flow.StaveNote.prototype.getStemX = function() {
   return stem_x;
 }
 
-Vex.Flow.StaveNote.prototype.getStemExtents = function() {
+Vex.Flow.StaveNote.prototype.setStemLength = function(height) {
+  this.render_options.stem_height = height;
+  return this;
+}
+
+  Vex.Flow.StaveNote.prototype.getStemExtents = function() {
   if (!this.ys || this.ys.length == 0) throw new Vex.RERR("NoYValues",
       "Can't get top stem Y when note has no Y values.");
 

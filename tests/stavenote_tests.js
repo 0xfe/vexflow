@@ -402,7 +402,7 @@ Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
   var restKey = options.params.restKey;
 
   var ctx = new contextBuilder(options.canvas_sel, 700, 180);
-  var stave = new Vex.Flow.Stave(10, 10, 650);
+  var stave = new Vex.Flow.Stave(10, 30, 650);
 
   stave.setContext(ctx);
   stave.addClef(clef);
@@ -467,7 +467,7 @@ Vex.Flow.Test.StaveNote.drawBoundingBoxes = function(options, contextBuilder) {
   var restKey = options.params.restKey;
 
   var ctx = new contextBuilder(options.canvas_sel, 700, 180);
-  var stave = new Vex.Flow.Stave(10, 10, 650);
+  var stave = new Vex.Flow.Stave(10, 30, 650);
 
   stave.setContext(ctx);
   stave.addClef(clef);

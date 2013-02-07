@@ -86,7 +86,7 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   // XXX: Do this right (by key, not whole note).
   var x_shift = 0;
   if (top_keys[0].line <= (bottom_keys[bottom_keys.length - 1].line + 0.5)) {
-     x_shift = top_note.getVoiceShiftWidth();
+     x_shift = top_note.getVoiceShiftWidth() + 3;
      bottom_note.setXShift(x_shift);
   }
 
@@ -157,6 +157,7 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
   var top_line = dot_list[0].line;
   var last_line = null;
   var last_note = null;
+  var prev_space_dotted = false;
   for (var i = 0; i < dot_list.length; ++i) {
     var dot = dot_list[i].dot;
     var line = dot_list[i].line;
@@ -165,7 +166,20 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
 
     // Reset the position of the dot every line.
     if (line != last_line || note != last_note) {
-      dot_shift = right_shift + shift;
+      dot_shift = shift;
+    }
+
+    if (!note.isRest() && line % 1 == 0) {
+      var half_shiftY = -0.5;
+      if (last_note != null && !last_note.isRest() && last_line - line == 0.5) {
+        half_shiftY = 0.5;
+        prev_space_dotted = true;
+      } else if (prev_space_dotted) {
+        half_shiftY = 0.5;
+      } else {
+        prev_space_dotted = false;
+      }
+      dot.dot_shiftY += half_shiftY;
     }
 
     dot.setXShift(dot_shift);
