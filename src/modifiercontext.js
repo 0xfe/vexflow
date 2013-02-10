@@ -86,7 +86,7 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   // XXX: Do this right (by key, not whole note).
   var x_shift = 0;
   if (top_keys[0].line <= (bottom_keys[bottom_keys.length - 1].line + 0.5)) {
-     x_shift = top_note.getVoiceShiftWidth();
+     x_shift = top_note.getVoiceShiftWidth() + 3;
      bottom_note.setXShift(x_shift);
   }
 
@@ -157,6 +157,9 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
   var top_line = dot_list[0].line;
   var last_line = null;
   var last_note = null;
+  var prev_dotted_space = null;
+  var half_shiftY = 0;
+
   for (var i = 0; i < dot_list.length; ++i) {
     var dot = dot_list[i].dot;
     var line = dot_list[i].line;
@@ -165,8 +168,30 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
 
     // Reset the position of the dot every line.
     if (line != last_line || note != last_note) {
-      dot_shift = right_shift + shift;
+      dot_shift = shift;
     }
+
+    if (!note.isRest() && line != last_line) {
+      if (line % 1 == 0.5) {
+        // note is on a space, so no dot shift
+        half_shiftY = 0;
+      } else if (!note.isRest()) {
+        // note is on a line, so shift dot to space above the line
+        half_shiftY = 0.5;
+        if (last_note != null &&
+            !last_note.isRest() && last_line - line == 0.5) {
+          // previous note on a space, so shift dot to space below the line
+          half_shiftY = -0.5;
+        } else if (line + half_shiftY == prev_dotted_space) {
+          // previous space is dotted, so shift dot to space below the line
+           half_shiftY = -0.5;
+        }
+      }
+    }
+
+    // convert half_shiftY to a multiplier for dots.draw()
+    dot.dot_shiftY += (-half_shiftY);
+    prev_dotted_space = line + half_shiftY;
 
     dot.setXShift(dot_shift);
     dot_shift += dot.getWidth() + dot_spacing; // spacing
