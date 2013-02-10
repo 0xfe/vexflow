@@ -157,7 +157,9 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
   var top_line = dot_list[0].line;
   var last_line = null;
   var last_note = null;
-  var prev_space_dotted = false;
+  var prev_dotted_space = null;
+  var half_shiftY = 0;
+
   for (var i = 0; i < dot_list.length; ++i) {
     var dot = dot_list[i].dot;
     var line = dot_list[i].line;
@@ -169,18 +171,27 @@ Vex.Flow.ModifierContext.prototype.formatDots = function() {
       dot_shift = shift;
     }
 
-    if (!note.isRest() && line % 1 == 0) {
-      var half_shiftY = -0.5;
-      if (last_note != null && !last_note.isRest() && last_line - line == 0.5) {
+    if (!note.isRest() && line != last_line) {
+      if (line % 1 == 0.5) {
+        // note is on a space, so no dot shift
+        half_shiftY = 0;
+      } else if (!note.isRest()) {
+        // note is on a line, so shift dot to space above the line
         half_shiftY = 0.5;
-        prev_space_dotted = true;
-      } else if (prev_space_dotted) {
-        half_shiftY = 0.5;
-      } else {
-        prev_space_dotted = false;
+        if (last_note != null &&
+            !last_note.isRest() && last_line - line == 0.5) {
+          // previous note on a space, so shift dot to space below the line
+          half_shiftY = -0.5;
+        } else if (line + half_shiftY == prev_dotted_space) {
+          // previous space is dotted, so shift dot to space below the line
+           half_shiftY = -0.5;
+        }
       }
-      dot.dot_shiftY += half_shiftY;
     }
+
+    // convert half_shiftY to a multiplier for dots.draw()
+    dot.dot_shiftY += (-half_shiftY);
+    prev_dotted_space = line + half_shiftY;
 
     dot.setXShift(dot_shift);
     dot_shift += dot.getWidth() + dot_spacing; // spacing

@@ -49,6 +49,14 @@ Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
     newNote({ keys: ["c/4", "e/4", "a/4", "b/4"], duration: "w"}).
       addDotToAll(),
 
+    newNote({ keys: ["c/5", "b/4", "a/4"],
+        duration: "q", stem_direction: 1}).
+      addDotToAll(),
+
+    newNote({ keys: ["b/4", "a/4", "g/4"],
+        duration: "q", stem_direction: -1}).
+      addDotToAll(),
+
     newNote({ keys: ["c/5", "b/4", "f/4", "e/4"],
         duration: "q"}).
       addDotToAll(),
@@ -62,7 +70,7 @@ Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
       addDotToAll(),
 
     newNote({ keys: ["c/5", "b/4", "g/4", "e/4"],
-        duration: "q"}).
+        duration: "q", stem_direction: 1}).
       addDotToAll(),
 
     newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
@@ -78,7 +86,7 @@ Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
   ];
 
   for (var i = 0; i < notes.length; ++i) {
-    Vex.Flow.Test.Dot.showNote(notes[i], stave, ctx, 30 + (i * 75));
+    Vex.Flow.Test.Dot.showNote(notes[i], stave, ctx, 30 + (i * 65));
     var accidentals = notes[i].getDots();
     ok(accidentals.length > 0, "Note " + i + " has accidentals");
 
