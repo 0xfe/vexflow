@@ -21,9 +21,8 @@ echo Copying over compiled sources...
 scp build/vexflow/vexflow-min.js $SCP_TO/support
 
 echo Copying over tests...
-ssh $SSH_TO rm -rf tests/
-rsync -przvl --delete --stats build/tests $SCP_TO
-scp build/tests/flow.html $SCP_TO/tests/index.html
+rsync -przvl --delete --stats tests $SCP_TO
+scp tests/flow.html $SCP_TO/tests/index.html
 
 echo Copy over docs...
 rsync -przvl --delete --stats docs $SCP_TO
