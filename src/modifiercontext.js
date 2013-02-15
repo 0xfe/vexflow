@@ -67,35 +67,103 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   if (notes[0].getStave() != null)
     return this.formatNotesByY(notes);
 
-  // Assumption: only two notes
-  Vex.Assert(notes.length == 2,
-      "Got more than two notes in Vex.Flow.ModifierContext.formatNotes!");
+  // Assumption: no more than three notes
+  Vex.Assert(notes.length < 4,
+      "Got more than three notes in Vex.Flow.ModifierContext.formatNotes!");
 
-  var top_note = notes[0];
-  var bottom_note = notes[1];
-
-  // If notes intersect, then shift the bottom stemmed note right
-  if (notes[0].getStemDirection() == Vex.Flow.StaveNote.STEM_DOWN) {
-    bottom_note = notes[0];
-    top_note = notes[1];
+  var notes_list= [];
+  for (var i = 0; i < notes.length; i++) {
+    var stem_order = notes[i].getStemDirection() == Vex.Flow.StaveNote.STEM_UP
+             ? "2"
+             : "1";
+    var props = notes[i].getKeyProps();
+    notes_list.push({sort_key: stem_order + props[0].octave + props[0].key,
+                     line: props[0].line,
+                     top_line: props[props.length -1].line,
+                     stem_dir: notes[i].getStemDirection(),
+                     stem_max: notes[i].getStemLength() / 10,
+                     stem_min: notes[i].getStemMinumumLength() / 10,
+                     voice_shift: notes[i].getVoiceShiftWidth(),
+                     is_displaced: notes[i].isDisplaced(),
+                     note: notes[i]});
   }
 
-  var top_keys = top_note.getKeyProps();
-  var bottom_keys = bottom_note.getKeyProps();
+  // sort notes_list top to bottom
+  notes_list.sort(Vex.SortStructArrayBy('sort_key', false, function(a){return a.toUpperCase()}));
 
-  // XXX: Do this right (by key, not whole note).
+  var top_note = notes_list[0];
+  var bottom_note = notes_list[1];
+
+  var voice_x_shift = Math.max(top_note.voice_shift, bottom_note.voice_shift);
   var x_shift = 0;
-  if (top_keys[0].line <= (bottom_keys[bottom_keys.length - 1].line + 0.5)) {
-     x_shift = top_note.getVoiceShiftWidth() + 3;
-     bottom_note.setXShift(x_shift);
+  var displaced = false;
+
+  // If top two voices are middle and lower voice, check for middle voice stem
+  // collision with lower voice. If a collision, shift middle voice right or 
+  // shorten stem.
+  if (top_note.stem_dir == bottom_note.stem_dir) {
+    // Determine available lines for stem
+    var stem_delta = top_note.line - (bottom_note.top_line + 0.5);
+    if (top_note.line - top_note.stem_max <= bottom_note.top_line + 0.5) {
+      // Determine optimal stem length
+      var stem_length = Math.max(stem_delta, top_note.stem_min);
+      // Shift note right when optimal stem length is too large
+      if (stem_length > stem_delta) {
+        x_shift = voice_x_shift + 3;
+        top_note.note.setXShift(x_shift);
+        displaced = true;
+      }
+      top_note.note.setStemLength(stem_length * 10);
+    }
+  } else if (bottom_note.is_displaced ||
+             top_note.line <= (bottom_note.top_line + 0.5)) {
+    // Top note is upper voice and voices intersect or bottom note manually
+    // set to be shifted
+    x_shift = voice_x_shift;
+    // If a middle voice, add additional 3 pixel spacing between voices
+    if (notes.length > 2 || top_note.stem_dir == bottom_note.stem_dir) {
+      x_shift +=3;
+    }
+    bottom_note.note.setXShift(x_shift);
+    displaced = true;
+    // Have a lower voice, so set middle voice stem optimal length
+    if (notes_list.length > 2) {
+      // Get the lower voice and determine the optimal middle voice stem length
+      var next_note = notes_list[2];
+      var stem_delta = bottom_note.line - (next_note.top_line + 0.5);
+      if (bottom_note.line - bottom_note.stem_max <= next_note.top_line + 0.5) {
+        var stem_length = Math.max(stem_delta, bottom_note.stem_min);
+        bottom_note.note.setStemLength(stem_length * 10);
+      }
+    }
   }
 
-  this.state.right_shift += x_shift;
+  // Have three voices with no middle voice shift. Test for note or stem
+  // collision with lower voice and either shift middle voice or shorten
+  // stem if needed.
+  if (!displaced && notes_list.length > 2) {
+    top_note = notes_list[1];
+    bottom_note = notes_list[2];
+    // if notes intersect, shift the top note (middle voice)
+    if (top_note.line <= (bottom_note.top_line + 0.5) ||
+        bottom_note.top_line + 0.5 > top_note.line - (top_note.stem_min)) {
+      x_shift = voice_x_shift + 3;
+      top_note.note.setXShift(x_shift);
+    }
+    var stem_delta = top_note.line - (bottom_note.top_line + 0.5);
+    if (top_note.line - top_note.stem_max <= bottom_note.top_line + 0.5) {
+      // Determine optimal stem length
+      var stem_length = Math.max(stem_delta, top_note.stem_min);
+      top_note.note.setStemLength(stem_length * 10);
+    }
+  }
+
   return this;
 }
 
 Vex.Flow.ModifierContext.prototype.formatNotesByY = function(notes) {
-  // Called from formatNotes when more than two voices
+  // NOTE: this function does not support more than two voices
+  //       use with care.
   var hasStave = true;
 
   for (var i = 0; i < notes.length; i++) {
@@ -125,6 +193,9 @@ Vex.Flow.ModifierContext.prototype.formatNotesByY = function(notes) {
     var line_space = top_note.getStave().options.spacing_between_lines_px;
     if (Math.abs(topY - bottomY) == line_space / 2) {
       x_shift = top_note.getVoiceShiftWidth();
+      // If a middle voice, add additional spacing between notes
+      if (notes.length > 2)
+        x_shift +=3;
       bottom_note.setXShift(x_shift);
     }
   }
