@@ -10,9 +10,9 @@ Vex.Flow.Test.ThreeVoices.Start = function() {
   module("Rests");
   Vex.Flow.Test.runTest("Three Voices - #1",
       Vex.Flow.Test.ThreeVoices.threevoices);
-  Vex.Flow.Test.runTest("Three Voices - #2",
+  Vex.Flow.Test.runTest("Three Voices - #2 Complex",
       Vex.Flow.Test.ThreeVoices.threevoices2);
-  Vex.Flow.Test.runTest("Three Voices - #3 Complex",
+  Vex.Flow.Test.runTest("Three Voices - #3",
       Vex.Flow.Test.ThreeVoices.threevoices3);
 };
 
