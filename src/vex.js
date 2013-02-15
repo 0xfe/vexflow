@@ -147,6 +147,23 @@ Vex.MidLine = function(a, b) {
   return mid_line;
 };
 
+// Sort structure array by any of it's elements
+//
+// Examples: Sort integer high to low
+//   structs.sort(sort_by('int_value', true, parseInt));
+//
+// Example: Sort string, case-insensitive, A-Z
+//   struct.sort(sort_by('string', false, function(a){return a.toUpperCase()}));
+//
+Vex.SortStructArrayBy = function(field, reverse, primer){
+   var key = function (x) {return primer ? primer(x[field]) : x[field]};
+
+   return function (a,b) {
+     var A = key(a), B = key(b);
+     return ( (A < B) ? -1 : ((A > B) ? 1 : 0) ) * [-1,1][+!!reverse];
+   };
+}
+
 /**
  * Take 'arr' and return a new list consisting of the sorted, unique,
  * contents of arr.

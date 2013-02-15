@@ -26,6 +26,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
 
   this.keys = note_struct.keys;
   this.clef = note_struct.clef;
+  this.beam = null;
 
   // Pull note rendering properties
   this.glyph = Vex.Flow.durationToGlyph(this.duration, this.noteType);
@@ -35,6 +36,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
         JSON.stringify(note_struct));
   }
 
+  this.notes_displaced = false;   // if true, displace note to right
   this.dot_shiftY = 0;
   this.keyProps = [];             // per-note properties
 
@@ -193,6 +195,40 @@ Vex.Flow.StaveNote.prototype.getKeyProps = function() {
   return this.keyProps;
 }
 
+Vex.Flow.StaveNote.prototype.getStemLength = function() {
+  return this.render_options.stem_height;
+}
+
+// Determine minimum length of stem
+Vex.Flow.StaveNote.prototype.getStemMinumumLength = function() {
+  var length = 20;
+  // if note is flagged, cannot shorten beam
+  switch (this.duration) {
+   case "8":
+     if (this.beam == null) length = 35;
+     break;
+   case "16":
+     if (this.beam == null)
+       length = 35;
+     else
+       length = 25;
+     break;
+   case "32":
+     if (this.beam == null)
+       length = 45;
+     else
+       length = 35;
+     break;
+   case "64":
+     if (this.beam == null)
+       length = 50;
+     else
+       length = 40;
+     break;
+  }
+  return length;
+}
+
 Vex.Flow.StaveNote.prototype.getStemDirection = function() {
   return this.stem_direction;
 }
@@ -206,12 +242,23 @@ Vex.Flow.StaveNote.prototype.getStemX = function() {
   return stem_x;
 }
 
+// Check if note is manually shifted to the right
+Vex.Flow.StaveNote.prototype.isDisplaced = function() { 
+  return this.notes_displaced;
+}
+// Manual setting of note shift to the right
+Vex.Flow.StaveNote.prototype.setNoteDisplaced = function(displaced) {
+  this.notes_displaced = displaced;
+  return this;
+}
+
+// Manuallly set note stem length
 Vex.Flow.StaveNote.prototype.setStemLength = function(height) {
   this.render_options.stem_height = height;
   return this;
 }
 
-  Vex.Flow.StaveNote.prototype.getStemExtents = function() {
+Vex.Flow.StaveNote.prototype.getStemExtents = function() {
   if (!this.ys || this.ys.length == 0) throw new Vex.RERR("NoYValues",
       "Can't get top stem Y when note has no Y values.");
 
