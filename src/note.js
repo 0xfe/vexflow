@@ -213,7 +213,7 @@ Vex.Flow.Note.prototype.getMetrics = function() {
 Vex.Flow.Note.prototype.getWidth = function() {
   if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
       "Can't call GetWidth on an unformatted note.");
-  return this.width + this.x_shift +
+  return this.width +
     (this.modifierContext ?  this.modifierContext.getWidth() : 0);
 }
 

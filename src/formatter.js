@@ -121,7 +121,7 @@ Vex.Flow.Formatter.FormatAndDrawTab = function(ctx,
 
 // Helper function to locate the next non-rest note(s)
 Vex.Flow.Formatter.LookAhead = function(notes, rest_line, i, compare) {
-  // If no valid next not group, next_rest_line is same as current
+  // If no valid next note group, next_rest_line is same as current
   var next_rest_line = rest_line;
   // get the rest line for next valid non-rest note group
   i++;
