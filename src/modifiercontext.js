@@ -60,6 +60,40 @@ Vex.Flow.ModifierContext.prototype.getMetrics = function(modifier) {
   };
 }
 
+// Called from formatNotes :: shift rests vertically
+Vex.Flow.ModifierContext.shiftRestVertical = function(rest, note, dir) {
+
+  if (!Vex.Debug) return;
+
+  var delta = 0;
+
+  if (dir == 1) {
+    var padding = note.isrest ? 0.0 : 0.5;
+    delta = note.max_line - rest.min_line;
+    delta += padding
+  } else {
+    var padding = note.isrest ? 0.0 : 0.5;
+//    delta = rest.max_line - note.min_line;
+    delta = note.min_line - rest.max_line;
+    delta -= padding;
+  }
+
+  rest.line += delta;
+  rest.max_line += delta;
+  rest.min_line += delta;
+  rest.note.keyProps[0].line += delta;
+
+}
+
+// Called from formatNotes :: center a rest between two notes
+Vex.Flow.ModifierContext.centerRest = function(rest, noteU, noteL) {
+  var delta = rest.line - Vex.MidLine(noteU.min_line, noteL.max_line);
+  rest.note.keyProps[0].line -= delta;
+  rest.line -= delta;
+  rest.max_line -= delta;
+  rest.min_line -= delta;
+}
+
 Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   var notes = this.modifiers['stavenotes'];
   if (!notes || notes.length < 2) return this;
@@ -67,35 +101,165 @@ Vex.Flow.ModifierContext.prototype.formatNotes = function() {
   if (notes[0].getStave() != null)
     return this.formatNotesByY(notes);
 
-  // Assumption: only two notes
-  Vex.Assert(notes.length == 2,
-      "Got more than two notes in Vex.Flow.ModifierContext.formatNotes!");
+  // Assumption: no more than three notes
+  Vex.Assert(notes.length < 4,
+      "Got more than three notes in Vex.Flow.ModifierContext.formatNotes!");
 
-  var top_note = notes[0];
-  var bottom_note = notes[1];
+  var notes_list= [];
 
-  // If notes intersect, then shift the bottom stemmed note right
-  if (notes[0].getStemDirection() == Vex.Flow.StaveNote.STEM_DOWN) {
-    bottom_note = notes[0];
-    top_note = notes[1];
+  for (var i = 0; i < notes.length; i++) {
+    var props = notes[i].getKeyProps();
+    var line = props[0].line;
+    var minL = props[props.length -1].line;
+    var stem_dir = notes[i].getStemDirection();
+    var stem_max = notes[i].getStemLength() / 10;
+    var stem_min = notes[i].getStemMinumumLength() / 10;
+
+    if (notes[i].isRest()) {
+      maxL = line + notes[i].glyph.line_above;
+      minL = line - notes[i].glyph.line_below
+    } else {
+      maxL = stem_dir == 1
+           ? props[props.length -1].line + stem_max
+           : props[props.length -1].line;
+      minL = stem_dir == 1
+           ? props[0].line
+           : props[0].line - stem_max;
+    }
+    notes_list.push(
+      {line: props[0].line,         // note/rest base line
+       max_line: maxL,              // note/rest upper bounds line
+       min_line: minL,              // note/rest lower bounds line
+       isrest: notes[i].isRest(),
+       stem_dir: stem_dir,
+       stem_max: stem_max,          // Maximum (default) note stem length;
+       stem_min: stem_min,          // minimum note stem length
+       voice_shift: notes[i].getVoiceShiftWidth(),
+       is_displaced: notes[i].isDisplaced(),   // note manually displaced
+       note: notes[i]});
   }
 
-  var top_keys = top_note.getKeyProps();
-  var bottom_keys = bottom_note.getKeyProps();
+  var voices = notes_list.length;
 
-  // XXX: Do this right (by key, not whole note).
+  var noteU = notes_list[0];
+  var noteM = voices > 2 ? notes_list[1] : null;
+  var noteL = voices > 2 ? notes_list[2] : notes_list[1];
+
+  // for two voice backward compatibility, ensure upper voice is stems up
+  // for three voices, the voices must be in order (upper, middle, lower)
+  if (voices == 2 && noteU.stem_dir == -1 && noteL.stem_dir == 1) {
+    noteU = notes_list[1];
+    noteL = notes_list[0];
+  }
+
+  var voice_x_shift = Math.max(noteU.voice_shift, noteL.voice_shift);
   var x_shift = 0;
-  if (top_keys[0].line <= (bottom_keys[bottom_keys.length - 1].line + 0.5)) {
-     x_shift = top_note.getVoiceShiftWidth() + 3;
-     bottom_note.setXShift(x_shift);
+
+  // Test for two voice note intersection
+  if (voices == 2) {
+    var line_spacing = noteU.stem_dir == noteL.stem_dir ? 0.0 : 0.5;
+    // if top voice is a middle voice, check stem intersection with lower voice
+    if (noteU.stem_dir == noteL.stem_dir &&
+        noteU.min_line <= noteL.max_line) {
+      if (!noteU.isrest) {
+        var stem_delta = Math.abs(noteU.line - (noteL.max_line + 0.5));
+        stem_delta = Math.max(stem_delta, noteU.stem_min);
+        noteU.min_line = noteU.line - stem_delta;
+        noteU.note.setStemLength(stem_delta * 10);
+      }
+    }
+    if (noteU.min_line <= noteL.max_line + line_spacing) {
+      if (noteU.isrest)
+        // shift rest up
+        Vex.Flow.ModifierContext.shiftRestVertical(noteU, noteL, 1);
+      else if (noteL.isrest)
+        // shift rest down
+        Vex.Flow.ModifierContext.shiftRestVertical(noteL, noteU, -1);
+      else {
+        x_shift = voice_x_shift;
+        if (noteU.stem_dir == noteL.stem_dir)
+          // upper voice is middle voice, so shift it right
+          noteU.note.setXShift(x_shift + 3);
+        else
+          // shift lower voice right
+          noteL.note.setXShift(x_shift);
+      }
+    }
+
+    // format complete
+    return this;
   }
 
-  this.state.right_shift += x_shift;
+  // Check middle voice stem intersection with lower voice
+  if (noteM != null && noteM.min_line < noteL.max_line + 0.5) {
+    if (!noteM.isrest) {
+      var stem_delta = Math.abs(noteM.line - (noteL.max_line + 0.5));
+      stem_delta = Math.max(stem_delta, noteM.stem_min);
+      noteM.min_line = noteM.line - stem_delta;
+      noteM.note.setStemLength(stem_delta * 10);
+    }
+  }
+
+  // For three voices, test if rests can be repositioned
+  //
+  // Special case 1 :: middle voice rest between two notes
+  //
+  if (noteM.isrest && !noteU.isrest && !noteL.isrest) {
+    if (noteU.min_line <= noteM.max_line ||
+        noteM.min_line <= noteL.max_line) {
+       var rest_height = noteM.max_line - noteM.min_line;
+       var space = noteU.min_line - noteL.max_line;
+       if (rest_height < space)
+         // center middle voice rest between the upper and lower voices
+         Vex.Flow.ModifierContext.centerRest(noteM, noteU, noteL);
+       else {
+         x_shift = voice_x_shift + 3;    // shift middle rest right
+         noteM.note.setXShift(x_shift);
+       }
+       // format complete
+       return this;
+    }
+  }
+
+  // Special case 2 :: all voices are rests
+  if (noteU.isrest && noteM.isrest && noteL.isrest) {
+    // Shift upper voice rest up
+    Vex.Flow.ModifierContext.shiftRestVertical(noteU, noteM, 1);
+    // Shift lower voice rest down
+    Vex.Flow.ModifierContext.shiftRestVertical(noteL, noteM, -1);
+    // format complete
+    return this;
+  }
+
+  // Test if any other rests can be repositioned
+  if (noteM.isrest && noteU.isrest && noteM.min_line <= noteL.max_line)
+    // Shift middle voice rest up
+    Vex.Flow.ModifierContext.shiftRestVertical(noteM, noteL, 1);
+  if (noteM.isrest && noteL.isrest && noteU.min_line <= noteM.max_line)
+    // Shift middle voice rest down
+    Vex.Flow.ModifierContext.shiftRestVertical(noteM, noteU, -1);
+  if (noteU.isrest && noteU.min_line <= noteM.max_line)
+    // shift upper voice rest up;
+    Vex.Flow.ModifierContext.shiftRestVertical(noteU, noteM, 1);
+  if (noteL.isrest && noteM.min_line <= noteL.max_line)
+    // shift lower voice rest down
+    Vex.Flow.ModifierContext.shiftRestVertical(noteL, noteM, -1);
+
+  // If middle voice intersects upper or lower voice
+  if ((!noteU.isrest && !noteM.isrest && noteU.min_line <= noteM.max_line + 0.5) ||
+      (!noteM.isrest && !noteL.isrest && noteM.min_line <= noteL.max_line)) {
+    x_shift = voice_x_shift + 3;      // shift middle note right
+    noteM.note.setXShift(x_shift);
+  }
+
+  // Format complete
   return this;
+
 }
 
 Vex.Flow.ModifierContext.prototype.formatNotesByY = function(notes) {
-  // Called from formatNotes when more than two voices
+  // NOTE: this function does not support more than two voices per stave
+  //       use with care.
   var hasStave = true;
 
   for (var i = 0; i < notes.length; i++) {

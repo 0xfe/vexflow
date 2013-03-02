@@ -575,7 +575,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem: false,
       stem_offset: 0,
       flag: false,
-      dot_shiftY: 0
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
     },
     type: {
       "n": { // Whole note
@@ -608,7 +610,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem: true,
       stem_offset: 0,
       flag: false,
-      dot_shiftY: 0
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
     },
     type: {
       "n": { // Half note
@@ -642,7 +646,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem: true,
       stem_offset: 0,
       flag: false,
-      dot_shiftY: 0
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
     },
     type: {
       "n": { // Quarter note
@@ -661,7 +667,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
         stem: false,
         rest: true,
         position: "B/4",
-        dot_shiftY: -0.5
+        dot_shiftY: -0.5,
+        line_above: 1.5,
+        line_below: 1.5
       },
       "s": { // Quarter slash
          // Drawn with canvas primitives
@@ -679,7 +687,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
       beam_count: 1,
       code_flag_upstem: "v54",
       code_flag_downstem: "v9a",
-      dot_shiftY: 0
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
     },
     type: {
       "n": { // Eighth note
@@ -697,7 +707,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
         flag: false,
         rest: true,
         position: "B/4",
-        dot_shiftY: -0.5
+        dot_shiftY: -0.5,
+        line_above: 1.0,
+        line_below: 1.0
       },
       "s": { // Eight slash
         // Drawn with canvas primitives
@@ -715,7 +727,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "v3f",
       code_flag_downstem: "v8f",
-      dot_shiftY: 0
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
     },
     type: {
       "n": { // Sixteenth note
@@ -734,7 +748,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
         flag: false,
         rest: true,
         position: "B/4",
-        dot_shiftY: -0.5
+        dot_shiftY: -0.5,
+        line_above: 1.0,
+        line_below: 2.0
       },
       "s": { // Sixteenth slash
         // Drawn with canvas primitives
@@ -752,7 +768,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "v47",
       code_flag_downstem: "v2a",
-      dot_shiftY: 0
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
     },
     type: {
       "n": { // Thirty-second note
@@ -771,7 +789,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
         flag: false,
         rest: true,
         position: "B/4",
-        dot_shiftY: -1.5
+        dot_shiftY: -1.5,
+        line_above: 2.0,
+        line_below: 2.0
       },
       "s": { // Thirty-second slash
         // Drawn with canvas primitives
@@ -789,7 +809,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "va9",
       code_flag_downstem: "v58",
-      dot_shiftY: 0
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
     },
     type: {
       "n": { // Sixty-fourth note
@@ -808,7 +830,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
         flag: false,
         rest: true,
         position: "B/4",
-        dot_shiftY: -1.5
+        dot_shiftY: -1.5,
+        line_above: 2.0,
+        line_below: 3.0
       },
       "s": { // Sixty-fourth slash
         // Drawn with canvas primitives

@@ -133,7 +133,7 @@ Vex.Max = function(a, b) {
   return (a > b) ? a : b;
 };
 
-// Round number to neasest fractional value (.5, .25, etc.)
+// Round number to nearest fractional value (.5, .25, etc.)
 Vex.RoundN = function(x, n) {
   return (x % n) >= (n/2) ? parseInt(x / n) * n + n : parseInt(x / n) * n;
 };
