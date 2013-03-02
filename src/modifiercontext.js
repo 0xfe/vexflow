@@ -73,7 +73,6 @@ Vex.Flow.ModifierContext.shiftRestVertical = function(rest, note, dir) {
     delta += padding
   } else {
     var padding = note.isrest ? 0.0 : 0.5;
-//    delta = rest.max_line - note.min_line;
     delta = note.min_line - rest.max_line;
     delta -= padding;
   }
