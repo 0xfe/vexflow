@@ -126,7 +126,7 @@ Vex.Flow.Formatter.LookAhead = function(notes, rest_line, i, compare) {
   // get the rest line for next valid non-rest note group
   i++;
   while (i < notes.length) {
-    if (!notes[i].isRest()) {
+    if (!notes[i].isRest() && !notes[i].shouldIgnoreTicks()) {
       next_rest_line = notes[i].getLineForRest();
       break;
     }
