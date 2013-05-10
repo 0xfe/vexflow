@@ -1,0 +1,26 @@
+{
+  "name": "vexflow",
+  "version": "0.0.1",
+  "description": "A JavaScript library for rendering music notation. See it in action at www.vexflow.com!",
+  "author": "Mohit Muthanna Cheppudira",
+  "keywords": ["music","notation","render","canvas"],
+  "dependencies": {
+    "canvas": "1.0.x",
+    "jsdom": "0.2.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xfe/vexflow.git"
+  },
+  "scripts": {
+    "preinstall": "scons build/vexflow/vexflow-node.js",
+    "test": "node ./tests/nodejsrunner.js; node ./tests/nodejsdemo.js"
+  },
+  "devDependencies": {
+    "jquery": ">=1.4.2",
+    "qunit": "0.5.x",
+    "mkdirp": "*"
+  },
+  "main": "./build/vexflow/vexflow-node.js",
+  "license": "MIT"
+}

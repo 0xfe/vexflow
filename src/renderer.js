@@ -78,7 +78,7 @@ Vex.Flow.Renderer.prototype.init = function(sel, backend) {
       "Invalid selector for renderer.");
 
   // Get element from selector
-  this.element = document.getElementById(sel);
+  this.element = Vex.document.getElementById(sel);
   if (!this.element) this.element = sel;
 
   // Verify backend and create context

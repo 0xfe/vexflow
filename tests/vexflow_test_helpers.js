@@ -17,9 +17,14 @@ Vex.Flow.Test.createTestCanvas = function(canvas_sel_name, test_name) {
   var sel = Vex.Flow.Test.createTestCanvas.sel;
   var test_div = $('<div></div>').addClass("testcanvas");
   test_div.append($('<div></div>').addClass("name").text(test_name));
-  test_div.append($('<canvas></canvas>').addClass("vex-tabdiv").
-      attr("id", canvas_sel_name).
-      addClass("name").text(name));
+  var canvas = $('<canvas></canvas>').addClass("vex-tabdiv")[0];
+  // $('canvas').attr('id', id) doesn't work in Node.js for some reason,
+  // so do it manually. Also set a generous width and height in case
+  // the test doesn't do so manually.
+  canvas.id = canvas_sel_name;
+  canvas.width = 640;
+  canvas.height = 480;
+  test_div.append(canvas);
   $(sel).append(test_div);
 }
 Vex.Flow.Test.createTestCanvas.sel = "#vexflow_testoutput";

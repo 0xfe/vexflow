@@ -26,6 +26,8 @@ VexTab 2.0 now supports all VexTab 1.0 features, and [includes a few new ones](h
 * Rebase early, rebase often.
 * Please include tests -- I will not commit changes that don't have
   accompanying tests.
+  New test files should be added to both [tests/flow.html](tests/flow.html)
+  and [tests/nodejstests.js](tests/nodejstests.js).
 * Please use 2 spaces instead of tabs and wrap your lines at 80 columns.
 * Try to stick to the style conventions in the existing code. (It's not great,
   but it's what we have.)
@@ -55,6 +57,22 @@ Clean with:
 Quiet build:
 
     $ scons -Q
+
+Open `tests/flow.html` for QUnit unit tests.
+
+## Node.js Integration
+
+Vex Flow can also be run outside the browser using Node.js.
+Install dependencies and compile with `npm install` here, then to use it,
+`npm link` in this repository
+then add "vexflow" as a dependency in your package.json.
+Your system must have Cairo installed; see 
+[here](https://github.com/LearnBoost/node-canvas#installation) for details.
+
+For a usage example, see `tests/nodejsdemo.js` and run it 
+with `node tests/nodejsdemo.js`.
+To run QUnit unit tests as well as the demo, run `npm test`.
+Rendered images from the unit tests can be found in `tests/output`.
 
 ## MIT License
 

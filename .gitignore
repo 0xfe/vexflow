@@ -17,3 +17,8 @@ ruby_sess.*
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 .idea/workspace.xml
+node_modules
+npm-debug.log
+tests/output
+.sconsign.dblite
+build

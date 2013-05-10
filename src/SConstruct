@@ -64,5 +64,6 @@ vexflow_sources = [
     "strokes.js"
     ]
 
-Import('dbg opt')
+Import('dbg opt node')
 build_and_stamp("vexflow-min.js", vexflow_sources, opt);
+build_and_stamp("vexflow-node.js", vexflow_sources, node);

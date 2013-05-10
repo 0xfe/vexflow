@@ -29,8 +29,17 @@ opt = env.Clone(
       "Vex.LogLevel": "4"
     });
 
+node = env.Clone(
+    JS_DEFINES = {
+      "Vex.Debug": "true",
+      "Vex.LogLevel": "4"
+    },
+    JS_EXTRA_FLAGS = "--formatting=pretty_print",
+    JS_COMPILATION_LEVEL = "WHITESPACE_ONLY"
+    );
+
 # Export construction environments to SConscripts
-Export("dbg opt")
+Export("dbg opt node")
 
 # Build VexFlow
 SConscript("src/SConstruct", variant_dir="build/vexflow", duplicate=0)

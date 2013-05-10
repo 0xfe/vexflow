@@ -7,6 +7,31 @@
 function Vex() {}
 
 /**
+ * Export code for Node.js
+ *
+ * The module returns the Vex object, with Vex.document defaulted
+ * to a new JSDOM document unless the environment provides
+ * a global document object. If the user wishes to use their own
+ * DOM tree, Vex.document should be reset before any renderers or
+ * contexts are created.
+ *
+ */
+if (typeof module !== 'undefined') {
+  module.exports = Vex;
+}
+
+if (typeof document !== 'undefined') {
+  Vex.document = document;
+}
+else if (typeof require !== 'undefined') {
+  try {
+    /* Necessary to trick browserify into not importing jsdom */
+    Vex.documentRequire = require;
+    Vex.document = Vex.documentRequire('jsdom').jsdom();
+  } catch (e) {}
+}
+
+/**
  * Enable debug mode for special-case code.
  *
  * @define {boolean}
@@ -191,7 +216,7 @@ Vex.getCanvasContext = function(canvas_sel) {
   if (!canvas_sel)
     throw new Vex.RERR("BadArgument", "Invalid canvas selector: " + canvas_sel);
 
-  var canvas = document.getElementById(canvas_sel);
+  var canvas = Vex.document.getElementById(canvas_sel);
   if (!(canvas && canvas.getContext)) {
     throw new Vex.RERR("UnsupportedBrowserError",
         "This browser does not support HTML5 Canvas");
