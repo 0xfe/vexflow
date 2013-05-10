@@ -28,6 +28,7 @@ var sources = [
   "tabtie_tests.js",
   "tabslide_tests.js",
   "beam_tests.js",
+  "auto_beam_formatting_tests.js",
   "vibrato_tests.js",
   "annotation_tests.js",
   "tuning_tests.js",
@@ -40,7 +41,15 @@ var sources = [
   "staveconnector_tests.js",
   "percussion_tests.js",
   "key_clef_tests.js",
-  "stavehairpin_tests.js"
+  "stavehairpin_tests.js",
+  "rhythm_tests.js",
+  "tuplet_tests.js",
+  "boundingbox_tests.js",
+  // "textnote_tests.js",
+  "strokes_tests.js",
+  "stringnumber_tests.js",
+  "rests_tests.js",
+  "threevoice_tests.js"
 ]
 
 for (var i = 0; i < sources.length; i += 1) {
@@ -73,6 +82,7 @@ Vex.Flow.Test.StaveTie.Start();
 Vex.Flow.Test.TabTie.Start();
 Vex.Flow.Test.TabSlide.Start();
 Vex.Flow.Test.Beam.Start();
+Vex.Flow.Test.AutoBeamFormatting.Start();
 Vex.Flow.Test.Vibrato.Start();
 Vex.Flow.Test.Annotation.Start();
 Vex.Flow.Test.Tuning.Start();
@@ -83,6 +93,13 @@ Vex.Flow.Test.StaveConnector.Start();
 Vex.Flow.Test.Percussion.Start();
 Vex.Flow.Test.ClefKeySignature.Start();
 Vex.Flow.Test.StaveHairpin.Start();
+Vex.Flow.Test.Rhythm.Start();
+Vex.Flow.Test.Tuplet.Start();
+Vex.Flow.Test.BoundingBox.Start();
+Vex.Flow.Test.Strokes.Start();
+Vex.Flow.Test.StringNumber.Start();
+Vex.Flow.Test.Rests.Start();
+Vex.Flow.Test.ThreeVoices.Start();
 
 // Now export all canvases
 QUnit.done(function() {
@@ -91,7 +108,9 @@ QUnit.done(function() {
   var numActive = 0;
 
   $('.testcanvas').each(function() {
-    var name = $(this).find('.name').text().replace("/",",");
+    var name = $(this).find('.name').text();
+    // Strip punctuation & Unicode so there are no invalid filenames
+    name = name.replace(/[^a-zA-Z0-9 ]+/g, '').replace(/ {2,}/g,' ');
     var canvas = $(this).find('canvas')[0];
     console.log("Saving " + name);
 
