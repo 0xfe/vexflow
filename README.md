@@ -26,6 +26,8 @@ VexTab 2.0 now supports all VexTab 1.0 features, and [includes a few new ones](h
 * Rebase early, rebase often.
 * Please include tests -- I will not commit changes that don't have
   accompanying tests.
+  New test files should be added to both [tests/flow.html](tests/flow.html)
+  and [tests/nodejstests.js](tests/nodejstests.js).
 * Please use 2 spaces instead of tabs and wrap your lines at 80 columns.
 * Try to stick to the style conventions in the existing code. (It's not great,
   but it's what we have.)
