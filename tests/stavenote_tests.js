@@ -62,6 +62,11 @@ Vex.Flow.Test.StaveNote.Start = function() {
   Vex.Flow.Test.runTest("StaveNote Draw - Bass", Vex.Flow.Test.StaveNote.drawBass);
   Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Bass(Raphael)",
       Vex.Flow.Test.StaveNote.drawBass);
+
+  Vex.Flow.Test.runTest("StaveNote Draw - Key Styles",
+      Vex.Flow.Test.StaveNote.drawKeyStyles);
+  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Key Styles (Raphael)",
+      Vex.Flow.Test.StaveNote.drawKeyStyles);
 }
 
 Vex.Flow.Test.StaveNote.ticks = function(options) {
@@ -680,4 +685,23 @@ Vex.Flow.Test.StaveNote.drawSlash = function(options, contextBuilder) {
     ok(staveNote.getX() > 0, "Note " + i + " has X value");
     ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
   }
+}
+
+Vex.Flow.Test.StaveNote.drawKeyStyles = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 300, 180);
+  var stave = new Vex.Flow.Stave(10, 10, 200);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var note_struct = { keys: ["g/4","b/4","d/5"], duration: "q" };
+  var note = new Vex.Flow.StaveNote(note_struct);
+  note.setKeyStyle(1, {shadowBlur:15, shadowColor:'blue', fillStyle:'blue'});
+
+  var tickContext = new Vex.Flow.TickContext();
+  tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
+  note.setContext(ctx).setStave(stave);
+  note.draw();
+
+  ok(note.getX() > 0, "Note has X value");
+  ok(note.getYs().length > 0, "Note has Y values");
 }

@@ -37,6 +37,11 @@ Vex.Flow.RaphaelContext.prototype.init = function(element) {
     "font": "10pt Arial"
   };
 
+  this.shadow_attributes = {
+    width: 0,
+    color: "black"
+  };
+
   this.state_stack= [];
 }
 
@@ -63,6 +68,16 @@ Vex.Flow.RaphaelContext.prototype.setBackgroundFillStyle = function(style) {
 
 Vex.Flow.RaphaelContext.prototype.setStrokeStyle = function(style) {
   this.attributes.stroke = style;
+  return this;
+}
+
+Vex.Flow.RaphaelContext.prototype.setShadowColor = function(style) {
+  this.shadow_attributes.color = style;
+  return this;
+}
+
+Vex.Flow.RaphaelContext.prototype.setShadowBlur = function(blur) {
+  this.shadow_attributes.width = blur;
   return this;
 }
 
@@ -249,20 +264,39 @@ Vex.Flow.RaphaelContext.prototype.arcHelper =
     + this.pen.y;
 }
 
-
+// Adapted from the source for Raphael's Element.glow
+Vex.Flow.RaphaelContext.prototype.glow = function() {
+  var out = this.paper.set();
+  if (this.shadow_attributes.width > 0) {
+    var sa = this.shadow_attributes;
+    var num_paths = sa.width / 2;
+    for (var i = 1; i <= num_paths; i++) {
+      out.push(this.paper.path(this.path).attr({
+        stroke: sa.color,
+        "stroke-linejoin": "round",
+        "stroke-linecap": "round",
+        "stroke-width": +(sa.width / num_paths * i).toFixed(3),
+        opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3)
+      }));
+    }
+  }
+  return out;
+}
 
 Vex.Flow.RaphaelContext.prototype.fill = function() {
-  this.paper.path(this.path).
+  var elem = this.paper.path(this.path).
     attr(this.attributes).
     attr("stroke-width", 0);
+  this.glow(elem);
   return this;
 }
 
 Vex.Flow.RaphaelContext.prototype.stroke = function() {
-  this.paper.path(this.path).
+  var elem = this.paper.path(this.path).
     attr(this.attributes).
     attr("fill", "none").
     attr("stroke-width", this.lineWidth);
+  this.glow(elem);
   return this;
 }
 
@@ -297,7 +331,12 @@ Vex.Flow.RaphaelContext.prototype.save = function() {
       font_family: this.state.font_family
     },
     attributes: {
-      font: this.attributes.font
+      font: this.attributes.font,
+      fill: this.attributes.fill
+    },
+    shadow_attributes: {
+      width: this.shadow_attributes.width,
+      color: this.shadow_attributes.color
     }
   });
   return this;
@@ -308,5 +347,8 @@ Vex.Flow.RaphaelContext.prototype.restore = function() {
   var state = this.state_stack.pop();
   this.state.font_family = state.state.font_family;
   this.attributes.font = state.attributes.font;
+  this.attributes.fill = state.attributes.fill;
+  this.shadow_attributes.width = state.shadow_attributes.width;
+  this.shadow_attributes.color = state.shadow_attributes.color;
   return this;
 }
