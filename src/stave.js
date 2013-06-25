@@ -214,8 +214,8 @@ Vex.Flow.Stave.prototype.addClef = function(clef) {
   return this;
 }
 
-Vex.Flow.Stave.prototype.addTimeSignature = function(timeSpec) {
-  this.addModifier(new Vex.Flow.TimeSignature(timeSpec));
+Vex.Flow.Stave.prototype.addTimeSignature = function(timeSpec, customPadding) {
+  this.addModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding));
   return this;
 }
 
