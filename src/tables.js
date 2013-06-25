@@ -530,7 +530,8 @@ Vex.Flow.durationToTicks.durations = {
   "16":   Vex.Flow.RESOLUTION / 16,
   "32":   Vex.Flow.RESOLUTION / 32,
   "64":   Vex.Flow.RESOLUTION / 64,
-  "256":   Vex.Flow.RESOLUTION / 256
+  "128":  Vex.Flow.RESOLUTION / 128,
+  "256":  Vex.Flow.RESOLUTION / 256
 };
 
 Vex.Flow.durationAliases = {
@@ -802,7 +803,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "64": {
     common: {
-      beam_count: 3,
+      beam_count: 4,
       head_width: 10.5,
       stem: true,
       stem_offset: 0,
@@ -840,6 +841,47 @@ Vex.Flow.durationToGlyph.duration_codes = {
         position: "B/4"
       }
     }
+  },
+  "128": {
+      common: {
+          beam_count: 5,
+          head_width: 10.5,
+          stem: true,
+          stem_offset:0,
+          flag: true,
+          code_flag_upstem: "v9b",
+          code_flag_downstem: "v30",
+          dot_shiftY: 0,
+          line_above: 0,
+          line_below: 0
+      },
+      type: {
+          "n": {  // Hundred-twenty-eight note
+              code_head: "vb"
+          },
+          "h": { // Hundred-twenty-eight harmonic
+              code_head: "v22"
+          },
+          "m": { // Hundred-twenty-eight muted
+              code_head: "v3e"
+          },
+          "r": {  // Hundred-twenty-eight rest
+              code_head: "vaa",
+              head_width: 20,
+              stem: false,
+              flag: false,
+              rest: true,
+              position: "B/4",
+              dot_shiftY: 1.5,
+              line_above: 2.0,
+              line_below: 3.0
+          },
+          "s": { // Hundred-twenty-eight rest
+              // Drawn with canvas primitives
+              head_width: 15,
+              position: "B/4"
+          }
+      }
   }
 };
 
