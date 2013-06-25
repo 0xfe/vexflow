@@ -12,6 +12,9 @@ Vex.Flow.Test.TimeSignature.Start = function() {
   Vex.Flow.Test.runRaphaelTest("Big Signature Test (Raphael)", 
       Vex.Flow.Test.TimeSignature.big);
 
+  Vex.Flow.Test.runTest("Time Signature multiple staves alignment test",
+      Vex.Flow.Test.TimeSignature.multiStave);
+
 }
 
 Vex.Flow.Test.TimeSignature.catchError = function(ts, spec) {
@@ -75,5 +78,45 @@ Vex.Flow.Test.TimeSignature.big = function(options, contextBuilder) {
   stave.draw();
 
   ok(true, "all pass");
+}
+
+Vex.Flow.Test.TimeSignature.multiStave = function(options, contextBuilder) {
+        var ctx = new contextBuilder(options.canvas_sel, 400, 350);
+
+        var stave = new Vex.Flow.Stave(15, 0, 300);
+
+        for (var i = 0; i < 5; i++) {
+            if (i == 2) continue;
+            stave.setConfigForLine(i, {visible: false} );
+        }
+
+        stave.addClef("percussion");
+        // passing the custom padding as second parameter (in pixels)
+        stave.addTimeSignature("4/4", 25);
+        stave.setContext(ctx).draw();
+
+        var stave2 = new Vex.Flow.Stave(15, 110, 300);
+        stave2.addClef("treble");
+        stave2.addTimeSignature("4/4");
+        stave2.setContext(ctx).draw();
+
+        var connector = new Vex.Flow.StaveConnector(stave, stave2);
+        connector.setType(Vex.Flow.StaveConnector.type.SINGLE);
+        connector.setContext(ctx).draw();
+
+        var stave3 = new Vex.Flow.Stave(15, 220, 300);
+        stave3.addClef("bass");
+        stave3.addTimeSignature("4/4");
+        stave3.setContext(ctx).draw();
+
+        var connector2 = new Vex.Flow.StaveConnector(stave2, stave3);
+        connector2.setType(Vex.Flow.StaveConnector.type.SINGLE);
+        connector2.setContext(ctx).draw();
+
+        var connector3 = new Vex.Flow.StaveConnector(stave2, stave3);
+        connector3.setType(Vex.Flow.StaveConnector.type.BRACE);
+        connector3.setContext(ctx).draw();
+
+    ok(true, "all pass");
 }
 
