@@ -502,6 +502,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
 
   // Displacement variables.
   var last_line = null;
+  var line_diff = null;
   var displaced = false;
 
   // Draw notes from bottom to top.
@@ -554,7 +555,8 @@ Vex.Flow.StaveNote.prototype.draw = function() {
     if (last_line == null) {
       last_line = line;
     } else {
-      if (Math.abs(last_line - line) == 0.5) {
+      line_diff = Math.abs(last_line - line);
+      if (line_diff == 0 || line_diff == 0.5) {
         displaced = !displaced;
       } else {
         displaced = false;
