@@ -376,6 +376,15 @@ Vex.Flow.StaveNote.prototype.setKeyStyle = function(index, style) {
   return this;
 }
 
+Vex.Flow.StaveNote.prototype.applyKeyStyle = function(key_style, context) {
+  if (key_style) {
+    if (key_style.shadowColor) context.setShadowColor(key_style.shadowColor);
+    if (key_style.shadowBlur) context.setShadowBlur(key_style.shadowBlur);
+    if (key_style.fillStyle) context.setFillStyle(key_style.fillStyle);
+    if (key_style.strokeStyle) context.setStrokeStyle(key_style.strokeStyle);
+  }
+}
+
 Vex.Flow.StaveNote.prototype.addToModifierContext = function(mc) {
   this.setModifierContext(mc);
   for (var i = 0; i < this.modifiers.length; ++i) {
@@ -598,13 +607,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
       head_x = Math.round(head_x);
 
       ctx.save();
-
-      if (key_style) {
-        if (key_style.shadowColor) ctx.setShadowColor(key_style.shadowColor);
-        if (key_style.shadowBlur) ctx.setShadowBlur(key_style.shadowBlur);
-        if (key_style.fillStyle) ctx.setFillStyle(key_style.fillStyle);
-        if (key_style.strokeStyle) ctx.setStrokeStyle(key_style.strokeStyle);
-      }
+      this.applyKeyStyle(key_style, ctx);
 
       // if a slash note, draw 'manually' as font glyphs do not slant enough
       // and are too small.
@@ -721,7 +724,15 @@ Vex.Flow.StaveNote.prototype.draw = function() {
   // Draw the modifiers
   for (var i = 0; i < this.modifiers.length; ++i) {
     var mod = this.modifiers[i];
-    mod.setContext(this.context);
+    var key_style = this.keyStyles[mod.getIndex()]; 
+    if(key_style) {
+        ctx.save();
+        this.applyKeyStyle(key_style, ctx);
+    }
+    mod.setContext(ctx);
     mod.draw();
+    if(key_style) {
+        ctx.restore();
+    }
   }
 }
