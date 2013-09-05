@@ -603,6 +603,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
         if (key_style.shadowColor) ctx.setShadowColor(key_style.shadowColor);
         if (key_style.shadowBlur) ctx.setShadowBlur(key_style.shadowBlur);
         if (key_style.fillStyle) ctx.setFillStyle(key_style.fillStyle);
+        if (key_style.strokeStyle) ctx.setStrokeStyle(key_style.strokeStyle);
       }
 
       // if a slash note, draw 'manually' as font glyphs do not slant enough
