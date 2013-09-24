@@ -98,7 +98,9 @@ Vex.Flow.StaveHairpin.prototype.renderHairpin = function(params) {
   
   var l_shift = this.render_options.left_shift_px;
   var r_shift = this.render_options.right_shift_px;
-  
+ 
+  ctx.beginPath();
+ 
   switch (this.hairpin) {
     case Vex.Flow.StaveHairpin.type.CRESC:
       ctx.moveTo(params.last_x + r_shift, y_shift + dis);
