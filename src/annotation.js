@@ -56,9 +56,9 @@ Vex.Flow.Annotation = (function() {
 
     setBottom: function(bottom) {
       if (bottom) {
-        this.vert_justification = VerticalJustify.BOTTOM;
+        this.vert_justification = Annotation.VerticalJustify.BOTTOM;
       } else {
-        this.vert_justification = VerticalJustify.TOP;
+        this.vert_justification = Annotation.VerticalJustify.TOP;
       }
       return this;
     },
