@@ -226,3 +226,22 @@ Vex.BM = function(s, f) {
   var elapsed = new Date().getTime() - start_time;
   Vex.L(s + elapsed + "ms");
 }
+
+/**
+ * Basic classical inheritance helper. Usage:
+ *
+ * Vex.Inherit(Child, Parent, {
+ *    getName: function() {return this.name;},
+ *    setName: function(name) {this.name = name}
+ * });
+ */
+Vex.Inherit = (function () {
+  var F = function () {};
+  return function (C, P, O) {
+    F.prototype = P.prototype;
+    C.prototype = new F();
+    C.superclass = P.prototype;
+    C.prototype.constructor = C;
+    Vex.Merge(C.prototype, O );
+  }
+}());
