@@ -39,6 +39,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   this.notes_displaced = false;   // if true, displace note to right
   this.dot_shiftY = 0;
   this.keyProps = [];             // per-note properties
+  this.keyStyles = [];            // per-note colors or gradients
 
   // Pull per-note location and other rendering properties.
   this.displaced = false;
@@ -74,6 +75,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
 
     last_line = line;
     this.keyProps.push(props);
+    this.keyStyles.push(null);
   }
 
   // Sort the notes from lowest line to highest line
@@ -369,6 +371,20 @@ Vex.Flow.StaveNote.prototype.getGlyph = function() {
   return this.glyph;
 }
 
+Vex.Flow.StaveNote.prototype.setKeyStyle = function(index, style) {
+  this.keyStyles[index] = style;
+  return this;
+}
+
+Vex.Flow.StaveNote.prototype.applyKeyStyle = function(key_style, context) {
+  if (key_style) {
+    if (key_style.shadowColor) context.setShadowColor(key_style.shadowColor);
+    if (key_style.shadowBlur) context.setShadowBlur(key_style.shadowBlur);
+    if (key_style.fillStyle) context.setFillStyle(key_style.fillStyle);
+    if (key_style.strokeStyle) context.setStrokeStyle(key_style.strokeStyle);
+  }
+}
+
 Vex.Flow.StaveNote.prototype.addToModifierContext = function(mc) {
   this.setModifierContext(mc);
   for (var i = 0; i < this.modifiers.length; ++i) {
@@ -502,6 +518,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
 
   // Displacement variables.
   var last_line = null;
+  var line_diff = null;
   var displaced = false;
 
   // Draw notes from bottom to top.
@@ -545,6 +562,7 @@ Vex.Flow.StaveNote.prototype.draw = function() {
 
   for (var i = start_i; i != end_i; i += step_i) {
     var note_props = this.keyProps[i];
+    var key_style = this.keyStyles[i];
     var line = note_props.line;
     highest_line = line > highest_line ? line : highest_line;
     lowest_line = line < lowest_line ? line : lowest_line;
@@ -554,7 +572,8 @@ Vex.Flow.StaveNote.prototype.draw = function() {
     if (last_line == null) {
       last_line = line;
     } else {
-      if (Math.abs(last_line - line) == 0.5) {
+      line_diff = Math.abs(last_line - line);
+      if (line_diff == 0 || line_diff == 0.5) {
         displaced = !displaced;
       } else {
         displaced = false;
@@ -585,7 +604,10 @@ Vex.Flow.StaveNote.prototype.draw = function() {
 
     // Draw the head.
     if (render_head) {
-     head_x = Math.round(head_x);
+      head_x = Math.round(head_x);
+
+      ctx.save();
+      this.applyKeyStyle(key_style, ctx);
 
       // if a slash note, draw 'manually' as font glyphs do not slant enough
       // and are too small.
@@ -595,6 +617,8 @@ Vex.Flow.StaveNote.prototype.draw = function() {
         Vex.Flow.renderGlyph(ctx, head_x,
             y, this.render_options.glyph_font_scale, code_head);
       }
+
+      ctx.restore();
 
       // If note above/below the staff, draw the small staff
       if (line <= 0 || line >= 6) {
@@ -700,7 +724,15 @@ Vex.Flow.StaveNote.prototype.draw = function() {
   // Draw the modifiers
   for (var i = 0; i < this.modifiers.length; ++i) {
     var mod = this.modifiers[i];
-    mod.setContext(this.context);
+    var key_style = this.keyStyles[mod.getIndex()]; 
+    if(key_style) {
+        ctx.save();
+        this.applyKeyStyle(key_style, ctx);
+    }
+    mod.setContext(ctx);
     mod.draw();
+    if(key_style) {
+        ctx.restore();
+    }
   }
 }
