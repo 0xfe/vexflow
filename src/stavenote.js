@@ -17,8 +17,7 @@ Vex.Flow.StaveNote = (function() {
 
   Vex.Inherit(StaveNote, Vex.Flow.Note, {
     init: function(note_struct) {
-      var superclass = Vex.Flow.StaveNote.superclass;
-      superclass.init.call(this, note_struct);
+      StaveNote.superclass.init.call(this, note_struct);
 
       this.keys = note_struct.keys;
       this.clef = note_struct.clef;
@@ -756,4 +755,4 @@ Vex.Flow.StaveNote = (function() {
   });
 
   return StaveNote;
-}())
+}());

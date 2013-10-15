@@ -234,6 +234,8 @@ Vex.BM = function(s, f) {
  *    getName: function() {return this.name;},
  *    setName: function(name) {this.name = name}
  * });
+ *
+ * Returns Child.
  */
 Vex.Inherit = (function () {
   var F = function () {};
@@ -243,5 +245,6 @@ Vex.Inherit = (function () {
     C.superclass = P.prototype;
     C.prototype.constructor = C;
     Vex.Merge(C.prototype, O );
+    return C;
   }
 }());
