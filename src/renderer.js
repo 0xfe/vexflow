@@ -49,8 +49,7 @@ Vex.Flow.Renderer.getRaphaelContext = function(sel, width, height, background) {
 
 Vex.Flow.Renderer.bolsterCanvasContext = function(ctx) {
   ctx.clear = function() {
-    // TODO: get real width and height of context.
-    ctx.clearRect(0, 0, 2000,2000);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
   ctx.setFont = function(family, size, weight) {
     this.font = (weight || "") + " " + size + "pt " + family;
