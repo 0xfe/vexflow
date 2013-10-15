@@ -97,6 +97,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   // Lengthen 32nd & 64th note stems for additional flags/beams
   if (this.duration == "32") this.render_options.stem_height = 45;
   if (this.duration == "64") this.render_options.stem_height = 50;
+  if (this.duration == "128") this.render_options.stem_height = 55;
 
   var auto_stem_direction;
   if (note_struct.auto_stem) {
@@ -240,6 +241,11 @@ Vex.Flow.StaveNote.prototype.getStemMinumumLength = function() {
      else
        length = 40;
      break;
+   case "128":
+     if (this.beam == null)
+       length = 55;
+     else
+       length = 45;
   }
   return length;
 }
