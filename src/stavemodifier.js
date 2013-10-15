@@ -7,47 +7,51 @@
 /**
  * @constructor
  */
-Vex.Flow.StaveModifier = function() {
-  this.init();
-}
-
-Vex.Flow.StaveModifier.prototype.init = function() {
-  this.padding = 10;
-}
-
-Vex.Flow.StaveModifier.prototype.getCategory = function() {return "";}
-Vex.Flow.StaveModifier.prototype.makeSpacer = function(padding) {
-  return {
-    getContext: function() {return true;},
-    setStave: function() {},
-    renderToStave: function() {},
-    getMetrics: function() {
-      return {width: padding};
-    }
-  };
-}
-
-Vex.Flow.StaveModifier.prototype.placeGlyphOnLine = function(glyph, stave, line) {
-  glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs());
-}
-
-Vex.Flow.StaveModifier.prototype.setPadding = function(padding) {
-  this.padding = padding;
-}
-
-Vex.Flow.StaveModifier.prototype.addToStave = function(stave, firstGlyph) {
-
-  if (!firstGlyph) {
-    stave.addGlyph(this.makeSpacer(this.padding));
+Vex.Flow.StaveModifier = (function() {
+  function StaveModifier() {
+    this.init();
   }
 
-  this.addModifier(stave);
-  return this;
-}
+  StaveModifier.prototype = {
+    init: function() {
+      this.padding = 10;
+    },
 
+    getCategory: function() {return "";},
+    makeSpacer: function(padding) {
+      return {
+        getContext: function() {return true;},
+        setStave: function() {},
+        renderToStave: function() {},
+        getMetrics: function() {
+          return {width: padding};
+        }
+      };
+    },
 
-Vex.Flow.StaveModifier.prototype.addModifier = function() {
-  throw new Vex.RERR("MethodNotImplemented",
-      "addModifier() not implemented for this stave modifier.");
-}
+    placeGlyphOnLine: function(glyph, stave, line) {
+      glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs());
+    },
+
+    setPadding: function(padding) {
+      this.padding = padding;
+    },
+
+    addToStave: function(stave, firstGlyph) {
+      if (!firstGlyph) {
+        stave.addGlyph(this.makeSpacer(this.padding));
+      }
+
+      this.addModifier(stave);
+      return this;
+    },
+
+    addModifier: function() {
+      throw new Vex.RERR("MethodNotImplemented",
+          "addModifier() not implemented for this stave modifier.");
+    }
+  };
+
+  return StaveModifier;
+}());
 
