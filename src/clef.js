@@ -1,6 +1,6 @@
 // Vex Flow Notation.
 // Copyright Mohit Muthanna Cheppudira 2013.
-// Implements clefs
+// Implements clefs.
 
 Vex.Flow.Clef = (function() {
   function Clef(clef) {
