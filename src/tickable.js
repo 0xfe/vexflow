@@ -114,8 +114,7 @@ Vex.Flow.Tickable = (function() {
     applyTickMultiplier: function(numerator, denominator) {
       this.tickMultiplier.multiply(numerator, denominator);
       this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
-    },
-
+    }
   };
 
   return Tickable;
