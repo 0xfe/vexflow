@@ -8,7 +8,7 @@ SSH_TO="mohit@my.vexflow.com source ~/.bash_profile; cd $TARGET;"
 SCP_TO="mohit@my.vexflow.com:$TARGET"
 
 echo Building...
-./build.sh
+rake clean; rake
 
 ssh $SSH_TO "mkdir -p $TARGET; mkdir -p $TARGET/support"
 if [ "$?" != "0" ]

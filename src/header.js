@@ -1,6 +1,5 @@
 /**
- * @preserve
- * VexFlow Engraver __VEX_VERSION__
+ * VexFlow Engraver <%= BUILD_VERSION %>
  * A library for rendering musical notation and guitar tablature in HTML5.
  *
  *                    http://www.vexflow.com
@@ -27,7 +26,6 @@
  *
  * This library makes use of Simon Tatham's awesome font - Gonville.
  *
- * Build ID: __VEX_BUILD_PREFIX__@__VEX_GIT_SHA1__
- * Build date: __VEX_BUILD_DATE__
- *
+ * Build ID: <%= BUILD_PREFIX %>@<%= BUILD_COMMIT %>
+ * Build date: <%= BUILD_DATE %>
  */

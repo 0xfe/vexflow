@@ -1,4 +1,4 @@
-# Vex Flow
+# VexFlow 2
 
 A JavaScript library for rendering music notation.
 Copyright (c) 2010 Mohit Muthanna Cheppudira
@@ -11,7 +11,6 @@ Go try out [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html) to lear
 
 If you're not a developer and just want to write and share your music, go to
 [My VexFlow](http://my.vexflow.com).
-
 
 ## Where is VexTab?
 
@@ -36,25 +35,25 @@ VexTab 2.0 now supports all VexTab 1.0 features, and [includes a few new ones](h
 
 For performing full builds, you need the following:
 
-* Google Closure Compiler (included in support/)
-  * This requires a JRE to be installed.
-* SCons
-* git
-* zip
+* Rake
+* Uglifier
+* Git
+
+If you have Ruby installed, then you can use Bundler to get all the
+dependencies.
+
+    $ gem install bundler
+    $ bundle install
 
 ## Build Instructions
 
 Build with:
 
-    $ scons
+    $ rake
 
 Clean with:
 
-    $ scons -c
-
-Quiet build:
-
-    $ scons -Q
+    $ rake clean
 
 ## MIT License
 

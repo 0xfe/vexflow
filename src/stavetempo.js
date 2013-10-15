@@ -1,6 +1,6 @@
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
-// Author Rados³aw Eichler 2012
+// Author Radosaw Eichler 2012
 // Implements tempo marker.
 
 /**
