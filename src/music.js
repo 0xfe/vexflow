@@ -192,7 +192,7 @@ Vex.Flow.Music = (function() {
     },
 
     getNoteValue: function(noteString) {
-      var value = Vex.Flow.Music.noteValues[noteString];
+      var value = Music.noteValues[noteString];
       if (value == null)
         throw new Vex.RERR("BadArguments", "Invalid note name: " + noteString);
 
@@ -200,7 +200,7 @@ Vex.Flow.Music = (function() {
     },
 
     getIntervalValue: function(intervalString) {
-      var value = Vex.Flow.Music.intervals[intervalString];
+      var value = Music.intervals[intervalString];
       if (value == null)
         throw new Vex.RERR("BadArguments",
                            "Invalid interval name: " + intervalString);
@@ -213,7 +213,7 @@ Vex.Flow.Music = (function() {
         throw new Vex.RERR("BadArguments",
                            "Invalid note value: " + noteValue);
 
-      return Vex.Flow.Music.canonical_notes[noteValue];
+      return Music.canonical_notes[noteValue];
     },
 
     getCanonicalIntervalName: function(intervalValue) {
@@ -221,7 +221,7 @@ Vex.Flow.Music = (function() {
         throw new Vex.RERR("BadArguments",
                            "Invalid interval value: " + intervalValue);
 
-      return Vex.Flow.Music.diatonic_intervals[intervalValue];
+      return Music.diatonic_intervals[intervalValue];
     },
 
     /* Given a note, interval, and interval direction, product the
@@ -232,9 +232,8 @@ Vex.Flow.Music = (function() {
       if (direction != 1 && direction != -1)
         throw new Vex.RERR("BadArguments", "Invalid direction: " + direction);
 
-      var sum = (noteValue + (direction * intervalValue)) %
-        Vex.Flow.Music.NUM_TONES;
-      if (sum < 0) sum += Vex.Flow.Music.NUM_TONES;
+      var sum = (noteValue + (direction * intervalValue)) % Music.NUM_TONES;
+      if (sum < 0) sum += Music.NUM_TONES;
 
       return sum;
     },
@@ -244,13 +243,13 @@ Vex.Flow.Music = (function() {
       var rootValue = this.getNoteValue(parts.root);
       var interval = noteValue - rootValue;
 
-      if (Math.abs(interval) > Vex.Flow.Music.NUM_TONES - 3) {
+      if (Math.abs(interval) > Music.NUM_TONES - 3) {
         var multiplier = 1;
         if (interval > 0 ) multiplier = -1;
 
         // Possibly wrap around. (Add +1 for modulo operator)
         var reverse_interval = (((noteValue + 1) + (rootValue + 1)) %
-          Vex.Flow.Music.NUM_TONES) * multiplier;
+          Music.NUM_TONES) * multiplier;
 
         if (Math.abs(reverse_interval) > 2) {
           throw new Vex.RERR("BadArguments", "Notes not related: " + root + ", " +
@@ -314,7 +313,7 @@ Vex.Flow.Music = (function() {
       else
         var difference = note1 - note2;
 
-      if (difference < 0) difference += Vex.Flow.Music.NUM_TONES;
+      if (difference < 0) difference += Music.NUM_TONES;
       return difference;
     }
   };
