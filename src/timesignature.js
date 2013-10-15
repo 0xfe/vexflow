@@ -5,10 +5,13 @@
 //
 
 /**
+ * @param {string} timeSpec time signature, i.e. "4/4"
+ * @param {number} [customPadding] custom padding when using multi-stave/multi-instrument setting
+ * to align key/time signature (in pixels), optional
  * @constructor
  */
-Vex.Flow.TimeSignature = function(timeSpec) {
-  if (arguments.length > 0) this.init(timeSpec);
+Vex.Flow.TimeSignature = function(timeSpec, customPadding) {
+  if (arguments.length > 0) this.init(timeSpec, customPadding);
 }
 
 
@@ -28,10 +31,11 @@ Vex.Flow.TimeSignature.prototype = new Vex.Flow.StaveModifier();
 Vex.Flow.TimeSignature.prototype.constructor = Vex.Flow.TimeSignature;
 Vex.Flow.TimeSignature.superclass = Vex.Flow.StaveModifier.prototype;
 
-Vex.Flow.TimeSignature.prototype.init = function(timeSpec) {
+Vex.Flow.TimeSignature.prototype.init = function(timeSpec, customPadding) {
   Vex.Flow.TimeSignature.superclass.init();
+   var padding = customPadding || 15;
 
-  this.setPadding(15);
+  this.setPadding(padding);
   this.point = 40;
   this.topLine = 2;
   this.bottomLine = 4;
