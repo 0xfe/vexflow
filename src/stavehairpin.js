@@ -2,7 +2,7 @@
 // Copyright Mohit Muthanna 2010
 // This class by Raffaele Viglianti, 2012 http://itisnotsound.wordpress.com/
 //
-// This class implements hairpins between notes. 
+// This class implements hairpins between notes.
 // Hairpins can be either Crescendo or Descrescendo.
 
 /**

@@ -31,7 +31,6 @@ Vex.Flow.StaveTie = (function() {
        *  }
        *
        **/
-
       this.notes = notes;
       this.context = null;
       this.text = text;

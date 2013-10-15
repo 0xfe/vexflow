@@ -5,165 +5,129 @@
 // tabs, etc.
 
 /** @constructor */
-Vex.Flow.TickContext = function() {
-  this.init();
-}
+Vex.Flow.TickContext = (function() {
+  function TickContext() {
+    this.init();
+  }
 
-Vex.Flow.TickContext.prototype.init = function() {
-  this.currentTick = new Vex.Flow.Fraction(0, 1);
-  this.maxTicks = new Vex.Flow.Fraction(0, 1);;
-  this.minTicks = null;
-  this.width = 0;
-  this.padding = 3;     // padding on each side (width += padding * 2)
-  this.pixelsUsed = 0;
-  this.x = 0;
-  this.tickables = [];   // Notes, tabs, chords, lyrics.
-  this.notePx = 0;       // width of widest note in this context
-  this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
-  this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
+  TickContext.prototype = {
+    init: function() {
+      this.currentTick = new Vex.Flow.Fraction(0, 1);
+      this.maxTicks = new Vex.Flow.Fraction(0, 1);;
+      this.minTicks = null;
+      this.width = 0;
+      this.padding = 3;     // padding on each side (width += padding * 2)
+      this.pixelsUsed = 0;
+      this.x = 0;
+      this.tickables = [];   // Notes, tabs, chords, lyrics.
+      this.notePx = 0;       // width of widest note in this context
+      this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
+      this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
 
-  // Ignore this tick context for formatting and justification
-  this.ignore_ticks = true;
-  this.preFormatted = false;
-  this.context = null; // Rendering context
-}
+      // Ignore this tick context for formatting and justification
+      this.ignore_ticks = true;
+      this.preFormatted = false;
+      this.context = null; // Rendering context
+    },
 
-Vex.Flow.TickContext.prototype.setContext = function(context) {
-  this.context = context;
-  return this;
-}
+    setContext: function(context) { this.context = context; return this; },
+    getContext: function() { return this.context; },
+    shouldIgnoreTicks: function() { return this.ignore_ticks; },
+    getWidth: function() { return this.width + (this.padding * 2); },
+    getX: function() { return this.x; },
+    setX: function(x) { this.x = x; return this; },
+    getPixelsUsed: function() { return this.pixelsUsed; },
+    setPixelsUsed: function(pixelsUsed) { this.pixelsUsed = pixelsUsed; return this; },
+    setPadding: function(padding) { this.padding = padding; return this; },
+    getMaxTicks: function() { return this.maxTicks; },
+    getMinTicks: function() { return this.minTicks; },
+    getTickables: function() { return this.tickables; },
 
-Vex.Flow.TickContext.prototype.getContext = function() {
-  return this.context;
-}
+    // Get widths context, note and left/right modifiers for formatting
+    getMetrics: function() {
+      return { width: this.width, notePx: this.notePx,
+               extraLeftPx: this.extraLeftPx, extraRightPx: this.extraRightPx };
+    },
 
-// Get widths context, note and left/right modifiers for formatting
-Vex.Flow.TickContext.prototype.getMetrics = function() {
-  return { width: this.width, notePx: this.notePx,
-           extraLeftPx: this.extraLeftPx, extraRightPx: this.extraRightPx };
-}
+    getCurrentTick: function() { return this.currentTick; },
+    setCurrentTick: function(tick) {
+      this.currentTick = tick;
+      this.preFormatted = false;
+    },
 
-Vex.Flow.TickContext.prototype.setCurrentTick = function(tick) {
-  this.currentTick = tick;
-  this.preFormatted = false;
-}
+    // Get left & right pixels used for modifiers
+    getExtraPx: function() {
+      var left_shift = 0;
+      var right_shift = 0;
+      var extraLeftPx = 0;
+      var extraRightPx = 0;
+      for (var i = 0; i < this.tickables.length; i++) {
+        extraLeftPx = Math.max(this.tickables[i].extraLeftPx, extraLeftPx);
+        extraRightPx = Math.max(this.tickables[i].extraRightPx, extraRightPx);
+        var mContext = this.tickables[i].modifierContext;
+        if (mContext && mContext != null) {
+          left_shift = Math.max( left_shift, mContext.state.left_shift);
+          right_shift = Math.max( right_shift, mContext.state.right_shift);
+        }
+      }
+      return { left: left_shift, right: right_shift,
+               extraLeft: extraLeftPx, extraRight: extraRightPx };
+    },
 
-Vex.Flow.TickContext.prototype.getCurrentTick = function() {
-  return this.currentTick;
-}
+    addTickable: function(tickable) {
+      if (!tickable) {
+        throw new Vex.RERR("BadArgument", "Invalid tickable added.");
+      }
 
-Vex.Flow.TickContext.prototype.shouldIgnoreTicks = function() {
-  return this.ignore_ticks;
-}
+      if (!tickable.shouldIgnoreTicks()) {
+        this.ignore_ticks = false;
 
-Vex.Flow.TickContext.prototype.getWidth = function() {
-  return this.width + (this.padding * 2);
-}
+        var ticks = tickable.getTicks();
 
-Vex.Flow.TickContext.prototype.getX = function() {
-  return this.x;
-}
+        if (ticks.value() > this.maxTicks.value()) {
+          this.maxTicks = ticks.clone();
+        }
 
-Vex.Flow.TickContext.prototype.setX = function(x) {
-  this.x = x;
-  return this;
-}
+        if (this.minTicks == null) {
+          this.minTicks = ticks.clone();
+        } else if (ticks.value() < this.minTicks.value()) {
+          this.minTicks = ticks.clone();
+        }
+      }
 
-// Get left & right pixels used for modifiers
-Vex.Flow.TickContext.prototype.getExtraPx = function() {
-  var left_shift = 0;
-  var right_shift = 0;
-  var extraLeftPx = 0;
-  var extraRightPx = 0;
-  for (var i = 0; i < this.tickables.length; i++) {
-    extraLeftPx = Math.max(this.tickables[i].extraLeftPx, extraLeftPx);
-    extraRightPx = Math.max(this.tickables[i].extraRightPx, extraRightPx);
-    var mContext = this.tickables[i].modifierContext;
-    if (mContext && mContext != null) {
-      left_shift = Math.max( left_shift, mContext.state.left_shift);
-      right_shift = Math.max( right_shift, mContext.state.right_shift);
+      tickable.setTickContext(this);
+      this.tickables.push(tickable);
+      this.preFormatted = false;
+      return this;
+    },
+
+    preFormat: function() {
+      if (this.preFormatted) return;
+
+      var note_width = 0;
+      for (var i = 0; i < this.tickables.length; ++i) {
+        var tickable = this.tickables[i];
+        tickable.preFormat();
+        var metrics = tickable.getMetrics();
+
+        // Maintain max extra pixels from all tickables in the context
+        this.extraLeftPx = Math.max(this.extraLeftPx,
+                                    metrics.extraLeftPx + metrics.modLeftPx);
+        this.extraRightPx = Math.max(this.extraRightPx,
+                                     metrics.extraRightPx + metrics.modRightPx);
+
+        // Maintain the widest note for all tickables in the context
+        this.notePx = Math.max(this.notePx, metrics.noteWidth);
+
+        // Recalculate the tick context total width
+        this.width = this.notePx +
+                     this.extraLeftPx +
+                     this.extraRightPx;
+      }
+
+      return this;
     }
-  }
-  return { left: left_shift, right: right_shift,
-           extraLeft: extraLeftPx, extraRight: extraRightPx };
-}
+  };
 
-Vex.Flow.TickContext.prototype.getPixelsUsed = function() {
-  return this.pixelsUsed;
-}
-
-Vex.Flow.TickContext.prototype.setPixelsUsed = function(pixelsUsed) {
-  this.pixelsUsed = pixelsUsed;
-  return this;
-}
-
-Vex.Flow.TickContext.prototype.setPadding = function(padding) {
-  this.padding = padding;
-  return this;
-}
-
-Vex.Flow.TickContext.prototype.getMaxTicks = function() {
-  return this.maxTicks;
-}
-
-Vex.Flow.TickContext.prototype.getMinTicks = function() {
-  return this.minTicks;
-}
-
-Vex.Flow.TickContext.prototype.getTickables = function() {
-  return this.tickables;
-}
-
-Vex.Flow.TickContext.prototype.addTickable = function(tickable) {
-  if (!tickable) {
-    throw new Vex.RERR("BadArgument", "Invalid tickable added.");
-  }
-
-  if (!tickable.shouldIgnoreTicks()) {
-    this.ignore_ticks = false;
-
-    var ticks = tickable.getTicks();
-
-    if (ticks.value() > this.maxTicks.value()) {
-      this.maxTicks = ticks.clone();
-    }
-
-    if (this.minTicks == null) {
-      this.minTicks = ticks.clone();
-    } else if (ticks.value() < this.minTicks.value()) {
-      this.minTicks = ticks.clone();
-    }
-  }
-
-  tickable.setTickContext(this);
-  this.tickables.push(tickable);
-  this.preFormatted = false;
-  return this;
-}
-
-Vex.Flow.TickContext.prototype.preFormat = function() {
-  if (this.preFormatted) return;
-
-  var note_width = 0;
-  for (var i = 0; i < this.tickables.length; ++i) {
-    var tickable = this.tickables[i];
-    tickable.preFormat();
-    var metrics = tickable.getMetrics();
-
-    // Maintain max extra pixels from all tickables in the context
-    this.extraLeftPx = Math.max(this.extraLeftPx,
-                                metrics.extraLeftPx + metrics.modLeftPx);
-    this.extraRightPx = Math.max(this.extraRightPx,
-                                 metrics.extraRightPx + metrics.modRightPx);
-
-    // Maintain the widest note for all tickables in the context
-    this.notePx = Math.max(this.notePx, metrics.noteWidth);
-
-    // Recalculate the tick context total width
-    this.width = this.notePx +
-                 this.extraLeftPx +
-                 this.extraRightPx;
-  }
-
-  return this;
-}
+  return TickContext;
+}());
