@@ -585,7 +585,7 @@ Vex.Flow.durationToGlyph = function(duration, type) {
 Vex.Flow.durationToGlyph.duration_codes = {
   "1": {
     common: {
-      head_width: 16.5,
+      head_width: 15.5,
       stem: false,
       stem_offset: 0,
       flag: false,
@@ -620,7 +620,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "2": {
     common: {
-      head_width: 10.5,
+      head_width: 9.5,
       stem: true,
       stem_offset: 0,
       flag: false,
@@ -656,7 +656,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "4": {
     common: {
-      head_width: 10.5,
+      head_width: 9.5,
       stem: true,
       stem_offset: 0,
       flag: false,
@@ -694,7 +694,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "8": {
     common: {
-      head_width: 10.5,
+      head_width: 9.5,
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -735,7 +735,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "16": {
     common: {
       beam_count: 2,
-      head_width: 10.5,
+      head_width: 9.5,
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -776,7 +776,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "32": {
     common: {
       beam_count: 3,
-      head_width: 10.5,
+      head_width: 9.5,
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -817,7 +817,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "64": {
     common: {
       beam_count: 4,
-      head_width: 10.5,
+      head_width: 9.5,
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -858,7 +858,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "128": {
       common: {
           beam_count: 5,
-          head_width: 10.5,
+          head_width: 9.5,
           stem: true,
           stem_offset:0,
           flag: true,

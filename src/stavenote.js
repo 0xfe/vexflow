@@ -85,7 +85,7 @@ Vex.Flow.StaveNote.prototype.init = function(note_struct) {
   this.modifiers = [];
 
   this.render_options = {
-    glyph_font_scale: 38, // font size for note heads and rests
+    glyph_font_scale: 35, // font size for note heads and rests
     stem_height: 35,      // in pixels
     stroke_px: 3,         // number of stroke px to the left and right of head
     stroke_spacing: 10,    // spacing between strokes (TODO: take from stave)
