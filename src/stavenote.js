@@ -166,6 +166,28 @@ Vex.Flow.StaveNote.prototype.getBoundingBox = function() {
   return new Vex.Flow.BoundingBox(x, min_y, w, max_y - min_y);
 }
 
+/** Gets the line number of the top or bottom note in the chord.
+  * If (is_top_note === true), get top note
+  * Otherwise, get bottom note */
+Vex.Flow.StaveNote.prototype.getLineNumber = function(is_top_note) {
+  if(!this.keyProps.length) throw new Vex.RERR("NoKeyProps",
+      "Can't get bottom note line, because note is not initialized properly.");
+  var result_line = this.keyProps[0].line;
+
+  // No precondition assumed for sortedness of keyProps array
+  for(var i=0; i<this.keyProps.length; i++){
+    var this_line = this.keyProps[i].line;
+    if(is_top_note)
+      if(this_line > result_line)
+            result_line = this_line;
+    else
+      if(this_line < result_line)
+        result_line = this_line;
+  }
+
+  return result_line;
+}
+
 Vex.Flow.StaveNote.prototype.isRest = function() {
   return this.glyph.rest;
 }

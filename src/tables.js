@@ -216,96 +216,109 @@ Vex.Flow.articulationCodes = function(artic) {
 }
 
 Vex.Flow.articulationCodes.articulations = {
-  "a.": {   // Stacato
+  "a.": {   // Staccato
     code: "v23",
     width: 4,
     shift_right: -2,
-    shift_up: 0,
-    shift_down: 0
+    shift_up: 8,
+    shift_down: 0,
+    between_lines: true
   },
   "av": {   // Staccatissimo
     code: "v28",
     width: 4,
     shift_right: 0,
-    shift_up: 2,
-    shift_down: 5
+    shift_up: 11,
+    shift_down: 5,
+    between_lines: true
   },
   "a>": {   // Accent
     code: "v42",
     width: 10,
     shift_right: 5,
-    shift_up: -2,
-    shift_down: 2
+    shift_up: 8,
+    shift_down: 1,
+    between_lines: true
   },
   "a-": {   // Tenuto
     code: "v25",
     width: 9,
     shift_right: -4,
-    shift_up: 8,
-    shift_down: 10
+    shift_up: 17,
+    shift_down: 10,
+    between_lines: true
   },
   "a^": {   // Marcato
     code: "va",
     width: 8,
     shift_right: 0,
-    shift_up: -10,
-    shift_down: -1
+    shift_up: -4,
+    shift_down: -2,
+    between_lines: false
   },
   "a+": {   // Left hand pizzicato
     code: "v8b",
     width: 9,
     shift_right: -4,
-    shift_up: 6,
-    shift_down: 12
+    shift_up: 12,
+    shift_down: 12,
+    between_lines: false
   },
   "ao": {   // Snap pizzicato
     code: "v94",
     width: 8,
     shift_right: 0,
     shift_up: -4,
-    shift_down: 4
+    shift_down: 6,
+    between_lines: false
   },
   "ah": {   // Natural harmonic or open note
     code: "vb9",
     width: 7,
     shift_right: 0,
     shift_up: -4,
-    shift_down: 4
+    shift_down: 4,
+    between_lines: false
   },
   "a@a": {   // Fermata above staff
     code: "v43",
     width: 25,
     shift_right: 0,
-    shift_up: 5,
-    shift_down: 0
+    shift_up: 8,
+    shift_down: 10,
+    between_lines: false
   },
   "a@u": {   // Fermata below staff
     code: "v5b",
     width: 25,
     shift_right: 0,
     shift_up: 0,
-    shift_down: -3
+    shift_down: -4,
+    between_lines: false
   },
   "a|": {   // Bow up - up stroke
     code: "v75",
     width: 8,
     shift_right: 0,
-    shift_up: 0,
-    shift_down: 11
+    shift_up: 8,
+    shift_down: 10,
+    between_lines: false
   },
   "am": {   // Bow down - down stroke
     code: "v97",
     width: 13,
     shift_right: 0,
-    shift_up: 0,
-    shift_down: 14
+    shift_up: 10,
+    shift_down: 12,
+    between_lines: false
   },
   "a,": {   // Choked
     code: "vb3",
     width: 6,
     shift_right: 8,
     shift_up: -4,
-    shift_down: 4
+    shift_down: 4,
+    between_lines: false
   }
 };
 

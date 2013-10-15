@@ -746,7 +746,12 @@ Vex.Flow.ModifierContext.prototype.formatArticulations = function() {
     articulation.setTextLine(text_line);
     var width = articulation.getWidth() > max_width ?
       articulation.getWidth() : max_width;
-    text_line += 1.5;
+
+    var type = Vex.Flow.articulationCodes(articulation.type);
+    if(type.between_lines)
+      text_line += 1;
+    else
+      text_line += 1.5;
   }
 
   this.state.left_shift += width / 2;
