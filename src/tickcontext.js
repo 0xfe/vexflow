@@ -13,7 +13,7 @@ Vex.Flow.TickContext = (function() {
   TickContext.prototype = {
     init: function() {
       this.currentTick = new Vex.Flow.Fraction(0, 1);
-      this.maxTicks = new Vex.Flow.Fraction(0, 1);;
+      this.maxTicks = new Vex.Flow.Fraction(0, 1);
       this.minTicks = null;
       this.width = 0;
       this.padding = 3;     // padding on each side (width += padding * 2)
@@ -104,7 +104,6 @@ Vex.Flow.TickContext = (function() {
     preFormat: function() {
       if (this.preFormatted) return;
 
-      var note_width = 0;
       for (var i = 0; i < this.tickables.length; ++i) {
         var tickable = this.tickables[i];
         tickable.preFormat();

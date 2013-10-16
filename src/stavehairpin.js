@@ -37,16 +37,20 @@ Vex.Flow.StaveHairpin = (function() {
    *
    **/
   StaveHairpin.FormatByTicksAndDraw = function(ctx, formatter, notes, type, position, options) {
-    ppt = formatter.pixelsPerTick;
+    var ppt = formatter.pixelsPerTick;
 
-    if (ppt == undefined){
+    if (ppt == null){
       throw new Vex.RuntimeError("BadArguments",
-          "A valid Formatter must be provide to draw offsets by ticks.");} 
+          "A valid Formatter must be provide to draw offsets by ticks.");}
 
-    l_shift_px = ppt * options.left_shift_ticks;
-    r_shift_px = ppt * options.right_shift_ticks;
+    var l_shift_px = ppt * options.left_shift_ticks;
+    var r_shift_px = ppt * options.right_shift_ticks;
 
-    hairpin_options = {height: options.height, y_shift:options.y_shift, left_shift_px:l_shift_px, right_shift_px:r_shift_px};
+    var hairpin_options = {
+      height: options.height,
+      y_shift:options.y_shift,
+      left_shift_px:l_shift_px,
+      right_shift_px:r_shift_px};
 
     new StaveHairpin({
       first_note: notes.first_note,
@@ -56,7 +60,7 @@ Vex.Flow.StaveHairpin = (function() {
       .setRenderOptions(hairpin_options)
       .setPosition(position)
       .draw();
-  }
+  };
 
   StaveHairpin.prototype = {
     init: function(notes, type) {
@@ -96,11 +100,12 @@ Vex.Flow.StaveHairpin = (function() {
     },
 
     setRenderOptions: function(options) {
-      if (options.height != undefined && 
-          options.y_shift != undefined && 
-          options.left_shift_px != undefined && 
-          options.right_shift_px != undefined){ 
-        this.render_options = options;}
+      if (options.height != null &&
+          options.y_shift != null &&
+          options.left_shift_px != null &&
+          options.right_shift_px != null){
+        this.render_options = options;
+      }
       return this;
     },
 

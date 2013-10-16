@@ -8,7 +8,7 @@
 /** @constructor */
 Vex.Flow.RaphaelContext = (function() {
   function RaphaelContext(element) {
-    if (arguments.length > 0) this.init(element)
+    if (arguments.length > 0) this.init(element);
   }
 
   RaphaelContext.prototype = {
@@ -106,10 +106,10 @@ Vex.Flow.RaphaelContext = (function() {
     rect: function(x, y, width, height) {
       if (height < 0) {
         y += height;
-        height = -height
+        height = -height;
       }
 
-      var r = this.paper.rect(x, y, width - 0.5, height - 0.5).
+      this.paper.rect(x, y, width - 0.5, height - 0.5).
         attr(this.attributes).
         attr("fill", "none").
         attr("stroke-width", this.lineWidth); return this;
@@ -118,10 +118,10 @@ Vex.Flow.RaphaelContext = (function() {
     fillRect: function(x, y, width, height) {
       if (height < 0) {
         y += height;
-        height = -height
+        height = -height;
       }
 
-      var r = this.paper.rect(x, y, width - 0.5, height - 0.5).
+      this.paper.rect(x, y, width - 0.5, height - 0.5).
         attr(this.attributes);
       return this;
     },
@@ -129,10 +129,10 @@ Vex.Flow.RaphaelContext = (function() {
     clearRect: function(x, y, width, height) {
       if (height < 0) {
         y += height;
-        height = -height
+        height = -height;
       }
 
-      var r = this.paper.rect(x, y, width - 0.5, height - 0.5).
+      this.paper.rect(x, y, width - 0.5, height - 0.5).
         attr(this.background_attributes);
       return this;
     },
@@ -243,19 +243,9 @@ Vex.Flow.RaphaelContext = (function() {
           largeArcFlag = 1;
       }
 
-      this.path += "M"
-        + x1 + ","
-        + y1 + ","
-        + "A" +
-        + radius + ","
-        + radius + ","
-        + "0,"
-        + largeArcFlag + ","
-        + sweepFlag + ","
-        + x2 + "," + y2
-        + "M"
-        + this.pen.x + ","
-        + this.pen.y;
+      this.path += "M" + x1 + "," + y1 + "," + "A" +
+        radius + "," + radius + "," + "0," + largeArcFlag + "," + sweepFlag + "," +
+        x2 + "," + y2 + "M" + this.pen.x + "," + this.pen.y;
     },
 
     // Adapted from the source for Raphael's Element.glow

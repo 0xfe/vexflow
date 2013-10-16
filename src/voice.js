@@ -19,7 +19,7 @@ Vex.Flow.Voice = (function() {
     STRICT: 1,
     SOFT:   2,
     FULL:   3
-  }
+  };
 
   Voice.prototype = {
     init: function(time) {
@@ -64,7 +64,7 @@ Vex.Flow.Voice = (function() {
     getBoundingBox: function() {
       if (!this.boundingBox) {
         if (!this.stave) throw Vex.RERR("NoStave", "Can't get bounding box without stave.");
-        stave = this.stave;
+        var stave = this.stave;
 
         var boundingBox = null;
         if (this.tickables[0]) {
@@ -157,7 +157,7 @@ Vex.Flow.Voice = (function() {
       for (var i = 0; i < this.tickables.length; ++i) {
         this.tickables[i].setStave(stave);
         if (i > 0 && boundingBox) {
-          tickable_bb = this.tickables[i].getBoundingBox();
+          var tickable_bb = this.tickables[i].getBoundingBox();
           if (tickable_bb) boundingBox.mergeWith(tickable_bb);
         }
         this.tickables[i].setContext(context);

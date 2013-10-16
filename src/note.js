@@ -33,7 +33,7 @@ Vex.Flow.Note = (function() {
       this.dots = initData.dots;
       this.noteType = initData.type;
       this.setIntrinsicTicks(initData.ticks);
-      this.modifiers = []
+      this.modifiers = [];
 
       if (this.positions &&
           (typeof(this.positions) != "object" || !this.positions.length)) {
@@ -95,11 +95,11 @@ Vex.Flow.Note = (function() {
     setExtraLeftPx: function(x) { this.extraLeftPx = x; return this; },
     setExtraRightPx: function(x) { this.extraRightPx = x; return this; },
     shouldIgnoreTicks: function() { return this.ignore_ticks; },
-    getLineNumber: function(is_top_note) { return 0; },
+    getLineNumber: function() { return 0; },
 
     setYs: function(ys) { this.ys = ys; return this; },
     getYs: function() {
-      if (this.ys.length == 0) throw new Vex.RERR("NoYValues",
+      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "No Y-values calculated for this note.");
       return this.ys;
     },
@@ -144,11 +144,11 @@ Vex.Flow.Note = (function() {
       return this;
     },
 
-    getModifierStartXY: function(position, index) {
+    getModifierStartXY: function() {
       if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
           "Can't call GetModifierStartXY on an unformatted note");
-      var x = 0;
 
+      var x = 0;
       return {x: this.getAbsoluteX() + x, y: this.ys[0]};
     },
 
@@ -187,13 +187,13 @@ Vex.Flow.Note = (function() {
       return this;
     },
 
-    getX: function(x) {
+    getX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
       return this.tickContext.getX() + this.x_shift;
     },
 
-    getAbsoluteX: function(x) {
+    getAbsoluteX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
 

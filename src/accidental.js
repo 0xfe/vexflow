@@ -7,7 +7,7 @@
  * @constructor
  */
 Vex.Flow.Accidental = (function(){
-  Accidental = function(type) {
+  var Accidental = function(type) {
     if (arguments.length > 0) this.init(type);
   };
 

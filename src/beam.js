@@ -49,9 +49,11 @@ Vex.Flow.Beam = (function() {
             "Beams can only be applied to notes shorter than a quarter note.");
       }
 
+      var i; // shared iterator
+      var note;
       if (!auto_stem) {
-        for (var i = 1; i < notes.length; ++i) {
-          var note = notes[i];
+        for (i = 1; i < notes.length; ++i) {
+          note = notes[i];
           if (note.getStemDirection() != this.stem_direction) {
             throw new Vex.RuntimeError("BadArguments",
                 "Notes in a beam all have the same stem direction");
@@ -65,16 +67,16 @@ Vex.Flow.Beam = (function() {
         // Figure out optimal stem direction based on given notes
         this.min_line = 1000;
 
-        for (var i = 0; i < notes.length; ++i) {
-          var note = notes[i];
+        for (i = 0; i < notes.length; ++i) {
+          note = notes[i];
           this.min_line = Vex.Min(note.getKeyProps()[0].line, this.min_line);
         }
 
         if (this.min_line < 3) stem_direction = 1;
       }
 
-      for (var i = 0; i < notes.length; ++i) {
-        var note = notes[i];
+      for (i = 0; i < notes.length; ++i) {
+        note = notes[i];
         if (auto_stem) {
           note.setStemDirection(stem_direction);
           this.stem_direction = stem_direction;
@@ -100,7 +102,7 @@ Vex.Flow.Beam = (function() {
      */
     getNotes: function() { return this.notes; },
 
-    draw: function(notes) {
+    draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
 
@@ -113,9 +115,9 @@ Vex.Flow.Beam = (function() {
       var last_y_px = last_note.getStemExtents().topY;
 
       var first_x_px = first_note.getStemX();
-      var last_x_px = last_note.getStemX();
 
       var beam_width = this.render_options.beam_width * this.stem_direction;
+      var x_px, i, note; // shared variables
 
       // Returns the Y coordinate for the slope at position X.
       function getSlopeY(x) {
@@ -136,10 +138,10 @@ Vex.Flow.Beam = (function() {
         var y_shift_tmp = 0;
 
         // iterate through notes, calculating y shift and stem extension
-        for (var i = 1; i < this.notes.length; ++i) {
-          var note = this.notes[i];
+        for (i = 1; i < this.notes.length; ++i) {
+          note = this.notes[i];
 
-          var x_px = note.getStemX();
+          x_px = note.getStemX();
           var y_px = note.getStemExtents().topY;
           var slope_y_px = getSlopeY(x_px) + y_shift_tmp;
 
@@ -167,15 +169,15 @@ Vex.Flow.Beam = (function() {
       slope = best_slope;
 
       // Draw the stems
-      for (var i = 0; i < this.notes.length; ++i) {
-        var note = this.notes[i];
+      for (i = 0; i < this.notes.length; ++i) {
+        note = this.notes[i];
 
         // Do not draw stem for rests
         if (!note.hasStem()) {
           continue;
         }
 
-        var x_px = note.getStemX();
+        x_px = note.getStemX();
         var y_extents = note.getStemExtents();
         var base_y_px = y_extents.baseY;
 
@@ -192,6 +194,7 @@ Vex.Flow.Beam = (function() {
       function getBeamLines(duration) {
         var beam_lines = [];
         var beam_started = false;
+        var current_beam;
 
         for (var i = 0; i < that.notes.length; ++i) {
           var note = that.notes[i];
@@ -203,14 +206,14 @@ Vex.Flow.Beam = (function() {
               beam_lines.push({start: note.getStemX(), end: null});
               beam_started = true;
             } else {
-              var current_beam = beam_lines[beam_lines.length - 1];
+              current_beam = beam_lines[beam_lines.length - 1];
               current_beam.end = note.getStemX();
             }
           } else {
             if (!beam_started) {
               // we don't care
             } else {
-              var current_beam = beam_lines[beam_lines.length - 1];
+              current_beam = beam_lines[beam_lines.length - 1];
               if (current_beam.end == null) {
                 // single note
                 current_beam.end = current_beam.start + 10; // TODO
@@ -223,8 +226,8 @@ Vex.Flow.Beam = (function() {
           }
         }
 
-        if (beam_started == true) {
-          var current_beam = beam_lines[beam_lines.length - 1];
+        if (beam_started === true) {
+          current_beam = beam_lines[beam_lines.length - 1];
           if (current_beam.end == null) {
             // single note
             current_beam.end = current_beam.start - 10; // TODO
@@ -237,7 +240,7 @@ Vex.Flow.Beam = (function() {
       var valid_beam_durations = ["4", "8", "16", "32"];
 
       // Draw the beams.
-      for (var i = 0; i < valid_beam_durations.length; ++i) {
+      for (i = 0; i < valid_beam_durations.length; ++i) {
         var duration = valid_beam_durations[i];
         var beam_lines = getBeamLines(duration);
 

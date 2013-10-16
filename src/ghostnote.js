@@ -43,7 +43,8 @@ Vex.Flow.GhostNote = (function() {
 
     setStave: function(stave) { GhostNote.superclass.setStave.call(this, stave); },
 
-    addToModifierContext: function(mc) { return this; },
+    addToModifierContext: function()
+      { /* intentionally overridden */ return this; },
 
     preFormat: function() {
       this.setPreFormatted(true);

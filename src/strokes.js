@@ -26,8 +26,8 @@ Vex.Flow.Stroke = (function() {
       this.options = Vex.Merge({}, options);
 
       // multi voice - span stroke across all voices if true
-      this.all_voices = 'all_voices' in this.options
-                      ? this.options.all_voices : true;
+      this.all_voices = 'all_voices' in this.options ?
+        this.options.all_voices : true;
 
       // multi voice - end note of stroke, set in draw()
       this.note_end = null;
@@ -64,12 +64,12 @@ Vex.Flow.Stroke = (function() {
       var ys = this.note.getYs();
       var topY = start.y;
       var botY = start.y;
-      var x = start.x - 5
+      var x = start.x - 5;
       var line_space = this.note.stave.options.spacing_between_lines_px;
 
       var notes = this.getModifierContext().getModifiers(this.note.getCategory());
-
-      for (var i = 0; i < notes.length; i++) {
+      var i;
+      for (i = 0; i < notes.length; i++) {
         ys = notes[i].getYs();
         for (var n = 0; n < ys.length; n++) {
           if (this.note == notes[i] || this.all_voices) {
@@ -79,58 +79,59 @@ Vex.Flow.Stroke = (function() {
         }
       }
 
+      var arrow, arrow_shift_x, arrow_y, text_shift_x, text_y;
       switch (this.type) {
         case Stroke.Type.BRUSH_DOWN:
-          var arrow = "vc3";
-          var arrow_shift_x = -3;
-          var arrow_y = topY - (line_space / 2) + 10;
+          arrow = "vc3";
+          arrow_shift_x = -3;
+          arrow_y = topY - (line_space / 2) + 10;
           botY += (line_space / 2);
           break;
         case Stroke.Type.BRUSH_UP:
-          var arrow = "v11";
-          var arrow_shift_x = .5;
-          var arrow_y = botY + (line_space / 2);
+          arrow = "v11";
+          arrow_shift_x = 0.5;
+          arrow_y = botY + (line_space / 2);
           topY -= (line_space / 2);
           break;
         case Stroke.Type.ROLL_DOWN:
         case Stroke.Type.RASQUEDO_DOWN:
-          var arrow = "vc3";
-          var arrow_shift_x = -3;
-          var text_shift_x = this.x_shift + arrow_shift_x - 2;
+          arrow = "vc3";
+          arrow_shift_x = -3;
+          text_shift_x = this.x_shift + arrow_shift_x - 2;
           if (this.note instanceof Vex.Flow.StaveNote) {
             topY += 1.5 * line_space;
-            if ((botY - topY) % 2 != 0) {
-              botY += .5 * line_space;
+            if ((botY - topY) % 2 !== 0) {
+              botY += 0.5 * line_space;
             } else {
               botY += line_space;
             }
-            var arrow_y = topY - line_space;
-            var text_y = botY + line_space + 2;
+            arrow_y = topY - line_space;
+            text_y = botY + line_space + 2;
           } else {
             topY += 1.5 * line_space;
             botY += line_space;
-            var arrow_y = topY - .75 * line_space;
-            var text_y = botY + .25 * line_space;
+            arrow_y = topY - 0.75 * line_space;
+            text_y = botY + 0.25 * line_space;
           }
           break;
         case Stroke.Type.ROLL_UP:
         case Stroke.Type.RASQUEDO_UP:
-          var arrow = "v52";
-          var arrow_shift_x = -4;
-          var text_shift_x = this.x_shift + arrow_shift_x - 1;
+          arrow = "v52";
+          arrow_shift_x = -4;
+          text_shift_x = this.x_shift + arrow_shift_x - 1;
           if (this.note instanceof Vex.Flow.StaveNote) {
             arrow_y = line_space / 2;
-            topY += .5 * line_space;
-            if ((botY - topY) % 2 == 0) {
+            topY += 0.5 * line_space;
+            if ((botY - topY) % 2 === 0) {
               botY += line_space / 2;
             }
-            var arrow_y = botY + .5 * line_space;
-            var text_y = topY - 1.25 * line_space;
+            arrow_y = botY + 0.5 * line_space;
+            text_y = topY - 1.25 * line_space;
           } else {
-            topY += .25 * line_space;
-            botY += .5 * line_space;
-            var arrow_y = botY + .25 * line_space;
-            var text_y = topY - line_space;
+            topY += 0.25 * line_space;
+            botY += 0.5 * line_space;
+            arrow_y = botY + 0.25 * line_space;
+            text_y = topY - line_space;
           }
           break;
       }
@@ -141,19 +142,19 @@ Vex.Flow.Stroke = (function() {
         this.context.fillRect(x + this.x_shift, topY, 1, botY - topY);
       } else {
         if (this.note instanceof Vex.Flow.StaveNote) {
-      	  for (var i = topY; i <= botY; i+= line_space) {
+          for (i = topY; i <= botY; i += line_space) {
             Vex.Flow.renderGlyph(this.context, x + this.x_shift - 4,
                                  i,
                                  this.render_options.font_scale, "va3");
           }
         } else {
-          for (var i = topY; i <= botY; i+= 10) {
+          for (i = topY; i <= botY; i+= 10) {
             Vex.Flow.renderGlyph(this.context, x + this.x_shift - 4,
                                  i,
                                  this.render_options.font_scale, "va3");
           }
           if (this.type == Vex.Flow.Stroke.Type.RASQUEDO_DOWN)
-            text_y = i + .25 * line_space;
+            text_y = i + 0.25 * line_space;
         }
       }
 

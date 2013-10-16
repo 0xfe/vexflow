@@ -56,15 +56,16 @@ Vex.Flow.Vibrato = (function() {
 
         ctx.beginPath();
 
+        var i;
         if (that.harsh) {
           ctx.moveTo(x, y + wave_girth + 1);
-          for (var i = 0; i < num_waves / 2; ++i) {
+          for (i = 0; i < num_waves / 2; ++i) {
             ctx.lineTo(x + wave_width, y - (wave_height / 2));
             x += wave_width;
             ctx.lineTo(x + wave_width, y + (wave_height / 2));
             x += wave_width;
           }
-          for (var i = 0; i < num_waves / 2; ++i) {
+          for (i = 0; i < num_waves / 2; ++i) {
             ctx.lineTo(x - wave_width, (y - (wave_height / 2)) + wave_girth + 1);
             x -= wave_width;
             ctx.lineTo(x - wave_width, (y + (wave_height / 2)) + wave_girth + 1);
@@ -73,7 +74,7 @@ Vex.Flow.Vibrato = (function() {
           ctx.fill();
         } else {
           ctx.moveTo(x, y + wave_girth);
-          for (var i = 0; i < num_waves / 2; ++i) {
+          for (i = 0; i < num_waves / 2; ++i) {
             ctx.quadraticCurveTo(x + (wave_width / 2), y - (wave_height / 2),
               x + wave_width, y);
             x += wave_width;
@@ -82,7 +83,7 @@ Vex.Flow.Vibrato = (function() {
             x += wave_width;
           }
 
-          for (var i = 0; i < num_waves / 2; ++i) {
+          for (i = 0; i < num_waves / 2; ++i) {
             ctx.quadraticCurveTo(
                 x - (wave_width / 2),
                 (y + (wave_height / 2)) + wave_girth,

@@ -72,7 +72,7 @@ Vex.Flow.TextNote = (function() {
       y_shift: -8
       // width: 10 // optional
     }
-  }
+  };
 
   Vex.Inherit(TextNote, Vex.Flow.Note, {
     init: function(text_struct) {
@@ -86,7 +86,7 @@ Vex.Flow.TextNote = (function() {
         family: "Arial",
         size: 12,
         weight: ""
-      }
+      };
 
       if (text_struct.font) this.font = text_struct.font;
 
@@ -97,7 +97,7 @@ Vex.Flow.TextNote = (function() {
         this.glyph = new Vex.Flow.Glyph(struct.code, struct.point, {cache: false});
 
         if (struct.width)
-          this.setWidth(struct.width)
+          this.setWidth(struct.width);
         else
           this.setWidth(this.glyph.getMetrics().width);
 
@@ -159,13 +159,14 @@ Vex.Flow.TextNote = (function() {
         x -= this.getWidth();
       }
 
+      var y;
       if (this.glyph) {
-        var y = this.stave.getYForLine(this.line + (-3));
+        y = this.stave.getYForLine(this.line + (-3));
         this.glyph.render(this.context,
                           x + this.glyph_struct.x_shift,
-                          y + this.glyph_struct.y_shift)
+                          y + this.glyph_struct.y_shift);
       } else {
-        var y = this.stave.getYForLine(this.line + (-3));
+        y = this.stave.getYForLine(this.line + (-3));
         ctx.save();
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
         ctx.fillText(this.text, x, y);

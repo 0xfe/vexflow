@@ -23,11 +23,11 @@ Vex.Flow.TabSlide = (function() {
 
   TabSlide.createSlideUp = function(notes) {
     return new TabSlide(notes, TabSlide.SLIDE_UP);
-  }
+  };
 
   TabSlide.createSlideDown = function(notes) {
     return new TabSlide(notes, TabSlide.SLIDE_DOWN);
-  }
+  };
 
   Vex.Inherit(TabSlide, Vex.Flow.TabTie, {
     init: function(notes, direction) {
@@ -47,7 +47,7 @@ Vex.Flow.TabSlide = (function() {
         var first_fret = notes.first_note.getPositions()[0].fret;
         var last_fret = notes.last_note.getPositions()[0].fret;
 
-        direction = ((parseInt(first_fret) > parseInt(last_fret)) ?
+        direction = ((parseInt(first_fret, 10) > parseInt(last_fret, 10)) ?
           TabSlide.SLIDE_DOWN : TabSlide.SLIDE_UP);
       }
 
@@ -61,14 +61,13 @@ Vex.Flow.TabSlide = (function() {
     },
 
     renderTie: function(params) {
-      if (params.first_ys.length == 0 || params.last_ys.length == 0)
+      if (params.first_ys.length === 0 || params.last_ys.length === 0)
         throw new Vex.RERR("BadArguments", "No Y-values to render");
 
       var ctx = this.context;
       var first_x_px = params.first_x_px;
       var first_ys = params.first_ys;
       var last_x_px = params.last_x_px;
-      var center_x = (first_x_px + last_x_px) / 2;
 
       var direction = this.slide_direction;
       if (direction != TabSlide.SLIDE_UP &&

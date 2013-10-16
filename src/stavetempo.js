@@ -34,7 +34,7 @@ Vex.Flow.StaveTempo = (function() {
     getCategory: function() { return "stavetempo"; },
     setTempo: function(tempo) { this.tempo = tempo; return this; },
     setShiftX: function(x) { this.shift_x = x; return this; },
-    setShiftY: function(x) { this.shift_y = y; return this; },
+    setShiftY: function(y) { this.shift_y = y; return this; },
 
     draw: function(stave, shift_x) {
       if (!stave.context) throw new Vex.RERR("NoContext",

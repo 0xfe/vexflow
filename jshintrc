@@ -1,0 +1,8 @@
+{
+  "eqnull": true, // allow == and ~= for nulls
+  "sub": true,     // don't enforce dot notation
+  "globals": {
+    "Vex": false,
+    "Raphael": false
+   } // allowed globals
+}

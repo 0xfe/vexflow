@@ -86,7 +86,7 @@ Vex.Flow.StaveTie = (function() {
     },
 
     renderTie: function(params) {
-      if (params.first_ys.length == 0 || params.last_ys.length == 0)
+      if (params.first_ys.length === 0 || params.last_ys.length === 0)
         throw new Vex.RERR("BadArguments", "No Y-values to render");
 
       var ctx = this.context;
@@ -154,7 +154,7 @@ Vex.Flow.StaveTie = (function() {
         first_x_px = last_note.getStave().getTieStartX();
         first_ys = last_note.getYs();
         this.first_indices = this.last_indices;
-      };
+      }
 
       if (last_note) {
         last_x_px = last_note.getTieLeftX() + this.render_options.tie_spacing;

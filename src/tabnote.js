@@ -20,7 +20,7 @@ Vex.Flow.TabNote = (function() {
       this.positions = tab_struct.positions; // [{ str: X, fret: X }]
       this.render_options = {
         glyph_font_scale: 30 // font size for note heads and rests
-      }
+      };
 
       this.noteGlyph =
         Vex.Flow.durationToGlyph(this.duration, this.noteType);
@@ -60,8 +60,9 @@ Vex.Flow.TabNote = (function() {
       this.width = 0;
 
       // Calculate the fret number width based on font used
+      var i;
       if (this.context) {
-        for (var i = 0; i < this.glyphs.length; ++i) {
+        for (i = 0; i < this.glyphs.length; ++i) {
           var text = "" + this.glyphs[i].text;
           if (text.toUpperCase() != "X")
             this.glyphs[i].width = this.context.measureText(text).width;
@@ -73,7 +74,7 @@ Vex.Flow.TabNote = (function() {
       var ys = [];
 
       // Setup y coordinates for score.
-      for (var i = 0; i < this.positions.length; ++i) {
+      for (i = 0; i < this.positions.length; ++i) {
         var line = this.positions[i].str;
         ys.push(this.stave.getYForLine(line - 1));
       }
@@ -118,7 +119,7 @@ Vex.Flow.TabNote = (function() {
       if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
           "Can't call GetModifierStartXY on an unformatted note");
 
-      if (this.ys.length == 0) throw new Vex.RERR("NoYValues",
+      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "No Y-Values calculated for this note.");
 
       var x = 0;
@@ -147,14 +148,15 @@ Vex.Flow.TabNote = (function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-      if (this.ys.length == 0) throw new Vex.RERR("NoYValues",
+      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't draw note without Y values.");
 
       var ctx = this.context;
       var x = this.getAbsoluteX();
       var ys = this.ys;
 
-      for (var i = 0; i < this.positions.length; ++i) {
+      var i;
+      for (i = 0; i < this.positions.length; ++i) {
         var y = ys[i];
 
         var glyph = this.glyphs[i];
@@ -175,7 +177,7 @@ Vex.Flow.TabNote = (function() {
       }
 
       // Draw the modifiers
-      for (var i = 0; i < this.modifiers.length; ++i) {
+      for (i= 0; i < this.modifiers.length; ++i) {
         var modifier = this.modifiers[i];
         modifier.setContext(this.context);
         modifier.draw();

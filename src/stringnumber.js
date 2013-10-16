@@ -117,20 +117,22 @@ Vex.Flow.StringNumber = (function() {
         var end = this.last_note.getStemX() - this.note.getX() + 5;
         ctx.strokeStyle="#000000";
         ctx.lineCap = "round";
-        ctx.lineWidth = .6;
+        ctx.lineWidth = 0.6;
         if (this.dashed)
           Vex.Flow.Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,3]);
         else
           Vex.Flow.Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,0]);
+
+        var len, pattern;
         switch (this.leg) {
           case Vex.Flow.Renderer.LineEndType.UP:
-            var len = -10;
-            var pattern = this.dashed ? [3,3] : [3,0];
+            len = -10;
+            pattern = this.dashed ? [3,3] : [3,0];
             Vex.Flow.Renderer.drawDashedLine(ctx, dot_x + end, dot_y, dot_x + end, dot_y + len, pattern);
             break;
           case Vex.Flow.Renderer.LineEndType.DOWN:
-            var len = 10;
-            var pattern = this.dashed ? [3,3] : [3,0];
+            len = 10;
+            pattern = this.dashed ? [3,3] : [3,0];
             Vex.Flow.Renderer.drawDashedLine(ctx, dot_x + end, dot_y, dot_x + end, dot_y + len, pattern);
             break;
         }

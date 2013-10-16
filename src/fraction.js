@@ -17,7 +17,7 @@ Vex.Flow.Fraction = (function() {
 
     var t;
 
-    while (b != 0) {
+    while (b !== 0) {
       t = b;
       b = a % b;
       a = t;
@@ -37,7 +37,7 @@ Vex.Flow.Fraction = (function() {
    * LCMM: Lowest common multiple for more than two numbers
    */
   Fraction.LCMM = function(args) {
-    if (args.length == 0) {
+    if (args.length === 0) {
       return 0;
     } else if (args.length == 1) {
       return args[0];

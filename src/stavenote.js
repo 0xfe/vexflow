@@ -5,11 +5,10 @@
 //
 // Requires vex.js.
 
-/** @constructor */
 Vex.Flow.StaveNote = (function() {
-  StaveNote = function(note_struct) {
+  var StaveNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
-  }
+  };
 
   // Stem directions
   StaveNote.STEM_UP = 1;
@@ -74,7 +73,7 @@ Vex.Flow.StaveNote = (function() {
       }
 
       // Sort the notes from lowest line to highest line
-      this.keyProps.sort(function(a, b) {return a.line - b.line});
+      this.keyProps.sort(function(a, b) { return a.line - b.line; });
 
       // Drawing
       this.modifiers = [];
@@ -85,7 +84,7 @@ Vex.Flow.StaveNote = (function() {
         stroke_px: 3,         // number of stroke px to the left and right of head
         stroke_spacing: 10,    // spacing between strokes (TODO: take from stave)
         annotation_spacing: 5 // spacing above note for annotations
-      }
+      };
 
       // whole note has no stem
       if (this.duration == "w") this.render_options.stem_height = 0;
@@ -148,7 +147,7 @@ Vex.Flow.StaveNote = (function() {
 
         for (var i=0; i < this.ys.length; ++i) {
           var yy = this.ys[i];
-          if (i == 0) {
+          if (i === 0) {
             min_y = yy;
             max_y = yy;
           } else {
@@ -299,7 +298,7 @@ Vex.Flow.StaveNote = (function() {
     },
 
     getStemExtents: function() {
-      if (!this.ys || this.ys.length == 0) throw new Vex.RERR("NoYValues",
+      if (!this.ys || this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't get top stem Y when note has no Y values.");
 
       var top_pixel = this.ys[0];
@@ -345,7 +344,7 @@ Vex.Flow.StaveNote = (function() {
         var last_line  = this.keyProps[this.keyProps.length - 1].line;
         var top = Vex.Max(rest_line, last_line);
         var bot = Vex.Min(rest_line, last_line);
-        rest_line = Vex.MidLine(top, bot)
+        rest_line = Vex.MidLine(top, bot);
       }
 
       return rest_line;
@@ -355,7 +354,7 @@ Vex.Flow.StaveNote = (function() {
       if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
           "Can't call GetModifierStartXY on an unformatted note");
 
-      if (this.ys.length == 0) throw new Vex.RERR("NoYValues",
+      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "No Y-Values calculated for this note.");
 
       var x = 0;
@@ -416,6 +415,7 @@ Vex.Flow.StaveNote = (function() {
       }
       this.modifierContext.addModifier(this);
       this.setPreFormatted(false);
+      return this;
     },
 
     // Generic function to add modifiers to a note
@@ -514,7 +514,7 @@ Vex.Flow.StaveNote = (function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-      if (this.ys.length == 0) throw new Vex.RERR("NoYValues",
+      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't draw note without Y values.");
 
       var ctx = this.context;
@@ -583,10 +583,11 @@ Vex.Flow.StaveNote = (function() {
         }
       }
 
-      for (var i = start_i; i != end_i; i += step_i) {
+      var i, key_style, line;
+      for (i = start_i; i != end_i; i += step_i) {
         var note_props = this.keyProps[i];
-        var key_style = this.keyStyles[i];
-        var line = note_props.line;
+        key_style = this.keyStyles[i];
+        line = note_props.line;
         highest_line = line > highest_line ? line : highest_line;
         lowest_line = line < lowest_line ? line : lowest_line;
 
@@ -596,7 +597,7 @@ Vex.Flow.StaveNote = (function() {
           last_line = line;
         } else {
           line_diff = Math.abs(last_line - line);
-          if (line_diff == 0 || line_diff == 0.5) {
+          if (line_diff === 0 || line_diff === 0.5) {
             displaced = !displaced;
           } else {
             displaced = false;
@@ -670,11 +671,11 @@ Vex.Flow.StaveNote = (function() {
           (that.render_options.stroke_px * 2), 1);
       }
 
-      for (var line = 6; line <= highest_line; ++line) {
+      for (line = 6; line <= highest_line; ++line) {
         stroke(this.stave.getYForNote(line));
       }
 
-      for (var line = 0; line >= lowest_line; --line) {
+      for (line = 0; line >= lowest_line; --line) {
         stroke(this.stave.getYForNote(line));
       }
 
@@ -738,9 +739,9 @@ Vex.Flow.StaveNote = (function() {
       }
 
       // Draw the modifiers
-      for (var i = 0; i < this.modifiers.length; ++i) {
+      for (i = 0; i < this.modifiers.length; ++i) {
         var mod = this.modifiers[i];
-        var key_style = this.keyStyles[mod.getIndex()]; 
+        key_style = this.keyStyles[mod.getIndex()]; 
         if(key_style) {
             ctx.save();
             this.applyKeyStyle(key_style, ctx);

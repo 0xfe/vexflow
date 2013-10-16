@@ -29,13 +29,14 @@ Vex.Flow.ModifierContext = (function() {
     if (!Vex.Debug) return;
 
     var delta = 0;
+    var padding;
 
     if (dir == 1) {
-      var padding = note.isrest ? 0.0 : 0.5;
+      padding = note.isrest ? 0.0 : 0.5;
       delta = note.max_line - rest.min_line;
-      delta += padding
+      delta += padding;
     } else {
-      var padding = note.isrest ? 0.0 : 0.5;
+      padding = note.isrest ? 0.0 : 0.5;
       delta = note.min_line - rest.max_line;
       delta -= padding;
     }
@@ -44,7 +45,7 @@ Vex.Flow.ModifierContext = (function() {
     rest.max_line += delta;
     rest.min_line += delta;
     rest.note.keyProps[0].line += delta;
-  }
+  };
 
 // Called from formatNotes :: center a rest between two notes
   var centerRest = function(rest, noteU, noteL) {
@@ -53,7 +54,7 @@ Vex.Flow.ModifierContext = (function() {
     rest.line -= delta;
     rest.max_line -= delta;
     rest.min_line -= delta;
-  }
+  };
 
   ModifierContext.prototype = {
     addModifier: function(modifier) {
@@ -73,7 +74,7 @@ Vex.Flow.ModifierContext = (function() {
 
     getExtraRightPx: function() { return this.state.right_shift; },
 
-    getMetrics: function(modifier) {
+    getMetrics: function() {
       if (!this.formatted) throw new Vex.RERR("UnformattedModifier",
           "Unformatted modifier has no metrics.");
 
@@ -106,15 +107,14 @@ Vex.Flow.ModifierContext = (function() {
         var stem_max = notes[i].getStemLength() / 10;
         var stem_min = notes[i].getStemMinumumLength() / 10;
 
+        var maxL;
         if (notes[i].isRest()) {
           maxL = line + notes[i].glyph.line_above;
-          minL = line - notes[i].glyph.line_below
+          minL = line - notes[i].glyph.line_below;
         } else {
-          maxL = stem_dir == 1
-               ? props[props.length -1].line + stem_max
+          maxL = stem_dir == 1 ? props[props.length -1].line + stem_max
                : props[props.length -1].line;
-          minL = stem_dir == 1
-               ? props[0].line
+          minL = stem_dir == 1 ? props[0].line
                : props[0].line - stem_max;
         }
         notes_list.push(
@@ -145,6 +145,7 @@ Vex.Flow.ModifierContext = (function() {
 
       var voice_x_shift = Math.max(noteU.voice_shift, noteL.voice_shift);
       var x_shift = 0;
+      var stem_delta;
 
       // Test for two voice note intersection
       if (voices == 2) {
@@ -153,7 +154,7 @@ Vex.Flow.ModifierContext = (function() {
         if (noteU.stem_dir == noteL.stem_dir &&
             noteU.min_line <= noteL.max_line) {
           if (!noteU.isrest) {
-            var stem_delta = Math.abs(noteU.line - (noteL.max_line + 0.5));
+            stem_delta = Math.abs(noteU.line - (noteL.max_line + 0.5));
             stem_delta = Math.max(stem_delta, noteU.stem_min);
             noteU.min_line = noteU.line - stem_delta;
             noteU.note.setStemLength(stem_delta * 10);
@@ -184,7 +185,7 @@ Vex.Flow.ModifierContext = (function() {
       // Check middle voice stem intersection with lower voice
       if (noteM != null && noteM.min_line < noteL.max_line + 0.5) {
         if (!noteM.isrest) {
-          var stem_delta = Math.abs(noteM.line - (noteL.max_line + 0.5));
+          stem_delta = Math.abs(noteM.line - (noteL.max_line + 0.5));
           stem_delta = Math.max(stem_delta, noteM.stem_min);
           noteM.min_line = noteM.line - stem_delta;
           noteM.note.setStemLength(stem_delta * 10);
@@ -252,8 +253,9 @@ Vex.Flow.ModifierContext = (function() {
       // NOTE: this function does not support more than two voices per stave
       //       use with care.
       var hasStave = true;
+      var i;
 
-      for (var i = 0; i < notes.length; i++) {
+      for (i = 0; i < notes.length; i++) {
         hasStave = hasStave && notes[i].getStave() != null;
       }
 
@@ -262,7 +264,7 @@ Vex.Flow.ModifierContext = (function() {
 
       var x_shift = 0;
 
-      for (var i = 0; i < notes.length - 1; i++) {
+      for (i = 0; i < notes.length - 1; i++) {
         var top_note = notes[i];
         var bottom_note = notes[i + 1];
 
@@ -293,14 +295,15 @@ Vex.Flow.ModifierContext = (function() {
       var dots = this.modifiers['dots'];
       var dot_spacing = 1;
 
-      if (!dots || dots.length == 0) return this;
+      if (!dots || dots.length === 0) return this;
 
+      var i, dot, note, shift;
       var dot_list = [];
-      for (var i = 0; i < dots.length; ++i) {
-        var dot = dots[i];
-        var note = dot.getNote();
+      for (i = 0; i < dots.length; ++i) {
+        dot = dots[i];
+        note = dot.getNote();
         var props = note.getKeyProps()[dot.getIndex()];
-        var shift = (props.displaced ? note.getExtraRightPx() : 0);
+        shift = (props.displaced ? note.getExtraRightPx() : 0);
         dot_list.push({ line: props.line, shift: shift, note: note, dot: dot });
       }
 
@@ -309,17 +312,16 @@ Vex.Flow.ModifierContext = (function() {
 
       var dot_shift = right_shift;
       var x_width = 0;
-      var top_line = dot_list[0].line;
       var last_line = null;
       var last_note = null;
       var prev_dotted_space = null;
       var half_shiftY = 0;
 
-      for (var i = 0; i < dot_list.length; ++i) {
-        var dot = dot_list[i].dot;
+      for (i = 0; i < dot_list.length; ++i) {
+        dot = dot_list[i].dot;
+        note = dot_list[i].note;
+        shift = dot_list[i].shift;
         var line = dot_list[i].line;
-        var note = dot_list[i].note;
-        var shift = dot_list[i].shift;
 
         // Reset the position of the dot every line.
         if (line != last_line || note != last_note) {
@@ -364,15 +366,16 @@ Vex.Flow.ModifierContext = (function() {
       var accidentals = this.modifiers['accidentals'];
       var accidental_spacing = 2;
 
-      if (!accidentals || accidentals.length == 0) return this;
+      if (!accidentals || accidentals.length === 0) return this;
 
       var acc_list = [];
       var hasStave = false;
       var prev_note = null;
       var shiftL = 0;
 
-      for (var i = 0; i < accidentals.length; ++i) {
-        var acc = accidentals[i];
+      var i, acc, props_tmp;
+      for (i = 0; i < accidentals.length; ++i) {
+        acc = accidentals[i];
         var note = acc.getNote();
         var stave = note.getStave();
         var props = note.getKeyProps()[acc.getIndex()];
@@ -405,8 +408,8 @@ Vex.Flow.ModifierContext = (function() {
       var acc_shift = acc_list[0].shift;
       var x_width = 0;
       var top_line = acc_list[0].line;
-      for (var i = 0; i < acc_list.length; ++i) {
-        var acc = acc_list[i].acc;
+      for (i = 0; i < acc_list.length; ++i) {
+        acc = acc_list[i].acc;
         var line = acc_list[i].line;
         var shift = acc_list[i].shift;
 
@@ -464,18 +467,20 @@ Vex.Flow.ModifierContext = (function() {
       var strokes = this.modifiers['strokes'];
       var stroke_spacing = 0;
 
-      if (!strokes || strokes.length == 0) return this;
+      if (!strokes || strokes.length === 0) return this;
 
       var str_list = [];
-      for (var i = 0; i < strokes.length; ++i) {
-        var str = strokes[i];
+      var i, str, shift;
+      for (i = 0; i < strokes.length; ++i) {
+        str = strokes[i];
         var note = str.getNote();
+        var props;
         if (note instanceof Vex.Flow.StaveNote) {
-          var props = note.getKeyProps()[str.getIndex()];
-          var shift = (props.displaced ? note.getExtraLeftPx() : 0);
+          props = note.getKeyProps()[str.getIndex()];
+          shift = (props.displaced ? note.getExtraLeftPx() : 0);
           str_list.push({ line: props.line, shift: shift, str: str });
         } else {
-          var props = note.getPositions()[str.getIndex()];
+          props = note.getPositions()[str.getIndex()];
           str_list.push({ line: props.str, shift: 0, str: str });
         }
       }
@@ -484,10 +489,10 @@ Vex.Flow.ModifierContext = (function() {
       var x_shift = 0;
 
       // There can only be one stroke .. if more than one, they overlay each other
-      for (var i = 0; i < str_list.length; ++i) {
-        var str = str_list[i].str;
-        var line = str_list[i].line;
-        var shift = str_list[i].shift;
+      for (i = 0; i < str_list.length; ++i) {
+        str = str_list[i].str;
+        shift = str_list[i].shift;
+
         str.setXShift(str_shift + shift);
         x_shift = Math.max(str.getWidth() + stroke_spacing, x_shift);
       }
@@ -502,28 +507,30 @@ Vex.Flow.ModifierContext = (function() {
       var nums = this.modifiers['stringnumber'];
       var num_spacing = 1;
 
-      if (!nums || nums.length == 0) return this;
+      if (!nums || nums.length === 0) return this;
 
       var nums_list = [];
       var prev_note = null;
       var shift_left = 0;
       var shift_right = 0;
 
-      for (var i = 0; i < nums.length; ++i) {
-        var num = nums[i];
-        var note = num.getNote();
+      var i, num, note, pos, props_tmp;
+      for (i = 0; i < nums.length; ++i) {
+        num = nums[i];
+        note = num.getNote();
 
-        for (var i = 0; i < nums.length; ++i) {
-          var num = nums[i];
-          var note = num.getNote();
+        for (i = 0; i < nums.length; ++i) {
+          num = nums[i];
+          note = num.getNote();
+          pos = num.getPosition();
           var props = note.getKeyProps()[num.getIndex()];
-          var pos = num.getPosition();
+
           if (note != prev_note) {
-            for (n = 0; n < note.keys.length; ++n) {
+            for (var n = 0; n < note.keys.length; ++n) {
               props_tmp = note.getKeyProps()[n];
-              if (left_shift == 0)
+              if (left_shift === 0)
                 shift_left = (props_tmp.displaced ? note.getExtraLeftPx() : shift_left);
-              if (right_shift == 0)
+              if (right_shift === 0)
                 shift_right = (props_tmp.displaced ? note.getExtraRightPx() : shift_right);
             }
             prev_note = note;
@@ -542,14 +549,14 @@ Vex.Flow.ModifierContext = (function() {
       var x_widthR = 0;
       var last_line = null;
       var last_note = null;
-      for (var i = 0; i < nums_list.length; ++i) {
+      for (i = 0; i < nums_list.length; ++i) {
         var num_shift = 0;
-        var num = nums_list[i].num;
+        note = nums_list[i].note;
+        pos = nums_list[i].pos;
+        num = nums_list[i].num;
         var line = nums_list[i].line;
-        var note = nums_list[i].note;
         var shiftL = nums_list[i].shiftL;
         var shiftR = nums_list[i].shiftR;
-        var pos = nums_list[i].pos;
 
         // Reset the position of the string number every line.
         if (line != last_line || note != last_note) {
@@ -582,24 +589,25 @@ Vex.Flow.ModifierContext = (function() {
       var nums = this.modifiers['frethandfinger'];
       var num_spacing = 1;
 
-      if (!nums || nums.length == 0) return this;
+      if (!nums || nums.length === 0) return this;
 
       var nums_list = [];
       var prev_note = null;
       var shift_left = 0;
       var shift_right = 0;
 
-      for (var i = 0; i < nums.length; ++i) {
-        var num = nums[i];
-        var note = num.getNote();
+      var i, num, note, pos, props_tmp;
+      for (i = 0; i < nums.length; ++i) {
+        num = nums[i];
+        note = num.getNote();
+        pos = num.getPosition();
         var props = note.getKeyProps()[num.getIndex()];
-        var pos = num.getPosition();
         if (note != prev_note) {
-          for (n = 0; n < note.keys.length; ++n) {
+          for (var n = 0; n < note.keys.length; ++n) {
             props_tmp = note.getKeyProps()[n];
-            if (left_shift == 0)
+            if (left_shift === 0)
               shift_left = (props_tmp.displaced ? note.getExtraLeftPx() : shift_left);
-            if (right_shift == 0)
+            if (right_shift === 0)
               shift_right = (props_tmp.displaced ? note.getExtraRightPx() : shift_right);
           }
           prev_note = note;
@@ -618,14 +626,14 @@ Vex.Flow.ModifierContext = (function() {
       var last_line = null;
       var last_note = null;
 
-      for (var i = 0; i < nums_list.length; ++i) {
+      for (i = 0; i < nums_list.length; ++i) {
         var num_shift = 0;
-        var num = nums_list[i].num;
+        note = nums_list[i].note;
+        pos = nums_list[i].pos;
+        num = nums_list[i].num;
         var line = nums_list[i].line;
-        var note = nums_list[i].note;
         var shiftL = nums_list[i].shiftL;
         var shiftR = nums_list[i].shiftR;
-        var pos = nums_list[i].pos;
 
         // Reset the position of the string number every line.
         if (line != last_line || note != last_note) {
@@ -653,11 +661,9 @@ Vex.Flow.ModifierContext = (function() {
     },
 
     formatBends: function() {
-      var right_shift = this.state.right_shift;
       var bends = this.modifiers['bends'];
-      if (!bends || bends.length == 0) return this;
+      if (!bends || bends.length === 0) return this;
 
-      var width = 0;
       var last_width = 0;
       var text_line = this.state.text_line;
 
@@ -676,7 +682,7 @@ Vex.Flow.ModifierContext = (function() {
 
     formatVibratos: function() {
       var vibratos = this.modifiers['vibratos'];
-      if (!vibratos || vibratos.length == 0) return this;
+      if (!vibratos || vibratos.length === 0) return this;
 
       var text_line = this.state.text_line;
       var width = 0;
@@ -704,16 +710,17 @@ Vex.Flow.ModifierContext = (function() {
 
     formatAnnotations: function() {
       var annotations = this.modifiers['annotations'];
-      if (!annotations || annotations.length == 0) return this;
+      if (!annotations || annotations.length === 0) return this;
 
       var text_line = this.state.text_line;
       var max_width = 0;
 
       // Format Annotations
+      var width;
       for (var i = 0; i < annotations.length; ++i) {
         var annotation = annotations[i];
         annotation.setTextLine(text_line);
-        var width = annotation.getWidth() > max_width ?
+        width = annotation.getWidth() > max_width ?
           annotation.getWidth() : max_width;
         text_line++;
       }
@@ -727,16 +734,17 @@ Vex.Flow.ModifierContext = (function() {
 
     formatArticulations: function() {
       var articulations = this.modifiers['articulations'];
-      if (!articulations || articulations.length == 0) return this;
+      if (!articulations || articulations.length === 0) return this;
 
       var text_line = this.state.text_line;
       var max_width = 0;
 
       // Format Articulations
+      var width;
       for (var i = 0; i < articulations.length; ++i) {
         var articulation = articulations[i];
         articulation.setTextLine(text_line);
-        var width = articulation.getWidth() > max_width ?
+        width = articulation.getWidth() > max_width ?
           articulation.getWidth() : max_width;
 
         var type = Vex.Flow.articulationCodes(articulation.type);

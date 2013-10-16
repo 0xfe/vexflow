@@ -5,7 +5,8 @@
 //
 // Copyright Mohit Cheppudira 2010
 
-/** @constructor */
+/* global document: false */
+
 Vex.Flow.Renderer = (function() {
   function Renderer(sel, backend) {
     if (arguments.length > 0) this.init(sel, backend);
@@ -16,14 +17,14 @@ Vex.Flow.Renderer = (function() {
     RAPHAEL: 2,
     SVG: 3,
     VML: 4
-  }
+  };
 
   //End of line types
   Renderer.LineEndType = {
       NONE: 1,        // No leg
       UP: 2,          // Upward leg
       DOWN: 3         // Downward leg
-  }
+  };
 
   Renderer.buildContext = function(sel,
       backend, width, height, background) {
@@ -34,48 +35,48 @@ Vex.Flow.Renderer = (function() {
     var ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
     return ctx;
-  }
+  };
 
   Renderer.getCanvasContext = function(sel, width, height, background) {
     return Renderer.buildContext(sel, Renderer.Backends.CANVAS,
         width, height, background);
-  }
+  };
 
   Renderer.getRaphaelContext = function(sel, width, height, background) {
     return Renderer.buildContext(sel, Renderer.Backends.RAPHAEL,
         width, height, background);
-  }
+  };
 
   Renderer.bolsterCanvasContext = function(ctx) {
     ctx.clear = function() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    }
+    };
     ctx.setFont = function(family, size, weight) {
       this.font = (weight || "") + " " + size + "pt " + family;
       return this;
-    }
+    };
     ctx.setFillStyle = function(style) {
       this.fillStyle = style;
       return this;
-    }
+    };
     ctx.setBackgroundFillStyle = function(style) {
       this.background_fillStyle = style;
       return this;
-    }
+    };
     ctx.setStrokeStyle = function(style) {
       this.strokeStyle = style;
       return this;
-    }
+    };
     ctx.setShadowColor = function(style) {
       this.shadowColor = style;
       return this;
-    }
+    };
     ctx.setShadowBlur = function(blur) {
       this.shadowBlur = blur;
       return this;
-    }
+    };
     return ctx;
-  }
+  };
 
   //Draw a dashed line (horizontal, vertical or diagonal
   //dashPattern = [3,3] draws a 3 pixel dash followed by a three pixel space.
@@ -107,7 +108,7 @@ Vex.Flow.Renderer = (function() {
 
     context.closePath();
     context.stroke();
-  }
+  };
 
   Renderer.prototype = {
     init: function(sel, backend) {
@@ -141,7 +142,7 @@ Vex.Flow.Renderer = (function() {
     resize: function(width, height) {
       if (this.backend == Renderer.Backends.CANVAS) {
         if (!this.element.getContext) throw new Vex.RERR("BadElement",
-          "Can't get canvas context from element: " + sel);
+          "Can't get canvas context from element: " + this.sel);
         this.element.width = width;
         this.element.height = height;
         this.ctx = Renderer.bolsterCanvasContext(

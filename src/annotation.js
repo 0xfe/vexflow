@@ -91,24 +91,26 @@ Vex.Flow.Annotation = (function() {
       // This is a hack to work around the inability to measure text height
       // in HTML5 Canvas.
       var text_height = this.context.measureText("m").width;
+      var x, y;
 
       if (this.justification == Annotation.Justify.LEFT) {
-        var x = start.x;
+        x = start.x;
       } else if (this.justification == Annotation.Justify.RIGHT) {
-        var x = start.x - text_width;
+        x = start.x - text_width;
       } else if (this.justification == Annotation.Justify.CENTER) {
-        var x = start.x - text_width / 2;
+        x = start.x - text_width / 2;
       } else /* CENTER_STEM */ {
-        var x = this.note.getStemX() - text_width / 2;
+        x = this.note.getStemX() - text_width / 2;
       }
 
+      var stem_ext, spacing;
       if (this.note.getStemExtents) {
-        var stem_ext = this.note.getStemExtents();
-        var spacing = this.note.stave.options.spacing_between_lines_px;
+        stem_ext = this.note.getStemExtents();
+        spacing = this.note.stave.options.spacing_between_lines_px;
       }
 
       if (this.vert_justification == Annotation.VerticalJustify.BOTTOM) {
-        var y = this.note.stave.getYForBottomText(this.text_line);
+        y = this.note.stave.getYForBottomText(this.text_line);
         if (stem_ext) {
           y = Vex.Max(y, (stem_ext.baseY) + (spacing * (this.text_line + 2)));
         }
@@ -116,15 +118,15 @@ Vex.Flow.Annotation = (function() {
                  Annotation.VerticalJustify.CENTER) {
         var yt = this.note.getYForTopText(this.text_line) - 1;
         var yb = this.note.stave.getYForBottomText(this.text_line);
-        var y = yt + ( yb - yt ) / 2 + text_height / 2;
+        y = yt + ( yb - yt ) / 2 + text_height / 2;
       } else if (this.vert_justification ==
                  Annotation.VerticalJustify.TOP) {
-        var y = this.note.stave.getYForTopText(this.text_line);
+        y = this.note.stave.getYForTopText(this.text_line);
         if (stem_ext)
           y = Vex.Min(y, (stem_ext.topY - 5) - (spacing * this.text_line));
       } else /* CENTER_STEM */{
         var extents = this.note.getStemExtents();
-        var y = extents.topY + ( extents.baseY - extents.topY ) / 2 +
+        y = extents.topY + ( extents.baseY - extents.topY ) / 2 +
           text_height / 2;
       }
 

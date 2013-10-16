@@ -12,7 +12,7 @@ Vex.Flow.clefProperties = function(clef) {
   if (!props) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
   return props;
-}
+};
 
 Vex.Flow.clefProperties.values = {
   'treble':  { line_shift: 0 },
@@ -49,8 +49,8 @@ Vex.Flow.keyProperties = function(key, clef) {
 
   var stroke = 0;
 
-  if (line <= 0 && (((line * 2) % 2) == 0)) stroke = 1;  // stroke up
-  if (line >= 6 && (((line * 2) % 2) == 0)) stroke = -1; // stroke down
+  if (line <= 0 && (((line * 2) % 2) === 0)) stroke = 1;  // stroke up
+  if (line >= 6 && (((line * 2) % 2) === 0)) stroke = -1; // stroke down
 
   // Integer value for note arithmetic.
   var int_value = (typeof(value.int_val)!='undefined') ? (o * 12) +
@@ -132,7 +132,7 @@ Vex.Flow.keyProperties.note_values = {
     code: "v3e",
     shift_right: 5.5
   }
-}
+};
 
 Vex.Flow.keyProperties.note_glyph = {
   /* Diamond */
@@ -152,7 +152,7 @@ Vex.Flow.keyProperties.note_glyph = {
   'X1':  { code: "v95", shift_right: -0.5 },
   'X2':  { code: "v7f", shift_right: 0.5 },
   'X3':  { code: "v3b", shift_right: -2 }
-}
+};
 
 Vex.Flow.integerToNote = function(integer) {
   if (typeof(integer) == "undefined")
@@ -168,7 +168,7 @@ Vex.Flow.integerToNote = function(integer) {
         integer);
 
   return noteValue;
-}
+};
 
 Vex.Flow.integerToNote.table = {
   0: "C",
@@ -209,11 +209,11 @@ Vex.Flow.tabToGlyph = function(fret) {
 
 Vex.Flow.textWidth = function(text) {
   return 6 * text.toString().length;
-}
+};
 
 Vex.Flow.articulationCodes = function(artic) {
   return Vex.Flow.articulationCodes.articulations[artic];
-}
+};
 
 Vex.Flow.articulationCodes.articulations = {
   "a.": {   // Staccato
@@ -324,7 +324,7 @@ Vex.Flow.articulationCodes.articulations = {
 
 Vex.Flow.accidentalCodes = function(acc) {
   return Vex.Flow.accidentalCodes.accidentals[acc];
-}
+};
 
 Vex.Flow.accidentalCodes.accidentals = {
   "#": {
@@ -374,7 +374,7 @@ Vex.Flow.accidentalCodes.accidentals = {
 Vex.Flow.keySignature = function(spec) {
   var keySpec = Vex.Flow.keySignature.keySpecs[spec];
 
-  if (keySpec == undefined) {
+  if (!keySpec) {
     throw new Vex.RERR("BadKeySignature",
         "Bad key signature spec: '" + spec + "'");
   }
@@ -386,14 +386,14 @@ Vex.Flow.keySignature = function(spec) {
   var code = Vex.Flow.accidentalCodes.accidentals[keySpec.acc].code;
   var notes = Vex.Flow.keySignature.accidentalList(keySpec.acc);
 
-  var acc_list = new Array();
+  var acc_list = [];
   for (var i = 0; i < keySpec.num; ++i) {
     var line = notes[i];
     acc_list.push({glyphCode: code, line: line});
   }
 
   return acc_list;
-}
+};
 
 Vex.Flow.keySignature.keySpecs = {
   "C": {acc: null, num: 0},
@@ -434,7 +434,7 @@ Vex.Flow.keySignature.accidentalList = function(acc) {
   }
   else if (acc == "#") {
     return [0, 1.5, -0.5, 1, 2.5, 0.5, 2]; }
-}
+};
 
 Vex.Flow.parseNoteDurationString = function(durationString) {
   if (typeof(durationString) !== "string") {
@@ -461,7 +461,7 @@ Vex.Flow.parseNoteDurationString = function(durationString) {
     dots: dots,
     type: type
   };
-}
+};
 
 Vex.Flow.parseNoteData = function(noteData) {
   var duration = noteData.duration;
@@ -519,7 +519,7 @@ Vex.Flow.parseNoteData = function(noteData) {
     dots: dots,
     ticks: ticks
   };
-}
+};
 
 Vex.Flow.durationToTicks = function(duration) {
   var alias = Vex.Flow.durationAliases[duration];
@@ -533,7 +533,7 @@ Vex.Flow.durationToTicks = function(duration) {
   }
 
   return ticks;
-}
+};
 
 Vex.Flow.durationToTicks.durations = {
   "1":    Vex.Flow.RESOLUTION / 1,
@@ -557,7 +557,7 @@ Vex.Flow.durationAliases = {
   //
   // TODO(0xfe): This needs to be cleaned up.
   "b": "256"
-}
+};
 
 Vex.Flow.durationToGlyph = function(duration, type) {
   var alias = Vex.Flow.durationAliases[duration];
@@ -574,13 +574,13 @@ Vex.Flow.durationToGlyph = function(duration, type) {
     type = "n";
   }
 
-  glyphTypeProperties = code.type[type];
+  var glyphTypeProperties = code.type[type];
   if (glyphTypeProperties === undefined) {
     return null;
   }
 
   return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
-}
+};
 
 Vex.Flow.durationToGlyph.duration_codes = {
   "1": {

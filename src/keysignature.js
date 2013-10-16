@@ -21,7 +21,7 @@ Vex.Flow.KeySignature = (function() {
 
     addAccToStave: function(stave, acc) {
       var glyph = new Vex.Flow.Glyph(acc.glyphCode, this.glyphFontScale);
-      this.placeGlyphOnLine(glyph, stave, acc.line)
+      this.placeGlyphOnLine(glyph, stave, acc.line);
       stave.addGlyph(glyph);
     },
 
@@ -33,7 +33,7 @@ Vex.Flow.KeySignature = (function() {
     },
 
     addToStave: function(stave, firstGlyph) {
-      if (this.accList.length == 0)
+      if (this.accList.length === 0)
         return this;
 
       if (!firstGlyph) {
@@ -64,15 +64,16 @@ Vex.Flow.KeySignature = (function() {
       }
 
       // Special-case for TenorSharps
+      var i;
       if (isTenorSharps) {
         tenorSharps = [3, 1, 2.5, 0.5, 2, 0, 1.5];
-        for (var i = 0; i < this.accList.length; ++i) {
+        for (i = 0; i < this.accList.length; ++i) {
           this.accList[i].line = tenorSharps[i];
         }
       }
       else {
         if (clef != "treble") {
-          for (var i = 0; i < this.accList.length; ++i) {
+          for (i = 0; i < this.accList.length; ++i) {
             this.accList[i].line += offset;
           }
         }

@@ -192,7 +192,7 @@ Vex.Flow.Stave = (function() {
 
     addModifier: function(modifier) {
       this.modifiers.push(modifier);
-      modifier.addToStave(this, (this.glyphs.length == 0));
+      modifier.addToStave(this, (this.glyphs.length === 0));
       return this;
     },
 
@@ -221,16 +221,17 @@ Vex.Flow.Stave = (function() {
     /**
      * All drawing functions below need the context to be set.
      */
-    draw: function(context) {
+    draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw stave without canvas context.");
 
       var num_lines = this.options.num_lines;
       var width = this.width;
       var x = this.x;
+      var y;
 
       for (var line=0; line < num_lines; line++) {
-        var y = this.getYForLine(line);
+        y = this.getYForLine(line);
 
         if (this.options.line_config[line].visible) {
           this.context.fillRect(x, y, width, 1);
@@ -239,7 +240,8 @@ Vex.Flow.Stave = (function() {
 
       x = this.glyph_start_x;
       var bar_x_shift = 0;
-      for (var i = 0; i < this.glyphs.length; ++i) {
+      var i;
+      for (i = 0; i < this.glyphs.length; ++i) {
         var glyph = this.glyphs[i];
         if (!glyph.getContext()) glyph.setContext(this.context);
         glyph.renderToStave(x);
@@ -249,16 +251,16 @@ Vex.Flow.Stave = (function() {
       // Add padding after clef, time sig, key sig
       if (bar_x_shift > 0) bar_x_shift += this.options.vertical_bar_width;
       // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
-      for (var i = 0; i < this.modifiers.length; i++) {
+      for (i = 0; i < this.modifiers.length; i++) {
         // Only draw modifier if it has a draw function
         if (typeof this.modifiers[i].draw == "function")
           this.modifiers[i].draw(this, bar_x_shift);
       }
       if (this.measure > 0) {
-        this.context.save()
+        this.context.save();
         this.context.setFont(this.font.family, this.font.size, this.font.weight);
         var text_width = this.context.measureText("" + this.measure).width;
-        var y = this.getYForTopText(0) + 3;
+        y = this.getYForTopText(0) + 3;
         this.context.fillText("" + this.measure, this.x - text_width / 2, y);
         this.context.restore();
       }

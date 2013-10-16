@@ -74,7 +74,7 @@ Vex.Flow.KeyManager = (function() {
       return {
         note: this.scaleMap[root],
         accidental: parts.accidental
-      }
+      };
     },
 
     selectNote: function(note) {
@@ -89,7 +89,7 @@ Vex.Flow.KeyManager = (function() {
         "note": scaleNote,
         "accidental": parts.accidental,
         "change": false
-      }
+      };
 
       // Then search for a note of equivalent value in our altered scale
       var valueNote = this.scaleMapByValue[this.music.getNoteValue(note)];
@@ -98,7 +98,7 @@ Vex.Flow.KeyManager = (function() {
           "note": valueNote,
           "accidental": this.music.getNoteParts(valueNote).accidental,
           "change": false
-        }
+        };
       }
 
       // Then search for a note of equivalent value in the original scale
@@ -112,7 +112,7 @@ Vex.Flow.KeyManager = (function() {
           "note": originalValueNote,
           "accidental": this.music.getNoteParts(originalValueNote).accidental,
           "change": true
-        }
+        };
       }
 
       // Then try to unmodify a currently modified note.
@@ -126,7 +126,7 @@ Vex.Flow.KeyManager = (function() {
           "note": modparts.root,
           "accidental": null,
           "change": true
-        }
+        };
       }
 
       // Last resort -- shitshoot
@@ -141,7 +141,7 @@ Vex.Flow.KeyManager = (function() {
         "note": note,
         "accidental": parts.accidental,
         "change": true
-      }
+      };
     }
   };
 

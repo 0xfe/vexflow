@@ -33,8 +33,7 @@ Vex.Flow.Barline = (function() {
     setX: function(x) { this.x = x; return this; },
 
       // Draw barlines
-    draw: function(stave, x) {
-        // x :: the right shift if the stave has clef, time sig, etc.
+    draw: function(stave) {
       switch (this.barline) {
         case Barline.type.SINGLE:
           this.drawVerticalBar(stave, this.x, false);

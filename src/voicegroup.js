@@ -10,7 +10,7 @@ Vex.Flow.VoiceGroup = (function() {
   }
 
   VoiceGroup.prototype = {
-    init: function(time, voiceGroup) {
+    init: function() {
       this.voices = [];
       this.modifierContexts = [];
     },

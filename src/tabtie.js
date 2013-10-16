@@ -14,17 +14,17 @@
  * @param {!Object} Options
  */
 Vex.Flow.TabTie = (function() {
-    function TabTie(notes, text) {
+  function TabTie(notes, text) {
     if (arguments.length > 0) this.init(notes, text);
   }
 
   TabTie.createHammeron = function(notes) {
     return new TabTie(notes, "H");
-  }
+  };
 
   TabTie.createPulloff = function(notes) {
     return new TabTie(notes, "P");
-  }
+  };
 
   Vex.Inherit(TabTie, Vex.Flow.StaveTie, {
     init: function(notes, text) {
@@ -61,7 +61,7 @@ Vex.Flow.TabTie = (function() {
         first_x_px = last_note.getStave().getTieStartX();
         first_ys = last_note.getYs();
         this.first_indices = this.last_indices;
-      };
+      }
 
       if (last_note) {
         last_x_px = last_note.getTieLeftX() + this.render_options.tie_spacing;

@@ -5,9 +5,12 @@ Copyright (c) 2010 Mohit Muthanna Cheppudira
 
 ## What is VexFlow?
 
-VexFlow is an open-source web-based music notation rendering API. It is written completely in JavaScript, and runs right in the browser. VexFlow supports HTML5 Canvas and SVG.
+VexFlow is an open-source web-based music notation rendering API. It is written
+completely in JavaScript, and runs right in the browser. VexFlow supports HTML5
+Canvas and SVG.
 
-Go try out [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html) to learn how to use VexFlow.
+Go try out [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html) to
+learn how to use VexFlow.
 
 If you're not a developer and just want to write and share your music, go to
 [My VexFlow](http://my.vexflow.com).
@@ -17,7 +20,8 @@ If you're not a developer and just want to write and share your music, go to
 VexTab has been overhauled and has moved to a new repository. Go
 to [github/0xfe/vextab](http://github.com/0xfe/vextab).
 
-VexTab 2.0 now supports all VexTab 1.0 features, and [includes a few new ones](http://my.vexflow.com/articles/53?source=enabled).
+VexTab 2.0 now supports all VexTab 1.0 features, and
+[includes a few new ones](http://my.vexflow.com/articles/53?source=enabled).
 
 ## To Contribute
 
@@ -25,7 +29,9 @@ VexTab 2.0 now supports all VexTab 1.0 features, and [includes a few new ones](h
 * Rebase early, rebase often.
 * Please include tests -- I will not commit changes that don't have
   accompanying tests.
-* Please use 2 spaces instead of tabs and wrap your lines at 80 columns.
+* Run `rake lint` before sending, and make sure your code is lint-clean. You
+  need to have [JSHint](http://jshint.com) installed for this.
+* Please use 2 spaces instead of tabs.
 * Try to stick to the style conventions in the existing code. (It's not great,
   but it's what we have.)
 * Join the VexFlow Google Group at:
@@ -55,7 +61,9 @@ Clean with:
 
     $ rake clean
 
-If you have JSHint installed, you can check your code for common errors with:
+If you have [JSHint](http://jshint.com) installed, you can check your code for
+common errors with the following command. Note that this step is mandatory if
+you want to commit your changes into the official VexFlow repository.
 
     $ rake lint
 

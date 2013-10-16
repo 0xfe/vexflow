@@ -53,7 +53,7 @@ Vex.Flow.Music = (function() {
     "b7":     {note: 6, accidental: -1},
     "M7":     {note: 6, accidental: 0},
     "octave": {note: 7, accidental: 0}
-  }
+  };
 
   Music.intervals = {
     "u":  0, "unison": 0,
@@ -157,7 +157,7 @@ Vex.Flow.Music = (function() {
         return {
           'root': root,
           'accidental': accidental
-        }
+        };
       } else {
         throw new Vex.RERR("BadArguments", "Invalid note name: " + noteString);
       }
@@ -185,7 +185,7 @@ Vex.Flow.Music = (function() {
           'root': root,
           'accidental': accidental,
           'type': type
-        }
+        };
       } else {
         throw new Vex.RERR("BadArguments", "Invalid key: " + keyString);
       }
@@ -264,11 +264,12 @@ Vex.Flow.Music = (function() {
                             noteValue);
 
       var relativeNoteName = parts.root;
+      var i;
       if (interval > 0) {
-        for (var i = 1; i <= interval; ++i)
+        for (i = 1; i <= interval; ++i)
           relativeNoteName += "#";
       } else if (interval < 0) {
-        for (var i = -1; i >= interval; --i)
+        for (i = -1; i >= interval; --i)
           relativeNoteName += "b";
       }
 
@@ -308,10 +309,12 @@ Vex.Flow.Music = (function() {
       if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2))
         throw new Vex.RERR("BadArguments",
                            "Invalid notes: " + note1 + ", " + note2);
+
+      var difference;
       if (direction == 1)
-        var difference = note2 - note1;
+        difference = note2 - note1;
       else
-        var difference = note1 - note2;
+        difference = note1 - note2;
 
       if (difference < 0) difference += Music.NUM_TONES;
       return difference;

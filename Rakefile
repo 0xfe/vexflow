@@ -138,7 +138,7 @@ end
 task :lint do
   # Requires JSHint to be installed
   puts "Checking VexFlow sources for lint errors..."
-  system "#{JSHINT} src/*.js"
+  system "#{JSHINT} --show-non-errors --config jshintrc src/*.js"
 end
 
 task :make => [:build_copy, TARGET_DIR, TARGET]

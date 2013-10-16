@@ -66,8 +66,8 @@ Vex.Flow.Bend = (function() {
         this.phrase = phrase;
       } else {
         // Backward compatibility
-        this.phrase = [{type: Bend.UP, text: this.text}]
-        if (this.release) this.phrase.push({type: Bend.DOWN, text: ""})
+        this.phrase = [{type: Bend.UP, text: this.text}];
+        if (this.release) this.phrase.push({type: Bend.DOWN, text: ""});
       }
 
       this.updateWidth();
@@ -130,7 +130,6 @@ Vex.Flow.Bend = (function() {
       var x_shift = this.x_shift;
 
       var ctx = this.context;
-      var that = this;
       var bend_height = this.note.getStave().getYForTopText(this.text_line) + 3;
       var annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
 
@@ -177,7 +176,7 @@ Vex.Flow.Bend = (function() {
       var last_drawn_width = 0;
       for (var i=0; i<this.phrase.length; ++i) {
         var bend = this.phrase[i];
-        if (i == 0) bend.draw_width += x_shift;
+        if (i === 0) bend.draw_width += x_shift;
 
         last_drawn_width = bend.draw_width + (last_bend?last_bend.draw_width:0) - (i==1?x_shift:0);
         if (bend.type == Bend.UP) {
@@ -206,7 +205,7 @@ Vex.Flow.Bend = (function() {
 
         renderText(start.x + last_drawn_width, bend.text);
         last_bend = bend;
-        last_bend.x = start.x
+        last_bend.x = start.x;
 
         start.x += last_drawn_width;
       }

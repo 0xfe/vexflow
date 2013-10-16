@@ -40,8 +40,7 @@ Vex.Flow.Volta = (function() {
         "Can't draw stave without canvas context.");
       var ctx = stave.context;
       var width = stave.width;
-      var top_y = stave.getYForTopText(stave.options.num_lines)
-                + this.y_shift;
+      var top_y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
       var vert_height = 1.5 * stave.options.spacing_between_lines_px;
       switch(this.volta) {
         case Vex.Flow.Volta.type.BEGIN:

@@ -25,10 +25,10 @@ Vex.Flow.Tuplet = (function() {
 
       this.options = Vex.Merge({}, options);
       this.notes = notes;
-      this.num_notes = 'num_notes' in this.options
-                     ? this.options.num_notes : notes.length;
-      this.beats_occupied = 'beats_occupied' in this.options
-                          ? this.options.beats_occupied : 2;
+      this.num_notes = 'num_notes' in this.options ?
+        this.options.num_notes : notes.length;
+      this.beats_occupied = 'beats_occupied' in this.options ?
+        this.options.beats_occupied : 2;
       this.bracketed = (notes[0].beam == null);
       this.ratioed = false;
       this.point = 28;
@@ -115,14 +115,14 @@ Vex.Flow.Tuplet = (function() {
       var n = this.num_notes;
       while (n >= 1) {
         this.num_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
-        n = parseInt(n / 10);
+        n = parseInt(n / 10, 10);
       }
 
       this.denom_glyphs = [];
       n = this.beats_occupied;
       while (n >= 1) {
         this.denom_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
-        n = parseInt(n / 10);
+        n = parseInt(n / 10, 10);
       }
     },
 
@@ -144,11 +144,12 @@ Vex.Flow.Tuplet = (function() {
       }
 
       // determine y value for tuplet
+      var i;
       if (this.location == Tuplet.LOCATION_TOP) {
         this.y_pos = first_note.getStave().getYForLine(0) - 15;
         //this.y_pos = first_note.getStemExtents().topY - 10;
 
-        for (var i=0; i<this.notes.length; ++i) {
+        for (i=0; i<this.notes.length; ++i) {
           var top_y = this.notes[i].getStemExtents().topY - 10;
           if (top_y < this.y_pos)
             this.y_pos = top_y;
@@ -157,7 +158,7 @@ Vex.Flow.Tuplet = (function() {
       else {
         this.y_pos = first_note.getStave().getYForLine(4) + 20;
 
-        for (var i=0; i<this.notes.length; ++i) {
+        for (i=0; i<this.notes.length; ++i) {
           var bottom_y = this.notes[i].getStemExtents().topY + 10;
           if (bottom_y > this.y_pos)
             this.y_pos = bottom_y;
@@ -166,15 +167,17 @@ Vex.Flow.Tuplet = (function() {
 
       // calculate total width of tuplet notation
       var width = 0;
-      for (var glyph in this.num_glyphs) {
+      var glyph;
+      for (glyph in this.num_glyphs) {
         width += this.num_glyphs[glyph].getMetrics().width;
       }
       if (this.ratioed) {
-        for (var glyph in this.denom_glyphs) {
+        for (glyph in this.denom_glyphs) {
           width += this.denom_glyphs[glyph].getMetrics().width;
         }
         width += this.point * 0.32;
       }
+
       var notation_center_x = this.x_pos + (this.width/2);
       var notation_start_x = notation_center_x - (width/2);
 
@@ -199,7 +202,7 @@ Vex.Flow.Tuplet = (function() {
       // draw numerator glyphs
       var x_offset = 0;
       var size = this.num_glyphs.length;
-      for (var glyph in this.num_glyphs) {
+      for (glyph in this.num_glyphs) {
         this.num_glyphs[size-glyph-1].render(
             this.context, notation_start_x + x_offset,
             this.y_pos + (this.point/3) - 2);
@@ -221,8 +224,8 @@ Vex.Flow.Tuplet = (function() {
         this.context.closePath();
         this.context.fill();
         x_offset += this.point*0.32;
-        var size = this.denom_glyphs.length;
-        for (var glyph in this.denom_glyphs) {
+        size = this.denom_glyphs.length;
+        for (glyph in this.denom_glyphs) {
           this.denom_glyphs[size-glyph-1].render(
               this.context, notation_start_x + x_offset,
               this.y_pos + (this.point/3) - 2);

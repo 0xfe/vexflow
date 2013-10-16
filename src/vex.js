@@ -3,7 +3,9 @@
 //
 // Copyright Mohit Muthanna Cheppudira 2010
 
-/** @constructor */
+/* global window: false */
+/* global document: false */
+
 function Vex() {}
 
 /**
@@ -23,7 +25,7 @@ Vex.LogLevels = {
   WARN: 3,
   ERROR: 2,
   FATAL: 1
-}
+};
 
 /**
  * Set the debuglevel for this application.
@@ -59,17 +61,17 @@ Vex.LogMessage = function(level, message) {
  * Logging shortcuts.
  */
 Vex.LogDebug = function(message) {
-  Vex.LogMessage(Vex.LogLevels.DEBUG, message); }
+  Vex.LogMessage(Vex.LogLevels.DEBUG, message); };
 Vex.LogInfo = function(message) {
-  Vex.LogMessage(Vex.LogLevels.INFO, message); }
+  Vex.LogMessage(Vex.LogLevels.INFO, message); };
 Vex.LogWarn = function(message) {
-  Vex.LogMessage(Vex.LogLevels.WARN, message); }
+  Vex.LogMessage(Vex.LogLevels.WARN, message); };
 Vex.LogError = function(message) {
-  Vex.LogMessage(Vex.LogLevels.ERROR, message); }
+  Vex.LogMessage(Vex.LogLevels.ERROR, message); };
 Vex.LogFatal = function(message, exception) {
   Vex.LogMessage(Vex.LogLevels.FATAL, message);
   if (exception) throw exception; else throw "VexFatalError";
-}
+};
 Vex.Log = Vex.LogDebug;
 Vex.L = Vex.LogDebug;
 
@@ -83,16 +85,16 @@ Vex.L = Vex.LogDebug;
  * @constructor
  * @param {string} message The message to display.
  */
-Vex.AssertException = function(message) { this.message = message; }
+Vex.AssertException = function(message) { this.message = message; };
 Vex.AssertException.prototype.toString = function() {
   return "AssertException: " + this.message;
-}
+};
 Vex.Assert = function(exp, message) {
   if (Vex.Debug && !exp) {
     if (!message) message = "Assertion failed.";
     throw new Vex.AssertException(message);
   }
-}
+};
 
 /**
  * An generic runtime exception. For example:
@@ -105,10 +107,10 @@ Vex.Assert = function(exp, message) {
 Vex.RuntimeError = function(code, message) {
   this.code = code;
   this.message = message;
-}
+};
 Vex.RuntimeError.prototype.toString = function() {
   return "RuntimeError: " + this.message;
-}
+};
 
 Vex.RERR = Vex.RuntimeError;
 
@@ -135,7 +137,8 @@ Vex.Max = function(a, b) {
 
 // Round number to nearest fractional value (.5, .25, etc.)
 Vex.RoundN = function(x, n) {
-  return (x % n) >= (n/2) ? parseInt(x / n) * n + n : parseInt(x / n) * n;
+  return (x % n) >= (n/2) ? 
+    parseInt(x / n, 10) * n + n : parseInt(x / n, 10) * n;
 };
 
 // Locate the mid point between stave lines. Returns a fractional line if a space
@@ -158,7 +161,7 @@ Vex.SortAndUnique = function(arr, cmp, eq) {
     arr.sort(cmp);
 
     for (var i = 0; i < arr.length; ++i) {
-      if (i == 0 || !eq(arr[i], last)) {
+      if (i === 0 || !eq(arr[i], last)) {
         newArr.push(arr[i]);
       }
       last = arr[i];
@@ -168,7 +171,7 @@ Vex.SortAndUnique = function(arr, cmp, eq) {
   } else {
     return arr;
   }
-}
+};
 
 /**
  * Check if array "a" contains "obj"
@@ -181,7 +184,7 @@ Vex.Contains = function(a, obj) {
     }
   }
   return false;
-}
+};
 
 /**
  * @param {string} canvas_sel The selector id for the canvas.
@@ -198,7 +201,7 @@ Vex.getCanvasContext = function(canvas_sel) {
   }
 
   return canvas.getContext('2d');
-}
+};
 
 /**
  * Draw a tiny marker on the specified canvas. A great debugging aid.
@@ -218,14 +221,14 @@ Vex.drawDot = function(ctx, x, y, color) {
   ctx.closePath();
   ctx.fill();
   ctx.restore();
-}
+};
 
 Vex.BM = function(s, f) {
   var start_time = new Date().getTime();
   f();
   var elapsed = new Date().getTime() - start_time;
   Vex.L(s + elapsed + "ms");
-}
+};
 
 /**
  * Basic classical inheritance helper. Usage:
@@ -246,5 +249,5 @@ Vex.Inherit = (function () {
     C.prototype.constructor = C;
     Vex.Merge(C.prototype, O );
     return C;
-  }
+  };
 }());

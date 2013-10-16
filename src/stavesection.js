@@ -32,7 +32,7 @@ Vex.Flow.StaveSection = (function() {
     getCategory: function() { return "stavesection"; },
     setStaveSection: function(section) { this.section = section; return this; },
     setShiftX: function(x) { this.shift_x = x; return this; },
-    setShiftY: function(x) { this.shift_y = y; return this; },
+    setShiftY: function(y) { this.shift_y = y; return this; },
 
     draw: function(stave, shift_x) {
       if (!stave.context) throw new Vex.RERR("NoContext",

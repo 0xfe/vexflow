@@ -25,7 +25,7 @@ Vex.Flow.Formatter = (function() {
   Formatter.FormatAndDraw = function(ctx, stave, notes, params) {
     var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
       setMode(Vex.Flow.Voice.Mode.SOFT);
-    voice.addTickables(notes)
+    voice.addTickables(notes);
 
     // For backward compatability, params has three forms:
     //   1. Setting autobeam only (context, stave, notes, true) or (ctx, stave, notes, {autobeam: true})
@@ -47,11 +47,11 @@ Vex.Flow.Formatter = (function() {
 
     var beams = null;
 
-    if (opts.auto_beam == true) {
+    if (opts.auto_beam) {
       beams = Vex.Flow.Beam.applyAndGetBeams(voice);
     }
 
-    var formatter = new Formatter().
+    new Formatter().
       joinVoices([voice], {align_rests: opts.align_rests}).
       formatToStave([voice], stave, {align_rests: opts.align_rests});
 
@@ -69,7 +69,7 @@ Vex.Flow.Formatter = (function() {
 
   // Helper function to format and draw a single voice
   Formatter.FormatAndDrawTab = function(ctx,
-      tabstave, stave, tabnotes, notes, autobeam) {
+      tabstave, stave, tabnotes, notes, autobeam, params) {
 
     var notevoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
       setMode(Vex.Flow.Voice.Mode.SOFT);
@@ -87,7 +87,7 @@ Vex.Flow.Formatter = (function() {
     // The default for autobam and align_rests is false
     //
     var opts = {
-      auto_beam: false,
+      auto_beam: autobeam,
       align_rests: false
     };
 
@@ -99,12 +99,12 @@ Vex.Flow.Formatter = (function() {
 
     var beams = null;
 
-    if (opts.auto_beam == true) {
-      beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+    if (opts.auto_beam) {
+      beams = Vex.Flow.Beam.applyAndGetBeams(notevoice);
     }
 
 
-    var formatter = new Formatter().
+    new Formatter().
       joinVoices([notevoice], {align_rests: opts.align_rests}).
       joinVoices([tabvoice]).
       formatToStave([notevoice,tabvoice], stave, {align_rests: opts.align_rests});
@@ -119,7 +119,7 @@ Vex.Flow.Formatter = (function() {
 
     // Draw a connector between tab and note staves.
     (new Vex.Flow.StaveConnector(stave, tabstave)).setContext(ctx).draw();
-  }
+  };
 
   // Helper function to locate the next non-rest note(s)
   Formatter.LookAhead = function(notes, rest_line, i, compare) {
@@ -142,7 +142,7 @@ Vex.Flow.Formatter = (function() {
       next_rest_line = Vex.MidLine(top, bot);
     }
     return next_rest_line;
-  }
+  };
 
   // Auto position rests based on previous/next note positions
   Formatter.AlignRestsToNotes = function(notes, align_all_notes, align_tuplets) {
@@ -161,15 +161,16 @@ Vex.Flow.Formatter = (function() {
         if (align_all_notes || note.beam != null) {
           // align rests with previous/next notes
           var props = note.getKeyProps()[0];
-          if (i == 0) {
+          if (i === 0) {
             props.line = Formatter.LookAhead(notes, props.line, i, false);
           } else if (i > 0 && i < notes.length) {
             // if previous note is a rest, use it's line number
+            var rest_line;
             if (notes[i-1].isRest()) {
-              var rest_line = notes[i-1].getKeyProps()[0].line;
+              rest_line = notes[i-1].getKeyProps()[0].line;
               props.line = rest_line;
             } else {
-              var rest_line = notes[i-1].getLineForRest();
+              rest_line = notes[i-1].getLineForRest();
               // get the rest line for next valid non-rest note group
               props.line = Formatter.LookAhead(notes, rest_line, i, true);
             }
@@ -179,7 +180,7 @@ Vex.Flow.Formatter = (function() {
     }
 
     return this;
-  }
+  };
 
   /**
      * Take a set of voices and place aligned tickables in the same modifier
@@ -200,8 +201,11 @@ Vex.Flow.Formatter = (function() {
     // for all fractional tick values in all tickables of all voices,
     // so that the values can be expanded and the numerator used
     // as an integer tick value.
-    for (var i = 0; i < voices.length; ++i) {
-      var voice = voices[i];
+    //
+    var i; // shared iterator
+    var voice;
+    for (i = 0; i < voices.length; ++i) {
+      voice = voices[i];
       if (voice.getTotalTicks().value() != totalTicks.value()) {
         throw new Vex.RERR("TickMismatch",
             "Voices should have same time signature.");
@@ -209,7 +213,7 @@ Vex.Flow.Formatter = (function() {
 
       if (voice.getMode() == Vex.Flow.Voice.Mode.STRICT && !voice.isComplete())
         throw new Vex.RERR("IncompleteVoice",
-          "Voice does not have enough notes.")
+          "Voice does not have enough notes.");
 
       var lcm = Vex.Flow.Fraction.LCM(resolutionMultiplier,
           voice.getResolutionMultiplier());
@@ -218,8 +222,8 @@ Vex.Flow.Formatter = (function() {
       }
     }
 
-    for (var i = 0; i < voices.length; ++i) {
-      var voice = voices[i];
+    for (i = 0; i < voices.length; ++i) {
+      voice = voices[i];
 
       var tickables = voice.getTickables();
 
@@ -358,10 +362,12 @@ Vex.Flow.Formatter = (function() {
       var initial_justify_width = justifyWidth;
       this.minTotalWidth = 0;
 
+      var i, tick, context;        // shared variables
+
       // Pass 1: Give each note maximum width requested by context.
-      for (var i = 0; i < contextList.length; ++i) {
-        var tick = contextList[i];
-        var context = contextMap[tick];
+      for (i = 0; i < contextList.length; ++i) {
+        tick = contextList[i];
+        context = contextMap[tick];
         if (rendering_context) context.setContext(rendering_context);
         context.preFormat();
 
@@ -437,13 +443,13 @@ Vex.Flow.Formatter = (function() {
         // all notes.
         var remaining_x = initial_justify_width - (x + prev_width);
         var leftover_pixels_per_tick = remaining_x / (this.totalTicks.value() * contexts.resolutionMultiplier);
-        var prev_tick = 0;
         var accumulated_space = 0;
+        prev_tick = 0;
 
-        for (var i = 0; i < contextList.length; ++i) {
-          var tick = contextList[i];
-          var context = contextMap[tick];
-          var tick_space = (tick - prev_tick) * leftover_pixels_per_tick;
+        for (i = 0; i < contextList.length; ++i) {
+          tick = contextList[i];
+          context = contextMap[tick];
+          tick_space = (tick - prev_tick) * leftover_pixels_per_tick;
           accumulated_space = accumulated_space + tick_space;
           context.setX(context.getX() + accumulated_space);
           prev_tick = tick;

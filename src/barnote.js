@@ -16,7 +16,7 @@ Vex.Flow.BarNote = (function() {
       var TYPE = Vex.Flow.Barline.type;
       this.metrics = {
         widths: {}
-      }
+      };
 
       this.metrics.widths[TYPE.SINGLE] = 8;
       this.metrics.widths[TYPE.DOUBLE] = 12;
@@ -51,7 +51,8 @@ Vex.Flow.BarNote = (function() {
       return new Vex.Flow.BoundingBox(0, 0, 0, 0);
     },
 
-    addToModifierContext: function(mc) {
+    addToModifierContext: function() {
+      /* overridden to ignore */
       return this;
     },
 

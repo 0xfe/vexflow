@@ -36,7 +36,7 @@ Vex.Flow.Repetition = (function() {
         family: "times",
         size: 12,
         weight: "bold italic"
-      }
+      };
     },
 
     getCategory: function() { return "repetitions"; },

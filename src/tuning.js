@@ -16,7 +16,7 @@ Vex.Flow.Tuning = (function() {
     "dagdad": "D/5,A/4,G/4,D/4,A/3,D/3",
     "dropd": "E/5,B/4,G/4,D/4,A/3,D/3",
     "eb": "Eb/5,Bb/4,Gb/4,Db/4,Ab/3,Db/3"
-  }
+  };
 
   Tuning.prototype = {
     init: function(tuningString) {
@@ -37,7 +37,7 @@ Vex.Flow.Tuning = (function() {
       this.numStrings = 0;
 
       var keys = noteString.split(/\s*,\s*/);
-      if (keys.length == 0)
+      if (keys.length === 0)
         throw new Vex.RERR("BadArguments", "Invalid tuning string: " + noteString);
 
       this.numStrings = keys.length;
@@ -47,7 +47,7 @@ Vex.Flow.Tuning = (function() {
     },
 
     getValueForString: function(stringNum) {
-      var s = parseInt(stringNum);
+      var s = parseInt(stringNum, 10);
       if (s < 1 || s > this.numStrings)
         throw new Vex.RERR("BadArguments", "String number must be between 1 and " +
             this.numStrings + ": " + stringNum);
@@ -57,7 +57,7 @@ Vex.Flow.Tuning = (function() {
 
     getValueForFret: function(fretNum, stringNum) {
       var stringValue = this.getValueForString(stringNum);
-      var f = parseInt(fretNum);
+      var f = parseInt(fretNum, 10);
 
       if (f < 0) {
         throw new Vex.RERR("BadArguments", "Fret number must be 0 or higher: " +

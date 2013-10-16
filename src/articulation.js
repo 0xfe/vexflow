@@ -76,7 +76,7 @@ Vex.Flow.Articulation = (function() {
         }
 
         return false;
-      }
+      };
 
       // Articulations are centered over/under the note head
       var stave = this.note.stave;
@@ -108,10 +108,11 @@ Vex.Flow.Articulation = (function() {
       if(needsLineAdjustment(this, note_line, line_spacing))
         line_spacing += 0.5;
 
+      var glyph_y_between_lines;
       if (this.position === Modifier.Position.ABOVE) {
         shiftY = this.articulation.shift_up;
+        glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
 
-        var glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
         if (this.articulation.between_lines)
           glyph_y = glyph_y_between_lines;
         else
@@ -119,9 +120,9 @@ Vex.Flow.Articulation = (function() {
       } else {
         shiftY = this.articulation.shift_down - 10;
 
-        var glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
+        glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
         if (this.articulation.between_lines)
-         glyph_y = glyph_y_between_lines;
+          glyph_y = glyph_y_between_lines;
         else
           glyph_y = Vex.Max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
       }
@@ -129,8 +130,8 @@ Vex.Flow.Articulation = (function() {
       var glyph_x = start.x + this.articulation.shift_right;
       glyph_y += shiftY + this.y_shift;
 
-     Vex.Flow.renderGlyph(this.context, glyph_x, glyph_y,
-                          this.render_options.font_scale, this.articulation.code);
+      Vex.Flow.renderGlyph(this.context, glyph_x, glyph_y,
+                           this.render_options.font_scale, this.articulation.code);
     }
   });
 

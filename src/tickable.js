@@ -48,9 +48,11 @@ Vex.Flow.Tickable = (function() {
     getTuplet: function() { return this.tuplet; },
     setTuplet: function(tuplet) {
       // Detach from previous tuplet
+      var noteCount, beatsOccupied;
+
       if (this.tuplet) {
-        var noteCount = this.tuplet.getNoteCount();
-        var beatsOccupied = this.tuplet.getBeatsOccupied();
+        noteCount = this.tuplet.getNoteCount();
+        beatsOccupied = this.tuplet.getBeatsOccupied();
 
         // Revert old multiplier
         this.applyTickMultiplier(noteCount, beatsOccupied);
@@ -58,8 +60,8 @@ Vex.Flow.Tickable = (function() {
 
       // Attach to new tuplet
       if (tuplet) {
-        var noteCount = tuplet.getNoteCount();
-        var beatsOccupied = tuplet.getBeatsOccupied();
+        noteCount = tuplet.getNoteCount();
+        beatsOccupied = tuplet.getBeatsOccupied();
 
         this.applyTickMultiplier(beatsOccupied, noteCount);
       }
@@ -89,15 +91,13 @@ Vex.Flow.Tickable = (function() {
     },
 
     preFormat: function() {
-      if (preFormatted) return;
+      if (this.preFormatted) return;
 
       this.width = 0;
       if (this.modifierContext) {
         this.modifierContext.preFormat();
         this.width += this.modifierContext.getWidth();
       }
-
-      // Calculate any extra width required.
     },
 
     getIntrinsicTicks: function() {

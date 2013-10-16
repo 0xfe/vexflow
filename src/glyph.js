@@ -20,7 +20,7 @@ Vex.Flow.renderGlyph = function(ctx, x_pos, y_pos, point, val, nocache) {
   var scale = point * 72 / (Vex.Flow.Font.resolution * 100);
   var metrics = Vex.Flow.Glyph.loadMetrics(Vex.Flow.Font, val, !nocache);
   Vex.Flow.Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
-}
+};
 
 /**
  * @constructor
@@ -53,7 +53,7 @@ Vex.Flow.Glyph = (function() {
     setXShift: function(x_shift) { this.x_shift = x_shift; return this; },
     setYShift: function(y_shift) { this.y_shift = y_shift; return this; },
     setContext: function(context) { this.context = context; return this; },
-    getContext: function(context) { return this.context; },
+    getContext: function() { return this.context; },
 
     reset: function() {
       this.metrics = Vex.Flow.Glyph.loadMetrics(this.options.font, this.code,
@@ -77,7 +77,6 @@ Vex.Flow.Glyph = (function() {
 
       var outline = this.metrics.outline;
       var scale = this.scale;
-      var outlineLength = outline.length;
 
       Glyph.renderOutline(ctx, outline, scale, x_pos, y_pos);
     },
@@ -90,7 +89,6 @@ Vex.Flow.Glyph = (function() {
 
       var outline = this.metrics.outline;
       var scale = this.scale;
-      var outlineLength = outline.length;
 
       Glyph.renderOutline(this.context, outline, scale,
           x + this.x_shift, this.stave.getYForGlyphs() + this.y_shift);
@@ -103,22 +101,22 @@ Vex.Flow.Glyph = (function() {
     if (!glyph) throw new Vex.RuntimeError("BadGlyph", "Glyph " + code +
         " does not exist in font.");
 
-    var x_min = glyph["x_min"];
-    var x_max = glyph["x_max"];
+    var x_min = glyph.x_min;
+    var x_max = glyph.x_max;
 
     var outline;
 
-    if (glyph["o"]) {
+    if (glyph.o) {
       if (cache) {
         if (glyph.cached_outline) {
           outline = glyph.cached_outline;
         } else {
-          outline = glyph["o"].split(' ');
+          outline = glyph.o.split(' ');
           glyph.cached_outline = outline;
         }
       } else {
         if (glyph.cached_outline) delete glyph.cached_outline;
-        outline = glyph["o"].split(' ');
+        outline = glyph.o.split(' ');
       }
 
       return {
@@ -130,7 +128,7 @@ Vex.Flow.Glyph = (function() {
       throw new Vex.RuntimeError("BadGlyph", "Glyph " + this.code +
           " has no outline defined.");
     }
-  }
+  };
 
   Glyph.renderOutline = function(ctx, outline, scale, x_pos, y_pos) {
     var outlineLength = outline.length;
@@ -173,7 +171,7 @@ Vex.Flow.Glyph = (function() {
       }
     }
     ctx.fill();
-  }
+  };
 
   return Glyph;
 }());

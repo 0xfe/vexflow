@@ -11,7 +11,7 @@
  * @constructor
  */
 Vex.Flow.Modifier = (function() {
-  function Modifier() { this.init() }
+  function Modifier() { this.init(); }
 
   Modifier.Position = {
     LEFT: 1,
