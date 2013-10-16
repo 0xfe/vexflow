@@ -31,15 +31,52 @@ base_sources = [
   "src/fonts/vexflow_font.js",
   "src/glyph.js",
   "src/stave.js",
+  "src/staveconnector.js",
   "src/tabstave.js",
+  "src/tickcontext.js",
   "src/tickable.js",
   "src/note.js",
+  "src/ghostnote.js",
+  "src/stavenote.js",
+  "src/tabnote.js",
+  "src/beam.js",
+  "src/voice.js",
+  "src/voicegroup.js",
   "src/modifier.js",
   "src/modifiercontext.js",
-  "src/stavemodifier.js",
-  "src/music.js",
+  "src/accidental.js",
+  "src/dot.js",
+  "src/formatter.js",
   "src/stavetie.js",
   "src/tabtie.js",
+  "src/tabslide.js",
+  "src/bend.js",
+  "src/vibrato.js",
+  "src/annotation.js",
+  "src/articulation.js",
+  "src/tuning.js",
+  "src/stavemodifier.js",
+  "src/keysignature.js",
+  "src/timesignature.js",
+  "src/clef.js",
+  "src/music.js",
+  "src/keymanager.js",
+  "src/renderer.js",
+  "src/raphaelcontext.js",
+  "src/stavebarline.js",
+  "src/stavehairpin.js",
+  "src/stavevolta.js",
+  "src/staverepetition.js",
+  "src/stavesection.js",
+  "src/stavetempo.js",
+  "src/barnote.js",
+  "src/tremolo.js",
+  "src/tuplet.js",
+  "src/boundingbox.js",
+  "src/textnote.js",
+  "src/frethandfinger.js",
+  "src/stringnumber.js",
+  "src/strokes.js"
 ]
 
 # Don't minify these files.
@@ -47,6 +84,7 @@ reject = [
   "src/header.js"
 ]
 
+# Catch other missing JS files
 js_files = Dir.glob('src/*.js')
 js_files.reject! {|file| base_sources.include?(file)}
 js_files.reject! {|file| reject.include?(file)}

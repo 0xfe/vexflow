@@ -43,8 +43,8 @@ Vex.Flow.Articulation = (function() {
     },
 
     setPosition: function(position) {
-      if (position == Vex.Flow.Modifier.Position.ABOVE ||
-          position == Vex.Flow.Modifier.Position.BELOW)
+      if (position == Modifier.Position.ABOVE ||
+          position == Modifier.Position.BELOW)
         this.position = position;
       return this;
     },
@@ -112,7 +112,7 @@ Vex.Flow.Articulation = (function() {
         shiftY = this.articulation.shift_up;
 
         var glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
-        if(this.articulation.between_lines)
+        if (this.articulation.between_lines)
           glyph_y = glyph_y_between_lines;
         else
           glyph_y = Vex.Min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
@@ -120,7 +120,7 @@ Vex.Flow.Articulation = (function() {
         shiftY = this.articulation.shift_down - 10;
 
         var glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
-        if(this.articulation.between_lines)
+        if (this.articulation.between_lines)
          glyph_y = glyph_y_between_lines;
         else
           glyph_y = Vex.Max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
@@ -130,8 +130,9 @@ Vex.Flow.Articulation = (function() {
       glyph_y += shiftY + this.y_shift;
 
      Vex.Flow.renderGlyph(this.context, glyph_x, glyph_y,
-                           this.render_options.font_scale, this.articulation.code);
+                          this.render_options.font_scale, this.articulation.code);
     }
   });
+
   return Articulation;
 }());

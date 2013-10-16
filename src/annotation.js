@@ -26,7 +26,7 @@ Vex.Flow.Annotation = (function() {
   };
 
   var Modifier = Vex.Flow.Modifier;
-  return Vex.Inherit(Annotation, Modifier, {
+  Vex.Inherit(Annotation, Modifier, {
     init: function(text) {
       Annotation.superclass.init.call(this);
 
@@ -132,4 +132,6 @@ Vex.Flow.Annotation = (function() {
       this.context.restore();
     }
   });
+
+  return Annotation;
 }());

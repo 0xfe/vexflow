@@ -95,6 +95,7 @@ Vex.Flow.Note = (function() {
     setExtraLeftPx: function(x) { this.extraLeftPx = x; return this; },
     setExtraRightPx: function(x) { this.extraRightPx = x; return this; },
     shouldIgnoreTicks: function() { return this.ignore_ticks; },
+    getLineNumber: function(is_top_note) { return 0; },
 
     setYs: function(ys) { this.ys = ys; return this; },
     getYs: function() {
