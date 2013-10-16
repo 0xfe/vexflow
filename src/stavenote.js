@@ -275,8 +275,11 @@ Vex.Flow.StaveNote = (function() {
     getStemX: function() {
       var x_begin = this.getAbsoluteX() + this.x_shift;
       var x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
+
       var stem_x = this.stem_direction == Vex.Flow.StaveNote.STEM_DOWN ?
         x_begin : x_end;
+
+      stem_x -= ((Vex.Flow.STEM_WIDTH / 2) * this.stem_direction);
 
       return stem_x;
     },
@@ -636,7 +639,9 @@ Vex.Flow.StaveNote = (function() {
           // if a slash note, draw 'manually' as font glyphs do not slant enough
           // and are too small.
           if (this.noteType == "s") {
-            drawSlashNoteHead(this, ctx, head_x + (this.stem_direction == 1 ? 1:0), y);
+            var displacement = Vex.Flow.STEM_WIDTH / 2;
+            drawSlashNoteHead(this, ctx,
+              head_x + (this.stem_direction == 1 ? -displacement : displacement), y);
           } else {
             Vex.Flow.renderGlyph(ctx, head_x,
                 y, this.render_options.glyph_font_scale, code_head);
@@ -712,7 +717,7 @@ Vex.Flow.StaveNote = (function() {
         // Draw the stem
         ctx.fillRect(stem_x,
             stem_y - (note_stem_height < 0 ? 0 : note_stem_height),
-            1,
+            Vex.Flow.STEM_WIDTH,
             Math.abs(note_stem_height));
       }
 

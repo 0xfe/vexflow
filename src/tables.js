@@ -904,3 +904,5 @@ Vex.Flow.TIME4_4 = {
   beat_value: 4,
   resolution: Vex.Flow.RESOLUTION
 };
+
+Vex.Flow.STEM_WIDTH = 1.5;
