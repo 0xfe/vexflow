@@ -58,6 +58,8 @@ Vex.Flow.Bend = (function() {
       this.release = release || false;
       this.font = "10pt Arial";
       this.render_options = {
+        line_width: 1.5,
+        line_style: "#777777",
         bend_width: 8,
         release_width: 8
       };
@@ -132,28 +134,39 @@ Vex.Flow.Bend = (function() {
       var ctx = this.context;
       var bend_height = this.note.getStave().getYForTopText(this.text_line) + 3;
       var annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
+      var that = this;
 
       function renderBend(x, y, width, height) {
         var cp_x = x + width;
         var cp_y = y;
 
+        ctx.save();
         ctx.beginPath();
+        ctx.setLineWidth(that.render_options.line_width);
+        ctx.setStrokeStyle(that.render_options.line_style);
+        ctx.setFillStyle(that.render_options.line_style);
         ctx.moveTo(x, y);
         ctx.quadraticCurveTo(cp_x, cp_y, x + width, height);
         ctx.stroke();
+        ctx.restore();
       }
 
       function renderRelease(x, y, width, height) {
+        ctx.save();
         ctx.beginPath();
+        ctx.setLineWidth(that.render_options.line_width);
+        ctx.setStrokeStyle(that.render_options.line_style);
+        ctx.setFillStyle(that.render_options.line_style);
         ctx.moveTo(x, height);
         ctx.quadraticCurveTo(
             x + width, height,
             x + width, y);
         ctx.stroke();
+        ctx.restore();
       }
 
       function renderArrowHead(x, y, direction) {
-        var width = 3;
+        var width = 4;
         var dir = direction || 1;
 
         ctx.beginPath();

@@ -83,6 +83,11 @@ Vex.Flow.RaphaelContext = (function() {
       return this;
     },
 
+    setLineWidth: function(width) {
+      this.attributes["stroke-width"] = width;
+      this.lineWidth = width;
+    },
+
     scale: function(x, y) {
       this.state.scale = { x: x, y: y };
       this.attributes.scale = x + "," + y + ",0,0";
@@ -318,7 +323,7 @@ Vex.Flow.RaphaelContext = (function() {
           font: this.attributes.font,
           fill: this.attributes.fill,
           stroke: this.attributes.stroke,
-
+          "stroke-width": this.attributes["stroke-width"]
         },
         shadow_attributes: {
           width: this.shadow_attributes.width,
@@ -335,6 +340,7 @@ Vex.Flow.RaphaelContext = (function() {
       this.attributes.font = state.attributes.font;
       this.attributes.fill = state.attributes.fill;
       this.attributes.stroke = state.attributes.stroke;
+      this.attributes["stroke-width"] = state.attributes["stroke-width"];
       this.shadow_attributes.width = state.shadow_attributes.width;
       this.shadow_attributes.color = state.shadow_attributes.color;
       return this;

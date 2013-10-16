@@ -75,6 +75,10 @@ Vex.Flow.Renderer = (function() {
       this.shadowBlur = blur;
       return this;
     };
+    ctx.setLineWidth = function(width) {
+      this.lineWidth = width;
+      return this;
+    }
     return ctx;
   };
 
