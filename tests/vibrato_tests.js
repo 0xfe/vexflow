@@ -14,9 +14,9 @@ Vex.Flow.Test.Vibrato.Start = function() {
       Vex.Flow.Test.Vibrato.withBend);
 }
 
-Vex.Flow.Test.Vibrato.simple = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 500, 240);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Vibrato.simple = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 500, 140);
+
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = "10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, 450).
@@ -38,9 +38,9 @@ Vex.Flow.Test.Vibrato.simple = function(options) {
   ok(true, "Simple Vibrato");
 }
 
-Vex.Flow.Test.Vibrato.harsh = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 500, 240);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Vibrato.harsh = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 500, 240);
+
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = "10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, 450).

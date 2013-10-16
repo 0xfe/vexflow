@@ -82,9 +82,9 @@ Vex.Flow.Test.Bend.doubleBendsWithRelease = function(options, contextBuilder) {
   ok(true, "Bend Release");
 }
 
-Vex.Flow.Test.Bend.reverseBends = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 500, 240);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Bend.reverseBends = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 500, 240);
+
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = " 10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, 450).
@@ -121,9 +121,8 @@ Vex.Flow.Test.Bend.reverseBends = function(options) {
   }
 }
 
-Vex.Flow.Test.Bend.bendPhrase = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 500, 240);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Bend.bendPhrase = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 500, 240);
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = " 10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, 450).

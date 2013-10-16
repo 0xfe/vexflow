@@ -12,8 +12,7 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
 }
 
 Vex.Flow.Test.AutoBeamFormatting.setupContext = function(options, x, y) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, x || 450, y || 140);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+  var ctx = new options.contextBuilder(options.canvas_sel, x || 450, y || 140);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = " 10pt Arial";
   var stave = new Vex.Flow.Stave(10, 10, x || 450).addTrebleGlyph().
@@ -24,7 +23,8 @@ Vex.Flow.Test.AutoBeamFormatting.setupContext = function(options, x, y) {
 
 function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
-Vex.Flow.Test.AutoBeamFormatting.simpleAuto = function(options) {
+Vex.Flow.Test.AutoBeamFormatting.simpleAuto = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.Beam.setupContext(options);
 
   var notes = [
@@ -60,7 +60,8 @@ Vex.Flow.Test.AutoBeamFormatting.simpleAuto = function(options) {
   ok(true, "Auto Beam Applicator Test");
 }
 
-Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options) {
+Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.Beam.setupContext(options);
 
   var notes = [
@@ -90,7 +91,8 @@ Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options) {
   ok(true, "Auto Beam Applicator Test");
 }
 
-Vex.Flow.Test.AutoBeamFormatting.simpleTuplets = function(options) {
+Vex.Flow.Test.AutoBeamFormatting.simpleTuplets = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.Beam.setupContext(options);
 
   var notes = [
@@ -129,7 +131,8 @@ Vex.Flow.Test.AutoBeamFormatting.simpleTuplets = function(options) {
   ok(true, "Auto Beam Applicator Test");
 }
 
-Vex.Flow.Test.AutoBeamFormatting.moreBeaming = function(options) {
+Vex.Flow.Test.AutoBeamFormatting.moreBeaming = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.Beam.setupContext(options);
 
   var notes = [

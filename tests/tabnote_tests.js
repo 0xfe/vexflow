@@ -40,8 +40,8 @@ Vex.Flow.Test.TabNote.tabStaveLine = function() {
 
   var ys = note.getYs();
   equal(ys.length, 2, "Chord should be rendered on two lines");
-  equal(ys[0], 100, "Line for String 6, Fret 6");
-  equal(ys[1], 80, "Line for String 4, Fret 5");
+  equal(ys[0], 99, "Line for String 6, Fret 6");
+  equal(ys[1], 79, "Line for String 4, Fret 5");
 }
 
 Vex.Flow.Test.TabNote.width = function() {
@@ -78,9 +78,9 @@ Vex.Flow.Test.TabNote.showNote = function(tab_struct, stave, ctx, x) {
   return note;
 }
 
-Vex.Flow.Test.TabNote.draw = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 140);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.TabNote.draw = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 600, 140);
+
   ctx.font = "10pt Arial";
   var stave = new Vex.Flow.TabStave(10, 10, 550);
   stave.setContext(ctx);

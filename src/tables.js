@@ -906,3 +906,5 @@ Vex.Flow.TIME4_4 = {
 };
 
 Vex.Flow.STEM_WIDTH = 1.5;
+Vex.Flow.STAVE_LINE_THICKNESS = 2;
+

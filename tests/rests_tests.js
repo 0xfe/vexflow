@@ -26,9 +26,8 @@ Vex.Flow.Test.Rests.Start = function() {
       Vex.Flow.Test.Rests.multi);
 };
 
-Vex.Flow.Test.Rests.setupContext = function(options, x, y) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, x || 350, y || 150);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Rests.setupContext = function(options, contextBuilder, x, y) {
+  var ctx = new contextBuilder(options.canvas_sel, x || 350, y || 150);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = " 10pt Arial";
   var stave = new Vex.Flow.Stave(10, 30, x || 350).addTrebleGlyph().
@@ -37,8 +36,8 @@ Vex.Flow.Test.Rests.setupContext = function(options, x, y) {
   return {context: ctx, stave: stave};
 }
 
-Vex.Flow.Test.Rests.basic = function(options) {
-  var c = Vex.Flow.Test.Rests.setupContext(options, 700);
+Vex.Flow.Test.Rests.basic = function(options, contextBuilder) {
+  var c = Vex.Flow.Test.Rests.setupContext(options, contextBuilder, 700);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
@@ -65,8 +64,8 @@ Vex.Flow.Test.Rests.basic = function(options) {
   ok(true, "Dotted Rest Test");
 }
 
-Vex.Flow.Test.Rests.beamsUp = function(options) {
-  var c = Vex.Flow.Test.Rests.setupContext(options, 600, 160);
+Vex.Flow.Test.Rests.beamsUp = function(options, b) {
+  var c = Vex.Flow.Test.Rests.setupContext(options, b, 600, 160);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
@@ -110,8 +109,8 @@ Vex.Flow.Test.Rests.beamsUp = function(options) {
   ok(true, "Auto Align Rests - Beams Up Test");
 }
 
-Vex.Flow.Test.Rests.beamsDown = function(options) {
-  var c = Vex.Flow.Test.Rests.setupContext(options, 600, 160);
+Vex.Flow.Test.Rests.beamsDown = function(options, b) {
+  var c = Vex.Flow.Test.Rests.setupContext(options, b, 600, 160);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
@@ -154,8 +153,8 @@ Vex.Flow.Test.Rests.beamsDown = function(options) {
   ok(true, "Auto Align Rests - Beams Down Test");
 }
 
-Vex.Flow.Test.Rests.tuplets = function(options) {
-  var c = Vex.Flow.Test.Rests.setupContext(options, 600, 160);
+Vex.Flow.Test.Rests.tuplets = function(options, b) {
+  var c = Vex.Flow.Test.Rests.setupContext(options, b, 600, 160);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
@@ -204,8 +203,8 @@ Vex.Flow.Test.Rests.tuplets = function(options) {
   ok(true, "Auto Align Rests - Tuplets Stem Up Test");
 }
 
-Vex.Flow.Test.Rests.tupletsdown = function(options) {
-  var c = Vex.Flow.Test.Rests.setupContext(options, 600, 160);
+Vex.Flow.Test.Rests.tupletsdown = function(options, b) {
+  var c = Vex.Flow.Test.Rests.setupContext(options, b, 600, 160);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
@@ -264,8 +263,8 @@ Vex.Flow.Test.Rests.tupletsdown = function(options) {
   ok(true, "Auto Align Rests - Tuplets Stem Down Test");
 }
 
-Vex.Flow.Test.Rests.staveRests = function(options) {
-  var c = Vex.Flow.Test.Rests.setupContext(options, 600, 160);
+Vex.Flow.Test.Rests.staveRests = function(options, b) {
+  var c = Vex.Flow.Test.Rests.setupContext(options, b, 600, 160);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
@@ -311,8 +310,8 @@ Vex.Flow.Test.Rests.staveRests = function(options) {
 }
 
 
-Vex.Flow.Test.Rests.staveRestsAll = function(options) {
-  var c = Vex.Flow.Test.Rests.setupContext(options, 600, 160);
+Vex.Flow.Test.Rests.staveRestsAll = function(options, b) {
+  var c = Vex.Flow.Test.Rests.setupContext(options, b, 600, 160);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
 
   var notes = [
@@ -362,8 +361,10 @@ Vex.Flow.Test.Rests.multi = function(options, contextBuilder) {
   var c = new contextBuilder(options.canvas_sel, 600, 200);
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
-  function newFinger(num, pos) { return new Vex.Flow.FretHandFinger(num).setPosition(pos); }
-  function newStringNumber(num, pos) { return new Vex.Flow.StringNumber(num).setPosition(pos);}
+  function newFinger(num, pos) {
+    return new Vex.Flow.FretHandFinger(num).setPosition(pos); }
+  function newStringNumber(num, pos) {
+    return new Vex.Flow.StringNumber(num).setPosition(pos);}
   var stave = new Vex.Flow.Stave(50, 10, 500).addTrebleGlyph();
   stave.setContext(c);
   stave.addTimeSignature("4/4");

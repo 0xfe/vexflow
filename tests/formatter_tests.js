@@ -89,9 +89,8 @@ Vex.Flow.Test.Formatter.renderNotes = function(
   voice2.draw(ctx, stave);
 }
 
-Vex.Flow.Test.Formatter.formatStaveNotes = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 400, 150);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Formatter.formatStaveNotes = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 150);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   var stave = new Vex.Flow.Stave(10, 10, 500);
   stave.setContext(ctx);
@@ -155,9 +154,8 @@ Vex.Flow.Test.Formatter.getNotes = function() {
 
 
 
-Vex.Flow.Test.Formatter.justifyStaveNotes = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 420, 400);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Formatter.justifyStaveNotes = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 420, 400);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
 
   // Get test voices.
@@ -225,9 +223,8 @@ Vex.Flow.Test.Formatter.renderNotesWithTab =
   tabVoice.draw(ctx, staves.tabs);
 }
 
-Vex.Flow.Test.Formatter.notesWithTab = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 420, 400);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Formatter.notesWithTab = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 420, 400);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = "10pt Arial";
 
@@ -252,9 +249,8 @@ Vex.Flow.Test.Formatter.notesWithTab = function(options) {
   ok(true);
 }
 
-Vex.Flow.Test.Formatter.multiStaves = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 500, 300);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Formatter.multiStaves = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 500, 300);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = "10pt Arial";
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }

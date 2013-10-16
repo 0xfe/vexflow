@@ -171,9 +171,9 @@ Vex.Flow.Test.Accidental.showNotes = function(note1, note2, stave, ctx, x) {
   ctx.restore();
 }
 
-Vex.Flow.Test.Accidental.multiVoice = function(options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 400, 150);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+Vex.Flow.Test.Accidental.multiVoice = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 150);
+
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   var stave = new Vex.Flow.Stave(10, 10, 420);
   stave.setContext(ctx);

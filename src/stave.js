@@ -9,6 +9,8 @@ Vex.Flow.Stave = (function() {
     if (arguments.length > 0) this.init(x, y, width, options);
   }
 
+  var THICKNESS = (Vex.Flow.STAVE_LINE_THICKNESS > 1 ?
+        Vex.Flow.STAVE_LINE_THICKNESS : 0);
   Stave.prototype = {
     init: function(x, y, width, options) {
       this.x = x;
@@ -30,6 +32,7 @@ Vex.Flow.Stave = (function() {
         vertical_bar_width: 10,       // Width around vertical bar end-marker
         glyph_spacing_px: 10,
         num_lines: 5,
+        fill_style: "#999999",
         spacing_between_lines_px: 10, // in pixels
         space_above_staff_ln: 4,      // in staff lines
         space_below_staff_ln: 4,      // in staff lines
@@ -155,7 +158,9 @@ Vex.Flow.Stave = (function() {
       var options = this.options;
       var spacing = options.spacing_between_lines_px;
       var headroom = options.space_above_staff_ln;
-      var y = this.y + ((line * spacing) + (headroom * spacing));
+
+      var y = this.y + ((line * spacing) + (headroom * spacing)) -
+        (THICKNESS / 2);
 
       return y;
     },
@@ -233,9 +238,13 @@ Vex.Flow.Stave = (function() {
       for (var line=0; line < num_lines; line++) {
         y = this.getYForLine(line);
 
+        this.context.save();
+        this.context.setFillStyle(this.options.fill_style);
+        this.context.setStrokeStyle(this.options.fill_style);
         if (this.options.line_config[line].visible) {
-          this.context.fillRect(x, y, width, 1);
+          this.context.fillRect(x, y, width, Vex.Flow.STAVE_LINE_THICKNESS);
         }
+        this.context.restore();
       }
 
       x = this.glyph_start_x;

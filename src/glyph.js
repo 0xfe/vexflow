@@ -17,7 +17,7 @@
  * @param {boolean} nocache If set, disables caching of font outline.
  */
 Vex.Flow.renderGlyph = function(ctx, x_pos, y_pos, point, val, nocache) {
-  var scale = point * 72 / (Vex.Flow.Font.resolution * 100);
+  var scale = point * 72.0 / (Vex.Flow.Font.resolution * 100.0);
   var metrics = Vex.Flow.Glyph.loadMetrics(Vex.Flow.Font, val, !nocache);
   Vex.Flow.Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
 };

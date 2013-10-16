@@ -34,15 +34,16 @@ Vex.Flow.Test.StaveTie.tieNotes = function(notes, indices, stave, ctx) {
 }
 
 Vex.Flow.Test.StaveTie.drawTie = function(notes, indices, options) {
-  Vex.Flow.Test.resizeCanvas(options.canvas_sel, 350, 140);
-  var ctx = Vex.getCanvasContext(options.canvas_sel);
+  var ctx = new options.contextBuilder(options.canvas_sel, 350, 140);
+
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   var stave = new Vex.Flow.Stave(10, 10, 350).setContext(ctx).draw();
 
   Vex.Flow.Test.StaveTie.tieNotes(notes, indices, stave, ctx);
 }
 
-Vex.Flow.Test.StaveTie.simple = function(options) {
+Vex.Flow.Test.StaveTie.simple = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
@@ -55,7 +56,8 @@ Vex.Flow.Test.StaveTie.simple = function(options) {
   ok(true, "Simple Test");
 }
 
-Vex.Flow.Test.StaveTie.chord = function(options) {
+Vex.Flow.Test.StaveTie.chord = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
@@ -68,7 +70,8 @@ Vex.Flow.Test.StaveTie.chord = function(options) {
   ok(true, "Chord test");
 }
 
-Vex.Flow.Test.StaveTie.stemUp = function(options) {
+Vex.Flow.Test.StaveTie.stemUp = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 

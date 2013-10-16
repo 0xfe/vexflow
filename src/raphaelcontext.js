@@ -316,7 +316,9 @@ Vex.Flow.RaphaelContext = (function() {
         },
         attributes: {
           font: this.attributes.font,
-          fill: this.attributes.fill
+          fill: this.attributes.fill,
+          stroke: this.attributes.stroke,
+
         },
         shadow_attributes: {
           width: this.shadow_attributes.width,
@@ -332,6 +334,7 @@ Vex.Flow.RaphaelContext = (function() {
       this.state.font_family = state.state.font_family;
       this.attributes.font = state.attributes.font;
       this.attributes.fill = state.attributes.fill;
+      this.attributes.stroke = state.attributes.stroke;
       this.shadow_attributes.width = state.shadow_attributes.width;
       this.shadow_attributes.color = state.shadow_attributes.color;
       return this;
