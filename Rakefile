@@ -17,6 +17,8 @@ BUILD_PREFIX = "0xFE"
 BUILD_DATE = Time.now()
 BUILD_COMMIT = `git rev-list --max-count=1 HEAD`.chomp
 
+JSHINT = "./node_modules/jshint/bin/jshint"
+
 directory TARGET_DIR
 directory 'build/tests'
 directory 'build/tests/support'
@@ -134,13 +136,9 @@ task :clean do
 end
 
 task :lint do
-  # Requires JSLint to be installed
-  command = "jsl "
-  FileList['src/*.js'].each do |source|
-    command += " -process #{source}"
-  end
-
-  system command
+  # Requires JSHint to be installed
+  puts "Checking VexFlow sources for lint errors..."
+  system "#{JSHINT} src/*.js"
 end
 
 task :make => [:build_copy, TARGET_DIR, TARGET]

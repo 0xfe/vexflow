@@ -55,7 +55,7 @@ Clean with:
 
     $ rake clean
 
-If you have JSLint installed, you can check your code for common errors with:
+If you have JSHint installed, you can check your code for common errors with:
 
     $ rake lint
 

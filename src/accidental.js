@@ -9,7 +9,7 @@
 Vex.Flow.Accidental = (function(){
   Accidental = function(type) {
     if (arguments.length > 0) this.init(type);
-  }
+  };
 
   Vex.Inherit(Accidental, Vex.Flow.Modifier, {
     init: function(type) {
