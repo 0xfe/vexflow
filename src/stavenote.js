@@ -632,7 +632,7 @@ Vex.Flow.StaveNote = (function() {
 
         // Draw the head.
         if (render_head) {
-          head_x = Math.round(head_x);
+          head_x = head_x;
 
           ctx.save();
           this.applyKeyStyle(key_style, ctx);
