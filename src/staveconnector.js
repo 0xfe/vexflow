@@ -18,6 +18,8 @@ Vex.Flow.StaveConnector = (function() {
     BRACKET: 4
   };
 
+  var THICKNESS = Vex.Flow.STAVE_LINE_THICKNESS;
+
   StaveConnector.prototype = {
     init: function(top_stave, bottom_stave) {
       this.width = 3;
@@ -42,7 +44,8 @@ Vex.Flow.StaveConnector = (function() {
       if (!this.ctx) throw new Vex.RERR(
           "NoContext", "Can't draw without a context.");
       var topY = this.top_stave.getYForLine(0);
-      var botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1);
+      var botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +
+        THICKNESS;
       var width = this.width;
       var topX = this.top_stave.getX();
       var attachment_height = botY - topY;
