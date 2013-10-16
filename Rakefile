@@ -133,6 +133,16 @@ task :clean do
   sh 'rm -rf build'
 end
 
+task :lint do
+  # Requires JSLint to be installed
+  command = "jsl "
+  FileList['src/*.js'].each do |source|
+    command += " -process #{source}"
+  end
+
+  system command
+end
+
 task :make => [:build_copy, TARGET_DIR, TARGET]
 
 task :default => [:make]

@@ -55,6 +55,10 @@ Clean with:
 
     $ rake clean
 
+If you have JSLint installed, you can check your code for common errors with:
+
+    $ rake lint
+
 ## MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
