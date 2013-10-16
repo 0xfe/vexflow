@@ -567,11 +567,12 @@ Vex.Flow.StaveNote = (function() {
       // Private function to draw slash note heads, glyphs were not slanted enough
       // and too small.
       function drawSlashNoteHead(stavenote, ctx, x, y) {
+        var width = 15 + (Vex.Flow.STEM_WIDTH / 2);
         ctx.beginPath();
         ctx.moveTo(x, y + 11);
         ctx.lineTo(x, y + 1);
-        ctx.lineTo(x + 15, y - 10);
-        ctx.lineTo(x + 15, y);
+        ctx.lineTo(x + width, y - 10);
+        ctx.lineTo(x + width, y);
         ctx.lineTo(x, y + 11);
         ctx.closePath();
 
