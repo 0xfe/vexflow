@@ -120,10 +120,10 @@ Vex.Flow.StaveConnector = (function() {
           topX -= (this.width + 2);
           break;
         case StaveConnector.type.BOLD_DOUBLE_LEFT:
-          drawRepeatConnector(this.ctx, this.type, topX, topY, botY);
+          drawBoldDoubleLine(this.ctx, this.type, topX, topY, botY);
           break;
         case StaveConnector.type.BOLD_DOUBLE_RIGHT:
-          drawRepeatConnector(this.ctx, this.type, topX, topY, botY);
+          drawBoldDoubleLine(this.ctx, this.type, topX, topY, botY);
           break;
       }
 
