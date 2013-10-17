@@ -12,7 +12,7 @@ Vex.Flow.StaveConnector = (function() {
   }
 
   // SINGLE_LEFT and SINGLE are the same value for compatibility
-  // with older versions of vexflow which didn't have right sided 
+  // with older versions of vexflow which didn't have right sided
   // stave connectors
   StaveConnector.type = {
     SINGLE_RIGHT : 0,
@@ -56,7 +56,7 @@ Vex.Flow.StaveConnector = (function() {
       var width = this.width;
       var topX = this.top_stave.getX();
 
-      var isRightSidedConnector = (this.type === StaveConnector.type.SINGLE_RIGHT || 
+      var isRightSidedConnector = (this.type === StaveConnector.type.SINGLE_RIGHT ||
         this.type === StaveConnector.type.BOLD_DOUBLE_RIGHT);
 
       if (isRightSidedConnector){
@@ -68,7 +68,7 @@ Vex.Flow.StaveConnector = (function() {
         case StaveConnector.type.SINGLE:
           width = 1;
           break;
-        case StaveConnector.type.SINGLE_LEFT: 
+        case StaveConnector.type.SINGLE_LEFT:
           width = 1;
           break;
         case StaveConnector.type.SINGLE_RIGHT:
@@ -127,26 +127,28 @@ Vex.Flow.StaveConnector = (function() {
           break;
       }
 
-      if (this.type !== StaveConnector.type.BRACE && 
-        this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT && 
+      if (this.type !== StaveConnector.type.BRACE &&
+        this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
         this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
         this.ctx.fillRect(topX , topY, width, attachment_height);
       }
     }
   };
 
-  function drawBoldDoubleLine(ctx, type, topX, topY, botY){    
-    if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT && type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
-      throw Vex.RERR("InvalidConnector", "A REPEAT_BEGIN or REPEAT_END type must be provided.");
+  function drawBoldDoubleLine(ctx, type, topX, topY, botY){
+    if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
+        type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
+      throw Vex.RERR("InvalidConnector",
+        "A REPEAT_BEGIN or REPEAT_END type must be provided.");
     }
-    
+
     var x_shift = 3;
     var variableWidth = 3.5; // Width for avoiding anti-aliasing width issues
     var thickLineOffset = 2; // For aesthetics
 
     if (type === StaveConnector.type.BOLD_DOUBLE_RIGHT) {
       x_shift = -5; // Flips the side of the thin line
-      variableWidth = 3; 
+      variableWidth = 3;
     }
 
     // Thin line
