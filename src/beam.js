@@ -253,7 +253,7 @@ Vex.Flow.Beam = (function() {
           var first_x = beam_line.start;
           var first_y = getSlopeY(first_x);
 
-          var last_x = beam_line.end;
+          var last_x = beam_line.end + (Vex.Flow.STEM_WIDTH / 2);
           var last_y = getSlopeY(last_x);
 
           this.context.beginPath();
