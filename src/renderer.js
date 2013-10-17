@@ -78,7 +78,7 @@ Vex.Flow.Renderer = (function() {
     ctx.setLineWidth = function(width) {
       this.lineWidth = width;
       return this;
-    }
+    };
     return ctx;
   };
 
