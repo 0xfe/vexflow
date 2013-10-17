@@ -11,11 +11,18 @@ Vex.Flow.StaveConnector = (function() {
     this.init(top_stave, bottom_stave);
   }
 
+  // SINGLE_LEFT and SINGLE are the same value for compatibility
+  // with older versions of vexflow which didn't have right sided 
+  // stave connectors
   StaveConnector.type = {
+    SINGLE_RIGHT : 0,
+    SINGLE_LEFT : 1,
     SINGLE: 1,
     DOUBLE: 2,
     BRACE: 3,
-    BRACKET: 4
+    BRACKET: 4,
+    BOLD_DOUBLE_LEFT: 5,
+    BOLD_DOUBLE_RIGHT: 6
   };
 
   var THICKNESS = Vex.Flow.STAVE_LINE_THICKNESS;
@@ -34,8 +41,8 @@ Vex.Flow.StaveConnector = (function() {
     },
 
     setType: function(type) {
-      if (type >= StaveConnector.type.SINGLE &&
-          type <= StaveConnector.type.BRACKET)
+      if (type >= StaveConnector.type.SINGLE_RIGHT &&
+          type <= StaveConnector.type.BOLD_DOUBLE_RIGHT)
         this.type = type;
       return this;
     },
@@ -48,9 +55,23 @@ Vex.Flow.StaveConnector = (function() {
         THICKNESS;
       var width = this.width;
       var topX = this.top_stave.getX();
+
+      var isRightSidedConnector = (this.type === StaveConnector.type.SINGLE_RIGHT || 
+        this.type === StaveConnector.type.BOLD_DOUBLE_RIGHT);
+
+      if (isRightSidedConnector){
+        topX = this.top_stave.getX() + this.top_stave.width;
+      }
+
       var attachment_height = botY - topY;
       switch (this.type) {
         case StaveConnector.type.SINGLE:
+          width = 1;
+          break;
+        case StaveConnector.type.SINGLE_LEFT: 
+          width = 1;
+          break;
+        case StaveConnector.type.SINGLE_RIGHT:
           width = 1;
           break;
         case StaveConnector.type.DOUBLE:
@@ -98,13 +119,41 @@ Vex.Flow.StaveConnector = (function() {
           Vex.Flow.renderGlyph(this.ctx, topX - 5, botY + 3, 40, "v10", true);
           topX -= (this.width + 2);
           break;
+        case StaveConnector.type.BOLD_DOUBLE_LEFT:
+          drawBoldDoubleLine(this.ctx, this.type, topX, topY, botY);
+          break;
+        case StaveConnector.type.BOLD_DOUBLE_RIGHT:
+          drawBoldDoubleLine(this.ctx, this.type, topX, topY, botY);
+          break;
       }
 
-      if (this.type != StaveConnector.type.BRACE) {
+      if (this.type !== StaveConnector.type.BRACE && 
+        this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT && 
+        this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
         this.ctx.fillRect(topX , topY, width, attachment_height);
       }
     }
   };
+
+  function drawBoldDoubleLine(ctx, type, topX, topY, botY){    
+    if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT && type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
+      throw Vex.RERR("InvalidConnector", "A REPEAT_BEGIN or REPEAT_END type must be provided.");
+    }
+    
+    var x_shift = 3;
+    var variableWidth = 3.5; // Width for avoiding anti-aliasing width issues
+    var thickLineOffset = 2; // For aesthetics
+
+    if (type === StaveConnector.type.BOLD_DOUBLE_RIGHT) {
+      x_shift = -5; // Flips the side of the thin line
+      variableWidth = 3; 
+    }
+
+    // Thin line
+    ctx.fillRect(topX + x_shift, topY, 1, botY - topY);
+    // Thick line
+    ctx.fillRect(topX - thickLineOffset, topY, variableWidth, botY - topY);
+  }
 
   return StaveConnector;
 }());
