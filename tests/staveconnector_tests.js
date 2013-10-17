@@ -11,10 +11,26 @@ Vex.Flow.Test.StaveConnector.Start = function() {
     Vex.Flow.Test.StaveConnector.drawSingle);  
   Vex.Flow.Test.runRaphaelTest("StaveConnector Single Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawSingle);
+  Vex.Flow.Test.runTest("StaveConnector Single Both Sides Test (Canvas)", 
+    Vex.Flow.Test.StaveConnector.drawSingleBoth);  
+  Vex.Flow.Test.runRaphaelTest("StaveConnector Single Both Sides Test (Raphael)",
+    Vex.Flow.Test.StaveConnector.drawSingleBoth);
   Vex.Flow.Test.runTest("StaveConnector Double Draw Test (Canvas)", 
     Vex.Flow.Test.StaveConnector.drawDouble);  
   Vex.Flow.Test.runRaphaelTest("StaveConnector Double Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawDouble);
+  Vex.Flow.Test.runTest("StaveConnector Bold Double Line Left Draw Test (Canvas)", 
+    Vex.Flow.Test.StaveConnector.drawRepeatBegin);  
+  Vex.Flow.Test.runRaphaelTest("StaveConnector Bold Double Line Left Draw Test (Raphael)",
+    Vex.Flow.Test.StaveConnector.drawRepeatBegin);
+  Vex.Flow.Test.runTest("StaveConnector Bold Double Line Right Draw Test (Canvas)", 
+    Vex.Flow.Test.StaveConnector.drawRepeatEnd);  
+  Vex.Flow.Test.runRaphaelTest("StaveConnector Bold Double Line Right Draw Test (Raphael)",
+    Vex.Flow.Test.StaveConnector.drawRepeatEnd);
+  Vex.Flow.Test.runTest("StaveConnector Bold Double Lines Overlapping Draw Test (Canvas)", 
+    Vex.Flow.Test.StaveConnector.drawRepeatAdjacent);  
+  Vex.Flow.Test.runRaphaelTest("StaveConnector Bold Double Lines Overlapping Draw Test (Raphael)",
+    Vex.Flow.Test.StaveConnector.drawRepeatAdjacent);
   Vex.Flow.Test.runTest("StaveConnector Brace Draw Test (Canvas)", 
     Vex.Flow.Test.StaveConnector.drawBrace);  
   Vex.Flow.Test.runRaphaelTest("StaveConnector Brace Draw Test (Raphael)",
@@ -45,6 +61,26 @@ Vex.Flow.Test.StaveConnector.drawSingle = function(options, contextBuilder) {
   stave.draw();
   stave2.draw();
   connector.draw();  
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.StaveConnector.drawSingleBoth = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 300);
+  var stave = new Vex.Flow.Stave(25, 10, 300);
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);  
+  stave.setContext(ctx);
+  stave2.setContext(ctx);
+  var connector = new Vex.Flow.StaveConnector(stave, stave2);
+  connector.setType(Vex.Flow.StaveConnector.type.SINGLE_LEFT);
+  connector.setContext(ctx);
+  var connector2 = new Vex.Flow.StaveConnector(stave, stave2);
+  connector2.setType(Vex.Flow.StaveConnector.type.SINGLE_RIGHT);
+  connector2.setContext(ctx);
+  stave.draw();
+  stave2.draw();
+  connector.draw();  
+  connector2.draw();  
 
   ok(true, "all pass");
 }
@@ -129,6 +165,96 @@ Vex.Flow.Test.StaveConnector.drawBracket = function(options, contextBuilder) {
   stave2.draw();
   connector.draw(); 
   line.draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.StaveConnector.drawRepeatBegin = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 300);
+  var stave = new Vex.Flow.Stave(25, 10, 300);
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);  
+  stave.setContext(ctx);
+  stave2.setContext(ctx);
+  stave.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+  stave2.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+  //var connector = new Vex.Flow.StaveConnector(stave, stave2);
+  var line = new Vex.Flow.StaveConnector(stave, stave2);
+  //connector.setType(Vex.Flow.StaveConnector.type.LINE);
+  //connector.setContext(ctx);
+  line.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_LEFT);
+  //connector.setContext(ctx);
+  line.setContext(ctx);
+  stave.draw();
+  stave2.draw();
+  //connector.draw(); 
+  line.draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.StaveConnector.drawRepeatEnd = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 300);
+  var stave = new Vex.Flow.Stave(25, 10, 300);
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);  
+  stave.setContext(ctx);
+  stave2.setContext(ctx);
+  stave.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
+  stave2.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
+  //var connector = new Vex.Flow.StaveConnector(stave, stave2);
+  var line = new Vex.Flow.StaveConnector(stave, stave2);
+  //connector.setType(Vex.Flow.StaveConnector.type.LINE);
+  //connector.setContext(ctx);
+  line.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_RIGHT);
+  //connector.setContext(ctx);
+  line.setContext(ctx);
+  stave.draw();
+  stave2.draw();
+  //connector.draw(); 
+  line.draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.StaveConnector.drawRepeatAdjacent = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 300);
+  var stave = new Vex.Flow.Stave(25, 10, 150);
+  var stave2 = new Vex.Flow.Stave(25, 120, 150);
+  var stave3 = new Vex.Flow.Stave(175, 10, 150);
+  var stave4 = new Vex.Flow.Stave(175, 120, 150);  
+  stave.setContext(ctx);
+  stave2.setContext(ctx);
+  stave3.setContext(ctx);
+  stave4.setContext(ctx);
+
+  stave.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
+  stave2.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
+  stave3.setEndBarType(Vex.Flow.Barline.type.END);
+  stave4.setEndBarType(Vex.Flow.Barline.type.END);
+
+  stave.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+  stave2.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+  stave3.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+  stave4.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+  var connector = new Vex.Flow.StaveConnector(stave, stave2);
+  var connector2 = new Vex.Flow.StaveConnector(stave, stave2);
+  var connector3 = new Vex.Flow.StaveConnector(stave3, stave4);
+  var connector4 = new Vex.Flow.StaveConnector(stave3, stave4);
+  connector.setContext(ctx);
+  connector2.setContext(ctx);
+  connector3.setContext(ctx);
+  connector4.setContext(ctx);
+  connector.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_LEFT);
+  connector2.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_RIGHT);
+  connector3.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_LEFT);
+  connector4.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_RIGHT);
+  stave.draw();
+  stave2.draw();
+  stave3.draw();
+  stave4.draw();
+  connector.draw(); 
+  connector2.draw();
+  connector3.draw();
+  connector4.draw();
 
   ok(true, "all pass");
 }
