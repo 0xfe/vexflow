@@ -39,6 +39,8 @@ base_sources = [
   "src/tickable.js",
   "src/note.js",
   "src/ghostnote.js",
+  "src/notehead.js",
+  "src/stem.js",
   "src/stavenote.js",
   "src/tabnote.js",
   "src/beam.js",
