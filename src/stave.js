@@ -63,7 +63,7 @@ Vex.Flow.Stave = (function() {
 
       // Add additional space if left barline is REPEAT_BEGIN
       if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN)
-        start_x += 10;
+        start_x += 20;
       return start_x;
     },
 
@@ -101,6 +101,22 @@ Vex.Flow.Stave = (function() {
       if (type != Vex.Flow.Barline.type.REPEAT_BEGIN)
         this.modifiers[1] = new Vex.Flow.Barline(type, this.x + this.width);
       return this;
+    },
+
+    getRepeatBeginXShift: function() {
+      var x = this.glyph_start_x;
+      var bar_x_shift = 0;
+
+      for (var i = 0; i < this.glyphs.length; ++i) {
+        var glyph = this.glyphs[i];
+        x += glyph.getMetrics().width;
+        bar_x_shift += glyph.getMetrics().width;
+      }
+
+      // Add padding after clef, time sig, key sig
+      if (bar_x_shift > 0) bar_x_shift += this.options.vertical_bar_width + 10;
+
+      return bar_x_shift;
     },
 
     // Coda & Segno Symbol functions
@@ -235,6 +251,7 @@ Vex.Flow.Stave = (function() {
       var x = this.x;
       var y;
 
+      // Render lines
       for (var line=0; line < num_lines; line++) {
         y = this.getYForLine(line);
 
@@ -247,24 +264,25 @@ Vex.Flow.Stave = (function() {
         this.context.restore();
       }
 
+      // render glyphs
       x = this.glyph_start_x;
-      var bar_x_shift = 0;
-      var i;
-      for (i = 0; i < this.glyphs.length; ++i) {
+      for (var i = 0; i < this.glyphs.length; ++i) {
         var glyph = this.glyphs[i];
-        if (!glyph.getContext()) glyph.setContext(this.context);
+        if (!glyph.getContext()) {
+          glyph.setContext(this.context);
+        }
         glyph.renderToStave(x);
         x += glyph.getMetrics().width;
-        bar_x_shift += glyph.getMetrics().width;
       }
-      // Add padding after clef, time sig, key sig
-      if (bar_x_shift > 0) bar_x_shift += this.options.vertical_bar_width;
+
       // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
       for (i = 0; i < this.modifiers.length; i++) {
         // Only draw modifier if it has a draw function
         if (typeof this.modifiers[i].draw == "function")
-          this.modifiers[i].draw(this, bar_x_shift);
+          this.modifiers[i].draw(this, this.getRepeatBeginXShift());
       }
+
+      // Render measure numbers
       if (this.measure > 0) {
         this.context.save();
         this.context.setFont(this.font.family, this.font.size, this.font.weight);

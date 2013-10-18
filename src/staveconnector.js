@@ -33,6 +33,7 @@ Vex.Flow.StaveConnector = (function() {
       this.top_stave = top_stave;
       this.bottom_stave = bottom_stave;
       this.type = StaveConnector.type.DOUBLE;
+      this.x_shift = 0; // Mainly used to offset Bold Double Left to align with offset Repeat Begin bars
     },
 
     setContext: function(ctx) {
@@ -44,6 +45,15 @@ Vex.Flow.StaveConnector = (function() {
       if (type >= StaveConnector.type.SINGLE_RIGHT &&
           type <= StaveConnector.type.BOLD_DOUBLE_RIGHT)
         this.type = type;
+      return this;
+    },
+
+    setXShift: function(x_shift){
+      if (typeof x_shift !== 'number') {
+        throw Vex.RERR("InvalidType", "x_shift must be a Number");
+      }
+
+      this.x_shift = x_shift;
       return this;
     },
 
@@ -120,7 +130,7 @@ Vex.Flow.StaveConnector = (function() {
           topX -= (this.width + 2);
           break;
         case StaveConnector.type.BOLD_DOUBLE_LEFT:
-          drawBoldDoubleLine(this.ctx, this.type, topX, topY, botY);
+          drawBoldDoubleLine(this.ctx, this.type, topX + this.x_shift, topY, botY);
           break;
         case StaveConnector.type.BOLD_DOUBLE_RIGHT:
           drawBoldDoubleLine(this.ctx, this.type, topX, topY, botY);
