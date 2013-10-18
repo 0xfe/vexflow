@@ -103,11 +103,21 @@ Vex.Flow.Stave = (function() {
       return this;
     },
 
-    getRepeatBeginXShift: function() {
+    /**
+     * Gets the pixels to shift from the beginning of the stave
+     * following the modifier at the provided index
+     * @param  {Number} index The index from which to determine the shift
+     * @return {Number}       The amount of pixels shifted
+     */
+    getModifierXShift: function(index) {
+      if (typeof index === 'undefined') index = this.glyphs.length -1;
+      if (typeof index !== 'number') new Vex.RERR("InvalidIndex", 
+        "Must be of number type");
+
       var x = this.glyph_start_x;
       var bar_x_shift = 0;
 
-      for (var i = 0; i < this.glyphs.length; ++i) {
+      for (var i = 0; i < index + 1; ++i) {
         var glyph = this.glyphs[i];
         x += glyph.getMetrics().width;
         bar_x_shift += glyph.getMetrics().width;
@@ -279,7 +289,7 @@ Vex.Flow.Stave = (function() {
       for (i = 0; i < this.modifiers.length; i++) {
         // Only draw modifier if it has a draw function
         if (typeof this.modifiers[i].draw == "function")
-          this.modifiers[i].draw(this, this.getRepeatBeginXShift());
+          this.modifiers[i].draw(this, this.getModifierXShift());
       }
 
       // Render measure numbers

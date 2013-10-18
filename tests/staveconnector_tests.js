@@ -308,8 +308,8 @@ Vex.Flow.Test.StaveConnector.drawRepeatOffset2 = function(options, contextBuilde
   connector4.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_RIGHT);
   connector5.setType(Vex.Flow.StaveConnector.type.SINGLE_LEFT);
 
-  connector.setXShift(stave.getRepeatBeginXShift());
-  connector3.setXShift(stave3.getRepeatBeginXShift());
+  connector.setXShift(stave.getModifierXShift());
+  connector3.setXShift(stave3.getModifierXShift());
 
   stave.draw();
   stave2.draw();
@@ -374,8 +374,8 @@ Vex.Flow.Test.StaveConnector.drawRepeatOffset = function(options, contextBuilder
   connector4.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_RIGHT);
   connector5.setType(Vex.Flow.StaveConnector.type.SINGLE_LEFT);
 
-  connector.setXShift(stave.getRepeatBeginXShift());
-  connector3.setXShift(stave3.getRepeatBeginXShift());
+  connector.setXShift(stave.getModifierXShift());
+  connector3.setXShift(stave3.getModifierXShift());
 
   stave.draw();
   stave2.draw();
