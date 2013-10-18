@@ -564,29 +564,6 @@ Vex.Flow.StaveNote = (function() {
       var highest_line = 5;
       var lowest_line = 1;
 
-      // Private function to draw slash note heads, glyphs were not slanted enough
-      // and too small.
-      function drawSlashNoteHead(stavenote, ctx, x, y) {
-        var width = 15 + (Vex.Flow.STEM_WIDTH / 2);
-        ctx.beginPath();
-        ctx.moveTo(x, y + 11);
-        ctx.lineTo(x, y + 1);
-        ctx.lineTo(x + width, y - 10);
-        ctx.lineTo(x + width, y);
-        ctx.lineTo(x, y + 11);
-        ctx.closePath();
-
-        // only fill if quarter note or smaller
-        if (stavenote.duration != 1 &&
-            stavenote.duration != 2 &&
-            stavenote.duration != "h" &&
-            stavenote.duration != "w") {
-          ctx.fill();
-        } else {
-          ctx.stroke();
-        }
-      }
-
       var i, key_style, line;
       for (i = start_i; i != end_i; i += step_i) {
         var note_props = this.keyProps[i];
@@ -617,38 +594,24 @@ Vex.Flow.StaveNote = (function() {
         if (y_top == null || y < y_top) y_top = y;
         if (y_bottom == null || y > y_bottom) y_bottom = y;
 
-        // Get glyph code and initial X position for the head. Displaced heads
-        // are shifted exactly one head-width right.
-        var code_head = glyph.code_head;
-        var head_x = x_begin +
-          (displaced ? glyph.head_width * stem_direction : 0);
+        var note_head = new Vex.Flow.NoteHead({
+          x: x_begin,
+          y: y,
+          note_type: this.noteType,
+          custom_glyph_code: note_props.code,
+          x_shift: note_props.shift_right,
+          duration: this.duration,
+          displaced: displaced,
+          stem_direction: stem_direction,
+          key_style: key_style,
+          glyph_font_scale: this.render_options.glyph_font_scale
+        });
 
-        // For special notes (such as "X"), use the glyph code from the
-        // key properties.
-        if (note_props.code) {
-          code_head = note_props.code;
-          head_x = x_begin + note_props.shift_right;
-        }
+        var head_x = note_head.getAbsoluteX();
 
         // Draw the head.
         if (render_head) {
-          head_x = head_x;
-
-          ctx.save();
-          this.applyKeyStyle(key_style, ctx);
-
-          // if a slash note, draw 'manually' as font glyphs do not slant enough
-          // and are too small.
-          if (this.noteType == "s") {
-            var displacement = Vex.Flow.STEM_WIDTH / 2;
-            drawSlashNoteHead(this, ctx,
-              head_x + (this.stem_direction == 1 ? -displacement : displacement), y);
-          } else {
-            Vex.Flow.renderGlyph(ctx, head_x,
-                y, this.render_options.glyph_font_scale, code_head);
-          }
-
-          ctx.restore();
+          note_head.setContext(this.context).draw();
 
           // If note above/below the staff, draw the small staff
           if (line <= 0 || line >= 6) {
@@ -689,7 +652,7 @@ Vex.Flow.StaveNote = (function() {
       var note_stem_height = ((y_bottom - y_top) * stem_direction) +
         (this.render_options.stem_height * stem_direction);
 
-      if (glyph.stem && render_stem) {
+      if (this.hasStem() && render_stem) {
         var stem_x, stem_y;
 
         if (stem_direction == Vex.Flow.StaveNote.STEM_DOWN) {
