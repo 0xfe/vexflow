@@ -34,20 +34,20 @@ Vex.Flow.NoteHead = (function() {
 
   NoteHead.prototype = {
     init: function(head_options) {
-      this.x = head_options.x;
-      this.y = head_options.y;
+      this.x = head_options.x || 0;
+      this.y = head_options.y || 0;
       this.note_type = head_options.note_type;
       this.duration = head_options.duration;
-      this.displaced = head_options.displaced;
-      this.stem_direction = head_options.stem_direction;
+      this.displaced = head_options.displaced || false;
+      this.stem_direction = head_options.stem_direction || Vex.Flow.StaveNote.STEM_UP;
 
       // Get glyph code based on duration and note type. This could be
       // regular notes, rests, or other custom codes.
       this.glyph = Vex.Flow.durationToGlyph(this.duration, this.note_type);
       if (!this.glyph) {
         throw new Vex.RuntimeError("BadArguments",
-            "Invalid note initialization data (No glyph found): " +
-            JSON.stringify(note_struct));
+            "No glyph found for duration '" + this.duration +
+            "' and type '" + this.note_type + "'");
       }
 
       this.width = this.glyph.head_width;
@@ -88,13 +88,9 @@ Vex.Flow.NoteHead = (function() {
       var y = this.y;
 
       // Begin and end positions for head.
-      var displaced = this.displaced;
       var stem_direction = this.stem_direction;
       var glyph_font_scale = this.glyph_font_scale;
       var key_style = this.key_style;
-
-      var code_head = this.glyph_code;
-      var width = this.width;
 
       if (this.note_type == "s") {
         var displacement = Vex.Flow.STEM_WIDTH / 2;
@@ -104,11 +100,10 @@ Vex.Flow.NoteHead = (function() {
         if (key_style) {
           ctx.save();
           this.applyKeyStyle(key_style, ctx);
-          Vex.Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, code_head);
+          Vex.Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
           ctx.restore();
         } else {
-          console.log(code_head);
-          Vex.Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, code_head);
+          Vex.Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
         }
       }
     }
