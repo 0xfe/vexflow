@@ -436,38 +436,22 @@ Vex.Flow.StaveNote = (function() {
     },
 
     addAccidental: function(index, accidental) {
-      accidental.setNote(this);
-      accidental.setIndex(index);
-      this.modifiers.push(accidental);
-      this.setPreFormatted(false);
-      return this;
+      return this.addModifier(index, accidental);
     },
 
     addArticulation: function(index, articulation) {
-      articulation.setNote(this);
-      articulation.setIndex(index);
-      this.modifiers.push(articulation);
-      this.setPreFormatted(false);
-      return this;
+      return this.addModifier(index, articulation);
     },
 
     addAnnotation: function(index, annotation) {
-      annotation.setNote(this);
-      annotation.setIndex(index);
-      this.modifiers.push(annotation);
-      this.setPreFormatted(false);
-      return this;
+      return this.addModifier(index, annotation);
     },
 
     addDot: function(index) {
       var dot = new Vex.Flow.Dot();
-      dot.setNote(this);
-      dot.setIndex(index);
       dot.setDotShiftY(this.glyph.dot_shiftY);
-      this.modifiers.push(dot);
-      this.setPreFormatted(false);
       this.dots++;
-      return this;
+      return this.addModifier(index, dot);
     },
 
     // Convenience method to add dot to all notes in chord
