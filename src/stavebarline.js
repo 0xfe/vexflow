@@ -34,8 +34,10 @@ Vex.Flow.Barline = (function() {
     getCategory: function() { return "barlines"; },
     setX: function(x) { this.x = x; return this; },
 
-      // Draw barlines
-    draw: function(stave) {
+  // Draw barlines
+    draw: function(stave, x_shift) {
+      x_shift = typeof x_shift !== 'number' ? 0 : x_shift;
+
       switch (this.barline) {
         case Barline.type.SINGLE:
           this.drawVerticalBar(stave, this.x, false);
@@ -47,7 +49,12 @@ Vex.Flow.Barline = (function() {
           this.drawVerticalEndBar(stave, this.x);
           break;
         case Barline.type.REPEAT_BEGIN:
-          this.drawRepeatBar(stave, this.x, true);
+          // If the barline is shifted over (in front of clef/time/key)
+          // Draw vertical bar at the beginning.
+          if (x_shift > 0) {
+            this.drawVerticalBar(stave, this.x);
+          }
+          this.drawRepeatBar(stave, this.x + x_shift, true);
           break;
         case Barline.type.REPEAT_END:
           this.drawRepeatBar(stave, this.x, false);
