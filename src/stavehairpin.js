@@ -141,12 +141,12 @@ Vex.Flow.StaveHairpin = (function() {
       switch (this.hairpin) {
         case StaveHairpin.type.CRESC:
           ctx.moveTo(params.last_x + r_shift, y_shift + dis);
-          ctx.lineTo(params.first_x + l_shift, y_shift +(this.render_options.height/2) + dis); 
+          ctx.lineTo(params.first_x + l_shift, y_shift +(this.render_options.height/2) + dis);
           ctx.lineTo(params.last_x + r_shift, y_shift + this.render_options.height + dis);
           break;
         case StaveHairpin.type.DECRESC:
           ctx.moveTo(params.first_x + l_shift, y_shift + dis);
-          ctx.lineTo(params.last_x + r_shift, y_shift +(this.render_options.height/2) + dis); 
+          ctx.lineTo(params.last_x + r_shift, y_shift +(this.render_options.height/2) + dis);
           ctx.lineTo(params.first_x + l_shift, y_shift + this.render_options.height + dis);
           break;
         default:

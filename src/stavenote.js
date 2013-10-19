@@ -678,7 +678,7 @@ Vex.Flow.StaveNote = (function() {
       // Draw the modifiers
       for (i = 0; i < this.modifiers.length; ++i) {
         var mod = this.modifiers[i];
-        key_style = this.keyStyles[mod.getIndex()]; 
+        key_style = this.keyStyles[mod.getIndex()];
         if(key_style) {
             ctx.save();
             this.applyKeyStyle(key_style, ctx);

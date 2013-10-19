@@ -4,7 +4,7 @@
 
 Vex.Flow.Clef = (function() {
   function Clef(clef) {
-    if (arguments.length > 0) this.init(clef); 
+    if (arguments.length > 0) this.init(clef);
   }
 
   Clef.types = {

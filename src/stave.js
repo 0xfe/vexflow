@@ -111,7 +111,7 @@ Vex.Flow.Stave = (function() {
      */
     getModifierXShift: function(index) {
       if (typeof index === 'undefined') index = this.glyphs.length -1;
-      if (typeof index !== 'number') new Vex.RERR("InvalidIndex", 
+      if (typeof index !== 'number') new Vex.RERR("InvalidIndex",
         "Must be of number type");
 
       var x = this.glyph_start_x;
