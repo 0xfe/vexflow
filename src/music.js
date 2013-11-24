@@ -167,14 +167,12 @@ Vex.Flow.Music = (function() {
       if (!keyString || keyString.length < 1)
         throw new Vex.RERR("BadArguments", "Invalid key: " + keyString);
 
-      var key = keyString.toLowerCase();
-
       // Support Major, Minor, Melodic Minor, and Harmonic Minor key types.
-      var regex = /^([cdefgab])(b|#)?(mel|harm|m|M)?$/;
-      var match = regex.exec(key);
+      var regex = /^([a-gA-G])(b|#)?(mel|harm|m|M)?$/;
+      var match = regex.exec(keyString);
 
       if (match != null) {
-        var root = match[1];
+        var root = match[1].toLowerCase();
         var accidental = match[2];
         var type = match[3];
 
