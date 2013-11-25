@@ -124,6 +124,10 @@ module.exports = function(grunt) {
       },
       
       src: ["src/*.js"]
+    },
+    
+    qunit: {
+      all: ['tests/*.html']
     }
   });
   
@@ -152,5 +156,7 @@ module.exports = function(grunt) {
   
   grunt.registerTask("make", ["init", "copy", "uglify"]);
   grunt.registerTask("lint", ["jshint"]);
+  grunt.registerTask("test", ["qunit"]);
+  
   grunt.registerTask("default", ["make"]);
 };
