@@ -185,13 +185,18 @@ Vex.Flow.Beam = (function() {
         base_y_px += this.stem_direction * note.glyph.stem_offset;
 
         // Don't go all the way to the top (for thicker stems)
-        var y_displacement = Vex.Flow.STEM_WIDTH * this.stem_direction;
+        var y_displacement = Vex.Flow.STEM_WIDTH;
 
-        // Draw the stem
-        this.context.fillRect(x_px,
-            base_y_px, Vex.Flow.STEM_WIDTH,
-            (((Math.abs(base_y_px - (getSlopeY(x_px) + y_shift)))) *
-              -this.stem_direction) + y_displacement);
+        note.drawStem({
+          x_begin: x_px,
+          x_end: x_px,
+          y_top: base_y_px,
+          y_bottom: base_y_px,
+          y_extend: y_displacement,
+          stem_extension: Math.abs(base_y_px - (getSlopeY(x_px) + y_shift)) 
+                          - Vex.Flow.Stem.HEIGHT,
+          stem_direction: this.stem_direction
+        });
       }
 
       var that = this;

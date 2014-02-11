@@ -12,6 +12,8 @@ Vex.Flow.Test.TabNote.Start = function() {
   test("Width", Vex.Flow.Test.TabNote.width);
   test("TickContext", Vex.Flow.Test.TabNote.tickContext);
   Vex.Flow.Test.runTest("TabNote Draw", Vex.Flow.Test.TabNote.draw);
+  Vex.Flow.Test.runTest("TabNote Stems Up", Vex.Flow.Test.TabNote.drawStemsUp);
+  Vex.Flow.Test.runTest("TabNote Stems Down", Vex.Flow.Test.TabNote.drawStemsDown);
 }
 
 Vex.Flow.Test.TabNote.ticks = function() {
@@ -111,3 +113,79 @@ Vex.Flow.Test.TabNote.draw = function(options, contextBuilder) {
     ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
   }
 }
+
+Vex.Flow.Test.TabNote.drawStemsUp = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 600, 140);
+  ctx.font = "10pt Arial";
+  var stave = new Vex.Flow.TabStave(10, 10, 550);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var specs = [
+    { positions: [{str: 3, fret: 6 }, {str: 4, fret: 25}], duration: "4"},
+    { positions: [{str: 2, fret: 10 }, {str: 5, fret: 12}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "16"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "32"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "64"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "128"}
+  ];
+
+  var notes = specs.map(function(noteSpec) {
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    tabNote.render_options.draw_stem = true;
+    return tabNote;
+  });
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode(Vex.Flow.Voice.Mode.SOFT);
+
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], stave);
+
+
+  voice.draw(ctx, stave);
+
+  ok (true, 'TabNotes successfully drawn');
+
+};
+
+Vex.Flow.Test.TabNote.drawStemsDown = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 600, 200);
+
+  ctx.font = "10pt Arial";
+  var stave = new Vex.Flow.TabStave(10, 10, 550);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var specs = [
+    { positions: [{str: 3, fret: 6 }, {str: 4, fret: 25}], duration: "4"},
+    { positions: [{str: 2, fret: 10 }, {str: 5, fret: 12}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "16"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "32"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "64"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "128"}
+  ];
+
+  var notes = specs.map(function(noteSpec) {
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    tabNote.render_options.draw_stem = true;
+    tabNote.setStemDirection(-1);
+    return tabNote;
+  });
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode(Vex.Flow.Voice.Mode.SOFT);
+
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], stave);
+
+
+  voice.draw(ctx, stave);
+
+  ok (true, 'All objects have been drawn');
+
+};
