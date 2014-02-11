@@ -33,6 +33,13 @@ Vex.Flow.TabNote = (function() {
             JSON.stringify(tab_struct));
       }
 
+      switch (this.duration) {
+        case "w": this.stem_extension = -1 * Stem.HEIGHT; break;
+        case "32": this.stem_extension = 5; break;
+        case "64": this.stem_extension = 10; break;
+        case "128": this.stem_extension = 15; break;
+        default: this.stem_extension = 0;
+      }
 
       this.ghost = false; // Renders parenthesis around notes
       this.updateWidth();
