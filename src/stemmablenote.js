@@ -12,7 +12,7 @@ Vex.Flow.StemmableNote = (function(){
 
       this.beam = null;
       this.stem_extension = 0;
-      this.stem_direction = 1;
+      this.setStemDirection(note_struct.stem_direction);
     },
 
     getStemLength: function() {
