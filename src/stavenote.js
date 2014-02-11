@@ -17,7 +17,7 @@ Vex.Flow.StaveNote = (function() {
   StaveNote.STEM_UP = Stem.UP;
   StaveNote.STEM_DOWN = Stem.DOWN;
 
-  Vex.Inherit(StaveNote, Vex.Flow.Note, {
+  Vex.Inherit(StaveNote, Vex.Flow.StemmableNote, {
     init: function(note_struct) {
       StaveNote.superclass.init.call(this, note_struct);
 
@@ -88,7 +88,6 @@ Vex.Flow.StaveNote = (function() {
         annotation_spacing: 5 // spacing above note for annotations
       };
 
-      this.stem_extension = 0;
       switch (this.duration) {
         case "w": this.stem_extension = -1 * Stem.HEIGHT; break;
         case "32": this.stem_extension = 10; break;
@@ -233,61 +232,6 @@ Vex.Flow.StaveNote = (function() {
       return this.keyProps;
     },
 
-    getStemLength: function() {
-      return Stem.HEIGHT + this.stem_extension;
-    },
-
-    // Determine minimum length of stem
-    getStemMinumumLength: function() {
-      var length = this.duration == "w" ? 0 : 20;
-      // if note is flagged, cannot shorten beam
-      switch (this.duration) {
-       case "8":
-         if (this.beam == null) length = 35;
-         break;
-       case "16":
-         if (this.beam == null)
-           length = 35;
-         else
-           length = 25;
-         break;
-       case "32":
-         if (this.beam == null)
-           length = 45;
-         else
-           length = 35;
-         break;
-       case "64":
-         if (this.beam == null)
-           length = 50;
-         else
-           length = 40;
-         break;
-       case "128":
-         if (this.beam == null)
-           length = 55;
-         else
-           length = 45;
-      }
-      return length;
-    },
-
-    getStemDirection: function() {
-      return this.stem_direction;
-    },
-
-    getStemX: function() {
-      var x_begin = this.getAbsoluteX() + this.x_shift;
-      var x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
-
-      var stem_x = this.stem_direction == Stem.DOWN ?
-        x_begin : x_end;
-
-      stem_x -= ((Stem.WIDTH / 2) * this.stem_direction);
-
-      return stem_x;
-    },
-
     // Check if note is manually shifted to the right
     isDisplaced: function() {
       return this.notes_displaced;
@@ -296,40 +240,6 @@ Vex.Flow.StaveNote = (function() {
     setNoteDisplaced: function(displaced) {
       this.notes_displaced = displaced;
       return this;
-    },
-
-    // Manuallly set note stem length
-    setStemLength: function(height) {
-      this.stem_extension = (height - Stem.HEIGHT);
-      return this;
-    },
-
-    getStemExtents: function() {
-      if (!this.ys || this.ys.length === 0) throw new Vex.RERR("NoYValues",
-          "Can't get top stem Y when note has no Y values.");
-
-      var top_pixel = this.ys[0];
-      var base_pixel = this.ys[0];
-      var stem_height = Stem.HEIGHT + this.stem_extension;
-
-      for (var i = 0; i < this.ys.length; ++i) {
-        var stem_top = this.ys[i] + (stem_height * -this.stem_direction);
-
-        if (this.stem_direction == Stem.DOWN) {
-          top_pixel = (top_pixel > stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel < this.ys[i]) ? base_pixel : this.ys[i];
-        } else {
-          top_pixel = (top_pixel < stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel > this.ys[i]) ? base_pixel : this.ys[i];
-        }
-
-        if(this.noteType == "s" || this.noteType == 'x') {
-          top_pixel -= this.stem_direction * 7;
-          base_pixel -= this.stem_direction * 7;
-        }
-      }
-
-      return { topY: top_pixel, baseY: base_pixel };
     },
 
     getTieRightX: function() {
@@ -375,26 +285,6 @@ Vex.Flow.StaveNote = (function() {
       }
 
       return { x: this.getAbsoluteX() + x, y: this.ys[index] };
-    },
-
-    setStemDirection: function(direction) {
-      if (!direction) direction = Stem.UP;
-      if (direction != Stem.UP &&
-          direction != Stem.DOWN) {
-        throw new Vex.RERR("BadArgument", "Invalid stem direction: " + direction);
-      }
-
-      this.stem_direction = direction;
-      this.beam = null;
-      if (this.preFormatted) {
-        this.preFormat();
-      }
-      return this;
-    },
-
-    setBeam: function(beam) {
-      this.beam = beam;
-      return this;
     },
 
     getGlyph: function() {
@@ -631,7 +521,6 @@ Vex.Flow.StaveNote = (function() {
       }
 
       // Draw Stem
-      var note_stem_height;
       if (this.hasStem() && render_stem) {
         // Shorten stem length for 1/2 & 1/4 dead note heads (X)
         var y_extend = 0;
@@ -639,7 +528,8 @@ Vex.Flow.StaveNote = (function() {
             glyph.code_head == "v3e") {
            y_extend = -4;
         }
-        var stem = new Stem({
+
+        this.drawStem({
           x_begin: x_begin,
           x_end: x_end,
           y_top: y_top,
@@ -648,13 +538,11 @@ Vex.Flow.StaveNote = (function() {
           stem_extension: this.stem_extension,
           stem_direction: stem_direction
         });
-
-        note_stem_height = stem.getHeight();
-        stem.setContext(ctx).draw();
       }
 
       // Now it's the flag's turn.
       if (glyph.flag && render_flag) {
+        var note_stem_height = this.stem.getHeight();
         var flag_x, flag_y, flag_code;
 
         if (stem_direction == Stem.DOWN) {
