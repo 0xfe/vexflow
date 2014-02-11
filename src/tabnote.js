@@ -173,9 +173,8 @@ Vex.Flow.TabNote = (function() {
     },
 
     getStemExtents: function() {
-      var stem_height = Stem.HEIGHT + this.stem_extension;
       var stem_base_y = this.getStemY();
-      var stem_top_y = stem_base_y + (stem_height * -this.stem_direction);
+      var stem_top_y = stem_base_y + (Stem.HEIGHT * -this.stem_direction);
 
       return { topY: stem_top_y , baseY: stem_base_y};
     },
