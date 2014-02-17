@@ -27,6 +27,10 @@ Vex.Flow.Test.StaveConnector.Start = function() {
     Vex.Flow.Test.StaveConnector.drawRepeatEnd);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Bold Double Line Right Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawRepeatEnd);
+  Vex.Flow.Test.runTest("StaveConnector Thin Double Line Right Draw Test (Canvas)",
+    Vex.Flow.Test.StaveConnector.drawThinDouble);
+  Vex.Flow.Test.runRaphaelTest("StaveConnector Thin Double Line Right Draw Test (Raphael)",
+    Vex.Flow.Test.StaveConnector.drawThinDouble);
   Vex.Flow.Test.runTest("StaveConnector Bold Double Lines Overlapping Draw Test (Canvas)",
     Vex.Flow.Test.StaveConnector.drawRepeatAdjacent);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Bold Double Lines Overlapping Draw Test (Raphael)",
@@ -207,6 +211,25 @@ Vex.Flow.Test.StaveConnector.drawRepeatEnd = function(options, contextBuilder) {
 
   var line = new Vex.Flow.StaveConnector(stave, stave2);
   line.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_RIGHT);
+  line.setContext(ctx);
+  stave.draw();
+  stave2.draw();
+  line.draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.StaveConnector.drawThinDouble= function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 400, 300);
+  var stave = new Vex.Flow.Stave(25, 10, 300);
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);
+  stave.setContext(ctx);
+  stave2.setContext(ctx);
+  stave.setEndBarType(Vex.Flow.Barline.type.DOUBLE);
+  stave2.setEndBarType(Vex.Flow.Barline.type.DOUBLE);
+
+  var line = new Vex.Flow.StaveConnector(stave, stave2);
+  line.setType(Vex.Flow.StaveConnector.type.THIN_DOUBLE);
   line.setContext(ctx);
   stave.draw();
   stave2.draw();
