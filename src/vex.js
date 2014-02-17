@@ -247,7 +247,7 @@ Vex.Inherit = (function () {
     C.prototype = new F();
     C.superclass = P.prototype;
     C.prototype.constructor = C;
-    Vex.Merge(C.prototype, O );
+    Vex.Merge(C.prototype, O);
     return C;
   };
 }());

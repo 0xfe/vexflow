@@ -4,7 +4,7 @@
 require 'bundler/setup'
 require 'fileutils'
 require 'rake/testtask'
-require 'Time'
+require 'time'
 require 'erb'
 require 'uglifier'
 

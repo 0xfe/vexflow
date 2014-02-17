@@ -1,3 +1,5 @@
+build/
+*.lock
 ruby_sess.*
 .*.swp
 .*.swo

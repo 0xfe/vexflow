@@ -164,7 +164,7 @@ Vex.Flow.integerToNote = function(integer) {
 
   var noteValue = Vex.Flow.integerToNote.table[integer];
   if (!noteValue)
-    throw new Vex.RERR("BadArguments", "Unkown note value for integer: " +
+    throw new Vex.RERR("BadArguments", "Unknown note value for integer: " +
         integer);
 
   return noteValue;
@@ -608,7 +608,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
         code_head: "v5c",
         head_width: 12.5,
         rest: true,
-        position: "D/5,",
+        position: "D/5",
         dot_shiftY: 0.5
       },
       "s": { // Whole note slash
@@ -886,7 +886,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
               rest: true,
               position: "B/4",
               dot_shiftY: 1.5,
-              line_above: 2.0,
+              line_above: 3.0,
               line_below: 3.0
           },
           "s": { // Hundred-twenty-eight rest

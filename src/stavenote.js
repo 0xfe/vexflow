@@ -89,7 +89,9 @@ Vex.Flow.StaveNote = (function() {
       };
 
       switch (this.duration) {
-        case "w": this.stem_extension = -1 * Stem.HEIGHT; break;
+        case "w":                 // Whole note alias
+        case "1": this.stem_extension = -1 * Stem.HEIGHT; break;
+        
         case "32": this.stem_extension = 10; break;
         case "64": this.stem_extension = 15; break;
         case "128": this.stem_extension = 20; break;
@@ -132,7 +134,7 @@ Vex.Flow.StaveNote = (function() {
 
       if (this.isRest()) {
         var y = this.ys[0];
-        if (this.duration == "w" || this.duration == "h") {
+        if (this.duration == "w" || this.duration == "h" || this.duration == "1" || this.duration == "2") {
           min_y = y - half_line_spacing;
           max_y = y + half_line_spacing;
         } else {
