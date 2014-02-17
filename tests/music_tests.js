@@ -54,7 +54,7 @@ Vex.Flow.Test.Music.validNotes = function() {
 }
 
 Vex.Flow.Test.Music.validKeys = function() {
-  expect(18);
+  expect(21);
 
   var music = new Vex.Flow.Music();
 
@@ -66,6 +66,11 @@ Vex.Flow.Test.Music.validKeys = function() {
   parts = music.getKeyParts("d#");
   equal(parts.root, "d");
   equal(parts.accidental, "#");
+  equal(parts.type, "M");
+
+  parts = music.getKeyParts("BbM");
+  equal(parts.root, "b");
+  equal(parts.accidental, "b");
   equal(parts.type, "M");
 
   parts = music.getKeyParts("fbm");
