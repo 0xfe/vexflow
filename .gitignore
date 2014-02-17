@@ -19,3 +19,5 @@ ruby_sess.*
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 .idea/workspace.xml
+/build
+/node_modules
