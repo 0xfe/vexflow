@@ -758,7 +758,7 @@ Vex.Flow.Test.Table.durationToGlyph = function() {
           rest: true,
           position: "B/4",
           dot_shiftY: 1.5,
-          line_above: 2.0,
+          line_above: 3.0,
           line_below: 3.0
         },
         "s": { // Hundred-twenty-eight rest
