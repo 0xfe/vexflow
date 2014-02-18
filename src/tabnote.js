@@ -34,7 +34,9 @@ Vex.Flow.TabNote = (function() {
       }
 
       switch (this.duration) {
-        case "w": this.stem_extension = -1 * Stem.HEIGHT; break;
+        case "w":                 // Whole note alias
+        case "1": this.stem_extension = -1 * Stem.HEIGHT; break;
+        
         case "32": this.stem_extension = 5; break;
         case "64": this.stem_extension = 10; break;
         case "128": this.stem_extension = 15; break;
@@ -168,8 +170,13 @@ Vex.Flow.TabNote = (function() {
     },
 
     getStemY: function(){
-      var lineOffset = this.stem_direction === Stem.DOWN ? this.stave.options.num_lines + 0.4 : 0;
-      return this.stave.getYForLine(-0.7 + lineOffset);
+      // The decimal staff line amounts provide optimal spacing between the 
+      // fret number and the stem
+      var stemUpLine = -0.7;
+      var stemDownLine = this.stave.options.num_lines - 0.3;
+      var stemStartLine = Stem.UP === this.stem_direction ? stemUpLine : stemDownLine;
+
+      return this.stave.getYForLine(stemStartLine);
     },
 
     getStemExtents: function() {
