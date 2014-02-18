@@ -18,6 +18,8 @@ Vex.Flow.Test.Beam.Start = function() {
   Vex.Flow.Test.runTest("Insane Beam", Vex.Flow.Test.Beam.insane);
   Vex.Flow.Test.runTest("Lengthy Beam", Vex.Flow.Test.Beam.lenghty);
   Vex.Flow.Test.runTest("Outlier Beam", Vex.Flow.Test.Beam.outlier);
+  Vex.Flow.Test.runTest("TabNote Beams Up", Vex.Flow.Test.Beam.tabBeamsUp);
+  Vex.Flow.Test.runTest("TabNote Beams Down", Vex.Flow.Test.Beam.tabBeamsDown);
 }
 
 Vex.Flow.Test.Beam.beamNotes = function(notes, stave, ctx) {
@@ -474,3 +476,118 @@ Vex.Flow.Test.Beam.outlier = function(options, contextBuilder) {
 
   ok(true, "Outlier Test");
 }
+
+
+Vex.Flow.Test.Beam.tabBeamsUp = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 600, 200);
+
+  ctx.font = "10pt Arial";
+  var stave = new Vex.Flow.TabStave(10, 10, 550);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var specs = [
+    { positions: [{str: 3, fret: 6 }, {str: 4, fret: 25}], duration: "4"},
+    { positions: [{str: 2, fret: 10 }, {str: 5, fret: 12}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "16"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "32"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "64"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "128"},
+    { positions: [{str: 3, fret: 6 }], duration: "8"},
+    { positions: [{str: 3, fret: 6 }], duration: "8"},
+    { positions: [{str: 3, fret: 6 }], duration: "8"},
+    { positions: [{str: 3, fret: 6 }], duration: "8"}
+  ];
+
+  var notes = specs.map(function(noteSpec) {
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    tabNote.render_options.draw_stem = true;
+    return tabNote;
+  });
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode(Vex.Flow.Voice.Mode.SOFT);
+
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], stave);
+
+  var beam1 = new Vex.Flow.Beam(notes.slice(1, 7));
+  var beam2 = new Vex.Flow.Beam(notes.slice(8, 11));
+
+  var tuplet = new Vex.Flow.Tuplet(notes.slice(8, 11));
+  tuplet.setRatioed(true);
+
+  voice.draw(ctx, stave);
+  beam1.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+
+  tuplet.setContext(ctx).draw();
+
+  ok (true, 'All objects have been drawn');
+
+};
+
+Vex.Flow.Test.Beam.tabBeamsDown = function(options, contextBuilder) {  
+  var ctx = new contextBuilder(options.canvas_sel, 600, 300);
+
+  ctx.font = "10pt Arial";
+  var stave = new Vex.Flow.TabStave(10, 10, 550, {
+    num_lines: 10
+  });
+  stave.setContext(ctx);
+  stave.draw();
+
+  var specs = [
+    { positions: [{str: 3, fret: 6 }, {str: 4, fret: 25}], duration: "4"},
+    { positions: [{str: 2, fret: 10 }, {str: 5, fret: 12}], duration: "8dd"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "16"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "32"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "64"},
+    { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "128"},
+    { positions: [{str: 1, fret: 6 }], duration: "8"},
+    { positions: [{str: 1, fret: 6 }], duration: "8"},
+    { positions: [{str: 1, fret: 6 }], duration: "8"},
+    { positions: [{str: 7, fret: 6 }], duration: "8"},
+    { positions: [{str: 7, fret: 6 }], duration: "8"},
+    { positions: [{str: 10, fret: 6 }], duration: "8"},
+    { positions: [{str: 10, fret: 6 }], duration: "8"}
+  ];
+
+  var notes = specs.map(function(noteSpec) {
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    tabNote.render_options.draw_stem = true;
+    tabNote.setStemDirection(-1);
+    tabNote.render_options.draw_dots = true;
+    return tabNote;
+  });
+
+  notes[1].addDot();
+  notes[1].addDot();
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode(Vex.Flow.Voice.Mode.SOFT);
+
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], stave);
+
+  var beam1 = new Vex.Flow.Beam(notes.slice(1, 7));
+  var beam2 = new Vex.Flow.Beam(notes.slice(8, 11));
+
+  var tuplet = new Vex.Flow.Tuplet(notes.slice(8, 11));
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(11, 14));
+  tuplet.setTupletLocation(-1);
+  tuplet2.setTupletLocation(-1);
+
+  voice.draw(ctx, stave);
+  beam1.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+  tuplet.setContext(ctx).draw();
+  tuplet2.setContext(ctx).draw();
+
+  ok (true, 'All objects have been drawn');
+
+};

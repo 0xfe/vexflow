@@ -41,6 +41,7 @@ base_sources = [
   "src/ghostnote.js",
   "src/notehead.js",
   "src/stem.js",
+  "src/stemmablenote.js",
   "src/stavenote.js",
   "src/tabnote.js",
   "src/beam.js",

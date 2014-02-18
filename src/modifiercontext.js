@@ -302,8 +302,17 @@ Vex.Flow.ModifierContext = (function() {
       for (i = 0; i < dots.length; ++i) {
         dot = dots[i];
         note = dot.getNote();
-        var props = note.getKeyProps()[dot.getIndex()];
-        shift = (props.displaced ? note.getExtraRightPx() : 0);
+
+        var props;
+        // Only StaveNote has .getKeyProps()
+        if (typeof note.getKeyProps === 'function') {
+          props = note.getKeyProps()[dot.getIndex()];
+          shift = (props.displaced ? note.getExtraRightPx() : 0);
+        } else { // Else it's a TabNote
+          props = { line: 0.5 }; // Shim key props for dot placement
+          shift = 0;
+        }
+
         dot_list.push({ line: props.line, shift: shift, note: note, dot: dot });
       }
 
