@@ -38,6 +38,12 @@ Vex.Flow.Dot = (function() {
       var line_space = this.note.stave.options.spacing_between_lines_px;
 
       var start = this.note.getModifierStartXY(this.position, this.index);
+
+      // Set the starting y coordinate to the base of the stem for TabNotes
+      if (this.note.getCategory() === 'tabnotes') {
+        start.y = this.note.getStemExtents().baseY;
+      }
+
       var dot_x = (start.x + this.x_shift) + this.width - this.radius;
       var dot_y = start.y + this.y_shift + (this.dot_shiftY * line_space);
       var ctx = this.context;
