@@ -22,7 +22,8 @@ Vex.Flow.TabNote = (function() {
       this.positions = tab_struct.positions; // [{ str: X, fret: X }]
       this.render_options = {
         glyph_font_scale: 30, // font size for note heads and rests
-        draw_stem: false
+        draw_stem: false,
+        draw_dots: false
       };
 
       this.glyph = 
@@ -60,6 +61,12 @@ Vex.Flow.TabNote = (function() {
 
     getGlyph: function() {
       return this.glyph;
+    },
+
+    addDot: function(index) {
+      var dot = new Vex.Flow.Dot();
+      this.dots++;
+      return this.addModifier(dot, 0);
     },
 
     updateWidth: function() {
@@ -256,11 +263,13 @@ Vex.Flow.TabNote = (function() {
       }
 
       // Draw the modifiers
-      for (i= 0; i < this.modifiers.length; ++i) {
-        var modifier = this.modifiers[i];
-        modifier.setContext(this.context);
-        modifier.draw();
-      }
+      this.modifiers.forEach(function(modifier) {
+          // Only draw the dots if enabled
+          if (modifier.getCategory() === 'dots' && !this.render_options.draw_dots) return;
+
+          modifier.setContext(this.context);
+          modifier.draw();
+      }, this);
     }
   });
 

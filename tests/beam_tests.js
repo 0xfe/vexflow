@@ -541,7 +541,7 @@ Vex.Flow.Test.Beam.tabBeamsDown = function(options, contextBuilder) {
 
   var specs = [
     { positions: [{str: 3, fret: 6 }, {str: 4, fret: 25}], duration: "4"},
-    { positions: [{str: 2, fret: 10 }, {str: 5, fret: 12}], duration: "8"},
+    { positions: [{str: 2, fret: 10 }, {str: 5, fret: 12}], duration: "8dd"},
     { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "8"},
     { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "16"},
     { positions: [{str: 1, fret: 6 }, {str: 4, fret: 5}], duration: "32"},
@@ -560,8 +560,12 @@ Vex.Flow.Test.Beam.tabBeamsDown = function(options, contextBuilder) {
     var tabNote = new Vex.Flow.TabNote(noteSpec);
     tabNote.render_options.draw_stem = true;
     tabNote.setStemDirection(-1);
+    tabNote.render_options.draw_dots = true;
     return tabNote;
   });
+
+  notes[1].addDot();
+  notes[1].addDot();
 
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode(Vex.Flow.Voice.Mode.SOFT);
 
