@@ -46,9 +46,26 @@ Vex.Flow.StaveModifier = (function() {
       return this;
     },
 
+    addToStaveEnd: function(stave, firstGlyph) {
+      if (!firstGlyph) {
+        stave.addEndGlyph(this.makeSpacer(this.padding));
+      }
+      else {
+        stave.addEndGlyph(this.makeSpacer(2));
+      }
+
+      this.addEndModifier(stave);
+      return this;
+    },
+
     addModifier: function() {
       throw new Vex.RERR("MethodNotImplemented",
           "addModifier() not implemented for this stave modifier.");
+    },
+
+    addEndModifier: function() {
+      throw new Vex.RERR("MethodNotImplemented",
+          "addEndModifier() not implemented for this stave modifier.");
     }
   };
 
