@@ -1,3 +1,9 @@
+// VexFlow (http://vexflow.com)
+// Copyright Mohit Muthanna 2010
+//
+// Implementation of stemmable notes.
+
+
 Vex.Flow.StemmableNote = (function(){
   var StemmableNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
@@ -62,7 +68,8 @@ Vex.Flow.StemmableNote = (function(){
       if (!direction) direction = Stem.UP;
       if (direction != Stem.UP &&
           direction != Stem.DOWN) {
-        throw new Vex.RERR("BadArgument", "Invalid stem direction: " + direction);
+        throw new Vex.RERR("BadArgument", "Invalid stem direction: " +
+            direction);
       }
 
       this.stem_direction = direction;

@@ -193,8 +193,8 @@ Vex.Flow.Beam = (function() {
           y_top: base_y_px,
           y_bottom: base_y_px,
           y_extend: y_displacement,
-          stem_extension: Math.abs(base_y_px - (getSlopeY(x_px) + y_shift)) 
-                          - Vex.Flow.Stem.HEIGHT,
+          stem_extension: Math.abs(base_y_px - (getSlopeY(x_px) + y_shift)) -
+                          Vex.Flow.Stem.HEIGHT,
           stem_direction: this.stem_direction
         });
       }

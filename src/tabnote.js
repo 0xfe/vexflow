@@ -26,7 +26,7 @@ Vex.Flow.TabNote = (function() {
         draw_dots: false
       };
 
-      this.glyph = 
+      this.glyph =
         Vex.Flow.durationToGlyph(this.duration, this.noteType);
       if (!this.glyph) {
         throw new Vex.RuntimeError("BadArguments",
@@ -37,7 +37,7 @@ Vex.Flow.TabNote = (function() {
       switch (this.duration) {
         case "w":                 // Whole note alias
         case "1": this.stem_extension = -1 * Stem.HEIGHT; break;
-        
+
         case "32": this.stem_extension = 5; break;
         case "64": this.stem_extension = 10; break;
         case "128": this.stem_extension = 15; break;
@@ -63,7 +63,7 @@ Vex.Flow.TabNote = (function() {
       return this.glyph;
     },
 
-    addDot: function(index) {
+    addDot: function() {
       var dot = new Vex.Flow.Dot();
       this.dots++;
       return this.addModifier(dot, 0);
@@ -240,7 +240,7 @@ Vex.Flow.TabNote = (function() {
           y_extend: 0,
           stem_extension: this.stem_extension,
           stem_direction: this.stem_direction
-        });        
+        });
       }
 
       // Now it's the flag's turn.
