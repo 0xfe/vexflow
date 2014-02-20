@@ -32,6 +32,31 @@ Vex.Flow.Clef = (function() {
       code: "v59",
       point: 40,
       line: 2
+    },
+    "treble_small": {
+      code: "v83",
+      point: 32,
+      line: 3
+    },
+    "bass_small": {
+      code: "v79",
+      point: 32,
+      line: 1
+    },
+    "alto_small": {
+      code: "vad",
+      point: 32,
+      line: 2
+    },
+    "tenor_small": {
+      code: "vad",
+      point: 32,
+      line: 1
+    },
+    "percussion_small": {
+      code: "v59",
+      point: 32,
+      line: 2
     }
   };
 
@@ -47,6 +72,12 @@ Vex.Flow.Clef = (function() {
       var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
       this.placeGlyphOnLine(glyph, stave, this.clef.line);
       stave.addGlyph(glyph);
+    },
+
+    addEndModifier: function(stave) {
+      var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
+      this.placeGlyphOnLine(glyph, stave, this.clef.line);
+      stave.addEndGlyph(glyph);
     }
   });
 

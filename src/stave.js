@@ -17,9 +17,12 @@ Vex.Flow.Stave = (function() {
       this.y = y;
       this.width = width;
       this.glyph_start_x = x + 5;
+      this.glyph_end_x = x + width;
       this.start_x = this.glyph_start_x;
+      this.end_x = this.glyph_end_x;
       this.context = null;
       this.glyphs = [];
+      this.end_glyphs = [];
       this.modifiers = [];  // non-glyph stave items (barlines, coda, segno, etc.)
       this.measure = 0;
       this.clef = "treble";
@@ -67,7 +70,7 @@ Vex.Flow.Stave = (function() {
       return start_x;
     },
 
-    getNoteEndX: function() { return this.x + this.width; },
+    getNoteEndX: function() { return this.end_x; },
     getTieStartX: function() { return this.start_x; },
     getTieEndX: function() { return this.x + this.width; },
     setContext: function(context) { this.context = context; return this; },
@@ -221,9 +224,22 @@ Vex.Flow.Stave = (function() {
       return this;
     },
 
+    addEndGlyph: function(glyph) {
+      glyph.setStave(this);
+      this.end_glyphs.push(glyph);
+      this.end_x -= glyph.getMetrics().width;
+      return this;
+    },
+
     addModifier: function(modifier) {
       this.modifiers.push(modifier);
       modifier.addToStave(this, (this.glyphs.length === 0));
+      return this;
+    },
+
+    addEndModifier: function(modifier) {
+      this.modifiers.push(modifier);
+      modifier.addToStaveEnd(this, (this.end_glyphs.length === 0));
       return this;
     },
 
@@ -235,6 +251,11 @@ Vex.Flow.Stave = (function() {
     addClef: function(clef) {
       this.clef = clef;
       this.addModifier(new Vex.Flow.Clef(clef));
+      return this;
+    },
+
+    addEndClef: function(clef) {
+      this.addEndModifier(new Vex.Flow.Clef(clef));
       return this;
     },
 
@@ -260,6 +281,7 @@ Vex.Flow.Stave = (function() {
       var width = this.width;
       var x = this.x;
       var y;
+      var glyph;
 
       // Render lines
       for (var line=0; line < num_lines; line++) {
@@ -274,15 +296,26 @@ Vex.Flow.Stave = (function() {
         this.context.restore();
       }
 
-      // render glyphs
+      // Render glyphs
       x = this.glyph_start_x;
       for (var i = 0; i < this.glyphs.length; ++i) {
-        var glyph = this.glyphs[i];
+        glyph = this.glyphs[i];
         if (!glyph.getContext()) {
           glyph.setContext(this.context);
         }
         glyph.renderToStave(x);
         x += glyph.getMetrics().width;
+      }
+
+      // Render end glyphs
+      x = this.glyph_end_x;
+      for (i = 0; i < this.end_glyphs.length; ++i) {
+        glyph = this.end_glyphs[i];
+        if (!glyph.getContext()) {
+          glyph.setContext(this.context);
+        }
+        x -= glyph.getMetrics().width;
+        glyph.renderToStave(x);
       }
 
       // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
