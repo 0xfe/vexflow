@@ -43,6 +43,7 @@ base_sources = [
   "src/stem.js",
   "src/stavenote.js",
   "src/tabnote.js",
+  "src/clefnote.js",
   "src/beam.js",
   "src/voice.js",
   "src/voicegroup.js",

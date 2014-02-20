@@ -70,7 +70,7 @@ Vex.Flow.Stave = (function() {
       return start_x;
     },
 
-    getNoteEndX: function() { return this.end_x },
+    getNoteEndX: function() { return this.end_x; },
     getTieStartX: function() { return this.start_x; },
     getTieEndX: function() { return this.x + this.width; },
     setContext: function(context) { this.context = context; return this; },
@@ -281,6 +281,7 @@ Vex.Flow.Stave = (function() {
       var width = this.width;
       var x = this.x;
       var y;
+      var glyph;
 
       // Render lines
       for (var line=0; line < num_lines; line++) {
@@ -298,7 +299,7 @@ Vex.Flow.Stave = (function() {
       // Render glyphs
       x = this.glyph_start_x;
       for (var i = 0; i < this.glyphs.length; ++i) {
-        var glyph = this.glyphs[i];
+        glyph = this.glyphs[i];
         if (!glyph.getContext()) {
           glyph.setContext(this.context);
         }
@@ -308,8 +309,8 @@ Vex.Flow.Stave = (function() {
 
       // Render end glyphs
       x = this.glyph_end_x;
-      for (var i = 0; i < this.end_glyphs.length; ++i) {
-        var glyph = this.end_glyphs[i];
+      for (i = 0; i < this.end_glyphs.length; ++i) {
+        glyph = this.end_glyphs[i];
         if (!glyph.getContext()) {
           glyph.setContext(this.context);
         }
