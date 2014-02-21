@@ -264,6 +264,10 @@ Vex.Flow.Stave = (function() {
       return this;
     },
 
+    addEndTimeSignature: function(timeSpec, customPadding) {
+      this.addEndModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding));
+    },
+
     addTrebleGlyph: function() {
       this.clef = "treble";
       this.addGlyph(new Vex.Flow.Glyph("v83", 40));

@@ -54,8 +54,8 @@ Vex.Flow.Test.TimeSignature.parser = function() {
 
 
 Vex.Flow.Test.TimeSignature.basic = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 400, 120);
-  var stave = new Vex.Flow.Stave(10, 10, 300);
+  var ctx = new contextBuilder(options.canvas_sel, 600, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 500);
 
   stave.addTimeSignature("2/2");
   stave.addTimeSignature("3/4");
@@ -63,6 +63,14 @@ Vex.Flow.Test.TimeSignature.basic = function(options, contextBuilder) {
   stave.addTimeSignature("6/8");
   stave.addTimeSignature("C");
   stave.addTimeSignature("C|");
+
+  stave.addEndTimeSignature("2/2");
+  stave.addEndTimeSignature("3/4");
+  stave.addEndTimeSignature("4/4");
+  stave.addEndClef("treble");
+  stave.addEndTimeSignature("6/8");
+  stave.addEndTimeSignature("C");
+  stave.addEndTimeSignature("C|");
 
   stave.setContext(ctx);
   stave.draw();
@@ -140,7 +148,6 @@ Vex.Flow.Test.TimeSignature.timeSigNote = function(options, contextBuilder) {
     new Vex.Flow.TimeSigNote("9/8"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" })
   ];
-  console.log('awefawe');
 
   var voice = new Vex.Flow.Voice({
     num_beats: 4,

@@ -164,6 +164,13 @@ Vex.Flow.TimeSignature = (function() {
         this.placeGlyphOnLine(this.timeSig.glyph, stave, this.timeSig.line);
       }
       stave.addGlyph(this.timeSig.glyph);
+    },
+
+    addEndModifier: function(stave) {
+      if (!this.timeSig.num) {
+        this.placeGlyphOnLine(this.timeSig.glyph, stave, this.timeSig.line);
+      }
+      stave.addEndGlyph(this.timeSig.glyph);
     }
   });
 
