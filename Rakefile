@@ -69,6 +69,7 @@ base_sources = [
   "src/keymanager.js",
   "src/renderer.js",
   "src/raphaelcontext.js",
+  "src/canvascontext.js",
   "src/stavebarline.js",
   "src/stavehairpin.js",
   "src/stavevolta.js",

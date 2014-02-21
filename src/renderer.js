@@ -26,6 +26,8 @@ Vex.Flow.Renderer = (function() {
       DOWN: 3         // Downward leg
   };
 
+  Renderer.USE_CANVAS_PROXY = false;
+
   Renderer.buildContext = function(sel,
       backend, width, height, background) {
     var renderer = new Renderer(sel, backend);
@@ -48,6 +50,12 @@ Vex.Flow.Renderer = (function() {
   };
 
   Renderer.bolsterCanvasContext = function(ctx) {
+    if (Renderer.USE_CANVAS_PROXY) {
+      return new Vex.Flow.CanvasContext(ctx);
+    }
+
+    // If you add new functions here, remember to add them to
+    // src/canvascontext.js too.
     ctx.clear = function() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     };
