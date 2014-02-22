@@ -11,6 +11,7 @@ require 'uglifier'
 DIR = File.dirname(__FILE__)
 TARGET_DIR = "build/vexflow"
 TARGET = "#{TARGET_DIR}/vexflow-min.js"
+TARGET_RAW = "#{TARGET_DIR}/vexflow-debug.js"
 
 BUILD_VERSION = "1.2 Custom"
 BUILD_PREFIX = "0xFE"
@@ -118,20 +119,27 @@ end
 file TARGET => vexflow_sources  do
   # Fill fields in header
   header = ERB.new(File.read("src/header.js")).result(binding)
-  File.open(TARGET, "w") do |f|
-    f.write header
+  raw_file = File.open(TARGET_RAW, "w")
+  min_file = File.open(TARGET, "w")
 
-    vexflow_sources.each do |file|
-      puts "Minifying: " + file
-      min = Uglifier.new(
-        {:output =>
-          {:comments => :none}
-        }).compile(File.read(file))
-      f.write(min)
-    end
+  raw_file.write header
+  min_file.write header
+
+  vexflow_sources.each do |file|
+    puts "Minifying: " + file
+    contents = File.read(file)
+    min = Uglifier.new(
+      {:output =>
+        {:comments => :none}
+      }).compile(contents)
+    raw_file.write(contents)
+    min_file.write(min)
   end
 
+  raw_file.close()
+  min_file.close()
   puts "Generated: " + TARGET
+  puts "Unminified: " + TARGET_RAW
 end
 
 copy_path("tests/*", "build/tests", :build_copy)
