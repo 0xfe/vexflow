@@ -15,6 +15,11 @@ Vex.Flow.Test.TimeSignature.Start = function() {
   Vex.Flow.Test.runTest("Time Signature multiple staves alignment test",
       Vex.Flow.Test.TimeSignature.multiStave);
 
+  Vex.Flow.Test.runTest("Time Signature Change Test",
+      Vex.Flow.Test.TimeSignature.timeSigNote);
+  Vex.Flow.Test.runRaphaelTest("Time Signature Change Test (Raphael)",
+      Vex.Flow.Test.TimeSignature.timeSigNote);
+
 }
 
 Vex.Flow.Test.TimeSignature.catchError = function(ts, spec) {
@@ -49,8 +54,8 @@ Vex.Flow.Test.TimeSignature.parser = function() {
 
 
 Vex.Flow.Test.TimeSignature.basic = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 400, 120);
-  var stave = new Vex.Flow.Stave(10, 10, 300);
+  var ctx = new contextBuilder(options.canvas_sel, 600, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 500);
 
   stave.addTimeSignature("2/2");
   stave.addTimeSignature("3/4");
@@ -58,6 +63,14 @@ Vex.Flow.Test.TimeSignature.basic = function(options, contextBuilder) {
   stave.addTimeSignature("6/8");
   stave.addTimeSignature("C");
   stave.addTimeSignature("C|");
+
+  stave.addEndTimeSignature("2/2");
+  stave.addEndTimeSignature("3/4");
+  stave.addEndTimeSignature("4/4");
+  stave.addEndClef("treble");
+  stave.addEndTimeSignature("6/8");
+  stave.addEndTimeSignature("C");
+  stave.addEndTimeSignature("C|");
 
   stave.setContext(ctx);
   stave.draw();
@@ -118,5 +131,36 @@ Vex.Flow.Test.TimeSignature.multiStave = function(options, contextBuilder) {
         connector3.setContext(ctx).draw();
 
     ok(true, "all pass");
+}
+
+Vex.Flow.Test.TimeSignature.timeSigNote = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 900, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 800);
+  stave.addClef("treble").addTimeSignature("C|").setContext(ctx).draw();
+
+  var notes = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" }),
+    new Vex.Flow.TimeSigNote("3/4"),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q", clef: "alto" }),
+    new Vex.Flow.StaveNote({ keys: ["b/3"], duration: "qr", clef: "alto" }),
+    new Vex.Flow.TimeSigNote("C"),
+    new Vex.Flow.StaveNote({ keys: ["c/3", "e/3", "g/3"], duration: "q", clef: "bass" }),
+    new Vex.Flow.TimeSigNote("9/8"),
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" })
+  ];
+
+  var voice = new Vex.Flow.Voice({
+    num_beats: 4,
+    beat_value: 4,
+    resolution: Vex.Flow.RESOLUTION
+  });
+  voice.setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().
+    joinVoices([voice]).format([voice], 800);
+  
+  voice.draw(ctx, stave);
+  ok(true, "all pass");
 }
 
