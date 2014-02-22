@@ -172,9 +172,11 @@ Vex.Flow.StaveNote.prototype.hasStem = function() {
 }
 
 Vex.Flow.StaveNote.prototype.getYForTopText = function(text_line) {
-  var extents = this.getStemExtents();
-  return Vex.Min(this.stave.getYForTopText(text_line),
-      extents.topY - (this.render_options.annotation_spacing * (text_line + 1)));
+	var top_pixel = this.ys[0] - 10;
+
+	var extents = this.getStemExtents();
+	return Vex.Min(top_pixel, this.stave.getYForTopText(text_line),
+		extents.topY - (this.render_options.annotation_spacing * (text_line + 1)));
 }
 
 Vex.Flow.StaveNote.prototype.getYForBottomText = function(text_line) {
