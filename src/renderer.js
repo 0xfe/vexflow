@@ -26,6 +26,9 @@ Vex.Flow.Renderer = (function() {
       DOWN: 3         // Downward leg
   };
 
+  // Set this to true if you're using VexFlow inside a runtime
+  // that does not allow modifiying canvas objects. There is a small
+  // performance degradation due to the extra indirection.
   Renderer.USE_CANVAS_PROXY = false;
 
   Renderer.buildContext = function(sel,
@@ -54,39 +57,15 @@ Vex.Flow.Renderer = (function() {
       return new Vex.Flow.CanvasContext(ctx);
     }
 
-    // If you add new functions here, remember to add them to
-    // src/canvascontext.js too.
-    ctx.clear = function() {
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    };
-    ctx.setFont = function(family, size, weight) {
-      this.font = (weight || "") + " " + size + "pt " + family;
-      return this;
-    };
-    ctx.setFillStyle = function(style) {
-      this.fillStyle = style;
-      return this;
-    };
-    ctx.setBackgroundFillStyle = function(style) {
-      this.background_fillStyle = style;
-      return this;
-    };
-    ctx.setStrokeStyle = function(style) {
-      this.strokeStyle = style;
-      return this;
-    };
-    ctx.setShadowColor = function(style) {
-      this.shadowColor = style;
-      return this;
-    };
-    ctx.setShadowBlur = function(blur) {
-      this.shadowBlur = blur;
-      return this;
-    };
-    ctx.setLineWidth = function(width) {
-      this.lineWidth = width;
-      return this;
-    };
+    var methods = ["clear", "setFont", "setFillStyle", "setBackgroundFillStyle",
+                   "setStrokeStyle", "setShadowColor", "setShadowBlur", "setLineWidth"];
+    ctx.vexFlowCanvasContext = ctx;
+
+    for (var i in methods) {
+      var method = methods[i];
+      ctx[method] = Vex.Flow.CanvasContext.prototype[method];
+    }
+
     return ctx;
   };
 
