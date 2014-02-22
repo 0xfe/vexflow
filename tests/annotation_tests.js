@@ -182,15 +182,17 @@ Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
       addClef("treble").setContext(ctx).draw();
 
     notes = [];
-
-    notes.push(newNote({ keys: ["c/3"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 1, v)));
-    notes.push(newNote({ keys: ["c/4"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 2, v)));
-    notes.push(newNote({ keys: ["c/5"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 3, v)));
-    notes.push(newNote({ keys: ["c/6"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 4, v)));
+    notes.push(newNote({ keys: ["c/3"], duration: "8", stem_direction:-1}).addAnnotation(0, newAnnotation("Text", 1, v)));
+    notes.push(newNote({ keys: ["c/4"], duration: "8", stem_direction:-1}).addAnnotation(0, newAnnotation("Text", 2, v)));
+    notes.push(newNote({ keys: ["c/5"], duration: "8", stem_direction:-1}).addAnnotation(0, newAnnotation("Text", 3, v)));
+    notes.push(newNote({ keys: ["c/6"], duration: "8", stem_direction:-1}).addAnnotation(0, newAnnotation("Text", 4, v)));
+    notes.push(newNote({ keys: ["c/3"], duration: "8", stem_direction:1}).addAnnotation(0, newAnnotation("Text", 1, v)));
+    notes.push(newNote({ keys: ["c/4"], duration: "8", stem_direction:1}).addAnnotation(0, newAnnotation("Text", 2, v)));
+    notes.push(newNote({ keys: ["c/5"], duration: "8", stem_direction:1}).addAnnotation(0, newAnnotation("Text", 3, v)));
+    notes.push(newNote({ keys: ["c/6"], duration: "8", stem_direction:1}).addAnnotation(0, newAnnotation("Text", 4, v)));
 
     Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 100);
   }
-
   ok(true, "Test Justification Annotation");
 }
 

@@ -121,10 +121,10 @@ Vex.Flow.Annotation = (function() {
         y = yt + ( yb - yt ) / 2 + text_height / 2;
       } else if (this.vert_justification ==
                  Annotation.VerticalJustify.TOP) {
-        y = this.note.stave.getYForTopText(this.text_line);
-        if (stem_ext)
-          y = Vex.Min(y, (stem_ext.topY - 5) - (spacing * this.text_line));
-      } else /* CENTER_STEM */{
+        y = Vex.Min(this.note.stave.getYForTopText(this.text_line), this.note.ys[0] - 10);
+		if (stem_ext)
+			y = Vex.Min(y, (stem_ext.topY - 5) - (spacing * this.text_line));
+     } else /* CENTER_STEM */{
         var extents = this.note.getStemExtents();
         y = extents.topY + ( extents.baseY - extents.topY ) / 2 +
           text_height / 2;
