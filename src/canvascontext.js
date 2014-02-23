@@ -74,11 +74,11 @@ Vex.Flow.CanvasContext = (function() {
     },
 
     scale: function(x, y) {
-      return this.vexFlowCanvasContext.scale(x, y);
+      return this.vexFlowCanvasContext.scale(parseFloat(x), parseFloat(y));
     },
 
     resize: function(width, height) {
-      return this.vexFlowCanvasContext.resize(width, height); },
+      return this.vexFlowCanvasContext.resize(parseInt(width), parseInt(height)); },
 
     rect: function(x, y, width, height) {
       return this.vexFlowCanvasContext.rect(x, y, width, height);
