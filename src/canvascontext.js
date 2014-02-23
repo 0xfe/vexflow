@@ -38,6 +38,11 @@ Vex.Flow.CanvasContext = (function() {
       return this;
     },
 
+    setRawFont: function(font) {
+      this.vexFlowCanvasContext.font = font;
+      return this;
+    },
+
     setFillStyle: function(style) {
       this.vexFlowCanvasContext.fillStyle = style;
       return this;

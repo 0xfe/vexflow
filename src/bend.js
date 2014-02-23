@@ -179,7 +179,7 @@ Vex.Flow.Bend = (function() {
 
       function renderText(x, text) {
         ctx.save();
-        ctx.font = this.font;
+        ctx.setRawFont(that.font);
         var render_x = x - (ctx.measureText(text).width / 2);
         ctx.fillText(text, render_x, annotation_y);
         ctx.restore();
