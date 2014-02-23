@@ -397,7 +397,7 @@ Vex.Flow.Beam = (function() {
 
       if (firstNote.beam) tuplet.setBracketed(false);
       if (firstNote.stem_direction == -1) {
-        tuplet.setTupletLocation( Vex.Flow.Tuplet.LOCATION_BOTTOM);
+        tuplet.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
       }
     });
 

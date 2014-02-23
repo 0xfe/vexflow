@@ -11,16 +11,26 @@ Vex.Flow.CanvasContext = (function() {
     if (arguments.length > 0) this.init(context);
   }
 
+  CanvasContext.WIDTH = 600;
+  CanvasContext.HEIGHT = 400;
+
   CanvasContext.prototype = {
     init: function(context) {
       // Use a name that is unlikely to clash with a canvas context
       // property
       this.vexFlowCanvasContext = context;
+      if (!context.canvas) {
+        this.canvas = {
+          width: CanvasContext.WIDTH,
+          height: CanvasContext.HEIGHT
+        };
+      } else {
+        this.canvas = this.context.canvas;
+      }
     },
 
     clear: function() {
-      this.vexFlowCanvasContext.clearRect(0, 0,
-        this.vexFlowCanvasContext.canvas.width, this.vexFlowCanvasContext.canvas.height);
+      this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
     setFont: function(family, size, weight) {
