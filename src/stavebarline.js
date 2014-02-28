@@ -34,7 +34,7 @@ Vex.Flow.Barline = (function() {
     getCategory: function() { return "barlines"; },
     setX: function(x) { this.x = x; return this; },
 
-  // Draw barlines
+    // Draw barlines
     draw: function(stave, x_shift) {
       x_shift = typeof x_shift !== 'number' ? 0 : x_shift;
 
