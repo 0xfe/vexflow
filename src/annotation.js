@@ -104,15 +104,19 @@ Vex.Flow.Annotation = (function() {
       }
 
       var stem_ext, spacing;
-      if (this.note.getStemExtents) {
+      var stemless = this.note.getCategory() === 'tabnotes' && !this.note.render_options.draw_stem;
+      var has_stem = !stemless;
+
+      if (has_stem) {
         stem_ext = this.note.getStemExtents();
         spacing = this.note.stave.options.spacing_between_lines_px;
       }
 
       if (this.vert_justification == Annotation.VerticalJustify.BOTTOM) {
         y = this.note.stave.getYForBottomText(this.text_line);
-        if (stem_ext) {
-          y = Vex.Max(y, (stem_ext.baseY) + (spacing * (this.text_line + 2)));
+        if (has_stem) {
+          var stem_base = (this.note.stem_direction === 1 ? stem_ext.baseY : stem_ext.topY);
+          y = Vex.Max(y, stem_base + (spacing * (this.text_line + 2)));
         }
       } else if (this.vert_justification ==
                  Annotation.VerticalJustify.CENTER) {
@@ -121,9 +125,10 @@ Vex.Flow.Annotation = (function() {
         y = yt + ( yb - yt ) / 2 + text_height / 2;
       } else if (this.vert_justification ==
                  Annotation.VerticalJustify.TOP) {
-        y = this.note.stave.getYForTopText(this.text_line);
-        if (stem_ext)
+        y = Vex.Min(this.note.stave.getYForTopText(this.text_line), this.note.ys[0] - 10);
+        if (has_stem) {
           y = Vex.Min(y, (stem_ext.topY - 5) - (spacing * this.text_line));
+        }
       } else /* CENTER_STEM */{
         var extents = this.note.getStemExtents();
         y = extents.topY + ( extents.baseY - extents.topY ) / 2 +

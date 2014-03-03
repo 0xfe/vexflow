@@ -36,6 +36,8 @@ Vex.Flow.Test.Articulation.Start = function() {
     "a.","a.", Vex.Flow.Test.Articulation.drawArticulations2);
   Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Inline/Multiple (Raphael)",
     "a.","a.", Vex.Flow.Test.Articulation.drawArticulations2);
+  Vex.Flow.Test.Articulation.runTest("TabNote Articulation",
+    "a.","a.", Vex.Flow.Test.Articulation.tabNotes);
 }
 
 Vex.Flow.Test.Articulation.runTest = function(name, sym1, sym2, func, params) {
@@ -294,3 +296,67 @@ Vex.Flow.Test.Articulation.drawArticulations2 = function(options, contextBuilder
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
 }
+
+Vex.Flow.Test.Articulation.tabNotes = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 600, 200);
+  ctx.font = "10pt Arial";
+  var stave = new Vex.Flow.TabStave(10, 10, 550);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var specs = [
+    { positions: [{str: 3, fret: 6 }, {str: 4, fret: 25}], duration: "8"},
+    { positions: [{str: 2, fret: 10 }, {str: 5, fret: 12}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 3, fret: 5}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 3, fret: 5}], duration: "8"}
+  ];
+
+  var notes = specs.map(function(noteSpec) {
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    tabNote.render_options.draw_stem = true;
+    return tabNote;
+  });
+
+  var notes2 = specs.map(function(noteSpec){
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    tabNote.render_options.draw_stem = true;
+    tabNote.setStemDirection(-1);
+    return tabNote;
+  });
+
+  var notes3 = specs.map(function(noteSpec){
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    return tabNote;
+  });
+
+  notes[0].addModifier(new Vex.Flow.Articulation("a>").setPosition(3), 0); // U
+  notes[1].addModifier(new Vex.Flow.Articulation("a>").setPosition(4), 0); // D
+  notes[2].addModifier(new Vex.Flow.Articulation("a.").setPosition(3), 0); // U
+  notes[3].addModifier(new Vex.Flow.Articulation("a.").setPosition(4), 0); // D
+
+  notes2[0].addModifier(new Vex.Flow.Articulation("a>").setPosition(3), 0);
+  notes2[1].addModifier(new Vex.Flow.Articulation("a>").setPosition(4), 0);
+  notes2[2].addModifier(new Vex.Flow.Articulation("a.").setPosition(3), 0);
+  notes2[3].addModifier(new Vex.Flow.Articulation("a.").setPosition(4), 0);
+
+  notes3[0].addModifier(new Vex.Flow.Articulation("a>").setPosition(3), 0);
+  notes3[1].addModifier(new Vex.Flow.Articulation("a>").setPosition(4), 0);
+  notes3[2].addModifier(new Vex.Flow.Articulation("a.").setPosition(3), 0);
+  notes3[3].addModifier(new Vex.Flow.Articulation("a.").setPosition(4), 0);
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode(Vex.Flow.Voice.Mode.SOFT);
+
+  voice.addTickables(notes);
+  voice.addTickables(notes2);
+  voice.addTickables(notes3);
+
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], stave);
+
+
+  voice.draw(ctx, stave);
+
+  ok (true, 'TabNotes successfully drawn');
+
+};
