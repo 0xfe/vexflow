@@ -63,18 +63,29 @@ Vex.Flow.Beam = (function() {
 
       var stem_direction = -1;
 
-      if (auto_stem)  {
-        // Figure out optimal stem direction based on given notes
+      // Figure out optimal stem direction based on given notes
+      if (auto_stem && notes[0].getCategory() === 'stavenotes')  {
+        // Auto Stem StaveNotes
         this.min_line = 1000;
 
         for (i = 0; i < notes.length; ++i) {
           note = notes[i];
-          this.min_line = Vex.Min(note.getKeyProps()[0].line, this.min_line);
+          if (note.getKeyProps) {
+            this.min_line = Vex.Min(note.getKeyProps()[0].line, this.min_line);
+          }
         }
 
         if (this.min_line < 3) stem_direction = 1;
+      } else if (auto_stem && notes[0].getCategory() === 'tabnotes') {
+        // Auto Stem TabNotes
+        var stem_weight = notes.reduce(function(memo, note) {
+          return memo + note.stem_direction;
+        }, 0);
+
+        stem_direction = stem_weight > -1 ? 1 : -1;
       }
 
+      // Apply stem directions and attach beam to notes
       for (i = 0; i < notes.length; ++i) {
         note = notes[i];
         if (auto_stem) {
@@ -350,9 +361,11 @@ Vex.Flow.Beam = (function() {
       var lineSum = 0;
 
       group.forEach(function(note) {
-        note.keyProps.forEach(function(keyProp){
-          lineSum += (keyProp.line - 3);
-        });
+        if (note.keyProps) {
+          note.keyProps.forEach(function(keyProp){
+            lineSum += (keyProp.line - 3);
+          });
+        }
       });
 
       if (lineSum > 0)
