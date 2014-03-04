@@ -104,12 +104,12 @@ Vex.Flow.Annotation = (function() {
       }
 
       var stem_ext, spacing;
-      var stemless = this.note.getCategory() === 'tabnotes' && !this.note.render_options.draw_stem;
+      var stemless = this.note.hasStem();
       var has_stem = !stemless;
 
       if (has_stem) {
         stem_ext = this.note.getStemExtents();
-        spacing = this.note.stave.options.spacing_between_lines_px;
+        spacing = this.note.getStave().options.spacing_between_lines_px;
       }
 
       if (this.vert_justification == Annotation.VerticalJustify.BOTTOM) {

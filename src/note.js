@@ -132,6 +132,7 @@ Vex.Flow.Note = (function() {
 
     getDuration: function() { return this.duration; },
     isDotted: function() { return (this.dots > 0); },
+    hasStem: function() { return false; },
     getDots: function() { return this.dots; },
     getNoteType: function() { return this.noteType; },
     setModifierContext: function(mc) { this.modifierContext = mc; return this; },

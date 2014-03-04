@@ -56,7 +56,7 @@ Vex.Flow.TabNote = (function() {
     },
 
     hasStem: function() {
-      return this.glyph.stem;
+      return this.render_options.draw_stem;
     },
 
     getGlyph: function() {

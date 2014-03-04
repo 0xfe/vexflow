@@ -81,7 +81,7 @@ Vex.Flow.Articulation = (function() {
       };
 
       // Articulations are centered over/under the note head
-      var stave = this.note.stave;
+      var stave = this.note.getStave();
       var start = this.note.getModifierStartXY(this.position, this.index);
       var glyph_y = start.y;
       var shiftY = 0;
@@ -101,7 +101,7 @@ Vex.Flow.Articulation = (function() {
       // TabNote specific positioning
       if (is_tabnote) {
         // Determine position if rendering with a stem
-        if (this.note.render_options.draw_stem){          
+        if (this.note.hasStem()){
           if (stem_direction === Vex.Flow.StaveNote.STEM_UP) {
             bottom = stave.getYForBottomText(this.text_line - 2);
           } else if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN ) {
