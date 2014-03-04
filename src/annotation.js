@@ -104,7 +104,7 @@ Vex.Flow.Annotation = (function() {
       }
 
       var stem_ext, spacing;
-      var stemless = this.note.hasStem();
+      var stemless = !this.note.hasStem();
       var has_stem = !stemless;
 
       if (has_stem) {

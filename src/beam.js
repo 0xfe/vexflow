@@ -54,7 +54,7 @@ Vex.Flow.Beam = (function() {
       if (!auto_stem) {
         for (i = 1; i < notes.length; ++i) {
           note = notes[i];
-          if (note.getStemDirection() != this.stem_direction) {
+          if (note.hasStem() && (note.getStemDirection() != this.stem_direction)) {
             throw new Vex.RuntimeError("BadArguments",
                 "Notes in a beam all have the same stem direction");
           }

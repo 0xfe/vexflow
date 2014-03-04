@@ -63,6 +63,9 @@ Vex.Flow.Note = (function() {
       // Drawing
       this.context = null;
       this.stave = null;
+      this.render_options = {
+        annotation_spacing: 5
+      };
     },
 
     setPlayNote: function(note) { this.playNote = note; return this; },
