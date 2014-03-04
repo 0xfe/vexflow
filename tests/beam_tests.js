@@ -633,7 +633,7 @@ Vex.Flow.Test.Beam.autoTabBeams = function(options, contextBuilder) {
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], stave);
-  
+
   var beams = Vex.Flow.Beam.applyAndGetBeams(voice, -1);
 
   voice.draw(ctx, stave);
