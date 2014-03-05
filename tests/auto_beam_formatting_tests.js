@@ -3,10 +3,14 @@ Vex.Flow.Test.AutoBeamFormatting = {};
 Vex.Flow.Test.AutoBeamFormatting.Start = function() {
   Vex.Flow.Test.runTest("Simple Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
+  Vex.Flow.Test.runTest("Odd Beam Groups Auto Beaming",
+                        Vex.Flow.Test.AutoBeamFormatting.oddBeamGroups);
   Vex.Flow.Test.runTest("More Simple Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.moreSimple);
-  Vex.Flow.Test.runTest("Simple Tuplet Beaming",
+  Vex.Flow.Test.runTest("Simple Tuplet Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleTuplets);
+  Vex.Flow.Test.runTest("More Simple Tuplet Auto Beaming",
+                        Vex.Flow.Test.AutoBeamFormatting.moreSimpleTuplets);
   Vex.Flow.Test.runTest("More Automatic Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.moreBeaming);
 }
@@ -60,6 +64,52 @@ Vex.Flow.Test.AutoBeamFormatting.simpleAuto = function(options, contextBuilder) 
   ok(true, "Auto Beam Applicator Test");
 }
 
+Vex.Flow.Test.AutoBeamFormatting.oddBeamGroups = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.Beam.setupContext(options);
+
+  var notes = [
+    newNote({ keys: ["f/5"], duration: "8"}),
+    newNote({ keys: ["e/5"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["e/5"], duration: "8"}),
+    newNote({ keys: ["f/5"], duration: "8"}),
+    newNote({ keys: ["f/5"], duration: "8"}),
+    newNote({ keys: ["f/4"], duration: "8"}),
+    newNote({ keys: ["f/3"], duration: "8"}),
+    newNote({ keys: ["f/5"], duration: "16"}),
+    newNote({ keys: ["f/5"], duration: "16"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode();
+  voice.addTickables(notes);
+
+  var Fraction = Vex.Flow.Fraction;
+
+  var groups = [
+    new Fraction(2, 8), 
+    new Fraction(3, 8), 
+    new Fraction(1, 8)
+  ];
+
+  // Takes a voice and returns it's auto beamsj
+  var beams = Vex.Flow.Beam.applyAndGetBeams(voice, undefined, groups);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+
+  ok(true, "Auto Beam Applicator Test");
+}
+
 Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options, contextBuilder) {
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.Beam.setupContext(options);
@@ -75,7 +125,8 @@ Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options, contextBuilder) 
     newNote({ keys: ["a/5"], duration: "8"})
   ];
 
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
   var beams = Vex.Flow.Beam.applyAndGetBeams(voice);
@@ -128,6 +179,42 @@ Vex.Flow.Test.AutoBeamFormatting.simpleTuplets = function(options, contextBuilde
 
   triplet1.setContext(c.context).draw();
   quintuplet.setContext(c.context).draw();
+  ok(true, "Auto Beam Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.moreSimpleTuplets = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.Beam.setupContext(options);
+
+  var notes = [
+    newNote({ keys: ["d/4"], duration: "4"}),
+    newNote({ keys: ["g/4"], duration: "4"}),
+    newNote({ keys: ["c/5"], duration: "4"}),
+
+    newNote({ keys: ["g/5"], duration: "16"}),
+    newNote({ keys: ["a/5"], duration: "16"}),
+    newNote({ keys: ["a/5"], duration: "16"}),
+    newNote({ keys: ["c/5", "e/5"], duration: "16"})
+    ];
+
+  var triplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  voice.setStrict(false);
+  voice.addTickables(notes);
+
+  var beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+
+  triplet1.setContext(c.context).draw();
   ok(true, "Auto Beam Applicator Test");
 }
 
