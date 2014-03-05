@@ -465,10 +465,35 @@ Vex.Flow.Beam = (function() {
       });
     }
 
+    // Splits up groups by Rest
+    function sanitizeGroups() {
+      var sanitizedGroups = [];
+      noteGroups.forEach(function(group) {
+        var tempGroup = [];
+        group.forEach(function(note) {
+          if (note.isRest()) {
+            if (tempGroup.length > 0) {
+              sanitizedGroups.push(tempGroup);
+            }
+            tempGroup = [];
+          } else {
+            tempGroup.push(note);
+          }
+        });
+
+        if (tempGroup.length > 0) {
+          sanitizedGroups.push(tempGroup);
+        }
+      });
+
+      noteGroups = sanitizedGroups;
+    }
+
     // Using closures to store the variables throughout the various functions
     // IMO Keeps it this process lot cleaner - but not super consistent with
     // the rest of the API's style - Silverwolf90 (Cyril)
     createGroups();
+    sanitizeGroups();
     formatStems();
 
     // Get the notes to be beamed

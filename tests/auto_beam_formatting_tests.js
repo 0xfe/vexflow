@@ -5,8 +5,10 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
                         Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
   Vex.Flow.Test.runTest("Odd Beam Groups Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.oddBeamGroups);
-  Vex.Flow.Test.runTest("More Simple Auto Beaming",
-                        Vex.Flow.Test.AutoBeamFormatting.moreSimple);
+  Vex.Flow.Test.runTest("More Simple Auto Beaming 0",
+                        Vex.Flow.Test.AutoBeamFormatting.moreSimple0);
+  Vex.Flow.Test.runTest("More Simple Auto Beaming 1",
+                        Vex.Flow.Test.AutoBeamFormatting.moreSimple1);
   Vex.Flow.Test.runTest("Simple Tuplet Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleTuplets);
   Vex.Flow.Test.runTest("More Simple Tuplet Auto Beaming",
@@ -110,7 +112,7 @@ Vex.Flow.Test.AutoBeamFormatting.oddBeamGroups = function(options, contextBuilde
   ok(true, "Auto Beam Applicator Test");
 }
 
-Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options, contextBuilder) {
+Vex.Flow.Test.AutoBeamFormatting.moreSimple0 = function(options, contextBuilder) {
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.Beam.setupContext(options);
 
@@ -123,6 +125,46 @@ Vex.Flow.Test.AutoBeamFormatting.moreSimple = function(options, contextBuilder) 
     newNote({ keys: ["c/4"], duration: "8"}),
     newNote({ keys: ["d/4"], duration: "8"}),
     newNote({ keys: ["a/5"], duration: "8"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  var beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  ok(true, "Auto Beam Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.moreSimple1 = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.Beam.setupContext(options);
+
+  var notes = [
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["g/5"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["c/4"], duration: "16"}),
+    newNote({ keys: ["d/4"], duration: "16"}),
+    newNote({ keys: ["a/5"], duration: "16"}),
+    newNote({ keys: ["c/4"], duration: "16"}),
+    newNote({ keys: ["g/4"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["c/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["a/5"], duration: "16"})
   ];
 
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
