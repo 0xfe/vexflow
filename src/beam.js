@@ -289,18 +289,89 @@ Vex.Flow.Beam = (function() {
     }
   };
 
+  Beam.getDefaultBeamGroups = function(time_sig){
+    var defaults = {
+      '1/2' :  ['1/2'],
+      '2/2' :  ['1/2'],
+      '3/2' :  ['1/2'],
+      '4/2' :  ['1/2'],
+
+      '1/4' :  ['1/4'],
+      '2/4' :  ['1/4'],
+      '3/4' :  ['1/4'],
+      '4/4' :  ['1/4'],
+ 
+      '1/8' :  ['1/8'],
+      '2/8' :  ['2/8'],
+      '3/8' :  ['3/8'],
+      '4/8' :  ['2/8'],
+
+      '1/16' : ['1/16'],
+      '2/16' : ['2/16'],
+      '3/16' : ['3/16'],
+      '4/16' : ['2/16'],
+    }
+
+    var Fraction = Vex.Flow.Fraction;
+    var groups = defaults[time_sig];
+
+    if (!groups) {
+      // If no beam groups found, naively determine
+      // the beam groupings from the time signature
+      var beatsNum = parseInt(time_sig.split('/')[0], 10);
+      var beatsValue = parseInt(time_sig.split('/')[1], 10);
+
+      var tripleMeter = beatsNum % 3 === 0;
+      var dupleMeter = beatsNum % 2 === 0 && !tripleMeter;
+
+      if (tripleMeter) {
+        return [new Fraction(3, beatsValue)];
+      } else if (dupleMeter && beatsValue > 4) {
+        return [new Fraction(2, beatsValue)];
+      } else if (dupleMeter && beatsValue <= 4) {
+        return [new Fraction(1, beatsValue)];
+      }
+    } else {
+      return groups.map(function(group) {
+        return new Fraction().parse(group);
+      });
+    }
+  };
+
   // Static method: Automatically beam notes in "voice". If "stem_direction"
   // is set, then force all stems to that direction (used for multi-voice music).
-  Beam.applyAndGetBeams = function(voice, stem_direction) {
+  Beam.applyAndGetBeams = function(voice, stem_direction, groups) {
+    // Default beam is 2 eighth notes
+    if (!groups || groups.length === 0) {
+      groups = [new Vex.Flow.Fraction(2, 8)];
+    }
+
+    // Convert beam groups to tick amounts
+    var tickGroups = groups.map(function(group) {
+      if (!group.multiply) {
+        throw new Vex.RuntimeError("InvalidBeamGroups",
+          "The beam groups must be an array of Vex.Flow.Fractions");
+      }
+      return group.multiply(Vex.Flow.RESOLUTION, 1);
+    });
+
     var unprocessedNotes = voice.tickables;
-    var ticksPerGroup    = 4096;
+    var currentTickGroup = 0;
     var noteGroups       = [];
     var currentGroup     = [];
 
     function getTotalTicks(vf_notes){
       return vf_notes.reduce(function(memo,note){
-        return note.getTicks().value() + memo;
-      }, 0);
+        return note.getTicks().clone().add(memo);
+      }, new Vex.Flow.Fraction(0, 1));
+    }
+
+    function nextTickGroup() {
+      if (tickGroups.length - 1 > currentTickGroup) {
+        currentTickGroup += 1;
+      } else {
+        currentTickGroup = 0;
+      }
     }
 
     function createGroups(){
@@ -315,15 +386,24 @@ Vex.Flow.Beam = (function() {
         }
 
         currentGroup.push(unprocessedNote);
+        var ticksPerGroup = tickGroups[currentTickGroup].value();
+        var totalTicks = getTotalTicks(currentGroup).value();
+
+        // Double the amount of ticks in a group, if it's an unbeamable tuplet
+        if (parseInt(unprocessedNote.duration, 10) < 8 && unprocessedNote.tuplet) {
+          ticksPerGroup *= 2;
+        }
 
         // If the note that was just added overflows the group tick total
-        if (getTotalTicks(currentGroup) > ticksPerGroup) {
+        if (totalTicks > ticksPerGroup) {
           nextGroup.push(currentGroup.pop());
           noteGroups.push(currentGroup);
           currentGroup = nextGroup;
-        } else if (getTotalTicks(currentGroup) == ticksPerGroup) {
+          nextTickGroup();
+        } else if (totalTicks == ticksPerGroup) {
           noteGroups.push(currentGroup);
           currentGroup = nextGroup;
+          nextTickGroup();
         }
       });
 
