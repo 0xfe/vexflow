@@ -55,10 +55,12 @@ Vex.Flow.Articulation = (function() {
       if (!(this.note && (this.index !== null))) throw new Vex.RERR("NoAttachedNote",
         "Can't draw Articulation without a note and index.");
 
+      var stem_direction = this.note.stem_direction;
+
       var is_on_head = (this.position === Modifier.Position.ABOVE &&
-                        this.note.stem_direction === Vex.Flow.StaveNote.STEM_DOWN) ||
+                        stem_direction === Vex.Flow.StaveNote.STEM_DOWN) ||
                        (this.position === Modifier.Position.BELOW &&
-                        this.note.stem_direction === Vex.Flow.StaveNote.STEM_UP);
+                        stem_direction === Vex.Flow.StaveNote.STEM_UP);
 
       var needsLineAdjustment = function(articulation, note_line, line_spacing){
         var offset_direction = (articulation.position === Modifier.Position.ABOVE) ? 1 : -1;
@@ -79,21 +81,35 @@ Vex.Flow.Articulation = (function() {
       };
 
       // Articulations are centered over/under the note head
-      var stave = this.note.stave;
+      var stave = this.note.getStave();
       var start = this.note.getModifierStartXY(this.position, this.index);
       var glyph_y = start.y;
       var shiftY = 0;
       var line_spacing = 1;
       var spacing = stave.options.spacing_between_lines_px;
-      var top, bottom;
+      var is_tabnote = this.note.getCategory() === 'tabnotes';
+      var stem_ext = this.note.getStemExtents();
 
-      if (this.note.getStemExtents) {
-        var stem_ext = this.note.getStemExtents();
-        top = stem_ext.topY;
-        bottom = stem_ext.baseY;
-        if (this.note.stem_direction === Vex.Flow.StaveNote.STEM_DOWN) {
-          top = stem_ext.baseY;
-          bottom = stem_ext.topY;
+      var top = stem_ext.topY;
+      var bottom = stem_ext.baseY;
+
+      if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN) {
+        top = stem_ext.baseY;
+        bottom = stem_ext.topY;
+      }
+
+      // TabNote specific positioning
+      if (is_tabnote) {
+        // Determine position if rendering with a stem
+        if (this.note.hasStem()){
+          if (stem_direction === Vex.Flow.StaveNote.STEM_UP) {
+            bottom = stave.getYForBottomText(this.text_line - 2);
+          } else if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN ) {
+            top = stave.getYForTopText(this.text_line - 1.5);
+          }
+        } else { // Without a stem
+          top = stave.getYForTopText(this.text_line - 1);
+          bottom = stave.getYForBottomText(this.text_line - 2);
         }
       }
 

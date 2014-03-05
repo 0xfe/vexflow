@@ -78,7 +78,9 @@ Vex.Flow.CanvasContext = (function() {
     },
 
     resize: function(width, height) {
-      return this.vexFlowCanvasContext.resize(parseInt(width), parseInt(height)); },
+      return this.vexFlowCanvasContext.resize(
+          parseInt(width, 10), parseInt(height, 10));
+    },
 
     rect: function(x, y, width, height) {
       return this.vexFlowCanvasContext.rect(x, y, width, height);

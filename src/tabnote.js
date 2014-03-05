@@ -20,11 +20,11 @@ Vex.Flow.TabNote = (function() {
 
       // Note properties
       this.positions = tab_struct.positions; // [{ str: X, fret: X }]
-      this.render_options = {
+      Vex.Merge(this.render_options, {
         glyph_font_scale: 30, // font size for note heads and rests
         draw_stem: draw_stem,
         draw_dots: draw_stem
-      };
+      });
 
       this.glyph =
         Vex.Flow.durationToGlyph(this.duration, this.noteType);
@@ -56,7 +56,7 @@ Vex.Flow.TabNote = (function() {
     },
 
     hasStem: function() {
-      return this.glyph.stem;
+      return this.render_options.draw_stem;
     },
 
     getGlyph: function() {
