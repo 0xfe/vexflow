@@ -27,7 +27,7 @@ Vex.Flow.StaveText = (function() {
 
       this.font = {
         family: "times",
-        size: 12,
+        size: 16,
         weight: "normal"
       };
     },
@@ -36,6 +36,14 @@ Vex.Flow.StaveText = (function() {
     setStaveText: function(text) { this.text = text; return this; },
     setShiftX: function(x) { this.shift_x = x; return this; },
     setShiftY: function(y) { this.shift_y = y; return this; },
+
+    setFont: function(font) {
+      Vex.Merge(this.font, font);
+    },
+
+    setText: function(text) {
+      this.text = text;
+    },
 
     draw: function(stave) {
       if (!stave.context) throw new Vex.RERR("NoContext",
@@ -47,7 +55,6 @@ Vex.Flow.StaveText = (function() {
       ctx.lineWidth = 2;
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       var text_width = ctx.measureText("" + this.text).width;
-      var width = text_width + 30;  // add left & right padding
 
       var x, y;
       var Modifier = Vex.Flow.Modifier;
@@ -56,15 +63,15 @@ Vex.Flow.StaveText = (function() {
         case Modifier.Position.RIGHT:
           y = (stave.getYForLine(0) + stave.getBottomLineY()) / 2;
           if(this.position == Modifier.Position.LEFT) {
-            x = stave.getX() - width + this.options.shift_x;
+            x = stave.getX() - text_width - 24 + this.options.shift_x;
           }
           else {
-            x = stave.getX() + stave.getWidth() + this.options.shift_x;
+            x = stave.getX() + stave.getWidth() + 24 + this.options.shift_x;
           }
           break;
         case Modifier.Position.ABOVE:
         case Modifier.Position.BELOW:
-          x = stave.getX() + stave.getWidth() / 2 - width / 2;
+          x = stave.getX() + stave.getWidth() / 2 - text_width / 2;
           if(this.position == Modifier.Position.ABOVE) {
             y = stave.getYForTopText(2) + this.options.shift_y;
           }
@@ -77,8 +84,7 @@ Vex.Flow.StaveText = (function() {
             "Value Must be in Modifier.Position.");
       }
 
-      x += (width - text_width) / 2;
-      ctx.fillText("" + this.text, x, y + 2);
+      ctx.fillText("" + this.text, x, y + 4);
       ctx.restore();
       return this;
     }
