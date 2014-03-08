@@ -57,6 +57,11 @@ Vex.Flow.RaphaelContext = (function() {
       return this;
     },
 
+    setRawFont: function(font) {
+      this.attributes.font = font;
+      return this;
+    },
+
     setFillStyle: function(style) {
       this.attributes.fill = style;
       return this;

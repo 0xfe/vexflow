@@ -7,24 +7,24 @@
 
 /** @constructor */
 Vex.Flow.TabNote = (function() {
-  function TabNote(tab_struct) {
-    if (arguments.length > 0) this.init(tab_struct);
+  function TabNote(tab_struct, draw_stem) {
+    if (arguments.length > 0) this.init(tab_struct, draw_stem);
   }
 
   var Stem = Vex.Flow.Stem;
 
   Vex.Inherit(TabNote, Vex.Flow.StemmableNote, {
-    init: function(tab_struct) {
+    init: function(tab_struct, draw_stem) {
       var superclass = Vex.Flow.TabNote.superclass;
       superclass.init.call(this, tab_struct);
 
       // Note properties
       this.positions = tab_struct.positions; // [{ str: X, fret: X }]
-      this.render_options = {
+      Vex.Merge(this.render_options, {
         glyph_font_scale: 30, // font size for note heads and rests
-        draw_stem: false,
-        draw_dots: false
-      };
+        draw_stem: draw_stem,
+        draw_dots: draw_stem
+      });
 
       this.glyph =
         Vex.Flow.durationToGlyph(this.duration, this.noteType);
@@ -56,7 +56,7 @@ Vex.Flow.TabNote = (function() {
     },
 
     hasStem: function() {
-      return this.glyph.stem;
+      return this.render_options.draw_stem;
     },
 
     getGlyph: function() {

@@ -69,6 +69,9 @@ you want to commit your changes into the official VexFlow repository.
 
 ## MIT License
 
+Copyright (c) Mohit Muthanna Cheppudira 2010 <br/>
+0xFE <mohit@muthanna.com> http://www.vexflow.com
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights

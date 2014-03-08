@@ -63,6 +63,9 @@ Vex.Flow.Note = (function() {
       // Drawing
       this.context = null;
       this.stave = null;
+      this.render_options = {
+        annotation_spacing: 5
+      };
     },
 
     setPlayNote: function(note) { this.playNote = note; return this; },
@@ -132,6 +135,7 @@ Vex.Flow.Note = (function() {
 
     getDuration: function() { return this.duration; },
     isDotted: function() { return (this.dots > 0); },
+    hasStem: function() { return false; },
     getDots: function() { return this.dots; },
     getNoteType: function() { return this.noteType; },
     setModifierContext: function(mc) { this.modifierContext = mc; return this; },

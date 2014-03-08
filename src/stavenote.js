@@ -81,12 +81,11 @@ Vex.Flow.StaveNote = (function() {
       // Drawing
       this.modifiers = [];
 
-      this.render_options = {
+      Vex.Merge(this.render_options, {
         glyph_font_scale: 35, // font size for note heads and rests
         stroke_px: 3,         // number of stroke px to the left and right of head
-        stroke_spacing: 10,    // spacing between strokes (TODO: take from stave)
-        annotation_spacing: 5 // spacing above note for annotations
-      };
+        stroke_spacing: 10    // spacing between strokes (TODO: take from stave)
+      });
 
       switch (this.duration) {
         case "w":                 // Whole note alias

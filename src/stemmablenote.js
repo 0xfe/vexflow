@@ -131,6 +131,26 @@ Vex.Flow.StemmableNote = (function(){
       return this;
     },
 
+    getYForTopText: function(text_line) {
+      var extents = this.getStemExtents();
+      if (this.hasStem()) {
+        return Vex.Min(this.stave.getYForTopText(text_line),
+            extents.topY - (this.render_options.annotation_spacing * (text_line + 1)));
+      } else {
+        return this.stave.getYForTopText(text_line);
+      }
+    },
+
+    getYForBottomText: function(text_line) {
+      var extents = this.getStemExtents();
+      if (this.hasStem()) {
+        return Vex.Max(this.stave.getYForTopText(text_line),
+          extents.baseY + (this.render_options.annotation_spacing * (text_line)));
+      } else {
+        return this.stave.getYForBottomText(text_line);
+      }
+    },
+
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");

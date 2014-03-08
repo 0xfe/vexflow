@@ -206,9 +206,7 @@ Vex.Flow.Test.TabNote.drawStemsDotted = function(options, contextBuilder) {
   ];
 
   var notes = specs.map(function(noteSpec) {
-    var tabNote = new Vex.Flow.TabNote(noteSpec);
-    tabNote.render_options.draw_stem = true;
-    tabNote.render_options.draw_dots = true;
+    var tabNote = new Vex.Flow.TabNote(noteSpec, true);
     return tabNote;
   });
 

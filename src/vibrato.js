@@ -100,7 +100,7 @@ Vex.Flow.Vibrato = (function() {
       }
 
       var vx = start.x + this.x_shift;
-      var vy = this.note.getStave().getYForTopText(this.text_line) + 2;
+      var vy = this.note.getYForTopText(this.text_line) + 2;
 
       renderVibrato(vx, vy);
     }

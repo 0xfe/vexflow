@@ -284,17 +284,17 @@ Vex.Flow.Test.ThreeVoices.autoresttwovoices = function(options, contextBuilder) 
     ];
 
     var notes1 = [
-      newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
-      newNote({ keys: ["c/4"], stem_direction: 1, duration: "16"}),
-      newNote({ keys: ["b/4"], stem_direction: 1, duration: "16r"}),
-      newNote({ keys: ["d/4"], stem_direction: 1, duration: "16"}),
+      newNote({ keys: ["c/5"], stem_direction: -1, duration: "16"}),
+      newNote({ keys: ["c/4"], stem_direction: -1, duration: "16"}),
+      newNote({ keys: ["b/4"], stem_direction: -1, duration: "16r"}),
+      newNote({ keys: ["d/4"], stem_direction: -1, duration: "16"}),
 
-      newNote({ keys: ["e/4"], stem_direction: 1, duration: "16"}),
-      newNote({ keys: ["f/4"], stem_direction: 1, duration: "16"}),
-      newNote({ keys: ["b/4"], stem_direction: 1, duration: "16r"}),
-      newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
+      newNote({ keys: ["e/4"], stem_direction: -1, duration: "16"}),
+      newNote({ keys: ["f/4"], stem_direction: -1, duration: "16"}),
+      newNote({ keys: ["b/4"], stem_direction: -1, duration: "16r"}),
+      newNote({ keys: ["g/4"], stem_direction: -1, duration: "16"}),
 
-      newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
+      newNote({ keys: ["g/4"], stem_direction: -1, duration: "16"}),
       newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
       newNote({ keys: ["b/4"], stem_direction: 1, duration: "16r"}),
       newNote({ keys: ["b/4"], stem_direction: 1, duration: "16"}),
@@ -322,6 +322,7 @@ Vex.Flow.Test.ThreeVoices.autoresttwovoices = function(options, contextBuilder) 
   voice.addTickables(n.notes);
   voice1.addTickables(n.notes1);
   voice2.addTickables(n.textnote);
+
   var beam = Vex.Flow.Beam.applyAndGetBeams(voice, 1);
   var beam1 = Vex.Flow.Beam.applyAndGetBeams(voice1, -1);
 

@@ -19,8 +19,12 @@ Vex.Flow.Test.Annotation.Start = function() {
       Vex.Flow.Test.Annotation.picking);
   Vex.Flow.Test.runTest("Bottom Annotation",
       Vex.Flow.Test.Annotation.bottom);
-  Vex.Flow.Test.runTest("Test Justification Annotation",
-      Vex.Flow.Test.Annotation.justification);
+  Vex.Flow.Test.runTest("Test Justification Annotation Stem Up",
+      Vex.Flow.Test.Annotation.justificationStemUp);
+  Vex.Flow.Test.runTest("Test Justification Annotation Stem Down",
+      Vex.Flow.Test.Annotation.justificationStemDown);
+  Vex.Flow.Test.runTest("TabNote Annotations",
+      Vex.Flow.Test.Annotation.tabNotes);
 }
 
 Vex.Flow.Test.Annotation.simple = function(options, contextBuilder) {
@@ -165,7 +169,7 @@ Vex.Flow.Test.Annotation.bottom = function(options, contextBuilder) {
   ok(true, "Bottom Annotation");
 }
 
-Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
+Vex.Flow.Test.Annotation.justificationStemUp = function(options, contextBuilder) {
   var ctx = contextBuilder(options.canvas_sel, 650, 950);
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
 
@@ -194,3 +198,95 @@ Vex.Flow.Test.Annotation.justification = function(options, contextBuilder) {
   ok(true, "Test Justification Annotation");
 }
 
+Vex.Flow.Test.Annotation.justificationStemDown = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 650, 1000);
+  ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAnnotation(text, hJustifcation, vJustifcation) {
+    return (
+        new Vex.Flow.Annotation(text)).
+          setFont("Arial", Vex.Flow.Test.Font.size).
+          setJustification(hJustifcation).
+          setVerticalJustification(vJustifcation); }
+
+  for (var v = 1; v <= 4; ++v) {
+    var stave = new Vex.Flow.Stave(10, (v-1) * 150 + 40, 400).
+      addClef("treble").setContext(ctx).draw();
+
+    notes = [];
+
+    notes.push(newNote({ keys: ["c/3"], duration: "q", stem_direction: -1}).addAnnotation(0, newAnnotation("Text", 1, v)));
+    notes.push(newNote({ keys: ["c/4"], duration: "q", stem_direction: -1}).addAnnotation(0, newAnnotation("Text", 2, v)));
+    notes.push(newNote({ keys: ["c/5"], duration: "q", stem_direction: -1}).addAnnotation(0, newAnnotation("Text", 3, v)));
+    notes.push(newNote({ keys: ["c/6"], duration: "q", stem_direction: -1}).addAnnotation(0, newAnnotation("Text", 4, v)));
+
+    Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 100);
+  }
+
+  ok(true, "Test Justification Annotation");
+}
+
+Vex.Flow.Test.Annotation.tabNotes = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 600, 200);
+  ctx.font = "10pt Arial";
+  var stave = new Vex.Flow.TabStave(10, 10, 550);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var specs = [
+    { positions: [{str: 3, fret: 6 }, {str: 4, fret: 25}], duration: "8"},
+    { positions: [{str: 2, fret: 10 }, {str: 5, fret: 12}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 3, fret: 5}], duration: "8"},
+    { positions: [{str: 1, fret: 6 }, {str: 3, fret: 5}], duration: "8"}
+  ];
+
+  var notes = specs.map(function(noteSpec) {
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    tabNote.render_options.draw_stem = true;
+    return tabNote;
+  });
+
+  var notes2 = specs.map(function(noteSpec){
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    tabNote.render_options.draw_stem = true;
+    tabNote.setStemDirection(-1);
+    return tabNote;
+  });
+
+  var notes3 = specs.map(function(noteSpec){
+    var tabNote = new Vex.Flow.TabNote(noteSpec);
+    return tabNote;
+  });
+
+  notes[0].addModifier(new Vex.Flow.Annotation("Text").setJustification(1).setVerticalJustification(1), 0); // U
+  notes[1].addModifier(new Vex.Flow.Annotation("Text").setJustification(2).setVerticalJustification(2), 0); // D
+  notes[2].addModifier(new Vex.Flow.Annotation("Text").setJustification(3).setVerticalJustification(3), 0); // U
+  notes[3].addModifier(new Vex.Flow.Annotation("Text").setJustification(4).setVerticalJustification(4), 0); // D
+
+  notes2[0].addModifier(new Vex.Flow.Annotation("Text").setJustification(3).setVerticalJustification(1), 0); // U
+  notes2[1].addModifier(new Vex.Flow.Annotation("Text").setJustification(3).setVerticalJustification(2), 0); // D
+  notes2[2].addModifier(new Vex.Flow.Annotation("Text").setJustification(3).setVerticalJustification(3), 0); // U
+  notes2[3].addModifier(new Vex.Flow.Annotation("Text").setJustification(3).setVerticalJustification(4), 0); // D
+
+  notes3[0].addModifier(new Vex.Flow.Annotation("Text").setVerticalJustification(1), 0); // U
+  notes3[1].addModifier(new Vex.Flow.Annotation("Text").setVerticalJustification(2), 0); // D
+  notes3[2].addModifier(new Vex.Flow.Annotation("Text").setVerticalJustification(3), 0); // U
+  notes3[3].addModifier(new Vex.Flow.Annotation("Text").setVerticalJustification(4), 0); // D
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode(Vex.Flow.Voice.Mode.SOFT);
+
+  voice.addTickables(notes);
+  voice.addTickables(notes2);
+  voice.addTickables(notes3);
+
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], stave);
+
+
+  voice.draw(ctx, stave);
+
+  ok (true, 'TabNotes successfully drawn');
+
+};
