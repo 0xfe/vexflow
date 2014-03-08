@@ -86,6 +86,10 @@ Vex.Flow.Stave = (function() {
       return this;
     },
 
+    getWidth: function() {
+      return this.width;
+    },
+
     setMeasure: function(measure) { this.measure = measure; return this; },
 
       // Bar Line functions
@@ -161,6 +165,12 @@ Vex.Flow.Stave = (function() {
       return this;
     },
 
+    // Text functions
+    setText: function(text, position, options) {
+      this.modifiers.push(new Vex.Flow.StaveText(text, position, options));
+      return this;
+    },
+
     getHeight: function() {
       return this.height;
     },
@@ -181,6 +191,10 @@ Vex.Flow.Stave = (function() {
          (options.space_below_staff_ln * spacing);
 
       return score_bottom;
+    },
+
+    getBottomLineY: function() {
+      return this.getYForLine(this.options.num_lines);
     },
 
     getYForLine: function(line) {

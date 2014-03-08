@@ -76,6 +76,7 @@ base_sources = [
   "src/staverepetition.js",
   "src/stavesection.js",
   "src/stavetempo.js",
+  "src/stavetext.js",
   "src/barnote.js",
   "src/tremolo.js",
   "src/tuplet.js",

@@ -38,6 +38,10 @@ Vex.Flow.Test.Stave.Start = function() {
       Vex.Flow.Test.Stave.configureAllLines);
   Vex.Flow.Test.runRaphaelTest("Batch Line Configuration Test (Raphael)",
       Vex.Flow.Test.Stave.configureAllLines);
+  Vex.Flow.Test.runTest("Stave Text Test (Canvas)",
+      Vex.Flow.Test.Stave.drawStaveText);
+  Vex.Flow.Test.runRaphaelTest("Stave Text Test (Raphael)",
+      Vex.Flow.Test.Stave.drawStaveText);
 }
 
 Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {
@@ -393,6 +397,18 @@ Vex.Flow.Test.Stave.configureAllLines = function(options, contextBuilder) {
   equal(config[2].visible, false, "getLinesConfiguration() - Line 2");
   equal(config[3].visible, true, "getLinesConfiguration() - Line 3");
   equal(config[4].visible, false, "getLinesConfiguration() - Line 4");
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.Stave.drawStaveText = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 900, 140);
+  var stave = new Vex.Flow.Stave(300, 10, 300);
+  stave.setText("Violin", Vex.Flow.Modifier.Position.LEFT);
+  stave.setText("Right Text", Vex.Flow.Modifier.Position.RIGHT);
+  stave.setText("Above Text", Vex.Flow.Modifier.Position.ABOVE);
+  stave.setText("Below Text", Vex.Flow.Modifier.Position.BELOW);
+  stave.setContext(ctx).draw();
 
   ok(true, "all pass");
 }
