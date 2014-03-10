@@ -318,18 +318,17 @@ Vex.Flow.Beam = (function() {
     if (!groups) {
       // If no beam groups found, naively determine
       // the beam groupings from the time signature
-      var beatsNum = parseInt(time_sig.split('/')[0], 10);
-      var beatsValue = parseInt(time_sig.split('/')[1], 10);
+      var beatTotal = parseInt(time_sig.split('/')[0], 10);
+      var beatValue = parseInt(time_sig.split('/')[1], 10);
 
-      var tripleMeter = beatsNum % 3 === 0;
-      var dupleMeter = beatsNum % 2 === 0 && !tripleMeter;
+      var tripleMeter = beatTotal % 3 === 0;
 
       if (tripleMeter) {
-        return [new Fraction(3, beatsValue)];
-      } else if (dupleMeter && beatsValue > 4) {
-        return [new Fraction(2, beatsValue)];
-      } else if (dupleMeter && beatsValue <= 4) {
-        return [new Fraction(1, beatsValue)];
+        return [new Fraction(3, beatValue)];
+      } else if (beatValue > 4) {
+        return [new Fraction(2, beatValue)];
+      } else if (beatValue <= 4) {
+        return [new Fraction(1, beatValue)];
       }
     } else {
       return groups.map(function(group) {
