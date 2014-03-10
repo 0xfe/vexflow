@@ -9,6 +9,10 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
                         Vex.Flow.Test.AutoBeamFormatting.moreSimple0);
   Vex.Flow.Test.runTest("More Simple Auto Beaming 1",
                         Vex.Flow.Test.AutoBeamFormatting.moreSimple1);
+  Vex.Flow.Test.runTest("Odd Time - Guessing Default Beam Groups",
+                        Vex.Flow.Test.AutoBeamFormatting.autoOddBeamGroups);
+  Vex.Flow.Test.runTest("Custom Beam Groups",
+                        Vex.Flow.Test.AutoBeamFormatting.customBeamGroups);
   Vex.Flow.Test.runTest("Simple Tuplet Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleTuplets);
   Vex.Flow.Test.runTest("More Simple Tuplet Auto Beaming",
@@ -180,6 +184,224 @@ Vex.Flow.Test.AutoBeamFormatting.moreSimple1 = function(options, contextBuilder)
 
   beams.forEach(function(beam){
     beam.setContext(c.context).draw();
+  });
+  ok(true, "Auto Beam Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.autoOddBeamGroups = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+
+  var context = new options.contextBuilder(options.canvas_sel, 450, 400);
+
+  context.scale(0.9, 0.9); context.fillStyle = "#221"; context.strokeStyle = "#221";
+
+  var stave1 = new Vex.Flow.Stave(10, 10, 450).addTrebleGlyph().
+    setContext(context);
+  stave1.addTimeSignature('5/4');
+
+  var stave2 = new Vex.Flow.Stave(10, 150, 450).addTrebleGlyph().
+    setContext(context);
+  stave2.addTimeSignature('5/8');
+
+  var stave3 = new Vex.Flow.Stave(10, 290, 450).addTrebleGlyph().
+    setContext(context);
+  stave3.addTimeSignature('13/16');
+
+  var notes1 = [
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["d/4"], duration: "8"}),
+    newNote({ keys: ["a/5"], duration: "8"}),
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"})
+  ];
+
+  var notes2 = [
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"})
+  ];
+
+  var notes3 = [
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["g/5"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["g/5"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"})
+  ];
+
+  var voice1 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice1.addTickables(notes1);
+
+  var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice2.addTickables(notes2);
+
+  var voice3 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice3.addTickables(notes3);
+
+  stave1.draw();
+  stave2.draw();
+  stave3.draw();
+
+  var groups1316 = [
+    new Vex.Flow.Fraction(3, 16),
+    new Vex.Flow.Fraction(2, 16)
+  ];
+
+  var beams = Vex.Flow.Beam.applyAndGetBeams(voice1, undefined, Vex.Flow.Beam.getDefaultBeamGroups('5/4'));
+  var beams2 = Vex.Flow.Beam.applyAndGetBeams(voice2, undefined, Vex.Flow.Beam.getDefaultBeamGroups('5/8'));
+  var beams3 = Vex.Flow.Beam.applyAndGetBeams(voice3, undefined, Vex.Flow.Beam.getDefaultBeamGroups('13/16'));
+
+  var formatter1 = new Vex.Flow.Formatter().
+    formatToStave([voice1], stave1).
+    formatToStave([voice2], stave2).
+    formatToStave([voice3], stave3);
+
+  voice1.draw(context, stave1);
+  voice2.draw(context, stave2);
+  voice3.draw(context, stave3);
+
+  beams.forEach(function(beam){
+    beam.setContext(context).draw();
+  });
+
+  beams2.forEach(function(beam){
+    beam.setContext(context).draw();
+  });
+
+  beams3.forEach(function(beam){
+    beam.setContext(context).draw();
+  });
+  ok(true, "Auto Beam Applicator Test");
+};
+
+Vex.Flow.Test.AutoBeamFormatting.customBeamGroups = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+
+  var context = new options.contextBuilder(options.canvas_sel, 450, 400);
+
+  context.scale(0.9, 0.9); context.fillStyle = "#221"; context.strokeStyle = "#221";
+
+  var stave1 = new Vex.Flow.Stave(10, 10, 450).addTrebleGlyph().
+    setContext(context);
+  stave1.addTimeSignature('5/4');
+
+  var stave2 = new Vex.Flow.Stave(10, 150, 450).addTrebleGlyph().
+    setContext(context);
+  stave2.addTimeSignature('5/8');
+
+  var stave3 = new Vex.Flow.Stave(10, 290, 450).addTrebleGlyph().
+    setContext(context);
+  stave3.addTimeSignature('13/16');
+
+  var notes1 = [
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["d/4"], duration: "8"}),
+    newNote({ keys: ["a/5"], duration: "8"}),
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"})
+  ];
+
+  var notes2 = [
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"})
+  ];
+
+  var notes3 = [
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["g/5"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["g/5"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"})
+  ];
+
+  var voice1 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice1.addTickables(notes1);
+
+  var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice2.addTickables(notes2);
+
+  var voice3 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice3.addTickables(notes3);
+
+  stave1.draw();
+  stave2.draw();
+  stave3.draw();
+
+  var group1 = [
+    new Vex.Flow.Fraction(5, 8)
+  ];
+
+  var group2 = [
+    new Vex.Flow.Fraction(3, 8),
+    new Vex.Flow.Fraction(2, 8)
+  ];
+
+  var group3 = [
+    new Vex.Flow.Fraction(7, 16),
+    new Vex.Flow.Fraction(3, 16),
+    new Vex.Flow.Fraction(3, 16)
+  ];
+
+  var beams = Vex.Flow.Beam.applyAndGetBeams(voice1, undefined, group1);
+  var beams2 = Vex.Flow.Beam.applyAndGetBeams(voice2, undefined, group2);
+  var beams3 = Vex.Flow.Beam.applyAndGetBeams(voice3, undefined, group3);
+
+  var formatter1 = new Vex.Flow.Formatter().
+    formatToStave([voice1], stave1).
+    formatToStave([voice2], stave2).
+    formatToStave([voice3], stave3);
+
+  voice1.draw(context, stave1);
+  voice2.draw(context, stave2);
+  voice3.draw(context, stave3);
+
+  beams.forEach(function(beam){
+    beam.setContext(context).draw();
+  });
+
+  beams2.forEach(function(beam){
+    beam.setContext(context).draw();
+  });
+
+  beams3.forEach(function(beam){
+    beam.setContext(context).draw();
   });
   ok(true, "Auto Beam Applicator Test");
 }
