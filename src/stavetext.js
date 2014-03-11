@@ -61,7 +61,7 @@ Vex.Flow.StaveText = (function() {
       switch(this.position) {
         case Modifier.Position.LEFT:
         case Modifier.Position.RIGHT:
-          y = (stave.getYForLine(0) + stave.getBottomLineY()) / 2;
+          y = (stave.getYForLine(0) + stave.getBottomLineY()) / 2 + this.options.shift_y;
           if(this.position == Modifier.Position.LEFT) {
             x = stave.getX() - text_width - 24 + this.options.shift_x;
           }
@@ -71,7 +71,7 @@ Vex.Flow.StaveText = (function() {
           break;
         case Modifier.Position.ABOVE:
         case Modifier.Position.BELOW:
-          x = stave.getX() + stave.getWidth() / 2 - text_width / 2;
+          x = stave.getX() + stave.getWidth() / 2 - text_width / 2 + this.options.shift_x;
           if(this.position == Modifier.Position.ABOVE) {
             y = stave.getYForTopText(2) + this.options.shift_y;
           }
