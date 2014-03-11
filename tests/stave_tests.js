@@ -42,6 +42,10 @@ Vex.Flow.Test.Stave.Start = function() {
       Vex.Flow.Test.Stave.drawStaveText);
   Vex.Flow.Test.runRaphaelTest("Stave Text Test (Raphael)",
       Vex.Flow.Test.Stave.drawStaveText);
+  Vex.Flow.Test.runTest("Multiple Line Stave Text Test (Raphael)",
+      Vex.Flow.Test.Stave.drawStaveTextMultiLine);
+  Vex.Flow.Test.runRaphaelTest("Multiple Line Stave Text Test (Raphael)",
+      Vex.Flow.Test.Stave.drawStaveTextMultiLine);
 }
 
 Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {
@@ -408,6 +412,22 @@ Vex.Flow.Test.Stave.drawStaveText = function(options, contextBuilder) {
   stave.setText("Right Text", Vex.Flow.Modifier.Position.RIGHT);
   stave.setText("Above Text", Vex.Flow.Modifier.Position.ABOVE);
   stave.setText("Below Text", Vex.Flow.Modifier.Position.BELOW);
+  stave.setContext(ctx).draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.Stave.drawStaveTextMultiLine = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 900, 200);
+  var stave = new Vex.Flow.Stave(300, 40, 300);
+  stave.setText("Violin", Vex.Flow.Modifier.Position.LEFT, {shift_y: -10});
+  stave.setText("2nd line", Vex.Flow.Modifier.Position.LEFT, {shift_y: 10});
+  stave.setText("Right Text", Vex.Flow.Modifier.Position.RIGHT, {shift_y: -10});
+  stave.setText("2nd line", Vex.Flow.Modifier.Position.RIGHT, {shift_y: 10});
+  stave.setText("Above Text", Vex.Flow.Modifier.Position.ABOVE, {shift_y: -10});
+  stave.setText("2nd line", Vex.Flow.Modifier.Position.ABOVE, {shift_y: 10});
+  stave.setText("Below Text", Vex.Flow.Modifier.Position.BELOW, {shift_y: -10});
+  stave.setText("2nd line", Vex.Flow.Modifier.Position.BELOW, {shift_y: 10});
   stave.setContext(ctx).draw();
 
   ok(true, "all pass");
