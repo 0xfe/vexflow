@@ -173,7 +173,7 @@ Vex.Flow.TabNote = (function() {
     },
 
     getStemX: function() {
-      return this.getAbsoluteX() + this.x_shift + (this.glyph.head_width / 2);
+      return this.getCenterGlyphX();
     },
 
     getStemY: function(){
