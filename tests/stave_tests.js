@@ -426,8 +426,10 @@ Vex.Flow.Test.Stave.drawStaveTextMultiLine = function(options, contextBuilder) {
   stave.setText("2nd line", Vex.Flow.Modifier.Position.RIGHT, {shift_y: 10});
   stave.setText("Above Text", Vex.Flow.Modifier.Position.ABOVE, {shift_y: -10});
   stave.setText("2nd line", Vex.Flow.Modifier.Position.ABOVE, {shift_y: 10});
-  stave.setText("Below Text", Vex.Flow.Modifier.Position.BELOW, {shift_y: -10});
-  stave.setText("2nd line", Vex.Flow.Modifier.Position.BELOW, {shift_y: 10});
+  stave.setText("Left Below Text", Vex.Flow.Modifier.Position.BELOW,
+    {shift_y: -10, justification: Vex.Flow.TextNote.Justification.LEFT});
+  stave.setText("Right Below Text", Vex.Flow.Modifier.Position.BELOW,
+    {shift_y: 10, justification: Vex.Flow.TextNote.Justification.RIGHT});
   stave.setContext(ctx).draw();
 
   ok(true, "all pass");

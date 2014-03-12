@@ -21,7 +21,8 @@ Vex.Flow.StaveText = (function() {
       this.position = position;
       this.options = {
         shift_x: 0,
-        shift_y: 0
+        shift_y: 0,
+        justification: Vex.Flow.TextNote.Justification.CENTER
       };
       Vex.Merge(this.options, options);
 
@@ -71,7 +72,15 @@ Vex.Flow.StaveText = (function() {
           break;
         case Modifier.Position.ABOVE:
         case Modifier.Position.BELOW:
-          x = stave.getX() + stave.getWidth() / 2 - text_width / 2 + this.options.shift_x;
+          var Justification = Vex.Flow.TextNote.Justification;
+          x = stave.getX() + this.options.shift_x;
+          if(this.options.justification == Justification.CENTER) {
+            x += stave.getWidth() / 2 - text_width / 2;
+          }
+          else if(this.options.justification == Justification.RIGHT) {
+            x += stave.getWidth() - text_width;
+          }
+          
           if(this.position == Modifier.Position.ABOVE) {
             y = stave.getYForTopText(2) + this.options.shift_y;
           }
