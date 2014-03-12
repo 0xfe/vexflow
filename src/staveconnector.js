@@ -49,6 +49,26 @@ Vex.Flow.StaveConnector = (function() {
       return this;
     },
 
+    setText: function(text, text_options) {
+      this.text = text;
+      this.text_options = {
+        shift_x: 0,
+        shift_y: 0
+      };
+      Vex.Merge(this.text_options, text_options);
+
+      this.font = {
+        family: "times",
+        size: 16,
+        weight: "normal"
+      };
+      return this;
+    },
+
+    setFont: function(font) {
+      Vex.Merge(this.font, font);
+    },
+
     setXShift: function(x_shift){
       if (typeof x_shift !== 'number') {
         throw Vex.RERR("InvalidType", "x_shift must be a Number");
@@ -153,6 +173,21 @@ Vex.Flow.StaveConnector = (function() {
       // If the connector is a thin double barline, draw the paralell line
       if (this.type === StaveConnector.type.THIN_DOUBLE) {
         this.ctx.fillRect(topX - 3, topY, width, attachment_height);
+      }
+
+      // Add stave connector text
+      if (this.text !== undefined) {
+        this.ctx.save();
+        this.ctx.lineWidth = 2;
+        this.ctx.setFont(this.font.family, this.font.size, this.font.weight);
+        var text_width = this.ctx.measureText("" + this.text).width;
+
+        var x = this.top_stave.getX() - text_width - 24 + this.text_options.shift_x;
+        var y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 +
+          this.text_options.shift_y;
+
+        this.ctx.fillText("" + this.text, x, y + 4);
+        this.ctx.restore();
       }
     }
   };

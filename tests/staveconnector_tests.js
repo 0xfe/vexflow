@@ -119,15 +119,16 @@ Vex.Flow.Test.StaveConnector.drawDouble = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.StaveConnector.drawBrace = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 400, 300);
-  var stave = new Vex.Flow.Stave(25, 10, 300);
-  var stave2 = new Vex.Flow.Stave(25, 120, 300);
+  var ctx = new contextBuilder(options.canvas_sel, 450, 300);
+  var stave = new Vex.Flow.Stave(100, 10, 300);
+  var stave2 = new Vex.Flow.Stave(100, 120, 300);
   stave.setContext(ctx);
   stave2.setContext(ctx);
   var connector = new Vex.Flow.StaveConnector(stave, stave2);
   var line = new Vex.Flow.StaveConnector(stave, stave2);
   connector.setType(Vex.Flow.StaveConnector.type.BRACE);
   connector.setContext(ctx);
+  connector.setText('Piano');
   line.setType(Vex.Flow.StaveConnector.type.SINGLE);
   connector.setContext(ctx);
   line.setContext(ctx);
@@ -414,14 +415,15 @@ Vex.Flow.Test.StaveConnector.drawRepeatOffset = function(options, contextBuilder
 }
 
 Vex.Flow.Test.StaveConnector.drawCombined = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 400, 700);
-  var stave = new Vex.Flow.Stave(25, 10, 300);
-  var stave2 = new Vex.Flow.Stave(25, 100, 300);
-  var stave3 = new Vex.Flow.Stave(25, 190, 300);
-  var stave4 = new Vex.Flow.Stave(25, 280, 300);
-  var stave5 = new Vex.Flow.Stave(25, 370, 300);
-  var stave6 = new Vex.Flow.Stave(25, 460, 300);
-  var stave7 = new Vex.Flow.Stave(25, 560, 300);
+  var ctx = new contextBuilder(options.canvas_sel, 550, 700);
+  var stave = new Vex.Flow.Stave(150, 10, 300);
+  var stave2 = new Vex.Flow.Stave(150, 100, 300);
+  var stave3 = new Vex.Flow.Stave(150, 190, 300);
+  var stave4 = new Vex.Flow.Stave(150, 280, 300);
+  var stave5 = new Vex.Flow.Stave(150, 370, 300);
+  var stave6 = new Vex.Flow.Stave(150, 460, 300);
+  var stave7 = new Vex.Flow.Stave(150, 560, 300);
+  stave.setText('Violin', Vex.Flow.Modifier.Position.LEFT);
   stave.setContext(ctx);
   stave2.setContext(ctx);
   stave3.setContext(ctx);
@@ -437,6 +439,9 @@ Vex.Flow.Test.StaveConnector.drawCombined = function(options, contextBuilder) {
   conn_double.setType(Vex.Flow.StaveConnector.type.DOUBLE);
   conn_bracket.setType(Vex.Flow.StaveConnector.type.BRACKET);
   conn_brace.setType(Vex.Flow.StaveConnector.type.BRACE);
+  conn_double.setText('Piano');
+  conn_bracket.setText('Celesta');
+  conn_brace.setText('Harpsichord');
   conn_single.setContext(ctx);
   conn_double.setContext(ctx);
   conn_bracket.setContext(ctx);
