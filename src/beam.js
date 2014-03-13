@@ -33,13 +33,6 @@ Vex.Flow.Beam = (function() {
         throw new Vex.RuntimeError("BadArguments", "Too few notes for beam.");
       }
 
-      this.unbeamable = false;
-      // Quit if first or last note is a rest.
-      if (!notes[0].hasStem() || !notes[notes.length-1].hasStem()) {
-        this.unbeamable = true;
-        return;
-      }
-
       // Validate beam line, direction and ticks.
       this.stem_direction = notes[0].getStemDirection();
       this.ticks = notes[0].getIntrinsicTicks();
@@ -96,13 +89,15 @@ Vex.Flow.Beam = (function() {
       }
 
       this.notes = notes;
-      this.beam_count = this.notes[0].getGlyph().beam_count;
+      this.beam_count = this.getBeamCount();
       this.render_options = {
         beam_width: 5,
         max_slope: 0.25,
         min_slope: -0.25,
         slope_iterations: 20,
-        slope_cost: 25
+        slope_cost: 25,
+        show_stemlets: false,
+        stemlet_extension: 7
       };
     },
 
@@ -112,6 +107,18 @@ Vex.Flow.Beam = (function() {
      * @return {Array.<Vex.Flow.Note>} Returns notes in this beam.
      */
     getNotes: function() { return this.notes; },
+
+    getBeamCount: function(){
+      var beamCounts =  this.notes.map(function(note) {
+        return note.getGlyph().beam_count;
+      });
+
+      var maxBeamCount =  beamCounts.reduce(function(max, beamCount) {
+          return beamCount > max ? beamCount : max; 
+      });
+
+      return maxBeamCount;
+    },
 
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
@@ -183,11 +190,6 @@ Vex.Flow.Beam = (function() {
       for (i = 0; i < this.notes.length; ++i) {
         note = this.notes[i];
 
-        // Do not draw stem for rests
-        if (!note.hasStem()) {
-          continue;
-        }
-
         x_px = note.getStemX();
         var y_extents = note.getStemExtents();
         var base_y_px = y_extents.baseY;
@@ -197,6 +199,35 @@ Vex.Flow.Beam = (function() {
 
         // Don't go all the way to the top (for thicker stems)
         var y_displacement = Vex.Flow.STEM_WIDTH;
+
+        if (!note.hasStem()) {
+          if (note.isRest() && this.render_options.show_stemlets) {
+            var centerGlyphX = note.getCenterGlyphX();
+
+            var width = this.render_options.beam_width;
+            var total_width = ((this.beam_count - 1)* width * 1.5) + width;
+
+            var stemlet_height = (total_width - y_displacement + 
+              this.render_options.stemlet_extension);
+
+            var beam_y = (getSlopeY(centerGlyphX) + y_shift);
+            var start_y = beam_y + (Vex.Flow.Stem.HEIGHT * this.stem_direction);
+            var end_y = beam_y + (stemlet_height * this.stem_direction);
+
+            // Draw Stemlet
+            note.drawStem({
+              x_begin: centerGlyphX,
+              x_end: centerGlyphX,
+              y_bottom: this.stem_direction === 1 ? end_y : start_y,
+              y_top: this.stem_direction === 1 ? start_y : end_y,
+              y_extend: y_displacement,
+              stem_extension: 0,
+              stem_direction: this.stem_direction
+            });
+          }
+          
+          continue;
+        }
 
         note.drawStem({
           x_begin: x_px,
@@ -220,14 +251,16 @@ Vex.Flow.Beam = (function() {
           var note = that.notes[i];
           var ticks = note.getIntrinsicTicks();
 
+          var stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
+
           // Check whether to apply beam(s)
           if (ticks < Vex.Flow.durationToTicks(duration)) {
             if (!beam_started) {
-              beam_lines.push({start: note.getStemX(), end: null});
+              beam_lines.push({start: stem_x, end: null});
               beam_started = true;
             } else {
               current_beam = beam_lines[beam_lines.length - 1];
-              current_beam.end = note.getStemX();
+              current_beam.end = stem_x;
             }
           } else {
             if (!beam_started) {
@@ -289,18 +322,106 @@ Vex.Flow.Beam = (function() {
     }
   };
 
+  Beam.getDefaultBeamGroups = function(time_sig){
+    var defaults = {
+      '1/2' :  ['1/2'],
+      '2/2' :  ['1/2'],
+      '3/2' :  ['1/2'],
+      '4/2' :  ['1/2'],
+
+      '1/4' :  ['1/4'],
+      '2/4' :  ['1/4'],
+      '3/4' :  ['1/4'],
+      '4/4' :  ['1/4'],
+ 
+      '1/8' :  ['1/8'],
+      '2/8' :  ['2/8'],
+      '3/8' :  ['3/8'],
+      '4/8' :  ['2/8'],
+
+      '1/16' : ['1/16'],
+      '2/16' : ['2/16'],
+      '3/16' : ['3/16'],
+      '4/16' : ['2/16']
+    };
+
+    var Fraction = Vex.Flow.Fraction;
+    var groups = defaults[time_sig];
+
+    if (!groups) {
+      // If no beam groups found, naively determine
+      // the beam groupings from the time signature
+      var beatTotal = parseInt(time_sig.split('/')[0], 10);
+      var beatValue = parseInt(time_sig.split('/')[1], 10);
+
+      var tripleMeter = beatTotal % 3 === 0;
+
+      if (tripleMeter) {
+        return [new Fraction(3, beatValue)];
+      } else if (beatValue > 4) {
+        return [new Fraction(2, beatValue)];
+      } else if (beatValue <= 4) {
+        return [new Fraction(1, beatValue)];
+      }
+    } else {
+      return groups.map(function(group) {
+        return new Fraction().parse(group);
+      });
+    }
+  };
+
   // Static method: Automatically beam notes in "voice". If "stem_direction"
   // is set, then force all stems to that direction (used for multi-voice music).
-  Beam.applyAndGetBeams = function(voice, stem_direction) {
-    var unprocessedNotes = voice.tickables;
-    var ticksPerGroup    = 4096;
+  Beam.applyAndGetBeams = function(voice, stem_direction, groups) {
+    return Beam.generateBeams(voice.tickables, {
+      groups: groups,
+      stem_direction: stem_direction
+    });
+  };
+
+  Beam.generateBeams = function(notes, config) {
+    // Example configuration object:
+    // 
+    // config = {
+    //   groups: [new Vex.Flow.Fraction(2, 8)],   // Beam groups
+    //   stem_direction: -1,                     // leave undefined for auto
+    //   beam_rests: true,
+    //   beam_middle_only: true,
+    //   show_stemlets: false
+    // };
+    
+    if (!config) config = {};
+    
+    if (!config.groups || !config.groups.length) {
+      config.groups = [new Vex.Flow.Fraction(2, 8)];
+    }
+
+    // Convert beam groups to tick amounts
+    var tickGroups = config.groups.map(function(group) {
+      if (!group.multiply) {
+        throw new Vex.RuntimeError("InvalidBeamGroups",
+          "The beam groups must be an array of Vex.Flow.Fractions");
+      }
+      return group.multiply(Vex.Flow.RESOLUTION, 1);
+    });
+
+    var unprocessedNotes = notes;
+    var currentTickGroup = 0;
     var noteGroups       = [];
     var currentGroup     = [];
 
     function getTotalTicks(vf_notes){
       return vf_notes.reduce(function(memo,note){
-        return note.getTicks().value() + memo;
-      }, 0);
+        return note.getTicks().clone().add(memo);
+      }, new Vex.Flow.Fraction(0, 1));
+    }
+
+    function nextTickGroup() {
+      if (tickGroups.length - 1 > currentTickGroup) {
+        currentTickGroup += 1;
+      } else {
+        currentTickGroup = 0;
+      }
     }
 
     function createGroups(){
@@ -315,15 +436,24 @@ Vex.Flow.Beam = (function() {
         }
 
         currentGroup.push(unprocessedNote);
+        var ticksPerGroup = tickGroups[currentTickGroup].value();
+        var totalTicks = getTotalTicks(currentGroup).value();
+
+        // Double the amount of ticks in a group, if it's an unbeamable tuplet
+        if (parseInt(unprocessedNote.duration, 10) < 8 && unprocessedNote.tuplet) {
+          ticksPerGroup *= 2;
+        }
 
         // If the note that was just added overflows the group tick total
-        if (getTotalTicks(currentGroup) > ticksPerGroup) {
+        if (totalTicks > ticksPerGroup) {
           nextGroup.push(currentGroup.pop());
           noteGroups.push(currentGroup);
           currentGroup = nextGroup;
-        } else if (getTotalTicks(currentGroup) == ticksPerGroup) {
+          nextTickGroup();
+        } else if (totalTicks == ticksPerGroup) {
           noteGroups.push(currentGroup);
           currentGroup = nextGroup;
+          nextTickGroup();
         }
       });
 
@@ -347,6 +477,38 @@ Vex.Flow.Beam = (function() {
       });
     }
 
+    // Splits up groups by Rest
+    function sanitizeGroups() {
+      var sanitizedGroups = [];
+      noteGroups.forEach(function(group) {
+        var tempGroup = [];
+        group.forEach(function(note, index, group) {
+          var isFirstOrLast = index === 0 || index === group.length - 1;
+
+          var breaksOnEachRest = !config.beam_rests && note.isRest();
+          var breaksOnFirstOrLastRest = (config.beam_rests && 
+            config.beam_middle_only && note.isRest() && isFirstOrLast);
+
+          var shouldBreak = breaksOnEachRest || breaksOnFirstOrLastRest;  
+
+          if (shouldBreak) {
+            if (tempGroup.length > 0) {
+              sanitizedGroups.push(tempGroup);
+            }
+            tempGroup = [];
+          } else {
+            tempGroup.push(note);
+          }
+        });
+
+        if (tempGroup.length > 0) {
+          sanitizedGroups.push(tempGroup);
+        }
+      });
+
+      noteGroups = sanitizedGroups;
+    }
+
     function formatStems() {
       noteGroups.forEach(function(group){
         var stemDirection = determineStemDirection(group);
@@ -356,7 +518,7 @@ Vex.Flow.Beam = (function() {
     }
 
     function determineStemDirection(group) {
-      if (stem_direction) return stem_direction;
+      if (config.stem_direction) return config.stem_direction;
 
       var lineSum = 0;
 
@@ -385,10 +547,12 @@ Vex.Flow.Beam = (function() {
       });
     }
 
+
     // Using closures to store the variables throughout the various functions
     // IMO Keeps it this process lot cleaner - but not super consistent with
     // the rest of the API's style - Silverwolf90 (Cyril)
     createGroups();
+    sanitizeGroups();
     formatStems();
 
     // Get the notes to be beamed
@@ -400,7 +564,13 @@ Vex.Flow.Beam = (function() {
     // Create a Vex.Flow.Beam from each group of notes to be beamed
     var beams = [];
     beamedNoteGroups.forEach(function(group){
-      beams.push(new Vex.Flow.Beam(group));
+      var beam = new Vex.Flow.Beam(group);
+
+      if (config.show_stemlets) {
+        beam.render_options.show_stemlets = true;
+      }
+
+      beams.push(beam);
     });
 
     // Reformat tuplets
