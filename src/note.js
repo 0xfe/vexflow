@@ -106,7 +106,6 @@ Vex.Flow.Note = (function() {
           "No Y-values calculated for this note.");
       return this.ys;
     },
-
     getYForTopText: function(text_line) {
       if (!this.stave) throw new Vex.RERR("NoStave",
           "No stave attached to this note.");
@@ -191,13 +190,25 @@ Vex.Flow.Note = (function() {
       return this;
     },
 
+    setX: function(x) {
+      if (isNaN(x)) {
+        throw new Vex.RERR('Invalid x coordinate attempted: ' + x.toString());
+      }
+      this.x = x; return this; 
+    },
+
     getX: function() {
+      if (this.x) { return this.x; };
+
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
       return this.tickContext.getX() + this.x_shift;
     },
 
+
     getAbsoluteX: function() {
+      if (this.x) { return this.x; };
+
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
 

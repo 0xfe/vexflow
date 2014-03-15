@@ -87,6 +87,10 @@ Vex.Flow.StaveNote = (function() {
         stroke_spacing: 10    // spacing between strokes (TODO: take from stave)
       });
 
+      this.isGraceNote = function(){
+        return note_struct.isGraceNote === true;
+      };
+
       switch (this.duration) {
         case "w":                 // Whole note alias
         case "1": this.stem_extension = -1 * Stem.HEIGHT; break;
@@ -94,6 +98,14 @@ Vex.Flow.StaveNote = (function() {
         case "64": this.stem_extension = 15; break;
         case "128": this.stem_extension = 20; break;
         default: this.stem_extension = 0;
+      }
+
+      if (this.isGraceNote()) {
+        this.render_options.glyph_font_scale = 20;
+        this.render_options.stem_height = 20;
+        this.render_options.stroke_px = 2;
+        this.glyph.head_width = 5;
+        this.stem_extension -= 15;
       }
 
       var auto_stem_direction;
@@ -337,6 +349,7 @@ Vex.Flow.StaveNote = (function() {
       return this.addModifier(index, annotation);
     },
 
+
     addDot: function(index) {
       var dot = new Vex.Flow.Dot();
       dot.setDotShiftY(this.glyph.dot_shiftY);
@@ -348,6 +361,16 @@ Vex.Flow.StaveNote = (function() {
     addDotToAll: function() {
       for (var i = 0; i < this.keys.length; ++i)
         this.addDot(i);
+      return this;
+    },
+
+    addGraceNoteGroup: function(index, graceNotes) {
+      debugger;
+      var graceNoteGroup = new Vex.Flow.GraceNoteGroup(graceNotes);
+      graceNoteGroup.setNote(this);
+      graceNoteGroup.setIndex(index);
+      this.modifiers.push(graceNoteGroup);
+      this.setPreFormatted(false);
       return this;
     },
 
