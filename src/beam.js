@@ -104,6 +104,12 @@ Vex.Flow.Beam = (function() {
         slope_iterations: 20,
         slope_cost: 25
       };
+
+      if (this.notes[0].isGraceNote()) {
+        this.render_options.beam_width = 2;
+        //this.render_options.max_slope = 0;
+        this.render_options.min_slope = 0;
+      }
     },
 
     setContext: function(context) { this.context = context; return this; },
