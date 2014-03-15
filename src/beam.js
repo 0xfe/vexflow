@@ -114,7 +114,7 @@ Vex.Flow.Beam = (function() {
       });
 
       var maxBeamCount =  beamCounts.reduce(function(max, beamCount) {
-          return beamCount > max ? beamCount : max; 
+          return beamCount > max ? beamCount : max;
       });
 
       return maxBeamCount;
@@ -207,7 +207,7 @@ Vex.Flow.Beam = (function() {
             var width = this.render_options.beam_width;
             var total_width = ((this.beam_count - 1)* width * 1.5) + width;
 
-            var stemlet_height = (total_width - y_displacement + 
+            var stemlet_height = (total_width - y_displacement +
               this.render_options.stemlet_extension);
 
             var beam_y = (getSlopeY(centerGlyphX) + y_shift);
@@ -486,10 +486,10 @@ Vex.Flow.Beam = (function() {
           var isFirstOrLast = index === 0 || index === group.length - 1;
 
           var breaksOnEachRest = !config.beam_rests && note.isRest();
-          var breaksOnFirstOrLastRest = (config.beam_rests && 
+          var breaksOnFirstOrLastRest = (config.beam_rests &&
             config.beam_middle_only && note.isRest() && isFirstOrLast);
 
-          var shouldBreak = breaksOnEachRest || breaksOnFirstOrLastRest;  
+          var shouldBreak = breaksOnEachRest || breaksOnFirstOrLastRest;
 
           if (shouldBreak) {
             if (tempGroup.length > 0) {

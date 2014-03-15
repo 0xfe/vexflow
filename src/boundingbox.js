@@ -8,7 +8,8 @@
 /** @constructor */
 Vex.Flow.BoundingBox = (function() {
   function BoundingBox(x, y, w, h) { this.init(x, y, w, h); }
-  BoundingBox.copy = function(that) { return new BoundingBox(that.x, that.y, that.w, that.h); }
+  BoundingBox.copy = function(that) {
+    return new BoundingBox(that.x, that.y, that.w, that.h); };
 
   BoundingBox.prototype = {
     init: function(x, y, w, h) {
@@ -28,7 +29,7 @@ Vex.Flow.BoundingBox = (function() {
     setW: function(w) { this.w = w; return this; },
     setH: function(h) { this.h = h; return this; },
 
-    move: function(x, y) { this.x += x; this.y += y },
+    move: function(x, y) { this.x += x; this.y += y; },
     clone: function() { return BoundingBox.copy(this); },
 
     // Merge my box with given box. Creates a bigger bounding box unless
