@@ -225,7 +225,7 @@ Vex.Flow.Beam = (function() {
               stem_direction: this.stem_direction
             });
           }
-          
+
           continue;
         }
 
@@ -333,7 +333,7 @@ Vex.Flow.Beam = (function() {
       '2/4' :  ['1/4'],
       '3/4' :  ['1/4'],
       '4/4' :  ['1/4'],
- 
+
       '1/8' :  ['1/8'],
       '2/8' :  ['2/8'],
       '3/8' :  ['3/8'],
@@ -381,7 +381,7 @@ Vex.Flow.Beam = (function() {
 
   Beam.generateBeams = function(notes, config) {
     // Example configuration object:
-    // 
+    //
     // config = {
     //   groups: [new Vex.Flow.Fraction(2, 8)],   // Beam groups
     //   stem_direction: -1,                     // leave undefined for auto
@@ -389,9 +389,9 @@ Vex.Flow.Beam = (function() {
     //   beam_middle_only: true,
     //   show_stemlets: false
     // };
-    
+
     if (!config) config = {};
-    
+
     if (!config.groups || !config.groups.length) {
       config.groups = [new Vex.Flow.Fraction(2, 8)];
     }
