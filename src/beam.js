@@ -323,6 +323,8 @@ Vex.Flow.Beam = (function() {
   };
 
   Beam.getDefaultBeamGroups = function(time_sig){
+    if (!time_sig || time_sig == "c") time_sig = "4/4";
+
     var defaults = {
       '1/2' :  ['1/2'],
       '2/2' :  ['1/2'],
@@ -373,7 +375,7 @@ Vex.Flow.Beam = (function() {
   // Static method: Automatically beam notes in "voice". If "stem_direction"
   // is set, then force all stems to that direction (used for multi-voice music).
   Beam.applyAndGetBeams = function(voice, stem_direction, groups) {
-    return Beam.generateBeams(voice.tickables, {
+    return Beam.generateBeams(voice.getTickables(), {
       groups: groups,
       stem_direction: stem_direction
     });
@@ -402,7 +404,7 @@ Vex.Flow.Beam = (function() {
         throw new Vex.RuntimeError("InvalidBeamGroups",
           "The beam groups must be an array of Vex.Flow.Fractions");
       }
-      return group.multiply(Vex.Flow.RESOLUTION, 1);
+      return group.clone().multiply(Vex.Flow.RESOLUTION, 1);
     });
 
     var unprocessedNotes = notes;
