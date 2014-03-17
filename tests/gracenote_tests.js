@@ -71,8 +71,10 @@ Vex.Flow.Test.GraceNote.basic = function(options, contextBuilder) {
   var gracenotes3 = gracenote_group3.map(createNote);
   var gracenotes4 = gracenote_group4.map(createNote);
 
-  gracenotes[1].addAccidental(0, new Vex.Flow.Accidental('#'));
-  gracenotes3[3].addAccidental(0, new Vex.Flow.Accidental('b'));
+  gracenotes[1].addAccidental(0, new Vex.Flow.Accidental('##'));
+  gracenotes3[3].addAccidental(0, new Vex.Flow.Accidental('bb'));
+
+  gracenotes4[0].addDotToAll();
 
   var config = {
     beam: true,
@@ -124,9 +126,9 @@ Vex.Flow.Test.GraceNote.basicSlurred = function(options, contextBuilder) {
   ];
 
   var gracenote_group4 = [
-    { keys: ["g/4"], duration: "8"},
-    { keys: ["g/4"], duration: "16"},
-    { keys: ["g/4"], duration: "16"}
+    { keys: ["a/4"], duration: "8"},
+    { keys: ["a/4"], duration: "16"},
+    { keys: ["a/4"], duration: "16"}
   ];
 
   function createNote(note_prop) {
@@ -141,6 +143,7 @@ Vex.Flow.Test.GraceNote.basicSlurred = function(options, contextBuilder) {
 
   gracenotes[1].addAccidental(0, new Vex.Flow.Accidental('#'));
   gracenotes3[3].addAccidental(0, new Vex.Flow.Accidental('b'));
+  gracenotes4[0].addDotToAll();
 
   var config = {
     beam: true,

@@ -5,12 +5,10 @@ Vex.Flow.GraceNoteGroup = (function(){
 
   Vex.Inherit(GraceNoteGroup, Vex.Flow.Modifier, {
     init: function(grace_notes, config) {
-      if (!config) {
-        config = {};
-      }
-
       var superclass = GraceNoteGroup.superclass;
       superclass.init.call(this);
+
+      if (!config) { config = {}; }
 
       this.note = null;
       this.index = null;
@@ -18,19 +16,25 @@ Vex.Flow.GraceNoteGroup = (function(){
       this.grace_notes = grace_notes;
       this.width = 0;
 
-      this.slur = config.slur;
+      this.show_slur = config.slur;
+      this.beam_notes = config.beam;
+      this.beam = null;
+      this.slur = null;
 
+      this.formatter = new Vex.Flow.Formatter();
       this.voice = new Vex.Flow.Voice({
         num_beats: 4,
         beat_value: 4,
         resolution: Vex.Flow.RESOLUTION
-      });
-      this.formatter = new Vex.Flow.Formatter();
+      }).setStrict(false);
 
+      this.setupVoice();
+    },
+
+    setupVoice: function() {
       this.voice.addTickables(this.grace_notes);
-      this.voice.setStrict(false);
-
-      if (config.beam && this.grace_notes.length > 1) {
+      
+      if (this.beam_notes && this.grace_notes.length > 1) {
         this.beamNotes();
       }
 
@@ -40,6 +44,7 @@ Vex.Flow.GraceNoteGroup = (function(){
 
     beamNotes: function(){
       var beam = new Vex.Flow.Beam(this.grace_notes);
+
       beam.render_options.beam_width = 3;
       beam.render_options.partial_beam_length = 4;
 
@@ -65,42 +70,50 @@ Vex.Flow.GraceNoteGroup = (function(){
           "Can't draw Grace note without a context.");
       }
 
-      if (!(this.note && (this.index !== null))) {
+      var note = this.getNote();
+
+      if (!(note && (this.index !== null))) {
         throw new Vex.RuntimeError("NoAttachedNote",
           "Can't draw grace note without a parent note and parent note index.");
       }
-      var note = this.getNote();
-      var tickContext = note.getTickContext();
-      var extraPx = tickContext.getExtraPx();
-      var x = tickContext.getX() - extraPx.left - extraPx.extraLeft;
-
-      var offset = 0;
-      this.grace_notes.forEach(function(graceNote) {
-          var tickContext = graceNote.getTickContext();
-          graceNote.setStave(note.stave);
-          var tempX = tickContext.getX();
-          tickContext.setX(x + tempX);
-          offset += tempX;
-      }, this);
-
-      if (this.beam) {
-        this.beam.setContext(this.context).draw();
-      }
       
+      function alignGraceNotesWithNote(grace_notes, note) {
+        // Shift over the tick contexts of each note
+        // So that th aligned with the note
+        var tickContext = note.getTickContext();
+        var extraPx = tickContext.getExtraPx();
+        var x = tickContext.getX() - extraPx.left - extraPx.extraLeft;
+        grace_notes.forEach(function(graceNote) {
+            var tick_context = graceNote.getTickContext();
+            var x_offset = tick_context.getX();
+            graceNote.setStave(note.stave);
+            tick_context.setX(x + x_offset);
+        });
+      }
+
+      alignGraceNotesWithNote(this.grace_notes, note);
+      
+      // Draw notes
       this.grace_notes.forEach(function(graceNote) {
         graceNote.setContext(this.context).draw();
       }, this);
 
-      if (this.slur) {
-        var tie = new Vex.Flow.StaveTie({
+      // Draw beam
+      if (this.beam) {
+        this.beam.setContext(this.context).draw();
+      }
+
+      if (this.show_slur) {
+        // Create and draw slur
+        this.slur = new Vex.Flow.StaveTie({
           last_note: this.grace_notes[0],
-          first_note: this.getNote(),
+          first_note: note,
           first_indices: [0],
           last_indices: [0]
         });
 
-        tie.render_options.cp2 = 12
-        tie.setContext(this.context).draw();
+        this.slur.render_options.cp2 = 12
+        this.slur.setContext(this.context).draw();
       }
     }
   });

@@ -42,8 +42,15 @@ Vex.Flow.Accidental = (function(){
 
       // For accidentals attached to grace notes
       if (this.note.getCategory() === 'gracenotes') {
-        this.render_options.font_scale = 25
-        this.setWidth(7);
+        var gracenote_widths = {
+          '#': 4.5,
+          'b' : 4.5,
+          '##' : 6,
+          'bb' : 8
+        };
+        
+        this.render_options.font_scale = 25;
+        this.setWidth(gracenote_widths[this.type]);
       }
     },
 

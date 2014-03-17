@@ -813,7 +813,7 @@ Vex.Flow.ModifierContext = (function() {
         gracenote_group = group_list[i].gracenote_group;
 
         gracenote_group.setXShift(left_shift + group_shift);
-        group_shift = gracenote_group.getWidth() + gracenote_spacing; // spacing
+        group_shift = gracenote_group.getWidth() + gracenote_spacing;
       }
 
       this.state.left_shift += group_shift;
