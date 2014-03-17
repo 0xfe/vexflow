@@ -92,6 +92,11 @@ Vex.Flow.StemmableNote = (function(){
       return stem_x;
     },
 
+    // Used for TabNote stems and Stemlets over rests
+    getCenterGlyphX: function(){
+      return this.getAbsoluteX() + this.x_shift + (this.glyph.head_width / 2);
+    },
+
     // Manuallly set note stem length
     setStemLength: function(height) {
       this.stem_extension = (height - Stem.HEIGHT);
