@@ -45,19 +45,22 @@ Vex.Flow.Stave = (function() {
       this.bounds = {x: this.x, y: this.y, w: this.width, h: 0};
       Vex.Merge(this.options, options);
 
-      this.options.line_config = [];
-      for (var i = 0; i < this.options.num_lines; i++) {
-        this.options.line_config.push({ visible: true });
-      }
+      this.resetLines();
 
-      this.height =
-        (this.options.num_lines + this.options.space_above_staff_ln) *
-         this.options.spacing_between_lines_px;
       this.modifiers.push(
           new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, this.x)); // beg bar
       this.modifiers.push(
           new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE,
           this.x + this.width)); // end bar
+    },
+
+    resetLines: function() {
+      this.options.line_config = [];
+      for (var i = 0; i < this.options.num_lines; i++) {
+        this.options.line_config.push({visible: true});
+      }
+      this.height = (this.options.num_lines + this.options.space_above_staff_ln) *
+         this.options.spacing_between_lines_px;
     },
 
     setNoteStartX: function(x) { this.start_x = x; return this; },
