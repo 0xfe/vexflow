@@ -102,14 +102,9 @@ Vex.Flow.Beam = (function() {
         max_slope: 0.25,
         min_slope: -0.25,
         slope_iterations: 20,
-        slope_cost: 25
+        slope_cost: 25,
+        partial_beam_length: 10
       };
-
-      if (this.notes[0].isGraceNote()) {
-        this.render_options.beam_width = 2;
-        //this.render_options.max_slope = 0;
-        this.render_options.min_slope = 0;
-      }
     },
 
     setContext: function(context) { this.context = context; return this; },
@@ -242,7 +237,7 @@ Vex.Flow.Beam = (function() {
               current_beam = beam_lines[beam_lines.length - 1];
               if (current_beam.end == null) {
                 // single note
-                current_beam.end = current_beam.start + 10; // TODO
+                current_beam.end = current_beam.start + that.render_options.partial_beam_length; // TODO
               } else {
                 // we don't care
               }
@@ -256,7 +251,7 @@ Vex.Flow.Beam = (function() {
           current_beam = beam_lines[beam_lines.length - 1];
           if (current_beam.end == null) {
             // single note
-            current_beam.end = current_beam.start - 10; // TODO
+            current_beam.end = current_beam.start - that.render_options.partial_beam_length - Vex.Flow.STEM_WIDTH; // TODO
           }
         }
 
