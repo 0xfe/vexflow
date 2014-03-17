@@ -112,7 +112,7 @@ Vex.Flow.GraceNoteGroup = (function(){
           last_indices: [0]
         });
 
-        this.slur.render_options.cp2 = 12
+        this.slur.render_options.cp2 = 12;
         this.slur.setContext(this.context).draw();
       }
     }

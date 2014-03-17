@@ -807,12 +807,8 @@ Vex.Flow.ModifierContext = (function() {
       
       // If first note left shift in case it is displaced
       var group_shift = group_list[0].shift;
-      var x_width = 0;
-      var top_line = group_list[0].line;
       for (i = 0; i < group_list.length; ++i) {
         gracenote_group = group_list[i].gracenote_group;
-
-        gracenote_group.setXShift(left_shift + group_shift);
         group_shift = gracenote_group.getWidth() + gracenote_spacing;
       }
 
