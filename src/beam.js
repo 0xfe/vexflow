@@ -34,7 +34,6 @@ Vex.Flow.Beam = (function() {
       }
 
       // Validate beam line, direction and ticks.
-      this.stem_direction = notes[0].getStemDirection();
       this.ticks = notes[0].getIntrinsicTicks();
 
       if (this.ticks >= Vex.Flow.durationToTicks("4")) {
@@ -44,13 +43,14 @@ Vex.Flow.Beam = (function() {
 
       var i; // shared iterator
       var note;
-      if (!auto_stem) {
-        for (i = 1; i < notes.length; ++i) {
-          note = notes[i];
-          if (note.hasStem() && (note.getStemDirection() != this.stem_direction)) {
-            throw new Vex.RuntimeError("BadArguments",
-                "Notes in a beam all have the same stem direction");
-          }
+
+      this.stem_direction = notes[0].getStemDirection();
+
+      for (i = 0; i < notes.length; ++i) {
+        note = notes[i];
+        if (note.hasStem()) {
+          this.stem_direction = note.getStemDirection();
+          break;
         }
       }
 
@@ -521,7 +521,6 @@ Vex.Flow.Beam = (function() {
     function formatStems() {
       noteGroups.forEach(function(group){
         var stemDirection = determineStemDirection(group);
-
         applyStemDirection(group, stemDirection);
       });
     }
@@ -530,7 +529,6 @@ Vex.Flow.Beam = (function() {
       if (config.stem_direction) return config.stem_direction;
 
       var lineSum = 0;
-
       group.forEach(function(note) {
         if (note.keyProps) {
           note.keyProps.forEach(function(keyProp){
@@ -585,6 +583,13 @@ Vex.Flow.Beam = (function() {
     // Reformat tuplets
     tupletGroups.forEach(function(group){
       var firstNote = group[0];
+      for (var i=0; i<group.length; ++i) {
+        if (group[i].hasStem()) {
+          firstNote = group[i];
+          break;
+        }
+      }
+
       var tuplet = firstNote.tuplet;
 
       if (firstNote.beam) tuplet.setBracketed(false);
