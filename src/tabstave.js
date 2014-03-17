@@ -37,7 +37,7 @@ Vex.Flow.TabStave = (function() {
       switch(this.options.num_lines) {
         case 6:
           glyphScale = 40;
-          glyphOffset = 0;
+          glyphOffset = 1.5;
           break;
         case 5:
           glyphScale = 30;
