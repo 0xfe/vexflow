@@ -95,7 +95,7 @@ Vex.Flow.Beam = (function() {
         max_slope: 0.25,
         min_slope: -0.25,
         slope_iterations: 20,
-        slope_cost: 25,
+        slope_cost: 20,
         show_stemlets: false,
         stemlet_extension: 7
       };
@@ -173,8 +173,15 @@ Vex.Flow.Beam = (function() {
           }
 
         }
-        var cost = this.render_options.slope_cost * Math.abs(slope) +
-          Math.abs(total_stem_extension);
+        /*
+          // This causes too many zero-slope beams.
+
+          var cost = this.render_options.slope_cost * Math.abs(slope) +
+            Math.abs(total_stem_extension);
+        */
+
+        // Pick a beam that minimizes stem extension.
+        var cost = Math.abs(total_stem_extension);
 
         // update state when a more ideal slope is found
         if (cost < min_cost) {

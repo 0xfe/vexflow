@@ -91,7 +91,8 @@ base_sources = [
 
 # Don't minify these files.
 reject = [
-  "src/header.js"
+  "src/header.js",
+  "src/container.js"
 ]
 
 # Catch other missing JS files

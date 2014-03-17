@@ -23,7 +23,13 @@ Vex.Flow.TabStave = (function() {
     },
 
     setNumberOfLines: function(lines) {
-      this.options.num_lines = lines; return this;
+      this.options.num_lines = parseInt(lines, 10);
+      this.resetLines();
+      return this;
+    },
+
+    getNumberOfLines: function() {
+      return this.options.num_lines;
     },
 
     getYForGlyphs: function() {
@@ -35,9 +41,17 @@ Vex.Flow.TabStave = (function() {
       var glyphOffset;
 
       switch(this.options.num_lines) {
+        case 8:
+          glyphScale = 55;
+          glyphOffset = 14;
+          break;
+        case 7:
+          glyphScale = 47;
+          glyphOffset = 8;
+          break;
         case 6:
           glyphScale = 40;
-          glyphOffset = 0;
+          glyphOffset = 1;
           break;
         case 5:
           glyphScale = 30;
