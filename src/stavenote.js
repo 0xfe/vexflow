@@ -110,6 +110,8 @@ Vex.Flow.StaveNote = (function() {
         this.setStemDirection(note_struct.stem_direction);
       }
 
+      this.end_secondary_beams = note_struct.end_secondary_beams;
+
       // Calculate left/right padding
       this.calcExtraPx();
     },

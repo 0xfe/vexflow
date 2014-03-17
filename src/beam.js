@@ -261,6 +261,11 @@ Vex.Flow.Beam = (function() {
             } else {
               current_beam = beam_lines[beam_lines.length - 1];
               current_beam.end = stem_x;
+              
+              // End secondary beams
+              if (note.end_secondary_beams && parseInt(duration, 10) >= 8) {
+                beam_started = false;
+              }
             }
           } else {
             if (!beam_started) {
