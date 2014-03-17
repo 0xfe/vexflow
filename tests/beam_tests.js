@@ -18,6 +18,7 @@ Vex.Flow.Test.Beam.Start = function() {
   Vex.Flow.Test.runTest("Insane Beam", Vex.Flow.Test.Beam.insane);
   Vex.Flow.Test.runTest("Lengthy Beam", Vex.Flow.Test.Beam.lenghty);
   Vex.Flow.Test.runTest("Outlier Beam", Vex.Flow.Test.Beam.outlier);
+  Vex.Flow.Test.runTest("Break Secondary Beams", Vex.Flow.Test.Beam.breakSecondaryBeams);
   Vex.Flow.Test.runTest("TabNote Beams Up", Vex.Flow.Test.Beam.tabBeamsUp);
   Vex.Flow.Test.runTest("TabNote Beams Down", Vex.Flow.Test.Beam.tabBeamsDown);
   Vex.Flow.Test.runTest("TabNote Auto Create Beams", Vex.Flow.Test.Beam.autoTabBeams);
@@ -161,6 +162,72 @@ Vex.Flow.Test.Beam.sixteenth = function(options, contextBuilder) {
 
   var beam2_1 = new Vex.Flow.Beam(notes2.slice(0, 4));
   var beam2_2 = new Vex.Flow.Beam(notes2.slice(4, 8));
+
+  voice.draw(c.context, c.stave);
+  voice2.draw(c.context, c.stave);
+  beam1_1.setContext(c.context).draw();
+  beam1_2.setContext(c.context).draw();
+
+  beam2_1.setContext(c.context).draw();
+  beam2_2.setContext(c.context).draw();
+  ok(true, "Sixteenth Test");
+}
+
+Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.Beam.setupContext(options, 600);
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+  var notes = [
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16", end_secondary_beams: true}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
+
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16", end_secondary_beams: true}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16", end_secondary_beams: true}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"})
+  ];
+
+  var notes2 = [
+    newNote({ keys: ["f/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["e/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "32", end_secondary_beams: true}),
+    newNote({ keys: ["f/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["e/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "16"}),
+    newNote({ keys: ["f/4"], stem_direction: -1, duration: "16", end_secondary_beams: true}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "16"}),
+    newNote({ keys: ["e/4"], stem_direction: -1, duration: "16"}),
+    newNote({ keys: ["e/4"], stem_direction: -1, duration: "16"}),
+    newNote({ keys: ["e/4"], stem_direction: -1, duration: "16"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
+  var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
+  voice.addTickables(notes);
+  voice2.addTickables(notes2);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice, voice2], 500);
+  var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 6));
+  var beam1_2 = new Vex.Flow.Beam(notes.slice(6, 12));
+
+  var beam2_1 = new Vex.Flow.Beam(notes2.slice(0, 12));
+  var beam2_2 = new Vex.Flow.Beam(notes2.slice(12, 18));
 
   voice.draw(c.context, c.stave);
   voice2.draw(c.context, c.stave);
