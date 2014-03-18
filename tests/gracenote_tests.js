@@ -173,7 +173,7 @@ Vex.Flow.Test.GraceNote.multipleVoices = function(options, contextBuilder) {
     newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"})
   ];
 
   var notes2 = [
@@ -184,7 +184,7 @@ Vex.Flow.Test.GraceNote.multipleVoices = function(options, contextBuilder) {
     newNote({ keys: ["c/4"], stem_direction: -1, duration: "16"}),
     newNote({ keys: ["d/4"], stem_direction: -1, duration: "16"}),
     newNote({ keys: ["f/4"], stem_direction: -1, duration: "16"}),
-    newNote({ keys: ["e/4"], stem_direction: -1, duration: "16"}),
+    newNote({ keys: ["e/4"], stem_direction: -1, duration: "16"})
   ];
 
   function createNote(note_prop) {
