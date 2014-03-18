@@ -37,7 +37,7 @@ Vex.Flow.StaveTie = (function() {
 
       this.render_options = {
           cp1: 8,      // Curve control point 1
-          cp2: 15,      // Curve control point 2
+          cp2: 12,      // Curve control point 2
           text_shift_x: 0,
           first_x_shift: 0,
           last_x_shift: 0,
@@ -114,7 +114,6 @@ Vex.Flow.StaveTie = (function() {
         var bottom_cp_y = ((first_y_px + last_y_px) / 2) + (cp2 * params.direction);
 
         ctx.beginPath();
-
         ctx.moveTo(params.first_x_px + first_x_shift, first_y_px);
         ctx.quadraticCurveTo(cp_x, top_cp_y,
                              params.last_x_px + last_x_shift, last_y_px);
