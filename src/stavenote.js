@@ -287,10 +287,6 @@ Vex.Flow.StaveNote = (function() {
       return { x: this.getAbsoluteX() + x, y: this.ys[index] };
     },
 
-    getGlyph: function() {
-      return this.glyph;
-    },
-
     setKeyStyle: function(index, style) {
       this.keyStyles[index] = style;
       return this;
@@ -351,7 +347,7 @@ Vex.Flow.StaveNote = (function() {
         this.addDot(i);
       return this;
     },
-    
+
     getAccidentals: function() {
       return this.modifierContext.getModifiers("accidentals");
     },

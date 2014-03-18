@@ -59,10 +59,6 @@ Vex.Flow.TabNote = (function() {
       return this.render_options.draw_stem;
     },
 
-    getGlyph: function() {
-      return this.glyph;
-    },
-
     addDot: function() {
       var dot = new Vex.Flow.Dot();
       this.dots++;
@@ -162,6 +158,10 @@ Vex.Flow.TabNote = (function() {
       }
 
       return {x: this.getAbsoluteX() + x, y: this.ys[index]};
+    },
+
+    getLineForRest: function() {
+      return this.positions[0].str;
     },
 
     // Pre-render formatting

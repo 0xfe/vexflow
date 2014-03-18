@@ -44,7 +44,7 @@ Vex.Flow.Beam = (function() {
       var i; // shared iterator
       var note;
 
-      this.stem_direction = notes[0].getStemDirection();
+      this.stem_direction = 1;
 
       for (i = 0; i < notes.length; ++i) {
         note = notes[i];

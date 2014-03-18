@@ -11,7 +11,7 @@ Vex.Flow.GhostNote = (function() {
     if (arguments.length > 0) this.init(duration);
   }
 
-  Vex.Inherit(GhostNote, Vex.Flow.Note, {
+  Vex.Inherit(GhostNote, Vex.Flow.StemmableNote, {
     init: function(parameter) {
       // Sanity check
       if (!parameter) {

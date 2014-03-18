@@ -34,6 +34,7 @@ Vex.Flow.Note = (function() {
       this.noteType = initData.type;
       this.setIntrinsicTicks(initData.ticks);
       this.modifiers = [];
+      this.glyph = Vex.Flow.durationToGlyph(this.duration, this.noteType);
 
       if (this.positions &&
           (typeof(this.positions) != "object" || !this.positions.length)) {
@@ -99,6 +100,7 @@ Vex.Flow.Note = (function() {
     setExtraRightPx: function(x) { this.extraRightPx = x; return this; },
     shouldIgnoreTicks: function() { return this.ignore_ticks; },
     getLineNumber: function() { return 0; },
+    getGlyph: function() { return this.glyph; },
 
     setYs: function(ys) { this.ys = ys; return this; },
     getYs: function() {
@@ -138,6 +140,7 @@ Vex.Flow.Note = (function() {
     getDots: function() { return this.dots; },
     getNoteType: function() { return this.noteType; },
     setModifierContext: function(mc) { this.modifierContext = mc; return this; },
+    setBeam: function(beam) { return this; },
 
     addModifier: function(modifier, index) {
       modifier.setNote(this);
