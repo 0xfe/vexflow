@@ -809,6 +809,7 @@ Vex.Flow.ModifierContext = (function() {
       var group_shift = group_list[0].shift;
       for (i = 0; i < group_list.length; ++i) {
         gracenote_group = group_list[i].gracenote_group;
+        gracenote_group.preFormat();
         group_shift = gracenote_group.getWidth() + gracenote_spacing;
       }
 

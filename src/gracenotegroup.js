@@ -4,11 +4,9 @@ Vex.Flow.GraceNoteGroup = (function(){
   };
 
   Vex.Inherit(GraceNoteGroup, Vex.Flow.Modifier, {
-    init: function(grace_notes, config) {
+    init: function(grace_notes, show_slur) {
       var superclass = GraceNoteGroup.superclass;
       superclass.init.call(this);
-
-      if (!config) { config = {}; }
 
       this.note = null;
       this.index = null;
@@ -16,9 +14,9 @@ Vex.Flow.GraceNoteGroup = (function(){
       this.grace_notes = grace_notes;
       this.width = 0;
 
-      this.show_slur = config.slur;
-      this.beam_notes = config.beam;
-      this.beam = null;
+      this.preFormatted = false;
+
+      this.show_slur = show_slur;
       this.slur = null;
 
       this.formatter = new Vex.Flow.Formatter();
@@ -28,27 +26,31 @@ Vex.Flow.GraceNoteGroup = (function(){
         resolution: Vex.Flow.RESOLUTION
       }).setStrict(false);
 
-      this.setupVoice();
+      this.voice.addTickables(this.grace_notes);
+
+      return this;
     },
 
-    setupVoice: function() {
-      this.voice.addTickables(this.grace_notes);
-      
-      if (this.beam_notes && this.grace_notes.length > 1) {
-        this.beamNotes();
-      }
+    preFormat: function(){
+      if (this.preFormatted) return;
 
       this.formatter.joinVoices([this.voice]).format([this.voice], 0);
       this.setWidth(this.formatter.getMinTotalWidth());
+
+      this.preFormatted = true;
     },
 
     beamNotes: function(){
-      var beam = new Vex.Flow.Beam(this.grace_notes);
+      if (this.grace_notes.length > 1) {
+        var beam = new Vex.Flow.Beam(this.grace_notes);
 
-      beam.render_options.beam_width = 3;
-      beam.render_options.partial_beam_length = 4;
+        beam.render_options.beam_width = 3;
+        beam.render_options.partial_beam_length = 4;
 
-      this.beam = beam;
+        this.beam = beam;
+      }
+
+      return this;
     },
 
     setNote: function(note) {

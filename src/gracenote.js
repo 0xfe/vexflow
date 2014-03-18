@@ -46,13 +46,24 @@ Vex.Flow.GraceNote = (function() {
     draw: function(){
       GraceNote.superclass.draw.call(this);
       var ctx = this.context;
+      var stem_direction = this.getStemDirection();
 
       if (this.slash) {
         ctx.beginPath();
-        var x = this.getAbsoluteX() + 1
+
+        var x = this.getAbsoluteX()
         var y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
-        ctx.lineTo(x, y);
-        ctx.lineTo(x + 13, y - 9);
+        if (stem_direction === 1) {
+          x += 1
+          ctx.lineTo(x, y);
+          ctx.lineTo(x + 13, y - 9);
+        } else if (stem_direction === -1) {
+          x -= 4;
+          y += 1;
+          ctx.lineTo(x, y);
+          ctx.lineTo(x + 13, y + 9);
+        }
+
         ctx.closePath();
         ctx.stroke();
       }
