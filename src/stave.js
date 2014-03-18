@@ -39,8 +39,7 @@ Vex.Flow.Stave = (function() {
         spacing_between_lines_px: 10, // in pixels
         space_above_staff_ln: 4,      // in staff lines
         space_below_staff_ln: 4,      // in staff lines
-        top_text_position: 1,         // in staff lines
-        bottom_text_position: 6       // in staff lines
+        top_text_position: 1          // in staff lines
       };
       this.bounds = {x: this.x, y: this.y, w: this.width, h: 0};
       Vex.Merge(this.options, options);
@@ -61,6 +60,7 @@ Vex.Flow.Stave = (function() {
       }
       this.height = (this.options.num_lines + this.options.space_above_staff_ln) *
          this.options.spacing_between_lines_px;
+      this.options.bottom_text_position = this.options.num_lines + 1;
     },
 
     setNoteStartX: function(x) { this.start_x = x; return this; },
@@ -80,6 +80,7 @@ Vex.Flow.Stave = (function() {
     getContext: function() { return this.context; },
     getX: function() { return this.x; },
     getNumLines: function() { return this.options.num_lines; },
+    getNumberOfLines: function() { return this.getNumLines(); },
     setY: function(y) { this.y = y; return this; },
 
     setWidth: function(width) {

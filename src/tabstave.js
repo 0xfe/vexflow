@@ -14,8 +14,7 @@ Vex.Flow.TabStave = (function() {
       var tab_options = {
         spacing_between_lines_px: 13,
         num_lines: 6,
-        top_text_position: 1,
-        bottom_text_position: 7
+        top_text_position: 1
       };
 
       Vex.Merge(tab_options, options);
@@ -26,10 +25,6 @@ Vex.Flow.TabStave = (function() {
       this.options.num_lines = parseInt(lines, 10);
       this.resetLines();
       return this;
-    },
-
-    getNumberOfLines: function() {
-      return this.options.num_lines;
     },
 
     getYForGlyphs: function() {

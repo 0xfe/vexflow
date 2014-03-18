@@ -56,6 +56,7 @@ Vex.Flow.Articulation = (function() {
         "Can't draw Articulation without a note and index.");
 
       var stem_direction = this.note.stem_direction;
+      var stave = this.note.getStave();
 
       var is_on_head = (this.position === Modifier.Position.ABOVE &&
                         stem_direction === Vex.Flow.StaveNote.STEM_DOWN) ||
@@ -81,7 +82,6 @@ Vex.Flow.Articulation = (function() {
       };
 
       // Articulations are centered over/under the note head
-      var stave = this.note.getStave();
       var start = this.note.getModifierStartXY(this.position, this.index);
       var glyph_y = start.y;
       var shiftY = 0;
