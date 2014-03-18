@@ -769,6 +769,54 @@ Vex.Flow.ModifierContext = (function() {
       return this;
     },
 
+    formatGraceNoteGroups: function(){
+      var left_shift = this.state.left_shift;
+      var gracenote_groups = this.modifiers['gracenotegroups'];
+      var gracenote_spacing = 4;
+
+      if (!gracenote_groups || gracenote_groups.length === 0) return this;
+
+      var group_list = [];
+      var hasStave = false;
+      var prev_note = null;
+      var shiftL = 0;
+
+      var i, gracenote_group, props_tmp;
+      for (i = 0; i < gracenote_groups.length; ++i) {
+        gracenote_group = gracenote_groups[i];
+        var note = gracenote_group.getNote();
+        var stave = note.getStave();
+        var props = note.getKeyProps()[gracenote_group.getIndex()];
+        if (note != prev_note) {
+           // Iterate through all notes to get the displaced pixels
+           for (var n = 0; n < note.keys.length; ++n) {
+              props_tmp = note.getKeyProps()[n];
+              shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+            }
+            prev_note = note;
+        }
+        if (stave != null) {
+          hasStave = true;
+          var line_space = stave.options.spacing_between_lines_px;
+          var y = stave.getYForLine(props.line);
+          group_list.push({shift: shiftL, gracenote_group: gracenote_group});
+        } else {
+          group_list.push({shift: shiftL, gracenote_group: gracenote_group });
+        }
+      }
+      
+      // If first note left shift in case it is displaced
+      var group_shift = group_list[0].shift;
+      for (i = 0; i < group_list.length; ++i) {
+        gracenote_group = group_list[i].gracenote_group;
+        gracenote_group.preFormat();
+        group_shift = gracenote_group.getWidth() + gracenote_spacing;
+      }
+
+      this.state.left_shift += group_shift;
+      return this;
+    },
+
     preFormat: function() {
       if (this.preFormatted) return;
 
@@ -777,6 +825,7 @@ Vex.Flow.ModifierContext = (function() {
            formatDots().
            formatFretHandFingers().
            formatAccidentals().
+           formatGraceNoteGroups().
            formatStrokes().
            formatStringNumbers().
            formatArticulations().
