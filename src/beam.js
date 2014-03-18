@@ -535,7 +535,7 @@ Vex.Flow.Beam = (function() {
       group.forEach(function(note) {
         if (note.keyProps) {
           note.keyProps.forEach(function(keyProp){
-            lineSum += (keyProp.line - 3);
+            lineSum += (keyProp.line - 2.5);
           });
         }
       });
