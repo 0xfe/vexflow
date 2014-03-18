@@ -45,6 +45,7 @@ Vex.Flow.Accidental = (function(){
         var gracenote_widths = {
           '#': 4.5,
           'b' : 4.5,
+          'n' : 4.5,
           '##' : 6,
           'bb' : 8
         };

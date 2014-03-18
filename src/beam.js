@@ -279,7 +279,7 @@ Vex.Flow.Beam = (function() {
               if (current_beam.end == null) {
                 // single note
                 current_beam.end = current_beam.start + 
-                                  that.render_options.partial_beam_length;
+                                   that.render_options.partial_beam_length;
               } else {
                 // we don't care
               }
