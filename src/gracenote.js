@@ -37,7 +37,7 @@ Vex.Flow.GraceNote = (function() {
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      stem_struct.y_bottom -= 1
+      stem_struct.y_bottom -= 1;
 
       this.stem = new Stem(stem_struct);
       this.stem.setContext(this.context).draw();
@@ -51,10 +51,10 @@ Vex.Flow.GraceNote = (function() {
       if (this.slash) {
         ctx.beginPath();
 
-        var x = this.getAbsoluteX()
+        var x = this.getAbsoluteX();
         var y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
         if (stem_direction === 1) {
-          x += 1
+          x += 1;
           ctx.lineTo(x, y);
           ctx.lineTo(x + 13, y - 9);
         } else if (stem_direction === -1) {
