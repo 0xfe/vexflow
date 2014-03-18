@@ -68,7 +68,7 @@ Vex.Flow.GraceNoteGroup = (function(){
     },
     draw: function() {
       if (!this.context)  {
-        throw new Vex.RuntimeError("NoContext", 
+        throw new Vex.RuntimeError("NoContext",
           "Can't draw Grace note without a context.");
       }
 
@@ -78,7 +78,7 @@ Vex.Flow.GraceNoteGroup = (function(){
         throw new Vex.RuntimeError("NoAttachedNote",
           "Can't draw grace note without a parent note and parent note index.");
       }
-      
+
       function alignGraceNotesWithNote(grace_notes, note) {
         // Shift over the tick contexts of each note
         // So that th aligned with the note
@@ -94,7 +94,7 @@ Vex.Flow.GraceNoteGroup = (function(){
       }
 
       alignGraceNotesWithNote(this.grace_notes, note);
-      
+
       // Draw notes
       this.grace_notes.forEach(function(graceNote) {
         graceNote.setContext(this.context).draw();

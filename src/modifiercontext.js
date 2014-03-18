@@ -770,7 +770,6 @@ Vex.Flow.ModifierContext = (function() {
     },
 
     formatGraceNoteGroups: function(){
-      var left_shift = this.state.left_shift;
       var gracenote_groups = this.modifiers['gracenotegroups'];
       var gracenote_spacing = 4;
 
@@ -786,7 +785,6 @@ Vex.Flow.ModifierContext = (function() {
         gracenote_group = gracenote_groups[i];
         var note = gracenote_group.getNote();
         var stave = note.getStave();
-        var props = note.getKeyProps()[gracenote_group.getIndex()];
         if (note != prev_note) {
            // Iterate through all notes to get the displaced pixels
            for (var n = 0; n < note.keys.length; ++n) {
@@ -797,14 +795,12 @@ Vex.Flow.ModifierContext = (function() {
         }
         if (stave != null) {
           hasStave = true;
-          var line_space = stave.options.spacing_between_lines_px;
-          var y = stave.getYForLine(props.line);
           group_list.push({shift: shiftL, gracenote_group: gracenote_group});
         } else {
           group_list.push({shift: shiftL, gracenote_group: gracenote_group });
         }
       }
-      
+
       // If first note left shift in case it is displaced
       var group_shift = group_list[0].shift;
       for (i = 0; i < group_list.length; ++i) {
