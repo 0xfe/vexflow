@@ -14,6 +14,11 @@ Vex.Flow.Curve = (function() {
     if (arguments.length > 0) this.init(from, to, options);
   }
 
+  Curve.Position = {
+    NEAR_HEAD: 1,
+    NEAR_TOP: 2
+  };
+
   Curve.DEBUG = true;
   function L() { if (Curve.DEBUG) console.log.apply(console, arguments); }
 
@@ -24,8 +29,11 @@ Vex.Flow.Curve = (function() {
         thickness: 2,
         x_shift: 0,
         y_shift: 10,
+        position: Curve.Position.NEAR_HEAD,
+        invert: false,
         cps: [{x: 0, y: 10}, {x: 0, y: 10}]
       };
+
       Vex.Merge(this.render_options, options);
       this.setNotes(from, to);
     },
@@ -87,22 +95,38 @@ Vex.Flow.Curve = (function() {
       var last_note = this.to;
       var first_x, last_x, first_y, last_y, stem_direction;
 
+      var metric = "baseY";
+      var end_metric = "baseY";
+      var position = this.render_options.position;
+      var position_end = this.render_options.position_end;
+
+      if (position === Curve.Position.NEAR_TOP) {
+        metric = "topY";
+        end_metric = "topY";
+      }
+
+      if (position_end == Curve.Position.NEAR_HEAD) {
+        end_metric = "baseY";
+      } else if (position_end == Curve.Position.NEAR_TOP) {
+        end_metric = "topY";
+      }
+
       if (first_note) {
         first_x = first_note.getTieRightX();
         stem_direction = first_note.getStemDirection();
-        first_y = first_note.getStemExtents().baseY;
+        first_y = first_note.getStemExtents()[metric];
       } else {
         first_x = last_note.getStave().getTieStartX();
-        first_y = last_note.getStemExtents().baseY;
+        first_y = last_note.getStemExtents()[metric];
       }
 
       if (last_note) {
         last_x = last_note.getTieLeftX();
         stem_direction = last_note.getStemDirection();
-        last_y = last_note.getStemExtents().baseY;
+        last_y = last_note.getStemExtents()[end_metric];
       } else {
         last_x = first_note.getStave().getTieEndX();
-        last_y = first_note.getStemExtents().baseY;
+        last_y = first_note.getStemExtents()[end_metric];
       }
 
       this.renderCurve({
@@ -110,7 +134,8 @@ Vex.Flow.Curve = (function() {
         last_x: last_x,
         first_y: first_y,
         last_y: last_y,
-        direction: stem_direction
+        direction: stem_direction *
+          (this.render_options.invert === true ? -1 : 1)
       });
       return true;
     }
