@@ -308,7 +308,7 @@ Vex.Flow.Test.Beam.auto = function(options, contextBuilder) {
   beam1_1.setContext(ctx).draw();
   beam1_2.setContext(ctx).draw();
 
-  ok(true, "Slopey Test");
+  ok(true, "Autobeam Test");
 }
 
 Vex.Flow.Test.Beam.mixed = function(options, contextBuilder) {
@@ -714,7 +714,7 @@ Vex.Flow.Test.Beam.autoTabBeams = function(options, contextBuilder) {
 
 // This tests makes sure the auto_stem functionality is works.
 // TabNote stems within a beam group should end up normalized
-Vex.Flow.Test.Beam.tabBeamsAutoStem = function(options, contextBuilder) {  
+Vex.Flow.Test.Beam.tabBeamsAutoStem = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 600, 300);
 
   ctx.font = "10pt Arial";
@@ -752,7 +752,7 @@ Vex.Flow.Test.Beam.tabBeamsAutoStem = function(options, contextBuilder) {
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], stave);
-  
+
   var beams = [
     new Vex.Flow.Beam(notes.slice(0, 8), true), // Stems should format down
     new Vex.Flow.Beam(notes.slice(8, 12), true)  // Stems should format up
