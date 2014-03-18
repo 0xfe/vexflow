@@ -19,7 +19,7 @@ Vex.Flow.Test.Tuning.checkStandard = function(tuning) {
   }
 
   try {
-    tuning.getValueForString(7);
+    tuning.getValueForString(9);
   } catch (e) {
     equal(e.code, "BadArguments", "String 7");
   }

@@ -21,12 +21,6 @@ Vex.Flow.TabStave = (function() {
       TabStave.superclass.init.call(this, x, y, width, tab_options);
     },
 
-    setNumberOfLines: function(lines) {
-      this.options.num_lines = parseInt(lines, 10);
-      this.resetLines();
-      return this;
-    },
-
     getYForGlyphs: function() {
       return this.getYForLine(2.5);
     },
