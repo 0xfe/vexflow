@@ -368,6 +368,36 @@ Vex.Flow.accidentalCodes.accidentals = {
     width: 5,
     shift_right: 0,
     shift_down: 0
+  },
+  "db": {
+    code: "v9e",
+    width: 16,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "d": {
+    code: "vab",
+    width: 10,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "bbs": {
+    code: "v90",
+    width: 13,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "++": {
+    code: "v51",
+    width: 13,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "+": {
+    code: "v78",
+    width: 8,
+    shift_right: 0,
+    shift_down: 0
   }
 };
 
