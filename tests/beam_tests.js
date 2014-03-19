@@ -182,15 +182,15 @@ Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
   var notes = [
     newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16", end_secondary_beams: true}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
 
     newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16", end_secondary_beams: true}),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16", end_secondary_beams: true}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"})
   ];
@@ -201,7 +201,7 @@ Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
     newNote({ keys: ["e/4"], stem_direction: -1, duration: "32"}),
     newNote({ keys: ["c/4"], stem_direction: -1, duration: "32"}),
     newNote({ keys: ["d/4"], stem_direction: -1, duration: "32"}),
-    newNote({ keys: ["c/4"], stem_direction: -1, duration: "32", end_secondary_beams: true}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "32"}),
     newNote({ keys: ["f/4"], stem_direction: -1, duration: "32"}),
     newNote({ keys: ["d/4"], stem_direction: -1, duration: "32"}),
     newNote({ keys: ["e/4"], stem_direction: -1, duration: "32"}),
@@ -209,7 +209,7 @@ Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
     newNote({ keys: ["c/4"], stem_direction: -1, duration: "32"}),
     newNote({ keys: ["d/4"], stem_direction: -1, duration: "32"}),
     newNote({ keys: ["d/4"], stem_direction: -1, duration: "16"}),
-    newNote({ keys: ["f/4"], stem_direction: -1, duration: "16", end_secondary_beams: true}),
+    newNote({ keys: ["f/4"], stem_direction: -1, duration: "16"}),
     newNote({ keys: ["d/4"], stem_direction: -1, duration: "16"}),
     newNote({ keys: ["e/4"], stem_direction: -1, duration: "16"}),
     newNote({ keys: ["e/4"], stem_direction: -1, duration: "16"}),
@@ -226,8 +226,14 @@ Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
   var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 6));
   var beam1_2 = new Vex.Flow.Beam(notes.slice(6, 12));
 
+  beam1_1.breakSecondaryAt([1, 3]);
+  beam1_2.breakSecondaryAt([2]);
+
   var beam2_1 = new Vex.Flow.Beam(notes2.slice(0, 12));
   var beam2_2 = new Vex.Flow.Beam(notes2.slice(12, 18));
+
+  beam2_1.breakSecondaryAt([3, 7, 11]);
+  beam2_2.breakSecondaryAt([3]);
 
   voice.draw(c.context, c.stave);
   voice2.draw(c.context, c.stave);
@@ -236,7 +242,7 @@ Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
 
   beam2_1.setContext(c.context).draw();
   beam2_2.setContext(c.context).draw();
-  ok(true, "Sixteenth Test");
+  ok(true, "Breaking Secondary Beams Test");
 }
 
 Vex.Flow.Test.Beam.slopey = function(options, contextBuilder) {
@@ -545,6 +551,8 @@ Vex.Flow.Test.Beam.outlier = function(options, contextBuilder) {
 
   ok(true, "Outlier Test");
 }
+
+
 
 
 Vex.Flow.Test.Beam.tabBeamsUp = function(options, contextBuilder) {
