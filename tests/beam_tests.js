@@ -226,14 +226,14 @@ Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
   var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 6));
   var beam1_2 = new Vex.Flow.Beam(notes.slice(6, 12));
 
-  beam1_1.setSecondaryBeamBreakIndices([1, 3]);
-  beam1_2.setSecondaryBeamBreakIndices([2]);
+  beam1_1.breakSecondaryAt([1, 3]);
+  beam1_2.breakSecondaryAt([2]);
 
   var beam2_1 = new Vex.Flow.Beam(notes2.slice(0, 12));
   var beam2_2 = new Vex.Flow.Beam(notes2.slice(12, 18));
 
-  beam2_1.setSecondaryBeamBreakIndices([3, 7, 11]);
-  beam2_2.setSecondaryBeamBreakIndices([3]);
+  beam2_1.breakSecondaryAt([3, 7, 11]);
+  beam2_2.breakSecondaryAt([3]);
 
   voice.draw(c.context, c.stave);
   voice2.draw(c.context, c.stave);
