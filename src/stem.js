@@ -66,6 +66,7 @@ Vex.Flow.Stem = (function() {
       ctx.moveTo(stem_x, stem_y);
       ctx.lineTo(stem_x, stem_y - (this.stem_height - (2 * stem_direction)));
       ctx.stroke();
+      ctx.setLineWidth(1);
 
       /*
       ctx.fillRect(stem_x,

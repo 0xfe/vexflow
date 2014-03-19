@@ -31,6 +31,7 @@ Vex.Flow.NoteHead = (function() {
     } else {
       ctx.stroke();
     }
+    ctx.setLineWidth(1);
   }
 
   NoteHead.prototype = {
