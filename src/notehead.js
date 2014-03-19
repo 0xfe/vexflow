@@ -15,12 +15,12 @@ Vex.Flow.NoteHead = (function() {
     var width = 15 + (Vex.Flow.STEM_WIDTH / 2);
     ctx.setLineWidth(Vex.Flow.STEM_WIDTH);
 
-    var fill = true;
+    var fill = false;
     if (duration != 1 &&
         duration != 2 &&
         duration != "h" &&
         duration != "w") {
-      fill = false;
+      fill = true;
     }
 
     if (!fill) x -= (Vex.Flow.STEM_WIDTH / 2) * stem_direction;
