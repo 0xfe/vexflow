@@ -300,7 +300,7 @@ Vex.Flow.Beam = (function() {
         return beam_lines;
       }
 
-      var valid_beam_durations = ["4", "8", "16", "32"];
+      var valid_beam_durations = ["4", "8", "16", "32", "64"];
 
       // Draw the beams.
       for (i = 0; i < valid_beam_durations.length; ++i) {
