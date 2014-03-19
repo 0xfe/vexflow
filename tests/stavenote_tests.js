@@ -686,17 +686,34 @@ Vex.Flow.Test.StaveNote.drawSlash = function(options, contextBuilder) {
     { keys: ["b/4"], duration: "16s", stem_direction: -1},
     { keys: ["b/4"], duration: "32s", stem_direction: -1},
     { keys: ["b/4"], duration: "64s", stem_direction: -1},
-    { keys: ["b/4"], duration: "128s", stem_direction: -1}
+    { keys: ["b/4"], duration: "128s", stem_direction: -1},
+
+    { keys: ["b/4"], duration: "ws", stem_direction: 1},
+    { keys: ["b/4"], duration: "hs", stem_direction: 1},
+    { keys: ["b/4"], duration: "qs", stem_direction: 1},
+    { keys: ["b/4"], duration: "8s", stem_direction: 1},
+    { keys: ["b/4"], duration: "16s", stem_direction: 1},
+    { keys: ["b/4"], duration: "32s", stem_direction: 1},
+    { keys: ["b/4"], duration: "64s", stem_direction: 1},
+    { keys: ["b/4"], duration: "128s", stem_direction: 1},
+
+    // Beam
+    { keys: ["b/4"], duration: "8s", stem_direction: -1},
+    { keys: ["b/4"], duration: "8s", stem_direction: -1},
+    { keys: ["b/4"], duration: "8s", stem_direction: 1},
+    { keys: ["b/4"], duration: "8s", stem_direction: 1}
   ];
-  expect(notes.length * 2);
 
-  for (var i = 0; i < notes.length; ++i) {
-    var note = notes[i];
-    var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+  var stave_notes = notes.map(function(note) {return new Vex.Flow.StaveNote(note)});
+  var beam1 = new Vex.Flow.Beam([stave_notes[16], stave_notes[17]]);
+  var beam2 = new Vex.Flow.Beam([stave_notes[18], stave_notes[19]]);
 
-    ok(staveNote.getX() > 0, "Note " + i + " has X value");
-    ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
-  }
+  Vex.Flow.Formatter.FormatAndDraw(ctx, stave, stave_notes, false);
+
+  beam1.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+
+  ok("Slash Note Heads");
 }
 
 Vex.Flow.Test.StaveNote.drawKeyStyles = function(options, contextBuilder) {
