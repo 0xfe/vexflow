@@ -90,6 +90,7 @@ Vex.Flow.Beam = (function() {
 
       this.notes = notes;
       this.beam_count = this.getBeamCount();
+      this.break_on_indices = [];
       this.render_options = {
         beam_width: 5,
         max_slope: 0.25,
@@ -119,6 +120,11 @@ Vex.Flow.Beam = (function() {
       });
 
       return maxBeamCount;
+    },
+
+    setSecondaryBeamBreakIndices: function(indices) {
+      this.break_on_indices = indices;
+      return this;
     },
 
     draw: function() {
@@ -269,6 +275,14 @@ Vex.Flow.Beam = (function() {
             } else {
               current_beam = beam_lines[beam_lines.length - 1];
               current_beam.end = stem_x;
+
+              // Should break secondary beams on note
+              var should_break = that.break_on_indices.indexOf(i) !== -1;
+              // Shorter than or eq an 8th note duration
+              var can_break = parseInt(duration, 10) >= 8; 
+              if (should_break  && can_break) {
+                beam_started = false;
+              }
             }
           } else {
             if (!beam_started) {
