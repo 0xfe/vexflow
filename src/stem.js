@@ -50,21 +50,29 @@ Vex.Flow.Stem = (function() {
 
       if (stem_direction == Stem.DOWN) {
         // Down stems are rendered to the left of the head.
-        stem_x = this.x_begin;
-        stem_y = this.y_top;
+        stem_x = this.x_begin + (Stem.WIDTH / 2);
+        stem_y = this.y_top + 2;
       } else {
         // Up stems are rendered to the right of the head.
-        stem_x = this.x_end;
-        stem_y = this.y_bottom;
+        stem_x = this.x_end + (Stem.WIDTH / 2);
+        stem_y = this.y_bottom - 2;
       }
 
       stem_y += this.y_extend * stem_direction;
 
       // Draw the stem
+      ctx.beginPath();
+      ctx.setLineWidth(Stem.WIDTH);
+      ctx.moveTo(stem_x, stem_y);
+      ctx.lineTo(stem_x, stem_y - (this.stem_height - (2 * stem_direction)));
+      ctx.stroke();
+
+      /*
       ctx.fillRect(stem_x,
         stem_y - (this.stem_height < 0 ? 0 : this.stem_height),
         Stem.WIDTH,
         Math.abs(this.stem_height));
+      */
     }
   };
 

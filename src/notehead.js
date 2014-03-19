@@ -13,6 +13,7 @@ Vex.Flow.NoteHead = (function() {
   // Draw slashnote head manually. No glyph exists for this.
   function drawSlashNoteHead(ctx, duration, x, y) {
     var width = 15 + (Vex.Flow.STEM_WIDTH / 2);
+    ctx.setLineWidth(Vex.Flow.STEM_WIDTH);
     ctx.beginPath();
     ctx.moveTo(x, y + 11);
     ctx.lineTo(x, y + 1);
@@ -93,7 +94,7 @@ Vex.Flow.NoteHead = (function() {
       var key_style = this.key_style;
 
       if (this.note_type == "s") {
-        var displacement = Vex.Flow.STEM_WIDTH / 2;
+        var displacement = 0; // Vex.Flow.STEM_WIDTH / 2;
         drawSlashNoteHead(ctx, this.duration,
           head_x + (stem_direction == 1 ? -displacement : displacement), y);
       } else {

@@ -406,7 +406,7 @@ Vex.Flow.StaveNote = (function() {
 
       // Begin and end positions for head.
       var x_begin = x;
-      var x_end = x + glyph.head_width;
+      var x_end = x + glyph.head_width - (Vex.Flow.STEM_WIDTH / 2);
 
       // Top and bottom Y values for stem.
       var y_top = null;

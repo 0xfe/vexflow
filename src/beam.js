@@ -238,7 +238,7 @@ Vex.Flow.Beam = (function() {
         }
 
         note.drawStem({
-          x_begin: x_px,
+          x_begin: x_px - (Vex.Flow.STEM_WIDTH/2),
           x_end: x_px,
           y_top: base_y_px,
           y_bottom: base_y_px,
@@ -293,7 +293,7 @@ Vex.Flow.Beam = (function() {
           if (current_beam.end == null) {
             // single note
             current_beam.end = current_beam.start -
-                that.render_options.partial_beam_length - Vex.Flow.STEM_WIDTH;
+                that.render_options.partial_beam_length;
           }
         }
 
@@ -309,10 +309,11 @@ Vex.Flow.Beam = (function() {
 
         for (var j = 0; j < beam_lines.length; ++j) {
           var beam_line = beam_lines[j];
-          var first_x = beam_line.start;
+          var first_x = beam_line.start - (this.stem_direction == -1 ? Vex.Flow.STEM_WIDTH/2:0);
           var first_y = getSlopeY(first_x);
 
-          var last_x = beam_line.end + (Vex.Flow.STEM_WIDTH / 2);
+          var last_x = beam_line.end +
+            (this.stem_direction == 1 ? (Vex.Flow.STEM_WIDTH/3):(-Vex.Flow.STEM_WIDTH/3));
           var last_y = getSlopeY(last_x);
 
           this.context.beginPath();
