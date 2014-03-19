@@ -60,7 +60,7 @@ Vex.Flow.NoteHead = (function() {
       }
       this.glyph_font_scale = head_options.glyph_font_scale;
       this.context = null;
-      this.key_style = null;
+      this.key_style = head_options.key_style;
       this.slashed = head_options.slashed;
     },
 
