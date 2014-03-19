@@ -279,7 +279,7 @@ Vex.Flow.Beam = (function() {
               // Should break secondary beams on note
               var should_break = that.break_on_indices.indexOf(i) !== -1;
               // Shorter than or eq an 8th note duration
-              var can_break = parseInt(duration, 10) >= 8; 
+              var can_break = parseInt(duration, 10) >= 8;
               if (should_break  && can_break) {
                 beam_started = false;
               }

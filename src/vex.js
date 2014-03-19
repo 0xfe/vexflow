@@ -73,7 +73,7 @@ Vex.LogFatal = function(message, exception) {
   if (exception) throw exception; else throw "VexFatalError";
 };
 Vex.Log = Vex.LogDebug;
-Vex.L = Vex.LogDebug;
+Vex.L = function() { window.console.log.apply(window.console, arguments); };
 
 /**
  * Simple assertion checks.

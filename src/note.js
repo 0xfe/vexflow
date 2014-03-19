@@ -140,7 +140,7 @@ Vex.Flow.Note = (function() {
     getDots: function() { return this.dots; },
     getNoteType: function() { return this.noteType; },
     setModifierContext: function(mc) { this.modifierContext = mc; return this; },
-    setBeam: function(beam) { return this; },
+    setBeam: function() { return this; }, // ignore parameters
 
     addModifier: function(modifier, index) {
       modifier.setNote(this);

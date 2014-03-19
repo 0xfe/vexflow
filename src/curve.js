@@ -20,7 +20,6 @@ Vex.Flow.Curve = (function() {
   };
 
   Curve.DEBUG = true;
-  function L() { if (Curve.DEBUG) console.log.apply(console, arguments); }
 
   Curve.prototype = {
     init: function(from, to, options) {
