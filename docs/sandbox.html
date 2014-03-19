@@ -67,8 +67,6 @@
     <a href="http://vexflow.com">VexFlow</a> |
     <a href="http://my.vexflow.com">My VexFlow</a> |
     <a href="http://vexflow.com/vextab">VexTab</a> |
-    <a href="http://vexmachines.com">VexMachines</a> |
-    <a href="http://wickedmeanposters.com">Posters</a> |
     <a href="http://0xfe.blogspot.com">0xfe</a>
   </div>
 
@@ -96,9 +94,9 @@
 var canvas = $("div.sandbox div.sandbox canvas")[0];
 
 var renderer = new Vex.Flow.Renderer(canvas,
-  Vex.Flow.Renderer.Backends.CANVAS);
+Vex.Flow.Renderer.Backends.CANVAS);
 var ctx = renderer.getContext();
-ctx.clearRect(0, 0, canvas.width, canvas.height);
+renderer.resize(500, 300); // Resize and clear canvas
 ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
 // Create and draw the tablature stave
