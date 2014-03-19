@@ -100,7 +100,10 @@ Vex.Flow.StaveNote = (function() {
       if (note_struct.auto_stem) {
         // Figure out optimal stem direction based on given notes
         this.min_line = this.keyProps[0].line;
-        if (this.min_line < 3) {
+        this.max_line = this.keyProps[this.keyProps.length - 1].line;
+        var decider = (this.min_line + this.max_line) / 2;
+
+        if (decider < 3) {
           auto_stem_direction = 1;
         } else {
           auto_stem_direction = -1;

@@ -64,7 +64,9 @@ Vex.Flow.Beam = (function() {
         for (i = 0; i < notes.length; ++i) {
           note = notes[i];
           if (note.getKeyProps) {
-            this.min_line = Vex.Min(note.getKeyProps()[0].line, this.min_line);
+            var props = note.getKeyProps();
+            var center_line = (props[0] + props[props.length - 1]) / 2;
+            this.min_line = Math.min(center_line, this.min_line);
           }
         }
 

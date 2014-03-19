@@ -335,8 +335,8 @@ Vex.Flow.Test.StaveNote.autoStem = function() {
 
   note = new Vex.Flow.StaveNote(
       { keys: ["a/4", "e/5", "g/5"], duration: "8", auto_stem: true});
-  equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_UP,
-      "Stem must be up");
+  equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_DOWN,
+      "Stem must be down");
 
   note = new Vex.Flow.StaveNote(
       { keys: ["b/4"], duration: "8", auto_stem: true});
