@@ -222,7 +222,7 @@ Vex.Flow.Test.Accidental.multiVoice = function(options, contextBuilder) {
 
 Vex.Flow.Test.Accidental.microtonal = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 700, 240);
-  ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
+  ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   var stave = new Vex.Flow.Stave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();

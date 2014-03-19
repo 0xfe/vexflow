@@ -330,30 +330,35 @@ Vex.Flow.accidentalCodes.accidentals = {
   "#": {
     code: "v18",
     width: 10,
+    gracenote_width: 4.5,
     shift_right: 0,
     shift_down: 0
   },
   "##": {
     code: "v7f",
     width: 13,
+    gracenote_width: 6,
     shift_right: -1,
     shift_down: 0
   },
   "b": {
     code: "v44",
     width: 8,
+    gracenote_width: 4.5,
     shift_right: 0,
     shift_down: 0
   },
   "bb": {
     code: "v26",
     width: 14,
+    gracenote_width: 8,
     shift_right: -3,
     shift_down: 0
   },
   "n": {
     code: "v4e",
     width: 8,
+    gracenote_width: 4.5,
     shift_right: 0,
     shift_down: 0
   },
