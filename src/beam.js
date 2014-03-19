@@ -122,7 +122,7 @@ Vex.Flow.Beam = (function() {
       return maxBeamCount;
     },
 
-    setSecondaryBeamBreakIndices: function(indices) {
+    breakSecondaryAt: function(indices) {
       this.break_on_indices = indices;
       return this;
     },
