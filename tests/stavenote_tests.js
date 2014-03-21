@@ -717,8 +717,9 @@ Vex.Flow.Test.StaveNote.drawSlash = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.StaveNote.drawKeyStyles = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 300, 180);
-  var stave = new Vex.Flow.Stave(10, 10, 200);
+  var ctx = new contextBuilder(options.canvas_sel, 300, 280);
+  var stave = new Vex.Flow.Stave(10, 0, 100);
+  ctx.scale(3, 3);
   stave.setContext(ctx);
   stave.draw();
 
