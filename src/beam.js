@@ -270,33 +270,15 @@ Vex.Flow.Beam = (function() {
           var next_note = that.notes[i+1];
           var ticks = note.getIntrinsicTicks();
 
-          function determinePartialSide (prev_note, current_note, next_note){
+          function determinePartialSide (prev_note, next_note){
             // Compare beam counts and store differences
-            var prev_beam_diff = 0;
-            var next_beam_diff = 0;
             var unshared_beams = 0;
-
-            if (prev_note) {
-              prev_beam_diff = Math.abs(prev_note.getBeamCount() 
-                - current_note.getBeamCount());
-            }
-            if (next_note) {
-              next_beam_diff = Math.abs(current_note.getBeamCount() 
-                - next_note.getBeamCount());
-            }
             if (next_note && prev_note) {
-              // Don't take the absolute value because the sign
-              // indicates the direction of the partial
               unshared_beams = prev_note.getBeamCount() - next_note.getBeamCount();
             }
 
-            var left_partial = duration !== "8" && 
-                               prev_beam_diff !== next_beam_diff && 
-                               unshared_beams > 0;
-
-            var right_partial = duration !== "8" && 
-                                prev_beam_diff !== next_beam_diff &&
-                                unshared_beams < 0;
+            var left_partial = duration !== "8" && unshared_beams > 0;
+            var right_partial = duration !== "8" && unshared_beams < 0;
 
             return {
               left: left_partial,
@@ -304,8 +286,8 @@ Vex.Flow.Beam = (function() {
             };
           }
 
-          var partial = determinePartialSide(prev_note, note, next_note);
-
+          var partial = determinePartialSide(prev_note, next_note);
+          
           var stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
 
           // Check whether to apply beam(s)
@@ -315,9 +297,7 @@ Vex.Flow.Beam = (function() {
 
               if (partial.left) {
                 new_line.end = stem_x - partial_beam_length;
-              } else if (partial.right) {
-                new_line.end = stem_x + partial_beam_length;
-              } 
+              }
 
               beam_lines.push(new_line);
               beam_started = true;
