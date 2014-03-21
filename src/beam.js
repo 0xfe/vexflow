@@ -264,13 +264,7 @@ Vex.Flow.Beam = (function() {
         var current_beam;
         var partial_beam_length = that.render_options.partial_beam_length;
 
-        for (var i = 0; i < that.notes.length; ++i) {
-          var note = that.notes[i];
-          var prev_note = that.notes[i-1];
-          var next_note = that.notes[i+1];
-          var ticks = note.getIntrinsicTicks();
-
-          function determinePartialSide (prev_note, next_note){
+        function determinePartialSide (prev_note, next_note){
             // Compare beam counts and store differences
             var unshared_beams = 0;
             if (next_note && prev_note) {
@@ -286,8 +280,12 @@ Vex.Flow.Beam = (function() {
             };
           }
 
+        for (var i = 0; i < that.notes.length; ++i) {
+          var note = that.notes[i];
+          var prev_note = that.notes[i-1];
+          var next_note = that.notes[i+1];
+          var ticks = note.getIntrinsicTicks();
           var partial = determinePartialSide(prev_note, next_note);
-          
           var stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
 
           // Check whether to apply beam(s)
