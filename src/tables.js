@@ -736,6 +736,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       beam_count: 1,
       code_flag_upstem: "v54",
       code_flag_downstem: "v9a",
+      stem_up_extension: 0,
+      stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -776,6 +778,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "v3f",
       code_flag_downstem: "v8f",
+      stem_up_extension: 0,
+      stem_down_extension: -4,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -817,6 +821,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "v47",
       code_flag_downstem: "v2a",
+      stem_up_extension: 0,
+      stem_down_extension: -4,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -858,6 +864,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "va9",
       code_flag_downstem: "v58",
+      stem_up_extension: 0,
+      stem_down_extension: -4,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -899,6 +907,8 @@ Vex.Flow.durationToGlyph.duration_codes = {
           flag: true,
           code_flag_upstem: "v9b",
           code_flag_downstem: "v30",
+          stem_up_extension: 0,
+          stem_down_extension: -4,
           dot_shiftY: 0,
           line_above: 0,
           line_below: 0

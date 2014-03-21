@@ -530,13 +530,23 @@ Vex.Flow.StaveNote = (function() {
            y_extend = -4;
         }
 
+        var stem_extension = this.stem_extension;
+
+        if (glyph.flag) {
+          if (stem_direction === -1) {
+            stem_extension += glyph.stem_down_extension;
+          } else if (stem_direction === 1) {
+            stem_extension += glyph.stem_up_extension;
+          }
+        }
+
         this.drawStem({
           x_begin: x_begin,
           x_end: x_end,
           y_top: y_top,
           y_bottom: y_bottom,
           y_extend: y_extend,
-          stem_extension: this.stem_extension,
+          stem_extension: stem_extension,
           stem_direction: stem_direction
         });
       }
