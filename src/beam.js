@@ -262,17 +262,44 @@ Vex.Flow.Beam = (function() {
         var beam_lines = [];
         var beam_started = false;
         var current_beam;
+        var partial_beam_length = that.render_options.partial_beam_length;
 
         for (var i = 0; i < that.notes.length; ++i) {
           var note = that.notes[i];
+          var prev_note = that.notes[i-1];
+          var next_note = that.notes[i+1];
           var ticks = note.getIntrinsicTicks();
 
+          function determinePartialSide (prev_note, next_note){
+            // Compare beam counts and store differences
+            var unshared_beams = 0;
+            if (next_note && prev_note) {
+              unshared_beams = prev_note.getBeamCount() - next_note.getBeamCount();
+            }
+
+            var left_partial = duration !== "8" && unshared_beams > 0;
+            var right_partial = duration !== "8" && unshared_beams < 0;
+
+            return {
+              left: left_partial,
+              right: right_partial
+            };
+          }
+
+          var partial = determinePartialSide(prev_note, next_note);
+          
           var stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
 
           // Check whether to apply beam(s)
           if (ticks < Vex.Flow.durationToTicks(duration)) {
             if (!beam_started) {
-              beam_lines.push({start: stem_x, end: null});
+              var new_line = {start: stem_x, end: null};
+
+              if (partial.left) {
+                new_line.end = stem_x - partial_beam_length;
+              }
+
+              beam_lines.push(new_line);
               beam_started = true;
             } else {
               current_beam = beam_lines[beam_lines.length - 1];
@@ -294,7 +321,7 @@ Vex.Flow.Beam = (function() {
               if (current_beam.end == null) {
                 // single note
                 current_beam.end = current_beam.start +
-                                   that.render_options.partial_beam_length;
+                                   partial_beam_length;
               } else {
                 // we don't care
               }
@@ -309,7 +336,7 @@ Vex.Flow.Beam = (function() {
           if (current_beam.end == null) {
             // single note
             current_beam.end = current_beam.start -
-                that.render_options.partial_beam_length;
+                partial_beam_length;
           }
         }
 
