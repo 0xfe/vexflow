@@ -36,7 +36,6 @@ Vex.Flow.GraceNote = (function() {
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      stem_struct.y_bottom -= 1;
 
       this.stem = new Stem(stem_struct);
       this.stem.setContext(this.context).draw();
