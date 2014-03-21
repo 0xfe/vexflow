@@ -25,6 +25,16 @@ Vex.Flow.StemmableNote = (function(){
       return Stem.HEIGHT + this.stem_extension;
     },
 
+    getBeamCount: function(){
+      var glyph = this.getGlyph();
+
+      if (glyph) {
+        return glyph.beam_count;
+      } else {
+        return 0;
+      }
+    },
+
     // Determine minimum length of stem
     getStemMinumumLength: function() {
       var length = this.duration == "w" || this.duration == "1" ? 0 : 20;

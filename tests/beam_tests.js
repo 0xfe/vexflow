@@ -12,7 +12,8 @@ Vex.Flow.Test.Beam.Start = function() {
   Vex.Flow.Test.runTest("Sixteenth Beam", Vex.Flow.Test.Beam.sixteenth);
   Vex.Flow.Test.runTest("Slopey Beam", Vex.Flow.Test.Beam.slopey);
   Vex.Flow.Test.runTest("Automatic Beam", Vex.Flow.Test.Beam.auto);
-  Vex.Flow.Test.runTest("Mixed Beam", Vex.Flow.Test.Beam.mixed);
+  Vex.Flow.Test.runTest("Mixed Beam 1", Vex.Flow.Test.Beam.mixed);
+  Vex.Flow.Test.runTest("Mixed Beam 2", Vex.Flow.Test.Beam.mixed2);
   Vex.Flow.Test.runTest("Dotted Beam", Vex.Flow.Test.Beam.dotted);
   Vex.Flow.Test.runTest("Close Trade-offs Beam", Vex.Flow.Test.Beam.tradeoffs);
   Vex.Flow.Test.runTest("Insane Beam", Vex.Flow.Test.Beam.insane);
@@ -357,8 +358,8 @@ Vex.Flow.Test.Beam.mixed = function(options, contextBuilder) {
     newNote({ keys: ["f/4"], stem_direction: -1, duration: "16"})
   ];
 
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-  var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
+  var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
   voice.addTickables(notes);
   voice2.addTickables(notes2);
 
@@ -377,6 +378,65 @@ Vex.Flow.Test.Beam.mixed = function(options, contextBuilder) {
 
   beam2_1.setContext(c.context).draw();
   beam2_2.setContext(c.context).draw();
+  ok(true, "Multi Test");
+}
+
+Vex.Flow.Test.Beam.mixed2 = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.Beam.setupContext(options);
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+  var notes = [
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "32"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "32"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "64"}),
+
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "128"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "32"}),
+
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "64"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "32"}),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["e/5"], stem_direction: 1, duration: "128"})
+  ];
+
+  var notes2 = [
+    newNote({ keys: ["f/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "16"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "64"}),
+
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "128"}),
+    newNote({ keys: ["e/4"], stem_direction: -1, duration: "8"}),
+    newNote({ keys: ["f/4"], stem_direction: -1, duration: "16"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "32"}),
+
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "64"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "32"}),
+    newNote({ keys: ["d/4"], stem_direction: -1, duration: "16"}),
+    newNote({ keys: ["e/4"], stem_direction: -1, duration: "128"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
+  var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
+  voice.addTickables(notes);
+  voice2.addTickables(notes2);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice, voice2]).
+    format([voice, voice2], 390);
+  var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 12));
+
+  var beam2_1 = new Vex.Flow.Beam(notes2.slice(0, 12));
+
+  voice.draw(c.context, c.stave);
+  voice2.draw(c.context, c.stave);
+  beam1_1.setContext(c.context).draw();
+  beam2_1.setContext(c.context).draw();
+
   ok(true, "Multi Test");
 }
 
