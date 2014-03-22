@@ -5,6 +5,10 @@
 //
 // Requires vex.js.
 
+Vex.Flow.STEM_WIDTH = 1.5;
+Vex.Flow.STEM_HEIGHT = 32;
+Vex.Flow.STAVE_LINE_THICKNESS = 2;
+
 Vex.Flow.clefProperties = function(clef) {
   if (!clef) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
@@ -624,6 +628,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem: false,
       stem_offset: 0,
       flag: false,
+      stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      gracenote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      gracenote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      tabnote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      tabnote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -659,6 +669,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem: true,
       stem_offset: 0,
       flag: false,
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      gracenote_stem_up_extension: -14,
+      gracenote_stem_down_extension: -14,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -695,6 +711,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem: true,
       stem_offset: 0,
       flag: false,
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      gracenote_stem_up_extension: -14,
+      gracenote_stem_down_extension: -14,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -738,6 +760,10 @@ Vex.Flow.durationToGlyph.duration_codes = {
       code_flag_downstem: "v9a",
       stem_up_extension: 0,
       stem_down_extension: 0,
+      gracenote_stem_up_extension: -14,
+      gracenote_stem_down_extension: -14,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -778,8 +804,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "v3f",
       code_flag_downstem: "v8f",
-      stem_up_extension: 0,
-      stem_down_extension: -4,
+      stem_up_extension: 4,
+      stem_down_extension: 0,
+      gracenote_stem_up_extension: -14,
+      gracenote_stem_down_extension: -14,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -821,8 +851,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "v47",
       code_flag_downstem: "v2a",
-      stem_up_extension: 0,
-      stem_down_extension: -4,
+      stem_up_extension: 13,
+      stem_down_extension: 9,
+      gracenote_stem_up_extension: -12,
+      gracenote_stem_down_extension: -12,
+      tabnote_stem_up_extension: 9,
+      tabnote_stem_down_extension: 5,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -864,8 +898,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: "va9",
       code_flag_downstem: "v58",
-      stem_up_extension: 0,
-      stem_down_extension: -4,
+      stem_up_extension: 17,
+      stem_down_extension: 13,
+      gracenote_stem_up_extension: -10,
+      gracenote_stem_down_extension: -10,
+      tabnote_stem_up_extension: 13,
+      tabnote_stem_down_extension: 9,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -907,8 +945,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
           flag: true,
           code_flag_upstem: "v9b",
           code_flag_downstem: "v30",
-          stem_up_extension: 0,
-          stem_down_extension: -4,
+          stem_up_extension: 26,
+          stem_down_extension: 22,
+          gracenote_stem_up_extension: -8,
+          gracenote_stem_down_extension: -8,
+          tabnote_stem_up_extension: 22,
+          tabnote_stem_down_extension: 18,
           dot_shiftY: 0,
           line_above: 0,
           line_below: 0
@@ -949,8 +991,3 @@ Vex.Flow.TIME4_4 = {
   beat_value: 4,
   resolution: Vex.Flow.RESOLUTION
 };
-
-Vex.Flow.STEM_WIDTH = 1.5;
-Vex.Flow.STEM_HEIGHT = 32;
-Vex.Flow.STAVE_LINE_THICKNESS = 2;
-

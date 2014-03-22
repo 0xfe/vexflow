@@ -17,18 +17,22 @@ Vex.Flow.GraceNote = (function() {
       this.slash = note_struct.slash;
       this.slur = true;
 
-      this.stem_extension = 0;
+      this.width = 3;
+    },
 
-      switch (this.duration) {
-        case "w":                 // Whole note alias
-        case "1": this.stem_extension = -1 * Stem.HEIGHT; break;
-        case "32": this.stem_extension = -12; break;
-        case "64": this.stem_extension = -10; break;
-        case "128": this.stem_extension = -8; break;
-        default: this.stem_extension = -14;
+    getStemExtension: function(){
+      var glyph = this.getGlyph();
+
+      if (this.stem_extension_override != null) {
+        return this.stem_extension_override;
       }
 
-      this.width = 3;
+      if (glyph) {
+        return this.getStemDirection() === 1 ? glyph.gracenote_stem_up_extension : 
+          glyph.gracenote_stem_down_extension;
+      }
+
+      return 0;
     },
 
     getCategory: function() { return 'gracenotes'; },

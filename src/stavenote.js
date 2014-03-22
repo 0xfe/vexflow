@@ -88,16 +88,6 @@ Vex.Flow.StaveNote = (function() {
         stroke_spacing: 10    // spacing between strokes (TODO: take from stave)
       });
 
-      switch (this.duration) {
-        case "w":                 // Whole note alias
-        case "1": this.stem_extension = -1 * Stem.HEIGHT; break;
-        case "16": this.stem_extension = 4; break;
-        case "32": this.stem_extension = 13; break;
-        case "64": this.stem_extension = 17; break;
-        case "128": this.stem_extension = 26; break;
-        default: this.stem_extension = 0;
-      }
-
       var auto_stem_direction;
       if (note_struct.auto_stem) {
         // Figure out optimal stem direction based on given notes
@@ -530,23 +520,13 @@ Vex.Flow.StaveNote = (function() {
            y_extend = -4;
         }
 
-        var stem_extension = this.stem_extension;
-
-        if (glyph.flag) {
-          if (stem_direction === -1) {
-            stem_extension += glyph.stem_down_extension;
-          } else if (stem_direction === 1) {
-            stem_extension += glyph.stem_up_extension;
-          }
-        }
-
         this.drawStem({
           x_begin: x_begin,
           x_end: x_end,
           y_top: y_top,
           y_bottom: y_bottom,
           y_extend: y_extend,
-          stem_extension: stem_extension,
+          stem_extension: this.getStemExtension(),
           stem_direction: stem_direction
         });
       }
