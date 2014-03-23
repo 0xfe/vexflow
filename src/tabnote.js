@@ -34,16 +34,6 @@ Vex.Flow.TabNote = (function() {
             JSON.stringify(tab_struct));
       }
 
-      switch (this.duration) {
-        case "w":                 // Whole note alias
-        case "1": this.stem_extension = -1 * Stem.HEIGHT; break;
-
-        case "32": this.stem_extension = 5; break;
-        case "64": this.stem_extension = 10; break;
-        case "128": this.stem_extension = 15; break;
-        default: this.stem_extension = 0;
-      }
-
       this.ghost = false; // Renders parenthesis around notes
       this.updateWidth();
     },
@@ -57,6 +47,21 @@ Vex.Flow.TabNote = (function() {
 
     hasStem: function() {
       return this.render_options.draw_stem;
+    },
+
+    getStemExtension: function(){
+      var glyph = this.getGlyph();
+
+      if (this.stem_extension_override != null) {
+        return this.stem_extension_override;
+      }
+
+      if (glyph) {
+        return this.getStemDirection() === 1 ? glyph.tabnote_stem_up_extension : 
+          glyph.tabnote_stem_down_extension;
+      }
+
+      return 0;
     },
 
     addDot: function() {
@@ -238,7 +243,7 @@ Vex.Flow.TabNote = (function() {
           y_top: stem_y,
           y_bottom: stem_y,
           y_extend: 0,
-          stem_extension: this.stem_extension,
+          stem_extension: this.getStemExtension(),
           stem_direction: this.stem_direction
         });
       }

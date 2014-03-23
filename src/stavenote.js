@@ -88,15 +88,6 @@ Vex.Flow.StaveNote = (function() {
         stroke_spacing: 10    // spacing between strokes (TODO: take from stave)
       });
 
-      switch (this.duration) {
-        case "w":                 // Whole note alias
-        case "1": this.stem_extension = -1 * Stem.HEIGHT; break;
-        case "32": this.stem_extension = 10; break;
-        case "64": this.stem_extension = 15; break;
-        case "128": this.stem_extension = 20; break;
-        default: this.stem_extension = 0;
-      }
-
       var auto_stem_direction;
       if (note_struct.auto_stem) {
         // Figure out optimal stem direction based on given notes
@@ -535,7 +526,7 @@ Vex.Flow.StaveNote = (function() {
           y_top: y_top,
           y_bottom: y_bottom,
           y_extend: y_extend,
-          stem_extension: this.stem_extension,
+          stem_extension: this.getStemExtension(),
           stem_direction: stem_direction
         });
       }
@@ -552,13 +543,13 @@ Vex.Flow.StaveNote = (function() {
         if (stem_direction == Stem.DOWN) {
           // Down stems have flags on the left.
           flag_x = x_begin + 1;
-          flag_y = y_top - note_stem_height;
+          flag_y = y_top - note_stem_height + 2;
           flag_code = glyph.code_flag_downstem;
 
         } else {
           // Up stems have flags on the left.
           flag_x = x_end + 1;
-          flag_y = y_bottom - note_stem_height;
+          flag_y = y_bottom - note_stem_height - 2;
           flag_code = glyph.code_flag_upstem;
         }
 

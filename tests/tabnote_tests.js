@@ -118,7 +118,7 @@ Vex.Flow.Test.TabNote.draw = function(options, contextBuilder) {
 Vex.Flow.Test.TabNote.drawStemsUp = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 600, 140);
   ctx.font = "10pt Arial";
-  var stave = new Vex.Flow.TabStave(10, 10, 550);
+  var stave = new Vex.Flow.TabStave(10, 30, 550);
   stave.setContext(ctx);
   stave.draw();
 

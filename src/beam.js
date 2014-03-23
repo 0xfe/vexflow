@@ -237,7 +237,7 @@ Vex.Flow.Beam = (function() {
               y_bottom: this.stem_direction === 1 ? end_y : start_y,
               y_top: this.stem_direction === 1 ? start_y : end_y,
               y_extend: y_displacement,
-              stem_extension: 0,
+              stem_extension: -1, // To avoid protruding through the beam
               stem_direction: this.stem_direction
             });
           }
@@ -252,7 +252,7 @@ Vex.Flow.Beam = (function() {
           y_bottom: base_y_px,
           y_extend: y_displacement,
           stem_extension: Math.abs(base_y_px - (getSlopeY(x_px) + y_shift)) -
-                          Vex.Flow.Stem.HEIGHT,
+                          Vex.Flow.Stem.HEIGHT - 1,
           stem_direction: this.stem_direction
         });
       }
