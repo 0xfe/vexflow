@@ -480,6 +480,15 @@ Vex.Flow.StaveNote = (function() {
       };
     },
 
+    getNoteHeadBeginX: function(){
+      return this.getAbsoluteX() + this.x_shift;
+    },
+
+    getNoteHeadEndX: function(){
+      var x_begin = this.getNoteHeadBeginX();
+      return x_begin + this.glyph.head_width - (Vex.Flow.STEM_WIDTH / 2);
+    }, 
+
     drawLedgerLines: function(){
       var ctx = this.context;
 
@@ -510,92 +519,10 @@ Vex.Flow.StaveNote = (function() {
       }
     },
 
-    getNoteHeadBeginX: function(){
-      return this.getAbsoluteX() + this.x_shift;
-    },
-
-    getNoteHeadEndX: function(){
-      var x_begin = this.getNoteHeadBeginX();
-      return x_begin + this.glyph.head_width - (Vex.Flow.STEM_WIDTH / 2);
-    }, 
-
-    draw: function() {
+    drawModifiers: function(){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
-          "Can't draw note without Y values.");
       var ctx = this.context;
-
-      // What elements do we render?
-      var render_stem = (this.beam == null);
-      var render_flag = (this.beam == null);
-
-      var glyph = this.glyph;
-
-      var x_begin = this.getNoteHeadBeginX();
-      var x_end = this.getNoteHeadEndX();
-
-      // Format note head x position
-      this.note_heads.forEach(function(note_head) {
-        note_head.setX(x_begin);
-      }, this);
-
-      this.drawLedgerLines();
-
-      // Draw Stem
-      if (this.hasStem() && render_stem) {
-        // Shorten stem length for 1/2 & 1/4 dead note heads (X)
-        var y_extend = 0;
-        if (glyph.code_head == "v95" ||
-            glyph.code_head == "v3e") {
-           y_extend = -4;
-        }
-
-        // Top and bottom Y values for stem.
-        var bounds = this.getNoteHeadBounds();
-        var y_top = bounds.y_top;
-        var y_bottom = bounds.y_bottom;
-
-        this.drawStem({
-          x_begin: x_begin,
-          x_end: x_end,
-          y_top: y_top,
-          y_bottom: y_bottom,
-          y_extend: y_extend,
-          stem_extension: this.getStemExtension(),
-          stem_direction: this.getStemDirection()
-        });
-      }
-
-      // Draw NoteHeads
-      this.note_heads.forEach(function(note_head) {
-        note_head.setContext(this.context).draw();
-      }, this);
-
-      // Draw flag
-      if (glyph.flag && render_flag) {
-        var note_stem_height = this.stem.getHeight();
-        var flag_x, flag_y, flag_code;
-
-        if (this.getStemDirection() === Stem.DOWN) {
-          // Down stems have flags on the left.
-          flag_x = x_begin + 1;
-          flag_y = y_top - note_stem_height + 2;
-          flag_code = glyph.code_flag_downstem;
-
-        } else {
-          // Up stems have flags on the left.
-          flag_x = x_end + 1;
-          flag_y = y_bottom - note_stem_height - 2;
-          flag_code = glyph.code_flag_upstem;
-        }
-
-        // Draw the Flag
-        Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
-            this.render_options.glyph_font_scale, flag_code);
-      }
-
       // Draw the modifiers
       for (var i = 0; i < this.modifiers.length; i++) {
         var mod = this.modifiers[i];
@@ -610,6 +537,100 @@ Vex.Flow.StaveNote = (function() {
             ctx.restore();
         }
       }
+    },
+
+    drawFlag: function(){
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+      var ctx = this.context;
+      var glyph = this.getGlyph();
+      var render_flag = this.beam == null;
+      var bounds = this.getNoteHeadBounds();
+
+      var x_begin = this.getNoteHeadBeginX();
+      var x_end = this.getNoteHeadEndX();
+
+      if (glyph.flag && render_flag) {
+        var note_stem_height = this.stem.getHeight();
+        var flag_x, flag_y, flag_code;
+
+        if (this.getStemDirection() === Stem.DOWN) {
+          // Down stems have flags on the left.
+          flag_x = x_begin + 1;
+          flag_y = bounds.y_top - note_stem_height + 2;
+          flag_code = glyph.code_flag_downstem;
+
+        } else {
+          // Up stems have flags on the left.
+          flag_x = x_end + 1;
+          flag_y = bounds.y_bottom - note_stem_height - 2;
+          flag_code = glyph.code_flag_upstem;
+        }
+
+        // Draw the Flag
+        Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
+            this.render_options.glyph_font_scale, flag_code);
+      }
+    },
+
+    drawNoteHeads: function(){
+      this.note_heads.forEach(function(note_head) {
+        note_head.setContext(this.context).draw();
+      }, this);
+    },
+
+    draw: function() {
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+      if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
+      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
+          "Can't draw note without Y values.");
+
+      var ctx = this.context;
+      var glyph = this.glyph;
+
+      var x_begin = this.getNoteHeadBeginX();
+      var x_end = this.getNoteHeadEndX();
+
+      var render_stem = this.beam == null;
+
+      // Format note head x position
+      this.note_heads.forEach(function(note_head) {
+        note_head.setX(x_begin);
+      }, this);
+
+      function drawStem() {
+        // Draw Stem
+        if (this.hasStem() && render_stem) {
+          // Shorten stem length for 1/2 & 1/4 dead note heads (X)
+          var y_extend = 0;
+          if (glyph.code_head == "v95" ||
+              glyph.code_head == "v3e") {
+             y_extend = -4;
+          }
+
+          // Top and bottom Y values for stem.
+          var bounds = this.getNoteHeadBounds();
+          var y_top = bounds.y_top;
+          var y_bottom = bounds.y_bottom;
+
+          this.drawStem({
+            x_begin: x_begin,
+            x_end: x_end,
+            y_top: y_top,
+            y_bottom: y_bottom,
+            y_extend: y_extend,
+            stem_extension: this.getStemExtension(),
+            stem_direction: this.getStemDirection()
+          });
+        }
+      }
+
+      this.drawLedgerLines();
+      drawStem.call(this);
+      this.drawNoteHeads();
+      this.drawFlag();
+      this.drawModifiers();
     }
   });
 
