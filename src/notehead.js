@@ -128,7 +128,7 @@ Vex.Flow.NoteHead = (function() {
           line_y += 5;
         ctx.fillRect(
           head_x - this.note.render_options.stroke_px, line_y,
-          ((head_x + this.note.getGlyph().head_width) - head_x) +
+          (this.note.getGlyph().head_width) +
           (this.note.render_options.stroke_px * 2), 1);
       }
 
