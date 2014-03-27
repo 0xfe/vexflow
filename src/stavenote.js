@@ -38,11 +38,9 @@ Vex.Flow.StaveNote = (function() {
       this.keyProps = [];             // per-note properties
       this.keyStyles = [];            // per-note colors or gradients
       this.note_heads = [];
-      this.default_head_x = false;
+      this.default_head_x = false;    // for displaced ledger lines
 
       this.displaced = false;
-
-      this.calculateKeyProps();
 
       // Drawing
       this.modifiers = [];
@@ -53,7 +51,13 @@ Vex.Flow.StaveNote = (function() {
         stroke_spacing: 10    // spacing between strokes (TODO: take from stave)
       });
 
-      this.autoStem(note_struct);
+      this.calculateKeyProps();
+
+      if (note_struct.auto_stem) {
+        this.autoStem();
+      } else {
+        this.setStemDirection(note_struct.stem_direction);
+      }
 
       this.buildNoteHeads();
 
@@ -113,10 +117,10 @@ Vex.Flow.StaveNote = (function() {
           x_shift: note_props.shift_right
         });
 
+        // Additional data to add to the note
         note_head.props = note_props;
         note_head.note = this;
         note_head.index = i;
-        note_head.default_head_x = true;
 
         this.note_heads[i] = note_head;
       }
@@ -124,21 +128,19 @@ Vex.Flow.StaveNote = (function() {
 
     autoStem: function(note_struct) {
       var auto_stem_direction;
-      if (note_struct.auto_stem) {
-        // Figure out optimal stem direction based on given notes
-        this.min_line = this.keyProps[0].line;
-        this.max_line = this.keyProps[this.keyProps.length - 1].line;
-        var decider = (this.min_line + this.max_line) / 2;
 
-        if (decider < 3) {
-          auto_stem_direction = 1;
-        } else {
-          auto_stem_direction = -1;
-        }
-        this.setStemDirection(auto_stem_direction);
+      // Figure out optimal stem direction based on given notes
+      this.min_line = this.keyProps[0].line;
+      this.max_line = this.keyProps[this.keyProps.length - 1].line;
+      var decider = (this.min_line + this.max_line) / 2;
+
+      if (decider < 3) {
+        auto_stem_direction = 1;
       } else {
-        this.setStemDirection(note_struct.stem_direction);
+        auto_stem_direction = -1;
       }
+
+      this.setStemDirection(auto_stem_direction);
     },
 
     calculateKeyProps: function() {
@@ -459,13 +461,19 @@ Vex.Flow.StaveNote = (function() {
       var y_top = null;
       var y_bottom = null;
 
-      var highest_line = 5;
+      var highest_line = this.stave.getNumLines();
       var lowest_line = 1;
+
       this.note_heads.forEach(function(note_head) {
         var line = note_head.props.line;
 
-        if (y_top === null || note_head.y < y_top) y_top = note_head.y;
-        if (y_bottom === null || note_head.y > y_bottom) y_bottom = note_head.y;
+        if (y_top === null || note_head.y < y_top)  {
+          y_top = note_head.y;
+        }
+
+        if (y_bottom === null || note_head.y > y_bottom) {
+          y_bottom = note_head.y;
+        }
 
         highest_line = line > highest_line ? line : highest_line;
         lowest_line = line < lowest_line ? line : lowest_line;
@@ -490,6 +498,8 @@ Vex.Flow.StaveNote = (function() {
     }, 
 
     drawLedgerLines: function(){
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
       var ctx = this.context;
 
       var bounds = this.getNoteHeadBounds();
@@ -582,7 +592,8 @@ Vex.Flow.StaveNote = (function() {
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
+      if (!this.stave) throw new Vex.RERR("NoStave", 
+          "Can't draw without a stave.");
       if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't draw note without Y values.");
 
