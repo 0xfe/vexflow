@@ -115,36 +115,36 @@ Vex.Flow.Annotation = (function() {
       }
 
       var stem_ext, spacing;
-      var stemless = !this.note.hasStem();
-      var has_stem = !stemless;
+      var has_stem = this.note.hasStem();
+      var stave = this.note.getStave();
 
       // The position of the text varies based on whether or not the note
       // has a stem.
       if (has_stem) {
         stem_ext = this.note.getStemExtents();
-        spacing = this.note.getStave().options.spacing_between_lines_px;
+        spacing = stave.getSpacingBetweenLines();
       }
 
       if (this.vert_justification == Annotation.VerticalJustify.BOTTOM) {
-        y = this.note.stave.getYForBottomText(this.text_line);
+        y = stave.getYForBottomText(this.text_line);
         if (has_stem) {
-          var stem_base = (this.note.stem_direction === 1 ? stem_ext.baseY : stem_ext.topY);
-          y = Vex.Max(y, stem_base + (spacing * (this.text_line + 2)));
+          var stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
+          y = Math.max(y, stem_base + (spacing * (this.text_line + 2)));
         }
       } else if (this.vert_justification ==
                  Annotation.VerticalJustify.CENTER) {
         var yt = this.note.getYForTopText(this.text_line) - 1;
-        var yb = this.note.stave.getYForBottomText(this.text_line);
+        var yb = stave.getYForBottomText(this.text_line);
         y = yt + ( yb - yt ) / 2 + text_height / 2;
       } else if (this.vert_justification ==
                  Annotation.VerticalJustify.TOP) {
-        y = Vex.Min(this.note.stave.getYForTopText(this.text_line), this.note.ys[0] - 10);
+        y = Math.min(stave.getYForTopText(this.text_line), this.note.getYs()[0] - 10);
         if (has_stem) {
-          y = Vex.Min(y, (stem_ext.topY - 5) - (spacing * this.text_line));
+          y = Math.min(y, (stem_ext.topY - 5) - (spacing * this.text_line));
         }
       } else /* CENTER_STEM */{
         var extents = this.note.getStemExtents();
-        y = extents.topY + ( extents.baseY - extents.topY ) / 2 +
+        y = extents.topY + (extents.baseY - extents.topY) / 2 +
           text_height / 2;
       }
 
