@@ -1,15 +1,9 @@
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 //
-// This class implements varies types of modifiers to notes (e.g. bends,
-// fingering positions etc.) Accidentals should also be implemented as
-// modifiers, eventually.
+// This class implements varies types of modifiers to notes (e.g. accidentals,
+// bends, fingering positions etc.)
 
-/**
- * Create a new modifier for the specified note.
- *
- * @constructor
- */
 Vex.Flow.Modifier = (function() {
   function Modifier() { this.init(); }
 

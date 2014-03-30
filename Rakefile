@@ -19,6 +19,7 @@ BUILD_DATE = Time.now()
 BUILD_COMMIT = `git rev-list --max-count=1 HEAD`.chomp
 
 JSHINT = "./node_modules/jshint/bin/jshint"
+DOCCO = "./node_modules/.bin/docco"
 
 directory TARGET_DIR
 directory 'build/tests'
@@ -156,6 +157,12 @@ task :lint do
   # Requires JSHint to be installed
   puts "Checking VexFlow sources for lint errors..."
   system "#{JSHINT} --show-non-errors --config jshintrc src/*.js"
+end
+
+task :docs do
+  # Requires JSHint to be installed
+  puts "Generating documentation..."
+  system "#{DOCCO} -l linear src/*.js"
 end
 
 task :make => [:build_copy, TARGET_DIR, TARGET]
