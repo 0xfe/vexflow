@@ -28,5 +28,6 @@ scp tests/flow.html $SCP_TO/tests/index.html
 echo Copy over docs...
 rsync -przvl --delete --stats docs $SCP_TO
 scp -r docs/index.html $SCP_TO
+scp -r docs/index.html $SCP_TO/docs
 
 echo Done.
