@@ -16,13 +16,13 @@ Vex.Flow.StemmableNote = (function(){
     init: function(note_struct){
       StemmableNote.superclass.init.call(this, note_struct);
 
+      this.stem_extension_override = null;
       this.beam = null;
-      this.stem_extension = 0;
       this.setStemDirection(note_struct.stem_direction);
     },
 
     getStemLength: function() {
-      return Stem.HEIGHT + this.stem_extension;
+      return Stem.HEIGHT + this.getStemExtension();
     },
 
     getBeamCount: function(){
@@ -107,9 +107,24 @@ Vex.Flow.StemmableNote = (function(){
       return this.getAbsoluteX() + this.x_shift + (this.glyph.head_width / 2);
     },
 
+    getStemExtension: function(){
+      var glyph = this.getGlyph();
+
+      if (this.stem_extension_override != null) {
+        return this.stem_extension_override;
+      }
+
+      if (glyph) {
+        return this.getStemDirection() === 1 ? glyph.stem_up_extension : 
+          glyph.stem_down_extension;
+      }
+
+      return 0;
+    },
+
     // Manuallly set note stem length
     setStemLength: function(height) {
-      this.stem_extension = (height - Stem.HEIGHT);
+      this.stem_extension_override = (height - Stem.HEIGHT);
       return this;
     },
 
@@ -119,7 +134,7 @@ Vex.Flow.StemmableNote = (function(){
 
       var top_pixel = this.ys[0];
       var base_pixel = this.ys[0];
-      var stem_height = Stem.HEIGHT + this.stem_extension;
+      var stem_height = Stem.HEIGHT + this.getStemExtension();
 
       for (var i = 0; i < this.ys.length; ++i) {
         var stem_top = this.ys[i] + (stem_height * -this.stem_direction);

@@ -64,16 +64,9 @@ Vex.Flow.Stem = (function() {
       ctx.beginPath();
       ctx.setLineWidth(Stem.WIDTH);
       ctx.moveTo(stem_x, stem_y);
-      ctx.lineTo(stem_x, stem_y - (this.stem_height - (2 * stem_direction)));
+      ctx.lineTo(stem_x, stem_y - this.stem_height);
       ctx.stroke();
       ctx.setLineWidth(1);
-
-      /*
-      ctx.fillRect(stem_x,
-        stem_y - (this.stem_height < 0 ? 0 : this.stem_height),
-        Stem.WIDTH,
-        Math.abs(this.stem_height));
-      */
     }
   };
 
