@@ -72,6 +72,10 @@ Vex.Flow.Modifier = (function() {
     getModifierContext: function() { return this.modifier_context; },
     setModifierContext: function(c) { this.modifier_context = c; return this; },
 
+    // Get and set articulation position.
+    getPosition: function() { return this.position; },
+    setPosition: function(position) { this.position = position; return this; },
+
     // Set the `text_line` for the modifier.
     setTextLine: function(line) { this.text_line = line; return this; },
 

@@ -126,7 +126,7 @@ Vex.drawDot = function(ctx, x, y, color) {
   ctx.restore();
 };
 
-// Run function `f` once and report time elapsed shifted by `s` milliseconds.
+// Benchmark. Run function `f` once and report time elapsed shifted by `s` milliseconds.
 Vex.BM = function(s, f) {
   var start_time = new Date().getTime();
   f();
