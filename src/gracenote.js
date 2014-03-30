@@ -28,7 +28,7 @@ Vex.Flow.GraceNote = (function() {
       }
 
       if (glyph) {
-        return this.getStemDirection() === 1 ? glyph.gracenote_stem_up_extension : 
+        return this.getStemDirection() === 1 ? glyph.gracenote_stem_up_extension :
           glyph.gracenote_stem_down_extension;
       }
 

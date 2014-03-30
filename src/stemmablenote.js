@@ -115,7 +115,7 @@ Vex.Flow.StemmableNote = (function(){
       }
 
       if (glyph) {
-        return this.getStemDirection() === 1 ? glyph.stem_up_extension : 
+        return this.getStemDirection() === 1 ? glyph.stem_up_extension :
           glyph.stem_down_extension;
       }
 
