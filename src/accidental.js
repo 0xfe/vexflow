@@ -2,10 +2,10 @@
 //
 // ## Description
 //
-// This class implements accidentals as modifiers that can be attached to
+// This file implements accidentals as modifiers that can be attached to
 // notes. Support is included for both western and microtonal accidentals.
 //
-// See tests/accidental_tests.js for usage examples.
+// See `tests/accidental_tests.js` for usage examples.
 
 Vex.Flow.Accidental = (function(){
   function Accidental(type) {
