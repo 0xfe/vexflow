@@ -12,6 +12,9 @@ Vex.Flow.Accidental = (function(){
     if (arguments.length > 0) this.init(type);
   }
 
+  // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
+  function L() { if (Accidental.DEBUG) Vex.L("Vex.Flow.Accidental", arguments); }
+
   var Modifier = Vex.Flow.Modifier;
 
   // ## Prototype Methods
@@ -24,6 +27,7 @@ Vex.Flow.Accidental = (function(){
     // example: `#`, `##`, `b`, `n`, etc.
     init: function(type) {
       Accidental.superclass.init.call(this);
+      L("New accidental: ", type);
 
       this.note = null;
       // The `index` points to a specific note in a chord.
@@ -91,6 +95,7 @@ Vex.Flow.Accidental = (function(){
       var start = this.note.getModifierStartXY(this.position, this.index);
       var acc_x = (start.x + this.x_shift) - this.width;
       var acc_y = start.y + this.y_shift;
+      L("Rendering: ", this.type, acc_x, acc_y);
 
       if (!this.cautionary) {
         // Render the accidental alone.

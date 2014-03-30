@@ -231,11 +231,6 @@ Vex.Flow.RaphaelContext = (function() {
     },
 
     arcHelper: function(x, y, radius, startAngle, endAngle, antiClockwise) {
-      Vex.Assert(endAngle > startAngle, "end angle " + endAngle +
-                 " less than or equal to start angle " + startAngle);
-      Vex.Assert(startAngle >= 0 && startAngle <= Math.PI * 2);
-      Vex.Assert(endAngle >= 0 && endAngle <= Math.PI * 2);
-
       var x1 = x + radius * Math.cos(startAngle);
       var y1 = y + radius * Math.sin(startAngle);
 

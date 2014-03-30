@@ -93,10 +93,6 @@ Vex.Flow.ModifierContext = (function() {
       if (notes[0].getStave() != null)
         return this.formatNotesByY(notes);
 
-      // Assumption: no more than three notes
-      Vex.Assert(notes.length < 4,
-          "Got more than three notes in Vex.Flow.ModifierContext.formatNotes!");
-
       var notes_list= [];
 
       for (var i = 0; i < notes.length; i++) {

@@ -15,6 +15,8 @@
 
 Vex.Flow.Modifier = (function() {
   function Modifier() { this.init(); }
+    // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
+  function L() { if (Modifier.DEBUG) Vex.L("Vex.Flow.Modifier", arguments); }
 
   // Modifiers can be positioned almost anywhere, relative to a note.
   Modifier.Position = {
@@ -43,6 +45,7 @@ Vex.Flow.Modifier = (function() {
       this.modifier_context = null;
       this.x_shift = 0;
       this.y_shift = 0;
+      L("Created new modifier");
     },
 
     // Every modifier has a category. The `ModifierContext` uses this to determine
