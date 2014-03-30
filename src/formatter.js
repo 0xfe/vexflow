@@ -390,9 +390,8 @@ Vex.Flow.Formatter = (function() {
         }
 
         // Determine the space required for the previous tick
-        // The shouldIgnoreTicks part is a dirty heuristic to accomodate for bar
-        // lines. Really, there shouldn't be bar lines inside measures. Bar lines
-        // should be implemented with distinct measures.
+        // The shouldIgnoreTicks bool is true for elements in the stave
+        // that don't consume ticks (bar lines, key and time signatures, etc.)
         set_x = context.shouldIgnoreTicks() ?
             (min_x + context.getWidth()) : Math.max(set_x, min_x);
 
@@ -428,7 +427,7 @@ Vex.Flow.Formatter = (function() {
         set_x += left_px;
 
         context.setX(set_x);
-        context.setPixelsUsed(pixels_used);  // ??? Not sure this is neeeded
+        context.setPixelsUsed(pixels_used);  // ??? Remove this if nothing breaks
 
         lastMetrics = thisMetrics;
         prev_width = width;
