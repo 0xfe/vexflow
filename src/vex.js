@@ -16,7 +16,7 @@ function Vex() {}
 Vex.L = function(block, args) {
   var line = Array.prototype.slice.call(args).join(" ");
   window.console.log(block + ": " + line);
-}
+};
 
 // Default runtime exception.
 Vex.RuntimeError = function(code, message) {

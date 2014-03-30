@@ -148,6 +148,7 @@ Vex.Flow.Annotation = (function() {
           text_height / 2;
       }
 
+      L("Rendering annotation: ", this.text, x, y);
       this.context.fillText(this.text, x, y);
       this.context.restore();
     }
