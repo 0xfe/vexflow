@@ -14,6 +14,7 @@ function Vex() {}
 
 // Default log function sends all arguments to console.
 Vex.L = function(block, args) {
+  if (!args) return;
   var line = Array.prototype.slice.call(args).join(" ");
   window.console.log(block + ": " + line);
 };

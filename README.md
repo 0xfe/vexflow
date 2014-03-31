@@ -7,7 +7,7 @@ Copyright (c) 2010 Mohit Muthanna Cheppudira
 
 VexFlow is an open-source web-based music notation rendering API. It is written
 completely in JavaScript, and runs right in the browser. VexFlow supports HTML5
-Canvas and SVG.
+Canvas and SVG, and runs on all modern browsers.
 
 Go try out [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html) to
 learn how to use VexFlow.
@@ -15,61 +15,11 @@ learn how to use VexFlow.
 If you're not a developer and just want to write and share your music, go to
 [My VexFlow](http://my.vexflow.com).
 
-## Where is VexTab?
+## Resources
 
-VexTab has been overhauled and has moved to a new repository. Go
-to [github/0xfe/vextab](http://github.com/0xfe/vextab).
+To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
 
-VexTab 2.0 now supports all VexTab 1.0 features, and
-[includes a few new ones](http://my.vexflow.com/articles/53?source=enabled).
-
-## To Contribute
-
-* Send in your changes via a GitHub pull request.
-* Rebase early, rebase often.
-* Please include tests -- I will not commit changes that don't have
-  accompanying tests.
-* Run `rake lint` before sending, and make sure your code is lint-clean. You
-  need to have [JSHint](http://jshint.com) installed for this.
-* Please use 2 spaces instead of tabs.
-* Try to stick to the style conventions in the existing code. (It's not great,
-  but it's what we have.)
-* Join the VexFlow Google Group at:
-  https://groups.google.com/forum/?fromgroups#!forum/vexflow
-
-## Prerequisites (for Developers)
-
-For performing full builds, you need the following:
-
-* Rake
-* Uglifier
-* Git
-
-If you have Ruby installed, then you can use Bundler to get all the
-dependencies.
-
-    $ gem install bundler
-    $ bundle install
-
-## Build Instructions
-
-Build with:
-
-    $ rake
-
-Clean with:
-
-    $ rake clean
-
-If you have [JSHint](http://jshint.com) installed, you can check your code for
-common errors with the following command. Note that this step is mandatory if
-you want to commit your changes into the official VexFlow repository.
-
-    $ rake lint
-
-To regenerate documentation from code, you need [Docco](http://jashkenas.github.io/docco/), which lets you embed Markdown syntax into code. Fixing up comments is currently a work-in-progress, and any new code must conform to the commenting style (see `src/accidental.js` for an example). Use the following command to generate documentation.
-
-    $ rake docs
+To build VexFlow from scratch, read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build-Instructions).
 
 ## MIT License
 
@@ -98,6 +48,4 @@ THE SOFTWARE.
 
 * [VexFlow Home](http://vexflow.com)
 * [My VexFlow](http://my.vexflow.com)
-* [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html)
-* [VexFlow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow)
 * [Me](http://0xfe.muthanna.com)
