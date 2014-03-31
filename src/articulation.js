@@ -81,7 +81,7 @@ Vex.Flow.Articulation = (function() {
         return false;
       };
 
-      // Articulations are centered over/under the note head
+      // Articulations are centered over/under the note head.
       var start = this.note.getModifierStartXY(this.position, this.index);
       var glyph_y = start.y;
       var shiftY = 0;
@@ -98,9 +98,9 @@ Vex.Flow.Articulation = (function() {
         bottom = stem_ext.topY;
       }
 
-      // TabNote specific positioning
+      // TabNotes don't have stems attached to them. Tab stems are rendered
+      // outside the stave.
       if (is_tabnote) {
-        // Determine position if rendering with a stem
         if (this.note.hasStem()){
           if (stem_direction === Vex.Flow.StaveNote.STEM_UP) {
             bottom = stave.getYForBottomText(this.text_line - 2);
@@ -116,11 +116,11 @@ Vex.Flow.Articulation = (function() {
       var is_above = (this.position === Modifier.Position.ABOVE) ? true : false;
       var note_line = this.note.getLineNumber(is_above);
 
-      // Beamed stems are longer than quarter note stems
+      // Beamed stems are longer than quarter note stems.
       if (!is_on_head && this.note.beam) line_spacing += 0.5;
 
-      // If articulation will overlap a line, reposition it
-      if(needsLineAdjustment(this, note_line, line_spacing)) line_spacing += 0.5;
+      // If articulation will overlap a line, reposition it.
+      if (needsLineAdjustment(this, note_line, line_spacing)) line_spacing += 0.5;
 
       var glyph_y_between_lines;
       if (this.position === Modifier.Position.ABOVE) {
