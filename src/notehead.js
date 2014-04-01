@@ -61,21 +61,37 @@ Vex.Flow.NoteHead = (function() {
 
       this.width = this.glyph.head_width;
       this.glyph_code = this.glyph.code_head;
-      this.absolute_x = this.x + (this.displaced ? this.width * this.stem_direction : 0);
+      this.x_shift = head_options.x_shift;
       if (head_options.custom_glyph_code) {
+        this.custom_glyph = true;
         this.glyph_code = head_options.custom_glyph_code;
-        this.absolute_x = this.x + head_options.x_shift;
       }
       this.glyph_font_scale = head_options.glyph_font_scale;
       this.context = null;
       this.key_style = head_options.key_style;
       this.slashed = head_options.slashed;
+
     },
 
     getCategory: function() { return "notehead"; },
     setContext: function(context) { this.context = context; return this;},
     getWidth: function() { return this.width; },
-    getAbsoluteX: function() { return this.absolute_x; },
+
+    setX: function(x){
+      this.x = x;
+    },
+
+    setY: function(y) {
+      this.y = y;
+    },
+
+    getAbsoluteX: function() {
+      if (this.custom_glyph) {
+        return this.x + this.x_shift;
+      } else {
+        return this.x + (this.displaced ? this.width * this.stem_direction : 0);
+      }
+    },
 
     getBoundingBox: function() {
       throw new Vex.RERR("NotImplemented", "getBoundingBox() not implemented.");
@@ -93,13 +109,28 @@ Vex.Flow.NoteHead = (function() {
           "Can't draw without a canvas context.");
 
       var ctx = this.context;
-      var head_x = this.absolute_x;
+      var head_x = this.getAbsoluteX();
       var y = this.y;
 
       // Begin and end positions for head.
       var stem_direction = this.stem_direction;
       var glyph_font_scale = this.glyph_font_scale;
       var key_style = this.key_style;
+      var line = this.props.line;
+
+      // If note above/below the staff, draw the small staff
+      if (line <= 0 || line >= 6) {
+        var line_y = y;
+        var floor = Math.floor(line);
+        if (line < 0 && floor - line == -0.5)
+          line_y -= 5;
+        else if (line > 6 &&  floor - line == -0.5)
+          line_y += 5;
+        ctx.fillRect(
+          head_x - this.note.render_options.stroke_px, line_y,
+          (this.note.getGlyph().head_width) +
+          (this.note.render_options.stroke_px * 2), 1);
+      }
 
       if (this.note_type == "s") {
         drawSlashNoteHead(ctx, this.duration,

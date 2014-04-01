@@ -38,9 +38,112 @@ Vex.Flow.StaveNote = (function() {
       this.keyProps = [];             // per-note properties
       this.keyStyles = [];            // per-note colors or gradients
       this.note_heads = [];
+      this.default_head_x = false;    // for displaced ledger lines
 
-      // Pull per-note location and other rendering properties.
       this.displaced = false;
+
+      // Drawing
+      this.modifiers = [];
+
+      Vex.Merge(this.render_options, {
+        glyph_font_scale: 35, // font size for note heads and rests
+        stroke_px: 3,         // number of stroke px to the left and right of head
+        stroke_spacing: 10    // spacing between strokes (TODO: take from stave)
+      });
+
+      this.calculateKeyProps();
+
+      if (note_struct.auto_stem) {
+        this.autoStem();
+      } else {
+        this.setStemDirection(note_struct.stem_direction);
+      }
+
+      this.buildNoteHeads();
+
+      // Calculate left/right padding
+      this.calcExtraPx();
+    },
+
+    buildNoteHeads: function() {
+      var stem_direction = this.getStemDirection();
+
+      var keys = this.getKeys();
+
+      var last_line = null;
+      var line_diff = null;
+      var displaced = false;
+
+      // Draw notes from bottom to top.
+      var start_i = 0;
+      var end_i = keys.length;
+      var step_i = 1;
+
+      // For down-stem notes, we draw from top to bottom.
+      if (stem_direction === Stem.DOWN) {
+        start_i = keys.length - 1;
+        end_i = -1;
+        step_i = -1;
+      }
+
+      for (i = start_i; i != end_i; i += step_i) {
+        var note_props = this.keyProps[i];
+        var key_style = this.keyStyles[i];
+
+        line = note_props.line;
+
+        // Keep track of last line with a note head, so that consecutive heads
+        // are correctly displaced.
+        if (last_line == null) {
+          last_line = line;
+        } else {
+          line_diff = Math.abs(last_line - line);
+          if (line_diff === 0 || line_diff === 0.5) {
+            displaced = !displaced;
+          } else {
+            displaced = false;
+            this.default_head_x = true;
+          }
+        }
+        last_line = line;
+
+        var note_head = new NoteHead({
+          duration: this.duration,
+          note_type: this.noteType,
+          displaced: displaced,
+          key_style: key_style,
+          stem_direction: stem_direction,
+          glyph_font_scale: this.render_options.glyph_font_scale,
+          x_shift: note_props.shift_right
+        });
+
+        // Additional data to add to the note
+        note_head.props = note_props;
+        note_head.note = this;
+        note_head.index = i;
+
+        this.note_heads[i] = note_head;
+      }
+    },
+
+    autoStem: function(note_struct) {
+      var auto_stem_direction;
+
+      // Figure out optimal stem direction based on given notes
+      this.min_line = this.keyProps[0].line;
+      this.max_line = this.keyProps[this.keyProps.length - 1].line;
+      var decider = (this.min_line + this.max_line) / 2;
+
+      if (decider < 3) {
+        auto_stem_direction = 1;
+      } else {
+        auto_stem_direction = -1;
+      }
+
+      this.setStemDirection(auto_stem_direction);
+    },
+
+    calculateKeyProps: function() {
       var last_line = null;
       for (var i = 0; i < this.keys.length; ++i) {
         var key = this.keys[i];
@@ -78,35 +181,6 @@ Vex.Flow.StaveNote = (function() {
 
       // Sort the notes from lowest line to highest line
       this.keyProps.sort(function(a, b) { return a.line - b.line; });
-
-      // Drawing
-      this.modifiers = [];
-
-      Vex.Merge(this.render_options, {
-        glyph_font_scale: 35, // font size for note heads and rests
-        stroke_px: 3,         // number of stroke px to the left and right of head
-        stroke_spacing: 10    // spacing between strokes (TODO: take from stave)
-      });
-
-      var auto_stem_direction;
-      if (note_struct.auto_stem) {
-        // Figure out optimal stem direction based on given notes
-        this.min_line = this.keyProps[0].line;
-        this.max_line = this.keyProps[this.keyProps.length - 1].line;
-        var decider = (this.min_line + this.max_line) / 2;
-
-        if (decider < 3) {
-          auto_stem_direction = 1;
-        } else {
-          auto_stem_direction = -1;
-        }
-        this.setStemDirection(auto_stem_direction);
-      } else {
-        this.setStemDirection(note_struct.stem_direction);
-      }
-
-      // Calculate left/right padding
-      this.calcExtraPx();
     },
 
     getCategory: function() { return "stavenotes"; },
@@ -210,7 +284,9 @@ Vex.Flow.StaveNote = (function() {
       // Setup y coordinates for score.
       for (var i = 0; i < this.keyProps.length; ++i) {
         var line = this.keyProps[i].line;
-        ys.push(this.stave.getYForNote(line));
+        var y = this.stave.getYForNote(line);
+        ys.push(y);
+        this.note_heads[i].setY(y);
       }
 
       return this.setYs(ys);
@@ -284,6 +360,7 @@ Vex.Flow.StaveNote = (function() {
 
     setKeyStyle: function(index, style) {
       this.keyStyles[index] = style;
+      this.buildNoteHeads();
       return this;
     },
 
@@ -379,130 +456,70 @@ Vex.Flow.StaveNote = (function() {
       this.setPreFormatted(true);
     },
 
-    draw: function() {
-      if (!this.context) throw new Vex.RERR("NoCanvasContext",
-          "Can't draw without a canvas context.");
-      if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
-          "Can't draw note without Y values.");
-
-      var ctx = this.context;
-      var x = this.getAbsoluteX() + this.x_shift;
-
-      var ys = this.ys;
-      var keys = this.keys;
-      var glyph = this.glyph;
-      var stem_direction = this.stem_direction;
-      var default_head_x = null;
-
-      // What elements do we render?
-      var render_stem = (this.beam == null);
-      var render_flag = (this.beam == null);
-
-      // Begin and end positions for head.
-      var x_begin = x;
-      var x_end = x + glyph.head_width - (Vex.Flow.STEM_WIDTH / 2);
-
+    getNoteHeadBounds: function() {
       // Top and bottom Y values for stem.
       var y_top = null;
       var y_bottom = null;
 
-      // Displacement variables.
-      var last_line = null;
-      var line_diff = null;
-      var displaced = false;
-
-      // Draw notes from bottom to top.
-      var start_i = 0;
-      var end_i = keys.length;
-      var step_i = 1;
-
-
-      // For down-stem notes, we draw from top to bottom.
-      if (stem_direction == Stem.DOWN) {
-        start_i = keys.length - 1;
-        end_i = -1;
-        step_i = -1;
-      }
-
-      // Keep track of highest and lowest lines for drawing strokes.
-      var highest_line = 5;
+      var highest_line = this.stave.getNumLines();
       var lowest_line = 1;
 
-      // For each note (key) in the chord, calculate strokes, displacements,
-      // and render the head.
-      var i, key_style, line;
-      for (i = start_i; i != end_i; i += step_i) {
-        var note_props = this.keyProps[i];
-        key_style = this.keyStyles[i];
-        line = note_props.line;
+      this.note_heads.forEach(function(note_head) {
+        var line = note_head.props.line;
+
+        if (y_top === null || note_head.y < y_top)  {
+          y_top = note_head.y;
+        }
+
+        if (y_bottom === null || note_head.y > y_bottom) {
+          y_bottom = note_head.y;
+        }
+
         highest_line = line > highest_line ? line : highest_line;
         lowest_line = line < lowest_line ? line : lowest_line;
 
-        // Keep track of last line with a note head, so that consecutive heads
-        // are correctly displaced.
-        if (last_line == null) {
-          last_line = line;
-        } else {
-          line_diff = Math.abs(last_line - line);
-          if (line_diff === 0 || line_diff === 0.5) {
-            displaced = !displaced;
-          } else {
-            displaced = false;
-            default_head_x = x;
-          }
-        }
-        last_line = line;
+      }, this);
 
-        // Get Y value for this head.
-        var y = ys[i];
+      return {
+        y_top: y_top,
+        y_bottom: y_bottom,
+        highest_line: highest_line,
+        lowest_line: lowest_line
+      };
+    },
 
-        // Keep track of top and bottom note for stem
-        if (y_top == null || y < y_top) y_top = y;
-        if (y_bottom == null || y > y_bottom) y_bottom = y;
+    getNoteHeadBeginX: function(){
+      return this.getAbsoluteX() + this.x_shift;
+    },
 
-        var note_head = new NoteHead({
-          x: x_begin,
-          y: y,
-          note_type: this.noteType,
-          custom_glyph_code: note_props.code,
-          x_shift: note_props.shift_right,
-          duration: this.duration,
-          displaced: displaced,
-          stem_direction: stem_direction,
-          key_style: key_style,
-          glyph_font_scale: this.render_options.glyph_font_scale
-        });
+    getNoteHeadEndX: function(){
+      var x_begin = this.getNoteHeadBeginX();
+      return x_begin + this.glyph.head_width - (Vex.Flow.STEM_WIDTH / 2);
+    }, 
 
-        var head_x = note_head.getAbsoluteX();
-        this.note_heads.push(note_head);
+    drawLedgerLines: function(){
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+      var ctx = this.context;
 
-        // If note above/below the staff, draw the small staff
-        if (line <= 0 || line >= 6) {
-          var line_y = y;
-          var floor = Math.floor(line);
-          if (line < 0 && floor - line == -0.5)
-            line_y -= 5;
-          else if (line > 6 &&  floor - line == -0.5)
-            line_y += 5;
-          ctx.fillRect(
-            head_x - this.render_options.stroke_px, line_y,
-            ((head_x + glyph.head_width) - head_x) +
-            (this.render_options.stroke_px * 2), 1);
-        }
-      }
+      var bounds = this.getNoteHeadBounds();
+      var highest_line = bounds.highest_line;
+      var lowest_line = bounds.lowest_line;
+      var head_x = this.note_heads[0].getAbsoluteX();
 
-      // For heads that are off the staff, draw the tiny stroke line.
       var that = this;
-
       function stroke(y) {
-        if (default_head_x != null) head_x = default_head_x;
-        ctx.fillRect(
-          head_x - that.render_options.stroke_px, y,
-          ((head_x + glyph.head_width) - head_x) +
-          (that.render_options.stroke_px * 2), 1);
+        if (that.default_head_x === true)  {
+          head_x = that.getAbsoluteX() + that.x_shift;
+        }
+        var x = head_x - that.render_options.stroke_px;
+        var length = ((head_x + that.glyph.head_width) - head_x) +
+          (that.render_options.stroke_px * 2);
+
+        ctx.fillRect(x, y, length, 1);
       }
 
+      var line; // iterator
       for (line = 6; line <= highest_line; ++line) {
         stroke(this.stave.getYForNote(line));
       }
@@ -510,58 +527,16 @@ Vex.Flow.StaveNote = (function() {
       for (line = 0; line >= lowest_line; --line) {
         stroke(this.stave.getYForNote(line));
       }
+    },
 
-      // Draw Stem
-      if (this.hasStem() && render_stem) {
-        // Shorten stem length for 1/2 & 1/4 dead note heads (X)
-        var y_extend = 0;
-        if (glyph.code_head == "v95" ||
-            glyph.code_head == "v3e") {
-           y_extend = -4;
-        }
-
-        this.drawStem({
-          x_begin: x_begin,
-          x_end: x_end,
-          y_top: y_top,
-          y_bottom: y_bottom,
-          y_extend: y_extend,
-          stem_extension: this.getStemExtension(),
-          stem_direction: stem_direction
-        });
-      }
-
-      this.note_heads.forEach(function(note_head) {
-        note_head.setContext(this.context).draw();
-      }, this);
-
-      // Now it's the flag's turn.
-      if (glyph.flag && render_flag) {
-        var note_stem_height = this.stem.getHeight();
-        var flag_x, flag_y, flag_code;
-
-        if (stem_direction == Stem.DOWN) {
-          // Down stems have flags on the left.
-          flag_x = x_begin + 1;
-          flag_y = y_top - note_stem_height + 2;
-          flag_code = glyph.code_flag_downstem;
-
-        } else {
-          // Up stems have flags on the left.
-          flag_x = x_end + 1;
-          flag_y = y_bottom - note_stem_height - 2;
-          flag_code = glyph.code_flag_upstem;
-        }
-
-        // Draw the Flag
-        Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
-            this.render_options.glyph_font_scale, flag_code);
-      }
-
+    drawModifiers: function(){
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+      var ctx = this.context;
       // Draw the modifiers
-      for (i = 0; i < this.modifiers.length; ++i) {
+      for (var i = 0; i < this.modifiers.length; i++) {
         var mod = this.modifiers[i];
-        key_style = this.keyStyles[mod.getIndex()];
+        var key_style = this.keyStyles[mod.getIndex()];
         if(key_style) {
             ctx.save();
             this.applyKeyStyle(key_style, ctx);
@@ -572,6 +547,101 @@ Vex.Flow.StaveNote = (function() {
             ctx.restore();
         }
       }
+    },
+
+    drawFlag: function(){
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+      var ctx = this.context;
+      var glyph = this.getGlyph();
+      var render_flag = this.beam == null;
+      var bounds = this.getNoteHeadBounds();
+
+      var x_begin = this.getNoteHeadBeginX();
+      var x_end = this.getNoteHeadEndX();
+
+      if (glyph.flag && render_flag) {
+        var note_stem_height = this.stem.getHeight();
+        var flag_x, flag_y, flag_code;
+
+        if (this.getStemDirection() === Stem.DOWN) {
+          // Down stems have flags on the left.
+          flag_x = x_begin + 1;
+          flag_y = bounds.y_top - note_stem_height + 2;
+          flag_code = glyph.code_flag_downstem;
+
+        } else {
+          // Up stems have flags on the left.
+          flag_x = x_end + 1;
+          flag_y = bounds.y_bottom - note_stem_height - 2;
+          flag_code = glyph.code_flag_upstem;
+        }
+
+        // Draw the Flag
+        Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
+            this.render_options.glyph_font_scale, flag_code);
+      }
+    },
+
+    drawNoteHeads: function(){
+      this.note_heads.forEach(function(note_head) {
+        note_head.setContext(this.context).draw();
+      }, this);
+    },
+
+    draw: function() {
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+      if (!this.stave) throw new Vex.RERR("NoStave", 
+          "Can't draw without a stave.");
+      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
+          "Can't draw note without Y values.");
+
+      var ctx = this.context;
+      var glyph = this.glyph;
+
+      var x_begin = this.getNoteHeadBeginX();
+      var x_end = this.getNoteHeadEndX();
+
+      var render_stem = this.beam == null;
+
+      // Format note head x position
+      this.note_heads.forEach(function(note_head) {
+        note_head.setX(x_begin);
+      }, this);
+
+      function drawStem() {
+        // Draw Stem
+        if (this.hasStem() && render_stem) {
+          // Shorten stem length for 1/2 & 1/4 dead note heads (X)
+          var y_extend = 0;
+          if (glyph.code_head == "v95" ||
+              glyph.code_head == "v3e") {
+             y_extend = -4;
+          }
+
+          // Top and bottom Y values for stem.
+          var bounds = this.getNoteHeadBounds();
+          var y_top = bounds.y_top;
+          var y_bottom = bounds.y_bottom;
+
+          this.drawStem({
+            x_begin: x_begin,
+            x_end: x_end,
+            y_top: y_top,
+            y_bottom: y_bottom,
+            y_extend: y_extend,
+            stem_extension: this.getStemExtension(),
+            stem_direction: this.getStemDirection()
+          });
+        }
+      }
+
+      this.drawLedgerLines();
+      drawStem.call(this);
+      this.drawNoteHeads();
+      this.drawFlag();
+      this.drawModifiers();
     }
   });
 
