@@ -1,15 +1,17 @@
-// VexFlow (http://vexflow.com)
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Implementation of stemmable notes.
-
-
+// ## Description
+//
+// `StemmableNote` is an abstract interface for notes with optional stems. 
+// Examples of stemmable notes are `StaveNote` and `TabNote`
 Vex.Flow.StemmableNote = (function(){
   var StemmableNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
   };
 
-  // Stem directions
+  // To enable logging for this class. Set `Vex.Flow.StemmableNote.DEBUG` to `true`.
+  function L() { if (StemmableNote.DEBUG) Vex.L("Vex.Flow.StemmableNote", arguments); }
+
   var Stem = Vex.Flow.Stem;
 
   Vex.Inherit(StemmableNote, Vex.Flow.Note, {
@@ -21,10 +23,12 @@ Vex.Flow.StemmableNote = (function(){
       this.setStemDirection(note_struct.stem_direction);
     },
 
+    // Get the full length of stem
     getStemLength: function() {
       return Stem.HEIGHT + this.getStemExtension();
     },
 
+    // Get the number of beams for this duration
     getBeamCount: function(){
       var glyph = this.getGlyph();
 
@@ -35,7 +39,7 @@ Vex.Flow.StemmableNote = (function(){
       }
     },
 
-    // Determine minimum length of stem
+    // Get the minimum length of stem
     getStemMinumumLength: function() {
       var length = this.duration == "w" || this.duration == "1" ? 0 : 20;
       // if note is flagged, cannot shorten beam
@@ -70,10 +74,8 @@ Vex.Flow.StemmableNote = (function(){
       return length;
     },
 
-    getStemDirection: function() {
-      return this.stem_direction;
-    },
-
+    // Get/set the direction of the stem
+    getStemDirection: function() { return this.stem_direction; },
     setStemDirection: function(direction) {
       if (!direction) direction = Stem.UP;
       if (direction != Stem.UP &&
@@ -90,6 +92,7 @@ Vex.Flow.StemmableNote = (function(){
       return this;
     },
 
+    // Get the `x` coordinate of the stem
     getStemX: function() {
       var x_begin = this.getAbsoluteX() + this.x_shift;
       var x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
@@ -102,11 +105,13 @@ Vex.Flow.StemmableNote = (function(){
       return stem_x;
     },
 
-    // Used for TabNote stems and Stemlets over rests
+    // Get the `x` coordinate for the center of the glyph.
+    // Used for `TabNote` stems and stemlets over rests
     getCenterGlyphX: function(){
       return this.getAbsoluteX() + this.x_shift + (this.glyph.head_width / 2);
     },
 
+    // Get the stem extension for the current duration
     getStemExtension: function(){
       var glyph = this.getGlyph();
 
@@ -122,12 +127,13 @@ Vex.Flow.StemmableNote = (function(){
       return 0;
     },
 
-    // Manuallly set note stem length
+    // Set the stem length to a specific. Will override the default length.
     setStemLength: function(height) {
       this.stem_extension_override = (height - Stem.HEIGHT);
       return this;
     },
 
+    // Get the top and bottom `y` values of the stem. 
     getStemExtents: function() {
       if (!this.ys || this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't get top stem Y when note has no Y values.");
@@ -156,11 +162,10 @@ Vex.Flow.StemmableNote = (function(){
       return { topY: top_pixel, baseY: base_pixel };
     },
 
-    setBeam: function(beam) {
-      this.beam = beam;
-      return this;
-    },
+    // Sets the current note's beam
+    setBeam: function(beam) { this.beam = beam; return this; },
 
+    // Get the `y` value for the top/bottom modifiers at a specific `text_line`
     getYForTopText: function(text_line) {
       var extents = this.getStemExtents();
       if (this.hasStem()) {
@@ -170,7 +175,6 @@ Vex.Flow.StemmableNote = (function(){
         return this.stave.getYForTopText(text_line);
       }
     },
-
     getYForBottomText: function(text_line) {
       var extents = this.getStemExtents();
       if (this.hasStem()) {
@@ -181,6 +185,7 @@ Vex.Flow.StemmableNote = (function(){
       }
     },
 
+    // Render the stem onto the canvas
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");

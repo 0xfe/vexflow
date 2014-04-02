@@ -193,24 +193,14 @@ Vex.Flow.Note = (function() {
       return this;
     },
 
-    setX: function(x) {
-      if (isNaN(x)) {
-        throw new Vex.RERR('Invalid x coordinate attempted: ' + x.toString());
-      }
-      this.x = x; return this;
-    },
 
     getX: function() {
-      if (this.x) return this.x;
-
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
       return this.tickContext.getX() + this.x_shift;
     },
 
     getAbsoluteX: function() {
-      if (this.x) return this.x;
-
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
 
