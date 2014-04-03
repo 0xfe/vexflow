@@ -16,7 +16,7 @@ Vex.Flow.NoteHead = (function() {
 
 
   // Draw slashnote head manually. No glyph exists for this.
-  // 
+  //
   // Parameters:
   // * `ctx`: the Canvas context
   // * `duration`: the duration of the note. ex: "4"
@@ -194,6 +194,8 @@ Vex.Flow.NoteHead = (function() {
       var ctx = this.context;
       var head_x = this.getAbsoluteX();
       var y = this.y;
+
+      L("Drawing note head '", this.note_type, this.duration, "' at", head_x, y);
 
       // Begin and end positions for head.
       var stem_direction = this.stem_direction;

@@ -133,7 +133,7 @@ Vex.Flow.StemmableNote = (function(){
       return this;
     },
 
-    // Get the top and bottom `y` values of the stem. 
+    // Get the top and bottom `y` values of the stem.
     getStemExtents: function() {
       if (!this.ys || this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't get top stem Y when note has no Y values.");
@@ -159,6 +159,7 @@ Vex.Flow.StemmableNote = (function(){
         }
       }
 
+      L("Stem extents: ", top_pixel, base_pixel);
       return { topY: top_pixel, baseY: base_pixel };
     },
 

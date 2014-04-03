@@ -4,7 +4,7 @@
 //
 // This file implements notes for standard notation. This consists of one or 
 // more `NoteHeads`, an optional stem, and an optional flag.
-// 
+//
 // *Throughout these comments, a "note" refers to the entire `StaveNote`,
 // and a "key" refers to a specific pitch/notehead within a note.*
 //
@@ -46,9 +46,9 @@ Vex.Flow.StaveNote = (function() {
       this.displaced = false;
       this.dot_shiftY = 0;
       // per-pitch properties
-      this.keyProps = [];            
+      this.keyProps = [];
       // for displaced ledger lines
-      this.use_default_head_x = false;    
+      this.use_default_head_x = false;
 
       // Drawing
       this.note_heads = [];
@@ -56,7 +56,7 @@ Vex.Flow.StaveNote = (function() {
 
       Vex.Merge(this.render_options, {
         // font size for note heads and rests
-        glyph_font_scale: 35, 
+        glyph_font_scale: 35,
         // number of stroke px to the left and right of head
         stroke_px: 3
       });
@@ -98,10 +98,10 @@ Vex.Flow.StaveNote = (function() {
         step_i = -1;
       }
 
-      for (i = start_i; i != end_i; i += step_i) {
+      for (var i = start_i; i != end_i; i += step_i) {
         var note_props = this.keyProps[i];
 
-        line = note_props.line;
+        var line = note_props.line;
 
         // Keep track of last line with a note head, so that consecutive heads
         // are correctly displaced.
@@ -117,7 +117,7 @@ Vex.Flow.StaveNote = (function() {
           }
         }
         last_line = line;
-        
+
         var note_head = new NoteHead({
           duration: this.duration,
           note_type: this.noteType,
@@ -182,7 +182,7 @@ Vex.Flow.StaveNote = (function() {
             }
           }
         }
-        
+
         last_line = line;
         this.keyProps.push(props);
       }
@@ -211,7 +211,7 @@ Vex.Flow.StaveNote = (function() {
 
       if (this.isRest()) {
         var y = this.ys[0];
-        if (this.duration == "w" || this.duration == "h" || 
+        if (this.duration == "w" || this.duration == "h" ||
             this.duration == "1" || this.duration == "2") {
           min_y = y - half_line_spacing;
           max_y = y + half_line_spacing;
@@ -275,7 +275,7 @@ Vex.Flow.StaveNote = (function() {
     // Determine if the `StaveNote` has a stem
     hasStem: function() { return this.glyph.stem; },
 
-    // Get the `y` coordinate for text placed on the top/bottom of a 
+    // Get the `y` coordinate for text placed on the top/bottom of a
     // note at a desired `text_line`
     getYForTopText: function(text_line) {
       var extents = this.getStemExtents();
@@ -362,10 +362,10 @@ Vex.Flow.StaveNote = (function() {
       var x = 0;
       if (position == Vex.Flow.Modifier.Position.LEFT) {
         // extra_left_px
-        x = -1 * 2;  
+        x = -1 * 2;
       } else if (position == Vex.Flow.Modifier.Position.RIGHT) {
         // extra_right_px
-        x = this.glyph.head_width + this.x_shift + 2; 
+        x = this.glyph.head_width + this.x_shift + 2;
       } else if (position == Vex.Flow.Modifier.Position.BELOW ||
                  position == Vex.Flow.Modifier.Position.ABOVE) {
         x = this.glyph.head_width / 2;
@@ -375,7 +375,7 @@ Vex.Flow.StaveNote = (function() {
     },
 
     // Sets the notehead at `index` to the provided coloring `style`.
-    // 
+    //
     // `style` is an `object` with the following properties: `shadowColor`,
     // `shadowBlur`, `fillStyle`, `strokeStyle`
     setKeyStyle: function(index, style) {
@@ -448,14 +448,14 @@ Vex.Flow.StaveNote = (function() {
       return this.modifierContext.getModifiers("dots");
     },
 
-    // Get the width of the note if it is displaced. Used for `Voice` 
+    // Get the width of the note if it is displaced. Used for `Voice`
     // formatting
     getVoiceShiftWidth: function() {
       // TODO: may need to accomodate for dot here.
       return this.glyph.head_width * (this.displaced ? 2 : 1);
     },
 
-    // Calculates and sets the extra pixels to the left or right 
+    // Calculates and sets the extra pixels to the left or right
     // if the note is displaced
     calcExtraPx: function() {
       this.setExtraLeftPx((this.displaced && this.stem_direction == -1) ?
@@ -523,7 +523,7 @@ Vex.Flow.StaveNote = (function() {
     getNoteHeadEndX: function(){
       var x_begin = this.getNoteHeadBeginX();
       return x_begin + this.glyph.head_width - (Vex.Flow.STEM_WIDTH / 2);
-    }, 
+    },
 
     // Draw the ledger lines between the stave and the highest/lowest keys
     drawLedgerLines: function(){
@@ -625,12 +625,11 @@ Vex.Flow.StaveNote = (function() {
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      if (!this.stave) throw new Vex.RERR("NoStave", 
+      if (!this.stave) throw new Vex.RERR("NoStave",
           "Can't draw without a stave.");
       if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't draw note without Y values.");
 
-      var ctx = this.context;
       var glyph = this.glyph;
 
       var x_begin = this.getNoteHeadBeginX();
