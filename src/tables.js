@@ -29,7 +29,7 @@ Vex.Flow.clefProperties.values = {
   'baritone-c': { line_shift: 5 },
   'baritone-f': { line_shift: 5 },
   'subbass': { line_shift: 7 },
-  'french': { line_shift: -1 },
+  'french': { line_shift: -1 }
 };
 
 /*
