@@ -23,7 +23,13 @@ Vex.Flow.clefProperties.values = {
   'bass':    { line_shift: 6 },
   'tenor':   { line_shift: 4 },
   'alto':    { line_shift: 3 },
-  'percussion': { line_shift: 0 }
+  'soprano': { line_shift: 1 },
+  'percussion': { line_shift: 0 },
+  'mezzo-soprano': { line_shift: 2 },
+  'baritone-c': { line_shift: 5 },
+  'baritone-f': { line_shift: 5 },
+  'subbass': { line_shift: 7 },
+  'french': { line_shift: -1 }
 };
 
 /*
