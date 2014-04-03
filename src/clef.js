@@ -33,6 +33,36 @@ Vex.Flow.Clef = (function() {
       point: 40,
       line: 2
     },
+    "soprano": {
+      code: "vad",
+      point: 40,
+      line: 4
+    },
+    "mezzo-soprano": {
+      code: "vad",
+      point: 40,
+      line: 3
+    },
+    "baritone-c": {
+      code: "vad",
+      point: 40,
+      line: 0
+    },
+    "baritone-f": {
+      code: "v79",
+      point: 40,
+      line: 2
+    },
+    "subbass": {
+      code: "v79",
+      point: 40,
+      line: 0
+    },
+    "french": {
+      code: "v83",
+      point: 40,
+      line: 4
+    },
     "treble_small": {
       code: "v83",
       point: 32,
@@ -52,6 +82,36 @@ Vex.Flow.Clef = (function() {
       code: "vad",
       point: 32,
       line: 1
+    },
+    "soprano_small": {
+      code: "vad",
+      point: 32,
+      line: 4
+    },
+    "mezzo-soprano_small": {
+      code: "vad",
+      point: 32,
+      line: 3
+    },
+    "baritone-c_small": {
+      code: "vad",
+      point: 32,
+      line: 0
+    },
+    "baritone-f_small": {
+      code: "v79",
+      point: 32,
+      line: 2
+    },
+    "subbass_small": {
+      code: "v79",
+      point: 32,
+      line: 0
+    },
+    "french_small": {
+      code: "v83",
+      point: 32,
+      line: 4
     },
     "percussion_small": {
       code: "v59",
