@@ -18,6 +18,7 @@ Vex.Flow.TabNote = (function() {
       var superclass = Vex.Flow.TabNote.superclass;
       superclass.init.call(this, tab_struct);
 
+      this.ghost = false; // Renders parenthesis around notes
       // Note properties
       this.positions = tab_struct.positions; // [{ str: X, fret: X }]
       Vex.Merge(this.render_options, {
@@ -33,8 +34,9 @@ Vex.Flow.TabNote = (function() {
             "Invalid note initialization data (No glyph found): " +
             JSON.stringify(tab_struct));
       }
-
-      this.ghost = false; // Renders parenthesis around notes
+      this.buildStem();
+      this.setStemDirection(Stem.UP);
+      
       this.updateWidth();
     },
 

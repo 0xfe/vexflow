@@ -20,22 +20,43 @@ Vex.Flow.Stem = (function() {
 
   Stem.prototype = {
     init: function(options) {
-      this.x_begin = options.x_begin;
-      this.x_end = options.x_end;
-      this.y_top = options.y_top;
-      this.y_bottom = options.y_bottom;
+      this.x_begin = options.x_begin || 0;
+      this.x_end = options.x_end || 0;
+      this.y_top = options.y_top || 0;
+      this.y_bottom = options.y_bottom || 0;
       this.y_extend = options.y_extend || 0;
       this.stem_direction = options.stem_direction;
       this.stem_extension = options.stem_extension;
 
-      // Calculated properties
-      this.stem_height = ((this.y_bottom - this.y_top) * this.stem_direction) +
-        ((Stem.HEIGHT + this.stem_extension) * this.stem_direction);
+      this.hide = false;
+    },
+
+    setNoteHeadXBounds: function(x_begin, x_end) {
+      this.x_begin = x_begin;
+      this.x_end = x_end;
+      return this;
+    },
+
+    setDirection: function(direction){
+      this.stem_direction = direction;
+    },
+
+    setExtension: function(ext) {
+      this.stem_extension = ext;
+    },
+
+    setYBounds: function(y_top, y_bottom) {
+      this.y_top = y_top;
+      this.y_bottom = y_bottom;
     },
 
     getCategory: function() { return "stem"; },
     setContext: function(context) { this.context = context; return this;},
-    getHeight: function() { return this.stem_height; },
+    getHeight: function() {
+      return ((this.y_bottom - this.y_top) * this.stem_direction) +
+             ((Stem.HEIGHT + this.stem_extension) * this.stem_direction);
+    },
+
     getBoundingBox: function() {
       throw new Vex.RERR("NotImplemented", "getBoundingBox() not implemented.");
     },
@@ -43,6 +64,8 @@ Vex.Flow.Stem = (function() {
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
+
+      if (this.hide) return;
 
       var ctx = this.context;
       var stem_x, stem_y;
@@ -64,7 +87,7 @@ Vex.Flow.Stem = (function() {
       ctx.beginPath();
       ctx.setLineWidth(Stem.WIDTH);
       ctx.moveTo(stem_x, stem_y);
-      ctx.lineTo(stem_x, stem_y - this.stem_height);
+      ctx.lineTo(stem_x, stem_y - this.getHeight());
       ctx.stroke();
       ctx.setLineWidth(1);
     }
