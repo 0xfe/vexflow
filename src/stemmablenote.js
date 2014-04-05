@@ -18,10 +18,16 @@ Vex.Flow.StemmableNote = (function(){
     init: function(note_struct){
       StemmableNote.superclass.init.call(this, note_struct);
 
+      this.stem = null;
       this.stem_extension_override = null;
       this.beam = null;
-      this.setStemDirection(note_struct.stem_direction);
+      
     },
+
+    getStem: function() {return this.stem; },
+    setStem: function(stem) { this.stem = stem; },
+
+    buildStem: function() { var stem = new Stem(); this.setStem(stem); },
 
     // Get the full length of stem
     getStemLength: function() {
@@ -85,6 +91,11 @@ Vex.Flow.StemmableNote = (function(){
       }
 
       this.stem_direction = direction;
+      if (this.stem) {
+        this.stem.setDirection(direction);
+        this.stem.setExtension(this.getStemExtension());
+      }
+
       this.beam = null;
       if (this.preFormatted) {
         this.preFormat();
@@ -190,11 +201,10 @@ Vex.Flow.StemmableNote = (function(){
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-
-      this.stem = new Stem(stem_struct);
+      
+      this.setStem(new Stem(stem_struct));
       this.stem.setContext(this.context).draw();
     }
-
   });
 
   return StemmableNote;
