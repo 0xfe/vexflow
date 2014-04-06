@@ -519,7 +519,8 @@ Vex.Flow.Formatter = (function() {
       }
     },
 
-    // Take all `voices` and create `ModifierContext`s out of them.
+    // Take all `voices` and create `ModifierContext`s out of them. This tells
+    // the formatters that the voices belong on a single stave.
     joinVoices: function(voices) {
       this.createModifierContexts(voices);
       this.hasMinTotalWidth = false;
