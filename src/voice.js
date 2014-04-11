@@ -23,7 +23,11 @@ Vex.Flow.Voice = (function() {
 
   Voice.prototype = {
     init: function(time) {
-      this.time = time;
+      this.time = Vex.Merge({
+        num_beats: 4,
+        beat_value: 4,
+        resolution: Vex.Flow.RESOLUTION
+      }, time);
 
       // Recalculate total ticks.
       this.totalTicks = new Vex.Flow.Fraction(
