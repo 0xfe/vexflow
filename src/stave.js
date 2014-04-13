@@ -89,8 +89,11 @@ Vex.Flow.Stave = (function() {
 
     setWidth: function(width) {
       this.width = width;
+      this.glyph_end_x = this.x + width;
+      this.end_x = this.glyph_end_x;
+
       // reset the x position of the end barline
-      this.modifiers[1].setX(this.x + this.width);
+      this.modifiers[1].setX(this.end_x);
       return this;
     },
 
