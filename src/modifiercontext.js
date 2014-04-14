@@ -334,7 +334,7 @@ Vex.Flow.ModifierContext = (function() {
         }
 
         if (!note.isRest() && line != last_line) {
-          if (line % 1 == 0.5) {
+          if (Math.abs(line % 1) == 0.5) {
             // note is on a space, so no dot shift
             half_shiftY = 0;
           } else if (!note.isRest()) {

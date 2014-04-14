@@ -447,24 +447,24 @@ Vex.Flow.Test.Beam.dotted = function(options, contextBuilder) {
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
   var notes = [
-    newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}).
+    newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["b/3"], stem_direction: 1, duration: "8d"}).
         addDotToAll(),
-    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["c/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["a/3"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["a/3"], stem_direction: 1, duration: "8"}),
 
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}).
+    newNote({ keys: ["b/3"], stem_direction: 1, duration: "8d"}).
         addDotToAll(),
-    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["c/4"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["b/3"], stem_direction: 1, duration: "8"}),
 
-    newNote({ keys: ["c/5"], stem_direction: 1, duration: "8d"}).
+    newNote({ keys: ["a/3"], stem_direction: 1, duration: "8d"}).
         addDotToAll(),
-    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8d"}).
+    newNote({ keys: ["a/3"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["b/3"], stem_direction: 1, duration: "8d"}).
         addDotToAll(),
-    newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"})
+    newNote({ keys: ["c/4"], stem_direction: 1, duration: "16"})
   ];
 
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).
