@@ -80,6 +80,8 @@ Vex.Flow.TextNote = (function() {
 
       // Note properties
       this.text = text_struct.text;
+      this.superscript = text_struct.superscript;
+      this.subscript = text_struct.subscript;
       this.glyph_type = text_struct.glyph;
       this.glyph = null;
       this.font = {
@@ -170,6 +172,20 @@ Vex.Flow.TextNote = (function() {
         ctx.save();
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
         ctx.fillText(this.text, x, y);
+
+        var height = ctx.measureText("M").width;
+        var width = ctx.measureText(this.text).width;
+        debugger;
+        if (this.superscript) {
+          ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
+          ctx.fillText(this.superscript, x + width + 2, y - (height/2.2));
+        }
+
+        if (this.subscript) {
+          ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
+          ctx.fillText(this.subscript, x + width + 2, y + (height/2.2));
+        }
+
         ctx.restore();
       }
     }
