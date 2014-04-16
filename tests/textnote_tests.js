@@ -9,6 +9,8 @@ Vex.Flow.Test.TextNote = (function() {
       module("TextNote");
       Vex.Flow.Test.runTest("TextNote Formatting",
           Vex.Flow.Test.TextNote.formatTextNotes);
+      Vex.Flow.Test.runTest("TextNote Superscript and Subscript",
+          Vex.Flow.Test.TextNote.superscriptAndSubscript);
       Vex.Flow.Test.runTest("TextNote Formatting With Glyphs",
           Vex.Flow.Test.TextNote.formatTextGlyphs);
     },
@@ -59,6 +61,52 @@ Vex.Flow.Test.TextNote = (function() {
         newTextNote({text: "Right", duration: "q"}).
           setJustification(Vex.Flow.TextNote.Justification.RIGHT),
       ];
+
+      Vex.Flow.Test.TextNote.renderNotes(notes1, notes2, ctx, stave);
+
+      ok(true);
+    },
+
+    superscriptAndSubscript: function(options) {
+      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 400, 200);
+      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      var stave = new Vex.Flow.Stave(10, 10, 400);
+      stave.setContext(ctx);
+      stave.draw();
+
+      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+      function newTextNote(text_struct) { return new Vex.Flow.TextNote(text_struct); }
+      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+      var notes1 = [
+        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: 1, duration: "h"}).
+          addAccidental(0, newAcc("b")).
+          addAccidental(1, newAcc("#")),
+        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: 1, duration: "q"}),
+        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: 1, duration: "q"}).
+          addAccidental(0, newAcc("n")).
+          addAccidental(1, newAcc("#"))
+      ];
+
+      var notes2 = [
+        newTextNote({text: "I",  duration: "4"}),
+        newTextNote({text: "D/F",  duration: "4", superscript: "sus2"}),
+        newTextNote({text: "ii", superscript: "6", subscript: "4",  duration: "8"}),
+        newTextNote({text: "C" ,  superscript: String.fromCharCode(parseInt('25B3', 16)) + "7", subscript: "", duration: "8"}),
+        newTextNote({text: "vii",  duration: "8"}),
+        newTextNote({text: "V",superscript: "7",   duration: "8"}),
+      ];
+
+      notes2.forEach(function(note) {
+        note.setLine(13);
+        note.font = {
+          family: "Times New Roman",
+          size: 15,
+          weight: ""
+        };
+        note.setJustification(Vex.Flow.TextNote.Justification.LEFT);
+      });
 
       Vex.Flow.Test.TextNote.renderNotes(notes1, notes2, ctx, stave);
 
