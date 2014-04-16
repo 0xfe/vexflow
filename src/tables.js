@@ -473,6 +473,20 @@ Vex.Flow.keySignature.keySpecs = {
   "A#m": {acc: "#", num: 7}
 };
 
+Vex.Flow.unicode = {
+  // Unicode accidentals
+  "sharp": String.fromCharCode(parseInt('266F', 16)),
+  "flat" : String.fromCharCode(parseInt('266D', 16)),
+  "natural": String.fromCharCode(parseInt('266E', 16)),
+  // Major Chord
+  "triangle": String.fromCharCode(parseInt('25B3', 16)),
+  // half-diminished
+  "o-with-slash": String.fromCharCode(parseInt('00F8', 16)),
+   // Diminished
+  "degrees": String.fromCharCode(parseInt('00B0', 16)),
+  "circle": String.fromCharCode(parseInt('25CB', 16))
+};
+
 Vex.Flow.keySignature.accidentalList = function(acc) {
   if (acc == "b") {
     return [2, 0.5, 2.5, 1, 3, 1.5, 3.5];

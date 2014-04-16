@@ -68,10 +68,10 @@ Vex.Flow.Test.TextNote = (function() {
     },
 
     superscriptAndSubscript: function(options) {
-      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 400, 200);
+      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 550, 200);
       var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
       ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      var stave = new Vex.Flow.Stave(10, 10, 400);
+      var stave = new Vex.Flow.Stave(10, 10, 500);
       stave.setContext(ctx);
       stave.draw();
 
@@ -90,18 +90,18 @@ Vex.Flow.Test.TextNote = (function() {
       ];
 
       var notes2 = [
-        newTextNote({text: "I",  duration: "4"}),
-        newTextNote({text: "D/F",  duration: "4", superscript: "sus2"}),
+        newTextNote({text: Vex.Flow.unicode["flat"] + "I", superscript: "+5",  duration: "8"}),
+        newTextNote({text: "D" + Vex.Flow.unicode["sharp"] +"/F",  duration: "4d", superscript: "sus2"}),
         newTextNote({text: "ii", superscript: "6", subscript: "4",  duration: "8"}),
-        newTextNote({text: "C" ,  superscript: String.fromCharCode(parseInt('25B3', 16)) + "7", subscript: "", duration: "8"}),
-        newTextNote({text: "vii",  duration: "8"}),
+        newTextNote({text: "C" , superscript: Vex.Flow.unicode["triangle"] + "7", subscript: "", duration: "8"}),
+        newTextNote({text: "vii", superscript: Vex.Flow.unicode["o-with-slash"] + "7", duration: "8"}),
         newTextNote({text: "V",superscript: "7",   duration: "8"}),
       ];
 
       notes2.forEach(function(note) {
         note.setLine(13);
         note.font = {
-          family: "Times New Roman",
+          family: "Serif",
           size: 15,
           weight: ""
         };
