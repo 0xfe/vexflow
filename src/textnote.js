@@ -1,9 +1,10 @@
-// Vex Flow Notation
-// Mohit Muthanna <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Copyright Mohit Muthanna 2013
-
-/** @constructor */
+// ## Description
+//
+// `TextNote` is a notation element that is positioned in time. Generally 
+// meant for objects that sit above/below the staff and inline with each other.
+// Examples of this would be such as dynamics, lyrics, chord changes, etc.
 Vex.Flow.TextNote = (function() {
   function TextNote(text_struct) {
     if (arguments.length > 0) this.init(text_struct);
@@ -15,6 +16,7 @@ Vex.Flow.TextNote = (function() {
     RIGHT: 3
   };
 
+  // Glyph data
   TextNote.GLYPHS = {
     "segno": {
       code: "v8c",
@@ -74,6 +76,7 @@ Vex.Flow.TextNote = (function() {
     }
   };
 
+  // ## Prototype Methods
   Vex.Inherit(TextNote, Vex.Flow.Note, {
     init: function(text_struct) {
       TextNote.superclass.init.call(this, text_struct);
@@ -90,8 +93,12 @@ Vex.Flow.TextNote = (function() {
         weight: ""
       };
 
+      // Set font
       if (text_struct.font) this.font = text_struct.font;
 
+      // Determine and set initial note width. Note that the text width is 
+      // an approximation and isn't very accurate. The only way to accurately
+      // measure the length of text is with `canvasContext.measureText()`
       if (this.glyph_type) {
         var struct = TextNote.GLYPHS[this.glyph_type];
         if (!struct) throw new Vex.RERR("Invalid glyph type: " + this.glyph_type);
@@ -113,11 +120,13 @@ Vex.Flow.TextNote = (function() {
       this.justification = TextNote.Justification.LEFT;
     },
 
+    // Set the horizontal justification of the TextNote
     setJustification: function(just) {
       this.justification = just;
       return this;
     },
 
+    // Set the Stave line on which the note should be placed
     setLine: function(line) {
       this.line = line;
       return this;
@@ -148,6 +157,7 @@ Vex.Flow.TextNote = (function() {
       this.setPreFormatted(true);
     },
 
+    // Renders the TextNote
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
@@ -173,17 +183,21 @@ Vex.Flow.TextNote = (function() {
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
         ctx.fillText(this.text, x, y);
 
+        // Width of the letter M gives us the approximate height of the text
         var height = ctx.measureText("M").width;
+        // Get accurate width of text
         var width = ctx.measureText(this.text).width;
-        debugger;
+
+        // Write superscript
         if (this.superscript) {
           ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
           ctx.fillText(this.superscript, x + width + 2, y - (height/2.2));
         }
 
+        // Write subscript
         if (this.subscript) {
           ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
-          ctx.fillText(this.subscript, x + width + 2, y + (height/2.2));
+          ctx.fillText(this.subscript, x + width + 2, y + (height/2.2) - 1);
         }
 
         ctx.restore();
