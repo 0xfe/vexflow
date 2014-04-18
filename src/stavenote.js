@@ -78,6 +78,7 @@ Vex.Flow.StaveNote = (function() {
       this.calcExtraPx();
     },
 
+    // Builds a `Stem` for the note
     buildStem: function() {
       var glyph = this.getGlyph();
 

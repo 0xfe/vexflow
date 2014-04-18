@@ -197,6 +197,14 @@ Vex.Flow.StemmableNote = (function(){
       }
     },
 
+    postFormat: function() {
+      if (this.beam) {
+        this.beam.postFormat();
+      }
+
+      this.postFormatted = true;
+    },
+
     // Render the stem onto the canvas
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",

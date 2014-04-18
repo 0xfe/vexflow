@@ -1,9 +1,9 @@
-// Vex Music Notation
-// Mohit Muthanna <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Copyright Mohit Muthanna 2010
-
-/** @constructor */
+// ## Description
+// 
+// This file implements the main Voice class. It's mainly a container 
+// object to group `Tickables` for formatting.
 Vex.Flow.Voice = (function() {
   function Voice(time) {
     if (arguments.length > 0) this.init(time);
@@ -21,6 +21,7 @@ Vex.Flow.Voice = (function() {
     FULL:   3
   };
 
+  // ## Prototype Methods
   Voice.prototype = {
     init: function(time) {
       this.time = Vex.Merge({
@@ -49,22 +50,39 @@ Vex.Flow.Voice = (function() {
       this.voiceGroup = null;
     },
 
+    // Get the total ticks in the voice
     getTotalTicks: function() { return this.totalTicks; },
+
+    // Get the total ticks used in the voice by all the tickables
     getTicksUsed: function() { return this.ticksUsed; },
+
+    // Get the largest width of all the tickables
     getLargestTickWidth: function() { return this.largestTickWidth; },
+
+    // Get the tick count for the shortest tickable
     getSmallestTickCount: function() { return this.smallestTickCount; },
+
+    // Get the tickables in the voice
     getTickables: function() { return this.tickables; },
+
+    // Get/set the voice mode, use a value from `Voice.Mode`
     getMode: function() { return this.mode; },
     setMode: function(mode) { this.mode = mode; return this; },
+
+    // Get the resolution multiplier for the voice
     getResolutionMultiplier: function() { return this.resolutionMultiplier; },
+
+    // Get the actual tick resolution for the voice
     getActualResolution: function() { return this.resolutionMultiplier * this.time.resolution; },
 
+    // Set the voice's stave
     setStave: function(stave) {
       this.stave = stave;
       this.boundingBox = null; // Reset bounding box so we can reformat
       return this;
     },
 
+    // Get the bounding box for the voice
     getBoundingBox: function() {
       if (!this.boundingBox) {
         if (!this.stave) throw Vex.RERR("NoStave", "Can't get bounding box without stave.");
@@ -96,13 +114,17 @@ Vex.Flow.Voice = (function() {
         throw new Vex.RERR("NoVoiceGroup", "No voice group for voice.");
       return this.voiceGroup;
     },
+
+    // Set the voice group
     setVoiceGroup: function(g) { this.voiceGroup = g; return this; },
 
+    // Set the voice mode to strict or soft 
     setStrict: function(strict) {
       this.mode = strict ? Vex.Flow.Voice.Mode.STRICT : Vex.Flow.Voice.Mode.SOFT;
       return this;
     },
 
+    // Determine if the voice is complete according to the voice mode
     isComplete: function() {
       if (this.mode == Vex.Flow.Voice.Mode.STRICT ||
           this.mode == Vex.Flow.Voice.Mode.FULL) {
@@ -112,6 +134,7 @@ Vex.Flow.Voice = (function() {
       }
     },
 
+    // Add a tickable to the voice
     addTickable: function(tickable) {
       if (!tickable.shouldIgnoreTicks()) {
         var ticks = tickable.getTicks();
@@ -143,6 +166,7 @@ Vex.Flow.Voice = (function() {
       return this;
     },
 
+    // Add an array of tickables to the voice
     addTickables: function(tickables) {
       for (var i = 0; i < tickables.length; ++i) {
         this.addTickable(tickables[i]);
@@ -151,22 +175,45 @@ Vex.Flow.Voice = (function() {
       return this;
     },
 
+    // Preformats the voice by applying the voice's stave to each note
+    preFormat: function(){
+      if (this.preFormatted) return;
+
+      this.tickables.forEach(function(tickable) {
+        if (!tickable.getStave()) {
+          tickable.setStave(this.stave);
+        }
+      }, this);
+
+      this.preFormatted = true;
+      return this;
+    },
+
+    // Render the voice onto the canvas `context` and an optional `stave`.
+    // If `stave` is omitted, it is expected that the notes have staves
+    // already set.
     draw: function(context, stave) {
       var boundingBox = null;
-      if (this.tickables[0]) {
-        this.tickables[0].setStave(stave);
-        boundingBox = this.tickables[0].getBoundingBox();
-      }
-
       for (var i = 0; i < this.tickables.length; ++i) {
-        this.tickables[i].setStave(stave);
+        var tickable = this.tickables[i];
+
+        // Set the stave if provided
+        if (stave) tickable.setStave(stave);
+
+        if (!tickable.getStave()) {
+          throw new Vex.RuntimeError("MissingStave",
+            "The voice cannot draw tickables without staves.");
+        }
+
+        if (i === 0) boundingBox = tickable.getBoundingBox();
+
         if (i > 0 && boundingBox) {
-          var tickable_bb = this.tickables[i].getBoundingBox();
+          var tickable_bb = tickable.getBoundingBox();
           if (tickable_bb) boundingBox.mergeWith(tickable_bb);
         }
-        this.tickables[i].setContext(context);
-        this.tickables[i].setStave(stave);
-        this.tickables[i].draw();
+
+       tickable.setContext(context);
+       tickable.draw();
       }
 
       this.boundingBox = boundingBox;

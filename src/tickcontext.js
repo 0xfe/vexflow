@@ -125,7 +125,9 @@ Vex.Flow.TickContext = (function() {
       }
 
       return this;
-    }
+    },
+
+    postFormat: function() { return this; }
   };
 
   return TickContext;
