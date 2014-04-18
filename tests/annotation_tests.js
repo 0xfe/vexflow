@@ -23,8 +23,6 @@ Vex.Flow.Test.Annotation.Start = function() {
       Vex.Flow.Test.Annotation.justificationStemUp);
   Vex.Flow.Test.runTest("Test Justification Annotation Stem Down",
       Vex.Flow.Test.Annotation.justificationStemDown);
-  Vex.Flow.Test.runTest("Complex Beams",
-      Vex.Flow.Test.Annotation.withComplexBeams);
   Vex.Flow.Test.runTest("TabNote Annotations",
       Vex.Flow.Test.Annotation.tabNotes);
 }
@@ -227,51 +225,6 @@ Vex.Flow.Test.Annotation.justificationStemDown = function(options, contextBuilde
   }
 
   ok(true, "Test Justification Annotation");
-}
-
-Vex.Flow.Test.Annotation.withComplexBeams = function(options, contextBuilder) {
-  var ctx = contextBuilder(options.canvas_sel, 500, 200);
-  ctx.scale(1.0, 1.0); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-
-  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-  function newAnnotation(text, hJustifcation, vJustifcation) {
-    return new Vex.Flow.Annotation(text).
-          setFont("Arial", Vex.Flow.Test.Font.size).
-          setJustification(hJustifcation).
-          setVerticalJustification(vJustifcation); 
-  }
-
-  var stave = new Vex.Flow.Stave(10, 40, 400).
-    addClef("treble").setContext(ctx).draw();
-
-  var notes = [
-    { keys: ["e/4"], duration: "128" },
-    { keys: ["d/4"], duration: "16" },
-    { keys: ["e/4"], duration: "8" },
-    { keys: ["g/4"], duration: "32" },
-    { keys: ["c/4"], duration: "32" },
-    { keys: ["c/4"], duration: "32" },
-    { keys: ["c/4"], duration: "32" }
-  ];
-
-  notes = notes.map(function(note, index) {
-      return newNote(note).setStave(stave).addModifier(0, new Vex.Flow.Articulation("a>").setPosition(3));
-  });
-
-  var beam = new Vex.Flow.Beam(notes);
-
-  var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
-    setMode(Vex.Flow.Voice.Mode.SOFT);
-  voice.addTickables(notes);
-
-
-  new Vex.Flow.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-  //beam.calculateSlope();
-  voice.draw(ctx, stave);
-  beam.setContext(ctx).draw();
-
-
-  ok(true, "Complex beam annotations");
 }
 
 Vex.Flow.Test.Annotation.tabNotes = function(options, contextBuilder) {

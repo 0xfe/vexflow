@@ -100,6 +100,8 @@ Vex.Flow.Tickable = (function() {
       }
     },
 
+    postFormat: function() { return this; },
+
     getIntrinsicTicks: function() {
       return this.intrinsicTicks;
     },

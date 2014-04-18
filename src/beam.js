@@ -1,17 +1,10 @@
-// Vex Flow Notation
-// Mohit Muthanna <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Copyright Mohit Muthanna 2010
-//
+// ## Description
+// 
+// This file implements `Beams` that span over a set of `StemmableNotes`.
+// 
 // Requires: vex.js, vexmusic.js, note.js
-
-/**
- * Create a new beam from the specified notes. The notes must
- * be part of the same line, and have the same duration (in ticks).
- *
- * @constructor
- * @param {Array.<Vex.Flow.StaveNote>} A set of notes.
- */
 Vex.Flow.Beam = (function() {
   function Beam(notes, auto_stem) {
     if (arguments.length > 0) this.init(notes, auto_stem);
@@ -19,13 +12,8 @@ Vex.Flow.Beam = (function() {
 
   var Stem = Vex.Flow.Stem;
 
+  // ## Prototype Methods
   Beam.prototype = {
-    /**
-     * Set the notes to attach this beam to.
-     *
-     * @param {Array.<Vex.Flow.StaveNote>} The notes.
-     * @param auto_stem If true, will automatically set stem direction.
-     */
     init: function(notes, auto_stem) {
       if (!notes || notes == []) {
         throw new Vex.RuntimeError("BadArguments", "No notes provided for beam.");
@@ -92,6 +80,7 @@ Vex.Flow.Beam = (function() {
         note.setBeam(this);
       }
 
+      this.postFormatted = false;
       this.notes = notes;
       this.beam_count = this.getBeamCount();
       this.break_on_indices = [];
@@ -107,13 +96,13 @@ Vex.Flow.Beam = (function() {
       };
     },
 
+    // The the rendering `context`
     setContext: function(context) { this.context = context; return this; },
 
-    /**
-     * @return {Array.<Vex.Flow.Note>} Returns notes in this beam.
-     */
+    // Get the notes in this beam
     getNotes: function() { return this.notes; },
 
+    // Get the max number of beams in the set of notes
     getBeamCount: function(){
       var beamCounts =  this.notes.map(function(note) {
         return note.getGlyph().beam_count;
@@ -126,15 +115,18 @@ Vex.Flow.Beam = (function() {
       return maxBeamCount;
     },
 
+    // Set which note `indices` to break the secondary beam at
     breakSecondaryAt: function(indices) {
       this.break_on_indices = indices;
       return this;
     },
 
+    // Return the y coordinate for linear function
     getSlopeY: function(x, first_x_px, first_y_px, slope) {
       return first_y_px + ((x - first_x_px) * slope);
     },
 
+    // Calculate the best possible slope for the provided notes
     calculateSlope: function() {
       var first_note = this.notes[0];
       var last_note = this.notes[this.notes.length - 1];
@@ -197,6 +189,8 @@ Vex.Flow.Beam = (function() {
       this.y_shift = y_shift;
     },
 
+    // Create new stems for the notes in the beam, so that each stem
+    // extends into the beams.
     applyStemExtensions: function(){
       var first_note = this.notes[0];
       var last_note = this.notes[this.notes.length - 1];
@@ -265,6 +259,7 @@ Vex.Flow.Beam = (function() {
       }
     },
 
+    // Get the x coordinates for the beam lines of specific `duration`
     getBeamLines: function(duration) {
       var beam_lines = [];
       var beam_started = false;
@@ -348,6 +343,7 @@ Vex.Flow.Beam = (function() {
       return beam_lines;
     },
 
+    // Render the stems for each notes
     drawStems: function() {
       this.notes.forEach(function(note) {
         if (note.getStem()) {
@@ -356,7 +352,11 @@ Vex.Flow.Beam = (function() {
       }, this);
     },
 
+    // Render the beam lines
     drawBeamLines: function() {
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+
       var valid_beam_durations = ["4", "8", "16", "32", "64"];
 
       var first_note = this.notes[0];
@@ -397,14 +397,32 @@ Vex.Flow.Beam = (function() {
       }
     },
 
+    // Pre-format the beam
+    preFormat: function() { return this; },
+
+    // Post-format the beam. This can only be called after
+    // the notes in the beam have both `x` and `y` values. ie: they've 
+    // been formatted and have staves
+    postFormat: function() {
+      if (this.postFormatted) return;
+
+      this.calculateSlope();
+      this.applyStemExtensions();
+
+      this.postFormatted = true;
+    },
+
+    // Render the beam to the canvas context
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
 
       if (this.unbeamable) return;
 
-      this.calculateSlope();
-      this.applyStemExtensions();
+      if (!this.postFormatted) {
+        this.postFormat();
+      }
+
       this.drawStems();
       this.drawBeamLines();
 
@@ -412,6 +430,11 @@ Vex.Flow.Beam = (function() {
     }
   };
 
+  // ## Static Methods
+  // 
+  // Gets the default beam groups for a provided time signature.
+  // Attempts to guess if the time signature is not found in table.
+  // Currently this is fairly naive.
   Beam.getDefaultBeamGroups = function(time_sig){
     if (!time_sig || time_sig == "c") time_sig = "4/4";
 
@@ -462,8 +485,13 @@ Vex.Flow.Beam = (function() {
     }
   };
 
-  // Static method: Automatically beam notes in "voice". If "stem_direction"
-  // is set, then force all stems to that direction (used for multi-voice music).
+  // A helper function to automatically build basic beams for a voice. For more
+  // complex auto-beaming use `Beam.generateBeams()`.
+  // 
+  // Parameters:
+  // * `voice` - The voice to generate the beams for
+  // * `stem_direction` - A stem direction to apply to the entire voice
+  // * `groups` - An array of `Fraction` representing beat groupings for the beam
   Beam.applyAndGetBeams = function(voice, stem_direction, groups) {
     return Beam.generateBeams(voice.getTickables(), {
       groups: groups,
@@ -471,16 +499,31 @@ Vex.Flow.Beam = (function() {
     });
   };
 
+  // A helper function to autimatically build beams for a voice with 
+  // configuration options.
+  // 
+  // Example configuration object:
+  //
+  // ```
+  // config = {
+  //   groups: [new Vex.Flow.Fraction(2, 8)],
+  //   stem_direction: -1,
+  //   beam_rests: true,
+  //   beam_middle_only: true,
+  //   show_stemlets: false
+  // };
+  // ```
+  // 
+  // Parameters:
+  // * `notes` - An array of notes to create the beams for
+  // * `config` - The configuration object
+  //    * `groups` - Array of `Fractions` that represent the beat structure to beam the notes
+  //    * `stem_direction` - Set to apply the same direction to all notes
+  //    * `beam_rests` - Set to `true` to include rests in the beams
+  //    * `beam_middle_only` - Set to `true` to only beam rests in the middle of the beat
+  //    * `show_stemlets` - Set to `true` to draw stemlets for rests 
+  // 
   Beam.generateBeams = function(notes, config) {
-    // Example configuration object:
-    //
-    // config = {
-    //   groups: [new Vex.Flow.Fraction(2, 8)],   // Beam groups
-    //   stem_direction: -1,                     // leave undefined for auto
-    //   beam_rests: true,
-    //   beam_middle_only: true,
-    //   show_stemlets: false
-    // };
 
     if (!config) config = {};
 

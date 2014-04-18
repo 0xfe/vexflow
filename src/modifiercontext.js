@@ -15,6 +15,7 @@ Vex.Flow.ModifierContext = (function() {
 
     // Formatting data.
     this.preFormatted = false;
+    this.postFormatted = false;
     this.width = 0;
     this.spacing = 0;
     this.state = {
@@ -809,6 +810,18 @@ Vex.Flow.ModifierContext = (function() {
       return this;
     },
 
+    postFormatNotes: function() {
+      var notes = this.modifiers['stavenotes'];
+
+      if (!notes) return;
+
+      notes.forEach(function(note) {
+        note.postFormat();
+      });
+
+      return this;
+    },
+
     preFormat: function() {
       if (this.preFormatted) return;
 
@@ -828,6 +841,13 @@ Vex.Flow.ModifierContext = (function() {
       // Update width of this modifier context
       this.width = this.state.left_shift + this.state.right_shift;
       this.preFormatted = true;
+    },
+
+    postFormat: function() {
+      if (this.postFormatted) return;
+
+      this.postFormatNotes();
+      return this;
     }
   };
 
