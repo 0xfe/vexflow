@@ -30,8 +30,15 @@ Vex.Flow.TextNote = (function() {
       y_shift: 0
       // width: 10 // optional
     },
-    "mordent": {
+    "mordent_upper": {
       code: "v1e",
+      point: 40,
+      x_shift: 0,
+      y_shift: 0
+      // width: 10 // optional
+    },
+    "mordent_lower": {
+      code: "v45",
       point: 40,
       x_shift: 0,
       y_shift: 0
@@ -65,13 +72,65 @@ Vex.Flow.TextNote = (function() {
       y_shift: 0
       // width: 10 // optional
     },
+    "z": {
+      code: "v80",
+      point: 40,
+      x_shift: 0,
+      y_shift: 0
+      // width: 10 // optional
+    },
     "coda": {
       code: "v4d",
       point: 40,
       x_shift: 0,
       y_shift: -8
       // width: 10 // optional
-    }
+    },
+    "pedal_open": {
+      code: "v36",
+      point:40,
+      x_shift:0,
+      y_shift:0
+    },
+    "pedal_close": {
+      code: "v5d",
+      point:40,
+      x_shift:0,
+      y_shift:3
+    },
+    "caesura_straight": {
+      code: "v34",
+      point:40,
+      x_shift:0,
+      y_shift:2
+    },
+    "caesura_curved": {
+      code: "v4b",
+      point:40,
+      x_shift:0,
+      y_shift:2
+    },
+    "breath": {
+      code: "v6c",
+      point:40,
+      x_shift:0,
+      y_shift:0
+    },
+    "tick": {
+      code: "v6f",
+      point:50,
+      x_shift:0,
+      y_shift:0
+    },
+
+    // DEPRECATED - please use "mordent_upper" or "mordent_lower"
+    "mordent": {
+      code: "v1e",
+      point: 40,
+      x_shift: 0,
+      y_shift: 0
+      // width: 10 // optional
+    },
   };
 
   Vex.Inherit(TextNote, Vex.Flow.Note, {
