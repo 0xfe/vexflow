@@ -24,6 +24,8 @@ Vex.Flow.Test.Beam.Start = function() {
   Vex.Flow.Test.runTest("TabNote Beams Down", Vex.Flow.Test.Beam.tabBeamsDown);
   Vex.Flow.Test.runTest("TabNote Auto Create Beams", Vex.Flow.Test.Beam.autoTabBeams);
   Vex.Flow.Test.runTest("TabNote Beams Auto Stem", Vex.Flow.Test.Beam.tabBeamsAutoStem);
+  Vex.Flow.Test.runTest("Complex Beams with Annotations", Vex.Flow.Test.Beam.complexWithAnnotation);
+  Vex.Flow.Test.runTest("Complex Beams with Articulations", Vex.Flow.Test.Beam.complexWithArticulation);
 }
 
 Vex.Flow.Test.Beam.beamNotes = function(notes, stave, ctx) {
@@ -834,3 +836,113 @@ Vex.Flow.Test.Beam.tabBeamsAutoStem = function(options, contextBuilder) {
   ok (true, 'All objects have been drawn');
 
 };
+
+Vex.Flow.Test.Beam.complexWithAnnotation = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 500, 200);
+  ctx.scale(1.0, 1.0); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+
+  var stave = new Vex.Flow.Stave(10, 40, 400).
+    addClef("treble").setContext(ctx).draw();
+
+  var notes = [
+    { keys: ["e/4"], duration: "128" , stem_direction: 1},
+    { keys: ["d/4"], duration: "16"  , stem_direction: 1},
+    { keys: ["e/4"], duration: "8"   , stem_direction: 1},
+    { keys: ["g/4", "c/4"], duration: "32"  , stem_direction: 1},
+    { keys: ["c/4"], duration: "32"  , stem_direction: 1 },
+    { keys: ["c/4"], duration: "32"  , stem_direction: 1},
+    { keys: ["c/4"], duration: "32"  , stem_direction: 1}
+  ];
+
+  var notes2 = [
+    { keys: ["e/5"], duration: "128" , stem_direction: -1},
+    { keys: ["d/5"], duration: "16"  , stem_direction: -1},
+    { keys: ["e/5"], duration: "8"   , stem_direction: -1},
+    { keys: ["g/5", "c/5"], duration: "32"  , stem_direction: -1},
+    { keys: ["c/5"], duration: "32"  , stem_direction: -1 },
+    { keys: ["c/5"], duration: "32"  , stem_direction: -1},
+    { keys: ["c/5"], duration: "32"  , stem_direction: -1}
+  ];
+
+  notes = notes.map(function(note, index) {
+      return newNote(note).addModifier(0, new Vex.Flow.Annotation("1").setVerticalJustification(1));
+  });
+
+  notes2 = notes2.map(function(note, index) {
+      return newNote(note).addModifier(0, new Vex.Flow.Annotation("1").setVerticalJustification(3));
+  });
+
+  var beam = new Vex.Flow.Beam(notes);
+  var beam2 = new Vex.Flow.Beam(notes2);
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+  voice.addTickables(notes2);
+
+
+  new Vex.Flow.Formatter().joinVoices([voice]).formatToStave([voice], stave, {stave: stave});
+  voice.draw(ctx);
+  beam.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+
+
+  ok(true, "Complex beam annotations");
+}
+
+Vex.Flow.Test.Beam.complexWithArticulation = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 500, 200);
+  ctx.scale(1.0, 1.0); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+
+  var stave = new Vex.Flow.Stave(10, 40, 400).
+    addClef("treble").setContext(ctx).draw();
+
+  var notes = [
+    { keys: ["e/4"], duration: "128" , stem_direction: 1},
+    { keys: ["d/4"], duration: "16"  , stem_direction: 1},
+    { keys: ["e/4"], duration: "8"   , stem_direction: 1},
+    { keys: ["g/4", "c/4"], duration: "32"  , stem_direction: 1},
+    { keys: ["c/4"], duration: "32"  , stem_direction: 1 },
+    { keys: ["c/4"], duration: "32"  , stem_direction: 1},
+    { keys: ["c/4"], duration: "32"  , stem_direction: 1}
+  ];
+
+  var notes2 = [
+    { keys: ["e/5"], duration: "128" , stem_direction: -1},
+    { keys: ["d/5"], duration: "16"  , stem_direction: -1},
+    { keys: ["e/5"], duration: "8"   , stem_direction: -1},
+    { keys: ["g/5", "c/5"], duration: "32"  , stem_direction: -1},
+    { keys: ["c/5"], duration: "32"  , stem_direction: -1 },
+    { keys: ["c/5"], duration: "32"  , stem_direction: -1},
+    { keys: ["c/5"], duration: "32"  , stem_direction: -1}
+  ];
+
+  notes = notes.map(function(note, index) {
+      return newNote(note).addModifier(0, new Vex.Flow.Articulation("am").setPosition(3));
+  });
+
+  notes2 = notes2.map(function(note, index) {
+      return newNote(note).addModifier(0, new Vex.Flow.Articulation("a>").setPosition(4));
+  });
+
+  var beam = new Vex.Flow.Beam(notes);
+  var beam2 = new Vex.Flow.Beam(notes2);
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
+    setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+  voice.addTickables(notes2);
+
+
+  new Vex.Flow.Formatter().joinVoices([voice]).formatToStave([voice], stave, {stave: stave});
+  voice.draw(ctx);
+  beam.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+
+
+  ok(true, "Complex beam articulations");
+}

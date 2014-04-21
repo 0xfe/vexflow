@@ -46,7 +46,7 @@ Vex.Flow.Test.NoteHead.basic = function(options, contextBuilder){
   voice.addTickables([note_head1, note_head2, note_head3]);  
   formatter.joinVoices([voice]).formatToStave([voice], c.stave);
 
-  voice.draw(c.ontext, c.stave);
+  voice.draw(c.context, c.stave);
 
   ok("Basic NoteHead test");
 };

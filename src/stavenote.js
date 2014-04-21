@@ -63,6 +63,8 @@ Vex.Flow.StaveNote = (function() {
 
       this.calculateKeyProps();
 
+      this.buildStem();
+
       // Set the stem direction
       if (note_struct.auto_stem) {
         this.autoStem();
@@ -74,6 +76,26 @@ Vex.Flow.StaveNote = (function() {
 
       // Calculate left/right padding
       this.calcExtraPx();
+    },
+
+    // Builds a `Stem` for the note
+    buildStem: function() {
+      var glyph = this.getGlyph();
+
+      var y_extend = 0;
+      if (glyph.code_head == "v95" || glyph.code_head == "v3e") {
+         y_extend = -4;
+      }
+
+      var stem = new Stem({
+        y_extend: y_extend
+      });
+
+      if (this.isRest()) {
+        stem.hide = true;
+      }
+
+      this.setStem(stem);
     },
 
     // Builds a `NoteHead` for each key in the note
@@ -293,14 +315,18 @@ Vex.Flow.StaveNote = (function() {
     setStave: function(stave) {
       var superclass = Vex.Flow.StaveNote.superclass;
       superclass.setStave.call(this, stave);
-      var ys = [];
 
-      this.note_heads.forEach(function(note_head) {
+      var ys = this.note_heads.map(function(note_head) {
         note_head.setStave(stave);
-        ys.push(note_head.getY());
+        return note_head.getY();
       });
 
-      return this.setYs(ys);
+      this.setYs(ys);
+
+      var bounds = this.getNoteHeadBounds();
+      this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
+
+      return this;
     },
 
     // Get the pitches in the note
@@ -621,6 +647,18 @@ Vex.Flow.StaveNote = (function() {
       }, this);
     },
 
+    // Render the stem onto the canvas
+    drawStem: function(stem_struct){
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+
+      if (stem_struct) {
+        this.setStem(new Stem(stem_struct));
+      }
+      
+      this.stem.setContext(this.context).draw();
+    },
+
     // Draws all the `StaveNote` parts. This is the main drawing method.
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
@@ -630,45 +668,24 @@ Vex.Flow.StaveNote = (function() {
       if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't draw note without Y values.");
 
-      var glyph = this.glyph;
-
       var x_begin = this.getNoteHeadBeginX();
       var x_end = this.getNoteHeadEndX();
 
-      var render_stem = this.beam === null;
+      var render_stem = this.hasStem() && !this.beam;
 
       // Format note head x positions
       this.note_heads.forEach(function(note_head) {
         note_head.setX(x_begin);
       }, this);
 
+      // Format stem x positions
+      this.stem.setNoteHeadXBounds(x_begin, x_end);
+
       L("Rendering ", this.isChord() ? "chord :" : "note :", this.keys);
 
+      // Draw each part of the note
       this.drawLedgerLines();
-
-      // Draw Stem
-      if (this.hasStem() && render_stem) {
-        // Shorten stem length for 1/2 & 1/4 dead note heads (X)
-        var y_extend = 0;
-        if (glyph.code_head == "v95" ||
-            glyph.code_head == "v3e") {
-           y_extend = -4;
-        }
-
-        // Top and bottom Y values for stem.
-        var bounds = this.getNoteHeadBounds();
-
-        this.drawStem({
-          x_begin: x_begin,
-          x_end: x_end,
-          y_top: bounds.y_top,
-          y_bottom: bounds.y_bottom,
-          y_extend: y_extend,
-          stem_extension: this.getStemExtension(),
-          stem_direction: this.getStemDirection()
-        });
-      }
-
+      if (render_stem) this.drawStem();
       this.drawNoteHeads();
       this.drawFlag();
       this.drawModifiers();

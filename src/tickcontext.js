@@ -27,6 +27,7 @@ Vex.Flow.TickContext = (function() {
       // Ignore this tick context for formatting and justification
       this.ignore_ticks = true;
       this.preFormatted = false;
+      this.postFormatted = false;
       this.context = null; // Rendering context
     },
 
@@ -124,6 +125,12 @@ Vex.Flow.TickContext = (function() {
                      this.extraRightPx;
       }
 
+      return this;
+    },
+
+    postFormat: function() {
+      if (this.postFormatted) return this;
+      this.postFormatted = true;
       return this;
     }
   };

@@ -39,14 +39,6 @@ Vex.Flow.GraceNote = (function() {
 
     getCategory: function() { return 'gracenotes'; },
 
-    drawStem: function(stem_struct){
-      if (!this.context) throw new Vex.RERR("NoCanvasContext",
-          "Can't draw without a canvas context.");
-
-      this.stem = new Stem(stem_struct);
-      this.stem.setContext(this.context).draw();
-    },
-
     draw: function(){
       GraceNote.superclass.draw.call(this);
       var ctx = this.context;

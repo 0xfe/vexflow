@@ -396,11 +396,20 @@ Vex.Flow.Formatter = (function() {
     // to `justifyWidth` pixels. `rendering_context` is required to justify elements
     // that can't retreive widths without a canvas. This method sets the `x` positions
     // of all the tickables/notes in the formatter.
-    preFormat: function(justifyWidth, rendering_context) {
+    preFormat: function(justifyWidth, rendering_context, voices, stave) {
       // Initialize context maps.
       var contexts = this.tContexts;
       var contextList = contexts.list;
       var contextMap = contexts.map;
+
+      // If voices and a stave were provided, set the Stave for each voice
+      // and preFormat to apply Y values to the notes;
+      if (voices && stave) {
+        voices.forEach(function(voice) {
+          voice.setStave(stave);
+          voice.preFormat();
+        });
+      }
 
       // Figure out how many pixels to allocate per tick.
       if (!justifyWidth) {
@@ -519,6 +528,23 @@ Vex.Flow.Formatter = (function() {
       }
     },
 
+    // This is the top-level call for all formatting logic completed
+    // after `x` *and* `y` values have been computed for the notes 
+    // in the voices.
+    postFormat: function() {
+      // Postformat modifier contexts
+      this.mContexts.list.forEach(function(mContext) {
+        this.mContexts.map[mContext].postFormat();
+      }, this);
+
+      // Postformat tick contexts
+      this.tContexts.list.forEach(function(tContext) {
+        this.tContexts.map[tContext].postFormat();
+      }, this);
+
+      return this;
+    },
+
     // Take all `voices` and create `ModifierContext`s out of them. This tells
     // the formatters that the voices belong on a single stave.
     joinVoices: function(voices) {
@@ -538,13 +564,18 @@ Vex.Flow.Formatter = (function() {
     format: function(voices, justifyWidth, options) {
       var opts = {
         align_rests: false,
-        context: null
+        context: null,
+        stave: null
       };
 
       Vex.Merge(opts, options);
       this.alignRests(voices, opts.align_rests);
       this.createTickContexts(voices);
-      this.preFormat(justifyWidth, opts.context);
+      this.preFormat(justifyWidth, opts.context, voices, opts.stave);
+
+      // Only postFormat if a stave was supplied for y value formatting
+      if (opts.stave) this.postFormat();
+      
       return this;
     },
 
