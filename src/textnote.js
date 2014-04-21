@@ -122,6 +122,18 @@ Vex.Flow.TextNote = (function() {
       x_shift:0,
       y_shift:0
     },
+    "turn": {
+      code: "v72",
+      point:40,
+      x_shift:0,
+      y_shift:0
+    },
+    "turn_inverted": {
+      code: "v33",
+      point:40,
+      x_shift:0,
+      y_shift:0
+    },
 
     // DEPRECATED - please use "mordent_upper" or "mordent_lower"
     "mordent": {
