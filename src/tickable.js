@@ -22,6 +22,7 @@ Vex.Flow.Tickable = (function() {
       this.modifierContext = null;
       this.modifiers = [];
       this.preFormatted = false;
+      this.postFormatted = false;
       this.tuplet = null;
 
       // This flag tells the formatter to ignore this tickable during
@@ -100,7 +101,11 @@ Vex.Flow.Tickable = (function() {
       }
     },
 
-    postFormat: function() { return this; },
+    postFormat: function() {
+      if (this.postFormatted) return;
+      this.postFormatted = true;
+      return this;
+    },
 
     getIntrinsicTicks: function() {
       return this.intrinsicTicks;

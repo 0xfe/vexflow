@@ -671,6 +671,8 @@ Vex.Flow.StaveNote = (function() {
       var x_begin = this.getNoteHeadBeginX();
       var x_end = this.getNoteHeadEndX();
 
+      var render_stem = this.hasStem() && !this.beam;
+
       // Format note head x positions
       this.note_heads.forEach(function(note_head) {
         note_head.setX(x_begin);
@@ -681,12 +683,9 @@ Vex.Flow.StaveNote = (function() {
 
       L("Rendering ", this.isChord() ? "chord :" : "note :", this.keys);
 
+      // Draw each part of the note
       this.drawLedgerLines();
-
-      if (!this.isRest() && this.hasStem() && !this.beam) {
-        this.stem.setContext(this.context).draw();
-      }
-
+      if (render_stem) this.drawStem();
       this.drawNoteHeads();
       this.drawFlag();
       this.drawModifiers();

@@ -24,10 +24,16 @@ Vex.Flow.StemmableNote = (function(){
       
     },
 
+    // Get and set the note's `Stem`
     getStem: function() {return this.stem; },
-    setStem: function(stem) { this.stem = stem; },
+    setStem: function(stem) { this.stem = stem; return this; },
 
-    buildStem: function() { var stem = new Stem(); this.setStem(stem); },
+    // Builds and sets a new stem
+    buildStem: function() {
+      var stem = new Stem();
+      this.setStem(stem);
+      return this;
+    },
 
     // Get the full length of stem
     getStemLength: function() {
@@ -197,12 +203,13 @@ Vex.Flow.StemmableNote = (function(){
       }
     },
 
+    // Post format the note
     postFormat: function() {
       if (this.beam) {
         this.beam.postFormat();
       }
-
       this.postFormatted = true;
+      return this;
     },
 
     // Render the stem onto the canvas
