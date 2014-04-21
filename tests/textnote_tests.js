@@ -15,6 +15,10 @@ Vex.Flow.Test.TextNote = (function() {
           Vex.Flow.Test.TextNote.formatTextGlyphs0);
       Vex.Flow.Test.runTest("TextNote Formatting With Glyphs 1",
           Vex.Flow.Test.TextNote.formatTextGlyphs1);
+      Vex.Flow.Test.runTest("TextNote Formatting With Glyphs",
+          Vex.Flow.Test.TextNote.formatTextGlyphs);
+      Vex.Flow.Test.runTest("Crescendo",
+          Vex.Flow.Test.TextNote.crescendo);
     },
 
     renderNotes: function(notes1, notes2, ctx, stave, justify) {
@@ -192,6 +196,35 @@ Vex.Flow.Test.TextNote = (function() {
       ];
 
       Vex.Flow.Test.TextNote.renderNotes(notes1, notes2, ctx, stave);
+
+      ok(true);
+    },
+
+    crescendo: function(options) {
+      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 180);
+      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      var stave = new Vex.Flow.Stave(10, 20, 500);
+      stave.setContext(ctx);
+      stave.draw();
+
+      var notes = [
+        new Vex.Flow.TextNote({glyph: "p", duration: "16"}).setContext(ctx),
+        new Vex.Flow.Crescendo({duration: "4d"}).setLine(0).setHeight(25),
+        new Vex.Flow.TextNote({glyph: "f", duration: "16"}).setContext(ctx),
+        new Vex.Flow.Crescendo({duration: "4"}).setLine(5),
+        new Vex.Flow.Crescendo({duration: "4"}).setLine(10).setDecrescendo(true).setHeight(5)
+      ];
+
+      var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
+      voice.addTickables(notes);
+
+      var formatter = new Vex.Flow.Formatter().formatToStave([voice], stave); 
+
+      notes.forEach(function(note) {
+        note.setStave(stave);
+        note.setContext(ctx).draw();
+      });
 
       ok(true);
     }
