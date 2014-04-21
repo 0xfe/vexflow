@@ -179,9 +179,8 @@ Vex.Flow.Test.TextNote = (function() {
       ];
 
       var notes2 = [
-        newTextNote({text: "Center",  duration: "8"}).
-          setJustification(Vex.Flow.TextNote.Justification.CENTER),
-
+        newTextNote({glyph: "turn",  duration: "16"}),
+        newTextNote({glyph: "turn_inverted",  duration: "16"}),
         newTextNote({glyph: "pedal_open", duration: "8"}).setLine(10),
         newTextNote({glyph: "pedal_close", duration: "8"}).setLine(10),
         newTextNote({glyph: "caesura_curved", duration: "8"}).setLine(3),
