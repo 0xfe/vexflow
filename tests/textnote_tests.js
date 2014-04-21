@@ -11,8 +11,10 @@ Vex.Flow.Test.TextNote = (function() {
           Vex.Flow.Test.TextNote.formatTextNotes);
       Vex.Flow.Test.runTest("TextNote Superscript and Subscript",
           Vex.Flow.Test.TextNote.superscriptAndSubscript);
-      Vex.Flow.Test.runTest("TextNote Formatting With Glyphs",
-          Vex.Flow.Test.TextNote.formatTextGlyphs);
+      Vex.Flow.Test.runTest("TextNote Formatting With Glyphs 0",
+          Vex.Flow.Test.TextNote.formatTextGlyphs0);
+      Vex.Flow.Test.runTest("TextNote Formatting With Glyphs 1",
+          Vex.Flow.Test.TextNote.formatTextGlyphs1);
     },
 
     renderNotes: function(notes1, notes2, ctx, stave, justify) {
@@ -113,7 +115,7 @@ Vex.Flow.Test.TextNote = (function() {
       ok(true);
     },
 
-    formatTextGlyphs: function(options) {
+    formatTextGlyphs0: function(options) {
       Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 180);
       var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
@@ -141,11 +143,52 @@ Vex.Flow.Test.TextNote = (function() {
         newTextNote({glyph: "f", duration: "8"}),
         newTextNote({glyph: "p", duration: "8"}),
         newTextNote({glyph: "m", duration: "8"}),
+        newTextNote({glyph: "z", duration: "8"}),
 
-        newTextNote({glyph: "mordent", duration: "8"}),
+        newTextNote({glyph: "mordent_upper", duration: "16"}),
+        newTextNote({glyph: "mordent_lower", duration: "16"}),
         newTextNote({glyph: "segno", duration: "8"}),
         newTextNote({glyph: "coda", duration: "8"}),
-        newTextNote({glyph: "tr", duration: "8", smooth: true}).
+      ];
+
+      Vex.Flow.Test.TextNote.renderNotes(notes1, notes2, ctx, stave);
+
+      ok(true);
+    },
+
+    formatTextGlyphs1: function(options) {
+      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 180);
+      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      var stave = new Vex.Flow.Stave(10, 20, 600);
+      stave.setContext(ctx);
+      stave.draw();
+
+      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+      function newTextNote(text_struct) { return new Vex.Flow.TextNote(text_struct); }
+      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+      var notes1 = [
+        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
+          addAccidental(0, newAcc("b")).
+          addAccidental(1, newAcc("#")),
+        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"})
+      ];
+
+      var notes2 = [
+        newTextNote({text: "Center",  duration: "8"}).
+          setJustification(Vex.Flow.TextNote.Justification.CENTER),
+
+        newTextNote({glyph: "pedal_open", duration: "8"}).setLine(10),
+        newTextNote({glyph: "pedal_close", duration: "8"}).setLine(10),
+        newTextNote({glyph: "caesura_curved", duration: "8"}).setLine(3),
+        newTextNote({glyph: "caesura_straight", duration: "8"}).setLine(3),
+        newTextNote({glyph: "breath", duration: "8"}).setLine(2),
+        newTextNote({glyph: "tick", duration: "8"}).setLine(3),
+      newTextNote({glyph: "tr", duration: "8", smooth: true}).
           setJustification(Vex.Flow.TextNote.Justification.CENTER),
       ];
 
