@@ -24,7 +24,8 @@ Vex.Flow.TabNote = (function() {
       Vex.Merge(this.render_options, {
         glyph_font_scale: 30, // font size for note heads and rests
         draw_stem: draw_stem,
-        draw_dots: draw_stem
+        draw_dots: draw_stem,
+        draw_stem_through_stave: false
       });
 
       this.glyph =
@@ -184,10 +185,12 @@ Vex.Flow.TabNote = (function() {
     },
 
     getStemY: function(){
+      var num_lines = this.stave.getNumLines();
+      
       // The decimal staff line amounts provide optimal spacing between the 
       // fret number and the stem
-      var stemUpLine = -0.7;
-      var stemDownLine = this.stave.options.num_lines - 0.3;
+      var stemUpLine = -0.5;
+      var stemDownLine = num_lines - 0.5;
       var stemStartLine = Stem.UP === this.stem_direction ? stemUpLine : stemDownLine;
 
       return this.stave.getYForLine(stemStartLine);
@@ -200,22 +203,83 @@ Vex.Flow.TabNote = (function() {
       return { topY: stem_top_y , baseY: stem_base_y};
     },
 
-    draw: function() {
-      if (!this.context) throw new Vex.RERR("NoCanvasContext",
-          "Can't draw without a canvas context.");
-      if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
-          "Can't draw note without Y values.");
+    drawFlag: function() {
+      var render_stem = this.beam == null && this.render_options.draw_stem;
+      var render_flag = this.beam == null && render_stem;
 
+      // Now it's the flag's turn.
+      if (this.glyph.flag && render_flag) {
+        var flag_x = this.getStemX() + 1 ;
+        var flag_y = this.getStemY() - (this.stem.getHeight());
+        var flag_code;
+
+        if (this.stem_direction == Stem.DOWN) {
+          // Down stems have flags on the left.
+          flag_code = this.glyph.code_flag_downstem;
+        } else {
+          // Up stems have flags on the left.
+          flag_code = this.glyph.code_flag_upstem;
+        }
+
+        // Draw the Flag
+        Vex.Flow.renderGlyph(this.context, flag_x, flag_y,
+            this.render_options.glyph_font_scale, flag_code);
+      }
+    },
+
+    drawModifiers: function() {
+      // Draw the modifiers
+      this.modifiers.forEach(function(modifier) {
+        // Only draw the dots if enabled
+        if (modifier.getCategory() === 'dots' && !this.render_options.draw_dots) return;
+
+        modifier.setContext(this.context);
+        modifier.draw();
+      }, this);
+    },
+
+    drawStemThrough: function() {
+      var stem_x = this.getStemX();
+      var stem_y = this.getStemY();
+      var ctx = this.context;
+
+      var stem_through = this.render_options.draw_stem_through_stave;
+      var draw_stem = this.render_options.draw_stem;
+      if (draw_stem && stem_through) {
+        var total_lines = this.stave.getNumLines();
+        var strings_used = this.positions.map(function(position) {
+          return position.str;
+        });
+
+        var unused_strings = getUnusedStringGroups(total_lines, strings_used);
+        var stem_lines = getPartialStemLines(stem_y, unused_strings,
+                              this.getStave(), this.getStemDirection());
+
+        
+        // Fine tune x position to match default stem
+        if (!this.beam || this.getStemDirection() === 1) {
+          stem_x += (Stem.WIDTH / 2);
+        }
+
+        ctx.save();
+        ctx.setLineWidth(Stem.WIDTH);
+        stem_lines.forEach(function(bounds) {
+          ctx.beginPath();
+          ctx.moveTo(stem_x, bounds[0]);
+          ctx.lineTo(stem_x, bounds[bounds.length - 1]);
+          ctx.stroke();
+          ctx.closePath();
+        });
+        ctx.restore();
+      }
+    },
+
+    drawPositions: function() {
       var ctx = this.context;
       var x = this.getAbsoluteX();
       var ys = this.ys;
       var y;
 
-      var render_stem = this.beam == null && this.render_options.draw_stem;
-      var render_flag = this.beam == null && render_stem;
-
-      var i;
       for (i = 0; i < this.positions.length; ++i) {
         y = ys[i];
 
@@ -235,6 +299,21 @@ Vex.Flow.TabNote = (function() {
           ctx.fillText(text, tab_x, y + 5);
         }
       }
+    },
+
+    draw: function() {
+      if (!this.context) throw new Vex.RERR("NoCanvasContext",
+          "Can't draw without a canvas context.");
+      if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
+      if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
+          "Can't draw note without Y values.");
+
+      var ctx = this.context;
+
+      var render_stem = this.beam == null && this.render_options.draw_stem;
+
+      this.drawPositions();
+      this.drawStemThrough();
 
       var stem_x = this.getStemX();
       var stem_y = this.getStemY();
@@ -250,35 +329,96 @@ Vex.Flow.TabNote = (function() {
         });
       }
 
-      // Now it's the flag's turn.
-      if (this.glyph.flag && render_flag) {
-        var flag_x = this.getStemX() + 1 ;
-        var flag_y = this.getStemY() - (this.stem.getHeight());
-        var flag_code;
-
-        if (this.stem_direction == Stem.DOWN) {
-          // Down stems have flags on the left.
-          flag_code = this.glyph.code_flag_downstem;
-        } else {
-          // Up stems have flags on the left.
-          flag_code = this.glyph.code_flag_upstem;
-        }
-
-        // Draw the Flag
-        Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
-            this.render_options.glyph_font_scale, flag_code);
-      }
-
-      // Draw the modifiers
-      this.modifiers.forEach(function(modifier) {
-          // Only draw the dots if enabled
-          if (modifier.getCategory() === 'dots' && !this.render_options.draw_dots) return;
-
-          modifier.setContext(this.context);
-          modifier.draw();
-      }, this);
+      this.drawFlag();
+      this.drawModifiers();
     }
   });
+  
+  // Private helper - used when for partial stems when drawing
+  // stem through staves
+  function getUnusedStringGroups(num_lines, strings_used) {
+    var stem_through = [];
+    var group = [];
+    for (var string = 1; string <= num_lines ; string++) {
+      var is_used = strings_used.indexOf(string) > -1;
+
+      if (!is_used) {
+        group.push(string);
+      } else {
+        stem_through.push(group);
+        group = [];
+      }
+    }
+    if (group.length > 0) stem_through.push(group);
+
+    return stem_through;
+  }
+
+  // Private helper that gets groups of points that outline the partial stems
+  // between fret positions
+  function getPartialStemLines (stem_y, unused_strings, stave, stem_direction) {
+    var up_stem = stem_direction !== 1;
+    var down_stem = stem_direction !== -1;
+
+    var line_spacing = stave.getSpacingBetweenLines();
+    var total_lines = stave.getNumLines();
+
+    var stem_lines = [];
+
+    unused_strings.forEach(function(strings) {
+      var containsLastString = strings.indexOf(total_lines) > -1;
+      var containsFirstString =  strings.indexOf(1) > -1;
+
+      if ((up_stem && containsFirstString) ||
+         (down_stem && containsLastString)) {
+        return;
+      }
+
+      // If there's only one string in the group, push a duplicate value.
+      // We do this because we need 2 strings to convert into upper/lower y
+      // values.
+      if (strings.length === 1) {
+        strings.push(strings[0]);
+      }
+
+      var line_ys = [];
+      // Iterate through each group string and store it's y position 
+      strings.forEach(function(string, index, strings) {
+        var isTopBound = string === 1;
+        var isBottomBound = string === total_lines;
+
+        // Get the y value for the appropriate staff line, 
+        // we adjust for a 0 index array, since string numbers are index 1
+        var y = stave.getYForLine(string - 1);
+
+        // Unless the string is the first or last, add padding to each side
+        // of the line
+        if (index === 0 && !isTopBound) {
+          y -= line_spacing/2 - 1;
+        } else if (index === strings.length - 1 && !isBottomBound){
+          y += line_spacing/2 - 1;
+        }
+
+        // Store the y value
+        line_ys.push(y);
+
+        // Store a subsequent y value connecting this group to the main 
+        // stem above/below the stave if it's the top/bottom string
+        if (stem_direction === 1 && isTopBound) {
+          line_ys.push(stem_y - 2);
+        } else if (stem_direction === -1 && isBottomBound) {
+          line_ys.push(stem_y + 2);
+        }
+      });
+
+      // Add the sorted y values to the
+      stem_lines.push(line_ys.sort(function(a, b) {
+        return a - b;
+      }));
+    });
+
+    return stem_lines;
+  }
 
   return TabNote;
 }());
