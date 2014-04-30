@@ -1,11 +1,11 @@
-// Vex Flow Notation
-// Mohit Muthanna <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Copyright Mohit Muthanna 2010
+// ## Description
 //
-// Requires vex.js.
-
-/** @constructor */
+// The file implements notes for Tablature notation. This consists of one or
+// more fret positions, and can either be drawn with or without stems.
+// 
+// See `tests/tabnote_tests.js` for usage examples
 Vex.Flow.TabNote = (function() {
   function TabNote(tab_struct, draw_stem) {
     if (arguments.length > 0) this.init(tab_struct, draw_stem);
@@ -13,18 +13,29 @@ Vex.Flow.TabNote = (function() {
 
   var Stem = Vex.Flow.Stem;
 
+  // ## Prototype Methods
   Vex.Inherit(TabNote, Vex.Flow.StemmableNote, {
+    // Initialize the TabNote with a `tab_struct` full of properties
+    // and whether to `draw_stem` when rendering the note
     init: function(tab_struct, draw_stem) {
       var superclass = Vex.Flow.TabNote.superclass;
       superclass.init.call(this, tab_struct);
 
       this.ghost = false; // Renders parenthesis around notes
       // Note properties
-      this.positions = tab_struct.positions; // [{ str: X, fret: X }]
+      // 
+      // The fret positions in the note. An array of `{ str: X, fret: X }`
+      this.positions = tab_struct.positions;
+
+      // Render Options
       Vex.Merge(this.render_options, {
-        glyph_font_scale: 30, // font size for note heads and rests
+        // font size for note heads and rests
+        glyph_font_scale: 30,
+        // Flag to draw a stem
         draw_stem: draw_stem,
+        // Flag to draw dot modifiers
         draw_dots: draw_stem,
+        // Flag to extend the main stem through the stave and fret positions
         draw_stem_through_stave: false
       });
 
@@ -35,23 +46,30 @@ Vex.Flow.TabNote = (function() {
             "Invalid note initialization data (No glyph found): " +
             JSON.stringify(tab_struct));
       }
+      
       this.buildStem();
       this.setStemDirection(Stem.UP);
-      
+
+      // Renders parenthesis around notes
+      this.ghost = false;
       this.updateWidth();
     },
 
+    // The ModifierContext category
     getCategory: function() { return "tabnotes"; },
+
+    // Set as ghost `TabNote`, surrounds the fret positions with parenthesis.
+    // Often used for indicating frets that are being bent to
     setGhost: function(ghost) {
       this.ghost = ghost;
       this.updateWidth();
       return this;
     },
 
-    hasStem: function() {
-      return this.render_options.draw_stem;
-    },
+    // Determine if the note has a stem
+    hasStem: function() { return this.render_options.draw_stem; },
 
+    // Get the default stem extension for the note
     getStemExtension: function(){
       var glyph = this.getGlyph();
 
@@ -67,12 +85,14 @@ Vex.Flow.TabNote = (function() {
       return 0;
     },
 
+    // Add a dot to the note
     addDot: function() {
       var dot = new Vex.Flow.Dot();
       this.dots++;
       return this.addModifier(dot, 0);
     },
 
+    // Calculate and store the width of the note
     updateWidth: function() {
       this.glyphs = [];
       this.width = 0;
@@ -85,6 +105,7 @@ Vex.Flow.TabNote = (function() {
       }
     },
 
+    // Set the `stave` to the note
     setStave: function(stave) {
       var superclass = Vex.Flow.TabNote.superclass;
       superclass.setStave.call(this, stave);
@@ -114,11 +135,10 @@ Vex.Flow.TabNote = (function() {
       return this.setYs(ys);
     },
 
-    // Get the Tab Positions for each note in chord
-    getPositions: function() {
-      return this.positions;
-    },
+    // Get the fret positions for the note
+    getPositions: function() { return this.positions; },
 
+    // Add self to the provided modifier context `mc`
     addToModifierContext: function(mc) {
       this.setModifierContext(mc);
       for (var i = 0; i < this.modifiers.length; ++i) {
@@ -129,6 +149,7 @@ Vex.Flow.TabNote = (function() {
       return this;
     },
 
+    // Get the `x` coordinate to the right of the note
     getTieRightX: function() {
       var tieStartX = this.getAbsoluteX();
       var note_glyph_width = this.glyph.head_width;
@@ -138,6 +159,7 @@ Vex.Flow.TabNote = (function() {
       return tieStartX;
     },
 
+    // Get the `x` coordinate to the left of the note
     getTieLeftX: function() {
       var tieEndX = this.getAbsoluteX();
       var note_glyph_width = this.glyph.head_width;
@@ -147,6 +169,8 @@ Vex.Flow.TabNote = (function() {
       return tieEndX;
     },
 
+    // Get the default `x` and `y` coordinates for a modifier at a specific
+    // `position` at a fret position `index`
     getModifierStartXY: function(position, index) {
       if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
           "Can't call GetModifierStartXY on an unformatted note");
@@ -168,9 +192,8 @@ Vex.Flow.TabNote = (function() {
       return {x: this.getAbsoluteX() + x, y: this.ys[index]};
     },
 
-    getLineForRest: function() {
-      return this.positions[0].str;
-    },
+    // Get the default line for rest
+    getLineForRest: function() { return this.positions[0].str; },
 
     // Pre-render formatting
     preFormat: function() {
@@ -180,10 +203,10 @@ Vex.Flow.TabNote = (function() {
       this.setPreFormatted(true);
     },
 
-    getStemX: function() {
-      return this.getCenterGlyphX();
-    },
+    // Get the x position for the stem
+    getStemX: function() { return this.getCenterGlyphX(); },
 
+    // Get the y position for the stem
     getStemY: function(){
       var num_lines = this.stave.getNumLines();
       
@@ -196,6 +219,7 @@ Vex.Flow.TabNote = (function() {
       return this.stave.getYForLine(stemStartLine);
     },
 
+    // Get the stem extents for the tabnote
     getStemExtents: function() {
       var stem_base_y = this.getStemY();
       var stem_top_y = stem_base_y + (Stem.HEIGHT * -this.stem_direction);
@@ -203,6 +227,7 @@ Vex.Flow.TabNote = (function() {
       return { topY: stem_top_y , baseY: stem_base_y};
     },
 
+    // Draw the fal onto the context
     drawFlag: function() {
       var render_stem = this.beam == null && this.render_options.draw_stem;
       var render_flag = this.beam == null && render_stem;
@@ -227,6 +252,7 @@ Vex.Flow.TabNote = (function() {
       }
     },
 
+    // Render the modifiers onto the context
     drawModifiers: function() {
       // Draw the modifiers
       this.modifiers.forEach(function(modifier) {
@@ -238,6 +264,7 @@ Vex.Flow.TabNote = (function() {
       }, this);
     },
 
+    // Render the stem extension through the fret positions
     drawStemThrough: function() {
       var stem_x = this.getStemX();
       var stem_y = this.getStemY();
@@ -274,6 +301,7 @@ Vex.Flow.TabNote = (function() {
       }
     },
 
+    // Render the fret positions onto the context
     drawPositions: function() {
       var ctx = this.context;
       var x = this.getAbsoluteX();
@@ -301,6 +329,7 @@ Vex.Flow.TabNote = (function() {
       }
     },
 
+    // The main rendering function for the entire note
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
@@ -334,8 +363,13 @@ Vex.Flow.TabNote = (function() {
     }
   });
   
-  // Private helper - used when for partial stems when drawing
-  // stem through staves
+  // ## Private Helpers
+  // 
+  // Gets the unused strings grouped together if consecutive.
+  // 
+  // Parameters:
+  // * num_lines - The number of lines
+  // * strings_used - An array of numbers representing which strings have fret positions
   function getUnusedStringGroups(num_lines, strings_used) {
     var stem_through = [];
     var group = [];
@@ -354,8 +388,14 @@ Vex.Flow.TabNote = (function() {
     return stem_through;
   }
 
-  // Private helper that gets groups of points that outline the partial stems
+  // Gets groups of points that outline the partial stem lines
   // between fret positions
+  // 
+  // Parameters:
+  // * stem_Y - The `y` coordinate the stem is located on
+  // * unused_strings - An array of groups of unused strings
+  // * stave - The stave to use for reference
+  // * stem_direction - The direction of the stem
   function getPartialStemLines (stem_y, unused_strings, stave, stem_direction) {
     var up_stem = stem_direction !== 1;
     var down_stem = stem_direction !== -1;
