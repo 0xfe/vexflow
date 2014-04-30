@@ -1,6 +1,7 @@
 Vex.Flow.Test.AutoBeamFormatting = {};
 
 Vex.Flow.Test.AutoBeamFormatting.Start = function() {
+  module('Auto-Beaming');
   Vex.Flow.Test.runTest("Simple Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
   Vex.Flow.Test.runTest("Odd Beam Groups Auto Beaming",
@@ -9,14 +10,20 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
                         Vex.Flow.Test.AutoBeamFormatting.moreSimple0);
   Vex.Flow.Test.runTest("More Simple Auto Beaming 1",
                         Vex.Flow.Test.AutoBeamFormatting.moreSimple1);
-  Vex.Flow.Test.runTest("Auto Beaming - Beam Across All Rests",
+  Vex.Flow.Test.runTest("Beam Across All Rests",
                         Vex.Flow.Test.AutoBeamFormatting.beamAcrossAllRests);
-  Vex.Flow.Test.runTest("Auto Beaming - Beam Across All Rests with Stemlets",
+  Vex.Flow.Test.runTest("Beam Across All Rests with Stemlets",
                         Vex.Flow.Test.AutoBeamFormatting.beamAcrossAllRestsWithStemlets);
-  Vex.Flow.Test.runTest("Auto Beaming - Break Beams on Middle Rests Only",
+  Vex.Flow.Test.runTest("Break Beams on Middle Rests Only",
                         Vex.Flow.Test.AutoBeamFormatting.beamAcrossMiddleRests);
-  Vex.Flow.Test.runTest("Auto Beaming - Break Beams on Rest",
+  Vex.Flow.Test.runTest("Break Beams on Rest",
                         Vex.Flow.Test.AutoBeamFormatting.breakBeamsOnRests);
+  Vex.Flow.Test.runTest("Maintain Stem Directions",
+                        Vex.Flow.Test.AutoBeamFormatting.maintainStemDirections);
+  Vex.Flow.Test.runTest("Maintain Stem Directions - Beam Over Rests",
+                        Vex.Flow.Test.AutoBeamFormatting.maintainStemDirectionsBeamAcrossRests);
+  Vex.Flow.Test.runTest("Beat group with unbeamable note",
+                        Vex.Flow.Test.AutoBeamFormatting.groupWithUnbeamableNote);
   Vex.Flow.Test.runTest("Odd Time - Guessing Default Beam Groups",
                         Vex.Flow.Test.AutoBeamFormatting.autoOddBeamGroups);
   Vex.Flow.Test.runTest("Custom Beam Groups",
@@ -402,6 +409,134 @@ Vex.Flow.Test.AutoBeamFormatting.breakBeamsOnRests = function(options, contextBu
 
   var beams = Vex.Flow.Beam.generateBeams(notes, {
     beam_rests: false
+  });
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  ok(true, "Auto Beam Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.maintainStemDirections = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 450, 200);
+
+  var notes = [
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "32"}),
+    newNote({ keys: ["b/4"], duration: "32", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "32", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "32"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "16"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  var beams = Vex.Flow.Beam.generateBeams(notes, {
+    beam_rests: false,
+    maintain_stem_directions: true
+  });
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  ok(true, "Auto Beam Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.maintainStemDirectionsBeamAcrossRests = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 450, 200);
+
+  var notes = [
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "16"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "32"}),
+    newNote({ keys: ["b/4"], duration: "32", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "32", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "32"}),
+    newNote({ keys: ["b/4"], duration: "16r"}),
+    newNote({ keys: ["b/4"], duration: "16"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  var beams = Vex.Flow.Beam.generateBeams(notes, {
+    beam_rests: false,
+    maintain_stem_directions: true
+  });
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  ok(true, "Auto Beam Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.groupWithUnbeamableNote = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 450, 200);
+
+  c.stave.addTimeSignature('2/2');
+
+  c.context.clear();
+  c.stave.draw();
+
+  var notes = [
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "4", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "16", stem_direction: 1}),
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  var beams = Vex.Flow.Beam.generateBeams(notes, {
+    groups: [new Vex.Flow.Fraction(2, 2)],
+    beam_rests: false,
+    maintain_stem_directions: true
   });
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
