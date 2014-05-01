@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-// 
+//
 // This file implements `StaveLine` which are simply lines that connect
 // two notes. This object is highly configurable, see the `render_options`.
-// A simple line is often used for notating glissando articulations, but you 
+// A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
 Vex.Flow.StaveLine = (function() {
@@ -27,7 +27,7 @@ Vex.Flow.StaveLine = (function() {
   // ## Prototype Methods
   StaveLine.prototype = {
     // Initialize the StaveLine with the given `notes`.
-    // 
+    //
     // `notes` is a struct that has:
     //
     //  ```
@@ -185,11 +185,11 @@ Vex.Flow.StaveLine = (function() {
         // Adjust y position better if it's not coming from the center of the note
         start_position.y += upwards_slope ? -3 : 1;
         end_position.y += upwards_slope ? 2 : 0;
-        
+
         drawArrowLine(ctx, start_position, end_position, this.render_options);
 
       }, this);
-    
+
       // Determine the x coordinate where to start the ext
       var text_width = ctx.measureText(this.text).width;
       var justification = render_options.text_justification;
@@ -229,9 +229,6 @@ Vex.Flow.StaveLine = (function() {
   // 
   // Draw an arrow head that connects between 3 coordinates
   function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
-    var radius = 3;
-    var twoPI = 2*Math.PI;
-
     // all cases do this.
     ctx.save();
     ctx.beginPath();
@@ -290,7 +287,7 @@ Vex.Flow.StaveLine = (function() {
     // h is the line length of a side of the arrow head
     var h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
 
-    var angle1;
+    var angle1, angle2;
     var top_x, top_y;
     var bottom_x, bottom_y;
 
