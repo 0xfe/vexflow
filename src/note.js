@@ -132,6 +132,9 @@ Vex.Flow.Note = (function() {
     // Get the stave line number for the note.
     getLineNumber: function() { return 0; },
 
+    // Get the stave line number for rest.
+    getLineForRest: function() { return 0; },
+
     // Get the glyph associated with this note.
     getGlyph: function() { return this.glyph; },
 
