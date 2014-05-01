@@ -88,7 +88,8 @@ base_sources = [
   "src/frethandfinger.js",
   "src/stringnumber.js",
   "src/strokes.js",
-  "src/curve.js"
+  "src/curve.js",
+  "src/staveline.js",
 ]
 
 # Don't minify these files.
