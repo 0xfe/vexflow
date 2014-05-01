@@ -135,7 +135,7 @@ Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
   expect(0);
 
   // Get the rendering context
-  var ctx = contextBuilder(options.canvas_sel, 550, 120);
+  var ctx = contextBuilder(options.canvas_sel, 750, 120);
 
   // bar 1
   var staveBar1 = new Vex.Flow.Stave(10, 0, 250);
@@ -189,6 +189,32 @@ Vex.Flow.Test.Stave.drawRepeats = function(options, contextBuilder) {
   // Render beams
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
+  
+  // bar 3 - juxtaposing third bar next to second bar
+  var staveBar3 = new Vex.Flow.Stave(staveBar2.width + staveBar2.x,
+                                     staveBar2.y, 50);
+  staveBar3.setContext(ctx).draw();
+  var notesBar3 = [new Vex.Flow.StaveNote({ keys: ["d/5"], duration: "wr" })];
+  
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+  
+  // bar 4 - juxtaposing third bar next to third bar
+  var staveBar4 = new Vex.Flow.Stave(staveBar3.width + staveBar3.x,
+                                     staveBar3.y, 250 - staveBar1.getModifierXShift());
+  staveBar4.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+  staveBar4.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
+  staveBar4.setContext(ctx).draw();
+  var notesBar4 = [
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "q" }),
+    new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" }),
+    new Vex.Flow.StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })
+  ];
+
+  // Helper function to justify and draw a 4/4 voice
+  Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+  
 }
 
 Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
