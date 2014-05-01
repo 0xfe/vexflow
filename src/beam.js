@@ -700,7 +700,7 @@ Vex.Flow.Beam = (function() {
 
     function applyStemDirection(group, direction) {
       group.forEach(function(note){
-        if (note.hasStem()) note.setStemDirection(direction);
+        note.setStemDirection(direction);
       });
     }
 
