@@ -78,6 +78,10 @@ Vex.Flow.CanvasContext = (function() {
       return this;
     },
 
+    setLineDash: function(dash) {
+      this.vexFlowCanvasContext.lineDash = dash;
+    },
+
     scale: function(x, y) {
       return this.vexFlowCanvasContext.scale(parseFloat(x), parseFloat(y));
     },

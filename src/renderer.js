@@ -59,7 +59,7 @@ Vex.Flow.Renderer = (function() {
 
     var methods = ["clear", "setFont", "setRawFont", "setFillStyle", "setBackgroundFillStyle",
                    "setStrokeStyle", "setShadowColor", "setShadowBlur", "setLineWidth",
-                   "setLineCap"];
+                   "setLineCap", "setLineDash"];
     ctx.vexFlowCanvasContext = ctx;
 
     for (var i in methods) {

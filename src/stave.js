@@ -69,7 +69,7 @@ Vex.Flow.Stave = (function() {
 
       // Add additional space if left barline is REPEAT_BEGIN and there are other
       // start modifiers than barlines
-      if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN && 
+      if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &&
           this.modifiers.length > 2)
         start_x += 20;
       return start_x;

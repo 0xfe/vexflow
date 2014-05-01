@@ -94,6 +94,7 @@ Vex.Flow.RaphaelContext = (function() {
     },
 
     // Empty because there is no equivalent in SVG
+    setLineDash: function() { return this; },
     setLineCap: function() { return this; },
 
     scale: function(x, y) {
