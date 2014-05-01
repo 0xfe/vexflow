@@ -497,7 +497,7 @@ Vex.Flow.Test.AutoBeamFormatting.maintainStemDirectionsBeamAcrossRests = functio
   voice.addTickables(notes);
 
   var beams = Vex.Flow.Beam.generateBeams(notes, {
-    beam_rests: false,
+    beam_rests: true,
     maintain_stem_directions: true
   });
 
