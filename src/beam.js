@@ -129,11 +129,7 @@ Vex.Flow.Beam = (function() {
     // Calculate the best possible slope for the provided notes
     calculateSlope: function() {
       var first_note = this.notes[0];
-      var last_note = this.notes[this.notes.length - 1];
-
       var first_y_px = first_note.getStemExtents().topY;
-      var last_y_px = last_note.getStemExtents().topY;
-
       var first_x_px = first_note.getStemX();
 
       var inc = (this.render_options.max_slope - this.render_options.min_slope) /
@@ -193,12 +189,8 @@ Vex.Flow.Beam = (function() {
     // extends into the beams.
     applyStemExtensions: function(){
       var first_note = this.notes[0];
-      var last_note = this.notes[this.notes.length - 1];
-
       var first_y_px = first_note.getStemExtents().topY;
       var first_x_px = first_note.getStemX();
-
-      var beam_width = this.render_options.beam_width * this.stem_direction;
 
       for (var i = 0; i < this.notes.length; ++i) {
         var note = this.notes[i];
@@ -370,7 +362,7 @@ Vex.Flow.Beam = (function() {
       var beam_width = this.render_options.beam_width * this.stem_direction;
 
       // Draw the beams.
-      for (i = 0; i < valid_beam_durations.length; ++i) {
+      for (var i = 0; i < valid_beam_durations.length; ++i) {
         var duration = valid_beam_durations[i];
         var beam_lines = this.getBeamLines(duration);
 

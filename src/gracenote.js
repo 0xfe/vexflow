@@ -3,8 +3,6 @@ Vex.Flow.GraceNote = (function() {
     if (arguments.length > 0) this.init(note_struct);
   };
 
-  // Stem directions
-  var Stem = Vex.Flow.Stem;
   Vex.Inherit(GraceNote, Vex.Flow.StaveNote, {
     init: function(note_struct) {
       GraceNote.superclass.init.call(this, note_struct);
