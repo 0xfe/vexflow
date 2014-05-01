@@ -57,9 +57,9 @@ Vex.Flow.StaveLine = (function() {
 
         // The width of the line in pixels
         line_width: 1,
-        // An array of line/space lengths
+        // An array of line/space lengths. Unsupported with Raphael (SVG)
         line_dash: null,
-        // Can draw rounded line end, instead of a square
+        // Can draw rounded line end, instead of a square. Unsupported with Raphael (SVG)
         rounded_end: true,
         // The color of the line and arrowheads
         color: null,
@@ -127,13 +127,27 @@ Vex.Flow.StaveLine = (function() {
       }
 
       if (render_options.rounded_end) {
-        ctx.lineCap = "round";
+        ctx.setLineCap("round");
       } else {
-        ctx.lineCap = "square";
+        ctx.setLineCap("square");
       }
+    },
+
+    // Apply the text styling to the context
+    applyFontStyle: function() {
+      if (!this.context) {
+        throw new Vex.RERR("NoContext","No context to apply the styling to");
+      }
+
+      var ctx = this.context;
 
       if (this.font) {
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
+      }
+
+      if (this.render_options.color) {
+        ctx.setStrokeStyle(this.render_options.color);
+        ctx.setFillStyle(this.render_options.color);
       }
     },
 
@@ -190,7 +204,9 @@ Vex.Flow.StaveLine = (function() {
 
       }, this);
 
-      // Determine the x coordinate where to start the ext
+      ctx.restore();
+
+      // Determine the x coordinate where to start the text
       var text_width = ctx.measureText(this.text).width;
       var justification = render_options.text_justification;
       var x = 0;
@@ -214,6 +230,8 @@ Vex.Flow.StaveLine = (function() {
       }
 
       // Draw the text
+      ctx.save();
+      this.applyFontStyle();
       ctx.fillText(this.text, x, y);
       ctx.restore();
 
@@ -230,18 +248,14 @@ Vex.Flow.StaveLine = (function() {
   // Draw an arrow head that connects between 3 coordinates
   function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
     // all cases do this.
-    ctx.save();
     ctx.beginPath();
     ctx.moveTo(x0,y0);
     ctx.lineTo(x1,y1);
     ctx.lineTo(x2,y2);
-
-    // Close off the arrow lines with an arcTo curve
-    var backdist = Math.sqrt(((x2-x0)*(x2-x0))+((y2-y0)*(y2-y0)));
-    ctx.arcTo(x1, y1, x0, y0, 0.55 * backdist);
+    ctx.lineTo(x0, y0);
+    ctx.closePath();
 
     ctx.fill();
-    ctx.restore();
   }
 
   // Helper function to draw a line with arrow heads
@@ -274,13 +288,17 @@ Vex.Flow.StaveLine = (function() {
       start_y = y1;
     }
 
+    if (config.color) {
+      ctx.setStrokeStyle(config.color);
+      ctx.setFillStyle(config.color);
+    }
+
     // Draw the shaft of the arrow
     ctx.beginPath();
-    ctx.setStrokeStyle(config.color);
-    ctx.setFillStyle(config.color);
     ctx.moveTo(start_x, start_y);
     ctx.lineTo(end_x,end_y);
     ctx.stroke();
+    ctx.closePath();
 
     // calculate the angle of the line
     var line_angle = Math.atan2(y2 - y1, x2 - x1);
