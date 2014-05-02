@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-// 
-// This file implements the `Crescendo` object which draws crescendos and 
-// decrescendo dynamics markings. A `Crescendo` is initialized with a 
+//
+// This file implements the `Crescendo` object which draws crescendos and
+// decrescendo dynamics markings. A `Crescendo` is initialized with a
 // duration and formatted as part of a `Voice` like any other `Note`
 // type in VexFlow. This object would most likely be formatted in a Voice
 // with `TextNotes` - which are used to represent other dynamics markings.
@@ -20,7 +20,6 @@ Vex.Flow.Crescendo = (function() {
     var begin_x = params.begin_x;
     var end_x = params.end_x;
     var y = params.y;
-    var height = params.height;
     var half_height =  params.height / 2;
 
     ctx.beginPath();
@@ -63,7 +62,7 @@ Vex.Flow.Crescendo = (function() {
       });
     },
 
-    // Set the line to center the element on 
+    // Set the line to center the element on
     setLine: function(line) { this.line = line; return this; },
 
     // Set the full height at the open end

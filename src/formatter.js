@@ -392,8 +392,8 @@ Vex.Flow.Formatter = (function() {
           Vex.Flow.TickContext,
           function(tickable, context) { context.addTickable(tickable); });
 
-      contexts.array.forEach(function(context, index, contexts) {
-        context.tContexts = contexts;
+      contexts.array.forEach(function(context) {
+        context.tContexts = contexts.array;
       });
 
       this.totalTicks = voices[0].getTicksUsed().clone();
@@ -584,7 +584,7 @@ Vex.Flow.Formatter = (function() {
 
       // Only postFormat if a stave was supplied for y value formatting
       if (opts.stave) this.postFormat();
-      
+
       return this;
     },
 
