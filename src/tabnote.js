@@ -4,7 +4,7 @@
 //
 // The file implements notes for Tablature notation. This consists of one or
 // more fret positions, and can either be drawn with or without stems.
-// 
+//
 // See `tests/tabnote_tests.js` for usage examples
 Vex.Flow.TabNote = (function() {
   function TabNote(tab_struct, draw_stem) {
@@ -23,7 +23,7 @@ Vex.Flow.TabNote = (function() {
 
       this.ghost = false; // Renders parenthesis around notes
       // Note properties
-      // 
+      //
       // The fret positions in the note. An array of `{ str: X, fret: X }`
       this.positions = tab_struct.positions;
 
@@ -46,7 +46,7 @@ Vex.Flow.TabNote = (function() {
             "Invalid note initialization data (No glyph found): " +
             JSON.stringify(tab_struct));
       }
-      
+
       this.buildStem();
       this.setStemDirection(Stem.UP);
 
@@ -209,8 +209,8 @@ Vex.Flow.TabNote = (function() {
     // Get the y position for the stem
     getStemY: function(){
       var num_lines = this.stave.getNumLines();
-      
-      // The decimal staff line amounts provide optimal spacing between the 
+
+      // The decimal staff line amounts provide optimal spacing between the
       // fret number and the stem
       var stemUpLine = -0.5;
       var stemDownLine = num_lines - 0.5;
@@ -282,7 +282,6 @@ Vex.Flow.TabNote = (function() {
         var stem_lines = getPartialStemLines(stem_y, unused_strings,
                               this.getStave(), this.getStemDirection());
 
-        
         // Fine tune x position to match default stem
         if (!this.beam || this.getStemDirection() === 1) {
           stem_x += (Stem.WIDTH / 2);
@@ -308,7 +307,7 @@ Vex.Flow.TabNote = (function() {
       var ys = this.ys;
       var y;
 
-      for (i = 0; i < this.positions.length; ++i) {
+      for (var i = 0; i < this.positions.length; ++i) {
         y = ys[i];
 
         var glyph = this.glyphs[i];
@@ -337,8 +336,6 @@ Vex.Flow.TabNote = (function() {
       if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't draw note without Y values.");
 
-      var ctx = this.context;
-
       var render_stem = this.beam == null && this.render_options.draw_stem;
 
       this.drawPositions();
@@ -362,11 +359,11 @@ Vex.Flow.TabNote = (function() {
       this.drawModifiers();
     }
   });
-  
+
   // ## Private Helpers
-  // 
+  //
   // Gets the unused strings grouped together if consecutive.
-  // 
+  //
   // Parameters:
   // * num_lines - The number of lines
   // * strings_used - An array of numbers representing which strings have fret positions
@@ -422,12 +419,12 @@ Vex.Flow.TabNote = (function() {
       }
 
       var line_ys = [];
-      // Iterate through each group string and store it's y position 
+      // Iterate through each group string and store it's y position
       strings.forEach(function(string, index, strings) {
         var isTopBound = string === 1;
         var isBottomBound = string === total_lines;
 
-        // Get the y value for the appropriate staff line, 
+        // Get the y value for the appropriate staff line,
         // we adjust for a 0 index array, since string numbers are index 1
         var y = stave.getYForLine(string - 1);
 
@@ -442,7 +439,7 @@ Vex.Flow.TabNote = (function() {
         // Store the y value
         line_ys.push(y);
 
-        // Store a subsequent y value connecting this group to the main 
+        // Store a subsequent y value connecting this group to the main
         // stem above/below the stave if it's the top/bottom string
         if (stem_direction === 1 && isTopBound) {
           line_ys.push(stem_y - 2);
