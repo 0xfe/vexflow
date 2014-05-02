@@ -15,8 +15,6 @@ Vex.Flow.Test.TextNote = (function() {
           Vex.Flow.Test.TextNote.formatTextGlyphs0);
       Vex.Flow.Test.runTest("TextNote Formatting With Glyphs 1",
           Vex.Flow.Test.TextNote.formatTextGlyphs1);
-      Vex.Flow.Test.runTest("TextNote Formatting With Glyphs",
-          Vex.Flow.Test.TextNote.formatTextGlyphs);
       Vex.Flow.Test.runTest("Crescendo",
           Vex.Flow.Test.TextNote.crescendo);
     },
