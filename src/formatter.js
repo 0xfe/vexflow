@@ -81,6 +81,7 @@ Vex.Flow.Formatter = (function() {
     var totalTicks = voices[0].getTotalTicks();
     var tickToContextMap = {};
     var tickList = [];
+    var contexts = [];
 
     var resolutionMultiplier = 1;
 
@@ -126,8 +127,11 @@ Vex.Flow.Formatter = (function() {
         var integerTicks = ticksUsed.numerator;
 
         // If we have no tick context for this tick, create one.
-        if (!tickToContextMap[integerTicks])
-          tickToContextMap[integerTicks] = new context_type();
+        if (!tickToContextMap[integerTicks]) {
+          var newContext = new context_type();
+          contexts.push(newContext);
+          tickToContextMap[integerTicks] = newContext;
+        }
 
         // Add this tickable to the TickContext.
         add_fn(tickable, tickToContextMap[integerTicks]);
@@ -140,6 +144,7 @@ Vex.Flow.Formatter = (function() {
 
     return {
       map: tickToContextMap,
+      array: contexts,
       list: Vex.SortAndUnique(tickList, function(a, b) { return a - b; },
           function(a, b) { return a === b; } ),
       resolutionMultiplier: resolutionMultiplier
@@ -386,6 +391,10 @@ Vex.Flow.Formatter = (function() {
       var contexts = createContexts(voices,
           Vex.Flow.TickContext,
           function(tickable, context) { context.addTickable(tickable); });
+
+      contexts.array.forEach(function(context, index, contexts) {
+        context.tContexts = contexts;
+      });
 
       this.totalTicks = voices[0].getTicksUsed().clone();
       this.tContexts = contexts;
