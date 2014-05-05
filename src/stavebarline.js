@@ -22,11 +22,10 @@ Vex.Flow.Barline = (function() {
     NONE: 7
   };
 
-  var THICKNESS = Vex.Flow.STAVE_LINE_THICKNESS;
-
   Vex.Inherit(Barline, Vex.Flow.StaveModifier, {
     init: function(type, x) {
       Barline.superclass.init.call(this);
+      this.thickness = Vex.Flow.STAVE_LINE_THICKNESS;
       this.barline = type;
       this.x = x;    // Left most x for the stave
     },
@@ -73,7 +72,7 @@ Vex.Flow.Barline = (function() {
       if (!stave.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw stave without canvas context.");
       var topY = stave.getYForLine(0);
-      var botY = stave.getYForLine(stave.getNumLines() - 1) + THICKNESS;
+      var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
       if (double_bar)
         stave.context.fillRect(x - 3, topY, 1, botY - topY);
       stave.context.fillRect(x, topY, 1, botY - topY);
@@ -84,7 +83,7 @@ Vex.Flow.Barline = (function() {
           "Can't draw stave without canvas context.");
 
       var topY = stave.getYForLine(0);
-      var botY = stave.getYForLine(stave.getNumLines() - 1) + THICKNESS;
+      var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
       stave.context.fillRect(x - 5, topY, 1, botY - topY);
       stave.context.fillRect(x - 2, topY, 3, botY - topY);
     },
@@ -94,7 +93,7 @@ Vex.Flow.Barline = (function() {
           "Can't draw stave without canvas context.");
 
       var topY = stave.getYForLine(0);
-      var botY = stave.getYForLine(stave.getNumLines() - 1) + THICKNESS;
+      var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
       var x_shift = 3;
 
       if (!begin) {
