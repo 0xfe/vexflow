@@ -15,6 +15,11 @@ Vex.Flow.Test.Accidental.Start = function() {
       Vex.Flow.Test.Accidental.basicStemDown);
   Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
   Vex.Flow.Test.runTest("Microtonal", Vex.Flow.Test.Accidental.microtonal);
+  Vex.Flow.Test.runTest("Automatic Accidentals", Vex.Flow.Test.Accidental.automaticAccidentals0);
+  Vex.Flow.Test.runTest("Automatic Accidentals - C major scale in Ab", Vex.Flow.Test.Accidental.automaticAccidentals1);
+  Vex.Flow.Test.runTest("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
+  Vex.Flow.Test.runTest("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
+  Vex.Flow.Test.runTest("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
 }
 
 Vex.Flow.Test.Accidental.showNote = function(note, stave, ctx, x) {
@@ -277,3 +282,191 @@ Vex.Flow.Test.Accidental.microtonal = function(options, contextBuilder) {
   ok(true, "Microtonal Accidental");
 }
 
+Vex.Flow.Test.Accidental.automaticAccidentals0 = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 200);
+
+  var notes = [
+    newNote({ keys: ["c/4", "c/5"], duration: "4"}),
+    newNote({ keys: ["c#/4", "c#/5"], duration: "4"}),
+    newNote({ keys: ["c#/4", "c#/5"], duration: "4"}),
+    newNote({ keys: ["c##/4", "c##/5"], duration: "4"}),
+    newNote({ keys: ["c##/4", "c##/5"], duration: "4"}),
+    newNote({ keys: ["c/4", "c/5"], duration: "4"}),
+    newNote({ keys: ["cn/4", "cn/5"], duration: "4"}),
+    newNote({ keys: ["cbb/4", "cbb/5"], duration: "4"}),
+    newNote({ keys: ["cbb/4", "cbb/5"], duration: "4"}),
+    newNote({ keys: ["cb/4", "cb/5"], duration: "4"}),
+    newNote({ keys: ["cb/4", "cb/5"], duration: "4"}),
+    newNote({ keys: ["c/4", "c/5"], duration: "4"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  Vex.Flow.Accidental.generateAccidentals([voice], "C");
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+  ok(true);
+};
+
+Vex.Flow.Test.Accidental.automaticAccidentals1 = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+
+  c.context.clear();
+  c.stave.addKeySignature("Ab");
+  c.stave.draw();
+  var notes = [
+    newNote({ keys: ["c/4"], duration: "4"}),
+    newNote({ keys: ["d/4"], duration: "4"}),
+    newNote({ keys: ["e/4"], duration: "4"}),
+    newNote({ keys: ["f/4"], duration: "4"}),
+    newNote({ keys: ["g/4"], duration: "4"}),
+    newNote({ keys: ["a/4"], duration: "4"}),
+    newNote({ keys: ["b/4"], duration: "4"}),
+    newNote({ keys: ["c/5"], duration: "4"}),
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  Vex.Flow.Accidental.generateAccidentals([voice], "Ab");
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+  ok(true);
+};
+
+Vex.Flow.Test.Accidental.automaticAccidentals2 = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+
+  c.context.clear();
+  c.stave.addKeySignature("A");
+  c.stave.draw();
+  var notes = [
+    newNote({ keys: ["a/4"], duration: "4"}),
+    newNote({ keys: ["b/4"], duration: "4"}),
+    newNote({ keys: ["c#/5"], duration: "4"}),
+    newNote({ keys: ["d/5"], duration: "4"}),
+    newNote({ keys: ["e/5"], duration: "4"}),
+    newNote({ keys: ["f#/5"], duration: "4"}),
+    newNote({ keys: ["g#/5"], duration: "4"}),
+    newNote({ keys: ["a/5"], duration: "4"}),
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  Vex.Flow.Accidental.generateAccidentals([voice], "A");
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+  ok(true);
+};
+
+Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+
+  c.context.clear();
+  c.stave.addKeySignature("Ab");
+  c.stave.draw();
+  var notes0 = [
+    newNote({ keys: ["c/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["d/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["e/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["f/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["g/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["a/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["c/5"], duration: "4", stem_direction: -1})
+  ];
+
+  var notes1 = [
+    newNote({ keys: ["c/5"], duration: "4"}),
+    newNote({ keys: ["d/5"], duration: "4"}),
+    newNote({ keys: ["e/5"], duration: "4"}),
+    newNote({ keys: ["f/5"], duration: "4"}),
+    newNote({ keys: ["g/5"], duration: "4"}),
+    newNote({ keys: ["a/5"], duration: "4"}),
+    newNote({ keys: ["b/5"], duration: "4"}),
+    newNote({ keys: ["c/6"], duration: "4"})
+  ];
+
+  var voice0 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice0.addTickables(notes0);
+
+  var voice1 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice1.addTickables(notes1);
+
+  Vex.Flow.Accidental.generateAccidentals([voice0, voice1], "Ab");
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice0, voice1]).
+    formatToStave([voice0, voice1], c.stave);
+
+  voice0.draw(c.context, c.stave);
+  voice1.draw(c.context, c.stave);
+  ok(true);
+};
+
+Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+
+  c.context.clear();
+  c.stave.addKeySignature("Ab");
+  c.stave.draw();
+  var notes0 = [
+    newNote({ keys: ["c/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["d/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["e/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["f/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["g/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["a/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["b/4"], duration: "4", stem_direction: -1}),
+    newNote({ keys: ["c/5"], duration: "4", stem_direction: -1})
+  ];
+
+  var notes1 = [
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "4"}),
+    newNote({ keys: ["d/5"], duration: "4"}),
+    newNote({ keys: ["e/5"], duration: "4"}),
+    newNote({ keys: ["f/5"], duration: "4"}),
+    newNote({ keys: ["g/5"], duration: "4"}),
+    newNote({ keys: ["a/5"], duration: "4"}),
+    newNote({ keys: ["b/5"], duration: "4"}),
+    newNote({ keys: ["c/6"], duration: "4"})
+  ];
+
+  var voice0 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice0.addTickables(notes0);
+
+  var voice1 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice1.addTickables(notes1);
+
+  Vex.Flow.Accidental.generateAccidentals([voice0, voice1], "Ab");
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice0, voice1]).
+    formatToStave([voice0, voice1], c.stave);
+
+  voice0.draw(c.context, c.stave);
+  voice1.draw(c.context, c.stave);
+  ok(true);
+};

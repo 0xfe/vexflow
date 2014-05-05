@@ -116,6 +116,123 @@ Vex.Flow.Accidental = (function(){
       }
     }
   });
+  
+  // ## Private Helper
+  // 
+  // This is helper method for `Accidental.generateAccidentals()`. It's used to
+  // create a scale map that represents the pitch state for a `keySignature`. 
+  // For example, passing a `G` to `keySignature` would return a scale map 
+  // with every note naturalized except for `F` which has an `F#` state.
+  function createScaleMap(keySignature) {
+    var music = new Vex.Flow.Music();
+    var keySigParts = music.getKeyParts(keySignature);
+    var scaleName = Vex.Flow.KeyManager.scales[keySigParts.type];
+
+    var keySigString = keySigParts.root;
+    if (keySigParts.accidental) keySigString += keySigParts.accidental;
+
+    if (!scaleName) throw new Vex.RERR("BadArguments", "Unsupported key type: " + keySignature);
+
+    var scale = music.getScaleTones(music.getNoteValue(keySigString), scaleName);
+    var noteLocation = Vex.Flow.Music.root_indices[keySigParts.root];
+
+    var scaleMap = {};
+    for (var i = 0; i < Vex.Flow.Music.roots.length; ++i) {
+      var index = (noteLocation + i) % Vex.Flow.Music.roots.length;
+      var rootName = Vex.Flow.Music.roots[index];
+      var noteName = music.getRelativeNoteName(rootName, scale[i]);
+
+      if (noteName.length === 1) {
+        noteName += "n";
+      }
+
+      scaleMap[rootName] = noteName;
+    }
+
+    return scaleMap;
+  }
+
+  // ## Static Methods
+  // 
+  // Use this method to automatically apply accidentals to a set of `voices`.
+  // The accidentals will be remembered between all the voices provided.
+  // Optionally, you can also provide an initial `keySignature`. 
+  Accidental.generateAccidentals = function(voices, keySignature) {
+    var tickPositions = [];
+    var tickNoteMap = {};
+
+    // Sort the tickables in each voice by their tick position in the voice
+    voices.forEach(function(voice) {
+      var tickPosition = 0;
+      var notes = voice.getTickables();
+      notes.forEach(function(note) {
+        var notesAtPosition = tickNoteMap[tickPosition];
+
+        if (!notesAtPosition) {
+          tickPositions.push(tickPosition);
+          tickNoteMap[tickPosition] = [note];
+        } else {
+          notesAtPosition.push(note);
+        }
+
+        tickPosition += note.getTicks().value();
+      });
+    });
+    
+    var music = new Vex.Flow.Music();
+
+    // Default key signature is C major
+    if (!keySignature) keySignature = "C";
+
+    // Get the scale map, which represents the current state of each pitch
+    var scaleMap = createScaleMap(keySignature);
+
+    tickPositions.forEach(function(tick) {
+      var notes = tickNoteMap[tick];
+
+      // Array to store all pitches that modified accidental states 
+      // at this tick position
+      var modifiedPitches = [];
+
+      notes.forEach(function(note) {
+          if (note.isRest()) return;
+          
+          // Go through each key and determine if an accidental should be 
+          // applied
+          note.keys.forEach(function(keyString, keyIndex) {
+              var key = music.getNoteParts(keyString.split('/')[0]);
+
+              // Force a natural for every key without an accidental
+              var accidentalString = key.accidental || "n";
+              var pitch = key.root + accidentalString;
+
+              // Determine if the current pitch has the same accidental 
+              // as the scale state
+              var sameAccidental = scaleMap[key.root] === pitch;
+
+              // Determine if an identical pitch in the chord already
+              // modified the accidental state
+              var previouslyModified = modifiedPitches.indexOf(pitch) > -1;
+
+              // Add the accidental to the StaveNote
+              if (!sameAccidental || (sameAccidental && previouslyModified)) {
+                  // Modify the scale map so that the root pitch has an 
+                  // updated state
+                  scaleMap[key.root] = pitch;
+
+                  // Create the accidental
+                  var accidental = new Vex.Flow.Accidental(accidentalString);
+
+                  // Attach the accidental to the StaveNote
+                  note.addAccidental(keyIndex, accidental);
+
+                  // Add the pitch to list of pitches that modified accidentals
+                  modifiedPitches.push(pitch);
+              }
+          });
+      });
+    });
+  };
 
   return Accidental;
 }());
