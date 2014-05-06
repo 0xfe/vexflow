@@ -17,6 +17,8 @@ Vex.Flow.Test.TextNote = (function() {
           Vex.Flow.Test.TextNote.formatTextGlyphs1);
       Vex.Flow.Test.runTest("Crescendo",
           Vex.Flow.Test.TextNote.crescendo);
+      Vex.Flow.Test.runTest("Text Dynamics",
+          Vex.Flow.Test.TextNote.textDynamics);
     },
 
     renderNotes: function(notes1, notes2, ctx, stave, justify) {
@@ -212,6 +214,37 @@ Vex.Flow.Test.TextNote = (function() {
         new Vex.Flow.TextNote({glyph: "f", duration: "16"}).setContext(ctx),
         new Vex.Flow.Crescendo({duration: "4"}).setLine(5),
         new Vex.Flow.Crescendo({duration: "4"}).setLine(10).setDecrescendo(true).setHeight(5)
+      ];
+
+      var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
+      voice.addTickables(notes);
+
+      var formatter = new Vex.Flow.Formatter().formatToStave([voice], stave);
+
+      notes.forEach(function(note) {
+        note.setStave(stave);
+        note.setContext(ctx).draw();
+      });
+
+      ok(true);
+    },
+
+    textDynamics: function(options) {
+      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 180);
+      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      var stave = new Vex.Flow.Stave(10, 20, 550);
+      stave.setContext(ctx);
+      stave.draw();
+
+      var notes = [
+        new Vex.Flow.TextDynamics({ text: "sfz", duration: "4" }),
+        new Vex.Flow.TextDynamics({ text: "rfz", duration: "4" }),
+        new Vex.Flow.TextDynamics({ text: "mp", duration: "4" }),
+        new Vex.Flow.TextDynamics({ text: "ppp", duration: "4" }),
+        new Vex.Flow.TextDynamics({ text: "fff", duration: "4" }),
+        new Vex.Flow.TextDynamics({ text: "mf", duration: "4" }),
+        new Vex.Flow.TextDynamics({ text: "sff", duration: "4" })
       ];
 
       var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
