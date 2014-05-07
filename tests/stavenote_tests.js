@@ -729,8 +729,9 @@ Vex.Flow.Test.StaveNote.drawKeyStyles = function(options, contextBuilder) {
   stave.setContext(ctx);
   stave.draw();
 
-  var note_struct = { keys: ["g/4","b/4","d/5"], duration: "q" };
+  var note_struct = { keys: ["g/4","bb/4","d/5"], duration: "q" };
   var note = new Vex.Flow.StaveNote(note_struct);
+  note.addAccidental(1, new Vex.Flow.Accidental('b'));
   note.setKeyStyle(1, {shadowBlur:15, shadowColor:'blue', fillStyle:'blue'});
 
   var tickContext = new Vex.Flow.TickContext();
