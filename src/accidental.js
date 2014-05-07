@@ -117,47 +117,12 @@ Vex.Flow.Accidental = (function(){
     }
   });
   
-  // ## Private Helper
-  // 
-  // This is helper method for `Accidental.generateAccidentals()`. It's used to
-  // create a scale map that represents the pitch state for a `keySignature`. 
-  // For example, passing a `G` to `keySignature` would return a scale map 
-  // with every note naturalized except for `F` which has an `F#` state.
-  function createScaleMap(keySignature) {
-    var music = new Vex.Flow.Music();
-    var keySigParts = music.getKeyParts(keySignature);
-    var scaleName = Vex.Flow.KeyManager.scales[keySigParts.type];
-
-    var keySigString = keySigParts.root;
-    if (keySigParts.accidental) keySigString += keySigParts.accidental;
-
-    if (!scaleName) throw new Vex.RERR("BadArguments", "Unsupported key type: " + keySignature);
-
-    var scale = music.getScaleTones(music.getNoteValue(keySigString), scaleName);
-    var noteLocation = Vex.Flow.Music.root_indices[keySigParts.root];
-
-    var scaleMap = {};
-    for (var i = 0; i < Vex.Flow.Music.roots.length; ++i) {
-      var index = (noteLocation + i) % Vex.Flow.Music.roots.length;
-      var rootName = Vex.Flow.Music.roots[index];
-      var noteName = music.getRelativeNoteName(rootName, scale[i]);
-
-      if (noteName.length === 1) {
-        noteName += "n";
-      }
-
-      scaleMap[rootName] = noteName;
-    }
-
-    return scaleMap;
-  }
-
   // ## Static Methods
   // 
   // Use this method to automatically apply accidentals to a set of `voices`.
   // The accidentals will be remembered between all the voices provided.
   // Optionally, you can also provide an initial `keySignature`. 
-  Accidental.generateAccidentals = function(voices, keySignature) {
+  Accidental.applyAccidentals = function(voices, keySignature) {
     var tickPositions = [];
     var tickNoteMap = {};
 
@@ -185,7 +150,7 @@ Vex.Flow.Accidental = (function(){
     if (!keySignature) keySignature = "C";
 
     // Get the scale map, which represents the current state of each pitch
-    var scaleMap = createScaleMap(keySignature);
+    var scaleMap = music.createScaleMap(keySignature);
 
     tickPositions.forEach(function(tick) {
       var notes = tickNoteMap[tick];

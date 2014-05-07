@@ -314,7 +314,7 @@ Vex.Flow.Test.Accidental.automaticAccidentals0 = function(options, contextBuilde
     .setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
-  Vex.Flow.Accidental.generateAccidentals([voice], "C");
+  Vex.Flow.Accidental.applyAccidentals([voice], "C");
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], c.stave);
@@ -345,7 +345,7 @@ Vex.Flow.Test.Accidental.automaticAccidentals1 = function(options, contextBuilde
     .setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
-  Vex.Flow.Accidental.generateAccidentals([voice], "Ab");
+  Vex.Flow.Accidental.applyAccidentals([voice], "Ab");
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], c.stave);
@@ -376,7 +376,7 @@ Vex.Flow.Test.Accidental.automaticAccidentals2 = function(options, contextBuilde
     .setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
 
-  Vex.Flow.Accidental.generateAccidentals([voice], "A");
+  Vex.Flow.Accidental.applyAccidentals([voice], "A");
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], c.stave);
@@ -423,7 +423,7 @@ Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline = function(options
   voice1.addTickables(notes1);
 
   // Ab Major
-  Vex.Flow.Accidental.generateAccidentals([voice0, voice1], "Ab");
+  Vex.Flow.Accidental.applyAccidentals([voice0, voice1], "Ab");
 
   equal(hasAccidental(notes0[0]), false);
   equal(hasAccidental(notes0[1]), true);
@@ -490,7 +490,7 @@ Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset = function(options
   voice1.addTickables(notes1);
 
   // Cb Major (All flats)
-  Vex.Flow.Accidental.generateAccidentals([voice0, voice1], "Cb");
+  Vex.Flow.Accidental.applyAccidentals([voice0, voice1], "Cb");
 
   equal(hasAccidental(notes0[0]), true);
   equal(hasAccidental(notes0[1]), true);
@@ -535,7 +535,7 @@ Vex.Flow.Test.Accidental.autoAccidentalWorking = function(options, contextBuilde
   voice.addTickables(notes);
 
   // F Major (Bb)
-  Vex.Flow.Accidental.generateAccidentals([voice], "F");
+  Vex.Flow.Accidental.applyAccidentals([voice], "F");
 
   equal(hasAccidental(notes[0]), false, "No flat because of key signature");
   equal(hasAccidental(notes[1]), false, "No flat because of key signature");
@@ -562,7 +562,7 @@ Vex.Flow.Test.Accidental.autoAccidentalWorking = function(options, contextBuilde
   voice.addTickables(notes);
 
   // A Major (F#,G#,C#)
-  Vex.Flow.Accidental.generateAccidentals([voice], "A");
+  Vex.Flow.Accidental.applyAccidentals([voice], "A");
 
   equal(hasAccidental(notes[0]), true, "Added sharp");
   equal(hasAccidental(notes[1]), true, "Added flat");
@@ -592,7 +592,7 @@ Vex.Flow.Test.Accidental.autoAccidentalWorking = function(options, contextBuilde
   voice.addTickables(notes);
 
   // C Major (no sharps/flats)
-  Vex.Flow.Accidental.generateAccidentals([voice], "C");
+  Vex.Flow.Accidental.applyAccidentals([voice], "C");
 
   equal(hasAccidental(notes[0]), false, "No accidental");
   equal(hasAccidental(notes[1]), true, "Added flat");
