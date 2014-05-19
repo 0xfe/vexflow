@@ -23,6 +23,7 @@ Vex.Flow.TickContext = (function() {
       this.notePx = 0;       // width of widest note in this context
       this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
       this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
+      this.align_center = false;
       
       this.tContexts = [];   // Parent array of tick contexts
 
@@ -45,6 +46,12 @@ Vex.Flow.TickContext = (function() {
     getMaxTicks: function() { return this.maxTicks; },
     getMinTicks: function() { return this.minTicks; },
     getTickables: function() { return this.tickables; },
+    
+    getCenterAlignedTickables: function() {
+      return this.tickables.filter(function(tickable) {
+        return tickable.isCenterAligned();
+      });
+    },
 
     // Get widths context, note and left/right modifiers for formatting
     getMetrics: function() {
