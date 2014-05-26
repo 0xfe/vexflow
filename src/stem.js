@@ -129,12 +129,13 @@ Vex.Flow.Stem = (function() {
       L("Rendering stem - ", "Top Y: ", this.y_top, "Bottom Y: ", this.y_bottom);
 
       // Draw the stem
+      ctx.save();
       ctx.beginPath();
       ctx.setLineWidth(Stem.WIDTH);
       ctx.moveTo(stem_x, stem_y);
       ctx.lineTo(stem_x, stem_y - this.getHeight());
       ctx.stroke();
-      ctx.setLineWidth(1);
+      ctx.restore();
     }
   };
 
