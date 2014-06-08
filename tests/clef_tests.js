@@ -19,6 +19,8 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   var stave = new Vex.Flow.Stave(10, 10, 700);
 
   stave.addClef("treble");
+  stave.addClef("treble_8va");
+  stave.addClef("treble_8vb");
   stave.addClef("alto");
   stave.addClef("tenor");
   stave.addClef("soprano");
@@ -30,12 +32,14 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   stave.addClef("french");
 
   stave.addEndClef("treble");
+  stave.addEndClef("treble_8va");
+  stave.addEndClef("treble_8vb");
   stave.addEndClef("alto");
-  stave.addEndClef("tenor");
-  stave.addEndClef("soprano");
+//  stave.addEndClef("tenor");   // should be fine, and takes
+//  stave.addEndClef("soprano"); // too much space
   stave.addEndClef("bass");
-  stave.addEndClef("mezzo-soprano");
-  stave.addEndClef("baritone-c");
+//  stave.addEndClef("mezzo-soprano");
+//  stave.addEndClef("baritone-c");
   stave.addEndClef("baritone-f");
   stave.addEndClef("subbass");
   stave.addEndClef("french");
@@ -51,6 +55,8 @@ Vex.Flow.Test.Clef.drawSmall = function(options, contextBuilder) {
   var stave = new Vex.Flow.Stave(10, 10, 700);
 
   stave.addClef("treble_small");
+  stave.addClef("treble_8va_small");
+  stave.addClef("treble_8vb_small");
   stave.addClef("alto_small");
   stave.addClef("tenor_small");
   stave.addClef("soprano_small");
@@ -62,12 +68,14 @@ Vex.Flow.Test.Clef.drawSmall = function(options, contextBuilder) {
   stave.addClef("french_small");
 
   stave.addEndClef("treble_small");
+  stave.addEndClef("treble_8va_small");
+  stave.addEndClef("treble_8vb_small");
   stave.addEndClef("alto_small");
   stave.addEndClef("tenor_small");
   stave.addEndClef("soprano_small");
   stave.addEndClef("bass_small");
-  stave.addEndClef("mezzo-soprano_small");
-  stave.addEndClef("baritone-c_small");
+//  stave.addEndClef("mezzo-soprano_small"); // save space
+//  stave.addEndClef("baritone-c_small");
   stave.addEndClef("baritone-f_small");
   stave.addEndClef("subbass_small");
   stave.addEndClef("french_small");
