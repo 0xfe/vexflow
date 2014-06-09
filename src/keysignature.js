@@ -1,17 +1,36 @@
-// Vex Flow Notation
-// Implements key signatures
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Larry Kuhns.
 //
-// Requires vex.js.
-
-/**
- * @constructor
- */
+// ## Description
+//
+// This file implements key signatures. A key signature sits on a stave
+// and indicates the notes with implicit accidentals.
+// 
 Vex.Flow.KeySignature = (function() {
   function KeySignature(keySpec) {
     if (arguments.length > 0) this.init(keySpec);
   }
 
+  // Space between natural and following accidental depending
+  // on vertical position
+  KeySignature.accidentalSpacing = {
+    '#': {
+      above: 6,
+      below: 4
+    },
+    'b': {
+      above: 4,
+      below: 7
+    },
+    'n': {
+      above: 3,
+      below: -1
+    }
+  };
+
+  // ## Prototype Methods
   Vex.Inherit(KeySignature, Vex.Flow.StaveModifier, {
+    // Create a new Key Signature based on a `key_spec`
     init: function(key_spec) {
       KeySignature.superclass.init();
 
@@ -19,45 +38,29 @@ Vex.Flow.KeySignature = (function() {
       this.accList = Vex.Flow.keySignature(key_spec);
     },
 
+    // Add an accidental glyph to the `stave`. `acc` is the data of the 
+    // accidental to add. If the `next` accidental is also provided, extra 
+    // width will be added to the initial accidental for optimal spacing.
     addAccToStave: function(stave, acc, next) {
       var glyph_data = Vex.Flow.accidentalCodes(acc.type);
       var glyph = new Vex.Flow.Glyph(glyph_data.code, this.glyphFontScale);
 
+      // Determine spacing between current accidental and the next accidental
       var extra_width = 0;
-      if (next && next.type === "n" && acc.type === "#" && next.line > acc.line) {
-        extra_width = 3;
-      } else if (next && next.type === "n" && acc.type === "#" && next.line < acc.line) {
-        extra_width = -2;
+      if (acc.type === "n" && next) {
+        var above = next.line >= acc.line;
+        var space = KeySignature.accidentalSpacing[next.type];
+        extra_width = above ? space.above : space.below;
       }
 
-      if (next && next.type === "b" && acc.type === "n" && next.line > acc.line) {
-        extra_width = 4;
-      } else if (next && next.type === "b" && acc.type === "n" && next.line < acc.line) {
-        extra_width = 4;
-      }
-      if (next && next.type === "#" && acc.type === "n" && next.line > acc.line) {
-        extra_width = 0;
-      } else if (next && next.type === "#" && acc.type === "n" && next.line < acc.line) {
-        extra_width = 3;
-      }
-
-      if (next && next.type === "n" && acc.type === "#" && next.line > acc.line) {
-        extra_width = 3;
-      } else if (next && next.type === "n" && acc.type === "#" && next.line < acc.line) {
-        extra_width = 2;
-      }
-
-      if (next && next.type === "n" && acc.type === "n" && next.line < acc.line) {
-        extra_width = -2;
-      } else if (next && next.type === "n" && acc.type === "n" && next.line > acc.line) {
-        extra_width = 3;
-      }
-
+      // Set the width and place the glyph on the stave
       glyph.setWidth(glyph_data.width + extra_width);
       this.placeGlyphOnLine(glyph, stave, acc.line);
       stave.addGlyph(glyph);
     },
 
+    // Cancel out a key signature provided in the `spec` parameter. This will
+    // place appropriate natural accidentals before the key signature.
     cancelKey: function(spec) {
       // Get the accidental list for the cancelled key signature
       var cancel_accList = Vex.Flow.keySignature(spec);
@@ -69,7 +72,7 @@ Vex.Flow.KeySignature = (function() {
       // Determine how many naturals needed to add
       var naturals = 0;
       if (different_types) {
-        naturals = Math.min(Math.abs(this.accList.length - 7), cancel_accList.length);
+        naturals = cancel_accList.length;
       } else {
         naturals = cancel_accList.length - this.accList.length;
       }
@@ -90,15 +93,13 @@ Vex.Flow.KeySignature = (function() {
       }
 
       // Combine naturals with main accidental list for the key signature
-      if (different_types) {
-        this.accList = cancelled.concat(this.accList);
-      } else {
-        this.accList = this.accList.concat(cancelled);
-      }
+      this.accList = cancelled.concat(this.accList);
 
       return this;
     },
 
+    // Add the key signature to the `stave`. You probably want to use the 
+    // helper method `.addToStave()` instead
     addModifier: function(stave) {
       this.convertAccLines(stave.clef, this.accList[0].type);
       for (var i = 0; i < this.accList.length; ++i) {
@@ -106,6 +107,8 @@ Vex.Flow.KeySignature = (function() {
       }
     },
 
+    // Add the key signature to the `stave`, if it's the not the `firstGlyph`
+    // a spacer will be added as well.
     addToStave: function(stave, firstGlyph) {
       if (this.accList.length === 0)
         return this;
@@ -118,6 +121,8 @@ Vex.Flow.KeySignature = (function() {
       return this;
     },
 
+    // Apply the accidental staff line placement based on the `clef` and 
+    // the  accidental `type` for the key signature ('# or 'b').
     convertAccLines: function(clef, type) {
       var offset = 0.0; // if clef === "treble"
       var tenorSharps;
