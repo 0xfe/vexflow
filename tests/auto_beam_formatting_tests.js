@@ -22,8 +22,10 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
                         Vex.Flow.Test.AutoBeamFormatting.maintainStemDirections);
   Vex.Flow.Test.runTest("Maintain Stem Directions - Beam Over Rests",
                         Vex.Flow.Test.AutoBeamFormatting.maintainStemDirectionsBeamAcrossRests);
-  Vex.Flow.Test.runTest("Beat group with unbeamable note",
+  Vex.Flow.Test.runTest("Beat group with unbeamable note - 2/2",
                         Vex.Flow.Test.AutoBeamFormatting.groupWithUnbeamableNote);
+  Vex.Flow.Test.runTest("Offset beat grouping - 6/8 ",
+                        Vex.Flow.Test.AutoBeamFormatting.groupWithUnbeamableNote1);
   Vex.Flow.Test.runTest("Odd Time - Guessing Default Beam Groups",
                         Vex.Flow.Test.AutoBeamFormatting.autoOddBeamGroups);
   Vex.Flow.Test.runTest("Custom Beam Groups",
@@ -535,6 +537,43 @@ Vex.Flow.Test.AutoBeamFormatting.groupWithUnbeamableNote = function(options, con
 
   var beams = Vex.Flow.Beam.generateBeams(notes, {
     groups: [new Vex.Flow.Fraction(2, 2)],
+    beam_rests: false,
+    maintain_stem_directions: true
+  });
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  ok(true, "Auto Beam Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.groupWithUnbeamableNote1 = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 450, 200);
+
+  c.stave.addTimeSignature('6/8');
+
+  c.context.clear();
+  c.stave.draw();
+
+  var notes = [
+    newNote({ keys: ["b/4"], duration: "4", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "4", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "8", stem_direction: 1}),
+    newNote({ keys: ["b/4"], duration: "8", stem_direction: 1})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  var beams = Vex.Flow.Beam.generateBeams(notes, {
+    groups: [new Vex.Flow.Fraction(3, 8)],
     beam_rests: false,
     maintain_stem_directions: true
   });
