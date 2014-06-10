@@ -28,10 +28,9 @@ Vex.Flow.NoteHead = (function() {
     ctx.setLineWidth(Vex.Flow.STEM_WIDTH);
 
     var fill = false;
-    if (duration != 1 &&
-        duration != 2 &&
-        duration != "h" &&
-        duration != "w") {
+
+    if (Vex.Flow.durationToInteger(duration) !== 1 &&
+        Vex.Flow.durationToInteger(duration) !== 2) {
       fill = true;
     }
 

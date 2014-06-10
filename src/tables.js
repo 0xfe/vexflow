@@ -580,11 +580,37 @@ Vex.Flow.parseNoteData = function(noteData) {
   };
 };
 
-Vex.Flow.durationToTicks = function(duration) {
+// Used to convert duration aliases to the number based duration.
+// If the input isn't an alias, simply return the input.
+// 
+// example: 'q' -> '4', '8' -> '8'
+function sanitizeDuration(duration) {
   var alias = Vex.Flow.durationAliases[duration];
   if (alias !== undefined) {
     duration = alias;
   }
+
+  if (Vex.Flow.durationToTicks.durations[duration] === undefined) {
+    throw new Vex.RERR('BadArguments',
+      'The provided duration is not valid');
+  }
+
+  return duration;
+}
+
+// Convert the `duration` to a fraction
+Vex.Flow.durationToFraction = function(duration) {
+  return new Vex.Flow.Fraction(Vex.Flow.durationToTicks(duration), 1);
+};
+
+// Convert the `duration` to an integer
+Vex.Flow.durationToInteger = function(duration) {
+  return parseInt(sanitizeDuration(duration));
+};
+
+// Convert the `duration` to total ticks
+Vex.Flow.durationToTicks = function(duration) {
+  duration = sanitizeDuration(duration);
 
   var ticks = Vex.Flow.durationToTicks.durations[duration];
   if (ticks === undefined) {

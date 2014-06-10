@@ -567,7 +567,8 @@ Vex.Flow.Beam = (function() {
         var totalTicks = getTotalTicks(currentGroup).value();
 
         // Double the amount of ticks in a group, if it's an unbeamable tuplet
-        if (parseInt(unprocessedNote.duration, 10) < 8 && unprocessedNote.tuplet) {
+        var durToInt = Vex.Flow.durationToInteger;
+        if (durToInt(unprocessedNote.duration) < 8 && unprocessedNote.tuplet) {
           ticksPerGroup *= 2;
         }
 
