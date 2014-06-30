@@ -16,10 +16,8 @@ Vex.Flow.Stave = (function() {
       this.x = x;
       this.y = y;
       this.width = width;
-      this.glyph_start_x = x + 5;
-      this.glyph_end_x = x + width;
-      this.start_x = this.glyph_start_x;
-      this.end_x = this.glyph_end_x;
+      this.start_x = this.getGlyphStartX();
+      this.end_x = this.getGlyphEndX();
       this.context = null;
       this.glyphs = [];
       this.end_glyphs = [];
@@ -53,6 +51,14 @@ Vex.Flow.Stave = (function() {
           this.x + this.width)); // end bar
     },
 
+    getGlyphStartX: function() {
+      return this.x + 5;
+    },
+
+    getGlyphEndX: function() {
+      return this.x + this.width;
+    },
+
     resetLines: function() {
       this.options.line_config = [];
       for (var i = 0; i < this.options.num_lines; i++) {
@@ -80,6 +86,20 @@ Vex.Flow.Stave = (function() {
     getTieEndX: function() { return this.x + this.width; },
     setContext: function(context) { this.context = context; return this; },
     getContext: function() { return this.context; },
+
+    setX: function(x) {
+      var i;
+      var dx = (typeof this.x == "number") ? x - this.x : 0;
+      console.log('dx: ' + dx.toString());
+      this.x = x;
+      this.bounds.x = x;
+      this.start_x += dx;
+      for (i = 0; i < this.modifiers.length; i++) {
+        this.modifiers[i].x = x;
+      }
+      return this;
+    },
+
     getX: function() { return this.x; },
     getNumLines: function() { return this.options.num_lines; },
     setNumLines: function(lines) {
@@ -91,8 +111,7 @@ Vex.Flow.Stave = (function() {
 
     setWidth: function(width) {
       this.width = width;
-      this.glyph_end_x = this.x + width;
-      this.end_x = this.glyph_end_x;
+      this.end_x = this.getGlyphEndX();
 
       // reset the x position of the end barline
       this.modifiers[1].setX(this.end_x);
@@ -134,7 +153,7 @@ Vex.Flow.Stave = (function() {
       if (typeof index !== 'number') new Vex.RERR("InvalidIndex",
         "Must be of number type");
 
-      var x = this.glyph_start_x;
+      var x = this.getGlyphStartX();
       var bar_x_shift = 0;
 
       for (var i = 0; i < index + 1; ++i) {
@@ -328,7 +347,7 @@ Vex.Flow.Stave = (function() {
       }
 
       // Render glyphs
-      x = this.glyph_start_x;
+      x = this.getGlyphStartX();
       for (var i = 0; i < this.glyphs.length; ++i) {
         glyph = this.glyphs[i];
         if (!glyph.getContext()) {
@@ -339,7 +358,7 @@ Vex.Flow.Stave = (function() {
       }
 
       // Render end glyphs
-      x = this.glyph_end_x;
+      x = this.getGlyphEndX();
       for (i = 0; i < this.end_glyphs.length; ++i) {
         glyph = this.end_glyphs[i];
         if (!glyph.getContext()) {

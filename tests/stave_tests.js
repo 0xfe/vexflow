@@ -250,8 +250,9 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
   Vex.Flow.Formatter.FormatAndDraw(ctx, mm2, notesmm2);
 
   // bar 3 - juxtapose third measure
-  var mm3 = new Vex.Flow.Stave(mm2.width + mm2.x, mm1.y, 60);
+  var mm3 = new Vex.Flow.Stave(0, mm1.y, 60);
   mm3.setVoltaType(Vex.Flow.Volta.type.BEGIN, "1.", -5);
+  mm3.setX(mm2.width + mm2.x);
   mm3.setMeasure(3);
   mm3.setContext(ctx).draw();
   var notesmm3 = [
@@ -261,8 +262,9 @@ Vex.Flow.Test.Stave.drawVoltaTest = function(options, contextBuilder) {
   Vex.Flow.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
 
   // bar 4 - juxtapose fourth measure
-  var mm4 = new Vex.Flow.Stave(mm3.width + mm3.x, mm1.y, 60);
+  var mm4 = new Vex.Flow.Stave(0, mm1.y, 60);
   mm4.setVoltaType(Vex.Flow.Volta.type.MID, "", -5);
+  mm4.setX(mm3.width + mm3.x);
   mm4.setMeasure(4);
   mm4.setContext(ctx).draw();
   var notesmm4 = [
