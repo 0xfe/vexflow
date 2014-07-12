@@ -21,7 +21,7 @@ Vex.Flow.Tuning = (function() {
   Tuning.prototype = {
     init: function(tuningString) {
       // Default to standard tuning.
-      this.setTuning(tuningString || "E/5,B/4,G/4,D/4,A/3,E/3");
+      this.setTuning(tuningString || "E/5,B/4,G/4,D/4,A/3,E/3,B/2,E/2");
     },
 
     noteToInteger: function(noteString) {

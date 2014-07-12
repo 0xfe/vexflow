@@ -1,31 +1,57 @@
-// VexFlow (http://vexflow.com)
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Implementation of stemmable notes.
-
-
+// ## Description
+//
+// `StemmableNote` is an abstract interface for notes with optional stems. 
+// Examples of stemmable notes are `StaveNote` and `TabNote`
 Vex.Flow.StemmableNote = (function(){
   var StemmableNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
   };
 
-  // Stem directions
+  // To enable logging for this class. Set `Vex.Flow.StemmableNote.DEBUG` to `true`.
+  function L() { if (StemmableNote.DEBUG) Vex.L("Vex.Flow.StemmableNote", arguments); }
+
   var Stem = Vex.Flow.Stem;
 
   Vex.Inherit(StemmableNote, Vex.Flow.Note, {
     init: function(note_struct){
       StemmableNote.superclass.init.call(this, note_struct);
 
+      this.stem = null;
+      this.stem_extension_override = null;
       this.beam = null;
-      this.stem_extension = 0;
-      this.setStemDirection(note_struct.stem_direction);
+      
     },
 
+    // Get and set the note's `Stem`
+    getStem: function() {return this.stem; },
+    setStem: function(stem) { this.stem = stem; return this; },
+
+    // Builds and sets a new stem
+    buildStem: function() {
+      var stem = new Stem();
+      this.setStem(stem);
+      return this;
+    },
+
+    // Get the full length of stem
     getStemLength: function() {
-      return Stem.HEIGHT + this.stem_extension;
+      return Stem.HEIGHT + this.getStemExtension();
     },
 
-    // Determine minimum length of stem
+    // Get the number of beams for this duration
+    getBeamCount: function(){
+      var glyph = this.getGlyph();
+
+      if (glyph) {
+        return glyph.beam_count;
+      } else {
+        return 0;
+      }
+    },
+
+    // Get the minimum length of stem
     getStemMinumumLength: function() {
       var length = this.duration == "w" || this.duration == "1" ? 0 : 20;
       // if note is flagged, cannot shorten beam
@@ -60,10 +86,8 @@ Vex.Flow.StemmableNote = (function(){
       return length;
     },
 
-    getStemDirection: function() {
-      return this.stem_direction;
-    },
-
+    // Get/set the direction of the stem
+    getStemDirection: function() { return this.stem_direction; },
     setStemDirection: function(direction) {
       if (!direction) direction = Stem.UP;
       if (direction != Stem.UP &&
@@ -73,6 +97,11 @@ Vex.Flow.StemmableNote = (function(){
       }
 
       this.stem_direction = direction;
+      if (this.stem) {
+        this.stem.setDirection(direction);
+        this.stem.setExtension(this.getStemExtension());
+      }
+
       this.beam = null;
       if (this.preFormatted) {
         this.preFormat();
@@ -80,6 +109,7 @@ Vex.Flow.StemmableNote = (function(){
       return this;
     },
 
+    // Get the `x` coordinate of the stem
     getStemX: function() {
       var x_begin = this.getAbsoluteX() + this.x_shift;
       var x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
@@ -92,19 +122,42 @@ Vex.Flow.StemmableNote = (function(){
       return stem_x;
     },
 
-    // Manuallly set note stem length
+    // Get the `x` coordinate for the center of the glyph.
+    // Used for `TabNote` stems and stemlets over rests
+    getCenterGlyphX: function(){
+      return this.getAbsoluteX() + this.x_shift + (this.glyph.head_width / 2);
+    },
+
+    // Get the stem extension for the current duration
+    getStemExtension: function(){
+      var glyph = this.getGlyph();
+
+      if (this.stem_extension_override != null) {
+        return this.stem_extension_override;
+      }
+
+      if (glyph) {
+        return this.getStemDirection() === 1 ? glyph.stem_up_extension :
+          glyph.stem_down_extension;
+      }
+
+      return 0;
+    },
+
+    // Set the stem length to a specific. Will override the default length.
     setStemLength: function(height) {
-      this.stem_extension = (height - Stem.HEIGHT);
+      this.stem_extension_override = (height - Stem.HEIGHT);
       return this;
     },
 
+    // Get the top and bottom `y` values of the stem.
     getStemExtents: function() {
       if (!this.ys || this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "Can't get top stem Y when note has no Y values.");
 
       var top_pixel = this.ys[0];
       var base_pixel = this.ys[0];
-      var stem_height = Stem.HEIGHT + this.stem_extension;
+      var stem_height = Stem.HEIGHT + this.getStemExtension();
 
       for (var i = 0; i < this.ys.length; ++i) {
         var stem_top = this.ys[i] + (stem_height * -this.stem_direction);
@@ -123,14 +176,14 @@ Vex.Flow.StemmableNote = (function(){
         }
       }
 
+      L("Stem extents: ", top_pixel, base_pixel);
       return { topY: top_pixel, baseY: base_pixel };
     },
 
-    setBeam: function(beam) {
-      this.beam = beam;
-      return this;
-    },
+    // Sets the current note's beam
+    setBeam: function(beam) { this.beam = beam; return this; },
 
+    // Get the `y` value for the top/bottom modifiers at a specific `text_line`
     getYForTopText: function(text_line) {
       var extents = this.getStemExtents();
       if (this.hasStem()) {
@@ -140,7 +193,6 @@ Vex.Flow.StemmableNote = (function(){
         return this.stave.getYForTopText(text_line);
       }
     },
-
     getYForBottomText: function(text_line) {
       var extents = this.getStemExtents();
       if (this.hasStem()) {
@@ -151,14 +203,23 @@ Vex.Flow.StemmableNote = (function(){
       }
     },
 
+    // Post format the note
+    postFormat: function() {
+      if (this.beam) {
+        this.beam.postFormat();
+      }
+      this.postFormatted = true;
+      return this;
+    },
+
+    // Render the stem onto the canvas
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-
-      this.stem = new Stem(stem_struct);
+      
+      this.setStem(new Stem(stem_struct));
       this.stem.setContext(this.context).draw();
     }
-
   });
 
   return StemmableNote;

@@ -60,15 +60,15 @@
       canvas.width = 800;
 
       var ctx = canvas.getContext("2d");
-      ctx.font = "16pt Arial";
+      ctx.font = "10pt Courier";
 
       var y = 60;
       for (var glyph in Vex.Flow.Font.glyphs) {
-        ctx.fillStyle = "#666";
+        ctx.fillStyle = "#222";
         ctx.fillText(glyph, x, y);
         x += 60;
 
-        ctx.strokeStyle = "#888";
+        ctx.strokeStyle = "#aaa";
         ctx.beginPath();
         ctx.moveTo(x - 5, y);
         ctx.lineTo(x + 5, y);
@@ -82,19 +82,22 @@
         ctx.fillStyle = "green";
 
         if (Vex.Flow.Font.glyphs[glyph].o) {
-          g = new Vex.Flow.Glyph(glyph, 40);
+          g = new Vex.Flow.Glyph(glyph, 38);
           g.render(ctx, x, y);
           ctx.save();
           ctx.font = "6pt Arial";
           var metrics = g.getMetrics();
-          ctx.fillText(Math.floor(g.getMetrics().width), x - 25, y - 15 );
+          ctx.fillText(Math.floor(g.getMetrics().width), x - 35, y - 15 );
+          ctx.fillText(Math.floor(g.getMetrics().height), x - 35, y - 8 );
+          // ctx.fillText(Math.floor(g.getMetrics().x_min), x - 25, y - 1 );
+          // ctx.fillText(Math.floor(g.getMetrics().x_max), x - 25, y + 8 );
           ctx.restore();
         }
         x += 60;
 
         if (x >= 800) {
           x = 0;
-          y += 40;
+          y += 60;
         }
       }
     });
@@ -103,7 +106,7 @@
 
 <body>
   <center>
-    <h1>Vex Glyphs</h1>
+    <h1>Gonville Glyphs</h1>
     <p>
       <i>Cross indicates render coordinates.</i>
     </p>

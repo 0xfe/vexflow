@@ -14,16 +14,11 @@ Vex.Flow.TabStave = (function() {
       var tab_options = {
         spacing_between_lines_px: 13,
         num_lines: 6,
-        top_text_position: 1,
-        bottom_text_position: 7
+        top_text_position: 1
       };
 
       Vex.Merge(tab_options, options);
       TabStave.superclass.init.call(this, x, y, width, tab_options);
-    },
-
-    setNumberOfLines: function(lines) {
-      this.options.num_lines = lines; return this;
     },
 
     getYForGlyphs: function() {
@@ -35,9 +30,17 @@ Vex.Flow.TabStave = (function() {
       var glyphOffset;
 
       switch(this.options.num_lines) {
+        case 8:
+          glyphScale = 55;
+          glyphOffset = 14;
+          break;
+        case 7:
+          glyphScale = 47;
+          glyphOffset = 8;
+          break;
         case 6:
           glyphScale = 40;
-          glyphOffset = 0;
+          glyphOffset = 1;
           break;
         case 5:
           glyphScale = 30;

@@ -23,10 +23,13 @@ Vex.Flow.TickContext = (function() {
       this.notePx = 0;       // width of widest note in this context
       this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
       this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
+      
+      this.tContexts = [];   // Parent array of tick contexts
 
       // Ignore this tick context for formatting and justification
       this.ignore_ticks = true;
       this.preFormatted = false;
+      this.postFormatted = false;
       this.context = null; // Rendering context
     },
 
@@ -125,7 +128,20 @@ Vex.Flow.TickContext = (function() {
       }
 
       return this;
+    },
+
+    postFormat: function() {
+      if (this.postFormatted) return this;
+      this.postFormatted = true;
+      return this;
     }
+  };
+
+  TickContext.getNextContext = function(tContext) {
+    var contexts = tContext.tContexts;
+    var index = contexts.indexOf(tContext);
+
+    return contexts[index+1];
   };
 
   return TickContext;

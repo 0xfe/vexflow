@@ -5,6 +5,10 @@
 //
 // Requires vex.js.
 
+Vex.Flow.STEM_WIDTH = 1.5;
+Vex.Flow.STEM_HEIGHT = 32;
+Vex.Flow.STAVE_LINE_THICKNESS = 2;
+
 Vex.Flow.clefProperties = function(clef) {
   if (!clef) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
@@ -19,7 +23,13 @@ Vex.Flow.clefProperties.values = {
   'bass':    { line_shift: 6 },
   'tenor':   { line_shift: 4 },
   'alto':    { line_shift: 3 },
-  'percussion': { line_shift: 0 }
+  'soprano': { line_shift: 1 },
+  'percussion': { line_shift: 0 },
+  'mezzo-soprano': { line_shift: 2 },
+  'baritone-c': { line_shift: 5 },
+  'baritone-f': { line_shift: 5 },
+  'subbass': { line_shift: 7 },
+  'french': { line_shift: -1 }
 };
 
 /*
@@ -330,30 +340,35 @@ Vex.Flow.accidentalCodes.accidentals = {
   "#": {
     code: "v18",
     width: 10,
+    gracenote_width: 4.5,
     shift_right: 0,
     shift_down: 0
   },
   "##": {
     code: "v7f",
     width: 13,
+    gracenote_width: 6,
     shift_right: -1,
     shift_down: 0
   },
   "b": {
     code: "v44",
     width: 8,
+    gracenote_width: 4.5,
     shift_right: 0,
     shift_down: 0
   },
   "bb": {
     code: "v26",
     width: 14,
+    gracenote_width: 8,
     shift_right: -3,
     shift_down: 0
   },
   "n": {
     code: "v4e",
     width: 8,
+    gracenote_width: 4.5,
     shift_right: 0,
     shift_down: 0
   },
@@ -366,6 +381,36 @@ Vex.Flow.accidentalCodes.accidentals = {
   "}": {   // Right paren for cautionary accidentals
     code: "v84",
     width: 5,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "db": {
+    code: "v9e",
+    width: 16,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "d": {
+    code: "vab",
+    width: 10,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "bbs": {
+    code: "v90",
+    width: 13,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "++": {
+    code: "v51",
+    width: 13,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "+": {
+    code: "v78",
+    width: 8,
     shift_right: 0,
     shift_down: 0
   }
@@ -426,6 +471,20 @@ Vex.Flow.keySignature.keySpecs = {
   "D#m": {acc: "#", num: 6},
   "C#": {acc: "#", num: 7},
   "A#m": {acc: "#", num: 7}
+};
+
+Vex.Flow.unicode = {
+  // Unicode accidentals
+  "sharp": String.fromCharCode(parseInt('266F', 16)),
+  "flat" : String.fromCharCode(parseInt('266D', 16)),
+  "natural": String.fromCharCode(parseInt('266E', 16)),
+  // Major Chord
+  "triangle": String.fromCharCode(parseInt('25B3', 16)),
+  // half-diminished
+  "o-with-slash": String.fromCharCode(parseInt('00F8', 16)),
+   // Diminished
+  "degrees": String.fromCharCode(parseInt('00B0', 16)),
+  "circle": String.fromCharCode(parseInt('25CB', 16))
 };
 
 Vex.Flow.keySignature.accidentalList = function(acc) {
@@ -585,10 +644,16 @@ Vex.Flow.durationToGlyph = function(duration, type) {
 Vex.Flow.durationToGlyph.duration_codes = {
   "1": {
     common: {
-      head_width: 15.5,
+      head_width: 16,
       stem: false,
       stem_offset: 0,
       flag: false,
+      stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      gracenote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      gracenote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      tabnote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      tabnote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -606,7 +671,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "r": { // Whole rest
         code_head: "v5c",
-        head_width: 12.5,
+        head_width: 12,
         rest: true,
         position: "D/5",
         dot_shiftY: 0.5
@@ -620,10 +685,16 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "2": {
     common: {
-      head_width: 9.5,
+      head_width: 10,
       stem: true,
       stem_offset: 0,
       flag: false,
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      gracenote_stem_up_extension: -14,
+      gracenote_stem_down_extension: -14,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -641,7 +712,7 @@ Vex.Flow.durationToGlyph.duration_codes = {
       },
       "r": { // Half rest
         code_head: "vc",
-        head_width: 12.5,
+        head_width: 12,
         stem: false,
         rest: true,
         position: "B/4",
@@ -656,10 +727,16 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "4": {
     common: {
-      head_width: 9.5,
+      head_width: 10,
       stem: true,
       stem_offset: 0,
       flag: false,
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      gracenote_stem_up_extension: -14,
+      gracenote_stem_down_extension: -14,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -694,13 +771,19 @@ Vex.Flow.durationToGlyph.duration_codes = {
   },
   "8": {
     common: {
-      head_width: 9.5,
+      head_width: 10,
       stem: true,
       stem_offset: 0,
       flag: true,
       beam_count: 1,
       code_flag_upstem: "v54",
       code_flag_downstem: "v9a",
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      gracenote_stem_up_extension: -14,
+      gracenote_stem_down_extension: -14,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -735,12 +818,18 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "16": {
     common: {
       beam_count: 2,
-      head_width: 9.5,
+      head_width: 10,
       stem: true,
       stem_offset: 0,
       flag: true,
       code_flag_upstem: "v3f",
       code_flag_downstem: "v8f",
+      stem_up_extension: 4,
+      stem_down_extension: 0,
+      gracenote_stem_up_extension: -14,
+      gracenote_stem_down_extension: -14,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -776,12 +865,18 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "32": {
     common: {
       beam_count: 3,
-      head_width: 9.5,
+      head_width: 10,
       stem: true,
       stem_offset: 0,
       flag: true,
       code_flag_upstem: "v47",
       code_flag_downstem: "v2a",
+      stem_up_extension: 13,
+      stem_down_extension: 9,
+      gracenote_stem_up_extension: -12,
+      gracenote_stem_down_extension: -12,
+      tabnote_stem_up_extension: 9,
+      tabnote_stem_down_extension: 5,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -817,12 +912,18 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "64": {
     common: {
       beam_count: 4,
-      head_width: 9.5,
+      head_width: 10,
       stem: true,
       stem_offset: 0,
       flag: true,
       code_flag_upstem: "va9",
       code_flag_downstem: "v58",
+      stem_up_extension: 17,
+      stem_down_extension: 13,
+      gracenote_stem_up_extension: -10,
+      gracenote_stem_down_extension: -10,
+      tabnote_stem_up_extension: 13,
+      tabnote_stem_down_extension: 9,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -858,12 +959,18 @@ Vex.Flow.durationToGlyph.duration_codes = {
   "128": {
       common: {
           beam_count: 5,
-          head_width: 9.5,
+          head_width: 10,
           stem: true,
           stem_offset:0,
           flag: true,
           code_flag_upstem: "v9b",
           code_flag_downstem: "v30",
+          stem_up_extension: 26,
+          stem_down_extension: 22,
+          gracenote_stem_up_extension: -8,
+          gracenote_stem_down_extension: -8,
+          tabnote_stem_up_extension: 22,
+          tabnote_stem_down_extension: 18,
           dot_shiftY: 0,
           line_above: 0,
           line_below: 0
@@ -904,8 +1011,3 @@ Vex.Flow.TIME4_4 = {
   beat_value: 4,
   resolution: Vex.Flow.RESOLUTION
 };
-
-Vex.Flow.STEM_WIDTH = 1.5;
-Vex.Flow.STEM_HEIGHT = 35;
-Vex.Flow.STAVE_LINE_THICKNESS = 2;
-

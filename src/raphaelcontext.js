@@ -93,6 +93,10 @@ Vex.Flow.RaphaelContext = (function() {
       this.lineWidth = width;
     },
 
+    // Empty because there is no equivalent in SVG
+    setLineDash: function() { return this; },
+    setLineCap: function() { return this; },
+
     scale: function(x, y) {
       this.state.scale = { x: x, y: y };
       this.attributes.scale = x + "," + y + ",0,0";
@@ -231,11 +235,6 @@ Vex.Flow.RaphaelContext = (function() {
     },
 
     arcHelper: function(x, y, radius, startAngle, endAngle, antiClockwise) {
-      Vex.Assert(endAngle > startAngle, "end angle " + endAngle +
-                 " less than or equal to start angle " + startAngle);
-      Vex.Assert(startAngle >= 0 && startAngle <= Math.PI * 2);
-      Vex.Assert(endAngle >= 0 && endAngle <= Math.PI * 2);
-
       var x1 = x + radius * Math.cos(startAngle);
       var y1 = y + radius * Math.sin(startAngle);
 

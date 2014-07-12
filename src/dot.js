@@ -25,6 +25,15 @@ Vex.Flow.Dot = (function() {
       this.dot_shiftY = 0;
     },
 
+    setNote: function(note){
+      this.note = note;
+
+      if (this.note.getCategory() === 'gracenotes') {
+        this.radius *= 0.50;
+        this.setWidth(3);
+      }
+    },
+
     getCategory: function() { return "dots"; },
 
     setDotShiftY: function(y) { this.dot_shiftY = y; return this; },

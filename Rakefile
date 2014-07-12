@@ -19,6 +19,7 @@ BUILD_DATE = Time.now()
 BUILD_COMMIT = `git rev-list --max-count=1 HEAD`.chomp
 
 JSHINT = "./node_modules/jshint/bin/jshint"
+DOCCO = "./node_modules/.bin/docco"
 
 directory TARGET_DIR
 directory 'build/tests'
@@ -39,12 +40,12 @@ base_sources = [
   "src/tickcontext.js",
   "src/tickable.js",
   "src/note.js",
-  "src/ghostnote.js",
   "src/notehead.js",
   "src/stem.js",
   "src/stemmablenote.js",
   "src/stavenote.js",
   "src/tabnote.js",
+  "src/ghostnote.js",
   "src/clefnote.js",
   "src/timesignote.js",
   "src/beam.js",
@@ -86,12 +87,16 @@ base_sources = [
   "src/textnote.js",
   "src/frethandfinger.js",
   "src/stringnumber.js",
-  "src/strokes.js"
+  "src/strokes.js",
+  "src/curve.js",
+  "src/staveline.js",
+  "src/crescendo.js"
 ]
 
 # Don't minify these files.
 reject = [
-  "src/header.js"
+  "src/header.js",
+  "src/container.js"
 ]
 
 # Catch other missing JS files
@@ -154,6 +159,12 @@ task :lint do
   # Requires JSHint to be installed
   puts "Checking VexFlow sources for lint errors..."
   system "#{JSHINT} --show-non-errors --config jshintrc src/*.js"
+end
+
+task :docs do
+  # Requires JSHint to be installed
+  puts "Generating documentation..."
+  system "#{DOCCO} -l linear src/*.js"
 end
 
 task :make => [:build_copy, TARGET_DIR, TARGET]

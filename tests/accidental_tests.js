@@ -14,6 +14,7 @@ Vex.Flow.Test.Accidental.Start = function() {
   Vex.Flow.Test.runRaphaelTest("Stem Down (Raphael)",
       Vex.Flow.Test.Accidental.basicStemDown);
   Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
+  Vex.Flow.Test.runTest("Microtonal", Vex.Flow.Test.Accidental.microtonal);
 }
 
 Vex.Flow.Test.Accidental.showNote = function(note, stave, ctx, x) {
@@ -218,3 +219,61 @@ Vex.Flow.Test.Accidental.multiVoice = function(options, contextBuilder) {
   Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 250);
   ok(true, "Full Accidental");
 }
+
+Vex.Flow.Test.Accidental.microtonal = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 700, 240);
+  ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
+  var stave = new Vex.Flow.Stave(10, 10, 550);
+  stave.setContext(ctx);
+  stave.draw();
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+  var notes = [
+    newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
+      addAccidental(0, newAcc("db")).
+      addAccidental(1, newAcc("d")),
+
+    newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
+        duration: "h"}).
+      addAccidental(0, newAcc("bbs")).
+      addAccidental(1, newAcc("++")).
+      addAccidental(2, newAcc("+")).
+      addAccidental(3, newAcc("d")).
+      addAccidental(4, newAcc("db")).
+      addAccidental(5, newAcc("+")).
+      addAccidental(6, newAcc("##")),
+
+    newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
+        duration: "16"}).
+      addAccidental(0, newAcc("++")).
+      addAccidental(1, newAcc("bbs")).
+      addAccidental(2, newAcc("+")).
+      addAccidental(3, newAcc("b")).
+      addAccidental(4, newAcc("db")).
+      addAccidental(5, newAcc("##")).
+      addAccidental(6, newAcc("#")),
+
+    newNote({ keys: ["a/3", "c/4", "e/4", "b/4", "d/5", "g/5"], duration: "w"}).
+      addAccidental(0, newAcc("#")).
+      addAccidental(1, newAcc("db").setAsCautionary()).
+      addAccidental(2, newAcc("bbs").setAsCautionary()).
+      addAccidental(3, newAcc("b")).
+      addAccidental(4, newAcc("++").setAsCautionary()).
+      addAccidental(5, newAcc("d").setAsCautionary()),
+  ];
+
+  for (var i = 0; i < notes.length; ++i) {
+    Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 125));
+    var accidentals = notes[i].getAccidentals();
+    ok(accidentals.length > 0, "Note " + i + " has accidentals");
+
+    for (var j = 0; j < accidentals.length; ++j) {
+      ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
+    }
+  }
+
+  ok(true, "Microtonal Accidental");
+}
+

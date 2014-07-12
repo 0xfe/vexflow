@@ -34,9 +34,9 @@ Vex.Flow.Test.Percussion.runBoth = function(title, func) {
 }
 
 Vex.Flow.Test.Percussion.newModifier = function(s) {
-  return new Vex.Flow.Annotation(s).setFont("Arial", 12).setBottom(true);
+  return new Vex.Flow.Annotation(s).setFont("Arial", 12)
+    .setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM);
 }
-
 
 Vex.Flow.Test.Percussion.newArticulation = function(s) {
   return new Vex.Flow.Articulation(s).setPosition(Vex.Flow.Modifier.Position.ABOVE);

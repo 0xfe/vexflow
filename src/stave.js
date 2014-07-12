@@ -39,20 +39,13 @@ Vex.Flow.Stave = (function() {
         spacing_between_lines_px: 10, // in pixels
         space_above_staff_ln: 4,      // in staff lines
         space_below_staff_ln: 4,      // in staff lines
-        top_text_position: 1,         // in staff lines
-        bottom_text_position: 6       // in staff lines
+        top_text_position: 1          // in staff lines
       };
       this.bounds = {x: this.x, y: this.y, w: this.width, h: 0};
       Vex.Merge(this.options, options);
 
-      this.options.line_config = [];
-      for (var i = 0; i < this.options.num_lines; i++) {
-        this.options.line_config.push({ visible: true });
-      }
+      this.resetLines();
 
-      this.height =
-        (this.options.num_lines + this.options.space_above_staff_ln) *
-         this.options.spacing_between_lines_px;
       this.modifiers.push(
           new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, this.x)); // beg bar
       this.modifiers.push(
@@ -60,12 +53,24 @@ Vex.Flow.Stave = (function() {
           this.x + this.width)); // end bar
     },
 
+    resetLines: function() {
+      this.options.line_config = [];
+      for (var i = 0; i < this.options.num_lines; i++) {
+        this.options.line_config.push({visible: true});
+      }
+      this.height = (this.options.num_lines + this.options.space_above_staff_ln) *
+         this.options.spacing_between_lines_px;
+      this.options.bottom_text_position = this.options.num_lines + 1;
+    },
+
     setNoteStartX: function(x) { this.start_x = x; return this; },
     getNoteStartX: function() {
       var start_x = this.start_x;
 
-      // Add additional space if left barline is REPEAT_BEGIN
-      if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN)
+      // Add additional space if left barline is REPEAT_BEGIN and there are other
+      // start modifiers than barlines
+      if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &&
+          this.modifiers.length > 2)
         start_x += 20;
       return start_x;
     },
@@ -77,12 +82,20 @@ Vex.Flow.Stave = (function() {
     getContext: function() { return this.context; },
     getX: function() { return this.x; },
     getNumLines: function() { return this.options.num_lines; },
+    setNumLines: function(lines) {
+      this.options.num_lines = parseInt(lines, 10);
+      this.resetLines();
+      return this;
+    },
     setY: function(y) { this.y = y; return this; },
 
     setWidth: function(width) {
       this.width = width;
+      this.glyph_end_x = this.x + width;
+      this.end_x = this.glyph_end_x;
+
       // reset the x position of the end barline
-      this.modifiers[1].setX(this.x + this.width);
+      this.modifiers[1].setX(this.end_x);
       return this;
     },
 

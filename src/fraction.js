@@ -260,8 +260,8 @@ Vex.Flow.Fraction = (function() {
     // Parses a fraction string
     parse: function(str) {
       var i = str.split('/');
-      var n = parseInt(i[0], 0);
-      var d = (i[1]) ? parseInt(i[1], 0) : 1;
+      var n = parseInt(i[0], 10);
+      var d = (i[1]) ? parseInt(i[1], 10) : 1;
 
       return this.set(n, d);
     }

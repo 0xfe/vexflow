@@ -8,11 +8,11 @@
     type="text/css" />
 
   <!-- VexFlow Compiled Source -->
+  <script src="../build/vexflow/vexflow-debug.js"></script>
   <script src="../support/vexflow-min.js"></script>
 
   <!-- Support Sources -->
-  <script src="../support/jquery.js"></script>
-  <script src="../support/raphael.js"></script>
+  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
 
   <style type="text/css">
     canvas {
@@ -67,8 +67,6 @@
     <a href="http://vexflow.com">VexFlow</a> |
     <a href="http://my.vexflow.com">My VexFlow</a> |
     <a href="http://vexflow.com/vextab">VexTab</a> |
-    <a href="http://vexmachines.com">VexMachines</a> |
-    <a href="http://wickedmeanposters.com">Posters</a> |
     <a href="http://0xfe.blogspot.com">0xfe</a>
   </div>
 
@@ -96,9 +94,9 @@
 var canvas = $("div.sandbox div.sandbox canvas")[0];
 
 var renderer = new Vex.Flow.Renderer(canvas,
-  Vex.Flow.Renderer.Backends.CANVAS);
+Vex.Flow.Renderer.Backends.CANVAS);
 var ctx = renderer.getContext();
-ctx.clearRect(0, 0, canvas.width, canvas.height);
+renderer.resize(500, 300); // Resize and clear canvas
 ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
 // Create and draw the tablature stave
@@ -167,7 +165,7 @@ Vex.Flow.Formatter.FormatAndDraw(ctx, tabstave, notes);</textarea>
 
         }
 
-        $('#sandbox').live('blur keyup paste', function() {
+        $('#sandbox').on('blur keyup paste', function() {
           if (timeout) clearTimeout(timeout);
           timeout = setTimeout(live_code, 200);
         });

@@ -3,22 +3,22 @@
   <title>VexFlow - HTML5 Music Engraving</title>
   <link href='http://fonts.googleapis.com/css?family=OFL+Sorts+Mill+Goudy+TT|Yanone+Kaffeesatz|Tangerine'
    rel='stylesheet' type='text/css'>
-  <link href="vextab/tabdiv.css" media="screen" rel="Stylesheet" type="text/css" />
-  <link href="vextab/style.css" media="screen" rel="Stylesheet" type="text/css" />
+  <link href="http://vwww.vexflow.com/vextab/tabdiv.css" media="screen" rel="Stylesheet" type="text/css" />
+  <link href="http://www.vexflow.com/vextab/style.css" media="screen" rel="Stylesheet" type="text/css" />
 
   <!-- VexFlow Compiled Source -->
+  <script src="../build/vexflow/vexflow-debug.js"></script>
   <script src="vextab/support/vexflow-min.js"></script>
-  <script src="vextab/support/jquery.js"></script>
-  <!-- <script src="vextab/support/raphael.js"></script> -->
-  <script src="vextab/support/underscore-min.js"></script>
-  <script src="vextab/support/tabdiv-min.js"></script>
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <script src="http://www.vexflow.com/support/tabdiv-debug.js"></script>
 </head>
 
 <body>
   <div class="vex">
     <a href="http://my.vexflow.com">My VexFlow</a> |
     <a href="http://vexflow.com/vextab/">VexTab</a> |
-    <a href="http://vexmachines.com">VexMachines</a> |
     <a href="http://0xfe.blogspot.com">0xfe</a>
   </div>
 
@@ -61,12 +61,19 @@ text :h, ,.font=Times-12-italic, D.S. al coda, |#coda
 text :h, ,.-1, .font=Arial-14-bold,A13
 text ++, .23, #f
 </div>
-
     <p/>
     <h2>Where Do I Start?</h2>
     <div class="docs">
-    If you want to use VexFlow to publish your music online, check out
-    <a href="http://my.vexflow.com">My VexFlow</a>.
+      If you're not a programmer, there are many ways to use VexFlow to create, share, or publish your music online:
+      <p/>
+      <ul>
+        <li><a href="http://my.vexflow.com">My VexFlow</a> allows you to create
+            and publish articles and blog-posts with playable music notation.</li>
+        <li>The <a href="https://chrome.google.com/webstore/detail/vextab-music-notation/pjggkphnejbllmmkmmgibonkbbhfjnkk">VexTab Google Docs add-on</a> lets you add music notation right in your Google Documents.</li>
+        <li>You can use the <a href="https://chrome.google.com/webstore/detail/npcffdibegeppkebphaghnpkcjcpopjf">VexTab Chrome Extension</a> to write and share musical snippets hosted on <a href="http://imgur.com">imgur</a> right from your browser.</li>
+        <li>The <a href="http://www.vexflow.com/vextab/playground/">VexTab Playground</a>
+        is a simple online application to quickly create and post music notation to <a href="http://imgur.com">imgur</a>.
+      </ul>
       <p/>
       If you're a programmer interested in rendering music notation in your
       own applications, take a look at
@@ -80,7 +87,7 @@ text ++, .23, #f
       It sings, it dances, it does your dishes. Actually it does none of that.
       But it can render a mean score. New features in VexFlow are incorporated
       quickly into <a href="http://my.vexflow.com">My VexFlow</a>.
-      
+
       <p/>Have a look
       at the <a href="http://my.vexflow.com/articles/53?source=enabled">
         New in My VexFlow</a> page for a comprehensive list of features.

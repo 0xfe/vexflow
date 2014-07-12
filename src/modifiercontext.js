@@ -15,6 +15,7 @@ Vex.Flow.ModifierContext = (function() {
 
     // Formatting data.
     this.preFormatted = false;
+    this.postFormatted = false;
     this.width = 0;
     this.spacing = 0;
     this.state = {
@@ -92,10 +93,6 @@ Vex.Flow.ModifierContext = (function() {
 
       if (notes[0].getStave() != null)
         return this.formatNotesByY(notes);
-
-      // Assumption: no more than three notes
-      Vex.Assert(notes.length < 4,
-          "Got more than three notes in Vex.Flow.ModifierContext.formatNotes!");
 
       var notes_list= [];
 
@@ -338,7 +335,7 @@ Vex.Flow.ModifierContext = (function() {
         }
 
         if (!note.isRest() && line != last_line) {
-          if (line % 1 == 0.5) {
+          if (Math.abs(line % 1) == 0.5) {
             // note is on a space, so no dot shift
             half_shiftY = 0;
           } else if (!note.isRest()) {
@@ -769,6 +766,62 @@ Vex.Flow.ModifierContext = (function() {
       return this;
     },
 
+    formatGraceNoteGroups: function(){
+      var gracenote_groups = this.modifiers['gracenotegroups'];
+      var gracenote_spacing = 4;
+
+      if (!gracenote_groups || gracenote_groups.length === 0) return this;
+
+      var group_list = [];
+      var hasStave = false;
+      var prev_note = null;
+      var shiftL = 0;
+
+      var i, gracenote_group, props_tmp;
+      for (i = 0; i < gracenote_groups.length; ++i) {
+        gracenote_group = gracenote_groups[i];
+        var note = gracenote_group.getNote();
+        var stave = note.getStave();
+        if (note != prev_note) {
+           // Iterate through all notes to get the displaced pixels
+           for (var n = 0; n < note.keys.length; ++n) {
+              props_tmp = note.getKeyProps()[n];
+              shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+            }
+            prev_note = note;
+        }
+        if (stave != null) {
+          hasStave = true;
+          group_list.push({shift: shiftL, gracenote_group: gracenote_group});
+        } else {
+          group_list.push({shift: shiftL, gracenote_group: gracenote_group });
+        }
+      }
+
+      // If first note left shift in case it is displaced
+      var group_shift = group_list[0].shift;
+      for (i = 0; i < group_list.length; ++i) {
+        gracenote_group = group_list[i].gracenote_group;
+        gracenote_group.preFormat();
+        group_shift = gracenote_group.getWidth() + gracenote_spacing;
+      }
+
+      this.state.left_shift += group_shift;
+      return this;
+    },
+
+    postFormatNotes: function() {
+      var notes = this.modifiers['stavenotes'];
+
+      if (!notes) return;
+
+      notes.forEach(function(note) {
+        note.postFormat();
+      });
+
+      return this;
+    },
+
     preFormat: function() {
       if (this.preFormatted) return;
 
@@ -777,6 +830,7 @@ Vex.Flow.ModifierContext = (function() {
            formatDots().
            formatFretHandFingers().
            formatAccidentals().
+           formatGraceNoteGroups().
            formatStrokes().
            formatStringNumbers().
            formatArticulations().
@@ -787,6 +841,13 @@ Vex.Flow.ModifierContext = (function() {
       // Update width of this modifier context
       this.width = this.state.left_shift + this.state.right_shift;
       this.preFormatted = true;
+    },
+
+    postFormat: function() {
+      if (this.postFormatted) return;
+
+      this.postFormatNotes();
+      return this;
     }
   };
 
