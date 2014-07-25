@@ -595,6 +595,7 @@ Vex.Flow.durationToTicks = function(duration) {
 };
 
 Vex.Flow.durationToTicks.durations = {
+    "0":    Vex.Flow.RESOLUTION * 2,
   "1":    Vex.Flow.RESOLUTION / 1,
   "2":    Vex.Flow.RESOLUTION / 2,
   "4":    Vex.Flow.RESOLUTION / 4,
@@ -642,6 +643,47 @@ Vex.Flow.durationToGlyph = function(duration, type) {
 };
 
 Vex.Flow.durationToGlyph.duration_codes = {
+  "0": {
+    common: {
+      head_width: 16,
+      stem: false,
+      stem_offset: 0,
+      flag: false,
+      stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      gracenote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      gracenote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      tabnote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      tabnote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
+    },
+    type: {
+      "n": { // Breve note
+        code_head: "v53"
+      },
+      "h": { // Breve note harmonic
+        code_head: "v59"
+      },
+      "m": { // Breve note muted -
+        code_head: "v92",
+        stem_offset: -3
+      },
+      "r": { // Breve rest
+        code_head: "v31",
+        head_width: 24,
+        rest: true,
+        position: "D/5",
+        dot_shiftY: 0.5
+      },
+      "s": { // Breve note slash -
+        // Drawn with canvas primitives
+        head_width: 15,
+        position: "B/4"
+      }
+    }
+  },
   "1": {
     common: {
       head_width: 16,

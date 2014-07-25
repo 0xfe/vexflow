@@ -42,6 +42,10 @@ Vex.Flow.ClefNote = (function() {
       return this;
     },
 
+    getCategory: function() {
+      return "clefnote";
+    },
+
     preFormat: function() {
       this.setPreFormatted(true);
       return this;
