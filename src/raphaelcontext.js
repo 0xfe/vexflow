@@ -117,6 +117,10 @@ Vex.Flow.RaphaelContext = (function() {
       return this;
     },
 
+    setViewBox: function(viewBox) {
+      this.paper.canvas.setAttribute('viewBox', viewBox);
+    },
+
     rect: function(x, y, width, height) {
       if (height < 0) {
         y += height;
