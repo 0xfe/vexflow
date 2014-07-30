@@ -127,8 +127,9 @@ Vex.Flow.NoteHead = (function() {
     getY: function() { return this.y; },
     setY: function(y) { this.y = y;  return this; },
 
-    // Get the stave line the notehead is placed on 
-    getLine: function(){ return this.line; },
+    // Get/set the stave line the notehead is placed on
+    getLine: function() { return this.line; },
+    setLine: function(line) { this.line = line; return this; },
 
     // Get the canvas `x` coordinate position of the notehead.
     getAbsoluteX: function() {

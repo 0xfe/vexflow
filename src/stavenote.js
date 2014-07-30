@@ -409,6 +409,11 @@ Vex.Flow.StaveNote = (function() {
       return this;
     },
 
+    setKeyLine: function(index, line) {
+      this.note_heads[index].setLine(line);
+      return this;
+    },
+
     // Add self to modifier context. `mContext` is the `ModifierContext`
     // to be added to.
     addToModifierContext: function(mContext) {

@@ -330,7 +330,7 @@ Vex.Flow.Test.ThreeVoices.autoresttwovoices = function(options, contextBuilder) 
   Vex.Debug = false;
   var formatter = new Vex.Flow.Formatter().
     joinVoices([voice, voice1, voice2]).
-    format([voice, voice1, voice2], 350, {align_rests: true});
+    format([voice, voice1, voice2], 350, {align_rests: false});
 
   voice.draw(c, stave);
   voice1.draw(c, stave);
@@ -446,7 +446,7 @@ Vex.Flow.Test.ThreeVoices.autorestthreevoices = function(options, contextBuilder
   Vex.Debug = false;
   var formatter = new Vex.Flow.Formatter().
     joinVoices([voice, voice1, voice2, voice3]).
-    format([voice, voice1, voice2, voice3], 350, {align_rests: true});
+    format([voice, voice1, voice2, voice3], 350, {align_rests: false});
 
   voice.draw(c, stave);
   voice1.draw(c, stave);
@@ -558,7 +558,7 @@ Vex.Flow.Test.ThreeVoices.autorestthreevoices2 = function(options, contextBuilde
   Vex.Debug = false;
   var formatter = new Vex.Flow.Formatter().
     joinVoices([voice, voice1, voice2, voice3]).
-    format([voice, voice1, voice2, voice3], 400, {align_rests: true});
+    format([voice, voice1, voice2, voice3], 400, {align_rests: false});
 
   voice.draw(c, stave);
   voice1.draw(c, stave);
