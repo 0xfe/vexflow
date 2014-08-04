@@ -16,35 +16,35 @@ Vex.Flow.Test.StaveNote.Start = function() {
   test("TickContext", Vex.Flow.Test.StaveNote.tickContext);
 
   Vex.Flow.Test.runTest("StaveNote Draw - Treble", Vex.Flow.Test.StaveNote.draw,
-      { clef: "treble", octaveShift: 0, restKey: "b/4" });
+      { clef: "treble", octaveShift: 0, restKey: "r/4" });
   Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Treble (Raphael)",
       Vex.Flow.Test.StaveNote.draw,
-      { clef: "treble", octaveShift: 0, restKey: "b/4" });
+      { clef: "treble", octaveShift: 0, restKey: "r/4" });
 
   Vex.Flow.Test.runTest("StaveNote BoundingBoxes - Treble", Vex.Flow.Test.StaveNote.drawBoundingBoxes,
-      { clef: "treble", octaveShift: 0, restKey: "b/4" });
+      { clef: "treble", octaveShift: 0, restKey: "r/4" });
   Vex.Flow.Test.runRaphaelTest("StaveNote BoundingBoxes - Treble (Raphael)",
       Vex.Flow.Test.StaveNote.drawBoundingBoxes,
-      { clef: "treble", octaveShift: 0, restKey: "b/4" });
+      { clef: "treble", octaveShift: 0, restKey: "r/4" });
 
 
   Vex.Flow.Test.runTest("StaveNote Draw - Alto", Vex.Flow.Test.StaveNote.draw,
-      { clef: "alto", octaveShift: -1, restKey: "c/4" });
+      { clef: "alto", octaveShift: -1, restKey: "r/4" });
   Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Alto (Raphael)",
       Vex.Flow.Test.StaveNote.draw,
-      { clef: "alto", octaveShift: -1, restKey: "c/4" });
+      { clef: "alto", octaveShift: -1, restKey: "r/4" });
 
   Vex.Flow.Test.runTest("StaveNote Draw - Tenor", Vex.Flow.Test.StaveNote.draw,
-      { clef: "tenor", octaveShift: -1, restKey: "a/3" });
+      { clef: "tenor", octaveShift: -1, restKey: "r/3" });
   Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Tenor (Raphael)",
       Vex.Flow.Test.StaveNote.draw,
-      { clef: "tenor", octaveShift: -1, restKey: "a/3" });
+      { clef: "tenor", octaveShift: -1, restKey: "r/3" });
 
   Vex.Flow.Test.runTest("StaveNote Draw - Bass", Vex.Flow.Test.StaveNote.draw,
-      { clef: "bass", octaveShift: -2, restKey: "d/3" });
+      { clef: "bass", octaveShift: -2, restKey: "r/3" });
   Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Bass (Raphael)",
       Vex.Flow.Test.StaveNote.draw,
-      { clef: "bass", octaveShift: -2, restKey: "d/3" });
+      { clef: "bass", octaveShift: -2, restKey: "r/3" });
 
   Vex.Flow.Test.runTest("StaveNote Draw - Harmonic And Muted",
                         Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
@@ -567,12 +567,12 @@ Vex.Flow.Test.StaveNote.drawBass = function(options, contextBuilder) {
     { clef: 'bass', keys: ["c/2", "e/2", "a/2"], duration: "16", stem_direction: -1},
     { clef: 'bass', keys: ["c/2", "e/2", "a/2"], duration: "32", stem_direction: -1},
 
-    { keys: ["b/4"], duration: "wr"},
-    { keys: ["b/4"], duration: "hr"},
-    { keys: ["b/4"], duration: "qr"},
-    { keys: ["b/4"], duration: "8r"},
-    { keys: ["b/4"], duration: "16r"},
-    { keys: ["b/4"], duration: "32r"},
+    { keys: ["r/4"], duration: "wr"},
+    { keys: ["r/4"], duration: "hr"},
+    { keys: ["r/4"], duration: "qr"},
+    { keys: ["r/4"], duration: "8r"},
+    { keys: ["r/4"], duration: "16r"},
+    { keys: ["r/4"], duration: "32r"},
     { keys: ["x/4"], duration: "h"}
   ];
 

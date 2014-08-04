@@ -188,6 +188,15 @@ Vex.Flow.StaveNote = (function() {
               "Invalid key for note properties: " + key);
         }
 
+        // Override line placement for default rests
+        if (props.key === "R") {
+          if (this.duration === "1" || this.duration === "w") {
+            props.line = 4;
+          } else {
+            props.line = 3;
+          }
+        }
+
         // Calculate displacement of this note
         var line = props.line;
         if (last_line === null) {
