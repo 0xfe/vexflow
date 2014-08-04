@@ -325,7 +325,6 @@ Vex.Flow.Music = (function() {
     // return a scale map with every note naturalized except for `F` which
     // has an `F#` state.
     createScaleMap: function(keySignature) {
-      var music = new Vex.Flow.Music();
       var keySigParts = this.getKeyParts(keySignature);
       var scaleName = Vex.Flow.KeyManager.scales[keySigParts.type];
 

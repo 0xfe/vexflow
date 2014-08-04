@@ -2,11 +2,11 @@
 //
 // ## Description
 //
-// This file implements different types of pedal markings. These notation 
+// This file implements different types of pedal markings. These notation
 // elements indicate to the performer when to depress and release the a pedal.
-// 
+//
 // In order to create "Sostenuto", and "una corda" markings, you must set
-// custom text for the release/depress pedal markings.  
+// custom text for the release/depress pedal markings.
 Vex.Flow.PedalMarking = (function() {
   function PedalMarking(type) {
     if (arguments.length > 0) this.init(type);
@@ -35,9 +35,9 @@ Vex.Flow.PedalMarking = (function() {
     MIXED: 3
   };
 
-  
+
   // ## Public helpers
-  // 
+  //
   // Create a sustain pedal marking. Returns the defaults PedalMarking.
   // Which uses the traditional "Ped" and "*"" markings.
   PedalMarking.createSustain = function(notes) {
@@ -71,7 +71,7 @@ Vex.Flow.PedalMarking = (function() {
       // Custom text for the release/depress markings
       this.custom_depress_text = "";
       this.custom_release_text = "";
-      
+
       this.font = {
         family: "Times New Roman",
         size: 12,
@@ -87,7 +87,7 @@ Vex.Flow.PedalMarking = (function() {
       };
     },
 
-    // Set custom text for the `depress`/`release` pedal markings. No text is 
+    // Set custom text for the `depress`/`release` pedal markings. No text is
     // set if the parameter is falsy.
     setCustomText: function(depress, release) {
       this.custom_depress_text = depress || "";
@@ -133,7 +133,7 @@ Vex.Flow.PedalMarking = (function() {
         if (x < prev_x) throw new Vex.RERR('InvalidConfiguration',
           'The notes provided must be in order of ascending x positions');
 
-        // Determine if the previous or next note are the same 
+        // Determine if the previous or next note are the same
         // as the current note. We need to keep track of this for
         // when adjustments are made for the release+depress action
         var next_is_same = notes[index+1] === note;
@@ -188,15 +188,13 @@ Vex.Flow.PedalMarking = (function() {
     drawText: function() {
       var ctx = this.context;
       var is_pedal_depressed = false;
-      var prev_x;
-      var prev_y;
       var pedal = this;
 
       // The glyph point size
       var point = pedal.render_options.glyph_point_size;
 
       // Iterate through each note, placing glyphs or custom text accordingly
-      this.notes.forEach(function(note, index, notes) {
+      this.notes.forEach(function(note) {
         is_pedal_depressed = !is_pedal_depressed;
         var stave = note.getStave();
         var x = note.getAbsoluteX();

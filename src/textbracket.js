@@ -6,7 +6,7 @@
 // This file implement `TextBrackets` which extend between two notes.
 // The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
 // using this class.
-// 
+//
 Vex.Flow.TextBracket = (function() {
   function TextBracket(bracket_data) {
     if (arguments.length > 0) this.init(bracket_data);
@@ -41,10 +41,8 @@ Vex.Flow.TextBracket = (function() {
       this.render_options = {
         dashed: true,
         dash: [5],
-        
         color: "black",
         line_width: 1,
-          
         show_bracket: true,
         bracket_height: 8,
 
@@ -97,6 +95,8 @@ Vex.Flow.TextBracket = (function() {
       // Get the preliminary start and stop coordintates for the bracket
       var start = { x: this.start.getAbsoluteX(), y: y};
       var stop = { x: this.stop.getAbsoluteX(), y: y };
+
+      L("Rendering TextBracket: start:", start, "stop:", stop, "y:", y);
 
       var bracket_height = this.render_options.bracket_height * this.position;
 

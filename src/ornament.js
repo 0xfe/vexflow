@@ -197,7 +197,7 @@ Vex.Flow.Ornament = (function() {
       }
 
       var ornament = this;
-      function drawAccidental(ctx, code, upper, x, y) {
+      function drawAccidental(ctx, code, upper) {
         var accidental = Vex.Flow.accidentalCodes(code);
 
         var acc_x = glyph_x - 3;
@@ -222,7 +222,7 @@ Vex.Flow.Ornament = (function() {
         var scale = ornament.render_options.font_scale/1.3;
         Vex.Flow.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);
 
-        // If rendered a bottom accidental, increase the y value by the 
+        // If rendered a bottom accidental, increase the y value by the
         // accidental height so that the ornament's glyph is shifted up
         if (!upper) {
           glyph_y -= mods ? mods.height : 18;
