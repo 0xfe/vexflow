@@ -1,5 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Larry Kuhns.
+// Author: Cyril Silverman
 //
 // ## Description
 //
