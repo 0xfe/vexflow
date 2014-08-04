@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-// 
+//
 // This file implements `Beams` that span over a set of `StemmableNotes`.
-// 
+//
 // Requires: vex.js, vexmusic.js, note.js
 Vex.Flow.Beam = (function() {
   function Beam(notes, auto_stem) {
@@ -572,14 +572,14 @@ Vex.Flow.Beam = (function() {
         var totalTicks = getTotalTicks(currentGroup).value();
 
         // Double the amount of ticks in a group, if it's an unbeamable tuplet
-        var unbeamable = parseInt(unprocessedNote.duration, 10) < 8;
-        if (unbeamable && unprocessedNote.tuplet) {
+        if (Vex.Flow.durationToInteger(unprocessedNote.duration) < 8
+            && unprocessedNote.tuplet) {
           ticksPerGroup *= 2;
         }
 
         // If the note that was just added overflows the group tick total
         if (totalTicks > ticksPerGroup) {
-          // If the overflow note can be beamed, start the next group 
+          // If the overflow note can be beamed, start the next group
           // with it. Unbeamable notes leave the group overflowed.
           if (!unbeamable) {
             nextGroup.push(currentGroup.pop());
@@ -648,7 +648,7 @@ Vex.Flow.Beam = (function() {
             }
 
             // Start a new group. Include the current note if the group
-            // was broken up by stem direction, as that note needs to start 
+            // was broken up by stem direction, as that note needs to start
             // the next group of notes
             tempGroup = breakOnStemChange ? [note] : [];
           } else {
@@ -656,7 +656,7 @@ Vex.Flow.Beam = (function() {
             tempGroup.push(note);
           }
         });
-  
+
         // If there is a remaining group, add it as well
         if (tempGroup.length > 0) {
           sanitizedGroups.push(tempGroup);
