@@ -1,3 +1,8 @@
+/*
+  VexFlow - Copyright Mohit Cheppudira 2010
+  Author: Cyril Silverman
+*/
+
 Vex.Flow.Test.Ornament = {};
 
 Vex.Flow.Test.Ornament.Start = function() {

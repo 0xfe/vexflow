@@ -170,7 +170,7 @@ Vex.Flow.Ornament = (function() {
       var is_on_head = stem_direction === Vex.Flow.StaveNote.STEM_DOWN;
       var spacing = stave.getSpacingBetweenLines();
       var line_spacing = 1;
-      
+
       // Beamed stems are longer than quarter note stems, adjust accordingly
       if (!is_on_head && this.note.beam) {
         line_spacing += 0.5;
