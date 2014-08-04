@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-// 
-// This file implements the `Stem` object. Generally this object is handled 
+//
+// This file implements the `Stem` object. Generally this object is handled
 // by its parent `StemmableNote`.
-// 
+//
 Vex.Flow.Stem = (function() {
   var Stem = function(options) {
     if (arguments.length > 0) this.init(options);
@@ -99,7 +99,7 @@ Vex.Flow.Stem = (function() {
           base_pixel = (base_pixel > ys[i]) ? base_pixel : ys[i];
         }
       }
-      
+
       return { topY: top_pixel, baseY: base_pixel };
     },
 
