@@ -32,7 +32,7 @@ Vex.Flow.ModifierContext = (function() {
   var shiftRestVertical = function(rest, note, dir) {
     if (!Vex.Debug) return;
 
-    var delta = (note.isrest ? 0.0 : 0.5) * dir;
+    var delta = (note.isrest ? 0.0 : 1.0) * dir;
 
     rest.line += delta;
     rest.max_line += delta;
