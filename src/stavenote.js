@@ -595,7 +595,7 @@ Vex.Flow.StaveNote = (function() {
         var key_style = note_head.getStyle();
         if(key_style) {
             ctx.save();
-            note_head.applyKeyStyle(ctx);
+            note_head.applyStyle(ctx);
         }
         mod.setContext(ctx);
         mod.draw();
