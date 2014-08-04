@@ -32,23 +32,12 @@ Vex.Flow.ModifierContext = (function() {
   var shiftRestVertical = function(rest, note, dir) {
     if (!Vex.Debug) return;
 
-    var delta = 0;
-    var padding;
-
-    if (dir == 1) {
-      padding = note.isrest ? 0.0 : 0.5;
-      delta = note.max_line - rest.min_line;
-      delta += padding;
-    } else {
-      padding = note.isrest ? 0.0 : 0.5;
-      delta = note.min_line - rest.max_line;
-      delta -= padding;
-    }
+    var delta = (note.isrest ? 0.0 : 0.5) * dir;
 
     rest.line += delta;
     rest.max_line += delta;
     rest.min_line += delta;
-    rest.note.setKeyLine(0, rest.note.getKeyLine(0) + delta);
+    rest.note.setKeyLine(0, rest.note.getKeyLine(0) + (delta));
   };
 
   // Called from formatNotes :: center a rest between two notes
