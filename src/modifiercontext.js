@@ -25,6 +25,9 @@ Vex.Flow.ModifierContext = (function() {
     };
   }
 
+  // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
+  function L() { if (ModifierContext.DEBUG) Vex.L("Vex.Flow.ModifierContext", arguments); }
+
   // Static method. Called from formatNotes :: shift rests vertically
   var shiftRestVertical = function(rest, note, dir) {
     if (!Vex.Debug) return;
@@ -45,13 +48,13 @@ Vex.Flow.ModifierContext = (function() {
     rest.line += delta;
     rest.max_line += delta;
     rest.min_line += delta;
-    rest.note.keyProps[0].line += delta;
+    rest.note.setKeyLine(0, rest.note.getKeyLine(0) + delta);
   };
 
-// Called from formatNotes :: center a rest between two notes
+  // Called from formatNotes :: center a rest between two notes
   var centerRest = function(rest, noteU, noteL) {
     var delta = rest.line - Vex.MidLine(noteU.min_line, noteL.max_line);
-    rest.note.keyProps[0].line -= delta;
+    rest.note.setKeyLine(0, rest.note.getKeyLine(0) - delta);
     rest.line -= delta;
     rest.max_line -= delta;
     rest.min_line -= delta;
@@ -158,13 +161,13 @@ Vex.Flow.ModifierContext = (function() {
           }
         }
         if (noteU.min_line <= noteL.max_line + line_spacing) {
-          if (noteU.isrest)
+          if (noteU.isrest) {
             // shift rest up
             shiftRestVertical(noteU, noteL, 1);
-          else if (noteL.isrest)
+          } else if (noteL.isrest) {
             // shift rest down
             shiftRestVertical(noteL, noteU, -1);
-          else {
+          } else {
             x_shift = voice_x_shift;
             if (noteU.stem_dir == noteL.stem_dir)
               // upper voice is middle voice, so shift it right

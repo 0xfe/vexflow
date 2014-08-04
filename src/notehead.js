@@ -110,7 +110,7 @@ Vex.Flow.NoteHead = (function() {
     isDisplaced: function() { return this.displaced === true; },
 
     // Get/set the notehead's style
-    // 
+    //
     // `style` is an `object` with the following properties: `shadowColor`,
     // `shadowBlur`, `fillStyle`, `strokeStyle`
     getStyle: function() { return this.style; },

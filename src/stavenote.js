@@ -419,8 +419,13 @@ Vex.Flow.StaveNote = (function() {
     },
 
     setKeyLine: function(index, line) {
+      this.keyProps[index].line = line;
       this.note_heads[index].setLine(line);
       return this;
+    },
+
+    getKeyLine: function(index, line) {
+      return this.keyProps[index].line;
     },
 
     // Add self to modifier context. `mContext` is the `ModifierContext`
@@ -669,7 +674,7 @@ Vex.Flow.StaveNote = (function() {
       if (stem_struct) {
         this.setStem(new Stem(stem_struct));
       }
-      
+
       this.stem.setContext(this.context).draw();
     },
 
