@@ -526,13 +526,12 @@ Vex.Flow.keySignature = function(spec) {
     return [];
   }
 
-  var code = Vex.Flow.accidentalCodes.accidentals[keySpec.acc].code;
   var notes = Vex.Flow.keySignature.accidentalList(keySpec.acc);
 
   var acc_list = [];
   for (var i = 0; i < keySpec.num; ++i) {
     var line = notes[i];
-    acc_list.push({glyphCode: code, line: line});
+    acc_list.push({type: keySpec.acc, line: line});
   }
 
   return acc_list;
