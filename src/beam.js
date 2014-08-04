@@ -89,7 +89,7 @@ Vex.Flow.Beam = (function() {
         max_slope: 0.25,
         min_slope: -0.25,
         slope_iterations: 20,
-        slope_cost: 25,
+        slope_cost: 100,
         show_stemlets: false,
         stemlet_extension: 7,
         partial_beam_length: 10
@@ -163,15 +163,19 @@ Vex.Flow.Beam = (function() {
           }
 
         }
-        /*
-          // This causes too many zero-slope beams.
+        
+        var last_note = this.notes[this.notes.length - 1];
+        var first_last_slope = ((last_note.getStemExtents().topY - first_y_px) / 
+                (last_note.getStemX() - first_x_px));
+        // most engraving books suggest aiming for a slope about half the angle of the
+        // difference between the first and last notes' stem length;
+        var ideal_slope = first_last_slope / 2; 
+        var distance_from_ideal = Math.abs(ideal_slope - slope);
 
-          var cost = this.render_options.slope_cost * Math.abs(slope) +
-            Math.abs(total_stem_extension);
-        */
-
-        // Pick a beam that minimizes stem extension.
-        var cost = Math.abs(total_stem_extension);
+        // This tries to align most beams to something closer to the ideal_slope, but
+        // doesn't go crazy. To disable, set this.render_options.slope_cost = 0
+        var cost = this.render_options.slope_cost * distance_from_ideal +
+            Math.abs(total_stem_extension);     
 
         // update state when a more ideal slope is found
         if (cost < min_cost) {
