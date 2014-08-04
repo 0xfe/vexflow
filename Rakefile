@@ -91,7 +91,8 @@ base_sources = [
   "src/curve.js",
   "src/staveline.js",
   "src/crescendo.js",
-  "src/ornament.js"
+  "src/ornament.js",
+  "src/pedalmarking.js"
 ]
 
 # Don't minify these files.
