@@ -1,11 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Larry Kuhns.
+// Author: Cyril Silverman
 //
 // ## Description
 //
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
-// 
 Vex.Flow.KeySignature = (function() {
   function KeySignature(keySpec) {
     if (arguments.length > 0) this.init(keySpec);
@@ -38,8 +37,8 @@ Vex.Flow.KeySignature = (function() {
       this.accList = Vex.Flow.keySignature(key_spec);
     },
 
-    // Add an accidental glyph to the `stave`. `acc` is the data of the 
-    // accidental to add. If the `next` accidental is also provided, extra 
+    // Add an accidental glyph to the `stave`. `acc` is the data of the
+    // accidental to add. If the `next` accidental is also provided, extra
     // width will be added to the initial accidental for optimal spacing.
     addAccToStave: function(stave, acc, next) {
       var glyph_data = Vex.Flow.accidentalCodes(acc.type);
@@ -121,7 +120,7 @@ Vex.Flow.KeySignature = (function() {
       return this;
     },
 
-    // Apply the accidental staff line placement based on the `clef` and 
+    // Apply the accidental staff line placement based on the `clef` and
     // the  accidental `type` for the key signature ('# or 'b').
     convertAccLines: function(clef, type) {
       var offset = 0.0; // if clef === "treble"
