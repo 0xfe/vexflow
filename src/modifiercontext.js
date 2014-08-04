@@ -766,6 +766,34 @@ Vex.Flow.ModifierContext = (function() {
       return this;
     },
 
+    formatOrnaments: function() {
+      var ornaments = this.modifiers['ornaments'];
+      if (!ornaments || ornaments.length === 0) return this;
+
+      var text_line = this.state.text_line;
+      var max_width = 0;
+
+      // Format Articulations
+      var width;
+      for (var i = 0; i < ornaments.length; ++i) {
+        var ornament = ornaments[i];
+        ornament.setTextLine(text_line);
+        width = ornament.getWidth() > max_width ?
+          ornament.getWidth() : max_width;
+
+        var type = Vex.Flow.ornamentCodes(ornament.type);
+        if(type.between_lines)
+          text_line += 1;
+        else
+          text_line += 1.5;
+      }
+
+      this.state.left_shift += width / 2;
+      this.state.right_shift += width / 2;
+      this.state.text_line = text_line;
+      return this;
+    },
+
     formatGraceNoteGroups: function(){
       var gracenote_groups = this.modifiers['gracenotegroups'];
       var gracenote_spacing = 4;
@@ -834,6 +862,7 @@ Vex.Flow.ModifierContext = (function() {
            formatStrokes().
            formatStringNumbers().
            formatArticulations().
+           formatOrnaments().
            formatAnnotations().
            formatBends().
            formatVibratos();
