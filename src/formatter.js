@@ -295,6 +295,7 @@ Vex.Flow.Formatter = (function() {
           var props = note.getKeyProps()[0];
           if (i === 0) {
             props.line = lookAhead(notes, props.line, i, false);
+            note.setKeyLine(0, props.line);
           } else if (i > 0 && i < notes.length) {
             // If previous note is a rest, use its line number.
             var rest_line;
@@ -306,6 +307,7 @@ Vex.Flow.Formatter = (function() {
               // Get the rest line for next valid non-rest note group.
               props.line = lookAhead(notes, rest_line, i, true);
             }
+            note.setKeyLine(0, props.line);
           }
         }
       }
