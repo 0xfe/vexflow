@@ -53,7 +53,7 @@ Vex.Flow.StemmableNote = (function(){
 
     // Get the minimum length of stem
     getStemMinumumLength: function() {
-      var length = this.duration == "w" || this.duration == "1" ? 0 : 20;
+      var length = Vex.Flow.durationToInteger(this.duration) === 1 ? 0 : 20;
       // if note is flagged, cannot shorten beam
       switch (this.duration) {
        case "8":

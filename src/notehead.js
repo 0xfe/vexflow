@@ -28,10 +28,9 @@ Vex.Flow.NoteHead = (function() {
     ctx.setLineWidth(Vex.Flow.STEM_WIDTH);
 
     var fill = false;
-    if (duration != 1 &&
-        duration != 2 &&
-        duration != "h" &&
-        duration != "w") {
+
+    if (Vex.Flow.durationToInteger(duration) !== 1 &&
+        Vex.Flow.durationToInteger(duration) !== 2) {
       fill = true;
     }
 
@@ -111,7 +110,7 @@ Vex.Flow.NoteHead = (function() {
     isDisplaced: function() { return this.displaced === true; },
 
     // Get/set the notehead's style
-    // 
+    //
     // `style` is an `object` with the following properties: `shadowColor`,
     // `shadowBlur`, `fillStyle`, `strokeStyle`
     getStyle: function() { return this.style; },
@@ -127,8 +126,9 @@ Vex.Flow.NoteHead = (function() {
     getY: function() { return this.y; },
     setY: function(y) { this.y = y;  return this; },
 
-    // Get the stave line the notehead is placed on 
-    getLine: function(){ return this.line; },
+    // Get/set the stave line the notehead is placed on
+    getLine: function() { return this.line; },
+    setLine: function(line) { this.line = line; return this; },
 
     // Get the canvas `x` coordinate position of the notehead.
     getAbsoluteX: function() {
