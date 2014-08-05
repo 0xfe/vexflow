@@ -79,6 +79,11 @@ Vex.Flow.Test.StaveNote.ticks = function(options) {
   var BEAT = 1 * Vex.Flow.RESOLUTION / 4;
 
   var note = new Vex.Flow.StaveNote(
+      { keys: ["c/4", "e/4", "g/4"], duration: "0"});
+  equal(note.getTicks().value(), BEAT * 8, "Breve note has 8 beats");
+  equal(note.getNoteType(), "n", "Note type is 'n' for normal note");
+
+  note = new Vex.Flow.StaveNote(
       { keys: ["c/4", "e/4", "g/4"], duration: "w"});
   equal(note.getTicks().value(), BEAT * 4, "Whole note has 4 beats");
   equal(note.getNoteType(), "n", "Note type is 'n' for normal note");
@@ -430,6 +435,7 @@ Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
 
   var showNote = Vex.Flow.Test.StaveNote.showNote;
   var notes = [
+    { clef: clef, keys: higherKeys, duration: "0"},
     { clef: clef, keys: lowerKeys, duration: "w"},
     { clef: clef, keys: higherKeys, duration: "h"},
     { clef: clef, keys: lowerKeys, duration: "q"},
@@ -438,6 +444,8 @@ Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
     { clef: clef, keys: higherKeys, duration: "32"},
     { clef: clef, keys: higherKeys, duration: "64"},
     { clef: clef, keys: higherKeys, duration: "128"},
+    { clef: clef, keys: lowerKeys, duration: "0",
+      stem_direction: -1},
     { clef: clef, keys: lowerKeys, duration: "w",
       stem_direction: -1},
     { clef: clef, keys: lowerKeys, duration: "h",
@@ -455,6 +463,7 @@ Vex.Flow.Test.StaveNote.draw = function(options, contextBuilder) {
     { clef: clef, keys: lowerKeys, duration: "128",
       stem_direction: -1},
 
+    { clef: clef, keys: restKeys, duration: "0r"},
     { clef: clef, keys: restKeys, duration: "wr"},
     { clef: clef, keys: restKeys, duration: "hr"},
     { clef: clef, keys: restKeys, duration: "qr"},
@@ -499,6 +508,7 @@ Vex.Flow.Test.StaveNote.drawBoundingBoxes = function(options, contextBuilder) {
 
   var showNote = Vex.Flow.Test.StaveNote.showNote;
   var notes = [
+    { clef: clef, keys: higherKeys, duration: "0"},
     { clef: clef, keys: lowerKeys, duration: "w"},
     { clef: clef, keys: higherKeys, duration: "h"},
     { clef: clef, keys: lowerKeys, duration: "q"},
@@ -507,6 +517,8 @@ Vex.Flow.Test.StaveNote.drawBoundingBoxes = function(options, contextBuilder) {
     { clef: clef, keys: higherKeys, duration: "32"},
     { clef: clef, keys: higherKeys, duration: "64"},
     { clef: clef, keys: higherKeys, duration: "128"},
+    { clef: clef, keys: lowerKeys, duration: "0",
+      stem_direction: -1},
     { clef: clef, keys: lowerKeys, duration: "w",
       stem_direction: -1},
     { clef: clef, keys: lowerKeys, duration: "h",
@@ -523,6 +535,7 @@ Vex.Flow.Test.StaveNote.drawBoundingBoxes = function(options, contextBuilder) {
       stem_direction: -1},
     { clef: clef, keys: lowerKeys, duration: "128"},
 
+    { clef: clef, keys: restKeys, duration: "0r"},
     { clef: clef, keys: restKeys, duration: "wr"},
     { clef: clef, keys: restKeys, duration: "hr"},
     { clef: clef, keys: restKeys, duration: "qr"},
@@ -545,7 +558,7 @@ Vex.Flow.Test.StaveNote.drawBoundingBoxes = function(options, contextBuilder) {
 }
 
 Vex.Flow.Test.StaveNote.drawBass = function(options, contextBuilder) {
-  expect(36);
+  expect(40);
   var ctx = new contextBuilder(options.canvas_sel, 600, 280);
   var stave = new Vex.Flow.Stave(10, 10, 650);
   var stave2 = new Vex.Flow.Stave(10, 150, 650);
@@ -555,6 +568,7 @@ Vex.Flow.Test.StaveNote.drawBass = function(options, contextBuilder) {
 
   var showNote = Vex.Flow.Test.StaveNote.showNote;
   var notes = [
+    { clef: 'bass', keys: ["c/3", "e/3", "a/3"], duration: "0"},
     { clef: 'bass', keys: ["c/2", "e/2", "a/2"], duration: "w"},
     { clef: 'bass', keys: ["c/3", "e/3", "a/3"], duration: "h"},
     { clef: 'bass', keys: ["c/2", "e/2", "a/2"], duration: "q"},
@@ -567,6 +581,7 @@ Vex.Flow.Test.StaveNote.drawBass = function(options, contextBuilder) {
     { clef: 'bass', keys: ["c/2", "e/2", "a/2"], duration: "16", stem_direction: -1},
     { clef: 'bass', keys: ["c/2", "e/2", "a/2"], duration: "32", stem_direction: -1},
 
+    { keys: ["r/4"], duration: "0r"},
     { keys: ["r/4"], duration: "wr"},
     { keys: ["r/4"], duration: "hr"},
     { keys: ["r/4"], duration: "qr"},
@@ -595,6 +610,7 @@ Vex.Flow.Test.StaveNote.displacements = function(options, contextBuilder) {
 
   var showNote = Vex.Flow.Test.StaveNote.showNote;
   var notes = [
+    { keys: ["g/3", "a/3", "c/4", "d/4", "e/4"], duration: "0"},
     { keys: ["g/3", "a/3", "c/4", "d/4", "e/4"], duration: "w"},
     { keys: ["d/4", "e/4", "f/4"], duration: "h"},
     { keys: ["f/4", "g/4", "a/4", "b/4"], duration: "q"},
@@ -632,6 +648,7 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options,
 
   var showNote = Vex.Flow.Test.StaveNote.showNote;
   var notes = [
+    { keys: ["c/4", "e/4", "a/4"], duration: "0h"},
     { keys: ["c/4", "e/4", "a/4"], duration: "wh"},
     { keys: ["c/4", "e/4", "a/4"], duration: "hh"},
     { keys: ["c/4", "e/4", "a/4"], duration: "qh"},
@@ -640,6 +657,7 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options,
     { keys: ["c/4", "e/4", "a/4"], duration: "32h"},
     { keys: ["c/4", "e/4", "a/4"], duration: "64h"},
     { keys: ["c/4", "e/4", "a/4"], duration: "128h"},
+    { keys: ["c/4", "e/4", "a/4"], duration: "0h", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "wh", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "hh", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "qh", stem_direction: -1},
@@ -649,6 +667,7 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options,
     { keys: ["c/4", "e/4", "a/4"], duration: "64h", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "128h", stem_direction: -1},
 
+    { keys: ["c/4", "e/4", "a/4"], duration: "0m"},
     { keys: ["c/4", "e/4", "a/4"], duration: "wm"},
     { keys: ["c/4", "e/4", "a/4"], duration: "hm"},
     { keys: ["c/4", "e/4", "a/4"], duration: "qm"},
@@ -657,6 +676,7 @@ Vex.Flow.Test.StaveNote.drawHarmonicAndMuted = function(options,
     { keys: ["c/4", "e/4", "a/4"], duration: "32m"},
     { keys: ["c/4", "e/4", "a/4"], duration: "64m"},
     { keys: ["c/4", "e/4", "a/4"], duration: "128m"},
+    { keys: ["c/4", "e/4", "a/4"], duration: "0m", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "wm", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "hm", stem_direction: -1},
     { keys: ["c/4", "e/4", "a/4"], duration: "qm", stem_direction: -1},
@@ -685,6 +705,7 @@ Vex.Flow.Test.StaveNote.drawSlash = function(options, contextBuilder) {
 
   var showNote = Vex.Flow.Test.StaveNote.showNote;
   var notes = [
+    { keys: ["b/4"], duration: "0s", stem_direction: -1},
     { keys: ["b/4"], duration: "ws", stem_direction: -1},
     { keys: ["b/4"], duration: "hs", stem_direction: -1},
     { keys: ["b/4"], duration: "qs", stem_direction: -1},
@@ -694,6 +715,7 @@ Vex.Flow.Test.StaveNote.drawSlash = function(options, contextBuilder) {
     { keys: ["b/4"], duration: "64s", stem_direction: -1},
     { keys: ["b/4"], duration: "128s", stem_direction: -1},
 
+    { keys: ["b/4"], duration: "0s", stem_direction: 1},
     { keys: ["b/4"], duration: "ws", stem_direction: 1},
     { keys: ["b/4"], duration: "hs", stem_direction: 1},
     { keys: ["b/4"], duration: "qs", stem_direction: 1},

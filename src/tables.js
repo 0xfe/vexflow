@@ -768,7 +768,7 @@ Vex.Flow.durationToGlyph = function(duration, type) {
 Vex.Flow.durationToGlyph.duration_codes = {
   "0": {
     common: {
-      head_width: 16,
+      head_width: 24,
       stem: false,
       stem_offset: 0,
       flag: false,
@@ -790,14 +790,14 @@ Vex.Flow.durationToGlyph.duration_codes = {
         code_head: "v59"
       },
       "m": { // Breve note muted -
-        code_head: "v92",
-        stem_offset: -3
+        code_head: "vf",
+        stem_offset: 0
       },
       "r": { // Breve rest
         code_head: "v31",
         head_width: 24,
         rest: true,
-        position: "D/5",
+        position: "B/5",
         dot_shiftY: 0.5
       },
       "s": { // Breve note slash -
