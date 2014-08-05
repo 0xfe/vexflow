@@ -61,13 +61,18 @@ Vex.Flow.Glyph = (function() {
       this.scale = this.point * 72 / (this.options.font.resolution * 100);
     },
 
+    setWidth: function(width) {
+      this.width =  width;
+      return this;
+    },
+
     getMetrics: function() {
       if (!this.metrics) throw new Vex.RuntimeError("BadGlyph", "Glyph " +
           this.code + " is not initialized.");
       return {
         x_min: this.metrics.x_min * this.scale,
         x_max: this.metrics.x_max * this.scale,
-        width: (this.metrics.x_max - this.metrics.x_min) * this.scale,
+        width: this.width || (this.metrics.x_max - this.metrics.x_min) * this.scale,
         height: this.metrics.ha * this.scale
       };
     },

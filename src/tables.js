@@ -416,6 +416,104 @@ Vex.Flow.accidentalCodes.accidentals = {
   }
 };
 
+Vex.Flow.ornamentCodes = function(acc) {
+  return Vex.Flow.ornamentCodes.ornaments[acc];
+};
+
+Vex.Flow.ornamentCodes.ornaments = {
+  "mordent": {
+    code: "v1e",
+    shift_right: 1,
+    shift_up: 0,
+    shift_down: 5,
+    width: 14,
+  },
+  "mordent_inverted": {
+    code: "v45",
+    shift_right: 1,
+    shift_up: 0,
+    shift_down: 5,
+    width: 14,
+  },
+  "turn": {
+    code: "v72",
+    shift_right: 1,
+    shift_up: 0,
+    shift_down: 5,
+    width: 20,
+  },
+  "turn_inverted": {
+    code: "v33",
+    shift_right: 1,
+    shift_up: 0,
+    shift_down: 6,
+    width: 20,
+  },
+  "tr": {
+    code: "v1f",
+    shift_right: 0,
+    shift_up: 5,
+    shift_down: 15,
+    width: 10,
+  },
+  "upprall": {
+    code: "v60",
+    shift_right: 1,
+    shift_up: -3,
+    shift_down: 6,
+    width: 20,
+  },
+  "downprall": {
+    code: "vb4",
+    shift_right: 1,
+    shift_up: -3,
+    shift_down: 6,
+    width: 20,
+  },
+  "prallup": {
+    code: "v6d",
+    shift_right: 1,
+    shift_up: -3,
+    shift_down: 6,
+    width: 20,
+  },
+  "pralldown": {
+    code: "v2c",
+    shift_right: 1,
+    shift_up: -3,
+    shift_down: 6,
+    width: 20,
+  },
+  "upmordent": {
+    code: "v29",
+    shift_right: 1,
+    shift_up: -3,
+    shift_down: 6,
+    width: 20,
+  },
+  "downmordent": {
+    code: "v68",
+    shift_right: 1,
+    shift_up: -3,
+    shift_down: 6,
+    width: 20,
+  },
+  "lineprall": {
+    code: "v20",
+    shift_right: 1,
+    shift_up: -3,
+    shift_down: 6,
+    width: 20,
+  },
+  "prallprall": {
+    code: "v86",
+    shift_right: 1,
+    shift_up: -3,
+    shift_down: 6,
+    width: 20,
+  }
+};
+
 Vex.Flow.keySignature = function(spec) {
   var keySpec = Vex.Flow.keySignature.keySpecs[spec];
 
@@ -428,13 +526,12 @@ Vex.Flow.keySignature = function(spec) {
     return [];
   }
 
-  var code = Vex.Flow.accidentalCodes.accidentals[keySpec.acc].code;
   var notes = Vex.Flow.keySignature.accidentalList(keySpec.acc);
 
   var acc_list = [];
   for (var i = 0; i < keySpec.num; ++i) {
     var line = notes[i];
-    acc_list.push({glyphCode: code, line: line});
+    acc_list.push({type: keySpec.acc, line: line});
   }
 
   return acc_list;
@@ -580,11 +677,37 @@ Vex.Flow.parseNoteData = function(noteData) {
   };
 };
 
-Vex.Flow.durationToTicks = function(duration) {
+// Used to convert duration aliases to the number based duration.
+// If the input isn't an alias, simply return the input.
+// 
+// example: 'q' -> '4', '8' -> '8'
+function sanitizeDuration(duration) {
   var alias = Vex.Flow.durationAliases[duration];
   if (alias !== undefined) {
     duration = alias;
   }
+
+  if (Vex.Flow.durationToTicks.durations[duration] === undefined) {
+    throw new Vex.RERR('BadArguments',
+      'The provided duration is not valid');
+  }
+
+  return duration;
+}
+
+// Convert the `duration` to a fraction
+Vex.Flow.durationToFraction = function(duration) {
+  return new Vex.Flow.Fraction(Vex.Flow.durationToTicks(duration), 1);
+};
+
+// Convert the `duration` to an integer
+Vex.Flow.durationToInteger = function(duration) {
+  return parseInt(sanitizeDuration(duration));
+};
+
+// Convert the `duration` to total ticks
+Vex.Flow.durationToTicks = function(duration) {
+  duration = sanitizeDuration(duration);
 
   var ticks = Vex.Flow.durationToTicks.durations[duration];
   if (ticks === undefined) {

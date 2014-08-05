@@ -318,7 +318,40 @@ Vex.Flow.Music = (function() {
 
       if (difference < 0) difference += Music.NUM_TONES;
       return difference;
+    },
+
+    // Create a scale map that represents the pitch state for a
+    // `keySignature`. For example, passing a `G` to `keySignature` would 
+    // return a scale map with every note naturalized except for `F` which
+    // has an `F#` state.
+    createScaleMap: function(keySignature) {
+      var keySigParts = this.getKeyParts(keySignature);
+      var scaleName = Vex.Flow.KeyManager.scales[keySigParts.type];
+
+      var keySigString = keySigParts.root;
+      if (keySigParts.accidental) keySigString += keySigParts.accidental;
+
+      if (!scaleName) throw new Vex.RERR("BadArguments", "Unsupported key type: " + keySignature);
+
+      var scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
+      var noteLocation = Vex.Flow.Music.root_indices[keySigParts.root];
+
+      var scaleMap = {};
+      for (var i = 0; i < Vex.Flow.Music.roots.length; ++i) {
+        var index = (noteLocation + i) % Vex.Flow.Music.roots.length;
+        var rootName = Vex.Flow.Music.roots[index];
+        var noteName = this.getRelativeNoteName(rootName, scale[i]);
+
+        if (noteName.length === 1) {
+          noteName += "n";
+        }
+
+        scaleMap[rootName] = noteName;
+      }
+
+      return scaleMap;
     }
+
   };
 
   return Music;

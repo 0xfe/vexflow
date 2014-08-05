@@ -303,10 +303,12 @@ Vex.Flow.RaphaelContext = (function() {
         attr(this.attributes).
         attr("fill", "none").
         attr("stroke", "none");
+      var bounds = txt.getBBox();
+      txt.remove();
 
       return {
-        width: txt.getBBox().width,
-        height: txt.getBBox().height
+        width: bounds.width,
+        height: bounds.height
       };
     },
 

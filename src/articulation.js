@@ -64,8 +64,7 @@ Vex.Flow.Articulation = (function() {
       var needsLineAdjustment = function(articulation, note_line, line_spacing) {
         var offset_direction = (articulation.position === Modifier.Position.ABOVE) ? 1 : -1;
         var duration = articulation.getNote().getDuration();
-
-        if(!is_on_head && duration !== "w" && duration !== "1"){
+        if(!is_on_head && Vex.Flow.durationToInteger(duration) === 1){
           // Add stem length, inless it's on a whole note
           note_line += offset_direction * 3.5;
         }

@@ -188,6 +188,15 @@ Vex.Flow.StaveNote = (function() {
               "Invalid key for note properties: " + key);
         }
 
+        // Override line placement for default rests
+        if (props.key === "R") {
+          if (this.duration === "1" || this.duration === "w") {
+            props.line = 4;
+          } else {
+            props.line = 3;
+          }
+        }
+
         // Calculate displacement of this note
         var line = props.line;
         if (last_line === null) {
@@ -233,8 +242,8 @@ Vex.Flow.StaveNote = (function() {
 
       if (this.isRest()) {
         var y = this.ys[0];
-        if (this.duration == "w" || this.duration == "h" ||
-            this.duration == "1" || this.duration == "2") {
+        var durToInt = Vex.Flow.durationToInteger;
+        if (durToInt(this.duration) === 1 || durToInt(this.duration) === 2) {
           min_y = y - half_line_spacing;
           max_y = y + half_line_spacing;
         } else {
@@ -407,6 +416,16 @@ Vex.Flow.StaveNote = (function() {
     setKeyStyle: function(index, style) {
       this.note_heads[index].setStyle(style);
       return this;
+    },
+
+    setKeyLine: function(index, line) {
+      this.keyProps[index].line = line;
+      this.note_heads[index].setLine(line);
+      return this;
+    },
+
+    getKeyLine: function(index, line) {
+      return this.keyProps[index].line;
     },
 
     // Add self to modifier context. `mContext` is the `ModifierContext`
@@ -595,7 +614,7 @@ Vex.Flow.StaveNote = (function() {
         var key_style = note_head.getStyle();
         if(key_style) {
             ctx.save();
-            note_head.applyKeyStyle(ctx);
+            note_head.applyStyle(ctx);
         }
         mod.setContext(ctx);
         mod.draw();
@@ -655,7 +674,7 @@ Vex.Flow.StaveNote = (function() {
       if (stem_struct) {
         this.setStem(new Stem(stem_struct));
       }
-      
+
       this.stem.setContext(this.context).draw();
     },
 
