@@ -246,10 +246,10 @@ Vex.Flow.Beam = (function() {
         note.setStem(new Vex.Flow.Stem({
           x_begin: x_px - (Vex.Flow.STEM_WIDTH/2),
           x_end: x_px,
-          y_top: this.stem_direction === 1 ? base_y_px : top_y_px,
-          y_bottom: this.stem_direction === 1 ? base_y_px : top_y_px ,
+          y_top: this.stem_direction === 1 ? top_y_px : base_y_px,
+          y_bottom: this.stem_direction === 1 ? base_y_px :  top_y_px ,
           y_extend: y_displacement,
-          stem_extension: Math.abs(top_y_px - slope_y) - 1,
+          stem_extension: Math.abs(top_y_px - slope_y) - Stem.HEIGHT - 1,
           stem_direction: this.stem_direction
         }));
       }
