@@ -25,33 +25,25 @@ Vex.Flow.ModifierContext = (function() {
     };
   }
 
+  // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
+  function L() { if (ModifierContext.DEBUG) Vex.L("Vex.Flow.ModifierContext", arguments); }
+
   // Static method. Called from formatNotes :: shift rests vertically
   var shiftRestVertical = function(rest, note, dir) {
     if (!Vex.Debug) return;
 
-    var delta = 0;
-    var padding;
-
-    if (dir == 1) {
-      padding = note.isrest ? 0.0 : 0.5;
-      delta = note.max_line - rest.min_line;
-      delta += padding;
-    } else {
-      padding = note.isrest ? 0.0 : 0.5;
-      delta = note.min_line - rest.max_line;
-      delta -= padding;
-    }
+    var delta = (note.isrest ? 0.0 : 1.0) * dir;
 
     rest.line += delta;
     rest.max_line += delta;
     rest.min_line += delta;
-    rest.note.keyProps[0].line += delta;
+    rest.note.setKeyLine(0, rest.note.getKeyLine(0) + (delta));
   };
 
-// Called from formatNotes :: center a rest between two notes
+  // Called from formatNotes :: center a rest between two notes
   var centerRest = function(rest, noteU, noteL) {
     var delta = rest.line - Vex.MidLine(noteU.min_line, noteL.max_line);
-    rest.note.keyProps[0].line -= delta;
+    rest.note.setKeyLine(0, rest.note.getKeyLine(0) - delta);
     rest.line -= delta;
     rest.max_line -= delta;
     rest.min_line -= delta;
@@ -158,13 +150,13 @@ Vex.Flow.ModifierContext = (function() {
           }
         }
         if (noteU.min_line <= noteL.max_line + line_spacing) {
-          if (noteU.isrest)
+          if (noteU.isrest) {
             // shift rest up
             shiftRestVertical(noteU, noteL, 1);
-          else if (noteL.isrest)
+          } else if (noteL.isrest) {
             // shift rest down
             shiftRestVertical(noteL, noteU, -1);
-          else {
+          } else {
             x_shift = voice_x_shift;
             if (noteU.stem_dir == noteL.stem_dir)
               // upper voice is middle voice, so shift it right
@@ -766,6 +758,34 @@ Vex.Flow.ModifierContext = (function() {
       return this;
     },
 
+    formatOrnaments: function() {
+      var ornaments = this.modifiers['ornaments'];
+      if (!ornaments || ornaments.length === 0) return this;
+
+      var text_line = this.state.text_line;
+      var max_width = 0;
+
+      // Format Articulations
+      var width;
+      for (var i = 0; i < ornaments.length; ++i) {
+        var ornament = ornaments[i];
+        ornament.setTextLine(text_line);
+        width = ornament.getWidth() > max_width ?
+          ornament.getWidth() : max_width;
+
+        var type = Vex.Flow.ornamentCodes(ornament.type);
+        if(type.between_lines)
+          text_line += 1;
+        else
+          text_line += 1.5;
+      }
+
+      this.state.left_shift += width / 2;
+      this.state.right_shift += width / 2;
+      this.state.text_line = text_line;
+      return this;
+    },
+
     formatGraceNoteGroups: function(){
       var gracenote_groups = this.modifiers['gracenotegroups'];
       var gracenote_spacing = 4;
@@ -834,6 +854,7 @@ Vex.Flow.ModifierContext = (function() {
            formatStrokes().
            formatStringNumbers().
            formatArticulations().
+           formatOrnaments().
            formatAnnotations().
            formatBends().
            formatVibratos();

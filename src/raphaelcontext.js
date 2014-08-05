@@ -117,6 +117,14 @@ Vex.Flow.RaphaelContext = (function() {
       return this;
     },
 
+    // Sets the SVG `viewBox` property, which results in auto scaling images when its container
+    // is resized.
+    //
+    // Usage: `ctx.setViewBox("0 0 600 400")`
+    setViewBox: function(viewBox) {
+      this.paper.canvas.setAttribute('viewBox', viewBox);
+    },
+
     rect: function(x, y, width, height) {
       if (height < 0) {
         y += height;
@@ -303,10 +311,12 @@ Vex.Flow.RaphaelContext = (function() {
         attr(this.attributes).
         attr("fill", "none").
         attr("stroke", "none");
+      var bounds = txt.getBBox();
+      txt.remove();
 
       return {
-        width: txt.getBBox().width,
-        height: txt.getBBox().height
+        width: bounds.width,
+        height: bounds.height
       };
     },
 

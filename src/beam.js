@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-// 
+//
 // This file implements `Beams` that span over a set of `StemmableNotes`.
-// 
+//
 // Requires: vex.js, vexmusic.js, note.js
 Vex.Flow.Beam = (function() {
   function Beam(notes, auto_stem) {
@@ -517,7 +517,8 @@ Vex.Flow.Beam = (function() {
   //    * `stem_direction` - Set to apply the same direction to all notes
   //    * `beam_rests` - Set to `true` to include rests in the beams
   //    * `beam_middle_only` - Set to `true` to only beam rests in the middle of the beat
-  //    * `show_stemlets` - Set to `true` to draw stemlets for rests 
+  //    * `show_stemlets` - Set to `true` to draw stemlets for rests
+  //    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
   // 
   Beam.generateBeams = function(notes, config) {
 
@@ -571,13 +572,20 @@ Vex.Flow.Beam = (function() {
         var totalTicks = getTotalTicks(currentGroup).value();
 
         // Double the amount of ticks in a group, if it's an unbeamable tuplet
-        if (parseInt(unprocessedNote.duration, 10) < 8 && unprocessedNote.tuplet) {
+        var unbeamable = false;
+        if (Vex.Flow.durationToInteger(unprocessedNote.duration) < 8
+            && unprocessedNote.tuplet) {
           ticksPerGroup *= 2;
+          unbeamable = true;
         }
 
         // If the note that was just added overflows the group tick total
         if (totalTicks > ticksPerGroup) {
-          nextGroup.push(currentGroup.pop());
+          // If the overflow note can be beamed, start the next group
+          // with it. Unbeamable notes leave the group overflowed.
+          if (!unbeamable) {
+            nextGroup.push(currentGroup.pop());
+          }
           noteGroups.push(currentGroup);
           currentGroup = nextGroup;
           nextTickGroup();
@@ -615,23 +623,43 @@ Vex.Flow.Beam = (function() {
         var tempGroup = [];
         group.forEach(function(note, index, group) {
           var isFirstOrLast = index === 0 || index === group.length - 1;
+          var prevNote = group[index-1];
 
           var breaksOnEachRest = !config.beam_rests && note.isRest();
           var breaksOnFirstOrLastRest = (config.beam_rests &&
             config.beam_middle_only && note.isRest() && isFirstOrLast);
 
-          var shouldBreak = breaksOnEachRest || breaksOnFirstOrLastRest;
+          var breakOnStemChange = false;
+          if (config.maintain_stem_directions && prevNote &&
+              !note.isRest() && !prevNote.isRest()) {
+            var prevDirection = prevNote.getStemDirection();
+            var currentDirection = note.getStemDirection();
+            breakOnStemChange = currentDirection !== prevDirection;
+          }
+
+          var isUnbeamableDuration = parseInt(note.duration, 10) < 8;
+
+          // Determine if the group should be broken at this note
+          var shouldBreak = breaksOnEachRest || breaksOnFirstOrLastRest ||
+                            breakOnStemChange || isUnbeamableDuration;
 
           if (shouldBreak) {
+            // Add current group
             if (tempGroup.length > 0) {
               sanitizedGroups.push(tempGroup);
             }
-            tempGroup = [];
+
+            // Start a new group. Include the current note if the group
+            // was broken up by stem direction, as that note needs to start
+            // the next group of notes
+            tempGroup = breakOnStemChange ? [note] : [];
           } else {
+            // Add note to group
             tempGroup.push(note);
           }
         });
 
+        // If there is a remaining group, add it as well
         if (tempGroup.length > 0) {
           sanitizedGroups.push(tempGroup);
         }
@@ -642,12 +670,29 @@ Vex.Flow.Beam = (function() {
 
     function formatStems() {
       noteGroups.forEach(function(group){
-        var stemDirection = determineStemDirection(group);
+        var stemDirection;
+        if (config.maintain_stem_directions) {
+          var note = findFirstNote(group);
+          stemDirection = note ? note.getStemDirection() : 1;
+        } else {
+          stemDirection = calculateStemDirection(group);
+        }
         applyStemDirection(group, stemDirection);
       });
     }
 
-    function determineStemDirection(group) {
+    function findFirstNote(group) {
+      for (var i = 0; i < group.length; i++) {
+        var note = group[i];
+        if (!note.isRest()) {
+          return note;
+        }
+      }
+
+      return false;
+    }
+
+    function calculateStemDirection(group) {
       if (config.stem_direction) return config.stem_direction;
 
       var lineSum = 0;
@@ -666,7 +711,7 @@ Vex.Flow.Beam = (function() {
 
     function applyStemDirection(group, direction) {
       group.forEach(function(note){
-        if (note.hasStem()) note.setStemDirection(direction);
+        note.setStemDirection(direction);
       });
     }
 
