@@ -117,6 +117,12 @@ Vex.Flow.RaphaelContext = (function() {
       return this;
     },
 
+    /**
+     * Enable setting for SVG viewBox property, this will make SVG scales automatically when its css width & height changes.
+     * If the SVG uses percentages on css width & height, it will resize automatically when its container resizes.
+     * Usage: <b>ctx.setViewBox("0 0 600 400")</b>
+     * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
+     */
     setViewBox: function(viewBox) {
       this.paper.canvas.setAttribute('viewBox', viewBox);
     },
