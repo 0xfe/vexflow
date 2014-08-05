@@ -20,6 +20,8 @@ Vex.Flow.clefProperties = function(clef) {
 
 Vex.Flow.clefProperties.values = {
   'treble':  { line_shift: 0 },
+  'treble_8va':  { line_shift: 0 },
+  'treble_8vb':  { line_shift: 0 },
   'bass':    { line_shift: 6 },
   'tenor':   { line_shift: 4 },
   'alto':    { line_shift: 3 },

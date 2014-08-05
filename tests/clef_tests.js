@@ -7,9 +7,15 @@ Vex.Flow.Test.Clef.Start = function() {
   Vex.Flow.Test.runTest("Clef Test", Vex.Flow.Test.Clef.draw);
   Vex.Flow.Test.runRaphaelTest("Clef Test (Raphael)", 
       Vex.Flow.Test.Clef.draw);
+  Vex.Flow.Test.runTest("Clef End Test", Vex.Flow.Test.Clef.drawEnd);
+  Vex.Flow.Test.runRaphaelTest("Clef End Test (Raphael)", 
+      Vex.Flow.Test.Clef.drawEnd);
   Vex.Flow.Test.runTest("Small Clef Test", Vex.Flow.Test.Clef.drawSmall);
   Vex.Flow.Test.runRaphaelTest("Small Clef Test (Raphael)",
       Vex.Flow.Test.Clef.drawSmall);
+  Vex.Flow.Test.runTest("Small Clef End Test", Vex.Flow.Test.Clef.drawSmallEnd);
+  Vex.Flow.Test.runRaphaelTest("Small Clef End Test (Raphael)",
+      Vex.Flow.Test.Clef.drawSmallEnd);
   Vex.Flow.Test.runTest("Clef Change Test", Vex.Flow.Test.Clef.drawClefChange);
   Vex.Flow.Test.runRaphaelTest("Clef Change Test (Raphael)", Vex.Flow.Test.Clef.drawClefChange);
 }
@@ -19,6 +25,8 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   var stave = new Vex.Flow.Stave(10, 10, 700);
 
   stave.addClef("treble");
+  stave.addClef("treble_8va");
+  stave.addClef("treble_8vb");
   stave.addClef("alto");
   stave.addClef("tenor");
   stave.addClef("soprano");
@@ -30,9 +38,25 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   stave.addClef("french");
 
   stave.addEndClef("treble");
+
+  stave.setContext(ctx);
+  stave.draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.Clef.drawEnd = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 800, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 700);
+
+  stave.addClef("bass");
+
+  stave.addEndClef("treble");
+  stave.addEndClef("treble_8va");
+  stave.addEndClef("treble_8vb");
   stave.addEndClef("alto");
-  stave.addEndClef("tenor");
-  stave.addEndClef("soprano");
+  stave.addEndClef("tenor");   
+  stave.addEndClef("soprano"); 
   stave.addEndClef("bass");
   stave.addEndClef("mezzo-soprano");
   stave.addEndClef("baritone-c");
@@ -46,11 +70,14 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   ok(true, "all pass");
 }
 
+
 Vex.Flow.Test.Clef.drawSmall = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 800, 120);
   var stave = new Vex.Flow.Stave(10, 10, 700);
 
   stave.addClef("treble_small");
+  stave.addClef("treble_8va_small");
+  stave.addClef("treble_8vb_small");
   stave.addClef("alto_small");
   stave.addClef("tenor_small");
   stave.addClef("soprano_small");
@@ -62,6 +89,21 @@ Vex.Flow.Test.Clef.drawSmall = function(options, contextBuilder) {
   stave.addClef("french_small");
 
   stave.addEndClef("treble_small");
+
+  stave.setContext(ctx);
+  stave.draw();
+
+  ok(true, "all pass");
+}
+Vex.Flow.Test.Clef.drawSmallEnd = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 800, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 700);
+    
+  stave.addClef("bass_small");
+    
+  stave.addEndClef("treble_small");
+  stave.addEndClef("treble_8va_small");
+  stave.addEndClef("treble_8vb_small");
   stave.addEndClef("alto_small");
   stave.addEndClef("tenor_small");
   stave.addEndClef("soprano_small");
@@ -71,12 +113,13 @@ Vex.Flow.Test.Clef.drawSmall = function(options, contextBuilder) {
   stave.addEndClef("baritone-f_small");
   stave.addEndClef("subbass_small");
   stave.addEndClef("french_small");
-
+    
   stave.setContext(ctx);
   stave.draw();
-
+    
   ok(true, "all pass");
 }
+
 
 Vex.Flow.Test.Clef.drawClefChange = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 800, 120);
