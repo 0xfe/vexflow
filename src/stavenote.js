@@ -242,8 +242,8 @@ Vex.Flow.StaveNote = (function() {
 
       if (this.isRest()) {
         var y = this.ys[0];
-        var durToInt = Vex.Flow.durationToInteger;
-        if (durToInt(this.duration) === 1 || durToInt(this.duration) === 2) {
+        var durToNum = Vex.Flow.durationToNumber;
+        if (durToNum(this.duration) === 1 || durToNum(this.duration) === 2) {
           min_y = y - half_line_spacing;
           max_y = y + half_line_spacing;
         } else {

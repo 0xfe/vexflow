@@ -597,7 +597,7 @@ Vex.Flow.parseNoteDurationString = function(durationString) {
     return null;
   }
 
-  var regexp = /(\d+|[a-z])(d*)([nrhms]|$)/;
+  var regexp = /(\d*\.?\d+|[a-z])(d*)([nrhms]|$)/;
 
   var result = regexp.exec(durationString);
   if (!result) {
@@ -701,8 +701,8 @@ Vex.Flow.durationToFraction = function(duration) {
 };
 
 // Convert the `duration` to an integer
-Vex.Flow.durationToInteger = function(duration) {
-  return parseInt(sanitizeDuration(duration));
+Vex.Flow.durationToNumber = function(duration) {
+  return parseFloat(sanitizeDuration(duration));
 };
 
 // Convert the `duration` to total ticks
@@ -718,7 +718,8 @@ Vex.Flow.durationToTicks = function(duration) {
 };
 
 Vex.Flow.durationToTicks.durations = {
-    "0":    Vex.Flow.RESOLUTION * 2,
+  "0.5":  Vex.Flow.RESOLUTION * 2,
+  ".5":   Vex.Flow.RESOLUTION * 2,
   "1":    Vex.Flow.RESOLUTION / 1,
   "2":    Vex.Flow.RESOLUTION / 2,
   "4":    Vex.Flow.RESOLUTION / 4,
@@ -731,6 +732,7 @@ Vex.Flow.durationToTicks.durations = {
 };
 
 Vex.Flow.durationAliases = {
+  "b": "0.5",
   "w": "1",
   "h": "2",
   "q": "4",
@@ -739,7 +741,7 @@ Vex.Flow.durationAliases = {
   // consume ticks, so this should be a no-op.
   //
   // TODO(0xfe): This needs to be cleaned up.
-  "b": "256"
+  //"b": "256"
 };
 
 Vex.Flow.durationToGlyph = function(duration, type) {
@@ -766,9 +768,9 @@ Vex.Flow.durationToGlyph = function(duration, type) {
 };
 
 Vex.Flow.durationToGlyph.duration_codes = {
-  "0": {
+  "0.5": {
     common: {
-      head_width: 24,
+      head_width: 22,
       stem: false,
       stem_offset: 0,
       flag: false,

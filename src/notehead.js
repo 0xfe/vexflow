@@ -29,9 +29,9 @@ Vex.Flow.NoteHead = (function() {
 
     var fill = false;
 
-    if (Vex.Flow.durationToInteger(duration) !== 0 &&
-        Vex.Flow.durationToInteger(duration) !== 1 &&
-        Vex.Flow.durationToInteger(duration) !== 2) {
+    if (Vex.Flow.durationToNumber(duration) !== 0.5 &&
+        Vex.Flow.durationToNumber(duration) !== 1 &&
+        Vex.Flow.durationToNumber(duration) !== 2) {
       fill = true;
     }
 
@@ -51,7 +51,7 @@ Vex.Flow.NoteHead = (function() {
 	ctx.stroke();
     }
 
-    if (Vex.Flow.durationToInteger(duration) === 0){
+    if (Vex.Flow.durationToNumber(duration) === 0.5){
 	var breve_lines = [-3, -1, width + 1, width + 3];
 	for(var i=0; i<breve_lines.length; i++){
 	    ctx.beginPath();

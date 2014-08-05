@@ -573,7 +573,7 @@ Vex.Flow.Beam = (function() {
 
         // Double the amount of ticks in a group, if it's an unbeamable tuplet
         var unbeamable = false;
-        if (Vex.Flow.durationToInteger(unprocessedNote.duration) < 8
+        if (Vex.Flow.durationToNumber(unprocessedNote.duration) < 8
             && unprocessedNote.tuplet) {
           ticksPerGroup *= 2;
           unbeamable = true;
