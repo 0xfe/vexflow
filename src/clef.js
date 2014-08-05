@@ -24,25 +24,27 @@ Vex.Flow.Clef = (function() {
       line: 3
     },
     "treble_8va": {
-        code: "v83",
-        point: 40,
-        line: 3,
-        ottava: {code: "v8",
-                 point: 20,
-                 line: -1.2,
-                 x_shift: 11
-                 }
-      },
+      code: "v83",
+      point: 40,
+      line: 3,
+      ottava: {
+        code: "v8",
+        point: 20,
+        line: -1.2,
+        x_shift: 11
+      }
+    },
     "treble_8vb": {
-        code: "v83",
-        point: 40,
-        line: 3,
-        ottava: {code: "v8",
-                 point: 20,
-                 line: 6.3,
-                 x_shift: 10
-                 }
-      },
+      code: "v83",
+      point: 40,
+      line: 3,
+      ottava: {
+        code: "v8",
+        point: 20,
+        line: 6.3,
+        x_shift: 10
+      }
+    },
     "bass": {
       code: "v79",
       point: 40,
@@ -99,25 +101,27 @@ Vex.Flow.Clef = (function() {
       line: 3
     },
     "treble_8va_small": {
-        code: "v83",
-        point: 32,
-        line: 3,
-        ottava: {code: "v8",
-                 point: 18,
-                 line: -0.4,
-                 x_shift: 8
-                 }
-      },
+      code: "v83",
+      point: 32,
+      line: 3,
+      ottava: {
+        code: "v8",
+        point: 18,
+        line: -0.4,
+        x_shift: 8
+      }
+    },
     "treble_8vb_small": {
-        code: "v83",
-        point: 32,
-        line: 3,
-        ottava: {code: "v8",
-            point: 18,
-            line: 5.8,
-            x_shift: 6
-            }
-      },
+      code: "v83",
+      point: 32,
+      line: 3,
+      ottava: {
+        code: "v8",
+        point: 18,
+        line: 5.8,
+        x_shift: 6
+      }
+    },
     "bass_small": {
       code: "v79",
       point: 32,
@@ -187,11 +191,11 @@ Vex.Flow.Clef = (function() {
       var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
       this.placeGlyphOnLine(glyph, stave, this.clef.line);
       if (this.clef.ottava !== undefined) {
-          var ottavaGlyph = new Vex.Flow.Glyph(this.clef.ottava.code, this.clef.ottava.point);
-          ottavaGlyph.metrics.x_max = 0;
-          ottavaGlyph.setXShift(this.clef.ottava.x_shift);
-          this.placeGlyphOnLine(ottavaGlyph, stave, this.clef.ottava.line);
-          stave.addGlyph(ottavaGlyph);
+        var ottavaGlyph = new Vex.Flow.Glyph(this.clef.ottava.code, this.clef.ottava.point);
+        ottavaGlyph.metrics.x_max = 0;
+        ottavaGlyph.setXShift(this.clef.ottava.x_shift);
+        this.placeGlyphOnLine(ottavaGlyph, stave, this.clef.ottava.line);
+        stave.addGlyph(ottavaGlyph);
       }
       stave.addGlyph(glyph);
     },
@@ -202,11 +206,11 @@ Vex.Flow.Clef = (function() {
       this.placeGlyphOnLine(glyph, stave, this.clef.line);
       stave.addEndGlyph(glyph);
       if (this.clef.ottava !== undefined) {
-          var ottavaGlyph = new Vex.Flow.Glyph(this.clef.ottava.code, this.clef.ottava.point);
-          ottavaGlyph.metrics.x_max = 0;
-          ottavaGlyph.setXShift(this.clef.ottava.x_shift);
-          this.placeGlyphOnLine(ottavaGlyph, stave, this.clef.ottava.line);
-          stave.addEndGlyph(ottavaGlyph);
+        var ottavaGlyph = new Vex.Flow.Glyph(this.clef.ottava.code, this.clef.ottava.point);
+        ottavaGlyph.metrics.x_max = 0;
+        ottavaGlyph.setXShift(this.clef.ottava.x_shift);
+        this.placeGlyphOnLine(ottavaGlyph, stave, this.clef.ottava.line);
+        stave.addEndGlyph(ottavaGlyph);
       }
     }
   });
