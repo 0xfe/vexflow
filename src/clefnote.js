@@ -5,20 +5,21 @@
 
 /** @constructor */
 Vex.Flow.ClefNote = (function() {
-  function ClefNote(clef) { this.init(clef); }
+  function ClefNote(clef, size, annotation) { this.init(clef, size, annotation); }
 
   Vex.Inherit(ClefNote, Vex.Flow.Note, {
-    init: function(clef) {
+    init: function(clef, size, annotation) {
       ClefNote.superclass.init.call(this, {duration: "b"});
       
-      this.setClef(clef);
+      this.setClef(clef, size, annotation);
 
       // Note properties
       this.ignore_ticks = true;
     },
 
-    setClef: function(clef) {
-      this.clef = Vex.Flow.Clef.types[clef];
+    setClef: function(clef, size, annotation) {
+      this.clef_obj = new Vex.Flow.Clef(clef, size, annotation);
+      this.clef = this.clef_obj.clef;
       this.glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
       this.setWidth(this.glyph.getMetrics().width);
       return this;

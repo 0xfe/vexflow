@@ -275,14 +275,14 @@ Vex.Flow.Stave = (function() {
       return this;
     },
 
-    addClef: function(clef) {
+    addClef: function(clef, size, annotation) {
       this.clef = clef;
-      this.addModifier(new Vex.Flow.Clef(clef));
+      this.addModifier(new Vex.Flow.Clef(clef, size, annotation));
       return this;
     },
 
-    addEndClef: function(clef) {
-      this.addEndModifier(new Vex.Flow.Clef(clef));
+    addEndClef: function(clef, size, annotation) {
+      this.addEndModifier(new Vex.Flow.Clef(clef, size, annotation));
       return this;
     },
 

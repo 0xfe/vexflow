@@ -32,6 +32,7 @@ Vex.Flow.StaveNote = (function() {
 
       this.keys = note_struct.keys;
       this.clef = note_struct.clef;
+      this.octave_shift = note_struct.octave_shift;
       this.beam = null;
 
       // Pull note rendering properties
@@ -182,7 +183,7 @@ Vex.Flow.StaveNote = (function() {
         // All rests use the same position on the line.
         // if (this.glyph.rest) key = this.glyph.position;
         if (this.glyph.rest) this.glyph.position = key;
-        var props = Vex.Flow.keyProperties(key, this.clef);
+        var props = Vex.Flow.keyProperties(key, this.clef, this.octave_shift);
         if (!props) {
           throw new Vex.RuntimeError("BadArguments",
               "Invalid key for note properties: " + key);
