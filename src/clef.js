@@ -126,6 +126,10 @@ Vex.Flow.Clef = (function() {
             "treble": {
               line: 6.3,
               x_shift: 10
+            },
+            "bass": {
+              line: 4,
+              x_shift: 1
             }
           }
         },
@@ -135,6 +139,10 @@ Vex.Flow.Clef = (function() {
             "treble": {
               line: 5.8,
               x_shift: 6
+            },
+            "bass": {
+              line: 3.5,
+              x_shift: 0.5
             }
           }         
         }

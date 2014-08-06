@@ -54,11 +54,25 @@ Vex.Flow.ClefNote = (function() {
       if (!this.glyph.getContext()) {
         this.glyph.setContext(this.context);
       }
+      var abs_x = this.getAbsoluteX();
 
       this.glyph.setStave(this.stave);
       this.glyph.setYShift(
         this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
-      this.glyph.renderToStave(this.getAbsoluteX());
+      this.glyph.renderToStave(abs_x);
+      
+      if (this.clef_obj.annotation !== undefined) {
+        this.ottavaGlyph = new Vex.Flow.Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
+        if (!this.ottavaGlyph.getContext()) {
+            this.ottavaGlyph.setContext(this.context);
+        }
+        this.ottavaGlyph.setStave(this.stave);
+        this.ottavaGlyph.setYShift(
+          this.stave.getYForLine(this.clef_obj.annotation.line) - this.stave.getYForGlyphs());
+        this.ottavaGlyph.setXShift(this.clef_obj.annotation.x_shift);
+        this.ottavaGlyph.renderToStave(abs_x);
+      }
+      
     }
   });
 

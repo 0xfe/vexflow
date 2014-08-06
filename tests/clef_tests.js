@@ -31,6 +31,7 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   stave.addClef("tenor");
   stave.addClef("soprano");
   stave.addClef("bass");
+  stave.addClef("bass", "default", "8vb");
   stave.addClef("mezzo-soprano");
   stave.addClef("baritone-c");
   stave.addClef("baritone-f");
@@ -58,6 +59,7 @@ Vex.Flow.Test.Clef.drawEnd = function(options, contextBuilder) {
   stave.addEndClef("tenor");   
   stave.addEndClef("soprano"); 
   stave.addEndClef("bass");
+  stave.addEndClef("bass", "default", "8vb");
   stave.addEndClef("mezzo-soprano");
   stave.addEndClef("baritone-c");
   stave.addEndClef("baritone-f");
@@ -82,6 +84,7 @@ Vex.Flow.Test.Clef.drawSmall = function(options, contextBuilder) {
   stave.addClef("tenor", "small");
   stave.addClef("soprano", "small");
   stave.addClef("bass", "small");
+  stave.addClef("bass", "small", "8vb");
   stave.addClef("mezzo-soprano", "small");
   stave.addClef("baritone-c", "small");
   stave.addClef("baritone-f", "small");
@@ -108,6 +111,7 @@ Vex.Flow.Test.Clef.drawSmallEnd = function(options, contextBuilder) {
   stave.addEndClef("tenor", "small");
   stave.addEndClef("soprano", "small");
   stave.addEndClef("bass", "small");
+  stave.addEndClef("bass", "small", "8vb");
   stave.addEndClef("mezzo-soprano", "small");
   stave.addEndClef("baritone-c", "small");
   stave.addEndClef("baritone-f", "small");
