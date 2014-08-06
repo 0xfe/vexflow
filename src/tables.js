@@ -20,8 +20,6 @@ Vex.Flow.clefProperties = function(clef) {
 
 Vex.Flow.clefProperties.values = {
   'treble':  { line_shift: 0 },
-  'treble_8va':  { line_shift: 0 },
-  'treble_8vb':  { line_shift: 0 },
   'bass':    { line_shift: 6 },
   'tenor':   { line_shift: 4 },
   'alto':    { line_shift: 3 },
@@ -37,7 +35,7 @@ Vex.Flow.clefProperties.values = {
 /*
   Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
 */
-Vex.Flow.keyProperties = function(key, clef) {
+Vex.Flow.keyProperties = function(key, clef, octave_shift) {
   if (clef === undefined) {
     clef = 'treble';
   }
@@ -54,7 +52,8 @@ Vex.Flow.keyProperties = function(key, clef) {
   if (!value) throw new Vex.RERR("BadArguments", "Invalid key name: " + k);
   if (value.octave) pieces[1] = value.octave;
 
-  var o = pieces[1];
+  var o = parseInt(pieces[1]);
+  if (octave_shift) o += -1 * octave_shift; // octave_shift is the shift for the clef; compensate
   var base_index = (o * 7) - (4 * 7);
   var line = (base_index + value.index) / 2;
   line += Vex.Flow.clefProperties(clef).line_shift;
