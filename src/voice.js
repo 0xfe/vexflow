@@ -1,8 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-// 
-// This file implements the main Voice class. It's mainly a container 
+//
+// This file implements the main Voice class. It's mainly a container
 // object to group `Tickables` for formatting.
 Vex.Flow.Voice = (function() {
   function Voice(time) {

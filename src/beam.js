@@ -163,19 +163,19 @@ Vex.Flow.Beam = (function() {
           }
 
         }
-        
+
         var last_note = this.notes[this.notes.length - 1];
-        var first_last_slope = ((last_note.getStemExtents().topY - first_y_px) / 
+        var first_last_slope = ((last_note.getStemExtents().topY - first_y_px) /
                 (last_note.getStemX() - first_x_px));
         // most engraving books suggest aiming for a slope about half the angle of the
         // difference between the first and last notes' stem length;
-        var ideal_slope = first_last_slope / 2; 
+        var ideal_slope = first_last_slope / 2;
         var distance_from_ideal = Math.abs(ideal_slope - slope);
 
         // This tries to align most beams to something closer to the ideal_slope, but
         // doesn't go crazy. To disable, set this.render_options.slope_cost = 0
         var cost = this.render_options.slope_cost * distance_from_ideal +
-            Math.abs(total_stem_extension);     
+            Math.abs(total_stem_extension);
 
         // update state when a more ideal slope is found
         if (cost < min_cost) {
@@ -427,7 +427,7 @@ Vex.Flow.Beam = (function() {
   };
 
   // ## Static Methods
-  // 
+  //
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
   // Currently this is fairly naive.
@@ -483,7 +483,7 @@ Vex.Flow.Beam = (function() {
 
   // A helper function to automatically build basic beams for a voice. For more
   // complex auto-beaming use `Beam.generateBeams()`.
-  // 
+  //
   // Parameters:
   // * `voice` - The voice to generate the beams for
   // * `stem_direction` - A stem direction to apply to the entire voice
@@ -495,9 +495,9 @@ Vex.Flow.Beam = (function() {
     });
   };
 
-  // A helper function to autimatically build beams for a voice with 
+  // A helper function to autimatically build beams for a voice with
   // configuration options.
-  // 
+  //
   // Example configuration object:
   //
   // ```
@@ -509,7 +509,7 @@ Vex.Flow.Beam = (function() {
   //   show_stemlets: false
   // };
   // ```
-  // 
+  //
   // Parameters:
   // * `notes` - An array of notes to create the beams for
   // * `config` - The configuration object
@@ -519,7 +519,7 @@ Vex.Flow.Beam = (function() {
   //    * `beam_middle_only` - Set to `true` to only beam rests in the middle of the beat
   //    * `show_stemlets` - Set to `true` to draw stemlets for rests
   //    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
-  // 
+  //
   Beam.generateBeams = function(notes, config) {
 
     if (!config) config = {};
