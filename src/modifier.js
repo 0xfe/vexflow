@@ -29,7 +29,7 @@ Vex.Flow.Modifier = (function() {
   // ## Prototype Methods
   Modifier.prototype = {
 
-    // The constructor sets initial widhts and constants.
+    // The constructor sets initial widths and constants.
     init: function() {
       this.width = 0;
       this.context = null;
