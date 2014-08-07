@@ -35,13 +35,20 @@ Vex.Flow.clefProperties.values = {
 /*
   Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
   
-  Options is a struct the currently can contain one option, octave_shift for clef ottavation.
+  The last argument, params, is a struct the currently can contain one option, 
+  octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
 */
-Vex.Flow.keyProperties = function(key, clef, options) {
+Vex.Flow.keyProperties = function(key, clef, params) {
   if (clef === undefined) {
     clef = 'treble';
   }
-
+  var options = { 
+    octave_shift: 0 
+  };
+  if (typeof params == "object") {
+    Vex.Merge(options, params);
+  }
+  
   var pieces = key.split("/");
 
   if (pieces.length < 2) {
@@ -56,8 +63,9 @@ Vex.Flow.keyProperties = function(key, clef, options) {
 
   var o = parseInt(pieces[1]);
   
-  // octave_shift is the shift to compensate for clef 8va/8vb
-  if (options !== undefined && options.octave_shift) o += -1 * options.octave_shift; 
+  // Octave_shift is the shift to compensate for clef 8va/8vb.
+  o += -1 * options.octave_shift; 
+
   var base_index = (o * 7) - (4 * 7);
   var line = (base_index + value.index) / 2;
   line += Vex.Flow.clefProperties(clef).line_shift;

@@ -183,7 +183,7 @@ Vex.Flow.StaveNote = (function() {
         // All rests use the same position on the line.
         // if (this.glyph.rest) key = this.glyph.position;
         if (this.glyph.rest) this.glyph.position = key;
-        var options = { octave_shift: this.octave_shift };
+        var options = { octave_shift: this.octave_shift || 0 };
         var props = Vex.Flow.keyProperties(key, this.clef, options);
         if (!props) {
           throw new Vex.RuntimeError("BadArguments",
