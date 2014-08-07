@@ -128,19 +128,19 @@ Vex.Flow.Accidental = (function(){
 
     // Sort the tickables in each voice by their tick position in the voice
     voices.forEach(function(voice) {
-      var tickPosition = 0;
+      var tickPosition = new Vex.Flow.Fraction(0, 1);
       var notes = voice.getTickables();
       notes.forEach(function(note) {
-        var notesAtPosition = tickNoteMap[tickPosition];
+        var notesAtPosition = tickNoteMap[tickPosition.value()];
 
         if (!notesAtPosition) {
-          tickPositions.push(tickPosition);
-          tickNoteMap[tickPosition] = [note];
+          tickPositions.push(tickPosition.value());
+          tickNoteMap[tickPosition.value()] = [note];
         } else {
           notesAtPosition.push(note);
         }
 
-        tickPosition += note.getTicks().value();
+        tickPosition.add(note.getTicks());
       });
     });
     

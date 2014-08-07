@@ -87,13 +87,13 @@ Vex.Flow.TickContext = (function() {
 
         var ticks = tickable.getTicks();
 
-        if (ticks.value() > this.maxTicks.value()) {
+        if (ticks.greaterThan(this.maxTicks)) {
           this.maxTicks = ticks.clone();
         }
 
         if (this.minTicks == null) {
           this.minTicks = ticks.clone();
-        } else if (ticks.value() < this.minTicks.value()) {
+        } else if (ticks.lessThan(this.minTicks)) {
           this.minTicks = ticks.clone();
         }
       }

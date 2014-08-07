@@ -94,9 +94,9 @@ Vex.Flow.Formatter = (function() {
     var voice;
     for (i = 0; i < voices.length; ++i) {
       voice = voices[i];
-      if (voice.getTotalTicks().value() != totalTicks.value()) {
+      if (!(voice.getTotalTicks().equals(totalTicks))) {
         throw new Vex.RERR("TickMismatch",
-            "Voices should have same time signature.");
+            "Voices should have same total note duration in ticks.");
       }
 
       if (voice.getMode() == Vex.Flow.Voice.Mode.STRICT && !voice.isComplete())
