@@ -15,8 +15,8 @@ Vex.Flow.Clef = (function() {
   // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
   function L() { if (Vex.Flow.Clef.DEBUG) Vex.L("Vex.Flow.Clef", arguments); }
 
-  // Every clef name is associated with a glyph code from the font file, a
-  // point size, and a default stave line number.
+  // Every clef name is associated with a glyph code from the font file
+  // and a default stave line number.
   Clef.types = {
     "treble": {
       code: "v83",
@@ -63,14 +63,14 @@ Vex.Flow.Clef = (function() {
       line: 4
     },
   };
-  // sizes affect the point-size of the clef
+  // Sizes affect the point-size of the clef.
   Clef.sizes = {
     "default": 40,
     "small": 32
   };
   
   
-  // annotations attach to clefs -- such as "8" for octave up or down...
+  // Annotations attach to clefs -- such as "8" for octave up or down.
   Clef.annotations = {
     "8va": {
       code: "v8",
@@ -143,6 +143,7 @@ Vex.Flow.Clef = (function() {
       }
       this.clef.point = Vex.Flow.Clef.sizes[this.size];
       
+      // If an annotation, such as 8va, is specified, add it to the Clef object.
       if (annotation !== undefined) {
         var anno_dict = Vex.Flow.Clef.annotations[annotation];
         this.annotation = {

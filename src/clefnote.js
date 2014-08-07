@@ -61,6 +61,7 @@ Vex.Flow.ClefNote = (function() {
         this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
       this.glyph.renderToStave(abs_x);
       
+      // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
       if (this.clef_obj.annotation !== undefined) {
         var attachment = new Vex.Flow.Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
         if (!attachment.getContext()) {
