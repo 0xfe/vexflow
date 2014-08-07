@@ -36,6 +36,7 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   stave.addClef("baritone-c");
   stave.addClef("baritone-f");
   stave.addClef("subbass");
+  stave.addClef("percussion");
   stave.addClef("french");
 
   stave.addEndClef("treble");
@@ -64,6 +65,7 @@ Vex.Flow.Test.Clef.drawEnd = function(options, contextBuilder) {
   stave.addEndClef("baritone-c");
   stave.addEndClef("baritone-f");
   stave.addEndClef("subbass");
+  stave.addEndClef("percussion");
   stave.addEndClef("french");
 
   stave.setContext(ctx);
@@ -89,6 +91,7 @@ Vex.Flow.Test.Clef.drawSmall = function(options, contextBuilder) {
   stave.addClef("baritone-c", "small");
   stave.addClef("baritone-f", "small");
   stave.addClef("subbass", "small");
+  stave.addClef("percussion", "small");
   stave.addClef("french", "small");
 
   stave.addEndClef("treble", "small");
@@ -116,6 +119,7 @@ Vex.Flow.Test.Clef.drawSmallEnd = function(options, contextBuilder) {
   stave.addEndClef("baritone-c", "small");
   stave.addEndClef("baritone-f", "small");
   stave.addEndClef("subbass", "small");
+  stave.addEndClef("percussion", "small");
   stave.addEndClef("french", "small");
     
   stave.setContext(ctx);

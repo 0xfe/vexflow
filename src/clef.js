@@ -20,75 +20,53 @@ Vex.Flow.Clef = (function() {
   Clef.types = {
     "treble": {
       code: "v83",
-      point: 40,
       line: 3
     },
     "bass": {
       code: "v79",
-      point: 40,
       line: 1
     },
     "alto": {
       code: "vad",
-      point: 40,
       line: 2
     },
     "tenor": {
       code: "vad",
-      point: 40,
       line: 1
     },
     "percussion": {
       code: "v59",
-      point: 40,
       line: 2
     },
     "soprano": {
       code: "vad",
-      point: 40,
       line: 4
     },
     "mezzo-soprano": {
       code: "vad",
-      point: 40,
       line: 3
     },
     "baritone-c": {
       code: "vad",
-      point: 40,
       line: 0
     },
     "baritone-f": {
       code: "v79",
-      point: 40,
       line: 2
     },
     "subbass": {
       code: "v79",
-      point: 40,
       line: 0
     },
     "french": {
       code: "v83",
-      point: 40,
       line: 4
     },
   };
   // sizes affect the point-size of the clef
   Clef.sizes = {
-    "small": {
-      "treble": 32,
-      "bass": 32,
-      "alto": 32,
-      "tenor": 32,
-      "percussion": 32,
-      "soprano": 32,
-      "mezzo-soprano": 32,
-      "baritone-c": 32,
-      "baritone-f": 32,
-      "subbass": 32,
-      "french": 32
-    } 
+    "default": 40,
+    "small": 32
   };
   
   
@@ -99,7 +77,7 @@ Vex.Flow.Clef = (function() {
       sizes: {
         "default": {
           point: 20,
-          clef_attachments: {
+          attachments: {
             "treble": {
               line: -1.2,
               x_shift: 11
@@ -108,7 +86,7 @@ Vex.Flow.Clef = (function() {
         },
         "small": {
           point: 18,
-          clef_attachments: {
+          attachments: {
             "treble": {
               line: -0.4,
               x_shift: 8
@@ -122,7 +100,7 @@ Vex.Flow.Clef = (function() {
       sizes: {
         "default": {
           point: 20,
-          clef_attachments: {
+          attachments: {
             "treble": {
               line: 6.3,
               x_shift: 10
@@ -135,7 +113,7 @@ Vex.Flow.Clef = (function() {
         },
         "small": {
           point: 18,
-          clef_attachments: {
+          attachments: {
             "treble": {
               line: 5.8,
               x_shift: 6
@@ -163,17 +141,15 @@ Vex.Flow.Clef = (function() {
       } else {
         this.size = size;
       }
-      if (this.size != "default" && Vex.Flow.Clef.sizes[this.size] !== undefined) {
-        this.clef.point = Vex.Flow.Clef.sizes[this.size][clef];
-      }
+      this.clef.point = Vex.Flow.Clef.sizes[this.size];
       
       if (annotation !== undefined) {
         var anno_dict = Vex.Flow.Clef.annotations[annotation];
         this.annotation = {
           code: anno_dict.code,
           point: anno_dict.sizes[this.size].point,
-          line: anno_dict.sizes[this.size].clef_attachments[clef].line,
-          x_shift: anno_dict.sizes[this.size].clef_attachments[clef].x_shift
+          line: anno_dict.sizes[this.size].attachments[clef].line,
+          x_shift: anno_dict.sizes[this.size].attachments[clef].x_shift
         };
       }
       L("Creating clef:", clef);
@@ -184,11 +160,11 @@ Vex.Flow.Clef = (function() {
       var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
       this.placeGlyphOnLine(glyph, stave, this.clef.line);
       if (this.annotation !== undefined) {
-        var ottavaGlyph = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
-        ottavaGlyph.metrics.x_max = 0;
-        ottavaGlyph.setXShift(this.annotation.x_shift);
-        this.placeGlyphOnLine(ottavaGlyph, stave, this.annotation.line);
-        stave.addGlyph(ottavaGlyph);
+        var attachment = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
+        attachment.metrics.x_max = 0;
+        attachment.setXShift(this.annotation.x_shift);
+        this.placeGlyphOnLine(attachment, stave, this.annotation.line);
+        stave.addGlyph(attachment);
       }
       stave.addGlyph(glyph);
     },
@@ -199,11 +175,11 @@ Vex.Flow.Clef = (function() {
       this.placeGlyphOnLine(glyph, stave, this.clef.line);
       stave.addEndGlyph(glyph);
       if (this.annotation !== undefined) {
-        var ottavaGlyph = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
-        ottavaGlyph.metrics.x_max = 0;
-        ottavaGlyph.setXShift(this.annotation.x_shift);
-        this.placeGlyphOnLine(ottavaGlyph, stave, this.annotation.line);
-        stave.addEndGlyph(ottavaGlyph);
+        var attachment = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
+        attachment.metrics.x_max = 0;
+        attachment.setXShift(this.annotation.x_shift);
+        this.placeGlyphOnLine(attachment, stave, this.annotation.line);
+        stave.addEndGlyph(attachment);
       }
     }
   });

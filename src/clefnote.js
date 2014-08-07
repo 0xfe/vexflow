@@ -62,15 +62,15 @@ Vex.Flow.ClefNote = (function() {
       this.glyph.renderToStave(abs_x);
       
       if (this.clef_obj.annotation !== undefined) {
-        this.ottavaGlyph = new Vex.Flow.Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
-        if (!this.ottavaGlyph.getContext()) {
-            this.ottavaGlyph.setContext(this.context);
+        var attachment = new Vex.Flow.Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
+        if (!attachment.getContext()) {
+            attachment.setContext(this.context);
         }
-        this.ottavaGlyph.setStave(this.stave);
-        this.ottavaGlyph.setYShift(
+        attachment.setStave(this.stave);
+        attachment.setYShift(
           this.stave.getYForLine(this.clef_obj.annotation.line) - this.stave.getYForGlyphs());
-        this.ottavaGlyph.setXShift(this.clef_obj.annotation.x_shift);
-        this.ottavaGlyph.renderToStave(abs_x);
+        attachment.setXShift(this.clef_obj.annotation.x_shift);
+        attachment.renderToStave(abs_x);
       }
       
     }
