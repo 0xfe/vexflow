@@ -732,7 +732,6 @@ Vex.Flow.durationToTicks.durations = {
 };
 
 Vex.Flow.durationAliases = {
-  "b": "1/2",
   "w": "1",
   "h": "2",
   "q": "4",
@@ -741,7 +740,7 @@ Vex.Flow.durationAliases = {
   // consume ticks, so this should be a no-op.
   //
   // TODO(0xfe): This needs to be cleaned up.
-  //"b": "256"
+  "b": "256"
 };
 
 Vex.Flow.durationToGlyph = function(duration, type) {
