@@ -610,7 +610,7 @@ Vex.Flow.parseNoteDurationString = function(durationString) {
     return null;
   }
 
-  var regexp = /(\d+|[a-z])(d*)([nrhms]|$)/;
+  var regexp = /(\d*\/?\d+|[a-z])(d*)([nrhms]|$)/;
 
   var result = regexp.exec(durationString);
   if (!result) {
@@ -714,8 +714,9 @@ Vex.Flow.durationToFraction = function(duration) {
 };
 
 // Convert the `duration` to an integer
-Vex.Flow.durationToInteger = function(duration) {
-  return parseInt(sanitizeDuration(duration));
+Vex.Flow.durationToNumber = function(duration) {
+  f = new Vex.Flow.Fraction().parse(sanitizeDuration(duration));
+  return f.numerator/f.denominator;
 };
 
 // Convert the `duration` to total ticks
@@ -731,6 +732,7 @@ Vex.Flow.durationToTicks = function(duration) {
 };
 
 Vex.Flow.durationToTicks.durations = {
+  "1/2":   Vex.Flow.RESOLUTION * 2,
   "1":    Vex.Flow.RESOLUTION / 1,
   "2":    Vex.Flow.RESOLUTION / 2,
   "4":    Vex.Flow.RESOLUTION / 4,
@@ -778,6 +780,47 @@ Vex.Flow.durationToGlyph = function(duration, type) {
 };
 
 Vex.Flow.durationToGlyph.duration_codes = {
+  "1/2": {
+    common: {
+      head_width: 22,
+      stem: false,
+      stem_offset: 0,
+      flag: false,
+      stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      gracenote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      gracenote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      tabnote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
+      tabnote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0
+    },
+    type: {
+      "n": { // Breve note
+        code_head: "v53"
+      },
+      "h": { // Breve note harmonic
+        code_head: "v59"
+      },
+      "m": { // Breve note muted -
+        code_head: "vf",
+        stem_offset: 0
+      },
+      "r": { // Breve rest
+        code_head: "v31",
+        head_width: 24,
+        rest: true,
+        position: "B/5",
+        dot_shiftY: 0.5
+      },
+      "s": { // Breve note slash -
+        // Drawn with canvas primitives
+        head_width: 15,
+        position: "B/4"
+      }
+    }
+  },
   "1": {
     common: {
       head_width: 16,
