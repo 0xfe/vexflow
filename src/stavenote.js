@@ -574,6 +574,7 @@ Vex.Flow.StaveNote = (function() {
 
     // Draw the ledger lines between the stave and the highest/lowest keys
     drawLedgerLines: function(){
+      if (this.isRest()) { return; }
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
       var ctx = this.context;
@@ -581,8 +582,8 @@ Vex.Flow.StaveNote = (function() {
       var bounds = this.getNoteHeadBounds();
       var highest_line = bounds.highest_line;
       var lowest_line = bounds.lowest_line;
-      var head_x = this.note_heads[0].getAbsoluteX();
-
+      var head_x = this.note_heads[0].getAbsoluteX();      
+      
       var that = this;
       function stroke(y) {
         if (that.use_default_head_x === true)  {

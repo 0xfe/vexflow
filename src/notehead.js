@@ -211,10 +211,12 @@ Vex.Flow.NoteHead = (function() {
           line_y -= 5;
         else if (line > 6 &&  floor - line == -0.5)
           line_y += 5;
-        ctx.fillRect(
-          head_x - this.render_options.stroke_px, line_y,
-          (this.getGlyph().head_width) +
-          (this.render_options.stroke_px * 2), 1);
+        if (this.note_type != 'r') {
+          ctx.fillRect(
+            head_x - this.render_options.stroke_px, line_y,
+            (this.getGlyph().head_width) +
+            (this.render_options.stroke_px * 2), 1);    
+        }        
       }
 
       if (this.note_type == "s") {
