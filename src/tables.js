@@ -34,7 +34,7 @@ Vex.Flow.clefProperties.values = {
 
 /*
   Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
-  
+
   The last argument, params, is a struct the currently can contain one option, 
   octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
 */
@@ -42,13 +42,13 @@ Vex.Flow.keyProperties = function(key, clef, params) {
   if (clef === undefined) {
     clef = 'treble';
   }
-  var options = { 
-    octave_shift: 0 
+  var options = {
+    octave_shift: 0
   };
   if (typeof params == "object") {
     Vex.Merge(options, params);
   }
-  
+
   var pieces = key.split("/");
 
   if (pieces.length < 2) {
@@ -62,9 +62,9 @@ Vex.Flow.keyProperties = function(key, clef, params) {
   if (value.octave) pieces[1] = value.octave;
 
   var o = parseInt(pieces[1]);
-  
+
   // Octave_shift is the shift to compensate for clef 8va/8vb.
-  o += -1 * options.octave_shift; 
+  o += -1 * options.octave_shift;
 
   var base_index = (o * 7) - (4 * 7);
   var line = (base_index + value.index) / 2;
@@ -708,15 +708,14 @@ function sanitizeDuration(duration) {
   return duration;
 }
 
-// Convert the `duration` to a fraction
+// Convert the `duration` to an fraction
 Vex.Flow.durationToFraction = function(duration) {
-  return new Vex.Flow.Fraction(Vex.Flow.durationToTicks(duration), 1);
+  return new Vex.Flow.Fraction().parse(sanitizeDuration(duration));
 };
 
-// Convert the `duration` to an integer
+// Convert the `duration` to an number
 Vex.Flow.durationToNumber = function(duration) {
-  f = new Vex.Flow.Fraction().parse(sanitizeDuration(duration));
-  return f.numerator/f.denominator;
+  return Vex.Flow.durationToFraction(duration).value();
 };
 
 // Convert the `duration` to total ticks
@@ -732,7 +731,7 @@ Vex.Flow.durationToTicks = function(duration) {
 };
 
 Vex.Flow.durationToTicks.durations = {
-  "1/2":   Vex.Flow.RESOLUTION * 2,
+  "1/2":  Vex.Flow.RESOLUTION * 2,
   "1":    Vex.Flow.RESOLUTION / 1,
   "2":    Vex.Flow.RESOLUTION / 2,
   "4":    Vex.Flow.RESOLUTION / 4,
