@@ -93,7 +93,8 @@ base_sources = [
   "src/crescendo.js",
   "src/ornament.js",
   "src/pedalmarking.js",
-  "src/textbracket.js"
+  "src/textbracket.js",
+  "src/textdynamics.js"
 ]
 
 # Don't minify these files.
