@@ -4,8 +4,8 @@
 //
 // This file implements the `TextDynamics` which renders traditional
 // text dynamics markings, **ie: p, f, sfz, rfz, ppp**
-// 
-// You can render any dynamics string that contains a combination of 
+//
+// You can render any dynamics string that contains a combination of
 // the following letters:  P, M, F, Z, R, S
 Vex.Flow.TextDynamics = (function(){
   function TextDynamics(text_struct) {
@@ -49,7 +49,7 @@ Vex.Flow.TextDynamics = (function(){
   // within a `Voice`.
   Vex.Inherit(TextDynamics, Vex.Flow.Note, {
     // Create the dynamics marking. `text_struct` is an object
-    // that contains a `duration` property and a `sequence` of 
+    // that contains a `duration` property and a `sequence` of
     // letters that represents the letters to render
     init: function(text_struct) {
       TextDynamics.superclass.init.call(this, text_struct);
@@ -94,7 +94,6 @@ Vex.Flow.TextDynamics = (function(){
 
     // Draw the dynamics text on the rendering context
     draw: function() {
-      var ctx = this.context;
       var x = this.getAbsoluteX();
       var y = this.stave.getYForLine(this.line + (-3));
 

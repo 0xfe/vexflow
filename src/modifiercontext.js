@@ -844,6 +844,7 @@ Vex.Flow.ModifierContext = (function() {
 
     preFormat: function() {
       if (this.preFormatted) return;
+      L("Preformatting ModifierContext");
 
       // Format modifiers in the following order:
       this.formatNotes().

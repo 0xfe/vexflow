@@ -428,7 +428,7 @@ Vex.Flow.StaveNote = (function() {
       return this;
     },
 
-    getKeyLine: function(index, line) {
+    getKeyLine: function(index) {
       return this.keyProps[index].line;
     },
 
