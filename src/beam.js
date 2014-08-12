@@ -48,19 +48,7 @@ Vex.Flow.Beam = (function() {
 
       // Figure out optimal stem direction based on given notes
       if (auto_stem && notes[0].getCategory() === 'stavenotes')  {
-        // Auto Stem StaveNotes
-        this.min_line = 1000;
-
-        for (i = 0; i < notes.length; ++i) {
-          note = notes[i];
-          if (note.getKeyProps) {
-            var props = note.getKeyProps();
-            var center_line = (props[0].line + props[props.length - 1].line) / 2;
-            this.min_line = Math.min(center_line, this.min_line);
-          }
-        }
-
-        if (this.min_line < 3) stem_direction = 1;
+        stem_direction = calculateStemDirection(notes);
       } else if (auto_stem && notes[0].getCategory() === 'tabnotes') {
         // Auto Stem TabNotes
         var stem_weight = notes.reduce(function(memo, note) {
@@ -426,6 +414,21 @@ Vex.Flow.Beam = (function() {
     }
   };
 
+  function calculateStemDirection(notes) {
+    var lineSum = 0;
+    notes.forEach(function(note) {
+      if (note.keyProps) {
+        note.keyProps.forEach(function(keyProp){
+          lineSum += (keyProp.line - 3);
+        });
+      }
+    });
+
+    if (lineSum >= 0)
+      return -1;
+    return 1;
+  }
+
   // ## Static Methods
   //
   // Gets the default beam groups for a provided time signature.
@@ -673,7 +676,11 @@ Vex.Flow.Beam = (function() {
           var note = findFirstNote(group);
           stemDirection = note ? note.getStemDirection() : 1;
         } else {
-          stemDirection = calculateStemDirection(group);
+          if (config.stem_direction){
+            stemDirection = config.stem_direction;
+          } else {
+            stemDirection = calculateStemDirection(group);
+          }
         }
         applyStemDirection(group, stemDirection);
       });
@@ -688,23 +695,6 @@ Vex.Flow.Beam = (function() {
       }
 
       return false;
-    }
-
-    function calculateStemDirection(group) {
-      if (config.stem_direction) return config.stem_direction;
-
-      var lineSum = 0;
-      group.forEach(function(note) {
-        if (note.keyProps) {
-          note.keyProps.forEach(function(keyProp){
-            lineSum += (keyProp.line - 2.5);
-          });
-        }
-      });
-
-      if (lineSum > 0)
-        return -1;
-      return 1;
     }
 
     function applyStemDirection(group, direction) {

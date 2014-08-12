@@ -4,6 +4,10 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
   module('Auto-Beaming');
   Vex.Flow.Test.runTest("Simple Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
+  Vex.Flow.Test.runTest("Even Group Stem Directions",
+                        Vex.Flow.Test.AutoBeamFormatting.evenGroupStemDirections);
+  Vex.Flow.Test.runTest("Odd Group Stem Directions",
+                        Vex.Flow.Test.AutoBeamFormatting.oddGroupStemDirections);
   Vex.Flow.Test.runTest("Odd Beam Groups Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.oddBeamGroups);
   Vex.Flow.Test.runTest("More Simple Auto Beaming 0",
@@ -74,6 +78,99 @@ Vex.Flow.Test.AutoBeamFormatting.simpleAuto = function(options, contextBuilder) 
 
   // Takes a voice and returns it's auto beamsj
   var beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+
+  ok(true, "Auto Beaming Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.evenGroupStemDirections = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
+
+  var notes = [
+    newNote({ keys: ["a/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["f/4"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["e/4"], duration: "8"}),
+    newNote({ keys: ["e/5"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
+  voice.addTickables(notes);
+
+  // Takes a voice and returns it's auto beamsj
+  var beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  equal(beams[0].stem_direction, 1);
+  equal(beams[1].stem_direction, 1);
+  equal(beams[2].stem_direction, 1);
+  equal(beams[3].stem_direction, 1);
+  equal(beams[4].stem_direction, -1);
+  equal(beams[5].stem_direction, -1);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+
+  ok(true, "Auto Beaming Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.oddGroupStemDirections = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
+
+  var notes = [
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["f/4"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["e/4"], duration: "8"}),
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["a/4"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["a/4"], duration: "8"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setStrict(false);
+  voice.addTickables(notes);
+
+  var groups = [
+    new Vex.Flow.Fraction(3, 8), 
+  ];
+
+  // Takes a voice and returns it's auto beamsj
+  var beams = Vex.Flow.Beam.applyAndGetBeams(voice, null, groups);
+
+  equal(beams[0].stem_direction, -1, "Notes are equa-distant from middle line");
+  equal(beams[1].stem_direction, -1);
+  equal(beams[2].stem_direction, 1);
+  equal(beams[3].stem_direction, -1, "Notes are equadistant from middle line");
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], c.stave);

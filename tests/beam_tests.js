@@ -11,7 +11,7 @@ Vex.Flow.Test.Beam.Start = function() {
   Vex.Flow.Test.runTest("Multi Beam", Vex.Flow.Test.Beam.multi);
   Vex.Flow.Test.runTest("Sixteenth Beam", Vex.Flow.Test.Beam.sixteenth);
   Vex.Flow.Test.runTest("Slopey Beam", Vex.Flow.Test.Beam.slopey);
-  Vex.Flow.Test.runTest("Automatic Beam", Vex.Flow.Test.Beam.auto);
+  Vex.Flow.Test.runTest("Auto-stemmed Beam", Vex.Flow.Test.Beam.autoStem);
   Vex.Flow.Test.runTest("Mixed Beam 1", Vex.Flow.Test.Beam.mixed);
   Vex.Flow.Test.runTest("Mixed Beam 2", Vex.Flow.Test.Beam.mixed2);
   Vex.Flow.Test.runTest("Dotted Beam", Vex.Flow.Test.Beam.dotted);
@@ -284,7 +284,7 @@ Vex.Flow.Test.Beam.slopey = function(options, contextBuilder) {
   ok(true, "Slopey Test");
 }
 
-Vex.Flow.Test.Beam.auto = function(options, contextBuilder) {
+Vex.Flow.Test.Beam.autoStem = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 350, 140);
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   ctx.font = " 10pt Arial";
@@ -295,29 +295,50 @@ Vex.Flow.Test.Beam.auto = function(options, contextBuilder) {
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
   var notes = [
-    newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["g/5"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["d/6"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["f/5"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["g/5"], stem_direction: 1, duration: "8"})
+    newNote({ keys: ["a/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "8"}),
+    newNote({ keys: ["f/4"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["e/4"], duration: "8"}),
+    newNote({ keys: ["e/5"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["b/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"})
   ];
 
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+  voice.setStrict(false);
   voice.addTickables(notes);
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     format([voice], 300);
-  var beam1_1 = new Vex.Flow.Beam(notes.slice(0, 4), true);
-  var beam1_2 = new Vex.Flow.Beam(notes.slice(4, 8), true);
+
+  var beam1 = new Vex.Flow.Beam(notes.slice(0, 2), true);
+  var beam2 = new Vex.Flow.Beam(notes.slice(2, 4), true);
+  var beam3 = new Vex.Flow.Beam(notes.slice(4, 6), true);
+  var beam4 = new Vex.Flow.Beam(notes.slice(6, 8), true);
+  var beam5 = new Vex.Flow.Beam(notes.slice(8, 10), true);
+  var beam6 = new Vex.Flow.Beam(notes.slice(10, 12), true);
+
+  equal(beam1.stem_direction, 1);
+  equal(beam2.stem_direction, 1);
+  equal(beam3.stem_direction, 1);
+  equal(beam4.stem_direction, 1);
+  equal(beam5.stem_direction, -1);
+  equal(beam6.stem_direction, -1);
 
   voice.draw(ctx, stave);
-  beam1_1.setContext(ctx).draw();
-  beam1_2.setContext(ctx).draw();
+  beam1.setContext(ctx).draw();
+  beam2.setContext(ctx).draw();
+  beam3.setContext(ctx).draw();
+  beam4.setContext(ctx).draw();
+  beam5.setContext(ctx).draw();
+  beam6.setContext(ctx).draw();
 
-  ok(true, "Autobeam Test");
+  ok(true, "AutoStem Beam Test");
 }
 
 Vex.Flow.Test.Beam.mixed = function(options, contextBuilder) {
