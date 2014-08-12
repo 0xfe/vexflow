@@ -692,7 +692,7 @@ Vex.Flow.parseNoteData = function(noteData) {
 
 // Used to convert duration aliases to the number based duration.
 // If the input isn't an alias, simply return the input.
-// 
+//
 // example: 'q' -> '4', '8' -> '8'
 function sanitizeDuration(duration) {
   var alias = Vex.Flow.durationAliases[duration];
