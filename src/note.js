@@ -86,6 +86,7 @@ Vex.Flow.Note = (function() {
       this.right_modPx = 0;       // Max width of right modifiers
       this.voice = null;          // The voice that this note is in
       this.preFormatted = false;  // Is this note preFormatted?
+      this.has_fixed_ys = false;
       this.ys = [];               // list of y coordinates for each note
                                   // we need to hold on to these for ties and beams.
                                 
@@ -157,6 +158,11 @@ Vex.Flow.Note = (function() {
       if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
           "No Y-values calculated for this note.");
       return this.ys;
+    },
+
+    // Check if the object has fixed Y boundaries
+    hasFixedYs: function(){
+      return this.has_fixed_ys;
     },
 
     // Get the Y position of the space above the stave onto which text can

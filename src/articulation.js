@@ -90,7 +90,6 @@ Vex.Flow.Articulation = (function() {
       var line_spacing = 1;
       var spacing = stave.getSpacingBetweenLines();
       var is_tabnote = this.note.getCategory() === 'tabnotes';
-      var is_pause = this.note.getCategory() === 'pausemarkings';
 
       // Get the stem extents if it's a StemmableNote
       var stem_ext, top, bottom;
@@ -135,8 +134,8 @@ Vex.Flow.Articulation = (function() {
 
         if (this.articulation.between_lines)
           glyph_y = glyph_y_between_lines;
-        else if (is_pause)
-          glyph_y = Math.min(stave.getYForTopText(this.text_line), glyph_y - 25);
+        else if (this.note.hasFixedYs())
+          glyph_y = Math.min(stave.getYForTopText(this.text_line), glyph_y - this.note.getFixedYs().top);
         else
           glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
       } else {
@@ -145,8 +144,8 @@ Vex.Flow.Articulation = (function() {
         glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
         if (this.articulation.between_lines)
           glyph_y = glyph_y_between_lines;
-        else if (is_pause)
-          glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y + 30);
+        else if (this.note.hasFixedYs())
+          glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y + this.note.getFixedYs().bottom);
         else
           glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
       }

@@ -50,6 +50,8 @@ Vex.Flow.PauseMarking = (function() {
       this.type = type;
       this.line = 0;
       this.glyph_data = PauseMarking.GLYPHS[type];
+      this.has_fixed_ys = true;
+      
       if (!this.glyph_data) throw new Vex.RERR("InvalidArguments",
         "PauseMarking type" + type + "does not exist");
 
@@ -63,6 +65,11 @@ Vex.Flow.PauseMarking = (function() {
     // Get/Set the Stave line on which the note should be placed
     getLine: function() { return this.line; },
     setLine: function(line) { this.line = line; return this; },
+
+    // Get the relative y boundaries on either side of the stave
+    getFixedYs: function(){
+      return {top: 25, bottom: 30};
+    },
 
     // Get the `ModifierContext` category
     getCategory: function() { return "pausemarkings"; },
