@@ -31,7 +31,7 @@ Vex.Flow.Beam = (function() {
             "Beams can only be applied to notes shorter than a quarter note.");
       }
 
-      var i; // shared iterator
+      var i, k; // shared iterator
       var note;
 
       this.stem_direction = 1;
@@ -46,19 +46,23 @@ Vex.Flow.Beam = (function() {
 
       var stem_direction = -1;
 
-      // Figure out optimal stem direction based on given notes
+      // Figure out optimal stem direction based on given notes.
       if (auto_stem && notes[0].getCategory() === 'stavenotes')  {
-        // Auto Stem StaveNotes
-        this.min_line = 1000;
+        // Auto Stem StaveNotes.
 
+        var num_heads = 0;
+        var summed_direction = 0;
         for (i = 0; i < notes.length; ++i) {
-          note = notes[i];
+          note = notes[i];          
           if (note.getKeyProps) {
             var props = note.getKeyProps();
-            var center_line = (props[0].line + props[props.length - 1].line) / 2;
-            this.min_line = Math.min(center_line, this.min_line);
+            for (k = 0; k < props.length; ++k) {
+                num_heads++;
+                summed_direction += props[k].line;
+            }
           }
         }
+        if (num_heads == 0) { num_heads = 1; }; // div/0 check
 
         if (this.min_line < 3) stem_direction = 1;
       } else if (auto_stem && notes[0].getCategory() === 'tabnotes') {
