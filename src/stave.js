@@ -87,6 +87,17 @@ Vex.Flow.Stave = (function() {
       this.resetLines();
       return this;
     },
+    // Space above and below staff lines is measured in staff lines.
+    getSpaceAboveStaffLines: function() { return this.options.space_above_staff_ln; },
+    setSpaceAboveStaffLines: function(space) { 
+      this.options.space_above_staff_ln = space;
+      return this;
+    },
+    getSpaceBelowStaffLines: function() { return this.options.space_below_staff_ln; },
+    setSpaceBelowStaffLines: function(space) { 
+      this.options.space_below_staff_ln = space;
+      return this;
+    },
     setY: function(y) { this.y = y; return this; },
 
     setWidth: function(width) {
@@ -190,6 +201,10 @@ Vex.Flow.Stave = (function() {
 
     getSpacingBetweenLines: function() {
       return this.options.spacing_between_lines_px;
+    },
+    setSpacingBetweenLines: function(px) {
+      this.options.spacing_between_lines_px = parseInt(px);
+      return this;      
     },
 
     getBoundingBox: function() {
