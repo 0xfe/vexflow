@@ -242,6 +242,16 @@ Vex.Flow.StaveNote = (function() {
     state.right_shift += x_shift;
   }
 
+  StaveNote.postFormat = function(notes, context) {
+    if (!notes) return false;
+
+    notes.forEach(function(note) {
+      note.postFormat();
+    });
+
+    return true;
+  }
+
   // ## Prototype Methods
   //
   Vex.Inherit(StaveNote, Vex.Flow.StemmableNote, {

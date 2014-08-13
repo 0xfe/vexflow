@@ -20,6 +20,26 @@ Vex.Flow.ModifierContext = (function() {
       right_shift: 0,
       text_line: 0
     };
+
+    // Add new modifiers to this array. The ordering is significant -- lower
+    // modifiers are formatted and rendered before higher ones.
+    this.PREFORMAT = [
+      Vex.Flow.StaveNote,
+      Vex.Flow.Dot,
+      Vex.Flow.FretHandFinger,
+      Vex.Flow.Accidental,
+      Vex.Flow.GraceNoteGroup,
+      Vex.Flow.Stroke,
+      Vex.Flow.StringNumber,
+      Vex.Flow.Articulation,
+      Vex.Flow.Ornament,
+      Vex.Flow.Annotation,
+      Vex.Flow.Bend,
+      Vex.Flow.Vibrato
+    ];
+
+    // If post-formatting is required for an element, add it to this array.
+    this.POSTFORMAT = [ Vex.Flow.StaveNote ];
   }
 
   // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
@@ -53,35 +73,12 @@ Vex.Flow.ModifierContext = (function() {
       };
     },
 
-    postFormatNotes: function() {
-      var notes = this.modifiers['stavenotes'];
-
-      if (!notes) return;
-
-      notes.forEach(function(note) {
-        note.postFormat();
-      });
-
-      return this;
-    },
-
     preFormat: function() {
       if (this.preFormatted) return;
-      L("Preformatting ModifierContext");
-
-      // Format modifiers in the following order:
-      Vex.Flow.StaveNote.format(this.modifiers["stavenotes"], this.state);
-      Vex.Flow.Dot.format(this.modifiers["dots"], this.state);
-      Vex.Flow.FretHandFinger.format(this.modifiers["frethandfinger"], this.state);
-      Vex.Flow.Accidental.format(this.modifiers["accidentals"], this.state);
-      Vex.Flow.GraceNoteGroup.format(this.modifiers["gracenotegroups"], this.state);
-      Vex.Flow.Stroke.format(this.modifiers["strokes"], this.state);
-      Vex.Flow.StringNumber.format(this.modifiers["stringnumber"], this.state);
-      Vex.Flow.Articulation.format(this.modifiers["articulations"], this.state);
-      Vex.Flow.Ornament.format(this.modifiers["ornaments"], this.state);
-      Vex.Flow.Annotation.format(this.modifiers["annotations"], this.state);
-      Vex.Flow.Bend.format(this.modifiers["bends"], this.state);
-      Vex.Flow.Vibrato.format(this.modifiers["vibratos"], this.state, this);
+      this.PREFORMAT.forEach(function(modifier) {
+        L("Preformatting ModifierContext: ", modifier.CATEGORY);
+        modifier.format(this.getModifiers(modifier.CATEGORY), this.state, this);
+      }, this);
 
       // Update width of this modifier context
       this.width = this.state.left_shift + this.state.right_shift;
@@ -90,9 +87,10 @@ Vex.Flow.ModifierContext = (function() {
 
     postFormat: function() {
       if (this.postFormatted) return;
-
-      this.postFormatNotes();
-      return this;
+      this.POSTFORMAT.forEach(function(modifier) {
+        L("Postformatting ModifierContext: ", modifier.CATEGORY);
+        modifier.postFormat(this.getModifiers(modifier.CATEGORY), this);
+      }, this);
     }
   };
 
