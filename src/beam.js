@@ -34,7 +34,7 @@ Vex.Flow.Beam = (function() {
       var i; // shared iterator
       var note;
 
-      this.stem_direction = 1;
+      this.stem_direction = Stem.UP;
 
       for (i = 0; i < notes.length; ++i) {
         note = notes[i];
@@ -44,8 +44,7 @@ Vex.Flow.Beam = (function() {
         }
       }
 
-      var stem_direction = -1;
-
+      var stem_direction = this.stem_direction;
       // Figure out optimal stem direction based on given notes
       if (auto_stem && notes[0].getCategory() === 'stavenotes')  {
         stem_direction = calculateStemDirection(notes);
@@ -55,7 +54,7 @@ Vex.Flow.Beam = (function() {
           return memo + note.stem_direction;
         }, 0);
 
-        stem_direction = stem_weight > -1 ? 1 : -1;
+        stem_direction = stem_weight > -1 ? Stem.UP : Stem.DOWN;
       }
 
       // Apply stem directions and attach beam to notes
@@ -360,7 +359,7 @@ Vex.Flow.Beam = (function() {
 
         for (var j = 0; j < beam_lines.length; ++j) {
           var beam_line = beam_lines[j];
-          var first_x = beam_line.start - (this.stem_direction == -1 ? Vex.Flow.STEM_WIDTH/2:0);
+          var first_x = beam_line.start - (this.stem_direction == Stem.DOWN ? Vex.Flow.STEM_WIDTH/2:0);
           var first_y = this.getSlopeY(first_x, first_x_px, first_y_px, this.slope);
 
           var last_x = beam_line.end +
@@ -425,8 +424,8 @@ Vex.Flow.Beam = (function() {
     });
 
     if (lineSum >= 0)
-      return -1;
-    return 1;
+      return Stem.DOWN;
+    return Stem.UP;
   }
 
   // ## Static Methods
@@ -674,7 +673,7 @@ Vex.Flow.Beam = (function() {
         var stemDirection;
         if (config.maintain_stem_directions) {
           var note = findFirstNote(group);
-          stemDirection = note ? note.getStemDirection() : 1;
+          stemDirection = note ? note.getStemDirection() : Stem.UP;
         } else {
           if (config.stem_direction){
             stemDirection = config.stem_direction;
@@ -748,7 +747,7 @@ Vex.Flow.Beam = (function() {
       var tuplet = firstNote.tuplet;
 
       if (firstNote.beam) tuplet.setBracketed(false);
-      if (firstNote.stem_direction == -1) {
+      if (firstNote.stem_direction == Stem.DOWN) {
         tuplet.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
       }
     });

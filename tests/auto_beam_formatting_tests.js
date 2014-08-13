@@ -119,12 +119,15 @@ Vex.Flow.Test.AutoBeamFormatting.evenGroupStemDirections = function(options, con
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], c.stave);
 
-  equal(beams[0].stem_direction, 1);
-  equal(beams[1].stem_direction, 1);
-  equal(beams[2].stem_direction, 1);
-  equal(beams[3].stem_direction, 1);
-  equal(beams[4].stem_direction, -1);
-  equal(beams[5].stem_direction, -1);
+  var UP = Vex.Flow.Stem.UP;
+  var DOWN = Vex.Flow.Stem.DOWN;
+
+  equal(beams[0].stem_direction, UP);
+  equal(beams[1].stem_direction, UP);
+  equal(beams[2].stem_direction, UP);
+  equal(beams[3].stem_direction, UP);
+  equal(beams[4].stem_direction, DOWN);
+  equal(beams[5].stem_direction, DOWN);
 
   voice.draw(c.context, c.stave);
 
@@ -161,16 +164,19 @@ Vex.Flow.Test.AutoBeamFormatting.oddGroupStemDirections = function(options, cont
   voice.addTickables(notes);
 
   var groups = [
-    new Vex.Flow.Fraction(3, 8), 
+    new Vex.Flow.Fraction(3, 8)
   ];
 
   // Takes a voice and returns it's auto beamsj
   var beams = Vex.Flow.Beam.applyAndGetBeams(voice, null, groups);
 
-  equal(beams[0].stem_direction, -1, "Notes are equa-distant from middle line");
-  equal(beams[1].stem_direction, -1);
-  equal(beams[2].stem_direction, 1);
-  equal(beams[3].stem_direction, -1, "Notes are equadistant from middle line");
+  var UP = Vex.Flow.Stem.UP;
+  var DOWN = Vex.Flow.Stem.DOWN;
+
+  equal(beams[0].stem_direction, DOWN, "Notes are equa-distant from middle line");
+  equal(beams[1].stem_direction, DOWN);
+  equal(beams[2].stem_direction, UP);
+  equal(beams[3].stem_direction, DOWN, "Notes are equadistant from middle line");
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], c.stave);

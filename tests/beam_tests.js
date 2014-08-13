@@ -323,12 +323,15 @@ Vex.Flow.Test.Beam.autoStem = function(options, contextBuilder) {
   var beam5 = new Vex.Flow.Beam(notes.slice(8, 10), true);
   var beam6 = new Vex.Flow.Beam(notes.slice(10, 12), true);
 
-  equal(beam1.stem_direction, 1);
-  equal(beam2.stem_direction, 1);
-  equal(beam3.stem_direction, 1);
-  equal(beam4.stem_direction, 1);
-  equal(beam5.stem_direction, -1);
-  equal(beam6.stem_direction, -1);
+  var UP = Vex.Flow.Stem.UP;
+  var DOWN = Vex.Flow.Stem.DOWN;
+
+  equal(beam1.stem_direction, UP);
+  equal(beam2.stem_direction, UP);
+  equal(beam3.stem_direction, UP);
+  equal(beam4.stem_direction, UP);
+  equal(beam5.stem_direction, DOWN);
+  equal(beam6.stem_direction, DOWN);
 
   voice.draw(ctx, stave);
   beam1.setContext(ctx).draw();
