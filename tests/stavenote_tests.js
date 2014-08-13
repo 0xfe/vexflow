@@ -922,7 +922,7 @@ Vex.Flow.Test.StaveNote.dotsAndFlagsStemDown = function(options, contextBuilder)
 
   ok(true, "Full Dot");
 }
-Vex.Flow.Test.StaveNote.dotsAndBeamsDown = function(options, contextBuilder) {
+Vex.Flow.Test.StaveNote.dotsAndBeamsUp = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 800, 150);
   ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   var stave = new Vex.Flow.Stave(10, 10, 975);
@@ -988,7 +988,7 @@ Vex.Flow.Test.StaveNote.dotsAndBeamsDown = function(options, contextBuilder) {
 
 
 
-Vex.Flow.Test.StaveNote.dotsAndBeamsUp = function(options, contextBuilder) {
+Vex.Flow.Test.StaveNote.dotsAndBeamsDown = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 800, 160);
   ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   var stave = new Vex.Flow.Stave(10, 10, 975);
