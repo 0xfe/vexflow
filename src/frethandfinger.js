@@ -10,6 +10,7 @@ Vex.Flow.FretHandFinger = (function() {
   function FretHandFinger(number) {
     if (arguments.length > 0) this.init(number);
   }
+  FretHandFinger.CATEGORY = "frethandfinger";
 
   var Modifier = Vex.Flow.Modifier;
 
@@ -110,7 +111,6 @@ Vex.Flow.FretHandFinger = (function() {
       };
     },
 
-    getCategory: function() { return "frethandfinger"; },
     getNote: function() { return this.note; },
     setNote: function(note) { this.note = note; return this; },
     getIndex: function() { return this.index; },

@@ -10,6 +10,7 @@ Vex.Flow.Stroke = (function() {
   function Stroke(type, options) {
     if (arguments.length > 0) this.init(type, options);
   }
+  Stroke.CATEGORY = "strokes";
 
   Stroke.Type = {
     BRUSH_DOWN: 1,
@@ -97,7 +98,6 @@ Vex.Flow.Stroke = (function() {
       this.setWidth(10);
     },
 
-    getCategory: function() { return "strokes"; },
     getPosition: function() { return this.position; },
     addEndNote: function(note) { this.note_end = note; return this; },
 

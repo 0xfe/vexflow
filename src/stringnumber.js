@@ -10,6 +10,7 @@ Vex.Flow.StringNumber = (function() {
   function StringNumber(number) {
     if (arguments.length > 0) this.init(number);
   }
+  StringNumber.CATEGORY = "stringnumber";
 
   var Modifier = Vex.Flow.Modifier;
 
@@ -121,7 +122,6 @@ Vex.Flow.StringNumber = (function() {
       };
     },
 
-    getCategory: function() { return "stringnumber"; },
     getNote: function() { return this.note; },
     setNote: function(note) { this.note = note; return this; },
     getIndex: function() { return this.index; },

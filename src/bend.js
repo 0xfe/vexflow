@@ -1,11 +1,10 @@
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// This class implements bends.
+// ## Description
+//
+// This file implements tablature bends.
 
 /**
-   @constructor
-
    @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
    @param release If true, render a release. (DEPRECATED)
    @param phrase If set, ignore "text" and "release", and use the more
@@ -43,11 +42,35 @@ Vex.Flow.Bend = (function() {
   function Bend(text, release, phrase) {
     if (arguments.length > 0) this.init(text, release, phrase);
   }
+  Bend.CATEGORY = "bends";
 
   Bend.UP = 0;
   Bend.DOWN = 1;
 
   var Modifier = Vex.Flow.Modifier;
+
+  // ## Static Methods
+  // Arrange bends in `ModifierContext`
+  Bend.format = function(bends, state) {
+    if (!bends || bends.length === 0) return false;
+
+    var last_width = 0;
+    var text_line = state.text_line;
+
+    // Format Bends
+    for (var i = 0; i < bends.length; ++i) {
+      var bend = bends[i];
+      bend.setXShift(last_width);
+      last_width = bend.getWidth();
+      bend.setTextLine(text_line);
+    }
+
+    state.right_shift += last_width;
+    state.text_line += 1;
+    return true;
+  }
+
+  // ## Prototype Methods
   Vex.Inherit(Bend, Modifier, {
     init: function(text, release, phrase) {
       var superclass = Vex.Flow.Bend.superclass;
@@ -81,8 +104,6 @@ Vex.Flow.Bend = (function() {
     },
 
     setFont: function(font) { this.font = font; return this; },
-
-    getCategory: function() { return "bends"; },
 
     getText: function() { return this.text; },
 

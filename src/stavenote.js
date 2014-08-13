@@ -13,6 +13,7 @@ Vex.Flow.StaveNote = (function() {
   var StaveNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
   };
+  StaveNote.CATEGORY = "stavenotes";
 
   // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
   function L() { if (StaveNote.DEBUG) Vex.L("Vex.Flow.StaveNote", arguments); }
@@ -440,9 +441,6 @@ Vex.Flow.StaveNote = (function() {
       // Sort the notes from lowest line to highest line
       this.keyProps.sort(function(a, b) { return a.line - b.line; });
     },
-
-    // Get modifier category for `ModifierContext`
-    getCategory: function() { return "stavenotes"; },
 
     // Get the `BoundingBox` for the entire note
     getBoundingBox: function() {

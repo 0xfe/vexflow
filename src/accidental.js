@@ -11,6 +11,7 @@ Vex.Flow.Accidental = (function(){
   function Accidental(type) {
     if (arguments.length > 0) this.init(type);
   }
+  Accidental.CATEGORY = "accidentals";
 
   // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
   function L() { if (Accidental.DEBUG) Vex.L("Vex.Flow.Accidental", arguments); }
@@ -154,10 +155,6 @@ Vex.Flow.Accidental = (function(){
       // Initial width is set from table.
       this.setWidth(this.accidental.width);
     },
-
-    // Return the modifier type. Used by the `ModifierContext` to calculate
-    // layout.
-    getCategory: function() { return "accidentals"; },
 
     // Attach this accidental to `note`, which must be a `StaveNote`.
     setNote: function(note){

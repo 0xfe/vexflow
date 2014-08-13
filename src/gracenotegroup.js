@@ -6,9 +6,10 @@
 // render grace notes.
 
 Vex.Flow.GraceNoteGroup = (function(){
-  var GraceNoteGroup = function(grace_notes, config) {
+  function GraceNoteGroup(grace_notes, config) {
     if (arguments.length > 0) this.init(grace_notes, config);
   };
+  GraceNoteGroup.CATEGORY = "gracenotegroups";
 
   // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
   function L() { if (GraceNoteGroup.DEBUG) Vex.L("Vex.Flow.GraceNoteGroup", arguments); }
@@ -114,7 +115,6 @@ Vex.Flow.GraceNoteGroup = (function(){
     setNote: function(note) {
       this.note = note;
     },
-    getCategory: function() { return "gracenotegroups"; },
     setWidth: function(width){
       this.width = width;
     },

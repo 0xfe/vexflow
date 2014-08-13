@@ -13,6 +13,7 @@ Vex.Flow.Articulation = (function() {
   function Articulation(type) {
     if (arguments.length > 0) this.init(type);
   }
+  Articulation.CATEGORY = "articulations";
 
   // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
   function L() { if (Articulation.DEBUG) Vex.L("Vex.Flow.Articulation", arguments); }
@@ -71,9 +72,6 @@ Vex.Flow.Articulation = (function() {
       // Default width comes from articulation table.
       this.setWidth(this.articulation.width);
     },
-
-    // Get modifier category for `ModifierContext`.
-    getCategory: function() { return "articulations"; },
 
     // Render articulation in position next to note.
     draw: function() {

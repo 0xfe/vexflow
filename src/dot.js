@@ -10,6 +10,7 @@ Vex.Flow.Dot = (function() {
   function Dot() {
     this.init();
   }
+  Dot.CATEGORY = "dots";
 
   var Modifier = Vex.Flow.Modifier;
 
@@ -114,8 +115,6 @@ Vex.Flow.Dot = (function() {
         this.setWidth(3);
       }
     },
-
-    getCategory: function() { return "dots"; },
 
     setDotShiftY: function(y) { this.dot_shiftY = y; return this; },
 
