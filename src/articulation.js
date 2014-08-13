@@ -53,10 +53,11 @@ Vex.Flow.Articulation = (function() {
       if (!(this.note && (this.index !== null))) throw new Vex.RERR("NoAttachedNote",
         "Can't draw Articulation without a note and index.");
 
-      var stem_direction = 1;
+      var stem_direction = Vex.Flow.Stem.UP;
       if (this.note.getStemDirection) {
         stem_direction = this.note.getStemDirection();
       }
+      
       var stave = this.note.getStave();
 
       var is_on_head = (this.position === Modifier.Position.ABOVE &&
