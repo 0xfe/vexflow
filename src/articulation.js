@@ -19,6 +19,35 @@ Vex.Flow.Articulation = (function() {
 
   var Modifier = Vex.Flow.Modifier;
 
+  // ## Static Methods
+  // Arrange articulations inside `ModifierContext`
+  Articulation.format = function(articulations, state) {
+    if (!articulations || articulations.length === 0) return false;
+
+    var text_line = state.text_line;
+    var max_width = 0;
+
+    // Format Articulations
+    var width;
+    for (var i = 0; i < articulations.length; ++i) {
+      var articulation = articulations[i];
+      articulation.setTextLine(text_line);
+      width = articulation.getWidth() > max_width ?
+        articulation.getWidth() : max_width;
+
+      var type = Vex.Flow.articulationCodes(articulation.type);
+      if(type.between_lines)
+        text_line += 1;
+      else
+        text_line += 1.5;
+    }
+
+    state.left_shift += width / 2;
+    state.right_shift += width / 2;
+    state.text_line = text_line;
+    return true;
+  }
+
   // ## Prototype Methods
   Vex.Inherit(Articulation, Modifier, {
     // Create a new articulation of type `type`, which is an entry in
