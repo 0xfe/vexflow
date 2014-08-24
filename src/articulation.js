@@ -13,11 +13,41 @@ Vex.Flow.Articulation = (function() {
   function Articulation(type) {
     if (arguments.length > 0) this.init(type);
   }
+  Articulation.CATEGORY = "articulations";
 
   // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
   function L() { if (Articulation.DEBUG) Vex.L("Vex.Flow.Articulation", arguments); }
 
   var Modifier = Vex.Flow.Modifier;
+
+  // ## Static Methods
+  // Arrange articulations inside `ModifierContext`
+  Articulation.format = function(articulations, state) {
+    if (!articulations || articulations.length === 0) return false;
+
+    var text_line = state.text_line;
+    var max_width = 0;
+
+    // Format Articulations
+    var width;
+    for (var i = 0; i < articulations.length; ++i) {
+      var articulation = articulations[i];
+      articulation.setTextLine(text_line);
+      width = articulation.getWidth() > max_width ?
+        articulation.getWidth() : max_width;
+
+      var type = Vex.Flow.articulationCodes(articulation.type);
+      if(type.between_lines)
+        text_line += 1;
+      else
+        text_line += 1.5;
+    }
+
+    state.left_shift += width / 2;
+    state.right_shift += width / 2;
+    state.text_line = text_line;
+    return true;
+  }
 
   // ## Prototype Methods
   Vex.Inherit(Articulation, Modifier, {
@@ -42,9 +72,6 @@ Vex.Flow.Articulation = (function() {
       // Default width comes from articulation table.
       this.setWidth(this.articulation.width);
     },
-
-    // Get modifier category for `ModifierContext`.
-    getCategory: function() { return "articulations"; },
 
     // Render articulation in position next to note.
     draw: function() {

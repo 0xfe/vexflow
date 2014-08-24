@@ -11,11 +11,112 @@ Vex.Flow.Accidental = (function(){
   function Accidental(type) {
     if (arguments.length > 0) this.init(type);
   }
+  Accidental.CATEGORY = "accidentals";
 
   // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
   function L() { if (Accidental.DEBUG) Vex.L("Vex.Flow.Accidental", arguments); }
 
   var Modifier = Vex.Flow.Modifier;
+
+  // ## Static Methods
+  //
+  // Arrange accidentals inside a ModifierContext.
+  Accidental.format = function(accidentals, state) {
+    var left_shift = state.left_shift;
+    var accidental_spacing = 2;
+
+    if (!accidentals || accidentals.length === 0) return false;
+
+    var acc_list = [];
+    var hasStave = false;
+    var prev_note = null;
+    var shiftL = 0;
+
+    var i, acc, props_tmp;
+    for (i = 0; i < accidentals.length; ++i) {
+      acc = accidentals[i];
+      var note = acc.getNote();
+      var stave = note.getStave();
+      var props = note.getKeyProps()[acc.getIndex()];
+      if (note != prev_note) {
+         // Iterate through all notes to get the displaced pixels
+         for (var n = 0; n < note.keys.length; ++n) {
+            props_tmp = note.getKeyProps()[n];
+            shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+          }
+          prev_note = note;
+      }
+      if (stave != null) {
+        hasStave = true;
+        var line_space = stave.options.spacing_between_lines_px;
+        var y = stave.getYForLine(props.line);
+        acc_list.push({ y: y, shift: shiftL, acc: acc, lineSpace: line_space });
+      } else {
+        acc_list.push({ line: props.line, shift: shiftL, acc: acc });
+      }
+    }
+
+    // If stave assigned, format based on note y-position
+    if (hasStave) return Accidental.formatByY(acc_list, state);
+
+    // Sort accidentals by line number.
+    acc_list.sort(function(a, b) { return (b.line - a.line); });
+
+    // If first note left shift in case it is displaced
+    var acc_shift = acc_list[0].shift;
+    var x_width = 0;
+    var top_line = acc_list[0].line;
+    for (i = 0; i < acc_list.length; ++i) {
+      acc = acc_list[i].acc;
+      var line = acc_list[i].line;
+      var shift = acc_list[i].shift;
+
+      // Once you hit three stave lines, you can reset the position of the
+      // accidental.
+      if (line < top_line - 3.0) {
+        top_line = line;
+        acc_shift = shift;
+      }
+
+      acc.setXShift(left_shift + acc_shift);
+      acc_shift += acc.getWidth() + accidental_spacing; // spacing
+      x_width = (acc_shift > x_width) ? acc_shift : x_width;
+    }
+
+    state.left_shift += x_width;
+  }
+
+  Accidental.formatByY = function(acc_list, state) {
+    var left_shift = state.left_shift;
+    var accidental_spacing = 2;
+
+    // Sort accidentals by Y-position.
+    acc_list.sort(function(a, b) { return (b.y - a.y); });
+
+    // If first note is displaced, get the correct left shift
+    var acc_shift = acc_list[0].shift;
+    var x_width = 0;
+    var top_y = acc_list[0].y;
+
+    for (var i = 0; i < acc_list.length; ++i) {
+      var acc = acc_list[i].acc;
+      var y = acc_list[i].y;
+      var shift = acc_list[i].shift;
+
+      // Once you hit three stave lines, you can reset the position of the
+      // accidental.
+      if (top_y - y > 3 * acc_list[i].lineSpace) {
+        top_y = y;
+        acc_shift = shift;
+      }
+
+      acc.setXShift(acc_shift + left_shift);
+      acc_shift += acc.getWidth() + accidental_spacing; // spacing
+      x_width = (acc_shift > x_width) ? acc_shift : x_width;
+    }
+
+    state.left_shift += x_width;
+  },
 
   // ## Prototype Methods
   //
@@ -54,10 +155,6 @@ Vex.Flow.Accidental = (function(){
       // Initial width is set from table.
       this.setWidth(this.accidental.width);
     },
-
-    // Return the modifier type. Used by the `ModifierContext` to calculate
-    // layout.
-    getCategory: function() { return "accidentals"; },
 
     // Attach this accidental to `note`, which must be a `StaveNote`.
     setNote: function(note){

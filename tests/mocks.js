@@ -38,7 +38,3 @@ Vex.Flow.Test.MockTickable.prototype.setIgnoreTicks = function(ignore_ticks) {
 Vex.Flow.Test.MockTickable.prototype.shouldIgnoreTicks = function() {
   return this.ignore_ticks; }
 Vex.Flow.Test.MockTickable.prototype.preFormat = function() {}
-
-/* Mock Modifier */
-
-Vex.Flow.Test.MockModifier = Vex.Flow.Modifier;

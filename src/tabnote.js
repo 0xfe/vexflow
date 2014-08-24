@@ -48,7 +48,12 @@ Vex.Flow.TabNote = (function() {
       }
 
       this.buildStem();
-      this.setStemDirection(Stem.UP);
+
+      if (tab_struct.stem_direction){
+        this.setStemDirection(tab_struct.stem_direction);
+      } else {
+        this.setStemDirection(Stem.UP);
+      }
 
       // Renders parenthesis around notes
       this.ghost = false;

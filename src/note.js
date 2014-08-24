@@ -22,6 +22,7 @@ Vex.Flow.Note = (function() {
   function Note(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
   }
+  Note.CATEGORY = "note";
 
   // ## Prototype Methods
   //
@@ -49,7 +50,15 @@ Vex.Flow.Note = (function() {
       this.duration = initData.duration;
       this.dots = initData.dots;
       this.noteType = initData.type;
-      this.setIntrinsicTicks(initData.ticks);
+
+      if (note_struct.duration_override) {
+        // Custom duration
+        this.setDuration(note_struct.duration_override);
+      } else {
+        // Default duration
+        this.setIntrinsicTicks(initData.ticks);
+      }
+
       this.modifiers = [];
 
       // Get the glyph code for this note from the font.
@@ -80,6 +89,10 @@ Vex.Flow.Note = (function() {
       this.preFormatted = false;  // Is this note preFormatted?
       this.ys = [];               // list of y coordinates for each note
                                   // we need to hold on to these for ties and beams.
+
+      if (note_struct.align_center) {
+        this.setCenterAlignment(note_struct.align_center);
+      }
 
       // The render surface.
       this.context = null;
@@ -116,6 +129,11 @@ Vex.Flow.Note = (function() {
       this.context = this.stave.context;
       return this;
     },
+
+
+    // `Note` is not really a modifier, but is used in
+    // a `ModifierContext`.
+    getCategory: function() { return this.constructor.CATEGORY; },
 
     // Set the rendering context for the note.
     setContext: function(context) { this.context = context; return this; },
@@ -265,9 +283,16 @@ Vex.Flow.Note = (function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
 
-      // {osition note to left edge of tick context.
+      // Position note to left edge of tick context.
       var x = this.tickContext.getX();
-      if (this.stave) x += this.stave.getNoteStartX() + this.render_options.stave_padding;
+      if (this.stave) {
+        x += this.stave.getNoteStartX() + this.render_options.stave_padding;
+      }
+      
+      if (this.isCenterAligned()){
+        x += this.getCenterXShift();
+      }
+
       return x;
     },
 

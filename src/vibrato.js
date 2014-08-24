@@ -1,15 +1,45 @@
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
 //
 // This class implements vibratos.
 
-/**
- * @constructor
- */
 Vex.Flow.Vibrato = (function() {
   function Vibrato() { this.init(); }
+  Vibrato.CATEGORY = "vibratos";
 
   var Modifier = Vex.Flow.Modifier;
+
+  // ## Static Methods
+  // Arrange vibratos inside a `ModifierContext`.
+  Vibrato.format = function(vibratos, state, context) {
+    if (!vibratos || vibratos.length === 0) return false;
+
+    var text_line = state.text_line;
+    var width = 0;
+    var shift = state.right_shift - 7;
+
+    // If there's a bend, drop the text line
+    var bends = context.getModifiers(Vex.Flow.Bend.CATEGORY);
+    if (bends && bends.length > 0) {
+      text_line--;
+    }
+
+    // Format Vibratos
+    for (var i = 0; i < vibratos.length; ++i) {
+      var vibrato = vibratos[i];
+      vibrato.setXShift(shift);
+      vibrato.setTextLine(text_line);
+      width += vibrato.getWidth();
+      shift += width;
+    }
+
+    state.right_shift += width;
+    state.text_line += 1;
+    return true;
+  }
+
+  // ## Prototype Methods
   Vex.Inherit(Vibrato, Modifier, {
     init: function() {
       var superclass = Vex.Flow.Vibrato.superclass;
@@ -27,7 +57,6 @@ Vex.Flow.Vibrato = (function() {
       this.setVibratoWidth(this.render_options.vibrato_width);
     },
 
-    getCategory: function() { return "vibratos"; },
     setHarsh: function(harsh) { this.harsh = harsh; return this; },
     setVibratoWidth: function(width) {
       this.vibrato_width = width;
