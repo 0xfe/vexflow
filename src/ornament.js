@@ -13,6 +13,7 @@ Vex.Flow.Ornament = (function() {
   function Ornament(type) {
     if (arguments.length > 0) this.init(type);
   }
+  Ornament.CATEGORY = "ornaments";
 
   // Accidental position modifications for each glyph
   var acc_mods = {
@@ -83,6 +84,35 @@ Vex.Flow.Ornament = (function() {
 
   var Modifier = Vex.Flow.Modifier;
 
+  // ## Static Methods
+  // Arrange ornaments inside `ModifierContext`
+  Ornament.format = function(ornaments, state) {
+   if (!ornaments || ornaments.length === 0) return false;
+
+    var text_line = state.text_line;
+    var max_width = 0;
+
+    // Format Articulations
+    var width;
+    for (var i = 0; i < ornaments.length; ++i) {
+      var ornament = ornaments[i];
+      ornament.setTextLine(text_line);
+      width = ornament.getWidth() > max_width ?
+        ornament.getWidth() : max_width;
+
+      var type = Vex.Flow.ornamentCodes(ornament.type);
+      if(type.between_lines)
+        text_line += 1;
+      else
+        text_line += 1.5;
+    }
+
+    state.left_shift += width / 2;
+    state.right_shift += width / 2;
+    state.text_line = text_line;
+    return true;
+  }
+
   // ## Prototype Methods
   Vex.Inherit(Ornament, Modifier, {
     // Create a new ornament of type `type`, which is an entry in
@@ -110,9 +140,6 @@ Vex.Flow.Ornament = (function() {
       // Default width comes from ornament table.
       this.setWidth(this.ornament.width);
     },
-
-    // Get modifier category for `ModifierContext`.
-    getCategory: function() { return "ornaments"; },
 
     // Set whether the ornament is to be delayed
     setDelayed: function(delayed) { this.delayed = delayed; return this; },
