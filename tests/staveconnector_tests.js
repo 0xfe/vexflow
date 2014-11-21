@@ -11,6 +11,8 @@ Vex.Flow.Test.StaveConnector.Start = function() {
     Vex.Flow.Test.StaveConnector.drawSingle);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Single Draw Test (Raphael)",
     Vex.Flow.Test.StaveConnector.drawSingle);
+  Vex.Flow.Test.runTest("StaveConnector Single Draw Test, 1px Stave Line Thickness (Canvas)",
+    Vex.Flow.Test.StaveConnector.drawSingle1pxBarlines);
   Vex.Flow.Test.runTest("StaveConnector Single Both Sides Test (Canvas)",
     Vex.Flow.Test.StaveConnector.drawSingleBoth);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Single Both Sides Test (Raphael)",
@@ -73,6 +75,24 @@ Vex.Flow.Test.StaveConnector.drawSingle = function(options, contextBuilder) {
   stave.draw();
   stave2.draw();
   connector.draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.StaveConnector.drawSingle1pxBarlines = function(options, contextBuilder) {
+  Vex.Flow.STAVE_LINE_THICKNESS = 1;
+  var ctx = new contextBuilder(options.canvas_sel, 400, 300);
+  var stave = new Vex.Flow.Stave(25, 10, 300);
+  var stave2 = new Vex.Flow.Stave(25, 120, 300);
+  stave.setContext(ctx);
+  stave2.setContext(ctx);
+  var connector = new Vex.Flow.StaveConnector(stave, stave2);
+  connector.setType(Vex.Flow.StaveConnector.type.SINGLE);
+  connector.setContext(ctx);
+  stave.draw();
+  stave2.draw();
+  connector.draw();
+  Vex.Flow.STAVE_LINE_THICKNESS = 2;
 
   ok(true, "all pass");
 }

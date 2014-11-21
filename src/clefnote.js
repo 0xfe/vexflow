@@ -5,20 +5,21 @@
 
 /** @constructor */
 Vex.Flow.ClefNote = (function() {
-  function ClefNote(clef) { this.init(clef); }
+  function ClefNote(clef, size, annotation) { this.init(clef, size, annotation); }
 
   Vex.Inherit(ClefNote, Vex.Flow.Note, {
-    init: function(clef) {
+    init: function(clef, size, annotation) {
       ClefNote.superclass.init.call(this, {duration: "b"});
       
-      this.setClef(clef);
+      this.setClef(clef, size, annotation);
 
       // Note properties
       this.ignore_ticks = true;
     },
 
-    setClef: function(clef) {
-      this.clef = Vex.Flow.Clef.types[clef];
+    setClef: function(clef, size, annotation) {
+      this.clef_obj = new Vex.Flow.Clef(clef, size, annotation);
+      this.clef = this.clef_obj.clef;
       this.glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
       this.setWidth(this.glyph.getMetrics().width);
       return this;
@@ -42,6 +43,10 @@ Vex.Flow.ClefNote = (function() {
       return this;
     },
 
+    getCategory: function() {
+      return "clefnote";
+    },
+
     preFormat: function() {
       this.setPreFormatted(true);
       return this;
@@ -53,11 +58,26 @@ Vex.Flow.ClefNote = (function() {
       if (!this.glyph.getContext()) {
         this.glyph.setContext(this.context);
       }
+      var abs_x = this.getAbsoluteX();
 
       this.glyph.setStave(this.stave);
       this.glyph.setYShift(
         this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
-      this.glyph.renderToStave(this.getAbsoluteX());
+      this.glyph.renderToStave(abs_x);
+      
+      // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
+      if (this.clef_obj.annotation !== undefined) {
+        var attachment = new Vex.Flow.Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
+        if (!attachment.getContext()) {
+            attachment.setContext(this.context);
+        }
+        attachment.setStave(this.stave);
+        attachment.setYShift(
+          this.stave.getYForLine(this.clef_obj.annotation.line) - this.stave.getYForGlyphs());
+        attachment.setXShift(this.clef_obj.annotation.x_shift);
+        attachment.renderToStave(abs_x);
+      }
+      
     }
   });
 

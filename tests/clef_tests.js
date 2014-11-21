@@ -7,9 +7,15 @@ Vex.Flow.Test.Clef.Start = function() {
   Vex.Flow.Test.runTest("Clef Test", Vex.Flow.Test.Clef.draw);
   Vex.Flow.Test.runRaphaelTest("Clef Test (Raphael)", 
       Vex.Flow.Test.Clef.draw);
+  Vex.Flow.Test.runTest("Clef End Test", Vex.Flow.Test.Clef.drawEnd);
+  Vex.Flow.Test.runRaphaelTest("Clef End Test (Raphael)", 
+      Vex.Flow.Test.Clef.drawEnd);
   Vex.Flow.Test.runTest("Small Clef Test", Vex.Flow.Test.Clef.drawSmall);
   Vex.Flow.Test.runRaphaelTest("Small Clef Test (Raphael)",
       Vex.Flow.Test.Clef.drawSmall);
+  Vex.Flow.Test.runTest("Small Clef End Test", Vex.Flow.Test.Clef.drawSmallEnd);
+  Vex.Flow.Test.runRaphaelTest("Small Clef End Test (Raphael)",
+      Vex.Flow.Test.Clef.drawSmallEnd);
   Vex.Flow.Test.runTest("Clef Change Test", Vex.Flow.Test.Clef.drawClefChange);
   Vex.Flow.Test.runRaphaelTest("Clef Change Test (Raphael)", Vex.Flow.Test.Clef.drawClefChange);
 }
@@ -19,25 +25,47 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   var stave = new Vex.Flow.Stave(10, 10, 700);
 
   stave.addClef("treble");
+  stave.addClef("treble", "default", "8va");
+  stave.addClef("treble", "default", "8vb");
   stave.addClef("alto");
   stave.addClef("tenor");
   stave.addClef("soprano");
   stave.addClef("bass");
+  stave.addClef("bass", "default", "8vb");
   stave.addClef("mezzo-soprano");
   stave.addClef("baritone-c");
   stave.addClef("baritone-f");
   stave.addClef("subbass");
+  stave.addClef("percussion");
   stave.addClef("french");
 
   stave.addEndClef("treble");
+
+  stave.setContext(ctx);
+  stave.draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.Clef.drawEnd = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 800, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 700);
+
+  stave.addClef("bass");
+
+  stave.addEndClef("treble");
+  stave.addEndClef("treble", "default", "8va");
+  stave.addEndClef("treble", "default", "8vb");
   stave.addEndClef("alto");
-  stave.addEndClef("tenor");
-  stave.addEndClef("soprano");
+  stave.addEndClef("tenor");   
+  stave.addEndClef("soprano"); 
   stave.addEndClef("bass");
+  stave.addEndClef("bass", "default", "8vb");
   stave.addEndClef("mezzo-soprano");
   stave.addEndClef("baritone-c");
   stave.addEndClef("baritone-f");
   stave.addEndClef("subbass");
+  stave.addEndClef("percussion");
   stave.addEndClef("french");
 
   stave.setContext(ctx);
@@ -46,67 +74,94 @@ Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {
   ok(true, "all pass");
 }
 
+
 Vex.Flow.Test.Clef.drawSmall = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 800, 120);
   var stave = new Vex.Flow.Stave(10, 10, 700);
 
-  stave.addClef("treble_small");
-  stave.addClef("alto_small");
-  stave.addClef("tenor_small");
-  stave.addClef("soprano_small");
-  stave.addClef("bass_small");
-  stave.addClef("mezzo-soprano_small");
-  stave.addClef("baritone-c_small");
-  stave.addClef("baritone-f_small");
-  stave.addClef("subbass_small");
-  stave.addClef("french_small");
+  stave.addClef("treble", "small");
+  stave.addClef("treble", "small", "8va");
+  stave.addClef("treble", "small", "8vb");
+  stave.addClef("alto", "small");
+  stave.addClef("tenor", "small");
+  stave.addClef("soprano", "small");
+  stave.addClef("bass", "small");
+  stave.addClef("bass", "small", "8vb");
+  stave.addClef("mezzo-soprano", "small");
+  stave.addClef("baritone-c", "small");
+  stave.addClef("baritone-f", "small");
+  stave.addClef("subbass", "small");
+  stave.addClef("percussion", "small");
+  stave.addClef("french", "small");
 
-  stave.addEndClef("treble_small");
-  stave.addEndClef("alto_small");
-  stave.addEndClef("tenor_small");
-  stave.addEndClef("soprano_small");
-  stave.addEndClef("bass_small");
-  stave.addEndClef("mezzo-soprano_small");
-  stave.addEndClef("baritone-c_small");
-  stave.addEndClef("baritone-f_small");
-  stave.addEndClef("subbass_small");
-  stave.addEndClef("french_small");
+  stave.addEndClef("treble", "small");
 
   stave.setContext(ctx);
   stave.draw();
 
   ok(true, "all pass");
 }
+Vex.Flow.Test.Clef.drawSmallEnd = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 800, 120);
+  var stave = new Vex.Flow.Stave(10, 10, 700);
+    
+  stave.addClef("bass", "small");
+    
+  stave.addEndClef("treble", "small");
+  stave.addEndClef("treble", "small", "8va");
+  stave.addEndClef("treble", "small", "8vb");
+  stave.addEndClef("alto", "small");
+  stave.addEndClef("tenor", "small");
+  stave.addEndClef("soprano", "small");
+  stave.addEndClef("bass", "small");
+  stave.addEndClef("bass", "small", "8vb");
+  stave.addEndClef("mezzo-soprano", "small");
+  stave.addEndClef("baritone-c", "small");
+  stave.addEndClef("baritone-f", "small");
+  stave.addEndClef("subbass", "small");
+  stave.addEndClef("percussion", "small");
+  stave.addEndClef("french", "small");
+    
+  stave.setContext(ctx);
+  stave.draw();
+    
+  ok(true, "all pass");
+}
+
 
 Vex.Flow.Test.Clef.drawClefChange = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 800, 120);
+  var ctx = new contextBuilder(options.canvas_sel, 800, 180);
   var stave = new Vex.Flow.Stave(10, 10, 700);
   stave.addClef("treble").setContext(ctx).draw();
 
   var notes = [
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" }),
-    new Vex.Flow.ClefNote("alto_small"),
+    new Vex.Flow.ClefNote("alto", "small"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "alto" }),
-    new Vex.Flow.ClefNote("tenor_small"),
+    new Vex.Flow.ClefNote("tenor", "small"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "tenor" }),
-    new Vex.Flow.ClefNote("soprano_small"),
+    new Vex.Flow.ClefNote("soprano", "small"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "soprano" }),
-    new Vex.Flow.ClefNote("bass_small"),
+    new Vex.Flow.ClefNote("bass", "small"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "bass" }),
-    new Vex.Flow.ClefNote("mezzo-soprano_small"),
+    new Vex.Flow.ClefNote("mezzo-soprano", "small"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "mezzo-soprano" }),
-    new Vex.Flow.ClefNote("baritone-c_small"),
+    new Vex.Flow.ClefNote("baritone-c","small"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "baritone-c" }),
-    new Vex.Flow.ClefNote("baritone-f_small"),
+    new Vex.Flow.ClefNote("baritone-f", "small"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "baritone-f" }),
-    new Vex.Flow.ClefNote("subbass_small"),
+    new Vex.Flow.ClefNote("subbass", "small"),
     new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "subbass" }),
-    new Vex.Flow.ClefNote("french_small"),
-    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "french" })
+    new Vex.Flow.ClefNote("french", "small"),
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "french" }),
+    new Vex.Flow.ClefNote("treble", "small", "8vb"),
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble", octave_shift: -1}),
+    new Vex.Flow.ClefNote("treble", "small", "8va"),
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble", octave_shift: 1 })
   ];
 
   var voice = new Vex.Flow.Voice({
-    num_beats: 10,
+    num_beats: 12,
     beat_value: 4,
     resolution: Vex.Flow.RESOLUTION
   });

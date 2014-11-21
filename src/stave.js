@@ -67,8 +67,10 @@ Vex.Flow.Stave = (function() {
     getNoteStartX: function() {
       var start_x = this.start_x;
 
-      // Add additional space if left barline is REPEAT_BEGIN
-      if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN)
+      // Add additional space if left barline is REPEAT_BEGIN and there are other
+      // start modifiers than barlines
+      if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &&
+          this.modifiers.length > 2)
         start_x += 20;
       return start_x;
     },
@@ -89,8 +91,11 @@ Vex.Flow.Stave = (function() {
 
     setWidth: function(width) {
       this.width = width;
+      this.glyph_end_x = this.x + width;
+      this.end_x = this.glyph_end_x;
+
       // reset the x position of the end barline
-      this.modifiers[1].setX(this.x + this.width);
+      this.modifiers[1].setX(this.end_x);
       return this;
     },
 
@@ -270,14 +275,14 @@ Vex.Flow.Stave = (function() {
       return this;
     },
 
-    addClef: function(clef) {
+    addClef: function(clef, size, annotation) {
       this.clef = clef;
-      this.addModifier(new Vex.Flow.Clef(clef));
+      this.addModifier(new Vex.Flow.Clef(clef, size, annotation));
       return this;
     },
 
-    addEndClef: function(clef) {
-      this.addEndModifier(new Vex.Flow.Clef(clef));
+    addEndClef: function(clef, size, annotation) {
+      this.addEndModifier(new Vex.Flow.Clef(clef, size, annotation));
       return this;
     },
 

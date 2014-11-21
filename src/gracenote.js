@@ -3,8 +3,6 @@ Vex.Flow.GraceNote = (function() {
     if (arguments.length > 0) this.init(note_struct);
   };
 
-  // Stem directions
-  var Stem = Vex.Flow.Stem;
   Vex.Inherit(GraceNote, Vex.Flow.StaveNote, {
     init: function(note_struct) {
       GraceNote.superclass.init.call(this, note_struct);
@@ -38,14 +36,6 @@ Vex.Flow.GraceNote = (function() {
     },
 
     getCategory: function() { return 'gracenotes'; },
-
-    drawStem: function(stem_struct){
-      if (!this.context) throw new Vex.RERR("NoCanvasContext",
-          "Can't draw without a canvas context.");
-
-      this.stem = new Stem(stem_struct);
-      this.stem.setContext(this.context).draw();
-    },
 
     draw: function(){
       GraceNote.superclass.draw.call(this);

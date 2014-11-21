@@ -81,6 +81,7 @@ Vex.Flow.Formatter = (function() {
     var totalTicks = voices[0].getTotalTicks();
     var tickToContextMap = {};
     var tickList = [];
+    var contexts = [];
 
     var resolutionMultiplier = 1;
 
@@ -93,9 +94,9 @@ Vex.Flow.Formatter = (function() {
     var voice;
     for (i = 0; i < voices.length; ++i) {
       voice = voices[i];
-      if (voice.getTotalTicks().value() != totalTicks.value()) {
+      if (!(voice.getTotalTicks().equals(totalTicks))) {
         throw new Vex.RERR("TickMismatch",
-            "Voices should have same time signature.");
+            "Voices should have same total note duration in ticks.");
       }
 
       if (voice.getMode() == Vex.Flow.Voice.Mode.STRICT && !voice.isComplete())
@@ -126,8 +127,11 @@ Vex.Flow.Formatter = (function() {
         var integerTicks = ticksUsed.numerator;
 
         // If we have no tick context for this tick, create one.
-        if (!tickToContextMap[integerTicks])
-          tickToContextMap[integerTicks] = new context_type();
+        if (!tickToContextMap[integerTicks]) {
+          var newContext = new context_type();
+          contexts.push(newContext);
+          tickToContextMap[integerTicks] = newContext;
+        }
 
         // Add this tickable to the TickContext.
         add_fn(tickable, tickToContextMap[integerTicks]);
@@ -140,6 +144,7 @@ Vex.Flow.Formatter = (function() {
 
     return {
       map: tickToContextMap,
+      array: contexts,
       list: Vex.SortAndUnique(tickList, function(a, b) { return a - b; },
           function(a, b) { return a === b; } ),
       resolutionMultiplier: resolutionMultiplier
@@ -290,6 +295,7 @@ Vex.Flow.Formatter = (function() {
           var props = note.getKeyProps()[0];
           if (i === 0) {
             props.line = lookAhead(notes, props.line, i, false);
+            note.setKeyLine(0, props.line);
           } else if (i > 0 && i < notes.length) {
             // If previous note is a rest, use its line number.
             var rest_line;
@@ -301,6 +307,7 @@ Vex.Flow.Formatter = (function() {
               // Get the rest line for next valid non-rest note group.
               props.line = lookAhead(notes, rest_line, i, true);
             }
+            note.setKeyLine(0, props.line);
           }
         }
       }
@@ -387,6 +394,10 @@ Vex.Flow.Formatter = (function() {
           Vex.Flow.TickContext,
           function(tickable, context) { context.addTickable(tickable); });
 
+      contexts.array.forEach(function(context) {
+        context.tContexts = contexts.array;
+      });
+
       this.totalTicks = voices[0].getTicksUsed().clone();
       this.tContexts = contexts;
       return contexts;
@@ -396,11 +407,20 @@ Vex.Flow.Formatter = (function() {
     // to `justifyWidth` pixels. `rendering_context` is required to justify elements
     // that can't retreive widths without a canvas. This method sets the `x` positions
     // of all the tickables/notes in the formatter.
-    preFormat: function(justifyWidth, rendering_context) {
+    preFormat: function(justifyWidth, rendering_context, voices, stave) {
       // Initialize context maps.
       var contexts = this.tContexts;
       var contextList = contexts.list;
       var contextMap = contexts.map;
+
+      // If voices and a stave were provided, set the Stave for each voice
+      // and preFormat to apply Y values to the notes;
+      if (voices && stave) {
+        voices.forEach(function(voice) {
+          voice.setStave(stave);
+          voice.preFormat();
+        });
+      }
 
       // Figure out how many pixels to allocate per tick.
       if (!justifyWidth) {
@@ -413,6 +433,7 @@ Vex.Flow.Formatter = (function() {
       // Now distribute the ticks to each tick context, and assign them their
       // own X positions.
       var x = 0;
+      var center_x = justifyWidth / 2;
       var white_space = 0; // White space to right of previous note
       var tick_space = 0;  // Pixels from prev note x-pos to curent note x-pos
       var prev_tick = 0;
@@ -515,11 +536,35 @@ Vex.Flow.Formatter = (function() {
           accumulated_space = accumulated_space + tick_space;
           context.setX(context.getX() + accumulated_space);
           prev_tick = tick;
+
+          // Move center aligned tickables to middle
+          var centeredTickables = context.getCenterAlignedTickables();
+          centeredTickables.forEach(function(tickable) {
+            tickable.center_x_shift = center_x - context.getX();
+          });
         }
       }
     },
 
-    // Take all `voices` and create `ModifierContext`s out of them.
+    // This is the top-level call for all formatting logic completed
+    // after `x` *and* `y` values have been computed for the notes 
+    // in the voices.
+    postFormat: function() {
+      // Postformat modifier contexts
+      this.mContexts.list.forEach(function(mContext) {
+        this.mContexts.map[mContext].postFormat();
+      }, this);
+
+      // Postformat tick contexts
+      this.tContexts.list.forEach(function(tContext) {
+        this.tContexts.map[tContext].postFormat();
+      }, this);
+
+      return this;
+    },
+
+    // Take all `voices` and create `ModifierContext`s out of them. This tells
+    // the formatters that the voices belong on a single stave.
     joinVoices: function(voices) {
       this.createModifierContexts(voices);
       this.hasMinTotalWidth = false;
@@ -537,13 +582,18 @@ Vex.Flow.Formatter = (function() {
     format: function(voices, justifyWidth, options) {
       var opts = {
         align_rests: false,
-        context: null
+        context: null,
+        stave: null
       };
 
       Vex.Merge(opts, options);
       this.alignRests(voices, opts.align_rests);
       this.createTickContexts(voices);
-      this.preFormat(justifyWidth, opts.context);
+      this.preFormat(justifyWidth, opts.context, voices, opts.stave);
+
+      // Only postFormat if a stave was supplied for y value formatting
+      if (opts.stave) this.postFormat();
+
       return this;
     },
 

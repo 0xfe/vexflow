@@ -1,8 +1,67 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements `GraceNoteGroup` which is used to format and
+// render grace notes.
+
 Vex.Flow.GraceNoteGroup = (function(){
-  var GraceNoteGroup = function(grace_notes, config) {
+  function GraceNoteGroup(grace_notes, config) {
     if (arguments.length > 0) this.init(grace_notes, config);
   };
+  GraceNoteGroup.CATEGORY = "gracenotegroups";
 
+  // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
+  function L() { if (GraceNoteGroup.DEBUG) Vex.L("Vex.Flow.GraceNoteGroup", arguments); }
+
+  // Arrange groups inside a `ModifierContext`
+  GraceNoteGroup.format = function(gracenote_groups, state) {
+    var gracenote_spacing = 4;
+
+    if (!gracenote_groups || gracenote_groups.length === 0) return false;
+
+    var group_list = [];
+    var hasStave = false;
+    var prev_note = null;
+    var shiftL = 0;
+
+    var i, gracenote_group, props_tmp;
+    for (i = 0; i < gracenote_groups.length; ++i) {
+      gracenote_group = gracenote_groups[i];
+      var note = gracenote_group.getNote();
+      var stave = note.getStave();
+      if (note != prev_note) {
+         // Iterate through all notes to get the displaced pixels
+         for (var n = 0; n < note.keys.length; ++n) {
+            props_tmp = note.getKeyProps()[n];
+            shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+          }
+          prev_note = note;
+      }
+      if (stave != null) {
+        hasStave = true;
+        group_list.push({shift: shiftL, gracenote_group: gracenote_group});
+      } else {
+        group_list.push({shift: shiftL, gracenote_group: gracenote_group });
+      }
+    }
+
+    // If first note left shift in case it is displaced
+    var group_shift = group_list[0].shift;
+    for (i = 0; i < group_list.length; ++i) {
+      gracenote_group = group_list[i].gracenote_group;
+      gracenote_group.preFormat();
+      group_shift = gracenote_group.getWidth() + gracenote_spacing;
+    }
+
+    state.left_shift += group_shift;
+    return true;
+  }
+
+  // ## Prototype Methods
+  //
+  // `GraceNoteGroup` inherits from `Modifier` and is placed inside a
+  // `ModifierContext`.
   Vex.Inherit(GraceNoteGroup, Vex.Flow.Modifier, {
     init: function(grace_notes, show_slur) {
       var superclass = GraceNoteGroup.superclass;
@@ -56,7 +115,6 @@ Vex.Flow.GraceNoteGroup = (function(){
     setNote: function(note) {
       this.note = note;
     },
-    getCategory: function() { return "gracenotegroups"; },
     setWidth: function(width){
       this.width = width;
     },

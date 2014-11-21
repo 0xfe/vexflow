@@ -47,6 +47,7 @@ Vex.Flow.Test.KeySignature.Start = function() {
   Vex.Flow.Test.runRaphaelTest("Minor Key Test (Raphael)", 
       Vex.Flow.Test.KeySignature.minorKeys);
   Vex.Flow.Test.runTest("Stave Helper", Vex.Flow.Test.KeySignature.staveHelper);
+  Vex.Flow.Test.runTest("Cancelled key test", Vex.Flow.Test.KeySignature.majorKeysCanceled);
 
 }
 
@@ -105,6 +106,60 @@ Vex.Flow.Test.KeySignature.majorKeys = function(options, contextBuilder) {
   stave.draw();
   stave2.setContext(ctx);
   stave2.draw();
+
+  ok(true, "all pass");
+}
+
+Vex.Flow.Test.KeySignature.majorKeysCanceled = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 780, 500);
+  ctx.scale(0.9, 0.9);
+  var stave = new Vex.Flow.Stave(10, 10, 750).addTrebleGlyph();
+  var stave2 = new Vex.Flow.Stave(10, 90, 750).addTrebleGlyph();
+  var stave3 = new Vex.Flow.Stave(10, 170, 750).addTrebleGlyph();
+  var stave4 = new Vex.Flow.Stave(10, 250, 750).addTrebleGlyph();
+  var keys = Vex.Flow.Test.KeySignature.MAJOR_KEYS;
+
+  var keySig = null;
+  var i, n;
+  for (i = 0; i < 8; ++i) {
+    keySig = new Vex.Flow.KeySignature(keys[i]);
+    keySig.cancelKey("Cb");
+
+    keySig.padding = 18;
+    keySig.addToStave(stave);
+  }
+
+  for (n = 8; n < keys.length; ++n) {
+    keySig = new Vex.Flow.KeySignature(keys[n]);
+    keySig.cancelKey("C#");
+    keySig.padding = 20;
+    keySig.addToStave(stave2);
+  }
+
+  for (i = 0; i < 8; ++i) {
+    keySig = new Vex.Flow.KeySignature(keys[i]);
+    keySig.cancelKey("E");
+
+    keySig.padding = 18;
+    keySig.addToStave(stave3);
+  }
+
+  for (n = 8; n < keys.length; ++n) {
+    keySig = new Vex.Flow.KeySignature(keys[n]);
+    keySig.cancelKey("Ab");
+    keySig.padding = 20;
+    keySig.addToStave(stave4);
+  }
+
+  stave.setContext(ctx);
+  stave.draw();
+  stave2.setContext(ctx);
+  stave2.draw();
+  stave3.setContext(ctx);
+  stave3.draw();
+  stave4.setContext(ctx);
+  stave4.draw();
+
 
   ok(true, "all pass");
 }
