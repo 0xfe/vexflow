@@ -10,6 +10,8 @@ require 'uglifier'
 
 DIR = File.dirname(__FILE__)
 TARGET_DIR = "build/vexflow"
+RELEASE_DIR = "releases"
+
 TARGET = "#{TARGET_DIR}/vexflow-min.js"
 TARGET_RAW = "#{TARGET_DIR}/vexflow-debug.js"
 
@@ -24,6 +26,7 @@ DOCCO = "./node_modules/.bin/docco"
 directory TARGET_DIR
 directory 'build/tests'
 directory 'build/tests/support'
+directory RELEASE_DIR
 
 # Ordered list of Vexflow source files. If you have dependencies
 # between files, order them here.
@@ -170,6 +173,8 @@ task :docs do
   puts "Generating documentation..."
   system "#{DOCCO} -l linear src/*.js"
 end
+
+copy_path("#{TARGET_DIR}/*", RELEASE_DIR, :release)
 
 task :make => [:build_copy, TARGET_DIR, TARGET]
 
