@@ -157,3 +157,5 @@ Vex.Inherit = (function () {
     return C;
   };
 }());
+
+module.exports = Vex;
