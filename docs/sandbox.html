@@ -90,7 +90,6 @@ var canvas = $("div.sandbox div.sandbox canvas")[0];
 var renderer = new Vex.Flow.Renderer(canvas,
 Vex.Flow.Renderer.Backends.CANVAS);
 var ctx = renderer.getContext();
-renderer.resize(500, 300); // Resize and clear canvas
 ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
 // Create and draw the tablature stave
