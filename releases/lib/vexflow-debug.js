@@ -26,8 +26,8 @@
  *
  * This library makes use of Simon Tatham's awesome font - Gonville.
  *
- * Build ID: 0xFE@5a7f9f7beb17164a44ba953d0de45eccc211c02f
- * Build date: 2014-11-22 17:09:31 -0500
+ * Build ID: 0xFE@520f2de5148c6afb85d854894398ed2abeb6dd47
+ * Build date: 2014-11-22 17:48:21 -0500
  */
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //

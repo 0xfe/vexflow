@@ -10,7 +10,7 @@ require 'uglifier'
 
 DIR = File.dirname(__FILE__)
 TARGET_DIR = "build/vexflow"
-RELEASE_DIR = "releases"
+RELEASE_DIR = "releases/lib"
 
 TARGET = "#{TARGET_DIR}/vexflow-min.js"
 TARGET_RAW = "#{TARGET_DIR}/vexflow-debug.js"
@@ -181,7 +181,17 @@ task :docs do
   system "#{DOCCO} -l linear src/*.js"
 end
 
-copy_path("#{TARGET_DIR}/*", RELEASE_DIR, :release)
+task :release do
+  puts "Releasing..."
+  system "cp #{TARGET_DIR}/* #{RELEASE_DIR}"
+end
+
+task :publish => [:browserify] do
+  Rake::Task['release'].invoke
+  Rake::Task['clean'].invoke
+  puts "Publishing..."
+  system "cd releases; npm publish"
+end
 
 task :make => [:browserify]
 
