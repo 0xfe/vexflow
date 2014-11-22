@@ -158,4 +158,11 @@ Vex.Inherit = (function () {
   };
 }());
 
-module.exports = Vex;
+// UMD
+if (typeof require == "function") {
+  module.exports = Vex;
+} else if (typeof define == "function" && define.amd) {
+  define("Vex", [], function(){ return Vex; });
+} else {
+  (this || window)["Vex"] = Vex;
+}
