@@ -15,6 +15,25 @@ learn how to use VexFlow.
 If you're not a developer and just want to write and share your music, go to
 [My VexFlow](http://my.vexflow.com).
 
+## Install
+
+#### Component
+
+`component install 0xfe/vexflow`
+
+#### npm & Browserify
+
+`npm install 0xfe/vexflow` 
+
+## Build and test
+
+```
+git clone https://github.com/0xfe/vexflow.git && cd vexflow
+npm install
+npm run build
+npm run test
+```
+
 ## Resources
 
 To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).

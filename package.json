@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/0xfe/vexflow/issues"
   },
-  "homepage": "https://github.com/0xfe/vexflow"
+  "homepage": "https://github.com/0xfe/vexflow",
+  "dependencies": {
+    "jquery": "^2.1.1"
+  }
 }
