@@ -1,7 +1,5 @@
 // this is a loader for all the dependencies local files
 
-window.$ = require("jquery");
-
 window.Vex = require("./src/vex.js");
 // these files extending the global Vex object
 require("./src/flow.js");

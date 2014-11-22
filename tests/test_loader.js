@@ -5,6 +5,7 @@ window.equal = qunit.equal;
 window.ok = qunit.ok;
 window.expect = qunit.expect;
 require('raphael');
+window.$ = require('jquery');
 
 require("./vexflow_test_helpers.js");
 require("./mocks.js");
