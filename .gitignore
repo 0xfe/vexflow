@@ -20,6 +20,7 @@ ruby_sess.*
 .idea/vcs.xml
 .idea/workspace.xml
 node_modules
+components
 
 #eclipse
 .project
