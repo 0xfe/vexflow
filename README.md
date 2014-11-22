@@ -15,6 +15,10 @@ learn how to use VexFlow.
 If you're not a developer and just want to write and share your music, go to
 [My VexFlow](http://my.vexflow.com).
 
+## Releases
+
+Pre-built binary releases are available in the `releases/` directory of this tree.
+
 ## Resources
 
 To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
