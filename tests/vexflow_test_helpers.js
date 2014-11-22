@@ -56,3 +56,6 @@ Vex.Flow.Test.runRaphaelTest = function(name, func, params) {
         Vex.Flow.Renderer.getRaphaelContext);
     });
 }
+
+window.newNote = function(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+window.newAcc = function(type) { return new Vex.Flow.Accidental(type); }
