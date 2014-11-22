@@ -4,6 +4,9 @@
   "trailing": true, // no more trailing spaces
   "globals": {
     "Vex": false,
-    "Raphael": false
+    "Raphael": false,
+    "require": false,
+    "define": false,
+    "module": false
    } // allowed globals
 }

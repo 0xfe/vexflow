@@ -26,8 +26,8 @@
  *
  * This library makes use of Simon Tatham's awesome font - Gonville.
  *
- * Build ID: 0xFE@847d976d936b462071f2849ee584caced1983ef9
- * Build date: 2014-11-22 09:57:57 -0500
+ * Build ID: 0xFE@5a7f9f7beb17164a44ba953d0de45eccc211c02f
+ * Build date: 2014-11-22 17:09:31 -0500
  */
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
@@ -187,7 +187,16 @@ Vex.Inherit = (function () {
     Vex.Merge(C.prototype, O);
     return C;
   };
-}());/**
+}());
+
+// UMD
+if (typeof require == "function") {
+  module.exports = Vex;
+} else if (typeof define == "function" && define.amd) {
+  define("Vex", [], function(){ return Vex; });
+} else {
+  (this || window)["Vex"] = Vex;
+}/**
  * Vex Flow - Mohit Muthanna <mohit@muthanna.com>
  */
 
@@ -2810,9 +2819,9 @@ Vex.Flow.Tickable = (function() {
       this.preFormatted = false;
       this.postFormatted = false;
       this.tuplet = null;
-      
+
       this.align_center = false;
-      this.center_x_shift = 0 // Shift from tick context if center aligned
+      this.center_x_shift = 0; // Shift from tick context if center aligned
 
       // This flag tells the formatter to ignore this tickable during
       // formatting and justification. It is set by tickables such as BarNote.
@@ -4066,7 +4075,7 @@ Vex.Flow.StaveNote = (function() {
     }
 
     return true;
-  }
+  };
 
   StaveNote.formatByY = function(notes, state) {
     // NOTE: this function does not support more than two voices per stave
@@ -4106,9 +4115,9 @@ Vex.Flow.StaveNote = (function() {
     }
 
     state.right_shift += x_shift;
-  }
+  };
 
-  StaveNote.postFormat = function(notes, context) {
+  StaveNote.postFormat = function(notes) {
     if (!notes) return false;
 
     notes.forEach(function(note) {
@@ -4116,7 +4125,7 @@ Vex.Flow.StaveNote = (function() {
     });
 
     return true;
-  }
+  };
 
   // ## Prototype Methods
   //
@@ -6330,22 +6339,20 @@ Vex.Flow.Voice = (function() {
 
     // Get the bounding box for the voice
     getBoundingBox: function() {
+      var stave, boundingBox, bb, i;
+
       if (!this.boundingBox) {
         if (!this.stave) throw Vex.RERR("NoStave", "Can't get bounding box without stave.");
-        var stave = this.stave;
+        stave = this.stave;
+        boundingBox = null;
 
-        var boundingBox = null;
-        if (this.tickables[0]) {
-          this.tickables[0].setStave(stave);
-          boundingBox = this.tickables[0].getBoundingBox();
-        }
-
-        for (var i = 0; i < this.tickables.length; ++i) {
+        for (i = 0; i < this.tickables.length; ++i) {
           this.tickables[i].setStave(stave);
-          if (i > 0 && boundingBox) {
-            var bb = this.tickables[i].getBoundingBox();
-            if (bb) boundingBox.mergeWith(bb);
-          }
+
+          bb = this.tickables[i].getBoundingBox();
+          if (!bb) continue;
+
+          boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
         }
 
         this.boundingBox = boundingBox;
@@ -6792,7 +6799,7 @@ Vex.Flow.Accidental = (function(){
     }
 
     state.left_shift += x_width;
-  }
+  };
 
   Accidental.formatByY = function(acc_list, state) {
     var left_shift = state.left_shift;
@@ -6824,7 +6831,7 @@ Vex.Flow.Accidental = (function(){
     }
 
     state.left_shift += x_width;
-  },
+  };
 
   // ## Prototype Methods
   //
@@ -6836,7 +6843,7 @@ Vex.Flow.Accidental = (function(){
     // example: `#`, `##`, `b`, `n`, etc.
     init: function(type) {
       Accidental.superclass.init.call(this);
-      L("New accidental: ", type);
+    L("New accidental: ", type);
 
       this.note = null;
       // The `index` points to a specific note in a chord.
@@ -6921,12 +6928,12 @@ Vex.Flow.Accidental = (function(){
       }
     }
   });
-  
+
   // ## Static Methods
-  // 
+  //
   // Use this method to automatically apply accidentals to a set of `voices`.
   // The accidentals will be remembered between all the voices provided.
-  // Optionally, you can also provide an initial `keySignature`. 
+  // Optionally, you can also provide an initial `keySignature`.
   Accidental.applyAccidentals = function(voices, keySignature) {
     var tickPositions = [];
     var tickNoteMap = {};
@@ -6948,7 +6955,7 @@ Vex.Flow.Accidental = (function(){
         tickPosition.add(note.getTicks());
       });
     });
-    
+
     var music = new Vex.Flow.Music();
 
     // Default key signature is C major
@@ -6960,14 +6967,14 @@ Vex.Flow.Accidental = (function(){
     tickPositions.forEach(function(tick) {
       var notes = tickNoteMap[tick];
 
-      // Array to store all pitches that modified accidental states 
+      // Array to store all pitches that modified accidental states
       // at this tick position
       var modifiedPitches = [];
 
       notes.forEach(function(note) {
           if (note.isRest()) return;
-          
-          // Go through each key and determine if an accidental should be 
+
+          // Go through each key and determine if an accidental should be
           // applied
           note.keys.forEach(function(keyString, keyIndex) {
               var key = music.getNoteParts(keyString.split('/')[0]);
@@ -6976,7 +6983,7 @@ Vex.Flow.Accidental = (function(){
               var accidentalString = key.accidental || "n";
               var pitch = key.root + accidentalString;
 
-              // Determine if the current pitch has the same accidental 
+              // Determine if the current pitch has the same accidental
               // as the scale state
               var sameAccidental = scaleMap[key.root] === pitch;
 
@@ -6986,7 +6993,7 @@ Vex.Flow.Accidental = (function(){
 
               // Add the accidental to the StaveNote
               if (!sameAccidental || (sameAccidental && previouslyModified)) {
-                  // Modify the scale map so that the root pitch has an 
+                  // Modify the scale map so that the root pitch has an
                   // updated state
                   scaleMap[key.root] = pitch;
 
@@ -7099,7 +7106,7 @@ Vex.Flow.Dot = (function() {
 
     // Update state.
     state.right_shift += x_width;
-  }
+  };
 
   Vex.Inherit(Dot, Modifier, {
     init: function() {
@@ -7693,6 +7700,8 @@ Vex.Flow.Formatter = (function() {
 
           // Move center aligned tickables to middle
           var centeredTickables = context.getCenterAlignedTickables();
+
+          /*jshint -W083 */
           centeredTickables.forEach(function(tickable) {
             tickable.center_x_shift = center_x - context.getX();
           });
@@ -7701,7 +7710,7 @@ Vex.Flow.Formatter = (function() {
     },
 
     // This is the top-level call for all formatting logic completed
-    // after `x` *and* `y` values have been computed for the notes 
+    // after `x` *and* `y` values have been computed for the notes
     // in the voices.
     postFormat: function() {
       // Postformat modifier contexts
@@ -8199,7 +8208,7 @@ Vex.Flow.Bend = (function() {
     state.right_shift += last_width;
     state.text_line += 1;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Bend, Modifier, {
@@ -8425,7 +8434,7 @@ Vex.Flow.Vibrato = (function() {
     state.right_shift += width;
     state.text_line += 1;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Vibrato, Modifier, {
@@ -8578,7 +8587,7 @@ Vex.Flow.Annotation = (function() {
     state.left_shift += width / 2;
     state.right_shift += width / 2;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   //
@@ -8750,7 +8759,7 @@ Vex.Flow.Articulation = (function() {
     state.right_shift += width / 2;
     state.text_line = text_line;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Articulation, Modifier, {
@@ -11859,7 +11868,9 @@ Vex.Flow.Tuplet = (function() {
         //this.y_pos = first_note.getStemExtents().topY - 10;
 
         for (i=0; i<this.notes.length; ++i) {
-          var top_y = this.notes[i].getStemExtents().topY - 10;
+          var top_y = this.notes[i].getStemDirection() === Vex.Flow.Stem.UP ?
+              this.notes[i].getStemExtents().topY - 10
+            : this.notes[i].getStemExtents().baseY - 20;
           if (top_y < this.y_pos)
             this.y_pos = top_y;
         }
@@ -11868,7 +11879,9 @@ Vex.Flow.Tuplet = (function() {
         this.y_pos = first_note.getStave().getYForLine(4) + 20;
 
         for (i=0; i<this.notes.length; ++i) {
-          var bottom_y = this.notes[i].getStemExtents().topY + 10;
+          var bottom_y = this.notes[i].getStemDirection() === Vex.Flow.Stem.UP ?
+              this.notes[i].getStemExtents().baseY + 20
+            : this.notes[i].getStemExtents().topY + 10;
           if (bottom_y > this.y_pos)
             this.y_pos = bottom_y;
         }
@@ -12378,7 +12391,7 @@ Vex.Flow.FretHandFinger = (function() {
 
     state.left_shift += x_widthL;
     state.right_shift += x_widthR;
-  }
+  };
 
   Vex.Inherit(FretHandFinger, Modifier, {
     init: function(number) {
@@ -12550,7 +12563,7 @@ Vex.Flow.StringNumber = (function() {
     state.left_shift += x_widthL;
     state.right_shift += x_widthR;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(StringNumber, Modifier, {
@@ -12751,7 +12764,7 @@ Vex.Flow.Stroke = (function() {
 
     state.left_shift += x_shift;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Stroke, Modifier, {
@@ -13616,7 +13629,7 @@ Vex.Flow.Ornament = (function() {
     state.right_shift += width / 2;
     state.text_line = text_line;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Ornament, Modifier, {
@@ -14396,7 +14409,8 @@ Vex.Flow.TextDynamics = (function(){
 Vex.Flow.GraceNoteGroup = (function(){
   function GraceNoteGroup(grace_notes, config) {
     if (arguments.length > 0) this.init(grace_notes, config);
-  };
+  }
+
   GraceNoteGroup.CATEGORY = "gracenotegroups";
 
   // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
@@ -14444,7 +14458,7 @@ Vex.Flow.GraceNoteGroup = (function(){
 
     state.left_shift += group_shift;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   //
@@ -14519,6 +14533,8 @@ Vex.Flow.GraceNoteGroup = (function(){
       }
 
       var note = this.getNote();
+
+      L("Drawing grace note group for:", note);
 
       if (!(note && (this.index !== null))) {
         throw new Vex.RuntimeError("NoAttachedNote",

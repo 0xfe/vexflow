@@ -14,6 +14,7 @@ RELEASE_DIR = "releases"
 
 TARGET = "#{TARGET_DIR}/vexflow-min.js"
 TARGET_RAW = "#{TARGET_DIR}/vexflow-debug.js"
+TARGET_BUNDLE = "#{TARGET_DIR}/vexflow.js"
 
 BUILD_VERSION = "1.2 Custom"
 BUILD_PREFIX = "0xFE"
@@ -22,6 +23,7 @@ BUILD_COMMIT = `git rev-list --max-count=1 HEAD`.chomp
 
 JSHINT = "./node_modules/jshint/bin/jshint"
 DOCCO = "./node_modules/.bin/docco"
+BROWSERIFY = "./node_modules/.bin/browserify"
 
 directory TARGET_DIR
 directory 'build/tests'
@@ -168,6 +170,11 @@ task :lint do
   system "#{JSHINT} --show-non-errors --config jshintrc src/*.js"
 end
 
+task :browserify => [:build_copy, TARGET_DIR, TARGET, "browserify_main.js"] do
+  puts "Browserifying..."
+  system "#{BROWSERIFY} browserify_main.js -o #{TARGET_BUNDLE}"
+end
+
 task :docs do
   # Requires JSHint to be installed
   puts "Generating documentation..."
@@ -176,6 +183,6 @@ end
 
 copy_path("#{TARGET_DIR}/*", RELEASE_DIR, :release)
 
-task :make => [:build_copy, TARGET_DIR, TARGET]
+task :make => [:browserify]
 
 task :default => [:make]
