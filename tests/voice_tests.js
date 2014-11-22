@@ -6,7 +6,7 @@
 Vex.Flow.Test.Voice = {}
 
 Vex.Flow.Test.Voice.Start = function() {
-  module("Voice");
+  q.module("Voice");
   test("Strict Test", Vex.Flow.Test.Voice.strict);
   test("Ignore Test", Vex.Flow.Test.Voice.ignore);
   Vex.Flow.Test.runTest("Full Voice Mode Test", Vex.Flow.Test.Voice.full);

@@ -3,7 +3,7 @@
 Vex.Flow.Test.TimeSignature = {}
 
 Vex.Flow.Test.TimeSignature.Start = function() {
-  module("TimeSignature");
+  q.module("TimeSignature");
   test("Time Signature Parser", Vex.Flow.Test.TimeSignature.parser);
   Vex.Flow.Test.runTest("Basic Time Signatures", Vex.Flow.Test.TimeSignature.basic);
   Vex.Flow.Test.runRaphaelTest("Basic Time Signatures (Raphael)", 

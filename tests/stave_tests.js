@@ -6,7 +6,7 @@
 Vex.Flow.Test.Stave = {}
 
 Vex.Flow.Test.Stave.Start = function() {
-  module("Stave");
+  q.module("Stave");
   Vex.Flow.Test.runTest("Stave Draw Test (Canvas)", Vex.Flow.Test.Stave.draw);
   Vex.Flow.Test.runTest("Vertical Bar Test (Canvas)",
       Vex.Flow.Test.Stave.drawVerticalBar);

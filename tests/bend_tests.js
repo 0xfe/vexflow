@@ -6,7 +6,7 @@
 Vex.Flow.Test.Bend = {}
 
 Vex.Flow.Test.Bend.Start = function() {
-  module("Bend");
+  q.module("Bend");
   Vex.Flow.Test.runTest("Double Bends", Vex.Flow.Test.Bend.doubleBends);
   Vex.Flow.Test.runRaphaelTest("Double Bends (Raphael)",
       Vex.Flow.Test.Bend.doubleBends);

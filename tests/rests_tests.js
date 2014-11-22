@@ -7,7 +7,7 @@
 Vex.Flow.Test.Rests = {};
 
 Vex.Flow.Test.Rests.Start = function() {
-  module("Rests");
+  q.module("Rests");
   Vex.Flow.Test.runTest("Rests - Dotted",
       Vex.Flow.Test.Rests.basic);
   Vex.Flow.Test.runTest("Auto Align Rests - Beamed Notes Stems Up",

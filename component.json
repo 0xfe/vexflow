@@ -1,0 +1,28 @@
+{
+  "name": "vexflow",
+  "version": "1.2.0",
+  "description": "A JavaScript library for rendering music notation and guitar tablature",
+  "tags": [
+    "music",
+    "notation",
+    "guitar",
+    "tablature"
+  ],
+  "author": "Mohit Muthanna Cheppudira",
+  "main": "main.js",
+  "scripts": [
+    "main.js",
+    "src/*.js",
+    "src/fonts/vexflow_font.js"
+  ],
+  "development": {
+    "dependencies": {
+      "components/jquery": "^2.1.1",
+      "components/qunit": "^1.11.0",
+      "timaschew/raphael": "1.4.8"
+    },
+    "scripts": [
+      "tests/*.js"
+    ]
+  }
+}

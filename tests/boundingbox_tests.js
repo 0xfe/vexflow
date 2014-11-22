@@ -6,7 +6,7 @@
 Vex.Flow.Test.BoundingBox = {}
 
 Vex.Flow.Test.BoundingBox.Start = function() {
-  module("BoundingBox");
+  q.module("BoundingBox");
   test("Initialization Test", Vex.Flow.Test.BoundingBox.initialization);
   test("Merging Text", Vex.Flow.Test.BoundingBox.merging);
 }

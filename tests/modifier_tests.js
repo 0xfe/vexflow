@@ -6,7 +6,7 @@
 Vex.Flow.Test.ModifierContext = {}
 
 Vex.Flow.Test.ModifierContext.Start = function() {
-  module("ModifierContext");
+  q.module("ModifierContext");
   test("Modifier Width Test", Vex.Flow.Test.ModifierContext.width);
   test("Modifier Management", Vex.Flow.Test.ModifierContext.management);
 }

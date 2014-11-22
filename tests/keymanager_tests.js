@@ -6,7 +6,7 @@
 Vex.Flow.Test.KeyManager = {}
 
 Vex.Flow.Test.KeyManager.Start = function() {
-  module("KeyManager");
+  q.module("KeyManager");
   test("Valid Notes", Vex.Flow.Test.KeyManager.works);
   test("Select Notes", Vex.Flow.Test.KeyManager.selectNotes);
 }

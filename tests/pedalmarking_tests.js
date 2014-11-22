@@ -6,7 +6,7 @@
 Vex.Flow.Test.PedalMarking = {};
 
 Vex.Flow.Test.PedalMarking.Start = function() {
-  module("PedalMarking");
+  q.module("PedalMarking");
   Vex.Flow.Test.runTest("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleText);
   Vex.Flow.Test.runTest("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleBracket);
   Vex.Flow.Test.runTest("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleMixed);

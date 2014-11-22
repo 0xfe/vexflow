@@ -6,7 +6,7 @@
 Vex.Flow.Test.StringNumber = {}
 
 Vex.Flow.Test.StringNumber.Start = function() {
-  module("StringNumber");
+  q.module("StringNumber");
   Vex.Flow.Test.runTest("String Number In Notation (Canvas)",
       Vex.Flow.Test.StringNumber.drawMultipleMeasures);
   Vex.Flow.Test.runRaphaelTest("String Number In Notation (Raphael)",

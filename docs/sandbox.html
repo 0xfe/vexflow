@@ -4,15 +4,9 @@
   <title>The VexFlow Sandbox</title>
   <link href='http://fonts.googleapis.com/css?family=OFL+Sorts+Mill+Goudy+TT|Yanone+Kaffeesatz|Tangerine'
    rel='stylesheet' type='text/css'>
-  <link href="../vextab/style.css" media="screen" rel="Stylesheet"
-    type="text/css" />
+  <link href="http://www.vexflow.com/vextab/style.css" media="screen" rel="Stylesheet" type="text/css" />
 
-  <!-- VexFlow Compiled Source -->
-  <script src="../build/vexflow/vexflow-debug.js"></script>
-  <script src="../support/vexflow-min.js"></script>
-
-  <!-- Support Sources -->
-  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <script src="../build/browser.js"></script>
 
   <style type="text/css">
     canvas {
@@ -96,7 +90,6 @@ var canvas = $("div.sandbox div.sandbox canvas")[0];
 var renderer = new Vex.Flow.Renderer(canvas,
 Vex.Flow.Renderer.Backends.CANVAS);
 var ctx = renderer.getContext();
-renderer.resize(500, 300); // Resize and clear canvas
 ctx.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
 // Create and draw the tablature stave
@@ -157,6 +150,9 @@ Vex.Flow.Formatter.FormatAndDraw(ctx, tabstave, notes);</textarea>
           var code = $("#sandbox").val();
 
           try {
+            var canvas = $('canvas')[0];
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
             eval(code);
             msg.html('').hide();
           } catch (e) {

@@ -6,7 +6,7 @@
 Vex.Flow.Test.StaveNote = {}
 
 Vex.Flow.Test.StaveNote.Start = function() {
-  module("StaveNote");
+  q.module("StaveNote");
   test("Tick", Vex.Flow.Test.StaveNote.ticks);
   test("Tick - New API", Vex.Flow.Test.StaveNote.ticksNewApi);
   test("Stem", Vex.Flow.Test.StaveNote.stem);

@@ -6,7 +6,7 @@
 Vex.Flow.Test.TextBracket = {};
 
 Vex.Flow.Test.TextBracket.Start = function() {
-  module("TextBracket");
+  q.module("TextBracket");
   Vex.Flow.Test.runTest("Simple TextBracket", Vex.Flow.Test.TextBracket.simple0);
   Vex.Flow.Test.runTest("TextBracket Styles", Vex.Flow.Test.TextBracket.simple1);
 };

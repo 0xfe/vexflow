@@ -6,7 +6,7 @@
 Vex.Flow.Test.Beam = {}
 
 Vex.Flow.Test.Beam.Start = function() {
-  module("Beam");
+  q.module("Beam");
   Vex.Flow.Test.runTest("Simple Beam", Vex.Flow.Test.Beam.simple);
   Vex.Flow.Test.runTest("Multi Beam", Vex.Flow.Test.Beam.multi);
   Vex.Flow.Test.runTest("Sixteenth Beam", Vex.Flow.Test.Beam.sixteenth);

@@ -6,7 +6,7 @@
 Vex.Flow.Test.Annotation = {}
 
 Vex.Flow.Test.Annotation.Start = function() {
-  module("Annotation");
+  q.module("Annotation");
   Vex.Flow.Test.runTest("Simple Annotation", Vex.Flow.Test.Annotation.simple);
   Vex.Flow.Test.runRaphaelTest("Simple Annotation",
       Vex.Flow.Test.Annotation.simple);

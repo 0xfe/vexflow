@@ -6,7 +6,7 @@
 Vex.Flow.Test.StaveConnector = {}
 
 Vex.Flow.Test.StaveConnector.Start = function() {
-  module("StaveConnector");
+  q.module("StaveConnector");
   Vex.Flow.Test.runTest("StaveConnector Single Draw Test (Canvas)",
     Vex.Flow.Test.StaveConnector.drawSingle);
   Vex.Flow.Test.runRaphaelTest("StaveConnector Single Draw Test (Raphael)",

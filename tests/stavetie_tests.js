@@ -6,7 +6,7 @@
 Vex.Flow.Test.StaveTie = {}
 
 Vex.Flow.Test.StaveTie.Start = function() {
-  module("StaveTie");
+  q.module("StaveTie");
   Vex.Flow.Test.runTest("Simple StaveTie", Vex.Flow.Test.StaveTie.simple);
   Vex.Flow.Test.runTest("Chord StaveTie", Vex.Flow.Test.StaveTie.chord);
   Vex.Flow.Test.runTest("Stem Up StaveTie", Vex.Flow.Test.StaveTie.stemUp);

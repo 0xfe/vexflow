@@ -6,7 +6,7 @@
 Vex.Flow.Test.Curve = (function () {
   var Curve = {
     Start: function() {
-      module("Curve");
+      q.module("Curve");
       Vex.Flow.Test.runTest("Simple Curve", Curve.simple);
       Vex.Flow.Test.runRaphaelTest("Simple Curve (Raphael)", Curve.simple);
       Vex.Flow.Test.runTest("Rounded Curve", Curve.rounded);

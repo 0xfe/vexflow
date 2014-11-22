@@ -6,7 +6,7 @@
 Vex.Flow.Test.Dot = {}
 
 Vex.Flow.Test.Dot.Start = function() {
-  module("Dot");
+  q.module("Dot");
   Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Dot.basic);
   Vex.Flow.Test.runRaphaelTest("Basic (Raphael)",
       Vex.Flow.Test.Dot.basic);

@@ -6,7 +6,7 @@
 Vex.Flow.Test.Ornament = {};
 
 Vex.Flow.Test.Ornament.Start = function() {
-  module("Ornament");
+  q.module("Ornament");
   Vex.Flow.Test.runTest("Ornaments (Canvas)", Vex.Flow.Test.Ornament.drawOrnaments);
   Vex.Flow.Test.runRaphaelTest("Ornaments (Raphael)", Vex.Flow.Test.Ornament.drawOrnaments);
 
