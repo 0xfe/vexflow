@@ -15,9 +15,15 @@ learn how to use VexFlow.
 If you're not a developer and just want to write and share your music, go to
 [My VexFlow](http://my.vexflow.com).
 
-## Releases
+## Quick Start
 
-Pre-built binary releases are available in the `releases/` directory of this tree.
+Install via NPM:
+
+    $ npm install vexflow
+
+Include one of `lib/vexflow*.js` into your HTML or JS code.
+
+You can also just download one of the Pre-built binary releases from the `releases/` directory of this tree.
 
 ## Resources
 
