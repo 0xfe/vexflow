@@ -6,7 +6,7 @@
 Vex.Flow.Test.Percussion = {}
 
 Vex.Flow.Test.Percussion.Start = function() {
-  module("Percussion");
+  q.module("Percussion");
   Vex.Flow.Test.Percussion.runBoth("Percussion Clef",
     Vex.Flow.Test.Percussion.draw);
 

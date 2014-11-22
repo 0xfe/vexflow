@@ -7,7 +7,7 @@
 Vex.Flow.Test.StaveHairpin = {}
 
 Vex.Flow.Test.StaveHairpin.Start = function() {
-  module("StaveHairpin");
+  q.module("StaveHairpin");
   Vex.Flow.Test.runTest("Simple StaveHairpin", Vex.Flow.Test.StaveHairpin.simple);
   Vex.Flow.Test.runTest("Horizontal Offset StaveHairpin", Vex.Flow.Test.StaveHairpin.ho);
   Vex.Flow.Test.runTest("Vertical Offset StaveHairpin", Vex.Flow.Test.StaveHairpin.vo);

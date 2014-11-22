@@ -6,7 +6,7 @@
 Vex.Flow.Test.TickContext = {}
 
 Vex.Flow.Test.TickContext.Start = function() {
-  module("TickContext");
+  q.module("TickContext");
   test("Current Tick Test", Vex.Flow.Test.TickContext.currentTick);
   test("Tracking Test", Vex.Flow.Test.TickContext.tracking);
 }

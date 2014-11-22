@@ -6,7 +6,7 @@
 Vex.Flow.Test.TabSlide = {}
 
 Vex.Flow.Test.TabSlide.Start = function() {
-  module("TabSlide");
+  q.module("TabSlide");
   Vex.Flow.Test.runTest("Simple TabSlide", Vex.Flow.Test.TabSlide.simple);
   Vex.Flow.Test.runTest("Slide Up", Vex.Flow.Test.TabSlide.slideUp);
   Vex.Flow.Test.runTest("Slide Down", Vex.Flow.Test.TabSlide.slideDown);

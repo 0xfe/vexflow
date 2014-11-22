@@ -6,7 +6,7 @@
 Vex.Flow.Test.Formatter = {}
 
 Vex.Flow.Test.Formatter.Start = function() {
-  module("Formatter");
+  q.module("Formatter");
   test("TickContext Building", Vex.Flow.Test.Formatter.buildTickContexts);
   Vex.Flow.Test.runTest("StaveNote Formatting",
       Vex.Flow.Test.Formatter.formatStaveNotes);

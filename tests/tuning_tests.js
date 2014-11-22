@@ -6,7 +6,7 @@
 Vex.Flow.Test.Tuning = {}
 
 Vex.Flow.Test.Tuning.Start = function() {
-  module("Tuning");
+  q.module("Tuning");
   test("Standard Tuning", Vex.Flow.Test.Tuning.standard);
   test("Return note for fret", Vex.Flow.Test.Tuning.noteForFret);
 }

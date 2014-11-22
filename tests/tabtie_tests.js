@@ -6,7 +6,7 @@
 Vex.Flow.Test.TabTie = {}
 
 Vex.Flow.Test.TabTie.Start = function() {
-  module("TabTie");
+  q.module("TabTie");
   Vex.Flow.Test.runTest("Simple TabTie", Vex.Flow.Test.TabTie.simple);
   Vex.Flow.Test.runRaphaelTest("Simple TabTie (Raphael)",
       Vex.Flow.Test.TabTie.simple);

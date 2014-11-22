@@ -6,7 +6,7 @@
 Vex.Flow.Test.TextNote = (function() {
   var TextNote = {
     Start: function() {
-      module("TextNote");
+      q.module("TextNote");
       Vex.Flow.Test.runTest("TextNote Formatting",
           Vex.Flow.Test.TextNote.formatTextNotes);
       Vex.Flow.Test.runTest("TextNote Superscript and Subscript",

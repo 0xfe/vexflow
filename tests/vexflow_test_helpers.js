@@ -40,7 +40,7 @@ Vex.Flow.Test.resizeCanvas = function(sel, width, height) {
 }
 
 Vex.Flow.Test.runTest = function(name, func, params) {
-  test(name, function() {
+  q.test(name, function() {
       test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
       test_canvas = Vex.Flow.Test.createTestCanvas(test_canvas_sel, name);
       func({ canvas_sel: test_canvas_sel, params: params },
@@ -49,7 +49,7 @@ Vex.Flow.Test.runTest = function(name, func, params) {
 }
 
 Vex.Flow.Test.runRaphaelTest = function(name, func, params) {
-  test(name, function() {
+  q.test(name, function() {
       test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
       test_canvas = Vex.Flow.Test.createTestRaphael(test_canvas_sel, name);
       func({ canvas_sel: test_canvas_sel, params: params },

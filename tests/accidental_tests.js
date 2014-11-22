@@ -6,7 +6,7 @@
 Vex.Flow.Test.Accidental = {}
 
 Vex.Flow.Test.Accidental.Start = function() {
-  module("Accidental");
+  q.module("Accidental");
   Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Accidental.basic);
   Vex.Flow.Test.runRaphaelTest("Basic (Raphael)",
       Vex.Flow.Test.Accidental.basic);

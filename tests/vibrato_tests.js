@@ -6,7 +6,7 @@
 Vex.Flow.Test.Vibrato = {}
 
 Vex.Flow.Test.Vibrato.Start = function() {
-  module("Vibrato");
+  q.module("Vibrato");
   Vex.Flow.Test.runTest("Simple Vibrato", Vex.Flow.Test.Vibrato.simple);
   Vex.Flow.Test.runTest("Harsh Vibrato", Vex.Flow.Test.Vibrato.harsh);
   Vex.Flow.Test.runTest("Vibrato with Bend", Vex.Flow.Test.Vibrato.withBend);

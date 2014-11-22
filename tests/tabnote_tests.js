@@ -6,7 +6,7 @@
 Vex.Flow.Test.TabNote = {}
 
 Vex.Flow.Test.TabNote.Start = function() {
-  module("TabNote");
+  q.module("TabNote");
   test("Tick", Vex.Flow.Test.TabNote.ticks);
   test("TabStave Line", Vex.Flow.Test.TabNote.tabStaveLine);
   test("Width", Vex.Flow.Test.TabNote.width);

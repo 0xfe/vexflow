@@ -7,7 +7,7 @@
 Vex.Flow.Test.ThreeVoices = {};
 
 Vex.Flow.Test.ThreeVoices.Start = function() {
-  module("Rests");
+  q.module("Rests");
   Vex.Flow.Test.runTest("Three Voices - #1",
       Vex.Flow.Test.ThreeVoices.threevoices);
   Vex.Flow.Test.runTest("Three Voices - #2 Complex",

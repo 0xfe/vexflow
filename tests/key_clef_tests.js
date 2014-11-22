@@ -38,7 +38,7 @@ Vex.Flow.Test.ClefKeySignature.MINOR_KEYS = [
 
 
 Vex.Flow.Test.ClefKeySignature.Start = function() {
-  module("KeySignature");
+  q.module("KeySignature");
   test("Key Parser Test", Vex.Flow.Test.ClefKeySignature.parser);
   Vex.Flow.Test.runTest("Major Key Clef Test", 
     Vex.Flow.Test.ClefKeySignature.majorKeys);

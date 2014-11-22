@@ -1,7 +1,7 @@
 Vex.Flow.Test.AutoBeamFormatting = {};
 
 Vex.Flow.Test.AutoBeamFormatting.Start = function() {
-  module('Auto-Beaming');
+  q.module('Auto-Beaming');
   Vex.Flow.Test.runTest("Simple Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
   Vex.Flow.Test.runTest("Even Group Stem Directions",

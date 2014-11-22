@@ -6,7 +6,7 @@
 Vex.Flow.Test.Rhythm = {}
 
 Vex.Flow.Test.Rhythm.Start = function() {
-  module("Rhythm");
+  q.module("Rhythm");
 
   Vex.Flow.Test.runTest("Rhythm Draw - slash notes",
     Vex.Flow.Test.Rhythm.drawBasic);

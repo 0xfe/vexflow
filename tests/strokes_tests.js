@@ -7,7 +7,7 @@
 Vex.Flow.Test.Strokes = {};
 
 Vex.Flow.Test.Strokes.Start = function() {
-  module("Strokes");
+  q.module("Strokes");
   Vex.Flow.Test.runTest("Strokes - Brush/Arpeggiate/Rasquedo (Canvas)",
       Vex.Flow.Test.Strokes.drawMultipleMeasures);
   Vex.Flow.Test.runRaphaelTest("Strokes - Brush/Arpeggiate/Rasquedo (Raphael)",

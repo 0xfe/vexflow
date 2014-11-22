@@ -6,7 +6,7 @@
 Vex.Flow.Test.Music = {}
 
 Vex.Flow.Test.Music.Start = function() {
-  module("Music");
+  q.module("Music");
   test("Valid Notes", Vex.Flow.Test.Music.validNotes);
   test("Valid Keys", Vex.Flow.Test.Music.validKeys);
   test("Note Values", Vex.Flow.Test.Music.noteValue);

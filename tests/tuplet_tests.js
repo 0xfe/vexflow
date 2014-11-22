@@ -5,7 +5,7 @@
 Vex.Flow.Test.Tuplet = {}
 
 Vex.Flow.Test.Tuplet.Start = function() {
-  module("Tuplet");
+  q.module("Tuplet");
   Vex.Flow.Test.runTest("Simple Tuplet", Vex.Flow.Test.Tuplet.simple);
   Vex.Flow.Test.runTest("Beamed Tuplet", Vex.Flow.Test.Tuplet.beamed);
   Vex.Flow.Test.runTest("Ratioed Tuplet", Vex.Flow.Test.Tuplet.ratio);

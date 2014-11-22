@@ -3,7 +3,7 @@
 Vex.Flow.Test.GraceNote = {};
 
 Vex.Flow.Test.GraceNote.Start = function() {
-  module("Grace Notes");
+  q.module("Grace Notes");
   Vex.Flow.Test.runTest("Grace Note Basic", Vex.Flow.Test.GraceNote.basic);
   Vex.Flow.Test.runTest("Grace Note Basic with Slurs", Vex.Flow.Test.GraceNote.basicSlurred);
   Vex.Flow.Test.runTest("Grace Notes Multiple Voices", Vex.Flow.Test.GraceNote.multipleVoices);

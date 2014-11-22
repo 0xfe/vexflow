@@ -7,7 +7,7 @@
 Vex.Flow.Test.Articulation = {}
 
 Vex.Flow.Test.Articulation.Start = function() {
-  module("Stave");
+  q.module("Stave");
   Vex.Flow.Test.Articulation.runTest("Articulation - Staccato/Staccatissimo (Canvas)",
     "a.","av", Vex.Flow.Test.Articulation.drawArticulations);
   Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Staccato/Staccatissimo (Raphael)",

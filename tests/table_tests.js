@@ -5,7 +5,7 @@
 Vex.Flow.Test.Table = {};
 
 Vex.Flow.Test.Table.Start = function() {
-  module("Tables");
+  q.module("Tables");
   test("Tables - Clef Properties"   , Vex.Flow.Test.Table.clefProperties);
   test("Tables - Key Properties"    , Vex.Flow.Test.Table.keyProperties);
   test("Tables - Integer to Note"   , Vex.Flow.Test.Table.integerToNote);
