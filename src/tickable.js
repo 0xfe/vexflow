@@ -24,9 +24,9 @@ Vex.Flow.Tickable = (function() {
       this.preFormatted = false;
       this.postFormatted = false;
       this.tuplet = null;
-      
+
       this.align_center = false;
-      this.center_x_shift = 0 // Shift from tick context if center aligned
+      this.center_x_shift = 0; // Shift from tick context if center aligned
 
       // This flag tells the formatter to ignore this tickable during
       // formatting and justification. It is set by tickables such as BarNote.

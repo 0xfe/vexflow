@@ -68,7 +68,7 @@ Vex.Flow.Bend = (function() {
     state.right_shift += last_width;
     state.text_line += 1;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Bend, Modifier, {

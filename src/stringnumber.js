@@ -95,7 +95,7 @@ Vex.Flow.StringNumber = (function() {
     state.left_shift += x_widthL;
     state.right_shift += x_widthR;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(StringNumber, Modifier, {

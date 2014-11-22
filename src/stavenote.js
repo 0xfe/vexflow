@@ -200,7 +200,7 @@ Vex.Flow.StaveNote = (function() {
     }
 
     return true;
-  }
+  };
 
   StaveNote.formatByY = function(notes, state) {
     // NOTE: this function does not support more than two voices per stave
@@ -240,9 +240,9 @@ Vex.Flow.StaveNote = (function() {
     }
 
     state.right_shift += x_shift;
-  }
+  };
 
-  StaveNote.postFormat = function(notes, context) {
+  StaveNote.postFormat = function(notes) {
     if (!notes) return false;
 
     notes.forEach(function(note) {
@@ -250,7 +250,7 @@ Vex.Flow.StaveNote = (function() {
     });
 
     return true;
-  }
+  };
 
   // ## Prototype Methods
   //

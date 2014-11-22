@@ -51,7 +51,7 @@ Vex.Flow.Annotation = (function() {
     state.left_shift += width / 2;
     state.right_shift += width / 2;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   //

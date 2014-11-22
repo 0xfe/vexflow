@@ -92,7 +92,7 @@ Vex.Flow.Dot = (function() {
 
     // Update state.
     state.right_shift += x_width;
-  }
+  };
 
   Vex.Inherit(Dot, Modifier, {
     init: function() {

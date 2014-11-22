@@ -539,6 +539,8 @@ Vex.Flow.Formatter = (function() {
 
           // Move center aligned tickables to middle
           var centeredTickables = context.getCenterAlignedTickables();
+
+          /*jshint -W083 */
           centeredTickables.forEach(function(tickable) {
             tickable.center_x_shift = center_x - context.getX();
           });

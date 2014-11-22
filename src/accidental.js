@@ -84,7 +84,7 @@ Vex.Flow.Accidental = (function(){
     }
 
     state.left_shift += x_width;
-  }
+  };
 
   Accidental.formatByY = function(acc_list, state) {
     var left_shift = state.left_shift;
@@ -116,7 +116,7 @@ Vex.Flow.Accidental = (function(){
     }
 
     state.left_shift += x_width;
-  },
+  };
 
   // ## Prototype Methods
   //
@@ -128,7 +128,7 @@ Vex.Flow.Accidental = (function(){
     // example: `#`, `##`, `b`, `n`, etc.
     init: function(type) {
       Accidental.superclass.init.call(this);
-      L("New accidental: ", type);
+    L("New accidental: ", type);
 
       this.note = null;
       // The `index` points to a specific note in a chord.
@@ -213,12 +213,12 @@ Vex.Flow.Accidental = (function(){
       }
     }
   });
-  
+
   // ## Static Methods
-  // 
+  //
   // Use this method to automatically apply accidentals to a set of `voices`.
   // The accidentals will be remembered between all the voices provided.
-  // Optionally, you can also provide an initial `keySignature`. 
+  // Optionally, you can also provide an initial `keySignature`.
   Accidental.applyAccidentals = function(voices, keySignature) {
     var tickPositions = [];
     var tickNoteMap = {};
@@ -240,7 +240,7 @@ Vex.Flow.Accidental = (function(){
         tickPosition.add(note.getTicks());
       });
     });
-    
+
     var music = new Vex.Flow.Music();
 
     // Default key signature is C major
@@ -252,14 +252,14 @@ Vex.Flow.Accidental = (function(){
     tickPositions.forEach(function(tick) {
       var notes = tickNoteMap[tick];
 
-      // Array to store all pitches that modified accidental states 
+      // Array to store all pitches that modified accidental states
       // at this tick position
       var modifiedPitches = [];
 
       notes.forEach(function(note) {
           if (note.isRest()) return;
-          
-          // Go through each key and determine if an accidental should be 
+
+          // Go through each key and determine if an accidental should be
           // applied
           note.keys.forEach(function(keyString, keyIndex) {
               var key = music.getNoteParts(keyString.split('/')[0]);
@@ -268,7 +268,7 @@ Vex.Flow.Accidental = (function(){
               var accidentalString = key.accidental || "n";
               var pitch = key.root + accidentalString;
 
-              // Determine if the current pitch has the same accidental 
+              // Determine if the current pitch has the same accidental
               // as the scale state
               var sameAccidental = scaleMap[key.root] === pitch;
 
@@ -278,7 +278,7 @@ Vex.Flow.Accidental = (function(){
 
               // Add the accidental to the StaveNote
               if (!sameAccidental || (sameAccidental && previouslyModified)) {
-                  // Modify the scale map so that the root pitch has an 
+                  // Modify the scale map so that the root pitch has an
                   // updated state
                   scaleMap[key.root] = pitch;
 
