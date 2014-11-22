@@ -2,8 +2,6 @@
 
 <head>
   <title>Vex Glyphs</title>
-  <script src="../tests/support/jquery.js"
-    type="text/javascript" charset="utf-8"></script>
   <style type="text/css">
     body {
       padding: 20px;
@@ -38,13 +36,30 @@
       border: 15px solid #d99;
     }
   </style>
+</head>
 
-  <script src="vex.js"></script>
+<body>
+  <center>
+    <h1>Gonville Glyphs</h1>
+    <p>
+      <i>Cross indicates render coordinates.</i>
+    </p>
+
+  <canvas id="glyphs" width="800" height="1600">
+    HTML5 Canvas not supported on this browser.
+  </canvas>
+
+  <p>
+  For more information visit <a href="http://0xfe.blogspot.com">0xfe.blogspot.com</a>.
+  </p>
+
+  </center>
+    <script src="vex.js"></script>
   <script src="flow.js"></script>
   <script src="fonts/gonville_all.js"></script>
   <script src="glyph.js"></script>
   <script>
-    $(function() {
+    (function() {
       var canvas = document.getElementById("glyphs");
       var x = 0;
 
@@ -100,26 +115,8 @@
           y += 60;
         }
       }
-    });
+    })();
   </script>
-</head>
-
-<body>
-  <center>
-    <h1>Gonville Glyphs</h1>
-    <p>
-      <i>Cross indicates render coordinates.</i>
-    </p>
-
-  <canvas id="glyphs" width="800" height="1600">
-    HTML5 Canvas not supported on this browser.
-  </canvas>
-
-  <p>
-  For more information visit <a href="http://0xfe.blogspot.com">0xfe.blogspot.com</a>.
-  </p>
-
-  </center>
 </body>
 
 </html>
