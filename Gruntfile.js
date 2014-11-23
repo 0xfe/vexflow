@@ -141,6 +141,20 @@ module.exports = function(grunt) {
         output: 'build/docs'
       }
     },
+    gitcommit: {
+      releases: {
+        options: {
+          message: "Committing release binaries for new version",
+          verbose: true
+        },
+        files: [
+          {
+            src: [RELEASE_DIR + "/*.js"],
+            expand: true
+          }
+        ]
+      }
+    },
     bump: {
       options: {
         files: ['package.json', 'component.json'],
@@ -170,6 +184,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-bump');
+  grunt.loadNpmTasks('grunt-git');
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'docco']);
@@ -189,6 +204,7 @@ module.exports = function(grunt) {
     grunt.task.run('bump');
     grunt.task.run('stage');
     grunt.task.run('test');
+    grunt.task.run('gitcommit:releases');
     grunt.task.run('release');
   });
 };
