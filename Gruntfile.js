@@ -139,7 +139,8 @@ module.exports = function(grunt) {
         layout: 'linear',
         output: 'build/docs'
       }
-    }
+    },
+    clean: [BUILD_DIR, RELEASE_DIR]
   });
 
   // Load the plugin that provides the "uglify" task.
@@ -149,15 +150,21 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-release');
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'docco']);
 
+  grunt.registerTask('test', 'Run qunit tests.', function() {
+    grunt.task.run('qunit');
+  });
+
   // Release current build.
   grunt.registerTask('stage', 'Stage current binaries to releases/.', function() {
     grunt.task.run('default');
+    grunt.task.run('test');
     grunt.task.run('copy:release');
   });
 
