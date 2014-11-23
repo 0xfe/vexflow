@@ -34,6 +34,9 @@
     "qunit": "^0.7.5",
     "raphael": "^2.1.0"
   },
+  "scripts": {
+    "test": "grunt test"
+  },
   "homepage": "http://vexflow.com",
   "keywords": [
     "music",
