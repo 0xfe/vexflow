@@ -20,6 +20,7 @@ fi
 echo Copying over compiled sources...
 scp build/vexflow-min.js $SCP_TO/support
 scp build/vexflow-debug.js $SCP_TO/support
+scp build/vexflow-min.js.map $SCP_TO/support
 
 echo Copying over tests...
 rsync -przvl --delete --stats tests $SCP_TO
