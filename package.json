@@ -1,6 +1,6 @@
 {
   "name": "vexflow",
-  "version": "1.2.17",
+  "version": "1.2.18",
   "description": "A JavaScript library for rendering music notation and guitar tablature",
   "main": "releases/vexflow-min.js",
   "repository": {
@@ -31,6 +31,7 @@
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-docco": "^0.3.3",
+    "grunt-git": "^0.3.2",
     "grunt-release": "^0.7.0",
     "jquery": "^2.1.1",
     "qunit": "^0.7.5",
