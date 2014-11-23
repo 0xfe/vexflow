@@ -158,7 +158,11 @@ Vex.Inherit = (function () {
   };
 }());
 
-// UMD
+// UMD to export Vex.
+//
+/* global require: false */
+/* global define: false */
+/* global module: false */
 if (typeof require == "function") {
   module.exports = Vex;
 } else if (typeof define == "function" && define.amd) {
