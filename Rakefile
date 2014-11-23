@@ -99,7 +99,8 @@ base_sources = [
   "src/ornament.js",
   "src/pedalmarking.js",
   "src/textbracket.js",
-  "src/textdynamics.js"
+  "src/textdynamics.js",
+  "src/pausemarking.js"
 ]
 
 # Don't minify these files.

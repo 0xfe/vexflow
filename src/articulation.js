@@ -80,7 +80,11 @@ Vex.Flow.Articulation = (function() {
       if (!(this.note && (this.index !== null))) throw new Vex.RERR("NoAttachedNote",
         "Can't draw Articulation without a note and index.");
 
-      var stem_direction = this.note.getStemDirection();
+      var stem_direction = Vex.Flow.Stem.UP;
+      if (this.note.getStemDirection) {
+        stem_direction = this.note.getStemDirection();
+      }
+      
       var stave = this.note.getStave();
 
       var is_on_head = (this.position === Modifier.Position.ABOVE &&
@@ -114,14 +118,17 @@ Vex.Flow.Articulation = (function() {
       var line_spacing = 1;
       var spacing = stave.getSpacingBetweenLines();
       var is_tabnote = this.note.getCategory() === 'tabnotes';
-      var stem_ext = this.note.getStem().getExtents();
 
-      var top = stem_ext.topY;
-      var bottom = stem_ext.baseY;
-
-      if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN) {
-        top = stem_ext.baseY;
-        bottom = stem_ext.topY;
+      // Get the stem extents if it's a StemmableNote
+      var stem_ext, top, bottom;
+      if (this.note.getStem) {
+        stem_ext = this.note.getStem().getExtents();
+        top = stem_ext.topY;
+        bottom = stem_ext.baseY;
+        if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN) {
+          top = stem_ext.baseY;
+          bottom = stem_ext.topY;
+        }
       }
 
       // TabNotes don't have stems attached to them. Tab stems are rendered
@@ -155,6 +162,8 @@ Vex.Flow.Articulation = (function() {
 
         if (this.articulation.between_lines)
           glyph_y = glyph_y_between_lines;
+        else if (this.note.hasFixedYs())
+          glyph_y = Math.min(stave.getYForTopText(this.text_line), glyph_y - this.note.getFixedYs().top);
         else
           glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
       } else {
@@ -163,6 +172,8 @@ Vex.Flow.Articulation = (function() {
         glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
         if (this.articulation.between_lines)
           glyph_y = glyph_y_between_lines;
+        else if (this.note.hasFixedYs())
+          glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y + this.note.getFixedYs().bottom);
         else
           glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
       }
