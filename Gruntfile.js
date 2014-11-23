@@ -152,12 +152,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-docco');
+  grunt.loadNpmTasks('grunt-release');
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'docco']);
 
   // Release current build.
-  grunt.registerTask('release', 'Release current binaries to releases/.', function() {
+  grunt.registerTask('stage', 'Stage current binaries to releases/.', function() {
     grunt.task.run('copy:release');
   });
 };
