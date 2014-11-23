@@ -14,7 +14,6 @@ RELEASE_DIR = "releases/lib"
 
 TARGET = "#{TARGET_DIR}/vexflow-min.js"
 TARGET_RAW = "#{TARGET_DIR}/vexflow-debug.js"
-TARGET_BUNDLE = "#{TARGET_DIR}/vexflow.js"
 
 BUILD_VERSION = "1.2 Custom"
 BUILD_PREFIX = "0xFE"
@@ -170,29 +169,24 @@ task :lint do
   system "#{JSHINT} --show-non-errors --config jshintrc src/*.js"
 end
 
-task :browserify => [:build_copy, TARGET_DIR, TARGET, "browserify_main.js"] do
-  puts "Browserifying..."
-  system "#{BROWSERIFY} browserify_main.js -o #{TARGET_BUNDLE}"
-end
-
 task :docs do
   # Requires JSHint to be installed
   puts "Generating documentation..."
   system "#{DOCCO} -l linear src/*.js"
 end
 
-task :release do
+task :make => [:build_copy, TARGET_DIR, TARGET]
+
+task :release => [:make] do
   puts "Releasing..."
   system "cp #{TARGET_DIR}/* #{RELEASE_DIR}"
 end
 
-task :publish => [:browserify] do
+task :publish => [:make] do
   Rake::Task['release'].invoke
-  Rake::Task['clean'].invoke
   puts "Publishing..."
   system "cd releases; npm publish"
 end
 
-task :make => [:browserify]
 
 task :default => [:make]
