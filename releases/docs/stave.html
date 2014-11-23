@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>stave.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>stave.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>Vex Flow
+Mohit Muthanna <a href="&#x6d;&#97;&#x69;&#108;&#116;&#111;&#58;&#109;&#111;&#104;&#x69;&#116;&#x40;&#x6d;&#117;&#x74;&#x68;&#97;&#x6e;&#x6e;&#97;&#x2e;&#99;&#111;&#109;">&#109;&#111;&#104;&#x69;&#116;&#x40;&#x6d;&#117;&#x74;&#x68;&#97;&#x6e;&#x6e;&#97;&#x2e;&#99;&#111;&#109;</a></p>
+<p>Copyright Mohit Cheppudira 2010</p>
+
+        
+          <div class='highlight'><pre>
+<span class="hljs-comment">/** @constructor */</span>
+Vex.Flow.Stave = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Stave</span><span class="hljs-params">(x, y, width, options)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(x, y, width, options);
+  }
+
+  <span class="hljs-keyword">var</span> THICKNESS = (Vex.Flow.STAVE_LINE_THICKNESS &gt; <span class="hljs-number">1</span> ?
+        Vex.Flow.STAVE_LINE_THICKNESS : <span class="hljs-number">0</span>);
+  Stave.prototype = {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y, width, options)</span> </span>{
+      <span class="hljs-keyword">this</span>.x = x;
+      <span class="hljs-keyword">this</span>.y = y;
+      <span class="hljs-keyword">this</span>.width = width;
+      <span class="hljs-keyword">this</span>.glyph_start_x = x + <span class="hljs-number">5</span>;
+      <span class="hljs-keyword">this</span>.glyph_end_x = x + width;
+      <span class="hljs-keyword">this</span>.start_x = <span class="hljs-keyword">this</span>.glyph_start_x;
+      <span class="hljs-keyword">this</span>.end_x = <span class="hljs-keyword">this</span>.glyph_end_x;
+      <span class="hljs-keyword">this</span>.context = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.glyphs = [];
+      <span class="hljs-keyword">this</span>.end_glyphs = [];
+      <span class="hljs-keyword">this</span>.modifiers = [];  <span class="hljs-comment">// non-glyph stave items (barlines, coda, segno, etc.)</span>
+      <span class="hljs-keyword">this</span>.measure = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.clef = <span class="hljs-string">"treble"</span>;
+      <span class="hljs-keyword">this</span>.font = {
+        family: <span class="hljs-string">"sans-serif"</span>,
+        size: <span class="hljs-number">8</span>,
+        weight: <span class="hljs-string">""</span>
+      };
+      <span class="hljs-keyword">this</span>.options = {
+        vertical_bar_width: <span class="hljs-number">10</span>,       <span class="hljs-comment">// Width around vertical bar end-marker</span>
+        glyph_spacing_px: <span class="hljs-number">10</span>,
+        num_lines: <span class="hljs-number">5</span>,
+        fill_style: <span class="hljs-string">"#999999"</span>,
+        spacing_between_lines_px: <span class="hljs-number">10</span>, <span class="hljs-comment">// in pixels</span>
+        space_above_staff_ln: <span class="hljs-number">4</span>,      <span class="hljs-comment">// in staff lines</span>
+        space_below_staff_ln: <span class="hljs-number">4</span>,      <span class="hljs-comment">// in staff lines</span>
+        top_text_position: <span class="hljs-number">1</span>          <span class="hljs-comment">// in staff lines</span>
+      };
+      <span class="hljs-keyword">this</span>.bounds = {x: <span class="hljs-keyword">this</span>.x, y: <span class="hljs-keyword">this</span>.y, w: <span class="hljs-keyword">this</span>.width, h: <span class="hljs-number">0</span>};
+      Vex.Merge(<span class="hljs-keyword">this</span>.options, options);
+
+      <span class="hljs-keyword">this</span>.resetLines();
+
+      <span class="hljs-keyword">this</span>.modifiers.push(
+          <span class="hljs-keyword">new</span> Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, <span class="hljs-keyword">this</span>.x)); <span class="hljs-comment">// beg bar</span>
+      <span class="hljs-keyword">this</span>.modifiers.push(
+          <span class="hljs-keyword">new</span> Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE,
+          <span class="hljs-keyword">this</span>.x + <span class="hljs-keyword">this</span>.width)); <span class="hljs-comment">// end bar</span>
+    },
+
+    resetLines: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">this</span>.options.line_config = [];
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.options.num_lines; i++) {
+        <span class="hljs-keyword">this</span>.options.line_config.push({visible: <span class="hljs-literal">true</span>});
+      }
+      <span class="hljs-keyword">this</span>.height = (<span class="hljs-keyword">this</span>.options.num_lines + <span class="hljs-keyword">this</span>.options.space_above_staff_ln) *
+         <span class="hljs-keyword">this</span>.options.spacing_between_lines_px;
+      <span class="hljs-keyword">this</span>.options.bottom_text_position = <span class="hljs-keyword">this</span>.options.num_lines + <span class="hljs-number">1</span>;
+    },
+
+    setNoteStartX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> </span>{ <span class="hljs-keyword">this</span>.start_x = x; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+    getNoteStartX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> start_x = <span class="hljs-keyword">this</span>.start_x;</pre></div>
+        
+      
+        
+        <p>Add additional space if left barline is REPEAT_BEGIN and there are other
+start modifiers than barlines</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.modifiers[<span class="hljs-number">0</span>].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &amp;&amp;
+          <span class="hljs-keyword">this</span>.modifiers.length &gt; <span class="hljs-number">2</span>)
+        start_x += <span class="hljs-number">20</span>;
+      <span class="hljs-keyword">return</span> start_x;
+    },
+
+    getNoteEndX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.end_x; },
+    getTieStartX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.start_x; },
+    getTieEndX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.x + <span class="hljs-keyword">this</span>.width; },
+    setContext: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(context)</span> </span>{ <span class="hljs-keyword">this</span>.context = context; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+    getContext: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.context; },
+    getX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.x; },
+    getNumLines: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.num_lines; },
+    setNumLines: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(lines)</span> </span>{
+      <span class="hljs-keyword">this</span>.options.num_lines = <span class="hljs-built_in">parseInt</span>(lines, <span class="hljs-number">10</span>);
+      <span class="hljs-keyword">this</span>.resetLines();
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+    setY: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(y)</span> </span>{ <span class="hljs-keyword">this</span>.y = y; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+
+    setWidth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(width)</span> </span>{
+      <span class="hljs-keyword">this</span>.width = width;
+      <span class="hljs-keyword">this</span>.glyph_end_x = <span class="hljs-keyword">this</span>.x + width;
+      <span class="hljs-keyword">this</span>.end_x = <span class="hljs-keyword">this</span>.glyph_end_x;</pre></div>
+        
+      
+        
+        <p>reset the x position of the end barline</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.modifiers[<span class="hljs-number">1</span>].setX(<span class="hljs-keyword">this</span>.end_x);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    getWidth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.width;
+    },
+
+    setMeasure: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(measure)</span> </span>{ <span class="hljs-keyword">this</span>.measure = measure; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Bar Line functions</p>
+
+        
+          <div class='highlight'><pre>    setBegBarType: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type)</span> </span>{</pre></div>
+        
+      
+        
+        <p>Only valid bar types at beginning of stave is none, single or begin repeat</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (type == Vex.Flow.Barline.type.SINGLE ||
+          type == Vex.Flow.Barline.type.REPEAT_BEGIN ||
+          type == Vex.Flow.Barline.type.NONE) {
+          <span class="hljs-keyword">this</span>.modifiers[<span class="hljs-number">0</span>] = <span class="hljs-keyword">new</span> Vex.Flow.Barline(type, <span class="hljs-keyword">this</span>.x);
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setEndBarType: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type)</span> </span>{</pre></div>
+        
+      
+        
+        <p>Repeat end not valid at end of stave</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (type != Vex.Flow.Barline.type.REPEAT_BEGIN)
+        <span class="hljs-keyword">this</span>.modifiers[<span class="hljs-number">1</span>] = <span class="hljs-keyword">new</span> Vex.Flow.Barline(type, <span class="hljs-keyword">this</span>.x + <span class="hljs-keyword">this</span>.width);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    <span class="hljs-comment">/**
+     * Gets the pixels to shift from the beginning of the stave
+     * following the modifier at the provided index
+     * @param  {Number} index The index from which to determine the shift
+     * @return {Number}       The amount of pixels shifted
+     */</span>
+    getModifierXShift: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(index)</span> </span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> index === <span class="hljs-string">'undefined'</span>) index = <span class="hljs-keyword">this</span>.glyphs.length -<span class="hljs-number">1</span>;
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> index !== <span class="hljs-string">'number'</span>) <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"InvalidIndex"</span>,
+        <span class="hljs-string">"Must be of number type"</span>);
+
+      <span class="hljs-keyword">var</span> x = <span class="hljs-keyword">this</span>.glyph_start_x;
+      <span class="hljs-keyword">var</span> bar_x_shift = <span class="hljs-number">0</span>;
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; index + <span class="hljs-number">1</span>; ++i) {
+        <span class="hljs-keyword">var</span> glyph = <span class="hljs-keyword">this</span>.glyphs[i];
+        x += glyph.getMetrics().width;
+        bar_x_shift += glyph.getMetrics().width;
+      }</pre></div>
+        
+      
+        
+        <p>Add padding after clef, time sig, key sig</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (bar_x_shift &gt; <span class="hljs-number">0</span>) bar_x_shift += <span class="hljs-keyword">this</span>.options.vertical_bar_width + <span class="hljs-number">10</span>;
+
+      <span class="hljs-keyword">return</span> bar_x_shift;
+    },</pre></div>
+        
+      
+        
+        <p>Coda &amp; Segno Symbol functions</p>
+
+        
+          <div class='highlight'><pre>    setRepetitionTypeLeft: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.modifiers.push(<span class="hljs-keyword">new</span> Vex.Flow.Repetition(type, <span class="hljs-keyword">this</span>.x, y));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setRepetitionTypeRight: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.modifiers.push(<span class="hljs-keyword">new</span> Vex.Flow.Repetition(type, <span class="hljs-keyword">this</span>.x, y) );
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Volta functions</p>
+
+        
+          <div class='highlight'><pre>    setVoltaType: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type, number_t, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.modifiers.push(<span class="hljs-keyword">new</span> Vex.Flow.Volta(type, number_t, <span class="hljs-keyword">this</span>.x, y));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Section functions</p>
+
+        
+          <div class='highlight'><pre>    setSection: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(section, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.modifiers.push(<span class="hljs-keyword">new</span> Vex.Flow.StaveSection(section, <span class="hljs-keyword">this</span>.x, y));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Tempo functions</p>
+
+        
+          <div class='highlight'><pre>    setTempo: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(tempo, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.modifiers.push(<span class="hljs-keyword">new</span> Vex.Flow.StaveTempo(tempo, <span class="hljs-keyword">this</span>.x, y));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Text functions</p>
+
+        
+          <div class='highlight'><pre>    setText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(text, position, options)</span> </span>{
+      <span class="hljs-keyword">this</span>.modifiers.push(<span class="hljs-keyword">new</span> Vex.Flow.StaveText(text, position, options));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    getHeight: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.height;
+    },
+
+    getSpacingBetweenLines: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.spacing_between_lines_px;
+    },
+
+    getBoundingBox: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Vex.Flow.BoundingBox(<span class="hljs-keyword">this</span>.x, <span class="hljs-keyword">this</span>.y, <span class="hljs-keyword">this</span>.width, <span class="hljs-keyword">this</span>.getBottomY() - <span class="hljs-keyword">this</span>.y);</pre></div>
+        
+      
+        
+        <p>body…</p>
+
+        
+          <div class='highlight'><pre>    },
+
+    getBottomY: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">this</span>.options;
+      <span class="hljs-keyword">var</span> spacing = options.spacing_between_lines_px;
+      <span class="hljs-keyword">var</span> score_bottom = <span class="hljs-keyword">this</span>.getYForLine(options.num_lines) +
+         (options.space_below_staff_ln * spacing);
+
+      <span class="hljs-keyword">return</span> score_bottom;
+    },
+
+    getBottomLineY: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getYForLine(<span class="hljs-keyword">this</span>.options.num_lines);
+    },
+
+    getYForLine: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span> </span>{
+      <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">this</span>.options;
+      <span class="hljs-keyword">var</span> spacing = options.spacing_between_lines_px;
+      <span class="hljs-keyword">var</span> headroom = options.space_above_staff_ln;
+
+      <span class="hljs-keyword">var</span> y = <span class="hljs-keyword">this</span>.y + ((line * spacing) + (headroom * spacing)) -
+        (THICKNESS / <span class="hljs-number">2</span>);
+
+      <span class="hljs-keyword">return</span> y;
+    },
+
+    getYForTopText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span> </span>{
+      <span class="hljs-keyword">var</span> l = line || <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getYForLine(-l - <span class="hljs-keyword">this</span>.options.top_text_position);
+    },
+
+    getYForBottomText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span> </span>{
+      <span class="hljs-keyword">var</span> l = line || <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getYForLine(<span class="hljs-keyword">this</span>.options.bottom_text_position + l);
+    },
+
+    getYForNote: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span> </span>{
+      <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">this</span>.options;
+      <span class="hljs-keyword">var</span> spacing = options.spacing_between_lines_px;
+      <span class="hljs-keyword">var</span> headroom = options.space_above_staff_ln;
+      <span class="hljs-keyword">var</span> y = <span class="hljs-keyword">this</span>.y + (headroom * spacing) + (<span class="hljs-number">5</span> * spacing) - (line * spacing);
+
+      <span class="hljs-keyword">return</span> y;
+    },
+
+    getYForGlyphs: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getYForLine(<span class="hljs-number">3</span>);
+    },
+
+    addGlyph: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(glyph)</span> </span>{
+      glyph.setStave(<span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">this</span>.glyphs.push(glyph);
+      <span class="hljs-keyword">this</span>.start_x += glyph.getMetrics().width;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    addEndGlyph: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(glyph)</span> </span>{
+      glyph.setStave(<span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">this</span>.end_glyphs.push(glyph);
+      <span class="hljs-keyword">this</span>.end_x -= glyph.getMetrics().width;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    addModifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(modifier)</span> </span>{
+      <span class="hljs-keyword">this</span>.modifiers.push(modifier);
+      modifier.addToStave(<span class="hljs-keyword">this</span>, (<span class="hljs-keyword">this</span>.glyphs.length === <span class="hljs-number">0</span>));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    addEndModifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(modifier)</span> </span>{
+      <span class="hljs-keyword">this</span>.modifiers.push(modifier);
+      modifier.addToStaveEnd(<span class="hljs-keyword">this</span>, (<span class="hljs-keyword">this</span>.end_glyphs.length === <span class="hljs-number">0</span>));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    addKeySignature: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(keySpec)</span> </span>{
+      <span class="hljs-keyword">this</span>.addModifier(<span class="hljs-keyword">new</span> Vex.Flow.KeySignature(keySpec));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    addClef: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(clef, size, annotation)</span> </span>{
+      <span class="hljs-keyword">this</span>.clef = clef;
+      <span class="hljs-keyword">this</span>.addModifier(<span class="hljs-keyword">new</span> Vex.Flow.Clef(clef, size, annotation));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    addEndClef: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(clef, size, annotation)</span> </span>{
+      <span class="hljs-keyword">this</span>.addEndModifier(<span class="hljs-keyword">new</span> Vex.Flow.Clef(clef, size, annotation));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    addTimeSignature: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(timeSpec, customPadding)</span> </span>{
+      <span class="hljs-keyword">this</span>.addModifier(<span class="hljs-keyword">new</span> Vex.Flow.TimeSignature(timeSpec, customPadding));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    addEndTimeSignature: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(timeSpec, customPadding)</span> </span>{
+      <span class="hljs-keyword">this</span>.addEndModifier(<span class="hljs-keyword">new</span> Vex.Flow.TimeSignature(timeSpec, customPadding));
+    },
+
+    addTrebleGlyph: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">this</span>.clef = <span class="hljs-string">"treble"</span>;
+      <span class="hljs-keyword">this</span>.addGlyph(<span class="hljs-keyword">new</span> Vex.Flow.Glyph(<span class="hljs-string">"v83"</span>, <span class="hljs-number">40</span>));
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    <span class="hljs-comment">/**
+     * All drawing functions below need the context to be set.
+     */</span>
+    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+
+      <span class="hljs-keyword">var</span> num_lines = <span class="hljs-keyword">this</span>.options.num_lines;
+      <span class="hljs-keyword">var</span> width = <span class="hljs-keyword">this</span>.width;
+      <span class="hljs-keyword">var</span> x = <span class="hljs-keyword">this</span>.x;
+      <span class="hljs-keyword">var</span> y;
+      <span class="hljs-keyword">var</span> glyph;</pre></div>
+        
+      
+        
+        <p>Render lines</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> line=<span class="hljs-number">0</span>; line &lt; num_lines; line++) {
+        y = <span class="hljs-keyword">this</span>.getYForLine(line);
+
+        <span class="hljs-keyword">this</span>.context.save();
+        <span class="hljs-keyword">this</span>.context.setFillStyle(<span class="hljs-keyword">this</span>.options.fill_style);
+        <span class="hljs-keyword">this</span>.context.setStrokeStyle(<span class="hljs-keyword">this</span>.options.fill_style);
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.line_config[line].visible) {
+          <span class="hljs-keyword">this</span>.context.fillRect(x, y, width, Vex.Flow.STAVE_LINE_THICKNESS);
+        }
+        <span class="hljs-keyword">this</span>.context.restore();
+      }</pre></div>
+        
+      
+        
+        <p>Render glyphs</p>
+
+        
+          <div class='highlight'><pre>      x = <span class="hljs-keyword">this</span>.glyph_start_x;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.glyphs.length; ++i) {
+        glyph = <span class="hljs-keyword">this</span>.glyphs[i];
+        <span class="hljs-keyword">if</span> (!glyph.getContext()) {
+          glyph.setContext(<span class="hljs-keyword">this</span>.context);
+        }
+        glyph.renderToStave(x);
+        x += glyph.getMetrics().width;
+      }</pre></div>
+        
+      
+        
+        <p>Render end glyphs</p>
+
+        
+          <div class='highlight'><pre>      x = <span class="hljs-keyword">this</span>.glyph_end_x;
+      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.end_glyphs.length; ++i) {
+        glyph = <span class="hljs-keyword">this</span>.end_glyphs[i];
+        <span class="hljs-keyword">if</span> (!glyph.getContext()) {
+          glyph.setContext(<span class="hljs-keyword">this</span>.context);
+        }
+        x -= glyph.getMetrics().width;
+        glyph.renderToStave(x);
+      }</pre></div>
+        
+      
+        
+        <p>Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.modifiers.length; i++) {</pre></div>
+        
+      
+        
+        <p>Only draw modifier if it has a draw function</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.modifiers[i].draw == <span class="hljs-string">"function"</span>)
+          <span class="hljs-keyword">this</span>.modifiers[i].draw(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.getModifierXShift());
+      }</pre></div>
+        
+      
+        
+        <p>Render measure numbers</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.measure &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">this</span>.context.save();
+        <span class="hljs-keyword">this</span>.context.setFont(<span class="hljs-keyword">this</span>.font.family, <span class="hljs-keyword">this</span>.font.size, <span class="hljs-keyword">this</span>.font.weight);
+        <span class="hljs-keyword">var</span> text_width = <span class="hljs-keyword">this</span>.context.measureText(<span class="hljs-string">""</span> + <span class="hljs-keyword">this</span>.measure).width;
+        y = <span class="hljs-keyword">this</span>.getYForTopText(<span class="hljs-number">0</span>) + <span class="hljs-number">3</span>;
+        <span class="hljs-keyword">this</span>.context.fillText(<span class="hljs-string">""</span> + <span class="hljs-keyword">this</span>.measure, <span class="hljs-keyword">this</span>.x - text_width / <span class="hljs-number">2</span>, y);
+        <span class="hljs-keyword">this</span>.context.restore();
+      }
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Draw Simple barlines for backward compatability
+Do not delete - draws the beginning bar of the stave</p>
+
+        
+          <div class='highlight'><pre>    drawVertical: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, isDouble)</span> </span>{
+      <span class="hljs-keyword">this</span>.drawVerticalFixed(<span class="hljs-keyword">this</span>.x + x, isDouble);
+    },
+
+    drawVerticalFixed: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, isDouble)</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+
+      <span class="hljs-keyword">var</span> top_line = <span class="hljs-keyword">this</span>.getYForLine(<span class="hljs-number">0</span>);
+      <span class="hljs-keyword">var</span> bottom_line = <span class="hljs-keyword">this</span>.getYForLine(<span class="hljs-keyword">this</span>.options.num_lines - <span class="hljs-number">1</span>);
+      <span class="hljs-keyword">if</span> (isDouble)
+        <span class="hljs-keyword">this</span>.context.fillRect(x - <span class="hljs-number">3</span>, top_line, <span class="hljs-number">1</span>, bottom_line - top_line + <span class="hljs-number">1</span>);
+      <span class="hljs-keyword">this</span>.context.fillRect(x, top_line, <span class="hljs-number">1</span>, bottom_line - top_line + <span class="hljs-number">1</span>);
+    },
+
+    drawVerticalBar: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> </span>{
+      <span class="hljs-keyword">this</span>.drawVerticalBarFixed(<span class="hljs-keyword">this</span>.x + x, <span class="hljs-literal">false</span>);
+    },
+
+    drawVerticalBarFixed: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+
+      <span class="hljs-keyword">var</span> top_line = <span class="hljs-keyword">this</span>.getYForLine(<span class="hljs-number">0</span>);
+      <span class="hljs-keyword">var</span> bottom_line = <span class="hljs-keyword">this</span>.getYForLine(<span class="hljs-keyword">this</span>.options.num_lines - <span class="hljs-number">1</span>);
+      <span class="hljs-keyword">this</span>.context.fillRect(x, top_line, <span class="hljs-number">1</span>, bottom_line - top_line + <span class="hljs-number">1</span>);
+    },
+
+    <span class="hljs-comment">/**
+     * Get the current configuration for the Stave.
+     * @return {Array} An array of configuration objects.
+     */</span>
+    getConfigForLines: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.line_config;
+    },
+
+    <span class="hljs-comment">/**
+     * Configure properties of the lines in the Stave
+     * @param line_number The index of the line to configure.
+     * @param line_config An configuration object for the specified line.
+     * @throws Vex.RERR "StaveConfigError" When the specified line number is out of
+     *   range of the number of lines specified in the constructor.
+     */</span>
+    setConfigForLine: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line_number, line_config)</span> </span>{
+      <span class="hljs-keyword">if</span> (line_number &gt;= <span class="hljs-keyword">this</span>.options.num_lines || line_number &lt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"StaveConfigError"</span>,
+          <span class="hljs-string">"The line number must be within the range of the number of lines in the Stave."</span>);
+      }
+      <span class="hljs-keyword">if</span> (!line_config.hasOwnProperty(<span class="hljs-string">'visible'</span>)) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"StaveConfigError"</span>,
+          <span class="hljs-string">"The line configuration object is missing the 'visible' property."</span>);
+      }
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(line_config.visible) !== <span class="hljs-string">'boolean'</span>) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"StaveConfigError"</span>,
+          <span class="hljs-string">"The line configuration objects 'visible' property must be true or false."</span>);
+      }
+
+      <span class="hljs-keyword">this</span>.options.line_config[line_number] = line_config;
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    <span class="hljs-comment">/**
+     * Set the staff line configuration array for all of the lines at once.
+     * @param lines_configuration An array of line configuration objects.  These objects
+     *   are of the same format as the single one passed in to setLineConfiguration().
+     *   The caller can set null for any line config entry if it is desired that the default be used
+     * @throws Vex.RERR "StaveConfigError" When the lines_configuration array does not have
+     *   exactly the same number of elements as the num_lines configuration object set in
+     *   the constructor.
+     */</span>
+    setConfigForLines: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(lines_configuration)</span> </span>{
+      <span class="hljs-keyword">if</span> (lines_configuration.length !== <span class="hljs-keyword">this</span>.options.num_lines) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"StaveConfigError"</span>,
+          <span class="hljs-string">"The length of the lines configuration array must match the number of lines in the Stave"</span>);
+      }</pre></div>
+        
+      
+        
+        <p>Make sure the defaults are present in case an incomplete set of
+ configuration options were supplied.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> line_config <span class="hljs-keyword">in</span> lines_configuration) {</pre></div>
+        
+      
+        
+        <p>Allow ‘null’ to be used if the caller just wants the default for a particular node.</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!lines_configuration[line_config]) {
+          lines_configuration[line_config] = <span class="hljs-keyword">this</span>.options.line_config[line_config];
+        }
+        Vex.Merge(<span class="hljs-keyword">this</span>.options.line_config[line_config], lines_configuration[line_config]);
+      }
+
+      <span class="hljs-keyword">this</span>.options.line_config = lines_configuration;
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    }
+  };
+
+  <span class="hljs-keyword">return</span> Stave;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

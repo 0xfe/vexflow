@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>staverepetition.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>staverepetition.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>Vex Flow Notation
+Author Larry Kuhns 2011
+Implements Repetitions (Coda, signo, D.C., etc.)</p>
+<p>Requires vex.js.</p>
+
+        
+          <div class='highlight'><pre>
+Vex.Flow.Repetition = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Repetition</span><span class="hljs-params">(type, x, y_shift)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(type, x, y_shift);
+  }
+
+  Repetition.type = {
+    NONE: <span class="hljs-number">1</span>,         <span class="hljs-comment">// no coda or segno</span>
+    CODA_LEFT: <span class="hljs-number">2</span>,    <span class="hljs-comment">// coda at beginning of stave</span>
+    CODA_RIGHT: <span class="hljs-number">3</span>,   <span class="hljs-comment">// coda at end of stave</span>
+    SEGNO_LEFT: <span class="hljs-number">4</span>,   <span class="hljs-comment">// segno at beginning of stave</span>
+    SEGNO_RIGHT: <span class="hljs-number">5</span>,  <span class="hljs-comment">// segno at end of stave</span>
+    DC: <span class="hljs-number">6</span>,           <span class="hljs-comment">// D.C. at end of stave</span>
+    DC_AL_CODA: <span class="hljs-number">7</span>,   <span class="hljs-comment">// D.C. al coda at end of stave</span>
+    DC_AL_FINE: <span class="hljs-number">8</span>,   <span class="hljs-comment">// D.C. al Fine end of stave</span>
+    DS: <span class="hljs-number">9</span>,           <span class="hljs-comment">// D.S. at end of stave</span>
+    DS_AL_CODA: <span class="hljs-number">10</span>,  <span class="hljs-comment">// D.S. al coda at end of stave</span>
+    DS_AL_FINE: <span class="hljs-number">11</span>,  <span class="hljs-comment">// D.S. al Fine at end of stave</span>
+    FINE: <span class="hljs-number">12</span>         <span class="hljs-comment">// Fine at end of stave</span>
+  };
+
+  Vex.Inherit(Repetition, Vex.Flow.StaveModifier, {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type, x, y_shift)</span> </span>{
+      Repetition.superclass.init.call(<span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">this</span>.symbol_type = type;
+      <span class="hljs-keyword">this</span>.x = x;
+      <span class="hljs-keyword">this</span>.x_shift = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.y_shift = y_shift;
+      <span class="hljs-keyword">this</span>.font = {
+        family: <span class="hljs-string">"times"</span>,
+        size: <span class="hljs-number">12</span>,
+        weight: <span class="hljs-string">"bold italic"</span>
+      };
+    },
+
+    getCategory: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">"repetitions"</span>; },
+    setShiftX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> </span>{ <span class="hljs-keyword">this</span>.x_shift = x; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+    setShiftY: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(y)</span> </span>{ <span class="hljs-keyword">this</span>.y_shift = y; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+
+    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave, x)</span> </span>{
+      <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.symbol_type) {
+        <span class="hljs-keyword">case</span> Repetition.type.CODA_RIGHT:
+          <span class="hljs-keyword">this</span>.drawCodaFixed(stave, x + stave.width);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.CODA_LEFT:
+          <span class="hljs-keyword">this</span>.drawSymbolText(stave, x, <span class="hljs-string">"Coda"</span>, <span class="hljs-literal">true</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.SEGNO_LEFT:
+          <span class="hljs-keyword">this</span>.drawSignoFixed(stave, x);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.SEGNO_RIGHT:
+          <span class="hljs-keyword">this</span>.drawSignoFixed(stave, x + stave.width);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.DC:
+          <span class="hljs-keyword">this</span>.drawSymbolText(stave, x, <span class="hljs-string">"D.C."</span>, <span class="hljs-literal">false</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.DC_AL_CODA:
+          <span class="hljs-keyword">this</span>.drawSymbolText(stave, x, <span class="hljs-string">"D.C. al"</span>, <span class="hljs-literal">true</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.DC_AL_FINE:
+          <span class="hljs-keyword">this</span>.drawSymbolText(stave, x, <span class="hljs-string">"D.C. al Fine"</span>, <span class="hljs-literal">false</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.DS:
+          <span class="hljs-keyword">this</span>.drawSymbolText(stave, x, <span class="hljs-string">"D.S."</span>, <span class="hljs-literal">false</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.DS_AL_CODA:
+          <span class="hljs-keyword">this</span>.drawSymbolText(stave, x, <span class="hljs-string">"D.S. al"</span>, <span class="hljs-literal">true</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.DS_AL_FINE:
+          <span class="hljs-keyword">this</span>.drawSymbolText(stave, x, <span class="hljs-string">"D.S. al Fine"</span>, <span class="hljs-literal">false</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Repetition.type.FINE:
+          <span class="hljs-keyword">this</span>.drawSymbolText(stave, x, <span class="hljs-string">"Fine"</span>, <span class="hljs-literal">false</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">default</span>:
+          <span class="hljs-keyword">break</span>;
+      }
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    drawCodaFixed: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave, x)</span> </span>{
+      <span class="hljs-keyword">if</span> (!stave.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+
+      <span class="hljs-keyword">var</span> y = stave.getYForTopText(stave.options.num_lines) + <span class="hljs-keyword">this</span>.y_shift;
+      Vex.Flow.renderGlyph(stave.context, <span class="hljs-keyword">this</span>.x + x + <span class="hljs-keyword">this</span>.x_shift,
+                           y + <span class="hljs-number">25</span>, <span class="hljs-number">40</span>, <span class="hljs-string">"v4d"</span>, <span class="hljs-literal">true</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    drawSignoFixed: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave, x)</span> </span>{
+      <span class="hljs-keyword">if</span> (!stave.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+      <span class="hljs-keyword">var</span> y = stave.getYForTopText(stave.options.num_lines) + <span class="hljs-keyword">this</span>.y_shift;
+      Vex.Flow.renderGlyph(stave.context, <span class="hljs-keyword">this</span>.x + x + <span class="hljs-keyword">this</span>.x_shift,
+                           y + <span class="hljs-number">25</span>, <span class="hljs-number">30</span>, <span class="hljs-string">"v8c"</span>, <span class="hljs-literal">true</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    drawSymbolText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave, x, text, draw_coda)</span> </span>{
+      <span class="hljs-keyword">if</span> (!stave.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+
+      <span class="hljs-keyword">var</span> ctx = stave.context;
+      ctx.save();
+      ctx.setFont(<span class="hljs-keyword">this</span>.font.family, <span class="hljs-keyword">this</span>.font.size, <span class="hljs-keyword">this</span>.font.weight);</pre></div>
+        
+      
+        
+        <p>Default to right symbol</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> text_x = <span class="hljs-number">0</span> + <span class="hljs-keyword">this</span>.x_shift;
+      <span class="hljs-keyword">var</span> symbol_x = x + <span class="hljs-keyword">this</span>.x_shift;
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.symbol_type == Vex.Flow.Repetition.type.CODA_LEFT) {</pre></div>
+        
+      
+        
+        <p>Offset Coda text to right of stave beginning</p>
+
+        
+          <div class='highlight'><pre>        text_x = <span class="hljs-keyword">this</span>.x + stave.options.vertical_bar_width;
+        symbol_x = text_x + ctx.measureText(text).width + <span class="hljs-number">12</span>;
+      } <span class="hljs-keyword">else</span> {</pre></div>
+        
+      
+        
+        <p>Offset Signo text to left stave end</p>
+
+        
+          <div class='highlight'><pre>        symbol_x = <span class="hljs-keyword">this</span>.x + x + stave.width - <span class="hljs-number">5</span> + <span class="hljs-keyword">this</span>.x_shift;
+        text_x = symbol_x - + ctx.measureText(text).width - <span class="hljs-number">12</span>;
+      }
+      <span class="hljs-keyword">var</span> y = stave.getYForTopText(stave.options.num_lines) + <span class="hljs-keyword">this</span>.y_shift;
+      <span class="hljs-keyword">if</span> (draw_coda) {
+        Vex.Flow.renderGlyph(ctx, symbol_x, y, <span class="hljs-number">40</span>, <span class="hljs-string">"v4d"</span>, <span class="hljs-literal">true</span>);
+      }
+
+      ctx.fillText(text, text_x, y + <span class="hljs-number">5</span>);
+      ctx.restore();
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    }
+  });
+
+  <span class="hljs-keyword">return</span> Repetition;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

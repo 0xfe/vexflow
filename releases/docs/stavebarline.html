@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>stavebarline.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>stavebarline.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>Vex Flow Notation
+Author Larry Kuhns 2011
+Implements barlines (single, double, repeat, end)</p>
+<p>Requires vex.js.</p>
+
+        
+          <div class='highlight'><pre>
+<span class="hljs-comment">/**
+ * @constructor
+ */</span>
+Vex.Flow.Barline = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Barline</span><span class="hljs-params">(type, x)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(type, x);
+  }
+
+  Barline.type = {
+    SINGLE: <span class="hljs-number">1</span>,
+    DOUBLE: <span class="hljs-number">2</span>,
+    END: <span class="hljs-number">3</span>,
+    REPEAT_BEGIN: <span class="hljs-number">4</span>,
+    REPEAT_END: <span class="hljs-number">5</span>,
+    REPEAT_BOTH: <span class="hljs-number">6</span>,
+    NONE: <span class="hljs-number">7</span>
+  };
+
+  Vex.Inherit(Barline, Vex.Flow.StaveModifier, {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type, x)</span> </span>{
+      Barline.superclass.init.call(<span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">this</span>.thickness = Vex.Flow.STAVE_LINE_THICKNESS;
+      <span class="hljs-keyword">this</span>.barline = type;
+      <span class="hljs-keyword">this</span>.x = x;    <span class="hljs-comment">// Left most x for the stave</span>
+    },
+
+    getCategory: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">"barlines"</span>; },
+    setX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> </span>{ <span class="hljs-keyword">this</span>.x = x; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Draw barlines</p>
+
+        
+          <div class='highlight'><pre>    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave, x_shift)</span> </span>{
+      x_shift = <span class="hljs-keyword">typeof</span> x_shift !== <span class="hljs-string">'number'</span> ? <span class="hljs-number">0</span> : x_shift;
+
+      <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.barline) {
+        <span class="hljs-keyword">case</span> Barline.type.SINGLE:
+          <span class="hljs-keyword">this</span>.drawVerticalBar(stave, <span class="hljs-keyword">this</span>.x, <span class="hljs-literal">false</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Barline.type.DOUBLE:
+          <span class="hljs-keyword">this</span>.drawVerticalBar(stave, <span class="hljs-keyword">this</span>.x, <span class="hljs-literal">true</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Barline.type.END:
+          <span class="hljs-keyword">this</span>.drawVerticalEndBar(stave, <span class="hljs-keyword">this</span>.x);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Barline.type.REPEAT_BEGIN:</pre></div>
+        
+      
+        
+        <p>If the barline is shifted over (in front of clef/time/key)
+Draw vertical bar at the beginning.</p>
+
+        
+          <div class='highlight'><pre>          <span class="hljs-keyword">if</span> (x_shift &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">this</span>.drawVerticalBar(stave, <span class="hljs-keyword">this</span>.x);
+          }
+          <span class="hljs-keyword">this</span>.drawRepeatBar(stave, <span class="hljs-keyword">this</span>.x + x_shift, <span class="hljs-literal">true</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Barline.type.REPEAT_END:
+          <span class="hljs-keyword">this</span>.drawRepeatBar(stave, <span class="hljs-keyword">this</span>.x, <span class="hljs-literal">false</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Barline.type.REPEAT_BOTH:
+          <span class="hljs-keyword">this</span>.drawRepeatBar(stave, <span class="hljs-keyword">this</span>.x, <span class="hljs-literal">false</span>);
+          <span class="hljs-keyword">this</span>.drawRepeatBar(stave, <span class="hljs-keyword">this</span>.x, <span class="hljs-literal">true</span>);
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">default</span>:</pre></div>
+        
+      
+        
+        <p>Default is NONE, so nothing to draw</p>
+
+        
+          <div class='highlight'><pre>          <span class="hljs-keyword">break</span>;
+      }
+    },
+
+    drawVerticalBar: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave, x, double_bar)</span> </span>{
+      <span class="hljs-keyword">if</span> (!stave.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+      <span class="hljs-keyword">var</span> topY = stave.getYForLine(<span class="hljs-number">0</span>);
+      <span class="hljs-keyword">var</span> botY = stave.getYForLine(stave.getNumLines() - <span class="hljs-number">1</span>) + <span class="hljs-keyword">this</span>.thickness;
+      <span class="hljs-keyword">if</span> (double_bar)
+        stave.context.fillRect(x - <span class="hljs-number">3</span>, topY, <span class="hljs-number">1</span>, botY - topY);
+      stave.context.fillRect(x, topY, <span class="hljs-number">1</span>, botY - topY);
+    },
+
+    drawVerticalEndBar: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave, x)</span> </span>{
+      <span class="hljs-keyword">if</span> (!stave.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+
+      <span class="hljs-keyword">var</span> topY = stave.getYForLine(<span class="hljs-number">0</span>);
+      <span class="hljs-keyword">var</span> botY = stave.getYForLine(stave.getNumLines() - <span class="hljs-number">1</span>) + <span class="hljs-keyword">this</span>.thickness;
+      stave.context.fillRect(x - <span class="hljs-number">5</span>, topY, <span class="hljs-number">1</span>, botY - topY);
+      stave.context.fillRect(x - <span class="hljs-number">2</span>, topY, <span class="hljs-number">3</span>, botY - topY);
+    },
+
+    drawRepeatBar: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave, x, begin)</span> </span>{
+      <span class="hljs-keyword">if</span> (!stave.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw stave without canvas context."</span>);
+
+      <span class="hljs-keyword">var</span> topY = stave.getYForLine(<span class="hljs-number">0</span>);
+      <span class="hljs-keyword">var</span> botY = stave.getYForLine(stave.getNumLines() - <span class="hljs-number">1</span>) + <span class="hljs-keyword">this</span>.thickness;
+      <span class="hljs-keyword">var</span> x_shift = <span class="hljs-number">3</span>;
+
+      <span class="hljs-keyword">if</span> (!begin) {
+        x_shift = -<span class="hljs-number">5</span>;
+      }
+
+      stave.context.fillRect(x + x_shift, topY, <span class="hljs-number">1</span>, botY - topY);
+      stave.context.fillRect(x - <span class="hljs-number">2</span>, topY, <span class="hljs-number">3</span>, botY - topY);
+
+      <span class="hljs-keyword">var</span> dot_radius = <span class="hljs-number">2</span>;</pre></div>
+        
+      
+        
+        <p>Shift dots left or right</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (begin) {
+        x_shift += <span class="hljs-number">4</span>;
+      } <span class="hljs-keyword">else</span> {
+        x_shift -= <span class="hljs-number">4</span>;
+      }
+
+      <span class="hljs-keyword">var</span> dot_x = (x + x_shift) + (dot_radius / <span class="hljs-number">2</span>);</pre></div>
+        
+      
+        
+        <p>calculate the y offset based on number of stave lines</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> y_offset = (stave.getNumLines() - <span class="hljs-number">1</span>) *
+        stave.getSpacingBetweenLines();
+      y_offset = (y_offset / <span class="hljs-number">2</span>) -
+                 (stave.getSpacingBetweenLines() / <span class="hljs-number">2</span>);
+      <span class="hljs-keyword">var</span> dot_y = topY + y_offset + (dot_radius / <span class="hljs-number">2</span>);</pre></div>
+        
+      
+        
+        <p>draw the top repeat dot</p>
+
+        
+          <div class='highlight'><pre>      stave.context.beginPath();
+      stave.context.arc(dot_x, dot_y, dot_radius, <span class="hljs-number">0</span>, <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>, <span class="hljs-literal">false</span>);
+      stave.context.fill();</pre></div>
+        
+      
+        
+        <p>draw the bottom repeat dot</p>
+
+        
+          <div class='highlight'><pre>      dot_y += stave.getSpacingBetweenLines();
+      stave.context.beginPath();
+      stave.context.arc(dot_x, dot_y, dot_radius, <span class="hljs-number">0</span>, <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>, <span class="hljs-literal">false</span>);
+      stave.context.fill();
+    }
+  });
+
+  <span class="hljs-keyword">return</span> Barline;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

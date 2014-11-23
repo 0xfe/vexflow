@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>raphaelcontext.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>raphaelcontext.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>Vex Flow
+Mohit Muthanna <a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#x6d;&#x6f;&#x68;&#105;&#x74;&#64;&#109;&#117;&#116;&#104;&#x61;&#110;&#110;&#x61;&#x2e;&#99;&#111;&#x6d;">&#x6d;&#x6f;&#x68;&#105;&#x74;&#64;&#109;&#117;&#116;&#104;&#x61;&#110;&#110;&#x61;&#x2e;&#99;&#111;&#x6d;</a></p>
+<p>A rendering context for the Raphael backend.</p>
+<p>Copyright Mohit Cheppudira 2010</p>
+
+        
+          <div class='highlight'><pre>
+<span class="hljs-comment">/** @constructor */</span>
+Vex.Flow.RaphaelContext = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">RaphaelContext</span><span class="hljs-params">(element)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(element);
+  }
+
+  RaphaelContext.prototype = {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(element)</span> </span>{
+      <span class="hljs-keyword">this</span>.element = element;
+      <span class="hljs-keyword">this</span>.paper = Raphael(element);
+      <span class="hljs-keyword">this</span>.path = <span class="hljs-string">""</span>;
+      <span class="hljs-keyword">this</span>.pen = {x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>};
+      <span class="hljs-keyword">this</span>.lineWidth = <span class="hljs-number">1.0</span>;
+      <span class="hljs-keyword">this</span>.state = {
+        scale: { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">1</span> },
+        font_family: <span class="hljs-string">"Arial"</span>,
+        font_size: <span class="hljs-number">8</span>,
+        font_weight: <span class="hljs-number">800</span>
+      };
+
+      <span class="hljs-keyword">this</span>.attributes = {
+        <span class="hljs-string">"stroke-width"</span>: <span class="hljs-number">0.3</span>,
+        <span class="hljs-string">"fill"</span>: <span class="hljs-string">"black"</span>,
+        <span class="hljs-string">"stroke"</span>: <span class="hljs-string">"black"</span>,
+        <span class="hljs-string">"font"</span>: <span class="hljs-string">"10pt Arial"</span>
+      };
+
+      <span class="hljs-keyword">this</span>.background_attributes = {
+        <span class="hljs-string">"stroke-width"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-string">"fill"</span>: <span class="hljs-string">"white"</span>,
+        <span class="hljs-string">"stroke"</span>: <span class="hljs-string">"white"</span>,
+        <span class="hljs-string">"font"</span>: <span class="hljs-string">"10pt Arial"</span>
+      };
+
+      <span class="hljs-keyword">this</span>.shadow_attributes = {
+        width: <span class="hljs-number">0</span>,
+        color: <span class="hljs-string">"black"</span>
+      };
+
+      <span class="hljs-keyword">this</span>.state_stack= [];
+    },
+
+    setFont: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(family, size, weight)</span> </span>{
+      <span class="hljs-keyword">this</span>.state.font_family = family;
+      <span class="hljs-keyword">this</span>.state.font_size = size;
+      <span class="hljs-keyword">this</span>.state.font_weight = weight;
+      <span class="hljs-keyword">this</span>.attributes.font = (<span class="hljs-keyword">this</span>.state.font_weight || <span class="hljs-string">""</span>) + <span class="hljs-string">" "</span> +
+        (<span class="hljs-keyword">this</span>.state.font_size * <span class="hljs-keyword">this</span>.state.scale.x) + <span class="hljs-string">"pt "</span> +
+        <span class="hljs-keyword">this</span>.state.font_family;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setRawFont: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(font)</span> </span>{
+      <span class="hljs-keyword">this</span>.attributes.font = font;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setFillStyle: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(style)</span> </span>{
+      <span class="hljs-keyword">this</span>.attributes.fill = style;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setBackgroundFillStyle: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(style)</span> </span>{
+      <span class="hljs-keyword">this</span>.background_attributes.fill = style;
+      <span class="hljs-keyword">this</span>.background_attributes.stroke = style;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setStrokeStyle: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(style)</span> </span>{
+      <span class="hljs-keyword">this</span>.attributes.stroke = style;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setShadowColor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(style)</span> </span>{
+      <span class="hljs-keyword">this</span>.shadow_attributes.color = style;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setShadowBlur: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(blur)</span> </span>{
+      <span class="hljs-keyword">this</span>.shadow_attributes.width = blur;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setLineWidth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(width)</span> </span>{
+      <span class="hljs-keyword">this</span>.attributes[<span class="hljs-string">"stroke-width"</span>] = width;
+      <span class="hljs-keyword">this</span>.lineWidth = width;
+    },</pre></div>
+        
+      
+        
+        <p>Empty because there is no equivalent in SVG</p>
+
+        
+          <div class='highlight'><pre>    setLineDash: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+    setLineCap: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+
+    scale: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.state.scale = { x: x, y: y };
+      <span class="hljs-keyword">this</span>.attributes.scale = x + <span class="hljs-string">","</span> + y + <span class="hljs-string">",0,0"</span>;
+      <span class="hljs-keyword">this</span>.attributes.font = <span class="hljs-keyword">this</span>.state.font_size * <span class="hljs-keyword">this</span>.state.scale.x + <span class="hljs-string">"pt "</span> +
+        <span class="hljs-keyword">this</span>.state.font_family;
+      <span class="hljs-keyword">this</span>.background_attributes.scale = x + <span class="hljs-string">","</span> + y + <span class="hljs-string">",0,0"</span>;
+      <span class="hljs-keyword">this</span>.background_attributes.font = <span class="hljs-keyword">this</span>.state.font_size *
+        <span class="hljs-keyword">this</span>.state.scale.x + <span class="hljs-string">"pt "</span> +
+        <span class="hljs-keyword">this</span>.state.font_family;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    clear: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">this</span>.paper.clear(); },
+
+    resize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(width, height)</span> </span>{
+      <span class="hljs-keyword">this</span>.element.style.width = width;
+      <span class="hljs-keyword">this</span>.paper.setSize(width, height);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Sets the SVG <code>viewBox</code> property, which results in auto scaling images when its container
+is resized.</p>
+<p>Usage: <code>ctx.setViewBox(&quot;0 0 600 400&quot;)</code></p>
+
+        
+          <div class='highlight'><pre>    setViewBox: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(viewBox)</span> </span>{
+      <span class="hljs-keyword">this</span>.paper.canvas.setAttribute(<span class="hljs-string">'viewBox'</span>, viewBox);
+    },
+
+    rect: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y, width, height)</span> </span>{
+      <span class="hljs-keyword">if</span> (height &lt; <span class="hljs-number">0</span>) {
+        y += height;
+        height = -height;
+      }
+
+      <span class="hljs-keyword">this</span>.paper.rect(x, y, width - <span class="hljs-number">0.5</span>, height - <span class="hljs-number">0.5</span>).
+        attr(<span class="hljs-keyword">this</span>.attributes).
+        attr(<span class="hljs-string">"fill"</span>, <span class="hljs-string">"none"</span>).
+        attr(<span class="hljs-string">"stroke-width"</span>, <span class="hljs-keyword">this</span>.lineWidth); <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    fillRect: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y, width, height)</span> </span>{
+      <span class="hljs-keyword">if</span> (height &lt; <span class="hljs-number">0</span>) {
+        y += height;
+        height = -height;
+      }
+
+      <span class="hljs-keyword">this</span>.paper.rect(x, y, width - <span class="hljs-number">0.5</span>, height - <span class="hljs-number">0.5</span>).
+        attr(<span class="hljs-keyword">this</span>.attributes);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    clearRect: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y, width, height)</span> </span>{
+      <span class="hljs-keyword">if</span> (height &lt; <span class="hljs-number">0</span>) {
+        y += height;
+        height = -height;
+      }
+
+      <span class="hljs-keyword">this</span>.paper.rect(x, y, width - <span class="hljs-number">0.5</span>, height - <span class="hljs-number">0.5</span>).
+        attr(<span class="hljs-keyword">this</span>.background_attributes);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    beginPath: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">this</span>.path = <span class="hljs-string">""</span>;
+      <span class="hljs-keyword">this</span>.pen.x = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.pen.y = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    moveTo: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.path += <span class="hljs-string">"M"</span> + x + <span class="hljs-string">","</span> + y;
+      <span class="hljs-keyword">this</span>.pen.x = x;
+      <span class="hljs-keyword">this</span>.pen.y = y;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    lineTo: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.path += <span class="hljs-string">"L"</span> + x + <span class="hljs-string">","</span> + y;
+      <span class="hljs-keyword">this</span>.pen.x = x;
+      <span class="hljs-keyword">this</span>.pen.y = y;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    bezierCurveTo: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x1, y1, x2, y2, x, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.path += <span class="hljs-string">"C"</span> +
+        x1 + <span class="hljs-string">","</span> +
+        y1 + <span class="hljs-string">","</span> +
+        x2 + <span class="hljs-string">","</span> +
+        y2 + <span class="hljs-string">","</span> +
+        x + <span class="hljs-string">","</span> +
+        y;
+      <span class="hljs-keyword">this</span>.pen.x = x;
+      <span class="hljs-keyword">this</span>.pen.y = y;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    quadraticCurveTo: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x1, y1, x, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.path += <span class="hljs-string">"Q"</span> +
+        x1 + <span class="hljs-string">","</span> +
+        y1 + <span class="hljs-string">","</span> +
+        x + <span class="hljs-string">","</span> +
+        y;
+      <span class="hljs-keyword">this</span>.pen.x = x;
+      <span class="hljs-keyword">this</span>.pen.y = y;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>This is an attempt (hack) to simulate the HTML5 canvas
+arc method.</p>
+
+        
+          <div class='highlight'><pre>    arc: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y, radius, startAngle, endAngle, antiClockwise)</span> </span>{
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">normalizeAngle</span><span class="hljs-params">(angle)</span> </span>{
+        <span class="hljs-keyword">while</span> (angle &lt; <span class="hljs-number">0</span>) {
+          angle += <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>;
+        }
+
+        <span class="hljs-keyword">while</span> (angle &gt; <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>) {
+          angle -= <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>;
+        }
+        <span class="hljs-keyword">return</span> angle;
+      }
+
+      startAngle = normalizeAngle(startAngle);
+      endAngle = normalizeAngle(endAngle);
+
+      <span class="hljs-keyword">if</span> (startAngle &gt; endAngle) {
+          <span class="hljs-keyword">var</span> tmp = startAngle;
+          startAngle = endAngle;
+          endAngle = tmp;
+          antiClockwise = !antiClockwise;
+      }
+
+      <span class="hljs-keyword">var</span> delta = endAngle - startAngle;
+
+      <span class="hljs-keyword">if</span> (delta &gt; <span class="hljs-built_in">Math</span>.PI) {
+          <span class="hljs-keyword">this</span>.arcHelper(x, y, radius, startAngle, startAngle + delta / <span class="hljs-number">2</span>,
+                         antiClockwise);
+          <span class="hljs-keyword">this</span>.arcHelper(x, y, radius, startAngle + delta / <span class="hljs-number">2</span>, endAngle,
+                         antiClockwise);
+      }
+      <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">this</span>.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    arcHelper: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, y, radius, startAngle, endAngle, antiClockwise)</span> </span>{
+      <span class="hljs-keyword">var</span> x1 = x + radius * <span class="hljs-built_in">Math</span>.cos(startAngle);
+      <span class="hljs-keyword">var</span> y1 = y + radius * <span class="hljs-built_in">Math</span>.sin(startAngle);
+
+      <span class="hljs-keyword">var</span> x2 = x + radius * <span class="hljs-built_in">Math</span>.cos(endAngle);
+      <span class="hljs-keyword">var</span> y2 = y + radius * <span class="hljs-built_in">Math</span>.sin(endAngle);
+
+      <span class="hljs-keyword">var</span> largeArcFlag = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">var</span> sweepFlag = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">if</span> (antiClockwise) {
+        sweepFlag = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (endAngle - startAngle &lt; <span class="hljs-built_in">Math</span>.PI)
+          largeArcFlag = <span class="hljs-number">1</span>;
+      }
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (endAngle - startAngle &gt; <span class="hljs-built_in">Math</span>.PI) {
+          largeArcFlag = <span class="hljs-number">1</span>;
+      }
+
+      <span class="hljs-keyword">this</span>.path += <span class="hljs-string">"M"</span> + x1 + <span class="hljs-string">","</span> + y1 + <span class="hljs-string">","</span> + <span class="hljs-string">"A"</span> +
+        radius + <span class="hljs-string">","</span> + radius + <span class="hljs-string">","</span> + <span class="hljs-string">"0,"</span> + largeArcFlag + <span class="hljs-string">","</span> + sweepFlag + <span class="hljs-string">","</span> +
+        x2 + <span class="hljs-string">","</span> + y2 + <span class="hljs-string">"M"</span> + <span class="hljs-keyword">this</span>.pen.x + <span class="hljs-string">","</span> + <span class="hljs-keyword">this</span>.pen.y;
+    },</pre></div>
+        
+      
+        
+        <p>Adapted from the source for Raphael’s Element.glow</p>
+
+        
+          <div class='highlight'><pre>    glow: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> out = <span class="hljs-keyword">this</span>.paper.set();
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.shadow_attributes.width &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">var</span> sa = <span class="hljs-keyword">this</span>.shadow_attributes;
+        <span class="hljs-keyword">var</span> num_paths = sa.width / <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span>; i &lt;= num_paths; i++) {
+          out.push(<span class="hljs-keyword">this</span>.paper.path(<span class="hljs-keyword">this</span>.path).attr({
+            stroke: sa.color,
+            <span class="hljs-string">"stroke-linejoin"</span>: <span class="hljs-string">"round"</span>,
+            <span class="hljs-string">"stroke-linecap"</span>: <span class="hljs-string">"round"</span>,
+            <span class="hljs-string">"stroke-width"</span>: +(sa.width / num_paths * i).toFixed(<span class="hljs-number">3</span>),
+            opacity: +((sa.opacity || <span class="hljs-number">0.3</span>) / num_paths).toFixed(<span class="hljs-number">3</span>)
+          }));
+        }
+      }
+      <span class="hljs-keyword">return</span> out;
+    },
+
+    fill: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> elem = <span class="hljs-keyword">this</span>.paper.path(<span class="hljs-keyword">this</span>.path).
+        attr(<span class="hljs-keyword">this</span>.attributes).
+        attr(<span class="hljs-string">"stroke-width"</span>, <span class="hljs-number">0</span>);
+      <span class="hljs-keyword">this</span>.glow(elem);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    stroke: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> elem = <span class="hljs-keyword">this</span>.paper.path(<span class="hljs-keyword">this</span>.path).
+        attr(<span class="hljs-keyword">this</span>.attributes).
+        attr(<span class="hljs-string">"fill"</span>, <span class="hljs-string">"none"</span>).
+        attr(<span class="hljs-string">"stroke-width"</span>, <span class="hljs-keyword">this</span>.lineWidth);
+      <span class="hljs-keyword">this</span>.glow(elem);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    closePath: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">this</span>.path += <span class="hljs-string">"Z"</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    measureText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(text)</span> </span>{
+      <span class="hljs-keyword">var</span> txt = <span class="hljs-keyword">this</span>.paper.text(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, text).
+        attr(<span class="hljs-keyword">this</span>.attributes).
+        attr(<span class="hljs-string">"fill"</span>, <span class="hljs-string">"none"</span>).
+        attr(<span class="hljs-string">"stroke"</span>, <span class="hljs-string">"none"</span>);
+      <span class="hljs-keyword">var</span> bounds = txt.getBBox();
+      txt.remove();
+
+      <span class="hljs-keyword">return</span> {
+        width: bounds.width,
+        height: bounds.height
+      };
+    },
+
+    fillText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(text, x, y)</span> </span>{
+      <span class="hljs-keyword">this</span>.paper.text(x + (<span class="hljs-keyword">this</span>.measureText(text).width / <span class="hljs-number">2</span>),
+          (y - (<span class="hljs-keyword">this</span>.state.font_size / (<span class="hljs-number">2.25</span> * <span class="hljs-keyword">this</span>.state.scale.y))), text).
+        attr(<span class="hljs-keyword">this</span>.attributes);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    save: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div>
+        
+      
+        
+        <p>TODO(mmuthanna): State needs to be deep-copied.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.state_stack.push({
+        state: {
+          font_family: <span class="hljs-keyword">this</span>.state.font_family
+        },
+        attributes: {
+          font: <span class="hljs-keyword">this</span>.attributes.font,
+          fill: <span class="hljs-keyword">this</span>.attributes.fill,
+          stroke: <span class="hljs-keyword">this</span>.attributes.stroke,
+          <span class="hljs-string">"stroke-width"</span>: <span class="hljs-keyword">this</span>.attributes[<span class="hljs-string">"stroke-width"</span>]
+        },
+        shadow_attributes: {
+          width: <span class="hljs-keyword">this</span>.shadow_attributes.width,
+          color: <span class="hljs-keyword">this</span>.shadow_attributes.color
+        }
+      });
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    restore: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div>
+        
+      
+        
+        <p>TODO(0xfe): State needs to be deep-restored.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> state = <span class="hljs-keyword">this</span>.state_stack.pop();
+      <span class="hljs-keyword">this</span>.state.font_family = state.state.font_family;
+      <span class="hljs-keyword">this</span>.attributes.font = state.attributes.font;
+      <span class="hljs-keyword">this</span>.attributes.fill = state.attributes.fill;
+      <span class="hljs-keyword">this</span>.attributes.stroke = state.attributes.stroke;
+      <span class="hljs-keyword">this</span>.attributes[<span class="hljs-string">"stroke-width"</span>] = state.attributes[<span class="hljs-string">"stroke-width"</span>];
+      <span class="hljs-keyword">this</span>.shadow_attributes.width = state.shadow_attributes.width;
+      <span class="hljs-keyword">this</span>.shadow_attributes.color = state.shadow_attributes.color;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    }
+  };
+
+  <span class="hljs-keyword">return</span> RaphaelContext;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

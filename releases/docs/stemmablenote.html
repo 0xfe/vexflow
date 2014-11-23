@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>stemmablenote.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>stemmablenote.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p><a href="http://vexflow.com">VexFlow</a> - Copyright (c) Mohit Muthanna 2010.</p>
+<h2 id="description">Description</h2>
+<p><code>StemmableNote</code> is an abstract interface for notes with optional stems.
+Examples of stemmable notes are <code>StaveNote</code> and <code>TabNote</code></p>
+
+        
+          <div class='highlight'><pre>Vex.Flow.StemmableNote = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+  <span class="hljs-keyword">var</span> StemmableNote = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(note_struct)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(note_struct);
+  };</pre></div>
+        
+      
+        
+        <p>To enable logging for this class. Set <code>Vex.Flow.StemmableNote.DEBUG</code> to <code>true</code>.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">L</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">if</span> (StemmableNote.DEBUG) Vex.L(<span class="hljs-string">"Vex.Flow.StemmableNote"</span>, <span class="hljs-built_in">arguments</span>); }
+
+  <span class="hljs-keyword">var</span> Stem = Vex.Flow.Stem;
+
+  Vex.Inherit(StemmableNote, Vex.Flow.Note, {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(note_struct)</span></span>{
+      StemmableNote.superclass.init.call(<span class="hljs-keyword">this</span>, note_struct);
+
+      <span class="hljs-keyword">this</span>.stem = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.stem_extension_override = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.beam = <span class="hljs-literal">null</span>;
+
+    },</pre></div>
+        
+      
+        
+        <p>Get and set the note’s <code>Stem</code></p>
+
+        
+          <div class='highlight'><pre>    getStem: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.stem; },
+    setStem: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stem)</span> </span>{ <span class="hljs-keyword">this</span>.stem = stem; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Builds and sets a new stem</p>
+
+        
+          <div class='highlight'><pre>    buildStem: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> stem = <span class="hljs-keyword">new</span> Stem();
+      <span class="hljs-keyword">this</span>.setStem(stem);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Get the full length of stem</p>
+
+        
+          <div class='highlight'><pre>    getStemLength: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> Stem.HEIGHT + <span class="hljs-keyword">this</span>.getStemExtension();
+    },</pre></div>
+        
+      
+        
+        <p>Get the number of beams for this duration</p>
+
+        
+          <div class='highlight'><pre>    getBeamCount: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+      <span class="hljs-keyword">var</span> glyph = <span class="hljs-keyword">this</span>.getGlyph();
+
+      <span class="hljs-keyword">if</span> (glyph) {
+        <span class="hljs-keyword">return</span> glyph.beam_count;
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+      }
+    },</pre></div>
+        
+      
+        
+        <p>Get the minimum length of stem</p>
+
+        
+          <div class='highlight'><pre>    getStemMinumumLength: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> frac = Vex.Flow.durationToFraction(<span class="hljs-keyword">this</span>.duration);
+      <span class="hljs-keyword">var</span> length = (frac.value() &lt;= <span class="hljs-number">1</span>) ? <span class="hljs-number">0</span> : <span class="hljs-number">20</span>;</pre></div>
+        
+      
+        
+        <p>if note is flagged, cannot shorten beam</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.duration) {
+       <span class="hljs-keyword">case</span> <span class="hljs-string">"8"</span>:
+         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.beam == <span class="hljs-literal">null</span>) length = <span class="hljs-number">35</span>;
+         <span class="hljs-keyword">break</span>;
+       <span class="hljs-keyword">case</span> <span class="hljs-string">"16"</span>:
+         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.beam == <span class="hljs-literal">null</span>)
+           length = <span class="hljs-number">35</span>;
+         <span class="hljs-keyword">else</span>
+           length = <span class="hljs-number">25</span>;
+         <span class="hljs-keyword">break</span>;
+       <span class="hljs-keyword">case</span> <span class="hljs-string">"32"</span>:
+         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.beam == <span class="hljs-literal">null</span>)
+           length = <span class="hljs-number">45</span>;
+         <span class="hljs-keyword">else</span>
+           length = <span class="hljs-number">35</span>;
+         <span class="hljs-keyword">break</span>;
+       <span class="hljs-keyword">case</span> <span class="hljs-string">"64"</span>:
+         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.beam == <span class="hljs-literal">null</span>)
+           length = <span class="hljs-number">50</span>;
+         <span class="hljs-keyword">else</span>
+           length = <span class="hljs-number">40</span>;
+         <span class="hljs-keyword">break</span>;
+       <span class="hljs-keyword">case</span> <span class="hljs-string">"128"</span>:
+         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.beam == <span class="hljs-literal">null</span>)
+           length = <span class="hljs-number">55</span>;
+         <span class="hljs-keyword">else</span>
+           length = <span class="hljs-number">45</span>;
+      }
+      <span class="hljs-keyword">return</span> length;
+    },</pre></div>
+        
+      
+        
+        <p>Get/set the direction of the stem</p>
+
+        
+          <div class='highlight'><pre>    getStemDirection: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.stem_direction; },
+    setStemDirection: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(direction)</span> </span>{
+      <span class="hljs-keyword">if</span> (!direction) direction = Stem.UP;
+      <span class="hljs-keyword">if</span> (direction != Stem.UP &amp;&amp;
+          direction != Stem.DOWN) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"BadArgument"</span>, <span class="hljs-string">"Invalid stem direction: "</span> +
+            direction);
+      }
+
+      <span class="hljs-keyword">this</span>.stem_direction = direction;
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.stem) {
+        <span class="hljs-keyword">this</span>.stem.setDirection(direction);
+        <span class="hljs-keyword">this</span>.stem.setExtension(<span class="hljs-keyword">this</span>.getStemExtension());
+      }
+
+      <span class="hljs-keyword">this</span>.beam = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.preFormatted) {
+        <span class="hljs-keyword">this</span>.preFormat();
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Get the <code>x</code> coordinate of the stem</p>
+
+        
+          <div class='highlight'><pre>    getStemX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> x_begin = <span class="hljs-keyword">this</span>.getAbsoluteX() + <span class="hljs-keyword">this</span>.x_shift;
+      <span class="hljs-keyword">var</span> x_end = <span class="hljs-keyword">this</span>.getAbsoluteX() + <span class="hljs-keyword">this</span>.x_shift + <span class="hljs-keyword">this</span>.glyph.head_width;
+
+      <span class="hljs-keyword">var</span> stem_x = <span class="hljs-keyword">this</span>.stem_direction == Stem.DOWN ?
+        x_begin : x_end;
+
+      stem_x -= ((Stem.WIDTH / <span class="hljs-number">2</span>) * <span class="hljs-keyword">this</span>.stem_direction);
+
+      <span class="hljs-keyword">return</span> stem_x;
+    },</pre></div>
+        
+      
+        
+        <p>Get the <code>x</code> coordinate for the center of the glyph.
+Used for <code>TabNote</code> stems and stemlets over rests</p>
+
+        
+          <div class='highlight'><pre>    getCenterGlyphX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getAbsoluteX() + <span class="hljs-keyword">this</span>.x_shift + (<span class="hljs-keyword">this</span>.glyph.head_width / <span class="hljs-number">2</span>);
+    },</pre></div>
+        
+      
+        
+        <p>Get the stem extension for the current duration</p>
+
+        
+          <div class='highlight'><pre>    getStemExtension: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+      <span class="hljs-keyword">var</span> glyph = <span class="hljs-keyword">this</span>.getGlyph();
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.stem_extension_override != <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.stem_extension_override;
+      }
+
+      <span class="hljs-keyword">if</span> (glyph) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getStemDirection() === <span class="hljs-number">1</span> ? glyph.stem_up_extension :
+          glyph.stem_down_extension;
+      }
+
+      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Set the stem length to a specific. Will override the default length.</p>
+
+        
+          <div class='highlight'><pre>    setStemLength: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(height)</span> </span>{
+      <span class="hljs-keyword">this</span>.stem_extension_override = (height - Stem.HEIGHT);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Get the top and bottom <code>y</code> values of the stem.</p>
+
+        
+          <div class='highlight'><pre>    getStemExtents: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.ys || <span class="hljs-keyword">this</span>.ys.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoYValues"</span>,
+          <span class="hljs-string">"Can't get top stem Y when note has no Y values."</span>);
+
+      <span class="hljs-keyword">var</span> top_pixel = <span class="hljs-keyword">this</span>.ys[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">var</span> base_pixel = <span class="hljs-keyword">this</span>.ys[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">var</span> stem_height = Stem.HEIGHT + <span class="hljs-keyword">this</span>.getStemExtension();
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.ys.length; ++i) {
+        <span class="hljs-keyword">var</span> stem_top = <span class="hljs-keyword">this</span>.ys[i] + (stem_height * -<span class="hljs-keyword">this</span>.stem_direction);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.stem_direction == Stem.DOWN) {
+          top_pixel = (top_pixel &gt; stem_top) ? top_pixel : stem_top;
+          base_pixel = (base_pixel &lt; <span class="hljs-keyword">this</span>.ys[i]) ? base_pixel : <span class="hljs-keyword">this</span>.ys[i];
+        } <span class="hljs-keyword">else</span> {
+          top_pixel = (top_pixel &lt; stem_top) ? top_pixel : stem_top;
+          base_pixel = (base_pixel &gt; <span class="hljs-keyword">this</span>.ys[i]) ? base_pixel : <span class="hljs-keyword">this</span>.ys[i];
+        }
+
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.noteType == <span class="hljs-string">"s"</span> || <span class="hljs-keyword">this</span>.noteType == <span class="hljs-string">'x'</span>) {
+          top_pixel -= <span class="hljs-keyword">this</span>.stem_direction * <span class="hljs-number">7</span>;
+          base_pixel -= <span class="hljs-keyword">this</span>.stem_direction * <span class="hljs-number">7</span>;
+        }
+      }
+
+      L(<span class="hljs-string">"Stem extents: "</span>, top_pixel, base_pixel);
+      <span class="hljs-keyword">return</span> { topY: top_pixel, baseY: base_pixel };
+    },</pre></div>
+        
+      
+        
+        <p>Sets the current note’s beam</p>
+
+        
+          <div class='highlight'><pre>    setBeam: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(beam)</span> </span>{ <span class="hljs-keyword">this</span>.beam = beam; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Get the <code>y</code> value for the top/bottom modifiers at a specific <code>text_line</code></p>
+
+        
+          <div class='highlight'><pre>    getYForTopText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(text_line)</span> </span>{
+      <span class="hljs-keyword">var</span> extents = <span class="hljs-keyword">this</span>.getStemExtents();
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hasStem()) {
+        <span class="hljs-keyword">return</span> Vex.Min(<span class="hljs-keyword">this</span>.stave.getYForTopText(text_line),
+            extents.topY - (<span class="hljs-keyword">this</span>.render_options.annotation_spacing * (text_line + <span class="hljs-number">1</span>)));
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.stave.getYForTopText(text_line);
+      }
+    },
+    getYForBottomText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(text_line)</span> </span>{
+      <span class="hljs-keyword">var</span> extents = <span class="hljs-keyword">this</span>.getStemExtents();
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hasStem()) {
+        <span class="hljs-keyword">return</span> Vex.Max(<span class="hljs-keyword">this</span>.stave.getYForTopText(text_line),
+          extents.baseY + (<span class="hljs-keyword">this</span>.render_options.annotation_spacing * (text_line)));
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.stave.getYForBottomText(text_line);
+      }
+    },</pre></div>
+        
+      
+        
+        <p>Post format the note</p>
+
+        
+          <div class='highlight'><pre>    postFormat: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.beam) {
+        <span class="hljs-keyword">this</span>.beam.postFormat();
+      }
+      <span class="hljs-keyword">this</span>.postFormatted = <span class="hljs-literal">true</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Render the stem onto the canvas</p>
+
+        
+          <div class='highlight'><pre>    drawStem: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stem_struct)</span></span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw without a canvas context."</span>);
+      
+      <span class="hljs-keyword">this</span>.setStem(<span class="hljs-keyword">new</span> Stem(stem_struct));
+      <span class="hljs-keyword">this</span>.stem.setContext(<span class="hljs-keyword">this</span>.context).draw();
+    }
+  });
+
+  <span class="hljs-keyword">return</span> StemmableNote;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

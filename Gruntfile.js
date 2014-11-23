@@ -1,6 +1,10 @@
 // VexFlow build file.
+// Mohit Muthanna Cheppudira <mohit@muthanna.com>
+
+var glob = require("glob");
 
 module.exports = function(grunt) {
+  var L = grunt.log.writeln;
   var BANNER = '/**\n' +
                 ' * VexFlow <%= pkg.version %> built on <%= grunt.template.today("yyyy-mm-dd") %>.\n' +
                 ' * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n' +
@@ -8,6 +12,7 @@ module.exports = function(grunt) {
                 ' * http://www.vexflow.com  http://github.com/0xfe/vexflow\n' +
                 ' */\n';
   var BUILD_DIR = 'build';
+  var RELEASE_DIR = 'releases';
   var TARGET_RAW = BUILD_DIR + '/vexflow-debug.js';
   var TARGET_MIN = BUILD_DIR + '/vexflow-min.js';
 
@@ -115,8 +120,27 @@ module.exports = function(grunt) {
       files: ['tests/flow.html']
     },
     watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint']
+      files: SOURCES,
+      tasks: ['concat']
+    },
+    copy: {
+      release: {
+        files: [
+          {
+            expand: true,
+            dest: RELEASE_DIR,
+            cwd: BUILD_DIR,
+            src    : ['*.js', 'docs/**']
+          }
+        ]
+      }
+    },
+    docco: {
+      src: SOURCES,
+      options: {
+        layout: 'linear',
+        output: 'build/docs'
+      }
     }
   });
 
@@ -126,8 +150,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-docco');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'docco']);
 
+  // Release current build.
+  grunt.registerTask('release', 'Release current binaries to releases/.', function() {
+    grunt.task.run('copy:release');
+  });
 };

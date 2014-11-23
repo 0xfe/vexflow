@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>clef.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>clef.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p><a href="http://vexflow.com">VexFlow</a> - Copyright (c) Mohit Muthanna Cheppudira 2013.
+Co-author: Benjamin W. Bohl</p>
+<h2 id="description">Description</h2>
+<p>This file implements various types of clefs that can be rendered on a stave.</p>
+<p>See <code>tests/clef_tests.js</code> for usage examples.</p>
+
+        
+          <div class='highlight'><pre>
+Vex.Flow.Clef = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Clef</span><span class="hljs-params">(clef, size, annotation)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(clef, size, annotation);
+  }</pre></div>
+        
+      
+        
+        <p>To enable logging for this class, set <code>Vex.Flow.Clef.DEBUG</code> to <code>true</code>.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">L</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">if</span> (Vex.Flow.Clef.DEBUG) Vex.L(<span class="hljs-string">"Vex.Flow.Clef"</span>, <span class="hljs-built_in">arguments</span>); }</pre></div>
+        
+      
+        
+        <p>Every clef name is associated with a glyph code from the font file
+and a default stave line number.</p>
+
+        
+          <div class='highlight'><pre>  Clef.types = {
+    <span class="hljs-string">"treble"</span>: {
+      code: <span class="hljs-string">"v83"</span>,
+      line: <span class="hljs-number">3</span>
+    },
+    <span class="hljs-string">"bass"</span>: {
+      code: <span class="hljs-string">"v79"</span>,
+      line: <span class="hljs-number">1</span>
+    },
+    <span class="hljs-string">"alto"</span>: {
+      code: <span class="hljs-string">"vad"</span>,
+      line: <span class="hljs-number">2</span>
+    },
+    <span class="hljs-string">"tenor"</span>: {
+      code: <span class="hljs-string">"vad"</span>,
+      line: <span class="hljs-number">1</span>
+    },
+    <span class="hljs-string">"percussion"</span>: {
+      code: <span class="hljs-string">"v59"</span>,
+      line: <span class="hljs-number">2</span>
+    },
+    <span class="hljs-string">"soprano"</span>: {
+      code: <span class="hljs-string">"vad"</span>,
+      line: <span class="hljs-number">4</span>
+    },
+    <span class="hljs-string">"mezzo-soprano"</span>: {
+      code: <span class="hljs-string">"vad"</span>,
+      line: <span class="hljs-number">3</span>
+    },
+    <span class="hljs-string">"baritone-c"</span>: {
+      code: <span class="hljs-string">"vad"</span>,
+      line: <span class="hljs-number">0</span>
+    },
+    <span class="hljs-string">"baritone-f"</span>: {
+      code: <span class="hljs-string">"v79"</span>,
+      line: <span class="hljs-number">2</span>
+    },
+    <span class="hljs-string">"subbass"</span>: {
+      code: <span class="hljs-string">"v79"</span>,
+      line: <span class="hljs-number">0</span>
+    },
+    <span class="hljs-string">"french"</span>: {
+      code: <span class="hljs-string">"v83"</span>,
+      line: <span class="hljs-number">4</span>
+    },
+  };</pre></div>
+        
+      
+        
+        <p>Sizes affect the point-size of the clef.</p>
+
+        
+          <div class='highlight'><pre>  Clef.sizes = {
+    <span class="hljs-string">"default"</span>: <span class="hljs-number">40</span>,
+    <span class="hljs-string">"small"</span>: <span class="hljs-number">32</span>
+  };</pre></div>
+        
+      
+        
+        <p>Annotations attach to clefs — such as “8” for octave up or down.</p>
+
+        
+          <div class='highlight'><pre>  Clef.annotations = {
+    <span class="hljs-string">"8va"</span>: {
+      code: <span class="hljs-string">"v8"</span>,
+      sizes: {
+        <span class="hljs-string">"default"</span>: {
+          point: <span class="hljs-number">20</span>,
+          attachments: {
+            <span class="hljs-string">"treble"</span>: {
+              line: -<span class="hljs-number">1.2</span>,
+              x_shift: <span class="hljs-number">11</span>
+            }
+          }
+        },
+        <span class="hljs-string">"small"</span>: {
+          point: <span class="hljs-number">18</span>,
+          attachments: {
+            <span class="hljs-string">"treble"</span>: {
+              line: -<span class="hljs-number">0.4</span>,
+              x_shift: <span class="hljs-number">8</span>
+            }
+          }         
+        }
+      }
+    },
+    <span class="hljs-string">"8vb"</span>: {
+      code: <span class="hljs-string">"v8"</span>,
+      sizes: {
+        <span class="hljs-string">"default"</span>: {
+          point: <span class="hljs-number">20</span>,
+          attachments: {
+            <span class="hljs-string">"treble"</span>: {
+              line: <span class="hljs-number">6.3</span>,
+              x_shift: <span class="hljs-number">10</span>
+            },
+            <span class="hljs-string">"bass"</span>: {
+              line: <span class="hljs-number">4</span>,
+              x_shift: <span class="hljs-number">1</span>
+            }
+          }
+        },
+        <span class="hljs-string">"small"</span>: {
+          point: <span class="hljs-number">18</span>,
+          attachments: {
+            <span class="hljs-string">"treble"</span>: {
+              line: <span class="hljs-number">5.8</span>,
+              x_shift: <span class="hljs-number">6</span>
+            },
+            <span class="hljs-string">"bass"</span>: {
+              line: <span class="hljs-number">3.5</span>,
+              x_shift: <span class="hljs-number">0.5</span>
+            }
+          }         
+        }
+      }
+    },
+  };</pre></div>
+        
+      
+        
+        <h2 id="prototype-methods">Prototype Methods</h2>
+
+        
+          <div class='highlight'><pre>  Vex.Inherit(Clef, Vex.Flow.StaveModifier, {</pre></div>
+        
+      
+        
+        <p>Create a new clef. The parameter <code>clef</code> must be a key from
+<code>Clef.types</code>.</p>
+
+        
+          <div class='highlight'><pre>    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(clef, size, annotation)</span> </span>{
+      <span class="hljs-keyword">var</span> superclass = Vex.Flow.Clef.superclass;
+      superclass.init.call(<span class="hljs-keyword">this</span>);
+      
+      <span class="hljs-keyword">this</span>.clef = Vex.Flow.Clef.types[clef];
+      <span class="hljs-keyword">if</span> (size === <span class="hljs-literal">undefined</span>) {
+        <span class="hljs-keyword">this</span>.size = <span class="hljs-string">"default"</span>;
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">this</span>.size = size;
+      }
+      <span class="hljs-keyword">this</span>.clef.point = Vex.Flow.Clef.sizes[<span class="hljs-keyword">this</span>.size];</pre></div>
+        
+      
+        
+        <p>If an annotation, such as 8va, is specified, add it to the Clef object.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (annotation !== <span class="hljs-literal">undefined</span>) {
+        <span class="hljs-keyword">var</span> anno_dict = Vex.Flow.Clef.annotations[annotation];
+        <span class="hljs-keyword">this</span>.annotation = {
+          code: anno_dict.code,
+          point: anno_dict.sizes[<span class="hljs-keyword">this</span>.size].point,
+          line: anno_dict.sizes[<span class="hljs-keyword">this</span>.size].attachments[clef].line,
+          x_shift: anno_dict.sizes[<span class="hljs-keyword">this</span>.size].attachments[clef].x_shift
+        };
+      }
+      L(<span class="hljs-string">"Creating clef:"</span>, clef);
+    },</pre></div>
+        
+      
+        
+        <p>Add this clef to the start of the given <code>stave</code>.</p>
+
+        
+          <div class='highlight'><pre>    addModifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave)</span> </span>{
+      <span class="hljs-keyword">var</span> glyph = <span class="hljs-keyword">new</span> Vex.Flow.Glyph(<span class="hljs-keyword">this</span>.clef.code, <span class="hljs-keyword">this</span>.clef.point);
+      <span class="hljs-keyword">this</span>.placeGlyphOnLine(glyph, stave, <span class="hljs-keyword">this</span>.clef.line);
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.annotation !== <span class="hljs-literal">undefined</span>) {
+        <span class="hljs-keyword">var</span> attachment = <span class="hljs-keyword">new</span> Vex.Flow.Glyph(<span class="hljs-keyword">this</span>.annotation.code, <span class="hljs-keyword">this</span>.annotation.point);
+        attachment.metrics.x_max = <span class="hljs-number">0</span>;
+        attachment.setXShift(<span class="hljs-keyword">this</span>.annotation.x_shift);
+        <span class="hljs-keyword">this</span>.placeGlyphOnLine(attachment, stave, <span class="hljs-keyword">this</span>.annotation.line);
+        stave.addGlyph(attachment);
+      }
+      stave.addGlyph(glyph);
+    },</pre></div>
+        
+      
+        
+        <p>Add this clef to the end of the given <code>stave</code>.</p>
+
+        
+          <div class='highlight'><pre>    addEndModifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave)</span> </span>{
+      <span class="hljs-keyword">var</span> glyph = <span class="hljs-keyword">new</span> Vex.Flow.Glyph(<span class="hljs-keyword">this</span>.clef.code, <span class="hljs-keyword">this</span>.clef.point);
+      <span class="hljs-keyword">this</span>.placeGlyphOnLine(glyph, stave, <span class="hljs-keyword">this</span>.clef.line);
+      stave.addEndGlyph(glyph);
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.annotation !== <span class="hljs-literal">undefined</span>) {
+        <span class="hljs-keyword">var</span> attachment = <span class="hljs-keyword">new</span> Vex.Flow.Glyph(<span class="hljs-keyword">this</span>.annotation.code, <span class="hljs-keyword">this</span>.annotation.point);
+        attachment.metrics.x_max = <span class="hljs-number">0</span>;
+        attachment.setXShift(<span class="hljs-keyword">this</span>.annotation.x_shift);
+        <span class="hljs-keyword">this</span>.placeGlyphOnLine(attachment, stave, <span class="hljs-keyword">this</span>.annotation.line);
+        stave.addEndGlyph(attachment);
+      }
+    }
+  });
+
+  <span class="hljs-keyword">return</span> Clef;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

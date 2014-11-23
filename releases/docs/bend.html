@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>bend.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>bend.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p><a href="http://vexflow.com">VexFlow</a> - Copyright (c) Mohit Muthanna 2010.</p>
+<h2 id="description">Description</h2>
+<p>This file implements tablature bends.</p>
+
+        
+          <div class='highlight'><pre>
+<span class="hljs-comment">/**
+   @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
+   @param release If true, render a release. (DEPRECATED)
+   @param phrase If set, ignore "text" and "release", and use the more
+                 sophisticated phrase specified.
+
+   Example of a phrase:
+
+     [{
+       type: UP,
+       text: "whole"
+       width: 8;
+     },
+     {
+       type: DOWN,
+       text: "whole"
+       width: 8;
+     },
+     {
+       type: UP,
+       text: "half"
+       width: 8;
+     },
+     {
+       type: UP,
+       text: "whole"
+       width: 8;
+     },
+     {
+       type: DOWN,
+       text: "1 1/2"
+       width: 8;
+     }]
+ */</span>
+Vex.Flow.Bend = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Bend</span><span class="hljs-params">(text, release, phrase)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(text, release, phrase);
+  }
+  Bend.CATEGORY = <span class="hljs-string">"bends"</span>;
+
+  Bend.UP = <span class="hljs-number">0</span>;
+  Bend.DOWN = <span class="hljs-number">1</span>;
+
+  <span class="hljs-keyword">var</span> Modifier = Vex.Flow.Modifier;</pre></div>
+        
+      
+        
+        <h2 id="static-methods">Static Methods</h2>
+<p>Arrange bends in <code>ModifierContext</code></p>
+
+        
+          <div class='highlight'><pre>  Bend.format = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(bends, state)</span> </span>{
+    <span class="hljs-keyword">if</span> (!bends || bends.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">var</span> last_width = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">var</span> text_line = state.text_line;</pre></div>
+        
+      
+        
+        <p>Format Bends</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; bends.length; ++i) {
+      <span class="hljs-keyword">var</span> bend = bends[i];
+      bend.setXShift(last_width);
+      last_width = bend.getWidth();
+      bend.setTextLine(text_line);
+    }
+
+    state.right_shift += last_width;
+    state.text_line += <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  };</pre></div>
+        
+      
+        
+        <h2 id="prototype-methods">Prototype Methods</h2>
+
+        
+          <div class='highlight'><pre>  Vex.Inherit(Bend, Modifier, {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(text, release, phrase)</span> </span>{
+      <span class="hljs-keyword">var</span> superclass = Vex.Flow.Bend.superclass;
+      superclass.init.call(<span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">this</span>.text = text;
+      <span class="hljs-keyword">this</span>.x_shift = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.release = release || <span class="hljs-literal">false</span>;
+      <span class="hljs-keyword">this</span>.font = <span class="hljs-string">"10pt Arial"</span>;
+      <span class="hljs-keyword">this</span>.render_options = {
+        line_width: <span class="hljs-number">1.5</span>,
+        line_style: <span class="hljs-string">"#777777"</span>,
+        bend_width: <span class="hljs-number">8</span>,
+        release_width: <span class="hljs-number">8</span>
+      };
+
+      <span class="hljs-keyword">if</span> (phrase) {
+        <span class="hljs-keyword">this</span>.phrase = phrase;
+      } <span class="hljs-keyword">else</span> {</pre></div>
+        
+      
+        
+        <p>Backward compatibility</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">this</span>.phrase = [{type: Bend.UP, text: <span class="hljs-keyword">this</span>.text}];
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.release) <span class="hljs-keyword">this</span>.phrase.push({type: Bend.DOWN, text: <span class="hljs-string">""</span>});
+      }
+
+      <span class="hljs-keyword">this</span>.updateWidth();
+    },
+
+    setXShift: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> </span>{
+      <span class="hljs-keyword">this</span>.x_shift = value;
+      <span class="hljs-keyword">this</span>.updateWidth();
+    },
+
+    setFont: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(font)</span> </span>{ <span class="hljs-keyword">this</span>.font = font; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+
+    getText: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.text; },
+
+    updateWidth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">measure_text</span><span class="hljs-params">(text)</span> </span>{
+        <span class="hljs-keyword">var</span> text_width;
+        <span class="hljs-keyword">if</span> (that.context) {
+          text_width = that.context.measureText(text).width;
+        } <span class="hljs-keyword">else</span> {
+          text_width = Vex.Flow.textWidth(text);
+        }
+
+        <span class="hljs-keyword">return</span> text_width;
+      }
+
+      <span class="hljs-keyword">var</span> total_width = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-keyword">this</span>.phrase.length; ++i) {
+        <span class="hljs-keyword">var</span> bend = <span class="hljs-keyword">this</span>.phrase[i];
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">'width'</span> <span class="hljs-keyword">in</span> bend) {
+          total_width += bend.width;
+        } <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">var</span> additional_width = (bend.type == Bend.UP) ?
+            <span class="hljs-keyword">this</span>.render_options.bend_width : <span class="hljs-keyword">this</span>.render_options.release_width;
+
+          bend.width = Vex.Max(additional_width, measure_text(bend.text)) + <span class="hljs-number">3</span>;
+          bend.draw_width = bend.width / <span class="hljs-number">2</span>;
+          total_width += bend.width;
+        }
+      }
+
+      <span class="hljs-keyword">this</span>.setWidth(total_width + <span class="hljs-keyword">this</span>.x_shift);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoContext"</span>,
+        <span class="hljs-string">"Can't draw bend without a context."</span>);
+      <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>.note &amp;&amp; (<span class="hljs-keyword">this</span>.index != <span class="hljs-literal">null</span>))) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoNoteForBend"</span>,
+        <span class="hljs-string">"Can't draw bend without a note or index."</span>);
+
+      <span class="hljs-keyword">var</span> start = <span class="hljs-keyword">this</span>.note.getModifierStartXY(Modifier.Position.RIGHT,
+          <span class="hljs-keyword">this</span>.index);
+      start.x += <span class="hljs-number">3</span>;
+      start.y += <span class="hljs-number">0.5</span>;
+      <span class="hljs-keyword">var</span> x_shift = <span class="hljs-keyword">this</span>.x_shift;
+
+      <span class="hljs-keyword">var</span> ctx = <span class="hljs-keyword">this</span>.context;
+      <span class="hljs-keyword">var</span> bend_height = <span class="hljs-keyword">this</span>.note.getStave().getYForTopText(<span class="hljs-keyword">this</span>.text_line) + <span class="hljs-number">3</span>;
+      <span class="hljs-keyword">var</span> annotation_y = <span class="hljs-keyword">this</span>.note.getStave().getYForTopText(<span class="hljs-keyword">this</span>.text_line) - <span class="hljs-number">1</span>;
+      <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderBend</span><span class="hljs-params">(x, y, width, height)</span> </span>{
+        <span class="hljs-keyword">var</span> cp_x = x + width;
+        <span class="hljs-keyword">var</span> cp_y = y;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineWidth(that.render_options.line_width);
+        ctx.setStrokeStyle(that.render_options.line_style);
+        ctx.setFillStyle(that.render_options.line_style);
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(cp_x, cp_y, x + width, height);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderRelease</span><span class="hljs-params">(x, y, width, height)</span> </span>{
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineWidth(that.render_options.line_width);
+        ctx.setStrokeStyle(that.render_options.line_style);
+        ctx.setFillStyle(that.render_options.line_style);
+        ctx.moveTo(x, height);
+        ctx.quadraticCurveTo(
+            x + width, height,
+            x + width, y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderArrowHead</span><span class="hljs-params">(x, y, direction)</span> </span>{
+        <span class="hljs-keyword">var</span> width = <span class="hljs-number">4</span>;
+        <span class="hljs-keyword">var</span> dir = direction || <span class="hljs-number">1</span>;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - width, y + width * dir);
+        ctx.lineTo(x + width, y + width * dir);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderText</span><span class="hljs-params">(x, text)</span> </span>{
+        ctx.save();
+        ctx.setRawFont(that.font);
+        <span class="hljs-keyword">var</span> render_x = x - (ctx.measureText(text).width / <span class="hljs-number">2</span>);
+        ctx.fillText(text, render_x, annotation_y);
+        ctx.restore();
+      }
+
+      <span class="hljs-keyword">var</span> last_bend = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">var</span> last_drawn_width = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-keyword">this</span>.phrase.length; ++i) {
+        <span class="hljs-keyword">var</span> bend = <span class="hljs-keyword">this</span>.phrase[i];
+        <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) bend.draw_width += x_shift;
+
+        last_drawn_width = bend.draw_width + (last_bend?last_bend.draw_width:<span class="hljs-number">0</span>) - (i==<span class="hljs-number">1</span>?x_shift:<span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (bend.type == Bend.UP) {
+          <span class="hljs-keyword">if</span> (last_bend &amp;&amp; last_bend.type == Bend.UP) {
+            renderArrowHead(start.x, bend_height);
+          }
+
+          renderBend(start.x, start.y, last_drawn_width, bend_height);
+        }
+
+        <span class="hljs-keyword">if</span> (bend.type == Bend.DOWN) {
+          <span class="hljs-keyword">if</span> (last_bend &amp;&amp; last_bend.type == Bend.UP) {
+            renderRelease(start.x, start.y, last_drawn_width, bend_height);
+          }
+
+          <span class="hljs-keyword">if</span> (last_bend &amp;&amp; last_bend.type == Bend.DOWN) {
+            renderArrowHead(start.x, start.y, -<span class="hljs-number">1</span>);
+            renderRelease(start.x, start.y, last_drawn_width, bend_height);
+          }
+
+          <span class="hljs-keyword">if</span> (last_bend == <span class="hljs-literal">null</span>) {
+            last_drawn_width = bend.draw_width;
+            renderRelease(start.x, start.y, last_drawn_width, bend_height);
+          }
+        }
+
+        renderText(start.x + last_drawn_width, bend.text);
+        last_bend = bend;
+        last_bend.x = start.x;
+
+        start.x += last_drawn_width;
+      }</pre></div>
+        
+      
+        
+        <p>Final arrowhead and text</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (last_bend.type == Bend.UP) {
+        renderArrowHead(last_bend.x + last_drawn_width, bend_height);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (last_bend.type == Bend.DOWN) {
+        renderArrowHead(last_bend.x + last_drawn_width, start.y, -<span class="hljs-number">1</span>);
+      }
+    }
+  });
+
+  <span class="hljs-keyword">return</span> Bend;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>frethandfinger.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>frethandfinger.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>VexFlow - Music Engraving for HTML5
+Copyright Mohit Muthanna 2010
+Author Larry Kuhns 2013
+Class to draws string numbers into the notation.</p>
+
+        
+          <div class='highlight'><pre>
+<span class="hljs-comment">/**
+ * @constructor
+ */</span>
+Vex.Flow.FretHandFinger = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">FretHandFinger</span><span class="hljs-params">(number)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(number);
+  }
+  FretHandFinger.CATEGORY = <span class="hljs-string">"frethandfinger"</span>;
+
+  <span class="hljs-keyword">var</span> Modifier = Vex.Flow.Modifier;</pre></div>
+        
+      
+        
+        <p>Arrange fingerings inside a ModifierContext.</p>
+
+        
+          <div class='highlight'><pre>  FretHandFinger.format = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(nums, state)</span> </span>{
+    <span class="hljs-keyword">var</span> left_shift = state.left_shift;
+    <span class="hljs-keyword">var</span> right_shift = state.right_shift;
+    <span class="hljs-keyword">var</span> num_spacing = <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">if</span> (!nums || nums.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">var</span> nums_list = [];
+    <span class="hljs-keyword">var</span> prev_note = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">var</span> shift_left = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">var</span> shift_right = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">var</span> i, num, note, pos, props_tmp;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; nums.length; ++i) {
+      num = nums[i];
+      note = num.getNote();
+      pos = num.getPosition();
+      <span class="hljs-keyword">var</span> props = note.getKeyProps()[num.getIndex()];
+      <span class="hljs-keyword">if</span> (note != prev_note) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> n = <span class="hljs-number">0</span>; n &lt; note.keys.length; ++n) {
+          props_tmp = note.getKeyProps()[n];
+          <span class="hljs-keyword">if</span> (left_shift === <span class="hljs-number">0</span>)
+            shift_left = (props_tmp.displaced ? note.getExtraLeftPx() : shift_left);
+          <span class="hljs-keyword">if</span> (right_shift === <span class="hljs-number">0</span>)
+            shift_right = (props_tmp.displaced ? note.getExtraRightPx() : shift_right);
+        }
+        prev_note = note;
+      }
+
+      nums_list.push({ line: props.line, pos: pos, shiftL: shift_left, shiftR: shift_right, note: note, num: num });
+    }</pre></div>
+        
+      
+        
+        <p>Sort fingernumbers by line number.</p>
+
+        
+          <div class='highlight'><pre>    nums_list.sort(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a, b)</span> </span>{ <span class="hljs-keyword">return</span> (b.line - a.line); });
+
+    <span class="hljs-keyword">var</span> num_shiftL = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">var</span> num_shiftR = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">var</span> x_widthL = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">var</span> x_widthR = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">var</span> last_line = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">var</span> last_note = <span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; nums_list.length; ++i) {
+      <span class="hljs-keyword">var</span> num_shift = <span class="hljs-number">0</span>;
+      note = nums_list[i].note;
+      pos = nums_list[i].pos;
+      num = nums_list[i].num;
+      <span class="hljs-keyword">var</span> line = nums_list[i].line;
+      <span class="hljs-keyword">var</span> shiftL = nums_list[i].shiftL;
+      <span class="hljs-keyword">var</span> shiftR = nums_list[i].shiftR;</pre></div>
+        
+      
+        
+        <p>Reset the position of the string number every line.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (line != last_line || note != last_note) {
+        num_shiftL = left_shift + shiftL;
+        num_shiftR = right_shift + shiftR;
+      }
+
+      <span class="hljs-keyword">var</span> num_width = num.getWidth() + num_spacing;
+      <span class="hljs-keyword">if</span> (pos == Vex.Flow.Modifier.Position.LEFT) {
+        num.setXShift(left_shift + num_shiftL);
+        num_shift = left_shift + num_width; <span class="hljs-comment">// spacing</span>
+        x_widthL = (num_shift &gt; x_widthL) ? num_shift : x_widthL;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pos == Vex.Flow.Modifier.Position.RIGHT) {
+        num.setXShift(num_shiftR);
+        num_shift = shift_right + num_width; <span class="hljs-comment">// spacing</span>
+        x_widthR = (num_shift &gt; x_widthR) ? num_shift : x_widthR;
+      }
+      last_line = line;
+      last_note = note;
+    }
+
+    state.left_shift += x_widthL;
+    state.right_shift += x_widthR;
+  };
+
+  Vex.Inherit(FretHandFinger, Modifier, {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(number)</span> </span>{
+      <span class="hljs-keyword">var</span> superclass = Vex.Flow.FretHandFinger.superclass;
+      superclass.init.call(<span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">this</span>.note = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.index = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.finger = number;
+      <span class="hljs-keyword">this</span>.width = <span class="hljs-number">7</span>;
+      <span class="hljs-keyword">this</span>.position = Modifier.Position.LEFT;  <span class="hljs-comment">// Default position above stem or note head</span>
+      <span class="hljs-keyword">this</span>.x_shift = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.y_shift = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.x_offset = <span class="hljs-number">0</span>;       <span class="hljs-comment">// Horizontal offset from default</span>
+      <span class="hljs-keyword">this</span>.y_offset = <span class="hljs-number">0</span>;       <span class="hljs-comment">// Vertical offset from default</span>
+      <span class="hljs-keyword">this</span>.font = {
+        family: <span class="hljs-string">"sans-serif"</span>,
+        size: <span class="hljs-number">9</span>,
+        weight: <span class="hljs-string">"bold"</span>
+      };
+    },
+
+    getNote: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.note; },
+    setNote: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(note)</span> </span>{ <span class="hljs-keyword">this</span>.note = note; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+    getIndex: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.index; },
+    setIndex: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(index)</span> </span>{ <span class="hljs-keyword">this</span>.index = index; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+    getPosition: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.position; },
+    setPosition: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(position)</span> </span>{
+      <span class="hljs-keyword">if</span> (position &gt;= Modifier.Position.LEFT &amp;&amp;
+          position &lt;= Modifier.Position.BELOW)
+        <span class="hljs-keyword">this</span>.position = position;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+    setFretHandFinger: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(number)</span> </span>{ <span class="hljs-keyword">this</span>.finger = number; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+    setOffsetX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> </span>{ <span class="hljs-keyword">this</span>.x_offset = x; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+    setOffsetY: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(y)</span> </span>{ <span class="hljs-keyword">this</span>.y_offset = y; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },
+
+    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoContext"</span>,
+        <span class="hljs-string">"Can't draw string number without a context."</span>);
+      <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>.note &amp;&amp; (<span class="hljs-keyword">this</span>.index != <span class="hljs-literal">null</span>))) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoAttachedNote"</span>,
+        <span class="hljs-string">"Can't draw string number without a note and index."</span>);
+
+      <span class="hljs-keyword">var</span> ctx = <span class="hljs-keyword">this</span>.context;
+      <span class="hljs-keyword">var</span> start = <span class="hljs-keyword">this</span>.note.getModifierStartXY(<span class="hljs-keyword">this</span>.position, <span class="hljs-keyword">this</span>.index);
+      <span class="hljs-keyword">var</span> dot_x = (start.x + <span class="hljs-keyword">this</span>.x_shift + <span class="hljs-keyword">this</span>.x_offset);
+      <span class="hljs-keyword">var</span> dot_y = start.y + <span class="hljs-keyword">this</span>.y_shift + <span class="hljs-keyword">this</span>.y_offset + <span class="hljs-number">5</span>;
+
+      <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.position) {
+        <span class="hljs-keyword">case</span> Modifier.Position.ABOVE:
+          dot_x -= <span class="hljs-number">4</span>;
+          dot_y -= <span class="hljs-number">12</span>;
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Modifier.Position.BELOW:
+          dot_x -= <span class="hljs-number">2</span>;
+          dot_y += <span class="hljs-number">10</span>;
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Modifier.Position.LEFT:
+          dot_x -= <span class="hljs-keyword">this</span>.width;
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Modifier.Position.RIGHT:
+          dot_x += <span class="hljs-number">1</span>;
+          <span class="hljs-keyword">break</span>;
+      }
+
+      ctx.save();
+      ctx.setFont(<span class="hljs-keyword">this</span>.font.family, <span class="hljs-keyword">this</span>.font.size, <span class="hljs-keyword">this</span>.font.weight);
+      ctx.fillText(<span class="hljs-string">""</span> + <span class="hljs-keyword">this</span>.finger, dot_x, dot_y);
+
+      ctx.restore();
+    }
+  });
+
+  <span class="hljs-keyword">return</span> FretHandFinger;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

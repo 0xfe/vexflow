@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>annotation.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>annotation.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p><a href="http://vexflow.com">VexFlow</a> - Copyright (c) Mohit Muthanna 2010.</p>
+<h2 id="description">Description</h2>
+<p>This file implements text annotations as modifiers that can be attached to
+notes.</p>
+<p>See <code>tests/annotation_tests.js</code> for usage examples.</p>
+
+        
+          <div class='highlight'><pre>
+Vex.Flow.Annotation = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Annotation</span><span class="hljs-params">(text)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(text);
+  }
+  Annotation.CATEGORY = <span class="hljs-string">"annotations"</span>;</pre></div>
+        
+      
+        
+        <p>To enable logging for this class. Set <code>Vex.Flow.Annotation.DEBUG</code> to <code>true</code>.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">L</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">if</span> (Annotation.DEBUG) Vex.L(<span class="hljs-string">"Vex.Flow.Annotation"</span>, <span class="hljs-built_in">arguments</span>); }</pre></div>
+        
+      
+        
+        <p>Text annotations can be positioned and justified relative to the note.</p>
+
+        
+          <div class='highlight'><pre>  Annotation.Justify = {
+    LEFT: <span class="hljs-number">1</span>,
+    CENTER: <span class="hljs-number">2</span>,
+    RIGHT: <span class="hljs-number">3</span>,
+    CENTER_STEM: <span class="hljs-number">4</span>
+  };
+
+  Annotation.VerticalJustify = {
+    TOP: <span class="hljs-number">1</span>,
+    CENTER: <span class="hljs-number">2</span>,
+    BOTTOM: <span class="hljs-number">3</span>,
+    CENTER_STEM: <span class="hljs-number">4</span>
+  };</pre></div>
+        
+      
+        
+        <p>Arrange annotations within a <code>ModifierContext</code></p>
+
+        
+          <div class='highlight'><pre>  Annotation.format = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(annotations, state)</span> </span>{
+    <span class="hljs-keyword">if</span> (!annotations || annotations.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">var</span> text_line = state.text_line;
+    <span class="hljs-keyword">var</span> max_width = <span class="hljs-number">0</span>;</pre></div>
+        
+      
+        
+        <p>Format Annotations</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">var</span> width;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; annotations.length; ++i) {
+      <span class="hljs-keyword">var</span> annotation = annotations[i];
+      annotation.setTextLine(text_line);
+      width = annotation.getWidth() &gt; max_width ?
+        annotation.getWidth() : max_width;
+      text_line++;
+    }
+
+    state.left_shift += width / <span class="hljs-number">2</span>;
+    state.right_shift += width / <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  };</pre></div>
+        
+      
+        
+        <h2 id="prototype-methods">Prototype Methods</h2>
+<p>Annotations inherit from <code>Modifier</code> and is positioned correctly when
+in a <code>ModifierContext</code>.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-keyword">var</span> Modifier = Vex.Flow.Modifier;
+  Vex.Inherit(Annotation, Modifier, {</pre></div>
+        
+      
+        
+        <p>Create a new <code>Annotation</code> with the string <code>text</code>.</p>
+
+        
+          <div class='highlight'><pre>    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(text)</span> </span>{
+      Annotation.superclass.init.call(<span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">this</span>.note = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.index = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.text_line = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.text = text;
+      <span class="hljs-keyword">this</span>.justification = Annotation.Justify.CENTER;
+      <span class="hljs-keyword">this</span>.vert_justification = Annotation.VerticalJustify.TOP;
+      <span class="hljs-keyword">this</span>.font = {
+        family: <span class="hljs-string">"Arial"</span>,
+        size: <span class="hljs-number">10</span>,
+        weight: <span class="hljs-string">""</span>
+      };</pre></div>
+        
+      
+        
+        <p>The default width is calculated from the text.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.setWidth(Vex.Flow.textWidth(text));
+    },</pre></div>
+        
+      
+        
+        <p>Set the vertical position of the text relative to the stave.</p>
+
+        
+          <div class='highlight'><pre>    setTextLine: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span> </span>{ <span class="hljs-keyword">this</span>.text_line = line; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Set font family, size, and weight. E.g., <code>Arial</code>, <code>10pt</code>, <code>Bold</code>.</p>
+
+        
+          <div class='highlight'><pre>    setFont: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(family, size, weight)</span> </span>{
+      <span class="hljs-keyword">this</span>.font = { family: family, size: size, weight: weight };
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Set vertical position of text (above or below stave). <code>just</code> must be
+a value in <code>Annotation.VerticalJustify</code>.</p>
+
+        
+          <div class='highlight'><pre>    setVerticalJustification: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(just)</span> </span>{
+      <span class="hljs-keyword">this</span>.vert_justification = just;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Get and set horizontal justification. <code>justification</code> is a value in
+<code>Annotation.Justify</code>.</p>
+
+        
+          <div class='highlight'><pre>    getJustification: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.justification; },
+    setJustification: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(justification)</span> </span>{
+      <span class="hljs-keyword">this</span>.justification = justification; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Render text beside the note.</p>
+
+        
+          <div class='highlight'><pre>    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoContext"</span>,
+        <span class="hljs-string">"Can't draw text annotation without a context."</span>);
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.note) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoNoteForAnnotation"</span>,
+        <span class="hljs-string">"Can't draw text annotation without an attached note."</span>);
+
+      <span class="hljs-keyword">var</span> start = <span class="hljs-keyword">this</span>.note.getModifierStartXY(Modifier.Position.ABOVE,
+          <span class="hljs-keyword">this</span>.index);</pre></div>
+        
+      
+        
+        <p>We’re changing context parameters. Save current state.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.context.save();
+      <span class="hljs-keyword">this</span>.context.setFont(<span class="hljs-keyword">this</span>.font.family, <span class="hljs-keyword">this</span>.font.size, <span class="hljs-keyword">this</span>.font.weight);
+      <span class="hljs-keyword">var</span> text_width = <span class="hljs-keyword">this</span>.context.measureText(<span class="hljs-keyword">this</span>.text).width;</pre></div>
+        
+      
+        
+        <p>Estimate text height to be the same as the width of an ‘m’.</p>
+<p>This is a hack to work around the inability to measure text height
+in HTML5 Canvas (and SVG).</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> text_height = <span class="hljs-keyword">this</span>.context.measureText(<span class="hljs-string">"m"</span>).width;
+      <span class="hljs-keyword">var</span> x, y;
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.justification == Annotation.Justify.LEFT) {
+        x = start.x;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.justification == Annotation.Justify.RIGHT) {
+        x = start.x - text_width;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.justification == Annotation.Justify.CENTER) {
+        x = start.x - text_width / <span class="hljs-number">2</span>;
+      } <span class="hljs-keyword">else</span> <span class="hljs-comment">/* CENTER_STEM */</span> {
+        x = <span class="hljs-keyword">this</span>.note.getStemX() - text_width / <span class="hljs-number">2</span>;
+      }
+
+      <span class="hljs-keyword">var</span> stem_ext, spacing;
+      <span class="hljs-keyword">var</span> has_stem = <span class="hljs-keyword">this</span>.note.hasStem();
+      <span class="hljs-keyword">var</span> stave = <span class="hljs-keyword">this</span>.note.getStave();</pre></div>
+        
+      
+        
+        <p>The position of the text varies based on whether or not the note
+has a stem.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (has_stem) {
+        stem_ext = <span class="hljs-keyword">this</span>.note.getStem().getExtents();
+        spacing = stave.getSpacingBetweenLines();
+      }
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.vert_justification == Annotation.VerticalJustify.BOTTOM) {
+        y = stave.getYForBottomText(<span class="hljs-keyword">this</span>.text_line);
+        <span class="hljs-keyword">if</span> (has_stem) {
+          <span class="hljs-keyword">var</span> stem_base = (<span class="hljs-keyword">this</span>.note.getStemDirection() === <span class="hljs-number">1</span> ? stem_ext.baseY : stem_ext.topY);
+          y = <span class="hljs-built_in">Math</span>.max(y, stem_base + (spacing * (<span class="hljs-keyword">this</span>.text_line + <span class="hljs-number">2</span>)));
+        }
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.vert_justification ==
+                 Annotation.VerticalJustify.CENTER) {
+        <span class="hljs-keyword">var</span> yt = <span class="hljs-keyword">this</span>.note.getYForTopText(<span class="hljs-keyword">this</span>.text_line) - <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">var</span> yb = stave.getYForBottomText(<span class="hljs-keyword">this</span>.text_line);
+        y = yt + ( yb - yt ) / <span class="hljs-number">2</span> + text_height / <span class="hljs-number">2</span>;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.vert_justification ==
+                 Annotation.VerticalJustify.TOP) {
+        y = <span class="hljs-built_in">Math</span>.min(stave.getYForTopText(<span class="hljs-keyword">this</span>.text_line), <span class="hljs-keyword">this</span>.note.getYs()[<span class="hljs-number">0</span>] - <span class="hljs-number">10</span>);
+        <span class="hljs-keyword">if</span> (has_stem) {
+          y = <span class="hljs-built_in">Math</span>.min(y, (stem_ext.topY - <span class="hljs-number">5</span>) - (spacing * <span class="hljs-keyword">this</span>.text_line));
+        }
+      } <span class="hljs-keyword">else</span> <span class="hljs-comment">/* CENTER_STEM */</span>{
+        <span class="hljs-keyword">var</span> extents = <span class="hljs-keyword">this</span>.note.getStemExtents();
+        y = extents.topY + (extents.baseY - extents.topY) / <span class="hljs-number">2</span> +
+          text_height / <span class="hljs-number">2</span>;
+      }
+
+      L(<span class="hljs-string">"Rendering annotation: "</span>, <span class="hljs-keyword">this</span>.text, x, y);
+      <span class="hljs-keyword">this</span>.context.fillText(<span class="hljs-keyword">this</span>.text, x, y);
+      <span class="hljs-keyword">this</span>.context.restore();
+    }
+  });
+
+  <span class="hljs-keyword">return</span> Annotation;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

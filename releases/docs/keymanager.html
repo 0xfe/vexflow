@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>keymanager.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>keymanager.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>VexFlow - Music Engraving for HTML5
+Copyright Mohit Muthanna 2010</p>
+<p>This class implements diatonic key management.</p>
+<p>requires: vex.js   (Vex)
+requires: flow.js  (Vex.Flow)
+requires: music.js (Vex.Flow.Music)</p>
+
+        
+          <div class='highlight'><pre>
+<span class="hljs-comment">/**
+ * @constructor
+ */</span>
+Vex.Flow.KeyManager = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">KeyManager</span><span class="hljs-params">(key)</span> </span>{
+    <span class="hljs-keyword">this</span>.init(key);
+  }
+
+  KeyManager.scales = {
+    <span class="hljs-string">"M"</span>: Vex.Flow.Music.scales.major,
+    <span class="hljs-string">"m"</span>: Vex.Flow.Music.scales.minor
+  };
+
+  KeyManager.prototype = {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span> </span>{
+      <span class="hljs-keyword">this</span>.music = <span class="hljs-keyword">new</span> Vex.Flow.Music();
+      <span class="hljs-keyword">this</span>.setKey(key);
+    },
+
+    setKey: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span> </span>{
+      <span class="hljs-keyword">this</span>.key = key;
+      <span class="hljs-keyword">this</span>.reset();
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    getKey: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.key; },
+
+    reset: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">this</span>.keyParts = <span class="hljs-keyword">this</span>.music.getKeyParts(<span class="hljs-keyword">this</span>.key);
+
+      <span class="hljs-keyword">this</span>.keyString = <span class="hljs-keyword">this</span>.keyParts.root;
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.keyParts.accidental) <span class="hljs-keyword">this</span>.keyString += <span class="hljs-keyword">this</span>.keyParts.accidental;
+
+      <span class="hljs-keyword">var</span> is_supported_type = KeyManager.scales[<span class="hljs-keyword">this</span>.keyParts.type];
+      <span class="hljs-keyword">if</span> (!is_supported_type)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"BadArguments"</span>, <span class="hljs-string">"Unsupported key type: "</span> + <span class="hljs-keyword">this</span>.key);
+
+      <span class="hljs-keyword">this</span>.scale = <span class="hljs-keyword">this</span>.music.getScaleTones(
+          <span class="hljs-keyword">this</span>.music.getNoteValue(<span class="hljs-keyword">this</span>.keyString),
+          Vex.Flow.KeyManager.scales[<span class="hljs-keyword">this</span>.keyParts.type]);
+
+      <span class="hljs-keyword">this</span>.scaleMap = {};
+      <span class="hljs-keyword">this</span>.scaleMapByValue = {};
+      <span class="hljs-keyword">this</span>.originalScaleMapByValue = {};
+
+      <span class="hljs-keyword">var</span> noteLocation = Vex.Flow.Music.root_indices[<span class="hljs-keyword">this</span>.keyParts.root];
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; Vex.Flow.Music.roots.length; ++i) {
+        <span class="hljs-keyword">var</span> index = (noteLocation + i) % Vex.Flow.Music.roots.length;
+        <span class="hljs-keyword">var</span> rootName = Vex.Flow.Music.roots[index];
+
+        <span class="hljs-keyword">var</span> noteName = <span class="hljs-keyword">this</span>.music.getRelativeNoteName(rootName, <span class="hljs-keyword">this</span>.scale[i]);
+        <span class="hljs-keyword">this</span>.scaleMap[rootName] = noteName;
+        <span class="hljs-keyword">this</span>.scaleMapByValue[<span class="hljs-keyword">this</span>.scale[i]] = noteName;
+        <span class="hljs-keyword">this</span>.originalScaleMapByValue[<span class="hljs-keyword">this</span>.scale[i]] = noteName;
+      }
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    getAccidental: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span> </span>{
+      <span class="hljs-keyword">var</span> root = <span class="hljs-keyword">this</span>.music.getKeyParts(key).root;
+      <span class="hljs-keyword">var</span> parts = <span class="hljs-keyword">this</span>.music.getNoteParts(<span class="hljs-keyword">this</span>.scaleMap[root]);
+
+      <span class="hljs-keyword">return</span> {
+        note: <span class="hljs-keyword">this</span>.scaleMap[root],
+        accidental: parts.accidental
+      };
+    },
+
+    selectNote: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(note)</span> </span>{
+      note = note.toLowerCase();
+      <span class="hljs-keyword">var</span> parts = <span class="hljs-keyword">this</span>.music.getNoteParts(note);</pre></div>
+        
+      
+        
+        <p>First look for matching note in our altered scale</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> scaleNote = <span class="hljs-keyword">this</span>.scaleMap[parts.root];
+      <span class="hljs-keyword">var</span> modparts = <span class="hljs-keyword">this</span>.music.getNoteParts(scaleNote);
+
+      <span class="hljs-keyword">if</span> (scaleNote == note) <span class="hljs-keyword">return</span> {
+        <span class="hljs-string">"note"</span>: scaleNote,
+        <span class="hljs-string">"accidental"</span>: parts.accidental,
+        <span class="hljs-string">"change"</span>: <span class="hljs-literal">false</span>
+      };</pre></div>
+        
+      
+        
+        <p>Then search for a note of equivalent value in our altered scale</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> valueNote = <span class="hljs-keyword">this</span>.scaleMapByValue[<span class="hljs-keyword">this</span>.music.getNoteValue(note)];
+      <span class="hljs-keyword">if</span> (valueNote != <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">return</span> {
+          <span class="hljs-string">"note"</span>: valueNote,
+          <span class="hljs-string">"accidental"</span>: <span class="hljs-keyword">this</span>.music.getNoteParts(valueNote).accidental,
+          <span class="hljs-string">"change"</span>: <span class="hljs-literal">false</span>
+        };
+      }</pre></div>
+        
+      
+        
+        <p>Then search for a note of equivalent value in the original scale</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> originalValueNote = <span class="hljs-keyword">this</span>.originalScaleMapByValue[
+        <span class="hljs-keyword">this</span>.music.getNoteValue(note)];
+      <span class="hljs-keyword">if</span> (originalValueNote != <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">this</span>.scaleMap[modparts.root] = originalValueNote;
+        <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.scaleMapByValue[<span class="hljs-keyword">this</span>.music.getNoteValue(scaleNote)];
+        <span class="hljs-keyword">this</span>.scaleMapByValue[<span class="hljs-keyword">this</span>.music.getNoteValue(note)] = originalValueNote;
+        <span class="hljs-keyword">return</span> {
+          <span class="hljs-string">"note"</span>: originalValueNote,
+          <span class="hljs-string">"accidental"</span>: <span class="hljs-keyword">this</span>.music.getNoteParts(originalValueNote).accidental,
+          <span class="hljs-string">"change"</span>: <span class="hljs-literal">true</span>
+        };
+      }</pre></div>
+        
+      
+        
+        <p>Then try to unmodify a currently modified note.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (modparts.root == note) {
+        <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.scaleMapByValue[
+          <span class="hljs-keyword">this</span>.music.getNoteValue(<span class="hljs-keyword">this</span>.scaleMap[parts.root])];
+        <span class="hljs-keyword">this</span>.scaleMapByValue[<span class="hljs-keyword">this</span>.music.getNoteValue(modparts.root)] =
+          modparts.root;
+        <span class="hljs-keyword">this</span>.scaleMap[modparts.root] = modparts.root;
+        <span class="hljs-keyword">return</span> {
+          <span class="hljs-string">"note"</span>: modparts.root,
+          <span class="hljs-string">"accidental"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-string">"change"</span>: <span class="hljs-literal">true</span>
+        };
+      }</pre></div>
+        
+      
+        
+        <p>Last resort — shitshoot</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.scaleMapByValue[
+        <span class="hljs-keyword">this</span>.music.getNoteValue(<span class="hljs-keyword">this</span>.scaleMap[parts.root])];
+      <span class="hljs-keyword">this</span>.scaleMapByValue[<span class="hljs-keyword">this</span>.music.getNoteValue(note)] = note;
+
+      <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.scaleMap[modparts.root];
+      <span class="hljs-keyword">this</span>.scaleMap[modparts.root] = note;
+
+      <span class="hljs-keyword">return</span> {
+        <span class="hljs-string">"note"</span>: note,
+        <span class="hljs-string">"accidental"</span>: parts.accidental,
+        <span class="hljs-string">"change"</span>: <span class="hljs-literal">true</span>
+      };
+    }
+  };
+
+  <span class="hljs-keyword">return</span> KeyManager;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

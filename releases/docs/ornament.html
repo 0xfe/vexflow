@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>ornament.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>ornament.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p><a href="http://vexflow.com">VexFlow</a> - Copyright (c) Mohit Muthanna 2010.
+Author: Cyril Silverman</p>
+<h2 id="description">Description</h2>
+<p>This file implements ornaments as modifiers that can be
+attached to notes. The complete list of ornaments is available in
+<code>tables.js</code> under <code>Vex.Flow.ornamentCodes</code>.</p>
+<p>See <code>tests/ornament_tests.js</code> for usage examples.</p>
+
+        
+          <div class='highlight'><pre>
+Vex.Flow.Ornament = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Ornament</span><span class="hljs-params">(type)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(type);
+  }
+  Ornament.CATEGORY = <span class="hljs-string">"ornaments"</span>;</pre></div>
+        
+      
+        
+        <p>Accidental position modifications for each glyph</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-keyword">var</span> acc_mods = {
+    <span class="hljs-string">"n"</span>: {
+      shift_x: <span class="hljs-number">1</span>,
+      shift_y_upper:<span class="hljs-number">0</span>,
+      shift_y_lower:<span class="hljs-number">0</span>,
+      height: <span class="hljs-number">17</span>
+    },
+    <span class="hljs-string">"#"</span>: {
+      shift_x: <span class="hljs-number">0</span>,
+      shift_y_upper: -<span class="hljs-number">2</span>,
+      shift_y_lower: -<span class="hljs-number">2</span>,
+      height: <span class="hljs-number">20</span>
+    },
+    <span class="hljs-string">"b"</span>: {
+      shift_x: <span class="hljs-number">1</span>,
+      shift_y_upper: <span class="hljs-number">0</span>,
+      shift_y_lower: <span class="hljs-number">3</span>,
+      height: <span class="hljs-number">18</span>
+    },
+    <span class="hljs-string">"##"</span>: {
+      shift_x: <span class="hljs-number">0</span>,
+      shift_y_upper: <span class="hljs-number">0</span>,
+      shift_y_lower: <span class="hljs-number">0</span>,
+      height: <span class="hljs-number">12</span>,
+    },
+    <span class="hljs-string">"bb"</span>: {
+      shift_x: <span class="hljs-number">0</span>,
+      shift_y_upper: <span class="hljs-number">0</span>,
+      shift_y_lower: <span class="hljs-number">4</span>,
+      height: <span class="hljs-number">17</span>
+    },
+    <span class="hljs-string">"db"</span>: {
+      shift_x: -<span class="hljs-number">3</span>,
+      shift_y_upper: <span class="hljs-number">0</span>,
+      shift_y_lower: <span class="hljs-number">4</span>,
+      height: <span class="hljs-number">17</span>
+    },
+    <span class="hljs-string">"bbs"</span>: {
+      shift_x: <span class="hljs-number">0</span>,
+      shift_y_upper: <span class="hljs-number">0</span>,
+      shift_y_lower: <span class="hljs-number">4</span>,
+      height: <span class="hljs-number">17</span>
+    },
+    <span class="hljs-string">"d"</span>: {
+      shift_x: <span class="hljs-number">0</span>,
+      shift_y_upper: <span class="hljs-number">0</span>,
+      shift_y_lower: <span class="hljs-number">0</span>,
+      height: <span class="hljs-number">17</span>
+    },
+    <span class="hljs-string">"++"</span>: {
+      shift_x: -<span class="hljs-number">2</span>,
+      shift_y_upper: -<span class="hljs-number">6</span>,
+      shift_y_lower: -<span class="hljs-number">3</span>,
+      height: <span class="hljs-number">22</span>
+    },
+    <span class="hljs-string">"+"</span>: {
+      shift_x: <span class="hljs-number">1</span>,
+      shift_y_upper: -<span class="hljs-number">4</span>,
+      shift_y_lower: -<span class="hljs-number">2</span>,
+      height: <span class="hljs-number">20</span>
+    }
+  };</pre></div>
+        
+      
+        
+        <p>To enable logging for this class. Set <code>Vex.Flow.Ornament.DEBUG</code> to <code>true</code>.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">L</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">if</span> (Ornament.DEBUG) Vex.L(<span class="hljs-string">"Vex.Flow.Ornament"</span>, <span class="hljs-built_in">arguments</span>); }
+
+  <span class="hljs-keyword">var</span> Modifier = Vex.Flow.Modifier;</pre></div>
+        
+      
+        
+        <h2 id="static-methods">Static Methods</h2>
+<p>Arrange ornaments inside <code>ModifierContext</code></p>
+
+        
+          <div class='highlight'><pre>  Ornament.format = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ornaments, state)</span> </span>{
+   <span class="hljs-keyword">if</span> (!ornaments || ornaments.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">var</span> text_line = state.text_line;
+    <span class="hljs-keyword">var</span> max_width = <span class="hljs-number">0</span>;</pre></div>
+        
+      
+        
+        <p>Format Articulations</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">var</span> width;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; ornaments.length; ++i) {
+      <span class="hljs-keyword">var</span> ornament = ornaments[i];
+      ornament.setTextLine(text_line);
+      width = ornament.getWidth() &gt; max_width ?
+        ornament.getWidth() : max_width;
+
+      <span class="hljs-keyword">var</span> type = Vex.Flow.ornamentCodes(ornament.type);
+      <span class="hljs-keyword">if</span>(type.between_lines)
+        text_line += <span class="hljs-number">1</span>;
+      <span class="hljs-keyword">else</span>
+        text_line += <span class="hljs-number">1.5</span>;
+    }
+
+    state.left_shift += width / <span class="hljs-number">2</span>;
+    state.right_shift += width / <span class="hljs-number">2</span>;
+    state.text_line = text_line;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  };</pre></div>
+        
+      
+        
+        <h2 id="prototype-methods">Prototype Methods</h2>
+
+        
+          <div class='highlight'><pre>  Vex.Inherit(Ornament, Modifier, {</pre></div>
+        
+      
+        
+        <p>Create a new ornament of type <code>type</code>, which is an entry in
+<code>Vex.Flow.ornamentCodes</code> in <code>tables.js</code>.</p>
+
+        
+          <div class='highlight'><pre>    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type)</span> </span>{
+      Ornament.superclass.init.call(<span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">this</span>.note = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.index = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.type = type;
+      <span class="hljs-keyword">this</span>.position = Modifier.Position.ABOVE;
+      <span class="hljs-keyword">this</span>.delayed = <span class="hljs-literal">false</span>;
+
+      <span class="hljs-keyword">this</span>.accidental_upper = <span class="hljs-string">""</span>;
+      <span class="hljs-keyword">this</span>.accidental_lower = <span class="hljs-string">""</span>;
+
+      <span class="hljs-keyword">this</span>.render_options = {
+        font_scale: <span class="hljs-number">38</span>
+      };
+
+      <span class="hljs-keyword">this</span>.ornament = Vex.Flow.ornamentCodes(<span class="hljs-keyword">this</span>.type);
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.ornament) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"ArgumentError"</span>,
+         <span class="hljs-string">"Ornament not found: '"</span> + <span class="hljs-keyword">this</span>.type + <span class="hljs-string">"'"</span>);</pre></div>
+        
+      
+        
+        <p>Default width comes from ornament table.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.setWidth(<span class="hljs-keyword">this</span>.ornament.width);
+    },</pre></div>
+        
+      
+        
+        <p>Set whether the ornament is to be delayed</p>
+
+        
+          <div class='highlight'><pre>    setDelayed: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(delayed)</span> </span>{ <span class="hljs-keyword">this</span>.delayed = delayed; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Set the upper accidental for the ornament</p>
+
+        
+          <div class='highlight'><pre>    setUpperAccidental: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(acc)</span> </span>{
+      <span class="hljs-keyword">this</span>.accidental_upper = acc;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Set the lower accidental for the ornament</p>
+
+        
+          <div class='highlight'><pre>    setLowerAccidental: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(acc)</span> </span>{
+      <span class="hljs-keyword">this</span>.accidental_lower = acc;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Render ornament in position next to note.</p>
+
+        
+          <div class='highlight'><pre>    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoContext"</span>,
+        <span class="hljs-string">"Can't draw Ornament without a context."</span>);
+      <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span>.note &amp;&amp; (<span class="hljs-keyword">this</span>.index !== <span class="hljs-literal">null</span>))) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoAttachedNote"</span>,
+        <span class="hljs-string">"Can't draw Ornament without a note and index."</span>);
+
+      <span class="hljs-keyword">var</span> ctx = <span class="hljs-keyword">this</span>.context;
+      <span class="hljs-keyword">var</span> stem_direction = <span class="hljs-keyword">this</span>.note.getStemDirection();
+      <span class="hljs-keyword">var</span> stave = <span class="hljs-keyword">this</span>.note.getStave();</pre></div>
+        
+      
+        
+        <p>Get stem extents</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> stem_ext = <span class="hljs-keyword">this</span>.note.getStem().getExtents();
+      <span class="hljs-keyword">var</span> top, bottom;
+      <span class="hljs-keyword">if</span> (stem_direction === Vex.Flow.StaveNote.STEM_DOWN) {
+        top = stem_ext.baseY;
+        bottom = stem_ext.topY;
+      } <span class="hljs-keyword">else</span> {
+        top = stem_ext.topY;
+        bottom = stem_ext.baseY;
+      }</pre></div>
+        
+      
+        
+        <p>TabNotes don’t have stems attached to them. Tab stems are rendered
+outside the stave.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> is_tabnote = <span class="hljs-keyword">this</span>.note.getCategory() === <span class="hljs-string">'tabnotes'</span>;
+      <span class="hljs-keyword">if</span> (is_tabnote) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.note.hasStem()){
+          <span class="hljs-keyword">if</span> (stem_direction === Vex.Flow.StaveNote.STEM_UP) {
+            bottom = stave.getYForBottomText(<span class="hljs-keyword">this</span>.text_line - <span class="hljs-number">2</span>);
+          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (stem_direction === Vex.Flow.StaveNote.STEM_DOWN ) {
+            top = stave.getYForTopText(<span class="hljs-keyword">this</span>.text_line - <span class="hljs-number">1.5</span>);
+          }
+        } <span class="hljs-keyword">else</span> { <span class="hljs-comment">// Without a stem</span>
+          top = stave.getYForTopText(<span class="hljs-keyword">this</span>.text_line - <span class="hljs-number">1</span>);
+          bottom = stave.getYForBottomText(<span class="hljs-keyword">this</span>.text_line - <span class="hljs-number">2</span>);
+        }
+      }
+
+      <span class="hljs-keyword">var</span> is_on_head = stem_direction === Vex.Flow.StaveNote.STEM_DOWN;
+      <span class="hljs-keyword">var</span> spacing = stave.getSpacingBetweenLines();
+      <span class="hljs-keyword">var</span> line_spacing = <span class="hljs-number">1</span>;</pre></div>
+        
+      
+        
+        <p>Beamed stems are longer than quarter note stems, adjust accordingly</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (!is_on_head &amp;&amp; <span class="hljs-keyword">this</span>.note.beam) {
+        line_spacing += <span class="hljs-number">0.5</span>;
+      }
+
+      <span class="hljs-keyword">var</span> total_spacing = spacing * (<span class="hljs-keyword">this</span>.text_line + line_spacing);
+      <span class="hljs-keyword">var</span> glyph_y_between_lines = (top - <span class="hljs-number">7</span>) - total_spacing;</pre></div>
+        
+      
+        
+        <p>Get initial coordinates for the modifier position</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> start = <span class="hljs-keyword">this</span>.note.getModifierStartXY(<span class="hljs-keyword">this</span>.position, <span class="hljs-keyword">this</span>.index);
+      <span class="hljs-keyword">var</span> glyph_x = start.x + <span class="hljs-keyword">this</span>.ornament.shift_right;
+      <span class="hljs-keyword">var</span> glyph_y = <span class="hljs-built_in">Math</span>.min(stave.getYForTopText(<span class="hljs-keyword">this</span>.text_line) - <span class="hljs-number">3</span>, glyph_y_between_lines);
+      glyph_y += <span class="hljs-keyword">this</span>.ornament.shift_up + <span class="hljs-keyword">this</span>.y_shift;</pre></div>
+        
+      
+        
+        <p>Ajdust x position if ornament is delayed</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.delayed) {
+        glyph_x += <span class="hljs-keyword">this</span>.ornament.width;
+        <span class="hljs-keyword">var</span> next_context = Vex.Flow.TickContext.getNextContext(<span class="hljs-keyword">this</span>.note.getTickContext());
+        <span class="hljs-keyword">if</span> (next_context) {
+          glyph_x += (next_context.getX() - glyph_x) * <span class="hljs-number">0.5</span>;
+        } <span class="hljs-keyword">else</span> {
+          glyph_x += (stave.x + stave.width - glyph_x) * <span class="hljs-number">0.5</span>;
+        }
+      }
+
+      <span class="hljs-keyword">var</span> ornament = <span class="hljs-keyword">this</span>;
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">drawAccidental</span><span class="hljs-params">(ctx, code, upper)</span> </span>{
+        <span class="hljs-keyword">var</span> accidental = Vex.Flow.accidentalCodes(code);
+
+        <span class="hljs-keyword">var</span> acc_x = glyph_x - <span class="hljs-number">3</span>;
+        <span class="hljs-keyword">var</span> acc_y = glyph_y + <span class="hljs-number">2</span>;</pre></div>
+        
+      
+        
+        <p>Special adjustments for trill glyph</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">if</span> (upper) {
+          acc_y -= mods ? mods.height : <span class="hljs-number">18</span>;
+          acc_y +=  ornament.type === <span class="hljs-string">"tr"</span> ? -<span class="hljs-number">8</span> : <span class="hljs-number">0</span>;
+        } <span class="hljs-keyword">else</span> {
+          acc_y +=  ornament.type === <span class="hljs-string">"tr"</span> ? -<span class="hljs-number">6</span> : <span class="hljs-number">0</span>;
+        }</pre></div>
+        
+      
+        
+        <p>Fine tune position of accidental glyph</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> mods = acc_mods[code];
+        <span class="hljs-keyword">if</span> (mods) {
+          acc_x += mods.shift_x;
+          acc_y += upper ? mods.shift_y_upper : mods.shift_y_lower;
+        }</pre></div>
+        
+      
+        
+        <p>Render the glyph</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> scale = ornament.render_options.font_scale/<span class="hljs-number">1.3</span>;
+        Vex.Flow.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);</pre></div>
+        
+      
+        
+        <p>If rendered a bottom accidental, increase the y value by the
+accidental height so that the ornament’s glyph is shifted up</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!upper) {
+          glyph_y -= mods ? mods.height : <span class="hljs-number">18</span>;
+        }
+      }</pre></div>
+        
+      
+        
+        <p>Draw lower accidental for ornament</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.accidental_lower) {
+        drawAccidental(ctx, <span class="hljs-keyword">this</span>.accidental_lower, <span class="hljs-literal">false</span>, glyph_x, glyph_y);
+      }
+
+      L(<span class="hljs-string">"Rendering ornament: "</span>, <span class="hljs-keyword">this</span>.ornament, glyph_x, glyph_y);
+      Vex.Flow.renderGlyph(ctx, glyph_x, glyph_y,
+                           <span class="hljs-keyword">this</span>.render_options.font_scale, <span class="hljs-keyword">this</span>.ornament.code);</pre></div>
+        
+      
+        
+        <p>Draw upper accidental for ornament</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.accidental_upper) {
+        drawAccidental(ctx, <span class="hljs-keyword">this</span>.accidental_upper, <span class="hljs-literal">true</span>, glyph_x, glyph_y);
+      }
+
+    }
+  });
+
+  <span class="hljs-keyword">return</span> Ornament;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

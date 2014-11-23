@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>notehead.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>notehead.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p><a href="http://vexflow.com">VexFlow</a> - Copyright (c) Mohit Muthanna 2010.</p>
+<h2 id="description">Description</h2>
+<p>This file implements <code>NoteHeads</code>. <code>NoteHeads</code> are typically not manipulated
+directly, but used internally in <code>StaveNote</code>.</p>
+<p>See <code>tests/notehead_tests.js</code> for usage examples.</p>
+
+        
+          <div class='highlight'><pre>Vex.Flow.NoteHead = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> NoteHead = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(head_options)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(head_options);
+  };</pre></div>
+        
+      
+        
+        <p>To enable logging for this class. Set <code>Vex.Flow.NoteHead.DEBUG</code> to <code>true</code>.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">L</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">if</span> (NoteHead.DEBUG) Vex.L(<span class="hljs-string">"Vex.Flow.NoteHead"</span>, <span class="hljs-built_in">arguments</span>); }</pre></div>
+        
+      
+        
+        <p>Draw slashnote head manually. No glyph exists for this.</p>
+<p>Parameters:</p>
+<ul>
+<li><code>ctx</code>: the Canvas context</li>
+<li><code>duration</code>: the duration of the note. ex: “4”</li>
+<li><code>x</code>: the x coordinate to draw at</li>
+<li><code>y</code>: the y coordinate to draw at</li>
+<li><code>stem_direction</code>: the direction of the stem</li>
+</ul>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">drawSlashNoteHead</span><span class="hljs-params">(ctx, duration, x, y, stem_direction)</span> </span>{
+    <span class="hljs-keyword">var</span> width = <span class="hljs-number">15</span> + (Vex.Flow.STEM_WIDTH / <span class="hljs-number">2</span>);
+    ctx.save();
+    ctx.setLineWidth(Vex.Flow.STEM_WIDTH);
+
+    <span class="hljs-keyword">var</span> fill = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">if</span> (Vex.Flow.durationToNumber(duration) &gt; <span class="hljs-number">2</span>) {
+      fill = <span class="hljs-literal">true</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (!fill) x -= (Vex.Flow.STEM_WIDTH / <span class="hljs-number">2</span>) * stem_direction;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y + <span class="hljs-number">11</span>);
+    ctx.lineTo(x, y + <span class="hljs-number">1</span>);
+    ctx.lineTo(x + width, y - <span class="hljs-number">10</span>);
+    ctx.lineTo(x + width, y);
+    ctx.lineTo(x, y + <span class="hljs-number">11</span>);
+    ctx.closePath();
+
+    <span class="hljs-keyword">if</span> (fill) {
+       ctx.fill();
+    } <span class="hljs-keyword">else</span> {
+       ctx.stroke();
+    }
+
+    <span class="hljs-keyword">if</span> (Vex.Flow.durationToFraction(duration).equals(<span class="hljs-number">0.5</span>)) {
+      <span class="hljs-keyword">var</span> breve_lines = [-<span class="hljs-number">3</span>, -<span class="hljs-number">1</span>, width + <span class="hljs-number">1</span>, width + <span class="hljs-number">3</span>];
+      <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;breve_lines.length; i++){
+          ctx.beginPath();
+          ctx.moveTo(x + breve_lines[i], y - <span class="hljs-number">10</span>);
+          ctx.lineTo(x + breve_lines[i], y + <span class="hljs-number">11</span>);
+          ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+  }</pre></div>
+        
+      
+        
+        <h2 id="prototype-methods">Prototype Methods</h2>
+
+        
+          <div class='highlight'><pre>  Vex.Inherit(NoteHead, Vex.Flow.Note, {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(head_options)</span> </span>{
+      NoteHead.superclass.init.call(<span class="hljs-keyword">this</span>, head_options);
+      <span class="hljs-keyword">this</span>.index = head_options.index;
+      <span class="hljs-keyword">this</span>.x = head_options.x || <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.y = head_options.y || <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.note_type = head_options.note_type;
+      <span class="hljs-keyword">this</span>.duration = head_options.duration;
+      <span class="hljs-keyword">this</span>.displaced = head_options.displaced || <span class="hljs-literal">false</span>;
+      <span class="hljs-keyword">this</span>.stem_direction = head_options.stem_direction || Vex.Flow.StaveNote.STEM_UP;
+      <span class="hljs-keyword">this</span>.line = head_options.line;</pre></div>
+        
+      
+        
+        <p>Get glyph code based on duration and note type. This could be
+regular notes, rests, or other custom codes.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.glyph = Vex.Flow.durationToGlyph(<span class="hljs-keyword">this</span>.duration, <span class="hljs-keyword">this</span>.note_type);
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.glyph) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RuntimeError(<span class="hljs-string">"BadArguments"</span>,
+            <span class="hljs-string">"No glyph found for duration '"</span> + <span class="hljs-keyword">this</span>.duration +
+            <span class="hljs-string">"' and type '"</span> + <span class="hljs-keyword">this</span>.note_type + <span class="hljs-string">"'"</span>);
+      }
+
+      <span class="hljs-keyword">this</span>.glyph_code = <span class="hljs-keyword">this</span>.glyph.code_head;
+      <span class="hljs-keyword">this</span>.x_shift = head_options.x_shift;
+      <span class="hljs-keyword">if</span> (head_options.custom_glyph_code) {
+        <span class="hljs-keyword">this</span>.custom_glyph = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.glyph_code = head_options.custom_glyph_code;
+      }
+
+      <span class="hljs-keyword">this</span>.context = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.style = head_options.style;
+      <span class="hljs-keyword">this</span>.slashed = head_options.slashed;
+
+      Vex.Merge(<span class="hljs-keyword">this</span>.render_options, {
+        glyph_font_scale: <span class="hljs-number">35</span>, <span class="hljs-comment">// font size for note heads</span>
+        stroke_px: <span class="hljs-number">3</span>         <span class="hljs-comment">// number of stroke px to the left and right of head</span>
+      });
+
+      <span class="hljs-keyword">if</span> (head_options.glyph_font_scale) {
+        <span class="hljs-keyword">this</span>.render_options.glyph_font_scale = head_options.glyph_font_scale;
+      }
+
+      <span class="hljs-keyword">this</span>.setWidth(<span class="hljs-keyword">this</span>.glyph.head_width);
+    },</pre></div>
+        
+      
+        
+        <p>Get the <code>ModifierContext</code> category</p>
+
+        
+          <div class='highlight'><pre>    getCategory: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">"notehead"</span>; },</pre></div>
+        
+      
+        
+        <p>Set the Cavnas context for drawing</p>
+
+        
+          <div class='highlight'><pre>    setContext: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(context)</span> </span>{ <span class="hljs-keyword">this</span>.context = context; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;},</pre></div>
+        
+      
+        
+        <p>Get the width of the notehead</p>
+
+        
+          <div class='highlight'><pre>    getWidth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.width; },</pre></div>
+        
+      
+        
+        <p>Determine if the notehead is displaced</p>
+
+        
+          <div class='highlight'><pre>    isDisplaced: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.displaced === <span class="hljs-literal">true</span>; },</pre></div>
+        
+      
+        
+        <p>Get/set the notehead’s style</p>
+<p><code>style</code> is an <code>object</code> with the following properties: <code>shadowColor</code>,
+<code>shadowBlur</code>, <code>fillStyle</code>, <code>strokeStyle</code></p>
+
+        
+          <div class='highlight'><pre>    getStyle: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.style; },
+    setStyle: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(style)</span> </span>{ <span class="hljs-keyword">this</span>.style = style; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Get the glyph data</p>
+
+        
+          <div class='highlight'><pre>    getGlyph: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.glyph; },</pre></div>
+        
+      
+        
+        <p>Set the X coordinate</p>
+
+        
+          <div class='highlight'><pre>    setX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span></span>{ <span class="hljs-keyword">this</span>.x = x; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>get/set the Y coordinate</p>
+
+        
+          <div class='highlight'><pre>    getY: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.y; },
+    setY: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(y)</span> </span>{ <span class="hljs-keyword">this</span>.y = y;  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Get/set the stave line the notehead is placed on</p>
+
+        
+          <div class='highlight'><pre>    getLine: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.line; },
+    setLine: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line)</span> </span>{ <span class="hljs-keyword">this</span>.line = line; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Get the canvas <code>x</code> coordinate position of the notehead.</p>
+
+        
+          <div class='highlight'><pre>    getAbsoluteX: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> getAbsoluteX = NoteHead.superclass.getAbsoluteX;</pre></div>
+        
+      
+        
+        <p>If the note has not been preformatted, then get the static x value
+Otherwise, it’s been formatted and we should use it’s x value relative
+to its tick context</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> x = !<span class="hljs-keyword">this</span>.preFormatted ? <span class="hljs-keyword">this</span>.x : getAbsoluteX.call(<span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">return</span> x + (<span class="hljs-keyword">this</span>.displaced ? <span class="hljs-keyword">this</span>.width * <span class="hljs-keyword">this</span>.stem_direction : <span class="hljs-number">0</span>);
+    },</pre></div>
+        
+      
+        
+        <p>Get the <code>BoundingBox</code> for the <code>NoteHead</code></p>
+
+        
+          <div class='highlight'><pre>    getBoundingBox: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.preFormatted) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"UnformattedNote"</span>,
+          <span class="hljs-string">"Can't call getBoundingBox on an unformatted note."</span>);
+
+      <span class="hljs-keyword">var</span> spacing = <span class="hljs-keyword">this</span>.stave.getSpacingBetweenLines();
+      <span class="hljs-keyword">var</span> half_spacing = spacing/<span class="hljs-number">2</span>;
+      <span class="hljs-keyword">var</span> min_y = <span class="hljs-keyword">this</span>.y - half_spacing;
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Vex.Flow.BoundingBox(<span class="hljs-keyword">this</span>.getAbsoluteX(), min_y, <span class="hljs-keyword">this</span>.width, spacing);
+    },</pre></div>
+        
+      
+        
+        <p>Apply current style to Canvas <code>context</code></p>
+
+        
+          <div class='highlight'><pre>    applyStyle: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(context)</span> </span>{
+      <span class="hljs-keyword">var</span> style = <span class="hljs-keyword">this</span>.getStyle();
+      <span class="hljs-keyword">if</span> (style.shadowColor) context.setShadowColor(style.shadowColor);
+      <span class="hljs-keyword">if</span> (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
+      <span class="hljs-keyword">if</span> (style.fillStyle) context.setFillStyle(style.fillStyle);
+      <span class="hljs-keyword">if</span> (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Set notehead to a provided <code>stave</code></p>
+
+        
+          <div class='highlight'><pre>    setStave: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave)</span></span>{
+      <span class="hljs-keyword">var</span> line = <span class="hljs-keyword">this</span>.getLine();
+
+      <span class="hljs-keyword">this</span>.stave = stave;
+      <span class="hljs-keyword">this</span>.setY(stave.getYForNote(line));
+      <span class="hljs-keyword">this</span>.context = <span class="hljs-keyword">this</span>.stave.context;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Pre-render formatting</p>
+
+        
+          <div class='highlight'><pre>    preFormat: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.preFormatted) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+
+      <span class="hljs-keyword">var</span> glyph = <span class="hljs-keyword">this</span>.getGlyph();
+      <span class="hljs-keyword">var</span> width = glyph.head_width + <span class="hljs-keyword">this</span>.extraLeftPx + <span class="hljs-keyword">this</span>.extraRightPx;
+
+      <span class="hljs-keyword">this</span>.setWidth(width);
+      <span class="hljs-keyword">this</span>.setPreFormatted(<span class="hljs-literal">true</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Draw the notehead</p>
+
+        
+          <div class='highlight'><pre>    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoCanvasContext"</span>,
+          <span class="hljs-string">"Can't draw without a canvas context."</span>);
+
+      <span class="hljs-keyword">var</span> ctx = <span class="hljs-keyword">this</span>.context;
+      <span class="hljs-keyword">var</span> head_x = <span class="hljs-keyword">this</span>.getAbsoluteX();
+      <span class="hljs-keyword">var</span> y = <span class="hljs-keyword">this</span>.y;
+
+      L(<span class="hljs-string">"Drawing note head '"</span>, <span class="hljs-keyword">this</span>.note_type, <span class="hljs-keyword">this</span>.duration, <span class="hljs-string">"' at"</span>, head_x, y);</pre></div>
+        
+      
+        
+        <p>Begin and end positions for head.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">var</span> stem_direction = <span class="hljs-keyword">this</span>.stem_direction;
+      <span class="hljs-keyword">var</span> glyph_font_scale = <span class="hljs-keyword">this</span>.render_options.glyph_font_scale;
+
+      <span class="hljs-keyword">var</span> line = <span class="hljs-keyword">this</span>.line;</pre></div>
+        
+      
+        
+        <p>If note above/below the staff, draw the small staff</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (line &lt;= <span class="hljs-number">0</span> || line &gt;= <span class="hljs-number">6</span>) {
+        <span class="hljs-keyword">var</span> line_y = y;
+        <span class="hljs-keyword">var</span> floor = <span class="hljs-built_in">Math</span>.floor(line);
+        <span class="hljs-keyword">if</span> (line &lt; <span class="hljs-number">0</span> &amp;&amp; floor - line == -<span class="hljs-number">0.5</span>)
+          line_y -= <span class="hljs-number">5</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (line &gt; <span class="hljs-number">6</span> &amp;&amp;  floor - line == -<span class="hljs-number">0.5</span>)
+          line_y += <span class="hljs-number">5</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.note_type != <span class="hljs-string">'r'</span>) {
+          ctx.fillRect(
+            head_x - <span class="hljs-keyword">this</span>.render_options.stroke_px, line_y,
+            (<span class="hljs-keyword">this</span>.getGlyph().head_width) +
+            (<span class="hljs-keyword">this</span>.render_options.stroke_px * <span class="hljs-number">2</span>), <span class="hljs-number">1</span>);    
+        }        
+      }
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.note_type == <span class="hljs-string">"s"</span>) {
+        drawSlashNoteHead(ctx, <span class="hljs-keyword">this</span>.duration,
+          head_x, y, stem_direction);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.style) {
+          ctx.save();
+          <span class="hljs-keyword">this</span>.applyStyle(ctx);
+          Vex.Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, <span class="hljs-keyword">this</span>.glyph_code);
+          ctx.restore();
+        } <span class="hljs-keyword">else</span> {
+          Vex.Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, <span class="hljs-keyword">this</span>.glyph_code);
+        }
+      }
+    }
+  });
+
+  <span class="hljs-keyword">return</span> NoteHead;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

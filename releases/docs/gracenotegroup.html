@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>gracenotegroup.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>gracenotegroup.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p><a href="http://vexflow.com">VexFlow</a> - Copyright (c) Mohit Muthanna 2010.</p>
+<h2 id="description">Description</h2>
+<p>This file implements <code>GraceNoteGroup</code> which is used to format and
+render grace notes.</p>
+
+        
+          <div class='highlight'><pre>
+Vex.Flow.GraceNoteGroup = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">GraceNoteGroup</span><span class="hljs-params">(grace_notes, config)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(grace_notes, config);
+  }
+
+  GraceNoteGroup.CATEGORY = <span class="hljs-string">"gracenotegroups"</span>;</pre></div>
+        
+      
+        
+        <p>To enable logging for this class. Set <code>Vex.Flow.GraceNoteGroup.DEBUG</code> to <code>true</code>.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">L</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">if</span> (GraceNoteGroup.DEBUG) Vex.L(<span class="hljs-string">"Vex.Flow.GraceNoteGroup"</span>, <span class="hljs-built_in">arguments</span>); }</pre></div>
+        
+      
+        
+        <p>Arrange groups inside a <code>ModifierContext</code></p>
+
+        
+          <div class='highlight'><pre>  GraceNoteGroup.format = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(gracenote_groups, state)</span> </span>{
+    <span class="hljs-keyword">var</span> gracenote_spacing = <span class="hljs-number">4</span>;
+
+    <span class="hljs-keyword">if</span> (!gracenote_groups || gracenote_groups.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">var</span> group_list = [];
+    <span class="hljs-keyword">var</span> hasStave = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">var</span> prev_note = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">var</span> shiftL = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">var</span> i, gracenote_group, props_tmp;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; gracenote_groups.length; ++i) {
+      gracenote_group = gracenote_groups[i];
+      <span class="hljs-keyword">var</span> note = gracenote_group.getNote();
+      <span class="hljs-keyword">var</span> stave = note.getStave();
+      <span class="hljs-keyword">if</span> (note != prev_note) {</pre></div>
+        
+      
+        
+        <p>Iterate through all notes to get the displaced pixels</p>
+
+        
+          <div class='highlight'><pre>         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> n = <span class="hljs-number">0</span>; n &lt; note.keys.length; ++n) {
+            props_tmp = note.getKeyProps()[n];
+            shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+          }
+          prev_note = note;
+      }
+      <span class="hljs-keyword">if</span> (stave != <span class="hljs-literal">null</span>) {
+        hasStave = <span class="hljs-literal">true</span>;
+        group_list.push({shift: shiftL, gracenote_group: gracenote_group});
+      } <span class="hljs-keyword">else</span> {
+        group_list.push({shift: shiftL, gracenote_group: gracenote_group });
+      }
+    }</pre></div>
+        
+      
+        
+        <p>If first note left shift in case it is displaced</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">var</span> group_shift = group_list[<span class="hljs-number">0</span>].shift;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; group_list.length; ++i) {
+      gracenote_group = group_list[i].gracenote_group;
+      gracenote_group.preFormat();
+      group_shift = gracenote_group.getWidth() + gracenote_spacing;
+    }
+
+    state.left_shift += group_shift;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  };</pre></div>
+        
+      
+        
+        <h2 id="prototype-methods">Prototype Methods</h2>
+<p><code>GraceNoteGroup</code> inherits from <code>Modifier</code> and is placed inside a
+<code>ModifierContext</code>.</p>
+
+        
+          <div class='highlight'><pre>  Vex.Inherit(GraceNoteGroup, Vex.Flow.Modifier, {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(grace_notes, show_slur)</span> </span>{
+      <span class="hljs-keyword">var</span> superclass = GraceNoteGroup.superclass;
+      superclass.init.call(<span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">this</span>.note = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.index = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.position = Vex.Flow.Modifier.Position.LEFT;
+      <span class="hljs-keyword">this</span>.grace_notes = grace_notes;
+      <span class="hljs-keyword">this</span>.width = <span class="hljs-number">0</span>;
+
+      <span class="hljs-keyword">this</span>.preFormatted = <span class="hljs-literal">false</span>;
+
+      <span class="hljs-keyword">this</span>.show_slur = show_slur;
+      <span class="hljs-keyword">this</span>.slur = <span class="hljs-literal">null</span>;
+
+      <span class="hljs-keyword">this</span>.formatter = <span class="hljs-keyword">new</span> Vex.Flow.Formatter();
+      <span class="hljs-keyword">this</span>.voice = <span class="hljs-keyword">new</span> Vex.Flow.Voice({
+        num_beats: <span class="hljs-number">4</span>,
+        beat_value: <span class="hljs-number">4</span>,
+        resolution: Vex.Flow.RESOLUTION
+      }).setStrict(<span class="hljs-literal">false</span>);
+
+      <span class="hljs-keyword">this</span>.voice.addTickables(<span class="hljs-keyword">this</span>.grace_notes);
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    preFormat: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.preFormatted) <span class="hljs-keyword">return</span>;
+
+      <span class="hljs-keyword">this</span>.formatter.joinVoices([<span class="hljs-keyword">this</span>.voice]).format([<span class="hljs-keyword">this</span>.voice], <span class="hljs-number">0</span>);
+      <span class="hljs-keyword">this</span>.setWidth(<span class="hljs-keyword">this</span>.formatter.getMinTotalWidth());
+
+      <span class="hljs-keyword">this</span>.preFormatted = <span class="hljs-literal">true</span>;
+    },
+
+    beamNotes: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.grace_notes.length &gt; <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">var</span> beam = <span class="hljs-keyword">new</span> Vex.Flow.Beam(<span class="hljs-keyword">this</span>.grace_notes);
+
+        beam.render_options.beam_width = <span class="hljs-number">3</span>;
+        beam.render_options.partial_beam_length = <span class="hljs-number">4</span>;
+
+        <span class="hljs-keyword">this</span>.beam = beam;
+      }
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },
+
+    setNote: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(note)</span> </span>{
+      <span class="hljs-keyword">this</span>.note = note;
+    },
+    setWidth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(width)</span></span>{
+      <span class="hljs-keyword">this</span>.width = width;
+    },
+    getWidth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.width;
+    },
+    setXShift: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x_shift)</span> </span>{
+        <span class="hljs-keyword">this</span>.x_shift = x_shift;
+    },
+    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.context)  {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RuntimeError(<span class="hljs-string">"NoContext"</span>,
+          <span class="hljs-string">"Can't draw Grace note without a context."</span>);
+      }
+
+      <span class="hljs-keyword">var</span> note = <span class="hljs-keyword">this</span>.getNote();
+
+      L(<span class="hljs-string">"Drawing grace note group for:"</span>, note);
+
+      <span class="hljs-keyword">if</span> (!(note &amp;&amp; (<span class="hljs-keyword">this</span>.index !== <span class="hljs-literal">null</span>))) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RuntimeError(<span class="hljs-string">"NoAttachedNote"</span>,
+          <span class="hljs-string">"Can't draw grace note without a parent note and parent note index."</span>);
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">alignGraceNotesWithNote</span><span class="hljs-params">(grace_notes, note)</span> </span>{</pre></div>
+        
+      
+        
+        <p>Shift over the tick contexts of each note
+So that th aligned with the note</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> tickContext = note.getTickContext();
+        <span class="hljs-keyword">var</span> extraPx = tickContext.getExtraPx();
+        <span class="hljs-keyword">var</span> x = tickContext.getX() - extraPx.left - extraPx.extraLeft;
+        grace_notes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(graceNote)</span> </span>{
+            <span class="hljs-keyword">var</span> tick_context = graceNote.getTickContext();
+            <span class="hljs-keyword">var</span> x_offset = tick_context.getX();
+            graceNote.setStave(note.stave);
+            tick_context.setX(x + x_offset);
+        });
+      }
+
+      alignGraceNotesWithNote(<span class="hljs-keyword">this</span>.grace_notes, note);</pre></div>
+        
+      
+        
+        <p>Draw notes</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.grace_notes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(graceNote)</span> </span>{
+        graceNote.setContext(<span class="hljs-keyword">this</span>.context).draw();
+      }, <span class="hljs-keyword">this</span>);</pre></div>
+        
+      
+        
+        <p>Draw beam</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.beam) {
+        <span class="hljs-keyword">this</span>.beam.setContext(<span class="hljs-keyword">this</span>.context).draw();
+      }
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.show_slur) {</pre></div>
+        
+      
+        
+        <p>Create and draw slur</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">this</span>.slur = <span class="hljs-keyword">new</span> Vex.Flow.StaveTie({
+          last_note: <span class="hljs-keyword">this</span>.grace_notes[<span class="hljs-number">0</span>],
+          first_note: note,
+          first_indices: [<span class="hljs-number">0</span>],
+          last_indices: [<span class="hljs-number">0</span>]
+        });
+
+        <span class="hljs-keyword">this</span>.slur.render_options.cp2 = <span class="hljs-number">12</span>;
+        <span class="hljs-keyword">this</span>.slur.setContext(<span class="hljs-keyword">this</span>.context).draw();
+      }
+    }
+  });
+
+<span class="hljs-keyword">return</span> GraceNoteGroup;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

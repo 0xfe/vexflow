@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>voice.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>voice.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="accidental.html">
+                    accidental.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="annotation.html">
+                    annotation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="articulation.html">
+                    articulation.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="barnote.html">
+                    barnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="beam.html">
+                    beam.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="bend.html">
+                    bend.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="boundingbox.html">
+                    boundingbox.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="canvascontext.html">
+                    canvascontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clef.html">
+                    clef.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="clefnote.html">
+                    clefnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="crescendo.html">
+                    crescendo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="curve.html">
+                    curve.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dot.html">
+                    dot.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="flow.html">
+                    flow.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vexflow_font.html">
+                    vexflow_font.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="formatter.html">
+                    formatter.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="fraction.html">
+                    fraction.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="frethandfinger.html">
+                    frethandfinger.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ghostnote.html">
+                    ghostnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="glyph.html">
+                    glyph.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenote.html">
+                    gracenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="gracenotegroup.html">
+                    gracenotegroup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keymanager.html">
+                    keymanager.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="keysignature.html">
+                    keysignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifier.html">
+                    modifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="modifiercontext.html">
+                    modifiercontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="music.html">
+                    music.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="note.html">
+                    note.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="notehead.html">
+                    notehead.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="ornament.html">
+                    ornament.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="pedalmarking.html">
+                    pedalmarking.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="raphaelcontext.html">
+                    raphaelcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="renderer.html">
+                    renderer.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stave.html">
+                    stave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavebarline.html">
+                    stavebarline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveconnector.html">
+                    staveconnector.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavehairpin.html">
+                    stavehairpin.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staveline.html">
+                    staveline.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavemodifier.html">
+                    stavemodifier.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavenote.html">
+                    stavenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="staverepetition.html">
+                    staverepetition.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavesection.html">
+                    stavesection.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetempo.html">
+                    stavetempo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetext.html">
+                    stavetext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavetie.html">
+                    stavetie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stavevolta.html">
+                    stavevolta.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stem.html">
+                    stem.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stemmablenote.html">
+                    stemmablenote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="stringnumber.html">
+                    stringnumber.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="strokes.html">
+                    strokes.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tables.html">
+                    tables.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabnote.html">
+                    tabnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabslide.html">
+                    tabslide.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabstave.html">
+                    tabstave.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tabtie.html">
+                    tabtie.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textbracket.html">
+                    textbracket.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textdynamics.html">
+                    textdynamics.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="textnote.html">
+                    textnote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickable.html">
+                    tickable.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tickcontext.html">
+                    tickcontext.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignature.html">
+                    timesignature.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="timesignote.html">
+                    timesignote.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tremolo.html">
+                    tremolo.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuning.html">
+                    tuning.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="tuplet.html">
+                    tuplet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vex.html">
+                    vex.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="vibrato.html">
+                    vibrato.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voice.html">
+                    voice.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="voicegroup.html">
+                    voicegroup.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p><a href="http://vexflow.com">VexFlow</a> - Copyright (c) Mohit Muthanna 2010.</p>
+<h2 id="description">Description</h2>
+<p>This file implements the main Voice class. It’s mainly a container
+object to group <code>Tickables</code> for formatting.</p>
+
+        
+          <div class='highlight'><pre>Vex.Flow.Voice = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Voice</span><span class="hljs-params">(time)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.init(time);
+  }</pre></div>
+        
+      
+        
+        <p>Modes allow the addition of ticks in three different ways:</p>
+<p>STRICT: This is the default. Ticks must fill the voice.
+SOFT:   Ticks can be added without restrictions.
+FULL:   Ticks do not need to fill the voice, but can’t exceed the maximum
+        tick length.</p>
+
+        
+          <div class='highlight'><pre>  Voice.Mode = {
+    STRICT: <span class="hljs-number">1</span>,
+    SOFT:   <span class="hljs-number">2</span>,
+    FULL:   <span class="hljs-number">3</span>
+  };</pre></div>
+        
+      
+        
+        <h2 id="prototype-methods">Prototype Methods</h2>
+
+        
+          <div class='highlight'><pre>  Voice.prototype = {
+    init: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(time)</span> </span>{
+      <span class="hljs-keyword">this</span>.time = Vex.Merge({
+        num_beats: <span class="hljs-number">4</span>,
+        beat_value: <span class="hljs-number">4</span>,
+        resolution: Vex.Flow.RESOLUTION
+      }, time);</pre></div>
+        
+      
+        
+        <p>Recalculate total ticks.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.totalTicks = <span class="hljs-keyword">new</span> Vex.Flow.Fraction(
+        <span class="hljs-keyword">this</span>.time.num_beats * (<span class="hljs-keyword">this</span>.time.resolution / <span class="hljs-keyword">this</span>.time.beat_value), <span class="hljs-number">1</span>);
+
+      <span class="hljs-keyword">this</span>.resolutionMultiplier = <span class="hljs-number">1</span>;</pre></div>
+        
+      
+        
+        <p>Set defaults</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.tickables = [];
+      <span class="hljs-keyword">this</span>.ticksUsed = <span class="hljs-keyword">new</span> Vex.Flow.Fraction(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+      <span class="hljs-keyword">this</span>.smallestTickCount = <span class="hljs-keyword">this</span>.totalTicks.clone();
+      <span class="hljs-keyword">this</span>.largestTickWidth = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">this</span>.stave = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">this</span>.boundingBox = <span class="hljs-literal">null</span>;</pre></div>
+        
+      
+        
+        <p>Do we care about strictly timed notes</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.mode = Vex.Flow.Voice.Mode.STRICT;</pre></div>
+        
+      
+        
+        <p>This must belong to a VoiceGroup</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.voiceGroup = <span class="hljs-literal">null</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Get the total ticks in the voice</p>
+
+        
+          <div class='highlight'><pre>    getTotalTicks: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.totalTicks; },</pre></div>
+        
+      
+        
+        <p>Get the total ticks used in the voice by all the tickables</p>
+
+        
+          <div class='highlight'><pre>    getTicksUsed: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.ticksUsed; },</pre></div>
+        
+      
+        
+        <p>Get the largest width of all the tickables</p>
+
+        
+          <div class='highlight'><pre>    getLargestTickWidth: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.largestTickWidth; },</pre></div>
+        
+      
+        
+        <p>Get the tick count for the shortest tickable</p>
+
+        
+          <div class='highlight'><pre>    getSmallestTickCount: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.smallestTickCount; },</pre></div>
+        
+      
+        
+        <p>Get the tickables in the voice</p>
+
+        
+          <div class='highlight'><pre>    getTickables: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.tickables; },</pre></div>
+        
+      
+        
+        <p>Get/set the voice mode, use a value from <code>Voice.Mode</code></p>
+
+        
+          <div class='highlight'><pre>    getMode: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.mode; },
+    setMode: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(mode)</span> </span>{ <span class="hljs-keyword">this</span>.mode = mode; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Get the resolution multiplier for the voice</p>
+
+        
+          <div class='highlight'><pre>    getResolutionMultiplier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.resolutionMultiplier; },</pre></div>
+        
+      
+        
+        <p>Get the actual tick resolution for the voice</p>
+
+        
+          <div class='highlight'><pre>    getActualResolution: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.resolutionMultiplier * <span class="hljs-keyword">this</span>.time.resolution; },</pre></div>
+        
+      
+        
+        <p>Set the voice’s stave</p>
+
+        
+          <div class='highlight'><pre>    setStave: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(stave)</span> </span>{
+      <span class="hljs-keyword">this</span>.stave = stave;
+      <span class="hljs-keyword">this</span>.boundingBox = <span class="hljs-literal">null</span>; <span class="hljs-comment">// Reset bounding box so we can reformat</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Get the bounding box for the voice</p>
+
+        
+          <div class='highlight'><pre>    getBoundingBox: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> stave, boundingBox, bb, i;
+
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.boundingBox) {
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.stave) <span class="hljs-keyword">throw</span> Vex.RERR(<span class="hljs-string">"NoStave"</span>, <span class="hljs-string">"Can't get bounding box without stave."</span>);
+        stave = <span class="hljs-keyword">this</span>.stave;
+        boundingBox = <span class="hljs-literal">null</span>;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.tickables.length; ++i) {
+          <span class="hljs-keyword">this</span>.tickables[i].setStave(stave);
+
+          bb = <span class="hljs-keyword">this</span>.tickables[i].getBoundingBox();
+          <span class="hljs-keyword">if</span> (!bb) <span class="hljs-keyword">continue</span>;
+
+          boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
+        }
+
+        <span class="hljs-keyword">this</span>.boundingBox = boundingBox;
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.boundingBox;
+    },</pre></div>
+        
+      
+        
+        <p>Every tickable must be associated with a voiceGroup. This allows formatters
+and preformatters to associate them with the right modifierContexts.</p>
+
+        
+          <div class='highlight'><pre>    getVoiceGroup: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.voiceGroup)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"NoVoiceGroup"</span>, <span class="hljs-string">"No voice group for voice."</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.voiceGroup;
+    },</pre></div>
+        
+      
+        
+        <p>Set the voice group</p>
+
+        
+          <div class='highlight'><pre>    setVoiceGroup: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(g)</span> </span>{ <span class="hljs-keyword">this</span>.voiceGroup = g; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; },</pre></div>
+        
+      
+        
+        <p>Set the voice mode to strict or soft </p>
+
+        
+          <div class='highlight'><pre>    setStrict: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(strict)</span> </span>{
+      <span class="hljs-keyword">this</span>.mode = strict ? Vex.Flow.Voice.Mode.STRICT : Vex.Flow.Voice.Mode.SOFT;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Determine if the voice is complete according to the voice mode</p>
+
+        
+          <div class='highlight'><pre>    isComplete: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.mode == Vex.Flow.Voice.Mode.STRICT ||
+          <span class="hljs-keyword">this</span>.mode == Vex.Flow.Voice.Mode.FULL) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.ticksUsed.equals(<span class="hljs-keyword">this</span>.totalTicks);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+      }
+    },</pre></div>
+        
+      
+        
+        <p>Add a tickable to the voice</p>
+
+        
+          <div class='highlight'><pre>    addTickable: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(tickable)</span> </span>{
+      <span class="hljs-keyword">if</span> (!tickable.shouldIgnoreTicks()) {
+        <span class="hljs-keyword">var</span> ticks = tickable.getTicks();</pre></div>
+        
+      
+        
+        <p>Update the total ticks for this line.</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">this</span>.ticksUsed.add(ticks);
+
+        <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">this</span>.mode == Vex.Flow.Voice.Mode.STRICT ||
+             <span class="hljs-keyword">this</span>.mode == Vex.Flow.Voice.Mode.FULL) &amp;&amp;
+             <span class="hljs-keyword">this</span>.ticksUsed.greaterThan(<span class="hljs-keyword">this</span>.totalTicks)) {
+          <span class="hljs-keyword">this</span>.totalTicks.subtract(ticks);
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RERR(<span class="hljs-string">"BadArgument"</span>, <span class="hljs-string">"Too many ticks."</span>);
+        }</pre></div>
+        
+      
+        
+        <p>Track the smallest tickable for formatting.</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">if</span> (ticks.lessThan(<span class="hljs-keyword">this</span>.smallestTickCount)) {
+          <span class="hljs-keyword">this</span>.smallestTickCount = ticks.clone();
+        }
+
+        <span class="hljs-keyword">this</span>.resolutionMultiplier = <span class="hljs-keyword">this</span>.ticksUsed.denominator;</pre></div>
+        
+      
+        
+        <p>Expand total ticks using denominator from ticks used.</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">this</span>.totalTicks.add(<span class="hljs-number">0</span>, <span class="hljs-keyword">this</span>.ticksUsed.denominator);
+      }</pre></div>
+        
+      
+        
+        <p>Add the tickable to the line.</p>
+
+        
+          <div class='highlight'><pre>      <span class="hljs-keyword">this</span>.tickables.push(tickable);
+      tickable.setVoice(<span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Add an array of tickables to the voice.</p>
+
+        
+          <div class='highlight'><pre>    addTickables: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(tickables)</span> </span>{
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; tickables.length; ++i) {
+        <span class="hljs-keyword">this</span>.addTickable(tickables[i]);
+      }
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Preformats the voice by applying the voice’s stave to each note.</p>
+
+        
+          <div class='highlight'><pre>    preFormat: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.preFormatted) <span class="hljs-keyword">return</span>;
+
+      <span class="hljs-keyword">this</span>.tickables.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(tickable)</span> </span>{
+        <span class="hljs-keyword">if</span> (!tickable.getStave()) {
+          tickable.setStave(<span class="hljs-keyword">this</span>.stave);
+        }
+      }, <span class="hljs-keyword">this</span>);
+
+      <span class="hljs-keyword">this</span>.preFormatted = <span class="hljs-literal">true</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    },</pre></div>
+        
+      
+        
+        <p>Render the voice onto the canvas <code>context</code> and an optional <code>stave</code>.
+If <code>stave</code> is omitted, it is expected that the notes have staves
+already set.</p>
+
+        
+          <div class='highlight'><pre>    draw: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(context, stave)</span> </span>{
+      <span class="hljs-keyword">var</span> boundingBox = <span class="hljs-literal">null</span>;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.tickables.length; ++i) {
+        <span class="hljs-keyword">var</span> tickable = <span class="hljs-keyword">this</span>.tickables[i];</pre></div>
+        
+      
+        
+        <p>Set the stave if provided</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">if</span> (stave) tickable.setStave(stave);
+
+        <span class="hljs-keyword">if</span> (!tickable.getStave()) {
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Vex.RuntimeError(<span class="hljs-string">"MissingStave"</span>,
+            <span class="hljs-string">"The voice cannot draw tickables without staves."</span>);
+        }
+
+        <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) boundingBox = tickable.getBoundingBox();
+
+        <span class="hljs-keyword">if</span> (i &gt; <span class="hljs-number">0</span> &amp;&amp; boundingBox) {
+          <span class="hljs-keyword">var</span> tickable_bb = tickable.getBoundingBox();
+          <span class="hljs-keyword">if</span> (tickable_bb) boundingBox.mergeWith(tickable_bb);
+        }
+
+       tickable.setContext(context);
+       tickable.draw();
+      }
+
+      <span class="hljs-keyword">this</span>.boundingBox = boundingBox;
+    }
+  };
+
+  <span class="hljs-keyword">return</span> Voice;
+}());</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>
