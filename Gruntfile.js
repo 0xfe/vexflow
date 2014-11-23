@@ -122,15 +122,6 @@ module.exports = function(grunt) {
       files: SOURCES,
       tasks: ['concat']
     },
-    bump: {
-      options: {
-        files: ['package.json', 'component.json'],
-        updateConfigs: ['pkg'],
-        createTag: false,
-        push: false,
-        commit: false
-      }
-    },
     copy: {
       release: {
         files: [
@@ -150,9 +141,18 @@ module.exports = function(grunt) {
         output: 'build/docs'
       }
     },
+    bump: {
+      options: {
+        files: ['package.json', 'component.json'],
+        updateConfigs: ['pkg'],
+        createTag: false,
+        push: false
+      }
+    },
     release: {
       options: {
-        bump: false
+        bump: false,
+        commit: false
       }
     },
     clean: [BUILD_DIR, RELEASE_DIR],
