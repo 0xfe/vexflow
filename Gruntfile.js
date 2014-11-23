@@ -122,6 +122,15 @@ module.exports = function(grunt) {
       files: SOURCES,
       tasks: ['concat']
     },
+    bump: {
+      options: {
+        files: ['package.json', 'component.json'],
+        updateConfigs: ['pkg'],
+        createTag: false,
+        push: false,
+        commit: false
+      }
+    },
     copy: {
       release: {
         files: [
@@ -141,7 +150,12 @@ module.exports = function(grunt) {
         output: 'build/docs'
       }
     },
-    clean: [BUILD_DIR, RELEASE_DIR]
+    release: {
+      options: {
+        bump: false
+      }
+    },
+    clean: [BUILD_DIR, RELEASE_DIR],
   });
 
   // Load the plugin that provides the "uglify" task.
@@ -154,6 +168,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-release');
+  grunt.loadNpmTasks('grunt-bump');
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'docco']);
@@ -164,6 +179,7 @@ module.exports = function(grunt) {
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current binaries to releases/.', function() {
+    grunt.task.run('bump');
     grunt.task.run('default');
     grunt.task.run('copy:release');
   });
