@@ -1,0 +1,8 @@
+{
+  "name": "vexflow",
+  "version": "1.2.10",
+  "description": "A JavaScript library for rendering music notation and guitar tablature",
+  "scripts": ["releases/vexflow-debug.js"],
+  "repository": "0xfe/vexflow",
+  "license": "MIT"
+}
