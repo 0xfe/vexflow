@@ -152,7 +152,8 @@ module.exports = function(grunt) {
     release: {
       options: {
         bump: false,
-        commit: false
+        commit: false,
+        push: false
       }
     },
     clean: [BUILD_DIR, RELEASE_DIR],
