@@ -21,9 +21,7 @@ Install via NPM:
 
     $ npm install vexflow
 
-Include one of `lib/vexflow*.js` into your HTML or JS code. If you're using a CommonJS loader, you can import with `var Vex = require('vexflow')`.
-
-You can also just download one of the Pre-built binary releases from the `releases/` directory of this tree.
+Include `releases/vexflow-min.js` into your HTML or JS code. It works as a standalone script in a `script` tag, or as a CommonJS or AMD dependency.
 
 ## Resources
 

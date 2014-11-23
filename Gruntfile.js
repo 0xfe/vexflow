@@ -157,6 +157,13 @@ module.exports = function(grunt) {
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current binaries to releases/.', function() {
+    grunt.task.run('default');
     grunt.task.run('copy:release');
+  });
+
+  // Increment package version and publish to NPM.
+  grunt.registerTask('publish', 'Publish VexFlow NPM.', function() {
+    grunt.task.run('stage');
+    grunt.task.run('release');
   });
 };
