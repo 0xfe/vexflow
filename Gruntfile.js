@@ -1,7 +1,5 @@
-// VexFlow build file.
+// Gruntfile for VexFlow.
 // Mohit Muthanna Cheppudira <mohit@muthanna.com>
-
-var glob = require("glob");
 
 module.exports = function(grunt) {
   var L = grunt.log.writeln;
@@ -113,7 +111,7 @@ module.exports = function(grunt) {
         globals: {
           "Vex": false,
           "Raphael": false
-         } // allowed globals
+         }
       }
     },
     qunit: {
