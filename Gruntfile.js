@@ -144,7 +144,7 @@ module.exports = function(grunt) {
     gitcommit: {
       releases: {
         options: {
-          message: "Committing release binaries for new version",
+          message: "Committing release binaries for new version: <%= pkg.version %>",
           verbose: true
         },
         files: [
