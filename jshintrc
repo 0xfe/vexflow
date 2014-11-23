@@ -1,9 +1,0 @@
-{
-  "eqnull": true,   // allow == and ~= for nulls
-  "sub": true,      // don't enforce dot notation
-  "trailing": true, // no more trailing spaces
-  "globals": {
-    "Vex": false,
-    "Raphael": false
-   } // allowed globals
-}

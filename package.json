@@ -2,7 +2,7 @@
   "name": "vexflow",
   "version": "1.2.5",
   "description": "A JavaScript library for rendering music notation and guitar tablature",
-  "main": "lib/vexflow-min.js",
+  "main": "releases/vexflow-min.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/0xfe/vexflow.git"
@@ -16,6 +16,23 @@
   "bugs": {
     "url": "https://github.com/0xfe/vexflow/issues"
   },
+  "devDependencies": {
+    "browserify": "^6.3.2",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-qunit": "^0.5.2",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "jquery": "^2.1.1",
+    "qunit": "^0.7.5",
+    "raphael": "^2.1.0"
+  },
   "homepage": "http://vexflow.com",
-  "keywords": ["music", "notation", "guitar", "tablature"]
+  "keywords": [
+    "music",
+    "notation",
+    "guitar",
+    "tablature"
+  ]
 }
