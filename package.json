@@ -35,6 +35,7 @@
     "raphael": "^2.1.0"
   },
   "scripts": {
+    "start": "grunt stage",
     "test": "grunt test"
   },
   "homepage": "http://vexflow.com",
