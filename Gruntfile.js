@@ -95,7 +95,8 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: BANNER
+        banner: BANNER,
+        sourceMap: true
       },
       build: {
         src: SOURCES,
@@ -128,7 +129,7 @@ module.exports = function(grunt) {
             expand: true,
             dest: RELEASE_DIR,
             cwd: BUILD_DIR,
-            src    : ['*.js', 'docs/**']
+            src    : ['*.js', 'docs/**', '*.map']
           }
         ]
       }
