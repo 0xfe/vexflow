@@ -21,6 +21,7 @@ ruby_sess.*
 .idea/workspace.xml
 node_modules
 components
+documentation
 
 #eclipse
 .project

@@ -4,11 +4,18 @@
   "description": "A JavaScript library for rendering music notation and guitar tablature",
   "main": "main.js",
   "devDependencies": {
-    "component": "^1.0.0"
+    "component-build": "^1.2.2",
+    "component-resolver": "^1.2.7",
+    "docco": "^0.6.3",
+    "jshint": "^2.5.10",
+    "minify": "git://github.com/ianstormtaylor/minify#0.1.1",
+    "mkdirp": "^0.5.0"
   },
   "scripts": {
-    "build": "component build",
-    "test": "component build --dev --name test-build && open tests/flow.html"
+    "build": "node build.js",
+    "test": "open tests/flow.html && node build.js watch",
+    "lint": "jshint --show-non-errors --config jshintrc src/*.js",
+    "doc": "docco --output documentation -l linear src/*.js "
   },
   "repository": {
     "type": "git",
