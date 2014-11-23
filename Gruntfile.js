@@ -144,6 +144,7 @@ module.exports = function(grunt) {
     bump: {
       options: {
         files: ['package.json', 'component.json'],
+        commitFiles: ['package.json', 'component.json'],
         updateConfigs: ['pkg'],
         createTag: false,
         push: false
@@ -152,8 +153,7 @@ module.exports = function(grunt) {
     release: {
       options: {
         bump: false,
-        commit: false,
-        push: false
+        commit: false
       }
     },
     clean: [BUILD_DIR, RELEASE_DIR],
