@@ -149,7 +149,7 @@ module.exports = function(grunt) {
         },
         files: [
           {
-            src: [RELEASE_DIR + "/*.js"],
+            src: [RELEASE_DIR + "/*.js", RELEASE_DIR + "/*.map"],
             expand: true
           }
         ]
