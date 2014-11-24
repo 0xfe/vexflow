@@ -120,7 +120,7 @@ module.exports = function(grunt) {
     },
     watch: {
       files: SOURCES,
-      tasks: ['concat']
+      tasks: ['concat', 'jshint']
     },
     copy: {
       release: {

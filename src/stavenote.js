@@ -511,14 +511,13 @@ Vex.Flow.StaveNote = (function() {
       var result_line = this.keyProps[0].line;
 
       // No precondition assumed for sortedness of keyProps array
-      for(var i=0; i<this.keyProps.length; i++){
+      for (var i=0; i<this.keyProps.length; i++) {
         var this_line = this.keyProps[i].line;
-        if(is_top_note)
-          if(this_line > result_line)
-                result_line = this_line;
-        else
-          if(this_line < result_line)
-            result_line = this_line;
+        if (is_top_note) {
+          if (this_line > result_line) result_line = this_line;
+        } else {
+          if (this_line < result_line) result_line = this_line;
+        }
       }
 
       return result_line;
