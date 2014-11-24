@@ -157,6 +157,9 @@ Vex.Flow.Formatter.FormatAndDraw(ctx, tabstave, notes);</textarea>
           var code = $("#sandbox").val();
 
           try {
+            var canvas = $('canvas')[0];
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
             eval(code);
             msg.html('').hide();
           } catch (e) {
