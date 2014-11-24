@@ -164,7 +164,9 @@ Vex.Inherit = (function () {
 /* global define: false */
 /* global module: false */
 if (typeof require == "function") {
-  module.exports = Vex;
+  try {
+    module.exports = Vex;
+  } catch (e) {}
 } else if (typeof define == "function" && define.amd) {
   define("Vex", [], function(){ return Vex; });
 } else {
