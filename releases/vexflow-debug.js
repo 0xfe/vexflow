@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.22 built on 2014-11-23.
+ * VexFlow 1.2.23 built on 2014-11-24.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -170,12 +170,15 @@ Vex.Inherit = (function () {
 /* global define: false */
 /* global module: false */
 if (typeof require == "function") {
-  module.exports = Vex;
+  try {
+    module.exports = Vex;
+  } catch (e) {}
 } else if (typeof define == "function" && define.amd) {
   define("Vex", [], function(){ return Vex; });
 } else {
   (this || window)["Vex"] = Vex;
 }
+
 /**
  * Vex Flow - Mohit Muthanna <mohit@muthanna.com>
  */
@@ -4380,14 +4383,13 @@ Vex.Flow.StaveNote = (function() {
       var result_line = this.keyProps[0].line;
 
       // No precondition assumed for sortedness of keyProps array
-      for(var i=0; i<this.keyProps.length; i++){
+      for (var i=0; i<this.keyProps.length; i++) {
         var this_line = this.keyProps[i].line;
-        if(is_top_note)
-          if(this_line > result_line)
-                result_line = this_line;
-        else
-          if(this_line < result_line)
-            result_line = this_line;
+        if (is_top_note) {
+          if (this_line > result_line) result_line = this_line;
+        } else {
+          if (this_line < result_line) result_line = this_line;
+        }
       }
 
       return result_line;
