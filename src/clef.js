@@ -68,8 +68,7 @@ Vex.Flow.Clef = (function() {
     "default": 40,
     "small": 32
   };
-  
-  
+
   // Annotations attach to clefs -- such as "8" for octave up or down.
   Clef.annotations = {
     "8va": {
@@ -91,7 +90,7 @@ Vex.Flow.Clef = (function() {
               line: -0.4,
               x_shift: 8
             }
-          }         
+          }
         }
       }
     },
@@ -122,7 +121,7 @@ Vex.Flow.Clef = (function() {
               line: 3.5,
               x_shift: 0.5
             }
-          }         
+          }
         }
       }
     },
@@ -134,7 +133,7 @@ Vex.Flow.Clef = (function() {
     init: function(clef, size, annotation) {
       var superclass = Vex.Flow.Clef.superclass;
       superclass.init.call(this);
-      
+
       this.clef = Vex.Flow.Clef.types[clef];
       if (size === undefined) {
         this.size = "default";
@@ -142,7 +141,7 @@ Vex.Flow.Clef = (function() {
         this.size = size;
       }
       this.clef.point = Vex.Flow.Clef.sizes[this.size];
-      
+
       // If an annotation, such as 8va, is specified, add it to the Clef object.
       if (annotation !== undefined) {
         var anno_dict = Vex.Flow.Clef.annotations[annotation];

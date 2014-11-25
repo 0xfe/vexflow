@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.23 built on 2014-11-24.
+ * VexFlow 1.2.23 built on 2014-11-25.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -1953,8 +1953,10 @@ Vex.Flow.Stave = (function() {
       // Add additional space if left barline is REPEAT_BEGIN and there are other
       // start modifiers than barlines
       if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &&
-          this.modifiers.length > 2)
+          this.modifiers.length > 2) {
         start_x += 20;
+      }
+
       return start_x;
     },
 
@@ -1977,8 +1979,8 @@ Vex.Flow.Stave = (function() {
       this.glyph_end_x = this.x + width;
       this.end_x = this.glyph_end_x;
 
-      // reset the x position of the end barline
-      this.modifiers[1].setX(this.end_x);
+      // reset the x position of the end barline (TODO(0xfe): This makes no sense)
+      // this.modifiers[1].setX(this.end_x);
       return this;
     },
 
@@ -3225,7 +3227,7 @@ Vex.Flow.Note = (function() {
       if (this.stave) {
         x += this.stave.getNoteStartX() + this.render_options.stave_padding;
       }
-      
+
       if (this.isCenterAligned()){
         x += this.getCenterXShift();
       }
@@ -4432,7 +4434,7 @@ Vex.Flow.StaveNote = (function() {
 
       var bounds = this.getNoteHeadBounds();
       if(!this.beam){
-	this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
+	       this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
       }
 
       return this;
@@ -4680,8 +4682,8 @@ Vex.Flow.StaveNote = (function() {
       var bounds = this.getNoteHeadBounds();
       var highest_line = bounds.highest_line;
       var lowest_line = bounds.lowest_line;
-      var head_x = this.note_heads[0].getAbsoluteX();      
-      
+      var head_x = this.note_heads[0].getAbsoluteX();
+
       var that = this;
       function stroke(y) {
         if (that.use_default_head_x === true)  {
@@ -9474,8 +9476,7 @@ Vex.Flow.Clef = (function() {
     "default": 40,
     "small": 32
   };
-  
-  
+
   // Annotations attach to clefs -- such as "8" for octave up or down.
   Clef.annotations = {
     "8va": {
@@ -9497,7 +9498,7 @@ Vex.Flow.Clef = (function() {
               line: -0.4,
               x_shift: 8
             }
-          }         
+          }
         }
       }
     },
@@ -9528,7 +9529,7 @@ Vex.Flow.Clef = (function() {
               line: 3.5,
               x_shift: 0.5
             }
-          }         
+          }
         }
       }
     },
@@ -9540,7 +9541,7 @@ Vex.Flow.Clef = (function() {
     init: function(clef, size, annotation) {
       var superclass = Vex.Flow.Clef.superclass;
       superclass.init.call(this);
-      
+
       this.clef = Vex.Flow.Clef.types[clef];
       if (size === undefined) {
         this.size = "default";
@@ -9548,7 +9549,7 @@ Vex.Flow.Clef = (function() {
         this.size = size;
       }
       this.clef.point = Vex.Flow.Clef.sizes[this.size];
-      
+
       // If an annotation, such as 8va, is specified, add it to the Clef object.
       if (annotation !== undefined) {
         var anno_dict = Vex.Flow.Clef.annotations[annotation];

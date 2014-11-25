@@ -560,7 +560,7 @@ Vex.Flow.StaveNote = (function() {
 
       var bounds = this.getNoteHeadBounds();
       if(!this.beam){
-	this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
+	       this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
       }
 
       return this;
@@ -808,8 +808,8 @@ Vex.Flow.StaveNote = (function() {
       var bounds = this.getNoteHeadBounds();
       var highest_line = bounds.highest_line;
       var lowest_line = bounds.lowest_line;
-      var head_x = this.note_heads[0].getAbsoluteX();      
-      
+      var head_x = this.note_heads[0].getAbsoluteX();
+
       var that = this;
       function stroke(y) {
         if (that.use_default_head_x === true)  {
