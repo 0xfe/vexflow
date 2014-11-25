@@ -10653,7 +10653,7 @@ Vex.Flow.CanvasContext = (function() {
           height: CanvasContext.HEIGHT
         };
       } else {
-        this.canvas = this.context.canvas;
+        this.canvas = context.canvas;
       }
     },
 
