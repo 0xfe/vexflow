@@ -18,16 +18,18 @@ if [ "$?" != "0" ]
 fi
 
 echo Copying over compiled sources...
-scp build/vexflow-min.js $SCP_TO/support
-scp build/vexflow-debug.js $SCP_TO/support
-scp build/vexflow-min.js.map $SCP_TO/support
+scp releases/vexflow-min.js $SCP_TO/support
+scp releases/vexflow-debug.js $SCP_TO/support
+scp releases/vexflow-min.js.map $SCP_TO/support
+
+scp -r releases/vexflow-min.js.map $SCP_TO
 
 echo Copying over tests...
 rsync -przvl --delete --stats tests $SCP_TO
 scp tests/flow.html $SCP_TO/tests/index.html
 
 echo Copy over docs...
-rsync -przvl --delete --stats build/docs $SCP_TO
+rsync -przvl --delete --stats releases/docs $SCP_TO
 scp -r docs/index.html $SCP_TO
 ssh $SSH_TO "rm docs/index.html"
 
