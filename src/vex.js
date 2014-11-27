@@ -10,7 +10,10 @@
 /* global window: false */
 /* global document: false */
 
-function Vex() {}
+if (typeof Vex === 'undefined') {
+  /* global Vex: true */
+  Vex = function() {};
+}
 
 // Default log function sends all arguments to console.
 Vex.L = function(block, args) {
