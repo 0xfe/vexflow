@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.23 built on 2014-11-25.
+ * VexFlow 1.2.24 built on 2014-11-27.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -16,7 +16,10 @@
 /* global window: false */
 /* global document: false */
 
-function Vex() {}
+if (typeof Vex === 'undefined') {
+  /* global Vex: true */
+  Vex = function() {};
+}
 
 // Default log function sends all arguments to console.
 Vex.L = function(block, args) {
@@ -186,19 +189,22 @@ if (typeof require == "function") {
 /**
  * New namespace.
  */
-Vex.Flow = {
-  /**
-   * The resolution used for all the rhythm timing in this
-   * library.
-   *
-   * @const
-   * @type {number}
-   */
-  RESOLUTION: 16384,
 
-  /* Kerning (DEPRECATED) */
-  IsKerned: true
-};
+if (typeof Vex.Flow === 'undefined') {
+  Vex.Flow = {
+    /**
+     * The resolution used for all the rhythm timing in this
+     * library.
+     *
+     * @const
+     * @type {number}
+     */
+    RESOLUTION: 16384,
+
+    /* Kerning (DEPRECATED) */
+    IsKerned: true
+  };
+}
 
 // Fraction class that represents a rational number
 // @author zz85
