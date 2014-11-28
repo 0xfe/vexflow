@@ -119,8 +119,13 @@ module.exports = function(grunt) {
       files: ['tests/flow.html']
     },
     watch: {
-      files: SOURCES,
-      tasks: ['concat', 'jshint']
+      scripts: {
+        files: ['src/*', 'Gruntfile.js'],
+        tasks: ['concat', 'jshint'],
+        options: {
+          interrupt: true
+        }
+      }
     },
     copy: {
       release: {
