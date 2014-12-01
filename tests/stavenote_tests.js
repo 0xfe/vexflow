@@ -68,6 +68,12 @@ Vex.Flow.Test.StaveNote.Start = function() {
   Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Key Styles (Raphael)",
       Vex.Flow.Test.StaveNote.drawKeyStyles);
 
+  Vex.Flow.Test.runTest("StaveNote Draw - StaveNote Styles",
+      Vex.Flow.Test.StaveNote.drawNoteStyles);
+  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - StaveNote Styles (Raphael)",
+      Vex.Flow.Test.StaveNote.drawNoteStyles);
+
+
   Vex.Flow.Test.runTest("Flag and Dot Placement - Stem Up", Vex.Flow.Test.StaveNote.dotsAndFlagsStemUp);
   Vex.Flow.Test.runTest("Flag and Dots Placement - Stem Down", Vex.Flow.Test.StaveNote.dotsAndFlagsStemDown);
   
@@ -761,14 +767,41 @@ Vex.Flow.Test.StaveNote.drawKeyStyles = function(options, contextBuilder) {
   note.addAccidental(1, new Vex.Flow.Accidental('b'));
   note.setKeyStyle(1, {shadowBlur:15, shadowColor:'blue', fillStyle:'blue'});
 
+
   var tickContext = new Vex.Flow.TickContext();
   tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
+
   note.setContext(ctx).setStave(stave);
+
   note.draw();
 
   ok(note.getX() > 0, "Note has X value");
   ok(note.getYs().length > 0, "Note has Y values");
 }
+
+Vex.Flow.Test.StaveNote.drawNoteStyles = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 300, 280);
+  var stave = new Vex.Flow.Stave(10, 0, 100);
+  ctx.scale(3, 3);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var note_struct = { keys: ["g/4","bb/4","d/5"], duration: "q" };
+  var note = new Vex.Flow.StaveNote(note_struct);
+  note.addAccidental(1, new Vex.Flow.Accidental('b'));
+  note.setStyle({shadowBlur:15, shadowColor:'blue', fillStyle:'blue', strokeStyle:'blue'});
+
+  var tickContext = new Vex.Flow.TickContext();
+  tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
+
+  note.setContext(ctx).setStave(stave);
+
+  note.draw();
+
+  ok(note.getX() > 0, "Note has X value");
+  ok(note.getYs().length > 0, "Note has Y values");
+}
+
 
 Vex.Flow.Test.StaveNote.renderNote = function(note, stave, ctx, x) {
   var mc = new Vex.Flow.ModifierContext();
