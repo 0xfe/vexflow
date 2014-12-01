@@ -60,7 +60,7 @@ Vex.Flow.Accidental = (function(){
       }
     }
 
-    // Sort accidentals by line number descending, (i.e. from highest to lowest pitch).
+    // Sort accidentals by line number.
     acc_list.sort(function(a, b) { return (b.line - a.line); });
 
     // Create an array of unique line numbers (line_list) from acc_list
@@ -84,12 +84,11 @@ Vex.Flow.Accidental = (function(){
       if( acc.acc.type != "##")
         line_list[line_list.length - 1].dbl_sharp_line = false;
 
-      // let's keep track of how many accidentals are on this line; it will
-      // make our life easier down the road:
+      // Track how many accidentals are on this line:
       line_list[line_list.length - 1].num_acc++;
 
-      // And let's track the total x_offset needed for this line
-      // which will simplify our life later on lines w/ multiple accidentals:
+      // Track the total x_offset needed for this line which will be needed
+      // for formatting lines w/ multiple accidentals:
 
       //width = accidental width + universal spacing between accidentals
       line_list[line_list.length - 1].width += acc.acc.getWidth() + accidental_spacing;
