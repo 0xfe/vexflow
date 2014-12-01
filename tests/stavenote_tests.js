@@ -767,12 +767,9 @@ Vex.Flow.Test.StaveNote.drawKeyStyles = function(options, contextBuilder) {
   note.addAccidental(1, new Vex.Flow.Accidental('b'));
   note.setKeyStyle(1, {shadowBlur:15, shadowColor:'blue', fillStyle:'blue'});
 
-
   var tickContext = new Vex.Flow.TickContext();
   tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
-
   note.setContext(ctx).setStave(stave);
-
   note.draw();
 
   ok(note.getX() > 0, "Note has X value");
@@ -793,9 +790,7 @@ Vex.Flow.Test.StaveNote.drawNoteStyles = function(options, contextBuilder) {
 
   var tickContext = new Vex.Flow.TickContext();
   tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
-
   note.setContext(ctx).setStave(stave);
-
   note.draw();
 
   ok(note.getX() > 0, "Note has X value");
