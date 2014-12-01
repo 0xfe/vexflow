@@ -637,6 +637,8 @@ Vex.Flow.StaveNote = (function() {
       return { x: this.getAbsoluteX() + x, y: this.ys[index] };
     },
 
+    // Sets the style of the complete StaveNote, including all keys
+    // and the stem.
     setStyle: function(style) {
       this.note_heads.forEach(function(notehead) {
         notehead.setStyle(style);
