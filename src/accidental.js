@@ -209,7 +209,7 @@ Vex.Flow.Accidental = (function(){
           column = Vex.Flow.accidentalColumnsTable[group_length][end_case][group_member-i];
           line_list[group_member].column = column;
           total_columns = (total_columns > column) ? total_columns : column;
-        }        
+        }
       }
 
       // Increment i to the last note that was set, so that if a lower set of notes
@@ -232,7 +232,7 @@ Vex.Flow.Accidental = (function(){
     // track each column's max width, which will be used as initial shift of later columns:
     var column_widths = [];
     var column_x_offsets = [];
-    for(i=0; i<=total_columns; i++) {      
+    for(i=0; i<=total_columns; i++) {
       column_widths[i] = 0;
       column_x_offsets[i] = 0;
     }
@@ -280,7 +280,7 @@ Vex.Flow.Accidental = (function(){
       clearance_required = (line_2.flat_line || line_2.dbl_sharp_line) ? 2.5 : 3.0;
       if(line_1.dbl_sharp_line) clearance -= 0.5;
     } else { // line 1 is on top
-      clearance_required = (line_1.flat_line || line_1.dbl_sharp_line) ? 2.5 : 3.0;    
+      clearance_required = (line_1.flat_line || line_1.dbl_sharp_line) ? 2.5 : 3.0;
       if(line_2.dbl_sharp_line) clearance -= 0.5;
     }
     var colission = (Math.abs(clearance) < clearance_required);
@@ -383,12 +383,12 @@ Vex.Flow.Accidental = (function(){
       }
     }
   });
-  
+
   // ## Static Methods
-  // 
+  //
   // Use this method to automatically apply accidentals to a set of `voices`.
   // The accidentals will be remembered between all the voices provided.
-  // Optionally, you can also provide an initial `keySignature`. 
+  // Optionally, you can also provide an initial `keySignature`.
   Accidental.applyAccidentals = function(voices, keySignature) {
     var tickPositions = [];
     var tickNoteMap = {};
@@ -410,7 +410,7 @@ Vex.Flow.Accidental = (function(){
         tickPosition.add(note.getTicks());
       });
     });
-    
+
     var music = new Vex.Flow.Music();
 
     // Default key signature is C major
@@ -422,14 +422,14 @@ Vex.Flow.Accidental = (function(){
     tickPositions.forEach(function(tick) {
       var notes = tickNoteMap[tick];
 
-      // Array to store all pitches that modified accidental states 
+      // Array to store all pitches that modified accidental states
       // at this tick position
       var modifiedPitches = [];
 
       notes.forEach(function(note) {
           if (note.isRest()) return;
-          
-          // Go through each key and determine if an accidental should be 
+
+          // Go through each key and determine if an accidental should be
           // applied
           note.keys.forEach(function(keyString, keyIndex) {
               var key = music.getNoteParts(keyString.split('/')[0]);
@@ -438,7 +438,7 @@ Vex.Flow.Accidental = (function(){
               var accidentalString = key.accidental || "n";
               var pitch = key.root + accidentalString;
 
-              // Determine if the current pitch has the same accidental 
+              // Determine if the current pitch has the same accidental
               // as the scale state
               var sameAccidental = scaleMap[key.root] === pitch;
 
@@ -448,7 +448,7 @@ Vex.Flow.Accidental = (function(){
 
               // Add the accidental to the StaveNote
               if (!sameAccidental || (sameAccidental && previouslyModified)) {
-                  // Modify the scale map so that the root pitch has an 
+                  // Modify the scale map so that the root pitch has an
                   // updated state
                   scaleMap[key.root] = pitch;
 

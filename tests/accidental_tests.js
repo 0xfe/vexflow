@@ -14,7 +14,7 @@ Vex.Flow.Test.Accidental.Start = function() {
   Vex.Flow.Test.runRaphaelTest("Stem Down (Raphael)",
       Vex.Flow.Test.Accidental.basicStemDown);
   Vex.Flow.Test.runTest("Accidental Arrangement Special Cases (Canvas)", Vex.Flow.Test.Accidental.specialCases);
-  Vex.Flow.Test.runRaphaelTest("Accidental Arrangement Special Cases (Raphael)", Vex.Flow.Test.Accidental.specialCases);  
+  Vex.Flow.Test.runRaphaelTest("Accidental Arrangement Special Cases (Raphael)", Vex.Flow.Test.Accidental.specialCases);
   Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
   Vex.Flow.Test.runTest("Microtonal", Vex.Flow.Test.Accidental.microtonal);
   test("Automatic Accidentals - Simple Tests", Vex.Flow.Test.Accidental.autoAccidentalWorking);
