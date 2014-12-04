@@ -1,5 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// @author Greg Ristow 2014 (modifications)
+// @author Mohit Cheppudira
+// @author Greg Ristow (modifications)
 //
 // ## Description
 //
