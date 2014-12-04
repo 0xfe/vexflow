@@ -103,6 +103,21 @@ Vex.Flow.Stem = (function() {
       return { topY: top_pixel, baseY: base_pixel };
     },
 
+    // set the draw style of a stem:
+    setStyle: function(style) { this.style = style; return this; },
+    getStyle: function() { return this.style; },
+
+    // Apply current style to Canvas `context`
+    applyStyle: function(context) {
+      var style = this.getStyle();
+      if(style) {
+        if (style.shadowColor) context.setShadowColor(style.shadowColor);
+        if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
+        if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
+      }
+      return this;
+    },
+
     // Render the stem onto the canvas
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
@@ -130,6 +145,7 @@ Vex.Flow.Stem = (function() {
 
       // Draw the stem
       ctx.save();
+      this.applyStyle(ctx);
       ctx.beginPath();
       ctx.setLineWidth(Stem.WIDTH);
       ctx.moveTo(stem_x, stem_y);
