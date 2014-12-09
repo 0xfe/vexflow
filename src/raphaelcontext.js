@@ -99,10 +99,11 @@ Vex.Flow.RaphaelContext = (function() {
 
     scale: function(x, y) {
       this.state.scale = { x: x, y: y };
-      this.attributes.scale = x + "," + y + ",0,0";
+      this.attributes.transform = "S" + x + "," + y + ",0,0";
+      this.shadow_attributes.transform = "S" + x + "," + y + ",0,0";
       this.attributes.font = this.state.font_size * this.state.scale.x + "pt " +
         this.state.font_family;
-      this.background_attributes.scale = x + "," + y + ",0,0";
+      this.background_attributes.transform = "S" + x + "," + y + ",0,0";
       this.background_attributes.font = this.state.font_size *
         this.state.scale.x + "pt " +
         this.state.font_family;
@@ -277,7 +278,8 @@ Vex.Flow.RaphaelContext = (function() {
             "stroke-linejoin": "round",
             "stroke-linecap": "round",
             "stroke-width": +(sa.width / num_paths * i).toFixed(3),
-            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3)
+            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
+            transform: this.attributes.transform
           }));
         }
       }
