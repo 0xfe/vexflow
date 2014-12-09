@@ -100,7 +100,6 @@ Vex.Flow.RaphaelContext = (function() {
     scale: function(x, y) {
       this.state.scale = { x: x, y: y };
       this.attributes.transform = "S" + x + "," + y + ",0,0";
-      this.shadow_attributes.transform = "S" + x + "," + y + ",0,0";
       this.attributes.font = this.state.font_size * this.state.scale.x + "pt " +
         this.state.font_family;
       this.background_attributes.transform = "S" + x + "," + y + ",0,0";
