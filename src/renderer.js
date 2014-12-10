@@ -36,7 +36,7 @@ Vex.Flow.Renderer = (function() {
     var renderer = new Renderer(sel, backend);
     if (width && height) { renderer.resize(width, height); }
 
-    if (!background) background = "#eed";
+    if (!background) background = "#FFF";
     var ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
     return ctx;
