@@ -287,8 +287,9 @@ Vex.Flow.RaphaelContext = (function() {
             opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
             // See note in this.scale(): In Raphael the scale() method
             // is deprecated and removed as of Raphael 2.0 and replaced
-            // by the transform() method.  It is preserved here but has
-            // no effect on the output SVG.
+            // by the transform() method.  It is preserved here for 
+            // users with earlier versions of Raphael, but has no effect
+            // on the output SVG in Raphael 2.0+.
             transform: this.attributes.transform,
             scale: this.attributes.scale
           }));
