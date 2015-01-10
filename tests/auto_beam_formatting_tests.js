@@ -2,43 +2,43 @@ Vex.Flow.Test.AutoBeamFormatting = {};
 
 Vex.Flow.Test.AutoBeamFormatting.Start = function() {
   module('Auto-Beaming');
-  Vex.Flow.Test.runTest("Simple Auto Beaming",
+  Vex.Flow.Test.runTests("Simple Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
-  Vex.Flow.Test.runTest("Even Group Stem Directions",
+  Vex.Flow.Test.runTests("Even Group Stem Directions",
                         Vex.Flow.Test.AutoBeamFormatting.evenGroupStemDirections);
-  Vex.Flow.Test.runTest("Odd Group Stem Directions",
+  Vex.Flow.Test.runTests("Odd Group Stem Directions",
                         Vex.Flow.Test.AutoBeamFormatting.oddGroupStemDirections);
-  Vex.Flow.Test.runTest("Odd Beam Groups Auto Beaming",
+  Vex.Flow.Test.runTests("Odd Beam Groups Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.oddBeamGroups);
-  Vex.Flow.Test.runTest("More Simple Auto Beaming 0",
+  Vex.Flow.Test.runTests("More Simple Auto Beaming 0",
                         Vex.Flow.Test.AutoBeamFormatting.moreSimple0);
-  Vex.Flow.Test.runTest("More Simple Auto Beaming 1",
+  Vex.Flow.Test.runTests("More Simple Auto Beaming 1",
                         Vex.Flow.Test.AutoBeamFormatting.moreSimple1);
-  Vex.Flow.Test.runTest("Beam Across All Rests",
+  Vex.Flow.Test.runTests("Beam Across All Rests",
                         Vex.Flow.Test.AutoBeamFormatting.beamAcrossAllRests);
-  Vex.Flow.Test.runTest("Beam Across All Rests with Stemlets",
+  Vex.Flow.Test.runTests("Beam Across All Rests with Stemlets",
                         Vex.Flow.Test.AutoBeamFormatting.beamAcrossAllRestsWithStemlets);
-  Vex.Flow.Test.runTest("Break Beams on Middle Rests Only",
+  Vex.Flow.Test.runTests("Break Beams on Middle Rests Only",
                         Vex.Flow.Test.AutoBeamFormatting.beamAcrossMiddleRests);
-  Vex.Flow.Test.runTest("Break Beams on Rest",
+  Vex.Flow.Test.runTests("Break Beams on Rest",
                         Vex.Flow.Test.AutoBeamFormatting.breakBeamsOnRests);
-  Vex.Flow.Test.runTest("Maintain Stem Directions",
+  Vex.Flow.Test.runTests("Maintain Stem Directions",
                         Vex.Flow.Test.AutoBeamFormatting.maintainStemDirections);
-  Vex.Flow.Test.runTest("Maintain Stem Directions - Beam Over Rests",
+  Vex.Flow.Test.runTests("Maintain Stem Directions - Beam Over Rests",
                         Vex.Flow.Test.AutoBeamFormatting.maintainStemDirectionsBeamAcrossRests);
-  Vex.Flow.Test.runTest("Beat group with unbeamable note - 2/2",
+  Vex.Flow.Test.runTests("Beat group with unbeamable note - 2/2",
                         Vex.Flow.Test.AutoBeamFormatting.groupWithUnbeamableNote);
-  Vex.Flow.Test.runTest("Offset beat grouping - 6/8 ",
+  Vex.Flow.Test.runTests("Offset beat grouping - 6/8 ",
                         Vex.Flow.Test.AutoBeamFormatting.groupWithUnbeamableNote1);
-  Vex.Flow.Test.runTest("Odd Time - Guessing Default Beam Groups",
+  Vex.Flow.Test.runTests("Odd Time - Guessing Default Beam Groups",
                         Vex.Flow.Test.AutoBeamFormatting.autoOddBeamGroups);
-  Vex.Flow.Test.runTest("Custom Beam Groups",
+  Vex.Flow.Test.runTests("Custom Beam Groups",
                         Vex.Flow.Test.AutoBeamFormatting.customBeamGroups);
-  Vex.Flow.Test.runTest("Simple Tuplet Auto Beaming",
+  Vex.Flow.Test.runTests("Simple Tuplet Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleTuplets);
-  Vex.Flow.Test.runTest("More Simple Tuplet Auto Beaming",
+  Vex.Flow.Test.runTests("More Simple Tuplet Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.moreSimpleTuplets);
-  Vex.Flow.Test.runTest("More Automatic Beaming",
+  Vex.Flow.Test.runTests("More Automatic Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.moreBeaming);
 }
 

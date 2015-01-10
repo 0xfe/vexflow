@@ -5,6 +5,10 @@
 //
 // Copyright Mohit Cheppudira 2010
 
+// ## Warning: Deprecated for SVGContext
+// Except in instances where SVG support for IE < 9.0 is
+// needed, SVGContext is recommended.
+
 /** @constructor */
 Vex.Flow.RaphaelContext = (function() {
   function RaphaelContext(element) {

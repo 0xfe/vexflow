@@ -7,13 +7,13 @@ Vex.Flow.Test.PedalMarking = {};
 
 Vex.Flow.Test.PedalMarking.Start = function() {
   module("PedalMarking");
-  Vex.Flow.Test.runTest("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleText);
-  Vex.Flow.Test.runTest("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleBracket);
-  Vex.Flow.Test.runTest("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleMixed);
-  Vex.Flow.Test.runTest("Release and Depress on Same Note", Vex.Flow.Test.PedalMarking.releaseDepressOnSameNoteBracketed);
-  Vex.Flow.Test.runTest("Release and Depress on Same Note", Vex.Flow.Test.PedalMarking.releaseDepressOnSameNoteMixed);
-  Vex.Flow.Test.runTest("Custom Text", Vex.Flow.Test.PedalMarking.customText);
-  Vex.Flow.Test.runTest("Custom Text", Vex.Flow.Test.PedalMarking.customTextMixed);
+  Vex.Flow.Test.runTests("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleText);
+  Vex.Flow.Test.runTests("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleBracket);
+  Vex.Flow.Test.runTests("Simple Pedal", Vex.Flow.Test.PedalMarking.simpleMixed);
+  Vex.Flow.Test.runTests("Release and Depress on Same Note", Vex.Flow.Test.PedalMarking.releaseDepressOnSameNoteBracketed);
+  Vex.Flow.Test.runTests("Release and Depress on Same Note", Vex.Flow.Test.PedalMarking.releaseDepressOnSameNoteMixed);
+  Vex.Flow.Test.runTests("Custom Text", Vex.Flow.Test.PedalMarking.customText);
+  Vex.Flow.Test.runTests("Custom Text", Vex.Flow.Test.PedalMarking.customTextMixed);
 };
 
 

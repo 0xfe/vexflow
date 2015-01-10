@@ -4,13 +4,11 @@ Vex.Flow.Test.StaveModifier = {}
 
 Vex.Flow.Test.StaveModifier.Start = function() {
   module("StaveModifier");
-  Vex.Flow.Test.runTest("Stave Draw Test (Canvas)", Vex.Flow.Test.Stave.draw);
-  Vex.Flow.Test.runTest("Vertical Bar Test (Canvas)",
+  Vex.Flow.Test.runTests("Stave Draw Test", Vex.Flow.Test.Stave.draw);
+  Vex.Flow.Test.runTests("Vertical Bar Test",
       Vex.Flow.Test.Stave.drawVerticalBar);
-  Vex.Flow.Test.runRaphaelTest("Stave Draw Test (Raphael)",
-      Vex.Flow.Test.Stave.draw);
-  Vex.Flow.Test.runRaphaelTest("Vertical Bar Test (Raphael)",
-      Vex.Flow.Test.Stave.drawVerticalBar);
+  
+  
 }
 
 Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {

@@ -7,17 +7,15 @@ Vex.Flow.Test.StringNumber = {}
 
 Vex.Flow.Test.StringNumber.Start = function() {
   module("StringNumber");
-  Vex.Flow.Test.runTest("String Number In Notation (Canvas)",
+  Vex.Flow.Test.runTests("String Number In Notation",
       Vex.Flow.Test.StringNumber.drawMultipleMeasures);
-  Vex.Flow.Test.runRaphaelTest("String Number In Notation (Raphael)",
-    Vex.Flow.Test.StringNumber.drawMultipleMeasures);
-  Vex.Flow.Test.runTest("Fret Hand Finger In Notation (Canvas)",
+  
+  Vex.Flow.Test.runTests("Fret Hand Finger In Notation",
       Vex.Flow.Test.StringNumber.drawFretHandFingers);
-  Vex.Flow.Test.runRaphaelTest("Fret Hand Finger In Notation (Raphael)",
-      Vex.Flow.Test.StringNumber.drawFretHandFingers);
-  Vex.Flow.Test.runTest("Multi Voice With Strokes, String & Finger Numbers",
+  
+  Vex.Flow.Test.runTests("Multi Voice With Strokes, String & Finger Numbers",
       Vex.Flow.Test.StringNumber.multi);
-  Vex.Flow.Test.runTest("Complex Measure With String & Finger Numbers",
+  Vex.Flow.Test.runTests("Complex Measure With String & Finger Numbers",
       Vex.Flow.Test.StringNumber.drawAccidentals);
 };
 

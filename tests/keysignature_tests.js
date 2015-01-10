@@ -40,14 +40,12 @@ Vex.Flow.Test.KeySignature.MINOR_KEYS = [
 Vex.Flow.Test.KeySignature.Start = function() {
   module("KeySignature");
   test("Key Parser Test", Vex.Flow.Test.KeySignature.parser);
-  Vex.Flow.Test.runTest("Major Key Test", Vex.Flow.Test.KeySignature.majorKeys);
-  Vex.Flow.Test.runRaphaelTest("Major Key Test (Raphael)", 
-      Vex.Flow.Test.KeySignature.majorKeys);
-  Vex.Flow.Test.runTest("Minor Key Test", Vex.Flow.Test.KeySignature.minorKeys);
-  Vex.Flow.Test.runRaphaelTest("Minor Key Test (Raphael)", 
-      Vex.Flow.Test.KeySignature.minorKeys);
-  Vex.Flow.Test.runTest("Stave Helper", Vex.Flow.Test.KeySignature.staveHelper);
-  Vex.Flow.Test.runTest("Cancelled key test", Vex.Flow.Test.KeySignature.majorKeysCanceled);
+  Vex.Flow.Test.runTests("Major Key Test", Vex.Flow.Test.KeySignature.majorKeys);
+  
+  Vex.Flow.Test.runTests("Minor Key Test", Vex.Flow.Test.KeySignature.minorKeys);
+  
+  Vex.Flow.Test.runTests("Stave Helper", Vex.Flow.Test.KeySignature.staveHelper);
+  Vex.Flow.Test.runTests("Cancelled key test", Vex.Flow.Test.KeySignature.majorKeysCanceled);
 
 }
 
