@@ -60,7 +60,7 @@ Vex.Flow.Test.runTests = function(name, func, params) {
 Vex.Flow.Test.runCanvasTest = function(name, func, params) {
   test(name, function() {
       test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
-      test_canvas = Vex.Flow.Test.createTestCanvas(test_canvas_sel, name + " (canvas)");
+      test_canvas = Vex.Flow.Test.createTestCanvas(test_canvas_sel, name + " (Canvas)");
       func({ canvas_sel: test_canvas_sel, params: params },
         Vex.Flow.Renderer.getCanvasContext);
     });
