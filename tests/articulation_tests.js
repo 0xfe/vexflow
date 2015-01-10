@@ -8,39 +8,38 @@ Vex.Flow.Test.Articulation = {}
 
 Vex.Flow.Test.Articulation.Start = function() {
   module("Stave");
-  Vex.Flow.Test.Articulation.runTest("Articulation - Staccato/Staccatissimo (Canvas)",
+  Vex.Flow.Test.Articulation.runTests("Articulation - Staccato/Staccatissimo",
     "a.","av", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Staccato/Staccatissimo (Raphael)",
-    "a.","av", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runTest("Articulation - Accent/Tenuto (Canvas)",
+  Vex.Flow.Test.Articulation.runTests("Articulation - Accent/Tenuto",
     "a>","a-", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Accent/Tenuto (Raphael)",
-    "a>","a-", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runTest("Articulation - Marcato/L.H. Pizzicato (Canvas)",
+  Vex.Flow.Test.Articulation.runTests("Articulation - Marcato/L.H. Pizzicato",
     "a^","a+", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Marcato/L.H. Pizzicato (Raphael)",
-    "a^","a+", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runTest("Articulation - Snap Pizzicato/Fermata (Canvas)",
+  Vex.Flow.Test.Articulation.runTests("Articulation - Snap Pizzicato/Fermata",
     "ao","ao", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Snap Pizzicato/Fermata (Raphael)",
-    "ao","ao", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runTest("Articulation - Up-stroke/Down-Stroke (Canvas)",
+  Vex.Flow.Test.Articulation.runTests("Articulation - Up-stroke/Down-Stroke",
     "a|","am", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Up-stroke/Down-Stroke (Raphael)",
-    "a|","am", Vex.Flow.Test.Articulation.drawArticulations);
-  Vex.Flow.Test.Articulation.runTest("Articulation - Fermata Above/Below (Canvas)",
+  Vex.Flow.Test.Articulation.runTests("Articulation - Fermata Above/Below",
     "a@a","a@u",Vex.Flow.Test.Articulation.drawFermata);
-  Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Fermata Above/Below (Raphael)",
-    "a@a","a@u",Vex.Flow.Test.Articulation.drawFermata);
-  Vex.Flow.Test.Articulation.runTest("Articulation - Inline/Multiple (Canvas)",
+  Vex.Flow.Test.Articulation.runTests("Articulation - Inline/Multiple",
     "a.","a.", Vex.Flow.Test.Articulation.drawArticulations2);
-  Vex.Flow.Test.Articulation.runRaphaelTest("Articulation - Inline/Multiple (Raphael)",
-    "a.","a.", Vex.Flow.Test.Articulation.drawArticulations2);
-  Vex.Flow.Test.Articulation.runTest("TabNote Articulation",
+  Vex.Flow.Test.Articulation.runTests("TabNote Articulation",
     "a.","a.", Vex.Flow.Test.Articulation.tabNotes);
 }
 
-Vex.Flow.Test.Articulation.runTest = function(name, sym1, sym2, func, params) {
+Vex.Flow.Test.Articulation.runTests = function(name, sym1, sym2, func, params) {
+  if(Vex.Flow.Test.RUN_CANVAS_TESTS) {
+    Vex.Flow.Test.Articulation.runCanvasTest(name, sym1, sym2, func, params);
+  }
+  if(Vex.Flow.Test.RUN_SVG_TESTS) {
+    Vex.Flow.Test.Articulation.runSVGTest(name, sym1, sym2, func, params);
+  }
+  if(Vex.Flow.Test.RUN_RAPHAEL_TESTS) {
+    Vex.Flow.Test.Articulation.runRaphaelTest(name, sym1, sym2, func, params);
+  }
+}
+
+
+Vex.Flow.Test.Articulation.runCanvasTest = function(name, sym1, sym2, func, params) {
   test(name, function() {
       var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
       Vex.Flow.Test.createTestCanvas(test_canvas_sel, name);
@@ -48,14 +47,26 @@ Vex.Flow.Test.Articulation.runTest = function(name, sym1, sym2, func, params) {
         Vex.Flow.Renderer.getCanvasContext, sym1, sym2);
     });
 }
+
 Vex.Flow.Test.Articulation.runRaphaelTest = function(name, sym1, sym2, func, params) {
   test(name, function() {
       var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
-      Vex.Flow.Test.createTestRaphael(test_canvas_sel, name);
+      Vex.Flow.Test.createTestSVGorRaphael(test_canvas_sel, name);
       func({ canvas_sel: test_canvas_sel, params: params },
         Vex.Flow.Renderer.getRaphaelContext, sym1, sym2);
     });
 }
+
+Vex.Flow.Test.Articulation.runSVGTest = function(name, sym1, sym2, func, params) {
+  test(name, function() {
+      var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
+      Vex.Flow.Test.createTestSVGorRaphael(test_canvas_sel, name);
+      func({ canvas_sel: test_canvas_sel, params: params },
+        Vex.Flow.Renderer.getSVGContext, sym1, sym2);
+    });
+}
+
+
 
 Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder, sym1, sym2) {
   expect(0);

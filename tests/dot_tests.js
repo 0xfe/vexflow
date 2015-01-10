@@ -7,10 +7,8 @@ Vex.Flow.Test.Dot = {}
 
 Vex.Flow.Test.Dot.Start = function() {
   module("Dot");
-  Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Dot.basic);
-  Vex.Flow.Test.runRaphaelTest("Basic (Raphael)",
-      Vex.Flow.Test.Dot.basic);
-  Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Dot.multiVoice);
+  Vex.Flow.Test.runTests("Basic", Vex.Flow.Test.Dot.basic);
+  Vex.Flow.Test.runTests("Multi Voice", Vex.Flow.Test.Dot.multiVoice);
 }
 
 Vex.Flow.Test.Dot.showNote = function(note, stave, ctx, x) {

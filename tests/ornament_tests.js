@@ -7,14 +7,14 @@ Vex.Flow.Test.Ornament = {};
 
 Vex.Flow.Test.Ornament.Start = function() {
   module("Ornament");
-  Vex.Flow.Test.runTest("Ornaments (Canvas)", Vex.Flow.Test.Ornament.drawOrnaments);
-  Vex.Flow.Test.runRaphaelTest("Ornaments (Raphael)", Vex.Flow.Test.Ornament.drawOrnaments);
+  Vex.Flow.Test.runTests("Ornaments", Vex.Flow.Test.Ornament.drawOrnaments);
+  
 
-  Vex.Flow.Test.runTest("Ornaments Vertically Shifted", Vex.Flow.Test.Ornament.drawOrnamentsDisplaced);
+  Vex.Flow.Test.runTests("Ornaments Vertically Shifted", Vex.Flow.Test.Ornament.drawOrnamentsDisplaced);
 
-  Vex.Flow.Test.runTest("Ornaments - Delayed turns", Vex.Flow.Test.Ornament.drawOrnamentsDelayed);
-  Vex.Flow.Test.runTest("Stacked", Vex.Flow.Test.Ornament.drawOrnamentsStacked);
-  Vex.Flow.Test.runTest("With Upper/Lower Accidentals", Vex.Flow.Test.Ornament.drawOrnamentsWithAccidentals);
+  Vex.Flow.Test.runTests("Ornaments - Delayed turns", Vex.Flow.Test.Ornament.drawOrnamentsDelayed);
+  Vex.Flow.Test.runTests("Stacked", Vex.Flow.Test.Ornament.drawOrnamentsStacked);
+  Vex.Flow.Test.runTests("With Upper/Lower Accidentals", Vex.Flow.Test.Ornament.drawOrnamentsWithAccidentals);
 };
 
 Vex.Flow.Test.Ornament.drawOrnaments = function(options, contextBuilder) {

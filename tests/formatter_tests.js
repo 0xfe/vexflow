@@ -8,15 +8,15 @@ Vex.Flow.Test.Formatter = {}
 Vex.Flow.Test.Formatter.Start = function() {
   module("Formatter");
   test("TickContext Building", Vex.Flow.Test.Formatter.buildTickContexts);
-  Vex.Flow.Test.runTest("StaveNote Formatting",
+  Vex.Flow.Test.runTests("StaveNote Formatting",
       Vex.Flow.Test.Formatter.formatStaveNotes);
-  Vex.Flow.Test.runTest("StaveNote Justification",
+  Vex.Flow.Test.runTests("StaveNote Justification",
       Vex.Flow.Test.Formatter.justifyStaveNotes);
-  Vex.Flow.Test.runTest("Notes with Tab",
+  Vex.Flow.Test.runTests("Notes with Tab",
       Vex.Flow.Test.Formatter.notesWithTab);
-  Vex.Flow.Test.runTest("Format Multiple Staves - No Justification",
+  Vex.Flow.Test.runTests("Format Multiple Staves - No Justification",
       Vex.Flow.Test.Formatter.multiStaves, {justify: 0});
-  Vex.Flow.Test.runTest("Format Multiple Staves - Justified",
+  Vex.Flow.Test.runTests("Format Multiple Staves - Justified",
       Vex.Flow.Test.Formatter.multiStaves, {justify: 168});
 }
 
