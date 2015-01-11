@@ -14,6 +14,7 @@ Vex.Flow.SVGContext = (function() {
 
   SVGContext.prototype = {
     init: function(element) {
+      this.debug = false;
       // element is the parent DOM object
       this.element = element;
       // Create the SVG in the SVG namespace:
@@ -58,13 +59,34 @@ Vex.Flow.SVGContext = (function() {
       };
 
       this.state_stack= [];
+
+      // see note at measureTextFix
+      this.iePolyfill();
     },
 
+    log: function(args) {
+      if(this.debug === true) {
+        var logString = "";
+        var spacer = "";
+        for(var i=0; i<arguments.length; i++) {
+          logString += spacer + arguments[i];
+          spacer = " ";
+        }
+        console.log(logString);
+      }
+    },
+
+    // see note at measureTextFix
+    iePolyfill: function() {
+        this.ie = (  /MSIE 9/i.test(navigator.userAgent) ||
+                            /MSIE 10/i.test(navigator.userAgent) ||
+                            /rv:11\.0/i.test(navigator.userAgent) ||
+                            /Trident/i.test(navigator.userAgent) );
+    },
 
     // ### Styling & State Methods:
 
     setFont: function(family, size, weight) {
-
       // Unlike canvas, in SVG italic is handled by font-style, but bold is
       // handled by font-weight.  So: we search strings to apply these as needed.
       var bold = false;
@@ -93,6 +115,10 @@ Vex.Flow.SVGContext = (function() {
         "font-style" : style
       };
 
+      // For ie polyfill text.getBBox(); otherwise, not used.
+      // Uses fontsize to calculate ie's overpadding of italics
+      this.fontSize = Number(size);
+
       Vex.Merge(this.attributes, fontAttributes);
       Vex.Merge(this.state, fontAttributes);
 
@@ -103,8 +129,9 @@ Vex.Flow.SVGContext = (function() {
       // Assume size first, split on space.
       // GCR TODO: What if someone sends it in another order?  Or tries sending styling with it.
       this.attributes["font-family"] = font.split(" ")[1];
-      this.attributes["font-size"] = font.split(" ")[0];
-
+      var size = font.split(" ")[0];
+      this.attributes["font-size"] = size + "pt";
+      this.fontSize = Number(size);
       return this;
     },
 
@@ -472,24 +499,56 @@ Vex.Flow.SVGContext = (function() {
 
       this.applyAttributes(path, attributes);
       this.svg.appendChild(path);
-      // GCR to-do implement glow:
       return this;
     },
 
     // ## Text Methods:
 
     measureText: function(text) {
-      // GCR: Is this method needed?
       var txt = this.create("text");
       txt.textContent = text;
       this.applyAttributes(txt, this.attributes);
       this.svg.appendChild(txt);
       var bbox = txt.getBBox();
+      if( this.ie && 
+          text !== "" &&
+          this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
       this.svg.removeChild(txt);
       return bbox;
     },
 
+    ieMeasureTextFix: function(bbox, text) {
+    // Internet Explorer way over-pads text in italics,
+    // resulting in giant width estimates for measureText.
+    // To fix this, we use this formula, tested against
+    // ie 11:
+    // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
+    // And then subtract the overestimate from calculated width.
+
+      this.log("width: ", bbox.width, " on text ", text);
+      var indep = Number(this.fontSize);
+      var m = 1.196;
+      var b = 1.9598;
+      var widthCorrection = (m * indep) + b;
+      this.log("Correction formula: " + widthCorrection + " = " + m + " * " + indep + " + " + b );
+
+      var width = bbox.width - widthCorrection;
+      var height = bbox.height - 1.5;
+
+      // Get non-protected copy:
+      var box = {
+        x : bbox.x,
+        y : bbox.y,
+        width : width,
+        height : height
+      };
+
+      this.log("adjusted width: ", box.width);
+      return box;
+    },
+
     fillText: function(text, x, y) {
+      this.log("Draw text: text, x, y:", text, x, y);
       var attributes = {};
       Vex.Merge(attributes, this.attributes);
       attributes.stroke = "none";
