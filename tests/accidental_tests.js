@@ -7,22 +7,17 @@ Vex.Flow.Test.Accidental = {}
 
 Vex.Flow.Test.Accidental.Start = function() {
   module("Accidental");
-  Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Accidental.basic);
-  Vex.Flow.Test.runRaphaelTest("Basic (Raphael)",
-      Vex.Flow.Test.Accidental.basic);
-  Vex.Flow.Test.runTest("Stem Down", Vex.Flow.Test.Accidental.basicStemDown);
-  Vex.Flow.Test.runRaphaelTest("Stem Down (Raphael)",
-      Vex.Flow.Test.Accidental.basicStemDown);
-  Vex.Flow.Test.runTest("Accidental Arrangement Special Cases (Canvas)", Vex.Flow.Test.Accidental.specialCases);
-  Vex.Flow.Test.runRaphaelTest("Accidental Arrangement Special Cases (Raphael)", Vex.Flow.Test.Accidental.specialCases);
-  Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
-  Vex.Flow.Test.runTest("Microtonal", Vex.Flow.Test.Accidental.microtonal);
+  Vex.Flow.Test.runTests("Basic", Vex.Flow.Test.Accidental.basic);
+  Vex.Flow.Test.runTests("Stem Down", Vex.Flow.Test.Accidental.basicStemDown);
+  Vex.Flow.Test.runTests("Accidental Arrangement Special Cases", Vex.Flow.Test.Accidental.specialCases);
+  Vex.Flow.Test.runTests("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
+  Vex.Flow.Test.runTests("Microtonal", Vex.Flow.Test.Accidental.microtonal);
   test("Automatic Accidentals - Simple Tests", Vex.Flow.Test.Accidental.autoAccidentalWorking);
-  Vex.Flow.Test.runTest("Automatic Accidentals", Vex.Flow.Test.Accidental.automaticAccidentals0);
-  Vex.Flow.Test.runTest("Automatic Accidentals - C major scale in Ab", Vex.Flow.Test.Accidental.automaticAccidentals1);
-  Vex.Flow.Test.runTest("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
-  Vex.Flow.Test.runTest("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
-  Vex.Flow.Test.runTest("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
+  Vex.Flow.Test.runTests("Automatic Accidentals", Vex.Flow.Test.Accidental.automaticAccidentals0);
+  Vex.Flow.Test.runTests("Automatic Accidentals - C major scale in Ab", Vex.Flow.Test.Accidental.automaticAccidentals1);
+  Vex.Flow.Test.runTests("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
+  Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
+  Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
 }
 
 function hasAccidental(note) {

@@ -4,20 +4,12 @@ Vex.Flow.Test.Clef = {}
 
 Vex.Flow.Test.Clef.Start = function() {
   module("Clef");
-  Vex.Flow.Test.runTest("Clef Test", Vex.Flow.Test.Clef.draw);
-  Vex.Flow.Test.runRaphaelTest("Clef Test (Raphael)", 
-      Vex.Flow.Test.Clef.draw);
-  Vex.Flow.Test.runTest("Clef End Test", Vex.Flow.Test.Clef.drawEnd);
-  Vex.Flow.Test.runRaphaelTest("Clef End Test (Raphael)", 
-      Vex.Flow.Test.Clef.drawEnd);
-  Vex.Flow.Test.runTest("Small Clef Test", Vex.Flow.Test.Clef.drawSmall);
-  Vex.Flow.Test.runRaphaelTest("Small Clef Test (Raphael)",
-      Vex.Flow.Test.Clef.drawSmall);
-  Vex.Flow.Test.runTest("Small Clef End Test", Vex.Flow.Test.Clef.drawSmallEnd);
-  Vex.Flow.Test.runRaphaelTest("Small Clef End Test (Raphael)",
-      Vex.Flow.Test.Clef.drawSmallEnd);
-  Vex.Flow.Test.runTest("Clef Change Test", Vex.Flow.Test.Clef.drawClefChange);
-  Vex.Flow.Test.runRaphaelTest("Clef Change Test (Raphael)", Vex.Flow.Test.Clef.drawClefChange);
+  Vex.Flow.Test.runTests("Clef Test", Vex.Flow.Test.Clef.draw);
+  Vex.Flow.Test.runTests("Clef End Test", Vex.Flow.Test.Clef.drawEnd);
+  Vex.Flow.Test.runTests("Small Clef Test", Vex.Flow.Test.Clef.drawSmall);
+  Vex.Flow.Test.runTests("Small Clef End Test", Vex.Flow.Test.Clef.drawSmallEnd);
+  Vex.Flow.Test.runTests("Clef Change Test", Vex.Flow.Test.Clef.drawClefChange);
+  
 }
 
 Vex.Flow.Test.Clef.draw = function(options, contextBuilder) {

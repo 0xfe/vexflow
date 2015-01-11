@@ -7,10 +7,10 @@ Vex.Flow.Test.StaveLine = {};
 
 Vex.Flow.Test.StaveLine.Start = function() {
   module("StaveLine");
-  Vex.Flow.Test.runTest("Simple StaveLine", Vex.Flow.Test.StaveLine.simple0);
-  Vex.Flow.Test.runRaphaelTest("Simple StaveLine", Vex.Flow.Test.StaveLine.simple0);
-  Vex.Flow.Test.runTest("StaveLine Arrow Options", Vex.Flow.Test.StaveLine.simple1);
-  Vex.Flow.Test.runRaphaelTest("StaveLine Arrow Options", Vex.Flow.Test.StaveLine.simple1);
+  Vex.Flow.Test.runTests("Simple StaveLine", Vex.Flow.Test.StaveLine.simple0);
+  
+  Vex.Flow.Test.runTests("StaveLine Arrow Options", Vex.Flow.Test.StaveLine.simple1);
+  
 };
 
 Vex.Flow.Test.StaveLine.simple0 = function(options, contextBuilder) {

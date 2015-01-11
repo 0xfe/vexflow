@@ -29,8 +29,8 @@ Vex.Flow.Test.Percussion.Start = function() {
 }
 
 Vex.Flow.Test.Percussion.runBoth = function(title, func) {
-  Vex.Flow.Test.runTest(title, func);
-  Vex.Flow.Test.runRaphaelTest(title + " (Raphael)", func);
+  Vex.Flow.Test.runTests(title, func);
+  
 }
 
 Vex.Flow.Test.Percussion.newModifier = function(s) {

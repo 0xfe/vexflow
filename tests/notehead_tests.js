@@ -2,8 +2,8 @@ Vex.Flow.Test.NoteHead = {};
 
 Vex.Flow.Test.NoteHead.Start = function(){
   module("NoteHead");
-  Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.NoteHead.basic);
-  Vex.Flow.Test.runTest("Bounding Boxes", Vex.Flow.Test.NoteHead.basicBoundingBoxes);
+  Vex.Flow.Test.runTests("Basic", Vex.Flow.Test.NoteHead.basic);
+  Vex.Flow.Test.runTests("Bounding Boxes", Vex.Flow.Test.NoteHead.basicBoundingBoxes);
 };
 
 Vex.Flow.Test.NoteHead.setupContext = function(options, x, y) {

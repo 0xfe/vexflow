@@ -7,16 +7,12 @@ Vex.Flow.Test.Bend = {}
 
 Vex.Flow.Test.Bend.Start = function() {
   module("Bend");
-  Vex.Flow.Test.runTest("Double Bends", Vex.Flow.Test.Bend.doubleBends);
-  Vex.Flow.Test.runRaphaelTest("Double Bends (Raphael)",
-      Vex.Flow.Test.Bend.doubleBends);
-  Vex.Flow.Test.runTest("Reverse Bends", Vex.Flow.Test.Bend.reverseBends);
-  Vex.Flow.Test.runTest("Bend Phrase", Vex.Flow.Test.Bend.bendPhrase);
-  Vex.Flow.Test.runTest("Double Bends With Release",
+  Vex.Flow.Test.runTests("Double Bends", Vex.Flow.Test.Bend.doubleBends);
+  Vex.Flow.Test.runTests("Reverse Bends", Vex.Flow.Test.Bend.reverseBends);
+  Vex.Flow.Test.runTests("Bend Phrase", Vex.Flow.Test.Bend.bendPhrase);
+  Vex.Flow.Test.runTests("Double Bends With Release",
       Vex.Flow.Test.Bend.doubleBendsWithRelease);
-  Vex.Flow.Test.runRaphaelTest("Double Bends With Release (Raphael)",
-      Vex.Flow.Test.Bend.doubleBendsWithRelease);
-  Vex.Flow.Test.runTest("Whako Bend", Vex.Flow.Test.Bend.whackoBends);
+  Vex.Flow.Test.runTests("Whako Bend", Vex.Flow.Test.Bend.whackoBends);
 }
 
 Vex.Flow.Test.Bend.doubleBends = function(options, contextBuilder) {

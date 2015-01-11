@@ -8,10 +8,10 @@ Vex.Flow.Test.StaveHairpin = {}
 
 Vex.Flow.Test.StaveHairpin.Start = function() {
   module("StaveHairpin");
-  Vex.Flow.Test.runTest("Simple StaveHairpin", Vex.Flow.Test.StaveHairpin.simple);
-  Vex.Flow.Test.runTest("Horizontal Offset StaveHairpin", Vex.Flow.Test.StaveHairpin.ho);
-  Vex.Flow.Test.runTest("Vertical Offset StaveHairpin", Vex.Flow.Test.StaveHairpin.vo);
-  Vex.Flow.Test.runTest("Height StaveHairpin", Vex.Flow.Test.StaveHairpin.height);
+  Vex.Flow.Test.runTests("Simple StaveHairpin", Vex.Flow.Test.StaveHairpin.simple);
+  Vex.Flow.Test.runTests("Horizontal Offset StaveHairpin", Vex.Flow.Test.StaveHairpin.ho);
+  Vex.Flow.Test.runTests("Vertical Offset StaveHairpin", Vex.Flow.Test.StaveHairpin.vo);
+  Vex.Flow.Test.runTests("Height StaveHairpin", Vex.Flow.Test.StaveHairpin.height);
 }
 
 Vex.Flow.Test.StaveHairpin.drawHairpin = function(notes, stave, ctx, type, position, options) {  

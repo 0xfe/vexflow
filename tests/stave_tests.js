@@ -7,45 +7,35 @@ Vex.Flow.Test.Stave = {}
 
 Vex.Flow.Test.Stave.Start = function() {
   module("Stave");
-  Vex.Flow.Test.runTest("Stave Draw Test (Canvas)", Vex.Flow.Test.Stave.draw);
-  Vex.Flow.Test.runTest("Vertical Bar Test (Canvas)",
+  Vex.Flow.Test.runTests("Stave Draw Test", Vex.Flow.Test.Stave.draw);
+  Vex.Flow.Test.runTests("Vertical Bar Test",
       Vex.Flow.Test.Stave.drawVerticalBar);
-  Vex.Flow.Test.runRaphaelTest("Stave Draw Test (Raphael)",
-      Vex.Flow.Test.Stave.draw);
-  Vex.Flow.Test.runRaphaelTest("Vertical Bar Test (Raphael)",
-      Vex.Flow.Test.Stave.drawVerticalBar);
-  Vex.Flow.Test.runTest("Multiple Stave Barline Test (Canvas)",
+  
+  
+  Vex.Flow.Test.runTests("Multiple Stave Barline Test",
       Vex.Flow.Test.Stave.drawMultipleMeasures);
-  Vex.Flow.Test.runTest("Multiple Stave Repeats Test (Canvas)",
+  Vex.Flow.Test.runTests("Multiple Stave Repeats Test",
       Vex.Flow.Test.Stave.drawRepeats);
-  Vex.Flow.Test.runRaphaelTest("Multiple Stave Barline Test (Raphael)",
-      Vex.Flow.Test.Stave.drawMultipleMeasures);
-  Vex.Flow.Test.runRaphaelTest("Multiple Stave Repeats Test (Raphael)",
-      Vex.Flow.Test.Stave.drawRepeats);
-  Vex.Flow.Test.runTest("Multiple Staves Volta Test (Canvas)",
+  
+  
+  Vex.Flow.Test.runTests("Multiple Staves Volta Test",
       Vex.Flow.Test.Stave.drawVoltaTest);
-  Vex.Flow.Test.runRaphaelTest("Multiple Staves Volta Test (Raphael)",
-      Vex.Flow.Test.Stave.drawVoltaTest);
-  Vex.Flow.Test.runTest("Tempo Test (Canvas)",
+  
+  Vex.Flow.Test.runTests("Tempo Test",
       Vex.Flow.Test.Stave.drawTempo);
-  Vex.Flow.Test.runRaphaelTest("Tempo Test (Raphael)",
-      Vex.Flow.Test.Stave.drawTempo);
-  Vex.Flow.Test.runTest("Single Line Configuration Test (Canvas)",
+  
+  Vex.Flow.Test.runTests("Single Line Configuration Test",
       Vex.Flow.Test.Stave.configureSingleLine);
-  Vex.Flow.Test.runRaphaelTest("Single Line Configuration Test (Raphael)",
-      Vex.Flow.Test.Stave.configureSingleLine);
-  Vex.Flow.Test.runTest("Batch Line Configuration Test (Canvas)",
+  
+  Vex.Flow.Test.runTests("Batch Line Configuration Test",
       Vex.Flow.Test.Stave.configureAllLines);
-  Vex.Flow.Test.runRaphaelTest("Batch Line Configuration Test (Raphael)",
-      Vex.Flow.Test.Stave.configureAllLines);
-  Vex.Flow.Test.runTest("Stave Text Test (Canvas)",
+  
+  Vex.Flow.Test.runTests("Stave Text Test",
       Vex.Flow.Test.Stave.drawStaveText);
-  Vex.Flow.Test.runRaphaelTest("Stave Text Test (Raphael)",
-      Vex.Flow.Test.Stave.drawStaveText);
-  Vex.Flow.Test.runTest("Multiple Line Stave Text Test (Raphael)",
+  
+  Vex.Flow.Test.runTests("Multiple Line Stave Text Test (Raphael)",
       Vex.Flow.Test.Stave.drawStaveTextMultiLine);
-  Vex.Flow.Test.runRaphaelTest("Multiple Line Stave Text Test (Raphael)",
-      Vex.Flow.Test.Stave.drawStaveTextMultiLine);
+  
 }
 
 Vex.Flow.Test.Stave.draw = function(options, contextBuilder) {

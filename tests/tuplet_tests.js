@@ -6,15 +6,15 @@ Vex.Flow.Test.Tuplet = {}
 
 Vex.Flow.Test.Tuplet.Start = function() {
   module("Tuplet");
-  Vex.Flow.Test.runTest("Simple Tuplet", Vex.Flow.Test.Tuplet.simple);
-  Vex.Flow.Test.runTest("Beamed Tuplet", Vex.Flow.Test.Tuplet.beamed);
-  Vex.Flow.Test.runTest("Ratioed Tuplet", Vex.Flow.Test.Tuplet.ratio);
-  Vex.Flow.Test.runTest("Bottom Tuplet", Vex.Flow.Test.Tuplet.bottom);
-  Vex.Flow.Test.runTest("Bottom Ratioed Tuplet", Vex.Flow.Test.Tuplet.bottom_ratio);
-  Vex.Flow.Test.runTest("Awkward Tuplet", Vex.Flow.Test.Tuplet.awkward);
-  Vex.Flow.Test.runTest("Complex Tuplet", Vex.Flow.Test.Tuplet.complex);
-  Vex.Flow.Test.runTest("Mixed Stem Direction Tuplet", Vex.Flow.Test.Tuplet.mixedTop);
-  Vex.Flow.Test.runTest("Mixed Stem Direction Bottom Tuplet", Vex.Flow.Test.Tuplet.mixedBottom);
+  Vex.Flow.Test.runTests("Simple Tuplet", Vex.Flow.Test.Tuplet.simple);
+  Vex.Flow.Test.runTests("Beamed Tuplet", Vex.Flow.Test.Tuplet.beamed);
+  Vex.Flow.Test.runTests("Ratioed Tuplet", Vex.Flow.Test.Tuplet.ratio);
+  Vex.Flow.Test.runTests("Bottom Tuplet", Vex.Flow.Test.Tuplet.bottom);
+  Vex.Flow.Test.runTests("Bottom Ratioed Tuplet", Vex.Flow.Test.Tuplet.bottom_ratio);
+  Vex.Flow.Test.runTests("Awkward Tuplet", Vex.Flow.Test.Tuplet.awkward);
+  Vex.Flow.Test.runTests("Complex Tuplet", Vex.Flow.Test.Tuplet.complex);
+  Vex.Flow.Test.runTests("Mixed Stem Direction Tuplet", Vex.Flow.Test.Tuplet.mixedTop);
+  Vex.Flow.Test.runTests("Mixed Stem Direction Bottom Tuplet", Vex.Flow.Test.Tuplet.mixedBottom);
 }
 
 Vex.Flow.Test.Tuplet.setupContext = function(options, x, y) {
