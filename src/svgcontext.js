@@ -14,14 +14,15 @@ Vex.Flow.SVGContext = (function() {
 
   SVGContext.prototype = {
     init: function(element) {
-      this.debug = false;
       // element is the parent DOM object
       this.element = element;
       // Create the SVG in the SVG namespace:
       this.svgNS = "http://www.w3.org/2000/svg";
-      this.svg = this.create("svg");
+      var svg = this.create("svg");
       // Add it to the canvas:
-      this.element.appendChild(this.svg);
+      this.element.appendChild(svg);
+      // Point to it:
+      this.svg = svg;
 
       this.path = "";
       this.pen = {x: 0, y: 0};
@@ -29,7 +30,7 @@ Vex.Flow.SVGContext = (function() {
       this.state = {
         scale: { x: 1, y: 1 },
         "font-family": "Arial",
-        "font-size": 8,
+        "font-size": "8pt",
         "font-weight": "normal"
       };
 
@@ -60,23 +61,13 @@ Vex.Flow.SVGContext = (function() {
 
       this.state_stack= [];
 
-      // see note at measureTextFix
+      // Test for Internet Explorer
       this.iePolyfill();
     },
 
-    log: function(args) {
-      if(this.debug === true) {
-        var logString = "";
-        var spacer = "";
-        for(var i=0; i<arguments.length; i++) {
-          logString += spacer + arguments[i];
-          spacer = " ";
-        }
-        console.log(logString);
-      }
-    },
-
-    // see note at measureTextFix
+    // Tests if the browser is Internet Explorer; if it is,
+    // we do some tricks to improve text layout.  See the
+    // note at ieMeasureTextFix() for details.
     iePolyfill: function() {
         this.ie = (  /MSIE 9/i.test(navigator.userAgent) ||
                             /MSIE 10/i.test(navigator.userAgent) ||
@@ -87,20 +78,26 @@ Vex.Flow.SVGContext = (function() {
     // ### Styling & State Methods:
 
     setFont: function(family, size, weight) {
-      // Unlike canvas, in SVG italic is handled by font-style, but bold is
-      // handled by font-weight.  So: we search strings to apply these as needed.
+      // Unlike canvas, in SVG italic is handled by font-style,
+      // not weight. So: we search the weight argument and
+      // apply bold and italic to weight and style respectively.
       var bold = false;
       var italic = false;
       var style = "normal";
+      // Weight might also be a number (200, 400, etc...) so we
+      // test its type to be sure we have access to String methods.
       if( typeof weight == "string" ) {
-          if(weight.search("italic") !== -1) {
+          // look for "italic" in the weight:
+          if(weight.indexOf("italic") !== -1) {
             weight = weight.replace(/italic/g, "");
             italic = true;
           }
-          if(weight.search("bold") !== -1) {
+          // look for "bold" in weight
+          if(weight.indexOf("bold") !== -1) {
             weight = weight.replace(/bold/g, "");
             bold = true;
           }
+          // remove any remaining spaces
           weight = weight.replace(/ /g, "");
       }
       weight = bold ? "bold" : weight;
@@ -115,8 +112,8 @@ Vex.Flow.SVGContext = (function() {
         "font-style" : style
       };
 
-      // For ie polyfill text.getBBox(); otherwise, not used.
-      // Uses fontsize to calculate ie's overpadding of italics
+      // Store the font size so that if the browser is Internet
+      // Explorer we can fix its calculations of text width.
       this.fontSize = Number(size);
 
       Vex.Merge(this.attributes, fontAttributes);
@@ -126,12 +123,19 @@ Vex.Flow.SVGContext = (function() {
     },
 
     setRawFont: function(font) {
-      // Assume size first, split on space.
-      // GCR TODO: What if someone sends it in another order?  Or tries sending styling with it.
-      this.attributes["font-family"] = font.split(" ")[1];
-      var size = font.split(" ")[0];
-      this.attributes["font-size"] = size + "pt";
-      this.fontSize = Number(size);
+      font=font.trim();
+      // Assumes size first, splits on space -- which is presently
+      // how all existing modules are calling this.
+      var fontArray = font.split(" ");
+
+      this.attributes["font-family"] = fontArray[1];
+      this.state["font-family"] = fontArray[1];
+
+      this.attributes["font-size"] = fontArray[0];
+      this.state["font-size"] = fontArray[0];
+
+      // Saves fontSize for IE polyfill
+      this.fontSize = Number(fontArray[0].match(/\d+/));
       return this;
     },
 
@@ -166,7 +170,6 @@ Vex.Flow.SVGContext = (function() {
       this.lineWidth = width;
     },
 
-    // GCR TODO: Only staveline seems to implement this -- test, test, test.
     setLineDash: function(lineDash) { 
       this.attributes["stroke-linedash"] = lineDash;
       return this; 
@@ -179,7 +182,7 @@ Vex.Flow.SVGContext = (function() {
 
     // ### Sizing & Scaling Methods:
 
-    // GCR TODO: See note at scale() -- we should seperate our internal
+    // TODO (GCR): See note at scale() -- seperate our internal
     // conception of pixel-based width/height from the style.width
     // and style.height properties eventually to allow users to
     // apply responsive sizing attributes to the SVG.
@@ -197,7 +200,7 @@ Vex.Flow.SVGContext = (function() {
 
     scale: function(x, y) {
       // uses viewBox to scale
-      // GCR TODO: we may at some point want to distinguish the 
+      // TODO (GCR): we may at some point want to distinguish the 
       // style.width / style.height properties that are applied to 
       // the SVG object from our internal conception of the SVG 
       // width/height.  This would allow us to create automatically
@@ -225,9 +228,7 @@ Vex.Flow.SVGContext = (function() {
       }
     },
 
-    // 
     // ### Drawing helper methods:
-    //
 
     applyAttributes: function(element, attributes) {
       for(var propertyName in attributes) {
@@ -241,12 +242,11 @@ Vex.Flow.SVGContext = (function() {
     },
 
     flipRectangle: function(args) {
-      // Avoid invalid negative height attribs by
-      // flipping a rectangle on its head:
-      // Note, args is the actual arguments value from
-      // one of the rectangle functions, so changing the
-      // internal values of it will persist without need
-      // to return anything.
+      // Avoid invalid negative height attributes by
+      // flipping a rectangle w/ negative height on its head.
+      // Since args is the actual arguments object from
+      // one of the rectangle functions, we don't need to
+      // return it.
 
       // Add negative height to Y
       args[1] += args[3];
@@ -257,16 +257,24 @@ Vex.Flow.SVGContext = (function() {
     // ### Shape & Path Methods:
 
     clear: function() { 
-      // remove the old svg from the element canvas:
-      this.element.removeChild(this.svg);
-      // and wipe the old svg from memory for garbage collection.
-      this.svg = this.create("svg"); 
-      this.element.appendChild(this.svg);
-      // Give the new SVG width, height & viewBox settings:
-      this.resize(this.width, this.height);
-      this.scale(this.state.scale.x, this.state.scale.y);
-    },
+      // Clear the SVG by removing all inner children.
 
+      // (This approach is usually slightly more efficient
+      // than removing the old SVG & adding a new one to
+      // the container element, since it does not cause the
+      // container to resize twice.  Also, the resize
+      // triggered by removing the entire SVG can trigger
+      // a touchcancel event when the element resizes away
+      // from a touch point.)
+
+      while (this.svg.lastChild) {
+        this.svg.removeChild(this.svg.lastChild);
+      }
+
+      // Replace the viewbox attribute we just removed:
+      this.scale(this.state.scale.x, this.state.scale.y);
+
+    },
 
     // ## Rectangles:
 
@@ -303,25 +311,21 @@ Vex.Flow.SVGContext = (function() {
     },
 
     clearRect: function(x, y, width, height) {
-      // GCR TODO: Improve implementation of this...
+      // TODO(GCR): Improve implementation of this...
       // Currently it draws a box of the background color, rather
       // than creating alpha through lower z-levels.
       //
-      // We could implement this with inverted clipping paths,
-      // dynamically created & added to defs, and applied to all
-      // previous children of the SVG.
+      // See the implementation of this in SVGKit:
+      // http://sourceforge.net/projects/svgkit/
+      // as a starting point.
       //
-      // Likely real performance hit by doing that -- and since
+      // Adding a large number of transform paths (as we would
+      // have to do) could be a real performance hit.  Since
       // tabNote seems to be the only module that makes use of this
       // it may be worth creating a seperate tabStave that would
       // draw lines around locations of tablature fingering.
-      // We could implement this by creating an inverted clipping path
-      // on all previously drawn elements and adding each path to the defs.
       //
-      // So: For now we preserve RaphaelContext's approach -- which doesn't
-      // clearRect but fills it with whatever background color is specified
-      // in background_attributes.
-      //
+
       if (height < 0) this.flipRectangle(arguments);
 
       this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
@@ -469,14 +473,13 @@ Vex.Flow.SVGContext = (function() {
     },
 
     fill: function(attributes) {
-      // GCR to-do implement glow:
+      // If our current path is set to glow, make it glow
       this.glow();
 
       var path = this.create("path");
       if(typeof attributes === "undefined") {
         attributes = {};
         Vex.Merge(attributes, this.attributes);
-      // GCR: or stroke-width 0 as in raphael?  eh...
         attributes.stroke = "none";
       }
 
@@ -488,6 +491,7 @@ Vex.Flow.SVGContext = (function() {
     },
 
     stroke: function() {
+      // If our current apth is set to glow, make it glow.
       this.glow();
 
       var path = this.create("path");
@@ -518,20 +522,17 @@ Vex.Flow.SVGContext = (function() {
     },
 
     ieMeasureTextFix: function(bbox, text) {
-    // Internet Explorer way over-pads text in italics,
+    // Internet Explorer over-pads text in italics,
     // resulting in giant width estimates for measureText.
     // To fix this, we use this formula, tested against
     // ie 11:
     // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
     // And then subtract the overestimate from calculated width.
 
-      this.log("width: ", bbox.width, " on text ", text);
-      var indep = Number(this.fontSize);
+      var fontSize = Number(this.fontSize);
       var m = 1.196;
       var b = 1.9598;
-      var widthCorrection = (m * indep) + b;
-      this.log("Correction formula: " + widthCorrection + " = " + m + " * " + indep + " + " + b );
-
+      var widthCorrection = (m * fontSize) + b;
       var width = bbox.width - widthCorrection;
       var height = bbox.height - 1.5;
 
@@ -543,12 +544,10 @@ Vex.Flow.SVGContext = (function() {
         height : height
       };
 
-      this.log("adjusted width: ", box.width);
       return box;
     },
 
     fillText: function(text, x, y) {
-      this.log("Draw text: text, x, y:", text, x, y);
       var attributes = {};
       Vex.Merge(attributes, this.attributes);
       attributes.stroke = "none";
