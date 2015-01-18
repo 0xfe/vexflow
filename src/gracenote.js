@@ -49,12 +49,12 @@ Vex.Flow.GraceNote = (function() {
         var y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
         if (stem_direction === 1) {
           x += 1;
-          ctx.lineTo(x, y);
+          ctx.moveTo(x, y);
           ctx.lineTo(x + 13, y - 9);
         } else if (stem_direction === -1) {
           x -= 4;
           y += 1;
-          ctx.lineTo(x, y);
+          ctx.moveTo(x, y);
           ctx.lineTo(x + 13, y + 9);
         }
 
