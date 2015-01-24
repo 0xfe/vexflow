@@ -53,7 +53,7 @@ Vex.Flow.Test.runTests = function(name, func, params) {
     Vex.Flow.Test.runSVGTest(name, func, params);
   }
   if(Vex.Flow.Test.RUN_RAPHAEL_TESTS) {
-    Vex.Flow.Test.runRaphaelTest(name, func, params);    
+    Vex.Flow.Test.runRaphaelTest(name, func, params);
   }
 }
 
