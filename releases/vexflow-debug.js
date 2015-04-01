@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.25 built on 2014-11-28.
+ * VexFlow 1.2.27 built on 2015-01-24.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -937,6 +937,19 @@ Vex.Flow.accidentalCodes.accidentals = {
     shift_right: 0,
     shift_down: 0
   }
+};
+
+Vex.Flow.accidentalColumnsTable = {
+  1 : { a : [1], b : [1]},
+  2 : { a : [1, 2] },
+  3 : { a : [1, 3, 2], b : [1, 2, 1], second_on_bottom : [1, 2, 3] },
+  4 : { a : [1, 3, 4, 2], b : [1, 2, 3, 1], spaced_out_tetrachord : [1, 2, 1, 2] },
+  5 : { a : [1, 3, 5, 4, 2], b : [1, 2, 4, 3, 1],
+        spaced_out_pentachord : [1, 2, 3, 2, 1],
+        very_spaced_out_pentachord : [1, 2, 1, 2, 1] },
+  6 : { a : [1, 3, 5, 6, 4, 2], b : [1, 2, 4, 5, 3, 1],
+        spaced_out_hexachord : [1, 3, 2, 1, 3, 2],
+        very_spaced_out_hexachord : [1, 2, 1, 2, 1, 2] }
 };
 
 Vex.Flow.ornamentCodes = function(acc) {
@@ -3611,6 +3624,21 @@ Vex.Flow.Stem = (function() {
       return { topY: top_pixel, baseY: base_pixel };
     },
 
+    // set the draw style of a stem:
+    setStyle: function(style) { this.style = style; return this; },
+    getStyle: function() { return this.style; },
+
+    // Apply current style to Canvas `context`
+    applyStyle: function(context) {
+      var style = this.getStyle();
+      if(style) {
+        if (style.shadowColor) context.setShadowColor(style.shadowColor);
+        if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
+        if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
+      }
+      return this;
+    },
+
     // Render the stem onto the canvas
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
@@ -3638,6 +3666,7 @@ Vex.Flow.Stem = (function() {
 
       // Draw the stem
       ctx.save();
+      this.applyStyle(ctx);
       ctx.beginPath();
       ctx.setLineWidth(Stem.WIDTH);
       ctx.moveTo(stem_x, stem_y);
@@ -4517,6 +4546,15 @@ Vex.Flow.StaveNote = (function() {
       return { x: this.getAbsoluteX() + x, y: this.ys[index] };
     },
 
+    // Sets the style of the complete StaveNote, including all keys
+    // and the stem.
+    setStyle: function(style) {
+      this.note_heads.forEach(function(notehead) {
+        notehead.setStyle(style);
+      }, this);
+      this.stem.setStyle(style);
+    },
+
     // Sets the notehead at `index` to the provided coloring `style`.
     //
     // `style` is an `object` with the following properties: `shadowColor`,
@@ -5217,7 +5255,7 @@ Vex.Flow.TabNote = (function() {
 
   // Gets groups of points that outline the partial stem lines
   // between fret positions
-  // 
+  //
   // Parameters:
   // * stem_Y - The `y` coordinate the stem is located on
   // * unused_strings - An array of groups of unused strings
@@ -6728,6 +6766,8 @@ Vex.Flow.ModifierContext = (function() {
 }());
 
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// @author Mohit Cheppudira
+// @author Greg Ristow (modifications)
 //
 // ## Description
 //
@@ -6754,6 +6794,7 @@ Vex.Flow.Accidental = (function(){
     var left_shift = state.left_shift;
     var accidental_spacing = 2;
 
+    // If there are no accidentals, we needn't format their positions
     if (!accidentals || accidentals.length === 0) return false;
 
     var acc_list = [];
@@ -6761,6 +6802,7 @@ Vex.Flow.Accidental = (function(){
     var prev_note = null;
     var shiftL = 0;
 
+    // First determine the accidentals' Y positions from the note.keys
     var i, acc, props_tmp;
     for (i = 0; i < accidentals.length; ++i) {
       acc = accidentals[i];
@@ -6775,76 +6817,242 @@ Vex.Flow.Accidental = (function(){
           }
           prev_note = note;
       }
-      if (stave != null) {
+      if (stave !== null) {
         hasStave = true;
         var line_space = stave.options.spacing_between_lines_px;
         var y = stave.getYForLine(props.line);
-        acc_list.push({ y: y, shift: shiftL, acc: acc, lineSpace: line_space });
+        var acc_line = Math.round(y / line_space * 2)/2;
+        acc_list.push({ y: y, line: acc_line, shift: shiftL, acc: acc, lineSpace: line_space });
       } else {
         acc_list.push({ line: props.line, shift: shiftL, acc: acc });
       }
     }
 
-    // If stave assigned, format based on note y-position
-    if (hasStave) return Accidental.formatByY(acc_list, state);
-
     // Sort accidentals by line number.
     acc_list.sort(function(a, b) { return (b.line - a.line); });
 
-    // If first note left shift in case it is displaced
-    var acc_shift = acc_list[0].shift;
-    var x_width = 0;
-    var top_line = acc_list[0].line;
-    for (i = 0; i < acc_list.length; ++i) {
-      acc = acc_list[i].acc;
-      var line = acc_list[i].line;
-      var shift = acc_list[i].shift;
+    // Create an array of unique line numbers (line_list) from acc_list
+    var line_list = []; // an array of unique line numbers
+    var acc_shift = 0; // amount by which all accidentals must be shifted right or left for stem flipping, notehead shifting concerns.
+    var previous_line = null;
 
-      // Once you hit three stave lines, you can reset the position of the
-      // accidental.
-      if (line < top_line - 3.0) {
-        top_line = line;
-        acc_shift = shift;
+    for(i = 0; i<acc_list.length; i++) {
+      acc = acc_list[i];
+
+      // if this is the first line, or a new line, add a line_list
+      if( (previous_line === null) || (previous_line != acc.line) ) {
+        line_list.push({line : acc.line, flat_line : true, dbl_sharp_line: true, num_acc : 0, width : 0});
       }
+      // if this accidental is not a flat, the accidental needs 3.0 lines lower
+      // clearance instead of 2.5 lines for b or bb.
+      if( (acc.acc.type != "b") && (acc.acc.type !="bb") ) {
+        line_list[line_list.length - 1].flat_line = false;
+      }
+      // if this accidental is not a double sharp, the accidental needs 3.0 lines above
+      if( acc.acc.type != "##")
+        line_list[line_list.length - 1].dbl_sharp_line = false;
 
-      acc.setXShift(left_shift + acc_shift);
-      acc_shift += acc.getWidth() + accidental_spacing; // spacing
-      x_width = (acc_shift > x_width) ? acc_shift : x_width;
+      // Track how many accidentals are on this line:
+      line_list[line_list.length - 1].num_acc++;
+
+      // Track the total x_offset needed for this line which will be needed
+      // for formatting lines w/ multiple accidentals:
+
+      //width = accidental width + universal spacing between accidentals
+      line_list[line_list.length - 1].width += acc.acc.getWidth() + accidental_spacing;
+
+      // if this acc_shift is larger, use it to keep first column accidentals in the same line
+      acc_shift = ( (acc.shift > acc_shift) ? acc.shift : acc_shift);
+
+      previous_line = acc.line;
     }
 
-    state.left_shift += x_width;
+    // ### Place Accidentals in Columns
+    //
+    // Default to a classic triangular layout (middle accidental farthest left),
+    // but follow exceptions as outlined in G. Read's _Music Notation_ and
+    // Elaine Gould's _Behind Bars_.
+    //
+    // Additionally, this implements different vertical colission rules for
+    // flats (only need 2.5 lines clearance below) and double sharps (only
+    // need 2.5 lines of clearance above or below).
+    //
+    // Classic layouts and exception patterns are found in the 'tables.js'
+    // in 'Vex.Flow.accidentalColumnsTable'
+    //
+    // Beyond 6 vertical accidentals, default to the parallel ascending lines approach,
+    // using as few columns as possible for the verticle structure.
+    //
+    // TODO (?): Allow column to be specified for an accidental at run-time?
+
+    var total_columns = 0;
+
+    // establish the boundaries for a group of notes with clashing accidentals:
+    for(i = 0; i<line_list.length; i++) {
+      var no_further_conflicts = false;
+      var group_start = i;
+      var group_end = i;
+
+      group_check_while : while( (group_end+1 < line_list.length) && (!no_further_conflicts) ) {
+        // if this note conflicts with the next:
+        if(this.checkCollision(line_list[group_end], line_list[group_end + 1])) {
+        // include the next note in the group:
+          group_end++;
+        }
+        else no_further_conflicts = true;
+      }
+
+      // Set columns for the lines in this group:
+      var group_length = group_end - group_start + 1;
+
+      // Set the accidental column for each line of the group
+      var end_case = (this.checkCollision(line_list[group_start], line_list[group_end])) ? "a" : "b";
+
+
+        var checkCollision = this.checkCollision;
+        switch(group_length) {
+          case 3:
+            if( (end_case == "a") &&
+                (line_list[group_start+1].line - line_list[group_start+2].line == 0.5) &&
+                (line_list[group_start].line - line_list[group_start + 1].line != 0.5) )
+              end_case = "second_on_bottom";
+              break;
+          case 4:
+            if( (!checkCollision(line_list[group_start], line_list[group_start+2])) &&
+                (!checkCollision(line_list[group_start+1], line_list[group_start+3])) )
+              end_case = "spaced_out_tetrachord";
+              break;
+          case 5:
+            if( (end_case == "b") &&
+                (!checkCollision(line_list[group_start+1], line_list[group_start+3])) )
+              end_case = "spaced_out_pentachord";
+            if( (end_case == "spaced_out_pentachord") &&
+                (!checkCollision(line_list[group_start], line_list[group_start+2])) &&
+                (!checkCollision(line_list[group_start+2], line_list[group_start+4])) )
+              end_case = "very_spaced_out_pentachord";
+              break;
+          case 6:
+            if( (!checkCollision(line_list[group_start], line_list[group_start+3])) &&
+                (!checkCollision(line_list[group_start+1], line_list[group_start+4])) &&
+                (!checkCollision(line_list[group_start+2], line_list[group_start+5])) )
+              end_case = "spaced_out_hexachord";
+            if( (!checkCollision(line_list[group_start], line_list[group_start+2])) &&
+                (!checkCollision(line_list[group_start+2], line_list[group_start+4])) &&
+                (!checkCollision(line_list[group_start+1], line_list[group_start+3])) &&
+                (!checkCollision(line_list[group_start+3], line_list[group_start+5])) )
+              end_case = "very_spaced_out_hexachord";
+              break;
+        }
+
+      var group_member;
+      var column;
+      // If the group contains more than seven members, use ascending parallel lines
+      // of accidentals, using as few columns as possible while avoiding collisions.
+      if (group_length>=7) {
+        // First, determine how many columns to use:
+        var pattern_length = 2;
+        var colission_detected = true;
+        while(colission_detected === true) {
+          colission_detected = false;
+          colission_detecter : for(var line = 0; line + pattern_length < line_list.length; line++) {
+            if(this.checkCollision(line_list[line], line_list[line+pattern_length])) {
+              colission_detected = true;
+              pattern_length++;
+              break colission_detecter;
+            }
+          }
+        }
+        // Then, assign a column to each line of accidentals
+        for(group_member = i; group_member <= group_end; group_member++) {
+          column = ((group_member-i) % pattern_length) + 1;
+          line_list[group_member].column = column;
+          total_columns = (total_columns > column) ? total_columns : column;
+        }
+
+      // Otherwise, if the group contains fewer than seven members, use the layouts from
+      // the accidentalsColumnsTable housed in tables.js.
+      } else {
+        for(group_member = i; group_member <= group_end; group_member++) {
+          column = Vex.Flow.accidentalColumnsTable[group_length][end_case][group_member-i];
+          line_list[group_member].column = column;
+          total_columns = (total_columns > column) ? total_columns : column;
+        }
+      }
+
+      // Increment i to the last note that was set, so that if a lower set of notes
+      // does not conflict at all with this group, it can have its own classic shape.
+      i = group_end;
+    }
+
+    // ### Convert Columns to x_offsets
+    //
+    // This keeps columns aligned, even if they have different accidentals within them
+    // which sometimes results in a larger x_offset than is an accidental might need
+    // to preserve the symmetry of the accidental shape.
+    //
+    // Neither A.C. Vinci nor G. Read address this, and it typically only happens in
+    // music with complex chord clusters.
+    //
+    // TODO (?): Optionally allow closer compression of accidentals, instead of forcing
+    // parallel columns.
+
+    // track each column's max width, which will be used as initial shift of later columns:
+    var column_widths = [];
+    var column_x_offsets = [];
+    for(i=0; i<=total_columns; i++) {
+      column_widths[i] = 0;
+      column_x_offsets[i] = 0;
+    }
+
+    column_widths[0] = acc_shift + left_shift;
+    column_x_offsets[0] = acc_shift + left_shift;
+
+    // Fill column_widths with widest needed x-space;
+    // this is what keeps the columns parallel.
+    line_list.forEach(function(line) {
+      if(line.width > column_widths[line.column]) column_widths[line.column] = line.width;
+    });
+
+    for(i=1; i<column_widths.length; i++) {
+      // this column's offset = this column's width + previous column's offset
+      column_x_offsets[i] = column_widths[i] + column_x_offsets[i-1];
+    }
+
+    // Set the x_shift for each accidental according to column offsets:
+    var acc_count = 0;
+    line_list.forEach(function(line) {
+      var line_width = 0;
+      var last_acc_on_line = acc_count + line.num_acc;
+      // handle all of the accidentals on a given line:
+      for(acc_count; acc_count<last_acc_on_line; acc_count++) {
+        var x_shift = (column_x_offsets[line.column-1] + line_width);
+        acc_list[acc_count].acc.setXShift(x_shift);
+        // keep track of the width of accidentals we've added so far, so that when
+        // we loop, we add space for them.
+        line_width += acc_list[acc_count].acc.getWidth() + accidental_spacing;
+        L("Line, acc_count, shift: ", line.line, acc_count, x_shift);
+      }
+    });
+
+    // update the overall layout with the full width of the accidental shapes:
+    state.left_shift += column_x_offsets[column_x_offsets.length-1];
   };
 
-  Accidental.formatByY = function(acc_list, state) {
-    var left_shift = state.left_shift;
-    var accidental_spacing = 2;
-
-    // Sort accidentals by Y-position.
-    acc_list.sort(function(a, b) { return (b.y - a.y); });
-
-    // If first note is displaced, get the correct left shift
-    var acc_shift = acc_list[0].shift;
-    var x_width = 0;
-    var top_y = acc_list[0].y;
-
-    for (var i = 0; i < acc_list.length; ++i) {
-      var acc = acc_list[i].acc;
-      var y = acc_list[i].y;
-      var shift = acc_list[i].shift;
-
-      // Once you hit three stave lines, you can reset the position of the
-      // accidental.
-      if (top_y - y > 3 * acc_list[i].lineSpace) {
-        top_y = y;
-        acc_shift = shift;
-      }
-
-      acc.setXShift(acc_shift + left_shift);
-      acc_shift += acc.getWidth() + accidental_spacing; // spacing
-      x_width = (acc_shift > x_width) ? acc_shift : x_width;
+  // Helper function to determine whether two lines of accidentals collide vertically
+  Accidental.checkCollision = function(line_1, line_2) {
+    var clearance = line_2.line - line_1.line;
+    var clearance_required = 3;
+    // But less clearance is required for certain accidentals: b, bb and ##.
+    if(clearance>0) { // then line 2 is on top
+      clearance_required = (line_2.flat_line || line_2.dbl_sharp_line) ? 2.5 : 3.0;
+      if(line_1.dbl_sharp_line) clearance -= 0.5;
+    } else { // line 1 is on top
+      clearance_required = (line_1.flat_line || line_1.dbl_sharp_line) ? 2.5 : 3.0;
+      if(line_2.dbl_sharp_line) clearance -= 0.5;
     }
-
-    state.left_shift += x_width;
+    var colission = (Math.abs(clearance) < clearance_required);
+    L("Line_1, Line_2, Collision: ", line_1.line, line_2.line, colission);
+    return(colission);
   };
 
   // ## Prototype Methods
@@ -6857,7 +7065,7 @@ Vex.Flow.Accidental = (function(){
     // example: `#`, `##`, `b`, `n`, etc.
     init: function(type) {
       Accidental.superclass.init.call(this);
-    L("New accidental: ", type);
+      L("New accidental: ", type);
 
       this.note = null;
       // The `index` points to a specific note in a chord.
@@ -7027,6 +7235,7 @@ Vex.Flow.Accidental = (function(){
 
   return Accidental;
 }());
+
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 //
@@ -10145,10 +10354,11 @@ Vex.Flow.Renderer = (function() {
 
   Renderer.buildContext = function(sel,
       backend, width, height, background) {
+
     var renderer = new Renderer(sel, backend);
     if (width && height) { renderer.resize(width, height); }
 
-    if (!background) background = "#eed";
+    if (!background) background = "#FFF";
     var ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
     return ctx;
@@ -10163,6 +10373,12 @@ Vex.Flow.Renderer = (function() {
     return Renderer.buildContext(sel, Renderer.Backends.RAPHAEL,
         width, height, background);
   };
+
+  Renderer.getSVGContext = function(sel, width, height, background) {
+    return Renderer.buildContext(sel, Renderer.Backends.SVG,
+        width, height, background);
+  };
+
 
   Renderer.bolsterCanvasContext = function(ctx) {
     if (Renderer.USE_CANVAS_PROXY) {
@@ -10235,8 +10451,13 @@ Vex.Flow.Renderer = (function() {
           "Can't get canvas context from element: " + sel);
         this.ctx = Renderer.bolsterCanvasContext(
             this.element.getContext('2d'));
+
       } else if (this.backend == Renderer.Backends.RAPHAEL) {
         this.ctx = new Vex.Flow.RaphaelContext(this.element);
+
+      } else if (this.backend == Renderer.Backends.SVG) {
+        this.ctx = new Vex.Flow.SVGContext(this.element);
+
       } else {
         throw new Vex.RERR("InvalidBackend",
           "No support for backend: " + this.backend);
@@ -10272,6 +10493,10 @@ Vex.Flow.Renderer = (function() {
 // A rendering context for the Raphael backend.
 //
 // Copyright Mohit Cheppudira 2010
+
+// ## Warning: Deprecated for SVGContext
+// Except in instances where SVG support for IE < 9.0 is
+// needed, SVGContext is recommended.
 
 /** @constructor */
 Vex.Flow.RaphaelContext = (function() {
@@ -10367,10 +10592,16 @@ Vex.Flow.RaphaelContext = (function() {
 
     scale: function(x, y) {
       this.state.scale = { x: x, y: y };
+      // The scale() method is deprecated as of Raphael.JS 2.0, and
+      // can no longer be used as an option in an Element.attr() call.
+      // It is preserved here for users running earlier versions of
+      // Raphael.JS, though it has no effect on the SVG output in
+      // Raphael 2 and higher. 
+      this.attributes.transform = "S" + x + "," + y + ",0,0";
       this.attributes.scale = x + "," + y + ",0,0";
       this.attributes.font = this.state.font_size * this.state.scale.x + "pt " +
         this.state.font_family;
-      this.background_attributes.scale = x + "," + y + ",0,0";
+      this.background_attributes.transform = "S" + x + "," + y + ",0,0";
       this.background_attributes.font = this.state.font_size *
         this.state.scale.x + "pt " +
         this.state.font_family;
@@ -10402,7 +10633,8 @@ Vex.Flow.RaphaelContext = (function() {
       this.paper.rect(x, y, width - 0.5, height - 0.5).
         attr(this.attributes).
         attr("fill", "none").
-        attr("stroke-width", this.lineWidth); return this;
+        attr("stroke-width", this.lineWidth);
+      return this;
     },
 
     fillRect: function(x, y, width, height) {
@@ -10545,7 +10777,14 @@ Vex.Flow.RaphaelContext = (function() {
             "stroke-linejoin": "round",
             "stroke-linecap": "round",
             "stroke-width": +(sa.width / num_paths * i).toFixed(3),
-            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3)
+            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
+            // See note in this.scale(): In Raphael the scale() method
+            // is deprecated and removed as of Raphael 2.0 and replaced
+            // by the transform() method.  It is preserved here for 
+            // users with earlier versions of Raphael, but has no effect
+            // on the output SVG in Raphael 2.0+.
+            transform: this.attributes.transform,
+            scale: this.attributes.scale
           }));
         }
       }
@@ -10561,10 +10800,28 @@ Vex.Flow.RaphaelContext = (function() {
     },
 
     stroke: function() {
+      // The first line of code below is, unfortunately, a bit of a hack: 
+      // Raphael's transform() scaling does not scale the stroke-width, so
+      // in order to scale a stroke, we have to manually scale the 
+      // stroke-width.
+      //
+      // This works well so long as the X & Y states for this.scale() are
+      // relatively similar.  However, if they are very different, we
+      // would expect horizontal and vertical lines to have different
+      // stroke-widths.
+      //
+      // In the future, if we want to support very divergent values for
+      // horizontal and vertical scaling, we may want to consider 
+      // implementing SVG scaling with properties of the SVG viewBox & 
+      // viewPort and removing it entirely from the Element.attr() calls.
+      // This would more closely parallel the approach taken in 
+      // canvascontext.js as well.
+
+      var strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y)/2;
       var elem = this.paper.path(this.path).
         attr(this.attributes).
         attr("fill", "none").
-        attr("stroke-width", this.lineWidth);
+        attr("stroke-width", strokeWidth);
       this.glow(elem);
       return this;
     },
@@ -14437,12 +14694,12 @@ Vex.Flow.GraceNote = (function() {
         var y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
         if (stem_direction === 1) {
           x += 1;
-          ctx.lineTo(x, y);
+          ctx.moveTo(x, y);
           ctx.lineTo(x + 13, y - 9);
         } else if (stem_direction === -1) {
           x -= 4;
           y += 1;
-          ctx.lineTo(x, y);
+          ctx.moveTo(x, y);
           ctx.lineTo(x + 13, y + 9);
         }
 
@@ -14639,4 +14896,616 @@ Vex.Flow.GraceNoteGroup = (function(){
   });
 
 return GraceNoteGroup;
+}());
+// Vex Flow
+// Mohit Muthanna <mohit@muthanna.com>
+//
+// A rendering context for SVG.
+//
+// Copyright Mohit Muthanna 2015
+// @author Gregory Ristow (2015)
+
+/** @constructor */
+Vex.Flow.SVGContext = (function() {
+  function SVGContext(element) {
+    if (arguments.length > 0) this.init(element);
+  }
+
+  SVGContext.prototype = {
+    init: function(element) {
+      // element is the parent DOM object
+      this.element = element;
+      // Create the SVG in the SVG namespace:
+      this.svgNS = "http://www.w3.org/2000/svg";
+      var svg = this.create("svg");
+      // Add it to the canvas:
+      this.element.appendChild(svg);
+      // Point to it:
+      this.svg = svg;
+
+      this.path = "";
+      this.pen = {x: 0, y: 0};
+      this.lineWidth = 1.0;
+      this.state = {
+        scale: { x: 1, y: 1 },
+        "font-family": "Arial",
+        "font-size": "8pt",
+        "font-weight": "normal"
+      };
+
+      this.attributes = {
+        "stroke-width": 0.3,
+        "fill": "black",
+        "stroke": "black",
+        "font-family": "Arial",
+        "font-size" : "10pt",
+        "font-weight" : "normal",
+        "font-style" : "normal"
+      };
+
+      this.background_attributes = {
+        "stroke-width": 0,
+        "fill": "white",
+        "stroke": "white",
+        "font-family": "Arial",
+        "font-size" : "10pt",
+        "font-weight": "normal",
+        "font-style": "normal"
+      };
+
+      this.shadow_attributes = {
+        width: 0,
+        color: "black"
+      };
+
+      this.state_stack= [];
+
+      // Test for Internet Explorer
+      this.iePolyfill();
+    },
+
+    // Tests if the browser is Internet Explorer; if it is,
+    // we do some tricks to improve text layout.  See the
+    // note at ieMeasureTextFix() for details.
+    iePolyfill: function() {
+        this.ie = (  /MSIE 9/i.test(navigator.userAgent) ||
+                            /MSIE 10/i.test(navigator.userAgent) ||
+                            /rv:11\.0/i.test(navigator.userAgent) ||
+                            /Trident/i.test(navigator.userAgent) );
+    },
+
+    // ### Styling & State Methods:
+
+    setFont: function(family, size, weight) {
+      // Unlike canvas, in SVG italic is handled by font-style,
+      // not weight. So: we search the weight argument and
+      // apply bold and italic to weight and style respectively.
+      var bold = false;
+      var italic = false;
+      var style = "normal";
+      // Weight might also be a number (200, 400, etc...) so we
+      // test its type to be sure we have access to String methods.
+      if( typeof weight == "string" ) {
+          // look for "italic" in the weight:
+          if(weight.indexOf("italic") !== -1) {
+            weight = weight.replace(/italic/g, "");
+            italic = true;
+          }
+          // look for "bold" in weight
+          if(weight.indexOf("bold") !== -1) {
+            weight = weight.replace(/bold/g, "");
+            bold = true;
+          }
+          // remove any remaining spaces
+          weight = weight.replace(/ /g, "");
+      }
+      weight = bold ? "bold" : weight;
+      weight = (typeof weight === "undefined" || weight === "") ? "normal" : weight;
+
+      style = italic ? "italic" : style;
+
+      var fontAttributes = {
+        "font-family": family,
+        "font-size": size + "pt",
+        "font-weight": weight,
+        "font-style" : style
+      };
+
+      // Store the font size so that if the browser is Internet
+      // Explorer we can fix its calculations of text width.
+      this.fontSize = Number(size);
+
+      Vex.Merge(this.attributes, fontAttributes);
+      Vex.Merge(this.state, fontAttributes);
+
+      return this;
+    },
+
+    setRawFont: function(font) {
+      font=font.trim();
+      // Assumes size first, splits on space -- which is presently
+      // how all existing modules are calling this.
+      var fontArray = font.split(" ");
+
+      this.attributes["font-family"] = fontArray[1];
+      this.state["font-family"] = fontArray[1];
+
+      this.attributes["font-size"] = fontArray[0];
+      this.state["font-size"] = fontArray[0];
+
+      // Saves fontSize for IE polyfill
+      this.fontSize = Number(fontArray[0].match(/\d+/));
+      return this;
+    },
+
+    setFillStyle: function(style) {
+      this.attributes.fill = style;
+      return this;
+    },
+
+    setBackgroundFillStyle: function(style) {
+      this.background_attributes.fill = style;
+      this.background_attributes.stroke = style;
+      return this;
+    },
+
+    setStrokeStyle: function(style) {
+      this.attributes.stroke = style;
+      return this;
+    },
+
+    setShadowColor: function(style) {
+      this.shadow_attributes.color = style;
+      return this;
+    },
+
+    setShadowBlur: function(blur) {
+      this.shadow_attributes.width = blur;
+      return this;
+    },
+
+    setLineWidth: function(width) {
+      this.attributes["stroke-width"] = width;
+      this.lineWidth = width;
+    },
+
+    setLineDash: function(lineDash) { 
+      this.attributes["stroke-linedash"] = lineDash;
+      return this; 
+    },
+
+    setLineCap: function(lineCap) { 
+      this.attributes["stroke-linecap"] = lineCap;
+      return this;
+    },
+
+    // ### Sizing & Scaling Methods:
+
+    // TODO (GCR): See note at scale() -- seperate our internal
+    // conception of pixel-based width/height from the style.width
+    // and style.height properties eventually to allow users to
+    // apply responsive sizing attributes to the SVG.
+    resize: function(width, height) {
+      this.width = width;
+      this.height = height;
+      this.element.style.width = width;
+      var attributes = {
+        width : width,
+        height : height
+      };
+      this.applyAttributes(this.svg, attributes);
+      return this;
+    },
+
+    scale: function(x, y) {
+      // uses viewBox to scale
+      // TODO (GCR): we may at some point want to distinguish the 
+      // style.width / style.height properties that are applied to 
+      // the SVG object from our internal conception of the SVG 
+      // width/height.  This would allow us to create automatically
+      // scaling SVG's that filled their containers, for instance.
+      //
+      // As this isn't implemented in Canvas or Raphael contexts, 
+      // I've left as is for now, but in using the viewBox to 
+      // handle internal scaling, am trying to make it possible
+      // for us to eventually move in that direction.
+
+      this.state.scale = { x: x, y: y };
+      var visibleWidth = this.width / x;
+      var visibleHeight = this.height / y;
+      this.setViewBox(0,0, visibleWidth, visibleHeight);
+
+      return this;
+    },
+
+    setViewBox: function(xMin, yMin, width, height) {
+      // Override for "x y w h" style:
+      if(arguments.length == 1) this.svg.setAttribute("viewBox", viewBox);
+      else {
+        var viewBoxString = xMin + " " + yMin + " " + width + " " + height;
+        this.svg.setAttribute("viewBox", viewBoxString);
+      }
+    },
+
+    // ### Drawing helper methods:
+
+    applyAttributes: function(element, attributes) {
+      for(var propertyName in attributes) {
+        element.setAttributeNS(null, propertyName, attributes[propertyName]);
+      }
+      return element;  
+    },
+
+    create: function(svgElementType) {
+      return document.createElementNS(this.svgNS, svgElementType);
+    },
+
+    flipRectangle: function(args) {
+      // Avoid invalid negative height attributes by
+      // flipping a rectangle w/ negative height on its head.
+      // Since args is the actual arguments object from
+      // one of the rectangle functions, we don't need to
+      // return it.
+
+      // Add negative height to Y
+      args[1] += args[3];
+      // Make the negative height positive.
+      args[3] = -args[3];
+    },
+
+    // ### Shape & Path Methods:
+
+    clear: function() { 
+      // Clear the SVG by removing all inner children.
+
+      // (This approach is usually slightly more efficient
+      // than removing the old SVG & adding a new one to
+      // the container element, since it does not cause the
+      // container to resize twice.  Also, the resize
+      // triggered by removing the entire SVG can trigger
+      // a touchcancel event when the element resizes away
+      // from a touch point.)
+
+      while (this.svg.lastChild) {
+        this.svg.removeChild(this.svg.lastChild);
+      }
+
+      // Replace the viewbox attribute we just removed:
+      this.scale(this.state.scale.x, this.state.scale.y);
+
+    },
+
+    // ## Rectangles:
+
+    rect: function(x, y, width, height, attributes) {
+      // Avoid invalid negative height attribs by
+      // flipping the rectangle on its head:
+      if (height < 0) this.flipRectangle(arguments);
+
+      // Create the rect & style it:
+      var rect = this.create("rect");
+      if(typeof attributes === "undefined") attributes = {
+        fill: "none",
+        "stroke-width": this.lineWidth,
+        stroke: "black"
+      };
+      Vex.Merge(attributes, {
+        x: x,
+        y: y,
+        width: width,
+        height: height
+      });
+
+      this.applyAttributes(rect, attributes);
+
+      this.svg.appendChild(rect);
+      return this;
+    },
+
+    fillRect: function(x, y, width, height) {
+      if(height < 0) this.flipRectangle(arguments);
+
+      this.rect(x, y, width - 0.5, height - 0.5, this.attributes);
+      return this;
+    },
+
+    clearRect: function(x, y, width, height) {
+      // TODO(GCR): Improve implementation of this...
+      // Currently it draws a box of the background color, rather
+      // than creating alpha through lower z-levels.
+      //
+      // See the implementation of this in SVGKit:
+      // http://sourceforge.net/projects/svgkit/
+      // as a starting point.
+      //
+      // Adding a large number of transform paths (as we would
+      // have to do) could be a real performance hit.  Since
+      // tabNote seems to be the only module that makes use of this
+      // it may be worth creating a seperate tabStave that would
+      // draw lines around locations of tablature fingering.
+      //
+
+      if (height < 0) this.flipRectangle(arguments);
+
+      this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
+      return this;
+    },
+
+    // ## Paths:
+
+    beginPath: function() {
+      this.path = "";
+      this.pen.x = 0;
+      this.pen.y = 0;
+      return this;
+    },
+
+    moveTo: function(x, y) {
+      this.path += "M" + x + " " + y;
+      this.pen.x = x;
+      this.pen.y = y;
+      return this;
+    },
+
+    lineTo: function(x, y) {
+      this.path += "L" + x + " " + y;
+      this.pen.x = x;
+      this.pen.y = y;
+      return this;
+    },
+
+    bezierCurveTo: function(x1, y1, x2, y2, x, y) {
+      this.path += "C" +
+        x1 + " " +
+        y1 + "," +
+        x2 + " " +
+        y2 + "," +
+        x + " " +
+        y;
+      this.pen.x = x;
+      this.pen.y = y;
+      return this;
+    },
+
+    quadraticCurveTo: function(x1, y1, x, y) {
+      this.path += "Q" +
+        x1 + " " +
+        y1 + "," +
+        x + " " +
+        y;
+      this.pen.x = x;
+      this.pen.y = y;
+      return this;
+    },
+
+    // This is an attempt (hack) to simulate the HTML5 canvas
+    // arc method.
+    arc: function(x, y, radius, startAngle, endAngle, antiClockwise) {
+      function normalizeAngle(angle) {
+        while (angle < 0) {
+          angle += Math.PI * 2;
+        }
+
+        while (angle > Math.PI * 2) {
+          angle -= Math.PI * 2;
+        }
+        return angle;
+      }
+
+      startAngle = normalizeAngle(startAngle);
+      endAngle = normalizeAngle(endAngle);
+
+      if (startAngle > endAngle) {
+          var tmp = startAngle;
+          startAngle = endAngle;
+          endAngle = tmp;
+          antiClockwise = !antiClockwise;
+      }
+
+      var delta = endAngle - startAngle;
+
+      if (delta > Math.PI) {
+          this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
+                         antiClockwise);
+          this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
+                         antiClockwise);
+      }
+      else {
+          this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
+      }
+      return this;
+    },
+
+    arcHelper: function(x, y, radius, startAngle, endAngle, antiClockwise) {
+      var x1 = x + radius * Math.cos(startAngle);
+      var y1 = y + radius * Math.sin(startAngle);
+
+      var x2 = x + radius * Math.cos(endAngle);
+      var y2 = y + radius * Math.sin(endAngle);
+
+      var largeArcFlag = 0;
+      var sweepFlag = 0;
+      if (antiClockwise) {
+        sweepFlag = 1;
+        if (endAngle - startAngle < Math.PI)
+          largeArcFlag = 1;
+      }
+      else if (endAngle - startAngle > Math.PI) {
+          largeArcFlag = 1;
+      }
+
+      this.path += "M" + x1 + " " + y1 + " " + "A" +
+        radius + " " + radius + " " + "0 " + largeArcFlag + " " + sweepFlag + " " +
+        x2 + " " + y2 + "M" + this.pen.x + " " + this.pen.y;
+
+    },
+
+    closePath: function() {
+      this.path += "Z";
+
+      return this;
+    },
+
+    // Adapted from the source for Raphael's Element.glow
+    glow: function() {
+      // Calculate the width & paths of the glow:
+      if (this.shadow_attributes.width > 0) {
+        var sa = this.shadow_attributes;
+        var num_paths = sa.width / 2;
+        // Stroke at varying widths to create effect of gaussian blur:
+        for (var i = 1; i <= num_paths; i++) {
+          var attributes = {
+            stroke: sa.color,
+            "stroke-linejoin": "round",
+            "stroke-linecap": "round",
+            "stroke-width": +((sa.width *0.4) / num_paths * i).toFixed(3),
+            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
+          };
+
+          var path = this.create("path");
+          attributes.d = this.path;
+          this.applyAttributes(path, attributes);
+          this.svg.appendChild(path);
+        }
+      }
+      return this;
+    },
+
+    fill: function(attributes) {
+      // If our current path is set to glow, make it glow
+      this.glow();
+
+      var path = this.create("path");
+      if(typeof attributes === "undefined") {
+        attributes = {};
+        Vex.Merge(attributes, this.attributes);
+        attributes.stroke = "none";
+      }
+
+      attributes.d = this.path;
+
+      this.applyAttributes(path, attributes);
+      this.svg.appendChild(path);
+      return this;
+    },
+
+    stroke: function() {
+      // If our current apth is set to glow, make it glow.
+      this.glow();
+
+      var path = this.create("path");
+      var attributes = {};
+      Vex.Merge(attributes, this.attributes);
+      attributes.fill = "none";
+      attributes["stroke-width"] = this.lineWidth;
+      attributes.d = this.path;
+
+      this.applyAttributes(path, attributes);
+      this.svg.appendChild(path);
+      return this;
+    },
+
+    // ## Text Methods:
+
+    measureText: function(text) {
+      var txt = this.create("text");
+      txt.textContent = text;
+      this.applyAttributes(txt, this.attributes);
+      this.svg.appendChild(txt);
+      var bbox = txt.getBBox();
+      if( this.ie && 
+          text !== "" &&
+          this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
+      this.svg.removeChild(txt);
+      return bbox;
+    },
+
+    ieMeasureTextFix: function(bbox, text) {
+    // Internet Explorer over-pads text in italics,
+    // resulting in giant width estimates for measureText.
+    // To fix this, we use this formula, tested against
+    // ie 11:
+    // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
+    // And then subtract the overestimate from calculated width.
+
+      var fontSize = Number(this.fontSize);
+      var m = 1.196;
+      var b = 1.9598;
+      var widthCorrection = (m * fontSize) + b;
+      var width = bbox.width - widthCorrection;
+      var height = bbox.height - 1.5;
+
+      // Get non-protected copy:
+      var box = {
+        x : bbox.x,
+        y : bbox.y,
+        width : width,
+        height : height
+      };
+
+      return box;
+    },
+
+    fillText: function(text, x, y) {
+      var attributes = {};
+      Vex.Merge(attributes, this.attributes);
+      attributes.stroke = "none";
+      attributes.x = x;
+      attributes.y = y;
+
+      var txt = this.create("text");
+      txt.textContent = text;
+      this.applyAttributes(txt, attributes);
+      this.svg.appendChild(txt);
+    },
+
+    save: function() {
+      // TODO(mmuthanna): State needs to be deep-copied.
+      this.state_stack.push({
+        state: {
+          "font-family": this.state["font-family"],
+          "font-weight": this.state["font-weight"],
+          "font-style": this.state["font-style"],
+          "font-size": this.state["font-size"]
+        },
+        attributes: {
+          "font-family": this.attributes["font-family"],
+          "font-weight": this.attributes["font-weight"],
+          "font-style": this.attributes["font-style"],
+          "font-size": this.attributes["font-size"],
+          fill: this.attributes.fill,
+          stroke: this.attributes.stroke,
+          "stroke-width": this.attributes["stroke-width"]
+        },
+        shadow_attributes: {
+          width: this.shadow_attributes.width,
+          color: this.shadow_attributes.color
+        }
+      });
+      return this;
+    },
+
+    restore: function() {
+      // TODO(0xfe): State needs to be deep-restored.
+      var state = this.state_stack.pop();
+      this.state["font-family"] = state.state["font-family"];
+      this.state["font-weight"] = state.state["font-weight"];
+      this.state["font-style"] = state.state["font-style"];
+      this.state["font-size"] = state.state["font-size"];
+
+      this.attributes["font-family"] = state.attributes["font-family"];
+      this.attributes["font-weight"] = state.attributes["font-weight"];
+      this.attributes["font-style"] = state.attributes["font-style"];
+      this.attributes["font-size"] = state.attributes["font-size"];
+
+      this.attributes.fill = state.attributes.fill;
+      this.attributes.stroke = state.attributes.stroke;
+      this.attributes["stroke-width"] = state.attributes["stroke-width"];
+      this.shadow_attributes.width = state.shadow_attributes.width;
+      this.shadow_attributes.color = state.shadow_attributes.color;
+      return this;
+    }
+  };
+
+  return SVGContext;
 }());

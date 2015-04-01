@@ -7,17 +7,17 @@ Vex.Flow.Test.TextNote = (function() {
   var TextNote = {
     Start: function() {
       module("TextNote");
-      Vex.Flow.Test.runTest("TextNote Formatting",
+      Vex.Flow.Test.runTests("TextNote Formatting",
           Vex.Flow.Test.TextNote.formatTextNotes);
-      Vex.Flow.Test.runTest("TextNote Superscript and Subscript",
+      Vex.Flow.Test.runTests("TextNote Superscript and Subscript",
           Vex.Flow.Test.TextNote.superscriptAndSubscript);
-      Vex.Flow.Test.runTest("TextNote Formatting With Glyphs 0",
+      Vex.Flow.Test.runTests("TextNote Formatting With Glyphs 0",
           Vex.Flow.Test.TextNote.formatTextGlyphs0);
-      Vex.Flow.Test.runTest("TextNote Formatting With Glyphs 1",
+      Vex.Flow.Test.runTests("TextNote Formatting With Glyphs 1",
           Vex.Flow.Test.TextNote.formatTextGlyphs1);
-      Vex.Flow.Test.runTest("Crescendo",
+      Vex.Flow.Test.runTests("Crescendo",
           Vex.Flow.Test.TextNote.crescendo);
-      Vex.Flow.Test.runTest("Text Dynamics",
+      Vex.Flow.Test.runTests("Text Dynamics",
           Vex.Flow.Test.TextNote.textDynamics);
     },
 
@@ -38,9 +38,8 @@ Vex.Flow.Test.TextNote = (function() {
       voice2.draw(ctx, stave);
     },
 
-    formatTextNotes: function(options) {
-      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 400, 150);
-      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+    formatTextNotes: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 400, 150);
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       var stave = new Vex.Flow.Stave(10, 10, 400);
       stave.setContext(ctx);
@@ -73,9 +72,8 @@ Vex.Flow.Test.TextNote = (function() {
       ok(true);
     },
 
-    superscriptAndSubscript: function(options) {
-      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 550, 200);
-      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+    superscriptAndSubscript: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 550, 200);
       ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       var stave = new Vex.Flow.Stave(10, 10, 500);
       stave.setContext(ctx);
@@ -119,9 +117,8 @@ Vex.Flow.Test.TextNote = (function() {
       ok(true);
     },
 
-    formatTextGlyphs0: function(options) {
-      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 180);
-      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+    formatTextGlyphs0: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 600, 180);
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       var stave = new Vex.Flow.Stave(10, 20, 600);
       stave.setContext(ctx);
@@ -160,9 +157,8 @@ Vex.Flow.Test.TextNote = (function() {
       ok(true);
     },
 
-    formatTextGlyphs1: function(options) {
-      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 180);
-      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+    formatTextGlyphs1: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 600, 180);
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       var stave = new Vex.Flow.Stave(10, 20, 600);
       stave.setContext(ctx);
@@ -200,9 +196,8 @@ Vex.Flow.Test.TextNote = (function() {
       ok(true);
     },
 
-    crescendo: function(options) {
-      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 180);
-      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+    crescendo: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 600, 180);
       ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       var stave = new Vex.Flow.Stave(10, 20, 500);
       stave.setContext(ctx);
@@ -229,9 +224,8 @@ Vex.Flow.Test.TextNote = (function() {
       ok(true);
     },
 
-    textDynamics: function(options) {
-      Vex.Flow.Test.resizeCanvas(options.canvas_sel, 600, 180);
-      var ctx = Vex.Flow.Renderer.getCanvasContext(options.canvas_sel);
+    textDynamics: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 600, 180);
       ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       var stave = new Vex.Flow.Stave(10, 20, 550);
       stave.setContext(ctx);

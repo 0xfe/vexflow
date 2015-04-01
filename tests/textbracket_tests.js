@@ -7,8 +7,10 @@ Vex.Flow.Test.TextBracket = {};
 
 Vex.Flow.Test.TextBracket.Start = function() {
   module("TextBracket");
-  Vex.Flow.Test.runTest("Simple TextBracket", Vex.Flow.Test.TextBracket.simple0);
-  Vex.Flow.Test.runTest("TextBracket Styles", Vex.Flow.Test.TextBracket.simple1);
+  Vex.Flow.Test.runTests("Simple TextBracket", Vex.Flow.Test.TextBracket.simple0);
+  Vex.Flow.Test.runTests("TextBracket Styles", Vex.Flow.Test.TextBracket.simple1);
+  
+  
 };
 
 Vex.Flow.Test.TextBracket.simple0 = function(options, contextBuilder) {

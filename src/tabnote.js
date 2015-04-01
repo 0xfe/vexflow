@@ -392,7 +392,7 @@ Vex.Flow.TabNote = (function() {
 
   // Gets groups of points that outline the partial stem lines
   // between fret positions
-  // 
+  //
   // Parameters:
   // * stem_Y - The `y` coordinate the stem is located on
   // * unused_strings - An array of groups of unused strings

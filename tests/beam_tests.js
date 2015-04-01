@@ -7,25 +7,25 @@ Vex.Flow.Test.Beam = {}
 
 Vex.Flow.Test.Beam.Start = function() {
   module("Beam");
-  Vex.Flow.Test.runTest("Simple Beam", Vex.Flow.Test.Beam.simple);
-  Vex.Flow.Test.runTest("Multi Beam", Vex.Flow.Test.Beam.multi);
-  Vex.Flow.Test.runTest("Sixteenth Beam", Vex.Flow.Test.Beam.sixteenth);
-  Vex.Flow.Test.runTest("Slopey Beam", Vex.Flow.Test.Beam.slopey);
-  Vex.Flow.Test.runTest("Auto-stemmed Beam", Vex.Flow.Test.Beam.autoStem);
-  Vex.Flow.Test.runTest("Mixed Beam 1", Vex.Flow.Test.Beam.mixed);
-  Vex.Flow.Test.runTest("Mixed Beam 2", Vex.Flow.Test.Beam.mixed2);
-  Vex.Flow.Test.runTest("Dotted Beam", Vex.Flow.Test.Beam.dotted);
-  Vex.Flow.Test.runTest("Close Trade-offs Beam", Vex.Flow.Test.Beam.tradeoffs);
-  Vex.Flow.Test.runTest("Insane Beam", Vex.Flow.Test.Beam.insane);
-  Vex.Flow.Test.runTest("Lengthy Beam", Vex.Flow.Test.Beam.lenghty);
-  Vex.Flow.Test.runTest("Outlier Beam", Vex.Flow.Test.Beam.outlier);
-  Vex.Flow.Test.runTest("Break Secondary Beams", Vex.Flow.Test.Beam.breakSecondaryBeams);
-  Vex.Flow.Test.runTest("TabNote Beams Up", Vex.Flow.Test.Beam.tabBeamsUp);
-  Vex.Flow.Test.runTest("TabNote Beams Down", Vex.Flow.Test.Beam.tabBeamsDown);
-  Vex.Flow.Test.runTest("TabNote Auto Create Beams", Vex.Flow.Test.Beam.autoTabBeams);
-  Vex.Flow.Test.runTest("TabNote Beams Auto Stem", Vex.Flow.Test.Beam.tabBeamsAutoStem);
-  Vex.Flow.Test.runTest("Complex Beams with Annotations", Vex.Flow.Test.Beam.complexWithAnnotation);
-  Vex.Flow.Test.runTest("Complex Beams with Articulations", Vex.Flow.Test.Beam.complexWithArticulation);
+  Vex.Flow.Test.runTests("Simple Beam", Vex.Flow.Test.Beam.simple);
+  Vex.Flow.Test.runTests("Multi Beam", Vex.Flow.Test.Beam.multi);
+  Vex.Flow.Test.runTests("Sixteenth Beam", Vex.Flow.Test.Beam.sixteenth);
+  Vex.Flow.Test.runTests("Slopey Beam", Vex.Flow.Test.Beam.slopey);
+  Vex.Flow.Test.runTests("Auto-stemmed Beam", Vex.Flow.Test.Beam.autoStem);
+  Vex.Flow.Test.runTests("Mixed Beam 1", Vex.Flow.Test.Beam.mixed);
+  Vex.Flow.Test.runTests("Mixed Beam 2", Vex.Flow.Test.Beam.mixed2);
+  Vex.Flow.Test.runTests("Dotted Beam", Vex.Flow.Test.Beam.dotted);
+  Vex.Flow.Test.runTests("Close Trade-offs Beam", Vex.Flow.Test.Beam.tradeoffs);
+  Vex.Flow.Test.runTests("Insane Beam", Vex.Flow.Test.Beam.insane);
+  Vex.Flow.Test.runTests("Lengthy Beam", Vex.Flow.Test.Beam.lenghty);
+  Vex.Flow.Test.runTests("Outlier Beam", Vex.Flow.Test.Beam.outlier);
+  Vex.Flow.Test.runTests("Break Secondary Beams", Vex.Flow.Test.Beam.breakSecondaryBeams);
+  Vex.Flow.Test.runTests("TabNote Beams Up", Vex.Flow.Test.Beam.tabBeamsUp);
+  Vex.Flow.Test.runTests("TabNote Beams Down", Vex.Flow.Test.Beam.tabBeamsDown);
+  Vex.Flow.Test.runTests("TabNote Auto Create Beams", Vex.Flow.Test.Beam.autoTabBeams);
+  Vex.Flow.Test.runTests("TabNote Beams Auto Stem", Vex.Flow.Test.Beam.tabBeamsAutoStem);
+  Vex.Flow.Test.runTests("Complex Beams with Annotations", Vex.Flow.Test.Beam.complexWithAnnotation);
+  Vex.Flow.Test.runTests("Complex Beams with Articulations", Vex.Flow.Test.Beam.complexWithArticulation);
 }
 
 Vex.Flow.Test.Beam.beamNotes = function(notes, stave, ctx) {

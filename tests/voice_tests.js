@@ -9,7 +9,7 @@ Vex.Flow.Test.Voice.Start = function() {
   module("Voice");
   test("Strict Test", Vex.Flow.Test.Voice.strict);
   test("Ignore Test", Vex.Flow.Test.Voice.ignore);
-  Vex.Flow.Test.runTest("Full Voice Mode Test", Vex.Flow.Test.Voice.full);
+  Vex.Flow.Test.runTests("Full Voice Mode Test", Vex.Flow.Test.Voice.full);
 }
 
 Vex.Flow.Test.Voice.strict = function(options) {

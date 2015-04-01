@@ -33,10 +33,11 @@ Vex.Flow.Renderer = (function() {
 
   Renderer.buildContext = function(sel,
       backend, width, height, background) {
+
     var renderer = new Renderer(sel, backend);
     if (width && height) { renderer.resize(width, height); }
 
-    if (!background) background = "#eed";
+    if (!background) background = "#FFF";
     var ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
     return ctx;
@@ -51,6 +52,12 @@ Vex.Flow.Renderer = (function() {
     return Renderer.buildContext(sel, Renderer.Backends.RAPHAEL,
         width, height, background);
   };
+
+  Renderer.getSVGContext = function(sel, width, height, background) {
+    return Renderer.buildContext(sel, Renderer.Backends.SVG,
+        width, height, background);
+  };
+
 
   Renderer.bolsterCanvasContext = function(ctx) {
     if (Renderer.USE_CANVAS_PROXY) {
@@ -123,8 +130,13 @@ Vex.Flow.Renderer = (function() {
           "Can't get canvas context from element: " + sel);
         this.ctx = Renderer.bolsterCanvasContext(
             this.element.getContext('2d'));
+
       } else if (this.backend == Renderer.Backends.RAPHAEL) {
         this.ctx = new Vex.Flow.RaphaelContext(this.element);
+
+      } else if (this.backend == Renderer.Backends.SVG) {
+        this.ctx = new Vex.Flow.SVGContext(this.element);
+
       } else {
         throw new Vex.RERR("InvalidBackend",
           "No support for backend: " + this.backend);

@@ -8,21 +8,21 @@ Vex.Flow.Test.Rests = {};
 
 Vex.Flow.Test.Rests.Start = function() {
   module("Rests");
-  Vex.Flow.Test.runTest("Rests - Dotted",
+  Vex.Flow.Test.runTests("Rests - Dotted",
       Vex.Flow.Test.Rests.basic);
-  Vex.Flow.Test.runTest("Auto Align Rests - Beamed Notes Stems Up",
+  Vex.Flow.Test.runTests("Auto Align Rests - Beamed Notes Stems Up",
       Vex.Flow.Test.Rests.beamsUp);
-  Vex.Flow.Test.runTest("Auto Align Rests - Beamed Notes Stems Down",
+  Vex.Flow.Test.runTests("Auto Align Rests - Beamed Notes Stems Down",
       Vex.Flow.Test.Rests.beamsDown);
-  Vex.Flow.Test.runTest("Auto Align Rests - Tuplets Stems Up",
+  Vex.Flow.Test.runTests("Auto Align Rests - Tuplets Stems Up",
       Vex.Flow.Test.Rests.tuplets);
-  Vex.Flow.Test.runTest("Auto Align Rests - Tuplets Stems Down",
+  Vex.Flow.Test.runTests("Auto Align Rests - Tuplets Stems Down",
       Vex.Flow.Test.Rests.tupletsdown);
-  Vex.Flow.Test.runTest("Auto Align Rests - Single Voice (Default)",
+  Vex.Flow.Test.runTests("Auto Align Rests - Single Voice (Default)",
       Vex.Flow.Test.Rests.staveRests);
-  Vex.Flow.Test.runTest("Auto Align Rests - Single Voice (Align All)",
+  Vex.Flow.Test.runTests("Auto Align Rests - Single Voice (Align All)",
       Vex.Flow.Test.Rests.staveRestsAll);
-  Vex.Flow.Test.runTest("Auto Align Rests - Multi Voice",
+  Vex.Flow.Test.runTests("Auto Align Rests - Multi Voice",
       Vex.Flow.Test.Rests.multi);
 };
 

@@ -7,14 +7,14 @@ Vex.Flow.Test.Curve = (function () {
   var Curve = {
     Start: function() {
       module("Curve");
-      Vex.Flow.Test.runTest("Simple Curve", Curve.simple);
-      Vex.Flow.Test.runRaphaelTest("Simple Curve (Raphael)", Curve.simple);
-      Vex.Flow.Test.runTest("Rounded Curve", Curve.rounded);
-      Vex.Flow.Test.runRaphaelTest("Rounded Curve (Raphael)", Curve.rounded);
-      Vex.Flow.Test.runTest("Thick Thin Curves", Curve.thickThin);
-      Vex.Flow.Test.runRaphaelTest("Thick Thin Curve (Raphael)", Curve.thickThin);
-      Vex.Flow.Test.runTest("Top Curve", Curve.topCurve);
-      Vex.Flow.Test.runRaphaelTest("Top Curve (Raphael)", Curve.topCurve);
+      Vex.Flow.Test.runTests("Simple Curve", Curve.simple);
+      
+      Vex.Flow.Test.runTests("Rounded Curve", Curve.rounded);
+      
+      Vex.Flow.Test.runTests("Thick Thin Curves", Curve.thickThin);
+      
+      Vex.Flow.Test.runTests("Top Curve", Curve.topCurve);
+      
     },
 
     simple: function(options, contextBuilder) {

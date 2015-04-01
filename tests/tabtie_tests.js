@@ -7,20 +7,16 @@ Vex.Flow.Test.TabTie = {}
 
 Vex.Flow.Test.TabTie.Start = function() {
   module("TabTie");
-  Vex.Flow.Test.runTest("Simple TabTie", Vex.Flow.Test.TabTie.simple);
-  Vex.Flow.Test.runRaphaelTest("Simple TabTie (Raphael)",
-      Vex.Flow.Test.TabTie.simple);
-  Vex.Flow.Test.runTest("Hammerons", Vex.Flow.Test.TabTie.simpleHammeron);
-  Vex.Flow.Test.runRaphaelTest("Hammerons (Raphael)",
-      Vex.Flow.Test.TabTie.simpleHammeron);
-  Vex.Flow.Test.runTest("Pulloffs", Vex.Flow.Test.TabTie.simplePulloff);
-  Vex.Flow.Test.runRaphaelTest("Pulloffs (Raphael)",
-      Vex.Flow.Test.TabTie.simplePulloff);
-  Vex.Flow.Test.runTest("Tapping", Vex.Flow.Test.TabTie.tap);
-  Vex.Flow.Test.runRaphaelTest("Tapping (Raphael)", Vex.Flow.Test.TabTie.tap);
-  Vex.Flow.Test.runTest("Continuous", Vex.Flow.Test.TabTie.continuous);
-  Vex.Flow.Test.runRaphaelTest("Continuous (Raphael)",
-      Vex.Flow.Test.TabTie.continuous);
+  Vex.Flow.Test.runTests("Simple TabTie", Vex.Flow.Test.TabTie.simple);
+  
+  Vex.Flow.Test.runTests("Hammerons", Vex.Flow.Test.TabTie.simpleHammeron);
+  
+  Vex.Flow.Test.runTests("Pulloffs", Vex.Flow.Test.TabTie.simplePulloff);
+  
+  Vex.Flow.Test.runTests("Tapping", Vex.Flow.Test.TabTie.tap);
+  
+  Vex.Flow.Test.runTests("Continuous", Vex.Flow.Test.TabTie.continuous);
+  
 }
 
 Vex.Flow.Test.TabTie.tieNotes = function(notes, indices, stave, ctx, text) {

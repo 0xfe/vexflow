@@ -5,20 +5,17 @@ Vex.Flow.Test.TimeSignature = {}
 Vex.Flow.Test.TimeSignature.Start = function() {
   module("TimeSignature");
   test("Time Signature Parser", Vex.Flow.Test.TimeSignature.parser);
-  Vex.Flow.Test.runTest("Basic Time Signatures", Vex.Flow.Test.TimeSignature.basic);
-  Vex.Flow.Test.runRaphaelTest("Basic Time Signatures (Raphael)", 
-      Vex.Flow.Test.TimeSignature.basic);
-  Vex.Flow.Test.runTest("Big Signature Test", Vex.Flow.Test.TimeSignature.big);
-  Vex.Flow.Test.runRaphaelTest("Big Signature Test (Raphael)", 
-      Vex.Flow.Test.TimeSignature.big);
+  Vex.Flow.Test.runTests("Basic Time Signatures", Vex.Flow.Test.TimeSignature.basic);
+  
+  Vex.Flow.Test.runTests("Big Signature Test", Vex.Flow.Test.TimeSignature.big);
+  
 
-  Vex.Flow.Test.runTest("Time Signature multiple staves alignment test",
+  Vex.Flow.Test.runTests("Time Signature multiple staves alignment test",
       Vex.Flow.Test.TimeSignature.multiStave);
 
-  Vex.Flow.Test.runTest("Time Signature Change Test",
+  Vex.Flow.Test.runTests("Time Signature Change Test",
       Vex.Flow.Test.TimeSignature.timeSigNote);
-  Vex.Flow.Test.runRaphaelTest("Time Signature Change Test (Raphael)",
-      Vex.Flow.Test.TimeSignature.timeSigNote);
+  
 
 }
 
