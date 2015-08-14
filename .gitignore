@@ -20,6 +20,11 @@ ruby_sess.*
 .idea/vcs.xml
 .idea/workspace.xml
 node_modules
+docs/*.html
+docs/public
+docs/docco.css
+!docs/index.html
+npm-debug.log
 
 #eclipse
 .project

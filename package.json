@@ -1,0 +1,51 @@
+{
+  "name": "vexflow",
+  "version": "1.2.27",
+  "description": "A JavaScript library for rendering music notation and guitar tablature",
+  "main": "releases/vexflow-debug.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xfe/vexflow.git"
+  },
+  "author": {
+    "name": "Mohit Muthanna Cheppudira",
+    "email": "mohit@muthanna.com",
+    "url": "http://muthanna.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/0xfe/vexflow/issues"
+  },
+  "devDependencies": {
+    "browserify": "^6.3.2",
+    "docco": "^0.6.3",
+    "glob": "^4.2.1",
+    "grunt": "^0.4.5",
+    "grunt-bump": "0.0.16",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-qunit": "^0.5.2",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-docco": "^0.3.3",
+    "grunt-git": "^0.3.2",
+    "grunt-release": "^0.7.0",
+    "jquery": "^2.1.1",
+    "qunit": "^0.7.5",
+    "raphael": "^2.1.0"
+  },
+  "scripts": {
+    "start": "grunt stage",
+    "test": "grunt test"
+  },
+  "homepage": "http://vexflow.com",
+  "keywords": [
+    "music",
+    "notation",
+    "guitar",
+    "tablature"
+  ]
+}

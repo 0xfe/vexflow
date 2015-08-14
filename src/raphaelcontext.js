@@ -5,6 +5,10 @@
 //
 // Copyright Mohit Cheppudira 2010
 
+// ## Warning: Deprecated for SVGContext
+// Except in instances where SVG support for IE < 9.0 is
+// needed, SVGContext is recommended.
+
 /** @constructor */
 Vex.Flow.RaphaelContext = (function() {
   function RaphaelContext(element) {
@@ -99,10 +103,16 @@ Vex.Flow.RaphaelContext = (function() {
 
     scale: function(x, y) {
       this.state.scale = { x: x, y: y };
+      // The scale() method is deprecated as of Raphael.JS 2.0, and
+      // can no longer be used as an option in an Element.attr() call.
+      // It is preserved here for users running earlier versions of
+      // Raphael.JS, though it has no effect on the SVG output in
+      // Raphael 2 and higher. 
+      this.attributes.transform = "S" + x + "," + y + ",0,0";
       this.attributes.scale = x + "," + y + ",0,0";
       this.attributes.font = this.state.font_size * this.state.scale.x + "pt " +
         this.state.font_family;
-      this.background_attributes.scale = x + "," + y + ",0,0";
+      this.background_attributes.transform = "S" + x + "," + y + ",0,0";
       this.background_attributes.font = this.state.font_size *
         this.state.scale.x + "pt " +
         this.state.font_family;
@@ -134,7 +144,8 @@ Vex.Flow.RaphaelContext = (function() {
       this.paper.rect(x, y, width - 0.5, height - 0.5).
         attr(this.attributes).
         attr("fill", "none").
-        attr("stroke-width", this.lineWidth); return this;
+        attr("stroke-width", this.lineWidth);
+      return this;
     },
 
     fillRect: function(x, y, width, height) {
@@ -277,7 +288,14 @@ Vex.Flow.RaphaelContext = (function() {
             "stroke-linejoin": "round",
             "stroke-linecap": "round",
             "stroke-width": +(sa.width / num_paths * i).toFixed(3),
-            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3)
+            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
+            // See note in this.scale(): In Raphael the scale() method
+            // is deprecated and removed as of Raphael 2.0 and replaced
+            // by the transform() method.  It is preserved here for 
+            // users with earlier versions of Raphael, but has no effect
+            // on the output SVG in Raphael 2.0+.
+            transform: this.attributes.transform,
+            scale: this.attributes.scale
           }));
         }
       }
@@ -293,10 +311,28 @@ Vex.Flow.RaphaelContext = (function() {
     },
 
     stroke: function() {
+      // The first line of code below is, unfortunately, a bit of a hack: 
+      // Raphael's transform() scaling does not scale the stroke-width, so
+      // in order to scale a stroke, we have to manually scale the 
+      // stroke-width.
+      //
+      // This works well so long as the X & Y states for this.scale() are
+      // relatively similar.  However, if they are very different, we
+      // would expect horizontal and vertical lines to have different
+      // stroke-widths.
+      //
+      // In the future, if we want to support very divergent values for
+      // horizontal and vertical scaling, we may want to consider 
+      // implementing SVG scaling with properties of the SVG viewBox & 
+      // viewPort and removing it entirely from the Element.attr() calls.
+      // This would more closely parallel the approach taken in 
+      // canvascontext.js as well.
+
+      var strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y)/2;
       var elem = this.paper.path(this.path).
         attr(this.attributes).
         attr("fill", "none").
-        attr("stroke-width", this.lineWidth);
+        attr("stroke-width", strokeWidth);
       this.glow(elem);
       return this;
     },

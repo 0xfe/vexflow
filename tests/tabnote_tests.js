@@ -11,12 +11,12 @@ Vex.Flow.Test.TabNote.Start = function() {
   test("TabStave Line", Vex.Flow.Test.TabNote.tabStaveLine);
   test("Width", Vex.Flow.Test.TabNote.width);
   test("TickContext", Vex.Flow.Test.TabNote.tickContext);
-  Vex.Flow.Test.runTest("TabNote Draw", Vex.Flow.Test.TabNote.draw);
-  Vex.Flow.Test.runTest("TabNote Stems Up", Vex.Flow.Test.TabNote.drawStemsUp);
-  Vex.Flow.Test.runTest("TabNote Stems Down", Vex.Flow.Test.TabNote.drawStemsDown);
-  Vex.Flow.Test.runTest("TabNote Stems Up Through Stave", Vex.Flow.Test.TabNote.drawStemsUpThrough);
-  Vex.Flow.Test.runTest("TabNote Stems Down Through Stave", Vex.Flow.Test.TabNote.drawStemsDownThrough);
-  Vex.Flow.Test.runTest("TabNote Stems with Dots", Vex.Flow.Test.TabNote.drawStemsDotted);
+  Vex.Flow.Test.runTests("TabNote Draw", Vex.Flow.Test.TabNote.draw);
+  Vex.Flow.Test.runTests("TabNote Stems Up", Vex.Flow.Test.TabNote.drawStemsUp);
+  Vex.Flow.Test.runTests("TabNote Stems Down", Vex.Flow.Test.TabNote.drawStemsDown);
+  Vex.Flow.Test.runTests("TabNote Stems Up Through Stave", Vex.Flow.Test.TabNote.drawStemsUpThrough);
+  Vex.Flow.Test.runTests("TabNote Stems Down Through Stave", Vex.Flow.Test.TabNote.drawStemsDownThrough);
+  Vex.Flow.Test.runTests("TabNote Stems with Dots", Vex.Flow.Test.TabNote.drawStemsDotted);
 }
 
 Vex.Flow.Test.TabNote.ticks = function() {

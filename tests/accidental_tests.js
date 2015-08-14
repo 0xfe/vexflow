@@ -7,20 +7,17 @@ Vex.Flow.Test.Accidental = {}
 
 Vex.Flow.Test.Accidental.Start = function() {
   module("Accidental");
-  Vex.Flow.Test.runTest("Basic", Vex.Flow.Test.Accidental.basic);
-  Vex.Flow.Test.runRaphaelTest("Basic (Raphael)",
-      Vex.Flow.Test.Accidental.basic);
-  Vex.Flow.Test.runTest("Stem Down", Vex.Flow.Test.Accidental.basicStemDown);
-  Vex.Flow.Test.runRaphaelTest("Stem Down (Raphael)",
-      Vex.Flow.Test.Accidental.basicStemDown);
-  Vex.Flow.Test.runTest("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
-  Vex.Flow.Test.runTest("Microtonal", Vex.Flow.Test.Accidental.microtonal);
+  Vex.Flow.Test.runTests("Basic", Vex.Flow.Test.Accidental.basic);
+  Vex.Flow.Test.runTests("Stem Down", Vex.Flow.Test.Accidental.basicStemDown);
+  Vex.Flow.Test.runTests("Accidental Arrangement Special Cases", Vex.Flow.Test.Accidental.specialCases);
+  Vex.Flow.Test.runTests("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
+  Vex.Flow.Test.runTests("Microtonal", Vex.Flow.Test.Accidental.microtonal);
   test("Automatic Accidentals - Simple Tests", Vex.Flow.Test.Accidental.autoAccidentalWorking);
-  Vex.Flow.Test.runTest("Automatic Accidentals", Vex.Flow.Test.Accidental.automaticAccidentals0);
-  Vex.Flow.Test.runTest("Automatic Accidentals - C major scale in Ab", Vex.Flow.Test.Accidental.automaticAccidentals1);
-  Vex.Flow.Test.runTest("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
-  Vex.Flow.Test.runTest("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
-  Vex.Flow.Test.runTest("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
+  Vex.Flow.Test.runTests("Automatic Accidentals", Vex.Flow.Test.Accidental.automaticAccidentals0);
+  Vex.Flow.Test.runTests("Automatic Accidentals - C major scale in Ab", Vex.Flow.Test.Accidental.automaticAccidentals1);
+  Vex.Flow.Test.runTests("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
+  Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
+  Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
 }
 
 function hasAccidental(note) {
@@ -99,6 +96,64 @@ Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
 
   for (var i = 0; i < notes.length; ++i) {
     Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 125));
+    var accidentals = notes[i].getAccidentals();
+    ok(accidentals.length > 0, "Note " + i + " has accidentals");
+
+    for (var j = 0; j < accidentals.length; ++j) {
+      ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
+    }
+  }
+
+  ok(true, "Full Accidental");
+}
+
+Vex.Flow.Test.Accidental.specialCases = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 700, 240);
+  ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
+  var stave = new Vex.Flow.Stave(10, 10, 550);
+  stave.setContext(ctx);
+  stave.draw();
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
+  var notes = [
+    newNote({ keys: ["f/4", "d/5"], duration: "w"}).
+      addAccidental(0, newAcc("#")).
+      addAccidental(1, newAcc("b")),
+
+    newNote({ keys: ["c/4", "g/4"], duration: "h"}).
+      addAccidental(0, newAcc("##")).
+      addAccidental(1, newAcc("##")),
+
+    newNote({ keys: ["b/3", "d/4", "f/4"],
+        duration: "16"}).
+      addAccidental(0, newAcc("#")).
+      addAccidental(1, newAcc("#")).
+      addAccidental(2, newAcc("##")),
+
+    newNote({ keys: ["g/4", "a/4", "c/5", "e/5"],
+        duration: "16"}).
+      addAccidental(0, newAcc("b")).
+      addAccidental(1, newAcc("b")).
+      addAccidental(3, newAcc("n")),
+
+    newNote({ keys: ["e/4", "g/4", "b/4", "c/5"], duration: "4"}).
+      addAccidental(0, newAcc("b").setAsCautionary()).
+      addAccidental(1, newAcc("b").setAsCautionary()).
+      addAccidental(2, newAcc("bb")).
+      addAccidental(3, newAcc("b")),
+
+    newNote({ keys: ["b/3", "e/4", "a/4", "d/5", "g/5"], duration: "8"}).
+      addAccidental(0, newAcc("bb")).
+      addAccidental(1, newAcc("b").setAsCautionary()).
+      addAccidental(2, newAcc("n").setAsCautionary()).
+      addAccidental(3, newAcc("#")).
+      addAccidental(4, newAcc("n").setAsCautionary())
+  ];
+
+  for (var i = 0; i < notes.length; ++i) {
+    Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 70));
     var accidentals = notes[i].getAccidentals();
     ok(accidentals.length > 0, "Note " + i + " has accidentals");
 

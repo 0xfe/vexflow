@@ -8,33 +8,16 @@ Vex.Flow.Test.Rhythm = {}
 Vex.Flow.Test.Rhythm.Start = function() {
   module("Rhythm");
 
-  Vex.Flow.Test.runTest("Rhythm Draw - slash notes",
+  Vex.Flow.Test.runTests("Rhythm Draw - slash notes",
     Vex.Flow.Test.Rhythm.drawBasic);
-  Vex.Flow.Test.runRaphaelTest("Rhythm Draw - slash notes (Raphael)",
-    Vex.Flow.Test.Rhythm.drawBasic);
-
-  Vex.Flow.Test.runTest("Rhythm Draw - beamed slash notes",
+  Vex.Flow.Test.runTests("Rhythm Draw - beamed slash notes",
     Vex.Flow.Test.Rhythm.drawBeamedSlashNotes);
-  Vex.Flow.Test.runRaphaelTest("Rhythm Draw - beamed slash notes (Raphael)",
-    Vex.Flow.Test.Rhythm.drawBeamedSlashNotes);
-
-  Vex.Flow.Test.runTest("Rhythm Draw - beamed slash notes, some rests",
+  Vex.Flow.Test.runTests("Rhythm Draw - beamed slash notes, some rests",
     Vex.Flow.Test.Rhythm.drawSlashAndBeamAndRests);
-  Vex.Flow.Test.runRaphaelTest(
-      "Rhythm Draw - beamed slash notes, some rests (Raphael)",
-      Vex.Flow.Test.Rhythm.drawSlashAndBeamAndRests);
-
-  Vex.Flow.Test.runTest("Rhythm Draw - 16th note rhythm with scratches",
+  Vex.Flow.Test.runTests("Rhythm Draw - 16th note rhythm with scratches",
     Vex.Flow.Test.Rhythm.drawSixtenthWithScratches);
-  Vex.Flow.Test.runRaphaelTest(
-      "Rhythm Draw - 16th note rhythm with scratches (Raphael)",
-      Vex.Flow.Test.Rhythm.drawSixtenthWithScratches);
-
-  Vex.Flow.Test.runTest("Rhythm Draw - 32nd note rhythm with scratches",
+  Vex.Flow.Test.runTests("Rhythm Draw - 32nd note rhythm with scratches",
     Vex.Flow.Test.Rhythm.drawThirtySecondWithScratches);
-  Vex.Flow.Test.runRaphaelTest(
-      "Rhythm Draw - 32nd note rhythm with scratches (Raphael)",
-      Vex.Flow.Test.Rhythm.drawThirtySecondWithScratches);
 }
 
 Vex.Flow.Test.Rhythm.drawSlash = function(options, contextBuilder) {

@@ -37,7 +37,7 @@ Vex.Flow.Vibrato = (function() {
     state.right_shift += width;
     state.text_line += 1;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Vibrato, Modifier, {

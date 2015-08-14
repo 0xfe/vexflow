@@ -70,8 +70,10 @@ Vex.Flow.Stave = (function() {
       // Add additional space if left barline is REPEAT_BEGIN and there are other
       // start modifiers than barlines
       if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &&
-          this.modifiers.length > 2)
+          this.modifiers.length > 2) {
         start_x += 20;
+      }
+
       return start_x;
     },
 
@@ -105,8 +107,8 @@ Vex.Flow.Stave = (function() {
       this.glyph_end_x = this.x + width;
       this.end_x = this.glyph_end_x;
 
-      // reset the x position of the end barline
-      this.modifiers[1].setX(this.end_x);
+      // reset the x position of the end barline (TODO(0xfe): This makes no sense)
+      // this.modifiers[1].setX(this.end_x);
       return this;
     },
 

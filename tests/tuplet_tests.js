@@ -6,13 +6,15 @@ Vex.Flow.Test.Tuplet = {}
 
 Vex.Flow.Test.Tuplet.Start = function() {
   module("Tuplet");
-  Vex.Flow.Test.runTest("Simple Tuplet", Vex.Flow.Test.Tuplet.simple);
-  Vex.Flow.Test.runTest("Beamed Tuplet", Vex.Flow.Test.Tuplet.beamed);
-  Vex.Flow.Test.runTest("Ratioed Tuplet", Vex.Flow.Test.Tuplet.ratio);
-  Vex.Flow.Test.runTest("Bottom Tuplet", Vex.Flow.Test.Tuplet.bottom);
-  Vex.Flow.Test.runTest("Bottom Ratioed Tuplet", Vex.Flow.Test.Tuplet.bottom_ratio);
-  Vex.Flow.Test.runTest("Awkward Tuplet", Vex.Flow.Test.Tuplet.awkward);
-  Vex.Flow.Test.runTest("Complex Tuplet", Vex.Flow.Test.Tuplet.complex);
+  Vex.Flow.Test.runTests("Simple Tuplet", Vex.Flow.Test.Tuplet.simple);
+  Vex.Flow.Test.runTests("Beamed Tuplet", Vex.Flow.Test.Tuplet.beamed);
+  Vex.Flow.Test.runTests("Ratioed Tuplet", Vex.Flow.Test.Tuplet.ratio);
+  Vex.Flow.Test.runTests("Bottom Tuplet", Vex.Flow.Test.Tuplet.bottom);
+  Vex.Flow.Test.runTests("Bottom Ratioed Tuplet", Vex.Flow.Test.Tuplet.bottom_ratio);
+  Vex.Flow.Test.runTests("Awkward Tuplet", Vex.Flow.Test.Tuplet.awkward);
+  Vex.Flow.Test.runTests("Complex Tuplet", Vex.Flow.Test.Tuplet.complex);
+  Vex.Flow.Test.runTests("Mixed Stem Direction Tuplet", Vex.Flow.Test.Tuplet.mixedTop);
+  Vex.Flow.Test.runTests("Mixed Stem Direction Bottom Tuplet", Vex.Flow.Test.Tuplet.mixedBottom);
 }
 
 Vex.Flow.Test.Tuplet.setupContext = function(options, x, y) {
@@ -346,4 +348,78 @@ Vex.Flow.Test.Tuplet.complex = function(options, contextBuilder) {
   beam3.setContext(c.context).draw();
 
   ok(true, "Complex Test");
+}
+
+Vex.Flow.Test.Tuplet.mixedTop = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.Beam.setupContext(options);
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+
+  var notes = [
+    newNote({ keys: ["a/4"], stem_direction: 1, duration: "4"}),
+    newNote({ keys: ["c/6"], stem_direction: -1, duration: "4"}),
+    newNote({ keys: ["a/4"], stem_direction: 1, duration: "4"}),
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "4"}),
+    newNote({ keys: ["a/4"], stem_direction: -1, duration: "4"}),
+    newNote({ keys: ["c/6"], stem_direction: -1, duration: "4"})
+  ];
+
+  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 2), {beats_occupied : 3});
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(2, 4), {beats_occupied : 3});
+  var tuplet3 = new Vex.Flow.Tuplet(notes.slice(4, 6), {beats_occupied : 3});
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+
+  voice.setStrict(false);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice], 300);
+
+  voice.draw(c.context, c.stave);
+
+  tuplet1.setContext(c.context).draw();
+  tuplet2.setContext(c.context).draw();
+  tuplet3.setContext(c.context).draw();
+
+  ok(true, "Mixed Stem Direction Tuplet");
+}
+
+Vex.Flow.Test.Tuplet.mixedBottom = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.Beam.setupContext(options);
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+
+  var notes = [
+    newNote({ keys: ["f/3"], stem_direction: 1, duration: "4"}),
+    newNote({ keys: ["a/5"], stem_direction: -1, duration: "4"}),
+    newNote({ keys: ["a/4"], stem_direction: 1, duration: "4"}),
+    newNote({ keys: ["f/3"], stem_direction: 1, duration: "4"}),
+    newNote({ keys: ["a/4"], stem_direction: -1, duration: "4"}),
+    newNote({ keys: ["c/4"], stem_direction: -1, duration: "4"})
+  ];
+
+  var tuplet1 = new Vex.Flow.Tuplet(notes.slice(0, 2), {beats_occupied : 3});
+  var tuplet2 = new Vex.Flow.Tuplet(notes.slice(2, 4), {beats_occupied : 3});
+  var tuplet3 = new Vex.Flow.Tuplet(notes.slice(4, 6), {beats_occupied : 3});
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+
+  voice.setStrict(false);
+  voice.addTickables(notes);
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    format([voice], 300);
+
+  voice.draw(c.context, c.stave);
+
+  tuplet1.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
+  tuplet2.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
+  tuplet3.setTupletLocation(Vex.Flow.Tuplet.LOCATION_BOTTOM);
+
+  tuplet1.setContext(c.context).draw();
+  tuplet2.setContext(c.context).draw();
+  tuplet3.setContext(c.context).draw();
+
+  ok(true, "Mixed Stem Direction Bottom Tuplet");
 }

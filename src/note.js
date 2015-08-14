@@ -288,7 +288,7 @@ Vex.Flow.Note = (function() {
       if (this.stave) {
         x += this.stave.getNoteStartX() + this.render_options.stave_padding;
       }
-      
+
       if (this.isCenterAligned()){
         x += this.getCenterXShift();
       }

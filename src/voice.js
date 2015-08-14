@@ -84,22 +84,20 @@ Vex.Flow.Voice = (function() {
 
     // Get the bounding box for the voice
     getBoundingBox: function() {
+      var stave, boundingBox, bb, i;
+
       if (!this.boundingBox) {
         if (!this.stave) throw Vex.RERR("NoStave", "Can't get bounding box without stave.");
-        var stave = this.stave;
+        stave = this.stave;
+        boundingBox = null;
 
-        var boundingBox = null;
-        if (this.tickables[0]) {
-          this.tickables[0].setStave(stave);
-          boundingBox = this.tickables[0].getBoundingBox();
-        }
-
-        for (var i = 0; i < this.tickables.length; ++i) {
+        for (i = 0; i < this.tickables.length; ++i) {
           this.tickables[i].setStave(stave);
-          if (i > 0 && boundingBox) {
-            var bb = this.tickables[i].getBoundingBox();
-            if (bb) boundingBox.mergeWith(bb);
-          }
+
+          bb = this.tickables[i].getBoundingBox();
+          if (!bb) continue;
+
+          boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
         }
 
         this.boundingBox = boundingBox;

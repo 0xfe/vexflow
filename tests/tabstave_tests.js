@@ -7,12 +7,10 @@ Vex.Flow.Test.TabStave = {}
 
 Vex.Flow.Test.TabStave.Start = function() {
   module("TabStave");
-  Vex.Flow.Test.runRaphaelTest("TabStave Draw Test (Raphael)",
-      Vex.Flow.Test.TabStave.draw);
-  Vex.Flow.Test.runRaphaelTest("Vertical Bar Test (Raphael)",
-      Vex.Flow.Test.TabStave.drawVerticalBar);
-  Vex.Flow.Test.runTest("TabStave Draw Test", Vex.Flow.Test.TabStave.draw);
-  Vex.Flow.Test.runTest("Vertical Bar Test",
+  
+  
+  Vex.Flow.Test.runTests("TabStave Draw Test", Vex.Flow.Test.TabStave.draw);
+  Vex.Flow.Test.runTests("Vertical Bar Test",
       Vex.Flow.Test.TabStave.drawVerticalBar);
 }
 

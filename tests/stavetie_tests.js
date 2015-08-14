@@ -7,11 +7,11 @@ Vex.Flow.Test.StaveTie = {}
 
 Vex.Flow.Test.StaveTie.Start = function() {
   module("StaveTie");
-  Vex.Flow.Test.runTest("Simple StaveTie", Vex.Flow.Test.StaveTie.simple);
-  Vex.Flow.Test.runTest("Chord StaveTie", Vex.Flow.Test.StaveTie.chord);
-  Vex.Flow.Test.runTest("Stem Up StaveTie", Vex.Flow.Test.StaveTie.stemUp);
-  Vex.Flow.Test.runTest("No End Note", Vex.Flow.Test.StaveTie.noEndNote);
-  Vex.Flow.Test.runTest("No Start Note", Vex.Flow.Test.StaveTie.noStartNote);
+  Vex.Flow.Test.runTests("Simple StaveTie", Vex.Flow.Test.StaveTie.simple);
+  Vex.Flow.Test.runTests("Chord StaveTie", Vex.Flow.Test.StaveTie.chord);
+  Vex.Flow.Test.runTests("Stem Up StaveTie", Vex.Flow.Test.StaveTie.stemUp);
+  Vex.Flow.Test.runTests("No End Note", Vex.Flow.Test.StaveTie.noEndNote);
+  Vex.Flow.Test.runTests("No Start Note", Vex.Flow.Test.StaveTie.noStartNote);
 }
 
 Vex.Flow.Test.StaveTie.tieNotes = function(notes, indices, stave, ctx) {

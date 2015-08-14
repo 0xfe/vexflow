@@ -7,11 +7,10 @@ Vex.Flow.Test.Vibrato = {}
 
 Vex.Flow.Test.Vibrato.Start = function() {
   module("Vibrato");
-  Vex.Flow.Test.runTest("Simple Vibrato", Vex.Flow.Test.Vibrato.simple);
-  Vex.Flow.Test.runTest("Harsh Vibrato", Vex.Flow.Test.Vibrato.harsh);
-  Vex.Flow.Test.runTest("Vibrato with Bend", Vex.Flow.Test.Vibrato.withBend);
-  Vex.Flow.Test.runRaphaelTest("Vibrato with Bend (Raphael)",
-      Vex.Flow.Test.Vibrato.withBend);
+  Vex.Flow.Test.runTests("Simple Vibrato", Vex.Flow.Test.Vibrato.simple);
+  Vex.Flow.Test.runTests("Harsh Vibrato", Vex.Flow.Test.Vibrato.harsh);
+  Vex.Flow.Test.runTests("Vibrato with Bend", Vex.Flow.Test.Vibrato.withBend);
+  
 }
 
 Vex.Flow.Test.Vibrato.simple = function(options, contextBuilder) {

@@ -150,7 +150,9 @@ Vex.Flow.Tuplet = (function() {
         //this.y_pos = first_note.getStemExtents().topY - 10;
 
         for (i=0; i<this.notes.length; ++i) {
-          var top_y = this.notes[i].getStemExtents().topY - 10;
+          var top_y = this.notes[i].getStemDirection() === Vex.Flow.Stem.UP ?
+              this.notes[i].getStemExtents().topY - 10
+            : this.notes[i].getStemExtents().baseY - 20;
           if (top_y < this.y_pos)
             this.y_pos = top_y;
         }
@@ -159,7 +161,9 @@ Vex.Flow.Tuplet = (function() {
         this.y_pos = first_note.getStave().getYForLine(4) + 20;
 
         for (i=0; i<this.notes.length; ++i) {
-          var bottom_y = this.notes[i].getStemExtents().topY + 10;
+          var bottom_y = this.notes[i].getStemDirection() === Vex.Flow.Stem.UP ?
+              this.notes[i].getStemExtents().baseY + 20
+            : this.notes[i].getStemExtents().topY + 10;
           if (bottom_y > this.y_pos)
             this.y_pos = bottom_y;
         }

@@ -8,17 +8,15 @@ Vex.Flow.Test.Strokes = {};
 
 Vex.Flow.Test.Strokes.Start = function() {
   module("Strokes");
-  Vex.Flow.Test.runTest("Strokes - Brush/Arpeggiate/Rasquedo (Canvas)",
+  Vex.Flow.Test.runTests("Strokes - Brush/Arpeggiate/Rasquedo",
       Vex.Flow.Test.Strokes.drawMultipleMeasures);
-  Vex.Flow.Test.runRaphaelTest("Strokes - Brush/Arpeggiate/Rasquedo (Raphael)",
-      Vex.Flow.Test.Strokes.drawMultipleMeasures);
-  Vex.Flow.Test.runTest("Strokes - Multi Voice (Canvas)",
+  
+  Vex.Flow.Test.runTests("Strokes - Multi Voice",
       Vex.Flow.Test.Strokes.multi);
-  Vex.Flow.Test.runRaphaelTest("Strokes - Tab (Raphael)",
-      Vex.Flow.Test.Strokes.drawTabStrokes);
-  Vex.Flow.Test.runTest("Strokes - Notation and Tab (Canvas)",
+  
+  Vex.Flow.Test.runTests("Strokes - Notation and Tab",
       Vex.Flow.Test.Strokes.notesWithTab);
-  Vex.Flow.Test.runTest("Strokes - Multi-Voice Notation and Tab (Canvas)",
+  Vex.Flow.Test.runTests("Strokes - Multi-Voice Notation and Tab",
       Vex.Flow.Test.Strokes.multiNotationAndTab);
 };
 

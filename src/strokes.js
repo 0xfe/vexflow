@@ -62,7 +62,7 @@ Vex.Flow.Stroke = (function() {
 
     state.left_shift += x_shift;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Stroke, Modifier, {

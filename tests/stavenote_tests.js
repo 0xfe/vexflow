@@ -15,69 +15,48 @@ Vex.Flow.Test.StaveNote.Start = function() {
   test("Width", Vex.Flow.Test.StaveNote.width);
   test("TickContext", Vex.Flow.Test.StaveNote.tickContext);
 
-  Vex.Flow.Test.runTest("StaveNote Draw - Treble", Vex.Flow.Test.StaveNote.draw,
-      { clef: "treble", octaveShift: 0, restKey: "r/4" });
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Treble (Raphael)",
-      Vex.Flow.Test.StaveNote.draw,
+  Vex.Flow.Test.runTests("StaveNote Draw - Treble", Vex.Flow.Test.StaveNote.draw,
       { clef: "treble", octaveShift: 0, restKey: "r/4" });
 
-  Vex.Flow.Test.runTest("StaveNote BoundingBoxes - Treble", Vex.Flow.Test.StaveNote.drawBoundingBoxes,
-      { clef: "treble", octaveShift: 0, restKey: "r/4" });
-  Vex.Flow.Test.runRaphaelTest("StaveNote BoundingBoxes - Treble (Raphael)",
-      Vex.Flow.Test.StaveNote.drawBoundingBoxes,
+  Vex.Flow.Test.runTests("StaveNote BoundingBoxes - Treble", Vex.Flow.Test.StaveNote.drawBoundingBoxes,
       { clef: "treble", octaveShift: 0, restKey: "r/4" });
 
-
-  Vex.Flow.Test.runTest("StaveNote Draw - Alto", Vex.Flow.Test.StaveNote.draw,
-      { clef: "alto", octaveShift: -1, restKey: "r/4" });
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Alto (Raphael)",
-      Vex.Flow.Test.StaveNote.draw,
+  Vex.Flow.Test.runTests("StaveNote Draw - Alto", Vex.Flow.Test.StaveNote.draw,
       { clef: "alto", octaveShift: -1, restKey: "r/4" });
 
-  Vex.Flow.Test.runTest("StaveNote Draw - Tenor", Vex.Flow.Test.StaveNote.draw,
-      { clef: "tenor", octaveShift: -1, restKey: "r/3" });
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Tenor (Raphael)",
-      Vex.Flow.Test.StaveNote.draw,
+  Vex.Flow.Test.runTests("StaveNote Draw - Tenor", Vex.Flow.Test.StaveNote.draw,
       { clef: "tenor", octaveShift: -1, restKey: "r/3" });
 
-  Vex.Flow.Test.runTest("StaveNote Draw - Bass", Vex.Flow.Test.StaveNote.draw,
-      { clef: "bass", octaveShift: -2, restKey: "r/3" });
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Bass (Raphael)",
-      Vex.Flow.Test.StaveNote.draw,
+  Vex.Flow.Test.runTests("StaveNote Draw - Bass", Vex.Flow.Test.StaveNote.draw,
       { clef: "bass", octaveShift: -2, restKey: "r/3" });
 
-  Vex.Flow.Test.runTest("StaveNote Draw - Harmonic And Muted",
+  Vex.Flow.Test.runTests("StaveNote Draw - Harmonic And Muted",
                         Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Harmonic And Muted (Raphael)",
-      Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
-
-  Vex.Flow.Test.runTest("StaveNote Draw - Slash",
-                        Vex.Flow.Test.StaveNote.drawSlash);
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Slash (Raphael)",
-      Vex.Flow.Test.StaveNote.drawSlash);
-
-  Vex.Flow.Test.runTest("Displacements", Vex.Flow.Test.StaveNote.displacements);
-  Vex.Flow.Test.runRaphaelTest("Displacements (Raphael)",
-      Vex.Flow.Test.StaveNote.displacements);
-  Vex.Flow.Test.runTest("StaveNote Draw - Bass", Vex.Flow.Test.StaveNote.drawBass);
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Bass(Raphael)",
-      Vex.Flow.Test.StaveNote.drawBass);
-
-  Vex.Flow.Test.runTest("StaveNote Draw - Key Styles",
-      Vex.Flow.Test.StaveNote.drawKeyStyles);
-  Vex.Flow.Test.runRaphaelTest("StaveNote Draw - Key Styles (Raphael)",
-      Vex.Flow.Test.StaveNote.drawKeyStyles);
-
-  Vex.Flow.Test.runTest("Flag and Dot Placement - Stem Up", Vex.Flow.Test.StaveNote.dotsAndFlagsStemUp);
-  Vex.Flow.Test.runTest("Flag and Dots Placement - Stem Down", Vex.Flow.Test.StaveNote.dotsAndFlagsStemDown);
   
-  Vex.Flow.Test.runTest("Beam and Dot Placement - Stem Up", Vex.Flow.Test.StaveNote.dotsAndBeamsUp);
-  Vex.Flow.Test.runTest("Beam and Dot Placement - Stem Down", Vex.Flow.Test.StaveNote.dotsAndBeamsDown);
-  Vex.Flow.Test.runTest("Center Aligned Note", Vex.Flow.Test.StaveNote.centerAlignedRest);
-  Vex.Flow.Test.runTest("Center Aligned Note with Articulation", Vex.Flow.Test.StaveNote.centerAlignedRestFermata);
-  Vex.Flow.Test.runTest("Center Aligned Note with Annotation", Vex.Flow.Test.StaveNote.centerAlignedRestAnnotation);
-  Vex.Flow.Test.runTest("Center Aligned Note - Multi Voice", Vex.Flow.Test.StaveNote.centerAlignedMultiVoice);
-  Vex.Flow.Test.runTest("Center Aligned Note with Multiple Modifiers", Vex.Flow.Test.StaveNote.centerAlignedNoteMultiModifiers);
+
+  Vex.Flow.Test.runTests("StaveNote Draw - Slash",
+                        Vex.Flow.Test.StaveNote.drawSlash);
+  
+  Vex.Flow.Test.runTests("Displacements", Vex.Flow.Test.StaveNote.displacements);
+  
+  Vex.Flow.Test.runTests("StaveNote Draw - Bass", Vex.Flow.Test.StaveNote.drawBass);
+  
+  Vex.Flow.Test.runTests("StaveNote Draw - Key Styles",
+      Vex.Flow.Test.StaveNote.drawKeyStyles);
+  
+  Vex.Flow.Test.runTests("StaveNote Draw - StaveNote Styles",
+      Vex.Flow.Test.StaveNote.drawNoteStyles);
+  
+  Vex.Flow.Test.runTests("Flag and Dot Placement - Stem Up", Vex.Flow.Test.StaveNote.dotsAndFlagsStemUp);
+  Vex.Flow.Test.runTests("Flag and Dots Placement - Stem Down", Vex.Flow.Test.StaveNote.dotsAndFlagsStemDown);
+  
+  Vex.Flow.Test.runTests("Beam and Dot Placement - Stem Up", Vex.Flow.Test.StaveNote.dotsAndBeamsUp);
+  Vex.Flow.Test.runTests("Beam and Dot Placement - Stem Down", Vex.Flow.Test.StaveNote.dotsAndBeamsDown);
+  Vex.Flow.Test.runTests("Center Aligned Note", Vex.Flow.Test.StaveNote.centerAlignedRest);
+  Vex.Flow.Test.runTests("Center Aligned Note with Articulation", Vex.Flow.Test.StaveNote.centerAlignedRestFermata);
+  Vex.Flow.Test.runTests("Center Aligned Note with Annotation", Vex.Flow.Test.StaveNote.centerAlignedRestAnnotation);
+  Vex.Flow.Test.runTests("Center Aligned Note - Multi Voice", Vex.Flow.Test.StaveNote.centerAlignedMultiVoice);
+  Vex.Flow.Test.runTests("Center Aligned Note with Multiple Modifiers", Vex.Flow.Test.StaveNote.centerAlignedNoteMultiModifiers);
 }
 
 Vex.Flow.Test.StaveNote.ticks = function(options) {
@@ -769,6 +748,28 @@ Vex.Flow.Test.StaveNote.drawKeyStyles = function(options, contextBuilder) {
   ok(note.getX() > 0, "Note has X value");
   ok(note.getYs().length > 0, "Note has Y values");
 }
+
+Vex.Flow.Test.StaveNote.drawNoteStyles = function(options, contextBuilder) {
+  var ctx = new contextBuilder(options.canvas_sel, 300, 280);
+  var stave = new Vex.Flow.Stave(10, 0, 100);
+  ctx.scale(3, 3);
+  stave.setContext(ctx);
+  stave.draw();
+
+  var note_struct = { keys: ["g/4","bb/4","d/5"], duration: "q" };
+  var note = new Vex.Flow.StaveNote(note_struct);
+  note.addAccidental(1, new Vex.Flow.Accidental('b'));
+  note.setStyle({shadowBlur:15, shadowColor:'blue', fillStyle:'blue', strokeStyle:'blue'});
+
+  var tickContext = new Vex.Flow.TickContext();
+  tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
+  note.setContext(ctx).setStave(stave);
+  note.draw();
+
+  ok(note.getX() > 0, "Note has X value");
+  ok(note.getYs().length > 0, "Note has Y values");
+}
+
 
 Vex.Flow.Test.StaveNote.renderNote = function(note, stave, ctx, x) {
   var mc = new Vex.Flow.ModifierContext();

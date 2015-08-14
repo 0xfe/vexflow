@@ -200,7 +200,7 @@ Vex.Flow.StaveNote = (function() {
     }
 
     return true;
-  }
+  };
 
   StaveNote.formatByY = function(notes, state) {
     // NOTE: this function does not support more than two voices per stave
@@ -240,9 +240,9 @@ Vex.Flow.StaveNote = (function() {
     }
 
     state.right_shift += x_shift;
-  }
+  };
 
-  StaveNote.postFormat = function(notes, context) {
+  StaveNote.postFormat = function(notes) {
     if (!notes) return false;
 
     notes.forEach(function(note) {
@@ -250,7 +250,7 @@ Vex.Flow.StaveNote = (function() {
     });
 
     return true;
-  }
+  };
 
   // ## Prototype Methods
   //
@@ -511,14 +511,13 @@ Vex.Flow.StaveNote = (function() {
       var result_line = this.keyProps[0].line;
 
       // No precondition assumed for sortedness of keyProps array
-      for(var i=0; i<this.keyProps.length; i++){
+      for (var i=0; i<this.keyProps.length; i++) {
         var this_line = this.keyProps[i].line;
-        if(is_top_note)
-          if(this_line > result_line)
-                result_line = this_line;
-        else
-          if(this_line < result_line)
-            result_line = this_line;
+        if (is_top_note) {
+          if (this_line > result_line) result_line = this_line;
+        } else {
+          if (this_line < result_line) result_line = this_line;
+        }
       }
 
       return result_line;
@@ -561,7 +560,7 @@ Vex.Flow.StaveNote = (function() {
 
       var bounds = this.getNoteHeadBounds();
       if(!this.beam){
-	this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
+	       this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
       }
 
       return this;
@@ -636,6 +635,15 @@ Vex.Flow.StaveNote = (function() {
       }
 
       return { x: this.getAbsoluteX() + x, y: this.ys[index] };
+    },
+
+    // Sets the style of the complete StaveNote, including all keys
+    // and the stem.
+    setStyle: function(style) {
+      this.note_heads.forEach(function(notehead) {
+        notehead.setStyle(style);
+      }, this);
+      this.stem.setStyle(style);
     },
 
     // Sets the notehead at `index` to the provided coloring `style`.
@@ -809,8 +817,8 @@ Vex.Flow.StaveNote = (function() {
       var bounds = this.getNoteHeadBounds();
       var highest_line = bounds.highest_line;
       var lowest_line = bounds.lowest_line;
-      var head_x = this.note_heads[0].getAbsoluteX();      
-      
+      var head_x = this.note_heads[0].getAbsoluteX();
+
       var that = this;
       function stroke(y) {
         if (that.use_default_head_x === true)  {

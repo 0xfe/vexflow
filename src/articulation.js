@@ -47,7 +47,7 @@ Vex.Flow.Articulation = (function() {
     state.right_shift += width / 2;
     state.text_line = text_line;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Articulation, Modifier, {

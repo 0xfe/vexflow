@@ -7,23 +7,18 @@ Vex.Flow.Test.Annotation = {}
 
 Vex.Flow.Test.Annotation.Start = function() {
   module("Annotation");
-  Vex.Flow.Test.runTest("Simple Annotation", Vex.Flow.Test.Annotation.simple);
-  Vex.Flow.Test.runRaphaelTest("Simple Annotation",
-      Vex.Flow.Test.Annotation.simple);
-  Vex.Flow.Test.runTest("Standard Notation Annotation",
+  Vex.Flow.Test.runTests("Simple Annotation", Vex.Flow.Test.Annotation.simple);
+  Vex.Flow.Test.runTests("Standard Notation Annotation",
       Vex.Flow.Test.Annotation.standard);
-  Vex.Flow.Test.runTest("Harmonics", Vex.Flow.Test.Annotation.harmonic);
-  Vex.Flow.Test.runRaphaelTest("Harmonics", Vex.Flow.Test.Annotation.harmonic);
-  Vex.Flow.Test.runTest("Fingerpicking", Vex.Flow.Test.Annotation.picking);
-  Vex.Flow.Test.runRaphaelTest("Fingerpicking (Raphael)",
-      Vex.Flow.Test.Annotation.picking);
-  Vex.Flow.Test.runTest("Bottom Annotation",
+  Vex.Flow.Test.runTests("Harmonics", Vex.Flow.Test.Annotation.harmonic);
+  Vex.Flow.Test.runTests("Fingerpicking", Vex.Flow.Test.Annotation.picking);
+  Vex.Flow.Test.runTests("Bottom Annotation",
       Vex.Flow.Test.Annotation.bottom);
-  Vex.Flow.Test.runTest("Test Justification Annotation Stem Up",
+  Vex.Flow.Test.runTests("Test Justification Annotation Stem Up",
       Vex.Flow.Test.Annotation.justificationStemUp);
-  Vex.Flow.Test.runTest("Test Justification Annotation Stem Down",
+  Vex.Flow.Test.runTests("Test Justification Annotation Stem Down",
       Vex.Flow.Test.Annotation.justificationStemDown);
-  Vex.Flow.Test.runTest("TabNote Annotations",
+  Vex.Flow.Test.runTests("TabNote Annotations",
       Vex.Flow.Test.Annotation.tabNotes);
 }
 

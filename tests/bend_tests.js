@@ -7,22 +7,18 @@ Vex.Flow.Test.Bend = {}
 
 Vex.Flow.Test.Bend.Start = function() {
   module("Bend");
-  Vex.Flow.Test.runTest("Double Bends", Vex.Flow.Test.Bend.doubleBends);
-  Vex.Flow.Test.runRaphaelTest("Double Bends (Raphael)",
-      Vex.Flow.Test.Bend.doubleBends);
-  Vex.Flow.Test.runTest("Reverse Bends", Vex.Flow.Test.Bend.reverseBends);
-  Vex.Flow.Test.runTest("Bend Phrase", Vex.Flow.Test.Bend.bendPhrase);
-  Vex.Flow.Test.runTest("Double Bends With Release",
+  Vex.Flow.Test.runTests("Double Bends", Vex.Flow.Test.Bend.doubleBends);
+  Vex.Flow.Test.runTests("Reverse Bends", Vex.Flow.Test.Bend.reverseBends);
+  Vex.Flow.Test.runTests("Bend Phrase", Vex.Flow.Test.Bend.bendPhrase);
+  Vex.Flow.Test.runTests("Double Bends With Release",
       Vex.Flow.Test.Bend.doubleBendsWithRelease);
-  Vex.Flow.Test.runRaphaelTest("Double Bends With Release (Raphael)",
-      Vex.Flow.Test.Bend.doubleBendsWithRelease);
-  Vex.Flow.Test.runTest("Whako Bend", Vex.Flow.Test.Bend.whackoBends);
+  Vex.Flow.Test.runTests("Whako Bend", Vex.Flow.Test.Bend.whackoBends);
 }
 
 Vex.Flow.Test.Bend.doubleBends = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 500, 240);
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = " 10pt Arial";
+  ctx.setRawFont(" 10pt Arial");
   var stave = new Vex.Flow.TabStave(10, 10, 450).
     addTabGlyph().setContext(ctx).draw();
 
@@ -50,7 +46,8 @@ Vex.Flow.Test.Bend.doubleBends = function(options, contextBuilder) {
 
 Vex.Flow.Test.Bend.doubleBendsWithRelease = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 500, 240);
-  ctx.scale(1.0, 1.0); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  ctx.scale(1.0, 1.0);
+  ctx.setBackgroundFillStyle("#FFF");
   ctx.setFont("Arial", Vex.Flow.Test.Font.size);
   var stave = new Vex.Flow.TabStave(10, 10, 550).
     addTabGlyph().setContext(ctx).draw();
@@ -86,7 +83,7 @@ Vex.Flow.Test.Bend.reverseBends = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 500, 240);
 
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = " 10pt Arial";
+  ctx.setRawFont("10pt Arial");
   var stave = new Vex.Flow.TabStave(10, 10, 450).
     addTabGlyph().setContext(ctx).draw();
 
@@ -124,7 +121,7 @@ Vex.Flow.Test.Bend.reverseBends = function(options, contextBuilder) {
 Vex.Flow.Test.Bend.bendPhrase = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 500, 240);
   ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  ctx.font = " 10pt Arial";
+  ctx.setRawFont(" 10pt Arial");
   var stave = new Vex.Flow.TabStave(10, 10, 450).
     addTabGlyph().setContext(ctx).draw();
 
@@ -160,7 +157,7 @@ Vex.Flow.Test.Bend.bendPhrase = function(options, contextBuilder) {
 
 Vex.Flow.Test.Bend.whackoBends = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 650, 240);
-  ctx.scale(1.0, 1.0); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  ctx.scale(1.0, 1.0); ctx.setBackgroundFillStyle("#FFF");
   ctx.setFont("Arial", Vex.Flow.Test.Font.size);
   var stave = new Vex.Flow.TabStave(10, 10, 650).
     addTabGlyph().setContext(ctx).draw();

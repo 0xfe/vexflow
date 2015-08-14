@@ -111,7 +111,7 @@ Vex.Flow.Ornament = (function() {
     state.right_shift += width / 2;
     state.text_line = text_line;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Ornament, Modifier, {

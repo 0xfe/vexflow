@@ -7,9 +7,9 @@ Vex.Flow.Test.TabSlide = {}
 
 Vex.Flow.Test.TabSlide.Start = function() {
   module("TabSlide");
-  Vex.Flow.Test.runTest("Simple TabSlide", Vex.Flow.Test.TabSlide.simple);
-  Vex.Flow.Test.runTest("Slide Up", Vex.Flow.Test.TabSlide.slideUp);
-  Vex.Flow.Test.runTest("Slide Down", Vex.Flow.Test.TabSlide.slideDown);
+  Vex.Flow.Test.runTests("Simple TabSlide", Vex.Flow.Test.TabSlide.simple);
+  Vex.Flow.Test.runTests("Slide Up", Vex.Flow.Test.TabSlide.slideUp);
+  Vex.Flow.Test.runTests("Slide Down", Vex.Flow.Test.TabSlide.slideDown);
 }
 
 Vex.Flow.Test.TabSlide.tieNotes = function(notes, indices, stave, ctx) {
