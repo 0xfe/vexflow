@@ -176,6 +176,24 @@ Vex.Flow.Beam = (function() {
       this.y_shift = y_shift;
     },
 
+    // Calculate a slope and y-shift for flat beams
+    calculateFlatSlope: function() {
+      var highest_note = 0;
+      var lowest_note = 0;
+      for (var n = 0; n < this.notes.length; ++n) {
+        var stem = this.notes[n].getStemExtents();
+        var top = stem.topY;
+        if (top > highest_note) {
+          highest_note = top;
+        }
+        if (lowest_note === 0 || top < lowest_note) {
+          lowest_note = top;
+        }
+      }
+      this.slope = 0;
+      this.y_shift = (highest_note - lowest_note) * -this.stem_direction;
+    },
+
     // Create new stems for the notes in the beam, so that each stem
     // extends into the beams.
     applyStemExtensions: function(){
@@ -234,7 +252,7 @@ Vex.Flow.Beam = (function() {
           x_begin: x_px - (Vex.Flow.STEM_WIDTH/2),
           x_end: x_px,
           y_top: this.stem_direction === 1 ? top_y_px : base_y_px,
-          y_bottom: this.stem_direction === 1 ? base_y_px :  top_y_px ,
+          y_bottom: this.stem_direction === 1 ? base_y_px :  top_y_px,
           y_extend: y_displacement,
           stem_extension: Math.abs(top_y_px - slope_y) - Stem.HEIGHT - 1,
           stem_direction: this.stem_direction
@@ -384,12 +402,16 @@ Vex.Flow.Beam = (function() {
     preFormat: function() { return this; },
 
     // Post-format the beam. This can only be called after
-    // the notes in the beam have both `x` and `y` values. ie: they've 
+    // the notes in the beam have both `x` and `y` values. ie: they've
     // been formatted and have staves
     postFormat: function() {
       if (this.postFormatted) return;
 
-      this.calculateSlope();
+      if(this.render_options.flat_beams) {
+        this.calculateFlatSlope();
+      } else {
+        this.calculateSlope();
+      }
       this.applyStemExtensions();
 
       this.postFormatted = true;
@@ -730,7 +752,7 @@ Vex.Flow.Beam = (function() {
       if (config.show_stemlets) {
         beam.render_options.show_stemlets = true;
       }
-
+      beam.render_options.flat_beams = config.flat_beams;
       beams.push(beam);
     });
 
