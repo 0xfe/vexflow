@@ -44,6 +44,8 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
                         Vex.Flow.Test.AutoBeamFormatting.flatBeamsUp);
   Vex.Flow.Test.runTests("Flat Beams Down",
                         Vex.Flow.Test.AutoBeamFormatting.flatBeamsDown);
+  Vex.Flow.Test.runTests("Flat Beams Mixed Direction",
+                        Vex.Flow.Test.AutoBeamFormatting.flatBeamsMixed);
   Vex.Flow.Test.runTests("Flat Beams Up (uniform)",
                         Vex.Flow.Test.AutoBeamFormatting.flatBeamsUpUniform);
   Vex.Flow.Test.runTests("Flat Beams Down (uniform)",
@@ -1036,7 +1038,7 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsUp = function(options, contextBuilder)
     newNote({ keys: ["f/5"], duration: "8"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["c/5"], duration: "16"}),
-    newNote({ keys: ["f/4"], duration: "16"}),
+    newNote({ keys: ["c/4", "e/4", "g/4"], duration: "16"}),
     newNote({ keys: ["f/4"], duration: "16"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["e/5"], duration: "8"}),
@@ -1081,7 +1083,7 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsDown = function(options, contextBuilde
     newNote({ keys: ["c/5"], duration: "64"}),
     newNote({ keys: ["a/5"], duration: "8"}),
     newNote({ keys: ["g/5"], duration: "8"}),
-    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["d/4", "f/4", "a/4"], duration: "16"}),
     newNote({ keys: ["d/4"], duration: "16"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["e/5"], duration: "8"}),
@@ -1089,6 +1091,53 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsDown = function(options, contextBuilde
     newNote({ keys: ["a/6"], duration: "32"}),
     newNote({ keys: ["a/6"], duration: "32"}),
     newNote({ keys: ["a/6"], duration: "32"}),
+    newNote({ keys: ["g/4"], duration: "64"}),
+    newNote({ keys: ["g/4"], duration: "64"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  var beams = Vex.Flow.Beam.generateBeams(notes, {
+    flat_beams: true,
+    stem_direction: -1
+  });
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  ok(true, "Flat Beams Down Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.flatBeamsMixed = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
+
+  var notes = [
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["d/5"], duration: "64"}),
+    newNote({ keys: ["e/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["f/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["a/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["a/5"], duration: "8"}),
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["d/4", "f/4", "a/4"], duration: "16"}),
+    newNote({ keys: ["d/4"], duration: "16"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["e/5"], duration: "8"}),
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["a/4"], duration: "32"}),
+    newNote({ keys: ["a/4"], duration: "32"}),
+    newNote({ keys: ["a/4"], duration: "32"}),
     newNote({ keys: ["g/4"], duration: "64"}),
     newNote({ keys: ["g/4"], duration: "64"})
   ];
@@ -1109,7 +1158,7 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsDown = function(options, contextBuilde
   beams.forEach(function(beam){
     beam.setContext(c.context).draw();
   });
-  ok(true, "Flat Beams Down Test");
+  ok(true, "Flat Beams Mixed Direction Test");
 }
 
 Vex.Flow.Test.AutoBeamFormatting.flatBeamsUpUniform = function(options, contextBuilder) {
@@ -1121,7 +1170,7 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsUpUniform = function(options, contextB
     newNote({ keys: ["g/5"], duration: "8"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["c/5"], duration: "16"}),
-    newNote({ keys: ["f/4"], duration: "16"}),
+    newNote({ keys: ["c/4", "e/4", "g/4"], duration: "16"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["e/5"], duration: "8"}),
     newNote({ keys: ["c/4"], duration: "8"}),
@@ -1164,8 +1213,8 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsDownUniform = function(options, contex
     newNote({ keys: ["c/5"], duration: "64"}),
     newNote({ keys: ["a/5"], duration: "8"}),
     newNote({ keys: ["g/5"], duration: "8"}),
-    newNote({ keys: ["c/5"], duration: "16"}),
-    newNote({ keys: ["d/4"], duration: "16"}),
+    newNote({ keys: ["e/4", "g/4", "b/4"], duration: "16"}),
+    newNote({ keys: ["e/5"], duration: "16"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["e/5"], duration: "8"}),
     newNote({ keys: ["g/5"], duration: "8"}),
@@ -1182,7 +1231,8 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsDownUniform = function(options, contex
 
   var beams = Vex.Flow.Beam.generateBeams(notes, {
     flat_beams: true,
-    flat_beam_offset: 150
+    flat_beam_offset: 150,
+    stem_direction: -1
   });
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).

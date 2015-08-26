@@ -187,6 +187,7 @@ Vex.Flow.Beam = (function() {
         var total = 0;
         var extreme_y = 0;  // Store the highest or lowest note here
         var extreme_beam_count = 0;  // The beam count of the extreme note
+        var current_extreme = 0;
         for (var i = 0; i < this.notes.length; i++) {
 
           // Total up all of the offsets so we can average them out later
@@ -196,10 +197,12 @@ Vex.Flow.Beam = (function() {
 
           // Store the highest (stems-up) or lowest (stems-down) note so the
           //  offset can be adjusted in case the average isn't enough
-          if (this.stem_direction === Stem.DOWN && extreme_y < top_y) {
+          if (this.stem_direction === Stem.DOWN && current_extreme < top_y) {
+            current_extreme = top_y;
             extreme_y = note.getNoteHeadBounds().y_bottom;
             extreme_beam_count = note.getBeamCount();
-          } else if (this.stem_direction === Stem.UP && (extreme_y === 0 || extreme_y > top_y)) {
+          } else if (this.stem_direction === Stem.UP && (current_extreme === 0 || current_extreme > top_y)) {
+            current_extreme = top_y;
             extreme_y = note.getNoteHeadBounds().y_top;
             extreme_beam_count = note.getBeamCount();
           }
