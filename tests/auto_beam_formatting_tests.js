@@ -1030,12 +1030,13 @@ Vex.Flow.Test.AutoBeamFormatting.moreBeaming = function(options, contextBuilder)
 Vex.Flow.Test.AutoBeamFormatting.flatBeamsUp = function(options, contextBuilder) {
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
-
   var notes = [
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
     newNote({ keys: ["f/5"], duration: "8"}),
-    newNote({ keys: ["a/5"], duration: "8"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["f/4"], duration: "16"}),
     newNote({ keys: ["f/4"], duration: "16"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["e/5"], duration: "8"}),
@@ -1045,24 +1046,23 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsUp = function(options, contextBuilder)
     newNote({ keys: ["f/5"], duration: "32"}),
     newNote({ keys: ["f/5"], duration: "32"})
   ];
-
+  var triplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
+  var triplet2 = new Vex.Flow.Tuplet(notes.slice(4, 7));
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
     .setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
-
   var beams = Vex.Flow.Beam.generateBeams(notes, {
     flat_beams: true,
     stem_direction: 1
   });
-
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], c.stave);
-
   voice.draw(c.context, c.stave);
-
   beams.forEach(function(beam){
     beam.setContext(c.context).draw();
   });
+  triplet1.setContext(c.context).draw();
+  triplet2.setContext(c.context).draw();
   ok(true, "Flat Beams Up Test");
 }
 
@@ -1115,10 +1115,10 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsDown = function(options, contextBuilde
 Vex.Flow.Test.AutoBeamFormatting.flatBeamsUpUniform = function(options, contextBuilder) {
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
-
   var notes = [
-    newNote({ keys: ["f/5"], duration: "8"}),
-    newNote({ keys: ["a/5"], duration: "8"}),
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["g/5"], duration: "8"}),
     newNote({ keys: ["d/5"], duration: "8"}),
     newNote({ keys: ["c/5"], duration: "16"}),
     newNote({ keys: ["f/4"], duration: "16"}),
@@ -1130,25 +1130,22 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsUpUniform = function(options, contextB
     newNote({ keys: ["f/5"], duration: "32"}),
     newNote({ keys: ["f/5"], duration: "32"})
   ];
-
+  var triplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
   var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
     .setMode(Vex.Flow.Voice.Mode.SOFT);
   voice.addTickables(notes);
-
   var beams = Vex.Flow.Beam.generateBeams(notes, {
     flat_beams: true,
-    flat_beam_offset: 30,
+    flat_beam_offset: 50,
     stem_direction: 1
   });
-
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
     formatToStave([voice], c.stave);
-
   voice.draw(c.context, c.stave);
-
   beams.forEach(function(beam){
     beam.setContext(c.context).draw();
   });
+  triplet1.setContext(c.context).draw();
   ok(true, "Flat Beams Up (uniform) Test");
 }
 

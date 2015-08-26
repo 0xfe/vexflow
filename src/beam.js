@@ -199,6 +199,9 @@ Vex.Flow.Beam = (function() {
           if (this.stem_direction === Stem.DOWN && extreme_y < top_y) {
             extreme_y = note.getNoteHeadBounds().y_bottom;
             extreme_beam_count = note.getBeamCount();
+          } else if (this.stem_direction === Stem.UP && (extreme_y === 0 || extreme_y > top_y)) {
+            extreme_y = note.getNoteHeadBounds().y_top;
+            extreme_beam_count = note.getBeamCount();
           }
         }
 
@@ -212,8 +215,11 @@ Vex.Flow.Beam = (function() {
         //  the width of the beams.
         var beam_width = this.render_options.beam_width * 1.5;
         var extreme_test = this.min_flat_beam_offset + (extreme_beam_count * beam_width);
-        if (offset < (extreme_y + extreme_test)) {
+        var new_offset = extreme_y + (extreme_test * -this.stem_direction);
+        if (this.stem_direction === Stem.DOWN && offset < new_offset) {
           offset = extreme_y + extreme_test;
+        } else if (this.stem_direction === Stem.UP && offset > new_offset) {
+          offset = extreme_y - extreme_test;
         }
 
         // Set the offset for the group based on the calculations above.
