@@ -246,83 +246,101 @@ Vex.Flow.Beam = (function() {
     getBeamLines: function(duration) {
       var beam_lines = [];
       var beam_started = false;
-      var current_beam;
+      var current_beam = null;
       var partial_beam_length = this.render_options.partial_beam_length;
-
-      function determinePartialSide (prev_note, next_note){
-          // Compare beam counts and store differences
-          var unshared_beams = 0;
-          if (next_note && prev_note) {
-            unshared_beams = prev_note.getBeamCount() - next_note.getBeamCount();
-          }
-
-          var left_partial = duration !== "8" && unshared_beams > 0;
-          var right_partial = duration !== "8" && unshared_beams < 0;
-
-          return {
-            left: left_partial,
-            right: right_partial
-          };
-        }
-
+      var previous_should_break = false;
+      var tick_tally = 0;
       for (var i = 0; i < this.notes.length; ++i) {
         var note = this.notes[i];
-        var prev_note = this.notes[i-1];
-        var next_note = this.notes[i+1];
+
+        // See if we need to break secondary beams on this note.
         var ticks = note.getIntrinsicTicks();
-        var partial = determinePartialSide(prev_note, next_note);
+        tick_tally += ticks;
+        var should_break = false;
+
+        // 8th note beams are always drawn.
+        if (parseInt(duration) >= 8) {
+
+          // First, check to see if any indices were set up through breakSecondaryAt()
+          should_break = this.break_on_indices.indexOf(i) !== -1;
+
+          // If the secondary breaks were auto-configured in the render options,
+          //  handle that as well.
+          if (this.render_options.secondary_break_ticks && tick_tally >= this.render_options.secondary_break_ticks) {
+            tick_tally = 0;
+            should_break = true;
+          }
+        }
+        var note_gets_beam = ticks < Vex.Flow.durationToTicks(duration);
         var stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
 
-        // Check whether to apply beam(s)
-        if (ticks < Vex.Flow.durationToTicks(duration)) {
-          if (!beam_started) {
-            var new_line = {start: stem_x, end: null};
+        // Check to see if the next note in the group will get a beam at this
+        //  level. This will help to inform the partial beam logic below.
+        var next_note = this.notes[i + 1];
+        var beam_next = next_note && next_note.getIntrinsicTicks() < Vex.Flow.durationToTicks(duration);
+        if (note_gets_beam) {
 
-            if (partial.left) {
-              new_line.end = stem_x - partial_beam_length;
-            }
+          // This note gets a beam at the current level
+          if (beam_started) {
 
-            beam_lines.push(new_line);
-            beam_started = true;
-          } else {
+            // We're currently in the middle of a beam. Just continue it on to
+            //  the stem X of the current note.
             current_beam = beam_lines[beam_lines.length - 1];
             current_beam.end = stem_x;
 
-            // Should break secondary beams on note
-            var should_break = this.break_on_indices.indexOf(i) !== -1;
-            // Shorter than or eq an 8th note duration
-            var can_break = parseInt(duration, 10) >= 8;
-            if (should_break  && can_break) {
+            // If a secondary beam break is set up, end the beam right now.
+            if (should_break) {
+              beam_started = false;
+              if (next_note && !beam_next) {
+
+                // This note gets a beam,.but the next one does not. This means
+                //  we need a partial pointing right.
+                current_beam.end = current_beam.start - partial_beam_length;
+              }
+            }
+          } else {
+
+            // No beam started yet. Start a new one.
+            current_beam = { start: stem_x, end: null };
+            beam_started = true;
+            if (!beam_next) {
+
+              // The next note doesn't get a beam. Draw a partial.
+              if((previous_should_break || i === 0) && next_note) {
+
+                // This is the first note (but not the last one), or it is
+                //  following a secondary break. Draw a partial to the right.
+                current_beam.end = current_beam.start + partial_beam_length;
+              } else {
+
+                // By default, draw a partial to the left.
+                current_beam.end = current_beam.start - partial_beam_length;
+              }
+            } else if (should_break) {
+
+              // This note should have a secondary break after it. Even though
+              //  we just started a beam, it needs to end immediately.
+              current_beam.end = current_beam.start - partial_beam_length;
               beam_started = false;
             }
+            beam_lines.push(current_beam);
           }
         } else {
-          if (!beam_started) {
-            // we don't care
-          } else {
-            current_beam = beam_lines[beam_lines.length - 1];
-            if (current_beam.end == null) {
-              // single note
-              current_beam.end = current_beam.start +
-                                 partial_beam_length;
-            } else {
-              // we don't care
-            }
-          }
 
+          // The current note does not get a beam.
           beam_started = false;
         }
+
+        // Store the secondary break flag to inform the partial beam logic in
+        //  the next iteration of the loop.
+        previous_should_break = should_break;
       }
 
-      if (beam_started === true) {
-        current_beam = beam_lines[beam_lines.length - 1];
-        if (current_beam.end == null) {
-          // single note
-          current_beam.end = current_beam.start -
-              partial_beam_length;
-        }
+      // Add a partial beam pointing left if this is the last note in the group
+      var last_beam = beam_lines[beam_lines.length - 1];
+      if (last_beam && last_beam.end === null) {
+        last_beam.end = last_beam.start - partial_beam_length;
       }
-
       return beam_lines;
     },
 
@@ -730,7 +748,9 @@ Vex.Flow.Beam = (function() {
       if (config.show_stemlets) {
         beam.render_options.show_stemlets = true;
       }
-
+      if (config.secondary_breaks) {
+        beam.render_options.secondary_break_ticks = Vex.Flow.durationToTicks(config.secondary_breaks);
+      }
       beams.push(beam);
     });
 
