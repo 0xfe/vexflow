@@ -71,7 +71,6 @@ Vex.Flow.Beam = (function() {
       this.notes = notes;
       this.beam_count = this.getBeamCount();
       this.break_on_indices = [];
-      this.min_flat_beam_offset = 15;
       this.render_options = {
         beam_width: 5,
         max_slope: 0.25,
@@ -81,7 +80,8 @@ Vex.Flow.Beam = (function() {
         show_stemlets: false,
         stemlet_extension: 7,
         partial_beam_length: 10,
-        flat_beams: false
+        flat_beams: false,
+        min_flat_beam_offset: 15
       };
     },
 
@@ -183,49 +183,53 @@ Vex.Flow.Beam = (function() {
 
       // If a flat beam offset has not yet been supplied or calculated,
       // generate one based on the notes in this particular note group
+      var total = 0;
+      var extreme_y = 0;  // Store the highest or lowest note here
+      var extreme_beam_count = 0;  // The beam count of the extreme note
+      var current_extreme = 0;
+      for (var i = 0; i < this.notes.length; i++) {
+
+        // Total up all of the offsets so we can average them out later
+        var note = this.notes[i];
+        var top_y = note.getStemExtents().topY;
+        total += top_y;
+
+        // Store the highest (stems-up) or lowest (stems-down) note so the
+        //  offset can be adjusted in case the average isn't enough
+        if (this.stem_direction === Stem.DOWN && current_extreme < top_y) {
+          current_extreme = top_y;
+          extreme_y = note.getNoteHeadBounds().y_bottom;
+          extreme_beam_count = note.getBeamCount();
+        } else if (this.stem_direction === Stem.UP && (current_extreme === 0 || current_extreme > top_y)) {
+          current_extreme = top_y;
+          extreme_y = note.getNoteHeadBounds().y_top;
+          extreme_beam_count = note.getBeamCount();
+        }
+      }
+
+      // Average the offsets to try and come up with a reasonable one that
+      //  works for all of the notes in the beam group.
+      var offset = total / this.notes.length;
+
+      // In case the average isn't long enough, add or subtract some more
+      //  based on the highest or lowest note (again, based on the stem
+      //  direction). This also takes into account the added height due to
+      //  the width of the beams.
+      var beam_width = this.render_options.beam_width * 1.5;
+      var extreme_test = this.render_options.min_flat_beam_offset + (extreme_beam_count * beam_width);
+      var new_offset = extreme_y + (extreme_test * -this.stem_direction);
+      if (this.stem_direction === Stem.DOWN && offset < new_offset) {
+        offset = extreme_y + extreme_test;
+      } else if (this.stem_direction === Stem.UP && offset > new_offset) {
+        offset = extreme_y - extreme_test;
+      }
       if (!this.render_options.flat_beam_offset) {
-        var total = 0;
-        var extreme_y = 0;  // Store the highest or lowest note here
-        var extreme_beam_count = 0;  // The beam count of the extreme note
-        var current_extreme = 0;
-        for (var i = 0; i < this.notes.length; i++) {
-
-          // Total up all of the offsets so we can average them out later
-          var note = this.notes[i];
-          var top_y = note.getStemExtents().topY;
-          total += top_y;
-
-          // Store the highest (stems-up) or lowest (stems-down) note so the
-          //  offset can be adjusted in case the average isn't enough
-          if (this.stem_direction === Stem.DOWN && current_extreme < top_y) {
-            current_extreme = top_y;
-            extreme_y = note.getNoteHeadBounds().y_bottom;
-            extreme_beam_count = note.getBeamCount();
-          } else if (this.stem_direction === Stem.UP && (current_extreme === 0 || current_extreme > top_y)) {
-            current_extreme = top_y;
-            extreme_y = note.getNoteHeadBounds().y_top;
-            extreme_beam_count = note.getBeamCount();
-          }
-        }
-
-        // Average the offsets to try and come up with a reasonable one that
-        //  works for all of the notes in the beam group.
-        var offset = total / this.notes.length;
-
-        // In case the average isn't long enough, add or subtract some more
-        //  based on the highest or lowest note (again, based on the stem
-        //  direction). This also takes into account the added height due to
-        //  the width of the beams.
-        var beam_width = this.render_options.beam_width * 1.5;
-        var extreme_test = this.min_flat_beam_offset + (extreme_beam_count * beam_width);
-        var new_offset = extreme_y + (extreme_test * -this.stem_direction);
-        if (this.stem_direction === Stem.DOWN && offset < new_offset) {
-          offset = extreme_y + extreme_test;
-        } else if (this.stem_direction === Stem.UP && offset > new_offset) {
-          offset = extreme_y - extreme_test;
-        }
 
         // Set the offset for the group based on the calculations above.
+        this.render_options.flat_beam_offset = offset;
+      } else if (this.stem_direction === Stem.DOWN && offset > this.render_options.flat_beam_offset) {
+        this.render_options.flat_beam_offset = offset;
+      } else if (this.stem_direction === Stem.UP && offset < this.render_options.flat_beam_offset) {
         this.render_options.flat_beam_offset = offset;
       }
 

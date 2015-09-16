@@ -50,6 +50,10 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
                         Vex.Flow.Test.AutoBeamFormatting.flatBeamsUpUniform);
   Vex.Flow.Test.runTests("Flat Beams Down (uniform)",
                         Vex.Flow.Test.AutoBeamFormatting.flatBeamsDownUniform);
+  Vex.Flow.Test.runTests("Flat Beams Up Bounds",
+                        Vex.Flow.Test.AutoBeamFormatting.flatBeamsUpBounds);
+  Vex.Flow.Test.runTests("Flat Beams Down Bounds",
+                        Vex.Flow.Test.AutoBeamFormatting.flatBeamsDownBounds);
 }
 
 Vex.Flow.Test.AutoBeamFormatting.setupContext = function(options, x, y) {
@@ -1231,7 +1235,94 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsDownUniform = function(options, contex
 
   var beams = Vex.Flow.Beam.generateBeams(notes, {
     flat_beams: true,
-    flat_beam_offset: 150,
+    flat_beam_offset: 155,
+    stem_direction: -1
+  });
+
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+
+  voice.draw(c.context, c.stave);
+
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  ok(true, "Flat Beams Down (uniform) Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.flatBeamsUpBounds = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
+  var notes = [
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["g/4"], duration: "8"}),
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["c/5"], duration: "16"}),
+    newNote({ keys: ["c/4", "e/4", "g/4"], duration: "16"}),
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["e/5"], duration: "8"}),
+    newNote({ keys: ["c/4"], duration: "8"}),
+    newNote({ keys: ["f/5"], duration: "32"}),
+    newNote({ keys: ["f/5"], duration: "32"}),
+    newNote({ keys: ["f/5"], duration: "32"}),
+    newNote({ keys: ["f/5"], duration: "32"})
+  ];
+  var triplet1 = new Vex.Flow.Tuplet(notes.slice(0, 3));
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+  var beams = Vex.Flow.Beam.generateBeams(notes, {
+    flat_beams: true,
+    flat_beam_offset: 60,
+    stem_direction: 1
+  });
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
+    formatToStave([voice], c.stave);
+  voice.draw(c.context, c.stave);
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  triplet1.setContext(c.context).draw();
+  ok(true, "Flat Beams Up (uniform) Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.flatBeamsDownBounds = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
+  var notes = [
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["a/6"], duration: "32"}),
+    newNote({ keys: ["a/6"], duration: "32"}),
+    newNote({ keys: ["a/6"], duration: "32"}),
+    newNote({ keys: ["g/4"], duration: "64"}),
+    newNote({ keys: ["g/4"], duration: "64"}),
+
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["c/5"], duration: "64"}),
+    newNote({ keys: ["a/5"], duration: "8"}),
+
+    newNote({ keys: ["g/5"], duration: "8"}),
+    newNote({ keys: ["e/4", "g/4", "b/4"], duration: "16"}),
+    newNote({ keys: ["e/5"], duration: "16"}),
+
+    newNote({ keys: ["d/5"], duration: "8"}),
+    newNote({ keys: ["e/5"], duration: "8"})
+  ];
+
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
+    .setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+
+  var beams = Vex.Flow.Beam.generateBeams(notes, {
+    flat_beams: true,
+    flat_beam_offset: 145,
     stem_direction: -1
   });
 
