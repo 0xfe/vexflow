@@ -99,6 +99,22 @@ Vex.Flow.Stave = (function() {
     },
     setY: function(y) { this.y = y; return this; },
 
+    setX: function(x){
+      var shift = x - this.x;
+      this.x = x;
+      this.glyph_start_x += shift;
+      this.glyph_end_x += shift;
+      this.start_x += shift;
+      this.end_x += shift;
+      for(var i=0; i<this.modifiers.length; i++) {
+	var mod = this.modifiers[i];
+        if (mod.x !== undefined) {
+          mod.x += shift;
+	}
+      }
+      return this;
+    },
+
     setWidth: function(width) {
       this.width = width;
       this.glyph_end_x = this.x + width;
