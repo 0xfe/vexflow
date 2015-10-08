@@ -168,7 +168,7 @@ Vex.Flow.Ornament = (function() {
       var stave = this.note.getStave();
 
       // Get stem extents
-      var stem_ext = this.note.getStem().getExtents();
+      var stem_ext = this.note.getStemExtents();
       var top, bottom;
       if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN) {
         top = stem_ext.baseY;

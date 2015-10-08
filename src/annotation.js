@@ -140,7 +140,7 @@ Vex.Flow.Annotation = (function() {
       // The position of the text varies based on whether or not the note
       // has a stem.
       if (has_stem) {
-        stem_ext = this.note.getStem().getExtents();
+        stem_ext = this.note.getStemExtents();
         spacing = stave.getSpacingBetweenLines();
       }
 

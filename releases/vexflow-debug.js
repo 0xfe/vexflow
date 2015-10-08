@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.27 built on 2015-01-24.
+ * VexFlow 1.2.27 built on 2015-10-08.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -9405,36 +9405,45 @@ Vex.Flow.KeySignature = (function() {
     // the  accidental `type` for the key signature ('# or 'b').
     convertAccLines: function(clef, type) {
       var offset = 0.0; // if clef === "treble"
-      var tenorSharps;
-      var isTenorSharps = ((clef === "tenor") && (type === "#")) ? true : false;
+      var customLines; // when clef doesn't follow treble key sig shape
 
       switch (clef) {
-        case "bass":
-          offset = 1;
+        // Treble & Subbass both have offsets of 0, so are not included.
+        case "soprano":
+          if(type === "#") customLines = [2.5,0.5,2,0,1.5,-0.5,1];
+          else offset = -1;
+          break;
+        case "mezzo-soprano":
+          if(type === "b") customLines = [0,2,0.5,2.5,1,3,1.5];
+          else offset = 1.5;
           break;
         case "alto":
           offset = 0.5;
           break;
         case "tenor":
-          if (!isTenorSharps) {
-            offset = -0.5;
-          }
+          if(type === "#") customLines = [3, 1, 2.5, 0.5, 2, 0, 1.5];
+          else offset = -0.5;
+          break;
+        case "baritone-f":
+        case "baritone-c":
+          if(type === "b") customLines = [0.5,2.5,1,3,1.5,3.5,2];
+          else offset = 2;
+          break;
+        case "bass":
+        case "french":
+          offset = 1;
           break;
       }
 
-      // Special-case for TenorSharps
+      // If there's a special case, assign those lines/spaces:
       var i;
-      if (isTenorSharps) {
-        tenorSharps = [3, 1, 2.5, 0.5, 2, 0, 1.5];
+      if (typeof customLines !== "undefined") {
         for (i = 0; i < this.accList.length; ++i) {
-          this.accList[i].line = tenorSharps[i];
+          this.accList[i].line = customLines[i];
         }
-      }
-      else {
-        if (clef != "treble") {
-          for (i = 0; i < this.accList.length; ++i) {
-            this.accList[i].line += offset;
-          }
+      } else if (offset !== 0) {
+        for (i = 0; i < this.accList.length; ++i) {
+          this.accList[i].line += offset;
         }
       }
     }
