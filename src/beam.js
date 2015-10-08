@@ -79,7 +79,9 @@ Vex.Flow.Beam = (function() {
         slope_cost: 100,
         show_stemlets: false,
         stemlet_extension: 7,
-        partial_beam_length: 10
+        partial_beam_length: 10,
+        flat_beams: false,
+        min_flat_beam_offset: 15
       };
     },
 
@@ -176,11 +178,77 @@ Vex.Flow.Beam = (function() {
       this.y_shift = y_shift;
     },
 
+    // Calculate a slope and y-shift for flat beams
+    calculateFlatSlope: function() {
+
+      // If a flat beam offset has not yet been supplied or calculated,
+      // generate one based on the notes in this particular note group
+      var total = 0;
+      var extreme_y = 0;  // Store the highest or lowest note here
+      var extreme_beam_count = 0;  // The beam count of the extreme note
+      var current_extreme = 0;
+      for (var i = 0; i < this.notes.length; i++) {
+
+        // Total up all of the offsets so we can average them out later
+        var note = this.notes[i];
+        var top_y = note.getStemExtents().topY;
+        total += top_y;
+
+        // Store the highest (stems-up) or lowest (stems-down) note so the
+        //  offset can be adjusted in case the average isn't enough
+        if (this.stem_direction === Stem.DOWN && current_extreme < top_y) {
+          current_extreme = top_y;
+          extreme_y = note.getNoteHeadBounds().y_bottom;
+          extreme_beam_count = note.getBeamCount();
+        } else if (this.stem_direction === Stem.UP && (current_extreme === 0 || current_extreme > top_y)) {
+          current_extreme = top_y;
+          extreme_y = note.getNoteHeadBounds().y_top;
+          extreme_beam_count = note.getBeamCount();
+        }
+      }
+
+      // Average the offsets to try and come up with a reasonable one that
+      //  works for all of the notes in the beam group.
+      var offset = total / this.notes.length;
+
+      // In case the average isn't long enough, add or subtract some more
+      //  based on the highest or lowest note (again, based on the stem
+      //  direction). This also takes into account the added height due to
+      //  the width of the beams.
+      var beam_width = this.render_options.beam_width * 1.5;
+      var extreme_test = this.render_options.min_flat_beam_offset + (extreme_beam_count * beam_width);
+      var new_offset = extreme_y + (extreme_test * -this.stem_direction);
+      if (this.stem_direction === Stem.DOWN && offset < new_offset) {
+        offset = extreme_y + extreme_test;
+      } else if (this.stem_direction === Stem.UP && offset > new_offset) {
+        offset = extreme_y - extreme_test;
+      }
+      if (!this.render_options.flat_beam_offset) {
+
+        // Set the offset for the group based on the calculations above.
+        this.render_options.flat_beam_offset = offset;
+      } else if (this.stem_direction === Stem.DOWN && offset > this.render_options.flat_beam_offset) {
+        this.render_options.flat_beam_offset = offset;
+      } else if (this.stem_direction === Stem.UP && offset < this.render_options.flat_beam_offset) {
+        this.render_options.flat_beam_offset = offset;
+      }
+
+      // for flat beams, the slope and y_shift are simply 0
+      this.slope = 0;
+      this.y_shift = 0;
+    },
+
     // Create new stems for the notes in the beam, so that each stem
     // extends into the beams.
     applyStemExtensions: function(){
       var first_note = this.notes[0];
       var first_y_px = first_note.getStemExtents().topY;
+
+      // If rendering flat beams, and an offset exists, set the y-coordinate to
+      //  the offset so the stems all end at the beam offset.
+      if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
+        first_y_px = this.render_options.flat_beam_offset;
+      }
       var first_x_px = first_note.getStemX();
 
       for (var i = 0; i < this.notes.length; ++i) {
@@ -190,6 +258,12 @@ Vex.Flow.Beam = (function() {
         var y_extents = note.getStemExtents();
         var base_y_px = y_extents.baseY;
         var top_y_px = y_extents.topY;
+
+        // If flat beams, set the top of the stem to the offset, rather than
+        //  relying on the topY value from above.
+        if (this.render_options.flat_beams) {
+          top_y_px = first_y_px;
+        }
 
         // For harmonic note heads, shorten stem length by 3 pixels
         base_y_px += this.stem_direction * note.glyph.stem_offset;
@@ -216,8 +290,8 @@ Vex.Flow.Beam = (function() {
             note.setStem(new Vex.Flow.Stem({
               x_begin: centerGlyphX,
               x_end: centerGlyphX,
-              y_bottom: this.stem_direction === 1 ? end_y : start_y,
-              y_top: this.stem_direction === 1 ? start_y : end_y,
+              y_bottom: this.stem_direction === Stem.UP ? end_y : start_y,
+              y_top: this.stem_direction === Stem.UP ? start_y : end_y,
               y_extend: y_displacement,
               stem_extension: -1, // To avoid protruding through the beam
               stem_direction: this.stem_direction
@@ -233,8 +307,8 @@ Vex.Flow.Beam = (function() {
         note.setStem(new Vex.Flow.Stem({
           x_begin: x_px - (Vex.Flow.STEM_WIDTH/2),
           x_end: x_px,
-          y_top: this.stem_direction === 1 ? top_y_px : base_y_px,
-          y_bottom: this.stem_direction === 1 ? base_y_px :  top_y_px ,
+          y_top: this.stem_direction === Stem.UP ? top_y_px : base_y_px,
+          y_bottom: this.stem_direction === Stem.UP ? base_y_px :  top_y_px,
           y_extend: y_displacement,
           stem_extension: Math.abs(top_y_px - slope_y) - Stem.HEIGHT - 1,
           stem_direction: this.stem_direction
@@ -348,6 +422,13 @@ Vex.Flow.Beam = (function() {
       var first_y_px = first_note.getStemExtents().topY;
       var last_y_px = last_note.getStemExtents().topY;
 
+      // For flat beams, set the first and last Y to the offset, rather than
+      //  using the note's stem extents.
+      if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
+        first_y_px = this.render_options.flat_beam_offset;
+        last_y_px = this.render_options.flat_beam_offset;
+      }
+
       var first_x_px = first_note.getStemX();
 
       var beam_width = this.render_options.beam_width * this.stem_direction;
@@ -384,12 +465,17 @@ Vex.Flow.Beam = (function() {
     preFormat: function() { return this; },
 
     // Post-format the beam. This can only be called after
-    // the notes in the beam have both `x` and `y` values. ie: they've 
+    // the notes in the beam have both `x` and `y` values. ie: they've
     // been formatted and have staves
     postFormat: function() {
       if (this.postFormatted) return;
 
-      this.calculateSlope();
+      // Calculate a smart slope if we're not forcing the beams to be flat.
+      if(this.render_options.flat_beams) {
+        this.calculateFlatSlope();
+      } else {
+        this.calculateSlope();
+      }
       this.applyStemExtensions();
 
       this.postFormatted = true;
@@ -730,7 +816,10 @@ Vex.Flow.Beam = (function() {
       if (config.show_stemlets) {
         beam.render_options.show_stemlets = true;
       }
-
+      if (config.flat_beams === true) {
+        beam.render_options.flat_beams = true;
+        beam.render_options.flat_beam_offset = config.flat_beam_offset;
+      }
       beams.push(beam);
     });
 
