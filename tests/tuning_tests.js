@@ -8,6 +8,7 @@ Vex.Flow.Test.Tuning = {}
 Vex.Flow.Test.Tuning.Start = function() {
   module("Tuning");
   test("Standard Tuning", Vex.Flow.Test.Tuning.standard);
+  test("Standard Banjo Tuning", Vex.Flow.Test.Tuning.banjo);
   test("Return note for fret", Vex.Flow.Test.Tuning.noteForFret);
 }
 
@@ -30,6 +31,34 @@ Vex.Flow.Test.Tuning.checkStandard = function(tuning) {
   equal(tuning.getValueForString(3), 55, "G string");
   equal(tuning.getValueForString(2), 59, "B string");
   equal(tuning.getValueForString(1), 64, "High E string");
+}
+
+Vex.Flow.Test.Tuning.checkStandardBanjo = function(tuning) {
+  try {
+    tuning.getValueForString(0);
+  } catch (e) {
+    equal(e.code, "BadArguments", "String 0");
+  }
+
+  try {
+    tuning.getValueForString(6);
+  } catch (e) {
+    equal(e.code, "BadArguments", "String 6");
+  }
+
+  equal(tuning.getValueForString(5), 67, "High G string");
+  equal(tuning.getValueForString(4), 50, "D string");
+  equal(tuning.getValueForString(3), 55, "G string");
+  equal(tuning.getValueForString(2), 59, "B string");
+  equal(tuning.getValueForString(1), 62, "High D string");
+}
+
+Vex.Flow.Test.Tuning.banjo = function() {
+  expect(7);
+
+  var tuning = new Vex.Flow.Tuning();
+  tuning.setTuning("standardBanjo");
+  Vex.Flow.Test.Tuning.checkStandardBanjo(tuning);
 }
 
 Vex.Flow.Test.Tuning.standard = function() {

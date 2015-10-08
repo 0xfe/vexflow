@@ -14,6 +14,8 @@ Vex.Flow.Test.Annotation.Start = function() {
   Vex.Flow.Test.runTests("Fingerpicking", Vex.Flow.Test.Annotation.picking);
   Vex.Flow.Test.runTests("Bottom Annotation",
       Vex.Flow.Test.Annotation.bottom);
+  Vex.Flow.Test.runTests("Bottom Annotations with Beams",
+      Vex.Flow.Test.Annotation.bottomWithBeam);
   Vex.Flow.Test.runTests("Test Justification Annotation Stem Up",
       Vex.Flow.Test.Annotation.justificationStemUp);
   Vex.Flow.Test.runTests("Test Justification Annotation Stem Down",
@@ -162,6 +164,38 @@ Vex.Flow.Test.Annotation.bottom = function(options, contextBuilder) {
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes, 100);
   ok(true, "Bottom Annotation");
+}
+
+Vex.Flow.Test.Annotation.bottomWithBeam = function(options, contextBuilder) {
+  var ctx = contextBuilder(options.canvas_sel, 500, 240);
+  ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  var stave = new Vex.Flow.Stave(10, 10, 300).
+    addClef("treble").setContext(ctx).draw();
+
+  // Create some notes
+  var notes = [
+    new Vex.Flow.StaveNote({ keys: ["a/3"], duration: "8" })
+      .addModifier(0, new Vex.Flow.Annotation("good")
+      .setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM)),
+
+    new Vex.Flow.StaveNote({ keys: ["g/3"], duration: "8" })
+      .addModifier(0, new Vex.Flow.Annotation("even")
+      .setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM)),
+
+    new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "8" })
+      .addModifier(0, new Vex.Flow.Annotation("under")
+      .setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM)),
+
+    new Vex.Flow.StaveNote({ keys: ["d/4"], duration: "8" })
+      .addModifier(0, new Vex.Flow.Annotation("beam")
+      .setVerticalJustification(Vex.Flow.Annotation.VerticalJustify.BOTTOM))
+  ];
+
+  var beam = new Vex.Flow.Beam(notes.slice(1));
+
+  Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
+  beam.setContext(ctx).draw();
+  ok(true, "Bottom Annotation with Beams");
 }
 
 Vex.Flow.Test.Annotation.justificationStemUp = function(options, contextBuilder) {
