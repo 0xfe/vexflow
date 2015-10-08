@@ -295,6 +295,8 @@ Vex.Flow.TabNote = (function() {
         ctx.save();
         ctx.setLineWidth(Stem.WIDTH);
         stem_lines.forEach(function(bounds) {
+          if (bounds.length == 0) return;
+
           ctx.beginPath();
           ctx.moveTo(stem_x, bounds[0]);
           ctx.lineTo(stem_x, bounds[bounds.length - 1]);
