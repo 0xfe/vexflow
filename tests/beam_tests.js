@@ -183,12 +183,12 @@ Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
   var notes = [
-    newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "16", dots: 1 }),
+    newNote({ keys: ["f/5"], stem_direction: 1, duration: "32"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16", dots: 1 }),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "32"}),
+    newNote({ keys: ["c/5"], stem_direction: 1, duration: "16", dots: 1 }),
+    newNote({ keys: ["d/5"], stem_direction: 1, duration: "32"}),
 
     newNote({ keys: ["f/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
@@ -197,6 +197,11 @@ Vex.Flow.Test.Beam.breakSecondaryBeams = function(options, contextBuilder) {
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"})
   ];
+  notes.forEach(function(note) {
+    if ('dots' in note && note.dots >= 1) {
+      note.addDotToAll();
+    }
+  });
 
   var notes2 = [
     newNote({ keys: ["f/4"], stem_direction: -1, duration: "32"}),
@@ -692,7 +697,7 @@ Vex.Flow.Test.Beam.tabBeamsUp = function(options, contextBuilder) {
 
 };
 
-Vex.Flow.Test.Beam.tabBeamsDown = function(options, contextBuilder) {  
+Vex.Flow.Test.Beam.tabBeamsDown = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 600, 300);
 
   ctx.font = "10pt Arial";
@@ -756,7 +761,7 @@ Vex.Flow.Test.Beam.tabBeamsDown = function(options, contextBuilder) {
 };
 
 
-Vex.Flow.Test.Beam.autoTabBeams = function(options, contextBuilder) {  
+Vex.Flow.Test.Beam.autoTabBeams = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 600, 300);
 
   ctx.font = "10pt Arial";

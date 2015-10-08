@@ -40,6 +40,8 @@ Vex.Flow.Test.AutoBeamFormatting.Start = function() {
                         Vex.Flow.Test.AutoBeamFormatting.moreSimpleTuplets);
   Vex.Flow.Test.runTests("More Automatic Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.moreBeaming);
+  Vex.Flow.Test.runTests("Duration-Based Secondary Beam Breaks",
+                        Vex.Flow.Test.AutoBeamFormatting.secondaryBreaks);
   Vex.Flow.Test.runTests("Flat Beams Up",
                         Vex.Flow.Test.AutoBeamFormatting.flatBeamsUp);
   Vex.Flow.Test.runTests("Flat Beams Down",
@@ -230,8 +232,8 @@ Vex.Flow.Test.AutoBeamFormatting.oddBeamGroups = function(options, contextBuilde
   var Fraction = Vex.Flow.Fraction;
 
   var groups = [
-    new Fraction(2, 8), 
-    new Fraction(3, 8), 
+    new Fraction(2, 8),
+    new Fraction(3, 8),
     new Fraction(1, 8)
   ];
 
@@ -1031,6 +1033,48 @@ Vex.Flow.Test.AutoBeamFormatting.moreBeaming = function(options, contextBuilder)
   });
 
   ok(true, "Auto Beam Applicator Test");
+}
+
+Vex.Flow.Test.AutoBeamFormatting.secondaryBreaks = function(options, contextBuilder) {
+  options.contextBuilder = contextBuilder;
+  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
+
+  var notes = [
+      newNote({ keys: ["f/5"], duration: "16"}),
+      newNote({ keys: ["f/5"], duration: "8"}),
+      newNote({ keys: ["f/5"], duration: "16"}),
+
+      newNote({ keys: ["f/5"], duration: "32"}),
+      newNote({ keys: ["f/5"], duration: "16", dots: 1}),
+      newNote({ keys: ["f/5"], duration: "16", dots: 1}),
+      newNote({ keys: ["f/5"], duration: "32"}),
+
+      newNote({ keys: ["f/5"], duration: "16", dots: 1}),
+      newNote({ keys: ["f/5"], duration: "32"}),
+      newNote({ keys: ["f/5"], duration: "32"}),
+      newNote({ keys: ["f/5"], duration: "16", dots: 1}),
+
+      newNote({ keys: ["f/5"], duration: "16"}),
+      newNote({ keys: ["f/5"], duration: "16"}),
+      newNote({ keys: ["f/5"], duration: "16"}),
+      newNote({ keys: ["f/5"], duration: "16"})
+  ];
+  notes.forEach(function(note) {
+    if (note.dots >= 1) {
+      note.addDotToAll();
+    }
+  });
+  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4).setMode(Vex.Flow.Voice.Mode.SOFT);
+  voice.addTickables(notes);
+  var beams = Vex.Flow.Beam.generateBeams(notes, {
+    secondary_breaks: '8'
+  });
+  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).formatToStave([voice], c.stave);
+  voice.draw(c.context, c.stave);
+  beams.forEach(function(beam){
+    beam.setContext(c.context).draw();
+  });
+  ok(true, "Duration-Based Secondary Breaks Test");
 }
 
 Vex.Flow.Test.AutoBeamFormatting.flatBeamsUp = function(options, contextBuilder) {
