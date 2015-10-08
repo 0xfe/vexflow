@@ -32,24 +32,24 @@ Vex.Flow.Test.StaveNote.Start = function() {
 
   Vex.Flow.Test.runTests("StaveNote Draw - Harmonic And Muted",
                         Vex.Flow.Test.StaveNote.drawHarmonicAndMuted);
-  
+
 
   Vex.Flow.Test.runTests("StaveNote Draw - Slash",
                         Vex.Flow.Test.StaveNote.drawSlash);
-  
+
   Vex.Flow.Test.runTests("Displacements", Vex.Flow.Test.StaveNote.displacements);
-  
+
   Vex.Flow.Test.runTests("StaveNote Draw - Bass", Vex.Flow.Test.StaveNote.drawBass);
-  
+
   Vex.Flow.Test.runTests("StaveNote Draw - Key Styles",
       Vex.Flow.Test.StaveNote.drawKeyStyles);
-  
+
   Vex.Flow.Test.runTests("StaveNote Draw - StaveNote Styles",
       Vex.Flow.Test.StaveNote.drawNoteStyles);
-  
+
   Vex.Flow.Test.runTests("Flag and Dot Placement - Stem Up", Vex.Flow.Test.StaveNote.dotsAndFlagsStemUp);
   Vex.Flow.Test.runTests("Flag and Dots Placement - Stem Down", Vex.Flow.Test.StaveNote.dotsAndFlagsStemDown);
-  
+
   Vex.Flow.Test.runTests("Beam and Dot Placement - Stem Up", Vex.Flow.Test.StaveNote.dotsAndBeamsUp);
   Vex.Flow.Test.runTests("Beam and Dot Placement - Stem Down", Vex.Flow.Test.StaveNote.dotsAndBeamsDown);
   Vex.Flow.Test.runTests("Center Aligned Note", Vex.Flow.Test.StaveNote.centerAlignedRest);
@@ -336,7 +336,7 @@ Vex.Flow.Test.StaveNote.autoStem = function() {
   note = new Vex.Flow.StaveNote(
       { keys: ["b/4"], duration: "8", auto_stem: true});
   equal(note.getStemDirection(), Vex.Flow.StaveNote.STEM_DOWN,
-      "Stem must be up");
+      "Stem must be down");
 
 }
 
@@ -1186,7 +1186,7 @@ Vex.Flow.Test.StaveNote.centerAlignedMultiVoice = function(options, contextBuild
 
   stave.addClef('treble');
   stave.addTimeSignature('3/8');
-  
+
   stave.setContext(ctx);
   stave.draw();
 
