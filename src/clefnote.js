@@ -29,6 +29,12 @@ Vex.Flow.ClefNote = (function() {
       return this.clef;
     },
 
+    setContext: function(context){
+      this.context = context;
+      this.glyph.setContext(this.context);
+      return this;
+    },
+
     setStave: function(stave) {
       var superclass = Vex.Flow.ClefNote.superclass;
       superclass.setStave.call(this, stave);

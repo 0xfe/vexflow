@@ -80,7 +80,15 @@ Vex.Flow.Stave = (function() {
     getNoteEndX: function() { return this.end_x; },
     getTieStartX: function() { return this.start_x; },
     getTieEndX: function() { return this.x + this.width; },
-    setContext: function(context) { this.context = context; return this; },
+    setContext: function(context) {
+      this.context = context; 
+	for(var i=0; i<this.glyphs.length; i++){
+          if(typeof(this.glyphs[i].setContext) === "function"){
+	    this.glyphs[i].setContext(context);
+          }
+	}
+      return this; 
+    },
     getContext: function() { return this.context; },
     getX: function() { return this.x; },
     getNumLines: function() { return this.options.num_lines; },
