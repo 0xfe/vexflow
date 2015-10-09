@@ -90,9 +90,9 @@ Vex.Flow.Test.Formatter.renderNotes = function(
 }
 
 Vex.Flow.Test.Formatter.formatStaveNotes = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 400, 150);
-  ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  var stave = new Vex.Flow.Stave(10, 10, 500);
+  var ctx = new contextBuilder(options.canvas_sel, 400, 250);
+  ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  var stave = new Vex.Flow.Stave(10, 30, 500);
   stave.setContext(ctx);
   stave.draw();
 
@@ -120,6 +120,16 @@ Vex.Flow.Test.Formatter.formatStaveNotes = function(options, contextBuilder) {
   ];
 
   Vex.Flow.Test.Formatter.renderNotes(notes1, notes2, ctx, stave);
+
+  notes1.forEach(function(note) {
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 250);
+  });
+
+  notes2.forEach(function(note) {
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 20);
+  });
+
+  Vex.Flow.Test.plotLegendForNoteWidth(ctx, 300, 180);
 
   ok(true);
 }
@@ -155,25 +165,32 @@ Vex.Flow.Test.Formatter.getNotes = function() {
 
 
 Vex.Flow.Test.Formatter.justifyStaveNotes = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 420, 400);
-  ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  var ctx = new contextBuilder(options.canvas_sel, 420, 870);
+ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
 
   // Get test voices.
   var notes = Vex.Flow.Test.Formatter.getNotes();
 
-  var stave = new Vex.Flow.Stave(10, 10, 400).addTrebleGlyph().
+  var stave = new Vex.Flow.Stave(10, 30, 400).addTrebleGlyph().
     setContext(ctx).draw();
   Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave);
+  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 250);});
+  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 20);});
   ok(true);
 
-  var stave2 = new Vex.Flow.Stave(10, 150, 400).addTrebleGlyph().
+  var stave2 = new Vex.Flow.Stave(10, 220, 400).addTrebleGlyph().
     setContext(ctx).draw();
   Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave2, 300);
   ok(true);
+  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 540);});
+  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 300);});
 
-  var stave3 = new Vex.Flow.Stave(10, 300, 400).addTrebleGlyph().
+  var stave3 = new Vex.Flow.Stave(10, 410, 400).addTrebleGlyph().
     setContext(ctx).draw();
   Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave3, 400);
+  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 820);});
+  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 590);});
+
   ok(true);
 }
 

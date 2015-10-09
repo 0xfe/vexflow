@@ -719,7 +719,7 @@ Vex.Flow.sanitizeDuration = function(duration) {
   }
 
   return duration;
-}
+};
 
 // Convert the `duration` to an fraction
 Vex.Flow.durationToFraction = function(duration) {
