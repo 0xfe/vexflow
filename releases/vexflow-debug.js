@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.29 built on 2015-10-09.
+ * VexFlow 1.2.30 built on 2015-10-09.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -126,7 +126,7 @@ Vex.getCanvasContext = function(canvas_sel) {
 Vex.drawDot = function(ctx, x, y, color) {
   var c = color || "#f55";
   ctx.save();
-  ctx.fillStyle = c;
+  ctx.setFillStyle(c);
 
   //draw a circle
   ctx.beginPath();
@@ -545,7 +545,7 @@ Vex.Flow.clefProperties.values = {
 /*
   Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
 
-  The last argument, params, is a struct the currently can contain one option, 
+  The last argument, params, is a struct the currently can contain one option,
   octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
 */
 Vex.Flow.keyProperties = function(key, clef, params) {
@@ -1217,7 +1217,7 @@ Vex.Flow.parseNoteData = function(noteData) {
 // If the input isn't an alias, simply return the input.
 //
 // example: 'q' -> '4', '8' -> '8'
-function sanitizeDuration(duration) {
+Vex.Flow.sanitizeDuration = function(duration) {
   var alias = Vex.Flow.durationAliases[duration];
   if (alias !== undefined) {
     duration = alias;
@@ -1229,11 +1229,11 @@ function sanitizeDuration(duration) {
   }
 
   return duration;
-}
+};
 
 // Convert the `duration` to an fraction
 Vex.Flow.durationToFraction = function(duration) {
-  return new Vex.Flow.Fraction().parse(sanitizeDuration(duration));
+  return new Vex.Flow.Fraction().parse(Vex.Flow.sanitizeDuration(duration));
 };
 
 // Convert the `duration` to an number
@@ -1243,7 +1243,7 @@ Vex.Flow.durationToNumber = function(duration) {
 
 // Convert the `duration` to total ticks
 Vex.Flow.durationToTicks = function(duration) {
-  duration = sanitizeDuration(duration);
+  duration = Vex.Flow.sanitizeDuration(duration);
 
   var ticks = Vex.Flow.durationToTicks.durations[duration];
   if (ticks === undefined) {
@@ -1279,10 +1279,7 @@ Vex.Flow.durationAliases = {
 };
 
 Vex.Flow.durationToGlyph = function(duration, type) {
-  var alias = Vex.Flow.durationAliases[duration];
-  if (alias !== undefined) {
-    duration = alias;
-  }
+  duration = Vex.Flow.sanitizeDuration(duration);
 
   var code = Vex.Flow.durationToGlyph.duration_codes[duration];
   if (code === undefined) {
@@ -2701,7 +2698,7 @@ Vex.Flow.TickContext = (function() {
       this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
       this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
       this.align_center = false;
-      
+
       this.tContexts = [];   // Parent array of tick contexts
 
       // Ignore this tick context for formatting and justification
@@ -2723,7 +2720,7 @@ Vex.Flow.TickContext = (function() {
     getMaxTicks: function() { return this.maxTicks; },
     getMinTicks: function() { return this.minTicks; },
     getTickables: function() { return this.tickables; },
-    
+
     getCenterAlignedTickables: function() {
       return this.tickables.filter(function(tickable) {
         return tickable.isCenterAligned();
@@ -3230,11 +3227,16 @@ Vex.Flow.Note = (function() {
       var width = this.getWidth();
       return { width: width,
                noteWidth: width -
-                          modLeftPx - modRightPx -  // used by accidentals and modifiers
+                          modLeftPx - modRightPx -
                           this.extraLeftPx - this.extraRightPx,
                left_shift: this.x_shift, // TODO(0xfe): Make style consistent
+
+
+               // Modifiers, accidentals etc.
                modLeftPx: modLeftPx,
                modRightPx: modRightPx,
+
+               // Displaced note head on left or right.
                extraLeftPx: this.extraLeftPx,
                extraRightPx: this.extraRightPx };
     },
@@ -3254,6 +3256,10 @@ Vex.Flow.Note = (function() {
       return this;
     },
 
+    getXShift: function() {
+      return this.x_shift;
+    },
+
     // Get `X` position of this tick context.
     getX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
@@ -3261,7 +3267,9 @@ Vex.Flow.Note = (function() {
       return this.tickContext.getX() + this.x_shift;
     },
 
-    // Get the absolute `X` position of this note relative to the stave.
+    // Get the absolute `X` position of this note's tick context, relative to
+    // the stave. This excludes x_shift, so you'll need to factor it in if you're
+    // looking for the post-formatted x-position.
     getAbsoluteX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
@@ -3882,6 +3890,7 @@ Vex.Flow.StemmableNote = (function(){
         return this.stave.getYForTopText(text_line);
       }
     },
+
     getYForBottomText: function(text_line) {
       var extents = this.getStemExtents();
       if (this.hasStem()) {
@@ -3890,6 +3899,10 @@ Vex.Flow.StemmableNote = (function(){
       } else {
         return this.stave.getYForBottomText(text_line);
       }
+    },
+
+    hasFlag: function() {
+      return Vex.Flow.durationToGlyph(this.duration).flag;
     },
 
     // Post format the note
@@ -3905,7 +3918,7 @@ Vex.Flow.StemmableNote = (function(){
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      
+
       this.setStem(new Stem(stem_struct));
       this.stem.setContext(this.context).draw();
     }
@@ -4654,11 +4667,14 @@ Vex.Flow.StaveNote = (function() {
     },
 
     // Calculates and sets the extra pixels to the left or right
-    // if the note is displaced
+    // if the note is displaced.
     calcExtraPx: function() {
       this.setExtraLeftPx((this.displaced && this.stem_direction == -1) ?
           this.glyph.head_width : 0);
-      this.setExtraRightPx((this.displaced && this.stem_direction == 1) ?
+
+      // For upstems with flags, the extra space is unnecessary, since it's taken
+      // up by the flag.
+      this.setExtraRightPx((!this.hasFlag() && this.displaced && this.stem_direction == 1) ?
           this.glyph.head_width : 0);
     },
 
@@ -8933,14 +8949,10 @@ Vex.Flow.Annotation = (function() {
   Annotation.format = function(annotations, state) {
     if (!annotations || annotations.length === 0) return false;
 
-    var max_width = 0;
-
-    // Format Annotations
-    var width;
+    var width = 0;
     for (var i = 0; i < annotations.length; ++i) {
       var annotation = annotations[i];
-      width = annotation.getWidth() > max_width ?
-        annotation.getWidth() : max_width;
+      width = Math.max(annotation.getWidth(), width);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
         state.top_text_line++;
@@ -9099,15 +9111,11 @@ Vex.Flow.Articulation = (function() {
   Articulation.format = function(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < articulations.length; ++i) {
       var increment = 1;
       var articulation = articulations[i];
-      width = articulation.getWidth() > max_width ?
-        articulation.getWidth() : max_width;
+      width = Math.max(articulation.getWidth(), width);
 
       var type = Vex.Flow.articulationCodes(articulation.type);
 
@@ -14059,16 +14067,11 @@ Vex.Flow.Ornament = (function() {
   Ornament.format = function(ornaments, state) {
    if (!ornaments || ornaments.length === 0) return false;
 
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < ornaments.length; ++i) {
       var ornament = ornaments[i];
       var increment = 1;
-
-      width = ornament.getWidth() > max_width ?
-        ornament.getWidth() : max_width;
+      width = Math.max(ornament.getWidth(), width);
 
       var type = Vex.Flow.ornamentCodes(ornament.type);
 
