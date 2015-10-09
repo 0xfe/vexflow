@@ -221,26 +221,16 @@ Vex.Flow.Test.Accidental.showNotes = function(note1, note2, stave, ctx, x) {
 
   note1.setContext(ctx).setStave(stave).draw();
   note2.setContext(ctx).setStave(stave).draw();
-  note1.getBoundingBox().draw(ctx);
-  note2.getBoundingBox().draw(ctx);
 
-  ctx.save();
-  ctx.font = "10pt Arial"; ctx.strokeStyle = "#579"; ctx.fillStyle = "#345";
-  ctx.fillText("w: " + note2.getWidth(), note2.getAbsoluteX() + 15, 20 / 1.5);
-  ctx.fillText("w: " + note1.getWidth(), note1.getAbsoluteX() - 25, 220 / 1.5);
-
-  ctx.beginPath();
-  ctx.moveTo(note1.getAbsoluteX() - (note1.getWidth() / 2), 230/1.5);
-  ctx.lineTo(note1.getAbsoluteX() + (note1.getWidth() / 2), 230/1.5);
-  ctx.stroke();
-  ctx.restore();
+  Vex.Flow.Test.plotNoteWidth(ctx, note1, 280);
+  Vex.Flow.Test.plotNoteWidth(ctx, note2, 20);
 }
 
 Vex.Flow.Test.Accidental.multiVoice = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 400, 150);
+  var ctx = new contextBuilder(options.canvas_sel, 460, 250);
 
-  ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  var stave = new Vex.Flow.Stave(10, 10, 420);
+  ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  var stave = new Vex.Flow.Stave(10, 40, 420);
   stave.setContext(ctx);
   stave.draw();
 
@@ -281,6 +271,7 @@ Vex.Flow.Test.Accidental.multiVoice = function(options, contextBuilder) {
       addAccidental(0, newAcc("b"));
 
   Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 250);
+  Vex.Flow.Test.plotLegendForNoteWidth(ctx, 350, 150);
   ok(true, "Full Accidental");
 }
 

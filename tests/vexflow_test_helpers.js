@@ -116,6 +116,8 @@ Vex.Flow.Test.plotNoteWidth = function(ctx, note, yPos) {
   stroke(xPost1, xPost2, "#999");
   stroke(xPost2, xEnd, "red");
 
+  stroke(xStart - note.getXShift(), xStart, "#DDD"); // Shift
+
   Vex.drawDot(ctx, xAbs + note.getXShift(), y, "blue");
 
   ctx.restore();
@@ -145,6 +147,7 @@ Vex.Flow.Test.plotLegendForNoteWidth = function(ctx, x, y) {
   legend("green", "Note + Flag")
   legend("red", "Modifiers")
   legend("#999", "Displaced Head")
+  legend("#DDD", "Formatter Shift")
 
   ctx.restore();
 }
