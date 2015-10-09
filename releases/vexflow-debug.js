@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.28 built on 2015-10-08.
+ * VexFlow 1.2.29 built on 2015-10-09.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -5165,6 +5165,8 @@ Vex.Flow.TabNote = (function() {
         ctx.save();
         ctx.setLineWidth(Stem.WIDTH);
         stem_lines.forEach(function(bounds) {
+          if (bounds.length === 0) return;
+
           ctx.beginPath();
           ctx.moveTo(stem_x, bounds[0]);
           ctx.lineTo(stem_x, bounds[bounds.length - 1]);
@@ -5876,83 +5878,101 @@ Vex.Flow.Beam = (function() {
     getBeamLines: function(duration) {
       var beam_lines = [];
       var beam_started = false;
-      var current_beam;
+      var current_beam = null;
       var partial_beam_length = this.render_options.partial_beam_length;
-
-      function determinePartialSide (prev_note, next_note){
-          // Compare beam counts and store differences
-          var unshared_beams = 0;
-          if (next_note && prev_note) {
-            unshared_beams = prev_note.getBeamCount() - next_note.getBeamCount();
-          }
-
-          var left_partial = duration !== "8" && unshared_beams > 0;
-          var right_partial = duration !== "8" && unshared_beams < 0;
-
-          return {
-            left: left_partial,
-            right: right_partial
-          };
-        }
-
+      var previous_should_break = false;
+      var tick_tally = 0;
       for (var i = 0; i < this.notes.length; ++i) {
         var note = this.notes[i];
-        var prev_note = this.notes[i-1];
-        var next_note = this.notes[i+1];
+
+        // See if we need to break secondary beams on this note.
         var ticks = note.getIntrinsicTicks();
-        var partial = determinePartialSide(prev_note, next_note);
+        tick_tally += ticks;
+        var should_break = false;
+
+        // 8th note beams are always drawn.
+        if (parseInt(duration) >= 8) {
+
+          // First, check to see if any indices were set up through breakSecondaryAt()
+          should_break = this.break_on_indices.indexOf(i) !== -1;
+
+          // If the secondary breaks were auto-configured in the render options,
+          //  handle that as well.
+          if (this.render_options.secondary_break_ticks && tick_tally >= this.render_options.secondary_break_ticks) {
+            tick_tally = 0;
+            should_break = true;
+          }
+        }
+        var note_gets_beam = ticks < Vex.Flow.durationToTicks(duration);
         var stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
 
-        // Check whether to apply beam(s)
-        if (ticks < Vex.Flow.durationToTicks(duration)) {
-          if (!beam_started) {
-            var new_line = {start: stem_x, end: null};
+        // Check to see if the next note in the group will get a beam at this
+        //  level. This will help to inform the partial beam logic below.
+        var next_note = this.notes[i + 1];
+        var beam_next = next_note && next_note.getIntrinsicTicks() < Vex.Flow.durationToTicks(duration);
+        if (note_gets_beam) {
 
-            if (partial.left) {
-              new_line.end = stem_x - partial_beam_length;
-            }
+          // This note gets a beam at the current level
+          if (beam_started) {
 
-            beam_lines.push(new_line);
-            beam_started = true;
-          } else {
+            // We're currently in the middle of a beam. Just continue it on to
+            //  the stem X of the current note.
             current_beam = beam_lines[beam_lines.length - 1];
             current_beam.end = stem_x;
 
-            // Should break secondary beams on note
-            var should_break = this.break_on_indices.indexOf(i) !== -1;
-            // Shorter than or eq an 8th note duration
-            var can_break = parseInt(duration, 10) >= 8;
-            if (should_break  && can_break) {
+            // If a secondary beam break is set up, end the beam right now.
+            if (should_break) {
+              beam_started = false;
+              if (next_note && !beam_next) {
+
+                // This note gets a beam,.but the next one does not. This means
+                //  we need a partial pointing right.
+                current_beam.end = current_beam.start - partial_beam_length;
+              }
+            }
+          } else {
+
+            // No beam started yet. Start a new one.
+            current_beam = { start: stem_x, end: null };
+            beam_started = true;
+            if (!beam_next) {
+
+              // The next note doesn't get a beam. Draw a partial.
+              if((previous_should_break || i === 0) && next_note) {
+
+                // This is the first note (but not the last one), or it is
+                //  following a secondary break. Draw a partial to the right.
+                current_beam.end = current_beam.start + partial_beam_length;
+              } else {
+
+                // By default, draw a partial to the left.
+                current_beam.end = current_beam.start - partial_beam_length;
+              }
+            } else if (should_break) {
+
+              // This note should have a secondary break after it. Even though
+              //  we just started a beam, it needs to end immediately.
+              current_beam.end = current_beam.start - partial_beam_length;
               beam_started = false;
             }
+            beam_lines.push(current_beam);
           }
         } else {
-          if (!beam_started) {
-            // we don't care
-          } else {
-            current_beam = beam_lines[beam_lines.length - 1];
-            if (current_beam.end == null) {
-              // single note
-              current_beam.end = current_beam.start +
-                                 partial_beam_length;
-            } else {
-              // we don't care
-            }
-          }
 
+          // The current note does not get a beam.
           beam_started = false;
         }
+
+        // Store the secondary break flag to inform the partial beam logic in
+        //  the next iteration of the loop.
+        previous_should_break = should_break;
       }
 
-      if (beam_started === true) {
-        current_beam = beam_lines[beam_lines.length - 1];
-        if (current_beam.end == null) {
-          // single note
-          current_beam.end = current_beam.start -
-              partial_beam_length;
-        }
+      // Add a partial beam pointing left if this is the last note in the group
+      var last_beam = beam_lines[beam_lines.length - 1];
+      if (last_beam && last_beam.end === null) {
+        last_beam.end = last_beam.start - partial_beam_length;
       }
-
       return beam_lines;
     },
 
@@ -6372,6 +6392,9 @@ Vex.Flow.Beam = (function() {
       if (config.show_stemlets) {
         beam.render_options.show_stemlets = true;
       }
+      if (config.secondary_breaks) {
+        beam.render_options.secondary_break_ticks = Vex.Flow.durationToTicks(config.secondary_breaks);
+      }
       if (config.flat_beams === true) {
         beam.render_options.flat_beams = true;
         beam.render_options.flat_beam_offset = config.flat_beam_offset;
@@ -6788,7 +6811,8 @@ Vex.Flow.ModifierContext = (function() {
     this.state = {
       left_shift: 0,
       right_shift: 0,
-      text_line: 0
+      text_line: 0,
+      top_text_line: 0
     };
 
     // Add new modifiers to this array. The ordering is significant -- lower
@@ -7350,6 +7374,7 @@ Vex.Flow.Dot = (function() {
   function Dot() {
     this.init();
   }
+
   Dot.CATEGORY = "dots";
 
   var Modifier = Vex.Flow.Modifier;
@@ -7420,7 +7445,7 @@ Vex.Flow.Dot = (function() {
       }
 
       // convert half_shiftY to a multiplier for dots.draw()
-      dot.dot_shiftY += (-half_shiftY);
+      dot.dot_shiftY = (-half_shiftY);
       prev_dotted_space = line + half_shiftY;
 
       dot.setXShift(dot_shift);
@@ -8526,7 +8551,8 @@ Vex.Flow.Bend = (function() {
     if (!bends || bends.length === 0) return false;
 
     var last_width = 0;
-    var text_line = state.text_line;
+    // Bends are always on top.
+    var text_line = state.top_text_line;
 
     // Format Bends
     for (var i = 0; i < bends.length; ++i) {
@@ -8537,7 +8563,7 @@ Vex.Flow.Bend = (function() {
     }
 
     state.right_shift += last_width;
-    state.text_line += 1;
+    state.top_text_line += 1;
     return true;
   };
 
@@ -8744,7 +8770,8 @@ Vex.Flow.Vibrato = (function() {
   Vibrato.format = function(vibratos, state, context) {
     if (!vibratos || vibratos.length === 0) return false;
 
-    var text_line = state.text_line;
+    // Vibratos are always on top.
+    var text_line = state.top_text_line;
     var width = 0;
     var shift = state.right_shift - 7;
 
@@ -8764,7 +8791,7 @@ Vex.Flow.Vibrato = (function() {
     }
 
     state.right_shift += width;
-    state.text_line += 1;
+    state.top_text_line += 1;
     return true;
   };
 
@@ -8880,7 +8907,9 @@ Vex.Flow.Annotation = (function() {
   function Annotation(text) {
     if (arguments.length > 0) this.init(text);
   }
+
   Annotation.CATEGORY = "annotations";
+  var Modifier = Vex.Flow.Modifier;
 
   // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
   function L() { if (Annotation.DEBUG) Vex.L("Vex.Flow.Annotation", arguments); }
@@ -8904,17 +8933,21 @@ Vex.Flow.Annotation = (function() {
   Annotation.format = function(annotations, state) {
     if (!annotations || annotations.length === 0) return false;
 
-    var text_line = state.text_line;
     var max_width = 0;
 
     // Format Annotations
     var width;
     for (var i = 0; i < annotations.length; ++i) {
       var annotation = annotations[i];
-      annotation.setTextLine(text_line);
       width = annotation.getWidth() > max_width ?
         annotation.getWidth() : max_width;
-      text_line++;
+      if (annotation.getPosition() === Modifier.Position.ABOVE) {
+        annotation.setTextLine(state.top_text_line);
+        state.top_text_line++;
+      } else {
+        annotation.setTextLine(state.text_line);
+        state.text_line++;
+      }
     }
 
     state.left_shift += width / 2;
@@ -8926,7 +8959,6 @@ Vex.Flow.Annotation = (function() {
   //
   // Annotations inherit from `Modifier` and is positioned correctly when
   // in a `ModifierContext`.
-  var Modifier = Vex.Flow.Modifier;
   Vex.Inherit(Annotation, Modifier, {
     // Create a new `Annotation` with the string `text`.
     init: function(text) {
@@ -8934,7 +8966,6 @@ Vex.Flow.Annotation = (function() {
 
       this.note = null;
       this.index = null;
-      this.text_line = 0;
       this.text = text;
       this.justification = Annotation.Justify.CENTER;
       this.vert_justification = Annotation.VerticalJustify.TOP;
@@ -8947,9 +8978,6 @@ Vex.Flow.Annotation = (function() {
       // The default width is calculated from the text.
       this.setWidth(Vex.Flow.textWidth(text));
     },
-
-    // Set the vertical position of the text relative to the stave.
-    setTextLine: function(line) { this.text_line = line; return this; },
 
     // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
     setFont: function(family, size, weight) {
@@ -9071,27 +9099,31 @@ Vex.Flow.Articulation = (function() {
   Articulation.format = function(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
-    var text_line = state.text_line;
     var max_width = 0;
 
     // Format Articulations
     var width;
     for (var i = 0; i < articulations.length; ++i) {
+      var increment = 1;
       var articulation = articulations[i];
-      articulation.setTextLine(text_line);
       width = articulation.getWidth() > max_width ?
         articulation.getWidth() : max_width;
 
       var type = Vex.Flow.articulationCodes(articulation.type);
-      if(type.between_lines)
-        text_line += 1;
-      else
-        text_line += 1.5;
+
+      if (!type.between_lines) increment += 1.5;
+
+      if (articulation.getPosition() === Modifier.Position.ABOVE) {
+        articulation.setTextLine(state.top_text_line);
+        state.top_text_line += increment;
+      } else {
+        articulation.setTextLine(state.text_line);
+        state.text_line += increment;
+      }
     }
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
-    state.text_line = text_line;
     return true;
   };
 
@@ -14027,27 +14059,32 @@ Vex.Flow.Ornament = (function() {
   Ornament.format = function(ornaments, state) {
    if (!ornaments || ornaments.length === 0) return false;
 
-    var text_line = state.text_line;
     var max_width = 0;
 
     // Format Articulations
     var width;
     for (var i = 0; i < ornaments.length; ++i) {
       var ornament = ornaments[i];
-      ornament.setTextLine(text_line);
+      var increment = 1;
+
       width = ornament.getWidth() > max_width ?
         ornament.getWidth() : max_width;
 
       var type = Vex.Flow.ornamentCodes(ornament.type);
-      if(type.between_lines)
-        text_line += 1;
-      else
-        text_line += 1.5;
+
+      if (!type.between_lines) increment += 1.5;
+
+      if (ornament.getPosition() === Modifier.Position.ABOVE) {
+        ornament.setTextLine(state.top_text_line);
+        state.top_text_line += increment;
+      } else {
+        ornament.setTextLine(state.text_line);
+        state.text_line += increment;
+      }
     }
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
-    state.text_line = text_line;
     return true;
   };
 
