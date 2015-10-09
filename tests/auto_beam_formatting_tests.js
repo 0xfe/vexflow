@@ -367,6 +367,7 @@ Vex.Flow.Test.AutoBeamFormatting.breakBeamsOnRests = function(options, contextBu
   });
   ok(true, "Auto Beam Applicator Test");
 }
+
 Vex.Flow.Test.AutoBeamFormatting.beamAcrossAllRestsWithStemlets = function(options, contextBuilder) {
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
@@ -486,50 +487,6 @@ Vex.Flow.Test.AutoBeamFormatting.beamAcrossMiddleRests = function(options, conte
   var beams = Vex.Flow.Beam.generateBeams(notes, {
     beam_rests: true,
     beam_middle_only: true
-  });
-
-  var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-    formatToStave([voice], c.stave);
-
-  voice.draw(c.context, c.stave);
-
-  beams.forEach(function(beam){
-    beam.setContext(c.context).draw();
-  });
-  ok(true, "Auto Beam Applicator Test");
-}
-
-Vex.Flow.Test.AutoBeamFormatting.breakBeamsOnRests = function(options, contextBuilder) {
-  options.contextBuilder = contextBuilder;
-  var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options);
-
-  var notes = [
-    newNote({ keys: ["c/5"], duration: "16"}),
-    newNote({ keys: ["g/5"], duration: "16"}),
-    newNote({ keys: ["c/5"], duration: "16"}),
-    newNote({ keys: ["b/4"], duration: "16r"}),
-    newNote({ keys: ["b/4"], duration: "16r"}),
-    newNote({ keys: ["c/4", "e/4", "g/4"], duration: "16"}),
-    newNote({ keys: ["d/4"], duration: "16"}),
-    newNote({ keys: ["a/5"], duration: "16"}),
-    newNote({ keys: ["c/4"], duration: "16"}),
-    newNote({ keys: ["g/4"], duration: "16"}),
-    newNote({ keys: ["b/4"], duration: "16"}),
-    newNote({ keys: ["b/4"], duration: "16r"}),
-    newNote({ keys: ["g/4", "e/4"], duration: "32"}),
-    newNote({ keys: ["b/4"], duration: "32r"}),
-    newNote({ keys: ["b/4"], duration: "32r"}),
-    newNote({ keys: ["a/4"], duration: "32"}),
-    newNote({ keys: ["a/4"], duration: "16r"}),
-    newNote({ keys: ["a/4"], duration: "16"})
-  ];
-
-  var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-    .setMode(Vex.Flow.Voice.Mode.SOFT);
-  voice.addTickables(notes);
-
-  var beams = Vex.Flow.Beam.generateBeams(notes, {
-    beam_rests: false
   });
 
   var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
