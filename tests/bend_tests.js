@@ -41,11 +41,15 @@ Vex.Flow.Test.Bend.doubleBends = function(options, contextBuilder) {
   ];
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
+  notes.forEach(function(note) {
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 220);
+  });
+
   ok(true, "Double Bends");
 }
 
 Vex.Flow.Test.Bend.doubleBendsWithRelease = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 500, 240);
+  var ctx = new contextBuilder(options.canvas_sel, 550, 240);
   ctx.scale(1.0, 1.0);
   ctx.setBackgroundFillStyle("#FFF");
   ctx.setFont("Arial", Vex.Flow.Test.Font.size);
@@ -76,6 +80,9 @@ Vex.Flow.Test.Bend.doubleBendsWithRelease = function(options, contextBuilder) {
   ];
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
+  notes.forEach(function(note) {
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 220);
+  });
   ok(true, "Bend Release");
 }
 
@@ -114,6 +121,7 @@ Vex.Flow.Test.Bend.reverseBends = function(options, contextBuilder) {
     tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
 
     note.setStave(stave).setContext(ctx).draw();
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 220);
     ok(true, "Bend " + i);
   }
 }
@@ -151,15 +159,16 @@ Vex.Flow.Test.Bend.bendPhrase = function(options, contextBuilder) {
     tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
 
     note.setStave(stave).setContext(ctx).draw();
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 220);
     ok(true, "Bend " + i);
   }
 }
 
 Vex.Flow.Test.Bend.whackoBends = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 650, 240);
+  var ctx = new contextBuilder(options.canvas_sel, 400, 240);
   ctx.scale(1.0, 1.0); ctx.setBackgroundFillStyle("#FFF");
   ctx.setFont("Arial", Vex.Flow.Test.Font.size);
-  var stave = new Vex.Flow.TabStave(10, 10, 650).
+  var stave = new Vex.Flow.TabStave(10, 10, 350).
     addTabGlyph().setContext(ctx).draw();
 
   function newNote(tab_struct) { return new Vex.Flow.TabNote(tab_struct); }
@@ -191,5 +200,6 @@ Vex.Flow.Test.Bend.whackoBends = function(options, contextBuilder) {
   ];
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
+  Vex.Flow.Test.plotNoteWidth(ctx, notes[0], 220);
   ok(true, "Whako Release");
 }

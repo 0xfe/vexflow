@@ -97,7 +97,7 @@ Vex.Flow.Test.plotNoteWidth = function(ctx, note, yPos) {
   var xWidth = xEnd - xStart;
   ctx.save();
   ctx.setFont("Arial", 8, "");
-  ctx.fillText(xWidth + "px", xStart + note.getXShift(), yPos / 1.5);
+  ctx.fillText(Math.round(xWidth) + "px", xStart + note.getXShift(), yPos / 1.5);
 
   var y = (yPos + 10) / 1.5;
   function stroke(x1, x2, color) {
