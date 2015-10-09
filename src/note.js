@@ -247,11 +247,16 @@ Vex.Flow.Note = (function() {
       var width = this.getWidth();
       return { width: width,
                noteWidth: width -
-                          modLeftPx - modRightPx -  // used by accidentals and modifiers
+                          modLeftPx - modRightPx -
                           this.extraLeftPx - this.extraRightPx,
                left_shift: this.x_shift, // TODO(0xfe): Make style consistent
+
+
+               // Modifiers, accidentals etc.
                modLeftPx: modLeftPx,
                modRightPx: modRightPx,
+
+               // Displaced note head on left or right.
                extraLeftPx: this.extraLeftPx,
                extraRightPx: this.extraRightPx };
     },
@@ -271,6 +276,10 @@ Vex.Flow.Note = (function() {
       return this;
     },
 
+    getXShift: function() {
+      return this.x_shift;
+    },
+
     // Get `X` position of this tick context.
     getX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
@@ -278,7 +287,9 @@ Vex.Flow.Note = (function() {
       return this.tickContext.getX() + this.x_shift;
     },
 
-    // Get the absolute `X` position of this note relative to the stave.
+    // Get the absolute `X` position of this note's tick context, relative to
+    // the stave. This excludes x_shift, so you'll need to factor it in if you're
+    // looking for the post-formatted x-position.
     getAbsoluteX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");

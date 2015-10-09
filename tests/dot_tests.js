@@ -21,21 +21,13 @@ Vex.Flow.Test.Dot.showNote = function(note, stave, ctx, x) {
   note.setContext(ctx).setStave(stave);
   note.draw();
 
-  ctx.save();
-  ctx.font = "10pt Arial"; ctx.strokeStyle = "#579"; ctx.fillStyle = "#345";
-  ctx.fillText("w: " + note.getWidth(), note.getAbsoluteX() - 25, 200 / 1.5);
-
-  ctx.beginPath();
-  ctx.moveTo(note.getAbsoluteX() - (note.getWidth() / 2), 210/1.5);
-  ctx.lineTo(note.getAbsoluteX() + (note.getWidth() / 2), 210/1.5);
-  ctx.stroke();
-  ctx.restore();
+  Vex.Flow.Test.plotNoteWidth(ctx, note, 210);
   return note;
 }
 
 Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 1000, 240);
-  ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
+  ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   var stave = new Vex.Flow.Stave(10, 10, 975);
   stave.setContext(ctx);
   stave.draw();
@@ -93,6 +85,7 @@ Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
     }
   }
 
+  Vex.Flow.Test.plotLegendForNoteWidth(ctx, 620, 140);
   ok(true, "Full Dot");
 }
 
@@ -102,29 +95,25 @@ Vex.Flow.Test.Dot.showNotes = function(note1, note2, stave, ctx, x) {
   note2.addToModifierContext(mc);
 
   var tickContext = new Vex.Flow.TickContext();
-  tickContext.addTickable(note1).addTickable(note2).
-    preFormat().setX(x).setPixelsUsed(65);
+  tickContext
+    .addTickable(note1)
+    .addTickable(note2)
+    .setX(x)
+    .preFormat()
+    .setPixelsUsed(65);
 
   note1.setContext(ctx).setStave(stave).draw();
   note2.setContext(ctx).setStave(stave).draw();
 
-  ctx.save();
-  ctx.font = "10pt Arial"; ctx.strokeStyle = "#579"; ctx.fillStyle = "#345";
-  ctx.fillText("w: " + note2.getWidth(), note2.getAbsoluteX() + 15, 20 / 1.5);
-  ctx.fillText("w: " + note1.getWidth(), note1.getAbsoluteX() - 25, 220 / 1.5);
-
-  ctx.beginPath();
-  ctx.moveTo(note1.getAbsoluteX() - (note1.getWidth() / 2), 230/1.5);
-  ctx.lineTo(note1.getAbsoluteX() + (note1.getWidth() / 2), 230/1.5);
-  ctx.stroke();
-  ctx.restore();
+  Vex.Flow.Test.plotNoteWidth(ctx, note1, 300);
+  Vex.Flow.Test.plotNoteWidth(ctx, note2, 20);
 }
 
 Vex.Flow.Test.Dot.multiVoice = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 400, 150);
+  var ctx = new contextBuilder(options.canvas_sel, 500, 300);
 
-  ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-  var stave = new Vex.Flow.Stave(10, 10, 420);
+  ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+  var stave = new Vex.Flow.Stave(30, 40, 420);
   stave.setContext(ctx);
   stave.draw();
 
@@ -167,5 +156,6 @@ Vex.Flow.Test.Dot.multiVoice = function(options, contextBuilder) {
       addDotToAll();
 
   Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 250);
+  Vex.Flow.Test.plotLegendForNoteWidth(ctx, 400, 180);
   ok(true, "Full Dot");
 }

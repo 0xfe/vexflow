@@ -738,11 +738,14 @@ Vex.Flow.StaveNote = (function() {
     },
 
     // Calculates and sets the extra pixels to the left or right
-    // if the note is displaced
+    // if the note is displaced.
     calcExtraPx: function() {
       this.setExtraLeftPx((this.displaced && this.stem_direction == -1) ?
           this.glyph.head_width : 0);
-      this.setExtraRightPx((this.displaced && this.stem_direction == 1) ?
+
+      // For upstems with flags, the extra space is unnecessary, since it's taken
+      // up by the flag.
+      this.setExtraRightPx((!this.hasFlag() && this.displaced && this.stem_direction == 1) ?
           this.glyph.head_width : 0);
     },
 

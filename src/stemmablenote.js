@@ -194,6 +194,7 @@ Vex.Flow.StemmableNote = (function(){
         return this.stave.getYForTopText(text_line);
       }
     },
+
     getYForBottomText: function(text_line) {
       var extents = this.getStemExtents();
       if (this.hasStem()) {
@@ -202,6 +203,10 @@ Vex.Flow.StemmableNote = (function(){
       } else {
         return this.stave.getYForBottomText(text_line);
       }
+    },
+
+    hasFlag: function() {
+      return Vex.Flow.durationToGlyph(this.duration).flag;
     },
 
     // Post format the note
@@ -217,7 +222,7 @@ Vex.Flow.StemmableNote = (function(){
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      
+
       this.setStem(new Stem(stem_struct));
       this.stem.setContext(this.context).draw();
     }

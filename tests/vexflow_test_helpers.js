@@ -88,16 +88,16 @@ Vex.Flow.Test.plotNoteWidth = function(ctx, note, yPos) {
   var metrics = note.getMetrics();
   var w = metrics.width;
   var xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
-  var xPre1 = note.getAbsoluteX() - metrics.modLeftPx;
+  var xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
   var xAbs = note.getAbsoluteX();
   var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
-  var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.modRightPx;
-  var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.modRightPx + metrics.extraRightPx;
+  var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
+  var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
 
   var xWidth = xEnd - xStart;
   ctx.save();
-  ctx.setFont("Arial", 10, "");
-  ctx.fillText("w: " + xWidth, xStart, yPos / 1.5);
+  ctx.setFont("Arial", 8, "");
+  ctx.fillText(xWidth + "px", xStart + note.getXShift(), yPos / 1.5);
 
   var y = (yPos + 10) / 1.5;
   function stroke(x1, x2, color) {
@@ -105,18 +105,46 @@ Vex.Flow.Test.plotNoteWidth = function(ctx, note, yPos) {
     ctx.setStrokeStyle(color)
     ctx.setFillStyle(color)
     ctx.setLineWidth(3);
-    ctx.moveTo(x1, y);
-    ctx.lineTo(x2, y);
+    ctx.moveTo(x1 + note.getXShift(), y);
+    ctx.lineTo(x2 + note.getXShift(), y);
     ctx.stroke();
   }
 
-  stroke(xStart, xPre1, "black");
-  stroke(xPre1, xAbs, "red");
+  stroke(xStart, xPre1, "red");
+  stroke(xPre1, xAbs, "#999");
   stroke(xAbs, xPost1, "green");
-  stroke(xPost1, xPost2, "red");
-  stroke(xPost2, xEnd, "black");
+  stroke(xPost1, xPost2, "#999");
+  stroke(xPost2, xEnd, "red");
 
-  Vex.drawDot(ctx, xAbs, y, "blue");
+  Vex.drawDot(ctx, xAbs + note.getXShift(), y, "blue");
+
+  ctx.restore();
+}
+
+Vex.Flow.Test.plotLegendForNoteWidth = function(ctx, x, y) {
+  ctx.save();
+  ctx.setFont("Arial", 8, "");
+
+  var spacing = 12;
+  var lastY = y;
+
+  function legend(color, text) {
+    ctx.beginPath();
+    ctx.setStrokeStyle(color)
+    ctx.setFillStyle(color)
+    ctx.setLineWidth(10);
+    ctx.moveTo(x, lastY - 4);
+    ctx.lineTo(x + 10, lastY - 4);
+    ctx.stroke();
+
+    ctx.setFillStyle("black");
+    ctx.fillText(text, x + 15, lastY);
+    lastY += spacing;
+  }
+
+  legend("green", "Note + Flag")
+  legend("red", "Modifiers")
+  legend("#999", "Displaced Head")
 
   ctx.restore();
 }

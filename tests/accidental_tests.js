@@ -38,13 +38,13 @@ Vex.Flow.Test.Accidental.showNote = function(note, stave, ctx, x) {
   note.setContext(ctx).setStave(stave);
   note.draw();
 
-  Vex.Flow.Test.plotNoteWidth(ctx, note, 200);
+  Vex.Flow.Test.plotNoteWidth(ctx, note, 210);
   return note;
 }
 
 Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 700, 240);
-  ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
+  ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   var stave = new Vex.Flow.Stave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();
@@ -96,12 +96,13 @@ Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
     }
   }
 
+  Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
   ok(true, "Full Accidental");
 }
 
 Vex.Flow.Test.Accidental.specialCases = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 700, 240);
-  ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
+  ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   var stave = new Vex.Flow.Stave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();
@@ -154,6 +155,7 @@ Vex.Flow.Test.Accidental.specialCases = function(options, contextBuilder) {
     }
   }
 
+  Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
   ok(true, "Full Accidental");
 }
 
@@ -203,6 +205,7 @@ Vex.Flow.Test.Accidental.basicStemDown = function(options, contextBuilder) {
     }
   }
 
+  Vex.Flow.Test.plotLegendForNoteWidth(ctx, 350, 120);
   ok(true, "Full Accidental");
 }
 
@@ -335,6 +338,7 @@ Vex.Flow.Test.Accidental.microtonal = function(options, contextBuilder) {
     }
   }
 
+  Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
   ok(true, "Microtonal Accidental");
 }
 
