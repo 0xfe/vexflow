@@ -84,3 +84,40 @@ Vex.Flow.Test.runSVGTest = function(name, func, params) {
     });
 }
 
+Vex.Flow.Test.plotNoteWidth = function(ctx, note, yPos) {
+  var metrics = note.getMetrics();
+  var w = metrics.width;
+  var xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
+  var xPre1 = note.getAbsoluteX() - metrics.modLeftPx;
+  var xAbs = note.getAbsoluteX();
+  var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
+  var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.modRightPx;
+  var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.modRightPx + metrics.extraRightPx;
+
+  var xWidth = xEnd - xStart;
+  ctx.save();
+  ctx.setFont("Arial", 10, "");
+  ctx.fillText("w: " + xWidth, xStart, yPos / 1.5);
+
+  var y = (yPos + 10) / 1.5;
+  function stroke(x1, x2, color) {
+    ctx.beginPath();
+    ctx.setStrokeStyle(color)
+    ctx.setFillStyle(color)
+    ctx.setLineWidth(3);
+    ctx.moveTo(x1, y);
+    ctx.lineTo(x2, y);
+    ctx.stroke();
+  }
+
+  stroke(xStart, xPre1, "black");
+  stroke(xPre1, xAbs, "red");
+  stroke(xAbs, xPost1, "green");
+  stroke(xPost1, xPost2, "red");
+  stroke(xPost2, xEnd, "black");
+
+  Vex.drawDot(ctx, xAbs, y, "blue");
+
+  ctx.restore();
+}
+

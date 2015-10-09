@@ -120,7 +120,7 @@ Vex.getCanvasContext = function(canvas_sel) {
 Vex.drawDot = function(ctx, x, y, color) {
   var c = color || "#f55";
   ctx.save();
-  ctx.fillStyle = c;
+  ctx.setFillStyle(c);
 
   //draw a circle
   ctx.beginPath();

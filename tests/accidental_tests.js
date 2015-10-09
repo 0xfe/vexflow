@@ -38,15 +38,7 @@ Vex.Flow.Test.Accidental.showNote = function(note, stave, ctx, x) {
   note.setContext(ctx).setStave(stave);
   note.draw();
 
-  ctx.save();
-  ctx.font = "10pt Arial"; ctx.strokeStyle = "#579"; ctx.fillStyle = "#345";
-  ctx.fillText("w: " + note.getWidth(), note.getAbsoluteX() - 25, 200 / 1.5);
-
-  ctx.beginPath();
-  ctx.moveTo(note.getAbsoluteX() - (note.getWidth() / 2), 210/1.5);
-  ctx.lineTo(note.getAbsoluteX() + (note.getWidth() / 2), 210/1.5);
-  ctx.stroke();
-  ctx.restore();
+  Vex.Flow.Test.plotNoteWidth(ctx, note, 200);
   return note;
 }
 
