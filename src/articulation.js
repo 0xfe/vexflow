@@ -25,15 +25,11 @@ Vex.Flow.Articulation = (function() {
   Articulation.format = function(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < articulations.length; ++i) {
       var increment = 1;
       var articulation = articulations[i];
-      width = articulation.getWidth() > max_width ?
-        articulation.getWidth() : max_width;
+      width = Math.max(articulation.getWidth(), width);
 
       var type = Vex.Flow.articulationCodes(articulation.type);
 

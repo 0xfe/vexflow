@@ -89,16 +89,11 @@ Vex.Flow.Ornament = (function() {
   Ornament.format = function(ornaments, state) {
    if (!ornaments || ornaments.length === 0) return false;
 
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < ornaments.length; ++i) {
       var ornament = ornaments[i];
       var increment = 1;
-
-      width = ornament.getWidth() > max_width ?
-        ornament.getWidth() : max_width;
+      width = Math.max(ornament.getWidth(), width);
 
       var type = Vex.Flow.ornamentCodes(ornament.type);
 

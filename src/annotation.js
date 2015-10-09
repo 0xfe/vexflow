@@ -37,14 +37,10 @@ Vex.Flow.Annotation = (function() {
   Annotation.format = function(annotations, state) {
     if (!annotations || annotations.length === 0) return false;
 
-    var max_width = 0;
-
-    // Format Annotations
-    var width;
+    var width = 0;
     for (var i = 0; i < annotations.length; ++i) {
       var annotation = annotations[i];
-      width = annotation.getWidth() > max_width ?
-        annotation.getWidth() : max_width;
+      width = Math.max(annotation.getWidth(), width);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
         state.top_text_line++;
