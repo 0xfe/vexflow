@@ -54,7 +54,7 @@ Vex.Flow.Test.TextNote = (function() {
           addAccidental(0, newAcc("b")).
           addAccidental(1, newAcc("#")),
         newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "q"}),
-        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "q"}).
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "q"}).
           addAccidental(0, newAcc("n")).
           addAccidental(1, newAcc("#"))
       ];
@@ -88,7 +88,7 @@ Vex.Flow.Test.TextNote = (function() {
           addAccidental(0, newAcc("b")).
           addAccidental(1, newAcc("#")),
         newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: 1, duration: "q"}).
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: 1, duration: "q"}).
           addAccidental(0, newAcc("n")).
           addAccidental(1, newAcc("#"))
       ];
@@ -133,9 +133,9 @@ Vex.Flow.Test.TextNote = (function() {
           addAccidental(0, newAcc("b")).
           addAccidental(1, newAcc("#")),
         newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"})
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "8"})
       ];
 
       var notes2 = [
@@ -173,9 +173,9 @@ Vex.Flow.Test.TextNote = (function() {
           addAccidental(0, newAcc("b")).
           addAccidental(1, newAcc("#")),
         newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "8"})
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "8"})
       ];
 
       var notes2 = [
@@ -244,7 +244,7 @@ Vex.Flow.Test.TextNote = (function() {
       var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).setStrict(false);
       voice.addTickables(notes);
 
-      var formatter = new Vex.Flow.Formatter().formatToStave([voice], stave); 
+      var formatter = new Vex.Flow.Formatter().formatToStave([voice], stave);
 
       notes.forEach(function(note) {
         note.setStave(stave);

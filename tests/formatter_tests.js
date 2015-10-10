@@ -104,7 +104,7 @@ Vex.Flow.Test.Formatter.formatStaveNotes = function(options, contextBuilder) {
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),
     newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "q"}),
-    newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "q"}).
+    newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "q"}).
       addAccidental(0, newAcc("n")).
       addAccidental(1, newAcc("#"))
   ];
@@ -114,7 +114,7 @@ Vex.Flow.Test.Formatter.formatStaveNotes = function(options, contextBuilder) {
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),
     newNote({ keys: ["d/5", "e/5", "f/5"], stem_direction: 1, duration: "q"}),
-    newNote({ keys: ["f/5", "a/5", "c/5"], stem_direction: 1, duration: "q"}).
+    newNote({ keys: ["c/5", "f/5", "a/5"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("n")).
       addAccidental(1, newAcc("#"))
   ];
@@ -144,7 +144,7 @@ Vex.Flow.Test.Formatter.getNotes = function() {
       addAccidental(1, newAcc("n")),
     newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "8"}),
     newNote({ keys: ["d/4", "f/4", "a/4"], stem_direction: -1, duration: "8"}),
-    newNote({ keys: ["f/4", "a/4", "c/4"], stem_direction: -1, duration: "q"}).
+    newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "q"}).
       addAccidental(0, newAcc("n")).
       addAccidental(1, newAcc("#"))
   ];
@@ -154,7 +154,7 @@ Vex.Flow.Test.Formatter.getNotes = function() {
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),
     newNote({ keys: ["d/5", "e/5", "f/5"], stem_direction: 1, duration: "h"}),
-    newNote({ keys: ["f/5", "a/5", "c/5"], stem_direction: 1, duration: "q"}).
+    newNote({ keys: ["c/5", "f/5", "a/5"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("##")).
       addAccidental(1, newAcc("b"))
   ];
@@ -204,7 +204,7 @@ Vex.Flow.Test.Formatter.getTabNotes = function() {
       addAccidental(0, newAcc("#")),
     newNote({ keys: ["c/4", "d/4"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["c/4", "a/4", "e/4"], stem_direction: 1, duration: "q"}).
+    newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("#"))
   ];
 
@@ -362,11 +362,11 @@ Vex.Flow.Test.Formatter.multiStaves = function(options, contextBuilder) {
     newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}).setStave(stave12)
   ];
   var notes22 = [
-    newNote({ keys: ["a/4", "e/4"], stem_direction: 1, duration: "qd"}).setStave(stave22).
+    newNote({ keys: ["e/4", "a/4"], stem_direction: 1, duration: "qd"}).setStave(stave22).
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("b")).
       addDotToAll(),
-    newNote({ keys: ["c/5", "a/4", "e/4"], stem_direction: 1, duration: "q"}).setStave(stave22).
+    newNote({ keys: ["e/4", "a/4", "c/5"], stem_direction: 1, duration: "q"}).setStave(stave22).
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("b")),
     newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}).setStave(stave22).

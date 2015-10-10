@@ -138,13 +138,13 @@ Vex.Flow.Test.Percussion.drawBasic0 = function(options, contextBuilder) {
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "8",
       stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["c/5", "d/4/x2"], duration: "q",
+    new Vex.Flow.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "8",
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "8",
       stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["c/5", "d/4/x2"], duration: "q",
+    new Vex.Flow.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
       stem_direction: -1 })
   ];
   var beamDown1 = new Vex.Flow.Beam(notesDown.slice(0,2));
@@ -188,11 +188,11 @@ Vex.Flow.Test.Percussion.drawBasic1 = function(options, contextBuilder) {
   notesDown = [
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "q",
       stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["c/5", "d/4/x2"], duration: "q",
+    new Vex.Flow.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "q",
       stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["c/5", "d/4/x2"], duration: "q",
+    new Vex.Flow.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
       stem_direction: -1 })
   ];
   var voiceDown = new Vex.Flow.Voice({ num_beats: 4, beat_value: 4,
@@ -238,11 +238,11 @@ Vex.Flow.Test.Percussion.drawBasic2 = function(options, contextBuilder) {
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "8",
       stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["c/5", "d/4/x2"], duration: "q",
+    new Vex.Flow.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "q",
       stem_direction: -1 }),
-    new Vex.Flow.StaveNote({ keys: ["c/5", "d/4/x2"], duration: "8d",
+    new Vex.Flow.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "8d",
       stem_direction: -1 }).addDotToAll(),
     new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "16",
       stem_direction: -1 })

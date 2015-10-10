@@ -17,7 +17,7 @@ Vex.Flow.Test.GraceNote.helper = function(options, contextBuilder, ctxWidth, sta
     ctx: ctx,
     stave: stave,
     newNote: function newNote(note_struct) {
-      return new Vex.Flow.StaveNote(note_struct); 
+      return new Vex.Flow.StaveNote(note_struct);
     }
  };
 };
@@ -51,7 +51,7 @@ Vex.Flow.Test.GraceNote.basic = function(options, contextBuilder) {
   var gracenote_group3 = [
     { keys: ["e/4"], duration: "8"},
     { keys: ["f/4"], duration: "16"},
-    { keys: ["g/4", "e/4"], duration: "8"},
+    { keys: ["e/4", "g/4"], duration: "8"},
     { keys: ["a/4"], duration: "32"},
     { keys: ["b/4"], duration: "32"}
   ];
@@ -116,7 +116,7 @@ Vex.Flow.Test.GraceNote.basicSlurred = function(options, contextBuilder) {
   var gracenote_group3 = [
     { keys: ["e/4"], duration: "8"},
     { keys: ["f/4"], duration: "16"},
-    { keys: ["g/4", "e/4"], duration: "8"},
+    { keys: ["e/4", "g/4"], duration: "8"},
     { keys: ["a/4"], duration: "32"},
     { keys: ["b/4"], duration: "32"}
   ];

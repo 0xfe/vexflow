@@ -39,27 +39,27 @@ Vex.Flow.Test.Dot.basic = function(options, contextBuilder) {
     newNote({ keys: ["c/4", "e/4", "a/4", "b/4"], duration: "w"}).
       addDotToAll(),
 
-    newNote({ keys: ["c/5", "b/4", "a/4"],
+    newNote({ keys: ["a/4", "b/4", "c/5"],
         duration: "q", stem_direction: 1}).
       addDotToAll(),
 
-    newNote({ keys: ["b/4", "a/4", "g/4"],
+    newNote({ keys: ["g/4", "a/4", "b/4"],
         duration: "q", stem_direction: -1}).
       addDotToAll(),
 
-    newNote({ keys: ["c/5", "b/4", "f/4", "e/4"],
+    newNote({ keys: ["e/4", "f/4", "b/4", "c/5"],
         duration: "q"}).
       addDotToAll(),
 
-    newNote({ keys: ["g/5", "e/5", "d/5", "a/4", "g/4"],
+    newNote({ keys: ["g/4", "a/4", "d/5", "e/5", "g/5"],
         duration: "q", stem_direction: -1}).
       addDotToAll(),
 
-    newNote({ keys: ["e/5", "d/5", "b/4", "g/4"],
+    newNote({ keys: ["g/4", "b/4", "d/5", "e/5"],
         duration: "q", stem_direction: -1}).
       addDotToAll(),
 
-    newNote({ keys: ["c/5", "b/4", "g/4", "e/4"],
+    newNote({ keys: ["e/4", "g/4", "b/4", "c/5"],
         duration: "q", stem_direction: 1}).
       addDotToAll(),
 

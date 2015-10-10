@@ -56,13 +56,13 @@ Vex.Flow.Test.ThreeVoices.threevoices = function(options, contextBuilder) {
     addModifier(0, newFinger("0", Vex.Flow.Modifier.Position.LEFT));
 
   var notes1 = [
-    newNote({ keys: ["d/5", "a/4", "d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4", "a/4", "d/5"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["c/5", "a/4", "d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["c/5", "a/4", "d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["c/5", "a/4", "d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
   ];
   notes1[0].addAccidental(2, new Vex.Flow.Accidental("#")).
@@ -138,15 +138,15 @@ Vex.Flow.Test.ThreeVoices.threevoices2 = function(options, contextBuilder) {
 //    setOffsetY(-6));
 
   var notes1 = [
-    newNote({ keys: ["d/5", "d/4"], stem_direction: 1, duration: "16"}),
+    newNote({ keys: ["d/4", "d/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["b/4", "c/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
-    newNote({ keys: ["c/5", "a/4", "d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["c/5", "a/4", "d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-    newNote({ keys: ["c/5", "a/4", "d/4"], stem_direction: 1, duration: "8"}),
+    newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
     newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
   ];
   notes1[0].addAccidental(1, new Vex.Flow.Accidental("#")).
@@ -205,9 +205,9 @@ Vex.Flow.Test.ThreeVoices.threevoices3 = function(options, contextBuilder) {
   stave.draw();
 
   var notes = [
-    newNote({ keys: ["e/5", "g/4"], stem_direction: 1, duration: "q"}),
+    newNote({ keys: ["g/4", "e/5"], stem_direction: 1, duration: "q"}),
     newNote({ keys: ["e/5"], stem_direction: 1, duration: "q"}),
-    newNote({ keys: ["e/5", "g/4"], stem_direction: 1, duration: "h"}),
+    newNote({ keys: ["g/4", "e/5"], stem_direction: 1, duration: "h"}),
   ];
   notes[0].addModifier(0, newFinger("0", Vex.Flow.Modifier.Position.LEFT)).
            addModifier(1, newFinger("0", Vex.Flow.Modifier.Position.LEFT));

@@ -449,6 +449,16 @@ Vex.Flow.StaveNote = (function() {
       }
 
       // Sort the notes from lowest line to highest line
+      var sorted = true;
+      var lastLine = -1000;
+      var that = this;
+      this.keyProps.forEach(function(key) {
+        if (key.line < lastLine) {
+          Vex.W("Unsorted keys in note will be sorted. " +
+            "See https://github.com/0xfe/vexflow/issues/104 for details.");
+        }
+        lastLine = key.line;
+      });
       this.keyProps.sort(function(a, b) { return a.line - b.line; });
     },
 

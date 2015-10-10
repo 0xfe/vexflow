@@ -27,6 +27,7 @@ Vex.RuntimeError = function(code, message) {
   this.code = code;
   this.message = message;
 };
+
 Vex.RuntimeError.prototype.toString = function() {
   return "RuntimeError: " + this.message;
 };
@@ -160,6 +161,18 @@ Vex.Inherit = (function () {
     return C;
   };
 }());
+
+// Get stack trace.
+Vex.StackTrace = function() {
+  var err = new Error();
+  return err.stack;
+};
+
+// Dump warning to console.
+Vex.W = function() {
+  var line = Array.prototype.slice.call(arguments).join(" ");
+  window.console.log("Warning: ", line, Vex.StackTrace());
+};
 
 // UMD to export Vex.
 //

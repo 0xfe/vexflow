@@ -10,10 +10,10 @@ Vex.Flow.Test.Strokes.Start = function() {
   module("Strokes");
   Vex.Flow.Test.runTests("Strokes - Brush/Arpeggiate/Rasquedo",
       Vex.Flow.Test.Strokes.drawMultipleMeasures);
-  
+
   Vex.Flow.Test.runTests("Strokes - Multi Voice",
       Vex.Flow.Test.Strokes.multi);
-  
+
   Vex.Flow.Test.runTests("Strokes - Notation and Tab",
       Vex.Flow.Test.Strokes.notesWithTab);
   Vex.Flow.Test.runTests("Strokes - Multi-Voice Notation and Tab",
@@ -294,7 +294,7 @@ Vex.Flow.Test.Strokes.getTabNotes = function() {
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
   var notes1 = [
-    newNote({ keys: ["g/5", "d/5", "b/4"], stem_direction: -1, duration: "q"}).
+    newNote({ keys: ["b/4", "d/5", "g/5"], stem_direction: -1, duration: "q"}).
       addAccidental(1, newAcc("b")).
       addAccidental(0, newAcc("b")),
     newNote({ keys: ["c/5", "d/5"], stem_direction: -1, duration: "q"}),

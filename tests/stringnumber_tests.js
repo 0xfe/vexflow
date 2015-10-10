@@ -9,10 +9,10 @@ Vex.Flow.Test.StringNumber.Start = function() {
   module("StringNumber");
   Vex.Flow.Test.runTests("String Number In Notation",
       Vex.Flow.Test.StringNumber.drawMultipleMeasures);
-  
+
   Vex.Flow.Test.runTests("Fret Hand Finger In Notation",
       Vex.Flow.Test.StringNumber.drawFretHandFingers);
-  
+
   Vex.Flow.Test.runTests("Multi Voice With Strokes, String & Finger Numbers",
       Vex.Flow.Test.StringNumber.multi);
   Vex.Flow.Test.runTests("Complex Measure With String & Finger Numbers",
@@ -243,7 +243,7 @@ Vex.Flow.Test.StringNumber.multi = function(options, contextBuilder) {
 
   var notes = [
     newNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" }),
-    newNote({ keys: ["e/4", "a/3", "g/4"], duration: "q" }),
+    newNote({ keys: ["a/3", "e/4", "g/4"], duration: "q" }),
     newNote({ keys: ["c/4", "d/4", "a/4"], duration: "q" }),
     newNote({ keys: ["c/4", "d/4", "a/4"], duration: "q" })
   ];

@@ -874,7 +874,7 @@ Vex.Flow.Test.Beam.complexWithAnnotation = function(options, contextBuilder) {
     { keys: ["e/4"], duration: "128" , stem_direction: 1},
     { keys: ["d/4"], duration: "16"  , stem_direction: 1},
     { keys: ["e/4"], duration: "8"   , stem_direction: 1},
-    { keys: ["g/4", "c/4"], duration: "32"  , stem_direction: 1},
+    { keys: ["c/4", "g/4"], duration: "32"  , stem_direction: 1},
     { keys: ["c/4"], duration: "32"  , stem_direction: 1 },
     { keys: ["c/4"], duration: "32"  , stem_direction: 1},
     { keys: ["c/4"], duration: "32"  , stem_direction: 1}
@@ -884,7 +884,7 @@ Vex.Flow.Test.Beam.complexWithAnnotation = function(options, contextBuilder) {
     { keys: ["e/5"], duration: "128" , stem_direction: -1},
     { keys: ["d/5"], duration: "16"  , stem_direction: -1},
     { keys: ["e/5"], duration: "8"   , stem_direction: -1},
-    { keys: ["g/5", "c/5"], duration: "32"  , stem_direction: -1},
+    { keys: ["c/5", "g/5"], duration: "32"  , stem_direction: -1},
     { keys: ["c/5"], duration: "32"  , stem_direction: -1 },
     { keys: ["c/5"], duration: "32"  , stem_direction: -1},
     { keys: ["c/5"], duration: "32"  , stem_direction: -1}
@@ -906,12 +906,10 @@ Vex.Flow.Test.Beam.complexWithAnnotation = function(options, contextBuilder) {
   voice.addTickables(notes);
   voice.addTickables(notes2);
 
-
   new Vex.Flow.Formatter().joinVoices([voice]).formatToStave([voice], stave, {stave: stave});
   voice.draw(ctx);
   beam.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
-
 
   ok(true, "Complex beam annotations");
 }
@@ -929,7 +927,7 @@ Vex.Flow.Test.Beam.complexWithArticulation = function(options, contextBuilder) {
     { keys: ["e/4"], duration: "128" , stem_direction: 1},
     { keys: ["d/4"], duration: "16"  , stem_direction: 1},
     { keys: ["e/4"], duration: "8"   , stem_direction: 1},
-    { keys: ["g/4", "c/4"], duration: "32"  , stem_direction: 1},
+    { keys: ["c/4", "g/4"], duration: "32"  , stem_direction: 1},
     { keys: ["c/4"], duration: "32"  , stem_direction: 1 },
     { keys: ["c/4"], duration: "32"  , stem_direction: 1},
     { keys: ["c/4"], duration: "32"  , stem_direction: 1}
@@ -939,7 +937,7 @@ Vex.Flow.Test.Beam.complexWithArticulation = function(options, contextBuilder) {
     { keys: ["e/5"], duration: "128" , stem_direction: -1},
     { keys: ["d/5"], duration: "16"  , stem_direction: -1},
     { keys: ["e/5"], duration: "8"   , stem_direction: -1},
-    { keys: ["g/5", "c/5"], duration: "32"  , stem_direction: -1},
+    { keys: ["c/5", "g/5"], duration: "32"  , stem_direction: -1},
     { keys: ["c/5"], duration: "32"  , stem_direction: -1 },
     { keys: ["c/5"], duration: "32"  , stem_direction: -1},
     { keys: ["c/5"], duration: "32"  , stem_direction: -1}
@@ -961,12 +959,10 @@ Vex.Flow.Test.Beam.complexWithArticulation = function(options, contextBuilder) {
   voice.addTickables(notes);
   voice.addTickables(notes2);
 
-
   new Vex.Flow.Formatter().joinVoices([voice]).formatToStave([voice], stave, {stave: stave});
   voice.draw(ctx);
   beam.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
-
 
   ok(true, "Complex beam articulations");
 }
