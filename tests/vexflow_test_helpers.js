@@ -84,44 +84,7 @@ Vex.Flow.Test.runSVGTest = function(name, func, params) {
     });
 }
 
-Vex.Flow.Test.plotNoteWidth = function(ctx, note, yPos) {
-  var metrics = note.getMetrics();
-  var w = metrics.width;
-  var xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
-  var xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
-  var xAbs = note.getAbsoluteX();
-  var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
-  var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
-  var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
-
-  var xWidth = xEnd - xStart;
-  ctx.save();
-  ctx.setFont("Arial", 8, "");
-  ctx.fillText(Math.round(xWidth) + "px", xStart + note.getXShift(), yPos / 1.5);
-
-  var y = (yPos + 10) / 1.5;
-  function stroke(x1, x2, color) {
-    ctx.beginPath();
-    ctx.setStrokeStyle(color)
-    ctx.setFillStyle(color)
-    ctx.setLineWidth(3);
-    ctx.moveTo(x1 + note.getXShift(), y);
-    ctx.lineTo(x2 + note.getXShift(), y);
-    ctx.stroke();
-  }
-
-  stroke(xStart, xPre1, "red");
-  stroke(xPre1, xAbs, "#999");
-  stroke(xAbs, xPost1, "green");
-  stroke(xPost1, xPost2, "#999");
-  stroke(xPost2, xEnd, "red");
-
-  stroke(xStart - note.getXShift(), xStart, "#DDD"); // Shift
-
-  Vex.drawDot(ctx, xAbs + note.getXShift(), y, "blue");
-
-  ctx.restore();
-}
+Vex.Flow.Test.plotNoteWidth = Vex.Flow.Note.plotMetrics;
 
 Vex.Flow.Test.plotLegendForNoteWidth = function(ctx, x, y) {
   ctx.save();

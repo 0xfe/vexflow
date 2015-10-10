@@ -81,13 +81,13 @@ Vex.Flow.Stave = (function() {
     getTieStartX: function() { return this.start_x; },
     getTieEndX: function() { return this.x + this.width; },
     setContext: function(context) {
-      this.context = context; 
+      this.context = context;
 	for(var i=0; i<this.glyphs.length; i++){
           if(typeof(this.glyphs[i].setContext) === "function"){
 	    this.glyphs[i].setContext(context);
           }
 	}
-      return this; 
+      return this;
     },
     getContext: function() { return this.context; },
     getX: function() { return this.x; },
@@ -107,10 +107,10 @@ Vex.Flow.Stave = (function() {
       this.start_x += shift;
       this.end_x += shift;
       for(var i=0; i<this.modifiers.length; i++) {
-	var mod = this.modifiers[i];
+      	var mod = this.modifiers[i];
         if (mod.x !== undefined) {
           mod.x += shift;
-	}
+      	}
       }
       return this;
     },

@@ -38,7 +38,7 @@ Vex.Flow.Test.Accidental.showNote = function(note, stave, ctx, x) {
   note.setContext(ctx).setStave(stave);
   note.draw();
 
-  Vex.Flow.Test.plotNoteWidth(ctx, note, 210);
+  Vex.Flow.Test.plotNoteWidth(ctx, note, 140);
   return note;
 }
 
@@ -222,8 +222,8 @@ Vex.Flow.Test.Accidental.showNotes = function(note1, note2, stave, ctx, x) {
   note1.setContext(ctx).setStave(stave).draw();
   note2.setContext(ctx).setStave(stave).draw();
 
-  Vex.Flow.Test.plotNoteWidth(ctx, note1, 280);
-  Vex.Flow.Test.plotNoteWidth(ctx, note2, 20);
+  Vex.Flow.Test.plotNoteWidth(ctx, note1, 180);
+  Vex.Flow.Test.plotNoteWidth(ctx, note2, 15);
 }
 
 Vex.Flow.Test.Accidental.multiVoice = function(options, contextBuilder) {

@@ -643,9 +643,6 @@ Vex.Flow.Test.Beam.outlier = function(options, contextBuilder) {
   ok(true, "Outlier Test");
 }
 
-
-
-
 Vex.Flow.Test.Beam.tabBeamsUp = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 600, 200);
 
@@ -690,11 +687,9 @@ Vex.Flow.Test.Beam.tabBeamsUp = function(options, contextBuilder) {
   voice.draw(ctx, stave);
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
-
   tuplet.setContext(ctx).draw();
 
   ok (true, 'All objects have been drawn');
-
 };
 
 Vex.Flow.Test.Beam.tabBeamsDown = function(options, contextBuilder) {

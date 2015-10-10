@@ -122,11 +122,11 @@ Vex.Flow.Test.Formatter.formatStaveNotes = function(options, contextBuilder) {
   Vex.Flow.Test.Formatter.renderNotes(notes1, notes2, ctx, stave);
 
   notes1.forEach(function(note) {
-    Vex.Flow.Test.plotNoteWidth(ctx, note, 250);
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 180);
   });
 
   notes2.forEach(function(note) {
-    Vex.Flow.Test.plotNoteWidth(ctx, note, 20);
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 15);
   });
 
   Vex.Flow.Test.plotLegendForNoteWidth(ctx, 300, 180);
@@ -165,7 +165,7 @@ Vex.Flow.Test.Formatter.getNotes = function() {
 
 
 Vex.Flow.Test.Formatter.justifyStaveNotes = function(options, contextBuilder) {
-  var ctx = new contextBuilder(options.canvas_sel, 420, 870);
+  var ctx = new contextBuilder(options.canvas_sel, 420, 580);
 ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
 
   // Get test voices.
@@ -174,22 +174,22 @@ ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
   var stave = new Vex.Flow.Stave(10, 30, 400).addTrebleGlyph().
     setContext(ctx).draw();
   Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave);
-  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 250);});
-  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 20);});
+  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 170);});
+  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 15);});
   ok(true);
 
   var stave2 = new Vex.Flow.Stave(10, 220, 400).addTrebleGlyph().
     setContext(ctx).draw();
   Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave2, 300);
   ok(true);
-  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 540);});
-  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 300);});
+  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 350);});
+  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 200);});
 
   var stave3 = new Vex.Flow.Stave(10, 410, 400).addTrebleGlyph().
     setContext(ctx).draw();
   Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave3, 400);
-  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 820);});
-  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 590);});
+  notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 550);});
+  notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 390);});
 
   ok(true);
 }

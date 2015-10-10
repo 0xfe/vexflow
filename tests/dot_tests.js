@@ -21,7 +21,7 @@ Vex.Flow.Test.Dot.showNote = function(note, stave, ctx, x) {
   note.setContext(ctx).setStave(stave);
   note.draw();
 
-  Vex.Flow.Test.plotNoteWidth(ctx, note, 210);
+  Vex.Flow.Test.plotNoteWidth(ctx, note, 140);
   return note;
 }
 
@@ -105,7 +105,7 @@ Vex.Flow.Test.Dot.showNotes = function(note1, note2, stave, ctx, x) {
   note1.setContext(ctx).setStave(stave).draw();
   note2.setContext(ctx).setStave(stave).draw();
 
-  Vex.Flow.Test.plotNoteWidth(ctx, note1, 300);
+  Vex.Flow.Test.plotNoteWidth(ctx, note1, 180);
   Vex.Flow.Test.plotNoteWidth(ctx, note2, 20);
 }
 

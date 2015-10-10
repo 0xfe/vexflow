@@ -24,6 +24,44 @@ Vex.Flow.Note = (function() {
   }
   Note.CATEGORY = "note";
 
+  // Debug helper. Displays various note metrics for the given
+  // note.
+  Note.plotMetrics = function(ctx, note, yPos) {
+    var metrics = note.getMetrics();
+    var w = metrics.width;
+    var xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
+    var xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
+    var xAbs = note.getAbsoluteX();
+    var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
+    var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
+    var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
+
+    var xWidth = xEnd - xStart;
+    ctx.save();
+    ctx.setFont("Arial", 8, "");
+    ctx.fillText(Math.round(xWidth) + "px", xStart + note.getXShift(), yPos);
+
+    var y = (yPos + 7);
+    function stroke(x1, x2, color) {
+      ctx.beginPath();
+      ctx.setStrokeStyle(color);
+      ctx.setFillStyle(color);
+      ctx.setLineWidth(3);
+      ctx.moveTo(x1 + note.getXShift(), y);
+      ctx.lineTo(x2 + note.getXShift(), y);
+      ctx.stroke();
+    }
+
+    stroke(xStart, xPre1, "red");
+    stroke(xPre1, xAbs, "#999");
+    stroke(xAbs, xPost1, "green");
+    stroke(xPost1, xPost2, "#999");
+    stroke(xPost2, xEnd, "red");
+    stroke(xStart - note.getXShift(), xStart, "#DDD"); // Shift
+    Vex.drawDot(ctx, xAbs + note.getXShift(), y, "blue");
+    ctx.restore();
+  };
+
   // ## Prototype Methods
   //
   // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
@@ -270,15 +308,9 @@ Vex.Flow.Note = (function() {
         (this.modifierContext ?  this.modifierContext.getWidth() : 0);
     },
 
-    // Displace note by `x` pixels.
-    setXShift: function(x) {
-      this.x_shift = x;
-      return this;
-    },
-
-    getXShift: function() {
-      return this.x_shift;
-    },
+    // Displace note by `x` pixels. Used by the formatter.
+    setXShift: function(x) { this.x_shift = x; return this; },
+    getXShift: function() { return this.x_shift; },
 
     // Get `X` position of this tick context.
     getX: function() {
@@ -287,8 +319,8 @@ Vex.Flow.Note = (function() {
       return this.tickContext.getX() + this.x_shift;
     },
 
-    // Get the absolute `X` position of this note's tick context, relative to
-    // the stave. This excludes x_shift, so you'll need to factor it in if you're
+    // Get the absolute `X` position of this note's tick context. This
+    // excludes x_shift, so you'll need to factor it in if you're
     // looking for the post-formatted x-position.
     getAbsoluteX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",

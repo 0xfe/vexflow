@@ -42,7 +42,7 @@ Vex.Flow.Test.Bend.doubleBends = function(options, contextBuilder) {
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
   notes.forEach(function(note) {
-    Vex.Flow.Test.plotNoteWidth(ctx, note, 220);
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 140);
   });
 
   ok(true, "Double Bends");
@@ -81,7 +81,7 @@ Vex.Flow.Test.Bend.doubleBendsWithRelease = function(options, contextBuilder) {
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
   notes.forEach(function(note) {
-    Vex.Flow.Test.plotNoteWidth(ctx, note, 220);
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 140);
   });
   ok(true, "Bend Release");
 }
@@ -121,7 +121,7 @@ Vex.Flow.Test.Bend.reverseBends = function(options, contextBuilder) {
     tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
 
     note.setStave(stave).setContext(ctx).draw();
-    Vex.Flow.Test.plotNoteWidth(ctx, note, 220);
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 140);
     ok(true, "Bend " + i);
   }
 }
@@ -159,7 +159,7 @@ Vex.Flow.Test.Bend.bendPhrase = function(options, contextBuilder) {
     tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
 
     note.setStave(stave).setContext(ctx).draw();
-    Vex.Flow.Test.plotNoteWidth(ctx, note, 220);
+    Vex.Flow.Test.plotNoteWidth(ctx, note, 140);
     ok(true, "Bend " + i);
   }
 }
@@ -200,6 +200,6 @@ Vex.Flow.Test.Bend.whackoBends = function(options, contextBuilder) {
   ];
 
   Vex.Flow.Formatter.FormatAndDraw(ctx, stave, notes);
-  Vex.Flow.Test.plotNoteWidth(ctx, notes[0], 220);
+  Vex.Flow.Test.plotNoteWidth(ctx, notes[0], 140);
   ok(true, "Whako Release");
 }
