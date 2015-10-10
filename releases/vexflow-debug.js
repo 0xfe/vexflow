@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.30 built on 2015-10-09.
+ * VexFlow 1.2.31 built on 2015-10-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -33,6 +33,7 @@ Vex.RuntimeError = function(code, message) {
   this.code = code;
   this.message = message;
 };
+
 Vex.RuntimeError.prototype.toString = function() {
   return "RuntimeError: " + this.message;
 };
@@ -166,6 +167,18 @@ Vex.Inherit = (function () {
     return C;
   };
 }());
+
+// Get stack trace.
+Vex.StackTrace = function() {
+  var err = new Error();
+  return err.stack;
+};
+
+// Dump warning to console.
+Vex.W = function() {
+  var line = Array.prototype.slice.call(arguments).join(" ");
+  window.console.log("Warning: ", line, Vex.StackTrace());
+};
 
 // UMD to export Vex.
 //
@@ -1980,13 +1993,13 @@ Vex.Flow.Stave = (function() {
     getTieStartX: function() { return this.start_x; },
     getTieEndX: function() { return this.x + this.width; },
     setContext: function(context) {
-      this.context = context; 
+      this.context = context;
 	for(var i=0; i<this.glyphs.length; i++){
           if(typeof(this.glyphs[i].setContext) === "function"){
 	    this.glyphs[i].setContext(context);
           }
 	}
-      return this; 
+      return this;
     },
     getContext: function() { return this.context; },
     getX: function() { return this.x; },
@@ -2006,10 +2019,10 @@ Vex.Flow.Stave = (function() {
       this.start_x += shift;
       this.end_x += shift;
       for(var i=0; i<this.modifiers.length; i++) {
-	var mod = this.modifiers[i];
+      	var mod = this.modifiers[i];
         if (mod.x !== undefined) {
           mod.x += shift;
-	}
+      	}
       }
       return this;
     },
@@ -3004,6 +3017,44 @@ Vex.Flow.Note = (function() {
   }
   Note.CATEGORY = "note";
 
+  // Debug helper. Displays various note metrics for the given
+  // note.
+  Note.plotMetrics = function(ctx, note, yPos) {
+    var metrics = note.getMetrics();
+    var w = metrics.width;
+    var xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
+    var xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
+    var xAbs = note.getAbsoluteX();
+    var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
+    var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
+    var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
+
+    var xWidth = xEnd - xStart;
+    ctx.save();
+    ctx.setFont("Arial", 8, "");
+    ctx.fillText(Math.round(xWidth) + "px", xStart + note.getXShift(), yPos);
+
+    var y = (yPos + 7);
+    function stroke(x1, x2, color) {
+      ctx.beginPath();
+      ctx.setStrokeStyle(color);
+      ctx.setFillStyle(color);
+      ctx.setLineWidth(3);
+      ctx.moveTo(x1 + note.getXShift(), y);
+      ctx.lineTo(x2 + note.getXShift(), y);
+      ctx.stroke();
+    }
+
+    stroke(xStart, xPre1, "red");
+    stroke(xPre1, xAbs, "#999");
+    stroke(xAbs, xPost1, "green");
+    stroke(xPost1, xPost2, "#999");
+    stroke(xPost2, xEnd, "red");
+    stroke(xStart - note.getXShift(), xStart, "#DDD"); // Shift
+    Vex.drawDot(ctx, xAbs + note.getXShift(), y, "blue");
+    ctx.restore();
+  };
+
   // ## Prototype Methods
   //
   // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
@@ -3250,15 +3301,9 @@ Vex.Flow.Note = (function() {
         (this.modifierContext ?  this.modifierContext.getWidth() : 0);
     },
 
-    // Displace note by `x` pixels.
-    setXShift: function(x) {
-      this.x_shift = x;
-      return this;
-    },
-
-    getXShift: function() {
-      return this.x_shift;
-    },
+    // Displace note by `x` pixels. Used by the formatter.
+    setXShift: function(x) { this.x_shift = x; return this; },
+    getXShift: function() { return this.x_shift; },
 
     // Get `X` position of this tick context.
     getX: function() {
@@ -3267,8 +3312,8 @@ Vex.Flow.Note = (function() {
       return this.tickContext.getX() + this.x_shift;
     },
 
-    // Get the absolute `X` position of this note's tick context, relative to
-    // the stave. This excludes x_shift, so you'll need to factor it in if you're
+    // Get the absolute `X` position of this note's tick context. This
+    // excludes x_shift, so you'll need to factor it in if you're
     // looking for the post-formatted x-position.
     getAbsoluteX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
@@ -4378,6 +4423,16 @@ Vex.Flow.StaveNote = (function() {
       }
 
       // Sort the notes from lowest line to highest line
+      var sorted = true;
+      var lastLine = -1000;
+      var that = this;
+      this.keyProps.forEach(function(key) {
+        if (key.line < lastLine) {
+          Vex.W("Unsorted keys in note will be sorted. " +
+            "See https://github.com/0xfe/vexflow/issues/104 for details.");
+        }
+        lastLine = key.line;
+      });
       this.keyProps.sort(function(a, b) { return a.line - b.line; });
     },
 
