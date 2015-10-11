@@ -153,18 +153,20 @@ Vex.Flow.Articulation = (function() {
         shiftY = this.articulation.shift_up;
         glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
 
-        if (this.articulation.between_lines)
+        if (this.articulation.between_lines) {
           glyph_y = glyph_y_between_lines;
-        else
+        } else {
           glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
+        }
       } else {
         shiftY = this.articulation.shift_down - 10;
 
         glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
-        if (this.articulation.between_lines)
+        if (this.articulation.between_lines) {
           glyph_y = glyph_y_between_lines;
-        else
+        } else {
           glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
+        }
       }
 
       var glyph_x = start.x + this.articulation.shift_right;
