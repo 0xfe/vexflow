@@ -164,11 +164,11 @@ Vex.Flow.StemmableNote = (function(){
         var stem_top = this.ys[i] + (stem_height * -this.stem_direction);
 
         if (this.stem_direction == Stem.DOWN) {
-          top_pixel = (top_pixel > stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel < this.ys[i]) ? base_pixel : this.ys[i];
+          top_pixel = Math.max(top_pixel, stem_top);
+          base_pixel = Math.min(base_pixel, this.ys[i]);
         } else {
-          top_pixel = (top_pixel < stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel > this.ys[i]) ? base_pixel : this.ys[i];
+          top_pixel = Math.min(top_pixel, stem_top);
+          base_pixel = Math.max(base_pixel, this.ys[i]);
         }
 
         if(this.noteType == "s" || this.noteType == 'x') {

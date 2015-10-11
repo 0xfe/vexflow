@@ -226,8 +226,8 @@ Vex.Flow.NoteHead = (function() {
           ctx.fillRect(
             head_x - this.render_options.stroke_px, line_y,
             (this.getGlyph().head_width) +
-            (this.render_options.stroke_px * 2), 1);    
-        }        
+            (this.render_options.stroke_px * 2), 1);
+        }
       }
 
       if (this.note_type == "s") {

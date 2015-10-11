@@ -82,7 +82,25 @@ Vex.Flow.Stem = (function() {
     // Get the y coordinates for the very base of the stem to the top of
     // the extension
     getExtents: function() {
-      throw new Vex.RERR("BrokenImplementation", "prefer note.getStemExtents() instead.");
+      var ys = [this.y_top, this.y_bottom];
+
+      var top_pixel = this.y_top;
+      var base_pixel = this.y_bottom;
+      var stem_height = Stem.HEIGHT + this.stem_extension;
+
+      for (var i = 0; i < ys.length; ++i) {
+        var stem_top = ys[i] + (stem_height * -this.stem_direction);
+
+        if (this.stem_direction == Stem.DOWN) {
+          top_pixel = Math.max(top_pixel, stem_top);
+          base_pixel = Math.min(base_pixel, ys[i]);
+        } else {
+          top_pixel = Math.min(top_pixel, stem_top);
+          base_pixel = Math.max(base_pixel, ys[i]);
+        }
+      }
+
+      return { topY: top_pixel, baseY: base_pixel };
     },
 
     // set the draw style of a stem:

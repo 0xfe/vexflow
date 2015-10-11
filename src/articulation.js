@@ -114,7 +114,7 @@ Vex.Flow.Articulation = (function() {
       var line_spacing = 1;
       var spacing = stave.getSpacingBetweenLines();
       var is_tabnote = this.note.getCategory() === 'tabnotes';
-      var stem_ext = this.note.getStemExtents();
+      var stem_ext = this.note.getStem().getExtents();
 
       var top = stem_ext.topY;
       var bottom = stem_ext.baseY;

@@ -895,7 +895,7 @@ Vex.Flow.Test.Beam.complexWithAnnotation = function(options, contextBuilder) {
   });
 
   notes2 = notes2.map(function(note, index) {
-      return newNote(note).addModifier(0, new Vex.Flow.Annotation("1").setVerticalJustification(3));
+      return newNote(note).addModifier(0, new Vex.Flow.Annotation("3").setVerticalJustification(3));
   });
 
   var beam = new Vex.Flow.Beam(notes);
