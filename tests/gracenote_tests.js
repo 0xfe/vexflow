@@ -204,13 +204,21 @@ Vex.Flow.Test.GraceNote.multipleVoices = function(options, contextBuilder) {
     { keys: ["e/4"], duration: "32", stem_direction: -1}
   ];
 
+  var gracenote_group3 = [
+    { keys: ["f/5"], duration: "32", stem_direction: 1},
+    { keys: ["e/5"], duration: "32", stem_direction: 1},
+    { keys: ["e/5"], duration: "8", stem_direction: 1}
+  ];
+
   var gracenotes1 = gracenote_group0.map(createNote);
   var gracenotes2 = gracenote_group1.map(createNote);
   var gracenotes3 = gracenote_group2.map(createNote);
+  var gracenotes4 = gracenote_group3.map(createNote);
 
   gracenotes2[0].setStemDirection(-1);
   gracenotes2[0].addAccidental(0, new Vex.Flow.Accidental('#'));
 
+  notes[1].addModifier(0, new Vex.Flow.GraceNoteGroup(gracenotes4).beamNotes());
   notes[3].addModifier(0, new Vex.Flow.GraceNoteGroup(gracenotes1));
   notes2[1].addModifier(0, new Vex.Flow.GraceNoteGroup(gracenotes2).beamNotes());
   notes2[5].addModifier(0, new Vex.Flow.GraceNoteGroup(gracenotes3).beamNotes());
