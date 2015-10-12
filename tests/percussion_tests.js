@@ -118,7 +118,7 @@ Vex.Flow.Test.Percussion.drawBasic0 = function(options, contextBuilder) {
   stave.setContext(ctx);
   stave.draw();
 
-  notesUp = [
+  var notesUp = [
     new Vex.Flow.StaveNote({ keys: ["g/5/x2"], duration: "8" }),
     new Vex.Flow.StaveNote({ keys: ["g/5/x2"], duration: "8" }),
     new Vex.Flow.StaveNote({ keys: ["g/5/x2"], duration: "8" }),
@@ -133,7 +133,7 @@ Vex.Flow.Test.Percussion.drawBasic0 = function(options, contextBuilder) {
     resolution: Vex.Flow.RESOLUTION });
   voiceUp.addTickables(notesUp);
 
-  notesDown = [
+  var notesDown = [
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "8",
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "8",
@@ -175,7 +175,7 @@ Vex.Flow.Test.Percussion.drawBasic1 = function(options, contextBuilder) {
   stave.setContext(ctx);
   stave.draw();
 
-  notesUp = [
+  var notesUp = [
     new Vex.Flow.StaveNote({ keys: ["f/5/x2"], duration: "q" }),
     new Vex.Flow.StaveNote({ keys: ["f/5/x2"], duration: "q" }),
     new Vex.Flow.StaveNote({ keys: ["f/5/x2"], duration: "q" }),
@@ -185,7 +185,7 @@ Vex.Flow.Test.Percussion.drawBasic1 = function(options, contextBuilder) {
     resolution: Vex.Flow.RESOLUTION });
   voiceUp.addTickables(notesUp);
 
-  notesDown = [
+  var notesDown = [
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "q",
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
@@ -217,7 +217,7 @@ Vex.Flow.Test.Percussion.drawBasic2 = function(options, contextBuilder) {
   stave.setContext(ctx);
   stave.draw();
 
-  notesUp = [
+  var notesUp = [
     new Vex.Flow.StaveNote({ keys: ["a/5/x3"], duration: "8" }).
       addModifier(0, (new Vex.Flow.Annotation("<")).setFont()),
     new Vex.Flow.StaveNote({ keys: ["g/5/x2"], duration: "8" }),
@@ -233,7 +233,7 @@ Vex.Flow.Test.Percussion.drawBasic2 = function(options, contextBuilder) {
     resolution: Vex.Flow.RESOLUTION });
   voiceUp.addTickables(notesUp);
 
-  notesDown = [
+  var notesDown = [
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "8",
       stem_direction: -1 }),
     new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "8",
@@ -271,9 +271,9 @@ Vex.Flow.Test.Percussion.drawSnare0 = function(options, contextBuilder) {
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
     ctx.setFont("Arial", 15, "");
 
-  x = 10;
-  y = 10;
-  w = 280;
+  var x = 10;
+  var y = 10;
+  var w = 280;
 
   {
     var stave = new Vex.Flow.Stave(x, y, w);
@@ -283,7 +283,7 @@ Vex.Flow.Test.Percussion.drawSnare0 = function(options, contextBuilder) {
     stave.setContext(ctx);
     stave.draw();
 
-    notesDown = [
+    var notesDown = [
       new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q",
         stem_direction: -1 }).
         addArticulation(0, Vex.Flow.Test.Percussion.newArticulation("a>")).
@@ -317,7 +317,7 @@ Vex.Flow.Test.Percussion.drawSnare0 = function(options, contextBuilder) {
     stave.setContext(ctx);
     stave.draw();
 
-    notesDown = [
+    var notesDown = [
       new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q",
         stem_direction: -1 }).
         addArticulation(0, Vex.Flow.Test.Percussion.newArticulation("a>")).
@@ -352,9 +352,9 @@ Vex.Flow.Test.Percussion.drawSnare1 = function(options, contextBuilder) {
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
     ctx.setFont("Arial", 15, "");
 
-  x = 10;
-  y = 10;
-  w = 280;
+  var x = 10;
+  var y = 10;
+  var w = 280;
 
   {
     var stave = new Vex.Flow.Stave(x, y, w);
@@ -364,7 +364,7 @@ Vex.Flow.Test.Percussion.drawSnare1 = function(options, contextBuilder) {
     stave.setContext(ctx);
     stave.draw();
 
-    notesDown = [
+    var notesDown = [
       new Vex.Flow.StaveNote({ keys: ["g/5/x2"], duration: "q",
         stem_direction: -1 }).
         addArticulation(0, Vex.Flow.Test.Percussion.newArticulation("ah")),
@@ -397,9 +397,9 @@ Vex.Flow.Test.Percussion.drawSnare2 = function(options, contextBuilder) {
   ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
     ctx.setFont("Arial", 15, "");
 
-  x = 10;
-  y = 10;
-  w = 280;
+  var x = 10;
+  var y = 10;
+  var w = 280;
 
   {
     var stave = new Vex.Flow.Stave(x, y, w);
@@ -409,7 +409,7 @@ Vex.Flow.Test.Percussion.drawSnare2 = function(options, contextBuilder) {
     stave.setContext(ctx);
     stave.draw();
 
-    notesDown = [
+    var notesDown = [
       new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q",
         stem_direction: -1 }).
         addArticulation(0, Vex.Flow.Test.Percussion.newTremolo(0)),

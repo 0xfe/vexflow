@@ -4,8 +4,8 @@
 # Pushes only JavaScript, tests, and supporting HTML (tutorial, playground)
 
 TARGET='/home/mohit/www/vexflow'
-SSH_TO="mohit@my.vexflow.com source ~/.bash_profile; cd $TARGET;"
-SCP_TO="mohit@my.vexflow.com:$TARGET"
+SSH_TO="mohit@vexflow.com source ~/.bash_profile; cd $TARGET;"
+SCP_TO="mohit@vexflow.com:$TARGET"
 
 echo Building...
 grunt clean; grunt

@@ -475,7 +475,7 @@ Vex.Flow.Test.ThreeVoices.autorestthreevoices = function(options, contextBuilder
 
   // Set option to position rests near the notes in each voice
   Vex.Debug = true;
-  formatter2 = new Vex.Flow.Formatter().
+  var formatter2 = new Vex.Flow.Formatter().
     joinVoices([voice, voice1, voice2, voice3]).
     format([voice, voice1, voice2, voice3], 350, {align_rests: true});
 
@@ -586,7 +586,7 @@ Vex.Flow.Test.ThreeVoices.autorestthreevoices2 = function(options, contextBuilde
 
   // Set option to position rests near the notes in each voice
   Vex.Debug = true;
-  formatter2 = new Vex.Flow.Formatter().
+  var formatter2 = new Vex.Flow.Formatter().
     joinVoices([voice, voice1, voice2, voice3]).
     format([voice, voice1, voice2, voice3], 400, {align_rests: true});
 

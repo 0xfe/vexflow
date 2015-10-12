@@ -135,7 +135,7 @@
     type="text/css" media="screen" />
   <script src="support/jquery.js"></script>
   <script src="support/qunit.js"></script>
-  <script src="support/raphael.js"></script> 
+  <script src="support/raphael.js"></script>
   <script src="vexflow_test_helpers.js"></script>
 
   <script src="mocks.js"></script>
@@ -187,6 +187,9 @@
 
   <script>
     $(function() {
+      // Show only failed tests.
+      QUnit.config.hidepassed = true;
+      QUnit.config.noglobals = true;
 
       Vex.Flow.Test.Stave.Start();
       Vex.Flow.Test.TabStave.Start();
@@ -241,10 +244,8 @@
 
 <body>
   <div style="text-align: center;">
-    <h1 id="qunit-header">VexFlow Tests</h1>
-    <h2 id="qunit-banner"></h2>
-    <h2 id="qunit-userAgent"></h2>
-    <ol id="qunit-tests"></ol>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
 
     <div id="vexflow_testoutput"></div>
 

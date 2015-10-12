@@ -6,7 +6,7 @@
 Vex.Flow.Test.Accidental = {}
 
 Vex.Flow.Test.Accidental.Start = function() {
-  module("Accidental");
+  QUnit.module("Accidental");
   Vex.Flow.Test.runTests("Basic", Vex.Flow.Test.Accidental.basic);
   Vex.Flow.Test.runTests("Stem Down", Vex.Flow.Test.Accidental.basicStemDown);
   Vex.Flow.Test.runTests("Accidental Arrangement Special Cases", Vex.Flow.Test.Accidental.specialCases);

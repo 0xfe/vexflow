@@ -214,7 +214,7 @@ Vex.Flow.Test.Annotation.justificationStemUp = function(options, contextBuilder)
     var stave = new Vex.Flow.Stave(10, (v-1) * 150 + 40, 400).
       addClef("treble").setContext(ctx).draw();
 
-    notes = [];
+    var notes = [];
 
     notes.push(newNote({ keys: ["c/3"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 1, v)));
     notes.push(newNote({ keys: ["c/4"], duration: "q"}).addAnnotation(0, newAnnotation("Text", 2, v)));
@@ -243,7 +243,7 @@ Vex.Flow.Test.Annotation.justificationStemDown = function(options, contextBuilde
     var stave = new Vex.Flow.Stave(10, (v-1) * 150 + 40, 400).
       addClef("treble").setContext(ctx).draw();
 
-    notes = [];
+    var notes = [];
 
     notes.push(newNote({ keys: ["c/3"], duration: "q", stem_direction: -1}).addAnnotation(0, newAnnotation("Text", 1, v)));
     notes.push(newNote({ keys: ["c/4"], duration: "q", stem_direction: -1}).addAnnotation(0, newAnnotation("Text", 2, v)));

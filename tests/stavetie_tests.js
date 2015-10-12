@@ -93,7 +93,7 @@ Vex.Flow.Test.StaveTie.noEndNote = function(options, contextBuilder) {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
-  notes = [
+  var notes = [
     newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),
@@ -127,7 +127,7 @@ Vex.Flow.Test.StaveTie.noStartNote = function(options, contextBuilder) {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
-  notes = [
+  var notes = [
     newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),

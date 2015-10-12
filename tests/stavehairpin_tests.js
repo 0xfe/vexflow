@@ -14,7 +14,7 @@ Vex.Flow.Test.StaveHairpin.Start = function() {
   Vex.Flow.Test.runTests("Height StaveHairpin", Vex.Flow.Test.StaveHairpin.height);
 }
 
-Vex.Flow.Test.StaveHairpin.drawHairpin = function(notes, stave, ctx, type, position, options) {  
+Vex.Flow.Test.StaveHairpin.drawHairpin = function(notes, stave, ctx, type, position, options) {
   var hp = new Vex.Flow.StaveHairpin(notes, type);
 
   hp.setContext(ctx);
@@ -45,7 +45,7 @@ Vex.Flow.Test.StaveHairpin.simple = function(options, contextBuilder) {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
-  notes = [
+  var notes = [
     newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),
@@ -54,7 +54,7 @@ Vex.Flow.Test.StaveHairpin.simple = function(options, contextBuilder) {
     newNote({ keys: ["f/4"], stem_direction: 1, duration: "q"})
   ]
 
-  render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
+  var render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[0], last_note:notes[2]}, render[0], render[1], 1, 4);
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[1], last_note:notes[3]}, render[0], render[1], 2, 3);
 
@@ -66,7 +66,7 @@ Vex.Flow.Test.StaveHairpin.ho = function(options, contextBuilder) {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
-  notes = [
+  var notes = [
     newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),
@@ -75,8 +75,8 @@ Vex.Flow.Test.StaveHairpin.ho = function(options, contextBuilder) {
     newNote({ keys: ["f/4"], stem_direction: 1, duration: "q"})
   ]
 
-  render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
-  render_options = {
+  var render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
+  var render_options = {
       height: 10,
       vo: 20, //vertical offset
       left_ho: 20, //left horizontal offset
@@ -84,12 +84,12 @@ Vex.Flow.Test.StaveHairpin.ho = function(options, contextBuilder) {
     };
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[0], last_note:notes[2]}, render[0], render[1], 1, 3, render_options);
 
-  render_options = {
+  var render_options = {
       height: 10,
       y_shift: 0, //vertical offset
       left_shift_px: 0, //left horizontal offset
       right_shift_px: 120 // right horizontal offset
-    }; 
+    };
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[3], last_note:notes[3]}, render[0], render[1], 2, 4, render_options);
 
   ok(true, "Horizontal Offset Test");
@@ -100,7 +100,7 @@ Vex.Flow.Test.StaveHairpin.vo = function(options, contextBuilder) {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
-  notes = [
+  var notes = [
     newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),
@@ -109,8 +109,8 @@ Vex.Flow.Test.StaveHairpin.vo = function(options, contextBuilder) {
     newNote({ keys: ["f/4"], stem_direction: 1, duration: "q"})
   ]
 
-  render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
-  render_options = {
+  var render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
+  var render_options = {
       height: 10,
       y_shift: 0, //vertical offset
       left_shift_px: 0, //left horizontal offset
@@ -118,7 +118,7 @@ Vex.Flow.Test.StaveHairpin.vo = function(options, contextBuilder) {
     };
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[0], last_note:notes[2]}, render[0], render[1], 1, 4, render_options);
 
-  render_options = {
+  var render_options = {
       height: 10,
       y_shift: -15, //vertical offset
       left_shift_px: 2, //left horizontal offset
@@ -135,7 +135,7 @@ Vex.Flow.Test.StaveHairpin.height = function(options, contextBuilder) {
   function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
   function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
-  notes = [
+  var notes = [
     newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: 1, duration: "q"}).
       addAccidental(0, newAcc("b")).
       addAccidental(1, newAcc("#")),
@@ -144,8 +144,8 @@ Vex.Flow.Test.StaveHairpin.height = function(options, contextBuilder) {
     newNote({ keys: ["f/4"], stem_direction: 1, duration: "q"})
   ]
 
-  render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
-  render_options = {
+  var render = Vex.Flow.Test.StaveHairpin.hairpinNotes(notes, options);
+  var render_options = {
       height: 10,
       y_shift: 0, //vertical offset
       left_shift_px: 0, //left horizontal offset
@@ -153,7 +153,7 @@ Vex.Flow.Test.StaveHairpin.height = function(options, contextBuilder) {
     };
   Vex.Flow.Test.StaveHairpin.drawHairpin({first_note:notes[0], last_note:notes[2]}, render[0], render[1], 1, 4, render_options);
 
-  render_options = {
+  var render_options = {
       height: 15,
       y_shift: 0, //vertical offset
       left_shift_px: 2, //left horizontal offset
