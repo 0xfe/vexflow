@@ -44,8 +44,10 @@ Vex.Flow.Test.Accidental.showNote = function(note, stave, ctx, x) {
 
 Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
   var ctx = new contextBuilder(options.canvas_sel, 700, 240);
-  ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   var stave = new Vex.Flow.Stave(10, 10, 550);
+  var assert = options.assert;
+
+  ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
   stave.setContext(ctx);
   stave.draw();
 
@@ -89,15 +91,15 @@ Vex.Flow.Test.Accidental.basic = function(options, contextBuilder) {
   for (var i = 0; i < notes.length; ++i) {
     Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 125));
     var accidentals = notes[i].getAccidentals();
-    ok(accidentals.length > 0, "Note " + i + " has accidentals");
+    assert.ok(accidentals.length > 0, "Note " + i + " has accidentals");
 
     for (var j = 0; j < accidentals.length; ++j) {
-      ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
+      assert.ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
     }
   }
 
   Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
-  ok(true, "Full Accidental");
+  assert.ok(true, "Full Accidental");
 }
 
 Vex.Flow.Test.Accidental.specialCases = function(options, contextBuilder) {

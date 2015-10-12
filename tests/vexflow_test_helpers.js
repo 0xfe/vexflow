@@ -58,28 +58,37 @@ Vex.Flow.Test.runTests = function(name, func, params) {
 }
 
 Vex.Flow.Test.runCanvasTest = function(name, func, params) {
-  QUnit.test(name, function() {
+  QUnit.test(name, function(assert) {
       var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
       var test_canvas = Vex.Flow.Test.createTestCanvas(test_canvas_sel, name + " (Canvas)");
-      func({ canvas_sel: test_canvas_sel, params: params },
+      func({
+        canvas_sel: test_canvas_sel,
+        params: params,
+        assert: assert },
         Vex.Flow.Renderer.getCanvasContext);
     });
 }
 
 Vex.Flow.Test.runRaphaelTest = function(name, func, params) {
-  QUnit.test(name, function() {
+  QUnit.test(name, function(assert) {
       var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
       var test_canvas = Vex.Flow.Test.createTestSVGorRaphael(test_canvas_sel, name + " (Raphael)");
-      func({ canvas_sel: test_canvas_sel, params: params },
+      func({
+        canvas_sel: test_canvas_sel,
+        params: params,
+        assert: assert },
         Vex.Flow.Renderer.getRaphaelContext);
     });
 }
 
 Vex.Flow.Test.runSVGTest = function(name, func, params) {
-  QUnit.test(name, function() {
+  QUnit.test(name, function(assert) {
       var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
       var test_canvas = Vex.Flow.Test.createTestSVGorRaphael(test_canvas_sel, name + " (SVG)");
-      func({ canvas_sel: test_canvas_sel, params: params },
+      func({
+        canvas_sel: test_canvas_sel,
+        params: params,
+        assert: assert },
         Vex.Flow.Renderer.getSVGContext);
     });
 }
