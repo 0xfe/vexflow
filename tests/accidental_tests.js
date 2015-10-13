@@ -339,6 +339,9 @@ Vex.Flow.Test.Accidental.automaticAccidentals0 = function(options, contextBuilde
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 200);
 
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
   var notes = [
     newNote({ keys: ["c/4", "c/5"], duration: "4"}),
     newNote({ keys: ["c#/4", "c#/5"], duration: "4"}),
@@ -371,6 +374,9 @@ Vex.Flow.Test.Accidental.automaticAccidentals1 = function(options, contextBuilde
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
 
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
   c.context.clear();
   c.stave.addKeySignature("Ab");
   c.stave.draw();
@@ -402,6 +408,9 @@ Vex.Flow.Test.Accidental.automaticAccidentals2 = function(options, contextBuilde
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
 
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
   c.context.clear();
   c.stave.addKeySignature("A");
   c.stave.draw();
@@ -432,6 +441,10 @@ Vex.Flow.Test.Accidental.automaticAccidentals2 = function(options, contextBuilde
 Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline = function(options, contextBuilder) {
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
 
   c.context.clear();
   c.stave.addKeySignature("Ab");
@@ -499,6 +512,9 @@ Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset = function(options
   options.contextBuilder = contextBuilder;
   var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
 
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
   c.context.clear();
   c.stave.addKeySignature("Cb");
   c.stave.draw();
@@ -563,6 +579,9 @@ Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset = function(options
 };
 
 Vex.Flow.Test.Accidental.autoAccidentalWorking = function(options, contextBuilder) {
+  function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
+  function newAcc(type) { return new Vex.Flow.Accidental(type); }
+
   var notes = [
     newNote({ keys: ["bb/4"], duration: "4"}),
     newNote({ keys: ["bb/4"], duration: "4"}),
@@ -649,5 +668,6 @@ Vex.Flow.Test.Accidental.autoAccidentalWorking = function(options, contextBuilde
   equal(hasAccidental(notes[8]), false, "Double sharp rememberd");
   equal(hasAccidental(notes[9]), true, "Added natural");
   equal(hasAccidental(notes[10]), false, "Natural remembered");
-
 };
+
+module.exports = Vex.Flow.Test.Accidental;

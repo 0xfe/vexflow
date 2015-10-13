@@ -1,7 +1,7 @@
 Vex.Flow.Test.AutoBeamFormatting = {};
 
 Vex.Flow.Test.AutoBeamFormatting.Start = function() {
-  module('Auto-Beaming');
+  QUnit.module('Auto-Beaming');
   Vex.Flow.Test.runTests("Simple Auto Beaming",
                         Vex.Flow.Test.AutoBeamFormatting.simpleAuto);
   Vex.Flow.Test.runTests("Even Group Stem Directions",
@@ -1337,3 +1337,5 @@ Vex.Flow.Test.AutoBeamFormatting.flatBeamsDownBounds = function(options, context
   });
   ok(true, "Flat Beams Down (uniform) Test");
 }
+
+module.exports = Vex.Flow.Test.AutoBeamFormatting;

@@ -9,6 +9,7 @@ Vex.Flow.Test = {}
 Vex.Flow.Test.RUN_CANVAS_TESTS = true;
 Vex.Flow.Test.RUN_SVG_TESTS = true;
 Vex.Flow.Test.RUN_RAPHAEL_TESTS = false;
+Vex.Flow.Test.RUN_NODE_TESTS = false;
 
 Vex.Flow.Test.Font = {size: 10}
 
@@ -49,19 +50,16 @@ Vex.Flow.Test.resizeCanvas = function(sel, width, height) {
 }
 
 Vex.Flow.Test.runTests = function(name, func, params) {
-  if (!Vex.Flow.Test.isNodeJS) {
-    // Inside a browser or qunit.
-    if (Vex.Flow.Test.RUN_CANVAS_TESTS) {
-      Vex.Flow.Test.runCanvasTest(name, func, params);
-    }
-    if (Vex.Flow.Test.RUN_SVG_TESTS) {
-      Vex.Flow.Test.runSVGTest(name, func, params);
-    }
-    if (Vex.Flow.Test.RUN_RAPHAEL_TESTS) {
-      Vex.Flow.Test.runRaphaelTest(name, func, params);
-    }
-  } else {
-    // Probably inside nodejs
+  if (Vex.Flow.Test.RUN_CANVAS_TESTS) {
+    Vex.Flow.Test.runCanvasTest(name, func, params);
+  }
+  if (Vex.Flow.Test.RUN_SVG_TESTS) {
+    Vex.Flow.Test.runSVGTest(name, func, params);
+  }
+  if (Vex.Flow.Test.RUN_RAPHAEL_TESTS) {
+    Vex.Flow.Test.runRaphaelTest(name, func, params);
+  }
+  if (Vex.Flow.Test.RUN_NODE_TESTS) {
     Vex.Flow.Test.runNodeTest(name, func, params);
   }
 }
