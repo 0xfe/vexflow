@@ -535,6 +535,12 @@ Vex.Flow.SVGContext = (function() {
             height: bbox.height
           };
         }
+        if (SVGContext.validateMeasurements) {
+          if (!(index in SVGContext.measureTextCache)) {
+            Vex.W("measureTextCache is stale. Please update tests/measure_text_cache.js: ",
+                  text, this.attributes);
+          }
+        }
         return bbox;
       } else {
         // Inside NodeJS

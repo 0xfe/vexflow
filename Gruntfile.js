@@ -84,7 +84,9 @@ module.exports = function(grunt) {
                   "src/textbracket.js",
                   "src/textdynamics.js", "src/*.js", "!src/header.js", "!src/container.js"];
 
-  var TEST_SOURCES = ["tests/vexflow_test_helpers.js", "tests/mocks.js", "tests/*_tests.js", "tests/run.js"];
+  var TEST_SOURCES = [
+    "tests/vexflow_test_helpers.js", "tests/mocks.js",
+    "tests/measure_text_cache.js", "tests/*_tests.js", "tests/run.js"];
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),

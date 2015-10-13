@@ -5,8 +5,10 @@
  $ npm install jsdom
  $ npm install xmldom
 
- $ mkdir images
- $ node genimages.js
+ $ mkdir -p build/images
+ $ node tests/genimages.js
+ $ cd build/images
+ $ for f in *.svg; do echo $f; convert $f `basename $f .svg`.png; done
 */
 
 var jsdom = require("jsdom").jsdom;
@@ -50,11 +52,6 @@ VF.Test.RUN_SVG_TESTS = false;
 VF.Test.RUN_RAPHAEL_TESTS = false;
 VF.Test.RUN_NODE_TESTS = true;
 VF.Test.NODE_IMAGEDIR = path.resolve(__dirname, '..', 'build', 'images');
-
-// Load the measureText cache to compensate for the lack of
-// SVG.getBBox() in jsdom.
-measureTextCacheString = require("./measure_text_cache.js").measureTextCacheString;
-VF.SVGContext.measureTextCache = JSON.parse(measureTextCacheString);
 
 // Run all tests.
 VF.Test.run();

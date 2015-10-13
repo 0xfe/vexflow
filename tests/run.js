@@ -1,4 +1,7 @@
 VF.Test.run = function () {
+  // Setup the measureTextCache with pre-collected data.
+  VF.SVGContext.measureTextCache = VF.Test.measureTextCache;
+
   VF.Test.Stave.Start();
   VF.Test.TabStave.Start();
   VF.Test.Voice.Start();
