@@ -115,16 +115,21 @@ VF.Test = (function() {
           assert: assert },
           VF.Renderer.getSVGContext);
 
-        var svgData = new xmldom.XMLSerializer().serializeToString(VF.Renderer.lastContext.svg);
+        if (VF.Renderer.lastContext != null) {
+          // If an SVG context was used, then serialize and save its contents to
+          // a local file.
+          var svgData = new xmldom.XMLSerializer().serializeToString(VF.Renderer.lastContext.svg);
 
-        var moduleName = QUnit.current_module.replace(/[^a-zA-Z0-9]/g, "_");
-        var testName = QUnit.current_test.replace(/[^a-zA-Z0-9]/g, "_");
-        var filename = VF.Test.NODE_IMAGEDIR + "/" + moduleName + "." + testName + ".svg";
-        fs.writeFile(filename, svgData, function(err) {
-          if (err) {
-            return console.log("Can't save file: " + filename + ". Error: " + err);
-          }
-        });
+          var moduleName = QUnit.current_module.replace(/[^a-zA-Z0-9]/g, "_");
+          var testName = QUnit.current_test.replace(/[^a-zA-Z0-9]/g, "_");
+          var filename = VF.Test.NODE_IMAGEDIR + "/" + moduleName + "." + testName + ".svg";
+          fs.writeFile(filename, svgData, function(err) {
+            if (err) {
+              return console.log("Can't save file: " + filename + ". Error: " + err);
+            }
+          });
+          VF.Renderer.lastContext = null;
+        }
       });
     },
 
