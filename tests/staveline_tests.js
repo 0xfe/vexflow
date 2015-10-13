@@ -2,7 +2,6 @@
  * VexFlow - StaveLine Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
 VF.Test.StaveLine = (function() {
   var StaveLine = {
     Start: function() {
