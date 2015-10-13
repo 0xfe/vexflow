@@ -3,238 +3,25 @@
 
 <head>
   <title>VexFlow Tests</title>
-  <style type="text/css">
-    body {
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      color: black;
-      margin: 0px;
-      height: 80%;
-    }
-
-    a.button {
-      color: green;
-      background: #bfb;
-      text-decoration: none;
-      padding: 5px;
-      margin: 2px;
-      border: 5px solid #aea;
-    }
-
-    div#error {
-      width: 60%;
-      padding: 10px;
-      color: red;
-      background: #faa;
-      border: 15px solid #d99;
-    }
-
-    div.testcanvas {
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-      color: #554;
-    }
-
-    div.testcanvas .vex-tabdiv {
-      background: white;
-    }
-
-    div.testcanvas .name {
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-      color: #447;
-    }
-
-    p.vf-footer {
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-    }
-
-  </style>
-
+  <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
   <!-- VexFlow Sources -->
-  <script src="../src/header.js"></script>
-  <script src="../src/vex.js"></script>
-  <script src="../src/flow.js"></script>
-  <script src="../src/fraction.js"></script>
-  <script src="../src/fonts/vexflow_font.js"></script>
-  <script src="../src/glyph.js"></script>
-  <script src="../src/tables.js"></script>
-  <script src="../src/stave.js"></script>
-  <script src="../src/staveconnector.js"></script>
-  <script src="../src/tabstave.js"></script>
-  <script src="../src/voice.js"></script>
-  <script src="../src/voicegroup.js"></script>
-  <script src="../src/modifier.js"></script>
-  <script src="../src/modifiercontext.js"></script>
-  <script src="../src/accidental.js"></script>
-  <script src="../src/dot.js"></script>
-  <script src="../src/tickcontext.js"></script>
-  <script src="../src/tickable.js"></script>
-  <script src="../src/note.js"></script>
-  <script src="../src/bend.js"></script>
-  <script src="../src/stem.js"></script>
-  <script src="../src/notehead.js"></script>
-  <script src="../src/stemmablenote.js"></script>
-  <script src="../src/stavenote.js"></script>
-  <script src="../src/tabnote.js"></script>
-  <script src="../src/barnote.js"></script>
-  <script src="../src/clefnote.js"></script>
-  <script src="../src/timesignote.js"></script>
-  <script src="../src/ghostnote.js"></script>
-  <script src="../src/formatter.js"></script>
-  <script src="../src/stavetie.js"></script>
-  <script src="../src/stavehairpin.js"></script>
-  <script src="../src/tabtie.js"></script>
-  <script src="../src/tabslide.js"></script>
-  <script src="../src/beam.js"></script>
-  <script src="../src/vibrato.js"></script>
-  <script src="../src/annotation.js"></script>
-  <script src="../src/tuning.js"></script>
-  <script src="../src/stavemodifier.js"></script>
-  <script src="../src/keysignature.js"></script>
-  <script src="../src/timesignature.js"></script>
-  <script src="../src/clef.js"></script>
-  <script src="../src/music.js"></script>
-  <script src="../src/keymanager.js"></script>
-  <script src="../src/renderer.js"></script>
-  <script src="../src/stavebarline.js"></script>
-  <script src="../src/stavevolta.js"></script>
-  <script src="../src/staverepetition.js"></script>
-  <script src="../src/stavesection.js"></script>
-  <script src="../src/stavetempo.js"></script>
-  <script src="../src/stavetext.js"></script>
-  <script src="../src/articulation.js"></script>
-  <script src="../src/tremolo.js"></script>
-  <script src="../src/raphaelcontext.js"></script>
-  <script src="../src/canvascontext.js"></script>
-  <script src="../src/tuplet.js"></script>
-  <script src="../src/boundingbox.js"></script>
-  <script src="../src/textnote.js"></script>
-  <script src="../src/strokes.js"></script>
-  <script src="../src/stringnumber.js"></script>
-  <script src="../src/svgcontext.js"></script>
-  <script src="../src/frethandfinger.js"></script>
-  <script src="../src/gracenote.js"></script>
-  <script src="../src/gracenotegroup.js"></script>
-  <script src="../src/curve.js"></script>
-  <script src="../src/staveline.js"></script>
-  <script src="../src/crescendo.js"></script>
-  <script src="../src/ornament.js"></script>
-  <script src="../src/pedalmarking.js"></script>
-  <script src="../src/textbracket.js"></script>
-  <script src="../src/textdynamics.js"></script>
+  <script src="../build/vexflow-debug.js"></script>
 
-  <!-- Compiled Source -->
-  <script src="../support/vexflow-min.js"></script>
-
-  <!-- Test Sources -->
+  <!-- Test Dependencies: jQuery, QUnit -->
   <link rel="stylesheet" href="support/qunit.css"
     type="text/css" media="screen" />
   <script src="support/jquery.js"></script>
   <script src="support/qunit.js"></script>
-  <script src="support/raphael.js"></script>
-  <script src="vexflow_test_helpers.js"></script>
 
-  <script src="mocks.js"></script>
-  <script src="stave_tests.js"></script>
-  <script src="tabstave_tests.js"></script>
-  <script src="voice_tests.js"></script>
-  <script src="stavenote_tests.js"></script>
-  <script src="tabnote_tests.js"></script>
-  <script src="tickcontext_tests.js"></script>
-  <script src="modifier_tests.js"></script>
-  <script src="accidental_tests.js"></script>
-  <script src="dot_tests.js"></script>
-  <script src="bend_tests.js"></script>
-  <script src="formatter_tests.js"></script>
-  <script src="stavetie_tests.js"></script>
-  <script src="tabtie_tests.js"></script>
-  <script src="tabslide_tests.js"></script>
-  <script src="beam_tests.js"></script>
-  <script src="auto_beam_formatting_tests.js"></script>
-  <script src="vibrato_tests.js"></script>
-  <script src="annotation_tests.js"></script>
-  <script src="tuning_tests.js"></script>
-  <script src="keysignature_tests.js"></script>
-  <script src="timesignature_tests.js"></script>
-  <script src="clef_tests.js"></script>
-  <script src="music_tests.js"></script>
-  <script src="keymanager_tests.js"></script>
-  <script src="articulation_tests.js"></script>
-  <script src="staveconnector_tests.js"></script>
-  <script src="percussion_tests.js"></script>
-  <script src="key_clef_tests.js"></script>
-  <script src="stavehairpin_tests.js"></script>
-  <script src="rhythm_tests.js"></script>
-  <script src="tuplet_tests.js"></script>
-  <script src="boundingbox_tests.js"></script>
-  <script src="textnote_tests.js"></script>
-  <script src="strokes_tests.js"></script>
-  <script src="stringnumber_tests.js"></script>
-  <script src="rests_tests.js"></script>
-  <script src="threevoice_tests.js"></script>
-  <script src="gracenote_tests.js"></script>
-  <script src="curve_tests.js"></script>
-  <script src="notehead_tests.js"></script>
-  <script src="staveline_tests.js"></script>
-  <script src="ornament_tests.js"></script>
-  <script src="pedalmarking_tests.js"></script>
-  <script src="textbracket_tests.js"></script>
-  <script src="stavemodifier_tests.js"></script>
+  <!-- VexFlow Tests -->
+  <script src="../build/vexflow-tests.js"></script>
 
   <script>
     $(function() {
       // Show only failed tests.
       QUnit.config.hidepassed = true;
       QUnit.config.noglobals = true;
-
-      Vex.Flow.Test.Stave.Start();
-      Vex.Flow.Test.TabStave.Start();
-      Vex.Flow.Test.Voice.Start();
-      Vex.Flow.Test.NoteHead.Start();
-      Vex.Flow.Test.StaveNote.Start();
-      Vex.Flow.Test.TabNote.Start();
-      Vex.Flow.Test.TickContext.Start();
-      Vex.Flow.Test.ModifierContext.Start();
-      Vex.Flow.Test.Accidental.Start();
-      Vex.Flow.Test.Dot.Start();
-      Vex.Flow.Test.Bend.Start();
-      Vex.Flow.Test.Formatter.Start();
-      Vex.Flow.Test.Clef.Start();
-      Vex.Flow.Test.KeySignature.Start();
-      Vex.Flow.Test.TimeSignature.Start();
-      Vex.Flow.Test.StaveTie.Start();
-      Vex.Flow.Test.TabTie.Start();
-      Vex.Flow.Test.TabSlide.Start();
-      Vex.Flow.Test.Beam.Start();
-      Vex.Flow.Test.AutoBeamFormatting.Start();
-      Vex.Flow.Test.GraceNote.Start();
-      Vex.Flow.Test.Vibrato.Start();
-      Vex.Flow.Test.Annotation.Start();
-      Vex.Flow.Test.Tuning.Start();
-      Vex.Flow.Test.Music.Start();
-      Vex.Flow.Test.KeyManager.Start();
-      Vex.Flow.Test.Articulation.Start();
-      Vex.Flow.Test.StaveConnector.Start();
-      Vex.Flow.Test.Percussion.Start();
-      Vex.Flow.Test.ClefKeySignature.Start();
-      Vex.Flow.Test.StaveHairpin.Start();
-      Vex.Flow.Test.Rhythm.Start();
-      Vex.Flow.Test.Tuplet.Start();
-      Vex.Flow.Test.BoundingBox.Start();
-      Vex.Flow.Test.Strokes.Start();
-      Vex.Flow.Test.StringNumber.Start();
-      Vex.Flow.Test.Rests.Start();
-      Vex.Flow.Test.ThreeVoices.Start();
-      Vex.Flow.Test.Curve.Start();
-      Vex.Flow.Test.TextNote.Start();
-      Vex.Flow.Test.StaveLine.Start();
-      Vex.Flow.Test.Ornament.Start();
-      Vex.Flow.Test.PedalMarking.Start();
-      Vex.Flow.Test.TextBracket.Start();
-      Vex.Flow.Test.StaveModifier.Start();
+      VF.Test.run();
     });
   </script>
 </head>
@@ -254,5 +41,4 @@
     </p>
   </div>
 </body>
-
 </html>

@@ -39,8 +39,8 @@ expect = QUnit.assertions.expect;
 
 // Load VexFlow
 Vex = require('../build/vexflow-debug.js')
-VF = Vex.Flow;
-VF.Test = require("./vexflow_test_helpers.js")
+Vex.Flow.Test = require("../build/vexflow-tests.js")
+var VF = Vex.Flow;
 
 // Tell VexFlow that we're outside the browser -- just run
 // the Node tests.
@@ -54,23 +54,5 @@ VF.Test.RUN_NODE_TESTS = true;
 measureTextCacheString = require("./measure_text_cache.js").measureTextCacheString;
 VF.SVGContext.measureTextCache = JSON.parse(measureTextCacheString);
 
-// Load and run tests.
-VF.Test.Annotation = require("./annotation_tests.js");
-VF.Test.AutoBeamFormatting = require("./auto_beam_formatting_tests.js");
-VF.Test.Accidental = require("./accidental_tests.js");
-VF.Test.Articulation = require("./articulation_tests.js");
-VF.Test.Beam = require("./beam_tests.js");
-VF.Test.Bend = require("./bend_tests.js");
-VF.Test.Clef = require("./clef_tests.js");
-VF.Test.Curve = require("./curve_tests.js");
-VF.Test.Dot = require("./dot_tests.js");
-VF.Test.GraceNote = require("./gracenote_tests.js");
-VF.Test.Annotation.Start();
-VF.Test.Accidental.Start();
-VF.Test.AutoBeamFormatting.Start();
-VF.Test.Articulation.Start();
-VF.Test.Beam.Start();
-VF.Test.Bend.Start();
-VF.Test.Clef.Start();
-VF.Test.Dot.Start();
-VF.Test.GraceNote.Start();
+// Run all tests.
+VF.Test.run();
