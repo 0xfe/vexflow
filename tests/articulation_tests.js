@@ -1,7 +1,6 @@
 /**
- * VexFlow - Basic Tests
+ * VexFlow - Articulation Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- *
  */
 
 var VF = Vex.Flow;
