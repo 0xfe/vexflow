@@ -3,8 +3,6 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-var VF = Vex.Flow;
-
 VF.Test.Annotation = (function() {
   var runTests = VF.Test.runTests;
   var Annotation = {

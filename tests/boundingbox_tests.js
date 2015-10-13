@@ -3,7 +3,6 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-var VF = Vex.Flow;
 VF.Test.BoundingBox = (function() {
   var BoundingBox = {
     Start: function() {

@@ -39,35 +39,38 @@ expect = QUnit.assertions.expect;
 
 // Load VexFlow
 Vex = require('../build/vexflow-debug.js')
-Vex.Flow.Test = require("./vexflow_test_helpers.js")
+VF = Vex.Flow;
+VF.Test = require("./vexflow_test_helpers.js")
 
 // Tell VexFlow that we're outside the browser -- just run
 // the Node tests.
-Vex.Flow.Test.RUN_CANVAS_TESTS = false;
-Vex.Flow.Test.RUN_SVG_TESTS = false;
-Vex.Flow.Test.RUN_RAPHAEL_TESTS = false;
-Vex.Flow.Test.RUN_NODE_TESTS = true;
+VF.Test.RUN_CANVAS_TESTS = false;
+VF.Test.RUN_SVG_TESTS = false;
+VF.Test.RUN_RAPHAEL_TESTS = false;
+VF.Test.RUN_NODE_TESTS = true;
 
 // Load the measureText cache to compensate for the lack of
 // SVG.getBBox() in jsdom.
 measureTextCacheString = require("./measure_text_cache.js").measureTextCacheString;
-Vex.Flow.SVGContext.measureTextCache = JSON.parse(measureTextCacheString);
+VF.SVGContext.measureTextCache = JSON.parse(measureTextCacheString);
 
 // Load and run tests.
-Vex.Flow.Test.Annotation = require("./annotation_tests.js");
-Vex.Flow.Test.AutoBeamFormatting = require("./auto_beam_formatting_tests.js");
-Vex.Flow.Test.Accidental = require("./accidental_tests.js");
-Vex.Flow.Test.Articulation = require("./articulation_tests.js");
-Vex.Flow.Test.Beam = require("./beam_tests.js");
-Vex.Flow.Test.Bend = require("./bend_tests.js");
-Vex.Flow.Test.Clef = require("./clef_tests.js");
-Vex.Flow.Test.Curve = require("./curve_tests.js");
-Vex.Flow.Test.Dot = require("./dot_tests.js");
-Vex.Flow.Test.Annotation.Start();
-Vex.Flow.Test.Accidental.Start();
-Vex.Flow.Test.AutoBeamFormatting.Start();
-Vex.Flow.Test.Articulation.Start();
-Vex.Flow.Test.Beam.Start();
-Vex.Flow.Test.Bend.Start();
-Vex.Flow.Test.Clef.Start();
-Vex.Flow.Test.Dot.Start();
+VF.Test.Annotation = require("./annotation_tests.js");
+VF.Test.AutoBeamFormatting = require("./auto_beam_formatting_tests.js");
+VF.Test.Accidental = require("./accidental_tests.js");
+VF.Test.Articulation = require("./articulation_tests.js");
+VF.Test.Beam = require("./beam_tests.js");
+VF.Test.Bend = require("./bend_tests.js");
+VF.Test.Clef = require("./clef_tests.js");
+VF.Test.Curve = require("./curve_tests.js");
+VF.Test.Dot = require("./dot_tests.js");
+VF.Test.GraceNote = require("./gracenote_tests.js");
+VF.Test.Annotation.Start();
+VF.Test.Accidental.Start();
+VF.Test.AutoBeamFormatting.Start();
+VF.Test.Articulation.Start();
+VF.Test.Beam.Start();
+VF.Test.Bend.Start();
+VF.Test.Clef.Start();
+VF.Test.Dot.Start();
+VF.Test.GraceNote.Start();
