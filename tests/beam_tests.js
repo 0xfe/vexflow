@@ -6,7 +6,7 @@
 Vex.Flow.Test.Beam = {}
 
 Vex.Flow.Test.Beam.Start = function() {
-  module("Beam");
+  QUnit.module("Beam");
   Vex.Flow.Test.runTests("Simple Beam", Vex.Flow.Test.Beam.simple);
   Vex.Flow.Test.runTests("Multi Beam", Vex.Flow.Test.Beam.multi);
   Vex.Flow.Test.runTests("Sixteenth Beam", Vex.Flow.Test.Beam.sixteenth);
@@ -966,3 +966,5 @@ Vex.Flow.Test.Beam.complexWithArticulation = function(options, contextBuilder) {
 
   ok(true, "Complex beam articulations");
 }
+
+module.exports = Vex.Flow.Test.Beam;

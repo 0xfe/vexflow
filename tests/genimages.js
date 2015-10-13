@@ -54,11 +54,13 @@ measureTextCacheString = require("./measure_text_cache.js").measureTextCacheStri
 Vex.Flow.SVGContext.measureTextCache = JSON.parse(measureTextCacheString);
 
 // Load and run tests.
-Vex.Flow.Test.Annotation = require("./annotation_tests.js")
-Vex.Flow.Test.AutoBeamFormatting = require("./auto_beam_formatting_tests.js")
-Vex.Flow.Test.Accidental = require("./accidental_tests.js")
-Vex.Flow.Test.Articulation = require("./articulation_tests.js")
-Vex.Flow.Test.Annotation.Start()
-Vex.Flow.Test.Accidental.Start()
-Vex.Flow.Test.AutoBeamFormatting.Start()
-Vex.Flow.Test.Articulation.Start()
+Vex.Flow.Test.Annotation = require("./annotation_tests.js");
+Vex.Flow.Test.AutoBeamFormatting = require("./auto_beam_formatting_tests.js");
+Vex.Flow.Test.Accidental = require("./accidental_tests.js");
+Vex.Flow.Test.Articulation = require("./articulation_tests.js");
+Vex.Flow.Test.Beam = require("./beam_tests.js");
+Vex.Flow.Test.Annotation.Start();
+Vex.Flow.Test.Accidental.Start();
+Vex.Flow.Test.AutoBeamFormatting.Start();
+Vex.Flow.Test.Articulation.Start();
+Vex.Flow.Test.Beam.Start();
