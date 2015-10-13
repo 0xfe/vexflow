@@ -252,5 +252,3 @@ VF.Test.GraceNote = (function() {
 
   return GraceNote;
 })();
-
-module.exports = VF.Test.GraceNote;

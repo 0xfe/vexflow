@@ -207,5 +207,3 @@ VF.Test.Bend = (function() {
 
   return Bend;
 })();
-
-module.exports = VF.Test.Bend;

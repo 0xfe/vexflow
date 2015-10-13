@@ -303,5 +303,3 @@ VF.Test.Music = (function() {
 
   return Music;
 })();
-
-module.exports = VF.Test.Music;

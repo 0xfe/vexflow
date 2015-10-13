@@ -317,5 +317,3 @@ VF.Test.Annotation = (function() {
 
   return Annotation;
 })();
-
-module.exports = VF.Test.Annotation;

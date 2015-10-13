@@ -177,5 +177,3 @@ VF.Test = (function() {
 
   return Test;
 })();
-
-module.exports = VF.Test;

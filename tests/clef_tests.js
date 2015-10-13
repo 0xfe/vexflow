@@ -172,5 +172,3 @@ VF.Test.Clef = (function() {
 
   return Clef;
 })();
-
-module.exports = VF.Test.Clef;

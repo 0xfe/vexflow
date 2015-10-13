@@ -98,6 +98,3 @@ VF.Test.NoteHead = (function() {
 
   return NoteHead;
 })();
-
-module.exports = VF.Test.NoteHead;
-

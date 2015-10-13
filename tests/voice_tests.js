@@ -100,5 +100,3 @@ VF.Test.Voice = (function() {
 
   return Voice;
 })();
-
-module.exports = VF.Test.Voice;

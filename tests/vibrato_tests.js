@@ -10,7 +10,7 @@ Vex.Flow.Test.Vibrato.Start = function() {
   Vex.Flow.Test.runTests("Simple Vibrato", Vex.Flow.Test.Vibrato.simple);
   Vex.Flow.Test.runTests("Harsh Vibrato", Vex.Flow.Test.Vibrato.harsh);
   Vex.Flow.Test.runTests("Vibrato with Bend", Vex.Flow.Test.Vibrato.withBend);
-  
+
 }
 
 Vex.Flow.Test.Vibrato.simple = function(options, contextBuilder) {

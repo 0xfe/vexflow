@@ -41,5 +41,3 @@ VF.Test.StaveModifier = (function() {
 
   return StaveModifier;
 })();
-
-module.exports = VF.Test.StaveModifier;

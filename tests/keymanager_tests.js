@@ -82,5 +82,3 @@ VF.Test.KeyManager = (function() {
 
   return KeyManager;
 })();
-
-module.exports = VF.Test.KeyManager;

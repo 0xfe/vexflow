@@ -169,5 +169,3 @@ VF.Test.StaveHairpin = (function() {
 
   return StaveHairpin;
 })();
-
-module.exports = VF.Test.StaveHairpin;

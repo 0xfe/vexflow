@@ -364,5 +364,3 @@ VF.Test.PedalMarking = (function() {
 
   return PedalMarking;
 })();
-
-module.exports = VF.Test.PedalMarking;

@@ -342,5 +342,3 @@ VF.Test.Articulation = (function() {
 
   return Articulation;
 })();
-
-module.exports = VF.Test.Articulation;

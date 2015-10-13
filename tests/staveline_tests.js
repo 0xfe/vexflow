@@ -177,5 +177,3 @@ VF.Test.StaveLine = (function() {
 
   return StaveLine;
 })();
-
-module.exports = VF.Test.StaveLine;

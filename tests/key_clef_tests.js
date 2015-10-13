@@ -177,5 +177,3 @@ VF.Test.ClefKeySignature = (function() {
 
   return ClefKeySignature;
 })();
-
-module.exports = VF.Test.ClefKeySignature;

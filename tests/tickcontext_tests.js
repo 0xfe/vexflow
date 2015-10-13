@@ -50,6 +50,3 @@ VF.Test.TickContext = (function() {
 
   return TickContext;
 })();
-
-module.exports = VF.Test.TickContext;
-
