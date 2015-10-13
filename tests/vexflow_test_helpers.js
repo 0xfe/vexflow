@@ -15,7 +15,10 @@ Vex.Flow.Test.Font = {size: 10}
 Vex.Flow.Test.genID = function() {
   return Vex.Flow.Test.genID.ID++;
 }
+
 Vex.Flow.Test.genID.ID = 0;
+Vex.Flow.Test.isNodeJS = false;
+Vex.Flow.Test.imageDir = "images";
 
 Vex.Flow.setupCanvasArray = function () { return ""; }
 
@@ -46,14 +49,20 @@ Vex.Flow.Test.resizeCanvas = function(sel, width, height) {
 }
 
 Vex.Flow.Test.runTests = function(name, func, params) {
-  if(Vex.Flow.Test.RUN_CANVAS_TESTS) {
-    Vex.Flow.Test.runCanvasTest(name, func, params);
-  }
-  if(Vex.Flow.Test.RUN_SVG_TESTS) {
-    Vex.Flow.Test.runSVGTest(name, func, params);
-  }
-  if(Vex.Flow.Test.RUN_RAPHAEL_TESTS) {
-    Vex.Flow.Test.runRaphaelTest(name, func, params);
+  if (!Vex.Flow.Test.isNodeJS) {
+    // Inside a browser or qunit.
+    if (Vex.Flow.Test.RUN_CANVAS_TESTS) {
+      Vex.Flow.Test.runCanvasTest(name, func, params);
+    }
+    if (Vex.Flow.Test.RUN_SVG_TESTS) {
+      Vex.Flow.Test.runSVGTest(name, func, params);
+    }
+    if (Vex.Flow.Test.RUN_RAPHAEL_TESTS) {
+      Vex.Flow.Test.runRaphaelTest(name, func, params);
+    }
+  } else {
+    // Probably inside nodejs
+    Vex.Flow.Test.runNodeTest(name, func, params);
   }
 }
 
@@ -93,6 +102,37 @@ Vex.Flow.Test.runSVGTest = function(name, func, params) {
     });
 }
 
+Vex.Flow.Test.runNodeTest = function(name, func, params) {
+  var jsdom = require("jsdom").jsdom;
+  var xmldom = require("xmldom");
+  var fs = require('fs');
+
+  window = jsdom().defaultView;
+  document = window.document;
+
+  QUnit.test(name, function(assert) {
+    var div = document.createElement("div");
+    div.setAttribute("id", "canvas_" + Vex.Flow.Test.genID());
+
+    func({
+      canvas_sel: div,
+      params: params,
+      assert: assert },
+      Vex.Flow.Renderer.getSVGContext);
+
+    var svgData = new xmldom.XMLSerializer().serializeToString(Vex.Flow.Renderer.lastContext.svg);
+
+    var moduleName = QUnit.current_module.replace(/[^a-zA-Z0-9]/g, "_");
+    var testName = QUnit.current_test.replace(/[^a-zA-Z0-9]/g, "_");
+    var filename = Vex.Flow.Test.imageDir + "/" + moduleName + "." + testName + ".svg";
+    fs.writeFile(filename, svgData, function(err) {
+      if (err) {
+        return console.log("Can't save file: " + filename + ". Error: " + err);
+      }
+    });
+  });
+}
+
 Vex.Flow.Test.plotNoteWidth = Vex.Flow.Note.plotMetrics;
 
 Vex.Flow.Test.plotLegendForNoteWidth = function(ctx, x, y) {
@@ -123,3 +163,5 @@ Vex.Flow.Test.plotLegendForNoteWidth = function(ctx, x, y) {
 
   ctx.restore();
 }
+
+module.exports = Vex.Flow.Test;

@@ -6,7 +6,7 @@
 Vex.Flow.Test.Annotation = {}
 
 Vex.Flow.Test.Annotation.Start = function() {
-  module("Annotation");
+  QUnit.module("Annotation");
   Vex.Flow.Test.runTests("Simple Annotation", Vex.Flow.Test.Annotation.simple);
   Vex.Flow.Test.runTests("Standard Notation Annotation",
       Vex.Flow.Test.Annotation.standard);
@@ -317,5 +317,6 @@ Vex.Flow.Test.Annotation.tabNotes = function(options, contextBuilder) {
   voice.draw(ctx, stave);
 
   ok (true, 'TabNotes successfully drawn');
-
 };
+
+module.exports = Vex.Flow.Test.Annotation;

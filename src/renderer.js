@@ -30,6 +30,7 @@ Vex.Flow.Renderer = (function() {
   // that does not allow modifiying canvas objects. There is a small
   // performance degradation due to the extra indirection.
   Renderer.USE_CANVAS_PROXY = false;
+  Renderer.lastContext = null;
 
   Renderer.buildContext = function(sel,
       backend, width, height, background) {
@@ -40,6 +41,7 @@ Vex.Flow.Renderer = (function() {
     if (!background) background = "#FFF";
     var ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
+    Renderer.lastContext = ctx;
     return ctx;
   };
 

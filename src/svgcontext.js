@@ -12,6 +12,9 @@ Vex.Flow.SVGContext = (function() {
     if (arguments.length > 0) this.init(element);
   }
 
+  SVGContext.measureTextCache = {};
+  SVGContext.collectMeasurements = false;
+
   SVGContext.prototype = {
     init: function(element) {
       // element is the parent DOM object
@@ -69,10 +72,12 @@ Vex.Flow.SVGContext = (function() {
     // we do some tricks to improve text layout.  See the
     // note at ieMeasureTextFix() for details.
     iePolyfill: function() {
+      if (typeof(navigator) !== "undefined") {
         this.ie = (  /MSIE 9/i.test(navigator.userAgent) ||
                             /MSIE 10/i.test(navigator.userAgent) ||
                             /rv:11\.0/i.test(navigator.userAgent) ||
                             /Trident/i.test(navigator.userAgent) );
+      }
     },
 
     // ### Styling & State Methods:
@@ -170,12 +175,12 @@ Vex.Flow.SVGContext = (function() {
       this.lineWidth = width;
     },
 
-    setLineDash: function(lineDash) { 
+    setLineDash: function(lineDash) {
       this.attributes["stroke-linedash"] = lineDash;
-      return this; 
+      return this;
     },
 
-    setLineCap: function(lineCap) { 
+    setLineCap: function(lineCap) {
       this.attributes["stroke-linecap"] = lineCap;
       return this;
     },
@@ -200,14 +205,14 @@ Vex.Flow.SVGContext = (function() {
 
     scale: function(x, y) {
       // uses viewBox to scale
-      // TODO (GCR): we may at some point want to distinguish the 
-      // style.width / style.height properties that are applied to 
-      // the SVG object from our internal conception of the SVG 
+      // TODO (GCR): we may at some point want to distinguish the
+      // style.width / style.height properties that are applied to
+      // the SVG object from our internal conception of the SVG
       // width/height.  This would allow us to create automatically
       // scaling SVG's that filled their containers, for instance.
       //
-      // As this isn't implemented in Canvas or Raphael contexts, 
-      // I've left as is for now, but in using the viewBox to 
+      // As this isn't implemented in Canvas or Raphael contexts,
+      // I've left as is for now, but in using the viewBox to
       // handle internal scaling, am trying to make it possible
       // for us to eventually move in that direction.
 
@@ -234,7 +239,7 @@ Vex.Flow.SVGContext = (function() {
       for(var propertyName in attributes) {
         element.setAttributeNS(null, propertyName, attributes[propertyName]);
       }
-      return element;  
+      return element;
     },
 
     create: function(svgElementType) {
@@ -256,7 +261,7 @@ Vex.Flow.SVGContext = (function() {
 
     // ### Shape & Path Methods:
 
-    clear: function() { 
+    clear: function() {
       // Clear the SVG by removing all inner children.
 
       // (This approach is usually slightly more efficient
@@ -507,18 +512,34 @@ Vex.Flow.SVGContext = (function() {
     },
 
     // ## Text Methods:
-
     measureText: function(text) {
+      var index = text + this.attributes["font-style"] + this.attributes["font-family"] +
+                  this.attributes["font-weight"] + this.attributes["font-size"];
+
       var txt = this.create("text");
-      txt.textContent = text;
-      this.applyAttributes(txt, this.attributes);
-      this.svg.appendChild(txt);
-      var bbox = txt.getBBox();
-      if( this.ie && 
-          text !== "" &&
-          this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
-      this.svg.removeChild(txt);
-      return bbox;
+      if (typeof(txt.getBBox) === "function") {
+        txt.textContent = text;
+        this.applyAttributes(txt, this.attributes);
+        this.svg.appendChild(txt);
+
+        var bbox = txt.getBBox();
+        if( this.ie &&
+            text !== "" &&
+            this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
+        this.svg.removeChild(txt);
+        if (SVGContext.collectMeasurements) {
+          SVGContext.measureTextCache[index] = {
+            x: bbox.x,
+            y: bbox.y,
+            width: bbox.width,
+            height: bbox.height
+          };
+        }
+        return bbox;
+      } else {
+        // Inside NodeJS
+        return SVGContext.measureTextCache[index];
+      }
     },
 
     ieMeasureTextFix: function(bbox, text) {
