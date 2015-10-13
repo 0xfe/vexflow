@@ -21,6 +21,23 @@ VF.Test = (function() {
     // Returns a unique ID for a test.
     genID: function() { return VF.Test.genID.ID++; },
 
+    // Run `func` inside a QUnit test for each of the enabled
+    // rendering backends.
+    runTests: function(name, func, params) {
+      if (VF.Test.RUN_CANVAS_TESTS) {
+        VF.Test.runCanvasTest(name, func, params);
+      }
+      if (VF.Test.RUN_SVG_TESTS) {
+        VF.Test.runSVGTest(name, func, params);
+      }
+      if (VF.Test.RUN_RAPHAEL_TESTS) {
+        VF.Test.runRaphaelTest(name, func, params);
+      }
+      if (VF.Test.RUN_NODE_TESTS) {
+        VF.Test.runNodeTest(name, func, params);
+      }
+    },
+
     createTestCanvas: function(canvas_sel_name, test_name) {
       var sel = VF.Test.createTestCanvas.sel;
       var test_div = $('<div></div>').addClass("testcanvas");
@@ -44,21 +61,6 @@ VF.Test = (function() {
       $("#" + sel).width(width);
       $("#" + sel).attr("width", width);
       $("#" + sel).attr("height", height);
-    },
-
-    runTests: function(name, func, params) {
-      if (VF.Test.RUN_CANVAS_TESTS) {
-        VF.Test.runCanvasTest(name, func, params);
-      }
-      if (VF.Test.RUN_SVG_TESTS) {
-        VF.Test.runSVGTest(name, func, params);
-      }
-      if (VF.Test.RUN_RAPHAEL_TESTS) {
-        VF.Test.runRaphaelTest(name, func, params);
-      }
-      if (VF.Test.RUN_NODE_TESTS) {
-        VF.Test.runNodeTest(name, func, params);
-      }
     },
 
     runCanvasTest: function(name, func, params) {
@@ -105,6 +107,11 @@ VF.Test = (function() {
       window = jsdom().defaultView;
       document = window.document;
 
+      // Allows `name` to be used inside file names.
+      function sanitizeName(name) {
+        return name.replace(/[^a-zA-Z0-9]/g, "_")
+      }
+
       QUnit.test(name, function(assert) {
         var div = document.createElement("div");
         div.setAttribute("id", "canvas_" + VF.Test.genID());
@@ -120,8 +127,8 @@ VF.Test = (function() {
           // a local file.
           var svgData = new xmldom.XMLSerializer().serializeToString(VF.Renderer.lastContext.svg);
 
-          var moduleName = QUnit.current_module.replace(/[^a-zA-Z0-9]/g, "_");
-          var testName = QUnit.current_test.replace(/[^a-zA-Z0-9]/g, "_");
+          var moduleName = sanitizeName(QUnit.current_module);
+          var testName = sanitizeName(QUnit.current_test);
           var filename = VF.Test.NODE_IMAGEDIR + "/" + moduleName + "." + testName + ".svg";
           fs.writeFile(filename, svgData, function(err) {
             if (err) {
