@@ -7,7 +7,7 @@ var VF = Vex.Flow;
 
 VF.Test.Annotation = (function() {
   var runTests = VF.Test.runTests;
-  Annotation = {
+  var Annotation = {
     Start: function() {
       QUnit.module("Annotation");
       runTests("Simple Annotation", Annotation.simple);

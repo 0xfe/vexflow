@@ -7,7 +7,7 @@ var VF = Vex.Flow;
 VF.Test.Formatter = (function() {
   var runTests = VF.Test.runTests;
 
-  Formatter = {
+  var Formatter = {
     Start: function() {
       QUnit.module("Formatter");
       test("TickContext Building", Formatter.buildTickContexts);

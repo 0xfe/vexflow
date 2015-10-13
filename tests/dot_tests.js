@@ -4,9 +4,8 @@
  */
 
 var VF = Vex.Flow;
-
 VF.Test.Dot = (function() {
-  Dot = {
+  var Dot = {
     Start: function() {
       QUnit.module("Dot");
       VF.Test.runTests("Basic", VF.Test.Dot.basic);
