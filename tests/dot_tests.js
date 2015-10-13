@@ -3,37 +3,39 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-Vex.Flow.Test.Dot = (function() {
+var VF = Vex.Flow;
+
+VF.Test.Dot = (function() {
   Dot = {
     Start: function() {
       QUnit.module("Dot");
-      Vex.Flow.Test.runTests("Basic", Vex.Flow.Test.Dot.basic);
-      Vex.Flow.Test.runTests("Multi Voice", Vex.Flow.Test.Dot.multiVoice);
+      VF.Test.runTests("Basic", VF.Test.Dot.basic);
+      VF.Test.runTests("Multi Voice", VF.Test.Dot.multiVoice);
     },
 
     showNote: function(note, stave, ctx, x) {
-      var mc = new Vex.Flow.ModifierContext();
+      var mc = new VF.ModifierContext();
       note.addToModifierContext(mc);
 
-      var tickContext = new Vex.Flow.TickContext();
+      var tickContext = new VF.TickContext();
       tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(65);
 
       note.setContext(ctx).setStave(stave);
       note.draw();
 
-      Vex.Flow.Test.plotNoteWidth(ctx, note, 140);
+      VF.Test.plotNoteWidth(ctx, note, 140);
       return note;
     },
 
     basic: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 1000, 240);
       ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      var stave = new Vex.Flow.Stave(10, 10, 975);
+      var stave = new VF.Stave(10, 10, 975);
       stave.setContext(ctx);
       stave.draw();
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Dot(type); }
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Dot(type); }
 
       var notes = [
         newNote({ keys: ["c/4", "e/4", "a/4", "b/4"], duration: "w"}).
@@ -76,7 +78,7 @@ Vex.Flow.Test.Dot = (function() {
       ];
 
       for (var i = 0; i < notes.length; ++i) {
-        Vex.Flow.Test.Dot.showNote(notes[i], stave, ctx, 30 + (i * 65));
+        VF.Test.Dot.showNote(notes[i], stave, ctx, 30 + (i * 65));
         var accidentals = notes[i].getDots();
         ok(accidentals.length > 0, "Note " + i + " has accidentals");
 
@@ -85,16 +87,16 @@ Vex.Flow.Test.Dot = (function() {
         }
       }
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 620, 140);
+      VF.Test.plotLegendForNoteWidth(ctx, 620, 140);
       ok(true, "Full Dot");
     },
 
     showNotes: function(note1, note2, stave, ctx, x) {
-      var mc = new Vex.Flow.ModifierContext();
+      var mc = new VF.ModifierContext();
       note1.addToModifierContext(mc);
       note2.addToModifierContext(mc);
 
-      var tickContext = new Vex.Flow.TickContext();
+      var tickContext = new VF.TickContext();
       tickContext
         .addTickable(note1)
         .addTickable(note2)
@@ -105,20 +107,20 @@ Vex.Flow.Test.Dot = (function() {
       note1.setContext(ctx).setStave(stave).draw();
       note2.setContext(ctx).setStave(stave).draw();
 
-      Vex.Flow.Test.plotNoteWidth(ctx, note1, 180);
-      Vex.Flow.Test.plotNoteWidth(ctx, note2, 20);
+      VF.Test.plotNoteWidth(ctx, note1, 180);
+      VF.Test.plotNoteWidth(ctx, note2, 20);
     },
 
     multiVoice: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 500, 300);
 
       ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      var stave = new Vex.Flow.Stave(30, 40, 420);
+      var stave = new VF.Stave(30, 40, 420);
       stave.setContext(ctx);
       stave.draw();
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Dot(type); }
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Dot(type); }
 
       var note1 = newNote(
           { keys: ["c/4", "e/4", "a/4"], duration: "h", stem_direction: -1}).
@@ -128,7 +130,7 @@ Vex.Flow.Test.Dot = (function() {
           { keys: ["d/5", "a/5", "b/5"], duration: "h", stem_direction: 1}).
           addDotToAll();
 
-      Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 60);
+      VF.Test.Dot.showNotes(note1, note2, stave, ctx, 60);
 
       note1 = newNote(
           { keys: ["c/4", "e/4", "c/5"], duration: "h", stem_direction: -1}).
@@ -144,7 +146,7 @@ Vex.Flow.Test.Dot = (function() {
           addDotToAll().
           addDotToAll();
 
-      Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 150);
+      VF.Test.Dot.showNotes(note1, note2, stave, ctx, 150);
 
       note1 = newNote(
           { keys: ["d/4", "c/5", "d/5"], duration: "h", stem_direction: -1}).
@@ -155,8 +157,8 @@ Vex.Flow.Test.Dot = (function() {
           { keys: ["d/5", "a/5", "b/5"], duration: "q", stem_direction: 1}).
           addDotToAll();
 
-      Vex.Flow.Test.Dot.showNotes(note1, note2, stave, ctx, 250);
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 400, 180);
+      VF.Test.Dot.showNotes(note1, note2, stave, ctx, 250);
+      VF.Test.plotLegendForNoteWidth(ctx, 400, 180);
       ok(true, "Full Dot");
     }
   };
@@ -164,4 +166,4 @@ Vex.Flow.Test.Dot = (function() {
   return Dot;
 })()
 
-module.exports = Vex.Flow.Test.Dot;
+module.exports = VF.Test.Dot;

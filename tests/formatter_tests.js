@@ -3,29 +3,27 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-Vex.Flow.Test.Formatter = (function() {
+var VF = Vex.Flow;
+VF.Test.Formatter = (function() {
+  var runTests = VF.Test.runTests;
+
   Formatter = {
     Start: function() {
       QUnit.module("Formatter");
-      test("TickContext Building", Vex.Flow.Test.Formatter.buildTickContexts);
-      Vex.Flow.Test.runTests("StaveNote Formatting",
-          Vex.Flow.Test.Formatter.formatStaveNotes);
-      Vex.Flow.Test.runTests("StaveNote Justification",
-          Vex.Flow.Test.Formatter.justifyStaveNotes);
-      Vex.Flow.Test.runTests("Notes with Tab",
-          Vex.Flow.Test.Formatter.notesWithTab);
-      Vex.Flow.Test.runTests("Format Multiple Staves - No Justification",
-          Vex.Flow.Test.Formatter.multiStaves, {justify: 0});
-      Vex.Flow.Test.runTests("Format Multiple Staves - Justified",
-          Vex.Flow.Test.Formatter.multiStaves, {justify: 168});
+      test("TickContext Building", Formatter.buildTickContexts);
+      runTests("StaveNote Formatting", Formatter.formatStaveNotes);
+      runTests("StaveNote Justification", Formatter.justifyStaveNotes);
+      runTests("Notes with Tab", Formatter.notesWithTab);
+      runTests("Format Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0});
+      runTests("Format Multiple Staves - Justified", Formatter.multiStaves, {justify: 168});
     },
 
     buildTickContexts: function() {
       function createTickable() {
-        return new Vex.Flow.Test.MockTickable();
+        return new VF.Test.MockTickable();
       }
 
-      var R = Vex.Flow.RESOLUTION;
+      var R = VF.RESOLUTION;
       var BEAT = 1 * R / 4;
 
       var tickables1 = [
@@ -40,13 +38,13 @@ Vex.Flow.Test.Formatter = (function() {
         createTickable().setTicks(BEAT).setWidth(30)
       ];
 
-      var voice1 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-      var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+      var voice1 = new VF.Voice(VF.Test.TIME4_4);
+      var voice2 = new VF.Voice(VF.Test.TIME4_4);
 
       voice1.addTickables(tickables1);
       voice2.addTickables(tickables2);
 
-      var formatter = new Vex.Flow.Formatter();
+      var formatter = new VF.Formatter();
       var tContexts = formatter.createTickContexts([voice1, voice2]);
 
       equal(tContexts.list.length, 4, "Voices should have four tick contexts");
@@ -76,13 +74,13 @@ Vex.Flow.Test.Formatter = (function() {
 
     renderNotes: function(
         notes1, notes2, ctx, stave, justify) {
-      var voice1 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-      var voice2 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+      var voice1 = new VF.Voice(VF.Test.TIME4_4);
+      var voice2 = new VF.Voice(VF.Test.TIME4_4);
 
       voice1.addTickables(notes1);
       voice2.addTickables(notes2);
 
-      new Vex.Flow.Formatter().joinVoices([voice1, voice2]).
+      new VF.Formatter().joinVoices([voice1, voice2]).
         format([voice1, voice2], justify);
 
       voice1.draw(ctx, stave);
@@ -92,12 +90,12 @@ Vex.Flow.Test.Formatter = (function() {
     formatStaveNotes: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 400, 250);
       ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      var stave = new Vex.Flow.Stave(10, 30, 500);
+      var stave = new VF.Stave(10, 30, 500);
       stave.setContext(ctx);
       stave.draw();
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
 
       var notes1 = [
         newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
@@ -119,24 +117,24 @@ Vex.Flow.Test.Formatter = (function() {
           addAccidental(1, newAcc("#"))
       ];
 
-      Vex.Flow.Test.Formatter.renderNotes(notes1, notes2, ctx, stave);
+      VF.Test.Formatter.renderNotes(notes1, notes2, ctx, stave);
 
       notes1.forEach(function(note) {
-        Vex.Flow.Test.plotNoteWidth(ctx, note, 180);
+        VF.Test.plotNoteWidth(ctx, note, 180);
       });
 
       notes2.forEach(function(note) {
-        Vex.Flow.Test.plotNoteWidth(ctx, note, 15);
+        VF.Test.plotNoteWidth(ctx, note, 15);
       });
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 300, 180);
+      VF.Test.plotLegendForNoteWidth(ctx, 300, 180);
 
       ok(true);
     },
 
     getNotes: function() {
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
 
       var notes1 = [
         newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
@@ -167,35 +165,35 @@ Vex.Flow.Test.Formatter = (function() {
       ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
 
       // Get test voices.
-      var notes = Vex.Flow.Test.Formatter.getNotes();
+      var notes = VF.Test.Formatter.getNotes();
 
-      var stave = new Vex.Flow.Stave(10, 30, 400).addTrebleGlyph().
+      var stave = new VF.Stave(10, 30, 400).addTrebleGlyph().
         setContext(ctx).draw();
-      Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave);
-      notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 170);});
-      notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 15);});
+      VF.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave);
+      notes[0].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 170);});
+      notes[1].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 15);});
       ok(true);
 
-      var stave2 = new Vex.Flow.Stave(10, 220, 400).addTrebleGlyph().
+      var stave2 = new VF.Stave(10, 220, 400).addTrebleGlyph().
         setContext(ctx).draw();
-      Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave2, 300);
+      VF.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave2, 300);
       ok(true);
-      notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 350);});
-      notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 200);});
+      notes[0].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 350);});
+      notes[1].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 200);});
 
-      var stave3 = new Vex.Flow.Stave(10, 410, 400).addTrebleGlyph().
+      var stave3 = new VF.Stave(10, 410, 400).addTrebleGlyph().
         setContext(ctx).draw();
-      Vex.Flow.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave3, 400);
-      notes[0].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 550);});
-      notes[1].forEach(function(note) {Vex.Flow.Test.plotNoteWidth(ctx, note, 390);});
+      VF.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave3, 400);
+      notes[0].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 550);});
+      notes[1].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 390);});
 
       ok(true);
     },
 
     getTabNotes: function() {
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newTabNote(tab_struct) { return new Vex.Flow.TabNote(tab_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newTabNote(tab_struct) { return new VF.TabNote(tab_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
 
       var notes1 = [
         newNote({ keys: ["d/4"], stem_direction: 1, duration: "h"}).
@@ -208,10 +206,10 @@ Vex.Flow.Test.Formatter = (function() {
 
       var tabs1 = [
         newTabNote({ positions: [{str: 3, fret: 6}], duration: "h"}).
-          addModifier(new Vex.Flow.Bend("Full"), 0),
+          addModifier(new VF.Bend("Full"), 0),
         newTabNote({ positions: [{str: 2, fret: 3},
                                  {str: 3, fret: 5}], duration: "8"}).
-          addModifier(new Vex.Flow.Bend("Unison"), 1),
+          addModifier(new VF.Bend("Unison"), 1),
         newTabNote({ positions: [{str: 3, fret: 7}], duration: "8"}),
         newTabNote({ positions: [{str: 3, fret: 6},
                                  {str: 4, fret: 7},
@@ -223,13 +221,13 @@ Vex.Flow.Test.Formatter = (function() {
     },
 
     renderNotesWithTab: function(notes, ctx, staves, justify) {
-      var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
-      var tabVoice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4);
+      var voice = new VF.Voice(VF.Test.TIME4_4);
+      var tabVoice = new VF.Voice(VF.Test.TIME4_4);
 
       voice.addTickables(notes.notes);
       tabVoice.addTickables(notes.tabs);
 
-      new Vex.Flow.Formatter().
+      new VF.Formatter().
         joinVoices([voice]).joinVoices([tabVoice]).
         format([voice, tabVoice], justify);
 
@@ -243,22 +241,22 @@ Vex.Flow.Test.Formatter = (function() {
       ctx.font = "10pt Arial";
 
       // Get test voices.
-      var notes = Vex.Flow.Test.Formatter.getTabNotes();
-      var stave = new Vex.Flow.Stave(10, 10, 400).addTrebleGlyph().
+      var notes = VF.Test.Formatter.getTabNotes();
+      var stave = new VF.Stave(10, 10, 400).addTrebleGlyph().
         setContext(ctx).draw();
-      var tabstave = new Vex.Flow.TabStave(10, 100, 400).addTabGlyph().
+      var tabstave = new VF.TabStave(10, 100, 400).addTabGlyph().
         setNoteStartX(stave.getNoteStartX()).setContext(ctx).draw();
 
-      Vex.Flow.Test.Formatter.renderNotesWithTab(notes, ctx,
+      VF.Test.Formatter.renderNotesWithTab(notes, ctx,
           { notes: stave, tabs: tabstave });
       ok(true);
 
-      var stave2 = new Vex.Flow.Stave(10, 200, 400).addTrebleGlyph().
+      var stave2 = new VF.Stave(10, 200, 400).addTrebleGlyph().
         setContext(ctx).draw();
-      var tabstave2 = new Vex.Flow.TabStave(10, 300, 400).addTabGlyph().
+      var tabstave2 = new VF.TabStave(10, 300, 400).addTabGlyph().
         setNoteStartX(stave2.getNoteStartX()).setContext(ctx).draw();
 
-      Vex.Flow.Test.Formatter.renderNotesWithTab(notes, ctx,
+      VF.Test.Formatter.renderNotesWithTab(notes, ctx,
           { notes: stave2, tabs: tabstave2 }, 300);
       ok(true);
     },
@@ -267,23 +265,23 @@ Vex.Flow.Test.Formatter = (function() {
       var ctx = new contextBuilder(options.canvas_sel, 500, 300);
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       ctx.font = "10pt Arial";
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
 
-      var stave11 = new Vex.Flow.Stave(20, 10, 255).
+      var stave11 = new VF.Stave(20, 10, 255).
         addTrebleGlyph().
         addTimeSignature("6/8").
         setContext(ctx).draw();
-      var stave21 = new Vex.Flow.Stave(20, 100, 255).
+      var stave21 = new VF.Stave(20, 100, 255).
         addTrebleGlyph().
         addTimeSignature("6/8").
         setContext(ctx).draw();
-      var stave31 = new Vex.Flow.Stave(20, 200, 255).
+      var stave31 = new VF.Stave(20, 200, 255).
         addClef("bass").
         addTimeSignature("6/8").
         setContext(ctx).draw();
-      new Vex.Flow.StaveConnector(stave21, stave31).
-        setType(Vex.Flow.StaveConnector.type.BRACE).
+      new VF.StaveConnector(stave21, stave31).
+        setType(VF.StaveConnector.type.BRACE).
         setContext(ctx).draw();
 
       var notes11 = [
@@ -312,23 +310,23 @@ Vex.Flow.Test.Formatter = (function() {
         newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31)
       ];
 
-      var voice11 = new Vex.Flow.Voice(Vex.Flow.Test.Formatter.TIME6_8);
-      var voice21 = new Vex.Flow.Voice(Vex.Flow.Test.Formatter.TIME6_8);
-      var voice31 = new Vex.Flow.Voice(Vex.Flow.Test.Formatter.TIME6_8);
+      var voice11 = new VF.Voice(VF.Test.Formatter.TIME6_8);
+      var voice21 = new VF.Voice(VF.Test.Formatter.TIME6_8);
+      var voice31 = new VF.Voice(VF.Test.Formatter.TIME6_8);
       voice11.addTickables(notes11);
       voice21.addTickables(notes21);
       voice31.addTickables(notes31);
 
-      var beam21a = new Vex.Flow.Beam(notes21.slice(0, 3));
-      var beam21b = new Vex.Flow.Beam(notes21.slice(3, 6));
-      var beam31a = new Vex.Flow.Beam(notes31.slice(0, 3));
-      var beam31b = new Vex.Flow.Beam(notes31.slice(3, 6));
+      var beam21a = new VF.Beam(notes21.slice(0, 3));
+      var beam21b = new VF.Beam(notes21.slice(3, 6));
+      var beam31a = new VF.Beam(notes31.slice(0, 3));
+      var beam31b = new VF.Beam(notes31.slice(3, 6));
 
       if (options.params.justify > 0) {
-        new Vex.Flow.Formatter().joinVoices( [voice11, voice21, voice31] ).
+        new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
           format([voice11, voice21, voice31], options.params.justify);
       } else {
-        new Vex.Flow.Formatter().joinVoices( [voice11, voice21, voice31] ).
+        new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
           format([voice11, voice21, voice31]);
       }
 
@@ -340,11 +338,11 @@ Vex.Flow.Test.Formatter = (function() {
       beam31a.setContext(ctx).draw();
       beam31b.setContext(ctx).draw();
 
-      var stave12 = new Vex.Flow.Stave(stave11.width + stave11.x, stave11.y, 250).
+      var stave12 = new VF.Stave(stave11.width + stave11.x, stave11.y, 250).
         setContext(ctx).draw();
-      var stave22 = new Vex.Flow.Stave(stave21.width + stave21.x, stave21.y, 250).
+      var stave22 = new VF.Stave(stave21.width + stave21.x, stave21.y, 250).
         setContext(ctx).draw();
-      var stave32 = new Vex.Flow.Stave(stave31.width + stave31.x, stave31.y, 250).
+      var stave32 = new VF.Stave(stave31.width + stave31.x, stave31.y, 250).
         setContext(ctx).draw();
 
       var notes12 = [
@@ -377,22 +375,22 @@ Vex.Flow.Test.Formatter = (function() {
         newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32),
         newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32)
       ];
-      var voice12 = new Vex.Flow.Voice(Vex.Flow.Test.Formatter.TIME6_8);
-      var voice22 = new Vex.Flow.Voice(Vex.Flow.Test.Formatter.TIME6_8);
-      var voice32 = new Vex.Flow.Voice(Vex.Flow.Test.Formatter.TIME6_8);
+      var voice12 = new VF.Voice(VF.Test.Formatter.TIME6_8);
+      var voice22 = new VF.Voice(VF.Test.Formatter.TIME6_8);
+      var voice32 = new VF.Voice(VF.Test.Formatter.TIME6_8);
       voice12.addTickables(notes12);
       voice22.addTickables(notes22);
       voice32.addTickables(notes32);
 
       if (options.params.justify > 0) {
-        new Vex.Flow.Formatter().joinVoices([voice12, voice22, voice32]).
+        new VF.Formatter().joinVoices([voice12, voice22, voice32]).
           format([voice12, voice22, voice32], 188);
       } else {
-        new Vex.Flow.Formatter().joinVoices([voice12, voice22, voice32]).
+        new VF.Formatter().joinVoices([voice12, voice22, voice32]).
           format([voice12, voice22, voice32]);
       }
-      var beam32a = new Vex.Flow.Beam(notes32.slice(0, 3));
-      var beam32b = new Vex.Flow.Beam(notes32.slice(3, 6));
+      var beam32a = new VF.Beam(notes32.slice(0, 3));
+      var beam32b = new VF.Beam(notes32.slice(3, 6));
 
       voice12.draw(ctx, stave12);
       voice22.draw(ctx, stave22);
@@ -406,11 +404,11 @@ Vex.Flow.Test.Formatter = (function() {
     TIME6_8: {
       num_beats: 6,
       beat_value: 8,
-      resolution: Vex.Flow.RESOLUTION
+      resolution: VF.RESOLUTION
     }
   };
 
   return Formatter;
 })();
 
-module.exports = Vex.Flow.Test.Formatter;
+module.exports = VF.Test.Formatter;
