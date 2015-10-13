@@ -130,7 +130,14 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['src/*', 'Gruntfile.js'],
-        tasks: ['concat', 'jshint'],
+        tasks: ['concat:vexflow'],
+        options: {
+          interrupt: true
+        }
+      },
+      tests: {
+        files: ['tests/*'],
+        tasks: ['concat:tests'],
         options: {
           interrupt: true
         }

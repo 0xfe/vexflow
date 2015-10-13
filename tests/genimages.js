@@ -11,6 +11,7 @@
 
 var jsdom = require("jsdom").jsdom;
 var xmldom = require("xmldom");
+var path = require("path");
 
 // Mock out the QUnit stuff, since we don't really care about
 // the assertions.
@@ -48,6 +49,7 @@ VF.Test.RUN_CANVAS_TESTS = false;
 VF.Test.RUN_SVG_TESTS = false;
 VF.Test.RUN_RAPHAEL_TESTS = false;
 VF.Test.RUN_NODE_TESTS = true;
+VF.Test.NODE_IMAGEDIR = path.resolve(__dirname, '..', 'build', 'images');
 
 // Load the measureText cache to compensate for the lack of
 // SVG.getBBox() in jsdom.

@@ -6,23 +6,23 @@ Vex.Flow.Test.TimeSignature.Start = function() {
   module("TimeSignature");
   test("Time Signature Parser", Vex.Flow.Test.TimeSignature.parser);
   Vex.Flow.Test.runTests("Basic Time Signatures", Vex.Flow.Test.TimeSignature.basic);
-  
+
   Vex.Flow.Test.runTests("Big Signature Test", Vex.Flow.Test.TimeSignature.big);
-  
+
 
   Vex.Flow.Test.runTests("Time Signature multiple staves alignment test",
       Vex.Flow.Test.TimeSignature.multiStave);
 
   Vex.Flow.Test.runTests("Time Signature Change Test",
       Vex.Flow.Test.TimeSignature.timeSigNote);
-  
+
 
 }
 
 Vex.Flow.Test.TimeSignature.catchError = function(ts, spec) {
   try {
     ts.parseTimeSpec(spec);
-  } catch (e) {  
+  } catch (e) {
     equal(e.code, "BadTimeSignature", e.message);
   }
 }
@@ -30,7 +30,7 @@ Vex.Flow.Test.TimeSignature.catchError = function(ts, spec) {
 Vex.Flow.Test.TimeSignature.parser = function() {
   expect(6);
   var ts = new Vex.Flow.TimeSignature();
-  
+
   // Invalid time signatures
   Vex.Flow.Test.TimeSignature.catchError(ts, "asdf");
   Vex.Flow.Test.TimeSignature.catchError(ts, "123/");
@@ -156,7 +156,7 @@ Vex.Flow.Test.TimeSignature.timeSigNote = function(options, contextBuilder) {
 
   var formatter = new Vex.Flow.Formatter().
     joinVoices([voice]).format([voice], 800);
-  
+
   voice.draw(ctx, stave);
   ok(true, "all pass");
 }
