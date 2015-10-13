@@ -6,15 +6,11 @@
 Vex.Flow.Test.Curve = (function () {
   var Curve = {
     Start: function() {
-      module("Curve");
+      QUnit.module("Curve");
       Vex.Flow.Test.runTests("Simple Curve", Curve.simple);
-      
       Vex.Flow.Test.runTests("Rounded Curve", Curve.rounded);
-      
       Vex.Flow.Test.runTests("Thick Thin Curves", Curve.thickThin);
-      
       Vex.Flow.Test.runTests("Top Curve", Curve.topCurve);
-      
     },
 
     simple: function(options, contextBuilder) {
@@ -221,3 +217,5 @@ Vex.Flow.Test.Curve = (function () {
 
   return Curve;
 })();
+
+module.exports = Vex.Flow.Test.Curve;
