@@ -7,7 +7,7 @@
 Vex.Flow.Test.Articulation = {}
 
 Vex.Flow.Test.Articulation.Start = function() {
-  module("Stave");
+  QUnit.module("Articulation");
   Vex.Flow.Test.Articulation.runTests("Articulation - Staccato/Staccatissimo",
     "a.","av", Vex.Flow.Test.Articulation.drawArticulations);
   Vex.Flow.Test.Articulation.runTests("Articulation - Accent/Tenuto",
@@ -26,49 +26,19 @@ Vex.Flow.Test.Articulation.Start = function() {
     "a.","a.", Vex.Flow.Test.Articulation.tabNotes);
 }
 
-Vex.Flow.Test.Articulation.runTests = function(name, sym1, sym2, func, params) {
-  if(Vex.Flow.Test.RUN_CANVAS_TESTS) {
-    Vex.Flow.Test.Articulation.runCanvasTest(name, sym1, sym2, func, params);
-  }
-  if(Vex.Flow.Test.RUN_SVG_TESTS) {
-    Vex.Flow.Test.Articulation.runSVGTest(name, sym1, sym2, func, params);
-  }
-  if(Vex.Flow.Test.RUN_RAPHAEL_TESTS) {
-    Vex.Flow.Test.Articulation.runRaphaelTest(name, sym1, sym2, func, params);
-  }
+Vex.Flow.Test.Articulation.runTests = function(name, sym1, sym2, func) {
+  var params = {
+    sym1: sym1,
+    sym2: sym2
+  };
+
+  Vex.Flow.Test.runTests(name, func, params);
 }
 
+Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder) {
+  var sym1 = options.params.sym1;
+  var sym2 = options.params.sym2;
 
-Vex.Flow.Test.Articulation.runCanvasTest = function(name, sym1, sym2, func, params) {
-  test(name, function() {
-      var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
-      Vex.Flow.Test.createTestCanvas(test_canvas_sel, name);
-      func({ canvas_sel: test_canvas_sel, params: params },
-        Vex.Flow.Renderer.getCanvasContext, sym1, sym2);
-    });
-}
-
-Vex.Flow.Test.Articulation.runRaphaelTest = function(name, sym1, sym2, func, params) {
-  test(name, function() {
-      var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
-      Vex.Flow.Test.createTestSVGorRaphael(test_canvas_sel, name);
-      func({ canvas_sel: test_canvas_sel, params: params },
-        Vex.Flow.Renderer.getRaphaelContext, sym1, sym2);
-    });
-}
-
-Vex.Flow.Test.Articulation.runSVGTest = function(name, sym1, sym2, func, params) {
-  test(name, function() {
-      var test_canvas_sel = "canvas_" + Vex.Flow.Test.genID();
-      Vex.Flow.Test.createTestSVGorRaphael(test_canvas_sel, name);
-      func({ canvas_sel: test_canvas_sel, params: params },
-        Vex.Flow.Renderer.getSVGContext, sym1, sym2);
-    });
-}
-
-
-
-Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder, sym1, sym2) {
   expect(0);
 
   // Get the rendering context
@@ -147,7 +117,10 @@ Vex.Flow.Test.Articulation.drawArticulations = function(options, contextBuilder,
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
 }
 
-Vex.Flow.Test.Articulation.drawFermata = function(options, contextBuilder, sym1, sym2) {
+Vex.Flow.Test.Articulation.drawFermata = function(options, contextBuilder) {
+  var sym1 = options.params.sym1;
+  var sym2 = options.params.sym2;
+
   expect(0);
 
   // Get the rendering context
@@ -190,7 +163,10 @@ Vex.Flow.Test.Articulation.drawFermata = function(options, contextBuilder, sym1,
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 }
 
-Vex.Flow.Test.Articulation.drawArticulations2 = function(options, contextBuilder, sym1, sym2) {
+Vex.Flow.Test.Articulation.drawArticulations2 = function(options, contextBuilder) {
+  var sym1 = options.params.sym1;
+  var sym2 = options.params.sym2;
+
   expect(0);
 
   // Get the rendering context
@@ -220,14 +196,14 @@ Vex.Flow.Test.Articulation.drawArticulations2 = function(options, contextBuilder
   for(var i=0; i<16; i++){
     notesBar1[i].addArticulation(0, new Vex.Flow.Articulation("a.").setPosition(4));
     notesBar1[i].addArticulation(0, new Vex.Flow.Articulation("a>").setPosition(4));
-    
+
     if(i === 15)
       notesBar1[i].addArticulation(0, new Vex.Flow.Articulation("a@u").setPosition(4));
   }
 
   var beam1 = new Vex.Flow.Beam(notesBar1.slice(0,8));
   var beam2 = new Vex.Flow.Beam(notesBar1.slice(8,16));
-  
+
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
   beam1.setContext(ctx).draw();
@@ -257,14 +233,14 @@ Vex.Flow.Test.Articulation.drawArticulations2 = function(options, contextBuilder
   for(i=0; i<16; i++){
     notesBar2[i].addArticulation(0, new Vex.Flow.Articulation("a-").setPosition(3));
     notesBar2[i].addArticulation(0, new Vex.Flow.Articulation("a^").setPosition(3));
-    
+
     if(i === 15)
       notesBar2[i].addArticulation(0, new Vex.Flow.Articulation("a@u").setPosition(4));
   }
 
   var beam3 = new Vex.Flow.Beam(notesBar2.slice(0,8));
   var beam4 = new Vex.Flow.Beam(notesBar2.slice(8,16));
-  
+
   // Helper function to justify and draw a 4/4 voice
   Vex.Flow.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
   beam3.setContext(ctx).draw();
@@ -369,5 +345,6 @@ Vex.Flow.Test.Articulation.tabNotes = function(options, contextBuilder) {
   voice.draw(ctx, stave);
 
   ok (true, 'TabNotes successfully drawn');
-
 };
+
+module.exports = Vex.Flow.Test.Articulation;
