@@ -1,4 +1,4 @@
-// There is corrently no good way to measure the text dimensions of
+﻿// There is corrently no good way to measure the text dimensions of
 // SVG elements from NodeJS/jsdom. So we resort to collecting the measurements
 // of all the text inside tests in a browser run, index them by font, size, weight,
 // style, and dump them to this file.

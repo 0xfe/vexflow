@@ -13,8 +13,10 @@
   <script src="support/jquery.js"></script>
   <script src="support/qunit.js"></script>
 
-  <!-- VexFlow Tests -->
-  <script src="../build/vexflow-tests.js"></script>
+  <!-- VexFlow Tests. Note the charset below: this is required for
+       the measureText cache, since the index contains weird unicode
+       characters. -->
+  <script src="../build/vexflow-tests.js" charset="utf-8"></script>
 
   <script>
     $(function() {
