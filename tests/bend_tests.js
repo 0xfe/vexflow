@@ -6,7 +6,7 @@
 Vex.Flow.Test.Bend = {}
 
 Vex.Flow.Test.Bend.Start = function() {
-  module("Bend");
+  QUnit.module("Bend");
   Vex.Flow.Test.runTests("Double Bends", Vex.Flow.Test.Bend.doubleBends);
   Vex.Flow.Test.runTests("Reverse Bends", Vex.Flow.Test.Bend.reverseBends);
   Vex.Flow.Test.runTests("Bend Phrase", Vex.Flow.Test.Bend.bendPhrase);
@@ -203,3 +203,5 @@ Vex.Flow.Test.Bend.whackoBends = function(options, contextBuilder) {
   Vex.Flow.Test.plotNoteWidth(ctx, notes[0], 140);
   ok(true, "Whako Release");
 }
+
+module.exports = Vex.Flow.Test.Bend;
