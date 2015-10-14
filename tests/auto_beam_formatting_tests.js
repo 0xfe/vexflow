@@ -1006,6 +1006,13 @@ VF.Test.AutoBeamFormatting = (function() {
       var c = AutoBeamFormatting.setupContext(options);
 
       var notes = [
+          newNote({ keys: ["f/5"], duration: "32"}),
+          newNote({ keys: ["f/5"], duration: "32"}),
+          newNote({ keys: ["f/5"], duration: "32"}),
+          newNote({ keys: ["f/5"], duration: "32"}),
+          newNote({ keys: ["f/5"], duration: "16", dots: 1}),
+          newNote({ keys: ["f/5"], duration: "32"}),
+
           newNote({ keys: ["f/5"], duration: "16"}),
           newNote({ keys: ["f/5"], duration: "8"}),
           newNote({ keys: ["f/5"], duration: "16"}),
@@ -1018,12 +1025,7 @@ VF.Test.AutoBeamFormatting = (function() {
           newNote({ keys: ["f/5"], duration: "16", dots: 1}),
           newNote({ keys: ["f/5"], duration: "32"}),
           newNote({ keys: ["f/5"], duration: "32"}),
-          newNote({ keys: ["f/5"], duration: "16", dots: 1}),
-
-          newNote({ keys: ["f/5"], duration: "16"}),
-          newNote({ keys: ["f/5"], duration: "16"}),
-          newNote({ keys: ["f/5"], duration: "16"}),
-          newNote({ keys: ["f/5"], duration: "16"})
+          newNote({ keys: ["f/5"], duration: "16", dots: 1})
       ];
       notes.forEach(function(note) {
         if (note.dots >= 1) {
