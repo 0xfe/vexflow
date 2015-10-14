@@ -29,6 +29,8 @@ Vex.Flow.SVGContext = (function() {
   // tests/measure_text_cache.js for instructions on how to do this.
   SVGContext.validateMeasurement = false;
 
+  SVGContext.addPrefix = Vex.Prefix;
+
   SVGContext.prototype = {
     init: function(element) {
       // element is the parent DOM object
@@ -90,13 +92,21 @@ Vex.Flow.SVGContext = (function() {
     },
 
     // Allow grouping elements in containers for interactivity.
-    openGroup: function(name, attr) {
+    openGroup: function(cls, id, attrs) {
       var group = this.create("g");
       this.groups.push(group);
+      this.parent.appendChild(group);
       this.parent = group;
+      if (cls) group.setAttribute("class", SVGContext.addPrefix(cls));
+      if (id) group.setAttribute("id", SVGContext.addPrefix(id));
+
+      if (attrs && attrs.pointerBBox) {
+        group.setAttribute("pointer-events", "bounding-box");
+      }
+      return group;
     },
 
-    closeGroup: function(name, attr) {
+    closeGroup: function() {
       var group = this.groups.pop();
       this.parent = this.groups[this.groups.length - 1];
     },
@@ -311,7 +321,6 @@ Vex.Flow.SVGContext = (function() {
 
       // Replace the viewbox attribute we just removed:
       this.scale(this.state.scale.x, this.state.scale.y);
-
     },
 
     // ## Rectangles:

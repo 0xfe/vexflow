@@ -38,6 +38,15 @@ VF.Test = (function() {
       }
     },
 
+    // Run `func` inside a QUnit test for each of the enabled
+    // rendering backends. These are for interactivity tests, and
+    // currently only work with the SVG backend.
+    runUITests: function(name, func, params) {
+      if (VF.Test.RUN_SVG_TESTS) {
+        VF.Test.runSVGTest(name, func, params);
+      }
+    },
+
     createTestCanvas: function(canvas_sel_name, test_name) {
       var sel = VF.Test.createTestCanvas.sel;
       var test_div = $('<div></div>').addClass("testcanvas");

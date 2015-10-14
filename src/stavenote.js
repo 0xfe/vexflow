@@ -859,6 +859,7 @@ Vex.Flow.StaveNote = (function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
       var ctx = this.context;
+      ctx.openGroup("modifiers");
       for (var i = 0; i < this.modifiers.length; i++) {
         var mod = this.modifiers[i];
         var note_head = this.note_heads[mod.getIndex()];
@@ -873,6 +874,7 @@ Vex.Flow.StaveNote = (function() {
             ctx.restore();
         }
       }
+      ctx.closeGroup();
     },
 
     // Draw the flag for the note
@@ -905,15 +907,20 @@ Vex.Flow.StaveNote = (function() {
         }
 
         // Draw the Flag
+        this.context.openGroup("flag", null, {pointerBBox: true});
         Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
             this.render_options.glyph_font_scale, flag_code);
+        this.context.closeGroup();
       }
     },
 
     // Draw the NoteHeads
     drawNoteHeads: function(){
+      var that = this;
       this.note_heads.forEach(function(note_head) {
-        note_head.setContext(this.context).draw();
+        that.context.openGroup("notehead", null, {pointerBBox: true});
+        note_head.setContext(that.context).draw();
+        that.context.closeGroup();
       }, this);
     },
 
@@ -926,7 +933,9 @@ Vex.Flow.StaveNote = (function() {
         this.setStem(new Stem(stem_struct));
       }
 
+      this.context.openGroup("stem", null, {pointerBBox: true});
       this.stem.setContext(this.context).draw();
+      this.context.closeGroup();
     },
 
     // Draws all the `StaveNote` parts. This is the main drawing method.
@@ -955,10 +964,15 @@ Vex.Flow.StaveNote = (function() {
 
       // Draw each part of the note
       this.drawLedgerLines();
-      if (render_stem) this.drawStem();
-      this.drawNoteHeads();
-      this.drawFlag();
+
+      this.elem = this.context.openGroup("stavenote", this.id);
+      this.context.openGroup("note", null, {pointerBBox: true});
+        if (render_stem) this.drawStem();
+        this.drawNoteHeads();
+        this.drawFlag();
+      this.context.closeGroup();
       this.drawModifiers();
+      this.context.closeGroup();
     }
   });
 
