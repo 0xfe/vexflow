@@ -2,15 +2,13 @@ VF.Test.run = function () {
   // Setup the measureTextCache with pre-collected data.
   VF.SVGContext.measureTextCache = VF.Test.measureTextCache;
 
-  VF.Test.Stave.Start();
-  VF.Test.TabStave.Start();
+  VF.Test.Accidental.Start();
+  VF.Test.StaveNote.Start();
   VF.Test.Voice.Start();
   VF.Test.NoteHead.Start();
-  VF.Test.StaveNote.Start();
   VF.Test.TabNote.Start();
   VF.Test.TickContext.Start();
   VF.Test.ModifierContext.Start();
-  VF.Test.Accidental.Start();
   VF.Test.Dot.Start();
   VF.Test.Bend.Start();
   VF.Test.Formatter.Start();
@@ -19,6 +17,8 @@ VF.Test.run = function () {
   VF.Test.TimeSignature.Start();
   VF.Test.StaveTie.Start();
   VF.Test.TabTie.Start();
+  VF.Test.Stave.Start();
+  VF.Test.TabStave.Start();
   VF.Test.TabSlide.Start();
   VF.Test.Beam.Start();
   VF.Test.AutoBeamFormatting.Start();

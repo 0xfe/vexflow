@@ -39,6 +39,9 @@ Vex.Flow.Tickable = (function() {
     },
 
     setContext: function(context) { this.context = context; },
+
+    // Set the DOM ID of the element. Must be called before draw(). TODO: Update
+    // ID of element if has already been rendered.
     setId: function(id) { this.id = id; },
     getId: function() { return this.id; },
     getElem: function() { return this.elem; },
@@ -123,13 +126,11 @@ Vex.Flow.Tickable = (function() {
         this.width += this.modifierContext.getWidth();
       }
     },
-
     postFormat: function() {
       if (this.postFormatted) return;
       this.postFormatted = true;
       return this;
     },
-
     getIntrinsicTicks: function() {
       return this.intrinsicTicks;
     },
@@ -137,7 +138,6 @@ Vex.Flow.Tickable = (function() {
       this.intrinsicTicks = intrinsicTicks;
       this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
     },
-
     getTickMultiplier: function() {
       return this.tickMultiplier;
     },
