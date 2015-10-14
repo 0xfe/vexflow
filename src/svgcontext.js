@@ -38,8 +38,11 @@ Vex.Flow.SVGContext = (function() {
       var svg = this.create("svg");
       // Add it to the canvas:
       this.element.appendChild(svg);
+
       // Point to it:
       this.svg = svg;
+      this.groups = [this.svg]; // Create the group stack
+      this.parent = this.svg;
 
       this.path = "";
       this.pen = {x: 0, y: 0};
@@ -80,6 +83,26 @@ Vex.Flow.SVGContext = (function() {
 
       // Test for Internet Explorer
       this.iePolyfill();
+    },
+
+    create: function(svgElementType) {
+      return document.createElementNS(this.svgNS, svgElementType);
+    },
+
+    // Allow grouping elements in containers for interactivity.
+    openGroup: function(name, attr) {
+      var group = this.create("g");
+      this.groups.push(group);
+      this.parent = group;
+    },
+
+    closeGroup: function(name, attr) {
+      var group = this.groups.pop();
+      this.parent = this.groups[this.groups.length - 1];
+    },
+
+    add: function(elem) {
+      this.parent.appendChild(elem);
     },
 
     // Tests if the browser is Internet Explorer; if it is,
@@ -256,10 +279,6 @@ Vex.Flow.SVGContext = (function() {
       return element;
     },
 
-    create: function(svgElementType) {
-      return document.createElementNS(this.svgNS, svgElementType);
-    },
-
     flipRectangle: function(args) {
       // Avoid invalid negative height attributes by
       // flipping a rectangle w/ negative height on its head.
@@ -318,7 +337,7 @@ Vex.Flow.SVGContext = (function() {
 
       this.applyAttributes(rect, attributes);
 
-      this.svg.appendChild(rect);
+      this.add(rect);
       return this;
     },
 
@@ -485,7 +504,7 @@ Vex.Flow.SVGContext = (function() {
           var path = this.create("path");
           attributes.d = this.path;
           this.applyAttributes(path, attributes);
-          this.svg.appendChild(path);
+          this.add(path);
         }
       }
       return this;
@@ -505,12 +524,12 @@ Vex.Flow.SVGContext = (function() {
       attributes.d = this.path;
 
       this.applyAttributes(path, attributes);
-      this.svg.appendChild(path);
+      this.add(path);
       return this;
     },
 
     stroke: function() {
-      // If our current apth is set to glow, make it glow.
+      // If our current path is set to glow, make it glow.
       this.glow();
 
       var path = this.create("path");
@@ -521,7 +540,7 @@ Vex.Flow.SVGContext = (function() {
       attributes.d = this.path;
 
       this.applyAttributes(path, attributes);
-      this.svg.appendChild(path);
+      this.add(path);
       return this;
     },
 
@@ -534,6 +553,8 @@ Vex.Flow.SVGContext = (function() {
       if (typeof(txt.getBBox) === "function") {
         txt.textContent = text;
         this.applyAttributes(txt, this.attributes);
+
+        // Temporarily add it to the document for measurement.
         this.svg.appendChild(txt);
 
         var bbox = txt.getBBox();
@@ -601,7 +622,7 @@ Vex.Flow.SVGContext = (function() {
       var txt = this.create("text");
       txt.textContent = text;
       this.applyAttributes(txt, attributes);
-      this.svg.appendChild(txt);
+      this.add(txt);
     },
 
     save: function() {

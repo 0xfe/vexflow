@@ -33,6 +33,19 @@ Vex.Flow.CanvasContext = (function() {
       this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
+    // Allow grouping elements in containers for interactivity.
+    openGroup: function(name, attr) {
+      throw new Vex.RERR("MethodNotImplemented", "CanvasContext is not interactive.")
+    },
+
+    closeGroup: function(name, attr) {
+      throw new Vex.RERR("MethodNotImplemented", "CanvasContext is not interactive.")
+    },
+
+    add: function(elem) {
+      throw new Vex.RERR("MethodNotImplemented", "CanvasContext is not interactive.")
+    },
+
     setFont: function(family, size, weight) {
       this.vexFlowCanvasContext.font = (weight || "") + " " + size + "pt " + family;
       return this;

@@ -51,6 +51,19 @@ Vex.Flow.RaphaelContext = (function() {
       this.state_stack= [];
     },
 
+    // Allow grouping elements in containers for interactivity.
+    openGroup: function(name, attr) {
+      throw new Vex.RERR("MethodNotImplemented", "RaphaelContext is not interactive.")
+    },
+
+    closeGroup: function(name, attr) {
+      throw new Vex.RERR("MethodNotImplemented", "RaphaelContext is not interactive.")
+    },
+
+    add: function(elem) {
+      throw new Vex.RERR("MethodNotImplemented", "RaphaelContext is not interactive.")
+    },
+
     setFont: function(family, size, weight) {
       this.state.font_family = family;
       this.state.font_size = size;
@@ -107,7 +120,7 @@ Vex.Flow.RaphaelContext = (function() {
       // can no longer be used as an option in an Element.attr() call.
       // It is preserved here for users running earlier versions of
       // Raphael.JS, though it has no effect on the SVG output in
-      // Raphael 2 and higher. 
+      // Raphael 2 and higher.
       this.attributes.transform = "S" + x + "," + y + ",0,0";
       this.attributes.scale = x + "," + y + ",0,0";
       this.attributes.font = this.state.font_size * this.state.scale.x + "pt " +
@@ -291,7 +304,7 @@ Vex.Flow.RaphaelContext = (function() {
             opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
             // See note in this.scale(): In Raphael the scale() method
             // is deprecated and removed as of Raphael 2.0 and replaced
-            // by the transform() method.  It is preserved here for 
+            // by the transform() method.  It is preserved here for
             // users with earlier versions of Raphael, but has no effect
             // on the output SVG in Raphael 2.0+.
             transform: this.attributes.transform,
@@ -311,9 +324,9 @@ Vex.Flow.RaphaelContext = (function() {
     },
 
     stroke: function() {
-      // The first line of code below is, unfortunately, a bit of a hack: 
+      // The first line of code below is, unfortunately, a bit of a hack:
       // Raphael's transform() scaling does not scale the stroke-width, so
-      // in order to scale a stroke, we have to manually scale the 
+      // in order to scale a stroke, we have to manually scale the
       // stroke-width.
       //
       // This works well so long as the X & Y states for this.scale() are
@@ -322,10 +335,10 @@ Vex.Flow.RaphaelContext = (function() {
       // stroke-widths.
       //
       // In the future, if we want to support very divergent values for
-      // horizontal and vertical scaling, we may want to consider 
-      // implementing SVG scaling with properties of the SVG viewBox & 
+      // horizontal and vertical scaling, we may want to consider
+      // implementing SVG scaling with properties of the SVG viewBox &
       // viewPort and removing it entirely from the Element.attr() calls.
-      // This would more closely parallel the approach taken in 
+      // This would more closely parallel the approach taken in
       // canvascontext.js as well.
 
       var strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y)/2;
