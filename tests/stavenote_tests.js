@@ -17,6 +17,9 @@ VF.Test.StaveNote = (function() {
       test("Width", StaveNote.width);
       test("TickContext", StaveNote.tickContext);
 
+      VF.Test.runUITests("Interactive Mouseover StaveNote", StaveNote.draw,
+          { clef: "treble", octaveShift: 0, restKey: "r/4", ui: true });
+
       runTests("StaveNote Draw - Treble", StaveNote.draw,
           { clef: "treble", octaveShift: 0, restKey: "r/4" });
 
@@ -454,6 +457,23 @@ VF.Test.StaveNote = (function() {
         var note = notes[i];
         var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
+        // If this is an interactivity test, then attempt to attach mouseover
+        // and mouseout handlers to the notes.
+        if (options.params.ui) {
+          var item = staveNote.getElem();
+          item.addEventListener("mouseover", function() {
+            Vex.forEach($(this).find("*"), function(child) {
+              child.setAttribute("fill", "green");
+              child.setAttribute("stroke", "green");
+            });
+          }, false);
+          item.addEventListener("mouseout", function() {
+            Vex.forEach($(this).find("*"), function(child) {
+              child.setAttribute("fill", "black");
+              child.setAttribute("stroke", "black");
+            });
+          }, false);
+        }
         ok(staveNote.getX() > 0, "Note " + i + " has X value");
         ok(staveNote.getYs().length > 0, "Note " + i + " has Y values");
       }

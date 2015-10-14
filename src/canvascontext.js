@@ -33,18 +33,10 @@ Vex.Flow.CanvasContext = (function() {
       this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
-    // Allow grouping elements in containers for interactivity.
-    openGroup: function(name, attr) {
-      // Not supported in Canvas
-    },
-
-    closeGroup: function(name, attr) {
-      // Not supported in Canvas
-    },
-
-    add: function(elem) {
-      // Not supported in Canvas
-    },
+    // Containers not implemented
+    openGroup: function(cls, id, attrs) {},
+    closeGroup: function() {},
+    add: function(elem) {},
 
     setFont: function(family, size, weight) {
       this.vexFlowCanvasContext.font = (weight || "") + " " + size + "pt " + family;

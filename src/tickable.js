@@ -25,6 +25,10 @@ Vex.Flow.Tickable = (function() {
       this.postFormatted = false;
       this.tuplet = null;
 
+      // For interactivity
+      this.id = null;
+      this.elem = null;
+
       this.align_center = false;
       this.center_x_shift = 0; // Shift from tick context if center aligned
 
@@ -35,6 +39,9 @@ Vex.Flow.Tickable = (function() {
     },
 
     setContext: function(context) { this.context = context; },
+    setId: function(id) { this.id = id; },
+    getId: function() { return this.id; },
+    getElem: function() { return this.elem; },
     getBoundingBox: function() { return null; },
     getTicks: function() { return this.ticks; },
     shouldIgnoreTicks: function() { return this.ignore_ticks; },
