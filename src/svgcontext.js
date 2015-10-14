@@ -12,8 +12,22 @@ Vex.Flow.SVGContext = (function() {
     if (arguments.length > 0) this.init(element);
   }
 
+  // The measureTextCache is used in Javascript runtimes where
+  // there is no proper DOM support for SVG bounding boxes. This
+  // is currently only useful in the NodeJS visual regression tests.
   SVGContext.measureTextCache = {};
+
+  // If enabled, will start collecting and indexing getBBox data by
+  // font name, size, weight, and style. This should be disabled by
+  // default (or you will find yourself slowly leaking RAM.)
   SVGContext.collectMeasurements = false;
+
+  // If enabled, will warn if there are new getBBox requests that are
+  // not in the cache. This is enabled in the VexFlow tests, and if you
+  // see a warning on the console, you will need to enable collectMeasurements
+  // above, then update measureTextCache with the new values. See
+  // tests/measure_text_cache.js for instructions on how to do this.
+  SVGContext.validateMeasurement = false;
 
   SVGContext.prototype = {
     init: function(element) {
@@ -527,6 +541,9 @@ Vex.Flow.SVGContext = (function() {
             text !== "" &&
             this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
         this.svg.removeChild(txt);
+
+        // For runtimes that do not have full support of bounding boxes, collect
+        // some data which can be used later to extrapolate them.
         if (SVGContext.collectMeasurements) {
           SVGContext.measureTextCache[index] = {
             x: bbox.x,
@@ -542,7 +559,8 @@ Vex.Flow.SVGContext = (function() {
         }
         return bbox;
       } else {
-        // Inside NodeJS
+        // Inside NodeJS or other runtimes that don't support getBBox. This
+        // is currently only useful for the NodeJS visual regression tests.
         return SVGContext.measureTextCache[index];
       }
     },
