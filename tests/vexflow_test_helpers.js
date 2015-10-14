@@ -74,7 +74,6 @@ VF.Test = (function() {
 
     runCanvasTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
-          console.log(assert);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
           var test_canvas = VF.Test.createTestCanvas(test_canvas_sel,
             assert.test.module.name + " (Canvas): " + name);
