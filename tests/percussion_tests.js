@@ -430,5 +430,3 @@ VF.Test.Percussion = (function() {
 
   return Percussion;
 })();
-
-module.exports = VF.Test.Percussion;

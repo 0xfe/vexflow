@@ -445,5 +445,3 @@ VF.Test.StaveConnector = (function() {
 
   return StaveConnector;
 })();
-
-module.exports = VF.Test.StaveConnector;

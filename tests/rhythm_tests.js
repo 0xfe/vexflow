@@ -360,5 +360,3 @@ VF.Test.Rhythm = (function() {
 
   return Rhythm;
 })();
-
-module.exports = VF.Test.Rhythm;

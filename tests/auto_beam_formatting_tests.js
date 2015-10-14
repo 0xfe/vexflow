@@ -1352,5 +1352,3 @@ VF.Test.AutoBeamFormatting = (function() {
 
   return AutoBeamFormatting;
 })();
-
-module.exports = VF.Test.AutoBeamFormatting;

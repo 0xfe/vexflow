@@ -672,5 +672,3 @@ Vex.Flow.Test.Accidental = (function() {
 
   return Accidental;
 })();
-
-module.exports = Vex.Flow.Test.Accidental;

@@ -409,5 +409,3 @@ VF.Test.Formatter = (function() {
 
   return Formatter;
 })();
-
-module.exports = VF.Test.Formatter;

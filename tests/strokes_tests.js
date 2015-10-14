@@ -432,5 +432,3 @@ VF.Test.Strokes = (function() {
 
   return Strokes;
 })();
-
-module.exports = VF.Test.Strokes;

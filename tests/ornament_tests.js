@@ -202,5 +202,3 @@ VF.Test.Ornament = (function() {
 
   return Ornament;
 })();
-
-module.exports = VF.Test.Ornament;

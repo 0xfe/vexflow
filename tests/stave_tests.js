@@ -436,5 +436,3 @@ VF.Test.Stave = (function() {
 
   return Stave;
 })();
-
-module.exports = VF.Test.Stave;

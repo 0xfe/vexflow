@@ -1224,5 +1224,3 @@ VF.Test.StaveNote = (function() {
 
   return StaveNote;
 })();
-
-module.exports = VF.Test.StaveNote;

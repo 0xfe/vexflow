@@ -32,5 +32,3 @@ VF.Test.ModifierContext = (function() {
 
   return ModifierContext;
 })();
-
-module.exports = VF.Test.ModifierContext;

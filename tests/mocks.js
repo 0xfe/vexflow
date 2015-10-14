@@ -32,5 +32,3 @@ VF.Test.MockTickable = (function() {
 
   return MockTickable;
 })();
-
-module.exports = VF.Test.MockTickable;

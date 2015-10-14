@@ -972,5 +972,3 @@ VF.Test.Beam = (function() {
 
   return Beam;
 })();
-
-module.exports = VF.Test.Beam;

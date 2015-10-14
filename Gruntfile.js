@@ -13,6 +13,7 @@ module.exports = function(grunt) {
   var RELEASE_DIR = 'releases';
   var TARGET_RAW = BUILD_DIR + '/vexflow-debug.js';
   var TARGET_MIN = BUILD_DIR + '/vexflow-min.js';
+  var TARGET_TESTS = BUILD_DIR + '/vexflow-tests.js';
 
   var SOURCES = [ "src/vex.js",
                   "src/flow.js",
@@ -83,15 +84,24 @@ module.exports = function(grunt) {
                   "src/textbracket.js",
                   "src/textdynamics.js", "src/*.js", "!src/header.js", "!src/container.js"];
 
+  var TEST_SOURCES = [
+    "tests/vexflow_test_helpers.js", "tests/mocks.js",
+    "tests/measure_text_cache.js", "tests/*_tests.js", "tests/run.js"];
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       options: {
-        banner: BANNER
+        banner: BANNER,
+        sourceMap: true
       },
-      build: {
+      vexflow: {
         src: SOURCES,
         dest: TARGET_RAW
+      },
+      tests: {
+        src: TEST_SOURCES,
+        dest: TARGET_TESTS
       }
     },
     uglify: {
@@ -122,7 +132,14 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['src/*', 'Gruntfile.js'],
-        tasks: ['concat', 'jshint'],
+        tasks: ['concat:vexflow'],
+        options: {
+          interrupt: true
+        }
+      },
+      tests: {
+        files: ['tests/*'],
+        tasks: ['concat:tests'],
         options: {
           interrupt: true
         }
@@ -194,10 +211,7 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'docco']);
-
-  grunt.registerTask('test', 'Run qunit tests.', function() {
-    grunt.task.run('qunit');
-  });
+  grunt.registerTask('test', 'Run qunit tests.', ['concat', 'qunit']);
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current binaries to releases/.', function() {

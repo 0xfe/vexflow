@@ -156,5 +156,3 @@ VF.Test.StaveTie = (function() {
 
   return StaveTie;
 })();
-
-module.exports = VF.Test.StaveTie;

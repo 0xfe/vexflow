@@ -405,5 +405,3 @@ VF.Test.Rests = (function() {
 
   return Rests;
 })();
-
-module.exports = VF.Test.Rests;

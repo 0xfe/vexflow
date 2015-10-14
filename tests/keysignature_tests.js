@@ -212,5 +212,3 @@ VF.Test.KeySignature = (function() {
 
   return KeySignature;
 })();
-
-module.exports = VF.Test.KeySignature;

@@ -146,5 +146,3 @@ VF.Test.TextBracket = (function(){
 
   return TextBracket;
 })();
-
-module.exports = VF.Test.TextBracket;

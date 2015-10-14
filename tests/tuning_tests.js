@@ -98,5 +98,3 @@ VF.Test.Tuning = (function() {
 
   return Tuning;
 })();
-
-module.exports = VF.Test.Tuning;

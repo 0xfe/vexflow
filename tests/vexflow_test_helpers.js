@@ -103,6 +103,7 @@ VF.Test = (function() {
       var jsdom = require("jsdom").jsdom;
       var xmldom = require("xmldom");
       var fs = require('fs');
+      var path = require('path');
 
       window = jsdom().defaultView;
       document = window.document;
@@ -129,7 +130,7 @@ VF.Test = (function() {
 
           var moduleName = sanitizeName(QUnit.current_module);
           var testName = sanitizeName(QUnit.current_test);
-          var filename = VF.Test.NODE_IMAGEDIR + "/" + moduleName + "." + testName + ".svg";
+          var filename = path.resolve(VF.Test.NODE_IMAGEDIR, moduleName + "." + testName + ".svg");
           fs.writeFile(filename, svgData, function(err) {
             if (err) {
               return console.log("Can't save file: " + filename + ". Error: " + err);
@@ -176,5 +177,3 @@ VF.Test = (function() {
 
   return Test;
 })();
-
-module.exports = VF.Test;

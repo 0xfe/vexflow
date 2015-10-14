@@ -163,5 +163,3 @@ VF.Test.Dot = (function() {
 
   return Dot;
 })()
-
-module.exports = VF.Test.Dot;

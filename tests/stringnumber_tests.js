@@ -385,5 +385,3 @@ VF.Test.StringNumber = (function() {
 
   return StringNumber;
 })();
-
-module.exports = VF.Test.StringNumber;

@@ -218,5 +218,3 @@ VF.Test.Curve = (function () {
 
   return Curve;
 })();
-
-module.exports = VF.Test.Curve;

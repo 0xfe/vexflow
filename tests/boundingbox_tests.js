@@ -39,5 +39,3 @@ VF.Test.BoundingBox = (function() {
 
   return BoundingBox;
 })();
-
-module.exports = VF.Test.BoundingBox;
