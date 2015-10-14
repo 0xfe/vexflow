@@ -35,15 +35,15 @@ Vex.Flow.CanvasContext = (function() {
 
     // Allow grouping elements in containers for interactivity.
     openGroup: function(name, attr) {
-      throw new Vex.RERR("MethodNotImplemented", "CanvasContext is not interactive.")
+      // Not supported in Canvas
     },
 
     closeGroup: function(name, attr) {
-      throw new Vex.RERR("MethodNotImplemented", "CanvasContext is not interactive.")
+      // Not supported in Canvas
     },
 
     add: function(elem) {
-      throw new Vex.RERR("MethodNotImplemented", "CanvasContext is not interactive.")
+      // Not supported in Canvas
     },
 
     setFont: function(family, size, weight) {

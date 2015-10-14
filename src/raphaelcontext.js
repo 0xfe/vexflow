@@ -53,15 +53,15 @@ Vex.Flow.RaphaelContext = (function() {
 
     // Allow grouping elements in containers for interactivity.
     openGroup: function(name, attr) {
-      throw new Vex.RERR("MethodNotImplemented", "RaphaelContext is not interactive.")
+      // Not supported in Raphael
     },
 
     closeGroup: function(name, attr) {
-      throw new Vex.RERR("MethodNotImplemented", "RaphaelContext is not interactive.")
+      // Not supported in Raphael
     },
 
     add: function(elem) {
-      throw new Vex.RERR("MethodNotImplemented", "RaphaelContext is not interactive.")
+      // Not supported in Raphael
     },
 
     setFont: function(family, size, weight) {
