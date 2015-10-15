@@ -8,13 +8,13 @@ VF.Test.PedalMarking = (function() {
     Start: function() {
       var runTests = VF.Test.runTests;
       QUnit.module("PedalMarking");
-      runTests("Simple Pedal", PedalMarking.simpleText);
-      runTests("Simple Pedal", PedalMarking.simpleBracket);
-      runTests("Simple Pedal", PedalMarking.simpleMixed);
-      runTests("Release and Depress on Same Note", PedalMarking.releaseDepressOnSameNoteBracketed);
-      runTests("Release and Depress on Same Note", PedalMarking.releaseDepressOnSameNoteMixed);
-      runTests("Custom Text", PedalMarking.customText);
-      runTests("Custom Text", PedalMarking.customTextMixed);
+      runTests("Simple Pedal 1", PedalMarking.simpleText);
+      runTests("Simple Pedal 2", PedalMarking.simpleBracket);
+      runTests("Simple Pedal 3", PedalMarking.simpleMixed);
+      runTests("Release and Depress on Same Note 1", PedalMarking.releaseDepressOnSameNoteBracketed);
+      runTests("Release and Depress on Same Note 2", PedalMarking.releaseDepressOnSameNoteMixed);
+      runTests("Custom Text 1", PedalMarking.customText);
+      runTests("Custom Text 2", PedalMarking.customTextMixed);
     },
 
     simpleText: function(options, contextBuilder) {

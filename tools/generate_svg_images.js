@@ -56,6 +56,7 @@ VF.Test.RUN_RAPHAEL_TESTS = false;
 VF.Test.RUN_NODE_TESTS = true;
 VF.Test.NODE_IMAGEDIR = path.resolve(__dirname, '..', 'build', 'images');
 
+// Create the image directory if it doesn't exist.
 try {
   fs.accessSync(VF.Test.NODE_IMAGEDIR, fs.R_OK | fs.W_OK);
 } catch(e) {

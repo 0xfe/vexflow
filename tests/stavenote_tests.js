@@ -38,7 +38,7 @@ VF.Test.StaveNote = (function() {
       runTests("StaveNote Draw - Harmonic And Muted", StaveNote.drawHarmonicAndMuted);
       runTests("StaveNote Draw - Slash", StaveNote.drawSlash);
       runTests("Displacements", StaveNote.displacements);
-      runTests("StaveNote Draw - Bass", StaveNote.drawBass);
+      runTests("StaveNote Draw - Bass 2", StaveNote.drawBass);
       runTests("StaveNote Draw - Key Styles", StaveNote.drawKeyStyles);
       runTests("StaveNote Draw - StaveNote Styles", StaveNote.drawNoteStyles);
       runTests("Flag and Dot Placement - Stem Up", StaveNote.dotsAndFlagsStemUp);
