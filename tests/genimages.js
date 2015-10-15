@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
  Run a bunch of VexFlow tests, grab the images, and dump them into
  a local directory.
