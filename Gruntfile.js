@@ -193,7 +193,7 @@ module.exports = function(grunt) {
         commit: false
       }
     },
-    clean: [BUILD_DIR, RELEASE_DIR],
+    clean: [BUILD_DIR],
   });
 
   // Load the plugin that provides the "uglify" task.
