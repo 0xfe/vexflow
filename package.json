@@ -34,8 +34,10 @@
     "grunt-git": "^0.3.2",
     "grunt-release": "^0.7.0",
     "jquery": "^2.1.1",
+    "jsdom": "^6.5.1",
     "qunit": "^0.7.5",
-    "raphael": "^2.1.0"
+    "raphael": "^2.1.0",
+    "xmldom": "^0.1.19"
   },
   "scripts": {
     "start": "grunt stage",

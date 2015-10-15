@@ -5,7 +5,8 @@
 # Prerequisites: librsvg, ImageMagick
 #    * ImageMagick's SVG parsing is broken, which is why we use librsvg.
 #
-# On OSX: $ brew install librsvg imagem
+# On OSX:   $ brew install librsvg imagemagick
+# On Linux: $ apt-get install librsvg2-dev librsvg2-bin imagemagick
 #
 # Usage:
 #
