@@ -16,6 +16,7 @@
 var jsdom = require("jsdom").jsdom;
 var xmldom = require("xmldom");
 var path = require("path");
+var fs = require("fs");
 
 // Mock out the QUnit stuff, since we don't really care about
 // the assertions.
@@ -54,6 +55,12 @@ VF.Test.RUN_SVG_TESTS = false;
 VF.Test.RUN_RAPHAEL_TESTS = false;
 VF.Test.RUN_NODE_TESTS = true;
 VF.Test.NODE_IMAGEDIR = path.resolve(__dirname, '..', 'build', 'images');
+
+try {
+  fs.accessSync(VF.Test.NODE_IMAGEDIR, fs.R_OK | fs.W_OK);
+} catch(e) {
+  fs.mkdirSync(VF.Test.NODE_IMAGEDIR);
+}
 
 // Run all tests.
 VF.Test.run();
