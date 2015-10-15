@@ -54,7 +54,7 @@ if [ "$1" == "" ]
 then
   files=*.svg
 else
-  files=$1*
+  files=$1*.svg
 fi
 
 if [ "`basename $PWD`" == "tools" ]
