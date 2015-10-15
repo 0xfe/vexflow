@@ -41,6 +41,7 @@ DIFF=$BASE/build/images/diff
 
 # All results are stored here.
 RESULTS=$DIFF/results.txt
+WARNINGS=$DIFF/warnings.txt
 
 mkdir -p $DIFF
 if [ -e "$RESULTS" ]
@@ -48,6 +49,7 @@ then
   rm $DIFF/*
 fi
 touch $RESULTS
+touch $WARNINGS
 
 # If no prefix is provided, test all images.
 if [ "$1" == "" ]
@@ -71,6 +73,12 @@ do
   diff=$CURRENT/temp
 
   echo Diffing: $name
+
+  if [ ! -e "$current" ]
+  then
+    echo "Warning: $name.svg missing in $CURRENT." >>$WARNINGS
+    continue
+  fi
 
   # Generate PNG images from SVG
   rsvg-convert $blessed >$diff-a.png
@@ -96,6 +104,21 @@ do
   fi
 done
 
+## Check for files newly built that are not yet blessed.
+for image in $CURRENT/$files
+do
+  name=`basename $image .svg`
+  blessed=$BLESSED/$name.svg
+  current=$CURRENT/$name.svg
+
+  if [ ! -e "$blessed" ]
+  then
+    echo "  Warning: $name.svg missing in $BLESSED." >>$WARNINGS
+  fi
+done
+
+num_warnings=`cat $WARNINGS | wc -l`
+
 # Sort results by PHASH
 sort -r -n -k 2 $RESULTS.unsorted >$RESULTS
 rm $RESULTS.unsorted
@@ -106,3 +129,10 @@ echo All images with a difference over threshold, $THRESHOLD, are
 echo available in $DIFF, sorted by perceptual hash.
 echo
 echo If all the tests look good, then run: cp $CURRENT/'*.svg' $BLESSED.
+
+if [ "$num_warnings" -gt 0 ]
+then
+  echo
+  echo "You have $num_warnings warning(s):"
+  cat $WARNINGS
+fi
