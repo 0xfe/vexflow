@@ -365,7 +365,7 @@ Vex.Flow.Beam = (function() {
             // If a secondary beam break is set up, end the beam right now.
             if (should_break) {
               beam_started = false;
-              if (next_note && !beam_next) {
+              if (next_note && !beam_next && current_beam.end === null) {
 
                 // This note gets a beam,.but the next one does not. This means
                 //  we need a partial pointing right.
