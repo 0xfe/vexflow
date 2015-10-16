@@ -21,7 +21,6 @@ Vex.Flow.StemmableNote = (function(){
       this.stem = null;
       this.stem_extension_override = null;
       this.beam = null;
-
     },
 
     // Get and set the note's `Stem`

@@ -1,16 +1,14 @@
 #!/usr/bin/env node
 
 /*
- Run a bunch of VexFlow tests, grab the images, and dump them into
- a local directory.
+  Run the full VexFlow test suite, grab the generated images, and
+  dump them into a local directory as SVG files.
 
- $ npm install jsdom
- $ npm install xmldom
+  This meant to be used with the visual regression test system in
+  `tools/visual_regression.sh`.
 
- $ mkdir -p build/images
- $ node tests/genimages.js
- $ cd build/images
- $ for f in *.svg; do echo $f; convert $f `basename $f .svg`.png; done
+  Quick commandline to convert the SVG files to PNG:
+    $ for f in *.svg; do echo $f; rsvg-convert $f `basename $f .svg`.png; done
 */
 
 var jsdom = require("jsdom").jsdom;
