@@ -89,27 +89,27 @@ Vex.Flow.Ornament = (function() {
   Ornament.format = function(ornaments, state) {
    if (!ornaments || ornaments.length === 0) return false;
 
-    var text_line = state.text_line;
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < ornaments.length; ++i) {
       var ornament = ornaments[i];
-      ornament.setTextLine(text_line);
-      width = ornament.getWidth() > max_width ?
-        ornament.getWidth() : max_width;
+      var increment = 1;
+      width = Math.max(ornament.getWidth(), width);
 
       var type = Vex.Flow.ornamentCodes(ornament.type);
-      if(type.between_lines)
-        text_line += 1;
-      else
-        text_line += 1.5;
+
+      if (!type.between_lines) increment += 1.5;
+
+      if (ornament.getPosition() === Modifier.Position.ABOVE) {
+        ornament.setTextLine(state.top_text_line);
+        state.top_text_line += increment;
+      } else {
+        ornament.setTextLine(state.text_line);
+        state.text_line += increment;
+      }
     }
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
-    state.text_line = text_line;
     return true;
   };
 

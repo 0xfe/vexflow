@@ -33,6 +33,11 @@ Vex.Flow.CanvasContext = (function() {
       this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
 
+    // Containers not implemented
+    openGroup: function(cls, id, attrs) {},
+    closeGroup: function() {},
+    add: function(elem) {},
+
     setFont: function(family, size, weight) {
       this.vexFlowCanvasContext.font = (weight || "") + " " + size + "pt " + family;
       return this;

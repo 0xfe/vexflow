@@ -12,6 +12,25 @@ Vex.Flow.SVGContext = (function() {
     if (arguments.length > 0) this.init(element);
   }
 
+  // The measureTextCache is used in Javascript runtimes where
+  // there is no proper DOM support for SVG bounding boxes. This
+  // is currently only useful in the NodeJS visual regression tests.
+  SVGContext.measureTextCache = {};
+
+  // If enabled, will start collecting and indexing getBBox data by
+  // font name, size, weight, and style. This should be disabled by
+  // default (or you will find yourself slowly leaking RAM.)
+  SVGContext.collectMeasurements = false;
+
+  // If enabled, will warn if there are new getBBox requests that are
+  // not in the cache. This is enabled in the VexFlow tests, and if you
+  // see a warning on the console, you will need to enable collectMeasurements
+  // above, then update measureTextCache with the new values. See
+  // tests/measure_text_cache.js for instructions on how to do this.
+  SVGContext.validateMeasurement = false;
+
+  SVGContext.addPrefix = Vex.Prefix;
+
   SVGContext.prototype = {
     init: function(element) {
       // element is the parent DOM object
@@ -21,8 +40,11 @@ Vex.Flow.SVGContext = (function() {
       var svg = this.create("svg");
       // Add it to the canvas:
       this.element.appendChild(svg);
+
       // Point to it:
       this.svg = svg;
+      this.groups = [this.svg]; // Create the group stack
+      this.parent = this.svg;
 
       this.path = "";
       this.pen = {x: 0, y: 0};
@@ -65,14 +87,44 @@ Vex.Flow.SVGContext = (function() {
       this.iePolyfill();
     },
 
+    create: function(svgElementType) {
+      return document.createElementNS(this.svgNS, svgElementType);
+    },
+
+    // Allow grouping elements in containers for interactivity.
+    openGroup: function(cls, id, attrs) {
+      var group = this.create("g");
+      this.groups.push(group);
+      this.parent.appendChild(group);
+      this.parent = group;
+      if (cls) group.setAttribute("class", SVGContext.addPrefix(cls));
+      if (id) group.setAttribute("id", SVGContext.addPrefix(id));
+
+      if (attrs && attrs.pointerBBox) {
+        group.setAttribute("pointer-events", "bounding-box");
+      }
+      return group;
+    },
+
+    closeGroup: function() {
+      var group = this.groups.pop();
+      this.parent = this.groups[this.groups.length - 1];
+    },
+
+    add: function(elem) {
+      this.parent.appendChild(elem);
+    },
+
     // Tests if the browser is Internet Explorer; if it is,
     // we do some tricks to improve text layout.  See the
     // note at ieMeasureTextFix() for details.
     iePolyfill: function() {
+      if (typeof(navigator) !== "undefined") {
         this.ie = (  /MSIE 9/i.test(navigator.userAgent) ||
                             /MSIE 10/i.test(navigator.userAgent) ||
                             /rv:11\.0/i.test(navigator.userAgent) ||
                             /Trident/i.test(navigator.userAgent) );
+      }
     },
 
     // ### Styling & State Methods:
@@ -170,12 +222,12 @@ Vex.Flow.SVGContext = (function() {
       this.lineWidth = width;
     },
 
-    setLineDash: function(lineDash) { 
+    setLineDash: function(lineDash) {
       this.attributes["stroke-linedash"] = lineDash;
-      return this; 
+      return this;
     },
 
-    setLineCap: function(lineCap) { 
+    setLineCap: function(lineCap) {
       this.attributes["stroke-linecap"] = lineCap;
       return this;
     },
@@ -200,14 +252,14 @@ Vex.Flow.SVGContext = (function() {
 
     scale: function(x, y) {
       // uses viewBox to scale
-      // TODO (GCR): we may at some point want to distinguish the 
-      // style.width / style.height properties that are applied to 
-      // the SVG object from our internal conception of the SVG 
+      // TODO (GCR): we may at some point want to distinguish the
+      // style.width / style.height properties that are applied to
+      // the SVG object from our internal conception of the SVG
       // width/height.  This would allow us to create automatically
       // scaling SVG's that filled their containers, for instance.
       //
-      // As this isn't implemented in Canvas or Raphael contexts, 
-      // I've left as is for now, but in using the viewBox to 
+      // As this isn't implemented in Canvas or Raphael contexts,
+      // I've left as is for now, but in using the viewBox to
       // handle internal scaling, am trying to make it possible
       // for us to eventually move in that direction.
 
@@ -234,11 +286,7 @@ Vex.Flow.SVGContext = (function() {
       for(var propertyName in attributes) {
         element.setAttributeNS(null, propertyName, attributes[propertyName]);
       }
-      return element;  
-    },
-
-    create: function(svgElementType) {
-      return document.createElementNS(this.svgNS, svgElementType);
+      return element;
     },
 
     flipRectangle: function(args) {
@@ -256,7 +304,7 @@ Vex.Flow.SVGContext = (function() {
 
     // ### Shape & Path Methods:
 
-    clear: function() { 
+    clear: function() {
       // Clear the SVG by removing all inner children.
 
       // (This approach is usually slightly more efficient
@@ -273,7 +321,6 @@ Vex.Flow.SVGContext = (function() {
 
       // Replace the viewbox attribute we just removed:
       this.scale(this.state.scale.x, this.state.scale.y);
-
     },
 
     // ## Rectangles:
@@ -299,7 +346,7 @@ Vex.Flow.SVGContext = (function() {
 
       this.applyAttributes(rect, attributes);
 
-      this.svg.appendChild(rect);
+      this.add(rect);
       return this;
     },
 
@@ -466,7 +513,7 @@ Vex.Flow.SVGContext = (function() {
           var path = this.create("path");
           attributes.d = this.path;
           this.applyAttributes(path, attributes);
-          this.svg.appendChild(path);
+          this.add(path);
         }
       }
       return this;
@@ -486,12 +533,12 @@ Vex.Flow.SVGContext = (function() {
       attributes.d = this.path;
 
       this.applyAttributes(path, attributes);
-      this.svg.appendChild(path);
+      this.add(path);
       return this;
     },
 
     stroke: function() {
-      // If our current apth is set to glow, make it glow.
+      // If our current path is set to glow, make it glow.
       this.glow();
 
       var path = this.create("path");
@@ -502,23 +549,50 @@ Vex.Flow.SVGContext = (function() {
       attributes.d = this.path;
 
       this.applyAttributes(path, attributes);
-      this.svg.appendChild(path);
+      this.add(path);
       return this;
     },
 
     // ## Text Methods:
-
     measureText: function(text) {
+      var index = text + this.attributes["font-style"] + this.attributes["font-family"] +
+                  this.attributes["font-weight"] + this.attributes["font-size"];
+
       var txt = this.create("text");
-      txt.textContent = text;
-      this.applyAttributes(txt, this.attributes);
-      this.svg.appendChild(txt);
-      var bbox = txt.getBBox();
-      if( this.ie && 
-          text !== "" &&
-          this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
-      this.svg.removeChild(txt);
-      return bbox;
+      if (typeof(txt.getBBox) === "function") {
+        txt.textContent = text;
+        this.applyAttributes(txt, this.attributes);
+
+        // Temporarily add it to the document for measurement.
+        this.svg.appendChild(txt);
+
+        var bbox = txt.getBBox();
+        if( this.ie &&
+            text !== "" &&
+            this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
+        this.svg.removeChild(txt);
+
+        // For runtimes that do not have full support of bounding boxes, collect
+        // some data which can be used later to extrapolate them.
+        if (SVGContext.collectMeasurements) {
+          SVGContext.measureTextCache[index] = {
+            x: bbox.x,
+            y: bbox.y,
+            width: bbox.width,
+            height: bbox.height
+          };
+        }
+        if (SVGContext.validateMeasurements) {
+          if (!(index in SVGContext.measureTextCache)) {
+            Vex.W("measureTextCache is stale. Please update tests/measure_text_cache.js: ", index);
+          }
+        }
+        return bbox;
+      } else {
+        // Inside NodeJS or other runtimes that don't support getBBox. This
+        // is currently only useful for the NodeJS visual regression tests.
+        return SVGContext.measureTextCache[index];
+      }
     },
 
     ieMeasureTextFix: function(bbox, text) {
@@ -557,7 +631,7 @@ Vex.Flow.SVGContext = (function() {
       var txt = this.create("text");
       txt.textContent = text;
       this.applyAttributes(txt, attributes);
-      this.svg.appendChild(txt);
+      this.add(txt);
     },
 
     save: function() {

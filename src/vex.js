@@ -27,6 +27,7 @@ Vex.RuntimeError = function(code, message) {
   this.code = code;
   this.message = message;
 };
+
 Vex.RuntimeError.prototype.toString = function() {
   return "RuntimeError: " + this.message;
 };
@@ -42,14 +43,13 @@ Vex.Merge = function(destination, source) {
   return destination;
 };
 
-// DEPRECATED. Use `Math.min`.
-Vex.Min = function(a, b) {
-  return (a > b) ? b : a;
-};
-
-// DEPRECATED. Use `Math.max`.
-Vex.Max = function(a, b) {
-  return (a > b) ? a : b;
+// DEPRECATED. Use `Math.*`.
+Vex.Min = Math.min;
+Vex.Max = Math.max;
+Vex.forEach = function(a, fn) {
+  for (var i=0; i<a.length; i++) {
+    fn(a[i],i);
+  }
 };
 
 // Round number to nearest fractional value (`.5`, `.25`, etc.)
@@ -120,7 +120,7 @@ Vex.getCanvasContext = function(canvas_sel) {
 Vex.drawDot = function(ctx, x, y, color) {
   var c = color || "#f55";
   ctx.save();
-  ctx.fillStyle = c;
+  ctx.setFillStyle(c);
 
   //draw a circle
   ctx.beginPath();
@@ -160,6 +160,25 @@ Vex.Inherit = (function () {
     return C;
   };
 }());
+
+// Get stack trace.
+Vex.StackTrace = function() {
+  var err = new Error();
+  return err.stack;
+};
+
+// Dump warning to console.
+Vex.W = function() {
+  var line = Array.prototype.slice.call(arguments).join(" ");
+  window.console.log("Warning: ", line, Vex.StackTrace());
+};
+
+// Used by various classes (e.g., SVGContext) to provide a
+// unique prefix to element names (or other keys in shared namespaces).
+Vex.Prefix = function(text) {
+  return Vex.Prefix.prefix + text;
+};
+Vex.Prefix.prefix = "vf-";
 
 // UMD to export Vex.
 //

@@ -1,40 +1,34 @@
 /**
- * VexFlow - TickContext Tests
+ * VexFlow - TickContext Mocks
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-Vex.Flow.Test.TIME4_4 = {
-  num_beats: 4,
-  beat_value: 4,
-  resolution: Vex.Flow.RESOLUTION
-};
-
 /* Mock Tickable */
+VF.Test.MockTickable = (function() {
+  function MockTickable() {
+    this.ignore_ticks = false;
+  }
+  MockTickable.prototype = {
+    init: function() {},
+    getX: function() {return this.tickContext.getX();},
+    getIntrinsicTicks: function() {return this.ticks;},
+    getTicks: function() {return this.ticks;},
+    setTicks: function(t) {this.ticks = new VF.Fraction(t, 1); return this; },
+    getMetrics: function() {
+      return { noteWidth: this.width,
+               left_shift: 0,
+               modLeftPx: 0, modRightPx: 0,
+               extraLeftPx: 0, extraRightPx: 0 };
+    },
+    getWidth: function() {return this.width;},
+    setWidth: function(w) {this.width = w; return this; },
+    setVoice: function(v) {this.voice = v; return this; },
+    setStave: function(stave) {this.stave = stave; return this; },
+    setTickContext: function(tc) {this.tickContext = tc; return this; },
+    setIgnoreTicks: function(ignore_ticks) {this.ignore_ticks = ignore_ticks; return this; },
+    shouldIgnoreTicks: function() {return this.ignore_ticks; },
+    preFormat: function() {}
+  };
 
-Vex.Flow.Test.MockTickable = function() { this.ignore_ticks = false; }
-Vex.Flow.Test.MockTickable.prototype.getX = function() {
-  return this.tickContext.getX();}
-Vex.Flow.Test.MockTickable.prototype.getIntrinsicTicks = function() {return this.ticks;}
-Vex.Flow.Test.MockTickable.prototype.getTicks = function() {return this.ticks;}
-Vex.Flow.Test.MockTickable.prototype.setTicks = function(t) {
-  this.ticks = new Vex.Flow.Fraction(t, 1); return this; };
-Vex.Flow.Test.MockTickable.prototype.getMetrics = function() {
-  return { noteWidth: this.width,
-           left_shift: 0,
-           modLeftPx: 0, modRightPx: 0,
-           extraLeftPx: 0, extraRightPx: 0 };
-}
-Vex.Flow.Test.MockTickable.prototype.getWidth = function() {return this.width;}
-Vex.Flow.Test.MockTickable.prototype.setWidth = function(w) {
-  this.width = w; return this; }
-Vex.Flow.Test.MockTickable.prototype.setVoice = function(v) {
-  this.voice = v; return this; }
-Vex.Flow.Test.MockTickable.prototype.setStave = function(stave) {
-  this.stave = stave; return this; }
-Vex.Flow.Test.MockTickable.prototype.setTickContext = function(tc) {
-  this.tickContext = tc; return this; }
-Vex.Flow.Test.MockTickable.prototype.setIgnoreTicks = function(ignore_ticks) {
-  this.ignore_ticks = ignore_ticks; return this; }
-Vex.Flow.Test.MockTickable.prototype.shouldIgnoreTicks = function() {
-  return this.ignore_ticks; }
-Vex.Flow.Test.MockTickable.prototype.preFormat = function() {}
+  return MockTickable;
+})();

@@ -15,7 +15,8 @@ Vex.Flow.Vibrato = (function() {
   Vibrato.format = function(vibratos, state, context) {
     if (!vibratos || vibratos.length === 0) return false;
 
-    var text_line = state.text_line;
+    // Vibratos are always on top.
+    var text_line = state.top_text_line;
     var width = 0;
     var shift = state.right_shift - 7;
 
@@ -35,7 +36,7 @@ Vex.Flow.Vibrato = (function() {
     }
 
     state.right_shift += width;
-    state.text_line += 1;
+    state.top_text_line += 1;
     return true;
   };
 

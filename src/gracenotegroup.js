@@ -49,10 +49,18 @@ Vex.Flow.GraceNoteGroup = (function(){
 
     // If first note left shift in case it is displaced
     var group_shift = group_list[0].shift;
+    var formatWidth;
     for (i = 0; i < group_list.length; ++i) {
       gracenote_group = group_list[i].gracenote_group;
       gracenote_group.preFormat();
-      group_shift = gracenote_group.getWidth() + gracenote_spacing;
+      formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+      group_shift = Math.max(formatWidth, group_shift);
+    }
+
+    for (i = 0; i < group_list.length; ++i) {
+      gracenote_group = group_list[i].gracenote_group;
+      formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+      gracenote_group.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
     }
 
     state.left_shift += group_shift;
@@ -96,7 +104,6 @@ Vex.Flow.GraceNoteGroup = (function(){
 
       this.formatter.joinVoices([this.voice]).format([this.voice], 0);
       this.setWidth(this.formatter.getMinTotalWidth());
-
       this.preFormatted = true;
     },
 
@@ -122,9 +129,6 @@ Vex.Flow.GraceNoteGroup = (function(){
     getWidth: function(){
       return this.width;
     },
-    setXShift: function(x_shift) {
-        this.x_shift = x_shift;
-    },
     draw: function() {
       if (!this.context)  {
         throw new Vex.RuntimeError("NoContext",
@@ -140,12 +144,13 @@ Vex.Flow.GraceNoteGroup = (function(){
           "Can't draw grace note without a parent note and parent note index.");
       }
 
-      function alignGraceNotesWithNote(grace_notes, note) {
+      var that = this;
+      function alignGraceNotesWithNote(grace_notes, note, groupWidth) {
         // Shift over the tick contexts of each note
         // So that th aligned with the note
         var tickContext = note.getTickContext();
         var extraPx = tickContext.getExtraPx();
-        var x = tickContext.getX() - extraPx.left - extraPx.extraLeft;
+        var x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
         grace_notes.forEach(function(graceNote) {
             var tick_context = graceNote.getTickContext();
             var x_offset = tick_context.getX();
@@ -154,7 +159,7 @@ Vex.Flow.GraceNoteGroup = (function(){
         });
       }
 
-      alignGraceNotesWithNote(this.grace_notes, note);
+      alignGraceNotesWithNote(this.grace_notes, note, this.width);
 
       // Draw notes
       this.grace_notes.forEach(function(graceNote) {

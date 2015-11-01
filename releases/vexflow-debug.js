@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.27 built on 2015-01-24.
+ * VexFlow 1.2.36 built on 2015-10-15.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -33,6 +33,7 @@ Vex.RuntimeError = function(code, message) {
   this.code = code;
   this.message = message;
 };
+
 Vex.RuntimeError.prototype.toString = function() {
   return "RuntimeError: " + this.message;
 };
@@ -48,14 +49,13 @@ Vex.Merge = function(destination, source) {
   return destination;
 };
 
-// DEPRECATED. Use `Math.min`.
-Vex.Min = function(a, b) {
-  return (a > b) ? b : a;
-};
-
-// DEPRECATED. Use `Math.max`.
-Vex.Max = function(a, b) {
-  return (a > b) ? a : b;
+// DEPRECATED. Use `Math.*`.
+Vex.Min = Math.min;
+Vex.Max = Math.max;
+Vex.forEach = function(a, fn) {
+  for (var i=0; i<a.length; i++) {
+    fn(a[i],i);
+  }
 };
 
 // Round number to nearest fractional value (`.5`, `.25`, etc.)
@@ -126,7 +126,7 @@ Vex.getCanvasContext = function(canvas_sel) {
 Vex.drawDot = function(ctx, x, y, color) {
   var c = color || "#f55";
   ctx.save();
-  ctx.fillStyle = c;
+  ctx.setFillStyle(c);
 
   //draw a circle
   ctx.beginPath();
@@ -166,6 +166,25 @@ Vex.Inherit = (function () {
     return C;
   };
 }());
+
+// Get stack trace.
+Vex.StackTrace = function() {
+  var err = new Error();
+  return err.stack;
+};
+
+// Dump warning to console.
+Vex.W = function() {
+  var line = Array.prototype.slice.call(arguments).join(" ");
+  window.console.log("Warning: ", line, Vex.StackTrace());
+};
+
+// Used by various classes (e.g., SVGContext) to provide a
+// unique prefix to element names (or other keys in shared namespaces).
+Vex.Prefix = function(text) {
+  return Vex.Prefix.prefix + text;
+};
+Vex.Prefix.prefix = "vf-";
 
 // UMD to export Vex.
 //
@@ -545,7 +564,7 @@ Vex.Flow.clefProperties.values = {
 /*
   Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
 
-  The last argument, params, is a struct the currently can contain one option, 
+  The last argument, params, is a struct the currently can contain one option,
   octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
 */
 Vex.Flow.keyProperties = function(key, clef, params) {
@@ -1217,7 +1236,7 @@ Vex.Flow.parseNoteData = function(noteData) {
 // If the input isn't an alias, simply return the input.
 //
 // example: 'q' -> '4', '8' -> '8'
-function sanitizeDuration(duration) {
+Vex.Flow.sanitizeDuration = function(duration) {
   var alias = Vex.Flow.durationAliases[duration];
   if (alias !== undefined) {
     duration = alias;
@@ -1229,11 +1248,11 @@ function sanitizeDuration(duration) {
   }
 
   return duration;
-}
+};
 
 // Convert the `duration` to an fraction
 Vex.Flow.durationToFraction = function(duration) {
-  return new Vex.Flow.Fraction().parse(sanitizeDuration(duration));
+  return new Vex.Flow.Fraction().parse(Vex.Flow.sanitizeDuration(duration));
 };
 
 // Convert the `duration` to an number
@@ -1243,7 +1262,7 @@ Vex.Flow.durationToNumber = function(duration) {
 
 // Convert the `duration` to total ticks
 Vex.Flow.durationToTicks = function(duration) {
-  duration = sanitizeDuration(duration);
+  duration = Vex.Flow.sanitizeDuration(duration);
 
   var ticks = Vex.Flow.durationToTicks.durations[duration];
   if (ticks === undefined) {
@@ -1279,10 +1298,7 @@ Vex.Flow.durationAliases = {
 };
 
 Vex.Flow.durationToGlyph = function(duration, type) {
-  var alias = Vex.Flow.durationAliases[duration];
-  if (alias !== undefined) {
-    duration = alias;
-  }
+  duration = Vex.Flow.sanitizeDuration(duration);
 
   var code = Vex.Flow.durationToGlyph.duration_codes[duration];
   if (code === undefined) {
@@ -1982,7 +1998,15 @@ Vex.Flow.Stave = (function() {
     getNoteEndX: function() { return this.end_x; },
     getTieStartX: function() { return this.start_x; },
     getTieEndX: function() { return this.x + this.width; },
-    setContext: function(context) { this.context = context; return this; },
+    setContext: function(context) {
+      this.context = context;
+	for(var i=0; i<this.glyphs.length; i++){
+          if(typeof(this.glyphs[i].setContext) === "function"){
+	    this.glyphs[i].setContext(context);
+          }
+	}
+      return this;
+    },
     getContext: function() { return this.context; },
     getX: function() { return this.x; },
     getNumLines: function() { return this.options.num_lines; },
@@ -1992,6 +2016,22 @@ Vex.Flow.Stave = (function() {
       return this;
     },
     setY: function(y) { this.y = y; return this; },
+
+    setX: function(x){
+      var shift = x - this.x;
+      this.x = x;
+      this.glyph_start_x += shift;
+      this.glyph_end_x += shift;
+      this.start_x += shift;
+      this.end_x += shift;
+      for(var i=0; i<this.modifiers.length; i++) {
+      	var mod = this.modifiers[i];
+        if (mod.x !== undefined) {
+          mod.x += shift;
+      	}
+      }
+      return this;
+    },
 
     setWidth: function(width) {
       this.width = width;
@@ -2370,6 +2410,7 @@ Vex.Flow.Stave = (function() {
 
   return Stave;
 }());
+
 // Vex Flow Notation
 // Mohit Muthanna <mohit@muthanna.com>
 //
@@ -2676,7 +2717,7 @@ Vex.Flow.TickContext = (function() {
       this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
       this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
       this.align_center = false;
-      
+
       this.tContexts = [];   // Parent array of tick contexts
 
       // Ignore this tick context for formatting and justification
@@ -2698,7 +2739,7 @@ Vex.Flow.TickContext = (function() {
     getMaxTicks: function() { return this.maxTicks; },
     getMinTicks: function() { return this.minTicks; },
     getTickables: function() { return this.tickables; },
-    
+
     getCenterAlignedTickables: function() {
       return this.tickables.filter(function(tickable) {
         return tickable.isCenterAligned();
@@ -2833,6 +2874,10 @@ Vex.Flow.Tickable = (function() {
       this.postFormatted = false;
       this.tuplet = null;
 
+      // For interactivity
+      this.id = null;
+      this.elem = null;
+
       this.align_center = false;
       this.center_x_shift = 0; // Shift from tick context if center aligned
 
@@ -2843,6 +2888,12 @@ Vex.Flow.Tickable = (function() {
     },
 
     setContext: function(context) { this.context = context; },
+
+    // Set the DOM ID of the element. Must be called before draw(). TODO: Update
+    // ID of element if has already been rendered.
+    setId: function(id) { this.id = id; },
+    getId: function() { return this.id; },
+    getElem: function() { return this.elem; },
     getBoundingBox: function() { return null; },
     getTicks: function() { return this.ticks; },
     shouldIgnoreTicks: function() { return this.ignore_ticks; },
@@ -2924,13 +2975,11 @@ Vex.Flow.Tickable = (function() {
         this.width += this.modifierContext.getWidth();
       }
     },
-
     postFormat: function() {
       if (this.postFormatted) return;
       this.postFormatted = true;
       return this;
     },
-
     getIntrinsicTicks: function() {
       return this.intrinsicTicks;
     },
@@ -2938,7 +2987,6 @@ Vex.Flow.Tickable = (function() {
       this.intrinsicTicks = intrinsicTicks;
       this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
     },
-
     getTickMultiplier: function() {
       return this.tickMultiplier;
     },
@@ -2955,7 +3003,6 @@ Vex.Flow.Tickable = (function() {
 
   return Tickable;
 }());
-
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
@@ -2981,6 +3028,44 @@ Vex.Flow.Note = (function() {
     if (arguments.length > 0) this.init(note_struct);
   }
   Note.CATEGORY = "note";
+
+  // Debug helper. Displays various note metrics for the given
+  // note.
+  Note.plotMetrics = function(ctx, note, yPos) {
+    var metrics = note.getMetrics();
+    var w = metrics.width;
+    var xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
+    var xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
+    var xAbs = note.getAbsoluteX();
+    var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
+    var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
+    var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
+
+    var xWidth = xEnd - xStart;
+    ctx.save();
+    ctx.setFont("Arial", 8, "");
+    ctx.fillText(Math.round(xWidth) + "px", xStart + note.getXShift(), yPos);
+
+    var y = (yPos + 7);
+    function stroke(x1, x2, color) {
+      ctx.beginPath();
+      ctx.setStrokeStyle(color);
+      ctx.setFillStyle(color);
+      ctx.setLineWidth(3);
+      ctx.moveTo(x1 + note.getXShift(), y);
+      ctx.lineTo(x2 + note.getXShift(), y);
+      ctx.stroke();
+    }
+
+    stroke(xStart, xPre1, "red");
+    stroke(xPre1, xAbs, "#999");
+    stroke(xAbs, xPost1, "green");
+    stroke(xPost1, xPost2, "#999");
+    stroke(xPost2, xEnd, "red");
+    stroke(xStart - note.getXShift(), xStart, "#DDD"); // Shift
+    Vex.drawDot(ctx, xAbs + note.getXShift(), y, "blue");
+    ctx.restore();
+  };
 
   // ## Prototype Methods
   //
@@ -3205,11 +3290,16 @@ Vex.Flow.Note = (function() {
       var width = this.getWidth();
       return { width: width,
                noteWidth: width -
-                          modLeftPx - modRightPx -  // used by accidentals and modifiers
+                          modLeftPx - modRightPx -
                           this.extraLeftPx - this.extraRightPx,
                left_shift: this.x_shift, // TODO(0xfe): Make style consistent
+
+
+               // Modifiers, accidentals etc.
                modLeftPx: modLeftPx,
                modRightPx: modRightPx,
+
+               // Displaced note head on left or right.
                extraLeftPx: this.extraLeftPx,
                extraRightPx: this.extraRightPx };
     },
@@ -3223,11 +3313,9 @@ Vex.Flow.Note = (function() {
         (this.modifierContext ?  this.modifierContext.getWidth() : 0);
     },
 
-    // Displace note by `x` pixels.
-    setXShift: function(x) {
-      this.x_shift = x;
-      return this;
-    },
+    // Displace note by `x` pixels. Used by the formatter.
+    setXShift: function(x) { this.x_shift = x; return this; },
+    getXShift: function() { return this.x_shift; },
 
     // Get `X` position of this tick context.
     getX: function() {
@@ -3236,7 +3324,9 @@ Vex.Flow.Note = (function() {
       return this.tickContext.getX() + this.x_shift;
     },
 
-    // Get the absolute `X` position of this note relative to the stave.
+    // Get the absolute `X` position of this note's tick context. This
+    // excludes x_shift, so you'll need to factor it in if you're
+    // looking for the post-formatted x-position.
     getAbsoluteX: function() {
       if (!this.tickContext) throw new Vex.RERR("NoTickContext",
           "Note needs a TickContext assigned for an X-Value");
@@ -3496,8 +3586,8 @@ Vex.Flow.NoteHead = (function() {
           ctx.fillRect(
             head_x - this.render_options.stroke_px, line_y,
             (this.getGlyph().head_width) +
-            (this.render_options.stroke_px * 2), 1);    
-        }        
+            (this.render_options.stroke_px * 2), 1);
+        }
       }
 
       if (this.note_type == "s") {
@@ -3613,11 +3703,11 @@ Vex.Flow.Stem = (function() {
         var stem_top = ys[i] + (stem_height * -this.stem_direction);
 
         if (this.stem_direction == Stem.DOWN) {
-          top_pixel = (top_pixel > stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel < ys[i]) ? base_pixel : ys[i];
+          top_pixel = Math.max(top_pixel, stem_top);
+          base_pixel = Math.min(base_pixel, ys[i]);
         } else {
-          top_pixel = (top_pixel < stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel > ys[i]) ? base_pixel : ys[i];
+          top_pixel = Math.min(top_pixel, stem_top);
+          base_pixel = Math.max(base_pixel, ys[i]);
         }
       }
 
@@ -3845,11 +3935,11 @@ Vex.Flow.StemmableNote = (function(){
         var stem_top = this.ys[i] + (stem_height * -this.stem_direction);
 
         if (this.stem_direction == Stem.DOWN) {
-          top_pixel = (top_pixel > stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel < this.ys[i]) ? base_pixel : this.ys[i];
+          top_pixel = Math.max(top_pixel, stem_top);
+          base_pixel = Math.min(base_pixel, this.ys[i]);
         } else {
-          top_pixel = (top_pixel < stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel > this.ys[i]) ? base_pixel : this.ys[i];
+          top_pixel = Math.min(top_pixel, stem_top);
+          base_pixel = Math.max(base_pixel, this.ys[i]);
         }
 
         if(this.noteType == "s" || this.noteType == 'x') {
@@ -3875,6 +3965,7 @@ Vex.Flow.StemmableNote = (function(){
         return this.stave.getYForTopText(text_line);
       }
     },
+
     getYForBottomText: function(text_line) {
       var extents = this.getStemExtents();
       if (this.hasStem()) {
@@ -3883,6 +3974,10 @@ Vex.Flow.StemmableNote = (function(){
       } else {
         return this.stave.getYForBottomText(text_line);
       }
+    },
+
+    hasFlag: function() {
+      return Vex.Flow.durationToGlyph(this.duration).flag;
     },
 
     // Post format the note
@@ -3898,7 +3993,7 @@ Vex.Flow.StemmableNote = (function(){
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      
+
       this.setStem(new Stem(stem_struct));
       this.stem.setContext(this.context).draw();
     }
@@ -4358,6 +4453,16 @@ Vex.Flow.StaveNote = (function() {
       }
 
       // Sort the notes from lowest line to highest line
+      var sorted = true;
+      var lastLine = -1000;
+      var that = this;
+      this.keyProps.forEach(function(key) {
+        if (key.line < lastLine) {
+          Vex.W("Unsorted keys in note will be sorted. " +
+            "See https://github.com/0xfe/vexflow/issues/104 for details.");
+        }
+        lastLine = key.line;
+      });
       this.keyProps.sort(function(a, b) { return a.line - b.line; });
     },
 
@@ -4468,8 +4573,8 @@ Vex.Flow.StaveNote = (function() {
       this.setYs(ys);
 
       var bounds = this.getNoteHeadBounds();
-      if(!this.beam){
-	       this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
+	    if (this.hasStem()) {
+        this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
       }
 
       return this;
@@ -4647,11 +4752,14 @@ Vex.Flow.StaveNote = (function() {
     },
 
     // Calculates and sets the extra pixels to the left or right
-    // if the note is displaced
+    // if the note is displaced.
     calcExtraPx: function() {
       this.setExtraLeftPx((this.displaced && this.stem_direction == -1) ?
           this.glyph.head_width : 0);
-      this.setExtraRightPx((this.displaced && this.stem_direction == 1) ?
+
+      // For upstems with flags, the extra space is unnecessary, since it's taken
+      // up by the flag.
+      this.setExtraRightPx((!this.hasFlag() && this.displaced && this.stem_direction == 1) ?
           this.glyph.head_width : 0);
     },
 
@@ -4755,6 +4863,7 @@ Vex.Flow.StaveNote = (function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
       var ctx = this.context;
+      ctx.openGroup("modifiers");
       for (var i = 0; i < this.modifiers.length; i++) {
         var mod = this.modifiers[i];
         var note_head = this.note_heads[mod.getIndex()];
@@ -4769,6 +4878,7 @@ Vex.Flow.StaveNote = (function() {
             ctx.restore();
         }
       }
+      ctx.closeGroup();
     },
 
     // Draw the flag for the note
@@ -4801,15 +4911,20 @@ Vex.Flow.StaveNote = (function() {
         }
 
         // Draw the Flag
+        this.context.openGroup("flag", null, {pointerBBox: true});
         Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
             this.render_options.glyph_font_scale, flag_code);
+        this.context.closeGroup();
       }
     },
 
     // Draw the NoteHeads
     drawNoteHeads: function(){
+      var that = this;
       this.note_heads.forEach(function(note_head) {
-        note_head.setContext(this.context).draw();
+        that.context.openGroup("notehead", null, {pointerBBox: true});
+        note_head.setContext(that.context).draw();
+        that.context.closeGroup();
       }, this);
     },
 
@@ -4822,7 +4937,9 @@ Vex.Flow.StaveNote = (function() {
         this.setStem(new Stem(stem_struct));
       }
 
+      this.context.openGroup("stem", null, {pointerBBox: true});
       this.stem.setContext(this.context).draw();
+      this.context.closeGroup();
     },
 
     // Draws all the `StaveNote` parts. This is the main drawing method.
@@ -4851,10 +4968,15 @@ Vex.Flow.StaveNote = (function() {
 
       // Draw each part of the note
       this.drawLedgerLines();
-      if (render_stem) this.drawStem();
-      this.drawNoteHeads();
-      this.drawFlag();
+
+      this.elem = this.context.openGroup("stavenote", this.id);
+      this.context.openGroup("note", null, {pointerBBox: true});
+        if (render_stem) this.drawStem();
+        this.drawNoteHeads();
+        this.drawFlag();
+      this.context.closeGroup();
       this.drawModifiers();
+      this.context.closeGroup();
     }
   });
 
@@ -5158,6 +5280,8 @@ Vex.Flow.TabNote = (function() {
         ctx.save();
         ctx.setLineWidth(Stem.WIDTH);
         stem_lines.forEach(function(bounds) {
+          if (bounds.length === 0) return;
+
           ctx.beginPath();
           ctx.moveTo(stem_x, bounds[0]);
           ctx.lineTo(stem_x, bounds[bounds.length - 1]);
@@ -5427,6 +5551,12 @@ Vex.Flow.ClefNote = (function() {
       return this.clef;
     },
 
+    setContext: function(context){
+      this.context = context;
+      this.glyph.setContext(this.context);
+      return this;
+    },
+
     setStave: function(stave) {
       var superclass = Vex.Flow.ClefNote.superclass;
       superclass.setStave.call(this, stave);
@@ -5622,7 +5752,9 @@ Vex.Flow.Beam = (function() {
         slope_cost: 100,
         show_stemlets: false,
         stemlet_extension: 7,
-        partial_beam_length: 10
+        partial_beam_length: 10,
+        flat_beams: false,
+        min_flat_beam_offset: 15
       };
     },
 
@@ -5719,11 +5851,77 @@ Vex.Flow.Beam = (function() {
       this.y_shift = y_shift;
     },
 
+    // Calculate a slope and y-shift for flat beams
+    calculateFlatSlope: function() {
+
+      // If a flat beam offset has not yet been supplied or calculated,
+      // generate one based on the notes in this particular note group
+      var total = 0;
+      var extreme_y = 0;  // Store the highest or lowest note here
+      var extreme_beam_count = 0;  // The beam count of the extreme note
+      var current_extreme = 0;
+      for (var i = 0; i < this.notes.length; i++) {
+
+        // Total up all of the offsets so we can average them out later
+        var note = this.notes[i];
+        var top_y = note.getStemExtents().topY;
+        total += top_y;
+
+        // Store the highest (stems-up) or lowest (stems-down) note so the
+        //  offset can be adjusted in case the average isn't enough
+        if (this.stem_direction === Stem.DOWN && current_extreme < top_y) {
+          current_extreme = top_y;
+          extreme_y = note.getNoteHeadBounds().y_bottom;
+          extreme_beam_count = note.getBeamCount();
+        } else if (this.stem_direction === Stem.UP && (current_extreme === 0 || current_extreme > top_y)) {
+          current_extreme = top_y;
+          extreme_y = note.getNoteHeadBounds().y_top;
+          extreme_beam_count = note.getBeamCount();
+        }
+      }
+
+      // Average the offsets to try and come up with a reasonable one that
+      //  works for all of the notes in the beam group.
+      var offset = total / this.notes.length;
+
+      // In case the average isn't long enough, add or subtract some more
+      //  based on the highest or lowest note (again, based on the stem
+      //  direction). This also takes into account the added height due to
+      //  the width of the beams.
+      var beam_width = this.render_options.beam_width * 1.5;
+      var extreme_test = this.render_options.min_flat_beam_offset + (extreme_beam_count * beam_width);
+      var new_offset = extreme_y + (extreme_test * -this.stem_direction);
+      if (this.stem_direction === Stem.DOWN && offset < new_offset) {
+        offset = extreme_y + extreme_test;
+      } else if (this.stem_direction === Stem.UP && offset > new_offset) {
+        offset = extreme_y - extreme_test;
+      }
+      if (!this.render_options.flat_beam_offset) {
+
+        // Set the offset for the group based on the calculations above.
+        this.render_options.flat_beam_offset = offset;
+      } else if (this.stem_direction === Stem.DOWN && offset > this.render_options.flat_beam_offset) {
+        this.render_options.flat_beam_offset = offset;
+      } else if (this.stem_direction === Stem.UP && offset < this.render_options.flat_beam_offset) {
+        this.render_options.flat_beam_offset = offset;
+      }
+
+      // for flat beams, the slope and y_shift are simply 0
+      this.slope = 0;
+      this.y_shift = 0;
+    },
+
     // Create new stems for the notes in the beam, so that each stem
     // extends into the beams.
     applyStemExtensions: function(){
       var first_note = this.notes[0];
       var first_y_px = first_note.getStemExtents().topY;
+
+      // If rendering flat beams, and an offset exists, set the y-coordinate to
+      //  the offset so the stems all end at the beam offset.
+      if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
+        first_y_px = this.render_options.flat_beam_offset;
+      }
       var first_x_px = first_note.getStemX();
 
       for (var i = 0; i < this.notes.length; ++i) {
@@ -5733,6 +5931,12 @@ Vex.Flow.Beam = (function() {
         var y_extents = note.getStemExtents();
         var base_y_px = y_extents.baseY;
         var top_y_px = y_extents.topY;
+
+        // If flat beams, set the top of the stem to the offset, rather than
+        //  relying on the topY value from above.
+        if (this.render_options.flat_beams) {
+          top_y_px = first_y_px;
+        }
 
         // For harmonic note heads, shorten stem length by 3 pixels
         base_y_px += this.stem_direction * note.glyph.stem_offset;
@@ -5759,8 +5963,8 @@ Vex.Flow.Beam = (function() {
             note.setStem(new Vex.Flow.Stem({
               x_begin: centerGlyphX,
               x_end: centerGlyphX,
-              y_bottom: this.stem_direction === 1 ? end_y : start_y,
-              y_top: this.stem_direction === 1 ? start_y : end_y,
+              y_bottom: this.stem_direction === Stem.UP ? end_y : start_y,
+              y_top: this.stem_direction === Stem.UP ? start_y : end_y,
               y_extend: y_displacement,
               stem_extension: -1, // To avoid protruding through the beam
               stem_direction: this.stem_direction
@@ -5776,8 +5980,8 @@ Vex.Flow.Beam = (function() {
         note.setStem(new Vex.Flow.Stem({
           x_begin: x_px - (Vex.Flow.STEM_WIDTH/2),
           x_end: x_px,
-          y_top: this.stem_direction === 1 ? top_y_px : base_y_px,
-          y_bottom: this.stem_direction === 1 ? base_y_px :  top_y_px ,
+          y_top: this.stem_direction === Stem.UP ? top_y_px : base_y_px,
+          y_bottom: this.stem_direction === Stem.UP ? base_y_px :  top_y_px,
           y_extend: y_displacement,
           stem_extension: Math.abs(top_y_px - slope_y) - Stem.HEIGHT - 1,
           stem_direction: this.stem_direction
@@ -5789,83 +5993,101 @@ Vex.Flow.Beam = (function() {
     getBeamLines: function(duration) {
       var beam_lines = [];
       var beam_started = false;
-      var current_beam;
+      var current_beam = null;
       var partial_beam_length = this.render_options.partial_beam_length;
-
-      function determinePartialSide (prev_note, next_note){
-          // Compare beam counts and store differences
-          var unshared_beams = 0;
-          if (next_note && prev_note) {
-            unshared_beams = prev_note.getBeamCount() - next_note.getBeamCount();
-          }
-
-          var left_partial = duration !== "8" && unshared_beams > 0;
-          var right_partial = duration !== "8" && unshared_beams < 0;
-
-          return {
-            left: left_partial,
-            right: right_partial
-          };
-        }
-
+      var previous_should_break = false;
+      var tick_tally = 0;
       for (var i = 0; i < this.notes.length; ++i) {
         var note = this.notes[i];
-        var prev_note = this.notes[i-1];
-        var next_note = this.notes[i+1];
+
+        // See if we need to break secondary beams on this note.
         var ticks = note.getIntrinsicTicks();
-        var partial = determinePartialSide(prev_note, next_note);
+        tick_tally += ticks;
+        var should_break = false;
+
+        // 8th note beams are always drawn.
+        if (parseInt(duration) >= 8) {
+
+          // First, check to see if any indices were set up through breakSecondaryAt()
+          should_break = this.break_on_indices.indexOf(i) !== -1;
+
+          // If the secondary breaks were auto-configured in the render options,
+          //  handle that as well.
+          if (this.render_options.secondary_break_ticks && tick_tally >= this.render_options.secondary_break_ticks) {
+            tick_tally = 0;
+            should_break = true;
+          }
+        }
+        var note_gets_beam = ticks < Vex.Flow.durationToTicks(duration);
         var stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
 
-        // Check whether to apply beam(s)
-        if (ticks < Vex.Flow.durationToTicks(duration)) {
-          if (!beam_started) {
-            var new_line = {start: stem_x, end: null};
+        // Check to see if the next note in the group will get a beam at this
+        //  level. This will help to inform the partial beam logic below.
+        var next_note = this.notes[i + 1];
+        var beam_next = next_note && next_note.getIntrinsicTicks() < Vex.Flow.durationToTicks(duration);
+        if (note_gets_beam) {
 
-            if (partial.left) {
-              new_line.end = stem_x - partial_beam_length;
-            }
+          // This note gets a beam at the current level
+          if (beam_started) {
 
-            beam_lines.push(new_line);
-            beam_started = true;
-          } else {
+            // We're currently in the middle of a beam. Just continue it on to
+            //  the stem X of the current note.
             current_beam = beam_lines[beam_lines.length - 1];
             current_beam.end = stem_x;
 
-            // Should break secondary beams on note
-            var should_break = this.break_on_indices.indexOf(i) !== -1;
-            // Shorter than or eq an 8th note duration
-            var can_break = parseInt(duration, 10) >= 8;
-            if (should_break  && can_break) {
+            // If a secondary beam break is set up, end the beam right now.
+            if (should_break) {
+              beam_started = false;
+              if (next_note && !beam_next && current_beam.end === null) {
+
+                // This note gets a beam,.but the next one does not. This means
+                //  we need a partial pointing right.
+                current_beam.end = current_beam.start - partial_beam_length;
+              }
+            }
+          } else {
+
+            // No beam started yet. Start a new one.
+            current_beam = { start: stem_x, end: null };
+            beam_started = true;
+            if (!beam_next) {
+
+              // The next note doesn't get a beam. Draw a partial.
+              if((previous_should_break || i === 0) && next_note) {
+
+                // This is the first note (but not the last one), or it is
+                //  following a secondary break. Draw a partial to the right.
+                current_beam.end = current_beam.start + partial_beam_length;
+              } else {
+
+                // By default, draw a partial to the left.
+                current_beam.end = current_beam.start - partial_beam_length;
+              }
+            } else if (should_break) {
+
+              // This note should have a secondary break after it. Even though
+              //  we just started a beam, it needs to end immediately.
+              current_beam.end = current_beam.start - partial_beam_length;
               beam_started = false;
             }
+            beam_lines.push(current_beam);
           }
         } else {
-          if (!beam_started) {
-            // we don't care
-          } else {
-            current_beam = beam_lines[beam_lines.length - 1];
-            if (current_beam.end == null) {
-              // single note
-              current_beam.end = current_beam.start +
-                                 partial_beam_length;
-            } else {
-              // we don't care
-            }
-          }
 
+          // The current note does not get a beam.
           beam_started = false;
         }
+
+        // Store the secondary break flag to inform the partial beam logic in
+        //  the next iteration of the loop.
+        previous_should_break = should_break;
       }
 
-      if (beam_started === true) {
-        current_beam = beam_lines[beam_lines.length - 1];
-        if (current_beam.end == null) {
-          // single note
-          current_beam.end = current_beam.start -
-              partial_beam_length;
-        }
+      // Add a partial beam pointing left if this is the last note in the group
+      var last_beam = beam_lines[beam_lines.length - 1];
+      if (last_beam && last_beam.end === null) {
+        last_beam.end = last_beam.start - partial_beam_length;
       }
-
       return beam_lines;
     },
 
@@ -5890,6 +6112,13 @@ Vex.Flow.Beam = (function() {
 
       var first_y_px = first_note.getStemExtents().topY;
       var last_y_px = last_note.getStemExtents().topY;
+
+      // For flat beams, set the first and last Y to the offset, rather than
+      //  using the note's stem extents.
+      if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
+        first_y_px = this.render_options.flat_beam_offset;
+        last_y_px = this.render_options.flat_beam_offset;
+      }
 
       var first_x_px = first_note.getStemX();
 
@@ -5927,12 +6156,17 @@ Vex.Flow.Beam = (function() {
     preFormat: function() { return this; },
 
     // Post-format the beam. This can only be called after
-    // the notes in the beam have both `x` and `y` values. ie: they've 
+    // the notes in the beam have both `x` and `y` values. ie: they've
     // been formatted and have staves
     postFormat: function() {
       if (this.postFormatted) return;
 
-      this.calculateSlope();
+      // Calculate a smart slope if we're not forcing the beams to be flat.
+      if(this.render_options.flat_beams) {
+        this.calculateFlatSlope();
+      } else {
+        this.calculateSlope();
+      }
       this.applyStemExtensions();
 
       this.postFormatted = true;
@@ -6273,7 +6507,13 @@ Vex.Flow.Beam = (function() {
       if (config.show_stemlets) {
         beam.render_options.show_stemlets = true;
       }
-
+      if (config.secondary_breaks) {
+        beam.render_options.secondary_break_ticks = Vex.Flow.durationToTicks(config.secondary_breaks);
+      }
+      if (config.flat_beams === true) {
+        beam.render_options.flat_beams = true;
+        beam.render_options.flat_beam_offset = config.flat_beam_offset;
+      }
       beams.push(beam);
     });
 
@@ -6606,6 +6846,7 @@ Vex.Flow.Modifier = (function() {
       this.modifier_context = null;
       this.x_shift = 0;
       this.y_shift = 0;
+      this.spacingFromNextModifier = 0;
       L("Created new modifier");
     },
 
@@ -6643,6 +6884,12 @@ Vex.Flow.Modifier = (function() {
     // Shift modifier down `y` pixels. Negative values shift up.
     setYShift: function(y) { this.y_shift = y; return this; },
 
+    setSpacingFromNextModifier: function(x) {
+      this.spacingFromNextModifier = x;
+    },
+
+    getSpacingFromNextModifier: function() {return this.spacingFromNextModifier; },
+
     // Shift modifier `x` pixels in the direction of the modifier. Negative values
     // shift reverse.
     setXShift: function(x) {
@@ -6653,6 +6900,7 @@ Vex.Flow.Modifier = (function() {
         this.x_shift += x;
       }
     },
+    getXShift: function() {return this.x_shift;},
 
     // Render the modifier onto the canvas.
     draw: function() {
@@ -6686,7 +6934,8 @@ Vex.Flow.ModifierContext = (function() {
     this.state = {
       left_shift: 0,
       right_shift: 0,
-      text_line: 0
+      text_line: 0,
+      top_text_line: 0
     };
 
     // Add new modifiers to this array. The ordering is significant -- lower
@@ -7018,6 +7267,7 @@ Vex.Flow.Accidental = (function(){
       column_x_offsets[i] = column_widths[i] + column_x_offsets[i-1];
     }
 
+    var total_shift = column_x_offsets[column_x_offsets.length-1];
     // Set the x_shift for each accidental according to column offsets:
     var acc_count = 0;
     line_list.forEach(function(line) {
@@ -7035,7 +7285,7 @@ Vex.Flow.Accidental = (function(){
     });
 
     // update the overall layout with the full width of the accidental shapes:
-    state.left_shift += column_x_offsets[column_x_offsets.length-1];
+    state.left_shift += total_shift;
   };
 
   // Helper function to determine whether two lines of accidentals collide vertically
@@ -7127,7 +7377,7 @@ Vex.Flow.Accidental = (function(){
 
       // Figure out the start `x` and `y` coordinates for this note and index.
       var start = this.note.getModifierStartXY(this.position, this.index);
-      var acc_x = (start.x + this.x_shift) - this.width;
+      var acc_x = ((start.x + this.x_shift) - this.width);
       var acc_y = start.y + this.y_shift;
       L("Rendering: ", this.type, acc_x, acc_y);
 
@@ -7248,6 +7498,7 @@ Vex.Flow.Dot = (function() {
   function Dot() {
     this.init();
   }
+
   Dot.CATEGORY = "dots";
 
   var Modifier = Vex.Flow.Modifier;
@@ -7318,7 +7569,7 @@ Vex.Flow.Dot = (function() {
       }
 
       // convert half_shiftY to a multiplier for dots.draw()
-      dot.dot_shiftY += (-half_shiftY);
+      dot.dot_shiftY = (-half_shiftY);
       prev_dotted_space = line + half_shiftY;
 
       dot.setXShift(dot_shift);
@@ -8424,7 +8675,8 @@ Vex.Flow.Bend = (function() {
     if (!bends || bends.length === 0) return false;
 
     var last_width = 0;
-    var text_line = state.text_line;
+    // Bends are always on top.
+    var text_line = state.top_text_line;
 
     // Format Bends
     for (var i = 0; i < bends.length; ++i) {
@@ -8435,7 +8687,7 @@ Vex.Flow.Bend = (function() {
     }
 
     state.right_shift += last_width;
-    state.text_line += 1;
+    state.top_text_line += 1;
     return true;
   };
 
@@ -8642,7 +8894,8 @@ Vex.Flow.Vibrato = (function() {
   Vibrato.format = function(vibratos, state, context) {
     if (!vibratos || vibratos.length === 0) return false;
 
-    var text_line = state.text_line;
+    // Vibratos are always on top.
+    var text_line = state.top_text_line;
     var width = 0;
     var shift = state.right_shift - 7;
 
@@ -8662,7 +8915,7 @@ Vex.Flow.Vibrato = (function() {
     }
 
     state.right_shift += width;
-    state.text_line += 1;
+    state.top_text_line += 1;
     return true;
   };
 
@@ -8778,7 +9031,9 @@ Vex.Flow.Annotation = (function() {
   function Annotation(text) {
     if (arguments.length > 0) this.init(text);
   }
+
   Annotation.CATEGORY = "annotations";
+  var Modifier = Vex.Flow.Modifier;
 
   // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
   function L() { if (Annotation.DEBUG) Vex.L("Vex.Flow.Annotation", arguments); }
@@ -8802,17 +9057,17 @@ Vex.Flow.Annotation = (function() {
   Annotation.format = function(annotations, state) {
     if (!annotations || annotations.length === 0) return false;
 
-    var text_line = state.text_line;
-    var max_width = 0;
-
-    // Format Annotations
-    var width;
+    var width = 0;
     for (var i = 0; i < annotations.length; ++i) {
       var annotation = annotations[i];
-      annotation.setTextLine(text_line);
-      width = annotation.getWidth() > max_width ?
-        annotation.getWidth() : max_width;
-      text_line++;
+      width = Math.max(annotation.getWidth(), width);
+      if (annotation.getPosition() === Modifier.Position.ABOVE) {
+        annotation.setTextLine(state.top_text_line);
+        state.top_text_line++;
+      } else {
+        annotation.setTextLine(state.text_line);
+        state.text_line++;
+      }
     }
 
     state.left_shift += width / 2;
@@ -8824,7 +9079,6 @@ Vex.Flow.Annotation = (function() {
   //
   // Annotations inherit from `Modifier` and is positioned correctly when
   // in a `ModifierContext`.
-  var Modifier = Vex.Flow.Modifier;
   Vex.Inherit(Annotation, Modifier, {
     // Create a new `Annotation` with the string `text`.
     init: function(text) {
@@ -8832,7 +9086,6 @@ Vex.Flow.Annotation = (function() {
 
       this.note = null;
       this.index = null;
-      this.text_line = 0;
       this.text = text;
       this.justification = Annotation.Justify.CENTER;
       this.vert_justification = Annotation.VerticalJustify.TOP;
@@ -8845,9 +9098,6 @@ Vex.Flow.Annotation = (function() {
       // The default width is calculated from the text.
       this.setWidth(Vex.Flow.textWidth(text));
     },
-
-    // Set the vertical position of the text relative to the stave.
-    setTextLine: function(line) { this.text_line = line; return this; },
 
     // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
     setFont: function(family, size, weight) {
@@ -8969,27 +9219,27 @@ Vex.Flow.Articulation = (function() {
   Articulation.format = function(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
-    var text_line = state.text_line;
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < articulations.length; ++i) {
+      var increment = 1;
       var articulation = articulations[i];
-      articulation.setTextLine(text_line);
-      width = articulation.getWidth() > max_width ?
-        articulation.getWidth() : max_width;
+      width = Math.max(articulation.getWidth(), width);
 
       var type = Vex.Flow.articulationCodes(articulation.type);
-      if(type.between_lines)
-        text_line += 1;
-      else
-        text_line += 1.5;
+
+      if (!type.between_lines) increment += 1.5;
+
+      if (articulation.getPosition() === Modifier.Position.ABOVE) {
+        articulation.setTextLine(state.top_text_line);
+        state.top_text_line += increment;
+      } else {
+        articulation.setTextLine(state.text_line);
+        state.text_line += increment;
+      }
     }
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
-    state.text_line = text_line;
     return true;
   };
 
@@ -9097,18 +9347,20 @@ Vex.Flow.Articulation = (function() {
         shiftY = this.articulation.shift_up;
         glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
 
-        if (this.articulation.between_lines)
+        if (this.articulation.between_lines) {
           glyph_y = glyph_y_between_lines;
-        else
+        } else {
           glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
+        }
       } else {
         shiftY = this.articulation.shift_down - 10;
 
         glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
-        if (this.articulation.between_lines)
+        if (this.articulation.between_lines) {
           glyph_y = glyph_y_between_lines;
-        else
+        } else {
           glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
+        }
       }
 
       var glyph_x = start.x + this.articulation.shift_right;
@@ -9139,7 +9391,8 @@ Vex.Flow.Tuning = (function() {
     "standard": "E/5,B/4,G/4,D/4,A/3,E/3",
     "dagdad": "D/5,A/4,G/4,D/4,A/3,D/3",
     "dropd": "E/5,B/4,G/4,D/4,A/3,D/3",
-    "eb": "Eb/5,Bb/4,Gb/4,Db/4,Ab/3,Db/3"
+    "eb": "Eb/5,Bb/4,Gb/4,Db/4,Ab/3,Db/3",
+    "standardBanjo": "D/5,B/4,G/4,D/4,G/5"
   };
 
   Tuning.prototype = {
@@ -9405,36 +9658,45 @@ Vex.Flow.KeySignature = (function() {
     // the  accidental `type` for the key signature ('# or 'b').
     convertAccLines: function(clef, type) {
       var offset = 0.0; // if clef === "treble"
-      var tenorSharps;
-      var isTenorSharps = ((clef === "tenor") && (type === "#")) ? true : false;
+      var customLines; // when clef doesn't follow treble key sig shape
 
       switch (clef) {
-        case "bass":
-          offset = 1;
+        // Treble & Subbass both have offsets of 0, so are not included.
+        case "soprano":
+          if(type === "#") customLines = [2.5,0.5,2,0,1.5,-0.5,1];
+          else offset = -1;
+          break;
+        case "mezzo-soprano":
+          if(type === "b") customLines = [0,2,0.5,2.5,1,3,1.5];
+          else offset = 1.5;
           break;
         case "alto":
           offset = 0.5;
           break;
         case "tenor":
-          if (!isTenorSharps) {
-            offset = -0.5;
-          }
+          if(type === "#") customLines = [3, 1, 2.5, 0.5, 2, 0, 1.5];
+          else offset = -0.5;
+          break;
+        case "baritone-f":
+        case "baritone-c":
+          if(type === "b") customLines = [0.5,2.5,1,3,1.5,3.5,2];
+          else offset = 2;
+          break;
+        case "bass":
+        case "french":
+          offset = 1;
           break;
       }
 
-      // Special-case for TenorSharps
+      // If there's a special case, assign those lines/spaces:
       var i;
-      if (isTenorSharps) {
-        tenorSharps = [3, 1, 2.5, 0.5, 2, 0, 1.5];
+      if (typeof customLines !== "undefined") {
         for (i = 0; i < this.accList.length; ++i) {
-          this.accList[i].line = tenorSharps[i];
+          this.accList[i].line = customLines[i];
         }
-      }
-      else {
-        if (clef != "treble") {
-          for (i = 0; i < this.accList.length; ++i) {
-            this.accList[i].line += offset;
-          }
+      } else if (offset !== 0) {
+        for (i = 0; i < this.accList.length; ++i) {
+          this.accList[i].line += offset;
         }
       }
     }
@@ -10351,6 +10613,7 @@ Vex.Flow.Renderer = (function() {
   // that does not allow modifiying canvas objects. There is a small
   // performance degradation due to the extra indirection.
   Renderer.USE_CANVAS_PROXY = false;
+  Renderer.lastContext = null;
 
   Renderer.buildContext = function(sel,
       backend, width, height, background) {
@@ -10361,6 +10624,7 @@ Vex.Flow.Renderer = (function() {
     if (!background) background = "#FFF";
     var ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
+    Renderer.lastContext = ctx;
     return ctx;
   };
 
@@ -10387,7 +10651,7 @@ Vex.Flow.Renderer = (function() {
 
     var methods = ["clear", "setFont", "setRawFont", "setFillStyle", "setBackgroundFillStyle",
                    "setStrokeStyle", "setShadowColor", "setShadowBlur", "setLineWidth",
-                   "setLineCap", "setLineDash"];
+                   "setLineCap", "setLineDash", "openGroup", "closeGroup", "getGroup"];
     ctx.vexFlowCanvasContext = ctx;
 
     for (var i in methods) {
@@ -10540,6 +10804,11 @@ Vex.Flow.RaphaelContext = (function() {
       this.state_stack= [];
     },
 
+    // Containers not implemented
+    openGroup: function(cls, id, attrs) {},
+    closeGroup: function() {},
+    add: function(elem) {},
+
     setFont: function(family, size, weight) {
       this.state.font_family = family;
       this.state.font_size = size;
@@ -10596,7 +10865,7 @@ Vex.Flow.RaphaelContext = (function() {
       // can no longer be used as an option in an Element.attr() call.
       // It is preserved here for users running earlier versions of
       // Raphael.JS, though it has no effect on the SVG output in
-      // Raphael 2 and higher. 
+      // Raphael 2 and higher.
       this.attributes.transform = "S" + x + "," + y + ",0,0";
       this.attributes.scale = x + "," + y + ",0,0";
       this.attributes.font = this.state.font_size * this.state.scale.x + "pt " +
@@ -10780,7 +11049,7 @@ Vex.Flow.RaphaelContext = (function() {
             opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
             // See note in this.scale(): In Raphael the scale() method
             // is deprecated and removed as of Raphael 2.0 and replaced
-            // by the transform() method.  It is preserved here for 
+            // by the transform() method.  It is preserved here for
             // users with earlier versions of Raphael, but has no effect
             // on the output SVG in Raphael 2.0+.
             transform: this.attributes.transform,
@@ -10800,9 +11069,9 @@ Vex.Flow.RaphaelContext = (function() {
     },
 
     stroke: function() {
-      // The first line of code below is, unfortunately, a bit of a hack: 
+      // The first line of code below is, unfortunately, a bit of a hack:
       // Raphael's transform() scaling does not scale the stroke-width, so
-      // in order to scale a stroke, we have to manually scale the 
+      // in order to scale a stroke, we have to manually scale the
       // stroke-width.
       //
       // This works well so long as the X & Y states for this.scale() are
@@ -10811,10 +11080,10 @@ Vex.Flow.RaphaelContext = (function() {
       // stroke-widths.
       //
       // In the future, if we want to support very divergent values for
-      // horizontal and vertical scaling, we may want to consider 
-      // implementing SVG scaling with properties of the SVG viewBox & 
+      // horizontal and vertical scaling, we may want to consider
+      // implementing SVG scaling with properties of the SVG viewBox &
       // viewPort and removing it entirely from the Element.attr() calls.
-      // This would more closely parallel the approach taken in 
+      // This would more closely parallel the approach taken in
       // canvascontext.js as well.
 
       var strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y)/2;
@@ -10892,6 +11161,693 @@ Vex.Flow.RaphaelContext = (function() {
 // Vex Flow
 // Mohit Muthanna <mohit@muthanna.com>
 //
+// A rendering context for SVG.
+//
+// Copyright Mohit Muthanna 2015
+// @author Gregory Ristow (2015)
+
+/** @constructor */
+Vex.Flow.SVGContext = (function() {
+  function SVGContext(element) {
+    if (arguments.length > 0) this.init(element);
+  }
+
+  // The measureTextCache is used in Javascript runtimes where
+  // there is no proper DOM support for SVG bounding boxes. This
+  // is currently only useful in the NodeJS visual regression tests.
+  SVGContext.measureTextCache = {};
+
+  // If enabled, will start collecting and indexing getBBox data by
+  // font name, size, weight, and style. This should be disabled by
+  // default (or you will find yourself slowly leaking RAM.)
+  SVGContext.collectMeasurements = false;
+
+  // If enabled, will warn if there are new getBBox requests that are
+  // not in the cache. This is enabled in the VexFlow tests, and if you
+  // see a warning on the console, you will need to enable collectMeasurements
+  // above, then update measureTextCache with the new values. See
+  // tests/measure_text_cache.js for instructions on how to do this.
+  SVGContext.validateMeasurement = false;
+
+  SVGContext.addPrefix = Vex.Prefix;
+
+  SVGContext.prototype = {
+    init: function(element) {
+      // element is the parent DOM object
+      this.element = element;
+      // Create the SVG in the SVG namespace:
+      this.svgNS = "http://www.w3.org/2000/svg";
+      var svg = this.create("svg");
+      // Add it to the canvas:
+      this.element.appendChild(svg);
+
+      // Point to it:
+      this.svg = svg;
+      this.groups = [this.svg]; // Create the group stack
+      this.parent = this.svg;
+
+      this.path = "";
+      this.pen = {x: 0, y: 0};
+      this.lineWidth = 1.0;
+      this.state = {
+        scale: { x: 1, y: 1 },
+        "font-family": "Arial",
+        "font-size": "8pt",
+        "font-weight": "normal"
+      };
+
+      this.attributes = {
+        "stroke-width": 0.3,
+        "fill": "black",
+        "stroke": "black",
+        "font-family": "Arial",
+        "font-size" : "10pt",
+        "font-weight" : "normal",
+        "font-style" : "normal"
+      };
+
+      this.background_attributes = {
+        "stroke-width": 0,
+        "fill": "white",
+        "stroke": "white",
+        "font-family": "Arial",
+        "font-size" : "10pt",
+        "font-weight": "normal",
+        "font-style": "normal"
+      };
+
+      this.shadow_attributes = {
+        width: 0,
+        color: "black"
+      };
+
+      this.state_stack= [];
+
+      // Test for Internet Explorer
+      this.iePolyfill();
+    },
+
+    create: function(svgElementType) {
+      return document.createElementNS(this.svgNS, svgElementType);
+    },
+
+    // Allow grouping elements in containers for interactivity.
+    openGroup: function(cls, id, attrs) {
+      var group = this.create("g");
+      this.groups.push(group);
+      this.parent.appendChild(group);
+      this.parent = group;
+      if (cls) group.setAttribute("class", SVGContext.addPrefix(cls));
+      if (id) group.setAttribute("id", SVGContext.addPrefix(id));
+
+      if (attrs && attrs.pointerBBox) {
+        group.setAttribute("pointer-events", "bounding-box");
+      }
+      return group;
+    },
+
+    closeGroup: function() {
+      var group = this.groups.pop();
+      this.parent = this.groups[this.groups.length - 1];
+    },
+
+    add: function(elem) {
+      this.parent.appendChild(elem);
+    },
+
+    // Tests if the browser is Internet Explorer; if it is,
+    // we do some tricks to improve text layout.  See the
+    // note at ieMeasureTextFix() for details.
+    iePolyfill: function() {
+      if (typeof(navigator) !== "undefined") {
+        this.ie = (  /MSIE 9/i.test(navigator.userAgent) ||
+                            /MSIE 10/i.test(navigator.userAgent) ||
+                            /rv:11\.0/i.test(navigator.userAgent) ||
+                            /Trident/i.test(navigator.userAgent) );
+      }
+    },
+
+    // ### Styling & State Methods:
+
+    setFont: function(family, size, weight) {
+      // Unlike canvas, in SVG italic is handled by font-style,
+      // not weight. So: we search the weight argument and
+      // apply bold and italic to weight and style respectively.
+      var bold = false;
+      var italic = false;
+      var style = "normal";
+      // Weight might also be a number (200, 400, etc...) so we
+      // test its type to be sure we have access to String methods.
+      if( typeof weight == "string" ) {
+          // look for "italic" in the weight:
+          if(weight.indexOf("italic") !== -1) {
+            weight = weight.replace(/italic/g, "");
+            italic = true;
+          }
+          // look for "bold" in weight
+          if(weight.indexOf("bold") !== -1) {
+            weight = weight.replace(/bold/g, "");
+            bold = true;
+          }
+          // remove any remaining spaces
+          weight = weight.replace(/ /g, "");
+      }
+      weight = bold ? "bold" : weight;
+      weight = (typeof weight === "undefined" || weight === "") ? "normal" : weight;
+
+      style = italic ? "italic" : style;
+
+      var fontAttributes = {
+        "font-family": family,
+        "font-size": size + "pt",
+        "font-weight": weight,
+        "font-style" : style
+      };
+
+      // Store the font size so that if the browser is Internet
+      // Explorer we can fix its calculations of text width.
+      this.fontSize = Number(size);
+
+      Vex.Merge(this.attributes, fontAttributes);
+      Vex.Merge(this.state, fontAttributes);
+
+      return this;
+    },
+
+    setRawFont: function(font) {
+      font=font.trim();
+      // Assumes size first, splits on space -- which is presently
+      // how all existing modules are calling this.
+      var fontArray = font.split(" ");
+
+      this.attributes["font-family"] = fontArray[1];
+      this.state["font-family"] = fontArray[1];
+
+      this.attributes["font-size"] = fontArray[0];
+      this.state["font-size"] = fontArray[0];
+
+      // Saves fontSize for IE polyfill
+      this.fontSize = Number(fontArray[0].match(/\d+/));
+      return this;
+    },
+
+    setFillStyle: function(style) {
+      this.attributes.fill = style;
+      return this;
+    },
+
+    setBackgroundFillStyle: function(style) {
+      this.background_attributes.fill = style;
+      this.background_attributes.stroke = style;
+      return this;
+    },
+
+    setStrokeStyle: function(style) {
+      this.attributes.stroke = style;
+      return this;
+    },
+
+    setShadowColor: function(style) {
+      this.shadow_attributes.color = style;
+      return this;
+    },
+
+    setShadowBlur: function(blur) {
+      this.shadow_attributes.width = blur;
+      return this;
+    },
+
+    setLineWidth: function(width) {
+      this.attributes["stroke-width"] = width;
+      this.lineWidth = width;
+    },
+
+    setLineDash: function(lineDash) {
+      this.attributes["stroke-linedash"] = lineDash;
+      return this;
+    },
+
+    setLineCap: function(lineCap) {
+      this.attributes["stroke-linecap"] = lineCap;
+      return this;
+    },
+
+    // ### Sizing & Scaling Methods:
+
+    // TODO (GCR): See note at scale() -- seperate our internal
+    // conception of pixel-based width/height from the style.width
+    // and style.height properties eventually to allow users to
+    // apply responsive sizing attributes to the SVG.
+    resize: function(width, height) {
+      this.width = width;
+      this.height = height;
+      this.element.style.width = width;
+      var attributes = {
+        width : width,
+        height : height
+      };
+      this.applyAttributes(this.svg, attributes);
+      return this;
+    },
+
+    scale: function(x, y) {
+      // uses viewBox to scale
+      // TODO (GCR): we may at some point want to distinguish the
+      // style.width / style.height properties that are applied to
+      // the SVG object from our internal conception of the SVG
+      // width/height.  This would allow us to create automatically
+      // scaling SVG's that filled their containers, for instance.
+      //
+      // As this isn't implemented in Canvas or Raphael contexts,
+      // I've left as is for now, but in using the viewBox to
+      // handle internal scaling, am trying to make it possible
+      // for us to eventually move in that direction.
+
+      this.state.scale = { x: x, y: y };
+      var visibleWidth = this.width / x;
+      var visibleHeight = this.height / y;
+      this.setViewBox(0,0, visibleWidth, visibleHeight);
+
+      return this;
+    },
+
+    setViewBox: function(xMin, yMin, width, height) {
+      // Override for "x y w h" style:
+      if(arguments.length == 1) this.svg.setAttribute("viewBox", viewBox);
+      else {
+        var viewBoxString = xMin + " " + yMin + " " + width + " " + height;
+        this.svg.setAttribute("viewBox", viewBoxString);
+      }
+    },
+
+    // ### Drawing helper methods:
+
+    applyAttributes: function(element, attributes) {
+      for(var propertyName in attributes) {
+        element.setAttributeNS(null, propertyName, attributes[propertyName]);
+      }
+      return element;
+    },
+
+    flipRectangle: function(args) {
+      // Avoid invalid negative height attributes by
+      // flipping a rectangle w/ negative height on its head.
+      // Since args is the actual arguments object from
+      // one of the rectangle functions, we don't need to
+      // return it.
+
+      // Add negative height to Y
+      args[1] += args[3];
+      // Make the negative height positive.
+      args[3] = -args[3];
+    },
+
+    // ### Shape & Path Methods:
+
+    clear: function() {
+      // Clear the SVG by removing all inner children.
+
+      // (This approach is usually slightly more efficient
+      // than removing the old SVG & adding a new one to
+      // the container element, since it does not cause the
+      // container to resize twice.  Also, the resize
+      // triggered by removing the entire SVG can trigger
+      // a touchcancel event when the element resizes away
+      // from a touch point.)
+
+      while (this.svg.lastChild) {
+        this.svg.removeChild(this.svg.lastChild);
+      }
+
+      // Replace the viewbox attribute we just removed:
+      this.scale(this.state.scale.x, this.state.scale.y);
+    },
+
+    // ## Rectangles:
+
+    rect: function(x, y, width, height, attributes) {
+      // Avoid invalid negative height attribs by
+      // flipping the rectangle on its head:
+      if (height < 0) this.flipRectangle(arguments);
+
+      // Create the rect & style it:
+      var rect = this.create("rect");
+      if(typeof attributes === "undefined") attributes = {
+        fill: "none",
+        "stroke-width": this.lineWidth,
+        stroke: "black"
+      };
+      Vex.Merge(attributes, {
+        x: x,
+        y: y,
+        width: width,
+        height: height
+      });
+
+      this.applyAttributes(rect, attributes);
+
+      this.add(rect);
+      return this;
+    },
+
+    fillRect: function(x, y, width, height) {
+      if(height < 0) this.flipRectangle(arguments);
+
+      this.rect(x, y, width - 0.5, height - 0.5, this.attributes);
+      return this;
+    },
+
+    clearRect: function(x, y, width, height) {
+      // TODO(GCR): Improve implementation of this...
+      // Currently it draws a box of the background color, rather
+      // than creating alpha through lower z-levels.
+      //
+      // See the implementation of this in SVGKit:
+      // http://sourceforge.net/projects/svgkit/
+      // as a starting point.
+      //
+      // Adding a large number of transform paths (as we would
+      // have to do) could be a real performance hit.  Since
+      // tabNote seems to be the only module that makes use of this
+      // it may be worth creating a seperate tabStave that would
+      // draw lines around locations of tablature fingering.
+      //
+
+      if (height < 0) this.flipRectangle(arguments);
+
+      this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
+      return this;
+    },
+
+    // ## Paths:
+
+    beginPath: function() {
+      this.path = "";
+      this.pen.x = 0;
+      this.pen.y = 0;
+      return this;
+    },
+
+    moveTo: function(x, y) {
+      this.path += "M" + x + " " + y;
+      this.pen.x = x;
+      this.pen.y = y;
+      return this;
+    },
+
+    lineTo: function(x, y) {
+      this.path += "L" + x + " " + y;
+      this.pen.x = x;
+      this.pen.y = y;
+      return this;
+    },
+
+    bezierCurveTo: function(x1, y1, x2, y2, x, y) {
+      this.path += "C" +
+        x1 + " " +
+        y1 + "," +
+        x2 + " " +
+        y2 + "," +
+        x + " " +
+        y;
+      this.pen.x = x;
+      this.pen.y = y;
+      return this;
+    },
+
+    quadraticCurveTo: function(x1, y1, x, y) {
+      this.path += "Q" +
+        x1 + " " +
+        y1 + "," +
+        x + " " +
+        y;
+      this.pen.x = x;
+      this.pen.y = y;
+      return this;
+    },
+
+    // This is an attempt (hack) to simulate the HTML5 canvas
+    // arc method.
+    arc: function(x, y, radius, startAngle, endAngle, antiClockwise) {
+      function normalizeAngle(angle) {
+        while (angle < 0) {
+          angle += Math.PI * 2;
+        }
+
+        while (angle > Math.PI * 2) {
+          angle -= Math.PI * 2;
+        }
+        return angle;
+      }
+
+      startAngle = normalizeAngle(startAngle);
+      endAngle = normalizeAngle(endAngle);
+
+      if (startAngle > endAngle) {
+          var tmp = startAngle;
+          startAngle = endAngle;
+          endAngle = tmp;
+          antiClockwise = !antiClockwise;
+      }
+
+      var delta = endAngle - startAngle;
+
+      if (delta > Math.PI) {
+          this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
+                         antiClockwise);
+          this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
+                         antiClockwise);
+      }
+      else {
+          this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
+      }
+      return this;
+    },
+
+    arcHelper: function(x, y, radius, startAngle, endAngle, antiClockwise) {
+      var x1 = x + radius * Math.cos(startAngle);
+      var y1 = y + radius * Math.sin(startAngle);
+
+      var x2 = x + radius * Math.cos(endAngle);
+      var y2 = y + radius * Math.sin(endAngle);
+
+      var largeArcFlag = 0;
+      var sweepFlag = 0;
+      if (antiClockwise) {
+        sweepFlag = 1;
+        if (endAngle - startAngle < Math.PI)
+          largeArcFlag = 1;
+      }
+      else if (endAngle - startAngle > Math.PI) {
+          largeArcFlag = 1;
+      }
+
+      this.path += "M" + x1 + " " + y1 + " " + "A" +
+        radius + " " + radius + " " + "0 " + largeArcFlag + " " + sweepFlag + " " +
+        x2 + " " + y2 + "M" + this.pen.x + " " + this.pen.y;
+
+    },
+
+    closePath: function() {
+      this.path += "Z";
+
+      return this;
+    },
+
+    // Adapted from the source for Raphael's Element.glow
+    glow: function() {
+      // Calculate the width & paths of the glow:
+      if (this.shadow_attributes.width > 0) {
+        var sa = this.shadow_attributes;
+        var num_paths = sa.width / 2;
+        // Stroke at varying widths to create effect of gaussian blur:
+        for (var i = 1; i <= num_paths; i++) {
+          var attributes = {
+            stroke: sa.color,
+            "stroke-linejoin": "round",
+            "stroke-linecap": "round",
+            "stroke-width": +((sa.width *0.4) / num_paths * i).toFixed(3),
+            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
+          };
+
+          var path = this.create("path");
+          attributes.d = this.path;
+          this.applyAttributes(path, attributes);
+          this.add(path);
+        }
+      }
+      return this;
+    },
+
+    fill: function(attributes) {
+      // If our current path is set to glow, make it glow
+      this.glow();
+
+      var path = this.create("path");
+      if(typeof attributes === "undefined") {
+        attributes = {};
+        Vex.Merge(attributes, this.attributes);
+        attributes.stroke = "none";
+      }
+
+      attributes.d = this.path;
+
+      this.applyAttributes(path, attributes);
+      this.add(path);
+      return this;
+    },
+
+    stroke: function() {
+      // If our current path is set to glow, make it glow.
+      this.glow();
+
+      var path = this.create("path");
+      var attributes = {};
+      Vex.Merge(attributes, this.attributes);
+      attributes.fill = "none";
+      attributes["stroke-width"] = this.lineWidth;
+      attributes.d = this.path;
+
+      this.applyAttributes(path, attributes);
+      this.add(path);
+      return this;
+    },
+
+    // ## Text Methods:
+    measureText: function(text) {
+      var index = text + this.attributes["font-style"] + this.attributes["font-family"] +
+                  this.attributes["font-weight"] + this.attributes["font-size"];
+
+      var txt = this.create("text");
+      if (typeof(txt.getBBox) === "function") {
+        txt.textContent = text;
+        this.applyAttributes(txt, this.attributes);
+
+        // Temporarily add it to the document for measurement.
+        this.svg.appendChild(txt);
+
+        var bbox = txt.getBBox();
+        if( this.ie &&
+            text !== "" &&
+            this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
+        this.svg.removeChild(txt);
+
+        // For runtimes that do not have full support of bounding boxes, collect
+        // some data which can be used later to extrapolate them.
+        if (SVGContext.collectMeasurements) {
+          SVGContext.measureTextCache[index] = {
+            x: bbox.x,
+            y: bbox.y,
+            width: bbox.width,
+            height: bbox.height
+          };
+        }
+        if (SVGContext.validateMeasurements) {
+          if (!(index in SVGContext.measureTextCache)) {
+            Vex.W("measureTextCache is stale. Please update tests/measure_text_cache.js: ", index);
+          }
+        }
+        return bbox;
+      } else {
+        // Inside NodeJS or other runtimes that don't support getBBox. This
+        // is currently only useful for the NodeJS visual regression tests.
+        return SVGContext.measureTextCache[index];
+      }
+    },
+
+    ieMeasureTextFix: function(bbox, text) {
+    // Internet Explorer over-pads text in italics,
+    // resulting in giant width estimates for measureText.
+    // To fix this, we use this formula, tested against
+    // ie 11:
+    // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
+    // And then subtract the overestimate from calculated width.
+
+      var fontSize = Number(this.fontSize);
+      var m = 1.196;
+      var b = 1.9598;
+      var widthCorrection = (m * fontSize) + b;
+      var width = bbox.width - widthCorrection;
+      var height = bbox.height - 1.5;
+
+      // Get non-protected copy:
+      var box = {
+        x : bbox.x,
+        y : bbox.y,
+        width : width,
+        height : height
+      };
+
+      return box;
+    },
+
+    fillText: function(text, x, y) {
+      var attributes = {};
+      Vex.Merge(attributes, this.attributes);
+      attributes.stroke = "none";
+      attributes.x = x;
+      attributes.y = y;
+
+      var txt = this.create("text");
+      txt.textContent = text;
+      this.applyAttributes(txt, attributes);
+      this.add(txt);
+    },
+
+    save: function() {
+      // TODO(mmuthanna): State needs to be deep-copied.
+      this.state_stack.push({
+        state: {
+          "font-family": this.state["font-family"],
+          "font-weight": this.state["font-weight"],
+          "font-style": this.state["font-style"],
+          "font-size": this.state["font-size"]
+        },
+        attributes: {
+          "font-family": this.attributes["font-family"],
+          "font-weight": this.attributes["font-weight"],
+          "font-style": this.attributes["font-style"],
+          "font-size": this.attributes["font-size"],
+          fill: this.attributes.fill,
+          stroke: this.attributes.stroke,
+          "stroke-width": this.attributes["stroke-width"]
+        },
+        shadow_attributes: {
+          width: this.shadow_attributes.width,
+          color: this.shadow_attributes.color
+        }
+      });
+      return this;
+    },
+
+    restore: function() {
+      // TODO(0xfe): State needs to be deep-restored.
+      var state = this.state_stack.pop();
+      this.state["font-family"] = state.state["font-family"];
+      this.state["font-weight"] = state.state["font-weight"];
+      this.state["font-style"] = state.state["font-style"];
+      this.state["font-size"] = state.state["font-size"];
+
+      this.attributes["font-family"] = state.attributes["font-family"];
+      this.attributes["font-weight"] = state.attributes["font-weight"];
+      this.attributes["font-style"] = state.attributes["font-style"];
+      this.attributes["font-size"] = state.attributes["font-size"];
+
+      this.attributes.fill = state.attributes.fill;
+      this.attributes.stroke = state.attributes.stroke;
+      this.attributes["stroke-width"] = state.attributes["stroke-width"];
+      this.shadow_attributes.width = state.shadow_attributes.width;
+      this.shadow_attributes.color = state.shadow_attributes.color;
+      return this;
+    }
+  };
+
+  return SVGContext;
+}());
+
+// Vex Flow
+// Mohit Muthanna <mohit@muthanna.com>
+//
 // A rendering context for the Raphael backend.
 //
 // Copyright Mohit Cheppudira 2010
@@ -10923,6 +11879,11 @@ Vex.Flow.CanvasContext = (function() {
     clear: function() {
       this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
+
+    // Containers not implemented
+    openGroup: function(cls, id, attrs) {},
+    closeGroup: function() {},
+    add: function(elem) {},
 
     setFont: function(family, size, weight) {
       this.vexFlowCanvasContext.font = (weight || "") + " " + size + "pt " + family;
@@ -13915,27 +14876,27 @@ Vex.Flow.Ornament = (function() {
   Ornament.format = function(ornaments, state) {
    if (!ornaments || ornaments.length === 0) return false;
 
-    var text_line = state.text_line;
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < ornaments.length; ++i) {
       var ornament = ornaments[i];
-      ornament.setTextLine(text_line);
-      width = ornament.getWidth() > max_width ?
-        ornament.getWidth() : max_width;
+      var increment = 1;
+      width = Math.max(ornament.getWidth(), width);
 
       var type = Vex.Flow.ornamentCodes(ornament.type);
-      if(type.between_lines)
-        text_line += 1;
-      else
-        text_line += 1.5;
+
+      if (!type.between_lines) increment += 1.5;
+
+      if (ornament.getPosition() === Modifier.Position.ABOVE) {
+        ornament.setTextLine(state.top_text_line);
+        state.top_text_line += increment;
+      } else {
+        ornament.setTextLine(state.text_line);
+        state.text_line += increment;
+      }
     }
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
-    state.text_line = text_line;
     return true;
   };
 
@@ -14763,10 +15724,18 @@ Vex.Flow.GraceNoteGroup = (function(){
 
     // If first note left shift in case it is displaced
     var group_shift = group_list[0].shift;
+    var formatWidth;
     for (i = 0; i < group_list.length; ++i) {
       gracenote_group = group_list[i].gracenote_group;
       gracenote_group.preFormat();
-      group_shift = gracenote_group.getWidth() + gracenote_spacing;
+      formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+      group_shift = Math.max(formatWidth, group_shift);
+    }
+
+    for (i = 0; i < group_list.length; ++i) {
+      gracenote_group = group_list[i].gracenote_group;
+      formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+      gracenote_group.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
     }
 
     state.left_shift += group_shift;
@@ -14810,7 +15779,6 @@ Vex.Flow.GraceNoteGroup = (function(){
 
       this.formatter.joinVoices([this.voice]).format([this.voice], 0);
       this.setWidth(this.formatter.getMinTotalWidth());
-
       this.preFormatted = true;
     },
 
@@ -14836,9 +15804,6 @@ Vex.Flow.GraceNoteGroup = (function(){
     getWidth: function(){
       return this.width;
     },
-    setXShift: function(x_shift) {
-        this.x_shift = x_shift;
-    },
     draw: function() {
       if (!this.context)  {
         throw new Vex.RuntimeError("NoContext",
@@ -14854,12 +15819,13 @@ Vex.Flow.GraceNoteGroup = (function(){
           "Can't draw grace note without a parent note and parent note index.");
       }
 
-      function alignGraceNotesWithNote(grace_notes, note) {
+      var that = this;
+      function alignGraceNotesWithNote(grace_notes, note, groupWidth) {
         // Shift over the tick contexts of each note
         // So that th aligned with the note
         var tickContext = note.getTickContext();
         var extraPx = tickContext.getExtraPx();
-        var x = tickContext.getX() - extraPx.left - extraPx.extraLeft;
+        var x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
         grace_notes.forEach(function(graceNote) {
             var tick_context = graceNote.getTickContext();
             var x_offset = tick_context.getX();
@@ -14868,7 +15834,7 @@ Vex.Flow.GraceNoteGroup = (function(){
         });
       }
 
-      alignGraceNotesWithNote(this.grace_notes, note);
+      alignGraceNotesWithNote(this.grace_notes, note, this.width);
 
       // Draw notes
       this.grace_notes.forEach(function(graceNote) {
@@ -14897,615 +15863,4 @@ Vex.Flow.GraceNoteGroup = (function(){
 
 return GraceNoteGroup;
 }());
-// Vex Flow
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// A rendering context for SVG.
-//
-// Copyright Mohit Muthanna 2015
-// @author Gregory Ristow (2015)
-
-/** @constructor */
-Vex.Flow.SVGContext = (function() {
-  function SVGContext(element) {
-    if (arguments.length > 0) this.init(element);
-  }
-
-  SVGContext.prototype = {
-    init: function(element) {
-      // element is the parent DOM object
-      this.element = element;
-      // Create the SVG in the SVG namespace:
-      this.svgNS = "http://www.w3.org/2000/svg";
-      var svg = this.create("svg");
-      // Add it to the canvas:
-      this.element.appendChild(svg);
-      // Point to it:
-      this.svg = svg;
-
-      this.path = "";
-      this.pen = {x: 0, y: 0};
-      this.lineWidth = 1.0;
-      this.state = {
-        scale: { x: 1, y: 1 },
-        "font-family": "Arial",
-        "font-size": "8pt",
-        "font-weight": "normal"
-      };
-
-      this.attributes = {
-        "stroke-width": 0.3,
-        "fill": "black",
-        "stroke": "black",
-        "font-family": "Arial",
-        "font-size" : "10pt",
-        "font-weight" : "normal",
-        "font-style" : "normal"
-      };
-
-      this.background_attributes = {
-        "stroke-width": 0,
-        "fill": "white",
-        "stroke": "white",
-        "font-family": "Arial",
-        "font-size" : "10pt",
-        "font-weight": "normal",
-        "font-style": "normal"
-      };
-
-      this.shadow_attributes = {
-        width: 0,
-        color: "black"
-      };
-
-      this.state_stack= [];
-
-      // Test for Internet Explorer
-      this.iePolyfill();
-    },
-
-    // Tests if the browser is Internet Explorer; if it is,
-    // we do some tricks to improve text layout.  See the
-    // note at ieMeasureTextFix() for details.
-    iePolyfill: function() {
-        this.ie = (  /MSIE 9/i.test(navigator.userAgent) ||
-                            /MSIE 10/i.test(navigator.userAgent) ||
-                            /rv:11\.0/i.test(navigator.userAgent) ||
-                            /Trident/i.test(navigator.userAgent) );
-    },
-
-    // ### Styling & State Methods:
-
-    setFont: function(family, size, weight) {
-      // Unlike canvas, in SVG italic is handled by font-style,
-      // not weight. So: we search the weight argument and
-      // apply bold and italic to weight and style respectively.
-      var bold = false;
-      var italic = false;
-      var style = "normal";
-      // Weight might also be a number (200, 400, etc...) so we
-      // test its type to be sure we have access to String methods.
-      if( typeof weight == "string" ) {
-          // look for "italic" in the weight:
-          if(weight.indexOf("italic") !== -1) {
-            weight = weight.replace(/italic/g, "");
-            italic = true;
-          }
-          // look for "bold" in weight
-          if(weight.indexOf("bold") !== -1) {
-            weight = weight.replace(/bold/g, "");
-            bold = true;
-          }
-          // remove any remaining spaces
-          weight = weight.replace(/ /g, "");
-      }
-      weight = bold ? "bold" : weight;
-      weight = (typeof weight === "undefined" || weight === "") ? "normal" : weight;
-
-      style = italic ? "italic" : style;
-
-      var fontAttributes = {
-        "font-family": family,
-        "font-size": size + "pt",
-        "font-weight": weight,
-        "font-style" : style
-      };
-
-      // Store the font size so that if the browser is Internet
-      // Explorer we can fix its calculations of text width.
-      this.fontSize = Number(size);
-
-      Vex.Merge(this.attributes, fontAttributes);
-      Vex.Merge(this.state, fontAttributes);
-
-      return this;
-    },
-
-    setRawFont: function(font) {
-      font=font.trim();
-      // Assumes size first, splits on space -- which is presently
-      // how all existing modules are calling this.
-      var fontArray = font.split(" ");
-
-      this.attributes["font-family"] = fontArray[1];
-      this.state["font-family"] = fontArray[1];
-
-      this.attributes["font-size"] = fontArray[0];
-      this.state["font-size"] = fontArray[0];
-
-      // Saves fontSize for IE polyfill
-      this.fontSize = Number(fontArray[0].match(/\d+/));
-      return this;
-    },
-
-    setFillStyle: function(style) {
-      this.attributes.fill = style;
-      return this;
-    },
-
-    setBackgroundFillStyle: function(style) {
-      this.background_attributes.fill = style;
-      this.background_attributes.stroke = style;
-      return this;
-    },
-
-    setStrokeStyle: function(style) {
-      this.attributes.stroke = style;
-      return this;
-    },
-
-    setShadowColor: function(style) {
-      this.shadow_attributes.color = style;
-      return this;
-    },
-
-    setShadowBlur: function(blur) {
-      this.shadow_attributes.width = blur;
-      return this;
-    },
-
-    setLineWidth: function(width) {
-      this.attributes["stroke-width"] = width;
-      this.lineWidth = width;
-    },
-
-    setLineDash: function(lineDash) { 
-      this.attributes["stroke-linedash"] = lineDash;
-      return this; 
-    },
-
-    setLineCap: function(lineCap) { 
-      this.attributes["stroke-linecap"] = lineCap;
-      return this;
-    },
-
-    // ### Sizing & Scaling Methods:
-
-    // TODO (GCR): See note at scale() -- seperate our internal
-    // conception of pixel-based width/height from the style.width
-    // and style.height properties eventually to allow users to
-    // apply responsive sizing attributes to the SVG.
-    resize: function(width, height) {
-      this.width = width;
-      this.height = height;
-      this.element.style.width = width;
-      var attributes = {
-        width : width,
-        height : height
-      };
-      this.applyAttributes(this.svg, attributes);
-      return this;
-    },
-
-    scale: function(x, y) {
-      // uses viewBox to scale
-      // TODO (GCR): we may at some point want to distinguish the 
-      // style.width / style.height properties that are applied to 
-      // the SVG object from our internal conception of the SVG 
-      // width/height.  This would allow us to create automatically
-      // scaling SVG's that filled their containers, for instance.
-      //
-      // As this isn't implemented in Canvas or Raphael contexts, 
-      // I've left as is for now, but in using the viewBox to 
-      // handle internal scaling, am trying to make it possible
-      // for us to eventually move in that direction.
-
-      this.state.scale = { x: x, y: y };
-      var visibleWidth = this.width / x;
-      var visibleHeight = this.height / y;
-      this.setViewBox(0,0, visibleWidth, visibleHeight);
-
-      return this;
-    },
-
-    setViewBox: function(xMin, yMin, width, height) {
-      // Override for "x y w h" style:
-      if(arguments.length == 1) this.svg.setAttribute("viewBox", viewBox);
-      else {
-        var viewBoxString = xMin + " " + yMin + " " + width + " " + height;
-        this.svg.setAttribute("viewBox", viewBoxString);
-      }
-    },
-
-    // ### Drawing helper methods:
-
-    applyAttributes: function(element, attributes) {
-      for(var propertyName in attributes) {
-        element.setAttributeNS(null, propertyName, attributes[propertyName]);
-      }
-      return element;  
-    },
-
-    create: function(svgElementType) {
-      return document.createElementNS(this.svgNS, svgElementType);
-    },
-
-    flipRectangle: function(args) {
-      // Avoid invalid negative height attributes by
-      // flipping a rectangle w/ negative height on its head.
-      // Since args is the actual arguments object from
-      // one of the rectangle functions, we don't need to
-      // return it.
-
-      // Add negative height to Y
-      args[1] += args[3];
-      // Make the negative height positive.
-      args[3] = -args[3];
-    },
-
-    // ### Shape & Path Methods:
-
-    clear: function() { 
-      // Clear the SVG by removing all inner children.
-
-      // (This approach is usually slightly more efficient
-      // than removing the old SVG & adding a new one to
-      // the container element, since it does not cause the
-      // container to resize twice.  Also, the resize
-      // triggered by removing the entire SVG can trigger
-      // a touchcancel event when the element resizes away
-      // from a touch point.)
-
-      while (this.svg.lastChild) {
-        this.svg.removeChild(this.svg.lastChild);
-      }
-
-      // Replace the viewbox attribute we just removed:
-      this.scale(this.state.scale.x, this.state.scale.y);
-
-    },
-
-    // ## Rectangles:
-
-    rect: function(x, y, width, height, attributes) {
-      // Avoid invalid negative height attribs by
-      // flipping the rectangle on its head:
-      if (height < 0) this.flipRectangle(arguments);
-
-      // Create the rect & style it:
-      var rect = this.create("rect");
-      if(typeof attributes === "undefined") attributes = {
-        fill: "none",
-        "stroke-width": this.lineWidth,
-        stroke: "black"
-      };
-      Vex.Merge(attributes, {
-        x: x,
-        y: y,
-        width: width,
-        height: height
-      });
-
-      this.applyAttributes(rect, attributes);
-
-      this.svg.appendChild(rect);
-      return this;
-    },
-
-    fillRect: function(x, y, width, height) {
-      if(height < 0) this.flipRectangle(arguments);
-
-      this.rect(x, y, width - 0.5, height - 0.5, this.attributes);
-      return this;
-    },
-
-    clearRect: function(x, y, width, height) {
-      // TODO(GCR): Improve implementation of this...
-      // Currently it draws a box of the background color, rather
-      // than creating alpha through lower z-levels.
-      //
-      // See the implementation of this in SVGKit:
-      // http://sourceforge.net/projects/svgkit/
-      // as a starting point.
-      //
-      // Adding a large number of transform paths (as we would
-      // have to do) could be a real performance hit.  Since
-      // tabNote seems to be the only module that makes use of this
-      // it may be worth creating a seperate tabStave that would
-      // draw lines around locations of tablature fingering.
-      //
-
-      if (height < 0) this.flipRectangle(arguments);
-
-      this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
-      return this;
-    },
-
-    // ## Paths:
-
-    beginPath: function() {
-      this.path = "";
-      this.pen.x = 0;
-      this.pen.y = 0;
-      return this;
-    },
-
-    moveTo: function(x, y) {
-      this.path += "M" + x + " " + y;
-      this.pen.x = x;
-      this.pen.y = y;
-      return this;
-    },
-
-    lineTo: function(x, y) {
-      this.path += "L" + x + " " + y;
-      this.pen.x = x;
-      this.pen.y = y;
-      return this;
-    },
-
-    bezierCurveTo: function(x1, y1, x2, y2, x, y) {
-      this.path += "C" +
-        x1 + " " +
-        y1 + "," +
-        x2 + " " +
-        y2 + "," +
-        x + " " +
-        y;
-      this.pen.x = x;
-      this.pen.y = y;
-      return this;
-    },
-
-    quadraticCurveTo: function(x1, y1, x, y) {
-      this.path += "Q" +
-        x1 + " " +
-        y1 + "," +
-        x + " " +
-        y;
-      this.pen.x = x;
-      this.pen.y = y;
-      return this;
-    },
-
-    // This is an attempt (hack) to simulate the HTML5 canvas
-    // arc method.
-    arc: function(x, y, radius, startAngle, endAngle, antiClockwise) {
-      function normalizeAngle(angle) {
-        while (angle < 0) {
-          angle += Math.PI * 2;
-        }
-
-        while (angle > Math.PI * 2) {
-          angle -= Math.PI * 2;
-        }
-        return angle;
-      }
-
-      startAngle = normalizeAngle(startAngle);
-      endAngle = normalizeAngle(endAngle);
-
-      if (startAngle > endAngle) {
-          var tmp = startAngle;
-          startAngle = endAngle;
-          endAngle = tmp;
-          antiClockwise = !antiClockwise;
-      }
-
-      var delta = endAngle - startAngle;
-
-      if (delta > Math.PI) {
-          this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
-                         antiClockwise);
-          this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
-                         antiClockwise);
-      }
-      else {
-          this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
-      }
-      return this;
-    },
-
-    arcHelper: function(x, y, radius, startAngle, endAngle, antiClockwise) {
-      var x1 = x + radius * Math.cos(startAngle);
-      var y1 = y + radius * Math.sin(startAngle);
-
-      var x2 = x + radius * Math.cos(endAngle);
-      var y2 = y + radius * Math.sin(endAngle);
-
-      var largeArcFlag = 0;
-      var sweepFlag = 0;
-      if (antiClockwise) {
-        sweepFlag = 1;
-        if (endAngle - startAngle < Math.PI)
-          largeArcFlag = 1;
-      }
-      else if (endAngle - startAngle > Math.PI) {
-          largeArcFlag = 1;
-      }
-
-      this.path += "M" + x1 + " " + y1 + " " + "A" +
-        radius + " " + radius + " " + "0 " + largeArcFlag + " " + sweepFlag + " " +
-        x2 + " " + y2 + "M" + this.pen.x + " " + this.pen.y;
-
-    },
-
-    closePath: function() {
-      this.path += "Z";
-
-      return this;
-    },
-
-    // Adapted from the source for Raphael's Element.glow
-    glow: function() {
-      // Calculate the width & paths of the glow:
-      if (this.shadow_attributes.width > 0) {
-        var sa = this.shadow_attributes;
-        var num_paths = sa.width / 2;
-        // Stroke at varying widths to create effect of gaussian blur:
-        for (var i = 1; i <= num_paths; i++) {
-          var attributes = {
-            stroke: sa.color,
-            "stroke-linejoin": "round",
-            "stroke-linecap": "round",
-            "stroke-width": +((sa.width *0.4) / num_paths * i).toFixed(3),
-            opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
-          };
-
-          var path = this.create("path");
-          attributes.d = this.path;
-          this.applyAttributes(path, attributes);
-          this.svg.appendChild(path);
-        }
-      }
-      return this;
-    },
-
-    fill: function(attributes) {
-      // If our current path is set to glow, make it glow
-      this.glow();
-
-      var path = this.create("path");
-      if(typeof attributes === "undefined") {
-        attributes = {};
-        Vex.Merge(attributes, this.attributes);
-        attributes.stroke = "none";
-      }
-
-      attributes.d = this.path;
-
-      this.applyAttributes(path, attributes);
-      this.svg.appendChild(path);
-      return this;
-    },
-
-    stroke: function() {
-      // If our current apth is set to glow, make it glow.
-      this.glow();
-
-      var path = this.create("path");
-      var attributes = {};
-      Vex.Merge(attributes, this.attributes);
-      attributes.fill = "none";
-      attributes["stroke-width"] = this.lineWidth;
-      attributes.d = this.path;
-
-      this.applyAttributes(path, attributes);
-      this.svg.appendChild(path);
-      return this;
-    },
-
-    // ## Text Methods:
-
-    measureText: function(text) {
-      var txt = this.create("text");
-      txt.textContent = text;
-      this.applyAttributes(txt, this.attributes);
-      this.svg.appendChild(txt);
-      var bbox = txt.getBBox();
-      if( this.ie && 
-          text !== "" &&
-          this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
-      this.svg.removeChild(txt);
-      return bbox;
-    },
-
-    ieMeasureTextFix: function(bbox, text) {
-    // Internet Explorer over-pads text in italics,
-    // resulting in giant width estimates for measureText.
-    // To fix this, we use this formula, tested against
-    // ie 11:
-    // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
-    // And then subtract the overestimate from calculated width.
-
-      var fontSize = Number(this.fontSize);
-      var m = 1.196;
-      var b = 1.9598;
-      var widthCorrection = (m * fontSize) + b;
-      var width = bbox.width - widthCorrection;
-      var height = bbox.height - 1.5;
-
-      // Get non-protected copy:
-      var box = {
-        x : bbox.x,
-        y : bbox.y,
-        width : width,
-        height : height
-      };
-
-      return box;
-    },
-
-    fillText: function(text, x, y) {
-      var attributes = {};
-      Vex.Merge(attributes, this.attributes);
-      attributes.stroke = "none";
-      attributes.x = x;
-      attributes.y = y;
-
-      var txt = this.create("text");
-      txt.textContent = text;
-      this.applyAttributes(txt, attributes);
-      this.svg.appendChild(txt);
-    },
-
-    save: function() {
-      // TODO(mmuthanna): State needs to be deep-copied.
-      this.state_stack.push({
-        state: {
-          "font-family": this.state["font-family"],
-          "font-weight": this.state["font-weight"],
-          "font-style": this.state["font-style"],
-          "font-size": this.state["font-size"]
-        },
-        attributes: {
-          "font-family": this.attributes["font-family"],
-          "font-weight": this.attributes["font-weight"],
-          "font-style": this.attributes["font-style"],
-          "font-size": this.attributes["font-size"],
-          fill: this.attributes.fill,
-          stroke: this.attributes.stroke,
-          "stroke-width": this.attributes["stroke-width"]
-        },
-        shadow_attributes: {
-          width: this.shadow_attributes.width,
-          color: this.shadow_attributes.color
-        }
-      });
-      return this;
-    },
-
-    restore: function() {
-      // TODO(0xfe): State needs to be deep-restored.
-      var state = this.state_stack.pop();
-      this.state["font-family"] = state.state["font-family"];
-      this.state["font-weight"] = state.state["font-weight"];
-      this.state["font-style"] = state.state["font-style"];
-      this.state["font-size"] = state.state["font-size"];
-
-      this.attributes["font-family"] = state.attributes["font-family"];
-      this.attributes["font-weight"] = state.attributes["font-weight"];
-      this.attributes["font-style"] = state.attributes["font-style"];
-      this.attributes["font-size"] = state.attributes["font-size"];
-
-      this.attributes.fill = state.attributes.fill;
-      this.attributes.stroke = state.attributes.stroke;
-      this.attributes["stroke-width"] = state.attributes["stroke-width"];
-      this.shadow_attributes.width = state.shadow_attributes.width;
-      this.shadow_attributes.color = state.shadow_attributes.color;
-      return this;
-    }
-  };
-
-  return SVGContext;
-}());
+//# sourceMappingURL=vexflow-debug.js.map
