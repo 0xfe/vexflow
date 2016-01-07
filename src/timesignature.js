@@ -40,6 +40,8 @@ Vex.Flow.TimeSignature = (function() {
       this.timeSig = this.parseTimeSpec(timeSpec);
     },
 
+    getCategory: function() { return 'timesignatures'; },
+
     parseTimeSpec: function(timeSpec) {
       if (timeSpec == "C" || timeSpec == "C|") {
         var glyphInfo = TimeSignature.glyphs[timeSpec];

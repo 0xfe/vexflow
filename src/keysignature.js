@@ -37,6 +37,8 @@ Vex.Flow.KeySignature = (function() {
       this.accList = Vex.Flow.keySignature(key_spec);
     },
 
+    getCategory: function() { return 'keysignatures'; },
+
     // Add an accidental glyph to the `stave`. `acc` is the data of the
     // accidental to add. If the `next` accidental is also provided, extra
     // width will be added to the initial accidental for optimal spacing.
@@ -97,7 +99,7 @@ Vex.Flow.KeySignature = (function() {
       return this;
     },
 
-    // Add the key signature to the `stave`. You probably want to use the 
+    // Add the key signature to the `stave`. You probably want to use the
     // helper method `.addToStave()` instead
     addModifier: function(stave) {
       this.convertAccLines(stave.clef, this.accList[0].type);

@@ -155,6 +155,8 @@ Vex.Flow.Clef = (function() {
       L("Creating clef:", clef);
     },
 
+    getCategory: function() { return 'clefs'; },
+
     // Add this clef to the start of the given `stave`.
     addModifier: function(stave) {
       var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
