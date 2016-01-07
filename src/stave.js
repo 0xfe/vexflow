@@ -68,16 +68,25 @@ Vex.Flow.Stave = (function() {
       var start_x = this.start_x;
 
       // Add additional space if left barline is REPEAT_BEGIN and there are other
-      // start modifiers than barlines
+      // start glyphs than barlines
       if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &&
-          this.modifiers.length > 2) {
+          this.glyphs.length > 0) {
         start_x += 20;
       }
 
       return start_x;
     },
 
-    getNoteEndX: function() { return this.end_x; },
+    getNoteEndX: function() {
+      var end_x = this.end_x;
+
+      if (this.modifiers[1].barline == Vex.Flow.Barline.type.REPEAT_END &&
+          this.end_glyphs.length > 0) {
+        end_x -= 20;
+      }
+
+      return this.end_x;
+    },
     getTieStartX: function() { return this.start_x; },
     getTieEndX: function() { return this.x + this.width; },
     setContext: function(context) {
