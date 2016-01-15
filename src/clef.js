@@ -8,8 +8,8 @@
 // See `tests/clef_tests.js` for usage examples.
 
 Vex.Flow.Clef = (function() {
-  function Clef(clef, size, annotation) {
-    if (arguments.length > 0) this.init(clef, size, annotation);
+  function Clef(type, size, annotation) {
+    if (arguments.length > 0) this.init(type, size, annotation);
   }
 
   // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
@@ -62,6 +62,9 @@ Vex.Flow.Clef = (function() {
       code: "v83",
       line: 4
     },
+    "tab": {
+      code: "v2f"
+    }
   };
   // Sizes affect the point-size of the clef.
   Clef.sizes = {
@@ -130,20 +133,21 @@ Vex.Flow.Clef = (function() {
   Vex.Inherit(Clef, Vex.Flow.StaveModifier, {
     // Create a new clef. The parameter `clef` must be a key from
     // `Clef.types`.
-    init: function(clef, size, annotation) {
+    init: function(type, size, annotation) {
       var superclass = Vex.Flow.Clef.superclass;
       superclass.init.call(this);
 
       this.setPosition(Vex.Flow.StaveModifier.Position.LEFT);
-      this.setType(clef, size, annotation);
+      this.setType(type, size, annotation);
       this.setWidth(this.glyph.getMetrics().width);
-      L("Creating clef:", clef);
+      L("Creating clef:", type);
     },
 
     getCategory: function() { return 'clefs'; },
 
-    setType: function(clef, size, annotation) {
-      this.clef = Vex.Flow.Clef.types[clef];
+    setType: function(type, size, annotation) {
+      this.type = type;
+      this.clef = Vex.Flow.Clef.types[type];
       if (size === undefined) {
         this.size = "default";
       } else {
@@ -158,8 +162,8 @@ Vex.Flow.Clef = (function() {
         this.annotation = {
           code: anno_dict.code,
           point: anno_dict.sizes[this.size].point,
-          line: anno_dict.sizes[this.size].attachments[clef].line,
-          x_shift: anno_dict.sizes[this.size].attachments[clef].x_shift
+          line: anno_dict.sizes[this.size].attachments[this.type].line,
+          x_shift: anno_dict.sizes[this.size].attachments[this.type].x_shift
         };
 
         this.attachment = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
@@ -171,13 +175,58 @@ Vex.Flow.Clef = (function() {
       }
     },
 
+    getWidth: function() {
+      if (this.type === 'tab' && !this.stave) {
+        throw new Vex.RERR("ClefError", "Can't get width without stave.");
+      }
+
+      return this.width;
+    },
+
+    setStave: function(stave) {
+      this.stave = stave;
+
+      if (this.type !== 'tab') return;
+
+      var glyphScale;
+      var glyphOffset;
+      switch(this.stave.getOptions().num_lines) {
+        case 8:
+          glyphScale = 55;
+          glyphOffset = 14;
+          break;
+        case 7:
+          glyphScale = 47;
+          glyphOffset = 8;
+          break;
+        case 6:
+          glyphScale = 40;
+          glyphOffset = 1;
+          break;
+        case 5:
+          glyphScale = 30;
+          glyphOffset = -6;
+          break;
+        case 4:
+          glyphScale = 23;
+          glyphOffset = -12;
+          break;
+      }
+
+      this.glyph.setPoint(glyphScale);
+      this.glyph.setYShift(glyphOffset);
+    },
+
     draw: function() {
       if (!this.x) throw new Vex.RERR("ClefError", "Can't draw clef without x.");
       if (!this.stave) throw new Vex.RERR("ClefError", "Can't draw clef without stave.");
 
       this.glyph.setStave(this.stave);
       this.glyph.setContext(this.stave.context);
-      this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line);
+      if (this.clef.line !== undefined) {
+        this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line);
+      }
+
       this.glyph.renderToStave(this.x);
 
       if (this.annotation !== undefined) {
