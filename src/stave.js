@@ -59,7 +59,12 @@ Vex.Flow.Stave = (function() {
 
     getOptions: function() { return this.options; },
 
-    setNoteStartX: function(x) { this.start_x = x; return this; },
+    setNoteStartX: function(x) {
+      if (!this.formatted) this.format();
+
+      this.start_x = x;
+      return this;
+    },
     getNoteStartX: function() {
       if (!this.formatted) this.format();
 
