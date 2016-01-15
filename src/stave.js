@@ -17,14 +17,10 @@ Vex.Flow.Stave = (function() {
       this.y = y;
       this.width = width;
       this.formatted = false;
-      this.glyph_start_x = x + 5;
-      this.glyph_end_x = x + width;
-      this.start_x = this.glyph_start_x;
-      this.end_x = this.glyph_end_x;
+      this.start_x = x + 5;
+      this.end_x = x + width;
       this.context = null;
-      this.glyphs = [];
-      this.end_glyphs = [];
-      this.modifiers = [];  // non-glyph stave items (barlines, coda, segno, etc.)
+      this.modifiers = [];  // stave modifiers (clef, key, time, barlines, coda, segno, etc.)
       this.measure = 0;
       this.clef = "treble";
       this.font = {
@@ -77,15 +73,7 @@ Vex.Flow.Stave = (function() {
     },
     getTieStartX: function() { return this.start_x; },
     getTieEndX: function() { return this.x + this.width; },
-    setContext: function(context) {
-      this.context = context;
-	for(var i=0; i<this.glyphs.length; i++){
-          if(typeof(this.glyphs[i].setContext) === "function"){
-	    this.glyphs[i].setContext(context);
-          }
-	}
-      return this;
-    },
+    setContext: function(context) { this.context = context; return this; },
     getContext: function() { return this.context; },
     getX: function() { return this.x; },
     getNumLines: function() { return this.options.num_lines; },
@@ -98,9 +86,8 @@ Vex.Flow.Stave = (function() {
 
     setX: function(x){
       var shift = x - this.x;
+      this.formatted = false;
       this.x = x;
-      this.glyph_start_x += shift;
-      this.glyph_end_x += shift;
       this.start_x += shift;
       this.end_x += shift;
       for(var i=0; i<this.modifiers.length; i++) {
@@ -113,9 +100,9 @@ Vex.Flow.Stave = (function() {
     },
 
     setWidth: function(width) {
+      this.formatted = false;
       this.width = width;
-      this.glyph_end_x = this.x + width;
-      this.end_x = this.glyph_end_x;
+      this.end_x = this.x + width;
 
       // reset the x position of the end barline (TODO(0xfe): This makes no sense)
       // this.modifiers[1].setX(this.end_x);
@@ -156,41 +143,23 @@ Vex.Flow.Stave = (function() {
      * @return {Number}       The amount of pixels shifted
      */
     getModifierXShift: function(index) {
-      if (typeof index === 'undefined') index = this.glyphs.length -1;
       if (typeof index !== 'number') new Vex.RERR("InvalidIndex",
         "Must be of number type");
 
       if (!this.formatted) this.format();
 
-      if (this.glyphs.length === 0) {
-        if (this.getModifiers(Vex.Flow.StaveModifier.Position.LEFT).length === 1) {
-          return 0;
-        }
-
-        var start_x = this.start_x - this.x;
-        var begBarline = this.modifiers[0];
-        if (begBarline.getType() === Vex.Flow.Barline.type.REPEAT_BEGIN &&
-            start_x > begBarline.getWidth()) {
-          start_x -= begBarline.getWidth();
-        }
-
-        return start_x;
+      if (this.getModifiers(Vex.Flow.StaveModifier.Position.LEFT).length === 1) {
+        return 0;
       }
 
-      // TODO: remove after merging tabstave tab clef to clef
-      var x = this.glyph_start_x;
-      var bar_x_shift = 0;
-
-      for (var i = 0; i < index + 1; ++i) {
-        var glyph = this.glyphs[i];
-        x += glyph.getMetrics().width;
-        bar_x_shift += glyph.getMetrics().width;
+      var start_x = this.start_x - this.x;
+      var begBarline = this.modifiers[0];
+      if (begBarline.getType() === Vex.Flow.Barline.type.REPEAT_BEGIN &&
+          start_x > begBarline.getWidth()) {
+        start_x -= begBarline.getWidth();
       }
 
-      // Add padding after clef, time sig, key sig
-      if (bar_x_shift > 0) bar_x_shift += this.options.vertical_bar_width + 10;
-
-      return bar_x_shift;
+      return start_x;
     },
 
     // Coda & Segno Symbol functions
@@ -286,13 +255,6 @@ Vex.Flow.Stave = (function() {
 
     getYForGlyphs: function() {
       return this.getYForLine(3);
-    },
-
-    addGlyph: function(glyph) {
-      glyph.setStave(this);
-      this.glyphs.push(glyph);
-
-      return this;
     },
 
     addModifier: function(modifier) {
@@ -419,14 +381,6 @@ Vex.Flow.Stave = (function() {
 
       this.end_x = rightModifiers.length === 1 ? this.x + this.width : x;
       this.formatted = true;
-
-      // TODO: remove after merging tabstave tab clef to clef
-      if (this.glyphs.length > 0) {
-        this.start_x = this.glyph_start_x;
-        for (i = 0; i < this.glyphs.length; i++) {
-          this.start_x += this.glyphs[i].getMetrics().width;
-        }
-      }
     },
 
     /**
@@ -442,7 +396,6 @@ Vex.Flow.Stave = (function() {
       var width = this.width;
       var x = this.x;
       var y;
-      var glyph;
 
       // Render lines
       for (var line=0; line < num_lines; line++) {
@@ -457,20 +410,8 @@ Vex.Flow.Stave = (function() {
         this.context.restore();
       }
 
-      // TODO: remote after merging tabstave clef to clef
-      // Render glyphs
-      x = this.glyph_start_x;
-      for (var i = 0; i < this.glyphs.length; ++i) {
-        glyph = this.glyphs[i];
-        if (!glyph.getContext()) {
-          glyph.setContext(this.context);
-        }
-        glyph.renderToStave(x);
-        x += glyph.getMetrics().width;
-      }
-
       // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
-      for (i = 0; i < this.modifiers.length; i++) {
+      for (var i = 0; i < this.modifiers.length; i++) {
         // Only draw modifier if it has a draw function
         if (typeof this.modifiers[i].draw == "function")
           this.modifiers[i].draw(this, this.getModifierXShift());
