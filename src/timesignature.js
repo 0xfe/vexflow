@@ -165,6 +165,7 @@ Vex.Flow.TimeSignature = (function() {
 
     setTimeSig: function(timeSpec) {
       this.timeSig = this.parseTimeSpec(timeSpec);
+      return this;
     },
 
     draw: function() {

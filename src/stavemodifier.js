@@ -28,11 +28,11 @@ Vex.Flow.StaveModifier = (function() {
     getPosition: function() { return this.position; },
     setPosition: function(position) { this.position = position; return this; },
     getStave: function() { return this.stave; },
-    setStave: function(stave) { this.stave = stave },
+    setStave: function(stave) { this.stave = stave; return this; },
     getWidth: function() { return this.width; },
-    setWidth: function(width) { this.width = width; },
+    setWidth: function(width) { this.width = width; return this; },
     getX: function() { return this.x; },
-    setX: function(x) { this.x = x; },
+    setX: function(x) { this.x = x; return this; },
 
     getCategory: function() {return "";},
     makeSpacer: function(padding) {
@@ -53,9 +53,7 @@ Vex.Flow.StaveModifier = (function() {
     getPadding: function(index) {
       return (index !== undefined && index < 2 ? 0 : this.padding);
     },
-    setPadding: function(padding) {
-      this.padding = padding;
-    }
+    setPadding: function(padding) { this.padding = padding; return this; }
   };
 
   return StaveModifier;

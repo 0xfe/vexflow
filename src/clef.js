@@ -173,6 +173,8 @@ Vex.Flow.Clef = (function() {
       else {
         this.annotation = undefined;
       }
+
+      return this;
     },
 
     getWidth: function() {
@@ -215,6 +217,8 @@ Vex.Flow.Clef = (function() {
 
       this.glyph.setPoint(glyphScale);
       this.glyph.setYShift(glyphOffset);
+
+      return this;
     },
 
     draw: function() {

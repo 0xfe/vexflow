@@ -56,6 +56,7 @@ Vex.Flow.Barline = (function() {
       this.type = type;
       this.setWidth(this.widths[this.type]);
       this.setPadding(this.paddings[this.type]);
+      return this;
     },
 
     // Draw barlines
