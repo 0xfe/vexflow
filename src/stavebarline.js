@@ -8,8 +8,8 @@
  * @constructor
  */
 Vex.Flow.Barline = (function() {
-  function Barline(type, x) {
-    if (arguments.length > 0) this.init(type, x);
+  function Barline(type) {
+    if (arguments.length > 0) this.init(type);
   }
 
   Barline.type = {
@@ -23,21 +23,44 @@ Vex.Flow.Barline = (function() {
   };
 
   Vex.Inherit(Barline, Vex.Flow.StaveModifier, {
-    init: function(type, x) {
+    init: function(type) {
       Barline.superclass.init.call(this);
       this.thickness = Vex.Flow.STAVE_LINE_THICKNESS;
-      this.barline = type;
-      this.x = x;    // Left most x for the stave
+
+      var TYPE = Vex.Flow.Barline.type;
+      this.widths = {};
+      this.widths[TYPE.SINGLE] = 5;
+      this.widths[TYPE.DOUBLE] = 5;
+      this.widths[TYPE.END] = 5;
+      this.widths[TYPE.REPEAT_BEGIN] = 5;
+      this.widths[TYPE.REPEAT_END] = 5;
+      this.widths[TYPE.REPEAT_BOTH] = 5;
+      this.widths[TYPE.NONE] = 5;
+
+      this.paddings = {};
+      this.paddings[TYPE.SINGLE] = 0;
+      this.paddings[TYPE.DOUBLE] = 0;
+      this.paddings[TYPE.END] = 0;
+      this.paddings[TYPE.REPEAT_BEGIN] = 15;
+      this.paddings[TYPE.REPEAT_END] = 15;
+      this.paddings[TYPE.REPEAT_BOTH] = 15;
+      this.paddings[TYPE.NONE] = 0;
+
+      this.setPosition(Vex.Flow.StaveModifier.Position.LEFT);
+      this.setType(type);
     },
 
     getCategory: function() { return "barlines"; },
-    setX: function(x) { this.x = x; return this; },
+    getType: function() { return this.type; },
+    setType: function(type) {
+      this.type = type;
+      this.setWidth(this.widths[this.type]);
+      this.setPadding(this.paddings[this.type]);
+    },
 
     // Draw barlines
-    draw: function(stave, x_shift) {
-      x_shift = typeof x_shift !== 'number' ? 0 : x_shift;
-
-      switch (this.barline) {
+    draw: function(stave) {
+      switch (this.type) {
         case Barline.type.SINGLE:
           this.drawVerticalBar(stave, this.x, false);
           break;
@@ -50,10 +73,11 @@ Vex.Flow.Barline = (function() {
         case Barline.type.REPEAT_BEGIN:
           // If the barline is shifted over (in front of clef/time/key)
           // Draw vertical bar at the beginning.
-          if (x_shift > 0) {
-            this.drawVerticalBar(stave, this.x);
+          this.drawRepeatBar(stave, this.x, true);
+          if (stave.getX() !== this.x) {
+            this.drawVerticalBar(stave, stave.getX());
           }
-          this.drawRepeatBar(stave, this.x + x_shift, true);
+
           break;
         case Barline.type.REPEAT_END:
           this.drawRepeatBar(stave, this.x, false);

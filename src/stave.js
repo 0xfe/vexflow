@@ -16,6 +16,7 @@ Vex.Flow.Stave = (function() {
       this.x = x;
       this.y = y;
       this.width = width;
+      this.formatted = false;
       this.glyph_start_x = x + 5;
       this.glyph_end_x = x + width;
       this.start_x = this.glyph_start_x;
@@ -46,11 +47,8 @@ Vex.Flow.Stave = (function() {
 
       this.resetLines();
 
-      this.modifiers.push(
-          new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, this.x)); // beg bar
-      this.modifiers.push(
-          new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE,
-          this.x + this.width)); // end bar
+      this.addModifier(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE)); // beg bar
+      this.addEndModifier(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE)); // end bar
     },
 
     resetLines: function() {
@@ -65,25 +63,13 @@ Vex.Flow.Stave = (function() {
 
     setNoteStartX: function(x) { this.start_x = x; return this; },
     getNoteStartX: function() {
-      var start_x = this.start_x;
+      if (!this.formatted) this.format();
 
-      // Add additional space if left barline is REPEAT_BEGIN and there are other
-      // start glyphs than barlines
-      if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &&
-          this.glyphs.length > 0) {
-        start_x += 20;
-      }
-
-      return start_x;
+      return this.start_x;
     },
 
     getNoteEndX: function() {
-      var end_x = this.end_x;
-
-      if (this.modifiers[1].barline == Vex.Flow.Barline.type.REPEAT_END &&
-          this.end_glyphs.length > 0) {
-        end_x -= 20;
-      }
+      if (!this.formatted) this.format();
 
       return this.end_x;
     },
@@ -146,15 +132,18 @@ Vex.Flow.Stave = (function() {
       if (type == Vex.Flow.Barline.type.SINGLE ||
           type == Vex.Flow.Barline.type.REPEAT_BEGIN ||
           type == Vex.Flow.Barline.type.NONE) {
-          this.modifiers[0] = new Vex.Flow.Barline(type, this.x);
+          this.modifiers[0].setType(type);
+          this.formatted = false;
       }
       return this;
     },
 
     setEndBarType: function(type) {
       // Repeat end not valid at end of stave
-      if (type != Vex.Flow.Barline.type.REPEAT_BEGIN)
-        this.modifiers[1] = new Vex.Flow.Barline(type, this.x + this.width);
+      if (type != Vex.Flow.Barline.type.REPEAT_BEGIN) {
+        this.modifiers[1].setType(type);
+        this.formatted = false;
+      }
       return this;
     },
 
@@ -169,6 +158,24 @@ Vex.Flow.Stave = (function() {
       if (typeof index !== 'number') new Vex.RERR("InvalidIndex",
         "Must be of number type");
 
+      if (!this.formatted) this.format();
+
+      if (this.glyphs.length === 0) {
+        if (this.getModifiers(Vex.Flow.StaveModifier.Position.LEFT).length === 1) {
+          return 0;
+        }
+
+        var start_x = this.start_x - this.x;
+        var begBarline = this.modifiers[0];
+        if (begBarline.getType() === Vex.Flow.Barline.type.REPEAT_BEGIN &&
+            start_x > begBarline.getWidth()) {
+          start_x -= begBarline.getWidth();
+        }
+
+        return start_x;
+      }
+
+      // TODO: remove after merging tabstave tab clef to clef
       var x = this.glyph_start_x;
       var bar_x_shift = 0;
 
@@ -282,31 +289,25 @@ Vex.Flow.Stave = (function() {
     addGlyph: function(glyph) {
       glyph.setStave(this);
       this.glyphs.push(glyph);
-      this.start_x += glyph.getMetrics().width;
-      return this;
-    },
 
-    addEndGlyph: function(glyph) {
-      glyph.setStave(this);
-      this.end_glyphs.push(glyph);
-      this.end_x -= glyph.getMetrics().width;
       return this;
     },
 
     addModifier: function(modifier) {
+      modifier.setStave(this);
+      this.formatted = false;
       this.modifiers.push(modifier);
-      modifier.addToStave(this, (this.glyphs.length === 0));
       return this;
     },
 
     addEndModifier: function(modifier) {
-      this.modifiers.push(modifier);
-      modifier.addToStaveEnd(this, (this.end_glyphs.length === 0));
+      modifier.setPosition(Vex.Flow.StaveModifier.Position.RIGHT);
+      this.addModifier(modifier);
       return this;
     },
 
-    addKeySignature: function(keySpec) {
-      this.addModifier(new Vex.Flow.KeySignature(keySpec));
+    addKeySignature: function(keySpec, cancelKeySpec) {
+      this.addModifier(new Vex.Flow.KeySignature(keySpec, cancelKeySpec));
       return this;
     },
 
@@ -328,12 +329,102 @@ Vex.Flow.Stave = (function() {
 
     addEndTimeSignature: function(timeSpec, customPadding) {
       this.addEndModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding));
+      return this;
     },
 
     addTrebleGlyph: function() {
-      this.clef = "treble";
-      this.addGlyph(new Vex.Flow.Glyph("v83", 40));
+      this.addClef('treble');
       return this;
+    },
+
+    getModifiers: function(position) {
+      if (position === undefined) return this.modifiers;
+
+      return this.modifiers.filter(function(modifier) {
+        return modifier.getPosition() === position;
+      });
+    },
+
+    sortByCategory: function(items, order) {
+      for (var i = items.length - 1; i >= 0; i--) {
+        for (var j = 0; j < i; j++) {
+          if (order[items[j].getCategory()] > order[items[j + 1].getCategory()]) {
+            var temp = items[j];
+            items[j] = items[j + 1];
+            items[j + 1] = temp;
+          }
+        }
+      }
+    },
+
+    format: function() {
+      var Barline = Vex.Flow.Barline;
+      var begBarline = this.modifiers[0];
+      var endBarline = this.modifiers[1];
+
+      var leftModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.LEFT);
+      var rightModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.RIGHT);
+
+      this.sortByCategory(leftModifiers, {
+        barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3
+      });
+
+      this.sortByCategory(rightModifiers, {
+        timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3
+      });
+
+      if (leftModifiers.length > 1 &&
+          begBarline.getType() === Barline.type.REPEAT_BEGIN) {
+        leftModifiers.push(leftModifiers.splice(0, 1)[0]);
+        leftModifiers.splice(0, 0, new Barline(Barline.type.SINGLE));
+      }
+
+      if (rightModifiers.indexOf(endBarline) > 0) {
+        rightModifiers.splice(0, 0, new Barline(Barline.type.NONE));
+      }
+
+      var width;
+      var padding;
+      var modifier;
+      var offset = 0;
+      var x = this.x;
+      for (var i = 0; i < leftModifiers.length; i++) {
+        modifier = leftModifiers[i];
+        padding = modifier.getPadding(i + offset);
+        width = modifier.getWidth();
+
+        x += padding;
+        modifier.setX(x);
+        x += width;
+
+        if (padding + width === 0) offset--;
+      }
+
+      this.start_x = x;
+      x = this.x + this.width;
+
+      for (i = 0; i < rightModifiers.length; i++) {
+        modifier = rightModifiers[i];
+        x -= modifier.getPadding(i);
+        if (i !== 0)
+          x -= modifier.getWidth();
+
+        modifier.setX(x);
+
+        if (i === 0)
+          x -= modifier.getWidth();
+      }
+
+      this.end_x = rightModifiers.length === 1 ? this.x + this.width : x;
+      this.formatted = true;
+
+      // TODO: remove after merging tabstave tab clef to clef
+      if (this.glyphs.length > 0) {
+        this.start_x = this.glyph_start_x;
+        for (i = 0; i < this.glyphs.length; i++) {
+          this.start_x += this.glyphs[i].getMetrics().width;
+        }
+      }
     },
 
     /**
@@ -342,6 +433,8 @@ Vex.Flow.Stave = (function() {
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw stave without canvas context.");
+
+      if (!this.formatted) this.format();
 
       var num_lines = this.options.num_lines;
       var width = this.width;
@@ -362,6 +455,7 @@ Vex.Flow.Stave = (function() {
         this.context.restore();
       }
 
+      // TODO: remote after merging tabstave clef to clef
       // Render glyphs
       x = this.glyph_start_x;
       for (var i = 0; i < this.glyphs.length; ++i) {
@@ -371,17 +465,6 @@ Vex.Flow.Stave = (function() {
         }
         glyph.renderToStave(x);
         x += glyph.getMetrics().width;
-      }
-
-      // Render end glyphs
-      x = this.glyph_end_x;
-      for (i = 0; i < this.end_glyphs.length; ++i) {
-        glyph = this.end_glyphs[i];
-        if (!glyph.getContext()) {
-          glyph.setContext(this.context);
-        }
-        x -= glyph.getMetrics().width;
-        glyph.renderToStave(x);
       }
 
       // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)

@@ -12,10 +12,27 @@ Vex.Flow.StaveModifier = (function() {
     this.init();
   }
 
+  StaveModifier.Position = {
+    LEFT: 1,
+    RIGHT: 2,
+    ABOVE: 3,
+    BELOW: 4
+  };
+
   StaveModifier.prototype = {
     init: function() {
       this.padding = 10;
+      this.position = StaveModifier.Position.ABOVE;
     },
+
+    getPosition: function() { return this.position; },
+    setPosition: function(position) { this.position = position; return this; },
+    getStave: function() { return this.stave; },
+    setStave: function(stave) { this.stave = stave },
+    getWidth: function() { return this.width; },
+    setWidth: function(width) { this.width = width; },
+    getX: function() { return this.x; },
+    setX: function(x) { this.x = x; },
 
     getCategory: function() {return "";},
     makeSpacer: function(padding) {
@@ -33,42 +50,13 @@ Vex.Flow.StaveModifier = (function() {
       glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs());
     },
 
+    getPadding: function(index) {
+      return (index !== undefined && index < 2 ? 0 : this.padding);
+    },
     setPadding: function(padding) {
       this.padding = padding;
-    },
-
-    addToStave: function(stave, firstGlyph) {
-      if (!firstGlyph) {
-        stave.addGlyph(this.makeSpacer(this.padding));
-      }
-
-      this.addModifier(stave);
-      return this;
-    },
-
-    addToStaveEnd: function(stave, firstGlyph) {
-      if (!firstGlyph) {
-        stave.addEndGlyph(this.makeSpacer(this.padding));
-      }
-      else {
-        stave.addEndGlyph(this.makeSpacer(2));
-      }
-
-      this.addEndModifier(stave);
-      return this;
-    },
-
-    addModifier: function() {
-      throw new Vex.RERR("MethodNotImplemented",
-          "addModifier() not implemented for this stave modifier.");
-    },
-
-    addEndModifier: function() {
-      throw new Vex.RERR("MethodNotImplemented",
-          "addEndModifier() not implemented for this stave modifier.");
     }
   };
 
   return StaveModifier;
 }());
-
