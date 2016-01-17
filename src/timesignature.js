@@ -36,7 +36,7 @@ Vex.Flow.TimeSignature = (function() {
       this.point = 40;
       this.topLine = 2;
       this.bottomLine = 4;
-      this.setPosition(Vex.Flow.StaveModifier.Position.LEFT);
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
       this.timeSig = this.parseTimeSpec(timeSpec);
       this.setWidth(this.timeSig.glyph.getMetrics().width);
       this.setPadding(padding);

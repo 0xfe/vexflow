@@ -137,7 +137,7 @@ Vex.Flow.Clef = (function() {
       var superclass = Vex.Flow.Clef.superclass;
       superclass.init.call(this);
 
-      this.setPosition(Vex.Flow.StaveModifier.Position.LEFT);
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
       this.setType(type, size, annotation);
       this.setWidth(this.glyph.getMetrics().width);
       L("Creating clef:", type);

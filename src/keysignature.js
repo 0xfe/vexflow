@@ -34,7 +34,7 @@ Vex.Flow.KeySignature = (function() {
       KeySignature.superclass.init();
 
       this.setKeySig(keySpec, cancelKeySpec);
-      this.setPosition(Vex.Flow.StaveModifier.Position.LEFT);
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
       this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
       this.glyphs = [];
       this.paddingForced = false;

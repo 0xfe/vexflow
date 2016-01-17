@@ -46,7 +46,7 @@ Vex.Flow.Barline = (function() {
       this.paddings[TYPE.REPEAT_BOTH] = 15;
       this.paddings[TYPE.NONE] = 0;
 
-      this.setPosition(Vex.Flow.StaveModifier.Position.LEFT);
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
       this.setType(type);
     },
 

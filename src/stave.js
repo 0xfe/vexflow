@@ -153,7 +153,7 @@ Vex.Flow.Stave = (function() {
 
       if (!this.formatted) this.format();
 
-      if (this.getModifiers(Vex.Flow.StaveModifier.Position.LEFT).length === 1) {
+      if (this.getModifiers(Vex.Flow.StaveModifier.Position.BEGIN).length === 1) {
         return 0;
       }
 
@@ -270,7 +270,7 @@ Vex.Flow.Stave = (function() {
     },
 
     addEndModifier: function(modifier) {
-      modifier.setPosition(Vex.Flow.StaveModifier.Position.RIGHT);
+      modifier.setPosition(Vex.Flow.StaveModifier.Position.END);
       this.addModifier(modifier);
       return this;
     },
@@ -331,25 +331,25 @@ Vex.Flow.Stave = (function() {
       var begBarline = this.modifiers[0];
       var endBarline = this.modifiers[1];
 
-      var leftModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.LEFT);
-      var rightModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.RIGHT);
+      var begModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.BEGIN);
+      var endModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.END);
 
-      this.sortByCategory(leftModifiers, {
+      this.sortByCategory(begModifiers, {
         barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3
       });
 
-      this.sortByCategory(rightModifiers, {
+      this.sortByCategory(endModifiers, {
         timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3
       });
 
-      if (leftModifiers.length > 1 &&
+      if (begModifiers.length > 1 &&
           begBarline.getType() === Barline.type.REPEAT_BEGIN) {
-        leftModifiers.push(leftModifiers.splice(0, 1)[0]);
-        leftModifiers.splice(0, 0, new Barline(Barline.type.SINGLE));
+        begModifiers.push(begModifiers.splice(0, 1)[0]);
+        begModifiers.splice(0, 0, new Barline(Barline.type.SINGLE));
       }
 
-      if (rightModifiers.indexOf(endBarline) > 0) {
-        rightModifiers.splice(0, 0, new Barline(Barline.type.NONE));
+      if (endModifiers.indexOf(endBarline) > 0) {
+        endModifiers.splice(0, 0, new Barline(Barline.type.NONE));
       }
 
       var width;
@@ -357,8 +357,8 @@ Vex.Flow.Stave = (function() {
       var modifier;
       var offset = 0;
       var x = this.x;
-      for (var i = 0; i < leftModifiers.length; i++) {
-        modifier = leftModifiers[i];
+      for (var i = 0; i < begModifiers.length; i++) {
+        modifier = begModifiers[i];
         padding = modifier.getPadding(i + offset);
         width = modifier.getWidth();
 
@@ -372,8 +372,8 @@ Vex.Flow.Stave = (function() {
       this.start_x = x;
       x = this.x + this.width;
 
-      for (i = 0; i < rightModifiers.length; i++) {
-        modifier = rightModifiers[i];
+      for (i = 0; i < endModifiers.length; i++) {
+        modifier = endModifiers[i];
         x -= modifier.getPadding(i);
         if (i !== 0)
           x -= modifier.getWidth();
@@ -384,7 +384,7 @@ Vex.Flow.Stave = (function() {
           x -= modifier.getWidth();
       }
 
-      this.end_x = rightModifiers.length === 1 ? this.x + this.width : x;
+      this.end_x = endModifiers.length === 1 ? this.x + this.width : x;
       this.formatted = true;
     },
 

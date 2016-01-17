@@ -16,7 +16,9 @@ Vex.Flow.StaveModifier = (function() {
     LEFT: 1,
     RIGHT: 2,
     ABOVE: 3,
-    BELOW: 4
+    BELOW: 4,
+    BEGIN: 5,
+    END: 6
   };
 
   StaveModifier.prototype = {
