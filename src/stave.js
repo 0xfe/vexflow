@@ -120,27 +120,6 @@ Vex.Flow.Stave = (function() {
 
     setMeasure: function(measure) { this.measure = measure; return this; },
 
-      // Bar Line functions
-    setBegBarType: function(type) {
-      // Only valid bar types at beginning of stave is none, single or begin repeat
-      if (type == Vex.Flow.Barline.type.SINGLE ||
-          type == Vex.Flow.Barline.type.REPEAT_BEGIN ||
-          type == Vex.Flow.Barline.type.NONE) {
-          this.modifiers[0].setType(type);
-          this.formatted = false;
-      }
-      return this;
-    },
-
-    setEndBarType: function(type) {
-      // Repeat end not valid at end of stave
-      if (type != Vex.Flow.Barline.type.REPEAT_BEGIN) {
-        this.modifiers[1].setType(type);
-        this.formatted = false;
-      }
-      return this;
-    },
-
     /**
      * Gets the pixels to shift from the beginning of the stave
      * following the modifier at the provided index
@@ -262,7 +241,11 @@ Vex.Flow.Stave = (function() {
       return this.getYForLine(3);
     },
 
-    addModifier: function(modifier) {
+    addModifier: function(modifier, position) {
+      if (position !== undefined) {
+        modifier.setPosition(position);
+      }
+
       modifier.setStave(this);
       this.formatted = false;
       this.modifiers.push(modifier);
@@ -270,47 +253,134 @@ Vex.Flow.Stave = (function() {
     },
 
     addEndModifier: function(modifier) {
-      modifier.setPosition(Vex.Flow.StaveModifier.Position.END);
-      this.addModifier(modifier);
+      this.addModifier(modifier, Vex.Flow.StaveModifier.Position.END);
       return this;
     },
 
-    addKeySignature: function(keySpec, cancelKeySpec) {
-      this.addModifier(new Vex.Flow.KeySignature(keySpec, cancelKeySpec));
+    // Bar Line functions
+    setBegBarType: function(type) {
+      // Only valid bar types at beginning of stave is none, single or begin repeat
+      if (type == Vex.Flow.Barline.type.SINGLE ||
+          type == Vex.Flow.Barline.type.REPEAT_BEGIN ||
+          type == Vex.Flow.Barline.type.NONE) {
+          this.modifiers[0].setType(type);
+          this.formatted = false;
+      }
       return this;
     },
 
-    addClef: function(clef, size, annotation) {
-      this.clef = clef;
-      this.addModifier(new Vex.Flow.Clef(clef, size, annotation));
+    setEndBarType: function(type) {
+      // Repeat end not valid at end of stave
+      if (type != Vex.Flow.Barline.type.REPEAT_BEGIN) {
+        this.modifiers[1].setType(type);
+        this.formatted = false;
+      }
+      return this;
+    },
+
+    setClef: function(clefSpec, size, annotation, position) {
+      if (position === undefined) {
+        position = Vex.Flow.StaveModifier.Position.BEGIN;
+      }
+
+      this.clef = clefSpec;
+      var clefs = this.getModifiers(position, Vex.Flow.Clef.category);
+      if (clefs.length === 0) {
+        this.addClef(clefSpec, size, annotation, position);
+      } else {
+        clefs[0].setType(clefSpec, size, annotation);
+      }
+
+      return this;
+    },
+
+    setEndClef: function(clefSpec, size, annotation) {
+      this.setClef(clefSpec, size, annotation, Vex.Flow.StaveModifier.Position.END);
+      return this;
+    },
+
+    setKeySignature: function(keySpec, cancelKeySpec, position) {
+      if (position === undefined) {
+        position = Vex.Flow.StaveModifier.Position.BEGIN;
+      }
+
+      var keySignatures = this.getModifiers(position, Vex.Flow.KeySignature.category);
+      if (keySignatures.length === 0) {
+        this.addKeySignature(keySpec, cancelKeySpec, position);
+      } else {
+        keySignatures[0].setKeySig(keySpec, cancelKeySpec);
+      }
+
+      return this;
+    },
+
+    setEndKeySignature: function(keySpec, cancelKeySpec) {
+      this.setKeySignature(keySpec, cancelKeySpec, Vex.Flow.StaveModifier.Position.END);
+      return this;
+    },
+
+    setTimeSignature: function(timeSpec, customPadding, position) {
+      if (position === undefined) {
+        position = Vex.Flow.StaveModifier.Position.BEGIN;
+      }
+
+      var timeSignatures = this.getModifiers(position, Vex.Flow.TimeSignature.category);
+      if (timeSignatures.length === 0) {
+        this.addTimeSignature(timeSpec, customPadding, position);
+      } else {
+        timeSignatures[0].setTimeSig(timeSpec);
+      }
+
+      return this;
+    },
+
+    setEndTimeSignature: function(timeSpec, customPadding) {
+      this.setTimeSignature(timeSpec, customPadding, Vex.Flow.StaveModifier.Position.END);
+      return this;
+    },
+
+    addKeySignature: function(keySpec, cancelKeySpec, position) {
+      this.addModifier(new Vex.Flow.KeySignature(keySpec, cancelKeySpec), position);
+      return this;
+    },
+
+    addClef: function(clef, size, annotation, position) {
+      if (position === undefined ||
+          position === Vex.Flow.StaveModifier.Position.BEGIN) {
+        this.clef = clef;
+      }
+
+      this.addModifier(new Vex.Flow.Clef(clef, size, annotation), position);
       return this;
     },
 
     addEndClef: function(clef, size, annotation) {
-      this.addEndModifier(new Vex.Flow.Clef(clef, size, annotation));
+      this.addClef(clef, size, annotation, Vex.Flow.StaveModifier.Position.END);
       return this;
     },
 
-    addTimeSignature: function(timeSpec, customPadding) {
-      this.addModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding));
+    addTimeSignature: function(timeSpec, customPadding, position) {
+      this.addModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding), position);
       return this;
     },
 
     addEndTimeSignature: function(timeSpec, customPadding) {
-      this.addEndModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding));
+      this.addTimeSignature(timeSpec, customPadding, Vex.Flow.StaveModifier.Position.END);
       return this;
     },
 
+    // Deprecated
     addTrebleGlyph: function() {
       this.addClef('treble');
       return this;
     },
 
-    getModifiers: function(position) {
+    getModifiers: function(position, category) {
       if (position === undefined) return this.modifiers;
 
       return this.modifiers.filter(function(modifier) {
-        return modifier.getPosition() === position;
+        return position === modifier.getPosition() &&
+          (category === undefined || category === modifier.getCategory());
       });
     },
 

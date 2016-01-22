@@ -15,6 +15,8 @@ Vex.Flow.Clef = (function() {
   // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
   function L() { if (Vex.Flow.Clef.DEBUG) Vex.L("Vex.Flow.Clef", arguments); }
 
+  Clef.category = 'clefs';
+
   // Every clef name is associated with a glyph code from the font file
   // and a default stave line number.
   Clef.types = {
@@ -143,7 +145,7 @@ Vex.Flow.Clef = (function() {
       L("Creating clef:", type);
     },
 
-    getCategory: function() { return 'clefs'; },
+    getCategory: function() { return Clef.category; },
 
     setType: function(type, size, annotation) {
       this.type = type;

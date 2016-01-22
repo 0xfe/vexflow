@@ -10,6 +10,8 @@ Vex.Flow.KeySignature = (function() {
     if (arguments.length > 0) this.init(keySpec, cancelKeySpec);
   }
 
+  KeySignature.category = 'keysignatures';
+
   // Space between natural and following accidental depending
   // on vertical position
   KeySignature.accidentalSpacing = {
@@ -40,7 +42,7 @@ Vex.Flow.KeySignature = (function() {
       this.paddingForced = false;
     },
 
-    getCategory: function() { return 'keysignatures'; },
+    getCategory: function() { return KeySignature.category; },
 
     // Add an accidental glyph to the `stave`. `acc` is the data of the
     // accidental to add. If the `next` accidental is also provided, extra

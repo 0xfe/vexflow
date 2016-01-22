@@ -15,6 +15,8 @@ Vex.Flow.TimeSignature = (function() {
     if (arguments.length > 0) this.init(timeSpec, customPadding);
   }
 
+  TimeSignature.category = 'timesignatures';
+
   TimeSignature.glyphs = {
     "C": {
       code: "v41",
@@ -37,12 +39,12 @@ Vex.Flow.TimeSignature = (function() {
       this.topLine = 2;
       this.bottomLine = 4;
       this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
-      this.timeSig = this.parseTimeSpec(timeSpec);
+      this.setTimeSig(timeSpec);
       this.setWidth(this.timeSig.glyph.getMetrics().width);
       this.setPadding(padding);
     },
 
-    getCategory: function() { return 'timesignatures'; },
+    getCategory: function() { return TimeSignature.category; },
 
     parseTimeSpec: function(timeSpec) {
       if (timeSpec == "C" || timeSpec == "C|") {
