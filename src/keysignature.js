@@ -6,8 +6,8 @@
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 Vex.Flow.KeySignature = (function() {
-  function KeySignature(keySpec) {
-    if (arguments.length > 0) this.init(keySpec);
+  function KeySignature(keySpec, cancelKeySpec) {
+    if (arguments.length > 0) this.init(keySpec, cancelKeySpec);
   }
 
   // Space between natural and following accidental depending
