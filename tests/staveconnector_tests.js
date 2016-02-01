@@ -414,18 +414,22 @@ VF.Test.StaveConnector = (function() {
       stave7.setContext(ctx);
       var conn_single = new VF.StaveConnector(stave, stave7);
       var conn_double = new VF.StaveConnector(stave2, stave3);
-      var conn_bracket = new VF.StaveConnector(stave4, stave5);
+      var conn_bracket = new VF.StaveConnector(stave4, stave7);
+      var conn_none = new VF.StaveConnector(stave4, stave5);
       var conn_brace = new VF.StaveConnector(stave6, stave7);
       conn_single.setType(VF.StaveConnector.type.SINGLE);
       conn_double.setType(VF.StaveConnector.type.DOUBLE);
       conn_bracket.setType(VF.StaveConnector.type.BRACKET);
       conn_brace.setType(VF.StaveConnector.type.BRACE);
+      conn_brace.setXShift(-5);
       conn_double.setText('Piano');
-      conn_bracket.setText('Celesta');
+      conn_none.setText('Multiple', { shift_y: -15 });
+      conn_none.setText('Line Text', { shift_y: 15 });
       conn_brace.setText('Harpsichord');
       conn_single.setContext(ctx);
       conn_double.setContext(ctx);
       conn_bracket.setContext(ctx);
+      conn_none.setContext(ctx);
       conn_brace.setContext(ctx);
       stave.draw();
       stave2.draw();
@@ -437,6 +441,7 @@ VF.Test.StaveConnector = (function() {
       conn_single.draw();
       conn_double.draw();
       conn_bracket.draw();
+      conn_none.draw();
       conn_brace.draw();
 
       ok(true, "all pass");
