@@ -23,7 +23,8 @@ Vex.Flow.StaveConnector = (function() {
     BRACKET: 4,
     BOLD_DOUBLE_LEFT: 5,
     BOLD_DOUBLE_RIGHT: 6,
-    THIN_DOUBLE: 7
+    THIN_DOUBLE: 7,
+    NONE: 8
   };
 
   StaveConnector.prototype = {
@@ -45,7 +46,7 @@ Vex.Flow.StaveConnector = (function() {
 
     setType: function(type) {
       if (type >= StaveConnector.type.SINGLE_RIGHT &&
-          type <= StaveConnector.type.THIN_DOUBLE)
+          type <= StaveConnector.type.NONE)
         this.type = type;
       return this;
     },
@@ -163,11 +164,14 @@ Vex.Flow.StaveConnector = (function() {
         case StaveConnector.type.THIN_DOUBLE:
           width = 1;
           break;
+        case StaveConnector.type.NONE:
+          break;
       }
 
       if (this.type !== StaveConnector.type.BRACE &&
         this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
-        this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
+        this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT &&
+        this.type !== StaveConnector.type.NONE) {
         this.ctx.fillRect(topX , topY, width, attachment_height);
       }
 
