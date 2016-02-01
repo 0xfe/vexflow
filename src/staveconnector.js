@@ -33,7 +33,9 @@ Vex.Flow.StaveConnector = (function() {
       this.top_stave = top_stave;
       this.bottom_stave = bottom_stave;
       this.type = StaveConnector.type.DOUBLE;
-      this.x_shift = 0; // Mainly used to offset Bold Double Left to align with offset Repeat Begin bars
+      // 1. Offset Bold Double Left to align with offset Repeat Begin bars
+      // 2. Offset BRACE type not to overlap with another StaveConnector
+      this.x_shift = 0;
     },
 
     setContext: function(ctx) {
@@ -113,7 +115,7 @@ Vex.Flow.StaveConnector = (function() {
         case StaveConnector.type.BRACE:
           width = 12;
           // May need additional code to draw brace
-          var x1 = this.top_stave.getX() - 2;
+          var x1 = this.top_stave.getX() - 2 + this.x_shift;
           var y1 = topY;
           var x3 = x1;
           var y3 = botY;
