@@ -35,14 +35,16 @@
     "grunt-release": "^0.7.0",
     "jquery": "^2.1.1",
     "jscs": "^2.3.3",
-    "jsdom": "^6.5.1",
     "qunit": "^0.7.5",
     "raphael": "^2.1.0",
-    "xmldom": "^0.1.19"
+    "slimerjs": "^0.9.6"
   },
   "scripts": {
     "start": "grunt stage",
-    "test": "grunt test"
+    "test:qunit": "grunt test",
+    "test:generate": "slimerjs ./tools/generate_svg_images.js",
+    "test:diff": "./tools/visual_regression.sh",
+    "test": "npm run test:qunit && npm run test:generate && npm run test:diff"
   },
   "homepage": "http://vexflow.com",
   "keywords": [

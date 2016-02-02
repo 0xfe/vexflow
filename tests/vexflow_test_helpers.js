@@ -3,6 +3,38 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
+// Mock out the QUnit stuff for generating svg images,
+// since we don't really care about the assertions.
+if (!window.QUnit) {
+  window.QUnit = {}
+
+  QUnit.assertions = {
+    ok: function() {return true;},
+    equal: function() {return true;},
+    expect: function() {return true;}
+  };
+
+  QUnit.module = function(name) {
+    console.log("Module: " + name);
+    QUnit.current_module = name;
+  };
+
+  QUnit.test = function(name, func) {
+    QUnit.current_test = name;
+    console.log("  Test: " + name);
+    func(QUnit.assertions);
+  };
+
+  test = QUnit.test;
+  ok = QUnit.assertions.ok;
+  equal = QUnit.assertions.equal;
+  expect = QUnit.assertions.expect;
+}
+
+if (typeof require == "function") {
+  Vex = require('./vexflow-debug.js');
+}
+
 var VF = Vex.Flow;
 VF.Test = (function() {
   var Test = {
@@ -112,14 +144,7 @@ VF.Test = (function() {
     },
 
     runNodeTest: function(name, func, params) {
-      var jsdom = require("jsdom").jsdom;
-      var xmldom = require("xmldom");
       var fs = require('fs');
-      var path = require('path');
-      var process = require('process');
-
-      window = jsdom().defaultView;
-      document = window.document;
 
       // Allows `name` to be used inside file names.
       function sanitizeName(name) {
@@ -129,6 +154,7 @@ VF.Test = (function() {
       QUnit.test(name, function(assert) {
         var div = document.createElement("div");
         div.setAttribute("id", "canvas_" + VF.Test.genID());
+        document.getElementsByTagName('body')[0].appendChild(div);
 
         func({
           canvas_sel: div,
@@ -139,16 +165,16 @@ VF.Test = (function() {
         if (VF.Renderer.lastContext != null) {
           // If an SVG context was used, then serialize and save its contents to
           // a local file.
-          var svgData = new xmldom.XMLSerializer().serializeToString(VF.Renderer.lastContext.svg);
+          var svgData = new XMLSerializer().serializeToString(VF.Renderer.lastContext.svg);
 
           var moduleName = sanitizeName(QUnit.current_module);
           var testName = sanitizeName(QUnit.current_test);
-          var filename = path.resolve(VF.Test.NODE_IMAGEDIR, moduleName + "." + testName + ".svg");
+          var filename = VF.Test.NODE_IMAGEDIR + "/" + moduleName + "." + testName + ".svg";
           try {
-            fs.writeFileSync(filename, svgData);
+            fs.write(filename, svgData, "w");
           } catch(e) {
             console.log("Can't save file: " + filename + ". Error: " + e);
-            process.exit(-1);
+            slimer.exit();
           };
           VF.Renderer.lastContext = null;
         }
