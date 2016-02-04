@@ -14,9 +14,12 @@ VF.Test.StaveTie = (function() {
       runTests("Stem Up StaveTie", StaveTie.stemUp);
       runTests("No End Note", StaveTie.noEndNote);
       runTests("No Start Note", StaveTie.noStartNote);
+      runTests("Set Direction Down", StaveTie.setDirectionDown);
+      runTests("Set Direction Up", StaveTie.setDirectionUp);
+
     },
 
-    tieNotes: function(notes, indices, stave, ctx) {
+    tieNotes: function(notes, indices, stave, ctx, direction) {
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables(notes);
 
@@ -32,6 +35,11 @@ VF.Test.StaveTie = (function() {
       });
 
       tie.setContext(ctx);
+
+      if(direction !== undefined && direction !== null){
+        tie.setDirection(direction);
+      }
+
       tie.draw();
     },
 
@@ -41,7 +49,7 @@ VF.Test.StaveTie = (function() {
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       var stave = new VF.Stave(10, 10, 350).setContext(ctx).draw();
 
-      VF.Test.StaveTie.tieNotes(notes, indices, stave, ctx);
+      VF.Test.StaveTie.tieNotes(notes, indices, stave, ctx, options['direction']);
     },
 
     simple: function(options, contextBuilder) {
@@ -151,7 +159,38 @@ VF.Test.StaveTie = (function() {
       }, "H").setContext(ctx).draw();
 
       ok(true, "No end note");
+    },
+
+    setDirectionDown: function(options, contextBuilder){
+      options.contextBuilder = contextBuilder;
+      options.direction = Vex.Flow.Stem.DOWN;
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
+
+      VF.Test.StaveTie.drawTie([
+        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
+            addAccidental(0, newAcc("b")).
+            addAccidental(1, newAcc("#")),
+        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
+      ], [0, 1], options);
+      ok(true, "Set Direction Down");
+    },
+
+    setDirectionUp: function(options, contextBuilder){
+      options.contextBuilder = contextBuilder;
+      options.direction = Vex.Flow.Stem.UP;
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
+
+      VF.Test.StaveTie.drawTie([
+        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
+            addAccidental(0, newAcc("b")).
+            addAccidental(1, newAcc("#")),
+        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
+      ], [0, 1], options);
+      ok(true, "Set Direction Down");
     }
+
   };
 
   return StaveTie;
