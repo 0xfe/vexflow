@@ -49,6 +49,7 @@ Vex.Flow.Glyph = (function() {
       this.reset();
     },
 
+    setPoint: function(point) { this.point = point; return this; },
     setStave: function(stave) { this.stave = stave; return this; },
     setXShift: function(x_shift) { this.x_shift = x_shift; return this; },
     setYShift: function(y_shift) { this.y_shift = y_shift; return this; },

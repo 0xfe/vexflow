@@ -8,6 +8,7 @@ VF.Test.Stave = (function() {
     Start: function() {
       var runTests = VF.Test.runTests;
       QUnit.module("Stave");
+      test("StaveModifiers SortByCategory", Stave.sortByCategory);
       runTests("Stave Draw Test", Stave.draw);
       runTests("Vertical Bar Test", Stave.drawVerticalBar);
       runTests("Multiple Stave Barline Test", Stave.drawMultipleMeasures);
@@ -18,6 +19,66 @@ VF.Test.Stave = (function() {
       runTests("Batch Line Configuration Test", Stave.configureAllLines);
       runTests("Stave Text Test", Stave.drawStaveText);
       runTests("Multiple Line Stave Text Test (Raphael)", Stave.drawStaveTextMultiLine);
+    },
+
+    sortByCategory: function(options) {
+      var stave = new VF.Stave(0, 0, 300);
+      var clef0 = new VF.Clef("treble");
+      var clef1 = new VF.Clef("alto");
+      var clef2 = new VF.Clef("bass");
+      var time0 = new VF.TimeSignature("C");
+      var time1 = new VF.TimeSignature("C|");
+      var time2 = new VF.TimeSignature("9/8");
+      var key0 = new VF.KeySignature("G");
+      var key1 = new VF.KeySignature("F");
+      var key2 = new VF.KeySignature("D");
+      var bar0 = new VF.Barline(VF.Barline.type.SINGLE);
+      var bar1 = new VF.Barline(VF.Barline.type.DOUBLE);
+      var bar2 = new VF.Barline(VF.Barline.type.NONE);
+      var order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
+      var order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
+
+      var sortAndCompare = function(title, arr, arr2, order) {
+        stave.sortByCategory(arr, order);
+
+        var isSame = true;
+        arr2.forEach(function(modifier, i) {
+          if (modifier !== arr[i]) isSame = false;
+        });
+
+        ok(isSame, title);
+      };
+
+      sortAndCompare(
+        'Keep the original order',
+        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+        order0
+      );
+      sortAndCompare(
+        'Keep the original order 2',
+        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+        order1
+      );
+      sortAndCompare(
+        'Sort and keep',
+        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+        order1
+      );
+      sortAndCompare(
+        'Sort and keep 2',
+        [bar0, clef0, key0, time0, key1, time1, clef1, bar1, time2, clef2, bar2, key2],
+        [bar0, bar1, bar2, clef0, clef1, clef2, key0, key1, key2, time0, time1, time2],
+        order0
+      );
+      sortAndCompare(
+        'Sort and keep 3',
+        [bar2, clef2, key2, time0, key0, time2, clef1, bar1, time1, clef0, bar0, key1],
+        [time0, time2, time1, key2, key0, key1, bar2, bar1, bar0, clef2, clef1, clef0],
+        order1
+      );
     },
 
     draw: function(options, contextBuilder) {

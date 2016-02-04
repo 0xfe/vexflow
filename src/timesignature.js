@@ -15,6 +15,8 @@ Vex.Flow.TimeSignature = (function() {
     if (arguments.length > 0) this.init(timeSpec, customPadding);
   }
 
+  TimeSignature.category = 'timesignatures';
+
   TimeSignature.glyphs = {
     "C": {
       code: "v41",
@@ -31,14 +33,18 @@ Vex.Flow.TimeSignature = (function() {
   Vex.Inherit(TimeSignature, Vex.Flow.StaveModifier, {
     init: function(timeSpec, customPadding) {
       TimeSignature.superclass.init();
-       var padding = customPadding || 15;
+      var padding = customPadding || 15;
 
-      this.setPadding(padding);
       this.point = 40;
       this.topLine = 2;
       this.bottomLine = 4;
-      this.timeSig = this.parseTimeSpec(timeSpec);
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
+      this.setTimeSig(timeSpec);
+      this.setWidth(this.timeSig.glyph.getMetrics().width);
+      this.setPadding(padding);
     },
+
+    getCategory: function() { return TimeSignature.category; },
 
     parseTimeSpec: function(timeSpec) {
       if (timeSpec == "C" || timeSpec == "C|") {
@@ -159,18 +165,19 @@ Vex.Flow.TimeSignature = (function() {
       return this.timeSig;
     },
 
-    addModifier: function(stave) {
-      if (!this.timeSig.num) {
-        this.placeGlyphOnLine(this.timeSig.glyph, stave, this.timeSig.line);
-      }
-      stave.addGlyph(this.timeSig.glyph);
+    setTimeSig: function(timeSpec) {
+      this.timeSig = this.parseTimeSpec(timeSpec);
+      return this;
     },
 
-    addEndModifier: function(stave) {
-      if (!this.timeSig.num) {
-        this.placeGlyphOnLine(this.timeSig.glyph, stave, this.timeSig.line);
-      }
-      stave.addEndGlyph(this.timeSig.glyph);
+    draw: function() {
+      if (!this.x) throw new Vex.RERR("TimeSignatureError", "Can't draw time signature without x.");
+      if (!this.stave) throw new Vex.RERR("TimeSignatureError", "Can't draw time signature without stave.");
+
+      this.timeSig.glyph.setStave(this.stave);
+      this.timeSig.glyph.setContext(this.stave.context);
+      this.placeGlyphOnLine(this.timeSig.glyph, this.stave, this.timeSig.line);
+      this.timeSig.glyph.renderToStave(this.x);
     }
   });
 

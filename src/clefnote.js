@@ -5,20 +5,21 @@
 
 /** @constructor */
 Vex.Flow.ClefNote = (function() {
-  function ClefNote(clef, size, annotation) { this.init(clef, size, annotation); }
+  function ClefNote(type, size, annotation) { this.init(type, size, annotation); }
 
   Vex.Inherit(ClefNote, Vex.Flow.Note, {
-    init: function(clef, size, annotation) {
+    init: function(type, size, annotation) {
       ClefNote.superclass.init.call(this, {duration: "b"});
-      
-      this.setClef(clef, size, annotation);
+
+      this.setType(type, size, annotation);
 
       // Note properties
       this.ignore_ticks = true;
     },
 
-    setClef: function(clef, size, annotation) {
-      this.clef_obj = new Vex.Flow.Clef(clef, size, annotation);
+    setType: function(type, size, annotation) {
+      this.type = type;
+      this.clef_obj = new Vex.Flow.Clef(type, size, annotation);
       this.clef = this.clef_obj.clef;
       this.glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
       this.setWidth(this.glyph.getMetrics().width);
@@ -60,7 +61,7 @@ Vex.Flow.ClefNote = (function() {
 
     draw: function() {
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-      
+
       if (!this.glyph.getContext()) {
         this.glyph.setContext(this.context);
       }
@@ -70,7 +71,7 @@ Vex.Flow.ClefNote = (function() {
       this.glyph.setYShift(
         this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
       this.glyph.renderToStave(abs_x);
-      
+
       // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
       if (this.clef_obj.annotation !== undefined) {
         var attachment = new Vex.Flow.Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
@@ -83,7 +84,7 @@ Vex.Flow.ClefNote = (function() {
         attachment.setXShift(this.clef_obj.annotation.x_shift);
         attachment.renderToStave(abs_x);
       }
-      
+
     }
   });
 
