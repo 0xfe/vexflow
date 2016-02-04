@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.36 built on 2015-10-15.
+ * VexFlow 1.2.36 built on 2015-11-16.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -2165,6 +2165,15 @@ Vex.Flow.Stave = (function() {
       return y;
     },
 
+    getLineForY: function(y){
+      //Does the revers of getYForLine - somewhat dumb and just calls getYForLine until the right value is reaches
+
+      var options = this.options;
+      var spacing = options.spacing_between_lines_px;
+      var headroom = options.space_above_staff_ln;
+      return ((y - this.y + (THICKNESS / 2)) / spacing) - headroom;
+    },
+
     getYForTopText: function(line) {
       var l = line || 0;
       return this.getYForLine(-l - this.options.top_text_position);
@@ -3792,7 +3801,6 @@ Vex.Flow.StemmableNote = (function(){
       this.stem = null;
       this.stem_extension_override = null;
       this.beam = null;
-
     },
 
     // Get and set the note's `Stem`
@@ -8286,17 +8294,18 @@ Vex.Flow.StaveTie = (function() {
       this.notes = notes;
       this.context = null;
       this.text = text;
+      this.direction = null;
 
       this.render_options = {
-          cp1: 8,      // Curve control point 1
-          cp2: 12,      // Curve control point 2
-          text_shift_x: 0,
-          first_x_shift: 0,
-          last_x_shift: 0,
-          y_shift: 7,
-          tie_spacing: 0,
-          font: { family: "Arial", size: 10, style: "" }
-        };
+        cp1: 8,      // Curve control point 1
+        cp2: 12,      // Curve control point 2
+        text_shift_x: 0,
+        first_x_shift: 0,
+        last_x_shift: 0,
+        y_shift: 7,
+        tie_spacing: 0,
+        font: { family: "Arial", size: 10, style: "" }
+      };
 
       this.font = this.render_options.font;
       this.setNotes(notes);
@@ -8304,6 +8313,7 @@ Vex.Flow.StaveTie = (function() {
 
     setContext: function(context) { this.context = context; return this; },
     setFont: function(font) { this.font = font; return this; },
+    setDirection: function(direction) { this.direction = direction; return this; },
 
     /**
      * Set the notes to attach this tie to.
@@ -8320,7 +8330,7 @@ Vex.Flow.StaveTie = (function() {
 
       if (notes.first_indices.length != notes.last_indices.length)
         throw new Vex.RuntimeError("BadArguments", "Tied notes must have similar" +
-          " index sizes");
+        " index sizes");
 
       // Success. Lets grab 'em notes.
       this.first_note = notes.first_note;
@@ -8355,7 +8365,7 @@ Vex.Flow.StaveTie = (function() {
 
       for (var i = 0; i < this.first_indices.length; ++i) {
         var cp_x = ((params.last_x_px + last_x_shift) +
-                    (params.first_x_px + first_x_shift)) / 2;
+            (params.first_x_px + first_x_shift)) / 2;
         var first_y_px = params.first_ys[this.first_indices[i]] + y_shift;
         var last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
 
@@ -8368,9 +8378,9 @@ Vex.Flow.StaveTie = (function() {
         ctx.beginPath();
         ctx.moveTo(params.first_x_px + first_x_shift, first_y_px);
         ctx.quadraticCurveTo(cp_x, top_cp_y,
-                             params.last_x_px + last_x_shift, last_y_px);
+            params.last_x_px + last_x_shift, last_y_px);
         ctx.quadraticCurveTo(cp_x, bottom_cp_y,
-                             params.first_x_px + first_x_shift, first_y_px);
+            params.first_x_px + first_x_shift, first_y_px);
 
         ctx.closePath();
         ctx.fill();
@@ -8415,6 +8425,10 @@ Vex.Flow.StaveTie = (function() {
         last_x_px = first_note.getStave().getTieEndX();
         last_ys = first_note.getYs();
         this.last_indices = this.first_indices;
+      }
+
+      if(this.direction){
+        stem_direction = this.direction;
       }
 
       this.renderTie({
@@ -12297,6 +12311,8 @@ Vex.Flow.StaveHairpin = (function() {
       var l_shift = this.render_options.left_shift_px;
       var r_shift = this.render_options.right_shift_px;
 
+      ctx.beginPath();
+
       switch (this.hairpin) {
         case StaveHairpin.type.CRESC:
           ctx.moveTo(params.last_x + r_shift, y_shift + dis);
@@ -12314,6 +12330,7 @@ Vex.Flow.StaveHairpin = (function() {
       }
 
       ctx.stroke();
+      ctx.closePath();
     },
 
     draw: function() {

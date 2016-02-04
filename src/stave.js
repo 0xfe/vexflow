@@ -218,6 +218,15 @@ Vex.Flow.Stave = (function() {
       return y;
     },
 
+    getLineForY: function(y){
+      //Does the revers of getYForLine - somewhat dumb and just calls getYForLine until the right value is reaches
+
+      var options = this.options;
+      var spacing = options.spacing_between_lines_px;
+      var headroom = options.space_above_staff_ln;
+      return ((y - this.y + (THICKNESS / 2)) / spacing) - headroom;
+    },
+
     getYForTopText: function(line) {
       var l = line || 0;
       return this.getYForLine(-l - this.options.top_text_position);
