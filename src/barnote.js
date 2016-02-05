@@ -68,7 +68,8 @@ Vex.Flow.BarNote = (function() {
     draw: function() {
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
       L("Rendering bar line at: ", this.getAbsoluteX());
-      var barline = new Vex.Flow.Barline(this.type, this.getAbsoluteX());
+      var barline = new Vex.Flow.Barline(this.type);
+      barline.setX(this.getAbsoluteX());
       barline.draw(this.stave);
     }
   });
