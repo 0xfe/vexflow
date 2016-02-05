@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.38 built on 2016-02-05.
+ * VexFlow 1.2.39 built on 2016-02-05.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -13149,7 +13149,8 @@ Vex.Flow.BarNote = (function() {
     draw: function() {
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
       L("Rendering bar line at: ", this.getAbsoluteX());
-      var barline = new Vex.Flow.Barline(this.type, this.getAbsoluteX());
+      var barline = new Vex.Flow.Barline(this.type);
+      barline.setX(this.getAbsoluteX());
       barline.draw(this.stave);
     }
   });
