@@ -33,6 +33,8 @@ Vex.Flow.Stave = (function() {
         glyph_spacing_px: 10,
         num_lines: 5,
         fill_style: "#999999",
+        left_bar: true,               // draw vertical bar on left
+        right_bar: true,               // draw vertical bar on right
         spacing_between_lines_px: 10, // in pixels
         space_above_staff_ln: 4,      // in staff lines
         space_below_staff_ln: 4,      // in staff lines
@@ -43,8 +45,13 @@ Vex.Flow.Stave = (function() {
 
       this.resetLines();
 
-      this.addModifier(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE)); // beg bar
-      this.addEndModifier(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE)); // end bar
+      if (this.options.left_bar) {
+        this.addModifier(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE));  // beg bar
+      }
+
+      if (this.options.right_bar) {
+        this.addEndModifier(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE)); // end bar
+      }
     },
 
     resetLines: function() {

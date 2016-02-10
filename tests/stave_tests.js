@@ -10,6 +10,7 @@ VF.Test.Stave = (function() {
       QUnit.module("Stave");
       test("StaveModifiers SortByCategory", Stave.sortByCategory);
       runTests("Stave Draw Test", Stave.draw);
+      runTests("Open Stave Draw Test", Stave.drawOpenStave);
       runTests("Vertical Bar Test", Stave.drawVerticalBar);
       runTests("Multiple Stave Barline Test", Stave.drawMultipleMeasures);
       runTests("Multiple Stave Repeats Test", Stave.drawRepeats);
@@ -86,12 +87,24 @@ VF.Test.Stave = (function() {
       var stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
       stave.draw();
-      stave.getBoundingBox().draw(ctx);
 
       equal(stave.getYForNote(0), 100, "getYForNote(0)");
       equal(stave.getYForLine(5), 99, "getYForLine(5)");
       equal(stave.getYForLine(0), 49, "getYForLine(0) - Top Line");
       equal(stave.getYForLine(4), 89, "getYForLine(4) - Bottom Line");
+
+      ok(true, "all pass");
+    },
+
+    drawOpenStave: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 400, 350);
+      var stave = new VF.Stave(10, 10, 300, {left_bar: false});
+      stave.setContext(ctx);
+      stave.draw();
+
+      var stave = new VF.Stave(10, 150, 300, {right_bar: false});
+      stave.setContext(ctx);
+      stave.draw();
 
       ok(true, "all pass");
     },
