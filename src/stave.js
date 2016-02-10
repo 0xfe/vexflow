@@ -45,13 +45,9 @@ Vex.Flow.Stave = (function() {
 
       this.resetLines();
 
-      if (this.options.left_bar) {
-        this.addModifier(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE));  // beg bar
-      }
-
-      if (this.options.right_bar) {
-        this.addEndModifier(new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE)); // end bar
-      }
+      var BARTYPE = Vex.Flow.Barline.type;
+      this.addModifier(new Vex.Flow.Barline(this.options.left_bar ? BARTYPE.SINGLE : BARTYPE.NONE));  // beg bar
+      this.addEndModifier(new Vex.Flow.Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE)); // end bar
     },
 
     resetLines: function() {
