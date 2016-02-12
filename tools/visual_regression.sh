@@ -26,7 +26,7 @@
 #  into tests/blessed, and submit your change.
 
 # PNG viewer on OSX. Switch this to whatever your system uses.
-VIEWER=open
+# VIEWER=open
 
 # Show images over this PHASH threshold. This is probably too low, but
 # a good first pass.
@@ -49,6 +49,8 @@ then
   rm $DIFF/*
 fi
 touch $RESULTS
+touch $RESULTS.pass
+touch $RESULTS.fail
 touch $WARNINGS
 
 # If no prefix is provided, test all images.
@@ -87,20 +89,22 @@ do
   # Calculate the difference metric and store the composite diff image.
   hash=`compare -metric PHASH $diff-a.png $diff-b.png $diff-diff.png 2>&1`
 
-  # Add the result to results.text
-  echo $name $hash >>$RESULTS.unsorted
-
   isGT=`echo "$hash > $THRESHOLD" | bc -l`
   if [ "$isGT" == "1" ]
   then
-    # Threshold exceeded, save the diff and open the original, current, and
-    # diff in the viewer.
+    # Add the result to results.text
+    echo $name $hash >>$RESULTS.fail
+    # Threshold exceeded, save the diff and the original, current
     cp $diff-diff.png $DIFF/$name.png
+    cp $diff-a.png $DIFF/$name'_'Original.png
+    cp $diff-b.png $DIFF/$name'_'Current.png
     echo "PHASH value exceeds threshold: $hash > $THRESHOLD"
     echo Image diff stored in $DIFF/$name.png
-    $VIEWER "$diff-diff.png" "$diff-a.png" "$diff-b.png"
-    echo 'Hit return to process next image...'
-    read
+    # $VIEWER "$diff-diff.png" "$diff-a.png" "$diff-b.png"
+    # echo 'Hit return to process next image...'
+    # read
+  else
+    echo $name $hash >>$RESULTS.pass
   fi
 done
 
@@ -118,10 +122,12 @@ do
 done
 
 num_warnings=`cat $WARNINGS | wc -l`
+num_fails=`cat $RESULTS.fail | wc -l`
 
 # Sort results by PHASH
-sort -r -n -k 2 $RESULTS.unsorted >$RESULTS
-rm $RESULTS.unsorted
+sort -r -n -k 2 $RESULTS.fail >$RESULTS
+sort -r -n -k 2 $RESULTS.pass >>$RESULTS
+rm $RESULTS.fail $RESULTS.pass
 
 echo
 echo Results stored in $DIFF/results.txt
@@ -135,4 +141,11 @@ then
   echo
   echo "You have $num_warnings warning(s):"
   cat $WARNINGS
+fi
+
+if [ "$num_fails" -gt 0 ]
+then
+  echo "You have $num_fails fail(s):"
+  head -n $num_fails $RESULTS
+  exit 1
 fi
