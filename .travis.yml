@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - "0.11"
+before_install:
+  - sudo apt-get install -qq librsvg2-dev librsvg2-bin imagemagick
 install: npm install
 before_script:
   - "export DISPLAY=:99.0"
