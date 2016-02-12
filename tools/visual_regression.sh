@@ -30,7 +30,7 @@
 
 # Show images over this PHASH threshold. This is probably too low, but
 # a good first pass.
-THRESHOLD=1.0
+THRESHOLD=0.01
 
 # Directories. You might want to change BASE, if you're running from a
 # different working directory.
@@ -149,3 +149,4 @@ then
   head -n $num_fails $RESULTS
   exit 1
 fi
+

@@ -18,6 +18,7 @@ VF.Test.run = function () {
   VF.Test.TabStave.Start();
   VF.Test.TabSlide.Start();
   VF.Test.Beam.Start();
+  VF.Test.Barline.Start();
   VF.Test.AutoBeamFormatting.Start();
   VF.Test.GraceNote.Start();
   VF.Test.Vibrato.Start();

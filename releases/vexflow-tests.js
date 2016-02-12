@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.36 built on 2015-10-15.
+ * VexFlow 1.2.41 built on 2016-02-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -80,6 +80,7 @@ VF.Test = (function() {
 
     runCanvasTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
+        // console.log("Running test (Canvas):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
           var test_canvas = VF.Test.createTestCanvas(test_canvas_sel,
             assert.test.module.name + " (Canvas): " + name);
@@ -93,6 +94,7 @@ VF.Test = (function() {
 
     runRaphaelTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
+          // console.log("Running test (Raphael):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
           var test_canvas = VF.Test.createTestSVG(test_canvas_sel,
             assert.test.module.name + " (Raphael): " + name);
@@ -106,6 +108,7 @@ VF.Test = (function() {
 
     runSVGTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
+          // console.log("Running test (SVG):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
           var test_canvas = VF.Test.createTestSVG(test_canvas_sel,
             assert.test.module.name + " (SVG): " + name);
@@ -248,7 +251,8 @@ VF.Test.MockTickable = (function() {
 // 5) Replace string below.
 // 6) Remove VF.SVGContext.collectMeasurements back to false in tests/flow.html.
 
-VF.Test.measureTextCache = {"Anormalsans-serifbold12pt":{"x":135,"y":75,"width":11.546875,"height":18},"Bnormalsans-serifbold12pt":{"x":495,"y":75,"width":11.546875,"height":18},"1normalsans-serifnormal8pt":{"x":135,"y":79,"width":5.921875,"height":12},"2normalsans-serifnormal8pt":{"x":195,"y":79,"width":5.921875,"height":12},"3normalsans-serifnormal8pt":{"x":195,"y":14,"width":5.921875,"height":12},"4normalsans-serifnormal8pt":{"x":255,"y":14,"width":5.921875,"height":12},"5normalsans-serifnormal8pt":{"x":315,"y":14,"width":5.921875,"height":12},"6normalsans-serifnormal8pt":{"x":375,"y":14,"width":5.921875,"height":12},"7normalsans-serifnormal8pt":{"x":495,"y":79,"width":5.921875,"height":12},"D.S. alitalictimesbold12pt":{"x":555,"y":75,"width":44.890625,"height":18},"8normalsans-serifnormal8pt":{"x":555,"y":79,"width":5.921875,"height":12},"Codaitalictimesbold12pt":{"x":698,"y":75,"width":34.671875,"height":18},"9normalsans-serifnormal8pt":{"x":698,"y":79,"width":5.921875,"height":12},"Andantenormaltimesbold14pt":{"x":680,"y":72,"width":68.421875,"height":22},"Andante graziosonormaltimesbold14pt":{"x":680,"y":222,"width":139.421875,"height":22},"Violinnormaltimesnormal16pt":{"x":450,"y":30,"width":54.5,"height":24},"Right Textnormaltimesnormal16pt":{"x":600,"y":60,"width":91.828125,"height":24},"Above Textnormaltimesnormal16pt":{"x":600,"y":60,"width":101.28125,"height":24},"Below Textnormaltimesnormal16pt":{"x":600,"y":30,"width":100.09375,"height":24},"2nd linenormaltimesnormal16pt":{"x":600,"y":60,"width":69.296875,"height":24},"Left Below Textnormaltimesnormal16pt":{"x":600,"y":60,"width":140.953125,"height":24},"Right Below Textnormaltimesnormal16pt":{"x":600,"y":60,"width":152.84375,"height":24},"Whole measure restnormalArialnormal10pt":{"x":360,"y":37,"width":119.265625,"height":15},"mnormalArialnormal10pt":{"x":560,"y":49,"width":11.09375,"height":15},"TestnormalArialnormal10pt":{"x":217.96875,"y":88,"width":25.921875,"height":15},"4normalsans-serifbold10pt":{"x":390.75,"y":63,"width":7.40625,"height":15},"6normalArialnormal10pt":{"x":162.203125,"y":395.28125,"width":7.40625,"height":15.546875},"25normalArialnormal10pt":{"x":560,"y":49,"width":14.8125,"height":15},"15normalArialnormal10pt":{"x":560,"y":49,"width":14.8125,"height":15},"5normalArialnormal10pt":{"x":162.203125,"y":395.28125,"width":7.40625,"height":15.546875},"10normalArialnormal10pt":{"x":560,"y":49,"width":14.8125,"height":15},"12normalArialnormal10pt":{"x":560,"y":49,"width":14.8125,"height":15},"0normalArialnormal10pt":{"x":186.953125,"y":157.5,"width":7.40625,"height":15},"4normalArialnormal10pt":{"x":450,"y":48.78125,"width":7.40625,"height":15.546875},"3normalArialnormal10pt":{"x":253.203125,"y":43,"width":7.40625,"height":15},"6normalsans-serifbold10pt":{"x":273.5,"y":108,"width":7.40625,"height":15},"25normalsans-serifbold10pt":{"x":560,"y":69,"width":14.8125,"height":15},"10normalsans-serifbold10pt":{"x":560,"y":69,"width":14.8125,"height":15},"12normalsans-serifbold10pt":{"x":560,"y":69,"width":14.8125,"height":15},"5normalsans-serifbold10pt":{"x":539.828125,"y":128,"width":7.40625,"height":15},"6normalArialbold10pt":{"x":560,"y":49,"width":7.40625,"height":15},"25normalArialbold10pt":{"x":560,"y":49,"width":14.8125,"height":15},"10normalArialbold10pt":{"x":560,"y":49,"width":14.8125,"height":15},"12normalArialbold10pt":{"x":560,"y":49,"width":14.8125,"height":15},"5normalArialbold10pt":{"x":560,"y":49,"width":7.40625,"height":15},"9normalArialnormal10pt":{"x":460,"y":49,"width":7.40625,"height":14.65625},"FullnormalArialnormal10pt":{"x":377.078125,"y":267.78125,"width":21.453125,"height":15.546875},"1/2normalArialnormal10pt":{"x":460,"y":48.703125,"width":18.53125,"height":15.375},"1/4normalArialnormal10pt":{"x":560,"y":49,"width":18.515625,"height":15},"7normalArialnormal10pt":{"x":162.203125,"y":395.28125,"width":7.40625,"height":15.546875},"MonstrousnormalArialnormal10pt":{"x":560,"y":49,"width":62.21875,"height":15},"normalArialnormal10pt":{"x":0,"y":0,"width":0,"height":0},"UnisonnormalArialnormal10pt":{"x":74.453125,"y":388.78125,"width":41.46875,"height":15.546875},"slow.normalArialnormal10pt":{"x":46,"y":87.78125,"width":30.34375,"height":15.546875},"HnormalArialnormal10pt":{"x":450,"y":49,"width":9.625,"height":15},"AnnotationnormalArialnormal10pt":{"x":360,"y":49,"width":63.734375,"height":15},"14normalArialnormal10pt":{"x":450,"y":48.78125,"width":14.8125,"height":15.546875},"16normalArialnormal10pt":{"x":450,"y":48.78125,"width":14.8125,"height":15.546875},"PnormalArialnormal10pt":{"x":450,"y":49,"width":8.890625,"height":15},"TnormalArialnormal10pt":{"x":460,"y":49,"width":8.140625,"height":14.65625},"sl.normalArialnormal10pt":{"x":450,"y":48.78125,"width":13.3125,"height":15.546875},"1normalArialnormal10pt":{"x":186.953125,"y":157.5,"width":7.40625,"height":15},"quietitalicTimesnormal10pt":{"x":63.453125,"y":88,"width":26.65625,"height":15.328125},"mitalicTimesnormal10pt":{"x":460,"y":49,"width":9.625,"height":15.328125},"AllegroitalicTimesnormal10pt":{"x":261.21875,"y":88,"width":39.984375,"height":15.328125},"Harm.normalArialnormal10pt":{"x":460,"y":49,"width":36.28125,"height":14.65625},"(8va)italicTimesnormal10pt":{"x":460,"y":49,"width":28.125,"height":15.328125},"A.H.normalArialnormal10pt":{"x":460,"y":49,"width":25.921875,"height":14.65625},"2normalArialnormal10pt":{"x":377.078125,"y":267.78125,"width":7.40625,"height":15.546875},"pitalicTimesnormal10pt":{"x":460,"y":49,"width":6.65625,"height":15.328125},"iitalicTimesnormal10pt":{"x":460,"y":49,"width":3.703125,"height":15.328125},"aitalicTimesnormal10pt":{"x":460,"y":49,"width":6.65625,"height":15.328125},"FnormalTimesnormal10pt":{"x":310,"y":37,"width":7.40625,"height":15.328125},"mnormalTimesnormal10pt":{"x":310,"y":37,"width":10.359375,"height":15.328125},"AnormalTimesnormal10pt":{"x":310,"y":37,"width":9.625,"height":15.328125},"CnormalTimesnormal10pt":{"x":310,"y":37,"width":8.890625,"height":15.328125},"EnormalTimesnormal10pt":{"x":310,"y":37,"width":8.140625,"height":15.328125},"goodnormalArialnormal10pt":{"x":60.453125,"y":98,"width":29.65625,"height":14.65625},"evennormalArialnormal10pt":{"x":127.84375,"y":98,"width":28.90625,"height":14.65625},"undernormalArialnormal10pt":{"x":191.21875,"y":88,"width":34.09375,"height":14.65625},"beamnormalArialnormal10pt":{"x":191.21875,"y":88,"width":33.34375,"height":14.65625},"TextnormalArialnormal10pt":{"x":560,"y":49,"width":25.921875,"height":15},"Pianonormaltimesnormal16pt":{"x":145,"y":120,"width":48.578125,"height":24},"Celestanormaltimesnormal16pt":{"x":145,"y":296,"width":62.78125,"height":24},"Harpsichordnormaltimesnormal16pt":{"x":145,"y":296,"width":105.421875,"height":24},"<normalundefinednormalundefinedpt":{"x":40.359375,"y":24.453125,"width":10.140625,"height":20},"mnormalundefinednormalundefinedpt":{"x":40.359375,"y":24.453125,"width":14,"height":20},"LnormalArialnormal12pt":{"x":568,"y":34.5625,"width":8.890625,"height":17.765625},"mnormalArialnormal12pt":{"x":568,"y":34.5625,"width":13.3125,"height":17.765625},"RnormalArialnormal12pt":{"x":568,"y":34.5625,"width":11.546875,"height":17.765625},"C7normalTimesnormal12pt":{"x":310,"y":55,"width":18.671875,"height":18},"mnormalTimesnormal12pt":{"x":530,"y":55,"width":12.4375,"height":18},"FnormalTimesnormal12pt":{"x":530,"y":55,"width":8.890625,"height":18},"C7normalTimesnormal13pt":{"x":310,"y":53,"width":20.21875,"height":20},"mnormalTimesnormal13pt":{"x":310,"y":53,"width":13.46875,"height":20},"3normalsans-serifbold10pt":{"x":316.21875,"y":128,"width":7.40625,"height":15},"2normalsans-serifbold10pt":{"x":316.21875,"y":128,"width":7.40625,"height":15},"MnormalArialnormal12pt":{"x":548.15625,"y":95.5625,"width":13.3125,"height":17.765625},"Default Rest PositionsnormalArialnormal12pt":{"x":443.703125,"y":96,"width":157.40625,"height":17},"Rests Repositioned To Avoid CollisionsnormalArialnormal12pt":{"x":869.25,"y":96,"width":279.234375,"height":17},"normalArialnormal12pt":{"x":0,"y":0,"width":0,"height":0},"Center JustificationnormalArialnormal10pt":{"x":410,"y":36.78125,"width":113.28125,"height":15.546875},"Left Line 1normalArialnormal10pt":{"x":410,"y":36.78125,"width":62.21875,"height":15.546875},"RightnormalArialnormal10pt":{"x":573.859375,"y":88,"width":31.109375,"height":15},"Center JustificationnormalArialnormal12pt":{"x":330.46875,"y":85.5625,"width":136.046875,"height":17.765625},"Left Line 1normalArialnormal12pt":{"x":330.46875,"y":85.5625,"width":74.71875,"height":17.765625},"RightnormalArialnormal12pt":{"x":330.46875,"y":85.5625,"width":37.34375,"height":17.765625},"Ã¢â„¢Â­InormalArialnormal10pt":{"x":510,"y":37,"width":17.03125,"height":15},"DÃ¢â„¢Â¯/FnormalArialnormal10pt":{"x":510,"y":37,"width":28.125,"height":15},"iinormalArialnormal10pt":{"x":510,"y":37,"width":5.921875,"height":15},"CnormalArialnormal10pt":{"x":510,"y":37,"width":9.625,"height":15},"viinormalArialnormal10pt":{"x":510,"y":37,"width":12.578125,"height":15},"VnormalArialnormal10pt":{"x":510,"y":37,"width":8.890625,"height":15},"MnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":17.78125,"height":23},"Ã¢â„¢Â­InormalSerifnormal15pt":{"x":401.84375,"y":82,"width":26.65625,"height":23},"DÃ¢â„¢Â¯/FnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":51.109375,"height":23},"iinormalSerifnormal15pt":{"x":401.84375,"y":82,"width":11.109375,"height":23},"CnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":13.328125,"height":23},"viinormalSerifnormal15pt":{"x":401.84375,"y":82,"width":21.109375,"height":23},"VnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":14.4375,"height":23},"CenternormalArialnormal10pt":{"x":573.859375,"y":88,"width":40,"height":15},"CenternormalArialnormal12pt":{"x":548.15625,"y":95.5625,"width":48.015625,"height":17.765625},"gliss.normalArialnormal10pt":{"x":303.71875,"y":88,"width":30.359375,"height":15},"LeftnormalArialnormal10pt":{"x":573.859375,"y":88,"width":22.21875,"height":15},"TopnormalArialnormal10pt":{"x":573.859375,"y":88,"width":22.96875,"height":15},"una cordaitalicTimes New Romanbold12pt":{"x":450.25,"y":86,"width":67.125,"height":17},"tre cordaitalicTimes New Romanbold12pt":{"x":450.25,"y":86,"width":59.09375,"height":17},"Sost. Ped.italicTimes New Romanbold12pt":{"x":450.25,"y":86,"width":64.4375,"height":17},"15italicSerifnormal15pt":{"x":431.359375,"y":112,"width":20,"height":23},"MitalicSerifnormal15pt":{"x":456.890625,"y":112,"width":16.65625,"height":23},"vaitalicSerifnormal10.714285714285715pt":{"x":431.359375,"y":117,"width":13.46875,"height":17},"MitalicSerifnormal10.714285714285715pt":{"x":456.890625,"y":117,"width":11.890625,"height":17},"8italicSerifnormal15pt":{"x":431.359375,"y":112,"width":10,"height":23},"vbitalicSerifnormal10.714285714285715pt":{"x":431.359375,"y":117,"width":13.46875,"height":17},"Cool notesitalicSerifnormal15pt":{"x":456.890625,"y":112,"width":86.109375,"height":23},"italicSerifnormal10.714285714285715pt":{"x":0,"y":0,"width":0,"height":0},"Not cool notesitalicSerifnormal15pt":{"x":456.890625,"y":112,"width":115.546875,"height":23}," super uncoolitalicSerifnormal10.714285714285715pt":{"x":456.890625,"y":117,"width":74.15625,"height":17},"TestingnormalArialnormal15pt":{"x":456.890625,"y":112,"width":65.578125,"height":22},"MnormalArialnormal15pt":{"x":456.890625,"y":112,"width":16.65625,"height":22},"superscriptnormalArialnormal10.714285714285715pt":{"x":456.890625,"y":117,"width":69.828125,"height":16},"MnormalArialnormal10.714285714285715pt":{"x":456.890625,"y":117,"width":11.890625,"height":16},"8italicSerifnormal30pt":{"x":456.890625,"y":94,"width":20,"height":46},"MitalicSerifnormal30pt":{"x":456.890625,"y":94,"width":33.3125,"height":46},"vbitalicSerifnormal21.42857142857143pt":{"x":456.890625,"y":105,"width":26.953125,"height":32},"MitalicSerifnormal21.42857142857143pt":{"x":456.890625,"y":105,"width":23.796875,"height":32},"â™­InormalArialnormal10pt":{"x":510,"y":37,"width":17.03125,"height":15},"Dâ™¯/FnormalArialnormal10pt":{"x":510,"y":37,"width":28.125,"height":15},"â™­InormalSerifnormal15pt":{"x":401.84375,"y":82,"width":26.65625,"height":23},"Dâ™¯/FnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":51.109375,"height":23},"♭InormalArialnormal10pt":{"x":510,"y":37,"width":17.03125,"height":15},"D♯/FnormalArialnormal10pt":{"x":510,"y":37,"width":28.125,"height":15},"♭InormalSerifnormal15pt":{"x":401.84375,"y":82,"width":26.65625,"height":23},"D♯/FnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":51.109375,"height":23}}
+VF.Test.measureTextCache = {"Anormalsans-serifbold12pt":{"x":135,"y":74,"width":11.546875,"height":18.5},"Bnormalsans-serifbold12pt":{"x":495,"y":74,"width":11.546875,"height":18.5},"1normalsans-serifnormal8pt":{"x":135,"y":79.5,"width":5.921875,"height":12},"2normalsans-serifnormal8pt":{"x":195,"y":79.5,"width":5.921875,"height":12},"3normalsans-serifnormal8pt":{"x":195,"y":14.5,"width":5.921875,"height":12},"4normalsans-serifnormal8pt":{"x":255,"y":14.5,"width":5.921875,"height":12},"5normalsans-serifnormal8pt":{"x":315,"y":14.5,"width":5.921875,"height":12},"6normalsans-serifnormal8pt":{"x":375,"y":14.5,"width":5.921875,"height":12},"7normalsans-serifnormal8pt":{"x":495,"y":79.5,"width":5.921875,"height":12},"D.S. alitalictimesbold12pt":{"x":555,"y":74.5,"width":44.890625,"height":18.5},"8normalsans-serifnormal8pt":{"x":555,"y":79.5,"width":5.921875,"height":12},"Codaitalictimesbold12pt":{"x":698,"y":74.5,"width":34.671875,"height":18.5},"9normalsans-serifnormal8pt":{"x":698,"y":79.5,"width":5.921875,"height":12},"Andantenormaltimesbold14pt":{"x":680,"y":72,"width":68.453125,"height":21.5},"Andante graziosonormaltimesbold14pt":{"x":680,"y":222,"width":139.453125,"height":21.5},"Violinnormaltimesnormal16pt":{"x":450,"y":30,"width":54.5,"height":24.5},"Right Textnormaltimesnormal16pt":{"x":600,"y":60,"width":91.828125,"height":24.5},"Above Textnormaltimesnormal16pt":{"x":600,"y":60,"width":101.28125,"height":24.5},"Below Textnormaltimesnormal16pt":{"x":600,"y":30,"width":100.09375,"height":24.5},"2nd linenormaltimesnormal16pt":{"x":600,"y":60,"width":69.296875,"height":24.5},"Left Below Textnormaltimesnormal16pt":{"x":600,"y":60,"width":140.953125,"height":24.5},"Right Below Textnormaltimesnormal16pt":{"x":600,"y":60,"width":152.84375,"height":24.5},"Whole measure restnormalArialnormal10pt":{"x":360,"y":37,"width":119.265625,"height":15},"mnormalArialnormal10pt":{"x":560,"y":49,"width":11.09375,"height":15},"TestnormalArialnormal10pt":{"x":217.96875,"y":88,"width":25.921875,"height":15},"4normalsans-serifbold10pt":{"x":390.75,"y":62.5,"width":7.40625,"height":15.5},"6normalArialnormal10pt":{"x":162.203125,"y":395.28125,"width":7.40625,"height":15},"25normalArialnormal10pt":{"x":560,"y":49,"width":14.8125,"height":15},"15normalArialnormal10pt":{"x":560,"y":49,"width":14.8125,"height":15},"5normalArialnormal10pt":{"x":162.203125,"y":395.28125,"width":7.40625,"height":15},"10normalArialnormal10pt":{"x":560,"y":49,"width":14.8125,"height":15},"12normalArialnormal10pt":{"x":560,"y":49,"width":14.8125,"height":15},"0normalArialnormal10pt":{"x":186.953125,"y":157.5,"width":7.40625,"height":15},"4normalArialnormal10pt":{"x":450,"y":48.78125,"width":7.40625,"height":15},"3normalArialnormal10pt":{"x":253.203125,"y":43,"width":7.40625,"height":15},"6normalsans-serifbold10pt":{"x":273.5,"y":107.5,"width":7.40625,"height":15.5},"25normalsans-serifbold10pt":{"x":560,"y":68.5,"width":14.8125,"height":15.5},"10normalsans-serifbold10pt":{"x":560,"y":68.5,"width":14.8125,"height":15.5},"12normalsans-serifbold10pt":{"x":560,"y":68.5,"width":14.8125,"height":15.5},"5normalsans-serifbold10pt":{"x":539.828125,"y":127.5,"width":7.40625,"height":15.5},"6normalArialbold10pt":{"x":560,"y":49,"width":7.40625,"height":15},"25normalArialbold10pt":{"x":560,"y":49,"width":14.8125,"height":15},"10normalArialbold10pt":{"x":560,"y":49,"width":14.8125,"height":15},"12normalArialbold10pt":{"x":560,"y":49,"width":14.8125,"height":15},"5normalArialbold10pt":{"x":560,"y":49,"width":7.40625,"height":15},"9normalArialnormal10pt":{"x":460,"y":49,"width":7.40625,"height":14.65625},"FullnormalArialnormal10pt":{"x":377.078125,"y":267.78125,"width":21.46875,"height":15},"1/2normalArialnormal10pt":{"x":460,"y":49.078125,"width":18.53125,"height":14.609375},"1/4normalArialnormal10pt":{"x":560,"y":49,"width":18.515625,"height":15},"7normalArialnormal10pt":{"x":162.203125,"y":395.28125,"width":7.40625,"height":15},"MonstrousnormalArialnormal10pt":{"x":560,"y":49,"width":62.21875,"height":15},"normalArialnormal10pt":{"x":0,"y":0,"width":0,"height":0},"UnisonnormalArialnormal10pt":{"x":74.453125,"y":388.78125,"width":41.484375,"height":15},"slow.normalArialnormal10pt":{"x":46,"y":87.78125,"width":30.359375,"height":15},"HnormalArialnormal10pt":{"x":450,"y":49,"width":9.625,"height":15},"AnnotationnormalArialnormal10pt":{"x":360,"y":49,"width":63.734375,"height":15},"14normalArialnormal10pt":{"x":450,"y":48.78125,"width":14.8125,"height":15},"16normalArialnormal10pt":{"x":450,"y":48.78125,"width":14.8125,"height":15},"PnormalArialnormal10pt":{"x":450,"y":49,"width":8.890625,"height":15},"TnormalArialnormal10pt":{"x":460,"y":49,"width":8.140625,"height":14.65625},"sl.normalArialnormal10pt":{"x":450,"y":48.78125,"width":13.3125,"height":15},"1normalArialnormal10pt":{"x":186.953125,"y":157.5,"width":7.40625,"height":15},"quietitalicTimesnormal10pt":{"x":63.453125,"y":88,"width":26.65625,"height":15.328125},"mitalicTimesnormal10pt":{"x":460,"y":49,"width":9.625,"height":15.328125},"AllegroitalicTimesnormal10pt":{"x":261.21875,"y":88,"width":39.984375,"height":15.328125},"Harm.normalArialnormal10pt":{"x":460,"y":49,"width":36.28125,"height":14.65625},"(8va)italicTimesnormal10pt":{"x":460,"y":49,"width":28.125,"height":15.328125},"A.H.normalArialnormal10pt":{"x":460,"y":49,"width":25.921875,"height":14.65625},"2normalArialnormal10pt":{"x":377.078125,"y":267.78125,"width":7.40625,"height":15},"pitalicTimesnormal10pt":{"x":460,"y":49,"width":6.65625,"height":15.328125},"iitalicTimesnormal10pt":{"x":460,"y":49,"width":3.703125,"height":15.328125},"aitalicTimesnormal10pt":{"x":460,"y":49,"width":6.65625,"height":15.328125},"FnormalTimesnormal10pt":{"x":310,"y":37,"width":7.40625,"height":15.328125},"mnormalTimesnormal10pt":{"x":310,"y":37,"width":10.359375,"height":15.328125},"AnormalTimesnormal10pt":{"x":310,"y":37,"width":9.625,"height":15.328125},"CnormalTimesnormal10pt":{"x":310,"y":37,"width":8.890625,"height":15.328125},"EnormalTimesnormal10pt":{"x":310,"y":37,"width":8.140625,"height":15.328125},"goodnormalArialnormal10pt":{"x":60.453125,"y":98,"width":29.65625,"height":14.65625},"evennormalArialnormal10pt":{"x":127.84375,"y":98,"width":28.90625,"height":14.65625},"undernormalArialnormal10pt":{"x":191.21875,"y":88,"width":34.09375,"height":14.65625},"beamnormalArialnormal10pt":{"x":191.21875,"y":88,"width":33.34375,"height":14.65625},"TextnormalArialnormal10pt":{"x":560,"y":49,"width":25.921875,"height":15},"Pianonormaltimesnormal16pt":{"x":145,"y":120,"width":48.578125,"height":24.5},"Celestanormaltimesnormal16pt":{"x":145,"y":300,"width":62.78125,"height":24.5},"Harpsichordnormaltimesnormal16pt":{"x":145,"y":300,"width":105.421875,"height":24.5},"<normalundefinednormalundefinedpt":{"x":40.359375,"y":23.890625,"width":10.140625,"height":20.546875},"mnormalundefinednormalundefinedpt":{"x":40.359375,"y":23.890625,"width":14,"height":20.546875},"LnormalArialnormal12pt":{"x":568,"y":34.5625,"width":8.890625,"height":17.765625},"mnormalArialnormal12pt":{"x":568,"y":34.5625,"width":13.3125,"height":17.765625},"RnormalArialnormal12pt":{"x":568,"y":34.5625,"width":11.546875,"height":17.765625},"C7normalTimesnormal12pt":{"x":310,"y":54.5,"width":18.671875,"height":18.5},"mnormalTimesnormal12pt":{"x":530,"y":54.5,"width":12.4375,"height":18.5},"FnormalTimesnormal12pt":{"x":530,"y":54.5,"width":8.890625,"height":18.5},"C7normalTimesnormal13pt":{"x":310,"y":53.5,"width":20.21875,"height":20},"mnormalTimesnormal13pt":{"x":310,"y":53.5,"width":13.46875,"height":20},"3normalsans-serifbold10pt":{"x":316.21875,"y":127.5,"width":7.40625,"height":15.5},"2normalsans-serifbold10pt":{"x":316.21875,"y":127.5,"width":7.40625,"height":15.5},"MnormalArialnormal12pt":{"x":548.15625,"y":95.5625,"width":13.3125,"height":17.765625},"Default Rest PositionsnormalArialnormal12pt":{"x":443.703125,"y":95.5,"width":157.40625,"height":18},"Rests Repositioned To Avoid CollisionsnormalArialnormal12pt":{"x":869.25,"y":95.5,"width":279.234375,"height":18},"normalArialnormal12pt":{"x":0,"y":0,"width":0,"height":0},"Center JustificationnormalArialnormal10pt":{"x":410,"y":36.78125,"width":113.328125,"height":15},"Left Line 1normalArialnormal10pt":{"x":410,"y":36.78125,"width":62.234375,"height":15},"RightnormalArialnormal10pt":{"x":573.859375,"y":88,"width":31.109375,"height":15},"Center JustificationnormalArialnormal12pt":{"x":330.46875,"y":85.5625,"width":136.046875,"height":17.765625},"Left Line 1normalArialnormal12pt":{"x":330.46875,"y":85.5625,"width":74.71875,"height":17.765625},"RightnormalArialnormal12pt":{"x":330.46875,"y":85.5625,"width":37.34375,"height":17.765625},"Ã¢â„¢Â­InormalArialnormal10pt":{"x":510,"y":37,"width":17.03125,"height":15},"DÃ¢â„¢Â¯/FnormalArialnormal10pt":{"x":510,"y":37,"width":28.125,"height":15},"iinormalArialnormal10pt":{"x":510,"y":37,"width":5.921875,"height":15},"CnormalArialnormal10pt":{"x":510,"y":37,"width":9.625,"height":15},"viinormalArialnormal10pt":{"x":510,"y":37,"width":12.578125,"height":15},"VnormalArialnormal10pt":{"x":510,"y":37,"width":8.890625,"height":15},"MnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":17.78125,"height":23},"Ã¢â„¢Â­InormalSerifnormal15pt":{"x":401.84375,"y":82,"width":26.65625,"height":23},"DÃ¢â„¢Â¯/FnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":51.109375,"height":23},"iinormalSerifnormal15pt":{"x":401.84375,"y":82,"width":11.109375,"height":23},"CnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":13.328125,"height":23},"viinormalSerifnormal15pt":{"x":401.84375,"y":82,"width":21.109375,"height":23},"VnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":14.4375,"height":23},"CenternormalArialnormal10pt":{"x":573.859375,"y":88,"width":40,"height":15},"CenternormalArialnormal12pt":{"x":548.15625,"y":95.5625,"width":48.015625,"height":17.765625},"gliss.normalArialnormal10pt":{"x":303.71875,"y":88,"width":30.359375,"height":15},"LeftnormalArialnormal10pt":{"x":573.859375,"y":88,"width":22.21875,"height":15},"TopnormalArialnormal10pt":{"x":573.859375,"y":88,"width":22.96875,"height":15},"una cordaitalicTimes New Romanbold12pt":{"x":450.25,"y":85.5,"width":67.125,"height":18},"tre cordaitalicTimes New Romanbold12pt":{"x":450.25,"y":85.5,"width":59.09375,"height":18},"Sost. Ped.italicTimes New Romanbold12pt":{"x":450.25,"y":85.5,"width":64.4375,"height":18},"15italicSerifnormal15pt":{"x":431.359375,"y":112,"width":20,"height":23},"MitalicSerifnormal15pt":{"x":456.890625,"y":112,"width":16.65625,"height":23},"vaitalicSerifnormal10.714285714285715pt":{"x":431.359375,"y":117.5,"width":13.46875,"height":16},"MitalicSerifnormal10.714285714285715pt":{"x":456.890625,"y":117.5,"width":11.890625,"height":16},"8italicSerifnormal15pt":{"x":431.359375,"y":112,"width":10,"height":23},"vbitalicSerifnormal10.714285714285715pt":{"x":431.359375,"y":117.5,"width":13.46875,"height":16},"Cool notesitalicSerifnormal15pt":{"x":456.890625,"y":112,"width":86.109375,"height":23},"italicSerifnormal10.714285714285715pt":{"x":0,"y":0,"width":0,"height":0},"Not cool notesitalicSerifnormal15pt":{"x":456.890625,"y":112,"width":115.546875,"height":23}," super uncoolitalicSerifnormal10.714285714285715pt":{"x":456.890625,"y":117.5,"width":74.1875,"height":16},"TestingnormalArialnormal15pt":{"x":456.890625,"y":112,"width":65.578125,"height":22},"MnormalArialnormal15pt":{"x":456.890625,"y":112,"width":16.65625,"height":22},"superscriptnormalArialnormal10.714285714285715pt":{"x":456.890625,"y":117,"width":69.859375,"height":16},"MnormalArialnormal10.714285714285715pt":{"x":456.890625,"y":117,"width":11.890625,"height":16},"8italicSerifnormal30pt":{"x":456.890625,"y":94,"width":20,"height":46},"MitalicSerifnormal30pt":{"x":456.890625,"y":94,"width":33.3125,"height":46},"vbitalicSerifnormal21.42857142857143pt":{"x":456.890625,"y":104,"width":26.953125,"height":33},"MitalicSerifnormal21.42857142857143pt":{"x":456.890625,"y":104,"width":23.796875,"height":33},"â™­InormalArialnormal10pt":{"x":510,"y":37,"width":17.03125,"height":15},"Dâ™¯/FnormalArialnormal10pt":{"x":510,"y":37,"width":28.125,"height":15},"â™­InormalSerifnormal15pt":{"x":401.84375,"y":82,"width":26.65625,"height":23},"Dâ™¯/FnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":51.109375,"height":23},"♭InormalArialnormal10pt":{"x":510,"y":37,"width":10.171875,"height":15},"D♯/FnormalArialnormal10pt":{"x":510,"y":37,"width":28.125,"height":15},"♭InormalSerifnormal15pt":{"x":401.84375,"y":82,"width":26.640625,"height":23},"D♯/FnormalSerifnormal15pt":{"x":401.84375,"y":82,"width":51.09375,"height":23},"Celesta 2normaltimesnormal16pt":{"x":145,"y":300,"width":78.765625,"height":24.5},"Multiplenormaltimesnormal16pt":{"x":145,"y":300,"width":73.453125,"height":24.5},"Line Textnormaltimesnormal16pt":{"x":145,"y":300,"width":83.5,"height":24.5}};
+
 /**
  * VexFlow - Accidental Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -2939,6 +2943,50 @@ VF.Test.AutoBeamFormatting = (function() {
   };
 
   return AutoBeamFormatting;
+})();
+/**
+ * VexFlow - Barline Tests
+ * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ */
+
+VF.Test.Barline = (function() {
+  var Barline = {
+    Start: function() {
+      var runTests = VF.Test.runTests;
+
+      QUnit.module("Barline");
+      runTests("Simple BarNotes", Barline.barnotes);
+    },
+
+    barnotes: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 350, 140);
+      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
+
+      var notes = [
+        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"}),
+        new VF.BarNote(VF.Barline.SINGLE),
+        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "h"}).
+          addAccidental(0, newAcc("n")).
+          addAccidental(1, newAcc("#"))
+      ];
+
+      var voice = new VF.Voice(VF.Test.TIME4_4);
+      voice.addTickables(notes);
+
+      var formatter = new VF.Formatter().joinVoices([voice]).
+        format([voice], 250);
+
+      var stave = new VF.Stave(10, 10, 350).setContext(ctx).draw();
+      voice.draw(ctx, stave);
+
+      ok(true, "Simple Test");
+    }
+  };
+
+  return Barline;
 })();
 /**
  * VexFlow - Beam Tests
@@ -8085,7 +8133,9 @@ VF.Test.Stave = (function() {
     Start: function() {
       var runTests = VF.Test.runTests;
       QUnit.module("Stave");
+      test("StaveModifiers SortByCategory", Stave.sortByCategory);
       runTests("Stave Draw Test", Stave.draw);
+      runTests("Open Stave Draw Test", Stave.drawOpenStave);
       runTests("Vertical Bar Test", Stave.drawVerticalBar);
       runTests("Multiple Stave Barline Test", Stave.drawMultipleMeasures);
       runTests("Multiple Stave Repeats Test", Stave.drawRepeats);
@@ -8097,17 +8147,89 @@ VF.Test.Stave = (function() {
       runTests("Multiple Line Stave Text Test (Raphael)", Stave.drawStaveTextMultiLine);
     },
 
+    sortByCategory: function(options) {
+      var stave = new VF.Stave(0, 0, 300);
+      var clef0 = new VF.Clef("treble");
+      var clef1 = new VF.Clef("alto");
+      var clef2 = new VF.Clef("bass");
+      var time0 = new VF.TimeSignature("C");
+      var time1 = new VF.TimeSignature("C|");
+      var time2 = new VF.TimeSignature("9/8");
+      var key0 = new VF.KeySignature("G");
+      var key1 = new VF.KeySignature("F");
+      var key2 = new VF.KeySignature("D");
+      var bar0 = new VF.Barline(VF.Barline.type.SINGLE);
+      var bar1 = new VF.Barline(VF.Barline.type.DOUBLE);
+      var bar2 = new VF.Barline(VF.Barline.type.NONE);
+      var order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
+      var order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
+
+      var sortAndCompare = function(title, arr, arr2, order) {
+        stave.sortByCategory(arr, order);
+
+        var isSame = true;
+        arr2.forEach(function(modifier, i) {
+          if (modifier !== arr[i]) isSame = false;
+        });
+
+        ok(isSame, title);
+      };
+
+      sortAndCompare(
+        'Keep the original order',
+        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+        order0
+      );
+      sortAndCompare(
+        'Keep the original order 2',
+        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+        order1
+      );
+      sortAndCompare(
+        'Sort and keep',
+        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+        order1
+      );
+      sortAndCompare(
+        'Sort and keep 2',
+        [bar0, clef0, key0, time0, key1, time1, clef1, bar1, time2, clef2, bar2, key2],
+        [bar0, bar1, bar2, clef0, clef1, clef2, key0, key1, key2, time0, time1, time2],
+        order0
+      );
+      sortAndCompare(
+        'Sort and keep 3',
+        [bar2, clef2, key2, time0, key0, time2, clef1, bar1, time1, clef0, bar0, key1],
+        [time0, time2, time1, key2, key0, key1, bar2, bar1, bar0, clef2, clef1, clef0],
+        order1
+      );
+    },
+
     draw: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 400, 150);
       var stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
       stave.draw();
-      stave.getBoundingBox().draw(ctx);
 
       equal(stave.getYForNote(0), 100, "getYForNote(0)");
       equal(stave.getYForLine(5), 99, "getYForLine(5)");
       equal(stave.getYForLine(0), 49, "getYForLine(0) - Top Line");
       equal(stave.getYForLine(4), 89, "getYForLine(4) - Bottom Line");
+
+      ok(true, "all pass");
+    },
+
+    drawOpenStave: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 400, 350);
+      var stave = new VF.Stave(10, 10, 300, {left_bar: false});
+      stave.setContext(ctx);
+      stave.draw();
+
+      var stave = new VF.Stave(10, 150, 300, {right_bar: false});
+      stave.setContext(ctx);
+      stave.draw();
 
       ok(true, "all pass");
     },
@@ -8513,6 +8635,7 @@ VF.Test.Stave = (function() {
 
   return Stave;
 })();
+
 /**
  * VexFlow - StaveConnector Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -8929,18 +9052,22 @@ VF.Test.StaveConnector = (function() {
       stave7.setContext(ctx);
       var conn_single = new VF.StaveConnector(stave, stave7);
       var conn_double = new VF.StaveConnector(stave2, stave3);
-      var conn_bracket = new VF.StaveConnector(stave4, stave5);
+      var conn_bracket = new VF.StaveConnector(stave4, stave7);
+      var conn_none = new VF.StaveConnector(stave4, stave5);
       var conn_brace = new VF.StaveConnector(stave6, stave7);
       conn_single.setType(VF.StaveConnector.type.SINGLE);
       conn_double.setType(VF.StaveConnector.type.DOUBLE);
       conn_bracket.setType(VF.StaveConnector.type.BRACKET);
       conn_brace.setType(VF.StaveConnector.type.BRACE);
+      conn_brace.setXShift(-5);
       conn_double.setText('Piano');
-      conn_bracket.setText('Celesta');
+      conn_none.setText('Multiple', { shift_y: -15 });
+      conn_none.setText('Line Text', { shift_y: 15 });
       conn_brace.setText('Harpsichord');
       conn_single.setContext(ctx);
       conn_double.setContext(ctx);
       conn_bracket.setContext(ctx);
+      conn_none.setContext(ctx);
       conn_brace.setContext(ctx);
       stave.draw();
       stave2.draw();
@@ -8952,6 +9079,7 @@ VF.Test.StaveConnector = (function() {
       conn_single.draw();
       conn_double.draw();
       conn_bracket.draw();
+      conn_none.draw();
       conn_brace.draw();
 
       ok(true, "all pass");
@@ -8960,6 +9088,7 @@ VF.Test.StaveConnector = (function() {
 
   return StaveConnector;
 })();
+
 /**
  * VexFlow - StaveHairpin Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -9321,6 +9450,8 @@ VF.Test.StaveModifier = (function() {
       VF.Test.runTests("Stave Draw Test", VF.Test.Stave.draw);
       VF.Test.runTests("Vertical Bar Test",
           VF.Test.Stave.drawVerticalBar);
+      VF.Test.runTests("Begin & End StaveModifier Test",
+          StaveModifier.drawBeginAndEnd);
     },
 
     draw: function(options, contextBuilder) {
@@ -9347,11 +9478,41 @@ VF.Test.StaveModifier = (function() {
       stave.drawVerticalBar(300);
 
       ok(true, "all pass");
+    },
+
+    drawBeginAndEnd: function(options, contextBuilder) {
+      var ctx = contextBuilder(options.canvas_sel, 500, 240);
+      var stave = new VF.Stave(10, 10, 400);
+      stave.setContext(ctx);
+      stave.setTimeSignature('C|');
+      stave.setKeySignature('Db');
+      stave.setClef('treble');
+      stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+      stave.setEndClef('alto');
+      stave.setEndTimeSignature('9/8');
+      stave.setEndKeySignature('G', 'C#');
+      stave.setEndBarType(VF.Barline.type.DOUBLE);
+      stave.draw();
+
+      // change
+      stave.setY(100);
+      stave.setTimeSignature('3/4');
+      stave.setKeySignature('G', 'C#');
+      stave.setClef('bass');
+      stave.setBegBarType(VF.Barline.type.SINGLE);
+      stave.setEndClef('treble');
+      stave.setEndTimeSignature('C');
+      stave.setEndKeySignature('F');
+      stave.setEndBarType(VF.Barline.type.SINGLE);
+      stave.draw();
+
+      ok(true, "all pass");
     }
   };
 
   return StaveModifier;
 })();
+
 /**
  * VexFlow - StaveNote Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -10614,9 +10775,12 @@ VF.Test.StaveTie = (function() {
       runTests("Stem Up StaveTie", StaveTie.stemUp);
       runTests("No End Note", StaveTie.noEndNote);
       runTests("No Start Note", StaveTie.noStartNote);
+      runTests("Set Direction Down", StaveTie.setDirectionDown);
+      runTests("Set Direction Up", StaveTie.setDirectionUp);
+
     },
 
-    tieNotes: function(notes, indices, stave, ctx) {
+    tieNotes: function(notes, indices, stave, ctx, direction) {
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables(notes);
 
@@ -10632,6 +10796,11 @@ VF.Test.StaveTie = (function() {
       });
 
       tie.setContext(ctx);
+
+      if(direction !== undefined && direction !== null){
+        tie.setDirection(direction);
+      }
+
       tie.draw();
     },
 
@@ -10641,7 +10810,7 @@ VF.Test.StaveTie = (function() {
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       var stave = new VF.Stave(10, 10, 350).setContext(ctx).draw();
 
-      VF.Test.StaveTie.tieNotes(notes, indices, stave, ctx);
+      VF.Test.StaveTie.tieNotes(notes, indices, stave, ctx, options['direction']);
     },
 
     simple: function(options, contextBuilder) {
@@ -10751,7 +10920,38 @@ VF.Test.StaveTie = (function() {
       }, "H").setContext(ctx).draw();
 
       ok(true, "No end note");
+    },
+
+    setDirectionDown: function(options, contextBuilder){
+      options.contextBuilder = contextBuilder;
+      options.direction = Vex.Flow.Stem.DOWN;
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
+
+      VF.Test.StaveTie.drawTie([
+        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
+            addAccidental(0, newAcc("b")).
+            addAccidental(1, newAcc("#")),
+        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
+      ], [0, 1], options);
+      ok(true, "Set Direction Down");
+    },
+
+    setDirectionUp: function(options, contextBuilder){
+      options.contextBuilder = contextBuilder;
+      options.direction = Vex.Flow.Stem.UP;
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      function newAcc(type) { return new VF.Accidental(type); }
+
+      VF.Test.StaveTie.drawTie([
+        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
+            addAccidental(0, newAcc("b")).
+            addAccidental(1, newAcc("#")),
+        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
+      ], [0, 1], options);
+      ok(true, "Set Direction Down");
     }
+
   };
 
   return StaveTie;
@@ -14190,6 +14390,7 @@ VF.Test.run = function () {
   VF.Test.TabStave.Start();
   VF.Test.TabSlide.Start();
   VF.Test.Beam.Start();
+  VF.Test.Barline.Start();
   VF.Test.AutoBeamFormatting.Start();
   VF.Test.GraceNote.Start();
   VF.Test.Vibrato.Start();
@@ -14219,4 +14420,5 @@ VF.Test.run = function () {
 }
 
 module.exports = VF.Test;
+
 //# sourceMappingURL=vexflow-tests.js.map

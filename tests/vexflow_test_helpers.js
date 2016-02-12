@@ -106,6 +106,7 @@ VF.Test = (function() {
 
     runCanvasTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
+        // console.log("Running test (Canvas):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
           var test_canvas = VF.Test.createTestCanvas(test_canvas_sel,
             assert.test.module.name + " (Canvas): " + name);
@@ -119,6 +120,7 @@ VF.Test = (function() {
 
     runRaphaelTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
+          // console.log("Running test (Raphael):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
           var test_canvas = VF.Test.createTestSVG(test_canvas_sel,
             assert.test.module.name + " (Raphael): " + name);
@@ -132,6 +134,7 @@ VF.Test = (function() {
 
     runSVGTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
+          // console.log("Running test (SVG):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
           var test_canvas = VF.Test.createTestSVG(test_canvas_sel,
             assert.test.module.name + " (SVG): " + name);

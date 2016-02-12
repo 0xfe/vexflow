@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.36 built on 2015-10-15.
+ * VexFlow 1.2.41 built on 2016-02-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -1781,6 +1781,7 @@ Vex.Flow.Glyph = (function() {
       this.reset();
     },
 
+    setPoint: function(point) { this.point = point; return this; },
     setStave: function(stave) { this.stave = stave; return this; },
     setXShift: function(x_shift) { this.x_shift = x_shift; return this; },
     setYShift: function(y_shift) { this.y_shift = y_shift; return this; },
@@ -1934,14 +1935,11 @@ Vex.Flow.Stave = (function() {
       this.x = x;
       this.y = y;
       this.width = width;
-      this.glyph_start_x = x + 5;
-      this.glyph_end_x = x + width;
-      this.start_x = this.glyph_start_x;
-      this.end_x = this.glyph_end_x;
+      this.formatted = false;
+      this.start_x = x + 5;
+      this.end_x = x + width;
       this.context = null;
-      this.glyphs = [];
-      this.end_glyphs = [];
-      this.modifiers = [];  // non-glyph stave items (barlines, coda, segno, etc.)
+      this.modifiers = [];  // stave modifiers (clef, key, time, barlines, coda, segno, etc.)
       this.measure = 0;
       this.clef = "treble";
       this.font = {
@@ -1954,6 +1952,8 @@ Vex.Flow.Stave = (function() {
         glyph_spacing_px: 10,
         num_lines: 5,
         fill_style: "#999999",
+        left_bar: true,               // draw vertical bar on left
+        right_bar: true,               // draw vertical bar on right
         spacing_between_lines_px: 10, // in pixels
         space_above_staff_ln: 4,      // in staff lines
         space_below_staff_ln: 4,      // in staff lines
@@ -1964,11 +1964,9 @@ Vex.Flow.Stave = (function() {
 
       this.resetLines();
 
-      this.modifiers.push(
-          new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE, this.x)); // beg bar
-      this.modifiers.push(
-          new Vex.Flow.Barline(Vex.Flow.Barline.type.SINGLE,
-          this.x + this.width)); // end bar
+      var BARTYPE = Vex.Flow.Barline.type;
+      this.addModifier(new Vex.Flow.Barline(this.options.left_bar ? BARTYPE.SINGLE : BARTYPE.NONE));  // beg bar
+      this.addEndModifier(new Vex.Flow.Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE)); // end bar
     },
 
     resetLines: function() {
@@ -1981,32 +1979,28 @@ Vex.Flow.Stave = (function() {
       this.options.bottom_text_position = this.options.num_lines + 1;
     },
 
-    setNoteStartX: function(x) { this.start_x = x; return this; },
-    getNoteStartX: function() {
-      var start_x = this.start_x;
+    getOptions: function() { return this.options; },
 
-      // Add additional space if left barline is REPEAT_BEGIN and there are other
-      // start modifiers than barlines
-      if (this.modifiers[0].barline == Vex.Flow.Barline.type.REPEAT_BEGIN &&
-          this.modifiers.length > 2) {
-        start_x += 20;
-      }
+    setNoteStartX: function(x) {
+      if (!this.formatted) this.format();
 
-      return start_x;
-    },
-
-    getNoteEndX: function() { return this.end_x; },
-    getTieStartX: function() { return this.start_x; },
-    getTieEndX: function() { return this.x + this.width; },
-    setContext: function(context) {
-      this.context = context;
-	for(var i=0; i<this.glyphs.length; i++){
-          if(typeof(this.glyphs[i].setContext) === "function"){
-	    this.glyphs[i].setContext(context);
-          }
-	}
+      this.start_x = x;
       return this;
     },
+    getNoteStartX: function() {
+      if (!this.formatted) this.format();
+
+      return this.start_x;
+    },
+
+    getNoteEndX: function() {
+      if (!this.formatted) this.format();
+
+      return this.end_x;
+    },
+    getTieStartX: function() { return this.start_x; },
+    getTieEndX: function() { return this.x + this.width; },
+    setContext: function(context) { this.context = context; return this; },
     getContext: function() { return this.context; },
     getX: function() { return this.x; },
     getNumLines: function() { return this.options.num_lines; },
@@ -2019,9 +2013,8 @@ Vex.Flow.Stave = (function() {
 
     setX: function(x){
       var shift = x - this.x;
+      this.formatted = false;
       this.x = x;
-      this.glyph_start_x += shift;
-      this.glyph_end_x += shift;
       this.start_x += shift;
       this.end_x += shift;
       for(var i=0; i<this.modifiers.length; i++) {
@@ -2034,9 +2027,9 @@ Vex.Flow.Stave = (function() {
     },
 
     setWidth: function(width) {
+      this.formatted = false;
       this.width = width;
-      this.glyph_end_x = this.x + width;
-      this.end_x = this.glyph_end_x;
+      this.end_x = this.x + width;
 
       // reset the x position of the end barline (TODO(0xfe): This makes no sense)
       // this.modifiers[1].setX(this.end_x);
@@ -2049,24 +2042,6 @@ Vex.Flow.Stave = (function() {
 
     setMeasure: function(measure) { this.measure = measure; return this; },
 
-      // Bar Line functions
-    setBegBarType: function(type) {
-      // Only valid bar types at beginning of stave is none, single or begin repeat
-      if (type == Vex.Flow.Barline.type.SINGLE ||
-          type == Vex.Flow.Barline.type.REPEAT_BEGIN ||
-          type == Vex.Flow.Barline.type.NONE) {
-          this.modifiers[0] = new Vex.Flow.Barline(type, this.x);
-      }
-      return this;
-    },
-
-    setEndBarType: function(type) {
-      // Repeat end not valid at end of stave
-      if (type != Vex.Flow.Barline.type.REPEAT_BEGIN)
-        this.modifiers[1] = new Vex.Flow.Barline(type, this.x + this.width);
-      return this;
-    },
-
     /**
      * Gets the pixels to shift from the beginning of the stave
      * following the modifier at the provided index
@@ -2074,23 +2049,23 @@ Vex.Flow.Stave = (function() {
      * @return {Number}       The amount of pixels shifted
      */
     getModifierXShift: function(index) {
-      if (typeof index === 'undefined') index = this.glyphs.length -1;
       if (typeof index !== 'number') new Vex.RERR("InvalidIndex",
         "Must be of number type");
 
-      var x = this.glyph_start_x;
-      var bar_x_shift = 0;
+      if (!this.formatted) this.format();
 
-      for (var i = 0; i < index + 1; ++i) {
-        var glyph = this.glyphs[i];
-        x += glyph.getMetrics().width;
-        bar_x_shift += glyph.getMetrics().width;
+      if (this.getModifiers(Vex.Flow.StaveModifier.Position.BEGIN).length === 1) {
+        return 0;
       }
 
-      // Add padding after clef, time sig, key sig
-      if (bar_x_shift > 0) bar_x_shift += this.options.vertical_bar_width + 10;
+      var start_x = this.start_x - this.x;
+      var begBarline = this.modifiers[0];
+      if (begBarline.getType() === Vex.Flow.Barline.type.REPEAT_BEGIN &&
+          start_x > begBarline.getWidth()) {
+        start_x -= begBarline.getWidth();
+      }
 
-      return bar_x_shift;
+      return start_x;
     },
 
     // Coda & Segno Symbol functions
@@ -2165,6 +2140,15 @@ Vex.Flow.Stave = (function() {
       return y;
     },
 
+    getLineForY: function(y){
+      //Does the revers of getYForLine - somewhat dumb and just calls getYForLine until the right value is reaches
+
+      var options = this.options;
+      var spacing = options.spacing_between_lines_px;
+      var headroom = options.space_above_staff_ln;
+      return ((y - this.y + (THICKNESS / 2)) / spacing) - headroom;
+    },
+
     getYForTopText: function(line) {
       var l = line || 0;
       return this.getYForLine(-l - this.options.top_text_position);
@@ -2188,61 +2172,221 @@ Vex.Flow.Stave = (function() {
       return this.getYForLine(3);
     },
 
-    addGlyph: function(glyph) {
-      glyph.setStave(this);
-      this.glyphs.push(glyph);
-      this.start_x += glyph.getMetrics().width;
-      return this;
-    },
+    addModifier: function(modifier, position) {
+      if (position !== undefined) {
+        modifier.setPosition(position);
+      }
 
-    addEndGlyph: function(glyph) {
-      glyph.setStave(this);
-      this.end_glyphs.push(glyph);
-      this.end_x -= glyph.getMetrics().width;
-      return this;
-    },
-
-    addModifier: function(modifier) {
+      modifier.setStave(this);
+      this.formatted = false;
       this.modifiers.push(modifier);
-      modifier.addToStave(this, (this.glyphs.length === 0));
       return this;
     },
 
     addEndModifier: function(modifier) {
-      this.modifiers.push(modifier);
-      modifier.addToStaveEnd(this, (this.end_glyphs.length === 0));
+      this.addModifier(modifier, Vex.Flow.StaveModifier.Position.END);
       return this;
     },
 
-    addKeySignature: function(keySpec) {
-      this.addModifier(new Vex.Flow.KeySignature(keySpec));
+    // Bar Line functions
+    setBegBarType: function(type) {
+      // Only valid bar types at beginning of stave is none, single or begin repeat
+      if (type == Vex.Flow.Barline.type.SINGLE ||
+          type == Vex.Flow.Barline.type.REPEAT_BEGIN ||
+          type == Vex.Flow.Barline.type.NONE) {
+          this.modifiers[0].setType(type);
+          this.formatted = false;
+      }
       return this;
     },
 
-    addClef: function(clef, size, annotation) {
-      this.clef = clef;
-      this.addModifier(new Vex.Flow.Clef(clef, size, annotation));
+    setEndBarType: function(type) {
+      // Repeat end not valid at end of stave
+      if (type != Vex.Flow.Barline.type.REPEAT_BEGIN) {
+        this.modifiers[1].setType(type);
+        this.formatted = false;
+      }
+      return this;
+    },
+
+    setClef: function(clefSpec, size, annotation, position) {
+      if (position === undefined) {
+        position = Vex.Flow.StaveModifier.Position.BEGIN;
+      }
+
+      this.clef = clefSpec;
+      var clefs = this.getModifiers(position, Vex.Flow.Clef.category);
+      if (clefs.length === 0) {
+        this.addClef(clefSpec, size, annotation, position);
+      } else {
+        clefs[0].setType(clefSpec, size, annotation);
+      }
+
+      return this;
+    },
+
+    setEndClef: function(clefSpec, size, annotation) {
+      this.setClef(clefSpec, size, annotation, Vex.Flow.StaveModifier.Position.END);
+      return this;
+    },
+
+    setKeySignature: function(keySpec, cancelKeySpec, position) {
+      if (position === undefined) {
+        position = Vex.Flow.StaveModifier.Position.BEGIN;
+      }
+
+      var keySignatures = this.getModifiers(position, Vex.Flow.KeySignature.category);
+      if (keySignatures.length === 0) {
+        this.addKeySignature(keySpec, cancelKeySpec, position);
+      } else {
+        keySignatures[0].setKeySig(keySpec, cancelKeySpec);
+      }
+
+      return this;
+    },
+
+    setEndKeySignature: function(keySpec, cancelKeySpec) {
+      this.setKeySignature(keySpec, cancelKeySpec, Vex.Flow.StaveModifier.Position.END);
+      return this;
+    },
+
+    setTimeSignature: function(timeSpec, customPadding, position) {
+      if (position === undefined) {
+        position = Vex.Flow.StaveModifier.Position.BEGIN;
+      }
+
+      var timeSignatures = this.getModifiers(position, Vex.Flow.TimeSignature.category);
+      if (timeSignatures.length === 0) {
+        this.addTimeSignature(timeSpec, customPadding, position);
+      } else {
+        timeSignatures[0].setTimeSig(timeSpec);
+      }
+
+      return this;
+    },
+
+    setEndTimeSignature: function(timeSpec, customPadding) {
+      this.setTimeSignature(timeSpec, customPadding, Vex.Flow.StaveModifier.Position.END);
+      return this;
+    },
+
+    addKeySignature: function(keySpec, cancelKeySpec, position) {
+      this.addModifier(new Vex.Flow.KeySignature(keySpec, cancelKeySpec), position);
+      return this;
+    },
+
+    addClef: function(clef, size, annotation, position) {
+      if (position === undefined ||
+          position === Vex.Flow.StaveModifier.Position.BEGIN) {
+        this.clef = clef;
+      }
+
+      this.addModifier(new Vex.Flow.Clef(clef, size, annotation), position);
       return this;
     },
 
     addEndClef: function(clef, size, annotation) {
-      this.addEndModifier(new Vex.Flow.Clef(clef, size, annotation));
+      this.addClef(clef, size, annotation, Vex.Flow.StaveModifier.Position.END);
       return this;
     },
 
-    addTimeSignature: function(timeSpec, customPadding) {
-      this.addModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding));
+    addTimeSignature: function(timeSpec, customPadding, position) {
+      this.addModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding), position);
       return this;
     },
 
     addEndTimeSignature: function(timeSpec, customPadding) {
-      this.addEndModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding));
+      this.addTimeSignature(timeSpec, customPadding, Vex.Flow.StaveModifier.Position.END);
+      return this;
     },
 
+    // Deprecated
     addTrebleGlyph: function() {
-      this.clef = "treble";
-      this.addGlyph(new Vex.Flow.Glyph("v83", 40));
+      this.addClef('treble');
       return this;
+    },
+
+    getModifiers: function(position, category) {
+      if (position === undefined) return this.modifiers;
+
+      return this.modifiers.filter(function(modifier) {
+        return position === modifier.getPosition() &&
+          (category === undefined || category === modifier.getCategory());
+      });
+    },
+
+    sortByCategory: function(items, order) {
+      for (var i = items.length - 1; i >= 0; i--) {
+        for (var j = 0; j < i; j++) {
+          if (order[items[j].getCategory()] > order[items[j + 1].getCategory()]) {
+            var temp = items[j];
+            items[j] = items[j + 1];
+            items[j + 1] = temp;
+          }
+        }
+      }
+    },
+
+    format: function() {
+      var Barline = Vex.Flow.Barline;
+      var begBarline = this.modifiers[0];
+      var endBarline = this.modifiers[1];
+
+      var begModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.BEGIN);
+      var endModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.END);
+
+      this.sortByCategory(begModifiers, {
+        barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3
+      });
+
+      this.sortByCategory(endModifiers, {
+        timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3
+      });
+
+      if (begModifiers.length > 1 &&
+          begBarline.getType() === Barline.type.REPEAT_BEGIN) {
+        begModifiers.push(begModifiers.splice(0, 1)[0]);
+        begModifiers.splice(0, 0, new Barline(Barline.type.SINGLE));
+      }
+
+      if (endModifiers.indexOf(endBarline) > 0) {
+        endModifiers.splice(0, 0, new Barline(Barline.type.NONE));
+      }
+
+      var width;
+      var padding;
+      var modifier;
+      var offset = 0;
+      var x = this.x;
+      for (var i = 0; i < begModifiers.length; i++) {
+        modifier = begModifiers[i];
+        padding = modifier.getPadding(i + offset);
+        width = modifier.getWidth();
+
+        x += padding;
+        modifier.setX(x);
+        x += width;
+
+        if (padding + width === 0) offset--;
+      }
+
+      this.start_x = x;
+      x = this.x + this.width;
+
+      for (i = 0; i < endModifiers.length; i++) {
+        modifier = endModifiers[i];
+        x -= modifier.getPadding(i);
+        if (i !== 0)
+          x -= modifier.getWidth();
+
+        modifier.setX(x);
+
+        if (i === 0)
+          x -= modifier.getWidth();
+      }
+
+      this.end_x = endModifiers.length === 1 ? this.x + this.width : x;
+      this.formatted = true;
     },
 
     /**
@@ -2252,11 +2396,12 @@ Vex.Flow.Stave = (function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw stave without canvas context.");
 
+      if (!this.formatted) this.format();
+
       var num_lines = this.options.num_lines;
       var width = this.width;
       var x = this.x;
       var y;
-      var glyph;
 
       // Render lines
       for (var line=0; line < num_lines; line++) {
@@ -2271,30 +2416,8 @@ Vex.Flow.Stave = (function() {
         this.context.restore();
       }
 
-      // Render glyphs
-      x = this.glyph_start_x;
-      for (var i = 0; i < this.glyphs.length; ++i) {
-        glyph = this.glyphs[i];
-        if (!glyph.getContext()) {
-          glyph.setContext(this.context);
-        }
-        glyph.renderToStave(x);
-        x += glyph.getMetrics().width;
-      }
-
-      // Render end glyphs
-      x = this.glyph_end_x;
-      for (i = 0; i < this.end_glyphs.length; ++i) {
-        glyph = this.end_glyphs[i];
-        if (!glyph.getContext()) {
-          glyph.setContext(this.context);
-        }
-        x -= glyph.getMetrics().width;
-        glyph.renderToStave(x);
-      }
-
       // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
-      for (i = 0; i < this.modifiers.length; i++) {
+      for (var i = 0; i < this.modifiers.length; i++) {
         // Only draw modifier if it has a draw function
         if (typeof this.modifiers[i].draw == "function")
           this.modifiers[i].draw(this, this.getModifierXShift());
@@ -2436,7 +2559,8 @@ Vex.Flow.StaveConnector = (function() {
     BRACKET: 4,
     BOLD_DOUBLE_LEFT: 5,
     BOLD_DOUBLE_RIGHT: 6,
-    THIN_DOUBLE: 7
+    THIN_DOUBLE: 7,
+    NONE: 8
   };
 
   StaveConnector.prototype = {
@@ -2446,7 +2570,15 @@ Vex.Flow.StaveConnector = (function() {
       this.top_stave = top_stave;
       this.bottom_stave = bottom_stave;
       this.type = StaveConnector.type.DOUBLE;
-      this.x_shift = 0; // Mainly used to offset Bold Double Left to align with offset Repeat Begin bars
+      this.font = {
+        family: "times",
+        size: 16,
+        weight: "normal"
+      };
+      // 1. Offset Bold Double Left to align with offset Repeat Begin bars
+      // 2. Offset BRACE type not to overlap with another StaveConnector
+      this.x_shift = 0;
+      this.texts = [];
     },
 
     setContext: function(ctx) {
@@ -2456,24 +2588,16 @@ Vex.Flow.StaveConnector = (function() {
 
     setType: function(type) {
       if (type >= StaveConnector.type.SINGLE_RIGHT &&
-          type <= StaveConnector.type.THIN_DOUBLE)
+          type <= StaveConnector.type.NONE)
         this.type = type;
       return this;
     },
 
-    setText: function(text, text_options) {
-      this.text = text;
-      this.text_options = {
-        shift_x: 0,
-        shift_y: 0
-      };
-      Vex.Merge(this.text_options, text_options);
-
-      this.font = {
-        family: "times",
-        size: 16,
-        weight: "normal"
-      };
+    setText: function(text, options) {
+      this.texts.push({
+        content: text,
+        options: Vex.Merge({ shift_x: 0, shift_y: 0 }, options)
+      });
       return this;
     },
 
@@ -2526,7 +2650,7 @@ Vex.Flow.StaveConnector = (function() {
         case StaveConnector.type.BRACE:
           width = 12;
           // May need additional code to draw brace
-          var x1 = this.top_stave.getX() - 2;
+          var x1 = this.top_stave.getX() - 2 + this.x_shift;
           var y1 = topY;
           var x3 = x1;
           var y3 = botY;
@@ -2574,11 +2698,14 @@ Vex.Flow.StaveConnector = (function() {
         case StaveConnector.type.THIN_DOUBLE:
           width = 1;
           break;
+        case StaveConnector.type.NONE:
+          break;
       }
 
       if (this.type !== StaveConnector.type.BRACE &&
         this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
-        this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
+        this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT &&
+        this.type !== StaveConnector.type.NONE) {
         this.ctx.fillRect(topX , topY, width, attachment_height);
       }
 
@@ -2587,20 +2714,20 @@ Vex.Flow.StaveConnector = (function() {
         this.ctx.fillRect(topX - 3, topY, width, attachment_height);
       }
 
+      this.ctx.save();
+      this.ctx.lineWidth = 2;
+      this.ctx.setFont(this.font.family, this.font.size, this.font.weight);
       // Add stave connector text
-      if (this.text !== undefined) {
-        this.ctx.save();
-        this.ctx.lineWidth = 2;
-        this.ctx.setFont(this.font.family, this.font.size, this.font.weight);
-        var text_width = this.ctx.measureText("" + this.text).width;
-
-        var x = this.top_stave.getX() - text_width - 24 + this.text_options.shift_x;
+      for (var i = 0; i < this.texts.length; i++) {
+        var text = this.texts[i];
+        var text_width = this.ctx.measureText("" + text.content).width;
+        var x = this.top_stave.getX() - text_width - 24 + text.options.shift_x;
         var y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 +
-          this.text_options.shift_y;
+          text.options.shift_y;
 
-        this.ctx.fillText("" + this.text, x, y + 4);
-        this.ctx.restore();
+        this.ctx.fillText("" + text.content, x, y + 4);
       }
+      this.ctx.restore();
     }
   };
 
@@ -2628,6 +2755,7 @@ Vex.Flow.StaveConnector = (function() {
 
   return StaveConnector;
 }());
+
 // Vex Flow
 // Mohit Muthanna <mohit@muthanna.com>
 //
@@ -2655,42 +2783,16 @@ Vex.Flow.TabStave = (function() {
       return this.getYForLine(2.5);
     },
 
+    // Deprecated
     addTabGlyph: function() {
-      var glyphScale;
-      var glyphOffset;
-
-      switch(this.options.num_lines) {
-        case 8:
-          glyphScale = 55;
-          glyphOffset = 14;
-          break;
-        case 7:
-          glyphScale = 47;
-          glyphOffset = 8;
-          break;
-        case 6:
-          glyphScale = 40;
-          glyphOffset = 1;
-          break;
-        case 5:
-          glyphScale = 30;
-          glyphOffset = -6;
-          break;
-        case 4:
-          glyphScale = 23;
-          glyphOffset = -12;
-          break;
-      }
-
-      var tabGlyph = new Vex.Flow.Glyph("v2f", glyphScale);
-      tabGlyph.y_shift = glyphOffset;
-      this.addGlyph(tabGlyph);
+      this.addClef('tab');
       return this;
     }
   });
 
   return TabStave;
 }());
+
 // Vex Flow
 // Copyright Mohit Cheppudira <mohit@muthanna.com>
 //
@@ -3792,7 +3894,6 @@ Vex.Flow.StemmableNote = (function(){
       this.stem = null;
       this.stem_extension_override = null;
       this.beam = null;
-
     },
 
     // Get and set the note's `Stem`
@@ -5527,20 +5628,21 @@ Vex.Flow.GhostNote = (function() {
 
 /** @constructor */
 Vex.Flow.ClefNote = (function() {
-  function ClefNote(clef, size, annotation) { this.init(clef, size, annotation); }
+  function ClefNote(type, size, annotation) { this.init(type, size, annotation); }
 
   Vex.Inherit(ClefNote, Vex.Flow.Note, {
-    init: function(clef, size, annotation) {
+    init: function(type, size, annotation) {
       ClefNote.superclass.init.call(this, {duration: "b"});
-      
-      this.setClef(clef, size, annotation);
+
+      this.setType(type, size, annotation);
 
       // Note properties
       this.ignore_ticks = true;
     },
 
-    setClef: function(clef, size, annotation) {
-      this.clef_obj = new Vex.Flow.Clef(clef, size, annotation);
+    setType: function(type, size, annotation) {
+      this.type = type;
+      this.clef_obj = new Vex.Flow.Clef(type, size, annotation);
       this.clef = this.clef_obj.clef;
       this.glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
       this.setWidth(this.glyph.getMetrics().width);
@@ -5582,7 +5684,7 @@ Vex.Flow.ClefNote = (function() {
 
     draw: function() {
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-      
+
       if (!this.glyph.getContext()) {
         this.glyph.setContext(this.context);
       }
@@ -5592,7 +5694,7 @@ Vex.Flow.ClefNote = (function() {
       this.glyph.setYShift(
         this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
       this.glyph.renderToStave(abs_x);
-      
+
       // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
       if (this.clef_obj.annotation !== undefined) {
         var attachment = new Vex.Flow.Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
@@ -5605,7 +5707,7 @@ Vex.Flow.ClefNote = (function() {
         attachment.setXShift(this.clef_obj.annotation.x_shift);
         attachment.renderToStave(abs_x);
       }
-      
+
     }
   });
 
@@ -8286,17 +8388,18 @@ Vex.Flow.StaveTie = (function() {
       this.notes = notes;
       this.context = null;
       this.text = text;
+      this.direction = null;
 
       this.render_options = {
-          cp1: 8,      // Curve control point 1
-          cp2: 12,      // Curve control point 2
-          text_shift_x: 0,
-          first_x_shift: 0,
-          last_x_shift: 0,
-          y_shift: 7,
-          tie_spacing: 0,
-          font: { family: "Arial", size: 10, style: "" }
-        };
+        cp1: 8,      // Curve control point 1
+        cp2: 12,      // Curve control point 2
+        text_shift_x: 0,
+        first_x_shift: 0,
+        last_x_shift: 0,
+        y_shift: 7,
+        tie_spacing: 0,
+        font: { family: "Arial", size: 10, style: "" }
+      };
 
       this.font = this.render_options.font;
       this.setNotes(notes);
@@ -8304,6 +8407,7 @@ Vex.Flow.StaveTie = (function() {
 
     setContext: function(context) { this.context = context; return this; },
     setFont: function(font) { this.font = font; return this; },
+    setDirection: function(direction) { this.direction = direction; return this; },
 
     /**
      * Set the notes to attach this tie to.
@@ -8320,7 +8424,7 @@ Vex.Flow.StaveTie = (function() {
 
       if (notes.first_indices.length != notes.last_indices.length)
         throw new Vex.RuntimeError("BadArguments", "Tied notes must have similar" +
-          " index sizes");
+        " index sizes");
 
       // Success. Lets grab 'em notes.
       this.first_note = notes.first_note;
@@ -8355,7 +8459,7 @@ Vex.Flow.StaveTie = (function() {
 
       for (var i = 0; i < this.first_indices.length; ++i) {
         var cp_x = ((params.last_x_px + last_x_shift) +
-                    (params.first_x_px + first_x_shift)) / 2;
+            (params.first_x_px + first_x_shift)) / 2;
         var first_y_px = params.first_ys[this.first_indices[i]] + y_shift;
         var last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
 
@@ -8368,9 +8472,9 @@ Vex.Flow.StaveTie = (function() {
         ctx.beginPath();
         ctx.moveTo(params.first_x_px + first_x_shift, first_y_px);
         ctx.quadraticCurveTo(cp_x, top_cp_y,
-                             params.last_x_px + last_x_shift, last_y_px);
+            params.last_x_px + last_x_shift, last_y_px);
         ctx.quadraticCurveTo(cp_x, bottom_cp_y,
-                             params.first_x_px + first_x_shift, first_y_px);
+            params.first_x_px + first_x_shift, first_y_px);
 
         ctx.closePath();
         ctx.fill();
@@ -8415,6 +8519,10 @@ Vex.Flow.StaveTie = (function() {
         last_x_px = first_note.getStave().getTieEndX();
         last_ys = first_note.getYs();
         this.last_indices = this.first_indices;
+      }
+
+      if(this.direction){
+        stem_direction = this.direction;
       }
 
       this.renderTie({
@@ -9471,10 +9579,29 @@ Vex.Flow.StaveModifier = (function() {
     this.init();
   }
 
+  StaveModifier.Position = {
+    LEFT: 1,
+    RIGHT: 2,
+    ABOVE: 3,
+    BELOW: 4,
+    BEGIN: 5,
+    END: 6
+  };
+
   StaveModifier.prototype = {
     init: function() {
       this.padding = 10;
+      this.position = StaveModifier.Position.ABOVE;
     },
+
+    getPosition: function() { return this.position; },
+    setPosition: function(position) { this.position = position; return this; },
+    getStave: function() { return this.stave; },
+    setStave: function(stave) { this.stave = stave; return this; },
+    getWidth: function() { return this.width; },
+    setWidth: function(width) { this.width = width; return this; },
+    getX: function() { return this.x; },
+    setX: function(x) { this.x = x; return this; },
 
     getCategory: function() {return "";},
     makeSpacer: function(padding) {
@@ -9492,45 +9619,14 @@ Vex.Flow.StaveModifier = (function() {
       glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs());
     },
 
-    setPadding: function(padding) {
-      this.padding = padding;
+    getPadding: function(index) {
+      return (index !== undefined && index < 2 ? 0 : this.padding);
     },
-
-    addToStave: function(stave, firstGlyph) {
-      if (!firstGlyph) {
-        stave.addGlyph(this.makeSpacer(this.padding));
-      }
-
-      this.addModifier(stave);
-      return this;
-    },
-
-    addToStaveEnd: function(stave, firstGlyph) {
-      if (!firstGlyph) {
-        stave.addEndGlyph(this.makeSpacer(this.padding));
-      }
-      else {
-        stave.addEndGlyph(this.makeSpacer(2));
-      }
-
-      this.addEndModifier(stave);
-      return this;
-    },
-
-    addModifier: function() {
-      throw new Vex.RERR("MethodNotImplemented",
-          "addModifier() not implemented for this stave modifier.");
-    },
-
-    addEndModifier: function() {
-      throw new Vex.RERR("MethodNotImplemented",
-          "addEndModifier() not implemented for this stave modifier.");
-    }
+    setPadding: function(padding) { this.padding = padding; return this; }
   };
 
   return StaveModifier;
 }());
-
 
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Cyril Silverman
@@ -9540,9 +9636,11 @@ Vex.Flow.StaveModifier = (function() {
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 Vex.Flow.KeySignature = (function() {
-  function KeySignature(keySpec) {
-    if (arguments.length > 0) this.init(keySpec);
+  function KeySignature(keySpec, cancelKeySpec) {
+    if (arguments.length > 0) this.init(keySpec, cancelKeySpec);
   }
+
+  KeySignature.category = 'keysignatures';
 
   // Space between natural and following accidental depending
   // on vertical position
@@ -9564,17 +9662,22 @@ Vex.Flow.KeySignature = (function() {
   // ## Prototype Methods
   Vex.Inherit(KeySignature, Vex.Flow.StaveModifier, {
     // Create a new Key Signature based on a `key_spec`
-    init: function(key_spec) {
+    init: function(keySpec, cancelKeySpec) {
       KeySignature.superclass.init();
 
+      this.setKeySig(keySpec, cancelKeySpec);
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
       this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
-      this.accList = Vex.Flow.keySignature(key_spec);
+      this.glyphs = [];
+      this.paddingForced = false;
     },
+
+    getCategory: function() { return KeySignature.category; },
 
     // Add an accidental glyph to the `stave`. `acc` is the data of the
     // accidental to add. If the `next` accidental is also provided, extra
     // width will be added to the initial accidental for optimal spacing.
-    addAccToStave: function(stave, acc, next) {
+    convertToGlyph: function(acc, next) {
       var glyph_data = Vex.Flow.accidentalCodes(acc.type);
       var glyph = new Vex.Flow.Glyph(glyph_data.code, this.glyphFontScale);
 
@@ -9586,15 +9689,24 @@ Vex.Flow.KeySignature = (function() {
         extra_width = above ? space.above : space.below;
       }
 
+      var glyph_width = glyph_data.width + extra_width;
+      this.width += glyph_width;
       // Set the width and place the glyph on the stave
-      glyph.setWidth(glyph_data.width + extra_width);
-      this.placeGlyphOnLine(glyph, stave, acc.line);
-      stave.addGlyph(glyph);
+      glyph.setWidth(glyph_width);
+      this.placeGlyphOnLine(glyph, this.stave, acc.line);
+      this.glyphs.push(glyph);
     },
 
     // Cancel out a key signature provided in the `spec` parameter. This will
     // place appropriate natural accidentals before the key signature.
     cancelKey: function(spec) {
+      this.formatted = false;
+      this.cancelKeySpec = spec;
+
+      return this;
+    },
+
+    convertToCancelAccList: function(spec) {
       // Get the accidental list for the cancelled key signature
       var cancel_accList = Vex.Flow.keySignature(spec);
 
@@ -9627,30 +9739,13 @@ Vex.Flow.KeySignature = (function() {
 
       // Combine naturals with main accidental list for the key signature
       this.accList = cancelled.concat(this.accList);
-
-      return this;
     },
 
-    // Add the key signature to the `stave`. You probably want to use the 
-    // helper method `.addToStave()` instead
-    addModifier: function(stave) {
-      this.convertAccLines(stave.clef, this.accList[0].type);
-      for (var i = 0; i < this.accList.length; ++i) {
-        this.addAccToStave(stave, this.accList[i], this.accList[i+1]);
-      }
-    },
-
-    // Add the key signature to the `stave`, if it's the not the `firstGlyph`
-    // a spacer will be added as well.
+    // Deprecated
     addToStave: function(stave, firstGlyph) {
-      if (this.accList.length === 0)
-        return this;
+      this.paddingForced = true;
+      stave.addModifier(this);
 
-      if (!firstGlyph) {
-        stave.addGlyph(this.makeSpacer(this.padding));
-      }
-
-      this.addModifier(stave);
       return this;
     },
 
@@ -9699,11 +9794,70 @@ Vex.Flow.KeySignature = (function() {
           this.accList[i].line += offset;
         }
       }
+    },
+
+    getPadding: function(index) {
+      if (!this.formatted) this.format();
+
+      return (
+        this.glyphs.length === 0 || (!this.paddingForced && index < 2) ?
+          0 : this.padding
+      );
+    },
+
+    getWidth: function() {
+      if (!this.formatted) this.format();
+
+      return this.width;
+    },
+
+    setKeySig: function(keySpec, cancelKeySpec) {
+      this.formatted = false;
+      this.keySpec = keySpec;
+      this.cancelKeySpec = cancelKeySpec;
+
+      return this;
+    },
+
+    format: function() {
+      if (!this.stave) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without stave.");
+
+      this.width = 0;
+      this.glyphs = [];
+      this.accList = Vex.Flow.keySignature(this.keySpec);
+      if (this.cancelKeySpec !== undefined) {
+        this.convertToCancelAccList(this.cancelKeySpec);
+      }
+
+      if (this.accList.length > 0) {
+        this.convertAccLines(this.stave.clef, this.accList[0].type);
+        for (var i = 0; i < this.accList.length; ++i) {
+          this.convertToGlyph(this.accList[i], this.accList[i+1]);
+        }
+      }
+
+      this.formatted = true;
+    },
+
+    draw: function() {
+      if (!this.x) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without x.");
+      if (!this.stave) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without stave.");
+      if (!this.formatted) this.format();
+
+      var x = this.x;
+      for (var i = 0; i < this.glyphs.length; i++) {
+        var glyph = this.glyphs[i];
+        glyph.setStave(this.stave);
+        glyph.setContext(this.stave.context);
+        glyph.renderToStave(x);
+        x += glyph.getMetrics().width;
+      }
     }
   });
 
   return KeySignature;
 }());
+
 // Vex Flow Notation
 // Implements time signatures glyphs for staffs
 // See tables.js for the internal time signatures
@@ -9721,6 +9875,8 @@ Vex.Flow.TimeSignature = (function() {
     if (arguments.length > 0) this.init(timeSpec, customPadding);
   }
 
+  TimeSignature.category = 'timesignatures';
+
   TimeSignature.glyphs = {
     "C": {
       code: "v41",
@@ -9737,14 +9893,18 @@ Vex.Flow.TimeSignature = (function() {
   Vex.Inherit(TimeSignature, Vex.Flow.StaveModifier, {
     init: function(timeSpec, customPadding) {
       TimeSignature.superclass.init();
-       var padding = customPadding || 15;
+      var padding = customPadding || 15;
 
-      this.setPadding(padding);
       this.point = 40;
       this.topLine = 2;
       this.bottomLine = 4;
-      this.timeSig = this.parseTimeSpec(timeSpec);
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
+      this.setTimeSig(timeSpec);
+      this.setWidth(this.timeSig.glyph.getMetrics().width);
+      this.setPadding(padding);
     },
+
+    getCategory: function() { return TimeSignature.category; },
 
     parseTimeSpec: function(timeSpec) {
       if (timeSpec == "C" || timeSpec == "C|") {
@@ -9865,18 +10025,19 @@ Vex.Flow.TimeSignature = (function() {
       return this.timeSig;
     },
 
-    addModifier: function(stave) {
-      if (!this.timeSig.num) {
-        this.placeGlyphOnLine(this.timeSig.glyph, stave, this.timeSig.line);
-      }
-      stave.addGlyph(this.timeSig.glyph);
+    setTimeSig: function(timeSpec) {
+      this.timeSig = this.parseTimeSpec(timeSpec);
+      return this;
     },
 
-    addEndModifier: function(stave) {
-      if (!this.timeSig.num) {
-        this.placeGlyphOnLine(this.timeSig.glyph, stave, this.timeSig.line);
-      }
-      stave.addEndGlyph(this.timeSig.glyph);
+    draw: function() {
+      if (!this.x) throw new Vex.RERR("TimeSignatureError", "Can't draw time signature without x.");
+      if (!this.stave) throw new Vex.RERR("TimeSignatureError", "Can't draw time signature without stave.");
+
+      this.timeSig.glyph.setStave(this.stave);
+      this.timeSig.glyph.setContext(this.stave.context);
+      this.placeGlyphOnLine(this.timeSig.glyph, this.stave, this.timeSig.line);
+      this.timeSig.glyph.renderToStave(this.x);
     }
   });
 
@@ -9893,12 +10054,14 @@ Vex.Flow.TimeSignature = (function() {
 // See `tests/clef_tests.js` for usage examples.
 
 Vex.Flow.Clef = (function() {
-  function Clef(clef, size, annotation) {
-    if (arguments.length > 0) this.init(clef, size, annotation);
+  function Clef(type, size, annotation) {
+    if (arguments.length > 0) this.init(type, size, annotation);
   }
 
   // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
   function L() { if (Vex.Flow.Clef.DEBUG) Vex.L("Vex.Flow.Clef", arguments); }
+
+  Clef.category = 'clefs';
 
   // Every clef name is associated with a glyph code from the font file
   // and a default stave line number.
@@ -9947,6 +10110,9 @@ Vex.Flow.Clef = (function() {
       code: "v83",
       line: 4
     },
+    "tab": {
+      code: "v2f"
+    }
   };
   // Sizes affect the point-size of the clef.
   Clef.sizes = {
@@ -10015,17 +10181,28 @@ Vex.Flow.Clef = (function() {
   Vex.Inherit(Clef, Vex.Flow.StaveModifier, {
     // Create a new clef. The parameter `clef` must be a key from
     // `Clef.types`.
-    init: function(clef, size, annotation) {
+    init: function(type, size, annotation) {
       var superclass = Vex.Flow.Clef.superclass;
       superclass.init.call(this);
 
-      this.clef = Vex.Flow.Clef.types[clef];
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
+      this.setType(type, size, annotation);
+      this.setWidth(this.glyph.getMetrics().width);
+      L("Creating clef:", type);
+    },
+
+    getCategory: function() { return Clef.category; },
+
+    setType: function(type, size, annotation) {
+      this.type = type;
+      this.clef = Vex.Flow.Clef.types[type];
       if (size === undefined) {
         this.size = "default";
       } else {
         this.size = size;
       }
       this.clef.point = Vex.Flow.Clef.sizes[this.size];
+      this.glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
 
       // If an annotation, such as 8va, is specified, add it to the Clef object.
       if (annotation !== undefined) {
@@ -10033,38 +10210,82 @@ Vex.Flow.Clef = (function() {
         this.annotation = {
           code: anno_dict.code,
           point: anno_dict.sizes[this.size].point,
-          line: anno_dict.sizes[this.size].attachments[clef].line,
-          x_shift: anno_dict.sizes[this.size].attachments[clef].x_shift
+          line: anno_dict.sizes[this.size].attachments[this.type].line,
+          x_shift: anno_dict.sizes[this.size].attachments[this.type].x_shift
         };
+
+        this.attachment = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
+        this.attachment.metrics.x_max = 0;
+        this.attachment.setXShift(this.annotation.x_shift);
       }
-      L("Creating clef:", clef);
+      else {
+        this.annotation = undefined;
+      }
+
+      return this;
     },
 
-    // Add this clef to the start of the given `stave`.
-    addModifier: function(stave) {
-      var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
-      this.placeGlyphOnLine(glyph, stave, this.clef.line);
-      if (this.annotation !== undefined) {
-        var attachment = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
-        attachment.metrics.x_max = 0;
-        attachment.setXShift(this.annotation.x_shift);
-        this.placeGlyphOnLine(attachment, stave, this.annotation.line);
-        stave.addGlyph(attachment);
+    getWidth: function() {
+      if (this.type === 'tab' && !this.stave) {
+        throw new Vex.RERR("ClefError", "Can't get width without stave.");
       }
-      stave.addGlyph(glyph);
+
+      return this.width;
     },
 
-    // Add this clef to the end of the given `stave`.
-    addEndModifier: function(stave) {
-      var glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
-      this.placeGlyphOnLine(glyph, stave, this.clef.line);
-      stave.addEndGlyph(glyph);
+    setStave: function(stave) {
+      this.stave = stave;
+
+      if (this.type !== 'tab') return;
+
+      var glyphScale;
+      var glyphOffset;
+      switch(this.stave.getOptions().num_lines) {
+        case 8:
+          glyphScale = 55;
+          glyphOffset = 14;
+          break;
+        case 7:
+          glyphScale = 47;
+          glyphOffset = 8;
+          break;
+        case 6:
+          glyphScale = 40;
+          glyphOffset = 1;
+          break;
+        case 5:
+          glyphScale = 30;
+          glyphOffset = -6;
+          break;
+        case 4:
+          glyphScale = 23;
+          glyphOffset = -12;
+          break;
+      }
+
+      this.glyph.setPoint(glyphScale);
+      this.glyph.setYShift(glyphOffset);
+
+      return this;
+    },
+
+    draw: function() {
+      if (!this.x) throw new Vex.RERR("ClefError", "Can't draw clef without x.");
+      if (!this.stave) throw new Vex.RERR("ClefError", "Can't draw clef without stave.");
+
+      this.glyph.setStave(this.stave);
+      this.glyph.setContext(this.stave.context);
+      if (this.clef.line !== undefined) {
+        this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line);
+      }
+
+      this.glyph.renderToStave(this.x);
+
       if (this.annotation !== undefined) {
-        var attachment = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
-        attachment.metrics.x_max = 0;
-        attachment.setXShift(this.annotation.x_shift);
-        this.placeGlyphOnLine(attachment, stave, this.annotation.line);
-        stave.addEndGlyph(attachment);
+        this.placeGlyphOnLine(this.attachment, this.stave, this.annotation.line);
+        this.attachment.setStave(this.stave);
+        this.attachment.setContext(this.stave.context);
+        this.attachment.renderToStave(this.x);
       }
     }
   });
@@ -12028,8 +12249,8 @@ Vex.Flow.CanvasContext = (function() {
  * @constructor
  */
 Vex.Flow.Barline = (function() {
-  function Barline(type, x) {
-    if (arguments.length > 0) this.init(type, x);
+  function Barline(type) {
+    if (arguments.length > 0) this.init(type);
   }
 
   Barline.type = {
@@ -12043,21 +12264,45 @@ Vex.Flow.Barline = (function() {
   };
 
   Vex.Inherit(Barline, Vex.Flow.StaveModifier, {
-    init: function(type, x) {
+    init: function(type) {
       Barline.superclass.init.call(this);
       this.thickness = Vex.Flow.STAVE_LINE_THICKNESS;
-      this.barline = type;
-      this.x = x;    // Left most x for the stave
+
+      var TYPE = Vex.Flow.Barline.type;
+      this.widths = {};
+      this.widths[TYPE.SINGLE] = 5;
+      this.widths[TYPE.DOUBLE] = 5;
+      this.widths[TYPE.END] = 5;
+      this.widths[TYPE.REPEAT_BEGIN] = 5;
+      this.widths[TYPE.REPEAT_END] = 5;
+      this.widths[TYPE.REPEAT_BOTH] = 5;
+      this.widths[TYPE.NONE] = 5;
+
+      this.paddings = {};
+      this.paddings[TYPE.SINGLE] = 0;
+      this.paddings[TYPE.DOUBLE] = 0;
+      this.paddings[TYPE.END] = 0;
+      this.paddings[TYPE.REPEAT_BEGIN] = 15;
+      this.paddings[TYPE.REPEAT_END] = 15;
+      this.paddings[TYPE.REPEAT_BOTH] = 15;
+      this.paddings[TYPE.NONE] = 0;
+
+      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
+      this.setType(type);
     },
 
     getCategory: function() { return "barlines"; },
-    setX: function(x) { this.x = x; return this; },
+    getType: function() { return this.type; },
+    setType: function(type) {
+      this.type = type;
+      this.setWidth(this.widths[this.type]);
+      this.setPadding(this.paddings[this.type]);
+      return this;
+    },
 
     // Draw barlines
-    draw: function(stave, x_shift) {
-      x_shift = typeof x_shift !== 'number' ? 0 : x_shift;
-
-      switch (this.barline) {
+    draw: function(stave) {
+      switch (this.type) {
         case Barline.type.SINGLE:
           this.drawVerticalBar(stave, this.x, false);
           break;
@@ -12070,10 +12315,11 @@ Vex.Flow.Barline = (function() {
         case Barline.type.REPEAT_BEGIN:
           // If the barline is shifted over (in front of clef/time/key)
           // Draw vertical bar at the beginning.
-          if (x_shift > 0) {
-            this.drawVerticalBar(stave, this.x);
+          this.drawRepeatBar(stave, this.x, true);
+          if (stave.getX() !== this.x) {
+            this.drawVerticalBar(stave, stave.getX());
           }
-          this.drawRepeatBar(stave, this.x + x_shift, true);
+
           break;
         case Barline.type.REPEAT_END:
           this.drawRepeatBar(stave, this.x, false);
@@ -12297,6 +12543,8 @@ Vex.Flow.StaveHairpin = (function() {
       var l_shift = this.render_options.left_shift_px;
       var r_shift = this.render_options.right_shift_px;
 
+      ctx.beginPath();
+
       switch (this.hairpin) {
         case StaveHairpin.type.CRESC:
           ctx.moveTo(params.last_x + r_shift, y_shift + dis);
@@ -12314,6 +12562,7 @@ Vex.Flow.StaveHairpin = (function() {
       }
 
       ctx.stroke();
+      ctx.closePath();
     },
 
     draw: function() {
@@ -12565,14 +12814,12 @@ Vex.Flow.StaveSection = (function() {
     if (arguments.length > 0) this.init(section, x, shift_y);
   }
 
-  var Modifier = Vex.Flow.Modifier;
-  Vex.Inherit(StaveSection, Modifier, {
+  Vex.Inherit(StaveSection, Vex.Flow.StaveModifier, {
     init: function(section, x, shift_y) {
       StaveSection.superclass.init.call(this);
 
       this.setWidth(16);
       this.section = section;
-      this.position = Modifier.Position.ABOVE;
       this.x = x;
       this.shift_x = 0;
       this.shift_y = shift_y;
@@ -12617,6 +12864,7 @@ Vex.Flow.StaveSection = (function() {
 
   return StaveSection;
 }());
+
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 // Author Radosaw Eichler 2012
@@ -12744,8 +12992,7 @@ Vex.Flow.StaveText = (function() {
     if (arguments.length > 0) this.init(text, position, options);
   }
 
-  var Modifier = Vex.Flow.Modifier;
-  Vex.Inherit(StaveText, Modifier, {
+  Vex.Inherit(StaveText, Vex.Flow.StaveModifier, {
     init: function(text, position, options) {
       StaveText.superclass.init.call(this);
 
@@ -12791,20 +13038,20 @@ Vex.Flow.StaveText = (function() {
       var text_width = ctx.measureText("" + this.text).width;
 
       var x, y;
-      var Modifier = Vex.Flow.Modifier;
+      var Position = Vex.Flow.StaveModifier.Position;
       switch(this.position) {
-        case Modifier.Position.LEFT:
-        case Modifier.Position.RIGHT:
+        case Position.LEFT:
+        case Position.RIGHT:
           y = (stave.getYForLine(0) + stave.getBottomLineY()) / 2 + this.options.shift_y;
-          if(this.position == Modifier.Position.LEFT) {
+          if(this.position == Position.LEFT) {
             x = stave.getX() - text_width - 24 + this.options.shift_x;
           }
           else {
             x = stave.getX() + stave.getWidth() + 24 + this.options.shift_x;
           }
           break;
-        case Modifier.Position.ABOVE:
-        case Modifier.Position.BELOW:
+        case Position.ABOVE:
+        case Position.BELOW:
           var Justification = Vex.Flow.TextNote.Justification;
           x = stave.getX() + this.options.shift_x;
           if(this.options.justification == Justification.CENTER) {
@@ -12813,8 +13060,8 @@ Vex.Flow.StaveText = (function() {
           else if(this.options.justification == Justification.RIGHT) {
             x += stave.getWidth() - text_width;
           }
-          
-          if(this.position == Modifier.Position.ABOVE) {
+
+          if(this.position == Position.ABOVE) {
             y = stave.getYForTopText(2) + this.options.shift_y;
           }
           else {
@@ -12905,7 +13152,8 @@ Vex.Flow.BarNote = (function() {
     draw: function() {
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
       L("Rendering bar line at: ", this.getAbsoluteX());
-      var barline = new Vex.Flow.Barline(this.type, this.getAbsoluteX());
+      var barline = new Vex.Flow.Barline(this.type);
+      barline.setX(this.getAbsoluteX());
       barline.draw(this.stave);
     }
   });
