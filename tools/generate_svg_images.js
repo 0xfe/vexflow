@@ -24,7 +24,7 @@ VF.Test.RUN_NODE_TESTS = true;
 VF.Test.NODE_IMAGEDIR = args[2];
 
 // Create the image directory if it doesn't exist.
-fs.makeDirectory(VF.Test.NODE_IMAGEDIR);
+fs.makeTree(VF.Test.NODE_IMAGEDIR);
 
 // Run all tests.
 VF.Test.run();
