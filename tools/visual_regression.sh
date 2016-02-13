@@ -35,8 +35,8 @@ THRESHOLD=0.01
 # Directories. You might want to change BASE, if you're running from a
 # different working directory.
 BASE=.
-BLESSED=$BASE/tests/blessed
-CURRENT=$BASE/build/images
+BLESSED=$BASE/build/images/blessed
+CURRENT=$BASE/build/images/current
 DIFF=$BASE/build/images/diff
 
 # All results are stored here.
@@ -134,7 +134,6 @@ echo Results stored in $DIFF/results.txt
 echo All images with a difference over threshold, $THRESHOLD, are
 echo available in $DIFF, sorted by perceptual hash.
 echo
-echo If all the tests look good, then run: cp $CURRENT/'*.svg' $BLESSED.
 
 if [ "$num_warnings" -gt 0 ]
 then
@@ -147,6 +146,4 @@ if [ "$num_fails" -gt 0 ]
 then
   echo "You have $num_fails fail(s):"
   head -n $num_fails $RESULTS
-  exit 1
 fi
-
