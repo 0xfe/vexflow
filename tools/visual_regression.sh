@@ -96,7 +96,7 @@ do
     echo $name $hash >>$RESULTS.fail
     # Threshold exceeded, save the diff and the original, current
     cp $diff-diff.png $DIFF/$name.png
-    cp $diff-a.png $DIFF/$name'_'Original.png
+    cp $diff-a.png $DIFF/$name'_'Blessed.png
     cp $diff-b.png $DIFF/$name'_'Current.png
     echo "PHASH value exceeds threshold: $hash > $THRESHOLD"
     echo Image diff stored in $DIFF/$name.png
