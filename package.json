@@ -41,12 +41,13 @@
   },
   "scripts": {
     "start": "grunt stage",
+    "lint": "grunt jshint",
     "qunit": "grunt test",
     "generate:current": "slimerjs ./tools/generate_svg_images.js ../build ./build/images/current",
     "generate:blessed": "slimerjs ./tools/generate_svg_images.js ../releases ./build/images/blessed",
     "generate": "npm run generate:current && npm run generate:blessed",
     "diff": "./tools/visual_regression.sh",
-    "test": "npm run qunit && npm run generate && npm run diff"
+    "test": "npm run lint && npm run qunit && npm run generate && npm run diff"
   },
   "homepage": "http://vexflow.com",
   "keywords": [
