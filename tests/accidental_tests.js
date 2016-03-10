@@ -279,7 +279,7 @@ Vex.Flow.Test.Accidental = (function() {
     microtonal: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 700, 240);
       ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      var stave = new Vex.Flow.Stave(10, 10, 550);
+      var stave = new Vex.Flow.Stave(10, 10, 650);
       stave.setContext(ctx);
       stave.draw();
 
@@ -318,6 +318,13 @@ Vex.Flow.Test.Accidental = (function() {
           addAccidental(3, newAcc("b")).
           addAccidental(4, newAcc("++").setAsCautionary()).
           addAccidental(5, newAcc("d").setAsCautionary()),
+
+        newNote({ keys: ["f/4", "g/4", "a/4", "b/4"],
+            duration: "16"}).
+          addAccidental(0, newAcc("++-")).
+          addAccidental(1, newAcc("+-")).
+          addAccidental(2, newAcc("bs")).
+          addAccidental(3, newAcc("bss")),
       ];
 
       for (var i = 0; i < notes.length; ++i) {
