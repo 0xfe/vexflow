@@ -534,7 +534,7 @@ Vex.Flow.Test.Accidental = (function() {
     microtonal: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 700, 240);
       ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      var stave = new Vex.Flow.Stave(10, 10, 550);
+      var stave = new Vex.Flow.Stave(10, 10, 650);
       stave.setContext(ctx);
       stave.draw();
 
@@ -592,7 +592,7 @@ Vex.Flow.Test.Accidental = (function() {
         }
       }
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
+      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
       ok(true, "Microtonal Accidental");
     },
 

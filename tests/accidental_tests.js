@@ -337,7 +337,7 @@ Vex.Flow.Test.Accidental = (function() {
         }
       }
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
+      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
       ok(true, "Microtonal Accidental");
     },
 
