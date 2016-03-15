@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.42 built on 2016-03-12.
+ * VexFlow 1.2.41 built on 2016-02-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -534,7 +534,7 @@ Vex.Flow.Test.Accidental = (function() {
     microtonal: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 700, 240);
       ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      var stave = new Vex.Flow.Stave(10, 10, 650);
+      var stave = new Vex.Flow.Stave(10, 10, 550);
       stave.setContext(ctx);
       stave.draw();
 
@@ -573,13 +573,6 @@ Vex.Flow.Test.Accidental = (function() {
           addAccidental(3, newAcc("b")).
           addAccidental(4, newAcc("++").setAsCautionary()).
           addAccidental(5, newAcc("d").setAsCautionary()),
-
-        newNote({ keys: ["f/4", "g/4", "a/4", "b/4"],
-            duration: "16"}).
-          addAccidental(0, newAcc("++-")).
-          addAccidental(1, newAcc("+-")).
-          addAccidental(2, newAcc("bs")).
-          addAccidental(3, newAcc("bss")),
       ];
 
       for (var i = 0; i < notes.length; ++i) {
@@ -592,7 +585,7 @@ Vex.Flow.Test.Accidental = (function() {
         }
       }
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
+      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
       ok(true, "Microtonal Accidental");
     },
 
@@ -934,7 +927,6 @@ Vex.Flow.Test.Accidental = (function() {
 
   return Accidental;
 })();
-
 /**
  * VexFlow - Annotation Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
