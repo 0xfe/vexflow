@@ -2,7 +2,7 @@
  * VexFlow - Tuplet Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
+"use strict";
 VF.Test.Tuplet = (function() {
   var Tuplet = {
     Start: function() {
@@ -17,6 +17,7 @@ VF.Test.Tuplet = (function() {
       runTests("Complex Tuplet", Tuplet.complex);
       runTests("Mixed Stem Direction Tuplet", Tuplet.mixedTop);
       runTests("Mixed Stem Direction Bottom Tuplet", Tuplet.mixedBottom);
+      runTests("Nested Tuplets", Tuplet.nested);
     },
 
     setupContext: function(options, x, y) {
@@ -132,7 +133,7 @@ VF.Test.Tuplet = (function() {
       var beam = new VF.Beam(notes.slice(3, 6));
 
       var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes.slice(3, 6), {beats_occupied: 4});
+      var tuplet2 = new VF.Tuplet(notes.slice(3, 6), {notes_occupied: 4});
 
       var voice = new VF.Voice(VF.Test.TIME4_4);
 
@@ -216,7 +217,7 @@ VF.Test.Tuplet = (function() {
       var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
       var tuplet2 = new VF.Tuplet(notes.slice(3, 6));
 
-      tuplet2.setBeatsOccupied(1);
+      tuplet2.setNotesOccupied(1);
       tuplet1.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
       tuplet2.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
 
@@ -267,7 +268,7 @@ VF.Test.Tuplet = (function() {
 
       var tuplet1 = new VF.Tuplet(notes.slice(0, 11));
       var tuplet2 = new VF.Tuplet(notes.slice(11, 14));
-      tuplet1.setBeatsOccupied(142);
+      tuplet1.setNotesOccupied(142);
 
       var voice = new VF.Voice(VF.Test.TIME4_4);
 
@@ -324,13 +325,14 @@ VF.Test.Tuplet = (function() {
       var beam3 = new VF.Beam(notes1.slice(11, 16));
 
       var tuplet1 = new VF.Tuplet(notes1.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes1.slice(3, 11),
-                                        {num_notes: 7, beats_occupied: 4});
-      var tuplet3 = new VF.Tuplet(notes1.slice(11, 16), {beats_occupied: 4});
+      var tuplet2 = new VF.Tuplet(notes1.slice(3, 11), {
+        num_notes: 7, notes_occupied: 4, ratioed: false
+      });
+      var tuplet3 = new VF.Tuplet(notes1.slice(11, 16), {notes_occupied: 4});
 
       voice1.setStrict(true);
       voice1.addTickables(notes1);
-      voice2.setStrict(true)
+      voice2.setStrict(true);
       voice2.addTickables(notes2);
       c.stave.addTimeSignature("4/4");
       c.stave.draw(c.context);
@@ -366,9 +368,9 @@ VF.Test.Tuplet = (function() {
         newNote({ keys: ["c/6"], stem_direction: -1, duration: "4"})
       ];
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 2), {beats_occupied : 3});
-      var tuplet2 = new VF.Tuplet(notes.slice(2, 4), {beats_occupied : 3});
-      var tuplet3 = new VF.Tuplet(notes.slice(4, 6), {beats_occupied : 3});
+      var tuplet1 = new VF.Tuplet(notes.slice(0, 2), {notes_occupied : 3});
+      var tuplet2 = new VF.Tuplet(notes.slice(2, 4), {notes_occupied : 3});
+      var tuplet3 = new VF.Tuplet(notes.slice(4, 6), {notes_occupied : 3});
 
       var voice = new VF.Voice(VF.Test.TIME4_4);
 
@@ -401,9 +403,9 @@ VF.Test.Tuplet = (function() {
         newNote({ keys: ["c/4"], stem_direction: -1, duration: "4"})
       ];
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 2), {beats_occupied : 3});
-      var tuplet2 = new VF.Tuplet(notes.slice(2, 4), {beats_occupied : 3});
-      var tuplet3 = new VF.Tuplet(notes.slice(4, 6), {beats_occupied : 3});
+      var tuplet1 = new VF.Tuplet(notes.slice(0, 2), {notes_occupied : 3});
+      var tuplet2 = new VF.Tuplet(notes.slice(2, 4), {notes_occupied : 3});
+      var tuplet3 = new VF.Tuplet(notes.slice(4, 6), {notes_occupied : 3});
 
       var voice = new VF.Voice(VF.Test.TIME4_4);
 
@@ -424,7 +426,58 @@ VF.Test.Tuplet = (function() {
       tuplet3.setContext(c.context).draw();
 
       ok(true, "Mixed Stem Direction Bottom Tuplet");
+    },
+
+    nested: function(options, contextBuilder) {
+      options.contextBuilder = contextBuilder;
+      var c = VF.Test.Beam.setupContext(options);
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+
+      var notes = [
+        // Big triplet 1:
+        newNote({ keys: ["b/4"], stem_direction: 1, duration: "q"}),
+        newNote({ keys: ["a/4"], stem_direction: 1, duration: "q"}),
+        newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
+        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
+        newNote({ keys: ["f/4"], stem_direction: 1, duration: "16"}),
+        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
+        newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
+
+        newNote({ keys: ["b/4"], stem_direction: 1, duration: "h"})
+      ];
+
+      var beam1 = new VF.Beam(notes.slice(2, 7));
+
+      var tuplet1 = new VF.Tuplet(notes.slice(0, 7), {
+        notes_occupied: 2, num_notes: 3
+      });
+      var tuplet1nested = new VF.Tuplet(notes.slice(2,7), {
+        notes_occupied: 4, num_notes: 5
+      });
+
+      // 4/4 time
+      var voice = new VF.Voice({
+        num_beats: 4, beat_value: 4, resolution: VF.RESOLUTION });
+
+      voice.setStrict(true);
+      voice.addTickables(notes);
+      c.stave.addTimeSignature("4/4");
+      c.stave.draw(c.context);
+
+      var formatter = new VF.Formatter().joinVoices([voice]).
+        format([voice], 350);
+
+      voice.draw(c.context, c.stave);
+
+      tuplet1.setContext(c.context).draw();
+      tuplet1nested.setContext(c.context).draw();
+
+      beam1.setContext(c.context).draw();
+
+
+      ok(true, "Nested Tuplets");
     }
+
   };
 
   return Tuplet;
