@@ -79,8 +79,6 @@ Vex.Flow.Tuplet = (function() {
           notes.some(function(note){ return note.beam === null; });
       }
 
-      this.bracketed = "bracketed" in this.options ?
-        this.options.bracketed : (notes[0].beam == null);
       this.ratioed = "ratioed" in this.options ?
         this.options.ratioed : 
         (Math.abs(this.notes_occupied - this.num_notes) > 1);
