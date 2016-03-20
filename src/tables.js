@@ -441,13 +441,13 @@ Vex.Flow.accidentalCodes.accidentals = {
   },
   "bs": {
     code: "vb7",
-    width: 7,
+    width: 10,
     shift_right: 0,
     shift_down: 0
   },
   "bss": {
     code: "v39",
-    width: 7,
+    width: 10,
     shift_right: 0,
     shift_down: 0
   }
