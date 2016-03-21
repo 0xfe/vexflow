@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.44 built on 2016-03-21.
+ * VexFlow 1.2.45 built on 2016-03-21.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -542,7 +542,7 @@ Vex.Flow.Test.Accidental = (function() {
     microtonal: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 700, 240);
       ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      var stave = new Vex.Flow.Stave(10, 10, 550);
+      var stave = new Vex.Flow.Stave(10, 10, 650);
       stave.setContext(ctx);
       stave.draw();
 
@@ -581,6 +581,13 @@ Vex.Flow.Test.Accidental = (function() {
           addAccidental(3, newAcc("b")).
           addAccidental(4, newAcc("++").setAsCautionary()).
           addAccidental(5, newAcc("d").setAsCautionary()),
+
+        newNote({ keys: ["f/4", "g/4", "a/4", "b/4"],
+            duration: "16"}).
+          addAccidental(0, newAcc("++-")).
+          addAccidental(1, newAcc("+-")).
+          addAccidental(2, newAcc("bs")).
+          addAccidental(3, newAcc("bss")),
       ];
 
       for (var i = 0; i < notes.length; ++i) {
@@ -593,7 +600,7 @@ Vex.Flow.Test.Accidental = (function() {
         }
       }
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
+      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
       ok(true, "Microtonal Accidental");
     },
 
@@ -935,6 +942,7 @@ Vex.Flow.Test.Accidental = (function() {
 
   return Accidental;
 })();
+
 /**
  * VexFlow - Annotation Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -5763,6 +5771,7 @@ VF.Test.KeySignature = (function() {
       VF.Test.runTests("Minor Key Test", VF.Test.KeySignature.minorKeys);
       VF.Test.runTests("Stave Helper", VF.Test.KeySignature.staveHelper);
       VF.Test.runTests("Cancelled key test", VF.Test.KeySignature.majorKeysCanceled);
+      VF.Test.runTests("Altered key test", VF.Test.KeySignature.majorKeysAltered);
     },
 
     parser: function() {
@@ -5870,6 +5879,58 @@ VF.Test.KeySignature = (function() {
       ok(true, "all pass");
     },
 
+    majorKeysAltered: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 780, 500);
+      ctx.scale(0.9, 0.9);
+      var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
+      var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
+      var stave3 = new VF.Stave(10, 170, 750).addTrebleGlyph();
+      var stave4 = new VF.Stave(10, 250, 750).addTrebleGlyph();
+      var keys = VF.Test.KeySignature.MAJOR_KEYS;
+
+      var keySig = null;
+      var i, n;
+      for (i = 0; i < 8; ++i) {
+        keySig = new VF.KeySignature(keys[i]);
+        keySig.alterKey(["bs", "bs"]);
+        keySig.padding = 18;
+        keySig.addToStave(stave);
+      }
+
+      for (n = 8; n < keys.length; ++n) {
+        keySig = new VF.KeySignature(keys[n]);
+        keySig.alterKey(["+", "+", "+"]);
+        keySig.padding = 20;
+        keySig.addToStave(stave2);
+      }
+
+      for (i = 0; i < 8; ++i) {
+        keySig = new VF.KeySignature(keys[i]);
+        keySig.alterKey(["n", "bs", "bb"]);
+        keySig.padding = 18;
+        keySig.addToStave(stave3);
+      }
+
+      for (n = 8; n < keys.length; ++n) {
+        keySig = new VF.KeySignature(keys[n]);
+        keySig.alterKey(["++", "+", "n", "+"]);
+        keySig.padding = 20;
+        keySig.addToStave(stave4);
+      }
+
+      stave.setContext(ctx);
+      stave.draw();
+      stave2.setContext(ctx);
+      stave2.draw();
+      stave3.setContext(ctx);
+      stave3.draw();
+      stave4.setContext(ctx);
+      stave4.draw();
+
+
+      ok(true, "all pass");
+    },
+
     minorKeys: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
@@ -5921,6 +5982,7 @@ VF.Test.KeySignature = (function() {
 
   return KeySignature;
 })();
+
 /**
  * VexFlow - ModifierContext Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
