@@ -76,6 +76,30 @@ Vex.Flow.Ornament = (function() {
       shift_y_upper: -4,
       shift_y_lower: -2,
       height: 20
+    },
+    "bs": {
+      shift_x: 0,
+      shift_y_upper: 0,
+      shift_y_lower: 4,
+      height: 17
+    },
+    "bss": {
+      shift_x: 0,
+      shift_y_upper: 0,
+      shift_y_lower: 4,
+      height: 17
+    },
+    "++-": {
+      shift_x: -2,
+      shift_y_upper: -6,
+      shift_y_lower: -3,
+      height: 22
+    },
+    "+-": {
+      shift_x: 1,
+      shift_y_upper: -4,
+      shift_y_lower: -2,
+      height: 20
     }
   };
 

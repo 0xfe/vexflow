@@ -54,6 +54,7 @@ VF.Test.KeySignature = (function() {
       VF.Test.runTests("Minor Key Test", VF.Test.KeySignature.minorKeys);
       VF.Test.runTests("Stave Helper", VF.Test.KeySignature.staveHelper);
       VF.Test.runTests("Cancelled key test", VF.Test.KeySignature.majorKeysCanceled);
+      VF.Test.runTests("Altered key test", VF.Test.KeySignature.majorKeysAltered);
     },
 
     parser: function() {
@@ -144,6 +145,58 @@ VF.Test.KeySignature = (function() {
       for (n = 8; n < keys.length; ++n) {
         keySig = new VF.KeySignature(keys[n]);
         keySig.cancelKey("Ab");
+        keySig.padding = 20;
+        keySig.addToStave(stave4);
+      }
+
+      stave.setContext(ctx);
+      stave.draw();
+      stave2.setContext(ctx);
+      stave2.draw();
+      stave3.setContext(ctx);
+      stave3.draw();
+      stave4.setContext(ctx);
+      stave4.draw();
+
+
+      ok(true, "all pass");
+    },
+
+    majorKeysAltered: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.canvas_sel, 780, 500);
+      ctx.scale(0.9, 0.9);
+      var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
+      var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
+      var stave3 = new VF.Stave(10, 170, 750).addTrebleGlyph();
+      var stave4 = new VF.Stave(10, 250, 750).addTrebleGlyph();
+      var keys = VF.Test.KeySignature.MAJOR_KEYS;
+
+      var keySig = null;
+      var i, n;
+      for (i = 0; i < 8; ++i) {
+        keySig = new VF.KeySignature(keys[i]);
+        keySig.alterKey(["bs", "bs"]);
+        keySig.padding = 18;
+        keySig.addToStave(stave);
+      }
+
+      for (n = 8; n < keys.length; ++n) {
+        keySig = new VF.KeySignature(keys[n]);
+        keySig.alterKey(["+", "+", "+"]);
+        keySig.padding = 20;
+        keySig.addToStave(stave2);
+      }
+
+      for (i = 0; i < 8; ++i) {
+        keySig = new VF.KeySignature(keys[i]);
+        keySig.alterKey(["n", "bs", "bb"]);
+        keySig.padding = 18;
+        keySig.addToStave(stave3);
+      }
+
+      for (n = 8; n < keys.length; ++n) {
+        keySig = new VF.KeySignature(keys[n]);
+        keySig.alterKey(["++", "+", "n", "+"]);
         keySig.padding = 20;
         keySig.addToStave(stave4);
       }
