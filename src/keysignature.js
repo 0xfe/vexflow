@@ -6,8 +6,8 @@
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 Vex.Flow.KeySignature = (function() {
-  function KeySignature(keySpec, cancelKeySpec) {
-    if (arguments.length > 0) this.init(keySpec, cancelKeySpec);
+  function KeySignature(keySpec, cancelKeySpec, alterKeySpec) {
+    if (arguments.length > 0) this.init(keySpec, cancelKeySpec, alterKeySpec);
   }
 
   KeySignature.category = 'keysignatures';
@@ -26,16 +26,60 @@ Vex.Flow.KeySignature = (function() {
     'n': {
       above: 3,
       below: -1
+    },
+    '##': {
+      above: 6,
+      below: 4
+    },
+    'bb': {
+      above: 4,
+      below: 7
+    },
+    'db': {
+      above: 4,
+      below: 7
+    },
+    'd': {
+      above: 4,
+      below: 7
+    },
+    'bbs': {
+      above: 4,
+      below: 7
+    },
+    '++': {
+      above: 6,
+      below: 4
+    },
+    '+': {
+      above: 6,
+      below: 4
+    },
+    '+-': {
+      above: 6,
+      below: 4
+    },
+    '++-': {
+      above: 6,
+      below: 4
+    },
+    'bs': {
+      above: 4,
+      below: 10
+    },
+    'bss': {
+      above: 4,
+      below: 10
     }
   };
 
   // ## Prototype Methods
   Vex.Inherit(KeySignature, Vex.Flow.StaveModifier, {
     // Create a new Key Signature based on a `key_spec`
-    init: function(keySpec, cancelKeySpec) {
+    init: function(keySpec, cancelKeySpec, alterKeySpec) {
       KeySignature.superclass.init();
 
-      this.setKeySig(keySpec, cancelKeySpec);
+      this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
       this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
       this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
       this.glyphs = [];
@@ -56,7 +100,9 @@ Vex.Flow.KeySignature = (function() {
       if (acc.type === "n" && next) {
         var above = next.line >= acc.line;
         var space = KeySignature.accidentalSpacing[next.type];
-        extra_width = above ? space.above : space.below;
+        if (space) {
+          extra_width = above ? space.above : space.below;
+        }
       }
 
       var glyph_width = glyph_data.width + extra_width;
@@ -181,12 +227,32 @@ Vex.Flow.KeySignature = (function() {
       return this.width;
     },
 
-    setKeySig: function(keySpec, cancelKeySpec) {
+    setKeySig: function(keySpec, cancelKeySpec, alterKeySpec) {
       this.formatted = false;
       this.keySpec = keySpec;
       this.cancelKeySpec = cancelKeySpec;
+      this.alterKeySpec = alterKeySpec;
 
       return this;
+    },
+
+    // Alter the accidentals of a key spec one by one.
+    // Each alteration is a new accidental that replaces the
+    // original accidental (or the canceled one).
+    alterKey: function(alterKeySpec) {
+      this.formatted = false;
+      this.alterKeySpec = alterKeySpec;
+
+      return this;
+    },
+
+    convertToAlterAccList: function(alterKeySpec) {
+      var max = Math.min(alterKeySpec.length, this.accList.length);
+      for (var i = 0; i < max; ++i) {
+        if (alterKeySpec[i]) {
+          this.accList[i].type = alterKeySpec[i];
+        }
+      }
     },
 
     format: function() {
@@ -195,12 +261,16 @@ Vex.Flow.KeySignature = (function() {
       this.width = 0;
       this.glyphs = [];
       this.accList = Vex.Flow.keySignature(this.keySpec);
-      if (this.cancelKeySpec !== undefined) {
+      if (this.cancelKeySpec) {
         this.convertToCancelAccList(this.cancelKeySpec);
+      }
+      var firstAccidentalType = this.accList.length > 0 ? this.accList[0].type : null;
+      if (this.alterKeySpec) {
+        this.convertToAlterAccList(this.alterKeySpec);
       }
 
       if (this.accList.length > 0) {
-        this.convertAccLines(this.stave.clef, this.accList[0].type);
+        this.convertAccLines(this.stave.clef, firstAccidentalType);
         for (var i = 0; i < this.accList.length; ++i) {
           this.convertToGlyph(this.accList[i], this.accList[i+1]);
         }
