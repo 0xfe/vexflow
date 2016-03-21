@@ -3,7 +3,6 @@
 //
 // The tickable interface. Tickables are things that sit on a score and
 // have a duration, i.e., they occupy space in the musical rendering dimension.
-
 /** @constructor */
 Vex.Flow.Tickable = (function() {
   function Tickable() {
@@ -24,6 +23,7 @@ Vex.Flow.Tickable = (function() {
       this.preFormatted = false;
       this.postFormatted = false;
       this.tuplet = null;
+      this.tupletStack = [];
 
       // For interactivity
       this.id = null;
@@ -73,24 +73,52 @@ Vex.Flow.Tickable = (function() {
     setVoice: function(voice) { this.voice = voice; },
 
     getTuplet: function() { return this.tuplet; },
-    setTuplet: function(tuplet) {
-      // Detach from previous tuplet
-      var noteCount, beatsOccupied;
 
-      if (this.tuplet) {
-        noteCount = this.tuplet.getNoteCount();
-        beatsOccupied = this.tuplet.getBeatsOccupied();
+    /*
+     * resetTuplet
+     * @param tuplet -- the specific tuplet to reset
+     *   if this is not provided, all tuplets are reset.
+     * @returns this
+     *
+     * Removes any prior tuplets from the tick calculation and
+     * resets the intrinsic tick value to 
+     */
+    resetTuplet: function(tuplet) {
+      var noteCount, notesOccupied;
+      if(tuplet){
+        var i = this.tupletStack.indexOf(tuplet);
+        if(i !== -1){
+          this.tupletStack.splice(i, 1);
+          noteCount = tuplet.getNoteCount();
+          notesOccupied = tuplet.getNotesOccupied();
 
-        // Revert old multiplier
-        this.applyTickMultiplier(noteCount, beatsOccupied);
+          // Revert old multiplier by inverting numerator & denom.:
+          this.applyTickMultiplier(noteCount, notesOccupied);        
+        }
+        return this;
       }
 
-      // Attach to new tuplet
-      if (tuplet) {
+      while(this.tupletStack.length){
+        tuplet = this.tupletStack.pop();
         noteCount = tuplet.getNoteCount();
-        beatsOccupied = tuplet.getBeatsOccupied();
+        notesOccupied = tuplet.getNotesOccupied();
 
-        this.applyTickMultiplier(beatsOccupied, noteCount);
+        // Revert old multiplier by inverting numerator & denom.:
+        this.applyTickMultiplier(noteCount, notesOccupied);        
+      }
+      return this;
+    },
+
+    setTuplet: function(tuplet) {
+      // Attach to new tuplet
+
+      if (tuplet) {
+        this.tupletStack.push(tuplet);
+
+        var noteCount = tuplet.getNoteCount();
+        var notesOccupied = tuplet.getNotesOccupied();
+
+        this.applyTickMultiplier(notesOccupied, noteCount);
       }
 
       this.tuplet = tuplet;

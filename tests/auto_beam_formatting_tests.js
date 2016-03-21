@@ -910,7 +910,7 @@ VF.Test.AutoBeamFormatting = (function() {
         ];
 
       var triplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var quintuplet = new VF.Tuplet(notes.slice(5));
+      var quintuplet = new VF.Tuplet(notes.slice(5), { ratioed: false });
 
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.setStrict(false);
