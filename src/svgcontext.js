@@ -12,23 +12,6 @@ Vex.Flow.SVGContext = (function() {
     if (arguments.length > 0) this.init(element);
   }
 
-  // The measureTextCache is used in Javascript runtimes where
-  // there is no proper DOM support for SVG bounding boxes. This
-  // is currently only useful in the NodeJS visual regression tests.
-  SVGContext.measureTextCache = {};
-
-  // If enabled, will start collecting and indexing getBBox data by
-  // font name, size, weight, and style. This should be disabled by
-  // default (or you will find yourself slowly leaking RAM.)
-  SVGContext.collectMeasurements = false;
-
-  // If enabled, will warn if there are new getBBox requests that are
-  // not in the cache. This is enabled in the VexFlow tests, and if you
-  // see a warning on the console, you will need to enable collectMeasurements
-  // above, then update measureTextCache with the new values. See
-  // tests/measure_text_cache.js for instructions on how to do this.
-  SVGContext.validateMeasurement = false;
-
   SVGContext.addPrefix = Vex.Prefix;
 
   SVGContext.prototype = {
@@ -555,44 +538,22 @@ Vex.Flow.SVGContext = (function() {
 
     // ## Text Methods:
     measureText: function(text) {
-      var index = text + this.attributes["font-style"] + this.attributes["font-family"] +
-                  this.attributes["font-weight"] + this.attributes["font-size"];
-
       var txt = this.create("text");
-      if (typeof(txt.getBBox) === "function") {
-        txt.textContent = text;
-        this.applyAttributes(txt, this.attributes);
+      if (typeof(txt.getBBox) !== "function")
+        return { x: 0, y: 0, width: 0, height: 0 };
 
-        // Temporarily add it to the document for measurement.
-        this.svg.appendChild(txt);
+      txt.textContent = text;
+      this.applyAttributes(txt, this.attributes);
 
-        var bbox = txt.getBBox();
-        if( this.ie &&
-            text !== "" &&
-            this.attributes["font-style"] == "italic") bbox = this.ieMeasureTextFix(bbox, text);
-        this.svg.removeChild(txt);
+      // Temporarily add it to the document for measurement.
+      this.svg.appendChild(txt);
 
-        // For runtimes that do not have full support of bounding boxes, collect
-        // some data which can be used later to extrapolate them.
-        if (SVGContext.collectMeasurements) {
-          SVGContext.measureTextCache[index] = {
-            x: bbox.x,
-            y: bbox.y,
-            width: bbox.width,
-            height: bbox.height
-          };
-        }
-        if (SVGContext.validateMeasurements) {
-          if (!(index in SVGContext.measureTextCache)) {
-            Vex.W("measureTextCache is stale. Please update tests/measure_text_cache.js: ", index);
-          }
-        }
-        return bbox;
-      } else {
-        // Inside NodeJS or other runtimes that don't support getBBox. This
-        // is currently only useful for the NodeJS visual regression tests.
-        return SVGContext.measureTextCache[index];
-      }
+      var bbox = txt.getBBox();
+      if (this.ie && text !== "" && this.attributes["font-style"] == "italic")
+        bbox = this.ieMeasureTextFix(bbox, text);
+
+      this.svg.removeChild(txt);
+      return bbox;
     },
 
     ieMeasureTextFix: function(bbox, text) {

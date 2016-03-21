@@ -86,7 +86,7 @@ module.exports = function(grunt) {
 
   var TEST_SOURCES = [
     "tests/vexflow_test_helpers.js", "tests/mocks.js",
-    "tests/measure_text_cache.js", "tests/*_tests.js", "tests/run.js"];
+    "tests/*_tests.js", "tests/run.js"];
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
