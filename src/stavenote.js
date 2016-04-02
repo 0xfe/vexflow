@@ -200,7 +200,7 @@ Vex.Flow.StaveNote = (function() {
     }
 
     return true;
-  }
+  };
 
   StaveNote.formatByY = function(notes, state) {
     // NOTE: this function does not support more than two voices per stave
@@ -240,9 +240,9 @@ Vex.Flow.StaveNote = (function() {
     }
 
     state.right_shift += x_shift;
-  }
+  };
 
-  StaveNote.postFormat = function(notes, context) {
+  StaveNote.postFormat = function(notes) {
     if (!notes) return false;
 
     notes.forEach(function(note) {
@@ -250,7 +250,7 @@ Vex.Flow.StaveNote = (function() {
     });
 
     return true;
-  }
+  };
 
   // ## Prototype Methods
   //
@@ -449,6 +449,16 @@ Vex.Flow.StaveNote = (function() {
       }
 
       // Sort the notes from lowest line to highest line
+      var sorted = true;
+      var lastLine = -1000;
+      var that = this;
+      this.keyProps.forEach(function(key) {
+        if (key.line < lastLine) {
+          Vex.W("Unsorted keys in note will be sorted. " +
+            "See https://github.com/0xfe/vexflow/issues/104 for details.");
+        }
+        lastLine = key.line;
+      });
       this.keyProps.sort(function(a, b) { return a.line - b.line; });
     },
 
@@ -511,14 +521,13 @@ Vex.Flow.StaveNote = (function() {
       var result_line = this.keyProps[0].line;
 
       // No precondition assumed for sortedness of keyProps array
-      for(var i=0; i<this.keyProps.length; i++){
+      for (var i=0; i<this.keyProps.length; i++) {
         var this_line = this.keyProps[i].line;
-        if(is_top_note)
-          if(this_line > result_line)
-                result_line = this_line;
-        else
-          if(this_line < result_line)
-            result_line = this_line;
+        if (is_top_note) {
+          if (this_line > result_line) result_line = this_line;
+        } else {
+          if (this_line < result_line) result_line = this_line;
+        }
       }
 
       return result_line;
@@ -560,8 +569,8 @@ Vex.Flow.StaveNote = (function() {
       this.setYs(ys);
 
       var bounds = this.getNoteHeadBounds();
-      if(!this.beam){
-	this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
+	    if (this.hasStem()) {
+        this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
       }
 
       return this;
@@ -636,6 +645,15 @@ Vex.Flow.StaveNote = (function() {
       }
 
       return { x: this.getAbsoluteX() + x, y: this.ys[index] };
+    },
+
+    // Sets the style of the complete StaveNote, including all keys
+    // and the stem.
+    setStyle: function(style) {
+      this.note_heads.forEach(function(notehead) {
+        notehead.setStyle(style);
+      }, this);
+      this.stem.setStyle(style);
     },
 
     // Sets the notehead at `index` to the provided coloring `style`.
@@ -730,11 +748,14 @@ Vex.Flow.StaveNote = (function() {
     },
 
     // Calculates and sets the extra pixels to the left or right
-    // if the note is displaced
+    // if the note is displaced.
     calcExtraPx: function() {
       this.setExtraLeftPx((this.displaced && this.stem_direction == -1) ?
           this.glyph.head_width : 0);
-      this.setExtraRightPx((this.displaced && this.stem_direction == 1) ?
+
+      // For upstems with flags, the extra space is unnecessary, since it's taken
+      // up by the flag.
+      this.setExtraRightPx((!this.hasFlag() && this.displaced && this.stem_direction == 1) ?
           this.glyph.head_width : 0);
     },
 
@@ -809,8 +830,8 @@ Vex.Flow.StaveNote = (function() {
       var bounds = this.getNoteHeadBounds();
       var highest_line = bounds.highest_line;
       var lowest_line = bounds.lowest_line;
-      var head_x = this.note_heads[0].getAbsoluteX();      
-      
+      var head_x = this.note_heads[0].getAbsoluteX();
+
       var that = this;
       function stroke(y) {
         if (that.use_default_head_x === true)  {
@@ -838,6 +859,7 @@ Vex.Flow.StaveNote = (function() {
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
       var ctx = this.context;
+      ctx.openGroup("modifiers");
       for (var i = 0; i < this.modifiers.length; i++) {
         var mod = this.modifiers[i];
         var note_head = this.note_heads[mod.getIndex()];
@@ -852,6 +874,7 @@ Vex.Flow.StaveNote = (function() {
             ctx.restore();
         }
       }
+      ctx.closeGroup();
     },
 
     // Draw the flag for the note
@@ -884,15 +907,20 @@ Vex.Flow.StaveNote = (function() {
         }
 
         // Draw the Flag
+        this.context.openGroup("flag", null, {pointerBBox: true});
         Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
             this.render_options.glyph_font_scale, flag_code);
+        this.context.closeGroup();
       }
     },
 
     // Draw the NoteHeads
     drawNoteHeads: function(){
+      var that = this;
       this.note_heads.forEach(function(note_head) {
-        note_head.setContext(this.context).draw();
+        that.context.openGroup("notehead", null, {pointerBBox: true});
+        note_head.setContext(that.context).draw();
+        that.context.closeGroup();
       }, this);
     },
 
@@ -905,7 +933,9 @@ Vex.Flow.StaveNote = (function() {
         this.setStem(new Stem(stem_struct));
       }
 
+      this.context.openGroup("stem", null, {pointerBBox: true});
       this.stem.setContext(this.context).draw();
+      this.context.closeGroup();
     },
 
     // Draws all the `StaveNote` parts. This is the main drawing method.
@@ -934,10 +964,15 @@ Vex.Flow.StaveNote = (function() {
 
       // Draw each part of the note
       this.drawLedgerLines();
-      if (render_stem) this.drawStem();
-      this.drawNoteHeads();
-      this.drawFlag();
+
+      this.elem = this.context.openGroup("stavenote", this.id);
+      this.context.openGroup("note", null, {pointerBBox: true});
+        if (render_stem) this.drawStem();
+        this.drawNoteHeads();
+        this.drawFlag();
+      this.context.closeGroup();
       this.drawModifiers();
+      this.context.closeGroup();
     }
   });
 

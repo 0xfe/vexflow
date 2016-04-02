@@ -25,13 +25,18 @@ Vex.Flow.CanvasContext = (function() {
           height: CanvasContext.HEIGHT
         };
       } else {
-        this.canvas = this.context.canvas;
+        this.canvas = context.canvas;
       }
     },
 
     clear: function() {
       this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
+
+    // Containers not implemented
+    openGroup: function(cls, id, attrs) {},
+    closeGroup: function() {},
+    add: function(elem) {},
 
     setFont: function(family, size, weight) {
       this.vexFlowCanvasContext.font = (weight || "") + " " + size + "pt " + family;

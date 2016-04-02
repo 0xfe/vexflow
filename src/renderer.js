@@ -30,15 +30,18 @@ Vex.Flow.Renderer = (function() {
   // that does not allow modifiying canvas objects. There is a small
   // performance degradation due to the extra indirection.
   Renderer.USE_CANVAS_PROXY = false;
+  Renderer.lastContext = null;
 
   Renderer.buildContext = function(sel,
       backend, width, height, background) {
+
     var renderer = new Renderer(sel, backend);
     if (width && height) { renderer.resize(width, height); }
 
-    if (!background) background = "#eed";
+    if (!background) background = "#FFF";
     var ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
+    Renderer.lastContext = ctx;
     return ctx;
   };
 
@@ -52,6 +55,12 @@ Vex.Flow.Renderer = (function() {
         width, height, background);
   };
 
+  Renderer.getSVGContext = function(sel, width, height, background) {
+    return Renderer.buildContext(sel, Renderer.Backends.SVG,
+        width, height, background);
+  };
+
+
   Renderer.bolsterCanvasContext = function(ctx) {
     if (Renderer.USE_CANVAS_PROXY) {
       return new Vex.Flow.CanvasContext(ctx);
@@ -59,7 +68,7 @@ Vex.Flow.Renderer = (function() {
 
     var methods = ["clear", "setFont", "setRawFont", "setFillStyle", "setBackgroundFillStyle",
                    "setStrokeStyle", "setShadowColor", "setShadowBlur", "setLineWidth",
-                   "setLineCap", "setLineDash"];
+                   "setLineCap", "setLineDash", "openGroup", "closeGroup", "getGroup"];
     ctx.vexFlowCanvasContext = ctx;
 
     for (var i in methods) {
@@ -123,8 +132,13 @@ Vex.Flow.Renderer = (function() {
           "Can't get canvas context from element: " + sel);
         this.ctx = Renderer.bolsterCanvasContext(
             this.element.getContext('2d'));
+
       } else if (this.backend == Renderer.Backends.RAPHAEL) {
         this.ctx = new Vex.Flow.RaphaelContext(this.element);
+
+      } else if (this.backend == Renderer.Backends.SVG) {
+        this.ctx = new Vex.Flow.SVGContext(this.element);
+
       } else {
         throw new Vex.RERR("InvalidBackend",
           "No support for backend: " + this.backend);

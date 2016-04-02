@@ -88,7 +88,7 @@ Vex.Flow.FretHandFinger = (function() {
 
     state.left_shift += x_widthL;
     state.right_shift += x_widthR;
-  }
+  };
 
   Vex.Inherit(FretHandFinger, Modifier, {
     init: function(number) {

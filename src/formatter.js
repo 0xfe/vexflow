@@ -539,6 +539,8 @@ Vex.Flow.Formatter = (function() {
 
           // Move center aligned tickables to middle
           var centeredTickables = context.getCenterAlignedTickables();
+
+          /*jshint -W083 */
           centeredTickables.forEach(function(tickable) {
             tickable.center_x_shift = center_x - context.getX();
           });
@@ -547,7 +549,7 @@ Vex.Flow.Formatter = (function() {
     },
 
     // This is the top-level call for all formatting logic completed
-    // after `x` *and* `y` values have been computed for the notes 
+    // after `x` *and* `y` values have been computed for the notes
     // in the voices.
     postFormat: function() {
       // Postformat modifier contexts

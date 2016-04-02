@@ -76,6 +76,30 @@ Vex.Flow.Ornament = (function() {
       shift_y_upper: -4,
       shift_y_lower: -2,
       height: 20
+    },
+    "bs": {
+      shift_x: 0,
+      shift_y_upper: 0,
+      shift_y_lower: 4,
+      height: 17
+    },
+    "bss": {
+      shift_x: 0,
+      shift_y_upper: 0,
+      shift_y_lower: 4,
+      height: 17
+    },
+    "++-": {
+      shift_x: -2,
+      shift_y_upper: -6,
+      shift_y_lower: -3,
+      height: 22
+    },
+    "+-": {
+      shift_x: 1,
+      shift_y_upper: -4,
+      shift_y_lower: -2,
+      height: 20
     }
   };
 
@@ -89,29 +113,29 @@ Vex.Flow.Ornament = (function() {
   Ornament.format = function(ornaments, state) {
    if (!ornaments || ornaments.length === 0) return false;
 
-    var text_line = state.text_line;
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < ornaments.length; ++i) {
       var ornament = ornaments[i];
-      ornament.setTextLine(text_line);
-      width = ornament.getWidth() > max_width ?
-        ornament.getWidth() : max_width;
+      var increment = 1;
+      width = Math.max(ornament.getWidth(), width);
 
       var type = Vex.Flow.ornamentCodes(ornament.type);
-      if(type.between_lines)
-        text_line += 1;
-      else
-        text_line += 1.5;
+
+      if (!type.between_lines) increment += 1.5;
+
+      if (ornament.getPosition() === Modifier.Position.ABOVE) {
+        ornament.setTextLine(state.top_text_line);
+        state.top_text_line += increment;
+      } else {
+        ornament.setTextLine(state.text_line);
+        state.text_line += increment;
+      }
     }
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
-    state.text_line = text_line;
     return true;
-  }
+  };
 
   // ## Prototype Methods
   Vex.Inherit(Ornament, Modifier, {

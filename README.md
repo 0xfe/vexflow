@@ -15,6 +15,14 @@ learn how to use VexFlow.
 If you're not a developer and just want to write and share your music, go to
 [My VexFlow](http://my.vexflow.com).
 
+## Quick Start
+
+Install via NPM:
+
+    $ npm install vexflow
+
+Include `releases/vexflow-min.js` into your HTML or JS code. It works as a standalone script in a `script` tag, or as a CommonJS or AMD dependency.
+
 ## Resources
 
 To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).

@@ -92,15 +92,30 @@ Vex.Flow.Stem = (function() {
         var stem_top = ys[i] + (stem_height * -this.stem_direction);
 
         if (this.stem_direction == Stem.DOWN) {
-          top_pixel = (top_pixel > stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel < ys[i]) ? base_pixel : ys[i];
+          top_pixel = Math.max(top_pixel, stem_top);
+          base_pixel = Math.min(base_pixel, ys[i]);
         } else {
-          top_pixel = (top_pixel < stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel > ys[i]) ? base_pixel : ys[i];
+          top_pixel = Math.min(top_pixel, stem_top);
+          base_pixel = Math.max(base_pixel, ys[i]);
         }
       }
 
       return { topY: top_pixel, baseY: base_pixel };
+    },
+
+    // set the draw style of a stem:
+    setStyle: function(style) { this.style = style; return this; },
+    getStyle: function() { return this.style; },
+
+    // Apply current style to Canvas `context`
+    applyStyle: function(context) {
+      var style = this.getStyle();
+      if(style) {
+        if (style.shadowColor) context.setShadowColor(style.shadowColor);
+        if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
+        if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
+      }
+      return this;
     },
 
     // Render the stem onto the canvas
@@ -130,6 +145,7 @@ Vex.Flow.Stem = (function() {
 
       // Draw the stem
       ctx.save();
+      this.applyStyle(ctx);
       ctx.beginPath();
       ctx.setLineWidth(Stem.WIDTH);
       ctx.moveTo(stem_x, stem_y);
