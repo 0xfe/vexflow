@@ -50,6 +50,16 @@ Vex.Flow.Voice = (function() {
       this.voiceGroup = null;
     },
 
+    sayHi: function() { return "hi"; },
+
+    deleteNote: function(index) {
+      var oldTickable = this.tickables[index];
+      var duration = oldTickable.getDuration() + "r";
+      var newTickable = new Vex.Flow.StaveNote({duration: duration, keys: ['b/4']});
+      console.log('tickable >>>>', newTickable.getNoteType(), oldTickable.getNoteType());
+      console.log("here >>>>", index);
+    },
+
     // Get the total ticks in the voice
     getTotalTicks: function() { return this.totalTicks; },
 

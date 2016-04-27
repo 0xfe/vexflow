@@ -88,6 +88,8 @@ VF.Test.Voice = (function() {
       voice.draw(ctx, stave);
       voice.getBoundingBox().draw(ctx);
 
+      voice.deleteNote(0);
+
       try {
         voice.addTickable(
           new VF.StaveNote({ keys: ["c/4"], duration: "h" })
