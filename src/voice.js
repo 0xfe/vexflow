@@ -50,7 +50,7 @@ Vex.Flow.Voice = (function() {
       this.voiceGroup = null;
     },
 
-    // Inserts rest of equal duration at index
+    // Inserts rest of equal duration at provided index
     deleteNote: function(index) {
       var duration = this.tickables[index].duration + "r";
       this.tickables[index] = new Vex.Flow.StaveNote({duration: duration, keys: ['b/4']});
