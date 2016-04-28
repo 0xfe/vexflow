@@ -88,6 +88,11 @@ VF.Test.Voice = (function() {
       voice.draw(ctx, stave);
       voice.getBoundingBox().draw(ctx);
 
+      var deleted = voice.tickables[0];
+      voice.deleteNote(0);
+      equal(voice.tickables[0].duration, deleted.duration, "Deleted note has same duration");
+      equal(voice.tickables[0].getNoteType(), "r", "Rest is inserted when note is deleted");
+
       try {
         voice.addTickable(
           new VF.StaveNote({ keys: ["c/4"], duration: "h" })
