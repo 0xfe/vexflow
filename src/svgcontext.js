@@ -205,9 +205,15 @@ Vex.Flow.SVGContext = (function() {
       this.lineWidth = width;
     },
 
-    setLineDash: function(lineDash) {
-      this.attributes["stroke-linedash"] = lineDash;
-      return this;
+    // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
+    setLineDash: function(lineDash) { 
+      if( Object.prototype.toString.call( lineDash ) === '[object Array]' ) {
+        lineDash = lineDash.join(", ");
+        this.attributes["stroke-dasharray"] = lineDash;
+        return this; 
+      } else {
+        throw new uTheory.RERR("lineDash must be an array of integers.");
+      }
     },
 
     setLineCap: function(lineCap) {
@@ -611,7 +617,8 @@ Vex.Flow.SVGContext = (function() {
           "font-size": this.attributes["font-size"],
           fill: this.attributes.fill,
           stroke: this.attributes.stroke,
-          "stroke-width": this.attributes["stroke-width"]
+          "stroke-width": this.attributes["stroke-width"],
+          "stroke-dasharray": this.attributes["stroke-dasharray"]
         },
         shadow_attributes: {
           width: this.shadow_attributes.width,
@@ -637,6 +644,8 @@ Vex.Flow.SVGContext = (function() {
       this.attributes.fill = state.attributes.fill;
       this.attributes.stroke = state.attributes.stroke;
       this.attributes["stroke-width"] = state.attributes["stroke-width"];
+      this.attributes["stroke-dasharray"] = state.attributes["stroke-dasharray"];
+
       this.shadow_attributes.width = state.shadow_attributes.width;
       this.shadow_attributes.color = state.shadow_attributes.color;
       return this;
