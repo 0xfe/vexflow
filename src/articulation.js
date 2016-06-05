@@ -25,27 +25,27 @@ Vex.Flow.Articulation = (function() {
   Articulation.format = function(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
-    var text_line = state.text_line;
-    var max_width = 0;
-
-    // Format Articulations
-    var width;
+    var width = 0;
     for (var i = 0; i < articulations.length; ++i) {
+      var increment = 1;
       var articulation = articulations[i];
-      articulation.setTextLine(text_line);
-      width = articulation.getWidth() > max_width ?
-        articulation.getWidth() : max_width;
+      width = Math.max(articulation.getWidth(), width);
 
       var type = Vex.Flow.articulationCodes(articulation.type);
-      if(type.between_lines)
-        text_line += 1;
-      else
-        text_line += 1.5;
+
+      if (!type.between_lines) increment += 1.5;
+
+      if (articulation.getPosition() === Modifier.Position.ABOVE) {
+        articulation.setTextLine(state.top_text_line);
+        state.top_text_line += increment;
+      } else {
+        articulation.setTextLine(state.text_line);
+        state.text_line += increment;
+      }
     }
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
-    state.text_line = text_line;
     return true;
   };
 
@@ -153,18 +153,20 @@ Vex.Flow.Articulation = (function() {
         shiftY = this.articulation.shift_up;
         glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
 
-        if (this.articulation.between_lines)
+        if (this.articulation.between_lines) {
           glyph_y = glyph_y_between_lines;
-        else
+        } else {
           glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
+        }
       } else {
         shiftY = this.articulation.shift_down - 10;
 
         glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
-        if (this.articulation.between_lines)
+        if (this.articulation.between_lines) {
           glyph_y = glyph_y_between_lines;
-        else
+        } else {
           glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
+        }
       }
 
       var glyph_x = start.x + this.articulation.shift_right;

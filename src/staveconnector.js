@@ -23,7 +23,8 @@ Vex.Flow.StaveConnector = (function() {
     BRACKET: 4,
     BOLD_DOUBLE_LEFT: 5,
     BOLD_DOUBLE_RIGHT: 6,
-    THIN_DOUBLE: 7
+    THIN_DOUBLE: 7,
+    NONE: 8
   };
 
   StaveConnector.prototype = {
@@ -33,7 +34,15 @@ Vex.Flow.StaveConnector = (function() {
       this.top_stave = top_stave;
       this.bottom_stave = bottom_stave;
       this.type = StaveConnector.type.DOUBLE;
-      this.x_shift = 0; // Mainly used to offset Bold Double Left to align with offset Repeat Begin bars
+      this.font = {
+        family: "times",
+        size: 16,
+        weight: "normal"
+      };
+      // 1. Offset Bold Double Left to align with offset Repeat Begin bars
+      // 2. Offset BRACE type not to overlap with another StaveConnector
+      this.x_shift = 0;
+      this.texts = [];
     },
 
     setContext: function(ctx) {
@@ -43,24 +52,16 @@ Vex.Flow.StaveConnector = (function() {
 
     setType: function(type) {
       if (type >= StaveConnector.type.SINGLE_RIGHT &&
-          type <= StaveConnector.type.THIN_DOUBLE)
+          type <= StaveConnector.type.NONE)
         this.type = type;
       return this;
     },
 
-    setText: function(text, text_options) {
-      this.text = text;
-      this.text_options = {
-        shift_x: 0,
-        shift_y: 0
-      };
-      Vex.Merge(this.text_options, text_options);
-
-      this.font = {
-        family: "times",
-        size: 16,
-        weight: "normal"
-      };
+    setText: function(text, options) {
+      this.texts.push({
+        content: text,
+        options: Vex.Merge({ shift_x: 0, shift_y: 0 }, options)
+      });
       return this;
     },
 
@@ -113,7 +114,7 @@ Vex.Flow.StaveConnector = (function() {
         case StaveConnector.type.BRACE:
           width = 12;
           // May need additional code to draw brace
-          var x1 = this.top_stave.getX() - 2;
+          var x1 = this.top_stave.getX() - 2 + this.x_shift;
           var y1 = topY;
           var x3 = x1;
           var y3 = botY;
@@ -161,11 +162,14 @@ Vex.Flow.StaveConnector = (function() {
         case StaveConnector.type.THIN_DOUBLE:
           width = 1;
           break;
+        case StaveConnector.type.NONE:
+          break;
       }
 
       if (this.type !== StaveConnector.type.BRACE &&
         this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
-        this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
+        this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT &&
+        this.type !== StaveConnector.type.NONE) {
         this.ctx.fillRect(topX , topY, width, attachment_height);
       }
 
@@ -174,20 +178,20 @@ Vex.Flow.StaveConnector = (function() {
         this.ctx.fillRect(topX - 3, topY, width, attachment_height);
       }
 
+      this.ctx.save();
+      this.ctx.lineWidth = 2;
+      this.ctx.setFont(this.font.family, this.font.size, this.font.weight);
       // Add stave connector text
-      if (this.text !== undefined) {
-        this.ctx.save();
-        this.ctx.lineWidth = 2;
-        this.ctx.setFont(this.font.family, this.font.size, this.font.weight);
-        var text_width = this.ctx.measureText("" + this.text).width;
-
-        var x = this.top_stave.getX() - text_width - 24 + this.text_options.shift_x;
+      for (var i = 0; i < this.texts.length; i++) {
+        var text = this.texts[i];
+        var text_width = this.ctx.measureText("" + text.content).width;
+        var x = this.top_stave.getX() - text_width - 24 + text.options.shift_x;
         var y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 +
-          this.text_options.shift_y;
+          text.options.shift_y;
 
-        this.ctx.fillText("" + this.text, x, y + 4);
-        this.ctx.restore();
+        this.ctx.fillText("" + text.content, x, y + 4);
       }
+      this.ctx.restore();
     }
   };
 

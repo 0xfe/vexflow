@@ -35,7 +35,7 @@ Vex.Flow.clefProperties.values = {
 /*
   Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
 
-  The last argument, params, is a struct the currently can contain one option, 
+  The last argument, params, is a struct the currently can contain one option,
   octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
 */
 Vex.Flow.keyProperties = function(key, clef, params) {
@@ -426,6 +426,30 @@ Vex.Flow.accidentalCodes.accidentals = {
     width: 8,
     shift_right: 0,
     shift_down: 0
+  },
+  "+-": {
+    code: "v8d",
+    width: 7,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "++-": {
+    code: "v7a",
+    width: 10,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "bs": {
+    code: "vb7",
+    width: 10,
+    shift_right: 0,
+    shift_down: 0
+  },
+  "bss": {
+    code: "v39",
+    width: 10,
+    shift_right: 0,
+    shift_down: 0
   }
 };
 
@@ -707,7 +731,7 @@ Vex.Flow.parseNoteData = function(noteData) {
 // If the input isn't an alias, simply return the input.
 //
 // example: 'q' -> '4', '8' -> '8'
-function sanitizeDuration(duration) {
+Vex.Flow.sanitizeDuration = function(duration) {
   var alias = Vex.Flow.durationAliases[duration];
   if (alias !== undefined) {
     duration = alias;
@@ -719,11 +743,11 @@ function sanitizeDuration(duration) {
   }
 
   return duration;
-}
+};
 
 // Convert the `duration` to an fraction
 Vex.Flow.durationToFraction = function(duration) {
-  return new Vex.Flow.Fraction().parse(sanitizeDuration(duration));
+  return new Vex.Flow.Fraction().parse(Vex.Flow.sanitizeDuration(duration));
 };
 
 // Convert the `duration` to an number
@@ -733,7 +757,7 @@ Vex.Flow.durationToNumber = function(duration) {
 
 // Convert the `duration` to total ticks
 Vex.Flow.durationToTicks = function(duration) {
-  duration = sanitizeDuration(duration);
+  duration = Vex.Flow.sanitizeDuration(duration);
 
   var ticks = Vex.Flow.durationToTicks.durations[duration];
   if (ticks === undefined) {
@@ -769,10 +793,7 @@ Vex.Flow.durationAliases = {
 };
 
 Vex.Flow.durationToGlyph = function(duration, type) {
-  var alias = Vex.Flow.durationAliases[duration];
-  if (alias !== undefined) {
-    duration = alias;
-  }
+  duration = Vex.Flow.sanitizeDuration(duration);
 
   var code = Vex.Flow.durationToGlyph.duration_codes[duration];
   if (code === undefined) {

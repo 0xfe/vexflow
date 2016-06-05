@@ -18,7 +18,8 @@ Vex.Flow.ModifierContext = (function() {
     this.state = {
       left_shift: 0,
       right_shift: 0,
-      text_line: 0
+      text_line: 0,
+      top_text_line: 0
     };
 
     // Add new modifiers to this array. The ordering is significant -- lower

@@ -251,6 +251,7 @@ Vex.Flow.Accidental = (function(){
       column_x_offsets[i] = column_widths[i] + column_x_offsets[i-1];
     }
 
+    var total_shift = column_x_offsets[column_x_offsets.length-1];
     // Set the x_shift for each accidental according to column offsets:
     var acc_count = 0;
     line_list.forEach(function(line) {
@@ -268,7 +269,7 @@ Vex.Flow.Accidental = (function(){
     });
 
     // update the overall layout with the full width of the accidental shapes:
-    state.left_shift += column_x_offsets[column_x_offsets.length-1];
+    state.left_shift += total_shift;
   };
 
   // Helper function to determine whether two lines of accidentals collide vertically
@@ -360,7 +361,7 @@ Vex.Flow.Accidental = (function(){
 
       // Figure out the start `x` and `y` coordinates for this note and index.
       var start = this.note.getModifierStartXY(this.position, this.index);
-      var acc_x = (start.x + this.x_shift) - this.width;
+      var acc_x = ((start.x + this.x_shift) - this.width);
       var acc_y = start.y + this.y_shift;
       L("Rendering: ", this.type, acc_x, acc_y);
 

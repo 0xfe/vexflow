@@ -1,0 +1,46 @@
+body {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: black;
+  margin: 0px;
+  height: 80%;
+}
+
+a.button {
+  color: green;
+  background: #bfb;
+  text-decoration: none;
+  padding: 5px;
+  margin: 2px;
+  border: 5px solid #aea;
+}
+
+div#error {
+  width: 60%;
+  padding: 10px;
+  color: red;
+  background: #faa;
+  border: 15px solid #d99;
+}
+
+div.testcanvas {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  color: #554;
+}
+
+div.testcanvas .vex-tabdiv {
+  background: white;
+}
+
+div.testcanvas .name {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  color: #447;
+}
+
+p.vf-footer {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}

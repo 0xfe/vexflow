@@ -3,7 +3,6 @@
 //
 // The tickable interface. Tickables are things that sit on a score and
 // have a duration, i.e., they occupy space in the musical rendering dimension.
-
 /** @constructor */
 Vex.Flow.Tickable = (function() {
   function Tickable() {
@@ -24,6 +23,11 @@ Vex.Flow.Tickable = (function() {
       this.preFormatted = false;
       this.postFormatted = false;
       this.tuplet = null;
+      this.tupletStack = [];
+
+      // For interactivity
+      this.id = null;
+      this.elem = null;
 
       this.align_center = false;
       this.center_x_shift = 0; // Shift from tick context if center aligned
@@ -35,6 +39,12 @@ Vex.Flow.Tickable = (function() {
     },
 
     setContext: function(context) { this.context = context; },
+
+    // Set the DOM ID of the element. Must be called before draw(). TODO: Update
+    // ID of element if has already been rendered.
+    setId: function(id) { this.id = id; },
+    getId: function() { return this.id; },
+    getElem: function() { return this.elem; },
     getBoundingBox: function() { return null; },
     getTicks: function() { return this.ticks; },
     shouldIgnoreTicks: function() { return this.ignore_ticks; },
@@ -63,24 +73,52 @@ Vex.Flow.Tickable = (function() {
     setVoice: function(voice) { this.voice = voice; },
 
     getTuplet: function() { return this.tuplet; },
-    setTuplet: function(tuplet) {
-      // Detach from previous tuplet
-      var noteCount, beatsOccupied;
 
-      if (this.tuplet) {
-        noteCount = this.tuplet.getNoteCount();
-        beatsOccupied = this.tuplet.getBeatsOccupied();
+    /*
+     * resetTuplet
+     * @param tuplet -- the specific tuplet to reset
+     *   if this is not provided, all tuplets are reset.
+     * @returns this
+     *
+     * Removes any prior tuplets from the tick calculation and
+     * resets the intrinsic tick value to 
+     */
+    resetTuplet: function(tuplet) {
+      var noteCount, notesOccupied;
+      if(tuplet){
+        var i = this.tupletStack.indexOf(tuplet);
+        if(i !== -1){
+          this.tupletStack.splice(i, 1);
+          noteCount = tuplet.getNoteCount();
+          notesOccupied = tuplet.getNotesOccupied();
 
-        // Revert old multiplier
-        this.applyTickMultiplier(noteCount, beatsOccupied);
+          // Revert old multiplier by inverting numerator & denom.:
+          this.applyTickMultiplier(noteCount, notesOccupied);        
+        }
+        return this;
       }
 
-      // Attach to new tuplet
-      if (tuplet) {
+      while(this.tupletStack.length){
+        tuplet = this.tupletStack.pop();
         noteCount = tuplet.getNoteCount();
-        beatsOccupied = tuplet.getBeatsOccupied();
+        notesOccupied = tuplet.getNotesOccupied();
 
-        this.applyTickMultiplier(beatsOccupied, noteCount);
+        // Revert old multiplier by inverting numerator & denom.:
+        this.applyTickMultiplier(noteCount, notesOccupied);        
+      }
+      return this;
+    },
+
+    setTuplet: function(tuplet) {
+      // Attach to new tuplet
+
+      if (tuplet) {
+        this.tupletStack.push(tuplet);
+
+        var noteCount = tuplet.getNoteCount();
+        var notesOccupied = tuplet.getNotesOccupied();
+
+        this.applyTickMultiplier(notesOccupied, noteCount);
       }
 
       this.tuplet = tuplet;
@@ -116,13 +154,11 @@ Vex.Flow.Tickable = (function() {
         this.width += this.modifierContext.getWidth();
       }
     },
-
     postFormat: function() {
       if (this.postFormatted) return;
       this.postFormatted = true;
       return this;
     },
-
     getIntrinsicTicks: function() {
       return this.intrinsicTicks;
     },
@@ -130,7 +166,6 @@ Vex.Flow.Tickable = (function() {
       this.intrinsicTicks = intrinsicTicks;
       this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
     },
-
     getTickMultiplier: function() {
       return this.tickMultiplier;
     },

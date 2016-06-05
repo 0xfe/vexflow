@@ -25,36 +25,9 @@ Vex.Flow.TabStave = (function() {
       return this.getYForLine(2.5);
     },
 
+    // Deprecated
     addTabGlyph: function() {
-      var glyphScale;
-      var glyphOffset;
-
-      switch(this.options.num_lines) {
-        case 8:
-          glyphScale = 55;
-          glyphOffset = 14;
-          break;
-        case 7:
-          glyphScale = 47;
-          glyphOffset = 8;
-          break;
-        case 6:
-          glyphScale = 40;
-          glyphOffset = 1;
-          break;
-        case 5:
-          glyphScale = 30;
-          glyphOffset = -6;
-          break;
-        case 4:
-          glyphScale = 23;
-          glyphOffset = -12;
-          break;
-      }
-
-      var tabGlyph = new Vex.Flow.Glyph("v2f", glyphScale);
-      tabGlyph.y_shift = glyphOffset;
-      this.addGlyph(tabGlyph);
+      this.addClef('tab');
       return this;
     }
   });

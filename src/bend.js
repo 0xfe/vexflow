@@ -55,7 +55,8 @@ Vex.Flow.Bend = (function() {
     if (!bends || bends.length === 0) return false;
 
     var last_width = 0;
-    var text_line = state.text_line;
+    // Bends are always on top.
+    var text_line = state.top_text_line;
 
     // Format Bends
     for (var i = 0; i < bends.length; ++i) {
@@ -66,7 +67,7 @@ Vex.Flow.Bend = (function() {
     }
 
     state.right_shift += last_width;
-    state.text_line += 1;
+    state.top_text_line += 1;
     return true;
   };
 

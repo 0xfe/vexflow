@@ -21,7 +21,6 @@ Vex.Flow.StemmableNote = (function(){
       this.stem = null;
       this.stem_extension_override = null;
       this.beam = null;
-
     },
 
     // Get and set the note's `Stem`
@@ -164,11 +163,11 @@ Vex.Flow.StemmableNote = (function(){
         var stem_top = this.ys[i] + (stem_height * -this.stem_direction);
 
         if (this.stem_direction == Stem.DOWN) {
-          top_pixel = (top_pixel > stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel < this.ys[i]) ? base_pixel : this.ys[i];
+          top_pixel = Math.max(top_pixel, stem_top);
+          base_pixel = Math.min(base_pixel, this.ys[i]);
         } else {
-          top_pixel = (top_pixel < stem_top) ? top_pixel : stem_top;
-          base_pixel = (base_pixel > this.ys[i]) ? base_pixel : this.ys[i];
+          top_pixel = Math.min(top_pixel, stem_top);
+          base_pixel = Math.max(base_pixel, this.ys[i]);
         }
 
         if(this.noteType == "s" || this.noteType == 'x') {
@@ -194,6 +193,7 @@ Vex.Flow.StemmableNote = (function(){
         return this.stave.getYForTopText(text_line);
       }
     },
+
     getYForBottomText: function(text_line) {
       var extents = this.getStemExtents();
       if (this.hasStem()) {
@@ -202,6 +202,10 @@ Vex.Flow.StemmableNote = (function(){
       } else {
         return this.stave.getYForBottomText(text_line);
       }
+    },
+
+    hasFlag: function() {
+      return Vex.Flow.durationToGlyph(this.duration).flag;
     },
 
     // Post format the note
@@ -217,7 +221,7 @@ Vex.Flow.StemmableNote = (function(){
     drawStem: function(stem_struct){
       if (!this.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw without a canvas context.");
-      
+
       this.setStem(new Stem(stem_struct));
       this.stem.setContext(this.context).draw();
     }

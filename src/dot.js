@@ -10,6 +10,7 @@ Vex.Flow.Dot = (function() {
   function Dot() {
     this.init();
   }
+
   Dot.CATEGORY = "dots";
 
   var Modifier = Vex.Flow.Modifier;
@@ -80,7 +81,7 @@ Vex.Flow.Dot = (function() {
       }
 
       // convert half_shiftY to a multiplier for dots.draw()
-      dot.dot_shiftY += (-half_shiftY);
+      dot.dot_shiftY = (-half_shiftY);
       prev_dotted_space = line + half_shiftY;
 
       dot.setXShift(dot_shift);

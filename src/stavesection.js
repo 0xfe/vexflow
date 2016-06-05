@@ -11,14 +11,12 @@ Vex.Flow.StaveSection = (function() {
     if (arguments.length > 0) this.init(section, x, shift_y);
   }
 
-  var Modifier = Vex.Flow.Modifier;
-  Vex.Inherit(StaveSection, Modifier, {
+  Vex.Inherit(StaveSection, Vex.Flow.StaveModifier, {
     init: function(section, x, shift_y) {
       StaveSection.superclass.init.call(this);
 
       this.setWidth(16);
       this.section = section;
-      this.position = Modifier.Position.ABOVE;
       this.x = x;
       this.shift_x = 0;
       this.shift_y = shift_y;
