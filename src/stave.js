@@ -99,10 +99,10 @@ Vex.Flow.Stave = (function() {
       this.start_x += shift;
       this.end_x += shift;
       for(var i=0; i<this.modifiers.length; i++) {
-      	var mod = this.modifiers[i];
+        var mod = this.modifiers[i];
         if (mod.x !== undefined) {
           mod.x += shift;
-      	}
+        }
       }
       return this;
     },
@@ -113,7 +113,7 @@ Vex.Flow.Stave = (function() {
       this.end_x = this.x + width;
 
       // reset the x position of the end barline (TODO(0xfe): This makes no sense)
-      this.modifiers[1].setX(this.end_x);
+      // this.modifiers[1].setX(this.end_x);
       return this;
     },
 
