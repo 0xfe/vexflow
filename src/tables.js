@@ -739,7 +739,7 @@ Vex.Flow.sanitizeDuration = function(duration) {
 
   if (Vex.Flow.durationToTicks.durations[duration] === undefined) {
     throw new Vex.RERR('BadArguments',
-      'The provided duration is not valid');
+      'The provided duration is not valid: ' + duration);
   }
 
   return duration;

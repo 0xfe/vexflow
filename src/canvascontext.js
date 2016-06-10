@@ -1,4 +1,4 @@
-// Vex Flow
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Mohit Muthanna <mohit@muthanna.com>
 //
 // A rendering context for the Raphael backend.
