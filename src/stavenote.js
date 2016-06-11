@@ -505,9 +505,9 @@ Vex.Flow.StaveNote = (function() {
             min_y = Vex.Min(yy, min_y);
             max_y = Vex.Max(yy, max_y);
           }
-          min_y -= half_line_spacing;
-          max_y += half_line_spacing;
         }
+        min_y -= half_line_spacing;
+        max_y += half_line_spacing;
       }
 
       return new Vex.Flow.BoundingBox(x, min_y, w, max_y - min_y);
