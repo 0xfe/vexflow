@@ -209,12 +209,12 @@ Vex.Flow.SVGContext = (function() {
 
     // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
     setLineDash: function(lineDash) { 
-      if( Object.prototype.toString.call( lineDash ) === '[object Array]' ) {
+      if (Object.prototype.toString.call(lineDash) === '[object Array]') {
         lineDash = lineDash.join(", ");
         this.attributes["stroke-dasharray"] = lineDash;
         return this; 
       } else {
-        throw new uTheory.RERR("lineDash must be an array of integers.");
+        throw new Vex.RERR("ArgumentError", "lineDash must be an array of integers.");
       }
     },
 
