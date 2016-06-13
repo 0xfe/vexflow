@@ -1,4 +1,4 @@
-// Vex Flow
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Mohit Muthanna <mohit@muthanna.com>
 //
 // A rendering context for the Raphael backend.
@@ -83,8 +83,15 @@ Vex.Flow.CanvasContext = (function() {
       return this;
     },
 
-    setLineDash: function(dash) {
+    // setLineDash: is the one native method in a canvas context
+    // that begins with set, therefore we don't bolster the method
+    // if it already exists (see renderer.bolsterCanvasContext).
+    // If it doesn't exist, we bolster it and assume it's looking for
+    // a ctx.lineDash method, as previous versions of VexFlow
+    // expected.
+    setLineDash: function(dash){
       this.vexFlowCanvasContext.lineDash = dash;
+      return this;
     },
 
     scale: function(x, y) {

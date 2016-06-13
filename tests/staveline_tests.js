@@ -42,6 +42,7 @@ VF.Test.StaveLine = (function() {
         first_indices: [2, 1, 0],
         last_indices: [0, 1, 2]
       });
+      staveLine2.render_options.line_dash = [10,10];
 
       var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
       voice.addTickables(notes);

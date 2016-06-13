@@ -110,10 +110,10 @@ Vex.Flow.Stave = (function() {
       this.start_x += shift;
       this.end_x += shift;
       for(var i=0; i<this.modifiers.length; i++) {
-      	var mod = this.modifiers[i];
+        var mod = this.modifiers[i];
         if (mod.x !== undefined) {
           mod.x += shift;
-      	}
+        }
       }
       return this;
     },

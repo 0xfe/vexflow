@@ -1,4 +1,4 @@
-// Vex Flow Notation
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Copyright Mohit Muthanna 2010
 //
 // Author Taehoon Moon 2014

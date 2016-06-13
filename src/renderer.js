@@ -73,7 +73,7 @@ Vex.Flow.Renderer = (function() {
 
     for (var i in methods) {
       var method = methods[i];
-      ctx[method] = Vex.Flow.CanvasContext.prototype[method];
+      ctx[method] = ctx[method] || Vex.Flow.CanvasContext.prototype[method];
     }
 
     return ctx;

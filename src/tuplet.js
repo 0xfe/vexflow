@@ -51,7 +51,7 @@ Vex.Flow.Tuplet = (function() {
 
   Tuplet.prototype = {
     init: function(notes, options) {
-      if (!notes || notes == []) {
+      if (!notes || !notes.length) {
         throw new Vex.RuntimeError("BadArguments", "No notes provided for tuplet.");
       }
 

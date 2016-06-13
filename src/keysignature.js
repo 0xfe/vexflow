@@ -127,7 +127,7 @@ Vex.Flow.KeySignature = (function() {
       var cancel_accList = Vex.Flow.keySignature(spec);
 
       // If the cancelled key has a different accidental type, ie: # vs b
-      var different_types = this.accList.length > 0 &&
+      var different_types = this.accList.length > 0 && cancel_accList.length > 0 &&
                             cancel_accList[0].type !== this.accList[0].type;
 
       // Determine how many naturals needed to add
