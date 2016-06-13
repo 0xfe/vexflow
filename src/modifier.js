@@ -50,6 +50,7 @@ Vex.Flow.Modifier = (function() {
       this.modifier_context = null;
       this.x_shift = 0;
       this.y_shift = 0;
+      this.spacingFromNextModifier = 0;
       L("Created new modifier");
     },
 
@@ -87,6 +88,12 @@ Vex.Flow.Modifier = (function() {
     // Shift modifier down `y` pixels. Negative values shift up.
     setYShift: function(y) { this.y_shift = y; return this; },
 
+    setSpacingFromNextModifier: function(x) {
+      this.spacingFromNextModifier = x;
+    },
+
+    getSpacingFromNextModifier: function() {return this.spacingFromNextModifier; },
+
     // Shift modifier `x` pixels in the direction of the modifier. Negative values
     // shift reverse.
     setXShift: function(x) {
@@ -97,6 +104,7 @@ Vex.Flow.Modifier = (function() {
         this.x_shift += x;
       }
     },
+    getXShift: function() {return this.x_shift;},
 
     // Render the modifier onto the canvas.
     draw: function() {

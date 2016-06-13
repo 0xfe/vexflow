@@ -11,8 +11,7 @@ Vex.Flow.StaveText = (function() {
     if (arguments.length > 0) this.init(text, position, options);
   }
 
-  var Modifier = Vex.Flow.Modifier;
-  Vex.Inherit(StaveText, Modifier, {
+  Vex.Inherit(StaveText, Vex.Flow.StaveModifier, {
     init: function(text, position, options) {
       StaveText.superclass.init.call(this);
 
@@ -58,20 +57,20 @@ Vex.Flow.StaveText = (function() {
       var text_width = ctx.measureText("" + this.text).width;
 
       var x, y;
-      var Modifier = Vex.Flow.Modifier;
+      var Position = Vex.Flow.StaveModifier.Position;
       switch(this.position) {
-        case Modifier.Position.LEFT:
-        case Modifier.Position.RIGHT:
+        case Position.LEFT:
+        case Position.RIGHT:
           y = (stave.getYForLine(0) + stave.getBottomLineY()) / 2 + this.options.shift_y;
-          if(this.position == Modifier.Position.LEFT) {
+          if(this.position == Position.LEFT) {
             x = stave.getX() - text_width - 24 + this.options.shift_x;
           }
           else {
             x = stave.getX() + stave.getWidth() + 24 + this.options.shift_x;
           }
           break;
-        case Modifier.Position.ABOVE:
-        case Modifier.Position.BELOW:
+        case Position.ABOVE:
+        case Position.BELOW:
           var Justification = Vex.Flow.TextNote.Justification;
           x = stave.getX() + this.options.shift_x;
           if(this.options.justification == Justification.CENTER) {
@@ -80,8 +79,8 @@ Vex.Flow.StaveText = (function() {
           else if(this.options.justification == Justification.RIGHT) {
             x += stave.getWidth() - text_width;
           }
-          
-          if(this.position == Modifier.Position.ABOVE) {
+
+          if(this.position == Position.ABOVE) {
             y = stave.getYForTopText(2) + this.options.shift_y;
           }
           else {
