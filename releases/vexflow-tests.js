@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.45 built on 2016-03-21.
+ * VexFlow 1.2.46 built on 2016-06-13.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -9374,6 +9374,7 @@ VF.Test.StaveLine = (function() {
         first_indices: [2, 1, 0],
         last_indices: [0, 1, 2]
       });
+      staveLine2.render_options.line_dash = [10,10];
 
       var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
       voice.addTickables(notes);

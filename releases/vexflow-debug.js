@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.45 built on 2016-03-21.
+ * VexFlow 1.2.46 built on 2016-06-13.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -1268,7 +1268,7 @@ Vex.Flow.sanitizeDuration = function(duration) {
 
   if (Vex.Flow.durationToTicks.durations[duration] === undefined) {
     throw new Vex.RERR('BadArguments',
-      'The provided duration is not valid');
+      'The provided duration is not valid: ' + duration);
   }
 
   return duration;
@@ -2043,10 +2043,10 @@ Vex.Flow.Stave = (function() {
       this.start_x += shift;
       this.end_x += shift;
       for(var i=0; i<this.modifiers.length; i++) {
-      	var mod = this.modifiers[i];
+        var mod = this.modifiers[i];
         if (mod.x !== undefined) {
           mod.x += shift;
-      	}
+        }
       }
       return this;
     },
@@ -2558,7 +2558,6 @@ Vex.Flow.Stave = (function() {
 
   return Stave;
 }());
-
 // Vex Flow Notation
 // Mohit Muthanna <mohit@muthanna.com>
 //
@@ -4663,9 +4662,9 @@ Vex.Flow.StaveNote = (function() {
             min_y = Vex.Min(yy, min_y);
             max_y = Vex.Max(yy, max_y);
           }
-          min_y -= half_line_spacing;
-          max_y += half_line_spacing;
         }
+        min_y -= half_line_spacing;
+        max_y += half_line_spacing;
       }
 
       return new Vex.Flow.BoundingBox(x, min_y, w, max_y - min_y);
@@ -5674,7 +5673,7 @@ Vex.Flow.GhostNote = (function() {
   return GhostNote;
 }());
 
-// Vex Flow Notation
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Copyright Mohit Muthanna 2010
 //
 // Author Taehoon Moon 2014
@@ -9810,7 +9809,7 @@ Vex.Flow.KeySignature = (function() {
       var cancel_accList = Vex.Flow.keySignature(spec);
 
       // If the cancelled key has a different accidental type, ie: # vs b
-      var different_types = this.accList.length > 0 &&
+      var different_types = this.accList.length > 0 && cancel_accList.length > 0 &&
                             cancel_accList[0].type !== this.accList[0].type;
 
       // Determine how many naturals needed to add
@@ -11000,7 +10999,7 @@ Vex.Flow.Renderer = (function() {
 
     for (var i in methods) {
       var method = methods[i];
-      ctx[method] = Vex.Flow.CanvasContext.prototype[method];
+      ctx[method] = ctx[method] || Vex.Flow.CanvasContext.prototype[method];
     }
 
     return ctx;
@@ -11547,6 +11546,7 @@ Vex.Flow.SVGContext = (function() {
         "stroke-width": 0.3,
         "fill": "black",
         "stroke": "black",
+        "stroke-dasharray": "none",
         "font-family": "Arial",
         "font-size" : "10pt",
         "font-weight" : "normal",
@@ -11557,6 +11557,7 @@ Vex.Flow.SVGContext = (function() {
         "stroke-width": 0,
         "fill": "white",
         "stroke": "white",
+        "stroke-dasharray": "none",
         "font-family": "Arial",
         "font-size" : "10pt",
         "font-weight": "normal",
@@ -11709,9 +11710,15 @@ Vex.Flow.SVGContext = (function() {
       this.lineWidth = width;
     },
 
-    setLineDash: function(lineDash) {
-      this.attributes["stroke-linedash"] = lineDash;
-      return this;
+    // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
+    setLineDash: function(lineDash) { 
+      if (Object.prototype.toString.call(lineDash) === '[object Array]') {
+        lineDash = lineDash.join(", ");
+        this.attributes["stroke-dasharray"] = lineDash;
+        return this; 
+      } else {
+        throw new Vex.RERR("ArgumentError", "lineDash must be an array of integers.");
+      }
     },
 
     setLineCap: function(lineCap) {
@@ -12115,7 +12122,8 @@ Vex.Flow.SVGContext = (function() {
           "font-size": this.attributes["font-size"],
           fill: this.attributes.fill,
           stroke: this.attributes.stroke,
-          "stroke-width": this.attributes["stroke-width"]
+          "stroke-width": this.attributes["stroke-width"],
+          "stroke-dasharray": this.attributes["stroke-dasharray"]
         },
         shadow_attributes: {
           width: this.shadow_attributes.width,
@@ -12141,6 +12149,8 @@ Vex.Flow.SVGContext = (function() {
       this.attributes.fill = state.attributes.fill;
       this.attributes.stroke = state.attributes.stroke;
       this.attributes["stroke-width"] = state.attributes["stroke-width"];
+      this.attributes["stroke-dasharray"] = state.attributes["stroke-dasharray"];
+
       this.shadow_attributes.width = state.shadow_attributes.width;
       this.shadow_attributes.color = state.shadow_attributes.color;
       return this;
@@ -12150,7 +12160,7 @@ Vex.Flow.SVGContext = (function() {
   return SVGContext;
 }());
 
-// Vex Flow
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Mohit Muthanna <mohit@muthanna.com>
 //
 // A rendering context for the Raphael backend.
@@ -12235,8 +12245,15 @@ Vex.Flow.CanvasContext = (function() {
       return this;
     },
 
-    setLineDash: function(dash) {
+    // setLineDash: is the one native method in a canvas context
+    // that begins with set, therefore we don't bolster the method
+    // if it already exists (see renderer.bolsterCanvasContext).
+    // If it doesn't exist, we bolster it and assume it's looking for
+    // a ctx.lineDash method, as previous versions of VexFlow
+    // expected.
+    setLineDash: function(dash){
       this.vexFlowCanvasContext.lineDash = dash;
+      return this;
     },
 
     scale: function(x, y) {
@@ -13361,7 +13378,7 @@ Vex.Flow.Tuplet = (function() {
 
   Tuplet.prototype = {
     init: function(notes, options) {
-      if (!notes || notes == []) {
+      if (!notes || !notes.length) {
         throw new Vex.RuntimeError("BadArguments", "No notes provided for tuplet.");
       }
 
