@@ -3,10 +3,16 @@
 # Draw dependency graph of VexFlow classe.
 #
 # $ brew install graphviz
-# 
+# $ ./graph.rb | dot -Tpdf -o graph.pdf
+#
+# Convert to PNG
+# $ brew install imagemagick ghostscript
+# $ convert -density 300 graph.pdf -resize 25% graph.png
 
-puts " digraph G {"
-Dir.glob("*.js").each do |file|
+puts "digraph G {"
+puts '  graph[rankdir=LR]'
+puts "  node[fontname=Arial,fontsize=10]"
+Dir.glob("../src/*.js").each do |file|
     f = File.open(file, "r")
     f.each_line do |line|
         if line =~ /Vex.Inherit\s*\(([^,]+),\s*([^\s,]+)/
