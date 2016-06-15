@@ -195,7 +195,7 @@ Vex.Flow.Clef = (function() {
       var glyphScale;
       var glyphOffset;
       switch(this.stave.getOptions().num_lines) {
-        case 10:
+        case 10: //TODO: Test with Visual Regression
           glyphScale = 69; 
           glyphOffset = 26;
           break;
