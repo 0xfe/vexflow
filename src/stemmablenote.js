@@ -4,7 +4,11 @@
 //
 // `StemmableNote` is an abstract interface for notes with optional stems.
 // Examples of stemmable notes are `StaveNote` and `TabNote`
-Vex.Flow.StemmableNote = (function(){
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Stem } from './stem';
+import { Note } from './note';
+export var StemmableNote = (function(){
   var StemmableNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
   };
@@ -12,9 +16,7 @@ Vex.Flow.StemmableNote = (function(){
   // To enable logging for this class. Set `Vex.Flow.StemmableNote.DEBUG` to `true`.
   function L() { if (StemmableNote.DEBUG) Vex.L("Vex.Flow.StemmableNote", arguments); }
 
-  var Stem = Vex.Flow.Stem;
-
-  Vex.Inherit(StemmableNote, Vex.Flow.Note, {
+  Vex.Inherit(StemmableNote, Note, {
     init: function(note_struct){
       StemmableNote.superclass.init.call(this, note_struct);
 
@@ -52,7 +54,7 @@ Vex.Flow.StemmableNote = (function(){
 
     // Get the minimum length of stem
     getStemMinumumLength: function() {
-      var frac = Vex.Flow.durationToFraction(this.duration);
+      var frac = Flow.durationToFraction(this.duration);
       var length = (frac.value() <= 1) ? 0 : 20;
       // if note is flagged, cannot shorten beam
       switch (this.duration) {
@@ -205,7 +207,7 @@ Vex.Flow.StemmableNote = (function(){
     },
 
     hasFlag: function() {
-      return Vex.Flow.durationToGlyph(this.duration).flag;
+      return Flow.durationToGlyph(this.duration).flag;
     },
 
     // Post format the note

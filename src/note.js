@@ -9,8 +9,10 @@
 // Some notes have stems, heads, dots, etc. Most notational elements that
 // surround a note are called *modifiers*, and every note has an associated
 // array of them. All notes also have a rendering context and belong to a stave.
-
-Vex.Flow.Note = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Tickable } from './tickable';
+export var Note = (function() {
   // To create a new note you need to provide a `note_struct`, which consists
   // of the following fields:
   //
@@ -66,7 +68,7 @@ Vex.Flow.Note = (function() {
   //
   // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
   // positioning and layout.
-  Vex.Inherit(Note, Vex.Flow.Tickable, {
+  Vex.Inherit(Note, Tickable, {
     // See constructor above for how to create a note.
     init: function(note_struct) {
       Note.superclass.init.call(this);
@@ -78,7 +80,7 @@ Vex.Flow.Note = (function() {
       }
 
       // Parse `note_struct` and get note properties.
-      var initData = Vex.Flow.parseNoteData(note_struct);
+      var initData = Flow.parseNoteData(note_struct);
       if (!initData) {
         throw new Vex.RuntimeError("BadArguments",
             "Invalid note initialization object: " + JSON.stringify(note_struct));
@@ -100,7 +102,7 @@ Vex.Flow.Note = (function() {
       this.modifiers = [];
 
       // Get the glyph code for this note from the font.
-      this.glyph = Vex.Flow.durationToGlyph(this.duration, this.noteType);
+      this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
 
       if (this.positions &&
           (typeof(this.positions) != "object" || !this.positions.length)) {

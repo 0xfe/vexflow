@@ -5,11 +5,11 @@
 //
 // requires: vex.js   (Vex)
 // requires: flow.js  (Vex.Flow)
-
+import { Vex } from './vex';
 /**
  * @constructor
  */
-Vex.Flow.Music = (function() {
+export var Music = (function() {
   function Music() {
     this.init();
   }
@@ -78,6 +78,11 @@ Vex.Flow.Music = (function() {
     minor: [2, 1, 2, 2, 1, 2, 2]
   };
 
+  Music.scaleTypes = {
+    "M": Music.scales.major,
+    "m": Music.scales.minor
+  };
+
   Music.accidentals = [ "bb", "b", "n", "#", "##" ];
 
   Music.noteValues = {
@@ -129,7 +134,7 @@ Vex.Flow.Music = (function() {
     init: function() {},
 
     isValidNoteValue: function(note) {
-      if (note == null || note < 0 || note >= Vex.Flow.Music.NUM_TONES)
+      if (note == null || note < 0 || note >= Music.NUM_TONES)
         return false;
       return true;
     },
@@ -321,12 +326,12 @@ Vex.Flow.Music = (function() {
     },
 
     // Create a scale map that represents the pitch state for a
-    // `keySignature`. For example, passing a `G` to `keySignature` would 
+    // `keySignature`. For example, passing a `G` to `keySignature` would
     // return a scale map with every note naturalized except for `F` which
     // has an `F#` state.
     createScaleMap: function(keySignature) {
       var keySigParts = this.getKeyParts(keySignature);
-      var scaleName = Vex.Flow.KeyManager.scales[keySigParts.type];
+      var scaleName = Music.scaleTypes[keySigParts.type];
 
       var keySigString = keySigParts.root;
       if (keySigParts.accidental) keySigString += keySigParts.accidental;
@@ -334,12 +339,12 @@ Vex.Flow.Music = (function() {
       if (!scaleName) throw new Vex.RERR("BadArguments", "Unsupported key type: " + keySignature);
 
       var scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
-      var noteLocation = Vex.Flow.Music.root_indices[keySigParts.root];
+      var noteLocation = Music.root_indices[keySigParts.root];
 
       var scaleMap = {};
-      for (var i = 0; i < Vex.Flow.Music.roots.length; ++i) {
-        var index = (noteLocation + i) % Vex.Flow.Music.roots.length;
-        var rootName = Vex.Flow.Music.roots[index];
+      for (var i = 0; i < Music.roots.length; ++i) {
+        var index = (noteLocation + i) % Music.roots.length;
+        var rootName = Music.roots[index];
         var noteName = this.getRelativeNoteName(rootName, scale[i]);
 
         if (noteName.length === 1) {

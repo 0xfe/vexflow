@@ -4,8 +4,20 @@
 //
 // This class implements various types of modifiers to notes (e.g. bends,
 // fingering positions etc.)
-
-Vex.Flow.ModifierContext = (function() {
+import { Vex } from './vex';
+import { StaveNote } from './stavenote';
+import { Dot } from './dot';
+import { FretHandFinger } from './frethandfinger';
+import { Accidental } from './accidental';
+import { GraceNoteGroup } from './gracenotegroup';
+import { Stroke } from './strokes';
+import { StringNumber } from './stringnumber';
+import { Articulation } from './articulation';
+import { Ornament } from './ornament';
+import { Annotation } from './annotation';
+import { Bend } from './bend';
+import { Vibrato } from './vibrato';
+export var ModifierContext = (function() {
   function ModifierContext() {
     // Current modifiers
     this.modifiers = {};
@@ -25,18 +37,18 @@ Vex.Flow.ModifierContext = (function() {
     // Add new modifiers to this array. The ordering is significant -- lower
     // modifiers are formatted and rendered before higher ones.
     this.PREFORMAT = [
-      Vex.Flow.StaveNote,
-      Vex.Flow.Dot,
-      Vex.Flow.FretHandFinger,
-      Vex.Flow.Accidental,
-      Vex.Flow.GraceNoteGroup,
-      Vex.Flow.Stroke,
-      Vex.Flow.StringNumber,
-      Vex.Flow.Articulation,
-      Vex.Flow.Ornament,
-      Vex.Flow.Annotation,
-      Vex.Flow.Bend,
-      Vex.Flow.Vibrato
+      StaveNote,
+      Dot,
+      FretHandFinger,
+      Accidental,
+      GraceNoteGroup,
+      Stroke,
+      StringNumber,
+      Articulation,
+      Ornament,
+      Annotation,
+      Bend,
+      Vibrato
     ];
 
     // If post-formatting is required for an element, add it to this array.

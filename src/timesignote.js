@@ -2,18 +2,21 @@
 // Copyright Mohit Muthanna 2010
 //
 // Author Taehoon Moon 2014
-
+import { Vex } from './vex';
+import { BoundingBox } from './boundingbox';
+import { Note } from './note';
+import { TimeSignature } from './timesignature';
 /** @constructor */
-Vex.Flow.TimeSigNote = (function() {
+export var TimeSigNote = (function() {
   function TimeSigNote(timeSpec, customPadding) {
     if (arguments.length > 0) this.init(timeSpec, customPadding);
   }
 
-  Vex.Inherit(TimeSigNote, Vex.Flow.Note, {
+  Vex.Inherit(TimeSigNote, Note, {
     init: function(timeSpec, customPadding) {
       TimeSigNote.superclass.init.call(this, {duration: "b"});
 
-      var timeSignature = new Vex.Flow.TimeSignature(timeSpec, customPadding);
+      var timeSignature = new TimeSignature(timeSpec, customPadding);
       this.timeSig = timeSignature.getTimeSig();
       this.setWidth(this.timeSig.glyph.getMetrics().width);
 
@@ -22,12 +25,12 @@ Vex.Flow.TimeSigNote = (function() {
     },
 
     setStave: function(stave) {
-      var superclass = Vex.Flow.TimeSigNote.superclass;
+      var superclass = TimeSigNote.superclass;
       superclass.setStave.call(this, stave);
     },
 
     getBoundingBox: function() {
-      return new Vex.Flow.BoundingBox(0, 0, 0, 0);
+      return new BoundingBox(0, 0, 0, 0);
     },
 
     addToModifierContext: function() {
@@ -42,7 +45,7 @@ Vex.Flow.TimeSigNote = (function() {
 
     draw: function() {
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-      
+
       if (!this.timeSig.glyph.getContext()) {
         this.timeSig.glyph.setContext(this.context);
       }

@@ -5,14 +5,15 @@
 //
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
-
-Vex.Flow.StringNumber = (function() {
+import { Vex } from './vex';
+import { Modifier } from './modifier';
+import { Renderer } from './renderer';
+import { StaveNote } from './stavenote';
+export var StringNumber = (function() {
   function StringNumber(number) {
     if (arguments.length > 0) this.init(number);
   }
   StringNumber.CATEGORY = "stringnumber";
-
-  var Modifier = Vex.Flow.Modifier;
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
@@ -79,11 +80,11 @@ Vex.Flow.StringNumber = (function() {
       }
 
       var num_width = num.getWidth() + num_spacing;
-      if (pos == Vex.Flow.Modifier.Position.LEFT) {
+      if (pos == Modifier.Position.LEFT) {
         num.setXShift(left_shift);
         num_shift = shift_left + num_width; // spacing
         x_widthL = (num_shift > x_widthL) ? num_shift : x_widthL;
-      } else if (pos == Vex.Flow.Modifier.Position.RIGHT) {
+      } else if (pos == Modifier.Position.RIGHT) {
         num.setXShift(num_shiftR);
         num_shift += num_width; // spacing
         x_widthR = (num_shift > x_widthR) ? num_shift : x_widthR;
@@ -113,7 +114,7 @@ Vex.Flow.StringNumber = (function() {
       this.x_offset = 0;                               // Horizontal offset from default
       this.y_offset = 0;                               // Vertical offset from default
       this.dashed = true;                              // true - draw dashed extension  false - no extension
-      this.leg = Vex.Flow.Renderer.LineEndType.NONE;   // draw upward/downward leg at the of extension line
+      this.leg = Renderer.LineEndType.NONE;   // draw upward/downward leg at the of extension line
       this.radius = 8;
       this.font = {
         family: "sans-serif",
@@ -128,8 +129,8 @@ Vex.Flow.StringNumber = (function() {
     setIndex: function(index) { this.index = index; return this; },
 
     setLineEndType: function(leg) {
-      if (leg >= Vex.Flow.Renderer.LineEndType.NONE &&
-          leg <= Vex.Flow.Renderer.LineEndType.DOWN)
+      if (leg >= Renderer.LineEndType.NONE &&
+          leg <= Renderer.LineEndType.DOWN)
         this.leg = leg;
       return this;
     },
@@ -168,7 +169,7 @@ Vex.Flow.StringNumber = (function() {
           var top = stem_ext.topY;
           var bottom = stem_ext.baseY + 2;
 
-          if (this.note.stem_direction == Vex.Flow.StaveNote.STEM_DOWN) {
+          if (this.note.stem_direction == StaveNote.STEM_DOWN) {
             top = stem_ext.baseY;
             bottom = stem_ext.topY - 2;
           }
@@ -207,21 +208,21 @@ Vex.Flow.StringNumber = (function() {
         ctx.lineCap = "round";
         ctx.lineWidth = 0.6;
         if (this.dashed)
-          Vex.Flow.Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,3]);
+          Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,3]);
         else
-          Vex.Flow.Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,0]);
+          Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,0]);
 
         var len, pattern;
         switch (this.leg) {
-          case Vex.Flow.Renderer.LineEndType.UP:
+          case Renderer.LineEndType.UP:
             len = -10;
             pattern = this.dashed ? [3,3] : [3,0];
-            Vex.Flow.Renderer.drawDashedLine(ctx, dot_x + end, dot_y, dot_x + end, dot_y + len, pattern);
+            Renderer.drawDashedLine(ctx, dot_x + end, dot_y, dot_x + end, dot_y + len, pattern);
             break;
-          case Vex.Flow.Renderer.LineEndType.DOWN:
+          case Renderer.LineEndType.DOWN:
             len = 10;
             pattern = this.dashed ? [3,3] : [3,0];
-            Vex.Flow.Renderer.drawDashedLine(ctx, dot_x + end, dot_y, dot_x + end, dot_y + len, pattern);
+            Renderer.drawDashedLine(ctx, dot_x + end, dot_y, dot_x + end, dot_y + len, pattern);
             break;
         }
       }

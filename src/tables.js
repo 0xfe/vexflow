@@ -4,21 +4,26 @@
 // Copyright Mohit Muthanna 2010
 //
 // Requires vex.js.
+import { Fraction } from './fraction';
+var Flow = {};
+Flow.STEM_WIDTH = 1.5;
+Flow.STEM_HEIGHT = 32;
+Flow.STAVE_LINE_THICKNESS = 2;
+Flow.RESOLUTION = 16384;
 
-Vex.Flow.STEM_WIDTH = 1.5;
-Vex.Flow.STEM_HEIGHT = 32;
-Vex.Flow.STAVE_LINE_THICKNESS = 2;
+/* Kerning (DEPRECATED) */
+Flow.IsKerned = true;
 
-Vex.Flow.clefProperties = function(clef) {
+Flow.clefProperties = function(clef) {
   if (!clef) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
-  var props = Vex.Flow.clefProperties.values[clef];
+  var props = Flow.clefProperties.values[clef];
   if (!props) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
   return props;
 };
 
-Vex.Flow.clefProperties.values = {
+Flow.clefProperties.values = {
   'treble':  { line_shift: 0 },
   'bass':    { line_shift: 6 },
   'tenor':   { line_shift: 4 },
@@ -38,7 +43,7 @@ Vex.Flow.clefProperties.values = {
   The last argument, params, is a struct the currently can contain one option,
   octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
 */
-Vex.Flow.keyProperties = function(key, clef, params) {
+Flow.keyProperties = function(key, clef, params) {
   if (clef === undefined) {
     clef = 'treble';
   }
@@ -57,7 +62,7 @@ Vex.Flow.keyProperties = function(key, clef, params) {
   }
 
   var k = pieces[0].toUpperCase();
-  var value = Vex.Flow.keyProperties.note_values[k];
+  var value = Flow.keyProperties.note_values[k];
   if (!value) throw new Vex.RERR("BadArguments", "Invalid key name: " + k);
   if (value.octave) pieces[1] = value.octave;
 
@@ -68,7 +73,7 @@ Vex.Flow.keyProperties = function(key, clef, params) {
 
   var base_index = (o * 7) - (4 * 7);
   var line = (base_index + value.index) / 2;
-  line += Vex.Flow.clefProperties(clef).line_shift;
+  line += Flow.clefProperties(clef).line_shift;
 
   var stroke = 0;
 
@@ -84,7 +89,7 @@ Vex.Flow.keyProperties = function(key, clef, params) {
   var shift_right = value.shift_right;
   if ((pieces.length > 2) && (pieces[2])) {
     var glyph_name = pieces[2].toUpperCase();
-    var note_glyph = Vex.Flow.keyProperties.note_glyph[glyph_name];
+    var note_glyph = Flow.keyProperties.note_glyph[glyph_name];
     if (note_glyph) {
       code = note_glyph.code;
       shift_right = note_glyph.shift_right;
@@ -104,7 +109,7 @@ Vex.Flow.keyProperties = function(key, clef, params) {
   };
 };
 
-Vex.Flow.keyProperties.note_values = {
+Flow.keyProperties.note_values = {
   'C':  { index: 0, int_val: 0, accidental: null },
   'CN': { index: 0, int_val: 0, accidental: "n" },
   'C#': { index: 0, int_val: 1, accidental: "#" },
@@ -157,7 +162,7 @@ Vex.Flow.keyProperties.note_values = {
   }
 };
 
-Vex.Flow.keyProperties.note_glyph = {
+Flow.keyProperties.note_glyph = {
   /* Diamond */
   'D0':  { code: "v27", shift_right: -0.5 },
   'D1':  { code: "v2d", shift_right: -0.5 },
@@ -177,7 +182,7 @@ Vex.Flow.keyProperties.note_glyph = {
   'X3':  { code: "v3b", shift_right: -2 }
 };
 
-Vex.Flow.integerToNote = function(integer) {
+Flow.integerToNote = function(integer) {
   if (typeof(integer) == "undefined")
     throw new Vex.RERR("BadArguments", "Undefined integer for integerToNote");
 
@@ -185,7 +190,7 @@ Vex.Flow.integerToNote = function(integer) {
     throw new Vex.RERR("BadArguments",
         "integerToNote requires integer > -2: " + integer);
 
-  var noteValue = Vex.Flow.integerToNote.table[integer];
+  var noteValue = Flow.integerToNote.table[integer];
   if (!noteValue)
     throw new Vex.RERR("BadArguments", "Unknown note value for integer: " +
         integer);
@@ -193,7 +198,7 @@ Vex.Flow.integerToNote = function(integer) {
   return noteValue;
 };
 
-Vex.Flow.integerToNote.table = {
+Flow.integerToNote.table = {
   0: "C",
   1: "C#",
   2: "D",
@@ -209,7 +214,7 @@ Vex.Flow.integerToNote.table = {
 };
 
 
-Vex.Flow.tabToGlyph = function(fret) {
+Flow.tabToGlyph = function(fret) {
   var glyph = null;
   var width = 0;
   var shift_y = 0;
@@ -219,7 +224,7 @@ Vex.Flow.tabToGlyph = function(fret) {
     width = 7;
     shift_y = -4.5;
   } else {
-    width = Vex.Flow.textWidth(fret.toString());
+    width = Flow.textWidth(fret.toString());
   }
 
   return {
@@ -230,15 +235,15 @@ Vex.Flow.tabToGlyph = function(fret) {
   };
 };
 
-Vex.Flow.textWidth = function(text) {
+Flow.textWidth = function(text) {
   return 6 * text.toString().length;
 };
 
-Vex.Flow.articulationCodes = function(artic) {
-  return Vex.Flow.articulationCodes.articulations[artic];
+Flow.articulationCodes = function(artic) {
+  return Flow.articulationCodes.articulations[artic];
 };
 
-Vex.Flow.articulationCodes.articulations = {
+Flow.articulationCodes.articulations = {
   "a.": {   // Staccato
     code: "v23",
     width: 4,
@@ -345,11 +350,11 @@ Vex.Flow.articulationCodes.articulations = {
   }
 };
 
-Vex.Flow.accidentalCodes = function(acc) {
-  return Vex.Flow.accidentalCodes.accidentals[acc];
+Flow.accidentalCodes = function(acc) {
+  return Flow.accidentalCodes.accidentals[acc];
 };
 
-Vex.Flow.accidentalCodes.accidentals = {
+Flow.accidentalCodes.accidentals = {
   "#": {
     code: "v18",
     width: 10,
@@ -453,7 +458,7 @@ Vex.Flow.accidentalCodes.accidentals = {
   }
 };
 
-Vex.Flow.accidentalColumnsTable = {
+Flow.accidentalColumnsTable = {
   1 : { a : [1], b : [1]},
   2 : { a : [1, 2] },
   3 : { a : [1, 3, 2], b : [1, 2, 1], second_on_bottom : [1, 2, 3] },
@@ -466,11 +471,11 @@ Vex.Flow.accidentalColumnsTable = {
         very_spaced_out_hexachord : [1, 2, 1, 2, 1, 2] }
 };
 
-Vex.Flow.ornamentCodes = function(acc) {
-  return Vex.Flow.ornamentCodes.ornaments[acc];
+Flow.ornamentCodes = function(acc) {
+  return Flow.ornamentCodes.ornaments[acc];
 };
 
-Vex.Flow.ornamentCodes.ornaments = {
+Flow.ornamentCodes.ornaments = {
   "mordent": {
     code: "v1e",
     shift_right: 1,
@@ -564,8 +569,8 @@ Vex.Flow.ornamentCodes.ornaments = {
   }
 };
 
-Vex.Flow.keySignature = function(spec) {
-  var keySpec = Vex.Flow.keySignature.keySpecs[spec];
+Flow.keySignature = function(spec) {
+  var keySpec = Flow.keySignature.keySpecs[spec];
 
   if (!keySpec) {
     throw new Vex.RERR("BadKeySignature",
@@ -576,7 +581,7 @@ Vex.Flow.keySignature = function(spec) {
     return [];
   }
 
-  var notes = Vex.Flow.keySignature.accidentalList(keySpec.acc);
+  var notes = Flow.keySignature.accidentalList(keySpec.acc);
 
   var acc_list = [];
   for (var i = 0; i < keySpec.num; ++i) {
@@ -587,7 +592,7 @@ Vex.Flow.keySignature = function(spec) {
   return acc_list;
 };
 
-Vex.Flow.keySignature.keySpecs = {
+Flow.keySignature.keySpecs = {
   "C": {acc: null, num: 0},
   "Am": {acc: null, num: 0},
   "F": {acc: "b", num: 1},
@@ -620,7 +625,7 @@ Vex.Flow.keySignature.keySpecs = {
   "A#m": {acc: "#", num: 7}
 };
 
-Vex.Flow.unicode = {
+Flow.unicode = {
   // Unicode accidentals
   "sharp": String.fromCharCode(parseInt('266F', 16)),
   "flat" : String.fromCharCode(parseInt('266D', 16)),
@@ -634,7 +639,7 @@ Vex.Flow.unicode = {
   "circle": String.fromCharCode(parseInt('25CB', 16))
 };
 
-Vex.Flow.keySignature.accidentalList = function(acc) {
+Flow.keySignature.accidentalList = function(acc) {
   if (acc == "b") {
     return [2, 0.5, 2.5, 1, 3, 1.5, 3.5];
   }
@@ -642,7 +647,7 @@ Vex.Flow.keySignature.accidentalList = function(acc) {
     return [0, 1.5, -0.5, 1, 2.5, 0.5, 2]; }
 };
 
-Vex.Flow.parseNoteDurationString = function(durationString) {
+Flow.parseNoteDurationString = function(durationString) {
   if (typeof(durationString) !== "string") {
     return null;
   }
@@ -669,16 +674,16 @@ Vex.Flow.parseNoteDurationString = function(durationString) {
   };
 };
 
-Vex.Flow.parseNoteData = function(noteData) {
+Flow.parseNoteData = function(noteData) {
   var duration = noteData.duration;
 
   // Preserve backwards-compatibility
-  var durationStringData = Vex.Flow.parseNoteDurationString(duration);
+  var durationStringData = Flow.parseNoteDurationString(duration);
   if (!durationStringData) {
     return null;
   }
 
-  var ticks = Vex.Flow.durationToTicks(durationStringData.duration);
+  var ticks = Flow.durationToTicks(durationStringData.duration);
   if (ticks == null) {
     return null;
   }
@@ -731,13 +736,13 @@ Vex.Flow.parseNoteData = function(noteData) {
 // If the input isn't an alias, simply return the input.
 //
 // example: 'q' -> '4', '8' -> '8'
-Vex.Flow.sanitizeDuration = function(duration) {
-  var alias = Vex.Flow.durationAliases[duration];
+Flow.sanitizeDuration = function(duration) {
+  var alias = Flow.durationAliases[duration];
   if (alias !== undefined) {
     duration = alias;
   }
 
-  if (Vex.Flow.durationToTicks.durations[duration] === undefined) {
+  if (Flow.durationToTicks.durations[duration] === undefined) {
     throw new Vex.RERR('BadArguments',
       'The provided duration is not valid: ' + duration);
   }
@@ -746,20 +751,20 @@ Vex.Flow.sanitizeDuration = function(duration) {
 };
 
 // Convert the `duration` to an fraction
-Vex.Flow.durationToFraction = function(duration) {
-  return new Vex.Flow.Fraction().parse(Vex.Flow.sanitizeDuration(duration));
+Flow.durationToFraction = function(duration) {
+  return new Fraction().parse(Flow.sanitizeDuration(duration));
 };
 
 // Convert the `duration` to an number
-Vex.Flow.durationToNumber = function(duration) {
-  return Vex.Flow.durationToFraction(duration).value();
+Flow.durationToNumber = function(duration) {
+  return Flow.durationToFraction(duration).value();
 };
 
 // Convert the `duration` to total ticks
-Vex.Flow.durationToTicks = function(duration) {
-  duration = Vex.Flow.sanitizeDuration(duration);
+Flow.durationToTicks = function(duration) {
+  duration = Flow.sanitizeDuration(duration);
 
-  var ticks = Vex.Flow.durationToTicks.durations[duration];
+  var ticks = Flow.durationToTicks.durations[duration];
   if (ticks === undefined) {
     return null;
   }
@@ -767,20 +772,20 @@ Vex.Flow.durationToTicks = function(duration) {
   return ticks;
 };
 
-Vex.Flow.durationToTicks.durations = {
-  "1/2":  Vex.Flow.RESOLUTION * 2,
-  "1":    Vex.Flow.RESOLUTION / 1,
-  "2":    Vex.Flow.RESOLUTION / 2,
-  "4":    Vex.Flow.RESOLUTION / 4,
-  "8":    Vex.Flow.RESOLUTION / 8,
-  "16":   Vex.Flow.RESOLUTION / 16,
-  "32":   Vex.Flow.RESOLUTION / 32,
-  "64":   Vex.Flow.RESOLUTION / 64,
-  "128":  Vex.Flow.RESOLUTION / 128,
-  "256":  Vex.Flow.RESOLUTION / 256
+Flow.durationToTicks.durations = {
+  "1/2":  Flow.RESOLUTION * 2,
+  "1":    Flow.RESOLUTION / 1,
+  "2":    Flow.RESOLUTION / 2,
+  "4":    Flow.RESOLUTION / 4,
+  "8":    Flow.RESOLUTION / 8,
+  "16":   Flow.RESOLUTION / 16,
+  "32":   Flow.RESOLUTION / 32,
+  "64":   Flow.RESOLUTION / 64,
+  "128":  Flow.RESOLUTION / 128,
+  "256":  Flow.RESOLUTION / 256
 };
 
-Vex.Flow.durationAliases = {
+Flow.durationAliases = {
   "w": "1",
   "h": "2",
   "q": "4",
@@ -792,10 +797,10 @@ Vex.Flow.durationAliases = {
   "b": "256"
 };
 
-Vex.Flow.durationToGlyph = function(duration, type) {
-  duration = Vex.Flow.sanitizeDuration(duration);
+Flow.durationToGlyph = function(duration, type) {
+  duration = Flow.sanitizeDuration(duration);
 
-  var code = Vex.Flow.durationToGlyph.duration_codes[duration];
+  var code = Flow.durationToGlyph.duration_codes[duration];
   if (code === undefined) {
     return null;
   }
@@ -812,19 +817,19 @@ Vex.Flow.durationToGlyph = function(duration, type) {
   return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
 };
 
-Vex.Flow.durationToGlyph.duration_codes = {
+Flow.durationToGlyph.duration_codes = {
   "1/2": {
     common: {
       head_width: 22,
       stem: false,
       stem_offset: 0,
       flag: false,
-      stem_up_extension: -Vex.Flow.STEM_HEIGHT,
-      stem_down_extension: -Vex.Flow.STEM_HEIGHT,
-      gracenote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
-      gracenote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
-      tabnote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
-      tabnote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      stem_up_extension: -Flow.STEM_HEIGHT,
+      stem_down_extension: -Flow.STEM_HEIGHT,
+      gracenote_stem_up_extension: -Flow.STEM_HEIGHT,
+      gracenote_stem_down_extension: -Flow.STEM_HEIGHT,
+      tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
+      tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -860,12 +865,12 @@ Vex.Flow.durationToGlyph.duration_codes = {
       stem: false,
       stem_offset: 0,
       flag: false,
-      stem_up_extension: -Vex.Flow.STEM_HEIGHT,
-      stem_down_extension: -Vex.Flow.STEM_HEIGHT,
-      gracenote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
-      gracenote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
-      tabnote_stem_up_extension: -Vex.Flow.STEM_HEIGHT,
-      tabnote_stem_down_extension: -Vex.Flow.STEM_HEIGHT,
+      stem_up_extension: -Flow.STEM_HEIGHT,
+      stem_down_extension: -Flow.STEM_HEIGHT,
+      gracenote_stem_up_extension: -Flow.STEM_HEIGHT,
+      gracenote_stem_down_extension: -Flow.STEM_HEIGHT,
+      tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
+      tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0
@@ -1218,8 +1223,9 @@ Vex.Flow.durationToGlyph.duration_codes = {
 };
 
 // Some defaults
-Vex.Flow.TIME4_4 = {
+Flow.TIME4_4 = {
   num_beats: 4,
   beat_value: 4,
-  resolution: Vex.Flow.RESOLUTION
+  resolution: Flow.RESOLUTION
 };
+export { Flow };

@@ -7,19 +7,22 @@
 // duration, it consumes no `tick`s, and is dealt with appropriately by the formatter.
 //
 // See `tests/barnote_tests.js` for usage examples.
-
-Vex.Flow.BarNote = (function() {
+import { Vex } from './vex';
+import { Note } from './note';
+import { Barline } from './stavebarline';
+import { BoundingBox } from './boundingbox';
+export var BarNote = (function() {
   function BarNote() { this.init(); }
 
   // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
   function L() { if (BarNote.DEBUG) Vex.L("Vex.Flow.BarNote", arguments); }
 
   // ## Prototype Methods
-  Vex.Inherit(BarNote, Vex.Flow.Note, {
+  Vex.Inherit(BarNote, Note, {
     init: function() {
       BarNote.superclass.init.call(this, {duration: "b"});
 
-      var TYPE = Vex.Flow.Barline.type;
+      var TYPE = Barline.type;
       this.metrics = {
         widths: {}
       };
@@ -50,7 +53,7 @@ Vex.Flow.BarNote = (function() {
     },
 
     getBoundingBox: function() {
-      return new Vex.Flow.BoundingBox(0, 0, 0, 0);
+      return new BoundingBox(0, 0, 0, 0);
     },
 
     addToModifierContext: function() {
@@ -68,7 +71,7 @@ Vex.Flow.BarNote = (function() {
     draw: function() {
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
       L("Rendering bar line at: ", this.getAbsoluteX());
-      var barline = new Vex.Flow.Barline(this.type);
+      var barline = new Barline(this.type);
       barline.setX(this.getAbsoluteX());
       barline.draw(this.stave);
     }

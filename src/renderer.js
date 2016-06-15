@@ -6,8 +6,10 @@
 // Copyright Mohit Cheppudira 2010
 
 /* global document: false */
-
-Vex.Flow.Renderer = (function() {
+import { CanvasContext } from './canvascontext';
+import { RaphaelContext } from './raphaelcontext';
+import { SVGContext } from './svgcontext';
+export var Renderer = (function() {
   function Renderer(sel, backend) {
     if (arguments.length > 0) this.init(sel, backend);
   }
@@ -63,7 +65,7 @@ Vex.Flow.Renderer = (function() {
 
   Renderer.bolsterCanvasContext = function(ctx) {
     if (Renderer.USE_CANVAS_PROXY) {
-      return new Vex.Flow.CanvasContext(ctx);
+      return new CanvasContext(ctx);
     }
 
     var methods = ["clear", "setFont", "setRawFont", "setFillStyle", "setBackgroundFillStyle",
@@ -73,7 +75,7 @@ Vex.Flow.Renderer = (function() {
 
     for (var i in methods) {
       var method = methods[i];
-      ctx[method] = ctx[method] || Vex.Flow.CanvasContext.prototype[method];
+      ctx[method] = ctx[method] || CanvasContext.prototype[method];
     }
 
     return ctx;
@@ -134,10 +136,10 @@ Vex.Flow.Renderer = (function() {
             this.element.getContext('2d'));
 
       } else if (this.backend == Renderer.Backends.RAPHAEL) {
-        this.ctx = new Vex.Flow.RaphaelContext(this.element);
+        this.ctx = new RaphaelContext(this.element);
 
       } else if (this.backend == Renderer.Backends.SVG) {
-        this.ctx = new Vex.Flow.SVGContext(this.element);
+        this.ctx = new SVGContext(this.element);
 
       } else {
         throw new Vex.RERR("InvalidBackend",
@@ -165,5 +167,3 @@ Vex.Flow.Renderer = (function() {
 
   return Renderer;
 }());
-
-

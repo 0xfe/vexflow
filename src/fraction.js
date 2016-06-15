@@ -1,8 +1,8 @@
 // Fraction class that represents a rational number
 // @author zz85
 // @author incompleteopus (modifications)
-
-Vex.Flow.Fraction = (function() {
+import { Vex } from './vex';
+export var Fraction = (function() {
   function Fraction(numerator, denominator) {
     this.set(numerator, denominator);
   }
@@ -42,11 +42,11 @@ Vex.Flow.Fraction = (function() {
     } else if (args.length == 1) {
       return args[0];
     } else if (args.length == 2) {
-      return Vex.Flow.Fraction.LCM(args[0], args[1]);
+      return Fraction.LCM(args[0], args[1]);
     } else {
       var arg0 = args[0];
       args.shift();
-      return Fraction.LCM(arg0, Vex.Flow.Fraction.LCMM(args));
+      return Fraction.LCM(arg0, Fraction.LCMM(args));
     }
   };
 
@@ -65,7 +65,7 @@ Vex.Flow.Fraction = (function() {
       var u = this.numerator;
       var d = this.denominator;
 
-      var gcd = Vex.Flow.Fraction.GCD(u, d);
+      var gcd = Fraction.GCD(u, d);
       u /= gcd;
       d /= gcd;
 
@@ -80,7 +80,7 @@ Vex.Flow.Fraction = (function() {
       var otherNumerator;
       var otherDenominator;
 
-      if (param1 instanceof Vex.Flow.Fraction) {
+      if (param1 instanceof Fraction) {
         otherNumerator = param1.numerator;
         otherDenominator = param1.denominator;
       } else {
@@ -97,7 +97,7 @@ Vex.Flow.Fraction = (function() {
         }
       }
 
-      var lcm = Vex.Flow.Fraction.LCM(this.denominator, otherDenominator);
+      var lcm = Fraction.LCM(this.denominator, otherDenominator);
       var a = lcm / this.denominator;
       var b = lcm / otherDenominator;
 
@@ -109,7 +109,7 @@ Vex.Flow.Fraction = (function() {
       var otherNumerator;
       var otherDenominator;
 
-      if (param1 instanceof Vex.Flow.Fraction) {
+      if (param1 instanceof Fraction) {
         otherNumerator = param1.numerator;
         otherDenominator = param1.denominator;
       } else {
@@ -126,7 +126,7 @@ Vex.Flow.Fraction = (function() {
         }
       }
 
-      var lcm = Vex.Flow.Fraction.LCM(this.denominator, otherDenominator);
+      var lcm = Fraction.LCM(this.denominator, otherDenominator);
       var a = lcm / this.denominator;
       var b = lcm / otherDenominator;
 
@@ -138,7 +138,7 @@ Vex.Flow.Fraction = (function() {
       var otherNumerator;
       var otherDenominator;
 
-      if (param1 instanceof Vex.Flow.Fraction) {
+      if (param1 instanceof Fraction) {
         otherNumerator = param1.numerator;
         otherDenominator = param1.denominator;
       } else {
@@ -162,7 +162,7 @@ Vex.Flow.Fraction = (function() {
       var otherNumerator;
       var otherDenominator;
 
-      if (param1 instanceof Vex.Flow.Fraction) {
+      if (param1 instanceof Fraction) {
         otherNumerator = param1.numerator;
         otherDenominator = param1.denominator;
       } else {
@@ -185,39 +185,39 @@ Vex.Flow.Fraction = (function() {
 
     // Simplifies both sides and checks if they are equal.
     equals: function(compare) {
-      var a = Vex.Flow.Fraction.__compareA.copy(compare).simplify();
-      var b = Vex.Flow.Fraction.__compareB.copy(this).simplify();
+      var a = Fraction.__compareA.copy(compare).simplify();
+      var b = Fraction.__compareB.copy(this).simplify();
 
       return (a.numerator === b.numerator) && (a.denominator === b.denominator);
     },
-    
+
     // Greater than operator.
     greaterThan: function(compare) {
-      var a = Vex.Flow.Fraction.__compareB.copy(this);
+      var a = Fraction.__compareB.copy(this);
       a.subtract(compare);
       return (a.numerator > 0);
     },
-    
+
     // Greater than or equals operator.
     greaterThanEquals: function(compare) {
-      var a = Vex.Flow.Fraction.__compareB.copy(this);
+      var a = Fraction.__compareB.copy(this);
       a.subtract(compare);
       return (a.numerator >= 0);
     },
 
     // Less than operator.
     lessThan: function(compare) {
-      return !(this.greaterThanEquals(compare));  
+      return !(this.greaterThanEquals(compare));
     },
 
     // Less than or equals operator.
     lessThanEquals: function(compare) {
-      return !(this.greaterThan(compare));  
+      return !(this.greaterThan(compare));
     },
 
     // Creates a new copy with this current values.
     clone: function() {
-      return new Vex.Flow.Fraction(this.numerator, this.denominator);
+      return new Fraction(this.numerator, this.denominator);
     },
 
     // Copies value of another Fraction into itself.
@@ -249,14 +249,14 @@ Vex.Flow.Fraction = (function() {
 
     // Returns a simplified string respresentation
     toSimplifiedString: function() {
-      return Vex.Flow.Fraction.__tmp.copy(this).simplify().toString();
+      return Fraction.__tmp.copy(this).simplify().toString();
     },
 
     // Returns string representation in mixed form
     toMixedString: function() {
       var s = '';
       var q = this.quotient();
-      var f = Vex.Flow.Fraction.__tmp.copy(this);
+      var f = Fraction.__tmp.copy(this);
 
       if (q < 0) {
         f.abs().fraction();
@@ -298,4 +298,3 @@ Vex.Flow.Fraction = (function() {
 
   return Fraction;
 }());
-

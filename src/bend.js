@@ -3,7 +3,9 @@
 // ## Description
 //
 // This file implements tablature bends.
-
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
 /**
    @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
    @param release If true, render a release. (DEPRECATED)
@@ -38,7 +40,7 @@
        width: 8;
      }]
  */
-Vex.Flow.Bend = (function() {
+export var Bend = (function() {
   function Bend(text, release, phrase) {
     if (arguments.length > 0) this.init(text, release, phrase);
   }
@@ -46,8 +48,6 @@ Vex.Flow.Bend = (function() {
 
   Bend.UP = 0;
   Bend.DOWN = 1;
-
-  var Modifier = Vex.Flow.Modifier;
 
   // ## Static Methods
   // Arrange bends in `ModifierContext`
@@ -74,7 +74,7 @@ Vex.Flow.Bend = (function() {
   // ## Prototype Methods
   Vex.Inherit(Bend, Modifier, {
     init: function(text, release, phrase) {
-      var superclass = Vex.Flow.Bend.superclass;
+      var superclass = Bend.superclass;
       superclass.init.call(this);
 
       this.text = text;
@@ -116,7 +116,7 @@ Vex.Flow.Bend = (function() {
         if (that.context) {
           text_width = that.context.measureText(text).width;
         } else {
-          text_width = Vex.Flow.textWidth(text);
+          text_width = Flow.textWidth(text);
         }
 
         return text_width;

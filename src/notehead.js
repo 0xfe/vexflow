@@ -6,7 +6,12 @@
 // directly, but used internally in `StaveNote`.
 //
 // See `tests/notehead_tests.js` for usage examples.
-Vex.Flow.NoteHead = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Note } from './note';
+import { StaveNote } from './stavenote';
+import './glyph';
+export var NoteHead = (function() {
   var NoteHead = function(head_options) {
     if (arguments.length > 0) this.init(head_options);
   };
@@ -24,17 +29,17 @@ Vex.Flow.NoteHead = (function() {
   // * `y`: the y coordinate to draw at
   // * `stem_direction`: the direction of the stem
   function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
-    var width = 15 + (Vex.Flow.STEM_WIDTH / 2);
+    var width = 15 + (Flow.STEM_WIDTH / 2);
     ctx.save();
-    ctx.setLineWidth(Vex.Flow.STEM_WIDTH);
+    ctx.setLineWidth(Flow.STEM_WIDTH);
 
     var fill = false;
 
-    if (Vex.Flow.durationToNumber(duration) > 2) {
+    if (Flow.durationToNumber(duration) > 2) {
       fill = true;
     }
 
-    if (!fill) x -= (Vex.Flow.STEM_WIDTH / 2) * stem_direction;
+    if (!fill) x -= (Flow.STEM_WIDTH / 2) * stem_direction;
 
     ctx.beginPath();
     ctx.moveTo(x, y + 11);
@@ -50,7 +55,7 @@ Vex.Flow.NoteHead = (function() {
        ctx.stroke();
     }
 
-    if (Vex.Flow.durationToFraction(duration).equals(0.5)) {
+    if (Flow.durationToFraction(duration).equals(0.5)) {
       var breve_lines = [-3, -1, width + 1, width + 3];
       for(var i=0; i<breve_lines.length; i++){
           ctx.beginPath();
@@ -64,7 +69,7 @@ Vex.Flow.NoteHead = (function() {
   }
 
   // ## Prototype Methods
-  Vex.Inherit(NoteHead, Vex.Flow.Note, {
+  Vex.Inherit(NoteHead, Note, {
     init: function(head_options) {
       NoteHead.superclass.init.call(this, head_options);
       this.index = head_options.index;
@@ -73,12 +78,12 @@ Vex.Flow.NoteHead = (function() {
       this.note_type = head_options.note_type;
       this.duration = head_options.duration;
       this.displaced = head_options.displaced || false;
-      this.stem_direction = head_options.stem_direction || Vex.Flow.StaveNote.STEM_UP;
+      this.stem_direction = head_options.stem_direction || StaveNote.STEM_UP;
       this.line = head_options.line;
 
       // Get glyph code based on duration and note type. This could be
       // regular notes, rests, or other custom codes.
-      this.glyph = Vex.Flow.durationToGlyph(this.duration, this.note_type);
+      this.glyph = Flow.durationToGlyph(this.duration, this.note_type);
       if (!this.glyph) {
         throw new Vex.RuntimeError("BadArguments",
             "No glyph found for duration '" + this.duration +
@@ -162,7 +167,7 @@ Vex.Flow.NoteHead = (function() {
       var half_spacing = spacing/2;
       var min_y = this.y - half_spacing;
 
-      return new Vex.Flow.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
+      return new Flow.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
     },
 
     // Apply current style to Canvas `context`
@@ -237,10 +242,10 @@ Vex.Flow.NoteHead = (function() {
         if (this.style) {
           ctx.save();
           this.applyStyle(ctx);
-          Vex.Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
+          Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
           ctx.restore();
         } else {
-          Vex.Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
+          Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
         }
       }
     }

@@ -6,7 +6,7 @@
 // Copyright Mohit Cheppudira 2010
 
 /** @constructor */
-Vex.Flow.CanvasContext = (function() {
+export var CanvasContext = (function() {
   function CanvasContext(context) {
     if (arguments.length > 0) this.init(context);
   }

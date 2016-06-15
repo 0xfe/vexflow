@@ -2,8 +2,8 @@
 // Copyright Mohit Muthanna 2010
 //
 // This class implements curves (for slurs)
-
-Vex.Flow.Curve = (function() {
+import { Vex } from './vex';
+export var Curve = (function() {
   // from: Start note
   // to: End note
   // options:

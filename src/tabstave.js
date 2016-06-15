@@ -2,14 +2,15 @@
 // Mohit Muthanna <mohit@muthanna.com>
 //
 // Copyright Mohit Cheppudira 2010
-
+import { Vex } from './vex';
+import { Stave } from './stave';
 /** @constructor */
-Vex.Flow.TabStave = (function() {
+export var TabStave = (function() {
   function TabStave(x, y, width, options) {
     if (arguments.length > 0) this.init(x, y, width, options);
   }
 
-  Vex.Inherit(TabStave, Vex.Flow.Stave, {
+  Vex.Inherit(TabStave, Stave, {
     init: function(x, y, width, options) {
       var tab_options = {
         spacing_between_lines_px: 13,

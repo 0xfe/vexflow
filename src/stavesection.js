@@ -2,16 +2,17 @@
 // Copyright Mohit Muthanna 2010
 // Author Larry Kuhns 2011
 // Implements stave section names.
-
+import { Vex } from './vex';
+import { StaveModifier } from './stavemodifier';
 /**
  * @constructor
  */
-Vex.Flow.StaveSection = (function() {
+export var StaveSection = (function() {
   function StaveSection(section, x, shift_y) {
     if (arguments.length > 0) this.init(section, x, shift_y);
   }
 
-  Vex.Inherit(StaveSection, Vex.Flow.StaveModifier, {
+  Vex.Inherit(StaveSection, StaveModifier, {
     init: function(section, x, shift_y) {
       StaveSection.superclass.init.call(this);
 

@@ -4,7 +4,8 @@
 //
 // This class implements hairpins between notes.
 // Hairpins can be either Crescendo or Descrescendo.
-
+import { Vex } from './vex';
+import { Modifier } from './modifier';
 /**
  * Create a new hairpin from the specified notes.
  *
@@ -12,7 +13,7 @@
  * @param {!Object} notes The notes to tie up.
  * @param {!Object} type The type of hairpin
  */
-Vex.Flow.StaveHairpin = (function() {
+export var StaveHairpin = (function() {
   function StaveHairpin(notes, type) {
     if (arguments.length > 0) this.init(notes, type);
   }
@@ -76,7 +77,7 @@ Vex.Flow.StaveHairpin = (function() {
 
       this.notes = notes;
       this.hairpin = type;
-      this.position = Vex.Flow.Modifier.Position.BELOW;
+      this.position = Modifier.Position.BELOW;
 
       this.context = null;
 
@@ -93,8 +94,8 @@ Vex.Flow.StaveHairpin = (function() {
     setContext: function(context) { this.context = context; return this; },
 
     setPosition: function(position) {
-      if (position == Vex.Flow.Modifier.Position.ABOVE ||
-          position == Vex.Flow.Modifier.Position.BELOW)
+      if (position == Modifier.Position.ABOVE ||
+          position == Modifier.Position.BELOW)
         this.position = position;
       return this;
     },
@@ -130,7 +131,7 @@ Vex.Flow.StaveHairpin = (function() {
       var dis = this.render_options.y_shift + 20;
       var y_shift = params.first_y;
 
-      if (this.position == Vex.Flow.Modifier.Position.ABOVE) {
+      if (this.position == Modifier.Position.ABOVE) {
         dis = -dis +30;
         y_shift = params.first_y - params.staff_height;
       }
@@ -182,4 +183,3 @@ Vex.Flow.StaveHairpin = (function() {
   };
   return StaveHairpin;
 }());
-

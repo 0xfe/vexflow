@@ -5,9 +5,9 @@
 //
 // Copyright Mohit Muthanna 2015
 // @author Gregory Ristow (2015)
-
+import { Vex } from './vex';
 /** @constructor */
-Vex.Flow.SVGContext = (function() {
+export var SVGContext = (function() {
   function SVGContext(element) {
     if (arguments.length > 0) this.init(element);
   }
@@ -208,11 +208,11 @@ Vex.Flow.SVGContext = (function() {
     },
 
     // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
-    setLineDash: function(lineDash) { 
+    setLineDash: function(lineDash) {
       if (Object.prototype.toString.call(lineDash) === '[object Array]') {
         lineDash = lineDash.join(", ");
         this.attributes["stroke-dasharray"] = lineDash;
-        return this; 
+        return this;
       } else {
         throw new Vex.RERR("ArgumentError", "lineDash must be an array of integers.");
       }

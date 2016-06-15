@@ -3,12 +3,12 @@
 // ## Description
 //
 // This class implements vibratos.
-
-Vex.Flow.Vibrato = (function() {
+import { Vex } from './vex';
+import { Modifier } from './modifier';
+import { Bend } from './bend';
+export var Vibrato = (function() {
   function Vibrato() { this.init(); }
   Vibrato.CATEGORY = "vibratos";
-
-  var Modifier = Vex.Flow.Modifier;
 
   // ## Static Methods
   // Arrange vibratos inside a `ModifierContext`.
@@ -21,7 +21,7 @@ Vex.Flow.Vibrato = (function() {
     var shift = state.right_shift - 7;
 
     // If there's a bend, drop the text line
-    var bends = context.getModifiers(Vex.Flow.Bend.CATEGORY);
+    var bends = context.getModifiers(Bend.CATEGORY);
     if (bends && bends.length > 0) {
       text_line--;
     }
@@ -43,11 +43,11 @@ Vex.Flow.Vibrato = (function() {
   // ## Prototype Methods
   Vex.Inherit(Vibrato, Modifier, {
     init: function() {
-      var superclass = Vex.Flow.Vibrato.superclass;
+      var superclass = Vibrato.superclass;
       superclass.init.call(this);
 
       this.harsh = false;
-      this.position = Vex.Flow.Modifier.Position.RIGHT;
+      this.position = Modifier.Position.RIGHT;
       this.render_options = {
         vibrato_width: 20,
         wave_height: 6,
@@ -71,7 +71,7 @@ Vex.Flow.Vibrato = (function() {
       if (!this.note) throw new Vex.RERR("NoNoteForVibrato",
         "Can't draw vibrato without an attached note.");
 
-      var start = this.note.getModifierStartXY(Vex.Flow.Modifier.Position.RIGHT,
+      var start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
           this.index);
 
       var ctx = this.context;

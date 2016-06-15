@@ -2,16 +2,18 @@
 // Copyright Mohit Muthanna 2010
 //
 // Author Taehoon Moon 2014
-
+import { Vex } from './vex';
+import { StaveModifier } from './stavemodifier';
+import { TextNote } from './textnote';
 /**
  * @constructor
  */
-Vex.Flow.StaveText = (function() {
+export var StaveText = (function() {
   function StaveText(text, position, options) {
     if (arguments.length > 0) this.init(text, position, options);
   }
 
-  Vex.Inherit(StaveText, Vex.Flow.StaveModifier, {
+  Vex.Inherit(StaveText, StaveModifier, {
     init: function(text, position, options) {
       StaveText.superclass.init.call(this);
 
@@ -21,7 +23,7 @@ Vex.Flow.StaveText = (function() {
       this.options = {
         shift_x: 0,
         shift_y: 0,
-        justification: Vex.Flow.TextNote.Justification.CENTER
+        justification: TextNote.Justification.CENTER
       };
       Vex.Merge(this.options, options);
 
@@ -57,7 +59,7 @@ Vex.Flow.StaveText = (function() {
       var text_width = ctx.measureText("" + this.text).width;
 
       var x, y;
-      var Position = Vex.Flow.StaveModifier.Position;
+      var Position = StaveModifier.Position;
       switch(this.position) {
         case Position.LEFT:
         case Position.RIGHT:
@@ -71,7 +73,7 @@ Vex.Flow.StaveText = (function() {
           break;
         case Position.ABOVE:
         case Position.BELOW:
-          var Justification = Vex.Flow.TextNote.Justification;
+          var Justification = TextNote.Justification;
           x = stave.getX() + this.options.shift_x;
           if(this.options.justification == Justification.CENTER) {
             x += stave.getWidth() / 2 - text_width / 2;

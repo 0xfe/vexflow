@@ -4,7 +4,9 @@
 // Copyright Mohit Muthanna 2010
 //
 // Requires a glyph font to be loaded and Vex.Flow.Font to be set.
-
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Font } from './fonts/vexflow_font';
 /**
  * A quick and dirty static glyph renderer. Renders glyphs from the default
  * font defined in Vex.Flow.Font.
@@ -16,23 +18,23 @@
  * @param {string} val The glyph code in Vex.Flow.Font.
  * @param {boolean} nocache If set, disables caching of font outline.
  */
-Vex.Flow.renderGlyph = function(ctx, x_pos, y_pos, point, val, nocache) {
-  var scale = point * 72.0 / (Vex.Flow.Font.resolution * 100.0);
-  var metrics = Vex.Flow.Glyph.loadMetrics(Vex.Flow.Font, val, !nocache);
-  Vex.Flow.Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
+Flow.renderGlyph = function(ctx, x_pos, y_pos, point, val, nocache) {
+  var scale = point * 72.0 / (Font.resolution * 100.0);
+  var metrics = Glyph.loadMetrics(Font, val, !nocache);
+  Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
 };
 
 /**
  * @constructor
  */
-Vex.Flow.Glyph = (function() {
+export var Glyph = (function() {
   function Glyph(code, point, options) {
     this.code = code;
     this.point = point;
     this.context = null;
     this.options = {
       cache: true,
-      font: Vex.Flow.Font
+      font: Font
     };
 
     this.width = null;
@@ -57,7 +59,7 @@ Vex.Flow.Glyph = (function() {
     getContext: function() { return this.context; },
 
     reset: function() {
-      this.metrics = Vex.Flow.Glyph.loadMetrics(this.options.font, this.code,
+      this.metrics = Glyph.loadMetrics(this.options.font, this.code,
           this.options.cache);
       this.scale = this.point * 72 / (this.options.font.resolution * 100);
     },

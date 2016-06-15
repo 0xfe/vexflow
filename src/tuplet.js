@@ -21,7 +21,7 @@
  *     certainly pass this parameter for anything other than
  *     a basic triplet.
  *
- *   location: 
+ *   location:
  *     default 1, which is above the notes: ┌─── 3 ───┐
  *      -1 is below the notes └─── 3 ───┘
  *
@@ -39,8 +39,11 @@
  *     with articulations, etc...
  * }
  */
-
-Vex.Flow.Tuplet = (function() {
+import { Vex } from './vex';
+import { Formatter } from './formatter';
+import { Glyph } from './glyph';
+import { Stem } from './stem';
+export var Tuplet = (function() {
   function Tuplet(notes, options) {
     if (arguments.length > 0) this.init(notes, options);
   }
@@ -80,7 +83,7 @@ Vex.Flow.Tuplet = (function() {
       }
 
       this.ratioed = "ratioed" in this.options ?
-        this.options.ratioed : 
+        this.options.ratioed :
         (Math.abs(this.notes_occupied - this.num_notes) > 1);
       this.point = 28;
       this.y_pos = 16;
@@ -88,7 +91,7 @@ Vex.Flow.Tuplet = (function() {
       this.width = 200;
       this.location = this.options.location || Tuplet.LOCATION_TOP;
 
-      Vex.Flow.Formatter.AlignRestsToNotes(notes, true, true);
+      Formatter.AlignRestsToNotes(notes, true, true);
       this.resolveGlyphs();
       this.attach();
     },
@@ -185,14 +188,14 @@ Vex.Flow.Tuplet = (function() {
       this.num_glyphs = [];
       var n = this.num_notes;
       while (n >= 1) {
-        this.num_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
+        this.num_glyphs.push(new Glyph("v" + (n % 10), this.point));
         n = parseInt(n / 10, 10);
       }
 
       this.denom_glyphs = [];
       n = this.notes_occupied;
       while (n >= 1) {
-        this.denom_glyphs.push(new Vex.Flow.Glyph("v" + (n % 10), this.point));
+        this.denom_glyphs.push(new Glyph("v" + (n % 10), this.point));
         n = parseInt(n / 10, 10);
       }
     },
@@ -231,9 +234,9 @@ Vex.Flow.Tuplet = (function() {
 
       // offset the tuplet for any nested tuplets between
       // it and the notes:
-      var nested_tuplet_y_offset = 
-        this.getNestedTupletCount() * 
-        Tuplet.NESTING_OFFSET * 
+      var nested_tuplet_y_offset =
+        this.getNestedTupletCount() *
+        Tuplet.NESTING_OFFSET *
         (-this.location);
 
       // offset the tuplet for any manual y_offset:
@@ -247,7 +250,7 @@ Vex.Flow.Tuplet = (function() {
         //y_pos = first_note.getStemExtents().topY - 10;
 
         for (i=0; i<this.notes.length; ++i) {
-          var top_y = this.notes[i].getStemDirection() === Vex.Flow.Stem.UP ?
+          var top_y = this.notes[i].getStemDirection() === Stem.UP ?
               this.notes[i].getStemExtents().topY - 10
             : this.notes[i].getStemExtents().baseY - 20;
           if (top_y < y_pos)
@@ -258,7 +261,7 @@ Vex.Flow.Tuplet = (function() {
         y_pos = first_note.getStave().getYForLine(4) + 20;
 
         for (i=0; i<this.notes.length; ++i) {
-          var bottom_y = this.notes[i].getStemDirection() === Vex.Flow.Stem.UP ?
+          var bottom_y = this.notes[i].getStemDirection() === Stem.UP ?
               this.notes[i].getStemExtents().baseY + 20
             : this.notes[i].getStemExtents().topY + 10;
           if (bottom_y > y_pos)

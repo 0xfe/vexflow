@@ -7,7 +7,7 @@
 /**
  * @constructor
  */
-Vex.Flow.StaveModifier = (function() {
+export var StaveModifier = (function() {
   function StaveModifier() {
     this.init();
   }

@@ -4,9 +4,9 @@
 // Copyright Mohit Muthanna 2010
 
 // Bounding boxes for interactive notation
-
+import { Vex } from './vex';
 /** @constructor */
-Vex.Flow.BoundingBox = (function() {
+export var BoundingBox = (function() {
   function BoundingBox(x, y, w, h) { this.init(x, y, w, h); }
   BoundingBox.copy = function(that) {
     return new BoundingBox(that.x, that.y, that.w, that.h); };

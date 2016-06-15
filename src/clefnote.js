@@ -2,12 +2,16 @@
 // Copyright Mohit Muthanna 2010
 //
 // Author Taehoon Moon 2014
-
+import { Vex } from './vex';
+import { BoundingBox } from './boundingbox';
+import { Note } from './note';
+import { Clef } from './clef';
+import { Glyph } from './glyph';
 /** @constructor */
-Vex.Flow.ClefNote = (function() {
+export var ClefNote = (function() {
   function ClefNote(type, size, annotation) { this.init(type, size, annotation); }
 
-  Vex.Inherit(ClefNote, Vex.Flow.Note, {
+  Vex.Inherit(ClefNote, Note, {
     init: function(type, size, annotation) {
       ClefNote.superclass.init.call(this, {duration: "b"});
 
@@ -19,9 +23,9 @@ Vex.Flow.ClefNote = (function() {
 
     setType: function(type, size, annotation) {
       this.type = type;
-      this.clef_obj = new Vex.Flow.Clef(type, size, annotation);
+      this.clef_obj = new Clef(type, size, annotation);
       this.clef = this.clef_obj.clef;
-      this.glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
+      this.glyph = new Glyph(this.clef.code, this.clef.point);
       this.setWidth(this.glyph.getMetrics().width);
       return this;
     },
@@ -37,12 +41,12 @@ Vex.Flow.ClefNote = (function() {
     },
 
     setStave: function(stave) {
-      var superclass = Vex.Flow.ClefNote.superclass;
+      var superclass = ClefNote.superclass;
       superclass.setStave.call(this, stave);
     },
 
     getBoundingBox: function() {
-      return new Vex.Flow.BoundingBox(0, 0, 0, 0);
+      return new BoundingBox(0, 0, 0, 0);
     },
 
     addToModifierContext: function() {
@@ -74,7 +78,7 @@ Vex.Flow.ClefNote = (function() {
 
       // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
       if (this.clef_obj.annotation !== undefined) {
-        var attachment = new Vex.Flow.Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
+        var attachment = new Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
         if (!attachment.getContext()) {
             attachment.setContext(this.context);
         }

@@ -2,11 +2,12 @@
 // Copyright Mohit Muthanna 2010
 //
 // This class implements varies types of tunings for tablature.
-
+import { Vex } from './vex';
+import { Flow } from './tables';
 /**
  * @constructor
  */
-Vex.Flow.Tuning = (function() {
+export var Tuning = (function() {
   function Tuning(tuningString) {
     this.init(tuningString);
   }
@@ -26,12 +27,12 @@ Vex.Flow.Tuning = (function() {
     },
 
     noteToInteger: function(noteString) {
-      return Vex.Flow.keyProperties(noteString).int_value;
+      return Flow.keyProperties(noteString).int_value;
     },
 
     setTuning: function(noteString) {
-      if (Vex.Flow.Tuning.names[noteString])
-        noteString = Vex.Flow.Tuning.names[noteString];
+      if (Tuning.names[noteString])
+        noteString = Tuning.names[noteString];
 
       this.tuningString = noteString;
       this.tuningValues = [];
@@ -74,7 +75,7 @@ Vex.Flow.Tuning = (function() {
       var octave = Math.floor(noteValue / 12);
       var value = noteValue % 12;
 
-      return Vex.Flow.integerToNote(value) + "/" + octave;
+      return Flow.integerToNote(value) + "/" + octave;
     }
   };
 
