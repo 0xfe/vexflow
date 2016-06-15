@@ -15,6 +15,9 @@ puts "  node[fontname=Arial,fontsize=10]"
 Dir.glob("../src/*.js").each do |file|
     f = File.open(file, "r")
     f.each_line do |line|
+        if line =~ /Vex.Flow\.(\S+)\s*=\s*\(\s*function/
+            puts "  #{$1};"
+        end
         if line =~ /Vex.Inherit\s*\(([^,]+),\s*([^\s,]+)/
             child = $1
             parent = $2.gsub(/Vex\.Flow\./, "")
