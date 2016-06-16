@@ -7,6 +7,7 @@
 // duration, it consumes no `tick`s, and is dealt with appropriately by the formatter.
 //
 // See `tests/barnote_tests.js` for usage examples.
+
 import { Vex } from './vex';
 import { Note } from './note';
 import { Barline } from './stavebarline';

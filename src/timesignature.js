@@ -3,6 +3,7 @@
 // See tables.js for the internal time signatures
 // representation
 //
+
 import { Vex } from './vex';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';

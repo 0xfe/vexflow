@@ -2,6 +2,7 @@
 // Copyright Mohit Muthanna 2010
 //
 // This class implements varies types of tunings for tablature.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 /**

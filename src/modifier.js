@@ -12,6 +12,7 @@
 // Typically, all modifiers to a note are part of the same `ModifierContext` instance. Also,
 // in multi-voice staves, all modifiers to notes on the same `tick` are part of the same
 // `ModifierContext`. This ensures that multiple voices don't trample all over each other.
+
 import { Vex } from './vex';
 export var Modifier = (function() {
   function Modifier() {

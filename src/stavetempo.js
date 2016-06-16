@@ -2,6 +2,7 @@
 // Copyright Mohit Muthanna 2010
 // Author Radosaw Eichler 2012
 // Implements tempo marker.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';

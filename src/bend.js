@@ -3,6 +3,7 @@
 // ## Description
 //
 // This file implements tablature bends.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';

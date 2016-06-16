@@ -2,6 +2,7 @@
 // Mohit Muthanna <mohit@muthanna.com>
 //
 // Copyright Mohit Cheppudira 2010
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Barline } from './stavebarline';

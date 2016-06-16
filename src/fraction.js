@@ -1,6 +1,7 @@
 // Fraction class that represents a rational number
 // @author zz85
 // @author incompleteopus (modifications)
+
 import { Vex } from './vex';
 export var Fraction = (function() {
   function Fraction(numerator, denominator) {

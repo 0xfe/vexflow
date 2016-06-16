@@ -9,11 +9,8 @@
 //
 /* global window: false */
 /* global document: false */
-
-//if (typeof window.Vex === 'undefined') {
-  /* global Vex: true */
+/* global Vex: true */
 var Vex = function() {};
-//}
 
 // Default log function sends all arguments to console.
 Vex.L = function(block, args) {
@@ -180,19 +177,4 @@ Vex.Prefix = function(text) {
 };
 Vex.Prefix.prefix = "vf-";
 
-// UMD to export Vex.
-//
-/* global require: false */
-/* global define: false */
-/* global module: false */
-/*if (typeof require == "function") {
-  try {
-    module.exports = Vex;
-  } catch (e) {}
-} else if (typeof define == "function" && define.amd) {
-  define("Vex", [], function(){ return Vex; });
-} else {
-  (this || window)["Vex"] = Vex;
-}
-*/
 export { Vex };

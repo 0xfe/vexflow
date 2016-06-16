@@ -2,6 +2,7 @@
 // Copyright Mohit Muthanna 2010
 //
 // This class implements dot modifiers for notes.
+
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 /**

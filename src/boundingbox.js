@@ -4,6 +4,7 @@
 // Copyright Mohit Muthanna 2010
 
 // Bounding boxes for interactive notation
+
 import { Vex } from './vex';
 /** @constructor */
 export var BoundingBox = (function() {

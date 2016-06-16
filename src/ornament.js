@@ -8,6 +8,7 @@
 // `tables.js` under `Vex.Flow.ornamentCodes`.
 //
 // See `tests/ornament_tests.js` for usage examples.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';

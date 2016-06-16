@@ -5,6 +5,7 @@
 //
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
+
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Renderer } from './renderer';

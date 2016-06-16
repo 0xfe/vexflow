@@ -6,6 +6,7 @@
 // This file implements various types of clefs that can be rendered on a stave.
 //
 // See `tests/clef_tests.js` for usage examples.
+
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';

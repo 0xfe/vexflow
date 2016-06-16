@@ -5,6 +5,7 @@
 //
 // requires: vex.js   (Vex)
 // requires: flow.js  (Vex.Flow)
+
 import { Vex } from './vex';
 /**
  * @constructor

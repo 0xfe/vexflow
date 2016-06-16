@@ -16,6 +16,7 @@
 //
 // See `tests/formatter_tests.js` for usage examples. The helper functions included
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Fraction } from './fraction';

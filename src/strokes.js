@@ -5,6 +5,7 @@
 //
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';

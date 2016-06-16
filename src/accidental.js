@@ -8,6 +8,7 @@
 // notes. Support is included for both western and microtonal accidentals.
 //
 // See `tests/accidental_tests.js` for usage examples.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Fraction } from './fraction';

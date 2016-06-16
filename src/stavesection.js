@@ -2,6 +2,7 @@
 // Copyright Mohit Muthanna 2010
 // Author Larry Kuhns 2011
 // Implements stave section names.
+
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 /**

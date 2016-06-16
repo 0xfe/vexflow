@@ -2,6 +2,7 @@
 // Copyright Mohit Muthanna 2010
 // Author Larry Kuhns 2013
 // Class to draws string numbers into the notation.
+
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 /**

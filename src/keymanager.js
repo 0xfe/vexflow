@@ -6,6 +6,7 @@
 // requires: vex.js   (Vex)
 // requires: flow.js  (Vex.Flow)
 // requires: music.js (Vex.Flow.Music)
+
 import { Vex } from './vex';
 import { Music } from './music';
 /**

@@ -39,6 +39,7 @@
  *     with articulations, etc...
  * }
  */
+
 import { Vex } from './vex';
 import { Formatter } from './formatter';
 import { Glyph } from './glyph';

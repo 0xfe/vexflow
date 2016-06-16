@@ -3,6 +3,7 @@
 // Implements Repetitions (Coda, signo, D.C., etc.)
 //
 // Requires vex.js.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';

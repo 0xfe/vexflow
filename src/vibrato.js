@@ -3,6 +3,7 @@
 // ## Description
 //
 // This class implements vibratos.
+
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Bend } from './bend';

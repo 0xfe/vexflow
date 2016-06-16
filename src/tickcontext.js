@@ -3,6 +3,7 @@
 //
 // A formatter for abstract tickable objects, such as notes, chords,
 // tabs, etc.
+
 import { Vex } from './vex';
 import { Fraction } from './fraction';
 /** @constructor */

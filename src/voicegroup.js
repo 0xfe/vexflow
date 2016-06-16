@@ -2,6 +2,7 @@
 // Mohit Muthanna <mohit@muthanna.com>
 //
 // Copyright Mohit Muthanna 2010
+
 import { Vex } from './vex';
 /** @constructor */
 export var VoiceGroup = (function() {

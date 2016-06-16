@@ -3,6 +3,7 @@
 // Implements voltas (repeat brackets)
 //
 // Requires vex.js.
+
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 export var Volta = (function() {

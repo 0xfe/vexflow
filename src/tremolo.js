@@ -2,6 +2,7 @@
 // Author: Mike Corrigan <corrigan@gmail.com>
 //
 // This class implements tremolo notation.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';

@@ -4,6 +4,7 @@
 //
 // This file implements `GraceNoteGroup` which is used to format and
 // render grace notes.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';

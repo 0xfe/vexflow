@@ -5,6 +5,7 @@
 //
 // Copyright Mohit Muthanna 2015
 // @author Gregory Ristow (2015)
+
 import { Vex } from './vex';
 /** @constructor */
 export var SVGContext = (function() {

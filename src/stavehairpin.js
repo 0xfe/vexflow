@@ -4,6 +4,7 @@
 //
 // This class implements hairpins between notes.
 // Hairpins can be either Crescendo or Descrescendo.
+
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 /**

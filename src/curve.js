@@ -2,6 +2,7 @@
 // Copyright Mohit Muthanna 2010
 //
 // This class implements curves (for slurs)
+
 import { Vex } from './vex';
 export var Curve = (function() {
   // from: Start note

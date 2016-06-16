@@ -6,6 +6,7 @@
 // Copyright Mohit Cheppudira 2010
 
 /* global document: false */
+
 import { CanvasContext } from './canvascontext';
 import { RaphaelContext } from './raphaelcontext';
 import { SVGContext } from './svgcontext';

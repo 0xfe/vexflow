@@ -4,6 +4,7 @@
 //
 // This class implements various types of modifiers to notes (e.g. bends,
 // fingering positions etc.)
+
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
 import { Dot } from './dot';

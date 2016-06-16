@@ -9,6 +9,7 @@
 // Some notes have stems, heads, dots, etc. Most notational elements that
 // surround a note are called *modifiers*, and every note has an associated
 // array of them. All notes also have a rendering context and belong to a stave.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Tickable } from './tickable';

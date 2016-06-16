@@ -4,6 +4,7 @@
 // Copyright Mohit Muthanna 2010
 //
 // Requires a glyph font to be loaded and Vex.Flow.Font to be set.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Font } from './fonts/vexflow_font';
