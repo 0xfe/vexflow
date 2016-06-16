@@ -7,7 +7,8 @@
 // A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
-Vex.Flow.StaveLine = (function() {
+import { Vex } from './vex';
+export var StaveLine = (function() {
   function StaveLine(notes) {
     if (arguments.length > 0) this.init(notes);
   }
@@ -240,11 +241,11 @@ Vex.Flow.StaveLine = (function() {
   };
 
   // ## Private Helpers
-  // 
+  //
   // Attribution: Arrow rendering implementations based off of
-  // Patrick Horgan's article, "Drawing lines and arcs with 
+  // Patrick Horgan's article, "Drawing lines and arcs with
   // arrow heads on  HTML5 Canvas"
-  // 
+  //
   // Draw an arrow head that connects between 3 coordinates
   function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
     // all cases do this.

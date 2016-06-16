@@ -6,7 +6,12 @@
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
 
-Vex.Flow.Stroke = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
+import { StaveNote } from './stavenote';
+import './glyph';
+export var Stroke = (function() {
   function Stroke(type, options) {
     if (arguments.length > 0) this.init(type, options);
   }
@@ -20,8 +25,6 @@ Vex.Flow.Stroke = (function() {
     RASQUEDO_DOWN: 5,
     RASQUEDO_UP: 6
   };
-
-  var Modifier = Vex.Flow.Modifier;
 
   // ## Static Methods
 
@@ -38,7 +41,7 @@ Vex.Flow.Stroke = (function() {
       str = strokes[i];
       var note = str.getNote();
       var props;
-      if (note instanceof Vex.Flow.StaveNote) {
+      if (note instanceof StaveNote) {
         props = note.getKeyProps()[str.getIndex()];
         shift = (props.displaced ? note.getExtraLeftPx() : 0);
         str_list.push({ line: props.line, shift: shift, str: str });
@@ -144,7 +147,7 @@ Vex.Flow.Stroke = (function() {
           arrow = "vc3";
           arrow_shift_x = -3;
           text_shift_x = this.x_shift + arrow_shift_x - 2;
-          if (this.note instanceof Vex.Flow.StaveNote) {
+          if (this.note instanceof StaveNote) {
             topY += 1.5 * line_space;
             if ((botY - topY) % 2 !== 0) {
               botY += 0.5 * line_space;
@@ -165,7 +168,7 @@ Vex.Flow.Stroke = (function() {
           arrow = "v52";
           arrow_shift_x = -4;
           text_shift_x = this.x_shift + arrow_shift_x - 1;
-          if (this.note instanceof Vex.Flow.StaveNote) {
+          if (this.note instanceof StaveNote) {
             arrow_y = line_space / 2;
             topY += 0.5 * line_space;
             if ((botY - topY) % 2 === 0) {
@@ -187,25 +190,25 @@ Vex.Flow.Stroke = (function() {
           this.type == Stroke.Type.BRUSH_UP) {
         this.context.fillRect(x + this.x_shift, topY, 1, botY - topY);
       } else {
-        if (this.note instanceof Vex.Flow.StaveNote) {
+        if (this.note instanceof StaveNote) {
           for (i = topY; i <= botY; i += line_space) {
-            Vex.Flow.renderGlyph(this.context, x + this.x_shift - 4,
+            Flow.renderGlyph(this.context, x + this.x_shift - 4,
                                  i,
                                  this.render_options.font_scale, "va3");
           }
         } else {
           for (i = topY; i <= botY; i+= 10) {
-            Vex.Flow.renderGlyph(this.context, x + this.x_shift - 4,
+            Flow.renderGlyph(this.context, x + this.x_shift - 4,
                                  i,
                                  this.render_options.font_scale, "va3");
           }
-          if (this.type == Vex.Flow.Stroke.Type.RASQUEDO_DOWN)
+          if (this.type == Stroke.Type.RASQUEDO_DOWN)
             text_y = i + 0.25 * line_space;
         }
       }
 
       // Draw the arrow head
-      Vex.Flow.renderGlyph(this.context, x + this.x_shift + arrow_shift_x, arrow_y,
+      Flow.renderGlyph(this.context, x + this.x_shift + arrow_shift_x, arrow_y,
                            this.render_options.font_scale, arrow);
 
       // Draw the rasquedo "R"

@@ -17,7 +17,16 @@
 // See `tests/formatter_tests.js` for usage examples. The helper functions included
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
-Vex.Flow.Formatter = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Fraction } from './fraction';
+import { Voice } from './voice';
+import { Beam } from './beam';
+import { StaveConnector } from './staveconnector';
+import { StaveNote } from './stavenote';
+import { ModifierContext } from './modifiercontext';
+import { TickContext } from './tickcontext';
+export var Formatter = (function() {
   function Formatter() {
     // Minimum width required to render all the notes in the voices.
     this.minTotalWidth = 0;
@@ -29,7 +38,7 @@ Vex.Flow.Formatter = (function() {
     this.pixelsPerTick = 0;
 
     // Total number of ticks in the voice.
-    this.totalTicks = new Vex.Flow.Fraction(0, 1);
+    this.totalTicks = new Fraction(0, 1);
 
     // Arrays of tick and modifier contexts.
     this.tContexts = null;
@@ -99,11 +108,11 @@ Vex.Flow.Formatter = (function() {
             "Voices should have same total note duration in ticks.");
       }
 
-      if (voice.getMode() == Vex.Flow.Voice.Mode.STRICT && !voice.isComplete())
+      if (voice.getMode() == Voice.Mode.STRICT && !voice.isComplete())
         throw new Vex.RERR("IncompleteVoice",
           "Voice does not have enough notes.");
 
-      var lcm = Vex.Flow.Fraction.LCM(resolutionMultiplier,
+      var lcm = Fraction.LCM(resolutionMultiplier,
           voice.getResolutionMultiplier());
       if (resolutionMultiplier < lcm) {
         resolutionMultiplier = lcm;
@@ -120,7 +129,7 @@ Vex.Flow.Formatter = (function() {
       // Use resolution multiplier as denominator to expand ticks
       // to suitable integer values, so that no additional expansion
       // of fractional tick values is needed.
-      var ticksUsed = new Vex.Flow.Fraction(0, resolutionMultiplier);
+      var ticksUsed = new Fraction(0, resolutionMultiplier);
 
       for (var j = 0; j < tickables.length; ++j) {
         var tickable = tickables[j];
@@ -181,14 +190,14 @@ Vex.Flow.Formatter = (function() {
     }
 
     // Start by creating a voice and adding all the notes to it.
-    var voice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
-      setMode(Vex.Flow.Voice.Mode.SOFT);
+    var voice = new Voice(Flow.TIME4_4).
+      setMode(Voice.Mode.SOFT);
     voice.addTickables(notes);
 
     // Then create beams, if requested.
     var beams = null;
     if (opts.auto_beam) {
-      beams = Vex.Flow.Beam.applyAndGetBeams(voice);
+      beams = Beam.applyAndGetBeams(voice);
     }
 
     // Instantiate a `Formatter` and format the notes.
@@ -236,19 +245,19 @@ Vex.Flow.Formatter = (function() {
     }
 
     // Create a `4/4` voice for `notes`.
-    var notevoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
-      setMode(Vex.Flow.Voice.Mode.SOFT);
+    var notevoice = new Voice(Flow.TIME4_4).
+      setMode(Voice.Mode.SOFT);
     notevoice.addTickables(notes);
 
     // Create a `4/4` voice for `tabnotes`.
-    var tabvoice = new Vex.Flow.Voice(Vex.Flow.TIME4_4).
-      setMode(Vex.Flow.Voice.Mode.SOFT);
+    var tabvoice = new Voice(Flow.TIME4_4).
+      setMode(Voice.Mode.SOFT);
     tabvoice.addTickables(tabnotes);
 
     // Generate beams if requested.
     var beams = null;
     if (opts.auto_beam) {
-      beams = Vex.Flow.Beam.applyAndGetBeams(notevoice);
+      beams = Beam.applyAndGetBeams(notevoice);
     }
 
 
@@ -268,7 +277,7 @@ Vex.Flow.Formatter = (function() {
     }
 
     // Draw a connector between tab and note staves.
-    (new Vex.Flow.StaveConnector(stave, tabstave)).setContext(ctx).draw();
+    (new StaveConnector(stave, tabstave)).setContext(ctx).draw();
   };
 
   // Auto position rests based on previous/next note positions.
@@ -279,7 +288,7 @@ Vex.Flow.Formatter = (function() {
   // * `align_tuplets`: If set to false, ignores tuplets.
   Formatter.AlignRestsToNotes = function(notes, align_all_notes, align_tuplets) {
     for (var i = 0; i < notes.length; ++i) {
-      if (notes[i] instanceof Vex.Flow.StaveNote && notes[i].isRest()) {
+      if (notes[i] instanceof StaveNote && notes[i].isRest()) {
         var note = notes[i];
 
         if (note.tuplet && !align_tuplets) continue;
@@ -379,7 +388,7 @@ Vex.Flow.Formatter = (function() {
     // Create `ModifierContext`s for each tick in `voices`.
     createModifierContexts: function(voices) {
       var contexts = createContexts(voices,
-          Vex.Flow.ModifierContext,
+          ModifierContext,
           function(tickable, context) {
             tickable.addToModifierContext(context);
           });
@@ -391,7 +400,7 @@ Vex.Flow.Formatter = (function() {
     // total number of ticks in voices.
     createTickContexts: function(voices) {
       var contexts = createContexts(voices,
-          Vex.Flow.TickContext,
+          TickContext,
           function(tickable, context) { context.addTickable(tickable); });
 
       contexts.array.forEach(function(context) {

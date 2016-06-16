@@ -7,13 +7,15 @@
 //
 // See `tests/annotation_tests.js` for usage examples.
 
-Vex.Flow.Annotation = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
+export var Annotation = (function() {
   function Annotation(text) {
     if (arguments.length > 0) this.init(text);
   }
 
   Annotation.CATEGORY = "annotations";
-  var Modifier = Vex.Flow.Modifier;
 
   // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
   function L() { if (Annotation.DEBUG) Vex.L("Vex.Flow.Annotation", arguments); }
@@ -76,7 +78,7 @@ Vex.Flow.Annotation = (function() {
       };
 
       // The default width is calculated from the text.
-      this.setWidth(Vex.Flow.textWidth(text));
+      this.setWidth(Flow.textWidth(text));
     },
 
     // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.

@@ -3,17 +3,17 @@
 //
 // This class implements dot modifiers for notes.
 
+import { Vex } from './vex';
+import { Modifier } from './modifier';
 /**
  * @constructor
  */
-Vex.Flow.Dot = (function() {
+export var Dot = (function() {
   function Dot() {
     this.init();
   }
 
   Dot.CATEGORY = "dots";
-
-  var Modifier = Vex.Flow.Modifier;
 
   // Arrange dots inside a ModifierContext.
   Dot.format = function(dots, state) {

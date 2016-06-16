@@ -5,7 +5,11 @@
 //
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
-Vex.Flow.KeySignature = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { StaveModifier } from './stavemodifier';
+import { Glyph } from './glyph';
+export var KeySignature = (function() {
   function KeySignature(keySpec, cancelKeySpec, alterKeySpec) {
     if (arguments.length > 0) this.init(keySpec, cancelKeySpec, alterKeySpec);
   }
@@ -74,13 +78,13 @@ Vex.Flow.KeySignature = (function() {
   };
 
   // ## Prototype Methods
-  Vex.Inherit(KeySignature, Vex.Flow.StaveModifier, {
+  Vex.Inherit(KeySignature, StaveModifier, {
     // Create a new Key Signature based on a `key_spec`
     init: function(keySpec, cancelKeySpec, alterKeySpec) {
       KeySignature.superclass.init();
 
       this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
-      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
+      this.setPosition(StaveModifier.Position.BEGIN);
       this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
       this.glyphs = [];
       this.paddingForced = false;
@@ -92,8 +96,8 @@ Vex.Flow.KeySignature = (function() {
     // accidental to add. If the `next` accidental is also provided, extra
     // width will be added to the initial accidental for optimal spacing.
     convertToGlyph: function(acc, next) {
-      var glyph_data = Vex.Flow.accidentalCodes(acc.type);
-      var glyph = new Vex.Flow.Glyph(glyph_data.code, this.glyphFontScale);
+      var glyph_data = Flow.accidentalCodes(acc.type);
+      var glyph = new Glyph(glyph_data.code, this.glyphFontScale);
 
       // Determine spacing between current accidental and the next accidental
       var extra_width = 0;
@@ -124,7 +128,7 @@ Vex.Flow.KeySignature = (function() {
 
     convertToCancelAccList: function(spec) {
       // Get the accidental list for the cancelled key signature
-      var cancel_accList = Vex.Flow.keySignature(spec);
+      var cancel_accList = Flow.keySignature(spec);
 
       // If the cancelled key has a different accidental type, ie: # vs b
       var different_types = this.accList.length > 0 && cancel_accList.length > 0 &&
@@ -260,7 +264,7 @@ Vex.Flow.KeySignature = (function() {
 
       this.width = 0;
       this.glyphs = [];
-      this.accList = Vex.Flow.keySignature(this.keySpec);
+      this.accList = Flow.keySignature(this.keySpec);
       if (this.cancelKeySpec) {
         this.convertToCancelAccList(this.cancelKeySpec);
       }

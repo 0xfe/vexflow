@@ -5,13 +5,15 @@
 //
 // Requires vex.js.
 
+import { Vex } from './vex';
+import { StemmableNote } from './stemmablenote';
 /** @constructor */
-Vex.Flow.GhostNote = (function() {
+export var GhostNote = (function() {
   function GhostNote(duration) {
     if (arguments.length > 0) this.init(duration);
   }
 
-  Vex.Inherit(GhostNote, Vex.Flow.StemmableNote, {
+  Vex.Inherit(GhostNote, StemmableNote, {
     init: function(parameter) {
       // Sanity check
       if (!parameter) {

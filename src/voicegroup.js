@@ -3,8 +3,9 @@
 //
 // Copyright Mohit Muthanna 2010
 
+import { Vex } from './vex';
 /** @constructor */
-Vex.Flow.VoiceGroup = (function() {
+export var VoiceGroup = (function() {
   function VoiceGroup() {
     this.init();
   }

@@ -5,8 +5,11 @@
 //
 // Requires vex.js.
 
+import { Vex } from './vex';
+import { Flow } from './tables';
+import './glyph';
 /** @constructor */
-Vex.Flow.StaveConnector = (function() {
+export var StaveConnector = (function() {
   function StaveConnector(top_stave, bottom_stave) {
     this.init(top_stave, bottom_stave);
   }
@@ -29,7 +32,7 @@ Vex.Flow.StaveConnector = (function() {
 
   StaveConnector.prototype = {
     init: function(top_stave, bottom_stave) {
-      this.thickness = Vex.Flow.STAVE_LINE_THICKNESS;
+      this.thickness = Flow.STAVE_LINE_THICKNESS;
       this.width = 3;
       this.top_stave = top_stave;
       this.bottom_stave = bottom_stave;
@@ -149,8 +152,8 @@ Vex.Flow.StaveConnector = (function() {
           topY -= 4;
           botY += 4;
           attachment_height = botY - topY;
-          Vex.Flow.renderGlyph(this.ctx, topX - 5, topY - 3, 40, "v1b", true);
-          Vex.Flow.renderGlyph(this.ctx, topX - 5, botY + 3, 40, "v10", true);
+          Flow.renderGlyph(this.ctx, topX - 5, topY - 3, 40, "v1b", true);
+          Flow.renderGlyph(this.ctx, topX - 5, botY + 3, 40, "v10", true);
           topX -= (this.width + 2);
           break;
         case StaveConnector.type.BOLD_DOUBLE_LEFT:

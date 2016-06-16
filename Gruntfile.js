@@ -11,6 +11,7 @@ module.exports = function(grunt) {
                 ' */\n';
   var BUILD_DIR = 'build';
   var RELEASE_DIR = 'releases';
+  var MODULE_ENTRY = 'src/index.js';
   var TARGET_RAW = BUILD_DIR + '/vexflow-debug.js';
   var TARGET_MIN = BUILD_DIR + '/vexflow-min.js';
   var TARGET_TESTS = BUILD_DIR + '/vexflow-tests.js';
@@ -95,13 +96,21 @@ module.exports = function(grunt) {
         banner: BANNER,
         sourceMap: true
       },
-      vexflow: {
-        src: SOURCES,
-        dest: TARGET_RAW
-      },
       tests: {
         src: TEST_SOURCES,
         dest: TARGET_TESTS
+      }
+    },
+    rollup: {
+      options: {
+        banner: BANNER,
+        format: 'umd',
+        moduleName: 'Vex',
+        sourceMap: true
+      },
+      files: {
+        src: MODULE_ENTRY,
+        dest: TARGET_RAW
       }
     },
     uglify: {
@@ -110,13 +119,14 @@ module.exports = function(grunt) {
         sourceMap: true
       },
       build: {
-        src: SOURCES,
+        src: TARGET_RAW,
         dest: TARGET_MIN
       }
     },
     jshint: {
       files: SOURCES,
       options: {
+        esversion: 6,
         eqnull: true,   // allow == and ~= for nulls
         sub: true,      // don't enforce dot notation
         trailing: true, // no more trailing spaces
@@ -197,6 +207,7 @@ module.exports = function(grunt) {
   });
 
   // Load the plugin that provides the "uglify" task.
+  grunt.loadNpmTasks('grunt-rollup');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -210,8 +221,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-git');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'docco']);
-  grunt.registerTask('test', 'Run qunit tests.', ['concat', 'qunit']);
+  grunt.registerTask('default', ['jshint', 'rollup', 'concat', 'uglify', 'docco']);
+  grunt.registerTask('test', 'Run qunit tests.', ['rollup', 'concat', 'qunit']);
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current binaries to releases/.', function() {

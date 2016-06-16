@@ -9,7 +9,13 @@
 //
 // See `tests/accidental_tests.js` for usage examples.
 
-Vex.Flow.Accidental = (function(){
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Fraction } from './fraction';
+import { Music } from './music';
+import { Modifier } from './modifier';
+import './glyph';
+export var Accidental = (function(){
   function Accidental(type) {
     if (arguments.length > 0) this.init(type);
   }
@@ -17,8 +23,6 @@ Vex.Flow.Accidental = (function(){
 
   // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
   function L() { if (Accidental.DEBUG) Vex.L("Vex.Flow.Accidental", arguments); }
-
-  var Modifier = Vex.Flow.Modifier;
 
   // ## Static Methods
   //
@@ -206,7 +210,7 @@ Vex.Flow.Accidental = (function(){
       // the accidentalsColumnsTable housed in tables.js.
       } else {
         for(group_member = i; group_member <= group_end; group_member++) {
-          column = Vex.Flow.accidentalColumnsTable[group_length][end_case][group_member-i];
+          column = Flow.accidentalColumnsTable[group_length][end_case][group_member-i];
           line_list[group_member].column = column;
           total_columns = (total_columns > column) ? total_columns : column;
         }
@@ -315,7 +319,7 @@ Vex.Flow.Accidental = (function(){
         stroke_px: 3
       };
 
-      this.accidental = Vex.Flow.accidentalCodes(this.type);
+      this.accidental = Flow.accidentalCodes(this.type);
       if (!this.accidental) throw new Vex.RERR("ArgumentError", "Unknown accidental type: " + type);
 
       // Cautionary accidentals have parentheses around them
@@ -343,8 +347,8 @@ Vex.Flow.Accidental = (function(){
     setAsCautionary: function() {
       this.cautionary = true;
       this.render_options.font_scale = 28;
-      this.paren_left = Vex.Flow.accidentalCodes("{");
-      this.paren_right = Vex.Flow.accidentalCodes("}");
+      this.paren_left = Flow.accidentalCodes("{");
+      this.paren_right = Flow.accidentalCodes("}");
       var width_adjust = (this.type == "##" || this.type == "bb") ? 6 : 4;
 
       // Make sure `width` accomodates for parentheses.
@@ -367,19 +371,19 @@ Vex.Flow.Accidental = (function(){
 
       if (!this.cautionary) {
         // Render the accidental alone.
-        Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
+        Flow.renderGlyph(this.context, acc_x, acc_y,
                              this.render_options.font_scale, this.accidental.code);
       } else {
         // Render the accidental in parentheses.
         acc_x += 3;
-        Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
+        Flow.renderGlyph(this.context, acc_x, acc_y,
                              this.render_options.font_scale, this.paren_left.code);
         acc_x += 2;
-        Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
+        Flow.renderGlyph(this.context, acc_x, acc_y,
                              this.render_options.font_scale, this.accidental.code);
         acc_x += this.accidental.width - 2;
         if (this.type == "##" || this.type == "bb") acc_x -= 2;
-        Vex.Flow.renderGlyph(this.context, acc_x, acc_y,
+        Flow.renderGlyph(this.context, acc_x, acc_y,
                              this.render_options.font_scale, this.paren_right.code);
       }
     }
@@ -396,7 +400,7 @@ Vex.Flow.Accidental = (function(){
 
     // Sort the tickables in each voice by their tick position in the voice
     voices.forEach(function(voice) {
-      var tickPosition = new Vex.Flow.Fraction(0, 1);
+      var tickPosition = new Flow.Fraction(0, 1);
       var notes = voice.getTickables();
       notes.forEach(function(note) {
         var notesAtPosition = tickNoteMap[tickPosition.value()];
@@ -412,7 +416,7 @@ Vex.Flow.Accidental = (function(){
       });
     });
 
-    var music = new Vex.Flow.Music();
+    var music = new Music();
 
     // Default key signature is C major
     if (!keySignature) keySignature = "C";
@@ -454,7 +458,7 @@ Vex.Flow.Accidental = (function(){
                   scaleMap[key.root] = pitch;
 
                   // Create the accidental
-                  var accidental = new Vex.Flow.Accidental(accidentalString);
+                  var accidental = new Accidental(accidentalString);
 
                   // Attach the accidental to the StaveNote
                   note.addAccidental(keyIndex, accidental);

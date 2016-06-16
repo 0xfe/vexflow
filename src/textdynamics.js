@@ -7,7 +7,10 @@
 //
 // You can render any dynamics string that contains a combination of
 // the following letters:  P, M, F, Z, R, S
-Vex.Flow.TextDynamics = (function(){
+import { Vex } from './vex';
+import { Note } from './note';
+import { Glyph } from './glyph';
+export var TextDynamics = (function(){
   function TextDynamics(text_struct) {
     if (arguments.length > 0) this.init(text_struct);
   }
@@ -47,7 +50,7 @@ Vex.Flow.TextDynamics = (function(){
   //
   // A `TextDynamics` object inherits from `Note` so that it can be formatted
   // within a `Voice`.
-  Vex.Inherit(TextDynamics, Vex.Flow.Note, {
+  Vex.Inherit(TextDynamics, Note, {
     // Create the dynamics marking. `text_struct` is an object
     // that contains a `duration` property and a `sequence` of
     // letters that represents the letters to render
@@ -78,7 +81,7 @@ Vex.Flow.TextDynamics = (function(){
         if (!glyph_data) throw new Vex.RERR("Invalid dynamics character: " + letter);
 
         var size =  this.render_options.glyph_font_size;
-        var glyph = new Vex.Flow.Glyph(glyph_data.code, size);
+        var glyph = new Glyph(glyph_data.code, size);
 
         // Add the glyph
         this.glyphs.push(glyph);

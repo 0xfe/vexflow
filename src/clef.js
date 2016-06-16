@@ -7,13 +7,16 @@
 //
 // See `tests/clef_tests.js` for usage examples.
 
-Vex.Flow.Clef = (function() {
+import { Vex } from './vex';
+import { StaveModifier } from './stavemodifier';
+import { Glyph } from './glyph';
+export var Clef = (function() {
   function Clef(type, size, annotation) {
     if (arguments.length > 0) this.init(type, size, annotation);
   }
 
   // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
-  function L() { if (Vex.Flow.Clef.DEBUG) Vex.L("Vex.Flow.Clef", arguments); }
+  function L() { if (Clef.DEBUG) Vex.L("Vex.Flow.Clef", arguments); }
 
   Clef.category = 'clefs';
 
@@ -132,14 +135,14 @@ Vex.Flow.Clef = (function() {
     },
   };
   // ## Prototype Methods
-  Vex.Inherit(Clef, Vex.Flow.StaveModifier, {
+  Vex.Inherit(Clef, StaveModifier, {
     // Create a new clef. The parameter `clef` must be a key from
     // `Clef.types`.
     init: function(type, size, annotation) {
-      var superclass = Vex.Flow.Clef.superclass;
+      var superclass = Clef.superclass;
       superclass.init.call(this);
 
-      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
+      this.setPosition(StaveModifier.Position.BEGIN);
       this.setType(type, size, annotation);
       this.setWidth(this.glyph.getMetrics().width);
       L("Creating clef:", type);
@@ -149,18 +152,18 @@ Vex.Flow.Clef = (function() {
 
     setType: function(type, size, annotation) {
       this.type = type;
-      this.clef = Vex.Flow.Clef.types[type];
+      this.clef = Clef.types[type];
       if (size === undefined) {
         this.size = "default";
       } else {
         this.size = size;
       }
-      this.clef.point = Vex.Flow.Clef.sizes[this.size];
-      this.glyph = new Vex.Flow.Glyph(this.clef.code, this.clef.point);
+      this.clef.point = Clef.sizes[this.size];
+      this.glyph = new Glyph(this.clef.code, this.clef.point);
 
       // If an annotation, such as 8va, is specified, add it to the Clef object.
       if (annotation !== undefined) {
-        var anno_dict = Vex.Flow.Clef.annotations[annotation];
+        var anno_dict = Clef.annotations[annotation];
         this.annotation = {
           code: anno_dict.code,
           point: anno_dict.sizes[this.size].point,
@@ -168,7 +171,7 @@ Vex.Flow.Clef = (function() {
           x_shift: anno_dict.sizes[this.size].attachments[this.type].x_shift
         };
 
-        this.attachment = new Vex.Flow.Glyph(this.annotation.code, this.annotation.point);
+        this.attachment = new Glyph(this.annotation.code, this.annotation.point);
         this.attachment.metrics.x_max = 0;
         this.attachment.setXShift(this.annotation.x_shift);
       }

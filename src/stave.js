@@ -3,14 +3,27 @@
 //
 // Copyright Mohit Cheppudira 2010
 
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Barline } from './stavebarline';
+import { StaveModifier } from './stavemodifier';
+import { Repetition } from './staverepetition';
+import { StaveSection } from './stavesection';
+import { StaveTempo } from './stavetempo';
+import { StaveText } from './stavetext';
+import { BoundingBox } from './boundingbox';
+import { Clef } from './clef';
+import { KeySignature } from './keysignature';
+import { TimeSignature } from './timesignature';
+import { Volta } from './stavevolta';
 /** @constructor */
-Vex.Flow.Stave = (function() {
+export var Stave = (function() {
   function Stave(x, y, width, options) {
     if (arguments.length > 0) this.init(x, y, width, options);
   }
 
-  var THICKNESS = (Vex.Flow.STAVE_LINE_THICKNESS > 1 ?
-        Vex.Flow.STAVE_LINE_THICKNESS : 0);
+  var THICKNESS = (Flow.STAVE_LINE_THICKNESS > 1 ?
+        Flow.STAVE_LINE_THICKNESS : 0);
   Stave.prototype = {
     init: function(x, y, width, options) {
       this.x = x;
@@ -45,9 +58,9 @@ Vex.Flow.Stave = (function() {
 
       this.resetLines();
 
-      var BARTYPE = Vex.Flow.Barline.type;
-      this.addModifier(new Vex.Flow.Barline(this.options.left_bar ? BARTYPE.SINGLE : BARTYPE.NONE));  // beg bar
-      this.addEndModifier(new Vex.Flow.Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE)); // end bar
+      var BARTYPE = Barline.type;
+      this.addModifier(new Barline(this.options.left_bar ? BARTYPE.SINGLE : BARTYPE.NONE));  // beg bar
+      this.addEndModifier(new Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE)); // end bar
     },
 
     resetLines: function() {
@@ -135,13 +148,13 @@ Vex.Flow.Stave = (function() {
 
       if (!this.formatted) this.format();
 
-      if (this.getModifiers(Vex.Flow.StaveModifier.Position.BEGIN).length === 1) {
+      if (this.getModifiers(StaveModifier.Position.BEGIN).length === 1) {
         return 0;
       }
 
       var start_x = this.start_x - this.x;
       var begBarline = this.modifiers[0];
-      if (begBarline.getType() === Vex.Flow.Barline.type.REPEAT_BEGIN &&
+      if (begBarline.getType() === Barline.type.REPEAT_BEGIN &&
           start_x > begBarline.getWidth()) {
         start_x -= begBarline.getWidth();
       }
@@ -151,36 +164,36 @@ Vex.Flow.Stave = (function() {
 
     // Coda & Segno Symbol functions
     setRepetitionTypeLeft: function(type, y) {
-      this.modifiers.push(new Vex.Flow.Repetition(type, this.x, y));
+      this.modifiers.push(new Repetition(type, this.x, y));
       return this;
     },
 
     setRepetitionTypeRight: function(type, y) {
-      this.modifiers.push(new Vex.Flow.Repetition(type, this.x, y) );
+      this.modifiers.push(new Repetition(type, this.x, y) );
       return this;
     },
 
     // Volta functions
     setVoltaType: function(type, number_t, y) {
-      this.modifiers.push(new Vex.Flow.Volta(type, number_t, this.x, y));
+      this.modifiers.push(new Volta(type, number_t, this.x, y));
       return this;
     },
 
     // Section functions
     setSection: function(section, y) {
-      this.modifiers.push(new Vex.Flow.StaveSection(section, this.x, y));
+      this.modifiers.push(new StaveSection(section, this.x, y));
       return this;
     },
 
     // Tempo functions
     setTempo: function(tempo, y) {
-      this.modifiers.push(new Vex.Flow.StaveTempo(tempo, this.x, y));
+      this.modifiers.push(new StaveTempo(tempo, this.x, y));
       return this;
     },
 
     // Text functions
     setText: function(text, position, options) {
-      this.modifiers.push(new Vex.Flow.StaveText(text, position, options));
+      this.modifiers.push(new StaveText(text, position, options));
       return this;
     },
 
@@ -193,7 +206,7 @@ Vex.Flow.Stave = (function() {
     },
 
     getBoundingBox: function() {
-      return new Vex.Flow.BoundingBox(this.x, this.y, this.width, this.getBottomY() - this.y);
+      return new BoundingBox(this.x, this.y, this.width, this.getBottomY() - this.y);
       // body...
     },
 
@@ -265,16 +278,16 @@ Vex.Flow.Stave = (function() {
     },
 
     addEndModifier: function(modifier) {
-      this.addModifier(modifier, Vex.Flow.StaveModifier.Position.END);
+      this.addModifier(modifier, StaveModifier.Position.END);
       return this;
     },
 
     // Bar Line functions
     setBegBarType: function(type) {
       // Only valid bar types at beginning of stave is none, single or begin repeat
-      if (type == Vex.Flow.Barline.type.SINGLE ||
-          type == Vex.Flow.Barline.type.REPEAT_BEGIN ||
-          type == Vex.Flow.Barline.type.NONE) {
+      if (type == Barline.type.SINGLE ||
+          type == Barline.type.REPEAT_BEGIN ||
+          type == Barline.type.NONE) {
           this.modifiers[0].setType(type);
           this.formatted = false;
       }
@@ -283,7 +296,7 @@ Vex.Flow.Stave = (function() {
 
     setEndBarType: function(type) {
       // Repeat end not valid at end of stave
-      if (type != Vex.Flow.Barline.type.REPEAT_BEGIN) {
+      if (type != Barline.type.REPEAT_BEGIN) {
         this.modifiers[1].setType(type);
         this.formatted = false;
       }
@@ -292,11 +305,11 @@ Vex.Flow.Stave = (function() {
 
     setClef: function(clefSpec, size, annotation, position) {
       if (position === undefined) {
-        position = Vex.Flow.StaveModifier.Position.BEGIN;
+        position = StaveModifier.Position.BEGIN;
       }
 
       this.clef = clefSpec;
-      var clefs = this.getModifiers(position, Vex.Flow.Clef.category);
+      var clefs = this.getModifiers(position, Clef.category);
       if (clefs.length === 0) {
         this.addClef(clefSpec, size, annotation, position);
       } else {
@@ -307,16 +320,16 @@ Vex.Flow.Stave = (function() {
     },
 
     setEndClef: function(clefSpec, size, annotation) {
-      this.setClef(clefSpec, size, annotation, Vex.Flow.StaveModifier.Position.END);
+      this.setClef(clefSpec, size, annotation, StaveModifier.Position.END);
       return this;
     },
 
     setKeySignature: function(keySpec, cancelKeySpec, position) {
       if (position === undefined) {
-        position = Vex.Flow.StaveModifier.Position.BEGIN;
+        position = StaveModifier.Position.BEGIN;
       }
 
-      var keySignatures = this.getModifiers(position, Vex.Flow.KeySignature.category);
+      var keySignatures = this.getModifiers(position, KeySignature.category);
       if (keySignatures.length === 0) {
         this.addKeySignature(keySpec, cancelKeySpec, position);
       } else {
@@ -327,16 +340,16 @@ Vex.Flow.Stave = (function() {
     },
 
     setEndKeySignature: function(keySpec, cancelKeySpec) {
-      this.setKeySignature(keySpec, cancelKeySpec, Vex.Flow.StaveModifier.Position.END);
+      this.setKeySignature(keySpec, cancelKeySpec, StaveModifier.Position.END);
       return this;
     },
 
     setTimeSignature: function(timeSpec, customPadding, position) {
       if (position === undefined) {
-        position = Vex.Flow.StaveModifier.Position.BEGIN;
+        position = StaveModifier.Position.BEGIN;
       }
 
-      var timeSignatures = this.getModifiers(position, Vex.Flow.TimeSignature.category);
+      var timeSignatures = this.getModifiers(position, TimeSignature.category);
       if (timeSignatures.length === 0) {
         this.addTimeSignature(timeSpec, customPadding, position);
       } else {
@@ -347,37 +360,37 @@ Vex.Flow.Stave = (function() {
     },
 
     setEndTimeSignature: function(timeSpec, customPadding) {
-      this.setTimeSignature(timeSpec, customPadding, Vex.Flow.StaveModifier.Position.END);
+      this.setTimeSignature(timeSpec, customPadding, StaveModifier.Position.END);
       return this;
     },
 
     addKeySignature: function(keySpec, cancelKeySpec, position) {
-      this.addModifier(new Vex.Flow.KeySignature(keySpec, cancelKeySpec), position);
+      this.addModifier(new KeySignature(keySpec, cancelKeySpec), position);
       return this;
     },
 
     addClef: function(clef, size, annotation, position) {
       if (position === undefined ||
-          position === Vex.Flow.StaveModifier.Position.BEGIN) {
+          position === StaveModifier.Position.BEGIN) {
         this.clef = clef;
       }
 
-      this.addModifier(new Vex.Flow.Clef(clef, size, annotation), position);
+      this.addModifier(new Clef(clef, size, annotation), position);
       return this;
     },
 
     addEndClef: function(clef, size, annotation) {
-      this.addClef(clef, size, annotation, Vex.Flow.StaveModifier.Position.END);
+      this.addClef(clef, size, annotation, StaveModifier.Position.END);
       return this;
     },
 
     addTimeSignature: function(timeSpec, customPadding, position) {
-      this.addModifier(new Vex.Flow.TimeSignature(timeSpec, customPadding), position);
+      this.addModifier(new TimeSignature(timeSpec, customPadding), position);
       return this;
     },
 
     addEndTimeSignature: function(timeSpec, customPadding) {
-      this.addTimeSignature(timeSpec, customPadding, Vex.Flow.StaveModifier.Position.END);
+      this.addTimeSignature(timeSpec, customPadding, StaveModifier.Position.END);
       return this;
     },
 
@@ -409,12 +422,11 @@ Vex.Flow.Stave = (function() {
     },
 
     format: function() {
-      var Barline = Vex.Flow.Barline;
       var begBarline = this.modifiers[0];
       var endBarline = this.modifiers[1];
 
-      var begModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.BEGIN);
-      var endModifiers = this.getModifiers(Vex.Flow.StaveModifier.Position.END);
+      var begModifiers = this.getModifiers(StaveModifier.Position.BEGIN);
+      var endModifiers = this.getModifiers(StaveModifier.Position.END);
 
       this.sortByCategory(begModifiers, {
         barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3
@@ -492,7 +504,7 @@ Vex.Flow.Stave = (function() {
         this.context.setFillStyle(this.options.fill_style);
         this.context.setStrokeStyle(this.options.fill_style);
         if (this.options.line_config[line].visible) {
-          this.context.fillRect(x, y, width, Vex.Flow.STAVE_LINE_THICKNESS);
+          this.context.fillRect(x, y, width, Flow.STAVE_LINE_THICKNESS);
         }
         this.context.restore();
       }

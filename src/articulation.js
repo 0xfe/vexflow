@@ -9,7 +9,12 @@
 //
 // See `tests/articulation_tests.js` for usage examples.
 
-Vex.Flow.Articulation = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
+import { StaveNote } from './stavenote';
+import './glyph';
+export var Articulation = (function() {
   function Articulation(type) {
     if (arguments.length > 0) this.init(type);
   }
@@ -17,8 +22,6 @@ Vex.Flow.Articulation = (function() {
 
   // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
   function L() { if (Articulation.DEBUG) Vex.L("Vex.Flow.Articulation", arguments); }
-
-  var Modifier = Vex.Flow.Modifier;
 
   // ## Static Methods
   // Arrange articulations inside `ModifierContext`
@@ -31,7 +34,7 @@ Vex.Flow.Articulation = (function() {
       var articulation = articulations[i];
       width = Math.max(articulation.getWidth(), width);
 
-      var type = Vex.Flow.articulationCodes(articulation.type);
+      var type = Flow.articulationCodes(articulation.type);
 
       if (!type.between_lines) increment += 1.5;
 
@@ -65,7 +68,7 @@ Vex.Flow.Articulation = (function() {
         font_scale: 38
       };
 
-      this.articulation = Vex.Flow.articulationCodes(this.type);
+      this.articulation = Flow.articulationCodes(this.type);
       if (!this.articulation) throw new Vex.RERR("ArgumentError",
          "Articulation not found: '" + this.type + "'");
 
@@ -84,14 +87,14 @@ Vex.Flow.Articulation = (function() {
       var stave = this.note.getStave();
 
       var is_on_head = (this.position === Modifier.Position.ABOVE &&
-                        stem_direction === Vex.Flow.StaveNote.STEM_DOWN) ||
+                        stem_direction === StaveNote.STEM_DOWN) ||
                        (this.position === Modifier.Position.BELOW &&
-                        stem_direction === Vex.Flow.StaveNote.STEM_UP);
+                        stem_direction === StaveNote.STEM_UP);
 
       var needsLineAdjustment = function(articulation, note_line, line_spacing) {
         var offset_direction = (articulation.position === Modifier.Position.ABOVE) ? 1 : -1;
         var duration = articulation.getNote().getDuration();
-        if(!is_on_head && Vex.Flow.durationToNumber(duration) <= 1){
+        if(!is_on_head && Flow.durationToNumber(duration) <= 1){
           // Add stem length, unless it's on a whole note.
           note_line += offset_direction * 3.5;
         }
@@ -119,7 +122,7 @@ Vex.Flow.Articulation = (function() {
       var top = stem_ext.topY;
       var bottom = stem_ext.baseY;
 
-      if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN) {
+      if (stem_direction === StaveNote.STEM_DOWN) {
         top = stem_ext.baseY;
         bottom = stem_ext.topY;
       }
@@ -128,9 +131,9 @@ Vex.Flow.Articulation = (function() {
       // outside the stave.
       if (is_tabnote) {
         if (this.note.hasStem()){
-          if (stem_direction === Vex.Flow.StaveNote.STEM_UP) {
+          if (stem_direction === StaveNote.STEM_UP) {
             bottom = stave.getYForBottomText(this.text_line - 2);
-          } else if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN ) {
+          } else if (stem_direction === StaveNote.STEM_DOWN ) {
             top = stave.getYForTopText(this.text_line - 1.5);
           }
         } else { // Without a stem
@@ -173,7 +176,7 @@ Vex.Flow.Articulation = (function() {
       glyph_y += shiftY + this.y_shift;
 
       L("Rendering articulation: ", this.articulation, glyph_x, glyph_y);
-      Vex.Flow.renderGlyph(this.context, glyph_x, glyph_y,
+      Flow.renderGlyph(this.context, glyph_x, glyph_y,
                            this.render_options.font_scale, this.articulation.code);
     }
   });

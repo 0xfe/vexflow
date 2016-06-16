@@ -4,7 +4,10 @@
 //
 // This file implements the main Voice class. It's mainly a container
 // object to group `Tickables` for formatting.
-Vex.Flow.Voice = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Fraction } from './fraction';
+export var Voice = (function() {
   function Voice(time) {
     if (arguments.length > 0) this.init(time);
   }
@@ -27,24 +30,24 @@ Vex.Flow.Voice = (function() {
       this.time = Vex.Merge({
         num_beats: 4,
         beat_value: 4,
-        resolution: Vex.Flow.RESOLUTION
+        resolution: Flow.RESOLUTION
       }, time);
 
       // Recalculate total ticks.
-      this.totalTicks = new Vex.Flow.Fraction(
+      this.totalTicks = new Fraction(
         this.time.num_beats * (this.time.resolution / this.time.beat_value), 1);
 
       this.resolutionMultiplier = 1;
 
       // Set defaults
       this.tickables = [];
-      this.ticksUsed = new Vex.Flow.Fraction(0, 1);
+      this.ticksUsed = new Fraction(0, 1);
       this.smallestTickCount = this.totalTicks.clone();
       this.largestTickWidth = 0;
       this.stave = null;
       this.boundingBox = null;
       // Do we care about strictly timed notes
-      this.mode = Vex.Flow.Voice.Mode.STRICT;
+      this.mode = Voice.Mode.STRICT;
 
       // This must belong to a VoiceGroup
       this.voiceGroup = null;
@@ -116,16 +119,16 @@ Vex.Flow.Voice = (function() {
     // Set the voice group
     setVoiceGroup: function(g) { this.voiceGroup = g; return this; },
 
-    // Set the voice mode to strict or soft 
+    // Set the voice mode to strict or soft
     setStrict: function(strict) {
-      this.mode = strict ? Vex.Flow.Voice.Mode.STRICT : Vex.Flow.Voice.Mode.SOFT;
+      this.mode = strict ? Voice.Mode.STRICT : Voice.Mode.SOFT;
       return this;
     },
 
     // Determine if the voice is complete according to the voice mode
     isComplete: function() {
-      if (this.mode == Vex.Flow.Voice.Mode.STRICT ||
-          this.mode == Vex.Flow.Voice.Mode.FULL) {
+      if (this.mode == Voice.Mode.STRICT ||
+          this.mode == Voice.Mode.FULL) {
         return this.ticksUsed.equals(this.totalTicks);
       } else {
         return true;
@@ -140,8 +143,8 @@ Vex.Flow.Voice = (function() {
         // Update the total ticks for this line.
         this.ticksUsed.add(ticks);
 
-        if ((this.mode == Vex.Flow.Voice.Mode.STRICT ||
-             this.mode == Vex.Flow.Voice.Mode.FULL) &&
+        if ((this.mode == Voice.Mode.STRICT ||
+             this.mode == Voice.Mode.FULL) &&
              this.ticksUsed.greaterThan(this.totalTicks)) {
           this.totalTicks.subtract(ticks);
           throw new Vex.RERR("BadArgument", "Too many ticks.");

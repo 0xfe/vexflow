@@ -7,7 +7,10 @@
 // The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
 // using this class.
 //
-Vex.Flow.TextBracket = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Renderer } from './renderer';
+export var TextBracket = (function() {
   function TextBracket(bracket_data) {
     if (arguments.length > 0) this.init(bracket_data);
   }
@@ -142,11 +145,11 @@ Vex.Flow.TextBracket = (function() {
 
       if (this.render_options.dashed) {
         // Main line
-        Vex.Flow.Renderer.drawDashedLine(ctx, start_x, line_y, end_x, line_y,
+        Renderer.drawDashedLine(ctx, start_x, line_y, end_x, line_y,
           this.render_options.dash);
         // Ending Bracket
         if (this.render_options.show_bracket) {
-          Vex.Flow.Renderer.drawDashedLine(ctx, end_x, line_y + (1 * this.position),
+          Renderer.drawDashedLine(ctx, end_x, line_y + (1 * this.position),
             end_x, line_y + bracket_height, this.render_options.dash);
         }
       } else {

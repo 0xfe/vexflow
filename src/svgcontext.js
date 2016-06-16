@@ -6,8 +6,9 @@
 // Copyright Mohit Muthanna 2015
 // @author Gregory Ristow (2015)
 
+import { Vex } from './vex';
 /** @constructor */
-Vex.Flow.SVGContext = (function() {
+export var SVGContext = (function() {
   function SVGContext(element) {
     if (arguments.length > 0) this.init(element);
   }
@@ -208,11 +209,11 @@ Vex.Flow.SVGContext = (function() {
     },
 
     // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
-    setLineDash: function(lineDash) { 
+    setLineDash: function(lineDash) {
       if (Object.prototype.toString.call(lineDash) === '[object Array]') {
         lineDash = lineDash.join(", ");
         this.attributes["stroke-dasharray"] = lineDash;
-        return this; 
+        return this;
       } else {
         throw new Vex.RERR("ArgumentError", "lineDash must be an array of integers.");
       }
@@ -280,19 +281,6 @@ Vex.Flow.SVGContext = (function() {
       return element;
     },
 
-    flipRectangle: function(args) {
-      // Avoid invalid negative height attributes by
-      // flipping a rectangle w/ negative height on its head.
-      // Since args is the actual arguments object from
-      // one of the rectangle functions, we don't need to
-      // return it.
-
-      // Add negative height to Y
-      args[1] += args[3];
-      // Make the negative height positive.
-      args[3] = -args[3];
-    },
-
     // ### Shape & Path Methods:
 
     clear: function() {
@@ -319,7 +307,10 @@ Vex.Flow.SVGContext = (function() {
     rect: function(x, y, width, height, attributes) {
       // Avoid invalid negative height attribs by
       // flipping the rectangle on its head:
-      if (height < 0) this.flipRectangle(arguments);
+      if(height < 0) {
+        y += height;
+        height *= -1;
+      }
 
       // Create the rect & style it:
       var rect = this.create("rect");
@@ -342,7 +333,10 @@ Vex.Flow.SVGContext = (function() {
     },
 
     fillRect: function(x, y, width, height) {
-      if(height < 0) this.flipRectangle(arguments);
+      if(height < 0) {
+        y += height;
+        height *= -1;
+      }
 
       this.rect(x, y, width - 0.5, height - 0.5, this.attributes);
       return this;

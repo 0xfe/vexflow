@@ -4,7 +4,10 @@
 // The tickable interface. Tickables are things that sit on a score and
 // have a duration, i.e., they occupy space in the musical rendering dimension.
 /** @constructor */
-Vex.Flow.Tickable = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Fraction } from './fraction';
+export var Tickable = (function() {
   function Tickable() {
     this.init();
   }
@@ -12,8 +15,8 @@ Vex.Flow.Tickable = (function() {
   Tickable.prototype = {
     init: function() {
       this.intrinsicTicks = 0;
-      this.tickMultiplier = new Vex.Flow.Fraction(1, 1);
-      this.ticks = new Vex.Flow.Fraction(0, 1);
+      this.tickMultiplier = new Fraction(1, 1);
+      this.ticks = new Fraction(0, 1);
       this.width = 0;
       this.x_shift = 0; // Shift from tick context
       this.voice = null;
@@ -81,7 +84,7 @@ Vex.Flow.Tickable = (function() {
      * @returns this
      *
      * Removes any prior tuplets from the tick calculation and
-     * resets the intrinsic tick value to 
+     * resets the intrinsic tick value to
      */
     resetTuplet: function(tuplet) {
       var noteCount, notesOccupied;
@@ -93,7 +96,7 @@ Vex.Flow.Tickable = (function() {
           notesOccupied = tuplet.getNotesOccupied();
 
           // Revert old multiplier by inverting numerator & denom.:
-          this.applyTickMultiplier(noteCount, notesOccupied);        
+          this.applyTickMultiplier(noteCount, notesOccupied);
         }
         return this;
       }
@@ -104,7 +107,7 @@ Vex.Flow.Tickable = (function() {
         notesOccupied = tuplet.getNotesOccupied();
 
         // Revert old multiplier by inverting numerator & denom.:
-        this.applyTickMultiplier(noteCount, notesOccupied);        
+        this.applyTickMultiplier(noteCount, notesOccupied);
       }
       return this;
     },
@@ -174,7 +177,7 @@ Vex.Flow.Tickable = (function() {
       this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
     },
     setDuration: function(duration) {
-      var ticks = duration.numerator * (Vex.Flow.RESOLUTION / duration.denominator);
+      var ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
       this.ticks = this.tickMultiplier.clone().multiply(ticks);
       this.intrinsicTicks = this.ticks.value();
     }

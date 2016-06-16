@@ -10,7 +10,7 @@
 // needed, SVGContext is recommended.
 
 /** @constructor */
-Vex.Flow.RaphaelContext = (function() {
+export var RaphaelContext = (function() {
   function RaphaelContext(element) {
     if (arguments.length > 0) this.init(element);
   }

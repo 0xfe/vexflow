@@ -7,22 +7,19 @@
 // requires: flow.js  (Vex.Flow)
 // requires: music.js (Vex.Flow.Music)
 
+import { Vex } from './vex';
+import { Music } from './music';
 /**
  * @constructor
  */
-Vex.Flow.KeyManager = (function() {
+export var KeyManager = (function() {
   function KeyManager(key) {
     this.init(key);
   }
 
-  KeyManager.scales = {
-    "M": Vex.Flow.Music.scales.major,
-    "m": Vex.Flow.Music.scales.minor
-  };
-
   KeyManager.prototype = {
     init: function(key) {
-      this.music = new Vex.Flow.Music();
+      this.music = new Music();
       this.setKey(key);
     },
 
@@ -40,23 +37,23 @@ Vex.Flow.KeyManager = (function() {
       this.keyString = this.keyParts.root;
       if (this.keyParts.accidental) this.keyString += this.keyParts.accidental;
 
-      var is_supported_type = KeyManager.scales[this.keyParts.type];
+      var is_supported_type = Music.scaleTypes[this.keyParts.type];
       if (!is_supported_type)
         throw new Vex.RERR("BadArguments", "Unsupported key type: " + this.key);
 
       this.scale = this.music.getScaleTones(
           this.music.getNoteValue(this.keyString),
-          Vex.Flow.KeyManager.scales[this.keyParts.type]);
+          Music.scaleTypes[this.keyParts.type]);
 
       this.scaleMap = {};
       this.scaleMapByValue = {};
       this.originalScaleMapByValue = {};
 
-      var noteLocation = Vex.Flow.Music.root_indices[this.keyParts.root];
+      var noteLocation = Music.root_indices[this.keyParts.root];
 
-      for (var i = 0; i < Vex.Flow.Music.roots.length; ++i) {
-        var index = (noteLocation + i) % Vex.Flow.Music.roots.length;
-        var rootName = Vex.Flow.Music.roots[index];
+      for (var i = 0; i < Music.roots.length; ++i) {
+        var index = (noteLocation + i) % Music.roots.length;
+        var rootName = Music.roots[index];
 
         var noteName = this.music.getRelativeNoteName(rootName, this.scale[i]);
         this.scaleMap[rootName] = noteName;

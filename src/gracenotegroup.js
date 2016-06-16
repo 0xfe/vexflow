@@ -5,7 +5,14 @@
 // This file implements `GraceNoteGroup` which is used to format and
 // render grace notes.
 
-Vex.Flow.GraceNoteGroup = (function(){
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
+import { Formatter } from './formatter';
+import { Voice } from './voice';
+import { Beam } from './beam';
+import { StaveTie } from './stavetie';
+export var GraceNoteGroup = (function(){
   function GraceNoteGroup(grace_notes, config) {
     if (arguments.length > 0) this.init(grace_notes, config);
   }
@@ -71,14 +78,14 @@ Vex.Flow.GraceNoteGroup = (function(){
   //
   // `GraceNoteGroup` inherits from `Modifier` and is placed inside a
   // `ModifierContext`.
-  Vex.Inherit(GraceNoteGroup, Vex.Flow.Modifier, {
+  Vex.Inherit(GraceNoteGroup, Modifier, {
     init: function(grace_notes, show_slur) {
       var superclass = GraceNoteGroup.superclass;
       superclass.init.call(this);
 
       this.note = null;
       this.index = null;
-      this.position = Vex.Flow.Modifier.Position.LEFT;
+      this.position = Modifier.Position.LEFT;
       this.grace_notes = grace_notes;
       this.width = 0;
 
@@ -87,11 +94,11 @@ Vex.Flow.GraceNoteGroup = (function(){
       this.show_slur = show_slur;
       this.slur = null;
 
-      this.formatter = new Vex.Flow.Formatter();
-      this.voice = new Vex.Flow.Voice({
+      this.formatter = new Formatter();
+      this.voice = new Voice({
         num_beats: 4,
         beat_value: 4,
-        resolution: Vex.Flow.RESOLUTION
+        resolution: Flow.RESOLUTION
       }).setStrict(false);
 
       this.voice.addTickables(this.grace_notes);
@@ -109,7 +116,7 @@ Vex.Flow.GraceNoteGroup = (function(){
 
     beamNotes: function(){
       if (this.grace_notes.length > 1) {
-        var beam = new Vex.Flow.Beam(this.grace_notes);
+        var beam = new Beam(this.grace_notes);
 
         beam.render_options.beam_width = 3;
         beam.render_options.partial_beam_length = 4;
@@ -173,7 +180,7 @@ Vex.Flow.GraceNoteGroup = (function(){
 
       if (this.show_slur) {
         // Create and draw slur
-        this.slur = new Vex.Flow.StaveTie({
+        this.slur = new StaveTie({
           last_note: this.grace_notes[0],
           first_note: note,
           first_indices: [0],

@@ -2,10 +2,14 @@
 //
 // ## Description
 //
-// `TextNote` is a notation element that is positioned in time. Generally 
+// `TextNote` is a notation element that is positioned in time. Generally
 // meant for objects that sit above/below the staff and inline with each other.
 // Examples of this would be such as dynamics, lyrics, chord changes, etc.
-Vex.Flow.TextNote = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Note } from './note';
+import { Glyph } from './glyph';
+export var TextNote = (function() {
   function TextNote(text_struct) {
     if (arguments.length > 0) this.init(text_struct);
   }
@@ -148,7 +152,7 @@ Vex.Flow.TextNote = (function() {
   };
 
   // ## Prototype Methods
-  Vex.Inherit(TextNote, Vex.Flow.Note, {
+  Vex.Inherit(TextNote, Note, {
     init: function(text_struct) {
       TextNote.superclass.init.call(this, text_struct);
 
@@ -167,14 +171,14 @@ Vex.Flow.TextNote = (function() {
       // Set font
       if (text_struct.font) this.font = text_struct.font;
 
-      // Determine and set initial note width. Note that the text width is 
+      // Determine and set initial note width. Note that the text width is
       // an approximation and isn't very accurate. The only way to accurately
       // measure the length of text is with `canvasContext.measureText()`
       if (this.glyph_type) {
         var struct = TextNote.GLYPHS[this.glyph_type];
         if (!struct) throw new Vex.RERR("Invalid glyph type: " + this.glyph_type);
 
-        this.glyph = new Vex.Flow.Glyph(struct.code, struct.point, {cache: false});
+        this.glyph = new Glyph(struct.code, struct.point, {cache: false});
 
         if (struct.width)
           this.setWidth(struct.width);
@@ -183,7 +187,7 @@ Vex.Flow.TextNote = (function() {
 
         this.glyph_struct = struct;
       } else {
-        this.setWidth(Vex.Flow.textWidth(this.text));
+        this.setWidth(Flow.textWidth(this.text));
       }
       this.line = text_struct.line || 0;
       this.smooth = text_struct.smooth || false;

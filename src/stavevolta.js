@@ -4,7 +4,9 @@
 //
 // Requires vex.js.
 
-Vex.Flow.Volta = (function() {
+import { Vex } from './vex';
+import { StaveModifier } from './stavemodifier';
+export var Volta = (function() {
   function Volta(type, number, x, y_shift) {
     if (arguments.length > 0) this.init(type, number, x, y_shift);
   }
@@ -17,7 +19,7 @@ Vex.Flow.Volta = (function() {
     BEGIN_END: 5
   };
 
-  Vex.Inherit(Volta, Vex.Flow.StaveModifier, {
+  Vex.Inherit(Volta, StaveModifier, {
     init: function(type, number, x, y_shift) {
       Volta.superclass.init.call(this);
 
@@ -43,14 +45,14 @@ Vex.Flow.Volta = (function() {
       var top_y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
       var vert_height = 1.5 * stave.options.spacing_between_lines_px;
       switch(this.volta) {
-        case Vex.Flow.Volta.type.BEGIN:
+        case Volta.type.BEGIN:
           ctx.fillRect(this.x + x, top_y, 1, vert_height);
           break;
-        case Vex.Flow.Volta.type.END:
+        case Volta.type.END:
           width -= 5;
           ctx.fillRect(this.x + x + width, top_y, 1, vert_height);
           break;
-        case Vex.Flow.Volta.type.BEGIN_END:
+        case Volta.type.BEGIN_END:
           width -= 3;
           ctx.fillRect(this.x + x, top_y, 1, vert_height);
           ctx.fillRect(this.x + x + width, top_y, 1, vert_height);
