@@ -109,4 +109,4 @@ Vex.Flow.StringNumber = StringNumber;
 Vex.Flow.Crescendo = Crescendo;
 Vex.Flow.Volta = Volta;
 
-window.Vex = Vex;
+export default Vex;

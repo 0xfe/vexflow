@@ -105,6 +105,7 @@ module.exports = function(grunt) {
       options: {
         banner: BANNER,
         format: 'umd',
+        moduleName: 'Vex',
         sourceMap: true
       },
       files: {

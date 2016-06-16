@@ -4,6 +4,7 @@
 // Copyright Mohit Muthanna 2010
 //
 // Requires vex.js.
+import { Vex } from './vex';
 import { Fraction } from './fraction';
 var Flow = {};
 Flow.STEM_WIDTH = 1.5;
