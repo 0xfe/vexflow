@@ -14,7 +14,7 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { StaveNote } from './stavenote';
-import './glyph';
+import { Glyph } from './glyph';
 export var Ornament = (function() {
   function Ornament(type) {
     if (arguments.length > 0) this.init(type);
@@ -275,7 +275,7 @@ export var Ornament = (function() {
 
         // Render the glyph
         var scale = ornament.render_options.font_scale/1.3;
-        Flow.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);
+        Glyph.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);
 
         // If rendered a bottom accidental, increase the y value by the
         // accidental height so that the ornament's glyph is shifted up
@@ -290,7 +290,7 @@ export var Ornament = (function() {
       }
 
       L("Rendering ornament: ", this.ornament, glyph_x, glyph_y);
-      Flow.renderGlyph(ctx, glyph_x, glyph_y,
+      Glyph.renderGlyph(ctx, glyph_x, glyph_y,
                            this.render_options.font_scale, this.ornament.code);
 
       // Draw upper accidental for ornament

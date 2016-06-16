@@ -12,7 +12,7 @@ import { Modifier } from './modifier';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Dot } from './dot';
-import './glyph';
+import { Glyph } from './glyph';
 export var TabNote = (function() {
   function TabNote(tab_struct, draw_stem) {
     if (arguments.length > 0) this.init(tab_struct, draw_stem);
@@ -257,7 +257,7 @@ export var TabNote = (function() {
         }
 
         // Draw the Flag
-        Flow.renderGlyph(this.context, flag_x, flag_y,
+        Glyph.renderGlyph(this.context, flag_x, flag_y,
             this.render_options.glyph_font_scale, flag_code);
       }
     },
@@ -331,7 +331,7 @@ export var TabNote = (function() {
         ctx.clearRect(tab_x - 2, y - 3, glyph.width + 4, 6);
 
         if (glyph.code) {
-          Flow.renderGlyph(ctx, tab_x, y + 5 + glyph.shift_y,
+          Glyph.renderGlyph(ctx, tab_x, y + 5 + glyph.shift_y,
               this.render_options.glyph_font_scale, glyph.code);
         } else {
           var text = glyph.text.toString();

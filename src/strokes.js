@@ -10,7 +10,7 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
-import './glyph';
+import { Glyph } from './glyph';
 export var Stroke = (function() {
   function Stroke(type, options) {
     if (arguments.length > 0) this.init(type, options);
@@ -192,13 +192,13 @@ export var Stroke = (function() {
       } else {
         if (this.note instanceof StaveNote) {
           for (i = topY; i <= botY; i += line_space) {
-            Flow.renderGlyph(this.context, x + this.x_shift - 4,
+            Glyph.renderGlyph(this.context, x + this.x_shift - 4,
                                  i,
                                  this.render_options.font_scale, "va3");
           }
         } else {
           for (i = topY; i <= botY; i+= 10) {
-            Flow.renderGlyph(this.context, x + this.x_shift - 4,
+            Glyph.renderGlyph(this.context, x + this.x_shift - 4,
                                  i,
                                  this.render_options.font_scale, "va3");
           }
@@ -208,7 +208,7 @@ export var Stroke = (function() {
       }
 
       // Draw the arrow head
-      Flow.renderGlyph(this.context, x + this.x_shift + arrow_shift_x, arrow_y,
+      Glyph.renderGlyph(this.context, x + this.x_shift + arrow_shift_x, arrow_y,
                            this.render_options.font_scale, arrow);
 
       // Draw the rasquedo "R"

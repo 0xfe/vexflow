@@ -6,7 +6,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
-import './glyph';
+import { Glyph } from './glyph';
 /**
  * @constructor
  */
@@ -54,7 +54,7 @@ export var Tremolo = (function() {
 
       x += this.shift_right;
       for (var i = 0; i < this.num; ++i) {
-        Flow.renderGlyph(this.context, x, y,
+        Glyph.renderGlyph(this.context, x, y,
                              this.render_options.font_scale, this.code);
         y += this.y_spacing;
       }

@@ -7,7 +7,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
-import './glyph';
+import { Glyph } from './glyph';
 export var Repetition = (function() {
   function Repetition(type, x, y_shift) {
     if (arguments.length > 0) this.init(type, x, y_shift);
@@ -94,7 +94,7 @@ export var Repetition = (function() {
           "Can't draw stave without canvas context.");
 
       var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-      Flow.renderGlyph(stave.context, this.x + x + this.x_shift,
+      Glyph.renderGlyph(stave.context, this.x + x + this.x_shift,
                            y + 25, 40, "v4d", true);
       return this;
     },
@@ -103,7 +103,7 @@ export var Repetition = (function() {
       if (!stave.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw stave without canvas context.");
       var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-      Flow.renderGlyph(stave.context, this.x + x + this.x_shift,
+      Glyph.renderGlyph(stave.context, this.x + x + this.x_shift,
                            y + 25, 30, "v8c", true);
       return this;
     },
@@ -129,7 +129,7 @@ export var Repetition = (function() {
       }
       var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
       if (draw_coda) {
-        Flow.renderGlyph(ctx, symbol_x, y, 40, "v4d", true);
+        Glyph.renderGlyph(ctx, symbol_x, y, 40, "v4d", true);
       }
 
       ctx.fillText(text, text_x, y + 5);

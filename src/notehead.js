@@ -10,7 +10,7 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
-import './glyph';
+import { Glyph } from './glyph';
 export var NoteHead = (function() {
   var NoteHead = function(head_options) {
     if (arguments.length > 0) this.init(head_options);
@@ -242,10 +242,10 @@ export var NoteHead = (function() {
         if (this.style) {
           ctx.save();
           this.applyStyle(ctx);
-          Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
+          Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
           ctx.restore();
         } else {
-          Flow.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
+          Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
         }
       }
     }

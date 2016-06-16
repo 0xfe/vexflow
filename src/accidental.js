@@ -14,7 +14,7 @@ import { Flow } from './tables';
 import { Fraction } from './fraction';
 import { Music } from './music';
 import { Modifier } from './modifier';
-import './glyph';
+import { Glyph } from './glyph';
 export var Accidental = (function(){
   function Accidental(type) {
     if (arguments.length > 0) this.init(type);
@@ -371,19 +371,19 @@ export var Accidental = (function(){
 
       if (!this.cautionary) {
         // Render the accidental alone.
-        Flow.renderGlyph(this.context, acc_x, acc_y,
+        Glyph.renderGlyph(this.context, acc_x, acc_y,
                              this.render_options.font_scale, this.accidental.code);
       } else {
         // Render the accidental in parentheses.
         acc_x += 3;
-        Flow.renderGlyph(this.context, acc_x, acc_y,
+        Glyph.renderGlyph(this.context, acc_x, acc_y,
                              this.render_options.font_scale, this.paren_left.code);
         acc_x += 2;
-        Flow.renderGlyph(this.context, acc_x, acc_y,
+        Glyph.renderGlyph(this.context, acc_x, acc_y,
                              this.render_options.font_scale, this.accidental.code);
         acc_x += this.accidental.width - 2;
         if (this.type == "##" || this.type == "bb") acc_x -= 2;
-        Flow.renderGlyph(this.context, acc_x, acc_y,
+        Glyph.renderGlyph(this.context, acc_x, acc_y,
                              this.render_options.font_scale, this.paren_right.code);
       }
     }

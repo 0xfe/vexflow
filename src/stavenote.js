@@ -17,7 +17,7 @@ import { NoteHead } from './notehead';
 import { StemmableNote } from './stemmablenote';
 import { Modifier } from './modifier';
 import { Dot } from './dot';
-import './glyph';
+import { Glyph } from './glyph';
 export var StaveNote = (function() {
   var StaveNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
@@ -914,7 +914,7 @@ export var StaveNote = (function() {
 
         // Draw the Flag
         this.context.openGroup("flag", null, {pointerBBox: true});
-        Flow.renderGlyph(ctx, flag_x, flag_y,
+        Glyph.renderGlyph(ctx, flag_x, flag_y,
             this.render_options.glyph_font_scale, flag_code);
         this.context.closeGroup();
       }

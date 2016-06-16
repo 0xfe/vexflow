@@ -8,22 +8,6 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Font } from './fonts/vexflow_font';
-/**
- * A quick and dirty static glyph renderer. Renders glyphs from the default
- * font defined in Vex.Flow.Font.
- *
- * @param {!Object} ctx The canvas context.
- * @param {number} x_pos X coordinate.
- * @param {number} y_pos Y coordinate.
- * @param {number} point The point size to use.
- * @param {string} val The glyph code in Vex.Flow.Font.
- * @param {boolean} nocache If set, disables caching of font outline.
- */
-Flow.renderGlyph = function(ctx, x_pos, y_pos, point, val, nocache) {
-  var scale = point * 72.0 / (Font.resolution * 100.0);
-  var metrics = Glyph.loadMetrics(Font, val, !nocache);
-  Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
-};
 
 /**
  * @constructor
@@ -183,6 +167,23 @@ export var Glyph = (function() {
       }
     }
     ctx.fill();
+  };
+
+  /**
+   * A quick and dirty static glyph renderer. Renders glyphs from the default
+   * font defined in Vex.Flow.Font.
+   *
+   * @param {!Object} ctx The canvas context.
+   * @param {number} x_pos X coordinate.
+   * @param {number} y_pos Y coordinate.
+   * @param {number} point The point size to use.
+   * @param {string} val The glyph code in Vex.Flow.Font.
+   * @param {boolean} nocache If set, disables caching of font outline.
+   */
+  Glyph.renderGlyph = function(ctx, x_pos, y_pos, point, val, nocache) {
+    var scale = point * 72.0 / (Font.resolution * 100.0);
+    var metrics = Glyph.loadMetrics(Font, val, !nocache);
+    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
   };
 
   return Glyph;

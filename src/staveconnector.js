@@ -7,7 +7,7 @@
 
 import { Vex } from './vex';
 import { Flow } from './tables';
-import './glyph';
+import { Glyph } from './glyph';
 /** @constructor */
 export var StaveConnector = (function() {
   function StaveConnector(top_stave, bottom_stave) {
@@ -152,8 +152,8 @@ export var StaveConnector = (function() {
           topY -= 4;
           botY += 4;
           attachment_height = botY - topY;
-          Flow.renderGlyph(this.ctx, topX - 5, topY - 3, 40, "v1b", true);
-          Flow.renderGlyph(this.ctx, topX - 5, botY + 3, 40, "v10", true);
+          Glyph.renderGlyph(this.ctx, topX - 5, topY - 3, 40, "v1b", true);
+          Glyph.renderGlyph(this.ctx, topX - 5, botY + 3, 40, "v10", true);
           topX -= (this.width + 2);
           break;
         case StaveConnector.type.BOLD_DOUBLE_LEFT:

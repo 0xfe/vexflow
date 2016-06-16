@@ -7,7 +7,7 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { StaveModifier } from './stavemodifier';
-import './glyph';
+import { Glyph } from './glyph';
 /**
  * @constructor
  * @param {Object} tempo Tempo parameters: { name, duration, dots, bpm }
@@ -76,7 +76,7 @@ export var StaveTempo = (function() {
         var code = Flow.durationToGlyph(duration);
 
         x += 3 * scale;
-        Flow.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
+        Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
         x += code.head_width * scale;
 
         // Draw stem and flags
@@ -91,7 +91,7 @@ export var StaveTempo = (function() {
           ctx.fillRect(x, y_top, scale, stem_height);
 
           if (code.flag) {
-            Flow.renderGlyph(ctx, x + scale, y_top, options.glyph_font_scale,
+            Glyph.renderGlyph(ctx, x + scale, y_top, options.glyph_font_scale,
                                  code.code_flag_upstem);
 
             if (!dots) x += 6 * scale;
