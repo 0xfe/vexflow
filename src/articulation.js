@@ -12,7 +12,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
-import { StaveNote } from './StaveNote';
+import { StaveNote } from './stavenote';
 import './glyph';
 export var Articulation = (function() {
   function Articulation(type) {
