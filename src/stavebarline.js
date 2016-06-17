@@ -1,8 +1,6 @@
-// Vex Flow Notation
-// Author Larry Kuhns 2011
-// Implements barlines (single, double, repeat, end)
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Requires vex.js.
+// Author Larry Kuhns 2011
 
 import { Vex } from './vex';
 import { Flow } from './tables';

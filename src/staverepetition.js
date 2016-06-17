@@ -1,13 +1,11 @@
-// Vex Flow Notation
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
-// Implements Repetitions (Coda, signo, D.C., etc.)
-//
-// Requires vex.js.
 
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
+
 export var Repetition = (function() {
   function Repetition(type, x, y_shift) {
     if (arguments.length > 0) this.init(type, x, y_shift);

@@ -1,13 +1,9 @@
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
-// Implements stave section names.
 
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
-/**
- * @constructor
- */
+
 export var StaveSection = (function() {
   function StaveSection(section, x, shift_y) {
     if (arguments.length > 0) this.init(section, x, shift_y);

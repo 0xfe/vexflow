@@ -14,6 +14,7 @@
 // `ModifierContext`. This ensures that multiple voices don't trample all over each other.
 
 import { Vex } from './vex';
+
 export var Modifier = (function() {
   function Modifier() {
     this.constructor = Modifier;

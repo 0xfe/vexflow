@@ -1,15 +1,14 @@
-// Vex Flow
-// Mohit Muthanna <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
+// ## Description
 // Support for different rendering contexts: Canvas, Raphael
-//
-// Copyright Mohit Cheppudira 2010
 
 /* global document: false */
 
 import { CanvasContext } from './canvascontext';
 import { RaphaelContext } from './raphaelcontext';
 import { SVGContext } from './svgcontext';
+
 export var Renderer = (function() {
   function Renderer(sel, backend) {
     if (arguments.length > 0) this.init(sel, backend);

@@ -1,12 +1,13 @@
-// Vex Flow
-// Copyright Mohit Cheppudira <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
+// ## Description
 // The tickable interface. Tickables are things that sit on a score and
 // have a duration, i.e., they occupy space in the musical rendering dimension.
-/** @constructor */
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
+
 export var Tickable = (function() {
   function Tickable() {
     this.init();

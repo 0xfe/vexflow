@@ -10,6 +10,7 @@
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
+
 export var Clef = (function() {
   function Clef(type, size, annotation) {
     if (arguments.length > 0) this.init(type, size, annotation);

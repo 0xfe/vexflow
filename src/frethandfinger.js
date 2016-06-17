@@ -5,6 +5,7 @@
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
+
 /**
  * @constructor
  */

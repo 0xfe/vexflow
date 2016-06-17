@@ -1,13 +1,11 @@
-// Vex Flow Notation
-// Copyright Mohit Muthanna 2010
-//
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
 import { Vex } from './vex';
 import { BoundingBox } from './boundingbox';
 import { Note } from './note';
 import { TimeSignature } from './timesignature';
-/** @constructor */
+
 export var TimeSigNote = (function() {
   function TimeSigNote(timeSpec, customPadding) {
     if (arguments.length > 0) this.init(timeSpec, customPadding);

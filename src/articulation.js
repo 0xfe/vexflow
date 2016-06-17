@@ -14,6 +14,7 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+
 export var Articulation = (function() {
   function Articulation(type) {
     if (arguments.length > 0) this.init(type);

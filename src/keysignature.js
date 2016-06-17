@@ -5,10 +5,12 @@
 //
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
+
 export var KeySignature = (function() {
   function KeySignature(keySpec, cancelKeySpec, alterKeySpec) {
     if (arguments.length > 0) this.init(keySpec, cancelKeySpec, alterKeySpec);

@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-//
 // This file implements notes for standard notation. This consists of one or
 // more `NoteHeads`, an optional stem, and an optional flag.
 //
@@ -9,6 +8,7 @@
 // and a "key" refers to a specific pitch/notehead within a note.*
 //
 // See `tests/stavenote_tests.js` for usage examples.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
@@ -18,6 +18,7 @@ import { StemmableNote } from './stemmablenote';
 import { Modifier } from './modifier';
 import { Dot } from './dot';
 import { Glyph } from './glyph';
+
 export var StaveNote = (function() {
   var StaveNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);

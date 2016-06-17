@@ -1,12 +1,8 @@
-// VexFlow - Music Engraving for HTML5
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
+// ## Description
 // A base class for stave modifiers (e.g. clefs, key signatures)
-//
 
-
-/**
- * @constructor
- */
 export var StaveModifier = (function() {
   function StaveModifier() {
     this.init();

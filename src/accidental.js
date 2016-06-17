@@ -15,6 +15,7 @@ import { Fraction } from './fraction';
 import { Music } from './music';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
+
 export var Accidental = (function(){
   function Accidental(type) {
     if (arguments.length > 0) this.init(type);

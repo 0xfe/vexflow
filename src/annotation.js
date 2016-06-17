@@ -10,6 +10,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
+
 export var Annotation = (function() {
   function Annotation(text) {
     if (arguments.length > 0) this.init(text);

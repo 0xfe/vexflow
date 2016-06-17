@@ -1,11 +1,9 @@
-// Vex Flow Notation
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
-// Implements voltas (repeat brackets)
-//
-// Requires vex.js.
 
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
+
 export var Volta = (function() {
   function Volta(type, number, x, y_shift) {
     if (arguments.length > 0) this.init(type, number, x, y_shift);

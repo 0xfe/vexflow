@@ -1,18 +1,14 @@
-// Vex Flow Notation
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
 // Implements time signatures glyphs for staffs
 // See tables.js for the internal time signatures
 // representation
-//
 
 import { Vex } from './vex';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
-/**
- * @param {string} timeSpec time signature, i.e. "4/4"
- * @param {number} [customPadding] custom padding when using multi-stave/multi-instrument setting
- * to align key/time signature (in pixels), optional
- * @constructor
- */
+
 export var TimeSignature = (function() {
   function TimeSignature(timeSpec, customPadding) {
     if (arguments.length > 0) this.init(timeSpec, customPadding);

@@ -1,9 +1,4 @@
-// Vex Flow
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// Copyright Mohit Muthanna 2010
-//
-// Requires a glyph font to be loaded and Vex.Flow.Font to be set.
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
 import { Flow } from './tables';

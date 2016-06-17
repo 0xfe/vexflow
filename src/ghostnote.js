@@ -1,12 +1,10 @@
-// Vex Flow Notation
-// Mohit Muthanna <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Copyright Mohit Muthanna 2010
-//
-// Requires vex.js.
+// ## Description
 
 import { Vex } from './vex';
 import { StemmableNote } from './stemmablenote';
+
 /** @constructor */
 export var GhostNote = (function() {
   function GhostNote(duration) {

@@ -18,6 +18,7 @@ import { Ornament } from './ornament';
 import { Annotation } from './annotation';
 import { Bend } from './bend';
 import { Vibrato } from './vibrato';
+
 export var ModifierContext = (function() {
   function ModifierContext() {
     // Current modifiers

@@ -15,6 +15,7 @@ import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+
 export var Ornament = (function() {
   function Ornament(type) {
     if (arguments.length > 0) this.init(type);

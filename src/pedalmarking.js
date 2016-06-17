@@ -7,8 +7,10 @@
 //
 // In order to create "Sostenuto", and "una corda" markings, you must set
 // custom text for the release/depress pedal markings.
+
 import { Vex } from './vex';
 import { Glyph } from './glyph';
+
 export var PedalMarking = (function() {
   function PedalMarking(type) {
     if (arguments.length > 0) this.init(type);

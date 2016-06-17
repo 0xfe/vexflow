@@ -1,15 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-//
 // This file implements the `TextDynamics` which renders traditional
 // text dynamics markings, **ie: p, f, sfz, rfz, ppp**
 //
 // You can render any dynamics string that contains a combination of
 // the following letters:  P, M, F, Z, R, S
+
 import { Vex } from './vex';
 import { Note } from './note';
 import { Glyph } from './glyph';
+
 export var TextDynamics = (function(){
   function TextDynamics(text_struct) {
     if (arguments.length > 0) this.init(text_struct);

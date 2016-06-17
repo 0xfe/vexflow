@@ -6,6 +6,7 @@
 // more fret positions, and can either be drawn with or without stems.
 //
 // See `tests/tabnote_tests.js` for usage examples
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
@@ -13,6 +14,7 @@ import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Dot } from './dot';
 import { Glyph } from './glyph';
+
 export var TabNote = (function() {
   function TabNote(tab_struct, draw_stem) {
     if (arguments.length > 0) this.init(tab_struct, draw_stem);

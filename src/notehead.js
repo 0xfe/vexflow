@@ -6,11 +6,13 @@
 // directly, but used internally in `StaveNote`.
 //
 // See `tests/notehead_tests.js` for usage examples.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+
 export var NoteHead = (function() {
   var NoteHead = function(head_options) {
     if (arguments.length > 0) this.init(head_options);

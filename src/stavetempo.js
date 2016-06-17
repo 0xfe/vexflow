@@ -1,17 +1,12 @@
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
-// Implements tempo marker.
 
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
-/**
- * @constructor
- * @param {Object} tempo Tempo parameters: { name, duration, dots, bpm }
- */
+
 export var StaveTempo = (function() {
   function StaveTempo(tempo, x, shift_y) {
     if (arguments.length > 0) this.init(tempo, x, shift_y);

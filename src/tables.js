@@ -1,12 +1,8 @@
-// Vex Flow Notation
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// Copyright Mohit Muthanna 2010
-//
-// Requires vex.js.
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
 import { Fraction } from './fraction';
+
 var Flow = {};
 Flow.STEM_WIDTH = 1.5;
 Flow.STEM_HEIGHT = 32;

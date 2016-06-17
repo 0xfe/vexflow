@@ -2,7 +2,6 @@
 // Author: Larry Kuhns
 //
 // ## Description
-//
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
 
@@ -11,6 +10,7 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+
 export var Stroke = (function() {
   function Stroke(type, options) {
     if (arguments.length > 0) this.init(type, options);

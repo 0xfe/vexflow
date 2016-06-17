@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-//
 // This file implements utility methods used by the rest of the VexFlow
 // codebase.
 //
@@ -10,6 +9,7 @@
 /* global window: false */
 /* global document: false */
 /* global Vex: true */
+
 var Vex = function() {};
 
 // Default log function sends all arguments to console.

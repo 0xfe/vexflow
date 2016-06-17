@@ -1,14 +1,15 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-//
 // `TextNote` is a notation element that is positioned in time. Generally
 // meant for objects that sit above/below the staff and inline with each other.
 // Examples of this would be such as dynamics, lyrics, chord changes, etc.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Note } from './note';
 import { Glyph } from './glyph';
+
 export var TextNote = (function() {
   function TextNote(text_struct) {
     if (arguments.length > 0) this.init(text_struct);

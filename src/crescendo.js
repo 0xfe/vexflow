@@ -10,6 +10,7 @@
 import { Vex } from './vex';
 import { Note } from './note';
 import { TickContext } from './tickcontext';
+
 export var Crescendo = (function() {
   function Crescendo(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
