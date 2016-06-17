@@ -2,6 +2,7 @@
 // Mohit Muthanna Cheppudira <mohit@muthanna.com>
 
 module.exports = function(grunt) {
+  var path = require('path');
   var L = grunt.log.writeln;
   var BANNER = '/**\n' +
                 ' * VexFlow <%= pkg.version %> built on <%= grunt.template.today("yyyy-mm-dd") %>.\n' +
@@ -9,12 +10,13 @@ module.exports = function(grunt) {
                 ' *\n' +
                 ' * http://www.vexflow.com  http://github.com/0xfe/vexflow\n' +
                 ' */\n';
-  var BUILD_DIR = 'build';
-  var RELEASE_DIR = 'releases';
-  var MODULE_ENTRY = 'src/index.js';
-  var TARGET_RAW = BUILD_DIR + '/vexflow-debug.js';
-  var TARGET_MIN = BUILD_DIR + '/vexflow-min.js';
-  var TARGET_TESTS = BUILD_DIR + '/vexflow-tests.js';
+  var BASE_DIR = __dirname;
+  var BUILD_DIR = path.join(BASE_DIR, 'build');
+  var RELEASE_DIR = path.join(BASE_DIR, 'releases');
+  var MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  var TARGET_RAW = path.join(BUILD_DIR, 'vexflow-debug.js');
+  var TARGET_MIN = path.join(BUILD_DIR, 'vexflow-min.js');
+  var TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
 
   var SOURCES = ["src/*.js", "!src/header.js", "!src/container.js"];
 
@@ -40,6 +42,7 @@ module.exports = function(grunt) {
         format: 'umd',
         moduleName: 'Vex',
         sourceMap: true,
+        sourceMapFile: TARGET_RAW,
         plugins: function() {
           return [
             babel({
@@ -82,7 +85,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['src/*', 'Gruntfile.js'],
-        tasks: ['concat:vexflow'],
+        tasks: ['rollup'],
         options: {
           interrupt: true
         }
