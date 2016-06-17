@@ -113,8 +113,7 @@ export var KeySignature = (function() {
 
       var glyph_width = glyph_data.width + extra_width;
       this.width += glyph_width;
-      // Set the width and place the glyph on the stave
-      glyph.setWidth(glyph_width);
+      // Place the glyph on the stave
       this.placeGlyphOnLine(glyph, this.stave, acc.line);
       this.glyphs.push(glyph);
     },
