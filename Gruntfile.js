@@ -78,7 +78,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['src/*', 'Gruntfile.js'],
-        tasks: ['concat:vexflow'],
+        tasks: ['rollup'],
         options: {
           interrupt: true
         }
