@@ -96,30 +96,32 @@ export var KeySignature = (function() {
     getCategory: function() { return KeySignature.category; },
 
     // Add an accidental glyph to the `KeySignature` instance which represents
-    // the provided `accid`. If a `nextAccid` is also provided, the appropriate
+    // the provided `acc`. If `nextAcc` is also provided, the appropriate
     // spacing will be included in the glyph's position
-    convertToGlyph: function(accid, nextAccid) {
-      var accidGlyphData = Flow.accidentalCodes(accid.type);
-      var glyph = new Glyph(accidGlyphData.code, this.glyphFontScale);
+    convertToGlyph: function(acc, nextAcc) {
+      var accGlyphData = Flow.accidentalCodes(acc.type);
+      var glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
 
       // Determine spacing between current accidental and the next accidental
       var extraWidth = 0;
-      if (accid.type === "n" && nextAccid) {
-        var isAbove = nextAccid.line >= accid.line;
-        var spacing = KeySignature.accidentalSpacing[nextAccid.type];
+      if (acc.type === "n" && nextAcc) {
+        var isAbove = nextAcc.line >= acc.line;
+        var spacing = KeySignature.accidentalSpacing[nextAcc.type];
         if (spacing) {
           extraWidth = isAbove ? spacing.above : spacing.below;
         }
       }
 
-      var glyphWidth = accidGlyphData.width + extraWidth;
-      var prevXPosition = this.xPositions[this.xPositions.length - 1];
-      this.width += glyphWidth;
       // Place the glyph on the stave
-      this.placeGlyphOnLine(glyph, this.stave, accid.line);
+      this.placeGlyphOnLine(glyph, this.stave, acc.line);
       this.glyphs.push(glyph);
+
+      var xPosition = this.xPositions[this.xPositions.length - 1];
+      var glyphWidth = accGlyphData.width + extraWidth;
       // Store the next accidental's x position
-      this.xPositions.push(prevXPosition + glyphWidth);
+      this.xPositions.push(xPosition + glyphWidth);
+      // Expand size of key signature
+      this.width += glyphWidth;
     },
 
     // Cancel out a key signature provided in the `spec` parameter. This will
