@@ -89,6 +89,7 @@ export var KeySignature = (function() {
       this.setPosition(StaveModifier.Position.BEGIN);
       this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
       this.glyphs = [];
+      this.xPositions = [];
       this.paddingForced = false;
     },
 
@@ -97,25 +98,27 @@ export var KeySignature = (function() {
     // Add an accidental glyph to the `stave`. `acc` is the data of the
     // accidental to add. If the `next` accidental is also provided, extra
     // width will be added to the initial accidental for optimal spacing.
-    convertToGlyph: function(acc, next) {
-      var glyph_data = Flow.accidentalCodes(acc.type);
-      var glyph = new Glyph(glyph_data.code, this.glyphFontScale);
+    convertToGlyph: function(accid, nextAccid) {
+      var accidGlyphData = Flow.accidentalCodes(accid.type);
+      var glyph = new Glyph(accidGlyphData.code, this.glyphFontScale);
 
       // Determine spacing between current accidental and the next accidental
-      var extra_width = 0;
-      if (acc.type === "n" && next) {
-        var above = next.line >= acc.line;
-        var space = KeySignature.accidentalSpacing[next.type];
-        if (space) {
-          extra_width = above ? space.above : space.below;
+      var extraWidth = 0;
+      if (accid.type === "n" && nextAccid) {
+        var isAbove = nextAccid.line >= accid.line;
+        var spacing = KeySignature.accidentalSpacing[nextAccid.type];
+        if (spacing) {
+          extraWidth = isAbove ? spacing.above : spacing.below;
         }
       }
 
-      var glyph_width = glyph_data.width + extra_width;
-      this.width += glyph_width;
+      var glyphWidth = accidGlyphData.width + extraWidth;
+      var prevXPosition = this.xPositions[this.xPositions.length - 1];
+      this.width += glyphWidth;
       // Place the glyph on the stave
-      this.placeGlyphOnLine(glyph, this.stave, acc.line);
+      this.placeGlyphOnLine(glyph, this.stave, accid.line);
       this.glyphs.push(glyph);
+      this.xPositions.push(prevXPosition + glyphWidth);
     },
 
     // Cancel out a key signature provided in the `spec` parameter. This will
@@ -265,6 +268,7 @@ export var KeySignature = (function() {
 
       this.width = 0;
       this.glyphs = [];
+      this.xPositions = [0]; // initialize with initial x position
       this.accList = Flow.keySignature(this.keySpec);
       if (this.cancelKeySpec) {
         this.convertToCancelAccList(this.cancelKeySpec);
@@ -289,13 +293,12 @@ export var KeySignature = (function() {
       if (!this.stave) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without stave.");
       if (!this.formatted) this.format();
 
-      var x = this.x;
       for (var i = 0; i < this.glyphs.length; i++) {
         var glyph = this.glyphs[i];
+        var x = this.x + this.xPositions[i];
         glyph.setStave(this.stave);
         glyph.setContext(this.stave.context);
         glyph.renderToStave(x);
-        x += glyph.getMetrics().width;
       }
     }
   });
