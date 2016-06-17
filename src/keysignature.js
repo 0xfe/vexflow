@@ -105,9 +105,9 @@ export var KeySignature = (function() {
       // Determine spacing between current accidental and the next accidental
       var extraWidth = 0;
       if (acc.type === "n" && nextAcc) {
-        var isAbove = nextAcc.line >= acc.line;
         var spacing = KeySignature.accidentalSpacing[nextAcc.type];
         if (spacing) {
+          var isAbove = nextAcc.line >= acc.line;
           extraWidth = isAbove ? spacing.above : spacing.below;
         }
       }
