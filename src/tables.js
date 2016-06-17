@@ -7,7 +7,7 @@
 
 import { Vex } from './vex';
 import { Fraction } from './fraction';
-var Flow = {};
+let Flow = {};
 Flow.STEM_WIDTH = 1.5;
 Flow.STEM_HEIGHT = 32;
 Flow.STAVE_LINE_THICKNESS = 2;
