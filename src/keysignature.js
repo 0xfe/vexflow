@@ -95,9 +95,9 @@ export var KeySignature = (function() {
 
     getCategory: function() { return KeySignature.category; },
 
-    // Add an accidental glyph to the `stave`. `acc` is the data of the
-    // accidental to add. If the `next` accidental is also provided, extra
-    // width will be added to the initial accidental for optimal spacing.
+    // Add an accidental glyph to the `KeySignature` instance which represents
+    // the provided `accid`. If a `nextAccid` is also provided, the appropriate
+    // spacing will be included in the glyph's position
     convertToGlyph: function(accid, nextAccid) {
       var accidGlyphData = Flow.accidentalCodes(accid.type);
       var glyph = new Glyph(accidGlyphData.code, this.glyphFontScale);
@@ -118,6 +118,7 @@ export var KeySignature = (function() {
       // Place the glyph on the stave
       this.placeGlyphOnLine(glyph, this.stave, accid.line);
       this.glyphs.push(glyph);
+      // Store the next accidental's x position
       this.xPositions.push(prevXPosition + glyphWidth);
     },
 
