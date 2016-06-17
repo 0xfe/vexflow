@@ -1,13 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-//
 // `StemmableNote` is an abstract interface for notes with optional stems.
 // Examples of stemmable notes are `StaveNote` and `TabNote`
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Stem } from './stem';
 import { Note } from './note';
+
 export var StemmableNote = (function(){
   var StemmableNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);

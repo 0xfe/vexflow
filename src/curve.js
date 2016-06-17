@@ -4,6 +4,7 @@
 // This class implements curves (for slurs)
 
 import { Vex } from './vex';
+
 export var Curve = (function() {
   // from: Start note
   // to: End note

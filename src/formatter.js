@@ -26,6 +26,7 @@ import { StaveConnector } from './staveconnector';
 import { StaveNote } from './stavenote';
 import { ModifierContext } from './modifiercontext';
 import { TickContext } from './tickcontext';
+
 export var Formatter = (function() {
   function Formatter() {
     // Minimum width required to render all the notes in the voices.

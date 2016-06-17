@@ -1,4 +1,4 @@
-// VexFlow - Music Engraving for HTML5
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Mike Corrigan <corrigan@gmail.com>
 //
 // This class implements tremolo notation.
@@ -6,10 +6,8 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
-import './glyph';
-/**
- * @constructor
- */
+import { Glyph } from './glyph';
+
 export var Tremolo = (function() {
   function Tremolo(num) {
     if (arguments.length > 0) this.init(num);
@@ -54,7 +52,7 @@ export var Tremolo = (function() {
 
       x += this.shift_right;
       for (var i = 0; i < this.num; ++i) {
-        Flow.renderGlyph(this.context, x, y,
+        Glyph.renderGlyph(this.context, x, y,
                              this.render_options.font_scale, this.code);
         y += this.y_spacing;
       }

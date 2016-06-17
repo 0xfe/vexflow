@@ -8,6 +8,7 @@
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
 import { Vex } from './vex';
+
 export var StaveLine = (function() {
   function StaveLine(notes) {
     if (arguments.length > 0) this.init(notes);

@@ -1,7 +1,4 @@
-// Vex Flow
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// Copyright Mohit Cheppudira 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
 import { Flow } from './tables';
@@ -16,6 +13,7 @@ import { Clef } from './clef';
 import { KeySignature } from './keysignature';
 import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
+
 /** @constructor */
 export var Stave = (function() {
   function Stave(x, y, width, options) {

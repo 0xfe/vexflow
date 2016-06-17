@@ -1,10 +1,8 @@
-// Vex Flow
-// Mohit Muthanna <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
+// ## Description
 // A rendering context for the Raphael backend.
 //
-// Copyright Mohit Cheppudira 2010
-
 // ## Warning: Deprecated for SVGContext
 // Except in instances where SVG support for IE < 9.0 is
 // needed, SVGContext is recommended.

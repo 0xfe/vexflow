@@ -1,9 +1,12 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 import { Renderer } from './renderer';
 import { Formatter } from './formatter';
 import { Music } from './music';
+import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveNote } from './stavenote';
 import { Voice } from './voice';
@@ -59,6 +62,7 @@ Vex.Flow.Fraction = Fraction;
 Vex.Flow.Renderer = Renderer;
 Vex.Flow.Formatter = Formatter;
 Vex.Flow.Music = Music;
+Vex.Flow.Glyph = Glyph;
 Vex.Flow.Stave = Stave;
 Vex.Flow.StaveNote = StaveNote;
 Vex.Flow.Voice = Voice;

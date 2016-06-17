@@ -1,12 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-//
 // This file implements the `Stem` object. Generally this object is handled
 // by its parent `StemmableNote`.
-//
+
 import { Vex } from './vex';
 import { Flow } from './tables';
+
 export var Stem = (function() {
   var Stem = function(options) {
     if (arguments.length > 0) this.init(options);

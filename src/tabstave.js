@@ -1,11 +1,8 @@
-// Vex Flow
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// Copyright Mohit Cheppudira 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
 import { Stave } from './stave';
-/** @constructor */
+
 export var TabStave = (function() {
   function TabStave(x, y, width, options) {
     if (arguments.length > 0) this.init(x, y, width, options);

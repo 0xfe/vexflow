@@ -1,14 +1,10 @@
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
-//
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 import { TextNote } from './textnote';
-/**
- * @constructor
- */
+
 export var StaveText = (function() {
   function StaveText(text, position, options) {
     if (arguments.length > 0) this.init(text, position, options);

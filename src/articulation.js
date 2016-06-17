@@ -13,7 +13,8 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
-import './glyph';
+import { Glyph } from './glyph';
+
 export var Articulation = (function() {
   function Articulation(type) {
     if (arguments.length > 0) this.init(type);
@@ -176,7 +177,7 @@ export var Articulation = (function() {
       glyph_y += shiftY + this.y_shift;
 
       L("Rendering articulation: ", this.articulation, glyph_x, glyph_y);
-      Flow.renderGlyph(this.context, glyph_x, glyph_y,
+      Glyph.renderGlyph(this.context, glyph_x, glyph_y,
                            this.render_options.font_scale, this.articulation.code);
     }
   });

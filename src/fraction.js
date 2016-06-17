@@ -1,4 +1,8 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
 // Fraction class that represents a rational number
+//
 // @author zz85
 // @author incompleteopus (modifications)
 

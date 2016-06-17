@@ -6,6 +6,7 @@
 // Bounding boxes for interactive notation
 
 import { Vex } from './vex';
+
 /** @constructor */
 export var BoundingBox = (function() {
   function BoundingBox(x, y, w, h) { this.init(x, y, w, h); }

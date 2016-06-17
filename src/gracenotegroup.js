@@ -12,6 +12,7 @@ import { Formatter } from './formatter';
 import { Voice } from './voice';
 import { Beam } from './beam';
 import { StaveTie } from './stavetie';
+
 export var GraceNoteGroup = (function(){
   function GraceNoteGroup(grace_notes, config) {
     if (arguments.length > 0) this.init(grace_notes, config);

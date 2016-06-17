@@ -2,7 +2,6 @@
 // Author: Larry Kuhns
 //
 // ## Description
-//
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
@@ -10,6 +9,7 @@ import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Renderer } from './renderer';
 import { StaveNote } from './stavenote';
+
 export var StringNumber = (function() {
   function StringNumber(number) {
     if (arguments.length > 0) this.init(number);

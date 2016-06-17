@@ -13,6 +13,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Tickable } from './tickable';
+
 export var Note = (function() {
   // To create a new note you need to provide a `note_struct`, which consists
   // of the following fields:

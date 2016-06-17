@@ -1,13 +1,11 @@
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
+// ## Description
 // This class implements varies types of tunings for tablature.
 
 import { Vex } from './vex';
 import { Flow } from './tables';
-/**
- * @constructor
- */
+
 export var Tuning = (function() {
   function Tuning(tuningString) {
     this.init(tuningString);

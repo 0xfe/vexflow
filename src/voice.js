@@ -4,9 +4,11 @@
 //
 // This file implements the main Voice class. It's mainly a container
 // object to group `Tickables` for formatting.
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
+
 export var Voice = (function() {
   function Voice(time) {
     if (arguments.length > 0) this.init(time);

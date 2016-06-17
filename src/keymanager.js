@@ -1,14 +1,12 @@
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
 //
 // This class implements diatonic key management.
-//
-// requires: vex.js   (Vex)
-// requires: flow.js  (Vex.Flow)
-// requires: music.js (Vex.Flow.Music)
 
 import { Vex } from './vex';
 import { Music } from './music';
+
 /**
  * @constructor
  */

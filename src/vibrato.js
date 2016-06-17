@@ -1,12 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-//
 // This class implements vibratos.
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Bend } from './bend';
+
 export var Vibrato = (function() {
   function Vibrato() { this.init(); }
   Vibrato.CATEGORY = "vibratos";

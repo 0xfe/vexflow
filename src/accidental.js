@@ -14,7 +14,7 @@ import { Flow } from './tables';
 import { Fraction } from './fraction';
 import { Music } from './music';
 import { Modifier } from './modifier';
-import './glyph';
+import { Glyph } from './glyph';
 
 // An `Accidental` inherits from `Modifier`, and is formatted within a
 // `ModifierContext`.

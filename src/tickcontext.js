@@ -1,12 +1,12 @@
-// Vex Flow
-// Copyright Mohit Cheppudira <mohit@muthanna.com>
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
+// ## Description
 // A formatter for abstract tickable objects, such as notes, chords,
 // tabs, etc.
 
 import { Vex } from './vex';
 import { Fraction } from './fraction';
-/** @constructor */
+
 export var TickContext = (function() {
   function TickContext() {
     this.init();

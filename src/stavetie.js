@@ -1,19 +1,11 @@
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
+// ## Description
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
 import { Vex } from './vex';
-/**
- * Create a new tie from the specified notes. The notes must
- * be part of the same line, and have the same duration (in ticks).
- *
- * @constructor
- * @param {!Object} context The canvas context.
- * @param {!Object} notes The notes to tie up.
- * @param {!Object} Options
- */
+
 export var StaveTie = (function() {
   function StaveTie(notes, text) {
     if (arguments.length > 0) this.init(notes, text);

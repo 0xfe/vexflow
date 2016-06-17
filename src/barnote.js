@@ -12,6 +12,7 @@ import { Vex } from './vex';
 import { Note } from './note';
 import { Barline } from './stavebarline';
 import { BoundingBox } from './boundingbox';
+
 export var BarNote = (function() {
   function BarNote() { this.init(); }
 

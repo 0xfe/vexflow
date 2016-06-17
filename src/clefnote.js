@@ -8,6 +8,7 @@ import { BoundingBox } from './boundingbox';
 import { Note } from './note';
 import { Clef } from './clef';
 import { Glyph } from './glyph';
+
 /** @constructor */
 export var ClefNote = (function() {
   function ClefNote(type, size, annotation) { this.init(type, size, annotation); }

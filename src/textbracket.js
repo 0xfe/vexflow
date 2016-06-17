@@ -6,10 +6,11 @@
 // This file implement `TextBrackets` which extend between two notes.
 // The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
 // using this class.
-//
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Renderer } from './renderer';
+
 export var TextBracket = (function() {
   function TextBracket(bracket_data) {
     if (arguments.length > 0) this.init(bracket_data);

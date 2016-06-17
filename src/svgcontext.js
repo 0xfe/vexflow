@@ -1,12 +1,8 @@
-// Vex Flow
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// A rendering context for SVG.
-//
-// Copyright Mohit Muthanna 2015
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Gregory Ristow (2015)
 
 import { Vex } from './vex';
+
 /** @constructor */
 export var SVGContext = (function() {
   function SVGContext(element) {

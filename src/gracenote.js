@@ -1,5 +1,8 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
+
 export var GraceNote = (function() {
   var GraceNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);

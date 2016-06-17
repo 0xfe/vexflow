@@ -1,4 +1,8 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+
 /**
+ * ## Description
+ * 
  * Create a new tuplet from the specified notes. The notes must
  * be part of the same voice. If they are of different rhythmic
  * values, then options.num_notes must be set.
@@ -44,6 +48,7 @@ import { Vex } from './vex';
 import { Formatter } from './formatter';
 import { Glyph } from './glyph';
 import { Stem } from './stem';
+
 export var Tuplet = (function() {
   function Tuplet(notes, options) {
     if (arguments.length > 0) this.init(notes, options);

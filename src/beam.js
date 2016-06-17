@@ -5,11 +5,13 @@
 // This file implements `Beams` that span over a set of `StemmableNotes`.
 //
 // Requires: vex.js, vexmusic.js, note.js
+
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 import { Tuplet } from './tuplet';
 import { Stem } from './stem';
+
 export var Beam = (function() {
   function Beam(notes, auto_stem) {
     if (arguments.length > 0) this.init(notes, auto_stem);
