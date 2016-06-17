@@ -7,7 +7,10 @@
 // duration and formatted as part of a `Voice` like any other `Note`
 // type in VexFlow. This object would most likely be formatted in a Voice
 // with `TextNotes` - which are used to represent other dynamics markings.
-Vex.Flow.Crescendo = (function() {
+import { Vex } from './vex';
+import { Note } from './note';
+import { TickContext } from './tickcontext';
+export var Crescendo = (function() {
   function Crescendo(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
   }
@@ -39,7 +42,7 @@ Vex.Flow.Crescendo = (function() {
   }
 
   // ## Prototype Methods
-  Vex.Inherit(Crescendo, Vex.Flow.Note, {
+  Vex.Inherit(Crescendo, Note, {
     // Initialize the crescendo's properties
     init: function(note_struct) {
       Crescendo.superclass.init.call(this, note_struct);
@@ -84,7 +87,7 @@ Vex.Flow.Crescendo = (function() {
         "Can't draw Hairpin without a context.");
 
       var tick_context = this.getTickContext();
-      var next_context = Vex.Flow.TickContext.getNextContext(tick_context);
+      var next_context = TickContext.getNextContext(tick_context);
 
       var begin_x = this.getAbsoluteX();
       var end_x;

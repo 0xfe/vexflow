@@ -4,6 +4,8 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
+import { Vex } from './vex';
+import { TabTie } from './tabtie';
 /**
  * Create a new tie from the specified notes. The notes must
  * be part of the same line, and have the same duration (in ticks).
@@ -13,7 +15,7 @@
  * @param {!Object} notes The notes to tie up.
  * @param {!Object} Options
  */
-Vex.Flow.TabSlide = (function() {
+export var TabSlide = (function() {
   function TabSlide(notes, direction) {
     if (arguments.length > 0) this.init(notes, direction);
   }
@@ -29,7 +31,7 @@ Vex.Flow.TabSlide = (function() {
     return new TabSlide(notes, TabSlide.SLIDE_DOWN);
   };
 
-  Vex.Inherit(TabSlide, Vex.Flow.TabTie, {
+  Vex.Inherit(TabSlide, TabTie, {
     init: function(notes, direction) {
       /**
        * Notes is a struct that has:

@@ -4,16 +4,18 @@
 // A formatter for abstract tickable objects, such as notes, chords,
 // tabs, etc.
 
+import { Vex } from './vex';
+import { Fraction } from './fraction';
 /** @constructor */
-Vex.Flow.TickContext = (function() {
+export var TickContext = (function() {
   function TickContext() {
     this.init();
   }
 
   TickContext.prototype = {
     init: function() {
-      this.currentTick = new Vex.Flow.Fraction(0, 1);
-      this.maxTicks = new Vex.Flow.Fraction(0, 1);
+      this.currentTick = new Fraction(0, 1);
+      this.maxTicks = new Fraction(0, 1);
       this.minTicks = null;
       this.width = 0;
       this.padding = 3;     // padding on each side (width += padding * 2)

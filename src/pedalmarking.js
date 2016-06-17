@@ -7,7 +7,9 @@
 //
 // In order to create "Sostenuto", and "una corda" markings, you must set
 // custom text for the release/depress pedal markings.
-Vex.Flow.PedalMarking = (function() {
+import { Vex } from './vex';
+import { Glyph } from './glyph';
+export var PedalMarking = (function() {
   function PedalMarking(type) {
     if (arguments.length > 0) this.init(type);
   }
@@ -65,7 +67,7 @@ Vex.Flow.PedalMarking = (function() {
   PedalMarking.prototype =  {
     init: function(notes) {
       this.notes = notes;
-      this.style = Vex.Flow.PedalMarking.TEXT;
+      this.style = PedalMarking.TEXT;
       this.line = 0;
 
       // Custom text for the release/depress markings
@@ -219,7 +221,7 @@ Vex.Flow.PedalMarking = (function() {
       });
     },
 
-    // Render the pedal marking in position on the rendering context 
+    // Render the pedal marking in position on the rendering context
     draw: function() {
       if (!this.context) throw new Vex.RERR("NoContext",
         "Can't draw PedalMarking without a context.");
@@ -236,7 +238,7 @@ Vex.Flow.PedalMarking = (function() {
           this.style === PedalMarking.Styles.MIXED) {
         ctx.setLineWidth(this.render_options.bracket_line_width);
         this.drawBracketed();
-      } else if (this.style === Vex.Flow.PedalMarking.Styles.TEXT) {
+      } else if (this.style === PedalMarking.Styles.TEXT) {
         this.drawText();
       }
 
@@ -245,13 +247,13 @@ Vex.Flow.PedalMarking = (function() {
   };
 
   // ## Private Helper
-  // 
-  // Draws a pedal glyph with the provided `name` on a rendering `context` 
+  //
+  // Draws a pedal glyph with the provided `name` on a rendering `context`
   // at the coordinates `x` and `y. Takes into account the glyph data
   // coordinate shifts.
   function drawPedalGlyph(name, context, x, y, point) {
     var glyph_data = PedalMarking.GLYPHS[name];
-    var glyph = new Vex.Flow.Glyph(glyph_data.code, point);
+    var glyph = new Glyph(glyph_data.code, point);
     glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
   }
 

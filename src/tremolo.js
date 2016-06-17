@@ -3,15 +3,18 @@
 //
 // This class implements tremolo notation.
 
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
+import { Glyph } from './glyph';
 /**
  * @constructor
  */
-Vex.Flow.Tremolo = (function() {
+export var Tremolo = (function() {
   function Tremolo(num) {
     if (arguments.length > 0) this.init(num);
   }
 
-  var Modifier = Vex.Flow.Modifier;
   Vex.Inherit(Tremolo, Modifier, {
     init: function(num) {
       Tremolo.superclass.init.call(this);
@@ -51,7 +54,7 @@ Vex.Flow.Tremolo = (function() {
 
       x += this.shift_right;
       for (var i = 0; i < this.num; ++i) {
-        Vex.Flow.renderGlyph(this.context, x, y,
+        Glyph.renderGlyph(this.context, x, y,
                              this.render_options.font_scale, this.code);
         y += this.y_spacing;
       }

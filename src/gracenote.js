@@ -1,9 +1,11 @@
-Vex.Flow.GraceNote = (function() {
+import { Vex } from './vex';
+import { StaveNote } from './stavenote';
+export var GraceNote = (function() {
   var GraceNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
   };
 
-  Vex.Inherit(GraceNote, Vex.Flow.StaveNote, {
+  Vex.Inherit(GraceNote, StaveNote, {
     init: function(note_struct) {
       GraceNote.superclass.init.call(this, note_struct);
 

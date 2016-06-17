@@ -3,16 +3,16 @@
 // Author Larry Kuhns 2013
 // Class to draws string numbers into the notation.
 
+import { Vex } from './vex';
+import { Modifier } from './modifier';
 /**
  * @constructor
  */
-Vex.Flow.FretHandFinger = (function() {
+export var FretHandFinger = (function() {
   function FretHandFinger(number) {
     if (arguments.length > 0) this.init(number);
   }
   FretHandFinger.CATEGORY = "frethandfinger";
-
-  var Modifier = Vex.Flow.Modifier;
 
   // Arrange fingerings inside a ModifierContext.
   FretHandFinger.format = function(nums, state) {
@@ -73,11 +73,11 @@ Vex.Flow.FretHandFinger = (function() {
       }
 
       var num_width = num.getWidth() + num_spacing;
-      if (pos == Vex.Flow.Modifier.Position.LEFT) {
+      if (pos == Modifier.Position.LEFT) {
         num.setXShift(left_shift + num_shiftL);
         num_shift = left_shift + num_width; // spacing
         x_widthL = (num_shift > x_widthL) ? num_shift : x_widthL;
-      } else if (pos == Vex.Flow.Modifier.Position.RIGHT) {
+      } else if (pos == Modifier.Position.RIGHT) {
         num.setXShift(num_shiftR);
         num_shift = shift_right + num_width; // spacing
         x_widthR = (num_shift > x_widthR) ? num_shift : x_widthR;
@@ -92,7 +92,7 @@ Vex.Flow.FretHandFinger = (function() {
 
   Vex.Inherit(FretHandFinger, Modifier, {
     init: function(number) {
-      var superclass = Vex.Flow.FretHandFinger.superclass;
+      var superclass = FretHandFinger.superclass;
       superclass.init.call(this);
 
       this.note = null;

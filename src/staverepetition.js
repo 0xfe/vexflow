@@ -4,7 +4,11 @@
 //
 // Requires vex.js.
 
-Vex.Flow.Repetition = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { StaveModifier } from './stavemodifier';
+import { Glyph } from './glyph';
+export var Repetition = (function() {
   function Repetition(type, x, y_shift) {
     if (arguments.length > 0) this.init(type, x, y_shift);
   }
@@ -24,7 +28,7 @@ Vex.Flow.Repetition = (function() {
     FINE: 12         // Fine at end of stave
   };
 
-  Vex.Inherit(Repetition, Vex.Flow.StaveModifier, {
+  Vex.Inherit(Repetition, StaveModifier, {
     init: function(type, x, y_shift) {
       Repetition.superclass.init.call(this);
 
@@ -90,7 +94,7 @@ Vex.Flow.Repetition = (function() {
           "Can't draw stave without canvas context.");
 
       var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-      Vex.Flow.renderGlyph(stave.context, this.x + x + this.x_shift,
+      Glyph.renderGlyph(stave.context, this.x + x + this.x_shift,
                            y + 25, 40, "v4d", true);
       return this;
     },
@@ -99,7 +103,7 @@ Vex.Flow.Repetition = (function() {
       if (!stave.context) throw new Vex.RERR("NoCanvasContext",
           "Can't draw stave without canvas context.");
       var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-      Vex.Flow.renderGlyph(stave.context, this.x + x + this.x_shift,
+      Glyph.renderGlyph(stave.context, this.x + x + this.x_shift,
                            y + 25, 30, "v8c", true);
       return this;
     },
@@ -114,7 +118,7 @@ Vex.Flow.Repetition = (function() {
         // Default to right symbol
       var text_x = 0 + this.x_shift;
       var symbol_x = x + this.x_shift;
-      if (this.symbol_type == Vex.Flow.Repetition.type.CODA_LEFT) {
+      if (this.symbol_type == Repetition.type.CODA_LEFT) {
           // Offset Coda text to right of stave beginning
         text_x = this.x + stave.options.vertical_bar_width;
         symbol_x = text_x + ctx.measureText(text).width + 12;
@@ -125,7 +129,7 @@ Vex.Flow.Repetition = (function() {
       }
       var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
       if (draw_coda) {
-        Vex.Flow.renderGlyph(ctx, symbol_x, y, 40, "v4d", true);
+        Glyph.renderGlyph(ctx, symbol_x, y, 40, "v4d", true);
       }
 
       ctx.fillText(text, text_x, y + 5);

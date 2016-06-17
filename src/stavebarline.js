@@ -4,10 +4,13 @@
 //
 // Requires vex.js.
 
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { StaveModifier } from './stavemodifier';
 /**
  * @constructor
  */
-Vex.Flow.Barline = (function() {
+export var Barline = (function() {
   function Barline(type) {
     if (arguments.length > 0) this.init(type);
   }
@@ -22,12 +25,12 @@ Vex.Flow.Barline = (function() {
     NONE: 7
   };
 
-  Vex.Inherit(Barline, Vex.Flow.StaveModifier, {
+  Vex.Inherit(Barline, StaveModifier, {
     init: function(type) {
       Barline.superclass.init.call(this);
-      this.thickness = Vex.Flow.STAVE_LINE_THICKNESS;
+      this.thickness = Flow.STAVE_LINE_THICKNESS;
 
-      var TYPE = Vex.Flow.Barline.type;
+      var TYPE = Barline.type;
       this.widths = {};
       this.widths[TYPE.SINGLE] = 5;
       this.widths[TYPE.DOUBLE] = 5;
@@ -46,7 +49,7 @@ Vex.Flow.Barline = (function() {
       this.paddings[TYPE.REPEAT_BOTH] = 15;
       this.paddings[TYPE.NONE] = 0;
 
-      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
+      this.setPosition(StaveModifier.Position.BEGIN);
       this.setType(type);
     },
 

@@ -5,7 +5,9 @@
 // This file implements the `Stem` object. Generally this object is handled
 // by its parent `StemmableNote`.
 //
-Vex.Flow.Stem = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+export var Stem = (function() {
   var Stem = function(options) {
     if (arguments.length > 0) this.init(options);
   };
@@ -18,8 +20,8 @@ Vex.Flow.Stem = (function() {
   Stem.DOWN = -1;
 
   // Theme
-  Stem.WIDTH = Vex.Flow.STEM_WIDTH;
-  Stem.HEIGHT = Vex.Flow.STEM_HEIGHT;
+  Stem.WIDTH = Flow.STEM_WIDTH;
+  Stem.HEIGHT = Flow.STEM_HEIGHT;
 
   // ## Prototype Methods
   Stem.prototype = {

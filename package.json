@@ -33,6 +33,7 @@
     "grunt-docco": "^0.3.3",
     "grunt-git": "^0.3.2",
     "grunt-release": "^0.7.0",
+    "grunt-rollup": "^0.7.1",
     "jquery": "^2.1.1",
     "jscs": "^2.3.3",
     "jshint": "^2.9.2",

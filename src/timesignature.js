@@ -4,13 +4,16 @@
 // representation
 //
 
+import { Vex } from './vex';
+import { Glyph } from './glyph';
+import { StaveModifier } from './stavemodifier';
 /**
  * @param {string} timeSpec time signature, i.e. "4/4"
  * @param {number} [customPadding] custom padding when using multi-stave/multi-instrument setting
  * to align key/time signature (in pixels), optional
  * @constructor
  */
-Vex.Flow.TimeSignature = (function() {
+export var TimeSignature = (function() {
   function TimeSignature(timeSpec, customPadding) {
     if (arguments.length > 0) this.init(timeSpec, customPadding);
   }
@@ -30,7 +33,7 @@ Vex.Flow.TimeSignature = (function() {
     }
   };
 
-  Vex.Inherit(TimeSignature, Vex.Flow.StaveModifier, {
+  Vex.Inherit(TimeSignature, StaveModifier, {
     init: function(timeSpec, customPadding) {
       TimeSignature.superclass.init();
       var padding = customPadding || 15;
@@ -38,7 +41,7 @@ Vex.Flow.TimeSignature = (function() {
       this.point = 40;
       this.topLine = 2;
       this.bottomLine = 4;
-      this.setPosition(Vex.Flow.StaveModifier.Position.BEGIN);
+      this.setPosition(StaveModifier.Position.BEGIN);
       this.setTimeSig(timeSpec);
       this.setWidth(this.timeSig.glyph.getMetrics().width);
       this.setPadding(padding);
@@ -50,7 +53,7 @@ Vex.Flow.TimeSignature = (function() {
       if (timeSpec == "C" || timeSpec == "C|") {
         var glyphInfo = TimeSignature.glyphs[timeSpec];
         return {num: false, line: glyphInfo.line,
-          glyph: new Vex.Flow.Glyph(glyphInfo.code, glyphInfo.point)};
+          glyph: new Glyph(glyphInfo.code, glyphInfo.point)};
       }
 
       var topNums = [];
@@ -100,7 +103,7 @@ Vex.Flow.TimeSignature = (function() {
     },
 
     makeTimeSignatureGlyph: function(topNums, botNums) {
-      var glyph = new Vex.Flow.Glyph("v0", this.point);
+      var glyph = new Glyph("v0", this.point);
       glyph["topGlyphs"] = [];
       glyph["botGlyphs"] = [];
 
@@ -108,7 +111,7 @@ Vex.Flow.TimeSignature = (function() {
       var i, num;
       for (i = 0; i < topNums.length; ++i) {
         num = topNums[i];
-        var topGlyph = new Vex.Flow.Glyph("v" + num, this.point);
+        var topGlyph = new Glyph("v" + num, this.point);
 
         glyph.topGlyphs.push(topGlyph);
         topWidth += topGlyph.getMetrics().width;
@@ -117,7 +120,7 @@ Vex.Flow.TimeSignature = (function() {
       var botWidth = 0;
       for (i = 0; i < botNums.length; ++i) {
         num = botNums[i];
-        var botGlyph = new Vex.Flow.Glyph("v" + num, this.point);
+        var botGlyph = new Glyph("v" + num, this.point);
 
         glyph.botGlyphs.push(botGlyph);
         botWidth += botGlyph.getMetrics().width;
@@ -143,7 +146,7 @@ Vex.Flow.TimeSignature = (function() {
         var i, g;
         for (i = 0; i < this.topGlyphs.length; ++i) {
           g = this.topGlyphs[i];
-          Vex.Flow.Glyph.renderOutline(this.context, g.metrics.outline,
+          Glyph.renderOutline(this.context, g.metrics.outline,
               g.scale, start_x + g.x_shift, this.stave.getYForLine(that.topLine) + 1);
           start_x += g.getMetrics().width;
         }
@@ -152,7 +155,7 @@ Vex.Flow.TimeSignature = (function() {
         for (i = 0; i < this.botGlyphs.length; ++i) {
           g = this.botGlyphs[i];
           that.placeGlyphOnLine(g, this.stave, g.line);
-          Vex.Flow.Glyph.renderOutline(this.context, g.metrics.outline,
+          Glyph.renderOutline(this.context, g.metrics.outline,
               g.scale, start_x + g.x_shift, this.stave.getYForLine(that.bottomLine) + 1);
           start_x += g.getMetrics().width;
         }

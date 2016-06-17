@@ -9,7 +9,13 @@
 //
 // See `tests/ornament_tests.js` for usage examples.
 
-Vex.Flow.Ornament = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
+import { TickContext } from './tickcontext';
+import { StaveNote } from './stavenote';
+import { Glyph } from './glyph';
+export var Ornament = (function() {
   function Ornament(type) {
     if (arguments.length > 0) this.init(type);
   }
@@ -106,8 +112,6 @@ Vex.Flow.Ornament = (function() {
   // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
   function L() { if (Ornament.DEBUG) Vex.L("Vex.Flow.Ornament", arguments); }
 
-  var Modifier = Vex.Flow.Modifier;
-
   // ## Static Methods
   // Arrange ornaments inside `ModifierContext`
   Ornament.format = function(ornaments, state) {
@@ -119,7 +123,7 @@ Vex.Flow.Ornament = (function() {
       var increment = 1;
       width = Math.max(ornament.getWidth(), width);
 
-      var type = Vex.Flow.ornamentCodes(ornament.type);
+      var type = Flow.ornamentCodes(ornament.type);
 
       if (!type.between_lines) increment += 1.5;
 
@@ -157,7 +161,7 @@ Vex.Flow.Ornament = (function() {
         font_scale: 38
       };
 
-      this.ornament = Vex.Flow.ornamentCodes(this.type);
+      this.ornament = Flow.ornamentCodes(this.type);
       if (!this.ornament) throw new Vex.RERR("ArgumentError",
          "Ornament not found: '" + this.type + "'");
 
@@ -194,7 +198,7 @@ Vex.Flow.Ornament = (function() {
       // Get stem extents
       var stem_ext = this.note.getStem().getExtents();
       var top, bottom;
-      if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN) {
+      if (stem_direction === StaveNote.STEM_DOWN) {
         top = stem_ext.baseY;
         bottom = stem_ext.topY;
       } else {
@@ -207,9 +211,9 @@ Vex.Flow.Ornament = (function() {
       var is_tabnote = this.note.getCategory() === 'tabnotes';
       if (is_tabnote) {
         if (this.note.hasStem()){
-          if (stem_direction === Vex.Flow.StaveNote.STEM_UP) {
+          if (stem_direction === StaveNote.STEM_UP) {
             bottom = stave.getYForBottomText(this.text_line - 2);
-          } else if (stem_direction === Vex.Flow.StaveNote.STEM_DOWN ) {
+          } else if (stem_direction === StaveNote.STEM_DOWN ) {
             top = stave.getYForTopText(this.text_line - 1.5);
           }
         } else { // Without a stem
@@ -218,7 +222,7 @@ Vex.Flow.Ornament = (function() {
         }
       }
 
-      var is_on_head = stem_direction === Vex.Flow.StaveNote.STEM_DOWN;
+      var is_on_head = stem_direction === StaveNote.STEM_DOWN;
       var spacing = stave.getSpacingBetweenLines();
       var line_spacing = 1;
 
@@ -239,7 +243,7 @@ Vex.Flow.Ornament = (function() {
       // Ajdust x position if ornament is delayed
       if (this.delayed) {
         glyph_x += this.ornament.width;
-        var next_context = Vex.Flow.TickContext.getNextContext(this.note.getTickContext());
+        var next_context = TickContext.getNextContext(this.note.getTickContext());
         if (next_context) {
           glyph_x += (next_context.getX() - glyph_x) * 0.5;
         } else {
@@ -249,7 +253,7 @@ Vex.Flow.Ornament = (function() {
 
       var ornament = this;
       function drawAccidental(ctx, code, upper) {
-        var accidental = Vex.Flow.accidentalCodes(code);
+        var accidental = Flow.accidentalCodes(code);
 
         var acc_x = glyph_x - 3;
         var acc_y = glyph_y + 2;
@@ -271,7 +275,7 @@ Vex.Flow.Ornament = (function() {
 
         // Render the glyph
         var scale = ornament.render_options.font_scale/1.3;
-        Vex.Flow.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);
+        Glyph.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);
 
         // If rendered a bottom accidental, increase the y value by the
         // accidental height so that the ornament's glyph is shifted up
@@ -286,7 +290,7 @@ Vex.Flow.Ornament = (function() {
       }
 
       L("Rendering ornament: ", this.ornament, glyph_x, glyph_y);
-      Vex.Flow.renderGlyph(ctx, glyph_x, glyph_y,
+      Glyph.renderGlyph(ctx, glyph_x, glyph_y,
                            this.render_options.font_scale, this.ornament.code);
 
       // Draw upper accidental for ornament

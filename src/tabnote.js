@@ -6,19 +6,24 @@
 // more fret positions, and can either be drawn with or without stems.
 //
 // See `tests/tabnote_tests.js` for usage examples
-Vex.Flow.TabNote = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
+import { Stem } from './stem';
+import { StemmableNote } from './stemmablenote';
+import { Dot } from './dot';
+import { Glyph } from './glyph';
+export var TabNote = (function() {
   function TabNote(tab_struct, draw_stem) {
     if (arguments.length > 0) this.init(tab_struct, draw_stem);
   }
 
-  var Stem = Vex.Flow.Stem;
-
   // ## Prototype Methods
-  Vex.Inherit(TabNote, Vex.Flow.StemmableNote, {
+  Vex.Inherit(TabNote, StemmableNote, {
     // Initialize the TabNote with a `tab_struct` full of properties
     // and whether to `draw_stem` when rendering the note
     init: function(tab_struct, draw_stem) {
-      var superclass = Vex.Flow.TabNote.superclass;
+      var superclass = TabNote.superclass;
       superclass.init.call(this, tab_struct);
 
       this.ghost = false; // Renders parenthesis around notes
@@ -40,7 +45,7 @@ Vex.Flow.TabNote = (function() {
       });
 
       this.glyph =
-        Vex.Flow.durationToGlyph(this.duration, this.noteType);
+        Flow.durationToGlyph(this.duration, this.noteType);
       if (!this.glyph) {
         throw new Vex.RuntimeError("BadArguments",
             "Invalid note initialization data (No glyph found): " +
@@ -92,7 +97,7 @@ Vex.Flow.TabNote = (function() {
 
     // Add a dot to the note
     addDot: function() {
-      var dot = new Vex.Flow.Dot();
+      var dot = new Dot();
       this.dots++;
       return this.addModifier(dot, 0);
     },
@@ -104,7 +109,7 @@ Vex.Flow.TabNote = (function() {
       for (var i = 0; i < this.positions.length; ++i) {
         var fret = this.positions[i].fret;
         if (this.ghost) fret = "(" + fret + ")";
-        var glyph = Vex.Flow.tabToGlyph(fret);
+        var glyph = Flow.tabToGlyph(fret);
         this.glyphs.push(glyph);
         this.width = (glyph.width > this.width) ? glyph.width : this.width;
       }
@@ -112,7 +117,7 @@ Vex.Flow.TabNote = (function() {
 
     // Set the `stave` to the note
     setStave: function(stave) {
-      var superclass = Vex.Flow.TabNote.superclass;
+      var superclass = TabNote.superclass;
       superclass.setStave.call(this, stave);
       this.context = stave.context;
       this.width = 0;
@@ -184,12 +189,12 @@ Vex.Flow.TabNote = (function() {
           "No Y-Values calculated for this note.");
 
       var x = 0;
-      if (position == Vex.Flow.Modifier.Position.LEFT) {
+      if (position == Modifier.Position.LEFT) {
         x = -1 * 2;  // extra_left_px
-      } else if (position == Vex.Flow.Modifier.Position.RIGHT) {
+      } else if (position == Modifier.Position.RIGHT) {
         x = this.width + 2; // extra_right_px
-      } else if (position == Vex.Flow.Modifier.Position.BELOW ||
-                 position == Vex.Flow.Modifier.Position.ABOVE) {
+      } else if (position == Modifier.Position.BELOW ||
+                 position == Modifier.Position.ABOVE) {
           var note_glyph_width = this.glyph.head_width;
           x = note_glyph_width / 2;
       }
@@ -252,7 +257,7 @@ Vex.Flow.TabNote = (function() {
         }
 
         // Draw the Flag
-        Vex.Flow.renderGlyph(this.context, flag_x, flag_y,
+        Glyph.renderGlyph(this.context, flag_x, flag_y,
             this.render_options.glyph_font_scale, flag_code);
       }
     },
@@ -326,7 +331,7 @@ Vex.Flow.TabNote = (function() {
         ctx.clearRect(tab_x - 2, y - 3, glyph.width + 4, 6);
 
         if (glyph.code) {
-          Vex.Flow.renderGlyph(ctx, tab_x, y + 5 + glyph.shift_y,
+          Glyph.renderGlyph(ctx, tab_x, y + 5 + glyph.shift_y,
               this.render_options.glyph_font_scale, glyph.code);
         } else {
           var text = glyph.text.toString();

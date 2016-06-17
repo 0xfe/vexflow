@@ -3,21 +3,26 @@
 // Author Radosaw Eichler 2012
 // Implements tempo marker.
 
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { Modifier } from './modifier';
+import { StaveModifier } from './stavemodifier';
+import { Glyph } from './glyph';
 /**
  * @constructor
  * @param {Object} tempo Tempo parameters: { name, duration, dots, bpm }
  */
-Vex.Flow.StaveTempo = (function() {
+export var StaveTempo = (function() {
   function StaveTempo(tempo, x, shift_y) {
     if (arguments.length > 0) this.init(tempo, x, shift_y);
   }
 
-  Vex.Inherit(StaveTempo, Vex.Flow.StaveModifier, {
+  Vex.Inherit(StaveTempo, StaveModifier, {
     init: function(tempo, x, shift_y) {
       StaveTempo.superclass.init.call(this);
 
       this.tempo = tempo;
-      this.position = Vex.Flow.Modifier.Position.ABOVE;
+      this.position = Modifier.Position.ABOVE;
       this.x = x;
       this.shift_x = 10;
       this.shift_y = shift_y;
@@ -68,10 +73,10 @@ Vex.Flow.StaveTempo = (function() {
           x += ctx.measureText("(").width;
         }
 
-        var code = Vex.Flow.durationToGlyph(duration);
+        var code = Flow.durationToGlyph(duration);
 
         x += 3 * scale;
-        Vex.Flow.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
+        Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
         x += code.head_width * scale;
 
         // Draw stem and flags
@@ -86,7 +91,7 @@ Vex.Flow.StaveTempo = (function() {
           ctx.fillRect(x, y_top, scale, stem_height);
 
           if (code.flag) {
-            Vex.Flow.renderGlyph(ctx, x + scale, y_top, options.glyph_font_scale,
+            Glyph.renderGlyph(ctx, x + scale, y_top, options.glyph_font_scale,
                                  code.code_flag_upstem);
 
             if (!dots) x += 6 * scale;

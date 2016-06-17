@@ -4,6 +4,7 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
+import { Vex } from './vex';
 /**
  * Create a new tie from the specified notes. The notes must
  * be part of the same line, and have the same duration (in ticks).
@@ -13,7 +14,7 @@
  * @param {!Object} notes The notes to tie up.
  * @param {!Object} Options
  */
-Vex.Flow.StaveTie = (function() {
+export var StaveTie = (function() {
   function StaveTie(notes, text) {
     if (arguments.length > 0) this.init(notes, text);
   }

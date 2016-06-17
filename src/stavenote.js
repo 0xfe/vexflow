@@ -9,7 +9,16 @@
 // and a "key" refers to a specific pitch/notehead within a note.*
 //
 // See `tests/stavenote_tests.js` for usage examples.
-Vex.Flow.StaveNote = (function() {
+import { Vex } from './vex';
+import { Flow } from './tables';
+import { BoundingBox } from './boundingbox';
+import { Stem } from './stem';
+import { NoteHead } from './notehead';
+import { StemmableNote } from './stemmablenote';
+import { Modifier } from './modifier';
+import { Dot } from './dot';
+import { Glyph } from './glyph';
+export var StaveNote = (function() {
   var StaveNote = function(note_struct) {
     if (arguments.length > 0) this.init(note_struct);
   };
@@ -17,9 +26,6 @@ Vex.Flow.StaveNote = (function() {
 
   // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
   function L() { if (StaveNote.DEBUG) Vex.L("Vex.Flow.StaveNote", arguments); }
-
-  var Stem = Vex.Flow.Stem;
-  var NoteHead = Vex.Flow.NoteHead;
 
   // Stem directions
   StaveNote.STEM_UP = Stem.UP;
@@ -221,7 +227,7 @@ Vex.Flow.StaveNote = (function() {
       var top_note = notes[i];
       var bottom_note = notes[i + 1];
 
-      if (top_note.getStemDirection() == Vex.Flow.StaveNote.STEM_DOWN) {
+      if (top_note.getStemDirection() == StaveNote.STEM_DOWN) {
         top_note = notes[i + 1];
         bottom_note = notes[i];
       }
@@ -254,7 +260,7 @@ Vex.Flow.StaveNote = (function() {
 
   // ## Prototype Methods
   //
-  Vex.Inherit(StaveNote, Vex.Flow.StemmableNote, {
+  Vex.Inherit(StaveNote, StemmableNote, {
     init: function(note_struct) {
       StaveNote.superclass.init.call(this, note_struct);
 
@@ -264,7 +270,7 @@ Vex.Flow.StaveNote = (function() {
       this.beam = null;
 
       // Pull note rendering properties
-      this.glyph = Vex.Flow.durationToGlyph(this.duration, this.noteType);
+      this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
       if (!this.glyph) {
         throw new Vex.RuntimeError("BadArguments",
             "Invalid note initialization data (No glyph found): " +
@@ -412,7 +418,7 @@ Vex.Flow.StaveNote = (function() {
         // if (this.glyph.rest) key = this.glyph.position;
         if (this.glyph.rest) this.glyph.position = key;
         var options = { octave_shift: this.octave_shift || 0 };
-        var props = Vex.Flow.keyProperties(key, this.clef, options);
+        var props = Flow.keyProperties(key, this.clef, options);
         if (!props) {
           throw new Vex.RuntimeError("BadArguments",
               "Invalid key for note properties: " + key);
@@ -479,7 +485,7 @@ Vex.Flow.StaveNote = (function() {
 
       if (this.isRest()) {
         var y = this.ys[0];
-        var frac = Vex.Flow.durationToFraction(this.duration);
+        var frac = Flow.durationToFraction(this.duration);
         if (frac.equals(1) || frac.equals(2)) {
           min_y = y - half_line_spacing;
           max_y = y + half_line_spacing;
@@ -510,7 +516,7 @@ Vex.Flow.StaveNote = (function() {
         max_y += half_line_spacing;
       }
 
-      return new Vex.Flow.BoundingBox(x, min_y, w, max_y - min_y);
+      return new BoundingBox(x, min_y, w, max_y - min_y);
     },
 
     // Gets the line number of the top or bottom note in the chord.
@@ -558,7 +564,7 @@ Vex.Flow.StaveNote = (function() {
     // Sets the current note to the provided `stave`. This applies
     // `y` values to the `NoteHeads`.
     setStave: function(stave) {
-      var superclass = Vex.Flow.StaveNote.superclass;
+      var superclass = StaveNote.superclass;
       superclass.setStave.call(this, stave);
 
       var ys = this.note_heads.map(function(note_head) {
@@ -633,14 +639,14 @@ Vex.Flow.StaveNote = (function() {
           "No Y-Values calculated for this note.");
 
       var x = 0;
-      if (position == Vex.Flow.Modifier.Position.LEFT) {
+      if (position == Modifier.Position.LEFT) {
         // extra_left_px
         x = -1 * 2;
-      } else if (position == Vex.Flow.Modifier.Position.RIGHT) {
+      } else if (position == Modifier.Position.RIGHT) {
         // extra_right_px
         x = this.glyph.head_width + this.x_shift + 2;
-      } else if (position == Vex.Flow.Modifier.Position.BELOW ||
-                 position == Vex.Flow.Modifier.Position.ABOVE) {
+      } else if (position == Modifier.Position.BELOW ||
+                 position == Modifier.Position.ABOVE) {
         x = this.glyph.head_width / 2;
       }
 
@@ -717,7 +723,7 @@ Vex.Flow.StaveNote = (function() {
 
     // Helper function to add a dot on a specific key
     addDot: function(index) {
-      var dot = new Vex.Flow.Dot();
+      var dot = new Dot();
       dot.setDotShiftY(this.glyph.dot_shiftY);
       this.dots++;
       return this.addModifier(index, dot);
@@ -817,7 +823,7 @@ Vex.Flow.StaveNote = (function() {
     // Get the ending `x` coordinate for the noteheads
     getNoteHeadEndX: function(){
       var x_begin = this.getNoteHeadBeginX();
-      return x_begin + this.glyph.head_width - (Vex.Flow.STEM_WIDTH / 2);
+      return x_begin + this.glyph.head_width - (Flow.STEM_WIDTH / 2);
     },
 
     // Draw the ledger lines between the stave and the highest/lowest keys
@@ -908,7 +914,7 @@ Vex.Flow.StaveNote = (function() {
 
         // Draw the Flag
         this.context.openGroup("flag", null, {pointerBBox: true});
-        Vex.Flow.renderGlyph(ctx, flag_x, flag_y,
+        Glyph.renderGlyph(ctx, flag_x, flag_y,
             this.render_options.glyph_font_scale, flag_code);
         this.context.closeGroup();
       }
