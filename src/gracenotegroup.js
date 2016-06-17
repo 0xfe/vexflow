@@ -13,18 +13,14 @@ import { Voice } from './voice';
 import { Beam } from './beam';
 import { StaveTie } from './stavetie';
 
-export var GraceNoteGroup = (function(){
-  function GraceNoteGroup(grace_notes, config) {
-    if (arguments.length > 0) this.init(grace_notes, config);
+export class GraceNoteGroup extends Modifier {
+
+  static get CATEGORY() {
+    return 'gracenotegroups';
   }
 
-  GraceNoteGroup.CATEGORY = "gracenotegroups";
-
-  // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
-  function L() { if (GraceNoteGroup.DEBUG) Vex.L("Vex.Flow.GraceNoteGroup", arguments); }
-
   // Arrange groups inside a `ModifierContext`
-  GraceNoteGroup.format = function(gracenote_groups, state) {
+  static format(gracenote_groups, state) {
     var gracenote_spacing = 4;
 
     if (!gracenote_groups || gracenote_groups.length === 0) return false;
@@ -73,126 +69,128 @@ export var GraceNoteGroup = (function(){
 
     state.left_shift += group_shift;
     return true;
-  };
+  }
 
   // ## Prototype Methods
   //
   // `GraceNoteGroup` inherits from `Modifier` and is placed inside a
   // `ModifierContext`.
-  Vex.Inherit(GraceNoteGroup, Modifier, {
-    init: function(grace_notes, show_slur) {
-      var superclass = GraceNoteGroup.superclass;
-      superclass.init.call(this);
+  constructor(grace_notes, show_slur) {
+    super();
 
-      this.note = null;
-      this.index = null;
-      this.position = Modifier.Position.LEFT;
-      this.grace_notes = grace_notes;
-      this.width = 0;
+    this.note = null;
+    this.index = null;
+    this.position = Modifier.Position.LEFT;
+    this.grace_notes = grace_notes;
+    this.width = 0;
 
-      this.preFormatted = false;
+    this.preFormatted = false;
 
-      this.show_slur = show_slur;
-      this.slur = null;
+    this.show_slur = show_slur;
+    this.slur = null;
 
-      this.formatter = new Formatter();
-      this.voice = new Voice({
-        num_beats: 4,
-        beat_value: 4,
-        resolution: Flow.RESOLUTION
-      }).setStrict(false);
+    this.formatter = new Formatter();
+    this.voice = new Voice({
+      num_beats: 4,
+      beat_value: 4,
+      resolution: Flow.RESOLUTION
+    }).setStrict(false);
 
-      this.voice.addTickables(this.grace_notes);
+    this.voice.addTickables(this.grace_notes);
 
-      return this;
-    },
+    return this;
+  }
 
-    preFormat: function(){
-      if (this.preFormatted) return;
+  getCategory() {
+    return GraceNoteGroup.CATEGORY;
+  }
 
-      this.formatter.joinVoices([this.voice]).format([this.voice], 0);
-      this.setWidth(this.formatter.getMinTotalWidth());
-      this.preFormatted = true;
-    },
+  preFormat(){
+    if (this.preFormatted) return;
 
-    beamNotes: function(){
-      if (this.grace_notes.length > 1) {
-        var beam = new Beam(this.grace_notes);
+    this.formatter.joinVoices([this.voice]).format([this.voice], 0);
+    this.setWidth(this.formatter.getMinTotalWidth());
+    this.preFormatted = true;
+  }
 
-        beam.render_options.beam_width = 3;
-        beam.render_options.partial_beam_length = 4;
+  beamNotes(){
+    if (this.grace_notes.length > 1) {
+      var beam = new Beam(this.grace_notes);
 
-        this.beam = beam;
-      }
+      beam.render_options.beam_width = 3;
+      beam.render_options.partial_beam_length = 4;
 
-      return this;
-    },
-
-    setNote: function(note) {
-      this.note = note;
-    },
-    setWidth: function(width){
-      this.width = width;
-    },
-    getWidth: function(){
-      return this.width;
-    },
-    draw: function() {
-      if (!this.context)  {
-        throw new Vex.RuntimeError("NoContext",
-          "Can't draw Grace note without a context.");
-      }
-
-      var note = this.getNote();
-
-      L("Drawing grace note group for:", note);
-
-      if (!(note && (this.index !== null))) {
-        throw new Vex.RuntimeError("NoAttachedNote",
-          "Can't draw grace note without a parent note and parent note index.");
-      }
-
-      var that = this;
-      function alignGraceNotesWithNote(grace_notes, note, groupWidth) {
-        // Shift over the tick contexts of each note
-        // So that th aligned with the note
-        var tickContext = note.getTickContext();
-        var extraPx = tickContext.getExtraPx();
-        var x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
-        grace_notes.forEach(function(graceNote) {
-            var tick_context = graceNote.getTickContext();
-            var x_offset = tick_context.getX();
-            graceNote.setStave(note.stave);
-            tick_context.setX(x + x_offset);
-        });
-      }
-
-      alignGraceNotesWithNote(this.grace_notes, note, this.width);
-
-      // Draw notes
-      this.grace_notes.forEach(function(graceNote) {
-        graceNote.setContext(this.context).draw();
-      }, this);
-
-      // Draw beam
-      if (this.beam) {
-        this.beam.setContext(this.context).draw();
-      }
-
-      if (this.show_slur) {
-        // Create and draw slur
-        this.slur = new StaveTie({
-          last_note: this.grace_notes[0],
-          first_note: note,
-          first_indices: [0],
-          last_indices: [0]
-        });
-
-        this.slur.render_options.cp2 = 12;
-        this.slur.setContext(this.context).draw();
-      }
+      this.beam = beam;
     }
-  });
 
-return GraceNoteGroup;
-}());
+    return this;
+  }
+
+  setNote(note) {
+    this.note = note;
+  }
+  setWidth(width){
+    this.width = width;
+  }
+  getWidth(){
+    return this.width;
+  }
+  draw() {
+    if (!this.context)  {
+      throw new Vex.RuntimeError("NoContext",
+        "Can't draw Grace note without a context.");
+    }
+
+    var note = this.getNote();
+
+    L("Drawing grace note group for:", note);
+
+    if (!(note && (this.index !== null))) {
+      throw new Vex.RuntimeError("NoAttachedNote",
+        "Can't draw grace note without a parent note and parent note index.");
+    }
+
+    var that = this;
+    function alignGraceNotesWithNote(grace_notes, note, groupWidth) {
+      // Shift over the tick contexts of each note
+      // So that th aligned with the note
+      var tickContext = note.getTickContext();
+      var extraPx = tickContext.getExtraPx();
+      var x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
+      grace_notes.forEach(function(graceNote) {
+          var tick_context = graceNote.getTickContext();
+          var x_offset = tick_context.getX();
+          graceNote.setStave(note.stave);
+          tick_context.setX(x + x_offset);
+      });
+    }
+
+    alignGraceNotesWithNote(this.grace_notes, note, this.width);
+
+    // Draw notes
+    this.grace_notes.forEach(function(graceNote) {
+      graceNote.setContext(this.context).draw();
+    }, this);
+
+    // Draw beam
+    if (this.beam) {
+      this.beam.setContext(this.context).draw();
+    }
+
+    if (this.show_slur) {
+      // Create and draw slur
+      this.slur = new StaveTie({
+        last_note: this.grace_notes[0],
+        first_note: note,
+        first_indices: [0],
+        last_indices: [0]
+      });
+
+      this.slur.render_options.cp2 = 12;
+      this.slur.setContext(this.context).draw();
+    }
+  }
+}
+
+// To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
+function L() { if (GraceNoteGroup.DEBUG) Vex.L("Vex.Flow.GraceNoteGroup", arguments); }

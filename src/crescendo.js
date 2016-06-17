@@ -11,42 +11,34 @@ import { Vex } from './vex';
 import { Note } from './note';
 import { TickContext } from './tickcontext';
 
-export var Crescendo = (function() {
-  function Crescendo(note_struct) {
-    if (arguments.length > 0) this.init(note_struct);
+// Private helper to draw the hairpin
+function renderHairpin(ctx, params) {
+  var begin_x = params.begin_x;
+  var end_x = params.end_x;
+  var y = params.y;
+  var half_height =  params.height / 2;
+
+  ctx.beginPath();
+
+  if (params.reverse) {
+      ctx.moveTo(begin_x, y - half_height);
+      ctx.lineTo(end_x,  y);
+      ctx.lineTo(begin_x, y + half_height);
+  } else {
+      ctx.moveTo(end_x,  y - half_height);
+      ctx.lineTo(begin_x, y);
+      ctx.lineTo(end_x,  y + half_height);
   }
 
-  // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-  function L() { if (Crescendo.DEBUG) Vex.L("Vex.Flow.Crescendo", arguments); }
+  ctx.stroke();
+  ctx.closePath();
+}
 
-  // Private helper to draw the hairpin
-  function renderHairpin(ctx, params) {
-    var begin_x = params.begin_x;
-    var end_x = params.end_x;
-    var y = params.y;
-    var half_height =  params.height / 2;
+export class Crescendo extends Note {
 
-    ctx.beginPath();
-
-    if (params.reverse) {
-        ctx.moveTo(begin_x, y - half_height);
-        ctx.lineTo(end_x,  y);
-        ctx.lineTo(begin_x, y + half_height);
-    } else {
-        ctx.moveTo(end_x,  y - half_height);
-        ctx.lineTo(begin_x, y);
-        ctx.lineTo(end_x,  y + half_height);
-    }
-
-    ctx.stroke();
-    ctx.closePath();
-  }
-
-  // ## Prototype Methods
-  Vex.Inherit(Crescendo, Note, {
     // Initialize the crescendo's properties
-    init: function(note_struct) {
-      Crescendo.superclass.init.call(this, note_struct);
+    constructor(note_struct) {
+      super(note_struct);
 
       // Whether the object is a decrescendo
       this.decrescendo = false;
@@ -64,26 +56,26 @@ export var Crescendo = (function() {
         // Vertical shift
         y_shift: 0
       });
-    },
+    }
 
     // Set the line to center the element on
-    setLine: function(line) { this.line = line; return this; },
+    setLine(line) { this.line = line; return this; }
 
     // Set the full height at the open end
-    setHeight: function(height) { this.height = height; return this; },
+    setHeight(height) { this.height = height; return this; }
 
     // Set whether the sign should be a descresendo by passing a bool
     // to `decresc`
-    setDecrescendo: function(decresc) {
+    setDecrescendo(decresc) {
       this.decrescendo = decresc;
       return this;
-    },
+    }
 
     // Preformat the note
-    preFormat: function() { this.preFormatted = true; return this; },
+    preFormat() { this.preFormatted = true; return this; }
 
     // Render the Crescendo object onto the canvas
-    draw: function() {
+    draw() {
       if (!this.context) throw new Vex.RERR("NoContext",
         "Can't draw Hairpin without a context.");
 
@@ -111,7 +103,7 @@ export var Crescendo = (function() {
         reverse: this.decrescendo
       });
     }
-  });
+  }
 
-  return Crescendo;
-})();
+// To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
+function L() { if (Crescendo.DEBUG) Vex.L("Vex.Flow.Crescendo", arguments); }

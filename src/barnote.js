@@ -13,16 +13,9 @@ import { Note } from './note';
 import { Barline } from './stavebarline';
 import { BoundingBox } from './boundingbox';
 
-export var BarNote = (function() {
-  function BarNote() { this.init(); }
-
-  // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
-  function L() { if (BarNote.DEBUG) Vex.L("Vex.Flow.BarNote", arguments); }
-
-  // ## Prototype Methods
-  Vex.Inherit(BarNote, Note, {
-    init: function() {
-      BarNote.superclass.init.call(this, {duration: "b"});
+export class BarNote extends Note {
+    constructor() {
+      super({ duration: 'b' });
 
       var TYPE = Barline.type;
       this.metrics = {
@@ -44,40 +37,40 @@ export var BarNote = (function() {
 
       // Set width to width of relevant `Barline`.
       this.setWidth(this.metrics.widths[this.type]);
-    },
+    }
 
     // Get and set the type of Bar note. `type` must be one of `Vex.Flow.Barline.type`.
-    getType: function() { return this.type; },
-    setType: function(type) {
+    getType() { return this.type; }
+    setType(type) {
       this.type = type;
       this.setWidth(this.metrics.widths[this.type]);
       return this;
-    },
+    }
 
-    getBoundingBox: function() {
+    getBoundingBox() {
       return new BoundingBox(0, 0, 0, 0);
-    },
+    }
 
-    addToModifierContext: function() {
+    addToModifierContext() {
       /* overridden to ignore */
       return this;
-    },
+    }
 
-    preFormat: function() {
+    preFormat() {
       /* overridden to ignore */
       this.setPreFormatted(true);
       return this;
-    },
+    }
 
     // Render note to stave.
-    draw: function() {
+    draw() {
       if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
       L("Rendering bar line at: ", this.getAbsoluteX());
       var barline = new Barline(this.type);
       barline.setX(this.getAbsoluteX());
       barline.draw(this.stave);
     }
-  });
+  }
 
-  return BarNote;
-}());
+// To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
+function L() { if (BarNote.DEBUG) Vex.L("Vex.Flow.BarNote", arguments); }

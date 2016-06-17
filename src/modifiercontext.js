@@ -19,8 +19,8 @@ import { Annotation } from './annotation';
 import { Bend } from './bend';
 import { Vibrato } from './vibrato';
 
-export var ModifierContext = (function() {
-  function ModifierContext() {
+export class ModifierContext {
+  constructor() {
     // Current modifiers
     this.modifiers = {};
 
@@ -54,60 +54,56 @@ export var ModifierContext = (function() {
     ];
 
     // If post-formatting is required for an element, add it to this array.
-    this.POSTFORMAT = [ Vex.Flow.StaveNote ];
+    this.POSTFORMAT = [ StaveNote ];
   }
 
-  // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
-  function L() { if (ModifierContext.DEBUG) Vex.L("Vex.Flow.ModifierContext", arguments); }
+  addModifier(modifier) {
+    var type = modifier.getCategory();
+    if (!this.modifiers[type]) this.modifiers[type] = [];
+    this.modifiers[type].push(modifier);
+    modifier.setModifierContext(this);
+    this.preFormatted = false;
+    return this;
+  }
 
-  ModifierContext.prototype = {
-    addModifier: function(modifier) {
-      var type = modifier.getCategory();
-      if (!this.modifiers[type]) this.modifiers[type] = [];
-      this.modifiers[type].push(modifier);
-      modifier.setModifierContext(this);
-      this.preFormatted = false;
-      return this;
-    },
+  getModifiers(type) { return this.modifiers[type]; }
+  getWidth() { return this.width; }
+  getExtraLeftPx() { return this.state.left_shift; }
+  getExtraRightPx() { return this.state.right_shift; }
+  getState() { return this.state; }
 
-    getModifiers: function(type) { return this.modifiers[type]; },
-    getWidth: function() { return this.width; },
-    getExtraLeftPx: function() { return this.state.left_shift; },
-    getExtraRightPx: function() { return this.state.right_shift; },
-    getState: function() { return this.state; },
+  getMetrics() {
+    if (!this.formatted) throw new Vex.RERR("UnformattedModifier",
+        "Unformatted modifier has no metrics.");
 
-    getMetrics: function() {
-      if (!this.formatted) throw new Vex.RERR("UnformattedModifier",
-          "Unformatted modifier has no metrics.");
+    return {
+      width: this.state.left_shift + this.state.right_shift + this.spacing,
+      spacing: this.spacing,
+      extra_left_px: this.state.left_shift,
+      extra_right_px: this.state.right_shift
+    };
+  }
 
-      return {
-        width: this.state.left_shift + this.state.right_shift + this.spacing,
-        spacing: this.spacing,
-        extra_left_px: this.state.left_shift,
-        extra_right_px: this.state.right_shift
-      };
-    },
+  preFormat() {
+    if (this.preFormatted) return;
+    this.PREFORMAT.forEach(function(modifier) {
+      L("Preformatting ModifierContext: ", modifier.CATEGORY);
+      modifier.format(this.getModifiers(modifier.CATEGORY), this.state, this);
+    }, this);
 
-    preFormat: function() {
-      if (this.preFormatted) return;
-      this.PREFORMAT.forEach(function(modifier) {
-        L("Preformatting ModifierContext: ", modifier.CATEGORY);
-        modifier.format(this.getModifiers(modifier.CATEGORY), this.state, this);
-      }, this);
+    // Update width of this modifier context
+    this.width = this.state.left_shift + this.state.right_shift;
+    this.preFormatted = true;
+  }
 
-      // Update width of this modifier context
-      this.width = this.state.left_shift + this.state.right_shift;
-      this.preFormatted = true;
-    },
+  postFormat() {
+    if (this.postFormatted) return;
+    this.POSTFORMAT.forEach(function(modifier) {
+      L("Postformatting ModifierContext: ", modifier.CATEGORY);
+      modifier.postFormat(this.getModifiers(modifier.CATEGORY), this);
+    }, this);
+  }
+}
 
-    postFormat: function() {
-      if (this.postFormatted) return;
-      this.POSTFORMAT.forEach(function(modifier) {
-        L("Postformatting ModifierContext: ", modifier.CATEGORY);
-        modifier.postFormat(this.getModifiers(modifier.CATEGORY), this);
-      }, this);
-    }
-  };
-
-  return ModifierContext;
-}());
+// To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
+function L() { if (ModifierContext.DEBUG) Vex.L("Vex.Flow.ModifierContext", arguments); }

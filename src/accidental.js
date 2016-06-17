@@ -374,9 +374,6 @@ export class Accidental extends Modifier {
   // `Vex.Flow.accidentalCodes.accidentals` table in `tables.js`. For
   // example: `#`, `##`, `b`, `n`, etc.
   constructor(type = null) {
-    if (type === null) {
-      return;
-    }
     super();
     L("New accidental: ", type);
 
@@ -405,6 +402,8 @@ export class Accidental extends Modifier {
     // Initial width is set from table.
     this.setWidth(this.accidental.width);
   }
+
+  getCategory() { return Accidental.CATEGORY; }
 
   // Attach this accidental to `note`, which must be a `StaveNote`.
   setNote(note){
@@ -446,19 +445,19 @@ export class Accidental extends Modifier {
 
     if (!this.cautionary) {
       // Render the accidental alone.
-      Flow.renderGlyph(this.context, acc_x, acc_y,
+      Glyph.renderGlyph(this.context, acc_x, acc_y,
                            this.render_options.font_scale, this.accidental.code);
     } else {
       // Render the accidental in parentheses.
       acc_x += 3;
-      Flow.renderGlyph(this.context, acc_x, acc_y,
+      Glyph.renderGlyph(this.context, acc_x, acc_y,
                            this.render_options.font_scale, this.paren_left.code);
       acc_x += 2;
-      Flow.renderGlyph(this.context, acc_x, acc_y,
+      Glyph.renderGlyph(this.context, acc_x, acc_y,
                            this.render_options.font_scale, this.accidental.code);
       acc_x += this.accidental.width - 2;
       if (this.type == "##" || this.type == "bb") acc_x -= 2;
-      Flow.renderGlyph(this.context, acc_x, acc_y,
+      Glyph.renderGlyph(this.context, acc_x, acc_y,
                            this.render_options.font_scale, this.paren_right.code);
     }
   }
