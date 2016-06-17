@@ -89,7 +89,7 @@ export var KeySignature = (function() {
       this.setPosition(StaveModifier.Position.BEGIN);
       this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
       this.glyphs = [];
-      this.xPositions = [];
+      this.xPositions = []; // relative to this.x
       this.paddingForced = false;
     },
 
