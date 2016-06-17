@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
-import { Flow } from './tables';
+import { BoundingBoxComputation } from './boundingboxcomputation';
 import { Font } from './fonts/vexflow_font';
 
 /**
@@ -159,7 +159,7 @@ export var Glyph = (function() {
   };
 
   Glyph.getOutlineBoundingBox = function(outline, scale, x_pos, y_pos) {
-    var bboxComp = new Vex.Flow.BoundingBoxComputation(x_pos, y_pos);
+    var bboxComp = new BoundingBoxComputation(x_pos, y_pos);
 
     processOutline(outline, x_pos, y_pos, scale, -scale, {
       m: bboxComp.addPoint.bind(bboxComp),

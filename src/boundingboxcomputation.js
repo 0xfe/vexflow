@@ -8,7 +8,7 @@
 //
 // taken from: https://github.com/gabelerner/canvg/blob/860e418aca67b9a41e858a223d74d375793ec364/canvg.js#L449
 
-Vex.Flow.BoundingBoxComputation = (function() {
+export var BoundingBoxComputation = (function() {
   function BoundingBoxComputation(x1, y1, x2, y2) { // pass in initial points if you want
     this.x1 = Number.NaN;
     this.y1 = Number.NaN;
