@@ -12,6 +12,7 @@ import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
 export class KeySignature extends StaveModifier {
+
   static get category() {
     return 'keysignatures';
   }
@@ -78,6 +79,8 @@ export class KeySignature extends StaveModifier {
       }
     };
   }
+
+  // Create a new Key Signature based on a `key_spec`
   constructor(keySpec, cancelKeySpec, alterKeySpec) {
     super();
 
@@ -85,33 +88,39 @@ export class KeySignature extends StaveModifier {
     this.setPosition(StaveModifier.Position.BEGIN);
     this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
     this.glyphs = [];
+    this.xPositions = []; // relative to this.x
     this.paddingForced = false;
   }
+
   getCategory() { return KeySignature.category; }
 
-  // Add an accidental glyph to the `stave`. `acc` is the data of the
-  // accidental to add. If the `next` accidental is also provided, extra
-  // width will be added to the initial accidental for optimal spacing.
-  convertToGlyph(acc, next) {
-    var glyph_data = Flow.accidentalCodes(acc.type);
-    var glyph = new Glyph(glyph_data.code, this.glyphFontScale);
+  // Add an accidental glyph to the `KeySignature` instance which represents
+  // the provided `acc`. If `nextAcc` is also provided, the appropriate
+  // spacing will be included in the glyph's position
+  convertToGlyph(acc, nextAcc) {
+    var accGlyphData = Flow.accidentalCodes(acc.type);
+    var glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
 
     // Determine spacing between current accidental and the next accidental
-    var extra_width = 0;
-    if (acc.type === "n" && next) {
-      var above = next.line >= acc.line;
-      var space = KeySignature.accidentalSpacing[next.type];
-      if (space) {
-        extra_width = above ? space.above : space.below;
+    var extraWidth = 0;
+    if (acc.type === "n" && nextAcc) {
+      var spacing = KeySignature.accidentalSpacing[nextAcc.type];
+      if (spacing) {
+        var isAbove = nextAcc.line >= acc.line;
+        extraWidth = isAbove ? spacing.above : spacing.below;
       }
     }
 
-    var glyph_width = glyph_data.width + extra_width;
-    this.width += glyph_width;
-    // Set the width and place the glyph on the stave
-    glyph.setWidth(glyph_width);
+    // Place the glyph on the stave
     this.placeGlyphOnLine(glyph, this.stave, acc.line);
     this.glyphs.push(glyph);
+
+    var xPosition = this.xPositions[this.xPositions.length - 1];
+    var glyphWidth = accGlyphData.width + extraWidth;
+    // Store the next accidental's x position
+    this.xPositions.push(xPosition + glyphWidth);
+    // Expand size of key signature
+    this.width += glyphWidth;
   }
 
   // Cancel out a key signature provided in the `spec` parameter. This will
@@ -122,6 +131,7 @@ export class KeySignature extends StaveModifier {
 
     return this;
   }
+
   convertToCancelAccList(spec) {
     // Get the accidental list for the cancelled key signature
     var cancel_accList = Flow.keySignature(spec);
@@ -211,6 +221,7 @@ export class KeySignature extends StaveModifier {
       }
     }
   }
+
   getPadding(index) {
     if (!this.formatted) this.format();
 
@@ -219,11 +230,13 @@ export class KeySignature extends StaveModifier {
         0 : this.padding
     );
   }
+
   getWidth() {
     if (!this.formatted) this.format();
 
     return this.width;
   }
+
   setKeySig(keySpec, cancelKeySpec, alterKeySpec) {
     this.formatted = false;
     this.keySpec = keySpec;
@@ -242,6 +255,7 @@ export class KeySignature extends StaveModifier {
 
     return this;
   }
+
   convertToAlterAccList(alterKeySpec) {
     var max = Math.min(alterKeySpec.length, this.accList.length);
     for (var i = 0; i < max; ++i) {
@@ -250,11 +264,13 @@ export class KeySignature extends StaveModifier {
       }
     }
   }
+
   format() {
     if (!this.stave) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without stave.");
 
     this.width = 0;
     this.glyphs = [];
+    this.xPositions = [0]; // initialize with initial x position
     this.accList = Flow.keySignature(this.keySpec);
     if (this.cancelKeySpec) {
       this.convertToCancelAccList(this.cancelKeySpec);
@@ -273,18 +289,18 @@ export class KeySignature extends StaveModifier {
 
     this.formatted = true;
   }
+
   draw() {
     if (!this.x) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without x.");
     if (!this.stave) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without stave.");
     if (!this.formatted) this.format();
 
-    var x = this.x;
     for (var i = 0; i < this.glyphs.length; i++) {
       var glyph = this.glyphs[i];
+      var x = this.x + this.xPositions[i];
       glyph.setStave(this.stave);
       glyph.setContext(this.stave.context);
       glyph.renderToStave(x);
-      x += glyph.getMetrics().width;
     }
   }
 }
