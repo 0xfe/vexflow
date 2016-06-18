@@ -245,9 +245,9 @@ export class Note extends Tickable {
   setModifierContext(mc) { this.modifierContext = mc; return this; }
 
   // Attach a modifier to this note.
-  addModifier(modifier, index) {
+  addModifier(modifier, index = 0) {
     modifier.setNote(this);
-    modifier.setIndex(index || 0);
+    modifier.setIndex(index);
     this.modifiers.push(modifier);
     this.setPreFormatted(false);
     return this;

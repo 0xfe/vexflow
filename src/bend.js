@@ -101,6 +101,10 @@ export class Bend extends Modifier {
     this.updateWidth();
   }
 
+  getCategory() {
+    return Bend.CATEGORY;
+  }
+
   setXShift(value) {
     this.x_shift = value;
     this.updateWidth();

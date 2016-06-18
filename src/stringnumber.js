@@ -120,7 +120,9 @@ export class StringNumber extends Modifier {
       weight: "bold"
     };
   }
-
+  getCategory() {
+    return StringNumber.CATEGORY;
+  }
   getNote() { return this.note; }
   setNote(note) { this.note = note; return this; }
   getIndex() { return this.index; }

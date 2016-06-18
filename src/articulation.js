@@ -71,6 +71,10 @@ export class Articulation extends Modifier {
     this.setWidth(this.articulation.width);
   }
 
+  getCategory() {
+    return Articulation.CATEGORY;
+  }
+
   // Render articulation in position next to note.
   draw() {
     if (!this.context) throw new Vex.RERR("NoContext",

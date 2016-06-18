@@ -21,7 +21,7 @@ export class TabSlide extends TabTie {
 
   static createSlideDown(notes) {
     return new TabSlide(notes, TabSlide.SLIDE_DOWN);
-  };
+  }
 
   constructor(notes, direction) {
     /**

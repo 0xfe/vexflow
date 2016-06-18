@@ -164,6 +164,10 @@ export class Ornament extends Modifier {
     this.setWidth(this.ornament.width);
   }
 
+  getCategory() {
+    return Ornament.CATEGORY;
+  }
+
   // Set whether the ornament is to be delayed
   setDelayed(delayed) { this.delayed = delayed; return this; }
 

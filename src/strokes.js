@@ -99,7 +99,9 @@ export class Stroke extends Modifier {
     this.setXShift(0);
     this.setWidth(10);
   }
-
+  getCategory() {
+    return Stroke.CATEGORY;
+  }
   getPosition() { return this.position; }
   addEndNote(note) { this.note_end = note; return this; }
 

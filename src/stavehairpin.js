@@ -62,7 +62,7 @@ export class StaveHairpin {
       .setRenderOptions(hairpin_options)
       .setPosition(position)
       .draw();
-  };
+  }
 
   constructor(notes, type) {
     /**

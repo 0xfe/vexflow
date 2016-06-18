@@ -108,7 +108,9 @@ export class FretHandFinger extends Modifier {
       weight: "bold"
     };
   }
-
+  getCategory() {
+    return FretHandFinger.CATEGORY;
+  }
   getNote() { return this.note; }
   setNote(note) { this.note = note; return this; }
   getIndex() { return this.index; }
