@@ -199,6 +199,14 @@ export var Clef = (function() {
       var glyphScale;
       var glyphOffset;
       switch(this.stave.getOptions().num_lines) {
+        case 10: //TODO: Test with Visual Regression
+          glyphScale = 69; 
+          glyphOffset = 26;
+          break;
+        case 9:
+          glyphScale = 62; 
+          glyphOffset = 20;
+          break;
         case 8:
           glyphScale = 55;
           glyphOffset = 14;
@@ -218,6 +226,10 @@ export var Clef = (function() {
         case 4:
           glyphScale = 23;
           glyphOffset = -12;
+          break;
+        case 3:
+          glyphScale = 16;
+          glyphOffset = -18;
           break;
       }
 

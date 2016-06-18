@@ -13,16 +13,22 @@ export var Tuning = (function() {
 
   Tuning.names = {
     "standard": "E/5,B/4,G/4,D/4,A/3,E/3",
+    "standard7": "E/5,B/4,G/4,D/4,A/3,E/3,B/2",
+    "standard8": "E/5,B/4,G/4,D/4,A/3,E/3,B/2,F#/2",
+    "standard9": "E/5,B/4,G/4,D/4,A/3,E/3,B/2,F#/2,C#/2",
+    "standard10": "E/5,B/4,G/4,D/4,A/3,E/3,B/2,F#/2,C#/2,G#/1",
     "dagdad": "D/5,A/4,G/4,D/4,A/3,D/3",
     "dropd": "E/5,B/4,G/4,D/4,A/3,D/3",
     "eb": "Eb/5,Bb/4,Gb/4,Db/4,Ab/3,Db/3",
+    "standardbass": "G/3,D/3,A/2,E/2",
+    "standard5bass": "G/3,D/3,A/2,E/2,B/1",
     "standardBanjo": "D/5,B/4,G/4,D/4,G/5"
   };
 
   Tuning.prototype = {
     init: function(tuningString) {
       // Default to standard tuning.
-      this.setTuning(tuningString || "E/5,B/4,G/4,D/4,A/3,E/3,B/2,E/2");
+      this.setTuning(tuningString || "E/5,B/4,G/4,D/4,A/3,E/3,B/2,E/2"); 
     },
 
     noteToInteger: function(noteString) {
