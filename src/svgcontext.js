@@ -3,8 +3,9 @@
 
 import { Vex } from './vex';
 
-/** @constructor */
 export class SVGContext {
+
+  /** @constructor */
   constructor(element) {
     // element is the parent DOM object
     this.element = element;
@@ -548,12 +549,12 @@ export class SVGContext {
   }
 
   ieMeasureTextFix(bbox, text) {
-  // Internet Explorer over-pads text in italics,
-  // resulting in giant width estimates for measureText.
-  // To fix this, we use this formula, tested against
-  // ie 11:
-  // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
-  // And then subtract the overestimate from calculated width.
+    // Internet Explorer over-pads text in italics,
+    // resulting in giant width estimates for measureText.
+    // To fix this, we use this formula, tested against
+    // ie 11:
+    // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
+    // And then subtract the overestimate from calculated width.
 
     var fontSize = Number(this.fontSize);
     var m = 1.196;

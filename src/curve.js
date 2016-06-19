@@ -5,8 +5,6 @@
 
 import { Vex } from './vex';
 
-let _debug = true;
-
 export class Curve {
 
   static get Position() {
@@ -14,13 +12,6 @@ export class Curve {
       NEAR_HEAD: 1,
       NEAR_TOP: 2
     };
-  }
-
-  static get DEBUG() {
-    return _debug;
-  }
-  static set DEBUG(debug) {
-    _debug = debug;
   }
 
   // from: Start note

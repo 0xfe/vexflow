@@ -9,6 +9,7 @@ import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 
 export class Tremolo extends Modifier {
+  static get CATEGORY() { return 'tremolo'; }
   constructor(num) {
     super();
 
@@ -33,7 +34,7 @@ export class Tremolo extends Modifier {
     };
   }
 
-  getCategory() { return "tremolo"; }
+  getCategory() { return Tremolo.CATEGORY; }
 
   draw() {
     if (!this.context) throw new Vex.RERR("NoContext",

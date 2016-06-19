@@ -3,7 +3,9 @@
 
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
+
 export class Volta extends StaveModifier {
+  static get CATEGORY() { return 'voltas'; }
   static get type() {
     return {
       NONE: 1,
@@ -13,6 +15,7 @@ export class Volta extends StaveModifier {
       BEGIN_END: 5
     };
   }
+
   constructor(type, number, x, y_shift) {
     super();
     this.volta = type;
@@ -25,7 +28,7 @@ export class Volta extends StaveModifier {
       weight: "bold"
     };
   }
-  getCategory() { return "voltas"; }
+  getCategory() { return Volta.CATEGORY; }
   setShiftY(y) { this.y_shift = y; return this; }
   draw(stave, x) {
     if (!stave.context) throw new Vex.RERR("NoCanvasContext",

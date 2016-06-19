@@ -27,6 +27,9 @@ import { StaveNote } from './stavenote';
 import { ModifierContext } from './modifiercontext';
 import { TickContext } from './tickcontext';
 
+// To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
+function L() { if (Formatter.DEBUG) Vex.L("Vex.Flow.Formatter", arguments); }
+
 // Helper function to locate the next non-rest note(s).
 function lookAhead(notes, rest_line, i, compare) {
   // If no valid next note group, next_rest_line is same as current.
@@ -609,6 +612,3 @@ export class Formatter {
     return this.format(voices, justifyWidth, opts);
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
-function L() { if (Formatter.DEBUG) Vex.L("Vex.Flow.Formatter", arguments); }

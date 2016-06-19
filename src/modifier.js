@@ -14,10 +14,12 @@
 // `ModifierContext`. This ensures that multiple voices don't trample all over each other.
 
 import { Vex } from './vex';
+
+// To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
+function L() { if (Modifier.DEBUG) Vex.L("Vex.Flow.Modifier", arguments); }
+
 export class Modifier {
-  static get CATEGORY() {
-    return 'none';
-  }
+  static get CATEGORY() { return 'none'; }
 
   // Modifiers can be positioned almost anywhere, relative to a note.
   static get Position() {
@@ -108,6 +110,3 @@ export class Modifier {
         "Draw() not implemented for this modifier.");
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
-function L() { if (Modifier.DEBUG) Vex.L("Vex.Flow.Modifier", arguments); }

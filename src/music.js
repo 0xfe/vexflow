@@ -4,9 +4,7 @@
 // This class implements some standard music theory routines.
 
 import { Vex } from './vex';
-/**
- * @constructor
- */
+
 export class Music {
 
   static get NUM_TONES() {
@@ -140,6 +138,7 @@ export class Music {
       'bbb': { root_index: 6, int_val: 9 }
     };
   }
+
   isValidNoteValue(note) {
     if (note == null || note < 0 || note >= Music.NUM_TONES)
       return false;

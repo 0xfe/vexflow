@@ -11,6 +11,8 @@ import { Glyph } from './glyph';
 
 /** @constructor */
 export class ClefNote extends Note {
+  static get CATEGORY() { return 'clefnote'; }
+
   constructor(type, size, annotation) {
     super({ duration: 'b' });
 
@@ -48,9 +50,7 @@ export class ClefNote extends Note {
     return this;
   }
 
-  getCategory() {
-    return "clefnote";
-  }
+  getCategory() { return ClefNote.CATEGORY; }
 
   preFormat() {
     this.setPreFormatted(true);

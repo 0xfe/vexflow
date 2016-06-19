@@ -11,11 +11,11 @@ import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
-export class Clef extends StaveModifier {
+// To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
+function L() { if (Clef.DEBUG) Vex.L("Vex.Flow.Clef", arguments); }
 
-  static get category() {
-    return 'clefs';
-  }
+export class Clef extends StaveModifier {
+  static get CATEGORY() { return 'clefs'; }
 
   // Every clef name is associated with a glyph code from the font file
   // and a default stave line number.
@@ -149,7 +149,7 @@ export class Clef extends StaveModifier {
     this.setWidth(this.glyph.getMetrics().width);
     L("Creating clef:", type);
   }
-  getCategory() { return Clef.category; }
+  getCategory() { return Clef.CATEGORY; }
   setType(type, size, annotation) {
     this.type = type;
     this.clef = Clef.types[type];
@@ -243,6 +243,3 @@ export class Clef extends StaveModifier {
     }
   }
 }
-
-// To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
-function L() { if (Clef.DEBUG) Vex.L("Vex.Flow.Clef", arguments); }

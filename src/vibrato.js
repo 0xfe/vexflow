@@ -8,9 +8,7 @@ import { Modifier } from './modifier';
 import { Bend } from './bend';
 
 export class Vibrato extends Modifier {
-  static get CATEGORY() {
-    return 'vibratos';
-  }
+  static get CATEGORY() { return 'vibratos'; }
 
   // ## Static Methods
   // Arrange vibratos inside a `ModifierContext`.
@@ -57,9 +55,7 @@ export class Vibrato extends Modifier {
 
     this.setVibratoWidth(this.render_options.vibrato_width);
   }
-  getCategory() {
-    return Vibrato.CATEGORY;
-  }
+  getCategory() { return Vibrato.CATEGORY; }
   setHarsh(harsh) { this.harsh = harsh; return this; }
   setVibratoWidth(width) {
     this.vibrato_width = width;

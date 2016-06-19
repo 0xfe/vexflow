@@ -15,9 +15,7 @@ import { Flow } from './tables';
 import { Tickable } from './tickable';
 
 export class Note extends Tickable {
-  static get CATEGORY() {
-    return 'note';
-  }
+  static get CATEGORY() { return 'note'; }
 
   // Debug helper. Displays various note metrics for the given
   // note.

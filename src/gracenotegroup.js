@@ -14,10 +14,7 @@ import { Beam } from './beam';
 import { StaveTie } from './stavetie';
 
 export class GraceNoteGroup extends Modifier {
-
-  static get CATEGORY() {
-    return 'gracenotegroups';
-  }
+  static get CATEGORY() { return 'gracenotegroups'; }
 
   // Arrange groups inside a `ModifierContext`
   static format(gracenote_groups, state) {
@@ -101,9 +98,7 @@ export class GraceNoteGroup extends Modifier {
     return this;
   }
 
-  getCategory() {
-    return GraceNoteGroup.CATEGORY;
-  }
+  getCategory() { return GraceNoteGroup.CATEGORY; }
 
   preFormat(){
     if (this.preFormatted) return;

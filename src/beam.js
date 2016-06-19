@@ -28,8 +28,7 @@ function calculateStemDirection(notes) {
 }
 
 export class Beam {
-  // ## Static Methods
-  //
+
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
   // Currently this is fairly naive.

@@ -11,6 +11,9 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Renderer } from './renderer';
 
+// To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
+function L() { if (TextBracket.DEBUG) Vex.L("Vex.Flow.TextBracket", arguments); }
+
 export class TextBracket {
 
   static get Positions() {
@@ -163,6 +166,3 @@ export class TextBracket {
     ctx.restore();
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
-function L() { if (TextBracket.DEBUG) Vex.L("Vex.Flow.TextBracket", arguments); }

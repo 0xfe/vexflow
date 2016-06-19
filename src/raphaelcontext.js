@@ -7,8 +7,9 @@
 // Except in instances where SVG support for IE < 9.0 is
 // needed, SVGContext is recommended.
 
-/** @constructor */
 export class RaphaelContext {
+
+  /** @constructor */
   constructor(element) {
     this.element = element;
     this.paper = Raphael(element);

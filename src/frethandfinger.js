@@ -10,9 +10,7 @@ import { Modifier } from './modifier';
  * @constructor
  */
 export class FretHandFinger extends Modifier {
-  static get CATEGORY() {
-    return 'frethandfinger';
-  }
+  static get CATEGORY() { return 'frethandfinger'; }
 
   // Arrange fingerings inside a ModifierContext.
   static format(nums, state) {
@@ -108,9 +106,7 @@ export class FretHandFinger extends Modifier {
       weight: "bold"
     };
   }
-  getCategory() {
-    return FretHandFinger.CATEGORY;
-  }
+  getCategory() { return FretHandFinger.CATEGORY; }
   getNote() { return this.note; }
   setNote(note) { this.note = note; return this; }
   getIndex() { return this.index; }

@@ -8,6 +8,8 @@ import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
 export class StaveTempo extends StaveModifier {
+  static get CATEGORY() { return 'stavetempo'; }
+
   constructor(tempo, x, shift_y) {
     super();
 
@@ -25,7 +27,7 @@ export class StaveTempo extends StaveModifier {
       glyph_font_scale: 30  // font size for note
     };
   }
-  getCategory() { return "stavetempo"; }
+  getCategory() { return StaveTempo.CATEGORY; }
   setTempo(tempo) { this.tempo = tempo; return this; }
   setShiftX(x) { this.shift_x = x; return this; }
   setShiftY(y) { this.shift_y = y; return this; }

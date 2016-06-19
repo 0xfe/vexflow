@@ -19,6 +19,9 @@ import { Modifier } from './modifier';
 import { Dot } from './dot';
 import { Glyph } from './glyph';
 
+// To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
+function L() { if (StaveNote.DEBUG) Vex.L("Vex.Flow.StaveNote", arguments); }
+
 // Helper methods for rest positioning in ModifierContext.
 function shiftRestVertical(rest, note, dir) {
   var delta = (note.isrest ? 0.0 : 1.0) * dir;
@@ -39,9 +42,7 @@ function centerRest(rest, noteU, noteL) {
 }
 
 export class StaveNote extends StemmableNote {
-  static get CATEGORY() {
-    return 'stavenotes';
-  }
+  static get CATEGORY() { return 'stavenotes'; }
 
   // Stem directions
   static get STEM_UP() {
@@ -309,9 +310,7 @@ export class StaveNote extends StemmableNote {
     this.calcExtraPx();
   }
 
-  getCategory() {
-    return StaveNote.CATEGORY;
-  }
+  getCategory() { return StaveNote.CATEGORY; }
 
   // Builds a `Stem` for the note
   buildStem() {
@@ -980,6 +979,3 @@ export class StaveNote extends StemmableNote {
     this.context.closeGroup();
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
-function L() { if (StaveNote.DEBUG) Vex.L("Vex.Flow.StaveNote", arguments); }

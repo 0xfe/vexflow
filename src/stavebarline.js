@@ -5,10 +5,9 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
-/**
- * @constructor
- */
+
 export class Barline extends StaveModifier {
+  static get CATEGORY() { return 'barlines'; }
   static get type() {
     return {
       SINGLE: 1,
@@ -21,6 +20,9 @@ export class Barline extends StaveModifier {
     };
   }
 
+  /**
+   * @constructor
+   */
   constructor(type) {
     super();
     this.thickness = Flow.STAVE_LINE_THICKNESS;
@@ -47,7 +49,7 @@ export class Barline extends StaveModifier {
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setType(type);
   }
-  getCategory() { return "barlines"; }
+  getCategory() { return Barline.CATEGORY; }
   getType() { return this.type; }
   setType(type) {
     this.type = type;

@@ -7,7 +7,6 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 
 export class Tuning {
-
   static get names() {
     return {
       "standard": "E/5,B/4,G/4,D/4,A/3,E/3",

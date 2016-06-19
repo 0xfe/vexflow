@@ -11,6 +11,9 @@ import { Vex } from './vex';
 import { Note } from './note';
 import { Glyph } from './glyph';
 
+// To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
+function L() { if (TextDynamics.DEBUG) Vex.L("Vex.Flow.TextDynamics", arguments); }
+
 export class TextDynamics extends Note {
 
   // The glyph data for each dynamics letter
@@ -104,6 +107,3 @@ export class TextDynamics extends Note {
     }, this);
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
-function L() { if (TextDynamics.DEBUG) Vex.L("Vex.Flow.TextDynamics", arguments); }

@@ -10,11 +10,7 @@ import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
 
 export class TimeSignature extends StaveModifier {
-
-  static get category() {
-    return 'timesignatures';
-  }
-
+  static get CATEGORY() { return 'timesignatures'; }
   static get glyphs() {
     return {
       "C": {
@@ -46,7 +42,7 @@ export class TimeSignature extends StaveModifier {
     this.setPadding(padding);
   }
 
-  getCategory() { return TimeSignature.category; }
+  getCategory() { return TimeSignature.CATEGORY; }
 
   parseTimeSpec(timeSpec) {
     if (timeSpec == "C" || timeSpec == "C|") {

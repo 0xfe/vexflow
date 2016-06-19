@@ -19,6 +19,9 @@ import { Annotation } from './annotation';
 import { Bend } from './bend';
 import { Vibrato } from './vibrato';
 
+// To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
+function L() { if (ModifierContext.DEBUG) Vex.L("Vex.Flow.ModifierContext", arguments); }
+
 export class ModifierContext {
   constructor() {
     // Current modifiers
@@ -104,6 +107,3 @@ export class ModifierContext {
     }, this);
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
-function L() { if (ModifierContext.DEBUG) Vex.L("Vex.Flow.ModifierContext", arguments); }

@@ -5,13 +5,9 @@
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
-/**
- * @constructor
- */
+
 export class Dot extends Modifier {
-  static get CATEGORY() {
-    return 'dots';
-  }
+  static get CATEGORY() { return 'dots'; }
 
   // Arrange dots inside a ModifierContext.
   static format(dots, state) {
@@ -93,6 +89,9 @@ export class Dot extends Modifier {
     state.right_shift += x_width;
   }
 
+  /**
+   * @constructor
+   */
   constructor() {
     super();
 
@@ -104,9 +103,7 @@ export class Dot extends Modifier {
     this.setWidth(5);
     this.dot_shiftY = 0;
   }
-  getCategory() {
-    return Dot.CATEGORY;
-  }
+  getCategory() { return Dot.CATEGORY; }
   setNote(note){
     this.note = note;
 

@@ -11,9 +11,7 @@ import { Renderer } from './renderer';
 import { StaveNote } from './stavenote';
 
 export class StringNumber extends Modifier {
-  static get CATEGORY() {
-    return 'stringnumber';
-  }
+  static get CATEGORY() { return 'stringnumber'; }
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
@@ -120,9 +118,7 @@ export class StringNumber extends Modifier {
       weight: "bold"
     };
   }
-  getCategory() {
-    return StringNumber.CATEGORY;
-  }
+  getCategory() { return StringNumber.CATEGORY; }
   getNote() { return this.note; }
   setNote(note) { this.note = note; return this; }
   getIndex() { return this.index; }

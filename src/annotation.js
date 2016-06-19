@@ -11,11 +11,11 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 
-export class Annotation extends Modifier {
+// To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
+function L() { if (Annotation.DEBUG) Vex.L("Vex.Flow.Annotation", arguments); }
 
-  static get CATEGORY() {
-    return 'annotations';
-  }
+export class Annotation extends Modifier {
+  static get CATEGORY() { return 'annotations'; }
 
   // Text annotations can be positioned and justified relative to the note.
   static get Justify() {
@@ -174,6 +174,3 @@ export class Annotation extends Modifier {
     this.context.restore();
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
-function L() { if (Annotation.DEBUG) Vex.L("Vex.Flow.Annotation", arguments); }

@@ -105,7 +105,7 @@ export class Glyph {
 
   static getOutlineBoundingBox(outline, scale, x_pos, y_pos) {
     var bboxComp = new BoundingBoxComputation(x_pos, y_pos);
-console.log(bboxComp.addPoint);
+
     processOutline(outline, x_pos, y_pos, scale, -scale, {
       m: bboxComp.addPoint.bind(bboxComp),
       l: bboxComp.addPoint.bind(bboxComp),

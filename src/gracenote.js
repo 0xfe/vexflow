@@ -4,6 +4,8 @@ import { Vex } from './vex';
 import { StaveNote } from './stavenote';
 
 export class GraceNote extends StaveNote {
+  static get CATEGORY() { return 'gracenotes'; }
+
   constructor(note_struct) {
     super(note_struct);
 
@@ -35,7 +37,7 @@ export class GraceNote extends StaveNote {
     return 0;
   }
 
-  getCategory() { return 'gracenotes'; }
+  getCategory() { return GraceNote.CATEGORY; }
 
   draw(){
     super.draw();

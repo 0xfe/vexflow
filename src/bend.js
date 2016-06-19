@@ -42,9 +42,7 @@ import { Modifier } from './modifier';
      }]
  */
 export class Bend extends Modifier {
-  static get CATEGORY() {
-    return 'bends';
-  }
+  static get CATEGORY() { return 'bends'; }
 
   static get UP() {
     return 0;
@@ -101,9 +99,7 @@ export class Bend extends Modifier {
     this.updateWidth();
   }
 
-  getCategory() {
-    return Bend.CATEGORY;
-  }
+  getCategory() { return Bend.CATEGORY; }
 
   setXShift(value) {
     this.x_shift = value;

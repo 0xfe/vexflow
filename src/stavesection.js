@@ -5,6 +5,8 @@ import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 
 export class StaveSection extends StaveModifier {
+  static get CATEGORY() { return 'stavesection'; }
+
   constructor(section, x, shift_y) {
     super();
 
@@ -19,7 +21,7 @@ export class StaveSection extends StaveModifier {
       weight: "bold"
     };
   }
-  getCategory() { return "stavesection"; }
+  getCategory() { return StaveSection.CATEGORY; }
   setStaveSection(section) { this.section = section; return this; }
   setShiftX(x) { this.shift_x = x; return this; }
   setShiftY(y) { this.shift_y = y; return this; }

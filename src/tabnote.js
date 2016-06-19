@@ -111,6 +111,8 @@ function getPartialStemLines (stem_y, unused_strings, stave, stem_direction) {
 }
 
 export class TabNote extends StemmableNote {
+  static get CATEGORY() { return 'tabnotes'; }
+
   // Initialize the TabNote with a `tab_struct` full of properties
   // and whether to `draw_stem` when rendering the note
   constructor(tab_struct, draw_stem) {
@@ -156,7 +158,7 @@ export class TabNote extends StemmableNote {
   }
 
   // The ModifierContext category
-  getCategory() { return "tabnotes"; }
+  getCategory() { return TabNote.CATEGORY; }
 
   // Set as ghost `TabNote`, surrounds the fret positions with parenthesis.
   // Often used for indicating frets that are being bent to

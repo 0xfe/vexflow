@@ -12,10 +12,7 @@ import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
 export class KeySignature extends StaveModifier {
-
-  static get category() {
-    return 'keysignatures';
-  }
+  static get CATEGORY() { return 'keysignatures'; }
 
   // Space between natural and following accidental depending
   // on vertical position
@@ -92,7 +89,7 @@ export class KeySignature extends StaveModifier {
     this.paddingForced = false;
   }
 
-  getCategory() { return KeySignature.category; }
+  getCategory() { return KeySignature.CATEGORY; }
 
   // Add an accidental glyph to the `KeySignature` instance which represents
   // the provided `acc`. If `nextAcc` is also provided, the appropriate

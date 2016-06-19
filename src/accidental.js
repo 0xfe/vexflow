@@ -16,12 +16,13 @@ import { Music } from './music';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 
+// To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
+function L() { if (Accidental.DEBUG) Vex.L("Vex.Flow.Accidental", arguments); }
+
 // An `Accidental` inherits from `Modifier`, and is formatted within a
 // `ModifierContext`.
 export class Accidental extends Modifier {
-  static get CATEGORY() {
-    return 'accidentals';
-  }
+  static get CATEGORY() { return 'accidentals'; }
 
   // Arrange accidentals inside a ModifierContext.
   static format(accidentals, state) {
@@ -462,6 +463,3 @@ export class Accidental extends Modifier {
     }
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
-function L() { if (Accidental.DEBUG) Vex.L("Vex.Flow.Accidental", arguments); }

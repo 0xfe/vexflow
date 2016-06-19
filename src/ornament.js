@@ -16,6 +16,9 @@ import { TickContext } from './tickcontext';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
+// To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
+function L() { if (Ornament.DEBUG) Vex.L("Vex.Flow.Ornament", arguments); }
+
 // Accidental position modifications for each glyph
 var acc_mods = {
   "n": {
@@ -105,9 +108,7 @@ var acc_mods = {
 };
 
 export class Ornament extends Modifier {
-  static get CATEGORY() {
-    return 'ornaments';
-  }
+  static get CATEGORY() { return 'ornaments'; }
 
   // ## Static Methods
   // Arrange ornaments inside `ModifierContext`
@@ -164,9 +165,7 @@ export class Ornament extends Modifier {
     this.setWidth(this.ornament.width);
   }
 
-  getCategory() {
-    return Ornament.CATEGORY;
-  }
+  getCategory() { return Ornament.CATEGORY; }
 
   // Set whether the ornament is to be delayed
   setDelayed(delayed) { this.delayed = delayed; return this; }
@@ -299,6 +298,3 @@ export class Ornament extends Modifier {
 
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
-function L() { if (Ornament.DEBUG) Vex.L("Vex.Flow.Ornament", arguments); }

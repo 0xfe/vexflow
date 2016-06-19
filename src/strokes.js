@@ -12,10 +12,7 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 export class Stroke extends Modifier {
-  static get CATEGORY() {
-    return 'strokes';
-  }
-
+  static get CATEGORY() { return 'strokes'; }
   static get Type() {
     return {
       BRUSH_DOWN: 1,
@@ -26,8 +23,6 @@ export class Stroke extends Modifier {
       RASQUEDO_UP: 6
     };
   }
-
-  // ## Static Methods
 
   // Arrange strokes inside `ModifierContext`
   static format(strokes, state) {
@@ -99,9 +94,7 @@ export class Stroke extends Modifier {
     this.setXShift(0);
     this.setWidth(10);
   }
-  getCategory() {
-    return Stroke.CATEGORY;
-  }
+  getCategory() { return Stroke.CATEGORY; }
   getPosition() { return this.position; }
   addEndNote(note) { this.note_end = note; return this; }
 

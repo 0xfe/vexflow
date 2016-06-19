@@ -7,6 +7,7 @@ import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
 export class Repetition extends StaveModifier {
+  static get CATEGORY() { return 'repetitions'; }
   static get type() {
     return {
       NONE: 1,         // no coda or segno
@@ -37,7 +38,7 @@ export class Repetition extends StaveModifier {
       weight: "bold italic"
     };
   }
-  getCategory() { return "repetitions"; }
+  getCategory() { return Repetition.CATEGORY; }
   setShiftX(x) { this.x_shift = x; return this; }
   setShiftY(y) { this.y_shift = y; return this; }
   draw(stave, x) {

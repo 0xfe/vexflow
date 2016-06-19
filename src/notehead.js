@@ -13,6 +13,9 @@ import { Note } from './note';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
+// To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
+function L() { if (NoteHead.DEBUG) Vex.L("Vex.Flow.NoteHead", arguments); }
+
 // Draw slashnote head manually. No glyph exists for this.
 //
 // Parameters:
@@ -62,6 +65,7 @@ function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
 }
 
 export class NoteHead extends Note {
+  static get CATEGORY() { return 'notehead'; }
 
   constructor(head_options) {
     super(head_options);
@@ -106,8 +110,7 @@ export class NoteHead extends Note {
     this.setWidth(this.glyph.head_width);
   }
 
-  // Get the `ModifierContext` category
-  getCategory() { return "notehead"; }
+  getCategory() { return NoteHead.CATEGORY; }
 
   // Set the Cavnas context for drawing
   setContext(context) { this.context = context; return this;}
@@ -242,6 +245,3 @@ export class NoteHead extends Note {
     }
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
-function L() { if (NoteHead.DEBUG) Vex.L("Vex.Flow.NoteHead", arguments); }

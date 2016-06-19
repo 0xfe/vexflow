@@ -11,6 +11,9 @@
 import { Vex } from './vex';
 import { Glyph } from './glyph';
 
+// To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
+function L() { if (PedalMarking.DEBUG) Vex.L("Vex.Flow.PedalMarking", arguments); }
+
 // Draws a pedal glyph with the provided `name` on a rendering `context`
 // at the coordinates `x` and `y. Takes into account the glyph data
 // coordinate shifts.
@@ -250,6 +253,3 @@ export class PedalMarking {
     ctx.restore();
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
-function L() { if (PedalMarking.DEBUG) Vex.L("Vex.Flow.PedalMarking", arguments); }

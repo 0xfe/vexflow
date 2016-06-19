@@ -5,9 +5,9 @@
 import { Vex } from './vex';
 import { StemmableNote } from './stemmablenote';
 
-/** @constructor */
 export class GhostNote extends StemmableNote {
 
+  /** @constructor */
   constructor(parameter) {
     // Sanity check
     if (!parameter) {

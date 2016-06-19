@@ -15,13 +15,12 @@ import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
-export class Articulation extends Modifier {
-  static get CATEGORY() {
-    return 'articulations';
-  }
+// To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
+function L() { if (Articulation.DEBUG) Vex.L("Vex.Flow.Articulation", arguments); }
 
-  // ## Static Methods
-  // Arrange articulations inside `ModifierContext`
+export class Articulation extends Modifier {
+  static get CATEGORY() { return 'articulations'; }
+
   static format(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
@@ -71,9 +70,7 @@ export class Articulation extends Modifier {
     this.setWidth(this.articulation.width);
   }
 
-  getCategory() {
-    return Articulation.CATEGORY;
-  }
+  getCategory() { return Articulation.CATEGORY; }
 
   // Render articulation in position next to note.
   draw() {
@@ -179,6 +176,3 @@ export class Articulation extends Modifier {
                          this.render_options.font_scale, this.articulation.code);
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
-function L() { if (Articulation.DEBUG) Vex.L("Vex.Flow.Articulation", arguments); }

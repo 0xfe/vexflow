@@ -11,6 +11,9 @@ import { Vex } from './vex';
 import { Note } from './note';
 import { TickContext } from './tickcontext';
 
+// To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
+function L() { if (Crescendo.DEBUG) Vex.L("Vex.Flow.Crescendo", arguments); }
+
 // Private helper to draw the hairpin
 function renderHairpin(ctx, params) {
   var begin_x = params.begin_x;
@@ -36,74 +39,71 @@ function renderHairpin(ctx, params) {
 
 export class Crescendo extends Note {
 
-    // Initialize the crescendo's properties
-    constructor(note_struct) {
-      super(note_struct);
+  // Initialize the crescendo's properties
+  constructor(note_struct) {
+    super(note_struct);
 
-      // Whether the object is a decrescendo
-      this.decrescendo = false;
+    // Whether the object is a decrescendo
+    this.decrescendo = false;
 
-      // The staff line to be placed on
-      this.line = note_struct.line || 0;
+    // The staff line to be placed on
+    this.line = note_struct.line || 0;
 
-      // The height at the open end of the cresc/decresc
-      this.height = 15;
+    // The height at the open end of the cresc/decresc
+    this.height = 15;
 
-      Vex.Merge(this.render_options, {
-        // Extensions to the length of the crescendo on either side
-        extend_left: 0,
-        extend_right: 0,
-        // Vertical shift
-        y_shift: 0
-      });
-    }
-
-    // Set the line to center the element on
-    setLine(line) { this.line = line; return this; }
-
-    // Set the full height at the open end
-    setHeight(height) { this.height = height; return this; }
-
-    // Set whether the sign should be a descresendo by passing a bool
-    // to `decresc`
-    setDecrescendo(decresc) {
-      this.decrescendo = decresc;
-      return this;
-    }
-
-    // Preformat the note
-    preFormat() { this.preFormatted = true; return this; }
-
-    // Render the Crescendo object onto the canvas
-    draw() {
-      if (!this.context) throw new Vex.RERR("NoContext",
-        "Can't draw Hairpin without a context.");
-
-      var tick_context = this.getTickContext();
-      var next_context = TickContext.getNextContext(tick_context);
-
-      var begin_x = this.getAbsoluteX();
-      var end_x;
-      if (next_context) {
-        end_x = next_context.getX();
-      } else {
-        end_x = this.stave.x + this.stave.width;
-      }
-
-      var y = this.stave.getYForLine(this.line + (-3)) + 1;
-
-      L("Drawing ",  this.decrescendo ? "decrescendo " : "crescendo ",
-        this.height, "x", begin_x - end_x);
-
-      renderHairpin(this.context, {
-        begin_x: begin_x - this.render_options.extend_left,
-        end_x: end_x + this.render_options.extend_right,
-        y: y + this.render_options.y_shift,
-        height: this.height,
-        reverse: this.decrescendo
-      });
-    }
+    Vex.Merge(this.render_options, {
+      // Extensions to the length of the crescendo on either side
+      extend_left: 0,
+      extend_right: 0,
+      // Vertical shift
+      y_shift: 0
+    });
   }
 
-// To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-function L() { if (Crescendo.DEBUG) Vex.L("Vex.Flow.Crescendo", arguments); }
+  // Set the line to center the element on
+  setLine(line) { this.line = line; return this; }
+
+  // Set the full height at the open end
+  setHeight(height) { this.height = height; return this; }
+
+  // Set whether the sign should be a descresendo by passing a bool
+  // to `decresc`
+  setDecrescendo(decresc) {
+    this.decrescendo = decresc;
+    return this;
+  }
+
+  // Preformat the note
+  preFormat() { this.preFormatted = true; return this; }
+
+  // Render the Crescendo object onto the canvas
+  draw() {
+    if (!this.context) throw new Vex.RERR("NoContext",
+      "Can't draw Hairpin without a context.");
+
+    var tick_context = this.getTickContext();
+    var next_context = TickContext.getNextContext(tick_context);
+
+    var begin_x = this.getAbsoluteX();
+    var end_x;
+    if (next_context) {
+      end_x = next_context.getX();
+    } else {
+      end_x = this.stave.x + this.stave.width;
+    }
+
+    var y = this.stave.getYForLine(this.line + (-3)) + 1;
+
+    L("Drawing ",  this.decrescendo ? "decrescendo " : "crescendo ",
+      this.height, "x", begin_x - end_x);
+
+    renderHairpin(this.context, {
+      begin_x: begin_x - this.render_options.extend_left,
+      end_x: end_x + this.render_options.extend_right,
+      y: y + this.render_options.y_shift,
+      height: this.height,
+      reverse: this.decrescendo
+    });
+  }
+}

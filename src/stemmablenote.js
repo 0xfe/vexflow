@@ -9,6 +9,9 @@ import { Flow } from './tables';
 import { Stem } from './stem';
 import { Note } from './note';
 
+// To enable logging for this class. Set `Vex.Flow.StemmableNote.DEBUG` to `true`.
+function L() { if (StemmableNote.DEBUG) Vex.L("Vex.Flow.StemmableNote", arguments); }
+
 export class StemmableNote extends Note {
   constructor(note_struct) {
     super(note_struct);
@@ -221,6 +224,3 @@ export class StemmableNote extends Note {
     this.stem.setContext(this.context).draw();
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.StemmableNote.DEBUG` to `true`.
-function L() { if (StemmableNote.DEBUG) Vex.L("Vex.Flow.StemmableNote", arguments); }

@@ -7,7 +7,11 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 
+// To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
+function L() { if (Stem.DEBUG) Vex.L("Vex.Flow.Stem", arguments); }
+
 export class Stem {
+  static get CATEGORY() { return 'stem'; }
 
   // Stem directions
   static get UP() {
@@ -69,7 +73,7 @@ export class Stem {
   }
 
   // The category of the object
-  getCategory() { return "stem"; }
+  getCategory() { return Stem.CATEGORY; }
 
   // Set the canvas context to render on
   setContext(context) { this.context = context; return this;}
@@ -158,6 +162,3 @@ export class Stem {
     ctx.restore();
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
-function L() { if (Stem.DEBUG) Vex.L("Vex.Flow.Stem", arguments); }

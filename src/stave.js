@@ -17,8 +17,9 @@ import { Volta } from './stavevolta';
 const THICKNESS = (Flow.STAVE_LINE_THICKNESS > 1 ?
       Flow.STAVE_LINE_THICKNESS : 0);
 
-/** @constructor */
 export class Stave {
+
+  /** @constructor */
   constructor(x, y, width, options) {
     this.x = x;
     this.y = y;
@@ -303,7 +304,7 @@ export class Stave {
     }
 
     this.clef = clefSpec;
-    var clefs = this.getModifiers(position, Clef.category);
+    var clefs = this.getModifiers(position, Clef.CATEGORY);
     if (clefs.length === 0) {
       this.addClef(clefSpec, size, annotation, position);
     } else {
@@ -323,7 +324,7 @@ export class Stave {
       position = StaveModifier.Position.BEGIN;
     }
 
-    var keySignatures = this.getModifiers(position, KeySignature.category);
+    var keySignatures = this.getModifiers(position, KeySignature.CATEGORY);
     if (keySignatures.length === 0) {
       this.addKeySignature(keySpec, cancelKeySpec, position);
     } else {
@@ -343,7 +344,7 @@ export class Stave {
       position = StaveModifier.Position.BEGIN;
     }
 
-    var timeSignatures = this.getModifiers(position, TimeSignature.category);
+    var timeSignatures = this.getModifiers(position, TimeSignature.CATEGORY);
     if (timeSignatures.length === 0) {
       this.addTimeSignature(timeSpec, customPadding, position);
     } else {

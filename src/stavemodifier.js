@@ -4,11 +4,6 @@
 // A base class for stave modifiers (e.g. clefs, key signatures)
 
 export class StaveModifier {
-  constructor() {
-    this.padding = 10;
-    this.position = StaveModifier.Position.ABOVE;
-  }
-
   static get Position() {
     return {
       LEFT: 1,
@@ -19,6 +14,12 @@ export class StaveModifier {
       END: 6
     };
   }
+
+  constructor() {
+    this.padding = 10;
+    this.position = StaveModifier.Position.ABOVE;
+  }
+
   getPosition() { return this.position; }
   setPosition(position) { this.position = position; return this; }
   getStave() { return this.stave; }
