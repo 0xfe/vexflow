@@ -17,9 +17,7 @@
     "url": "https://github.com/0xfe/vexflow/issues"
   },
   "devDependencies": {
-    "browserify": "^6.3.2",
     "docco": "^0.7.0",
-    "glob": "^4.2.1",
     "grunt": "^0.4.5",
     "grunt-bump": "0.0.16",
     "grunt-cli": "^0.1.13",
@@ -35,7 +33,6 @@
     "grunt-release": "^0.7.0",
     "grunt-rollup": "^0.7.1",
     "jquery": "^2.1.1",
-    "jscs": "^2.3.3",
     "jshint": "^2.9.2",
     "qunit": "^0.9.1",
     "raphael": "^2.1.0",
