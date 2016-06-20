@@ -15,7 +15,6 @@ import { Glyph } from './glyph';
 function L() { if (TextDynamics.DEBUG) Vex.L("Vex.Flow.TextDynamics", arguments); }
 
 export class TextDynamics extends Note {
-
   // The glyph data for each dynamics letter
   static get GLYPHS() {
     return {

@@ -4,8 +4,6 @@
 import { Vex } from './vex';
 
 export class SVGContext {
-
-  /** @constructor */
   constructor(element) {
     // element is the parent DOM object
     this.element = element;

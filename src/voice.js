@@ -10,7 +10,6 @@ import { Flow } from './tables';
 import { Fraction } from './fraction';
 
 export class Voice {
-
   // Modes allow the addition of ticks in three different ways:
   //
   // STRICT: This is the default. Ticks must fill the voice.

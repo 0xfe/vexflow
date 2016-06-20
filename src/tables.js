@@ -2,6 +2,7 @@
 
 import { Vex } from './vex';
 import { Fraction } from './fraction';
+
 let Flow = {};
 Flow.STEM_WIDTH = 1.5;
 Flow.STEM_HEIGHT = 32;

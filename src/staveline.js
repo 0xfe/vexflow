@@ -103,7 +103,6 @@ function drawArrowLine(ctx, point1, point2, config) {
 }
 
 export class StaveLine {
-
   // Text Positioning
   static get TextVerticalPosition() {
     return {

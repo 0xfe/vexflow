@@ -10,7 +10,6 @@ import { Vex } from './vex';
 import { Modifier } from './modifier';
 
 export class StaveHairpin {
-
   static get type() {
     return {
       CRESC: 1,

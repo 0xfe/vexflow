@@ -3,8 +3,6 @@
 // ## Description
 //
 // This file implements `Beams` that span over a set of `StemmableNotes`.
-//
-// Requires: vex.js, vexmusic.js, note.js
 
 import { Vex } from './vex';
 import { Flow } from './tables';
@@ -28,7 +26,6 @@ function calculateStemDirection(notes) {
 }
 
 export class Beam {
-
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
   // Currently this is fairly naive.

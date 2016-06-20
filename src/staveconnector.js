@@ -26,9 +26,7 @@ function drawBoldDoubleLine(ctx, type, topX, topY, botY){
   ctx.fillRect(topX - thickLineOffset, topY, variableWidth, botY - topY);
 }
 
-/** @constructor */
 export class StaveConnector {
-
   // SINGLE_LEFT and SINGLE are the same value for compatibility
   // with older versions of vexflow which didn't have right sided
   // stave connectors

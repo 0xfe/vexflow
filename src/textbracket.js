@@ -15,7 +15,6 @@ import { Renderer } from './renderer';
 function L() { if (TextBracket.DEBUG) Vex.L("Vex.Flow.TextBracket", arguments); }
 
 export class TextBracket {
-
   static get Positions() {
     return {
       TOP: 1,

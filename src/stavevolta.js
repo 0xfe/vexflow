@@ -28,6 +28,7 @@ export class Volta extends StaveModifier {
       weight: "bold"
     };
   }
+
   getCategory() { return Volta.CATEGORY; }
   setShiftY(y) { this.y_shift = y; return this; }
   draw(stave, x) {

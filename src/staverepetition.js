@@ -38,6 +38,7 @@ export class Repetition extends StaveModifier {
       weight: "bold italic"
     };
   }
+
   getCategory() { return Repetition.CATEGORY; }
   setShiftX(x) { this.x_shift = x; return this; }
   setShiftY(y) { this.y_shift = y; return this; }

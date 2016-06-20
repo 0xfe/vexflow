@@ -36,7 +36,6 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
 }
 
 export class Glyph {
-
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
     var glyph = font.glyphs[code];

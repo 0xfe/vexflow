@@ -11,7 +11,6 @@ import { Note } from './note';
 import { Glyph } from './glyph';
 
 export class TextNote extends Note {
-
   static get Justification() {
     return {
       LEFT: 1,

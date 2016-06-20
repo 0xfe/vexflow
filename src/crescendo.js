@@ -7,6 +7,7 @@
 // duration and formatted as part of a `Voice` like any other `Note`
 // type in VexFlow. This object would most likely be formatted in a Voice
 // with `TextNotes` - which are used to represent other dynamics markings.
+
 import { Vex } from './vex';
 import { Note } from './note';
 import { TickContext } from './tickcontext';
@@ -38,7 +39,6 @@ function renderHairpin(ctx, params) {
 }
 
 export class Crescendo extends Note {
-
   // Initialize the crescendo's properties
   constructor(note_struct) {
     super(note_struct);

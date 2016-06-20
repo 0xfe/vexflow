@@ -18,8 +18,6 @@ const THICKNESS = (Flow.STAVE_LINE_THICKNESS > 1 ?
       Flow.STAVE_LINE_THICKNESS : 0);
 
 export class Stave {
-
-  /** @constructor */
   constructor(x, y, width, options) {
     this.x = x;
     this.y = y;

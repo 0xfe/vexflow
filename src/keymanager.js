@@ -8,10 +8,6 @@ import { Vex } from './vex';
 import { Music } from './music';
 
 export class KeyManager {
-
-  /**
-   * @constructor
-   */
   constructor(key) {
     this.music = new Music();
     this.setKey(key);

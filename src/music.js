@@ -6,7 +6,6 @@
 import { Vex } from './vex';
 
 export class Music {
-
   static get NUM_TONES() {
     return 12;
   }

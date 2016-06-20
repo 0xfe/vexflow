@@ -8,8 +8,6 @@
 // needed, SVGContext is recommended.
 
 export class RaphaelContext {
-
-  /** @constructor */
   constructor(element) {
     this.element = element;
     this.paper = Raphael(element);
