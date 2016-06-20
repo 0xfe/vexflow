@@ -23,6 +23,15 @@ Dir.glob("../src/*.js").each do |file|
             puts "  #{$1} [color = burlywood3, fontcolor = coral3];"
             parent = $1
         end
+        if line =~ /export\s+class\s+(\S+)\s*{/
+            puts "  #{$1} [color = burlywood3, fontcolor = coral3];"
+            parent = $1
+        end
+        if line =~ /export\s+class\s+(\S+)\s+extends\s+(\S+)\s*{/
+            puts "  #{$1} [color = burlywood3, fontcolor = coral3];"
+            parent = $1
+            inherits = $2
+        end
         if line =~ /import\s+{\s*(\S+)\s*} from/
             next if $1 == "Vex"
             next if $1 == "Flow"
