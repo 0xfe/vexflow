@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-//
 // This file implements utility methods used by the rest of the VexFlow
 // codebase.
 //
@@ -9,11 +8,9 @@
 //
 /* global window: false */
 /* global document: false */
+/* global Vex: true */
 
-if (typeof Vex === 'undefined') {
-  /* global Vex: true */
-  Vex = function() {};
-}
+var Vex = function() {};
 
 // Default log function sends all arguments to console.
 Vex.L = function(block, args) {
@@ -180,17 +177,4 @@ Vex.Prefix = function(text) {
 };
 Vex.Prefix.prefix = "vf-";
 
-// UMD to export Vex.
-//
-/* global require: false */
-/* global define: false */
-/* global module: false */
-if (typeof require == "function") {
-  try {
-    module.exports = Vex;
-  } catch (e) {}
-} else if (typeof define == "function" && define.amd) {
-  define("Vex", [], function(){ return Vex; });
-} else {
-  (this || window)["Vex"] = Vex;
-}
+export { Vex };

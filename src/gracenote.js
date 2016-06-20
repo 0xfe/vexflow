@@ -1,68 +1,67 @@
-Vex.Flow.GraceNote = (function() {
-  var GraceNote = function(note_struct) {
-    if (arguments.length > 0) this.init(note_struct);
-  };
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-  Vex.Inherit(GraceNote, Vex.Flow.StaveNote, {
-    init: function(note_struct) {
-      GraceNote.superclass.init.call(this, note_struct);
+import { Vex } from './vex';
+import { StaveNote } from './stavenote';
 
-      this.render_options.glyph_font_scale = 22;
-      this.render_options.stem_height = 20;
-      this.render_options.stroke_px = 2;
-      this.glyph.head_width = 6;
+export class GraceNote extends StaveNote {
+  static get CATEGORY() { return 'gracenotes'; }
 
-      this.slash = note_struct.slash;
-      this.slur = true;
+  constructor(note_struct) {
+    super(note_struct);
 
-      this.buildNoteHeads();
+    this.render_options.glyph_font_scale = 22;
+    this.render_options.stem_height = 20;
+    this.render_options.stroke_px = 2;
+    this.glyph.head_width = 6;
 
-      this.width = 3;
-    },
+    this.slash = note_struct.slash;
+    this.slur = true;
 
-    getStemExtension: function(){
-      var glyph = this.getGlyph();
+    this.buildNoteHeads();
 
-      if (this.stem_extension_override != null) {
-        return this.stem_extension_override;
-      }
+    this.width = 3;
+  }
 
-      if (glyph) {
-        return this.getStemDirection() === 1 ? glyph.gracenote_stem_up_extension :
-          glyph.gracenote_stem_down_extension;
-      }
+  getStemExtension(){
+    var glyph = this.getGlyph();
 
-      return 0;
-    },
-
-    getCategory: function() { return 'gracenotes'; },
-
-    draw: function(){
-      GraceNote.superclass.draw.call(this);
-      var ctx = this.context;
-      var stem_direction = this.getStemDirection();
-
-      if (this.slash) {
-        ctx.beginPath();
-
-        var x = this.getAbsoluteX();
-        var y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
-        if (stem_direction === 1) {
-          x += 1;
-          ctx.moveTo(x, y);
-          ctx.lineTo(x + 13, y - 9);
-        } else if (stem_direction === -1) {
-          x -= 4;
-          y += 1;
-          ctx.moveTo(x, y);
-          ctx.lineTo(x + 13, y + 9);
-        }
-
-        ctx.closePath();
-        ctx.stroke();
-      }
+    if (this.stem_extension_override != null) {
+      return this.stem_extension_override;
     }
-  });
 
-  return GraceNote;
-}());
+    if (glyph) {
+      return this.getStemDirection() === 1 ? glyph.gracenote_stem_up_extension :
+        glyph.gracenote_stem_down_extension;
+    }
+
+    return 0;
+  }
+
+  getCategory() { return GraceNote.CATEGORY; }
+
+  draw(){
+    super.draw();
+    var ctx = this.context;
+    var stem_direction = this.getStemDirection();
+
+    if (this.slash) {
+      ctx.beginPath();
+
+      var x = this.getAbsoluteX();
+      var y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
+      if (stem_direction === 1) {
+        x += 1;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 13, y - 9);
+      } else if (stem_direction === -1) {
+        x -= 4;
+        y += 1;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 13, y + 9);
+      }
+
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+}

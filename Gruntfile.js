@@ -2,6 +2,7 @@
 // Mohit Muthanna Cheppudira <mohit@muthanna.com>
 
 module.exports = function(grunt) {
+  var path = require('path');
   var L = grunt.log.writeln;
   var BANNER = '/**\n' +
                 ' * VexFlow <%= pkg.version %> built on <%= grunt.template.today("yyyy-mm-dd") %>.\n' +
@@ -9,85 +10,20 @@ module.exports = function(grunt) {
                 ' *\n' +
                 ' * http://www.vexflow.com  http://github.com/0xfe/vexflow\n' +
                 ' */\n';
-  var BUILD_DIR = 'build';
-  var RELEASE_DIR = 'releases';
-  var TARGET_RAW = BUILD_DIR + '/vexflow-debug.js';
-  var TARGET_MIN = BUILD_DIR + '/vexflow-min.js';
-  var TARGET_TESTS = BUILD_DIR + '/vexflow-tests.js';
+  var BASE_DIR = __dirname;
+  var BUILD_DIR = path.join(BASE_DIR, 'build');
+  var RELEASE_DIR = path.join(BASE_DIR, 'releases');
+  var MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  var TARGET_RAW = path.join(BUILD_DIR, 'vexflow-debug.js');
+  var TARGET_MIN = path.join(BUILD_DIR, 'vexflow-min.js');
+  var TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
 
-  var SOURCES = [ "src/vex.js",
-                  "src/flow.js",
-                  "src/fraction.js",
-                  "src/tables.js",
-                  "src/fonts/vexflow_font.js",
-                  "src/glyph.js",
-                  "src/stave.js",
-                  "src/staveconnector.js",
-                  "src/tabstave.js",
-                  "src/tickcontext.js",
-                  "src/tickable.js",
-                  "src/note.js",
-                  "src/notehead.js",
-                  "src/stem.js",
-                  "src/stemmablenote.js",
-                  "src/stavenote.js",
-                  "src/tabnote.js",
-                  "src/ghostnote.js",
-                  "src/clefnote.js",
-                  "src/timesignote.js",
-                  "src/beam.js",
-                  "src/voice.js",
-                  "src/voicegroup.js",
-                  "src/modifier.js",
-                  "src/modifiercontext.js",
-                  "src/accidental.js",
-                  "src/dot.js",
-                  "src/formatter.js",
-                  "src/stavetie.js",
-                  "src/tabtie.js",
-                  "src/tabslide.js",
-                  "src/bend.js",
-                  "src/vibrato.js",
-                  "src/annotation.js",
-                  "src/articulation.js",
-                  "src/tuning.js",
-                  "src/stavemodifier.js",
-                  "src/keysignature.js",
-                  "src/timesignature.js",
-                  "src/clef.js",
-                  "src/music.js",
-                  "src/keymanager.js",
-                  "src/renderer.js",
-                  "src/raphaelcontext.js",
-                  "src/svgcontext.js",
-                  "src/canvascontext.js",
-                  "src/stavebarline.js",
-                  "src/stavehairpin.js",
-                  "src/stavevolta.js",
-                  "src/staverepetition.js",
-                  "src/stavesection.js",
-                  "src/stavetempo.js",
-                  "src/stavetext.js",
-                  "src/barnote.js",
-                  "src/tremolo.js",
-                  "src/tuplet.js",
-                  "src/boundingbox.js",
-                  "src/textnote.js",
-                  "src/frethandfinger.js",
-                  "src/stringnumber.js",
-                  "src/strokes.js",
-                  "src/curve.js",
-                  "src/staveline.js",
-                  "src/crescendo.js",
-                  "src/ornament.js",
-                  "src/pedalmarking.js",
-                  "src/textbracket.js",
-                  "src/textdynamics.js", "src/*.js", "!src/header.js", "!src/container.js"];
+  var SOURCES = ["src/*.js", "!src/header.js", "!src/container.js"];
 
   var TEST_SOURCES = [
     "tests/vexflow_test_helpers.js", "tests/mocks.js",
     "tests/*_tests.js", "tests/run.js"];
-
+  var babel = require('rollup-plugin-babel');
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
@@ -95,13 +31,29 @@ module.exports = function(grunt) {
         banner: BANNER,
         sourceMap: true
       },
-      vexflow: {
-        src: SOURCES,
-        dest: TARGET_RAW
-      },
       tests: {
         src: TEST_SOURCES,
         dest: TARGET_TESTS
+      }
+    },
+    rollup: {
+      options: {
+        banner: BANNER,
+        format: 'umd',
+        moduleName: 'Vex',
+        sourceMap: true,
+        sourceMapFile: TARGET_RAW,
+        plugins: function() {
+          return [
+            babel({
+              exclude: './node_modules/**'
+            })
+          ];
+        }
+      },
+      files: {
+        src: MODULE_ENTRY,
+        dest: TARGET_RAW
       }
     },
     uglify: {
@@ -110,13 +62,14 @@ module.exports = function(grunt) {
         sourceMap: true
       },
       build: {
-        src: SOURCES,
+        src: TARGET_RAW,
         dest: TARGET_MIN
       }
     },
     jshint: {
       files: SOURCES,
       options: {
+        esversion: 6,
         eqnull: true,   // allow == and ~= for nulls
         sub: true,      // don't enforce dot notation
         trailing: true, // no more trailing spaces
@@ -132,7 +85,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['src/*', 'Gruntfile.js'],
-        tasks: ['concat:vexflow'],
+        tasks: ['rollup'],
         options: {
           interrupt: true
         }
@@ -197,6 +150,7 @@ module.exports = function(grunt) {
   });
 
   // Load the plugin that provides the "uglify" task.
+  grunt.loadNpmTasks('grunt-rollup');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -210,8 +164,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-git');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'docco']);
-  grunt.registerTask('test', 'Run qunit tests.', ['concat', 'qunit']);
+  grunt.registerTask('default', ['jshint', 'rollup', 'concat', 'uglify', 'docco']);
+  grunt.registerTask('test', 'Run qunit tests.', ['rollup', 'concat', 'qunit']);
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current binaries to releases/.', function() {

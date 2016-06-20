@@ -3,20 +3,14 @@
 //
 // This class implements dot modifiers for notes.
 
-/**
- * @constructor
- */
-Vex.Flow.Dot = (function() {
-  function Dot() {
-    this.init();
-  }
+import { Vex } from './vex';
+import { Modifier } from './modifier';
 
-  Dot.CATEGORY = "dots";
-
-  var Modifier = Vex.Flow.Modifier;
+export class Dot extends Modifier {
+  static get CATEGORY() { return 'dots'; }
 
   // Arrange dots inside a ModifierContext.
-  Dot.format = function(dots, state) {
+  static format(dots, state) {
     var right_shift = state.right_shift;
     var dot_spacing = 1;
 
@@ -93,56 +87,53 @@ Vex.Flow.Dot = (function() {
 
     // Update state.
     state.right_shift += x_width;
-  };
+  }
 
-  Vex.Inherit(Dot, Modifier, {
-    init: function() {
-      Dot.superclass.init.call(this);
+  /**
+   * @constructor
+   */
+  constructor() {
+    super();
 
-      this.note = null;
-      this.index = null;
-      this.position = Modifier.Position.RIGHT;
+    this.note = null;
+    this.index = null;
+    this.position = Modifier.Position.RIGHT;
 
-      this.radius = 2;
-      this.setWidth(5);
-      this.dot_shiftY = 0;
-    },
+    this.radius = 2;
+    this.setWidth(5);
+    this.dot_shiftY = 0;
+  }
+  getCategory() { return Dot.CATEGORY; }
+  setNote(note){
+    this.note = note;
 
-    setNote: function(note){
-      this.note = note;
-
-      if (this.note.getCategory() === 'gracenotes') {
-        this.radius *= 0.50;
-        this.setWidth(3);
-      }
-    },
-
-    setDotShiftY: function(y) { this.dot_shiftY = y; return this; },
-
-    draw: function() {
-      if (!this.context) throw new Vex.RERR("NoContext",
-        "Can't draw dot without a context.");
-      if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
-        "Can't draw dot without a note and index.");
-
-      var line_space = this.note.stave.options.spacing_between_lines_px;
-
-      var start = this.note.getModifierStartXY(this.position, this.index);
-
-      // Set the starting y coordinate to the base of the stem for TabNotes
-      if (this.note.getCategory() === 'tabnotes') {
-        start.y = this.note.getStemExtents().baseY;
-      }
-
-      var dot_x = (start.x + this.x_shift) + this.width - this.radius;
-      var dot_y = start.y + this.y_shift + (this.dot_shiftY * line_space);
-      var ctx = this.context;
-
-      ctx.beginPath();
-      ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
-      ctx.fill();
+    if (this.note.getCategory() === 'gracenotes') {
+      this.radius *= 0.50;
+      this.setWidth(3);
     }
-  });
+  }
+  setDotShiftY(y) { this.dot_shiftY = y; return this; }
+  draw() {
+    if (!this.context) throw new Vex.RERR("NoContext",
+      "Can't draw dot without a context.");
+    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
+      "Can't draw dot without a note and index.");
 
-  return Dot;
-}());
+    var line_space = this.note.stave.options.spacing_between_lines_px;
+
+    var start = this.note.getModifierStartXY(this.position, this.index);
+
+    // Set the starting y coordinate to the base of the stem for TabNotes
+    if (this.note.getCategory() === 'tabnotes') {
+      start.y = this.note.getStemExtents().baseY;
+    }
+
+    var dot_x = (start.x + this.x_shift) + this.width - this.radius;
+    var dot_y = start.y + this.y_shift + (this.dot_shiftY * line_space);
+    var ctx = this.context;
+
+    ctx.beginPath();
+    ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
+    ctx.fill();
+  }
+}
