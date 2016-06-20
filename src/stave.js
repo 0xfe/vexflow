@@ -96,6 +96,23 @@ export class Stave {
     this.resetLines();
     return this;
   }
+
+  /**
+   *  The space above and below staff lines is measured in staff lines 
+   */
+  getSpaceAboveStaffLines() { return this.options.space_above_staff_ln; }
+  setSpaceAboveStaffLines(space) {
+    this.options.space_above_staff_ln = space;
+    this.resetLines();
+    return this;
+  }
+  getSpaceBelowStaffLines() { return this.options.space_below_staff_ln; }
+  setSpaceBelowStaffLines(space) {
+    this.options.space_below_staff_ln = space;
+    this.resetLines();
+    return this;
+  }
+  
   setY(y) { this.y = y; return this; }
 
   setX(x){
@@ -196,6 +213,11 @@ export class Stave {
 
   getSpacingBetweenLines() {
     return this.options.spacing_between_lines_px;
+  }
+  setSpacingBetweenLines(px) {
+    this.options.spacing_between_lines_px = parseInt(px);
+    this.resetLines();
+    return this;
   }
 
   getBoundingBox() {
