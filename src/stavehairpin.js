@@ -8,22 +8,14 @@
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
-/**
- * Create a new hairpin from the specified notes.
- *
- * @constructor
- * @param {!Object} notes The notes to tie up.
- * @param {!Object} type The type of hairpin
- */
-export var StaveHairpin = (function() {
-  function StaveHairpin(notes, type) {
-    if (arguments.length > 0) this.init(notes, type);
-  }
 
-  StaveHairpin.type = {
-    CRESC: 1,
-    DECRESC: 2
-  };
+export class StaveHairpin {
+  static get type() {
+    return {
+      CRESC: 1,
+      DECRESC: 2
+    };
+  }
 
   /* Helper function to convert ticks into pixels.
    * Requires a Formatter with voices joined and formatted (to
@@ -39,7 +31,7 @@ export var StaveHairpin = (function() {
    *  }
    *
    **/
-  StaveHairpin.FormatByTicksAndDraw = function(ctx, formatter, notes, type, position, options) {
+  static FormatByTicksAndDraw(ctx, formatter, notes, type, position, options) {
     var ppt = formatter.pixelsPerTick;
 
     if (ppt == null){
@@ -63,125 +55,129 @@ export var StaveHairpin = (function() {
       .setRenderOptions(hairpin_options)
       .setPosition(position)
       .draw();
-  };
+  }
 
-  StaveHairpin.prototype = {
-    init: function(notes, type) {
-      /**
-       * Notes is a struct that has:
-       *
-       *  {
-       *    first_note: Note,
-       *    last_note: Note,
-       *  }
-       *
-       **/
-
-      this.notes = notes;
-      this.hairpin = type;
-      this.position = Modifier.Position.BELOW;
-
-      this.context = null;
-
-      this.render_options = {
-          height: 10,
-          y_shift: 0, //vertical offset
-          left_shift_px: 0, //left horizontal offset
-          right_shift_px: 0 // right horizontal offset
-        };
-
-      this.setNotes(notes);
-    },
-
-    setContext: function(context) { this.context = context; return this; },
-
-    setPosition: function(position) {
-      if (position == Modifier.Position.ABOVE ||
-          position == Modifier.Position.BELOW)
-        this.position = position;
-      return this;
-    },
-
-    setRenderOptions: function(options) {
-      if (options.height != null &&
-          options.y_shift != null &&
-          options.left_shift_px != null &&
-          options.right_shift_px != null){
-        this.render_options = options;
-      }
-      return this;
-    },
-
+  /**
+   * Create a new hairpin from the specified notes.
+   *
+   * @constructor
+   * @param {!Object} notes The notes to tie up.
+   * @param {!Object} type The type of hairpin
+   */
+  constructor(notes, type) {
     /**
-     * Set the notes to attach this hairpin to.
+     * Notes is a struct that has:
      *
-     * @param {!Object} notes The start and end notes.
-     */
-    setNotes: function(notes) {
-      if (!notes.first_note && !notes.last_note)
-        throw new Vex.RuntimeError("BadArguments",
-            "Hairpin needs to have either first_note or last_note set.");
+     *  {
+     *    first_note: Note,
+     *    last_note: Note,
+     *  }
+     *
+     **/
 
-      // Success. Lets grab 'em notes.
-      this.first_note = notes.first_note;
-      this.last_note = notes.last_note;
-      return this;
-    },
+    this.notes = notes;
+    this.hairpin = type;
+    this.position = Modifier.Position.BELOW;
 
-    renderHairpin: function(params) {
-      var ctx = this.context;
-      var dis = this.render_options.y_shift + 20;
-      var y_shift = params.first_y;
+    this.context = null;
 
-      if (this.position == Modifier.Position.ABOVE) {
-        dis = -dis +30;
-        y_shift = params.first_y - params.staff_height;
-      }
+    this.render_options = {
+        height: 10,
+        y_shift: 0, //vertical offset
+        left_shift_px: 0, //left horizontal offset
+        right_shift_px: 0 // right horizontal offset
+      };
 
-      var l_shift = this.render_options.left_shift_px;
-      var r_shift = this.render_options.right_shift_px;
+    this.setNotes(notes);
+  }
 
-      ctx.beginPath();
+  setContext(context) { this.context = context; return this; }
 
-      switch (this.hairpin) {
-        case StaveHairpin.type.CRESC:
-          ctx.moveTo(params.last_x + r_shift, y_shift + dis);
-          ctx.lineTo(params.first_x + l_shift, y_shift +(this.render_options.height/2) + dis);
-          ctx.lineTo(params.last_x + r_shift, y_shift + this.render_options.height + dis);
-          break;
-        case StaveHairpin.type.DECRESC:
-          ctx.moveTo(params.first_x + l_shift, y_shift + dis);
-          ctx.lineTo(params.last_x + r_shift, y_shift +(this.render_options.height/2) + dis);
-          ctx.lineTo(params.first_x + l_shift, y_shift + this.render_options.height + dis);
-          break;
-        default:
-          // Default is NONE, so nothing to draw
-          break;
-      }
+  setPosition(position) {
+    if (position == Modifier.Position.ABOVE ||
+        position == Modifier.Position.BELOW)
+      this.position = position;
+    return this;
+  }
 
-      ctx.stroke();
-      ctx.closePath();
-    },
-
-    draw: function() {
-      if (!this.context) throw new Vex.RERR("NoContext",
-        "Can't draw Hairpin without a context.");
-
-      var first_note = this.first_note;
-      var last_note = this.last_note;
-
-      var start = first_note.getModifierStartXY(this.position, 0);
-      var end = last_note.getModifierStartXY(this.position, 0);
-
-      this.renderHairpin({
-        first_x: start.x,
-        last_x: end.x,
-        first_y: first_note.getStave().y + first_note.getStave().height,
-        last_y: last_note.getStave().y + last_note.getStave().height,
-        staff_height: first_note.getStave().height
-      });
-     return true;
+  setRenderOptions(options) {
+    if (options.height != null &&
+        options.y_shift != null &&
+        options.left_shift_px != null &&
+        options.right_shift_px != null){
+      this.render_options = options;
     }
-  };
-  return StaveHairpin;
-}());
+    return this;
+  }
+
+  /**
+   * Set the notes to attach this hairpin to.
+   *
+   * @param {!Object} notes The start and end notes.
+   */
+  setNotes(notes) {
+    if (!notes.first_note && !notes.last_note)
+      throw new Vex.RuntimeError("BadArguments",
+          "Hairpin needs to have either first_note or last_note set.");
+
+    // Success. Lets grab 'em notes.
+    this.first_note = notes.first_note;
+    this.last_note = notes.last_note;
+    return this;
+  }
+
+  renderHairpin(params) {
+    var ctx = this.context;
+    var dis = this.render_options.y_shift + 20;
+    var y_shift = params.first_y;
+
+    if (this.position == Modifier.Position.ABOVE) {
+      dis = -dis +30;
+      y_shift = params.first_y - params.staff_height;
+    }
+
+    var l_shift = this.render_options.left_shift_px;
+    var r_shift = this.render_options.right_shift_px;
+
+    ctx.beginPath();
+
+    switch (this.hairpin) {
+      case StaveHairpin.type.CRESC:
+        ctx.moveTo(params.last_x + r_shift, y_shift + dis);
+        ctx.lineTo(params.first_x + l_shift, y_shift +(this.render_options.height/2) + dis);
+        ctx.lineTo(params.last_x + r_shift, y_shift + this.render_options.height + dis);
+        break;
+      case StaveHairpin.type.DECRESC:
+        ctx.moveTo(params.first_x + l_shift, y_shift + dis);
+        ctx.lineTo(params.last_x + r_shift, y_shift +(this.render_options.height/2) + dis);
+        ctx.lineTo(params.first_x + l_shift, y_shift + this.render_options.height + dis);
+        break;
+      default:
+        // Default is NONE, so nothing to draw
+        break;
+    }
+
+    ctx.stroke();
+    ctx.closePath();
+  }
+
+  draw() {
+    if (!this.context) throw new Vex.RERR("NoContext",
+      "Can't draw Hairpin without a context.");
+
+    var first_note = this.first_note;
+    var last_note = this.last_note;
+
+    var start = first_note.getModifierStartXY(this.position, 0);
+    var end = last_note.getModifierStartXY(this.position, 0);
+
+    this.renderHairpin({
+      first_x: start.x,
+      last_x: end.x,
+      first_y: first_note.getStave().y + first_note.getStave().height,
+      last_y: last_note.getStave().y + last_note.getStave().height,
+      staff_height: first_note.getStave().height
+    });
+   return true;
+  }
+}

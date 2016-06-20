@@ -17,6 +17,7 @@
     "url": "https://github.com/0xfe/vexflow/issues"
   },
   "devDependencies": {
+    "babel-preset-es2015-rollup": "^1.1.1",
     "browserify": "^6.3.2",
     "docco": "^0.6.3",
     "glob": "^4.2.1",
@@ -39,6 +40,7 @@
     "jshint": "^2.9.2",
     "qunit": "^0.7.5",
     "raphael": "^2.1.0",
+    "rollup-plugin-babel": "^2.5.1",
     "slimerjs": "^0.9.6"
   },
   "scripts": {
