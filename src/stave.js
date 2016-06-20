@@ -96,6 +96,23 @@ export class Stave {
     this.resetLines();
     return this;
   }
+
+  /**
+   *  The space above and below staff lines is measured in staff lines 
+   */
+  getSpaceAboveStaffLines() { return this.options.space_above_staff_ln; }
+  setSpaceAboveStaffLines(space) {
+    this.options.space_above_staff_ln = space;
+    this.resetLines();
+    return this;
+  }
+  getSpaceBelowStaffLines() { return this.options.space_below_staff_ln; }
+  setSpaceBelowStaffLines(space) {
+    this.options.space_below_staff_ln = space;
+    this.resetLines();
+    return this;
+  }
+  
   setY(y) { this.y = y; return this; }
 
   setX(x){
@@ -197,6 +214,11 @@ export class Stave {
   getSpacingBetweenLines() {
     return this.options.spacing_between_lines_px;
   }
+  setSpacingBetweenLines(px) {
+    this.options.spacing_between_lines_px = parseInt(px);
+    this.resetLines();
+    return this;
+  }
 
   getBoundingBox() {
     return new BoundingBox(this.x, this.y, this.width, this.getBottomY() - this.y);
@@ -228,7 +250,8 @@ export class Stave {
   }
 
   getLineForY(y){
-    //Does the revers of getYForLine - somewhat dumb and just calls getYForLine until the right value is reaches
+    // Does the reverse of getYForLine - somewhat dumb and just 
+    // calls getYForLine until the right value is reached.
 
     var options = this.options;
     var spacing = options.spacing_between_lines_px;
