@@ -5,6 +5,7 @@
     "max-len": [2, 100],
     "no-case-declarations": [2],
     "no-confusing-arrow": [0],
+    "new-cap": [0],
     "no-else-return": [0],
     "no-multi-spaces": [0],
     "no-param-reassign": [0],
