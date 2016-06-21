@@ -9,33 +9,42 @@ import { CanvasContext } from './canvascontext';
 import { RaphaelContext } from './raphaelcontext';
 import { SVGContext } from './svgcontext';
 
-export var Renderer = (function() {
-  function Renderer(sel, backend) {
-    if (arguments.length > 0) this.init(sel, backend);
+let _lastContext = null;
+
+export class Renderer {
+  static get Backends() {
+    return {
+      CANVAS: 1,
+      RAPHAEL: 2,
+      SVG: 3,
+      VML: 4
+    };
   }
 
-  Renderer.Backends = {
-    CANVAS: 1,
-    RAPHAEL: 2,
-    SVG: 3,
-    VML: 4
-  };
-
   //End of line types
-  Renderer.LineEndType = {
+  static get LineEndType() {
+    return {
       NONE: 1,        // No leg
       UP: 2,          // Upward leg
       DOWN: 3         // Downward leg
-  };
+    };
+  }
 
   // Set this to true if you're using VexFlow inside a runtime
   // that does not allow modifiying canvas objects. There is a small
   // performance degradation due to the extra indirection.
-  Renderer.USE_CANVAS_PROXY = false;
-  Renderer.lastContext = null;
+  static get USE_CANVAS_PROXY() {
+    return false;
+  }
 
-  Renderer.buildContext = function(sel,
-      backend, width, height, background) {
+  static get lastContext() {
+    return _lastContext;
+  }
+  static set lastContext(ctx) {
+    _lastContext = ctx;
+  }
+
+  static buildContext(sel, backend, width, height, background) {
 
     var renderer = new Renderer(sel, backend);
     if (width && height) { renderer.resize(width, height); }
@@ -45,25 +54,24 @@ export var Renderer = (function() {
     ctx.setBackgroundFillStyle(background);
     Renderer.lastContext = ctx;
     return ctx;
-  };
+  }
 
-  Renderer.getCanvasContext = function(sel, width, height, background) {
+  static getCanvasContext(sel, width, height, background) {
     return Renderer.buildContext(sel, Renderer.Backends.CANVAS,
         width, height, background);
-  };
+  }
 
-  Renderer.getRaphaelContext = function(sel, width, height, background) {
+  static getRaphaelContext(sel, width, height, background) {
     return Renderer.buildContext(sel, Renderer.Backends.RAPHAEL,
         width, height, background);
-  };
+  }
 
-  Renderer.getSVGContext = function(sel, width, height, background) {
+  static getSVGContext(sel, width, height, background) {
     return Renderer.buildContext(sel, Renderer.Backends.SVG,
         width, height, background);
-  };
+  }
 
-
-  Renderer.bolsterCanvasContext = function(ctx) {
+  static bolsterCanvasContext(ctx) {
     if (Renderer.USE_CANVAS_PROXY) {
       return new CanvasContext(ctx);
     }
@@ -79,12 +87,12 @@ export var Renderer = (function() {
     }
 
     return ctx;
-  };
+  }
 
   //Draw a dashed line (horizontal, vertical or diagonal
   //dashPattern = [3,3] draws a 3 pixel dash followed by a three pixel space.
   //setting the second number to 0 draws a solid line.
-  Renderer.drawDashedLine = function(context, fromX, fromY, toX, toY, dashPattern) {
+  static drawDashedLine(context, fromX, fromY, toX, toY, dashPattern) {
     context.beginPath();
 
     var dx = toX - fromX;
@@ -111,59 +119,55 @@ export var Renderer = (function() {
 
     context.closePath();
     context.stroke();
-  };
+  }
 
-  Renderer.prototype = {
-    init: function(sel, backend) {
-      // Verify selector
-      this.sel = sel;
-      if (!this.sel) throw new Vex.RERR("BadArgument",
-          "Invalid selector for renderer.");
+  constructor(sel, backend) {
+    // Verify selector
+    this.sel = sel;
+    if (!this.sel) throw new Vex.RERR("BadArgument",
+        "Invalid selector for renderer.");
 
-      // Get element from selector
-      this.element = document.getElementById(sel);
-      if (!this.element) this.element = sel;
+    // Get element from selector
+    this.element = document.getElementById(sel);
+    if (!this.element) this.element = sel;
 
-      // Verify backend and create context
-      this.ctx = null;
-      this.paper = null;
-      this.backend = backend;
-      if (this.backend == Renderer.Backends.CANVAS) {
-        // Create context.
-        if (!this.element.getContext) throw new Vex.RERR("BadElement",
-          "Can't get canvas context from element: " + sel);
-        this.ctx = Renderer.bolsterCanvasContext(
-            this.element.getContext('2d'));
+    // Verify backend and create context
+    this.ctx = null;
+    this.paper = null;
+    this.backend = backend;
+    if (this.backend == Renderer.Backends.CANVAS) {
+      // Create context.
+      if (!this.element.getContext) throw new Vex.RERR("BadElement",
+        "Can't get canvas context from element: " + sel);
+      this.ctx = Renderer.bolsterCanvasContext(
+          this.element.getContext('2d'));
 
-      } else if (this.backend == Renderer.Backends.RAPHAEL) {
-        this.ctx = new RaphaelContext(this.element);
+    } else if (this.backend == Renderer.Backends.RAPHAEL) {
+      this.ctx = new RaphaelContext(this.element);
 
-      } else if (this.backend == Renderer.Backends.SVG) {
-        this.ctx = new SVGContext(this.element);
+    } else if (this.backend == Renderer.Backends.SVG) {
+      this.ctx = new SVGContext(this.element);
 
-      } else {
-        throw new Vex.RERR("InvalidBackend",
-          "No support for backend: " + this.backend);
-      }
-    },
+    } else {
+      throw new Vex.RERR("InvalidBackend",
+        "No support for backend: " + this.backend);
+    }
+  }
 
-    resize: function(width, height) {
-      if (this.backend == Renderer.Backends.CANVAS) {
-        if (!this.element.getContext) throw new Vex.RERR("BadElement",
-          "Can't get canvas context from element: " + this.sel);
-        this.element.width = width;
-        this.element.height = height;
-        this.ctx = Renderer.bolsterCanvasContext(
-            this.element.getContext('2d'));
-      } else {
-        this.ctx.resize(width, height);
-      }
+  resize(width, height) {
+    if (this.backend == Renderer.Backends.CANVAS) {
+      if (!this.element.getContext) throw new Vex.RERR("BadElement",
+        "Can't get canvas context from element: " + this.sel);
+      this.element.width = width;
+      this.element.height = height;
+      this.ctx = Renderer.bolsterCanvasContext(
+          this.element.getContext('2d'));
+    } else {
+      this.ctx.resize(width, height);
+    }
 
-      return this;
-    },
+    return this;
+  }
 
-    getContext: function() { return this.ctx; }
-  };
-
-  return Renderer;
-}());
+  getContext() { return this.ctx; }
+}

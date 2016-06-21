@@ -23,7 +23,7 @@ module.exports = function(grunt) {
   var TEST_SOURCES = [
     "tests/vexflow_test_helpers.js", "tests/mocks.js",
     "tests/*_tests.js", "tests/run.js"];
-
+  var babel = require('rollup-plugin-babel');
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
@@ -42,7 +42,14 @@ module.exports = function(grunt) {
         format: 'umd',
         moduleName: 'Vex',
         sourceMap: true,
-        sourceMapFile: TARGET_RAW
+        sourceMapFile: TARGET_RAW,
+        plugins: function() {
+          return [
+            babel({
+              exclude: './node_modules/**'
+            })
+          ];
+        }
       },
       files: {
         src: MODULE_ENTRY,

@@ -5,63 +5,54 @@
 import { Vex } from './vex';
 import { StemmableNote } from './stemmablenote';
 
-/** @constructor */
-export var GhostNote = (function() {
-  function GhostNote(duration) {
-    if (arguments.length > 0) this.init(duration);
+export class GhostNote extends StemmableNote {
+  /** @constructor */
+  constructor(parameter) {
+    // Sanity check
+    if (!parameter) {
+      throw new Vex.RuntimeError("BadArguments",
+          "Ghost note must have valid initialization data to identify " +
+          "duration.");
+    }
+
+    var note_struct;
+
+    // Preserve backwards-compatibility
+    if (typeof(parameter) === "string") {
+      note_struct = { duration: parameter };
+    } else if (typeof(parameter) === "object") {
+      note_struct = parameter;
+    } else {
+      throw new Vex.RuntimeError("BadArguments",
+          "Ghost note must have valid initialization data to identify " +
+          "duration.");
+    }
+
+    super(note_struct);
+
+    // Note properties
+    this.setWidth(0);
   }
 
-  Vex.Inherit(GhostNote, StemmableNote, {
-    init: function(parameter) {
-      // Sanity check
-      if (!parameter) {
-        throw new Vex.RuntimeError("BadArguments",
-            "Ghost note must have valid initialization data to identify " +
-            "duration.");
-      }
+  isRest() { return true; }
 
-      var note_struct;
+  setStave(stave) { GhostNote.superclass.setStave.call(this, stave); }
 
-      // Preserve backwards-compatibility
-      if (typeof(parameter) === "string") {
-        note_struct = { duration: parameter };
-      } else if (typeof(parameter) === "object") {
-        note_struct = parameter;
-      } else {
-        throw new Vex.RuntimeError("BadArguments",
-            "Ghost note must have valid initialization data to identify " +
-            "duration.");
-      }
+  addToModifierContext() { /* intentionally overridden */ return this; }
 
-      GhostNote.superclass.init.call(this, note_struct);
+  preFormat() {
+    this.setPreFormatted(true);
+    return this;
+  }
 
-      // Note properties
-      this.setWidth(0);
-    },
+  draw() {
+    if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
 
-    isRest: function() { return true; },
-
-    setStave: function(stave) { GhostNote.superclass.setStave.call(this, stave); },
-
-    addToModifierContext: function()
-      { /* intentionally overridden */ return this; },
-
-    preFormat: function() {
-      this.setPreFormatted(true);
-      return this;
-    },
-
-    draw: function() {
-      if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-
-      // Draw the modifiers
-      for (var i = 0; i < this.modifiers.length; ++i) {
-        var modifier = this.modifiers[i];
-        modifier.setContext(this.context);
-        modifier.draw();
-      }
+    // Draw the modifiers
+    for (var i = 0; i < this.modifiers.length; ++i) {
+      var modifier = this.modifiers[i];
+      modifier.setContext(this.context);
+      modifier.draw();
     }
-  });
-
-  return GhostNote;
-}());
+  }
+}

@@ -6,77 +6,71 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 
-export var Tuning = (function() {
-  function Tuning(tuningString) {
-    this.init(tuningString);
+export class Tuning {
+  static get names() {
+    return {
+      "standard": "E/5,B/4,G/4,D/4,A/3,E/3",
+      "dagdad": "D/5,A/4,G/4,D/4,A/3,D/3",
+      "dropd": "E/5,B/4,G/4,D/4,A/3,D/3",
+      "eb": "Eb/5,Bb/4,Gb/4,Db/4,Ab/3,Db/3",
+      "standardBanjo": "D/5,B/4,G/4,D/4,G/5"
+    };
   }
 
-  Tuning.names = {
-    "standard": "E/5,B/4,G/4,D/4,A/3,E/3",
-    "dagdad": "D/5,A/4,G/4,D/4,A/3,D/3",
-    "dropd": "E/5,B/4,G/4,D/4,A/3,D/3",
-    "eb": "Eb/5,Bb/4,Gb/4,Db/4,Ab/3,Db/3",
-    "standardBanjo": "D/5,B/4,G/4,D/4,G/5"
-  };
+  constructor(tuningString = 'E/5,B/4,G/4,D/4,A/3,E/3,B/2,E/2') {
+    // Default to standard tuning.
+    this.setTuning(tuningString);
+  }
 
-  Tuning.prototype = {
-    init: function(tuningString) {
-      // Default to standard tuning.
-      this.setTuning(tuningString || "E/5,B/4,G/4,D/4,A/3,E/3,B/2,E/2");
-    },
+  noteToInteger(noteString) {
+    return Flow.keyProperties(noteString).int_value;
+  }
 
-    noteToInteger: function(noteString) {
-      return Flow.keyProperties(noteString).int_value;
-    },
+  setTuning(noteString) {
+    if (Tuning.names[noteString])
+      noteString = Tuning.names[noteString];
 
-    setTuning: function(noteString) {
-      if (Tuning.names[noteString])
-        noteString = Tuning.names[noteString];
+    this.tuningString = noteString;
+    this.tuningValues = [];
+    this.numStrings = 0;
 
-      this.tuningString = noteString;
-      this.tuningValues = [];
-      this.numStrings = 0;
+    var keys = noteString.split(/\s*,\s*/);
+    if (keys.length === 0)
+      throw new Vex.RERR("BadArguments", "Invalid tuning string: " + noteString);
 
-      var keys = noteString.split(/\s*,\s*/);
-      if (keys.length === 0)
-        throw new Vex.RERR("BadArguments", "Invalid tuning string: " + noteString);
-
-      this.numStrings = keys.length;
-      for (var i = 0; i < this.numStrings; ++i) {
-        this.tuningValues[i] = this.noteToInteger(keys[i]);
-      }
-    },
-
-    getValueForString: function(stringNum) {
-      var s = parseInt(stringNum, 10);
-      if (s < 1 || s > this.numStrings)
-        throw new Vex.RERR("BadArguments", "String number must be between 1 and " +
-            this.numStrings + ": " + stringNum);
-
-      return this.tuningValues[s - 1];
-    },
-
-    getValueForFret: function(fretNum, stringNum) {
-      var stringValue = this.getValueForString(stringNum);
-      var f = parseInt(fretNum, 10);
-
-      if (f < 0) {
-        throw new Vex.RERR("BadArguments", "Fret number must be 0 or higher: " +
-            fretNum);
-      }
-
-      return stringValue + f;
-    },
-
-    getNoteForFret: function(fretNum, stringNum) {
-      var noteValue = this.getValueForFret(fretNum, stringNum);
-
-      var octave = Math.floor(noteValue / 12);
-      var value = noteValue % 12;
-
-      return Flow.integerToNote(value) + "/" + octave;
+    this.numStrings = keys.length;
+    for (var i = 0; i < this.numStrings; ++i) {
+      this.tuningValues[i] = this.noteToInteger(keys[i]);
     }
-  };
+  }
 
-  return Tuning;
-}());
+  getValueForString(stringNum) {
+    var s = parseInt(stringNum, 10);
+    if (s < 1 || s > this.numStrings)
+      throw new Vex.RERR("BadArguments", "String number must be between 1 and " +
+          this.numStrings + ": " + stringNum);
+
+    return this.tuningValues[s - 1];
+  }
+
+  getValueForFret(fretNum, stringNum) {
+    var stringValue = this.getValueForString(stringNum);
+    var f = parseInt(fretNum, 10);
+
+    if (f < 0) {
+      throw new Vex.RERR("BadArguments", "Fret number must be 0 or higher: " +
+          fretNum);
+    }
+
+    return stringValue + f;
+  }
+
+  getNoteForFret(fretNum, stringNum) {
+    var noteValue = this.getValueForFret(fretNum, stringNum);
+
+    var octave = Math.floor(noteValue / 12);
+    var value = noteValue % 12;
+
+    return Flow.integerToNote(value) + "/" + octave;
+  }
+}
