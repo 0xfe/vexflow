@@ -26,7 +26,6 @@ export class Accidental extends Modifier {
 
   // Arrange accidentals inside a ModifierContext.
   static format(accidentals, state) {
-    /* eslint-disable no-labels, no-restricted-syntax */
     const leftShift = state.left_shift;
     const accidentalSpacing = 2;
 
@@ -48,7 +47,7 @@ export class Accidental extends Modifier {
          // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
           propsTemp = note.getKeyProps()[n];
-          shiftL = (propsTemp.displaced ? note.getExtraLeftPx() : shiftL);
+          shiftL = propsTemp.displaced ? note.getExtraLeftPx() : shiftL;
         }
         prevNote = note;
       }
@@ -79,7 +78,7 @@ export class Accidental extends Modifier {
       const acc = accList[i];
 
       // if this is the first line, or a new line, add a lineList
-      if ((previousLine === null) || (previousLine !== acc.line)) {
+      if (previousLine === null || previousLine !== acc.line) {
         lineList.push({
           line: acc.line,
           flatLine: true,
@@ -90,7 +89,8 @@ export class Accidental extends Modifier {
       }
       // if this accidental is not a flat, the accidental needs 3.0 lines lower
       // clearance instead of 2.5 lines for b or bb.
-      if ((acc.acc.type !== 'b') && (acc.acc.type !== 'bb')) {
+      // FIXME: acc.acc is very awkward
+      if (acc.acc.type !== 'b' && acc.acc.type !== 'bb') {
         lineList[lineList.length - 1].flatLine = false;
       }
 
@@ -109,7 +109,7 @@ export class Accidental extends Modifier {
       lineList[lineList.length - 1].width += acc.acc.getWidth() + accidentalSpacing;
 
       // if this accShift is larger, use it to keep first column accidentals in the same line
-      accShift = ((acc.shift > accShift) ? acc.shift : accShift);
+      accShift = acc.shift > accShift ? acc.shift : accShift;
 
       previousLine = acc.line;
     }
@@ -140,7 +140,7 @@ export class Accidental extends Modifier {
       const groupStart = i;
       let groupEnd = i;
 
-      while ((groupEnd + 1 < lineList.length) && (!noFurtherConflicts)) {
+      while (groupEnd + 1 < lineList.length && !noFurtherConflicts) {
         // if this note conflicts with the next:
         if (this.checkCollision(lineList[groupEnd], lineList[groupEnd + 1])) {
         // include the next note in the group:
@@ -161,7 +161,7 @@ export class Accidental extends Modifier {
       const notColliding = (...indexPairs) =>
         indexPairs
           .map(getGroupLines)
-          .every(([a, b]) => !this.checkCollision(a, b));
+          .every((...lines) => !this.checkCollision(...lines));
 
       // Set columns for the lines in this group:
       const groupLength = groupEnd - groupStart + 1;
