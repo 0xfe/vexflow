@@ -10,6 +10,7 @@
 // See `tests/accidental_tests.js` for usage examples.
 
 import { Vex } from './vex';
+import { Fraction } from './fraction';
 import { Flow } from './tables';
 import { Music } from './music';
 import { Modifier } from './modifier';
@@ -30,7 +31,7 @@ export class Accidental extends Modifier {
     const accidentalSpacing = 2;
 
     // If there are no accidentals, we needn't format their positions
-    if (!accidentals || accidentals.length === 0) return false;
+    if (!accidentals || accidentals.length === 0) return;
 
     const accList = [];
     let prevNote = null;
@@ -309,7 +310,7 @@ export class Accidental extends Modifier {
 
     // Sort the tickables in each voice by their tick position in the voice
     voices.forEach(voice => {
-      const tickPosition = new Flow.Fraction(0, 1);
+      const tickPosition = new Fraction(0, 1);
       const notes = voice.getTickables();
       notes.forEach(note => {
         const notesAtPosition = tickNoteMap[tickPosition.value()];
@@ -343,36 +344,36 @@ export class Accidental extends Modifier {
       notes.forEach(note => {
         if (note.isRest()) return;
 
-          // Go through each key and determine if an accidental should be
-          // applied
+        // Go through each key and determine if an accidental should be
+        // applied
         note.keys.forEach((keyString, keyIndex) => {
           const key = music.getNoteParts(keyString.split('/')[0]);
 
-              // Force a natural for every key without an accidental
+          // Force a natural for every key without an accidental
           const accidentalString = key.accidental || 'n';
           const pitch = key.root + accidentalString;
 
-              // Determine if the current pitch has the same accidental
-              // as the scale state
+          // Determine if the current pitch has the same accidental
+          // as the scale state
           const sameAccidental = scaleMap[key.root] === pitch;
 
-              // Determine if an identical pitch in the chord already
-              // modified the accidental state
+          // Determine if an identical pitch in the chord already
+          // modified the accidental state
           const previouslyModified = modifiedPitches.indexOf(pitch) > -1;
 
-              // Add the accidental to the StaveNote
+            // Add the accidental to the StaveNote
           if (!sameAccidental || (sameAccidental && previouslyModified)) {
-                  // Modify the scale map so that the root pitch has an
-                  // updated state
+            // Modify the scale map so that the root pitch has an
+            // updated state
             scaleMap[key.root] = pitch;
 
-                  // Create the accidental
+            // Create the accidental
             const accidental = new Accidental(accidentalString);
 
-                  // Attach the accidental to the StaveNote
+            // Attach the accidental to the StaveNote
             note.addAccidental(keyIndex, accidental);
 
-                  // Add the pitch to list of pitches that modified accidentals
+            // Add the pitch to list of pitches that modified accidentals
             modifiedPitches.push(pitch);
           }
         });
@@ -402,7 +403,9 @@ export class Accidental extends Modifier {
     };
 
     this.accidental = Flow.accidentalCodes(this.type);
-    if (!this.accidental) throw new Vex.RERR('ArgumentError', `Unknown accidental type: ${type}`);
+    if (!this.accidental) {
+      throw new Vex.RERR('ArgumentError', `Unknown accidental type: ${type}`);
+    }
 
     // Cautionary accidentals have parentheses around them
     this.cautionary = false;
@@ -417,7 +420,10 @@ export class Accidental extends Modifier {
 
   // Attach this accidental to `note`, which must be a `StaveNote`.
   setNote(note) {
-    if (!note) throw new Vex.RERR('ArgumentError', `Bad note value: ${note}`);
+    if (!note) {
+      throw new Vex.RERR('ArgumentError', `Bad note value: ${note}`);
+    }
+
     this.note = note;
 
     // Accidentals attached to grace notes are rendered smaller.
