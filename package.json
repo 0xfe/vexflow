@@ -17,11 +17,10 @@
     "url": "https://github.com/0xfe/vexflow/issues"
   },
   "devDependencies": {
-    "docco": "^0.7.0",
     "babel-preset-es2015-rollup": "^1.1.1",
     "browserify": "^6.3.2",
+    "docco": "^0.7.0",
     "glob": "^4.2.1",
-    "grunt": "^0.4.5",
     "grunt-bump": "0.0.16",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^1.0.0",
@@ -35,16 +34,13 @@
     "grunt-git": "^0.3.2",
     "grunt-release": "^0.7.0",
     "grunt-rollup": "^0.7.1",
+    "grunt": "^0.4.5",
     "jquery": "^2.1.1",
     "jshint": "^2.9.2",
     "qunit": "^0.9.1",
     "raphael": "^2.1.0",
-<<<<<<< HEAD
-    "slimerjs": "^0.906.2"
-=======
     "rollup-plugin-babel": "^2.5.1",
-    "slimerjs": "^0.9.6"
->>>>>>> master
+    "slimerjs": "^0.906.2"
   },
   "scripts": {
     "start": "grunt stage",
