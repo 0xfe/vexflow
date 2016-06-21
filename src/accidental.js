@@ -65,13 +65,16 @@ export class Accidental extends Modifier {
     // Sort accidentals by line number.
     accList.sort((a, b) => b.line - a.line);
 
-    // Create an array of unique line numbers (lineList) from accList
-    const lineList = []; // an array of unique line numbers
+    // FIXME: Confusing name. Each object in this array has a property called `line`.
+    // So if this is a list of lines, you end up with: `line.line` which is very awkward.
+    const lineList = [];
+
     // amount by which all accidentals must be shifted right or left for
     // stem flipping, notehead shifting concerns.
     let accShift = 0;
     let previousLine = null;
 
+    // Create an array of unique line numbers (lineList) from accList
     for (let i = 0; i < accList.length; i++) {
       const acc = accList[i];
 
@@ -147,45 +150,53 @@ export class Accidental extends Modifier {
         }
       }
 
+      // Gets an a line from the `lineList`, relative to the current group
+      const getGroupLine = (index) => lineList[groupStart + index];
+      const getGroupLines = (indexes) => indexes.map(getGroupLine);
+      const lineDifference = (indexA, indexB) => {
+        const [a, b] = getGroupLines([indexA, indexB]).map(item => item.line);
+        return a - b;
+      };
+
+      const notColliding = (...indexPairs) =>
+        indexPairs
+          .map(getGroupLines)
+          .every(([a, b]) => !this.checkCollision(a, b));
+
       // Set columns for the lines in this group:
       const groupLength = groupEnd - groupStart + 1;
 
       // Set the accidental column for each line of the group
       let endCase = this.checkCollision(lineList[groupStart], lineList[groupEnd]) ? 'a' : 'b';
 
-
-      const checkCollision = this.checkCollision;
       switch (groupLength) {
         case 3:
-          if ((endCase === 'a') &&
-                (lineList[groupStart + 1].line - lineList[groupStart + 2].line === 0.5) &&
-                (lineList[groupStart].line - lineList[groupStart + 1].line !== 0.5))
+          if (endCase === 'a' && lineDifference(1, 2) === 0.5 && lineDifference(0, 1) !== 0.5) {
             endCase = 'second_on_bottom';
+          }
           break;
         case 4:
-          if ((!checkCollision(lineList[groupStart], lineList[groupStart + 2])) &&
-                (!checkCollision(lineList[groupStart + 1], lineList[groupStart + 3])))
+          if (notColliding([0, 2], [1, 3])) {
             endCase = 'spaced_out_tetrachord';
+          }
           break;
         case 5:
-          if ((endCase === 'b') &&
-                (!checkCollision(lineList[groupStart + 1], lineList[groupStart + 3])))
+          if (endCase === 'b' && notColliding([1, 3])) {
             endCase = 'spaced_out_pentachord';
-          if ((endCase === 'spaced_out_pentachord') &&
-                (!checkCollision(lineList[groupStart], lineList[groupStart + 2])) &&
-                (!checkCollision(lineList[groupStart + 2], lineList[groupStart + 4])))
-            endCase = 'very_spaced_out_pentachord';
+            if (notColliding([0, 2], [2, 4])) {
+              endCase = 'very_spaced_out_pentachord';
+            }
+          }
           break;
         case 6:
-          if ((!checkCollision(lineList[groupStart], lineList[groupStart + 3])) &&
-                (!checkCollision(lineList[groupStart + 1], lineList[groupStart + 4])) &&
-                (!checkCollision(lineList[groupStart + 2], lineList[groupStart + 5])))
+          if (notColliding([0, 3], [1, 4], [2, 5])) {
             endCase = 'spaced_out_hexachord';
-          if ((!checkCollision(lineList[groupStart], lineList[groupStart + 2])) &&
-                (!checkCollision(lineList[groupStart + 2], lineList[groupStart + 4])) &&
-                (!checkCollision(lineList[groupStart + 1], lineList[groupStart + 3])) &&
-                (!checkCollision(lineList[groupStart + 3], lineList[groupStart + 5])))
+          }
+          if (notColliding([0, 2], [2, 4], [1, 3], [3, 5])) {
             endCase = 'very_spaced_out_hexachord';
+          }
+          break;
+        default:
           break;
       }
 
