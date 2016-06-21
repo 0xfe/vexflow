@@ -487,7 +487,7 @@ export class Accidental extends Modifier {
     const accY = start.y + y_shift;
     L('Rendering: ', type, accX, accY);
 
-    const renderGlyphToContext = Glyph.renderGlyph(null, context);
+    const renderGlyphToContext = Glyph.renderGlyph.bind(null, context);
 
     if (!cautionary) {
       // Render the accidental alone.
