@@ -89,7 +89,7 @@ export class Accidental extends Modifier {
       }
       // if this accidental is not a flat, the accidental needs 3.0 lines lower
       // clearance instead of 2.5 lines for b or bb.
-      // FIXME: acc.acc is very awkward
+      // FIXME: Naming could use work. acc.acc is very awkward
       if (acc.acc.type !== 'b' && acc.acc.type !== 'bb') {
         lineList[lineList.length - 1].flatLine = false;
       }
@@ -465,36 +465,42 @@ export class Accidental extends Modifier {
 
   // Render accidental onto canvas.
   draw() {
-    if (!this.context) {
+    const {
+      context,
+      type, position, note, index, cautionary,
+      x_shift, y_shift, width,
+      accidental, parenLeft, parenRight,
+      render_options: { font_scale },
+    } = this;
+
+    if (!context) {
       throw new Vex.RERR('NoContext', "Can't draw accidental without a context.");
     }
 
-    if (!(this.note && (this.index != null))) {
+    if (!(note && (index != null))) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
     }
 
-    // Figure out the start `x` and `y` coordinates for this note and index.
-    const start = this.note.getModifierStartXY(this.position, this.index);
-    let accX = ((start.x + this.x_shift) - this.width);
-    const accY = start.y + this.y_shift;
-    L('Rendering: ', this.type, accX, accY);
+    // Figure out the start `x` and `y` coordinates for note and index.
+    const start = note.getModifierStartXY(position, index);
+    let accX = ((start.x + x_shift) - width);
+    const accY = start.y + y_shift;
+    L('Rendering: ', type, accX, accY);
 
-    if (!this.cautionary) {
+    const renderGlyphToContext = Glyph.renderGlyph(null, context);
+
+    if (!cautionary) {
       // Render the accidental alone.
-      Glyph.renderGlyph(this.context, accX, accY,
-                           this.render_options.font_scale, this.accidental.code);
+      renderGlyphToContext(accX, accY, font_scale, accidental.code);
     } else {
       // Render the accidental in parentheses.
       accX += 3;
-      Glyph.renderGlyph(this.context, accX, accY,
-                           this.render_options.font_scale, this.parenLeft.code);
+      renderGlyphToContext(accX, accY, font_scale, parenLeft.code);
       accX += 2;
-      Glyph.renderGlyph(this.context, accX, accY,
-                           this.render_options.font_scale, this.accidental.code);
-      accX += this.accidental.width - 2;
-      if (this.type === '##' || this.type === 'bb') accX -= 2;
-      Glyph.renderGlyph(this.context, accX, accY,
-                           this.render_options.font_scale, this.parenRight.code);
+      renderGlyphToContext(accX, accY, font_scale, accidental.code);
+      accX += accidental.width - 2;
+      if (type === '##' || type === 'bb') accX -= 2;
+      renderGlyphToContext(accX, accY, font_scale, parenRight.code);
     }
   }
 }
