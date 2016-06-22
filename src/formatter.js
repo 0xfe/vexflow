@@ -328,7 +328,7 @@ export class Formatter {
     if (!voices || !voices.length) throw new Vex.RERR("BadArgument",
         "No voices to format rests");
     for (var i = 0; i < voices.length; i++) {
-      new Formatter.AlignRestsToNotes(voices[i].tickables, align_all_notes);
+      Formatter.AlignRestsToNotes(voices[i].tickables, align_all_notes);
     }
   }
 
