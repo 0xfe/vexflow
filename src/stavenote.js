@@ -20,7 +20,7 @@ import { Dot } from './dot';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
-function L() { if (StaveNote.DEBUG) Vex.L("Vex.Flow.StaveNote", arguments); }
+function L() { if (StaveNote.DEBUG) Vex.L('Vex.Flow.StaveNote', arguments); }
 
 // Helper methods for rest positioning in ModifierContext.
 function shiftRestVertical(rest, note, dir) {
@@ -60,12 +60,12 @@ export class StaveNote extends StemmableNote {
 
     if (notes[0].getStave() != null) return StaveNote.formatByY(notes, state);
 
-    const notes_list= [];
+    const notes_list = [];
 
     for (let i = 0; i < notes.length; i++) {
       const props = notes[i].getKeyProps();
       const line = props[0].line;
-      let minL = props[props.length -1].line;
+      let minL = props[props.length - 1].line;
       const stem_dir = notes[i].getStemDirection();
       const stem_max = notes[i].getStemLength() / 10;
       const stem_min = notes[i].getStemMinumumLength() / 10;
@@ -75,13 +75,13 @@ export class StaveNote extends StemmableNote {
         maxL = line + notes[i].glyph.line_above;
         minL = line - notes[i].glyph.line_below;
       } else {
-        maxL = stem_dir == 1 ? props[props.length -1].line + stem_max
-             : props[props.length -1].line;
+        maxL = stem_dir == 1 ? props[props.length - 1].line + stem_max
+             : props[props.length - 1].line;
         minL = stem_dir == 1 ? props[0].line
              : props[0].line - stem_max;
       }
       notes_list.push(
-        {line: props[0].line,         // note/rest base line
+        { line: props[0].line,         // note/rest base line
          max_line: maxL,              // note/rest upper bounds line
          min_line: minL,              // note/rest lower bounds line
          isrest: notes[i].isRest(),
@@ -90,7 +90,7 @@ export class StaveNote extends StemmableNote {
          stem_min,          // minimum note stem length
          voice_shift: notes[i].getVoiceShiftWidth(),
          is_displaced: notes[i].isDisplaced(),   // note manually displaced
-         note: notes[i]});
+         note: notes[i] });
     }
 
     const voices = notes_list.length;
@@ -162,17 +162,17 @@ export class StaveNote extends StemmableNote {
     if (noteM.isrest && !noteU.isrest && !noteL.isrest) {
       if (noteU.min_line <= noteM.max_line ||
           noteM.min_line <= noteL.max_line) {
-         const rest_height = noteM.max_line - noteM.min_line;
-         const space = noteU.min_line - noteL.max_line;
-         if (rest_height < space)
+        const rest_height = noteM.max_line - noteM.min_line;
+        const space = noteU.min_line - noteL.max_line;
+        if (rest_height < space)
            // center middle voice rest between the upper and lower voices
-           centerRest(noteM, noteU, noteL);
-         else {
-           x_shift = voice_x_shift + 3;    // shift middle rest right
-           noteM.note.setXShift(x_shift);
-         }
+          centerRest(noteM, noteU, noteL);
+        else {
+          x_shift = voice_x_shift + 3;    // shift middle rest right
+          noteM.note.setXShift(x_shift);
+        }
          // format complete
-         return true;
+        return true;
       }
     }
 
@@ -219,8 +219,8 @@ export class StaveNote extends StemmableNote {
       hasStave = hasStave && notes[i].getStave() != null;
     }
 
-    if (!hasStave) throw new Vex.RERR("Stave Missing",
-      "All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!");
+    if (!hasStave) throw new Vex.RERR('Stave Missing',
+      'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!');
 
     let x_shift = 0;
 
@@ -269,7 +269,7 @@ export class StaveNote extends StemmableNote {
     // Pull note rendering properties
     this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
     if (!this.glyph) {
-      throw new Vex.RuntimeError("BadArguments",
+      throw new Vex.RuntimeError('BadArguments',
           `Invalid note initialization data (No glyph found): ${JSON.stringify(note_struct)}`);
     }
 
@@ -289,7 +289,7 @@ export class StaveNote extends StemmableNote {
       // font size for note heads and rests
       glyph_font_scale: 35,
       // number of stroke px to the left and right of head
-      stroke_px: 3
+      stroke_px: 3,
     });
 
     this.calculateKeyProps();
@@ -316,12 +316,12 @@ export class StaveNote extends StemmableNote {
     const glyph = this.getGlyph();
 
     let y_extend = 0;
-    if (glyph.code_head == "v95" || glyph.code_head == "v3e") {
-       y_extend = -4;
+    if (glyph.code_head == 'v95' || glyph.code_head == 'v3e') {
+      y_extend = -4;
     }
 
     const stem = new Stem({
-      y_extend
+      y_extend,
     });
 
     if (this.isRest()) {
@@ -381,7 +381,7 @@ export class StaveNote extends StemmableNote {
         custom_glyph_code: note_props.code,
         glyph_font_scale: this.render_options.glyph_font_scale,
         x_shift: note_props.shift_right,
-        line: note_props.line
+        line: note_props.line,
       });
 
       this.note_heads[i] = note_head;
@@ -418,13 +418,13 @@ export class StaveNote extends StemmableNote {
       const options = { octave_shift: this.octave_shift || 0 };
       const props = Flow.keyProperties(key, this.clef, options);
       if (!props) {
-        throw new Vex.RuntimeError("BadArguments",
+        throw new Vex.RuntimeError('BadArguments',
             `Invalid key for note properties: ${key}`);
       }
 
       // Override line placement for default rests
-      if (props.key === "R") {
-        if (this.duration === "1" || this.duration === "w") {
+      if (props.key === 'R') {
+        if (this.duration === '1' || this.duration === 'w') {
           props.line = 4;
         } else {
           props.line = 3;
@@ -443,7 +443,7 @@ export class StaveNote extends StemmableNote {
           // Have to mark the previous note as
           // displaced as well, for modifier placement
           if (this.keyProps.length > 0) {
-              this.keyProps[i-1].displaced = true;
+            this.keyProps[i - 1].displaced = true;
           }
         }
       }
@@ -458,8 +458,8 @@ export class StaveNote extends StemmableNote {
     const that = this;
     this.keyProps.forEach(key => {
       if (key.line < lastLine) {
-        Vex.W("Unsorted keys in note will be sorted. " +
-          "See https://github.com/0xfe/vexflow/issues/104 for details.");
+        Vex.W('Unsorted keys in note will be sorted. ' +
+          'See https://github.com/0xfe/vexflow/issues/104 for details.');
       }
       lastLine = key.line;
     });
@@ -468,7 +468,7 @@ export class StaveNote extends StemmableNote {
 
   // Get the `BoundingBox` for the entire note
   getBoundingBox() {
-    if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
         "Can't call getBoundingBox on an unformatted note.");
 
     const metrics = this.getMetrics();
@@ -500,7 +500,7 @@ export class StaveNote extends StemmableNote {
       min_y = null;
       max_y = null;
 
-      for (let i=0; i < this.ys.length; ++i) {
+      for (let i = 0; i < this.ys.length; ++i) {
         const yy = this.ys[i];
         if (i === 0) {
           min_y = yy;
@@ -520,12 +520,12 @@ export class StaveNote extends StemmableNote {
   // Gets the line number of the top or bottom note in the chord.
   // If `is_top_note` is `true` then get the top note
   getLineNumber(is_top_note) {
-    if(!this.keyProps.length) throw new Vex.RERR("NoKeyProps",
+    if (!this.keyProps.length) throw new Vex.RERR('NoKeyProps',
         "Can't get bottom note line, because note is not initialized properly.");
     let result_line = this.keyProps[0].line;
 
     // No precondition assumed for sortedness of keyProps array
-    for (let i=0; i<this.keyProps.length; i++) {
+    for (let i = 0; i < this.keyProps.length; i++) {
       const this_line = this.keyProps[i].line;
       if (is_top_note) {
         if (this_line > result_line) result_line = this_line;
@@ -629,11 +629,11 @@ export class StaveNote extends StemmableNote {
   // Get the default `x` and `y` coordinates for the provided `position`
   // and key `index`
   getModifierStartXY(position, index) {
-    if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
         "Can't call GetModifierStartXY on an unformatted note");
 
-    if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
-        "No Y-Values calculated for this note.");
+    if (this.ys.length === 0) throw new Vex.RERR('NoYValues',
+        'No Y-Values calculated for this note.');
 
     let x = 0;
     if (position == Modifier.Position.LEFT) {
@@ -735,12 +735,12 @@ export class StaveNote extends StemmableNote {
 
   // Get all accidentals in the `ModifierContext`
   getAccidentals() {
-    return this.modifierContext.getModifiers("accidentals");
+    return this.modifierContext.getModifiers('accidentals');
   }
 
   // Get all dots in the `ModifierContext`
   getDots() {
-    return this.modifierContext.getModifiers("dots");
+    return this.modifierContext.getModifiers('dots');
   }
 
   // Get the width of the note if it is displaced. Used for `Voice`
@@ -801,14 +801,13 @@ export class StaveNote extends StemmableNote {
 
       highest_line = line > highest_line ? line : highest_line;
       lowest_line = line < lowest_line ? line : lowest_line;
-
     }, this);
 
     return {
       y_top,
       y_bottom,
       highest_line,
-      lowest_line
+      lowest_line,
     };
   }
 
@@ -826,7 +825,7 @@ export class StaveNote extends StemmableNote {
   // Draw the ledger lines between the stave and the highest/lowest keys
   drawLedgerLines() {
     if (this.isRest()) { return; }
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
     const ctx = this.context;
 
@@ -859,22 +858,22 @@ export class StaveNote extends StemmableNote {
 
   // Draw all key modifiers
   drawModifiers() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
     const ctx = this.context;
-    ctx.openGroup("modifiers");
+    ctx.openGroup('modifiers');
     for (let i = 0; i < this.modifiers.length; i++) {
       const mod = this.modifiers[i];
       const note_head = this.note_heads[mod.getIndex()];
       const key_style = note_head.getStyle();
-      if(key_style) {
-          ctx.save();
-          note_head.applyStyle(ctx);
+      if (key_style) {
+        ctx.save();
+        note_head.applyStyle(ctx);
       }
       mod.setContext(ctx);
       mod.draw();
-      if(key_style) {
-          ctx.restore();
+      if (key_style) {
+        ctx.restore();
       }
     }
     ctx.closeGroup();
@@ -882,7 +881,7 @@ export class StaveNote extends StemmableNote {
 
   // Draw the flag for the note
   drawFlag() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
     const ctx = this.context;
     const glyph = this.getGlyph();
@@ -901,7 +900,6 @@ export class StaveNote extends StemmableNote {
         flag_x = x_begin + 1;
         flag_y = bounds.y_top - note_stem_height + 2;
         flag_code = glyph.code_flag_downstem;
-
       } else {
         // Up stems have flags on the left.
         flag_x = x_end + 1;
@@ -910,7 +908,7 @@ export class StaveNote extends StemmableNote {
       }
 
       // Draw the Flag
-      this.context.openGroup("flag", null, {pointerBBox: true});
+      this.context.openGroup('flag', null, { pointerBBox: true });
       Glyph.renderGlyph(ctx, flag_x, flag_y,
           this.render_options.glyph_font_scale, flag_code);
       this.context.closeGroup();
@@ -921,7 +919,7 @@ export class StaveNote extends StemmableNote {
   drawNoteHeads() {
     const that = this;
     this.note_heads.forEach(note_head => {
-      that.context.openGroup("notehead", null, {pointerBBox: true});
+      that.context.openGroup('notehead', null, { pointerBBox: true });
       note_head.setContext(that.context).draw();
       that.context.closeGroup();
     }, this);
@@ -929,25 +927,25 @@ export class StaveNote extends StemmableNote {
 
   // Render the stem onto the canvas
   drawStem(stem_struct) {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
 
     if (stem_struct) {
       this.setStem(new Stem(stem_struct));
     }
 
-    this.context.openGroup("stem", null, {pointerBBox: true});
+    this.context.openGroup('stem', null, { pointerBBox: true });
     this.stem.setContext(this.context).draw();
     this.context.closeGroup();
   }
 
   // Draws all the `StaveNote` parts. This is the main drawing method.
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
-    if (!this.stave) throw new Vex.RERR("NoStave",
+    if (!this.stave) throw new Vex.RERR('NoStave',
         "Can't draw without a stave.");
-    if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
+    if (this.ys.length === 0) throw new Vex.RERR('NoYValues',
         "Can't draw note without Y values.");
 
     const x_begin = this.getNoteHeadBeginX();
@@ -963,16 +961,16 @@ export class StaveNote extends StemmableNote {
     // Format stem x positions
     this.stem.setNoteHeadXBounds(x_begin, x_end);
 
-    L("Rendering ", this.isChord() ? "chord :" : "note :", this.keys);
+    L('Rendering ', this.isChord() ? 'chord :' : 'note :', this.keys);
 
     // Draw each part of the note
     this.drawLedgerLines();
 
-    this.elem = this.context.openGroup("stavenote", this.id);
-    this.context.openGroup("note", null, {pointerBBox: true});
-      if (render_stem) this.drawStem();
-      this.drawNoteHeads();
-      this.drawFlag();
+    this.elem = this.context.openGroup('stavenote', this.id);
+    this.context.openGroup('note', null, { pointerBBox: true });
+    if (render_stem) this.drawStem();
+    this.drawNoteHeads();
+    this.drawFlag();
     this.context.closeGroup();
     this.drawModifiers();
     this.context.closeGroup();
