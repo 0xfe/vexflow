@@ -161,7 +161,7 @@ export class Accidental extends Modifier {
       const notColliding = (...indexPairs) =>
         indexPairs
           .map(getGroupLines)
-          .every((...lines) => !this.checkCollision(...lines));
+          .every(lines => !this.checkCollision(...lines));
 
       // Set columns for the lines in this group:
       const groupLength = groupEnd - groupStart + 1;
