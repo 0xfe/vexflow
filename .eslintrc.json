@@ -3,6 +3,7 @@
   "root": true,
   "rules": {
     "max-len": [2, 100],
+    "camelcase": [0],
     "no-case-declarations": [2],
     "no-confusing-arrow": [0],
     "new-cap": [0],
