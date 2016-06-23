@@ -28,7 +28,7 @@ import { ModifierContext } from './modifiercontext';
 import { TickContext } from './tickcontext';
 
 // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
-function L() { if (Formatter.DEBUG) Vex.L("Vex.Flow.Formatter", arguments); }
+function L() { if (Formatter.DEBUG) Vex.L('Vex.Flow.Formatter', arguments); }
 
 // Helper function to locate the next non-rest note(s).
 function lookAhead(notes, rest_line, i, compare) {
@@ -63,8 +63,8 @@ function lookAhead(notes, rest_line, i, compare) {
 // * `context_type`: A context class (e.g., `ModifierContext`, `TickContext`)
 // * `add_fn`: Function to add tickable to context.
 function createContexts(voices, context_type, add_fn) {
-  if (!voices || !voices.length) throw new Vex.RERR("BadArgument",
-      "No voices to format");
+  if (!voices || !voices.length) throw new Vex.RERR('BadArgument',
+      'No voices to format');
 
   // Initialize tick maps.
   const totalTicks = voices[0].getTotalTicks();
@@ -84,13 +84,13 @@ function createContexts(voices, context_type, add_fn) {
   for (i = 0; i < voices.length; ++i) {
     voice = voices[i];
     if (!(voice.getTotalTicks().equals(totalTicks))) {
-      throw new Vex.RERR("TickMismatch",
-          "Voices should have same total note duration in ticks.");
+      throw new Vex.RERR('TickMismatch',
+          'Voices should have same total note duration in ticks.');
     }
 
     if (voice.getMode() == Voice.Mode.STRICT && !voice.isComplete())
-      throw new Vex.RERR("IncompleteVoice",
-        "Voice does not have enough notes.");
+      throw new Vex.RERR('IncompleteVoice',
+        'Voice does not have enough notes.');
 
     const lcm = Fraction.LCM(resolutionMultiplier,
         voice.getResolutionMultiplier());
@@ -135,8 +135,8 @@ function createContexts(voices, context_type, add_fn) {
     map: tickToContextMap,
     array: contexts,
     list: Vex.SortAndUnique(tickList, (a, b) => a - b,
-        (a, b) => a === b ),
-    resolutionMultiplier
+        (a, b) => a === b),
+    resolutionMultiplier,
   };
 }
 
@@ -159,12 +159,12 @@ export class Formatter {
   static FormatAndDraw(ctx, stave, notes, params) {
     const opts = {
       auto_beam: false,
-      align_rests: false
+      align_rests: false,
     };
 
-    if (typeof params == "object") {
+    if (typeof params == 'object') {
       Vex.Merge(opts, params);
-    } else if (typeof params == "boolean") {
+    } else if (typeof params == 'boolean') {
       opts.auto_beam = params;
     }
 
@@ -181,14 +181,14 @@ export class Formatter {
 
     // Instantiate a `Formatter` and format the notes.
     new Formatter().
-      joinVoices([voice], {align_rests: opts.align_rests}).
-      formatToStave([voice], stave, {align_rests: opts.align_rests});
+      joinVoices([voice], { align_rests: opts.align_rests }).
+      formatToStave([voice], stave, { align_rests: opts.align_rests });
 
     // Render the voice and beams to the stave.
     voice.setStave(stave);
     voice.draw(ctx, stave);
     if (beams != null) {
-      for (let i=0; i<beams.length; ++i) {
+      for (let i = 0; i < beams.length; ++i) {
         beams[i].setContext(ctx).draw();
       }
     }
@@ -213,12 +213,12 @@ export class Formatter {
   static FormatAndDrawTab(ctx, tabstave, stave, tabnotes, notes, autobeam, params) {
     const opts = {
       auto_beam: autobeam,
-      align_rests: false
+      align_rests: false,
     };
 
-    if (typeof params == "object") {
+    if (typeof params == 'object') {
       Vex.Merge(opts, params);
-    } else if (typeof params == "boolean") {
+    } else if (typeof params == 'boolean') {
       opts.auto_beam = params;
     }
 
@@ -241,15 +241,15 @@ export class Formatter {
 
     // Instantiate a `Formatter` and align tab and stave notes.
     new Formatter().
-      joinVoices([notevoice], {align_rests: opts.align_rests}).
+      joinVoices([notevoice], { align_rests: opts.align_rests }).
       joinVoices([tabvoice]).
-      formatToStave([notevoice,tabvoice], stave, {align_rests: opts.align_rests});
+      formatToStave([notevoice, tabvoice], stave, { align_rests: opts.align_rests });
 
     // Render voices and beams to staves.
     notevoice.draw(ctx, stave);
     tabvoice.draw(ctx, tabstave);
     if (beams != null) {
-      for (let i=0; i<beams.length; ++i) {
+      for (let i = 0; i < beams.length; ++i) {
         beams[i].setContext(ctx).draw();
       }
     }
@@ -273,7 +273,7 @@ export class Formatter {
 
         // If activated rests not on default can be rendered as specified.
         const position = note.getGlyph().position.toUpperCase();
-        if (position != "R/4" && position != "B/4") {
+        if (position != 'R/4' && position != 'B/4') {
           continue;
         }
 
@@ -286,11 +286,11 @@ export class Formatter {
           } else if (i > 0 && i < notes.length) {
             // If previous note is a rest, use its line number.
             let rest_line;
-            if (notes[i-1].isRest()) {
-              rest_line = notes[i-1].getKeyProps()[0].line;
+            if (notes[i - 1].isRest()) {
+              rest_line = notes[i - 1].getKeyProps()[0].line;
               props.line = rest_line;
             } else {
-              rest_line = notes[i-1].getLineForRest();
+              rest_line = notes[i - 1].getLineForRest();
               // Get the rest line for next valid non-rest note group.
               props.line = lookAhead(notes, rest_line, i, true);
             }
@@ -325,8 +325,8 @@ export class Formatter {
   // to neighboring notes. If `align_all_notes` is `false`, then only
   // align non-beamed notes.
   alignRests(voices, align_all_notes) {
-    if (!voices || !voices.length) throw new Vex.RERR("BadArgument",
-        "No voices to format rests");
+    if (!voices || !voices.length) throw new Vex.RERR('BadArgument',
+        'No voices to format rests');
     for (let i = 0; i < voices.length; i++) {
       new Formatter.AlignRestsToNotes(voices[i].tickables, align_all_notes);
     }
@@ -340,7 +340,7 @@ export class Formatter {
     // Create tick contexts if not already created.
     if (!this.tContexts) {
       if (!voices) {
-        throw new Vex.RERR("BadArgument",
+        throw new Vex.RERR('BadArgument',
                            "'voices' required to run preCalculateMinTotalWidth");
       }
       this.createTickContexts(voices);
@@ -371,7 +371,7 @@ export class Formatter {
   // `preCalculateMinTotalWidth` must be called before this method.
   getMinTotalWidth() {
     if (!this.hasMinTotalWidth) {
-      throw new Vex.RERR("NoMinTotalWidth",
+      throw new Vex.RERR('NoMinTotalWidth',
           "Need to call 'preCalculateMinTotalWidth' or 'preFormat' before" +
           " calling 'getMinTotalWidth'");
     }
@@ -482,8 +482,8 @@ export class Formatter {
 
       if (context.shouldIgnoreTicks() && justifyWidth) {
           // This note stole room... recalculate with new justification width.
-          justifyWidth -= context.getWidth();
-          this.pixelsPerTick = justifyWidth /
+        justifyWidth -= context.getWidth();
+        this.pixelsPerTick = justifyWidth /
             (this.totalTicks.value() * contexts.resolutionMultiplier);
       }
 
@@ -543,7 +543,7 @@ export class Formatter {
         // Move center aligned tickables to middle
         const centeredTickables = context.getCenterAlignedTickables();
 
-        /*jshint -W083 */
+        /* jshint -W083 */
         centeredTickables.forEach(tickable => {
           tickable.center_x_shift = center_x - context.getX();
         });
@@ -588,7 +588,7 @@ export class Formatter {
     const opts = {
       align_rests: false,
       context: null,
-      stave: null
+      stave: null,
     };
 
     Vex.Merge(opts, options);
@@ -606,8 +606,8 @@ export class Formatter {
   // from the `stave`.
   formatToStave(voices, stave, options) {
     const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
-    L("Formatting voices to width: ", justifyWidth);
-    const opts = {context: stave.getContext()};
+    L('Formatting voices to width: ', justifyWidth);
+    const opts = { context: stave.getContext() };
     Vex.Merge(opts, options);
     return this.format(voices, justifyWidth, opts);
   }
