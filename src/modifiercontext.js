@@ -20,7 +20,7 @@ import { Bend } from './bend';
 import { Vibrato } from './vibrato';
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
-function L() { if (ModifierContext.DEBUG) Vex.L("Vex.Flow.ModifierContext", arguments); }
+function L() { if (ModifierContext.DEBUG) Vex.L('Vex.Flow.ModifierContext', arguments); }
 
 export class ModifierContext {
   constructor() {
@@ -36,7 +36,7 @@ export class ModifierContext {
       left_shift: 0,
       right_shift: 0,
       text_line: 0,
-      top_text_line: 0
+      top_text_line: 0,
     };
 
     // Add new modifiers to this array. The ordering is significant -- lower
@@ -53,11 +53,11 @@ export class ModifierContext {
       Ornament,
       Annotation,
       Bend,
-      Vibrato
+      Vibrato,
     ];
 
     // If post-formatting is required for an element, add it to this array.
-    this.POSTFORMAT = [ StaveNote ];
+    this.POSTFORMAT = [StaveNote];
   }
 
   addModifier(modifier) {
@@ -76,21 +76,21 @@ export class ModifierContext {
   getState() { return this.state; }
 
   getMetrics() {
-    if (!this.formatted) throw new Vex.RERR("UnformattedModifier",
-        "Unformatted modifier has no metrics.");
+    if (!this.formatted) throw new Vex.RERR('UnformattedModifier',
+        'Unformatted modifier has no metrics.');
 
     return {
       width: this.state.left_shift + this.state.right_shift + this.spacing,
       spacing: this.spacing,
       extra_left_px: this.state.left_shift,
-      extra_right_px: this.state.right_shift
+      extra_right_px: this.state.right_shift,
     };
   }
 
   preFormat() {
     if (this.preFormatted) return;
     this.PREFORMAT.forEach((modifier) => {
-      L("Preformatting ModifierContext: ", modifier.CATEGORY);
+      L('Preformatting ModifierContext: ', modifier.CATEGORY);
       modifier.format(this.getModifiers(modifier.CATEGORY), this.state, this);
     });
 
@@ -102,7 +102,7 @@ export class ModifierContext {
   postFormat() {
     if (this.postFormatted) return;
     this.POSTFORMAT.forEach((modifier) => {
-      L("Postformatting ModifierContext: ", modifier.CATEGORY);
+      L('Postformatting ModifierContext: ', modifier.CATEGORY);
       modifier.postFormat(this.getModifiers(modifier.CATEGORY), this);
     });
   }
