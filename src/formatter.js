@@ -33,7 +33,7 @@ function L() { if (Formatter.DEBUG) Vex.L("Vex.Flow.Formatter", arguments); }
 // Helper function to locate the next non-rest note(s).
 function lookAhead(notes, rest_line, i, compare) {
   // If no valid next note group, next_rest_line is same as current.
-  var next_rest_line = rest_line;
+  let next_rest_line = rest_line;
 
   // Get the rest line for next valid non-rest note group.
   i++;
@@ -47,8 +47,8 @@ function lookAhead(notes, rest_line, i, compare) {
 
   // Locate the mid point between two lines.
   if (compare && rest_line != next_rest_line) {
-    var top = Vex.Max(rest_line, next_rest_line);
-    var bot = Vex.Min(rest_line, next_rest_line);
+    const top = Vex.Max(rest_line, next_rest_line);
+    const bot = Vex.Min(rest_line, next_rest_line);
     next_rest_line = Vex.MidLine(top, bot);
   }
   return next_rest_line;
@@ -67,20 +67,20 @@ function createContexts(voices, context_type, add_fn) {
       "No voices to format");
 
   // Initialize tick maps.
-  var totalTicks = voices[0].getTotalTicks();
-  var tickToContextMap = {};
-  var tickList = [];
-  var contexts = [];
+  const totalTicks = voices[0].getTotalTicks();
+  const tickToContextMap = {};
+  const tickList = [];
+  const contexts = [];
 
-  var resolutionMultiplier = 1;
+  let resolutionMultiplier = 1;
 
   // Find out highest common multiple of resolution multipliers.
   // The purpose of this is to find out a common denominator
   // for all fractional tick values in all tickables of all voices,
   // so that the values can be expanded and the numerator used
   // as an integer tick value.
-  var i; // shared iterator
-  var voice;
+  let i; // shared iterator
+  let voice;
   for (i = 0; i < voices.length; ++i) {
     voice = voices[i];
     if (!(voice.getTotalTicks().equals(totalTicks))) {
@@ -92,7 +92,7 @@ function createContexts(voices, context_type, add_fn) {
       throw new Vex.RERR("IncompleteVoice",
         "Voice does not have enough notes.");
 
-    var lcm = Fraction.LCM(resolutionMultiplier,
+    const lcm = Fraction.LCM(resolutionMultiplier,
         voice.getResolutionMultiplier());
     if (resolutionMultiplier < lcm) {
       resolutionMultiplier = lcm;
@@ -104,20 +104,20 @@ function createContexts(voices, context_type, add_fn) {
   for (i = 0; i < voices.length; ++i) {
     voice = voices[i];
 
-    var tickables = voice.getTickables();
+    const tickables = voice.getTickables();
 
     // Use resolution multiplier as denominator to expand ticks
     // to suitable integer values, so that no additional expansion
     // of fractional tick values is needed.
-    var ticksUsed = new Fraction(0, resolutionMultiplier);
+    const ticksUsed = new Fraction(0, resolutionMultiplier);
 
-    for (var j = 0; j < tickables.length; ++j) {
-      var tickable = tickables[j];
-      var integerTicks = ticksUsed.numerator;
+    for (let j = 0; j < tickables.length; ++j) {
+      const tickable = tickables[j];
+      const integerTicks = ticksUsed.numerator;
 
       // If we have no tick context for this tick, create one.
       if (!tickToContextMap[integerTicks]) {
-        var newContext = new context_type();
+        const newContext = new context_type();
         contexts.push(newContext);
         tickToContextMap[integerTicks] = newContext;
       }
@@ -134,9 +134,9 @@ function createContexts(voices, context_type, add_fn) {
   return {
     map: tickToContextMap,
     array: contexts,
-    list: Vex.SortAndUnique(tickList, function(a, b) { return a - b; },
-        function(a, b) { return a === b; } ),
-    resolutionMultiplier: resolutionMultiplier
+    list: Vex.SortAndUnique(tickList, (a, b) => a - b,
+        (a, b) => a === b ),
+    resolutionMultiplier
   };
 }
 
@@ -157,7 +157,7 @@ export class Formatter {
   // `autobeam` automatically generates beams for the notes.
   // `align_rests` aligns rests with nearby notes.
   static FormatAndDraw(ctx, stave, notes, params) {
-    var opts = {
+    const opts = {
       auto_beam: false,
       align_rests: false
     };
@@ -169,12 +169,12 @@ export class Formatter {
     }
 
     // Start by creating a voice and adding all the notes to it.
-    var voice = new Voice(Flow.TIME4_4).
+    const voice = new Voice(Flow.TIME4_4).
       setMode(Voice.Mode.SOFT);
     voice.addTickables(notes);
 
     // Then create beams, if requested.
-    var beams = null;
+    let beams = null;
     if (opts.auto_beam) {
       beams = Beam.applyAndGetBeams(voice);
     }
@@ -188,7 +188,7 @@ export class Formatter {
     voice.setStave(stave);
     voice.draw(ctx, stave);
     if (beams != null) {
-      for (var i=0; i<beams.length; ++i) {
+      for (let i=0; i<beams.length; ++i) {
         beams[i].setContext(ctx).draw();
       }
     }
@@ -211,7 +211,7 @@ export class Formatter {
   //    * `autobeam` automatically generates beams for the notes.
   //    * `align_rests` aligns rests with nearby notes.
   static FormatAndDrawTab(ctx, tabstave, stave, tabnotes, notes, autobeam, params) {
-    var opts = {
+    const opts = {
       auto_beam: autobeam,
       align_rests: false
     };
@@ -223,17 +223,17 @@ export class Formatter {
     }
 
     // Create a `4/4` voice for `notes`.
-    var notevoice = new Voice(Flow.TIME4_4).
+    const notevoice = new Voice(Flow.TIME4_4).
       setMode(Voice.Mode.SOFT);
     notevoice.addTickables(notes);
 
     // Create a `4/4` voice for `tabnotes`.
-    var tabvoice = new Voice(Flow.TIME4_4).
+    const tabvoice = new Voice(Flow.TIME4_4).
       setMode(Voice.Mode.SOFT);
     tabvoice.addTickables(tabnotes);
 
     // Generate beams if requested.
-    var beams = null;
+    let beams = null;
     if (opts.auto_beam) {
       beams = Beam.applyAndGetBeams(notevoice);
     }
@@ -249,7 +249,7 @@ export class Formatter {
     notevoice.draw(ctx, stave);
     tabvoice.draw(ctx, tabstave);
     if (beams != null) {
-      for (var i=0; i<beams.length; ++i) {
+      for (let i=0; i<beams.length; ++i) {
         beams[i].setContext(ctx).draw();
       }
     }
@@ -265,27 +265,27 @@ export class Formatter {
   // * `align_all_notes`: If set to false, only aligns non-beamed notes.
   // * `align_tuplets`: If set to false, ignores tuplets.
   static AlignRestsToNotes(notes, align_all_notes, align_tuplets) {
-    for (var i = 0; i < notes.length; ++i) {
+    for (let i = 0; i < notes.length; ++i) {
       if (notes[i] instanceof StaveNote && notes[i].isRest()) {
-        var note = notes[i];
+        const note = notes[i];
 
         if (note.tuplet && !align_tuplets) continue;
 
         // If activated rests not on default can be rendered as specified.
-        var position = note.getGlyph().position.toUpperCase();
+        const position = note.getGlyph().position.toUpperCase();
         if (position != "R/4" && position != "B/4") {
           continue;
         }
 
         if (align_all_notes || note.beam != null) {
           // Align rests with previous/next notes.
-          var props = note.getKeyProps()[0];
+          const props = note.getKeyProps()[0];
           if (i === 0) {
             props.line = lookAhead(notes, props.line, i, false);
             note.setKeyLine(0, props.line);
           } else if (i > 0 && i < notes.length) {
             // If previous note is a rest, use its line number.
-            var rest_line;
+            let rest_line;
             if (notes[i-1].isRest()) {
               rest_line = notes[i-1].getKeyProps()[0].line;
               props.line = rest_line;
@@ -327,7 +327,7 @@ export class Formatter {
   alignRests(voices, align_all_notes) {
     if (!voices || !voices.length) throw new Vex.RERR("BadArgument",
         "No voices to format rests");
-    for (var i = 0; i < voices.length; i++) {
+    for (let i = 0; i < voices.length; i++) {
       new Formatter.AlignRestsToNotes(voices[i].tickables, align_all_notes);
     }
   }
@@ -346,15 +346,15 @@ export class Formatter {
       this.createTickContexts(voices);
     }
 
-    var contexts = this.tContexts;
-    var contextList = contexts.list;
-    var contextMap = contexts.map;
+    const contexts = this.tContexts;
+    const contextList = contexts.list;
+    const contextMap = contexts.map;
 
     this.minTotalWidth = 0;
 
     // Go through each tick context and calculate total width.
-    for (var i = 0; i < contextList.length; ++i) {
-      var context = contextMap[contextList[i]];
+    for (let i = 0; i < contextList.length; ++i) {
+      const context = contextMap[contextList[i]];
 
       // `preFormat` gets them to descend down to their tickables and modifier
       // contexts, and calculate their widths.
@@ -381,9 +381,9 @@ export class Formatter {
 
   // Create `ModifierContext`s for each tick in `voices`.
   createModifierContexts(voices) {
-    var contexts = createContexts(voices,
+    const contexts = createContexts(voices,
         ModifierContext,
-        function(tickable, context) {
+        (tickable, context) => {
           tickable.addToModifierContext(context);
         });
     this.mContexts = contexts;
@@ -393,11 +393,11 @@ export class Formatter {
   // Create `TickContext`s for each tick in `voices`. Also calculate the
   // total number of ticks in voices.
   createTickContexts(voices) {
-    var contexts = createContexts(voices,
+    const contexts = createContexts(voices,
         TickContext,
-        function(tickable, context) { context.addTickable(tickable); });
+        (tickable, context) => { context.addTickable(tickable); });
 
-    contexts.array.forEach(function(context) {
+    contexts.array.forEach(context => {
       context.tContexts = contexts.array;
     });
 
@@ -412,14 +412,14 @@ export class Formatter {
   // of all the tickables/notes in the formatter.
   preFormat(justifyWidth, rendering_context, voices, stave) {
     // Initialize context maps.
-    var contexts = this.tContexts;
-    var contextList = contexts.list;
-    var contextMap = contexts.map;
+    const contexts = this.tContexts;
+    const contextList = contexts.list;
+    const contextMap = contexts.map;
 
     // If voices and a stave were provided, set the Stave for each voice
     // and preFormat to apply Y values to the notes;
     if (voices && stave) {
-      voices.forEach(function(voice) {
+      voices.forEach(voice => {
         voice.setStave(stave);
         voice.preFormat();
       });
@@ -435,17 +435,17 @@ export class Formatter {
 
     // Now distribute the ticks to each tick context, and assign them their
     // own X positions.
-    var x = 0;
-    var center_x = justifyWidth / 2;
-    var white_space = 0; // White space to right of previous note
-    var tick_space = 0;  // Pixels from prev note x-pos to curent note x-pos
-    var prev_tick = 0;
-    var prev_width = 0;
-    var lastMetrics = null;
-    var initial_justify_width = justifyWidth;
+    let x = 0;
+    const center_x = justifyWidth / 2;
+    let white_space = 0; // White space to right of previous note
+    let tick_space = 0;  // Pixels from prev note x-pos to curent note x-pos
+    let prev_tick = 0;
+    let prev_width = 0;
+    let lastMetrics = null;
+    const initial_justify_width = justifyWidth;
     this.minTotalWidth = 0;
 
-    var i, tick, context;
+    let i, tick, context;
 
     // Pass 1: Give each note maximum width requested by context.
     for (i = 0; i < contextList.length; ++i) {
@@ -457,17 +457,17 @@ export class Formatter {
       // space requirements.
       context.preFormat();
 
-      var thisMetrics = context.getMetrics();
-      var width = context.getWidth();
+      const thisMetrics = context.getMetrics();
+      const width = context.getWidth();
       this.minTotalWidth += width;
-      var min_x = 0;
-      var pixels_used = width;
+      let min_x = 0;
+      const pixels_used = width;
 
       // Calculate space between last note and next note.
       tick_space = Math.min((tick - prev_tick) * this.pixelsPerTick, pixels_used);
 
       // Shift next note up `tick_space` pixels.
-      var set_x = x + tick_space;
+      let set_x = x + tick_space;
 
       // Calculate the minimum next note position to allow for right modifiers.
       if (lastMetrics != null) {
@@ -488,7 +488,7 @@ export class Formatter {
       }
 
       // Determine pixels needed for left modifiers.
-      var left_px = thisMetrics.extraLeftPx;
+      let left_px = thisMetrics.extraLeftPx;
 
       // Determine white space to right of previous tick (from right modifiers.)
       if (lastMetrics != null) {
@@ -527,9 +527,9 @@ export class Formatter {
     if (justifyWidth > 0) {
       // Pass 2: Take leftover width, and distribute it to proportionately to
       // all notes.
-      var remaining_x = initial_justify_width - (x + prev_width);
-      var leftover_pixels_per_tick = remaining_x / (this.totalTicks.value() * contexts.resolutionMultiplier);
-      var accumulated_space = 0;
+      const remaining_x = initial_justify_width - (x + prev_width);
+      const leftover_pixels_per_tick = remaining_x / (this.totalTicks.value() * contexts.resolutionMultiplier);
+      let accumulated_space = 0;
       prev_tick = 0;
 
       for (i = 0; i < contextList.length; ++i) {
@@ -541,10 +541,10 @@ export class Formatter {
         prev_tick = tick;
 
         // Move center aligned tickables to middle
-        var centeredTickables = context.getCenterAlignedTickables();
+        const centeredTickables = context.getCenterAlignedTickables();
 
         /*jshint -W083 */
-        centeredTickables.forEach(function(tickable) {
+        centeredTickables.forEach(tickable => {
           tickable.center_x_shift = center_x - context.getX();
         });
       }
@@ -585,7 +585,7 @@ export class Formatter {
   // Set `options.context` to the rendering context. Set `options.align_rests`
   // to true to enable rest alignment.
   format(voices, justifyWidth, options) {
-    var opts = {
+    const opts = {
       align_rests: false,
       context: null,
       stave: null
@@ -605,9 +605,9 @@ export class Formatter {
   // This method is just like `format` except that the `justifyWidth` is inferred
   // from the `stave`.
   formatToStave(voices, stave, options) {
-    var justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
+    const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
     L("Formatting voices to width: ", justifyWidth);
-    var opts = {context: stave.getContext()};
+    const opts = {context: stave.getContext()};
     Vex.Merge(opts, options);
     return this.format(voices, justifyWidth, opts);
   }
