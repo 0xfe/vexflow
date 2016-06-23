@@ -20,9 +20,23 @@ module.exports = function(grunt) {
 
   var SOURCES = ["src/*.js", "!src/header.js", "!src/container.js"];
 
+  var ESLINT_SOURCES = [
+    'src/accidental.js',
+    'src/formatter.js',
+    'src/modifiercontext.js',
+    'src/stavenote.js',
+  ];
+
+  var negatePattern = (pattern) => '!' + pattern;
+  var JSHINT_SOURCES = SOURCES.concat(ESLINT_SOURCES.map(negatePattern));
+
   var TEST_SOURCES = [
-    "tests/vexflow_test_helpers.js", "tests/mocks.js",
-    "tests/*_tests.js", "tests/run.js"];
+    "tests/vexflow_test_helpers.js",
+    "tests/mocks.js",
+    "tests/*_tests.js",
+    "tests/run.js"
+  ];
+
   var babel = require('rollup-plugin-babel');
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -66,8 +80,14 @@ module.exports = function(grunt) {
         dest: TARGET_MIN
       }
     },
+    eslint: {
+      target: ESLINT_SOURCES,
+      options: {
+        configFile: '.eslintrc.json'
+      }
+    },
     jshint: {
-      files: SOURCES,
+      files: JSHINT_SOURCES,
       options: {
         esversion: 6,
         eqnull: true,   // allow == and ~= for nulls
@@ -162,9 +182,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-git');
+  grunt.loadNpmTasks('grunt-eslint');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'rollup', 'concat', 'uglify', 'docco']);
+  grunt.registerTask('default', ['eslint', 'jshint', 'rollup', 'concat', 'uglify', 'docco']);
   grunt.registerTask('test', 'Run qunit tests.', ['rollup', 'concat', 'qunit']);
 
   // Release current build.

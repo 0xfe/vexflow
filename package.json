@@ -32,6 +32,7 @@
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-docco": "^0.3.3",
+    "grunt-eslint": "^18.1.0",
     "grunt-git": "^0.3.2",
     "grunt-release": "^0.7.0",
     "grunt-rollup": "^0.7.1",
