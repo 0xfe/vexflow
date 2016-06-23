@@ -307,9 +307,9 @@ export class Accidental extends Modifier {
       clearanceRequired = (line1.flatLine || line1.dblSharpLine) ? 2.5 : 3.0;
       if (line2.dblSharpLine) clearance -= 0.5;
     }
-    const collision = (Math.abs(clearance) < clearanceRequired);
+    const collision = Math.abs(clearance) < clearanceRequired;
     L('Line_1, Line_2, Collision: ', line1.line, line2.line, collision);
-    return (collision);
+    return collision;
   }
 
   // Use this method to automatically apply accidentals to a set of `voices`.
