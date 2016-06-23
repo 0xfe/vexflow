@@ -1,43 +1,40 @@
-// Gruntfile for VexFlow.
-// Mohit Muthanna Cheppudira <mohit@muthanna.com>
-
-module.exports = function(grunt) {
-  var path = require('path');
-  var L = grunt.log.writeln;
-  var BANNER = '/**\n' +
+module.exports = (grunt) => {
+  const path = require('path');
+  const L = grunt.log.writeln;
+  const BANNER = '/**\n' +
                 ' * VexFlow <%= pkg.version %> built on <%= grunt.template.today("yyyy-mm-dd") %>.\n' +
                 ' * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n' +
                 ' *\n' +
                 ' * http://www.vexflow.com  http://github.com/0xfe/vexflow\n' +
                 ' */\n';
-  var BASE_DIR = __dirname;
-  var BUILD_DIR = path.join(BASE_DIR, 'build');
-  var RELEASE_DIR = path.join(BASE_DIR, 'releases');
-  var MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
-  var TARGET_RAW = path.join(BUILD_DIR, 'vexflow-debug.js');
-  var TARGET_MIN = path.join(BUILD_DIR, 'vexflow-min.js');
-  var TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
+  const BASE_DIR = __dirname;
+  const BUILD_DIR = path.join(BASE_DIR, 'build');
+  const RELEASE_DIR = path.join(BASE_DIR, 'releases');
+  const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  const TARGET_RAW = path.join(BUILD_DIR, 'vexflow-debug.js');
+  const TARGET_MIN = path.join(BUILD_DIR, 'vexflow-min.js');
+  const TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
 
-  var SOURCES = ["src/*.js", "!src/header.js", "!src/container.js"];
+  const SOURCES = ["src/*.js", "!src/header.js", "!src/container.js"];
 
-  var ESLINT_SOURCES = [
+  const ESLINT_SOURCES = [
     'src/accidental.js',
     'src/formatter.js',
     'src/modifiercontext.js',
     'src/stavenote.js',
   ];
 
-  var negatePattern = (pattern) => '!' + pattern;
-  var JSHINT_SOURCES = SOURCES.concat(ESLINT_SOURCES.map(negatePattern));
+  const negatePattern = (pattern) => `!${pattern}`;
+  const JSHINT_SOURCES = SOURCES.concat(ESLINT_SOURCES.map(negatePattern));
 
-  var TEST_SOURCES = [
+  const TEST_SOURCES = [
     "tests/vexflow_test_helpers.js",
     "tests/mocks.js",
     "tests/*_tests.js",
     "tests/run.js"
   ];
 
-  var babel = require('rollup-plugin-babel');
+  const babel = require('rollup-plugin-babel');
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
@@ -57,7 +54,7 @@ module.exports = function(grunt) {
         moduleName: 'Vex',
         sourceMap: true,
         sourceMapFile: TARGET_RAW,
-        plugins: function() {
+        plugins() {
           return [
             babel({
               exclude: './node_modules/**'
@@ -145,7 +142,7 @@ module.exports = function(grunt) {
         },
         files: [
           {
-            src: [RELEASE_DIR + "/*.js", RELEASE_DIR + "/*.map"],
+            src: [`${RELEASE_DIR}/*.js`, `${RELEASE_DIR}/*.map`],
             expand: true
           }
         ]
@@ -189,13 +186,13 @@ module.exports = function(grunt) {
   grunt.registerTask('test', 'Run qunit tests.', ['rollup', 'concat', 'qunit']);
 
   // Release current build.
-  grunt.registerTask('stage', 'Stage current binaries to releases/.', function() {
+  grunt.registerTask('stage', 'Stage current binaries to releases/.', () => {
     grunt.task.run('default');
     grunt.task.run('copy:release');
   });
 
   // Increment package version and publish to NPM.
-  grunt.registerTask('publish', 'Publish VexFlow NPM.', function() {
+  grunt.registerTask('publish', 'Publish VexFlow NPM.', () => {
     grunt.task.run('bump');
     grunt.task.run('stage');
     grunt.task.run('test');
