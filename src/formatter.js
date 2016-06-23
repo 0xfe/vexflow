@@ -85,7 +85,7 @@ function createContexts(voices, ContextType, addToContext) {
       );
     }
 
-    return Math.min(
+    return Math.max(
       resolutionMultiplier,
       Fraction.LCM(resolutionMultiplier, voice.getResolutionMultiplier())
     );
