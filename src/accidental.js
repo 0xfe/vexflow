@@ -120,7 +120,7 @@ export class Accidental extends Modifier {
     // but follow exceptions as outlined in G. Read's _Music Notation_ and
     // Elaine Gould's _Behind Bars_.
     //
-    // Additionally, this implements different vertical colission rules for
+    // Additionally, this implements different vertical collision rules for
     // flats (only need 2.5 lines clearance below) and double sharps (only
     // need 2.5 lines of clearance above or below).
     //
@@ -207,12 +207,12 @@ export class Accidental extends Modifier {
       if (groupLength >= 7) {
         // First, determine how many columns to use:
         let patternLength = 2;
-        let colissionDetected = true;
-        while (colissionDetected === true) {
-          colissionDetected = false;
+        let collisionDetected = true;
+        while (collisionDetected === true) {
+          collisionDetected = false;
           for (let line = 0; line + patternLength < lineList.length; line++) {
             if (this.checkCollision(lineList[line], lineList[line + patternLength])) {
-              colissionDetected = true;
+              collisionDetected = true;
               patternLength++;
               break;
             }
@@ -307,9 +307,9 @@ export class Accidental extends Modifier {
       clearanceRequired = (line1.flatLine || line1.dblSharpLine) ? 2.5 : 3.0;
       if (line2.dblSharpLine) clearance -= 0.5;
     }
-    const colission = (Math.abs(clearance) < clearanceRequired);
-    L('Line_1, Line_2, Collision: ', line1.line, line2.line, colission);
-    return (colission);
+    const collision = (Math.abs(clearance) < clearanceRequired);
+    L('Line_1, Line_2, Collision: ', line1.line, line2.line, collision);
+    return (collision);
   }
 
   // Use this method to automatically apply accidentals to a set of `voices`.
