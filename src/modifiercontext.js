@@ -20,7 +20,7 @@ import { Bend } from './bend';
 import { Vibrato } from './vibrato';
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
-function L() { if (ModifierContext.DEBUG) Vex.L('Vex.Flow.ModifierContext', arguments); }
+function L(...args) { if (ModifierContext.DEBUG) Vex.L('Vex.Flow.ModifierContext', args); }
 
 export class ModifierContext {
   constructor() {
@@ -76,8 +76,9 @@ export class ModifierContext {
   getState() { return this.state; }
 
   getMetrics() {
-    if (!this.formatted) throw new Vex.RERR('UnformattedModifier',
-        'Unformatted modifier has no metrics.');
+    if (!this.formatted) {
+      throw new Vex.RERR('UnformattedModifier', 'Unformatted modifier has no metrics.');
+    }
 
     return {
       width: this.state.left_shift + this.state.right_shift + this.spacing,
