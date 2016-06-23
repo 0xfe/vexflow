@@ -61,7 +61,7 @@ export class ModifierContext {
   }
 
   addModifier(modifier) {
-    var type = modifier.getCategory();
+    const type = modifier.getCategory();
     if (!this.modifiers[type]) this.modifiers[type] = [];
     this.modifiers[type].push(modifier);
     modifier.setModifierContext(this);
@@ -89,10 +89,10 @@ export class ModifierContext {
 
   preFormat() {
     if (this.preFormatted) return;
-    this.PREFORMAT.forEach(function(modifier) {
+    this.PREFORMAT.forEach((modifier) => {
       L("Preformatting ModifierContext: ", modifier.CATEGORY);
       modifier.format(this.getModifiers(modifier.CATEGORY), this.state, this);
-    }, this);
+    });
 
     // Update width of this modifier context
     this.width = this.state.left_shift + this.state.right_shift;
@@ -101,9 +101,9 @@ export class ModifierContext {
 
   postFormat() {
     if (this.postFormatted) return;
-    this.POSTFORMAT.forEach(function(modifier) {
+    this.POSTFORMAT.forEach((modifier) => {
       L("Postformatting ModifierContext: ", modifier.CATEGORY);
       modifier.postFormat(this.getModifiers(modifier.CATEGORY), this);
-    }, this);
+    });
   }
 }
