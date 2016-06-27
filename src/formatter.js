@@ -36,7 +36,7 @@ function lookAhead(notes, restLine, i, compare) {
   let nextRestLine = restLine;
 
   // Get the rest line for next valid non-rest note group.
-  for (let i = i + 1; i < notes.length; i++) {
+  for (i = i + 1; i < notes.length; i++) {
     const note = notes[i];
     if (!note.isRest() && !note.shouldIgnoreTicks()) {
       nextRestLine = note.getLineForRest();
