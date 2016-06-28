@@ -113,9 +113,9 @@ export class StringNumber extends Modifier {
     this.leg = Renderer.LineEndType.NONE;   // draw upward/downward leg at the of extension line
     this.radius = 8;
     this.font = {
-      family: "sans-serif",
+      family: 'sans-serif',
       size: 10,
-      weight: "bold"
+      weight: 'bold',
     };
   }
   getCategory() { return StringNumber.CATEGORY; }
@@ -146,9 +146,9 @@ export class StringNumber extends Modifier {
   setDashed(dashed) { this.dashed = dashed; return this; }
 
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw string number without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
+    if (!(this.note && (this.index != null))) throw new Vex.RERR('NoAttachedNote',
       "Can't draw string number without a note and index.");
 
     const ctx = this.context;
@@ -173,7 +173,7 @@ export class StringNumber extends Modifier {
         if (this.position == Modifier.Position.ABOVE) {
           dot_y = this.note.hasStem() ? top - (line_space * 1.75)
                                       : start.y - (line_space * 1.75);
-      } else {
+        } else {
           dot_y = this.note.hasStem() ? bottom + (line_space * 1.5)
                                       : start.y + (line_space * 1.75);
         }
@@ -196,28 +196,28 @@ export class StringNumber extends Modifier {
     ctx.stroke();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
-    ctx.fillText("" + this.string_number, x, dot_y + 4.5);
+    ctx.fillText('' + this.string_number, x, dot_y + 4.5);
 
     if (this.last_note != null) {
       const end = this.last_note.getStemX() - this.note.getX() + 5;
-      ctx.strokeStyle="#000000";
-      ctx.lineCap = "round";
+      ctx.strokeStyle = '#000000';
+      ctx.lineCap = 'round';
       ctx.lineWidth = 0.6;
       if (this.dashed)
-        Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,3]);
+        Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3, 3]);
       else
-        Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,0]);
+        Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3, 0]);
 
       let len, pattern;
       switch (this.leg) {
         case Renderer.LineEndType.UP:
           len = -10;
-          pattern = this.dashed ? [3,3] : [3,0];
+          pattern = this.dashed ? [3, 3] : [3, 0];
           Renderer.drawDashedLine(ctx, dot_x + end, dot_y, dot_x + end, dot_y + len, pattern);
           break;
         case Renderer.LineEndType.DOWN:
           len = 10;
-          pattern = this.dashed ? [3,3] : [3,0];
+          pattern = this.dashed ? [3, 3] : [3, 0];
           Renderer.drawDashedLine(ctx, dot_x + end, dot_y, dot_x + end, dot_y + len, pattern);
           break;
       }

@@ -16,9 +16,9 @@ export class StaveSection extends StaveModifier {
     this.shift_x = 0;
     this.shift_y = shift_y;
     this.font = {
-      family: "sans-serif",
+      family: 'sans-serif',
       size: 12,
-      weight: "bold"
+      weight: 'bold',
     };
   }
   getCategory() { return StaveSection.CATEGORY; }
@@ -26,7 +26,7 @@ export class StaveSection extends StaveModifier {
   setShiftX(x) { this.shift_x = x; return this; }
   setShiftY(y) { this.shift_y = y; return this; }
   draw(stave, shift_x) {
-    if (!stave.context) throw new Vex.RERR("NoContext",
+    if (!stave.context) throw new Vex.RERR('NoContext',
       "Can't draw stave section without a context.");
 
     const ctx = stave.context;
@@ -34,7 +34,7 @@ export class StaveSection extends StaveModifier {
     ctx.save();
     ctx.lineWidth = 2;
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    const text_width = ctx.measureText("" + this.section).width;
+    const text_width = ctx.measureText('' + this.section).width;
     let width = text_width + 6;  // add left & right padding
     if (width < 18) width = 18;
     const height = 20;
@@ -46,7 +46,7 @@ export class StaveSection extends StaveModifier {
     ctx.rect(x, y, width, height);
     ctx.stroke();
     x += (width - text_width) / 2;
-    ctx.fillText("" + this.section, x, y + 16);
+    ctx.fillText('' + this.section, x, y + 16);
     ctx.restore();
     return this;
   }

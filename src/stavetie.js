@@ -32,7 +32,7 @@ export class StaveTie {
       last_x_shift: 0,
       y_shift: 7,
       tie_spacing: 0,
-      font: { family: "Arial", size: 10, style: "" }
+      font: { family: 'Arial', size: 10, style: '' },
     };
 
     this.font = this.render_options.font;
@@ -50,15 +50,15 @@ export class StaveTie {
    */
   setNotes(notes) {
     if (!notes.first_note && !notes.last_note)
-      throw new Vex.RuntimeError("BadArguments",
-          "Tie needs to have either first_note or last_note set.");
+      throw new Vex.RuntimeError('BadArguments',
+          'Tie needs to have either first_note or last_note set.');
 
     if (!notes.first_indices) notes.first_indices = [0];
     if (!notes.last_indices) notes.last_indices = [0];
 
     if (notes.first_indices.length != notes.last_indices.length)
-      throw new Vex.RuntimeError("BadArguments", "Tied notes must have similar" +
-      " index sizes");
+      throw new Vex.RuntimeError('BadArguments', 'Tied notes must have similar' +
+      ' index sizes');
 
     // Success. Lets grab 'em notes.
     this.first_note = notes.first_note;
@@ -77,7 +77,7 @@ export class StaveTie {
 
   renderTie(params) {
     if (params.first_ys.length === 0 || params.last_ys.length === 0)
-      throw new Vex.RERR("BadArguments", "No Y-values to render");
+      throw new Vex.RERR('BadArguments', 'No Y-values to render');
 
     const ctx = this.context;
     let cp1 = this.render_options.cp1;
@@ -98,7 +98,7 @@ export class StaveTie {
       const last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
 
       if (isNaN(first_y_px) || isNaN(last_y_px))
-        throw new Vex.RERR("BadArguments", "Bad indices for tie rendering.");
+        throw new Vex.RERR('BadArguments', 'Bad indices for tie rendering.');
 
       const top_cp_y = ((first_y_px + last_y_px) / 2) + (cp1 * params.direction);
       const bottom_cp_y = ((first_y_px + last_y_px) / 2) + (cp2 * params.direction);
@@ -130,7 +130,7 @@ export class StaveTie {
 
   draw() {
     if (!this.context)
-      throw new Vex.RERR("NoContext", "No context to render tie.");
+      throw new Vex.RERR('NoContext', 'No context to render tie.');
     const first_note = this.first_note;
     const last_note = this.last_note;
     let first_x_px, last_x_px, first_ys, last_ys, stem_direction;
@@ -155,7 +155,7 @@ export class StaveTie {
       this.last_indices = this.first_indices;
     }
 
-    if(this.direction){
+    if (this.direction) {
       stem_direction = this.direction;
     }
 
@@ -164,7 +164,7 @@ export class StaveTie {
       last_x_px,
       first_ys,
       last_ys,
-      direction: stem_direction
+      direction: stem_direction,
     });
 
     this.renderText(first_x_px, last_x_px);

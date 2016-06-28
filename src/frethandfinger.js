@@ -101,9 +101,9 @@ export class FretHandFinger extends Modifier {
     this.x_offset = 0;       // Horizontal offset from default
     this.y_offset = 0;       // Vertical offset from default
     this.font = {
-      family: "sans-serif",
+      family: 'sans-serif',
       size: 9,
-      weight: "bold"
+      weight: 'bold',
     };
   }
   getCategory() { return FretHandFinger.CATEGORY; }
@@ -123,9 +123,9 @@ export class FretHandFinger extends Modifier {
   setOffsetY(y) { this.y_offset = y; return this; }
 
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw string number without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
+    if (!(this.note && (this.index != null))) throw new Vex.RERR('NoAttachedNote',
       "Can't draw string number without a note and index.");
 
     const ctx = this.context;
@@ -152,7 +152,7 @@ export class FretHandFinger extends Modifier {
 
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    ctx.fillText("" + this.finger, dot_x, dot_y);
+    ctx.fillText('' + this.finger, dot_x, dot_y);
 
     ctx.restore();
   }

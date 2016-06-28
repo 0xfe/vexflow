@@ -13,22 +13,22 @@ export class TimeSignature extends StaveModifier {
   static get CATEGORY() { return 'timesignatures'; }
   static get glyphs() {
     return {
-      "C": {
-        code: "v41",
+      'C': {
+        code: 'v41',
         point: 40,
-        line: 2
+        line: 2,
       },
-      "C|": {
-        code: "vb6",
+      'C|': {
+        code: 'vb6',
         point: 40,
-        line: 2
-      }
+        line: 2,
+      },
     };
   }
 
   constructor(timeSpec = null, customPadding = 15) {
     super();
-    if(timeSpec === null) {
+    if (timeSpec === null) {
       return;
     }
     const padding = customPadding;
@@ -45,39 +45,39 @@ export class TimeSignature extends StaveModifier {
   getCategory() { return TimeSignature.CATEGORY; }
 
   parseTimeSpec(timeSpec) {
-    if (timeSpec == "C" || timeSpec == "C|") {
+    if (timeSpec == 'C' || timeSpec == 'C|') {
       const glyphInfo = TimeSignature.glyphs[timeSpec];
-      return {num: false, line: glyphInfo.line,
-        glyph: new Glyph(glyphInfo.code, glyphInfo.point)};
+      return { num: false, line: glyphInfo.line,
+        glyph: new Glyph(glyphInfo.code, glyphInfo.point) };
     }
 
     const topNums = [];
     let i, c;
     for (i = 0; i < timeSpec.length; ++i) {
       c = timeSpec.charAt(i);
-      if (c == "/") {
+      if (c == '/') {
         break;
       }
       else if (/[0-9]/.test(c)) {
         topNums.push(c);
       }
       else {
-        throw new Vex.RERR("BadTimeSignature",
-            "Invalid time spec: " + timeSpec);
+        throw new Vex.RERR('BadTimeSignature',
+            'Invalid time spec: ' + timeSpec);
       }
     }
 
     if (i === 0) {
-      throw new Vex.RERR("BadTimeSignature",
-            "Invalid time spec: " + timeSpec);
+      throw new Vex.RERR('BadTimeSignature',
+            'Invalid time spec: ' + timeSpec);
     }
 
     // skip the "/"
     ++i;
 
     if (i == timeSpec.length) {
-      throw new Vex.RERR("BadTimeSignature",
-            "Invalid time spec: " + timeSpec);
+      throw new Vex.RERR('BadTimeSignature',
+            'Invalid time spec: ' + timeSpec);
     }
 
 
@@ -88,25 +88,25 @@ export class TimeSignature extends StaveModifier {
         botNums.push(c);
       }
       else {
-        throw new Vex.RERR("BadTimeSignature",
-            "Invalid time spec: " + timeSpec);
+        throw new Vex.RERR('BadTimeSignature',
+            'Invalid time spec: ' + timeSpec);
       }
     }
 
 
-    return {num: true, glyph: this.makeTimeSignatureGlyph(topNums, botNums)};
+    return { num: true, glyph: this.makeTimeSignatureGlyph(topNums, botNums) };
   }
 
   makeTimeSignatureGlyph(topNums, botNums) {
-    const glyph = new Glyph("v0", this.point);
-    glyph["topGlyphs"] = [];
-    glyph["botGlyphs"] = [];
+    const glyph = new Glyph('v0', this.point);
+    glyph['topGlyphs'] = [];
+    glyph['botGlyphs'] = [];
 
     let topWidth = 0;
     let i, num;
     for (i = 0; i < topNums.length; ++i) {
       num = topNums[i];
-      const topGlyph = new Glyph("v" + num, this.point);
+      const topGlyph = new Glyph('v' + num, this.point);
 
       glyph.topGlyphs.push(topGlyph);
       topWidth += topGlyph.getMetrics().width;
@@ -115,7 +115,7 @@ export class TimeSignature extends StaveModifier {
     let botWidth = 0;
     for (i = 0; i < botNums.length; ++i) {
       num = botNums[i];
-      const botGlyph = new Glyph("v" + num, this.point);
+      const botGlyph = new Glyph('v' + num, this.point);
 
       glyph.botGlyphs.push(botGlyph);
       botWidth += botGlyph.getMetrics().width;
@@ -127,7 +127,7 @@ export class TimeSignature extends StaveModifier {
     glyph.getMetrics = () => ({
       x_min: xMin,
       x_max: xMin + width,
-      width
+      width,
     });
 
     const topStartX = (width - topWidth) / 2.0;
@@ -167,8 +167,8 @@ export class TimeSignature extends StaveModifier {
   }
 
   draw() {
-    if (!this.x) throw new Vex.RERR("TimeSignatureError", "Can't draw time signature without x.");
-    if (!this.stave) throw new Vex.RERR("TimeSignatureError", "Can't draw time signature without stave.");
+    if (!this.x) throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without x.");
+    if (!this.stave) throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without stave.");
 
     this.timeSig.glyph.setStave(this.stave);
     this.timeSig.glyph.setContext(this.stave.context);

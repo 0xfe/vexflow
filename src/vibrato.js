@@ -50,7 +50,7 @@ export class Vibrato extends Modifier {
       vibrato_width: 20,
       wave_height: 6,
       wave_width: 4,
-      wave_girth: 2
+      wave_girth: 2,
     };
 
     this.setVibratoWidth(this.render_options.vibrato_width);
@@ -64,9 +64,9 @@ export class Vibrato extends Modifier {
   }
 
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw vibrato without a context.");
-    if (!this.note) throw new Vex.RERR("NoNoteForVibrato",
+    if (!this.note) throw new Vex.RERR('NoNoteForVibrato',
       "Can't draw vibrato without an attached note.");
 
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,

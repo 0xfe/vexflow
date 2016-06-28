@@ -14,7 +14,7 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
-function L() { if (NoteHead.DEBUG) Vex.L("Vex.Flow.NoteHead", arguments); }
+function L() { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', arguments); }
 
 // Draw slashnote head manually. No glyph exists for this.
 //
@@ -46,18 +46,18 @@ function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
   ctx.closePath();
 
   if (fill) {
-     ctx.fill();
+    ctx.fill();
   } else {
-     ctx.stroke();
+    ctx.stroke();
   }
 
   if (Flow.durationToFraction(duration).equals(0.5)) {
     const breve_lines = [-3, -1, width + 1, width + 3];
-    for(let i=0; i<breve_lines.length; i++){
-        ctx.beginPath();
-        ctx.moveTo(x + breve_lines[i], y - 10);
-        ctx.lineTo(x + breve_lines[i], y + 11);
-        ctx.stroke();
+    for (let i = 0; i < breve_lines.length; i++) {
+      ctx.beginPath();
+      ctx.moveTo(x + breve_lines[i], y - 10);
+      ctx.lineTo(x + breve_lines[i], y + 11);
+      ctx.stroke();
     }
   }
 
@@ -82,7 +82,7 @@ export class NoteHead extends Note {
     // regular notes, rests, or other custom codes.
     this.glyph = Flow.durationToGlyph(this.duration, this.note_type);
     if (!this.glyph) {
-      throw new Vex.RuntimeError("BadArguments",
+      throw new Vex.RuntimeError('BadArguments',
           "No glyph found for duration '" + this.duration +
           "' and type '" + this.note_type + "'");
     }
@@ -100,7 +100,7 @@ export class NoteHead extends Note {
 
     Vex.Merge(this.render_options, {
       glyph_font_scale: 35, // font size for note heads
-      stroke_px: 3         // number of stroke px to the left and right of head
+      stroke_px: 3,         // number of stroke px to the left and right of head
     });
 
     if (head_options.glyph_font_scale) {
@@ -113,7 +113,7 @@ export class NoteHead extends Note {
   getCategory() { return NoteHead.CATEGORY; }
 
   // Set the Cavnas context for drawing
-  setContext(context) { this.context = context; return this;}
+  setContext(context) { this.context = context; return this; }
 
   // Get the width of the notehead
   getWidth() { return this.width; }
@@ -129,10 +129,10 @@ export class NoteHead extends Note {
   setStyle(style) { this.style = style; return this; }
 
   // Get the glyph data
-  getGlyph(){ return this.glyph; }
+  getGlyph() { return this.glyph; }
 
   // Set the X coordinate
-  setX(x){ this.x = x; return this; }
+  setX(x) { this.x = x; return this; }
 
   // get/set the Y coordinate
   getY() { return this.y; }
@@ -144,7 +144,6 @@ export class NoteHead extends Note {
 
   // Get the canvas `x` coordinate position of the notehead.
   getAbsoluteX() {
-
     // If the note has not been preformatted, then get the static x value
     // Otherwise, it's been formatted and we should use it's x value relative
     // to its tick context
@@ -155,11 +154,11 @@ export class NoteHead extends Note {
 
   // Get the `BoundingBox` for the `NoteHead`
   getBoundingBox() {
-    if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
         "Can't call getBoundingBox on an unformatted note.");
 
     const spacing = this.stave.getSpacingBetweenLines();
-    const half_spacing = spacing/2;
+    const half_spacing = spacing / 2;
     const min_y = this.y - half_spacing;
 
     return new Flow.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
@@ -176,7 +175,7 @@ export class NoteHead extends Note {
   }
 
   // Set notehead to a provided `stave`
-  setStave(stave){
+  setStave(stave) {
     const line = this.getLine();
 
     this.stave = stave;
@@ -199,7 +198,7 @@ export class NoteHead extends Note {
 
   // Draw the notehead
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
 
     const ctx = this.context;
@@ -230,7 +229,7 @@ export class NoteHead extends Note {
       }
     }
 
-    if (this.note_type == "s") {
+    if (this.note_type == 's') {
       drawSlashNoteHead(ctx, this.duration,
         head_x, y, stem_direction);
     } else {

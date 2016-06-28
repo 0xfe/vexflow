@@ -35,7 +35,7 @@ export class TabSlide extends TabTie {
      *  }
      *
      **/
-    super(notes, "sl.");
+    super(notes, 'sl.');
     if (!direction) {
       const first_fret = notes.first_note.getPositions()[0].fret;
       const last_fret = notes.last_note.getPositions()[0].fret;
@@ -49,13 +49,13 @@ export class TabSlide extends TabTie {
     this.render_options.cp2 = 14;
     this.render_options.y_shift = 0.5;
 
-    this.setFont({font: "Times", size: 10, style: "bold italic"});
+    this.setFont({ font: 'Times', size: 10, style: 'bold italic' });
     this.setNotes(notes);
   }
 
   renderTie(params) {
     if (params.first_ys.length === 0 || params.last_ys.length === 0)
-      throw new Vex.RERR("BadArguments", "No Y-values to render");
+      throw new Vex.RERR('BadArguments', 'No Y-values to render');
 
     const ctx = this.context;
     const first_x_px = params.first_x_px;
@@ -65,7 +65,7 @@ export class TabSlide extends TabTie {
     const direction = this.slide_direction;
     if (direction != TabSlide.SLIDE_UP &&
         direction != TabSlide.SLIDE_DOWN) {
-      throw new Vex.RERR("BadSlide", "Invalid slide direction");
+      throw new Vex.RERR('BadSlide', 'Invalid slide direction');
     }
 
     for (let i = 0; i < this.first_indices.length; ++i) {
@@ -73,7 +73,7 @@ export class TabSlide extends TabTie {
         this.render_options.y_shift;
 
       if (isNaN(slide_y))
-        throw new Vex.RERR("BadArguments", "Bad indices for slide rendering.");
+        throw new Vex.RERR('BadArguments', 'Bad indices for slide rendering.');
 
       ctx.beginPath();
       ctx.moveTo(first_x_px, slide_y + (3 * direction));

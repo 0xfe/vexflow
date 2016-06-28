@@ -8,7 +8,7 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
-function L() { if (Stem.DEBUG) Vex.L("Vex.Flow.Stem", arguments); }
+function L() { if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', arguments); }
 
 export class Stem {
   static get CATEGORY() { return 'stem'; }
@@ -30,7 +30,7 @@ export class Stem {
   }
 
   constructor(options = null) {
-    if(options === null) {
+    if (options === null) {
       return;
     }
     // Default notehead x bounds
@@ -61,7 +61,7 @@ export class Stem {
   }
 
   // Set the direction of the stem in relation to the noteheads
-  setDirection(direction){ this.stem_direction = direction; }
+  setDirection(direction) { this.stem_direction = direction; }
 
   // Set the extension for the stem, generally for flags or beams
   setExtension(ext) { this.stem_extension = ext; }
@@ -76,7 +76,7 @@ export class Stem {
   getCategory() { return Stem.CATEGORY; }
 
   // Set the canvas context to render on
-  setContext(context) { this.context = context; return this;}
+  setContext(context) { this.context = context; return this; }
 
   // Gets the entire height for the stem
   getHeight() {
@@ -84,7 +84,7 @@ export class Stem {
            ((Stem.HEIGHT + this.stem_extension) * this.stem_direction);
   }
   getBoundingBox() {
-    throw new Vex.RERR("NotImplemented", "getBoundingBox() not implemented.");
+    throw new Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
   }
 
   // Get the y coordinates for the very base of the stem to the top of
@@ -118,7 +118,7 @@ export class Stem {
   // Apply current style to Canvas `context`
   applyStyle(context) {
     const style = this.getStyle();
-    if(style) {
+    if (style) {
       if (style.shadowColor) context.setShadowColor(style.shadowColor);
       if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
       if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
@@ -128,7 +128,7 @@ export class Stem {
 
   // Render the stem onto the canvas
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
 
     if (this.hide) return;
@@ -149,7 +149,7 @@ export class Stem {
 
     stem_y += this.y_extend * stem_direction;
 
-    L("Rendering stem - ", "Top Y: ", this.y_top, "Bottom Y: ", this.y_bottom);
+    L('Rendering stem - ', 'Top Y: ', this.y_top, 'Bottom Y: ', this.y_bottom);
 
     // Draw the stem
     ctx.save();

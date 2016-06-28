@@ -33,7 +33,7 @@ export class TimeSigNote extends Note {
   }
 
   draw() {
-    if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
+    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
     if (!this.timeSig.glyph.getContext()) {
       this.timeSig.glyph.setContext(this.context);

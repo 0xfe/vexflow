@@ -12,7 +12,7 @@ import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
 // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
-function L() { if (Clef.DEBUG) Vex.L("Vex.Flow.Clef", arguments); }
+function L() { if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', arguments); }
 
 export class Clef extends StaveModifier {
   static get CATEGORY() { return 'clefs'; }
@@ -21,120 +21,120 @@ export class Clef extends StaveModifier {
   // and a default stave line number.
   static get types() {
     return {
-      "treble": {
-        code: "v83",
-        line: 3
+      'treble': {
+        code: 'v83',
+        line: 3,
       },
-      "bass": {
-        code: "v79",
-        line: 1
+      'bass': {
+        code: 'v79',
+        line: 1,
       },
-      "alto": {
-        code: "vad",
-        line: 2
+      'alto': {
+        code: 'vad',
+        line: 2,
       },
-      "tenor": {
-        code: "vad",
-        line: 1
+      'tenor': {
+        code: 'vad',
+        line: 1,
       },
-      "percussion": {
-        code: "v59",
-        line: 2
+      'percussion': {
+        code: 'v59',
+        line: 2,
       },
-      "soprano": {
-        code: "vad",
-        line: 4
+      'soprano': {
+        code: 'vad',
+        line: 4,
       },
-      "mezzo-soprano": {
-        code: "vad",
-        line: 3
+      'mezzo-soprano': {
+        code: 'vad',
+        line: 3,
       },
-      "baritone-c": {
-        code: "vad",
-        line: 0
+      'baritone-c': {
+        code: 'vad',
+        line: 0,
       },
-      "baritone-f": {
-        code: "v79",
-        line: 2
+      'baritone-f': {
+        code: 'v79',
+        line: 2,
       },
-      "subbass": {
-        code: "v79",
-        line: 0
+      'subbass': {
+        code: 'v79',
+        line: 0,
       },
-      "french": {
-        code: "v83",
-        line: 4
+      'french': {
+        code: 'v83',
+        line: 4,
       },
-      "tab": {
-        code: "v2f"
-      }
+      'tab': {
+        code: 'v2f',
+      },
     };
   }
 
   // Sizes affect the point-size of the clef.
   static get sizes() {
     return {
-      "default": 40,
-      "small": 32
+      'default': 40,
+      'small': 32,
     };
   }
 
   // Annotations attach to clefs -- such as "8" for octave up or down.
   static get annotations() {
     return {
-      "8va": {
-        code: "v8",
+      '8va': {
+        code: 'v8',
         sizes: {
-          "default": {
+          'default': {
             point: 20,
             attachments: {
-              "treble": {
+              'treble': {
                 line: -1.2,
-                x_shift: 11
-              }
-            }
+                x_shift: 11,
+              },
+            },
           },
-          "small": {
+          'small': {
             point: 18,
             attachments: {
-              "treble": {
+              'treble': {
                 line: -0.4,
-                x_shift: 8
-              }
-            }
-          }
-        }
+                x_shift: 8,
+              },
+            },
+          },
+        },
       },
-      "8vb": {
-        code: "v8",
+      '8vb': {
+        code: 'v8',
         sizes: {
-          "default": {
+          'default': {
             point: 20,
             attachments: {
-              "treble": {
+              'treble': {
                 line: 6.3,
-                x_shift: 10
+                x_shift: 10,
               },
-              "bass": {
+              'bass': {
                 line: 4,
-                x_shift: 1
-              }
-            }
+                x_shift: 1,
+              },
+            },
           },
-          "small": {
+          'small': {
             point: 18,
             attachments: {
-              "treble": {
+              'treble': {
                 line: 5.8,
-                x_shift: 6
+                x_shift: 6,
               },
-              "bass": {
+              'bass': {
                 line: 3.5,
-                x_shift: 0.5
-              }
-            }
-          }
-        }
+                x_shift: 0.5,
+              },
+            },
+          },
+        },
       },
     };
   }
@@ -147,14 +147,14 @@ export class Clef extends StaveModifier {
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setType(type, size, annotation);
     this.setWidth(this.glyph.getMetrics().width);
-    L("Creating clef:", type);
+    L('Creating clef:', type);
   }
   getCategory() { return Clef.CATEGORY; }
   setType(type, size, annotation) {
     this.type = type;
     this.clef = Clef.types[type];
     if (size === undefined) {
-      this.size = "default";
+      this.size = 'default';
     } else {
       this.size = size;
     }
@@ -168,7 +168,7 @@ export class Clef extends StaveModifier {
         code: anno_dict.code,
         point: anno_dict.sizes[this.size].point,
         line: anno_dict.sizes[this.size].attachments[this.type].line,
-        x_shift: anno_dict.sizes[this.size].attachments[this.type].x_shift
+        x_shift: anno_dict.sizes[this.size].attachments[this.type].x_shift,
       };
 
       this.attachment = new Glyph(this.annotation.code, this.annotation.point);
@@ -183,7 +183,7 @@ export class Clef extends StaveModifier {
   }
   getWidth() {
     if (this.type === 'tab' && !this.stave) {
-      throw new Vex.RERR("ClefError", "Can't get width without stave.");
+      throw new Vex.RERR('ClefError', "Can't get width without stave.");
     }
 
     return this.width;
@@ -195,7 +195,7 @@ export class Clef extends StaveModifier {
 
     let glyphScale;
     let glyphOffset;
-    switch(this.stave.getOptions().num_lines) {
+    switch (this.stave.getOptions().num_lines) {
       case 8:
         glyphScale = 55;
         glyphOffset = 14;
@@ -224,8 +224,8 @@ export class Clef extends StaveModifier {
     return this;
   }
   draw() {
-    if (!this.x) throw new Vex.RERR("ClefError", "Can't draw clef without x.");
-    if (!this.stave) throw new Vex.RERR("ClefError", "Can't draw clef without stave.");
+    if (!this.x) throw new Vex.RERR('ClefError', "Can't draw clef without x.");
+    if (!this.stave) throw new Vex.RERR('ClefError', "Can't draw clef without stave.");
 
     this.glyph.setStave(this.stave);
     this.glyph.setContext(this.stave.context);

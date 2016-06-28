@@ -10,7 +10,7 @@ import { Stem } from './stem';
 import { Note } from './note';
 
 // To enable logging for this class. Set `Vex.Flow.StemmableNote.DEBUG` to `true`.
-function L() { if (StemmableNote.DEBUG) Vex.L("Vex.Flow.StemmableNote", arguments); }
+function L() { if (StemmableNote.DEBUG) Vex.L('Vex.Flow.StemmableNote', arguments); }
 
 export class StemmableNote extends Note {
   constructor(note_struct) {
@@ -22,7 +22,7 @@ export class StemmableNote extends Note {
   }
 
   // Get and set the note's `Stem`
-  getStem() {return this.stem; }
+  getStem() { return this.stem; }
   setStem(stem) { this.stem = stem; return this; }
 
   // Builds and sets a new stem
@@ -54,31 +54,31 @@ export class StemmableNote extends Note {
     let length = (frac.value() <= 1) ? 0 : 20;
     // if note is flagged, cannot shorten beam
     switch (this.duration) {
-     case "8":
-       if (this.beam == null) length = 35;
-       break;
-     case "16":
-       if (this.beam == null)
-         length = 35;
-       else
+      case '8':
+        if (this.beam == null) length = 35;
+        break;
+      case '16':
+        if (this.beam == null)
+          length = 35;
+        else
          length = 25;
-       break;
-     case "32":
-       if (this.beam == null)
-         length = 45;
-       else
+        break;
+      case '32':
+        if (this.beam == null)
+          length = 45;
+        else
          length = 35;
-       break;
-     case "64":
-       if (this.beam == null)
-         length = 50;
-       else
+        break;
+      case '64':
+        if (this.beam == null)
+          length = 50;
+        else
          length = 40;
-       break;
-     case "128":
-       if (this.beam == null)
-         length = 55;
-       else
+        break;
+      case '128':
+        if (this.beam == null)
+          length = 55;
+        else
          length = 45;
     }
     return length;
@@ -90,7 +90,7 @@ export class StemmableNote extends Note {
     if (!direction) direction = Stem.UP;
     if (direction != Stem.UP &&
         direction != Stem.DOWN) {
-      throw new Vex.RERR("BadArgument", "Invalid stem direction: " +
+      throw new Vex.RERR('BadArgument', 'Invalid stem direction: ' +
           direction);
     }
 
@@ -150,7 +150,7 @@ export class StemmableNote extends Note {
 
   // Get the top and bottom `y` values of the stem.
   getStemExtents() {
-    if (!this.ys || this.ys.length === 0) throw new Vex.RERR("NoYValues",
+    if (!this.ys || this.ys.length === 0) throw new Vex.RERR('NoYValues',
         "Can't get top stem Y when note has no Y values.");
 
     let top_pixel = this.ys[0];
@@ -168,13 +168,13 @@ export class StemmableNote extends Note {
         base_pixel = Math.max(base_pixel, this.ys[i]);
       }
 
-      if(this.noteType == "s" || this.noteType == 'x') {
+      if (this.noteType == 's' || this.noteType == 'x') {
         top_pixel -= this.stem_direction * 7;
         base_pixel -= this.stem_direction * 7;
       }
     }
 
-    L("Stem extents: ", top_pixel, base_pixel);
+    L('Stem extents: ', top_pixel, base_pixel);
     return { topY: top_pixel, baseY: base_pixel };
   }
 
@@ -216,8 +216,8 @@ export class StemmableNote extends Note {
   }
 
   // Render the stem onto the canvas
-  drawStem(stem_struct){
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+  drawStem(stem_struct) {
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
 
     this.setStem(new Stem(stem_struct));

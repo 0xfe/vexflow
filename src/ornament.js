@@ -17,94 +17,94 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
-function L() { if (Ornament.DEBUG) Vex.L("Vex.Flow.Ornament", arguments); }
+function L() { if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', arguments); }
 
 // Accidental position modifications for each glyph
 const acc_mods = {
-  "n": {
+  'n': {
     shift_x: 1,
-    shift_y_upper:0,
-    shift_y_lower:0,
-    height: 17
+    shift_y_upper: 0,
+    shift_y_lower: 0,
+    height: 17,
   },
-  "#": {
+  '#': {
     shift_x: 0,
     shift_y_upper: -2,
     shift_y_lower: -2,
-    height: 20
+    height: 20,
   },
-  "b": {
+  'b': {
     shift_x: 1,
     shift_y_upper: 0,
     shift_y_lower: 3,
-    height: 18
+    height: 18,
   },
-  "##": {
+  '##': {
     shift_x: 0,
     shift_y_upper: 0,
     shift_y_lower: 0,
     height: 12,
   },
-  "bb": {
+  'bb': {
     shift_x: 0,
     shift_y_upper: 0,
     shift_y_lower: 4,
-    height: 17
+    height: 17,
   },
-  "db": {
+  'db': {
     shift_x: -3,
     shift_y_upper: 0,
     shift_y_lower: 4,
-    height: 17
+    height: 17,
   },
-  "bbs": {
+  'bbs': {
     shift_x: 0,
     shift_y_upper: 0,
     shift_y_lower: 4,
-    height: 17
+    height: 17,
   },
-  "d": {
+  'd': {
     shift_x: 0,
     shift_y_upper: 0,
     shift_y_lower: 0,
-    height: 17
+    height: 17,
   },
-  "++": {
+  '++': {
     shift_x: -2,
     shift_y_upper: -6,
     shift_y_lower: -3,
-    height: 22
+    height: 22,
   },
-  "+": {
+  '+': {
     shift_x: 1,
     shift_y_upper: -4,
     shift_y_lower: -2,
-    height: 20
+    height: 20,
   },
-  "bs": {
+  'bs': {
     shift_x: 0,
     shift_y_upper: 0,
     shift_y_lower: 4,
-    height: 17
+    height: 17,
   },
-  "bss": {
+  'bss': {
     shift_x: 0,
     shift_y_upper: 0,
     shift_y_lower: 4,
-    height: 17
+    height: 17,
   },
-  "++-": {
+  '++-': {
     shift_x: -2,
     shift_y_upper: -6,
     shift_y_lower: -3,
-    height: 22
+    height: 22,
   },
-  "+-": {
+  '+-': {
     shift_x: 1,
     shift_y_upper: -4,
     shift_y_lower: -2,
-    height: 20
-  }
+    height: 20,
+  },
 };
 
 export class Ornament extends Modifier {
@@ -113,7 +113,7 @@ export class Ornament extends Modifier {
   // ## Static Methods
   // Arrange ornaments inside `ModifierContext`
   static format(ornaments, state) {
-   if (!ornaments || ornaments.length === 0) return false;
+    if (!ornaments || ornaments.length === 0) return false;
 
     let width = 0;
     for (let i = 0; i < ornaments.length; ++i) {
@@ -150,15 +150,15 @@ export class Ornament extends Modifier {
     this.position = Modifier.Position.ABOVE;
     this.delayed = false;
 
-    this.accidental_upper = "";
-    this.accidental_lower = "";
+    this.accidental_upper = '';
+    this.accidental_lower = '';
 
     this.render_options = {
-      font_scale: 38
+      font_scale: 38,
     };
 
     this.ornament = Flow.ornamentCodes(this.type);
-    if (!this.ornament) throw new Vex.RERR("ArgumentError",
+    if (!this.ornament) throw new Vex.RERR('ArgumentError',
        "Ornament not found: '" + this.type + "'");
 
     // Default width comes from ornament table.
@@ -184,9 +184,9 @@ export class Ornament extends Modifier {
 
   // Render ornament in position next to note.
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw Ornament without a context.");
-    if (!(this.note && (this.index !== null))) throw new Vex.RERR("NoAttachedNote",
+    if (!(this.note && (this.index !== null))) throw new Vex.RERR('NoAttachedNote',
       "Can't draw Ornament without a note and index.");
 
     const ctx = this.context;
@@ -208,10 +208,10 @@ export class Ornament extends Modifier {
     // outside the stave.
     const is_tabnote = this.note.getCategory() === 'tabnotes';
     if (is_tabnote) {
-      if (this.note.hasStem()){
+      if (this.note.hasStem()) {
         if (stem_direction === StaveNote.STEM_UP) {
           bottom = stave.getYForBottomText(this.text_line - 2);
-        } else if (stem_direction === StaveNote.STEM_DOWN ) {
+        } else if (stem_direction === StaveNote.STEM_DOWN) {
           top = stave.getYForTopText(this.text_line - 1.5);
         }
       } else { // Without a stem
@@ -259,9 +259,9 @@ export class Ornament extends Modifier {
       // Special adjustments for trill glyph
       if (upper) {
         acc_y -= mods ? mods.height : 18;
-        acc_y +=  ornament.type === "tr" ? -8 : 0;
+        acc_y +=  ornament.type === 'tr' ? -8 : 0;
       } else {
-        acc_y +=  ornament.type === "tr" ? -6 : 0;
+        acc_y +=  ornament.type === 'tr' ? -6 : 0;
       }
 
       // Fine tune position of accidental glyph
@@ -272,7 +272,7 @@ export class Ornament extends Modifier {
       }
 
       // Render the glyph
-      const scale = ornament.render_options.font_scale/1.3;
+      const scale = ornament.render_options.font_scale / 1.3;
       Glyph.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);
 
       // If rendered a bottom accidental, increase the y value by the
@@ -287,7 +287,7 @@ export class Ornament extends Modifier {
       drawAccidental(ctx, this.accidental_lower, false, glyph_x, glyph_y);
     }
 
-    L("Rendering ornament: ", this.ornament, glyph_x, glyph_y);
+    L('Rendering ornament: ', this.ornament, glyph_x, glyph_y);
     Glyph.renderGlyph(ctx, glyph_x, glyph_y,
                          this.render_options.font_scale, this.ornament.code);
 
@@ -295,6 +295,5 @@ export class Ornament extends Modifier {
     if (this.accidental_upper) {
       drawAccidental(ctx, this.accidental_upper, true, glyph_x, glyph_y);
     }
-
   }
 }

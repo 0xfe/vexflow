@@ -21,7 +21,7 @@ export class CanvasContext {
     if (!context.canvas) {
       this.canvas = {
         width: CanvasContext.WIDTH,
-        height: CanvasContext.HEIGHT
+        height: CanvasContext.HEIGHT,
       };
     } else {
       this.canvas = context.canvas;
@@ -38,7 +38,7 @@ export class CanvasContext {
   add(elem) {}
 
   setFont(family, size, weight) {
-    this.vexFlowCanvasContext.font = (weight || "") + " " + size + "pt " + family;
+    this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
     return this;
   }
 
@@ -88,7 +88,7 @@ export class CanvasContext {
   // If it doesn't exist, we bolster it and assume it's looking for
   // a ctx.lineDash method, as previous versions of VexFlow
   // expected.
-  setLineDash(dash){
+  setLineDash(dash) {
     this.vexFlowCanvasContext.lineDash = dash;
     return this;
   }

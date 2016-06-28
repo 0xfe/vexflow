@@ -34,17 +34,17 @@ export class GraceNoteGroup extends Modifier {
       const stave = note.getStave();
       if (note != prev_note) {
          // Iterate through all notes to get the displaced pixels
-         for (let n = 0; n < note.keys.length; ++n) {
-            props_tmp = note.getKeyProps()[n];
-            shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
-          }
-          prev_note = note;
+        for (let n = 0; n < note.keys.length; ++n) {
+          props_tmp = note.getKeyProps()[n];
+          shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+        }
+        prev_note = note;
       }
       if (stave != null) {
         hasStave = true;
-        group_list.push({shift: shiftL, gracenote_group});
+        group_list.push({ shift: shiftL, gracenote_group });
       } else {
-        group_list.push({shift: shiftL, gracenote_group });
+        group_list.push({ shift: shiftL, gracenote_group });
       }
     }
 
@@ -90,7 +90,7 @@ export class GraceNoteGroup extends Modifier {
     this.voice = new Voice({
       num_beats: 4,
       beat_value: 4,
-      resolution: Flow.RESOLUTION
+      resolution: Flow.RESOLUTION,
     }).setStrict(false);
 
     this.voice.addTickables(this.grace_notes);
@@ -100,7 +100,7 @@ export class GraceNoteGroup extends Modifier {
 
   getCategory() { return GraceNoteGroup.CATEGORY; }
 
-  preFormat(){
+  preFormat() {
     if (this.preFormatted) return;
 
     this.formatter.joinVoices([this.voice]).format([this.voice], 0);
@@ -108,7 +108,7 @@ export class GraceNoteGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  beamNotes(){
+  beamNotes() {
     if (this.grace_notes.length > 1) {
       const beam = new Beam(this.grace_notes);
 
@@ -124,24 +124,24 @@ export class GraceNoteGroup extends Modifier {
   setNote(note) {
     this.note = note;
   }
-  setWidth(width){
+  setWidth(width) {
     this.width = width;
   }
-  getWidth(){
+  getWidth() {
     return this.width;
   }
   draw() {
     if (!this.context)  {
-      throw new Vex.RuntimeError("NoContext",
+      throw new Vex.RuntimeError('NoContext',
         "Can't draw Grace note without a context.");
     }
 
     const note = this.getNote();
 
-    L("Drawing grace note group for:", note);
+    L('Drawing grace note group for:', note);
 
     if (!(note && (this.index !== null))) {
-      throw new Vex.RuntimeError("NoAttachedNote",
+      throw new Vex.RuntimeError('NoAttachedNote',
         "Can't draw grace note without a parent note and parent note index.");
     }
 
@@ -153,10 +153,10 @@ export class GraceNoteGroup extends Modifier {
       const extraPx = tickContext.getExtraPx();
       const x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
       grace_notes.forEach(graceNote => {
-          const tick_context = graceNote.getTickContext();
-          const x_offset = tick_context.getX();
-          graceNote.setStave(note.stave);
-          tick_context.setX(x + x_offset);
+        const tick_context = graceNote.getTickContext();
+        const x_offset = tick_context.getX();
+        graceNote.setStave(note.stave);
+        tick_context.setX(x + x_offset);
       });
     }
 
@@ -178,7 +178,7 @@ export class GraceNoteGroup extends Modifier {
         last_note: this.grace_notes[0],
         first_note: note,
         first_indices: [0],
-        last_indices: [0]
+        last_indices: [0],
       });
 
       this.slur.render_options.cp2 = 12;
@@ -188,4 +188,4 @@ export class GraceNoteGroup extends Modifier {
 }
 
 // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
-function L() { if (GraceNoteGroup.DEBUG) Vex.L("Vex.Flow.GraceNoteGroup", arguments); }
+function L() { if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', arguments); }

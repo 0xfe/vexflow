@@ -16,7 +16,7 @@ export class Barline extends StaveModifier {
       REPEAT_BEGIN: 4,
       REPEAT_END: 5,
       REPEAT_BOTH: 6,
-      NONE: 7
+      NONE: 7,
     };
   }
 
@@ -92,7 +92,7 @@ export class Barline extends StaveModifier {
     }
   }
   drawVerticalBar(stave, x, double_bar) {
-    if (!stave.context) throw new Vex.RERR("NoCanvasContext",
+    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw stave without canvas context.");
     const topY = stave.getYForLine(0);
     const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
@@ -101,7 +101,7 @@ export class Barline extends StaveModifier {
     stave.context.fillRect(x, topY, 1, botY - topY);
   }
   drawVerticalEndBar(stave, x) {
-    if (!stave.context) throw new Vex.RERR("NoCanvasContext",
+    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw stave without canvas context.");
 
     const topY = stave.getYForLine(0);
@@ -110,7 +110,7 @@ export class Barline extends StaveModifier {
     stave.context.fillRect(x - 2, topY, 3, botY - topY);
   }
   drawRepeatBar(stave, x, begin) {
-    if (!stave.context) throw new Vex.RERR("NoCanvasContext",
+    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw stave without canvas context.");
 
     const topY = stave.getYForLine(0);
@@ -147,7 +147,7 @@ export class Barline extends StaveModifier {
     stave.context.arc(dot_x, dot_y, dot_radius, 0, Math.PI * 2, false);
     stave.context.fill();
 
-    //draw the bottom repeat dot
+    // draw the bottom repeat dot
     dot_y += stave.getSpacingBetweenLines();
     stave.context.beginPath();
     stave.context.arc(dot_x, dot_y, dot_radius, 0, Math.PI * 2, false);

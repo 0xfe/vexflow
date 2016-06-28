@@ -62,11 +62,11 @@ export class Tuplet {
 
   constructor(notes, options) {
     if (!notes || !notes.length) {
-      throw new Vex.RuntimeError("BadArguments", "No notes provided for tuplet.");
+      throw new Vex.RuntimeError('BadArguments', 'No notes provided for tuplet.');
     }
 
     if (notes.length == 1) {
-      throw new Vex.RuntimeError("BadArguments", "Too few notes for tuplet.");
+      throw new Vex.RuntimeError('BadArguments', 'Too few notes for tuplet.');
     }
 
     this.options = Vex.Merge({}, options);
@@ -76,20 +76,20 @@ export class Tuplet {
 
     // We accept beats_occupied, but warn that it's deprecated:
     // the preferred property name is now notes_occupied.
-    if(this.options.beats_occupied){
+    if (this.options.beats_occupied) {
       this.beatsOccupiedDeprecationWarning();
     }
     this.notes_occupied = this.options.notes_occupied ||
       this.options.beats_occupied ||
       2;
-    if("bracketed" in this.options){
+    if ('bracketed' in this.options) {
       this.bracketed = this.options.bracketed;
     } else {
       this.bracketed =
         notes.some(note => note.beam === null);
     }
 
-    this.ratioed = "ratioed" in this.options ?
+    this.ratioed = 'ratioed' in this.options ?
       this.options.ratioed :
       (Math.abs(this.notes_occupied - this.num_notes) > 1);
     this.point = 28;
@@ -145,7 +145,7 @@ export class Tuplet {
     if (!location) location = Tuplet.LOCATION_TOP;
     else if (location != Tuplet.LOCATION_TOP &&
         location != Tuplet.LOCATION_BOTTOM) {
-      throw new Vex.RERR("BadArgument", "Invalid tuplet location: " + location);
+      throw new Vex.RERR('BadArgument', 'Invalid tuplet location: ' + location);
     }
 
     this.location = location;
@@ -160,14 +160,14 @@ export class Tuplet {
     return this.num_notes;
   }
 
-  beatsOccupiedDeprecationWarning(){
-      const msg = "beats_occupied has been deprecated as an " +
-        "option for tuplets. Please use notes_occupied " +
-        "instead. Calls to getBeatsOccupied and " +
-        "setBeatsOccupied should now be routed to " +
-        "getNotesOccupied and setNotesOccupied instead.";
-      if(console && console.warn) console.warn(msg);
-      else if(console) console.log(msg);
+  beatsOccupiedDeprecationWarning() {
+    const msg = 'beats_occupied has been deprecated as an ' +
+        'option for tuplets. Please use notes_occupied ' +
+        'instead. Calls to getBeatsOccupied and ' +
+        'setBeatsOccupied should now be routed to ' +
+        'getNotesOccupied and setNotesOccupied instead.';
+    if (console && console.warn) console.warn(msg);
+    else if (console) console.log(msg);
   }
 
   getBeatsOccupied() {
@@ -195,14 +195,14 @@ export class Tuplet {
     this.num_glyphs = [];
     let n = this.num_notes;
     while (n >= 1) {
-      this.num_glyphs.push(new Glyph("v" + (n % 10), this.point));
+      this.num_glyphs.push(new Glyph('v' + (n % 10), this.point));
       n = parseInt(n / 10, 10);
     }
 
     this.denom_glyphs = [];
     n = this.notes_occupied;
     while (n >= 1) {
-      this.denom_glyphs.push(new Glyph("v" + (n % 10), this.point));
+      this.denom_glyphs.push(new Glyph('v' + (n % 10), this.point));
       n = parseInt(n / 10, 10);
     }
   }
@@ -210,7 +210,7 @@ export class Tuplet {
   // determine how many tuplets are nested within this tuplet
   // on the same side (above/below), to calculate a y
   // offset for this tuplet:
-  getNestedTupletCount(){
+  getNestedTupletCount() {
     const location = this.location;
     const first_note = this.notes[0];
     let maxTupletCount = countTuplets(first_note, location);
@@ -218,8 +218,8 @@ export class Tuplet {
 
     // Count the tuplets that are on the same side (above/below)
     // as this tuplet:
-    function countTuplets(note, location){
-      return note.tupletStack.filter(tuplet => tuplet.location===location).length;
+    function countTuplets(note, location) {
+      return note.tupletStack.filter(tuplet => tuplet.location === location).length;
     }
 
     this.notes.forEach(note => {
@@ -234,7 +234,7 @@ export class Tuplet {
   }
 
   // determine the y position of the tuplet:
-  getYPosition(){
+  getYPosition() {
     let i, y_pos;
 
     // offset the tuplet for any nested tuplets between
@@ -252,9 +252,9 @@ export class Tuplet {
     const first_note = this.notes[0];
     if (this.location == Tuplet.LOCATION_TOP) {
       y_pos = first_note.getStave().getYForLine(0) - 15;
-      //y_pos = first_note.getStemExtents().topY - 10;
+      // y_pos = first_note.getStemExtents().topY - 10;
 
-      for (i=0; i<this.notes.length; ++i) {
+      for (i = 0; i < this.notes.length; ++i) {
         const top_y = this.notes[i].getStemDirection() === Stem.UP ?
             this.notes[i].getStemExtents().topY - 10
           : this.notes[i].getStemExtents().baseY - 20;
@@ -265,7 +265,7 @@ export class Tuplet {
     else {
       y_pos = first_note.getStave().getYForLine(4) + 20;
 
-      for (i=0; i<this.notes.length; ++i) {
+      for (i = 0; i < this.notes.length; ++i) {
         const bottom_y = this.notes[i].getStemDirection() === Stem.UP ?
             this.notes[i].getStemExtents().baseY + 20
           : this.notes[i].getStemExtents().topY + 10;
@@ -278,7 +278,7 @@ export class Tuplet {
   }
 
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
 
     // determine x value of left bound of tuplet
@@ -310,18 +310,18 @@ export class Tuplet {
       width += this.point * 0.32;
     }
 
-    const notation_center_x = this.x_pos + (this.width/2);
-    const notation_start_x = notation_center_x - (width/2);
+    const notation_center_x = this.x_pos + (this.width / 2);
+    const notation_start_x = notation_center_x - (width / 2);
 
     // draw bracket if the tuplet is not beamed
     if (this.bracketed) {
-      const line_width = this.width/2 - width/2 - 5;
+      const line_width = this.width / 2 - width / 2 - 5;
 
       // only draw the bracket if it has positive length
       if (line_width > 0) {
-        this.context.fillRect(this.x_pos, this.y_pos,line_width, 1);
+        this.context.fillRect(this.x_pos, this.y_pos, line_width, 1);
         this.context.fillRect(this.x_pos + this.width / 2 + width / 2 + 5,
-                              this.y_pos,line_width, 1);
+                              this.y_pos, line_width, 1);
         this.context.fillRect(this.x_pos,
             this.y_pos + (this.location == Tuplet.LOCATION_BOTTOM),
             1, this.location * 10);
@@ -335,33 +335,33 @@ export class Tuplet {
     let x_offset = 0;
     let size = this.num_glyphs.length;
     for (glyph in this.num_glyphs) {
-      this.num_glyphs[size-glyph-1].render(
+      this.num_glyphs[size - glyph - 1].render(
           this.context, notation_start_x + x_offset,
-          this.y_pos + (this.point/3) - 2);
-      x_offset += this.num_glyphs[size-glyph-1].getMetrics().width;
+          this.y_pos + (this.point / 3) - 2);
+      x_offset += this.num_glyphs[size - glyph - 1].getMetrics().width;
     }
 
     // display colon and denominator if the ratio is to be shown
     if (this.ratioed) {
-      const colon_x = notation_start_x + x_offset + this.point*0.16;
+      const colon_x = notation_start_x + x_offset + this.point * 0.16;
       const colon_radius = this.point * 0.06;
       this.context.beginPath();
-      this.context.arc(colon_x, this.y_pos - this.point*0.08,
-                       colon_radius, 0, Math.PI*2, true);
+      this.context.arc(colon_x, this.y_pos - this.point * 0.08,
+                       colon_radius, 0, Math.PI * 2, true);
       this.context.closePath();
       this.context.fill();
       this.context.beginPath();
-      this.context.arc(colon_x, this.y_pos + this.point*0.12,
-                       colon_radius, 0, Math.PI*2, true);
+      this.context.arc(colon_x, this.y_pos + this.point * 0.12,
+                       colon_radius, 0, Math.PI * 2, true);
       this.context.closePath();
       this.context.fill();
-      x_offset += this.point*0.32;
+      x_offset += this.point * 0.32;
       size = this.denom_glyphs.length;
       for (glyph in this.denom_glyphs) {
-        this.denom_glyphs[size-glyph-1].render(
+        this.denom_glyphs[size - glyph - 1].render(
             this.context, notation_start_x + x_offset,
-            this.y_pos + (this.point/3) - 2);
-        x_offset += this.denom_glyphs[size-glyph-1].getMetrics().width;
+            this.y_pos + (this.point / 3) - 2);
+        x_offset += this.denom_glyphs[size - glyph - 1].getMetrics().width;
       }
     }
   }

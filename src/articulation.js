@@ -16,7 +16,7 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
-function L() { if (Articulation.DEBUG) Vex.L("Vex.Flow.Articulation", arguments); }
+function L() { if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', arguments); }
 
 export class Articulation extends Modifier {
   static get CATEGORY() { return 'articulations'; }
@@ -59,11 +59,11 @@ export class Articulation extends Modifier {
     this.position = Modifier.Position.BELOW;
 
     this.render_options = {
-      font_scale: 38
+      font_scale: 38,
     };
 
     this.articulation = Flow.articulationCodes(this.type);
-    if (!this.articulation) throw new Vex.RERR("ArgumentError",
+    if (!this.articulation) throw new Vex.RERR('ArgumentError',
        "Articulation not found: '" + this.type + "'");
 
     // Default width comes from articulation table.
@@ -74,9 +74,9 @@ export class Articulation extends Modifier {
 
   // Render articulation in position next to note.
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw Articulation without a context.");
-    if (!(this.note && (this.index !== null))) throw new Vex.RERR("NoAttachedNote",
+    if (!(this.note && (this.index !== null))) throw new Vex.RERR('NoAttachedNote',
       "Can't draw Articulation without a note and index.");
 
     const stem_direction = this.note.getStemDirection();
@@ -90,16 +90,16 @@ export class Articulation extends Modifier {
     const needsLineAdjustment = (articulation, note_line, line_spacing) => {
       const offset_direction = (articulation.position === Modifier.Position.ABOVE) ? 1 : -1;
       const duration = articulation.getNote().getDuration();
-      if(!is_on_head && Flow.durationToNumber(duration) <= 1){
+      if (!is_on_head && Flow.durationToNumber(duration) <= 1) {
         // Add stem length, unless it's on a whole note.
         note_line += offset_direction * 3.5;
       }
 
       const articulation_line = note_line + (offset_direction * line_spacing);
 
-      if(articulation_line >= 1 &&
+      if (articulation_line >= 1 &&
          articulation_line <= 5 &&
-         articulation_line % 1 === 0){
+         articulation_line % 1 === 0) {
         return true;
       }
 
@@ -126,10 +126,10 @@ export class Articulation extends Modifier {
     // TabNotes don't have stems attached to them. Tab stems are rendered
     // outside the stave.
     if (is_tabnote) {
-      if (this.note.hasStem()){
+      if (this.note.hasStem()) {
         if (stem_direction === StaveNote.STEM_UP) {
           bottom = stave.getYForBottomText(this.text_line - 2);
-        } else if (stem_direction === StaveNote.STEM_DOWN ) {
+        } else if (stem_direction === StaveNote.STEM_DOWN) {
           top = stave.getYForTopText(this.text_line - 1.5);
         }
       } else { // Without a stem
@@ -171,7 +171,7 @@ export class Articulation extends Modifier {
     const glyph_x = start.x + this.articulation.shift_right;
     glyph_y += shiftY + this.y_shift;
 
-    L("Rendering articulation: ", this.articulation, glyph_x, glyph_y);
+    L('Rendering articulation: ', this.articulation, glyph_x, glyph_y);
     Glyph.renderGlyph(this.context, glyph_x, glyph_y,
                          this.render_options.font_scale, this.articulation.code);
   }

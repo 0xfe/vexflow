@@ -12,7 +12,7 @@ export class Volta extends StaveModifier {
       BEGIN: 2,
       MID: 3,
       END: 4,
-      BEGIN_END: 5
+      BEGIN_END: 5,
     };
   }
 
@@ -23,22 +23,22 @@ export class Volta extends StaveModifier {
     this.y_shift = y_shift;
     this.number = number;
     this.font = {
-      family: "sans-serif",
+      family: 'sans-serif',
       size: 9,
-      weight: "bold"
+      weight: 'bold',
     };
   }
 
   getCategory() { return Volta.CATEGORY; }
   setShiftY(y) { this.y_shift = y; return this; }
   draw(stave, x) {
-    if (!stave.context) throw new Vex.RERR("NoCanvasContext",
+    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
       "Can't draw stave without canvas context.");
     const ctx = stave.context;
     let width = stave.width;
     const top_y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     const vert_height = 1.5 * stave.options.spacing_between_lines_px;
-    switch(this.volta) {
+    switch (this.volta) {
       case Volta.type.BEGIN:
         ctx.fillRect(this.x + x, top_y, 1, vert_height);
         break;

@@ -11,7 +11,7 @@ export class StaveModifier {
       ABOVE: 3,
       BELOW: 4,
       BEGIN: 5,
-      END: 6
+      END: 6,
     };
   }
 
@@ -28,7 +28,7 @@ export class StaveModifier {
   setWidth(width) { this.width = width; return this; }
   getX() { return this.x; }
   setX(x) { this.x = x; return this; }
-  getCategory() {return "";}
+  getCategory() { return ''; }
   makeSpacer(padding) {
     return {
       getContext() { return true; },
@@ -36,7 +36,7 @@ export class StaveModifier {
       renderToStave() {},
       getMetrics() {
         return { width: padding };
-      }
+      },
     };
   }
   placeGlyphOnLine(glyph, stave, line) {

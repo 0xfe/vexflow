@@ -31,8 +31,8 @@ export class Note extends Tickable {
 
     const xWidth = xEnd - xStart;
     ctx.save();
-    ctx.setFont("Arial", 8, "");
-    ctx.fillText(Math.round(xWidth) + "px", xStart + note.getXShift(), yPos);
+    ctx.setFont('Arial', 8, '');
+    ctx.fillText(Math.round(xWidth) + 'px', xStart + note.getXShift(), yPos);
 
     const y = (yPos + 7);
     function stroke(x1, x2, color) {
@@ -45,13 +45,13 @@ export class Note extends Tickable {
       ctx.stroke();
     }
 
-    stroke(xStart, xPre1, "red");
-    stroke(xPre1, xAbs, "#999");
-    stroke(xAbs, xPost1, "green");
-    stroke(xPost1, xPost2, "#999");
-    stroke(xPost2, xEnd, "red");
-    stroke(xStart - note.getXShift(), xStart, "#DDD"); // Shift
-    Vex.drawDot(ctx, xAbs + note.getXShift(), y, "blue");
+    stroke(xStart, xPre1, 'red');
+    stroke(xPre1, xAbs, '#999');
+    stroke(xAbs, xPost1, 'green');
+    stroke(xPost1, xPost2, '#999');
+    stroke(xPost2, xEnd, 'red');
+    stroke(xStart - note.getXShift(), xStart, '#DDD'); // Shift
+    Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
     ctx.restore();
   }
 
@@ -69,16 +69,16 @@ export class Note extends Tickable {
     super();
 
     if (!note_struct) {
-      throw new Vex.RuntimeError("BadArguments",
-          "Note must have valid initialization data to identify " +
-          "duration and type.");
+      throw new Vex.RuntimeError('BadArguments',
+          'Note must have valid initialization data to identify ' +
+          'duration and type.');
     }
 
     // Parse `note_struct` and get note properties.
     const initData = Flow.parseNoteData(note_struct);
     if (!initData) {
-      throw new Vex.RuntimeError("BadArguments",
-          "Invalid note initialization object: " + JSON.stringify(note_struct));
+      throw new Vex.RuntimeError('BadArguments',
+          'Invalid note initialization object: ' + JSON.stringify(note_struct));
     }
 
     // Set note properties from parameters.
@@ -100,9 +100,9 @@ export class Note extends Tickable {
     this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
 
     if (this.positions &&
-        (typeof(this.positions) != "object" || !this.positions.length)) {
+        (typeof(this.positions) != 'object' || !this.positions.length)) {
       throw new Vex.RuntimeError(
-        "BadArguments", "Note keys must be array type.");
+        'BadArguments', 'Note keys must be array type.');
     }
 
     // Note to play for audio players.
@@ -134,7 +134,7 @@ export class Note extends Tickable {
     this.stave = null;
     this.render_options = {
       annotation_spacing: 5,
-      stave_padding: 12
+      stave_padding: 12,
     };
   }
 
@@ -194,16 +194,16 @@ export class Note extends Tickable {
   // an individual pitch/key within the note/chord.
   setYs(ys) { this.ys = ys; return this; }
   getYs() {
-    if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
-        "No Y-values calculated for this note.");
+    if (this.ys.length === 0) throw new Vex.RERR('NoYValues',
+        'No Y-values calculated for this note.');
     return this.ys;
   }
 
   // Get the Y position of the space above the stave onto which text can
   // be rendered.
   getYForTopText(text_line) {
-    if (!this.stave) throw new Vex.RERR("NoStave",
-        "No stave attached to this note.");
+    if (!this.stave) throw new Vex.RERR('NoStave',
+        'No stave attached to this note.');
     return this.stave.getYForTopText(text_line);
   }
 
@@ -212,7 +212,7 @@ export class Note extends Tickable {
 
   // Returns the voice that this note belongs in.
   getVoice() {
-    if (!this.voice) throw new Vex.RERR("NoVoice", "Note has no voice.");
+    if (!this.voice) throw new Vex.RERR('NoVoice', 'Note has no voice.');
     return this.voice;
   }
 
@@ -253,9 +253,9 @@ export class Note extends Tickable {
 
   // Get the coordinates for where modifiers begin.
   getModifierStartXY() {
-    if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
         "Can't call GetModifierStartXY on an unformatted note");
-    return {x: this.getAbsoluteX(), y: this.ys[0]};
+    return { x: this.getAbsoluteX(), y: this.ys[0] };
   }
 
   // Get bounds and metrics for this note.
@@ -269,7 +269,7 @@ export class Note extends Tickable {
   // `extraLeftPx`: Extra space on left of note.
   // `extraRightPx`: Extra space on right of note.
   getMetrics() {
-    if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
         "Can't call getMetrics on an unformatted note.");
     let modLeftPx = 0;
     let modRightPx = 0;
@@ -298,7 +298,7 @@ export class Note extends Tickable {
   // Get and set width of note. Used by the formatter for positioning.
   setWidth(width) { this.width = width; }
   getWidth() {
-    if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
         "Can't call GetWidth on an unformatted note.");
     return this.width +
       (this.modifierContext ?  this.modifierContext.getWidth() : 0);
@@ -310,8 +310,8 @@ export class Note extends Tickable {
 
   // Get `X` position of this tick context.
   getX() {
-    if (!this.tickContext) throw new Vex.RERR("NoTickContext",
-        "Note needs a TickContext assigned for an X-Value");
+    if (!this.tickContext) throw new Vex.RERR('NoTickContext',
+        'Note needs a TickContext assigned for an X-Value');
     return this.tickContext.getX() + this.x_shift;
   }
 
@@ -319,8 +319,8 @@ export class Note extends Tickable {
   // excludes x_shift, so you'll need to factor it in if you're
   // looking for the post-formatted x-position.
   getAbsoluteX() {
-    if (!this.tickContext) throw new Vex.RERR("NoTickContext",
-        "Note needs a TickContext assigned for an X-Value");
+    if (!this.tickContext) throw new Vex.RERR('NoTickContext',
+        'Note needs a TickContext assigned for an X-Value');
 
     // Position note to left edge of tick context.
     let x = this.tickContext.getX();
@@ -328,7 +328,7 @@ export class Note extends Tickable {
       x += this.stave.getNoteStartX() + this.render_options.stave_padding;
     }
 
-    if (this.isCenterAligned()){
+    if (this.isCenterAligned()) {
       x += this.getCenterXShift();
     }
 

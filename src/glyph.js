@@ -39,8 +39,8 @@ export class Glyph {
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
     const glyph = font.glyphs[code];
-    if (!glyph) throw new Vex.RuntimeError("BadGlyph", "Glyph " + code +
-        " does not exist in font.");
+    if (!glyph) throw new Vex.RuntimeError('BadGlyph', 'Glyph ' + code +
+        ' does not exist in font.');
 
     const x_min = glyph.x_min;
     const x_max = glyph.x_max;
@@ -65,11 +65,11 @@ export class Glyph {
         x_min,
         x_max,
         ha,
-        outline
+        outline,
       };
     } else {
-      throw new Vex.RuntimeError("BadGlyph", "Glyph " + code +
-          " has no outline defined.");
+      throw new Vex.RuntimeError('BadGlyph', 'Glyph ' + code +
+          ' has no outline defined.');
     }
   }
 
@@ -97,7 +97,7 @@ export class Glyph {
       m: ctx.moveTo.bind(ctx),
       l: ctx.lineTo.bind(ctx),
       q: ctx.quadraticCurveTo.bind(ctx),
-      b: ctx.bezierCurveTo.bind(ctx)
+      b: ctx.bezierCurveTo.bind(ctx),
     });
     ctx.fill();
   }
@@ -109,7 +109,7 @@ export class Glyph {
       m: bboxComp.addPoint.bind(bboxComp),
       l: bboxComp.addPoint.bind(bboxComp),
       q: bboxComp.addQuadraticCurve.bind(bboxComp),
-      b: bboxComp.addBezierCurve.bind(bboxComp)
+      b: bboxComp.addBezierCurve.bind(bboxComp),
     });
 
     return new BoundingBox(
@@ -129,7 +129,7 @@ export class Glyph {
     this.context = null;
     this.options = {
       cache: true,
-      font: Font
+      font: Font,
     };
 
     this.metrics = null;
@@ -171,20 +171,20 @@ export class Glyph {
   }
 
   getMetrics() {
-    if (!this.metrics) throw new Vex.RuntimeError("BadGlyph", "Glyph " +
-      this.code + " is not initialized.");
+    if (!this.metrics) throw new Vex.RuntimeError('BadGlyph', 'Glyph ' +
+      this.code + ' is not initialized.');
 
     return {
       x_min: this.metrics.x_min * this.scale,
       x_max: this.metrics.x_max * this.scale,
       width: this.bbox.getW(),
-      height: this.bbox.getH()
+      height: this.bbox.getH(),
     };
   }
 
   render(ctx, x_pos, y_pos) {
-    if (!this.metrics) throw new Vex.RuntimeError("BadGlyph", "Glyph " +
-        this.code + " is not initialized.");
+    if (!this.metrics) throw new Vex.RuntimeError('BadGlyph', 'Glyph ' +
+        this.code + ' is not initialized.');
 
     const outline = this.metrics.outline;
     const scale = this.scale;
@@ -193,10 +193,10 @@ export class Glyph {
   }
 
   renderToStave(x) {
-    if (!this.metrics) throw new Vex.RuntimeError("BadGlyph", "Glyph " +
-        this.code + " is not initialized.");
-    if (!this.stave) throw new Vex.RuntimeError("GlyphError", "No valid stave");
-    if (!this.context) throw new Vex.RERR("GlyphError", "No valid context");
+    if (!this.metrics) throw new Vex.RuntimeError('BadGlyph', 'Glyph ' +
+        this.code + ' is not initialized.');
+    if (!this.stave) throw new Vex.RuntimeError('GlyphError', 'No valid stave');
+    if (!this.context) throw new Vex.RERR('GlyphError', 'No valid context');
 
     const outline = this.metrics.outline;
     const scale = this.scale;

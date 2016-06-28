@@ -1,4 +1,4 @@
-/// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// / [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 // This class implements varies types of ties between contiguous notes. The
@@ -9,11 +9,11 @@ import { StaveTie } from './stavetie';
 
 export class TabTie extends StaveTie {
   static createHammeron(notes) {
-    return new TabTie(notes, "H");
+    return new TabTie(notes, 'H');
   }
 
   static createPulloff(notes) {
-    return new TabTie(notes, "P");
+    return new TabTie(notes, 'P');
   }
 
   constructor(notes, text) {
@@ -38,7 +38,7 @@ export class TabTie extends StaveTie {
 
   draw() {
     if (!this.context)
-      throw new Vex.RERR("NoContext", "No context to render tie.");
+      throw new Vex.RERR('NoContext', 'No context to render tie.');
     const first_note = this.first_note;
     const last_note = this.last_note;
     let first_x_px, last_x_px, first_ys, last_ys;
@@ -66,7 +66,7 @@ export class TabTie extends StaveTie {
       last_x_px,
       first_ys,
       last_ys,
-      direction: -1           // Tab tie's are always face up.
+      direction: -1,           // Tab tie's are always face up.
     });
 
     this.renderText(first_x_px, last_x_px);

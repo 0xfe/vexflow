@@ -17,29 +17,29 @@ export class Tremolo extends Modifier {
     this.note = null;
     this.index = null;
     this.position = Modifier.Position.CENTER;
-    this.code = "v74";
+    this.code = 'v74';
     this.shift_right = -2;
     this.y_spacing = 4;
 
     this.render_options = {
       font_scale: 35,
       stroke_px: 3,
-      stroke_spacing: 10
+      stroke_spacing: 10,
     };
 
     this.font = {
-      family: "Arial",
+      family: 'Arial',
       size: 16,
-      weight: ""
+      weight: '',
     };
   }
 
   getCategory() { return Tremolo.CATEGORY; }
 
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw Tremolo without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
+    if (!(this.note && (this.index != null))) throw new Vex.RERR('NoAttachedNote',
       "Can't draw Tremolo without a note and index.");
 
     const start = this.note.getModifierStartXY(this.position, this.index);

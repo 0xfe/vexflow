@@ -13,8 +13,8 @@ export class Fraction {
    * GCD: Find greatest common divisor using Euclidean algorithm
    */
   static GCD(a, b) {
-    if (typeof a !== "number" || typeof b !== "number") {
-      throw new Vex.RERR("BadArgument", "Invalid numbers: " + a + ", " + b);
+    if (typeof a !== 'number' || typeof b !== 'number') {
+      throw new Vex.RERR('BadArgument', 'Invalid numbers: ' + a + ', ' + b);
     }
 
     let t;

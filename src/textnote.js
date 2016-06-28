@@ -15,140 +15,140 @@ export class TextNote extends Note {
     return {
       LEFT: 1,
       CENTER: 2,
-      RIGHT: 3
+      RIGHT: 3,
     };
   }
 
   // Glyph data
   static get GLYPHS() {
     return {
-      "segno": {
-        code: "v8c",
+      'segno': {
+        code: 'v8c',
         point: 40,
         x_shift: 0,
-        y_shift: -10
+        y_shift: -10,
         // width: 10 // optional
       },
-      "tr": {
-        code: "v1f",
+      'tr': {
+        code: 'v1f',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
       },
-      "mordent_upper": {
-        code: "v1e",
+      'mordent_upper': {
+        code: 'v1e',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
       },
-      "mordent_lower": {
-        code: "v45",
+      'mordent_lower': {
+        code: 'v45',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
       },
-      "f": {
-        code: "vba",
+      'f': {
+        code: 'vba',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
       },
-      "p": {
-        code: "vbf",
+      'p': {
+        code: 'vbf',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
       },
-      "m": {
-        code: "v62",
+      'm': {
+        code: 'v62',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
       },
-      "s": {
-        code: "v4a",
+      's': {
+        code: 'v4a',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
       },
-      "z": {
-        code: "v80",
+      'z': {
+        code: 'v80',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
       },
-      "coda": {
-        code: "v4d",
+      'coda': {
+        code: 'v4d',
         point: 40,
         x_shift: 0,
-        y_shift: -8
+        y_shift: -8,
         // width: 10 // optional
       },
-      "pedal_open": {
-        code: "v36",
-        point:40,
-        x_shift:0,
-        y_shift:0
+      'pedal_open': {
+        code: 'v36',
+        point: 40,
+        x_shift: 0,
+        y_shift: 0,
       },
-      "pedal_close": {
-        code: "v5d",
-        point:40,
-        x_shift:0,
-        y_shift:3
+      'pedal_close': {
+        code: 'v5d',
+        point: 40,
+        x_shift: 0,
+        y_shift: 3,
       },
-      "caesura_straight": {
-        code: "v34",
-        point:40,
-        x_shift:0,
-        y_shift:2
+      'caesura_straight': {
+        code: 'v34',
+        point: 40,
+        x_shift: 0,
+        y_shift: 2,
       },
-      "caesura_curved": {
-        code: "v4b",
-        point:40,
-        x_shift:0,
-        y_shift:2
+      'caesura_curved': {
+        code: 'v4b',
+        point: 40,
+        x_shift: 0,
+        y_shift: 2,
       },
-      "breath": {
-        code: "v6c",
-        point:40,
-        x_shift:0,
-        y_shift:0
+      'breath': {
+        code: 'v6c',
+        point: 40,
+        x_shift: 0,
+        y_shift: 0,
       },
-      "tick": {
-        code: "v6f",
-        point:50,
-        x_shift:0,
-        y_shift:0
+      'tick': {
+        code: 'v6f',
+        point: 50,
+        x_shift: 0,
+        y_shift: 0,
       },
-      "turn": {
-        code: "v72",
-        point:40,
-        x_shift:0,
-        y_shift:0
+      'turn': {
+        code: 'v72',
+        point: 40,
+        x_shift: 0,
+        y_shift: 0,
       },
-      "turn_inverted": {
-        code: "v33",
-        point:40,
-        x_shift:0,
-        y_shift:0
+      'turn_inverted': {
+        code: 'v33',
+        point: 40,
+        x_shift: 0,
+        y_shift: 0,
       },
 
       // DEPRECATED - please use "mordent_upper" or "mordent_lower"
-      "mordent": {
-        code: "v1e",
+      'mordent': {
+        code: 'v1e',
         point: 40,
         x_shift: 0,
-        y_shift: 0
+        y_shift: 0,
         // width: 10 // optional
-      }
+      },
     };
   }
 
@@ -162,9 +162,9 @@ export class TextNote extends Note {
     this.glyph_type = text_struct.glyph;
     this.glyph = null;
     this.font = {
-      family: "Arial",
+      family: 'Arial',
       size: 12,
-      weight: ""
+      weight: '',
     };
 
     // Set font
@@ -175,9 +175,9 @@ export class TextNote extends Note {
     // measure the length of text is with `canvasContext.measureText()`
     if (this.glyph_type) {
       const struct = TextNote.GLYPHS[this.glyph_type];
-      if (!struct) throw new Vex.RERR("Invalid glyph type: " + this.glyph_type);
+      if (!struct) throw new Vex.RERR('Invalid glyph type: ' + this.glyph_type);
 
-      this.glyph = new Glyph(struct.code, struct.point, {cache: false});
+      this.glyph = new Glyph(struct.code, struct.point, { cache: false });
 
       if (struct.width)
         this.setWidth(struct.width);
@@ -208,7 +208,7 @@ export class TextNote extends Note {
 
   // Pre-render formatting
   preFormat() {
-    if (!this.context) throw new Vex.RERR("NoRenderContext",
+    if (!this.context) throw new Vex.RERR('NoRenderContext',
         "Can't measure text without rendering context.");
     if (this.preFormatted) return;
 
@@ -233,9 +233,9 @@ export class TextNote extends Note {
 
   // Renders the TextNote
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
-    if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
+    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
     const ctx = this.context;
     let x = this.getAbsoluteX();
@@ -258,20 +258,20 @@ export class TextNote extends Note {
       ctx.fillText(this.text, x, y);
 
       // Width of the letter M gives us the approximate height of the text
-      const height = ctx.measureText("M").width;
+      const height = ctx.measureText('M').width;
       // Get accurate width of text
       const width = ctx.measureText(this.text).width;
 
       // Write superscript
       if (this.superscript) {
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
-        ctx.fillText(this.superscript, x + width + 2, y - (height/2.2));
+        ctx.fillText(this.superscript, x + width + 2, y - (height / 2.2));
       }
 
       // Write subscript
       if (this.subscript) {
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
-        ctx.fillText(this.subscript, x + width + 2, y + (height/2.2) - 1);
+        ctx.fillText(this.subscript, x + width + 2, y + (height / 2.2) - 1);
       }
 
       ctx.restore();

@@ -23,7 +23,7 @@ import { Glyph } from './glyph';
 function getUnusedStringGroups(num_lines, strings_used) {
   const stem_through = [];
   let group = [];
-  for (let string = 1; string <= num_lines ; string++) {
+  for (let string = 1; string <= num_lines; string++) {
     const is_used = strings_used.indexOf(string) > -1;
 
     if (!is_used) {
@@ -46,7 +46,7 @@ function getUnusedStringGroups(num_lines, strings_used) {
 // * unused_strings - An array of groups of unused strings
 // * stave - The stave to use for reference
 // * stem_direction - The direction of the stem
-function getPartialStemLines (stem_y, unused_strings, stave, stem_direction) {
+function getPartialStemLines(stem_y, unused_strings, stave, stem_direction) {
   const up_stem = stem_direction !== 1;
   const down_stem = stem_direction !== -1;
 
@@ -84,9 +84,9 @@ function getPartialStemLines (stem_y, unused_strings, stave, stem_direction) {
       // Unless the string is the first or last, add padding to each side
       // of the line
       if (index === 0 && !isTopBound) {
-        y -= line_spacing/2 - 1;
-      } else if (index === strings.length - 1 && !isBottomBound){
-        y += line_spacing/2 - 1;
+        y -= line_spacing / 2 - 1;
+      } else if (index === strings.length - 1 && !isBottomBound) {
+        y += line_spacing / 2 - 1;
       }
 
       // Store the y value
@@ -131,20 +131,20 @@ export class TabNote extends StemmableNote {
       // Flag to draw dot modifiers
       draw_dots: draw_stem,
       // Flag to extend the main stem through the stave and fret positions
-      draw_stem_through_stave: false
+      draw_stem_through_stave: false,
     });
 
     this.glyph =
       Flow.durationToGlyph(this.duration, this.noteType);
     if (!this.glyph) {
-      throw new Vex.RuntimeError("BadArguments",
-          "Invalid note initialization data (No glyph found): " +
+      throw new Vex.RuntimeError('BadArguments',
+          'Invalid note initialization data (No glyph found): ' +
           JSON.stringify(tab_struct));
     }
 
     this.buildStem();
 
-    if (tab_struct.stem_direction){
+    if (tab_struct.stem_direction) {
       this.setStemDirection(tab_struct.stem_direction);
     } else {
       this.setStemDirection(Stem.UP);
@@ -170,7 +170,7 @@ export class TabNote extends StemmableNote {
   hasStem() { return this.render_options.draw_stem; }
 
   // Get the default stem extension for the note
-  getStemExtension(){
+  getStemExtension() {
     const glyph = this.getGlyph();
 
     if (this.stem_extension_override != null) {
@@ -198,7 +198,7 @@ export class TabNote extends StemmableNote {
     this.width = 0;
     for (let i = 0; i < this.positions.length; ++i) {
       let fret = this.positions[i].fret;
-      if (this.ghost) fret = "(" + fret + ")";
+      if (this.ghost) fret = '(' + fret + ')';
       const glyph = Flow.tabToGlyph(fret);
       this.glyphs.push(glyph);
       this.width = (glyph.width > this.width) ? glyph.width : this.width;
@@ -215,8 +215,8 @@ export class TabNote extends StemmableNote {
     let i;
     if (this.context) {
       for (i = 0; i < this.glyphs.length; ++i) {
-        const text = "" + this.glyphs[i].text;
-        if (text.toUpperCase() != "X")
+        const text = '' + this.glyphs[i].text;
+        if (text.toUpperCase() != 'X')
           this.glyphs[i].width = this.context.measureText(text).width;
         this.width = (this.glyphs[i].width > this.width) ?
           this.glyphs[i].width : this.width;
@@ -271,11 +271,11 @@ export class TabNote extends StemmableNote {
   // Get the default `x` and `y` coordinates for a modifier at a specific
   // `position` at a fret position `index`
   getModifierStartXY(position, index) {
-    if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
+    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
         "Can't call GetModifierStartXY on an unformatted note");
 
-    if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
-        "No Y-Values calculated for this note.");
+    if (this.ys.length === 0) throw new Vex.RERR('NoYValues',
+        'No Y-Values calculated for this note.');
 
     let x = 0;
     if (position == Modifier.Position.LEFT) {
@@ -284,11 +284,11 @@ export class TabNote extends StemmableNote {
       x = this.width + 2; // extra_right_px
     } else if (position == Modifier.Position.BELOW ||
                position == Modifier.Position.ABOVE) {
-        const note_glyph_width = this.glyph.head_width;
-        x = note_glyph_width / 2;
+      const note_glyph_width = this.glyph.head_width;
+      x = note_glyph_width / 2;
     }
 
-    return {x: this.getAbsoluteX() + x, y: this.ys[index]};
+    return { x: this.getAbsoluteX() + x, y: this.ys[index] };
   }
 
   // Get the default line for rest
@@ -306,7 +306,7 @@ export class TabNote extends StemmableNote {
   getStemX() { return this.getCenterGlyphX(); }
 
   // Get the y position for the stem
-  getStemY(){
+  getStemY() {
     const num_lines = this.stave.getNumLines();
 
     // The decimal staff line amounts provide optimal spacing between the
@@ -323,7 +323,7 @@ export class TabNote extends StemmableNote {
     const stem_base_y = this.getStemY();
     const stem_top_y = stem_base_y + (Stem.HEIGHT * -this.stem_direction);
 
-    return { topY: stem_top_y , baseY: stem_base_y};
+    return { topY: stem_top_y, baseY: stem_base_y };
   }
 
   // Draw the fal onto the context
@@ -429,10 +429,10 @@ export class TabNote extends StemmableNote {
 
   // The main rendering function for the entire note
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
-    if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-    if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
+    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    if (this.ys.length === 0) throw new Vex.RERR('NoYValues',
         "Can't draw note without Y values.");
 
     const render_stem = this.beam == null && this.render_options.draw_stem;
@@ -450,7 +450,7 @@ export class TabNote extends StemmableNote {
         y_bottom: stem_y,
         y_extend: 0,
         stem_extension: this.getStemExtension(),
-        stem_direction: this.stem_direction
+        stem_direction: this.stem_direction,
       });
     }
 

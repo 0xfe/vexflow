@@ -17,16 +17,16 @@ export class Renderer {
       CANVAS: 1,
       RAPHAEL: 2,
       SVG: 3,
-      VML: 4
+      VML: 4,
     };
   }
 
-  //End of line types
+  // End of line types
   static get LineEndType() {
     return {
       NONE: 1,        // No leg
       UP: 2,          // Upward leg
-      DOWN: 3         // Downward leg
+      DOWN: 3,         // Downward leg
     };
   }
 
@@ -45,11 +45,10 @@ export class Renderer {
   }
 
   static buildContext(sel, backend, width, height, background) {
-
     const renderer = new Renderer(sel, backend);
     if (width && height) { renderer.resize(width, height); }
 
-    if (!background) background = "#FFF";
+    if (!background) background = '#FFF';
     const ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
     Renderer.lastContext = ctx;
@@ -76,9 +75,9 @@ export class Renderer {
       return new CanvasContext(ctx);
     }
 
-    const methods = ["clear", "setFont", "setRawFont", "setFillStyle", "setBackgroundFillStyle",
-                   "setStrokeStyle", "setShadowColor", "setShadowBlur", "setLineWidth",
-                   "setLineCap", "setLineDash", "openGroup", "closeGroup", "getGroup"];
+    const methods = ['clear', 'setFont', 'setRawFont', 'setFillStyle', 'setBackgroundFillStyle',
+                   'setStrokeStyle', 'setShadowColor', 'setShadowBlur', 'setLineWidth',
+                   'setLineCap', 'setLineDash', 'openGroup', 'closeGroup', 'getGroup'];
     ctx.vexFlowCanvasContext = ctx;
 
     for (const i in methods) {
@@ -89,9 +88,9 @@ export class Renderer {
     return ctx;
   }
 
-  //Draw a dashed line (horizontal, vertical or diagonal
-  //dashPattern = [3,3] draws a 3 pixel dash followed by a three pixel space.
-  //setting the second number to 0 draws a solid line.
+  // Draw a dashed line (horizontal, vertical or diagonal
+  // dashPattern = [3,3] draws a 3 pixel dash followed by a three pixel space.
+  // setting the second number to 0 draws a solid line.
   static drawDashedLine(context, fromX, fromY, toX, toY, dashPattern) {
     context.beginPath();
 
@@ -114,7 +113,7 @@ export class Renderer {
       } else {
         context.moveTo(x, y);
       }
-        draw = !draw;
+      draw = !draw;
     }
 
     context.closePath();
@@ -124,8 +123,8 @@ export class Renderer {
   constructor(sel, backend) {
     // Verify selector
     this.sel = sel;
-    if (!this.sel) throw new Vex.RERR("BadArgument",
-        "Invalid selector for renderer.");
+    if (!this.sel) throw new Vex.RERR('BadArgument',
+        'Invalid selector for renderer.');
 
     // Get element from selector
     this.element = document.getElementById(sel);
@@ -137,26 +136,23 @@ export class Renderer {
     this.backend = backend;
     if (this.backend == Renderer.Backends.CANVAS) {
       // Create context.
-      if (!this.element.getContext) throw new Vex.RERR("BadElement",
+      if (!this.element.getContext) throw new Vex.RERR('BadElement',
         "Can't get canvas context from element: " + sel);
       this.ctx = Renderer.bolsterCanvasContext(
           this.element.getContext('2d'));
-
     } else if (this.backend == Renderer.Backends.RAPHAEL) {
       this.ctx = new RaphaelContext(this.element);
-
     } else if (this.backend == Renderer.Backends.SVG) {
       this.ctx = new SVGContext(this.element);
-
     } else {
-      throw new Vex.RERR("InvalidBackend",
-        "No support for backend: " + this.backend);
+      throw new Vex.RERR('InvalidBackend',
+        'No support for backend: ' + this.backend);
     }
   }
 
   resize(width, height) {
     if (this.backend == Renderer.Backends.CANVAS) {
-      if (!this.element.getContext) throw new Vex.RERR("BadElement",
+      if (!this.element.getContext) throw new Vex.RERR('BadElement',
         "Can't get canvas context from element: " + this.sel);
       this.element.width = width;
       this.element.height = height;

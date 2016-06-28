@@ -12,7 +12,7 @@ import { Vex } from './vex';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
-function L() { if (PedalMarking.DEBUG) Vex.L("Vex.Flow.PedalMarking", arguments); }
+function L() { if (PedalMarking.DEBUG) Vex.L('Vex.Flow.PedalMarking', arguments); }
 
 // Draws a pedal glyph with the provided `name` on a rendering `context`
 // at the coordinates `x` and `y. Takes into account the glyph data
@@ -28,15 +28,15 @@ export class PedalMarking {
   // Glyph data
   static get GLYPHS() {
     return {
-      "pedal_depress": {
-        code: "v36",
-        x_shift:-10,
-        y_shift:0
+      'pedal_depress': {
+        code: 'v36',
+        x_shift: -10,
+        y_shift: 0,
       },
-      "pedal_release": {
-        code: "v5d",
-        x_shift:-2,
-        y_shift:3
+      'pedal_release': {
+        code: 'v5d',
+        x_shift: -2,
+        y_shift: 3,
       },
     };
   }
@@ -45,7 +45,7 @@ export class PedalMarking {
     return {
       TEXT: 1,
       BRACKET: 2,
-      MIXED: 3
+      MIXED: 3,
     };
   }
 
@@ -60,15 +60,15 @@ export class PedalMarking {
   static createSostenuto(notes) {
     const pedal = new PedalMarking(notes);
     pedal.setStyle(PedalMarking.Styles.MIXED);
-    pedal.setCustomText("Sost. Ped.");
+    pedal.setCustomText('Sost. Ped.');
     return pedal;
   }
 
   // Create an una corda pedal marking
-  static createUnaCorda(notes){
+  static createUnaCorda(notes) {
     const pedal = new PedalMarking(notes);
     pedal.setStyle(PedalMarking.Styles.TEXT);
-    pedal.setCustomText("una corda", "tre corda");
+    pedal.setCustomText('una corda', 'tre corda');
     return pedal;
   }
 
@@ -79,13 +79,13 @@ export class PedalMarking {
     this.line = 0;
 
     // Custom text for the release/depress markings
-    this.custom_depress_text = "";
-    this.custom_release_text = "";
+    this.custom_depress_text = '';
+    this.custom_release_text = '';
 
     this.font = {
-      family: "Times New Roman",
+      family: 'Times New Roman',
       size: 12,
-      weight: "italic bold"
+      weight: 'italic bold',
     };
 
     this.render_options = {
@@ -93,23 +93,23 @@ export class PedalMarking {
       text_margin_right: 6,
       bracket_line_width: 1,
       glyph_point_size: 40,
-      color: "black"
+      color: 'black',
     };
   }
 
   // Set custom text for the `depress`/`release` pedal markings. No text is
   // set if the parameter is falsy.
   setCustomText(depress, release) {
-    this.custom_depress_text = depress || "";
-    this.custom_release_text = release || "";
+    this.custom_depress_text = depress || '';
+    this.custom_release_text = release || '';
     return this;
   }
 
   // Set the pedal marking style
-  setStyle(style){
+  setStyle(style) {
     if (style < 1 && style > 3)  {
-      throw new Vex.RERR("InvalidParameter",
-        "The style must be one found in PedalMarking.Styles");
+      throw new Vex.RERR('InvalidParameter',
+        'The style must be one found in PedalMarking.Styles');
     }
 
     this.style = style;
@@ -146,8 +146,8 @@ export class PedalMarking {
       // Determine if the previous or next note are the same
       // as the current note. We need to keep track of this for
       // when adjustments are made for the release+depress action
-      const next_is_same = notes[index+1] === note;
-      const prev_is_same = notes[index-1] === note;
+      const next_is_same = notes[index + 1] === note;
+      const prev_is_same = notes[index - 1] === note;
 
       let x_shift = 0;
       if (is_pedal_depressed) {
@@ -159,7 +159,7 @@ export class PedalMarking {
           if (pedal.custom_depress_text) {
             // If we have custom text, use instead of the default "Ped" glyph
             const text_width = ctx.measureText(pedal.custom_depress_text).width;
-            ctx.fillText(pedal.custom_depress_text, x - (text_width/2), y);
+            ctx.fillText(pedal.custom_depress_text, x - (text_width / 2), y);
             x_shift = (text_width / 2) + pedal.render_options.text_margin_right;
           } else {
             // Render the Ped glyph in position
@@ -214,16 +214,16 @@ export class PedalMarking {
       if (is_pedal_depressed) {
         if (pedal.custom_depress_text) {
           text_width = ctx.measureText(pedal.custom_depress_text).width;
-          ctx.fillText(pedal.custom_depress_text, x - (text_width/2), y);
+          ctx.fillText(pedal.custom_depress_text, x - (text_width / 2), y);
         } else {
-          drawPedalGlyph("pedal_depress", ctx, x, y, point);
+          drawPedalGlyph('pedal_depress', ctx, x, y, point);
         }
       } else {
         if (pedal.custom_release_text) {
           text_width = ctx.measureText(pedal.custom_release_text).width;
-          ctx.fillText(pedal.custom_release_text, x - (text_width/2), y);
+          ctx.fillText(pedal.custom_release_text, x - (text_width / 2), y);
         } else {
-          drawPedalGlyph("pedal_release", ctx, x, y, point);
+          drawPedalGlyph('pedal_release', ctx, x, y, point);
         }
       }
     });
@@ -231,7 +231,7 @@ export class PedalMarking {
 
   // Render the pedal marking in position on the rendering context
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw PedalMarking without a context.");
     const ctx = this.context;
 
@@ -240,7 +240,7 @@ export class PedalMarking {
     ctx.setFillStyle(this.render_options.color);
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
 
-    L("Rendering Pedal Marking");
+    L('Rendering Pedal Marking');
 
     if (this.style === PedalMarking.Styles.BRACKET ||
         this.style === PedalMarking.Styles.MIXED) {

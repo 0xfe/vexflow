@@ -11,36 +11,36 @@ export class RaphaelContext {
   constructor(element) {
     this.element = element;
     this.paper = Raphael(element);
-    this.path = "";
-    this.pen = {x: 0, y: 0};
+    this.path = '';
+    this.pen = { x: 0, y: 0 };
     this.lineWidth = 1.0;
     this.state = {
       scale: { x: 1, y: 1 },
-      font_family: "Arial",
+      font_family: 'Arial',
       font_size: 8,
-      font_weight: 800
+      font_weight: 800,
     };
 
     this.attributes = {
-      "stroke-width": 0.3,
-      "fill": "black",
-      "stroke": "black",
-      "font": "10pt Arial"
+      'stroke-width': 0.3,
+      'fill': 'black',
+      'stroke': 'black',
+      'font': '10pt Arial',
     };
 
     this.background_attributes = {
-      "stroke-width": 0,
-      "fill": "white",
-      "stroke": "white",
-      "font": "10pt Arial"
+      'stroke-width': 0,
+      'fill': 'white',
+      'stroke': 'white',
+      'font': '10pt Arial',
     };
 
     this.shadow_attributes = {
       width: 0,
-      color: "black"
+      color: 'black',
     };
 
-    this.state_stack= [];
+    this.state_stack = [];
   }
 
   // Containers not implemented
@@ -52,8 +52,8 @@ export class RaphaelContext {
     this.state.font_family = family;
     this.state.font_size = size;
     this.state.font_weight = weight;
-    this.attributes.font = (this.state.font_weight || "") + " " +
-      (this.state.font_size * this.state.scale.x) + "pt " +
+    this.attributes.font = (this.state.font_weight || '') + ' ' +
+      (this.state.font_size * this.state.scale.x) + 'pt ' +
       this.state.font_family;
     return this;
   }
@@ -90,7 +90,7 @@ export class RaphaelContext {
   }
 
   setLineWidth(width) {
-    this.attributes["stroke-width"] = width;
+    this.attributes['stroke-width'] = width;
     this.lineWidth = width;
   }
 
@@ -105,13 +105,13 @@ export class RaphaelContext {
     // It is preserved here for users running earlier versions of
     // Raphael.JS, though it has no effect on the SVG output in
     // Raphael 2 and higher.
-    this.attributes.transform = "S" + x + "," + y + ",0,0";
-    this.attributes.scale = x + "," + y + ",0,0";
-    this.attributes.font = this.state.font_size * this.state.scale.x + "pt " +
+    this.attributes.transform = 'S' + x + ',' + y + ',0,0';
+    this.attributes.scale = x + ',' + y + ',0,0';
+    this.attributes.font = this.state.font_size * this.state.scale.x + 'pt ' +
       this.state.font_family;
-    this.background_attributes.transform = "S" + x + "," + y + ",0,0";
+    this.background_attributes.transform = 'S' + x + ',' + y + ',0,0';
     this.background_attributes.font = this.state.font_size *
-      this.state.scale.x + "pt " +
+      this.state.scale.x + 'pt ' +
       this.state.font_family;
     return this;
   }
@@ -140,8 +140,8 @@ export class RaphaelContext {
 
     this.paper.rect(x, y, width - 0.5, height - 0.5).
       attr(this.attributes).
-      attr("fill", "none").
-      attr("stroke-width", this.lineWidth);
+      attr('fill', 'none').
+      attr('stroke-width', this.lineWidth);
     return this;
   }
 
@@ -168,33 +168,33 @@ export class RaphaelContext {
   }
 
   beginPath() {
-    this.path = "";
+    this.path = '';
     this.pen.x = 0;
     this.pen.y = 0;
     return this;
   }
 
   moveTo(x, y) {
-    this.path += "M" + x + "," + y;
+    this.path += 'M' + x + ',' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
   lineTo(x, y) {
-    this.path += "L" + x + "," + y;
+    this.path += 'L' + x + ',' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
   bezierCurveTo(x1, y1, x2, y2, x, y) {
-    this.path += "C" +
-      x1 + "," +
-      y1 + "," +
-      x2 + "," +
-      y2 + "," +
-      x + "," +
+    this.path += 'C' +
+      x1 + ',' +
+      y1 + ',' +
+      x2 + ',' +
+      y2 + ',' +
+      x + ',' +
       y;
     this.pen.x = x;
     this.pen.y = y;
@@ -202,10 +202,10 @@ export class RaphaelContext {
   }
 
   quadraticCurveTo(x1, y1, x, y) {
-    this.path += "Q" +
-      x1 + "," +
-      y1 + "," +
-      x + "," +
+    this.path += 'Q' +
+      x1 + ',' +
+      y1 + ',' +
+      x + ',' +
       y;
     this.pen.x = x;
     this.pen.y = y;
@@ -230,22 +230,22 @@ export class RaphaelContext {
     endAngle = normalizeAngle(endAngle);
 
     if (startAngle > endAngle) {
-        const tmp = startAngle;
-        startAngle = endAngle;
-        endAngle = tmp;
-        antiClockwise = !antiClockwise;
+      const tmp = startAngle;
+      startAngle = endAngle;
+      endAngle = tmp;
+      antiClockwise = !antiClockwise;
     }
 
     const delta = endAngle - startAngle;
 
     if (delta > Math.PI) {
-        this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
+      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
                        antiClockwise);
-        this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
+      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
                        antiClockwise);
     }
     else {
-        this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
+      this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
     }
     return this;
   }
@@ -265,12 +265,12 @@ export class RaphaelContext {
         largeArcFlag = 1;
     }
     else if (endAngle - startAngle > Math.PI) {
-        largeArcFlag = 1;
+      largeArcFlag = 1;
     }
 
-    this.path += "M" + x1 + "," + y1 + "," + "A" +
-      radius + "," + radius + "," + "0," + largeArcFlag + "," + sweepFlag + "," +
-      x2 + "," + y2 + "M" + this.pen.x + "," + this.pen.y;
+    this.path += 'M' + x1 + ',' + y1 + ',' + 'A' +
+      radius + ',' + radius + ',' + '0,' + largeArcFlag + ',' + sweepFlag + ',' +
+      x2 + ',' + y2 + 'M' + this.pen.x + ',' + this.pen.y;
   }
 
   // Adapted from the source for Raphael's Element.glow
@@ -282,9 +282,9 @@ export class RaphaelContext {
       for (let i = 1; i <= num_paths; i++) {
         out.push(this.paper.path(this.path).attr({
           stroke: sa.color,
-          "stroke-linejoin": "round",
-          "stroke-linecap": "round",
-          "stroke-width": +(sa.width / num_paths * i).toFixed(3),
+          'stroke-linejoin': 'round',
+          'stroke-linecap': 'round',
+          'stroke-width': +(sa.width / num_paths * i).toFixed(3),
           opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
           // See note in this.scale(): In Raphael the scale() method
           // is deprecated and removed as of Raphael 2.0 and replaced
@@ -292,7 +292,7 @@ export class RaphaelContext {
           // users with earlier versions of Raphael, but has no effect
           // on the output SVG in Raphael 2.0+.
           transform: this.attributes.transform,
-          scale: this.attributes.scale
+          scale: this.attributes.scale,
         }));
       }
     }
@@ -302,7 +302,7 @@ export class RaphaelContext {
   fill() {
     const elem = this.paper.path(this.path).
       attr(this.attributes).
-      attr("stroke-width", 0);
+      attr('stroke-width', 0);
     this.glow(elem);
     return this;
   }
@@ -325,31 +325,31 @@ export class RaphaelContext {
     // This would more closely parallel the approach taken in
     // canvascontext.js as well.
 
-    const strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y)/2;
+    const strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y) / 2;
     const elem = this.paper.path(this.path).
       attr(this.attributes).
-      attr("fill", "none").
-      attr("stroke-width", strokeWidth);
+      attr('fill', 'none').
+      attr('stroke-width', strokeWidth);
     this.glow(elem);
     return this;
   }
 
   closePath() {
-    this.path += "Z";
+    this.path += 'Z';
     return this;
   }
 
   measureText(text) {
     const txt = this.paper.text(0, 0, text).
       attr(this.attributes).
-      attr("fill", "none").
-      attr("stroke", "none");
+      attr('fill', 'none').
+      attr('stroke', 'none');
     const bounds = txt.getBBox();
     txt.remove();
 
     return {
       width: bounds.width,
-      height: bounds.height
+      height: bounds.height,
     };
   }
 
@@ -364,18 +364,18 @@ export class RaphaelContext {
     // TODO(mmuthanna): State needs to be deep-copied.
     this.state_stack.push({
       state: {
-        font_family: this.state.font_family
+        font_family: this.state.font_family,
       },
       attributes: {
         font: this.attributes.font,
         fill: this.attributes.fill,
         stroke: this.attributes.stroke,
-        "stroke-width": this.attributes["stroke-width"]
+        'stroke-width': this.attributes['stroke-width'],
       },
       shadow_attributes: {
         width: this.shadow_attributes.width,
-        color: this.shadow_attributes.color
-      }
+        color: this.shadow_attributes.color,
+      },
     });
     return this;
   }
@@ -387,7 +387,7 @@ export class RaphaelContext {
     this.attributes.font = state.attributes.font;
     this.attributes.fill = state.attributes.fill;
     this.attributes.stroke = state.attributes.stroke;
-    this.attributes["stroke-width"] = state.attributes["stroke-width"];
+    this.attributes['stroke-width'] = state.attributes['stroke-width'];
     this.shadow_attributes.width = state.shadow_attributes.width;
     this.shadow_attributes.color = state.shadow_attributes.color;
     return this;

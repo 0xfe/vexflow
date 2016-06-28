@@ -16,7 +16,7 @@
 import { Vex } from './vex';
 
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
-function L() { if (Modifier.DEBUG) Vex.L("Vex.Flow.Modifier", arguments); }
+function L() { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', arguments); }
 
 export class Modifier {
   static get CATEGORY() { return 'none'; }
@@ -27,7 +27,7 @@ export class Modifier {
       LEFT: 1,
       RIGHT: 2,
       ABOVE: 3,
-      BELOW: 4
+      BELOW: 4,
     };
   }
 
@@ -47,7 +47,7 @@ export class Modifier {
     this.x_shift = 0;
     this.y_shift = 0;
     this.spacingFromNextModifier = 0;
-    L("Created new modifier");
+    L('Created new modifier');
   }
 
   // Every modifier has a category. The `ModifierContext` uses this to determine
@@ -88,7 +88,7 @@ export class Modifier {
     this.spacingFromNextModifier = x;
   }
 
-  getSpacingFromNextModifier() {return this.spacingFromNextModifier; }
+  getSpacingFromNextModifier() { return this.spacingFromNextModifier; }
 
   // Shift modifier `x` pixels in the direction of the modifier. Negative values
   // shift reverse.
@@ -100,13 +100,13 @@ export class Modifier {
       this.x_shift += x;
     }
   }
-  getXShift() {return this.x_shift;}
+  getXShift() { return this.x_shift; }
 
   // Render the modifier onto the canvas.
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw without a canvas context.");
-    throw new Vex.RERR("MethodNotImplemented",
-        "Draw() not implemented for this modifier.");
+    throw new Vex.RERR('MethodNotImplemented',
+        'Draw() not implemented for this modifier.');
   }
 }

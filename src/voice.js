@@ -19,8 +19,8 @@ export class Voice {
   static get Mode() {
     return {
       STRICT: 1,
-      SOFT:   2,
-      FULL:   3
+      SOFT: 2,
+      FULL: 3,
     };
   }
 
@@ -28,7 +28,7 @@ export class Voice {
     this.time = Vex.Merge({
       num_beats: 4,
       beat_value: 4,
-      resolution: Flow.RESOLUTION
+      resolution: Flow.RESOLUTION,
     }, time);
 
     // Recalculate total ticks.
@@ -88,7 +88,7 @@ export class Voice {
     let stave, boundingBox, bb, i;
 
     if (!this.boundingBox) {
-      if (!this.stave) throw Vex.RERR("NoStave", "Can't get bounding box without stave.");
+      if (!this.stave) throw Vex.RERR('NoStave', "Can't get bounding box without stave.");
       stave = this.stave;
       boundingBox = null;
 
@@ -110,7 +110,7 @@ export class Voice {
   // and preformatters to associate them with the right modifierContexts.
   getVoiceGroup() {
     if (!this.voiceGroup)
-      throw new Vex.RERR("NoVoiceGroup", "No voice group for voice.");
+      throw new Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
     return this.voiceGroup;
   }
 
@@ -145,7 +145,7 @@ export class Voice {
            this.mode == Voice.Mode.FULL) &&
            this.ticksUsed.greaterThan(this.totalTicks)) {
         this.totalTicks.subtract(ticks);
-        throw new Vex.RERR("BadArgument", "Too many ticks.");
+        throw new Vex.RERR('BadArgument', 'Too many ticks.');
       }
 
       // Track the smallest tickable for formatting.
@@ -175,7 +175,7 @@ export class Voice {
   }
 
   // Preformats the voice by applying the voice's stave to each note.
-  preFormat(){
+  preFormat() {
     if (this.preFormatted) return;
 
     this.tickables.forEach(function(tickable) {
@@ -200,8 +200,8 @@ export class Voice {
       if (stave) tickable.setStave(stave);
 
       if (!tickable.getStave()) {
-        throw new Vex.RuntimeError("MissingStave",
-          "The voice cannot draw tickables without staves.");
+        throw new Vex.RuntimeError('MissingStave',
+          'The voice cannot draw tickables without staves.');
       }
 
       if (i === 0) boundingBox = tickable.getBoundingBox();
@@ -211,8 +211,8 @@ export class Voice {
         if (tickable_bb) boundingBox.mergeWith(tickable_bb);
       }
 
-     tickable.setContext(context);
-     tickable.draw();
+      tickable.setContext(context);
+      tickable.draw();
     }
 
     this.boundingBox = boundingBox;

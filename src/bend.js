@@ -80,20 +80,20 @@ export class Bend extends Modifier {
     this.text = text;
     this.x_shift = 0;
     this.release = release || false;
-    this.font = "10pt Arial";
+    this.font = '10pt Arial';
     this.render_options = {
       line_width: 1.5,
-      line_style: "#777777",
+      line_style: '#777777',
       bend_width: 8,
-      release_width: 8
+      release_width: 8,
     };
 
     if (phrase) {
       this.phrase = phrase;
     } else {
       // Backward compatibility
-      this.phrase = [{type: Bend.UP, text: this.text}];
-      if (this.release) this.phrase.push({type: Bend.DOWN, text: ""});
+      this.phrase = [{ type: Bend.UP, text: this.text }];
+      if (this.release) this.phrase.push({ type: Bend.DOWN, text: '' });
     }
 
     this.updateWidth();
@@ -122,7 +122,7 @@ export class Bend extends Modifier {
     }
 
     let total_width = 0;
-    for (let i=0; i<this.phrase.length; ++i) {
+    for (let i = 0; i < this.phrase.length; ++i) {
       const bend = this.phrase[i];
       if ('width' in bend) {
         total_width += bend.width;
@@ -140,9 +140,9 @@ export class Bend extends Modifier {
     return this;
   }
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw bend without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoNoteForBend",
+    if (!(this.note && (this.index != null))) throw new Vex.RERR('NoNoteForBend',
       "Can't draw bend without a note or index.");
 
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
@@ -207,11 +207,11 @@ export class Bend extends Modifier {
 
     let last_bend = null;
     let last_drawn_width = 0;
-    for (let i=0; i<this.phrase.length; ++i) {
+    for (let i = 0; i < this.phrase.length; ++i) {
       const bend = this.phrase[i];
       if (i === 0) bend.draw_width += x_shift;
 
-      last_drawn_width = bend.draw_width + (last_bend?last_bend.draw_width:0) - (i==1?x_shift:0);
+      last_drawn_width = bend.draw_width + (last_bend ? last_bend.draw_width : 0) - (i == 1 ? x_shift : 0);
       if (bend.type == Bend.UP) {
         if (last_bend && last_bend.type == Bend.UP) {
           renderArrowHead(start.x, bend_height);

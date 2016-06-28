@@ -28,25 +28,25 @@ export class Stave {
     this.context = null;
     this.modifiers = [];  // stave modifiers (clef, key, time, barlines, coda, segno, etc.)
     this.measure = 0;
-    this.clef = "treble";
+    this.clef = 'treble';
     this.font = {
-      family: "sans-serif",
+      family: 'sans-serif',
       size: 8,
-      weight: ""
+      weight: '',
     };
     this.options = {
       vertical_bar_width: 10,       // Width around vertical bar end-marker
       glyph_spacing_px: 10,
       num_lines: 5,
-      fill_style: "#999999",
+      fill_style: '#999999',
       left_bar: true,               // draw vertical bar on left
       right_bar: true,               // draw vertical bar on right
       spacing_between_lines_px: 10, // in pixels
       space_above_staff_ln: 4,      // in staff lines
       space_below_staff_ln: 4,      // in staff lines
-      top_text_position: 1          // in staff lines
+      top_text_position: 1,          // in staff lines
     };
-    this.bounds = {x: this.x, y: this.y, w: this.width, h: 0};
+    this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
     Vex.Merge(this.options, options);
 
     this.resetLines();
@@ -59,7 +59,7 @@ export class Stave {
   resetLines() {
     this.options.line_config = [];
     for (let i = 0; i < this.options.num_lines; i++) {
-      this.options.line_config.push({visible: true});
+      this.options.line_config.push({ visible: true });
     }
     this.height = (this.options.num_lines + this.options.space_above_staff_ln) *
        this.options.spacing_between_lines_px;
@@ -98,13 +98,13 @@ export class Stave {
   }
   setY(y) { this.y = y; return this; }
 
-  setX(x){
+  setX(x) {
     const shift = x - this.x;
     this.formatted = false;
     this.x = x;
     this.start_x += shift;
     this.end_x += shift;
-    for(let i=0; i<this.modifiers.length; i++) {
+    for (let i = 0; i < this.modifiers.length; i++) {
       const mod = this.modifiers[i];
       if (mod.x !== undefined) {
         mod.x += shift;
@@ -136,8 +136,8 @@ export class Stave {
    * @return {Number}       The amount of pixels shifted
    */
   getModifierXShift(index) {
-    if (typeof index !== 'number') new Vex.RERR("InvalidIndex",
-      "Must be of number type");
+    if (typeof index !== 'number') new Vex.RERR('InvalidIndex',
+      'Must be of number type');
 
     if (!this.formatted) this.format();
 
@@ -162,7 +162,7 @@ export class Stave {
   }
 
   setRepetitionTypeRight(type, y) {
-    this.modifiers.push(new Repetition(type, this.x, y) );
+    this.modifiers.push(new Repetition(type, this.x, y));
     return this;
   }
 
@@ -227,8 +227,8 @@ export class Stave {
     return y;
   }
 
-  getLineForY(y){
-    //Does the revers of getYForLine - somewhat dumb and just calls getYForLine until the right value is reaches
+  getLineForY(y) {
+    // Does the revers of getYForLine - somewhat dumb and just calls getYForLine until the right value is reaches
 
     const options = this.options;
     const spacing = options.spacing_between_lines_px;
@@ -281,8 +281,8 @@ export class Stave {
     if (type == Barline.type.SINGLE ||
         type == Barline.type.REPEAT_BEGIN ||
         type == Barline.type.NONE) {
-        this.modifiers[0].setType(type);
-        this.formatted = false;
+      this.modifiers[0].setType(type);
+      this.formatted = false;
     }
     return this;
   }
@@ -420,11 +420,11 @@ export class Stave {
     const endModifiers = this.getModifiers(StaveModifier.Position.END);
 
     this.sortByCategory(begModifiers, {
-      barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3
+      barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3,
     });
 
     this.sortByCategory(endModifiers, {
-      timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3
+      timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3,
     });
 
     if (begModifiers.length > 1 &&
@@ -477,7 +477,7 @@ export class Stave {
    * All drawing functions below need the context to be set.
    */
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw stave without canvas context.");
 
     if (!this.formatted) this.format();
@@ -488,7 +488,7 @@ export class Stave {
     let y;
 
     // Render lines
-    for (let line=0; line < num_lines; line++) {
+    for (let line = 0; line < num_lines; line++) {
       y = this.getYForLine(line);
 
       this.context.save();
@@ -503,7 +503,7 @@ export class Stave {
     // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
     for (let i = 0; i < this.modifiers.length; i++) {
       // Only draw modifier if it has a draw function
-      if (typeof this.modifiers[i].draw == "function")
+      if (typeof this.modifiers[i].draw == 'function')
         this.modifiers[i].draw(this, this.getModifierXShift());
     }
 
@@ -511,9 +511,9 @@ export class Stave {
     if (this.measure > 0) {
       this.context.save();
       this.context.setFont(this.font.family, this.font.size, this.font.weight);
-      const text_width = this.context.measureText("" + this.measure).width;
+      const text_width = this.context.measureText('' + this.measure).width;
       y = this.getYForTopText(0) + 3;
-      this.context.fillText("" + this.measure, this.x - text_width / 2, y);
+      this.context.fillText('' + this.measure, this.x - text_width / 2, y);
       this.context.restore();
     }
 
@@ -527,7 +527,7 @@ export class Stave {
   }
 
   drawVerticalFixed(x, isDouble) {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw stave without canvas context.");
 
     const top_line = this.getYForLine(0);
@@ -542,7 +542,7 @@ export class Stave {
   }
 
   drawVerticalBarFixed(x) {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
+    if (!this.context) throw new Vex.RERR('NoCanvasContext',
         "Can't draw stave without canvas context.");
 
     const top_line = this.getYForLine(0);
@@ -567,15 +567,15 @@ export class Stave {
    */
   setConfigForLine(line_number, line_config) {
     if (line_number >= this.options.num_lines || line_number < 0) {
-      throw new Vex.RERR("StaveConfigError",
-        "The line number must be within the range of the number of lines in the Stave.");
+      throw new Vex.RERR('StaveConfigError',
+        'The line number must be within the range of the number of lines in the Stave.');
     }
     if (!line_config.hasOwnProperty('visible')) {
-      throw new Vex.RERR("StaveConfigError",
+      throw new Vex.RERR('StaveConfigError',
         "The line configuration object is missing the 'visible' property.");
     }
     if (typeof(line_config.visible) !== 'boolean') {
-      throw new Vex.RERR("StaveConfigError",
+      throw new Vex.RERR('StaveConfigError',
         "The line configuration objects 'visible' property must be true or false.");
     }
 
@@ -595,8 +595,8 @@ export class Stave {
    */
   setConfigForLines(lines_configuration) {
     if (lines_configuration.length !== this.options.num_lines) {
-      throw new Vex.RERR("StaveConfigError",
-        "The length of the lines configuration array must match the number of lines in the Stave");
+      throw new Vex.RERR('StaveConfigError',
+        'The length of the lines configuration array must match the number of lines in the Stave');
     }
 
     // Make sure the defaults are present in case an incomplete set of

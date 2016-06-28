@@ -13,7 +13,7 @@ import { Note } from './note';
 import { TickContext } from './tickcontext';
 
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-function L() { if (Crescendo.DEBUG) Vex.L("Vex.Flow.Crescendo", arguments); }
+function L() { if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', arguments); }
 
 // Private helper to draw the hairpin
 function renderHairpin(ctx, params) {
@@ -25,13 +25,13 @@ function renderHairpin(ctx, params) {
   ctx.beginPath();
 
   if (params.reverse) {
-      ctx.moveTo(begin_x, y - half_height);
-      ctx.lineTo(end_x,  y);
-      ctx.lineTo(begin_x, y + half_height);
+    ctx.moveTo(begin_x, y - half_height);
+    ctx.lineTo(end_x,  y);
+    ctx.lineTo(begin_x, y + half_height);
   } else {
-      ctx.moveTo(end_x,  y - half_height);
-      ctx.lineTo(begin_x, y);
-      ctx.lineTo(end_x,  y + half_height);
+    ctx.moveTo(end_x,  y - half_height);
+    ctx.lineTo(begin_x, y);
+    ctx.lineTo(end_x,  y + half_height);
   }
 
   ctx.stroke();
@@ -57,7 +57,7 @@ export class Crescendo extends Note {
       extend_left: 0,
       extend_right: 0,
       // Vertical shift
-      y_shift: 0
+      y_shift: 0,
     });
   }
 
@@ -79,7 +79,7 @@ export class Crescendo extends Note {
 
   // Render the Crescendo object onto the canvas
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw Hairpin without a context.");
 
     const tick_context = this.getTickContext();
@@ -95,15 +95,15 @@ export class Crescendo extends Note {
 
     const y = this.stave.getYForLine(this.line + (-3)) + 1;
 
-    L("Drawing ",  this.decrescendo ? "decrescendo " : "crescendo ",
-      this.height, "x", begin_x - end_x);
+    L('Drawing ',  this.decrescendo ? 'decrescendo ' : 'crescendo ',
+      this.height, 'x', begin_x - end_x);
 
     renderHairpin(this.context, {
       begin_x: begin_x - this.render_options.extend_left,
       end_x: end_x + this.render_options.extend_right,
       y: y + this.render_options.y_shift,
       height: this.height,
-      reverse: this.decrescendo
+      reverse: this.decrescendo,
     });
   }
 }

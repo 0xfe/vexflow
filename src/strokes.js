@@ -20,7 +20,7 @@ export class Stroke extends Modifier {
       ROLL_DOWN: 3,        // Arpegiated chord
       ROLL_UP: 4,          // Arpegiated chord
       RASQUEDO_DOWN: 5,
-      RASQUEDO_UP: 6
+      RASQUEDO_UP: 6,
     };
   }
 
@@ -82,14 +82,14 @@ export class Stroke extends Modifier {
     this.render_options = {
       font_scale: 38,
       stroke_px: 3,
-      stroke_spacing: 10
+      stroke_spacing: 10,
     };
 
     this.font = {
-     family: "serif",
-     size: 10,
-     weight: "bold italic"
-   };
+      family: 'serif',
+      size: 10,
+      weight: 'bold italic',
+    };
 
     this.setXShift(0);
     this.setWidth(10);
@@ -99,9 +99,9 @@ export class Stroke extends Modifier {
   addEndNote(note) { this.note_end = note; return this; }
 
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw stroke without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
+    if (!(this.note && (this.index != null))) throw new Vex.RERR('NoAttachedNote',
       "Can't draw stroke without a note and index.");
     const start = this.note.getModifierStartXY(this.position, this.index);
     let ys = this.note.getYs();
@@ -125,20 +125,20 @@ export class Stroke extends Modifier {
     let arrow, arrow_shift_x, arrow_y, text_shift_x, text_y;
     switch (this.type) {
       case Stroke.Type.BRUSH_DOWN:
-        arrow = "vc3";
+        arrow = 'vc3';
         arrow_shift_x = -3;
         arrow_y = topY - (line_space / 2) + 10;
         botY += (line_space / 2);
         break;
       case Stroke.Type.BRUSH_UP:
-        arrow = "v11";
+        arrow = 'v11';
         arrow_shift_x = 0.5;
         arrow_y = botY + (line_space / 2);
         topY -= (line_space / 2);
         break;
       case Stroke.Type.ROLL_DOWN:
       case Stroke.Type.RASQUEDO_DOWN:
-        arrow = "vc3";
+        arrow = 'vc3';
         arrow_shift_x = -3;
         text_shift_x = this.x_shift + arrow_shift_x - 2;
         if (this.note instanceof StaveNote) {
@@ -159,7 +159,7 @@ export class Stroke extends Modifier {
         break;
       case Stroke.Type.ROLL_UP:
       case Stroke.Type.RASQUEDO_UP:
-        arrow = "v52";
+        arrow = 'v52';
         arrow_shift_x = -4;
         text_shift_x = this.x_shift + arrow_shift_x - 1;
         if (this.note instanceof StaveNote) {
@@ -188,13 +188,13 @@ export class Stroke extends Modifier {
         for (i = topY; i <= botY; i += line_space) {
           Glyph.renderGlyph(this.context, x + this.x_shift - 4,
                                i,
-                               this.render_options.font_scale, "va3");
+                               this.render_options.font_scale, 'va3');
         }
       } else {
-        for (i = topY; i <= botY; i+= 10) {
+        for (i = topY; i <= botY; i += 10) {
           Glyph.renderGlyph(this.context, x + this.x_shift - 4,
                                i,
-                               this.render_options.font_scale, "va3");
+                               this.render_options.font_scale, 'va3');
         }
         if (this.type == Stroke.Type.RASQUEDO_DOWN)
           text_y = i + 0.25 * line_space;
@@ -210,7 +210,7 @@ export class Stroke extends Modifier {
         this.type == Stroke.Type.RASQUEDO_UP) {
       this.context.save();
       this.context.setFont(this.font.family, this.font.size, this.font.weight);
-      this.context.fillText("R", x + text_shift_x, text_y);
+      this.context.fillText('R', x + text_shift_x, text_y);
       this.context.restore();
     }
   }

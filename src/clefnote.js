@@ -35,7 +35,7 @@ export class ClefNote extends Note {
     return this.clef;
   }
 
-  setContext(context){
+  setContext(context) {
     this.context = context;
     this.glyph.setContext(this.context);
     return this;
@@ -58,7 +58,7 @@ export class ClefNote extends Note {
   }
 
   draw() {
-    if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
+    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
     if (!this.glyph.getContext()) {
       this.glyph.setContext(this.context);
@@ -74,7 +74,7 @@ export class ClefNote extends Note {
     if (this.clef_obj.annotation !== undefined) {
       const attachment = new Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
       if (!attachment.getContext()) {
-          attachment.setContext(this.context);
+        attachment.setContext(this.context);
       }
       attachment.setStave(this.stave);
       attachment.setYShift(

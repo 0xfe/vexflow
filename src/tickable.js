@@ -64,7 +64,7 @@ export class Tickable {
   // Every tickable must be associated with a voice. This allows formatters
   // and preFormatter to associate them with the right modifierContexts.
   getVoice() {
-    if (!this.voice) throw new Vex.RERR("NoVoice", "Tickable has no voice.");
+    if (!this.voice) throw new Vex.RERR('NoVoice', 'Tickable has no voice.');
     return this.voice;
   }
   setVoice(voice) { this.voice = voice; }
@@ -81,9 +81,9 @@ export class Tickable {
    */
   resetTuplet(tuplet) {
     let noteCount, notesOccupied;
-    if(tuplet){
+    if (tuplet) {
       const i = this.tupletStack.indexOf(tuplet);
-      if(i !== -1){
+      if (i !== -1) {
         this.tupletStack.splice(i, 1);
         noteCount = tuplet.getNoteCount();
         notesOccupied = tuplet.getNotesOccupied();
@@ -94,7 +94,7 @@ export class Tickable {
       return this;
     }
 
-    while(this.tupletStack.length){
+    while (this.tupletStack.length) {
       tuplet = this.tupletStack.pop();
       noteCount = tuplet.getNoteCount();
       notesOccupied = tuplet.getNotesOccupied();

@@ -12,13 +12,13 @@ import { Flow } from './tables';
 import { Renderer } from './renderer';
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
-function L() { if (TextBracket.DEBUG) Vex.L("Vex.Flow.TextBracket", arguments); }
+function L() { if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', arguments); }
 
 export class TextBracket {
   static get Positions() {
     return {
       TOP: 1,
-      BOTTOM: -1
+      BOTTOM: -1,
     };
   }
 
@@ -26,29 +26,29 @@ export class TextBracket {
     this.start = bracket_data.start;
     this.stop = bracket_data.stop;
 
-    this.text = bracket_data.text || "";
-    this.superscript = bracket_data.superscript || "";
+    this.text = bracket_data.text || '';
+    this.superscript = bracket_data.superscript || '';
 
     this.position = bracket_data.position || TextBracket.Positions.TOP;
     this.line = 1;
 
     this.font = {
-      family: "Serif",
+      family: 'Serif',
       size: 15,
-      weight: "italic"
+      weight: 'italic',
     };
 
     this.render_options = {
       dashed: true,
       dash: [5],
-      color: "black",
+      color: 'black',
       line_width: 1,
       show_bracket: true,
       bracket_height: 8,
 
       // In the BOTTOM position, the bracket line can extend
       // under the superscript.
-      underline_superscript: true
+      underline_superscript: true,
     };
   }
 
@@ -83,7 +83,7 @@ export class TextBracket {
     const ctx = this.context;
 
     let y = 0;
-    switch(this.position) {
+    switch (this.position) {
       case TextBracket.Positions.TOP:
         y =  this.start.getStave().getYForTopText(this.line);
         break;
@@ -93,10 +93,10 @@ export class TextBracket {
     }
 
     // Get the preliminary start and stop coordintates for the bracket
-    const start = { x: this.start.getAbsoluteX(), y};
+    const start = { x: this.start.getAbsoluteX(), y };
     const stop = { x: this.stop.getAbsoluteX(), y };
 
-    L("Rendering TextBracket: start:", start, "stop:", stop, "y:", y);
+    L('Rendering TextBracket: start:', start, 'stop:', stop, 'y:', y);
 
     const bracket_height = this.render_options.bracket_height * this.position;
 
@@ -108,10 +108,10 @@ export class TextBracket {
 
     // Get the width and height for the octave number
     const main_width = ctx.measureText(this.text).width;
-    const main_height = ctx.measureText("M").width;
+    const main_height = ctx.measureText('M').width;
 
     // Calculate the y position for the super script
-    const super_y = start.y - (main_height/2.5);
+    const super_y = start.y - (main_height / 2.5);
 
     // Draw the superscript
     ctx.setFont(this.font.family, this.font.size / 1.4, this.font.weight);
@@ -120,7 +120,7 @@ export class TextBracket {
 
     // Determine width and height of the superscript
     const superscript_width = ctx.measureText(this.superscript).width;
-    const super_height = ctx.measureText("M").width;
+    const super_height = ctx.measureText('M').width;
 
     // Setup initial coordinates for the bracket line
     let start_x = start.x;
@@ -130,9 +130,9 @@ export class TextBracket {
     // Adjust x and y coordinates based on position
     if (this.position === TextBracket.Positions.TOP) {
       start_x += main_width + superscript_width + 5;
-      line_y -= super_height/2.7;
+      line_y -= super_height / 2.7;
     } else if (this.position === TextBracket.Positions.BOTTOM) {
-      line_y += super_height/2.7;
+      line_y += super_height / 2.7;
       start_x += main_width + 2;
 
       if (!this.render_options.underline_superscript) {

@@ -12,7 +12,7 @@ export class TickContext {
     const contexts = tContext.tContexts;
     const index = contexts.indexOf(tContext);
 
-    return contexts[index+1];
+    return contexts[index + 1];
   }
 
   constructor() {
@@ -75,8 +75,8 @@ export class TickContext {
       extraRightPx = Math.max(this.tickables[i].extraRightPx, extraRightPx);
       const mContext = this.tickables[i].modifierContext;
       if (mContext && mContext != null) {
-        left_shift = Math.max( left_shift, mContext.state.left_shift);
-        right_shift = Math.max( right_shift, mContext.state.right_shift);
+        left_shift = Math.max(left_shift, mContext.state.left_shift);
+        right_shift = Math.max(right_shift, mContext.state.right_shift);
       }
     }
     return { left: left_shift, right: right_shift,
@@ -84,7 +84,7 @@ export class TickContext {
   }
   addTickable(tickable) {
     if (!tickable) {
-      throw new Vex.RERR("BadArgument", "Invalid tickable added.");
+      throw new Vex.RERR('BadArgument', 'Invalid tickable added.');
     }
 
     if (!tickable.shouldIgnoreTicks()) {

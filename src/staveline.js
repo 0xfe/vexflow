@@ -17,9 +17,9 @@ import { Vex } from './vex';
 function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
   // all cases do this.
   ctx.beginPath();
-  ctx.moveTo(x0,y0);
-  ctx.lineTo(x1,y1);
-  ctx.lineTo(x2,y2);
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.lineTo(x2, y2);
   ctx.lineTo(x0, y0);
   ctx.closePath();
 
@@ -37,8 +37,8 @@ function drawArrowLine(ctx, point1, point2, config) {
 
   // For ends with arrow we actually want to stop before we get to the arrow
   // so that wide lines won't put a flat end on the arrow.
-  const distance = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-  const ratio = (distance - config.arrowhead_length/3) / distance;
+  const distance = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+  const ratio = (distance - config.arrowhead_length / 3) / distance;
   let end_x, end_y, start_x, start_y;
   if (config.draw_end_arrow || both_arrows) {
     end_x = Math.round(x1 + (x2 - x1) * ratio);
@@ -64,7 +64,7 @@ function drawArrowLine(ctx, point1, point2, config) {
   // Draw the shaft of the arrow
   ctx.beginPath();
   ctx.moveTo(start_x, start_y);
-  ctx.lineTo(end_x,end_y);
+  ctx.lineTo(end_x, end_y);
   ctx.stroke();
   ctx.closePath();
 
@@ -107,7 +107,7 @@ export class StaveLine {
   static get TextVerticalPosition() {
     return {
       TOP: 1,
-      BOTTOM: 2
+      BOTTOM: 2,
     };
   }
 
@@ -115,7 +115,7 @@ export class StaveLine {
     return {
       LEFT: 1,
       CENTER: 2,
-      RIGHT: 3
+      RIGHT: 3,
     };
   }
 
@@ -135,12 +135,12 @@ export class StaveLine {
     this.notes = notes;
     this.context = null;
 
-    this.text = "";
+    this.text = '';
 
     this.font = {
-      family: "Arial",
+      family: 'Arial',
       size: 10,
-      weight: ""
+      weight: '',
     };
 
     this.render_options = {
@@ -168,7 +168,7 @@ export class StaveLine {
 
       // The position of the text
       text_position_vertical: StaveLine.TextVerticalPosition.TOP,
-      text_justification: StaveLine.TextJustification.CENTER
+      text_justification: StaveLine.TextJustification.CENTER,
     };
 
     this.setNotes(notes);
@@ -184,15 +184,15 @@ export class StaveLine {
   // Set the notes for the `StaveLine`
   setNotes(notes) {
     if (!notes.first_note && !notes.last_note)
-      throw new Vex.RuntimeError("BadArguments",
-          "Notes needs to have either first_note or last_note set.");
+      throw new Vex.RuntimeError('BadArguments',
+          'Notes needs to have either first_note or last_note set.');
 
     if (!notes.first_indices) notes.first_indices = [0];
     if (!notes.last_indices) notes.last_indices = [0];
 
     if (notes.first_indices.length != notes.last_indices.length)
-      throw new Vex.RuntimeError("BadArguments", "Connected notes must have similar" +
-        " index sizes");
+      throw new Vex.RuntimeError('BadArguments', 'Connected notes must have similar' +
+        ' index sizes');
 
     // Success. Lets grab 'em notes.
     this.first_note = notes.first_note;
@@ -205,7 +205,7 @@ export class StaveLine {
   // Apply the style of the `StaveLine` to the context
   applyLineStyle() {
     if (!this.context) {
-      throw new Vex.RERR("NoContext","No context to apply the styling to");
+      throw new Vex.RERR('NoContext', 'No context to apply the styling to');
     }
 
     const render_options = this.render_options;
@@ -220,16 +220,16 @@ export class StaveLine {
     }
 
     if (render_options.rounded_end) {
-      ctx.setLineCap("round");
+      ctx.setLineCap('round');
     } else {
-      ctx.setLineCap("square");
+      ctx.setLineCap('square');
     }
   }
 
   // Apply the text styling to the context
   applyFontStyle() {
     if (!this.context) {
-      throw new Vex.RERR("NoContext","No context to apply the styling to");
+      throw new Vex.RERR('NoContext', 'No context to apply the styling to');
     }
 
     const ctx = this.context;
@@ -247,7 +247,7 @@ export class StaveLine {
   // Renders the `StaveLine` on the context
   draw() {
     if (!this.context) {
-      throw new Vex.RERR("NoContext", "No context to render StaveLine.");
+      throw new Vex.RERR('NoContext', 'No context to render StaveLine.');
     }
 
     const ctx = this.context;
@@ -294,7 +294,6 @@ export class StaveLine {
       end_position.y += upwards_slope ? 2 : 0;
 
       drawArrowLine(ctx, start_position, end_position, this.render_options);
-
     }, this);
 
     ctx.restore();
@@ -307,7 +306,7 @@ export class StaveLine {
       x = start_position.x;
     } else if (justification === StaveLine.TextJustification.CENTER) {
       const delta_x = (end_position.x - start_position.x);
-      const center_x = (delta_x / 2 ) + start_position.x;
+      const center_x = (delta_x / 2) + start_position.x;
       x = center_x - (text_width / 2);
     } else if (justification === StaveLine.TextJustification.RIGHT) {
       x = end_position.x  -  text_width;

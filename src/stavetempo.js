@@ -19,12 +19,12 @@ export class StaveTempo extends StaveModifier {
     this.shift_x = 10;
     this.shift_y = shift_y;
     this.font = {
-      family: "times",
+      family: 'times',
       size: 14,
-      weight: "bold"
+      weight: 'bold',
     };
     this.render_options = {
-      glyph_font_scale: 30  // font size for note
+      glyph_font_scale: 30,  // font size for note
     };
   }
   getCategory() { return StaveTempo.CATEGORY; }
@@ -33,7 +33,7 @@ export class StaveTempo extends StaveModifier {
   setShiftY(y) { this.shift_y = y; return this; }
 
   draw(stave, shift_x) {
-    if (!stave.context) throw new Vex.RERR("NoContext",
+    if (!stave.context) throw new Vex.RERR('NoContext',
       "Can't draw stave tempo without a context.");
 
     const options = this.render_options;
@@ -59,9 +59,9 @@ export class StaveTempo extends StaveModifier {
       ctx.setFont(font.family, font.size, 'normal');
 
       if (name) {
-        x += ctx.measureText(" ").width;
-        ctx.fillText("(", x, y);
-        x += ctx.measureText("(").width;
+        x += ctx.measureText(' ').width;
+        ctx.fillText('(', x, y);
+        x += ctx.measureText('(').width;
       }
 
       const code = Flow.durationToGlyph(duration);
@@ -97,7 +97,7 @@ export class StaveTempo extends StaveModifier {
         ctx.fill();
       }
 
-      ctx.fillText(" = " + bpm + (name ? ")" : ""), x + 3 * scale, y);
+      ctx.fillText(' = ' + bpm + (name ? ')' : ''), x + 3 * scale, y);
     }
 
     ctx.restore();

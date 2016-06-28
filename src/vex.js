@@ -15,8 +15,8 @@ const Vex = () => {};
 // Default log function sends all arguments to console.
 Vex.L = (block, args) => {
   if (!args) return;
-  const line = Array.prototype.slice.call(args).join(" ");
-  window.console.log(block + ": " + line);
+  const line = Array.prototype.slice.call(args).join(' ');
+  window.console.log(block + ': ' + line);
 };
 
 // Default runtime exception.
@@ -26,7 +26,7 @@ Vex.RuntimeError = function(code, message) {
 };
 
 Vex.RuntimeError.prototype.toString = function() {
-  return "RuntimeError: " + this.message;
+  return 'RuntimeError: ' + this.message;
 };
 
 // Shortcut method for `RuntimeError`.
@@ -44,13 +44,13 @@ Vex.Merge = (destination, source) => {
 Vex.Min = Math.min;
 Vex.Max = Math.max;
 Vex.forEach = (a, fn) => {
-  for (let i=0; i<a.length; i++) {
-    fn(a[i],i);
+  for (let i = 0; i < a.length; i++) {
+    fn(a[i], i);
   }
 };
 
 // Round number to nearest fractional value (`.5`, `.25`, etc.)
-Vex.RoundN = (x, n) => (x % n) >= (n/2) ?
+Vex.RoundN = (x, n) => (x % n) >= (n / 2) ?
   parseInt(x / n, 10) * n + n : parseInt(x / n, 10) * n;
 
 // Locate the mid point between stave lines. Returns a fractional line if a space.
@@ -97,12 +97,12 @@ Vex.Contains = (a, obj) => {
 // Get the 2D Canvas context from DOM element `canvas_sel`.
 Vex.getCanvasContext = canvas_sel => {
   if (!canvas_sel)
-    throw new Vex.RERR("BadArgument", "Invalid canvas selector: " + canvas_sel);
+    throw new Vex.RERR('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
 
   const canvas = document.getElementById(canvas_sel);
   if (!(canvas && canvas.getContext)) {
-    throw new Vex.RERR("UnsupportedBrowserError",
-        "This browser does not support HTML5 Canvas");
+    throw new Vex.RERR('UnsupportedBrowserError',
+        'This browser does not support HTML5 Canvas');
   }
 
   return canvas.getContext('2d');
@@ -113,13 +113,13 @@ Vex.getCanvasContext = canvas_sel => {
 // `ctx`: Canvas context.
 // `x`, `y`: Dot coordinates.
 Vex.drawDot = (ctx, x, y, color) => {
-  const c = color || "#f55";
+  const c = color || '#f55';
   ctx.save();
   ctx.setFillStyle(c);
 
-  //draw a circle
+  // draw a circle
   ctx.beginPath();
-  ctx.arc(x, y, 3, 0, Math.PI*2, true);
+  ctx.arc(x, y, 3, 0, Math.PI * 2, true);
   ctx.closePath();
   ctx.fill();
   ctx.restore();
@@ -130,7 +130,7 @@ Vex.BM = (s, f) => {
   const start_time = new Date().getTime();
   f();
   const elapsed = new Date().getTime() - start_time;
-  Vex.L(s + elapsed + "ms");
+  Vex.L(s + elapsed + 'ms');
 };
 
 // Basic classical inheritance helper. Usage:
@@ -164,13 +164,13 @@ Vex.StackTrace = () => {
 
 // Dump warning to console.
 Vex.W = function() {
-  const line = Array.prototype.slice.call(arguments).join(" ");
-  window.console.log("Warning: ", line, Vex.StackTrace());
+  const line = Array.prototype.slice.call(arguments).join(' ');
+  window.console.log('Warning: ', line, Vex.StackTrace());
 };
 
 // Used by various classes (e.g., SVGContext) to provide a
 // unique prefix to element names (or other keys in shared namespaces).
 Vex.Prefix = text => Vex.Prefix.prefix + text;
-Vex.Prefix.prefix = "vf-";
+Vex.Prefix.prefix = 'vf-';
 
 export { Vex };

@@ -12,7 +12,7 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
-function L() { if (Annotation.DEBUG) Vex.L("Vex.Flow.Annotation", arguments); }
+function L() { if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', arguments); }
 
 export class Annotation extends Modifier {
   static get CATEGORY() { return 'annotations'; }
@@ -23,7 +23,7 @@ export class Annotation extends Modifier {
       LEFT: 1,
       CENTER: 2,
       RIGHT: 3,
-      CENTER_STEM: 4
+      CENTER_STEM: 4,
     };
   }
   static get VerticalJustify() {
@@ -31,7 +31,7 @@ export class Annotation extends Modifier {
       TOP: 1,
       CENTER: 2,
       BOTTOM: 3,
-      CENTER_STEM: 4
+      CENTER_STEM: 4,
     };
   }
 
@@ -71,9 +71,9 @@ export class Annotation extends Modifier {
     this.justification = Annotation.Justify.CENTER;
     this.vert_justification = Annotation.VerticalJustify.TOP;
     this.font = {
-      family: "Arial",
+      family: 'Arial',
       size: 10,
-      weight: ""
+      weight: '',
     };
 
     // The default width is calculated from the text.
@@ -105,9 +105,9 @@ export class Annotation extends Modifier {
 
   // Render text beside the note.
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw text annotation without a context.");
-    if (!this.note) throw new Vex.RERR("NoNoteForAnnotation",
+    if (!this.note) throw new Vex.RERR('NoNoteForAnnotation',
       "Can't draw text annotation without an attached note.");
 
     const start = this.note.getModifierStartXY(Modifier.Position.ABOVE,
@@ -122,7 +122,7 @@ export class Annotation extends Modifier {
     //
     // This is a hack to work around the inability to measure text height
     // in HTML5 Canvas (and SVG).
-    const text_height = this.context.measureText("m").width;
+    const text_height = this.context.measureText('m').width;
     let x, y;
 
     if (this.justification == Annotation.Justify.LEFT) {
@@ -156,7 +156,7 @@ export class Annotation extends Modifier {
                Annotation.VerticalJustify.CENTER) {
       const yt = this.note.getYForTopText(this.text_line) - 1;
       const yb = stave.getYForBottomText(this.text_line);
-      y = yt + ( yb - yt ) / 2 + text_height / 2;
+      y = yt + (yb - yt) / 2 + text_height / 2;
     } else if (this.vert_justification ==
                Annotation.VerticalJustify.TOP) {
       y = Math.min(stave.getYForTopText(this.text_line), this.note.getYs()[0] - 10);
@@ -169,7 +169,7 @@ export class Annotation extends Modifier {
         text_height / 2;
     }
 
-    L("Rendering annotation: ", this.text, x, y);
+    L('Rendering annotation: ', this.text, x, y);
     this.context.fillText(this.text, x, y);
     this.context.restore();
   }

@@ -4,11 +4,11 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
 
-function drawBoldDoubleLine(ctx, type, topX, topY, botY){
+function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
   if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
       type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
-    throw Vex.RERR("InvalidConnector",
-      "A REPEAT_BEGIN or REPEAT_END type must be provided.");
+    throw Vex.RERR('InvalidConnector',
+      'A REPEAT_BEGIN or REPEAT_END type must be provided.');
   }
 
   let x_shift = 3;
@@ -32,8 +32,8 @@ export class StaveConnector {
   // stave connectors
   static get type() {
     return {
-      SINGLE_RIGHT : 0,
-      SINGLE_LEFT : 1,
+      SINGLE_RIGHT: 0,
+      SINGLE_LEFT: 1,
       SINGLE: 1,
       DOUBLE: 2,
       BRACE: 3,
@@ -41,7 +41,7 @@ export class StaveConnector {
       BOLD_DOUBLE_LEFT: 5,
       BOLD_DOUBLE_RIGHT: 6,
       THIN_DOUBLE: 7,
-      NONE: 8
+      NONE: 8,
     };
   }
 
@@ -52,9 +52,9 @@ export class StaveConnector {
     this.bottom_stave = bottom_stave;
     this.type = StaveConnector.type.DOUBLE;
     this.font = {
-      family: "times",
+      family: 'times',
       size: 16,
-      weight: "normal"
+      weight: 'normal',
     };
     // 1. Offset Bold Double Left to align with offset Repeat Begin bars
     // 2. Offset BRACE type not to overlap with another StaveConnector
@@ -77,7 +77,7 @@ export class StaveConnector {
   setText(text, options) {
     this.texts.push({
       content: text,
-      options: Vex.Merge({ shift_x: 0, shift_y: 0 }, options)
+      options: Vex.Merge({ shift_x: 0, shift_y: 0 }, options),
     });
     return this;
   }
@@ -86,9 +86,9 @@ export class StaveConnector {
     Vex.Merge(this.font, font);
   }
 
-  setXShift(x_shift){
+  setXShift(x_shift) {
     if (typeof x_shift !== 'number') {
-      throw Vex.RERR("InvalidType", "x_shift must be a Number");
+      throw Vex.RERR('InvalidType', 'x_shift must be a Number');
     }
 
     this.x_shift = x_shift;
@@ -97,7 +97,7 @@ export class StaveConnector {
 
   draw() {
     if (!this.ctx) throw new Vex.RERR(
-        "NoContext", "Can't draw without a context.");
+        'NoContext', "Can't draw without a context.");
     let topY = this.top_stave.getYForLine(0);
     let botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +
       this.thickness;
@@ -110,7 +110,7 @@ export class StaveConnector {
       this.type === StaveConnector.type.THIN_DOUBLE
     );
 
-    if (isRightSidedConnector){
+    if (isRightSidedConnector) {
       topX = this.top_stave.getX() + this.top_stave.width;
     }
 
@@ -136,7 +136,7 @@ export class StaveConnector {
         const x3 = x1;
         const y3 = botY;
         const x2 = x1 - width;
-        const y2 = y1 + attachment_height/2.0;
+        const y2 = y1 + attachment_height / 2.0;
         const cpx1 = x2 - (0.90 * width);
         const cpy1 = y1 + (0.2 * attachment_height);
         const cpx2 = x1 + (1.10 * width);
@@ -166,8 +166,8 @@ export class StaveConnector {
         topY -= 4;
         botY += 4;
         attachment_height = botY - topY;
-        Glyph.renderGlyph(this.ctx, topX - 5, topY - 3, 40, "v1b", true);
-        Glyph.renderGlyph(this.ctx, topX - 5, botY + 3, 40, "v10", true);
+        Glyph.renderGlyph(this.ctx, topX - 5, topY - 3, 40, 'v1b', true);
+        Glyph.renderGlyph(this.ctx, topX - 5, botY + 3, 40, 'v10', true);
         topX -= (this.width + 2);
         break;
       case StaveConnector.type.BOLD_DOUBLE_LEFT:
@@ -187,7 +187,7 @@ export class StaveConnector {
       this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
       this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT &&
       this.type !== StaveConnector.type.NONE) {
-      this.ctx.fillRect(topX , topY, width, attachment_height);
+      this.ctx.fillRect(topX, topY, width, attachment_height);
     }
 
     // If the connector is a thin double barline, draw the paralell line
@@ -201,12 +201,12 @@ export class StaveConnector {
     // Add stave connector text
     for (let i = 0; i < this.texts.length; i++) {
       const text = this.texts[i];
-      const text_width = this.ctx.measureText("" + text.content).width;
+      const text_width = this.ctx.measureText('' + text.content).width;
       const x = this.top_stave.getX() - text_width - 24 + text.options.shift_x;
       const y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 +
         text.options.shift_y;
 
-      this.ctx.fillText("" + text.content, x, y + 4);
+      this.ctx.fillText('' + text.content, x, y + 4);
     }
     this.ctx.restore();
   }

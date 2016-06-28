@@ -69,7 +69,7 @@ export class Dot extends Modifier {
             half_shiftY = -0.5;
           } else if (line + half_shiftY == prev_dotted_space) {
             // previous space is dotted, so shift dot to space below the line
-             half_shiftY = -0.5;
+            half_shiftY = -0.5;
           }
         }
       }
@@ -104,7 +104,7 @@ export class Dot extends Modifier {
     this.dot_shiftY = 0;
   }
   getCategory() { return Dot.CATEGORY; }
-  setNote(note){
+  setNote(note) {
     this.note = note;
 
     if (this.note.getCategory() === 'gracenotes') {
@@ -114,9 +114,9 @@ export class Dot extends Modifier {
   }
   setDotShiftY(y) { this.dot_shiftY = y; return this; }
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
+    if (!this.context) throw new Vex.RERR('NoContext',
       "Can't draw dot without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
+    if (!(this.note && (this.index != null))) throw new Vex.RERR('NoAttachedNote',
       "Can't draw dot without a note and index.");
 
     const line_space = this.note.stave.options.spacing_between_lines_px;
