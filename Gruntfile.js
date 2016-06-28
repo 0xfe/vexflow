@@ -22,9 +22,15 @@ module.exports = (grunt) => {
 
   const ESLINT_SOURCES = [
     'src/accidental.js',
+    'src/clef.js',
     'src/formatter.js',
     'src/modifiercontext.js',
+    'src/stave.js',
+    'src/staveconnector.js',
     'src/stavenote.js',
+    'src/stringnumber.js',
+    'src/tuning.js',
+    'src/vibrato.js',
   ];
 
   const negatePattern = (pattern) => `!${pattern}`;

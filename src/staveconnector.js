@@ -5,10 +5,13 @@ import { Flow } from './tables';
 import { Glyph } from './glyph';
 
 function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
-  if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
-      type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
-    throw Vex.RERR('InvalidConnector',
-      'A REPEAT_BEGIN or REPEAT_END type must be provided.');
+  if (
+    type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
+    type !== StaveConnector.type.BOLD_DOUBLE_RIGHT
+  ) {
+    throw new Vex.RERR(
+      'InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.'
+    );
   }
 
   let x_shift = 3;
@@ -68,9 +71,9 @@ export class StaveConnector {
   }
 
   setType(type) {
-    if (type >= StaveConnector.type.SINGLE_RIGHT &&
-        type <= StaveConnector.type.NONE)
+    if (type >= StaveConnector.type.SINGLE_RIGHT && type <= StaveConnector.type.NONE) {
       this.type = type;
+    }
     return this;
   }
 
@@ -96,8 +99,10 @@ export class StaveConnector {
   }
 
   draw() {
-    if (!this.ctx) throw new Vex.RERR(
-        'NoContext', "Can't draw without a context.");
+    if (!this.ctx) {
+      throw new Vex.RERR('NoContext', "Can't draw without a context.");
+    }
+
     let topY = this.top_stave.getYForLine(0);
     let botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +
       this.thickness;
@@ -128,7 +133,7 @@ export class StaveConnector {
       case StaveConnector.type.DOUBLE:
         topX -= (this.width + 2);
         break;
-      case StaveConnector.type.BRACE:
+      case StaveConnector.type.BRACE: {
         width = 12;
         // May need additional code to draw brace
         const x1 = this.top_stave.getX() - 2 + this.x_shift;
@@ -162,7 +167,7 @@ export class StaveConnector {
         this.ctx.fill();
         this.ctx.stroke();
         break;
-      case StaveConnector.type.BRACKET:
+      } case StaveConnector.type.BRACKET:
         topY -= 4;
         botY += 4;
         attachment_height = botY - topY;
@@ -181,12 +186,18 @@ export class StaveConnector {
         break;
       case StaveConnector.type.NONE:
         break;
+      default:
+        throw new Vex.RERR(
+          'InvalidType', `The provided StaveConnector.type (${this.type}) is invalid`
+        );
     }
 
-    if (this.type !== StaveConnector.type.BRACE &&
+    if (
+      this.type !== StaveConnector.type.BRACE &&
       this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
       this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT &&
-      this.type !== StaveConnector.type.NONE) {
+      this.type !== StaveConnector.type.NONE
+    ) {
       this.ctx.fillRect(topX, topY, width, attachment_height);
     }
 

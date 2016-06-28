@@ -27,16 +27,18 @@ export class Tuning {
   }
 
   setTuning(noteString) {
-    if (Tuning.names[noteString])
+    if (Tuning.names[noteString]) {
       noteString = Tuning.names[noteString];
+    }
 
     this.tuningString = noteString;
     this.tuningValues = [];
     this.numStrings = 0;
 
     const keys = noteString.split(/\s*,\s*/);
-    if (keys.length === 0)
+    if (keys.length === 0) {
       throw new Vex.RERR('BadArguments', 'Invalid tuning string: ' + noteString);
+    }
 
     this.numStrings = keys.length;
     for (let i = 0; i < this.numStrings; ++i) {
@@ -46,9 +48,11 @@ export class Tuning {
 
   getValueForString(stringNum) {
     const s = parseInt(stringNum, 10);
-    if (s < 1 || s > this.numStrings)
-      throw new Vex.RERR('BadArguments', 'String number must be between 1 and ' +
-          this.numStrings + ': ' + stringNum);
+    if (s < 1 || s > this.numStrings) {
+      throw new Vex.RERR(
+        'BadArguments', `String number must be between 1 and ${this.numStrings}:${stringNum}`
+      );
+    }
 
     return this.tuningValues[s - 1];
   }
