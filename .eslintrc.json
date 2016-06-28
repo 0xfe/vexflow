@@ -12,6 +12,7 @@
     "no-param-reassign": [0],
     "no-shadow": [0],
     "no-use-before-define": [0],
+    "quote-props": [0],
     "prefer-template": [0],
     "space-before-function-paren": [2, "never"],
     "strict": [2, "global"]
