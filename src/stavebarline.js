@@ -27,7 +27,7 @@ export class Barline extends StaveModifier {
     super();
     this.thickness = Flow.STAVE_LINE_THICKNESS;
 
-    var TYPE = Barline.type;
+    const TYPE = Barline.type;
     this.widths = {};
     this.widths[TYPE.SINGLE] = 5;
     this.widths[TYPE.DOUBLE] = 5;
@@ -94,8 +94,8 @@ export class Barline extends StaveModifier {
   drawVerticalBar(stave, x, double_bar) {
     if (!stave.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw stave without canvas context.");
-    var topY = stave.getYForLine(0);
-    var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+    const topY = stave.getYForLine(0);
+    const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
     if (double_bar)
       stave.context.fillRect(x - 3, topY, 1, botY - topY);
     stave.context.fillRect(x, topY, 1, botY - topY);
@@ -104,8 +104,8 @@ export class Barline extends StaveModifier {
     if (!stave.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw stave without canvas context.");
 
-    var topY = stave.getYForLine(0);
-    var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+    const topY = stave.getYForLine(0);
+    const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
     stave.context.fillRect(x - 5, topY, 1, botY - topY);
     stave.context.fillRect(x - 2, topY, 3, botY - topY);
   }
@@ -113,9 +113,9 @@ export class Barline extends StaveModifier {
     if (!stave.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw stave without canvas context.");
 
-    var topY = stave.getYForLine(0);
-    var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
-    var x_shift = 3;
+    const topY = stave.getYForLine(0);
+    const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+    let x_shift = 3;
 
     if (!begin) {
       x_shift = -5;
@@ -124,7 +124,7 @@ export class Barline extends StaveModifier {
     stave.context.fillRect(x + x_shift, topY, 1, botY - topY);
     stave.context.fillRect(x - 2, topY, 3, botY - topY);
 
-    var dot_radius = 2;
+    const dot_radius = 2;
 
     // Shift dots left or right
     if (begin) {
@@ -133,14 +133,14 @@ export class Barline extends StaveModifier {
       x_shift -= 4;
     }
 
-    var dot_x = (x + x_shift) + (dot_radius / 2);
+    const dot_x = (x + x_shift) + (dot_radius / 2);
 
     // calculate the y offset based on number of stave lines
-    var y_offset = (stave.getNumLines() - 1) *
+    let y_offset = (stave.getNumLines() - 1) *
       stave.getSpacingBetweenLines();
     y_offset = (y_offset / 2) -
                (stave.getSpacingBetweenLines() / 2);
-    var dot_y = topY + y_offset + (dot_radius / 2);
+    let dot_y = topY + y_offset + (dot_radius / 2);
 
     // draw the top repeat dot
     stave.context.beginPath();

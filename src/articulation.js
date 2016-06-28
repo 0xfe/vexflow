@@ -24,13 +24,13 @@ export class Articulation extends Modifier {
   static format(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
-    var width = 0;
-    for (var i = 0; i < articulations.length; ++i) {
-      var increment = 1;
-      var articulation = articulations[i];
+    let width = 0;
+    for (let i = 0; i < articulations.length; ++i) {
+      let increment = 1;
+      const articulation = articulations[i];
       width = Math.max(articulation.getWidth(), width);
 
-      var type = Flow.articulationCodes(articulation.type);
+      const type = Flow.articulationCodes(articulation.type);
 
       if (!type.between_lines) increment += 1.5;
 
@@ -79,23 +79,23 @@ export class Articulation extends Modifier {
     if (!(this.note && (this.index !== null))) throw new Vex.RERR("NoAttachedNote",
       "Can't draw Articulation without a note and index.");
 
-    var stem_direction = this.note.getStemDirection();
-    var stave = this.note.getStave();
+    const stem_direction = this.note.getStemDirection();
+    const stave = this.note.getStave();
 
-    var is_on_head = (this.position === Modifier.Position.ABOVE &&
+    const is_on_head = (this.position === Modifier.Position.ABOVE &&
                       stem_direction === StaveNote.STEM_DOWN) ||
                      (this.position === Modifier.Position.BELOW &&
                       stem_direction === StaveNote.STEM_UP);
 
-    var needsLineAdjustment = function(articulation, note_line, line_spacing) {
-      var offset_direction = (articulation.position === Modifier.Position.ABOVE) ? 1 : -1;
-      var duration = articulation.getNote().getDuration();
+    const needsLineAdjustment = (articulation, note_line, line_spacing) => {
+      const offset_direction = (articulation.position === Modifier.Position.ABOVE) ? 1 : -1;
+      const duration = articulation.getNote().getDuration();
       if(!is_on_head && Flow.durationToNumber(duration) <= 1){
         // Add stem length, unless it's on a whole note.
         note_line += offset_direction * 3.5;
       }
 
-      var articulation_line = note_line + (offset_direction * line_spacing);
+      const articulation_line = note_line + (offset_direction * line_spacing);
 
       if(articulation_line >= 1 &&
          articulation_line <= 5 &&
@@ -107,16 +107,16 @@ export class Articulation extends Modifier {
     };
 
     // Articulations are centered over/under the note head.
-    var start = this.note.getModifierStartXY(this.position, this.index);
-    var glyph_y = start.y;
-    var shiftY = 0;
-    var line_spacing = 1;
-    var spacing = stave.getSpacingBetweenLines();
-    var is_tabnote = this.note.getCategory() === 'tabnotes';
-    var stem_ext = this.note.getStem().getExtents();
+    const start = this.note.getModifierStartXY(this.position, this.index);
+    let glyph_y = start.y;
+    let shiftY = 0;
+    let line_spacing = 1;
+    const spacing = stave.getSpacingBetweenLines();
+    const is_tabnote = this.note.getCategory() === 'tabnotes';
+    const stem_ext = this.note.getStem().getExtents();
 
-    var top = stem_ext.topY;
-    var bottom = stem_ext.baseY;
+    let top = stem_ext.topY;
+    let bottom = stem_ext.baseY;
 
     if (stem_direction === StaveNote.STEM_DOWN) {
       top = stem_ext.baseY;
@@ -138,8 +138,8 @@ export class Articulation extends Modifier {
       }
     }
 
-    var is_above = (this.position === Modifier.Position.ABOVE) ? true : false;
-    var note_line = this.note.getLineNumber(is_above);
+    const is_above = (this.position === Modifier.Position.ABOVE) ? true : false;
+    const note_line = this.note.getLineNumber(is_above);
 
     // Beamed stems are longer than quarter note stems.
     if (!is_on_head && this.note.beam) line_spacing += 0.5;
@@ -147,7 +147,7 @@ export class Articulation extends Modifier {
     // If articulation will overlap a line, reposition it.
     if (needsLineAdjustment(this, note_line, line_spacing)) line_spacing += 0.5;
 
-    var glyph_y_between_lines;
+    let glyph_y_between_lines;
     if (this.position === Modifier.Position.ABOVE) {
       shiftY = this.articulation.shift_up;
       glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
@@ -168,7 +168,7 @@ export class Articulation extends Modifier {
       }
     }
 
-    var glyph_x = start.x + this.articulation.shift_right;
+    const glyph_x = start.x + this.articulation.shift_right;
     glyph_y += shiftY + this.y_shift;
 
     L("Rendering articulation: ", this.articulation, glyph_x, glyph_y);

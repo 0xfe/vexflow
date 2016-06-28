@@ -9,8 +9,8 @@ import { Fraction } from './fraction';
 
 export class TickContext {
   static getNextContext(tContext) {
-    var contexts = tContext.tContexts;
-    var index = contexts.indexOf(tContext);
+    const contexts = tContext.tContexts;
+    const index = contexts.indexOf(tContext);
 
     return contexts[index+1];
   }
@@ -50,9 +50,7 @@ export class TickContext {
   getMinTicks() { return this.minTicks; }
   getTickables() { return this.tickables; }
   getCenterAlignedTickables() {
-    return this.tickables.filter(function(tickable) {
-      return tickable.isCenterAligned();
-    });
+    return this.tickables.filter(tickable => tickable.isCenterAligned());
   }
 
   // Get widths context, note and left/right modifiers for formatting
@@ -68,14 +66,14 @@ export class TickContext {
 
   // Get left & right pixels used for modifiers
   getExtraPx() {
-    var left_shift = 0;
-    var right_shift = 0;
-    var extraLeftPx = 0;
-    var extraRightPx = 0;
-    for (var i = 0; i < this.tickables.length; i++) {
+    let left_shift = 0;
+    let right_shift = 0;
+    let extraLeftPx = 0;
+    let extraRightPx = 0;
+    for (let i = 0; i < this.tickables.length; i++) {
       extraLeftPx = Math.max(this.tickables[i].extraLeftPx, extraLeftPx);
       extraRightPx = Math.max(this.tickables[i].extraRightPx, extraRightPx);
-      var mContext = this.tickables[i].modifierContext;
+      const mContext = this.tickables[i].modifierContext;
       if (mContext && mContext != null) {
         left_shift = Math.max( left_shift, mContext.state.left_shift);
         right_shift = Math.max( right_shift, mContext.state.right_shift);
@@ -92,7 +90,7 @@ export class TickContext {
     if (!tickable.shouldIgnoreTicks()) {
       this.ignore_ticks = false;
 
-      var ticks = tickable.getTicks();
+      const ticks = tickable.getTicks();
 
       if (ticks.greaterThan(this.maxTicks)) {
         this.maxTicks = ticks.clone();
@@ -113,10 +111,10 @@ export class TickContext {
   preFormat() {
     if (this.preFormatted) return;
 
-    for (var i = 0; i < this.tickables.length; ++i) {
-      var tickable = this.tickables[i];
+    for (let i = 0; i < this.tickables.length; ++i) {
+      const tickable = this.tickables[i];
       tickable.preFormat();
-      var metrics = tickable.getMetrics();
+      const metrics = tickable.getMetrics();
 
       // Maintain max extra pixels from all tickables in the context
       this.extraLeftPx = Math.max(this.extraLeftPx,

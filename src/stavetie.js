@@ -79,29 +79,29 @@ export class StaveTie {
     if (params.first_ys.length === 0 || params.last_ys.length === 0)
       throw new Vex.RERR("BadArguments", "No Y-values to render");
 
-    var ctx = this.context;
-    var cp1 = this.render_options.cp1;
-    var cp2 = this.render_options.cp2;
+    const ctx = this.context;
+    let cp1 = this.render_options.cp1;
+    let cp2 = this.render_options.cp2;
 
     if (Math.abs(params.last_x_px - params.first_x_px) < 10) {
       cp1 = 2; cp2 = 8;
     }
 
-    var first_x_shift = this.render_options.first_x_shift;
-    var last_x_shift = this.render_options.last_x_shift;
-    var y_shift = this.render_options.y_shift * params.direction;
+    const first_x_shift = this.render_options.first_x_shift;
+    const last_x_shift = this.render_options.last_x_shift;
+    const y_shift = this.render_options.y_shift * params.direction;
 
-    for (var i = 0; i < this.first_indices.length; ++i) {
-      var cp_x = ((params.last_x_px + last_x_shift) +
+    for (let i = 0; i < this.first_indices.length; ++i) {
+      const cp_x = ((params.last_x_px + last_x_shift) +
           (params.first_x_px + first_x_shift)) / 2;
-      var first_y_px = params.first_ys[this.first_indices[i]] + y_shift;
-      var last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
+      const first_y_px = params.first_ys[this.first_indices[i]] + y_shift;
+      const last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
 
       if (isNaN(first_y_px) || isNaN(last_y_px))
         throw new Vex.RERR("BadArguments", "Bad indices for tie rendering.");
 
-      var top_cp_y = ((first_y_px + last_y_px) / 2) + (cp1 * params.direction);
-      var bottom_cp_y = ((first_y_px + last_y_px) / 2) + (cp2 * params.direction);
+      const top_cp_y = ((first_y_px + last_y_px) / 2) + (cp1 * params.direction);
+      const bottom_cp_y = ((first_y_px + last_y_px) / 2) + (cp2 * params.direction);
 
       ctx.beginPath();
       ctx.moveTo(params.first_x_px + first_x_shift, first_y_px);
@@ -117,7 +117,7 @@ export class StaveTie {
 
   renderText(first_x_px, last_x_px) {
     if (!this.text) return;
-    var center_x = (first_x_px + last_x_px) / 2;
+    let center_x = (first_x_px + last_x_px) / 2;
     center_x -= this.context.measureText(this.text).width / 2;
 
     this.context.save();
@@ -131,9 +131,9 @@ export class StaveTie {
   draw() {
     if (!this.context)
       throw new Vex.RERR("NoContext", "No context to render tie.");
-    var first_note = this.first_note;
-    var last_note = this.last_note;
-    var first_x_px, last_x_px, first_ys, last_ys, stem_direction;
+    const first_note = this.first_note;
+    const last_note = this.last_note;
+    let first_x_px, last_x_px, first_ys, last_ys, stem_direction;
 
     if (first_note) {
       first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
@@ -160,10 +160,10 @@ export class StaveTie {
     }
 
     this.renderTie({
-      first_x_px: first_x_px,
-      last_x_px: last_x_px,
-      first_ys: first_ys,
-      last_ys: last_ys,
+      first_x_px,
+      last_x_px,
+      first_ys,
+      last_ys,
       direction: stem_direction
     });
 

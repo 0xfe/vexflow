@@ -153,14 +153,14 @@ export class Music {
     if (noteString.length > 3)
       throw new Vex.RERR("BadArguments", "Invalid note name: " + noteString);
 
-    var note = noteString.toLowerCase();
+    const note = noteString.toLowerCase();
 
-    var regex = /^([cdefgab])(b|bb|n|#|##)?$/;
-    var match = regex.exec(note);
+    const regex = /^([cdefgab])(b|bb|n|#|##)?$/;
+    const match = regex.exec(note);
 
     if (match != null) {
-      var root = match[1];
-      var accidental = match[2];
+      const root = match[1];
+      const accidental = match[2];
 
       return {
         'root': root,
@@ -174,16 +174,16 @@ export class Music {
     if (!keyString || keyString.length < 1)
       throw new Vex.RERR("BadArguments", "Invalid key: " + keyString);
 
-    var key = keyString.toLowerCase();
+    const key = keyString.toLowerCase();
 
     // Support Major, Minor, Melodic Minor, and Harmonic Minor key types.
-    var regex = /^([cdefgab])(b|#)?(mel|harm|m|M)?$/;
-    var match = regex.exec(key);
+    const regex = /^([cdefgab])(b|#)?(mel|harm|m|M)?$/;
+    const match = regex.exec(key);
 
     if (match != null) {
-      var root = match[1];
-      var accidental = match[2];
-      var type = match[3];
+      const root = match[1];
+      const accidental = match[2];
+      let type = match[3];
 
       // Unspecified type implies major
       if (!type) type = "M";
@@ -198,14 +198,14 @@ export class Music {
     }
   }
   getNoteValue(noteString) {
-    var value = Music.noteValues[noteString];
+    const value = Music.noteValues[noteString];
     if (value == null)
       throw new Vex.RERR("BadArguments", "Invalid note name: " + noteString);
 
     return value.int_val;
   }
   getIntervalValue(intervalString) {
-    var value = Music.intervals[intervalString];
+    const value = Music.intervals[intervalString];
     if (value == null)
       throw new Vex.RERR("BadArguments",
                          "Invalid interval name: " + intervalString);
@@ -235,22 +235,22 @@ export class Music {
     if (direction != 1 && direction != -1)
       throw new Vex.RERR("BadArguments", "Invalid direction: " + direction);
 
-    var sum = (noteValue + (direction * intervalValue)) % Music.NUM_TONES;
+    let sum = (noteValue + (direction * intervalValue)) % Music.NUM_TONES;
     if (sum < 0) sum += Music.NUM_TONES;
 
     return sum;
   }
   getRelativeNoteName(root, noteValue) {
-    var parts = this.getNoteParts(root);
-    var rootValue = this.getNoteValue(parts.root);
-    var interval = noteValue - rootValue;
+    const parts = this.getNoteParts(root);
+    const rootValue = this.getNoteValue(parts.root);
+    let interval = noteValue - rootValue;
 
     if (Math.abs(interval) > Music.NUM_TONES - 3) {
-      var multiplier = 1;
+      let multiplier = 1;
       if (interval > 0 ) multiplier = -1;
 
       // Possibly wrap around. (Add +1 for modulo operator)
-      var reverse_interval = (((noteValue + 1) + (rootValue + 1)) %
+      const reverse_interval = (((noteValue + 1) + (rootValue + 1)) %
         Music.NUM_TONES) * multiplier;
 
       if (Math.abs(reverse_interval) > 2) {
@@ -265,8 +265,8 @@ export class Music {
         throw new Vex.RERR("BadArguments", "Notes not related: " + root + ", " +
                           noteValue);
 
-    var relativeNoteName = parts.root;
-    var i;
+    let relativeNoteName = parts.root;
+    let i;
     if (interval > 0) {
       for (i = 1; i <= interval; ++i)
         relativeNoteName += "#";
@@ -287,11 +287,11 @@ export class Music {
    * interval list).
    */
   getScaleTones(key, intervals) {
-    var tones = [];
+    const tones = [];
     tones.push(key);
 
-    var nextNote = key;
-    for (var i = 0; i < intervals.length; ++i) {
+    let nextNote = key;
+    for (let i = 0; i < intervals.length; ++i) {
       nextNote = this.getRelativeNoteValue(nextNote,
                                            intervals[i]);
       if (nextNote != key) tones.push(nextNote);
@@ -312,7 +312,7 @@ export class Music {
       throw new Vex.RERR("BadArguments",
                          "Invalid notes: " + note1 + ", " + note2);
 
-    var difference;
+    let difference;
     if (direction == 1)
       difference = note2 - note1;
     else
@@ -327,22 +327,22 @@ export class Music {
   // return a scale map with every note naturalized except for `F` which
   // has an `F#` state.
   createScaleMap(keySignature) {
-    var keySigParts = this.getKeyParts(keySignature);
-    var scaleName = Music.scaleTypes[keySigParts.type];
+    const keySigParts = this.getKeyParts(keySignature);
+    const scaleName = Music.scaleTypes[keySigParts.type];
 
-    var keySigString = keySigParts.root;
+    let keySigString = keySigParts.root;
     if (keySigParts.accidental) keySigString += keySigParts.accidental;
 
     if (!scaleName) throw new Vex.RERR("BadArguments", "Unsupported key type: " + keySignature);
 
-    var scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
-    var noteLocation = Music.root_indices[keySigParts.root];
+    const scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
+    const noteLocation = Music.root_indices[keySigParts.root];
 
-    var scaleMap = {};
-    for (var i = 0; i < Music.roots.length; ++i) {
-      var index = (noteLocation + i) % Music.roots.length;
-      var rootName = Music.roots[index];
-      var noteName = this.getRelativeNoteName(rootName, scale[i]);
+    const scaleMap = {};
+    for (let i = 0; i < Music.roots.length; ++i) {
+      const index = (noteLocation + i) % Music.roots.length;
+      const rootName = Music.roots[index];
+      let noteName = this.getRelativeNoteName(rootName, scale[i]);
 
       if (noteName.length === 1) {
         noteName += "n";

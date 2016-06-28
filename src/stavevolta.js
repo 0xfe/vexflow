@@ -34,10 +34,10 @@ export class Volta extends StaveModifier {
   draw(stave, x) {
     if (!stave.context) throw new Vex.RERR("NoCanvasContext",
       "Can't draw stave without canvas context.");
-    var ctx = stave.context;
-    var width = stave.width;
-    var top_y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-    var vert_height = 1.5 * stave.options.spacing_between_lines_px;
+    const ctx = stave.context;
+    let width = stave.width;
+    const top_y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
+    const vert_height = 1.5 * stave.options.spacing_between_lines_px;
     switch(this.volta) {
       case Volta.type.BEGIN:
         ctx.fillRect(this.x + x, top_y, 1, vert_height);

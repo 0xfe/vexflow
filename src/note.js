@@ -20,21 +20,21 @@ export class Note extends Tickable {
   // Debug helper. Displays various note metrics for the given
   // note.
   static plotMetrics(ctx, note, yPos) {
-    var metrics = note.getMetrics();
-    var w = metrics.width;
-    var xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
-    var xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
-    var xAbs = note.getAbsoluteX();
-    var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
-    var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
-    var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
+    const metrics = note.getMetrics();
+    const w = metrics.width;
+    const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
+    const xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
+    const xAbs = note.getAbsoluteX();
+    const xPost1 = note.getAbsoluteX() + metrics.noteWidth;
+    const xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
+    const xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
 
-    var xWidth = xEnd - xStart;
+    const xWidth = xEnd - xStart;
     ctx.save();
     ctx.setFont("Arial", 8, "");
     ctx.fillText(Math.round(xWidth) + "px", xStart + note.getXShift(), yPos);
 
-    var y = (yPos + 7);
+    const y = (yPos + 7);
     function stroke(x1, x2, color) {
       ctx.beginPath();
       ctx.setStrokeStyle(color);
@@ -75,7 +75,7 @@ export class Note extends Tickable {
     }
 
     // Parse `note_struct` and get note properties.
-    var initData = Flow.parseNoteData(note_struct);
+    const initData = Flow.parseNoteData(note_struct);
     if (!initData) {
       throw new Vex.RuntimeError("BadArguments",
           "Invalid note initialization object: " + JSON.stringify(note_struct));
@@ -271,15 +271,15 @@ export class Note extends Tickable {
   getMetrics() {
     if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
         "Can't call getMetrics on an unformatted note.");
-    var modLeftPx = 0;
-    var modRightPx = 0;
+    let modLeftPx = 0;
+    let modRightPx = 0;
     if (this.modifierContext != null) {
       modLeftPx = this.modifierContext.state.left_shift;
       modRightPx = this.modifierContext.state.right_shift;
     }
 
-    var width = this.getWidth();
-    return { width: width,
+    const width = this.getWidth();
+    return { width,
              noteWidth: width -
                         modLeftPx - modRightPx -
                         this.extraLeftPx - this.extraRightPx,
@@ -287,8 +287,8 @@ export class Note extends Tickable {
 
 
              // Modifiers, accidentals etc.
-             modLeftPx: modLeftPx,
-             modRightPx: modRightPx,
+             modLeftPx,
+             modRightPx,
 
              // Displaced note head on left or right.
              extraLeftPx: this.extraLeftPx,
@@ -323,7 +323,7 @@ export class Note extends Tickable {
         "Note needs a TickContext assigned for an X-Value");
 
     // Position note to left edge of tick context.
-    var x = this.tickContext.getX();
+    let x = this.tickContext.getX();
     if (this.stave) {
       x += this.stave.getNoteStartX() + this.render_options.stave_padding;
     }
@@ -339,7 +339,7 @@ export class Note extends Tickable {
 
     // Maintain the width of left and right modifiers in pixels.
     if (this.preFormatted) {
-      var extra = this.tickContext.getExtraPx();
+      const extra = this.tickContext.getExtraPx();
       this.left_modPx = Math.max(this.left_modPx, extra.left);
       this.right_modPx = Math.max(this.right_modPx, extra.right);
     }

@@ -86,7 +86,7 @@ export class Tuplet {
       this.bracketed = this.options.bracketed;
     } else {
       this.bracketed =
-        notes.some(function(note){ return note.beam === null; });
+        notes.some(note => note.beam === null);
     }
 
     this.ratioed = "ratioed" in this.options ?
@@ -104,15 +104,15 @@ export class Tuplet {
   }
 
   attach() {
-    for (var i = 0; i < this.notes.length; i++) {
-      var note = this.notes[i];
+    for (let i = 0; i < this.notes.length; i++) {
+      const note = this.notes[i];
       note.setTuplet(this);
     }
   }
 
   detach() {
-    for (var i = 0; i < this.notes.length; i++) {
-      var note = this.notes[i];
+    for (let i = 0; i < this.notes.length; i++) {
+      const note = this.notes[i];
       note.resetTuplet(this);
     }
   }
@@ -161,7 +161,7 @@ export class Tuplet {
   }
 
   beatsOccupiedDeprecationWarning(){
-      var msg = "beats_occupied has been deprecated as an " +
+      const msg = "beats_occupied has been deprecated as an " +
         "option for tuplets. Please use notes_occupied " +
         "instead. Calls to getBeatsOccupied and " +
         "setBeatsOccupied should now be routed to " +
@@ -193,7 +193,7 @@ export class Tuplet {
 
   resolveGlyphs() {
     this.num_glyphs = [];
-    var n = this.num_notes;
+    let n = this.num_notes;
     while (n >= 1) {
       this.num_glyphs.push(new Glyph("v" + (n % 10), this.point));
       n = parseInt(n / 10, 10);
@@ -211,21 +211,19 @@ export class Tuplet {
   // on the same side (above/below), to calculate a y
   // offset for this tuplet:
   getNestedTupletCount(){
-    var location = this.location,
-        first_note = this.notes[0],
-        maxTupletCount = countTuplets(first_note, location),
-        minTupletCount = countTuplets(first_note, location);
+    const location = this.location;
+    const first_note = this.notes[0];
+    let maxTupletCount = countTuplets(first_note, location);
+    let minTupletCount = countTuplets(first_note, location);
 
     // Count the tuplets that are on the same side (above/below)
     // as this tuplet:
     function countTuplets(note, location){
-      return note.tupletStack.filter(function(tuplet){
-        return tuplet.location===location;
-      }).length;
+      return note.tupletStack.filter(tuplet => tuplet.location===location).length;
     }
 
-    this.notes.forEach(function(note){
-      var tupletCount = countTuplets(note, location);
+    this.notes.forEach(note => {
+      const tupletCount = countTuplets(note, location);
       maxTupletCount = (tupletCount > maxTupletCount) ?
         tupletCount : maxTupletCount;
       minTupletCount = (tupletCount < minTupletCount) ?
@@ -237,27 +235,27 @@ export class Tuplet {
 
   // determine the y position of the tuplet:
   getYPosition(){
-    var i, y_pos;
+    let i, y_pos;
 
     // offset the tuplet for any nested tuplets between
     // it and the notes:
-    var nested_tuplet_y_offset =
+    const nested_tuplet_y_offset =
       this.getNestedTupletCount() *
       Tuplet.NESTING_OFFSET *
       (-this.location);
 
     // offset the tuplet for any manual y_offset:
-    var y_offset = this.options.y_offset || 0;
+    const y_offset = this.options.y_offset || 0;
 
     // now iterate through the notes and find our highest
     // or lowest locations, to form a base y_pos
-    var first_note = this.notes[0];
+    const first_note = this.notes[0];
     if (this.location == Tuplet.LOCATION_TOP) {
       y_pos = first_note.getStave().getYForLine(0) - 15;
       //y_pos = first_note.getStemExtents().topY - 10;
 
       for (i=0; i<this.notes.length; ++i) {
-        var top_y = this.notes[i].getStemDirection() === Stem.UP ?
+        const top_y = this.notes[i].getStemDirection() === Stem.UP ?
             this.notes[i].getStemExtents().topY - 10
           : this.notes[i].getStemExtents().baseY - 20;
         if (top_y < y_pos)
@@ -268,7 +266,7 @@ export class Tuplet {
       y_pos = first_note.getStave().getYForLine(4) + 20;
 
       for (i=0; i<this.notes.length; ++i) {
-        var bottom_y = this.notes[i].getStemDirection() === Stem.UP ?
+        const bottom_y = this.notes[i].getStemDirection() === Stem.UP ?
             this.notes[i].getStemExtents().baseY + 20
           : this.notes[i].getStemExtents().topY + 10;
         if (bottom_y > y_pos)
@@ -284,8 +282,8 @@ export class Tuplet {
         "Can't draw without a canvas context.");
 
     // determine x value of left bound of tuplet
-    var first_note = this.notes[0];
-    var last_note = this.notes[this.notes.length - 1];
+    const first_note = this.notes[0];
+    const last_note = this.notes[this.notes.length - 1];
 
     if (!this.bracketed) {
       this.x_pos = first_note.getStemX();
@@ -300,8 +298,8 @@ export class Tuplet {
     this.y_pos = this.getYPosition();
 
     // calculate total width of tuplet notation
-    var width = 0;
-    var glyph;
+    let width = 0;
+    let glyph;
     for (glyph in this.num_glyphs) {
       width += this.num_glyphs[glyph].getMetrics().width;
     }
@@ -312,12 +310,12 @@ export class Tuplet {
       width += this.point * 0.32;
     }
 
-    var notation_center_x = this.x_pos + (this.width/2);
-    var notation_start_x = notation_center_x - (width/2);
+    const notation_center_x = this.x_pos + (this.width/2);
+    const notation_start_x = notation_center_x - (width/2);
 
     // draw bracket if the tuplet is not beamed
     if (this.bracketed) {
-      var line_width = this.width/2 - width/2 - 5;
+      const line_width = this.width/2 - width/2 - 5;
 
       // only draw the bracket if it has positive length
       if (line_width > 0) {
@@ -334,8 +332,8 @@ export class Tuplet {
     }
 
     // draw numerator glyphs
-    var x_offset = 0;
-    var size = this.num_glyphs.length;
+    let x_offset = 0;
+    let size = this.num_glyphs.length;
     for (glyph in this.num_glyphs) {
       this.num_glyphs[size-glyph-1].render(
           this.context, notation_start_x + x_offset,
@@ -345,8 +343,8 @@ export class Tuplet {
 
     // display colon and denominator if the ratio is to be shown
     if (this.ratioed) {
-      var colon_x = notation_start_x + x_offset + this.point*0.16;
-      var colon_radius = this.point * 0.06;
+      const colon_x = notation_start_x + x_offset + this.point*0.16;
+      const colon_radius = this.point * 0.06;
       this.context.beginPath();
       this.context.arc(colon_x, this.y_pos - this.point*0.08,
                        colon_radius, 0, Math.PI*2, true);

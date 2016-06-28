@@ -54,19 +54,19 @@ export class Curve {
   }
 
   renderCurve(params) {
-    var ctx = this.context;
-    var cps = this.render_options.cps;
+    const ctx = this.context;
+    const cps = this.render_options.cps;
 
-    var x_shift = this.render_options.x_shift;
-    var y_shift = this.render_options.y_shift * params.direction;
+    const x_shift = this.render_options.x_shift;
+    const y_shift = this.render_options.y_shift * params.direction;
 
-    var first_x = params.first_x + x_shift;
-    var first_y = params.first_y + y_shift;
-    var last_x = params.last_x - x_shift;
-    var last_y = params.last_y + y_shift;
-    var thickness = this.render_options.thickness;
+    const first_x = params.first_x + x_shift;
+    const first_y = params.first_y + y_shift;
+    const last_x = params.last_x - x_shift;
+    const last_y = params.last_y + y_shift;
+    const thickness = this.render_options.thickness;
 
-    var cp_spacing = (last_x - first_x) / (cps.length + 2);
+    const cp_spacing = (last_x - first_x) / (cps.length + 2);
 
     ctx.beginPath();
     ctx.moveTo(first_x, first_y);
@@ -88,14 +88,14 @@ export class Curve {
   draw() {
     if (!this.context)
       throw new Vex.RERR("NoContext", "No context to render tie.");
-    var first_note = this.from;
-    var last_note = this.to;
-    var first_x, last_x, first_y, last_y, stem_direction;
+    const first_note = this.from;
+    const last_note = this.to;
+    let first_x, last_x, first_y, last_y, stem_direction;
 
-    var metric = "baseY";
-    var end_metric = "baseY";
-    var position = this.render_options.position;
-    var position_end = this.render_options.position_end;
+    let metric = "baseY";
+    let end_metric = "baseY";
+    const position = this.render_options.position;
+    const position_end = this.render_options.position_end;
 
     if (position === Curve.Position.NEAR_TOP) {
       metric = "topY";
@@ -127,10 +127,10 @@ export class Curve {
     }
 
     this.renderCurve({
-      first_x: first_x,
-      last_x: last_x,
-      first_y: first_y,
-      last_y: last_y,
+      first_x,
+      last_x,
+      first_y,
+      last_y,
       direction: stem_direction *
         (this.render_options.invert === true ? -1 : 1)
     });

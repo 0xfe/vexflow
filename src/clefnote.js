@@ -63,7 +63,7 @@ export class ClefNote extends Note {
     if (!this.glyph.getContext()) {
       this.glyph.setContext(this.context);
     }
-    var abs_x = this.getAbsoluteX();
+    const abs_x = this.getAbsoluteX();
 
     this.glyph.setStave(this.stave);
     this.glyph.setYShift(
@@ -72,7 +72,7 @@ export class ClefNote extends Note {
 
     // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
     if (this.clef_obj.annotation !== undefined) {
-      var attachment = new Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
+      const attachment = new Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
       if (!attachment.getContext()) {
           attachment.setContext(this.context);
       }

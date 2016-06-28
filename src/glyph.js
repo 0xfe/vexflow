@@ -6,10 +6,10 @@ import { BoundingBox } from './boundingbox';
 import { Font } from './fonts/vexflow_font';
 
 function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
-  var command;
-  var x;
-  var y;
-  var i = 0;
+  let command;
+  let x;
+  let y;
+  let i = 0;
 
   function nextX() { return originX + outline[i++] * scaleX; }
   function nextY() { return originY + outline[i++] * scaleY; }
@@ -38,15 +38,15 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
 export class Glyph {
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
-    var glyph = font.glyphs[code];
+    const glyph = font.glyphs[code];
     if (!glyph) throw new Vex.RuntimeError("BadGlyph", "Glyph " + code +
         " does not exist in font.");
 
-    var x_min = glyph.x_min;
-    var x_max = glyph.x_max;
-    var ha = glyph.ha;
+    const x_min = glyph.x_min;
+    const x_max = glyph.x_max;
+    const ha = glyph.ha;
 
-    var outline;
+    let outline;
 
     if (glyph.o) {
       if (cache) {
@@ -62,10 +62,10 @@ export class Glyph {
       }
 
       return {
-        x_min: x_min,
-        x_max: x_max,
-        ha: ha,
-        outline: outline
+        x_min,
+        x_max,
+        ha,
+        outline
       };
     } else {
       throw new Vex.RuntimeError("BadGlyph", "Glyph " + code +
@@ -85,8 +85,8 @@ export class Glyph {
    * @param {boolean} nocache If set, disables caching of font outline.
    */
   static renderGlyph(ctx, x_pos, y_pos, point, val, nocache) {
-    var scale = point * 72.0 / (Font.resolution * 100.0);
-    var metrics = Glyph.loadMetrics(Font, val, !nocache);
+    const scale = point * 72.0 / (Font.resolution * 100.0);
+    const metrics = Glyph.loadMetrics(Font, val, !nocache);
     Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
   }
 
@@ -103,7 +103,7 @@ export class Glyph {
   }
 
   static getOutlineBoundingBox(outline, scale, x_pos, y_pos) {
-    var bboxComp = new BoundingBoxComputation(x_pos, y_pos);
+    const bboxComp = new BoundingBoxComputation(x_pos, y_pos);
 
     processOutline(outline, x_pos, y_pos, scale, -scale, {
       m: bboxComp.addPoint.bind(bboxComp),
@@ -186,8 +186,8 @@ export class Glyph {
     if (!this.metrics) throw new Vex.RuntimeError("BadGlyph", "Glyph " +
         this.code + " is not initialized.");
 
-    var outline = this.metrics.outline;
-    var scale = this.scale;
+    const outline = this.metrics.outline;
+    const scale = this.scale;
 
     Glyph.renderOutline(ctx, outline, scale, x_pos, y_pos);
   }
@@ -198,8 +198,8 @@ export class Glyph {
     if (!this.stave) throw new Vex.RuntimeError("GlyphError", "No valid stave");
     if (!this.context) throw new Vex.RERR("GlyphError", "No valid context");
 
-    var outline = this.metrics.outline;
-    var scale = this.scale;
+    const outline = this.metrics.outline;
+    const scale = this.scale;
 
     Glyph.renderOutline(this.context, outline, scale,
         x + this.x_shift, this.stave.getYForGlyphs() + this.y_shift);

@@ -51,14 +51,14 @@ export class Stave {
 
     this.resetLines();
 
-    var BARTYPE = Barline.type;
+    const BARTYPE = Barline.type;
     this.addModifier(new Barline(this.options.left_bar ? BARTYPE.SINGLE : BARTYPE.NONE));  // beg bar
     this.addEndModifier(new Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE)); // end bar
   }
 
   resetLines() {
     this.options.line_config = [];
-    for (var i = 0; i < this.options.num_lines; i++) {
+    for (let i = 0; i < this.options.num_lines; i++) {
       this.options.line_config.push({visible: true});
     }
     this.height = (this.options.num_lines + this.options.space_above_staff_ln) *
@@ -99,13 +99,13 @@ export class Stave {
   setY(y) { this.y = y; return this; }
 
   setX(x){
-    var shift = x - this.x;
+    const shift = x - this.x;
     this.formatted = false;
     this.x = x;
     this.start_x += shift;
     this.end_x += shift;
-    for(var i=0; i<this.modifiers.length; i++) {
-      var mod = this.modifiers[i];
+    for(let i=0; i<this.modifiers.length; i++) {
+      const mod = this.modifiers[i];
       if (mod.x !== undefined) {
         mod.x += shift;
       }
@@ -145,8 +145,8 @@ export class Stave {
       return 0;
     }
 
-    var start_x = this.start_x - this.x;
-    var begBarline = this.modifiers[0];
+    let start_x = this.start_x - this.x;
+    const begBarline = this.modifiers[0];
     if (begBarline.getType() === Barline.type.REPEAT_BEGIN &&
         start_x > begBarline.getWidth()) {
       start_x -= begBarline.getWidth();
@@ -204,9 +204,9 @@ export class Stave {
   }
 
   getBottomY() {
-    var options = this.options;
-    var spacing = options.spacing_between_lines_px;
-    var score_bottom = this.getYForLine(options.num_lines) +
+    const options = this.options;
+    const spacing = options.spacing_between_lines_px;
+    const score_bottom = this.getYForLine(options.num_lines) +
        (options.space_below_staff_ln * spacing);
 
     return score_bottom;
@@ -217,11 +217,11 @@ export class Stave {
   }
 
   getYForLine(line) {
-    var options = this.options;
-    var spacing = options.spacing_between_lines_px;
-    var headroom = options.space_above_staff_ln;
+    const options = this.options;
+    const spacing = options.spacing_between_lines_px;
+    const headroom = options.space_above_staff_ln;
 
-    var y = this.y + ((line * spacing) + (headroom * spacing)) -
+    const y = this.y + ((line * spacing) + (headroom * spacing)) -
       (THICKNESS / 2);
 
     return y;
@@ -230,27 +230,27 @@ export class Stave {
   getLineForY(y){
     //Does the revers of getYForLine - somewhat dumb and just calls getYForLine until the right value is reaches
 
-    var options = this.options;
-    var spacing = options.spacing_between_lines_px;
-    var headroom = options.space_above_staff_ln;
+    const options = this.options;
+    const spacing = options.spacing_between_lines_px;
+    const headroom = options.space_above_staff_ln;
     return ((y - this.y + (THICKNESS / 2)) / spacing) - headroom;
   }
 
   getYForTopText(line) {
-    var l = line || 0;
+    const l = line || 0;
     return this.getYForLine(-l - this.options.top_text_position);
   }
 
   getYForBottomText(line) {
-    var l = line || 0;
+    const l = line || 0;
     return this.getYForLine(this.options.bottom_text_position + l);
   }
 
   getYForNote(line) {
-    var options = this.options;
-    var spacing = options.spacing_between_lines_px;
-    var headroom = options.space_above_staff_ln;
-    var y = this.y + (headroom * spacing) + (5 * spacing) - (line * spacing);
+    const options = this.options;
+    const spacing = options.spacing_between_lines_px;
+    const headroom = options.space_above_staff_ln;
+    const y = this.y + (headroom * spacing) + (5 * spacing) - (line * spacing);
 
     return y;
   }
@@ -302,7 +302,7 @@ export class Stave {
     }
 
     this.clef = clefSpec;
-    var clefs = this.getModifiers(position, Clef.CATEGORY);
+    const clefs = this.getModifiers(position, Clef.CATEGORY);
     if (clefs.length === 0) {
       this.addClef(clefSpec, size, annotation, position);
     } else {
@@ -322,7 +322,7 @@ export class Stave {
       position = StaveModifier.Position.BEGIN;
     }
 
-    var keySignatures = this.getModifiers(position, KeySignature.CATEGORY);
+    const keySignatures = this.getModifiers(position, KeySignature.CATEGORY);
     if (keySignatures.length === 0) {
       this.addKeySignature(keySpec, cancelKeySpec, position);
     } else {
@@ -342,7 +342,7 @@ export class Stave {
       position = StaveModifier.Position.BEGIN;
     }
 
-    var timeSignatures = this.getModifiers(position, TimeSignature.CATEGORY);
+    const timeSignatures = this.getModifiers(position, TimeSignature.CATEGORY);
     if (timeSignatures.length === 0) {
       this.addTimeSignature(timeSpec, customPadding, position);
     } else {
@@ -396,17 +396,15 @@ export class Stave {
   getModifiers(position, category) {
     if (position === undefined) return this.modifiers;
 
-    return this.modifiers.filter(function(modifier) {
-      return position === modifier.getPosition() &&
-        (category === undefined || category === modifier.getCategory());
-    });
+    return this.modifiers.filter(modifier => position === modifier.getPosition() &&
+      (category === undefined || category === modifier.getCategory()));
   }
 
   sortByCategory(items, order) {
-    for (var i = items.length - 1; i >= 0; i--) {
-      for (var j = 0; j < i; j++) {
+    for (let i = items.length - 1; i >= 0; i--) {
+      for (let j = 0; j < i; j++) {
         if (order[items[j].getCategory()] > order[items[j + 1].getCategory()]) {
-          var temp = items[j];
+          const temp = items[j];
           items[j] = items[j + 1];
           items[j + 1] = temp;
         }
@@ -415,11 +413,11 @@ export class Stave {
   }
 
   format() {
-    var begBarline = this.modifiers[0];
-    var endBarline = this.modifiers[1];
+    const begBarline = this.modifiers[0];
+    const endBarline = this.modifiers[1];
 
-    var begModifiers = this.getModifiers(StaveModifier.Position.BEGIN);
-    var endModifiers = this.getModifiers(StaveModifier.Position.END);
+    const begModifiers = this.getModifiers(StaveModifier.Position.BEGIN);
+    const endModifiers = this.getModifiers(StaveModifier.Position.END);
 
     this.sortByCategory(begModifiers, {
       barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3
@@ -439,11 +437,11 @@ export class Stave {
       endModifiers.splice(0, 0, new Barline(Barline.type.NONE));
     }
 
-    var width;
-    var padding;
-    var modifier;
-    var offset = 0;
-    var x = this.x;
+    let width;
+    let padding;
+    let modifier;
+    let offset = 0;
+    let x = this.x;
     for (var i = 0; i < begModifiers.length; i++) {
       modifier = begModifiers[i];
       padding = modifier.getPadding(i + offset);
@@ -484,13 +482,13 @@ export class Stave {
 
     if (!this.formatted) this.format();
 
-    var num_lines = this.options.num_lines;
-    var width = this.width;
-    var x = this.x;
-    var y;
+    const num_lines = this.options.num_lines;
+    const width = this.width;
+    const x = this.x;
+    let y;
 
     // Render lines
-    for (var line=0; line < num_lines; line++) {
+    for (let line=0; line < num_lines; line++) {
       y = this.getYForLine(line);
 
       this.context.save();
@@ -503,7 +501,7 @@ export class Stave {
     }
 
     // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
-    for (var i = 0; i < this.modifiers.length; i++) {
+    for (let i = 0; i < this.modifiers.length; i++) {
       // Only draw modifier if it has a draw function
       if (typeof this.modifiers[i].draw == "function")
         this.modifiers[i].draw(this, this.getModifierXShift());
@@ -513,7 +511,7 @@ export class Stave {
     if (this.measure > 0) {
       this.context.save();
       this.context.setFont(this.font.family, this.font.size, this.font.weight);
-      var text_width = this.context.measureText("" + this.measure).width;
+      const text_width = this.context.measureText("" + this.measure).width;
       y = this.getYForTopText(0) + 3;
       this.context.fillText("" + this.measure, this.x - text_width / 2, y);
       this.context.restore();
@@ -532,8 +530,8 @@ export class Stave {
     if (!this.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw stave without canvas context.");
 
-    var top_line = this.getYForLine(0);
-    var bottom_line = this.getYForLine(this.options.num_lines - 1);
+    const top_line = this.getYForLine(0);
+    const bottom_line = this.getYForLine(this.options.num_lines - 1);
     if (isDouble)
       this.context.fillRect(x - 3, top_line, 1, bottom_line - top_line + 1);
     this.context.fillRect(x, top_line, 1, bottom_line - top_line + 1);
@@ -547,8 +545,8 @@ export class Stave {
     if (!this.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw stave without canvas context.");
 
-    var top_line = this.getYForLine(0);
-    var bottom_line = this.getYForLine(this.options.num_lines - 1);
+    const top_line = this.getYForLine(0);
+    const bottom_line = this.getYForLine(this.options.num_lines - 1);
     this.context.fillRect(x, top_line, 1, bottom_line - top_line + 1);
   }
 
@@ -603,7 +601,7 @@ export class Stave {
 
     // Make sure the defaults are present in case an incomplete set of
     //  configuration options were supplied.
-    for (var line_config in lines_configuration) {
+    for (const line_config in lines_configuration) {
       // Allow 'null' to be used if the caller just wants the default for a particular node.
       if (!lines_configuration[line_config]) {
         lines_configuration[line_config] = this.options.line_config[line_config];

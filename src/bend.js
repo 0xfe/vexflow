@@ -56,13 +56,13 @@ export class Bend extends Modifier {
   static format(bends, state) {
     if (!bends || bends.length === 0) return false;
 
-    var last_width = 0;
+    let last_width = 0;
     // Bends are always on top.
-    var text_line = state.top_text_line;
+    const text_line = state.top_text_line;
 
     // Format Bends
-    for (var i = 0; i < bends.length; ++i) {
-      var bend = bends[i];
+    for (let i = 0; i < bends.length; ++i) {
+      const bend = bends[i];
       bend.setXShift(last_width);
       last_width = bend.getWidth();
       bend.setTextLine(text_line);
@@ -108,10 +108,10 @@ export class Bend extends Modifier {
   setFont(font) { this.font = font; return this; }
   getText() { return this.text; }
   updateWidth() {
-    var that = this;
+    const that = this;
 
     function measure_text(text) {
-      var text_width;
+      let text_width;
       if (that.context) {
         text_width = that.context.measureText(text).width;
       } else {
@@ -121,13 +121,13 @@ export class Bend extends Modifier {
       return text_width;
     }
 
-    var total_width = 0;
-    for (var i=0; i<this.phrase.length; ++i) {
-      var bend = this.phrase[i];
+    let total_width = 0;
+    for (let i=0; i<this.phrase.length; ++i) {
+      const bend = this.phrase[i];
       if ('width' in bend) {
         total_width += bend.width;
       } else {
-        var additional_width = (bend.type == Bend.UP) ?
+        const additional_width = (bend.type == Bend.UP) ?
           this.render_options.bend_width : this.render_options.release_width;
 
         bend.width = Vex.Max(additional_width, measure_text(bend.text)) + 3;
@@ -145,20 +145,20 @@ export class Bend extends Modifier {
     if (!(this.note && (this.index != null))) throw new Vex.RERR("NoNoteForBend",
       "Can't draw bend without a note or index.");
 
-    var start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
+    const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
         this.index);
     start.x += 3;
     start.y += 0.5;
-    var x_shift = this.x_shift;
+    const x_shift = this.x_shift;
 
-    var ctx = this.context;
-    var bend_height = this.note.getStave().getYForTopText(this.text_line) + 3;
-    var annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
-    var that = this;
+    const ctx = this.context;
+    const bend_height = this.note.getStave().getYForTopText(this.text_line) + 3;
+    const annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
+    const that = this;
 
     function renderBend(x, y, width, height) {
-      var cp_x = x + width;
-      var cp_y = y;
+      const cp_x = x + width;
+      const cp_y = y;
 
       ctx.save();
       ctx.beginPath();
@@ -186,8 +186,8 @@ export class Bend extends Modifier {
     }
 
     function renderArrowHead(x, y, direction) {
-      var width = 4;
-      var dir = direction || 1;
+      const width = 4;
+      const dir = direction || 1;
 
       ctx.beginPath();
       ctx.moveTo(x, y);
@@ -200,15 +200,15 @@ export class Bend extends Modifier {
     function renderText(x, text) {
       ctx.save();
       ctx.setRawFont(that.font);
-      var render_x = x - (ctx.measureText(text).width / 2);
+      const render_x = x - (ctx.measureText(text).width / 2);
       ctx.fillText(text, render_x, annotation_y);
       ctx.restore();
     }
 
-    var last_bend = null;
-    var last_drawn_width = 0;
-    for (var i=0; i<this.phrase.length; ++i) {
-      var bend = this.phrase[i];
+    let last_bend = null;
+    let last_drawn_width = 0;
+    for (let i=0; i<this.phrase.length; ++i) {
+      const bend = this.phrase[i];
       if (i === 0) bend.draw_width += x_shift;
 
       last_drawn_width = bend.draw_width + (last_bend?last_bend.draw_width:0) - (i==1?x_shift:0);

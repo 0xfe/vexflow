@@ -33,12 +33,12 @@ export class BoundingBox {
   // Merge my box with given box. Creates a bigger bounding box unless
   // the given box is contained in this one.
   mergeWith(boundingBox, ctx) {
-    var that = boundingBox;
+    const that = boundingBox;
 
-    var new_x = this.x < that.x ? this.x : that.x;
-    var new_y = this.y < that.y ? this.y : that.y;
-    var new_w = (this.x + this.w) < (that.x + that.w) ? (that.x + that.w) - this.x : (this.x + this.w) - Vex.Min(this.x, that.x);
-    var new_h = (this.y + this.h) < (that.y + that.h) ? (that.y + that.h) - this.y : (this.y + this.h) - Vex.Min(this.y, that.y);
+    const new_x = this.x < that.x ? this.x : that.x;
+    const new_y = this.y < that.y ? this.y : that.y;
+    const new_w = (this.x + this.w) < (that.x + that.w) ? (that.x + that.w) - this.x : (this.x + this.w) - Vex.Min(this.x, that.x);
+    const new_h = (this.y + this.h) < (that.y + that.h) ? (that.y + that.h) - this.y : (this.y + this.h) - Vex.Min(this.y, that.y);
 
     this.x = new_x;
     this.y = new_y;

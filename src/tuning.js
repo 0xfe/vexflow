@@ -34,18 +34,18 @@ export class Tuning {
     this.tuningValues = [];
     this.numStrings = 0;
 
-    var keys = noteString.split(/\s*,\s*/);
+    const keys = noteString.split(/\s*,\s*/);
     if (keys.length === 0)
       throw new Vex.RERR("BadArguments", "Invalid tuning string: " + noteString);
 
     this.numStrings = keys.length;
-    for (var i = 0; i < this.numStrings; ++i) {
+    for (let i = 0; i < this.numStrings; ++i) {
       this.tuningValues[i] = this.noteToInteger(keys[i]);
     }
   }
 
   getValueForString(stringNum) {
-    var s = parseInt(stringNum, 10);
+    const s = parseInt(stringNum, 10);
     if (s < 1 || s > this.numStrings)
       throw new Vex.RERR("BadArguments", "String number must be between 1 and " +
           this.numStrings + ": " + stringNum);
@@ -54,8 +54,8 @@ export class Tuning {
   }
 
   getValueForFret(fretNum, stringNum) {
-    var stringValue = this.getValueForString(stringNum);
-    var f = parseInt(fretNum, 10);
+    const stringValue = this.getValueForString(stringNum);
+    const f = parseInt(fretNum, 10);
 
     if (f < 0) {
       throw new Vex.RERR("BadArguments", "Fret number must be 0 or higher: " +
@@ -66,10 +66,10 @@ export class Tuning {
   }
 
   getNoteForFret(fretNum, stringNum) {
-    var noteValue = this.getValueForFret(fretNum, stringNum);
+    const noteValue = this.getValueForFret(fretNum, stringNum);
 
-    var octave = Math.floor(noteValue / 12);
-    var value = noteValue % 12;
+    const octave = Math.floor(noteValue / 12);
+    const value = noteValue % 12;
 
     return Flow.integerToNote(value) + "/" + octave;
   }

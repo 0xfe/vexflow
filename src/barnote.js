@@ -20,7 +20,7 @@ export class BarNote extends Note {
   constructor() {
     super({ duration: 'b' });
 
-    var TYPE = Barline.type;
+    const TYPE = Barline.type;
     this.metrics = {
       widths: {}
     };
@@ -69,7 +69,7 @@ export class BarNote extends Note {
   draw() {
     if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
     L("Rendering bar line at: ", this.getAbsoluteX());
-    var barline = new Barline(this.type);
+    const barline = new Barline(this.type);
     barline.setX(this.getAbsoluteX());
     barline.draw(this.stave);
   }

@@ -45,15 +45,15 @@ export class StaveText extends StaveModifier {
     if (!stave.context) throw new Vex.RERR("NoContext",
       "Can't draw stave text without a context.");
 
-    var ctx = stave.context;
+    const ctx = stave.context;
 
     ctx.save();
     ctx.lineWidth = 2;
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    var text_width = ctx.measureText("" + this.text).width;
+    const text_width = ctx.measureText("" + this.text).width;
 
-    var x, y;
-    var Position = StaveModifier.Position;
+    let x, y;
+    const Position = StaveModifier.Position;
     switch(this.position) {
       case Position.LEFT:
       case Position.RIGHT:
@@ -67,7 +67,7 @@ export class StaveText extends StaveModifier {
         break;
       case Position.ABOVE:
       case Position.BELOW:
-        var Justification = TextNote.Justification;
+        const Justification = TextNote.Justification;
         x = stave.getX() + this.options.shift_x;
         if(this.options.justification == Justification.CENTER) {
           x += stave.getWidth() / 2 - text_width / 2;

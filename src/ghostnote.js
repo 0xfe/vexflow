@@ -15,7 +15,7 @@ export class GhostNote extends StemmableNote {
           "duration.");
     }
 
-    var note_struct;
+    let note_struct;
 
     // Preserve backwards-compatibility
     if (typeof(parameter) === "string") {
@@ -49,8 +49,8 @@ export class GhostNote extends StemmableNote {
     if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
 
     // Draw the modifiers
-    for (var i = 0; i < this.modifiers.length; ++i) {
-      var modifier = this.modifiers[i];
+    for (let i = 0; i < this.modifiers.length; ++i) {
+      const modifier = this.modifiers[i];
       modifier.setContext(this.context);
       modifier.draw();
     }

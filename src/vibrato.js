@@ -16,19 +16,19 @@ export class Vibrato extends Modifier {
     if (!vibratos || vibratos.length === 0) return false;
 
     // Vibratos are always on top.
-    var text_line = state.top_text_line;
-    var width = 0;
-    var shift = state.right_shift - 7;
+    let text_line = state.top_text_line;
+    let width = 0;
+    let shift = state.right_shift - 7;
 
     // If there's a bend, drop the text line
-    var bends = context.getModifiers(Bend.CATEGORY);
+    const bends = context.getModifiers(Bend.CATEGORY);
     if (bends && bends.length > 0) {
       text_line--;
     }
 
     // Format Vibratos
-    for (var i = 0; i < vibratos.length; ++i) {
-      var vibrato = vibratos[i];
+    for (let i = 0; i < vibratos.length; ++i) {
+      const vibrato = vibratos[i];
       vibrato.setXShift(shift);
       vibrato.setTextLine(text_line);
       width += vibrato.getWidth();
@@ -69,22 +69,22 @@ export class Vibrato extends Modifier {
     if (!this.note) throw new Vex.RERR("NoNoteForVibrato",
       "Can't draw vibrato without an attached note.");
 
-    var start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
+    const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
         this.index);
 
-    var ctx = this.context;
-    var that = this;
-    var vibrato_width = this.vibrato_width;
+    const ctx = this.context;
+    const that = this;
+    const vibrato_width = this.vibrato_width;
 
     function renderVibrato(x, y) {
-      var wave_width = that.render_options.wave_width;
-      var wave_girth = that.render_options.wave_girth;
-      var wave_height = that.render_options.wave_height;
-      var num_waves = vibrato_width / wave_width;
+      const wave_width = that.render_options.wave_width;
+      const wave_girth = that.render_options.wave_girth;
+      const wave_height = that.render_options.wave_height;
+      const num_waves = vibrato_width / wave_width;
 
       ctx.beginPath();
 
-      var i;
+      let i;
       if (that.harsh) {
         ctx.moveTo(x, y + wave_girth + 1);
         for (i = 0; i < num_waves / 2; ++i) {
@@ -127,8 +127,8 @@ export class Vibrato extends Modifier {
       }
     }
 
-    var vx = start.x + this.x_shift;
-    var vy = this.note.getYForTopText(this.text_line) + 2;
+    const vx = start.x + this.x_shift;
+    const vy = this.note.getYForTopText(this.text_line) + 2;
 
     renderVibrato(vx, vy);
   }

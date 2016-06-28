@@ -90,14 +90,14 @@ export class Stem {
   // Get the y coordinates for the very base of the stem to the top of
   // the extension
   getExtents() {
-    var ys = [this.y_top, this.y_bottom];
+    const ys = [this.y_top, this.y_bottom];
 
-    var top_pixel = this.y_top;
-    var base_pixel = this.y_bottom;
-    var stem_height = Stem.HEIGHT + this.stem_extension;
+    let top_pixel = this.y_top;
+    let base_pixel = this.y_bottom;
+    const stem_height = Stem.HEIGHT + this.stem_extension;
 
-    for (var i = 0; i < ys.length; ++i) {
-      var stem_top = ys[i] + (stem_height * -this.stem_direction);
+    for (let i = 0; i < ys.length; ++i) {
+      const stem_top = ys[i] + (stem_height * -this.stem_direction);
 
       if (this.stem_direction == Stem.DOWN) {
         top_pixel = Math.max(top_pixel, stem_top);
@@ -117,7 +117,7 @@ export class Stem {
 
   // Apply current style to Canvas `context`
   applyStyle(context) {
-    var style = this.getStyle();
+    const style = this.getStyle();
     if(style) {
       if (style.shadowColor) context.setShadowColor(style.shadowColor);
       if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
@@ -133,9 +133,9 @@ export class Stem {
 
     if (this.hide) return;
 
-    var ctx = this.context;
-    var stem_x, stem_y;
-    var stem_direction = this.stem_direction;
+    const ctx = this.context;
+    let stem_x, stem_y;
+    const stem_direction = this.stem_direction;
 
     if (stem_direction == Stem.DOWN) {
       // Down stems are rendered to the left of the head.

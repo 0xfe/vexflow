@@ -28,18 +28,18 @@ function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
 
 // Helper function to draw a line with arrow heads
 function drawArrowLine(ctx, point1, point2, config) {
-  var both_arrows = config.draw_start_arrow && config.draw_end_arrow;
+  const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
 
-  var x1 = point1.x;
-  var y1 = point1.y;
-  var x2 = point2.x;
-  var y2 = point2.y;
+  const x1 = point1.x;
+  const y1 = point1.y;
+  const x2 = point2.x;
+  const y2 = point2.y;
 
   // For ends with arrow we actually want to stop before we get to the arrow
   // so that wide lines won't put a flat end on the arrow.
-  var distance = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-  var ratio = (distance - config.arrowhead_length/3) / distance;
-  var end_x, end_y, start_x, start_y;
+  const distance = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+  const ratio = (distance - config.arrowhead_length/3) / distance;
+  let end_x, end_y, start_x, start_y;
   if (config.draw_end_arrow || both_arrows) {
     end_x = Math.round(x1 + (x2 - x1) * ratio);
     end_y = Math.round(y1 + (y2 - y1) * ratio);
@@ -69,13 +69,13 @@ function drawArrowLine(ctx, point1, point2, config) {
   ctx.closePath();
 
   // calculate the angle of the line
-  var line_angle = Math.atan2(y2 - y1, x2 - x1);
+  const line_angle = Math.atan2(y2 - y1, x2 - x1);
   // h is the line length of a side of the arrow head
-  var h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
+  const h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
 
-  var angle1, angle2;
-  var top_x, top_y;
-  var bottom_x, bottom_y;
+  let angle1, angle2;
+  let top_x, top_y;
+  let bottom_x, bottom_y;
 
   if (config.draw_end_arrow || both_arrows) {
     angle1 = line_angle + Math.PI + config.arrowhead_angle;
@@ -208,8 +208,8 @@ export class StaveLine {
       throw new Vex.RERR("NoContext","No context to apply the styling to");
     }
 
-    var render_options = this.render_options;
-    var ctx = this.context;
+    const render_options = this.render_options;
+    const ctx = this.context;
 
     if (render_options.line_dash) {
       ctx.setLineDash(render_options.line_dash);
@@ -232,7 +232,7 @@ export class StaveLine {
       throw new Vex.RERR("NoContext","No context to apply the styling to");
     }
 
-    var ctx = this.context;
+    const ctx = this.context;
 
     if (this.font) {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
@@ -250,24 +250,24 @@ export class StaveLine {
       throw new Vex.RERR("NoContext", "No context to render StaveLine.");
     }
 
-    var ctx = this.context;
-    var first_note = this.first_note;
-    var last_note = this.last_note;
-    var render_options = this.render_options;
+    const ctx = this.context;
+    const first_note = this.first_note;
+    const last_note = this.last_note;
+    const render_options = this.render_options;
 
     ctx.save();
     this.applyLineStyle();
 
     // Cycle through each set of indices and draw lines
-    var start_position;
-    var end_position;
+    let start_position;
+    let end_position;
     this.first_indices.forEach(function(first_index, i) {
-      var last_index = this.last_indices[i];
+      const last_index = this.last_indices[i];
 
       // Get initial coordinates for the start/end of the line
       start_position = first_note.getModifierStartXY(2, first_index);
       end_position = last_note.getModifierStartXY(1, last_index);
-      var upwards_slope = start_position.y > end_position.y;
+      const upwards_slope = start_position.y > end_position.y;
 
       // Adjust `x` coordinates for modifiers
       start_position.x += first_note.getMetrics().modRightPx +
@@ -277,14 +277,14 @@ export class StaveLine {
 
 
       // Adjust first `x` coordinates for displacements
-      var notehead_width = first_note.getGlyph().head_width;
-      var first_displaced = first_note.getKeyProps()[first_index].displaced;
+      const notehead_width = first_note.getGlyph().head_width;
+      const first_displaced = first_note.getKeyProps()[first_index].displaced;
       if (first_displaced && first_note.getStemDirection() === 1) {
         start_position.x += notehead_width + render_options.padding_left;
       }
 
       // Adjust last `x` coordinates for displacements
-      var last_displaced = last_note.getKeyProps()[last_index].displaced;
+      const last_displaced = last_note.getKeyProps()[last_index].displaced;
       if (last_displaced && last_note.getStemDirection() === -1) {
         end_position.x -= notehead_width + render_options.padding_right;
       }
@@ -300,22 +300,22 @@ export class StaveLine {
     ctx.restore();
 
     // Determine the x coordinate where to start the text
-    var text_width = ctx.measureText(this.text).width;
-    var justification = render_options.text_justification;
-    var x = 0;
+    const text_width = ctx.measureText(this.text).width;
+    const justification = render_options.text_justification;
+    let x = 0;
     if (justification === StaveLine.TextJustification.LEFT) {
       x = start_position.x;
     } else if (justification === StaveLine.TextJustification.CENTER) {
-      var delta_x = (end_position.x - start_position.x);
-      var center_x = (delta_x / 2 ) + start_position.x;
+      const delta_x = (end_position.x - start_position.x);
+      const center_x = (delta_x / 2 ) + start_position.x;
       x = center_x - (text_width / 2);
     } else if (justification === StaveLine.TextJustification.RIGHT) {
       x = end_position.x  -  text_width;
     }
 
     // Determine the y value to start the text
-    var y;
-    var vertical_position = render_options.text_position_vertical;
+    let y;
+    const vertical_position = render_options.text_position_vertical;
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
       y = first_note.getStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {

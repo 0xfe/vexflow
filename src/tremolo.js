@@ -42,12 +42,12 @@ export class Tremolo extends Modifier {
     if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
       "Can't draw Tremolo without a note and index.");
 
-    var start = this.note.getModifierStartXY(this.position, this.index);
-    var x = start.x;
-    var y = start.y;
+    const start = this.note.getModifierStartXY(this.position, this.index);
+    let x = start.x;
+    let y = start.y;
 
     x += this.shift_right;
-    for (var i = 0; i < this.num; ++i) {
+    for (let i = 0; i < this.num; ++i) {
       Glyph.renderGlyph(this.context, x, y,
                            this.render_options.font_scale, this.code);
       y += this.y_spacing;

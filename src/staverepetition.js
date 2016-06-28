@@ -87,7 +87,7 @@ export class Repetition extends StaveModifier {
     if (!stave.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw stave without canvas context.");
 
-    var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
+    const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     Glyph.renderGlyph(stave.context, this.x + x + this.x_shift,
                          y + 25, 40, "v4d", true);
     return this;
@@ -95,7 +95,7 @@ export class Repetition extends StaveModifier {
   drawSignoFixed(stave, x) {
     if (!stave.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw stave without canvas context.");
-    var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
+    const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     Glyph.renderGlyph(stave.context, this.x + x + this.x_shift,
                          y + 25, 30, "v8c", true);
     return this;
@@ -104,12 +104,12 @@ export class Repetition extends StaveModifier {
     if (!stave.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw stave without canvas context.");
 
-    var ctx = stave.context;
+    const ctx = stave.context;
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
       // Default to right symbol
-    var text_x = 0 + this.x_shift;
-    var symbol_x = x + this.x_shift;
+    let text_x = 0 + this.x_shift;
+    let symbol_x = x + this.x_shift;
     if (this.symbol_type == Repetition.type.CODA_LEFT) {
         // Offset Coda text to right of stave beginning
       text_x = this.x + stave.options.vertical_bar_width;
@@ -119,7 +119,7 @@ export class Repetition extends StaveModifier {
       symbol_x = this.x + x + stave.width - 5 + this.x_shift;
       text_x = symbol_x - + ctx.measureText(text).width - 12;
     }
-    var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
+    const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     if (draw_coda) {
       Glyph.renderGlyph(ctx, symbol_x, y, 40, "v4d", true);
     }

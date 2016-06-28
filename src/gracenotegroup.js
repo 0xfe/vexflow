@@ -18,23 +18,23 @@ export class GraceNoteGroup extends Modifier {
 
   // Arrange groups inside a `ModifierContext`
   static format(gracenote_groups, state) {
-    var gracenote_spacing = 4;
+    const gracenote_spacing = 4;
 
     if (!gracenote_groups || gracenote_groups.length === 0) return false;
 
-    var group_list = [];
-    var hasStave = false;
-    var prev_note = null;
-    var shiftL = 0;
+    const group_list = [];
+    let hasStave = false;
+    let prev_note = null;
+    let shiftL = 0;
 
-    var i, gracenote_group, props_tmp;
+    let i, gracenote_group, props_tmp;
     for (i = 0; i < gracenote_groups.length; ++i) {
       gracenote_group = gracenote_groups[i];
-      var note = gracenote_group.getNote();
-      var stave = note.getStave();
+      const note = gracenote_group.getNote();
+      const stave = note.getStave();
       if (note != prev_note) {
          // Iterate through all notes to get the displaced pixels
-         for (var n = 0; n < note.keys.length; ++n) {
+         for (let n = 0; n < note.keys.length; ++n) {
             props_tmp = note.getKeyProps()[n];
             shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
           }
@@ -42,15 +42,15 @@ export class GraceNoteGroup extends Modifier {
       }
       if (stave != null) {
         hasStave = true;
-        group_list.push({shift: shiftL, gracenote_group: gracenote_group});
+        group_list.push({shift: shiftL, gracenote_group});
       } else {
-        group_list.push({shift: shiftL, gracenote_group: gracenote_group });
+        group_list.push({shift: shiftL, gracenote_group });
       }
     }
 
     // If first note left shift in case it is displaced
-    var group_shift = group_list[0].shift;
-    var formatWidth;
+    let group_shift = group_list[0].shift;
+    let formatWidth;
     for (i = 0; i < group_list.length; ++i) {
       gracenote_group = group_list[i].gracenote_group;
       gracenote_group.preFormat();
@@ -110,7 +110,7 @@ export class GraceNoteGroup extends Modifier {
 
   beamNotes(){
     if (this.grace_notes.length > 1) {
-      var beam = new Beam(this.grace_notes);
+      const beam = new Beam(this.grace_notes);
 
       beam.render_options.beam_width = 3;
       beam.render_options.partial_beam_length = 4;
@@ -136,7 +136,7 @@ export class GraceNoteGroup extends Modifier {
         "Can't draw Grace note without a context.");
     }
 
-    var note = this.getNote();
+    const note = this.getNote();
 
     L("Drawing grace note group for:", note);
 
@@ -145,16 +145,16 @@ export class GraceNoteGroup extends Modifier {
         "Can't draw grace note without a parent note and parent note index.");
     }
 
-    var that = this;
+    const that = this;
     function alignGraceNotesWithNote(grace_notes, note, groupWidth) {
       // Shift over the tick contexts of each note
       // So that th aligned with the note
-      var tickContext = note.getTickContext();
-      var extraPx = tickContext.getExtraPx();
-      var x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
-      grace_notes.forEach(function(graceNote) {
-          var tick_context = graceNote.getTickContext();
-          var x_offset = tick_context.getX();
+      const tickContext = note.getTickContext();
+      const extraPx = tickContext.getExtraPx();
+      const x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
+      grace_notes.forEach(graceNote => {
+          const tick_context = graceNote.getTickContext();
+          const x_offset = tick_context.getX();
           graceNote.setStave(note.stave);
           tick_context.setX(x + x_offset);
       });

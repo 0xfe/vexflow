@@ -11,9 +11,9 @@ function drawBoldDoubleLine(ctx, type, topX, topY, botY){
       "A REPEAT_BEGIN or REPEAT_END type must be provided.");
   }
 
-  var x_shift = 3;
-  var variableWidth = 3.5; // Width for avoiding anti-aliasing width issues
-  var thickLineOffset = 2; // For aesthetics
+  let x_shift = 3;
+  let variableWidth = 3.5; // Width for avoiding anti-aliasing width issues
+  const thickLineOffset = 2; // For aesthetics
 
   if (type === StaveConnector.type.BOLD_DOUBLE_RIGHT) {
     x_shift = -5; // Flips the side of the thin line
@@ -98,13 +98,13 @@ export class StaveConnector {
   draw() {
     if (!this.ctx) throw new Vex.RERR(
         "NoContext", "Can't draw without a context.");
-    var topY = this.top_stave.getYForLine(0);
-    var botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +
+    let topY = this.top_stave.getYForLine(0);
+    let botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +
       this.thickness;
-    var width = this.width;
-    var topX = this.top_stave.getX();
+    let width = this.width;
+    let topX = this.top_stave.getX();
 
-    var isRightSidedConnector = (
+    const isRightSidedConnector = (
       this.type === StaveConnector.type.SINGLE_RIGHT ||
       this.type === StaveConnector.type.BOLD_DOUBLE_RIGHT ||
       this.type === StaveConnector.type.THIN_DOUBLE
@@ -114,7 +114,7 @@ export class StaveConnector {
       topX = this.top_stave.getX() + this.top_stave.width;
     }
 
-    var attachment_height = botY - topY;
+    let attachment_height = botY - topY;
     switch (this.type) {
       case StaveConnector.type.SINGLE:
         width = 1;
@@ -131,28 +131,28 @@ export class StaveConnector {
       case StaveConnector.type.BRACE:
         width = 12;
         // May need additional code to draw brace
-        var x1 = this.top_stave.getX() - 2 + this.x_shift;
-        var y1 = topY;
-        var x3 = x1;
-        var y3 = botY;
-        var x2 = x1 - width;
-        var y2 = y1 + attachment_height/2.0;
-        var cpx1 = x2 - (0.90 * width);
-        var cpy1 = y1 + (0.2 * attachment_height);
-        var cpx2 = x1 + (1.10 * width);
-        var cpy2 = y2 - (0.135 * attachment_height);
-        var cpx3 = cpx2;
-        var cpy3 = y2 + (0.135 * attachment_height);
-        var cpx4 = cpx1;
-        var cpy4 = y3 - (0.2 * attachment_height);
-        var cpx5 = x2 - width;
-        var cpy5 = cpy4;
-        var cpx6 = x1 + (0.40 * width);
-        var cpy6 = y2 + (0.135 * attachment_height);
-        var cpx7 = cpx6;
-        var cpy7 = y2 - (0.135 * attachment_height);
-        var cpx8 = cpx5;
-        var cpy8 = cpy1;
+        const x1 = this.top_stave.getX() - 2 + this.x_shift;
+        const y1 = topY;
+        const x3 = x1;
+        const y3 = botY;
+        const x2 = x1 - width;
+        const y2 = y1 + attachment_height/2.0;
+        const cpx1 = x2 - (0.90 * width);
+        const cpy1 = y1 + (0.2 * attachment_height);
+        const cpx2 = x1 + (1.10 * width);
+        const cpy2 = y2 - (0.135 * attachment_height);
+        const cpx3 = cpx2;
+        const cpy3 = y2 + (0.135 * attachment_height);
+        const cpx4 = cpx1;
+        const cpy4 = y3 - (0.2 * attachment_height);
+        const cpx5 = x2 - width;
+        const cpy5 = cpy4;
+        const cpx6 = x1 + (0.40 * width);
+        const cpy6 = y2 + (0.135 * attachment_height);
+        const cpx7 = cpx6;
+        const cpy7 = y2 - (0.135 * attachment_height);
+        const cpx8 = cpx5;
+        const cpy8 = cpy1;
         this.ctx.beginPath();
         this.ctx.moveTo(x1, y1);
         this.ctx.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x2, y2);
@@ -199,11 +199,11 @@ export class StaveConnector {
     this.ctx.lineWidth = 2;
     this.ctx.setFont(this.font.family, this.font.size, this.font.weight);
     // Add stave connector text
-    for (var i = 0; i < this.texts.length; i++) {
-      var text = this.texts[i];
-      var text_width = this.ctx.measureText("" + text.content).width;
-      var x = this.top_stave.getX() - text_width - 24 + text.options.shift_x;
-      var y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 +
+    for (let i = 0; i < this.texts.length; i++) {
+      const text = this.texts[i];
+      const text_width = this.ctx.measureText("" + text.content).width;
+      const x = this.top_stave.getX() - text_width - 24 + text.options.shift_x;
+      const y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 +
         text.options.shift_y;
 
       this.ctx.fillText("" + text.content, x, y + 4);

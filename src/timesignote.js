@@ -10,7 +10,7 @@ export class TimeSigNote extends Note {
   constructor(timeSpec, customPadding) {
     super({ duration: 'b' });
 
-    var timeSignature = new TimeSignature(timeSpec, customPadding);
+    const timeSignature = new TimeSignature(timeSpec, customPadding);
     this.timeSig = timeSignature.getTimeSig();
     this.setWidth(this.timeSig.glyph.getMetrics().width);
 

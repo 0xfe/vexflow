@@ -99,7 +99,7 @@ export class RaphaelContext {
   setLineCap() { return this; }
 
   scale(x, y) {
-    this.state.scale = { x: x, y: y };
+    this.state.scale = { x, y };
     // The scale() method is deprecated as of Raphael.JS 2.0, and
     // can no longer be used as an option in an Element.attr() call.
     // It is preserved here for users running earlier versions of
@@ -230,13 +230,13 @@ export class RaphaelContext {
     endAngle = normalizeAngle(endAngle);
 
     if (startAngle > endAngle) {
-        var tmp = startAngle;
+        const tmp = startAngle;
         startAngle = endAngle;
         endAngle = tmp;
         antiClockwise = !antiClockwise;
     }
 
-    var delta = endAngle - startAngle;
+    const delta = endAngle - startAngle;
 
     if (delta > Math.PI) {
         this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
@@ -251,14 +251,14 @@ export class RaphaelContext {
   }
 
   arcHelper(x, y, radius, startAngle, endAngle, antiClockwise) {
-    var x1 = x + radius * Math.cos(startAngle);
-    var y1 = y + radius * Math.sin(startAngle);
+    const x1 = x + radius * Math.cos(startAngle);
+    const y1 = y + radius * Math.sin(startAngle);
 
-    var x2 = x + radius * Math.cos(endAngle);
-    var y2 = y + radius * Math.sin(endAngle);
+    const x2 = x + radius * Math.cos(endAngle);
+    const y2 = y + radius * Math.sin(endAngle);
 
-    var largeArcFlag = 0;
-    var sweepFlag = 0;
+    let largeArcFlag = 0;
+    let sweepFlag = 0;
     if (antiClockwise) {
       sweepFlag = 1;
       if (endAngle - startAngle < Math.PI)
@@ -275,11 +275,11 @@ export class RaphaelContext {
 
   // Adapted from the source for Raphael's Element.glow
   glow() {
-    var out = this.paper.set();
+    const out = this.paper.set();
     if (this.shadow_attributes.width > 0) {
-      var sa = this.shadow_attributes;
-      var num_paths = sa.width / 2;
-      for (var i = 1; i <= num_paths; i++) {
+      const sa = this.shadow_attributes;
+      const num_paths = sa.width / 2;
+      for (let i = 1; i <= num_paths; i++) {
         out.push(this.paper.path(this.path).attr({
           stroke: sa.color,
           "stroke-linejoin": "round",
@@ -300,7 +300,7 @@ export class RaphaelContext {
   }
 
   fill() {
-    var elem = this.paper.path(this.path).
+    const elem = this.paper.path(this.path).
       attr(this.attributes).
       attr("stroke-width", 0);
     this.glow(elem);
@@ -325,8 +325,8 @@ export class RaphaelContext {
     // This would more closely parallel the approach taken in
     // canvascontext.js as well.
 
-    var strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y)/2;
-    var elem = this.paper.path(this.path).
+    const strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y)/2;
+    const elem = this.paper.path(this.path).
       attr(this.attributes).
       attr("fill", "none").
       attr("stroke-width", strokeWidth);
@@ -340,11 +340,11 @@ export class RaphaelContext {
   }
 
   measureText(text) {
-    var txt = this.paper.text(0, 0, text).
+    const txt = this.paper.text(0, 0, text).
       attr(this.attributes).
       attr("fill", "none").
       attr("stroke", "none");
-    var bounds = txt.getBBox();
+    const bounds = txt.getBBox();
     txt.remove();
 
     return {
@@ -382,7 +382,7 @@ export class RaphaelContext {
 
   restore() {
     // TODO(0xfe): State needs to be deep-restored.
-    var state = this.state_stack.pop();
+    const state = this.state_stack.pop();
     this.state.font_family = state.state.font_family;
     this.attributes.font = state.attributes.font;
     this.attributes.fill = state.attributes.fill;

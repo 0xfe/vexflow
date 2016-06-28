@@ -21,10 +21,10 @@ import { Glyph } from './glyph';
 // * num_lines - The number of lines
 // * strings_used - An array of numbers representing which strings have fret positions
 function getUnusedStringGroups(num_lines, strings_used) {
-  var stem_through = [];
-  var group = [];
-  for (var string = 1; string <= num_lines ; string++) {
-    var is_used = strings_used.indexOf(string) > -1;
+  const stem_through = [];
+  let group = [];
+  for (let string = 1; string <= num_lines ; string++) {
+    const is_used = strings_used.indexOf(string) > -1;
 
     if (!is_used) {
       group.push(string);
@@ -47,17 +47,17 @@ function getUnusedStringGroups(num_lines, strings_used) {
 // * stave - The stave to use for reference
 // * stem_direction - The direction of the stem
 function getPartialStemLines (stem_y, unused_strings, stave, stem_direction) {
-  var up_stem = stem_direction !== 1;
-  var down_stem = stem_direction !== -1;
+  const up_stem = stem_direction !== 1;
+  const down_stem = stem_direction !== -1;
 
-  var line_spacing = stave.getSpacingBetweenLines();
-  var total_lines = stave.getNumLines();
+  const line_spacing = stave.getSpacingBetweenLines();
+  const total_lines = stave.getNumLines();
 
-  var stem_lines = [];
+  const stem_lines = [];
 
-  unused_strings.forEach(function(strings) {
-    var containsLastString = strings.indexOf(total_lines) > -1;
-    var containsFirstString =  strings.indexOf(1) > -1;
+  unused_strings.forEach(strings => {
+    const containsLastString = strings.indexOf(total_lines) > -1;
+    const containsFirstString =  strings.indexOf(1) > -1;
 
     if ((up_stem && containsFirstString) ||
        (down_stem && containsLastString)) {
@@ -71,15 +71,15 @@ function getPartialStemLines (stem_y, unused_strings, stave, stem_direction) {
       strings.push(strings[0]);
     }
 
-    var line_ys = [];
+    const line_ys = [];
     // Iterate through each group string and store it's y position
-    strings.forEach(function(string, index, strings) {
-      var isTopBound = string === 1;
-      var isBottomBound = string === total_lines;
+    strings.forEach((string, index, strings) => {
+      const isTopBound = string === 1;
+      const isBottomBound = string === total_lines;
 
       // Get the y value for the appropriate staff line,
       // we adjust for a 0 index array, since string numbers are index 1
-      var y = stave.getYForLine(string - 1);
+      let y = stave.getYForLine(string - 1);
 
       // Unless the string is the first or last, add padding to each side
       // of the line
@@ -102,9 +102,7 @@ function getPartialStemLines (stem_y, unused_strings, stave, stem_direction) {
     });
 
     // Add the sorted y values to the
-    stem_lines.push(line_ys.sort(function(a, b) {
-      return a - b;
-    }));
+    stem_lines.push(line_ys.sort((a, b) => a - b));
   });
 
   return stem_lines;
@@ -129,7 +127,7 @@ export class TabNote extends StemmableNote {
       // font size for note heads and rests
       glyph_font_scale: 30,
       // Flag to draw a stem
-      draw_stem: draw_stem,
+      draw_stem,
       // Flag to draw dot modifiers
       draw_dots: draw_stem,
       // Flag to extend the main stem through the stave and fret positions
@@ -173,7 +171,7 @@ export class TabNote extends StemmableNote {
 
   // Get the default stem extension for the note
   getStemExtension(){
-    var glyph = this.getGlyph();
+    const glyph = this.getGlyph();
 
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
@@ -189,7 +187,7 @@ export class TabNote extends StemmableNote {
 
   // Add a dot to the note
   addDot() {
-    var dot = new Dot();
+    const dot = new Dot();
     this.dots++;
     return this.addModifier(dot, 0);
   }
@@ -198,10 +196,10 @@ export class TabNote extends StemmableNote {
   updateWidth() {
     this.glyphs = [];
     this.width = 0;
-    for (var i = 0; i < this.positions.length; ++i) {
-      var fret = this.positions[i].fret;
+    for (let i = 0; i < this.positions.length; ++i) {
+      let fret = this.positions[i].fret;
       if (this.ghost) fret = "(" + fret + ")";
-      var glyph = Flow.tabToGlyph(fret);
+      const glyph = Flow.tabToGlyph(fret);
       this.glyphs.push(glyph);
       this.width = (glyph.width > this.width) ? glyph.width : this.width;
     }
@@ -214,10 +212,10 @@ export class TabNote extends StemmableNote {
     this.width = 0;
 
     // Calculate the fret number width based on font used
-    var i;
+    let i;
     if (this.context) {
       for (i = 0; i < this.glyphs.length; ++i) {
-        var text = "" + this.glyphs[i].text;
+        const text = "" + this.glyphs[i].text;
         if (text.toUpperCase() != "X")
           this.glyphs[i].width = this.context.measureText(text).width;
         this.width = (this.glyphs[i].width > this.width) ?
@@ -225,11 +223,11 @@ export class TabNote extends StemmableNote {
       }
     }
 
-    var ys = [];
+    const ys = [];
 
     // Setup y coordinates for score.
     for (i = 0; i < this.positions.length; ++i) {
-      var line = this.positions[i].str;
+      const line = this.positions[i].str;
       ys.push(this.stave.getYForLine(line - 1));
     }
 
@@ -242,7 +240,7 @@ export class TabNote extends StemmableNote {
   // Add self to the provided modifier context `mc`
   addToModifierContext(mc) {
     this.setModifierContext(mc);
-    for (var i = 0; i < this.modifiers.length; ++i) {
+    for (let i = 0; i < this.modifiers.length; ++i) {
       this.modifierContext.addModifier(this.modifiers[i]);
     }
     this.modifierContext.addModifier(this);
@@ -252,8 +250,8 @@ export class TabNote extends StemmableNote {
 
   // Get the `x` coordinate to the right of the note
   getTieRightX() {
-    var tieStartX = this.getAbsoluteX();
-    var note_glyph_width = this.glyph.head_width;
+    let tieStartX = this.getAbsoluteX();
+    const note_glyph_width = this.glyph.head_width;
     tieStartX += (note_glyph_width / 2);
     tieStartX += ((-this.width / 2) + this.width + 2);
 
@@ -262,8 +260,8 @@ export class TabNote extends StemmableNote {
 
   // Get the `x` coordinate to the left of the note
   getTieLeftX() {
-    var tieEndX = this.getAbsoluteX();
-    var note_glyph_width = this.glyph.head_width;
+    let tieEndX = this.getAbsoluteX();
+    const note_glyph_width = this.glyph.head_width;
     tieEndX += (note_glyph_width / 2);
     tieEndX -= ((this.width / 2) + 2);
 
@@ -279,14 +277,14 @@ export class TabNote extends StemmableNote {
     if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
         "No Y-Values calculated for this note.");
 
-    var x = 0;
+    let x = 0;
     if (position == Modifier.Position.LEFT) {
       x = -1 * 2;  // extra_left_px
     } else if (position == Modifier.Position.RIGHT) {
       x = this.width + 2; // extra_right_px
     } else if (position == Modifier.Position.BELOW ||
                position == Modifier.Position.ABOVE) {
-        var note_glyph_width = this.glyph.head_width;
+        const note_glyph_width = this.glyph.head_width;
         x = note_glyph_width / 2;
     }
 
@@ -309,35 +307,35 @@ export class TabNote extends StemmableNote {
 
   // Get the y position for the stem
   getStemY(){
-    var num_lines = this.stave.getNumLines();
+    const num_lines = this.stave.getNumLines();
 
     // The decimal staff line amounts provide optimal spacing between the
     // fret number and the stem
-    var stemUpLine = -0.5;
-    var stemDownLine = num_lines - 0.5;
-    var stemStartLine = Stem.UP === this.stem_direction ? stemUpLine : stemDownLine;
+    const stemUpLine = -0.5;
+    const stemDownLine = num_lines - 0.5;
+    const stemStartLine = Stem.UP === this.stem_direction ? stemUpLine : stemDownLine;
 
     return this.stave.getYForLine(stemStartLine);
   }
 
   // Get the stem extents for the tabnote
   getStemExtents() {
-    var stem_base_y = this.getStemY();
-    var stem_top_y = stem_base_y + (Stem.HEIGHT * -this.stem_direction);
+    const stem_base_y = this.getStemY();
+    const stem_top_y = stem_base_y + (Stem.HEIGHT * -this.stem_direction);
 
     return { topY: stem_top_y , baseY: stem_base_y};
   }
 
   // Draw the fal onto the context
   drawFlag() {
-    var render_stem = this.beam == null && this.render_options.draw_stem;
-    var render_flag = this.beam == null && render_stem;
+    const render_stem = this.beam == null && this.render_options.draw_stem;
+    const render_flag = this.beam == null && render_stem;
 
     // Now it's the flag's turn.
     if (this.glyph.flag && render_flag) {
-      var flag_x = this.getStemX() + 1 ;
-      var flag_y = this.getStemY() - (this.stem.getHeight());
-      var flag_code;
+      const flag_x = this.getStemX() + 1;
+      const flag_y = this.getStemY() - (this.stem.getHeight());
+      let flag_code;
 
       if (this.stem_direction == Stem.DOWN) {
         // Down stems have flags on the left.
@@ -367,20 +365,18 @@ export class TabNote extends StemmableNote {
 
   // Render the stem extension through the fret positions
   drawStemThrough() {
-    var stem_x = this.getStemX();
-    var stem_y = this.getStemY();
-    var ctx = this.context;
+    let stem_x = this.getStemX();
+    const stem_y = this.getStemY();
+    const ctx = this.context;
 
-    var stem_through = this.render_options.draw_stem_through_stave;
-    var draw_stem = this.render_options.draw_stem;
+    const stem_through = this.render_options.draw_stem_through_stave;
+    const draw_stem = this.render_options.draw_stem;
     if (draw_stem && stem_through) {
-      var total_lines = this.stave.getNumLines();
-      var strings_used = this.positions.map(function(position) {
-        return position.str;
-      });
+      const total_lines = this.stave.getNumLines();
+      const strings_used = this.positions.map(position => position.str);
 
-      var unused_strings = getUnusedStringGroups(total_lines, strings_used);
-      var stem_lines = getPartialStemLines(stem_y, unused_strings,
+      const unused_strings = getUnusedStringGroups(total_lines, strings_used);
+      const stem_lines = getPartialStemLines(stem_y, unused_strings,
                             this.getStave(), this.getStemDirection());
 
       // Fine tune x position to match default stem
@@ -390,7 +386,7 @@ export class TabNote extends StemmableNote {
 
       ctx.save();
       ctx.setLineWidth(Stem.WIDTH);
-      stem_lines.forEach(function(bounds) {
+      stem_lines.forEach(bounds => {
         if (bounds.length === 0) return;
 
         ctx.beginPath();
@@ -405,19 +401,19 @@ export class TabNote extends StemmableNote {
 
   // Render the fret positions onto the context
   drawPositions() {
-    var ctx = this.context;
-    var x = this.getAbsoluteX();
-    var ys = this.ys;
-    var y;
+    const ctx = this.context;
+    const x = this.getAbsoluteX();
+    const ys = this.ys;
+    let y;
 
-    for (var i = 0; i < this.positions.length; ++i) {
+    for (let i = 0; i < this.positions.length; ++i) {
       y = ys[i];
 
-      var glyph = this.glyphs[i];
+      const glyph = this.glyphs[i];
 
       // Center the fret text beneath the notation note head
-      var note_glyph_width = this.glyph.head_width;
-      var tab_x = x + (note_glyph_width / 2) - (glyph.width / 2);
+      const note_glyph_width = this.glyph.head_width;
+      const tab_x = x + (note_glyph_width / 2) - (glyph.width / 2);
 
       ctx.clearRect(tab_x - 2, y - 3, glyph.width + 4, 6);
 
@@ -425,7 +421,7 @@ export class TabNote extends StemmableNote {
         Glyph.renderGlyph(ctx, tab_x, y + 5 + glyph.shift_y,
             this.render_options.glyph_font_scale, glyph.code);
       } else {
-        var text = glyph.text.toString();
+        const text = glyph.text.toString();
         ctx.fillText(text, tab_x, y + 5);
       }
     }
@@ -439,13 +435,13 @@ export class TabNote extends StemmableNote {
     if (this.ys.length === 0) throw new Vex.RERR("NoYValues",
         "Can't draw note without Y values.");
 
-    var render_stem = this.beam == null && this.render_options.draw_stem;
+    const render_stem = this.beam == null && this.render_options.draw_stem;
 
     this.drawPositions();
     this.drawStemThrough();
 
-    var stem_x = this.getStemX();
-    var stem_y = this.getStemY();
+    const stem_x = this.getStemX();
+    const stem_y = this.getStemY();
     if (render_stem) {
       this.drawStem({
         x_begin: stem_x,

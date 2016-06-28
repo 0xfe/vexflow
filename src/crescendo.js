@@ -17,10 +17,10 @@ function L() { if (Crescendo.DEBUG) Vex.L("Vex.Flow.Crescendo", arguments); }
 
 // Private helper to draw the hairpin
 function renderHairpin(ctx, params) {
-  var begin_x = params.begin_x;
-  var end_x = params.end_x;
-  var y = params.y;
-  var half_height =  params.height / 2;
+  const begin_x = params.begin_x;
+  const end_x = params.end_x;
+  const y = params.y;
+  const half_height =  params.height / 2;
 
   ctx.beginPath();
 
@@ -82,18 +82,18 @@ export class Crescendo extends Note {
     if (!this.context) throw new Vex.RERR("NoContext",
       "Can't draw Hairpin without a context.");
 
-    var tick_context = this.getTickContext();
-    var next_context = TickContext.getNextContext(tick_context);
+    const tick_context = this.getTickContext();
+    const next_context = TickContext.getNextContext(tick_context);
 
-    var begin_x = this.getAbsoluteX();
-    var end_x;
+    const begin_x = this.getAbsoluteX();
+    let end_x;
     if (next_context) {
       end_x = next_context.getX();
     } else {
       end_x = this.stave.x + this.stave.width;
     }
 
-    var y = this.stave.getYForLine(this.line + (-3)) + 1;
+    const y = this.stave.getYForLine(this.line + (-3)) + 1;
 
     L("Drawing ",  this.decrescendo ? "decrescendo " : "crescendo ",
       this.height, "x", begin_x - end_x);

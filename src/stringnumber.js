@@ -16,18 +16,18 @@ export class StringNumber extends Modifier {
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
   static format(nums, state) {
-    var left_shift = state.left_shift;
-    var right_shift = state.right_shift;
-    var num_spacing = 1;
+    const left_shift = state.left_shift;
+    const right_shift = state.right_shift;
+    const num_spacing = 1;
 
     if (!nums || nums.length === 0) return this;
 
-    var nums_list = [];
-    var prev_note = null;
-    var shift_left = 0;
-    var shift_right = 0;
+    const nums_list = [];
+    let prev_note = null;
+    let shift_left = 0;
+    let shift_right = 0;
 
-    var i, num, note, pos, props_tmp;
+    let i, num, note, pos, props_tmp;
     for (i = 0; i < nums.length; ++i) {
       num = nums[i];
       note = num.getNote();
@@ -36,10 +36,10 @@ export class StringNumber extends Modifier {
         num = nums[i];
         note = num.getNote();
         pos = num.getPosition();
-        var props = note.getKeyProps()[num.getIndex()];
+        const props = note.getKeyProps()[num.getIndex()];
 
         if (note != prev_note) {
-          for (var n = 0; n < note.keys.length; ++n) {
+          for (let n = 0; n < note.keys.length; ++n) {
             props_tmp = note.getKeyProps()[n];
             if (left_shift === 0)
               shift_left = (props_tmp.displaced ? note.getExtraLeftPx() : shift_left);
@@ -49,27 +49,27 @@ export class StringNumber extends Modifier {
           prev_note = note;
         }
 
-        nums_list.push({ line: props.line, pos: pos, shiftL: shift_left, shiftR: shift_right, note: note, num: num });
+        nums_list.push({ line: props.line, pos, shiftL: shift_left, shiftR: shift_right, note, num });
       }
     }
 
     // Sort string numbers by line number.
-    nums_list.sort(function(a, b) { return (b.line - a.line); });
+    nums_list.sort((a, b) => b.line - a.line);
 
-    var num_shiftL = 0;
-    var num_shiftR = 0;
-    var x_widthL = 0;
-    var x_widthR = 0;
-    var last_line = null;
-    var last_note = null;
+    let num_shiftL = 0;
+    let num_shiftR = 0;
+    let x_widthL = 0;
+    let x_widthR = 0;
+    let last_line = null;
+    let last_note = null;
     for (i = 0; i < nums_list.length; ++i) {
-      var num_shift = 0;
+      let num_shift = 0;
       note = nums_list[i].note;
       pos = nums_list[i].pos;
       num = nums_list[i].num;
-      var line = nums_list[i].line;
-      var shiftL = nums_list[i].shiftL;
-      var shiftR = nums_list[i].shiftR;
+      const line = nums_list[i].line;
+      const shiftL = nums_list[i].shiftL;
+      const shiftR = nums_list[i].shiftR;
 
       // Reset the position of the string number every line.
       if (line != last_line || note != last_note) {
@@ -77,7 +77,7 @@ export class StringNumber extends Modifier {
         num_shiftR = right_shift + shiftR;
       }
 
-      var num_width = num.getWidth() + num_spacing;
+      const num_width = num.getWidth() + num_spacing;
       if (pos == Modifier.Position.LEFT) {
         num.setXShift(left_shift);
         num_shift = shift_left + num_width; // spacing
@@ -151,19 +151,19 @@ export class StringNumber extends Modifier {
     if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
       "Can't draw string number without a note and index.");
 
-    var ctx = this.context;
-    var line_space = this.note.stave.options.spacing_between_lines_px;
+    const ctx = this.context;
+    const line_space = this.note.stave.options.spacing_between_lines_px;
 
-    var start = this.note.getModifierStartXY(this.position, this.index);
-    var dot_x = (start.x + this.x_shift + this.x_offset);
-    var dot_y = start.y + this.y_shift + this.y_offset;
+    const start = this.note.getModifierStartXY(this.position, this.index);
+    let dot_x = (start.x + this.x_shift + this.x_offset);
+    let dot_y = start.y + this.y_shift + this.y_offset;
 
     switch (this.position) {
       case Modifier.Position.ABOVE:
       case Modifier.Position.BELOW:
-        var stem_ext = this.note.getStemExtents();
-        var top = stem_ext.topY;
-        var bottom = stem_ext.baseY + 2;
+        const stem_ext = this.note.getStemExtents();
+        let top = stem_ext.topY;
+        let bottom = stem_ext.baseY + 2;
 
         if (this.note.stem_direction == StaveNote.STEM_DOWN) {
           top = stem_ext.baseY;
@@ -195,11 +195,11 @@ export class StringNumber extends Modifier {
     ctx.lineWidth = 1.5;
     ctx.stroke();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    var x = dot_x - ctx.measureText(this.string_number).width / 2;
+    const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText("" + this.string_number, x, dot_y + 4.5);
 
     if (this.last_note != null) {
-      var end = this.last_note.getStemX() - this.note.getX() + 5;
+      const end = this.last_note.getStemX() - this.note.getX() + 5;
       ctx.strokeStyle="#000000";
       ctx.lineCap = "round";
       ctx.lineWidth = 0.6;
@@ -208,7 +208,7 @@ export class StringNumber extends Modifier {
       else
         Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3,0]);
 
-      var len, pattern;
+      let len, pattern;
       switch (this.leg) {
         case Renderer.LineEndType.UP:
           len = -10;

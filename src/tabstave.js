@@ -5,7 +5,7 @@ import { Stave } from './stave';
 
 export class TabStave extends Stave {
   constructor(x, y, width, options) {
-    var tab_options = {
+    const tab_options = {
       spacing_between_lines_px: 13,
       num_lines: 6,
       top_text_position: 1

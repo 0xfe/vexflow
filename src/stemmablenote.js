@@ -27,7 +27,7 @@ export class StemmableNote extends Note {
 
   // Builds and sets a new stem
   buildStem() {
-    var stem = new Stem();
+    const stem = new Stem();
     this.setStem(stem);
     return this;
   }
@@ -39,7 +39,7 @@ export class StemmableNote extends Note {
 
   // Get the number of beams for this duration
   getBeamCount() {
-    var glyph = this.getGlyph();
+    const glyph = this.getGlyph();
 
     if (glyph) {
       return glyph.beam_count;
@@ -50,8 +50,8 @@ export class StemmableNote extends Note {
 
   // Get the minimum length of stem
   getStemMinumumLength() {
-    var frac = Flow.durationToFraction(this.duration);
-    var length = (frac.value() <= 1) ? 0 : 20;
+    const frac = Flow.durationToFraction(this.duration);
+    let length = (frac.value() <= 1) ? 0 : 20;
     // if note is flagged, cannot shorten beam
     switch (this.duration) {
      case "8":
@@ -109,10 +109,10 @@ export class StemmableNote extends Note {
 
   // Get the `x` coordinate of the stem
   getStemX() {
-    var x_begin = this.getAbsoluteX() + this.x_shift;
-    var x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
+    const x_begin = this.getAbsoluteX() + this.x_shift;
+    const x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
 
-    var stem_x = this.stem_direction == Stem.DOWN ?
+    let stem_x = this.stem_direction == Stem.DOWN ?
       x_begin : x_end;
 
     stem_x -= ((Stem.WIDTH / 2) * this.stem_direction);
@@ -128,7 +128,7 @@ export class StemmableNote extends Note {
 
   // Get the stem extension for the current duration
   getStemExtension() {
-    var glyph = this.getGlyph();
+    const glyph = this.getGlyph();
 
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
@@ -153,12 +153,12 @@ export class StemmableNote extends Note {
     if (!this.ys || this.ys.length === 0) throw new Vex.RERR("NoYValues",
         "Can't get top stem Y when note has no Y values.");
 
-    var top_pixel = this.ys[0];
-    var base_pixel = this.ys[0];
-    var stem_height = Stem.HEIGHT + this.getStemExtension();
+    let top_pixel = this.ys[0];
+    let base_pixel = this.ys[0];
+    const stem_height = Stem.HEIGHT + this.getStemExtension();
 
-    for (var i = 0; i < this.ys.length; ++i) {
-      var stem_top = this.ys[i] + (stem_height * -this.stem_direction);
+    for (let i = 0; i < this.ys.length; ++i) {
+      const stem_top = this.ys[i] + (stem_height * -this.stem_direction);
 
       if (this.stem_direction == Stem.DOWN) {
         top_pixel = Math.max(top_pixel, stem_top);
@@ -183,7 +183,7 @@ export class StemmableNote extends Note {
 
   // Get the `y` value for the top/bottom modifiers at a specific `text_line`
   getYForTopText(text_line) {
-    var extents = this.getStemExtents();
+    const extents = this.getStemExtents();
     if (this.hasStem()) {
       return Vex.Min(this.stave.getYForTopText(text_line),
           extents.topY - (this.render_options.annotation_spacing * (text_line + 1)));
@@ -193,7 +193,7 @@ export class StemmableNote extends Note {
   }
 
   getYForBottomText(text_line) {
-    var extents = this.getStemExtents();
+    const extents = this.getStemExtents();
     if (this.hasStem()) {
       return Vex.Max(this.stave.getYForTopText(text_line),
         extents.baseY + (this.render_options.annotation_spacing * (text_line)));

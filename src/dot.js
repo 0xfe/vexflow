@@ -11,18 +11,18 @@ export class Dot extends Modifier {
 
   // Arrange dots inside a ModifierContext.
   static format(dots, state) {
-    var right_shift = state.right_shift;
-    var dot_spacing = 1;
+    const right_shift = state.right_shift;
+    const dot_spacing = 1;
 
     if (!dots || dots.length === 0) return false;
 
-    var i, dot, note, shift;
-    var dot_list = [];
+    let i, dot, note, shift;
+    const dot_list = [];
     for (i = 0; i < dots.length; ++i) {
       dot = dots[i];
       note = dot.getNote();
 
-      var props;
+      let props;
       // Only StaveNote has .getKeyProps()
       if (typeof note.getKeyProps === 'function') {
         props = note.getKeyProps()[dot.getIndex()];
@@ -32,24 +32,24 @@ export class Dot extends Modifier {
         shift = 0;
       }
 
-      dot_list.push({ line: props.line, shift: shift, note: note, dot: dot });
+      dot_list.push({ line: props.line, shift, note, dot });
     }
 
     // Sort dots by line number.
-    dot_list.sort(function(a, b) { return (b.line - a.line); });
+    dot_list.sort((a, b) => b.line - a.line);
 
-    var dot_shift = right_shift;
-    var x_width = 0;
-    var last_line = null;
-    var last_note = null;
-    var prev_dotted_space = null;
-    var half_shiftY = 0;
+    let dot_shift = right_shift;
+    let x_width = 0;
+    let last_line = null;
+    let last_note = null;
+    let prev_dotted_space = null;
+    let half_shiftY = 0;
 
     for (i = 0; i < dot_list.length; ++i) {
       dot = dot_list[i].dot;
       note = dot_list[i].note;
       shift = dot_list[i].shift;
-      var line = dot_list[i].line;
+      const line = dot_list[i].line;
 
       // Reset the position of the dot every line.
       if (line != last_line || note != last_note) {
@@ -119,18 +119,18 @@ export class Dot extends Modifier {
     if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
       "Can't draw dot without a note and index.");
 
-    var line_space = this.note.stave.options.spacing_between_lines_px;
+    const line_space = this.note.stave.options.spacing_between_lines_px;
 
-    var start = this.note.getModifierStartXY(this.position, this.index);
+    const start = this.note.getModifierStartXY(this.position, this.index);
 
     // Set the starting y coordinate to the base of the stem for TabNotes
     if (this.note.getCategory() === 'tabnotes') {
       start.y = this.note.getStemExtents().baseY;
     }
 
-    var dot_x = (start.x + this.x_shift) + this.width - this.radius;
-    var dot_y = start.y + this.y_shift + (this.dot_shiftY * line_space);
-    var ctx = this.context;
+    const dot_x = (start.x + this.x_shift) + this.width - this.radius;
+    const dot_y = start.y + this.y_shift + (this.dot_shiftY * line_space);
+    const ctx = this.context;
 
     ctx.beginPath();
     ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);

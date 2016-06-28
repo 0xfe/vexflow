@@ -26,29 +26,29 @@ export class Stroke extends Modifier {
 
   // Arrange strokes inside `ModifierContext`
   static format(strokes, state) {
-    var left_shift = state.left_shift;
-    var stroke_spacing = 0;
+    const left_shift = state.left_shift;
+    const stroke_spacing = 0;
 
     if (!strokes || strokes.length === 0) return this;
 
-    var str_list = [];
-    var i, str, shift;
+    const str_list = [];
+    let i, str, shift;
     for (i = 0; i < strokes.length; ++i) {
       str = strokes[i];
-      var note = str.getNote();
-      var props;
+      const note = str.getNote();
+      let props;
       if (note instanceof StaveNote) {
         props = note.getKeyProps()[str.getIndex()];
         shift = (props.displaced ? note.getExtraLeftPx() : 0);
-        str_list.push({ line: props.line, shift: shift, str: str });
+        str_list.push({ line: props.line, shift, str });
       } else {
         props = note.getPositions()[str.getIndex()];
-        str_list.push({ line: props.str, shift: 0, str: str });
+        str_list.push({ line: props.str, shift: 0, str });
       }
     }
 
-    var str_shift = left_shift;
-    var x_shift = 0;
+    const str_shift = left_shift;
+    let x_shift = 0;
 
     // There can only be one stroke .. if more than one, they overlay each other
     for (i = 0; i < str_list.length; ++i) {
@@ -103,18 +103,18 @@ export class Stroke extends Modifier {
       "Can't draw stroke without a context.");
     if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
       "Can't draw stroke without a note and index.");
-    var start = this.note.getModifierStartXY(this.position, this.index);
-    var ys = this.note.getYs();
-    var topY = start.y;
-    var botY = start.y;
-    var x = start.x - 5;
-    var line_space = this.note.stave.options.spacing_between_lines_px;
+    const start = this.note.getModifierStartXY(this.position, this.index);
+    let ys = this.note.getYs();
+    let topY = start.y;
+    let botY = start.y;
+    const x = start.x - 5;
+    const line_space = this.note.stave.options.spacing_between_lines_px;
 
-    var notes = this.getModifierContext().getModifiers(this.note.getCategory());
-    var i;
+    const notes = this.getModifierContext().getModifiers(this.note.getCategory());
+    let i;
     for (i = 0; i < notes.length; i++) {
       ys = notes[i].getYs();
-      for (var n = 0; n < ys.length; n++) {
+      for (let n = 0; n < ys.length; n++) {
         if (this.note == notes[i] || this.all_voices) {
           topY = Vex.Min(topY, ys[n]);
           botY = Vex.Max(botY, ys[n]);
@@ -122,7 +122,7 @@ export class Stroke extends Modifier {
       }
     }
 
-    var arrow, arrow_shift_x, arrow_y, text_shift_x, text_y;
+    let arrow, arrow_shift_x, arrow_y, text_shift_x, text_y;
     switch (this.type) {
       case Stroke.Type.BRUSH_DOWN:
         arrow = "vc3";

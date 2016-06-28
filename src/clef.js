@@ -163,7 +163,7 @@ export class Clef extends StaveModifier {
 
     // If an annotation, such as 8va, is specified, add it to the Clef object.
     if (annotation !== undefined) {
-      var anno_dict = Clef.annotations[annotation];
+      const anno_dict = Clef.annotations[annotation];
       this.annotation = {
         code: anno_dict.code,
         point: anno_dict.sizes[this.size].point,
@@ -193,8 +193,8 @@ export class Clef extends StaveModifier {
 
     if (this.type !== 'tab') return;
 
-    var glyphScale;
-    var glyphOffset;
+    let glyphScale;
+    let glyphOffset;
     switch(this.stave.getOptions().num_lines) {
       case 8:
         glyphScale = 55;

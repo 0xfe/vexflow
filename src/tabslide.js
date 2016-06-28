@@ -37,8 +37,8 @@ export class TabSlide extends TabTie {
      **/
     super(notes, "sl.");
     if (!direction) {
-      var first_fret = notes.first_note.getPositions()[0].fret;
-      var last_fret = notes.last_note.getPositions()[0].fret;
+      const first_fret = notes.first_note.getPositions()[0].fret;
+      const last_fret = notes.last_note.getPositions()[0].fret;
 
       direction = ((parseInt(first_fret, 10) > parseInt(last_fret, 10)) ?
         TabSlide.SLIDE_DOWN : TabSlide.SLIDE_UP);
@@ -57,19 +57,19 @@ export class TabSlide extends TabTie {
     if (params.first_ys.length === 0 || params.last_ys.length === 0)
       throw new Vex.RERR("BadArguments", "No Y-values to render");
 
-    var ctx = this.context;
-    var first_x_px = params.first_x_px;
-    var first_ys = params.first_ys;
-    var last_x_px = params.last_x_px;
+    const ctx = this.context;
+    const first_x_px = params.first_x_px;
+    const first_ys = params.first_ys;
+    const last_x_px = params.last_x_px;
 
-    var direction = this.slide_direction;
+    const direction = this.slide_direction;
     if (direction != TabSlide.SLIDE_UP &&
         direction != TabSlide.SLIDE_DOWN) {
       throw new Vex.RERR("BadSlide", "Invalid slide direction");
     }
 
-    for (var i = 0; i < this.first_indices.length; ++i) {
-      var slide_y = first_ys[this.first_indices[i]] +
+    for (let i = 0; i < this.first_indices.length; ++i) {
+      const slide_y = first_ys[this.first_indices[i]] +
         this.render_options.y_shift;
 
       if (isNaN(slide_y))

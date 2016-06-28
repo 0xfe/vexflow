@@ -46,11 +46,11 @@ export class Renderer {
 
   static buildContext(sel, backend, width, height, background) {
 
-    var renderer = new Renderer(sel, backend);
+    const renderer = new Renderer(sel, backend);
     if (width && height) { renderer.resize(width, height); }
 
     if (!background) background = "#FFF";
-    var ctx = renderer.getContext();
+    const ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
     Renderer.lastContext = ctx;
     return ctx;
@@ -76,13 +76,13 @@ export class Renderer {
       return new CanvasContext(ctx);
     }
 
-    var methods = ["clear", "setFont", "setRawFont", "setFillStyle", "setBackgroundFillStyle",
+    const methods = ["clear", "setFont", "setRawFont", "setFillStyle", "setBackgroundFillStyle",
                    "setStrokeStyle", "setShadowColor", "setShadowBlur", "setLineWidth",
                    "setLineCap", "setLineDash", "openGroup", "closeGroup", "getGroup"];
     ctx.vexFlowCanvasContext = ctx;
 
-    for (var i in methods) {
-      var method = methods[i];
+    for (const i in methods) {
+      const method = methods[i];
       ctx[method] = ctx[method] || CanvasContext.prototype[method];
     }
 
@@ -95,19 +95,19 @@ export class Renderer {
   static drawDashedLine(context, fromX, fromY, toX, toY, dashPattern) {
     context.beginPath();
 
-    var dx = toX - fromX;
-    var dy = toY - fromY;
-    var angle = Math.atan2(dy, dx);
-    var x = fromX;
-    var y = fromY;
+    const dx = toX - fromX;
+    const dy = toY - fromY;
+    const angle = Math.atan2(dy, dx);
+    let x = fromX;
+    let y = fromY;
     context.moveTo(fromX, fromY);
-    var idx = 0;
-    var draw = true;
+    let idx = 0;
+    let draw = true;
     while (!((dx < 0 ? x <= toX : x >= toX) && (dy < 0 ? y <= toY : y >= toY))) {
-      var dashLength = dashPattern[idx++ % dashPattern.length];
-      var nx = x + (Math.cos(angle) * dashLength);
+      const dashLength = dashPattern[idx++ % dashPattern.length];
+      const nx = x + (Math.cos(angle) * dashLength);
       x = dx < 0 ? Math.max(toX, nx) : Math.min(toX, nx);
-      var ny = y + (Math.sin(angle) * dashLength);
+      const ny = y + (Math.sin(angle) * dashLength);
       y = dy < 0 ? Math.max(toY, ny) : Math.min(toY, ny);
       if (draw) {
         context.lineTo(x, y);

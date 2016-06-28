@@ -174,7 +174,7 @@ export class TextNote extends Note {
     // an approximation and isn't very accurate. The only way to accurately
     // measure the length of text is with `canvasContext.measureText()`
     if (this.glyph_type) {
-      var struct = TextNote.GLYPHS[this.glyph_type];
+      const struct = TextNote.GLYPHS[this.glyph_type];
       if (!struct) throw new Vex.RERR("Invalid glyph type: " + this.glyph_type);
 
       this.glyph = new Glyph(struct.code, struct.point, {cache: false});
@@ -237,15 +237,15 @@ export class TextNote extends Note {
         "Can't draw without a canvas context.");
     if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
 
-    var ctx = this.context;
-    var x = this.getAbsoluteX();
+    const ctx = this.context;
+    let x = this.getAbsoluteX();
     if (this.justification == TextNote.Justification.CENTER) {
       x -= this.getWidth() / 2;
     } else if (this.justification == TextNote.Justification.RIGHT) {
       x -= this.getWidth();
     }
 
-    var y;
+    let y;
     if (this.glyph) {
       y = this.stave.getYForLine(this.line + (-3));
       this.glyph.render(this.context,
@@ -258,9 +258,9 @@ export class TextNote extends Note {
       ctx.fillText(this.text, x, y);
 
       // Width of the letter M gives us the approximate height of the text
-      var height = ctx.measureText("M").width;
+      const height = ctx.measureText("M").width;
       // Get accurate width of text
-      var width = ctx.measureText(this.text).width;
+      const width = ctx.measureText(this.text).width;
 
       // Write superscript
       if (this.superscript) {

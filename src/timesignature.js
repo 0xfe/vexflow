@@ -31,7 +31,7 @@ export class TimeSignature extends StaveModifier {
     if(timeSpec === null) {
       return;
     }
-    var padding = customPadding;
+    const padding = customPadding;
 
     this.point = 40;
     this.topLine = 2;
@@ -46,13 +46,13 @@ export class TimeSignature extends StaveModifier {
 
   parseTimeSpec(timeSpec) {
     if (timeSpec == "C" || timeSpec == "C|") {
-      var glyphInfo = TimeSignature.glyphs[timeSpec];
+      const glyphInfo = TimeSignature.glyphs[timeSpec];
       return {num: false, line: glyphInfo.line,
         glyph: new Glyph(glyphInfo.code, glyphInfo.point)};
     }
 
-    var topNums = [];
-    var i, c;
+    const topNums = [];
+    let i, c;
     for (i = 0; i < timeSpec.length; ++i) {
       c = timeSpec.charAt(i);
       if (c == "/") {
@@ -81,7 +81,7 @@ export class TimeSignature extends StaveModifier {
     }
 
 
-    var botNums = [];
+    const botNums = [];
     for (; i < timeSpec.length; ++i) {
       c = timeSpec.charAt(i);
       if (/[0-9]/.test(c)) {
@@ -98,47 +98,45 @@ export class TimeSignature extends StaveModifier {
   }
 
   makeTimeSignatureGlyph(topNums, botNums) {
-    var glyph = new Glyph("v0", this.point);
+    const glyph = new Glyph("v0", this.point);
     glyph["topGlyphs"] = [];
     glyph["botGlyphs"] = [];
 
-    var topWidth = 0;
-    var i, num;
+    let topWidth = 0;
+    let i, num;
     for (i = 0; i < topNums.length; ++i) {
       num = topNums[i];
-      var topGlyph = new Glyph("v" + num, this.point);
+      const topGlyph = new Glyph("v" + num, this.point);
 
       glyph.topGlyphs.push(topGlyph);
       topWidth += topGlyph.getMetrics().width;
     }
 
-    var botWidth = 0;
+    let botWidth = 0;
     for (i = 0; i < botNums.length; ++i) {
       num = botNums[i];
-      var botGlyph = new Glyph("v" + num, this.point);
+      const botGlyph = new Glyph("v" + num, this.point);
 
       glyph.botGlyphs.push(botGlyph);
       botWidth += botGlyph.getMetrics().width;
     }
 
-    var width = (topWidth > botWidth ? topWidth : botWidth);
-    var xMin = glyph.getMetrics().x_min;
+    const width = (topWidth > botWidth ? topWidth : botWidth);
+    const xMin = glyph.getMetrics().x_min;
 
-    glyph.getMetrics = function() {
-      return {
-        x_min: xMin,
-        x_max: xMin + width,
-        width: width
-      };
-    };
+    glyph.getMetrics = () => ({
+      x_min: xMin,
+      x_max: xMin + width,
+      width
+    });
 
-    var topStartX = (width - topWidth) / 2.0;
-    var botStartX = (width - botWidth) / 2.0;
+    const topStartX = (width - topWidth) / 2.0;
+    const botStartX = (width - botWidth) / 2.0;
 
-    var that = this;
+    const that = this;
     glyph.renderToStave = function(x) {
-      var start_x = x + topStartX;
-      var i, g;
+      let start_x = x + topStartX;
+      let i, g;
       for (i = 0; i < this.topGlyphs.length; ++i) {
         g = this.topGlyphs[i];
         Glyph.renderOutline(this.context, g.metrics.outline,

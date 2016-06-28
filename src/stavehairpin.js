@@ -32,16 +32,16 @@ export class StaveHairpin {
    *
    **/
   static FormatByTicksAndDraw(ctx, formatter, notes, type, position, options) {
-    var ppt = formatter.pixelsPerTick;
+    const ppt = formatter.pixelsPerTick;
 
     if (ppt == null){
       throw new Vex.RuntimeError("BadArguments",
           "A valid Formatter must be provide to draw offsets by ticks.");}
 
-    var l_shift_px = ppt * options.left_shift_ticks;
-    var r_shift_px = ppt * options.right_shift_ticks;
+    const l_shift_px = ppt * options.left_shift_ticks;
+    const r_shift_px = ppt * options.right_shift_ticks;
 
-    var hairpin_options = {
+    const hairpin_options = {
       height: options.height,
       y_shift:options.y_shift,
       left_shift_px:l_shift_px,
@@ -127,17 +127,17 @@ export class StaveHairpin {
   }
 
   renderHairpin(params) {
-    var ctx = this.context;
-    var dis = this.render_options.y_shift + 20;
-    var y_shift = params.first_y;
+    const ctx = this.context;
+    let dis = this.render_options.y_shift + 20;
+    let y_shift = params.first_y;
 
     if (this.position == Modifier.Position.ABOVE) {
       dis = -dis +30;
       y_shift = params.first_y - params.staff_height;
     }
 
-    var l_shift = this.render_options.left_shift_px;
-    var r_shift = this.render_options.right_shift_px;
+    const l_shift = this.render_options.left_shift_px;
+    const r_shift = this.render_options.right_shift_px;
 
     ctx.beginPath();
 
@@ -165,11 +165,11 @@ export class StaveHairpin {
     if (!this.context) throw new Vex.RERR("NoContext",
       "Can't draw Hairpin without a context.");
 
-    var first_note = this.first_note;
-    var last_note = this.last_note;
+    const first_note = this.first_note;
+    const last_note = this.last_note;
 
-    var start = first_note.getModifierStartXY(this.position, 0);
-    var end = last_note.getModifierStartXY(this.position, 0);
+    const start = first_note.getModifierStartXY(this.position, 0);
+    const end = last_note.getModifierStartXY(this.position, 0);
 
     this.renderHairpin({
       first_x: start.x,

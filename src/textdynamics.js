@@ -69,15 +69,15 @@ export class TextDynamics extends Note {
 
   // Preformat the dynamics text
   preFormat() {
-    var total_width = 0;
+    let total_width = 0;
     // Iterate through each letter
     this.sequence.split('').forEach(function(letter) {
       // Get the glyph data for the letter
-      var glyph_data = TextDynamics.GLYPHS[letter];
+      const glyph_data = TextDynamics.GLYPHS[letter];
       if (!glyph_data) throw new Vex.RERR("Invalid dynamics character: " + letter);
 
-      var size =  this.render_options.glyph_font_size;
-      var glyph = new Glyph(glyph_data.code, size);
+      const size =  this.render_options.glyph_font_size;
+      const glyph = new Glyph(glyph_data.code, size);
 
       // Add the glyph
       this.glyphs.push(glyph);
@@ -93,14 +93,14 @@ export class TextDynamics extends Note {
 
   // Draw the dynamics text on the rendering context
   draw() {
-    var x = this.getAbsoluteX();
-    var y = this.stave.getYForLine(this.line + (-3));
+    const x = this.getAbsoluteX();
+    const y = this.stave.getYForLine(this.line + (-3));
 
     L("Rendering Dynamics: ", this.sequence);
 
-    var letter_x = x;
+    let letter_x = x;
     this.glyphs.forEach(function(glyph, index) {
-      var current_letter = this.sequence[index];
+      const current_letter = this.sequence[index];
       glyph.render(this.context, letter_x, y);
       letter_x += TextDynamics.GLYPHS[current_letter].width;
     }, this);

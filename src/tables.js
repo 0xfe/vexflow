@@ -12,10 +12,10 @@ Flow.RESOLUTION = 16384;
 /* Kerning (DEPRECATED) */
 Flow.IsKerned = true;
 
-Flow.clefProperties = function(clef) {
+Flow.clefProperties = clef => {
   if (!clef) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
-  var props = Flow.clefProperties.values[clef];
+  const props = Flow.clefProperties.values[clef];
   if (!props) throw new Vex.RERR("BadArgument", "Invalid clef: " + clef);
 
   return props;
@@ -41,53 +41,53 @@ Flow.clefProperties.values = {
   The last argument, params, is a struct the currently can contain one option,
   octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
 */
-Flow.keyProperties = function(key, clef, params) {
+Flow.keyProperties = (key, clef, params) => {
   if (clef === undefined) {
     clef = 'treble';
   }
-  var options = {
+  const options = {
     octave_shift: 0
   };
   if (typeof params == "object") {
     Vex.Merge(options, params);
   }
 
-  var pieces = key.split("/");
+  const pieces = key.split("/");
 
   if (pieces.length < 2) {
     throw new Vex.RERR("BadArguments",
         "Key must have note + octave and an optional glyph: " + key);
   }
 
-  var k = pieces[0].toUpperCase();
-  var value = Flow.keyProperties.note_values[k];
+  const k = pieces[0].toUpperCase();
+  const value = Flow.keyProperties.note_values[k];
   if (!value) throw new Vex.RERR("BadArguments", "Invalid key name: " + k);
   if (value.octave) pieces[1] = value.octave;
 
-  var o = parseInt(pieces[1]);
+  let o = parseInt(pieces[1]);
 
   // Octave_shift is the shift to compensate for clef 8va/8vb.
   o += -1 * options.octave_shift;
 
-  var base_index = (o * 7) - (4 * 7);
-  var line = (base_index + value.index) / 2;
+  const base_index = (o * 7) - (4 * 7);
+  let line = (base_index + value.index) / 2;
   line += Flow.clefProperties(clef).line_shift;
 
-  var stroke = 0;
+  let stroke = 0;
 
   if (line <= 0 && (((line * 2) % 2) === 0)) stroke = 1;  // stroke up
   if (line >= 6 && (((line * 2) % 2) === 0)) stroke = -1; // stroke down
 
   // Integer value for note arithmetic.
-  var int_value = (typeof(value.int_val)!='undefined') ? (o * 12) +
+  const int_value = (typeof(value.int_val)!='undefined') ? (o * 12) +
     value.int_val : null;
 
   /* Check if the user specified a glyph. */
-  var code = value.code;
-  var shift_right = value.shift_right;
+  let code = value.code;
+  let shift_right = value.shift_right;
   if ((pieces.length > 2) && (pieces[2])) {
-    var glyph_name = pieces[2].toUpperCase();
-    var note_glyph = Flow.keyProperties.note_glyph[glyph_name];
+    const glyph_name = pieces[2].toUpperCase();
+    const note_glyph = Flow.keyProperties.note_glyph[glyph_name];
     if (note_glyph) {
       code = note_glyph.code;
       shift_right = note_glyph.shift_right;
@@ -97,12 +97,12 @@ Flow.keyProperties = function(key, clef, params) {
   return {
     key: k,
     octave: o,
-    line: line,
-    int_value: int_value,
+    line,
+    int_value,
     accidental: value.accidental,
-    code: code,
-    stroke: stroke,
-    shift_right: shift_right,
+    code,
+    stroke,
+    shift_right,
     displaced: false
   };
 };
@@ -180,7 +180,7 @@ Flow.keyProperties.note_glyph = {
   'X3':  { code: "v3b", shift_right: -2 }
 };
 
-Flow.integerToNote = function(integer) {
+Flow.integerToNote = integer => {
   if (typeof(integer) == "undefined")
     throw new Vex.RERR("BadArguments", "Undefined integer for integerToNote");
 
@@ -188,7 +188,7 @@ Flow.integerToNote = function(integer) {
     throw new Vex.RERR("BadArguments",
         "integerToNote requires integer > -2: " + integer);
 
-  var noteValue = Flow.integerToNote.table[integer];
+  const noteValue = Flow.integerToNote.table[integer];
   if (!noteValue)
     throw new Vex.RERR("BadArguments", "Unknown note value for integer: " +
         integer);
@@ -212,10 +212,10 @@ Flow.integerToNote.table = {
 };
 
 
-Flow.tabToGlyph = function(fret) {
-  var glyph = null;
-  var width = 0;
-  var shift_y = 0;
+Flow.tabToGlyph = fret => {
+  let glyph = null;
+  let width = 0;
+  let shift_y = 0;
 
   if (fret.toString().toUpperCase() == "X") {
     glyph = "v7f";
@@ -228,18 +228,14 @@ Flow.tabToGlyph = function(fret) {
   return {
     text: fret,
     code: glyph,
-    width: width,
-    shift_y: shift_y
+    width,
+    shift_y
   };
 };
 
-Flow.textWidth = function(text) {
-  return 6 * text.toString().length;
-};
+Flow.textWidth = text => 6 * text.toString().length;
 
-Flow.articulationCodes = function(artic) {
-  return Flow.articulationCodes.articulations[artic];
-};
+Flow.articulationCodes = artic => Flow.articulationCodes.articulations[artic];
 
 Flow.articulationCodes.articulations = {
   "a.": {   // Staccato
@@ -348,9 +344,7 @@ Flow.articulationCodes.articulations = {
   }
 };
 
-Flow.accidentalCodes = function(acc) {
-  return Flow.accidentalCodes.accidentals[acc];
-};
+Flow.accidentalCodes = acc => Flow.accidentalCodes.accidentals[acc];
 
 Flow.accidentalCodes.accidentals = {
   "#": {
@@ -469,9 +463,7 @@ Flow.accidentalColumnsTable = {
         very_spaced_out_hexachord : [1, 2, 1, 2, 1, 2] }
 };
 
-Flow.ornamentCodes = function(acc) {
-  return Flow.ornamentCodes.ornaments[acc];
-};
+Flow.ornamentCodes = acc => Flow.ornamentCodes.ornaments[acc];
 
 Flow.ornamentCodes.ornaments = {
   "mordent": {
@@ -567,8 +559,8 @@ Flow.ornamentCodes.ornaments = {
   }
 };
 
-Flow.keySignature = function(spec) {
-  var keySpec = Flow.keySignature.keySpecs[spec];
+Flow.keySignature = spec => {
+  const keySpec = Flow.keySignature.keySpecs[spec];
 
   if (!keySpec) {
     throw new Vex.RERR("BadKeySignature",
@@ -579,12 +571,12 @@ Flow.keySignature = function(spec) {
     return [];
   }
 
-  var notes = Flow.keySignature.accidentalList(keySpec.acc);
+  const notes = Flow.keySignature.accidentalList(keySpec.acc);
 
-  var acc_list = [];
-  for (var i = 0; i < keySpec.num; ++i) {
-    var line = notes[i];
-    acc_list.push({type: keySpec.acc, line: line});
+  const acc_list = [];
+  for (let i = 0; i < keySpec.num; ++i) {
+    const line = notes[i];
+    acc_list.push({type: keySpec.acc, line});
   }
 
   return acc_list;
@@ -637,7 +629,7 @@ Flow.unicode = {
   "circle": String.fromCharCode(parseInt('25CB', 16))
 };
 
-Flow.keySignature.accidentalList = function(acc) {
+Flow.keySignature.accidentalList = acc => {
   if (acc == "b") {
     return [2, 0.5, 2.5, 1, 3, 1.5, 3.5];
   }
@@ -645,48 +637,48 @@ Flow.keySignature.accidentalList = function(acc) {
     return [0, 1.5, -0.5, 1, 2.5, 0.5, 2]; }
 };
 
-Flow.parseNoteDurationString = function(durationString) {
+Flow.parseNoteDurationString = durationString => {
   if (typeof(durationString) !== "string") {
     return null;
   }
 
-  var regexp = /(\d*\/?\d+|[a-z])(d*)([nrhms]|$)/;
+  const regexp = /(\d*\/?\d+|[a-z])(d*)([nrhms]|$)/;
 
-  var result = regexp.exec(durationString);
+  const result = regexp.exec(durationString);
   if (!result) {
     return null;
   }
 
-  var duration = result[1];
-  var dots = result[2].length;
-  var type = result[3];
+  const duration = result[1];
+  const dots = result[2].length;
+  let type = result[3];
 
   if (type.length === 0) {
     type = "n";
   }
 
   return {
-    duration: duration,
-    dots: dots,
-    type: type
+    duration,
+    dots,
+    type
   };
 };
 
-Flow.parseNoteData = function(noteData) {
-  var duration = noteData.duration;
+Flow.parseNoteData = noteData => {
+  const duration = noteData.duration;
 
   // Preserve backwards-compatibility
-  var durationStringData = Flow.parseNoteDurationString(duration);
+  const durationStringData = Flow.parseNoteDurationString(duration);
   if (!durationStringData) {
     return null;
   }
 
-  var ticks = Flow.durationToTicks(durationStringData.duration);
+  let ticks = Flow.durationToTicks(durationStringData.duration);
   if (ticks == null) {
     return null;
   }
 
-  var type = noteData.type;
+  let type = noteData.type;
 
   if (type) {
     if (!(type === "n" || type === "r" || type === "h" ||
@@ -700,7 +692,7 @@ Flow.parseNoteData = function(noteData) {
     }
   }
 
-  var dots = 0;
+  let dots = 0;
   if (noteData.dots) {
     dots = noteData.dots;
   } else {
@@ -711,9 +703,9 @@ Flow.parseNoteData = function(noteData) {
     return null;
   }
 
-  var currentTicks = ticks;
+  let currentTicks = ticks;
 
-  for (var i = 0; i < dots; i++) {
+  for (let i = 0; i < dots; i++) {
     if (currentTicks <= 1) {
       return null;
     }
@@ -724,9 +716,9 @@ Flow.parseNoteData = function(noteData) {
 
   return {
     duration: durationStringData.duration,
-    type: type,
-    dots: dots,
-    ticks: ticks
+    type,
+    dots,
+    ticks
   };
 };
 
@@ -734,8 +726,8 @@ Flow.parseNoteData = function(noteData) {
 // If the input isn't an alias, simply return the input.
 //
 // example: 'q' -> '4', '8' -> '8'
-Flow.sanitizeDuration = function(duration) {
-  var alias = Flow.durationAliases[duration];
+Flow.sanitizeDuration = duration => {
+  const alias = Flow.durationAliases[duration];
   if (alias !== undefined) {
     duration = alias;
   }
@@ -749,20 +741,16 @@ Flow.sanitizeDuration = function(duration) {
 };
 
 // Convert the `duration` to an fraction
-Flow.durationToFraction = function(duration) {
-  return new Fraction().parse(Flow.sanitizeDuration(duration));
-};
+Flow.durationToFraction = duration => new Fraction().parse(Flow.sanitizeDuration(duration));
 
 // Convert the `duration` to an number
-Flow.durationToNumber = function(duration) {
-  return Flow.durationToFraction(duration).value();
-};
+Flow.durationToNumber = duration => Flow.durationToFraction(duration).value();
 
 // Convert the `duration` to total ticks
-Flow.durationToTicks = function(duration) {
+Flow.durationToTicks = duration => {
   duration = Flow.sanitizeDuration(duration);
 
-  var ticks = Flow.durationToTicks.durations[duration];
+  const ticks = Flow.durationToTicks.durations[duration];
   if (ticks === undefined) {
     return null;
   }
@@ -795,10 +783,10 @@ Flow.durationAliases = {
   "b": "256"
 };
 
-Flow.durationToGlyph = function(duration, type) {
+Flow.durationToGlyph = (duration, type) => {
   duration = Flow.sanitizeDuration(duration);
 
-  var code = Flow.durationToGlyph.duration_codes[duration];
+  const code = Flow.durationToGlyph.duration_codes[duration];
   if (code === undefined) {
     return null;
   }
@@ -807,7 +795,7 @@ Flow.durationToGlyph = function(duration, type) {
     type = "n";
   }
 
-  var glyphTypeProperties = code.type[type];
+  const glyphTypeProperties = code.type[type];
   if (glyphTypeProperties === undefined) {
     return null;
   }

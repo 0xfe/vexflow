@@ -36,16 +36,16 @@ export class StaveTempo extends StaveModifier {
     if (!stave.context) throw new Vex.RERR("NoContext",
       "Can't draw stave tempo without a context.");
 
-    var options = this.render_options;
-    var scale = options.glyph_font_scale / 38;
-    var name = this.tempo.name;
-    var duration = this.tempo.duration;
-    var dots = this.tempo.dots;
-    var bpm = this.tempo.bpm;
-    var font = this.font;
-    var ctx = stave.context;
-    var x = this.x + this.shift_x + shift_x;
-    var y = stave.getYForTopText(1) + this.shift_y;
+    const options = this.render_options;
+    const scale = options.glyph_font_scale / 38;
+    const name = this.tempo.name;
+    const duration = this.tempo.duration;
+    const dots = this.tempo.dots;
+    const bpm = this.tempo.bpm;
+    const font = this.font;
+    const ctx = stave.context;
+    let x = this.x + this.shift_x + shift_x;
+    const y = stave.getYForTopText(1) + this.shift_y;
 
     ctx.save();
 
@@ -64,7 +64,7 @@ export class StaveTempo extends StaveModifier {
         x += ctx.measureText("(").width;
       }
 
-      var code = Flow.durationToGlyph(duration);
+      const code = Flow.durationToGlyph(duration);
 
       x += 3 * scale;
       Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
@@ -72,13 +72,13 @@ export class StaveTempo extends StaveModifier {
 
       // Draw stem and flags
       if (code.stem) {
-        var stem_height = 30;
+        let stem_height = 30;
 
         if (code.beam_count) stem_height += 3 * (code.beam_count - 1);
 
         stem_height *= scale;
 
-        var y_top = y - stem_height;
+        const y_top = y - stem_height;
         ctx.fillRect(x, y_top, scale, stem_height);
 
         if (code.flag) {
@@ -90,7 +90,7 @@ export class StaveTempo extends StaveModifier {
       }
 
       // Draw dot
-      for (var i = 0; i < dots; i++) {
+      for (let i = 0; i < dots; i++) {
         x += 6 * scale;
         ctx.beginPath();
         ctx.arc(x, y + 2 * scale, 2 * scale, 0, Math.PI * 2, false);

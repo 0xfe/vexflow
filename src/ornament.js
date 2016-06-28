@@ -20,7 +20,7 @@ import { Glyph } from './glyph';
 function L() { if (Ornament.DEBUG) Vex.L("Vex.Flow.Ornament", arguments); }
 
 // Accidental position modifications for each glyph
-var acc_mods = {
+const acc_mods = {
   "n": {
     shift_x: 1,
     shift_y_upper:0,
@@ -115,13 +115,13 @@ export class Ornament extends Modifier {
   static format(ornaments, state) {
    if (!ornaments || ornaments.length === 0) return false;
 
-    var width = 0;
-    for (var i = 0; i < ornaments.length; ++i) {
-      var ornament = ornaments[i];
-      var increment = 1;
+    let width = 0;
+    for (let i = 0; i < ornaments.length; ++i) {
+      const ornament = ornaments[i];
+      let increment = 1;
       width = Math.max(ornament.getWidth(), width);
 
-      var type = Flow.ornamentCodes(ornament.type);
+      const type = Flow.ornamentCodes(ornament.type);
 
       if (!type.between_lines) increment += 1.5;
 
@@ -189,13 +189,13 @@ export class Ornament extends Modifier {
     if (!(this.note && (this.index !== null))) throw new Vex.RERR("NoAttachedNote",
       "Can't draw Ornament without a note and index.");
 
-    var ctx = this.context;
-    var stem_direction = this.note.getStemDirection();
-    var stave = this.note.getStave();
+    const ctx = this.context;
+    const stem_direction = this.note.getStemDirection();
+    const stave = this.note.getStave();
 
     // Get stem extents
-    var stem_ext = this.note.getStem().getExtents();
-    var top, bottom;
+    const stem_ext = this.note.getStem().getExtents();
+    let top, bottom;
     if (stem_direction === StaveNote.STEM_DOWN) {
       top = stem_ext.baseY;
       bottom = stem_ext.topY;
@@ -206,7 +206,7 @@ export class Ornament extends Modifier {
 
     // TabNotes don't have stems attached to them. Tab stems are rendered
     // outside the stave.
-    var is_tabnote = this.note.getCategory() === 'tabnotes';
+    const is_tabnote = this.note.getCategory() === 'tabnotes';
     if (is_tabnote) {
       if (this.note.hasStem()){
         if (stem_direction === StaveNote.STEM_UP) {
@@ -220,28 +220,28 @@ export class Ornament extends Modifier {
       }
     }
 
-    var is_on_head = stem_direction === StaveNote.STEM_DOWN;
-    var spacing = stave.getSpacingBetweenLines();
-    var line_spacing = 1;
+    const is_on_head = stem_direction === StaveNote.STEM_DOWN;
+    const spacing = stave.getSpacingBetweenLines();
+    let line_spacing = 1;
 
     // Beamed stems are longer than quarter note stems, adjust accordingly
     if (!is_on_head && this.note.beam) {
       line_spacing += 0.5;
     }
 
-    var total_spacing = spacing * (this.text_line + line_spacing);
-    var glyph_y_between_lines = (top - 7) - total_spacing;
+    const total_spacing = spacing * (this.text_line + line_spacing);
+    const glyph_y_between_lines = (top - 7) - total_spacing;
 
     // Get initial coordinates for the modifier position
-    var start = this.note.getModifierStartXY(this.position, this.index);
-    var glyph_x = start.x + this.ornament.shift_right;
-    var glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
+    const start = this.note.getModifierStartXY(this.position, this.index);
+    let glyph_x = start.x + this.ornament.shift_right;
+    let glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
     glyph_y += this.ornament.shift_up + this.y_shift;
 
     // Ajdust x position if ornament is delayed
     if (this.delayed) {
       glyph_x += this.ornament.width;
-      var next_context = TickContext.getNextContext(this.note.getTickContext());
+      const next_context = TickContext.getNextContext(this.note.getTickContext());
       if (next_context) {
         glyph_x += (next_context.getX() - glyph_x) * 0.5;
       } else {
@@ -249,12 +249,12 @@ export class Ornament extends Modifier {
       }
     }
 
-    var ornament = this;
+    const ornament = this;
     function drawAccidental(ctx, code, upper) {
-      var accidental = Flow.accidentalCodes(code);
+      const accidental = Flow.accidentalCodes(code);
 
-      var acc_x = glyph_x - 3;
-      var acc_y = glyph_y + 2;
+      let acc_x = glyph_x - 3;
+      let acc_y = glyph_y + 2;
 
       // Special adjustments for trill glyph
       if (upper) {
@@ -272,7 +272,7 @@ export class Ornament extends Modifier {
       }
 
       // Render the glyph
-      var scale = ornament.render_options.font_scale/1.3;
+      const scale = ornament.render_options.font_scale/1.3;
       Glyph.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);
 
       // If rendered a bottom accidental, increase the y value by the

@@ -23,7 +23,7 @@ export class GraceNote extends StaveNote {
   }
 
   getStemExtension(){
-    var glyph = this.getGlyph();
+    const glyph = this.getGlyph();
 
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
@@ -41,14 +41,14 @@ export class GraceNote extends StaveNote {
 
   draw(){
     super.draw();
-    var ctx = this.context;
-    var stem_direction = this.getStemDirection();
+    const ctx = this.context;
+    const stem_direction = this.getStemDirection();
 
     if (this.slash) {
       ctx.beginPath();
 
-      var x = this.getAbsoluteX();
-      var y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
+      let x = this.getAbsoluteX();
+      let y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
       if (stem_direction === 1) {
         x += 1;
         ctx.moveTo(x, y);

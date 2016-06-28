@@ -85,7 +85,7 @@ export class Voice {
 
   // Get the bounding box for the voice
   getBoundingBox() {
-    var stave, boundingBox, bb, i;
+    let stave, boundingBox, bb, i;
 
     if (!this.boundingBox) {
       if (!this.stave) throw Vex.RERR("NoStave", "Can't get bounding box without stave.");
@@ -136,7 +136,7 @@ export class Voice {
   // Add a tickable to the voice
   addTickable(tickable) {
     if (!tickable.shouldIgnoreTicks()) {
-      var ticks = tickable.getTicks();
+      const ticks = tickable.getTicks();
 
       // Update the total ticks for this line.
       this.ticksUsed.add(ticks);
@@ -167,7 +167,7 @@ export class Voice {
 
   // Add an array of tickables to the voice.
   addTickables(tickables) {
-    for (var i = 0; i < tickables.length; ++i) {
+    for (let i = 0; i < tickables.length; ++i) {
       this.addTickable(tickables[i]);
     }
 
@@ -192,9 +192,9 @@ export class Voice {
   // If `stave` is omitted, it is expected that the notes have staves
   // already set.
   draw(context, stave) {
-    var boundingBox = null;
-    for (var i = 0; i < this.tickables.length; ++i) {
-      var tickable = this.tickables[i];
+    let boundingBox = null;
+    for (let i = 0; i < this.tickables.length; ++i) {
+      const tickable = this.tickables[i];
 
       // Set the stave if provided
       if (stave) tickable.setStave(stave);
@@ -207,7 +207,7 @@ export class Voice {
       if (i === 0) boundingBox = tickable.getBoundingBox();
 
       if (i > 0 && boundingBox) {
-        var tickable_bb = tickable.getBoundingBox();
+        const tickable_bb = tickable.getBoundingBox();
         if (tickable_bb) boundingBox.mergeWith(tickable_bb);
       }
 

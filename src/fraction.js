@@ -17,7 +17,7 @@ export class Fraction {
       throw new Vex.RERR("BadArgument", "Invalid numbers: " + a + ", " + b);
     }
 
-    var t;
+    let t;
 
     while (b !== 0) {
       t = b;
@@ -46,7 +46,7 @@ export class Fraction {
     } else if (args.length == 2) {
       return Fraction.LCM(args[0], args[1]);
     } else {
-      var arg0 = args[0];
+      const arg0 = args[0];
       args.shift();
       return Fraction.LCM(arg0, Fraction.LCMM(args));
     }
@@ -64,10 +64,10 @@ export class Fraction {
     return this.numerator / this.denominator;
   }
   simplify() {
-    var u = this.numerator;
-    var d = this.denominator;
+    let u = this.numerator;
+    let d = this.denominator;
 
-    var gcd = Fraction.GCD(u, d);
+    const gcd = Fraction.GCD(u, d);
     u /= gcd;
     d /= gcd;
 
@@ -78,8 +78,8 @@ export class Fraction {
     return this.set(u, d);
   }
   add(param1, param2) {
-    var otherNumerator;
-    var otherDenominator;
+    let otherNumerator;
+    let otherDenominator;
 
     if (param1 instanceof Fraction) {
       otherNumerator = param1.numerator;
@@ -98,16 +98,16 @@ export class Fraction {
       }
     }
 
-    var lcm = Fraction.LCM(this.denominator, otherDenominator);
-    var a = lcm / this.denominator;
-    var b = lcm / otherDenominator;
+    const lcm = Fraction.LCM(this.denominator, otherDenominator);
+    const a = lcm / this.denominator;
+    const b = lcm / otherDenominator;
 
-    var u = this.numerator * a + otherNumerator * b;
+    const u = this.numerator * a + otherNumerator * b;
     return this.set(u, lcm);
   }
   subtract(param1, param2) {
-    var otherNumerator;
-    var otherDenominator;
+    let otherNumerator;
+    let otherDenominator;
 
     if (param1 instanceof Fraction) {
       otherNumerator = param1.numerator;
@@ -126,16 +126,16 @@ export class Fraction {
       }
     }
 
-    var lcm = Fraction.LCM(this.denominator, otherDenominator);
-    var a = lcm / this.denominator;
-    var b = lcm / otherDenominator;
+    const lcm = Fraction.LCM(this.denominator, otherDenominator);
+    const a = lcm / this.denominator;
+    const b = lcm / otherDenominator;
 
-    var u = this.numerator * a - otherNumerator * b;
+    const u = this.numerator * a - otherNumerator * b;
     return this.set(u, lcm);
   }
   multiply(param1, param2) {
-    var otherNumerator;
-    var otherDenominator;
+    let otherNumerator;
+    let otherDenominator;
 
     if (param1 instanceof Fraction) {
       otherNumerator = param1.numerator;
@@ -157,8 +157,8 @@ export class Fraction {
     return this.set(this.numerator * otherNumerator, this.denominator * otherDenominator);
   }
   divide(param1, param2) {
-    var otherNumerator;
-    var otherDenominator;
+    let otherNumerator;
+    let otherDenominator;
 
     if (param1 instanceof Fraction) {
       otherNumerator = param1.numerator;
@@ -182,22 +182,22 @@ export class Fraction {
 
   // Simplifies both sides and checks if they are equal.
   equals(compare) {
-    var a = Fraction.__compareA.copy(compare).simplify();
-    var b = Fraction.__compareB.copy(this).simplify();
+    const a = Fraction.__compareA.copy(compare).simplify();
+    const b = Fraction.__compareB.copy(this).simplify();
 
     return (a.numerator === b.numerator) && (a.denominator === b.denominator);
   }
 
   // Greater than operator.
   greaterThan(compare) {
-    var a = Fraction.__compareB.copy(this);
+    const a = Fraction.__compareB.copy(this);
     a.subtract(compare);
     return (a.numerator > 0);
   }
 
   // Greater than or equals operator.
   greaterThanEquals(compare) {
-    var a = Fraction.__compareB.copy(this);
+    const a = Fraction.__compareB.copy(this);
     a.subtract(compare);
     return (a.numerator >= 0);
   }
@@ -251,9 +251,9 @@ export class Fraction {
 
   // Returns string representation in mixed form
   toMixedString() {
-    var s = '';
-    var q = this.quotient();
-    var f = Fraction.__tmp.copy(this);
+    let s = '';
+    const q = this.quotient();
+    const f = Fraction.__tmp.copy(this);
 
     if (q < 0) {
       f.abs().fraction();
@@ -280,9 +280,9 @@ export class Fraction {
 
   // Parses a fraction string
   parse(str) {
-    var i = str.split('/');
-    var n = parseInt(i[0], 10);
-    var d = (i[1]) ? parseInt(i[1], 10) : 1;
+    const i = str.split('/');
+    const n = parseInt(i[0], 10);
+    const d = (i[1]) ? parseInt(i[1], 10) : 1;
 
     return this.set(n, d);
   }

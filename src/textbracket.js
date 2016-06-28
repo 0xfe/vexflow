@@ -80,9 +80,9 @@ export class TextBracket {
 
   // Draw the octave bracket on the rendering context
   draw() {
-    var ctx = this.context;
+    const ctx = this.context;
 
-    var y = 0;
+    let y = 0;
     switch(this.position) {
       case TextBracket.Positions.TOP:
         y =  this.start.getStave().getYForTopText(this.line);
@@ -93,12 +93,12 @@ export class TextBracket {
     }
 
     // Get the preliminary start and stop coordintates for the bracket
-    var start = { x: this.start.getAbsoluteX(), y: y};
-    var stop = { x: this.stop.getAbsoluteX(), y: y };
+    const start = { x: this.start.getAbsoluteX(), y};
+    const stop = { x: this.stop.getAbsoluteX(), y };
 
     L("Rendering TextBracket: start:", start, "stop:", stop, "y:", y);
 
-    var bracket_height = this.render_options.bracket_height * this.position;
+    const bracket_height = this.render_options.bracket_height * this.position;
 
     ctx.save();
     this.applyStyle(ctx);
@@ -107,11 +107,11 @@ export class TextBracket {
     ctx.fillText(this.text, start.x, start.y);
 
     // Get the width and height for the octave number
-    var main_width = ctx.measureText(this.text).width;
-    var main_height = ctx.measureText("M").width;
+    const main_width = ctx.measureText(this.text).width;
+    const main_height = ctx.measureText("M").width;
 
     // Calculate the y position for the super script
-    var super_y = start.y - (main_height/2.5);
+    const super_y = start.y - (main_height/2.5);
 
     // Draw the superscript
     ctx.setFont(this.font.family, this.font.size / 1.4, this.font.weight);
@@ -119,13 +119,13 @@ export class TextBracket {
 
 
     // Determine width and height of the superscript
-    var superscript_width = ctx.measureText(this.superscript).width;
-    var super_height = ctx.measureText("M").width;
+    const superscript_width = ctx.measureText(this.superscript).width;
+    const super_height = ctx.measureText("M").width;
 
     // Setup initial coordinates for the bracket line
-    var start_x = start.x;
-    var line_y = super_y;
-    var end_x = stop.x + this.stop.getGlyph().head_width;
+    let start_x = start.x;
+    let line_y = super_y;
+    const end_x = stop.x + this.stop.getGlyph().head_width;
 
     // Adjust x and y coordinates based on position
     if (this.position === TextBracket.Positions.TOP) {

@@ -25,11 +25,11 @@ function L() { if (NoteHead.DEBUG) Vex.L("Vex.Flow.NoteHead", arguments); }
 // * `y`: the y coordinate to draw at
 // * `stem_direction`: the direction of the stem
 function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
-  var width = 15 + (Flow.STEM_WIDTH / 2);
+  const width = 15 + (Flow.STEM_WIDTH / 2);
   ctx.save();
   ctx.setLineWidth(Flow.STEM_WIDTH);
 
-  var fill = false;
+  let fill = false;
 
   if (Flow.durationToNumber(duration) > 2) {
     fill = true;
@@ -52,8 +52,8 @@ function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
   }
 
   if (Flow.durationToFraction(duration).equals(0.5)) {
-    var breve_lines = [-3, -1, width + 1, width + 3];
-    for(var i=0; i<breve_lines.length; i++){
+    const breve_lines = [-3, -1, width + 1, width + 3];
+    for(let i=0; i<breve_lines.length; i++){
         ctx.beginPath();
         ctx.moveTo(x + breve_lines[i], y - 10);
         ctx.lineTo(x + breve_lines[i], y + 11);
@@ -148,7 +148,7 @@ export class NoteHead extends Note {
     // If the note has not been preformatted, then get the static x value
     // Otherwise, it's been formatted and we should use it's x value relative
     // to its tick context
-    var x = !this.preFormatted ? this.x : super.getAbsoluteX();
+    const x = !this.preFormatted ? this.x : super.getAbsoluteX();
 
     return x + (this.displaced ? this.width * this.stem_direction : 0);
   }
@@ -158,16 +158,16 @@ export class NoteHead extends Note {
     if (!this.preFormatted) throw new Vex.RERR("UnformattedNote",
         "Can't call getBoundingBox on an unformatted note.");
 
-    var spacing = this.stave.getSpacingBetweenLines();
-    var half_spacing = spacing/2;
-    var min_y = this.y - half_spacing;
+    const spacing = this.stave.getSpacingBetweenLines();
+    const half_spacing = spacing/2;
+    const min_y = this.y - half_spacing;
 
     return new Flow.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
   }
 
   // Apply current style to Canvas `context`
   applyStyle(context) {
-    var style = this.getStyle();
+    const style = this.getStyle();
     if (style.shadowColor) context.setShadowColor(style.shadowColor);
     if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
     if (style.fillStyle) context.setFillStyle(style.fillStyle);
@@ -177,7 +177,7 @@ export class NoteHead extends Note {
 
   // Set notehead to a provided `stave`
   setStave(stave){
-    var line = this.getLine();
+    const line = this.getLine();
 
     this.stave = stave;
     this.setY(stave.getYForNote(line));
@@ -189,8 +189,8 @@ export class NoteHead extends Note {
   preFormat() {
     if (this.preFormatted) return this;
 
-    var glyph = this.getGlyph();
-    var width = glyph.head_width + this.extraLeftPx + this.extraRightPx;
+    const glyph = this.getGlyph();
+    const width = glyph.head_width + this.extraLeftPx + this.extraRightPx;
 
     this.setWidth(width);
     this.setPreFormatted(true);
@@ -202,22 +202,22 @@ export class NoteHead extends Note {
     if (!this.context) throw new Vex.RERR("NoCanvasContext",
         "Can't draw without a canvas context.");
 
-    var ctx = this.context;
-    var head_x = this.getAbsoluteX();
-    var y = this.y;
+    const ctx = this.context;
+    const head_x = this.getAbsoluteX();
+    const y = this.y;
 
     L("Drawing note head '", this.note_type, this.duration, "' at", head_x, y);
 
     // Begin and end positions for head.
-    var stem_direction = this.stem_direction;
-    var glyph_font_scale = this.render_options.glyph_font_scale;
+    const stem_direction = this.stem_direction;
+    const glyph_font_scale = this.render_options.glyph_font_scale;
 
-    var line = this.line;
+    const line = this.line;
 
     // If note above/below the staff, draw the small staff
     if (line <= 0 || line >= 6) {
-      var line_y = y;
-      var floor = Math.floor(line);
+      let line_y = y;
+      const floor = Math.floor(line);
       if (line < 0 && floor - line == -0.5)
         line_y -= 5;
       else if (line > 6 &&  floor - line == -0.5)

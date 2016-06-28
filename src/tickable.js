@@ -80,9 +80,9 @@ export class Tickable {
    * resets the intrinsic tick value to
    */
   resetTuplet(tuplet) {
-    var noteCount, notesOccupied;
+    let noteCount, notesOccupied;
     if(tuplet){
-      var i = this.tupletStack.indexOf(tuplet);
+      const i = this.tupletStack.indexOf(tuplet);
       if(i !== -1){
         this.tupletStack.splice(i, 1);
         noteCount = tuplet.getNoteCount();
@@ -110,8 +110,8 @@ export class Tickable {
     if (tuplet) {
       this.tupletStack.push(tuplet);
 
-      var noteCount = tuplet.getNoteCount();
-      var notesOccupied = tuplet.getNotesOccupied();
+      const noteCount = tuplet.getNoteCount();
+      const notesOccupied = tuplet.getNotesOccupied();
 
       this.applyTickMultiplier(notesOccupied, noteCount);
     }
@@ -167,7 +167,7 @@ export class Tickable {
     this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
   }
   setDuration(duration) {
-    var ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
+    const ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();
   }

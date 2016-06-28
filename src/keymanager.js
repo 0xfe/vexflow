@@ -27,7 +27,7 @@ export class KeyManager {
     this.keyString = this.keyParts.root;
     if (this.keyParts.accidental) this.keyString += this.keyParts.accidental;
 
-    var is_supported_type = Music.scaleTypes[this.keyParts.type];
+    const is_supported_type = Music.scaleTypes[this.keyParts.type];
     if (!is_supported_type)
       throw new Vex.RERR("BadArguments", "Unsupported key type: " + this.key);
 
@@ -39,13 +39,13 @@ export class KeyManager {
     this.scaleMapByValue = {};
     this.originalScaleMapByValue = {};
 
-    var noteLocation = Music.root_indices[this.keyParts.root];
+    const noteLocation = Music.root_indices[this.keyParts.root];
 
-    for (var i = 0; i < Music.roots.length; ++i) {
-      var index = (noteLocation + i) % Music.roots.length;
-      var rootName = Music.roots[index];
+    for (let i = 0; i < Music.roots.length; ++i) {
+      const index = (noteLocation + i) % Music.roots.length;
+      const rootName = Music.roots[index];
 
-      var noteName = this.music.getRelativeNoteName(rootName, this.scale[i]);
+      const noteName = this.music.getRelativeNoteName(rootName, this.scale[i]);
       this.scaleMap[rootName] = noteName;
       this.scaleMapByValue[this.scale[i]] = noteName;
       this.originalScaleMapByValue[this.scale[i]] = noteName;
@@ -55,8 +55,8 @@ export class KeyManager {
   }
 
   getAccidental(key) {
-    var root = this.music.getKeyParts(key).root;
-    var parts = this.music.getNoteParts(this.scaleMap[root]);
+    const root = this.music.getKeyParts(key).root;
+    const parts = this.music.getNoteParts(this.scaleMap[root]);
 
     return {
       note: this.scaleMap[root],
@@ -66,11 +66,11 @@ export class KeyManager {
 
   selectNote(note) {
     note = note.toLowerCase();
-    var parts = this.music.getNoteParts(note);
+    const parts = this.music.getNoteParts(note);
 
     // First look for matching note in our altered scale
-    var scaleNote = this.scaleMap[parts.root];
-    var modparts = this.music.getNoteParts(scaleNote);
+    const scaleNote = this.scaleMap[parts.root];
+    const modparts = this.music.getNoteParts(scaleNote);
 
     if (scaleNote == note) return {
       "note": scaleNote,
@@ -79,7 +79,7 @@ export class KeyManager {
     };
 
     // Then search for a note of equivalent value in our altered scale
-    var valueNote = this.scaleMapByValue[this.music.getNoteValue(note)];
+    const valueNote = this.scaleMapByValue[this.music.getNoteValue(note)];
     if (valueNote != null) {
       return {
         "note": valueNote,
@@ -89,7 +89,7 @@ export class KeyManager {
     }
 
     // Then search for a note of equivalent value in the original scale
-    var originalValueNote = this.originalScaleMapByValue[
+    const originalValueNote = this.originalScaleMapByValue[
       this.music.getNoteValue(note)];
     if (originalValueNote != null) {
       this.scaleMap[modparts.root] = originalValueNote;

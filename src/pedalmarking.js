@@ -18,8 +18,8 @@ function L() { if (PedalMarking.DEBUG) Vex.L("Vex.Flow.PedalMarking", arguments)
 // at the coordinates `x` and `y. Takes into account the glyph data
 // coordinate shifts.
 function drawPedalGlyph(name, context, x, y, point) {
-  var glyph_data = PedalMarking.GLYPHS[name];
-  var glyph = new Glyph(glyph_data.code, point);
+  const glyph_data = PedalMarking.GLYPHS[name];
+  const glyph = new Glyph(glyph_data.code, point);
   glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
 }
 
@@ -52,13 +52,13 @@ export class PedalMarking {
   // Create a sustain pedal marking. Returns the defaults PedalMarking.
   // Which uses the traditional "Ped" and "*"" markings.
   static createSustain(notes) {
-    var pedal = new PedalMarking(notes);
+    const pedal = new PedalMarking(notes);
     return pedal;
   }
 
   // Create a sostenuto pedal marking
   static createSostenuto(notes) {
-    var pedal = new PedalMarking(notes);
+    const pedal = new PedalMarking(notes);
     pedal.setStyle(PedalMarking.Styles.MIXED);
     pedal.setCustomText("Sost. Ped.");
     return pedal;
@@ -66,7 +66,7 @@ export class PedalMarking {
 
   // Create an una corda pedal marking
   static createUnaCorda(notes){
-    var pedal = new PedalMarking(notes);
+    const pedal = new PedalMarking(notes);
     pedal.setStyle(PedalMarking.Styles.TEXT);
     pedal.setCustomText("una corda", "tre corda");
     return pedal;
@@ -124,20 +124,20 @@ export class PedalMarking {
 
   // Draw the bracket based pedal markings
   drawBracketed() {
-    var ctx = this.context;
-    var is_pedal_depressed = false;
-    var prev_x;
-    var prev_y;
-    var pedal = this;
+    const ctx = this.context;
+    let is_pedal_depressed = false;
+    let prev_x;
+    let prev_y;
+    const pedal = this;
 
     // Iterate through each note
-    this.notes.forEach(function(note, index, notes) {
+    this.notes.forEach((note, index, notes) => {
       // Each note triggers the opposite pedal action
       is_pedal_depressed = !is_pedal_depressed;
 
       // Get the initial coordinates for the note
-      var x = note.getAbsoluteX();
-      var y = note.getStave().getYForBottomText(pedal.line + 3);
+      const x = note.getAbsoluteX();
+      const y = note.getStave().getYForBottomText(pedal.line + 3);
 
       // Throw if current note is positioned before the previous note
       if (x < prev_x) throw new Vex.RERR('InvalidConfiguration',
@@ -146,10 +146,10 @@ export class PedalMarking {
       // Determine if the previous or next note are the same
       // as the current note. We need to keep track of this for
       // when adjustments are made for the release+depress action
-      var next_is_same = notes[index+1] === note;
-      var prev_is_same = notes[index-1] === note;
+      const next_is_same = notes[index+1] === note;
+      const prev_is_same = notes[index-1] === note;
 
-      var x_shift = 0;
+      let x_shift = 0;
       if (is_pedal_depressed) {
         // Adjustment for release+depress
         x_shift =  prev_is_same ? 5 : 0;
@@ -158,7 +158,7 @@ export class PedalMarking {
           // For MIXED style, start with text instead of bracket
           if (pedal.custom_depress_text) {
             // If we have custom text, use instead of the default "Ped" glyph
-            var text_width = ctx.measureText(pedal.custom_depress_text).width;
+            const text_width = ctx.measureText(pedal.custom_depress_text).width;
             ctx.fillText(pedal.custom_depress_text, x - (text_width/2), y);
             x_shift = (text_width / 2) + pedal.render_options.text_margin_right;
           } else {
@@ -196,21 +196,21 @@ export class PedalMarking {
   // Draw the text based pedal markings. This defaults to the traditional
   // "Ped" and "*"" symbols if no custom text has been provided.
   drawText() {
-    var ctx = this.context;
-    var is_pedal_depressed = false;
-    var pedal = this;
+    const ctx = this.context;
+    let is_pedal_depressed = false;
+    const pedal = this;
 
     // The glyph point size
-    var point = pedal.render_options.glyph_point_size;
+    const point = pedal.render_options.glyph_point_size;
 
     // Iterate through each note, placing glyphs or custom text accordingly
-    this.notes.forEach(function(note) {
+    this.notes.forEach(note => {
       is_pedal_depressed = !is_pedal_depressed;
-      var stave = note.getStave();
-      var x = note.getAbsoluteX();
-      var y = stave.getYForBottomText(pedal.line + 3);
+      const stave = note.getStave();
+      const x = note.getAbsoluteX();
+      const y = stave.getYForBottomText(pedal.line + 3);
 
-      var text_width = 0;
+      let text_width = 0;
       if (is_pedal_depressed) {
         if (pedal.custom_depress_text) {
           text_width = ctx.measureText(pedal.custom_depress_text).width;
@@ -233,7 +233,7 @@ export class PedalMarking {
   draw() {
     if (!this.context) throw new Vex.RERR("NoContext",
       "Can't draw PedalMarking without a context.");
-    var ctx = this.context;
+    const ctx = this.context;
 
     ctx.save();
     ctx.setStrokeStyle(this.render_options.color);
