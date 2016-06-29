@@ -10,14 +10,14 @@
 // See `tests/accidental_tests.js` for usage examples.
 
 import { Vex } from './vex';
-import { Flow } from './tables';
 import { Fraction } from './fraction';
+import { Flow } from './tables';
 import { Music } from './music';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
-function L() { if (Accidental.DEBUG) Vex.L("Vex.Flow.Accidental", arguments); }
+function L(...args) { if (Accidental.DEBUG) Vex.L('Vex.Flow.Accidental', args); }
 
 // An `Accidental` inherits from `Modifier`, and is formatted within a
 // `ModifierContext`.
@@ -26,80 +26,92 @@ export class Accidental extends Modifier {
 
   // Arrange accidentals inside a ModifierContext.
   static format(accidentals, state) {
-    var left_shift = state.left_shift;
-    var accidental_spacing = 2;
+    const leftShift = state.left_shift;
+    const accidentalSpacing = 2;
 
     // If there are no accidentals, we needn't format their positions
-    if (!accidentals || accidentals.length === 0) return false;
+    if (!accidentals || accidentals.length === 0) return;
 
-    var acc_list = [];
-    var hasStave = false;
-    var prev_note = null;
-    var shiftL = 0;
+    const accList = [];
+    let prevNote = null;
+    let shiftL = 0;
 
     // First determine the accidentals' Y positions from the note.keys
-    var i, acc, props_tmp;
-    for (i = 0; i < accidentals.length; ++i) {
-      acc = accidentals[i];
-      var note = acc.getNote();
-      var stave = note.getStave();
-      var props = note.getKeyProps()[acc.getIndex()];
-      if (note != prev_note) {
+    let propsTemp;
+    for (let i = 0; i < accidentals.length; ++i) {
+      const acc = accidentals[i];
+      const note = acc.getNote();
+      const stave = note.getStave();
+      const props = note.getKeyProps()[acc.getIndex()];
+      if (note !== prevNote) {
          // Iterate through all notes to get the displaced pixels
-         for (var n = 0; n < note.keys.length; ++n) {
-            props_tmp = note.getKeyProps()[n];
-            shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
-          }
-          prev_note = note;
+        for (let n = 0; n < note.keys.length; ++n) {
+          propsTemp = note.getKeyProps()[n];
+          shiftL = propsTemp.displaced ? note.getExtraLeftPx() : shiftL;
+        }
+        prevNote = note;
       }
       if (stave !== null) {
-        hasStave = true;
-        var line_space = stave.options.spacing_between_lines_px;
-        var y = stave.getYForLine(props.line);
-        var acc_line = Math.round(y / line_space * 2)/2;
-        acc_list.push({ y: y, line: acc_line, shift: shiftL, acc: acc, lineSpace: line_space });
+        const lineSpace = stave.options.spacing_between_lines_px;
+        const y = stave.getYForLine(props.line);
+        const accLine = Math.round(y / lineSpace * 2) / 2;
+        accList.push({ y, line: accLine, shift: shiftL, acc, lineSpace });
       } else {
-        acc_list.push({ line: props.line, shift: shiftL, acc: acc });
+        accList.push({ line: props.line, shift: shiftL, acc });
       }
     }
 
     // Sort accidentals by line number.
-    acc_list.sort(function(a, b) { return (b.line - a.line); });
+    accList.sort((a, b) => b.line - a.line);
 
-    // Create an array of unique line numbers (line_list) from acc_list
-    var line_list = []; // an array of unique line numbers
-    var acc_shift = 0; // amount by which all accidentals must be shifted right or left for stem flipping, notehead shifting concerns.
-    var previous_line = null;
+    // FIXME: Confusing name. Each object in this array has a property called `line`.
+    // So if this is a list of lines, you end up with: `line.line` which is very awkward.
+    const lineList = [];
 
-    for(i = 0; i<acc_list.length; i++) {
-      acc = acc_list[i];
+    // amount by which all accidentals must be shifted right or left for
+    // stem flipping, notehead shifting concerns.
+    let accShift = 0;
+    let previousLine = null;
 
-      // if this is the first line, or a new line, add a line_list
-      if( (previous_line === null) || (previous_line != acc.line) ) {
-        line_list.push({line : acc.line, flat_line : true, dbl_sharp_line: true, num_acc : 0, width : 0});
+    // Create an array of unique line numbers (lineList) from accList
+    for (let i = 0; i < accList.length; i++) {
+      const acc = accList[i];
+
+      // if this is the first line, or a new line, add a lineList
+      if (previousLine === null || previousLine !== acc.line) {
+        lineList.push({
+          line: acc.line,
+          flatLine: true,
+          dblSharpLine: true,
+          numAcc: 0,
+          width: 0,
+        });
       }
       // if this accidental is not a flat, the accidental needs 3.0 lines lower
       // clearance instead of 2.5 lines for b or bb.
-      if( (acc.acc.type != "b") && (acc.acc.type !="bb") ) {
-        line_list[line_list.length - 1].flat_line = false;
+      // FIXME: Naming could use work. acc.acc is very awkward
+      if (acc.acc.type !== 'b' && acc.acc.type !== 'bb') {
+        lineList[lineList.length - 1].flatLine = false;
       }
+
       // if this accidental is not a double sharp, the accidental needs 3.0 lines above
-      if( acc.acc.type != "##")
-        line_list[line_list.length - 1].dbl_sharp_line = false;
+      if (acc.acc.type !== '##') {
+        lineList[lineList.length - 1].dblSharpLine = false;
+      }
 
       // Track how many accidentals are on this line:
-      line_list[line_list.length - 1].num_acc++;
+      lineList[lineList.length - 1].numAcc++;
 
       // Track the total x_offset needed for this line which will be needed
       // for formatting lines w/ multiple accidentals:
 
-      //width = accidental width + universal spacing between accidentals
-      line_list[line_list.length - 1].width += acc.acc.getWidth() + accidental_spacing;
+      // width = accidental width + universal spacing between accidentals
+      lineList[lineList.length - 1].width += acc.acc.getWidth() + accidentalSpacing;
 
-      // if this acc_shift is larger, use it to keep first column accidentals in the same line
-      acc_shift = ( (acc.shift > acc_shift) ? acc.shift : acc_shift);
+      // if this accShift is larger, use it to keep first column accidentals in the same line
+      accShift = acc.shift > accShift ? acc.shift : accShift;
 
-      previous_line = acc.line;
+      previousLine = acc.line;
     }
 
     // ### Place Accidentals in Columns
@@ -108,7 +120,7 @@ export class Accidental extends Modifier {
     // but follow exceptions as outlined in G. Read's _Music Notation_ and
     // Elaine Gould's _Behind Bars_.
     //
-    // Additionally, this implements different vertical colission rules for
+    // Additionally, this implements different vertical collision rules for
     // flats (only need 2.5 lines clearance below) and double sharps (only
     // need 2.5 lines of clearance above or below).
     //
@@ -120,103 +132,112 @@ export class Accidental extends Modifier {
     //
     // TODO (?): Allow column to be specified for an accidental at run-time?
 
-    var total_columns = 0;
+    let totalColumns = 0;
 
     // establish the boundaries for a group of notes with clashing accidentals:
-    for(i = 0; i<line_list.length; i++) {
-      var no_further_conflicts = false;
-      var group_start = i;
-      var group_end = i;
+    for (let i = 0; i < lineList.length; i++) {
+      let noFurtherConflicts = false;
+      const groupStart = i;
+      let groupEnd = i;
 
-      group_check_while : while( (group_end+1 < line_list.length) && (!no_further_conflicts) ) {
+      while (groupEnd + 1 < lineList.length && !noFurtherConflicts) {
         // if this note conflicts with the next:
-        if(this.checkCollision(line_list[group_end], line_list[group_end + 1])) {
+        if (this.checkCollision(lineList[groupEnd], lineList[groupEnd + 1])) {
         // include the next note in the group:
-          group_end++;
+          groupEnd++;
+        } else {
+          noFurtherConflicts = true;
         }
-        else no_further_conflicts = true;
       }
 
+      // Gets an a line from the `lineList`, relative to the current group
+      const getGroupLine = (index) => lineList[groupStart + index];
+      const getGroupLines = (indexes) => indexes.map(getGroupLine);
+      const lineDifference = (indexA, indexB) => {
+        const [a, b] = getGroupLines([indexA, indexB]).map(item => item.line);
+        return a - b;
+      };
+
+      const notColliding = (...indexPairs) =>
+        indexPairs
+          .map(getGroupLines)
+          .every(lines => !this.checkCollision(...lines));
+
       // Set columns for the lines in this group:
-      var group_length = group_end - group_start + 1;
+      const groupLength = groupEnd - groupStart + 1;
 
       // Set the accidental column for each line of the group
-      var end_case = (this.checkCollision(line_list[group_start], line_list[group_end])) ? "a" : "b";
+      let endCase = this.checkCollision(lineList[groupStart], lineList[groupEnd]) ? 'a' : 'b';
 
+      switch (groupLength) {
+        case 3:
+          if (endCase === 'a' && lineDifference(1, 2) === 0.5 && lineDifference(0, 1) !== 0.5) {
+            endCase = 'second_on_bottom';
+          }
+          break;
+        case 4:
+          if (notColliding([0, 2], [1, 3])) {
+            endCase = 'spaced_out_tetrachord';
+          }
+          break;
+        case 5:
+          if (endCase === 'b' && notColliding([1, 3])) {
+            endCase = 'spaced_out_pentachord';
+            if (notColliding([0, 2], [2, 4])) {
+              endCase = 'very_spaced_out_pentachord';
+            }
+          }
+          break;
+        case 6:
+          if (notColliding([0, 3], [1, 4], [2, 5])) {
+            endCase = 'spaced_out_hexachord';
+          }
+          if (notColliding([0, 2], [2, 4], [1, 3], [3, 5])) {
+            endCase = 'very_spaced_out_hexachord';
+          }
+          break;
+        default:
+          break;
+      }
 
-        var checkCollision = this.checkCollision;
-        switch(group_length) {
-          case 3:
-            if( (end_case == "a") &&
-                (line_list[group_start+1].line - line_list[group_start+2].line == 0.5) &&
-                (line_list[group_start].line - line_list[group_start + 1].line != 0.5) )
-              end_case = "second_on_bottom";
-              break;
-          case 4:
-            if( (!checkCollision(line_list[group_start], line_list[group_start+2])) &&
-                (!checkCollision(line_list[group_start+1], line_list[group_start+3])) )
-              end_case = "spaced_out_tetrachord";
-              break;
-          case 5:
-            if( (end_case == "b") &&
-                (!checkCollision(line_list[group_start+1], line_list[group_start+3])) )
-              end_case = "spaced_out_pentachord";
-            if( (end_case == "spaced_out_pentachord") &&
-                (!checkCollision(line_list[group_start], line_list[group_start+2])) &&
-                (!checkCollision(line_list[group_start+2], line_list[group_start+4])) )
-              end_case = "very_spaced_out_pentachord";
-              break;
-          case 6:
-            if( (!checkCollision(line_list[group_start], line_list[group_start+3])) &&
-                (!checkCollision(line_list[group_start+1], line_list[group_start+4])) &&
-                (!checkCollision(line_list[group_start+2], line_list[group_start+5])) )
-              end_case = "spaced_out_hexachord";
-            if( (!checkCollision(line_list[group_start], line_list[group_start+2])) &&
-                (!checkCollision(line_list[group_start+2], line_list[group_start+4])) &&
-                (!checkCollision(line_list[group_start+1], line_list[group_start+3])) &&
-                (!checkCollision(line_list[group_start+3], line_list[group_start+5])) )
-              end_case = "very_spaced_out_hexachord";
-              break;
-        }
-
-      var group_member;
-      var column;
+      let groupMember;
+      let column;
       // If the group contains more than seven members, use ascending parallel lines
       // of accidentals, using as few columns as possible while avoiding collisions.
-      if (group_length>=7) {
+      if (groupLength >= 7) {
         // First, determine how many columns to use:
-        var pattern_length = 2;
-        var colission_detected = true;
-        while(colission_detected === true) {
-          colission_detected = false;
-          colission_detecter : for(var line = 0; line + pattern_length < line_list.length; line++) {
-            if(this.checkCollision(line_list[line], line_list[line+pattern_length])) {
-              colission_detected = true;
-              pattern_length++;
-              break colission_detecter;
+        let patternLength = 2;
+        let collisionDetected = true;
+        while (collisionDetected === true) {
+          collisionDetected = false;
+          for (let line = 0; line + patternLength < lineList.length; line++) {
+            if (this.checkCollision(lineList[line], lineList[line + patternLength])) {
+              collisionDetected = true;
+              patternLength++;
+              break;
             }
           }
         }
         // Then, assign a column to each line of accidentals
-        for(group_member = i; group_member <= group_end; group_member++) {
-          column = ((group_member-i) % pattern_length) + 1;
-          line_list[group_member].column = column;
-          total_columns = (total_columns > column) ? total_columns : column;
+        for (groupMember = i; groupMember <= groupEnd; groupMember++) {
+          column = ((groupMember - i) % patternLength) + 1;
+          lineList[groupMember].column = column;
+          totalColumns = (totalColumns > column) ? totalColumns : column;
         }
 
       // Otherwise, if the group contains fewer than seven members, use the layouts from
       // the accidentalsColumnsTable housed in tables.js.
       } else {
-        for(group_member = i; group_member <= group_end; group_member++) {
-          column = Flow.accidentalColumnsTable[group_length][end_case][group_member-i];
-          line_list[group_member].column = column;
-          total_columns = (total_columns > column) ? total_columns : column;
+        for (groupMember = i; groupMember <= groupEnd; groupMember++) {
+          column = Flow.accidentalColumnsTable[groupLength][endCase][groupMember - i];
+          lineList[groupMember].column = column;
+          totalColumns = (totalColumns > column) ? totalColumns : column;
         }
       }
 
       // Increment i to the last note that was set, so that if a lower set of notes
       // does not conflict at all with this group, it can have its own classic shape.
-      i = group_end;
+      i = groupEnd;
     }
 
     // ### Convert Columns to x_offsets
@@ -232,78 +253,78 @@ export class Accidental extends Modifier {
     // parallel columns.
 
     // track each column's max width, which will be used as initial shift of later columns:
-    var column_widths = [];
-    var column_x_offsets = [];
-    for(i=0; i<=total_columns; i++) {
-      column_widths[i] = 0;
-      column_x_offsets[i] = 0;
+    const columnWidths = [];
+    const columnXOffsets = [];
+    for (let i = 0; i <= totalColumns; i++) {
+      columnWidths[i] = 0;
+      columnXOffsets[i] = 0;
     }
 
-    column_widths[0] = acc_shift + left_shift;
-    column_x_offsets[0] = acc_shift + left_shift;
+    columnWidths[0] = accShift + leftShift;
+    columnXOffsets[0] = accShift + leftShift;
 
-    // Fill column_widths with widest needed x-space;
+    // Fill columnWidths with widest needed x-space;
     // this is what keeps the columns parallel.
-    line_list.forEach(function(line) {
-      if(line.width > column_widths[line.column]) column_widths[line.column] = line.width;
+    lineList.forEach(line => {
+      if (line.width > columnWidths[line.column]) columnWidths[line.column] = line.width;
     });
 
-    for(i=1; i<column_widths.length; i++) {
+    for (let i = 1; i < columnWidths.length; i++) {
       // this column's offset = this column's width + previous column's offset
-      column_x_offsets[i] = column_widths[i] + column_x_offsets[i-1];
+      columnXOffsets[i] = columnWidths[i] + columnXOffsets[i - 1];
     }
 
-    var total_shift = column_x_offsets[column_x_offsets.length-1];
-    // Set the x_shift for each accidental according to column offsets:
-    var acc_count = 0;
-    line_list.forEach(function(line) {
-      var line_width = 0;
-      var last_acc_on_line = acc_count + line.num_acc;
+    const totalShift = columnXOffsets[columnXOffsets.length - 1];
+    // Set the xShift for each accidental according to column offsets:
+    let accCount = 0;
+    lineList.forEach(line => {
+      let lineWidth = 0;
+      const lastAccOnLine = accCount + line.numAcc;
       // handle all of the accidentals on a given line:
-      for(acc_count; acc_count<last_acc_on_line; acc_count++) {
-        var x_shift = (column_x_offsets[line.column-1] + line_width);
-        acc_list[acc_count].acc.setXShift(x_shift);
+      for (accCount; accCount < lastAccOnLine; accCount++) {
+        const xShift = (columnXOffsets[line.column - 1] + lineWidth);
+        accList[accCount].acc.setXShift(xShift);
         // keep track of the width of accidentals we've added so far, so that when
         // we loop, we add space for them.
-        line_width += acc_list[acc_count].acc.getWidth() + accidental_spacing;
-        L("Line, acc_count, shift: ", line.line, acc_count, x_shift);
+        lineWidth += accList[accCount].acc.getWidth() + accidentalSpacing;
+        L('Line, accCount, shift: ', line.line, accCount, xShift);
       }
     });
 
     // update the overall layout with the full width of the accidental shapes:
-    state.left_shift += total_shift;
+    state.left_shift += totalShift;
   }
 
   // Helper function to determine whether two lines of accidentals collide vertically
-  static checkCollision(line_1, line_2) {
-    var clearance = line_2.line - line_1.line;
-    var clearance_required = 3;
+  static checkCollision(line1, line2) {
+    let clearance = line2.line - line1.line;
+    let clearanceRequired = 3;
     // But less clearance is required for certain accidentals: b, bb and ##.
-    if(clearance>0) { // then line 2 is on top
-      clearance_required = (line_2.flat_line || line_2.dbl_sharp_line) ? 2.5 : 3.0;
-      if(line_1.dbl_sharp_line) clearance -= 0.5;
+    if (clearance > 0) { // then line 2 is on top
+      clearanceRequired = (line2.flatLine || line2.dblSharpLine) ? 2.5 : 3.0;
+      if (line1.dblSharpLine) clearance -= 0.5;
     } else { // line 1 is on top
-      clearance_required = (line_1.flat_line || line_1.dbl_sharp_line) ? 2.5 : 3.0;
-      if(line_2.dbl_sharp_line) clearance -= 0.5;
+      clearanceRequired = (line1.flatLine || line1.dblSharpLine) ? 2.5 : 3.0;
+      if (line2.dblSharpLine) clearance -= 0.5;
     }
-    var colission = (Math.abs(clearance) < clearance_required);
-    L("Line_1, Line_2, Collision: ", line_1.line, line_2.line, colission);
-    return(colission);
+    const collision = Math.abs(clearance) < clearanceRequired;
+    L('Line_1, Line_2, Collision: ', line1.line, line2.line, collision);
+    return collision;
   }
 
   // Use this method to automatically apply accidentals to a set of `voices`.
   // The accidentals will be remembered between all the voices provided.
   // Optionally, you can also provide an initial `keySignature`.
   static applyAccidentals(voices, keySignature) {
-    var tickPositions = [];
-    var tickNoteMap = {};
+    const tickPositions = [];
+    const tickNoteMap = {};
 
     // Sort the tickables in each voice by their tick position in the voice
-    voices.forEach(function(voice) {
-      var tickPosition = new Flow.Fraction(0, 1);
-      var notes = voice.getTickables();
-      notes.forEach(function(note) {
-        var notesAtPosition = tickNoteMap[tickPosition.value()];
+    voices.forEach(voice => {
+      const tickPosition = new Fraction(0, 1);
+      const notes = voice.getTickables();
+      notes.forEach(note => {
+        const notesAtPosition = tickNoteMap[tickPosition.value()];
 
         if (!notesAtPosition) {
           tickPositions.push(tickPosition.value());
@@ -316,57 +337,57 @@ export class Accidental extends Modifier {
       });
     });
 
-    var music = new Music();
+    const music = new Music();
 
     // Default key signature is C major
-    if (!keySignature) keySignature = "C";
+    if (!keySignature) keySignature = 'C';
 
     // Get the scale map, which represents the current state of each pitch
-    var scaleMap = music.createScaleMap(keySignature);
+    const scaleMap = music.createScaleMap(keySignature);
 
-    tickPositions.forEach(function(tick) {
-      var notes = tickNoteMap[tick];
+    tickPositions.forEach(tick => {
+      const notes = tickNoteMap[tick];
 
       // Array to store all pitches that modified accidental states
       // at this tick position
-      var modifiedPitches = [];
+      const modifiedPitches = [];
 
-      notes.forEach(function(note) {
-          if (note.isRest()) return;
+      notes.forEach(note => {
+        if (note.isRest()) return;
 
-          // Go through each key and determine if an accidental should be
-          // applied
-          note.keys.forEach(function(keyString, keyIndex) {
-              var key = music.getNoteParts(keyString.split('/')[0]);
+        // Go through each key and determine if an accidental should be
+        // applied
+        note.keys.forEach((keyString, keyIndex) => {
+          const key = music.getNoteParts(keyString.split('/')[0]);
 
-              // Force a natural for every key without an accidental
-              var accidentalString = key.accidental || "n";
-              var pitch = key.root + accidentalString;
+          // Force a natural for every key without an accidental
+          const accidentalString = key.accidental || 'n';
+          const pitch = key.root + accidentalString;
 
-              // Determine if the current pitch has the same accidental
-              // as the scale state
-              var sameAccidental = scaleMap[key.root] === pitch;
+          // Determine if the current pitch has the same accidental
+          // as the scale state
+          const sameAccidental = scaleMap[key.root] === pitch;
 
-              // Determine if an identical pitch in the chord already
-              // modified the accidental state
-              var previouslyModified = modifiedPitches.indexOf(pitch) > -1;
+          // Determine if an identical pitch in the chord already
+          // modified the accidental state
+          const previouslyModified = modifiedPitches.indexOf(pitch) > -1;
 
-              // Add the accidental to the StaveNote
-              if (!sameAccidental || (sameAccidental && previouslyModified)) {
-                  // Modify the scale map so that the root pitch has an
-                  // updated state
-                  scaleMap[key.root] = pitch;
+            // Add the accidental to the StaveNote
+          if (!sameAccidental || (sameAccidental && previouslyModified)) {
+            // Modify the scale map so that the root pitch has an
+            // updated state
+            scaleMap[key.root] = pitch;
 
-                  // Create the accidental
-                  var accidental = new Accidental(accidentalString);
+            // Create the accidental
+            const accidental = new Accidental(accidentalString);
 
-                  // Attach the accidental to the StaveNote
-                  note.addAccidental(keyIndex, accidental);
+            // Attach the accidental to the StaveNote
+            note.addAccidental(keyIndex, accidental);
 
-                  // Add the pitch to list of pitches that modified accidentals
-                  modifiedPitches.push(pitch);
-              }
-          });
+            // Add the pitch to list of pitches that modified accidentals
+            modifiedPitches.push(pitch);
+          }
+        });
       });
     });
   }
@@ -376,7 +397,7 @@ export class Accidental extends Modifier {
   // example: `#`, `##`, `b`, `n`, etc.
   constructor(type = null) {
     super();
-    L("New accidental: ", type);
+    L('New accidental: ', type);
 
     this.note = null;
     // The `index` points to a specific note in a chord.
@@ -389,16 +410,18 @@ export class Accidental extends Modifier {
       font_scale: 38,
 
       // Length of stroke across heads above or below the stave.
-      stroke_px: 3
+      stroke_px: 3,
     };
 
     this.accidental = Flow.accidentalCodes(this.type);
-    if (!this.accidental) throw new Vex.RERR("ArgumentError", "Unknown accidental type: " + type);
+    if (!this.accidental) {
+      throw new Vex.RERR('ArgumentError', `Unknown accidental type: ${type}`);
+    }
 
     // Cautionary accidentals have parentheses around them
     this.cautionary = false;
-    this.paren_left = null;
-    this.paren_right = null;
+    this.parenLeft = null;
+    this.parenRight = null;
 
     // Initial width is set from table.
     this.setWidth(this.accidental.width);
@@ -407,8 +430,11 @@ export class Accidental extends Modifier {
   getCategory() { return Accidental.CATEGORY; }
 
   // Attach this accidental to `note`, which must be a `StaveNote`.
-  setNote(note){
-    if (!note) throw new Vex.RERR("ArgumentError", "Bad note value: " + note);
+  setNote(note) {
+    if (!note) {
+      throw new Vex.RERR('ArgumentError', `Bad note value: ${note}`);
+    }
+
     this.note = note;
 
     // Accidentals attached to grace notes are rendered smaller.
@@ -422,44 +448,59 @@ export class Accidental extends Modifier {
   setAsCautionary() {
     this.cautionary = true;
     this.render_options.font_scale = 28;
-    this.paren_left = Flow.accidentalCodes("{");
-    this.paren_right = Flow.accidentalCodes("}");
-    var width_adjust = (this.type == "##" || this.type == "bb") ? 6 : 4;
+    this.parenLeft = Flow.accidentalCodes('{');
+    this.parenRight = Flow.accidentalCodes('}');
+    const widthAdjust = (this.type === '##' || this.type === 'bb') ? 6 : 4;
 
     // Make sure `width` accomodates for parentheses.
-    this.setWidth(this.paren_left.width + this.accidental.width + this.paren_right.width - width_adjust);
+    this.setWidth(
+      this.parenLeft.width
+      + this.accidental.width
+      + this.parenRight.width
+      - widthAdjust
+    );
+
     return this;
   }
 
   // Render accidental onto canvas.
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
-      "Can't draw accidental without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
-      "Can't draw accidental without a note and index.");
+    const {
+      context,
+      type, position, note, index, cautionary,
+      x_shift, y_shift, width,
+      accidental, parenLeft, parenRight,
+      render_options: { font_scale },
+    } = this;
 
-    // Figure out the start `x` and `y` coordinates for this note and index.
-    var start = this.note.getModifierStartXY(this.position, this.index);
-    var acc_x = ((start.x + this.x_shift) - this.width);
-    var acc_y = start.y + this.y_shift;
-    L("Rendering: ", this.type, acc_x, acc_y);
+    if (!context) {
+      throw new Vex.RERR('NoContext', "Can't draw accidental without a context.");
+    }
 
-    if (!this.cautionary) {
+    if (!(note && (index != null))) {
+      throw new Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
+    }
+
+    // Figure out the start `x` and `y` coordinates for note and index.
+    const start = note.getModifierStartXY(position, index);
+    let accX = ((start.x + x_shift) - width);
+    const accY = start.y + y_shift;
+    L('Rendering: ', type, accX, accY);
+
+    const renderGlyphToContext = Glyph.renderGlyph.bind(null, context);
+
+    if (!cautionary) {
       // Render the accidental alone.
-      Glyph.renderGlyph(this.context, acc_x, acc_y,
-                           this.render_options.font_scale, this.accidental.code);
+      renderGlyphToContext(accX, accY, font_scale, accidental.code);
     } else {
       // Render the accidental in parentheses.
-      acc_x += 3;
-      Glyph.renderGlyph(this.context, acc_x, acc_y,
-                           this.render_options.font_scale, this.paren_left.code);
-      acc_x += 2;
-      Glyph.renderGlyph(this.context, acc_x, acc_y,
-                           this.render_options.font_scale, this.accidental.code);
-      acc_x += this.accidental.width - 2;
-      if (this.type == "##" || this.type == "bb") acc_x -= 2;
-      Glyph.renderGlyph(this.context, acc_x, acc_y,
-                           this.render_options.font_scale, this.paren_right.code);
+      accX += 3;
+      renderGlyphToContext(accX, accY, font_scale, parenLeft.code);
+      accX += 2;
+      renderGlyphToContext(accX, accY, font_scale, accidental.code);
+      accX += accidental.width - 2;
+      if (type === '##' || type === 'bb') accX -= 2;
+      renderGlyphToContext(accX, accY, font_scale, parenRight.code);
     }
   }
 }

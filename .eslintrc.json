@@ -1,0 +1,19 @@
+{
+  "extends": "airbnb-base",
+  "root": true,
+  "rules": {
+    "max-len": [2, 100],
+    "camelcase": [0],
+    "no-case-declarations": [2],
+    "no-confusing-arrow": [0],
+    "new-cap": [0],
+    "no-else-return": [0],
+    "no-multi-spaces": [0],
+    "no-param-reassign": [0],
+    "no-shadow": [0],
+    "no-use-before-define": [0],
+    "prefer-template": [0],
+    "space-before-function-paren": [2, "never"],
+    "strict": [2, "global"]
+  }
+}
