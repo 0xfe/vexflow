@@ -14,7 +14,7 @@
       2,
       "DebuggerStatement",
       "LabeledStatement",
-      "WithStatement",
+      "WithStatement"
     ],
     "no-shadow": [0],
     "no-use-before-define": [0],
