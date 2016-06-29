@@ -35,8 +35,9 @@ Vex.RERR = Vex.RuntimeError;
 // Merge `destination` hash with `source` hash, overwriting like keys
 // in `source` if necessary.
 Vex.Merge = (destination, source) => {
-  for (const property in source)
+  for (const property in source) { // eslint-disable-line guard-for-in
     destination[property] = source[property];
+  }
   return destination;
 };
 
@@ -96,13 +97,15 @@ Vex.Contains = (a, obj) => {
 
 // Get the 2D Canvas context from DOM element `canvas_sel`.
 Vex.getCanvasContext = canvas_sel => {
-  if (!canvas_sel)
+  if (!canvas_sel) {
     throw new Vex.RERR('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
+  }
 
   const canvas = document.getElementById(canvas_sel);
   if (!(canvas && canvas.getContext)) {
-    throw new Vex.RERR('UnsupportedBrowserError',
-        'This browser does not support HTML5 Canvas');
+    throw new Vex.RERR(
+      'UnsupportedBrowserError', 'This browser does not support HTML5 Canvas'
+    );
   }
 
   return canvas.getContext('2d');
@@ -163,8 +166,8 @@ Vex.StackTrace = () => {
 };
 
 // Dump warning to console.
-Vex.W = function() {
-  const line = Array.prototype.slice.call(arguments).join(' ');
+Vex.W = function(...args) {
+  const line = Array.prototype.slice.call(args).join(' ');
   window.console.log('Warning: ', line, Vex.StackTrace());
 };
 
