@@ -1,10 +1,9 @@
 /**
- * VexFlow 1.2.50 built on 2016-06-20.
+ * VexFlow 1.2.51 built on 2016-06-29.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
  */
-
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -264,6 +263,54 @@
     }
 
     return call && (typeof call === "object" || typeof call === "function") ? call : self;
+  };
+
+  var slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  var toConsumableArray = function (arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
   };
 
   var Fraction = function () {
@@ -7403,7 +7450,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
   function L$2() {
-    if (StaveNote.DEBUG) Vex$1.L("Vex.Flow.StaveNote", arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (StaveNote.DEBUG) Vex$1.L('Vex.Flow.StaveNote', args);
   }
 
   // Helper methods for rest positioning in ModifierContext.
@@ -7411,18 +7462,18 @@
     var delta = (note.isrest ? 0.0 : 1.0) * dir;
 
     rest.line += delta;
-    rest.max_line += delta;
-    rest.min_line += delta;
+    rest.maxLine += delta;
+    rest.minLine += delta;
     rest.note.setKeyLine(0, rest.note.getKeyLine(0) + delta);
   }
 
   // Called from formatNotes :: center a rest between two notes
   function centerRest(rest, noteU, noteL) {
-    var delta = rest.line - Vex$1.MidLine(noteU.min_line, noteL.max_line);
+    var delta = rest.line - Vex$1.MidLine(noteU.minLine, noteL.maxLine);
     rest.note.setKeyLine(0, rest.note.getKeyLine(0) - delta);
     rest.line -= delta;
-    rest.max_line -= delta;
-    rest.min_line -= delta;
+    rest.maxLine -= delta;
+    rest.minLine -= delta;
   }
 
   var StaveNote = function (_StemmableNote) {
@@ -7439,66 +7490,70 @@
 
         if (notes[0].getStave() != null) return StaveNote.formatByY(notes, state);
 
-        var notes_list = [];
+        var notesList = [];
 
         for (var i = 0; i < notes.length; i++) {
           var props = notes[i].getKeyProps();
           var line = props[0].line;
           var minL = props[props.length - 1].line;
-          var stem_dir = notes[i].getStemDirection();
-          var stem_max = notes[i].getStemLength() / 10;
-          var stem_min = notes[i].getStemMinumumLength() / 10;
+          var stemDirection = notes[i].getStemDirection();
+          var stemMax = notes[i].getStemLength() / 10;
+          var stemMin = notes[i].getStemMinumumLength() / 10;
 
-          var maxL;
+          var maxL = void 0;
           if (notes[i].isRest()) {
             maxL = line + notes[i].glyph.line_above;
             minL = line - notes[i].glyph.line_below;
           } else {
-            maxL = stem_dir == 1 ? props[props.length - 1].line + stem_max : props[props.length - 1].line;
-            minL = stem_dir == 1 ? props[0].line : props[0].line - stem_max;
+            maxL = stemDirection === 1 ? props[props.length - 1].line + stemMax : props[props.length - 1].line;
+
+            minL = stemDirection === 1 ? props[0].line : props[0].line - stemMax;
           }
-          notes_list.push({ line: props[0].line, // note/rest base line
-            max_line: maxL, // note/rest upper bounds line
-            min_line: minL, // note/rest lower bounds line
+
+          notesList.push({
+            line: props[0].line, // note/rest base line
+            maxLine: maxL, // note/rest upper bounds line
+            minLine: minL, // note/rest lower bounds line
             isrest: notes[i].isRest(),
-            stem_dir: stem_dir,
-            stem_max: stem_max, // Maximum (default) note stem length;
-            stem_min: stem_min, // minimum note stem length
+            stemDirection: stemDirection,
+            stemMax: stemMax, // Maximum (default) note stem length;
+            stemMin: stemMin, // minimum note stem length
             voice_shift: notes[i].getVoiceShiftWidth(),
             is_displaced: notes[i].isDisplaced(), // note manually displaced
-            note: notes[i] });
+            note: notes[i]
+          });
         }
 
-        var voices = notes_list.length;
+        var voices = notesList.length;
 
-        var noteU = notes_list[0];
-        var noteM = voices > 2 ? notes_list[1] : null;
-        var noteL = voices > 2 ? notes_list[2] : notes_list[1];
+        var noteU = notesList[0];
+        var noteM = voices > 2 ? notesList[1] : null;
+        var noteL = voices > 2 ? notesList[2] : notesList[1];
 
         // for two voice backward compatibility, ensure upper voice is stems up
         // for three voices, the voices must be in order (upper, middle, lower)
-        if (voices == 2 && noteU.stem_dir == -1 && noteL.stem_dir == 1) {
-          noteU = notes_list[1];
-          noteL = notes_list[0];
+        if (voices === 2 && noteU.stemDirection === -1 && noteL.stemDirection === 1) {
+          noteU = notesList[1];
+          noteL = notesList[0];
         }
 
-        var voice_x_shift = Math.max(noteU.voice_shift, noteL.voice_shift);
-        var x_shift = 0;
-        var stem_delta;
+        var voiceXShift = Math.max(noteU.voice_shift, noteL.voice_shift);
+        var xShift = 0;
+        var stemDelta = void 0;
 
         // Test for two voice note intersection
-        if (voices == 2) {
-          var line_spacing = noteU.stem_dir == noteL.stem_dir ? 0.0 : 0.5;
+        if (voices === 2) {
+          var lineSpacing = noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
           // if top voice is a middle voice, check stem intersection with lower voice
-          if (noteU.stem_dir == noteL.stem_dir && noteU.min_line <= noteL.max_line) {
+          if (noteU.stemDirection === noteL.stemDirection && noteU.minLine <= noteL.maxLine) {
             if (!noteU.isrest) {
-              stem_delta = Math.abs(noteU.line - (noteL.max_line + 0.5));
-              stem_delta = Math.max(stem_delta, noteU.stem_min);
-              noteU.min_line = noteU.line - stem_delta;
-              noteU.note.setStemLength(stem_delta * 10);
+              stemDelta = Math.abs(noteU.line - (noteL.maxLine + 0.5));
+              stemDelta = Math.max(stemDelta, noteU.stemMin);
+              noteU.minLine = noteU.line - stemDelta;
+              noteU.note.setStemLength(stemDelta * 10);
             }
           }
-          if (noteU.min_line <= noteL.max_line + line_spacing) {
+          if (noteU.minLine <= noteL.maxLine + lineSpacing) {
             if (noteU.isrest) {
               // shift rest up
               shiftRestVertical(noteU, noteL, 1);
@@ -7506,12 +7561,14 @@
               // shift rest down
               shiftRestVertical(noteL, noteU, -1);
             } else {
-              x_shift = voice_x_shift;
-              if (noteU.stem_dir == noteL.stem_dir)
+              xShift = voiceXShift;
+              if (noteU.stemDirection === noteL.stemDirection) {
                 // upper voice is middle voice, so shift it right
-                noteU.note.setXShift(x_shift + 3);else
+                noteU.note.setXShift(xShift + 3);
+              } else {
                 // shift lower voice right
-                noteL.note.setXShift(x_shift);
+                noteL.note.setXShift(xShift);
+              }
             }
           }
 
@@ -7520,12 +7577,12 @@
         }
 
         // Check middle voice stem intersection with lower voice
-        if (noteM != null && noteM.min_line < noteL.max_line + 0.5) {
+        if (noteM !== null && noteM.minLine < noteL.maxLine + 0.5) {
           if (!noteM.isrest) {
-            stem_delta = Math.abs(noteM.line - (noteL.max_line + 0.5));
-            stem_delta = Math.max(stem_delta, noteM.stem_min);
-            noteM.min_line = noteM.line - stem_delta;
-            noteM.note.setStemLength(stem_delta * 10);
+            stemDelta = Math.abs(noteM.line - (noteL.maxLine + 0.5));
+            stemDelta = Math.max(stemDelta, noteM.stemMin);
+            noteM.minLine = noteM.line - stemDelta;
+            noteM.note.setStemLength(stemDelta * 10);
           }
         }
 
@@ -7534,14 +7591,15 @@
         // Special case 1 :: middle voice rest between two notes
         //
         if (noteM.isrest && !noteU.isrest && !noteL.isrest) {
-          if (noteU.min_line <= noteM.max_line || noteM.min_line <= noteL.max_line) {
-            var rest_height = noteM.max_line - noteM.min_line;
-            var space = noteU.min_line - noteL.max_line;
-            if (rest_height < space)
+          if (noteU.minLine <= noteM.maxLine || noteM.minLine <= noteL.maxLine) {
+            var restHeight = noteM.maxLine - noteM.minLine;
+            var space = noteU.minLine - noteL.maxLine;
+            if (restHeight < space) {
               // center middle voice rest between the upper and lower voices
-              centerRest(noteM, noteU, noteL);else {
-              x_shift = voice_x_shift + 3; // shift middle rest right
-              noteM.note.setXShift(x_shift);
+              centerRest(noteM, noteU, noteL);
+            } else {
+              xShift = voiceXShift + 3; // shift middle rest right
+              noteM.note.setXShift(xShift);
             }
             // format complete
             return true;
@@ -7559,23 +7617,27 @@
         }
 
         // Test if any other rests can be repositioned
-        if (noteM.isrest && noteU.isrest && noteM.min_line <= noteL.max_line)
+        if (noteM.isrest && noteU.isrest && noteM.minLine <= noteL.maxLine) {
           // Shift middle voice rest up
           shiftRestVertical(noteM, noteL, 1);
-        if (noteM.isrest && noteL.isrest && noteU.min_line <= noteM.max_line)
+        }
+        if (noteM.isrest && noteL.isrest && noteU.minLine <= noteM.maxLine) {
           // Shift middle voice rest down
           shiftRestVertical(noteM, noteU, -1);
-        if (noteU.isrest && noteU.min_line <= noteM.max_line)
+        }
+        if (noteU.isrest && noteU.minLine <= noteM.maxLine) {
           // shift upper voice rest up;
           shiftRestVertical(noteU, noteM, 1);
-        if (noteL.isrest && noteM.min_line <= noteL.max_line)
+        }
+        if (noteL.isrest && noteM.minLine <= noteL.maxLine) {
           // shift lower voice rest down
           shiftRestVertical(noteL, noteM, -1);
+        }
 
         // If middle voice intersects upper or lower voice
-        if (!noteU.isrest && !noteM.isrest && noteU.min_line <= noteM.max_line + 0.5 || !noteM.isrest && !noteL.isrest && noteM.min_line <= noteL.max_line) {
-          x_shift = voice_x_shift + 3; // shift middle note right
-          noteM.note.setXShift(x_shift);
+        if (!noteU.isrest && !noteM.isrest && noteU.minLine <= noteM.maxLine + 0.5 || !noteM.isrest && !noteL.isrest && noteM.minLine <= noteL.maxLine) {
+          xShift = voiceXShift + 3; // shift middle note right
+          noteM.note.setXShift(xShift);
         }
 
         return true;
@@ -7584,41 +7646,42 @@
       key: 'formatByY',
       value: function formatByY(notes, state) {
         // NOTE: this function does not support more than two voices per stave
-        //       use with care.
+        // use with care.
         var hasStave = true;
-        var i;
 
-        for (i = 0; i < notes.length; i++) {
+        for (var i = 0; i < notes.length; i++) {
           hasStave = hasStave && notes[i].getStave() != null;
         }
 
-        if (!hasStave) throw new Vex$1.RERR("Stave Missing", "All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!");
+        if (!hasStave) {
+          throw new Vex$1.RERR('Stave Missing', 'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!');
+        }
 
-        var x_shift = 0;
+        var xShift = 0;
 
-        for (i = 0; i < notes.length - 1; i++) {
-          var top_note = notes[i];
-          var bottom_note = notes[i + 1];
+        for (var _i = 0; _i < notes.length - 1; _i++) {
+          var topNote = notes[_i];
+          var bottomNote = notes[_i + 1];
 
-          if (top_note.getStemDirection() == StaveNote.STEM_DOWN) {
-            top_note = notes[i + 1];
-            bottom_note = notes[i];
+          if (topNote.getStemDirection() === Stem.DOWN) {
+            topNote = notes[_i + 1];
+            bottomNote = notes[_i];
           }
 
-          var top_keys = top_note.getKeyProps();
-          var bottom_keys = bottom_note.getKeyProps();
+          var topKeys = topNote.getKeyProps();
+          var bottomKeys = bottomNote.getKeyProps();
 
-          var topY = top_note.getStave().getYForLine(top_keys[0].line);
-          var bottomY = bottom_note.getStave().getYForLine(bottom_keys[bottom_keys.length - 1].line);
+          var topY = topNote.getStave().getYForLine(topKeys[0].line);
+          var bottomY = bottomNote.getStave().getYForLine(bottomKeys[bottomKeys.length - 1].line);
 
-          var line_space = top_note.getStave().options.spacing_between_lines_px;
-          if (Math.abs(topY - bottomY) == line_space / 2) {
-            x_shift = top_note.getVoiceShiftWidth();
-            bottom_note.setXShift(x_shift);
+          var lineSpace = topNote.getStave().options.spacing_between_lines_px;
+          if (Math.abs(topY - bottomY) === lineSpace / 2) {
+            xShift = topNote.getVoiceShiftWidth();
+            bottomNote.setXShift(xShift);
           }
         }
 
-        state.right_shift += x_shift;
+        state.right_shift += xShift;
       }
     }, {
       key: 'postFormat',
@@ -7626,7 +7689,7 @@
         if (!notes) return false;
 
         notes.forEach(function (note) {
-          note.postFormat();
+          return note.postFormat();
         });
 
         return true;
@@ -7636,9 +7699,6 @@
       get: function get() {
         return 'stavenotes';
       }
-
-      // Stem directions
-
     }, {
       key: 'STEM_UP',
       get: function get() {
@@ -7651,20 +7711,21 @@
       }
     }]);
 
-    function StaveNote(note_struct) {
+    function StaveNote(noteStruct) {
       classCallCheck(this, StaveNote);
 
-      var _this = possibleConstructorReturn(this, Object.getPrototypeOf(StaveNote).call(this, note_struct));
+      var _this = possibleConstructorReturn(this, Object.getPrototypeOf(StaveNote).call(this, noteStruct));
 
-      _this.keys = note_struct.keys;
-      _this.clef = note_struct.clef;
-      _this.octave_shift = note_struct.octave_shift;
+      _this.keys = noteStruct.keys;
+      _this.clef = noteStruct.clef;
+      _this.octave_shift = noteStruct.octave_shift;
       _this.beam = null;
 
       // Pull note rendering properties
       _this.glyph = Flow.durationToGlyph(_this.duration, _this.noteType);
+
       if (!_this.glyph) {
-        throw new Vex$1.RuntimeError("BadArguments", "Invalid note initialization data (No glyph found): " + JSON.stringify(note_struct));
+        throw new Vex$1.RuntimeError('BadArguments', 'Invalid note initialization data (No glyph found): ' + JSON.stringify(noteStruct));
       }
 
       // if true, displace note to right
@@ -7691,10 +7752,10 @@
       _this.buildStem();
 
       // Set the stem direction
-      if (note_struct.auto_stem) {
+      if (noteStruct.auto_stem) {
         _this.autoStem();
       } else {
-        _this.setStemDirection(note_struct.stem_direction);
+        _this.setStemDirection(noteStruct.stem_direction);
       }
 
       _this.buildNoteHeads();
@@ -7716,15 +7777,8 @@
       key: 'buildStem',
       value: function buildStem() {
         var glyph = this.getGlyph();
-
-        var y_extend = 0;
-        if (glyph.code_head == "v95" || glyph.code_head == "v3e") {
-          y_extend = -4;
-        }
-
-        var stem = new Stem({
-          y_extend: y_extend
-        });
+        var yExtend = glyph.code_head === 'v95' || glyph.code_head === 'v3e' ? -4 : 0;
+        var stem = new Stem({ yExtend: yExtend });
 
         if (this.isRest()) {
           stem.hide = true;
@@ -7738,58 +7792,60 @@
     }, {
       key: 'buildNoteHeads',
       value: function buildNoteHeads() {
-        var stem_direction = this.getStemDirection();
-
+        var stemDirection = this.getStemDirection();
         var keys = this.getKeys();
 
-        var last_line = null;
-        var line_diff = null;
+        var lastLine = null;
+        var lineDiff = null;
         var displaced = false;
 
         // Draw notes from bottom to top.
-        var start_i = 0;
-        var end_i = keys.length;
-        var step_i = 1;
 
         // For down-stem notes, we draw from top to bottom.
-        if (stem_direction === Stem.DOWN) {
-          start_i = keys.length - 1;
-          end_i = -1;
-          step_i = -1;
+        var start = void 0;
+        var end = void 0;
+        var step = void 0;
+        if (stemDirection === Stem.UP) {
+          start = 0;
+          end = keys.length;
+          step = 1;
+        } else if (stemDirection === Stem.DOWN) {
+          start = keys.length - 1;
+          end = -1;
+          step = -1;
         }
 
-        for (var i = start_i; i != end_i; i += step_i) {
-          var note_props = this.keyProps[i];
-
-          var line = note_props.line;
+        for (var i = start; i !== end; i += step) {
+          var noteProps = this.keyProps[i];
+          var line = noteProps.line;
 
           // Keep track of last line with a note head, so that consecutive heads
           // are correctly displaced.
-          if (last_line === null) {
-            last_line = line;
+          if (lastLine === null) {
+            lastLine = line;
           } else {
-            line_diff = Math.abs(last_line - line);
-            if (line_diff === 0 || line_diff === 0.5) {
+            lineDiff = Math.abs(lastLine - line);
+            if (lineDiff === 0 || lineDiff === 0.5) {
               displaced = !displaced;
             } else {
               displaced = false;
               this.use_default_head_x = true;
             }
           }
-          last_line = line;
+          lastLine = line;
 
-          var note_head = new NoteHead({
+          var notehead = new NoteHead({
             duration: this.duration,
             note_type: this.noteType,
             displaced: displaced,
-            stem_direction: stem_direction,
-            custom_glyph_code: note_props.code,
+            stem_direction: stemDirection,
+            custom_glyph_code: noteProps.code,
             glyph_font_scale: this.render_options.glyph_font_scale,
-            x_shift: note_props.shift_right,
-            line: note_props.line
+            x_shift: noteProps.shift_right,
+            line: noteProps.line
           });
 
-          this.note_heads[i] = note_head;
+          this.note_heads[i] = notehead;
         }
       }
 
@@ -7798,20 +7854,15 @@
     }, {
       key: 'autoStem',
       value: function autoStem() {
-        var auto_stem_direction;
-
         // Figure out optimal stem direction based on given notes
-        this.min_line = this.keyProps[0].line;
-        this.max_line = this.keyProps[this.keyProps.length - 1].line;
-        var decider = (this.min_line + this.max_line) / 2;
+        this.minLine = this.keyProps[0].line;
+        this.maxLine = this.keyProps[this.keyProps.length - 1].line;
 
-        if (decider < 3) {
-          auto_stem_direction = 1;
-        } else {
-          auto_stem_direction = -1;
-        }
+        var MIDDLE_LINE = 3;
+        var decider = (this.minLine + this.maxLine) / 2;
+        var stemDirection = decider < MIDDLE_LINE ? Stem.UP : Stem.DOWN;
 
-        this.setStemDirection(auto_stem_direction);
+        this.setStemDirection(stemDirection);
       }
 
       // Calculates and stores the properties for each key in the note
@@ -7819,22 +7870,24 @@
     }, {
       key: 'calculateKeyProps',
       value: function calculateKeyProps() {
-        var last_line = null;
+        var lastLine = null;
         for (var i = 0; i < this.keys.length; ++i) {
           var key = this.keys[i];
 
           // All rests use the same position on the line.
           // if (this.glyph.rest) key = this.glyph.position;
           if (this.glyph.rest) this.glyph.position = key;
+
           var options = { octave_shift: this.octave_shift || 0 };
           var props = Flow.keyProperties(key, this.clef, options);
+
           if (!props) {
-            throw new Vex$1.RuntimeError("BadArguments", "Invalid key for note properties: " + key);
+            throw new Vex$1.RuntimeError('BadArguments', 'Invalid key for note properties: ' + key);
           }
 
           // Override line placement for default rests
-          if (props.key === "R") {
-            if (this.duration === "1" || this.duration === "w") {
+          if (props.key === 'R') {
+            if (this.duration === '1' || this.duration === 'w') {
               props.line = 4;
             } else {
               props.line = 3;
@@ -7843,10 +7896,10 @@
 
           // Calculate displacement of this note
           var line = props.line;
-          if (last_line === null) {
-            last_line = line;
+          if (lastLine === null) {
+            lastLine = line;
           } else {
-            if (Math.abs(last_line - line) == 0.5) {
+            if (Math.abs(lastLine - line) === 0.5) {
               this.displaced = true;
               props.displaced = true;
 
@@ -7858,17 +7911,15 @@
             }
           }
 
-          last_line = line;
+          lastLine = line;
           this.keyProps.push(props);
         }
 
         // Sort the notes from lowest line to highest line
-        var sorted = true;
-        var lastLine = -1000;
-        var that = this;
+        lastLine = -1000;
         this.keyProps.forEach(function (key) {
           if (key.line < lastLine) {
-            Vex$1.W("Unsorted keys in note will be sorted. " + "See https://github.com/0xfe/vexflow/issues/104 for details.");
+            Vex$1.W('Unsorted keys in note will be sorted. ' + 'See https://github.com/0xfe/vexflow/issues/104 for details.');
           }
           lastLine = key.line;
         });
@@ -7882,74 +7933,82 @@
     }, {
       key: 'getBoundingBox',
       value: function getBoundingBox() {
-        if (!this.preFormatted) throw new Vex$1.RERR("UnformattedNote", "Can't call getBoundingBox on an unformatted note.");
+        if (!this.preFormatted) {
+          throw new Vex$1.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+        }
 
-        var metrics = this.getMetrics();
+        var _getMetrics = this.getMetrics();
 
-        var w = metrics.width;
-        var x = this.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
+        var w = _getMetrics.width;
+        var modLeftPx = _getMetrics.modLeftPx;
+        var extraLeftPx = _getMetrics.extraLeftPx;
 
-        var min_y = 0;
-        var max_y = 0;
-        var half_line_spacing = this.getStave().getSpacingBetweenLines() / 2;
-        var line_spacing = half_line_spacing * 2;
+        var x = this.getAbsoluteX() - modLeftPx - extraLeftPx;
+
+        var minY = 0;
+        var maxY = 0;
+        var halfLineSpacing = this.getStave().getSpacingBetweenLines() / 2;
+        var lineSpacing = halfLineSpacing * 2;
 
         if (this.isRest()) {
           var y = this.ys[0];
           var frac = Flow.durationToFraction(this.duration);
           if (frac.equals(1) || frac.equals(2)) {
-            min_y = y - half_line_spacing;
-            max_y = y + half_line_spacing;
+            minY = y - halfLineSpacing;
+            maxY = y + halfLineSpacing;
           } else {
-            min_y = y - this.glyph.line_above * line_spacing;
-            max_y = y + this.glyph.line_below * line_spacing;
+            minY = y - this.glyph.line_above * lineSpacing;
+            maxY = y + this.glyph.line_below * lineSpacing;
           }
         } else if (this.glyph.stem) {
           var ys = this.getStemExtents();
-          ys.baseY += half_line_spacing * this.stem_direction;
-          min_y = Vex$1.Min(ys.topY, ys.baseY);
-          max_y = Vex$1.Max(ys.topY, ys.baseY);
+          ys.baseY += halfLineSpacing * this.stem_direction;
+          minY = Vex$1.Min(ys.topY, ys.baseY);
+          maxY = Vex$1.Max(ys.topY, ys.baseY);
         } else {
-          min_y = null;
-          max_y = null;
+          minY = null;
+          maxY = null;
 
           for (var i = 0; i < this.ys.length; ++i) {
             var yy = this.ys[i];
             if (i === 0) {
-              min_y = yy;
-              max_y = yy;
+              minY = yy;
+              maxY = yy;
             } else {
-              min_y = Vex$1.Min(yy, min_y);
-              max_y = Vex$1.Max(yy, max_y);
+              minY = Vex$1.Min(yy, minY);
+              maxY = Vex$1.Max(yy, maxY);
             }
           }
-          min_y -= half_line_spacing;
-          max_y += half_line_spacing;
+          minY -= halfLineSpacing;
+          maxY += halfLineSpacing;
         }
 
-        return new BoundingBox(x, min_y, w, max_y - min_y);
+        return new BoundingBox(x, minY, w, maxY - minY);
       }
 
       // Gets the line number of the top or bottom note in the chord.
-      // If `is_top_note` is `true` then get the top note
+      // If `isTopNote` is `true` then get the top note
 
     }, {
       key: 'getLineNumber',
-      value: function getLineNumber(is_top_note) {
-        if (!this.keyProps.length) throw new Vex$1.RERR("NoKeyProps", "Can't get bottom note line, because note is not initialized properly.");
-        var result_line = this.keyProps[0].line;
+      value: function getLineNumber(isTopNote) {
+        if (!this.keyProps.length) {
+          throw new Vex$1.RERR('NoKeyProps', "Can't get bottom note line, because note is not initialized properly.");
+        }
+
+        var resultLine = this.keyProps[0].line;
 
         // No precondition assumed for sortedness of keyProps array
         for (var i = 0; i < this.keyProps.length; i++) {
-          var this_line = this.keyProps[i].line;
-          if (is_top_note) {
-            if (this_line > result_line) result_line = this_line;
+          var thisLine = this.keyProps[i].line;
+          if (isTopNote) {
+            if (thisLine > resultLine) resultLine = thisLine;
           } else {
-            if (this_line < result_line) result_line = this_line;
+            if (thisLine < resultLine) resultLine = thisLine;
           }
         }
 
-        return result_line;
+        return resultLine;
       }
 
       // Determine if current note is a rest
@@ -7981,15 +8040,15 @@
 
     }, {
       key: 'getYForTopText',
-      value: function getYForTopText(text_line) {
+      value: function getYForTopText(textLine) {
         var extents = this.getStemExtents();
-        return Vex$1.Min(this.stave.getYForTopText(text_line), extents.topY - this.render_options.annotation_spacing * (text_line + 1));
+        return Math.min(this.stave.getYForTopText(textLine), extents.topY - this.render_options.annotation_spacing * (textLine + 1));
       }
     }, {
       key: 'getYForBottomText',
-      value: function getYForBottomText(text_line) {
+      value: function getYForBottomText(textLine) {
         var extents = this.getStemExtents();
-        return Vex$1.Max(this.stave.getYForTopText(text_line), extents.baseY + this.render_options.annotation_spacing * text_line);
+        return Math.max(this.stave.getYForTopText(textLine), extents.baseY + this.render_options.annotation_spacing * textLine);
       }
 
       // Sets the current note to the provided `stave`. This applies
@@ -8000,16 +8059,20 @@
       value: function setStave(stave) {
         get(Object.getPrototypeOf(StaveNote.prototype), 'setStave', this).call(this, stave);
 
-        var ys = this.note_heads.map(function (note_head) {
-          note_head.setStave(stave);
-          return note_head.getY();
+        var ys = this.note_heads.map(function (notehead) {
+          notehead.setStave(stave);
+          return notehead.getY();
         });
 
         this.setYs(ys);
 
-        var bounds = this.getNoteHeadBounds();
         if (this.hasStem()) {
-          this.stem.setYBounds(bounds.y_top, bounds.y_bottom);
+          var _getNoteHeadBounds = this.getNoteHeadBounds();
+
+          var y_top = _getNoteHeadBounds.y_top;
+          var y_bottom = _getNoteHeadBounds.y_bottom;
+
+          this.stem.setYBounds(y_top, y_bottom);
         }
 
         return this;
@@ -8074,15 +8137,15 @@
     }, {
       key: 'getLineForRest',
       value: function getLineForRest() {
-        var rest_line = this.keyProps[0].line;
+        var restLine = this.keyProps[0].line;
         if (this.keyProps.length > 1) {
-          var last_line = this.keyProps[this.keyProps.length - 1].line;
-          var top = Vex$1.Max(rest_line, last_line);
-          var bot = Vex$1.Min(rest_line, last_line);
-          rest_line = Vex$1.MidLine(top, bot);
+          var lastLine = this.keyProps[this.keyProps.length - 1].line;
+          var top = Math.max(restLine, lastLine);
+          var bot = Math.min(restLine, lastLine);
+          restLine = Vex$1.MidLine(top, bot);
         }
 
-        return rest_line;
+        return restLine;
       }
 
       // Get the default `x` and `y` coordinates for the provided `position`
@@ -8091,18 +8154,22 @@
     }, {
       key: 'getModifierStartXY',
       value: function getModifierStartXY(position, index) {
-        if (!this.preFormatted) throw new Vex$1.RERR("UnformattedNote", "Can't call GetModifierStartXY on an unformatted note");
+        if (!this.preFormatted) {
+          throw new Vex$1.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+        }
 
-        if (this.ys.length === 0) throw new Vex$1.RERR("NoYValues", "No Y-Values calculated for this note.");
+        if (this.ys.length === 0) {
+          throw new Vex$1.RERR('NoYValues', 'No Y-Values calculated for this note.');
+        }
 
         var x = 0;
-        if (position == Modifier.Position.LEFT) {
+        if (position === Modifier.Position.LEFT) {
           // extra_left_px
           x = -1 * 2;
-        } else if (position == Modifier.Position.RIGHT) {
+        } else if (position === Modifier.Position.RIGHT) {
           // extra_right_px
           x = this.glyph.head_width + this.x_shift + 2;
-        } else if (position == Modifier.Position.BELOW || position == Modifier.Position.ABOVE) {
+        } else if (position === Modifier.Position.BELOW || position === Modifier.Position.ABOVE) {
           x = this.glyph.head_width / 2;
         }
 
@@ -8218,7 +8285,8 @@
       value: function addDotToAll() {
         for (var i = 0; i < this.keys.length; ++i) {
           this.addDot(i);
-        }return this;
+        }
+        return this;
       }
 
       // Get all accidentals in the `ModifierContext`
@@ -8226,7 +8294,7 @@
     }, {
       key: 'getAccidentals',
       value: function getAccidentals() {
-        return this.modifierContext.getModifiers("accidentals");
+        return this.modifierContext.getModifiers('accidentals');
       }
 
       // Get all dots in the `ModifierContext`
@@ -8234,7 +8302,7 @@
     }, {
       key: 'getDots',
       value: function getDots() {
-        return this.modifierContext.getModifiers("dots");
+        return this.modifierContext.getModifiers('dots');
       }
 
       // Get the width of the note if it is displaced. Used for `Voice`
@@ -8253,11 +8321,11 @@
     }, {
       key: 'calcExtraPx',
       value: function calcExtraPx() {
-        this.setExtraLeftPx(this.displaced && this.stem_direction == -1 ? this.glyph.head_width : 0);
+        this.setExtraLeftPx(this.displaced && this.stem_direction === Stem.DOWN ? this.glyph.head_width : 0);
 
         // For upstems with flags, the extra space is unnecessary, since it's taken
         // up by the flag.
-        this.setExtraRightPx(!this.hasFlag() && this.displaced && this.stem_direction == 1 ? this.glyph.head_width : 0);
+        this.setExtraRightPx(!this.hasFlag() && this.displaced && this.stem_direction === Stem.UP ? this.glyph.head_width : 0);
       }
 
       // Pre-render formatting
@@ -8271,7 +8339,7 @@
         var width = this.glyph.head_width + this.extraLeftPx + this.extraRightPx;
 
         // For upward flagged notes, the width of the flag needs to be added
-        if (this.glyph.flag && this.beam === null && this.stem_direction == 1) {
+        if (this.glyph.flag && this.beam === null && this.stem_direction === Stem.UP) {
           width += this.glyph.head_width;
         }
 
@@ -8285,33 +8353,33 @@
       key: 'getNoteHeadBounds',
       value: function getNoteHeadBounds() {
         // Top and bottom Y values for stem.
-        var y_top = null;
-        var y_bottom = null;
+        var yTop = null;
+        var yBottom = null;
 
-        var highest_line = this.stave.getNumLines();
-        var lowest_line = 1;
+        var highestLine = this.stave.getNumLines();
+        var lowestLine = 1;
 
-        this.note_heads.forEach(function (note_head) {
-          var line = note_head.getLine();
-          var y = note_head.getY();
+        this.note_heads.forEach(function (notehead) {
+          var line = notehead.getLine();
+          var y = notehead.getY();
 
-          if (y_top === null || y < y_top) {
-            y_top = y;
+          if (yTop === null || y < yTop) {
+            yTop = y;
           }
 
-          if (y_bottom === null || y > y_bottom) {
-            y_bottom = y;
+          if (yBottom === null || y > yBottom) {
+            yBottom = y;
           }
 
-          highest_line = line > highest_line ? line : highest_line;
-          lowest_line = line < lowest_line ? line : lowest_line;
+          highestLine = line > highestLine ? line : highestLine;
+          lowestLine = line < lowestLine ? line : lowestLine;
         }, this);
 
         return {
-          y_top: y_top,
-          y_bottom: y_bottom,
-          highest_line: highest_line,
-          lowest_line: lowest_line
+          y_top: yTop,
+          y_bottom: yBottom,
+          highest_line: highestLine,
+          lowest_line: lowestLine
         };
       }
 
@@ -8328,8 +8396,8 @@
     }, {
       key: 'getNoteHeadEndX',
       value: function getNoteHeadEndX() {
-        var x_begin = this.getNoteHeadBeginX();
-        return x_begin + this.glyph.head_width - Flow.STEM_WIDTH / 2;
+        var xBegin = this.getNoteHeadBeginX();
+        return xBegin + this.glyph.head_width - Flow.STEM_WIDTH / 2;
       }
 
       // Draw the ledger lines between the stave and the highest/lowest keys
@@ -8337,35 +8405,45 @@
     }, {
       key: 'drawLedgerLines',
       value: function drawLedgerLines() {
-        if (this.isRest()) {
-          return;
-        }
-        if (!this.context) throw new Vex$1.RERR("NoCanvasContext", "Can't draw without a canvas context.");
+        var _this2 = this;
+
+        var note_heads = this.note_heads;
+        var stave = this.stave;
+        var use_default_head_x = this.use_default_head_x;
+        var x_shift = this.x_shift;
+        var glyph = this.glyph;
+        var stroke_px = this.render_options.stroke_px;
         var ctx = this.context;
 
-        var bounds = this.getNoteHeadBounds();
-        var highest_line = bounds.highest_line;
-        var lowest_line = bounds.lowest_line;
-        var head_x = this.note_heads[0].getAbsoluteX();
 
-        var that = this;
-        function stroke(y) {
-          if (that.use_default_head_x === true) {
-            head_x = that.getAbsoluteX() + that.x_shift;
+        if (this.isRest()) return;
+        if (!ctx) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
+
+        var _getNoteHeadBounds2 = this.getNoteHeadBounds();
+
+        var highest_line = _getNoteHeadBounds2.highest_line;
+        var lowest_line = _getNoteHeadBounds2.lowest_line;
+
+        var headX = note_heads[0].getAbsoluteX();
+
+        var drawLedgerLine = function drawLedgerLine(y) {
+          if (use_default_head_x === true) {
+            headX = _this2.getAbsoluteX() + x_shift;
           }
-          var x = head_x - that.render_options.stroke_px;
-          var length = head_x + that.glyph.head_width - head_x + that.render_options.stroke_px * 2;
+          var x = headX - stroke_px;
+          var length = headX + glyph.head_width - headX + stroke_px * 2;
 
           ctx.fillRect(x, y, length, 1);
+        };
+
+        for (var line = 6; line <= highest_line; ++line) {
+          drawLedgerLine(stave.getYForNote(line));
         }
 
-        var line; // iterator
-        for (line = 6; line <= highest_line; ++line) {
-          stroke(this.stave.getYForNote(line));
-        }
-
-        for (line = 0; line >= lowest_line; --line) {
-          stroke(this.stave.getYForNote(line));
+        for (var _line = 0; _line >= lowest_line; --_line) {
+          drawLedgerLine(stave.getYForNote(_line));
         }
       }
 
@@ -8374,20 +8452,23 @@
     }, {
       key: 'drawModifiers',
       value: function drawModifiers() {
-        if (!this.context) throw new Vex$1.RERR("NoCanvasContext", "Can't draw without a canvas context.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
+
         var ctx = this.context;
-        ctx.openGroup("modifiers");
+        ctx.openGroup('modifiers');
         for (var i = 0; i < this.modifiers.length; i++) {
-          var mod = this.modifiers[i];
-          var note_head = this.note_heads[mod.getIndex()];
-          var key_style = note_head.getStyle();
-          if (key_style) {
+          var modifier = this.modifiers[i];
+          var notehead = this.note_heads[modifier.getIndex()];
+          var noteheadStyle = notehead.getStyle();
+          if (noteheadStyle) {
             ctx.save();
-            note_head.applyStyle(ctx);
+            notehead.applyStyle(ctx);
           }
-          mod.setContext(ctx);
-          mod.draw();
-          if (key_style) {
+          modifier.setContext(ctx);
+          modifier.draw();
+          if (noteheadStyle) {
             ctx.restore();
           }
         }
@@ -8399,35 +8480,49 @@
     }, {
       key: 'drawFlag',
       value: function drawFlag() {
-        if (!this.context) throw new Vex$1.RERR("NoCanvasContext", "Can't draw without a canvas context.");
+        var stem = this.stem;
+        var beam = this.beam;
         var ctx = this.context;
+        var glyph_font_scale = this.render_options.glyph_font_scale;
+
+
+        if (!ctx) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
+
+        var shouldRenderFlag = beam === null;
         var glyph = this.getGlyph();
-        var render_flag = this.beam === null;
-        var bounds = this.getNoteHeadBounds();
 
-        var x_begin = this.getNoteHeadBeginX();
-        var x_end = this.getNoteHeadEndX();
+        if (glyph.flag && shouldRenderFlag) {
+          var flagX = void 0;
+          var flagY = void 0;
+          var flagCode = void 0;
 
-        if (glyph.flag && render_flag) {
-          var note_stem_height = this.stem.getHeight();
-          var flag_x, flag_y, flag_code;
+          var xBegin = this.getNoteHeadBeginX();
+          var xEnd = this.getNoteHeadEndX();
 
+          var _getNoteHeadBounds3 = this.getNoteHeadBounds();
+
+          var y_top = _getNoteHeadBounds3.y_top;
+          var y_bottom = _getNoteHeadBounds3.y_bottom;
+
+          var noteStemHeight = stem.getHeight();
           if (this.getStemDirection() === Stem.DOWN) {
             // Down stems have flags on the left.
-            flag_x = x_begin + 1;
-            flag_y = bounds.y_top - note_stem_height + 2;
-            flag_code = glyph.code_flag_downstem;
+            flagX = xBegin + 1;
+            flagY = y_top - noteStemHeight + 2;
+            flagCode = glyph.code_flag_downstem;
           } else {
             // Up stems have flags on the left.
-            flag_x = x_end + 1;
-            flag_y = bounds.y_bottom - note_stem_height - 2;
-            flag_code = glyph.code_flag_upstem;
+            flagX = xEnd + 1;
+            flagY = y_bottom - noteStemHeight - 2;
+            flagCode = glyph.code_flag_upstem;
           }
 
           // Draw the Flag
-          this.context.openGroup("flag", null, { pointerBBox: true });
-          Glyph.renderGlyph(ctx, flag_x, flag_y, this.render_options.glyph_font_scale, flag_code);
-          this.context.closeGroup();
+          ctx.openGroup('flag', null, { pointerBBox: true });
+          Glyph.renderGlyph(ctx, flagX, flagY, glyph_font_scale, flagCode);
+          ctx.closeGroup();
         }
       }
 
@@ -8436,26 +8531,29 @@
     }, {
       key: 'drawNoteHeads',
       value: function drawNoteHeads() {
-        var that = this;
-        this.note_heads.forEach(function (note_head) {
-          that.context.openGroup("notehead", null, { pointerBBox: true });
-          note_head.setContext(that.context).draw();
-          that.context.closeGroup();
-        }, this);
+        var _this3 = this;
+
+        this.note_heads.forEach(function (notehead) {
+          _this3.context.openGroup('notehead', null, { pointerBBox: true });
+          notehead.setContext(_this3.context).draw();
+          _this3.context.closeGroup();
+        });
       }
 
       // Render the stem onto the canvas
 
     }, {
       key: 'drawStem',
-      value: function drawStem(stem_struct) {
-        if (!this.context) throw new Vex$1.RERR("NoCanvasContext", "Can't draw without a canvas context.");
-
-        if (stem_struct) {
-          this.setStem(new Stem(stem_struct));
+      value: function drawStem(stemStruct) {
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
-        this.context.openGroup("stem", null, { pointerBBox: true });
+        if (stemStruct) {
+          this.setStem(new Stem(stemStruct));
+        }
+
+        this.context.openGroup('stem', null, { pointerBBox: true });
         this.stem.setContext(this.context).draw();
         this.context.closeGroup();
       }
@@ -8465,31 +8563,36 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR("NoCanvasContext", "Can't draw without a canvas context.");
-        if (!this.stave) throw new Vex$1.RERR("NoStave", "Can't draw without a stave.");
-        if (this.ys.length === 0) throw new Vex$1.RERR("NoYValues", "Can't draw note without Y values.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
+        if (!this.stave) {
+          throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+        }
+        if (this.ys.length === 0) {
+          throw new Vex$1.RERR('NoYValues', "Can't draw note without Y values.");
+        }
 
-        var x_begin = this.getNoteHeadBeginX();
-        var x_end = this.getNoteHeadEndX();
-
-        var render_stem = this.hasStem() && !this.beam;
+        var xBegin = this.getNoteHeadBeginX();
+        var xEnd = this.getNoteHeadEndX();
+        var shouldRenderStem = this.hasStem() && !this.beam;
 
         // Format note head x positions
-        this.note_heads.forEach(function (note_head) {
-          note_head.setX(x_begin);
-        }, this);
+        this.note_heads.forEach(function (notehead) {
+          return notehead.setX(xBegin);
+        });
 
         // Format stem x positions
-        this.stem.setNoteHeadXBounds(x_begin, x_end);
+        this.stem.setNoteHeadXBounds(xBegin, xEnd);
 
-        L$2("Rendering ", this.isChord() ? "chord :" : "note :", this.keys);
+        L$2('Rendering ', this.isChord() ? 'chord :' : 'note :', this.keys);
 
         // Draw each part of the note
         this.drawLedgerLines();
 
-        this.elem = this.context.openGroup("stavenote", this.id);
-        this.context.openGroup("note", null, { pointerBBox: true });
-        if (render_stem) this.drawStem();
+        this.elem = this.context.openGroup('stavenote', this.id);
+        this.context.openGroup('note', null, { pointerBBox: true });
+        if (shouldRenderStem) this.drawStem();
         this.drawNoteHeads();
         this.drawFlag();
         this.context.closeGroup();
@@ -9084,7 +9187,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
   function L$7() {
-    if (Accidental.DEBUG) Vex$1.L("Vex.Flow.Accidental", arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (Accidental.DEBUG) Vex$1.L('Vex.Flow.Accidental', args);
   }
 
   // An `Accidental` inherits from `Modifier`, and is formatted within a
@@ -9097,81 +9204,96 @@
 
       // Arrange accidentals inside a ModifierContext.
       value: function format(accidentals, state) {
-        var left_shift = state.left_shift;
-        var accidental_spacing = 2;
+        var _this2 = this;
+
+        var leftShift = state.left_shift;
+        var accidentalSpacing = 2;
 
         // If there are no accidentals, we needn't format their positions
-        if (!accidentals || accidentals.length === 0) return false;
+        if (!accidentals || accidentals.length === 0) return;
 
-        var acc_list = [];
-        var hasStave = false;
-        var prev_note = null;
+        var accList = [];
+        var prevNote = null;
         var shiftL = 0;
 
         // First determine the accidentals' Y positions from the note.keys
-        var i, acc, props_tmp;
-        for (i = 0; i < accidentals.length; ++i) {
-          acc = accidentals[i];
+        var propsTemp = void 0;
+        for (var i = 0; i < accidentals.length; ++i) {
+          var acc = accidentals[i];
           var note = acc.getNote();
           var stave = note.getStave();
           var props = note.getKeyProps()[acc.getIndex()];
-          if (note != prev_note) {
+          if (note !== prevNote) {
             // Iterate through all notes to get the displaced pixels
             for (var n = 0; n < note.keys.length; ++n) {
-              props_tmp = note.getKeyProps()[n];
-              shiftL = props_tmp.displaced ? note.getExtraLeftPx() : shiftL;
+              propsTemp = note.getKeyProps()[n];
+              shiftL = propsTemp.displaced ? note.getExtraLeftPx() : shiftL;
             }
-            prev_note = note;
+            prevNote = note;
           }
           if (stave !== null) {
-            hasStave = true;
-            var line_space = stave.options.spacing_between_lines_px;
+            var lineSpace = stave.options.spacing_between_lines_px;
             var y = stave.getYForLine(props.line);
-            var acc_line = Math.round(y / line_space * 2) / 2;
-            acc_list.push({ y: y, line: acc_line, shift: shiftL, acc: acc, lineSpace: line_space });
+            var accLine = Math.round(y / lineSpace * 2) / 2;
+            accList.push({ y: y, line: accLine, shift: shiftL, acc: acc, lineSpace: lineSpace });
           } else {
-            acc_list.push({ line: props.line, shift: shiftL, acc: acc });
+            accList.push({ line: props.line, shift: shiftL, acc: acc });
           }
         }
 
         // Sort accidentals by line number.
-        acc_list.sort(function (a, b) {
+        accList.sort(function (a, b) {
           return b.line - a.line;
         });
 
-        // Create an array of unique line numbers (line_list) from acc_list
-        var line_list = []; // an array of unique line numbers
-        var acc_shift = 0; // amount by which all accidentals must be shifted right or left for stem flipping, notehead shifting concerns.
-        var previous_line = null;
+        // FIXME: Confusing name. Each object in this array has a property called `line`.
+        // So if this is a list of lines, you end up with: `line.line` which is very awkward.
+        var lineList = [];
 
-        for (i = 0; i < acc_list.length; i++) {
-          acc = acc_list[i];
+        // amount by which all accidentals must be shifted right or left for
+        // stem flipping, notehead shifting concerns.
+        var accShift = 0;
+        var previousLine = null;
 
-          // if this is the first line, or a new line, add a line_list
-          if (previous_line === null || previous_line != acc.line) {
-            line_list.push({ line: acc.line, flat_line: true, dbl_sharp_line: true, num_acc: 0, width: 0 });
+        // Create an array of unique line numbers (lineList) from accList
+        for (var _i = 0; _i < accList.length; _i++) {
+          var _acc = accList[_i];
+
+          // if this is the first line, or a new line, add a lineList
+          if (previousLine === null || previousLine !== _acc.line) {
+            lineList.push({
+              line: _acc.line,
+              flatLine: true,
+              dblSharpLine: true,
+              numAcc: 0,
+              width: 0
+            });
           }
           // if this accidental is not a flat, the accidental needs 3.0 lines lower
           // clearance instead of 2.5 lines for b or bb.
-          if (acc.acc.type != "b" && acc.acc.type != "bb") {
-            line_list[line_list.length - 1].flat_line = false;
+          // FIXME: Naming could use work. acc.acc is very awkward
+          if (_acc.acc.type !== 'b' && _acc.acc.type !== 'bb') {
+            lineList[lineList.length - 1].flatLine = false;
           }
+
           // if this accidental is not a double sharp, the accidental needs 3.0 lines above
-          if (acc.acc.type != "##") line_list[line_list.length - 1].dbl_sharp_line = false;
+          if (_acc.acc.type !== '##') {
+            lineList[lineList.length - 1].dblSharpLine = false;
+          }
 
           // Track how many accidentals are on this line:
-          line_list[line_list.length - 1].num_acc++;
+          lineList[lineList.length - 1].numAcc++;
 
           // Track the total x_offset needed for this line which will be needed
           // for formatting lines w/ multiple accidentals:
 
-          //width = accidental width + universal spacing between accidentals
-          line_list[line_list.length - 1].width += acc.acc.getWidth() + accidental_spacing;
+          // width = accidental width + universal spacing between accidentals
+          lineList[lineList.length - 1].width += _acc.acc.getWidth() + accidentalSpacing;
 
-          // if this acc_shift is larger, use it to keep first column accidentals in the same line
-          acc_shift = acc.shift > acc_shift ? acc.shift : acc_shift;
+          // if this accShift is larger, use it to keep first column accidentals in the same line
+          accShift = _acc.shift > accShift ? _acc.shift : accShift;
 
-          previous_line = acc.line;
+          previousLine = _acc.line;
         }
 
         // ### Place Accidentals in Columns
@@ -9180,7 +9302,7 @@
         // but follow exceptions as outlined in G. Read's _Music Notation_ and
         // Elaine Gould's _Behind Bars_.
         //
-        // Additionally, this implements different vertical colission rules for
+        // Additionally, this implements different vertical collision rules for
         // flats (only need 2.5 lines clearance below) and double sharps (only
         // need 2.5 lines of clearance above or below).
         //
@@ -9192,84 +9314,134 @@
         //
         // TODO (?): Allow column to be specified for an accidental at run-time?
 
-        var total_columns = 0;
+        var totalColumns = 0;
 
         // establish the boundaries for a group of notes with clashing accidentals:
-        for (i = 0; i < line_list.length; i++) {
-          var no_further_conflicts = false;
-          var group_start = i;
-          var group_end = i;
+        var _loop = function _loop(_i3) {
+          var noFurtherConflicts = false;
+          var groupStart = _i3;
+          var groupEnd = _i3;
 
-          group_check_while: while (group_end + 1 < line_list.length && !no_further_conflicts) {
+          while (groupEnd + 1 < lineList.length && !noFurtherConflicts) {
             // if this note conflicts with the next:
-            if (this.checkCollision(line_list[group_end], line_list[group_end + 1])) {
+            if (_this2.checkCollision(lineList[groupEnd], lineList[groupEnd + 1])) {
               // include the next note in the group:
-              group_end++;
-            } else no_further_conflicts = true;
+              groupEnd++;
+            } else {
+              noFurtherConflicts = true;
+            }
           }
+
+          // Gets an a line from the `lineList`, relative to the current group
+          var getGroupLine = function getGroupLine(index) {
+            return lineList[groupStart + index];
+          };
+          var getGroupLines = function getGroupLines(indexes) {
+            return indexes.map(getGroupLine);
+          };
+          var lineDifference = function lineDifference(indexA, indexB) {
+            var _getGroupLines$map = getGroupLines([indexA, indexB]).map(function (item) {
+              return item.line;
+            });
+
+            var _getGroupLines$map2 = slicedToArray(_getGroupLines$map, 2);
+
+            var a = _getGroupLines$map2[0];
+            var b = _getGroupLines$map2[1];
+
+            return a - b;
+          };
+
+          var notColliding = function notColliding() {
+            for (var _len2 = arguments.length, indexPairs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+              indexPairs[_key2] = arguments[_key2];
+            }
+
+            return indexPairs.map(getGroupLines).every(function (lines) {
+              return !_this2.checkCollision.apply(_this2, toConsumableArray(lines));
+            });
+          };
 
           // Set columns for the lines in this group:
-          var group_length = group_end - group_start + 1;
+          var groupLength = groupEnd - groupStart + 1;
 
           // Set the accidental column for each line of the group
-          var end_case = this.checkCollision(line_list[group_start], line_list[group_end]) ? "a" : "b";
+          var endCase = _this2.checkCollision(lineList[groupStart], lineList[groupEnd]) ? 'a' : 'b';
 
-          var checkCollision = this.checkCollision;
-          switch (group_length) {
+          switch (groupLength) {
             case 3:
-              if (end_case == "a" && line_list[group_start + 1].line - line_list[group_start + 2].line == 0.5 && line_list[group_start].line - line_list[group_start + 1].line != 0.5) end_case = "second_on_bottom";
+              if (endCase === 'a' && lineDifference(1, 2) === 0.5 && lineDifference(0, 1) !== 0.5) {
+                endCase = 'second_on_bottom';
+              }
               break;
             case 4:
-              if (!checkCollision(line_list[group_start], line_list[group_start + 2]) && !checkCollision(line_list[group_start + 1], line_list[group_start + 3])) end_case = "spaced_out_tetrachord";
+              if (notColliding([0, 2], [1, 3])) {
+                endCase = 'spaced_out_tetrachord';
+              }
               break;
             case 5:
-              if (end_case == "b" && !checkCollision(line_list[group_start + 1], line_list[group_start + 3])) end_case = "spaced_out_pentachord";
-              if (end_case == "spaced_out_pentachord" && !checkCollision(line_list[group_start], line_list[group_start + 2]) && !checkCollision(line_list[group_start + 2], line_list[group_start + 4])) end_case = "very_spaced_out_pentachord";
+              if (endCase === 'b' && notColliding([1, 3])) {
+                endCase = 'spaced_out_pentachord';
+                if (notColliding([0, 2], [2, 4])) {
+                  endCase = 'very_spaced_out_pentachord';
+                }
+              }
               break;
             case 6:
-              if (!checkCollision(line_list[group_start], line_list[group_start + 3]) && !checkCollision(line_list[group_start + 1], line_list[group_start + 4]) && !checkCollision(line_list[group_start + 2], line_list[group_start + 5])) end_case = "spaced_out_hexachord";
-              if (!checkCollision(line_list[group_start], line_list[group_start + 2]) && !checkCollision(line_list[group_start + 2], line_list[group_start + 4]) && !checkCollision(line_list[group_start + 1], line_list[group_start + 3]) && !checkCollision(line_list[group_start + 3], line_list[group_start + 5])) end_case = "very_spaced_out_hexachord";
+              if (notColliding([0, 3], [1, 4], [2, 5])) {
+                endCase = 'spaced_out_hexachord';
+              }
+              if (notColliding([0, 2], [2, 4], [1, 3], [3, 5])) {
+                endCase = 'very_spaced_out_hexachord';
+              }
+              break;
+            default:
               break;
           }
 
-          var group_member;
-          var column;
+          var groupMember = void 0;
+          var column = void 0;
           // If the group contains more than seven members, use ascending parallel lines
           // of accidentals, using as few columns as possible while avoiding collisions.
-          if (group_length >= 7) {
+          if (groupLength >= 7) {
             // First, determine how many columns to use:
-            var pattern_length = 2;
-            var colission_detected = true;
-            while (colission_detected === true) {
-              colission_detected = false;
-              colission_detecter: for (var line = 0; line + pattern_length < line_list.length; line++) {
-                if (this.checkCollision(line_list[line], line_list[line + pattern_length])) {
-                  colission_detected = true;
-                  pattern_length++;
-                  break colission_detecter;
+            var patternLength = 2;
+            var collisionDetected = true;
+            while (collisionDetected === true) {
+              collisionDetected = false;
+              for (var line = 0; line + patternLength < lineList.length; line++) {
+                if (_this2.checkCollision(lineList[line], lineList[line + patternLength])) {
+                  collisionDetected = true;
+                  patternLength++;
+                  break;
                 }
               }
             }
             // Then, assign a column to each line of accidentals
-            for (group_member = i; group_member <= group_end; group_member++) {
-              column = (group_member - i) % pattern_length + 1;
-              line_list[group_member].column = column;
-              total_columns = total_columns > column ? total_columns : column;
+            for (groupMember = _i3; groupMember <= groupEnd; groupMember++) {
+              column = (groupMember - _i3) % patternLength + 1;
+              lineList[groupMember].column = column;
+              totalColumns = totalColumns > column ? totalColumns : column;
             }
 
             // Otherwise, if the group contains fewer than seven members, use the layouts from
             // the accidentalsColumnsTable housed in tables.js.
           } else {
-              for (group_member = i; group_member <= group_end; group_member++) {
-                column = Flow.accidentalColumnsTable[group_length][end_case][group_member - i];
-                line_list[group_member].column = column;
-                total_columns = total_columns > column ? total_columns : column;
+              for (groupMember = _i3; groupMember <= groupEnd; groupMember++) {
+                column = Flow.accidentalColumnsTable[groupLength][endCase][groupMember - _i3];
+                lineList[groupMember].column = column;
+                totalColumns = totalColumns > column ? totalColumns : column;
               }
             }
 
           // Increment i to the last note that was set, so that if a lower set of notes
           // does not conflict at all with this group, it can have its own classic shape.
-          i = group_end;
+          _i3 = groupEnd;
+          _i2 = _i3;
+        };
+
+        for (var _i2 = 0; _i2 < lineList.length; _i2++) {
+          _loop(_i2);
         }
 
         // ### Convert Columns to x_offsets
@@ -9285,68 +9457,68 @@
         // parallel columns.
 
         // track each column's max width, which will be used as initial shift of later columns:
-        var column_widths = [];
-        var column_x_offsets = [];
-        for (i = 0; i <= total_columns; i++) {
-          column_widths[i] = 0;
-          column_x_offsets[i] = 0;
+        var columnWidths = [];
+        var columnXOffsets = [];
+        for (var _i4 = 0; _i4 <= totalColumns; _i4++) {
+          columnWidths[_i4] = 0;
+          columnXOffsets[_i4] = 0;
         }
 
-        column_widths[0] = acc_shift + left_shift;
-        column_x_offsets[0] = acc_shift + left_shift;
+        columnWidths[0] = accShift + leftShift;
+        columnXOffsets[0] = accShift + leftShift;
 
-        // Fill column_widths with widest needed x-space;
+        // Fill columnWidths with widest needed x-space;
         // this is what keeps the columns parallel.
-        line_list.forEach(function (line) {
-          if (line.width > column_widths[line.column]) column_widths[line.column] = line.width;
+        lineList.forEach(function (line) {
+          if (line.width > columnWidths[line.column]) columnWidths[line.column] = line.width;
         });
 
-        for (i = 1; i < column_widths.length; i++) {
+        for (var _i5 = 1; _i5 < columnWidths.length; _i5++) {
           // this column's offset = this column's width + previous column's offset
-          column_x_offsets[i] = column_widths[i] + column_x_offsets[i - 1];
+          columnXOffsets[_i5] = columnWidths[_i5] + columnXOffsets[_i5 - 1];
         }
 
-        var total_shift = column_x_offsets[column_x_offsets.length - 1];
-        // Set the x_shift for each accidental according to column offsets:
-        var acc_count = 0;
-        line_list.forEach(function (line) {
-          var line_width = 0;
-          var last_acc_on_line = acc_count + line.num_acc;
+        var totalShift = columnXOffsets[columnXOffsets.length - 1];
+        // Set the xShift for each accidental according to column offsets:
+        var accCount = 0;
+        lineList.forEach(function (line) {
+          var lineWidth = 0;
+          var lastAccOnLine = accCount + line.numAcc;
           // handle all of the accidentals on a given line:
-          for (acc_count; acc_count < last_acc_on_line; acc_count++) {
-            var x_shift = column_x_offsets[line.column - 1] + line_width;
-            acc_list[acc_count].acc.setXShift(x_shift);
+          for (accCount; accCount < lastAccOnLine; accCount++) {
+            var xShift = columnXOffsets[line.column - 1] + lineWidth;
+            accList[accCount].acc.setXShift(xShift);
             // keep track of the width of accidentals we've added so far, so that when
             // we loop, we add space for them.
-            line_width += acc_list[acc_count].acc.getWidth() + accidental_spacing;
-            L$7("Line, acc_count, shift: ", line.line, acc_count, x_shift);
+            lineWidth += accList[accCount].acc.getWidth() + accidentalSpacing;
+            L$7('Line, accCount, shift: ', line.line, accCount, xShift);
           }
         });
 
         // update the overall layout with the full width of the accidental shapes:
-        state.left_shift += total_shift;
+        state.left_shift += totalShift;
       }
 
       // Helper function to determine whether two lines of accidentals collide vertically
 
     }, {
       key: 'checkCollision',
-      value: function checkCollision(line_1, line_2) {
-        var clearance = line_2.line - line_1.line;
-        var clearance_required = 3;
+      value: function checkCollision(line1, line2) {
+        var clearance = line2.line - line1.line;
+        var clearanceRequired = 3;
         // But less clearance is required for certain accidentals: b, bb and ##.
         if (clearance > 0) {
           // then line 2 is on top
-          clearance_required = line_2.flat_line || line_2.dbl_sharp_line ? 2.5 : 3.0;
-          if (line_1.dbl_sharp_line) clearance -= 0.5;
+          clearanceRequired = line2.flatLine || line2.dblSharpLine ? 2.5 : 3.0;
+          if (line1.dblSharpLine) clearance -= 0.5;
         } else {
           // line 1 is on top
-          clearance_required = line_1.flat_line || line_1.dbl_sharp_line ? 2.5 : 3.0;
-          if (line_2.dbl_sharp_line) clearance -= 0.5;
+          clearanceRequired = line1.flatLine || line1.dblSharpLine ? 2.5 : 3.0;
+          if (line2.dblSharpLine) clearance -= 0.5;
         }
-        var colission = Math.abs(clearance) < clearance_required;
-        L$7("Line_1, Line_2, Collision: ", line_1.line, line_2.line, colission);
-        return colission;
+        var collision = Math.abs(clearance) < clearanceRequired;
+        L$7('Line_1, Line_2, Collision: ', line1.line, line2.line, collision);
+        return collision;
       }
 
       // Use this method to automatically apply accidentals to a set of `voices`.
@@ -9361,7 +9533,7 @@
 
         // Sort the tickables in each voice by their tick position in the voice
         voices.forEach(function (voice) {
-          var tickPosition = new Flow.Fraction(0, 1);
+          var tickPosition = new Fraction(0, 1);
           var notes = voice.getTickables();
           notes.forEach(function (note) {
             var notesAtPosition = tickNoteMap[tickPosition.value()];
@@ -9380,7 +9552,7 @@
         var music = new Music();
 
         // Default key signature is C major
-        if (!keySignature) keySignature = "C";
+        if (!keySignature) keySignature = 'C';
 
         // Get the scale map, which represents the current state of each pitch
         var scaleMap = music.createScaleMap(keySignature);
@@ -9401,7 +9573,7 @@
               var key = music.getNoteParts(keyString.split('/')[0]);
 
               // Force a natural for every key without an accidental
-              var accidentalString = key.accidental || "n";
+              var accidentalString = key.accidental || 'n';
               var pitch = key.root + accidentalString;
 
               // Determine if the current pitch has the same accidental
@@ -9449,7 +9621,7 @@
 
       var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Accidental).call(this));
 
-      L$7("New accidental: ", type);
+      L$7('New accidental: ', type);
 
       _this.note = null;
       // The `index` points to a specific note in a chord.
@@ -9466,12 +9638,14 @@
       };
 
       _this.accidental = Flow.accidentalCodes(_this.type);
-      if (!_this.accidental) throw new Vex$1.RERR("ArgumentError", "Unknown accidental type: " + type);
+      if (!_this.accidental) {
+        throw new Vex$1.RERR('ArgumentError', 'Unknown accidental type: ' + type);
+      }
 
       // Cautionary accidentals have parentheses around them
       _this.cautionary = false;
-      _this.paren_left = null;
-      _this.paren_right = null;
+      _this.parenLeft = null;
+      _this.parenRight = null;
 
       // Initial width is set from table.
       _this.setWidth(_this.accidental.width);
@@ -9489,7 +9663,10 @@
     }, {
       key: 'setNote',
       value: function setNote(note) {
-        if (!note) throw new Vex$1.RERR("ArgumentError", "Bad note value: " + note);
+        if (!note) {
+          throw new Vex$1.RERR('ArgumentError', 'Bad note value: ' + note);
+        }
+
         this.note = note;
 
         // Accidentals attached to grace notes are rendered smaller.
@@ -9506,12 +9683,13 @@
       value: function setAsCautionary() {
         this.cautionary = true;
         this.render_options.font_scale = 28;
-        this.paren_left = Flow.accidentalCodes("{");
-        this.paren_right = Flow.accidentalCodes("}");
-        var width_adjust = this.type == "##" || this.type == "bb" ? 6 : 4;
+        this.parenLeft = Flow.accidentalCodes('{');
+        this.parenRight = Flow.accidentalCodes('}');
+        var widthAdjust = this.type === '##' || this.type === 'bb' ? 6 : 4;
 
         // Make sure `width` accomodates for parentheses.
-        this.setWidth(this.paren_left.width + this.accidental.width + this.paren_right.width - width_adjust);
+        this.setWidth(this.parenLeft.width + this.accidental.width + this.parenRight.width - widthAdjust);
+
         return this;
       }
 
@@ -9520,27 +9698,49 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR("NoContext", "Can't draw accidental without a context.");
-        if (!(this.note && this.index != null)) throw new Vex$1.RERR("NoAttachedNote", "Can't draw accidental without a note and index.");
+        var context = this.context;
+        var type = this.type;
+        var position = this.position;
+        var note = this.note;
+        var index = this.index;
+        var cautionary = this.cautionary;
+        var x_shift = this.x_shift;
+        var y_shift = this.y_shift;
+        var width = this.width;
+        var accidental = this.accidental;
+        var parenLeft = this.parenLeft;
+        var parenRight = this.parenRight;
+        var font_scale = this.render_options.font_scale;
 
-        // Figure out the start `x` and `y` coordinates for this note and index.
-        var start = this.note.getModifierStartXY(this.position, this.index);
-        var acc_x = start.x + this.x_shift - this.width;
-        var acc_y = start.y + this.y_shift;
-        L$7("Rendering: ", this.type, acc_x, acc_y);
 
-        if (!this.cautionary) {
+        if (!context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw accidental without a context.");
+        }
+
+        if (!(note && index != null)) {
+          throw new Vex$1.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
+        }
+
+        // Figure out the start `x` and `y` coordinates for note and index.
+        var start = note.getModifierStartXY(position, index);
+        var accX = start.x + x_shift - width;
+        var accY = start.y + y_shift;
+        L$7('Rendering: ', type, accX, accY);
+
+        var renderGlyphToContext = Glyph.renderGlyph.bind(null, context);
+
+        if (!cautionary) {
           // Render the accidental alone.
-          Glyph.renderGlyph(this.context, acc_x, acc_y, this.render_options.font_scale, this.accidental.code);
+          renderGlyphToContext(accX, accY, font_scale, accidental.code);
         } else {
           // Render the accidental in parentheses.
-          acc_x += 3;
-          Glyph.renderGlyph(this.context, acc_x, acc_y, this.render_options.font_scale, this.paren_left.code);
-          acc_x += 2;
-          Glyph.renderGlyph(this.context, acc_x, acc_y, this.render_options.font_scale, this.accidental.code);
-          acc_x += this.accidental.width - 2;
-          if (this.type == "##" || this.type == "bb") acc_x -= 2;
-          Glyph.renderGlyph(this.context, acc_x, acc_y, this.render_options.font_scale, this.paren_right.code);
+          accX += 3;
+          renderGlyphToContext(accX, accY, font_scale, parenLeft.code);
+          accX += 2;
+          renderGlyphToContext(accX, accY, font_scale, accidental.code);
+          accX += accidental.width - 2;
+          if (type === '##' || type === 'bb') accX -= 2;
+          renderGlyphToContext(accX, accY, font_scale, parenRight.code);
         }
       }
     }]);
@@ -11745,7 +11945,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
   function L$6() {
-    if (ModifierContext.DEBUG) Vex$1.L("Vex.Flow.ModifierContext", arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (ModifierContext.DEBUG) Vex$1.L('Vex.Flow.ModifierContext', args);
   }
 
   var ModifierContext = function () {
@@ -11813,7 +12017,9 @@
     }, {
       key: 'getMetrics',
       value: function getMetrics() {
-        if (!this.formatted) throw new Vex$1.RERR("UnformattedModifier", "Unformatted modifier has no metrics.");
+        if (!this.formatted) {
+          throw new Vex$1.RERR('UnformattedModifier', 'Unformatted modifier has no metrics.');
+        }
 
         return {
           width: this.state.left_shift + this.state.right_shift + this.spacing,
@@ -11825,11 +12031,13 @@
     }, {
       key: 'preFormat',
       value: function preFormat() {
+        var _this = this;
+
         if (this.preFormatted) return;
         this.PREFORMAT.forEach(function (modifier) {
-          L$6("Preformatting ModifierContext: ", modifier.CATEGORY);
-          modifier.format(this.getModifiers(modifier.CATEGORY), this.state, this);
-        }, this);
+          L$6('Preformatting ModifierContext: ', modifier.CATEGORY);
+          modifier.format(_this.getModifiers(modifier.CATEGORY), _this.state, _this);
+        });
 
         // Update width of this modifier context
         this.width = this.state.left_shift + this.state.right_shift;
@@ -11838,11 +12046,13 @@
     }, {
       key: 'postFormat',
       value: function postFormat() {
+        var _this2 = this;
+
         if (this.postFormatted) return;
         this.POSTFORMAT.forEach(function (modifier) {
-          L$6("Postformatting ModifierContext: ", modifier.CATEGORY);
-          modifier.postFormat(this.getModifiers(modifier.CATEGORY), this);
-        }, this);
+          L$6('Postformatting ModifierContext: ', modifier.CATEGORY);
+          modifier.postFormat(_this2.getModifiers(modifier.CATEGORY), _this2);
+        });
       }
     }]);
     return ModifierContext;
@@ -11850,104 +12060,98 @@
 
   // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
   function L() {
-    if (Formatter.DEBUG) Vex$1.L("Vex.Flow.Formatter", arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (Formatter.DEBUG) Vex$1.L('Vex.Flow.Formatter', args);
   }
 
   // Helper function to locate the next non-rest note(s).
-  function lookAhead(notes, rest_line, i, compare) {
-    // If no valid next note group, next_rest_line is same as current.
-    var next_rest_line = rest_line;
+  function lookAhead(notes, restLine, i, compare) {
+    // If no valid next note group, nextRestLine is same as current.
+    var nextRestLine = restLine;
 
     // Get the rest line for next valid non-rest note group.
-    i++;
-    while (i < notes.length) {
-      if (!notes[i].isRest() && !notes[i].shouldIgnoreTicks()) {
-        next_rest_line = notes[i].getLineForRest();
+    for (i += 1; i < notes.length; i += 1) {
+      var note = notes[i];
+      if (!note.isRest() && !note.shouldIgnoreTicks()) {
+        nextRestLine = note.getLineForRest();
         break;
       }
-      i++;
     }
 
     // Locate the mid point between two lines.
-    if (compare && rest_line != next_rest_line) {
-      var top = Vex$1.Max(rest_line, next_rest_line);
-      var bot = Vex$1.Min(rest_line, next_rest_line);
-      next_rest_line = Vex$1.MidLine(top, bot);
+    if (compare && restLine !== nextRestLine) {
+      var top = Math.max(restLine, nextRestLine);
+      var bot = Math.min(restLine, nextRestLine);
+      nextRestLine = Vex$1.MidLine(top, bot);
     }
-    return next_rest_line;
+    return nextRestLine;
   }
 
   // Take an array of `voices` and place aligned tickables in the same context. Returns
-  // a mapping from `tick` to `context_type`, a list of `tick`s, and the resolution
+  // a mapping from `tick` to `ContextType`, a list of `tick`s, and the resolution
   // multiplier.
   //
   // Params:
   // * `voices`: Array of `Voice` instances.
-  // * `context_type`: A context class (e.g., `ModifierContext`, `TickContext`)
-  // * `add_fn`: Function to add tickable to context.
-  function createContexts(voices, context_type, add_fn) {
-    if (!voices || !voices.length) throw new Vex$1.RERR("BadArgument", "No voices to format");
-
-    // Initialize tick maps.
-    var totalTicks = voices[0].getTotalTicks();
-    var tickToContextMap = {};
-    var tickList = [];
-    var contexts = [];
-
-    var resolutionMultiplier = 1;
+  // * `ContextType`: A context class (e.g., `ModifierContext`, `TickContext`)
+  // * `addToContext`: Function to add tickable to context.
+  function createContexts(voices, ContextType, addToContext) {
+    if (!voices || !voices.length) {
+      throw new Vex$1.RERR('BadArgument', 'No voices to format');
+    }
 
     // Find out highest common multiple of resolution multipliers.
     // The purpose of this is to find out a common denominator
     // for all fractional tick values in all tickables of all voices,
     // so that the values can be expanded and the numerator used
     // as an integer tick value.
-    var i; // shared iterator
-    var voice;
-    for (i = 0; i < voices.length; ++i) {
-      voice = voices[i];
+    var totalTicks = voices[0].getTotalTicks();
+    var resolutionMultiplier = voices.reduce(function (resolutionMultiplier, voice) {
       if (!voice.getTotalTicks().equals(totalTicks)) {
-        throw new Vex$1.RERR("TickMismatch", "Voices should have same total note duration in ticks.");
+        throw new Vex$1.RERR('TickMismatch', 'Voices should have same total note duration in ticks.');
       }
 
-      if (voice.getMode() == Voice.Mode.STRICT && !voice.isComplete()) throw new Vex$1.RERR("IncompleteVoice", "Voice does not have enough notes.");
-
-      var lcm = Fraction.LCM(resolutionMultiplier, voice.getResolutionMultiplier());
-      if (resolutionMultiplier < lcm) {
-        resolutionMultiplier = lcm;
+      if (voice.getMode() === Voice.Mode.STRICT && !voice.isComplete()) {
+        throw new Vex$1.RERR('IncompleteVoice', 'Voice does not have enough notes.');
       }
-    }
+
+      return Math.max(resolutionMultiplier, Fraction.LCM(resolutionMultiplier, voice.getResolutionMultiplier()));
+    }, 1);
+
+    // Initialize tick maps.
+    var tickToContextMap = {};
+    var tickList = [];
+    var contexts = [];
 
     // For each voice, extract notes and create a context for every
     // new tick that hasn't been seen before.
-    for (i = 0; i < voices.length; ++i) {
-      voice = voices[i];
-
-      var tickables = voice.getTickables();
-
+    voices.forEach(function (voice) {
       // Use resolution multiplier as denominator to expand ticks
       // to suitable integer values, so that no additional expansion
       // of fractional tick values is needed.
       var ticksUsed = new Fraction(0, resolutionMultiplier);
 
-      for (var j = 0; j < tickables.length; ++j) {
-        var tickable = tickables[j];
+      voice.getTickables().forEach(function (tickable) {
         var integerTicks = ticksUsed.numerator;
 
         // If we have no tick context for this tick, create one.
         if (!tickToContextMap[integerTicks]) {
-          var newContext = new context_type();
+          var newContext = new ContextType();
           contexts.push(newContext);
           tickToContextMap[integerTicks] = newContext;
         }
 
         // Add this tickable to the TickContext.
-        add_fn(tickable, tickToContextMap[integerTicks]);
+        addToContext(tickable, tickToContextMap[integerTicks]);
 
         // Maintain a sorted list of tick contexts.
         tickList.push(integerTicks);
         ticksUsed.add(tickable.getTicks());
-      }
-    }
+      });
+    });
 
     return {
       map: tickToContextMap,
@@ -11974,45 +12178,40 @@
       // * `stave` - The stave to which to draw (`Stave` or `TabStave`)
       // * `notes` - Array of `Note` instances (`StaveNote`, `TextNote`, `TabNote`, etc.)
       // * `params` - One of below:
-      //    * Setting `autobeam` only `(context, stave, notes, true)` or `(ctx, stave, notes, {autobeam: true})`
+      //    * Setting `autobeam` only `(context, stave, notes, true)` or
+      //      `(ctx, stave, notes, {autobeam: true})`
       //    * Setting `align_rests` a struct is needed `(context, stave, notes, {align_rests: true})`
-      //    * Setting both a struct is needed `(context, stave, notes, {autobeam: true, align_rests: true})`
+      //    * Setting both a struct is needed `(context, stave, notes, {
+      //      autobeam: true, align_rests: true})`
       //
       // `autobeam` automatically generates beams for the notes.
       // `align_rests` aligns rests with nearby notes.
       value: function FormatAndDraw(ctx, stave, notes, params) {
-        var opts = {
+        var options = {
           auto_beam: false,
           align_rests: false
         };
 
-        if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) == "object") {
-          Vex$1.Merge(opts, params);
-        } else if (typeof params == "boolean") {
-          opts.auto_beam = params;
+        if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) === 'object') {
+          Vex$1.Merge(options, params);
+        } else if (typeof params === 'boolean') {
+          options.auto_beam = params;
         }
 
         // Start by creating a voice and adding all the notes to it.
-        var voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
-        voice.addTickables(notes);
+        var voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
 
         // Then create beams, if requested.
-        var beams = null;
-        if (opts.auto_beam) {
-          beams = Beam.applyAndGetBeams(voice);
-        }
+        var beams = options.auto_beam ? Beam.applyAndGetBeams(voice) : [];
 
         // Instantiate a `Formatter` and format the notes.
-        new Formatter().joinVoices([voice], { align_rests: opts.align_rests }).formatToStave([voice], stave, { align_rests: opts.align_rests });
+        new Formatter().joinVoices([voice], { align_rests: options.align_rests }).formatToStave([voice], stave, { align_rests: options.align_rests });
 
         // Render the voice and beams to the stave.
-        voice.setStave(stave);
-        voice.draw(ctx, stave);
-        if (beams != null) {
-          for (var i = 0; i < beams.length; ++i) {
-            beams[i].setContext(ctx).draw();
-          }
-        }
+        voice.setStave(stave).draw(ctx, stave);
+        beams.forEach(function (beam) {
+          return beam.setContext(ctx).draw();
+        });
 
         // Return the bounding box of the voice.
         return voice.getBoundingBox();
@@ -12040,25 +12239,20 @@
           align_rests: false
         };
 
-        if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) == "object") {
+        if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) === 'object') {
           Vex$1.Merge(opts, params);
-        } else if (typeof params == "boolean") {
+        } else if (typeof params === 'boolean') {
           opts.auto_beam = params;
         }
 
         // Create a `4/4` voice for `notes`.
-        var notevoice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
-        notevoice.addTickables(notes);
+        var notevoice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
 
         // Create a `4/4` voice for `tabnotes`.
-        var tabvoice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
-        tabvoice.addTickables(tabnotes);
+        var tabvoice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(tabnotes);
 
-        // Generate beams if requested.
-        var beams = null;
-        if (opts.auto_beam) {
-          beams = Beam.applyAndGetBeams(notevoice);
-        }
+        // Then create beams, if requested.
+        var beams = opts.auto_beam ? Beam.applyAndGetBeams(notevoice) : [];
 
         // Instantiate a `Formatter` and align tab and stave notes.
         new Formatter().joinVoices([notevoice], { align_rests: opts.align_rests }).joinVoices([tabvoice]).formatToStave([notevoice, tabvoice], stave, { align_rests: opts.align_rests });
@@ -12066,11 +12260,9 @@
         // Render voices and beams to staves.
         notevoice.draw(ctx, stave);
         tabvoice.draw(ctx, tabstave);
-        if (beams != null) {
-          for (var i = 0; i < beams.length; ++i) {
-            beams[i].setContext(ctx).draw();
-          }
-        }
+        beams.forEach(function (beam) {
+          return beam.setContext(ctx).draw();
+        });
 
         // Draw a connector between tab and note staves.
         new StaveConnector(stave, tabstave).setContext(ctx).draw();
@@ -12080,46 +12272,42 @@
       //
       // Params:
       // * `notes`: An array of notes.
-      // * `align_all_notes`: If set to false, only aligns non-beamed notes.
-      // * `align_tuplets`: If set to false, ignores tuplets.
+      // * `alignAllNotes`: If set to false, only aligns non-beamed notes.
+      // * `alignTuplets`: If set to false, ignores tuplets.
 
     }, {
       key: 'AlignRestsToNotes',
-      value: function AlignRestsToNotes(notes, align_all_notes, align_tuplets) {
-        for (var i = 0; i < notes.length; ++i) {
-          if (notes[i] instanceof StaveNote && notes[i].isRest()) {
-            var note = notes[i];
-
-            if (note.tuplet && !align_tuplets) continue;
+      value: function AlignRestsToNotes(notes, alignAllNotes, alignTuplets) {
+        notes.forEach(function (note, index) {
+          if (note instanceof StaveNote && note.isRest()) {
+            if (note.tuplet && !alignTuplets) return;
 
             // If activated rests not on default can be rendered as specified.
             var position = note.getGlyph().position.toUpperCase();
-            if (position != "R/4" && position != "B/4") {
-              continue;
-            }
+            if (position !== 'R/4' && position !== 'B/4') return;
 
-            if (align_all_notes || note.beam != null) {
+            if (alignAllNotes || note.beam != null) {
               // Align rests with previous/next notes.
               var props = note.getKeyProps()[0];
-              if (i === 0) {
-                props.line = lookAhead(notes, props.line, i, false);
+              if (index === 0) {
+                props.line = lookAhead(notes, props.line, index, false);
                 note.setKeyLine(0, props.line);
-              } else if (i > 0 && i < notes.length) {
+              } else if (index > 0 && index < notes.length) {
                 // If previous note is a rest, use its line number.
-                var rest_line;
-                if (notes[i - 1].isRest()) {
-                  rest_line = notes[i - 1].getKeyProps()[0].line;
-                  props.line = rest_line;
+                var restLine = void 0;
+                if (notes[index - 1].isRest()) {
+                  restLine = notes[index - 1].getKeyProps()[0].line;
+                  props.line = restLine;
                 } else {
-                  rest_line = notes[i - 1].getLineForRest();
+                  restLine = notes[index - 1].getLineForRest();
                   // Get the rest line for next valid non-rest note group.
-                  props.line = lookAhead(notes, rest_line, i, true);
+                  props.line = lookAhead(notes, restLine, index, true);
                 }
                 note.setKeyLine(0, props.line);
               }
             }
           }
-        }
+        });
 
         return this;
       }
@@ -12141,22 +12329,25 @@
       this.totalTicks = new Fraction(0, 1);
 
       // Arrays of tick and modifier contexts.
-      this.tContexts = null;
-      this.mContexts = null;
+      this.tickContexts = null;
+      this.modiferContexts = null;
     }
 
     // Find all the rests in each of the `voices` and align them
-    // to neighboring notes. If `align_all_notes` is `false`, then only
+    // to neighboring notes. If `alignAllNotes` is `false`, then only
     // align non-beamed notes.
 
 
     createClass(Formatter, [{
       key: 'alignRests',
-      value: function alignRests(voices, align_all_notes) {
-        if (!voices || !voices.length) throw new Vex$1.RERR("BadArgument", "No voices to format rests");
-        for (var i = 0; i < voices.length; i++) {
-          new Formatter.AlignRestsToNotes(voices[i].tickables, align_all_notes);
+      value: function alignRests(voices, alignAllNotes) {
+        if (!voices || !voices.length) {
+          throw new Vex$1.RERR('BadArgument', 'No voices to format rests');
         }
+
+        voices.forEach(function (voice) {
+          return Formatter.AlignRestsToNotes(voice.getTickables(), alignAllNotes);
+        });
       }
 
       // Calculate the minimum width required to align and format `voices`.
@@ -12165,31 +12356,30 @@
       key: 'preCalculateMinTotalWidth',
       value: function preCalculateMinTotalWidth(voices) {
         // Cache results.
-        if (this.hasMinTotalWidth) return;
+        if (this.hasMinTotalWidth) return this.minTotalWidth;
 
         // Create tick contexts if not already created.
-        if (!this.tContexts) {
+        if (!this.tickContexts) {
           if (!voices) {
-            throw new Vex$1.RERR("BadArgument", "'voices' required to run preCalculateMinTotalWidth");
+            throw new Vex$1.RERR('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
           }
+
           this.createTickContexts(voices);
         }
 
-        var contexts = this.tContexts;
-        var contextList = contexts.list;
-        var contextMap = contexts.map;
-
-        this.minTotalWidth = 0;
+        var _tickContexts = this.tickContexts;
+        var contextList = _tickContexts.list;
+        var contextMap = _tickContexts.map;
 
         // Go through each tick context and calculate total width.
-        for (var i = 0; i < contextList.length; ++i) {
-          var context = contextMap[contextList[i]];
 
-          // `preFormat` gets them to descend down to their tickables and modifier
-          // contexts, and calculate their widths.
+        this.minTotalWidth = contextList.map(function (tick) {
+          var context = contextMap[tick];
           context.preFormat();
-          this.minTotalWidth += context.getWidth();
-        }
+          return context.getWidth();
+        }).reduce(function (a, b) {
+          return a + b;
+        }, 0);
 
         this.hasMinTotalWidth = true;
 
@@ -12203,7 +12393,7 @@
       key: 'getMinTotalWidth',
       value: function getMinTotalWidth() {
         if (!this.hasMinTotalWidth) {
-          throw new Vex$1.RERR("NoMinTotalWidth", "Need to call 'preCalculateMinTotalWidth' or 'preFormat' before" + " calling 'getMinTotalWidth'");
+          throw new Vex$1.RERR('NoMinTotalWidth', "Call 'preCalculateMinTotalWidth' or 'preFormat' before calling 'getMinTotalWidth'");
         }
 
         return this.minTotalWidth;
@@ -12215,9 +12405,10 @@
       key: 'createModifierContexts',
       value: function createModifierContexts(voices) {
         var contexts = createContexts(voices, ModifierContext, function (tickable, context) {
-          tickable.addToModifierContext(context);
+          return tickable.addToModifierContext(context);
         });
-        this.mContexts = contexts;
+
+        this.modiferContexts = contexts;
         return contexts;
       }
 
@@ -12228,7 +12419,7 @@
       key: 'createTickContexts',
       value: function createTickContexts(voices) {
         var contexts = createContexts(voices, TickContext, function (tickable, context) {
-          context.addTickable(tickable);
+          return context.addTickable(tickable);
         });
 
         contexts.array.forEach(function (context) {
@@ -12236,29 +12427,32 @@
         });
 
         this.totalTicks = voices[0].getTicksUsed().clone();
-        this.tContexts = contexts;
+        this.tickContexts = contexts;
         return contexts;
       }
 
       // This is the core formatter logic. Format voices and justify them
-      // to `justifyWidth` pixels. `rendering_context` is required to justify elements
+      // to `justifyWidth` pixels. `renderingContext` is required to justify elements
       // that can't retreive widths without a canvas. This method sets the `x` positions
       // of all the tickables/notes in the formatter.
 
     }, {
       key: 'preFormat',
-      value: function preFormat(justifyWidth, rendering_context, voices, stave) {
+      value: function preFormat(justifyWidth, renderingContext, voices, stave) {
+        var _this = this;
+
         // Initialize context maps.
-        var contexts = this.tContexts;
+        var contexts = this.tickContexts;
         var contextList = contexts.list;
         var contextMap = contexts.map;
+        var resolutionMultiplier = contexts.resolutionMultiplier;
 
         // If voices and a stave were provided, set the Stave for each voice
         // and preFormat to apply Y values to the notes;
+
         if (voices && stave) {
           voices.forEach(function (voice) {
-            voice.setStave(stave);
-            voice.preFormat();
+            return voice.setStave(stave).preFormat();
           });
         }
 
@@ -12267,28 +12461,25 @@
           justifyWidth = 0;
           this.pixelsPerTick = 0;
         } else {
-          this.pixelsPerTick = justifyWidth / (this.totalTicks.value() * contexts.resolutionMultiplier);
+          this.pixelsPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
         }
 
         // Now distribute the ticks to each tick context, and assign them their
         // own X positions.
         var x = 0;
-        var center_x = justifyWidth / 2;
-        var white_space = 0; // White space to right of previous note
-        var tick_space = 0; // Pixels from prev note x-pos to curent note x-pos
-        var prev_tick = 0;
-        var prev_width = 0;
+        var centerX = justifyWidth / 2;
+        var whiteSpace = 0; // White space to right of previous note
+        var tickSpace = 0; // Pixels from prev note x-pos to curent note x-pos
+        var prevTick = 0;
+        var prevWidth = 0;
         var lastMetrics = null;
-        var initial_justify_width = justifyWidth;
+        var initialJustifyWidth = justifyWidth;
         this.minTotalWidth = 0;
 
-        var i, tick, context;
-
         // Pass 1: Give each note maximum width requested by context.
-        for (i = 0; i < contextList.length; ++i) {
-          tick = contextList[i];
-          context = contextMap[tick];
-          if (rendering_context) context.setContext(rendering_context);
+        contextList.forEach(function (tick, index) {
+          var context = contextMap[tick];
+          if (renderingContext) context.setContext(renderingContext);
 
           // Make sure that all tickables in this context have calculated their
           // space requirements.
@@ -12296,92 +12487,89 @@
 
           var thisMetrics = context.getMetrics();
           var width = context.getWidth();
-          this.minTotalWidth += width;
-          var min_x = 0;
-          var pixels_used = width;
+          _this.minTotalWidth += width;
+          var minX = 0;
+          var pxUsed = width;
 
           // Calculate space between last note and next note.
-          tick_space = Math.min((tick - prev_tick) * this.pixelsPerTick, pixels_used);
+          tickSpace = Math.min((tick - prevTick) * _this.pixelsPerTick, pxUsed);
 
-          // Shift next note up `tick_space` pixels.
-          var set_x = x + tick_space;
+          // Shift next note up `tickSpace` pixels.
+          var setX = x + tickSpace;
 
           // Calculate the minimum next note position to allow for right modifiers.
           if (lastMetrics != null) {
-            min_x = x + prev_width - lastMetrics.extraLeftPx;
+            minX = x + prevWidth - lastMetrics.extraLeftPx;
           }
 
           // Determine the space required for the previous tick.
           // The `shouldIgnoreTicks` bool is true for elements in the stave
           // that don't consume ticks (bar lines, key and time signatures, etc.)
-          set_x = context.shouldIgnoreTicks() ? min_x + context.getWidth() : Math.max(set_x, min_x);
+          setX = context.shouldIgnoreTicks() ? minX + context.getWidth() : Math.max(setX, minX);
 
           if (context.shouldIgnoreTicks() && justifyWidth) {
             // This note stole room... recalculate with new justification width.
             justifyWidth -= context.getWidth();
-            this.pixelsPerTick = justifyWidth / (this.totalTicks.value() * contexts.resolutionMultiplier);
+            _this.pixelsPerTick = justifyWidth / (_this.totalTicks.value() * resolutionMultiplier);
           }
 
           // Determine pixels needed for left modifiers.
-          var left_px = thisMetrics.extraLeftPx;
+          var leftPx = thisMetrics.extraLeftPx;
 
           // Determine white space to right of previous tick (from right modifiers.)
           if (lastMetrics != null) {
-            white_space = set_x - x - (prev_width - lastMetrics.extraLeftPx);
+            whiteSpace = setX - x - (prevWidth - lastMetrics.extraLeftPx);
           }
 
           // Deduct pixels from white space quota.
-          if (i > 0) {
-            if (white_space > 0) {
-              if (white_space >= left_px) {
-                // Have enough white space for left modifiers - no offset needed.
-                left_px = 0;
-              } else {
-                // Decrease left modifier offset by amount of white space.
-                left_px -= white_space;
-              }
+          if (index > 0 && whiteSpace > 0) {
+            if (whiteSpace >= leftPx) {
+              // Have enough white space for left modifiers - no offset needed.
+              leftPx = 0;
+            } else {
+              // Decrease left modifier offset by amount of white space.
+              leftPx -= whiteSpace;
             }
           }
 
           // Adjust the tick x position with the left modifier offset.
-          set_x += left_px;
+          setX += leftPx;
 
           // Set the `x` value for the context, which sets the `x` value for all
           // tickables in this context.
-          context.setX(set_x);
-          context.setPixelsUsed(pixels_used); // ??? Remove this if nothing breaks
+          context.setX(setX);
+          context.setPixelsUsed(pxUsed); // ??? Remove this if nothing breaks
 
           lastMetrics = thisMetrics;
-          prev_width = width;
-          prev_tick = tick;
-          x = set_x;
-        }
+          prevWidth = width;
+          prevTick = tick;
+          x = setX;
+        });
 
         this.hasMinTotalWidth = true;
         if (justifyWidth > 0) {
-          // Pass 2: Take leftover width, and distribute it to proportionately to
-          // all notes.
-          var remaining_x = initial_justify_width - (x + prev_width);
-          var leftover_pixels_per_tick = remaining_x / (this.totalTicks.value() * contexts.resolutionMultiplier);
-          var accumulated_space = 0;
-          prev_tick = 0;
+          (function () {
+            // Pass 2: Take leftover width, and distribute it to proportionately to
+            // all notes.
+            var remainingX = initialJustifyWidth - (x + prevWidth);
+            var leftoverPxPerTick = remainingX / (_this.totalTicks.value() * resolutionMultiplier);
+            var spaceAccum = 0;
 
-          for (i = 0; i < contextList.length; ++i) {
-            tick = contextList[i];
-            context = contextMap[tick];
-            tick_space = (tick - prev_tick) * leftover_pixels_per_tick;
-            accumulated_space = accumulated_space + tick_space;
-            context.setX(context.getX() + accumulated_space);
-            prev_tick = tick;
+            contextList.forEach(function (tick, index) {
+              var prevTick = contextList[index - 1] || 0;
+              var context = contextMap[tick];
+              var tickSpace = (tick - prevTick) * leftoverPxPerTick;
+              spaceAccum += tickSpace;
 
-            // Move center aligned tickables to middle
-            var centeredTickables = context.getCenterAlignedTickables();
+              context.setX(context.getX() + spaceAccum);
 
-            /*jshint -W083 */
-            centeredTickables.forEach(function (tickable) {
-              tickable.center_x_shift = center_x - context.getX();
+              // Move center aligned tickables to middle
+              context.getCenterAlignedTickables().forEach(function (tickable) {
+                // eslint-disable-line
+                tickable.center_x_shift = centerX - context.getX();
+              });
             });
-          }
+          })();
         }
       }
 
@@ -12392,15 +12580,14 @@
     }, {
       key: 'postFormat',
       value: function postFormat() {
-        // Postformat modifier contexts
-        this.mContexts.list.forEach(function (mContext) {
-          this.mContexts.map[mContext].postFormat();
-        }, this);
+        var postFormatContexts = function postFormatContexts(contexts) {
+          return contexts.list.forEach(function (tick) {
+            return contexts.map[tick].postFormat();
+          });
+        };
 
-        // Postformat tick contexts
-        this.tContexts.list.forEach(function (tContext) {
-          this.tContexts.map[tContext].postFormat();
-        }, this);
+        postFormatContexts(this.modiferContexts);
+        postFormatContexts(this.tickContexts);
 
         return this;
       }
@@ -12452,7 +12639,7 @@
       key: 'formatToStave',
       value: function formatToStave(voices, stave, options) {
         var justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
-        L("Formatting voices to width: ", justifyWidth);
+        L('Formatting voices to width: ', justifyWidth);
         var opts = { context: stave.getContext() };
         Vex$1.Merge(opts, options);
         return this.format(voices, justifyWidth, opts);
