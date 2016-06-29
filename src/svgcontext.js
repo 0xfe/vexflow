@@ -301,7 +301,7 @@ export class SVGContext {
     }
 
     // Create the rect & style it:
-    const rect = this.create('rect');
+    const rectangle = this.create('rect');
     if (typeof attributes === 'undefined') attributes = {
       fill: 'none',
       'stroke-width': this.lineWidth,
@@ -314,9 +314,9 @@ export class SVGContext {
       height,
     });
 
-    this.applyAttributes(rect, attributes);
+    this.applyAttributes(rectangle, attributes);
 
-    this.add(rect);
+    this.add(rectangle);
     return this;
   }
 
