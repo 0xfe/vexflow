@@ -22,6 +22,11 @@ module.exports = (grunt) => {
 
   const ESLINT_SOURCES = [
     'src/accidental.js',
+    'src/annotation.js',
+    'src/articulation.js',
+    'src/barnote.js',
+    'src/beam.js',
+    'src/bend.js',
     'src/formatter.js',
     'src/modifiercontext.js',
     'src/stavenote.js',

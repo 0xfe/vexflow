@@ -127,7 +127,7 @@ export class Bend extends Modifier {
       if ('width' in bend) {
         total_width += bend.width;
       } else {
-        const additional_width = (bend.type == Bend.UP) ?
+        const additional_width = (bend.type === Bend.UP) ?
           this.render_options.bend_width : this.render_options.release_width;
 
         bend.width = Vex.Max(additional_width, measure_text(bend.text)) + 3;
@@ -140,10 +140,12 @@ export class Bend extends Modifier {
     return this;
   }
   draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw bend without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR('NoNoteForBend',
-      "Can't draw bend without a note or index.");
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw bend without a context.");
+    }
+    if (!(this.note && (this.index != null))) {
+      throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
+    }
 
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
         this.index);
@@ -211,26 +213,28 @@ export class Bend extends Modifier {
       const bend = this.phrase[i];
       if (i === 0) bend.draw_width += x_shift;
 
-      last_drawn_width = bend.draw_width + (last_bend ? last_bend.draw_width : 0) - (i == 1 ? x_shift : 0);
-      if (bend.type == Bend.UP) {
-        if (last_bend && last_bend.type == Bend.UP) {
+      last_drawn_width = bend.draw_width +
+        (last_bend ? last_bend.draw_width : 0) -
+        (i === 1 ? x_shift : 0);
+      if (bend.type === Bend.UP) {
+        if (last_bend && last_bend.type === Bend.UP) {
           renderArrowHead(start.x, bend_height);
         }
 
         renderBend(start.x, start.y, last_drawn_width, bend_height);
       }
 
-      if (bend.type == Bend.DOWN) {
-        if (last_bend && last_bend.type == Bend.UP) {
+      if (bend.type === Bend.DOWN) {
+        if (last_bend && last_bend.type === Bend.UP) {
           renderRelease(start.x, start.y, last_drawn_width, bend_height);
         }
 
-        if (last_bend && last_bend.type == Bend.DOWN) {
+        if (last_bend && last_bend.type === Bend.DOWN) {
           renderArrowHead(start.x, start.y, -1);
           renderRelease(start.x, start.y, last_drawn_width, bend_height);
         }
 
-        if (last_bend == null) {
+        if (last_bend === null) {
           last_drawn_width = bend.draw_width;
           renderRelease(start.x, start.y, last_drawn_width, bend_height);
         }
@@ -244,9 +248,9 @@ export class Bend extends Modifier {
     }
 
     // Final arrowhead and text
-    if (last_bend.type == Bend.UP) {
+    if (last_bend.type === Bend.UP) {
       renderArrowHead(last_bend.x + last_drawn_width, bend_height);
-    } else if (last_bend.type == Bend.DOWN) {
+    } else if (last_bend.type === Bend.DOWN) {
       renderArrowHead(last_bend.x + last_drawn_width, start.y, -1);
     }
   }
