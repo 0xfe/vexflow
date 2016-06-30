@@ -12,7 +12,7 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
-function L() { if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', arguments); }
+function L(...args) { if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args); }
 
 export class Annotation extends Modifier {
   static get CATEGORY() { return 'annotations'; }
@@ -105,10 +105,14 @@ export class Annotation extends Modifier {
 
   // Render text beside the note.
   draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw text annotation without a context.");
-    if (!this.note) throw new Vex.RERR('NoNoteForAnnotation',
-      "Can't draw text annotation without an attached note.");
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw text annotation without a context.");
+    }
+    if (!this.note) {
+      throw new Vex.RERR(
+        'NoNoteForAnnotation', "Can't draw text annotation without an attached note."
+      );
+    }
 
     const start = this.note.getModifierStartXY(Modifier.Position.ABOVE,
         this.index);
@@ -123,19 +127,21 @@ export class Annotation extends Modifier {
     // This is a hack to work around the inability to measure text height
     // in HTML5 Canvas (and SVG).
     const text_height = this.context.measureText('m').width;
-    let x, y;
+    let x;
+    let y;
 
-    if (this.justification == Annotation.Justify.LEFT) {
+    if (this.justification === Annotation.Justify.LEFT) {
       x = start.x;
-    } else if (this.justification == Annotation.Justify.RIGHT) {
+    } else if (this.justification === Annotation.Justify.RIGHT) {
       x = start.x - text_width;
-    } else if (this.justification == Annotation.Justify.CENTER) {
+    } else if (this.justification === Annotation.Justify.CENTER) {
       x = start.x - text_width / 2;
     } else /* CENTER_STEM */ {
       x = this.note.getStemX() - text_width / 2;
     }
 
-    let stem_ext, spacing;
+    let stem_ext;
+    let spacing;
     const has_stem = this.note.hasStem();
     const stave = this.note.getStave();
 
@@ -146,19 +152,17 @@ export class Annotation extends Modifier {
       spacing = stave.getSpacingBetweenLines();
     }
 
-    if (this.vert_justification == Annotation.VerticalJustify.BOTTOM) {
+    if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
       y = stave.getYForBottomText(this.text_line);
       if (has_stem) {
         const stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
         y = Math.max(y, stem_base + (spacing * (this.text_line + 2)));
       }
-    } else if (this.vert_justification ==
-               Annotation.VerticalJustify.CENTER) {
+    } else if (this.vert_justification === Annotation.VerticalJustify.CENTER) {
       const yt = this.note.getYForTopText(this.text_line) - 1;
       const yb = stave.getYForBottomText(this.text_line);
       y = yt + (yb - yt) / 2 + text_height / 2;
-    } else if (this.vert_justification ==
-               Annotation.VerticalJustify.TOP) {
+    } else if (this.vert_justification === Annotation.VerticalJustify.TOP) {
       y = Math.min(stave.getYForTopText(this.text_line), this.note.getYs()[0] - 10);
       if (has_stem) {
         y = Math.min(y, (stem_ext.topY - 5) - (spacing * this.text_line));

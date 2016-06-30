@@ -16,7 +16,7 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
-function L() { if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', arguments); }
+function L(...args) { if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args); }
 
 export class Articulation extends Modifier {
   static get CATEGORY() { return 'articulations'; }
@@ -63,8 +63,9 @@ export class Articulation extends Modifier {
     };
 
     this.articulation = Flow.articulationCodes(this.type);
-    if (!this.articulation) throw new Vex.RERR('ArgumentError',
-       "Articulation not found: '" + this.type + "'");
+    if (!this.articulation) {
+      throw new Vex.RERR('ArgumentError', "Articulation not found: '" + this.type + "'");
+    }
 
     // Default width comes from articulation table.
     this.setWidth(this.articulation.width);
@@ -74,10 +75,12 @@ export class Articulation extends Modifier {
 
   // Render articulation in position next to note.
   draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw Articulation without a context.");
-    if (!(this.note && (this.index !== null))) throw new Vex.RERR('NoAttachedNote',
-      "Can't draw Articulation without a note and index.");
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw Articulation without a context.");
+    }
+    if (!(this.note && (this.index !== null))) {
+      throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
+    }
 
     const stem_direction = this.note.getStemDirection();
     const stave = this.note.getStave();
@@ -138,7 +141,7 @@ export class Articulation extends Modifier {
       }
     }
 
-    const is_above = (this.position === Modifier.Position.ABOVE) ? true : false;
+    const is_above = (this.position === Modifier.Position.ABOVE);
     const note_line = this.note.getLineNumber(is_above);
 
     // Beamed stems are longer than quarter note stems.
