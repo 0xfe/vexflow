@@ -64,28 +64,27 @@ export class Vibrato extends Modifier {
   }
 
   draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw vibrato without a context.");
-    if (!this.note) throw new Vex.RERR('NoNoteForVibrato',
-      "Can't draw vibrato without an attached note.");
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw vibrato without a context.");
+    }
 
-    const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
-        this.index);
+    if (!this.note) {
+      throw new Vex.RERR('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
+    }
+
+    const start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
 
     const ctx = this.context;
-    const that = this;
     const vibrato_width = this.vibrato_width;
 
-    function renderVibrato(x, y) {
-      const wave_width = that.render_options.wave_width;
-      const wave_girth = that.render_options.wave_girth;
-      const wave_height = that.render_options.wave_height;
+    const renderVibrato = (x, y) => {
+      const { wave_width, wave_girth, wave_height } = this.render_options;
       const num_waves = vibrato_width / wave_width;
 
       ctx.beginPath();
 
       let i;
-      if (that.harsh) {
+      if (this.harsh) {
         ctx.moveTo(x, y + wave_girth + 1);
         for (i = 0; i < num_waves / 2; ++i) {
           ctx.lineTo(x + wave_width, y - (wave_height / 2));
@@ -103,29 +102,27 @@ export class Vibrato extends Modifier {
       } else {
         ctx.moveTo(x, y + wave_girth);
         for (i = 0; i < num_waves / 2; ++i) {
-          ctx.quadraticCurveTo(x + (wave_width / 2), y - (wave_height / 2),
-            x + wave_width, y);
+          ctx.quadraticCurveTo(x + (wave_width / 2), y - (wave_height / 2), x + wave_width, y);
           x += wave_width;
-          ctx.quadraticCurveTo(x + (wave_width / 2), y + (wave_height / 2),
-            x + wave_width, y);
+          ctx.quadraticCurveTo(x + (wave_width / 2), y + (wave_height / 2), x + wave_width, y);
           x += wave_width;
         }
 
         for (i = 0; i < num_waves / 2; ++i) {
           ctx.quadraticCurveTo(
-              x - (wave_width / 2),
-              (y + (wave_height / 2)) + wave_girth,
-              x - wave_width, y + wave_girth);
+            x - (wave_width / 2),
+            (y + (wave_height / 2)) + wave_girth,
+            x - wave_width, y + wave_girth);
           x -= wave_width;
           ctx.quadraticCurveTo(
-              x - (wave_width / 2),
-              (y - (wave_height / 2)) + wave_girth,
-              x - wave_width, y + wave_girth);
+            x - (wave_width / 2),
+            (y - (wave_height / 2)) + wave_girth,
+            x - wave_width, y + wave_girth);
           x -= wave_width;
         }
         ctx.fill();
       }
-    }
+    };
 
     const vx = start.x + this.x_shift;
     const vy = this.note.getYForTopText(this.text_line) + 2;
