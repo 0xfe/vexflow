@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.52 built on 2016-06-30.
+ * VexFlow 1.2.53 built on 2016-06-30.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -4682,7 +4682,9 @@
       }
     });
 
-    if (lineSum >= 0) return Stem.DOWN;
+    if (lineSum >= 0) {
+      return Stem.DOWN;
+    }
     return Stem.UP;
   }
 
@@ -4694,7 +4696,9 @@
       // Attempts to guess if the time signature is not found in table.
       // Currently this is fairly naive.
       value: function getDefaultBeamGroups(time_sig) {
-        if (!time_sig || time_sig == 'c') time_sig = '4/4';
+        if (!time_sig || time_sig === 'c') {
+          time_sig = '4/4';
+        }
 
         var defaults = {
           '1/2': ['1/2'],
@@ -4735,11 +4739,10 @@
           } else if (beatValue <= 4) {
             return [new Fraction(1, beatValue)];
           }
-        } else {
-          return groups.map(function (group) {
-            return new Fraction().parse(group);
-          });
         }
+        return groups.map(function (group) {
+          return new Fraction().parse(group);
+        });
       }
 
       // A helper function to automatically build basic beams for a voice. For more
@@ -4860,7 +4863,9 @@
           });
 
           // Adds any remainder notes
-          if (currentGroup.length > 0) noteGroups.push(currentGroup);
+          if (currentGroup.length > 0) {
+            noteGroups.push(currentGroup);
+          }
         }
 
         function getBeamGroups() {
@@ -4963,7 +4968,10 @@
 
         function getTupletGroups() {
           return noteGroups.filter(function (group) {
-            if (group[0]) return group[0].tuplet;
+            if (group[0]) {
+              return group[0].tuplet;
+            }
+            return false;
           });
         }
 
@@ -5011,7 +5019,7 @@
           var tuplet = firstNote.tuplet;
 
           if (firstNote.beam) tuplet.setBracketed(false);
-          if (firstNote.stem_direction == Stem.DOWN) {
+          if (firstNote.stem_direction === Stem.DOWN) {
             tuplet.setTupletLocation(Tuplet.LOCATION_BOTTOM);
           }
         });
@@ -5023,11 +5031,11 @@
     function Beam(notes, auto_stem) {
       classCallCheck(this, Beam);
 
-      if (!notes || notes == []) {
+      if (!notes || notes === []) {
         throw new Vex$1.RuntimeError('BadArguments', 'No notes provided for beam.');
       }
 
-      if (notes.length == 1) {
+      if (notes.length === 1) {
         throw new Vex$1.RuntimeError('BadArguments', 'Too few notes for beam.');
       }
 
@@ -5361,7 +5369,7 @@
           var should_break = false;
 
           // 8th note beams are always drawn.
-          if (parseInt(duration) >= 8) {
+          if (parseInt(duration, 10) >= 8) {
             // First, check to see if any indices were set up through breakSecondaryAt()
             should_break = this.break_on_indices.indexOf(i) !== -1;
 
@@ -5441,9 +5449,11 @@
     }, {
       key: 'drawStems',
       value: function drawStems() {
+        var _this = this;
+
         this.notes.forEach(function (note) {
           if (note.getStem()) {
-            note.getStem().setContext(this.context).draw();
+            note.getStem().setContext(_this.context).draw();
           }
         }, this);
       }
@@ -5453,7 +5463,9 @@
     }, {
       key: 'drawBeamLines',
       value: function drawBeamLines() {
-        if (!this.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
 
         var valid_beam_durations = ['4', '8', '16', '32', '64'];
 
@@ -5481,10 +5493,10 @@
 
           for (var j = 0; j < beam_lines.length; ++j) {
             var beam_line = beam_lines[j];
-            var first_x = beam_line.start - (this.stem_direction == Stem.DOWN ? Flow.STEM_WIDTH / 2 : 0);
+            var first_x = beam_line.start - (this.stem_direction === Stem.DOWN ? Flow.STEM_WIDTH / 2 : 0);
             var first_y = this.getSlopeY(first_x, first_x_px, first_y_px, this.slope);
 
-            var last_x = beam_line.end + (this.stem_direction == 1 ? Flow.STEM_WIDTH / 3 : -Flow.STEM_WIDTH / 3);
+            var last_x = beam_line.end + (this.stem_direction === 1 ? Flow.STEM_WIDTH / 3 : -Flow.STEM_WIDTH / 3);
             var last_y = this.getSlopeY(last_x, first_x_px, first_y_px, this.slope);
 
             this.context.beginPath();
@@ -5534,7 +5546,9 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
 
         if (this.unbeamable) return;
 
@@ -5544,8 +5558,6 @@
 
         this.drawStems();
         this.drawBeamLines();
-
-        return true;
       }
     }]);
     return Beam;
@@ -10677,7 +10689,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
   function L$9() {
-    if (Articulation.DEBUG) Vex$1.L('Vex.Flow.Articulation', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (Articulation.DEBUG) Vex$1.L('Vex.Flow.Articulation', args);
   }
 
   var Articulation = function (_Modifier) {
@@ -10736,7 +10752,9 @@
       };
 
       _this.articulation = Flow.articulationCodes(_this.type);
-      if (!_this.articulation) throw new Vex$1.RERR('ArgumentError', "Articulation not found: '" + _this.type + "'");
+      if (!_this.articulation) {
+        throw new Vex$1.RERR('ArgumentError', "Articulation not found: '" + _this.type + "'");
+      }
 
       // Default width comes from articulation table.
       _this.setWidth(_this.articulation.width);
@@ -10754,8 +10772,12 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', "Can't draw Articulation without a context.");
-        if (!(this.note && this.index !== null)) throw new Vex$1.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw Articulation without a context.");
+        }
+        if (!(this.note && this.index !== null)) {
+          throw new Vex$1.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
+        }
 
         var stem_direction = this.note.getStemDirection();
         var stave = this.note.getStave();
@@ -10812,7 +10834,7 @@
           }
         }
 
-        var is_above = this.position === Modifier.Position.ABOVE ? true : false;
+        var is_above = this.position === Modifier.Position.ABOVE;
         var note_line = this.note.getLineNumber(is_above);
 
         // Beamed stems are longer than quarter note stems.
@@ -11377,7 +11399,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
   function L$11() {
-    if (Annotation.DEBUG) Vex$1.L('Vex.Flow.Annotation', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (Annotation.DEBUG) Vex$1.L('Vex.Flow.Annotation', args);
   }
 
   var Annotation = function (_Modifier) {
@@ -11510,8 +11536,12 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', "Can't draw text annotation without a context.");
-        if (!this.note) throw new Vex$1.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw text annotation without a context.");
+        }
+        if (!this.note) {
+          throw new Vex$1.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
+        }
 
         var start = this.note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
 
@@ -11525,21 +11555,21 @@
         // This is a hack to work around the inability to measure text height
         // in HTML5 Canvas (and SVG).
         var text_height = this.context.measureText('m').width;
-        var x = void 0,
-            y = void 0;
+        var x = void 0;
+        var y = void 0;
 
-        if (this.justification == Annotation.Justify.LEFT) {
+        if (this.justification === Annotation.Justify.LEFT) {
           x = start.x;
-        } else if (this.justification == Annotation.Justify.RIGHT) {
+        } else if (this.justification === Annotation.Justify.RIGHT) {
           x = start.x - text_width;
-        } else if (this.justification == Annotation.Justify.CENTER) {
+        } else if (this.justification === Annotation.Justify.CENTER) {
           x = start.x - text_width / 2;
         } else /* CENTER_STEM */{
             x = this.note.getStemX() - text_width / 2;
           }
 
-        var stem_ext = void 0,
-            spacing = void 0;
+        var stem_ext = void 0;
+        var spacing = void 0;
         var has_stem = this.note.hasStem();
         var stave = this.note.getStave();
 
@@ -11550,17 +11580,17 @@
           spacing = stave.getSpacingBetweenLines();
         }
 
-        if (this.vert_justification == Annotation.VerticalJustify.BOTTOM) {
+        if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
           y = stave.getYForBottomText(this.text_line);
           if (has_stem) {
             var stem_base = this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
             y = Math.max(y, stem_base + spacing * (this.text_line + 2));
           }
-        } else if (this.vert_justification == Annotation.VerticalJustify.CENTER) {
+        } else if (this.vert_justification === Annotation.VerticalJustify.CENTER) {
           var yt = this.note.getYForTopText(this.text_line) - 1;
           var yb = stave.getYForBottomText(this.text_line);
           y = yt + (yb - yt) / 2 + text_height / 2;
-        } else if (this.vert_justification == Annotation.VerticalJustify.TOP) {
+        } else if (this.vert_justification === Annotation.VerticalJustify.TOP) {
           y = Math.min(stave.getYForTopText(this.text_line), this.note.getYs()[0] - 10);
           if (has_stem) {
             y = Math.min(y, stem_ext.topY - 5 - spacing * this.text_line);
@@ -11730,7 +11760,7 @@
           if ('width' in bend) {
             total_width += bend.width;
           } else {
-            var additional_width = bend.type == Bend.UP ? this.render_options.bend_width : this.render_options.release_width;
+            var additional_width = bend.type === Bend.UP ? this.render_options.bend_width : this.render_options.release_width;
 
             bend.width = Vex$1.Max(additional_width, measure_text(bend.text)) + 3;
             bend.draw_width = bend.width / 2;
@@ -11744,8 +11774,12 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', "Can't draw bend without a context.");
-        if (!(this.note && this.index != null)) throw new Vex$1.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw bend without a context.");
+        }
+        if (!(this.note && this.index != null)) {
+          throw new Vex$1.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
+        }
 
         var start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
         start.x += 3;
@@ -11810,26 +11844,26 @@
           var bend = this.phrase[i];
           if (i === 0) bend.draw_width += x_shift;
 
-          last_drawn_width = bend.draw_width + (last_bend ? last_bend.draw_width : 0) - (i == 1 ? x_shift : 0);
-          if (bend.type == Bend.UP) {
-            if (last_bend && last_bend.type == Bend.UP) {
+          last_drawn_width = bend.draw_width + (last_bend ? last_bend.draw_width : 0) - (i === 1 ? x_shift : 0);
+          if (bend.type === Bend.UP) {
+            if (last_bend && last_bend.type === Bend.UP) {
               renderArrowHead(start.x, bend_height);
             }
 
             renderBend(start.x, start.y, last_drawn_width, bend_height);
           }
 
-          if (bend.type == Bend.DOWN) {
-            if (last_bend && last_bend.type == Bend.UP) {
+          if (bend.type === Bend.DOWN) {
+            if (last_bend && last_bend.type === Bend.UP) {
               renderRelease(start.x, start.y, last_drawn_width, bend_height);
             }
 
-            if (last_bend && last_bend.type == Bend.DOWN) {
+            if (last_bend && last_bend.type === Bend.DOWN) {
               renderArrowHead(start.x, start.y, -1);
               renderRelease(start.x, start.y, last_drawn_width, bend_height);
             }
 
-            if (last_bend == null) {
+            if (last_bend === null) {
               last_drawn_width = bend.draw_width;
               renderRelease(start.x, start.y, last_drawn_width, bend_height);
             }
@@ -11843,9 +11877,9 @@
         }
 
         // Final arrowhead and text
-        if (last_bend.type == Bend.UP) {
+        if (last_bend.type === Bend.UP) {
           renderArrowHead(last_bend.x + last_drawn_width, bend_height);
-        } else if (last_bend.type == Bend.DOWN) {
+        } else if (last_bend.type === Bend.DOWN) {
           renderArrowHead(last_bend.x + last_drawn_width, start.y, -1);
         }
       }
@@ -17806,7 +17840,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
   function L$16() {
-    if (BarNote.DEBUG) Vex$1.L('Vex.Flow.BarNote', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (BarNote.DEBUG) Vex$1.L('Vex.Flow.BarNote', args);
   }
 
   var BarNote = function (_Note) {
