@@ -20,8 +20,9 @@ function calculateStemDirection(notes) {
     }
   });
 
-  if (lineSum >= 0)
+  if (lineSum >= 0) {
     return Stem.DOWN;
+  }
   return Stem.UP;
 }
 
@@ -30,7 +31,9 @@ export class Beam {
   // Attempts to guess if the time signature is not found in table.
   // Currently this is fairly naive.
   static getDefaultBeamGroups(time_sig) {
-    if (!time_sig || time_sig == 'c') time_sig = '4/4';
+    if (!time_sig || time_sig === 'c') {
+      time_sig = '4/4';
+    }
 
     const defaults = {
       '1/2': ['1/2'],
@@ -71,9 +74,8 @@ export class Beam {
       } else if (beatValue <= 4) {
         return [new Fraction(1, beatValue)];
       }
-    } else {
-      return groups.map(group => new Fraction().parse(group));
     }
+    return groups.map(group => new Fraction().parse(group));
   }
 
   // A helper function to automatically build basic beams for a voice. For more
@@ -187,8 +189,9 @@ export class Beam {
       });
 
       // Adds any remainder notes
-      if (currentGroup.length > 0)
+      if (currentGroup.length > 0) {
         noteGroups.push(currentGroup);
+      }
     }
 
     function getBeamGroups() {
@@ -294,7 +297,10 @@ export class Beam {
 
     function getTupletGroups() {
       return noteGroups.filter(group => {
-        if (group[0]) return group[0].tuplet;
+        if (group[0]) {
+          return group[0].tuplet;
+        }
+        return false;
       });
     }
 
@@ -343,7 +349,7 @@ export class Beam {
       const tuplet = firstNote.tuplet;
 
       if (firstNote.beam) tuplet.setBracketed(false);
-      if (firstNote.stem_direction == Stem.DOWN) {
+      if (firstNote.stem_direction === Stem.DOWN) {
         tuplet.setTupletLocation(Tuplet.LOCATION_BOTTOM);
       }
     });
@@ -352,11 +358,11 @@ export class Beam {
   }
 
   constructor(notes, auto_stem) {
-    if (!notes || notes == []) {
+    if (!notes || notes === []) {
       throw new Vex.RuntimeError('BadArguments', 'No notes provided for beam.');
     }
 
-    if (notes.length == 1) {
+    if (notes.length === 1) {
       throw new Vex.RuntimeError('BadArguments', 'Too few notes for beam.');
     }
 
@@ -528,7 +534,8 @@ export class Beam {
         current_extreme = top_y;
         extreme_y = note.getNoteHeadBounds().y_bottom;
         extreme_beam_count = note.getBeamCount();
-      } else if (this.stem_direction === Stem.UP && (current_extreme === 0 || current_extreme > top_y)) {
+      } else if (this.stem_direction === Stem.UP &&
+          (current_extreme === 0 || current_extreme > top_y)) {
         current_extreme = top_y;
         extreme_y = note.getNoteHeadBounds().y_top;
         extreme_beam_count = note.getBeamCount();
@@ -544,7 +551,8 @@ export class Beam {
     //  direction). This also takes into account the added height due to
     //  the width of the beams.
     const beam_width = this.render_options.beam_width * 1.5;
-    const extreme_test = this.render_options.min_flat_beam_offset + (extreme_beam_count * beam_width);
+    const extreme_test = this.render_options.min_flat_beam_offset +
+        (extreme_beam_count * beam_width);
     const new_offset = extreme_y + (extreme_test * -this.stem_direction);
     if (this.stem_direction === Stem.DOWN && offset < new_offset) {
       offset = extreme_y + extreme_test;
@@ -660,13 +668,14 @@ export class Beam {
       let should_break = false;
 
       // 8th note beams are always drawn.
-      if (parseInt(duration) >= 8) {
+      if (parseInt(duration, 10) >= 8) {
         // First, check to see if any indices were set up through breakSecondaryAt()
         should_break = this.break_on_indices.indexOf(i) !== -1;
 
         // If the secondary breaks were auto-configured in the render options,
         //  handle that as well.
-        if (this.render_options.secondary_break_ticks && tick_tally >= this.render_options.secondary_break_ticks) {
+        if (this.render_options.secondary_break_ticks && tick_tally >=
+            this.render_options.secondary_break_ticks) {
           tick_tally = 0;
           should_break = true;
         }
@@ -737,7 +746,7 @@ export class Beam {
 
   // Render the stems for each notes
   drawStems() {
-    this.notes.forEach(function(note) {
+    this.notes.forEach(note => {
       if (note.getStem()) {
         note.getStem().setContext(this.context).draw();
       }
@@ -746,8 +755,9 @@ export class Beam {
 
   // Render the beam lines
   drawBeamLines() {
-    if (!this.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw without a canvas context.");
+    if (!this.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+    }
 
     const valid_beam_durations = ['4', '8', '16', '32', '64'];
 
@@ -775,11 +785,12 @@ export class Beam {
 
       for (let j = 0; j < beam_lines.length; ++j) {
         const beam_line = beam_lines[j];
-        const first_x = beam_line.start - (this.stem_direction == Stem.DOWN ? Flow.STEM_WIDTH / 2 : 0);
+        const first_x = beam_line.start -
+          (this.stem_direction === Stem.DOWN ? Flow.STEM_WIDTH / 2 : 0);
         const first_y = this.getSlopeY(first_x, first_x_px, first_y_px, this.slope);
 
         const last_x = beam_line.end +
-          (this.stem_direction == 1 ? (Flow.STEM_WIDTH / 3) : (-Flow.STEM_WIDTH / 3));
+          (this.stem_direction === 1 ? (Flow.STEM_WIDTH / 3) : (-Flow.STEM_WIDTH / 3));
         const last_y = this.getSlopeY(last_x, first_x_px, first_y_px, this.slope);
 
         this.context.beginPath();
@@ -818,8 +829,9 @@ export class Beam {
 
   // Render the beam to the canvas context
   draw() {
-    if (!this.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw without a canvas context.");
+    if (!this.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+    }
 
     if (this.unbeamable) return;
 
@@ -829,7 +841,5 @@ export class Beam {
 
     this.drawStems();
     this.drawBeamLines();
-
-    return true;
   }
 }
