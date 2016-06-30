@@ -20,16 +20,19 @@ Vex.L = (block, args) => {
 };
 
 // Default runtime exception.
-Vex.RuntimeError = function(code, message) {
-  this.code = code;
-  this.message = message;
-};
+class RuntimeError {
+  constructor(code, message) {
+    this.code = code;
+    this.message = message;
+  }
 
-Vex.RuntimeError.prototype.toString = function() {
-  return 'RuntimeError: ' + this.message;
-};
+  toString() {
+    return 'RuntimeError: ' + this.message;
+  }
+}
 
 // Shortcut method for `RuntimeError`.
+Vex.RuntimeError = RuntimeError;
 Vex.RERR = Vex.RuntimeError;
 
 // Merge `destination` hash with `source` hash, overwriting like keys
@@ -51,8 +54,10 @@ Vex.forEach = (a, fn) => {
 };
 
 // Round number to nearest fractional value (`.5`, `.25`, etc.)
-Vex.RoundN = (x, n) => (x % n) >= (n / 2) ?
-  parseInt(x / n, 10) * n + n : parseInt(x / n, 10) * n;
+Vex.RoundN = (x, n) =>
+  (x % n) >= (n / 2)
+    ? parseInt(x / n, 10) * n + n
+    : parseInt(x / n, 10) * n;
 
 // Locate the mid point between stave lines. Returns a fractional line if a space.
 Vex.MidLine = (a, b) => {
@@ -115,10 +120,9 @@ Vex.getCanvasContext = canvas_sel => {
 //
 // `ctx`: Canvas context.
 // `x`, `y`: Dot coordinates.
-Vex.drawDot = (ctx, x, y, color) => {
-  const c = color || '#f55';
+Vex.drawDot = (ctx, x, y, color = '#55') => {
   ctx.save();
-  ctx.setFillStyle(c);
+  ctx.setFillStyle(color);
 
   // draw a circle
   ctx.beginPath();
@@ -136,29 +140,6 @@ Vex.BM = (s, f) => {
   Vex.L(s + elapsed + 'ms');
 };
 
-// Basic classical inheritance helper. Usage:
-// ```
-// // Vex.Inherit(Child, Parent, {
-// //   getName: function() {return this.name;},
-// //   setName: function(name) {this.name = name}
-// // });
-// //
-// // Returns 'Child'.
-// ```
-Vex.Inherit = ((() => {
-  const F = () => {};
-  // `C` is Child. `P` is parent. `O` is an object to
-  // to extend `C` with.
-  return (C, P, O) => {
-    F.prototype = P.prototype;
-    C.prototype = new F();
-    C.superclass = P.prototype;
-    C.prototype.constructor = C;
-    Vex.Merge(C.prototype, O);
-    return C;
-  };
-})());
-
 // Get stack trace.
 Vex.StackTrace = () => {
   const err = new Error();
@@ -166,7 +147,7 @@ Vex.StackTrace = () => {
 };
 
 // Dump warning to console.
-Vex.W = function(...args) {
+Vex.W = (...args) => {
   const line = Array.prototype.slice.call(args).join(' ');
   window.console.log('Warning: ', line, Vex.StackTrace());
 };
