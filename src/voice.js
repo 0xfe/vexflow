@@ -85,10 +85,13 @@ export class Voice {
 
   // Get the bounding box for the voice
   getBoundingBox() {
-    let stave, boundingBox, bb, i;
+    let stave;
+    let boundingBox;
+    let bb;
+    let i;
 
     if (!this.boundingBox) {
-      if (!this.stave) throw Vex.RERR('NoStave', "Can't get bounding box without stave.");
+      if (!this.stave) throw new Vex.RERR('NoStave', "Can't get bounding box without stave.");
       stave = this.stave;
       boundingBox = null;
 
@@ -109,8 +112,10 @@ export class Voice {
   // Every tickable must be associated with a voiceGroup. This allows formatters
   // and preformatters to associate them with the right modifierContexts.
   getVoiceGroup() {
-    if (!this.voiceGroup)
+    if (!this.voiceGroup) {
       throw new Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
+    }
+
     return this.voiceGroup;
   }
 
@@ -125,8 +130,7 @@ export class Voice {
 
   // Determine if the voice is complete according to the voice mode
   isComplete() {
-    if (this.mode == Voice.Mode.STRICT ||
-        this.mode == Voice.Mode.FULL) {
+    if (this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) {
       return this.ticksUsed.equals(this.totalTicks);
     } else {
       return true;
@@ -141,9 +145,10 @@ export class Voice {
       // Update the total ticks for this line.
       this.ticksUsed.add(ticks);
 
-      if ((this.mode == Voice.Mode.STRICT ||
-           this.mode == Voice.Mode.FULL) &&
-           this.ticksUsed.greaterThan(this.totalTicks)) {
+      if (
+        (this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) &&
+        this.ticksUsed.greaterThan(this.totalTicks)
+      ) {
         this.totalTicks.subtract(ticks);
         throw new Vex.RERR('BadArgument', 'Too many ticks.');
       }
@@ -176,13 +181,13 @@ export class Voice {
 
   // Preformats the voice by applying the voice's stave to each note.
   preFormat() {
-    if (this.preFormatted) return;
+    if (this.preFormatted) return this;
 
-    this.tickables.forEach(function(tickable) {
+    this.tickables.forEach((tickable) => {
       if (!tickable.getStave()) {
         tickable.setStave(this.stave);
       }
-    }, this);
+    });
 
     this.preFormatted = true;
     return this;
@@ -200,8 +205,9 @@ export class Voice {
       if (stave) tickable.setStave(stave);
 
       if (!tickable.getStave()) {
-        throw new Vex.RuntimeError('MissingStave',
-          'The voice cannot draw tickables without staves.');
+        throw new Vex.RuntimeError(
+          'MissingStave', 'The voice cannot draw tickables without staves.'
+        );
       }
 
       if (i === 0) boundingBox = tickable.getBoundingBox();

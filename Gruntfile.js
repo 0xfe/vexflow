@@ -34,8 +34,11 @@ module.exports = (grunt) => {
     'src/staveconnector.js',
     'src/stavenote.js',
     'src/stringnumber.js',
+    'src/tremolo.js',
     'src/tuning.js',
+    'src/vex.js',
     'src/vibrato.js',
+    'src/voice.js',
   ];
 
   const negatePattern = (pattern) => `!${pattern}`;

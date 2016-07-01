@@ -146,4 +146,6 @@ if [ "$num_fails" -gt 0 ]
 then
   echo "You have $num_fails fail(s):"
   head -n $num_fails $RESULTS
+else
+  echo "Success - All diffs under threshold!"
 fi
