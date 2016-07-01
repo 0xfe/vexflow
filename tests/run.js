@@ -45,6 +45,7 @@ VF.Test.run = function () {
   VF.Test.PedalMarking.Start();
   VF.Test.TextBracket.Start();
   VF.Test.StaveModifier.Start();
+  VF.Test.GhostNote.Start();
 }
 
 module.exports = VF.Test;

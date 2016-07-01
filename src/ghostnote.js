@@ -36,7 +36,9 @@ export class GhostNote extends StemmableNote {
 
   isRest() { return true; }
 
-  setStave(stave) { GhostNote.superclass.setStave.call(this, stave); }
+  setStave(stave) {
+    super.setStave(stave);
+  }
 
   addToModifierContext() { /* intentionally overridden */ return this; }
 
