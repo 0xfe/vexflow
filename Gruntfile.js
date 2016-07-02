@@ -34,6 +34,7 @@ module.exports = (grunt) => {
     'src/staveconnector.js',
     'src/stavenote.js',
     'src/stringnumber.js',
+    'src/strokes.js',
     'src/tremolo.js',
     'src/tuning.js',
     'src/vex.js',
