@@ -51,7 +51,7 @@ VF.Test.AttrNoteGroup = (function() {
         new VF.BarNote()
       ]);
       addAttrs(notes[5], [new VF.TimeSigNote("6/8")]);
-      addAttrs(notes[6], [(new VF.BarNote()).setType(VF.Barline.type.REPEAT_BEGIN)]);
+      addAttrs(notes[6], [new VF.BarNote(VF.Barline.type.REPEAT_BEGIN)]);
       addAccidental(notes[4], "b");
       addAccidental(notes[6], "bb");
 
@@ -101,13 +101,13 @@ VF.Test.AttrNoteGroup = (function() {
       addAccidental(notes[1], "#");
       addAttrs(notes[1], [
         new VF.ClefNote("bass", "small"),
-        (new VF.BarNote()).setType(VF.Barline.type.REPEAT_BEGIN),
+        new VF.BarNote(VF.Barline.type.REPEAT_BEGIN),
         new VF.TimeSigNote("3/4")
       ]);
       addAttrs(notes2[2], [
         new VF.ClefNote("alto", "small"),
         new VF.TimeSigNote("9/8"),
-        (new VF.BarNote()).setType(VF.Barline.type.DOUBLE)
+        new VF.BarNote(VF.Barline.type.DOUBLE)
       ]);
       addAttrs(notes[3], [new VF.ClefNote("soprano", "small")]);
       addAccidental(notes[2], "b");
