@@ -11,7 +11,6 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
 import { Voice } from './voice';
-import { GraceNoteGroup } from './gracenotegroup';
 
 export class AttrNoteGroup extends Modifier {
   static get CATEGORY() { return 'attrnotegroup'; }
