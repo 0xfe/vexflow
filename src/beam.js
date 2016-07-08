@@ -295,13 +295,21 @@ export class Beam {
       });
     }
 
-    function getTupletGroups() {
-      return noteGroups.filter(group => {
-        if (group[0]) {
-          return group[0].tuplet;
-        }
-        return false;
+    // Get all of the tuplets in all of the note groups
+    function getTuplets() {
+      const uniqueTuplets = [];
+
+      // Go through all of the note groups and inspect for tuplets
+      noteGroups.forEach(group => {
+        let tuplet = null;
+        group.forEach(note => {
+          if (note.tuplet && (tuplet !== note.tuplet)) {
+            tuplet = note.tuplet;
+            uniqueTuplets.push(tuplet);
+          }
+        });
       });
+      return uniqueTuplets;
     }
 
 
@@ -316,7 +324,7 @@ export class Beam {
     const beamedNoteGroups = getBeamGroups();
 
     // Get the tuplets in order to format them accurately
-    const tupletGroups = getTupletGroups();
+    const allTuplets = getTuplets();
 
     // Create a Vex.Flow.Beam from each group of notes to be beamed
     const beams = [];
@@ -337,21 +345,22 @@ export class Beam {
     });
 
     // Reformat tuplets
-    tupletGroups.forEach(group => {
-      let firstNote = group[0];
-      for (let i = 0; i < group.length; ++i) {
-        if (group[i].hasStem()) {
-          firstNote = group[i];
+    allTuplets.forEach(tuplet => {
+      // Set the tuplet location based on the stem direction
+      const direction = tuplet.notes[0].stem_direction === Stem.DOWN ?
+        Tuplet.LOCATION_BOTTOM : Tuplet.LOCATION_TOP;
+      tuplet.setTupletLocation(direction);
+
+      // If any of the notes in the tuplet are not beamed, draw a bracket.
+      let bracketed = false;
+      for (let i = 0; i < tuplet.notes.length; i++) {
+        const note = tuplet.notes[i];
+        if (note.beam === null) {
+          bracketed = true;
           break;
         }
       }
-
-      const tuplet = firstNote.tuplet;
-
-      if (firstNote.beam) tuplet.setBracketed(false);
-      if (firstNote.stem_direction === Stem.DOWN) {
-        tuplet.setTupletLocation(Tuplet.LOCATION_BOTTOM);
-      }
+      tuplet.setBracketed(bracketed);
     });
 
     return beams;
@@ -663,7 +672,7 @@ export class Beam {
       const note = this.notes[i];
 
       // See if we need to break secondary beams on this note.
-      const ticks = note.getIntrinsicTicks();
+      const ticks = note.ticks.value();
       tick_tally += ticks;
       let should_break = false;
 
@@ -680,7 +689,7 @@ export class Beam {
           should_break = true;
         }
       }
-      const note_gets_beam = ticks < Flow.durationToTicks(duration);
+      const note_gets_beam = note.getIntrinsicTicks() < Flow.durationToTicks(duration);
       const stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
 
       // Check to see if the next note in the group will get a beam at this
@@ -807,6 +816,22 @@ export class Beam {
     }
   }
 
+  adjustTuplets() {
+    let currentTuplet = null;
+    const tuplets = [];
+    this.notes.forEach(note => {
+      if (note.tuplet !== null && note.tuplet !== currentTuplet) {
+        currentTuplet = note.tuplet;
+        tuplets.push(note.tuplet);
+      }
+    });
+
+    // TODO: Figure out how to set the tuplet's y_offset based off of the beam's location
+    tuplets.forEach(tuplet => {
+      // tuplet.options.y_offset = ???;
+    });
+  }
+
   // Pre-format the beam
   preFormat() { return this; }
 
@@ -838,7 +863,7 @@ export class Beam {
     if (!this.postFormatted) {
       this.postFormat();
     }
-
+    this.adjustTuplets();
     this.drawStems();
     this.drawBeamLines();
   }

@@ -51,6 +51,8 @@ VF.Test.AutoBeamFormatting = (function() {
                             AutoBeamFormatting.moreBeaming);
       runTests("Duration-Based Secondary Beam Breaks",
                             AutoBeamFormatting.secondaryBreaks);
+      runTests("Duration-Based Secondary Beam Breaks 2",
+                            AutoBeamFormatting.secondaryBreaks2);
       runTests("Flat Beams Up",
                             AutoBeamFormatting.flatBeamsUp);
       runTests("Flat Beams Down",
@@ -1039,6 +1041,62 @@ VF.Test.AutoBeamFormatting = (function() {
       });
       var formatter = new VF.Formatter().joinVoices([voice]).formatToStave([voice], c.stave);
       voice.draw(c.context, c.stave);
+      beams.forEach(function(beam){
+        beam.setContext(c.context).draw();
+      });
+      ok(true, "Duration-Based Secondary Breaks Test");
+    },
+
+    secondaryBreaks2: function(options, contextBuilder) {
+      options.contextBuilder = contextBuilder;
+      var c = AutoBeamFormatting.setupContext(options);
+
+      var notes = [
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16d", dots: 1}),
+        newNote({ keys: ["f/5"], duration: "32"}),
+
+        newNote({ keys: ["f/5"], duration: "16d", dots: 1}),
+        newNote({ keys: ["f/5"], duration: "32"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+
+        newNote({ keys: ["f/5"], duration: "8"}),
+        newNote({ keys: ["f/5"], duration: "8"}),
+        newNote({ keys: ["f/5"], duration: "8"}),
+
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["f/5"], duration: "16"})
+      ];
+      notes.forEach(function(note) {
+        if (note.dots >= 1) {
+          note.addDotToAll();
+        }
+      });
+      var tuplets = [
+        new VF.Tuplet(notes.slice(0, 3)),
+        new VF.Tuplet(notes.slice(7, 10)),
+        new VF.Tuplet(notes.slice(10, 13)),
+        new VF.Tuplet(notes.slice(13, 16)),
+        new VF.Tuplet(notes.slice(16))
+      ];
+      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      voice.addTickables(notes);
+      var beams = VF.Beam.generateBeams(notes, {
+        secondary_breaks: '8'
+      });
+      var formatter = new VF.Formatter().joinVoices([voice]).formatToStave([voice], c.stave);
+      voice.draw(c.context, c.stave);
+      tuplets.forEach(function(tuplet) {
+        tuplet.setContext(c.context).draw();
+      });
       beams.forEach(function(beam){
         beam.setContext(c.context).draw();
       });
