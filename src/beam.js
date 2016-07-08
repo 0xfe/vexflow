@@ -827,9 +827,9 @@ export class Beam {
     });
 
     // TODO: Figure out how to set the tuplet's y_offset based off of the beam's location
-    tuplets.forEach(tuplet => {
-      // tuplet.options.y_offset = ???;
-    });
+    /* tuplets.forEach(tuplet => {
+      tuplet.options.y_offset = ???;
+    });*/
   }
 
   // Pre-format the beam
