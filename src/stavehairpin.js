@@ -94,17 +94,19 @@ export class StaveHairpin {
   setContext(context) { this.context = context; return this; }
 
   setPosition(position) {
-    if (position == Modifier.Position.ABOVE ||
-        position == Modifier.Position.BELOW)
+    if (position === Modifier.Position.ABOVE || position === Modifier.Position.BELOW) {
       this.position = position;
+    }
     return this;
   }
 
   setRenderOptions(options) {
-    if (options.height != null &&
-        options.y_shift != null &&
-        options.left_shift_px != null &&
-        options.right_shift_px != null) {
+    if (
+      options.height != null &&
+      options.y_shift != null &&
+      options.left_shift_px != null &&
+      options.right_shift_px != null
+    ) {
       this.render_options = options;
     }
     return this;
@@ -116,9 +118,12 @@ export class StaveHairpin {
    * @param {!Object} notes The start and end notes.
    */
   setNotes(notes) {
-    if (!notes.first_note && !notes.last_note)
-      throw new Vex.RuntimeError('BadArguments',
-          'Hairpin needs to have either first_note or last_note set.');
+    if (!notes.first_note && !notes.last_note) {
+      throw new Vex.RuntimeError(
+        'BadArguments',
+        'Hairpin needs to have either first_note or last_note set.'
+      );
+    }
 
     // Success. Lets grab 'em notes.
     this.first_note = notes.first_note;
@@ -131,7 +136,7 @@ export class StaveHairpin {
     let dis = this.render_options.y_shift + 20;
     let y_shift = params.first_y;
 
-    if (this.position == Modifier.Position.ABOVE) {
+    if (this.position === Modifier.Position.ABOVE) {
       dis = -dis + 30;
       y_shift = params.first_y - params.staff_height;
     }
@@ -162,21 +167,22 @@ export class StaveHairpin {
   }
 
   draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw Hairpin without a context.");
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw Hairpin without a context.");
+    }
 
-    const first_note = this.first_note;
-    const last_note = this.last_note;
+    const firstNote = this.first_note;
+    const lastNote = this.last_note;
 
-    const start = first_note.getModifierStartXY(this.position, 0);
-    const end = last_note.getModifierStartXY(this.position, 0);
+    const start = firstNote.getModifierStartXY(this.position, 0);
+    const end = lastNote.getModifierStartXY(this.position, 0);
 
     this.renderHairpin({
       first_x: start.x,
       last_x: end.x,
-      first_y: first_note.getStave().y + first_note.getStave().height,
-      last_y: last_note.getStave().y + last_note.getStave().height,
-      staff_height: first_note.getStave().height,
+      first_y: firstNote.getStave().y + firstNote.getStave().height,
+      last_y: lastNote.getStave().y + lastNote.getStave().height,
+      staff_height: firstNote.getStave().height,
     });
     return true;
   }
