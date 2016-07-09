@@ -59,15 +59,15 @@ export class FretHandFinger extends Modifier {
     let numShiftR = 0;
     let xWidthL = 0;
     let xWidthR = 0;
-    let last_line = null;
-    let last_note = null;
+    let lastLine = null;
+    let lastNote = null;
 
     for (let i = 0; i < nums_list.length; ++i) {
       let num_shift = 0;
       const { note, pos, num, line, shiftL, shiftR } = nums_list[i];
 
       // Reset the position of the string number every line.
-      if (line !== last_line || note !== last_note) {
+      if (line !== lastLine || note !== lastNote) {
         numShiftL = left_shift + shiftL;
         numShiftR = right_shift + shiftR;
       }
@@ -82,8 +82,8 @@ export class FretHandFinger extends Modifier {
         num_shift = shiftRight + numWidth; // spacing
         xWidthR = (num_shift > xWidthR) ? num_shift : xWidthR;
       }
-      last_line = line;
-      last_note = note;
+      lastLine = line;
+      lastNote = note;
     }
 
     state.left_shift += xWidthL;
