@@ -42,8 +42,9 @@ export class StaveText extends StaveModifier {
   }
 
   draw(stave) {
-    if (!stave.context) throw new Vex.RERR('NoContext',
-      "Can't draw stave text without a context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoContext', "Can't draw stave text without a context.");
+    }
 
     const ctx = stave.context;
 
@@ -52,40 +53,37 @@ export class StaveText extends StaveModifier {
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const text_width = ctx.measureText('' + this.text).width;
 
-    let x, y;
+    let x;
+    let y;
     const Position = StaveModifier.Position;
+    const Justification = TextNote.Justification;
     switch (this.position) {
       case Position.LEFT:
       case Position.RIGHT:
         y = (stave.getYForLine(0) + stave.getBottomLineY()) / 2 + this.options.shift_y;
-        if (this.position == Position.LEFT) {
+        if (this.position === Position.LEFT) {
           x = stave.getX() - text_width - 24 + this.options.shift_x;
-        }
-        else {
+        } else {
           x = stave.getX() + stave.getWidth() + 24 + this.options.shift_x;
         }
         break;
       case Position.ABOVE:
       case Position.BELOW:
-        const Justification = TextNote.Justification;
         x = stave.getX() + this.options.shift_x;
-        if (this.options.justification == Justification.CENTER) {
+        if (this.options.justification === Justification.CENTER) {
           x += stave.getWidth() / 2 - text_width / 2;
-        }
-        else if (this.options.justification == Justification.RIGHT) {
+        } else if (this.options.justification === Justification.RIGHT) {
           x += stave.getWidth() - text_width;
         }
 
-        if (this.position == Position.ABOVE) {
+        if (this.position === Position.ABOVE) {
           y = stave.getYForTopText(2) + this.options.shift_y;
-        }
-        else {
+        } else {
           y = stave.getYForBottomText(2) + this.options.shift_y;
         }
         break;
       default:
-        throw new Vex.RERR('InvalidPosition',
-          'Value Must be in Modifier.Position.');
+        throw new Vex.RERR('InvalidPosition', 'Value Must be in Modifier.Position.');
     }
 
     ctx.fillText('' + this.text, x, y + 4);
