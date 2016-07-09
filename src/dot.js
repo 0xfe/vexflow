@@ -16,13 +16,13 @@ export class Dot extends Modifier {
 
     if (!dots || dots.length === 0) return false;
 
-    let i, dot, note, shift;
     const dot_list = [];
-    for (i = 0; i < dots.length; ++i) {
-      dot = dots[i];
-      note = dot.getNote();
+    for (let i = 0; i < dots.length; ++i) {
+      const dot = dots[i];
+      const note = dot.getNote();
 
       let props;
+      let shift;
       // Only StaveNote has .getKeyProps()
       if (typeof note.getKeyProps === 'function') {
         props = note.getKeyProps()[dot.getIndex()];
@@ -45,29 +45,26 @@ export class Dot extends Modifier {
     let prev_dotted_space = null;
     let half_shiftY = 0;
 
-    for (i = 0; i < dot_list.length; ++i) {
-      dot = dot_list[i].dot;
-      note = dot_list[i].note;
-      shift = dot_list[i].shift;
-      const line = dot_list[i].line;
+    for (let i = 0; i < dot_list.length; ++i) {
+      const { dot, note, shift, line } = dot_list[i];
 
       // Reset the position of the dot every line.
-      if (line != last_line || note != last_note) {
+      if (line !== last_line || note !== last_note) {
         dot_shift = shift;
       }
 
-      if (!note.isRest() && line != last_line) {
-        if (Math.abs(line % 1) == 0.5) {
+      if (!note.isRest() && line !== last_line) {
+        if (Math.abs(line % 1) === 0.5) {
           // note is on a space, so no dot shift
           half_shiftY = 0;
         } else if (!note.isRest()) {
           // note is on a line, so shift dot to space above the line
           half_shiftY = 0.5;
           if (last_note != null &&
-              !last_note.isRest() && last_line - line == 0.5) {
+              !last_note.isRest() && last_line - line === 0.5) {
             // previous note on a space, so shift dot to space below the line
             half_shiftY = -0.5;
-          } else if (line + half_shiftY == prev_dotted_space) {
+          } else if (line + half_shiftY === prev_dotted_space) {
             // previous space is dotted, so shift dot to space below the line
             half_shiftY = -0.5;
           }
@@ -75,7 +72,7 @@ export class Dot extends Modifier {
       }
 
       // convert half_shiftY to a multiplier for dots.draw()
-      dot.dot_shiftY = (-half_shiftY);
+      dot.dot_shiftY = -half_shiftY;
       prev_dotted_space = line + half_shiftY;
 
       dot.setXShift(dot_shift);
@@ -87,6 +84,7 @@ export class Dot extends Modifier {
 
     // Update state.
     state.right_shift += x_width;
+    return true;
   }
 
   /**
@@ -103,7 +101,9 @@ export class Dot extends Modifier {
     this.setWidth(5);
     this.dot_shiftY = 0;
   }
+
   getCategory() { return Dot.CATEGORY; }
+
   setNote(note) {
     this.note = note;
 
@@ -112,14 +112,19 @@ export class Dot extends Modifier {
       this.setWidth(3);
     }
   }
-  setDotShiftY(y) { this.dot_shiftY = y; return this; }
-  draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw dot without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR('NoAttachedNote',
-      "Can't draw dot without a note and index.");
 
-    const line_space = this.note.stave.options.spacing_between_lines_px;
+  setDotShiftY(y) { this.dot_shiftY = y; return this; }
+
+  draw() {
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw dot without a context.");
+    }
+
+    if (!this.note || this.index === null) {
+      throw new Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
+    }
+
+    const lineSpace = this.note.stave.options.spacing_between_lines_px;
 
     const start = this.note.getModifierStartXY(this.position, this.index);
 
@@ -128,12 +133,12 @@ export class Dot extends Modifier {
       start.y = this.note.getStemExtents().baseY;
     }
 
-    const dot_x = (start.x + this.x_shift) + this.width - this.radius;
-    const dot_y = start.y + this.y_shift + (this.dot_shiftY * line_space);
+    const x = (start.x + this.x_shift) + this.width - this.radius;
+    const y = start.y + this.y_shift + (this.dot_shiftY * lineSpace);
     const ctx = this.context;
 
     ctx.beginPath();
-    ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
+    ctx.arc(x, y, this.radius, 0, Math.PI * 2, false);
     ctx.fill();
   }
 }
