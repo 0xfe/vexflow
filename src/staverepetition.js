@@ -2,7 +2,6 @@
 // Author Larry Kuhns 2011
 
 import { Vex } from './vex';
-import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
@@ -21,7 +20,7 @@ export class Repetition extends StaveModifier {
       DS: 9,           // D.S. at end of stave
       DS_AL_CODA: 10,  // D.S. al coda at end of stave
       DS_AL_FINE: 11,  // D.S. al Fine at end of stave
-      FINE: 12,         // Fine at end of stave
+      FINE: 12,        // Fine at end of stave
     };
   }
 
@@ -83,26 +82,31 @@ export class Repetition extends StaveModifier {
 
     return this;
   }
+
   drawCodaFixed(stave, x) {
-    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw stave without canvas context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+    }
 
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-    Glyph.renderGlyph(stave.context, this.x + x + this.x_shift,
-                         y + 25, 40, 'v4d', true);
+    Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 40, 'v4d', true);
     return this;
   }
+
   drawSignoFixed(stave, x) {
-    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw stave without canvas context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+    }
+
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-    Glyph.renderGlyph(stave.context, this.x + x + this.x_shift,
-                         y + 25, 30, 'v8c', true);
+    Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 30, 'v8c', true);
     return this;
   }
+
   drawSymbolText(stave, x, text, draw_coda) {
-    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw stave without canvas context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+    }
 
     const ctx = stave.context;
     ctx.save();
@@ -110,7 +114,7 @@ export class Repetition extends StaveModifier {
       // Default to right symbol
     let text_x = 0 + this.x_shift;
     let symbol_x = x + this.x_shift;
-    if (this.symbol_type == Repetition.type.CODA_LEFT) {
+    if (this.symbol_type === Repetition.type.CODA_LEFT) {
         // Offset Coda text to right of stave beginning
       text_x = this.x + stave.options.vertical_bar_width;
       symbol_x = text_x + ctx.measureText(text).width + 12;
@@ -119,6 +123,7 @@ export class Repetition extends StaveModifier {
       symbol_x = this.x + x + stave.width - 5 + this.x_shift;
       text_x = symbol_x - + ctx.measureText(text).width - 12;
     }
+
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     if (draw_coda) {
       Glyph.renderGlyph(ctx, symbol_x, y, 40, 'v4d', true);
