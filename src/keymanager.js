@@ -28,12 +28,14 @@ export class KeyManager {
     if (this.keyParts.accidental) this.keyString += this.keyParts.accidental;
 
     const is_supported_type = Music.scaleTypes[this.keyParts.type];
-    if (!is_supported_type)
-      throw new Vex.RERR('BadArguments', 'Unsupported key type: ' + this.key);
+    if (!is_supported_type) {
+      throw new Vex.RERR('BadArguments', `Unsupported key type: ${this.key}`);
+    }
 
     this.scale = this.music.getScaleTones(
-        this.music.getNoteValue(this.keyString),
-        Music.scaleTypes[this.keyParts.type]);
+      this.music.getNoteValue(this.keyString),
+      Music.scaleTypes[this.keyParts.type]
+    );
 
     this.scaleMap = {};
     this.scaleMapByValue = {};
@@ -72,11 +74,13 @@ export class KeyManager {
     const scaleNote = this.scaleMap[parts.root];
     const modparts = this.music.getNoteParts(scaleNote);
 
-    if (scaleNote == note) return {
-      'note': scaleNote,
-      'accidental': parts.accidental,
-      'change': false,
-    };
+    if (scaleNote === note) {
+      return {
+        'note': scaleNote,
+        'accidental': parts.accidental,
+        'change': false,
+      };
+    }
 
     // Then search for a note of equivalent value in our altered scale
     const valueNote = this.scaleMapByValue[this.music.getNoteValue(note)];
@@ -103,11 +107,9 @@ export class KeyManager {
     }
 
     // Then try to unmodify a currently modified note.
-    if (modparts.root == note) {
-      delete this.scaleMapByValue[
-        this.music.getNoteValue(this.scaleMap[parts.root])];
-      this.scaleMapByValue[this.music.getNoteValue(modparts.root)] =
-        modparts.root;
+    if (modparts.root === note) {
+      delete this.scaleMapByValue[this.music.getNoteValue(this.scaleMap[parts.root])];
+      this.scaleMapByValue[this.music.getNoteValue(modparts.root)] =  modparts.root;
       this.scaleMap[modparts.root] = modparts.root;
       return {
         'note': modparts.root,
@@ -117,8 +119,7 @@ export class KeyManager {
     }
 
     // Last resort -- shitshoot
-    delete this.scaleMapByValue[
-      this.music.getNoteValue(this.scaleMap[parts.root])];
+    delete this.scaleMapByValue[this.music.getNoteValue(this.scaleMap[parts.root])];
     this.scaleMapByValue[this.music.getNoteValue(note)] = note;
 
     delete this.scaleMap[modparts.root];

@@ -31,6 +31,8 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
         y = nextY();
         outlineFns.b(nextX(), nextY(), nextX(), nextY(), x, y);
         break;
+      default:
+        break;
     }
   }
 }
@@ -39,8 +41,9 @@ export class Glyph {
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
     const glyph = font.glyphs[code];
-    if (!glyph) throw new Vex.RuntimeError('BadGlyph', 'Glyph ' + code +
-        ' does not exist in font.');
+    if (!glyph) {
+      throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
+    }
 
     const x_min = glyph.x_min;
     const x_max = glyph.x_max;
@@ -68,8 +71,7 @@ export class Glyph {
         outline,
       };
     } else {
-      throw new Vex.RuntimeError('BadGlyph', 'Glyph ' + code +
-          ' has no outline defined.');
+      throw new Vex.RERR('BadGlyph', `Glyph ${code} has no outline defined.`);
     }
   }
 
@@ -171,8 +173,9 @@ export class Glyph {
   }
 
   getMetrics() {
-    if (!this.metrics) throw new Vex.RuntimeError('BadGlyph', 'Glyph ' +
-      this.code + ' is not initialized.');
+    if (!this.metrics) {
+      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+    }
 
     return {
       x_min: this.metrics.x_min * this.scale,
@@ -183,8 +186,9 @@ export class Glyph {
   }
 
   render(ctx, x_pos, y_pos) {
-    if (!this.metrics) throw new Vex.RuntimeError('BadGlyph', 'Glyph ' +
-        this.code + ' is not initialized.');
+    if (!this.metrics) {
+      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+    }
 
     const outline = this.metrics.outline;
     const scale = this.scale;
@@ -193,10 +197,17 @@ export class Glyph {
   }
 
   renderToStave(x) {
-    if (!this.metrics) throw new Vex.RuntimeError('BadGlyph', 'Glyph ' +
-        this.code + ' is not initialized.');
-    if (!this.stave) throw new Vex.RuntimeError('GlyphError', 'No valid stave');
-    if (!this.context) throw new Vex.RERR('GlyphError', 'No valid context');
+    if (!this.metrics) {
+      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+    }
+
+    if (!this.stave) {
+      throw new Vex.RuntimeError('GlyphError', 'No valid stave');
+    }
+
+    if (!this.context) {
+      throw new Vex.RERR('GlyphError', 'No valid context');
+    }
 
     const outline = this.metrics.outline;
     const scale = this.scale;
