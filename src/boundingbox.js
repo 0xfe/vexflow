@@ -37,8 +37,12 @@ export class BoundingBox {
 
     const new_x = this.x < that.x ? this.x : that.x;
     const new_y = this.y < that.y ? this.y : that.y;
-    const new_w = (this.x + this.w) < (that.x + that.w) ? (that.x + that.w) - this.x : (this.x + this.w) - Vex.Min(this.x, that.x);
-    const new_h = (this.y + this.h) < (that.y + that.h) ? (that.y + that.h) - this.y : (this.y + this.h) - Vex.Min(this.y, that.y);
+    const new_w = (this.x + this.w) < (that.x + that.w)
+      ? (that.x + that.w) - this.x
+      : (this.x + this.w) - Vex.Min(this.x, that.x);
+    const new_h = (this.y + this.h) < (that.y + that.h)
+      ? (that.y + that.h) - this.y
+      : (this.y + this.h) - Vex.Min(this.y, that.y);
 
     this.x = new_x;
     this.y = new_y;
@@ -48,6 +52,7 @@ export class BoundingBox {
     if (ctx) this.draw(ctx);
     return this;
   }
+
   draw(ctx, x, y) {
     if (!x) x = 0;
     if (!y) y = 0;
