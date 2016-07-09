@@ -38,6 +38,7 @@ module.exports = (grunt) => {
     'src/stemmablenote.js',
     'src/stringnumber.js',
     'src/strokes.js',
+    'src/tables.js',
     'src/tremolo.js',
     'src/tuning.js',
     'src/vex.js',
