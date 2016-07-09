@@ -91,27 +91,35 @@ export class Barline extends StaveModifier {
         break;
     }
   }
+
   drawVerticalBar(stave, x, double_bar) {
-    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw stave without canvas context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+    }
+
     const topY = stave.getYForLine(0);
     const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
-    if (double_bar)
+    if (double_bar) {
       stave.context.fillRect(x - 3, topY, 1, botY - topY);
+    }
     stave.context.fillRect(x, topY, 1, botY - topY);
   }
+
   drawVerticalEndBar(stave, x) {
-    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw stave without canvas context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+    }
 
     const topY = stave.getYForLine(0);
     const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
     stave.context.fillRect(x - 5, topY, 1, botY - topY);
     stave.context.fillRect(x - 2, topY, 3, botY - topY);
   }
+
   drawRepeatBar(stave, x, begin) {
-    if (!stave.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw stave without canvas context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+    }
 
     const topY = stave.getYForLine(0);
     const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
@@ -136,10 +144,8 @@ export class Barline extends StaveModifier {
     const dot_x = (x + x_shift) + (dot_radius / 2);
 
     // calculate the y offset based on number of stave lines
-    let y_offset = (stave.getNumLines() - 1) *
-      stave.getSpacingBetweenLines();
-    y_offset = (y_offset / 2) -
-               (stave.getSpacingBetweenLines() / 2);
+    let y_offset = (stave.getNumLines() - 1) * stave.getSpacingBetweenLines();
+    y_offset = (y_offset / 2) - (stave.getSpacingBetweenLines() / 2);
     let dot_y = topY + y_offset + (dot_radius / 2);
 
     // draw the top repeat dot
