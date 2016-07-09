@@ -80,7 +80,8 @@ export class Tickable {
    * resets the intrinsic tick value to
    */
   resetTuplet(tuplet) {
-    let noteCount, notesOccupied;
+    let noteCount;
+    let notesOccupied;
     if (tuplet) {
       const i = this.tupletStack.indexOf(tuplet);
       if (i !== -1) {
@@ -104,6 +105,7 @@ export class Tickable {
     }
     return this;
   }
+
   setTuplet(tuplet) {
     // Attach to new tuplet
 
@@ -148,7 +150,7 @@ export class Tickable {
     }
   }
   postFormat() {
-    if (this.postFormatted) return;
+    if (this.postFormatted) return this;
     this.postFormatted = true;
     return this;
   }
