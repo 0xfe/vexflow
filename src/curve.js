@@ -37,9 +37,11 @@ export class Curve {
 
   setContext(context) { this.context = context; return this; }
   setNotes(from, to) {
-    if (!from && !to)
-      throw new Vex.RuntimeError('BadArguments',
-          'Curve needs to have either first_note or last_note set.');
+    if (!from && !to) {
+      throw new Vex.RuntimeError(
+        'BadArguments', 'Curve needs to have either first_note or last_note set.'
+      );
+    }
 
     this.from = from;
     this.to = to;
@@ -70,27 +72,39 @@ export class Curve {
 
     ctx.beginPath();
     ctx.moveTo(first_x, first_y);
-    ctx.bezierCurveTo(first_x + cp_spacing + cps[0].x,
-                      first_y + (cps[0].y * params.direction),
-                      last_x - cp_spacing + cps[1].x,
-                      last_y + (cps[1].y * params.direction),
-                      last_x, last_y);
-    ctx.bezierCurveTo(last_x - cp_spacing + cps[1].x,
-                      last_y + ((cps[1].y + thickness) * params.direction),
-                      first_x + cp_spacing + cps[0].x,
-                      first_y + ((cps[0].y + thickness) * params.direction),
-                      first_x, first_y);
+    ctx.bezierCurveTo(
+      first_x + cp_spacing + cps[0].x,
+      first_y + (cps[0].y * params.direction),
+      last_x - cp_spacing + cps[1].x,
+      last_y + (cps[1].y * params.direction),
+      last_x,
+      last_y
+    );
+    ctx.bezierCurveTo(
+      last_x - cp_spacing + cps[1].x,
+      last_y + ((cps[1].y + thickness) * params.direction),
+      first_x + cp_spacing + cps[0].x,
+      first_y + ((cps[0].y + thickness) * params.direction),
+      first_x,
+      first_y
+    );
     ctx.stroke();
     ctx.closePath();
     ctx.fill();
   }
 
   draw() {
-    if (!this.context)
+    if (!this.context) {
       throw new Vex.RERR('NoContext', 'No context to render tie.');
+    }
+
     const first_note = this.from;
     const last_note = this.to;
-    let first_x, last_x, first_y, last_y, stem_direction;
+    let first_x;
+    let last_x;
+    let first_y;
+    let last_y;
+    let stem_direction;
 
     let metric = 'baseY';
     let end_metric = 'baseY';
@@ -102,9 +116,9 @@ export class Curve {
       end_metric = 'topY';
     }
 
-    if (position_end == Curve.Position.NEAR_HEAD) {
+    if (position_end === Curve.Position.NEAR_HEAD) {
       end_metric = 'baseY';
-    } else if (position_end == Curve.Position.NEAR_TOP) {
+    } else if (position_end === Curve.Position.NEAR_TOP) {
       end_metric = 'topY';
     }
 
@@ -131,8 +145,7 @@ export class Curve {
       last_x,
       first_y,
       last_y,
-      direction: stem_direction *
-        (this.render_options.invert === true ? -1 : 1),
+      direction: stem_direction * (this.render_options.invert === true ? -1 : 1),
     });
     return true;
   }
