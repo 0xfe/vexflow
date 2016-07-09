@@ -20,35 +20,6 @@ module.exports = (grunt) => {
 
   const SOURCES = ['src/*.js', '!src/header.js', '!src/container.js'];
 
-  const ESLINT_SOURCES = [
-    'src/accidental.js',
-    'src/clef.js',
-    'src/annotation.js',
-    'src/articulation.js',
-    'src/barnote.js',
-    'src/beam.js',
-    'src/bend.js',
-    'src/formatter.js',
-    'src/frethandfinger.js',
-    'src/modifiercontext.js',
-    'src/music.js',
-    'src/stave.js',
-    'src/staveconnector.js',
-    'src/stavenote.js',
-    'src/stemmablenote.js',
-    'src/stringnumber.js',
-    'src/strokes.js',
-    'src/tables.js',
-    'src/tremolo.js',
-    'src/tuning.js',
-    'src/vex.js',
-    'src/vibrato.js',
-    'src/voice.js',
-  ];
-
-  const negatePattern = (pattern) => `!${pattern}`;
-  const JSHINT_SOURCES = SOURCES.concat(ESLINT_SOURCES.map(negatePattern));
-
   const TEST_SOURCES = [
     'tests/vexflow_test_helpers.js',
     'tests/mocks.js',
@@ -99,22 +70,9 @@ module.exports = (grunt) => {
       },
     },
     eslint: {
-      target: ESLINT_SOURCES,
+      target: SOURCES,
       options: {
         configFile: '.eslintrc.json',
-      },
-    },
-    jshint: {
-      files: JSHINT_SOURCES,
-      options: {
-        esversion: 6,
-        eqnull: true,   // allow == and ~= for nulls
-        sub: true,      // don't enforce dot notation
-        trailing: true, // no more trailing spaces
-        globals: {
-          Vex: false,
-          Raphael: false,
-        },
       },
     },
     qunit: {
@@ -191,7 +149,6 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-rollup');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -203,7 +160,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-eslint');
 
   // Default task(s).
-  grunt.registerTask('default', ['eslint', 'jshint', 'rollup', 'concat', 'uglify', 'docco']);
+  grunt.registerTask('default', ['eslint', 'rollup', 'concat', 'uglify', 'docco']);
   grunt.registerTask('test', 'Run qunit tests.', ['rollup', 'concat', 'qunit']);
 
   // Release current build.
