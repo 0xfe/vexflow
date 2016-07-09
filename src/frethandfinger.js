@@ -76,11 +76,11 @@ export class FretHandFinger extends Modifier {
       if (pos === Modifier.Position.LEFT) {
         num.setXShift(left_shift + numShiftL);
         num_shift = left_shift + numWidth; // spacing
-        xWidthL = (num_shift > xWidthL) ? num_shift : xWidthL;
+        xWidthL = num_shift > xWidthL ? num_shift : xWidthL;
       } else if (pos === Modifier.Position.RIGHT) {
         num.setXShift(numShiftR);
         num_shift = shiftRight + numWidth; // spacing
-        xWidthR = (num_shift > xWidthR) ? num_shift : xWidthR;
+        xWidthR = num_shift > xWidthR ? num_shift : xWidthR;
       }
       lastLine = line;
       lastNote = note;
