@@ -17,7 +17,7 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
-function L() { if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', arguments); }
+function L(...args) { if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', args); }
 
 // Accidental position modifications for each glyph
 const acc_mods = {
@@ -158,8 +158,9 @@ export class Ornament extends Modifier {
     };
 
     this.ornament = Flow.ornamentCodes(this.type);
-    if (!this.ornament) throw new Vex.RERR('ArgumentError',
-       "Ornament not found: '" + this.type + "'");
+    if (!this.ornament) {
+      throw new Vex.RERR('ArgumentError', `Ornament not found: '${this.type}'`);
+    }
 
     // Default width comes from ornament table.
     this.setWidth(this.ornament.width);
@@ -184,10 +185,13 @@ export class Ornament extends Modifier {
 
   // Render ornament in position next to note.
   draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw Ornament without a context.");
-    if (!(this.note && (this.index !== null))) throw new Vex.RERR('NoAttachedNote',
-      "Can't draw Ornament without a note and index.");
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw Ornament without a context.");
+    }
+
+    if (!this.note || this.index == null) {
+      throw new Vex.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
+    }
 
     const ctx = this.context;
     const stem_direction = this.note.getStemDirection();
@@ -195,13 +199,11 @@ export class Ornament extends Modifier {
 
     // Get stem extents
     const stem_ext = this.note.getStem().getExtents();
-    let top, bottom;
+    let top;
     if (stem_direction === StaveNote.STEM_DOWN) {
       top = stem_ext.baseY;
-      bottom = stem_ext.topY;
     } else {
       top = stem_ext.topY;
-      bottom = stem_ext.baseY;
     }
 
     // TabNotes don't have stems attached to them. Tab stems are rendered
@@ -209,14 +211,11 @@ export class Ornament extends Modifier {
     const is_tabnote = this.note.getCategory() === 'tabnotes';
     if (is_tabnote) {
       if (this.note.hasStem()) {
-        if (stem_direction === StaveNote.STEM_UP) {
-          bottom = stave.getYForBottomText(this.text_line - 2);
-        } else if (stem_direction === StaveNote.STEM_DOWN) {
+        if (stem_direction === StaveNote.STEM_DOWN) {
           top = stave.getYForTopText(this.text_line - 1.5);
         }
       } else { // Without a stem
         top = stave.getYForTopText(this.text_line - 1);
-        bottom = stave.getYForBottomText(this.text_line - 2);
       }
     }
 
@@ -251,6 +250,7 @@ export class Ornament extends Modifier {
 
     const ornament = this;
     function drawAccidental(ctx, code, upper) {
+      const mods = acc_mods[code];
       const accidental = Flow.accidentalCodes(code);
 
       let acc_x = glyph_x - 3;
@@ -265,7 +265,6 @@ export class Ornament extends Modifier {
       }
 
       // Fine tune position of accidental glyph
-      var mods = acc_mods[code];
       if (mods) {
         acc_x += mods.shift_x;
         acc_y += upper ? mods.shift_y_upper : mods.shift_y_lower;
@@ -288,8 +287,7 @@ export class Ornament extends Modifier {
     }
 
     L('Rendering ornament: ', this.ornament, glyph_x, glyph_y);
-    Glyph.renderGlyph(ctx, glyph_x, glyph_y,
-                         this.render_options.font_scale, this.ornament.code);
+    Glyph.renderGlyph(ctx, glyph_x, glyph_y, this.render_options.font_scale, this.ornament.code);
 
     // Draw upper accidental for ornament
     if (this.accidental_upper) {
