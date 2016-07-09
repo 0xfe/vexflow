@@ -3,6 +3,7 @@
   "root": true,
   "rules": {
     "camelcase": [0],
+    "yoda": [2, "never", { "exceptRange": true }],
     "max-len": [2, 100],
     "new-cap": [0],
     "no-case-declarations": [2],
