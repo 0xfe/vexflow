@@ -13,6 +13,9 @@ import { Voice } from './voice';
 import { Beam } from './beam';
 import { StaveTie } from './stavetie';
 
+// To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
+function L(...args) { if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args); }
+
 export class GraceNoteGroup extends Modifier {
   static get CATEGORY() { return 'gracenotegroups'; }
 
@@ -23,25 +26,22 @@ export class GraceNoteGroup extends Modifier {
     if (!gracenote_groups || gracenote_groups.length === 0) return false;
 
     const group_list = [];
-    let hasStave = false;
     let prev_note = null;
     let shiftL = 0;
 
-    let i, gracenote_group, props_tmp;
-    for (i = 0; i < gracenote_groups.length; ++i) {
-      gracenote_group = gracenote_groups[i];
+    for (let i = 0; i < gracenote_groups.length; ++i) {
+      const gracenote_group = gracenote_groups[i];
       const note = gracenote_group.getNote();
       const stave = note.getStave();
-      if (note != prev_note) {
+      if (note !== prev_note) {
          // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
-          props_tmp = note.getKeyProps()[n];
+          const props_tmp = note.getKeyProps()[n];
           shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
         }
         prev_note = note;
       }
       if (stave != null) {
-        hasStave = true;
         group_list.push({ shift: shiftL, gracenote_group });
       } else {
         group_list.push({ shift: shiftL, gracenote_group });
@@ -51,15 +51,15 @@ export class GraceNoteGroup extends Modifier {
     // If first note left shift in case it is displaced
     let group_shift = group_list[0].shift;
     let formatWidth;
-    for (i = 0; i < group_list.length; ++i) {
-      gracenote_group = group_list[i].gracenote_group;
+    for (let i = 0; i < group_list.length; ++i) {
+      const gracenote_group = group_list[i].gracenote_group;
       gracenote_group.preFormat();
       formatWidth = gracenote_group.getWidth() + gracenote_spacing;
       group_shift = Math.max(formatWidth, group_shift);
     }
 
-    for (i = 0; i < group_list.length; ++i) {
-      gracenote_group = group_list[i].gracenote_group;
+    for (let i = 0; i < group_list.length; ++i) {
+      const gracenote_group = group_list[i].gracenote_group;
       formatWidth = gracenote_group.getWidth() + gracenote_spacing;
       gracenote_group.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
     }
@@ -146,12 +146,16 @@ export class GraceNoteGroup extends Modifier {
     }
 
     const that = this;
-    function alignGraceNotesWithNote(grace_notes, note, groupWidth) {
+    function alignGraceNotesWithNote(grace_notes, note) {
       // Shift over the tick contexts of each note
       // So that th aligned with the note
       const tickContext = note.getTickContext();
       const extraPx = tickContext.getExtraPx();
-      const x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
+      const x = tickContext.getX()
+        - extraPx.left
+        - extraPx.extraLeft
+        + that.getSpacingFromNextModifier();
+
       grace_notes.forEach(graceNote => {
         const tick_context = graceNote.getTickContext();
         const x_offset = tick_context.getX();
@@ -163,9 +167,9 @@ export class GraceNoteGroup extends Modifier {
     alignGraceNotesWithNote(this.grace_notes, note, this.width);
 
     // Draw notes
-    this.grace_notes.forEach(function(graceNote) {
+    this.grace_notes.forEach(graceNote => {
       graceNote.setContext(this.context).draw();
-    }, this);
+    });
 
     // Draw beam
     if (this.beam) {
@@ -186,6 +190,3 @@ export class GraceNoteGroup extends Modifier {
     }
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
-function L() { if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', arguments); }
