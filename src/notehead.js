@@ -14,7 +14,7 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
-function L() { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', arguments); }
+function L(...args) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args); }
 
 // Draw slashnote head manually. No glyph exists for this.
 //
@@ -82,9 +82,9 @@ export class NoteHead extends Note {
     // regular notes, rests, or other custom codes.
     this.glyph = Flow.durationToGlyph(this.duration, this.note_type);
     if (!this.glyph) {
-      throw new Vex.RuntimeError('BadArguments',
-          "No glyph found for duration '" + this.duration +
-          "' and type '" + this.note_type + "'");
+      throw new Vex.RuntimeError(
+        'BadArguments',
+        `No glyph found for duration '${this.duration}' and type '${this.note_type}'`);
     }
 
     this.glyph_code = this.glyph.code_head;
@@ -154,8 +154,9 @@ export class NoteHead extends Note {
 
   // Get the `BoundingBox` for the `NoteHead`
   getBoundingBox() {
-    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
-        "Can't call getBoundingBox on an unformatted note.");
+    if (!this.preFormatted) {
+      throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+    }
 
     const spacing = this.stave.getSpacingBetweenLines();
     const half_spacing = spacing / 2;
@@ -198,8 +199,9 @@ export class NoteHead extends Note {
 
   // Draw the notehead
   draw() {
-    if (!this.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw without a canvas context.");
+    if (!this.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+    }
 
     const ctx = this.context;
     const head_x = this.getAbsoluteX();
@@ -210,28 +212,30 @@ export class NoteHead extends Note {
     // Begin and end positions for head.
     const stem_direction = this.stem_direction;
     const glyph_font_scale = this.render_options.glyph_font_scale;
-
     const line = this.line;
 
     // If note above/below the staff, draw the small staff
     if (line <= 0 || line >= 6) {
       let line_y = y;
       const floor = Math.floor(line);
-      if (line < 0 && floor - line == -0.5)
+      if (line < 0 && floor - line === -0.5) {
         line_y -= 5;
-      else if (line > 6 &&  floor - line == -0.5)
+      } else if (line > 6 &&  floor - line === -0.5) {
         line_y += 5;
-      if (this.note_type != 'r') {
+      }
+
+      if (this.note_type !== 'r') {
         ctx.fillRect(
-          head_x - this.render_options.stroke_px, line_y,
-          (this.getGlyph().head_width) +
-          (this.render_options.stroke_px * 2), 1);
+          head_x - this.render_options.stroke_px,
+          line_y,
+          this.getGlyph().head_width + (this.render_options.stroke_px * 2),
+          1
+        );
       }
     }
 
-    if (this.note_type == 's') {
-      drawSlashNoteHead(ctx, this.duration,
-        head_x, y, stem_direction);
+    if (this.note_type === 's') {
+      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction);
     } else {
       if (this.style) {
         ctx.save();
