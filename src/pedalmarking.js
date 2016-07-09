@@ -12,7 +12,7 @@ import { Vex } from './vex';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
-function L() { if (PedalMarking.DEBUG) Vex.L('Vex.Flow.PedalMarking', arguments); }
+function L(...args) { if (PedalMarking.DEBUG) Vex.L('Vex.Flow.PedalMarking', args); }
 
 // Draws a pedal glyph with the provided `name` on a rendering `context`
 // at the coordinates `x` and `y. Takes into account the glyph data
@@ -108,8 +108,7 @@ export class PedalMarking {
   // Set the pedal marking style
   setStyle(style) {
     if (style < 1 && style > 3)  {
-      throw new Vex.RERR('InvalidParameter',
-        'The style must be one found in PedalMarking.Styles');
+      throw new Vex.RERR('InvalidParameter', 'The style must be one found in PedalMarking.Styles');
     }
 
     this.style = style;
@@ -140,8 +139,11 @@ export class PedalMarking {
       const y = note.getStave().getYForBottomText(pedal.line + 3);
 
       // Throw if current note is positioned before the previous note
-      if (x < prev_x) throw new Vex.RERR('InvalidConfiguration',
-        'The notes provided must be in order of ascending x positions');
+      if (x < prev_x) {
+        throw new Vex.RERR(
+          'InvalidConfiguration', 'The notes provided must be in order of ascending x positions'
+        );
+      }
 
       // Determine if the previous or next note are the same
       // as the current note. We need to keep track of this for
@@ -231,8 +233,10 @@ export class PedalMarking {
 
   // Render the pedal marking in position on the rendering context
   draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw PedalMarking without a context.");
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw PedalMarking without a context.");
+    }
+
     const ctx = this.context;
 
     ctx.save();
@@ -242,8 +246,7 @@ export class PedalMarking {
 
     L('Rendering Pedal Marking');
 
-    if (this.style === PedalMarking.Styles.BRACKET ||
-        this.style === PedalMarking.Styles.MIXED) {
+    if (this.style === PedalMarking.Styles.BRACKET || this.style === PedalMarking.Styles.MIXED) {
       ctx.setLineWidth(this.render_options.bracket_line_width);
       this.drawBracketed();
     } else if (this.style === PedalMarking.Styles.TEXT) {
