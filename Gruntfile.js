@@ -29,6 +29,7 @@ module.exports = (grunt) => {
     'src/beam.js',
     'src/bend.js',
     'src/formatter.js',
+    'src/frethandfinger.js',
     'src/modifiercontext.js',
     'src/music.js',
     'src/stave.js',
