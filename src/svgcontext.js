@@ -81,7 +81,7 @@ export class SVGContext {
   }
 
   closeGroup() {
-    const group = this.groups.pop();
+    this.groups.pop();
     this.parent = this.groups[this.groups.length - 1];
   }
 
@@ -112,7 +112,7 @@ export class SVGContext {
     let style = 'normal';
     // Weight might also be a number (200, 400, etc...) so we
     // test its type to be sure we have access to String methods.
-    if (typeof weight == 'string') {
+    if (typeof weight === 'string') {
         // look for "italic" in the weight:
       if (weight.indexOf('italic') !== -1) {
         weight = weight.replace(/italic/g, '');
@@ -251,10 +251,13 @@ export class SVGContext {
     return this;
   }
 
-  setViewBox(xMin, yMin, width, height) {
+  setViewBox(...args) {
     // Override for "x y w h" style:
-    if (arguments.length == 1) this.svg.setAttribute('viewBox', viewBox);
-    else {
+    if (args.length === 1) {
+      const [viewBox] = args;
+      this.svg.setAttribute('viewBox', viewBox);
+    } else {
+      const [xMin, yMin, width, height] = args;
       const viewBoxString = xMin + ' ' + yMin + ' ' + width + ' ' + height;
       this.svg.setAttribute('viewBox', viewBoxString);
     }
@@ -263,9 +266,11 @@ export class SVGContext {
   // ### Drawing helper methods:
 
   applyAttributes(element, attributes) {
-    for (const propertyName in attributes) {
-      element.setAttributeNS(null, propertyName, attributes[propertyName]);
-    }
+    Object
+      .keys(attributes)
+      .forEach(propertyName =>
+        element.setAttributeNS(null, propertyName, attributes[propertyName]));
+
     return element;
   }
 
@@ -302,11 +307,14 @@ export class SVGContext {
 
     // Create the rect & style it:
     const rectangle = this.create('rect');
-    if (typeof attributes === 'undefined') attributes = {
-      fill: 'none',
-      'stroke-width': this.lineWidth,
-      stroke: 'black',
-    };
+    if (typeof attributes === 'undefined') {
+      attributes = {
+        fill: 'none',
+        'stroke-width': this.lineWidth,
+        stroke: 'black',
+      };
+    }
+
     Vex.Merge(attributes, {
       x,
       y,
@@ -345,8 +353,6 @@ export class SVGContext {
     // it may be worth creating a seperate tabStave that would
     // draw lines around locations of tablature fingering.
     //
-
-    if (height < 0) this.flipRectangle(arguments);
 
     this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
     return this;
@@ -426,12 +432,9 @@ export class SVGContext {
     const delta = endAngle - startAngle;
 
     if (delta > Math.PI) {
-      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
-                       antiClockwise);
-      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
-                       antiClockwise);
-    }
-    else {
+      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2, antiClockwise);
+      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle, antiClockwise);
+    } else {
       this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
     }
     return this;
@@ -448,15 +451,15 @@ export class SVGContext {
     let sweepFlag = 0;
     if (antiClockwise) {
       sweepFlag = 1;
-      if (endAngle - startAngle < Math.PI)
+      if (endAngle - startAngle < Math.PI) {
         largeArcFlag = 1;
-    }
-    else if (endAngle - startAngle > Math.PI) {
+      }
+    } else if (endAngle - startAngle > Math.PI) {
       largeArcFlag = 1;
     }
 
-    this.path += 'M' + x1 + ' ' + y1 + ' ' + 'A' +
-      radius + ' ' + radius + ' ' + '0 ' + largeArcFlag + ' ' + sweepFlag + ' ' +
+    this.path += 'M' + x1 + ' ' + y1 + ' A' +
+      radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' +
       x2 + ' ' + y2 + 'M' + this.pen.x + ' ' + this.pen.y;
   }
 
@@ -528,8 +531,9 @@ export class SVGContext {
   // ## Text Methods:
   measureText(text) {
     const txt = this.create('text');
-    if (typeof(txt.getBBox) !== 'function')
+    if (typeof(txt.getBBox) !== 'function') {
       return { x: 0, y: 0, width: 0, height: 0 };
+    }
 
     txt.textContent = text;
     this.applyAttributes(txt, this.attributes);
@@ -538,14 +542,15 @@ export class SVGContext {
     this.svg.appendChild(txt);
 
     let bbox = txt.getBBox();
-    if (this.ie && text !== '' && this.attributes['font-style'] == 'italic')
+    if (this.ie && text !== '' && this.attributes['font-style'] === 'italic') {
       bbox = this.ieMeasureTextFix(bbox, text);
+    }
 
     this.svg.removeChild(txt);
     return bbox;
   }
 
-  ieMeasureTextFix(bbox, text) {
+  ieMeasureTextFix(bbox) {
     // Internet Explorer over-pads text in italics,
     // resulting in giant width estimates for measureText.
     // To fix this, we use this formula, tested against
