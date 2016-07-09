@@ -21,13 +21,15 @@ export class Note extends Tickable {
   // note.
   static plotMetrics(ctx, note, yPos) {
     const metrics = note.getMetrics();
-    const w = metrics.width;
     const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
     const xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
     const xAbs = note.getAbsoluteX();
     const xPost1 = note.getAbsoluteX() + metrics.noteWidth;
     const xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
-    const xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
+    const xEnd = note.getAbsoluteX()
+      + metrics.noteWidth
+      + metrics.extraRightPx
+      + metrics.modRightPx;
 
     const xWidth = xEnd - xStart;
     ctx.save();
@@ -69,16 +71,17 @@ export class Note extends Tickable {
     super();
 
     if (!note_struct) {
-      throw new Vex.RuntimeError('BadArguments',
-          'Note must have valid initialization data to identify ' +
-          'duration and type.');
+      throw new Vex.RuntimeError(
+        'BadArguments', 'Note must have valid initialization data to identify duration and type.'
+      );
     }
 
     // Parse `note_struct` and get note properties.
     const initData = Flow.parseNoteData(note_struct);
     if (!initData) {
-      throw new Vex.RuntimeError('BadArguments',
-          'Invalid note initialization object: ' + JSON.stringify(note_struct));
+      throw new Vex.RuntimeError(
+        'BadArguments', `Invalid note initialization object: ${JSON.stringify(note_struct)}`
+      );
     }
 
     // Set note properties from parameters.
@@ -99,10 +102,8 @@ export class Note extends Tickable {
     // Get the glyph code for this note from the font.
     this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
 
-    if (this.positions &&
-        (typeof(this.positions) != 'object' || !this.positions.length)) {
-      throw new Vex.RuntimeError(
-        'BadArguments', 'Note keys must be array type.');
+    if (this.positions && (typeof(this.positions) !== 'object' || !this.positions.length)) {
+      throw new Vex.RuntimeError('BadArguments', 'Note keys must be array type.');
     }
 
     // Note to play for audio players.
@@ -194,16 +195,20 @@ export class Note extends Tickable {
   // an individual pitch/key within the note/chord.
   setYs(ys) { this.ys = ys; return this; }
   getYs() {
-    if (this.ys.length === 0) throw new Vex.RERR('NoYValues',
-        'No Y-values calculated for this note.');
+    if (this.ys.length === 0) {
+      throw new Vex.RERR('NoYValues', 'No Y-values calculated for this note.');
+    }
+
     return this.ys;
   }
 
   // Get the Y position of the space above the stave onto which text can
   // be rendered.
   getYForTopText(text_line) {
-    if (!this.stave) throw new Vex.RERR('NoStave',
-        'No stave attached to this note.');
+    if (!this.stave) {
+      throw new Vex.RERR('NoStave', 'No stave attached to this note.');
+    }
+
     return this.stave.getYForTopText(text_line);
   }
 
@@ -253,9 +258,14 @@ export class Note extends Tickable {
 
   // Get the coordinates for where modifiers begin.
   getModifierStartXY() {
-    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
-        "Can't call GetModifierStartXY on an unformatted note");
-    return { x: this.getAbsoluteX(), y: this.ys[0] };
+    if (!this.preFormatted) {
+      throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+    }
+
+    return {
+      x: this.getAbsoluteX(),
+      y: this.ys[0],
+    };
   }
 
   // Get bounds and metrics for this note.
@@ -269,8 +279,10 @@ export class Note extends Tickable {
   // `extraLeftPx`: Extra space on left of note.
   // `extraRightPx`: Extra space on right of note.
   getMetrics() {
-    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
-        "Can't call getMetrics on an unformatted note.");
+    if (!this.preFormatted) {
+      throw new Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
+    }
+
     let modLeftPx = 0;
     let modRightPx = 0;
     if (this.modifierContext != null) {
@@ -279,29 +291,29 @@ export class Note extends Tickable {
     }
 
     const width = this.getWidth();
-    return { width,
-             noteWidth: width -
-                        modLeftPx - modRightPx -
-                        this.extraLeftPx - this.extraRightPx,
-             left_shift: this.x_shift, // TODO(0xfe): Make style consistent
+    return {
+      width,
+      noteWidth: width - modLeftPx - modRightPx - this.extraLeftPx - this.extraRightPx,
+      left_shift: this.x_shift, // TODO(0xfe): Make style consistent
 
+      // Modifiers, accidentals etc.
+      modLeftPx,
+      modRightPx,
 
-             // Modifiers, accidentals etc.
-             modLeftPx,
-             modRightPx,
-
-             // Displaced note head on left or right.
-             extraLeftPx: this.extraLeftPx,
-             extraRightPx: this.extraRightPx };
+      // Displaced note head on left or right.
+      extraLeftPx: this.extraLeftPx,
+      extraRightPx: this.extraRightPx,
+    };
   }
 
   // Get and set width of note. Used by the formatter for positioning.
   setWidth(width) { this.width = width; }
   getWidth() {
-    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
-        "Can't call GetWidth on an unformatted note.");
-    return this.width +
-      (this.modifierContext ?  this.modifierContext.getWidth() : 0);
+    if (!this.preFormatted) {
+      throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
+    }
+
+    return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
   }
 
   // Displace note by `x` pixels. Used by the formatter.
@@ -310,8 +322,10 @@ export class Note extends Tickable {
 
   // Get `X` position of this tick context.
   getX() {
-    if (!this.tickContext) throw new Vex.RERR('NoTickContext',
-        'Note needs a TickContext assigned for an X-Value');
+    if (!this.tickContext) {
+      throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+    }
+
     return this.tickContext.getX() + this.x_shift;
   }
 
@@ -319,8 +333,9 @@ export class Note extends Tickable {
   // excludes x_shift, so you'll need to factor it in if you're
   // looking for the post-formatted x-position.
   getAbsoluteX() {
-    if (!this.tickContext) throw new Vex.RERR('NoTickContext',
-        'Note needs a TickContext assigned for an X-Value');
+    if (!this.tickContext) {
+      throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+    }
 
     // Position note to left edge of tick context.
     let x = this.tickContext.getX();
