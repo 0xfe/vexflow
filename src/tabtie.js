@@ -37,11 +37,16 @@ export class TabTie extends StaveTie {
   }
 
   draw() {
-    if (!this.context)
+    if (!this.context) {
       throw new Vex.RERR('NoContext', 'No context to render tie.');
+    }
+
     const first_note = this.first_note;
     const last_note = this.last_note;
-    let first_x_px, last_x_px, first_ys, last_ys;
+    let first_x_px;
+    let last_x_px;
+    let first_ys;
+    let last_ys;
 
     if (first_note) {
       first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
@@ -66,7 +71,7 @@ export class TabTie extends StaveTie {
       last_x_px,
       first_ys,
       last_ys,
-      direction: -1,           // Tab tie's are always face up.
+      direction: -1, // Tab tie's are always face up.
     });
 
     this.renderText(first_x_px, last_x_px);
