@@ -9,12 +9,15 @@ export class Music {
   static get NUM_TONES() {
     return 12;
   }
+
   static get roots() {
     return ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
   }
+
   static get root_values() {
     return [0, 2, 4, 5, 7, 9, 11];
   }
+
   static get root_indices() {
     return {
       'c': 0,
@@ -26,6 +29,7 @@ export class Music {
       'b': 6,
     };
   }
+
   static get canonical_notes() {
     return [
       'c', 'c#', 'd', 'd#',
@@ -33,6 +37,7 @@ export class Music {
       'g#', 'a', 'a#', 'b',
     ];
   }
+
   static get diatonic_intervals() {
     return [
       'unison', 'm2', 'M2', 'm3', 'M3',
@@ -40,6 +45,7 @@ export class Music {
       'b7', 'M7', 'octave',
     ];
   }
+
   static get diatonic_accidentals() {
     return {
       'unison': { note: 0, accidental: 0 },
@@ -57,6 +63,7 @@ export class Music {
       'octave': { note: 7, accidental: 0 },
     };
   }
+
   static get intervals() {
     return {
       'u': 0, 'unison': 0,
@@ -74,6 +81,7 @@ export class Music {
       '8': 12, 'octave': 12,
     };
   }
+
   static get scales() {
     return {
       major: [2, 2, 1, 2, 2, 2, 1],
@@ -82,15 +90,18 @@ export class Music {
       minor: [2, 1, 2, 2, 1, 2, 2],
     };
   }
+
   static get scaleTypes() {
     return {
       'M': Music.scales.major,
       'm': Music.scales.minor,
     };
   }
+
   static get accidentals() {
     return ['bb', 'b', 'n', '#', '##'];
   }
+
   static get noteValues() {
     return {
       'c': { root_index: 0, int_val: 0 },
@@ -139,19 +150,24 @@ export class Music {
   }
 
   isValidNoteValue(note) {
-    if (note == null || note < 0 || note >= Music.NUM_TONES)
+    if (note == null || note < 0 || note >= Music.NUM_TONES) {
       return false;
+    }
     return true;
   }
+
   isValidIntervalValue(interval) {
     return this.isValidNoteValue(interval);
   }
-  getNoteParts(noteString) {
-    if (!noteString || noteString.length < 1)
-      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
 
-    if (noteString.length > 3)
+  getNoteParts(noteString) {
+    if (!noteString || noteString.length < 1) {
       throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+    }
+
+    if (noteString.length > 3) {
+      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+    }
 
     const note = noteString.toLowerCase();
 
@@ -170,9 +186,11 @@ export class Music {
       throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
     }
   }
+
   getKeyParts(keyString) {
-    if (!keyString || keyString.length < 1)
+    if (!keyString || keyString.length < 1) {
       throw new Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
+    }
 
     const key = keyString.toLowerCase();
 
@@ -194,35 +212,40 @@ export class Music {
         type,
       };
     } else {
-      throw new Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
+      throw new Vex.RERR('BadArguments', `Invalid key: ${keyString}`);
     }
   }
+
   getNoteValue(noteString) {
     const value = Music.noteValues[noteString];
-    if (value == null)
-      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+    if (value == null) {
+      throw new Vex.RERR('BadArguments', `Invalid note name: ${noteString}`);
+    }
 
     return value.int_val;
   }
+
   getIntervalValue(intervalString) {
     const value = Music.intervals[intervalString];
-    if (value == null)
-      throw new Vex.RERR('BadArguments',
-                         'Invalid interval name: ' + intervalString);
+    if (value == null) {
+      throw new Vex.RERR('BadArguments', 'Invalid interval name: ${intervalString}');
+    }
 
     return value;
   }
+
   getCanonicalNoteName(noteValue) {
-    if (!this.isValidNoteValue(noteValue))
-      throw new Vex.RERR('BadArguments',
-                         'Invalid note value: ' + noteValue);
+    if (!this.isValidNoteValue(noteValue)) {
+      throw new Vex.RERR('BadArguments', `Invalid note value: ${noteValue}`);
+    }
 
     return Music.canonical_notes[noteValue];
   }
+
   getCanonicalIntervalName(intervalValue) {
-    if (!this.isValidIntervalValue(intervalValue))
-      throw new Vex.RERR('BadArguments',
-                         'Invalid interval value: ' + intervalValue);
+    if (!this.isValidIntervalValue(intervalValue)) {
+      throw new Vex.RERR('BadArguments', `Invalid interval value: ${intervalValue}`);
+    }
 
     return Music.diatonic_intervals[intervalValue];
   }
@@ -232,14 +255,17 @@ export class Music {
    */
   getRelativeNoteValue(noteValue, intervalValue, direction) {
     if (direction == null) direction = 1;
-    if (direction != 1 && direction != -1)
-      throw new Vex.RERR('BadArguments', 'Invalid direction: ' + direction);
+
+    if (direction !== 1 && direction !== -1) {
+      throw new Vex.RERR('BadArguments', `Invalid direction: ${direction}`);
+    }
 
     let sum = (noteValue + (direction * intervalValue)) % Music.NUM_TONES;
     if (sum < 0) sum += Music.NUM_TONES;
 
     return sum;
   }
+
   getRelativeNoteName(root, noteValue) {
     const parts = this.getNoteParts(root);
     const rootValue = this.getNoteValue(parts.root);
@@ -254,25 +280,25 @@ export class Music {
         Music.NUM_TONES) * multiplier;
 
       if (Math.abs(reverse_interval) > 2) {
-        throw new Vex.RERR('BadArguments', 'Notes not related: ' + root + ', ' +
-                          noteValue);
+        throw new Vex.RERR('BadArguments', `Notes not related: ${root}, ${noteValue})`);
       } else {
         interval = reverse_interval;
       }
     }
 
-    if (Math.abs(interval) > 2)
-      throw new Vex.RERR('BadArguments', 'Notes not related: ' + root + ', ' +
-                          noteValue);
+    if (Math.abs(interval) > 2) {
+      throw new Vex.RERR('BadArguments', `Notes not related: ${root}, ${noteValue})`);
+    }
 
     let relativeNoteName = parts.root;
-    let i;
     if (interval > 0) {
-      for (i = 1; i <= interval; ++i)
+      for (let i = 1; i <= interval; ++i) {
         relativeNoteName += '#';
+      }
     } else if (interval < 0) {
-      for (i = -1; i >= interval; --i)
+      for (let i = -1; i >= interval; --i) {
         relativeNoteName += 'b';
+      }
     }
 
     return relativeNoteName;
@@ -287,14 +313,12 @@ export class Music {
    * interval list).
    */
   getScaleTones(key, intervals) {
-    const tones = [];
-    tones.push(key);
+    const tones = [key];
 
     let nextNote = key;
-    for (let i = 0; i < intervals.length; ++i) {
-      nextNote = this.getRelativeNoteValue(nextNote,
-                                           intervals[i]);
-      if (nextNote != key) tones.push(nextNote);
+    for (let i = 0; i < intervals.length; i += 1) {
+      nextNote = this.getRelativeNoteValue(nextNote, intervals[i]);
+      if (nextNote !== key) tones.push(nextNote);
     }
 
     return tones;
@@ -306,19 +330,21 @@ export class Music {
    */
   getIntervalBetween(note1, note2, direction) {
     if (direction == null) direction = 1;
-    if (direction != 1 && direction != -1)
-      throw new Vex.RERR('BadArguments', 'Invalid direction: ' + direction);
-    if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2))
-      throw new Vex.RERR('BadArguments',
-                         'Invalid notes: ' + note1 + ', ' + note2);
 
-    let difference;
-    if (direction == 1)
-      difference = note2 - note1;
-    else
-      difference = note1 - note2;
+    if (direction !== 1 && direction !== -1) {
+      throw new Vex.RERR('BadArguments', `Invalid direction: ${direction}`);
+    }
+
+    if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2)) {
+      throw new Vex.RERR('BadArguments', `Invalid notes: ${note1}, ${note2}`);
+    }
+
+    let difference = direction === 1
+      ? note2 - note1
+      : note1 - note2;
 
     if (difference < 0) difference += Music.NUM_TONES;
+
     return difference;
   }
 

@@ -30,6 +30,7 @@ module.exports = (grunt) => {
     'src/bend.js',
     'src/formatter.js',
     'src/modifiercontext.js',
+    'src/music.js',
     'src/stave.js',
     'src/staveconnector.js',
     'src/stavenote.js',
