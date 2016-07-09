@@ -16,7 +16,7 @@
 import { Vex } from './vex';
 
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
-function L() { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', arguments); }
+function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
 
 export class Modifier {
   static get CATEGORY() { return 'none'; }
@@ -94,7 +94,7 @@ export class Modifier {
   // shift reverse.
   setXShift(x) {
     this.x_shift = 0;
-    if (this.position == Modifier.Position.LEFT) {
+    if (this.position === Modifier.Position.LEFT) {
       this.x_shift -= x;
     } else {
       this.x_shift += x;
@@ -104,9 +104,10 @@ export class Modifier {
 
   // Render the modifier onto the canvas.
   draw() {
-    if (!this.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw without a canvas context.");
-    throw new Vex.RERR('MethodNotImplemented',
-        'Draw() not implemented for this modifier.');
+    if (!this.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+    }
+
+    throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
   }
 }
