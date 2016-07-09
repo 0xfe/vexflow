@@ -8,8 +8,9 @@
 import { CanvasContext } from './canvascontext';
 import { RaphaelContext } from './raphaelcontext';
 import { SVGContext } from './svgcontext';
+import { Vex } from './vex';
 
-let _lastContext = null;
+let lastContext = null;
 
 export class Renderer {
   static get Backends() {
@@ -24,9 +25,9 @@ export class Renderer {
   // End of line types
   static get LineEndType() {
     return {
-      NONE: 1,        // No leg
-      UP: 2,          // Upward leg
-      DOWN: 3,         // Downward leg
+      NONE: 1, // No leg
+      UP: 2,   // Upward leg
+      DOWN: 3, // Downward leg
     };
   }
 
@@ -38,10 +39,10 @@ export class Renderer {
   }
 
   static get lastContext() {
-    return _lastContext;
+    return lastContext;
   }
   static set lastContext(ctx) {
-    _lastContext = ctx;
+    lastContext = ctx;
   }
 
   static buildContext(sel, backend, width, height, background) {
@@ -56,18 +57,15 @@ export class Renderer {
   }
 
   static getCanvasContext(sel, width, height, background) {
-    return Renderer.buildContext(sel, Renderer.Backends.CANVAS,
-        width, height, background);
+    return Renderer.buildContext(sel, Renderer.Backends.CANVAS, width, height, background);
   }
 
   static getRaphaelContext(sel, width, height, background) {
-    return Renderer.buildContext(sel, Renderer.Backends.RAPHAEL,
-        width, height, background);
+    return Renderer.buildContext(sel, Renderer.Backends.RAPHAEL, width, height, background);
   }
 
   static getSVGContext(sel, width, height, background) {
-    return Renderer.buildContext(sel, Renderer.Backends.SVG,
-        width, height, background);
+    return Renderer.buildContext(sel, Renderer.Backends.SVG, width, height, background);
   }
 
   static bolsterCanvasContext(ctx) {
@@ -75,15 +73,17 @@ export class Renderer {
       return new CanvasContext(ctx);
     }
 
-    const methods = ['clear', 'setFont', 'setRawFont', 'setFillStyle', 'setBackgroundFillStyle',
-                   'setStrokeStyle', 'setShadowColor', 'setShadowBlur', 'setLineWidth',
-                   'setLineCap', 'setLineDash', 'openGroup', 'closeGroup', 'getGroup'];
+    const methodNames = [
+      'clear', 'setFont', 'setRawFont', 'setFillStyle', 'setBackgroundFillStyle',
+      'setStrokeStyle', 'setShadowColor', 'setShadowBlur', 'setLineWidth',
+      'setLineCap', 'setLineDash', 'openGroup', 'closeGroup', 'getGroup',
+    ];
+
     ctx.vexFlowCanvasContext = ctx;
 
-    for (const i in methods) {
-      const method = methods[i];
-      ctx[method] = ctx[method] || CanvasContext.prototype[method];
-    }
+    methodNames.forEach(methodName => {
+      ctx[methodName] = ctx[methodName] || CanvasContext.prototype[methodName];
+    });
 
     return ctx;
   }
@@ -123,8 +123,9 @@ export class Renderer {
   constructor(sel, backend) {
     // Verify selector
     this.sel = sel;
-    if (!this.sel) throw new Vex.RERR('BadArgument',
-        'Invalid selector for renderer.');
+    if (!this.sel) {
+      throw new Vex.RERR('BadArgument', 'Invalid selector for renderer.');
+    }
 
     // Get element from selector
     this.element = document.getElementById(sel);
@@ -134,30 +135,29 @@ export class Renderer {
     this.ctx = null;
     this.paper = null;
     this.backend = backend;
-    if (this.backend == Renderer.Backends.CANVAS) {
+    if (this.backend === Renderer.Backends.CANVAS) {
       // Create context.
-      if (!this.element.getContext) throw new Vex.RERR('BadElement',
-        "Can't get canvas context from element: " + sel);
-      this.ctx = Renderer.bolsterCanvasContext(
-          this.element.getContext('2d'));
-    } else if (this.backend == Renderer.Backends.RAPHAEL) {
+      if (!this.element.getContext) {
+        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${sel}`);
+      }
+      this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
+    } else if (this.backend === Renderer.Backends.RAPHAEL) {
       this.ctx = new RaphaelContext(this.element);
-    } else if (this.backend == Renderer.Backends.SVG) {
+    } else if (this.backend === Renderer.Backends.SVG) {
       this.ctx = new SVGContext(this.element);
     } else {
-      throw new Vex.RERR('InvalidBackend',
-        'No support for backend: ' + this.backend);
+      throw new Vex.RERR('InvalidBackend', `No support for backend: ${this.backend}`);
     }
   }
 
   resize(width, height) {
-    if (this.backend == Renderer.Backends.CANVAS) {
-      if (!this.element.getContext) throw new Vex.RERR('BadElement',
-        "Can't get canvas context from element: " + this.sel);
+    if (this.backend === Renderer.Backends.CANVAS) {
+      if (!this.element.getContext) {
+        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${this.sel}`);
+      }
       this.element.width = width;
       this.element.height = height;
-      this.ctx = Renderer.bolsterCanvasContext(
-          this.element.getContext('2d'));
+      this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
     } else {
       this.ctx.resize(width, height);
     }
