@@ -8,11 +8,10 @@
 // using this class.
 
 import { Vex } from './vex';
-import { Flow } from './tables';
 import { Renderer } from './renderer';
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
-function L() { if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', arguments); }
+function L(...args) { if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args); }
 
 export class TextBracket {
   static get Positions() {
@@ -90,6 +89,8 @@ export class TextBracket {
       case TextBracket.Positions.BOTTOM:
         y =  this.start.getStave().getYForBottomText(this.line);
         break;
+      default:
+        throw new Vex.RERR('InvalidPosition', `The position ${this.position} is invalid`);
     }
 
     // Get the preliminary start and stop coordintates for the bracket
@@ -117,7 +118,6 @@ export class TextBracket {
     ctx.setFont(this.font.family, this.font.size / 1.4, this.font.weight);
     ctx.fillText(this.superscript, start.x + main_width + 1, super_y);
 
-
     // Determine width and height of the superscript
     const superscript_width = ctx.measureText(this.superscript).width;
     const super_height = ctx.measureText('M').width;
@@ -142,12 +142,24 @@ export class TextBracket {
 
     if (this.render_options.dashed) {
       // Main line
-      Renderer.drawDashedLine(ctx, start_x, line_y, end_x, line_y,
-        this.render_options.dash);
+      Renderer.drawDashedLine(
+        ctx,
+        start_x,
+        line_y,
+        end_x,
+        line_y,
+        this.render_options.dash
+      );
       // Ending Bracket
       if (this.render_options.show_bracket) {
-        Renderer.drawDashedLine(ctx, end_x, line_y + (1 * this.position),
-          end_x, line_y + bracket_height, this.render_options.dash);
+        Renderer.drawDashedLine(
+          ctx,
+          end_x,
+          line_y + (1 * this.position),
+          end_x,
+          line_y + bracket_height,
+          this.render_options.dash
+        );
       }
     } else {
       ctx.beginPath();

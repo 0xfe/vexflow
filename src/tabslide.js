@@ -54,8 +54,9 @@ export class TabSlide extends TabTie {
   }
 
   renderTie(params) {
-    if (params.first_ys.length === 0 || params.last_ys.length === 0)
+    if (params.first_ys.length === 0 || params.last_ys.length === 0) {
       throw new Vex.RERR('BadArguments', 'No Y-values to render');
+    }
 
     const ctx = this.context;
     const first_x_px = params.first_x_px;
@@ -63,8 +64,7 @@ export class TabSlide extends TabTie {
     const last_x_px = params.last_x_px;
 
     const direction = this.slide_direction;
-    if (direction != TabSlide.SLIDE_UP &&
-        direction != TabSlide.SLIDE_DOWN) {
+    if (direction !== TabSlide.SLIDE_UP && direction !== TabSlide.SLIDE_DOWN) {
       throw new Vex.RERR('BadSlide', 'Invalid slide direction');
     }
 
@@ -72,8 +72,9 @@ export class TabSlide extends TabTie {
       const slide_y = first_ys[this.first_indices[i]] +
         this.render_options.y_shift;
 
-      if (isNaN(slide_y))
+      if (isNaN(slide_y)) {
         throw new Vex.RERR('BadArguments', 'Bad indices for slide rendering.');
+      }
 
       ctx.beginPath();
       ctx.moveTo(first_x_px, slide_y + (3 * direction));
