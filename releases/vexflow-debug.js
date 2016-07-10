@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.55 built on 2016-07-10.
+ * VexFlow 1.2.56 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -5918,8 +5918,8 @@
     }, {
       key: 'resetTuplet',
       value: function resetTuplet(tuplet) {
-        var noteCount = void 0,
-            notesOccupied = void 0;
+        var noteCount = void 0;
+        var notesOccupied = void 0;
         if (tuplet) {
           var i = this.tupletStack.indexOf(tuplet);
           if (i !== -1) {
@@ -6001,7 +6001,7 @@
     }, {
       key: 'postFormat',
       value: function postFormat() {
-        if (this.postFormatted) return;
+        if (this.postFormatted) return this;
         this.postFormatted = true;
         return this;
       }
@@ -11086,8 +11086,12 @@
             right_shift = Math.max(right_shift, mContext.state.right_shift);
           }
         }
-        return { left: left_shift, right: right_shift,
-          extraLeft: extraLeftPx, extraRight: extraRightPx };
+        return {
+          left: left_shift,
+          right: right_shift,
+          extraLeft: extraLeftPx,
+          extraRight: extraRightPx
+        };
       }
     }, {
       key: 'addTickable',
@@ -11120,7 +11124,7 @@
     }, {
       key: 'preFormat',
       value: function preFormat() {
-        if (this.preFormatted) return;
+        if (this.preFormatted) return this;
 
         for (var i = 0; i < this.tickables.length; ++i) {
           var tickable = this.tickables[i];
@@ -16234,13 +16238,16 @@
     createClass(TabTie, [{
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', 'No context to render tie.');
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', 'No context to render tie.');
+        }
+
         var first_note = this.first_note;
         var last_note = this.last_note;
-        var first_x_px = void 0,
-            last_x_px = void 0,
-            first_ys = void 0,
-            last_ys = void 0;
+        var first_x_px = void 0;
+        var last_x_px = void 0;
+        var first_ys = void 0;
+        var last_ys = void 0;
 
         if (first_note) {
           first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
@@ -16336,7 +16343,9 @@
     createClass(TabSlide, [{
       key: 'renderTie',
       value: function renderTie(params) {
-        if (params.first_ys.length === 0 || params.last_ys.length === 0) throw new Vex$1.RERR('BadArguments', 'No Y-values to render');
+        if (params.first_ys.length === 0 || params.last_ys.length === 0) {
+          throw new Vex$1.RERR('BadArguments', 'No Y-values to render');
+        }
 
         var ctx = this.context;
         var first_x_px = params.first_x_px;
@@ -16344,14 +16353,16 @@
         var last_x_px = params.last_x_px;
 
         var direction = this.slide_direction;
-        if (direction != TabSlide.SLIDE_UP && direction != TabSlide.SLIDE_DOWN) {
+        if (direction !== TabSlide.SLIDE_UP && direction !== TabSlide.SLIDE_DOWN) {
           throw new Vex$1.RERR('BadSlide', 'Invalid slide direction');
         }
 
         for (var i = 0; i < this.first_indices.length; ++i) {
           var slide_y = first_ys[this.first_indices[i]] + this.render_options.y_shift;
 
-          if (isNaN(slide_y)) throw new Vex$1.RERR('BadArguments', 'Bad indices for slide rendering.');
+          if (isNaN(slide_y)) {
+            throw new Vex$1.RERR('BadArguments', 'Bad indices for slide rendering.');
+          }
 
           ctx.beginPath();
           ctx.moveTo(first_x_px, slide_y + 3 * direction);
@@ -16987,7 +16998,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
   function L$13() {
-    if (TextDynamics.DEBUG) Vex$1.L('Vex.Flow.TextDynamics', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (TextDynamics.DEBUG) Vex$1.L('Vex.Flow.TextDynamics', args);
   }
 
   var TextDynamics = function (_Note) {
@@ -17056,7 +17071,8 @@
     createClass(TextDynamics, [{
       key: 'setLine',
       value: function setLine(line) {
-        this.line = line;return this;
+        this.line = line;
+        return this;
       }
 
       // Preformat the dynamics text
@@ -17064,6 +17080,8 @@
     }, {
       key: 'preFormat',
       value: function preFormat() {
+        var _this2 = this;
+
         var total_width = 0;
         // Iterate through each letter
         this.sequence.split('').forEach(function (letter) {
@@ -17071,14 +17089,14 @@
           var glyph_data = TextDynamics.GLYPHS[letter];
           if (!glyph_data) throw new Vex$1.RERR('Invalid dynamics character: ' + letter);
 
-          var size = this.render_options.glyph_font_size;
+          var size = _this2.render_options.glyph_font_size;
           var glyph = new Glyph(glyph_data.code, size);
 
           // Add the glyph
-          this.glyphs.push(glyph);
+          _this2.glyphs.push(glyph);
 
           total_width += glyph_data.width;
-        }, this);
+        });
 
         // Store the width of the text
         this.setWidth(total_width);
@@ -17091,6 +17109,8 @@
     }, {
       key: 'draw',
       value: function draw() {
+        var _this3 = this;
+
         var x = this.getAbsoluteX();
         var y = this.stave.getYForLine(this.line + -3);
 
@@ -17098,10 +17118,10 @@
 
         var letter_x = x;
         this.glyphs.forEach(function (glyph, index) {
-          var current_letter = this.sequence[index];
-          glyph.render(this.context, letter_x, y);
+          var current_letter = _this3.sequence[index];
+          glyph.render(_this3.context, letter_x, y);
           letter_x += TextDynamics.GLYPHS[current_letter].width;
-        }, this);
+        });
       }
     }]);
     return TextDynamics;
@@ -17756,7 +17776,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
   function L$15() {
-    if (TextBracket.DEBUG) Vex$1.L('Vex.Flow.TextBracket', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (TextBracket.DEBUG) Vex$1.L('Vex.Flow.TextBracket', args);
   }
 
   var TextBracket = function () {
@@ -17865,6 +17889,8 @@
           case TextBracket.Positions.BOTTOM:
             y = this.start.getStave().getYForBottomText(this.line);
             break;
+          default:
+            throw new Vex$1.RERR('InvalidPosition', 'The position ' + this.position + ' is invalid');
         }
 
         // Get the preliminary start and stop coordintates for the bracket

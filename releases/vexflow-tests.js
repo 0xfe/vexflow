@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.55 built on 2016-07-10.
+ * VexFlow 1.2.56 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -26,7 +26,7 @@ if (!window.QUnit) {
 
   QUnit.test = function(name, func) {
     QUnit.current_test = name;
-    console.log("  Test: " + name);
+    // console.log("  Test: " + name);
     func(QUnit.assertions);
   };
 
