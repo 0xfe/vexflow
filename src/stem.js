@@ -8,7 +8,7 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
-function L() { if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', arguments); }
+function L(...args) { if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args); }
 
 export class Stem {
   static get CATEGORY() { return 'stem'; }
@@ -99,7 +99,7 @@ export class Stem {
     for (let i = 0; i < ys.length; ++i) {
       const stem_top = ys[i] + (stem_height * -this.stem_direction);
 
-      if (this.stem_direction == Stem.DOWN) {
+      if (this.stem_direction === Stem.DOWN) {
         top_pixel = Math.max(top_pixel, stem_top);
         base_pixel = Math.min(base_pixel, ys[i]);
       } else {
@@ -128,16 +128,18 @@ export class Stem {
 
   // Render the stem onto the canvas
   draw() {
-    if (!this.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw without a canvas context.");
+    if (!this.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+    }
 
     if (this.hide) return;
 
     const ctx = this.context;
-    let stem_x, stem_y;
+    let stem_x;
+    let stem_y;
     const stem_direction = this.stem_direction;
 
-    if (stem_direction == Stem.DOWN) {
+    if (stem_direction === Stem.DOWN) {
       // Down stems are rendered to the left of the head.
       stem_x = this.x_begin + (Stem.WIDTH / 2);
       stem_y = this.y_top + 2;
