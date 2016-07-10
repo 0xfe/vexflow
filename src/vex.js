@@ -4,11 +4,6 @@
 // This file implements utility methods used by the rest of the VexFlow
 // codebase.
 //
-// ## JSHint Settings
-//
-/* global window: false */
-/* global document: false */
-/* global Vex: true */
 
 const Vex = () => {};
 

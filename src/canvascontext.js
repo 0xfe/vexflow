@@ -33,9 +33,9 @@ export class CanvasContext {
   }
 
   // Containers not implemented
-  openGroup(cls, id, attrs) {}
+  openGroup() {}
   closeGroup() {}
-  add(elem) {}
+  add() {}
 
   setFont(family, size, weight) {
     this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
