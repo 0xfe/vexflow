@@ -39,7 +39,10 @@ function drawArrowLine(ctx, point1, point2, config) {
   // so that wide lines won't put a flat end on the arrow.
   const distance = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
   const ratio = (distance - config.arrowhead_length / 3) / distance;
-  let end_x, end_y, start_x, start_y;
+  let end_x;
+  let end_y;
+  let start_x;
+  let start_y;
   if (config.draw_end_arrow || both_arrows) {
     end_x = Math.round(x1 + (x2 - x1) * ratio);
     end_y = Math.round(y1 + (y2 - y1) * ratio);
@@ -73,9 +76,12 @@ function drawArrowLine(ctx, point1, point2, config) {
   // h is the line length of a side of the arrow head
   const h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
 
-  let angle1, angle2;
-  let top_x, top_y;
-  let bottom_x, bottom_y;
+  let angle1;
+  let angle2;
+  let top_x;
+  let top_y;
+  let bottom_x;
+  let bottom_y;
 
   if (config.draw_end_arrow || both_arrows) {
     angle1 = line_angle + Math.PI + config.arrowhead_angle;
@@ -183,16 +189,20 @@ export class StaveLine {
 
   // Set the notes for the `StaveLine`
   setNotes(notes) {
-    if (!notes.first_note && !notes.last_note)
-      throw new Vex.RuntimeError('BadArguments',
-          'Notes needs to have either first_note or last_note set.');
+    if (!notes.first_note && !notes.last_note) {
+      throw new Vex.RuntimeError(
+        'BadArguments', 'Notes needs to have either first_note or last_note set.'
+      );
+    }
 
     if (!notes.first_indices) notes.first_indices = [0];
     if (!notes.last_indices) notes.last_indices = [0];
 
-    if (notes.first_indices.length != notes.last_indices.length)
-      throw new Vex.RuntimeError('BadArguments', 'Connected notes must have similar' +
-        ' index sizes');
+    if (notes.first_indices.length !== notes.last_indices.length) {
+      throw new Vex.RuntimeError(
+        'BadArguments', 'Connected notes must have similar index sizes'
+      );
+    }
 
     // Success. Lets grab 'em notes.
     this.first_note = notes.first_note;
@@ -261,7 +271,7 @@ export class StaveLine {
     // Cycle through each set of indices and draw lines
     let start_position;
     let end_position;
-    this.first_indices.forEach(function(first_index, i) {
+    this.first_indices.forEach((first_index, i) => {
       const last_index = this.last_indices[i];
 
       // Get initial coordinates for the start/end of the line
@@ -270,10 +280,8 @@ export class StaveLine {
       const upwards_slope = start_position.y > end_position.y;
 
       // Adjust `x` coordinates for modifiers
-      start_position.x += first_note.getMetrics().modRightPx +
-                          render_options.padding_left;
-      end_position.x -= last_note.getMetrics().modLeftPx +
-                        render_options.padding_right;
+      start_position.x += first_note.getMetrics().modRightPx + render_options.padding_left;
+      end_position.x -= last_note.getMetrics().modLeftPx + render_options.padding_right;
 
 
       // Adjust first `x` coordinates for displacements
@@ -294,7 +302,7 @@ export class StaveLine {
       end_position.y += upwards_slope ? 2 : 0;
 
       drawArrowLine(ctx, start_position, end_position, this.render_options);
-    }, this);
+    });
 
     ctx.restore();
 
