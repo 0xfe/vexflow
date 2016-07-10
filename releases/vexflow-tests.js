@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.60 built on 2016-07-10.
+ * VexFlow 1.2.61 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -11,6 +11,8 @@
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
 if (!window.QUnit) {
+  var process = require('system');
+
   window.QUnit = {}
 
   QUnit.assertions = {
@@ -20,13 +22,12 @@ if (!window.QUnit) {
   };
 
   QUnit.module = function(name) {
-    console.log("Module: " + name);
     QUnit.current_module = name;
   };
 
   QUnit.test = function(name, func) {
     QUnit.current_test = name;
-    // console.log("  Test: " + name);
+    process.stdout.write("\033[0G" + QUnit.current_module + " :: " + name + "\033[0K");
     func(QUnit.assertions);
   };
 

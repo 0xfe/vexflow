@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.60 built on 2016-07-10.
+ * VexFlow 1.2.61 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -4787,7 +4787,7 @@
 
         var groups = defaults[time_sig];
 
-        if (!groups) {
+        if (groups === undefined) {
           // If no beam groups found, naively determine
           // the beam groupings from the time signature
           var beatTotal = parseInt(time_sig.split('/')[0], 10);
@@ -4802,10 +4802,13 @@
           } else if (beatValue <= 4) {
             return [new Fraction(1, beatValue)];
           }
+        } else {
+          return groups.map(function (group) {
+            return new Fraction().parse(group);
+          });
         }
-        return groups.map(function (group) {
-          return new Fraction().parse(group);
-        });
+
+        return [new Fraction(1, 4)];
       }
 
       // A helper function to automatically build basic beams for a voice. For more
