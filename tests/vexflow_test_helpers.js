@@ -21,7 +21,7 @@ if (!window.QUnit) {
 
   QUnit.test = function(name, func) {
     QUnit.current_test = name;
-    console.log("  Test: " + name);
+    // console.log("  Test: " + name);
     func(QUnit.assertions);
   };
 
