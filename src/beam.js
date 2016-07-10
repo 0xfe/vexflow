@@ -59,7 +59,7 @@ export class Beam {
 
     const groups = defaults[time_sig];
 
-    if (!groups) {
+    if (groups === undefined) {
       // If no beam groups found, naively determine
       // the beam groupings from the time signature
       const beatTotal = parseInt(time_sig.split('/')[0], 10);
@@ -74,8 +74,11 @@ export class Beam {
       } else if (beatValue <= 4) {
         return [new Fraction(1, beatValue)];
       }
+    } else {
+      return groups.map(group => new Fraction().parse(group));
     }
-    return groups.map(group => new Fraction().parse(group));
+
+    return [new Fraction(1, 4)];
   }
 
   // A helper function to automatically build basic beams for a voice. For more
