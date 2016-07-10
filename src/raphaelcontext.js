@@ -10,7 +10,7 @@
 export class RaphaelContext {
   constructor(element) {
     this.element = element;
-    this.paper = Raphael(element);
+    this.paper = Raphael(element); // eslint-disable-line
     this.path = '';
     this.pen = { x: 0, y: 0 };
     this.lineWidth = 1.0;
@@ -44,9 +44,9 @@ export class RaphaelContext {
   }
 
   // Containers not implemented
-  openGroup(cls, id, attrs) {}
+  openGroup() {}
   closeGroup() {}
-  add(elem) {}
+  add() {}
 
   setFont(family, size, weight) {
     this.state.font_family = family;
@@ -151,8 +151,7 @@ export class RaphaelContext {
       height = -height;
     }
 
-    this.paper.rect(x, y, width - 0.5, height - 0.5).
-      attr(this.attributes);
+    this.paper.rect(x, y, width - 0.5, height - 0.5).attr(this.attributes);
     return this;
   }
 
@@ -239,12 +238,9 @@ export class RaphaelContext {
     const delta = endAngle - startAngle;
 
     if (delta > Math.PI) {
-      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
-                       antiClockwise);
-      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
-                       antiClockwise);
-    }
-    else {
+      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2, antiClockwise);
+      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle, antiClockwise);
+    } else {
       this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
     }
     return this;
@@ -261,15 +257,15 @@ export class RaphaelContext {
     let sweepFlag = 0;
     if (antiClockwise) {
       sweepFlag = 1;
-      if (endAngle - startAngle < Math.PI)
+      if (endAngle - startAngle < Math.PI) {
         largeArcFlag = 1;
-    }
-    else if (endAngle - startAngle > Math.PI) {
+      }
+    } else if (endAngle - startAngle > Math.PI) {
       largeArcFlag = 1;
     }
 
-    this.path += 'M' + x1 + ',' + y1 + ',' + 'A' +
-      radius + ',' + radius + ',' + '0,' + largeArcFlag + ',' + sweepFlag + ',' +
+    this.path += 'M' + x1 + ',' + y1 + ',A' +
+      radius + ',' + radius + ',0,' + largeArcFlag + ',' + sweepFlag + ',' +
       x2 + ',' + y2 + 'M' + this.pen.x + ',' + this.pen.y;
   }
 
@@ -354,9 +350,14 @@ export class RaphaelContext {
   }
 
   fillText(text, x, y) {
-    this.paper.text(x + (this.measureText(text).width / 2),
-        (y - (this.state.font_size / (2.25 * this.state.scale.y))), text).
-      attr(this.attributes);
+    this.paper
+      .text(
+        x + (this.measureText(text).width / 2),
+        y - (this.state.font_size / (2.25 * this.state.scale.y)),
+        text
+      )
+      .attr(this.attributes);
+
     return this;
   }
 

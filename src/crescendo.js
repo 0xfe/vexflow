@@ -13,7 +13,7 @@ import { Note } from './note';
 import { TickContext } from './tickcontext';
 
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-function L() { if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', arguments); }
+function L(...args) { if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args); }
 
 // Private helper to draw the hairpin
 function renderHairpin(ctx, params) {
@@ -79,24 +79,24 @@ export class Crescendo extends Note {
 
   // Render the Crescendo object onto the canvas
   draw() {
-    if (!this.context) throw new Vex.RERR('NoContext',
-      "Can't draw Hairpin without a context.");
+    if (!this.context) {
+      throw new Vex.RERR('NoContext', "Can't draw Hairpin without a context.");
+    }
 
     const tick_context = this.getTickContext();
     const next_context = TickContext.getNextContext(tick_context);
 
     const begin_x = this.getAbsoluteX();
-    let end_x;
-    if (next_context) {
-      end_x = next_context.getX();
-    } else {
-      end_x = this.stave.x + this.stave.width;
-    }
-
+    const end_x  = next_context ? next_context.getX() : this.stave.x + this.stave.width;
     const y = this.stave.getYForLine(this.line + (-3)) + 1;
 
-    L('Drawing ',  this.decrescendo ? 'decrescendo ' : 'crescendo ',
-      this.height, 'x', begin_x - end_x);
+    L(
+      'Drawing ',
+      this.decrescendo ? 'decrescendo ' : 'crescendo ',
+      this.height,
+      'x',
+      begin_x - end_x
+    );
 
     renderHairpin(this.context, {
       begin_x: begin_x - this.render_options.extend_left,

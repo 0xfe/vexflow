@@ -6,6 +6,8 @@
 // @author zz85
 // @author incompleteopus (modifications)
 
+/* eslint-disable no-underscore-dangle */
+
 import { Vex } from './vex';
 export class Fraction {
 
@@ -14,7 +16,7 @@ export class Fraction {
    */
   static GCD(a, b) {
     if (typeof a !== 'number' || typeof b !== 'number') {
-      throw new Vex.RERR('BadArgument', 'Invalid numbers: ' + a + ', ' + b);
+      throw new Vex.RERR('BadArgument', `Invalid numbers: ${a}, ${b}`);
     }
 
     let t;
@@ -41,9 +43,9 @@ export class Fraction {
   static LCMM(args) {
     if (args.length === 0) {
       return 0;
-    } else if (args.length == 1) {
+    } else if (args.length === 1) {
       return args[0];
-    } else if (args.length == 2) {
+    } else if (args.length === 2) {
       return Fraction.LCM(args[0], args[1]);
     } else {
       const arg0 = args[0];
