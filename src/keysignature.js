@@ -134,16 +134,14 @@ export class KeySignature extends StaveModifier {
     const cancel_accList = Flow.keySignature(spec);
 
     // If the cancelled key has a different accidental type, ie: # vs b
-    const different_types = this.accList.length > 0 && cancel_accList.length > 0 &&
-                          cancel_accList[0].type !== this.accList[0].type;
+    const different_types = this.accList.length > 0
+      && cancel_accList.length > 0
+      && cancel_accList[0].type !== this.accList[0].type;
 
     // Determine how many naturals needed to add
-    let naturals = 0;
-    if (different_types) {
-      naturals = cancel_accList.length;
-    } else {
-      naturals = cancel_accList.length - this.accList.length;
-    }
+    const naturals = different_types
+      ? cancel_accList.length
+      : cancel_accList.length - this.accList.length;
 
     // Return if no naturals needed
     if (naturals < 1) return;
@@ -165,7 +163,7 @@ export class KeySignature extends StaveModifier {
   }
 
   // Deprecated
-  addToStave(stave, firstGlyph) {
+  addToStave(stave) {
     this.paddingForced = true;
     stave.addModifier(this);
 
@@ -203,6 +201,8 @@ export class KeySignature extends StaveModifier {
       case 'bass':
       case 'french':
         offset = 1;
+        break;
+      default:
         break;
     }
 
@@ -263,7 +263,9 @@ export class KeySignature extends StaveModifier {
   }
 
   format() {
-    if (!this.stave) throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+    if (!this.stave) {
+      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+    }
 
     this.width = 0;
     this.glyphs = [];
@@ -288,8 +290,14 @@ export class KeySignature extends StaveModifier {
   }
 
   draw() {
-    if (!this.x) throw new Vex.RERR('KeySignatureError', "Can't draw key signature without x.");
-    if (!this.stave) throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+    if (!this.x) {
+      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without x.");
+    }
+
+    if (!this.stave) {
+      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+    }
+
     if (!this.formatted) this.format();
 
     for (let i = 0; i < this.glyphs.length; i++) {
