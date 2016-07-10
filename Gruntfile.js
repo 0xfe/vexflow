@@ -153,7 +153,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-docco');
+  grunt.loadNpmTasks('grunt-contrib-docco');
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-git');

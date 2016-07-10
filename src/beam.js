@@ -765,16 +765,13 @@ export class Beam {
     const valid_beam_durations = ['4', '8', '16', '32', '64'];
 
     const first_note = this.notes[0];
-    const last_note = this.notes[this.notes.length - 1];
 
     let first_y_px = first_note.getStemExtents().topY;
-    let last_y_px = last_note.getStemExtents().topY;
 
     // For flat beams, set the first and last Y to the offset, rather than
     //  using the note's stem extents.
     if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
       first_y_px = this.render_options.flat_beam_offset;
-      last_y_px = this.render_options.flat_beam_offset;
     }
 
     const first_x_px = first_note.getStemX();
@@ -806,7 +803,6 @@ export class Beam {
       }
 
       first_y_px += beam_width * 1.5;
-      last_y_px += beam_width * 1.5;
     }
   }
 
