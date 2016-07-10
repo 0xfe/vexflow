@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.59 built on 2016-07-10.
+ * VexFlow 1.2.60 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -143,16 +143,11 @@
   // This file implements utility methods used by the rest of the VexFlow
   // codebase.
   //
-  // ## JSHint Settings
-  //
-  /* global window: false */
-  /* global document: false */
-  /* global Vex: true */
 
-  var Vex$1 = function Vex() {};
+  var Vex = function Vex() {};
 
   // Default log function sends all arguments to console.
-  Vex$1.L = function (block, args) {
+  Vex.L = function (block, args) {
     if (!args) return;
     var line = Array.prototype.slice.call(args).join(' ');
     window.console.log(block + ': ' + line);
@@ -180,12 +175,12 @@
   // Shortcut method for `RuntimeError`.
 
 
-  Vex$1.RuntimeError = RuntimeError;
-  Vex$1.RERR = Vex$1.RuntimeError;
+  Vex.RuntimeError = RuntimeError;
+  Vex.RERR = Vex.RuntimeError;
 
   // Merge `destination` hash with `source` hash, overwriting like keys
   // in `source` if necessary.
-  Vex$1.Merge = function (destination, source) {
+  Vex.Merge = function (destination, source) {
     for (var property in source) {
       // eslint-disable-line guard-for-in
       destination[property] = source[property];
@@ -194,31 +189,31 @@
   };
 
   // DEPRECATED. Use `Math.*`.
-  Vex$1.Min = Math.min;
-  Vex$1.Max = Math.max;
-  Vex$1.forEach = function (a, fn) {
+  Vex.Min = Math.min;
+  Vex.Max = Math.max;
+  Vex.forEach = function (a, fn) {
     for (var i = 0; i < a.length; i++) {
       fn(a[i], i);
     }
   };
 
   // Round number to nearest fractional value (`.5`, `.25`, etc.)
-  Vex$1.RoundN = function (x, n) {
+  Vex.RoundN = function (x, n) {
     return x % n >= n / 2 ? parseInt(x / n, 10) * n + n : parseInt(x / n, 10) * n;
   };
 
   // Locate the mid point between stave lines. Returns a fractional line if a space.
-  Vex$1.MidLine = function (a, b) {
+  Vex.MidLine = function (a, b) {
     var mid_line = b + (a - b) / 2;
     if (mid_line % 2 > 0) {
-      mid_line = Vex$1.RoundN(mid_line * 10, 5) / 10;
+      mid_line = Vex.RoundN(mid_line * 10, 5) / 10;
     }
     return mid_line;
   };
 
   // Take `arr` and return a new list consisting of the sorted, unique,
   // contents of arr. Does not modify `arr`.
-  Vex$1.SortAndUnique = function (arr, cmp, eq) {
+  Vex.SortAndUnique = function (arr, cmp, eq) {
     if (arr.length > 1) {
       var newArr = [];
       var last = void 0;
@@ -238,7 +233,7 @@
   };
 
   // Check if array `a` contains `obj`.
-  Vex$1.Contains = function (a, obj) {
+  Vex.Contains = function (a, obj) {
     var i = a.length;
     while (i--) {
       if (a[i] === obj) {
@@ -249,14 +244,14 @@
   };
 
   // Get the 2D Canvas context from DOM element `canvas_sel`.
-  Vex$1.getCanvasContext = function (canvas_sel) {
+  Vex.getCanvasContext = function (canvas_sel) {
     if (!canvas_sel) {
-      throw new Vex$1.RERR('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
+      throw new Vex.RERR('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
     }
 
     var canvas = document.getElementById(canvas_sel);
     if (!(canvas && canvas.getContext)) {
-      throw new Vex$1.RERR('UnsupportedBrowserError', 'This browser does not support HTML5 Canvas');
+      throw new Vex.RERR('UnsupportedBrowserError', 'This browser does not support HTML5 Canvas');
     }
 
     return canvas.getContext('2d');
@@ -266,7 +261,7 @@
   //
   // `ctx`: Canvas context.
   // `x`, `y`: Dot coordinates.
-  Vex$1.drawDot = function (ctx, x, y) {
+  Vex.drawDot = function (ctx, x, y) {
     var color = arguments.length <= 3 || arguments[3] === undefined ? '#55' : arguments[3];
 
     ctx.save();
@@ -281,35 +276,35 @@
   };
 
   // Benchmark. Run function `f` once and report time elapsed shifted by `s` milliseconds.
-  Vex$1.BM = function (s, f) {
+  Vex.BM = function (s, f) {
     var start_time = new Date().getTime();
     f();
     var elapsed = new Date().getTime() - start_time;
-    Vex$1.L(s + elapsed + 'ms');
+    Vex.L(s + elapsed + 'ms');
   };
 
   // Get stack trace.
-  Vex$1.StackTrace = function () {
+  Vex.StackTrace = function () {
     var err = new Error();
     return err.stack;
   };
 
   // Dump warning to console.
-  Vex$1.W = function () {
+  Vex.W = function () {
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
     var line = Array.prototype.slice.call(args).join(' ');
-    window.console.log('Warning: ', line, Vex$1.StackTrace());
+    window.console.log('Warning: ', line, Vex.StackTrace());
   };
 
   // Used by various classes (e.g., SVGContext) to provide a
   // unique prefix to element names (or other keys in shared namespaces).
-  Vex$1.Prefix = function (text) {
-    return Vex$1.Prefix.prefix + text;
+  Vex.Prefix = function (text) {
+    return Vex.Prefix.prefix + text;
   };
-  Vex$1.Prefix.prefix = 'vf-';
+  Vex.Prefix.prefix = 'vf-';
 
   var Fraction = function () {
     createClass(Fraction, null, [{
@@ -321,7 +316,7 @@
        */
       value: function GCD(a, b) {
         if (typeof a !== 'number' || typeof b !== 'number') {
-          throw new Vex$1.RERR('BadArgument', 'Invalid numbers: ' + a + ', ' + b);
+          throw new Vex.RERR('BadArgument', 'Invalid numbers: ' + a + ', ' + b);
         }
 
         var t = void 0;
@@ -354,9 +349,9 @@
       value: function LCMM(args) {
         if (args.length === 0) {
           return 0;
-        } else if (args.length == 1) {
+        } else if (args.length === 1) {
           return args[0];
-        } else if (args.length == 2) {
+        } else if (args.length === 2) {
           return Fraction.LCM(args[0], args[1]);
         } else {
           var arg0 = args[0];
@@ -678,10 +673,10 @@
   };
 
   Flow.clefProperties = function (clef) {
-    if (!clef) throw new Vex$1.RERR('BadArgument', 'Invalid clef: ' + clef);
+    if (!clef) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
 
     var props = Flow.clefProperties.values[clef];
-    if (!props) throw new Vex$1.RERR('BadArgument', 'Invalid clef: ' + clef);
+    if (!props) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
 
     return props;
   };
@@ -714,18 +709,18 @@
     var options = { octave_shift: 0 };
 
     if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) === 'object') {
-      Vex$1.Merge(options, params);
+      Vex.Merge(options, params);
     }
 
     var pieces = key.split('/');
 
     if (pieces.length < 2) {
-      throw new Vex$1.RERR('BadArguments', 'Key must have note + octave and an optional glyph: ' + key);
+      throw new Vex.RERR('BadArguments', 'Key must have note + octave and an optional glyph: ' + key);
     }
 
     var k = pieces[0].toUpperCase();
     var value = Flow.keyProperties.note_values[k];
-    if (!value) throw new Vex$1.RERR('BadArguments', 'Invalid key name: ' + k);
+    if (!value) throw new Vex.RERR('BadArguments', 'Invalid key name: ' + k);
     if (value.octave) pieces[1] = value.octave;
 
     var octave = parseInt(pieces[1], 10);
@@ -845,16 +840,16 @@
 
   Flow.integerToNote = function (integer) {
     if (typeof integer === 'undefined') {
-      throw new Vex$1.RERR('BadArguments', 'Undefined integer for integerToNote');
+      throw new Vex.RERR('BadArguments', 'Undefined integer for integerToNote');
     }
 
     if (integer < -2) {
-      throw new Vex$1.RERR('BadArguments', 'integerToNote requires integer > -2: ' + integer);
+      throw new Vex.RERR('BadArguments', 'integerToNote requires integer > -2: ' + integer);
     }
 
     var noteValue = Flow.integerToNote.table[integer];
     if (!noteValue) {
-      throw new Vex$1.RERR('BadArguments', 'Unknown note value for integer: ' + integer);
+      throw new Vex.RERR('BadArguments', 'Unknown note value for integer: ' + integer);
     }
 
     return noteValue;
@@ -1234,7 +1229,7 @@
     var keySpec = Flow.keySignature.keySpecs[spec];
 
     if (!keySpec) {
-      throw new Vex$1.RERR('BadKeySignature', "Bad key signature spec: '" + spec + "'");
+      throw new Vex.RERR('BadKeySignature', "Bad key signature spec: '" + spec + "'");
     }
 
     if (!keySpec.acc) {
@@ -1396,7 +1391,7 @@
     }
 
     if (Flow.durationToTicks.durations[duration] === undefined) {
-      throw new Vex$1.RERR('BadArguments', 'The provided duration is not valid: ' + duration);
+      throw new Vex.RERR('BadArguments', 'The provided duration is not valid: ' + duration);
     }
 
     return duration;
@@ -1466,7 +1461,7 @@
       return null;
     }
 
-    return Vex$1.Merge(Vex$1.Merge({}, code.common), glyphTypeProperties);
+    return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
   };
 
   Flow.durationToGlyph.duration_codes = {
@@ -1928,13 +1923,13 @@
 
     }, {
       key: 'openGroup',
-      value: function openGroup(cls, id, attrs) {}
+      value: function openGroup() {}
     }, {
       key: 'closeGroup',
       value: function closeGroup() {}
     }, {
       key: 'add',
-      value: function add(elem) {}
+      value: function add() {}
     }, {
       key: 'setFont',
       value: function setFont(family, size, weight) {
@@ -2123,7 +2118,7 @@
       classCallCheck(this, RaphaelContext);
 
       this.element = element;
-      this.paper = Raphael(element);
+      this.paper = Raphael(element); // eslint-disable-line
       this.path = '';
       this.pen = { x: 0, y: 0 };
       this.lineWidth = 1.0;
@@ -2161,13 +2156,13 @@
 
     createClass(RaphaelContext, [{
       key: 'openGroup',
-      value: function openGroup(cls, id, attrs) {}
+      value: function openGroup() {}
     }, {
       key: 'closeGroup',
       value: function closeGroup() {}
     }, {
       key: 'add',
-      value: function add(elem) {}
+      value: function add() {}
     }, {
       key: 'setFont',
       value: function setFont(family, size, weight) {
@@ -2396,12 +2391,14 @@
         var sweepFlag = 0;
         if (antiClockwise) {
           sweepFlag = 1;
-          if (endAngle - startAngle < Math.PI) largeArcFlag = 1;
+          if (endAngle - startAngle < Math.PI) {
+            largeArcFlag = 1;
+          }
         } else if (endAngle - startAngle > Math.PI) {
           largeArcFlag = 1;
         }
 
-        this.path += 'M' + x1 + ',' + y1 + ',' + 'A' + radius + ',' + radius + ',' + '0,' + largeArcFlag + ',' + sweepFlag + ',' + x2 + ',' + y2 + 'M' + this.pen.x + ',' + this.pen.y;
+        this.path += 'M' + x1 + ',' + y1 + ',A' + radius + ',' + radius + ',0,' + largeArcFlag + ',' + sweepFlag + ',' + x2 + ',' + y2 + 'M' + this.pen.x + ',' + this.pen.y;
       }
 
       // Adapted from the source for Raphael's Element.glow
@@ -2486,6 +2483,7 @@
       key: 'fillText',
       value: function fillText(text, x, y) {
         this.paper.text(x + this.measureText(text).width / 2, y - this.state.font_size / (2.25 * this.state.scale.y), text).attr(this.attributes);
+
         return this;
       }
     }, {
@@ -2602,8 +2600,8 @@
         this.groups.push(group);
         this.parent.appendChild(group);
         this.parent = group;
-        if (cls) group.setAttribute('class', Vex$1.Prefix(cls));
-        if (id) group.setAttribute('id', Vex$1.Prefix(id));
+        if (cls) group.setAttribute('class', Vex.Prefix(cls));
+        if (id) group.setAttribute('id', Vex.Prefix(id));
 
         if (attrs && attrs.pointerBBox) {
           group.setAttribute('pointer-events', 'bounding-box');
@@ -2613,7 +2611,7 @@
     }, {
       key: 'closeGroup',
       value: function closeGroup() {
-        var group = this.groups.pop();
+        this.groups.pop();
         this.parent = this.groups[this.groups.length - 1];
       }
     }, {
@@ -2647,7 +2645,7 @@
         var style = 'normal';
         // Weight might also be a number (200, 400, etc...) so we
         // test its type to be sure we have access to String methods.
-        if (typeof weight == 'string') {
+        if (typeof weight === 'string') {
           // look for "italic" in the weight:
           if (weight.indexOf('italic') !== -1) {
             weight = weight.replace(/italic/g, '');
@@ -2677,8 +2675,8 @@
         // Explorer we can fix its calculations of text width.
         this.fontSize = Number(size);
 
-        Vex$1.Merge(this.attributes, fontAttributes);
-        Vex$1.Merge(this.state, fontAttributes);
+        Vex.Merge(this.attributes, fontAttributes);
+        Vex.Merge(this.state, fontAttributes);
 
         return this;
       }
@@ -2748,7 +2746,7 @@
           this.attributes['stroke-dasharray'] = lineDash;
           return this;
         } else {
-          throw new Vex$1.RERR('ArgumentError', 'lineDash must be an array of integers.');
+          throw new Vex.RERR('ArgumentError', 'lineDash must be an array of integers.');
         }
       }
     }, {
@@ -2802,9 +2800,22 @@
       }
     }, {
       key: 'setViewBox',
-      value: function setViewBox(xMin, yMin, width, height) {
+      value: function setViewBox() {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
         // Override for "x y w h" style:
-        if (arguments.length == 1) this.svg.setAttribute('viewBox', viewBox);else {
+        if (args.length === 1) {
+          var viewBox = args[0];
+
+          this.svg.setAttribute('viewBox', viewBox);
+        } else {
+          var xMin = args[0];
+          var yMin = args[1];
+          var width = args[2];
+          var height = args[3];
+
           var viewBoxString = xMin + ' ' + yMin + ' ' + width + ' ' + height;
           this.svg.setAttribute('viewBox', viewBoxString);
         }
@@ -2815,9 +2826,10 @@
     }, {
       key: 'applyAttributes',
       value: function applyAttributes(element, attributes) {
-        for (var propertyName in attributes) {
-          element.setAttributeNS(null, propertyName, attributes[propertyName]);
-        }
+        Object.keys(attributes).forEach(function (propertyName) {
+          return element.setAttributeNS(null, propertyName, attributes[propertyName]);
+        });
+
         return element;
       }
 
@@ -2858,12 +2870,15 @@
 
         // Create the rect & style it:
         var rectangle = this.create('rect');
-        if (typeof attributes === 'undefined') attributes = {
-          fill: 'none',
-          'stroke-width': this.lineWidth,
-          stroke: 'black'
-        };
-        Vex$1.Merge(attributes, {
+        if (typeof attributes === 'undefined') {
+          attributes = {
+            fill: 'none',
+            'stroke-width': this.lineWidth,
+            stroke: 'black'
+          };
+        }
+
+        Vex.Merge(attributes, {
           x: x,
           y: y,
           width: width,
@@ -2903,8 +2918,6 @@
         // it may be worth creating a seperate tabStave that would
         // draw lines around locations of tablature fingering.
         //
-
-        if (height < 0) this.flipRectangle(arguments);
 
         this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
         return this;
@@ -3003,12 +3016,14 @@
         var sweepFlag = 0;
         if (antiClockwise) {
           sweepFlag = 1;
-          if (endAngle - startAngle < Math.PI) largeArcFlag = 1;
+          if (endAngle - startAngle < Math.PI) {
+            largeArcFlag = 1;
+          }
         } else if (endAngle - startAngle > Math.PI) {
           largeArcFlag = 1;
         }
 
-        this.path += 'M' + x1 + ' ' + y1 + ' ' + 'A' + radius + ' ' + radius + ' ' + '0 ' + largeArcFlag + ' ' + sweepFlag + ' ' + x2 + ' ' + y2 + 'M' + this.pen.x + ' ' + this.pen.y;
+        this.path += 'M' + x1 + ' ' + y1 + ' A' + radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' + x2 + ' ' + y2 + 'M' + this.pen.x + ' ' + this.pen.y;
       }
     }, {
       key: 'closePath',
@@ -3054,7 +3069,7 @@
         var path = this.create('path');
         if (typeof attributes === 'undefined') {
           attributes = {};
-          Vex$1.Merge(attributes, this.attributes);
+          Vex.Merge(attributes, this.attributes);
           attributes.stroke = 'none';
         }
 
@@ -3072,7 +3087,7 @@
 
         var path = this.create('path');
         var attributes = {};
-        Vex$1.Merge(attributes, this.attributes);
+        Vex.Merge(attributes, this.attributes);
         attributes.fill = 'none';
         attributes['stroke-width'] = this.lineWidth;
         attributes.d = this.path;
@@ -3087,7 +3102,9 @@
       key: 'measureText',
       value: function measureText(text) {
         var txt = this.create('text');
-        if (typeof txt.getBBox !== 'function') return { x: 0, y: 0, width: 0, height: 0 };
+        if (typeof txt.getBBox !== 'function') {
+          return { x: 0, y: 0, width: 0, height: 0 };
+        }
 
         txt.textContent = text;
         this.applyAttributes(txt, this.attributes);
@@ -3096,14 +3113,16 @@
         this.svg.appendChild(txt);
 
         var bbox = txt.getBBox();
-        if (this.ie && text !== '' && this.attributes['font-style'] == 'italic') bbox = this.ieMeasureTextFix(bbox, text);
+        if (this.ie && text !== '' && this.attributes['font-style'] === 'italic') {
+          bbox = this.ieMeasureTextFix(bbox, text);
+        }
 
         this.svg.removeChild(txt);
         return bbox;
       }
     }, {
       key: 'ieMeasureTextFix',
-      value: function ieMeasureTextFix(bbox, text) {
+      value: function ieMeasureTextFix(bbox) {
         // Internet Explorer over-pads text in italics,
         // resulting in giant width estimates for measureText.
         // To fix this, we use this formula, tested against
@@ -3132,7 +3151,7 @@
       key: 'fillText',
       value: function fillText(text, x, y) {
         var attributes = {};
-        Vex$1.Merge(attributes, this.attributes);
+        Vex.Merge(attributes, this.attributes);
         attributes.stroke = 'none';
         attributes.x = x;
         attributes.y = y;
@@ -3198,7 +3217,7 @@
     return SVGContext;
   }();
 
-  var _lastContext = null;
+  var lastContext = null;
 
   var Renderer = function () {
     createClass(Renderer, null, [{
@@ -3237,13 +3256,13 @@
           return new CanvasContext(ctx);
         }
 
-        var methods = ['clear', 'setFont', 'setRawFont', 'setFillStyle', 'setBackgroundFillStyle', 'setStrokeStyle', 'setShadowColor', 'setShadowBlur', 'setLineWidth', 'setLineCap', 'setLineDash', 'openGroup', 'closeGroup', 'getGroup'];
+        var methodNames = ['clear', 'setFont', 'setRawFont', 'setFillStyle', 'setBackgroundFillStyle', 'setStrokeStyle', 'setShadowColor', 'setShadowBlur', 'setLineWidth', 'setLineCap', 'setLineDash', 'openGroup', 'closeGroup', 'getGroup'];
+
         ctx.vexFlowCanvasContext = ctx;
 
-        for (var i in methods) {
-          var method = methods[i];
-          ctx[method] = ctx[method] || CanvasContext.prototype[method];
-        }
+        methodNames.forEach(function (methodName) {
+          ctx[methodName] = ctx[methodName] || CanvasContext.prototype[methodName];
+        });
 
         return ctx;
       }
@@ -3317,10 +3336,10 @@
     }, {
       key: 'lastContext',
       get: function get() {
-        return _lastContext;
+        return lastContext;
       },
       set: function set(ctx) {
-        _lastContext = ctx;
+        lastContext = ctx;
       }
     }]);
 
@@ -3329,7 +3348,9 @@
 
       // Verify selector
       this.sel = sel;
-      if (!this.sel) throw new Vex.RERR('BadArgument', 'Invalid selector for renderer.');
+      if (!this.sel) {
+        throw new Vex.RERR('BadArgument', 'Invalid selector for renderer.');
+      }
 
       // Get element from selector
       this.element = document.getElementById(sel);
@@ -3339,13 +3360,15 @@
       this.ctx = null;
       this.paper = null;
       this.backend = backend;
-      if (this.backend == Renderer.Backends.CANVAS) {
+      if (this.backend === Renderer.Backends.CANVAS) {
         // Create context.
-        if (!this.element.getContext) throw new Vex.RERR('BadElement', "Can't get canvas context from element: " + sel);
+        if (!this.element.getContext) {
+          throw new Vex.RERR('BadElement', 'Can\'t get canvas context from element: ' + sel);
+        }
         this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
-      } else if (this.backend == Renderer.Backends.RAPHAEL) {
+      } else if (this.backend === Renderer.Backends.RAPHAEL) {
         this.ctx = new RaphaelContext(this.element);
-      } else if (this.backend == Renderer.Backends.SVG) {
+      } else if (this.backend === Renderer.Backends.SVG) {
         this.ctx = new SVGContext(this.element);
       } else {
         throw new Vex.RERR('InvalidBackend', 'No support for backend: ' + this.backend);
@@ -3355,8 +3378,10 @@
     createClass(Renderer, [{
       key: 'resize',
       value: function resize(width, height) {
-        if (this.backend == Renderer.Backends.CANVAS) {
-          if (!this.element.getContext) throw new Vex.RERR('BadElement', "Can't get canvas context from element: " + this.sel);
+        if (this.backend === Renderer.Backends.CANVAS) {
+          if (!this.element.getContext) {
+            throw new Vex.RERR('BadElement', 'Can\'t get canvas context from element: ' + this.sel);
+          }
           this.element.width = width;
           this.element.height = height;
           this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
@@ -3397,7 +3422,7 @@
     function Voice(time) {
       classCallCheck(this, Voice);
 
-      this.time = Vex$1.Merge({
+      this.time = Vex.Merge({
         num_beats: 4,
         beat_value: 4,
         resolution: Flow.RESOLUTION
@@ -3513,7 +3538,7 @@
         var i = void 0;
 
         if (!this.boundingBox) {
-          if (!this.stave) throw new Vex$1.RERR('NoStave', "Can't get bounding box without stave.");
+          if (!this.stave) throw new Vex.RERR('NoStave', "Can't get bounding box without stave.");
           stave = this.stave;
           boundingBox = null;
 
@@ -3538,7 +3563,7 @@
       key: 'getVoiceGroup',
       value: function getVoiceGroup() {
         if (!this.voiceGroup) {
-          throw new Vex$1.RERR('NoVoiceGroup', 'No voice group for voice.');
+          throw new Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
         }
 
         return this.voiceGroup;
@@ -3586,7 +3611,7 @@
 
           if ((this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) && this.ticksUsed.greaterThan(this.totalTicks)) {
             this.totalTicks.subtract(ticks);
-            throw new Vex$1.RERR('BadArgument', 'Too many ticks.');
+            throw new Vex.RERR('BadArgument', 'Too many ticks.');
           }
 
           // Track the smallest tickable for formatting.
@@ -3652,7 +3677,7 @@
           if (stave) tickable.setStave(stave);
 
           if (!tickable.getStave()) {
-            throw new Vex$1.RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
+            throw new Vex.RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
           }
 
           if (i === 0) boundingBox = tickable.getBoundingBox();
@@ -3875,8 +3900,8 @@
 
         var new_x = this.x < that.x ? this.x : that.x;
         var new_y = this.y < that.y ? this.y : that.y;
-        var new_w = this.x + this.w < that.x + that.w ? that.x + that.w - this.x : this.x + this.w - Vex$1.Min(this.x, that.x);
-        var new_h = this.y + this.h < that.y + that.h ? that.y + that.h - this.y : this.y + this.h - Vex$1.Min(this.y, that.y);
+        var new_w = this.x + this.w < that.x + that.w ? that.x + that.w - this.x : this.x + this.w - Vex.Min(this.x, that.x);
+        var new_h = this.y + this.h < that.y + that.h ? that.y + that.h - this.y : this.y + this.h - Vex.Min(this.y, that.y);
 
         this.x = new_x;
         this.y = new_y;
@@ -3944,7 +3969,7 @@
       value: function loadMetrics(font, code, cache) {
         var glyph = font.glyphs[code];
         if (!glyph) {
-          throw new Vex$1.RERR('BadGlyph', 'Glyph ' + code + ' does not exist in font.');
+          throw new Vex.RERR('BadGlyph', 'Glyph ' + code + ' does not exist in font.');
         }
 
         var x_min = glyph.x_min;
@@ -3973,7 +3998,7 @@
             outline: outline
           };
         } else {
-          throw new Vex$1.RERR('BadGlyph', 'Glyph ' + code + ' has no outline defined.');
+          throw new Vex.RERR('BadGlyph', 'Glyph ' + code + ' has no outline defined.');
         }
       }
 
@@ -4055,7 +4080,7 @@
     createClass(Glyph, [{
       key: 'setOptions',
       value: function setOptions(options) {
-        Vex$1.Merge(this.options, options);
+        Vex.Merge(this.options, options);
         this.reset();
       }
     }, {
@@ -4099,7 +4124,7 @@
       key: 'getMetrics',
       value: function getMetrics() {
         if (!this.metrics) {
-          throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
+          throw new Vex.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
         }
 
         return {
@@ -4113,7 +4138,7 @@
       key: 'render',
       value: function render(ctx, x_pos, y_pos) {
         if (!this.metrics) {
-          throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
+          throw new Vex.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
         }
 
         var outline = this.metrics.outline;
@@ -4125,15 +4150,15 @@
       key: 'renderToStave',
       value: function renderToStave(x) {
         if (!this.metrics) {
-          throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
+          throw new Vex.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
         }
 
         if (!this.stave) {
-          throw new Vex$1.RuntimeError('GlyphError', 'No valid stave');
+          throw new Vex.RuntimeError('GlyphError', 'No valid stave');
         }
 
         if (!this.context) {
-          throw new Vex$1.RERR('GlyphError', 'No valid context');
+          throw new Vex.RERR('GlyphError', 'No valid context');
         }
 
         var outline = this.metrics.outline;
@@ -4151,7 +4176,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (Stem.DEBUG) Vex$1.L('Vex.Flow.Stem', args);
+    if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args);
   }
 
   var Stem = function () {
@@ -4277,7 +4302,7 @@
     }, {
       key: 'getBoundingBox',
       value: function getBoundingBox() {
-        throw new Vex$1.RERR('NotImplemented', 'getBoundingBox() not implemented.');
+        throw new Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
       }
 
       // Get the y coordinates for the very base of the stem to the top of
@@ -4339,7 +4364,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         if (this.hide) return;
@@ -4399,14 +4424,14 @@
       classCallCheck(this, Tuplet);
 
       if (!notes || !notes.length) {
-        throw new Vex$1.RuntimeError('BadArguments', 'No notes provided for tuplet.');
+        throw new Vex.RuntimeError('BadArguments', 'No notes provided for tuplet.');
       }
 
-      if (notes.length == 1) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Too few notes for tuplet.');
+      if (notes.length === 1) {
+        throw new Vex.RuntimeError('BadArguments', 'Too few notes for tuplet.');
       }
 
-      this.options = Vex$1.Merge({}, options);
+      this.options = Vex.Merge({}, options);
       this.notes = notes;
       this.num_notes = 'num_notes' in this.options ? this.options.num_notes : notes.length;
 
@@ -4466,7 +4491,7 @@
     }, {
       key: 'setBracketed',
       value: function setBracketed(bracketed) {
-        this.bracketed = bracketed ? true : false;
+        this.bracketed = !!bracketed;
         return this;
       }
 
@@ -4477,7 +4502,7 @@
     }, {
       key: 'setRatioed',
       value: function setRatioed(ratioed) {
-        this.ratioed = ratioed ? true : false;
+        this.ratioed = !!ratioed;
         return this;
       }
 
@@ -4488,8 +4513,10 @@
     }, {
       key: 'setTupletLocation',
       value: function setTupletLocation(location) {
-        if (!location) location = Tuplet.LOCATION_TOP;else if (location != Tuplet.LOCATION_TOP && location != Tuplet.LOCATION_BOTTOM) {
-          throw new Vex$1.RERR('BadArgument', 'Invalid tuplet location: ' + location);
+        if (!location) {
+          location = Tuplet.LOCATION_TOP;
+        } else if (location !== Tuplet.LOCATION_TOP && location !== Tuplet.LOCATION_BOTTOM) {
+          throw new Vex.RERR('BadArgument', 'Invalid tuplet location: ' + location);
         }
 
         this.location = location;
@@ -4508,8 +4535,14 @@
     }, {
       key: 'beatsOccupiedDeprecationWarning',
       value: function beatsOccupiedDeprecationWarning() {
-        var msg = 'beats_occupied has been deprecated as an ' + 'option for tuplets. Please use notes_occupied ' + 'instead. Calls to getBeatsOccupied and ' + 'setBeatsOccupied should now be routed to ' + 'getNotesOccupied and setNotesOccupied instead.';
-        if (console && console.warn) console.warn(msg);else if (console) console.log(msg);
+        var msg = ['beats_occupied has been deprecated as an ', 'option for tuplets. Please use notes_occupied ', 'instead. Calls to getBeatsOccupied and ', 'setBeatsOccupied should now be routed to ', 'getNotesOccupied and setNotesOccupied instead'].join('');
+
+        if (console && console.warn) {
+          // eslint-disable-line no-console
+          console.warn(msg); // eslint-disable-line no-console
+        } else if (console) {
+            console.log(msg); // eslint-disable-line no-console
+          }
       }
     }, {
       key: 'getBeatsOccupied',
@@ -4586,9 +4619,6 @@
     }, {
       key: 'getYPosition',
       value: function getYPosition() {
-        var i = void 0,
-            y_pos = void 0;
-
         // offset the tuplet for any nested tuplets between
         // it and the notes:
         var nested_tuplet_y_offset = this.getNestedTupletCount() * Tuplet.NESTING_OFFSET * -this.location;
@@ -4599,20 +4629,26 @@
         // now iterate through the notes and find our highest
         // or lowest locations, to form a base y_pos
         var first_note = this.notes[0];
-        if (this.location == Tuplet.LOCATION_TOP) {
+        var y_pos = void 0;
+        if (this.location === Tuplet.LOCATION_TOP) {
           y_pos = first_note.getStave().getYForLine(0) - 15;
           // y_pos = first_note.getStemExtents().topY - 10;
 
-          for (i = 0; i < this.notes.length; ++i) {
+          for (var i = 0; i < this.notes.length; ++i) {
             var top_y = this.notes[i].getStemDirection() === Stem.UP ? this.notes[i].getStemExtents().topY - 10 : this.notes[i].getStemExtents().baseY - 20;
-            if (top_y < y_pos) y_pos = top_y;
+
+            if (top_y < y_pos) {
+              y_pos = top_y;
+            }
           }
         } else {
           y_pos = first_note.getStave().getYForLine(4) + 20;
 
-          for (i = 0; i < this.notes.length; ++i) {
-            var bottom_y = this.notes[i].getStemDirection() === Stem.UP ? this.notes[i].getStemExtents().baseY + 20 : this.notes[i].getStemExtents().topY + 10;
-            if (bottom_y > y_pos) y_pos = bottom_y;
+          for (var _i = 0; _i < this.notes.length; ++_i) {
+            var bottom_y = this.notes[_i].getStemDirection() === Stem.UP ? this.notes[_i].getStemExtents().baseY + 20 : this.notes[_i].getStemExtents().topY + 10;
+            if (bottom_y > y_pos) {
+              y_pos = bottom_y;
+            }
           }
         }
 
@@ -4621,7 +4657,11 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        var _this = this;
+
+        if (!this.context) {
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
 
         // determine x value of left bound of tuplet
         var first_note = this.notes[0];
@@ -4638,16 +4678,14 @@
         // determine y value for tuplet
         this.y_pos = this.getYPosition();
 
+        var addGlyphWidth = function addGlyphWidth(width, glyph) {
+          return width + glyph.getMetrics().width;
+        };
+
         // calculate total width of tuplet notation
-        var width = 0;
-        var glyph = void 0;
-        for (glyph in this.num_glyphs) {
-          width += this.num_glyphs[glyph].getMetrics().width;
-        }
+        var width = this.num_glyphs.reduce(addGlyphWidth, 0);
         if (this.ratioed) {
-          for (glyph in this.denom_glyphs) {
-            width += this.denom_glyphs[glyph].getMetrics().width;
-          }
+          width = this.denom_glyphs.reduce(addGlyphWidth, width);
           width += this.point * 0.32;
         }
 
@@ -4662,18 +4700,17 @@
           if (line_width > 0) {
             this.context.fillRect(this.x_pos, this.y_pos, line_width, 1);
             this.context.fillRect(this.x_pos + this.width / 2 + width / 2 + 5, this.y_pos, line_width, 1);
-            this.context.fillRect(this.x_pos, this.y_pos + (this.location == Tuplet.LOCATION_BOTTOM), 1, this.location * 10);
-            this.context.fillRect(this.x_pos + this.width, this.y_pos + (this.location == Tuplet.LOCATION_BOTTOM), 1, this.location * 10);
+            this.context.fillRect(this.x_pos, this.y_pos + (this.location === Tuplet.LOCATION_BOTTOM), 1, this.location * 10);
+            this.context.fillRect(this.x_pos + this.width, this.y_pos + (this.location === Tuplet.LOCATION_BOTTOM), 1, this.location * 10);
           }
         }
 
         // draw numerator glyphs
         var x_offset = 0;
-        var size = this.num_glyphs.length;
-        for (glyph in this.num_glyphs) {
-          this.num_glyphs[size - glyph - 1].render(this.context, notation_start_x + x_offset, this.y_pos + this.point / 3 - 2);
-          x_offset += this.num_glyphs[size - glyph - 1].getMetrics().width;
-        }
+        this.num_glyphs.forEach(function (glyph) {
+          glyph.render(_this.context, notation_start_x + x_offset, _this.y_pos + _this.point / 3 - 2);
+          x_offset += glyph.getMetrics().width;
+        });
 
         // display colon and denominator if the ratio is to be shown
         if (this.ratioed) {
@@ -4688,11 +4725,10 @@
           this.context.closePath();
           this.context.fill();
           x_offset += this.point * 0.32;
-          size = this.denom_glyphs.length;
-          for (glyph in this.denom_glyphs) {
-            this.denom_glyphs[size - glyph - 1].render(this.context, notation_start_x + x_offset, this.y_pos + this.point / 3 - 2);
-            x_offset += this.denom_glyphs[size - glyph - 1].getMetrics().width;
-          }
+          this.denom_glyphs.forEach(function (glyph) {
+            glyph.render(_this.context, notation_start_x + x_offset, _this.y_pos + _this.point / 3 - 2);
+            x_offset += glyph.getMetrics().width;
+          });
         }
       }
     }]);
@@ -4827,7 +4863,7 @@
         // Convert beam groups to tick amounts
         var tickGroups = config.groups.map(function (group) {
           if (!group.multiply) {
-            throw new Vex$1.RuntimeError('InvalidBeamGroups', 'The beam groups must be an array of Vex.Flow.Fractions');
+            throw new Vex.RuntimeError('InvalidBeamGroups', 'The beam groups must be an array of Vex.Flow.Fractions');
           }
           return group.clone().multiply(Flow.RESOLUTION, 1);
         });
@@ -5059,18 +5095,18 @@
       classCallCheck(this, Beam);
 
       if (!notes || notes === []) {
-        throw new Vex$1.RuntimeError('BadArguments', 'No notes provided for beam.');
+        throw new Vex.RuntimeError('BadArguments', 'No notes provided for beam.');
       }
 
       if (notes.length === 1) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Too few notes for beam.');
+        throw new Vex.RuntimeError('BadArguments', 'Too few notes for beam.');
       }
 
       // Validate beam line, direction and ticks.
       this.ticks = notes[0].getIntrinsicTicks();
 
       if (this.ticks >= Flow.durationToTicks('4')) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Beams can only be applied to notes shorter than a quarter note.');
+        throw new Vex.RuntimeError('BadArguments', 'Beams can only be applied to notes shorter than a quarter note.');
       }
 
       var i = void 0; // shared iterator
@@ -5491,7 +5527,7 @@
       key: 'drawBeamLines',
       value: function drawBeamLines() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         var valid_beam_durations = ['4', '8', '16', '32', '64'];
@@ -5574,7 +5610,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         if (this.unbeamable) return;
@@ -5592,7 +5628,7 @@
 
   function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
     if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT && type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
-      throw new Vex$1.RERR('InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.');
+      throw new Vex.RERR('InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.');
     }
 
     var x_shift = 3;
@@ -5671,20 +5707,20 @@
       value: function setText(text, options) {
         this.texts.push({
           content: text,
-          options: Vex$1.Merge({ shift_x: 0, shift_y: 0 }, options)
+          options: Vex.Merge({ shift_x: 0, shift_y: 0 }, options)
         });
         return this;
       }
     }, {
       key: 'setFont',
       value: function setFont(font) {
-        Vex$1.Merge(this.font, font);
+        Vex.Merge(this.font, font);
       }
     }, {
       key: 'setXShift',
       value: function setXShift(x_shift) {
         if (typeof x_shift !== 'number') {
-          throw Vex$1.RERR('InvalidType', 'x_shift must be a Number');
+          throw Vex.RERR('InvalidType', 'x_shift must be a Number');
         }
 
         this.x_shift = x_shift;
@@ -5694,7 +5730,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.ctx) {
-          throw new Vex$1.RERR('NoContext', "Can't draw without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw without a context.");
         }
 
         var topY = this.top_stave.getYForLine(0);
@@ -5777,7 +5813,7 @@
           case StaveConnector.type.NONE:
             break;
           default:
-            throw new Vex$1.RERR('InvalidType', 'The provided StaveConnector.type (' + this.type + ') is invalid');
+            throw new Vex.RERR('InvalidType', 'The provided StaveConnector.type (' + this.type + ') is invalid');
         }
 
         if (this.type !== StaveConnector.type.BRACE && this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT && this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT && this.type !== StaveConnector.type.NONE) {
@@ -5914,7 +5950,7 @@
     }, {
       key: 'getVoice',
       value: function getVoice() {
-        if (!this.voice) throw new Vex$1.RERR('NoVoice', 'Tickable has no voice.');
+        if (!this.voice) throw new Vex.RERR('NoVoice', 'Tickable has no voice.');
         return this.voice;
       }
     }, {
@@ -6100,7 +6136,7 @@
         stroke(xPost1, xPost2, '#999');
         stroke(xPost2, xEnd, 'red');
         stroke(xStart - note.getXShift(), xStart, '#DDD'); // Shift
-        Vex$1.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
+        Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
         ctx.restore();
       }
 
@@ -6128,13 +6164,13 @@
       var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Note).call(this));
 
       if (!note_struct) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Note must have valid initialization data to identify duration and type.');
+        throw new Vex.RuntimeError('BadArguments', 'Note must have valid initialization data to identify duration and type.');
       }
 
       // Parse `note_struct` and get note properties.
       var initData = Flow.parseNoteData(note_struct);
       if (!initData) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Invalid note initialization object: ' + JSON.stringify(note_struct));
+        throw new Vex.RuntimeError('BadArguments', 'Invalid note initialization object: ' + JSON.stringify(note_struct));
       }
 
       // Set note properties from parameters.
@@ -6156,7 +6192,7 @@
       _this.glyph = Flow.durationToGlyph(_this.duration, _this.noteType);
 
       if (_this.positions && (_typeof(_this.positions) !== 'object' || !_this.positions.length)) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Note keys must be array type.');
+        throw new Vex.RuntimeError('BadArguments', 'Note keys must be array type.');
       }
 
       // Note to play for audio players.
@@ -6329,7 +6365,7 @@
       key: 'getYs',
       value: function getYs() {
         if (this.ys.length === 0) {
-          throw new Vex$1.RERR('NoYValues', 'No Y-values calculated for this note.');
+          throw new Vex.RERR('NoYValues', 'No Y-values calculated for this note.');
         }
 
         return this.ys;
@@ -6342,7 +6378,7 @@
       key: 'getYForTopText',
       value: function getYForTopText(text_line) {
         if (!this.stave) {
-          throw new Vex$1.RERR('NoStave', 'No stave attached to this note.');
+          throw new Vex.RERR('NoStave', 'No stave attached to this note.');
         }
 
         return this.stave.getYForTopText(text_line);
@@ -6361,7 +6397,7 @@
     }, {
       key: 'getVoice',
       value: function getVoice() {
-        if (!this.voice) throw new Vex$1.RERR('NoVoice', 'Note has no voice.');
+        if (!this.voice) throw new Vex.RERR('NoVoice', 'Note has no voice.');
         return this.voice;
       }
 
@@ -6451,7 +6487,7 @@
       key: 'getModifierStartXY',
       value: function getModifierStartXY() {
         if (!this.preFormatted) {
-          throw new Vex$1.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+          throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
         }
 
         return {
@@ -6475,7 +6511,7 @@
       key: 'getMetrics',
       value: function getMetrics() {
         if (!this.preFormatted) {
-          throw new Vex$1.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
+          throw new Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
         }
 
         var modLeftPx = 0;
@@ -6512,7 +6548,7 @@
       key: 'getWidth',
       value: function getWidth() {
         if (!this.preFormatted) {
-          throw new Vex$1.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
+          throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
         }
 
         return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
@@ -6537,7 +6573,7 @@
       key: 'getX',
       value: function getX() {
         if (!this.tickContext) {
-          throw new Vex$1.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+          throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
         }
 
         return this.tickContext.getX() + this.x_shift;
@@ -6551,7 +6587,7 @@
       key: 'getAbsoluteX',
       value: function getAbsoluteX() {
         if (!this.tickContext) {
-          throw new Vex$1.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+          throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
         }
 
         // Position note to left edge of tick context.
@@ -6588,7 +6624,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (NoteHead.DEBUG) Vex$1.L('Vex.Flow.NoteHead', args);
+    if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args);
   }
 
   // Draw slashnote head manually. No glyph exists for this.
@@ -6666,7 +6702,7 @@
       // regular notes, rests, or other custom codes.
       _this.glyph = Flow.durationToGlyph(_this.duration, _this.note_type);
       if (!_this.glyph) {
-        throw new Vex$1.RuntimeError('BadArguments', 'No glyph found for duration \'' + _this.duration + '\' and type \'' + _this.note_type + '\'');
+        throw new Vex.RuntimeError('BadArguments', 'No glyph found for duration \'' + _this.duration + '\' and type \'' + _this.note_type + '\'');
       }
 
       _this.glyph_code = _this.glyph.code_head;
@@ -6680,7 +6716,7 @@
       _this.style = head_options.style;
       _this.slashed = head_options.slashed;
 
-      Vex$1.Merge(_this.render_options, {
+      Vex.Merge(_this.render_options, {
         glyph_font_scale: 35, // font size for note heads
         stroke_px: 3 });
 
@@ -6800,7 +6836,7 @@
       key: 'getBoundingBox',
       value: function getBoundingBox() {
         if (!this.preFormatted) {
-          throw new Vex$1.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+          throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
         }
 
         var spacing = this.stave.getSpacingBetweenLines();
@@ -6857,7 +6893,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         var ctx = this.context;
@@ -6909,7 +6945,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (StemmableNote.DEBUG) Vex$1.L('Vex.Flow.StemmableNote', args);
+    if (StemmableNote.DEBUG) Vex.L('Vex.Flow.StemmableNote', args);
   }
 
   var StemmableNote = function (_Note) {
@@ -7014,7 +7050,7 @@
       value: function setStemDirection(direction) {
         if (!direction) direction = Stem.UP;
         if (direction !== Stem.UP && direction !== Stem.DOWN) {
-          throw new Vex$1.RERR('BadArgument', 'Invalid stem direction: ' + direction);
+          throw new Vex.RERR('BadArgument', 'Invalid stem direction: ' + direction);
         }
 
         this.stem_direction = direction;
@@ -7086,7 +7122,7 @@
       key: 'getStemExtents',
       value: function getStemExtents() {
         if (!this.ys || this.ys.length === 0) {
-          throw new Vex$1.RERR('NoYValues', "Can't get top stem Y when note has no Y values.");
+          throw new Vex.RERR('NoYValues', "Can't get top stem Y when note has no Y values.");
         }
 
         var topY = this.ys[0];
@@ -7168,7 +7204,7 @@
       key: 'drawStem',
       value: function drawStem(stem_struct) {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         this.setStem(new Stem(stem_struct));
@@ -7184,7 +7220,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (Modifier.DEBUG) Vex$1.L('Vex.Flow.Modifier', args);
+    if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args);
   }
 
   var Modifier = function () {
@@ -7368,10 +7404,10 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
-        throw new Vex$1.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
+        throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
       }
     }]);
     return Modifier;
@@ -7518,11 +7554,11 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw dot without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw dot without a context.");
         }
 
         if (!this.note || this.index === null) {
-          throw new Vex$1.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
+          throw new Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
         }
 
         var lineSpace = this.note.stave.options.spacing_between_lines_px;
@@ -7552,7 +7588,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (StaveNote.DEBUG) Vex$1.L('Vex.Flow.StaveNote', args);
+    if (StaveNote.DEBUG) Vex.L('Vex.Flow.StaveNote', args);
   }
 
   // Helper methods for rest positioning in ModifierContext.
@@ -7567,7 +7603,7 @@
 
   // Called from formatNotes :: center a rest between two notes
   function centerRest(rest, noteU, noteL) {
-    var delta = rest.line - Vex$1.MidLine(noteU.minLine, noteL.maxLine);
+    var delta = rest.line - Vex.MidLine(noteU.minLine, noteL.maxLine);
     rest.note.setKeyLine(0, rest.note.getKeyLine(0) - delta);
     rest.line -= delta;
     rest.maxLine -= delta;
@@ -7752,7 +7788,7 @@
         }
 
         if (!hasStave) {
-          throw new Vex$1.RERR('Stave Missing', 'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!');
+          throw new Vex.RERR('Stave Missing', 'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!');
         }
 
         var xShift = 0;
@@ -7823,7 +7859,7 @@
       _this.glyph = Flow.durationToGlyph(_this.duration, _this.noteType);
 
       if (!_this.glyph) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Invalid note initialization data (No glyph found): ' + JSON.stringify(noteStruct));
+        throw new Vex.RuntimeError('BadArguments', 'Invalid note initialization data (No glyph found): ' + JSON.stringify(noteStruct));
       }
 
       // if true, displace note to right
@@ -7838,7 +7874,7 @@
       _this.note_heads = [];
       _this.modifiers = [];
 
-      Vex$1.Merge(_this.render_options, {
+      Vex.Merge(_this.render_options, {
         // font size for note heads and rests
         glyph_font_scale: 35,
         // number of stroke px to the left and right of head
@@ -7980,7 +8016,7 @@
           var props = Flow.keyProperties(key, this.clef, options);
 
           if (!props) {
-            throw new Vex$1.RuntimeError('BadArguments', 'Invalid key for note properties: ' + key);
+            throw new Vex.RuntimeError('BadArguments', 'Invalid key for note properties: ' + key);
           }
 
           // Override line placement for default rests
@@ -8017,7 +8053,7 @@
         lastLine = -1000;
         this.keyProps.forEach(function (key) {
           if (key.line < lastLine) {
-            Vex$1.W('Unsorted keys in note will be sorted. ' + 'See https://github.com/0xfe/vexflow/issues/104 for details.');
+            Vex.W('Unsorted keys in note will be sorted. ' + 'See https://github.com/0xfe/vexflow/issues/104 for details.');
           }
           lastLine = key.line;
         });
@@ -8032,7 +8068,7 @@
       key: 'getBoundingBox',
       value: function getBoundingBox() {
         if (!this.preFormatted) {
-          throw new Vex$1.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+          throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
         }
 
         var _getMetrics = this.getMetrics();
@@ -8061,8 +8097,8 @@
         } else if (this.glyph.stem) {
           var ys = this.getStemExtents();
           ys.baseY += halfLineSpacing * this.stem_direction;
-          minY = Vex$1.Min(ys.topY, ys.baseY);
-          maxY = Vex$1.Max(ys.topY, ys.baseY);
+          minY = Vex.Min(ys.topY, ys.baseY);
+          maxY = Vex.Max(ys.topY, ys.baseY);
         } else {
           minY = null;
           maxY = null;
@@ -8073,8 +8109,8 @@
               minY = yy;
               maxY = yy;
             } else {
-              minY = Vex$1.Min(yy, minY);
-              maxY = Vex$1.Max(yy, maxY);
+              minY = Vex.Min(yy, minY);
+              maxY = Vex.Max(yy, maxY);
             }
           }
           minY -= halfLineSpacing;
@@ -8091,7 +8127,7 @@
       key: 'getLineNumber',
       value: function getLineNumber(isTopNote) {
         if (!this.keyProps.length) {
-          throw new Vex$1.RERR('NoKeyProps', "Can't get bottom note line, because note is not initialized properly.");
+          throw new Vex.RERR('NoKeyProps', "Can't get bottom note line, because note is not initialized properly.");
         }
 
         var resultLine = this.keyProps[0].line;
@@ -8240,7 +8276,7 @@
           var lastLine = this.keyProps[this.keyProps.length - 1].line;
           var top = Math.max(restLine, lastLine);
           var bot = Math.min(restLine, lastLine);
-          restLine = Vex$1.MidLine(top, bot);
+          restLine = Vex.MidLine(top, bot);
         }
 
         return restLine;
@@ -8253,11 +8289,11 @@
       key: 'getModifierStartXY',
       value: function getModifierStartXY(position, index) {
         if (!this.preFormatted) {
-          throw new Vex$1.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+          throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
         }
 
         if (this.ys.length === 0) {
-          throw new Vex$1.RERR('NoYValues', 'No Y-Values calculated for this note.');
+          throw new Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
         }
 
         var x = 0;
@@ -8516,7 +8552,7 @@
 
         if (this.isRest()) return;
         if (!ctx) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         var _getNoteHeadBounds2 = this.getNoteHeadBounds();
@@ -8551,7 +8587,7 @@
       key: 'drawModifiers',
       value: function drawModifiers() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         var ctx = this.context;
@@ -8585,7 +8621,7 @@
 
 
         if (!ctx) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         var shouldRenderFlag = beam === null;
@@ -8644,7 +8680,7 @@
       key: 'drawStem',
       value: function drawStem(stemStruct) {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         if (stemStruct) {
@@ -8662,13 +8698,13 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
         if (!this.stave) {
-          throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+          throw new Vex.RERR('NoStave', "Can't draw without a stave.");
         }
         if (this.ys.length === 0) {
-          throw new Vex$1.RERR('NoYValues', "Can't draw note without Y values.");
+          throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
         }
 
         var xBegin = this.getNoteHeadBeginX();
@@ -8886,11 +8922,11 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw string number without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw string number without a context.");
         }
 
         if (!this.note || this.index == null) {
-          throw new Vex$1.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
+          throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
         }
 
         var ctx = this.context;
@@ -8914,7 +8950,7 @@
             dot_x += 1;
             break;
           default:
-            throw new Vex$1.RERR('InvalidPostion', 'The position ' + this.position + ' does not exist');
+            throw new Vex.RERR('InvalidPostion', 'The position ' + this.position + ' does not exist');
         }
 
         ctx.save();
@@ -8948,11 +8984,11 @@
       key: 'getNoteParts',
       value: function getNoteParts(noteString) {
         if (!noteString || noteString.length < 1) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid note name: ' + noteString);
+          throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
         }
 
         if (noteString.length > 3) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid note name: ' + noteString);
+          throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
         }
 
         var note = noteString.toLowerCase();
@@ -8969,14 +9005,14 @@
             accidental: accidental
           };
         } else {
-          throw new Vex$1.RERR('BadArguments', 'Invalid note name: ' + noteString);
+          throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
         }
       }
     }, {
       key: 'getKeyParts',
       value: function getKeyParts(keyString) {
         if (!keyString || keyString.length < 1) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid key: ' + keyString);
+          throw new Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
         }
 
         var key = keyString.toLowerCase();
@@ -8999,7 +9035,7 @@
             type: type
           };
         } else {
-          throw new Vex$1.RERR('BadArguments', 'Invalid key: ' + keyString);
+          throw new Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
         }
       }
     }, {
@@ -9007,7 +9043,7 @@
       value: function getNoteValue(noteString) {
         var value = Music.noteValues[noteString];
         if (value == null) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid note name: ' + noteString);
+          throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
         }
 
         return value.int_val;
@@ -9017,7 +9053,7 @@
       value: function getIntervalValue(intervalString) {
         var value = Music.intervals[intervalString];
         if (value == null) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid interval name: ${intervalString}');
+          throw new Vex.RERR('BadArguments', 'Invalid interval name: ${intervalString}');
         }
 
         return value;
@@ -9026,7 +9062,7 @@
       key: 'getCanonicalNoteName',
       value: function getCanonicalNoteName(noteValue) {
         if (!this.isValidNoteValue(noteValue)) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid note value: ' + noteValue);
+          throw new Vex.RERR('BadArguments', 'Invalid note value: ' + noteValue);
         }
 
         return Music.canonical_notes[noteValue];
@@ -9035,7 +9071,7 @@
       key: 'getCanonicalIntervalName',
       value: function getCanonicalIntervalName(intervalValue) {
         if (!this.isValidIntervalValue(intervalValue)) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid interval value: ' + intervalValue);
+          throw new Vex.RERR('BadArguments', 'Invalid interval value: ' + intervalValue);
         }
 
         return Music.diatonic_intervals[intervalValue];
@@ -9051,7 +9087,7 @@
         if (direction == null) direction = 1;
 
         if (direction !== 1 && direction !== -1) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid direction: ' + direction);
+          throw new Vex.RERR('BadArguments', 'Invalid direction: ' + direction);
         }
 
         var sum = (noteValue + direction * intervalValue) % Music.NUM_TONES;
@@ -9074,14 +9110,14 @@
           var reverse_interval = (noteValue + 1 + (rootValue + 1)) % Music.NUM_TONES * multiplier;
 
           if (Math.abs(reverse_interval) > 2) {
-            throw new Vex$1.RERR('BadArguments', 'Notes not related: ' + root + ', ' + noteValue + ')');
+            throw new Vex.RERR('BadArguments', 'Notes not related: ' + root + ', ' + noteValue + ')');
           } else {
             interval = reverse_interval;
           }
         }
 
         if (Math.abs(interval) > 2) {
-          throw new Vex$1.RERR('BadArguments', 'Notes not related: ' + root + ', ' + noteValue + ')');
+          throw new Vex.RERR('BadArguments', 'Notes not related: ' + root + ', ' + noteValue + ')');
         }
 
         var relativeNoteName = parts.root;
@@ -9132,11 +9168,11 @@
         if (direction == null) direction = 1;
 
         if (direction !== 1 && direction !== -1) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid direction: ' + direction);
+          throw new Vex.RERR('BadArguments', 'Invalid direction: ' + direction);
         }
 
         if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2)) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid notes: ' + note1 + ', ' + note2);
+          throw new Vex.RERR('BadArguments', 'Invalid notes: ' + note1 + ', ' + note2);
         }
 
         var difference = direction === 1 ? note2 - note1 : note1 - note2;
@@ -9160,7 +9196,7 @@
         var keySigString = keySigParts.root;
         if (keySigParts.accidental) keySigString += keySigParts.accidental;
 
-        if (!scaleName) throw new Vex$1.RERR('BadArguments', 'Unsupported key type: ' + keySignature);
+        if (!scaleName) throw new Vex.RERR('BadArguments', 'Unsupported key type: ' + keySignature);
 
         var scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
         var noteLocation = Music.root_indices[keySigParts.root];
@@ -9337,7 +9373,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (Accidental.DEBUG) Vex$1.L('Vex.Flow.Accidental', args);
+    if (Accidental.DEBUG) Vex.L('Vex.Flow.Accidental', args);
   }
 
   // An `Accidental` inherits from `Modifier`, and is formatted within a
@@ -9785,7 +9821,7 @@
 
       _this.accidental = Flow.accidentalCodes(_this.type);
       if (!_this.accidental) {
-        throw new Vex$1.RERR('ArgumentError', 'Unknown accidental type: ' + type);
+        throw new Vex.RERR('ArgumentError', 'Unknown accidental type: ' + type);
       }
 
       // Cautionary accidentals have parentheses around them
@@ -9810,7 +9846,7 @@
       key: 'setNote',
       value: function setNote(note) {
         if (!note) {
-          throw new Vex$1.RERR('ArgumentError', 'Bad note value: ' + note);
+          throw new Vex.RERR('ArgumentError', 'Bad note value: ' + note);
         }
 
         this.note = note;
@@ -9860,11 +9896,11 @@
 
 
         if (!context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw accidental without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw accidental without a context.");
         }
 
         if (!(note && index != null)) {
-          throw new Vex$1.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
+          throw new Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
         }
 
         // Figure out the start `x` and `y` coordinates for note and index.
@@ -9954,14 +9990,14 @@
       key: 'setNotes',
       value: function setNotes(notes) {
         if (!notes.first_note && !notes.last_note) {
-          throw new Vex$1.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
+          throw new Vex.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
         }
 
         if (!notes.first_indices) notes.first_indices = [0];
         if (!notes.last_indices) notes.last_indices = [0];
 
         if (notes.first_indices.length !== notes.last_indices.length) {
-          throw new Vex$1.RuntimeError('BadArguments', 'Tied notes must have similar index sizes');
+          throw new Vex.RuntimeError('BadArguments', 'Tied notes must have similar index sizes');
         }
 
         // Success. Lets grab 'em notes.
@@ -9985,7 +10021,7 @@
       key: 'renderTie',
       value: function renderTie(params) {
         if (params.first_ys.length === 0 || params.last_ys.length === 0) {
-          throw new Vex$1.RERR('BadArguments', 'No Y-values to render');
+          throw new Vex.RERR('BadArguments', 'No Y-values to render');
         }
 
         var ctx = this.context;
@@ -10006,7 +10042,7 @@
           var last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
 
           if (isNaN(first_y_px) || isNaN(last_y_px)) {
-            throw new Vex$1.RERR('BadArguments', 'Bad indices for tie rendering.');
+            throw new Vex.RERR('BadArguments', 'Bad indices for tie rendering.');
           }
 
           var top_cp_y = (first_y_px + last_y_px) / 2 + cp1 * params.direction;
@@ -10036,7 +10072,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', 'No context to render tie.');
+          throw new Vex.RERR('NoContext', 'No context to render tie.');
         }
         var first_note = this.first_note;
         var last_note = this.last_note;
@@ -10091,7 +10127,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (GraceNoteGroup.DEBUG) Vex$1.L('Vex.Flow.GraceNoteGroup', args);
+    if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
   }
 
   var GraceNoteGroup = function (_Modifier) {
@@ -10240,7 +10276,7 @@
         var _this2 = this;
 
         if (!this.context) {
-          throw new Vex$1.RuntimeError('NoContext', "Can't draw Grace note without a context.");
+          throw new Vex.RuntimeError('NoContext', "Can't draw Grace note without a context.");
         }
 
         var note = this.getNote();
@@ -10248,7 +10284,7 @@
         L$8('Drawing grace note group for:', note);
 
         if (!(note && this.index !== null)) {
-          throw new Vex$1.RuntimeError('NoAttachedNote', "Can't draw grace note without a parent note and parent note index.");
+          throw new Vex.RuntimeError('NoAttachedNote', "Can't draw grace note without a parent note and parent note index.");
         }
 
         var that = this;
@@ -10364,7 +10400,7 @@
       var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Stroke).call(this));
 
       _this.note = null;
-      _this.options = Vex$1.Merge({}, options);
+      _this.options = Vex.Merge({}, options);
 
       // multi voice - span stroke across all voices if true
       _this.all_voices = 'all_voices' in _this.options ? _this.options.all_voices : true;
@@ -10411,11 +10447,11 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw stroke without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw stroke without a context.");
         }
 
         if (!(this.note && this.index != null)) {
-          throw new Vex$1.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");
+          throw new Vex.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");
         }
 
         var start = this.note.getModifierStartXY(this.position, this.index);
@@ -10430,8 +10466,8 @@
           ys = notes[i].getYs();
           for (var n = 0; n < ys.length; n++) {
             if (this.note === notes[i] || this.all_voices) {
-              topY = Vex$1.Min(topY, ys[n]);
-              botY = Vex$1.Max(botY, ys[n]);
+              topY = Vex.Min(topY, ys[n]);
+              botY = Vex.Max(botY, ys[n]);
             }
           }
         }
@@ -10496,7 +10532,7 @@
             }
             break;
           default:
-            throw new Vex$1.RERR('InvalidType', 'The stroke type ' + this.type + ' does not exist');
+            throw new Vex.RERR('InvalidType', 'The stroke type ' + this.type + ' does not exist');
         }
 
         // Draw the stroke
@@ -10745,10 +10781,10 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw string number without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw string number without a context.");
         }
         if (!(this.note && this.index != null)) {
-          throw new Vex$1.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
+          throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
         }
 
         var ctx = this.context;
@@ -10787,7 +10823,7 @@
             dot_x += this.radius / 2 + 6;
             break;
           default:
-            throw new Vex$1.RERR('InvalidPosition', 'The position ' + this.position + ' is invalid');
+            throw new Vex.RERR('InvalidPosition', 'The position ' + this.position + ' is invalid');
         }
 
         ctx.save();
@@ -10840,7 +10876,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (Articulation.DEBUG) Vex$1.L('Vex.Flow.Articulation', args);
+    if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args);
   }
 
   var Articulation = function (_Modifier) {
@@ -10900,7 +10936,7 @@
 
       _this.articulation = Flow.articulationCodes(_this.type);
       if (!_this.articulation) {
-        throw new Vex$1.RERR('ArgumentError', "Articulation not found: '" + _this.type + "'");
+        throw new Vex.RERR('ArgumentError', "Articulation not found: '" + _this.type + "'");
       }
 
       // Default width comes from articulation table.
@@ -10920,10 +10956,10 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw Articulation without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw Articulation without a context.");
         }
         if (!(this.note && this.index !== null)) {
-          throw new Vex$1.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
+          throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
         }
 
         var stem_direction = this.note.getStemDirection();
@@ -11174,7 +11210,7 @@
       key: 'addTickable',
       value: function addTickable(tickable) {
         if (!tickable) {
-          throw new Vex$1.RERR('BadArgument', 'Invalid tickable added.');
+          throw new Vex.RERR('BadArgument', 'Invalid tickable added.');
         }
 
         if (!tickable.shouldIgnoreTicks()) {
@@ -11238,7 +11274,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (Ornament.DEBUG) Vex$1.L('Vex.Flow.Ornament', args);
+    if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', args);
   }
 
   // Accidental position modifications for each glyph
@@ -11394,7 +11430,7 @@
 
       _this.ornament = Flow.ornamentCodes(_this.type);
       if (!_this.ornament) {
-        throw new Vex$1.RERR('ArgumentError', 'Ornament not found: \'' + _this.type + '\'');
+        throw new Vex.RERR('ArgumentError', 'Ornament not found: \'' + _this.type + '\'');
       }
 
       // Default width comes from ornament table.
@@ -11440,11 +11476,11 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw Ornament without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw Ornament without a context.");
         }
 
         if (!this.note || this.index == null) {
-          throw new Vex$1.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
+          throw new Vex.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
         }
 
         var ctx = this.context;
@@ -11559,7 +11595,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (Annotation.DEBUG) Vex$1.L('Vex.Flow.Annotation', args);
+    if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args);
   }
 
   var Annotation = function (_Modifier) {
@@ -11693,10 +11729,10 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw text annotation without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw text annotation without a context.");
         }
         if (!this.note) {
-          throw new Vex$1.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
+          throw new Vex.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
         }
 
         var start = this.note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
@@ -11918,7 +11954,7 @@
           } else {
             var additional_width = bend.type === Bend.UP ? this.render_options.bend_width : this.render_options.release_width;
 
-            bend.width = Vex$1.Max(additional_width, measure_text(bend.text)) + 3;
+            bend.width = Vex.Max(additional_width, measure_text(bend.text)) + 3;
             bend.draw_width = bend.width / 2;
             total_width += bend.width;
           }
@@ -11931,10 +11967,10 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw bend without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw bend without a context.");
         }
         if (!(this.note && this.index != null)) {
-          throw new Vex$1.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
+          throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
         }
 
         var start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
@@ -12129,11 +12165,11 @@
         var _this2 = this;
 
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw vibrato without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw vibrato without a context.");
         }
 
         if (!this.note) {
-          throw new Vex$1.RERR('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
+          throw new Vex.RERR('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
         }
 
         var start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
@@ -12201,7 +12237,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (ModifierContext.DEBUG) Vex$1.L('Vex.Flow.ModifierContext', args);
+    if (ModifierContext.DEBUG) Vex.L('Vex.Flow.ModifierContext', args);
   }
 
   var ModifierContext = function () {
@@ -12270,7 +12306,7 @@
       key: 'getMetrics',
       value: function getMetrics() {
         if (!this.formatted) {
-          throw new Vex$1.RERR('UnformattedModifier', 'Unformatted modifier has no metrics.');
+          throw new Vex.RERR('UnformattedModifier', 'Unformatted modifier has no metrics.');
         }
 
         return {
@@ -12316,7 +12352,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (Formatter.DEBUG) Vex$1.L('Vex.Flow.Formatter', args);
+    if (Formatter.DEBUG) Vex.L('Vex.Flow.Formatter', args);
   }
 
   // Helper function to locate the next non-rest note(s).
@@ -12337,7 +12373,7 @@
     if (compare && restLine !== nextRestLine) {
       var top = Math.max(restLine, nextRestLine);
       var bot = Math.min(restLine, nextRestLine);
-      nextRestLine = Vex$1.MidLine(top, bot);
+      nextRestLine = Vex.MidLine(top, bot);
     }
     return nextRestLine;
   }
@@ -12352,7 +12388,7 @@
   // * `addToContext`: Function to add tickable to context.
   function createContexts(voices, ContextType, addToContext) {
     if (!voices || !voices.length) {
-      throw new Vex$1.RERR('BadArgument', 'No voices to format');
+      throw new Vex.RERR('BadArgument', 'No voices to format');
     }
 
     // Find out highest common multiple of resolution multipliers.
@@ -12363,11 +12399,11 @@
     var totalTicks = voices[0].getTotalTicks();
     var resolutionMultiplier = voices.reduce(function (resolutionMultiplier, voice) {
       if (!voice.getTotalTicks().equals(totalTicks)) {
-        throw new Vex$1.RERR('TickMismatch', 'Voices should have same total note duration in ticks.');
+        throw new Vex.RERR('TickMismatch', 'Voices should have same total note duration in ticks.');
       }
 
       if (voice.getMode() === Voice.Mode.STRICT && !voice.isComplete()) {
-        throw new Vex$1.RERR('IncompleteVoice', 'Voice does not have enough notes.');
+        throw new Vex.RERR('IncompleteVoice', 'Voice does not have enough notes.');
       }
 
       return Math.max(resolutionMultiplier, Fraction.LCM(resolutionMultiplier, voice.getResolutionMultiplier()));
@@ -12408,7 +12444,7 @@
     return {
       map: tickToContextMap,
       array: contexts,
-      list: Vex$1.SortAndUnique(tickList, function (a, b) {
+      list: Vex.SortAndUnique(tickList, function (a, b) {
         return a - b;
       }, function (a, b) {
         return a === b;
@@ -12445,7 +12481,7 @@
         };
 
         if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) === 'object') {
-          Vex$1.Merge(options, params);
+          Vex.Merge(options, params);
         } else if (typeof params === 'boolean') {
           options.auto_beam = params;
         }
@@ -12492,7 +12528,7 @@
         };
 
         if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) === 'object') {
-          Vex$1.Merge(opts, params);
+          Vex.Merge(opts, params);
         } else if (typeof params === 'boolean') {
           opts.auto_beam = params;
         }
@@ -12594,7 +12630,7 @@
       key: 'alignRests',
       value: function alignRests(voices, alignAllNotes) {
         if (!voices || !voices.length) {
-          throw new Vex$1.RERR('BadArgument', 'No voices to format rests');
+          throw new Vex.RERR('BadArgument', 'No voices to format rests');
         }
 
         voices.forEach(function (voice) {
@@ -12613,7 +12649,7 @@
         // Create tick contexts if not already created.
         if (!this.tickContexts) {
           if (!voices) {
-            throw new Vex$1.RERR('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
+            throw new Vex.RERR('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
           }
 
           this.createTickContexts(voices);
@@ -12645,7 +12681,7 @@
       key: 'getMinTotalWidth',
       value: function getMinTotalWidth() {
         if (!this.hasMinTotalWidth) {
-          throw new Vex$1.RERR('NoMinTotalWidth', "Call 'preCalculateMinTotalWidth' or 'preFormat' before calling 'getMinTotalWidth'");
+          throw new Vex.RERR('NoMinTotalWidth', "Call 'preCalculateMinTotalWidth' or 'preFormat' before calling 'getMinTotalWidth'");
         }
 
         return this.minTotalWidth;
@@ -12873,7 +12909,7 @@
           stave: null
         };
 
-        Vex$1.Merge(opts, options);
+        Vex.Merge(opts, options);
         this.alignRests(voices, opts.align_rests);
         this.createTickContexts(voices);
         this.preFormat(justifyWidth, opts.context, voices, opts.stave);
@@ -12893,7 +12929,7 @@
         var justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
         L('Formatting voices to width: ', justifyWidth);
         var opts = { context: stave.getContext() };
-        Vex$1.Merge(opts, options);
+        Vex.Merge(opts, options);
         return this.format(voices, justifyWidth, opts);
       }
     }]);
@@ -13122,7 +13158,7 @@
       key: 'drawVerticalBar',
       value: function drawVerticalBar(stave, x, double_bar) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var topY = stave.getYForLine(0);
@@ -13136,7 +13172,7 @@
       key: 'drawVerticalEndBar',
       value: function drawVerticalEndBar(stave, x) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var topY = stave.getYForLine(0);
@@ -13148,7 +13184,7 @@
       key: 'drawRepeatBar',
       value: function drawRepeatBar(stave, x, begin) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var topY = stave.getYForLine(0);
@@ -13299,7 +13335,7 @@
       key: 'drawCodaFixed',
       value: function drawCodaFixed(stave, x) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
@@ -13310,7 +13346,7 @@
       key: 'drawSignoFixed',
       value: function drawSignoFixed(stave, x) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
@@ -13321,7 +13357,7 @@
       key: 'drawSymbolText',
       value: function drawSymbolText(stave, x, text, draw_coda) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var ctx = stave.context;
@@ -13405,7 +13441,7 @@
       key: 'draw',
       value: function draw(stave, shift_x) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw stave section without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw stave section without a context.");
         }
 
         var ctx = stave.context;
@@ -13487,7 +13523,7 @@
       key: 'draw',
       value: function draw(stave, shift_x) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw stave tempo without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw stave tempo without a context.");
         }
 
         var options = this.render_options;
@@ -13736,7 +13772,7 @@
       // measure the length of text is with `canvasContext.measureText()`
       if (_this.glyph_type) {
         var struct = TextNote.GLYPHS[_this.glyph_type];
-        if (!struct) throw new Vex$1.RERR('Invalid glyph type: ' + _this.glyph_type);
+        if (!struct) throw new Vex.RERR('Invalid glyph type: ' + _this.glyph_type);
 
         _this.glyph = new Glyph(struct.code, struct.point, { cache: false });
 
@@ -13782,7 +13818,7 @@
       key: 'preFormat',
       value: function preFormat() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoRenderContext', "Can't measure text without rendering context.");
+          throw new Vex.RERR('NoRenderContext', "Can't measure text without rendering context.");
         }
 
         if (this.preFormatted) return;
@@ -13812,11 +13848,11 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         if (!this.stave) {
-          throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+          throw new Vex.RERR('NoStave', "Can't draw without a stave.");
         }
 
         var ctx = this.context;
@@ -13883,7 +13919,7 @@
         shift_y: 0,
         justification: TextNote.Justification.CENTER
       };
-      Vex$1.Merge(_this.options, options);
+      Vex.Merge(_this.options, options);
 
       _this.font = {
         family: 'times',
@@ -13916,7 +13952,7 @@
     }, {
       key: 'setFont',
       value: function setFont(font) {
-        Vex$1.Merge(this.font, font);
+        Vex.Merge(this.font, font);
       }
     }, {
       key: 'setText',
@@ -13927,7 +13963,7 @@
       key: 'draw',
       value: function draw(stave) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw stave text without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw stave text without a context.");
         }
 
         var ctx = stave.context;
@@ -13967,7 +14003,7 @@
             }
             break;
           default:
-            throw new Vex$1.RERR('InvalidPosition', 'Value Must be in Modifier.Position.');
+            throw new Vex.RERR('InvalidPosition', 'Value Must be in Modifier.Position.');
         }
 
         ctx.fillText('' + this.text, x, y + 4);
@@ -13984,7 +14020,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (Clef.DEBUG) Vex$1.L('Vex.Flow.Clef', args);
+    if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', args);
   }
 
   var Clef = function (_StaveModifier) {
@@ -14184,7 +14220,7 @@
       key: 'getWidth',
       value: function getWidth() {
         if (this.type === 'tab' && !this.stave) {
-          throw new Vex$1.RERR('ClefError', "Can't get width without stave.");
+          throw new Vex.RERR('ClefError', "Can't get width without stave.");
         }
 
         return this.width;
@@ -14221,7 +14257,7 @@
             glyphOffset = -12;
             break;
           default:
-            throw new Vex$1.RERR('ClefError', 'Invalid number of lines: ' + numLines);
+            throw new Vex.RERR('ClefError', 'Invalid number of lines: ' + numLines);
         }
 
         this.glyph.setPoint(glyphScale);
@@ -14232,8 +14268,8 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.x) throw new Vex$1.RERR('ClefError', "Can't draw clef without x.");
-        if (!this.stave) throw new Vex$1.RERR('ClefError', "Can't draw clef without stave.");
+        if (!this.x) throw new Vex.RERR('ClefError', "Can't draw clef without x.");
+        if (!this.stave) throw new Vex.RERR('ClefError', "Can't draw clef without stave.");
 
         this.glyph.setStave(this.stave);
         this.glyph.setContext(this.stave.context);
@@ -14535,7 +14571,7 @@
       key: 'format',
       value: function format() {
         if (!this.stave) {
-          throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without stave.");
+          throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
         }
 
         this.width = 0;
@@ -14563,11 +14599,11 @@
       key: 'draw',
       value: function draw() {
         if (!this.x) {
-          throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without x.");
+          throw new Vex.RERR('KeySignatureError', "Can't draw key signature without x.");
         }
 
         if (!this.stave) {
-          throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without stave.");
+          throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
         }
 
         if (!this.formatted) this.format();
@@ -14590,12 +14626,12 @@
     });
 
     if (numbers.length !== 2) {
-      throw new Vex$1.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec + '. Must be in the form "<numerator>/<denominator>"');
+      throw new Vex.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec + '. Must be in the form "<numerator>/<denominator>"');
     }
 
     numbers.forEach(function (number) {
       if (isNaN(Number(number))) {
-        throw new Vex$1.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec + '. Must contain two valid numbers.');
+        throw new Vex.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec + '. Must contain two valid numbers.');
       }
     });
   };
@@ -14758,11 +14794,11 @@
       key: 'draw',
       value: function draw() {
         if (!this.x) {
-          throw new Vex$1.RERR('TimeSignatureError', "Can't draw time signature without x.");
+          throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without x.");
         }
 
         if (!this.stave) {
-          throw new Vex$1.RERR('TimeSignatureError', "Can't draw time signature without stave.");
+          throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without stave.");
         }
 
         this.timeSig.glyph.setStave(this.stave);
@@ -14825,7 +14861,7 @@
       key: 'draw',
       value: function draw(stave, x) {
         if (!stave.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var ctx = stave.context;
@@ -14897,7 +14933,7 @@
         top_text_position: 1 };
       // in staff lines
       this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
-      Vex$1.Merge(this.options, options);
+      Vex.Merge(this.options, options);
 
       this.resetLines();
 
@@ -15038,7 +15074,7 @@
         var index = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
         if (typeof index !== 'number') {
-          throw new Vex$1.RERR('InvalidIndex', 'Must be of number type');
+          throw new Vex.RERR('InvalidIndex', 'Must be of number type');
         }
 
         if (!this.formatted) this.format();
@@ -15434,7 +15470,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         if (!this.formatted) this.format();
@@ -15490,7 +15526,7 @@
       key: 'drawVerticalFixed',
       value: function drawVerticalFixed(x, isDouble) {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var top_line = this.getYForLine(0);
@@ -15509,7 +15545,7 @@
       key: 'drawVerticalBarFixed',
       value: function drawVerticalBarFixed(x) {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
         }
 
         var top_line = this.getYForLine(0);
@@ -15540,15 +15576,15 @@
       key: 'setConfigForLine',
       value: function setConfigForLine(line_number, line_config) {
         if (line_number >= this.options.num_lines || line_number < 0) {
-          throw new Vex$1.RERR('StaveConfigError', 'The line number must be within the range of the number of lines in the Stave.');
+          throw new Vex.RERR('StaveConfigError', 'The line number must be within the range of the number of lines in the Stave.');
         }
 
         if (!line_config.hasOwnProperty('visible')) {
-          throw new Vex$1.RERR('StaveConfigError', "The line configuration object is missing the 'visible' property.");
+          throw new Vex.RERR('StaveConfigError', "The line configuration object is missing the 'visible' property.");
         }
 
         if (typeof line_config.visible !== 'boolean') {
-          throw new Vex$1.RERR('StaveConfigError', "The line configuration objects 'visible' property must be true or false.");
+          throw new Vex.RERR('StaveConfigError', "The line configuration objects 'visible' property must be true or false.");
         }
 
         this.options.line_config[line_number] = line_config;
@@ -15570,7 +15606,7 @@
       key: 'setConfigForLines',
       value: function setConfigForLines(lines_configuration) {
         if (lines_configuration.length !== this.options.num_lines) {
-          throw new Vex$1.RERR('StaveConfigError', 'The length of the lines configuration array must match the number of lines in the Stave');
+          throw new Vex.RERR('StaveConfigError', 'The length of the lines configuration array must match the number of lines in the Stave');
         }
 
         // Make sure the defaults are present in case an incomplete set of
@@ -15580,7 +15616,7 @@
           if (!lines_configuration[line_config]) {
             lines_configuration[line_config] = this.options.line_config[line_config];
           }
-          Vex$1.Merge(this.options.line_config[line_config], lines_configuration[line_config]);
+          Vex.Merge(this.options.line_config[line_config], lines_configuration[line_config]);
         }
 
         this.options.line_config = lines_configuration;
@@ -15603,7 +15639,7 @@
         top_text_position: 1
       };
 
-      Vex$1.Merge(tab_options, options);
+      Vex.Merge(tab_options, options);
       return possibleConstructorReturn(this, Object.getPrototypeOf(TabStave).call(this, x, y, width, tab_options));
     }
 
@@ -15744,7 +15780,7 @@
       _this.positions = tab_struct.positions;
 
       // Render Options
-      Vex$1.Merge(_this.render_options, {
+      Vex.Merge(_this.render_options, {
         // font size for note heads and rests
         glyph_font_scale: 30,
         // Flag to draw a stem
@@ -15758,7 +15794,7 @@
       _this.glyph = Flow.durationToGlyph(_this.duration, _this.noteType);
 
       if (!_this.glyph) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Invalid note initialization data (No glyph found): ' + JSON.stringify(tab_struct));
+        throw new Vex.RuntimeError('BadArguments', 'Invalid note initialization data (No glyph found): ' + JSON.stringify(tab_struct));
       }
 
       _this.buildStem();
@@ -15934,11 +15970,11 @@
       key: 'getModifierStartXY',
       value: function getModifierStartXY(position, index) {
         if (!this.preFormatted) {
-          throw new Vex$1.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+          throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
         }
 
         if (this.ys.length === 0) {
-          throw new Vex$1.RERR('NoYValues', 'No Y-Values calculated for this note.');
+          throw new Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
         }
 
         var x = 0;
@@ -16128,15 +16164,15 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+          throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
         }
 
         if (!this.stave) {
-          throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+          throw new Vex.RERR('NoStave', "Can't draw without a stave.");
         }
 
         if (this.ys.length === 0) {
-          throw new Vex$1.RERR('NoYValues', "Can't draw note without Y values.");
+          throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
         }
 
         var render_stem = this.beam == null && this.render_options.draw_stem;
@@ -16234,7 +16270,7 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.stave) throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+        if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
         if (!this.glyph.getContext()) {
           this.glyph.setContext(this.context);
@@ -16298,7 +16334,7 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.stave) throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+        if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
         if (!this.timeSig.glyph.getContext()) {
           this.timeSig.glyph.setContext(this.context);
@@ -16355,7 +16391,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', 'No context to render tie.');
+          throw new Vex.RERR('NoContext', 'No context to render tie.');
         }
 
         var first_note = this.first_note;
@@ -16460,7 +16496,7 @@
       key: 'renderTie',
       value: function renderTie(params) {
         if (params.first_ys.length === 0 || params.last_ys.length === 0) {
-          throw new Vex$1.RERR('BadArguments', 'No Y-values to render');
+          throw new Vex.RERR('BadArguments', 'No Y-values to render');
         }
 
         var ctx = this.context;
@@ -16470,14 +16506,14 @@
 
         var direction = this.slide_direction;
         if (direction !== TabSlide.SLIDE_UP && direction !== TabSlide.SLIDE_DOWN) {
-          throw new Vex$1.RERR('BadSlide', 'Invalid slide direction');
+          throw new Vex.RERR('BadSlide', 'Invalid slide direction');
         }
 
         for (var i = 0; i < this.first_indices.length; ++i) {
           var slide_y = first_ys[this.first_indices[i]] + this.render_options.y_shift;
 
           if (isNaN(slide_y)) {
-            throw new Vex$1.RERR('BadArguments', 'Bad indices for slide rendering.');
+            throw new Vex.RERR('BadArguments', 'Bad indices for slide rendering.');
           }
 
           ctx.beginPath();
@@ -16610,7 +16646,7 @@
 
         var keys = noteString.split(/\s*,\s*/);
         if (keys.length === 0) {
-          throw new Vex$1.RERR('BadArguments', 'Invalid tuning string: ' + noteString);
+          throw new Vex.RERR('BadArguments', 'Invalid tuning string: ' + noteString);
         }
 
         this.numStrings = keys.length;
@@ -16623,7 +16659,7 @@
       value: function getValueForString(stringNum) {
         var s = parseInt(stringNum, 10);
         if (s < 1 || s > this.numStrings) {
-          throw new Vex$1.RERR('BadArguments', 'String number must be between 1 and ' + this.numStrings + ':' + stringNum);
+          throw new Vex.RERR('BadArguments', 'String number must be between 1 and ' + this.numStrings + ':' + stringNum);
         }
 
         return this.tuningValues[s - 1];
@@ -16635,7 +16671,7 @@
         var f = parseInt(fretNum, 10);
 
         if (f < 0) {
-          throw new Vex$1.RERR('BadArguments', 'Fret number must be 0 or higher: ' + fretNum);
+          throw new Vex.RERR('BadArguments', 'Fret number must be 0 or higher: ' + fretNum);
         }
 
         return stringValue + f;
@@ -16684,7 +16720,7 @@
 
         var is_supported_type = Music.scaleTypes[this.keyParts.type];
         if (!is_supported_type) {
-          throw new Vex$1.RERR('BadArguments', 'Unsupported key type: ' + this.key);
+          throw new Vex.RERR('BadArguments', 'Unsupported key type: ' + this.key);
         }
 
         this.scale = this.music.getScaleTones(this.music.getNoteValue(this.keyString), Music.scaleTypes[this.keyParts.type]);
@@ -16811,7 +16847,7 @@
         var ppt = formatter.pixelsPerTick;
 
         if (ppt == null) {
-          throw new Vex$1.RuntimeError('BadArguments', 'A valid Formatter must be provide to draw offsets by ticks.');
+          throw new Vex.RuntimeError('BadArguments', 'A valid Formatter must be provide to draw offsets by ticks.');
         }
 
         var l_shift_px = ppt * options.left_shift_ticks;
@@ -16908,7 +16944,7 @@
       key: 'setNotes',
       value: function setNotes(notes) {
         if (!notes.first_note && !notes.last_note) {
-          throw new Vex$1.RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
+          throw new Vex.RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
         }
 
         // Success. Lets grab 'em notes.
@@ -16956,7 +16992,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw Hairpin without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw Hairpin without a context.");
         }
 
         var firstNote = this.first_note;
@@ -17010,7 +17046,7 @@
         cps: [{ x: 0, y: 10 }, { x: 0, y: 10 }]
       };
 
-      Vex$1.Merge(this.render_options, options);
+      Vex.Merge(this.render_options, options);
       this.setNotes(from, to);
     }
 
@@ -17022,7 +17058,9 @@
     }, {
       key: 'setNotes',
       value: function setNotes(from, to) {
-        if (!from && !to) throw new Vex$1.RuntimeError('BadArguments', 'Curve needs to have either first_note or last_note set.');
+        if (!from && !to) {
+          throw new Vex.RuntimeError('BadArguments', 'Curve needs to have either first_note or last_note set.');
+        }
 
         this.from = from;
         this.to = to;
@@ -17066,14 +17104,17 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', 'No context to render tie.');
+        if (!this.context) {
+          throw new Vex.RERR('NoContext', 'No context to render tie.');
+        }
+
         var first_note = this.from;
         var last_note = this.to;
-        var first_x = void 0,
-            last_x = void 0,
-            first_y = void 0,
-            last_y = void 0,
-            stem_direction = void 0;
+        var first_x = void 0;
+        var last_x = void 0;
+        var first_y = void 0;
+        var last_y = void 0;
+        var stem_direction = void 0;
 
         var metric = 'baseY';
         var end_metric = 'baseY';
@@ -17085,9 +17126,9 @@
           end_metric = 'topY';
         }
 
-        if (position_end == Curve.Position.NEAR_HEAD) {
+        if (position_end === Curve.Position.NEAR_HEAD) {
           end_metric = 'baseY';
-        } else if (position_end == Curve.Position.NEAR_TOP) {
+        } else if (position_end === Curve.Position.NEAR_TOP) {
           end_metric = 'topY';
         }
 
@@ -17128,7 +17169,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (TextDynamics.DEBUG) Vex$1.L('Vex.Flow.TextDynamics', args);
+    if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args);
   }
 
   var TextDynamics = function (_Note) {
@@ -17183,7 +17224,7 @@
       _this.line = text_struct.line || 0;
       _this.glyphs = [];
 
-      Vex$1.Merge(_this.render_options, {
+      Vex.Merge(_this.render_options, {
         glyph_font_size: 40
       });
 
@@ -17213,7 +17254,7 @@
         this.sequence.split('').forEach(function (letter) {
           // Get the glyph data for the letter
           var glyph_data = TextDynamics.GLYPHS[letter];
-          if (!glyph_data) throw new Vex$1.RERR('Invalid dynamics character: ' + letter);
+          if (!glyph_data) throw new Vex.RERR('Invalid dynamics character: ' + letter);
 
           var size = _this2.render_options.glyph_font_size;
           var glyph = new Glyph(glyph_data.code, size);
@@ -17462,14 +17503,14 @@
       key: 'setNotes',
       value: function setNotes(notes) {
         if (!notes.first_note && !notes.last_note) {
-          throw new Vex$1.RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
+          throw new Vex.RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
         }
 
         if (!notes.first_indices) notes.first_indices = [0];
         if (!notes.last_indices) notes.last_indices = [0];
 
         if (notes.first_indices.length !== notes.last_indices.length) {
-          throw new Vex$1.RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
+          throw new Vex.RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
         }
 
         // Success. Lets grab 'em notes.
@@ -17486,7 +17527,7 @@
       key: 'applyLineStyle',
       value: function applyLineStyle() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', 'No context to apply the styling to');
+          throw new Vex.RERR('NoContext', 'No context to apply the styling to');
         }
 
         var render_options = this.render_options;
@@ -17513,7 +17554,7 @@
       key: 'applyFontStyle',
       value: function applyFontStyle() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', 'No context to apply the styling to');
+          throw new Vex.RERR('NoContext', 'No context to apply the styling to');
         }
 
         var ctx = this.context;
@@ -17536,7 +17577,7 @@
         var _this = this;
 
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', 'No context to render StaveLine.');
+          throw new Vex.RERR('NoContext', 'No context to render StaveLine.');
         }
 
         var ctx = this.context;
@@ -17625,7 +17666,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (PedalMarking.DEBUG) Vex$1.L('Vex.Flow.PedalMarking', args);
+    if (PedalMarking.DEBUG) Vex.L('Vex.Flow.PedalMarking', args);
   }
 
   // Draws a pedal glyph with the provided `name` on a rendering `context`
@@ -17747,7 +17788,7 @@
       key: 'setStyle',
       value: function setStyle(style) {
         if (style < 1 && style > 3) {
-          throw new Vex$1.RERR('InvalidParameter', 'The style must be one found in PedalMarking.Styles');
+          throw new Vex.RERR('InvalidParameter', 'The style must be one found in PedalMarking.Styles');
         }
 
         this.style = style;
@@ -17792,7 +17833,7 @@
 
           // Throw if current note is positioned before the previous note
           if (x < prev_x) {
-            throw new Vex$1.RERR('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
+            throw new Vex.RERR('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
           }
 
           // Determine if the previous or next note are the same
@@ -17890,7 +17931,7 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw PedalMarking without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw PedalMarking without a context.");
         }
 
         var ctx = this.context;
@@ -17921,7 +17962,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (TextBracket.DEBUG) Vex$1.L('Vex.Flow.TextBracket', args);
+    if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args);
   }
 
   var TextBracket = function () {
@@ -18031,7 +18072,7 @@
             y = this.start.getStave().getYForBottomText(this.line);
             break;
           default:
-            throw new Vex$1.RERR('InvalidPosition', 'The position ' + this.position + ' is invalid');
+            throw new Vex.RERR('InvalidPosition', 'The position ' + this.position + ' is invalid');
         }
 
         // Get the preliminary start and stop coordintates for the bracket
@@ -18113,7 +18154,7 @@
       args[_key] = arguments[_key];
     }
 
-    if (BarNote.DEBUG) Vex$1.L('Vex.Flow.BarNote', args);
+    if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args);
   }
 
   var BarNote = function (_Note) {
@@ -18186,7 +18227,7 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.stave) throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+        if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
         L$16('Rendering bar line at: ', this.getAbsoluteX());
         var barline = new Barline(this.type);
         barline.setX(this.getAbsoluteX());
@@ -18206,7 +18247,7 @@
 
       // Sanity check
       if (!parameter) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify ' + 'duration.');
+        throw new Vex.RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify ' + 'duration.');
       }
 
       var note_struct = void 0;
@@ -18217,7 +18258,7 @@
       } else if ((typeof parameter === 'undefined' ? 'undefined' : _typeof(parameter)) === 'object') {
         note_struct = parameter;
       } else {
-        throw new Vex$1.RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify ' + 'duration.');
+        throw new Vex.RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify ' + 'duration.');
       }
 
       // Note properties
@@ -18252,7 +18293,7 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.stave) throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+        if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
         // Draw the modifiers
         for (var i = 0; i < this.modifiers.length; ++i) {
@@ -18310,11 +18351,11 @@
       key: 'draw',
       value: function draw() {
         if (!this.context) {
-          throw new Vex$1.RERR('NoContext', "Can't draw Tremolo without a context.");
+          throw new Vex.RERR('NoContext', "Can't draw Tremolo without a context.");
         }
 
         if (!(this.note && this.index != null)) {
-          throw new Vex$1.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");
+          throw new Vex.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");
         }
 
         var start = this.note.getModifierStartXY(this.position, this.index);
@@ -18333,7 +18374,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
   function L$17() {
-    if (Crescendo.DEBUG) Vex$1.L('Vex.Flow.Crescendo', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args);
   }
 
   // Private helper to draw the hairpin
@@ -18380,7 +18425,7 @@
       // The height at the open end of the cresc/decresc
       _this.height = 15;
 
-      Vex$1.Merge(_this.render_options, {
+      Vex.Merge(_this.render_options, {
         // Extensions to the length of the crescendo on either side
         extend_left: 0,
         extend_right: 0,
@@ -18430,19 +18475,15 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', "Can't draw Hairpin without a context.");
+        if (!this.context) {
+          throw new Vex.RERR('NoContext', "Can't draw Hairpin without a context.");
+        }
 
         var tick_context = this.getTickContext();
         var next_context = TickContext.getNextContext(tick_context);
 
         var begin_x = this.getAbsoluteX();
-        var end_x = void 0;
-        if (next_context) {
-          end_x = next_context.getX();
-        } else {
-          end_x = this.stave.x + this.stave.width;
-        }
-
+        var end_x = next_context ? next_context.getX() : this.stave.x + this.stave.width;
         var y = this.stave.getYForLine(this.line + -3) + 1;
 
         L$17('Drawing ', this.decrescendo ? 'decrescendo ' : 'crescendo ', this.height, 'x', begin_x - end_x);
@@ -18459,65 +18500,65 @@
     return Crescendo;
   }(Note);
 
-  Vex$1.Flow = Flow;
-  Vex$1.Flow.Fraction = Fraction;
-  Vex$1.Flow.Renderer = Renderer;
-  Vex$1.Flow.Formatter = Formatter;
-  Vex$1.Flow.Music = Music;
-  Vex$1.Flow.Glyph = Glyph;
-  Vex$1.Flow.Stave = Stave;
-  Vex$1.Flow.StaveNote = StaveNote;
-  Vex$1.Flow.Voice = Voice;
-  Vex$1.Flow.Accidental = Accidental;
-  Vex$1.Flow.Beam = Beam;
-  Vex$1.Flow.StaveTie = StaveTie;
-  Vex$1.Flow.TabStave = TabStave;
-  Vex$1.Flow.TabNote = TabNote;
-  Vex$1.Flow.Bend = Bend;
-  Vex$1.Flow.Vibrato = Vibrato;
-  Vex$1.Flow.Note = Note;
-  Vex$1.Flow.ModifierContext = ModifierContext;
-  Vex$1.Flow.TickContext = TickContext;
-  Vex$1.Flow.Articulation = Articulation;
-  Vex$1.Flow.Annotation = Annotation;
-  Vex$1.Flow.Barline = Barline;
-  Vex$1.Flow.NoteHead = NoteHead;
-  Vex$1.Flow.StaveConnector = StaveConnector;
-  Vex$1.Flow.ClefNote = ClefNote;
-  Vex$1.Flow.KeySignature = KeySignature;
-  Vex$1.Flow.TimeSignature = TimeSignature;
-  Vex$1.Flow.TimeSigNote = TimeSigNote;
-  Vex$1.Flow.Stem = Stem;
-  Vex$1.Flow.TabTie = TabTie;
-  Vex$1.Flow.Clef = Clef;
-  Vex$1.Flow.Modifier = Modifier;
-  Vex$1.Flow.TabSlide = TabSlide;
-  Vex$1.Flow.Tuplet = Tuplet;
-  Vex$1.Flow.GraceNote = GraceNote;
-  Vex$1.Flow.Tuning = Tuning;
-  Vex$1.Flow.KeyManager = KeyManager;
-  Vex$1.Flow.StaveHairpin = StaveHairpin;
-  Vex$1.Flow.BoundingBox = BoundingBox;
-  Vex$1.Flow.Stroke = Stroke;
-  Vex$1.Flow.TextNote = TextNote;
-  Vex$1.Flow.Curve = Curve;
-  Vex$1.Flow.TextDynamics = TextDynamics;
-  Vex$1.Flow.StaveLine = StaveLine;
-  Vex$1.Flow.Ornament = Ornament;
-  Vex$1.Flow.PedalMarking = PedalMarking;
-  Vex$1.Flow.TextBracket = TextBracket;
-  Vex$1.Flow.FretHandFinger = FretHandFinger;
-  Vex$1.Flow.Repetition = Repetition;
-  Vex$1.Flow.BarNote = BarNote;
-  Vex$1.Flow.GhostNote = GhostNote;
-  Vex$1.Flow.GraceNoteGroup = GraceNoteGroup;
-  Vex$1.Flow.Tremolo = Tremolo;
-  Vex$1.Flow.StringNumber = StringNumber;
-  Vex$1.Flow.Crescendo = Crescendo;
-  Vex$1.Flow.Volta = Volta;
-  Vex$1.Flow.Font = Font;
+  Vex.Flow = Flow;
+  Vex.Flow.Fraction = Fraction;
+  Vex.Flow.Renderer = Renderer;
+  Vex.Flow.Formatter = Formatter;
+  Vex.Flow.Music = Music;
+  Vex.Flow.Glyph = Glyph;
+  Vex.Flow.Stave = Stave;
+  Vex.Flow.StaveNote = StaveNote;
+  Vex.Flow.Voice = Voice;
+  Vex.Flow.Accidental = Accidental;
+  Vex.Flow.Beam = Beam;
+  Vex.Flow.StaveTie = StaveTie;
+  Vex.Flow.TabStave = TabStave;
+  Vex.Flow.TabNote = TabNote;
+  Vex.Flow.Bend = Bend;
+  Vex.Flow.Vibrato = Vibrato;
+  Vex.Flow.Note = Note;
+  Vex.Flow.ModifierContext = ModifierContext;
+  Vex.Flow.TickContext = TickContext;
+  Vex.Flow.Articulation = Articulation;
+  Vex.Flow.Annotation = Annotation;
+  Vex.Flow.Barline = Barline;
+  Vex.Flow.NoteHead = NoteHead;
+  Vex.Flow.StaveConnector = StaveConnector;
+  Vex.Flow.ClefNote = ClefNote;
+  Vex.Flow.KeySignature = KeySignature;
+  Vex.Flow.TimeSignature = TimeSignature;
+  Vex.Flow.TimeSigNote = TimeSigNote;
+  Vex.Flow.Stem = Stem;
+  Vex.Flow.TabTie = TabTie;
+  Vex.Flow.Clef = Clef;
+  Vex.Flow.Modifier = Modifier;
+  Vex.Flow.TabSlide = TabSlide;
+  Vex.Flow.Tuplet = Tuplet;
+  Vex.Flow.GraceNote = GraceNote;
+  Vex.Flow.Tuning = Tuning;
+  Vex.Flow.KeyManager = KeyManager;
+  Vex.Flow.StaveHairpin = StaveHairpin;
+  Vex.Flow.BoundingBox = BoundingBox;
+  Vex.Flow.Stroke = Stroke;
+  Vex.Flow.TextNote = TextNote;
+  Vex.Flow.Curve = Curve;
+  Vex.Flow.TextDynamics = TextDynamics;
+  Vex.Flow.StaveLine = StaveLine;
+  Vex.Flow.Ornament = Ornament;
+  Vex.Flow.PedalMarking = PedalMarking;
+  Vex.Flow.TextBracket = TextBracket;
+  Vex.Flow.FretHandFinger = FretHandFinger;
+  Vex.Flow.Repetition = Repetition;
+  Vex.Flow.BarNote = BarNote;
+  Vex.Flow.GhostNote = GhostNote;
+  Vex.Flow.GraceNoteGroup = GraceNoteGroup;
+  Vex.Flow.Tremolo = Tremolo;
+  Vex.Flow.StringNumber = StringNumber;
+  Vex.Flow.Crescendo = Crescendo;
+  Vex.Flow.Volta = Volta;
+  Vex.Flow.Font = Font;
 
-  return Vex$1;
+  return Vex;
 
 }));
 //# sourceMappingURL=vexflow-debug.js.map
