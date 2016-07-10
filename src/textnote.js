@@ -218,7 +218,7 @@ export class TextNote extends Note {
     if (this.smooth) {
       this.setWidth(0);
     } else {
-      if (!this.glyph) {
+      if (this.glyph) {
         // Width already set.
       } else {
         this.setWidth(this.context.measureText(this.text).width);
