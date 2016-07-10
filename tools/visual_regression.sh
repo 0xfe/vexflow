@@ -116,7 +116,7 @@ do
     cp $diff-b.png $DIFF/$name'_'Current.png
     echo "Test: $name"
     echo "  PHASH value exceeds threshold: $hash > $THRESHOLD"
-    echo "  Image diff stored in $DIFF/$name.png"
+    echo "  Image diff stored in $DIFF/$name.png\n"
     # $VIEWER "$diff-diff.png" "$diff-a.png" "$diff-b.png"
     # echo 'Hit return to process next image...'
     # read
