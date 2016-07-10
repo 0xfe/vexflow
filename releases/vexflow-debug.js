@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.56 built on 2016-07-10.
+ * VexFlow 1.2.57 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -4130,7 +4130,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
   function L$1() {
-    if (Stem.DEBUG) Vex$1.L('Vex.Flow.Stem', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (Stem.DEBUG) Vex$1.L('Vex.Flow.Stem', args);
   }
 
   var Stem = function () {
@@ -4274,7 +4278,7 @@
         for (var i = 0; i < ys.length; ++i) {
           var stem_top = ys[i] + stem_height * -this.stem_direction;
 
-          if (this.stem_direction == Stem.DOWN) {
+          if (this.stem_direction === Stem.DOWN) {
             top_pixel = Math.max(top_pixel, stem_top);
             base_pixel = Math.min(base_pixel, ys[i]);
           } else {
@@ -4317,16 +4321,18 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
 
         if (this.hide) return;
 
         var ctx = this.context;
-        var stem_x = void 0,
-            stem_y = void 0;
+        var stem_x = void 0;
+        var stem_y = void 0;
         var stem_direction = this.stem_direction;
 
-        if (stem_direction == Stem.DOWN) {
+        if (stem_direction === Stem.DOWN) {
           // Down stems are rendered to the left of the head.
           stem_x = this.x_begin + Stem.WIDTH / 2;
           stem_y = this.y_top + 2;
@@ -9887,12 +9893,16 @@
     }, {
       key: 'setNotes',
       value: function setNotes(notes) {
-        if (!notes.first_note && !notes.last_note) throw new Vex$1.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
+        if (!notes.first_note && !notes.last_note) {
+          throw new Vex$1.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
+        }
 
         if (!notes.first_indices) notes.first_indices = [0];
         if (!notes.last_indices) notes.last_indices = [0];
 
-        if (notes.first_indices.length != notes.last_indices.length) throw new Vex$1.RuntimeError('BadArguments', 'Tied notes must have similar' + ' index sizes');
+        if (notes.first_indices.length !== notes.last_indices.length) {
+          throw new Vex$1.RuntimeError('BadArguments', 'Tied notes must have similar index sizes');
+        }
 
         // Success. Lets grab 'em notes.
         this.first_note = notes.first_note;
@@ -9914,7 +9924,9 @@
     }, {
       key: 'renderTie',
       value: function renderTie(params) {
-        if (params.first_ys.length === 0 || params.last_ys.length === 0) throw new Vex$1.RERR('BadArguments', 'No Y-values to render');
+        if (params.first_ys.length === 0 || params.last_ys.length === 0) {
+          throw new Vex$1.RERR('BadArguments', 'No Y-values to render');
+        }
 
         var ctx = this.context;
         var cp1 = this.render_options.cp1;
@@ -9933,7 +9945,9 @@
           var first_y_px = params.first_ys[this.first_indices[i]] + y_shift;
           var last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
 
-          if (isNaN(first_y_px) || isNaN(last_y_px)) throw new Vex$1.RERR('BadArguments', 'Bad indices for tie rendering.');
+          if (isNaN(first_y_px) || isNaN(last_y_px)) {
+            throw new Vex$1.RERR('BadArguments', 'Bad indices for tie rendering.');
+          }
 
           var top_cp_y = (first_y_px + last_y_px) / 2 + cp1 * params.direction;
           var bottom_cp_y = (first_y_px + last_y_px) / 2 + cp2 * params.direction;
@@ -9942,7 +9956,6 @@
           ctx.moveTo(params.first_x_px + first_x_shift, first_y_px);
           ctx.quadraticCurveTo(cp_x, top_cp_y, params.last_x_px + last_x_shift, last_y_px);
           ctx.quadraticCurveTo(cp_x, bottom_cp_y, params.first_x_px + first_x_shift, first_y_px);
-
           ctx.closePath();
           ctx.fill();
         }
@@ -9962,15 +9975,17 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', 'No context to render tie.');
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', 'No context to render tie.');
+        }
         var first_note = this.first_note;
         var last_note = this.last_note;
-        var first_x_px = void 0,
-            last_x_px = void 0,
-            first_ys = void 0,
-            last_ys = void 0,
-            stem_direction = void 0;
 
+        var first_x_px = void 0;
+        var last_x_px = void 0;
+        var first_ys = void 0;
+        var last_ys = void 0;
+        var stem_direction = void 0;
         if (first_note) {
           first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
           stem_direction = first_note.getStemDirection();
@@ -13305,7 +13320,9 @@
     }, {
       key: 'draw',
       value: function draw(stave, shift_x) {
-        if (!stave.context) throw new Vex$1.RERR('NoContext', "Can't draw stave section without a context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw stave section without a context.");
+        }
 
         var ctx = stave.context;
 
@@ -13385,7 +13402,9 @@
     }, {
       key: 'draw',
       value: function draw(stave, shift_x) {
-        if (!stave.context) throw new Vex$1.RERR('NoContext', "Can't draw stave tempo without a context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw stave tempo without a context.");
+        }
 
         var options = this.render_options;
         var scale = options.glyph_font_scale / 38;
@@ -13823,7 +13842,9 @@
     }, {
       key: 'draw',
       value: function draw(stave) {
-        if (!stave.context) throw new Vex$1.RERR('NoContext', "Can't draw stave text without a context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw stave text without a context.");
+        }
 
         var ctx = stave.context;
 
@@ -13832,14 +13853,15 @@
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
         var text_width = ctx.measureText('' + this.text).width;
 
-        var x = void 0,
-            y = void 0;
+        var x = void 0;
+        var y = void 0;
         var Position = StaveModifier.Position;
+        var Justification = TextNote.Justification;
         switch (this.position) {
           case Position.LEFT:
           case Position.RIGHT:
             y = (stave.getYForLine(0) + stave.getBottomLineY()) / 2 + this.options.shift_y;
-            if (this.position == Position.LEFT) {
+            if (this.position === Position.LEFT) {
               x = stave.getX() - text_width - 24 + this.options.shift_x;
             } else {
               x = stave.getX() + stave.getWidth() + 24 + this.options.shift_x;
@@ -13847,15 +13869,14 @@
             break;
           case Position.ABOVE:
           case Position.BELOW:
-            var Justification = TextNote.Justification;
             x = stave.getX() + this.options.shift_x;
-            if (this.options.justification == Justification.CENTER) {
+            if (this.options.justification === Justification.CENTER) {
               x += stave.getWidth() / 2 - text_width / 2;
-            } else if (this.options.justification == Justification.RIGHT) {
+            } else if (this.options.justification === Justification.RIGHT) {
               x += stave.getWidth() - text_width;
             }
 
-            if (this.position == Position.ABOVE) {
+            if (this.position === Position.ABOVE) {
               y = stave.getYForTopText(2) + this.options.shift_y;
             } else {
               y = stave.getYForBottomText(2) + this.options.shift_y;
@@ -14714,7 +14735,10 @@
     }, {
       key: 'draw',
       value: function draw(stave, x) {
-        if (!stave.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        }
+
         var ctx = stave.context;
         var width = stave.width;
         var top_y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
@@ -14732,14 +14756,17 @@
             ctx.fillRect(this.x + x, top_y, 1, vert_height);
             ctx.fillRect(this.x + x + width, top_y, 1, vert_height);
             break;
+          default:
+            break;
         }
         // If the beginning of a volta, draw measure number
-        if (this.volta == Volta.type.BEGIN || this.volta == Volta.type.BEGIN_END) {
+        if (this.volta === Volta.type.BEGIN || this.volta === Volta.type.BEGIN_END) {
           ctx.save();
           ctx.setFont(this.font.family, this.font.size, this.font.weight);
           ctx.fillText(this.number, this.x + x + 5, top_y + 15);
           ctx.restore();
         }
+
         ctx.fillRect(this.x + x, top_y, width, 1);
         return this;
       }
