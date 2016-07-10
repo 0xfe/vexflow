@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.57 built on 2016-07-10.
+ * VexFlow 1.2.58 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -6543,7 +6543,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
   function L$3() {
-    if (NoteHead.DEBUG) Vex$1.L('Vex.Flow.NoteHead', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (NoteHead.DEBUG) Vex$1.L('Vex.Flow.NoteHead', args);
   }
 
   // Draw slashnote head manually. No glyph exists for this.
@@ -6621,7 +6625,7 @@
       // regular notes, rests, or other custom codes.
       _this.glyph = Flow.durationToGlyph(_this.duration, _this.note_type);
       if (!_this.glyph) {
-        throw new Vex$1.RuntimeError('BadArguments', "No glyph found for duration '" + _this.duration + "' and type '" + _this.note_type + "'");
+        throw new Vex$1.RuntimeError('BadArguments', 'No glyph found for duration \'' + _this.duration + '\' and type \'' + _this.note_type + '\'');
       }
 
       _this.glyph_code = _this.glyph.code_head;
@@ -6754,7 +6758,9 @@
     }, {
       key: 'getBoundingBox',
       value: function getBoundingBox() {
-        if (!this.preFormatted) throw new Vex$1.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+        if (!this.preFormatted) {
+          throw new Vex$1.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+        }
 
         var spacing = this.stave.getSpacingBetweenLines();
         var half_spacing = spacing / 2;
@@ -6809,7 +6815,9 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
 
         var ctx = this.context;
         var head_x = this.getAbsoluteX();
@@ -6820,20 +6828,24 @@
         // Begin and end positions for head.
         var stem_direction = this.stem_direction;
         var glyph_font_scale = this.render_options.glyph_font_scale;
-
         var line = this.line;
 
         // If note above/below the staff, draw the small staff
         if (line <= 0 || line >= 6) {
           var line_y = y;
           var floor = Math.floor(line);
-          if (line < 0 && floor - line == -0.5) line_y -= 5;else if (line > 6 && floor - line == -0.5) line_y += 5;
-          if (this.note_type != 'r') {
+          if (line < 0 && floor - line === -0.5) {
+            line_y -= 5;
+          } else if (line > 6 && floor - line === -0.5) {
+            line_y += 5;
+          }
+
+          if (this.note_type !== 'r') {
             ctx.fillRect(head_x - this.render_options.stroke_px, line_y, this.getGlyph().head_width + this.render_options.stroke_px * 2, 1);
           }
         }
 
-        if (this.note_type == 's') {
+        if (this.note_type === 's') {
           drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction);
         } else {
           if (this.style) {
@@ -11172,7 +11184,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
   function L$10() {
-    if (Ornament.DEBUG) Vex$1.L('Vex.Flow.Ornament', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (Ornament.DEBUG) Vex$1.L('Vex.Flow.Ornament', args);
   }
 
   // Accidental position modifications for each glyph
@@ -11327,7 +11343,9 @@
       };
 
       _this.ornament = Flow.ornamentCodes(_this.type);
-      if (!_this.ornament) throw new Vex$1.RERR('ArgumentError', "Ornament not found: '" + _this.type + "'");
+      if (!_this.ornament) {
+        throw new Vex$1.RERR('ArgumentError', 'Ornament not found: \'' + _this.type + '\'');
+      }
 
       // Default width comes from ornament table.
       _this.setWidth(_this.ornament.width);
@@ -11371,8 +11389,13 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', "Can't draw Ornament without a context.");
-        if (!(this.note && this.index !== null)) throw new Vex$1.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw Ornament without a context.");
+        }
+
+        if (!this.note || this.index == null) {
+          throw new Vex$1.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
+        }
 
         var ctx = this.context;
         var stem_direction = this.note.getStemDirection();
@@ -11380,14 +11403,11 @@
 
         // Get stem extents
         var stem_ext = this.note.getStem().getExtents();
-        var top = void 0,
-            bottom = void 0;
+        var top = void 0;
         if (stem_direction === StaveNote.STEM_DOWN) {
           top = stem_ext.baseY;
-          bottom = stem_ext.topY;
         } else {
           top = stem_ext.topY;
-          bottom = stem_ext.baseY;
         }
 
         // TabNotes don't have stems attached to them. Tab stems are rendered
@@ -11395,15 +11415,12 @@
         var is_tabnote = this.note.getCategory() === 'tabnotes';
         if (is_tabnote) {
           if (this.note.hasStem()) {
-            if (stem_direction === StaveNote.STEM_UP) {
-              bottom = stave.getYForBottomText(this.text_line - 2);
-            } else if (stem_direction === StaveNote.STEM_DOWN) {
+            if (stem_direction === StaveNote.STEM_DOWN) {
               top = stave.getYForTopText(this.text_line - 1.5);
             }
           } else {
             // Without a stem
             top = stave.getYForTopText(this.text_line - 1);
-            bottom = stave.getYForBottomText(this.text_line - 2);
           }
         }
 
@@ -11438,6 +11455,7 @@
 
         var ornament = this;
         function drawAccidental(ctx, code, upper) {
+          var mods = acc_mods[code];
           var accidental = Flow.accidentalCodes(code);
 
           var acc_x = glyph_x - 3;
@@ -11452,7 +11470,6 @@
           }
 
           // Fine tune position of accidental glyph
-          var mods = acc_mods[code];
           if (mods) {
             acc_x += mods.shift_x;
             acc_y += upper ? mods.shift_y_upper : mods.shift_y_lower;
@@ -13054,16 +13071,23 @@
     }, {
       key: 'drawVerticalBar',
       value: function drawVerticalBar(stave, x, double_bar) {
-        if (!stave.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        }
+
         var topY = stave.getYForLine(0);
         var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
-        if (double_bar) stave.context.fillRect(x - 3, topY, 1, botY - topY);
+        if (double_bar) {
+          stave.context.fillRect(x - 3, topY, 1, botY - topY);
+        }
         stave.context.fillRect(x, topY, 1, botY - topY);
       }
     }, {
       key: 'drawVerticalEndBar',
       value: function drawVerticalEndBar(stave, x) {
-        if (!stave.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        }
 
         var topY = stave.getYForLine(0);
         var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
@@ -13073,7 +13097,9 @@
     }, {
       key: 'drawRepeatBar',
       value: function drawRepeatBar(stave, x, begin) {
-        if (!stave.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        }
 
         var topY = stave.getYForLine(0);
         var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
@@ -13222,7 +13248,9 @@
     }, {
       key: 'drawCodaFixed',
       value: function drawCodaFixed(stave, x) {
-        if (!stave.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        }
 
         var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
         Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 40, 'v4d', true);
@@ -13231,7 +13259,10 @@
     }, {
       key: 'drawSignoFixed',
       value: function drawSignoFixed(stave, x) {
-        if (!stave.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        }
+
         var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
         Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 30, 'v8c', true);
         return this;
@@ -13239,7 +13270,9 @@
     }, {
       key: 'drawSymbolText',
       value: function drawSymbolText(stave, x, text, draw_coda) {
-        if (!stave.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        if (!stave.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
+        }
 
         var ctx = stave.context;
         ctx.save();
@@ -13247,7 +13280,7 @@
         // Default to right symbol
         var text_x = 0 + this.x_shift;
         var symbol_x = x + this.x_shift;
-        if (this.symbol_type == Repetition.type.CODA_LEFT) {
+        if (this.symbol_type === Repetition.type.CODA_LEFT) {
           // Offset Coda text to right of stave beginning
           text_x = this.x + stave.options.vertical_bar_width;
           symbol_x = text_x + ctx.measureText(text).width + 12;
@@ -13256,6 +13289,7 @@
           symbol_x = this.x + x + stave.width - 5 + this.x_shift;
           text_x = symbol_x - +ctx.measureText(text).width - 12;
         }
+
         var y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
         if (draw_coda) {
           Glyph.renderGlyph(ctx, symbol_x, y, 40, 'v4d', true);
@@ -16791,7 +16825,9 @@
     }, {
       key: 'setPosition',
       value: function setPosition(position) {
-        if (position == Modifier.Position.ABOVE || position == Modifier.Position.BELOW) this.position = position;
+        if (position === Modifier.Position.ABOVE || position === Modifier.Position.BELOW) {
+          this.position = position;
+        }
         return this;
       }
     }, {
@@ -16812,7 +16848,9 @@
     }, {
       key: 'setNotes',
       value: function setNotes(notes) {
-        if (!notes.first_note && !notes.last_note) throw new Vex$1.RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
+        if (!notes.first_note && !notes.last_note) {
+          throw new Vex$1.RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
+        }
 
         // Success. Lets grab 'em notes.
         this.first_note = notes.first_note;
@@ -16826,7 +16864,7 @@
         var dis = this.render_options.y_shift + 20;
         var y_shift = params.first_y;
 
-        if (this.position == Modifier.Position.ABOVE) {
+        if (this.position === Modifier.Position.ABOVE) {
           dis = -dis + 30;
           y_shift = params.first_y - params.staff_height;
         }
@@ -16858,20 +16896,22 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', "Can't draw Hairpin without a context.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw Hairpin without a context.");
+        }
 
-        var first_note = this.first_note;
-        var last_note = this.last_note;
+        var firstNote = this.first_note;
+        var lastNote = this.last_note;
 
-        var start = first_note.getModifierStartXY(this.position, 0);
-        var end = last_note.getModifierStartXY(this.position, 0);
+        var start = firstNote.getModifierStartXY(this.position, 0);
+        var end = lastNote.getModifierStartXY(this.position, 0);
 
         this.renderHairpin({
           first_x: start.x,
           last_x: end.x,
-          first_y: first_note.getStave().y + first_note.getStave().height,
-          last_y: last_note.getStave().y + last_note.getStave().height,
-          staff_height: first_note.getStave().height
+          first_y: firstNote.getStave().y + firstNote.getStave().height,
+          last_y: lastNote.getStave().y + lastNote.getStave().height,
+          staff_height: firstNote.getStave().height
         });
         return true;
       }
@@ -17184,10 +17224,10 @@
     // so that wide lines won't put a flat end on the arrow.
     var distance = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     var ratio = (distance - config.arrowhead_length / 3) / distance;
-    var end_x = void 0,
-        end_y = void 0,
-        start_x = void 0,
-        start_y = void 0;
+    var end_x = void 0;
+    var end_y = void 0;
+    var start_x = void 0;
+    var start_y = void 0;
     if (config.draw_end_arrow || both_arrows) {
       end_x = Math.round(x1 + (x2 - x1) * ratio);
       end_y = Math.round(y1 + (y2 - y1) * ratio);
@@ -17221,12 +17261,12 @@
     // h is the line length of a side of the arrow head
     var h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
 
-    var angle1 = void 0,
-        angle2 = void 0;
-    var top_x = void 0,
-        top_y = void 0;
-    var bottom_x = void 0,
-        bottom_y = void 0;
+    var angle1 = void 0;
+    var angle2 = void 0;
+    var top_x = void 0;
+    var top_y = void 0;
+    var bottom_x = void 0;
+    var bottom_y = void 0;
 
     if (config.draw_end_arrow || both_arrows) {
       angle1 = line_angle + Math.PI + config.arrowhead_angle;
@@ -17362,12 +17402,16 @@
     }, {
       key: 'setNotes',
       value: function setNotes(notes) {
-        if (!notes.first_note && !notes.last_note) throw new Vex$1.RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
+        if (!notes.first_note && !notes.last_note) {
+          throw new Vex$1.RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
+        }
 
         if (!notes.first_indices) notes.first_indices = [0];
         if (!notes.last_indices) notes.last_indices = [0];
 
-        if (notes.first_indices.length != notes.last_indices.length) throw new Vex$1.RuntimeError('BadArguments', 'Connected notes must have similar' + ' index sizes');
+        if (notes.first_indices.length !== notes.last_indices.length) {
+          throw new Vex$1.RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
+        }
 
         // Success. Lets grab 'em notes.
         this.first_note = notes.first_note;
@@ -17430,6 +17474,8 @@
     }, {
       key: 'draw',
       value: function draw() {
+        var _this = this;
+
         if (!this.context) {
           throw new Vex$1.RERR('NoContext', 'No context to render StaveLine.');
         }
@@ -17446,7 +17492,7 @@
         var start_position = void 0;
         var end_position = void 0;
         this.first_indices.forEach(function (first_index, i) {
-          var last_index = this.last_indices[i];
+          var last_index = _this.last_indices[i];
 
           // Get initial coordinates for the start/end of the line
           start_position = first_note.getModifierStartXY(2, first_index);
@@ -17474,8 +17520,8 @@
           start_position.y += upwards_slope ? -3 : 1;
           end_position.y += upwards_slope ? 2 : 0;
 
-          drawArrowLine(ctx, start_position, end_position, this.render_options);
-        }, this);
+          drawArrowLine(ctx, start_position, end_position, _this.render_options);
+        });
 
         ctx.restore();
 
@@ -17516,7 +17562,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
   function L$14() {
-    if (PedalMarking.DEBUG) Vex$1.L('Vex.Flow.PedalMarking', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (PedalMarking.DEBUG) Vex$1.L('Vex.Flow.PedalMarking', args);
   }
 
   // Draws a pedal glyph with the provided `name` on a rendering `context`
@@ -17682,7 +17732,9 @@
           var y = note.getStave().getYForBottomText(pedal.line + 3);
 
           // Throw if current note is positioned before the previous note
-          if (x < prev_x) throw new Vex$1.RERR('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
+          if (x < prev_x) {
+            throw new Vex$1.RERR('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
+          }
 
           // Determine if the previous or next note are the same
           // as the current note. We need to keep track of this for
@@ -17778,7 +17830,10 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', "Can't draw PedalMarking without a context.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw PedalMarking without a context.");
+        }
+
         var ctx = this.context;
 
         ctx.save();
