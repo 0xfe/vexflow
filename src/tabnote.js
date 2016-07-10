@@ -134,12 +134,13 @@ export class TabNote extends StemmableNote {
       draw_stem_through_stave: false,
     });
 
-    this.glyph =
-      Flow.durationToGlyph(this.duration, this.noteType);
+    this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
+
     if (!this.glyph) {
-      throw new Vex.RuntimeError('BadArguments',
-          'Invalid note initialization data (No glyph found): ' +
-          JSON.stringify(tab_struct));
+      throw new Vex.RuntimeError(
+        'BadArguments',
+        `Invalid note initialization data (No glyph found): ${JSON.stringify(tab_struct)}`
+      );
     }
 
     this.buildStem();
@@ -178,8 +179,9 @@ export class TabNote extends StemmableNote {
     }
 
     if (glyph) {
-      return this.getStemDirection() === 1 ? glyph.tabnote_stem_up_extension :
-        glyph.tabnote_stem_down_extension;
+      return this.getStemDirection() === 1
+        ? glyph.tabnote_stem_up_extension
+        : glyph.tabnote_stem_down_extension;
     }
 
     return 0;
@@ -188,7 +190,7 @@ export class TabNote extends StemmableNote {
   // Add a dot to the note
   addDot() {
     const dot = new Dot();
-    this.dots++;
+    this.dots += 1;
     return this.addModifier(dot, 0);
   }
 
@@ -216,10 +218,12 @@ export class TabNote extends StemmableNote {
     if (this.context) {
       for (i = 0; i < this.glyphs.length; ++i) {
         const text = '' + this.glyphs[i].text;
-        if (text.toUpperCase() != 'X')
+        if (text.toUpperCase() !== 'X') {
           this.glyphs[i].width = this.context.measureText(text).width;
-        this.width = (this.glyphs[i].width > this.width) ?
-          this.glyphs[i].width : this.width;
+        }
+        this.width = this.glyphs[i].width > this.width
+          ? this.glyphs[i].width
+          : this.width;
       }
     }
 
@@ -252,8 +256,8 @@ export class TabNote extends StemmableNote {
   getTieRightX() {
     let tieStartX = this.getAbsoluteX();
     const note_glyph_width = this.glyph.head_width;
-    tieStartX += (note_glyph_width / 2);
-    tieStartX += ((-this.width / 2) + this.width + 2);
+    tieStartX += note_glyph_width / 2;
+    tieStartX += (-this.width / 2) + this.width + 2;
 
     return tieStartX;
   }
@@ -262,8 +266,8 @@ export class TabNote extends StemmableNote {
   getTieLeftX() {
     let tieEndX = this.getAbsoluteX();
     const note_glyph_width = this.glyph.head_width;
-    tieEndX += (note_glyph_width / 2);
-    tieEndX -= ((this.width / 2) + 2);
+    tieEndX += note_glyph_width / 2;
+    tieEndX -= (this.width / 2) + 2;
 
     return tieEndX;
   }
@@ -271,24 +275,28 @@ export class TabNote extends StemmableNote {
   // Get the default `x` and `y` coordinates for a modifier at a specific
   // `position` at a fret position `index`
   getModifierStartXY(position, index) {
-    if (!this.preFormatted) throw new Vex.RERR('UnformattedNote',
-        "Can't call GetModifierStartXY on an unformatted note");
+    if (!this.preFormatted) {
+      throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+    }
 
-    if (this.ys.length === 0) throw new Vex.RERR('NoYValues',
-        'No Y-Values calculated for this note.');
+    if (this.ys.length === 0) {
+      throw new Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
+    }
 
     let x = 0;
-    if (position == Modifier.Position.LEFT) {
+    if (position === Modifier.Position.LEFT) {
       x = -1 * 2;  // extra_left_px
-    } else if (position == Modifier.Position.RIGHT) {
+    } else if (position === Modifier.Position.RIGHT) {
       x = this.width + 2; // extra_right_px
-    } else if (position == Modifier.Position.BELOW ||
-               position == Modifier.Position.ABOVE) {
+    } else if (position === Modifier.Position.BELOW || position === Modifier.Position.ABOVE) {
       const note_glyph_width = this.glyph.head_width;
       x = note_glyph_width / 2;
     }
 
-    return { x: this.getAbsoluteX() + x, y: this.ys[index] };
+    return {
+      x: this.getAbsoluteX() + x,
+      y: this.ys[index],
+    };
   }
 
   // Get the default line for rest
@@ -337,7 +345,7 @@ export class TabNote extends StemmableNote {
       const flag_y = this.getStemY() - (this.stem.getHeight());
       let flag_code;
 
-      if (this.stem_direction == Stem.DOWN) {
+      if (this.stem_direction === Stem.DOWN) {
         // Down stems have flags on the left.
         flag_code = this.glyph.code_flag_downstem;
       } else {
@@ -354,13 +362,13 @@ export class TabNote extends StemmableNote {
   // Render the modifiers onto the context
   drawModifiers() {
     // Draw the modifiers
-    this.modifiers.forEach(function(modifier) {
+    this.modifiers.forEach((modifier) => {
       // Only draw the dots if enabled
       if (modifier.getCategory() === 'dots' && !this.render_options.draw_dots) return;
 
       modifier.setContext(this.context);
       modifier.draw();
-    }, this);
+    });
   }
 
   // Render the stem extension through the fret positions
@@ -376,8 +384,12 @@ export class TabNote extends StemmableNote {
       const strings_used = this.positions.map(position => position.str);
 
       const unused_strings = getUnusedStringGroups(total_lines, strings_used);
-      const stem_lines = getPartialStemLines(stem_y, unused_strings,
-                            this.getStave(), this.getStemDirection());
+      const stem_lines = getPartialStemLines(
+        stem_y,
+        unused_strings,
+        this.getStave(),
+        this.getStemDirection()
+      );
 
       // Fine tune x position to match default stem
       if (!this.beam || this.getStemDirection() === 1) {
@@ -404,11 +416,8 @@ export class TabNote extends StemmableNote {
     const ctx = this.context;
     const x = this.getAbsoluteX();
     const ys = this.ys;
-    let y;
-
     for (let i = 0; i < this.positions.length; ++i) {
-      y = ys[i];
-
+      const y = ys[i];
       const glyph = this.glyphs[i];
 
       // Center the fret text beneath the notation note head
@@ -418,8 +427,13 @@ export class TabNote extends StemmableNote {
       ctx.clearRect(tab_x - 2, y - 3, glyph.width + 4, 6);
 
       if (glyph.code) {
-        Glyph.renderGlyph(ctx, tab_x, y + 5 + glyph.shift_y,
-            this.render_options.glyph_font_scale, glyph.code);
+        Glyph.renderGlyph(
+          ctx,
+          tab_x,
+          y + 5 + glyph.shift_y,
+          this.render_options.glyph_font_scale,
+          glyph.code
+        );
       } else {
         const text = glyph.text.toString();
         ctx.fillText(text, tab_x, y + 5);
@@ -429,11 +443,17 @@ export class TabNote extends StemmableNote {
 
   // The main rendering function for the entire note
   draw() {
-    if (!this.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw without a canvas context.");
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
-    if (this.ys.length === 0) throw new Vex.RERR('NoYValues',
-        "Can't draw note without Y values.");
+    if (!this.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+    }
+
+    if (!this.stave) {
+      throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    }
+
+    if (this.ys.length === 0) {
+      throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
+    }
 
     const render_stem = this.beam == null && this.render_options.draw_stem;
 
