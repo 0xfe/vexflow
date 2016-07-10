@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.58 built on 2016-07-10.
+ * VexFlow 1.2.59 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -3680,7 +3680,8 @@
   // Warning: This file is merely a crutch to get bounding box information without
   // explicit metadata. This is likely to get deprecated following SMuFL support.
   //
-  // taken from: https://github.com/gabelerner/canvg/blob/860e418aca67b9a41e858a223d74d375793ec364/canvg.js#L449
+  // taken from: https://github.com/gabelerner/canvg/blob/860e418aca67b9a41e858a223d74d375793ec364/ca
+  // nvg.js#L449
 
   var BoundingBoxComputation = function () {
     function BoundingBoxComputation(x1, y1, x2, y2) {
@@ -3929,6 +3930,8 @@
           y = nextY();
           outlineFns.b(nextX(), nextY(), nextX(), nextY(), x, y);
           break;
+        default:
+          break;
       }
     }
   }
@@ -3940,7 +3943,9 @@
       /* Static methods used to implement loading / unloading of glyphs */
       value: function loadMetrics(font, code, cache) {
         var glyph = font.glyphs[code];
-        if (!glyph) throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + code + ' does not exist in font.');
+        if (!glyph) {
+          throw new Vex$1.RERR('BadGlyph', 'Glyph ' + code + ' does not exist in font.');
+        }
 
         var x_min = glyph.x_min;
         var x_max = glyph.x_max;
@@ -3968,7 +3973,7 @@
             outline: outline
           };
         } else {
-          throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + code + ' has no outline defined.');
+          throw new Vex$1.RERR('BadGlyph', 'Glyph ' + code + ' has no outline defined.');
         }
       }
 
@@ -4093,7 +4098,9 @@
     }, {
       key: 'getMetrics',
       value: function getMetrics() {
-        if (!this.metrics) throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
+        if (!this.metrics) {
+          throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
+        }
 
         return {
           x_min: this.metrics.x_min * this.scale,
@@ -4105,7 +4112,9 @@
     }, {
       key: 'render',
       value: function render(ctx, x_pos, y_pos) {
-        if (!this.metrics) throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
+        if (!this.metrics) {
+          throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
+        }
 
         var outline = this.metrics.outline;
         var scale = this.scale;
@@ -4115,9 +4124,17 @@
     }, {
       key: 'renderToStave',
       value: function renderToStave(x) {
-        if (!this.metrics) throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
-        if (!this.stave) throw new Vex$1.RuntimeError('GlyphError', 'No valid stave');
-        if (!this.context) throw new Vex$1.RERR('GlyphError', 'No valid context');
+        if (!this.metrics) {
+          throw new Vex$1.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
+        }
+
+        if (!this.stave) {
+          throw new Vex$1.RuntimeError('GlyphError', 'No valid stave');
+        }
+
+        if (!this.context) {
+          throw new Vex$1.RERR('GlyphError', 'No valid context');
+        }
 
         var outline = this.metrics.outline;
         var scale = this.scale;
@@ -6054,7 +6071,6 @@
       // note.
       value: function plotMetrics(ctx, note, yPos) {
         var metrics = note.getMetrics();
-        var w = metrics.width;
         var xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
         var xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
         var xAbs = note.getAbsoluteX();
@@ -6112,7 +6128,7 @@
       var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Note).call(this));
 
       if (!note_struct) {
-        throw new Vex$1.RuntimeError('BadArguments', 'Note must have valid initialization data to identify ' + 'duration and type.');
+        throw new Vex$1.RuntimeError('BadArguments', 'Note must have valid initialization data to identify duration and type.');
       }
 
       // Parse `note_struct` and get note properties.
@@ -6139,7 +6155,7 @@
       // Get the glyph code for this note from the font.
       _this.glyph = Flow.durationToGlyph(_this.duration, _this.noteType);
 
-      if (_this.positions && (_typeof(_this.positions) != 'object' || !_this.positions.length)) {
+      if (_this.positions && (_typeof(_this.positions) !== 'object' || !_this.positions.length)) {
         throw new Vex$1.RuntimeError('BadArguments', 'Note keys must be array type.');
       }
 
@@ -6312,7 +6328,10 @@
     }, {
       key: 'getYs',
       value: function getYs() {
-        if (this.ys.length === 0) throw new Vex$1.RERR('NoYValues', 'No Y-values calculated for this note.');
+        if (this.ys.length === 0) {
+          throw new Vex$1.RERR('NoYValues', 'No Y-values calculated for this note.');
+        }
+
         return this.ys;
       }
 
@@ -6322,7 +6341,10 @@
     }, {
       key: 'getYForTopText',
       value: function getYForTopText(text_line) {
-        if (!this.stave) throw new Vex$1.RERR('NoStave', 'No stave attached to this note.');
+        if (!this.stave) {
+          throw new Vex$1.RERR('NoStave', 'No stave attached to this note.');
+        }
+
         return this.stave.getYForTopText(text_line);
       }
 
@@ -6428,8 +6450,14 @@
     }, {
       key: 'getModifierStartXY',
       value: function getModifierStartXY() {
-        if (!this.preFormatted) throw new Vex$1.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
-        return { x: this.getAbsoluteX(), y: this.ys[0] };
+        if (!this.preFormatted) {
+          throw new Vex$1.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+        }
+
+        return {
+          x: this.getAbsoluteX(),
+          y: this.ys[0]
+        };
       }
 
       // Get bounds and metrics for this note.
@@ -6446,7 +6474,10 @@
     }, {
       key: 'getMetrics',
       value: function getMetrics() {
-        if (!this.preFormatted) throw new Vex$1.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
+        if (!this.preFormatted) {
+          throw new Vex$1.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
+        }
+
         var modLeftPx = 0;
         var modRightPx = 0;
         if (this.modifierContext != null) {
@@ -6455,7 +6486,8 @@
         }
 
         var width = this.getWidth();
-        return { width: width,
+        return {
+          width: width,
           noteWidth: width - modLeftPx - modRightPx - this.extraLeftPx - this.extraRightPx,
           left_shift: this.x_shift, // TODO(0xfe): Make style consistent
 
@@ -6465,7 +6497,8 @@
 
           // Displaced note head on left or right.
           extraLeftPx: this.extraLeftPx,
-          extraRightPx: this.extraRightPx };
+          extraRightPx: this.extraRightPx
+        };
       }
 
       // Get and set width of note. Used by the formatter for positioning.
@@ -6478,7 +6511,10 @@
     }, {
       key: 'getWidth',
       value: function getWidth() {
-        if (!this.preFormatted) throw new Vex$1.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
+        if (!this.preFormatted) {
+          throw new Vex$1.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
+        }
+
         return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
       }
 
@@ -6500,7 +6536,10 @@
     }, {
       key: 'getX',
       value: function getX() {
-        if (!this.tickContext) throw new Vex$1.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+        if (!this.tickContext) {
+          throw new Vex$1.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+        }
+
         return this.tickContext.getX() + this.x_shift;
       }
 
@@ -6511,7 +6550,9 @@
     }, {
       key: 'getAbsoluteX',
       value: function getAbsoluteX() {
-        if (!this.tickContext) throw new Vex$1.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+        if (!this.tickContext) {
+          throw new Vex$1.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+        }
 
         // Position note to left edge of tick context.
         var x = this.tickContext.getX();
@@ -7139,7 +7180,11 @@
 
   // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
   function L$5() {
-    if (Modifier.DEBUG) Vex$1.L('Vex.Flow.Modifier', arguments);
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (Modifier.DEBUG) Vex$1.L('Vex.Flow.Modifier', args);
   }
 
   var Modifier = function () {
@@ -7305,7 +7350,7 @@
       key: 'setXShift',
       value: function setXShift(x) {
         this.x_shift = 0;
-        if (this.position == Modifier.Position.LEFT) {
+        if (this.position === Modifier.Position.LEFT) {
           this.x_shift -= x;
         } else {
           this.x_shift += x;
@@ -7322,8 +7367,11 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-        throw new Vex$1.RERR('MethodNotImplemented', 'Draw() not implemented for this modifier.');
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
+
+        throw new Vex$1.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
       }
     }]);
     return Modifier;
@@ -10037,6 +10085,15 @@
     return StaveTie;
   }();
 
+  // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
+  function L$8() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (GraceNoteGroup.DEBUG) Vex$1.L('Vex.Flow.GraceNoteGroup', args);
+  }
+
   var GraceNoteGroup = function (_Modifier) {
     inherits(GraceNoteGroup, _Modifier);
     createClass(GraceNoteGroup, null, [{
@@ -10050,27 +10107,22 @@
         if (!gracenote_groups || gracenote_groups.length === 0) return false;
 
         var group_list = [];
-        var hasStave = false;
         var prev_note = null;
         var shiftL = 0;
 
-        var i = void 0,
-            gracenote_group = void 0,
-            props_tmp = void 0;
-        for (i = 0; i < gracenote_groups.length; ++i) {
-          gracenote_group = gracenote_groups[i];
+        for (var i = 0; i < gracenote_groups.length; ++i) {
+          var gracenote_group = gracenote_groups[i];
           var note = gracenote_group.getNote();
           var stave = note.getStave();
-          if (note != prev_note) {
+          if (note !== prev_note) {
             // Iterate through all notes to get the displaced pixels
             for (var n = 0; n < note.keys.length; ++n) {
-              props_tmp = note.getKeyProps()[n];
+              var props_tmp = note.getKeyProps()[n];
               shiftL = props_tmp.displaced ? note.getExtraLeftPx() : shiftL;
             }
             prev_note = note;
           }
           if (stave != null) {
-            hasStave = true;
             group_list.push({ shift: shiftL, gracenote_group: gracenote_group });
           } else {
             group_list.push({ shift: shiftL, gracenote_group: gracenote_group });
@@ -10080,17 +10132,17 @@
         // If first note left shift in case it is displaced
         var group_shift = group_list[0].shift;
         var formatWidth = void 0;
-        for (i = 0; i < group_list.length; ++i) {
-          gracenote_group = group_list[i].gracenote_group;
-          gracenote_group.preFormat();
-          formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+        for (var _i = 0; _i < group_list.length; ++_i) {
+          var _gracenote_group = group_list[_i].gracenote_group;
+          _gracenote_group.preFormat();
+          formatWidth = _gracenote_group.getWidth() + gracenote_spacing;
           group_shift = Math.max(formatWidth, group_shift);
         }
 
-        for (i = 0; i < group_list.length; ++i) {
-          gracenote_group = group_list[i].gracenote_group;
-          formatWidth = gracenote_group.getWidth() + gracenote_spacing;
-          gracenote_group.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
+        for (var _i2 = 0; _i2 < group_list.length; ++_i2) {
+          var _gracenote_group2 = group_list[_i2].gracenote_group;
+          formatWidth = _gracenote_group2.getWidth() + gracenote_spacing;
+          _gracenote_group2.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
         }
 
         state.left_shift += group_shift;
@@ -10185,6 +10237,8 @@
     }, {
       key: 'draw',
       value: function draw() {
+        var _this2 = this;
+
         if (!this.context) {
           throw new Vex$1.RuntimeError('NoContext', "Can't draw Grace note without a context.");
         }
@@ -10198,12 +10252,13 @@
         }
 
         var that = this;
-        function alignGraceNotesWithNote(grace_notes, note, groupWidth) {
+        function alignGraceNotesWithNote(grace_notes, note) {
           // Shift over the tick contexts of each note
           // So that th aligned with the note
           var tickContext = note.getTickContext();
           var extraPx = tickContext.getExtraPx();
           var x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
+
           grace_notes.forEach(function (graceNote) {
             var tick_context = graceNote.getTickContext();
             var x_offset = tick_context.getX();
@@ -10216,8 +10271,8 @@
 
         // Draw notes
         this.grace_notes.forEach(function (graceNote) {
-          graceNote.setContext(this.context).draw();
-        }, this);
+          graceNote.setContext(_this2.context).draw();
+        });
 
         // Draw beam
         if (this.beam) {
@@ -10240,11 +10295,6 @@
     }]);
     return GraceNoteGroup;
   }(Modifier);
-
-  // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
-  function L$8() {
-    if (GraceNoteGroup.DEBUG) Vex$1.L('Vex.Flow.GraceNoteGroup', arguments);
-  }
 
   var Stroke = function (_Modifier) {
     inherits(Stroke, _Modifier);
@@ -14355,12 +14405,7 @@
         var different_types = this.accList.length > 0 && cancel_accList.length > 0 && cancel_accList[0].type !== this.accList[0].type;
 
         // Determine how many naturals needed to add
-        var naturals = 0;
-        if (different_types) {
-          naturals = cancel_accList.length;
-        } else {
-          naturals = cancel_accList.length - this.accList.length;
-        }
+        var naturals = different_types ? cancel_accList.length : cancel_accList.length - this.accList.length;
 
         // Return if no naturals needed
         if (naturals < 1) return;
@@ -14385,7 +14430,7 @@
 
     }, {
       key: 'addToStave',
-      value: function addToStave(stave, firstGlyph) {
+      value: function addToStave(stave) {
         this.paddingForced = true;
         stave.addModifier(this);
 
@@ -14422,6 +14467,8 @@
           case 'bass':
           case 'french':
             offset = 1;
+            break;
+          default:
             break;
         }
 
@@ -14487,7 +14534,9 @@
     }, {
       key: 'format',
       value: function format() {
-        if (!this.stave) throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without stave.");
+        if (!this.stave) {
+          throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without stave.");
+        }
 
         this.width = 0;
         this.glyphs = [];
@@ -14513,8 +14562,14 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.x) throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without x.");
-        if (!this.stave) throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without stave.");
+        if (!this.x) {
+          throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without x.");
+        }
+
+        if (!this.stave) {
+          throw new Vex$1.RERR('KeySignatureError', "Can't draw key signature without stave.");
+        }
+
         if (!this.formatted) this.format();
 
         for (var i = 0; i < this.glyphs.length; i++) {
@@ -16628,7 +16683,9 @@
         if (this.keyParts.accidental) this.keyString += this.keyParts.accidental;
 
         var is_supported_type = Music.scaleTypes[this.keyParts.type];
-        if (!is_supported_type) throw new Vex$1.RERR('BadArguments', 'Unsupported key type: ' + this.key);
+        if (!is_supported_type) {
+          throw new Vex$1.RERR('BadArguments', 'Unsupported key type: ' + this.key);
+        }
 
         this.scale = this.music.getScaleTones(this.music.getNoteValue(this.keyString), Music.scaleTypes[this.keyParts.type]);
 
@@ -16671,11 +16728,13 @@
         var scaleNote = this.scaleMap[parts.root];
         var modparts = this.music.getNoteParts(scaleNote);
 
-        if (scaleNote == note) return {
-          'note': scaleNote,
-          'accidental': parts.accidental,
-          'change': false
-        };
+        if (scaleNote === note) {
+          return {
+            'note': scaleNote,
+            'accidental': parts.accidental,
+            'change': false
+          };
+        }
 
         // Then search for a note of equivalent value in our altered scale
         var valueNote = this.scaleMapByValue[this.music.getNoteValue(note)];
@@ -16701,7 +16760,7 @@
         }
 
         // Then try to unmodify a currently modified note.
-        if (modparts.root == note) {
+        if (modparts.root === note) {
           delete this.scaleMapByValue[this.music.getNoteValue(this.scaleMap[parts.root])];
           this.scaleMapByValue[this.music.getNoteValue(modparts.root)] = modparts.root;
           this.scaleMap[modparts.root] = modparts.root;
