@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.54 built on 2016-07-10.
+ * VexFlow 1.2.55 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -7324,16 +7324,13 @@
 
         if (!dots || dots.length === 0) return false;
 
-        var i = void 0,
-            dot = void 0,
-            note = void 0,
-            shift = void 0;
         var dot_list = [];
-        for (i = 0; i < dots.length; ++i) {
-          dot = dots[i];
-          note = dot.getNote();
+        for (var i = 0; i < dots.length; ++i) {
+          var dot = dots[i];
+          var note = dot.getNote();
 
           var props = void 0;
+          var shift = void 0;
           // Only StaveNote has .getKeyProps()
           if (typeof note.getKeyProps === 'function') {
             props = note.getKeyProps()[dot.getIndex()];
@@ -7359,28 +7356,30 @@
         var prev_dotted_space = null;
         var half_shiftY = 0;
 
-        for (i = 0; i < dot_list.length; ++i) {
-          dot = dot_list[i].dot;
-          note = dot_list[i].note;
-          shift = dot_list[i].shift;
-          var line = dot_list[i].line;
+        for (var _i = 0; _i < dot_list.length; ++_i) {
+          var _dot_list$_i = dot_list[_i];
+          var _dot = _dot_list$_i.dot;
+          var _note = _dot_list$_i.note;
+          var _shift = _dot_list$_i.shift;
+          var line = _dot_list$_i.line;
 
           // Reset the position of the dot every line.
-          if (line != last_line || note != last_note) {
-            dot_shift = shift;
+
+          if (line !== last_line || _note !== last_note) {
+            dot_shift = _shift;
           }
 
-          if (!note.isRest() && line != last_line) {
-            if (Math.abs(line % 1) == 0.5) {
+          if (!_note.isRest() && line !== last_line) {
+            if (Math.abs(line % 1) === 0.5) {
               // note is on a space, so no dot shift
               half_shiftY = 0;
-            } else if (!note.isRest()) {
+            } else if (!_note.isRest()) {
               // note is on a line, so shift dot to space above the line
               half_shiftY = 0.5;
-              if (last_note != null && !last_note.isRest() && last_line - line == 0.5) {
+              if (last_note != null && !last_note.isRest() && last_line - line === 0.5) {
                 // previous note on a space, so shift dot to space below the line
                 half_shiftY = -0.5;
-              } else if (line + half_shiftY == prev_dotted_space) {
+              } else if (line + half_shiftY === prev_dotted_space) {
                 // previous space is dotted, so shift dot to space below the line
                 half_shiftY = -0.5;
               }
@@ -7388,18 +7387,19 @@
           }
 
           // convert half_shiftY to a multiplier for dots.draw()
-          dot.dot_shiftY = -half_shiftY;
+          _dot.dot_shiftY = -half_shiftY;
           prev_dotted_space = line + half_shiftY;
 
-          dot.setXShift(dot_shift);
-          dot_shift += dot.getWidth() + dot_spacing; // spacing
+          _dot.setXShift(dot_shift);
+          dot_shift += _dot.getWidth() + dot_spacing; // spacing
           x_width = dot_shift > x_width ? dot_shift : x_width;
           last_line = line;
-          last_note = note;
+          last_note = _note;
         }
 
         // Update state.
         state.right_shift += x_width;
+        return true;
       }
 
       /**
@@ -7451,10 +7451,15 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoContext', "Can't draw dot without a context.");
-        if (!(this.note && this.index != null)) throw new Vex$1.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoContext', "Can't draw dot without a context.");
+        }
 
-        var line_space = this.note.stave.options.spacing_between_lines_px;
+        if (!this.note || this.index === null) {
+          throw new Vex$1.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
+        }
+
+        var lineSpace = this.note.stave.options.spacing_between_lines_px;
 
         var start = this.note.getModifierStartXY(this.position, this.index);
 
@@ -7463,12 +7468,12 @@
           start.y = this.note.getStemExtents().baseY;
         }
 
-        var dot_x = start.x + this.x_shift + this.width - this.radius;
-        var dot_y = start.y + this.y_shift + this.dot_shiftY * line_space;
+        var x = start.x + this.x_shift + this.width - this.radius;
+        var y = start.y + this.y_shift + this.dot_shiftY * lineSpace;
         var ctx = this.context;
 
         ctx.beginPath();
-        ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
+        ctx.arc(x, y, this.radius, 0, Math.PI * 2, false);
         ctx.fill();
       }
     }]);
@@ -13628,7 +13633,11 @@
 
         _this.glyph = new Glyph(struct.code, struct.point, { cache: false });
 
-        if (struct.width) _this.setWidth(struct.width);else _this.setWidth(_this.glyph.getMetrics().width);
+        if (struct.width) {
+          _this.setWidth(struct.width);
+        } else {
+          _this.setWidth(_this.glyph.getMetrics().width);
+        }
 
         _this.glyph_struct = struct;
       } else {
@@ -13665,7 +13674,10 @@
     }, {
       key: 'preFormat',
       value: function preFormat() {
-        if (!this.context) throw new Vex$1.RERR('NoRenderContext', "Can't measure text without rendering context.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoRenderContext', "Can't measure text without rendering context.");
+        }
+
         if (this.preFormatted) return;
 
         if (this.smooth) {
@@ -13678,9 +13690,9 @@
             }
         }
 
-        if (this.justification == TextNote.Justification.CENTER) {
+        if (this.justification === TextNote.Justification.CENTER) {
           this.extraLeftPx = this.width / 2;
-        } else if (this.justification == TextNote.Justification.RIGHT) {
+        } else if (this.justification === TextNote.Justification.RIGHT) {
           this.extraLeftPx = this.width;
         }
 
@@ -13692,14 +13704,19 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-        if (!this.stave) throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
+
+        if (!this.stave) {
+          throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+        }
 
         var ctx = this.context;
         var x = this.getAbsoluteX();
-        if (this.justification == TextNote.Justification.CENTER) {
+        if (this.justification === TextNote.Justification.CENTER) {
           x -= this.getWidth() / 2;
-        } else if (this.justification == TextNote.Justification.RIGHT) {
+        } else if (this.justification === TextNote.Justification.RIGHT) {
           x -= this.getWidth();
         }
 
@@ -14453,6 +14470,22 @@
     return KeySignature;
   }(StaveModifier);
 
+  var assertIsValidFraction = function assertIsValidFraction(timeSpec) {
+    var numbers = timeSpec.split('/').filter(function (number) {
+      return number !== '';
+    });
+
+    if (numbers.length !== 2) {
+      throw new Vex$1.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec + '. Must be in the form "<numerator>/<denominator>"');
+    }
+
+    numbers.forEach(function (number) {
+      if (isNaN(Number(number))) {
+        throw new Vex$1.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec + '. Must contain two valid numbers.');
+      }
+    });
+  };
+
   var TimeSignature = function (_StaveModifier) {
     inherits(TimeSignature, _StaveModifier);
     createClass(TimeSignature, null, [{
@@ -14485,9 +14518,8 @@
 
       var _this = possibleConstructorReturn(this, Object.getPrototypeOf(TimeSignature).call(this));
 
-      if (timeSpec === null) {
-        return possibleConstructorReturn(_this);
-      }
+      if (timeSpec === null) return possibleConstructorReturn(_this);
+
       var padding = customPadding;
 
       _this.point = 40;
@@ -14508,61 +14540,46 @@
     }, {
       key: 'parseTimeSpec',
       value: function parseTimeSpec(timeSpec) {
-        if (timeSpec == 'C' || timeSpec == 'C|') {
-          var glyphInfo = TimeSignature.glyphs[timeSpec];
-          return { num: false, line: glyphInfo.line,
-            glyph: new Glyph(glyphInfo.code, glyphInfo.point) };
+        if (timeSpec === 'C' || timeSpec === 'C|') {
+          var _TimeSignature$glyphs = TimeSignature.glyphs[timeSpec];
+          var line = _TimeSignature$glyphs.line;
+          var code = _TimeSignature$glyphs.code;
+          var point = _TimeSignature$glyphs.point;
+
+          return {
+            line: line,
+            num: false,
+            glyph: new Glyph(code, point)
+          };
         }
 
-        var topNums = [];
-        var i = void 0,
-            c = void 0;
-        for (i = 0; i < timeSpec.length; ++i) {
-          c = timeSpec.charAt(i);
-          if (c == '/') {
-            break;
-          } else if (/[0-9]/.test(c)) {
-            topNums.push(c);
-          } else {
-            throw new Vex$1.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec);
-          }
-        }
+        assertIsValidFraction(timeSpec);
 
-        if (i === 0) {
-          throw new Vex$1.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec);
-        }
+        var _timeSpec$split$map = timeSpec.split('/').map(function (number) {
+          return number.split('');
+        });
 
-        // skip the "/"
-        ++i;
+        var _timeSpec$split$map2 = slicedToArray(_timeSpec$split$map, 2);
 
-        if (i == timeSpec.length) {
-          throw new Vex$1.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec);
-        }
+        var topDigits = _timeSpec$split$map2[0];
+        var botDigits = _timeSpec$split$map2[1];
 
-        var botNums = [];
-        for (; i < timeSpec.length; ++i) {
-          c = timeSpec.charAt(i);
-          if (/[0-9]/.test(c)) {
-            botNums.push(c);
-          } else {
-            throw new Vex$1.RERR('BadTimeSignature', 'Invalid time spec: ' + timeSpec);
-          }
-        }
 
-        return { num: true, glyph: this.makeTimeSignatureGlyph(topNums, botNums) };
+        return {
+          num: true,
+          glyph: this.makeTimeSignatureGlyph(topDigits, botDigits)
+        };
       }
     }, {
       key: 'makeTimeSignatureGlyph',
-      value: function makeTimeSignatureGlyph(topNums, botNums) {
+      value: function makeTimeSignatureGlyph(topDigits, botDigits) {
         var glyph = new Glyph('v0', this.point);
-        glyph['topGlyphs'] = [];
-        glyph['botGlyphs'] = [];
+        glyph.topGlyphs = [];
+        glyph.botGlyphs = [];
 
         var topWidth = 0;
-        var i = void 0,
-            num = void 0;
-        for (i = 0; i < topNums.length; ++i) {
-          num = topNums[i];
+        for (var i = 0; i < topDigits.length; ++i) {
+          var num = topDigits[i];
           var topGlyph = new Glyph('v' + num, this.point);
 
           glyph.topGlyphs.push(topGlyph);
@@ -14570,9 +14587,9 @@
         }
 
         var botWidth = 0;
-        for (i = 0; i < botNums.length; ++i) {
-          num = botNums[i];
-          var botGlyph = new Glyph('v' + num, this.point);
+        for (var _i = 0; _i < botDigits.length; ++_i) {
+          var _num = botDigits[_i];
+          var botGlyph = new Glyph('v' + _num, this.point);
 
           glyph.botGlyphs.push(botGlyph);
           botWidth += botGlyph.getMetrics().width;
@@ -14593,22 +14610,20 @@
         var botStartX = (width - botWidth) / 2.0;
 
         var that = this;
-        glyph.renderToStave = function (x) {
+        glyph.renderToStave = function renderToStave(x) {
           var start_x = x + topStartX;
-          var i = void 0,
-              g = void 0;
-          for (i = 0; i < this.topGlyphs.length; ++i) {
-            g = this.topGlyphs[i];
-            Glyph.renderOutline(this.context, g.metrics.outline, g.scale, start_x + g.x_shift, this.stave.getYForLine(that.topLine) + 1);
-            start_x += g.getMetrics().width;
+          for (var _i2 = 0; _i2 < this.topGlyphs.length; ++_i2) {
+            var _glyph = this.topGlyphs[_i2];
+            Glyph.renderOutline(this.context, _glyph.metrics.outline, _glyph.scale, start_x + _glyph.x_shift, this.stave.getYForLine(that.topLine) + 1);
+            start_x += _glyph.getMetrics().width;
           }
 
           start_x = x + botStartX;
-          for (i = 0; i < this.botGlyphs.length; ++i) {
-            g = this.botGlyphs[i];
-            that.placeGlyphOnLine(g, this.stave, g.line);
-            Glyph.renderOutline(this.context, g.metrics.outline, g.scale, start_x + g.x_shift, this.stave.getYForLine(that.bottomLine) + 1);
-            start_x += g.getMetrics().width;
+          for (var _i3 = 0; _i3 < this.botGlyphs.length; ++_i3) {
+            var _glyph2 = this.botGlyphs[_i3];
+            that.placeGlyphOnLine(_glyph2, this.stave, _glyph2.line);
+            Glyph.renderOutline(this.context, _glyph2.metrics.outline, _glyph2.scale, start_x + _glyph2.x_shift, this.stave.getYForLine(that.bottomLine) + 1);
+            start_x += _glyph2.getMetrics().width;
           }
         };
 
@@ -14628,8 +14643,13 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.x) throw new Vex$1.RERR('TimeSignatureError', "Can't draw time signature without x.");
-        if (!this.stave) throw new Vex$1.RERR('TimeSignatureError', "Can't draw time signature without stave.");
+        if (!this.x) {
+          throw new Vex$1.RERR('TimeSignatureError', "Can't draw time signature without x.");
+        }
+
+        if (!this.stave) {
+          throw new Vex$1.RERR('TimeSignatureError', "Can't draw time signature without stave.");
+        }
 
         this.timeSig.glyph.setStave(this.stave);
         this.timeSig.glyph.setContext(this.stave.context);
@@ -15616,6 +15636,7 @@
       });
 
       _this.glyph = Flow.durationToGlyph(_this.duration, _this.noteType);
+
       if (!_this.glyph) {
         throw new Vex$1.RuntimeError('BadArguments', 'Invalid note initialization data (No glyph found): ' + JSON.stringify(tab_struct));
       }
@@ -15686,7 +15707,7 @@
       key: 'addDot',
       value: function addDot() {
         var dot = new Dot();
-        this.dots++;
+        this.dots += 1;
         return this.addModifier(dot, 0);
       }
 
@@ -15720,7 +15741,9 @@
         if (this.context) {
           for (i = 0; i < this.glyphs.length; ++i) {
             var text = '' + this.glyphs[i].text;
-            if (text.toUpperCase() != 'X') this.glyphs[i].width = this.context.measureText(text).width;
+            if (text.toUpperCase() !== 'X') {
+              this.glyphs[i].width = this.context.measureText(text).width;
+            }
             this.width = this.glyphs[i].width > this.width ? this.glyphs[i].width : this.width;
           }
         }
@@ -15790,21 +15813,28 @@
     }, {
       key: 'getModifierStartXY',
       value: function getModifierStartXY(position, index) {
-        if (!this.preFormatted) throw new Vex$1.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+        if (!this.preFormatted) {
+          throw new Vex$1.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+        }
 
-        if (this.ys.length === 0) throw new Vex$1.RERR('NoYValues', 'No Y-Values calculated for this note.');
+        if (this.ys.length === 0) {
+          throw new Vex$1.RERR('NoYValues', 'No Y-Values calculated for this note.');
+        }
 
         var x = 0;
-        if (position == Modifier.Position.LEFT) {
+        if (position === Modifier.Position.LEFT) {
           x = -1 * 2; // extra_left_px
-        } else if (position == Modifier.Position.RIGHT) {
+        } else if (position === Modifier.Position.RIGHT) {
             x = this.width + 2; // extra_right_px
-          } else if (position == Modifier.Position.BELOW || position == Modifier.Position.ABOVE) {
+          } else if (position === Modifier.Position.BELOW || position === Modifier.Position.ABOVE) {
               var note_glyph_width = this.glyph.head_width;
               x = note_glyph_width / 2;
             }
 
-        return { x: this.getAbsoluteX() + x, y: this.ys[index] };
+        return {
+          x: this.getAbsoluteX() + x,
+          y: this.ys[index]
+        };
       }
 
       // Get the default line for rest
@@ -15875,7 +15905,7 @@
           var flag_y = this.getStemY() - this.stem.getHeight();
           var flag_code = void 0;
 
-          if (this.stem_direction == Stem.DOWN) {
+          if (this.stem_direction === Stem.DOWN) {
             // Down stems have flags on the left.
             flag_code = this.glyph.code_flag_downstem;
           } else {
@@ -15893,14 +15923,16 @@
     }, {
       key: 'drawModifiers',
       value: function drawModifiers() {
+        var _this2 = this;
+
         // Draw the modifiers
         this.modifiers.forEach(function (modifier) {
           // Only draw the dots if enabled
-          if (modifier.getCategory() === 'dots' && !this.render_options.draw_dots) return;
+          if (modifier.getCategory() === 'dots' && !_this2.render_options.draw_dots) return;
 
-          modifier.setContext(this.context);
+          modifier.setContext(_this2.context);
           modifier.draw();
-        }, this);
+        });
       }
 
       // Render the stem extension through the fret positions
@@ -15951,11 +15983,8 @@
         var ctx = this.context;
         var x = this.getAbsoluteX();
         var ys = this.ys;
-        var y = void 0;
-
         for (var i = 0; i < this.positions.length; ++i) {
-          y = ys[i];
-
+          var y = ys[i];
           var glyph = this.glyphs[i];
 
           // Center the fret text beneath the notation note head
@@ -15978,9 +16007,17 @@
     }, {
       key: 'draw',
       value: function draw() {
-        if (!this.context) throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-        if (!this.stave) throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
-        if (this.ys.length === 0) throw new Vex$1.RERR('NoYValues', "Can't draw note without Y values.");
+        if (!this.context) {
+          throw new Vex$1.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+        }
+
+        if (!this.stave) {
+          throw new Vex$1.RERR('NoStave', "Can't draw without a stave.");
+        }
+
+        if (this.ys.length === 0) {
+          throw new Vex$1.RERR('NoYValues', "Can't draw note without Y values.");
+        }
 
         var render_stem = this.beam == null && this.render_options.draw_stem;
 

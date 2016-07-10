@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.54 built on 2016-07-10.
+ * VexFlow 1.2.55 built on 2016-07-10.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -13727,7 +13727,7 @@ VF.Test.TimeSignature = (function() {
     },
 
     parser: function() {
-      expect(6);
+      expect(7);
       var ts = new VF.TimeSignature();
 
       // Invalid time signatures
@@ -13862,6 +13862,7 @@ VF.Test.TimeSignature = (function() {
 
   return TimeSignature;
 })();
+
 /**
  * VexFlow - Tuning Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
