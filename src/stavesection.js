@@ -26,8 +26,9 @@ export class StaveSection extends StaveModifier {
   setShiftX(x) { this.shift_x = x; return this; }
   setShiftY(y) { this.shift_y = y; return this; }
   draw(stave, shift_x) {
-    if (!stave.context) throw new Vex.RERR('NoContext',
-      "Can't draw stave section without a context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoContext', "Can't draw stave section without a context.");
+    }
 
     const ctx = stave.context;
 
