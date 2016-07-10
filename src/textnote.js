@@ -179,10 +179,11 @@ export class TextNote extends Note {
 
       this.glyph = new Glyph(struct.code, struct.point, { cache: false });
 
-      if (struct.width)
+      if (struct.width) {
         this.setWidth(struct.width);
-      else
+      } else {
         this.setWidth(this.glyph.getMetrics().width);
+      }
 
       this.glyph_struct = struct;
     } else {
@@ -208,23 +209,25 @@ export class TextNote extends Note {
 
   // Pre-render formatting
   preFormat() {
-    if (!this.context) throw new Vex.RERR('NoRenderContext',
-        "Can't measure text without rendering context.");
+    if (!this.context) {
+      throw new Vex.RERR('NoRenderContext', "Can't measure text without rendering context.");
+    }
+
     if (this.preFormatted) return;
 
     if (this.smooth) {
       this.setWidth(0);
     } else {
-      if (this.glyph) {
+      if (!this.glyph) {
         // Width already set.
       } else {
         this.setWidth(this.context.measureText(this.text).width);
       }
     }
 
-    if (this.justification == TextNote.Justification.CENTER) {
+    if (this.justification === TextNote.Justification.CENTER) {
       this.extraLeftPx = this.width / 2;
-    } else if (this.justification == TextNote.Justification.RIGHT) {
+    } else if (this.justification === TextNote.Justification.RIGHT) {
       this.extraLeftPx = this.width;
     }
 
@@ -233,26 +236,32 @@ export class TextNote extends Note {
 
   // Renders the TextNote
   draw() {
-    if (!this.context) throw new Vex.RERR('NoCanvasContext',
-        "Can't draw without a canvas context.");
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    if (!this.context) {
+      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+    }
+
+    if (!this.stave) {
+      throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    }
 
     const ctx = this.context;
     let x = this.getAbsoluteX();
-    if (this.justification == TextNote.Justification.CENTER) {
+    if (this.justification === TextNote.Justification.CENTER) {
       x -= this.getWidth() / 2;
-    } else if (this.justification == TextNote.Justification.RIGHT) {
+    } else if (this.justification === TextNote.Justification.RIGHT) {
       x -= this.getWidth();
     }
 
     let y;
     if (this.glyph) {
-      y = this.stave.getYForLine(this.line + (-3));
-      this.glyph.render(this.context,
-                        x + this.glyph_struct.x_shift,
-                        y + this.glyph_struct.y_shift);
+      y = this.stave.getYForLine(this.line + -3);
+      this.glyph.render(
+        this.context,
+        x + this.glyph_struct.x_shift,
+        y + this.glyph_struct.y_shift
+      );
     } else {
-      y = this.stave.getYForLine(this.line + (-3));
+      y = this.stave.getYForLine(this.line + -3);
       ctx.save();
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.text, x, y);
