@@ -23,6 +23,32 @@ Install via NPM:
 
 Include `releases/vexflow-min.js` into your HTML or JS code. It works as a standalone script in a `script` tag, or as a CommonJS or AMD dependency.
 
+### Your First Stave
+
+The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/nL0cn3vL/2/).
+
+```javascript
+VF = Vex.Flow;
+
+// Create an SVG renderer and attach it to the DIV element named "boo".
+var div = document.getElementById("boo")
+var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+// Configure the rendering context.
+renderer.resize(500, 500);
+var context = renderer.getContext();
+context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+
+// Create a stave of width 400 at position 10, 40 on the canvas.
+var stave = new VF.Stave(10, 40, 400);
+
+// Add a clef and time signature.
+stave.addClef("treble").addTimeSignature("4/4");
+
+// Connect it to the rendering context and draw!
+stave.setContext(context).draw();
+```
+
 ## Resources
 
 To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
