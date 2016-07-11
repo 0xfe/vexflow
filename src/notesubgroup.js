@@ -3,8 +3,9 @@
 //
 // ## Description
 //
-// This file implements `AttrNoteGroup` which is used to format and
-// render attr notes; ClefNote, TimeSigNote and BarNote.
+// This file implements `NoteSubGroup` which is used to format and
+// render notes as a `Modifier`
+// ex) ClefNote, TimeSigNote and BarNote.
 
 import { Vex } from './vex';
 import { Flow } from './tables';
@@ -12,32 +13,32 @@ import { Modifier } from './modifier';
 import { Formatter } from './formatter';
 import { Voice } from './voice';
 
-export class AttrNoteGroup extends Modifier {
-  static get CATEGORY() { return 'attrnotegroup'; }
+export class NoteSubGroup extends Modifier {
+  static get CATEGORY() { return 'notesubgroup'; }
 
   // Arrange groups inside a `ModifierContext`
-  static format(attrnote_groups, state) {
-    if (!attrnote_groups || attrnote_groups.length === 0) return false;
+  static format(groups, state) {
+    if (!groups || groups.length === 0) return false;
 
     let width = 0;
-    for (let i = 0; i < attrnote_groups.length; ++i) {
-      const attrnote_group = attrnote_groups[i];
-      attrnote_group.preFormat();
-      width += attrnote_group.getWidth();
+    for (let i = 0; i < groups.length; ++i) {
+      const group = groups[i];
+      group.preFormat();
+      width += group.getWidth();
     }
 
     state.left_shift += width;
     return true;
   }
 
-  constructor(attr_notes) {
+  constructor(subNotes) {
     super();
 
     this.note = null;
     this.index = null;
     this.position = Modifier.Position.LEFT;
-    this.attr_notes = attr_notes;
-    this.attr_notes.forEach(note => note.ignore_ticks = false);
+    this.subNotes = subNotes;
+    this.subNotes.forEach(subNote => subNote.ignore_ticks = false);
     this.width = 0;
     this.preFormatted = false;
 
@@ -48,12 +49,12 @@ export class AttrNoteGroup extends Modifier {
       resolution: Flow.RESOLUTION,
     }).setStrict(false);
 
-    this.voice.addTickables(this.attr_notes);
+    this.voice.addTickables(this.subNotes);
 
     return this;
   }
 
-  getCategory() { return AttrNoteGroup.CATEGORY; }
+  getCategory() { return NoteSubGroup.CATEGORY; }
 
   preFormat() {
     if (this.preFormatted) return;
@@ -76,33 +77,33 @@ export class AttrNoteGroup extends Modifier {
   draw() {
     if (!this.context)  {
       throw new Vex.RuntimeError('NoContext',
-        "Can't draw attr note without a context.");
+        "Can't draw notes without a context.");
     }
 
     const note = this.getNote();
 
     if (!(note && (this.index !== null))) {
       throw new Vex.RuntimeError('NoAttachedNote',
-        "Can't draw attr note without a parent note and parent note index.");
+        "Can't draw notes without a parent note and parent note index.");
     }
 
-    const alignAttrNotesWithNote = (attr_notes, note, groupWidth) => {
+    const alignSubNotesWithNote = (subNotes, note, groupWidth) => {
       // Shift over the tick contexts of each note
       const tickContext = note.getTickContext();
       const extraPx = tickContext.getExtraPx();
       const x = tickContext.getX() - extraPx.left - extraPx.extraLeft + this.getSpacingFromNextModifier();
 
-      attr_notes.forEach(attrNote => {
-        const tick_context = attrNote.getTickContext();
+      subNotes.forEach(subNote => {
+        const tick_context = subNote.getTickContext();
         const x_offset = tick_context.getX();
-        attrNote.setStave(note.stave);
+        subNote.setStave(note.stave);
         tick_context.setX(x + x_offset);
       });
     };
 
-    alignAttrNotesWithNote(this.attr_notes, note, this.width);
+    alignSubNotesWithNote(this.subNotes, note, this.width);
 
     // Draw notes
-    this.attr_notes.forEach(attrNote => attrNote.setContext(this.context).draw());
+    this.subNotes.forEach(subNote => subNote.setContext(this.context).draw());
   }
 }

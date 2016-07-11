@@ -1,17 +1,17 @@
 /**
- * VexFlow - AttrNoteGroup Tests
+ * VexFlow - NoteSubGroup Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  *
  * Author Taehoon Moon 2016
  */
 
-VF.Test.AttrNoteGroup = (function() {
-  var AttrNoteGroup = {
+VF.Test.NoteSubGroup = (function() {
+  var NoteSubGroup = {
     Start: function() {
-      QUnit.module("AttrNoteGroup");
-      VF.Test.runTests("Basic - ClefNote, TimeSigNote and BarNote", VF.Test.AttrNoteGroup.draw);
-      VF.Test.runTests("Multi Voice", VF.Test.AttrNoteGroup.drawMultiVoice);
-      VF.Test.runTests("Multi Staff", VF.Test.AttrNoteGroup.drawMultiStaff);
+      QUnit.module("NoteSubGroup");
+      VF.Test.runTests("Basic - ClefNote, TimeSigNote and BarNote", VF.Test.NoteSubGroup.draw);
+      VF.Test.runTests("Multi Voice", VF.Test.NoteSubGroup.drawMultiVoice);
+      VF.Test.runTests("Multi Staff", VF.Test.NoteSubGroup.drawMultiStaff);
     },
 
     draw: function(options, contextBuilder) {
@@ -37,21 +37,21 @@ VF.Test.AttrNoteGroup = (function() {
       });
 
       function addAccidental(note, acc) { return note.addModifier(0, new VF.Accidental(acc)); }
-      function addAttrs(note, attrNotes) {
-        return note.addModifier(0, new VF.AttrNoteGroup(attrNotes));
+      function addSubGroup(note, subNotes) {
+        return note.addModifier(0, new VF.NoteSubGroup(subNotes));
       }
 
-      // {AttrNotes} | {Accidental} | {StaveNote}
+      // {SubNotes} | {Accidental} | {StaveNote}
       addAccidental(notes[1], "#");
       addAccidental(notes[2], "n");
-      addAttrs(notes[1], [new VF.ClefNote("bass", "small")]);
-      addAttrs(notes[2], [new VF.ClefNote("alto", "small")]);
-      addAttrs(notes[4], [
+      addSubGroup(notes[1], [new VF.ClefNote("bass", "small")]);
+      addSubGroup(notes[2], [new VF.ClefNote("alto", "small")]);
+      addSubGroup(notes[4], [
         new VF.ClefNote("tenor", "small"),
         new VF.BarNote()
       ]);
-      addAttrs(notes[5], [new VF.TimeSigNote("6/8")]);
-      addAttrs(notes[6], [new VF.BarNote(VF.Barline.type.REPEAT_BEGIN)]);
+      addSubGroup(notes[5], [new VF.TimeSigNote("6/8")]);
+      addSubGroup(notes[6], [new VF.BarNote(VF.Barline.type.REPEAT_BEGIN)]);
       addAccidental(notes[4], "b");
       addAccidental(notes[6], "bb");
 
@@ -91,25 +91,25 @@ VF.Test.AttrNoteGroup = (function() {
 
       function newStaveNote(note_struct) { return new VF.StaveNote(note_struct); }
       function addAccidental(note, acc) { return note.addModifier(0, new VF.Accidental(acc)); }
-      function addAttrs(note, attrNotes) {
-        return note.addModifier(0, new VF.AttrNoteGroup(attrNotes));
+      function addSubGroup(note, subNotes) {
+        return note.addModifier(0, new VF.NoteSubGroup(subNotes));
       }
 
       notes = notes.map(newStaveNote);
       notes2 = notes2.map(newStaveNote);
 
       addAccidental(notes[1], "#");
-      addAttrs(notes[1], [
+      addSubGroup(notes[1], [
         new VF.ClefNote("bass", "small"),
         new VF.BarNote(VF.Barline.type.REPEAT_BEGIN),
         new VF.TimeSigNote("3/4")
       ]);
-      addAttrs(notes2[2], [
+      addSubGroup(notes2[2], [
         new VF.ClefNote("alto", "small"),
         new VF.TimeSigNote("9/8"),
         new VF.BarNote(VF.Barline.type.DOUBLE)
       ]);
-      addAttrs(notes[3], [new VF.ClefNote("soprano", "small")]);
+      addSubGroup(notes[3], [new VF.ClefNote("soprano", "small")]);
       addAccidental(notes[2], "b");
       addAccidental(notes2[3], "#");
 
@@ -180,8 +180,8 @@ VF.Test.AttrNoteGroup = (function() {
         }
       }
       function addAccidental(note, acc) { return note.addModifier(0, new VF.Accidental(acc)); }
-      function addAttrs(note, attrNotes) {
-        return note.addModifier(0, new VF.AttrNoteGroup(attrNotes));
+      function addSubGroup(note, subNotes) {
+        return note.addModifier(0, new VF.NoteSubGroup(subNotes));
       }
 
       notes = notes.map(newStaveNote(stave));
@@ -192,17 +192,17 @@ VF.Test.AttrNoteGroup = (function() {
       var beam3_2 = new VF.Beam(notes3.slice(5));
 
       addAccidental(notes[1], "#");
-      addAttrs(notes[1], [
+      addSubGroup(notes[1], [
         new VF.ClefNote("bass", "small"),
         new VF.TimeSigNote("3/4")
       ]);
-      addAttrs(notes2[2], [
+      addSubGroup(notes2[2], [
         new VF.ClefNote("alto", "small"),
         new VF.TimeSigNote("9/8"),
       ]);
-      addAttrs(notes[3], [new VF.ClefNote("soprano", "small")]);
-      addAttrs(notes3[1], [new VF.ClefNote("treble", "small")]);
-      addAttrs(notes3[5], [new VF.ClefNote("bass", "small")]);
+      addSubGroup(notes[3], [new VF.ClefNote("soprano", "small")]);
+      addSubGroup(notes3[1], [new VF.ClefNote("treble", "small")]);
+      addSubGroup(notes3[5], [new VF.ClefNote("bass", "small")]);
       addAccidental(notes3[0], "#");
       addAccidental(notes3[3], "b");
       addAccidental(notes3[5], "#");
@@ -230,5 +230,5 @@ VF.Test.AttrNoteGroup = (function() {
     }
   };
 
-  return AttrNoteGroup;
+  return NoteSubGroup;
 })();

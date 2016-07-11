@@ -29,7 +29,7 @@ VF.Test.run = function () {
   VF.Test.Articulation.Start();
   VF.Test.StaveConnector.Start();
   VF.Test.Percussion.Start();
-  VF.Test.AttrNoteGroup.Start();
+  VF.Test.NoteSubGroup.Start();
   VF.Test.ClefKeySignature.Start();
   VF.Test.StaveHairpin.Start();
   VF.Test.Rhythm.Start();
