@@ -38,7 +38,7 @@ export class NoteSubGroup extends Modifier {
     this.index = null;
     this.position = Modifier.Position.LEFT;
     this.subNotes = subNotes;
-    this.subNotes.forEach(subNote => subNote.ignore_ticks = false);
+    this.subNotes.forEach(subNote => { subNote.ignore_ticks = false; });
     this.width = 0;
     this.preFormatted = false;
 
@@ -87,11 +87,12 @@ export class NoteSubGroup extends Modifier {
         "Can't draw notes without a parent note and parent note index.");
     }
 
-    const alignSubNotesWithNote = (subNotes, note, groupWidth) => {
+    const alignSubNotesWithNote = (subNotes, note) => {
       // Shift over the tick contexts of each note
       const tickContext = note.getTickContext();
       const extraPx = tickContext.getExtraPx();
-      const x = tickContext.getX() - extraPx.left - extraPx.extraLeft + this.getSpacingFromNextModifier();
+      const x = tickContext.getX() - extraPx.left - extraPx.extraLeft +
+        this.getSpacingFromNextModifier();
 
       subNotes.forEach(subNote => {
         const tick_context = subNote.getTickContext();
