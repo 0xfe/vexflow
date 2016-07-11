@@ -10,6 +10,7 @@ import { StaveNote } from './stavenote';
 import { Dot } from './dot';
 import { FretHandFinger } from './frethandfinger';
 import { Accidental } from './accidental';
+import { NoteSubGroup } from './notesubgroup';
 import { GraceNoteGroup } from './gracenotegroup';
 import { Stroke } from './strokes';
 import { StringNumber } from './stringnumber';
@@ -47,6 +48,7 @@ export class ModifierContext {
       FretHandFinger,
       Accidental,
       GraceNoteGroup,
+      NoteSubGroup,
       Stroke,
       StringNumber,
       Articulation,
