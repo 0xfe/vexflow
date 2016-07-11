@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.62 built on 2016-07-10.
+ * VexFlow 1.2.63 built on 2016-07-11.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -9926,6 +9926,131 @@
     return Accidental;
   }(Modifier);
 
+  var NoteSubGroup = function (_Modifier) {
+    inherits(NoteSubGroup, _Modifier);
+    createClass(NoteSubGroup, null, [{
+      key: 'format',
+
+
+      // Arrange groups inside a `ModifierContext`
+      value: function format(groups, state) {
+        if (!groups || groups.length === 0) return false;
+
+        var width = 0;
+        for (var i = 0; i < groups.length; ++i) {
+          var group = groups[i];
+          group.preFormat();
+          width += group.getWidth();
+        }
+
+        state.left_shift += width;
+        return true;
+      }
+    }, {
+      key: 'CATEGORY',
+      get: function get() {
+        return 'notesubgroup';
+      }
+    }]);
+
+    function NoteSubGroup(subNotes) {
+      var _ret;
+
+      classCallCheck(this, NoteSubGroup);
+
+      var _this = possibleConstructorReturn(this, Object.getPrototypeOf(NoteSubGroup).call(this));
+
+      _this.note = null;
+      _this.index = null;
+      _this.position = Modifier.Position.LEFT;
+      _this.subNotes = subNotes;
+      _this.subNotes.forEach(function (subNote) {
+        subNote.ignore_ticks = false;
+      });
+      _this.width = 0;
+      _this.preFormatted = false;
+
+      _this.formatter = new Formatter();
+      _this.voice = new Voice({
+        num_beats: 4,
+        beat_value: 4,
+        resolution: Flow.RESOLUTION
+      }).setStrict(false);
+
+      _this.voice.addTickables(_this.subNotes);
+
+      return _ret = _this, possibleConstructorReturn(_this, _ret);
+    }
+
+    createClass(NoteSubGroup, [{
+      key: 'getCategory',
+      value: function getCategory() {
+        return NoteSubGroup.CATEGORY;
+      }
+    }, {
+      key: 'preFormat',
+      value: function preFormat() {
+        if (this.preFormatted) return;
+
+        this.formatter.joinVoices([this.voice]).format([this.voice], 0);
+        this.setWidth(this.formatter.getMinTotalWidth());
+        this.preFormatted = true;
+      }
+    }, {
+      key: 'setNote',
+      value: function setNote(note) {
+        this.note = note;
+      }
+    }, {
+      key: 'setWidth',
+      value: function setWidth(width) {
+        this.width = width;
+      }
+    }, {
+      key: 'getWidth',
+      value: function getWidth() {
+        return this.width;
+      }
+    }, {
+      key: 'draw',
+      value: function draw() {
+        var _this2 = this;
+
+        if (!this.context) {
+          throw new Vex.RuntimeError('NoContext', "Can't draw notes without a context.");
+        }
+
+        var note = this.getNote();
+
+        if (!(note && this.index !== null)) {
+          throw new Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note and parent note index.");
+        }
+
+        var alignSubNotesWithNote = function alignSubNotesWithNote(subNotes, note) {
+          // Shift over the tick contexts of each note
+          var tickContext = note.getTickContext();
+          var extraPx = tickContext.getExtraPx();
+          var x = tickContext.getX() - extraPx.left - extraPx.extraLeft + _this2.getSpacingFromNextModifier();
+
+          subNotes.forEach(function (subNote) {
+            var tick_context = subNote.getTickContext();
+            var x_offset = tick_context.getX();
+            subNote.setStave(note.stave);
+            tick_context.setX(x + x_offset);
+          });
+        };
+
+        alignSubNotesWithNote(this.subNotes, note, this.width);
+
+        // Draw notes
+        this.subNotes.forEach(function (subNote) {
+          return subNote.setContext(_this2.context).draw();
+        });
+      }
+    }]);
+    return NoteSubGroup;
+  }(Modifier);
+
   var StaveTie = function () {
     function StaveTie(notes, text) {
       classCallCheck(this, StaveTie);
@@ -12258,7 +12383,7 @@
 
       // Add new modifiers to this array. The ordering is significant -- lower
       // modifiers are formatted and rendered before higher ones.
-      this.PREFORMAT = [StaveNote, Dot, FretHandFinger, Accidental, GraceNoteGroup, Stroke, StringNumber, Articulation, Ornament, Annotation, Bend, Vibrato];
+      this.PREFORMAT = [StaveNote, Dot, FretHandFinger, Accidental, GraceNoteGroup, NoteSubGroup, Stroke, StringNumber, Articulation, Ornament, Annotation, Bend, Vibrato];
 
       // If post-formatting is required for an element, add it to this array.
       this.POSTFORMAT = [StaveNote];
@@ -18141,7 +18266,7 @@
   var BarNote = function (_Note) {
     inherits(BarNote, _Note);
 
-    function BarNote() {
+    function BarNote(type) {
       classCallCheck(this, BarNote);
 
       var _this = possibleConstructorReturn(this, Object.getPrototypeOf(BarNote).call(this, { duration: 'b' }));
@@ -18162,7 +18287,7 @@
 
       // Tell the formatter that bar notes have no duration.
       _this.ignore_ticks = true;
-      _this.type = TYPE.SINGLE;
+      _this.type = type === undefined ? TYPE.SINGLE : type;
 
       // Set width to width of relevant `Barline`.
       _this.setWidth(_this.metrics.widths[_this.type]);
@@ -18532,6 +18657,7 @@
   Vex.Flow.Repetition = Repetition;
   Vex.Flow.BarNote = BarNote;
   Vex.Flow.GhostNote = GhostNote;
+  Vex.Flow.NoteSubGroup = NoteSubGroup;
   Vex.Flow.GraceNoteGroup = GraceNoteGroup;
   Vex.Flow.Tremolo = Tremolo;
   Vex.Flow.StringNumber = StringNumber;
