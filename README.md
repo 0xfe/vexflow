@@ -9,7 +9,7 @@ VexFlow is an open-source web-based music notation rendering API. It is written
 completely in JavaScript, and runs right in the browser. VexFlow supports HTML5
 Canvas and SVG, and runs on all modern browsers.
 
-Go try out [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html) to
+Go try out [The VexFlow Tutorial](https://github.com/0xfe/vexflow/wiki/The-VexFlow-Tutorial) to
 learn how to use VexFlow.
 
 If you're not a developer and just want to write and share your music, go to
