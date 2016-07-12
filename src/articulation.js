@@ -12,11 +12,94 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
-import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+import { Stem } from './stem';
 
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
 function L(...args) { if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args); }
+
+const { ABOVE, BELOW } = Modifier.Position;
+
+const mathToIncrement =
+  (mathFn, increment, value) =>
+    mathFn(value / increment) * increment;
+
+const isWithinStaff = (line) => (1 <= line && line <= 5);
+
+const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) => {
+  const adjustmentFunction = position === ABOVE ? Math.ceil : Math.floor;
+
+  // Snap To staff line or staff space
+  let snappedLine = mathToIncrement(adjustmentFunction, 0.5, line);
+  const onStaffLine = Math.abs(snappedLine % 1) === 0;
+
+  const shouldSnapToStaffSpace =
+    canSitBetweenLines && isWithinStaff(snappedLine) && onStaffLine;
+
+  // If within staff, snap to staff space
+  if (shouldSnapToStaffSpace) {
+    snappedLine += 0.5 * -offsetDirection;
+  }
+
+  return snappedLine;
+};
+
+const getTopY = (note, textLine) => {
+  const stave = note.getStave();
+  const stemDirection = note.getStemDirection();
+  const { topY: stemTipY, baseY: stemBaseY } = note.getStem().getExtents();
+
+  if (note.getCategory() === 'stavenotes') {
+    if (stemDirection === Stem.UP) {
+      return stemTipY;
+    } else {
+      return stemBaseY;
+    }
+  } else if (note.getCategory() === 'tabnotes') {
+    if (note.hasStem()) {
+      if (stemDirection === Stem.UP) {
+        return stemTipY;
+      } else {
+        return stave.getYForTopText(textLine - 1);
+      }
+    } else {
+      return stave.getYForTopText(textLine - 1);
+    }
+  } else {
+    throw new Vex.RERR(
+      'UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes'
+    );
+  }
+};
+
+const getBottomY = (note, textLine) => {
+  const stave = note.getStave();
+  const stemDirection = note.getStemDirection();
+  const { topY: stemTipY, baseY: stemBaseY } = note.getStem().getExtents();
+
+  if (note.getCategory() === 'stavenotes') {
+    debugger;
+    if (stemDirection === Stem.UP) {
+      return stemBaseY;
+    } else {
+      return stemTipY;
+    }
+  } else if (note.getCategory() === 'tabnotes') {
+    if (note.hasStem()) {
+      if (stemDirection === Stem.UP) {
+        return stave.getYForBottomText(textLine - 2);
+      } else {
+        return stemTipY;
+      }
+    } else {
+      return stave.getYForBottomText(textLine - 2);
+    }
+  } else {
+    throw new Vex.RERR(
+      'UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes'
+    );
+  }
+};
 
 export class Articulation extends Modifier {
   static get CATEGORY() { return 'articulations'; }
@@ -34,7 +117,7 @@ export class Articulation extends Modifier {
 
       if (!type.between_lines) increment += 1.5;
 
-      if (articulation.getPosition() === Modifier.Position.ABOVE) {
+      if (articulation.getPosition() === ABOVE) {
         articulation.setTextLine(state.top_text_line);
         state.top_text_line += increment;
       } else {
@@ -56,126 +139,75 @@ export class Articulation extends Modifier {
     this.note = null;
     this.index = null;
     this.type = type;
-    this.position = Modifier.Position.BELOW;
-
+    this.position = BELOW;
     this.render_options = {
       font_scale: 38,
     };
 
     this.articulation = Flow.articulationCodes(this.type);
     if (!this.articulation) {
-      throw new Vex.RERR('ArgumentError', "Articulation not found: '" + this.type + "'");
+      throw new Vex.RERR('ArgumentError', `Articulation not found: ${this.type}`);
     }
 
+    this.glyph = new Glyph(this.articulation.code, this.render_options.font_scale);
+
     // Default width comes from articulation table.
-    this.setWidth(this.articulation.width);
+    this.setWidth(this.glyph.getMetrics().width);
   }
 
   getCategory() { return Articulation.CATEGORY; }
 
   // Render articulation in position next to note.
   draw() {
-    if (!this.context) {
+    const {
+      note, index, position, glyph,
+      articulation: { between_lines: canSitBetweenLines },
+      text_line: textLine,
+      context: ctx,
+    } = this;
+
+    if (!ctx) {
       throw new Vex.RERR('NoContext', "Can't draw Articulation without a context.");
     }
-    if (!(this.note && (this.index !== null))) {
+
+    if (!note || index == null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
     }
 
-    const stem_direction = this.note.getStemDirection();
-    const stave = this.note.getStave();
-
-    const is_on_head = (this.position === Modifier.Position.ABOVE &&
-                      stem_direction === StaveNote.STEM_DOWN) ||
-                     (this.position === Modifier.Position.BELOW &&
-                      stem_direction === StaveNote.STEM_UP);
-
-    const needsLineAdjustment = (articulation, note_line, line_spacing) => {
-      const offset_direction = (articulation.position === Modifier.Position.ABOVE) ? 1 : -1;
-      const duration = articulation.getNote().getDuration();
-      if (!is_on_head && Flow.durationToNumber(duration) <= 1) {
-        // Add stem length, unless it's on a whole note.
-        note_line += offset_direction * 3.5;
-      }
-
-      const articulation_line = note_line + (offset_direction * line_spacing);
-
-      if (articulation_line >= 1 &&
-         articulation_line <= 5 &&
-         articulation_line % 1 === 0) {
-        return true;
-      }
-
-      return false;
-    };
+    const stave = note.getStave();
+    const staffSpace = stave.getSpacingBetweenLines();
+    const isTab = note.getCategory() === 'tabnotes';
 
     // Articulations are centered over/under the note head.
-    const start = this.note.getModifierStartXY(this.position, this.index);
-    let glyph_y = start.y;
-    let shiftY = 0;
-    let line_spacing = 1;
-    const spacing = stave.getSpacingBetweenLines();
-    const is_tabnote = this.note.getCategory() === 'tabnotes';
-    const stem_ext = this.note.getStem().getExtents();
+    const { x } = note.getModifierStartXY(position, index);
+    const shouldSitOutsideStaff = !canSitBetweenLines || isTab;
 
-    let top = stem_ext.topY;
-    let bottom = stem_ext.baseY;
+    const y = {
+      [ABOVE]: () => {
+        glyph.setOrigin(0.5, 1);
+        const y = getTopY(note, textLine) - ((textLine + 1) * staffSpace);
+        return shouldSitOutsideStaff ? Math.min(stave.getYForTopText(0), y) : y;
+      },
+      [BELOW]: () => {
+        glyph.setOrigin(0.5, 0);
+        const y = getBottomY(note, textLine) + ((textLine + 1) * staffSpace);
+        return shouldSitOutsideStaff ? Math.max(stave.getYForBottomText(0), y) : y;
+      },
+    }[position]();
 
-    if (stem_direction === StaveNote.STEM_DOWN) {
-      top = stem_ext.baseY;
-      bottom = stem_ext.topY;
+    let yAdjustment = 0;
+    if (!isTab) {
+      const offsetDirection = position === ABOVE ? -1 : +1;
+      const noteLine = isTab ? note.positions[index].str : note.getKeyProps()[index].line;
+      const distanceFromNote = (note.getYs()[index] - y) / staffSpace;
+      const articLine = distanceFromNote + noteLine;
+      const snappedLine = snapLineToStaff(canSitBetweenLines, articLine, position, offsetDirection);
+
+      if (isWithinStaff(snappedLine)) glyph.setOrigin(0.5, 0.5);
+
+      yAdjustment = Math.abs(snappedLine - articLine) * staffSpace * offsetDirection;
     }
 
-    // TabNotes don't have stems attached to them. Tab stems are rendered
-    // outside the stave.
-    if (is_tabnote) {
-      if (this.note.hasStem()) {
-        if (stem_direction === StaveNote.STEM_UP) {
-          bottom = stave.getYForBottomText(this.text_line - 2);
-        } else if (stem_direction === StaveNote.STEM_DOWN) {
-          top = stave.getYForTopText(this.text_line - 1.5);
-        }
-      } else { // Without a stem
-        top = stave.getYForTopText(this.text_line - 1);
-        bottom = stave.getYForBottomText(this.text_line - 2);
-      }
-    }
-
-    const is_above = (this.position === Modifier.Position.ABOVE);
-    const note_line = this.note.getLineNumber(is_above);
-
-    // Beamed stems are longer than quarter note stems.
-    if (!is_on_head && this.note.beam) line_spacing += 0.5;
-
-    // If articulation will overlap a line, reposition it.
-    if (needsLineAdjustment(this, note_line, line_spacing)) line_spacing += 0.5;
-
-    let glyph_y_between_lines;
-    if (this.position === Modifier.Position.ABOVE) {
-      shiftY = this.articulation.shift_up;
-      glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
-
-      if (this.articulation.between_lines) {
-        glyph_y = glyph_y_between_lines;
-      } else {
-        glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
-      }
-    } else {
-      shiftY = this.articulation.shift_down - 10;
-
-      glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
-      if (this.articulation.between_lines) {
-        glyph_y = glyph_y_between_lines;
-      } else {
-        glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
-      }
-    }
-
-    const glyph_x = start.x + this.articulation.shift_right;
-    glyph_y += shiftY + this.y_shift;
-
-    L('Rendering articulation: ', this.articulation, glyph_x, glyph_y);
-    Glyph.renderGlyph(this.context, glyph_x, glyph_y,
-                         this.render_options.font_scale, this.articulation.code);
+    glyph.render(ctx, x, y + yAdjustment);
   }
 }

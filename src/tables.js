@@ -241,110 +241,19 @@ Flow.textWidth = text => 6 * text.toString().length;
 Flow.articulationCodes = artic => Flow.articulationCodes.articulations[artic];
 
 Flow.articulationCodes.articulations = {
-  'a.': {   // Staccato
-    code: 'v23',
-    width: 4,
-    shift_right: -2,
-    shift_up: 8,
-    shift_down: 0,
-    between_lines: true,
-  },
-  'av': {   // Staccatissimo
-    code: 'v28',
-    width: 4,
-    shift_right: 0,
-    shift_up: 11,
-    shift_down: 5,
-    between_lines: true,
-  },
-  'a>': {   // Accent
-    code: 'v42',
-    width: 10,
-    shift_right: 5,
-    shift_up: 8,
-    shift_down: 1,
-    between_lines: true,
-  },
-  'a-': {   // Tenuto
-    code: 'v25',
-    width: 9,
-    shift_right: -4,
-    shift_up: 17,
-    shift_down: 10,
-    between_lines: true,
-  },
-  'a^': {   // Marcato
-    code: 'va',
-    width: 8,
-    shift_right: 0,
-    shift_up: -4,
-    shift_down: -2,
-    between_lines: false,
-  },
-  'a+': {   // Left hand pizzicato
-    code: 'v8b',
-    width: 9,
-    shift_right: -4,
-    shift_up: 12,
-    shift_down: 12,
-    between_lines: false,
-  },
-  'ao': {   // Snap pizzicato
-    code: 'v94',
-    width: 8,
-    shift_right: 0,
-    shift_up: -4,
-    shift_down: 6,
-    between_lines: false,
-  },
-  'ah': {   // Natural harmonic or open note
-    code: 'vb9',
-    width: 7,
-    shift_right: 0,
-    shift_up: -4,
-    shift_down: 4,
-    between_lines: false,
-  },
-  'a@a': {   // Fermata above staff
-    code: 'v43',
-    width: 25,
-    shift_right: 0,
-    shift_up: 8,
-    shift_down: 10,
-    between_lines: false,
-  },
-  'a@u': {   // Fermata below staff
-    code: 'v5b',
-    width: 25,
-    shift_right: 0,
-    shift_up: 0,
-    shift_down: -4,
-    between_lines: false,
-  },
-  'a|': {   // Bow up - up stroke
-    code: 'v75',
-    width: 8,
-    shift_right: 0,
-    shift_up: 8,
-    shift_down: 10,
-    between_lines: false,
-  },
-  'am': {   // Bow down - down stroke
-    code: 'v97',
-    width: 13,
-    shift_right: 0,
-    shift_up: 10,
-    shift_down: 12,
-    between_lines: false,
-  },
-  'a,': {   // Choked
-    code: 'vb3',
-    width: 6,
-    shift_right: 8,
-    shift_up: -4,
-    shift_down: 4,
-    between_lines: false,
-  },
+  'a.': { code: 'v23', between_lines: true }, // Staccato
+  'av': { code: 'v28', between_lines: true }, // Staccatissimo
+  'a>': { code: 'v42', between_lines: true }, // Accent
+  'a-': { code: 'v25', between_lines: true }, // Tenuto
+  'a^': { code: 'va',  between_lines: false }, // Marcato
+  'a+': { code: 'v8b', between_lines: false }, // Left hand pizzicato
+  'ao': { code: 'v94', between_lines: false }, // Snap pizzicato
+  'ah': { code: 'vb9', between_lines: false }, // Natural harmonic or open note
+  'a@a': { code: 'v43', between_lines: false }, // Fermata above staff
+  'a@u': { code: 'v5b', between_lines: false }, // Fermata below staff
+  'a|': { code: 'v75', between_lines: false }, // Bow up - up stroke
+  'am': { code: 'v97', between_lines: false }, // Bow down - down stroke
+  'a,': { code: 'vb3', between_lines: false }, // Choked
 };
 
 Flow.accidentalCodes = acc => Flow.accidentalCodes.accidentals[acc];
