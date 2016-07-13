@@ -20,21 +20,30 @@ function L(...args) { if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', arg
 
 const { ABOVE, BELOW } = Modifier.Position;
 
-const mathToIncrement =
-  (mathFn, increment, value) =>
-    mathFn(value / increment) * increment;
+const roundToNearestHalf = (mathFn, value) => mathFn(value / 0.5) * 0.5;
 
-const isWithinStaff = (line) => (1 <= line && line <= 5);
+// This includes both staff and ledger lines
+const isWithinLines = (line, position) => position === ABOVE ? line <= 5 : line >= 1;
+
+const getAdjustmentFunction = (line, position) => {
+  if (isWithinLines(line, position)) {
+    if (position === ABOVE) {
+      return Math.ceil;
+    } else {
+      return Math.floor;
+    }
+  } else {
+    return Math.round;
+  }
+};
 
 const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) => {
-  const adjustmentFunction = position === ABOVE ? Math.ceil : Math.floor;
-
   // Snap To staff line or staff space
-  let snappedLine = mathToIncrement(adjustmentFunction, 0.5, line);
+  let snappedLine = roundToNearestHalf(getAdjustmentFunction(line, position), line);
   const onStaffLine = Math.abs(snappedLine % 1) === 0;
 
   const shouldSnapToStaffSpace =
-    canSitBetweenLines && isWithinStaff(snappedLine) && onStaffLine;
+    canSitBetweenLines && isWithinLines(snappedLine, position) && onStaffLine;
 
   // If within staff, snap to staff space
   if (shouldSnapToStaffSpace) {
@@ -60,10 +69,10 @@ const getTopY = (note, textLine) => {
       if (stemDirection === Stem.UP) {
         return stemTipY;
       } else {
-        return stave.getYForTopText(textLine - 1);
+        return stave.getYForTopText(textLine);
       }
     } else {
-      return stave.getYForTopText(textLine - 1);
+      return stave.getYForTopText(textLine);
     }
   } else {
     throw new Vex.RERR(
@@ -78,7 +87,6 @@ const getBottomY = (note, textLine) => {
   const { topY: stemTipY, baseY: stemBaseY } = note.getStem().getExtents();
 
   if (note.getCategory() === 'stavenotes') {
-    debugger;
     if (stemDirection === Stem.UP) {
       return stemBaseY;
     } else {
@@ -87,12 +95,12 @@ const getBottomY = (note, textLine) => {
   } else if (note.getCategory() === 'tabnotes') {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
-        return stave.getYForBottomText(textLine - 2);
+        return stave.getYForBottomText(textLine);
       } else {
         return stemTipY;
       }
     } else {
-      return stave.getYForBottomText(textLine - 2);
+      return stave.getYForBottomText(textLine);
     }
   } else {
     throw new Vex.RERR(
@@ -203,7 +211,7 @@ export class Articulation extends Modifier {
       const articLine = distanceFromNote + noteLine;
       const snappedLine = snapLineToStaff(canSitBetweenLines, articLine, position, offsetDirection);
 
-      if (isWithinStaff(snappedLine)) glyph.setOrigin(0.5, 0.5);
+      if (isWithinLines(snappedLine, position)) glyph.setOrigin(0.5, 0.5);
 
       yAdjustment = Math.abs(snappedLine - articLine) * staffSpace * offsetDirection;
     }
