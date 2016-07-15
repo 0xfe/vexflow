@@ -1,6 +1,9 @@
 {
   "extends": "airbnb-base",
   "root": true,
+  "env": {
+    "browser": true
+  },
   "rules": {
     "camelcase": [0],
     "yoda": [2, "never", { "exceptRange": true }],
