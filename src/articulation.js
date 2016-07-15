@@ -18,6 +18,7 @@ import { Stem } from './stem';
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
 function L(...args) { if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args); }
 
+
 const { ABOVE, BELOW } = Modifier.Position;
 
 const roundToNearestHalf = (mathFn, value) => mathFn(value / 0.5) * 0.5;
@@ -37,6 +38,7 @@ const getRoundingFunction = (line, position) => {
   }
 };
 
+
 const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) => {
   // Initially, snap to nearest staff line or space
   const snappedLine = roundToNearestHalf(getRoundingFunction(line, position), line);
@@ -45,9 +47,9 @@ const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) =>
   const shouldSnapToStaffSpace =
     canSitBetweenLines && isWithinLines(snappedLine, position) && onStaffLine;
 
-  // If within staff, snap to staff space
   if (shouldSnapToStaffSpace) {
-    return snappedLine + (0.5 * -offsetDirection);
+    const HALF_STAFF_SPACE = 0.5;
+    return snappedLine + (HALF_STAFF_SPACE * -offsetDirection);
   } else {
     return snappedLine;
   }
@@ -190,7 +192,7 @@ export class Articulation extends Modifier {
     const { x } = note.getModifierStartXY(position, index);
     const shouldSitOutsideStaff = !canSitBetweenLines || isTab;
 
-    const y = {
+    let y = {
       [ABOVE]: () => {
         glyph.setOrigin(0.5, 1);
         const y = getTopY(note, textLine) - ((textLine + 1) * staffSpace);
@@ -203,7 +205,6 @@ export class Articulation extends Modifier {
       },
     }[position]();
 
-    let yAdjustment = 0;
     if (!isTab) {
       const offsetDirection = position === ABOVE ? -1 : +1;
       const noteLine = isTab ? note.positions[index].str : note.getKeyProps()[index].line;
@@ -213,9 +214,11 @@ export class Articulation extends Modifier {
 
       if (isWithinLines(snappedLine, position)) glyph.setOrigin(0.5, 0.5);
 
-      yAdjustment = Math.abs(snappedLine - articLine) * staffSpace * offsetDirection;
+      y += Math.abs(snappedLine - articLine) * staffSpace * offsetDirection;
     }
 
-    glyph.render(ctx, x, y + yAdjustment);
+    L(`Rendering articulation at (x: ${x}, y: ${y})`);
+
+    glyph.render(ctx, x, y);
   }
 }
