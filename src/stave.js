@@ -65,7 +65,7 @@ export class Stave {
     }
     this.height = (this.options.num_lines + this.options.space_above_staff_ln) *
        this.options.spacing_between_lines_px;
-    this.options.bottom_text_position = this.options.num_lines + 1;
+    this.options.bottom_text_position = this.options.num_lines;
   }
 
   getOptions() { return this.options; }

@@ -25,7 +25,7 @@ const roundToNearestHalf = (mathFn, value) => mathFn(value / 0.5) * 0.5;
 // This includes both staff and ledger lines
 const isWithinLines = (line, position) => position === ABOVE ? line <= 5 : line >= 1;
 
-const getAdjustmentFunction = (line, position) => {
+const getRoundingFunction = (line, position) => {
   if (isWithinLines(line, position)) {
     if (position === ABOVE) {
       return Math.ceil;
@@ -38,25 +38,25 @@ const getAdjustmentFunction = (line, position) => {
 };
 
 const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) => {
-  // Snap To staff line or staff space
-  let snappedLine = roundToNearestHalf(getAdjustmentFunction(line, position), line);
-  const onStaffLine = Math.abs(snappedLine % 1) === 0;
+  // Initially, snap to nearest staff line or space
+  const snappedLine = roundToNearestHalf(getRoundingFunction(line, position), line);
+  const onStaffLine = snappedLine % 1 === 0;
 
   const shouldSnapToStaffSpace =
     canSitBetweenLines && isWithinLines(snappedLine, position) && onStaffLine;
 
   // If within staff, snap to staff space
   if (shouldSnapToStaffSpace) {
-    snappedLine += 0.5 * -offsetDirection;
+    return snappedLine + (0.5 * -offsetDirection);
+  } else {
+    return snappedLine;
   }
-
-  return snappedLine;
 };
 
 const getTopY = (note, textLine) => {
   const stave = note.getStave();
   const stemDirection = note.getStemDirection();
-  const { topY: stemTipY, baseY: stemBaseY } = note.getStem().getExtents();
+  const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
   if (note.getCategory() === 'stavenotes') {
     if (stemDirection === Stem.UP) {
@@ -84,7 +84,7 @@ const getTopY = (note, textLine) => {
 const getBottomY = (note, textLine) => {
   const stave = note.getStave();
   const stemDirection = note.getStemDirection();
-  const { topY: stemTipY, baseY: stemBaseY } = note.getStem().getExtents();
+  const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
   if (note.getCategory() === 'stavenotes') {
     if (stemDirection === Stem.UP) {
