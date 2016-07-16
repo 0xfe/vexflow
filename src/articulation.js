@@ -18,7 +18,6 @@ import { Stem } from './stem';
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
 function L(...args) { if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args); }
 
-
 const { ABOVE, BELOW } = Modifier.Position;
 
 const roundToNearestHalf = (mathFn, value) => mathFn(value / 0.5) * 0.5;
@@ -61,10 +60,14 @@ const getTopY = (note, textLine) => {
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
   if (note.getCategory() === 'stavenotes') {
-    if (stemDirection === Stem.UP) {
-      return stemTipY;
+    if (note.hasStem()) {
+      if (stemDirection === Stem.UP) {
+        return stemTipY;
+      } else {
+        return stemBaseY;
+      }
     } else {
-      return stemBaseY;
+      return Math.min(...note.getYs());
     }
   } else if (note.getCategory() === 'tabnotes') {
     if (note.hasStem()) {
@@ -89,10 +92,14 @@ const getBottomY = (note, textLine) => {
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
   if (note.getCategory() === 'stavenotes') {
-    if (stemDirection === Stem.UP) {
-      return stemBaseY;
+    if (note.hasStem()) {
+      if (stemDirection === Stem.UP) {
+        return stemBaseY;
+      } else {
+        return stemTipY;
+      }
     } else {
-      return stemTipY;
+      return Math.max(...note.getYs());
     }
   } else if (note.getCategory() === 'tabnotes') {
     if (note.hasStem()) {
