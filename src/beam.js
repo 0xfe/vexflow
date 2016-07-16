@@ -550,7 +550,9 @@ export class Beam {
         currentExtreme = stemTipY;
         extremeY = note.getNoteHeadBounds().y_bottom;
         extremeBeamCount = note.getBeamCount();
-      } else if (stem_direction === Stem.UP && (currentExtreme === 0 || currentExtreme > stemTipY)) {
+      } else if (
+        stem_direction === Stem.UP && (currentExtreme === 0 || currentExtreme > stemTipY)
+      ) {
         currentExtreme = stemTipY;
         extremeY = note.getNoteHeadBounds().y_top;
         extremeBeamCount = note.getBeamCount();

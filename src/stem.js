@@ -159,12 +159,17 @@ export class Stem {
 
     L('Rendering stem - ', 'Top Y: ', this.y_top, 'Bottom Y: ', this.y_bottom);
 
+    // The offset from the stem's base which is required fo satisfy the stemlet height
+    const stemletYOffset = this.isStemlet
+      ? stemHeight - this.stemletHeight * this.stem_direction
+      : 0;
+
     // Draw the stem
     ctx.save();
     this.applyStyle(ctx);
     ctx.beginPath();
     ctx.setLineWidth(Stem.WIDTH);
-    ctx.moveTo(stem_x, stem_y - (this.isStemlet ? stemHeight - this.stemletHeight * this.stem_direction : 0));
+    ctx.moveTo(stem_x, stem_y - stemletYOffset);
     ctx.lineTo(stem_x, stem_y - stemHeight);
     ctx.stroke();
     ctx.restore();
