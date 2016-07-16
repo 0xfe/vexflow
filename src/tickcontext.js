@@ -37,6 +37,7 @@ export class TickContext {
     this.postFormatted = false;
     this.context = null; // Rendering context
   }
+
   setContext(context) { this.context = context; return this; }
   getContext() { return this.context; }
   shouldIgnoreTicks() { return this.ignore_ticks; }
@@ -79,9 +80,14 @@ export class TickContext {
         right_shift = Math.max(right_shift, mContext.state.right_shift);
       }
     }
-    return { left: left_shift, right: right_shift,
-             extraLeft: extraLeftPx, extraRight: extraRightPx };
+    return {
+      left: left_shift,
+      right: right_shift,
+      extraLeft: extraLeftPx,
+      extraRight: extraRightPx,
+    };
   }
+
   addTickable(tickable) {
     if (!tickable) {
       throw new Vex.RERR('BadArgument', 'Invalid tickable added.');
@@ -108,8 +114,9 @@ export class TickContext {
     this.preFormatted = false;
     return this;
   }
+
   preFormat() {
-    if (this.preFormatted) return;
+    if (this.preFormatted) return this;
 
     for (let i = 0; i < this.tickables.length; ++i) {
       const tickable = this.tickables[i];
@@ -117,22 +124,19 @@ export class TickContext {
       const metrics = tickable.getMetrics();
 
       // Maintain max extra pixels from all tickables in the context
-      this.extraLeftPx = Math.max(this.extraLeftPx,
-                                  metrics.extraLeftPx + metrics.modLeftPx);
-      this.extraRightPx = Math.max(this.extraRightPx,
-                                   metrics.extraRightPx + metrics.modRightPx);
+      this.extraLeftPx = Math.max(this.extraLeftPx, metrics.extraLeftPx + metrics.modLeftPx);
+      this.extraRightPx = Math.max(this.extraRightPx, metrics.extraRightPx + metrics.modRightPx);
 
       // Maintain the widest note for all tickables in the context
       this.notePx = Math.max(this.notePx, metrics.noteWidth);
 
       // Recalculate the tick context total width
-      this.width = this.notePx +
-                   this.extraLeftPx +
-                   this.extraRightPx;
+      this.width = this.notePx + this.extraLeftPx + this.extraRightPx;
     }
 
     return this;
   }
+
   postFormat() {
     if (this.postFormatted) return this;
     this.postFormatted = true;

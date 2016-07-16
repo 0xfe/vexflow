@@ -9,7 +9,7 @@ VexFlow is an open-source web-based music notation rendering API. It is written
 completely in JavaScript, and runs right in the browser. VexFlow supports HTML5
 Canvas and SVG, and runs on all modern browsers.
 
-Go try out [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html) to
+Go try out [The VexFlow Tutorial](https://github.com/0xfe/vexflow/wiki/The-VexFlow-Tutorial) to
 learn how to use VexFlow.
 
 If you're not a developer and just want to write and share your music, go to
@@ -22,6 +22,32 @@ Install via NPM:
     $ npm install vexflow
 
 Include `releases/vexflow-min.js` into your HTML or JS code. It works as a standalone script in a `script` tag, or as a CommonJS or AMD dependency.
+
+### Your First Stave
+
+The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/nL0cn3vL/2/).
+
+```javascript
+VF = Vex.Flow;
+
+// Create an SVG renderer and attach it to the DIV element named "boo".
+var div = document.getElementById("boo")
+var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+// Configure the rendering context.
+renderer.resize(500, 500);
+var context = renderer.getContext();
+context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+
+// Create a stave of width 400 at position 10, 40 on the canvas.
+var stave = new VF.Stave(10, 40, 400);
+
+// Add a clef and time signature.
+stave.addClef("treble").addTimeSignature("4/4");
+
+// Connect it to the rendering context and draw!
+stave.setContext(context).draw();
+```
 
 ## Resources
 

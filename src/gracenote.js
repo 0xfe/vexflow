@@ -1,6 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Vex } from './vex';
 import { StaveNote } from './stavenote';
 
 export class GraceNote extends StaveNote {

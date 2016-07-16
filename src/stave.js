@@ -581,7 +581,7 @@ export class Stave {
       );
     }
 
-    if (!line_config.hasOwnProperty('visible')) {
+    if (line_config.visible === undefined) {
       throw new Vex.RERR(
         'StaveConfigError',
         "The line configuration object is missing the 'visible' property."

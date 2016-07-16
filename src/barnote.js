@@ -17,7 +17,7 @@ import { BoundingBox } from './boundingbox';
 function L(...args) { if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args); }
 
 export class BarNote extends Note {
-  constructor() {
+  constructor(type) {
     super({ duration: 'b' });
 
     const TYPE = Barline.type;
@@ -36,7 +36,7 @@ export class BarNote extends Note {
 
     // Tell the formatter that bar notes have no duration.
     this.ignore_ticks = true;
-    this.type = TYPE.SINGLE;
+    this.type = type === undefined ? TYPE.SINGLE : type;
 
     // Set width to width of relevant `Barline`.
     this.setWidth(this.metrics.widths[this.type]);

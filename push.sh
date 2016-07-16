@@ -3,9 +3,15 @@
 #
 # Pushes only JavaScript, tests, and supporting HTML (tutorial, playground)
 
+PRIMARY=static1.muthanna.com
+BACKUP=static2.muthanna.com
+CURRENT=vexflow.com
+
+TARGET_SERVER=$CURRENT
+
 TARGET='/home/mohit/www/vexflow'
-SSH_TO="mohit@vexflow.com source ~/.bash_profile; cd $TARGET;"
-SCP_TO="mohit@vexflow.com:$TARGET"
+SSH_TO="mohit@$TARGET_SERVER source ~/.bash_profile; cd $TARGET;"
+SCP_TO="mohit@$TARGET_SERVER:$TARGET"
 
 ssh $SSH_TO "mkdir -p $TARGET; mkdir -p $TARGET/support"
 if [ "$?" != "0" ]
@@ -23,8 +29,8 @@ rsync -przvl --delete --stats tests/* $SCP_TO/tests
 scp tests/flow.html $SCP_TO/tests/index.html
 
 # echo Copy over docs...
-# rsync -przvl --delete --stats docs $SCP_TO
-# scp -r docs/index.html $SCP_TO
-# ssh $SSH_TO "rm docs/index.html"
+rsync -przvl --delete --stats docs $SCP_TO
+scp -r docs/index.html $SCP_TO
+ssh $SSH_TO "rm docs/index.html"
 
 echo Done.

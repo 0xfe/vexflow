@@ -67,14 +67,30 @@ then
   exit 1
 fi
 
+total=`ls -l $BLESSED/$files | wc -l | sed 's/[[:space:]]//g'`
+
+echo "Running $total tests with threshold $THRESHOLD..."
+
+function ProgressBar {
+    let _progress=(${1}*100/${2}*100)/100
+    let _done=(${_progress}*4)/10
+    let _left=40-$_done
+    _fill=$(printf "%${_done}s")
+    _empty=$(printf "%${_left}s")
+
+    printf "\rProgress : [${_fill// /#}${_empty// /-}] ${_progress}%%"
+}
+
+count=0
 for image in $BLESSED/$files
 do
+  count=$((count + 1))
   name=`basename $image .svg`
   blessed=$BLESSED/$name.svg
   current=$CURRENT/$name.svg
   diff=$CURRENT/temp
 
-  echo Diffing: $name
+  ProgressBar ${count} ${total}
 
   if [ ! -e "$current" ]
   then
@@ -98,8 +114,9 @@ do
     cp $diff-diff.png $DIFF/$name.png
     cp $diff-a.png $DIFF/$name'_'Blessed.png
     cp $diff-b.png $DIFF/$name'_'Current.png
-    echo "PHASH value exceeds threshold: $hash > $THRESHOLD"
-    echo Image diff stored in $DIFF/$name.png
+    echo "Test: $name"
+    echo "  PHASH value exceeds threshold: $hash > $THRESHOLD"
+    echo "  Image diff stored in $DIFF/$name.png"
     # $VIEWER "$diff-diff.png" "$diff-a.png" "$diff-b.png"
     # echo 'Hit return to process next image...'
     # read

@@ -33,8 +33,9 @@ export class StaveTempo extends StaveModifier {
   setShiftY(y) { this.shift_y = y; return this; }
 
   draw(stave, shift_x) {
-    if (!stave.context) throw new Vex.RERR('NoContext',
-      "Can't draw stave tempo without a context.");
+    if (!stave.context) {
+      throw new Vex.RERR('NoContext', "Can't draw stave tempo without a context.");
+    }
 
     const options = this.render_options;
     const scale = options.glyph_font_scale / 38;

@@ -6,6 +6,8 @@
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
 if (!window.QUnit) {
+  var process = require('system');
+
   window.QUnit = {}
 
   QUnit.assertions = {
@@ -15,13 +17,12 @@ if (!window.QUnit) {
   };
 
   QUnit.module = function(name) {
-    console.log("Module: " + name);
     QUnit.current_module = name;
   };
 
   QUnit.test = function(name, func) {
     QUnit.current_test = name;
-    console.log("  Test: " + name);
+    process.stdout.write("\033[0G" + QUnit.current_module + " :: " + name + "\033[0K");
     func(QUnit.assertions);
   };
 

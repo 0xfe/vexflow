@@ -3,14 +3,16 @@
 import { Vex } from './vex';
 import { Fraction } from './fraction';
 
-let Flow = {};
-Flow.STEM_WIDTH = 1.5;
-Flow.STEM_HEIGHT = 32;
-Flow.STAVE_LINE_THICKNESS = 2;
-Flow.RESOLUTION = 16384;
+const Flow = {
+  STEM_WIDTH: 1.5,
+  STEM_HEIGHT: 32,
+  STAVE_LINE_THICKNESS: 2,
+  RESOLUTION: 16384,
 
-/* Kerning (DEPRECATED) */
-Flow.IsKerned = true;
+  /* Kerning (DEPRECATED) */
+  IsKerned: true,
+};
+
 
 Flow.clefProperties = clef => {
   if (!clef) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
@@ -45,18 +47,17 @@ Flow.keyProperties = (key, clef, params) => {
   if (clef === undefined) {
     clef = 'treble';
   }
-  const options = {
-    octave_shift: 0,
-  };
-  if (typeof params == 'object') {
+
+  const options = { octave_shift: 0 };
+
+  if (typeof params === 'object') {
     Vex.Merge(options, params);
   }
 
   const pieces = key.split('/');
 
   if (pieces.length < 2) {
-    throw new Vex.RERR('BadArguments',
-        'Key must have note + octave and an optional glyph: ' + key);
+    throw new Vex.RERR('BadArguments', `Key must have note + octave and an optional glyph: ${key}`);
   }
 
   const k = pieces[0].toUpperCase();
@@ -64,12 +65,12 @@ Flow.keyProperties = (key, clef, params) => {
   if (!value) throw new Vex.RERR('BadArguments', 'Invalid key name: ' + k);
   if (value.octave) pieces[1] = value.octave;
 
-  let o = parseInt(pieces[1]);
+  let octave = parseInt(pieces[1], 10);
 
   // Octave_shift is the shift to compensate for clef 8va/8vb.
-  o += -1 * options.octave_shift;
+  octave += -1 * options.octave_shift;
 
-  const base_index = (o * 7) - (4 * 7);
+  const base_index = (octave * 7) - (4 * 7);
   let line = (base_index + value.index) / 2;
   line += Flow.clefProperties(clef).line_shift;
 
@@ -79,13 +80,14 @@ Flow.keyProperties = (key, clef, params) => {
   if (line >= 6 && (((line * 2) % 2) === 0)) stroke = -1; // stroke down
 
   // Integer value for note arithmetic.
-  const int_value = (typeof(value.int_val) != 'undefined') ? (o * 12) +
-    value.int_val : null;
+  const int_value = typeof(value.int_val) !== 'undefined'
+    ? (octave * 12) + value.int_val
+    : null;
 
   /* Check if the user specified a glyph. */
   let code = value.code;
   let shift_right = value.shift_right;
-  if ((pieces.length > 2) && (pieces[2])) {
+  if (pieces.length > 2 && pieces[2]) {
     const glyph_name = pieces[2].toUpperCase();
     const note_glyph = Flow.keyProperties.note_glyph[glyph_name];
     if (note_glyph) {
@@ -96,7 +98,7 @@ Flow.keyProperties = (key, clef, params) => {
 
   return {
     key: k,
-    octave: o,
+    octave,
     line,
     int_value,
     accidental: value.accidental,
@@ -181,17 +183,18 @@ Flow.keyProperties.note_glyph = {
 };
 
 Flow.integerToNote = integer => {
-  if (typeof(integer) == 'undefined')
+  if (typeof(integer) === 'undefined') {
     throw new Vex.RERR('BadArguments', 'Undefined integer for integerToNote');
+  }
 
-  if (integer < -2)
-    throw new Vex.RERR('BadArguments',
-        'integerToNote requires integer > -2: ' + integer);
+  if (integer < -2) {
+    throw new Vex.RERR('BadArguments', `integerToNote requires integer > -2: ${integer}`);
+  }
 
   const noteValue = Flow.integerToNote.table[integer];
-  if (!noteValue)
-    throw new Vex.RERR('BadArguments', 'Unknown note value for integer: ' +
-        integer);
+  if (!noteValue) {
+    throw new Vex.RERR('BadArguments', `Unknown note value for integer: ${integer}`);
+  }
 
   return noteValue;
 };
@@ -217,7 +220,7 @@ Flow.tabToGlyph = fret => {
   let width = 0;
   let shift_y = 0;
 
-  if (fret.toString().toUpperCase() == 'X') {
+  if (fret.toString().toUpperCase() === 'X') {
     glyph = 'v7f';
     width = 7;
     shift_y = -4.5;
@@ -629,12 +632,13 @@ Flow.unicode = {
   'circle': String.fromCharCode(parseInt('25CB', 16)),
 };
 
-Flow.keySignature.accidentalList = acc => {
-  if (acc == 'b') {
-    return [2, 0.5, 2.5, 1, 3, 1.5, 3.5];
-  }
-  else if (acc == '#') {
-    return [0, 1.5, -0.5, 1, 2.5, 0.5, 2]; }
+Flow.keySignature.accidentalList = (acc) => {
+  const patterns = {
+    'b': [2, 0.5, 2.5, 1, 3, 1.5, 3.5],
+    '#': [0, 1.5, -0.5, 1, 2.5, 0.5, 2],
+  };
+
+  return patterns[acc];
 };
 
 Flow.parseNoteDurationString = durationString => {
@@ -681,8 +685,7 @@ Flow.parseNoteData = noteData => {
   let type = noteData.type;
 
   if (type) {
-    if (!(type === 'n' || type === 'r' || type === 'h' ||
-          type === 'm' || type === 's')) {
+    if (!(type === 'n' || type === 'r' || type === 'h' || type === 'm' || type === 's')) {
       return null;
     }
   } else {
@@ -692,12 +695,7 @@ Flow.parseNoteData = noteData => {
     }
   }
 
-  let dots = 0;
-  if (noteData.dots) {
-    dots = noteData.dots;
-  } else {
-    dots = durationStringData.dots;
-  }
+  const dots = noteData.dots ? noteData.dots : durationStringData.dots;
 
   if (typeof(dots) !== 'number') {
     return null;
@@ -706,9 +704,7 @@ Flow.parseNoteData = noteData => {
   let currentTicks = ticks;
 
   for (let i = 0; i < dots; i++) {
-    if (currentTicks <= 1) {
-      return null;
-    }
+    if (currentTicks <= 1) return null;
 
     currentTicks = currentTicks / 2;
     ticks += currentTicks;
@@ -733,8 +729,7 @@ Flow.sanitizeDuration = duration => {
   }
 
   if (Flow.durationToTicks.durations[duration] === undefined) {
-    throw new Vex.RERR('BadArguments',
-      'The provided duration is not valid: ' + duration);
+    throw new Vex.RERR('BadArguments', `The provided duration is not valid: ${duration}`);
   }
 
   return duration;
