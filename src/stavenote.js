@@ -549,6 +549,14 @@ export class StaveNote extends StemmableNote {
   // Determine if the `StaveNote` has a stem
   hasStem() { return this.glyph.stem; }
 
+  getStemX() {
+    if (this.noteType === 'r') {
+      return this.getCenterGlyphX();
+    } else {
+      return super.getStemX();
+    }
+  }
+
   // Get the `y` coordinate for text placed on the top/bottom of a
   // note at a desired `text_line`
   getYForTopText(textLine) {
@@ -578,7 +586,7 @@ export class StaveNote extends StemmableNote {
 
     this.setYs(ys);
 
-    if (this.hasStem()) {
+    if (this.stem) {
       const { y_top, y_bottom } = this.getNoteHeadBounds();
       this.stem.setYBounds(y_top, y_bottom);
     }
