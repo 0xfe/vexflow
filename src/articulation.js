@@ -37,16 +37,13 @@ const getRoundingFunction = (line, position) => {
   }
 };
 
-
 const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) => {
   // Initially, snap to nearest staff line or space
   const snappedLine = roundToNearestHalf(getRoundingFunction(line, position), line);
+  const canSnapToStaffSpace = canSitBetweenLines && isWithinLines(snappedLine, position);
   const onStaffLine = snappedLine % 1 === 0;
 
-  const shouldSnapToStaffSpace =
-    canSitBetweenLines && isWithinLines(snappedLine, position) && onStaffLine;
-
-  if (shouldSnapToStaffSpace) {
+  if (canSnapToStaffSpace && onStaffLine) {
     const HALF_STAFF_SPACE = 0.5;
     return snappedLine + (HALF_STAFF_SPACE * -offsetDirection);
   } else {
@@ -115,6 +112,28 @@ const getBottomY = (note, textLine) => {
     throw new Vex.RERR(
       'UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes'
     );
+  }
+};
+
+// Gets the initial offset of the articulation from the y value of the starting position.
+// This is required because the top/bottom text positions already have spacing applied to
+// provide a "visually pleasent" default position. However the y values provided from
+// the stavenote's top/bottom do *not* have any pre-applied spacing. This function
+// normalizes this asymmetry.
+const getInitialOffset = (note, position) => {
+  const isOnStemTip = (
+    (position === ABOVE && note.getStemDirection() === Stem.UP) ||
+    (position === BELOW && note.getStemDirection() === Stem.DOWN)
+  );
+
+  if (note.getCategory() === 'stavenotes') {
+    return 1;
+  } else {
+    if (note.hasStem() && isOnStemTip) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 };
 
@@ -199,15 +218,17 @@ export class Articulation extends Modifier {
     const { x } = note.getModifierStartXY(position, index);
     const shouldSitOutsideStaff = !canSitBetweenLines || isTab;
 
+    const initialOffset = getInitialOffset(note, position);
+
     let y = {
       [ABOVE]: () => {
         glyph.setOrigin(0.5, 1);
-        const y = getTopY(note, textLine) - ((textLine + 1) * staffSpace);
+        const y = getTopY(note, textLine) - ((textLine + initialOffset) * staffSpace);
         return shouldSitOutsideStaff ? Math.min(stave.getYForTopText(0), y) : y;
       },
       [BELOW]: () => {
         glyph.setOrigin(0.5, 0);
-        const y = getBottomY(note, textLine) + ((textLine + 1) * staffSpace);
+        const y = getBottomY(note, textLine) + ((textLine + initialOffset) * staffSpace);
         return shouldSitOutsideStaff ? Math.max(stave.getYForBottomText(0), y) : y;
       },
     }[position]();
