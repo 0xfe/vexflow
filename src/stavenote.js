@@ -22,6 +22,8 @@ import { Glyph } from './glyph';
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
 function L(...args) { if (StaveNote.DEBUG) Vex.L('Vex.Flow.StaveNote', args); }
 
+const getStemAdjustment = (note) => Stem.WIDTH / (2 * -note.getStemDirection());
+
 // Helper methods for rest positioning in ModifierContext.
 function shiftRestVertical(rest, note, dir) {
   const delta = (note.isrest ? 0.0 : 1.0) * dir;
@@ -553,8 +555,7 @@ export class StaveNote extends StemmableNote {
     } else {
       // We adjust the origin of the stem because we want the stem left-aligned
       // with the notehead if stemmed-down, and right-aligned if stemmed-up
-      const stemAdjustment = Stem.WIDTH / (2 * -this.getStemDirection());
-      return super.getStemX() + stemAdjustment;
+      return super.getStemX() + getStemAdjustment(this);
     }
   }
 
@@ -923,22 +924,18 @@ export class StaveNote extends StemmableNote {
     const glyph = this.getGlyph();
 
     if (glyph.flag && shouldRenderFlag) {
-      let flagX;
+      const flagX = this.getStemX();
       let flagY;
       let flagCode;
 
-      const xBegin = this.getNoteHeadBeginX();
-      const xEnd = this.getNoteHeadEndX();
       const { y_top, y_bottom } = this.getNoteHeadBounds();
       const noteStemHeight = stem.getHeight();
       if (this.getStemDirection() === Stem.DOWN) {
         // Down stems have flags on the left.
-        flagX = xBegin + 1;
         flagY = y_top - noteStemHeight + 2;
         flagCode = glyph.code_flag_downstem;
       } else {
         // Up stems have flags on the left.
-        flagX = xEnd + 1;
         flagY = y_bottom - noteStemHeight - 2;
         flagCode = glyph.code_flag_upstem;
       }
