@@ -38,8 +38,6 @@ export class Stem {
     this.y_top = options.y_top || 0;
     this.y_bottom = options.y_bottom || 0;
 
-    // Stem base extension
-    this.y_extend = options.y_extend || 0;
     // Stem top extension
     this.stem_extension = options.stem_extension || 0;
 
@@ -51,6 +49,10 @@ export class Stem {
 
     this.isStemlet = options.isStemlet || false;
     this.stemletHeight = options.stemletHeight || 0;
+
+    // Use to adjust the rendered height without affecting
+    // the results of `.getExtents()`
+    this.renderHeightAdjustment = 0;
   }
 
   // Set the x bounds for the default notehead
@@ -150,9 +152,7 @@ export class Stem {
       stem_y = this.y_bottom;
     }
 
-    stem_y += this.y_extend * stem_direction;
-
-    const stemHeight = this.getHeight() + -this.y_extend * -stem_direction;
+    const stemHeight = this.getHeight();
 
     L('Rendering stem - ', 'Top Y: ', this.y_top, 'Bottom Y: ', this.y_bottom);
 
@@ -167,7 +167,7 @@ export class Stem {
     ctx.beginPath();
     ctx.setLineWidth(Stem.WIDTH);
     ctx.moveTo(stem_x, stem_y - stemletYOffset);
-    ctx.lineTo(stem_x, stem_y - stemHeight);
+    ctx.lineTo(stem_x, stem_y - stemHeight - (this.renderHeightAdjustment * stem_direction));
     ctx.stroke();
     ctx.restore();
   }

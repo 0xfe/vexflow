@@ -491,8 +491,8 @@ export class StaveNote extends StemmableNote {
     } else if (this.glyph.stem) {
       const ys = this.getStemExtents();
       ys.baseY += halfLineSpacing * this.stem_direction;
-      minY = Vex.Min(ys.topY, ys.baseY);
-      maxY = Vex.Max(ys.topY, ys.baseY);
+      minY = Math.min(ys.topY, ys.baseY);
+      maxY = Math.max(ys.topY, ys.baseY);
     } else {
       minY = null;
       maxY = null;
@@ -503,8 +503,8 @@ export class StaveNote extends StemmableNote {
           minY = yy;
           maxY = yy;
         } else {
-          minY = Vex.Min(yy, minY);
-          maxY = Vex.Max(yy, maxY);
+          minY = Math.min(yy, minY);
+          maxY = Math.max(yy, maxY);
         }
       }
       minY -= halfLineSpacing;
@@ -553,7 +553,7 @@ export class StaveNote extends StemmableNote {
     } else {
       // We adjust the origin of the stem because we want the stem left-aligned
       // with the notehead if stemmed-down, and right-aligned if stemmed-up
-      const stemAdjustment = Stem.WIDTH / (this.getStemDirection() === Stem.UP ? -2 : +2);
+      const stemAdjustment = Stem.WIDTH / (2 * -this.getStemDirection());
       return super.getStemX() + stemAdjustment;
     }
   }
@@ -844,7 +844,7 @@ export class StaveNote extends StemmableNote {
   // Get the ending `x` coordinate for the noteheads
   getNoteHeadEndX() {
     const xBegin = this.getNoteHeadBeginX();
-    return xBegin + this.glyph.head_width - (Flow.STEM_WIDTH / 2);
+    return xBegin + this.glyph.head_width;
   }
 
   // Draw the ledger lines between the stave and the highest/lowest keys
@@ -987,14 +987,14 @@ export class StaveNote extends StemmableNote {
     }
 
     const xBegin = this.getNoteHeadBeginX();
-    const xEnd = this.getNoteHeadEndX();
     const shouldRenderStem = this.hasStem() && !this.beam;
 
     // Format note head x positions
     this.note_heads.forEach(notehead => notehead.setX(xBegin));
 
     // Format stem x positions
-    this.stem.setNoteHeadXBounds(xBegin, xEnd);
+    const stemX = this.getStemX();
+    this.stem.setNoteHeadXBounds(stemX, stemX);
 
     L('Rendering ', this.isChord() ? 'chord :' : 'note :', this.keys);
 

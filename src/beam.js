@@ -625,12 +625,12 @@ export class Beam {
         : beamedStemTipY - stemTipY;
 
       note.stem.setExtension(preBeamExtension + beamExtension);
+      note.stem.renderHeightAdjustment = -Stem.WIDTH / 2;
 
       if (note.isRest() && show_stemlets) {
         const beamWidth = beam_width;
         const totalBeamWidth = ((beam_count - 1) * beamWidth * 1.5) + beamWidth;
         note.stem
-          .setNoteHeadXBounds(stemX, stemX)
           .setVisibility(true)
           .setStemlet(true, totalBeamWidth + stemlet_extension);
       }
@@ -667,7 +667,8 @@ export class Beam {
         }
       }
       const note_gets_beam = ticks < Flow.durationToTicks(duration);
-      const stem_x = note.getStemX();
+
+      const stem_x = note.getStemX() - (Stem.WIDTH / 2);
 
       // Check to see if the next note in the group will get a beam at this
       //  level. This will help to inform the partial beam logic below.
@@ -768,14 +769,10 @@ export class Beam {
 
       for (let j = 0; j < beamLines.length; ++j) {
         const beam_line = beamLines[j];
-        const startBeamX = beam_line.start
-          - (this.stem_direction === Stem.DOWN ? Flow.STEM_WIDTH / 2 : 0);
+        const startBeamX = beam_line.start;
 
         const startBeamY = this.getSlopeY(startBeamX, firstStemX, beamY, this.slope);
-
-        const lastBeamX = beam_line.end
-          + (this.stem_direction === 1 ? (Flow.STEM_WIDTH / 3) : (-Flow.STEM_WIDTH / 3));
-
+        const lastBeamX = beam_line.end;
         const lastBeamY = this.getSlopeY(lastBeamX, firstStemX, beamY, this.slope);
 
         this.context.beginPath();

@@ -453,7 +453,6 @@ export class TabNote extends StemmableNote {
     this.drawStemThrough();
 
     const stem_x = this.getStemX();
-    const stem_y = this.getStemY();
 
     this.stem.setNoteHeadXBounds(stem_x, stem_x);
 
