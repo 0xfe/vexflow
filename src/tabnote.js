@@ -370,7 +370,7 @@ export class TabNote extends StemmableNote {
 
   // Render the stem extension through the fret positions
   drawStemThrough() {
-    let stem_x = this.getStemX();
+    const stem_x = this.getStemX();
     const stem_y = this.getStemY();
     const ctx = this.context;
 
