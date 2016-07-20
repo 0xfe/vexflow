@@ -227,15 +227,17 @@ export class TabNote extends StemmableNote {
       }
     }
 
-    const ys = [];
+    // we subtract 1 from `line` because getYForLine expects a 0-based index,
+    // while the position.str is a 1-based index
+    const ys = this.positions.map(({ str: line }) => stave.getYForLine(line - 1));
 
-    // Setup y coordinates for score.
-    for (i = 0; i < this.positions.length; ++i) {
-      const line = this.positions[i].str;
-      ys.push(this.stave.getYForLine(line - 1));
+    this.setYs(ys);
+
+    if (this.stem) {
+      this.stem.setYBounds(this.getStemY(), this.getStemY());
     }
 
-    return this.setYs(ys);
+    return this;
   }
 
   // Get the fret positions for the note
@@ -328,34 +330,29 @@ export class TabNote extends StemmableNote {
 
   // Get the stem extents for the tabnote
   getStemExtents() {
-    const stem_base_y = this.getStemY();
-    const stem_top_y = stem_base_y + (Stem.HEIGHT * -this.stem_direction);
-
-    return { topY: stem_top_y, baseY: stem_base_y };
+    return this.stem.getExtents();
   }
 
   // Draw the fal onto the context
   drawFlag() {
-    const render_stem = this.beam == null && this.render_options.draw_stem;
-    const render_flag = this.beam == null && render_stem;
+    const {
+      beam, glyph, context, stem, stem_direction,
+      render_options: { draw_stem, glyph_font_scale },
+    } = this;
+
+    const shouldDrawFlag = beam == null && draw_stem;
 
     // Now it's the flag's turn.
-    if (this.glyph.flag && render_flag) {
+    if (glyph.flag && shouldDrawFlag) {
       const flag_x = this.getStemX() + 1;
-      const flag_y = this.getStemY() - (this.stem.getHeight());
-      let flag_code;
+      const flag_y = this.getStemY() - stem.getHeight();
 
-      if (this.stem_direction === Stem.DOWN) {
-        // Down stems have flags on the left.
-        flag_code = this.glyph.code_flag_downstem;
-      } else {
-        // Up stems have flags on the left.
-        flag_code = this.glyph.code_flag_upstem;
-      }
+      const flag_code = stem_direction === Stem.DOWN
+        ? glyph.code_flag_downstem // Down stems have flags on the left.
+        : glyph.code_flag_upstem;
 
       // Draw the Flag
-      Glyph.renderGlyph(this.context, flag_x, flag_y,
-          this.render_options.glyph_font_scale, flag_code);
+      Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code);
     }
   }
 
@@ -462,16 +459,13 @@ export class TabNote extends StemmableNote {
 
     const stem_x = this.getStemX();
     const stem_y = this.getStemY();
+
+    this.stem.setNoteHeadXBounds(stem_x, stem_x);
+
     if (render_stem) {
-      this.drawStem({
-        x_begin: stem_x,
-        x_end: stem_x,
-        y_top: stem_y,
-        y_bottom: stem_y,
-        y_extend: 0,
-        stem_extension: this.getStemExtension(),
-        stem_direction: this.stem_direction,
-      });
+      this.context.openGroup('stem', null, { pointerBBox: true });
+      this.stem.setContext(this.context).draw();
+      this.context.closeGroup();
     }
 
     this.drawFlag();

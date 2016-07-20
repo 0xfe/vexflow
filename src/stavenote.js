@@ -324,13 +324,11 @@ export class StaveNote extends StemmableNote {
   buildStem() {
     const glyph = this.getGlyph();
     const yExtend = glyph.code_head === 'v95' || glyph.code_head === 'v3e' ? -4 : 0;
-    const stem = new Stem({ yExtend });
 
-    if (this.isRest()) {
-      stem.hide = true;
-    }
-
-    this.setStem(stem);
+    this.setStem(new Stem({
+      yExtend,
+      hide: !!this.isRest(),
+    }));
   }
 
   // Builds a `NoteHead` for each key in the note

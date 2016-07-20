@@ -548,13 +548,13 @@ export class Beam {
       //  offset can be adjusted in case the average isn't enough
       if (stem_direction === Stem.DOWN && currentExtreme < stemTipY) {
         currentExtreme = stemTipY;
-        extremeY = note.getNoteHeadBounds().y_bottom;
+        extremeY = Math.max(...note.getYs());
         extremeBeamCount = note.getBeamCount();
       } else if (
         stem_direction === Stem.UP && (currentExtreme === 0 || currentExtreme > stemTipY)
       ) {
         currentExtreme = stemTipY;
-        extremeY = note.getNoteHeadBounds().y_top;
+        extremeY = Math.min(...note.getYs());
         extremeBeamCount = note.getBeamCount();
       }
     }
@@ -667,7 +667,7 @@ export class Beam {
         }
       }
       const note_gets_beam = ticks < Flow.durationToTicks(duration);
-      const stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
+      const stem_x = note.getStemX();
 
       // Check to see if the next note in the group will get a beam at this
       //  level. This will help to inform the partial beam logic below.
@@ -801,7 +801,7 @@ export class Beam {
     if (this.postFormatted) return;
 
     // Calculate a smart slope if we're not forcing the beams to be flat.
-    if (this.render_options.flat_beams) {
+    if (this.notes[0].getCategory() === 'tabnotes' || this.render_options.flat_beams) {
       this.calculateFlatSlope();
     } else {
       this.calculateSlope();

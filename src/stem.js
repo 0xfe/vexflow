@@ -29,10 +29,7 @@ export class Stem {
     return Flow.STEM_HEIGHT;
   }
 
-  constructor(options = null) {
-    if (options === null) {
-      return;
-    }
+  constructor(options = {}) {
     // Default notehead x bounds
     this.x_begin = options.x_begin || 0;
     this.x_end = options.x_end || 0;
