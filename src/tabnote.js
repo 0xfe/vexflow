@@ -388,11 +388,6 @@ export class TabNote extends StemmableNote {
         this.getStemDirection()
       );
 
-      // Fine tune x position to match default stem
-      if (!this.beam || this.getStemDirection() === 1) {
-        stem_x += (Stem.WIDTH / 2);
-      }
-
       ctx.save();
       ctx.setLineWidth(Stem.WIDTH);
       stem_lines.forEach(bounds => {

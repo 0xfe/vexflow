@@ -551,7 +551,10 @@ export class StaveNote extends StemmableNote {
     if (this.noteType === 'r') {
       return this.getCenterGlyphX();
     } else {
-      return super.getStemX();
+      // We adjust the origin of the stem because we want the stem left-aligned
+      // with the notehead if stemmed-down, and right-aligned if stemmed-up
+      const stemAdjustment = Stem.WIDTH / (this.getStemDirection() === Stem.UP ? -2 : +2);
+      return super.getStemX() + stemAdjustment;
     }
   }
 

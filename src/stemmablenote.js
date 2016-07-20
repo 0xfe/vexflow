@@ -97,10 +97,7 @@ export class StemmableNote extends Note {
   getStemX() {
     const x_begin = this.getAbsoluteX() + this.x_shift;
     const x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
-
-    let stem_x = this.stem_direction === Stem.DOWN ? x_begin : x_end;
-    stem_x -= (Stem.WIDTH / 2) * this.stem_direction;
-
+    const stem_x = this.stem_direction === Stem.DOWN ? x_begin : x_end;
     return stem_x;
   }
 
