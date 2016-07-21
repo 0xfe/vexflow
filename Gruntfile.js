@@ -32,6 +32,7 @@ module.exports = (grunt) => {
       path: BUILD_DIR,
       filename: 'vexflow-debug.js',
       library: 'Vex',
+      libraryTarget: 'umd',
     },
     devtool: 'source-map',
     module: {
