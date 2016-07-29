@@ -26,6 +26,14 @@ function calculateStemDirection(notes) {
   return Stem.UP;
 }
 
+const getStemSlope = (firstNote, lastNote) => {
+  const firstStemTipY = firstNote.getStemExtents().topY;
+  const firstStemX = firstNote.getStemX();
+  const lastStemTipY = lastNote.getStemExtents().topY;
+  const lastStemX = lastNote.getStemX();
+  return (lastStemTipY - firstStemTipY) / (lastStemX - firstStemX);
+};
+
 export class Beam {
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
@@ -457,117 +465,123 @@ export class Beam {
 
   // Calculate the best possible slope for the provided notes
   calculateSlope() {
-    const first_note = this.notes[0];
-    const first_y_px = first_note.getStemExtents().topY;
-    const first_x_px = first_note.getStemX();
+    const {
+      notes,
+      stem_direction: stemDirection,
+      render_options: { max_slope, min_slope, slope_iterations, slope_cost },
+    } = this;
 
-    const inc = (this.render_options.max_slope - this.render_options.min_slope) /
-        this.render_options.slope_iterations;
-    let min_cost = Number.MAX_VALUE;
-    let best_slope = 0;
-    let y_shift = 0;
+    const firstNote = notes[0];
+    const initialSlope = getStemSlope(firstNote, notes[notes.length - 1]);
+    const increment = (max_slope - min_slope) / slope_iterations;
+    let minCost = Number.MAX_VALUE;
+    let bestSlope = 0;
+    let yShift = 0;
 
     // iterate through slope values to find best weighted fit
-    for (let slope = this.render_options.min_slope;
-         slope <= this.render_options.max_slope;
-         slope += inc) {
-      let total_stem_extension = 0;
-      let y_shift_tmp = 0;
+    for (let slope = min_slope; slope <= max_slope; slope += increment) {
+      let totalStemExtension = 0;
+      let yShiftTemp = 0;
 
       // iterate through notes, calculating y shift and stem extension
-      for (let i = 1; i < this.notes.length; ++i) {
-        const note = this.notes[i];
+      for (let i = 1; i < notes.length; ++i) {
+        const note = notes[i];
+        const adjustedStemTipY = this.getSlopeY(
+          note.getStemX(),
+          firstNote.getStemX(),
+          firstNote.getStemExtents().topY,
+          slope
+        ) + yShiftTemp;
 
-        const x_px = note.getStemX();
-        const y_px = note.getStemExtents().topY;
-        const slope_y_px = this.getSlopeY(x_px, first_x_px, first_y_px, slope) + y_shift_tmp;
-
+        const stemTipY = note.getStemExtents().topY;
         // beam needs to be shifted up to accommodate note
-        if (y_px * this.stem_direction < slope_y_px * this.stem_direction) {
-          const diff =  Math.abs(y_px - slope_y_px);
-          y_shift_tmp += diff * -this.stem_direction;
-          total_stem_extension += (diff * i);
+        if (stemTipY * stemDirection < adjustedStemTipY * stemDirection) {
+          const diff = Math.abs(stemTipY - adjustedStemTipY);
+          yShiftTemp += diff * -stemDirection;
+          totalStemExtension += diff * i;
         } else { // beam overshoots note, account for the difference
-          total_stem_extension += (y_px - slope_y_px) * this.stem_direction;
+          totalStemExtension += (stemTipY - adjustedStemTipY) * stemDirection;
         }
       }
 
-      const last_note = this.notes[this.notes.length - 1];
-      const first_last_slope = ((last_note.getStemExtents().topY - first_y_px) /
-              (last_note.getStemX() - first_x_px));
       // most engraving books suggest aiming for a slope about half the angle of the
       // difference between the first and last notes' stem length;
-      const ideal_slope = first_last_slope / 2;
-      const distance_from_ideal = Math.abs(ideal_slope - slope);
+      const idealSlope = initialSlope / 2;
+      const distanceFromIdeal = Math.abs(idealSlope - slope);
 
-      // This tries to align most beams to something closer to the ideal_slope, but
+      // This tries to align most beams to something closer to the idealSlope, but
       // doesn't go crazy. To disable, set this.render_options.slope_cost = 0
-      const cost = this.render_options.slope_cost * distance_from_ideal +
-          Math.abs(total_stem_extension);
+      const cost = slope_cost * distanceFromIdeal + Math.abs(totalStemExtension);
 
       // update state when a more ideal slope is found
-      if (cost < min_cost) {
-        min_cost = cost;
-        best_slope = slope;
-        y_shift = y_shift_tmp;
+      if (cost < minCost) {
+        minCost = cost;
+        bestSlope = slope;
+        yShift = yShiftTemp;
       }
     }
 
-    this.slope = best_slope;
-    this.y_shift = y_shift;
+    this.slope = bestSlope;
+    this.y_shift = yShift;
   }
 
   // Calculate a slope and y-shift for flat beams
   calculateFlatSlope() {
+    const {
+      notes, stem_direction,
+      render_options: { beam_width, min_flat_beam_offset, flat_beam_offset },
+    } = this;
+
     // If a flat beam offset has not yet been supplied or calculated,
     // generate one based on the notes in this particular note group
     let total = 0;
-    let extreme_y = 0;  // Store the highest or lowest note here
-    let extreme_beam_count = 0;  // The beam count of the extreme note
-    let current_extreme = 0;
-    for (let i = 0; i < this.notes.length; i++) {
+    let extremeY = 0;  // Store the highest or lowest note here
+    let extremeBeamCount = 0;  // The beam count of the extreme note
+    let currentExtreme = 0;
+    for (let i = 0; i < notes.length; i++) {
       // Total up all of the offsets so we can average them out later
-      const note = this.notes[i];
-      const top_y = note.getStemExtents().topY;
-      total += top_y;
+      const note = notes[i];
+      const stemTipY = note.getStemExtents().topY;
+      total += stemTipY;
 
       // Store the highest (stems-up) or lowest (stems-down) note so the
       //  offset can be adjusted in case the average isn't enough
-      if (this.stem_direction === Stem.DOWN && current_extreme < top_y) {
-        current_extreme = top_y;
-        extreme_y = note.getNoteHeadBounds().y_bottom;
-        extreme_beam_count = note.getBeamCount();
-      } else if (this.stem_direction === Stem.UP &&
-          (current_extreme === 0 || current_extreme > top_y)) {
-        current_extreme = top_y;
-        extreme_y = note.getNoteHeadBounds().y_top;
-        extreme_beam_count = note.getBeamCount();
+      if (stem_direction === Stem.DOWN && currentExtreme < stemTipY) {
+        currentExtreme = stemTipY;
+        extremeY = Math.max(...note.getYs());
+        extremeBeamCount = note.getBeamCount();
+      } else if (
+        stem_direction === Stem.UP && (currentExtreme === 0 || currentExtreme > stemTipY)
+      ) {
+        currentExtreme = stemTipY;
+        extremeY = Math.min(...note.getYs());
+        extremeBeamCount = note.getBeamCount();
       }
     }
 
     // Average the offsets to try and come up with a reasonable one that
     //  works for all of the notes in the beam group.
-    let offset = total / this.notes.length;
+    let offset = total / notes.length;
 
     // In case the average isn't long enough, add or subtract some more
     //  based on the highest or lowest note (again, based on the stem
     //  direction). This also takes into account the added height due to
     //  the width of the beams.
-    const beam_width = this.render_options.beam_width * 1.5;
-    const extreme_test = this.render_options.min_flat_beam_offset +
-        (extreme_beam_count * beam_width);
-    const new_offset = extreme_y + (extreme_test * -this.stem_direction);
-    if (this.stem_direction === Stem.DOWN && offset < new_offset) {
-      offset = extreme_y + extreme_test;
-    } else if (this.stem_direction === Stem.UP && offset > new_offset) {
-      offset = extreme_y - extreme_test;
+    const beamWidth = beam_width * 1.5;
+    const extremeTest = min_flat_beam_offset + (extremeBeamCount * beamWidth);
+    const newOffset = extremeY + (extremeTest * -stem_direction);
+    if (stem_direction === Stem.DOWN && offset < newOffset) {
+      offset = extremeY + extremeTest;
+    } else if (stem_direction === Stem.UP && offset > newOffset) {
+      offset = extremeY - extremeTest;
     }
-    if (!this.render_options.flat_beam_offset) {
+
+    if (!flat_beam_offset) {
       // Set the offset for the group based on the calculations above.
       this.render_options.flat_beam_offset = offset;
-    } else if (this.stem_direction === Stem.DOWN && offset > this.render_options.flat_beam_offset) {
+    } else if (stem_direction === Stem.DOWN && offset > flat_beam_offset) {
       this.render_options.flat_beam_offset = offset;
-    } else if (this.stem_direction === Stem.UP && offset < this.render_options.flat_beam_offset) {
+    } else if (stem_direction === Stem.UP && offset < flat_beam_offset) {
       this.render_options.flat_beam_offset = offset;
     }
 
@@ -579,78 +593,47 @@ export class Beam {
   // Create new stems for the notes in the beam, so that each stem
   // extends into the beams.
   applyStemExtensions() {
-    const first_note = this.notes[0];
-    let first_y_px = first_note.getStemExtents().topY;
+    const {
+      notes, slope, y_shift, stem_direction, beam_count,
+      render_options: {
+        show_stemlets,
+        flat_beam_offset,
+        flat_beams,
+        stemlet_extension,
+        beam_width,
+      },
+    } = this;
 
-    // If rendering flat beams, and an offset exists, set the y-coordinate to
+    const firstNote = notes[0];
+    let firstStemTipY = firstNote.getStemExtents().topY;
+
+    // If rendering flat beams, and an offset exists, set the y-coordinat`e to
     //  the offset so the stems all end at the beam offset.
-    if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
-      first_y_px = this.render_options.flat_beam_offset;
+    if (flat_beams && flat_beam_offset) {
+      firstStemTipY = flat_beam_offset;
     }
-    const first_x_px = first_note.getStemX();
+    const firstStemX = firstNote.getStemX();
 
-    for (let i = 0; i < this.notes.length; ++i) {
-      const note = this.notes[i];
+    for (let i = 0; i < notes.length; ++i) {
+      const note = notes[i];
+      const stemX = note.getStemX();
+      const { topY: stemTipY } = note.getStemExtents();
+      const beamedStemTipY = this.getSlopeY(stemX, firstStemX, firstStemTipY, slope) + y_shift;
+      const preBeamExtension = note.getStem().getExtension();
+      const beamExtension = stem_direction === Stem.UP
+        ? stemTipY - beamedStemTipY
+        : beamedStemTipY - stemTipY;
 
-      const x_px = note.getStemX();
-      const y_extents = note.getStemExtents();
-      let base_y_px = y_extents.baseY;
-      let top_y_px = y_extents.topY;
+      note.stem.setExtension(preBeamExtension + beamExtension);
+      note.stem.renderHeightAdjustment = -Stem.WIDTH / 2;
 
-      // If flat beams, set the top of the stem to the offset, rather than
-      //  relying on the topY value from above.
-      if (this.render_options.flat_beams) {
-        top_y_px = first_y_px;
+      if (note.isRest() && show_stemlets) {
+        const beamWidth = beam_width;
+        const totalBeamWidth = ((beam_count - 1) * beamWidth * 1.5) + beamWidth;
+        note.stem
+          .setVisibility(true)
+          .setStemlet(true, totalBeamWidth + stemlet_extension);
       }
-
-      // For harmonic note heads, shorten stem length by 3 pixels
-      base_y_px += this.stem_direction * note.glyph.stem_offset;
-
-      // Don't go all the way to the top (for thicker stems)
-      const y_displacement = Flow.STEM_WIDTH;
-
-      if (!note.hasStem()) {
-        if (note.isRest() && this.render_options.show_stemlets) {
-          const centerGlyphX = note.getCenterGlyphX();
-
-          const width = this.render_options.beam_width;
-          const total_width = ((this.beam_count - 1) * width * 1.5) + width;
-
-          const stemlet_height = (total_width - y_displacement +
-            this.render_options.stemlet_extension);
-
-          const beam_y = this.getSlopeY(centerGlyphX, first_x_px,
-                          first_y_px, this.slope) + this.y_shift;
-          const start_y = beam_y + (Stem.HEIGHT * this.stem_direction);
-          const end_y = beam_y + (stemlet_height * this.stem_direction);
-
-          // Draw Stemlet
-          note.setStem(new Stem({
-            x_begin: centerGlyphX,
-            x_end: centerGlyphX,
-            y_bottom: this.stem_direction === Stem.UP ? end_y : start_y,
-            y_top: this.stem_direction === Stem.UP ? start_y : end_y,
-            y_extend: y_displacement,
-            stem_extension: -1, // To avoid protruding through the beam
-            stem_direction: this.stem_direction,
-          }));
-        }
-
-        continue;
-      }
-
-      const slope_y = this.getSlopeY(x_px, first_x_px, first_y_px,
-                      this.slope) + this.y_shift;
-
-      note.setStem(new Stem({
-        x_begin: x_px - (Flow.STEM_WIDTH / 2),
-        x_end: x_px,
-        y_top: this.stem_direction === Stem.UP ? top_y_px : base_y_px,
-        y_bottom: this.stem_direction === Stem.UP ? base_y_px :  top_y_px,
-        y_extend: y_displacement,
-        stem_extension: Math.abs(top_y_px - slope_y) - Stem.HEIGHT - 1,
-        stem_direction: this.stem_direction,
-      }));
     }
   }
 
@@ -684,7 +667,8 @@ export class Beam {
         }
       }
       const note_gets_beam = ticks < Flow.durationToTicks(duration);
-      const stem_x = note.isRest() ? note.getCenterGlyphX() : note.getStemX();
+
+      const stem_x = note.getStemX() - (Stem.WIDTH / 2);
 
       // Check to see if the next note in the group will get a beam at this
       //  level. This will help to inform the partial beam logic below.
@@ -764,45 +748,43 @@ export class Beam {
 
     const valid_beam_durations = ['4', '8', '16', '32', '64'];
 
-    const first_note = this.notes[0];
+    const firstNote = this.notes[0];
 
-    let first_y_px = first_note.getStemExtents().topY;
+    const firstStemTipY = firstNote.getStemExtents().topY;
+    let beamY = firstStemTipY;
 
     // For flat beams, set the first and last Y to the offset, rather than
     //  using the note's stem extents.
     if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
-      first_y_px = this.render_options.flat_beam_offset;
+      beamY = this.render_options.flat_beam_offset;
     }
 
-    const first_x_px = first_note.getStemX();
-
-    const beam_width = this.render_options.beam_width * this.stem_direction;
+    const firstStemX = firstNote.getStemX();
+    const beamThickness = this.render_options.beam_width * this.stem_direction;
 
     // Draw the beams.
     for (let i = 0; i < valid_beam_durations.length; ++i) {
       const duration = valid_beam_durations[i];
-      const beam_lines = this.getBeamLines(duration);
+      const beamLines = this.getBeamLines(duration);
 
-      for (let j = 0; j < beam_lines.length; ++j) {
-        const beam_line = beam_lines[j];
-        const first_x = beam_line.start -
-          (this.stem_direction === Stem.DOWN ? Flow.STEM_WIDTH / 2 : 0);
-        const first_y = this.getSlopeY(first_x, first_x_px, first_y_px, this.slope);
+      for (let j = 0; j < beamLines.length; ++j) {
+        const beam_line = beamLines[j];
+        const startBeamX = beam_line.start;
 
-        const last_x = beam_line.end +
-          (this.stem_direction === 1 ? (Flow.STEM_WIDTH / 3) : (-Flow.STEM_WIDTH / 3));
-        const last_y = this.getSlopeY(last_x, first_x_px, first_y_px, this.slope);
+        const startBeamY = this.getSlopeY(startBeamX, firstStemX, beamY, this.slope);
+        const lastBeamX = beam_line.end;
+        const lastBeamY = this.getSlopeY(lastBeamX, firstStemX, beamY, this.slope);
 
         this.context.beginPath();
-        this.context.moveTo(first_x, first_y + this.y_shift);
-        this.context.lineTo(first_x, first_y + beam_width + this.y_shift);
-        this.context.lineTo(last_x + 1, last_y + beam_width + this.y_shift);
-        this.context.lineTo(last_x + 1, last_y + this.y_shift);
+        this.context.moveTo(startBeamX, startBeamY);
+        this.context.lineTo(startBeamX, startBeamY + beamThickness);
+        this.context.lineTo(lastBeamX + 1, lastBeamY + beamThickness);
+        this.context.lineTo(lastBeamX + 1, lastBeamY);
         this.context.closePath();
         this.context.fill();
       }
 
-      first_y_px += beam_width * 1.5;
+      beamY += beamThickness * 1.5;
     }
   }
 
@@ -816,7 +798,7 @@ export class Beam {
     if (this.postFormatted) return;
 
     // Calculate a smart slope if we're not forcing the beams to be flat.
-    if (this.render_options.flat_beams) {
+    if (this.notes[0].getCategory() === 'tabnotes' || this.render_options.flat_beams) {
       this.calculateFlatSlope();
     } else {
       this.calculateSlope();

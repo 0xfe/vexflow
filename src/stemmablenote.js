@@ -9,9 +9,6 @@ import { Flow } from './tables';
 import { Stem } from './stem';
 import { Note } from './note';
 
-// To enable logging for this class. Set `Vex.Flow.StemmableNote.DEBUG` to `true`.
-function L(...args) { if (StemmableNote.DEBUG) Vex.L('Vex.Flow.StemmableNote', args); }
-
 export class StemmableNote extends Note {
   constructor(note_struct) {
     super(note_struct);
@@ -100,10 +97,7 @@ export class StemmableNote extends Note {
   getStemX() {
     const x_begin = this.getAbsoluteX() + this.x_shift;
     const x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
-
-    let stem_x = this.stem_direction === Stem.DOWN ? x_begin : x_end;
-    stem_x -= (Stem.WIDTH / 2) * this.stem_direction;
-
+    const stem_x = this.stem_direction === Stem.DOWN ? x_begin : x_end;
     return stem_x;
   }
 
@@ -138,33 +132,7 @@ export class StemmableNote extends Note {
 
   // Get the top and bottom `y` values of the stem.
   getStemExtents() {
-    if (!this.ys || this.ys.length === 0) {
-      throw new Vex.RERR('NoYValues', "Can't get top stem Y when note has no Y values.");
-    }
-
-    let topY = this.ys[0];
-    let baseY = this.ys[0];
-    const stemHeight = Stem.HEIGHT + this.getStemExtension();
-
-    for (let i = 0; i < this.ys.length; ++i) {
-      const stemTop = this.ys[i] + (stemHeight * -this.stem_direction);
-
-      if (this.stem_direction === Stem.DOWN) {
-        topY = Math.max(topY, stemTop);
-        baseY = Math.min(baseY, this.ys[i]);
-      } else {
-        topY = Math.min(topY, stemTop);
-        baseY = Math.max(baseY, this.ys[i]);
-      }
-
-      if (this.noteType === 's' || this.noteType === 'x') {
-        topY -= this.stem_direction * 7;
-        baseY -= this.stem_direction * 7;
-      }
-    }
-
-    L('Stem extents: ', topY, baseY);
-    return { topY, baseY };
+    return this.stem.getExtents();
   }
 
   // Sets the current note's beam
@@ -213,7 +181,6 @@ export class StemmableNote extends Note {
     if (!this.context) {
       throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
     }
-
     this.setStem(new Stem(stem_struct));
     this.stem.setContext(this.context).draw();
   }

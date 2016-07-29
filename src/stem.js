@@ -29,10 +29,7 @@ export class Stem {
     return Flow.STEM_HEIGHT;
   }
 
-  constructor(options = null) {
-    if (options === null) {
-      return;
-    }
+  constructor(options = {}) {
     // Default notehead x bounds
     this.x_begin = options.x_begin || 0;
     this.x_end = options.x_end || 0;
@@ -41,8 +38,6 @@ export class Stem {
     this.y_top = options.y_top || 0;
     this.y_bottom = options.y_bottom || 0;
 
-    // Stem base extension
-    this.y_extend = options.y_extend || 0;
     // Stem top extension
     this.stem_extension = options.stem_extension || 0;
 
@@ -50,7 +45,14 @@ export class Stem {
     this.stem_direction = options.stem_direction || 0;
 
     // Flag to override all draw calls
-    this.hide = false;
+    this.hide = options.hide || false;
+
+    this.isStemlet = options.isStemlet || false;
+    this.stemletHeight = options.stemletHeight || 0;
+
+    // Use to adjust the rendered height without affecting
+    // the results of `.getExtents()`
+    this.renderHeightAdjustment = 0;
   }
 
   // Set the x bounds for the default notehead
@@ -65,6 +67,7 @@ export class Stem {
 
   // Set the extension for the stem, generally for flags or beams
   setExtension(ext) { this.stem_extension = ext; }
+  getExtension() { return this.stem_extension; }
 
   // The the y bounds for the top and bottom noteheads
   setYBounds(y_top, y_bottom) {
@@ -90,30 +93,30 @@ export class Stem {
   // Get the y coordinates for the very base of the stem to the top of
   // the extension
   getExtents() {
+    const isStemUp = this.stem_direction === Stem.UP;
     const ys = [this.y_top, this.y_bottom];
+    const stemHeight = Stem.HEIGHT + this.stem_extension;
+    const innerMostNoteheadY = (isStemUp ? Math.min : Math.max)(...ys);
+    const outerMostNoteheadY = (isStemUp ? Math.max : Math.min)(...ys);
+    const stemTipY = innerMostNoteheadY + (stemHeight * -this.stem_direction);
 
-    let top_pixel = this.y_top;
-    let base_pixel = this.y_bottom;
-    const stem_height = Stem.HEIGHT + this.stem_extension;
-
-    for (let i = 0; i < ys.length; ++i) {
-      const stem_top = ys[i] + (stem_height * -this.stem_direction);
-
-      if (this.stem_direction === Stem.DOWN) {
-        top_pixel = Math.max(top_pixel, stem_top);
-        base_pixel = Math.min(base_pixel, ys[i]);
-      } else {
-        top_pixel = Math.min(top_pixel, stem_top);
-        base_pixel = Math.max(base_pixel, ys[i]);
-      }
-    }
-
-    return { topY: top_pixel, baseY: base_pixel };
+    return { topY: stemTipY, baseY: outerMostNoteheadY };
   }
 
   // set the draw style of a stem:
   setStyle(style) { this.style = style; return this; }
   getStyle() { return this.style; }
+
+  setVisibility(isVisible) {
+    this.hide = !isVisible;
+    return this;
+  }
+
+  setStemlet(isStemlet, stemletHeight) {
+    this.isStemlet = isStemlet;
+    this.stemletHeight = stemletHeight;
+    return this;
+  }
 
   // Apply current style to Canvas `context`
   applyStyle(context) {
@@ -141,25 +144,30 @@ export class Stem {
 
     if (stem_direction === Stem.DOWN) {
       // Down stems are rendered to the left of the head.
-      stem_x = this.x_begin + (Stem.WIDTH / 2);
-      stem_y = this.y_top + 2;
+      stem_x = this.x_begin;
+      stem_y = this.y_top;
     } else {
       // Up stems are rendered to the right of the head.
-      stem_x = this.x_end + (Stem.WIDTH / 2);
-      stem_y = this.y_bottom - 2;
+      stem_x = this.x_end;
+      stem_y = this.y_bottom;
     }
 
-    stem_y += this.y_extend * stem_direction;
+    const stemHeight = this.getHeight();
 
     L('Rendering stem - ', 'Top Y: ', this.y_top, 'Bottom Y: ', this.y_bottom);
+
+    // The offset from the stem's base which is required fo satisfy the stemlet height
+    const stemletYOffset = this.isStemlet
+      ? stemHeight - this.stemletHeight * this.stem_direction
+      : 0;
 
     // Draw the stem
     ctx.save();
     this.applyStyle(ctx);
     ctx.beginPath();
     ctx.setLineWidth(Stem.WIDTH);
-    ctx.moveTo(stem_x, stem_y);
-    ctx.lineTo(stem_x, stem_y - this.getHeight());
+    ctx.moveTo(stem_x, stem_y - stemletYOffset);
+    ctx.lineTo(stem_x, stem_y - stemHeight - (this.renderHeightAdjustment * stem_direction));
     ctx.stroke();
     ctx.restore();
   }

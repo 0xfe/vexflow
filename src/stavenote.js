@@ -22,6 +22,8 @@ import { Glyph } from './glyph';
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
 function L(...args) { if (StaveNote.DEBUG) Vex.L('Vex.Flow.StaveNote', args); }
 
+const getStemAdjustment = (note) => Stem.WIDTH / (2 * -note.getStemDirection());
+
 // Helper methods for rest positioning in ModifierContext.
 function shiftRestVertical(rest, note, dir) {
   const delta = (note.isrest ? 0.0 : 1.0) * dir;
@@ -324,13 +326,11 @@ export class StaveNote extends StemmableNote {
   buildStem() {
     const glyph = this.getGlyph();
     const yExtend = glyph.code_head === 'v95' || glyph.code_head === 'v3e' ? -4 : 0;
-    const stem = new Stem({ yExtend });
 
-    if (this.isRest()) {
-      stem.hide = true;
-    }
-
-    this.setStem(stem);
+    this.setStem(new Stem({
+      yExtend,
+      hide: !!this.isRest(),
+    }));
   }
 
   // Builds a `NoteHead` for each key in the note
@@ -493,8 +493,8 @@ export class StaveNote extends StemmableNote {
     } else if (this.glyph.stem) {
       const ys = this.getStemExtents();
       ys.baseY += halfLineSpacing * this.stem_direction;
-      minY = Vex.Min(ys.topY, ys.baseY);
-      maxY = Vex.Max(ys.topY, ys.baseY);
+      minY = Math.min(ys.topY, ys.baseY);
+      maxY = Math.max(ys.topY, ys.baseY);
     } else {
       minY = null;
       maxY = null;
@@ -505,8 +505,8 @@ export class StaveNote extends StemmableNote {
           minY = yy;
           maxY = yy;
         } else {
-          minY = Vex.Min(yy, minY);
-          maxY = Vex.Max(yy, maxY);
+          minY = Math.min(yy, minY);
+          maxY = Math.max(yy, maxY);
         }
       }
       minY -= halfLineSpacing;
@@ -549,6 +549,16 @@ export class StaveNote extends StemmableNote {
   // Determine if the `StaveNote` has a stem
   hasStem() { return this.glyph.stem; }
 
+  getStemX() {
+    if (this.noteType === 'r') {
+      return this.getCenterGlyphX();
+    } else {
+      // We adjust the origin of the stem because we want the stem left-aligned
+      // with the notehead if stemmed-down, and right-aligned if stemmed-up
+      return super.getStemX() + getStemAdjustment(this);
+    }
+  }
+
   // Get the `y` coordinate for text placed on the top/bottom of a
   // note at a desired `text_line`
   getYForTopText(textLine) {
@@ -578,7 +588,7 @@ export class StaveNote extends StemmableNote {
 
     this.setYs(ys);
 
-    if (this.hasStem()) {
+    if (this.stem) {
       const { y_top, y_bottom } = this.getNoteHeadBounds();
       this.stem.setYBounds(y_top, y_bottom);
     }
@@ -835,7 +845,7 @@ export class StaveNote extends StemmableNote {
   // Get the ending `x` coordinate for the noteheads
   getNoteHeadEndX() {
     const xBegin = this.getNoteHeadBeginX();
-    return xBegin + this.glyph.head_width - (Flow.STEM_WIDTH / 2);
+    return xBegin + this.glyph.head_width;
   }
 
   // Draw the ledger lines between the stave and the highest/lowest keys
@@ -914,22 +924,18 @@ export class StaveNote extends StemmableNote {
     const glyph = this.getGlyph();
 
     if (glyph.flag && shouldRenderFlag) {
-      let flagX;
+      const flagX = this.getStemX();
       let flagY;
       let flagCode;
 
-      const xBegin = this.getNoteHeadBeginX();
-      const xEnd = this.getNoteHeadEndX();
       const { y_top, y_bottom } = this.getNoteHeadBounds();
       const noteStemHeight = stem.getHeight();
       if (this.getStemDirection() === Stem.DOWN) {
         // Down stems have flags on the left.
-        flagX = xBegin + 1;
         flagY = y_top - noteStemHeight + 2;
         flagCode = glyph.code_flag_downstem;
       } else {
         // Up stems have flags on the left.
-        flagX = xEnd + 1;
         flagY = y_bottom - noteStemHeight - 2;
         flagCode = glyph.code_flag_upstem;
       }
@@ -978,14 +984,14 @@ export class StaveNote extends StemmableNote {
     }
 
     const xBegin = this.getNoteHeadBeginX();
-    const xEnd = this.getNoteHeadEndX();
     const shouldRenderStem = this.hasStem() && !this.beam;
 
     // Format note head x positions
     this.note_heads.forEach(notehead => notehead.setX(xBegin));
 
     // Format stem x positions
-    this.stem.setNoteHeadXBounds(xBegin, xEnd);
+    const stemX = this.getStemX();
+    this.stem.setNoteHeadXBounds(stemX, stemX);
 
     L('Rendering ', this.isChord() ? 'chord :' : 'note :', this.keys);
 
