@@ -10,6 +10,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Note } from './note';
+import { Stem } from './stem';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
@@ -25,7 +26,7 @@ function L(...args) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args); }
 // * `y`: the y coordinate to draw at
 // * `stem_direction`: the direction of the stem
 function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
-  const width = 15 + (Flow.STEM_WIDTH / 2);
+  const width = 15;
   ctx.save();
   ctx.setLineWidth(Flow.STEM_WIDTH);
 
@@ -149,7 +150,14 @@ export class NoteHead extends Note {
     // to its tick context
     const x = !this.preFormatted ? this.x : super.getAbsoluteX();
 
-    return x + (this.displaced ? this.width * this.stem_direction : 0);
+    // For a more natural displaced notehead, we adjust the displacement amount
+    // by half the stem width in order to maintain a slight overlap with the stem
+    const displacementStemAdjustment = (Stem.WIDTH / 2);
+
+    return x + (this.displaced
+      ? (this.width - displacementStemAdjustment) * this.stem_direction
+      : 0
+    );
   }
 
   // Get the `BoundingBox` for the `NoteHead`

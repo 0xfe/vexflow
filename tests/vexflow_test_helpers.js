@@ -213,6 +213,10 @@ VF.Test = (function() {
       legend("#DDD", "Formatter Shift")
 
       ctx.restore();
+    },
+
+    almostEqual: function(value, expectedValue, errorMargin) {
+      return equal(Math.abs(value - expectedValue) < errorMargin, true);
     }
   };
 

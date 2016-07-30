@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.63 built on 2016-07-11.
+ * VexFlow 1.2.64 built on 2016-07-30.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -218,6 +218,10 @@ VF.Test = (function() {
       legend("#DDD", "Formatter Shift")
 
       ctx.restore();
+    },
+
+    almostEqual: function(value, expectedValue, errorMargin) {
+      return equal(Math.abs(value - expectedValue) < errorMargin, true);
     }
   };
 
@@ -10347,7 +10351,7 @@ VF.Test.StaveNote = (function() {
       tickContext.setX(10);
       tickContext.setPadding(0);
 
-      equal(tickContext.getWidth(), 16);
+      VF.Test.almostEqual(tickContext.getWidth(), 15.5988, 0.0001);
     },
 
     showNote: function(note_struct, stave, ctx, x, drawBoundingBox) {
@@ -11218,6 +11222,7 @@ VF.Test.StaveNote = (function() {
 
   return StaveNote;
 })();
+
 /**
  * VexFlow - StaveTie Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>

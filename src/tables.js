@@ -2,6 +2,7 @@
 
 import { Vex } from './vex';
 import { Fraction } from './fraction';
+import { Glyph } from './glyph';
 
 const Flow = {
   STEM_WIDTH: 1.5,
@@ -710,7 +711,9 @@ Flow.durationToGlyph = (duration, type) => {
 Flow.durationToGlyph.duration_codes = {
   '1/2': {
     common: {
-      head_width: 22,
+      get head_width() {
+        return new Glyph(this.code_head || 'v53', 35).getMetrics().width;
+      },
       stem: false,
       stem_offset: 0,
       flag: false,
@@ -737,7 +740,6 @@ Flow.durationToGlyph.duration_codes = {
       },
       'r': { // Breve rest
         code_head: 'v31',
-        head_width: 24,
         rest: true,
         position: 'B/5',
         dot_shiftY: 0.5,
@@ -751,7 +753,9 @@ Flow.durationToGlyph.duration_codes = {
   },
   '1': {
     common: {
-      head_width: 16,
+      get head_width() {
+        return new Glyph(this.code_head || 'v1d', 35).getMetrics().width;
+      },
       stem: false,
       stem_offset: 0,
       flag: false,
@@ -778,7 +782,6 @@ Flow.durationToGlyph.duration_codes = {
       },
       'r': { // Whole rest
         code_head: 'v5c',
-        head_width: 12,
         rest: true,
         position: 'D/5',
         dot_shiftY: 0.5,
@@ -792,7 +795,9 @@ Flow.durationToGlyph.duration_codes = {
   },
   '2': {
     common: {
-      head_width: 10,
+      get head_width() {
+        return new Glyph(this.code_head || 'v81', 35).getMetrics().width;
+      },
       stem: true,
       stem_offset: 0,
       flag: false,
@@ -819,7 +824,6 @@ Flow.durationToGlyph.duration_codes = {
       },
       'r': { // Half rest
         code_head: 'vc',
-        head_width: 12,
         stem: false,
         rest: true,
         position: 'B/4',
@@ -834,7 +838,9 @@ Flow.durationToGlyph.duration_codes = {
   },
   '4': {
     common: {
-      head_width: 10,
+      get head_width() {
+        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+      },
       stem: true,
       stem_offset: 0,
       flag: false,
@@ -861,7 +867,6 @@ Flow.durationToGlyph.duration_codes = {
       },
       'r': { // Quarter rest
         code_head: 'v7c',
-        head_width: 8,
         stem: false,
         rest: true,
         position: 'B/4',
@@ -878,7 +883,9 @@ Flow.durationToGlyph.duration_codes = {
   },
   '8': {
     common: {
-      head_width: 10,
+      get head_width() {
+        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+      },
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -925,7 +932,9 @@ Flow.durationToGlyph.duration_codes = {
   '16': {
     common: {
       beam_count: 2,
-      head_width: 10,
+      get head_width() {
+        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+      },
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -953,7 +962,6 @@ Flow.durationToGlyph.duration_codes = {
       },
       'r': { // Sixteenth rest
         code_head: 'v3c',
-        head_width: 13,
         stem: false,
         flag: false,
         rest: true,
@@ -972,7 +980,9 @@ Flow.durationToGlyph.duration_codes = {
   '32': {
     common: {
       beam_count: 3,
-      head_width: 10,
+      get head_width() {
+        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+      },
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -1000,7 +1010,6 @@ Flow.durationToGlyph.duration_codes = {
       },
       'r': { // Thirty-second rest
         code_head: 'v55',
-        head_width: 16,
         stem: false,
         flag: false,
         rest: true,
@@ -1019,7 +1028,9 @@ Flow.durationToGlyph.duration_codes = {
   '64': {
     common: {
       beam_count: 4,
-      head_width: 10,
+      get head_width() {
+        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+      },
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -1047,7 +1058,6 @@ Flow.durationToGlyph.duration_codes = {
       },
       'r': { // Sixty-fourth rest
         code_head: 'v38',
-        head_width: 18,
         stem: false,
         flag: false,
         rest: true,
@@ -1066,7 +1076,9 @@ Flow.durationToGlyph.duration_codes = {
   '128': {
     common: {
       beam_count: 5,
-      head_width: 10,
+      get head_width() {
+        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+      },
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -1094,7 +1106,6 @@ Flow.durationToGlyph.duration_codes = {
       },
       'r': {  // Hundred-twenty-eight rest
         code_head: 'vaa',
-        head_width: 20,
         stem: false,
         flag: false,
         rest: true,
