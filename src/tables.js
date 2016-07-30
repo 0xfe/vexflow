@@ -10,7 +10,7 @@ const Flow = {
   STAVE_LINE_THICKNESS: 2,
   RESOLUTION: 16384,
   DEFAULT_NOTATION_FONT_SCALE: 39,
-  DEFAULT_TABLATURE_FONT_SCALE: 30,
+  DEFAULT_TABLATURE_FONT_SCALE: 39,
 
   /* Kerning (DEPRECATED) */
   IsKerned: true,
@@ -234,12 +234,12 @@ Flow.tabToGlyph = fret => {
   return {
     text: fret,
     code: glyph,
-    width,
+    getWidth: () => width,
     shift_y,
   };
 };
 
-Flow.textWidth = text => 6 * text.toString().length;
+Flow.textWidth = text => 7 * text.toString().length;
 
 Flow.articulationCodes = artic => Flow.articulationCodes.articulations[artic];
 
@@ -801,13 +801,11 @@ Flow.durationToGlyph = (duration, type) => {
   return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
 };
 
-const scale = Flow.DEFAULT_NOTATION_FONT_SCALE;;
-
 Flow.durationToGlyph.duration_codes = {
   '1/2': {
     common: {
-      get head_width() {
-        return new Glyph(this.code_head || 'v53', 35).getMetrics().width;
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+        return new Glyph(this.code_head || 'v53', scale).getMetrics().width;
       },
       stem: false,
       stem_offset: 0,
@@ -841,14 +839,14 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Breve note slash -
         // Drawn with canvas primitives
-        head_width: 15,
+        getWidth: () => 15,
         position: 'B/4',
       },
     },
   },
   '1': {
     common: {
-      get head_width() {
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'v1d', scale).getMetrics().width;
       },
       stem: false,
@@ -883,14 +881,14 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Whole note slash
         // Drawn with canvas primitives
-        head_width: 15,
+        getWidth: () => 15,
         position: 'B/4',
       },
     },
   },
   '2': {
     common: {
-      get head_width() {
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'v81', scale).getMetrics().width;
       },
       stem: true,
@@ -926,14 +924,14 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Half note slash
         // Drawn with canvas primitives
-        head_width: 15,
+        getWidth: () => 15,
         position: 'B/4',
       },
     },
   },
   '4': {
     common: {
-      get head_width() {
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
@@ -971,14 +969,14 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Quarter slash
          // Drawn with canvas primitives
-        head_width: 15,
+        getWidth: () => 15,
         position: 'B/4',
       },
     },
   },
   '8': {
     common: {
-      get head_width() {
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
@@ -1019,7 +1017,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Eight slash
         // Drawn with canvas primitives
-        head_width: 15,
+        getWidth: () => 15,
         position: 'B/4',
       },
     },
@@ -1027,7 +1025,7 @@ Flow.durationToGlyph.duration_codes = {
   '16': {
     common: {
       beam_count: 2,
-      get head_width() {
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
@@ -1035,7 +1033,7 @@ Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: 'v3f',
       code_flag_downstem: 'v8f',
-      stem_up_extension: 4,
+      stem_up_extension: 0,
       stem_down_extension: 0,
       gracenote_stem_up_extension: -14,
       gracenote_stem_down_extension: -14,
@@ -1067,7 +1065,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Sixteenth slash
         // Drawn with canvas primitives
-        head_width: 15,
+        width: () => 15,
         position: 'B/4',
       },
     },
@@ -1075,7 +1073,7 @@ Flow.durationToGlyph.duration_codes = {
   '32': {
     common: {
       beam_count: 3,
-      get head_width() {
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
@@ -1083,11 +1081,11 @@ Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: 'v47',
       code_flag_downstem: 'v2a',
-      stem_up_extension: 13,
+      stem_up_extension: 9,
       stem_down_extension: 9,
       gracenote_stem_up_extension: -12,
       gracenote_stem_down_extension: -12,
-      tabnote_stem_up_extension: 9,
+      tabnote_stem_up_extension: 5,
       tabnote_stem_down_extension: 5,
       dot_shiftY: 0,
       line_above: 0,
@@ -1115,7 +1113,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Thirty-second slash
         // Drawn with canvas primitives
-        head_width: 15,
+        getWidth: () => 15,
         position: 'B/4',
       },
     },
@@ -1123,7 +1121,7 @@ Flow.durationToGlyph.duration_codes = {
   '64': {
     common: {
       beam_count: 4,
-      get head_width() {
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
@@ -1131,11 +1129,11 @@ Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: 'va9',
       code_flag_downstem: 'v58',
-      stem_up_extension: 17,
+      stem_up_extension: 13,
       stem_down_extension: 13,
       gracenote_stem_up_extension: -10,
       gracenote_stem_down_extension: -10,
-      tabnote_stem_up_extension: 13,
+      tabnote_stem_up_extension: 9,
       tabnote_stem_down_extension: 9,
       dot_shiftY: 0,
       line_above: 0,
@@ -1163,7 +1161,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Sixty-fourth slash
         // Drawn with canvas primitives
-        head_width: 15,
+        getWidth: () => 15,
         position: 'B/4',
       },
     },
@@ -1171,7 +1169,7 @@ Flow.durationToGlyph.duration_codes = {
   '128': {
     common: {
       beam_count: 5,
-      get head_width() {
+      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
@@ -1179,11 +1177,11 @@ Flow.durationToGlyph.duration_codes = {
       flag: true,
       code_flag_upstem: 'v9b',
       code_flag_downstem: 'v30',
-      stem_up_extension: 26,
+      stem_up_extension: 22,
       stem_down_extension: 22,
       gracenote_stem_up_extension: -8,
       gracenote_stem_down_extension: -8,
-      tabnote_stem_up_extension: 22,
+      tabnote_stem_up_extension: 18,
       tabnote_stem_down_extension: 18,
       dot_shiftY: 0,
       line_above: 0,
@@ -1211,7 +1209,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Hundred-twenty-eight rest
               // Drawn with canvas primitives
-        head_width: 15,
+        getWidth: () => 15,
         position: 'B/4',
       },
     },

@@ -101,12 +101,12 @@ export class NoteHead extends Note {
 
     Vex.Merge(this.render_options, {
       // font size for note heads
-      glyph_font_scale: head_options.glyph_font_scale || Flow.NOTATION_FONT_SCALE,
+      glyph_font_scale: head_options.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
       stroke_px: 3,
     });
 
-    this.setWidth(this.glyph.head_width);
+    this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
   }
 
   getCategory() { return NoteHead.CATEGORY; }
@@ -195,8 +195,7 @@ export class NoteHead extends Note {
   preFormat() {
     if (this.preFormatted) return this;
 
-    const glyph = this.getGlyph();
-    const width = glyph.head_width + this.extraLeftPx + this.extraRightPx;
+    const width = this.getWidth() + this.extraLeftPx + this.extraRightPx;
 
     this.setWidth(width);
     this.setPreFormatted(true);
@@ -234,7 +233,7 @@ export class NoteHead extends Note {
         ctx.fillRect(
           head_x - this.render_options.stroke_px,
           line_y,
-          this.getGlyph().head_width + (this.render_options.stroke_px * 2),
+          this.getWidth() + (this.render_options.stroke_px * 2),
           1
         );
       }

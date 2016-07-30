@@ -203,7 +203,14 @@ export class TabNote extends StemmableNote {
       if (this.ghost) fret = '(' + fret + ')';
       const glyph = Flow.tabToGlyph(fret);
       this.glyphs.push(glyph);
-      this.width = (glyph.width > this.width) ? glyph.width : this.width;
+      this.width = Math.max(glyph.getWidth(), this.width);
+
+      // For some reason we associate a notehead glyph with a TabNote, and this
+      // glyph is used for certain width calculations. Of course, this is totally
+      // incorrect since a notehead is a poor approximation for the dimensions of
+      // a fret number which can have multiple digits. As a result, we must
+      // overwrite getWidth() to return the correct width
+      this.glyph.getWidth = () => this.width;
     }
   }
 
@@ -257,7 +264,7 @@ export class TabNote extends StemmableNote {
   // Get the `x` coordinate to the right of the note
   getTieRightX() {
     let tieStartX = this.getAbsoluteX();
-    const note_glyph_width = this.glyph.head_width;
+    const note_glyph_width = this.glyph.getWidth();
     tieStartX += note_glyph_width / 2;
     tieStartX += (-this.width / 2) + this.width + 2;
 
@@ -267,7 +274,7 @@ export class TabNote extends StemmableNote {
   // Get the `x` coordinate to the left of the note
   getTieLeftX() {
     let tieEndX = this.getAbsoluteX();
-    const note_glyph_width = this.glyph.head_width;
+    const note_glyph_width = this.glyph.getWidth();
     tieEndX += note_glyph_width / 2;
     tieEndX -= (this.width / 2) + 2;
 
@@ -291,7 +298,7 @@ export class TabNote extends StemmableNote {
     } else if (position === Modifier.Position.RIGHT) {
       x = this.width + 2; // extra_right_px
     } else if (position === Modifier.Position.BELOW || position === Modifier.Position.ABOVE) {
-      const note_glyph_width = this.glyph.head_width;
+      const note_glyph_width = this.glyph.getWidth();
       x = note_glyph_width / 2;
     }
 
@@ -413,10 +420,11 @@ export class TabNote extends StemmableNote {
       const glyph = this.glyphs[i];
 
       // Center the fret text beneath the notation note head
-      const note_glyph_width = this.glyph.head_width;
-      const tab_x = x + (note_glyph_width / 2) - (glyph.width / 2);
+      const note_glyph_width = this.glyph.getWidth();
+      const tab_x = x + (note_glyph_width / 2) - (glyph.getWidth() / 2);
 
-      ctx.clearRect(tab_x - 2, y - 3, glyph.width + 4, 6);
+      // FIXME: Magic numbers.
+      ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
 
       if (glyph.code) {
         Glyph.renderGlyph(

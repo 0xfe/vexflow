@@ -73,7 +73,7 @@ VF.Test.TabNote = (function() {
       tickContext.setX(10);
       tickContext.setPadding(0);
 
-      equal(tickContext.getWidth(), 6);
+      equal(tickContext.getWidth(), 7);
     },
 
     showNote: function(tab_struct, stave, ctx, x) {

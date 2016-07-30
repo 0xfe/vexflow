@@ -314,6 +314,7 @@ export class StaveNote extends StemmableNote {
       this.setStemDirection(noteStruct.stem_direction);
     }
 
+    this.buildFlag();
     this.buildNoteHeads();
 
     // Calculate left/right padding
@@ -331,6 +332,19 @@ export class StaveNote extends StemmableNote {
       yExtend,
       hide: !!this.isRest(),
     }));
+  }
+
+  buildFlag() {
+    const { glyph, beam } = this;
+    const shouldRenderFlag = beam === null;
+
+    if (glyph.flag && shouldRenderFlag) {
+      const flagCode = this.getStemDirection() === Stem.DOWN
+        ? glyph.code_flag_downstem
+        : glyph.code_flag_upstem;
+
+      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale);
+    }
   }
 
   // Builds a `NoteHead` for each key in the note
@@ -618,7 +632,7 @@ export class StaveNote extends StemmableNote {
   // Get the starting `x` coordinate for a `StaveTie`
   getTieRightX() {
     let tieStartX = this.getAbsoluteX();
-    tieStartX += this.glyph.head_width + this.x_shift + this.extraRightPx;
+    tieStartX += this.getGlyphWidth() + this.x_shift + this.extraRightPx;
     if (this.modifierContext) tieStartX += this.modifierContext.getExtraRightPx();
     return tieStartX;
   }
@@ -654,27 +668,34 @@ export class StaveNote extends StemmableNote {
       throw new Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
     }
 
+    const { ABOVE, BELOW, LEFT, RIGHT } = Modifier.Position;
     let x = 0;
-    if (position === Modifier.Position.LEFT) {
+    if (position === LEFT) {
       // extra_left_px
+      // FIXME: What are these magic numbers?
       x = -1 * 2;
-    } else if (position === Modifier.Position.RIGHT) {
+    } else if (position === RIGHT) {
       // extra_right_px
-      x = this.glyph.head_width + this.x_shift + 2;
-    } else if (position === Modifier.Position.BELOW ||
-               position === Modifier.Position.ABOVE) {
-      x = this.glyph.head_width / 2;
+       // FIXME: What is this magical +2?
+      x = this.getGlyphWidth() + this.x_shift + 2;
+
+      if (this.stem_direction === Stem.UP && this.hasFlag() && !this.beam) {
+        x += this.flag.getMetrics().width;
+      }
+    } else if (position === BELOW || position === ABOVE) {
+      x = this.getGlyphWidth() / 2;
     }
 
-    return { x: this.getAbsoluteX() + x, y: this.ys[index] };
+    return {
+      x: this.getAbsoluteX() + x,
+      y: this.ys[index],
+    };
   }
 
   // Sets the style of the complete StaveNote, including all keys
   // and the stem.
   setStyle(style) {
-    this.note_heads.forEach(notehead => {
-      notehead.setStyle(style);
-    }, this);
+    this.note_heads.forEach(notehead => notehead.setStyle(style));
     this.stem.setStyle(style);
   }
 
@@ -767,7 +788,7 @@ export class StaveNote extends StemmableNote {
   // formatting
   getVoiceShiftWidth() {
     // TODO: may need to accomodate for dot here.
-    return this.glyph.head_width * (this.displaced ? 2 : 1);
+    return this.getGlyphWidth() * (this.displaced ? 2 : 1);
   }
 
   // Calculates and sets the extra pixels to the left or right
@@ -775,7 +796,7 @@ export class StaveNote extends StemmableNote {
   calcExtraPx() {
     this.setExtraLeftPx(
       this.displaced && this.stem_direction === Stem.DOWN
-        ? this.glyph.head_width
+        ? this.getGlyphWidth()
         : 0
     );
 
@@ -783,7 +804,7 @@ export class StaveNote extends StemmableNote {
     // up by the flag.
     this.setExtraRightPx(
       !this.hasFlag() && this.displaced && this.stem_direction === Stem.UP
-        ? this.glyph.head_width
+        ? this.getGlyphWidth()
         : 0
     );
   }
@@ -793,11 +814,11 @@ export class StaveNote extends StemmableNote {
     if (this.preFormatted) return;
     if (this.modifierContext) this.modifierContext.preFormat();
 
-    let width = this.glyph.head_width + this.extraLeftPx + this.extraRightPx;
+    let width = this.getGlyphWidth() + this.extraLeftPx + this.extraRightPx;
 
     // For upward flagged notes, the width of the flag needs to be added
     if (this.glyph.flag && this.beam === null && this.stem_direction === Stem.UP) {
-      width += this.glyph.head_width;
+      width += this.getGlyphWidth();
     }
 
     this.setWidth(width);
@@ -845,7 +866,7 @@ export class StaveNote extends StemmableNote {
   // Get the ending `x` coordinate for the noteheads
   getNoteHeadEndX() {
     const xBegin = this.getNoteHeadBeginX();
-    return xBegin + this.glyph.head_width;
+    return xBegin + this.getGlyphWidth();
   }
 
   // Draw the ledger lines between the stave and the highest/lowest keys
@@ -869,7 +890,7 @@ export class StaveNote extends StemmableNote {
         headX = this.getAbsoluteX() + x_shift;
       }
       const x = headX - stroke_px;
-      const length = ((headX + glyph.head_width) - headX) + (stroke_px * 2);
+      const length = ((headX + glyph.getWidth()) - headX) + (stroke_px * 2);
 
       ctx.fillRect(x, y, length, 1);
     };
@@ -910,11 +931,7 @@ export class StaveNote extends StemmableNote {
 
   // Draw the flag for the note
   drawFlag() {
-    const {
-      stem, beam,
-      context: ctx,
-      render_options: { glyph_font_scale },
-    } = this;
+    const { stem, beam, context: ctx } = this;
 
     if (!ctx) {
       throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
@@ -924,25 +941,19 @@ export class StaveNote extends StemmableNote {
     const glyph = this.getGlyph();
 
     if (glyph.flag && shouldRenderFlag) {
-      const flagX = this.getStemX();
-      let flagY;
-      let flagCode;
-
       const { y_top, y_bottom } = this.getNoteHeadBounds();
       const noteStemHeight = stem.getHeight();
-      if (this.getStemDirection() === Stem.DOWN) {
-        // Down stems have flags on the left.
-        flagY = y_top - noteStemHeight + 2;
-        flagCode = glyph.code_flag_downstem;
-      } else {
-        // Up stems have flags on the left.
-        flagY = y_bottom - noteStemHeight - 2;
-        flagCode = glyph.code_flag_upstem;
-      }
+      const flagX = this.getStemX();
+      // FIXME: What's with the magic +/- 2
+      const flagY = this.getStemDirection() === Stem.DOWN
+          // Down stems have flags on the left
+          ? y_top - noteStemHeight + 2
+          // Up stems have flags on the eft.
+          : y_bottom - noteStemHeight - 2;
 
       // Draw the Flag
       ctx.openGroup('flag', null, { pointerBBox: true });
-      Glyph.renderGlyph(ctx, flagX, flagY, glyph_font_scale, flagCode);
+      this.flag.render(ctx, flagX, flagY);
       ctx.closeGroup();
     }
   }

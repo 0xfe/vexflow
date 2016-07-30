@@ -285,7 +285,7 @@ export class StaveLine {
 
 
       // Adjust first `x` coordinates for displacements
-      const notehead_width = first_note.getGlyph().head_width;
+      const notehead_width = first_note.getGlyph().getWidth();
       const first_displaced = first_note.getKeyProps()[first_index].displaced;
       if (first_displaced && first_note.getStemDirection() === 1) {
         start_position.x += notehead_width + render_options.padding_left;
