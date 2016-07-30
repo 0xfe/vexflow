@@ -215,8 +215,8 @@ VF.Test = (function() {
       ctx.restore();
     },
 
-    almostEqual: function(value, expected, precision) {
-      return equal(Math.abs(value - expected) < precision, true);
+    almostEqual: function(value, expectedValue, errorMargin) {
+      return equal(Math.abs(value - expectedValue) < errorMargin, true);
     }
   };
 
