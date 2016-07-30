@@ -216,7 +216,7 @@ VF.Test = (function() {
     },
 
     almostEqual: function(value, expected, precision) {
-      return QUnit.equal(Math.abs(value - expected) < precision, true);
+      return equal(Math.abs(value - expected) < precision, true);
     }
   };
 
