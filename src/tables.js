@@ -6,7 +6,7 @@ import { Glyph } from './glyph';
 
 const Flow = {
   STEM_WIDTH: 1.5,
-  STEM_HEIGHT: 32,
+  STEM_HEIGHT: 35,
   STAVE_LINE_THICKNESS: 2,
   RESOLUTION: 16384,
   DEFAULT_NOTATION_FONT_SCALE: 39,
