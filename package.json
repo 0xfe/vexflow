@@ -45,7 +45,8 @@
     "qunit": "^0.9.1",
     "raphael": "^2.1.0",
     "slimerjs": "^0.906.2",
-    "webpack": "^1.13.1"
+    "webpack": "*",
+    "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
     "start": "grunt stage",
