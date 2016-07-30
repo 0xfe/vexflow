@@ -213,6 +213,10 @@ VF.Test = (function() {
       legend("#DDD", "Formatter Shift")
 
       ctx.restore();
+    },
+
+    almostEqual: function(value, expected, precision) {
+      return QUnit.equal(Math.abs(value - expected) < precision, true);
     }
   };
 
