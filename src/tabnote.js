@@ -125,7 +125,7 @@ export class TabNote extends StemmableNote {
     // Render Options
     Vex.Merge(this.render_options, {
       // font size for note heads and rests
-      glyph_font_scale: 30,
+      glyph_font_scale: Flow.DEFAULT_TABLATURE_FONT_SCALE,
       // Flag to draw a stem
       draw_stem,
       // Flag to draw dot modifiers

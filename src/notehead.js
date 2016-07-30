@@ -100,13 +100,11 @@ export class NoteHead extends Note {
     this.slashed = head_options.slashed;
 
     Vex.Merge(this.render_options, {
-      glyph_font_scale: 35, // font size for note heads
-      stroke_px: 3,         // number of stroke px to the left and right of head
+      // font size for note heads
+      glyph_font_scale: head_options.glyph_font_scale || Flow.NOTATION_FONT_SCALE,
+      // number of stroke px to the left and right of head
+      stroke_px: 3,
     });
-
-    if (head_options.glyph_font_scale) {
-      this.render_options.glyph_font_scale = head_options.glyph_font_scale;
-    }
 
     this.setWidth(this.glyph.head_width);
   }

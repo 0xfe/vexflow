@@ -9,6 +9,8 @@ const Flow = {
   STEM_HEIGHT: 32,
   STAVE_LINE_THICKNESS: 2,
   RESOLUTION: 16384,
+  DEFAULT_NOTATION_FONT_SCALE: 39,
+  DEFAULT_TABLATURE_FONT_SCALE: 30,
 
   /* Kerning (DEPRECATED) */
   IsKerned: true,
@@ -799,6 +801,8 @@ Flow.durationToGlyph = (duration, type) => {
   return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
 };
 
+const scale = Flow.DEFAULT_NOTATION_FONT_SCALE;;
+
 Flow.durationToGlyph.duration_codes = {
   '1/2': {
     common: {
@@ -845,7 +849,7 @@ Flow.durationToGlyph.duration_codes = {
   '1': {
     common: {
       get head_width() {
-        return new Glyph(this.code_head || 'v1d', 35).getMetrics().width;
+        return new Glyph(this.code_head || 'v1d', scale).getMetrics().width;
       },
       stem: false,
       stem_offset: 0,
@@ -887,7 +891,7 @@ Flow.durationToGlyph.duration_codes = {
   '2': {
     common: {
       get head_width() {
-        return new Glyph(this.code_head || 'v81', 35).getMetrics().width;
+        return new Glyph(this.code_head || 'v81', scale).getMetrics().width;
       },
       stem: true,
       stem_offset: 0,
@@ -930,7 +934,7 @@ Flow.durationToGlyph.duration_codes = {
   '4': {
     common: {
       get head_width() {
-        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+        return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
       stem_offset: 0,
@@ -975,7 +979,7 @@ Flow.durationToGlyph.duration_codes = {
   '8': {
     common: {
       get head_width() {
-        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+        return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
       stem_offset: 0,
@@ -1024,7 +1028,7 @@ Flow.durationToGlyph.duration_codes = {
     common: {
       beam_count: 2,
       get head_width() {
-        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+        return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
       stem_offset: 0,
@@ -1072,7 +1076,7 @@ Flow.durationToGlyph.duration_codes = {
     common: {
       beam_count: 3,
       get head_width() {
-        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+        return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
       stem_offset: 0,
@@ -1120,7 +1124,7 @@ Flow.durationToGlyph.duration_codes = {
     common: {
       beam_count: 4,
       get head_width() {
-        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+        return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
       stem_offset: 0,
@@ -1168,7 +1172,7 @@ Flow.durationToGlyph.duration_codes = {
     common: {
       beam_count: 5,
       get head_width() {
-        return new Glyph(this.code_head || 'vb', 35).getMetrics().width;
+        return new Glyph(this.code_head || 'vb', scale).getMetrics().width;
       },
       stem: true,
       stem_offset: 0,

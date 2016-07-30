@@ -298,7 +298,7 @@ export class StaveNote extends StemmableNote {
 
     Vex.Merge(this.render_options, {
       // font size for note heads and rests
-      glyph_font_scale: 35,
+      glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
       stroke_px: 3,
     });
