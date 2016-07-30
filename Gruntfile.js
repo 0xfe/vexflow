@@ -1,4 +1,3 @@
-const babel = require('rollup-plugin-babel');
 const path = require('path');
 
 module.exports = (grunt) => {
@@ -27,6 +26,30 @@ module.exports = (grunt) => {
     'tests/run.js',
   ];
 
+  const webpackCommon = {
+    entry: MODULE_ENTRY,
+    output: {
+      path: BUILD_DIR,
+      filename: 'vexflow-debug.js',
+      library: 'Vex',
+      libraryTarget: 'umd',
+    },
+    devtool: 'source-map',
+    module: {
+      loaders: [
+        {
+          test: /\.js?$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'babel',
+          query: {
+            presets: ['es2015'],
+            'plugins': ['add-module-exports'],
+          },
+        },
+      ],
+    },
+  };
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
@@ -39,25 +62,13 @@ module.exports = (grunt) => {
         dest: TARGET_TESTS,
       },
     },
-    rollup: {
-      options: {
-        banner: BANNER,
-        format: 'umd',
-        moduleName: 'Vex',
-        sourceMap: true,
-        sourceMapFile: TARGET_RAW,
-        plugins() {
-          return [
-            babel({
-              exclude: './node_modules/**',
-            }),
-          ];
-        },
-      },
-      files: {
-        src: MODULE_ENTRY,
-        dest: TARGET_RAW,
-      },
+    webpack: {
+      build: webpackCommon,
+      watch: Object.assign({}, webpackCommon, {
+        watch: true,
+        keepalive: true,
+        watchDelay: 0,
+      }),
     },
     uglify: {
       options: {
@@ -79,13 +90,6 @@ module.exports = (grunt) => {
       files: ['tests/flow.html'],
     },
     watch: {
-      scripts: {
-        files: ['src/*', 'Gruntfile.js'],
-        tasks: ['rollup'],
-        options: {
-          interrupt: true,
-        },
-      },
       tests: {
         files: ['tests/*'],
         tasks: ['concat:tests'],
@@ -146,7 +150,6 @@ module.exports = (grunt) => {
   });
 
   // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-rollup');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -158,10 +161,11 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-git');
   grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-webpack');
 
   // Default task(s).
-  grunt.registerTask('default', ['eslint', 'rollup', 'concat', 'uglify', 'docco']);
-  grunt.registerTask('test', 'Run qunit tests.', ['rollup', 'concat', 'qunit']);
+  grunt.registerTask('default', ['eslint', 'webpack:build', 'concat', 'uglify', 'docco']);
+  grunt.registerTask('test', 'Run qunit tests.', ['webpack:build', 'concat', 'qunit']);
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current binaries to releases/.', () => {
