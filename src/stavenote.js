@@ -563,6 +563,10 @@ export class StaveNote extends StemmableNote {
   // Determine if the `StaveNote` has a stem
   hasStem() { return this.glyph.stem; }
 
+  hasFlag() {
+    return super.hasFlag() && !this.isRest();
+  }
+
   getStemX() {
     if (this.noteType === 'r') {
       return this.getCenterGlyphX();
@@ -679,7 +683,7 @@ export class StaveNote extends StemmableNote {
        // FIXME: What is this magical +2?
       x = this.getGlyphWidth() + this.x_shift + 2;
 
-      if (this.stem_direction === Stem.UP && this.hasFlag() && !this.beam) {
+      if (this.stem_direction === Stem.UP && this.hasFlag()) {
         x += this.flag.getMetrics().width;
       }
     } else if (position === BELOW || position === ABOVE) {

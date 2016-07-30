@@ -164,7 +164,7 @@ export class StemmableNote extends Note {
   }
 
   hasFlag() {
-    return Flow.durationToGlyph(this.duration).flag;
+    return Flow.durationToGlyph(this.duration).flag && !this.beam;
   }
 
   // Post format the note
