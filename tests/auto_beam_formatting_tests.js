@@ -1052,40 +1052,37 @@ VF.Test.AutoBeamFormatting = (function() {
       var c = AutoBeamFormatting.setupContext(options);
 
       var notes = [
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16d", dots: 1}),
-        newNote({ keys: ["f/5"], duration: "32"}),
+        newNote({ keys: ["e/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["c/5"], duration: "16" }),
 
-        newNote({ keys: ["f/5"], duration: "16d", dots: 1}),
-        newNote({ keys: ["f/5"], duration: "32"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
+        newNote({ keys: ["a/4"], duration: "16d" }).addDotToAll(),
+        newNote({ keys: ["f/4"], duration: "32" }),
+        newNote({ keys: ["d/4"], duration: "16" }),
+        newNote({ keys: ["d/4"], duration: "16" }),
+        newNote({ keys: ["d/4"], duration: "16" }),
 
-        newNote({ keys: ["f/5"], duration: "8"}),
-        newNote({ keys: ["f/5"], duration: "8"}),
-        newNote({ keys: ["f/5"], duration: "8"}),
+        newNote({ keys: [ 'a/5' ], duration: "8" }),
+        newNote({ keys: [ 'e/5', 'g/5' ], duration: "8" }),
+        newNote({ keys: [ 'a/5' ], duration: "8" }),
 
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"}),
-        newNote({ keys: ["f/5"], duration: "16"})
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["a/4"], duration: "16" })
       ];
-      notes.forEach(function(note) {
-        if (note.dots >= 1) {
-          note.addDotToAll();
-        }
-      });
       var tuplets = [
         new VF.Tuplet(notes.slice(0, 3)),
-        new VF.Tuplet(notes.slice(7, 10)),
-        new VF.Tuplet(notes.slice(10, 13)),
-        new VF.Tuplet(notes.slice(13, 16)),
-        new VF.Tuplet(notes.slice(16))
+        new VF.Tuplet(notes.slice(3, 6)),
+        new VF.Tuplet(notes.slice(8, 11)),
+        new VF.Tuplet(notes.slice(11, 14)),
+        new VF.Tuplet(notes.slice(14, 17)),
+        new VF.Tuplet(notes.slice(17))
       ];
       var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
