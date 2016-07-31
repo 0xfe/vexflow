@@ -221,6 +221,7 @@ export class Stave {
     return this.getYForLine(this.options.num_lines);
   }
 
+  // This returns the y for the *center* of a staff line
   getYForLine(line) {
     const options = this.options;
     const spacing = options.spacing_between_lines_px;
