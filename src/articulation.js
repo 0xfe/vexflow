@@ -156,8 +156,8 @@ export class Articulation extends Modifier {
   //
   // This indicates that all objects should have their stave set before being
   // formatted. It can't be an optional if you want accurate vertical positioning.
-  // Perfectly positioned articulations as long as we're relying on the snapping
-  // behavior in the render method.
+  // Consistently positioned articulations that play nice with other modifiers
+  // won't be possible until we stop relying on render-time formatting.
   //
   // Ideally, when this function has completed, the vertical articulation positions
   // should be ready to render without further adjustment. But the current state
