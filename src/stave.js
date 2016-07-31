@@ -14,9 +14,6 @@ import { KeySignature } from './keysignature';
 import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
 
-const THICKNESS = (Flow.STAVE_LINE_THICKNESS > 1 ?
-      Flow.STAVE_LINE_THICKNESS : 0);
-
 export class Stave {
   constructor(x, y, width, options) {
     this.x = x;
@@ -99,6 +96,13 @@ export class Stave {
     return this;
   }
   setY(y) { this.y = y; return this; }
+
+  getTopLineTopY() {
+    return this.getYForLine(0) - (Flow.STAVE_LINE_THICKNESS / 2);
+  }
+  getBottomLineBottomY() {
+    return this.getYForLine(this.getNumLines() - 1) + (Flow.STAVE_LINE_THICKNESS / 2);
+  }
 
   setX(x) {
     const shift = x - this.x;
@@ -222,7 +226,7 @@ export class Stave {
     const spacing = options.spacing_between_lines_px;
     const headroom = options.space_above_staff_ln;
 
-    const y = this.y + ((line * spacing) + (headroom * spacing)) - (THICKNESS / 2);
+    const y = this.y + (line * spacing) + (headroom * spacing);
 
     return y;
   }
@@ -234,7 +238,7 @@ export class Stave {
     const options = this.options;
     const spacing = options.spacing_between_lines_px;
     const headroom = options.space_above_staff_ln;
-    return ((y - this.y + (THICKNESS / 2)) / spacing) - headroom;
+    return ((y - this.y) / spacing) - headroom;
   }
 
   getYForTopText(line) {
@@ -498,8 +502,12 @@ export class Stave {
       this.context.save();
       this.context.setFillStyle(this.options.fill_style);
       this.context.setStrokeStyle(this.options.fill_style);
+      this.context.setLineWidth(Flow.STAVE_LINE_THICKNESS);
       if (this.options.line_config[line].visible) {
-        this.context.fillRect(x, y, width, Flow.STAVE_LINE_THICKNESS);
+        this.context.beginPath();
+        this.context.moveTo(x, y);
+        this.context.lineTo(x + width, y);
+        this.context.stroke();
       }
       this.context.restore();
     }
