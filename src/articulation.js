@@ -146,6 +146,22 @@ const getInitialOffset = (note, position) => {
 export class Articulation extends Modifier {
   static get CATEGORY() { return 'articulations'; }
 
+  // FIXME:
+  // Most of the complex formatting logic (ie: snapping to space) is
+  // actually done in .render(). But that logic belongs in this method.
+  //
+  // Unfortunately, this isn't possible because, by this point, stem lengths
+  // have not yet been finalized. Finalized stem lengths are required to determine the
+  // initial position of any stem-side articulation.
+  //
+  // This indicates that all objects should have their stave set before being
+  // formatted. It can't be an optional if you want accurate vertical positioning.
+  // Perfectly positioned articulations as long as we're relying on the snapping
+  // behavior in the render method.
+  //
+  // Ideally, when this function has completed, the vertical articulation positions
+  // should be ready to render without further adjustment. But the current state
+  // is far from this ideal.
   static format(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
