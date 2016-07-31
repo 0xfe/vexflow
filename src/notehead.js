@@ -240,7 +240,8 @@ export class NoteHead extends Note {
     }
 
     if (this.note_type === 's') {
-      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, this.stave.getSpacingBetweenLines());
+      const staveSpace = this.stave.getSpacingBetweenLines();
+      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       if (this.style) {
         ctx.save();
