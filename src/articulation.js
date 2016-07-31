@@ -190,7 +190,6 @@ export class Articulation extends Modifier {
 
     this.glyph = new Glyph(this.articulation.code, this.render_options.font_scale);
 
-    // Default width comes from articulation table.
     this.setWidth(this.glyph.getMetrics().width);
   }
 
