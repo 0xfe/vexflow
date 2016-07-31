@@ -11,6 +11,7 @@ const Flow = {
   RESOLUTION: 16384,
   DEFAULT_NOTATION_FONT_SCALE: 39,
   DEFAULT_TABLATURE_FONT_SCALE: 39,
+  SLASH_NOTEHEAD_WIDTH: 15,
 
   /* Kerning (DEPRECATED) */
   IsKerned: true,
@@ -839,7 +840,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Breve note slash -
         // Drawn with canvas primitives
-        getWidth: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },
@@ -881,7 +882,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Whole note slash
         // Drawn with canvas primitives
-        getWidth: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },
@@ -924,7 +925,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Half note slash
         // Drawn with canvas primitives
-        getWidth: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },
@@ -969,7 +970,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Quarter slash
          // Drawn with canvas primitives
-        getWidth: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },
@@ -1017,7 +1018,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Eight slash
         // Drawn with canvas primitives
-        getWidth: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },
@@ -1065,7 +1066,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Sixteenth slash
         // Drawn with canvas primitives
-        width: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },
@@ -1113,7 +1114,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Thirty-second slash
         // Drawn with canvas primitives
-        getWidth: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },
@@ -1161,7 +1162,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Sixty-fourth slash
         // Drawn with canvas primitives
-        getWidth: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },
@@ -1209,7 +1210,7 @@ Flow.durationToGlyph.duration_codes = {
       },
       's': { // Hundred-twenty-eight rest
               // Drawn with canvas primitives
-        getWidth: () => 15,
+        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
     },

@@ -25,8 +25,8 @@ function L(...args) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args); }
 // * `x`: the x coordinate to draw at
 // * `y`: the y coordinate to draw at
 // * `stem_direction`: the direction of the stem
-function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
-  const width = 15;
+function drawSlashNoteHead(ctx, duration, x, y, stem_direction, staveSpace) {
+  const width = Flow.SLASH_NOTEHEAD_WIDTH;
   ctx.save();
   ctx.setLineWidth(Flow.STEM_WIDTH);
 
@@ -39,11 +39,11 @@ function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
   if (!fill) x -= (Flow.STEM_WIDTH / 2) * stem_direction;
 
   ctx.beginPath();
-  ctx.moveTo(x, y + 11);
+  ctx.moveTo(x, y + staveSpace);
   ctx.lineTo(x, y + 1);
-  ctx.lineTo(x + width, y - 10);
+  ctx.lineTo(x + width, y - staveSpace);
   ctx.lineTo(x + width, y);
-  ctx.lineTo(x, y + 11);
+  ctx.lineTo(x, y + staveSpace);
   ctx.closePath();
 
   if (fill) {
@@ -240,7 +240,7 @@ export class NoteHead extends Note {
     }
 
     if (this.note_type === 's') {
-      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction);
+      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, this.stave.getSpacingBetweenLines());
     } else {
       if (this.style) {
         ctx.save();
