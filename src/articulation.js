@@ -127,7 +127,13 @@ const getInitialOffset = (note, position) => {
   );
 
   if (note.getCategory() === 'stavenotes') {
-    return 1;
+    if (note.hasStem() && isOnStemTip) {
+      return 0.5;
+    } else {
+      // this amount is larger than the stem-tip offset because we start from
+      // the center of the notehead
+      return 1;
+    }
   } else {
     if (note.hasStem() && isOnStemTip) {
       return 1;
@@ -145,20 +151,25 @@ export class Articulation extends Modifier {
 
     const isAbove = artic => artic.getPosition() === ABOVE;
     const isBelow = artic => artic.getPosition() === BELOW;
-    const getIncrement = (articulation) =>  articulation.articulation.between_lines ? 1 : 1.5;
+    const margin = 0.5;
+    const getIncrement = (articulation, line, position) =>
+      roundToNearestHalf(
+        getRoundingFunction(line, position),
+        (articulation.glyph.getMetrics().height / 10) + margin
+      );
 
     articulations
       .filter(isAbove)
       .forEach(articulation => {
         articulation.setTextLine(state.top_text_line);
-        state.top_text_line += getIncrement(articulation);
+        state.top_text_line += getIncrement(articulation, state.top_text_line, ABOVE);
       });
 
     articulations
       .filter(isBelow)
       .forEach(articulation => {
         articulation.setTextLine(state.text_line);
-        state.text_line += getIncrement(articulation);
+        state.text_line += getIncrement(articulation, state.text_line, BELOW);
       });
 
     const width = articulations
