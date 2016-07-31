@@ -9,6 +9,7 @@ const Flow = {
   STEM_HEIGHT: 32,
   STAVE_LINE_THICKNESS: 2,
   RESOLUTION: 16384,
+  INITIAL_ARTICULATION_OFFSET: -0.5,
 
   /* Kerning (DEPRECATED) */
   IsKerned: true,

@@ -143,24 +143,27 @@ export class Articulation extends Modifier {
   static format(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
-    let width = 0;
-    for (let i = 0; i < articulations.length; ++i) {
-      let increment = 1;
-      const articulation = articulations[i];
-      width = Math.max(articulation.getWidth(), width);
+    const isAbove = artic => artic.getPosition() === ABOVE;
+    const isBelow = artic => artic.getPosition() === BELOW;
+    const getIncrement = (articulation) =>  articulation.articulation.between_lines ? 1 : 1.5;
 
-      const type = Flow.articulationCodes(articulation.type);
-
-      if (!type.between_lines) increment += 1.5;
-
-      if (articulation.getPosition() === ABOVE) {
+    articulations
+      .filter(isAbove)
+      .forEach(articulation => {
         articulation.setTextLine(state.top_text_line);
-        state.top_text_line += increment;
-      } else {
+        state.top_text_line += getIncrement(articulation);
+      });
+
+    articulations
+      .filter(isBelow)
+      .forEach(articulation => {
         articulation.setTextLine(state.text_line);
-        state.text_line += increment;
-      }
-    }
+        state.text_line += getIncrement(articulation);
+      });
+
+    const width = articulations
+      .map(articulation => articulation.getWidth())
+      .reduce((maxWidth, articWidth) => Math.max(articWidth, maxWidth));
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
@@ -224,12 +227,16 @@ export class Articulation extends Modifier {
       [ABOVE]: () => {
         glyph.setOrigin(0.5, 1);
         const y = getTopY(note, textLine) - ((textLine + initialOffset) * staffSpace);
-        return shouldSitOutsideStaff ? Math.min(stave.getYForTopText(0), y) : y;
+        return shouldSitOutsideStaff
+          ? Math.min(stave.getYForTopText(Flow.INITIAL_ARTICULATION_OFFSET), y)
+          : y;
       },
       [BELOW]: () => {
         glyph.setOrigin(0.5, 0);
         const y = getBottomY(note, textLine) + ((textLine + initialOffset) * staffSpace);
-        return shouldSitOutsideStaff ? Math.max(stave.getYForBottomText(0), y) : y;
+        return shouldSitOutsideStaff
+          ? Math.max(stave.getYForBottomText(Flow.INITIAL_ARTICULATION_OFFSET), y)
+          : y;
       },
     }[position]();
 
