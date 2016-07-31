@@ -55,14 +55,15 @@ VF.Test.StaveModifier = (function() {
       stave.draw();
 
       // change
+      var END = VF.StaveModifier.Position.END;
       stave.setY(100);
       stave.setTimeSignature('3/4');
       stave.setKeySignature('G', 'C#');
       stave.setClef('bass');
       stave.setBegBarType(VF.Barline.type.SINGLE);
-      stave.setEndClef('treble');
-      stave.setEndTimeSignature('C');
-      stave.setEndKeySignature('F');
+      stave.setClef('treble', undefined, undefined, END);
+      stave.setTimeSignature('C', undefined, END);
+      stave.setKeySignature('F', undefined, END);
       stave.setEndBarType(VF.Barline.type.SINGLE);
       stave.draw();
 
