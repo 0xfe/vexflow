@@ -326,7 +326,11 @@ export class StaveLine {
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
       y = first_note.getStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
-      y = first_note.getStave().getYForBottomText();
+      // HACK: Since text origins are positioned bottom-right, we must
+      // compensate for the height of the text. Of course, this is a very poor
+      // approximation and assumes that font sizes will never exceed a staff space.
+      const TEXT_HEIGHT_OFFSET = 1;
+      y = first_note.getStave().getYForBottomText(TEXT_HEIGHT_OFFSET);
     }
 
     // Draw the text
