@@ -234,9 +234,10 @@ Flow.tabToGlyph = fret => {
   let shift_y = 0;
 
   if (fret.toString().toUpperCase() === 'X') {
+    const glyphMetrics = new Glyph('v7f', Flow.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
     glyph = 'v7f';
-    width = 7;
-    shift_y = -4.5;
+    width = glyphMetrics.width;
+    shift_y = -glyphMetrics.height / 2;
   } else {
     width = Flow.textWidth(fret.toString());
   }

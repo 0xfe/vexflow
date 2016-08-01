@@ -427,13 +427,7 @@ export class TabNote extends StemmableNote {
       ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
 
       if (glyph.code) {
-        Glyph.renderGlyph(
-          ctx,
-          tab_x,
-          y + 5 + glyph.shift_y,
-          this.render_options.glyph_font_scale,
-          glyph.code
-        );
+        Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale, glyph.code);
       } else {
         const text = glyph.text.toString();
         ctx.fillText(text, tab_x, y + 5);
