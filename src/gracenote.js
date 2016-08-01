@@ -5,13 +5,15 @@ import { Flow } from './tables';
 
 export class GraceNote extends StaveNote {
   static get CATEGORY() { return 'gracenotes'; }
+  static get LEDGER_LINE_OFFSET() { return 2; }
+  static get SCALE() { return 0.66; }
 
   constructor(note_struct) {
-    super(note_struct);
+    super(Object.assign(note_struct, {
+      glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
+      stroke_px: GraceNote.LEDGER_LINE_OFFSET,
+    }));
 
-    this.render_options.glyph_font_scale = Flow.DEFAULT_NOTATION_FONT_SCALE * 0.66;
-    this.render_options.stem_height = 20;
-    this.render_options.stroke_px = 2;
     this.slash = note_struct.slash;
     this.slur = true;
 

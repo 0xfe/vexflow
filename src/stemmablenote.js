@@ -7,6 +7,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Stem } from './stem';
+import { Glyph } from './glyph';
 import { Note } from './note';
 
 export class StemmableNote extends Note {
@@ -27,6 +28,19 @@ export class StemmableNote extends Note {
     const stem = new Stem();
     this.setStem(stem);
     return this;
+  }
+
+  buildFlag() {
+    const { glyph, beam } = this;
+    const shouldRenderFlag = beam === null;
+
+    if (glyph && glyph.flag && shouldRenderFlag) {
+      const flagCode = this.getStemDirection() === Stem.DOWN
+        ? glyph.code_flag_downstem
+        : glyph.code_flag_upstem;
+
+      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale);
+    }
   }
 
   // Get the full length of stem
@@ -84,6 +98,10 @@ export class StemmableNote extends Note {
     if (this.stem) {
       this.stem.setDirection(direction);
       this.stem.setExtension(this.getStemExtension());
+    }
+
+    if (this.flag) {
+      this.buildFlag();
     }
 
     this.beam = null;

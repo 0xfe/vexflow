@@ -47,6 +47,7 @@ export class StaveNote extends StemmableNote {
   static get CATEGORY() { return 'stavenotes'; }
   static get STEM_UP() { return Stem.UP; }
   static get STEM_DOWN() { return Stem.DOWN; }
+  static get DEFAULT_LEDGER_LINE_OFFSET() { return 3; }
 
   // ## Static Methods
   //
@@ -298,9 +299,9 @@ export class StaveNote extends StemmableNote {
 
     Vex.Merge(this.render_options, {
       // font size for note heads and rests
-      glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
+      glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
-      stroke_px: 3,
+      stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET,
     });
 
     this.calculateKeyProps();
@@ -332,19 +333,6 @@ export class StaveNote extends StemmableNote {
       yExtend,
       hide: !!this.isRest(),
     }));
-  }
-
-  buildFlag() {
-    const { glyph, beam } = this;
-    const shouldRenderFlag = beam === null;
-
-    if (glyph.flag && shouldRenderFlag) {
-      const flagCode = this.getStemDirection() === Stem.DOWN
-        ? glyph.code_flag_downstem
-        : glyph.code_flag_upstem;
-
-      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale);
-    }
   }
 
   // Builds a `NoteHead` for each key in the note
