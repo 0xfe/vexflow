@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.65 built on 2016-07-30.
+ * VexFlow 1.2.66 built on 2016-08-01.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -1608,6 +1608,7 @@ VF.Test.Articulation = (function() {
 
   return Articulation;
 })();
+
 /**
  * VexFlow - Auto-beaming Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -13426,16 +13427,16 @@ VF.Test.ThreeVoices = (function() {
     //    setOffsetY(-6));
 
       var notes1 = [
-        newNote({ keys: ["d/4", "d/5"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["b/4", "c/5"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
+        newNote({ keys: ["d/4", "d/5"], stem_direction: -1, duration: "16"}),
+        newNote({ keys: ["b/4", "c/5"], stem_direction: -1, duration: "16"}),
+        newNote({ keys: ["d/5"], stem_direction: -1, duration: "16"}),
+        newNote({ keys: ["e/5"], stem_direction: -1, duration: "16"}),
+        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"}),
       ];
       notes1[0].addAccidental(1, new VF.Accidental("#")).
                 addModifier(0, newFinger("0", VF.Modifier.Position.LEFT)).
@@ -13889,6 +13890,7 @@ VF.Test.ThreeVoices = (function() {
 
   return ThreeVoices;
 })();
+
 /**
  * VexFlow - TickContext Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>

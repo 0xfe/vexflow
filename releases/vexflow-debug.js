@@ -456,6 +456,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  STAVE_LINE_THICKNESS: 2,
 	  RESOLUTION: 16384,
 	
+	  // HACK:
+	  // Since text origins are positioned at the baseline, we must
+	  // compensate for the ascender of the text. Of course, 1 staff space is
+	  // a very poor approximation.
+	  //
+	  // This will be deprecated in the future. This is a temporary solution until
+	  // we have more robust text metrics.
+	  TEXT_HEIGHT_OFFSET_HACK: 1,
+	
 	  /* Kerning (DEPRECATED) */
 	  IsKerned: true
 	};
@@ -688,111 +697,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	Flow.articulationCodes.articulations = {
-	  'a.': { // Staccato
-	    code: 'v23',
-	    width: 4,
-	    shift_right: -2,
-	    shift_up: 8,
-	    shift_down: 0,
-	    between_lines: true
-	  },
-	  'av': { // Staccatissimo
-	    code: 'v28',
-	    width: 4,
-	    shift_right: 0,
-	    shift_up: 11,
-	    shift_down: 5,
-	    between_lines: true
-	  },
-	  'a>': { // Accent
-	    code: 'v42',
-	    width: 10,
-	    shift_right: 5,
-	    shift_up: 8,
-	    shift_down: 1,
-	    between_lines: true
-	  },
-	  'a-': { // Tenuto
-	    code: 'v25',
-	    width: 9,
-	    shift_right: -4,
-	    shift_up: 17,
-	    shift_down: 10,
-	    between_lines: true
-	  },
-	  'a^': { // Marcato
-	    code: 'va',
-	    width: 8,
-	    shift_right: 0,
-	    shift_up: -4,
-	    shift_down: -2,
-	    between_lines: false
-	  },
-	  'a+': { // Left hand pizzicato
-	    code: 'v8b',
-	    width: 9,
-	    shift_right: -4,
-	    shift_up: 12,
-	    shift_down: 12,
-	    between_lines: false
-	  },
-	  'ao': { // Snap pizzicato
-	    code: 'v94',
-	    width: 8,
-	    shift_right: 0,
-	    shift_up: -4,
-	    shift_down: 6,
-	    between_lines: false
-	  },
-	  'ah': { // Natural harmonic or open note
-	    code: 'vb9',
-	    width: 7,
-	    shift_right: 0,
-	    shift_up: -4,
-	    shift_down: 4,
-	    between_lines: false
-	  },
-	  'a@a': { // Fermata above staff
-	    code: 'v43',
-	    width: 25,
-	    shift_right: 0,
-	    shift_up: 8,
-	    shift_down: 10,
-	    between_lines: false
-	  },
-	  'a@u': { // Fermata below staff
-	    code: 'v5b',
-	    width: 25,
-	    shift_right: 0,
-	    shift_up: 0,
-	    shift_down: -4,
-	    between_lines: false
-	  },
-	  'a|': { // Bow up - up stroke
-	    code: 'v75',
-	    width: 8,
-	    shift_right: 0,
-	    shift_up: 8,
-	    shift_down: 10,
-	    between_lines: false
-	  },
-	  'am': { // Bow down - down stroke
-	    code: 'v97',
-	    width: 13,
-	    shift_right: 0,
-	    shift_up: 10,
-	    shift_down: 12,
-	    between_lines: false
-	  },
-	  'a,': { // Choked
-	    code: 'vb3',
-	    width: 6,
-	    shift_right: 8,
-	    shift_up: -4,
-	    shift_down: 4,
-	    between_lines: false
-	  }
-	};
+	  'a.': { code: 'v23', between_lines: true }, // Staccato
+	  'av': { code: 'v28', between_lines: true }, // Staccatissimo
+	  'a>': { code: 'v42', between_lines: true }, // Accent
+	  'a-': { code: 'v25', between_lines: true }, // Tenuto
+	  'a^': { code: 'va', between_lines: false }, // Marcato
+	  'a+': { code: 'v8b', between_lines: false }, // Left hand pizzicato
+	  'ao': { code: 'v94', between_lines: false }, // Snap pizzicato
+	  'ah': { code: 'vb9', between_lines: false }, // Natural harmonic or open note
+	  'a@a': { code: 'v43', between_lines: false }, // Fermata above staff
+	  'a@u': { code: 'v5b', between_lines: false }, // Fermata below staff
+	  'a|': { code: 'v75', between_lines: false }, // Bow up - up stroke
+	  'am': { code: 'v97', between_lines: false }, // Bow down - down stroke
+	  'a,': { code: 'vb3', between_lines: false } };
 	
 	Flow.accidentalCodes = function (acc) {
 	  return Flow.accidentalCodes.accidentals[acc];
@@ -2196,7 +2113,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getOutlineBoundingBox',
 	    value: function getOutlineBoundingBox(outline, scale, x_pos, y_pos) {
-	      var bboxComp = new _boundingboxcomputation.BoundingBoxComputation(x_pos, y_pos);
+	      var bboxComp = new _boundingboxcomputation.BoundingBoxComputation();
 	
 	      processOutline(outline, x_pos, y_pos, scale, -scale, {
 	        m: bboxComp.addPoint.bind(bboxComp),
@@ -2228,6 +2145,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.metrics = null;
 	    this.x_shift = 0;
 	    this.y_shift = 0;
+	
+	    this.originShift = {
+	      x: 0,
+	      y: 0
+	    };
 	
 	    if (options) {
 	      this.setOptions(options);
@@ -2294,8 +2216,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    }
 	  }, {
+	    key: 'setOrigin',
+	    value: function setOrigin(x, y) {
+	      var bbox = this.bbox;
+	
+	      var originX = Math.abs(bbox.getX() / bbox.getW());
+	      var originY = Math.abs(bbox.getY() / bbox.getH());
+	
+	      var xShift = (x - originX) * bbox.getW();
+	      var yShift = (y - originY) * bbox.getH();
+	
+	      this.originShift = {
+	        x: -xShift,
+	        y: -yShift
+	      };
+	    }
+	  }, {
 	    key: 'render',
-	    value: function render(ctx, x_pos, y_pos) {
+	    value: function render(ctx, x, y) {
 	      if (!this.metrics) {
 	        throw new _vex.Vex.RuntimeError('BadGlyph', 'Glyph ' + this.code + ' is not initialized.');
 	      }
@@ -2303,7 +2241,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var outline = this.metrics.outline;
 	      var scale = this.scale;
 	
-	      Glyph.renderOutline(ctx, outline, scale, x_pos, y_pos);
+	      Glyph.renderOutline(ctx, outline, scale, x + this.originShift.x, y + this.originShift.y);
 	    }
 	  }, {
 	    key: 'renderToStave',
@@ -2472,30 +2410,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.BoundingBox = undefined;
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // Vex Music Notation
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	// Vex Music Notation
 	// Mohit Muthanna <mohit@muthanna.com>
 	//
 	// Copyright Mohit Muthanna 2010
 	
 	// Bounding boxes for interactive notation
 	
-	var _vex = __webpack_require__(1);
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	/** @constructor */
 	var BoundingBox = exports.BoundingBox = function () {
 	  _createClass(BoundingBox, null, [{
-	    key: 'copy',
+	    key: "copy",
 	    value: function copy(that) {
 	      return new BoundingBox(that.x, that.y, that.w, that.h);
 	    }
@@ -2511,52 +2447,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(BoundingBox, [{
-	    key: 'getX',
+	    key: "getX",
 	    value: function getX() {
 	      return this.x;
 	    }
 	  }, {
-	    key: 'getY',
+	    key: "getY",
 	    value: function getY() {
 	      return this.y;
 	    }
 	  }, {
-	    key: 'getW',
+	    key: "getW",
 	    value: function getW() {
 	      return this.w;
 	    }
 	  }, {
-	    key: 'getH',
+	    key: "getH",
 	    value: function getH() {
 	      return this.h;
 	    }
 	  }, {
-	    key: 'setX',
+	    key: "setX",
 	    value: function setX(x) {
 	      this.x = x;return this;
 	    }
 	  }, {
-	    key: 'setY',
+	    key: "setY",
 	    value: function setY(y) {
 	      this.y = y;return this;
 	    }
 	  }, {
-	    key: 'setW',
+	    key: "setW",
 	    value: function setW(w) {
 	      this.w = w;return this;
 	    }
 	  }, {
-	    key: 'setH',
+	    key: "setH",
 	    value: function setH(h) {
 	      this.h = h;return this;
 	    }
 	  }, {
-	    key: 'move',
+	    key: "move",
 	    value: function move(x, y) {
 	      this.x += x;this.y += y;
 	    }
 	  }, {
-	    key: 'clone',
+	    key: "clone",
 	    value: function clone() {
 	      return BoundingBox.copy(this);
 	    }
@@ -2565,14 +2501,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // the given box is contained in this one.
 	
 	  }, {
-	    key: 'mergeWith',
+	    key: "mergeWith",
 	    value: function mergeWith(boundingBox, ctx) {
 	      var that = boundingBox;
 	
 	      var new_x = this.x < that.x ? this.x : that.x;
 	      var new_y = this.y < that.y ? this.y : that.y;
-	      var new_w = this.x + this.w < that.x + that.w ? that.x + that.w - this.x : this.x + this.w - _vex.Vex.Min(this.x, that.x);
-	      var new_h = this.y + this.h < that.y + that.h ? that.y + that.h - this.y : this.y + this.h - _vex.Vex.Min(this.y, that.y);
+	      var new_w = this.x + this.w < that.x + that.w ? that.x + that.w - this.x : this.x + this.w - Math.min(this.x, that.x);
+	      var new_h = this.y + this.h < that.y + that.h ? that.y + that.h - this.y : this.y + this.h - Math.min(this.y, that.y);
 	
 	      this.x = new_x;
 	      this.y = new_y;
@@ -2583,7 +2519,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	  }, {
-	    key: 'draw',
+	    key: "draw",
 	    value: function draw(ctx, x, y) {
 	      if (!x) x = 0;
 	      if (!y) y = 0;
@@ -12820,15 +12756,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _modifier = __webpack_require__(23);
 	
-	var _stavenote = __webpack_require__(18);
-	
 	var _glyph = __webpack_require__(4);
+	
+	var _stem = __webpack_require__(16);
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 	// Author: Larry Kuhns.
 	//
 	// ## Description
@@ -12848,32 +12788,193 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (Articulation.DEBUG) _vex.Vex.L('Vex.Flow.Articulation', args);
 	}
 	
+	var _Modifier$Position = _modifier.Modifier.Position;
+	var ABOVE = _Modifier$Position.ABOVE;
+	var BELOW = _Modifier$Position.BELOW;
+	
+	
+	var roundToNearestHalf = function roundToNearestHalf(mathFn, value) {
+	  return mathFn(value / 0.5) * 0.5;
+	};
+	
+	// This includes both staff and ledger lines
+	var isWithinLines = function isWithinLines(line, position) {
+	  return position === ABOVE ? line <= 5 : line >= 1;
+	};
+	
+	var getRoundingFunction = function getRoundingFunction(line, position) {
+	  if (isWithinLines(line, position)) {
+	    if (position === ABOVE) {
+	      return Math.ceil;
+	    } else {
+	      return Math.floor;
+	    }
+	  } else {
+	    return Math.round;
+	  }
+	};
+	
+	var snapLineToStaff = function snapLineToStaff(canSitBetweenLines, line, position, offsetDirection) {
+	  // Initially, snap to nearest staff line or space
+	  var snappedLine = roundToNearestHalf(getRoundingFunction(line, position), line);
+	  var canSnapToStaffSpace = canSitBetweenLines && isWithinLines(snappedLine, position);
+	  var onStaffLine = snappedLine % 1 === 0;
+	
+	  if (canSnapToStaffSpace && onStaffLine) {
+	    var HALF_STAFF_SPACE = 0.5;
+	    return snappedLine + HALF_STAFF_SPACE * -offsetDirection;
+	  } else {
+	    return snappedLine;
+	  }
+	};
+	
+	var getTopY = function getTopY(note, textLine) {
+	  var stave = note.getStave();
+	  var stemDirection = note.getStemDirection();
+	
+	  var _note$getStemExtents = note.getStemExtents();
+	
+	  var stemTipY = _note$getStemExtents.topY;
+	  var stemBaseY = _note$getStemExtents.baseY;
+	
+	
+	  if (note.getCategory() === 'stavenotes') {
+	    if (note.hasStem()) {
+	      if (stemDirection === _stem.Stem.UP) {
+	        return stemTipY;
+	      } else {
+	        return stemBaseY;
+	      }
+	    } else {
+	      return Math.min.apply(Math, _toConsumableArray(note.getYs()));
+	    }
+	  } else if (note.getCategory() === 'tabnotes') {
+	    if (note.hasStem()) {
+	      if (stemDirection === _stem.Stem.UP) {
+	        return stemTipY;
+	      } else {
+	        return stave.getYForTopText(textLine);
+	      }
+	    } else {
+	      return stave.getYForTopText(textLine);
+	    }
+	  } else {
+	    throw new _vex.Vex.RERR('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
+	  }
+	};
+	
+	var getBottomY = function getBottomY(note, textLine) {
+	  var stave = note.getStave();
+	  var stemDirection = note.getStemDirection();
+	
+	  var _note$getStemExtents2 = note.getStemExtents();
+	
+	  var stemTipY = _note$getStemExtents2.topY;
+	  var stemBaseY = _note$getStemExtents2.baseY;
+	
+	
+	  if (note.getCategory() === 'stavenotes') {
+	    if (note.hasStem()) {
+	      if (stemDirection === _stem.Stem.UP) {
+	        return stemBaseY;
+	      } else {
+	        return stemTipY;
+	      }
+	    } else {
+	      return Math.max.apply(Math, _toConsumableArray(note.getYs()));
+	    }
+	  } else if (note.getCategory() === 'tabnotes') {
+	    if (note.hasStem()) {
+	      if (stemDirection === _stem.Stem.UP) {
+	        return stave.getYForBottomText(textLine);
+	      } else {
+	        return stemTipY;
+	      }
+	    } else {
+	      return stave.getYForBottomText(textLine);
+	    }
+	  } else {
+	    throw new _vex.Vex.RERR('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
+	  }
+	};
+	
+	// Gets the initial offset of the articulation from the y value of the starting position.
+	// This is required because the top/bottom text positions already have spacing applied to
+	// provide a "visually pleasent" default position. However the y values provided from
+	// the stavenote's top/bottom do *not* have any pre-applied spacing. This function
+	// normalizes this asymmetry.
+	var getInitialOffset = function getInitialOffset(note, position) {
+	  var isOnStemTip = position === ABOVE && note.getStemDirection() === _stem.Stem.UP || position === BELOW && note.getStemDirection() === _stem.Stem.DOWN;
+	
+	  if (note.getCategory() === 'stavenotes') {
+	    if (note.hasStem() && isOnStemTip) {
+	      return 0.5;
+	    } else {
+	      // this amount is larger than the stem-tip offset because we start from
+	      // the center of the notehead
+	      return 1;
+	    }
+	  } else {
+	    if (note.hasStem() && isOnStemTip) {
+	      return 1;
+	    } else {
+	      return 0;
+	    }
+	  }
+	};
+	
 	var Articulation = exports.Articulation = function (_Modifier) {
 	  _inherits(Articulation, _Modifier);
 	
 	  _createClass(Articulation, null, [{
 	    key: 'format',
+	
+	
+	    // FIXME:
+	    // Most of the complex formatting logic (ie: snapping to space) is
+	    // actually done in .render(). But that logic belongs in this method.
+	    //
+	    // Unfortunately, this isn't possible because, by this point, stem lengths
+	    // have not yet been finalized. Finalized stem lengths are required to determine the
+	    // initial position of any stem-side articulation.
+	    //
+	    // This indicates that all objects should have their stave set before being
+	    // formatted. It can't be an optional if you want accurate vertical positioning.
+	    // Consistently positioned articulations that play nice with other modifiers
+	    // won't be possible until we stop relying on render-time formatting.
+	    //
+	    // Ideally, when this function has completed, the vertical articulation positions
+	    // should be ready to render without further adjustment. But the current state
+	    // is far from this ideal.
 	    value: function format(articulations, state) {
 	      if (!articulations || articulations.length === 0) return false;
 	
-	      var width = 0;
-	      for (var i = 0; i < articulations.length; ++i) {
-	        var increment = 1;
-	        var articulation = articulations[i];
-	        width = Math.max(articulation.getWidth(), width);
+	      var isAbove = function isAbove(artic) {
+	        return artic.getPosition() === ABOVE;
+	      };
+	      var isBelow = function isBelow(artic) {
+	        return artic.getPosition() === BELOW;
+	      };
+	      var margin = 0.5;
+	      var getIncrement = function getIncrement(articulation, line, position) {
+	        return roundToNearestHalf(getRoundingFunction(line, position), articulation.glyph.getMetrics().height / 10 + margin);
+	      };
 	
-	        var type = _tables.Flow.articulationCodes(articulation.type);
+	      articulations.filter(isAbove).forEach(function (articulation) {
+	        articulation.setTextLine(state.top_text_line);
+	        state.top_text_line += getIncrement(articulation, state.top_text_line, ABOVE);
+	      });
 	
-	        if (!type.between_lines) increment += 1.5;
+	      articulations.filter(isBelow).forEach(function (articulation) {
+	        articulation.setTextLine(state.text_line);
+	        state.text_line += getIncrement(articulation, state.text_line, BELOW);
+	      });
 	
-	        if (articulation.getPosition() === _modifier.Modifier.Position.ABOVE) {
-	          articulation.setTextLine(state.top_text_line);
-	          state.top_text_line += increment;
-	        } else {
-	          articulation.setTextLine(state.text_line);
-	          state.text_line += increment;
-	        }
-	      }
+	      var width = articulations.map(function (articulation) {
+	        return articulation.getWidth();
+	      }).reduce(function (maxWidth, articWidth) {
+	        return Math.max(articWidth, maxWidth);
+	      });
 	
 	      state.left_shift += width / 2;
 	      state.right_shift += width / 2;
@@ -12888,6 +12989,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    get: function get() {
 	      return 'articulations';
 	    }
+	  }, {
+	    key: 'INITIAL_OFFSET',
+	    get: function get() {
+	      return -0.5;
+	    }
 	  }]);
 	
 	  function Articulation(type) {
@@ -12898,19 +13004,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.note = null;
 	    _this.index = null;
 	    _this.type = type;
-	    _this.position = _modifier.Modifier.Position.BELOW;
-	
+	    _this.position = BELOW;
 	    _this.render_options = {
 	      font_scale: 38
 	    };
 	
 	    _this.articulation = _tables.Flow.articulationCodes(_this.type);
 	    if (!_this.articulation) {
-	      throw new _vex.Vex.RERR('ArgumentError', "Articulation not found: '" + _this.type + "'");
+	      throw new _vex.Vex.RERR('ArgumentError', 'Articulation not found: ' + _this.type);
 	    }
 	
-	    // Default width comes from articulation table.
-	    _this.setWidth(_this.articulation.width);
+	    _this.glyph = new _glyph.Glyph(_this.articulation.code, _this.render_options.font_scale);
+	
+	    _this.setWidth(_this.glyph.getMetrics().width);
 	    return _this;
 	  }
 	
@@ -12925,103 +13031,64 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
-	      if (!this.context) {
+	      var _ABOVE$BELOW$position;
+	
+	      var note = this.note;
+	      var index = this.index;
+	      var position = this.position;
+	      var glyph = this.glyph;
+	      var canSitBetweenLines = this.articulation.between_lines;
+	      var textLine = this.text_line;
+	      var ctx = this.context;
+	
+	
+	      if (!ctx) {
 	        throw new _vex.Vex.RERR('NoContext', "Can't draw Articulation without a context.");
 	      }
-	      if (!(this.note && this.index !== null)) {
+	
+	      if (!note || index == null) {
 	        throw new _vex.Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
 	      }
 	
-	      var stem_direction = this.note.getStemDirection();
-	      var stave = this.note.getStave();
-	
-	      var is_on_head = this.position === _modifier.Modifier.Position.ABOVE && stem_direction === _stavenote.StaveNote.STEM_DOWN || this.position === _modifier.Modifier.Position.BELOW && stem_direction === _stavenote.StaveNote.STEM_UP;
-	
-	      var needsLineAdjustment = function needsLineAdjustment(articulation, note_line, line_spacing) {
-	        var offset_direction = articulation.position === _modifier.Modifier.Position.ABOVE ? 1 : -1;
-	        var duration = articulation.getNote().getDuration();
-	        if (!is_on_head && _tables.Flow.durationToNumber(duration) <= 1) {
-	          // Add stem length, unless it's on a whole note.
-	          note_line += offset_direction * 3.5;
-	        }
-	
-	        var articulation_line = note_line + offset_direction * line_spacing;
-	
-	        if (articulation_line >= 1 && articulation_line <= 5 && articulation_line % 1 === 0) {
-	          return true;
-	        }
-	
-	        return false;
-	      };
+	      var stave = note.getStave();
+	      var staffSpace = stave.getSpacingBetweenLines();
+	      var isTab = note.getCategory() === 'tabnotes';
 	
 	      // Articulations are centered over/under the note head.
-	      var start = this.note.getModifierStartXY(this.position, this.index);
-	      var glyph_y = start.y;
-	      var shiftY = 0;
-	      var line_spacing = 1;
-	      var spacing = stave.getSpacingBetweenLines();
-	      var is_tabnote = this.note.getCategory() === 'tabnotes';
-	      var stem_ext = this.note.getStem().getExtents();
 	
-	      var top = stem_ext.topY;
-	      var bottom = stem_ext.baseY;
+	      var _note$getModifierStar = note.getModifierStartXY(position, index);
 	
-	      if (stem_direction === _stavenote.StaveNote.STEM_DOWN) {
-	        top = stem_ext.baseY;
-	        bottom = stem_ext.topY;
+	      var x = _note$getModifierStar.x;
+	
+	      var shouldSitOutsideStaff = !canSitBetweenLines || isTab;
+	
+	      var initialOffset = getInitialOffset(note, position);
+	
+	      var y = (_ABOVE$BELOW$position = {}, _defineProperty(_ABOVE$BELOW$position, ABOVE, function () {
+	        glyph.setOrigin(0.5, 1);
+	        var y = getTopY(note, textLine) - (textLine + initialOffset) * staffSpace;
+	        return shouldSitOutsideStaff ? Math.min(stave.getYForTopText(Articulation.INITIAL_OFFSET), y) : y;
+	      }), _defineProperty(_ABOVE$BELOW$position, BELOW, function () {
+	        glyph.setOrigin(0.5, 0);
+	        var y = getBottomY(note, textLine) + (textLine + initialOffset) * staffSpace;
+	        return shouldSitOutsideStaff ? Math.max(stave.getYForBottomText(Articulation.INITIAL_OFFSET), y) : y;
+	      }), _ABOVE$BELOW$position)[position]();
+	
+	      if (!isTab) {
+	        var offsetDirection = position === ABOVE ? -1 : +1;
+	        var noteLine = isTab ? note.positions[index].str : note.getKeyProps()[index].line;
+	        var distanceFromNote = (note.getYs()[index] - y) / staffSpace;
+	        var articLine = distanceFromNote + noteLine;
+	        var snappedLine = snapLineToStaff(canSitBetweenLines, articLine, position, offsetDirection);
+	
+	        if (isWithinLines(snappedLine, position)) glyph.setOrigin(0.5, 0.5);
+	
+	        y += Math.abs(snappedLine - articLine) * staffSpace * offsetDirection;
 	      }
 	
-	      // TabNotes don't have stems attached to them. Tab stems are rendered
-	      // outside the stave.
-	      if (is_tabnote) {
-	        if (this.note.hasStem()) {
-	          if (stem_direction === _stavenote.StaveNote.STEM_UP) {
-	            bottom = stave.getYForBottomText(this.text_line - 2);
-	          } else if (stem_direction === _stavenote.StaveNote.STEM_DOWN) {
-	            top = stave.getYForTopText(this.text_line - 1.5);
-	          }
-	        } else {
-	          // Without a stem
-	          top = stave.getYForTopText(this.text_line - 1);
-	          bottom = stave.getYForBottomText(this.text_line - 2);
-	        }
-	      }
+	      L('Rendering articulation at (x: ' + x + ', y: ' + y + ')');
 	
-	      var is_above = this.position === _modifier.Modifier.Position.ABOVE;
-	      var note_line = this.note.getLineNumber(is_above);
-	
-	      // Beamed stems are longer than quarter note stems.
-	      if (!is_on_head && this.note.beam) line_spacing += 0.5;
-	
-	      // If articulation will overlap a line, reposition it.
-	      if (needsLineAdjustment(this, note_line, line_spacing)) line_spacing += 0.5;
-	
-	      var glyph_y_between_lines = void 0;
-	      if (this.position === _modifier.Modifier.Position.ABOVE) {
-	        shiftY = this.articulation.shift_up;
-	        glyph_y_between_lines = top - 7 - spacing * (this.text_line + line_spacing);
-	
-	        if (this.articulation.between_lines) {
-	          glyph_y = glyph_y_between_lines;
-	        } else {
-	          glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
-	        }
-	      } else {
-	        shiftY = this.articulation.shift_down - 10;
-	
-	        glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
-	        if (this.articulation.between_lines) {
-	          glyph_y = glyph_y_between_lines;
-	        } else {
-	          glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
-	        }
-	      }
-	
-	      var glyph_x = start.x + this.articulation.shift_right;
-	      glyph_y += shiftY + this.y_shift;
-	
-	      L('Rendering articulation: ', this.articulation, glyph_x, glyph_y);
-	      _glyph.Glyph.renderGlyph(this.context, glyph_x, glyph_y, this.render_options.font_scale, this.articulation.code);
+	      glyph.render(ctx, x, y);
 	    }
 	  }]);
 
@@ -13843,7 +13910,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
-	        y = stave.getYForBottomText(this.text_line);
+	        // HACK: We need to compensate for the text's height since its origin
+	        // is bottom-right.
+	        y = stave.getYForBottomText(this.text_line + _tables.Flow.TEXT_HEIGHT_OFFSET_HACK);
 	        if (has_stem) {
 	          var stem_base = this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
 	          y = Math.max(y, stem_base + spacing * (this.text_line + 2));
@@ -14456,7 +14525,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.options.line_config.push({ visible: true });
 	      }
 	      this.height = (this.options.num_lines + this.options.space_above_staff_ln) * this.options.spacing_between_lines_px;
-	      this.options.bottom_text_position = this.options.num_lines + 1;
+	      this.options.bottom_text_position = this.options.num_lines;
 	    }
 	  }, {
 	    key: 'getOptions',
@@ -19430,6 +19499,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
+	var _tables = __webpack_require__(2);
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	// Attribution: Arrow rendering implementations based off of
@@ -19783,7 +19854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
 	        y = first_note.getStave().getYForTopText();
 	      } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
-	        y = first_note.getStave().getYForBottomText();
+	        y = first_note.getStave().getYForBottomText(_tables.Flow.TEXT_HEIGHT_OFFSET_HACK);
 	      }
 	
 	      // Draw the text
@@ -20145,6 +20216,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
+	var _tables = __webpack_require__(2);
+	
 	var _renderer = __webpack_require__(8);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20262,7 +20335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          y = this.start.getStave().getYForTopText(this.line);
 	          break;
 	        case TextBracket.Positions.BOTTOM:
-	          y = this.start.getStave().getYForBottomText(this.line);
+	          y = this.start.getStave().getYForBottomText(this.line + _tables.Flow.TEXT_HEIGHT_OFFSET_HACK);
 	          break;
 	        default:
 	          throw new _vex.Vex.RERR('InvalidPosition', 'The position ' + this.position + ' is invalid');
