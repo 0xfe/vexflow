@@ -145,6 +145,7 @@ const getInitialOffset = (note, position) => {
 
 export class Articulation extends Modifier {
   static get CATEGORY() { return 'articulations'; }
+  static get INITIAL_OFFSET() { return -0.5; }
 
   // FIXME:
   // Most of the complex formatting logic (ie: snapping to space) is
@@ -254,14 +255,14 @@ export class Articulation extends Modifier {
         glyph.setOrigin(0.5, 1);
         const y = getTopY(note, textLine) - ((textLine + initialOffset) * staffSpace);
         return shouldSitOutsideStaff
-          ? Math.min(stave.getYForTopText(Flow.INITIAL_ARTICULATION_OFFSET), y)
+          ? Math.min(stave.getYForTopText(Articulation.INITIAL_OFFSET), y)
           : y;
       },
       [BELOW]: () => {
         glyph.setOrigin(0.5, 0);
         const y = getBottomY(note, textLine) + ((textLine + initialOffset) * staffSpace);
         return shouldSitOutsideStaff
-          ? Math.max(stave.getYForBottomText(Flow.INITIAL_ARTICULATION_OFFSET), y)
+          ? Math.max(stave.getYForBottomText(Articulation.INITIAL_OFFSET), y)
           : y;
       },
     }[position]();
