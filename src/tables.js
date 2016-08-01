@@ -11,6 +11,15 @@ const Flow = {
   RESOLUTION: 16384,
   INITIAL_ARTICULATION_OFFSET: -0.5,
 
+  // HACK:
+  // Since text origins are positioned at the baseline, we must
+  // compensate for the ascender of the text. Of course, 1 staff space is
+  // a very poor approximation.
+  //
+  // This will be deprecated in the future. This is a temporary solution until
+  // we have more robust text metrics.
+  TEXT_HEIGHT_OFFSET_HACK: 1,
+
   /* Kerning (DEPRECATED) */
   IsKerned: true,
 };
