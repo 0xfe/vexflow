@@ -797,22 +797,6 @@ export class Beam {
     }
   }
 
-  adjustTuplets() {
-    let currentTuplet = null;
-    const tuplets = [];
-    this.notes.forEach(note => {
-      if (note.tuplet !== null && note.tuplet !== currentTuplet) {
-        currentTuplet = note.tuplet;
-        tuplets.push(note.tuplet);
-      }
-    });
-
-    // TODO: Figure out how to set the tuplet's y_offset based off of the beam's location
-    /* tuplets.forEach(tuplet => {
-      tuplet.options.y_offset = ???;
-    });*/
-  }
-
   // Pre-format the beam
   preFormat() { return this; }
 
@@ -844,7 +828,6 @@ export class Beam {
     if (!this.postFormatted) {
       this.postFormat();
     }
-    this.adjustTuplets();
     this.drawStems();
     this.drawBeamLines();
   }
