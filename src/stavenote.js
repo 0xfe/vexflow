@@ -17,7 +17,6 @@ import { NoteHead } from './notehead';
 import { StemmableNote } from './stemmablenote';
 import { Modifier } from './modifier';
 import { Dot } from './dot';
-import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
 function L(...args) { if (StaveNote.DEBUG) Vex.L('Vex.Flow.StaveNote', args); }
