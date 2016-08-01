@@ -132,16 +132,16 @@ VF.Test.ThreeVoices = (function() {
     //    setOffsetY(-6));
 
       var notes1 = [
-        newNote({ keys: ["d/4", "d/5"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["b/4", "c/5"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["d/5"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["e/5"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
+        newNote({ keys: ["d/4", "d/5"], stem_direction: -1, duration: "16"}),
+        newNote({ keys: ["b/4", "c/5"], stem_direction: -1, duration: "16"}),
+        newNote({ keys: ["d/5"], stem_direction: -1, duration: "16"}),
+        newNote({ keys: ["e/5"], stem_direction: -1, duration: "16"}),
+        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["d/4", "a/4", "c/5"], stem_direction: -1, duration: "8"}),
+        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"}),
       ];
       notes1[0].addAccidental(1, new VF.Accidental("#")).
                 addModifier(0, newFinger("0", VF.Modifier.Position.LEFT)).

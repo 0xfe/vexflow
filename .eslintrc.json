@@ -28,6 +28,7 @@
     "prefer-template": [0],
     "quote-props": [0],
     "space-before-function-paren": [2, "never"],
-    "strict": [2, "global"]
+    "strict": [2, "global"],
+    "yoda": [2, "never", { "exceptRange": true }]
   }
 }

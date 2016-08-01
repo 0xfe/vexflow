@@ -12,36 +12,186 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
-import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+import { Stem } from './stem';
 
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
 function L(...args) { if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args); }
 
+const { ABOVE, BELOW } = Modifier.Position;
+
+const roundToNearestHalf = (mathFn, value) => mathFn(value / 0.5) * 0.5;
+
+// This includes both staff and ledger lines
+const isWithinLines = (line, position) => position === ABOVE ? line <= 5 : line >= 1;
+
+const getRoundingFunction = (line, position) => {
+  if (isWithinLines(line, position)) {
+    if (position === ABOVE) {
+      return Math.ceil;
+    } else {
+      return Math.floor;
+    }
+  } else {
+    return Math.round;
+  }
+};
+
+const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) => {
+  // Initially, snap to nearest staff line or space
+  const snappedLine = roundToNearestHalf(getRoundingFunction(line, position), line);
+  const canSnapToStaffSpace = canSitBetweenLines && isWithinLines(snappedLine, position);
+  const onStaffLine = snappedLine % 1 === 0;
+
+  if (canSnapToStaffSpace && onStaffLine) {
+    const HALF_STAFF_SPACE = 0.5;
+    return snappedLine + (HALF_STAFF_SPACE * -offsetDirection);
+  } else {
+    return snappedLine;
+  }
+};
+
+const getTopY = (note, textLine) => {
+  const stave = note.getStave();
+  const stemDirection = note.getStemDirection();
+  const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
+
+  if (note.getCategory() === 'stavenotes') {
+    if (note.hasStem()) {
+      if (stemDirection === Stem.UP) {
+        return stemTipY;
+      } else {
+        return stemBaseY;
+      }
+    } else {
+      return Math.min(...note.getYs());
+    }
+  } else if (note.getCategory() === 'tabnotes') {
+    if (note.hasStem()) {
+      if (stemDirection === Stem.UP) {
+        return stemTipY;
+      } else {
+        return stave.getYForTopText(textLine);
+      }
+    } else {
+      return stave.getYForTopText(textLine);
+    }
+  } else {
+    throw new Vex.RERR(
+      'UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes'
+    );
+  }
+};
+
+const getBottomY = (note, textLine) => {
+  const stave = note.getStave();
+  const stemDirection = note.getStemDirection();
+  const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
+
+  if (note.getCategory() === 'stavenotes') {
+    if (note.hasStem()) {
+      if (stemDirection === Stem.UP) {
+        return stemBaseY;
+      } else {
+        return stemTipY;
+      }
+    } else {
+      return Math.max(...note.getYs());
+    }
+  } else if (note.getCategory() === 'tabnotes') {
+    if (note.hasStem()) {
+      if (stemDirection === Stem.UP) {
+        return stave.getYForBottomText(textLine);
+      } else {
+        return stemTipY;
+      }
+    } else {
+      return stave.getYForBottomText(textLine);
+    }
+  } else {
+    throw new Vex.RERR(
+      'UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes'
+    );
+  }
+};
+
+// Gets the initial offset of the articulation from the y value of the starting position.
+// This is required because the top/bottom text positions already have spacing applied to
+// provide a "visually pleasent" default position. However the y values provided from
+// the stavenote's top/bottom do *not* have any pre-applied spacing. This function
+// normalizes this asymmetry.
+const getInitialOffset = (note, position) => {
+  const isOnStemTip = (
+    (position === ABOVE && note.getStemDirection() === Stem.UP) ||
+    (position === BELOW && note.getStemDirection() === Stem.DOWN)
+  );
+
+  if (note.getCategory() === 'stavenotes') {
+    if (note.hasStem() && isOnStemTip) {
+      return 0.5;
+    } else {
+      // this amount is larger than the stem-tip offset because we start from
+      // the center of the notehead
+      return 1;
+    }
+  } else {
+    if (note.hasStem() && isOnStemTip) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+};
+
 export class Articulation extends Modifier {
   static get CATEGORY() { return 'articulations'; }
+  static get INITIAL_OFFSET() { return -0.5; }
 
+  // FIXME:
+  // Most of the complex formatting logic (ie: snapping to space) is
+  // actually done in .render(). But that logic belongs in this method.
+  //
+  // Unfortunately, this isn't possible because, by this point, stem lengths
+  // have not yet been finalized. Finalized stem lengths are required to determine the
+  // initial position of any stem-side articulation.
+  //
+  // This indicates that all objects should have their stave set before being
+  // formatted. It can't be an optional if you want accurate vertical positioning.
+  // Consistently positioned articulations that play nice with other modifiers
+  // won't be possible until we stop relying on render-time formatting.
+  //
+  // Ideally, when this function has completed, the vertical articulation positions
+  // should be ready to render without further adjustment. But the current state
+  // is far from this ideal.
   static format(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
-    let width = 0;
-    for (let i = 0; i < articulations.length; ++i) {
-      let increment = 1;
-      const articulation = articulations[i];
-      width = Math.max(articulation.getWidth(), width);
+    const isAbove = artic => artic.getPosition() === ABOVE;
+    const isBelow = artic => artic.getPosition() === BELOW;
+    const margin = 0.5;
+    const getIncrement = (articulation, line, position) =>
+      roundToNearestHalf(
+        getRoundingFunction(line, position),
+        (articulation.glyph.getMetrics().height / 10) + margin
+      );
 
-      const type = Flow.articulationCodes(articulation.type);
-
-      if (!type.between_lines) increment += 1.5;
-
-      if (articulation.getPosition() === Modifier.Position.ABOVE) {
+    articulations
+      .filter(isAbove)
+      .forEach(articulation => {
         articulation.setTextLine(state.top_text_line);
-        state.top_text_line += increment;
-      } else {
+        state.top_text_line += getIncrement(articulation, state.top_text_line, ABOVE);
+      });
+
+    articulations
+      .filter(isBelow)
+      .forEach(articulation => {
         articulation.setTextLine(state.text_line);
-        state.text_line += increment;
-      }
-    }
+        state.text_line += getIncrement(articulation, state.text_line, BELOW);
+      });
+
+    const width = articulations
+      .map(articulation => articulation.getWidth())
+      .reduce((maxWidth, articWidth) => Math.max(articWidth, maxWidth));
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;
@@ -56,126 +206,81 @@ export class Articulation extends Modifier {
     this.note = null;
     this.index = null;
     this.type = type;
-    this.position = Modifier.Position.BELOW;
-
+    this.position = BELOW;
     this.render_options = {
       font_scale: 38,
     };
 
     this.articulation = Flow.articulationCodes(this.type);
     if (!this.articulation) {
-      throw new Vex.RERR('ArgumentError', "Articulation not found: '" + this.type + "'");
+      throw new Vex.RERR('ArgumentError', `Articulation not found: ${this.type}`);
     }
 
-    // Default width comes from articulation table.
-    this.setWidth(this.articulation.width);
+    this.glyph = new Glyph(this.articulation.code, this.render_options.font_scale);
+
+    this.setWidth(this.glyph.getMetrics().width);
   }
 
   getCategory() { return Articulation.CATEGORY; }
 
   // Render articulation in position next to note.
   draw() {
-    if (!this.context) {
+    const {
+      note, index, position, glyph,
+      articulation: { between_lines: canSitBetweenLines },
+      text_line: textLine,
+      context: ctx,
+    } = this;
+
+    if (!ctx) {
       throw new Vex.RERR('NoContext', "Can't draw Articulation without a context.");
     }
-    if (!(this.note && (this.index !== null))) {
+
+    if (!note || index == null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
     }
 
-    const stem_direction = this.note.getStemDirection();
-    const stave = this.note.getStave();
-
-    const is_on_head = (this.position === Modifier.Position.ABOVE &&
-                      stem_direction === StaveNote.STEM_DOWN) ||
-                     (this.position === Modifier.Position.BELOW &&
-                      stem_direction === StaveNote.STEM_UP);
-
-    const needsLineAdjustment = (articulation, note_line, line_spacing) => {
-      const offset_direction = (articulation.position === Modifier.Position.ABOVE) ? 1 : -1;
-      const duration = articulation.getNote().getDuration();
-      if (!is_on_head && Flow.durationToNumber(duration) <= 1) {
-        // Add stem length, unless it's on a whole note.
-        note_line += offset_direction * 3.5;
-      }
-
-      const articulation_line = note_line + (offset_direction * line_spacing);
-
-      if (articulation_line >= 1 &&
-         articulation_line <= 5 &&
-         articulation_line % 1 === 0) {
-        return true;
-      }
-
-      return false;
-    };
+    const stave = note.getStave();
+    const staffSpace = stave.getSpacingBetweenLines();
+    const isTab = note.getCategory() === 'tabnotes';
 
     // Articulations are centered over/under the note head.
-    const start = this.note.getModifierStartXY(this.position, this.index);
-    let glyph_y = start.y;
-    let shiftY = 0;
-    let line_spacing = 1;
-    const spacing = stave.getSpacingBetweenLines();
-    const is_tabnote = this.note.getCategory() === 'tabnotes';
-    const stem_ext = this.note.getStem().getExtents();
+    const { x } = note.getModifierStartXY(position, index);
+    const shouldSitOutsideStaff = !canSitBetweenLines || isTab;
 
-    let top = stem_ext.topY;
-    let bottom = stem_ext.baseY;
+    const initialOffset = getInitialOffset(note, position);
 
-    if (stem_direction === StaveNote.STEM_DOWN) {
-      top = stem_ext.baseY;
-      bottom = stem_ext.topY;
+    let y = {
+      [ABOVE]: () => {
+        glyph.setOrigin(0.5, 1);
+        const y = getTopY(note, textLine) - ((textLine + initialOffset) * staffSpace);
+        return shouldSitOutsideStaff
+          ? Math.min(stave.getYForTopText(Articulation.INITIAL_OFFSET), y)
+          : y;
+      },
+      [BELOW]: () => {
+        glyph.setOrigin(0.5, 0);
+        const y = getBottomY(note, textLine) + ((textLine + initialOffset) * staffSpace);
+        return shouldSitOutsideStaff
+          ? Math.max(stave.getYForBottomText(Articulation.INITIAL_OFFSET), y)
+          : y;
+      },
+    }[position]();
+
+    if (!isTab) {
+      const offsetDirection = position === ABOVE ? -1 : +1;
+      const noteLine = isTab ? note.positions[index].str : note.getKeyProps()[index].line;
+      const distanceFromNote = (note.getYs()[index] - y) / staffSpace;
+      const articLine = distanceFromNote + noteLine;
+      const snappedLine = snapLineToStaff(canSitBetweenLines, articLine, position, offsetDirection);
+
+      if (isWithinLines(snappedLine, position)) glyph.setOrigin(0.5, 0.5);
+
+      y += Math.abs(snappedLine - articLine) * staffSpace * offsetDirection;
     }
 
-    // TabNotes don't have stems attached to them. Tab stems are rendered
-    // outside the stave.
-    if (is_tabnote) {
-      if (this.note.hasStem()) {
-        if (stem_direction === StaveNote.STEM_UP) {
-          bottom = stave.getYForBottomText(this.text_line - 2);
-        } else if (stem_direction === StaveNote.STEM_DOWN) {
-          top = stave.getYForTopText(this.text_line - 1.5);
-        }
-      } else { // Without a stem
-        top = stave.getYForTopText(this.text_line - 1);
-        bottom = stave.getYForBottomText(this.text_line - 2);
-      }
-    }
+    L(`Rendering articulation at (x: ${x}, y: ${y})`);
 
-    const is_above = (this.position === Modifier.Position.ABOVE);
-    const note_line = this.note.getLineNumber(is_above);
-
-    // Beamed stems are longer than quarter note stems.
-    if (!is_on_head && this.note.beam) line_spacing += 0.5;
-
-    // If articulation will overlap a line, reposition it.
-    if (needsLineAdjustment(this, note_line, line_spacing)) line_spacing += 0.5;
-
-    let glyph_y_between_lines;
-    if (this.position === Modifier.Position.ABOVE) {
-      shiftY = this.articulation.shift_up;
-      glyph_y_between_lines = (top - 7) - (spacing * (this.text_line + line_spacing));
-
-      if (this.articulation.between_lines) {
-        glyph_y = glyph_y_between_lines;
-      } else {
-        glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
-      }
-    } else {
-      shiftY = this.articulation.shift_down - 10;
-
-      glyph_y_between_lines = bottom + 10 + spacing * (this.text_line + line_spacing);
-      if (this.articulation.between_lines) {
-        glyph_y = glyph_y_between_lines;
-      } else {
-        glyph_y = Math.max(stave.getYForBottomText(this.text_line), glyph_y_between_lines);
-      }
-    }
-
-    const glyph_x = start.x + this.articulation.shift_right;
-    glyph_y += shiftY + this.y_shift;
-
-    L('Rendering articulation: ', this.articulation, glyph_x, glyph_y);
-    Glyph.renderGlyph(this.context, glyph_x, glyph_y,
-                         this.render_options.font_scale, this.articulation.code);
+    glyph.render(ctx, x, y);
   }
 }

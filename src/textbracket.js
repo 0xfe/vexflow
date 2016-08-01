@@ -8,6 +8,7 @@
 // using this class.
 
 import { Vex } from './vex';
+import { Flow } from './tables';
 import { Renderer } from './renderer';
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
@@ -87,7 +88,7 @@ export class TextBracket {
         y =  this.start.getStave().getYForTopText(this.line);
         break;
       case TextBracket.Positions.BOTTOM:
-        y =  this.start.getStave().getYForBottomText(this.line);
+        y =  this.start.getStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
         break;
       default:
         throw new Vex.RERR('InvalidPosition', `The position ${this.position} is invalid`);

@@ -153,7 +153,9 @@ export class Annotation extends Modifier {
     }
 
     if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
-      y = stave.getYForBottomText(this.text_line);
+      // HACK: We need to compensate for the text's height since its origin
+      // is bottom-right.
+      y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
       if (has_stem) {
         const stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
         y = Math.max(y, stem_base + (spacing * (this.text_line + 2)));

@@ -105,7 +105,7 @@ export class Glyph {
   }
 
   static getOutlineBoundingBox(outline, scale, x_pos, y_pos) {
-    const bboxComp = new BoundingBoxComputation(x_pos, y_pos);
+    const bboxComp = new BoundingBoxComputation();
 
     processOutline(outline, x_pos, y_pos, scale, -scale, {
       m: bboxComp.addPoint.bind(bboxComp),
@@ -137,6 +137,11 @@ export class Glyph {
     this.metrics = null;
     this.x_shift = 0;
     this.y_shift = 0;
+
+    this.originShift = {
+      x: 0,
+      y: 0,
+    };
 
     if (options) {
       this.setOptions(options);
@@ -185,7 +190,21 @@ export class Glyph {
     };
   }
 
-  render(ctx, x_pos, y_pos) {
+  setOrigin(x, y) {
+    const { bbox } = this;
+    const originX = Math.abs(bbox.getX() / bbox.getW());
+    const originY = Math.abs(bbox.getY() / bbox.getH());
+
+    const xShift = (x - originX) * bbox.getW();
+    const yShift = (y - originY) * bbox.getH();
+
+    this.originShift = {
+      x: -xShift,
+      y: -yShift,
+    };
+  }
+
+  render(ctx, x, y) {
     if (!this.metrics) {
       throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
@@ -193,7 +212,7 @@ export class Glyph {
     const outline = this.metrics.outline;
     const scale = this.scale;
 
-    Glyph.renderOutline(ctx, outline, scale, x_pos, y_pos);
+    Glyph.renderOutline(ctx, outline, scale, x + this.originShift.x, y + this.originShift.y);
   }
 
   renderToStave(x) {

@@ -8,6 +8,7 @@
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
 import { Vex } from './vex';
+import { Flow } from './tables';
 
 // Attribution: Arrow rendering implementations based off of
 // Patrick Horgan's article, "Drawing lines and arcs with
@@ -326,7 +327,7 @@ export class StaveLine {
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
       y = first_note.getStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
-      y = first_note.getStave().getYForBottomText();
+      y = first_note.getStave().getYForBottomText(Flow.TEXT_HEIGHT_OFFSET_HACK);
     }
 
     // Draw the text
