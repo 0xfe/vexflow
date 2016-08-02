@@ -186,6 +186,7 @@ module.exports = (grunt) => {
   grunt.registerTask('stage', 'Stage current binaries to releases/.', () => {
     grunt.task.run('default');
     grunt.task.run('buildLegacy');
+    grunt.task.run('qunit'); 
     grunt.task.run('copy:release');
   });
 
@@ -193,7 +194,6 @@ module.exports = (grunt) => {
   grunt.registerTask('publish', 'Publish VexFlow NPM.', () => {
     grunt.task.run('bump');
     grunt.task.run('stage');
-    grunt.task.run('test');
     grunt.task.run('gitcommit:releases');
     grunt.task.run('release');
   });
