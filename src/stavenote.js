@@ -23,6 +23,9 @@ function L(...args) { if (StaveNote.DEBUG) Vex.L('Vex.Flow.StaveNote', args); }
 
 const getStemAdjustment = (note) => Stem.WIDTH / (2 * -note.getStemDirection());
 
+const isInnerNoteIndex = (note, index) =>
+  index === (note.getStemDirection() === Stem.UP ? note.keyProps.length - 1 : 0);
+
 // Helper methods for rest positioning in ModifierContext.
 function shiftRestVertical(rest, note, dir) {
   const delta = (note.isrest ? 0.0 : 1.0) * dir;
@@ -454,7 +457,7 @@ export class StaveNote extends StemmableNote {
     }
 
     // Sort the notes from lowest line to highest line
-    lastLine = -1000;
+    lastLine = -Infinity;
     this.keyProps.forEach(key => {
       if (key.line < lastLine) {
         Vex.W(
@@ -670,7 +673,7 @@ export class StaveNote extends StemmableNote {
        // FIXME: What is this magical +2?
       x = this.getGlyphWidth() + this.x_shift + 2;
 
-      if (this.stem_direction === Stem.UP && this.hasFlag()) {
+      if (this.stem_direction === Stem.UP && this.hasFlag() && isInnerNoteIndex(this, index)) {
         x += this.flag.getMetrics().width;
       }
     } else if (position === BELOW || position === ABOVE) {
