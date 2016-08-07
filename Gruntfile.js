@@ -26,29 +26,38 @@ module.exports = (grunt) => {
     'tests/run.js',
   ];
 
-  const webpackCommon = {
-    entry: MODULE_ENTRY,
-    output: {
-      path: BUILD_DIR,
-      filename: 'vexflow-debug.js',
-      library: 'Vex',
-      libraryTarget: 'umd',
-    },
-    devtool: 'source-map',
-    module: {
-      loaders: [
-        {
-          test: /\.js?$/,
-          exclude: /(node_modules|bower_components)/,
-          loader: 'babel',
-          query: {
-            presets: ['es2015'],
-            'plugins': ['add-module-exports', 'transform-object-assign'],
+  function webpackConfig(target, preset) {
+    return {
+      entry: MODULE_ENTRY,
+      output: {
+        path: '/',
+        filename: target,
+        library: 'Vex',
+        libraryTarget: 'umd',
+      },
+      devtool: 'source-map',
+      module: {
+        loaders: [
+          {
+            test: /\.js?$/,
+            exclude: /(node_modules|bower_components)/,
+            loader: 'babel',
+            query: {
+              presets: [preset],
+              'plugins': ['add-module-exports', 'transform-object-assign'],
+            },
           },
-        },
-      ],
-    },
-  };
+        ],
+      },
+    };
+  }
+
+  const webpackCommon = webpackConfig(TARGET_RAW, 'es2015');
+
+  // Unsupported build for IE versions <11
+  const TARGET_LEGACY_RAW = path.join(BUILD_DIR, 'vexflow-legacy-debug.js');
+  const TARGET_LEGACY_MIN = path.join(BUILD_DIR, 'vexflow-legacy-min.js');
+  const webpackLegacy = webpackConfig(TARGET_LEGACY_RAW, 'es2015-loose');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -64,6 +73,7 @@ module.exports = (grunt) => {
     },
     webpack: {
       build: webpackCommon,
+      buildLegacy: webpackLegacy,
       watch: Object.assign({}, webpackCommon, {
         watch: true,
         keepalive: true,
@@ -78,6 +88,10 @@ module.exports = (grunt) => {
       build: {
         src: TARGET_RAW,
         dest: TARGET_MIN,
+      },
+      buildLegacy: {
+        src: TARGET_LEGACY_RAW,
+        dest: TARGET_LEGACY_MIN,
       },
     },
     eslint: {
@@ -164,12 +178,15 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-webpack');
 
   // Default task(s).
-  grunt.registerTask('default', ['eslint', 'webpack:build', 'concat', 'uglify', 'docco']);
+  grunt.registerTask('default', ['eslint', 'webpack:build', 'concat', 'uglify:build', 'docco']);
+  grunt.registerTask('buildLegacy', ['webpack:buildLegacy', 'uglify:buildLegacy']);
   grunt.registerTask('test', 'Run qunit tests.', ['webpack:build', 'concat', 'qunit']);
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current binaries to releases/.', () => {
     grunt.task.run('default');
+    grunt.task.run('buildLegacy');
+    grunt.task.run('qunit');
     grunt.task.run('copy:release');
   });
 
@@ -177,7 +194,6 @@ module.exports = (grunt) => {
   grunt.registerTask('publish', 'Publish VexFlow NPM.', () => {
     grunt.task.run('bump');
     grunt.task.run('stage');
-    grunt.task.run('test');
     grunt.task.run('gitcommit:releases');
     grunt.task.run('release');
   });

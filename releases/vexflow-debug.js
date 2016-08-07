@@ -5442,13 +5442,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	      }
 	
-	      function getTupletGroups() {
-	        return noteGroups.filter(function (group) {
-	          if (group[0]) {
-	            return group[0].tuplet;
-	          }
-	          return false;
+	      // Get all of the tuplets in all of the note groups
+	      function getTuplets() {
+	        var uniqueTuplets = [];
+	
+	        // Go through all of the note groups and inspect for tuplets
+	        noteGroups.forEach(function (group) {
+	          var tuplet = null;
+	          group.forEach(function (note) {
+	            if (note.tuplet && tuplet !== note.tuplet) {
+	              tuplet = note.tuplet;
+	              uniqueTuplets.push(tuplet);
+	            }
+	          });
 	        });
+	        return uniqueTuplets;
 	      }
 	
 	      // Using closures to store the variables throughout the various functions
@@ -5462,7 +5470,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var beamedNoteGroups = getBeamGroups();
 	
 	      // Get the tuplets in order to format them accurately
-	      var tupletGroups = getTupletGroups();
+	      var allTuplets = getTuplets();
 	
 	      // Create a Vex.Flow.Beam from each group of notes to be beamed
 	      var beams = [];
@@ -5483,21 +5491,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	
 	      // Reformat tuplets
-	      tupletGroups.forEach(function (group) {
-	        var firstNote = group[0];
-	        for (var i = 0; i < group.length; ++i) {
-	          if (group[i].hasStem()) {
-	            firstNote = group[i];
+	      allTuplets.forEach(function (tuplet) {
+	        // Set the tuplet location based on the stem direction
+	        var direction = tuplet.notes[0].stem_direction === _stem.Stem.DOWN ? _tuplet.Tuplet.LOCATION_BOTTOM : _tuplet.Tuplet.LOCATION_TOP;
+	        tuplet.setTupletLocation(direction);
+	
+	        // If any of the notes in the tuplet are not beamed, draw a bracket.
+	        var bracketed = false;
+	        for (var i = 0; i < tuplet.notes.length; i++) {
+	          var note = tuplet.notes[i];
+	          if (note.beam === null) {
+	            bracketed = true;
 	            break;
 	          }
 	        }
-	
-	        var tuplet = firstNote.tuplet;
-	
-	        if (firstNote.beam) tuplet.setBracketed(false);
-	        if (firstNote.stem_direction === _stem.Stem.DOWN) {
-	          tuplet.setTupletLocation(_tuplet.Tuplet.LOCATION_BOTTOM);
-	        }
+	        tuplet.setBracketed(bracketed);
 	      });
 	
 	      return beams;
@@ -5826,7 +5834,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var note = this.notes[i];
 	
 	        // See if we need to break secondary beams on this note.
-	        var ticks = note.getIntrinsicTicks();
+	        var ticks = note.ticks.value();
 	        tick_tally += ticks;
 	        var should_break = false;
 	
@@ -5842,7 +5850,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            should_break = true;
 	          }
 	        }
-	        var note_gets_beam = ticks < _tables.Flow.durationToTicks(duration);
+	        var note_gets_beam = note.getIntrinsicTicks() < _tables.Flow.durationToTicks(duration);
 	
 	        var stem_x = note.getStemX() - _stem.Stem.WIDTH / 2;
 	
@@ -6014,7 +6022,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (!this.postFormatted) {
 	        this.postFormat();
 	      }
-	
 	      this.drawStems();
 	      this.drawBeamLines();
 	    }
