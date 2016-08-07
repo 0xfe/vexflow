@@ -50,6 +50,7 @@ VF.Test.StaveNote = (function() {
       runTests("Center Aligned Note with Annotation", StaveNote.centerAlignedRestAnnotation);
       runTests("Center Aligned Note - Multi Voice", StaveNote.centerAlignedMultiVoice);
       runTests("Center Aligned Note with Multiple Modifiers", StaveNote.centerAlignedNoteMultiModifiers);
+      runTests("Stem to Middle Line", StaveNote.stemToMiddleLine);
     },
 
     ticks: function(options) {
@@ -421,25 +422,15 @@ VF.Test.StaveNote = (function() {
         { clef: clef, keys: higherKeys, duration: "32"},
         { clef: clef, keys: higherKeys, duration: "64"},
         { clef: clef, keys: higherKeys, duration: "128"},
-        { clef: clef, keys: lowerKeys, duration: "1/2",
-          stem_direction: -1},
-        { clef: clef, keys: lowerKeys, duration: "w",
-          stem_direction: -1},
-        { clef: clef, keys: lowerKeys, duration: "h",
-          stem_direction: -1},
-        { clef: clef, keys: lowerKeys, duration: "q",
-          stem_direction: -1},
-        { clef: clef, keys: lowerKeys, duration: "8",
-          stem_direction: -1},
-        { clef: clef, keys: lowerKeys, duration: "16",
-          stem_direction: -1},
-        { clef: clef, keys: lowerKeys, duration: "32",
-          stem_direction: -1},
-        { clef: clef, keys: lowerKeys, duration: "64",
-          stem_direction: -1},
-        { clef: clef, keys: lowerKeys, duration: "128",
-          stem_direction: -1},
-
+        { clef: clef, keys: lowerKeys, duration: "1/2", stem_direction: -1},
+        { clef: clef, keys: lowerKeys, duration: "w", stem_direction: -1},
+        { clef: clef, keys: lowerKeys, duration: "h", stem_direction: -1},
+        { clef: clef, keys: lowerKeys, duration: "q", stem_direction: -1},
+        { clef: clef, keys: lowerKeys, duration: "8", stem_direction: -1},
+        { clef: clef, keys: lowerKeys, duration: "16", stem_direction: -1},
+        { clef: clef, keys: lowerKeys, duration: "32", stem_direction: -1},
+        { clef: clef, keys: lowerKeys, duration: "64", stem_direction: -1},
+        { clef: clef, keys: lowerKeys, duration: "128", stem_direction: -1},
         { clef: clef, keys: restKeys, duration: "1/2r"},
         { clef: clef, keys: restKeys, duration: "wr"},
         { clef: clef, keys: restKeys, duration: "hr"},
@@ -1185,6 +1176,65 @@ VF.Test.StaveNote = (function() {
       var formatter = new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
 
       voice0.draw(ctx, stave);
+
+      ok(true);
+    },
+
+    stemToMiddleLine: function(options, contextBuilder) {
+      const ctx = new contextBuilder(options.canvas_sel, 800, 160);
+      ctx.scale(1.0, 1.0);
+      ctx.setFillStyle('#221');
+      ctx.setStrokeStyle('#221');
+
+      const stave = new VF.Stave(10, 10, 600)
+        .addClef('treble')
+        .addTimeSignature('4/4');
+
+      const notes = [
+        { keys: ['d/4'], duration:  '4', stem_direction: 1 },
+        { keys: ['c/4'], duration:  '4', stem_direction: 1 },
+        { keys: ['b/3'], duration:  '4', stem_direction: 1 },
+        { keys: ['a/3'], duration:  '4', stem_direction: 1 },
+        { keys: ['g/3'], duration:  '4', stem_direction: 1 },
+        { keys: ['f/3'], duration:  '8', stem_direction: 1 },
+        { keys: ['e/3'], duration: '16', stem_direction: 1 },
+        { keys: ['d/3'], duration: '32', stem_direction: 1 },
+        { keys: ['c/3'], duration: '64', stem_direction: 1 },
+
+        { keys: ['f/5'], duration:  '4', stem_direction: -1 },
+        { keys: ['g/5'], duration:  '4', stem_direction: -1 },
+        { keys: ['a/5'], duration:  '4', stem_direction: -1 },
+        { keys: ['b/5'], duration:  '4', stem_direction: -1 },
+        { keys: ['c/6'], duration:  '4', stem_direction: -1 },
+        { keys: ['d/6'], duration:  '4', stem_direction: -1 },
+        { keys: ['e/6'], duration:  '8', stem_direction: -1 },
+        { keys: ['f/6'], duration: '16', stem_direction: -1 },
+        { keys: ['g/6'], duration: '32', stem_direction: -1 },
+        { keys: ['a/6'], duration: '64', stem_direction: -1 },
+      ]
+
+      const notes0 = notes
+        .map(note_struct => new VF.StaveNote(note_struct));
+
+      const beamedNotes = notes
+        .filter(note => Number(note.duration) > 4)
+        .map(note_struct => new VF.StaveNote(note_struct));
+
+      const beams = [[0, 4],  [4, 8]]
+        .map(range => beamedNotes.slice(...range))
+        .map(notes => new VF.Beam(notes));
+
+      const voice0 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes0.concat(beamedNotes));
+
+      new VF.Formatter()
+        .joinVoices([voice0])
+        .formatToStave([voice0], stave, { stave });
+
+      stave.setContext(ctx).draw();
+      voice0.draw(ctx, stave);
+      beams.forEach(beam => beam.setContext(ctx).draw());
 
       ok(true);
     },
