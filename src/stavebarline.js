@@ -97,8 +97,8 @@ export class Barline extends StaveModifier {
       throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
     }
 
-    const topY = stave.getYForLine(0);
-    const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+    const topY = stave.getTopLineTopY();
+    const botY = stave.getBottomLineBottomY();
     if (double_bar) {
       stave.context.fillRect(x - 3, topY, 1, botY - topY);
     }
@@ -110,8 +110,8 @@ export class Barline extends StaveModifier {
       throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
     }
 
-    const topY = stave.getYForLine(0);
-    const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+    const topY = stave.getTopLineTopY();
+    const botY = stave.getBottomLineBottomY();
     stave.context.fillRect(x - 5, topY, 1, botY - topY);
     stave.context.fillRect(x - 2, topY, 3, botY - topY);
   }
@@ -121,8 +121,8 @@ export class Barline extends StaveModifier {
       throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
     }
 
-    const topY = stave.getYForLine(0);
-    const botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+    const topY = stave.getTopLineTopY();
+    const botY = stave.getBottomLineBottomY();
     let x_shift = 3;
 
     if (!begin) {

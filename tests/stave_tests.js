@@ -89,9 +89,9 @@ VF.Test.Stave = (function() {
       stave.draw();
 
       equal(stave.getYForNote(0), 100, "getYForNote(0)");
-      equal(stave.getYForLine(5), 99, "getYForLine(5)");
-      equal(stave.getYForLine(0), 49, "getYForLine(0) - Top Line");
-      equal(stave.getYForLine(4), 89, "getYForLine(4) - Bottom Line");
+      equal(stave.getYForLine(5), 100, "getYForLine(5)");
+      equal(stave.getYForLine(0), 50, "getYForLine(0) - Top Line");
+      equal(stave.getYForLine(4), 90, "getYForLine(4) - Bottom Line");
 
       ok(true, "all pass");
     },

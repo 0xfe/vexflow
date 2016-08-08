@@ -55,8 +55,8 @@ module.exports = (grunt) => {
   const webpackCommon = webpackConfig(TARGET_RAW, 'es2015');
 
   // Unsupported build for IE versions <11
-  const TARGET_LEGACY_RAW = path.join(BUILD_DIR, 'vexflow-legacy-debug.js')
-  const TARGET_LEGACY_MIN = path.join(BUILD_DIR, 'vexflow-legacy-min.js')
+  const TARGET_LEGACY_RAW = path.join(BUILD_DIR, 'vexflow-legacy-debug.js');
+  const TARGET_LEGACY_MIN = path.join(BUILD_DIR, 'vexflow-legacy-min.js');
   const webpackLegacy = webpackConfig(TARGET_LEGACY_RAW, 'es2015-loose');
 
   grunt.initConfig({
@@ -91,8 +91,8 @@ module.exports = (grunt) => {
       },
       buildLegacy: {
         src: TARGET_LEGACY_RAW,
-        dest: TARGET_LEGACY_MIN
-      }
+        dest: TARGET_LEGACY_MIN,
+      },
     },
     eslint: {
       target: SOURCES,
@@ -186,7 +186,7 @@ module.exports = (grunt) => {
   grunt.registerTask('stage', 'Stage current binaries to releases/.', () => {
     grunt.task.run('default');
     grunt.task.run('buildLegacy');
-    grunt.task.run('qunit'); 
+    grunt.task.run('qunit');
     grunt.task.run('copy:release');
   });
 

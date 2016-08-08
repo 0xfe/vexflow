@@ -191,6 +191,10 @@ export class Note extends Tickable {
   // Get the glyph associated with this note.
   getGlyph() { return this.glyph; }
 
+  getGlyphWidth() {
+    return this.glyph.getWidth(this.render_options.glyph_font_scale);
+  }
+
   // Set and get Y positions for this note. Each Y value is associated with
   // an individual pitch/key within the note/chord.
   setYs(ys) { this.ys = ys; return this; }

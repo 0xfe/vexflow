@@ -195,11 +195,11 @@ VF.Test.GraceNote = (function() {
       }
 
       var gracenote_group0 = [
-        { keys: ["b/4"], duration: "8", slash: true}
+        { keys: ["b/4"], stem_direction: 1, duration: "8", slash: true}
       ];
 
       var gracenote_group1 = [
-        { keys: ["f/4"], duration: "8", slash: true}
+        { keys: ["f/4"], stem_direction: -1, duration: "8", slash: true}
       ];
 
       var gracenote_group2 = [
