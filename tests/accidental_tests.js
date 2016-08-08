@@ -55,37 +55,35 @@ Vex.Flow.Test.Accidental = (function() {
       function newAcc(type) { return new Vex.Flow.Accidental(type); }
 
       var notes = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
+        newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"})
+          .addAccidental(0, newAcc("b"))
+          .addAccidental(1, newAcc("#")),
 
-        newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
-            duration: "h"}).
-          addAccidental(0, newAcc("##")).
-          addAccidental(1, newAcc("n")).
-          addAccidental(2, newAcc("bb")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("#")).
-          addAccidental(5, newAcc("n")).
-          addAccidental(6, newAcc("bb")),
+        newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"], duration: "h"})
+          .addAccidental(0, newAcc("##"))
+          .addAccidental(1, newAcc("n"))
+          .addAccidental(2, newAcc("bb"))
+          .addAccidental(3, newAcc("b"))
+          .addAccidental(4, newAcc("#"))
+          .addAccidental(5, newAcc("n"))
+          .addAccidental(6, newAcc("bb")),
 
-        newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
-            duration: "16"}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#")).
-          addAccidental(2, newAcc("#")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("bb")).
-          addAccidental(5, newAcc("##")).
-          addAccidental(6, newAcc("#")),
+        newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"], duration: "16"})
+          .addAccidental(0, newAcc("n"))
+          .addAccidental(1, newAcc("#"))
+          .addAccidental(2, newAcc("#"))
+          .addAccidental(3, newAcc("b"))
+          .addAccidental(4, newAcc("bb"))
+          .addAccidental(5, newAcc("##"))
+          .addAccidental(6, newAcc("#")),
 
-        newNote({ keys: ["a/3", "c/4", "e/4", "b/4", "d/5", "g/5"], duration: "w"}).
-          addAccidental(0, newAcc("#")).
-          addAccidental(1, newAcc("##").setAsCautionary()).
-          addAccidental(2, newAcc("#").setAsCautionary()).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("bb").setAsCautionary()).
-          addAccidental(5, newAcc("b").setAsCautionary()),
+        newNote({ keys: ["a/3", "c/4", "e/4", "b/4", "d/5", "g/5"], duration: "w"})
+          .addAccidental(0, newAcc("#"))
+          .addAccidental(1, newAcc("##").setAsCautionary())
+          .addAccidental(2, newAcc("#").setAsCautionary())
+          .addAccidental(3, newAcc("b"))
+          .addAccidental(4, newAcc("bb").setAsCautionary())
+          .addAccidental(5, newAcc("b").setAsCautionary()),
       ];
 
       for (var i = 0; i < notes.length; ++i) {
