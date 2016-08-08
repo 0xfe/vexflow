@@ -7,6 +7,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Stem } from './stem';
+import { Glyph } from './glyph';
 import { Note } from './note';
 
 export class StemmableNote extends Note {
@@ -27,6 +28,19 @@ export class StemmableNote extends Note {
     const stem = new Stem();
     this.setStem(stem);
     return this;
+  }
+
+  buildFlag() {
+    const { glyph, beam } = this;
+    const shouldRenderFlag = beam === null;
+
+    if (glyph && glyph.flag && shouldRenderFlag) {
+      const flagCode = this.getStemDirection() === Stem.DOWN
+        ? glyph.code_flag_downstem
+        : glyph.code_flag_upstem;
+
+      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale);
+    }
   }
 
   // Get the full length of stem
@@ -86,6 +100,10 @@ export class StemmableNote extends Note {
       this.stem.setExtension(this.getStemExtension());
     }
 
+    if (this.flag) {
+      this.buildFlag();
+    }
+
     this.beam = null;
     if (this.preFormatted) {
       this.preFormat();
@@ -96,7 +114,7 @@ export class StemmableNote extends Note {
   // Get the `x` coordinate of the stem
   getStemX() {
     const x_begin = this.getAbsoluteX() + this.x_shift;
-    const x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
+    const x_end = this.getAbsoluteX() + this.x_shift + this.getGlyphWidth();
     const stem_x = this.stem_direction === Stem.DOWN ? x_begin : x_end;
     return stem_x;
   }
@@ -104,7 +122,7 @@ export class StemmableNote extends Note {
   // Get the `x` coordinate for the center of the glyph.
   // Used for `TabNote` stems and stemlets over rests
   getCenterGlyphX() {
-    return this.getAbsoluteX() + this.x_shift + (this.glyph.head_width / 2);
+    return this.getAbsoluteX() + this.x_shift + (this.getGlyphWidth() / 2);
   }
 
   // Get the stem extension for the current duration
@@ -164,7 +182,7 @@ export class StemmableNote extends Note {
   }
 
   hasFlag() {
-    return Flow.durationToGlyph(this.duration).flag;
+    return Flow.durationToGlyph(this.duration).flag && !this.beam;
   }
 
   // Post format the note

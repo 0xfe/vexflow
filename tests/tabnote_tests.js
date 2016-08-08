@@ -34,8 +34,11 @@ VF.Test.TabNote = (function() {
     },
 
     tabStaveLine: function() {
-      var note = new VF.TabNote(
-          { positions: [{str: 6, fret: 6 }, {str: 4, fret: 5}], duration: "w"});
+      var note = new VF.TabNote({
+        positions: [{ str: 6, fret: 6 }, { str: 4, fret: 5 }],
+        duration: "w"
+      });
+
       var positions = note.getPositions();
       equal(positions[0].str, 6, "String 6, Fret 6");
       equal(positions[0].fret, 6, "String 6, Fret 6");
@@ -47,8 +50,8 @@ VF.Test.TabNote = (function() {
 
       var ys = note.getYs();
       equal(ys.length, 2, "Chord should be rendered on two lines");
-      equal(ys[0], 99, "Line for String 6, Fret 6");
-      equal(ys[1], 79, "Line for String 4, Fret 5");
+      equal(ys[0], 100, "Line for String 6, Fret 6");
+      equal(ys[1], 80, "Line for String 4, Fret 5");
     },
 
     width: function() {
@@ -73,7 +76,7 @@ VF.Test.TabNote = (function() {
       tickContext.setX(10);
       tickContext.setPadding(0);
 
-      equal(tickContext.getWidth(), 6);
+      equal(tickContext.getWidth(), 7);
     },
 
     showNote: function(tab_struct, stave, ctx, x) {

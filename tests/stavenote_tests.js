@@ -374,7 +374,7 @@ VF.Test.StaveNote = (function() {
       tickContext.setX(10);
       tickContext.setPadding(0);
 
-      VF.Test.almostEqual(tickContext.getWidth(), 15.5988, 0.0001);
+      VF.Test.almostEqual(tickContext.getWidth(), 17.3815, 0.0001);
     },
 
     showNote: function(note_struct, stave, ctx, x, drawBoundingBox) {

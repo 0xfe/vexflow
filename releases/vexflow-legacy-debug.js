@@ -441,9 +441,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Flow = {
 	  STEM_WIDTH: 1.5,
-	  STEM_HEIGHT: 32,
-	  STAVE_LINE_THICKNESS: 2,
+	  STEM_HEIGHT: 35,
+	  STAVE_LINE_THICKNESS: 1,
 	  RESOLUTION: 16384,
+	  DEFAULT_NOTATION_FONT_SCALE: 39,
+	  DEFAULT_TABLATURE_FONT_SCALE: 39,
+	  SLASH_NOTEHEAD_WIDTH: 15,
 	
 	  // HACK:
 	  // Since text origins are positioned at the baseline, we must
@@ -662,9 +665,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var shift_y = 0;
 	
 	  if (fret.toString().toUpperCase() === 'X') {
+	    var glyphMetrics = new _glyph.Glyph('v7f', Flow.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
 	    glyph = 'v7f';
-	    width = 7;
-	    shift_y = -4.5;
+	    width = glyphMetrics.width;
+	    shift_y = -glyphMetrics.height / 2;
 	  } else {
 	    width = Flow.textWidth(fret.toString());
 	  }
@@ -672,13 +676,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return {
 	    text: fret,
 	    code: glyph,
-	    width: width,
+	    getWidth: function getWidth() {
+	      return width;
+	    },
 	    shift_y: shift_y
 	  };
 	};
 	
 	Flow.textWidth = function (text) {
-	  return 6 * text.toString().length;
+	  return 7 * text.toString().length;
 	};
 	
 	Flow.articulationCodes = function (artic) {
@@ -1161,9 +1167,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	Flow.durationToGlyph.duration_codes = {
 	  '1/2': {
 	    common: {
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'v53', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'v53', scale).getMetrics().width;
 	      },
+	
 	      stem: false,
 	      stem_offset: 0,
 	      flag: false,
@@ -1196,16 +1205,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Breve note slash -
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
 	  },
 	  '1': {
 	    common: {
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'v1d', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'v1d', scale).getMetrics().width;
 	      },
+	
 	      stem: false,
 	      stem_offset: 0,
 	      flag: false,
@@ -1238,16 +1252,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Whole note slash
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
 	  },
 	  '2': {
 	    common: {
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'v81', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'v81', scale).getMetrics().width;
 	      },
+	
 	      stem: true,
 	      stem_offset: 0,
 	      flag: false,
@@ -1281,16 +1300,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Half note slash
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
 	  },
 	  '4': {
 	    common: {
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'vb', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'vb', scale).getMetrics().width;
 	      },
+	
 	      stem: true,
 	      stem_offset: 0,
 	      flag: false,
@@ -1326,16 +1350,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Quarter slash
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
 	  },
 	  '8': {
 	    common: {
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'vb', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'vb', scale).getMetrics().width;
 	      },
+	
 	      stem: true,
 	      stem_offset: 0,
 	      flag: true,
@@ -1374,7 +1403,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Eight slash
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
@@ -1382,15 +1413,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  '16': {
 	    common: {
 	      beam_count: 2,
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'vb', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'vb', scale).getMetrics().width;
 	      },
+	
 	      stem: true,
 	      stem_offset: 0,
 	      flag: true,
 	      code_flag_upstem: 'v3f',
 	      code_flag_downstem: 'v8f',
-	      stem_up_extension: 4,
+	      stem_up_extension: 0,
 	      stem_down_extension: 0,
 	      gracenote_stem_up_extension: -14,
 	      gracenote_stem_down_extension: -14,
@@ -1422,7 +1456,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Sixteenth slash
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
@@ -1430,19 +1466,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  '32': {
 	    common: {
 	      beam_count: 3,
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'vb', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'vb', scale).getMetrics().width;
 	      },
+	
 	      stem: true,
 	      stem_offset: 0,
 	      flag: true,
 	      code_flag_upstem: 'v47',
 	      code_flag_downstem: 'v2a',
-	      stem_up_extension: 13,
+	      stem_up_extension: 9,
 	      stem_down_extension: 9,
 	      gracenote_stem_up_extension: -12,
 	      gracenote_stem_down_extension: -12,
-	      tabnote_stem_up_extension: 9,
+	      tabnote_stem_up_extension: 8,
 	      tabnote_stem_down_extension: 5,
 	      dot_shiftY: 0,
 	      line_above: 0,
@@ -1470,7 +1509,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Thirty-second slash
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
@@ -1478,19 +1519,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  '64': {
 	    common: {
 	      beam_count: 4,
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'vb', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'vb', scale).getMetrics().width;
 	      },
+	
 	      stem: true,
 	      stem_offset: 0,
 	      flag: true,
 	      code_flag_upstem: 'va9',
 	      code_flag_downstem: 'v58',
-	      stem_up_extension: 17,
+	      stem_up_extension: 13,
 	      stem_down_extension: 13,
 	      gracenote_stem_up_extension: -10,
 	      gracenote_stem_down_extension: -10,
-	      tabnote_stem_up_extension: 13,
+	      tabnote_stem_up_extension: 12,
 	      tabnote_stem_down_extension: 9,
 	      dot_shiftY: 0,
 	      line_above: 0,
@@ -1518,7 +1562,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Sixty-fourth slash
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
@@ -1526,19 +1572,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  '128': {
 	    common: {
 	      beam_count: 5,
-	      get head_width() {
-	        return new _glyph.Glyph(this.code_head || 'vb', 35).getMetrics().width;
+	      getWidth: function getWidth() {
+	        var scale = arguments.length <= 0 || arguments[0] === undefined ? Flow.DEFAULT_NOTATION_FONT_SCALE : arguments[0];
+	
+	        return new _glyph.Glyph(this.code_head || 'vb', scale).getMetrics().width;
 	      },
+	
 	      stem: true,
 	      stem_offset: 0,
 	      flag: true,
 	      code_flag_upstem: 'v9b',
 	      code_flag_downstem: 'v30',
-	      stem_up_extension: 26,
+	      stem_up_extension: 22,
 	      stem_down_extension: 22,
 	      gracenote_stem_up_extension: -8,
 	      gracenote_stem_down_extension: -8,
-	      tabnote_stem_up_extension: 22,
+	      tabnote_stem_up_extension: 21,
 	      tabnote_stem_down_extension: 18,
 	      dot_shiftY: 0,
 	      line_above: 0,
@@ -1566,7 +1615,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      's': { // Hundred-twenty-eight rest
 	        // Drawn with canvas primitives
-	        head_width: 15,
+	        getWidth: function getWidth() {
+	          return Flow.SLASH_NOTEHEAD_WIDTH;
+	        },
 	        position: 'B/4'
 	      }
 	    }
@@ -3594,7 +3645,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      height *= -1;
 	    }
 	
-	    this.rect(x, y, width - 0.5, height - 0.5, this.attributes);
+	    this.rect(x, y, width, height, this.attributes);
 	    return this;
 	  };
 	
@@ -3614,7 +3665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // draw lines around locations of tablature fingering.
 	    //
 	
-	    this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
+	    this.rect(x, y, width, height, this.background_attributes);
 	    return this;
 	  };
 	
@@ -6602,8 +6653,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _dot = __webpack_require__(24);
 	
-	var _glyph = __webpack_require__(4);
-	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -6630,6 +6679,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var getStemAdjustment = function getStemAdjustment(note) {
 	  return _stem.Stem.WIDTH / (2 * -note.getStemDirection());
+	};
+	
+	var isInnerNoteIndex = function isInnerNoteIndex(note, index) {
+	  return index === (note.getStemDirection() === _stem.Stem.UP ? note.keyProps.length - 1 : 0);
 	};
 	
 	// Helper methods for rest positioning in ModifierContext.
@@ -6880,6 +6933,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    get: function get() {
 	      return _stem.Stem.DOWN;
 	    }
+	  }, {
+	    key: 'DEFAULT_LEDGER_LINE_OFFSET',
+	    get: function get() {
+	      return 3;
+	    }
 	  }]);
 	
 	  function StaveNote(noteStruct) {
@@ -6913,9 +6971,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _vex.Vex.Merge(_this.render_options, {
 	      // font size for note heads and rests
-	      glyph_font_scale: 35,
+	      glyph_font_scale: noteStruct.glyph_font_scale || _tables.Flow.DEFAULT_NOTATION_FONT_SCALE,
 	      // number of stroke px to the left and right of head
-	      stroke_px: 3
+	      stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET
 	    });
 	
 	    _this.calculateKeyProps();
@@ -6929,6 +6987,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _this.setStemDirection(noteStruct.stem_direction);
 	    }
 	
+	    _this.buildFlag();
 	    _this.buildNoteHeads();
 	
 	    // Calculate left/right padding
@@ -7079,7 +7138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    // Sort the notes from lowest line to highest line
-	    lastLine = -1000;
+	    lastLine = -Infinity;
 	    this.keyProps.forEach(function (key) {
 	      if (key.line < lastLine) {
 	        _vex.Vex.W('Unsorted keys in note will be sorted. ' + 'See https://github.com/0xfe/vexflow/issues/104 for details.');
@@ -7193,6 +7252,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.glyph.stem;
 	  };
 	
+	  StaveNote.prototype.hasFlag = function hasFlag() {
+	    return _StemmableNote.prototype.hasFlag.call(this) && !this.isRest();
+	  };
+	
 	  StaveNote.prototype.getStemX = function getStemX() {
 	    if (this.noteType === 'r') {
 	      return this.getCenterGlyphX();
@@ -7277,7 +7340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  StaveNote.prototype.getTieRightX = function getTieRightX() {
 	    var tieStartX = this.getAbsoluteX();
-	    tieStartX += this.glyph.head_width + this.x_shift + this.extraRightPx;
+	    tieStartX += this.getGlyphWidth() + this.x_shift + this.extraRightPx;
 	    if (this.modifierContext) tieStartX += this.modifierContext.getExtraRightPx();
 	    return tieStartX;
 	  };
@@ -7319,18 +7382,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new _vex.Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
 	    }
 	
+	    var _Modifier$Position = _modifier.Modifier.Position;
+	    var ABOVE = _Modifier$Position.ABOVE;
+	    var BELOW = _Modifier$Position.BELOW;
+	    var LEFT = _Modifier$Position.LEFT;
+	    var RIGHT = _Modifier$Position.RIGHT;
+	
 	    var x = 0;
-	    if (position === _modifier.Modifier.Position.LEFT) {
+	    if (position === LEFT) {
 	      // extra_left_px
+	      // FIXME: What are these magic numbers?
 	      x = -1 * 2;
-	    } else if (position === _modifier.Modifier.Position.RIGHT) {
+	    } else if (position === RIGHT) {
 	      // extra_right_px
-	      x = this.glyph.head_width + this.x_shift + 2;
-	    } else if (position === _modifier.Modifier.Position.BELOW || position === _modifier.Modifier.Position.ABOVE) {
-	      x = this.glyph.head_width / 2;
+	      // FIXME: What is this magical +2?
+	      x = this.getGlyphWidth() + this.x_shift + 2;
+	
+	      if (this.stem_direction === _stem.Stem.UP && this.hasFlag() && isInnerNoteIndex(this, index)) {
+	        x += this.flag.getMetrics().width;
+	      }
+	    } else if (position === BELOW || position === ABOVE) {
+	      x = this.getGlyphWidth() / 2;
 	    }
 	
-	    return { x: this.getAbsoluteX() + x, y: this.ys[index] };
+	    return {
+	      x: this.getAbsoluteX() + x,
+	      y: this.ys[index]
+	    };
 	  };
 	
 	  // Sets the style of the complete StaveNote, including all keys
@@ -7339,8 +7417,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  StaveNote.prototype.setStyle = function setStyle(style) {
 	    this.note_heads.forEach(function (notehead) {
-	      notehead.setStyle(style);
-	    }, this);
+	      return notehead.setStyle(style);
+	    });
 	    this.stem.setStyle(style);
 	  };
 	
@@ -7455,7 +7533,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  StaveNote.prototype.getVoiceShiftWidth = function getVoiceShiftWidth() {
 	    // TODO: may need to accomodate for dot here.
-	    return this.glyph.head_width * (this.displaced ? 2 : 1);
+	    return this.getGlyphWidth() * (this.displaced ? 2 : 1);
 	  };
 	
 	  // Calculates and sets the extra pixels to the left or right
@@ -7463,11 +7541,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	  StaveNote.prototype.calcExtraPx = function calcExtraPx() {
-	    this.setExtraLeftPx(this.displaced && this.stem_direction === _stem.Stem.DOWN ? this.glyph.head_width : 0);
+	    this.setExtraLeftPx(this.displaced && this.stem_direction === _stem.Stem.DOWN ? this.getGlyphWidth() : 0);
 	
 	    // For upstems with flags, the extra space is unnecessary, since it's taken
 	    // up by the flag.
-	    this.setExtraRightPx(!this.hasFlag() && this.displaced && this.stem_direction === _stem.Stem.UP ? this.glyph.head_width : 0);
+	    this.setExtraRightPx(!this.hasFlag() && this.displaced && this.stem_direction === _stem.Stem.UP ? this.getGlyphWidth() : 0);
 	  };
 	
 	  // Pre-render formatting
@@ -7477,11 +7555,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.preFormatted) return;
 	    if (this.modifierContext) this.modifierContext.preFormat();
 	
-	    var width = this.glyph.head_width + this.extraLeftPx + this.extraRightPx;
+	    var width = this.getGlyphWidth() + this.extraLeftPx + this.extraRightPx;
 	
 	    // For upward flagged notes, the width of the flag needs to be added
 	    if (this.glyph.flag && this.beam === null && this.stem_direction === _stem.Stem.UP) {
-	      width += this.glyph.head_width;
+	      width += this.getGlyphWidth();
 	    }
 	
 	    this.setWidth(width);
@@ -7535,7 +7613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  StaveNote.prototype.getNoteHeadEndX = function getNoteHeadEndX() {
 	    var xBegin = this.getNoteHeadBeginX();
-	    return xBegin + this.glyph.head_width;
+	    return xBegin + this.getGlyphWidth();
 	  };
 	
 	  // Draw the ledger lines between the stave and the highest/lowest keys
@@ -7570,7 +7648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        headX = _this2.getAbsoluteX() + x_shift;
 	      }
 	      var x = headX - stroke_px;
-	      var length = headX + glyph.head_width - headX + stroke_px * 2;
+	      var length = headX + glyph.getWidth() - headX + stroke_px * 2;
 	
 	      ctx.fillRect(x, y, length, 1);
 	    };
@@ -7618,7 +7696,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var stem = this.stem;
 	    var beam = this.beam;
 	    var ctx = this.context;
-	    var glyph_font_scale = this.render_options.glyph_font_scale;
 	
 	
 	    if (!ctx) {
@@ -7629,29 +7706,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var glyph = this.getGlyph();
 	
 	    if (glyph.flag && shouldRenderFlag) {
-	      var flagX = this.getStemX();
-	      var flagY = void 0;
-	      var flagCode = void 0;
-	
 	      var _getNoteHeadBounds3 = this.getNoteHeadBounds();
 	
 	      var y_top = _getNoteHeadBounds3.y_top;
 	      var y_bottom = _getNoteHeadBounds3.y_bottom;
 	
 	      var noteStemHeight = stem.getHeight();
-	      if (this.getStemDirection() === _stem.Stem.DOWN) {
-	        // Down stems have flags on the left.
-	        flagY = y_top - noteStemHeight + 2;
-	        flagCode = glyph.code_flag_downstem;
-	      } else {
-	        // Up stems have flags on the left.
-	        flagY = y_bottom - noteStemHeight - 2;
-	        flagCode = glyph.code_flag_upstem;
-	      }
+	      var flagX = this.getStemX();
+	      // FIXME: What's with the magic +/- 2
+	      var flagY = this.getStemDirection() === _stem.Stem.DOWN
+	      // Down stems have flags on the left
+	      ? y_top - noteStemHeight + 2
+	      // Up stems have flags on the eft.
+	      : y_bottom - noteStemHeight - 2;
 	
 	      // Draw the Flag
 	      ctx.openGroup('flag', null, { pointerBBox: true });
-	      _glyph.Glyph.renderGlyph(ctx, flagX, flagY, glyph_font_scale, flagCode);
+	      this.flag.render(ctx, flagX, flagY);
 	      ctx.closeGroup();
 	    }
 	  };
@@ -7783,8 +7854,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	// * `x`: the x coordinate to draw at
 	// * `y`: the y coordinate to draw at
 	// * `stem_direction`: the direction of the stem
-	function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
-	  var width = 15;
+	function drawSlashNoteHead(ctx, duration, x, y, stem_direction, staveSpace) {
+	  var width = _tables.Flow.SLASH_NOTEHEAD_WIDTH;
 	  ctx.save();
 	  ctx.setLineWidth(_tables.Flow.STEM_WIDTH);
 	
@@ -7797,11 +7868,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (!fill) x -= _tables.Flow.STEM_WIDTH / 2 * stem_direction;
 	
 	  ctx.beginPath();
-	  ctx.moveTo(x, y + 11);
+	  ctx.moveTo(x, y + staveSpace);
 	  ctx.lineTo(x, y + 1);
-	  ctx.lineTo(x + width, y - 10);
+	  ctx.lineTo(x + width, y - staveSpace);
 	  ctx.lineTo(x + width, y);
-	  ctx.lineTo(x, y + 11);
+	  ctx.lineTo(x, y + staveSpace);
 	  ctx.closePath();
 	
 	  if (fill) {
@@ -7866,14 +7937,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.slashed = head_options.slashed;
 	
 	    _vex.Vex.Merge(_this.render_options, {
-	      glyph_font_scale: 35, // font size for note heads
-	      stroke_px: 3 });
+	      // font size for note heads
+	      glyph_font_scale: head_options.glyph_font_scale || _tables.Flow.DEFAULT_NOTATION_FONT_SCALE,
+	      // number of stroke px to the left and right of head
+	      stroke_px: 3
+	    });
 	
-	    if (head_options.glyph_font_scale) {
-	      _this.render_options.glyph_font_scale = head_options.glyph_font_scale;
-	    }
-	
-	    _this.setWidth(_this.glyph.head_width);
+	    _this.setWidth(_this.glyph.getWidth(_this.render_options.glyph_font_scale));
 	    return _this;
 	  }
 	
@@ -8013,8 +8083,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  NoteHead.prototype.preFormat = function preFormat() {
 	    if (this.preFormatted) return this;
 	
-	    var glyph = this.getGlyph();
-	    var width = glyph.head_width + this.extraLeftPx + this.extraRightPx;
+	    var width = this.getWidth() + this.extraLeftPx + this.extraRightPx;
 	
 	    this.setWidth(width);
 	    this.setPreFormatted(true);
@@ -8051,12 +8120,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      if (this.note_type !== 'r') {
-	        ctx.fillRect(head_x - this.render_options.stroke_px, line_y, this.getGlyph().head_width + this.render_options.stroke_px * 2, 1);
+	        ctx.fillRect(head_x - this.render_options.stroke_px, line_y, this.getWidth() + this.render_options.stroke_px * 2, 1);
 	      }
 	    }
 	
 	    if (this.note_type === 's') {
-	      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction);
+	      var staveSpace = this.stave.getSpacingBetweenLines();
+	      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
 	    } else {
 	      if (this.style) {
 	        ctx.save();
@@ -8342,6 +8412,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Note.prototype.getGlyph = function getGlyph() {
 	    return this.glyph;
+	  };
+	
+	  Note.prototype.getGlyphWidth = function getGlyphWidth() {
+	    return this.glyph.getWidth(this.render_options.glyph_font_scale);
 	  };
 	
 	  // Set and get Y positions for this note. Each Y value is associated with
@@ -8846,6 +8920,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _stem = __webpack_require__(16);
 	
+	var _glyph = __webpack_require__(4);
+	
 	var _note = __webpack_require__(20);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -8890,6 +8966,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var stem = new _stem.Stem();
 	    this.setStem(stem);
 	    return this;
+	  };
+	
+	  StemmableNote.prototype.buildFlag = function buildFlag() {
+	    var glyph = this.glyph;
+	    var beam = this.beam;
+	
+	    var shouldRenderFlag = beam === null;
+	
+	    if (glyph && glyph.flag && shouldRenderFlag) {
+	      var flagCode = this.getStemDirection() === _stem.Stem.DOWN ? glyph.code_flag_downstem : glyph.code_flag_upstem;
+	
+	      this.flag = new _glyph.Glyph(flagCode, this.render_options.glyph_font_scale);
+	    }
 	  };
 	
 	  // Get the full length of stem
@@ -8960,6 +9049,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.stem.setExtension(this.getStemExtension());
 	    }
 	
+	    if (this.flag) {
+	      this.buildFlag();
+	    }
+	
 	    this.beam = null;
 	    if (this.preFormatted) {
 	      this.preFormat();
@@ -8972,7 +9065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  StemmableNote.prototype.getStemX = function getStemX() {
 	    var x_begin = this.getAbsoluteX() + this.x_shift;
-	    var x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
+	    var x_end = this.getAbsoluteX() + this.x_shift + this.getGlyphWidth();
 	    var stem_x = this.stem_direction === _stem.Stem.DOWN ? x_begin : x_end;
 	    return stem_x;
 	  };
@@ -8982,7 +9075,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	  StemmableNote.prototype.getCenterGlyphX = function getCenterGlyphX() {
-	    return this.getAbsoluteX() + this.x_shift + this.glyph.head_width / 2;
+	    return this.getAbsoluteX() + this.x_shift + this.getGlyphWidth() / 2;
 	  };
 	
 	  // Get the stem extension for the current duration
@@ -9046,7 +9139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	
 	  StemmableNote.prototype.hasFlag = function hasFlag() {
-	    return _tables.Flow.durationToGlyph(this.duration).flag;
+	    return _tables.Flow.durationToGlyph(this.duration).flag && !this.beam;
 	  };
 	
 	  // Post format the note
@@ -13655,8 +13748,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 	
-	var THICKNESS = _tables.Flow.STAVE_LINE_THICKNESS > 1 ? _tables.Flow.STAVE_LINE_THICKNESS : 0;
-	
 	var Stave = exports.Stave = function () {
 	  function Stave(x, y, width, options) {
 	    _classCallCheck(this, Stave);
@@ -13763,6 +13854,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Stave.prototype.setY = function setY(y) {
 	    this.y = y;return this;
+	  };
+	
+	  Stave.prototype.getTopLineTopY = function getTopLineTopY() {
+	    return this.getYForLine(0) - _tables.Flow.STAVE_LINE_THICKNESS / 2;
+	  };
+	
+	  Stave.prototype.getBottomLineBottomY = function getBottomLineBottomY() {
+	    return this.getYForLine(this.getNumLines() - 1) + _tables.Flow.STAVE_LINE_THICKNESS / 2;
 	  };
 	
 	  Stave.prototype.setX = function setX(x) {
@@ -13897,12 +13996,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this.getYForLine(this.options.num_lines);
 	  };
 	
+	  // This returns the y for the *center* of a staff line
+	
+	
 	  Stave.prototype.getYForLine = function getYForLine(line) {
 	    var options = this.options;
 	    var spacing = options.spacing_between_lines_px;
 	    var headroom = options.space_above_staff_ln;
 	
-	    var y = this.y + (line * spacing + headroom * spacing) - THICKNESS / 2;
+	    var y = this.y + line * spacing + headroom * spacing;
 	
 	    return y;
 	  };
@@ -13914,7 +14016,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var options = this.options;
 	    var spacing = options.spacing_between_lines_px;
 	    var headroom = options.space_above_staff_ln;
-	    return (y - this.y + THICKNESS / 2) / spacing - headroom;
+	    return (y - this.y) / spacing - headroom;
 	  };
 	
 	  Stave.prototype.getYForTopText = function getYForTopText(line) {
@@ -14186,8 +14288,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.context.save();
 	      this.context.setFillStyle(this.options.fill_style);
 	      this.context.setStrokeStyle(this.options.fill_style);
+	      this.context.setLineWidth(_tables.Flow.STAVE_LINE_THICKNESS);
 	      if (this.options.line_config[line].visible) {
-	        this.context.fillRect(x, y, width, _tables.Flow.STAVE_LINE_THICKNESS);
+	        this.context.beginPath();
+	        this.context.moveTo(x, y);
+	        this.context.lineTo(x + width, y);
+	        this.context.stroke();
 	      }
 	      this.context.restore();
 	    }
@@ -14459,8 +14565,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new _vex.Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
 	    }
 	
-	    var topY = stave.getYForLine(0);
-	    var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+	    var topY = stave.getTopLineTopY();
+	    var botY = stave.getBottomLineBottomY();
 	    if (double_bar) {
 	      stave.context.fillRect(x - 3, topY, 1, botY - topY);
 	    }
@@ -14472,8 +14578,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new _vex.Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
 	    }
 	
-	    var topY = stave.getYForLine(0);
-	    var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+	    var topY = stave.getTopLineTopY();
+	    var botY = stave.getBottomLineBottomY();
 	    stave.context.fillRect(x - 5, topY, 1, botY - topY);
 	    stave.context.fillRect(x - 2, topY, 3, botY - topY);
 	  };
@@ -14483,8 +14589,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new _vex.Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
 	    }
 	
-	    var topY = stave.getYForLine(0);
-	    var botY = stave.getYForLine(stave.getNumLines() - 1) + this.thickness;
+	    var topY = stave.getTopLineTopY();
+	    var botY = stave.getBottomLineBottomY();
 	    var x_shift = 3;
 	
 	    if (!begin) {
@@ -14981,6 +15087,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    var options = this.render_options;
+	    // FIXME: What does the '38' mean? Why 38? Is that supposed to
+	    // be the default font size for standard notation?
 	    var scale = options.glyph_font_scale / 38;
 	    var name = this.tempo.name;
 	    var duration = this.tempo.duration;
@@ -15012,7 +15120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      x += 3 * scale;
 	      _glyph.Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
-	      x += code.head_width * scale;
+	      x += code.getWidth() * scale;
 	
 	      // Draw stem and flags
 	      if (code.stem) {
@@ -15023,10 +15131,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        stem_height *= scale;
 	
 	        var y_top = y - stem_height;
-	        ctx.fillRect(x, y_top, scale, stem_height);
+	        ctx.fillRect(x - scale, y_top, scale, stem_height);
 	
 	        if (code.flag) {
-	          _glyph.Glyph.renderGlyph(ctx, x + scale, y_top, options.glyph_font_scale, code.code_flag_upstem);
+	          _glyph.Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, code.code_flag_upstem);
 	
 	          if (!dots) x += 6 * scale;
 	        }
@@ -16676,7 +16784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Render Options
 	    _vex.Vex.Merge(_this.render_options, {
 	      // font size for note heads and rests
-	      glyph_font_scale: 30,
+	      glyph_font_scale: _tables.Flow.DEFAULT_TABLATURE_FONT_SCALE,
 	      // Flag to draw a stem
 	      draw_stem: draw_stem,
 	      // Flag to draw dot modifiers
@@ -16759,6 +16867,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	  TabNote.prototype.updateWidth = function updateWidth() {
+	    var _this2 = this;
+	
 	    this.glyphs = [];
 	    this.width = 0;
 	    for (var i = 0; i < this.positions.length; ++i) {
@@ -16766,7 +16876,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.ghost) fret = '(' + fret + ')';
 	      var glyph = _tables.Flow.tabToGlyph(fret);
 	      this.glyphs.push(glyph);
-	      this.width = glyph.width > this.width ? glyph.width : this.width;
+	      this.width = Math.max(glyph.getWidth(), this.width);
+	
+	      // For some reason we associate a notehead glyph with a TabNote, and this
+	      // glyph is used for certain width calculations. Of course, this is totally
+	      // incorrect since a notehead is a poor approximation for the dimensions of
+	      // a fret number which can have multiple digits. As a result, we must
+	      // overwrite getWidth() to return the correct width
+	      this.glyph.getWidth = function () {
+	        return _this2.width;
+	      };
 	    }
 	  };
 	
@@ -16831,7 +16950,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  TabNote.prototype.getTieRightX = function getTieRightX() {
 	    var tieStartX = this.getAbsoluteX();
-	    var note_glyph_width = this.glyph.head_width;
+	    var note_glyph_width = this.glyph.getWidth();
 	    tieStartX += note_glyph_width / 2;
 	    tieStartX += -this.width / 2 + this.width + 2;
 	
@@ -16843,7 +16962,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  TabNote.prototype.getTieLeftX = function getTieLeftX() {
 	    var tieEndX = this.getAbsoluteX();
-	    var note_glyph_width = this.glyph.head_width;
+	    var note_glyph_width = this.glyph.getWidth();
 	    tieEndX += note_glyph_width / 2;
 	    tieEndX -= this.width / 2 + 2;
 	
@@ -16869,7 +16988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } else if (position === _modifier.Modifier.Position.RIGHT) {
 	      x = this.width + 2; // extra_right_px
 	    } else if (position === _modifier.Modifier.Position.BELOW || position === _modifier.Modifier.Position.ABOVE) {
-	      var note_glyph_width = this.glyph.head_width;
+	      var note_glyph_width = this.glyph.getWidth();
 	      x = note_glyph_width / 2;
 	    }
 	
@@ -16958,14 +17077,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	  TabNote.prototype.drawModifiers = function drawModifiers() {
-	    var _this2 = this;
+	    var _this3 = this;
 	
 	    // Draw the modifiers
 	    this.modifiers.forEach(function (modifier) {
 	      // Only draw the dots if enabled
-	      if (modifier.getCategory() === 'dots' && !_this2.render_options.draw_dots) return;
+	      if (modifier.getCategory() === 'dots' && !_this3.render_options.draw_dots) return;
 	
-	      modifier.setContext(_this2.context);
+	      modifier.setContext(_this3.context);
 	      modifier.draw();
 	    });
 	  };
@@ -17016,13 +17135,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var glyph = this.glyphs[i];
 	
 	      // Center the fret text beneath the notation note head
-	      var note_glyph_width = this.glyph.head_width;
-	      var tab_x = x + note_glyph_width / 2 - glyph.width / 2;
+	      var note_glyph_width = this.glyph.getWidth();
+	      var tab_x = x + note_glyph_width / 2 - glyph.getWidth() / 2;
 	
-	      ctx.clearRect(tab_x - 2, y - 3, glyph.width + 4, 6);
+	      // FIXME: Magic numbers.
+	      ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
 	
 	      if (glyph.code) {
-	        _glyph.Glyph.renderGlyph(ctx, tab_x, y + 5 + glyph.shift_y, this.render_options.glyph_font_scale, glyph.code);
+	        _glyph.Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale, glyph.code);
 	      } else {
 	        var text = glyph.text.toString();
 	        ctx.fillText(text, tab_x, y + 5);
@@ -17483,9 +17603,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.__esModule = true;
 	exports.GraceNote = undefined;
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _stavenote = __webpack_require__(18);
+	
+	var _tables = __webpack_require__(2);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -17501,17 +17625,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    get: function get() {
 	      return 'gracenotes';
 	    }
+	  }, {
+	    key: 'LEDGER_LINE_OFFSET',
+	    get: function get() {
+	      return 2;
+	    }
+	  }, {
+	    key: 'SCALE',
+	    get: function get() {
+	      return 0.66;
+	    }
 	  }]);
 	
 	  function GraceNote(note_struct) {
 	    _classCallCheck(this, GraceNote);
 	
-	    var _this = _possibleConstructorReturn(this, _StaveNote.call(this, note_struct));
-	
-	    _this.render_options.glyph_font_scale = 22;
-	    _this.render_options.stem_height = 20;
-	    _this.render_options.stroke_px = 2;
-	    _this.glyph.head_width = 6;
+	    var _this = _possibleConstructorReturn(this, _StaveNote.call(this, _extends(note_struct, {
+	      glyph_font_scale: _tables.Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
+	      stroke_px: GraceNote.LEDGER_LINE_OFFSET
+	    })));
 	
 	    _this.slash = note_struct.slash;
 	    _this.slur = true;
@@ -18665,7 +18797,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      end_position.x -= last_note.getMetrics().modLeftPx + render_options.padding_right;
 	
 	      // Adjust first `x` coordinates for displacements
-	      var notehead_width = first_note.getGlyph().head_width;
+	      var notehead_width = first_note.getGlyph().getWidth();
 	      var first_displaced = first_note.getKeyProps()[first_index].displaced;
 	      if (first_displaced && first_note.getStemDirection() === 1) {
 	        start_position.x += notehead_width + render_options.padding_left;
@@ -19200,7 +19332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Setup initial coordinates for the bracket line
 	    var start_x = start.x;
 	    var line_y = super_y;
-	    var end_x = stop.x + this.stop.getGlyph().head_width;
+	    var end_x = stop.x + this.stop.getGlyph().getWidth();
 	
 	    // Adjust x and y coordinates based on position
 	    if (this.position === TextBracket.Positions.TOP) {

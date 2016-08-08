@@ -25,8 +25,8 @@ function L(...args) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args); }
 // * `x`: the x coordinate to draw at
 // * `y`: the y coordinate to draw at
 // * `stem_direction`: the direction of the stem
-function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
-  const width = 15;
+function drawSlashNoteHead(ctx, duration, x, y, stem_direction, staveSpace) {
+  const width = Flow.SLASH_NOTEHEAD_WIDTH;
   ctx.save();
   ctx.setLineWidth(Flow.STEM_WIDTH);
 
@@ -39,11 +39,11 @@ function drawSlashNoteHead(ctx, duration, x, y, stem_direction) {
   if (!fill) x -= (Flow.STEM_WIDTH / 2) * stem_direction;
 
   ctx.beginPath();
-  ctx.moveTo(x, y + 11);
+  ctx.moveTo(x, y + staveSpace);
   ctx.lineTo(x, y + 1);
-  ctx.lineTo(x + width, y - 10);
+  ctx.lineTo(x + width, y - staveSpace);
   ctx.lineTo(x + width, y);
-  ctx.lineTo(x, y + 11);
+  ctx.lineTo(x, y + staveSpace);
   ctx.closePath();
 
   if (fill) {
@@ -100,15 +100,13 @@ export class NoteHead extends Note {
     this.slashed = head_options.slashed;
 
     Vex.Merge(this.render_options, {
-      glyph_font_scale: 35, // font size for note heads
-      stroke_px: 3,         // number of stroke px to the left and right of head
+      // font size for note heads
+      glyph_font_scale: head_options.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+      // number of stroke px to the left and right of head
+      stroke_px: 3,
     });
 
-    if (head_options.glyph_font_scale) {
-      this.render_options.glyph_font_scale = head_options.glyph_font_scale;
-    }
-
-    this.setWidth(this.glyph.head_width);
+    this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
   }
 
   getCategory() { return NoteHead.CATEGORY; }
@@ -197,8 +195,7 @@ export class NoteHead extends Note {
   preFormat() {
     if (this.preFormatted) return this;
 
-    const glyph = this.getGlyph();
-    const width = glyph.head_width + this.extraLeftPx + this.extraRightPx;
+    const width = this.getWidth() + this.extraLeftPx + this.extraRightPx;
 
     this.setWidth(width);
     this.setPreFormatted(true);
@@ -236,14 +233,15 @@ export class NoteHead extends Note {
         ctx.fillRect(
           head_x - this.render_options.stroke_px,
           line_y,
-          this.getGlyph().head_width + (this.render_options.stroke_px * 2),
+          this.getWidth() + (this.render_options.stroke_px * 2),
           1
         );
       }
     }
 
     if (this.note_type === 's') {
-      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction);
+      const staveSpace = this.stave.getSpacingBetweenLines();
+      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       if (this.style) {
         ctx.save();

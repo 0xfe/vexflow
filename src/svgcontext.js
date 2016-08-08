@@ -94,10 +94,12 @@ export class SVGContext {
   // note at ieMeasureTextFix() for details.
   iePolyfill() {
     if (typeof(navigator) !== 'undefined') {
-      this.ie = (/MSIE 9/i.test(navigator.userAgent) ||
-                          /MSIE 10/i.test(navigator.userAgent) ||
-                          /rv:11\.0/i.test(navigator.userAgent) ||
-                          /Trident/i.test(navigator.userAgent));
+      this.ie = (
+        /MSIE 9/i.test(navigator.userAgent) ||
+        /MSIE 10/i.test(navigator.userAgent) ||
+        /rv:11\.0/i.test(navigator.userAgent) ||
+        /Trident/i.test(navigator.userAgent)
+      );
     }
   }
 
@@ -334,7 +336,7 @@ export class SVGContext {
       height *= -1;
     }
 
-    this.rect(x, y, width - 0.5, height - 0.5, this.attributes);
+    this.rect(x, y, width, height, this.attributes);
     return this;
   }
 
@@ -354,7 +356,7 @@ export class SVGContext {
     // draw lines around locations of tablature fingering.
     //
 
-    this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
+    this.rect(x, y, width, height, this.background_attributes);
     return this;
   }
 
