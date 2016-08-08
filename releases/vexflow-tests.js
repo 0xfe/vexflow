@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.69 built on 2016-08-02.
+ * VexFlow 1.2.70 built on 2016-08-08.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -5609,11 +5609,11 @@ VF.Test.GraceNote = (function() {
       }
 
       var gracenote_group0 = [
-        { keys: ["b/4"], duration: "8", slash: true}
+        { keys: ["b/4"], stem_direction: 1, duration: "8", slash: true}
       ];
 
       var gracenote_group1 = [
-        { keys: ["f/4"], duration: "8", slash: true}
+        { keys: ["f/4"], stem_direction: -1, duration: "8", slash: true}
       ];
 
       var gracenote_group2 = [
@@ -5666,6 +5666,7 @@ VF.Test.GraceNote = (function() {
 
   return GraceNote;
 })();
+
 /**
  * VexFlow - Clef-Key Signature Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -8733,9 +8734,9 @@ VF.Test.Stave = (function() {
       stave.draw();
 
       equal(stave.getYForNote(0), 100, "getYForNote(0)");
-      equal(stave.getYForLine(5), 99, "getYForLine(5)");
-      equal(stave.getYForLine(0), 49, "getYForLine(0) - Top Line");
-      equal(stave.getYForLine(4), 89, "getYForLine(4) - Bottom Line");
+      equal(stave.getYForLine(5), 100, "getYForLine(5)");
+      equal(stave.getYForLine(0), 50, "getYForLine(0) - Top Line");
+      equal(stave.getYForLine(4), 90, "getYForLine(4) - Bottom Line");
 
       ok(true, "all pass");
     },
@@ -10409,7 +10410,7 @@ VF.Test.StaveNote = (function() {
       tickContext.setX(10);
       tickContext.setPadding(0);
 
-      VF.Test.almostEqual(tickContext.getWidth(), 15.5988, 0.0001);
+      VF.Test.almostEqual(tickContext.getWidth(), 17.3815, 0.0001);
     },
 
     showNote: function(note_struct, stave, ctx, x, drawBoundingBox) {
@@ -12335,8 +12336,11 @@ VF.Test.TabNote = (function() {
     },
 
     tabStaveLine: function() {
-      var note = new VF.TabNote(
-          { positions: [{str: 6, fret: 6 }, {str: 4, fret: 5}], duration: "w"});
+      var note = new VF.TabNote({
+        positions: [{ str: 6, fret: 6 }, { str: 4, fret: 5 }],
+        duration: "w"
+      });
+
       var positions = note.getPositions();
       equal(positions[0].str, 6, "String 6, Fret 6");
       equal(positions[0].fret, 6, "String 6, Fret 6");
@@ -12348,8 +12352,8 @@ VF.Test.TabNote = (function() {
 
       var ys = note.getYs();
       equal(ys.length, 2, "Chord should be rendered on two lines");
-      equal(ys[0], 99, "Line for String 6, Fret 6");
-      equal(ys[1], 79, "Line for String 4, Fret 5");
+      equal(ys[0], 100, "Line for String 6, Fret 6");
+      equal(ys[1], 80, "Line for String 4, Fret 5");
     },
 
     width: function() {
@@ -12374,7 +12378,7 @@ VF.Test.TabNote = (function() {
       tickContext.setX(10);
       tickContext.setPadding(0);
 
-      equal(tickContext.getWidth(), 6);
+      equal(tickContext.getWidth(), 7);
     },
 
     showNote: function(tab_struct, stave, ctx, x) {
@@ -12587,6 +12591,7 @@ VF.Test.TabNote = (function() {
 
   return TabNote;
 })();
+
 /**
  * VexFlow - TabSlide Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -12725,31 +12730,26 @@ VF.Test.TabStave = (function() {
     Start: function() {
       QUnit.module("TabStave");
       VF.Test.runTests("TabStave Draw Test", VF.Test.TabStave.draw);
-      VF.Test.runTests("Vertical Bar Test",
-          VF.Test.TabStave.drawVerticalBar);
+      VF.Test.runTests("Vertical Bar Test", VF.Test.TabStave.drawVerticalBar);
     },
 
     draw: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel,
-          400, 160);
-
+      var ctx = new contextBuilder(options.canvas_sel, 400, 160);
       var stave = new VF.TabStave(10, 10, 300);
       stave.setNumLines(6);
       stave.setContext(ctx);
       stave.draw();
 
       equal(stave.getYForNote(0), 127, "getYForNote(0)");
-      equal(stave.getYForLine(5), 126, "getYForLine(5)");
-      equal(stave.getYForLine(0), 61, "getYForLine(0) - Top Line");
-      equal(stave.getYForLine(4), 113, "getYForLine(4) - Bottom Line");
+      equal(stave.getYForLine(5), 127, "getYForLine(5)");
+      equal(stave.getYForLine(0), 62, "getYForLine(0) - Top Line");
+      equal(stave.getYForLine(4), 114, "getYForLine(4) - Bottom Line");
 
       ok(true, "all pass");
     },
 
     drawVerticalBar: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel,
-          400, 160);
-
+      var ctx = new contextBuilder(options.canvas_sel, 400, 160);
       var stave = new VF.TabStave(10, 10, 300);
       stave.setNumLines(6);
       stave.setContext(ctx);
@@ -12767,6 +12767,7 @@ VF.Test.TabStave = (function() {
 })();
 
 module.exports = VF.Test.TabStave;
+
 /**
  * VexFlow - TabTie Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
