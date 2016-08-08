@@ -587,6 +587,10 @@ export class StaveNote extends StemmableNote {
   // Sets the current note to the provided `stave`. This applies
   // `y` values to the `NoteHeads`.
   setStave(stave) {
+    if (!stave) {
+      throw new Vex.RERR('InvalidArgument', '`stave` should not be a falsy value');
+    }
+
     super.setStave(stave);
 
     const ys = this.note_heads.map(notehead => {

@@ -106,16 +106,11 @@ VF.Test = (function() {
     },
 
     runCanvasTest: function(name, func, params) {
-      QUnit.test(name, function(assert) {
+      QUnit.test(name, (assert) => {
         // console.log("Running test (Canvas):", assert.test.module.name, "--", name);
-          var test_canvas_sel = "canvas_" + VF.Test.genID();
-          var test_canvas = VF.Test.createTestCanvas(test_canvas_sel,
-            assert.test.module.name + " (Canvas): " + name);
-          func({
-            canvas_sel: test_canvas_sel,
-            params: params,
-            assert: assert },
-            VF.Renderer.getCanvasContext);
+          var canvas_sel = "canvas_" + VF.Test.genID();
+          var test_canvas = VF.Test.createTestCanvas(canvas_sel, assert.test.module.name + " (Canvas): " + name);
+          func({ canvas_sel, params, assert }, VF.Renderer.getCanvasContext);
         });
     },
 
