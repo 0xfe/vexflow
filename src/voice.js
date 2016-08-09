@@ -79,6 +79,7 @@ export class Voice {
   // Set the voice's stave
   setStave(stave) {
     this.stave = stave;
+    this.tickables.forEach(tickable => tickable.setStave(stave));
     this.boundingBox = null; // Reset bounding box so we can reformat
     return this;
   }
