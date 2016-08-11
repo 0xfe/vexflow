@@ -111,6 +111,8 @@ function getPartialStemLines(stem_y, unused_strings, stave, stem_direction) {
 export class TabNote extends StemmableNote {
   static get CATEGORY() { return 'tabnotes'; }
 
+  static get SCALE() { return 1.0; }
+
   // Initialize the TabNote with a `tab_struct` full of properties
   // and whether to `draw_stem` when rendering the note
   constructor(tab_struct, draw_stem) {
@@ -132,6 +134,8 @@ export class TabNote extends StemmableNote {
       draw_dots: draw_stem,
       // Flag to extend the main stem through the stave and fret positions
       draw_stem_through_stave: false,
+      // vertical shift from stave line
+      y_shift: 0,
     });
 
     this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
@@ -158,6 +162,10 @@ export class TabNote extends StemmableNote {
 
   // The ModifierContext category
   getCategory() { return TabNote.CATEGORY; }
+
+  getScale() { return TabNote.SCALE; }
+
+  getFont() { return Flow.TABLATURE_FONT; }
 
   // Set as ghost `TabNote`, surrounds the fret positions with parenthesis.
   // Often used for indicating frets that are being bent to
@@ -201,17 +209,16 @@ export class TabNote extends StemmableNote {
     for (let i = 0; i < this.positions.length; ++i) {
       let fret = this.positions[i].fret;
       if (this.ghost) fret = '(' + fret + ')';
-      const glyph = Flow.tabToGlyph(fret);
+      const glyph = Flow.tabToGlyph(fret, this.getScale());
       this.glyphs.push(glyph);
       this.width = Math.max(glyph.getWidth(), this.width);
-
-      // For some reason we associate a notehead glyph with a TabNote, and this
-      // glyph is used for certain width calculations. Of course, this is totally
-      // incorrect since a notehead is a poor approximation for the dimensions of
-      // a fret number which can have multiple digits. As a result, we must
-      // overwrite getWidth() to return the correct width
-      this.glyph.getWidth = () => this.width;
     }
+    // For some reason we associate a notehead glyph with a TabNote, and this
+    // glyph is used for certain width calculations. Of course, this is totally
+    // incorrect since a notehead is a poor approximation for the dimensions of
+    // a fret number which can have multiple digits. As a result, we must
+    // overwrite getWidth() to return the correct width
+    this.glyph.getWidth = () => this.width;
   }
 
   // Set the `stave` to the note
@@ -416,7 +423,7 @@ export class TabNote extends StemmableNote {
     const x = this.getAbsoluteX();
     const ys = this.ys;
     for (let i = 0; i < this.positions.length; ++i) {
-      const y = ys[i];
+      const y = ys[i] + this.render_options.y_shift;
       const glyph = this.glyphs[i];
 
       // Center the fret text beneath the notation note head
@@ -427,10 +434,14 @@ export class TabNote extends StemmableNote {
       ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
 
       if (glyph.code) {
-        Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale, glyph.code);
+        Glyph.renderGlyph(ctx, tab_x, y,
+          this.render_options.glyph_font_scale * this.getScale(), glyph.code);
       } else {
+        ctx.save();
+        ctx.setRawFont(this.getFont());
         const text = glyph.text.toString();
-        ctx.fillText(text, tab_x, y + 5);
+        ctx.fillText(text, tab_x, y + 5 * this.getScale());
+        ctx.restore();
       }
     }
   }

@@ -12,6 +12,7 @@ import { FretHandFinger } from './frethandfinger';
 import { Accidental } from './accidental';
 import { NoteSubGroup } from './notesubgroup';
 import { GraceNoteGroup } from './gracenotegroup';
+import { GraceTabNoteGroup } from './gracetabnotegroup';
 import { Stroke } from './strokes';
 import { StringNumber } from './stringnumber';
 import { Articulation } from './articulation';
@@ -48,6 +49,7 @@ export class ModifierContext {
       FretHandFinger,
       Accidental,
       GraceNoteGroup,
+      GraceTabNoteGroup,
       NoteSubGroup,
       Stroke,
       StringNumber,

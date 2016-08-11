@@ -9,6 +9,8 @@ const Flow = {
   STEM_HEIGHT: 35,
   STAVE_LINE_THICKNESS: 1,
   RESOLUTION: 16384,
+  TABLATURE_FONT: '10pt Arial',
+  TABLATURE_GRACE_FONT: '7.5pt Arial',
   DEFAULT_NOTATION_FONT_SCALE: 39,
   DEFAULT_TABLATURE_FONT_SCALE: 39,
   SLASH_NOTEHEAD_WIDTH: 15,
@@ -228,7 +230,7 @@ Flow.integerToNote.table = {
 };
 
 
-Flow.tabToGlyph = fret => {
+Flow.tabToGlyph = (fret, scale) => {
   let glyph = null;
   let width = 0;
   let shift_y = 0;
@@ -236,10 +238,10 @@ Flow.tabToGlyph = fret => {
   if (fret.toString().toUpperCase() === 'X') {
     const glyphMetrics = new Glyph('v7f', Flow.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
     glyph = 'v7f';
-    width = glyphMetrics.width;
+    width = glyphMetrics.width * scale;
     shift_y = -glyphMetrics.height / 2;
   } else {
-    width = Flow.textWidth(fret.toString());
+    width = Flow.textWidth(fret.toString()) * scale;
   }
 
   return {
