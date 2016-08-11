@@ -12,6 +12,8 @@ import { Formatter } from './formatter';
 import { Voice } from './voice';
 import { Beam } from './beam';
 import { StaveTie } from './stavetie';
+import { TabTie } from './tabtie';
+import { StaveNote } from './stavenote';
 
 // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
 function L(...args) { if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args); }
@@ -21,7 +23,8 @@ export class GraceNoteGroup extends Modifier {
 
   // Arrange groups inside a `ModifierContext`
   static format(gracenote_groups, state) {
-    const gracenote_spacing = 4;
+    const group_spacing_stave = 4;
+    const group_spacing_tab = 0;
 
     if (!gracenote_groups || gracenote_groups.length === 0) return false;
 
@@ -32,8 +35,10 @@ export class GraceNoteGroup extends Modifier {
     for (let i = 0; i < gracenote_groups.length; ++i) {
       const gracenote_group = gracenote_groups[i];
       const note = gracenote_group.getNote();
-      const stave = note.getStave();
-      if (note !== prev_note) {
+      const is_stavenote = (note.getCategory() === StaveNote.CATEGORY);
+      const spacing = (is_stavenote ?  group_spacing_stave : group_spacing_tab);
+
+      if (is_stavenote && note !== prev_note) {
          // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
           const props_tmp = note.getKeyProps()[n];
@@ -41,11 +46,8 @@ export class GraceNoteGroup extends Modifier {
         }
         prev_note = note;
       }
-      if (stave != null) {
-        group_list.push({ shift: shiftL, gracenote_group });
-      } else {
-        group_list.push({ shift: shiftL, gracenote_group });
-      }
+
+      group_list.push({ shift: shiftL, gracenote_group, spacing });
     }
 
     // If first note left shift in case it is displaced
@@ -54,13 +56,13 @@ export class GraceNoteGroup extends Modifier {
     for (let i = 0; i < group_list.length; ++i) {
       const gracenote_group = group_list[i].gracenote_group;
       gracenote_group.preFormat();
-      formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+      formatWidth = gracenote_group.getWidth() + group_list[i].spacing;
       group_shift = Math.max(formatWidth, group_shift);
     }
 
     for (let i = 0; i < group_list.length; ++i) {
       const gracenote_group = group_list[i].gracenote_group;
-      formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+      formatWidth = gracenote_group.getWidth() + group_list[i].spacing;
       gracenote_group.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
     }
 
@@ -178,7 +180,10 @@ export class GraceNoteGroup extends Modifier {
 
     if (this.show_slur) {
       // Create and draw slur
-      this.slur = new StaveTie({
+      const is_stavenote = (this.getNote().getCategory() === StaveNote.CATEGORY);
+      const TieClass = (is_stavenote ? StaveTie : TabTie);
+
+      this.slur = new TieClass({
         last_note: this.grace_notes[0],
         first_note: note,
         first_indices: [0],

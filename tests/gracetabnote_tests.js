@@ -56,10 +56,10 @@ VF.Test.GraceTabNote = (function() {
       gracenotes2[0].setGhost(true);
       var gracenotes3 = gracenote_group3.map(createNote);
 
-      note0.addModifier(new VF.GraceTabNoteGroup(gracenotes0));
-      note1.addModifier(new VF.GraceTabNoteGroup(gracenotes1));
-      note2.addModifier(new VF.GraceTabNoteGroup(gracenotes2));
-      note3.addModifier(new VF.GraceTabNoteGroup(gracenotes3));
+      note0.addModifier(new VF.GraceNoteGroup(gracenotes0));
+      note1.addModifier(new VF.GraceNoteGroup(gracenotes1));
+      note2.addModifier(new VF.GraceNoteGroup(gracenotes2));
+      note3.addModifier(new VF.GraceNoteGroup(gracenotes3));
 
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables([note0, note1, note2, note3]);
@@ -99,8 +99,8 @@ VF.Test.GraceTabNote = (function() {
       var gracenotes0 = gracenote_group0.map(createNote);
       var gracenotes1 = gracenote_group1.map(createNote);
 
-      note0.addModifier(new VF.GraceTabNoteGroup(gracenotes0, true));
-      note1.addModifier(new VF.GraceTabNoteGroup(gracenotes1, true));
+      note0.addModifier(new VF.GraceNoteGroup(gracenotes0, true));
+      note1.addModifier(new VF.GraceNoteGroup(gracenotes1, true));
 
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables([note0, note1]);

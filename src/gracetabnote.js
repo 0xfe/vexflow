@@ -8,23 +8,28 @@
 //
 // See `tests/gracetabnote_tests.js` for usage examples.
 
+import { Vex } from './vex';
 import { TabNote } from './tabnote';
-import { Flow } from './tables';
 
 export class GraceTabNote extends TabNote {
   static get CATEGORY() { return 'gracetabnotes'; }
-  static get SCALE() { return 0.66; }
 
   constructor(note_struct) {
     super(note_struct, false);
-    this.render_options.y_shift = 1;
+
+    Vex.Merge(this.render_options, {
+      // vertical shift from stave line
+      y_shift: 1.5,
+      // grace glyph scale
+      scale: 0.6,
+      // grace tablature font
+      font: '7.5pt Arial',
+    });
+
+    this.updateWidth();
   }
 
   getCategory() { return GraceTabNote.CATEGORY; }
-
-  getScale() { return GraceTabNote.SCALE; }
-
-  getFont() { return Flow.TABLATURE_GRACE_FONT; }
 
   draw() {
     super.draw();
