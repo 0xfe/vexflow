@@ -72,11 +72,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _glyph = __webpack_require__(4);
 	
-	var _stave = __webpack_require__(40);
+	var _stave = __webpack_require__(41);
 	
 	var _stavenote = __webpack_require__(18);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	var _voice = __webpack_require__(13);
 	
@@ -86,43 +86,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _stavetie = __webpack_require__(31);
 	
-	var _tabstave = __webpack_require__(52);
+	var _tabstave = __webpack_require__(53);
 	
-	var _tabnote = __webpack_require__(53);
+	var _tabnote = __webpack_require__(54);
 	
-	var _bend = __webpack_require__(38);
+	var _bend = __webpack_require__(39);
 	
-	var _vibrato = __webpack_require__(39);
+	var _vibrato = __webpack_require__(40);
 	
 	var _note = __webpack_require__(20);
 	
 	var _modifiercontext = __webpack_require__(25);
 	
-	var _tickcontext = __webpack_require__(36);
+	var _tickcontext = __webpack_require__(37);
 	
-	var _articulation = __webpack_require__(34);
+	var _articulation = __webpack_require__(35);
 	
-	var _annotation = __webpack_require__(37);
+	var _annotation = __webpack_require__(38);
 	
-	var _stavebarline = __webpack_require__(41);
+	var _stavebarline = __webpack_require__(42);
 	
 	var _notehead = __webpack_require__(19);
 	
 	var _staveconnector = __webpack_require__(17);
 	
-	var _clefnote = __webpack_require__(54);
+	var _clefnote = __webpack_require__(55);
 	
-	var _keysignature = __webpack_require__(49);
+	var _keysignature = __webpack_require__(50);
 	
-	var _timesignature = __webpack_require__(50);
+	var _timesignature = __webpack_require__(51);
 	
-	var _timesignote = __webpack_require__(55);
+	var _timesignote = __webpack_require__(56);
 	
 	var _stem = __webpack_require__(16);
 	
-	var _tabtie = __webpack_require__(56);
+	var _tabtie = __webpack_require__(32);
 	
-	var _clef = __webpack_require__(48);
+	var _clef = __webpack_require__(49);
 	
 	var _modifier = __webpack_require__(23);
 	
@@ -132,55 +132,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _gracenote = __webpack_require__(58);
 	
-	var _tuning = __webpack_require__(59);
+	var _gracetabnote = __webpack_require__(59);
 	
-	var _keymanager = __webpack_require__(60);
+	var _tuning = __webpack_require__(60);
 	
-	var _stavehairpin = __webpack_require__(61);
+	var _keymanager = __webpack_require__(61);
+	
+	var _stavehairpin = __webpack_require__(62);
 	
 	var _boundingbox = __webpack_require__(6);
 	
-	var _strokes = __webpack_require__(32);
+	var _strokes = __webpack_require__(33);
 	
-	var _textnote = __webpack_require__(47);
+	var _textnote = __webpack_require__(48);
 	
-	var _curve = __webpack_require__(62);
+	var _curve = __webpack_require__(63);
 	
-	var _textdynamics = __webpack_require__(63);
+	var _textdynamics = __webpack_require__(64);
 	
-	var _staveline = __webpack_require__(64);
+	var _staveline = __webpack_require__(65);
 	
-	var _ornament = __webpack_require__(35);
+	var _ornament = __webpack_require__(36);
 	
-	var _pedalmarking = __webpack_require__(65);
+	var _pedalmarking = __webpack_require__(66);
 	
-	var _textbracket = __webpack_require__(66);
+	var _textbracket = __webpack_require__(67);
 	
 	var _frethandfinger = __webpack_require__(26);
 	
-	var _staverepetition = __webpack_require__(43);
+	var _staverepetition = __webpack_require__(44);
 	
-	var _barnote = __webpack_require__(67);
+	var _barnote = __webpack_require__(68);
 	
-	var _ghostnote = __webpack_require__(68);
+	var _ghostnote = __webpack_require__(69);
 	
 	var _notesubgroup = __webpack_require__(29);
 	
 	var _gracenotegroup = __webpack_require__(30);
 	
-	var _tremolo = __webpack_require__(69);
+	var _tremolo = __webpack_require__(70);
 	
-	var _stringnumber = __webpack_require__(33);
+	var _stringnumber = __webpack_require__(34);
 	
-	var _crescendo = __webpack_require__(70);
+	var _crescendo = __webpack_require__(71);
 	
-	var _stavevolta = __webpack_require__(51);
+	var _stavevolta = __webpack_require__(52);
 	
 	var _vexflow_font = __webpack_require__(7);
 	
-	// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	_vex.Vex.Flow = _tables.Flow; // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 	
-	_vex.Vex.Flow = _tables.Flow;
 	_vex.Vex.Flow.Fraction = _fraction.Fraction;
 	_vex.Vex.Flow.Renderer = _renderer.Renderer;
 	_vex.Vex.Flow.Formatter = _formatter.Formatter;
@@ -216,6 +217,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	_vex.Vex.Flow.TabSlide = _tabslide.TabSlide;
 	_vex.Vex.Flow.Tuplet = _tuplet.Tuplet;
 	_vex.Vex.Flow.GraceNote = _gracenote.GraceNote;
+	_vex.Vex.Flow.GraceTabNote = _gracetabnote.GraceTabNote;
 	_vex.Vex.Flow.Tuning = _tuning.Tuning;
 	_vex.Vex.Flow.KeyManager = _keymanager.KeyManager;
 	_vex.Vex.Flow.StaveHairpin = _stavehairpin.StaveHairpin;
@@ -660,6 +662,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	Flow.tabToGlyph = function (fret) {
+	  var scale = arguments.length <= 1 || arguments[1] === undefined ? 1.0 : arguments[1];
+	
 	  var glyph = null;
 	  var width = 0;
 	  var shift_y = 0;
@@ -677,7 +681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    text: fret,
 	    code: glyph,
 	    getWidth: function getWidth() {
-	      return width;
+	      return width * scale;
 	    },
 	    shift_y: shift_y
 	  };
@@ -3974,7 +3978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _modifiercontext = __webpack_require__(25);
 	
-	var _tickcontext = __webpack_require__(36);
+	var _tickcontext = __webpack_require__(37);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 	//
@@ -9582,19 +9586,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _gracenotegroup = __webpack_require__(30);
 	
-	var _strokes = __webpack_require__(32);
+	var _strokes = __webpack_require__(33);
 	
-	var _stringnumber = __webpack_require__(33);
+	var _stringnumber = __webpack_require__(34);
 	
-	var _articulation = __webpack_require__(34);
+	var _articulation = __webpack_require__(35);
 	
-	var _ornament = __webpack_require__(35);
+	var _ornament = __webpack_require__(36);
 	
-	var _annotation = __webpack_require__(37);
+	var _annotation = __webpack_require__(38);
 	
-	var _bend = __webpack_require__(38);
+	var _bend = __webpack_require__(39);
 	
-	var _vibrato = __webpack_require__(39);
+	var _vibrato = __webpack_require__(40);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 	//
@@ -11121,6 +11125,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _stavetie = __webpack_require__(31);
 	
+	var _tabtie = __webpack_require__(32);
+	
+	var _stavenote = __webpack_require__(18);
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -11146,7 +11154,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  // Arrange groups inside a `ModifierContext`
 	  GraceNoteGroup.format = function format(gracenote_groups, state) {
-	    var gracenote_spacing = 4;
+	    var group_spacing_stave = 4;
+	    var group_spacing_tab = 0;
 	
 	    if (!gracenote_groups || gracenote_groups.length === 0) return false;
 	
@@ -11157,8 +11166,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    for (var i = 0; i < gracenote_groups.length; ++i) {
 	      var gracenote_group = gracenote_groups[i];
 	      var note = gracenote_group.getNote();
-	      var stave = note.getStave();
-	      if (note !== prev_note) {
+	      var is_stavenote = note.getCategory() === _stavenote.StaveNote.CATEGORY;
+	      var spacing = is_stavenote ? group_spacing_stave : group_spacing_tab;
+	
+	      if (is_stavenote && note !== prev_note) {
 	        // Iterate through all notes to get the displaced pixels
 	        for (var n = 0; n < note.keys.length; ++n) {
 	          var props_tmp = note.getKeyProps()[n];
@@ -11166,11 +11177,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        prev_note = note;
 	      }
-	      if (stave != null) {
-	        group_list.push({ shift: shiftL, gracenote_group: gracenote_group });
-	      } else {
-	        group_list.push({ shift: shiftL, gracenote_group: gracenote_group });
-	      }
+	
+	      group_list.push({ shift: shiftL, gracenote_group: gracenote_group, spacing: spacing });
 	    }
 	
 	    // If first note left shift in case it is displaced
@@ -11179,13 +11187,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    for (var _i = 0; _i < group_list.length; ++_i) {
 	      var _gracenote_group = group_list[_i].gracenote_group;
 	      _gracenote_group.preFormat();
-	      formatWidth = _gracenote_group.getWidth() + gracenote_spacing;
+	      formatWidth = _gracenote_group.getWidth() + group_list[_i].spacing;
 	      group_shift = Math.max(formatWidth, group_shift);
 	    }
 	
 	    for (var _i2 = 0; _i2 < group_list.length; ++_i2) {
 	      var _gracenote_group2 = group_list[_i2].gracenote_group;
-	      formatWidth = _gracenote_group2.getWidth() + gracenote_spacing;
+	      formatWidth = _gracenote_group2.getWidth() + group_list[_i2].spacing;
 	      _gracenote_group2.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
 	    }
 	
@@ -11230,6 +11238,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      beat_value: 4,
 	      resolution: _tables.Flow.RESOLUTION
 	    }).setStrict(false);
+	
+	    _this.render_options = {
+	      slur_y_shift: 0
+	    };
 	
 	    _this.voice.addTickables(_this.grace_notes);
 	
@@ -11318,7 +11330,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (this.show_slur) {
 	      // Create and draw slur
-	      this.slur = new _stavetie.StaveTie({
+	      var is_stavenote = this.getNote().getCategory() === _stavenote.StaveNote.CATEGORY;
+	      var TieClass = is_stavenote ? _stavetie.StaveTie : _tabtie.TabTie;
+	
+	      this.slur = new TieClass({
 	        last_note: this.grace_notes[0],
 	        first_note: note,
 	        first_indices: [0],
@@ -11326,6 +11341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	
 	      this.slur.render_options.cp2 = 12;
+	      this.slur.render_options.y_shift = (is_stavenote ? 7 : 5) + this.render_options.slur_y_shift;
 	      this.slur.setContext(this.context).draw();
 	    }
 	  };
@@ -11535,6 +11551,109 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.TabTie = undefined;
+	
+	var _vex = __webpack_require__(1);
+	
+	var _stavetie = __webpack_require__(31);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // / [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	//
+	// ## Description
+	// This class implements varies types of ties between contiguous notes. The
+	// ties include: regular ties, hammer ons, pull offs, and slides.
+	
+	var TabTie = exports.TabTie = function (_StaveTie) {
+	  _inherits(TabTie, _StaveTie);
+	
+	  TabTie.createHammeron = function createHammeron(notes) {
+	    return new TabTie(notes, 'H');
+	  };
+	
+	  TabTie.createPulloff = function createPulloff(notes) {
+	    return new TabTie(notes, 'P');
+	  };
+	
+	  function TabTie(notes, text) {
+	    _classCallCheck(this, TabTie);
+	
+	    var _this = _possibleConstructorReturn(this, _StaveTie.call(this, notes, text));
+	    /**
+	     * Notes is a struct that has:
+	     *
+	     *  {
+	     *    first_note: Note,
+	     *    last_note: Note,
+	     *    first_indices: [n1, n2, n3],
+	     *    last_indices: [n1, n2, n3]
+	     *  }
+	     *
+	     **/
+	
+	
+	    _this.render_options.cp1 = 9;
+	    _this.render_options.cp2 = 11;
+	    _this.render_options.y_shift = 3;
+	
+	    _this.setNotes(notes);
+	    return _this;
+	  }
+	
+	  TabTie.prototype.draw = function draw() {
+	    if (!this.context) {
+	      throw new _vex.Vex.RERR('NoContext', 'No context to render tie.');
+	    }
+	
+	    var first_note = this.first_note;
+	    var last_note = this.last_note;
+	    var first_x_px = void 0;
+	    var last_x_px = void 0;
+	    var first_ys = void 0;
+	    var last_ys = void 0;
+	
+	    if (first_note) {
+	      first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
+	      first_ys = first_note.getYs();
+	    } else {
+	      first_x_px = last_note.getStave().getTieStartX();
+	      first_ys = last_note.getYs();
+	      this.first_indices = this.last_indices;
+	    }
+	
+	    if (last_note) {
+	      last_x_px = last_note.getTieLeftX() + this.render_options.tie_spacing;
+	      last_ys = last_note.getYs();
+	    } else {
+	      last_x_px = first_note.getStave().getTieEndX();
+	      last_ys = first_note.getYs();
+	      this.last_indices = this.first_indices;
+	    }
+	
+	    this.renderTie({
+	      first_x_px: first_x_px,
+	      last_x_px: last_x_px,
+	      first_ys: first_ys,
+	      last_ys: last_ys,
+	      direction: -1 });
+	
+	    this.renderText(first_x_px, last_x_px);
+	    return true;
+	  };
+	
+	  return TabTie;
+	}(_stavetie.StaveTie);
+
+/***/ },
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11794,7 +11913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12108,7 +12227,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12453,7 +12572,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12469,7 +12588,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _modifier = __webpack_require__(23);
 	
-	var _tickcontext = __webpack_require__(36);
+	var _tickcontext = __webpack_require__(37);
 	
 	var _stavenote = __webpack_require__(18);
 	
@@ -12804,7 +12923,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13010,7 +13129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13244,7 +13363,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13541,7 +13660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13555,7 +13674,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _modifier = __webpack_require__(23);
 	
-	var _bend = __webpack_require__(38);
+	var _bend = __webpack_require__(39);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -13712,7 +13831,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13724,27 +13843,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _stavebarline = __webpack_require__(41);
+	var _stavebarline = __webpack_require__(42);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
-	var _staverepetition = __webpack_require__(43);
+	var _staverepetition = __webpack_require__(44);
 	
-	var _stavesection = __webpack_require__(44);
+	var _stavesection = __webpack_require__(45);
 	
-	var _stavetempo = __webpack_require__(45);
+	var _stavetempo = __webpack_require__(46);
 	
-	var _stavetext = __webpack_require__(46);
+	var _stavetext = __webpack_require__(47);
 	
 	var _boundingbox = __webpack_require__(6);
 	
-	var _clef = __webpack_require__(48);
+	var _clef = __webpack_require__(49);
 	
-	var _keysignature = __webpack_require__(49);
+	var _keysignature = __webpack_require__(50);
 	
-	var _timesignature = __webpack_require__(50);
+	var _timesignature = __webpack_require__(51);
 	
-	var _stavevolta = __webpack_require__(51);
+	var _stavevolta = __webpack_require__(52);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 	
@@ -14426,7 +14545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14440,7 +14559,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -14632,7 +14751,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -14735,7 +14854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14747,7 +14866,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -14912,7 +15031,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14924,7 +15043,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -15008,7 +15127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15024,7 +15143,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _modifier = __webpack_require__(23);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -15159,7 +15278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15171,9 +15290,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
-	var _textnote = __webpack_require__(47);
+	var _textnote = __webpack_require__(48);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -15293,7 +15412,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15607,7 +15726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15619,7 +15738,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -15908,7 +16027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15922,7 +16041,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -16256,7 +16375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16270,7 +16389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _glyph3 = __webpack_require__(4);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -16467,7 +16586,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16479,7 +16598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(42);
+	var _stavemodifier = __webpack_require__(43);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -16575,7 +16694,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16585,7 +16704,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stave = __webpack_require__(40);
+	var _stave = __webpack_require__(41);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -16625,7 +16744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stave.Stave);
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16647,7 +16766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _dot = __webpack_require__(24);
 	
-	var _glyph = __webpack_require__(4);
+	var _glyph2 = __webpack_require__(4);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -16790,7 +16909,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Flag to draw dot modifiers
 	      draw_dots: draw_stem,
 	      // Flag to extend the main stem through the stave and fret positions
-	      draw_stem_through_stave: false
+	      draw_stem_through_stave: false,
+	      // vertical shift from stave line
+	      y_shift: 0,
+	      // normal glyph scale
+	      scale: 1.0,
+	      // default tablature font
+	      font: '10pt Arial'
 	    });
 	
 	    _this.glyph = _tables.Flow.durationToGlyph(_this.duration, _this.noteType);
@@ -16874,39 +16999,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	    for (var i = 0; i < this.positions.length; ++i) {
 	      var fret = this.positions[i].fret;
 	      if (this.ghost) fret = '(' + fret + ')';
-	      var glyph = _tables.Flow.tabToGlyph(fret);
+	      var glyph = _tables.Flow.tabToGlyph(fret, this.render_options.scale);
 	      this.glyphs.push(glyph);
 	      this.width = Math.max(glyph.getWidth(), this.width);
-	
-	      // For some reason we associate a notehead glyph with a TabNote, and this
-	      // glyph is used for certain width calculations. Of course, this is totally
-	      // incorrect since a notehead is a poor approximation for the dimensions of
-	      // a fret number which can have multiple digits. As a result, we must
-	      // overwrite getWidth() to return the correct width
-	      this.glyph.getWidth = function () {
-	        return _this2.width;
-	      };
 	    }
+	    // For some reason we associate a notehead glyph with a TabNote, and this
+	    // glyph is used for certain width calculations. Of course, this is totally
+	    // incorrect since a notehead is a poor approximation for the dimensions of
+	    // a fret number which can have multiple digits. As a result, we must
+	    // overwrite getWidth() to return the correct width
+	    this.glyph.getWidth = function () {
+	      return _this2.width;
+	    };
 	  };
 	
 	  // Set the `stave` to the note
 	
 	
 	  TabNote.prototype.setStave = function setStave(stave) {
+	    var _this3 = this;
+	
 	    _StemmableNote.prototype.setStave.call(this, stave);
 	    this.context = stave.context;
-	    this.width = 0;
 	
 	    // Calculate the fret number width based on font used
 	    var i = void 0;
 	    if (this.context) {
-	      for (i = 0; i < this.glyphs.length; ++i) {
-	        var text = '' + this.glyphs[i].text;
+	      var ctx = this.context;
+	      this.width = 0;
+	
+	      var _loop = function _loop() {
+	        var glyph = _this3.glyphs[i];
+	        var text = '' + glyph.text;
 	        if (text.toUpperCase() !== 'X') {
-	          this.glyphs[i].width = this.context.measureText(text).width;
+	          ctx.save();
+	          ctx.setRawFont(_this3.render_options.font);
+	          glyph.width = ctx.measureText(text).width;
+	          ctx.restore();
+	          glyph.getWidth = function () {
+	            return glyph.width;
+	          };
 	        }
-	        this.width = this.glyphs[i].width > this.width ? this.glyphs[i].width : this.width;
+	        _this3.width = Math.max(glyph.getWidth(), _this3.width);
+	      };
+	
+	      for (i = 0; i < this.glyphs.length; ++i) {
+	        _loop();
 	      }
+	      this.glyph.getWidth = function () {
+	        return _this3.width;
+	      };
 	    }
 	
 	    // we subtract 1 from `line` because getYForLine expects a 0-based index,
@@ -17069,7 +17211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      : glyph.code_flag_upstem;
 	
 	      // Draw the Flag
-	      _glyph.Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code);
+	      _glyph2.Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code);
 	    }
 	  };
 	
@@ -17077,14 +17219,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	  TabNote.prototype.drawModifiers = function drawModifiers() {
-	    var _this3 = this;
+	    var _this4 = this;
 	
 	    // Draw the modifiers
 	    this.modifiers.forEach(function (modifier) {
 	      // Only draw the dots if enabled
-	      if (modifier.getCategory() === 'dots' && !_this3.render_options.draw_dots) return;
+	      if (modifier.getCategory() === 'dots' && !_this4.render_options.draw_dots) return;
 	
-	      modifier.setContext(_this3.context);
+	      modifier.setContext(_this4.context);
 	      modifier.draw();
 	    });
 	  };
@@ -17131,21 +17273,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var x = this.getAbsoluteX();
 	    var ys = this.ys;
 	    for (var i = 0; i < this.positions.length; ++i) {
-	      var y = ys[i];
-	      var glyph = this.glyphs[i];
+	      var y = ys[i] + this.render_options.y_shift;
+	      var _glyph = this.glyphs[i];
 	
 	      // Center the fret text beneath the notation note head
 	      var note_glyph_width = this.glyph.getWidth();
-	      var tab_x = x + note_glyph_width / 2 - glyph.getWidth() / 2;
+	      var tab_x = x + note_glyph_width / 2 - _glyph.getWidth() / 2;
 	
 	      // FIXME: Magic numbers.
-	      ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
+	      ctx.clearRect(tab_x - 2, y - 3, _glyph.getWidth() + 4, 6);
 	
-	      if (glyph.code) {
-	        _glyph.Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale, glyph.code);
+	      if (_glyph.code) {
+	        _glyph2.Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale * this.render_options.scale, _glyph.code);
 	      } else {
-	        var text = glyph.text.toString();
-	        ctx.fillText(text, tab_x, y + 5);
+	        ctx.save();
+	        ctx.setRawFont(this.render_options.font);
+	        var _text = _glyph.text.toString();
+	        ctx.fillText(_text, tab_x, y + 5 * this.render_options.scale);
+	        ctx.restore();
 	      }
 	    }
 	  };
@@ -17189,7 +17334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stemmablenote.StemmableNote);
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17205,7 +17350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _note = __webpack_require__(20);
 	
-	var _clef = __webpack_require__(48);
+	var _clef = __webpack_require__(49);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -17307,7 +17452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17321,7 +17466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _note = __webpack_require__(20);
 	
-	var _timesignature = __webpack_require__(50);
+	var _timesignature = __webpack_require__(51);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -17377,109 +17522,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	exports.TabTie = undefined;
-	
-	var _vex = __webpack_require__(1);
-	
-	var _stavetie = __webpack_require__(31);
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // / [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-	//
-	// ## Description
-	// This class implements varies types of ties between contiguous notes. The
-	// ties include: regular ties, hammer ons, pull offs, and slides.
-	
-	var TabTie = exports.TabTie = function (_StaveTie) {
-	  _inherits(TabTie, _StaveTie);
-	
-	  TabTie.createHammeron = function createHammeron(notes) {
-	    return new TabTie(notes, 'H');
-	  };
-	
-	  TabTie.createPulloff = function createPulloff(notes) {
-	    return new TabTie(notes, 'P');
-	  };
-	
-	  function TabTie(notes, text) {
-	    _classCallCheck(this, TabTie);
-	
-	    var _this = _possibleConstructorReturn(this, _StaveTie.call(this, notes, text));
-	    /**
-	     * Notes is a struct that has:
-	     *
-	     *  {
-	     *    first_note: Note,
-	     *    last_note: Note,
-	     *    first_indices: [n1, n2, n3],
-	     *    last_indices: [n1, n2, n3]
-	     *  }
-	     *
-	     **/
-	
-	
-	    _this.render_options.cp1 = 9;
-	    _this.render_options.cp2 = 11;
-	    _this.render_options.y_shift = 3;
-	
-	    _this.setNotes(notes);
-	    return _this;
-	  }
-	
-	  TabTie.prototype.draw = function draw() {
-	    if (!this.context) {
-	      throw new _vex.Vex.RERR('NoContext', 'No context to render tie.');
-	    }
-	
-	    var first_note = this.first_note;
-	    var last_note = this.last_note;
-	    var first_x_px = void 0;
-	    var last_x_px = void 0;
-	    var first_ys = void 0;
-	    var last_ys = void 0;
-	
-	    if (first_note) {
-	      first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
-	      first_ys = first_note.getYs();
-	    } else {
-	      first_x_px = last_note.getStave().getTieStartX();
-	      first_ys = last_note.getYs();
-	      this.first_indices = this.last_indices;
-	    }
-	
-	    if (last_note) {
-	      last_x_px = last_note.getTieLeftX() + this.render_options.tie_spacing;
-	      last_ys = last_note.getYs();
-	    } else {
-	      last_x_px = first_note.getStave().getTieEndX();
-	      last_ys = first_note.getYs();
-	      this.last_indices = this.first_indices;
-	    }
-	
-	    this.renderTie({
-	      first_x_px: first_x_px,
-	      last_x_px: last_x_px,
-	      first_ys: first_ys,
-	      last_ys: last_ys,
-	      direction: -1 });
-	
-	    this.renderText(first_x_px, last_x_px);
-	    return true;
-	  };
-	
-	  return TabTie;
-	}(_stavetie.StaveTie);
-
-/***/ },
 /* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -17492,7 +17534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _tabtie = __webpack_require__(56);
+	var _tabtie = __webpack_require__(32);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -17708,6 +17750,74 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	exports.__esModule = true;
+	exports.GraceTabNote = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _vex = __webpack_require__(1);
+	
+	var _tabnote = __webpack_require__(54);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	// @author Balazs Forian-Szabo
+	//
+	// ## Description
+	//
+	// A basic implementation of grace notes
+	// to be rendered on a tab stave.
+	//
+	// See `tests/gracetabnote_tests.js` for usage examples.
+	
+	var GraceTabNote = exports.GraceTabNote = function (_TabNote) {
+	  _inherits(GraceTabNote, _TabNote);
+	
+	  _createClass(GraceTabNote, null, [{
+	    key: 'CATEGORY',
+	    get: function get() {
+	      return 'gracetabnotes';
+	    }
+	  }]);
+	
+	  function GraceTabNote(note_struct) {
+	    _classCallCheck(this, GraceTabNote);
+	
+	    var _this = _possibleConstructorReturn(this, _TabNote.call(this, note_struct, false));
+	
+	    _vex.Vex.Merge(_this.render_options, {
+	      // vertical shift from stave line
+	      y_shift: 0.3,
+	      // grace glyph scale
+	      scale: 0.6,
+	      // grace tablature font
+	      font: '7.5pt Arial'
+	    });
+	
+	    _this.updateWidth();
+	    return _this;
+	  }
+	
+	  GraceTabNote.prototype.getCategory = function getCategory() {
+	    return GraceTabNote.CATEGORY;
+	  };
+	
+	  GraceTabNote.prototype.draw = function draw() {
+	    _TabNote.prototype.draw.call(this);
+	  };
+	
+	  return GraceTabNote;
+	}(_tabnote.TabNote);
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
 	exports.Tuning = undefined;
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
@@ -17801,7 +17911,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17948,7 +18058,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18151,7 +18261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18312,7 +18422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18470,7 +18580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18854,7 +18964,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19163,7 +19273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19374,7 +19484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19386,7 +19496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _note = __webpack_require__(20);
 	
-	var _stavebarline = __webpack_require__(41);
+	var _stavebarline = __webpack_require__(42);
 	
 	var _boundingbox = __webpack_require__(6);
 	
@@ -19487,7 +19597,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19571,7 +19681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stemmablenote.StemmableNote);
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19661,7 +19771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19673,7 +19783,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _note = __webpack_require__(20);
 	
-	var _tickcontext = __webpack_require__(36);
+	var _tickcontext = __webpack_require__(37);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	

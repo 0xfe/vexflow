@@ -21,6 +21,7 @@ VF.Test.run = function () {
   VF.Test.Barline.Start();
   VF.Test.AutoBeamFormatting.Start();
   VF.Test.GraceNote.Start();
+  VF.Test.GraceTabNote.Start();
   VF.Test.Vibrato.Start();
   VF.Test.Annotation.Start();
   VF.Test.Tuning.Start();
