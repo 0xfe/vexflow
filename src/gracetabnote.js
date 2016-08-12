@@ -19,7 +19,7 @@ export class GraceTabNote extends TabNote {
 
     Vex.Merge(this.render_options, {
       // vertical shift from stave line
-      y_shift: 1.5,
+      y_shift: 0.3,
       // grace glyph scale
       scale: 0.6,
       // grace tablature font

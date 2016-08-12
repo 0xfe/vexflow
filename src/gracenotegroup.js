@@ -95,6 +95,10 @@ export class GraceNoteGroup extends Modifier {
       resolution: Flow.RESOLUTION,
     }).setStrict(false);
 
+    this.render_options = {
+      slur_y_shift: 0,
+    };
+
     this.voice.addTickables(this.grace_notes);
 
     return this;
@@ -191,6 +195,7 @@ export class GraceNoteGroup extends Modifier {
       });
 
       this.slur.render_options.cp2 = 12;
+      this.slur.render_options.y_shift = (is_stavenote ? 7 : 5) + this.render_options.slur_y_shift;
       this.slur.setContext(this.context).draw();
     }
   }
