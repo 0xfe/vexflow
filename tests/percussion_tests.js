@@ -22,7 +22,8 @@ VF.Test.Percussion = (function() {
     },
 
     newModifier: function(s) {
-      return new VF.Annotation(s).setFont("Arial", 12)
+      return new VF.Annotation(s)
+        .setFont("Arial", 12)
         .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
     },
 
@@ -37,20 +38,19 @@ VF.Test.Percussion = (function() {
     draw: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 400, 120);
 
-      var stave = new VF.Stave(10, 10, 300);
-      stave.addClef("percussion");
-      stave.setContext(ctx);
-      stave.draw();
+      var stave = new VF.Stave(10, 10, 300)
+        .addClef("percussion")
+        .setContext(ctx)
+        .draw();
 
       ok(true, "");
     },
 
     showNote: function(note_struct, stave, ctx, x) {
-      var note = new VF.StaveNote(note_struct);
+      var note = new VF.StaveNote(note_struct).setStave(stave);;
       var tickContext = new VF.TickContext();
       tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(20);
-      note.setContext(ctx).setStave(stave);
-      note.draw();
+      note.setContext(ctx).draw();
       return note;
     },
 
@@ -75,15 +75,14 @@ VF.Test.Percussion = (function() {
       ];
       expect(notes.length * 4);
 
-      var ctx = new contextBuilder(options.canvas_sel,
-        notes.length * 25 + 100, 240);
+      var ctx = new contextBuilder(options.canvas_sel, notes.length * 25 + 100, 240);
 
       // Draw two staves, one with up-stems and one with down-stems.
       for (var h = 0; h < 2; ++h) {
-        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75);
-        stave.addClef("percussion");
-        stave.setContext(ctx);
-        stave.draw();
+        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75)
+          .addClef("percussion")
+          .setContext(ctx)
+          .draw();
 
         var showNote = VF.Test.Percussion.showNote;
 
@@ -100,12 +99,12 @@ VF.Test.Percussion = (function() {
 
     drawBasic0: function(options, contextBuilder) {
       var ctx = contextBuilder(options.canvas_sel, 500, 120);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-        ctx.setFont("Arial", 15, "");
-      var stave = new VF.Stave(10, 10, 420);
-      stave.addClef("percussion");
-      stave.setContext(ctx);
-      stave.draw();
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
+      ctx.setFont("Arial", 15, "");
+
+      var stave = new VF.Stave(10, 10, 420).addClef("percussion")
 
       var notesUp = [
         new VF.StaveNote({ keys: ["g/5/x2"], duration: "8" }),
@@ -118,36 +117,33 @@ VF.Test.Percussion = (function() {
         new VF.StaveNote({ keys: ["g/5/x2"], duration: "8" })
       ];
       var beamUp = new VF.Beam(notesUp.slice(0,8));
-      var voiceUp = new VF.Voice({ num_beats: 4, beat_value: 4,
-        resolution: VF.RESOLUTION });
-      voiceUp.addTickables(notesUp);
+      var voiceUp = new VF.Voice(VF.TIME4_4)
+        .addTickables(notesUp)
+        .setStave(stave);
 
       var notesDown = [
-        new VF.StaveNote({ keys: ["f/4"], duration: "8",
-          stem_direction: -1 }),
-        new VF.StaveNote({ keys: ["f/4"], duration: "8",
-          stem_direction: -1 }),
-        new VF.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
-          stem_direction: -1 }),
-        new VF.StaveNote({ keys: ["f/4"], duration: "8",
-          stem_direction: -1 }),
-        new VF.StaveNote({ keys: ["f/4"], duration: "8",
-          stem_direction: -1 }),
-        new VF.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
-          stem_direction: -1 })
+        new VF.StaveNote({ keys: ["f/4"], duration: "8", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["f/4"], duration: "8", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["f/4"], duration: "8", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["f/4"], duration: "8", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q", stem_direction: -1 })
       ];
+
       var beamDown1 = new VF.Beam(notesDown.slice(0,2));
       var beamDown2 = new VF.Beam(notesDown.slice(3,6));
-      var voiceDown = new VF.Voice({ num_beats: 4, beat_value: 4,
-        resolution: VF.RESOLUTION });
-      voiceDown.addTickables(notesDown);
 
-      var formatter = new VF.Formatter().joinVoices([voiceUp, voiceDown]).
-         formatToStave([voiceUp, voiceDown], stave);
+      var voiceDown = new VF.Voice(VF.TIME4_4)
+        .addTickables(notesDown)
+        .setStave(stave);
 
-      voiceUp.draw(ctx, stave);
-      voiceDown.draw(ctx, stave);
+      var formatter = new VF.Formatter()
+        .joinVoices([voiceUp, voiceDown])
+        .formatToStave([voiceUp, voiceDown], stave);
 
+      stave.setContext(ctx).draw();
+      voiceUp.draw(ctx);
+      voiceDown.draw(ctx);
       beamUp.setContext(ctx).draw();
       beamDown1.setContext(ctx).draw();
       beamDown2.setContext(ctx).draw();
@@ -157,12 +153,12 @@ VF.Test.Percussion = (function() {
 
     drawBasic1: function(options, contextBuilder) {
       var ctx = contextBuilder(options.canvas_sel, 500, 120);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-        ctx.setFont("Arial", 15, "");
-      var stave = new VF.Stave(10, 10, 420);
-      stave.addClef("percussion");
-      stave.setContext(ctx);
-      stave.draw();
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
+      ctx.setFont("Arial", 15, "");
+
+      var stave = new VF.Stave(10, 10, 420).addClef("percussion");
 
       var notesUp = [
         new VF.StaveNote({ keys: ["f/5/x2"], duration: "q" }),
@@ -170,37 +166,39 @@ VF.Test.Percussion = (function() {
         new VF.StaveNote({ keys: ["f/5/x2"], duration: "q" }),
         new VF.StaveNote({ keys: ["f/5/x2"], duration: "q" })
       ];
-      var voiceUp = new VF.Voice({ num_beats: 4, beat_value: 4,
-        resolution: VF.RESOLUTION });
-      voiceUp.addTickables(notesUp);
+
+      var voiceUp = new VF.Voice(VF.TIME4_4)
+        .addTickables(notesUp)
+        .setStave(stave);
 
       var notesDown = [
-        new VF.StaveNote({ keys: ["f/4"], duration: "q",
-          stem_direction: -1 }),
-        new VF.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
-          stem_direction: -1 }),
-        new VF.StaveNote({ keys: ["f/4"], duration: "q",
-          stem_direction: -1 }),
-        new VF.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q",
-          stem_direction: -1 })
+        new VF.StaveNote({ keys: ["f/4"], duration: "q", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["f/4"], duration: "q", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["d/4/x2", "c/5"], duration: "q", stem_direction: -1 })
       ];
-      var voiceDown = new VF.Voice({ num_beats: 4, beat_value: 4,
-        resolution: VF.RESOLUTION });
-      voiceDown.addTickables(notesDown);
 
-      var formatter = new VF.Formatter().joinVoices([voiceUp, voiceDown]).
-          formatToStave([voiceUp, voiceDown], stave);
+      var voiceDown = new VF.Voice(VF.TIME4_4)
+        .addTickables(notesDown)
+        .setStave(stave);
 
-      voiceUp.draw(ctx, stave);
-      voiceDown.draw(ctx, stave);
+      var formatter = new VF.Formatter()
+        .joinVoices([voiceUp, voiceDown])
+        .formatToStave([voiceUp, voiceDown], stave);
+
+      stave.setContext(ctx).draw();
+      voiceUp.draw(ctx);
+      voiceDown.draw(ctx);
 
       ok(true, "");
     },
 
     drawBasic2: function(options, contextBuilder) {
       var ctx = contextBuilder(options.canvas_sel, 500, 120);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-        ctx.setFont("Arial", 15, "");
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
+      ctx.setFont("Arial", 15, "");
       var stave = new VF.Stave(10, 10, 420);
       stave.addClef("percussion");
       stave.setContext(ctx);
@@ -245,8 +243,8 @@ VF.Test.Percussion = (function() {
       var formatter = new VF.Formatter().joinVoices([voiceUp, voiceDown]).
         formatToStave([voiceUp, voiceDown], stave);
 
-      voiceUp.draw(ctx, stave);
-      voiceDown.draw(ctx, stave);
+      voiceUp.draw(ctx);
+      voiceDown.draw(ctx);
 
       beamUp.setContext(ctx).draw();
       beamDown1.setContext(ctx).draw();
@@ -257,8 +255,10 @@ VF.Test.Percussion = (function() {
 
     drawSnare0: function(options, contextBuilder) {
       var ctx = contextBuilder(options.canvas_sel, 600, 120);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-        ctx.setFont("Arial", 15, "");
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
+      ctx.setFont("Arial", 15, "");
 
       var x = 10;
       var y = 10;
@@ -294,7 +294,7 @@ VF.Test.Percussion = (function() {
         var formatter = new VF.Formatter().
           joinVoices([voiceDown]).formatToStave([voiceDown], stave);
 
-        voiceDown.draw(ctx, stave);
+        voiceDown.draw(ctx);
 
         x += stave.width;
       }
@@ -328,7 +328,7 @@ VF.Test.Percussion = (function() {
         var formatter = new VF.Formatter().
           joinVoices([voiceDown]).formatToStave([voiceDown], stave);
 
-        voiceDown.draw(ctx, stave);
+        voiceDown.draw(ctx);
 
         x += stave.width;
       }
@@ -338,91 +338,81 @@ VF.Test.Percussion = (function() {
 
     drawSnare1: function(options, contextBuilder) {
       var ctx = contextBuilder(options.canvas_sel, 600, 120);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-        ctx.setFont("Arial", 15, "");
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
+      ctx.setFont("Arial", 15, "");
 
       var x = 10;
       var y = 10;
       var w = 280;
 
-      {
-        var stave = new VF.Stave(x, y, w);
-        stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-        stave.setEndBarType(VF.Barline.type.SINGLE);
-        stave.addClef("percussion");
-        stave.setContext(ctx);
-        stave.draw();
+      var stave = new VF.Stave(x, y, w)
+        .setBegBarType(VF.Barline.type.REPEAT_BEGIN)
+        .setEndBarType(VF.Barline.type.SINGLE)
+        .addClef("percussion");
 
-        var notesDown = [
-          new VF.StaveNote({ keys: ["g/5/x2"], duration: "q",
-            stem_direction: -1 }).
-            addArticulation(0, VF.Test.Percussion.newArticulation("ah")),
-          new VF.StaveNote({ keys: ["g/5/x2"], duration: "q",
-            stem_direction: -1 }),
-          new VF.StaveNote({ keys: ["g/5/x2"], duration: "q",
-            stem_direction: -1 }).
-            addArticulation(0, VF.Test.Percussion.newArticulation("ah")),
-          new VF.StaveNote({ keys: ["a/5/x3"], duration: "q",
-            stem_direction: -1 }).
-            addArticulation(0, VF.Test.Percussion.newArticulation("a,")),
-        ];
-        var voiceDown = new VF.Voice({ num_beats: 4, beat_value: 4,
-            resolution: VF.RESOLUTION });
-        voiceDown.addTickables(notesDown);
+      var notesDown = [
+        new VF.StaveNote({ keys: ["g/5/x2"], duration: "q", stem_direction: -1 })
+          .addArticulation(0, VF.Test.Percussion.newArticulation("ah")),
+        new VF.StaveNote({ keys: ["g/5/x2"], duration: "q", stem_direction: -1 }),
+        new VF.StaveNote({ keys: ["g/5/x2"], duration: "q", stem_direction: -1 })
+          .addArticulation(0, VF.Test.Percussion.newArticulation("ah")),
+        new VF.StaveNote({ keys: ["a/5/x3"], duration: "q", stem_direction: -1 })
+          .addArticulation(0, VF.Test.Percussion.newArticulation("a,")),
+      ];
 
-        var formatter = new VF.Formatter().
-          joinVoices([voiceDown]).formatToStave([voiceDown], stave);
+      var voiceDown = new VF.Voice(VF.TIME4_4)
+        .addTickables(notesDown)
+        .setStave(stave);
 
-        voiceDown.draw(ctx, stave);
+      var formatter = new VF.Formatter()
+        .joinVoices([voiceDown])
+        .formatToStave([voiceDown], stave);
 
-        x += stave.width;
-      }
+      stave.setContext(ctx).draw();
+      voiceDown.draw(ctx);
 
       ok(true, "");
     },
 
     drawSnare2: function(options, contextBuilder) {
       var ctx = contextBuilder(options.canvas_sel, 600, 120);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-        ctx.setFont("Arial", 15, "");
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
+      ctx.setFont("Arial", 15, "");
 
       var x = 10;
       var y = 10;
       var w = 280;
 
-      {
-        var stave = new VF.Stave(x, y, w);
-        stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-        stave.setEndBarType(VF.Barline.type.SINGLE);
-        stave.addClef("percussion");
-        stave.setContext(ctx);
-        stave.draw();
+      var stave = new VF.Stave(x, y, w)
+        .setBegBarType(VF.Barline.type.REPEAT_BEGIN)
+        .setEndBarType(VF.Barline.type.SINGLE)
+        .addClef("percussion");
 
-        var notesDown = [
-          new VF.StaveNote({ keys: ["c/5"], duration: "q",
-            stem_direction: -1 }).
-            addArticulation(0, VF.Test.Percussion.newTremolo(0)),
-          new VF.StaveNote({ keys: ["c/5"], duration: "q",
-            stem_direction: -1 }).
-            addArticulation(0, VF.Test.Percussion.newTremolo(1)),
-          new VF.StaveNote({ keys: ["c/5"], duration: "q",
-            stem_direction: -1 }).
-            addArticulation(0, VF.Test.Percussion.newTremolo(3)),
-          new VF.StaveNote({ keys: ["c/5"], duration: "q",
-            stem_direction: -1 }).
-            addArticulation(0, VF.Test.Percussion.newTremolo(5)),
-        ];
-        var voiceDown = new VF.Voice({ num_beats: 4, beat_value: 4,
-            resolution: VF.RESOLUTION });
-        voiceDown.addTickables(notesDown);
+      var notesDown = [
+        new VF.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 })
+          .addArticulation(0, VF.Test.Percussion.newTremolo(0)),
+        new VF.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 })
+          .addArticulation(0, VF.Test.Percussion.newTremolo(1)),
+        new VF.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 })
+          .addArticulation(0, VF.Test.Percussion.newTremolo(3)),
+        new VF.StaveNote({ keys: ["c/5"], duration: "q", stem_direction: -1 })
+          .addArticulation(0, VF.Test.Percussion.newTremolo(5)),
+      ];
 
-        var formatter = new VF.Formatter().
-          joinVoices([voiceDown]).formatToStave([voiceDown], stave);
+      var voiceDown = new VF.Voice(VF.TIME4_4)
+        .addTickables(notesDown)
+        .setStave(stave);
 
-        voiceDown.draw(ctx, stave);
+      var formatter = new VF.Formatter()
+        .joinVoices([voiceDown])
+        .formatToStave([voiceDown], stave);
 
-        x += stave.width;
-      }
+      stave.setContext(ctx).draw();
+      voiceDown.draw(ctx);
 
       ok(true, "");
     }
