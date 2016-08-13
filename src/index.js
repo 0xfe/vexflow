@@ -61,7 +61,7 @@ import { StringNumber } from './stringnumber';
 import { Crescendo } from './crescendo';
 import { Volta } from './stavevolta';
 import { Font } from './fonts/vexflow_font';
-import { Factory } from './builder';
+import { Factory } from './factory';
 
 Vex.Flow = Flow;
 Vex.Flow.Fraction = Fraction;

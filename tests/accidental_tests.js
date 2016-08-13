@@ -677,7 +677,7 @@ Vex.Flow.Test.Accidental = (function() {
       equal(hasAccidental(notes[10]), false, "Natural remembered");
     },
 
-    builderAPI: function(options) {
+    factoryAPI: function(options) {
       var vf = VF.Test.makeFactory(options, 700, 240);
       var assert = options.assert;
 
