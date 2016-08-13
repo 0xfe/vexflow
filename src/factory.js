@@ -39,13 +39,14 @@ export class Factory {
     L('New factory: ', options);
     const defaults = {
       stave: {
-        spacing_px: 10,
+        space: 10,
       },
       renderer: {
         el: '',
         backend: Renderer.Backends.SVG,
         width: 500,
         height: 200,
+        background: '#FFF',
       },
       font: {
         face: 'Arial',
@@ -68,27 +69,27 @@ export class Factory {
   }
 
   initRenderer() {
-    const o = this.options.renderer;
-    if (o.el === '') {
+    const { el, backend, width, height, background } = this.options.renderer;
+    if (el === '') {
       throw new X('HTML DOM element not set in Factory');
     }
 
-    this.ctx = Renderer.buildContext(o.el, o.backend, o.width, o.height, o.background);
+    this.ctx = Renderer.buildContext(el, backend, width, height, background);
   }
 
   getContext() { return this.ctx; }
   getStave() { return this.stave; }
 
   // Returns pixels from current stave spacing.
-  px(spacing) { return this.options.stave.spacing_px * spacing; }
+  space(spacing) { return this.options.stave.space * spacing; }
 
   Stave(params) {
     params = setDefaults(params, {
       x: 0,
       y: 0,
-      width: this.options.renderer.width - this.px(1),
+      width: this.options.renderer.width - this.space(1),
       options: {
-        spacing_between_lines_px: this.options.stave.spacing_px,
+        spacing_between_lines_px: this.options.stave.space,
       },
     });
 
@@ -115,7 +116,7 @@ export class Factory {
 
     const acc = new Accidental(params.type);
     acc.setContext(this.ctx);
-    // acc.render_options.stroke_px = this.px(0.3);
+    // acc.render_options.stroke_px = this.space(0.3);
     return acc;
   }
 
