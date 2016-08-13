@@ -8,5 +8,6 @@
 		"build/": true,
 		"node_modules/": true,
         "docs": true
-	}
+	},
+	"editor.tabSize": 2,
 }

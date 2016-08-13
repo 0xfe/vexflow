@@ -26,6 +26,7 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.runTests("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
       Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
       Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
+      Vex.Flow.Test.runTests("Factory API", Vex.Flow.Test.Accidental.factoryAPI);
     },
 
     showNote: function(note, stave, ctx, x) {
@@ -674,6 +675,69 @@ Vex.Flow.Test.Accidental = (function() {
       equal(hasAccidental(notes[8]), false, "Double sharp rememberd");
       equal(hasAccidental(notes[9]), true, "Added natural");
       equal(hasAccidental(notes[10]), false, "Natural remembered");
+    },
+
+    factoryAPI: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var assert = options.assert;
+
+      var stave = vf.Stave({x: 10, y: 10, width: 550});
+
+      function newNote(note_struct) { return vf.StaveNote(note_struct); }
+      function newAcc(type) { return vf.Accidental({type: type}); }
+
+      var notes = [
+        newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
+          addAccidental(0, newAcc("b")).
+          addAccidental(1, newAcc("#")),
+
+        newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
+            duration: "h"}).
+          addAccidental(0, newAcc("##")).
+          addAccidental(1, newAcc("n")).
+          addAccidental(2, newAcc("bb")).
+          addAccidental(3, newAcc("b")).
+          addAccidental(4, newAcc("#")).
+          addAccidental(5, newAcc("n")).
+          addAccidental(6, newAcc("bb")),
+
+        newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
+            duration: "16"}).
+          addAccidental(0, newAcc("n")).
+          addAccidental(1, newAcc("#")).
+          addAccidental(2, newAcc("#")).
+          addAccidental(3, newAcc("b")).
+          addAccidental(4, newAcc("bb")).
+          addAccidental(5, newAcc("##")).
+          addAccidental(6, newAcc("#")),
+
+        newNote({ keys: ["a/3", "c/4", "e/4", "b/4", "d/5", "g/5"], duration: "w"}).
+          addAccidental(0, newAcc("#")).
+          addAccidental(1, newAcc("##").setAsCautionary()).
+          addAccidental(2, newAcc("#").setAsCautionary()).
+          addAccidental(3, newAcc("b")).
+          addAccidental(4, newAcc("bb").setAsCautionary()).
+          addAccidental(5, newAcc("b").setAsCautionary()),
+      ];
+
+      var init = function(note, x) {
+        note.addToModifierContext(vf.ModifierContext());
+        vf.TickContext().addTickable(note).preFormat().setX(x).setPixelsUsed(65);
+        return note;
+      }
+
+      for (var i = 0; i < notes.length; ++i) {
+        init(notes[i], 30 + (i * 125));
+        var accidentals = notes[i].getAccidentals();
+        assert.ok(accidentals.length > 0, "Note " + i + " has accidentals");
+
+        for (var j = 0; j < accidentals.length; ++j) {
+          assert.ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
+        }
+      }
+
+      vf.draw();
+      assert.ok(true, "Factory API");
     }
   };
 
