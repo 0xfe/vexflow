@@ -77,13 +77,13 @@ export class Builder {
   getStave() { return this.stave; }
 
   // Returns pixels from current stave spacing.
-  getPx(spacing) { return this.options.stave.spacing_px * spacing; }
+  px(spacing) { return this.options.stave.spacing_px * spacing; }
 
   Stave(params) {
     params = setDefaults(params, {
       x: 0,
       y: 0,
-      width: this.options.renderer.width - 10,
+      width: this.options.renderer.width - this.px(1),
       options: {
         spacing_between_lines_px: this.options.stave.spacing_px,
       },
