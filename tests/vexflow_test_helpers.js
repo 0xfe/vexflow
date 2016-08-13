@@ -108,7 +108,7 @@ VF.Test = (function() {
     makeBuilder: function(options, width, height) {
       return new VF.Builder({
         renderer: {
-            el: document.getElementById(options.canvas_sel),
+            el: options.canvas_sel,
             backend: options.backend,
             width: width,
             height: height
@@ -176,6 +176,7 @@ VF.Test = (function() {
 
         func({
           canvas_sel: div,
+          backend: VF.Renderer.Backends.SVG,
           params: params,
           assert: assert },
           VF.Renderer.getSVGContext);
