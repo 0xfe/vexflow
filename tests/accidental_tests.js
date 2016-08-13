@@ -26,7 +26,7 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.runTests("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
       Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
       Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
-      Vex.Flow.Test.runTests("Builder API", Vex.Flow.Test.Accidental.builderAPI);
+      Vex.Flow.Test.runTests("Factory API", Vex.Flow.Test.Accidental.factoryAPI);
     },
 
     showNote: function(note, stave, ctx, x) {
@@ -678,7 +678,7 @@ Vex.Flow.Test.Accidental = (function() {
     },
 
     builderAPI: function(options) {
-      var vf = VF.Test.makeBuilder(options, 700, 240);
+      var vf = VF.Test.makeFactory(options, 700, 240);
       var assert = options.assert;
 
       var stave = vf.Stave({x: 10, y: 10, width: 550});
@@ -737,7 +737,7 @@ Vex.Flow.Test.Accidental = (function() {
       }
 
       vf.draw();
-      assert.ok(true, "Builder API");
+      assert.ok(true, "Factory API");
     }
   };
 

@@ -16,12 +16,12 @@ import { Stave } from './stave';
 import { StaveNote } from './stavenote';
 import { TickContext } from './tickcontext';
 
-// To enable logging for this class. Set `Vex.Flow.Builder.DEBUG` to `true`.
-function L(...args) { if (Builder.DEBUG) Vex.L('Vex.Flow.Builder', args); }
+// To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
+function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
 
 // Exceptions for this class.
 function X(message, data) {
-  this.name = 'BuilderException';
+  this.name = 'FactoryException';
   this.message = message;
   this.data = data;
   L(this.name + ':', message, data);
@@ -34,9 +34,9 @@ function setDefaults(params, defaults) {
   return params;
 }
 
-export class Builder {
+export class Factory {
   constructor(options) {
-    L('New builder: ', options);
+    L('New factory: ', options);
     const defaults = {
       stave: {
         spacing_px: 10,
@@ -70,7 +70,7 @@ export class Builder {
   initRenderer() {
     const o = this.options.renderer;
     if (o.el === '') {
-      throw new X('HTML DOM element not set in Builder');
+      throw new X('HTML DOM element not set in Factory');
     }
 
     this.ctx = Renderer.buildContext(o.el, o.backend, o.width, o.height, o.background);

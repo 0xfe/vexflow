@@ -105,8 +105,8 @@ VF.Test = (function() {
       $("#" + sel).attr("height", height);
     },
 
-    makeBuilder: function(options, width, height) {
-      return new VF.Builder({
+    makeFactory: function(options, width, height) {
+      return new VF.Factory({
         renderer: {
             el: options.canvas_sel,
             backend: options.backend,

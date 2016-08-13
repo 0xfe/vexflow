@@ -20,7 +20,7 @@ VF.Test.Stave = (function() {
       runTests("Batch Line Configuration Test", Stave.configureAllLines);
       runTests("Stave Text Test", Stave.drawStaveText);
       runTests("Multiple Line Stave Text Test", Stave.drawStaveTextMultiLine);
-      runTests("Builder API", Stave.builderAPI);
+      runTests("Factory API", Stave.factoryAPI);
     },
 
     sortByCategory: function(options) {
@@ -508,8 +508,8 @@ VF.Test.Stave = (function() {
       ok(true, "all pass");
     },
 
-    builderAPI: function(options) {
-      var vf = VF.Test.makeBuilder(options, 900, 200);
+    factoryAPI: function(options) {
+      var vf = VF.Test.makeFactory(options, 900, 200);
       var stave = vf.Stave({x: 300, y: 40, width: 300});
       stave.setText("Violin", VF.Modifier.Position.LEFT, {shift_y: -10});
       stave.setText("2nd line", VF.Modifier.Position.LEFT, {shift_y: 10});
