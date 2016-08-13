@@ -720,21 +720,14 @@ Vex.Flow.Test.Accidental = (function() {
           addAccidental(5, newAcc("b").setAsCautionary()),
       ];
 
-      var init = function(note, x) {
-        note.addToModifierContext(vf.ModifierContext());
-        vf.TickContext().addTickable(note).preFormat().setX(x).setPixelsUsed(65);
-        return note;
-      }
+      VF.Formatter.SimpleFormat(notes);
 
-      for (var i = 0; i < notes.length; ++i) {
-        init(notes[i], 30 + (i * 125));
-        var accidentals = notes[i].getAccidentals();
-        assert.ok(accidentals.length > 0, "Note " + i + " has accidentals");
-
-        for (var j = 0; j < accidentals.length; ++j) {
-          assert.ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
-        }
-      }
+      notes.forEach(function(n, i) {
+        assert.ok(n.getAccidentals().length > 0, "Note " + i + " has accidentals");
+        n.getAccidentals().forEach(function(a, i) {
+          assert.ok(a.width > 0, "Accidental " + i + " has set width");
+        })
+      }) 
 
       vf.draw();
       assert.ok(true, "Factory API");
