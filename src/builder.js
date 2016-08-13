@@ -9,8 +9,10 @@
 // *This API is currently DRAFT*
 
 import { Vex } from './vex';
+import { Accidental } from './accidental';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
+import { StaveNote } from './stavenote';
 
 // To enable logging for this class. Set `Vex.Flow.Builder.DEBUG` to `true`.
 function L(...args) { if (Builder.DEBUG) Vex.L('Vex.Flow.Builder', args); }
@@ -64,13 +66,12 @@ export class Builder {
   }
 
   initRenderer() {
-    if (this.options.renderer.el === '') {
+    const o = this.options.renderer;
+    if (o.el === '') {
       throw new X('HTML DOM element not set in Builder');
     }
 
-    this.renderer = new Renderer(this.options.renderer.el, this.options.renderer.backend);
-    this.renderer.resize(this.options.renderer.width, this.options.renderer.height);
-    this.ctx = this.renderer.getContext();
+    this.ctx = Renderer.buildContext(o.el, o.backend, o.width, o.height, o.background);
   }
 
   getContext() { return this.ctx; }
@@ -94,6 +95,25 @@ export class Builder {
     this.renderQ.push(stave);
     this.stave = stave;
     return stave;
+  }
+
+  StaveNote(noteStruct) {
+    const note = new StaveNote(noteStruct);
+    note.setStave(this.stave);
+    note.setContext(this.ctx);
+    this.renderQ.push(note);
+    return note;
+  }
+
+  Accidental(params) {
+    params = setDefaults(params, {
+      type: null,
+      options: {},
+    });
+
+    const acc = new Accidental(params.type);
+    // acc.render_options.stroke_px = this.px(0.3);
+    return acc;
   }
 
   draw() {
