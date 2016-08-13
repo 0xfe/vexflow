@@ -509,15 +509,7 @@ VF.Test.Stave = (function() {
     },
 
     builderAPI: function(options) {
-      var vf = new VF.Builder({
-        renderer: {
-            el: document.getElementById(options.canvas_sel),
-            backend: options.backend,
-            width: 900,
-            height: 200
-        }
-      })
-
+      var vf = VF.Test.makeBuilder(options, 900, 200);
       var stave = vf.Stave({x: 300, y: 40, width: 300});
       stave.setText("Violin", VF.Modifier.Position.LEFT, {shift_y: -10});
       stave.setText("2nd line", VF.Modifier.Position.LEFT, {shift_y: 10});

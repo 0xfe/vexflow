@@ -105,6 +105,17 @@ VF.Test = (function() {
       $("#" + sel).attr("height", height);
     },
 
+    makeBuilder: function(options, width, height) {
+      return new VF.Builder({
+        renderer: {
+            el: document.getElementById(options.canvas_sel),
+            backend: options.backend,
+            width: width,
+            height: height
+        }
+      })
+    },
+
     runCanvasTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
         // console.log("Running test (Canvas):", assert.test.module.name, "--", name);

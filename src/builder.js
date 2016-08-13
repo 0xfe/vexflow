@@ -64,7 +64,7 @@ export class Builder {
   }
 
   initRenderer() {
-    if (this.el === '') {
+    if (this.options.renderer.el === '') {
       throw new X('HTML DOM element not set in Builder');
     }
 
@@ -75,6 +75,9 @@ export class Builder {
 
   getContext() { return this.ctx; }
   getStave() { return this.stave; }
+
+  // Returns pixels from current stave spacing.
+  getPx(spacing) { return this.options.stave.spacing_px * spacing; }
 
   Stave(params) {
     params = setDefaults(params, {
