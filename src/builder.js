@@ -10,9 +10,11 @@
 
 import { Vex } from './vex';
 import { Accidental } from './accidental';
+import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
 import { StaveNote } from './stavenote';
+import { TickContext } from './tickcontext';
 
 // To enable logging for this class. Set `Vex.Flow.Builder.DEBUG` to `true`.
 function L(...args) { if (Builder.DEBUG) Vex.L('Vex.Flow.Builder', args); }
@@ -114,6 +116,14 @@ export class Builder {
     const acc = new Accidental(params.type);
     // acc.render_options.stroke_px = this.px(0.3);
     return acc;
+  }
+
+  TickContext() {
+    return new TickContext().setContext(this.ctx);
+  }
+
+  ModifierContext() {
+    return new ModifierContext();
   }
 
   draw() {

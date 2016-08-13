@@ -721,11 +721,8 @@ Vex.Flow.Test.Accidental = (function() {
       ];
 
       var init = function(note, x) {
-        var mc = new Vex.Flow.ModifierContext();
-        note.addToModifierContext(mc);
-
-        var tickContext = new Vex.Flow.TickContext();
-        tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(65);
+        note.addToModifierContext(vf.ModifierContext());
+        vf.TickContext().addTickable(note).preFormat().setX(x).setPixelsUsed(65);
         return note;
       }
 
