@@ -113,6 +113,7 @@ VF.Test = (function() {
             assert.test.module.name + " (Canvas): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.CANVAS,
             params: params,
             assert: assert },
             VF.Renderer.getCanvasContext);
@@ -127,6 +128,7 @@ VF.Test = (function() {
             assert.test.module.name + " (Raphael): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.RAPHAEL,
             params: params,
             assert: assert },
             VF.Renderer.getRaphaelContext);
@@ -141,6 +143,7 @@ VF.Test = (function() {
             assert.test.module.name + " (SVG): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.SVG,
             params: params,
             assert: assert },
             VF.Renderer.getSVGContext);
