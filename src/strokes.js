@@ -56,6 +56,7 @@ export class Stroke extends Modifier {
 
   constructor(type, options) {
     super();
+    this.setAttribute('type', 'Stroke');
 
     this.note = null;
     this.options = Vex.Merge({}, options);
@@ -90,9 +91,7 @@ export class Stroke extends Modifier {
   addEndNote(note) { this.note_end = note; return this; }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw stroke without a context.");
-    }
+    this.checkContext();
 
     if (!(this.note && (this.index != null))) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");

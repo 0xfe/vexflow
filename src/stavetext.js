@@ -10,6 +10,7 @@ export class StaveText extends StaveModifier {
 
   constructor(text, position, options) {
     super();
+    this.setAttribute('type', 'StaveText');
 
     this.setWidth(16);
     this.text = text;
@@ -42,11 +43,7 @@ export class StaveText extends StaveModifier {
   }
 
   draw(stave) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoContext', "Can't draw stave text without a context.");
-    }
-
-    const ctx = stave.context;
+    const ctx = stave.checkContext();
 
     ctx.save();
     ctx.lineWidth = 2;

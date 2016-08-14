@@ -18,6 +18,7 @@ export class Volta extends StaveModifier {
 
   constructor(type, number, x, y_shift) {
     super();
+    this.setAttribute('type', 'Volta');
     this.volta = type;
     this.x = x;
     this.y_shift = y_shift;
@@ -32,11 +33,7 @@ export class Volta extends StaveModifier {
   getCategory() { return Volta.CATEGORY; }
   setShiftY(y) { this.y_shift = y; return this; }
   draw(stave, x) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
-
-    const ctx = stave.context;
+    const ctx = stave.checkContext();
     let width = stave.width;
     const top_y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     const vert_height = 1.5 * stave.options.spacing_between_lines_px;

@@ -5,8 +5,9 @@
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
 import { Vex } from './vex';
+import { Element } from './element';
 
-export class StaveTie {
+export class StaveTie extends Element {
   constructor(notes, text) {
     /**
      * Notes is a struct that has:
@@ -19,6 +20,8 @@ export class StaveTie {
      *  }
      *
      **/
+    super();
+    this.setAttribute('type', 'StaveTie');
     this.notes = notes;
     this.context = null;
     this.text = text;
@@ -39,7 +42,6 @@ export class StaveTie {
     this.setNotes(notes);
   }
 
-  setContext(context) { this.context = context; return this; }
   setFont(font) { this.font = font; return this; }
   setDirection(direction) { this.direction = direction; return this; }
 
@@ -132,9 +134,7 @@ export class StaveTie {
   }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', 'No context to render tie.');
-    }
+    this.checkContext();
     const first_note = this.first_note;
     const last_note = this.last_note;
 

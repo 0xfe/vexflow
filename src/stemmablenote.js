@@ -13,6 +13,7 @@ import { Note } from './note';
 export class StemmableNote extends Note {
   constructor(note_struct) {
     super(note_struct);
+    this.setAttribute('type', 'StemmableNote');
 
     this.stem = null;
     this.stemExtensionOverride = null;
@@ -196,9 +197,7 @@ export class StemmableNote extends Note {
 
   // Render the stem onto the canvas
   drawStem(stem_struct) {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
+    this.checkContext();
     this.setStem(new Stem(stem_struct));
     this.stem.setContext(this.context).draw();
   }

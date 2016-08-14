@@ -115,6 +115,7 @@ export class TabNote extends StemmableNote {
   // and whether to `draw_stem` when rendering the note
   constructor(tab_struct, draw_stem) {
     super(tab_struct);
+    this.setAttribute('type', 'TabNote');
 
     this.ghost = false; // Renders parenthesis around notes
     // Note properties
@@ -452,9 +453,7 @@ export class TabNote extends StemmableNote {
 
   // The main rendering function for the entire note
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
+    this.checkContext();
 
     if (!this.stave) {
       throw new Vex.RERR('NoStave', "Can't draw without a stave.");

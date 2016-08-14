@@ -29,6 +29,8 @@ export class TabTie extends StaveTie {
      *
      **/
     super(notes, text);
+    this.setAttribute('type', 'TabTie');
+
     this.render_options.cp1 = 9;
     this.render_options.cp2 = 11;
     this.render_options.y_shift = 3;
@@ -37,9 +39,7 @@ export class TabTie extends StaveTie {
   }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', 'No context to render tie.');
-    }
+    this.checkContext();
 
     const first_note = this.first_note;
     const last_note = this.last_note;

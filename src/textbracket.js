@@ -9,12 +9,13 @@
 
 import { Vex } from './vex';
 import { Flow } from './tables';
+import { Element } from './element';
 import { Renderer } from './renderer';
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
 function L(...args) { if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args); }
 
-export class TextBracket {
+export class TextBracket extends Element {
   static get Positions() {
     return {
       TOP: 1,
@@ -23,6 +24,9 @@ export class TextBracket {
   }
 
   constructor(bracket_data) {
+    super();
+    this.setAttribute('type', 'TextBracket');
+
     this.start = bracket_data.start;
     this.stop = bracket_data.stop;
 
@@ -74,8 +78,6 @@ export class TextBracket {
   // Set the font for the text
   setFont(font) { this.font = font; return this; }
   // Set the rendering `context` for the octave bracket
-  setContext(context) { this.context = context; return this; }
-  // Set the staff line to render the bracket on
   setLine(line) { this.line = line; return this; }
 
   // Draw the octave bracket on the rendering context

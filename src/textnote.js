@@ -154,6 +154,7 @@ export class TextNote extends Note {
 
   constructor(text_struct) {
     super(text_struct);
+    this.setAttribute('type', 'TextNote');
 
     // Note properties
     this.text = text_struct.text;
@@ -172,7 +173,7 @@ export class TextNote extends Note {
 
     // Determine and set initial note width. Note that the text width is
     // an approximation and isn't very accurate. The only way to accurately
-    // measure the length of text is with `canvasContext.measureText()`
+    // measure the length of text is with `canvasmeasureText()`
     if (this.glyph_type) {
       const struct = TextNote.GLYPHS[this.glyph_type];
       if (!struct) throw new Vex.RERR('Invalid glyph type: ' + this.glyph_type);
@@ -209,9 +210,7 @@ export class TextNote extends Note {
 
   // Pre-render formatting
   preFormat() {
-    if (!this.context) {
-      throw new Vex.RERR('NoRenderContext', "Can't measure text without rendering context.");
-    }
+    this.checkContext();
 
     if (this.preFormatted) return;
 
@@ -236,9 +235,7 @@ export class TextNote extends Note {
 
   // Renders the TextNote
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
+    this.checkContext();
 
     if (!this.stave) {
       throw new Vex.RERR('NoStave', "Can't draw without a stave.");
