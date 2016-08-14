@@ -227,12 +227,12 @@ VF.Test.StringNumber = (function() {
     },
 
     multi: function(options, contextBuilder) {
-      var c = new contextBuilder(options.canvas_sel, 600, 200);
+      var c = new contextBuilder(options.canvas_sel, 700, 200);
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
       function newAcc(type) { return new VF.Accidental(type); }
       function newFinger(num, pos) { return new VF.FretHandFinger(num).setPosition(pos); }
       function newStringNumber(num, pos) { return new VF.StringNumber(num).setPosition(pos);}
-      var stave = new VF.Stave(50, 10, 500);
+      var stave = new VF.Stave(50, 10, 600);
       stave.setContext(c);
       stave.draw();
 
@@ -297,7 +297,7 @@ VF.Test.StringNumber = (function() {
       voice2.addTickables(notes2);
 
       var formatter = new VF.Formatter().joinVoices([voice, voice2]).
-        format([voice, voice2], 400);
+        format([voice, voice2], 550);
 
       var beam2_1 = new VF.Beam(notes2.slice(0, 4));
       var beam2_2 = new VF.Beam(notes2.slice(4, 8));
@@ -312,7 +312,7 @@ VF.Test.StringNumber = (function() {
 
     drawAccidentals: function(options, contextBuilder) {
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 600, 200);
+      var ctx = contextBuilder(options.canvas_sel, 800, 200);
       function newFinger(num, pos) { return new VF.FretHandFinger(num).setPosition(pos); }
       function newStringNumber(num, pos) { return new VF.StringNumber(num).setPosition(pos);}
 
