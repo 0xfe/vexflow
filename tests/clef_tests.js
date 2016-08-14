@@ -16,54 +16,50 @@ VF.Test.Clef = (function() {
 
     draw: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 120);
-      var stave = new VF.Stave(10, 10, 700);
 
-      stave.addClef("treble");
-      stave.addClef("treble", "default", "8va");
-      stave.addClef("treble", "default", "8vb");
-      stave.addClef("alto");
-      stave.addClef("tenor");
-      stave.addClef("soprano");
-      stave.addClef("bass");
-      stave.addClef("bass", "default", "8vb");
-      stave.addClef("mezzo-soprano");
-      stave.addClef("baritone-c");
-      stave.addClef("baritone-f");
-      stave.addClef("subbass");
-      stave.addClef("percussion");
-      stave.addClef("french");
-
-      stave.addEndClef("treble");
-
-      stave.setContext(ctx);
-      stave.draw();
+      new VF.Stave(10, 10, 700)
+        .addClef("treble")
+        .addClef("treble", "default", "8va")
+        .addClef("treble", "default", "8vb")
+        .addClef("alto")
+        .addClef("tenor")
+        .addClef("soprano")
+        .addClef("bass")
+        .addClef("bass", "default", "8vb")
+        .addClef("mezzo-soprano")
+        .addClef("baritone-c")
+        .addClef("baritone-f")
+        .addClef("subbass")
+        .addClef("percussion")
+        .addClef("french")
+        .addEndClef("treble")
+        .setContext(ctx)
+        .draw();
 
       ok(true, "all pass");
     },
 
     drawEnd: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 120);
-      var stave = new VF.Stave(10, 10, 700);
 
-      stave.addClef("bass");
-
-      stave.addEndClef("treble");
-      stave.addEndClef("treble", "default", "8va");
-      stave.addEndClef("treble", "default", "8vb");
-      stave.addEndClef("alto");
-      stave.addEndClef("tenor");
-      stave.addEndClef("soprano");
-      stave.addEndClef("bass");
-      stave.addEndClef("bass", "default", "8vb");
-      stave.addEndClef("mezzo-soprano");
-      stave.addEndClef("baritone-c");
-      stave.addEndClef("baritone-f");
-      stave.addEndClef("subbass");
-      stave.addEndClef("percussion");
-      stave.addEndClef("french");
-
-      stave.setContext(ctx);
-      stave.draw();
+      new VF.Stave(10, 10, 700)
+        .addClef("bass")
+        .addEndClef("treble")
+        .addEndClef("treble", "default", "8va")
+        .addEndClef("treble", "default", "8vb")
+        .addEndClef("alto")
+        .addEndClef("tenor")
+        .addEndClef("soprano")
+        .addEndClef("bass")
+        .addEndClef("bass", "default", "8vb")
+        .addEndClef("mezzo-soprano")
+        .addEndClef("baritone-c")
+        .addEndClef("baritone-f")
+        .addEndClef("subbass")
+        .addEndClef("percussion")
+        .addEndClef("french")
+        .setContext(ctx)
+        .draw();
 
       ok(true, "all pass");
     },
@@ -71,62 +67,57 @@ VF.Test.Clef = (function() {
 
     drawSmall: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 120);
-      var stave = new VF.Stave(10, 10, 700);
 
-      stave.addClef("treble", "small");
-      stave.addClef("treble", "small", "8va");
-      stave.addClef("treble", "small", "8vb");
-      stave.addClef("alto", "small");
-      stave.addClef("tenor", "small");
-      stave.addClef("soprano", "small");
-      stave.addClef("bass", "small");
-      stave.addClef("bass", "small", "8vb");
-      stave.addClef("mezzo-soprano", "small");
-      stave.addClef("baritone-c", "small");
-      stave.addClef("baritone-f", "small");
-      stave.addClef("subbass", "small");
-      stave.addClef("percussion", "small");
-      stave.addClef("french", "small");
-
-      stave.addEndClef("treble", "small");
-
-      stave.setContext(ctx);
-      stave.draw();
+      new VF.Stave(10, 10, 700)
+        .addClef("treble", "small")
+        .addClef("treble", "small", "8va")
+        .addClef("treble", "small", "8vb")
+        .addClef("alto", "small")
+        .addClef("tenor", "small")
+        .addClef("soprano", "small")
+        .addClef("bass", "small")
+        .addClef("bass", "small", "8vb")
+        .addClef("mezzo-soprano", "small")
+        .addClef("baritone-c", "small")
+        .addClef("baritone-f", "small")
+        .addClef("subbass", "small")
+        .addClef("percussion", "small")
+        .addClef("french", "small")
+        .addEndClef("treble", "small")
+        .setContext(ctx)
+        .draw();
 
       ok(true, "all pass");
     },
 
     drawSmallEnd: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 120);
-      var stave = new VF.Stave(10, 10, 700);
 
-      stave.addClef("bass", "small");
-
-      stave.addEndClef("treble", "small");
-      stave.addEndClef("treble", "small", "8va");
-      stave.addEndClef("treble", "small", "8vb");
-      stave.addEndClef("alto", "small");
-      stave.addEndClef("tenor", "small");
-      stave.addEndClef("soprano", "small");
-      stave.addEndClef("bass", "small");
-      stave.addEndClef("bass", "small", "8vb");
-      stave.addEndClef("mezzo-soprano", "small");
-      stave.addEndClef("baritone-c", "small");
-      stave.addEndClef("baritone-f", "small");
-      stave.addEndClef("subbass", "small");
-      stave.addEndClef("percussion", "small");
-      stave.addEndClef("french", "small");
-
-      stave.setContext(ctx);
-      stave.draw();
+      new VF.Stave(10, 10, 700)
+        .addClef("bass", "small")
+        .addEndClef("treble", "small")
+        .addEndClef("treble", "small", "8va")
+        .addEndClef("treble", "small", "8vb")
+        .addEndClef("alto", "small")
+        .addEndClef("tenor", "small")
+        .addEndClef("soprano", "small")
+        .addEndClef("bass", "small")
+        .addEndClef("bass", "small", "8vb")
+        .addEndClef("mezzo-soprano", "small")
+        .addEndClef("baritone-c", "small")
+        .addEndClef("baritone-f", "small")
+        .addEndClef("subbass", "small")
+        .addEndClef("percussion", "small")
+        .addEndClef("french", "small")
+        .setContext(ctx)
+        .draw();
 
       ok(true, "all pass");
     },
 
     drawClefChange: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 180);
-      var stave = new VF.Stave(10, 10, 700);
-      stave.addClef("treble").setContext(ctx).draw();
+      var stave = new VF.Stave(10, 10, 700).addClef("treble");
 
       var notes = [
         new VF.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" }),
@@ -158,14 +149,15 @@ VF.Test.Clef = (function() {
         num_beats: 12,
         beat_value: 4,
         resolution: VF.RESOLUTION
-      });
+      }).addTickables(notes)
+        .setStave(stave);
 
-      voice.addTickables(notes);
+      var formatter = new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], 500);
 
-      var formatter = new VF.Formatter().
-        joinVoices([voice]).format([voice], 500);
-
-      voice.draw(ctx, stave);
+      stave.setContext(ctx).draw();
+      voice.draw(ctx);
       ok(true, "all pass");
     }
   };

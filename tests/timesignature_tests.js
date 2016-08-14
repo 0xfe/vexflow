@@ -47,40 +47,37 @@ VF.Test.TimeSignature = (function() {
 
     basic: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 600, 120);
-      var stave = new VF.Stave(10, 10, 500);
 
-      stave.addTimeSignature("2/2");
-      stave.addTimeSignature("3/4");
-      stave.addTimeSignature("4/4");
-      stave.addTimeSignature("6/8");
-      stave.addTimeSignature("C");
-      stave.addTimeSignature("C|");
-
-      stave.addEndTimeSignature("2/2");
-      stave.addEndTimeSignature("3/4");
-      stave.addEndTimeSignature("4/4");
-      stave.addEndClef("treble");
-      stave.addEndTimeSignature("6/8");
-      stave.addEndTimeSignature("C");
-      stave.addEndTimeSignature("C|");
-
-      stave.setContext(ctx);
-      stave.draw();
+      new VF.Stave(10, 10, 500)
+        .addTimeSignature("2/2")
+        .addTimeSignature("3/4")
+        .addTimeSignature("4/4")
+        .addTimeSignature("6/8")
+        .addTimeSignature("C")
+        .addTimeSignature("C|")
+        .addEndTimeSignature("2/2")
+        .addEndTimeSignature("3/4")
+        .addEndTimeSignature("4/4")
+        .addEndClef("treble")
+        .addEndTimeSignature("6/8")
+        .addEndTimeSignature("C")
+        .addEndTimeSignature("C|")
+        .setContext(ctx)
+        .draw();
 
       ok(true, "all pass");
     },
 
     big: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 400, 120);
-      var stave = new VF.Stave(10, 10, 300);
 
-      stave.addTimeSignature("12/8");
-      stave.addTimeSignature("7/16");
-      stave.addTimeSignature("1234567/890");
-      stave.addTimeSignature("987/654321");
-
-      stave.setContext(ctx);
-      stave.draw();
+      new VF.Stave(10, 10, 300)
+        .addTimeSignature("12/8")
+        .addTimeSignature("7/16")
+        .addTimeSignature("1234567/890")
+        .addTimeSignature("987/654321")
+        .setContext(ctx)
+        .draw();
 
       ok(true, "all pass");
     },
@@ -127,8 +124,9 @@ VF.Test.TimeSignature = (function() {
 
     timeSigNote: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 900, 120);
-      var stave = new VF.Stave(10, 10, 800);
-      stave.addClef("treble").addTimeSignature("C|").setContext(ctx).draw();
+      var stave = new VF.Stave(10, 10, 800)
+        .addClef("treble")
+        .addTimeSignature("C|");
 
       var notes = [
         new VF.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" }),
@@ -141,18 +139,17 @@ VF.Test.TimeSignature = (function() {
         new VF.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" })
       ];
 
-      var voice = new VF.Voice({
-        num_beats: 4,
-        beat_value: 4,
-        resolution: VF.RESOLUTION
-      });
-      voice.setMode(VF.Voice.Mode.SOFT);
-      voice.addTickables(notes);
+      var voice = new VF.Voice(VF.TIME4_4)
+        .setMode(VF.Voice.Mode.SOFT)
+        .addTickables(notes)
+        .setStave(stave);
 
-      var formatter = new VF.Formatter().
-        joinVoices([voice]).format([voice], 800);
+      var formatter = new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], 800);
 
-      voice.draw(ctx, stave);
+      stave.setContext(ctx).draw();
+      voice.draw(ctx);
       ok(true, "all pass");
     }
   };
