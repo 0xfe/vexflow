@@ -402,7 +402,7 @@ VF.Test.Formatter = (function() {
     },
 
     proportionalFormatting: function(options) {
-      var vf = VF.Test.makeFactory(options, 600, 850);
+      var vf = VF.Test.makeFactory(options, 600, 650);
 
       var voices = [];
 
@@ -442,10 +442,21 @@ VF.Test.Formatter = (function() {
         {keys: ["a/4"], stem_direction: 1, duration: "16"},
       ];
 
+      var notes5 = [
+        {keys: ["a/4"], stem_direction: 1, duration: "32"},
+        {keys: ["a/4"], stem_direction: 1, duration: "32"},
+        {keys: ["a/4"], stem_direction: 1, duration: "32"},
+        {keys: ["a/4"], stem_direction: 1, duration: "32"},
+        {keys: ["a/4"], stem_direction: 1, duration: "32"},
+        {keys: ["a/4"], stem_direction: 1, duration: "32"},
+        {keys: ["a/4"], stem_direction: 1, duration: "32"},
+      ];
+
       var voice1 = newVoice(notes1, 30);
       var voice2 = newVoice(notes2, 140);
       var voice3 = newVoice(notes3, 250, 2);
       var voice4 = newVoice(notes4, 360, 4);
+      var voice5 = newVoice(notes5, 470, 8);
 
       var formatter = vf.Formatter();
       voices.forEach(function(voice) {formatter.joinVoices([voice]);})
