@@ -66,15 +66,17 @@ export class TickContext extends Element {
     this.preFormatted = false;
   }
 
-  // Get left & right pixels used for modifiers
+  // ### DEPRECATED ###
+  // Get left & right pixels used for modifiers. THIS METHOD IS DEPRECATED. Use
+  // the getMetrics() method instead!
   getExtraPx() {
     let left_shift = 0;
     let right_shift = 0;
     let extraLeftPx = 0;
     let extraRightPx = 0;
     for (let i = 0; i < this.tickables.length; i++) {
-      extraLeftPx = Math.max(this.tickables[i].extraLeftPx, extraLeftPx);
-      extraRightPx = Math.max(this.tickables[i].extraRightPx, extraRightPx);
+      extraLeftPx = Math.max(this.tickables[i].extraLeftPx || 0, extraLeftPx);
+      extraRightPx = Math.max(this.tickables[i].extraRightPx || 0, extraRightPx);
       const mContext = this.tickables[i].modifierContext;
       if (mContext && mContext != null) {
         left_shift = Math.max(left_shift, mContext.state.left_shift);
