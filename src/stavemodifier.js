@@ -3,9 +3,9 @@
 // ## Description
 // A base class for stave modifiers (e.g. clefs, key signatures)
 
-import { Base } from './base';
+import { Element } from './element';
 
-export class StaveModifier extends Base {
+export class StaveModifier extends Element {
   static get Position() {
     return {
       LEFT: 1,
@@ -35,6 +35,9 @@ export class StaveModifier extends Base {
   setX(x) { this.x = x; return this; }
   getCategory() { return ''; }
   makeSpacer(padding) {
+    // TODO(0xfe): Return an instance of type `Spacer` based on `GhostNote`
+    // instead of this hack.
+
     return {
       getContext() { return true; },
       setStave() {},

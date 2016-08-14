@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
-import { Base } from './base';
+import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
 import { Font } from './fonts/vexflow_font';
@@ -38,7 +38,7 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   }
 }
 
-export class Glyph extends Base {
+export class Glyph extends Element {
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
     const glyph = font.glyphs[code];

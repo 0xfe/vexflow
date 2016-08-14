@@ -4,11 +4,11 @@
 // ## Description
 //
 // This file implements a generic base class for VexFlow, with implementations
-// of general functions and properties that can be inherited by all VexFlow classes.
+// of general functions and properties that can be inherited by all VexFlow elements.
 
 import { Vex } from './vex';
 
-export class Base {
+export class Element {
   constructor() {
     this.attrs = {
       id: '',

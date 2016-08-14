@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
-import { Base } from './base';
+import { Element } from './element';
 import { Flow } from './tables';
 import { Barline } from './stavebarline';
 import { StaveModifier } from './stavemodifier';
@@ -15,7 +15,7 @@ import { KeySignature } from './keysignature';
 import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
 
-export class Stave extends Base {
+export class Stave extends Element {
   constructor(x, y, width, options) {
     super();
     this.attrs.type = 'Stave';

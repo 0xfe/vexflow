@@ -6,7 +6,7 @@
 
 import { Vex } from './vex';
 import { Flow } from './tables';
-import { Base } from './base';
+import { Element } from './element';
 import { Fraction } from './fraction';
 import { Tuplet } from './tuplet';
 import { Stem } from './stem';
@@ -35,7 +35,7 @@ const getStemSlope = (firstNote, lastNote) => {
   return (lastStemTipY - firstStemTipY) / (lastStemX - firstStemX);
 };
 
-export class Beam extends Base {
+export class Beam extends Element {
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
   // Currently this is fairly naive.

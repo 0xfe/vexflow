@@ -9,6 +9,7 @@ export class StaveSection extends StaveModifier {
 
   constructor(section, x, shift_y) {
     super();
+    this.attrs.type = 'StaveSection';
 
     this.setWidth(16);
     this.section = section;
@@ -21,16 +22,13 @@ export class StaveSection extends StaveModifier {
       weight: 'bold',
     };
   }
+
   getCategory() { return StaveSection.CATEGORY; }
   setStaveSection(section) { this.section = section; return this; }
   setShiftX(x) { this.shift_x = x; return this; }
   setShiftY(y) { this.shift_y = y; return this; }
   draw(stave, shift_x) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoContext', "Can't draw stave section without a context.");
-    }
-
-    const ctx = stave.context;
+    const ctx = stave.checkContext();
 
     ctx.save();
     ctx.lineWidth = 2;

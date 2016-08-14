@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
@@ -26,6 +25,7 @@ export class Repetition extends StaveModifier {
 
   constructor(type, x, y_shift) {
     super();
+    this.attrs.type = 'Repetition';
 
     this.symbol_type = type;
     this.x = x;
@@ -84,31 +84,20 @@ export class Repetition extends StaveModifier {
   }
 
   drawCodaFixed(stave, x) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
-
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 40, 'v4d', true);
     return this;
   }
 
   drawSignoFixed(stave, x) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
-
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 30, 'v8c', true);
     return this;
   }
 
   drawSymbolText(stave, x, text, draw_coda) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
+    const ctx = stave.checkContext();
 
-    const ctx = stave.context;
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
       // Default to right symbol

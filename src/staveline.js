@@ -8,6 +8,7 @@
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
 import { Vex } from './vex';
+import { Element } from './element';
 import { Flow } from './tables';
 
 // Attribution: Arrow rendering implementations based off of
@@ -109,7 +110,7 @@ function drawArrowLine(ctx, point1, point2, config) {
   }
 }
 
-export class StaveLine {
+export class StaveLine extends Element {
   // Text Positioning
   static get TextVerticalPosition() {
     return {
@@ -139,8 +140,10 @@ export class StaveLine {
   //  }
   //  ```
   constructor(notes) {
+    super()
+    this.attrs.type = 'StaveLine';
+
     this.notes = notes;
-    this.context = null;
 
     this.text = '';
 
@@ -181,8 +184,6 @@ export class StaveLine {
     this.setNotes(notes);
   }
 
-  // Set the rendering context
-  setContext(context) { this.context = context; return this; }
   // Set the font for the `StaveLine` text
   setFont(font) { this.font = font; return this; }
   // The the annotation for the `StaveLine`
@@ -215,12 +216,8 @@ export class StaveLine {
 
   // Apply the style of the `StaveLine` to the context
   applyLineStyle() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', 'No context to apply the styling to');
-    }
-
+    const ctx = this.checkContext();
     const render_options = this.render_options;
-    const ctx = this.context;
 
     if (render_options.line_dash) {
       ctx.setLineDash(render_options.line_dash);
@@ -239,11 +236,7 @@ export class StaveLine {
 
   // Apply the text styling to the context
   applyFontStyle() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', 'No context to apply the styling to');
-    }
-
-    const ctx = this.context;
+    const ctx = this.checkContext();
 
     if (this.font) {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
@@ -257,11 +250,7 @@ export class StaveLine {
 
   // Renders the `StaveLine` on the context
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', 'No context to render StaveLine.');
-    }
-
-    const ctx = this.context;
+    const ctx = this.checkContext();
     const first_note = this.first_note;
     const last_note = this.last_note;
     const render_options = this.render_options;

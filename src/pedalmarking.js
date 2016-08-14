@@ -9,7 +9,7 @@
 // custom text for the release/depress pedal markings.
 
 import { Vex } from './vex';
-import { Base } from './base';
+import { Element } from './element';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
@@ -24,7 +24,7 @@ function drawPedalGlyph(name, context, x, y, point) {
   glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
 }
 
-export class PedalMarking extends Base {
+export class PedalMarking extends Element {
   // Glyph data
   static get GLYPHS() {
     return {

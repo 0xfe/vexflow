@@ -4,10 +4,9 @@
 // This class implements curves (for slurs)
 
 import { Vex } from './vex';
-import { Base } from './base';
+import { Element } from './element';
 
-export class Curve extends Base {
-
+export class Curve extends Element {
   static get Position() {
     return {
       NEAR_HEAD: 1,

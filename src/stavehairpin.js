@@ -7,9 +7,10 @@
 // Hairpins can be either Crescendo or Descrescendo.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Modifier } from './modifier';
 
-export class StaveHairpin {
+export class StaveHairpin extends Element {
   static get type() {
     return {
       CRESC: 1,
@@ -74,12 +75,11 @@ export class StaveHairpin {
      *  }
      *
      **/
-
+    super();
+    this.attrs.type = 'StaveHairpin';
     this.notes = notes;
     this.hairpin = type;
     this.position = Modifier.Position.BELOW;
-
-    this.context = null;
 
     this.render_options = {
       height: 10,
@@ -90,8 +90,6 @@ export class StaveHairpin {
 
     this.setNotes(notes);
   }
-
-  setContext(context) { this.context = context; return this; }
 
   setPosition(position) {
     if (position === Modifier.Position.ABOVE || position === Modifier.Position.BELOW) {
@@ -132,7 +130,7 @@ export class StaveHairpin {
   }
 
   renderHairpin(params) {
-    const ctx = this.context;
+    const ctx = this.checkContext();
     let dis = this.render_options.y_shift + 20;
     let y_shift = params.first_y;
 
@@ -167,9 +165,7 @@ export class StaveHairpin {
   }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw Hairpin without a context.");
-    }
+    this.checkContext();
 
     const firstNote = this.first_note;
     const lastNote = this.last_note;

@@ -14,12 +14,12 @@
 // `ModifierContext`. This ensures that multiple voices don't trample all over each other.
 
 import { Vex } from './vex';
-import { Base } from './base';
+import { Element } from './element';
 
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
 // function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
 
-export class Modifier extends Base {
+export class Modifier extends Element {
   static get CATEGORY() { return 'none'; }
 
   // Modifiers can be positioned almost anywhere, relative to a note.

@@ -5,11 +5,11 @@
 // have a duration, i.e., they occupy space in the musical rendering dimension.
 
 import { Vex } from './vex';
-import { Base } from './base';
+import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 
-export class Tickable extends Base {
+export class Tickable extends Element {
   constructor() {
     super();
     this.attrs.type = 'Tickable';
