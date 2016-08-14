@@ -112,6 +112,7 @@ export class StringNumber extends Modifier {
 
   constructor(number) {
     super();
+    this.setAttribute('type', 'StringNumber');
 
     this.note = null;
     this.last_note = null;
@@ -160,14 +161,11 @@ export class StringNumber extends Modifier {
   setDashed(dashed) { this.dashed = dashed; return this; }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw string number without a context.");
-    }
+    const ctx = this.checkContext();
     if (!(this.note && (this.index != null))) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
     }
 
-    const ctx = this.context;
     const line_space = this.note.stave.options.spacing_between_lines_px;
 
     const start = this.note.getModifierStartXY(this.position, this.index);

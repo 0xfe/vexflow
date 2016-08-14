@@ -6,6 +6,7 @@
 
 import { Vex } from './vex';
 import { Flow } from './tables';
+import { Element } from './element';
 import { Fraction } from './fraction';
 import { Tuplet } from './tuplet';
 import { Stem } from './stem';
@@ -34,7 +35,7 @@ const getStemSlope = (firstNote, lastNote) => {
   return (lastStemTipY - firstStemTipY) / (lastStemX - firstStemX);
 };
 
-export class Beam {
+export class Beam extends Element {
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
   // Currently this is fairly naive.
@@ -378,6 +379,9 @@ export class Beam {
   }
 
   constructor(notes, auto_stem) {
+    super();
+    this.attrs.type = 'Beam';
+
     if (!notes || notes === []) {
       throw new Vex.RuntimeError('BadArguments', 'No notes provided for beam.');
     }
@@ -445,9 +449,6 @@ export class Beam {
       min_flat_beam_offset: 15,
     };
   }
-
-  // The the rendering `context`
-  setContext(context) { this.context = context; return this; }
 
   // Get the notes in this beam
   getNotes() { return this.notes; }
@@ -751,9 +752,7 @@ export class Beam {
 
   // Render the beam lines
   drawBeamLines() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
+    this.checkContext();
 
     const valid_beam_durations = ['4', '8', '16', '32', '64'];
 
@@ -819,9 +818,7 @@ export class Beam {
 
   // Render the beam to the canvas context
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
+    this.checkContext();
 
     if (this.unbeamable) return;
 

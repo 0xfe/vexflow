@@ -132,6 +132,18 @@ function createContexts(voices, ContextType, addToContext) {
 }
 
 export class Formatter {
+  // Helper function to layout "notes" one after the other without
+  // regard for proportions. Useful for tests and debugging.
+  static SimpleFormat(notes, x = 0) {
+    notes.reduce((x, note) => {
+      note.addToModifierContext(new ModifierContext());
+      const tick = new TickContext().addTickable(note).preFormat();
+      const extra = tick.getExtraPx();
+      tick.setX(x + extra.left);
+
+      return x + tick.getWidth() + extra.right + 10;
+    }, x);
+  }
 
   // Helper function to format and draw a single voice. Returns a bounding
   // box for the notation.
@@ -283,9 +295,6 @@ export class Formatter {
     // This is set to `true` after `minTotalWidth` is calculated.
     this.hasMinTotalWidth = false;
 
-    // The suggested amount of space for each tick.
-    this.pixelsPerTick = 0;
-
     // Total number of ticks in the voice.
     this.totalTicks = new Fraction(0, 1);
 
@@ -385,7 +394,7 @@ export class Formatter {
   // to `justifyWidth` pixels. `renderingContext` is required to justify elements
   // that can't retreive widths without a canvas. This method sets the `x` positions
   // of all the tickables/notes in the formatter.
-  preFormat(justifyWidth, renderingContext, voices, stave) {
+  preFormat(justifyWidth = 0, renderingContext, voices, stave) {
     // Initialize context maps.
     const contexts = this.tickContexts;
     const { list: contextList, map: contextMap, resolutionMultiplier } = contexts;
@@ -396,28 +405,15 @@ export class Formatter {
       voices.forEach(voice => voice.setStave(stave).preFormat());
     }
 
-    // Figure out how many pixels to allocate per tick.
-    if (!justifyWidth) {
-      justifyWidth = 0;
-      this.pixelsPerTick = 0;
-    } else {
-      this.pixelsPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
-    }
-
     // Now distribute the ticks to each tick context, and assign them their
     // own X positions.
     let x = 0;
+    let shift = 0;
     const centerX = justifyWidth / 2;
-    let whiteSpace = 0; // White space to right of previous note
-    let tickSpace = 0;  // Pixels from prev note x-pos to curent note x-pos
-    let prevTick = 0;
-    let prevWidth = 0;
-    let lastMetrics = null;
-    const initialJustifyWidth = justifyWidth;
     this.minTotalWidth = 0;
 
     // Pass 1: Give each note maximum width requested by context.
-    contextList.forEach((tick, index) => {
+    contextList.forEach((tick) => {
       const context = contextMap[tick];
       if (renderingContext) context.setContext(renderingContext);
 
@@ -425,83 +421,37 @@ export class Formatter {
       // space requirements.
       context.preFormat();
 
-      const thisMetrics = context.getMetrics();
       const width = context.getWidth();
       this.minTotalWidth += width;
-      let minX = 0;
-      const pxUsed = width;
 
-      // Calculate space between last note and next note.
-      tickSpace = Math.min((tick - prevTick) * this.pixelsPerTick, pxUsed);
+      const metrics = context.getMetrics();
+      x = x + shift + metrics.extraLeftPx;
+      context.setX(x);
 
-      // Shift next note up `tickSpace` pixels.
-      let setX = x + tickSpace;
-
-      // Calculate the minimum next note position to allow for right modifiers.
-      if (lastMetrics != null) {
-        minX = x + prevWidth - lastMetrics.extraLeftPx;
-      }
-
-      // Determine the space required for the previous tick.
-      // The `shouldIgnoreTicks` bool is true for elements in the stave
-      // that don't consume ticks (bar lines, key and time signatures, etc.)
-      setX = context.shouldIgnoreTicks()
-        ? minX + context.getWidth()
-        : Math.max(setX, minX);
-
-      if (context.shouldIgnoreTicks() && justifyWidth) {
-          // This note stole room... recalculate with new justification width.
-        justifyWidth -= context.getWidth();
-        this.pixelsPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
-      }
-
-      // Determine pixels needed for left modifiers.
-      let leftPx = thisMetrics.extraLeftPx;
-
-      // Determine white space to right of previous tick (from right modifiers.)
-      if (lastMetrics != null) {
-        whiteSpace = (setX - x) - (prevWidth - lastMetrics.extraLeftPx);
-      }
-
-      // Deduct pixels from white space quota.
-      if (index > 0 && whiteSpace > 0) {
-        if (whiteSpace >= leftPx) {
-          // Have enough white space for left modifiers - no offset needed.
-          leftPx = 0;
-        } else {
-          // Decrease left modifier offset by amount of white space.
-          leftPx -= whiteSpace;
-        }
-      }
-
-      // Adjust the tick x position with the left modifier offset.
-      setX += leftPx;
-
-      // Set the `x` value for the context, which sets the `x` value for all
-      // tickables in this context.
-      context.setX(setX);
-      context.setPixelsUsed(pxUsed);  // ??? Remove this if nothing breaks
-
-      lastMetrics = thisMetrics;
-      prevWidth = width;
-      prevTick = tick;
-      x = setX;
+      // Calculate shift for the next tick.
+      shift = context.getWidth() - metrics.extraLeftPx;
     });
 
+    this.minTotalWidth = x + shift;
     this.hasMinTotalWidth = true;
+
     if (justifyWidth > 0) {
       // Pass 2: Take leftover width, and distribute it to proportionately to
       // all notes.
-      const remainingX = initialJustifyWidth - (x + prevWidth);
+      const remainingX = justifyWidth - this.minTotalWidth;
       const leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
+      // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
       let spaceAccum = 0;
 
       contextList.forEach((tick, index) => {
         const prevTick = contextList[index - 1] || 0;
         const context = contextMap[tick];
         const tickSpace = (tick - prevTick) * leftoverPxPerTick;
-        spaceAccum += tickSpace;
+        // TODO: An idea worth pursuing:
+        //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
+        //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
 
+        spaceAccum += tickSpace;
         context.setX(context.getX() + spaceAccum);
 
         // Move center aligned tickables to middle

@@ -5,9 +5,10 @@
 // tabs, etc.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Fraction } from './fraction';
 
-export class TickContext {
+export class TickContext extends Element {
   static getNextContext(tContext) {
     const contexts = tContext.tContexts;
     const index = contexts.indexOf(tContext);
@@ -16,6 +17,9 @@ export class TickContext {
   }
 
   constructor() {
+    super();
+    this.setAttribute('type', 'TickContext');
+
     this.currentTick = new Fraction(0, 1);
     this.maxTicks = new Fraction(0, 1);
     this.minTicks = null;
@@ -35,11 +39,8 @@ export class TickContext {
     this.ignore_ticks = true;
     this.preFormatted = false;
     this.postFormatted = false;
-    this.context = null; // Rendering context
   }
 
-  setContext(context) { this.context = context; return this; }
-  getContext() { return this.context; }
   shouldIgnoreTicks() { return this.ignore_ticks; }
   getWidth() { return this.width + (this.padding * 2); }
   getX() { return this.x; }
@@ -65,15 +66,17 @@ export class TickContext {
     this.preFormatted = false;
   }
 
-  // Get left & right pixels used for modifiers
+  // ### DEPRECATED ###
+  // Get left & right pixels used for modifiers. THIS METHOD IS DEPRECATED. Use
+  // the getMetrics() method instead!
   getExtraPx() {
     let left_shift = 0;
     let right_shift = 0;
     let extraLeftPx = 0;
     let extraRightPx = 0;
     for (let i = 0; i < this.tickables.length; i++) {
-      extraLeftPx = Math.max(this.tickables[i].extraLeftPx, extraLeftPx);
-      extraRightPx = Math.max(this.tickables[i].extraRightPx, extraRightPx);
+      extraLeftPx = Math.max(this.tickables[i].extraLeftPx || 0, extraLeftPx);
+      extraRightPx = Math.max(this.tickables[i].extraRightPx || 0, extraRightPx);
       const mContext = this.tickables[i].modifierContext;
       if (mContext && mContext != null) {
         left_shift = Math.max(left_shift, mContext.state.left_shift);

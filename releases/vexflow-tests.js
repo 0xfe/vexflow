@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.71 built on 2016-08-12.
+ * VexFlow 1.2.73 built on 2016-08-14.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -18,7 +18,8 @@ if (!window.QUnit) {
   QUnit.assertions = {
     ok: function() {return true;},
     equal: function() {return true;},
-    expect: function() {return true;}
+    expect: function() {return true;},
+    throws: function() {return true;}
   };
 
   QUnit.module = function(name) {
@@ -35,6 +36,7 @@ if (!window.QUnit) {
   ok = QUnit.assertions.ok;
   equal = QUnit.assertions.equal;
   expect = QUnit.assertions.expect;
+  throws = QUnit.assertions.throws;
 }
 
 if (typeof require == "function") {
@@ -110,6 +112,17 @@ VF.Test = (function() {
       $("#" + sel).attr("height", height);
     },
 
+    makeFactory: function(options, width, height) {
+      return new VF.Factory({
+        renderer: {
+            el: options.canvas_sel,
+            backend: options.backend,
+            width: width,
+            height: height
+        }
+      })
+    },
+
     runCanvasTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
         // console.log("Running test (Canvas):", assert.test.module.name, "--", name);
@@ -118,6 +131,7 @@ VF.Test = (function() {
             assert.test.module.name + " (Canvas): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.CANVAS,
             params: params,
             assert: assert },
             VF.Renderer.getCanvasContext);
@@ -132,6 +146,7 @@ VF.Test = (function() {
             assert.test.module.name + " (Raphael): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.RAPHAEL,
             params: params,
             assert: assert },
             VF.Renderer.getRaphaelContext);
@@ -146,6 +161,7 @@ VF.Test = (function() {
             assert.test.module.name + " (SVG): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.SVG,
             params: params,
             assert: assert },
             VF.Renderer.getSVGContext);
@@ -167,6 +183,7 @@ VF.Test = (function() {
 
         func({
           canvas_sel: div,
+          backend: VF.Renderer.Backends.SVG,
           params: params,
           assert: assert },
           VF.Renderer.getSVGContext);
@@ -293,6 +310,7 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.runTests("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
       Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
       Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
+      Vex.Flow.Test.runTests("Factory API", Vex.Flow.Test.Accidental.factoryAPI);
     },
 
     showNote: function(note, stave, ctx, x) {
@@ -941,6 +959,62 @@ Vex.Flow.Test.Accidental = (function() {
       equal(hasAccidental(notes[8]), false, "Double sharp rememberd");
       equal(hasAccidental(notes[9]), true, "Added natural");
       equal(hasAccidental(notes[10]), false, "Natural remembered");
+    },
+
+    factoryAPI: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var assert = options.assert;
+
+      var stave = vf.Stave({x: 10, y: 10, width: 550});
+
+      function newNote(note_struct) { return vf.StaveNote(note_struct); }
+      function newAcc(type) { return vf.Accidental({type: type}); }
+
+      var notes = [
+        newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
+          addAccidental(0, newAcc("b")).
+          addAccidental(1, newAcc("#")),
+
+        newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
+            duration: "h"}).
+          addAccidental(0, newAcc("##")).
+          addAccidental(1, newAcc("n")).
+          addAccidental(2, newAcc("bb")).
+          addAccidental(3, newAcc("b")).
+          addAccidental(4, newAcc("#")).
+          addAccidental(5, newAcc("n")).
+          addAccidental(6, newAcc("bb")),
+
+        newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
+            duration: "16"}).
+          addAccidental(0, newAcc("n")).
+          addAccidental(1, newAcc("#")).
+          addAccidental(2, newAcc("#")).
+          addAccidental(3, newAcc("b")).
+          addAccidental(4, newAcc("bb")).
+          addAccidental(5, newAcc("##")).
+          addAccidental(6, newAcc("#")),
+
+        newNote({ keys: ["a/3", "c/4", "e/4", "b/4", "d/5", "g/5"], duration: "w"}).
+          addAccidental(0, newAcc("#")).
+          addAccidental(1, newAcc("##").setAsCautionary()).
+          addAccidental(2, newAcc("#").setAsCautionary()).
+          addAccidental(3, newAcc("b")).
+          addAccidental(4, newAcc("bb").setAsCautionary()).
+          addAccidental(5, newAcc("b").setAsCautionary()),
+      ];
+
+      VF.Formatter.SimpleFormat(notes);
+
+      notes.forEach(function(n, i) {
+        assert.ok(n.getAccidentals().length > 0, "Note " + i + " has accidentals");
+        n.getAccidentals().forEach(function(a, i) {
+          assert.ok(a.width > 0, "Accidental " + i + " has set width");
+        })
+      }) 
+
+      vf.draw();
+      assert.ok(true, "Factory API");
     }
   };
 
@@ -3982,12 +4056,12 @@ VF.Test.Beam = (function() {
     },
 
     complexWithArticulation: function(options, contextBuilder) {
-      var ctx = contextBuilder(options.canvas_sel, 500, 200);
+      var ctx = contextBuilder(options.canvas_sel, 600, 200);
       ctx.scale(1.0, 1.0); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
 
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
 
-      var stave = new VF.Stave(10, 40, 400).
+      var stave = new VF.Stave(10, 40, 500).
         addClef("treble").setContext(ctx).draw();
 
       var notes = [
@@ -4847,6 +4921,51 @@ VF.Test.Dot = (function() {
   return Dot;
 })()
 /**
+ * VexFlow - Factory Tests
+ * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ */
+
+Vex.Flow.Test.Factory = (function() {
+  Factory = {
+    Start: function() {
+      QUnit.module("Factory");
+      var VFT = Vex.Flow.Test;
+
+      QUnit.test("Defaults", VFT.Factory.defaults);
+    },
+
+    defaults: function(assert) {
+      assert.throws(function() {
+        var vf = new VF.Factory({
+          renderer: {
+              width: 700,
+              height: 500
+          }
+        })
+      });
+
+      var vf = new VF.Factory({
+        renderer: {
+          el: null,
+          width: 700,
+          height: 500
+        }
+      });
+
+      var options = vf.getOptions();
+      assert.equal(options.renderer.width, 700);
+      assert.equal(options.renderer.height, 500);
+      assert.equal(options.renderer.el, null);
+      assert.equal(options.stave.space, 10); 
+
+      assert.expect(5);
+    }
+  };
+
+  return Factory;  
+})();
+
+/**
  * VexFlow - TickContext Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
@@ -4863,6 +4982,7 @@ VF.Test.Formatter = (function() {
       runTests("Notes with Tab", Formatter.notesWithTab);
       runTests("Format Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0});
       runTests("Format Multiple Staves - Justified", Formatter.multiStaves, {justify: 168});
+      runTests("Proportional Formatting", Formatter.proportionalFormatting);
     },
 
     buildTickContexts: function() {
@@ -5245,6 +5365,70 @@ VF.Test.Formatter = (function() {
       beam32a.setContext(ctx).draw();
       beam32b.setContext(ctx).draw();
 
+      ok(true);
+    },
+
+    proportionalFormatting: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 850);
+
+      var voices = [];
+
+      function newNote(note_struct) { return vf.StaveNote(note_struct); }
+      function newVoice(notes, y, tuplet){
+        var stave = vf.Stave({x: 10, y: y, width: 500});
+        var tickables = notes.map(function(note) {return vf.StaveNote(note);});
+        if (tuplet) vf.Tuplet({notes: tickables, options: {notes_occupied: tuplet}});
+        var voice = vf.Voice({time: {num_beats: 1, beat_value: 4}}).addTickables(tickables);
+        voices.push(voice)
+        return voice;
+      }
+
+      var notes1 = [
+        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+      ];
+
+      var notes2 = [
+        {keys: ["c/5"], stem_direction: -1, duration: "8"},
+        {keys: ["c/5"], stem_direction: -1, duration: "8"},
+      ];
+  
+      var notes3 = [
+        {keys: ["a/4"], stem_direction: 1, duration: "8"},
+        {keys: ["a/4"], stem_direction: 1, duration: "8"},
+        {keys: ["a/4"], stem_direction: 1, duration: "8"},
+      ];
+
+      var notes4 = [
+        {keys: ["a/4"], stem_direction: 1, duration: "16"},
+        {keys: ["a/4"], stem_direction: 1, duration: "16"},
+        {keys: ["a/4"], stem_direction: 1, duration: "16"},
+        {keys: ["a/4"], stem_direction: 1, duration: "16"},
+        {keys: ["a/4"], stem_direction: 1, duration: "16"},
+      ];
+
+      var voice1 = newVoice(notes1, 30);
+      var voice2 = newVoice(notes2, 140);
+      var voice3 = newVoice(notes3, 250, 2);
+      var voice4 = newVoice(notes4, 360, 4);
+
+      var formatter = vf.Formatter();
+      voices.forEach(function(voice) {formatter.joinVoices([voice]);})
+      formatter.format(voices, 450);
+
+      vf.draw();
+
+      var location = 140;
+      voices.forEach(function(voice) {
+        voice.getTickables().forEach(function(note) {
+          VF.Test.plotNoteWidth(vf.getContext(), note, location);
+        });
+        location = location + 110;
+      });
+
+      // VF.Test.plotLegendForNoteWidth(vf.getContext(), 300, 280);
       ok(true);
     },
 
@@ -8783,7 +8967,8 @@ VF.Test.Stave = (function() {
       runTests("Single Line Configuration Test", Stave.configureSingleLine);
       runTests("Batch Line Configuration Test", Stave.configureAllLines);
       runTests("Stave Text Test", Stave.drawStaveText);
-      runTests("Multiple Line Stave Text Test (Raphael)", Stave.drawStaveTextMultiLine);
+      runTests("Multiple Line Stave Text Test", Stave.drawStaveTextMultiLine);
+      runTests("Factory API", Stave.factoryAPI);
     },
 
     sortByCategory: function(options) {
@@ -9267,6 +9452,16 @@ VF.Test.Stave = (function() {
       stave.setText("Right Below Text", VF.Modifier.Position.BELOW,
         {shift_y: 10, justification: VF.TextNote.Justification.RIGHT});
       stave.setContext(ctx).draw();
+
+      ok(true, "all pass");
+    },
+
+    factoryAPI: function(options) {
+      var vf = VF.Test.makeFactory(options, 900, 200);
+      var stave = vf.Stave({x: 300, y: 40, width: 300});
+      stave.setText("Violin", VF.Modifier.Position.LEFT, {shift_y: -10});
+      stave.setText("2nd line", VF.Modifier.Position.LEFT, {shift_y: 10});
+      vf.draw();
 
       ok(true, "all pass");
     }
@@ -11827,12 +12022,12 @@ VF.Test.StringNumber = (function() {
     },
 
     multi: function(options, contextBuilder) {
-      var c = new contextBuilder(options.canvas_sel, 600, 200);
+      var c = new contextBuilder(options.canvas_sel, 700, 200);
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
       function newAcc(type) { return new VF.Accidental(type); }
       function newFinger(num, pos) { return new VF.FretHandFinger(num).setPosition(pos); }
       function newStringNumber(num, pos) { return new VF.StringNumber(num).setPosition(pos);}
-      var stave = new VF.Stave(50, 10, 500);
+      var stave = new VF.Stave(50, 10, 600);
       stave.setContext(c);
       stave.draw();
 
@@ -11897,7 +12092,7 @@ VF.Test.StringNumber = (function() {
       voice2.addTickables(notes2);
 
       var formatter = new VF.Formatter().joinVoices([voice, voice2]).
-        format([voice, voice2], 400);
+        format([voice, voice2], 550);
 
       var beam2_1 = new VF.Beam(notes2.slice(0, 4));
       var beam2_2 = new VF.Beam(notes2.slice(4, 8));
@@ -11912,7 +12107,7 @@ VF.Test.StringNumber = (function() {
 
     drawAccidentals: function(options, contextBuilder) {
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 600, 200);
+      var ctx = contextBuilder(options.canvas_sel, 800, 200);
       function newFinger(num, pos) { return new VF.FretHandFinger(num).setPosition(pos); }
       function newStringNumber(num, pos) { return new VF.StringNumber(num).setPosition(pos);}
 
@@ -15114,6 +15309,7 @@ VF.Test.run = function () {
   VF.Test.TextBracket.Start();
   VF.Test.StaveModifier.Start();
   VF.Test.GhostNote.Start();
+  VF.Test.Factory.Start();
 }
 
 module.exports = VF.Test;

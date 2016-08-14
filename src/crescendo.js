@@ -42,6 +42,7 @@ export class Crescendo extends Note {
   // Initialize the crescendo's properties
   constructor(note_struct) {
     super(note_struct);
+    this.attrs.type = 'Crescendo';
 
     // Whether the object is a decrescendo
     this.decrescendo = false;
@@ -79,9 +80,7 @@ export class Crescendo extends Note {
 
   // Render the Crescendo object onto the canvas
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw Hairpin without a context.");
-    }
+    this.checkContext();
 
     const tick_context = this.getTickContext();
     const next_context = TickContext.getNextContext(tick_context);

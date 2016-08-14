@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
 
@@ -29,7 +30,7 @@ function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
   ctx.fillRect(topX - thickLineOffset, topY, variableWidth, botY - topY);
 }
 
-export class StaveConnector {
+export class StaveConnector extends Element {
   // SINGLE_LEFT and SINGLE are the same value for compatibility
   // with older versions of vexflow which didn't have right sided
   // stave connectors
@@ -49,6 +50,9 @@ export class StaveConnector {
   }
 
   constructor(top_stave, bottom_stave) {
+    super();
+    this.attrs.type = 'StaveConnector';
+
     this.thickness = Flow.STAVE_LINE_THICKNESS;
     this.width = 3;
     this.top_stave = top_stave;
@@ -63,11 +67,6 @@ export class StaveConnector {
     // 2. Offset BRACE type not to overlap with another StaveConnector
     this.x_shift = 0;
     this.texts = [];
-  }
-
-  setContext(ctx) {
-    this.ctx = ctx;
-    return this;
   }
 
   setType(type) {
@@ -99,9 +98,7 @@ export class StaveConnector {
   }
 
   draw() {
-    if (!this.ctx) {
-      throw new Vex.RERR('NoContext', "Can't draw without a context.");
-    }
+    const ctx = this.checkContext();
 
     let topY = this.top_stave.getYForLine(0);
     let botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +
@@ -158,28 +155,28 @@ export class StaveConnector {
         const cpy7 = y2 - (0.135 * attachment_height);
         const cpx8 = cpx5;
         const cpy8 = cpy1;
-        this.ctx.beginPath();
-        this.ctx.moveTo(x1, y1);
-        this.ctx.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x2, y2);
-        this.ctx.bezierCurveTo(cpx3, cpy3, cpx4, cpy4, x3, y3);
-        this.ctx.bezierCurveTo(cpx5, cpy5, cpx6, cpy6, x2, y2);
-        this.ctx.bezierCurveTo(cpx7, cpy7, cpx8, cpy8, x1, y1);
-        this.ctx.fill();
-        this.ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, x2, y2);
+        ctx.bezierCurveTo(cpx3, cpy3, cpx4, cpy4, x3, y3);
+        ctx.bezierCurveTo(cpx5, cpy5, cpx6, cpy6, x2, y2);
+        ctx.bezierCurveTo(cpx7, cpy7, cpx8, cpy8, x1, y1);
+        ctx.fill();
+        ctx.stroke();
         break;
       } case StaveConnector.type.BRACKET:
         topY -= 4;
         botY += 4;
         attachment_height = botY - topY;
-        Glyph.renderGlyph(this.ctx, topX - 5, topY - 3, 40, 'v1b', true);
-        Glyph.renderGlyph(this.ctx, topX - 5, botY + 3, 40, 'v10', true);
+        Glyph.renderGlyph(ctx, topX - 5, topY - 3, 40, 'v1b', true);
+        Glyph.renderGlyph(ctx, topX - 5, botY + 3, 40, 'v10', true);
         topX -= (this.width + 2);
         break;
       case StaveConnector.type.BOLD_DOUBLE_LEFT:
-        drawBoldDoubleLine(this.ctx, this.type, topX + this.x_shift, topY, botY);
+        drawBoldDoubleLine(ctx, this.type, topX + this.x_shift, topY, botY);
         break;
       case StaveConnector.type.BOLD_DOUBLE_RIGHT:
-        drawBoldDoubleLine(this.ctx, this.type, topX, topY, botY);
+        drawBoldDoubleLine(ctx, this.type, topX, topY, botY);
         break;
       case StaveConnector.type.THIN_DOUBLE:
         width = 1;
@@ -198,27 +195,27 @@ export class StaveConnector {
       this.type !== StaveConnector.type.BOLD_DOUBLE_RIGHT &&
       this.type !== StaveConnector.type.NONE
     ) {
-      this.ctx.fillRect(topX, topY, width, attachment_height);
+      ctx.fillRect(topX, topY, width, attachment_height);
     }
 
     // If the connector is a thin double barline, draw the paralell line
     if (this.type === StaveConnector.type.THIN_DOUBLE) {
-      this.ctx.fillRect(topX - 3, topY, width, attachment_height);
+      ctx.fillRect(topX - 3, topY, width, attachment_height);
     }
 
-    this.ctx.save();
-    this.ctx.lineWidth = 2;
-    this.ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.save();
+    ctx.lineWidth = 2;
+    ctx.setFont(this.font.family, this.font.size, this.font.weight);
     // Add stave connector text
     for (let i = 0; i < this.texts.length; i++) {
       const text = this.texts[i];
-      const text_width = this.ctx.measureText('' + text.content).width;
+      const text_width = ctx.measureText('' + text.content).width;
       const x = this.top_stave.getX() - text_width - 24 + text.options.shift_x;
       const y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 +
         text.options.shift_y;
 
-      this.ctx.fillText('' + text.content, x, y + 4);
+      ctx.fillText('' + text.content, x, y + 4);
     }
-    this.ctx.restore();
+    ctx.restore();
   }
 }

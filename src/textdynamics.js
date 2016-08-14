@@ -52,6 +52,7 @@ export class TextDynamics extends Note {
   // letters that represents the letters to render
   constructor(text_struct) {
     super(text_struct);
+    this.setAttribute('type', 'TextDynamics');
 
     this.sequence = text_struct.text.toLowerCase();
     this.line = text_struct.line || 0;

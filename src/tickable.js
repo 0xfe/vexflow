@@ -5,11 +5,15 @@
 // have a duration, i.e., they occupy space in the musical rendering dimension.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 
-export class Tickable {
+export class Tickable extends Element {
   constructor() {
+    super();
+    this.attrs.type = 'Tickable';
+
     this.intrinsicTicks = 0;
     this.tickMultiplier = new Fraction(1, 1);
     this.ticks = new Fraction(0, 1);
@@ -34,9 +38,7 @@ export class Tickable {
     // This flag tells the formatter to ignore this tickable during
     // formatting and justification. It is set by tickables such as BarNote.
     this.ignore_ticks = false;
-    this.context = null;
   }
-  setContext(context) { this.context = context; }
 
   // Set the DOM ID of the element. Must be called before draw(). TODO: Update
   // ID of element if has already been rendered.

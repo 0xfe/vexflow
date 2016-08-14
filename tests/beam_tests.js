@@ -917,12 +917,12 @@ VF.Test.Beam = (function() {
     },
 
     complexWithArticulation: function(options, contextBuilder) {
-      var ctx = contextBuilder(options.canvas_sel, 500, 200);
+      var ctx = contextBuilder(options.canvas_sel, 600, 200);
       ctx.scale(1.0, 1.0); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
 
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
 
-      var stave = new VF.Stave(10, 40, 400).
+      var stave = new VF.Stave(10, 40, 500).
         addClef("treble").setContext(ctx).draw();
 
       var notes = [

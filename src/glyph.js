@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
 import { Font } from './fonts/vexflow_font';
@@ -37,7 +38,7 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   }
 }
 
-export class Glyph {
+export class Glyph extends Element {
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
     const glyph = font.glyphs[code];
@@ -126,9 +127,11 @@ export class Glyph {
    * @constructor
    */
   constructor(code, point, options) {
+    super();
+    this.attrs.type = 'Glyph';
+
     this.code = code;
     this.point = point;
-    this.context = null;
     this.options = {
       cache: true,
       font: Font,
@@ -159,8 +162,6 @@ export class Glyph {
   setStave(stave) { this.stave = stave; return this; }
   setXShift(x_shift) { this.x_shift = x_shift; return this; }
   setYShift(y_shift) { this.y_shift = y_shift; return this; }
-  setContext(context) { this.context = context; return this; }
-  getContext() { return this.context; }
 
   reset() {
     this.scale = this.point * 72 / (this.options.font.resolution * 100);
@@ -216,16 +217,14 @@ export class Glyph {
   }
 
   renderToStave(x) {
+    this.checkContext();
+
     if (!this.metrics) {
       throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
 
     if (!this.stave) {
       throw new Vex.RuntimeError('GlyphError', 'No valid stave');
-    }
-
-    if (!this.context) {
-      throw new Vex.RERR('GlyphError', 'No valid context');
     }
 
     const outline = this.metrics.outline;

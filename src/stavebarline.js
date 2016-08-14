@@ -2,7 +2,6 @@
 //
 // Author Larry Kuhns 2011
 
-import { Vex } from './vex';
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
 
@@ -25,6 +24,7 @@ export class Barline extends StaveModifier {
    */
   constructor(type) {
     super();
+    this.attrs.type = 'Barline';
     this.thickness = Flow.STAVE_LINE_THICKNESS;
 
     const TYPE = Barline.type;
@@ -60,6 +60,7 @@ export class Barline extends StaveModifier {
 
   // Draw barlines
   draw(stave) {
+    stave.checkContext();
     switch (this.type) {
       case Barline.type.SINGLE:
         this.drawVerticalBar(stave, this.x, false);
@@ -93,10 +94,7 @@ export class Barline extends StaveModifier {
   }
 
   drawVerticalBar(stave, x, double_bar) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
-
+    stave.checkContext();
     const topY = stave.getTopLineTopY();
     const botY = stave.getBottomLineBottomY();
     if (double_bar) {
@@ -106,10 +104,7 @@ export class Barline extends StaveModifier {
   }
 
   drawVerticalEndBar(stave, x) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
-
+    stave.checkContext();
     const topY = stave.getTopLineTopY();
     const botY = stave.getBottomLineBottomY();
     stave.context.fillRect(x - 5, topY, 1, botY - topY);
@@ -117,9 +112,7 @@ export class Barline extends StaveModifier {
   }
 
   drawRepeatBar(stave, x, begin) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
+    stave.checkContext();
 
     const topY = stave.getTopLineTopY();
     const botY = stave.getBottomLineBottomY();
