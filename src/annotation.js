@@ -64,6 +64,7 @@ export class Annotation extends Modifier {
   // Create a new `Annotation` with the string `text`.
   constructor(text) {
     super();
+    this.attrs.type = 'Annotation';
 
     this.note = null;
     this.index = null;
@@ -105,9 +106,8 @@ export class Annotation extends Modifier {
 
   // Render text beside the note.
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw text annotation without a context.");
-    }
+    this.checkContext();
+
     if (!this.note) {
       throw new Vex.RERR(
         'NoNoteForAnnotation', "Can't draw text annotation without an attached note."

@@ -397,6 +397,8 @@ export class Accidental extends Modifier {
   // example: `#`, `##`, `b`, `n`, etc.
   constructor(type = null) {
     super();
+    this.attrs.type = 'Accidental';
+
     L('New accidental: ', type);
 
     this.note = null;
@@ -473,9 +475,7 @@ export class Accidental extends Modifier {
       render_options: { font_scale },
     } = this;
 
-    if (!context) {
-      throw new Vex.RERR('NoContext', "Can't draw accidental without a context.");
-    }
+    this.checkContext();
 
     if (!(note && (index != null))) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");

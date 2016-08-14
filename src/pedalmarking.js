@@ -9,6 +9,7 @@
 // custom text for the release/depress pedal markings.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
@@ -23,8 +24,7 @@ function drawPedalGlyph(name, context, x, y, point) {
   glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
 }
 
-export class PedalMarking {
-
+export class PedalMarking extends Element {
   // Glyph data
   static get GLYPHS() {
     return {
@@ -74,6 +74,9 @@ export class PedalMarking {
 
   // ## Prototype Methods
   constructor(notes) {
+    super();
+    this.attrs.type = 'PedalMarking';
+
     this.notes = notes;
     this.style = PedalMarking.TEXT;
     this.line = 0;
@@ -117,9 +120,6 @@ export class PedalMarking {
 
   // Set the staff line to render the markings on
   setLine(line) { this.line = line; return this; }
-
-  // Set the rendering context
-  setContext(context) { this.context = context; return this; }
 
   // Draw the bracket based pedal markings
   drawBracketed() {
@@ -233,11 +233,7 @@ export class PedalMarking {
 
   // Render the pedal marking in position on the rendering context
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw PedalMarking without a context.");
-    }
-
-    const ctx = this.context;
+    const ctx = this.checkContext();
 
     ctx.save();
     ctx.setStrokeStyle(this.render_options.color);

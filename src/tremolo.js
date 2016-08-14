@@ -11,6 +11,7 @@ export class Tremolo extends Modifier {
   static get CATEGORY() { return 'tremolo'; }
   constructor(num) {
     super();
+    this.setAttribute('type', 'Tremolo');
 
     this.num = num;
     this.note = null;
@@ -36,9 +37,7 @@ export class Tremolo extends Modifier {
   getCategory() { return Tremolo.CATEGORY; }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw Tremolo without a context.");
-    }
+    this.checkContext();
 
     if (!(this.note && this.index != null)) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");

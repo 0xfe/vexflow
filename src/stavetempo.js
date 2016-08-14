@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
 
-import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { StaveModifier } from './stavemodifier';
@@ -12,6 +11,7 @@ export class StaveTempo extends StaveModifier {
 
   constructor(tempo, x, shift_y) {
     super();
+    this.setAttribute('type', 'StaveTempo');
 
     this.tempo = tempo;
     this.position = Modifier.Position.ABOVE;
@@ -33,9 +33,7 @@ export class StaveTempo extends StaveModifier {
   setShiftY(y) { this.shift_y = y; return this; }
 
   draw(stave, shift_x) {
-    if (!stave.context) {
-      throw new Vex.RERR('NoContext', "Can't draw stave tempo without a context.");
-    }
+    const ctx = stave.checkContext();
 
     const options = this.render_options;
     // FIXME: What does the '38' mean? Why 38? Is that supposed to
@@ -46,7 +44,6 @@ export class StaveTempo extends StaveModifier {
     const dots = this.tempo.dots;
     const bpm = this.tempo.bpm;
     const font = this.font;
-    const ctx = stave.context;
     let x = this.x + this.shift_x + shift_x;
     const y = stave.getYForTopText(1) + this.shift_y;
 

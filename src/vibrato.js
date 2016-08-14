@@ -43,6 +43,7 @@ export class Vibrato extends Modifier {
   // ## Prototype Methods
   constructor() {
     super();
+    this.setAttribute('type', 'Vibrato');
 
     this.harsh = false;
     this.position = Modifier.Position.RIGHT;
@@ -64,17 +65,13 @@ export class Vibrato extends Modifier {
   }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw vibrato without a context.");
-    }
+    const ctx = this.checkContext();
 
     if (!this.note) {
       throw new Vex.RERR('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
     }
 
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
-
-    const ctx = this.context;
     const vibrato_width = this.vibrato_width;
 
     const renderVibrato = (x, y) => {

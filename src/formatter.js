@@ -132,6 +132,18 @@ function createContexts(voices, ContextType, addToContext) {
 }
 
 export class Formatter {
+  // Helper function to layout "notes" one after the other without
+  // regard for proportions. Useful for tests and debugging.
+  static SimpleFormat(notes, x = 0) {
+    notes.reduce((x, note) => {
+      note.addToModifierContext(new ModifierContext());
+      const tick = new TickContext().addTickable(note).preFormat();
+      const extra = tick.getExtraPx();
+      tick.setX(x + extra.left);
+
+      return x + tick.getWidth() + extra.right + 10;
+    }, x);
+  }
 
   // Helper function to format and draw a single voice. Returns a bounding
   // box for the notation.

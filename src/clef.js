@@ -143,6 +143,7 @@ export class Clef extends StaveModifier {
   // `Clef.types`.
   constructor(type, size, annotation) {
     super();
+    this.attrs.type = 'Clef';
 
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setType(type, size, annotation);

@@ -76,6 +76,7 @@ export class GraceNoteGroup extends Modifier {
   // `ModifierContext`.
   constructor(grace_notes, show_slur) {
     super();
+    this.attrs.type = 'GraceNoteGroup';
 
     this.note = null;
     this.index = null;
@@ -137,10 +138,7 @@ export class GraceNoteGroup extends Modifier {
     return this.width;
   }
   draw() {
-    if (!this.context)  {
-      throw new Vex.RuntimeError('NoContext',
-        "Can't draw Grace note without a context.");
-    }
+    this.checkContext();
 
     const note = this.getNote();
 

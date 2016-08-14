@@ -6,10 +6,11 @@
 // object to group `Tickables` for formatting.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 
-export class Voice {
+export class Voice extends Element {
   // Modes allow the addition of ticks in three different ways:
   //
   // STRICT: This is the default. Ticks must fill the voice.
@@ -25,6 +26,8 @@ export class Voice {
   }
 
   constructor(time) {
+    super();
+    this.setAttribute('type', 'Voice');
     this.time = Vex.Merge({
       num_beats: 4,
       beat_value: 4,

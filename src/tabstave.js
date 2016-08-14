@@ -13,6 +13,7 @@ export class TabStave extends Stave {
 
     Vex.Merge(tab_options, options);
     super(x, y, width, tab_options);
+    this.setAttribute('type', 'TabStave');
   }
 
   getYForGlyphs() {

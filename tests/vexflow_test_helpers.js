@@ -13,7 +13,8 @@ if (!window.QUnit) {
   QUnit.assertions = {
     ok: function() {return true;},
     equal: function() {return true;},
-    expect: function() {return true;}
+    expect: function() {return true;},
+    throws: function() {return true;}
   };
 
   QUnit.module = function(name) {
@@ -30,6 +31,7 @@ if (!window.QUnit) {
   ok = QUnit.assertions.ok;
   equal = QUnit.assertions.equal;
   expect = QUnit.assertions.expect;
+  throws = QUnit.assertions.throws;
 }
 
 if (typeof require == "function") {
@@ -105,12 +107,29 @@ VF.Test = (function() {
       $("#" + sel).attr("height", height);
     },
 
+    makeFactory: function(options, width, height) {
+      return new VF.Factory({
+        renderer: {
+            el: options.canvas_sel,
+            backend: options.backend,
+            width: width,
+            height: height
+        }
+      })
+    },
+
     runCanvasTest: function(name, func, params) {
       QUnit.test(name, (assert) => {
         // console.log("Running test (Canvas):", assert.test.module.name, "--", name);
-          var canvas_sel = "canvas_" + VF.Test.genID();
-          var test_canvas = VF.Test.createTestCanvas(canvas_sel, assert.test.module.name + " (Canvas): " + name);
-          func({ canvas_sel, params, assert }, VF.Renderer.getCanvasContext);
+          var test_canvas_sel = "canvas_" + VF.Test.genID();
+          var test_canvas = VF.Test.createTestCanvas(test_canvas_sel,
+            assert.test.module.name + " (Canvas): " + name);
+          func({
+            canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.CANVAS,
+            params: params,
+            assert: assert },
+            VF.Renderer.getCanvasContext);
         });
     },
 
@@ -122,6 +141,7 @@ VF.Test = (function() {
             assert.test.module.name + " (Raphael): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.RAPHAEL,
             params: params,
             assert: assert },
             VF.Renderer.getRaphaelContext);
@@ -136,6 +156,7 @@ VF.Test = (function() {
             assert.test.module.name + " (SVG): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.SVG,
             params: params,
             assert: assert },
             VF.Renderer.getSVGContext);
@@ -157,6 +178,7 @@ VF.Test = (function() {
 
         func({
           canvas_sel: div,
+          backend: VF.Renderer.Backends.SVG,
           params: params,
           assert: assert },
           VF.Renderer.getSVGContext);

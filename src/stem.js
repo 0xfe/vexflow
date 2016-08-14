@@ -5,12 +5,13 @@
 // by its parent `StemmableNote`.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Flow } from './tables';
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
 function L(...args) { if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args); }
 
-export class Stem {
+export class Stem extends Element {
   static get CATEGORY() { return 'stem'; }
 
   // Stem directions
@@ -30,6 +31,9 @@ export class Stem {
   }
 
   constructor(options = {}) {
+    super();
+    this.setAttribute('type', 'Stem');
+
     // Default notehead x bounds
     this.x_begin = options.x_begin || 0;
     this.x_end = options.x_end || 0;
@@ -77,9 +81,6 @@ export class Stem {
 
   // The category of the object
   getCategory() { return Stem.CATEGORY; }
-
-  // Set the canvas context to render on
-  setContext(context) { this.context = context; return this; }
 
   // Gets the entire height for the stem
   getHeight() {
@@ -156,13 +157,8 @@ export class Stem {
 
   // Render the stem onto the canvas
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
-
     if (this.hide) return;
-
-    const ctx = this.context;
+    const ctx = this.checkContext();
     let stem_x;
     let stem_y;
     const stem_direction = this.stem_direction;

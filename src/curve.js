@@ -4,9 +4,9 @@
 // This class implements curves (for slurs)
 
 import { Vex } from './vex';
+import { Element } from './element';
 
-export class Curve {
-
+export class Curve extends Element {
   static get Position() {
     return {
       NEAR_HEAD: 1,
@@ -21,6 +21,9 @@ export class Curve {
   //    x_shift: pixels to shift
   //    y_shift: pixels to shift
   constructor(from, to, options) {
+    super();
+    this.attrs.type = 'Curve';
+
     this.render_options = {
       spacing: 2,
       thickness: 2,
@@ -35,7 +38,6 @@ export class Curve {
     this.setNotes(from, to);
   }
 
-  setContext(context) { this.context = context; return this; }
   setNotes(from, to) {
     if (!from && !to) {
       throw new Vex.RuntimeError(
@@ -94,9 +96,7 @@ export class Curve {
   }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', 'No context to render tie.');
-    }
+    this.checkContext();
 
     const first_note = this.from;
     const last_note = this.to;

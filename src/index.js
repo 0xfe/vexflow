@@ -2,6 +2,7 @@
 
 import { Vex } from './vex';
 import { Flow } from './tables';
+import { Element } from './element';
 import { Fraction } from './fraction';
 import { Renderer } from './renderer';
 import { Formatter } from './formatter';
@@ -61,8 +62,10 @@ import { StringNumber } from './stringnumber';
 import { Crescendo } from './crescendo';
 import { Volta } from './stavevolta';
 import { Font } from './fonts/vexflow_font';
+import { Factory } from './factory';
 
 Vex.Flow = Flow;
+Vex.Flow.Element = Element;
 Vex.Flow.Fraction = Fraction;
 Vex.Flow.Renderer = Renderer;
 Vex.Flow.Formatter = Formatter;
@@ -122,5 +125,6 @@ Vex.Flow.StringNumber = StringNumber;
 Vex.Flow.Crescendo = Crescendo;
 Vex.Flow.Volta = Volta;
 Vex.Flow.Font = Font;
+Vex.Flow.Factory = Factory;
 
 export default Vex;

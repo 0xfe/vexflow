@@ -36,6 +36,8 @@ export class TabSlide extends TabTie {
      *
      **/
     super(notes, 'sl.');
+    this.setAttribute('type', 'TabSlide');
+
     if (!direction) {
       const first_fret = notes.first_note.getPositions()[0].fret;
       const last_fret = notes.last_note.getPositions()[0].fret;

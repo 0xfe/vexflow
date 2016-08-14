@@ -15,6 +15,7 @@ export class ClefNote extends Note {
 
   constructor(type, size, annotation) {
     super({ duration: 'b' });
+    this.attrs.type = 'ClefNote';
 
     this.setType(type, size, annotation);
 
@@ -63,6 +64,7 @@ export class ClefNote extends Note {
     if (!this.glyph.getContext()) {
       this.glyph.setContext(this.context);
     }
+
     const abs_x = this.getAbsoluteX();
 
     this.glyph.setStave(this.stave);

@@ -19,6 +19,7 @@ function L(...args) { if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args); }
 export class BarNote extends Note {
   constructor(type) {
     super({ duration: 'b' });
+    this.attrs.type = 'BarNote';
 
     const TYPE = Barline.type;
     this.metrics = {
@@ -67,6 +68,7 @@ export class BarNote extends Note {
 
   // Render note to stave.
   draw() {
+    this.checkContext();
     if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
     L('Rendering bar line at: ', this.getAbsoluteX());
     const barline = new Barline(this.type);

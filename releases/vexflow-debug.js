@@ -64,126 +64,131 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
+	var _base = __webpack_require__(8);
+	
 	var _fraction = __webpack_require__(3);
 	
-	var _renderer = __webpack_require__(8);
+	var _renderer = __webpack_require__(9);
 	
-	var _formatter = __webpack_require__(12);
+	var _formatter = __webpack_require__(13);
 	
-	var _music = __webpack_require__(28);
+	var _music = __webpack_require__(29);
 	
 	var _glyph = __webpack_require__(4);
 	
-	var _stave = __webpack_require__(41);
+	var _stave = __webpack_require__(42);
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
-	var _voice = __webpack_require__(13);
+	var _voice = __webpack_require__(14);
 	
-	var _accidental = __webpack_require__(27);
+	var _accidental = __webpack_require__(28);
 	
-	var _beam = __webpack_require__(14);
+	var _beam = __webpack_require__(15);
 	
-	var _stavetie = __webpack_require__(31);
+	var _stavetie = __webpack_require__(32);
 	
-	var _tabstave = __webpack_require__(53);
+	var _tabstave = __webpack_require__(54);
 	
-	var _tabnote = __webpack_require__(54);
+	var _tabnote = __webpack_require__(55);
 	
-	var _bend = __webpack_require__(39);
+	var _bend = __webpack_require__(40);
 	
-	var _vibrato = __webpack_require__(40);
+	var _vibrato = __webpack_require__(41);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
-	var _modifiercontext = __webpack_require__(25);
+	var _modifiercontext = __webpack_require__(26);
 	
-	var _tickcontext = __webpack_require__(37);
+	var _tickcontext = __webpack_require__(38);
 	
-	var _articulation = __webpack_require__(35);
+	var _articulation = __webpack_require__(36);
 	
-	var _annotation = __webpack_require__(38);
+	var _annotation = __webpack_require__(39);
 	
-	var _stavebarline = __webpack_require__(42);
+	var _stavebarline = __webpack_require__(43);
 	
-	var _notehead = __webpack_require__(19);
+	var _notehead = __webpack_require__(20);
 	
-	var _staveconnector = __webpack_require__(17);
+	var _staveconnector = __webpack_require__(18);
 	
-	var _clefnote = __webpack_require__(55);
+	var _clefnote = __webpack_require__(56);
 	
-	var _keysignature = __webpack_require__(50);
+	var _keysignature = __webpack_require__(51);
 	
-	var _timesignature = __webpack_require__(51);
+	var _timesignature = __webpack_require__(52);
 	
-	var _timesignote = __webpack_require__(56);
+	var _timesignote = __webpack_require__(57);
 	
-	var _stem = __webpack_require__(16);
+	var _stem = __webpack_require__(17);
 	
-	var _tabtie = __webpack_require__(32);
+	var _tabtie = __webpack_require__(33);
 	
-	var _clef = __webpack_require__(49);
+	var _clef = __webpack_require__(50);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _tabslide = __webpack_require__(57);
+	var _tabslide = __webpack_require__(58);
 	
-	var _tuplet = __webpack_require__(15);
+	var _tuplet = __webpack_require__(16);
 	
-	var _gracenote = __webpack_require__(58);
+	var _gracenote = __webpack_require__(59);
 	
-	var _gracetabnote = __webpack_require__(59);
+	var _gracetabnote = __webpack_require__(60);
 	
-	var _tuning = __webpack_require__(60);
+	var _tuning = __webpack_require__(61);
 	
-	var _keymanager = __webpack_require__(61);
+	var _keymanager = __webpack_require__(62);
 	
-	var _stavehairpin = __webpack_require__(62);
+	var _stavehairpin = __webpack_require__(63);
 	
 	var _boundingbox = __webpack_require__(6);
 	
-	var _strokes = __webpack_require__(33);
+	var _strokes = __webpack_require__(34);
 	
-	var _textnote = __webpack_require__(48);
+	var _textnote = __webpack_require__(49);
 	
-	var _curve = __webpack_require__(63);
+	var _curve = __webpack_require__(64);
 	
-	var _textdynamics = __webpack_require__(64);
+	var _textdynamics = __webpack_require__(65);
 	
-	var _staveline = __webpack_require__(65);
+	var _staveline = __webpack_require__(66);
 	
-	var _ornament = __webpack_require__(36);
+	var _ornament = __webpack_require__(37);
 	
-	var _pedalmarking = __webpack_require__(66);
+	var _pedalmarking = __webpack_require__(67);
 	
-	var _textbracket = __webpack_require__(67);
+	var _textbracket = __webpack_require__(68);
 	
-	var _frethandfinger = __webpack_require__(26);
+	var _frethandfinger = __webpack_require__(27);
 	
-	var _staverepetition = __webpack_require__(44);
+	var _staverepetition = __webpack_require__(45);
 	
-	var _barnote = __webpack_require__(68);
+	var _barnote = __webpack_require__(69);
 	
-	var _ghostnote = __webpack_require__(69);
+	var _ghostnote = __webpack_require__(70);
 	
-	var _notesubgroup = __webpack_require__(29);
+	var _notesubgroup = __webpack_require__(30);
 	
-	var _gracenotegroup = __webpack_require__(30);
+	var _gracenotegroup = __webpack_require__(31);
 	
-	var _tremolo = __webpack_require__(70);
+	var _tremolo = __webpack_require__(71);
 	
-	var _stringnumber = __webpack_require__(34);
+	var _stringnumber = __webpack_require__(35);
 	
-	var _crescendo = __webpack_require__(71);
+	var _crescendo = __webpack_require__(72);
 	
-	var _stavevolta = __webpack_require__(52);
+	var _stavevolta = __webpack_require__(53);
 	
 	var _vexflow_font = __webpack_require__(7);
 	
+	var _factory = __webpack_require__(73);
+	
 	_vex.Vex.Flow = _tables.Flow; // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 	
+	_vex.Vex.Flow.Base = _base.Base;
 	_vex.Vex.Flow.Fraction = _fraction.Fraction;
 	_vex.Vex.Flow.Renderer = _renderer.Renderer;
 	_vex.Vex.Flow.Formatter = _formatter.Formatter;
@@ -243,6 +248,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	_vex.Vex.Flow.Crescendo = _crescendo.Crescendo;
 	_vex.Vex.Flow.Volta = _stavevolta.Volta;
 	_vex.Vex.Flow.Font = _vexflow_font.Font;
+	_vex.Vex.Flow.Factory = _factory.Factory;
 	
 	exports.default = _vex.Vex;
 	module.exports = exports['default'];
@@ -2601,6 +2607,86 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.Base = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	// @author Mohit Cheppudira
+	//
+	// ## Description
+	//
+	// This file implements a generic base class for VexFlow, with implementations
+	// of general functions and properties that can be inherited by all VexFlow classes.
+	
+	var _vex = __webpack_require__(1);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Base = exports.Base = function () {
+	  function Base() {
+	    _classCallCheck(this, Base);
+	
+	    this.attrs = {
+	      id: '',
+	      staveSpace: 10,
+	      type: 'Base'
+	    };
+	    this.context = null;
+	  }
+	
+	  _createClass(Base, [{
+	    key: 'getAttrs',
+	    value: function getAttrs() {
+	      return this.attrs;
+	    }
+	  }, {
+	    key: 'getAttr',
+	    value: function getAttr(key) {
+	      return this.attrs[key];
+	    }
+	  }, {
+	    key: 'setAttr',
+	    value: function setAttr(key, val) {
+	      this.attrs[key] = val;return this;
+	    }
+	  }, {
+	    key: 'getContext',
+	    value: function getContext() {
+	      return this.context;
+	    }
+	  }, {
+	    key: 'setContext',
+	    value: function setContext(context) {
+	      this.context = context;return this;
+	    }
+	  }, {
+	    key: 'space',
+	    value: function space(spacing) {
+	      return this.attrs.staveSpace * spacing;
+	    }
+	
+	    // Validators
+	
+	  }, {
+	    key: 'checkContext',
+	    value: function checkContext() {
+	      if (!this.context) {
+	        throw new _vex.Vex.RERR('NoContext', 'No rendering context attached to instance');
+	      }
+	    }
+	  }]);
+
+	  return Base;
+	}();
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.Renderer = undefined;
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
@@ -2610,11 +2696,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/* global document: false */
 	
-	var _canvascontext = __webpack_require__(9);
+	var _canvascontext = __webpack_require__(10);
 	
-	var _raphaelcontext = __webpack_require__(10);
+	var _raphaelcontext = __webpack_require__(11);
 	
-	var _svgcontext = __webpack_require__(11);
+	var _svgcontext = __webpack_require__(12);
 	
 	var _vex = __webpack_require__(1);
 	
@@ -2804,7 +2890,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3047,7 +3133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3483,7 +3569,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4195,7 +4281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4232,17 +4318,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _fraction = __webpack_require__(3);
 	
-	var _voice = __webpack_require__(13);
+	var _voice = __webpack_require__(14);
 	
-	var _beam = __webpack_require__(14);
+	var _beam = __webpack_require__(15);
 	
-	var _staveconnector = __webpack_require__(17);
+	var _staveconnector = __webpack_require__(18);
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
-	var _modifiercontext = __webpack_require__(25);
+	var _modifiercontext = __webpack_require__(26);
 	
-	var _tickcontext = __webpack_require__(37);
+	var _tickcontext = __webpack_require__(38);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -4355,8 +4441,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Formatter = exports.Formatter = function () {
 	  _createClass(Formatter, null, [{
-	    key: 'FormatAndDraw',
+	    key: 'SimpleFormat',
 	
+	    // Helper function to layout "notes" one after the other without
+	    // regard for proportions. Useful for tests and debugging.
+	    value: function SimpleFormat(notes) {
+	      var x = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+	
+	      notes.reduce(function (x, note) {
+	        note.addToModifierContext(new _modifiercontext.ModifierContext());
+	        var tick = new _tickcontext.TickContext().addTickable(note).preFormat();
+	        var extra = tick.getExtraPx();
+	        tick.setX(x + extra.left);
+	
+	        return x + tick.getWidth() + extra.right + 10;
+	      }, x);
+	    }
 	
 	    // Helper function to format and draw a single voice. Returns a bounding
 	    // box for the notation.
@@ -4374,6 +4474,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //
 	    // `autobeam` automatically generates beams for the notes.
 	    // `align_rests` aligns rests with nearby notes.
+	
+	  }, {
+	    key: 'FormatAndDraw',
 	    value: function FormatAndDraw(ctx, stave, notes, params) {
 	      var options = {
 	        auto_beam: false,
@@ -4838,7 +4941,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5162,7 +5265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5184,9 +5287,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _fraction = __webpack_require__(3);
 	
-	var _tuplet = __webpack_require__(15);
+	var _tuplet = __webpack_require__(16);
 	
-	var _stem = __webpack_require__(16);
+	var _stem = __webpack_require__(17);
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
@@ -6086,7 +6189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6144,11 +6247,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _formatter = __webpack_require__(12);
+	var _formatter = __webpack_require__(13);
 	
 	var _glyph = __webpack_require__(4);
 	
-	var _stem = __webpack_require__(16);
+	var _stem = __webpack_require__(17);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -6489,7 +6592,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6759,7 +6862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6998,7 +7101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7018,15 +7121,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _boundingbox = __webpack_require__(6);
 	
-	var _stem = __webpack_require__(16);
+	var _stem = __webpack_require__(17);
 	
-	var _notehead = __webpack_require__(19);
+	var _notehead = __webpack_require__(20);
 	
-	var _stemmablenote = __webpack_require__(22);
+	var _stemmablenote = __webpack_require__(23);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _dot = __webpack_require__(24);
+	var _dot = __webpack_require__(25);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -8232,7 +8335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stemmablenote.StemmableNote);
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8250,11 +8353,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
-	var _stem = __webpack_require__(16);
+	var _stem = __webpack_require__(17);
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -8597,7 +8700,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8615,7 +8718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _tickable = __webpack_require__(21);
+	var _tickable = __webpack_require__(22);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -9162,7 +9265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_tickable.Tickable);
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9442,7 +9545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9458,11 +9561,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _stem = __webpack_require__(16);
+	var _stem = __webpack_require__(17);
 	
 	var _glyph = __webpack_require__(4);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -9730,7 +9833,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9960,7 +10063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9974,7 +10077,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -10157,7 +10260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10176,31 +10279,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
-	var _dot = __webpack_require__(24);
+	var _dot = __webpack_require__(25);
 	
-	var _frethandfinger = __webpack_require__(26);
+	var _frethandfinger = __webpack_require__(27);
 	
-	var _accidental = __webpack_require__(27);
+	var _accidental = __webpack_require__(28);
 	
-	var _notesubgroup = __webpack_require__(29);
+	var _notesubgroup = __webpack_require__(30);
 	
-	var _gracenotegroup = __webpack_require__(30);
+	var _gracenotegroup = __webpack_require__(31);
 	
-	var _strokes = __webpack_require__(33);
+	var _strokes = __webpack_require__(34);
 	
-	var _stringnumber = __webpack_require__(34);
+	var _stringnumber = __webpack_require__(35);
 	
-	var _articulation = __webpack_require__(35);
+	var _articulation = __webpack_require__(36);
 	
-	var _ornament = __webpack_require__(36);
+	var _ornament = __webpack_require__(37);
 	
-	var _annotation = __webpack_require__(38);
+	var _annotation = __webpack_require__(39);
 	
-	var _bend = __webpack_require__(39);
+	var _bend = __webpack_require__(40);
 	
-	var _vibrato = __webpack_require__(40);
+	var _vibrato = __webpack_require__(41);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -10321,7 +10424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10335,7 +10438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -10574,7 +10677,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10594,9 +10697,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _music = __webpack_require__(28);
+	var _music = __webpack_require__(29);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -11185,7 +11288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11611,7 +11714,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11627,11 +11730,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _formatter = __webpack_require__(12);
+	var _formatter = __webpack_require__(13);
 	
-	var _voice = __webpack_require__(13);
+	var _voice = __webpack_require__(14);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -11774,7 +11877,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11790,19 +11893,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _formatter = __webpack_require__(12);
+	var _formatter = __webpack_require__(13);
 	
-	var _voice = __webpack_require__(13);
+	var _voice = __webpack_require__(14);
 	
-	var _beam = __webpack_require__(14);
+	var _beam = __webpack_require__(15);
 	
-	var _stavetie = __webpack_require__(31);
+	var _stavetie = __webpack_require__(32);
 	
-	var _tabtie = __webpack_require__(32);
+	var _tabtie = __webpack_require__(33);
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -12037,7 +12140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12251,7 +12354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12265,7 +12368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavetie = __webpack_require__(31);
+	var _stavetie = __webpack_require__(32);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -12365,7 +12468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavetie.StaveTie);
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12379,9 +12482,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -12636,7 +12739,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12650,11 +12753,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _renderer = __webpack_require__(8);
+	var _renderer = __webpack_require__(9);
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -12971,7 +13074,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12987,11 +13090,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
 	var _glyph = __webpack_require__(4);
 	
-	var _stem = __webpack_require__(16);
+	var _stem = __webpack_require__(17);
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
@@ -13329,7 +13432,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13345,11 +13448,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _tickcontext = __webpack_require__(37);
+	var _tickcontext = __webpack_require__(38);
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -13692,7 +13795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13927,7 +14030,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13943,7 +14046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -14174,7 +14277,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14190,7 +14293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -14484,7 +14587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14498,9 +14601,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _bend = __webpack_require__(39);
+	var _bend = __webpack_require__(40);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -14666,7 +14769,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14676,56 +14779,67 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.Stave = undefined;
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _vex = __webpack_require__(1);
 	
+	var _base = __webpack_require__(8);
+	
 	var _tables = __webpack_require__(2);
 	
-	var _stavebarline = __webpack_require__(42);
+	var _stavebarline = __webpack_require__(43);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
-	var _staverepetition = __webpack_require__(44);
+	var _staverepetition = __webpack_require__(45);
 	
-	var _stavesection = __webpack_require__(45);
+	var _stavesection = __webpack_require__(46);
 	
-	var _stavetempo = __webpack_require__(46);
+	var _stavetempo = __webpack_require__(47);
 	
-	var _stavetext = __webpack_require__(47);
+	var _stavetext = __webpack_require__(48);
 	
 	var _boundingbox = __webpack_require__(6);
 	
-	var _clef = __webpack_require__(49);
+	var _clef = __webpack_require__(50);
 	
-	var _keysignature = __webpack_require__(50);
+	var _keysignature = __webpack_require__(51);
 	
-	var _timesignature = __webpack_require__(51);
+	var _timesignature = __webpack_require__(52);
 	
-	var _stavevolta = __webpack_require__(52);
+	var _stavevolta = __webpack_require__(53);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Stave = exports.Stave = function () {
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	
+	var Stave = exports.Stave = function (_Base) {
+	  _inherits(Stave, _Base);
+	
 	  function Stave(x, y, width, options) {
 	    _classCallCheck(this, Stave);
 	
-	    this.x = x;
-	    this.y = y;
-	    this.width = width;
-	    this.formatted = false;
-	    this.start_x = x + 5;
-	    this.end_x = x + width;
-	    this.context = null;
-	    this.modifiers = []; // stave modifiers (clef, key, time, barlines, coda, segno, etc.)
-	    this.measure = 0;
-	    this.clef = 'treble';
-	    this.font = {
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Stave).call(this));
+	
+	    _this.attrs.type = 'Stave';
+	
+	    _this.x = x;
+	    _this.y = y;
+	    _this.width = width;
+	    _this.formatted = false;
+	    _this.start_x = x + 5;
+	    _this.end_x = x + width;
+	    _this.modifiers = []; // stave modifiers (clef, key, time, barlines, coda, segno, etc.)
+	    _this.measure = 0;
+	    _this.clef = 'treble';
+	    _this.font = {
 	      family: 'sans-serif',
 	      size: 8,
 	      weight: ''
 	    };
-	    this.options = {
+	    _this.options = {
 	      vertical_bar_width: 10, // Width around vertical bar end-marker
 	      glyph_spacing_px: 10,
 	      num_lines: 5,
@@ -14736,16 +14850,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      space_above_staff_ln: 4, // in staff lines
 	      space_below_staff_ln: 4, // in staff lines
 	      top_text_position: 1 };
-	    this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
-	    _vex.Vex.Merge(this.options, options);
+	    _this.bounds = { x: _this.x, y: _this.y, w: _this.width, h: 0 };
+	    _vex.Vex.Merge(_this.options, options);
 	
-	    this.resetLines();
+	    _this.resetLines();
 	
 	    var BARTYPE = _stavebarline.Barline.type;
 	    // beg bar
-	    this.addModifier(new _stavebarline.Barline(this.options.left_bar ? BARTYPE.SINGLE : BARTYPE.NONE));
+	    _this.addModifier(new _stavebarline.Barline(_this.options.left_bar ? BARTYPE.SINGLE : BARTYPE.NONE));
 	    // end bar
-	    this.addEndModifier(new _stavebarline.Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE));
+	    _this.addEndModifier(new _stavebarline.Barline(_this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE));
+	    return _this;
 	  }
 	
 	  _createClass(Stave, [{
@@ -14794,16 +14909,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'getTieEndX',
 	    value: function getTieEndX() {
 	      return this.x + this.width;
-	    }
-	  }, {
-	    key: 'setContext',
-	    value: function setContext(context) {
-	      this.context = context;return this;
-	    }
-	  }, {
-	    key: 'getContext',
-	    value: function getContext() {
-	      return this.context;
 	    }
 	  }, {
 	    key: 'getX',
@@ -15286,9 +15391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
-	      if (!this.context) {
-	        throw new _vex.Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-	      }
+	      this.checkContext();
 	
 	      if (!this.formatted) this.format();
 	
@@ -15346,9 +15449,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'drawVerticalFixed',
 	    value: function drawVerticalFixed(x, isDouble) {
-	      if (!this.context) {
-	        throw new _vex.Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-	      }
+	      this.checkContext();
 	
 	      var top_line = this.getYForLine(0);
 	      var bottom_line = this.getYForLine(this.options.num_lines - 1);
@@ -15365,9 +15466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'drawVerticalBarFixed',
 	    value: function drawVerticalBarFixed(x) {
-	      if (!this.context) {
-	        throw new _vex.Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-	      }
+	      this.checkContext();
 	
 	      var top_line = this.getYForLine(0);
 	      var bottom_line = this.getYForLine(this.options.num_lines - 1);
@@ -15447,10 +15546,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return Stave;
-	}();
+	}(_base.Base);
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15466,7 +15565,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -15667,7 +15766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15787,7 +15886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15801,7 +15900,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -15975,7 +16074,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15989,7 +16088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -16080,7 +16179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16096,9 +16195,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -16240,7 +16339,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16254,9 +16353,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
-	var _textnote = __webpack_require__(48);
+	var _textnote = __webpack_require__(49);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -16385,7 +16484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16401,7 +16500,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -16707,7 +16806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16721,7 +16820,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -17017,7 +17116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17033,7 +17132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -17382,7 +17481,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17400,7 +17499,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _glyph3 = __webpack_require__(4);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -17607,7 +17706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17621,7 +17720,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stavemodifier = __webpack_require__(43);
+	var _stavemodifier = __webpack_require__(44);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -17722,7 +17821,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavemodifier.StaveModifier);
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17736,7 +17835,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stave = __webpack_require__(41);
+	var _stave = __webpack_require__(42);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -17780,7 +17879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stave.Stave);
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17798,13 +17897,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
-	var _stem = __webpack_require__(16);
+	var _stem = __webpack_require__(17);
 	
-	var _stemmablenote = __webpack_require__(22);
+	var _stemmablenote = __webpack_require__(23);
 	
-	var _dot = __webpack_require__(24);
+	var _dot = __webpack_require__(25);
 	
 	var _glyph2 = __webpack_require__(4);
 	
@@ -18398,7 +18497,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stemmablenote.StemmableNote);
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18414,9 +18513,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _boundingbox = __webpack_require__(6);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
-	var _clef = __webpack_require__(49);
+	var _clef = __webpack_require__(50);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -18528,7 +18627,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18544,9 +18643,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _boundingbox = __webpack_require__(6);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
-	var _timesignature = __webpack_require__(51);
+	var _timesignature = __webpack_require__(52);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -18608,7 +18707,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18622,7 +18721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _tabtie = __webpack_require__(32);
+	var _tabtie = __webpack_require__(33);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -18730,7 +18829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_tabtie.TabTie);
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18746,7 +18845,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _stavenote = __webpack_require__(18);
+	var _stavenote = __webpack_require__(19);
 	
 	var _tables = __webpack_require__(2);
 	
@@ -18846,7 +18945,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavenote.StaveNote);
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18862,7 +18961,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _tabnote = __webpack_require__(54);
+	var _tabnote = __webpack_require__(55);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -18922,7 +19021,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_tabnote.TabNote);
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19030,7 +19129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19048,7 +19147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _music = __webpack_require__(28);
+	var _music = __webpack_require__(29);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -19188,7 +19287,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19208,7 +19307,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -19403,7 +19502,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19573,7 +19672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19587,7 +19686,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -19738,7 +19837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20133,7 +20232,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20457,7 +20556,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20480,7 +20579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _renderer = __webpack_require__(8);
+	var _renderer = __webpack_require__(9);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -20678,7 +20777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20692,9 +20791,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
-	var _stavebarline = __webpack_require__(42);
+	var _stavebarline = __webpack_require__(43);
 	
 	var _boundingbox = __webpack_require__(6);
 	
@@ -20803,7 +20902,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20821,7 +20920,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _stemmablenote = __webpack_require__(22);
+	var _stemmablenote = __webpack_require__(23);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -20900,7 +20999,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stemmablenote.StemmableNote);
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20914,7 +21013,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _modifier = __webpack_require__(23);
+	var _modifier = __webpack_require__(24);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -20996,7 +21095,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21010,9 +21109,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _note = __webpack_require__(20);
+	var _note = __webpack_require__(21);
 	
-	var _tickcontext = __webpack_require__(37);
+	var _tickcontext = __webpack_require__(38);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -21153,6 +21252,212 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return Crescendo;
 	}(_note.Note);
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.Factory = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	// @author Mohit Cheppudira
+	//
+	// ## Description
+	//
+	// This file implements a high level API around VexFlow. It will eventually
+	// become the canonical way to use VexFlow.
+	//
+	// *This API is currently DRAFT*
+	
+	var _vex = __webpack_require__(1);
+	
+	var _accidental = __webpack_require__(28);
+	
+	var _modifiercontext = __webpack_require__(26);
+	
+	var _renderer = __webpack_require__(9);
+	
+	var _stave = __webpack_require__(42);
+	
+	var _stavenote = __webpack_require__(19);
+	
+	var _tickcontext = __webpack_require__(38);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	// To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
+	function L() {
+	  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	    args[_key] = arguments[_key];
+	  }
+	
+	  if (Factory.DEBUG) _vex.Vex.L('Vex.Flow.Factory', args);
+	}
+	
+	// Exceptions for this class.
+	function X(message, data) {
+	  this.name = 'FactoryException';
+	  this.message = message;
+	  this.data = data;
+	  L(this.name + ':', message, data);
+	}
+	
+	function setDefaults(params, defaults) {
+	  var default_options = defaults.options;
+	  params = _extends(defaults, params);
+	  params.options = _extends(default_options, params.options);
+	  return params;
+	}
+	
+	var Factory = exports.Factory = function () {
+	  function Factory(options) {
+	    _classCallCheck(this, Factory);
+	
+	    L('New factory: ', options);
+	    var defaults = {
+	      stave: {
+	        space: 10
+	      },
+	      renderer: {
+	        el: '',
+	        backend: _renderer.Renderer.Backends.SVG,
+	        width: 500,
+	        height: 200,
+	        background: '#FFF'
+	      },
+	      font: {
+	        face: 'Arial',
+	        point: 10,
+	        style: ''
+	      }
+	    };
+	
+	    this.options = defaults;
+	    this.setOptions(options);
+	    if (this.options.renderer.el !== null) this.initRenderer();
+	    this.renderQ = [];
+	    this.stave = null; // current stave
+	  }
+	
+	  _createClass(Factory, [{
+	    key: 'getOptions',
+	    value: function getOptions() {
+	      return this.options;
+	    }
+	  }, {
+	    key: 'setOptions',
+	    value: function setOptions(options) {
+	      var _arr = ['stave', 'renderer', 'font'];
+	
+	      for (var _i = 0; _i < _arr.length; _i++) {
+	        var key = _arr[_i];
+	        _extends(this.options[key], options[key]);
+	      }
+	    }
+	  }, {
+	    key: 'initRenderer',
+	    value: function initRenderer() {
+	      var _options$renderer = this.options.renderer;
+	      var el = _options$renderer.el;
+	      var backend = _options$renderer.backend;
+	      var width = _options$renderer.width;
+	      var height = _options$renderer.height;
+	      var background = _options$renderer.background;
+	
+	      if (el === '') {
+	        throw new X('HTML DOM element not set in Factory');
+	      }
+	
+	      this.ctx = _renderer.Renderer.buildContext(el, backend, width, height, background);
+	    }
+	  }, {
+	    key: 'getContext',
+	    value: function getContext() {
+	      return this.ctx;
+	    }
+	  }, {
+	    key: 'getStave',
+	    value: function getStave() {
+	      return this.stave;
+	    }
+	
+	    // Returns pixels from current stave spacing.
+	
+	  }, {
+	    key: 'space',
+	    value: function space(spacing) {
+	      return this.options.stave.space * spacing;
+	    }
+	  }, {
+	    key: 'Stave',
+	    value: function Stave(params) {
+	      params = setDefaults(params, {
+	        x: 0,
+	        y: 0,
+	        width: this.options.renderer.width - this.space(1),
+	        options: {
+	          spacing_between_lines_px: this.options.stave.space
+	        }
+	      });
+	
+	      var stave = new _stave.Stave(params.x, params.y, params.width, params.options);
+	      stave.setContext(this.ctx);
+	      this.renderQ.push(stave);
+	      this.stave = stave;
+	      return stave;
+	    }
+	  }, {
+	    key: 'StaveNote',
+	    value: function StaveNote(noteStruct) {
+	      var note = new _stavenote.StaveNote(noteStruct);
+	      note.setStave(this.stave);
+	      note.setContext(this.ctx);
+	      this.renderQ.push(note);
+	      return note;
+	    }
+	  }, {
+	    key: 'Accidental',
+	    value: function Accidental(params) {
+	      params = setDefaults(params, {
+	        type: null,
+	        options: {}
+	      });
+	
+	      var acc = new _accidental.Accidental(params.type);
+	      acc.setContext(this.ctx);
+	      // acc.render_options.stroke_px = this.space(0.3);
+	      return acc;
+	    }
+	  }, {
+	    key: 'TickContext',
+	    value: function TickContext() {
+	      return new _tickcontext.TickContext().setContext(this.ctx);
+	    }
+	  }, {
+	    key: 'ModifierContext',
+	    value: function ModifierContext() {
+	      return new _modifiercontext.ModifierContext();
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      var _this = this;
+	
+	      this.renderQ.forEach(function (i) {
+	        return i.setContext(_this.ctx).draw();
+	      });
+	    }
+	  }]);
+
+	  return Factory;
+	}();
 
 /***/ }
 /******/ ])

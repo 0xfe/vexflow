@@ -76,6 +76,7 @@ export class Bend extends Modifier {
   // ## Prototype Methods
   constructor(text, release, phrase) {
     super();
+    this.attrs.type = 'Bend';
 
     this.text = text;
     this.x_shift = 0;
@@ -140,9 +141,7 @@ export class Bend extends Modifier {
     return this;
   }
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw bend without a context.");
-    }
+    this.checkContext();
     if (!(this.note && (this.index != null))) {
       throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
     }

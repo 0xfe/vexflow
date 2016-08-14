@@ -70,6 +70,8 @@ export class NoteHead extends Note {
 
   constructor(head_options) {
     super(head_options);
+    this.attrs.type = 'NoteHead';
+
     this.index = head_options.index;
     this.x = head_options.x || 0;
     this.y = head_options.y || 0;
@@ -95,7 +97,6 @@ export class NoteHead extends Note {
       this.glyph_code = head_options.custom_glyph_code;
     }
 
-    this.context = null;
     this.style = head_options.style;
     this.slashed = head_options.slashed;
 
@@ -110,9 +111,6 @@ export class NoteHead extends Note {
   }
 
   getCategory() { return NoteHead.CATEGORY; }
-
-  // Set the Cavnas context for drawing
-  setContext(context) { this.context = context; return this; }
 
   // Get the width of the notehead
   getWidth() { return this.width; }
@@ -204,9 +202,7 @@ export class NoteHead extends Note {
 
   // Draw the notehead
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
+    this.checkContext();
 
     const ctx = this.context;
     const head_x = this.getAbsoluteX();

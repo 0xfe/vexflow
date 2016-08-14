@@ -29,6 +29,7 @@ export class GhostNote extends StemmableNote {
     }
 
     super(note_struct);
+    this.attrs.type = 'StemmableNote';
 
     // Note properties
     this.setWidth(0);
