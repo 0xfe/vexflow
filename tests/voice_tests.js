@@ -73,7 +73,9 @@ VF.Test.Voice = (function() {
       var stave = new VF.Stave(10, 50, 500)
         .addClef("treble")
         .addTimeSignature("4/4")
-        .setEndBarType(VF.Barline.type.END).setContext(ctx).draw();
+        .setEndBarType(VF.Barline.type.END)
+        .setContext(ctx)
+        .draw();
 
       var notes = [
         new VF.StaveNote({ keys: ["c/4"], duration: "q" }),
@@ -83,9 +85,13 @@ VF.Test.Voice = (function() {
 
       var voice = new VF.Voice(VF.Test.TIME4_4)
         .setMode(VF.Voice.Mode.FULL)
-        .addTickables(notes);
+        .addTickables(notes)
+        .setStave(stave);
 
-      new VF.Formatter().joinVoices([voice]).format([voice], 500);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], 500);
+
       voice.draw(ctx);
       voice.getBoundingBox().draw(ctx);
 
