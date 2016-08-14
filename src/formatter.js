@@ -424,12 +424,12 @@ export class Formatter {
       const width = context.getWidth();
       this.minTotalWidth += width;
 
-      const extra = context.getExtraPx();
-      x = x + shift + extra.left + extra.extraLeft;
+      const metrics = context.getMetrics();
+      x = x + shift + metrics.extraLeftPx;
       context.setX(x);
 
       // Calculate shift for the next tick.
-      shift = context.getWidth() - (extra.left + extra.extraLeft);
+      shift = context.getWidth() - metrics.extraLeftPx;
     });
 
     this.minTotalWidth = x + shift;
@@ -440,14 +440,18 @@ export class Formatter {
       // all notes.
       const remainingX = justifyWidth - this.minTotalWidth;
       const leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
+      // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
       let spaceAccum = 0;
 
       contextList.forEach((tick, index) => {
         const prevTick = contextList[index - 1] || 0;
         const context = contextMap[tick];
         const tickSpace = (tick - prevTick) * leftoverPxPerTick;
-        spaceAccum += tickSpace;
+        // TODO: An idea worth pursuing:
+        //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
+        //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
 
+        spaceAccum += tickSpace;
         context.setX(context.getX() + spaceAccum);
 
         // Move center aligned tickables to middle

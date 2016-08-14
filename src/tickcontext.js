@@ -66,7 +66,9 @@ export class TickContext extends Element {
     this.preFormatted = false;
   }
 
-  // Get left & right pixels used for modifiers
+  // ### DEPRECATED ###
+  // Get left & right pixels used for modifiers. THIS METHOD IS DEPRECATED. Use
+  // the getMetrics() method instead!
   getExtraPx() {
     let left_shift = 0;
     let right_shift = 0;
