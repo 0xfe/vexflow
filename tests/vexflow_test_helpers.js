@@ -13,7 +13,8 @@ if (!window.QUnit) {
   QUnit.assertions = {
     ok: function() {return true;},
     equal: function() {return true;},
-    expect: function() {return true;}
+    expect: function() {return true;},
+    throws: function() {return true;}
   };
 
   QUnit.module = function(name) {
@@ -30,6 +31,7 @@ if (!window.QUnit) {
   ok = QUnit.assertions.ok;
   equal = QUnit.assertions.equal;
   expect = QUnit.assertions.expect;
+  throws = QUnit.assertions.throws;
 }
 
 if (typeof require == "function") {

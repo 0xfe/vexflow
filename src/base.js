@@ -8,16 +8,6 @@
 
 import { Vex } from './vex';
 
-// To enable logging for this class. Set `Vex.Flow.Base.DEBUG` to `true`.
-// function L(...args) { if (Base.DEBUG) Vex.L('Vex.Flow.Base', args); }
-
-function setDefaults(params, defaults) {
-  const default_options = defaults.options;
-  params = Object.assign(defaults, params);
-  params.options = Object.assign(default_options, params.options);
-  return params;
-}
-
 export class Base {
   constructor() {
     this.attrs = {
@@ -33,14 +23,14 @@ export class Base {
   setAttr(key, val) { this.attrs[key] = val; return this; }
 
   getContext() { return this.context; }
-  setContext(context) { this.context = context; return this; } 
+  setContext(context) { this.context = context; return this; }
 
   space(spacing) { return this.attrs.staveSpace * spacing; }
 
   // Validators
   checkContext() {
     if (!this.context) {
-      throw new Vex.RERR('NoContext', "No rendering context attached to instance");
+      throw new Vex.RERR('NoContext', 'No rendering context attached to instance');
     }
   }
 }

@@ -202,6 +202,7 @@ export class Articulation extends Modifier {
   // `Vex.Flow.articulationCodes` in `tables.js`.
   constructor(type) {
     super();
+    this.attrs.type = 'Articulation';
 
     this.note = null;
     this.index = null;
@@ -232,9 +233,7 @@ export class Articulation extends Modifier {
       context: ctx,
     } = this;
 
-    if (!ctx) {
-      throw new Vex.RERR('NoContext', "Can't draw Articulation without a context.");
-    }
+    this.checkContext();
 
     if (!note || index == null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");

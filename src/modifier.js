@@ -14,11 +14,12 @@
 // `ModifierContext`. This ensures that multiple voices don't trample all over each other.
 
 import { Vex } from './vex';
+import { Base } from './base';
 
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
-function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
+// function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
 
-export class Modifier {
+export class Modifier extends Base {
   static get CATEGORY() { return 'none'; }
 
   // Modifiers can be positioned almost anywhere, relative to a note.
@@ -32,8 +33,10 @@ export class Modifier {
   }
 
   constructor() {
+    super();
+    this.attrs.type = 'Modifier';
+
     this.width = 0;
-    this.context = null;
 
     // Modifiers are attached to a note and an index. An index is a
     // specific head in a chord.
@@ -47,7 +50,6 @@ export class Modifier {
     this.x_shift = 0;
     this.y_shift = 0;
     this.spacingFromNextModifier = 0;
-    L('Created new modifier');
   }
 
   // Every modifier has a category. The `ModifierContext` uses this to determine
@@ -65,10 +67,6 @@ export class Modifier {
   // Get and set note index, which is a specific note in a chord.
   getIndex() { return this.index; }
   setIndex(index) { this.index = index; return this; }
-
-  // Get and set rendering context.
-  getContext() { return this.context; }
-  setContext(context) { this.context = context; return this; }
 
   // Every modifier must be part of a `ModifierContext`.
   getModifierContext() { return this.modifier_context; }
@@ -104,10 +102,7 @@ export class Modifier {
 
   // Render the modifier onto the canvas.
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
-
+    this.checkContext();
     throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
   }
 }

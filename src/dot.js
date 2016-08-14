@@ -92,6 +92,7 @@ export class Dot extends Modifier {
    */
   constructor() {
     super();
+    this.attrs.type = 'Dot';
 
     this.note = null;
     this.index = null;
@@ -116,9 +117,7 @@ export class Dot extends Modifier {
   setDotShiftY(y) { this.dot_shiftY = y; return this; }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw dot without a context.");
-    }
+    this.checkContext();
 
     if (!this.note || this.index === null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");

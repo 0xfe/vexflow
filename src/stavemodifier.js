@@ -3,7 +3,9 @@
 // ## Description
 // A base class for stave modifiers (e.g. clefs, key signatures)
 
-export class StaveModifier {
+import { Base } from './base';
+
+export class StaveModifier extends Base {
   static get Position() {
     return {
       LEFT: 1,
@@ -16,6 +18,9 @@ export class StaveModifier {
   }
 
   constructor() {
+    super();
+    this.attrs.type = 'StaveModifier';
+
     this.padding = 10;
     this.position = StaveModifier.Position.ABOVE;
   }
