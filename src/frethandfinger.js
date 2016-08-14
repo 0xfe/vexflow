@@ -94,6 +94,7 @@ export class FretHandFinger extends Modifier {
 
   constructor(number) {
     super();
+    this.attrs.type = 'FretHandFinger';
 
     this.note = null;
     this.index = null;
@@ -127,9 +128,7 @@ export class FretHandFinger extends Modifier {
   setOffsetY(y) { this.y_offset = y; return this; }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw string number without a context.");
-    }
+    this.checkContext();
 
     if (!this.note || this.index == null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");

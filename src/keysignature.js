@@ -80,6 +80,7 @@ export class KeySignature extends StaveModifier {
   // Create a new Key Signature based on a `key_spec`
   constructor(keySpec, cancelKeySpec, alterKeySpec) {
     super();
+    this.attrs.type = 'KeySignature';
 
     this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
     this.setPosition(StaveModifier.Position.BEGIN);

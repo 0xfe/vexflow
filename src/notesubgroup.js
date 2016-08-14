@@ -33,6 +33,7 @@ export class NoteSubGroup extends Modifier {
 
   constructor(subNotes) {
     super();
+    this.attrs.type = 'NoteSubGroup';
 
     this.note = null;
     this.index = null;
@@ -75,10 +76,7 @@ export class NoteSubGroup extends Modifier {
   }
 
   draw() {
-    if (!this.context)  {
-      throw new Vex.RuntimeError('NoContext',
-        "Can't draw notes without a context.");
-    }
+    this.checkContext();
 
     const note = this.getNote();
 

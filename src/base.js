@@ -25,6 +25,8 @@ export class Base {
   getContext() { return this.context; }
   setContext(context) { this.context = context; return this; }
 
+  // TODO: Bounding boxes for all elements.
+
   space(spacing) { return this.attrs.staveSpace * spacing; }
 
   // Validators
@@ -32,6 +34,7 @@ export class Base {
     if (!this.context) {
       throw new Vex.RERR('NoContext', 'No rendering context attached to instance');
     }
+    return this.context;
   }
 }
 

@@ -143,6 +143,7 @@ export class Ornament extends Modifier {
   // `Vex.Flow.ornamentCodes` in `tables.js`.
   constructor(type) {
     super();
+    this.attrs.type = 'Ornament';
 
     this.note = null;
     this.index = null;
@@ -185,9 +186,7 @@ export class Ornament extends Modifier {
 
   // Render ornament in position next to note.
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoContext', "Can't draw Ornament without a context.");
-    }
+    this.checkContext();
 
     if (!this.note || this.index == null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
