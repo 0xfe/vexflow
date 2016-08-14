@@ -908,13 +908,13 @@ VF.Test.Beam = (function() {
         { keys: ["c/5"], duration: "32"  , stem_direction: -1}
       ];
 
-      notes = notes.map(function(note, index) {
-        return newNote(note).addModifier(0, new VF.Annotation("1").setVerticalJustification(1));
-      });
+      notes = notes.map((note, index) =>
+        newNote(note).addModifier(0, new VF.Annotation("1").setVerticalJustification(1))
+      );
 
-      notes2 = notes2.map(function(note, index) {
-        return newNote(note).addModifier(0, new VF.Annotation("3").setVerticalJustification(3));
-      });
+      notes2 = notes2.map((note, index) =>
+        newNote(note).addModifier(0, new VF.Annotation("3").setVerticalJustification(3))
+      );
 
       var voice = new VF.Voice(VF.TIME4_4)
         .setMode(VF.Voice.Mode.SOFT)
@@ -927,7 +927,7 @@ VF.Test.Beam = (function() {
 
       new VF.Formatter()
         .joinVoices([voice])
-        .formatToStave([voice], stave);
+        .formatToStave([voice], stave, { stave });
 
       stave.setContext(ctx).draw();
       voice.draw(ctx);
@@ -984,7 +984,7 @@ VF.Test.Beam = (function() {
 
       new VF.Formatter()
         .joinVoices([voice])
-        .formatToStave([voice], stave);
+        .formatToStave([voice], stave, { stave });
 
       stave.setContext(ctx).draw();
       voice.draw(ctx);

@@ -842,7 +842,6 @@ VF.Test.StaveNote = (function() {
         }, 20);
 
         notes.forEach((note, index) => {
-          debugger;
           note
             .getTickContext()
             .preFormat()
