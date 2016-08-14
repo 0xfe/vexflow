@@ -48,6 +48,7 @@ export class TimeSignature extends StaveModifier {
 
   constructor(timeSpec = null, customPadding = 15) {
     super();
+    this.setAttribute('type', 'TimeSignature');
 
     if (timeSpec === null) return;
 

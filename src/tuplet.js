@@ -45,11 +45,12 @@
  */
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Formatter } from './formatter';
 import { Glyph } from './glyph';
 import { Stem } from './stem';
 
-export class Tuplet {
+export class Tuplet extends Element {
   static get LOCATION_TOP() {
     return 1;
   }
@@ -61,6 +62,8 @@ export class Tuplet {
   }
 
   constructor(notes, options) {
+    super();
+    this.setAttribute('type', 'Tuplet');
     if (!notes || !notes.length) {
       throw new Vex.RuntimeError('BadArguments', 'No notes provided for tuplet.');
     }
@@ -115,11 +118,6 @@ export class Tuplet {
       const note = this.notes[i];
       note.resetTuplet(this);
     }
-  }
-
-  setContext(context) {
-    this.context = context;
-    return this;
   }
 
   /**
@@ -283,9 +281,7 @@ export class Tuplet {
   }
 
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
+    this.checkContext();
 
     // determine x value of left bound of tuplet
     const first_note = this.notes[0];

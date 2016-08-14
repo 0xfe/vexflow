@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { Vex } from './vex';
 import { BoundingBox } from './boundingbox';
 import { Note } from './note';
 import { TimeSignature } from './timesignature';
@@ -9,6 +8,7 @@ import { TimeSignature } from './timesignature';
 export class TimeSigNote extends Note {
   constructor(timeSpec, customPadding) {
     super({ duration: 'b' });
+    this.setAttribute('type', 'TimeSigNote');
 
     const timeSignature = new TimeSignature(timeSpec, customPadding);
     this.timeSig = timeSignature.getTimeSig();
@@ -33,8 +33,7 @@ export class TimeSigNote extends Note {
   }
 
   draw() {
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
-
+    this.stave.checkContext();
     if (!this.timeSig.glyph.getContext()) {
       this.timeSig.glyph.setContext(this.context);
     }
