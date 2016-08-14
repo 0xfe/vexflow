@@ -134,7 +134,7 @@ export class Factory {
 
   Voice(params) {
     params = setDefaults(params, {
-      time: {num_beats: 4,  beat_value: 4},
+      time: { num_beats: 4,  beat_value: 4 },
       options: {},
     });
     return new Voice(params.time);
