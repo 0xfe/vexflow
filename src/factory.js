@@ -18,6 +18,7 @@ import { StaveNote } from './stavenote';
 import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
 import { Voice } from './voice';
+import { Beam } from './beam';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -30,7 +31,7 @@ function X(message, data) {
   L(this.name + ':', message, data);
 }
 
-function setDefaults(params, defaults) {
+function setDefaults(params = {}, defaults) {
   const default_options = defaults.options;
   params = Object.assign(defaults, params);
   params.options = Object.assign(default_options, params.options);
@@ -63,6 +64,8 @@ export class Factory {
     if (this.options.renderer.el !== null) this.initRenderer();
     this.renderQ = [];
     this.stave = null; // current stave
+
+    this.StaveNote = this.StaveNote.bind(this);
   }
 
   getOptions() { return this.options; }
@@ -151,6 +154,17 @@ export class Factory {
     });
 
     const tuplet = new Tuplet(params.notes, params.options).setContext(this.ctx);
+    this.renderQ.push(tuplet);
+    return tuplet;
+  }
+
+  Beam(params) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {},
+    });
+
+    const tuplet = new Beam(params.notes, params.options).setContext(this.ctx);
     this.renderQ.push(tuplet);
     return tuplet;
   }
