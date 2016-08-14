@@ -140,7 +140,7 @@ export class StaveLine extends Element {
   //  }
   //  ```
   constructor(notes) {
-    super()
+    super();
     this.attrs.type = 'StaveLine';
 
     this.notes = notes;

@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 
 export class StaveSection extends StaveModifier {

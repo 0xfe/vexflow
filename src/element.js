@@ -18,9 +18,9 @@ export class Element {
     this.context = null;
   }
 
-  getAttrs() { return this.attrs; }
-  getAttr(key) { return this.attrs[key]; }
-  setAttr(key, val) { this.attrs[key] = val; return this; }
+  getAttributes() { return this.attrs; }
+  getAttribute(name) { return this.attrs[name]; }
+  setAttribute(name, value) { this.attrs[name] = value; return this; }
 
   getContext() { return this.context; }
   setContext(context) { this.context = context; return this; }
