@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
+import { Base } from './base';
 import { Flow } from './tables';
 import { Barline } from './stavebarline';
 import { StaveModifier } from './stavemodifier';
@@ -14,12 +15,10 @@ import { KeySignature } from './keysignature';
 import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
 
-export class Stave {
+export class Stave extends Base {
   constructor(x, y, width, options) {
-    this.attrs = {
-      id: '',
-      type: 'Stave',
-    };
+    super();
+    this.attrs.type = 'Stave';
 
     this.x = x;
     this.y = y;
@@ -27,7 +26,6 @@ export class Stave {
     this.formatted = false;
     this.start_x = x + 5;
     this.end_x = x + width;
-    this.context = null;
     this.modifiers = [];  // stave modifiers (clef, key, time, barlines, coda, segno, etc.)
     this.measure = 0;
     this.clef = 'treble';
@@ -60,9 +58,6 @@ export class Stave {
     this.addEndModifier(new Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE));
   }
 
-  getAttr(key) { return this.attrs[key]; }
-  setAttr(key, val) { this.attrs[key] = val; return this; }
-
   resetLines() {
     this.options.line_config = [];
     for (let i = 0; i < this.options.num_lines; i++) {
@@ -94,8 +89,6 @@ export class Stave {
   }
   getTieStartX() { return this.start_x; }
   getTieEndX() { return this.x + this.width; }
-  setContext(context) { this.context = context; return this; }
-  getContext() { return this.context; }
   getX() { return this.x; }
   getNumLines() { return this.options.num_lines; }
   setNumLines(lines) {
@@ -493,9 +486,7 @@ export class Stave {
    * All drawing functions below need the context to be set.
    */
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
+    this.checkContext();
 
     if (!this.formatted) this.format();
 
@@ -549,9 +540,7 @@ export class Stave {
   }
 
   drawVerticalFixed(x, isDouble) {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
+    this.checkContext();
 
     const top_line = this.getYForLine(0);
     const bottom_line = this.getYForLine(this.options.num_lines - 1);
@@ -566,9 +555,7 @@ export class Stave {
   }
 
   drawVerticalBarFixed(x) {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw stave without canvas context.");
-    }
+    this.checkContext();
 
     const top_line = this.getYForLine(0);
     const bottom_line = this.getYForLine(this.options.num_lines - 1);
