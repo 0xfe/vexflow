@@ -10,11 +10,14 @@
 
 import { Vex } from './vex';
 import { Accidental } from './accidental';
+import { Formatter } from './formatter';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
 import { StaveNote } from './stavenote';
 import { TickContext } from './tickcontext';
+import { Tuplet } from './tuplet';
+import { Voice } from './voice';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -127,6 +130,29 @@ export class Factory {
 
   ModifierContext() {
     return new ModifierContext();
+  }
+
+  Voice(params) {
+    params = setDefaults(params, {
+      time: { num_beats: 4,  beat_value: 4 },
+      options: {},
+    });
+    return new Voice(params.time);
+  }
+
+  Formatter() {
+    return new Formatter();
+  }
+
+  Tuplet(params) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {},
+    });
+
+    const tuplet = new Tuplet(params.notes, params.options).setContext(this.ctx);
+    this.renderQ.push(tuplet);
+    return tuplet;
   }
 
   draw() {
