@@ -57,11 +57,12 @@ export class Factory {
 
     this.options = defaults;
     this.setOptions(options);
-    this.initRenderer();
+    if (this.options.renderer.el !== null) this.initRenderer();
     this.renderQ = [];
     this.stave = null; // current stave
   }
 
+  getOptions() { return this.options; }
   setOptions(options) {
     for (const key of ['stave', 'renderer', 'font']) {
       Object.assign(this.options[key], options[key]);

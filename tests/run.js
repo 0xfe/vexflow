@@ -48,6 +48,7 @@ VF.Test.run = function () {
   VF.Test.TextBracket.Start();
   VF.Test.StaveModifier.Start();
   VF.Test.GhostNote.Start();
+  VF.Test.Factory.Start();
 }
 
 module.exports = VF.Test;

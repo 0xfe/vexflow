@@ -16,6 +16,11 @@ import { Volta } from './stavevolta';
 
 export class Stave {
   constructor(x, y, width, options) {
+    this.attrs = {
+      id: '',
+      type: 'Stave',
+    };
+
     this.x = x;
     this.y = y;
     this.width = width;
@@ -54,6 +59,9 @@ export class Stave {
     // end bar
     this.addEndModifier(new Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE));
   }
+
+  getAttr(key) { return this.attrs[key]; }
+  setAttr(key, val) { this.attrs[key] = val; return this; }
 
   resetLines() {
     this.options.line_config = [];
