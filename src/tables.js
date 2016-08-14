@@ -228,7 +228,7 @@ Flow.integerToNote.table = {
 };
 
 
-Flow.tabToGlyph = fret => {
+Flow.tabToGlyph = (fret, scale = 1.0) => {
   let glyph = null;
   let width = 0;
   let shift_y = 0;
@@ -245,7 +245,7 @@ Flow.tabToGlyph = fret => {
   return {
     text: fret,
     code: glyph,
-    getWidth: () => width,
+    getWidth: () => width * scale,
     shift_y,
   };
 };
