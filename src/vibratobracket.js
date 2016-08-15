@@ -45,18 +45,25 @@ export class VibratoBracket extends Element {
   setLine(line) { this.line = line; return this; }
   setHarsh(harsh) { this.render_options.harsh = harsh; return this; }
 
-  // Draw the octave bracket on the rendering context
+  // Draw the vibrato bracket on the rendering context
   draw() {
     const ctx = this.context;
 
-    const y = this.start.getStave().getYForTopText(this.line);
+    const y = (this.start)
+      ? this.start.getStave().getYForTopText(this.line)
+      : this.stop.getStave().getYForTopText(this.line);
 
-    // Get the preliminary start and stop coordintates for the bracket
-    const start_x = this.start.getAbsoluteX();
+    // If start note is not set then vibrato will be drawn
+    // from the beginning of the stave
+    const start_x = (this.start)
+      ? this.start.getAbsoluteX()
+      : this.stop.getStave().getTieStartX();
 
-    const stop_x = (this.stop
-      ? this.stop.getAbsoluteX() - this.stop.getWidth() - 10
-      : this.start.getStave().getTieEndX() - 10);
+      // If stop note is not set then vibrato will be drawn
+      // until the end of the stave
+    const stop_x = (this.stop)
+      ? this.stop.getAbsoluteX() - this.stop.getWidth() - 5
+      : this.start.getStave().getTieEndX() - 10;
 
     this.render_options.vibrato_width = stop_x - start_x;
 

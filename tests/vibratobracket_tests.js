@@ -10,7 +10,8 @@ VF.Test.VibratoBracket = (function(){
     Start: function() {
       QUnit.module("VibratoBracket");
       VF.Test.runTests("Simple VibratoBracket", VF.Test.VibratoBracket.simple);
-      VF.Test.runTests("Harsh VibratoBracket", VF.Test.VibratoBracket.harsh);
+      VF.Test.runTests("Harsh VibratoBracket Without End Note", VF.Test.VibratoBracket.harsh);
+      VF.Test.runTests("Harsh VibratoBracket Without Start Note", VF.Test.VibratoBracket.harsh2);
     },
 
     simple: function(options, contextBuilder) {
@@ -77,7 +78,42 @@ VF.Test.VibratoBracket = (function(){
       voice.draw(ctx, stave);
 
       vibrato.setContext(ctx).draw();
-      ok(true, "VibratoBracket Harsh");
+      ok(true, "VibratoBracket Harsh No End");
+    },
+
+    harsh2: function(options, contextBuilder) {
+      options.contextBuilder = contextBuilder;
+      var ctx = new options.contextBuilder(options.canvas_sel, 650, 200);
+      ctx.scale(1, 1);
+
+      var stave = new VF.Stave(10, 40, 550);
+      stave.setContext(ctx).draw();
+
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+
+      var notes = [
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"}
+      ].map(newNote);
+
+      var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
+      voice.addTickables(notes);
+
+      var vibrato = new VF.VibratoBracket({
+        start: null,
+        stop: notes[2],
+      });
+      vibrato.setLine(2);
+      vibrato.setHarsh(true);
+
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      voice.draw(ctx, stave);
+
+      vibrato.setContext(ctx).draw();
+      ok(true, "VibratoBracket Harsh No Start");
     }
   };
 
