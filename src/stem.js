@@ -130,6 +130,31 @@ export class Stem extends Element {
     return this;
   }
 
+  setStave(stave) {
+    this.stave = stave;
+  }
+
+  preFormat() {
+    if (!this.stave) {
+      throw new Vex.RERR(
+        'MissingStave',
+        'Cannot format the stem without a corresponding `Stave`, which can be set using ' +
+        'stem.setStave(stave). We are unable to format a stem without access to ' +
+        'the the ratio of pixels per staff space, which is only exposed on the `stave`.'
+      );
+    }
+
+    const STAFF_MIDDLE = (this.stave.getNumLines() - 1) / 2;
+    const staffMiddleY = this.stave.getYForLine(STAFF_MIDDLE);
+    const stemTipY = this.getExtents().topY;
+
+    if (this.stem_direction === Stem.UP && stemTipY > staffMiddleY) {
+      this.stem_extension += stemTipY - staffMiddleY;
+    } else if (this.stem_direction === Stem.DOWN && stemTipY < staffMiddleY) {
+      this.stem_extension += staffMiddleY - stemTipY;
+    }
+  }
+
   // Render the stem onto the canvas
   draw() {
     if (this.hide) return;

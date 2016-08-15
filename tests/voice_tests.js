@@ -70,9 +70,12 @@ VF.Test.Voice = (function() {
     full: function(options, contextBuilder) {
       var ctx  = contextBuilder(options.canvas_sel, 550, 200);
 
-      var stave = new VF.Stave(10, 50, 500);
-      stave.addClef("treble").addTimeSignature("4/4").
-        setEndBarType(VF.Barline.type.END).setContext(ctx).draw();
+      var stave = new VF.Stave(10, 50, 500)
+        .addClef("treble")
+        .addTimeSignature("4/4")
+        .setEndBarType(VF.Barline.type.END)
+        .setContext(ctx)
+        .draw();
 
       var notes = [
         new VF.StaveNote({ keys: ["c/4"], duration: "q" }),
@@ -80,18 +83,20 @@ VF.Test.Voice = (function() {
         new VF.StaveNote({ keys: ["b/4"], duration: "qr" })
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).
-        setMode(VF.Voice.Mode.FULL);
-      voice.addTickables(notes);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setMode(VF.Voice.Mode.FULL)
+        .addTickables(notes)
+        .setStave(stave);
 
-      new VF.Formatter().joinVoices([voice]).format([voice], 500);
-      voice.draw(ctx, stave);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], 500);
+
+      voice.draw(ctx);
       voice.getBoundingBox().draw(ctx);
 
       try {
-        voice.addTickable(
-          new VF.StaveNote({ keys: ["c/4"], duration: "h" })
-        );
+        voice.addTickable(new VF.StaveNote({ keys: ["c/4"], duration: "h" }));
       } catch (e) {
         equal(e.code, "BadArgument", "Too many ticks exception");
       }

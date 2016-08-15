@@ -4,6 +4,15 @@
  *
  */
 
+/*
+eslint-disable
+no-var,
+no-undef,
+quotes,
+object-curly-spacing,
+vars-on-top,
+*/
+
 VF.Test.Rests = (function() {
   var Rests = {
     Start: function() {
@@ -21,17 +30,20 @@ VF.Test.Rests = (function() {
 
     setupContext: function(options, contextBuilder, x, y) {
       var ctx = new contextBuilder(options.canvas_sel, x || 350, y || 150);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
-      var stave = new VF.Stave(10, 30, x || 350).addTrebleGlyph().
-        setContext(ctx).draw();
+      var stave = new VF.Stave(10, 30, x || 350)
+        .addTrebleGlyph()
+        .setContext(ctx)
+        .draw();
 
       return {context: ctx, stave: stave};
     },
 
     basic: function(options, contextBuilder) {
-      var c = VF.Test.Rests.setupContext(options, contextBuilder, 700);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      var { stave, context } = VF.Test.Rests.setupContext(options, contextBuilder, 700);
 
       var notes = [
         newNote({ keys: ["b/4"], stem_direction: 1, duration: "wr"}).addDotToAll(),
@@ -47,19 +59,21 @@ VF.Test.Rests = (function() {
 
       voice.setStrict(false);
       voice.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      stave.addTimeSignature("4/4");
+      stave.draw(context);
 
-      VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+      // Instantiate a `Formatter` and format the notes.
+      new VF.Formatter()
+        .joinVoices([voice], { align_rests: true })
+        .formatToStave([voice], stave, { align_rests: true, stave });
 
-      voice.draw(c.context, c.stave);
+      voice.draw(context, stave);
 
       ok(true, "Dotted Rest Test");
     },
 
     beamsUp: function(options, b) {
-      var c = VF.Test.Rests.setupContext(options, b, 600, 160);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      var { context, stave } = VF.Test.Rests.setupContext(options, b, 600, 160);
 
       var notes = [
         newNote({ keys: ["e/5"], stem_direction: 1, duration: "8"}),
@@ -79,32 +93,33 @@ VF.Test.Rests = (function() {
 
       ];
 
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.Test.TIME4_4);
 
       var beam1 = new VF.Beam(notes.slice(0, 4));
       var beam2 = new VF.Beam(notes.slice(4, 8));
       var beam3 = new VF.Beam(notes.slice(8,12));
 
+      voice.setStrict(false);
+      voice.addTickables(notes);
+      stave.addTimeSignature("4/4");
+      stave.draw(context);
 
-      voice1.setStrict(false);
-      voice1.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      // Instantiate a `Formatter` and format the notes.
+      new VF.Formatter()
+        .joinVoices([voice], { align_rests: true })
+        .formatToStave([voice], stave, { align_rests: true, stave });
 
-      VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+      voice.draw(context);
 
-      voice1.draw(c.context, c.stave);
-
-      beam1.setContext(c.context).draw();
-      beam2.setContext(c.context).draw();
-      beam3.setContext(c.context).draw();
+      beam1.setContext(context).draw();
+      beam2.setContext(context).draw();
+      beam3.setContext(context).draw();
 
       ok(true, "Auto Align Rests - Beams Up Test");
     },
 
     beamsDown: function(options, b) {
-      var c = VF.Test.Rests.setupContext(options, b, 600, 160);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      var { context, stave } = VF.Test.Rests.setupContext(options, b, 600, 160);
 
       var notes = [
         newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}),
@@ -124,31 +139,34 @@ VF.Test.Rests = (function() {
 
       ];
 
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.Test.TIME4_4);
 
       var beam1 = new VF.Beam(notes.slice(0, 4));
       var beam2 = new VF.Beam(notes.slice(4, 8));
       var beam3 = new VF.Beam(notes.slice(8, 12));
 
-      voice1.setStrict(false);
-      voice1.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      voice.setStrict(false);
+      voice.addTickables(notes);
+      stave.addTimeSignature("4/4");
 
-      VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+      // Instantiate a `Formatter` and format the notes.
+      new VF.Formatter()
+        .joinVoices([voice], { align_rests: true })
+        .formatToStave([voice], stave, { align_rests: true, stave });
 
-      voice1.draw(c.context, c.stave);
-
-      beam1.setContext(c.context).draw();
-      beam2.setContext(c.context).draw();
-      beam3.setContext(c.context).draw();
+      stave.setContext(context).draw();
+      voice.draw(context);
+      beam1.setContext(context).draw();
+      beam2.setContext(context).draw();
+      beam3.setContext(context).draw();
 
       ok(true, "Auto Align Rests - Beams Down Test");
     },
 
     tuplets: function(options, b) {
-      var c = VF.Test.Rests.setupContext(options, b, 600, 160);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      var { context, stave } = VF.Test.Rests.setupContext(options, b, 600, 160);
+
+      stave.addTimeSignature("4/4");
 
       var notes = [
         newNote({ keys: ["b/4"], stem_direction: 1, duration: "q"}),
@@ -168,37 +186,30 @@ VF.Test.Rests = (function() {
         newNote({ keys: ["b/4"], stem_direction: 1, duration: "qr"}),
       ];
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes.slice(3, 6));
-      var tuplet3 = new VF.Tuplet(notes.slice(6, 9));
-      var tuplet4 = new VF.Tuplet(notes.slice(9, 12));
-      tuplet1.setTupletLocation(VF.Tuplet.LOCATION_TOP);
-      tuplet2.setTupletLocation(VF.Tuplet.LOCATION_TOP);
-      tuplet3.setTupletLocation(VF.Tuplet.LOCATION_TOP);
-      tuplet4.setTupletLocation(VF.Tuplet.LOCATION_TOP);
+      const tuplets = [[0, 3], [3, 6], [6, 9], [9, 12]]
+        .map(range => new VF.Tuplet(notes.slice(...range)))
+        .map(tuplet => tuplet.setTupletLocation(VF.Tuplet.LOCATION_TOP));
 
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes);
 
-      voice1.setStrict(false);
-      voice1.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      // Instantiate a `Formatter` and format the notes.
+      new VF.Formatter()
+        .joinVoices([voice], { align_rests: true })
+        .formatToStave([voice], stave, { align_rests: true, stave });
 
-      VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
-
-      voice1.draw(c.context, c.stave);
-
-      tuplet1.setContext(c.context).draw();
-      tuplet2.setContext(c.context).draw();
-      tuplet3.setContext(c.context).draw();
-      tuplet4.setContext(c.context).draw();
+      stave.draw(context);
+      voice.draw(context);
+      tuplets.forEach(tuplet => tuplet.setContext(context).draw());
 
       ok(true, "Auto Align Rests - Tuplets Stem Up Test");
     },
 
     tupletsdown: function(options, b) {
-      var c = VF.Test.Rests.setupContext(options, b, 600, 160);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      var { context, stave } = VF.Test.Rests.setupContext(options, b, 600, 160);
+
+      stave.addTimeSignature("4/4");
 
       var notes = [
         newNote({ keys: ["a/5"], stem_direction: -1, duration: "8r"}),
@@ -218,47 +229,34 @@ VF.Test.Rests = (function() {
         newNote({ keys: ["b/4"], stem_direction: -1, duration: "8r"}),
       ];
 
-      var beam1 = new VF.Beam(notes.slice(0, 3));
-      var beam2 = new VF.Beam(notes.slice(3, 6));
-      var beam3 = new VF.Beam(notes.slice(6, 9));
-      var beam4 = new VF.Beam(notes.slice(9, 12));
+      const noteGroups = [[0, 3], [3, 6], [6, 9], [9, 12]];
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes.slice(3, 6));
-      var tuplet3 = new VF.Tuplet(notes.slice(6, 9));
-      var tuplet4 = new VF.Tuplet(notes.slice(9, 12));
-      tuplet1.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
-      tuplet2.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
-      tuplet3.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
-      tuplet4.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
+      const beams = noteGroups.map(range => new VF.Beam(notes.slice(...range)));
+      const tuplets = noteGroups
+        .map(range => new VF.Tuplet(notes.slice(...range)))
+        .map(tuplet => tuplet.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM));
 
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes);
 
-      voice1.setStrict(false);
-      voice1.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      // Instantiate a `Formatter` and format the notes.
+      new VF.Formatter()
+        .joinVoices([voice], { align_rests: true })
+        .formatToStave([voice], stave, { align_rests: true, stave });
 
-      VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
-
-      voice1.draw(c.context, c.stave);
-
-      tuplet1.setContext(c.context).draw();
-      tuplet2.setContext(c.context).draw();
-      tuplet3.setContext(c.context).draw();
-      tuplet4.setContext(c.context).draw();
-
-      beam1.setContext(c.context).draw();
-      beam2.setContext(c.context).draw();
-      beam3.setContext(c.context).draw();
-      beam4.setContext(c.context).draw();
+      stave.setContext(context).draw();
+      voice.draw(context);
+      tuplets.forEach(tuplet => tuplet.setContext(context).draw());
+      beams.forEach(beam => beam.setContext(context).draw());
 
       ok(true, "Auto Align Rests - Tuplets Stem Down Test");
     },
 
     staveRests: function(options, b) {
-      var c = VF.Test.Rests.setupContext(options, b, 600, 160);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      var { context, stave } = VF.Test.Rests.setupContext(options, b, 600, 160);
+
+      stave.addTimeSignature("4/4");
 
       var notes = [
         newNote({ keys: ["b/4"], stem_direction: -1, duration: "qr"}),
@@ -282,30 +280,33 @@ VF.Test.Rests = (function() {
         newNote({ keys: ["b/4"], stem_direction: -1, duration: "qr"}),
       ];
 
-      var beam1 = new VF.Beam(notes.slice(5, 9));
+      var beam = new VF.Beam(notes.slice(5, 9));
       var tuplet = new VF.Tuplet(notes.slice(9, 12));
       tuplet.setTupletLocation(VF.Tuplet.LOCATION_TOP);
 
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes)
+        .setStave(stave);
 
-      voice1.setStrict(false);
-      voice1.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+        // Instantiate a `Formatter` and format the notes.
+      new VF.Formatter()
+          .joinVoices([voice], { align_rests: true })
+          .formatToStave([voice], stave, { align_rests: true, stave });
 
-      VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
-
-      voice1.draw(c.context, c.stave);
-      tuplet.setContext(c.context).draw();
-      beam1.setContext(c.context).draw();
+      stave.draw(context);
+      voice.draw(context);
+      tuplet.setContext(context).draw();
+      beam.setContext(context).draw();
 
       ok(true, "Auto Align Rests - Default Test");
     },
 
 
     staveRestsAll: function(options, b) {
-      var c = VF.Test.Rests.setupContext(options, b, 600, 160);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+      var { context, stave } = VF.Test.Rests.setupContext(options, b, 600, 160);
+
+      stave.addTimeSignature("4/4");
 
       var notes = [
         newNote({ keys: ["b/4"], stem_direction: -1, duration: "qr"}),
@@ -329,78 +330,76 @@ VF.Test.Rests = (function() {
         newNote({ keys: ["b/4"], stem_direction: -1, duration: "qr"}),
       ];
 
-      var beam1 = new VF.Beam(notes.slice(5, 9));
-      var tuplet = new VF.Tuplet(notes.slice(9, 12));
-      tuplet.setTupletLocation(VF.Tuplet.LOCATION_TOP);
+      var beam = new VF.Beam(notes.slice(5, 9));
+      var tuplet = new VF.Tuplet(notes.slice(9, 12)).setTupletLocation(VF.Tuplet.LOCATION_TOP);
 
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes)
+        .setStave(stave);
 
-      voice1.setStrict(false);
-      voice1.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      // Instantiate a `Formatter` and format the notes.
+      new VF.Formatter()
+        .joinVoices([voice], { align_rests: true })
+        .formatToStave([voice], stave, { align_rests: true, stave });
 
-      // Set option to position rests near the notes in the voice
-      new VF.Formatter.FormatAndDraw(c.context, c.stave, notes, {align_rests: true});
-
-      voice1.draw(c.context, c.stave);
-      tuplet.setContext(c.context).draw();
-      beam1.setContext(c.context).draw();
+      stave.setContext(context).draw();
+      voice.draw(context);
+      tuplet.setContext(context).draw();
+      beam.setContext(context).draw();
 
       ok(true, "Auto Align Rests - Align All Test");
     },
 
     multi: function(options, contextBuilder) {
-      var c = new contextBuilder(options.canvas_sel, 600, 200);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-      function newFinger(num, pos) {
-        return new VF.FretHandFinger(num).setPosition(pos); }
-      function newStringNumber(num, pos) {
-        return new VF.StringNumber(num).setPosition(pos);}
-      var stave = new VF.Stave(50, 10, 500).addTrebleGlyph();
-      stave.setContext(c);
-      stave.addTimeSignature("4/4");
-      stave.draw();
+      var context = new contextBuilder(options.canvas_sel, 600, 200);
+      var stave = new VF.Stave(50, 10, 500)
+        .addTrebleGlyph()
+        .addTimeSignature("4/4")
+        .setContext(context)
+        .draw();
 
-      var notes = [
-        newNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" }),
-        newNote({ keys: ["b/4"], duration: "qr" }),
-        newNote({ keys: ["c/4", "d/4", "a/4"], duration: "q" }),
-        newNote({ keys: ["b/4"], duration: "qr" })
-      ];
+      var notes1 = [
+        { keys: ["c/4", "e/4", "g/4"], duration: "q" },
+        { keys: ["b/4"], duration: "qr" },
+        { keys: ["c/4", "d/4", "a/4"], duration: "q" },
+        { keys: ["b/4"], duration: "qr" },
+      ].map(newNote);
 
       var notes2 = [
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8r"}),
-        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8r"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8r"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"})
-      ];
+        { keys: ["e/3"], stem_direction: -1, duration: "8" },
+        { keys: ["b/4"], stem_direction: -1, duration: "8r" },
+        { keys: ["b/4"], stem_direction: -1, duration: "8r" },
+        { keys: ["e/3"], stem_direction: -1, duration: "8" },
+        { keys: ["e/3"], stem_direction: -1, duration: "8" },
+        { keys: ["b/4"], stem_direction: -1, duration: "8r" },
+        { keys: ["e/3"], stem_direction: -1, duration: "8" },
+        { keys: ["e/3"], stem_direction: -1, duration: "8" },
+      ].map(newNote);
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      var voice2 = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables(notes);
-      voice2.addTickables(notes2);
+      var voice1 = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables(notes1)
+        .setStave(stave);
 
-      // Set option to position rests near the notes in each voice
-      var formatter = new VF.Formatter().
-        joinVoices([voice, voice2]).
-        format([voice, voice2], 400, {align_rests: true});
+      var voice2 = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables(notes2)
+        .setStave(stave);
 
       var beam2_1 = new VF.Beam(notes2.slice(0, 4));
       var beam2_2 = new VF.Beam(notes2.slice(4, 8));
 
-      voice2.draw(c, stave);
-      beam2_1.setContext(c).draw();
-      beam2_2.setContext(c).draw();
-      voice.draw(c, stave);
+      // Set option to position rests near the notes in each voice
+      new VF.Formatter()
+        .joinVoices([voice1, voice2], { align_rests: true })
+        .formatToStave([voice1, voice2], stave, { align_rests: true, stave });
+
+      voice1.draw(context);
+      voice2.draw(context);
+      beam2_1.setContext(context).draw();
+      beam2_2.setContext(context).draw();
 
       ok(true, "Strokes Test Multi Voice");
-    }
+    },
   };
 
   return Rests;

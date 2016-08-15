@@ -4,6 +4,9 @@
  */
 
 VF.Test.PedalMarking = (function() {
+  function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+  function newAcc(type) { return new VF.Accidental(type); }
+
   var PedalMarking = {
     Start: function() {
       var runTests = VF.Test.runTests;
@@ -22,17 +25,13 @@ VF.Test.PedalMarking = (function() {
 
       options.contextBuilder = contextBuilder;
       var ctx = new options.contextBuilder(options.canvas_sel, 550, 200);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      ctx.scale(1, 1);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
-      //ctx.translate(0.5, 0.5);
+
       var stave0 = new VF.Stave(10, 10, 250).addTrebleGlyph();
       var stave1 = new VF.Stave(260, 10, 250);
-      stave0.setContext(ctx).draw();
-      stave1.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
 
       var notes0 = [
         {keys: ["b/4"], duration: "4", stem_direction: 1},
@@ -48,22 +47,34 @@ VF.Test.PedalMarking = (function() {
         {keys: ["c/4"], duration: "4"}
       ].map(newNote);
 
-      var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      var voice1 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice0.addTickables(notes0);
-      voice1.addTickables(notes1);
+      var voice0 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes0)
+        .setStave(stave0);
 
-      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave0);
-      new VF.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
+      var voice1 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes1)
+        .setStave(stave1);
 
-      var pedal = new VF.PedalMarking([notes0[0], notes0[2], notes0[3], notes1[3]]);
+      var pedal = new VF.PedalMarking([
+        notes0[0], notes0[2], notes0[3],
+        notes1[3]
+      ]).setStyle(VF.PedalMarking.Styles.TEXT);
 
-      pedal.setStyle(VF.PedalMarking.Styles.TEXT);
+      new VF.Formatter()
+        .joinVoices([voice0])
+        .formatToStave([voice0], stave0);
 
-      voice0.draw(ctx, stave0);
-      voice1.draw(ctx, stave1);
+      new VF.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
+
+      stave0.setContext(ctx).draw();
+      stave1.setContext(ctx).draw();
+      voice0.draw(ctx);
+      voice1.draw(ctx);
       pedal.setContext(ctx).draw();
-
     },
 
     simpleBracket: function(options, contextBuilder) {
@@ -71,48 +82,56 @@ VF.Test.PedalMarking = (function() {
 
       options.contextBuilder = contextBuilder;
       var ctx = new options.contextBuilder(options.canvas_sel, 550, 200);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      ctx.scale(1, 1);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
-      //ctx.translate(0.5, 0.5);
+
       var stave0 = new VF.Stave(10, 10, 250).addTrebleGlyph();
       var stave1 = new VF.Stave(260, 10, 250);
-      stave0.setContext(ctx).draw();
-      stave1.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
 
       var notes0 = [
-        {keys: ["b/4"], duration: "4", stem_direction: 1},
-        {keys: ["b/4"], duration: "4", stem_direction: 1},
-        {keys: ["b/4"], duration: "4", stem_direction: 1},
-        {keys: ["b/4"], duration: "4", stem_direction: -1}
+        { keys: ["b/4"], duration: "4", stem_direction: 1 },
+        { keys: ["b/4"], duration: "4", stem_direction: 1 },
+        { keys: ["b/4"], duration: "4", stem_direction: 1 },
+        { keys: ["b/4"], duration: "4", stem_direction: -1 }
       ].map(newNote);
 
       var notes1 = [
-        {keys: ["c/4"], duration: "4"},
-        {keys: ["c/4"], duration: "4"},
-        {keys: ["c/4"], duration: "4"},
-        {keys: ["c/4"], duration: "4"}
+        { keys: ["c/4"], duration: "4" },
+        { keys: ["c/4"], duration: "4" },
+        { keys: ["c/4"], duration: "4" },
+        { keys: ["c/4"], duration: "4" }
       ].map(newNote);
 
-      var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      var voice1 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice0.addTickables(notes0);
-      voice1.addTickables(notes1);
+      var voice0 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes0)
+        .setStave(stave0);
 
-      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave0);
-      new VF.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
+      var voice1 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes1)
+        .setStave(stave1);
 
-      var pedal = new VF.PedalMarking([notes0[0], notes0[2], notes0[3], notes1[3]]);
+      var pedal = new VF.PedalMarking([
+        notes0[0], notes0[2], notes0[3],
+        notes1[3]
+      ]).setStyle(VF.PedalMarking.Styles.BRACKET);
 
-      pedal.setStyle(VF.PedalMarking.Styles.BRACKET);
+      new VF.Formatter()
+        .joinVoices([voice0])
+        .formatToStave([voice0], stave0);
 
-      voice0.draw(ctx, stave0);
-      voice1.draw(ctx, stave1);
+      new VF.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
+
+      stave0.setContext(ctx).draw();
+      stave1.setContext(ctx).draw();
+      voice0.draw(ctx);
+      voice1.draw(ctx);
       pedal.setContext(ctx).draw();
-
     },
 
     simpleMixed: function(options, contextBuilder) {
@@ -120,17 +139,13 @@ VF.Test.PedalMarking = (function() {
 
       options.contextBuilder = contextBuilder;
       var ctx = new options.contextBuilder(options.canvas_sel, 550, 200);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      ctx.scale(1, 1);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
-      //ctx.translate(0.5, 0.5);
+
       var stave0 = new VF.Stave(10, 10, 250).addTrebleGlyph();
       var stave1 = new VF.Stave(260, 10, 250);
-      stave0.setContext(ctx).draw();
-      stave1.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
 
       var notes0 = [
         {keys: ["b/4"], duration: "4", stem_direction: 1},
@@ -146,22 +161,34 @@ VF.Test.PedalMarking = (function() {
         {keys: ["c/4"], duration: "4"}
       ].map(newNote);
 
-      var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      var voice1 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice0.addTickables(notes0);
-      voice1.addTickables(notes1);
+      var pedal = new VF.PedalMarking([
+        notes0[0], notes0[2], notes0[3],
+        notes1[3]
+      ]).setStyle(VF.PedalMarking.Styles.MIXED);
 
-      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave0);
-      new VF.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
+      var voice0 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes0)
+        .setStave(stave0);
 
-      var pedal = new VF.PedalMarking([notes0[0], notes0[2], notes0[3], notes1[3]]);
+      var voice1 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes1)
+        .setStave(stave1);
 
-      pedal.setStyle(VF.PedalMarking.Styles.MIXED);
+      new VF.Formatter()
+        .joinVoices([voice0])
+        .formatToStave([voice0], stave0);
 
-      voice0.draw(ctx, stave0);
-      voice1.draw(ctx, stave1);
+      new VF.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
+
+      stave0.setContext(ctx).draw();
+      stave1.setContext(ctx).draw();
+      voice0.draw(ctx);
+      voice1.draw(ctx);
       pedal.setContext(ctx).draw();
-
     },
 
     releaseDepressOnSameNoteBracketed: function(options, contextBuilder) {
@@ -169,17 +196,13 @@ VF.Test.PedalMarking = (function() {
 
       options.contextBuilder = contextBuilder;
       var ctx = new options.contextBuilder(options.canvas_sel, 550, 200);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      ctx.scale(1, 1);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
-      //ctx.translate(0.5, 0.5);
+
       var stave0 = new VF.Stave(10, 10, 250).addTrebleGlyph();
       var stave1 = new VF.Stave(260, 10, 250);
-      stave0.setContext(ctx).draw();
-      stave1.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
 
       var notes0 = [
         {keys: ["b/4"], duration: "4", stem_direction: 1},
@@ -195,22 +218,34 @@ VF.Test.PedalMarking = (function() {
         {keys: ["c/4"], duration: "4"}
       ].map(newNote);
 
-      var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      var voice1 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice0.addTickables(notes0);
-      voice1.addTickables(notes1);
+      var voice0 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes0)
+        .setStave(stave0);
 
-      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave0);
-      new VF.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
+      var voice1 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes1)
+        .setStave(stave1);
 
-      var pedal = new VF.PedalMarking([notes0[0], notes0[3], notes0[3], notes1[1], notes1[1], notes1[3]]);
+      new VF.Formatter()
+        .joinVoices([voice0])
+        .formatToStave([voice0], stave0);
 
-      pedal.setStyle(VF.PedalMarking.Styles.BRACKET);
+      new VF.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
 
-      voice0.draw(ctx, stave0);
-      voice1.draw(ctx, stave1);
+      var pedal = new VF.PedalMarking([
+        notes0[0], notes0[3], notes0[3],
+        notes1[1], notes1[1], notes1[3]
+      ]).setStyle(VF.PedalMarking.Styles.BRACKET);
+
+      stave0.setContext(ctx).draw();
+      stave1.setContext(ctx).draw();
+      voice0.draw(ctx);
+      voice1.draw(ctx);
       pedal.setContext(ctx).draw();
-
     },
 
     releaseDepressOnSameNoteMixed: function(options, contextBuilder) {
@@ -218,17 +253,13 @@ VF.Test.PedalMarking = (function() {
 
       options.contextBuilder = contextBuilder;
       var ctx = new options.contextBuilder(options.canvas_sel, 550, 200);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      ctx.scale(1, 1);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
-      //ctx.translate(0.5, 0.5);
+
       var stave0 = new VF.Stave(10, 10, 250).addTrebleGlyph();
       var stave1 = new VF.Stave(260, 10, 250);
-      stave0.setContext(ctx).draw();
-      stave1.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
 
       var notes0 = [
         {keys: ["b/4"], duration: "4", stem_direction: 1},
@@ -244,22 +275,34 @@ VF.Test.PedalMarking = (function() {
         {keys: ["c/4"], duration: "4"}
       ].map(newNote);
 
-      var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      var voice1 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice0.addTickables(notes0);
-      voice1.addTickables(notes1);
+      var voice0 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes0)
+        .setStave(stave0);
 
-      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave0);
-      new VF.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
+      var voice1 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes1)
+        .setStave(stave1);
 
-      var pedal = new VF.PedalMarking([notes0[0], notes0[3], notes0[3], notes1[1], notes1[1],  notes1[3]]);
+      var pedal = new VF.PedalMarking([
+        notes0[0], notes0[3], notes0[3],
+        notes1[1], notes1[1], notes1[3]
+      ]).setStyle(VF.PedalMarking.Styles.MIXED);
 
-      pedal.setStyle(VF.PedalMarking.Styles.MIXED);
+      new VF.Formatter()
+        .joinVoices([voice0])
+        .formatToStave([voice0], stave0);
 
-      voice0.draw(ctx, stave0);
-      voice1.draw(ctx, stave1);
+      new VF.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
+
+      stave0.setContext(ctx).draw();
+      stave1.setContext(ctx).draw();
+      voice0.draw(ctx);
+      voice1.draw(ctx);
       pedal.setContext(ctx).draw();
-
     },
 
     customText: function(options, contextBuilder) {
@@ -267,17 +310,13 @@ VF.Test.PedalMarking = (function() {
 
       options.contextBuilder = contextBuilder;
       var ctx = new options.contextBuilder(options.canvas_sel, 550, 200);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      ctx.scale(1, 1);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
       //ctx.translate(0.5, 0.5);
       var stave0 = new VF.Stave(10, 10, 250).addTrebleGlyph();
       var stave1 = new VF.Stave(260, 10, 250);
-      stave0.setContext(ctx).draw();
-      stave1.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
 
       var notes0 = [
         {keys: ["b/4"], duration: "4", stem_direction: 1},
@@ -293,22 +332,32 @@ VF.Test.PedalMarking = (function() {
         {keys: ["c/4"], duration: "4"}
       ].map(newNote);
 
-      var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      var voice1 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice0.addTickables(notes0);
-      voice1.addTickables(notes1);
+      var voice0 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes0)
+        .setStave(stave0);
 
-      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave0);
-      new VF.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
+      var voice1 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes1)
+        .setStave(stave1);
 
-      var pedal = new VF.PedalMarking([notes0[0], notes1[3]]);
+      var pedal = new VF.PedalMarking([notes0[0], notes1[3]])
+        .setStyle(VF.PedalMarking.Styles.TEXT)
+        .setCustomText("una corda", "tre corda");
 
-      pedal.setStyle(VF.PedalMarking.Styles.TEXT);
+      new VF.Formatter()
+        .joinVoices([voice0])
+        .formatToStave([voice0], stave0);
 
-      pedal.setCustomText("una corda", "tre corda");
+      new VF.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
 
-      voice0.draw(ctx, stave0);
-      voice1.draw(ctx, stave1);
+      stave0.setContext(ctx).draw();
+      stave1.setContext(ctx).draw();
+      voice0.draw(ctx);
+      voice1.draw(ctx);
       pedal.setContext(ctx).draw();
     },
 
@@ -317,17 +366,13 @@ VF.Test.PedalMarking = (function() {
 
       options.contextBuilder = contextBuilder;
       var ctx = new options.contextBuilder(options.canvas_sel, 550, 200);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+      ctx.scale(1, 1);
+      ctx.fillStyle = "#221";
+      ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
       //ctx.translate(0.5, 0.5);
       var stave0 = new VF.Stave(10, 10, 250).addTrebleGlyph();
       var stave1 = new VF.Stave(260, 10, 250);
-      stave0.setContext(ctx).draw();
-      stave1.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
 
       var notes0 = [
         {keys: ["b/4"], duration: "4", stem_direction: 1},
@@ -343,21 +388,32 @@ VF.Test.PedalMarking = (function() {
         {keys: ["c/4"], duration: "4"}
       ].map(newNote);
 
-      var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      var voice1 = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice0.addTickables(notes0);
-      voice1.addTickables(notes1);
+      var voice0 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes0)
+        .setStave(stave0);
 
-      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave0);
-      new VF.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
+      var voice1 = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables(notes1)
+        .setStave(stave1);
 
-      var pedal = new VF.PedalMarking([notes0[0], notes1[3]]);
+      var pedal = new VF.PedalMarking([notes0[0], notes1[3]])
+        .setStyle(VF.PedalMarking.Styles.MIXED)
+        .setCustomText("Sost. Ped.");
 
-      pedal.setStyle(VF.PedalMarking.Styles.MIXED);
-      pedal.setCustomText("Sost. Ped.");
+      new VF.Formatter()
+        .joinVoices([voice0])
+        .formatToStave([voice0], stave0);
 
-      voice0.draw(ctx, stave0);
-      voice1.draw(ctx, stave1);
+      new VF.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
+
+      stave0.setContext(ctx).draw();
+      stave1.setContext(ctx).draw();
+      voice0.draw(ctx);
+      voice1.draw(ctx);
       pedal.setContext(ctx).draw();
     }
   };

@@ -110,16 +110,16 @@ VF.Test = (function() {
     makeFactory: function(options, width, height) {
       return new VF.Factory({
         renderer: {
-            selector: options.canvas_sel,
-            backend: options.backend,
-            width: width,
-            height: height
+          selector: options.canvas_sel,
+          backend: options.backend,
+          width: width || 450,
+          height: height || 140,
         }
       })
     },
 
     runCanvasTest: function(name, func, params) {
-      QUnit.test(name, function(assert) {
+      QUnit.test(name, (assert) => {
         // console.log("Running test (Canvas):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
           var test_canvas = VF.Test.createTestCanvas(test_canvas_sel,
