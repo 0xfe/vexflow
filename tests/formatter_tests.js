@@ -447,11 +447,11 @@ VF.Test.Formatter = (function() {
         return vf.Voice({time: {num_beats: 1, beat_value: 4}}).addTickables(tickables);
       }
 
-      system.addStave({voices: [newVoice(notes1)]}).addClef("treble");
-      system.addStave({voices: [newVoice(notes2, 2)]}).addClef("treble");
-      system.addStave({voices: [newVoice(notes3)]}).addClef("treble");
-      system.addStave({voices: [newVoice(notes4, 4)]}).addClef("treble");
-      system.addStave({voices: [newVoice(notes5, 8)]}).addClef("treble");
+      system.addStave({voices: [newVoice(notes1)]}).addClef("treble").addTimeSignature("1/4");
+      system.addStave({voices: [newVoice(notes2, 2)]}).addClef("treble").addTimeSignature("1/4");
+      system.addStave({voices: [newVoice(notes3)]}).addClef("bass").addTimeSignature("1/4");
+      system.addStave({voices: [newVoice(notes4, 4)]}).addClef("treble").addTimeSignature("1/4");
+      system.addStave({voices: [newVoice(notes5, 8)]}).addClef("treble").addTimeSignature("1/4");
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();

@@ -435,33 +435,34 @@ export class Formatter {
     this.minTotalWidth = x + shift;
     this.hasMinTotalWidth = true;
 
-    if (justifyWidth > 0) {
-      // Pass 2: Take leftover width, and distribute it to proportionately to
-      // all notes.
-      const remainingX = justifyWidth - this.minTotalWidth;
-      const leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
-      // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
-      let spaceAccum = 0;
+    // No justification needed. End formatting.
+    if (justifyWidth <= 0) return;
 
-      contextList.forEach((tick, index) => {
-        const prevTick = contextList[index - 1] || 0;
-        const context = contextMap[tick];
-        const tickSpace = (tick - prevTick) * leftoverPxPerTick;
-        // TODO: An idea worth pursuing:
-        //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
-        //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
+    // Pass 2: Take leftover width, and distribute it to proportionately to
+    // all notes.
+    const remainingX = justifyWidth - this.minTotalWidth;
+    const leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
+    // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
+    let spaceAccum = 0;
 
-        spaceAccum += tickSpace;
-        context.setX(context.getX() + spaceAccum);
+    contextList.forEach((tick, index) => {
+      const prevTick = contextList[index - 1] || 0;
+      const context = contextMap[tick];
+      const tickSpace = (tick - prevTick) * leftoverPxPerTick;
+      // TODO: An idea worth pursuing:
+      //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
+      //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
 
-        // Move center aligned tickables to middle
-        context
-          .getCenterAlignedTickables()
-          .forEach(tickable => { // eslint-disable-line
-            tickable.center_x_shift = centerX - context.getX();
-          });
-      });
-    }
+      spaceAccum += tickSpace;
+      context.setX(context.getX() + spaceAccum);
+
+      // Move center aligned tickables to middle
+      context
+        .getCenterAlignedTickables()
+        .forEach(tickable => { // eslint-disable-line
+          tickable.center_x_shift = centerX - context.getX();
+        });
+    });
   }
 
   // This is the top-level call for all formatting logic completed
