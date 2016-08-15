@@ -16,6 +16,7 @@ import { Tickable } from './tickable';
 
 export class Note extends Tickable {
   static get CATEGORY() { return 'note'; }
+  static get STAVEPADDING() { return 12; }
 
   // Debug helper. Displays various note metrics for the given
   // note.
@@ -30,6 +31,7 @@ export class Note extends Tickable {
       + metrics.noteWidth
       + metrics.extraRightPx
       + metrics.modRightPx;
+    const xFreedomRight = xEnd + note.getFreedom().right;
 
     const xWidth = xEnd - xStart;
     ctx.save();
@@ -52,7 +54,8 @@ export class Note extends Tickable {
     stroke(xAbs, xPost1, 'green');
     stroke(xPost1, xPost2, '#999');
     stroke(xPost2, xEnd, 'red');
-    stroke(xStart - note.getXShift(), xStart, '#DDD'); // Shift
+    stroke(xEnd, xFreedomRight, '#DD0');
+    stroke(xStart - note.getXShift(), xStart, '#BBB'); // Shift
     Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
     ctx.restore();
   }
@@ -135,7 +138,7 @@ export class Note extends Tickable {
     this.stave = null;
     this.render_options = {
       annotation_spacing: 5,
-      stave_padding: 12,
+      stave_padding: Note.STAVEPADDING,
     };
   }
 

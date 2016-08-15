@@ -15,6 +15,8 @@ import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
 import { StaveNote } from './stavenote';
+import { StaveConnector } from './staveconnector';
+import { System } from './system';
 import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
 import { Voice } from './voice';
@@ -45,6 +47,7 @@ export class Factory {
         space: 10,
       },
       renderer: {
+        context: null,
         el: '',
         backend: Renderer.Backends.SVG,
         width: 500,
@@ -60,7 +63,7 @@ export class Factory {
 
     this.options = defaults;
     this.setOptions(options);
-    if (this.options.renderer.el !== null) this.initRenderer();
+    if (this.options.renderer.el !== null || this.options.renderer.context) this.initRenderer();
     this.renderQ = [];
     this.stave = null; // current stave
   }
@@ -78,10 +81,11 @@ export class Factory {
       throw new X('HTML DOM element not set in Factory');
     }
 
-    this.ctx = Renderer.buildContext(el, backend, width, height, background);
+    this.context = Renderer.buildContext(el, backend, width, height, background);
   }
 
-  getContext() { return this.ctx; }
+  getContext() { return this.context; }
+  setContext(context) { this.context = context; return this; }
   getStave() { return this.stave; }
 
   // Returns pixels from current stave spacing.
@@ -98,7 +102,7 @@ export class Factory {
     });
 
     const stave = new Stave(params.x, params.y, params.width, params.options);
-    stave.setContext(this.ctx);
+    stave.setContext(this.context);
     this.renderQ.push(stave);
     this.stave = stave;
     return stave;
@@ -106,8 +110,8 @@ export class Factory {
 
   StaveNote(noteStruct) {
     const note = new StaveNote(noteStruct);
-    note.setStave(this.stave);
-    note.setContext(this.ctx);
+    if (this.stave) note.setStave(this.stave);
+    note.setContext(this.context);
     this.renderQ.push(note);
     return note;
   }
@@ -119,13 +123,13 @@ export class Factory {
     });
 
     const acc = new Accidental(params.type);
-    acc.setContext(this.ctx);
+    acc.setContext(this.context);
     // acc.render_options.stroke_px = this.space(0.3);
     return acc;
   }
 
   TickContext() {
-    return new TickContext().setContext(this.ctx);
+    return new TickContext().setContext(this.context);
   }
 
   ModifierContext() {
@@ -140,6 +144,18 @@ export class Factory {
     return new Voice(params.time);
   }
 
+  StaveConnector(params) {
+    params = setDefaults(params, {
+      top_stave: null,
+      bottom_stave: null,
+      options: {},
+    });
+    const connector = new StaveConnector(params.top_stave, params.bottom_stave);
+    connector.setContext(this.context);
+    this.renderQ.push(connector);
+    return connector;
+  }
+
   Formatter() {
     return new Formatter();
   }
@@ -150,12 +166,19 @@ export class Factory {
       options: {},
     });
 
-    const tuplet = new Tuplet(params.notes, params.options).setContext(this.ctx);
+    const tuplet = new Tuplet(params.notes, params.options).setContext(this.context);
     this.renderQ.push(tuplet);
     return tuplet;
   }
 
+  System(params) {
+    params.factory = this;
+    const system = new System(params).setContext(this.context);
+    this.renderQ.push(system);
+    return system;
+  }
+
   draw() {
-    this.renderQ.forEach(i => i.setContext(this.ctx).draw());
+    this.renderQ.forEach(i => i.setContext(this.context).draw());
   }
 }
