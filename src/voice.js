@@ -200,7 +200,7 @@ export class Voice extends Element {
   // Render the voice onto the canvas `context` and an optional `stave`.
   // If `stave` is omitted, it is expected that the notes have staves
   // already set.
-  draw(context, stave) {
+  draw(context = this.context, stave = this.stave) {
     let boundingBox = null;
     for (let i = 0; i < this.tickables.length; ++i) {
       const tickable = this.tickables[i];

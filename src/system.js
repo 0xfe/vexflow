@@ -34,6 +34,7 @@ export class System extends Element {
       endPadding: 0,
       factory: null,
       debugFormatter: false,
+      formatIterations: 6,
       options: {},
     });
 
@@ -70,6 +71,7 @@ export class System extends Element {
         { x: this.options.x, y: this.options.y, width: this.options.width, options });
     }
 
+    params.voices.forEach(voice => voice.setContext(this.context).setStave(params.stave));
     this.parts.push(params);
     return params.stave;
   }
@@ -105,9 +107,13 @@ export class System extends Element {
       - (startX - this.options.x) - this.options.endPadding - Note.STAVEPADDING;
     formatter.format(allVoices, justifyWidth);
 
+    for (let i = 0; i < this.options.formatIterations; i++) {
+      formatter.tune();
+    }
+
     // Render.
     this.parts.forEach(part => {
-      part.voices.forEach(voice => voice.draw(ctx, part.stave));
+      part.voices.forEach(voice => voice.draw());
     });
 
     // Render debug info.

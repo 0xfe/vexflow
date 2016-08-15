@@ -422,9 +422,10 @@ VF.Test.Formatter = (function() {
       }
 
       var vf = VF.Test.makeFactory(options, 600, 750);
+      var debug = true;
       var system = vf.System({
         x: 50, width: 500,
-        debugFormatter: true,
+        debugFormatter: debug,
       });
 
       var notes1 = [
@@ -471,23 +472,23 @@ VF.Test.Formatter = (function() {
 
       system.addStave({
         voices: [newVoice(notes1)],
-        debugNoteMetrics: true,
+        debugNoteMetrics: debug,
         }).addClef("treble").addTimeSignature("1/4");
       system.addStave({
         voices: [newVoice(notes2, 2)],
-        debugNoteMetrics: true,
+        debugNoteMetrics: debug,
         }).addClef("treble").addTimeSignature("1/4");
       system.addStave({
          voices: [newVoice(notes3)],
-        debugNoteMetrics: true,
+        debugNoteMetrics: debug,
         }).addClef("bass").addTimeSignature("1/4");
       system.addStave({
         voices: [newVoice(notes4, 4)],
-        debugNoteMetrics: true,
+        debugNoteMetrics: debug,
         }).addClef("treble").addTimeSignature("1/4");
       system.addStave({
         voices: [newVoice(notes5, 8)],
-        debugNoteMetrics: true,
+        debugNoteMetrics: debug,
         }).addClef("treble").addTimeSignature("1/4");
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
