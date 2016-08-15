@@ -110,7 +110,7 @@ VF.Test = (function() {
     makeFactory: function(options, width, height) {
       return new VF.Factory({
         renderer: {
-            el: options.canvas_sel,
+            selector: options.canvas_sel,
             backend: options.backend,
             width: width,
             height: height

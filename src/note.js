@@ -39,13 +39,13 @@ export class Note extends Tickable {
     ctx.fillText(Math.round(xWidth) + 'px', xStart + note.getXShift(), yPos);
 
     const y = (yPos + 7);
-    function stroke(x1, x2, color) {
+    function stroke(x1, x2, color, yy = y) {
       ctx.beginPath();
       ctx.setStrokeStyle(color);
       ctx.setFillStyle(color);
       ctx.setLineWidth(3);
-      ctx.moveTo(x1 + note.getXShift(), y);
-      ctx.lineTo(x2 + note.getXShift(), y);
+      ctx.moveTo(x1 + note.getXShift(), yy);
+      ctx.lineTo(x2 + note.getXShift(), yy);
       ctx.stroke();
     }
 
@@ -57,6 +57,16 @@ export class Note extends Tickable {
     stroke(xEnd, xFreedomRight, '#DD0');
     stroke(xStart - note.getXShift(), xStart, '#BBB'); // Shift
     Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
+
+    const formatterMetrics = note.getFormatterMetrics();
+    if (formatterMetrics.spaceDeviation !== undefined) {
+      const spaceDeviation = formatterMetrics.spaceDeviation;
+      const prefix = spaceDeviation >= 0 ? '+' : '';
+      ctx.setFillStyle('red');
+      ctx.fillText(prefix + Math.round(spaceDeviation),
+        xAbs + note.getXShift(), yPos - 10);
+      // ctx.fillText(Math.round(formatterMetrics.mean), (xEnd + xFreedomRight) / 2, yPos - 20);
+    }
     ctx.restore();
   }
 

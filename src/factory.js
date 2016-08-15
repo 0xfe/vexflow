@@ -48,7 +48,7 @@ export class Factory {
       },
       renderer: {
         context: null,
-        el: '',
+        selector: '',
         backend: Renderer.Backends.SVG,
         width: 500,
         height: 200,
@@ -63,7 +63,9 @@ export class Factory {
 
     this.options = defaults;
     this.setOptions(options);
-    if (this.options.renderer.el !== null || this.options.renderer.context) this.initRenderer();
+    if (this.options.renderer.selector !== null || this.options.renderer.context) {
+      this.initRenderer();
+    }
     this.renderQ = [];
     this.stave = null; // current stave
   }
@@ -76,12 +78,12 @@ export class Factory {
   }
 
   initRenderer() {
-    const { el, backend, width, height, background } = this.options.renderer;
-    if (el === '') {
+    const { selector, backend, width, height, background } = this.options.renderer;
+    if (selector === '') {
       throw new X('HTML DOM element not set in Factory');
     }
 
-    this.context = Renderer.buildContext(el, backend, width, height, background);
+    this.context = Renderer.buildContext(selector, backend, width, height, background);
   }
 
   getContext() { return this.context; }
