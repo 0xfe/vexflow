@@ -16,6 +16,7 @@ import { Tickable } from './tickable';
 
 export class Note extends Tickable {
   static get CATEGORY() { return 'note'; }
+  static get STAVEPADDING() { return 12; }
 
   // Debug helper. Displays various note metrics for the given
   // note.
@@ -135,7 +136,7 @@ export class Note extends Tickable {
     this.stave = null;
     this.render_options = {
       annotation_spacing: 5,
-      stave_padding: 12,
+      stave_padding: Note.STAVEPADDING,
     };
   }
 

@@ -18,12 +18,13 @@
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
 import { Vex } from './vex';
+import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 import { Voice } from './voice';
-import { Beam } from './beam';
 import { StaveConnector } from './staveconnector';
 import { StaveNote } from './stavenote';
+import { Note } from './note';
 import { ModifierContext } from './modifiercontext';
 import { TickContext } from './tickcontext';
 
@@ -143,6 +144,31 @@ export class Formatter {
 
       return x + tick.getWidth() + extra.right + 10;
     }, x);
+  }
+
+  // Helper function to plot formatter debug info.
+  static plotDebugging(ctx, formatter, xPos, y1, y2) {
+    const x = xPos + Note.STAVEPADDING;
+    const contextGaps = formatter.contextGaps;
+    function stroke(x1, x2, color) {
+      ctx.beginPath();
+      ctx.setStrokeStyle(color);
+      ctx.setFillStyle(color);
+      ctx.setLineWidth(1);
+      ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+    }
+
+    ctx.save();
+    ctx.setFont('Arial', 8, '');
+
+    contextGaps.gaps.forEach(gap => {
+      stroke(x + gap.x1, x + gap.x2, '#aaa');
+      // Vex.drawDot(ctx, xPos + gap.x1, yPos, 'blue');
+      ctx.fillText(Math.round(gap.x2 - gap.x1), x + gap.x1, y2 + 12);
+    });
+
+    ctx.fillText(Math.round(contextGaps.total) + 'px', x - 20, y2 + 12);
+    ctx.restore();
   }
 
   // Helper function to format and draw a single voice. Returns a bounding
@@ -301,6 +327,13 @@ export class Formatter {
     // Arrays of tick and modifier contexts.
     this.tickContexts = null;
     this.modiferContexts = null;
+
+    // Gaps between contexts, for free movement of notes post
+    // formatting.
+    this.contextGaps = {
+      total: 0,
+      gaps: [],
+    };
   }
 
   // Find all the rests in each of the `voices` and align them
@@ -462,6 +495,27 @@ export class Formatter {
         .forEach(tickable => { // eslint-disable-line
           tickable.center_x_shift = centerX - context.getX();
         });
+    });
+
+    // Just one context. Done formatting.
+    if (contextList.length === 1) return;
+
+    // Pass 3: Calculate available slack per tick context. This works out how much freedom
+    // to move a context has in either direction, without affecting other notes.
+    this.contextGaps.total = 0;
+    this.contextGaps.gaps = [];
+    contextList.forEach((tick, index) => {
+      if (index === 0) return;
+      const prevTick = contextList[index - 1];
+      const prevContext = contextMap[prevTick];
+      const context = contextMap[tick];
+
+      const prevMetrics = prevContext.getMetrics();
+
+      const insideRightEdge = prevContext.getX() + prevMetrics.width;
+      const insideLeftEdge = context.getX();
+      this.contextGaps.total += insideLeftEdge - insideRightEdge;
+      this.contextGaps.gaps.push({ x1: insideRightEdge, x2: insideLeftEdge });
     });
   }
 

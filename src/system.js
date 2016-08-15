@@ -4,9 +4,10 @@
 // each which can have one or more voices. All voices across all staves in
 // the system are formatted together.
 
+import { Element } from './element';
 import { Factory } from './factory';
 import { Formatter } from './formatter';
-import { Element } from './element';
+import { Note } from './note';
 
 function setDefaults(params, defaults) {
   const default_options = defaults.options;
@@ -29,9 +30,10 @@ export class System extends Element {
       y: 10,
       width: 500,
       connector: null,
-      spaceBetweenStaves: 15, // stave spaces
+      spaceBetweenStaves: 12, // stave spaces
       endPadding: 5,
       factory: null,
+      debugFormatter: false,
       options: {},
     });
 
@@ -58,6 +60,7 @@ export class System extends Element {
       voices: [],
       spaceAbove: 0, // stave spaces
       spaceBelow: 0, // stave spaces
+      debugNoteMetrics: false,
       options: {},
     });
 
@@ -78,6 +81,7 @@ export class System extends Element {
     let y = this.options.y;
     let startX = 0;
     let allVoices = [];
+    const debugNoteMetricsYs = [];
 
     // Join the voices for each stave.
     this.parts.forEach(part => {
@@ -86,6 +90,10 @@ export class System extends Element {
       formatter.joinVoices(part.voices);
       y = y + part.stave.space(part.spaceBelow);
       y = y + part.stave.space(this.options.spaceBetweenStaves);
+      if (part.debugNoteMetrics) {
+        debugNoteMetricsYs.push({ y, voice: part.voices[0] });
+        y += 15;
+      }
       allVoices = allVoices.concat(part.voices);
 
       startX = Math.max(startX, part.stave.getNoteStartX());
@@ -99,6 +107,15 @@ export class System extends Element {
     // Render.
     this.parts.forEach(part => {
       part.voices.forEach(voice => voice.draw(ctx, part.stave));
+    });
+
+    // Render debug info.
+    if (this.options.debugFormatter) {
+      Formatter.plotDebugging(ctx, formatter, startX, this.options.y, y);
+    }
+
+    debugNoteMetricsYs.forEach(d => {
+      d.voice.getTickables().forEach(note => Note.plotMetrics(ctx, note, d.y));
     });
   }
 }
