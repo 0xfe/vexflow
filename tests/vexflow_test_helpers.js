@@ -113,7 +113,7 @@ VF.Test = (function() {
           selector: options.canvas_sel,
           backend: options.backend,
           width: width || 450,
-          height: heigh || 140,
+          height: height || 140,
         }
       })
     },
