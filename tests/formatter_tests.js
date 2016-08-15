@@ -15,7 +15,13 @@ VF.Test.Formatter = (function() {
       runTests("Notes with Tab", Formatter.notesWithTab);
       runTests("Format Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0});
       runTests("Format Multiple Staves - Justified", Formatter.multiStaves, {justify: 168});
-      runTests("Proportional Formatting", Formatter.proportionalFormatting);
+
+      runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: true, iterations: 0});
+
+      for (var i = 2; i < 15; i++) {
+        VF.Test.runSVGTest("Proportional Formatting (" + i + " iterations)",
+          Formatter.proportionalFormatting, {debug: true, iterations: i});
+      }
     },
 
     buildTickContexts: function() {
@@ -402,11 +408,12 @@ VF.Test.Formatter = (function() {
     },
 
     proportionalFormatting: function(options) {
+      var debug = options.params.debug;
       var vf = VF.Test.makeFactory(options, 600, 750);
-      var debug = true;
       var system = vf.System({
         x: 50, width: 500,
         debugFormatter: debug,
+        formatIterations: options.params.iterations,
       });
 
       var notes1 = [

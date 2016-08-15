@@ -1,6 +1,6 @@
 {
   "name": "vexflow",
-  "version": "1.2.74",
+  "version": "1.2.75",
   "description": "A JavaScript library for rendering music notation and guitar tablature",
   "main": "releases/vexflow-debug.js",
   "repository": {

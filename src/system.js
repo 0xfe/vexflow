@@ -34,7 +34,7 @@ export class System extends Element {
       endPadding: 0,
       factory: null,
       debugFormatter: false,
-      formatIterations: 6,
+      formatIterations: 15,
       options: {},
     });
 

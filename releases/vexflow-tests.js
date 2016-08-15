@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.74 built on 2016-08-14.
+ * VexFlow 1.2.75 built on 2016-08-15.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -115,7 +115,7 @@ VF.Test = (function() {
     makeFactory: function(options, width, height) {
       return new VF.Factory({
         renderer: {
-            el: options.canvas_sel,
+            selector: options.canvas_sel,
             backend: options.backend,
             width: width,
             height: height
@@ -154,6 +154,7 @@ VF.Test = (function() {
     },
 
     runSVGTest: function(name, func, params) {
+      if (!VF.Test.RUN_SVG_TESTS) return;
       QUnit.test(name, function(assert) {
           // console.log("Running test (SVG):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
@@ -4946,7 +4947,7 @@ Vex.Flow.Test.Factory = (function() {
 
       var vf = new VF.Factory({
         renderer: {
-          el: null,
+          selector: null,
           width: 700,
           height: 500
         }
@@ -4955,7 +4956,7 @@ Vex.Flow.Test.Factory = (function() {
       var options = vf.getOptions();
       assert.equal(options.renderer.width, 700);
       assert.equal(options.renderer.height, 500);
-      assert.equal(options.renderer.el, null);
+      assert.equal(options.renderer.selector, null);
       assert.equal(options.stave.space, 10); 
 
       assert.expect(5);
@@ -4982,7 +4983,13 @@ VF.Test.Formatter = (function() {
       runTests("Notes with Tab", Formatter.notesWithTab);
       runTests("Format Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0});
       runTests("Format Multiple Staves - Justified", Formatter.multiStaves, {justify: 168});
-      runTests("Proportional Formatting", Formatter.proportionalFormatting);
+
+      runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: true, iterations: 0});
+
+      for (var i = 2; i < 15; i++) {
+        VF.Test.runSVGTest("Proportional Formatting (" + i + " iterations)",
+          Formatter.proportionalFormatting, {debug: true, iterations: i});
+      }
     },
 
     buildTickContexts: function() {
@@ -5369,8 +5376,13 @@ VF.Test.Formatter = (function() {
     },
 
     proportionalFormatting: function(options) {
+      var debug = options.params.debug;
       var vf = VF.Test.makeFactory(options, 600, 750);
-      var system = vf.System({x: 50, width: 500});
+      var system = vf.System({
+        x: 50, width: 500,
+        debugFormatter: debug,
+        formatIterations: options.params.iterations,
+      });
 
       var notes1 = [
         {keys: ["c/5"], stem_direction: -1, duration: "8"},
@@ -5414,11 +5426,26 @@ VF.Test.Formatter = (function() {
         return vf.Voice({time: {num_beats: 1, beat_value: 4}}).addTickables(tickables);
       }
 
-      system.addStave({voices: [newVoice(notes1)]}).addClef("treble");
-      system.addStave({voices: [newVoice(notes2, 2)]}).addClef("treble");
-      system.addStave({voices: [newVoice(notes3)]}).addClef("treble");
-      system.addStave({voices: [newVoice(notes4, 4)]}).addClef("treble");
-      system.addStave({voices: [newVoice(notes5, 8)]}).addClef("treble");
+      system.addStave({
+        voices: [newVoice(notes1)],
+        debugNoteMetrics: debug,
+        }).addClef("treble").addTimeSignature("1/4");
+      system.addStave({
+        voices: [newVoice(notes2, 2)],
+        debugNoteMetrics: debug,
+        }).addClef("treble").addTimeSignature("1/4");
+      system.addStave({
+         voices: [newVoice(notes3)],
+        debugNoteMetrics: debug,
+        }).addClef("bass").addTimeSignature("1/4");
+      system.addStave({
+        voices: [newVoice(notes4, 4)],
+        debugNoteMetrics: debug,
+        }).addClef("treble").addTimeSignature("1/4");
+      system.addStave({
+        voices: [newVoice(notes5, 8)],
+        debugNoteMetrics: debug,
+        }).addClef("treble").addTimeSignature("1/4");
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();
