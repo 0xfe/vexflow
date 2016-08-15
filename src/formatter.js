@@ -603,33 +603,46 @@ export class Formatter {
   // and oscillates around a global minimum.
   tune() {
     // Reposition tick contexts to reduce cost.
-    function rootMeanSquare(means) {
+    function sum(means) {
       let total = 0;
       for (let i = 0; i < means.length; i++) {
-        total += Math.pow(means[i], 2);
+        total += means[i];
       }
-      return Math.sqrt(total);
+      return total;
     }
 
-    let accumulator = 0;
-    this.tickContexts.list.forEach((tick, index) => {
+    function move(current, prev, next, shift) {
+      current.setX(current.getX() + shift);
+      current.setFreedomLeft(current.getFreedom().left + shift);
+      current.setFreedomRight(current.getFreedom().right - shift);
+
+      if (prev) prev.setFreedomRight(prev.getFreedom().right + shift);
+      if (next) next.setFreedomLeft(next.getFreedom().left - shift);
+    }
+
+    let shift = 0;
+    this.tickContexts.list.forEach((tick, index, list) => {
       const context = this.tickContexts.map[tick];
-      const cost = rootMeanSquare(
+      const prevContext = (index > 0) ? this.tickContexts.map[list[index - 1]] : null;
+      const nextContext = (index < list.length - 1) ? this.tickContexts.map[list[index + 1]] : null;
+
+      move(context, prevContext, nextContext, shift);
+
+      const cost = -sum(
         context.getTickables().map(t => t.getFormatterMetrics().spaceDeviation));
 
-      accumulator += cost;
-
-      if (index > 0) {
-        let shift = 0;
-        if (accumulator > 0) {
-          shift = Math.min(context.getFreedom().right, Math.abs(accumulator));
-        } else if (accumulator < 0) {
-          shift = -Math.min(context.getFreedom().left, Math.abs(accumulator));
+      if (cost > 0) {
+        shift = -Math.min(context.getFreedom().right, Math.abs(cost));
+      } else if (cost < 0) {
+        if (nextContext) {
+          shift = Math.min(nextContext.getFreedom().right, Math.abs(cost));
+        } else {
+          shift = 0;
         }
-
-        context.setX(context.getX() + shift);
-        accumulator -= shift;
       }
+
+      const minShift = Math.min(5, Math.abs(shift));
+      shift = shift > 0 ? minShift : -minShift;
     });
 
     this.evaluate();

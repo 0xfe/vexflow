@@ -149,6 +149,7 @@ VF.Test = (function() {
     },
 
     runSVGTest: function(name, func, params) {
+      if (!VF.Test.RUN_SVG_TESTS) return;
       QUnit.test(name, function(assert) {
           // console.log("Running test (SVG):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();

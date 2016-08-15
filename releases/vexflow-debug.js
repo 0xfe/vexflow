@@ -82,11 +82,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _stavemodifier = __webpack_require__(44);
 	
-	var _voice = __webpack_require__(14);
+	var _voice = __webpack_require__(17);
 	
 	var _accidental = __webpack_require__(28);
 	
-	var _beam = __webpack_require__(15);
+	var _beam = __webpack_require__(14);
 	
 	var _stavetie = __webpack_require__(32);
 	
@@ -122,7 +122,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _timesignote = __webpack_require__(57);
 	
-	var _stem = __webpack_require__(17);
+	var _stem = __webpack_require__(16);
 	
 	var _tabtie = __webpack_require__(33);
 	
@@ -132,7 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tabslide = __webpack_require__(58);
 	
-	var _tuplet = __webpack_require__(16);
+	var _tuplet = __webpack_require__(15);
 	
 	var _gracenote = __webpack_require__(59);
 	
@@ -4322,17 +4322,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
+	var _beam = __webpack_require__(14);
+	
 	var _tables = __webpack_require__(2);
 	
 	var _fraction = __webpack_require__(3);
 	
-	var _voice = __webpack_require__(14);
-	
-	var _beam = __webpack_require__(15);
+	var _voice = __webpack_require__(17);
 	
 	var _staveconnector = __webpack_require__(18);
 	
 	var _stavenote = __webpack_require__(19);
+	
+	var _note = __webpack_require__(21);
 	
 	var _modifiercontext = __webpack_require__(26);
 	
@@ -4464,6 +4466,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        return x + tick.getWidth() + extra.right + 10;
 	      }, x);
+	    }
+	
+	    // Helper function to plot formatter debug info.
+	
+	  }, {
+	    key: 'plotDebugging',
+	    value: function plotDebugging(ctx, formatter, xPos, y1, y2) {
+	      var x = xPos + _note.Note.STAVEPADDING;
+	      var contextGaps = formatter.contextGaps;
+	      function stroke(x1, x2, color) {
+	        ctx.beginPath();
+	        ctx.setStrokeStyle(color);
+	        ctx.setFillStyle(color);
+	        ctx.setLineWidth(1);
+	        ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+	      }
+	
+	      ctx.save();
+	      ctx.setFont('Arial', 8, '');
+	
+	      contextGaps.gaps.forEach(function (gap) {
+	        stroke(x + gap.x1, x + gap.x2, '#aaa');
+	        // Vex.drawDot(ctx, xPos + gap.x1, yPos, 'blue');
+	        ctx.fillText(Math.round(gap.x2 - gap.x1), x + gap.x1, y2 + 12);
+	      });
+	
+	      ctx.fillText(Math.round(contextGaps.total) + 'px', x - 20, y2 + 12);
+	      ctx.setFillStyle('red');
+	
+	      ctx.fillText('Loss: ' + formatter.lossHistory.map(function (loss) {
+	        return Math.round(loss);
+	      }), x - 20, y2 + 22);
+	      ctx.restore();
 	    }
 	
 	    // Helper function to format and draw a single voice. Returns a bounding
@@ -4627,6 +4662,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Arrays of tick and modifier contexts.
 	    this.tickContexts = null;
 	    this.modiferContexts = null;
+	
+	    // Gaps between contexts, for free movement of notes post
+	    // formatting.
+	    this.contextGaps = {
+	      total: 0,
+	      gaps: []
+	    };
+	
+	    this.voices = [];
 	  }
 	
 	  // Find all the rests in each of the `voices` and align them
@@ -4788,34 +4832,185 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.minTotalWidth = x + shift;
 	      this.hasMinTotalWidth = true;
 	
-	      if (justifyWidth > 0) {
-	        (function () {
-	          // Pass 2: Take leftover width, and distribute it to proportionately to
-	          // all notes.
-	          var remainingX = justifyWidth - _this.minTotalWidth;
-	          var leftoverPxPerTick = remainingX / (_this.totalTicks.value() * resolutionMultiplier);
-	          // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
-	          var spaceAccum = 0;
+	      // No justification needed. End formatting.
+	      if (justifyWidth <= 0) return;
 	
-	          contextList.forEach(function (tick, index) {
-	            var prevTick = contextList[index - 1] || 0;
-	            var context = contextMap[tick];
-	            var tickSpace = (tick - prevTick) * leftoverPxPerTick;
-	            // TODO: An idea worth pursuing:
-	            //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
-	            //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
+	      // Pass 2: Take leftover width, and distribute it to proportionately to
+	      // all notes.
+	      var remainingX = justifyWidth - this.minTotalWidth;
+	      var leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
+	      // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
+	      var spaceAccum = 0;
 	
-	            spaceAccum += tickSpace;
-	            context.setX(context.getX() + spaceAccum);
+	      contextList.forEach(function (tick, index) {
+	        var prevTick = contextList[index - 1] || 0;
+	        var context = contextMap[tick];
+	        var tickSpace = (tick - prevTick) * leftoverPxPerTick;
+	        // TODO: An idea worth pursuing:
+	        //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
+	        //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
 	
-	            // Move center aligned tickables to middle
-	            context.getCenterAlignedTickables().forEach(function (tickable) {
-	              // eslint-disable-line
-	              tickable.center_x_shift = centerX - context.getX();
-	            });
-	          });
-	        })();
+	        spaceAccum += tickSpace;
+	        context.setX(context.getX() + spaceAccum);
+	
+	        // Move center aligned tickables to middle
+	        context.getCenterAlignedTickables().forEach(function (tickable) {
+	          // eslint-disable-line
+	          tickable.center_x_shift = centerX - context.getX();
+	        });
+	      });
+	
+	      // Just one context. Done formatting.
+	      if (contextList.length === 1) return;
+	
+	      this.justifyWidth = justifyWidth;
+	      this.lossHistory = [];
+	      this.evaluate();
+	    }
+	
+	    // Calculate the total cost of this formatting decision.
+	
+	  }, {
+	    key: 'evaluate',
+	    value: function evaluate() {
+	      var _this2 = this;
+	
+	      var justifyWidth = this.justifyWidth;
+	      // Calculate available slack per tick context. This works out how much freedom
+	      // to move a context has in either direction, without affecting other notes.
+	      this.contextGaps.total = 0;
+	      this.contextGaps.gaps = [];
+	      this.tickContexts.list.forEach(function (tick, index) {
+	        if (index === 0) return;
+	        var prevTick = _this2.tickContexts.list[index - 1];
+	        var prevContext = _this2.tickContexts.map[prevTick];
+	        var context = _this2.tickContexts.map[tick];
+	        var prevMetrics = prevContext.getMetrics();
+	
+	        var insideRightEdge = prevContext.getX() + prevMetrics.width;
+	        var insideLeftEdge = context.getX();
+	        var gap = insideLeftEdge - insideRightEdge;
+	        _this2.contextGaps.total += gap;
+	        _this2.contextGaps.gaps.push({ x1: insideRightEdge, x2: insideLeftEdge });
+	
+	        // Tell the tick contexts how much they can reposition themselves.
+	        context.setFreedomLeft(gap);
+	        prevContext.setFreedomRight(gap);
+	      });
+	
+	      // Calculate mean distance in each voice for each duration type, then calculate
+	      // how far each note is from the mean.
+	      var durationStats = this.durationStats = {};
+	
+	      function updateStats(duration, space) {
+	        var stats = durationStats[duration];
+	        if (stats === undefined) {
+	          durationStats[duration] = { mean: space, count: 1 };
+	        } else {
+	          stats.count += 1;
+	          stats.mean = (stats.mean + space) / 2;
+	        }
 	      }
+	
+	      this.voices.forEach(function (voice) {
+	        voice.getTickables().forEach(function (note, i, notes) {
+	          var duration = note.getTicks().clone().simplify().toString();
+	          var metrics = note.getMetrics();
+	          var leftNoteEdge = note.getX() + metrics.noteWidth + metrics.modRightPx + metrics.extraRightPx;
+	          var space = 0;
+	
+	          if (i < notes.length - 1) {
+	            var rightNote = notes[i + 1];
+	            var rightMetrics = rightNote.getMetrics();
+	            var rightNoteEdge = rightNote.getX() - rightMetrics.modLeftPx - rightMetrics.extraLeftPx;
+	
+	            space = rightNoteEdge - leftNoteEdge;
+	            note.setFreedomRight(space);
+	            note.getFormatterMetrics().space = rightNote.getX() - note.getX();
+	            rightNote.setFreedomLeft(space);
+	          } else {
+	            space = justifyWidth - leftNoteEdge;
+	            note.setFreedomRight(space);
+	            note.getFormatterMetrics().space = justifyWidth - note.getX();
+	          }
+	
+	          updateStats(duration, note.getFormatterMetrics().space);
+	        });
+	      });
+	
+	      // Calculate how much each note deviates from the mean. Loss function is square
+	      // root of the sum of squared deviation.
+	      var totalDeviation = 0;
+	      this.voices.forEach(function (voice) {
+	        voice.getTickables().forEach(function (note) {
+	          var duration = note.getTicks().clone().simplify().toString();
+	          note.getFormatterMetrics().spaceDeviation = note.getFormatterMetrics().space - _this2.durationStats[duration].mean;
+	          note.getFormatterMetrics().duration = duration;
+	          note.getFormatterMetrics().mean = _this2.durationStats[duration].mean;
+	
+	          totalDeviation += Math.pow(_this2.durationStats[duration].mean, 2);
+	        });
+	      });
+	
+	      this.totalCost = Math.sqrt(totalDeviation);
+	      this.lossHistory.push(this.totalCost);
+	    }
+	
+	    // Run a single iteration of rejustification. At a high level, this method calculates
+	    // the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
+	    // attempt to reduce the cost. You can call this method multiple times until it finds
+	    // and oscillates around a global minimum.
+	
+	  }, {
+	    key: 'tune',
+	    value: function tune() {
+	      var _this3 = this;
+	
+	      // Reposition tick contexts to reduce cost.
+	      function sum(means) {
+	        var total = 0;
+	        for (var i = 0; i < means.length; i++) {
+	          total += means[i];
+	        }
+	        return total;
+	      }
+	
+	      function move(current, prev, next, shift) {
+	        current.setX(current.getX() + shift);
+	        current.setFreedomLeft(current.getFreedom().left + shift);
+	        current.setFreedomRight(current.getFreedom().right - shift);
+	
+	        if (prev) prev.setFreedomRight(prev.getFreedom().right + shift);
+	        if (next) next.setFreedomLeft(next.getFreedom().left - shift);
+	      }
+	
+	      var shift = 0;
+	      this.tickContexts.list.forEach(function (tick, index, list) {
+	        var context = _this3.tickContexts.map[tick];
+	        var prevContext = index > 0 ? _this3.tickContexts.map[list[index - 1]] : null;
+	        var nextContext = index < list.length - 1 ? _this3.tickContexts.map[list[index + 1]] : null;
+	
+	        move(context, prevContext, nextContext, shift);
+	
+	        var cost = -sum(context.getTickables().map(function (t) {
+	          return t.getFormatterMetrics().spaceDeviation;
+	        }));
+	
+	        if (cost > 0) {
+	          shift = -Math.min(context.getFreedom().right, Math.abs(cost));
+	        } else if (cost < 0) {
+	          if (nextContext) {
+	            shift = Math.min(nextContext.getFreedom().right, Math.abs(cost));
+	          } else {
+	            shift = 0;
+	          }
+	        }
+	
+	        var minShift = Math.min(5, Math.abs(shift));
+	        shift = shift > 0 ? minShift : -minShift;
+	      });
+	
+	      this.evaluate();
 	    }
 	
 	    // This is the top-level call for all formatting logic completed
@@ -4867,6 +5062,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	
 	      _vex.Vex.Merge(opts, options);
+	      this.voices = voices;
 	      this.alignRests(voices, opts.align_rests);
 	      this.createTickContexts(voices);
 	      this.preFormat(justifyWidth, opts.context, voices, opts.stave);
@@ -4903,342 +5099,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Voice = undefined;
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _vex = __webpack_require__(1);
-	
-	var _element = __webpack_require__(5);
-	
-	var _tables = __webpack_require__(2);
-	
-	var _fraction = __webpack_require__(3);
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-	//
-	// ## Description
-	//
-	// This file implements the main Voice class. It's mainly a container
-	// object to group `Tickables` for formatting.
-	
-	var Voice = exports.Voice = function (_Element) {
-	  _inherits(Voice, _Element);
-	
-	  _createClass(Voice, null, [{
-	    key: 'Mode',
-	
-	    // Modes allow the addition of ticks in three different ways:
-	    //
-	    // STRICT: This is the default. Ticks must fill the voice.
-	    // SOFT:   Ticks can be added without restrictions.
-	    // FULL:   Ticks do not need to fill the voice, but can't exceed the maximum
-	    //         tick length.
-	    get: function get() {
-	      return {
-	        STRICT: 1,
-	        SOFT: 2,
-	        FULL: 3
-	      };
-	    }
-	  }]);
-	
-	  function Voice(time) {
-	    _classCallCheck(this, Voice);
-	
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Voice).call(this));
-	
-	    _this.setAttribute('type', 'Voice');
-	    _this.time = _vex.Vex.Merge({
-	      num_beats: 4,
-	      beat_value: 4,
-	      resolution: _tables.Flow.RESOLUTION
-	    }, time);
-	
-	    // Recalculate total ticks.
-	    _this.totalTicks = new _fraction.Fraction(_this.time.num_beats * (_this.time.resolution / _this.time.beat_value), 1);
-	
-	    _this.resolutionMultiplier = 1;
-	
-	    // Set defaults
-	    _this.tickables = [];
-	    _this.ticksUsed = new _fraction.Fraction(0, 1);
-	    _this.smallestTickCount = _this.totalTicks.clone();
-	    _this.largestTickWidth = 0;
-	    _this.stave = null;
-	    _this.boundingBox = null;
-	    // Do we care about strictly timed notes
-	    _this.mode = Voice.Mode.STRICT;
-	
-	    // This must belong to a VoiceGroup
-	    _this.voiceGroup = null;
-	    return _this;
-	  }
-	
-	  // Get the total ticks in the voice
-	
-	
-	  _createClass(Voice, [{
-	    key: 'getTotalTicks',
-	    value: function getTotalTicks() {
-	      return this.totalTicks;
-	    }
-	
-	    // Get the total ticks used in the voice by all the tickables
-	
-	  }, {
-	    key: 'getTicksUsed',
-	    value: function getTicksUsed() {
-	      return this.ticksUsed;
-	    }
-	
-	    // Get the largest width of all the tickables
-	
-	  }, {
-	    key: 'getLargestTickWidth',
-	    value: function getLargestTickWidth() {
-	      return this.largestTickWidth;
-	    }
-	
-	    // Get the tick count for the shortest tickable
-	
-	  }, {
-	    key: 'getSmallestTickCount',
-	    value: function getSmallestTickCount() {
-	      return this.smallestTickCount;
-	    }
-	
-	    // Get the tickables in the voice
-	
-	  }, {
-	    key: 'getTickables',
-	    value: function getTickables() {
-	      return this.tickables;
-	    }
-	
-	    // Get/set the voice mode, use a value from `Voice.Mode`
-	
-	  }, {
-	    key: 'getMode',
-	    value: function getMode() {
-	      return this.mode;
-	    }
-	  }, {
-	    key: 'setMode',
-	    value: function setMode(mode) {
-	      this.mode = mode;return this;
-	    }
-	
-	    // Get the resolution multiplier for the voice
-	
-	  }, {
-	    key: 'getResolutionMultiplier',
-	    value: function getResolutionMultiplier() {
-	      return this.resolutionMultiplier;
-	    }
-	
-	    // Get the actual tick resolution for the voice
-	
-	  }, {
-	    key: 'getActualResolution',
-	    value: function getActualResolution() {
-	      return this.resolutionMultiplier * this.time.resolution;
-	    }
-	
-	    // Set the voice's stave
-	
-	  }, {
-	    key: 'setStave',
-	    value: function setStave(stave) {
-	      this.stave = stave;
-	      this.boundingBox = null; // Reset bounding box so we can reformat
-	      return this;
-	    }
-	
-	    // Get the bounding box for the voice
-	
-	  }, {
-	    key: 'getBoundingBox',
-	    value: function getBoundingBox() {
-	      var stave = void 0;
-	      var boundingBox = void 0;
-	      var bb = void 0;
-	      var i = void 0;
-	
-	      if (!this.boundingBox) {
-	        if (!this.stave) throw new _vex.Vex.RERR('NoStave', "Can't get bounding box without stave.");
-	        stave = this.stave;
-	        boundingBox = null;
-	
-	        for (i = 0; i < this.tickables.length; ++i) {
-	          this.tickables[i].setStave(stave);
-	
-	          bb = this.tickables[i].getBoundingBox();
-	          if (!bb) continue;
-	
-	          boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
-	        }
-	
-	        this.boundingBox = boundingBox;
-	      }
-	      return this.boundingBox;
-	    }
-	
-	    // Every tickable must be associated with a voiceGroup. This allows formatters
-	    // and preformatters to associate them with the right modifierContexts.
-	
-	  }, {
-	    key: 'getVoiceGroup',
-	    value: function getVoiceGroup() {
-	      if (!this.voiceGroup) {
-	        throw new _vex.Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
-	      }
-	
-	      return this.voiceGroup;
-	    }
-	
-	    // Set the voice group
-	
-	  }, {
-	    key: 'setVoiceGroup',
-	    value: function setVoiceGroup(g) {
-	      this.voiceGroup = g;return this;
-	    }
-	
-	    // Set the voice mode to strict or soft
-	
-	  }, {
-	    key: 'setStrict',
-	    value: function setStrict(strict) {
-	      this.mode = strict ? Voice.Mode.STRICT : Voice.Mode.SOFT;
-	      return this;
-	    }
-	
-	    // Determine if the voice is complete according to the voice mode
-	
-	  }, {
-	    key: 'isComplete',
-	    value: function isComplete() {
-	      if (this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) {
-	        return this.ticksUsed.equals(this.totalTicks);
-	      } else {
-	        return true;
-	      }
-	    }
-	
-	    // Add a tickable to the voice
-	
-	  }, {
-	    key: 'addTickable',
-	    value: function addTickable(tickable) {
-	      if (!tickable.shouldIgnoreTicks()) {
-	        var ticks = tickable.getTicks();
-	
-	        // Update the total ticks for this line.
-	        this.ticksUsed.add(ticks);
-	
-	        if ((this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) && this.ticksUsed.greaterThan(this.totalTicks)) {
-	          this.totalTicks.subtract(ticks);
-	          throw new _vex.Vex.RERR('BadArgument', 'Too many ticks.');
-	        }
-	
-	        // Track the smallest tickable for formatting.
-	        if (ticks.lessThan(this.smallestTickCount)) {
-	          this.smallestTickCount = ticks.clone();
-	        }
-	
-	        this.resolutionMultiplier = this.ticksUsed.denominator;
-	
-	        // Expand total ticks using denominator from ticks used.
-	        this.totalTicks.add(0, this.ticksUsed.denominator);
-	      }
-	
-	      // Add the tickable to the line.
-	      this.tickables.push(tickable);
-	      tickable.setVoice(this);
-	      return this;
-	    }
-	
-	    // Add an array of tickables to the voice.
-	
-	  }, {
-	    key: 'addTickables',
-	    value: function addTickables(tickables) {
-	      for (var i = 0; i < tickables.length; ++i) {
-	        this.addTickable(tickables[i]);
-	      }
-	
-	      return this;
-	    }
-	
-	    // Preformats the voice by applying the voice's stave to each note.
-	
-	  }, {
-	    key: 'preFormat',
-	    value: function preFormat() {
-	      var _this2 = this;
-	
-	      if (this.preFormatted) return this;
-	
-	      this.tickables.forEach(function (tickable) {
-	        if (!tickable.getStave()) {
-	          tickable.setStave(_this2.stave);
-	        }
-	      });
-	
-	      this.preFormatted = true;
-	      return this;
-	    }
-	
-	    // Render the voice onto the canvas `context` and an optional `stave`.
-	    // If `stave` is omitted, it is expected that the notes have staves
-	    // already set.
-	
-	  }, {
-	    key: 'draw',
-	    value: function draw(context, stave) {
-	      var boundingBox = null;
-	      for (var i = 0; i < this.tickables.length; ++i) {
-	        var tickable = this.tickables[i];
-	
-	        // Set the stave if provided
-	        if (stave) tickable.setStave(stave);
-	
-	        if (!tickable.getStave()) {
-	          throw new _vex.Vex.RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
-	        }
-	
-	        if (i === 0) boundingBox = tickable.getBoundingBox();
-	
-	        if (i > 0 && boundingBox) {
-	          var tickable_bb = tickable.getBoundingBox();
-	          if (tickable_bb) boundingBox.mergeWith(tickable_bb);
-	        }
-	
-	        tickable.setContext(context);
-	        tickable.draw();
-	      }
-	
-	      this.boundingBox = boundingBox;
-	    }
-	  }]);
-
-	  return Voice;
-	}(_element.Element);
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
 	exports.Beam = undefined;
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5251,9 +5111,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _fraction = __webpack_require__(3);
 	
-	var _tuplet = __webpack_require__(16);
+	var _tuplet = __webpack_require__(15);
 	
-	var _stem = __webpack_require__(17);
+	var _stem = __webpack_require__(16);
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
@@ -6156,7 +6016,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6176,7 +6036,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _glyph = __webpack_require__(4);
 	
-	var _stem = __webpack_require__(17);
+	var _stem = __webpack_require__(16);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -6563,7 +6423,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6833,6 +6693,345 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.Voice = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _vex = __webpack_require__(1);
+	
+	var _element = __webpack_require__(5);
+	
+	var _tables = __webpack_require__(2);
+	
+	var _fraction = __webpack_require__(3);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	//
+	// ## Description
+	//
+	// This file implements the main Voice class. It's mainly a container
+	// object to group `Tickables` for formatting.
+	
+	var Voice = exports.Voice = function (_Element) {
+	  _inherits(Voice, _Element);
+	
+	  _createClass(Voice, null, [{
+	    key: 'Mode',
+	
+	    // Modes allow the addition of ticks in three different ways:
+	    //
+	    // STRICT: This is the default. Ticks must fill the voice.
+	    // SOFT:   Ticks can be added without restrictions.
+	    // FULL:   Ticks do not need to fill the voice, but can't exceed the maximum
+	    //         tick length.
+	    get: function get() {
+	      return {
+	        STRICT: 1,
+	        SOFT: 2,
+	        FULL: 3
+	      };
+	    }
+	  }]);
+	
+	  function Voice(time) {
+	    _classCallCheck(this, Voice);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Voice).call(this));
+	
+	    _this.setAttribute('type', 'Voice');
+	    _this.time = _vex.Vex.Merge({
+	      num_beats: 4,
+	      beat_value: 4,
+	      resolution: _tables.Flow.RESOLUTION
+	    }, time);
+	
+	    // Recalculate total ticks.
+	    _this.totalTicks = new _fraction.Fraction(_this.time.num_beats * (_this.time.resolution / _this.time.beat_value), 1);
+	
+	    _this.resolutionMultiplier = 1;
+	
+	    // Set defaults
+	    _this.tickables = [];
+	    _this.ticksUsed = new _fraction.Fraction(0, 1);
+	    _this.smallestTickCount = _this.totalTicks.clone();
+	    _this.largestTickWidth = 0;
+	    _this.stave = null;
+	    _this.boundingBox = null;
+	    // Do we care about strictly timed notes
+	    _this.mode = Voice.Mode.STRICT;
+	
+	    // This must belong to a VoiceGroup
+	    _this.voiceGroup = null;
+	    return _this;
+	  }
+	
+	  // Get the total ticks in the voice
+	
+	
+	  _createClass(Voice, [{
+	    key: 'getTotalTicks',
+	    value: function getTotalTicks() {
+	      return this.totalTicks;
+	    }
+	
+	    // Get the total ticks used in the voice by all the tickables
+	
+	  }, {
+	    key: 'getTicksUsed',
+	    value: function getTicksUsed() {
+	      return this.ticksUsed;
+	    }
+	
+	    // Get the largest width of all the tickables
+	
+	  }, {
+	    key: 'getLargestTickWidth',
+	    value: function getLargestTickWidth() {
+	      return this.largestTickWidth;
+	    }
+	
+	    // Get the tick count for the shortest tickable
+	
+	  }, {
+	    key: 'getSmallestTickCount',
+	    value: function getSmallestTickCount() {
+	      return this.smallestTickCount;
+	    }
+	
+	    // Get the tickables in the voice
+	
+	  }, {
+	    key: 'getTickables',
+	    value: function getTickables() {
+	      return this.tickables;
+	    }
+	
+	    // Get/set the voice mode, use a value from `Voice.Mode`
+	
+	  }, {
+	    key: 'getMode',
+	    value: function getMode() {
+	      return this.mode;
+	    }
+	  }, {
+	    key: 'setMode',
+	    value: function setMode(mode) {
+	      this.mode = mode;return this;
+	    }
+	
+	    // Get the resolution multiplier for the voice
+	
+	  }, {
+	    key: 'getResolutionMultiplier',
+	    value: function getResolutionMultiplier() {
+	      return this.resolutionMultiplier;
+	    }
+	
+	    // Get the actual tick resolution for the voice
+	
+	  }, {
+	    key: 'getActualResolution',
+	    value: function getActualResolution() {
+	      return this.resolutionMultiplier * this.time.resolution;
+	    }
+	
+	    // Set the voice's stave
+	
+	  }, {
+	    key: 'setStave',
+	    value: function setStave(stave) {
+	      this.stave = stave;
+	      this.boundingBox = null; // Reset bounding box so we can reformat
+	      return this;
+	    }
+	
+	    // Get the bounding box for the voice
+	
+	  }, {
+	    key: 'getBoundingBox',
+	    value: function getBoundingBox() {
+	      var stave = void 0;
+	      var boundingBox = void 0;
+	      var bb = void 0;
+	      var i = void 0;
+	
+	      if (!this.boundingBox) {
+	        if (!this.stave) throw new _vex.Vex.RERR('NoStave', "Can't get bounding box without stave.");
+	        stave = this.stave;
+	        boundingBox = null;
+	
+	        for (i = 0; i < this.tickables.length; ++i) {
+	          this.tickables[i].setStave(stave);
+	
+	          bb = this.tickables[i].getBoundingBox();
+	          if (!bb) continue;
+	
+	          boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
+	        }
+	
+	        this.boundingBox = boundingBox;
+	      }
+	      return this.boundingBox;
+	    }
+	
+	    // Every tickable must be associated with a voiceGroup. This allows formatters
+	    // and preformatters to associate them with the right modifierContexts.
+	
+	  }, {
+	    key: 'getVoiceGroup',
+	    value: function getVoiceGroup() {
+	      if (!this.voiceGroup) {
+	        throw new _vex.Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
+	      }
+	
+	      return this.voiceGroup;
+	    }
+	
+	    // Set the voice group
+	
+	  }, {
+	    key: 'setVoiceGroup',
+	    value: function setVoiceGroup(g) {
+	      this.voiceGroup = g;return this;
+	    }
+	
+	    // Set the voice mode to strict or soft
+	
+	  }, {
+	    key: 'setStrict',
+	    value: function setStrict(strict) {
+	      this.mode = strict ? Voice.Mode.STRICT : Voice.Mode.SOFT;
+	      return this;
+	    }
+	
+	    // Determine if the voice is complete according to the voice mode
+	
+	  }, {
+	    key: 'isComplete',
+	    value: function isComplete() {
+	      if (this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) {
+	        return this.ticksUsed.equals(this.totalTicks);
+	      } else {
+	        return true;
+	      }
+	    }
+	
+	    // Add a tickable to the voice
+	
+	  }, {
+	    key: 'addTickable',
+	    value: function addTickable(tickable) {
+	      if (!tickable.shouldIgnoreTicks()) {
+	        var ticks = tickable.getTicks();
+	
+	        // Update the total ticks for this line.
+	        this.ticksUsed.add(ticks);
+	
+	        if ((this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) && this.ticksUsed.greaterThan(this.totalTicks)) {
+	          this.totalTicks.subtract(ticks);
+	          throw new _vex.Vex.RERR('BadArgument', 'Too many ticks.');
+	        }
+	
+	        // Track the smallest tickable for formatting.
+	        if (ticks.lessThan(this.smallestTickCount)) {
+	          this.smallestTickCount = ticks.clone();
+	        }
+	
+	        this.resolutionMultiplier = this.ticksUsed.denominator;
+	
+	        // Expand total ticks using denominator from ticks used.
+	        this.totalTicks.add(0, this.ticksUsed.denominator);
+	      }
+	
+	      // Add the tickable to the line.
+	      this.tickables.push(tickable);
+	      tickable.setVoice(this);
+	      return this;
+	    }
+	
+	    // Add an array of tickables to the voice.
+	
+	  }, {
+	    key: 'addTickables',
+	    value: function addTickables(tickables) {
+	      for (var i = 0; i < tickables.length; ++i) {
+	        this.addTickable(tickables[i]);
+	      }
+	
+	      return this;
+	    }
+	
+	    // Preformats the voice by applying the voice's stave to each note.
+	
+	  }, {
+	    key: 'preFormat',
+	    value: function preFormat() {
+	      var _this2 = this;
+	
+	      if (this.preFormatted) return this;
+	
+	      this.tickables.forEach(function (tickable) {
+	        if (!tickable.getStave()) {
+	          tickable.setStave(_this2.stave);
+	        }
+	      });
+	
+	      this.preFormatted = true;
+	      return this;
+	    }
+	
+	    // Render the voice onto the canvas `context` and an optional `stave`.
+	    // If `stave` is omitted, it is expected that the notes have staves
+	    // already set.
+	
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      var context = arguments.length <= 0 || arguments[0] === undefined ? this.context : arguments[0];
+	      var stave = arguments.length <= 1 || arguments[1] === undefined ? this.stave : arguments[1];
+	
+	      var boundingBox = null;
+	      for (var i = 0; i < this.tickables.length; ++i) {
+	        var tickable = this.tickables[i];
+	
+	        // Set the stave if provided
+	        if (stave) tickable.setStave(stave);
+	
+	        if (!tickable.getStave()) {
+	          throw new _vex.Vex.RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
+	        }
+	
+	        if (i === 0) boundingBox = tickable.getBoundingBox();
+	
+	        if (i > 0 && boundingBox) {
+	          var tickable_bb = tickable.getBoundingBox();
+	          if (tickable_bb) boundingBox.mergeWith(tickable_bb);
+	        }
+	
+	        tickable.setContext(context);
+	        tickable.draw();
+	      }
+	
+	      this.boundingBox = boundingBox;
+	    }
+	  }]);
+
+	  return Voice;
+	}(_element.Element);
+
+/***/ },
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7097,7 +7296,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _boundingbox = __webpack_require__(7);
 	
-	var _stem = __webpack_require__(17);
+	var _stem = __webpack_require__(16);
 	
 	var _notehead = __webpack_require__(20);
 	
@@ -8333,7 +8532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _note = __webpack_require__(21);
 	
-	var _stem = __webpack_require__(17);
+	var _stem = __webpack_require__(16);
 	
 	var _stavenote = __webpack_require__(19);
 	
@@ -8722,6 +8921,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
 	      var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
 	      var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
+	      var xFreedomRight = xEnd + note.getFreedom().right;
 	
 	      var xWidth = xEnd - xStart;
 	      ctx.save();
@@ -8730,12 +8930,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var y = yPos + 7;
 	      function stroke(x1, x2, color) {
+	        var yy = arguments.length <= 3 || arguments[3] === undefined ? y : arguments[3];
+	
 	        ctx.beginPath();
 	        ctx.setStrokeStyle(color);
 	        ctx.setFillStyle(color);
 	        ctx.setLineWidth(3);
-	        ctx.moveTo(x1 + note.getXShift(), y);
-	        ctx.lineTo(x2 + note.getXShift(), y);
+	        ctx.moveTo(x1 + note.getXShift(), yy);
+	        ctx.lineTo(x2 + note.getXShift(), yy);
 	        ctx.stroke();
 	      }
 	
@@ -8744,8 +8946,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      stroke(xAbs, xPost1, 'green');
 	      stroke(xPost1, xPost2, '#999');
 	      stroke(xPost2, xEnd, 'red');
-	      stroke(xStart - note.getXShift(), xStart, '#DDD'); // Shift
+	      stroke(xEnd, xFreedomRight, '#DD0');
+	      stroke(xStart - note.getXShift(), xStart, '#BBB'); // Shift
 	      _vex.Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
+	
+	      var formatterMetrics = note.getFormatterMetrics();
+	      if (formatterMetrics.spaceDeviation !== undefined) {
+	        var spaceDeviation = formatterMetrics.spaceDeviation;
+	        var prefix = spaceDeviation >= 0 ? '+' : '';
+	        ctx.setFillStyle('red');
+	        ctx.fillText(prefix + Math.round(spaceDeviation), xAbs + note.getXShift(), yPos - 10);
+	        // ctx.fillText(Math.round(formatterMetrics.mean), (xEnd + xFreedomRight) / 2, yPos - 20);
+	      }
 	      ctx.restore();
 	    }
 	
@@ -8764,6 +8976,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'CATEGORY',
 	    get: function get() {
 	      return 'note';
+	    }
+	  }, {
+	    key: 'STAVEPADDING',
+	    get: function get() {
+	      return 12;
 	    }
 	  }]);
 	
@@ -8834,7 +9051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.stave = null;
 	    _this.render_options = {
 	      annotation_spacing: 5,
-	      stave_padding: 12
+	      stave_padding: Note.STAVEPADDING
 	    };
 	    return _this;
 	  }
@@ -9299,6 +9516,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // This flag tells the formatter to ignore this tickable during
 	    // formatting and justification. It is set by tickables such as BarNote.
 	    _this.ignore_ticks = false;
+	    _this.freedom = { left: 0, right: 0 }; // space availabile on each side for tuning.
+	    _this.formatterMetrics = {};
 	    return _this;
 	  }
 	
@@ -9340,6 +9559,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'getWidth',
 	    value: function getWidth() {
 	      return this.width;
+	    }
+	  }, {
+	    key: 'getFreedom',
+	    value: function getFreedom() {
+	      return this.freedom;
+	    }
+	  }, {
+	    key: 'setFreedomLeft',
+	    value: function setFreedomLeft(pixels) {
+	      this.freedom.left = pixels;return this;
+	    }
+	  }, {
+	    key: 'setFreedomRight',
+	    value: function setFreedomRight(pixels) {
+	      this.freedom.right = pixels;return this;
+	    }
+	  }, {
+	    key: 'getFormatterMetrics',
+	    value: function getFormatterMetrics() {
+	      return this.formatterMetrics;
 	    }
 	  }, {
 	    key: 'setXShift',
@@ -9538,7 +9777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tables = __webpack_require__(2);
 	
-	var _stem = __webpack_require__(17);
+	var _stem = __webpack_require__(16);
 	
 	var _glyph = __webpack_require__(4);
 	
@@ -11700,7 +11939,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _formatter = __webpack_require__(13);
 	
-	var _voice = __webpack_require__(14);
+	var _voice = __webpack_require__(17);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -11863,9 +12102,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _formatter = __webpack_require__(13);
 	
-	var _voice = __webpack_require__(14);
+	var _voice = __webpack_require__(17);
 	
-	var _beam = __webpack_require__(15);
+	var _beam = __webpack_require__(14);
 	
 	var _stavetie = __webpack_require__(32);
 	
@@ -13063,7 +13302,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _glyph = __webpack_require__(4);
 	
-	var _stem = __webpack_require__(17);
+	var _stem = __webpack_require__(16);
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
@@ -13829,6 +14068,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // Ignore this tick context for formatting and justification
 	    _this.ignore_ticks = true;
+	    _this.freedom = { left: 0, right: 0 }; // space availabile on each side for tuning.
 	    _this.preFormatted = false;
 	    _this.postFormatted = false;
 	    return _this;
@@ -13883,6 +14123,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'getTickables',
 	    value: function getTickables() {
 	      return this.tickables;
+	    }
+	  }, {
+	    key: 'getFreedom',
+	    value: function getFreedom() {
+	      return this.freedom;
+	    }
+	  }, {
+	    key: 'setFreedomLeft',
+	    value: function setFreedomLeft(pixels) {
+	      this.freedom.left = pixels;return this;
+	    }
+	  }, {
+	    key: 'setFreedomRight',
+	    value: function setFreedomRight(pixels) {
+	      this.freedom.right = pixels;return this;
 	    }
 	  }, {
 	    key: 'getCenterAlignedTickables',
@@ -17866,7 +18121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _modifier = __webpack_require__(24);
 	
-	var _stem = __webpack_require__(17);
+	var _stem = __webpack_require__(16);
 	
 	var _stemmablenote = __webpack_require__(23);
 	
@@ -21264,11 +21519,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	// each which can have one or more voices. All voices across all staves in
 	// the system are formatted together.
 	
+	var _element = __webpack_require__(5);
+	
 	var _factory = __webpack_require__(74);
 	
 	var _formatter = __webpack_require__(13);
 	
-	var _element = __webpack_require__(5);
+	var _note = __webpack_require__(21);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -21307,9 +21564,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        y: 10,
 	        width: 500,
 	        connector: null,
-	        spaceBetweenStaves: 15, // stave spaces
-	        endPadding: 5,
+	        spaceBetweenStaves: 12, // stave spaces
+	        endPadding: 0,
 	        factory: null,
+	        debugFormatter: false,
+	        formatIterations: 15,
 	        options: {}
 	      });
 	
@@ -21334,11 +21593,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'addStave',
 	    value: function addStave(params) {
+	      var _this2 = this;
+	
 	      params = setDefaults(params, {
 	        stave: null,
 	        voices: [],
 	        spaceAbove: 0, // stave spaces
 	        spaceBelow: 0, // stave spaces
+	        debugNoteMetrics: false,
 	        options: {}
 	      });
 	
@@ -21347,13 +21609,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        params.stave = this.factory.Stave({ x: this.options.x, y: this.options.y, width: this.options.width, options: options });
 	      }
 	
+	      params.voices.forEach(function (voice) {
+	        return voice.setContext(_this2.context).setStave(params.stave);
+	      });
 	      this.parts.push(params);
 	      return params.stave;
 	    }
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      var ctx = this.checkContext();
 	      var formatter = new _formatter.Formatter();
@@ -21361,6 +21626,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var y = this.options.y;
 	      var startX = 0;
 	      var allVoices = [];
+	      var debugNoteMetricsYs = [];
 	
 	      // Join the voices for each stave.
 	      this.parts.forEach(function (part) {
@@ -21368,7 +21634,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        part.stave.setY(y);
 	        formatter.joinVoices(part.voices);
 	        y = y + part.stave.space(part.spaceBelow);
-	        y = y + part.stave.space(_this2.options.spaceBetweenStaves);
+	        y = y + part.stave.space(_this3.options.spaceBetweenStaves);
+	        if (part.debugNoteMetrics) {
+	          debugNoteMetricsYs.push({ y: y, voice: part.voices[0] });
+	          y += 15;
+	        }
 	        allVoices = allVoices.concat(part.voices);
 	
 	        startX = Math.max(startX, part.stave.getNoteStartX());
@@ -21378,13 +21648,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.parts.forEach(function (part) {
 	        return part.stave.setNoteStartX(startX);
 	      });
-	      var justifyWidth = this.options.width - (startX - this.options.x) - this.options.endPadding;
+	      var justifyWidth = this.options.width - (startX - this.options.x) - this.options.endPadding - _note.Note.STAVEPADDING;
 	      formatter.format(allVoices, justifyWidth);
+	
+	      for (var i = 0; i < this.options.formatIterations; i++) {
+	        formatter.tune();
+	      }
 	
 	      // Render.
 	      this.parts.forEach(function (part) {
 	        part.voices.forEach(function (voice) {
-	          return voice.draw(ctx, part.stave);
+	          return voice.draw();
+	        });
+	      });
+	
+	      // Render debug info.
+	      if (this.options.debugFormatter) {
+	        _formatter.Formatter.plotDebugging(ctx, formatter, startX, this.options.y, y);
+	      }
+	
+	      debugNoteMetricsYs.forEach(function (d) {
+	        d.voice.getTickables().forEach(function (note) {
+	          return _note.Note.plotMetrics(ctx, note, d.y);
 	        });
 	      });
 	    }
@@ -21436,9 +21721,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tickcontext = __webpack_require__(38);
 	
-	var _tuplet = __webpack_require__(16);
+	var _tuplet = __webpack_require__(15);
 	
-	var _voice = __webpack_require__(14);
+	var _voice = __webpack_require__(17);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -21477,7 +21762,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      },
 	      renderer: {
 	        context: null,
-	        el: '',
+	        selector: '',
 	        backend: _renderer.Renderer.Backends.SVG,
 	        width: 500,
 	        height: 200,
@@ -21492,7 +21777,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.options = defaults;
 	    this.setOptions(options);
-	    if (this.options.renderer.el !== null || this.options.renderer.context) this.initRenderer();
+	    if (this.options.renderer.selector !== null || this.options.renderer.context) {
+	      this.initRenderer();
+	    }
 	    this.renderQ = [];
 	    this.stave = null; // current stave
 	  }
@@ -21516,17 +21803,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'initRenderer',
 	    value: function initRenderer() {
 	      var _options$renderer = this.options.renderer;
-	      var el = _options$renderer.el;
+	      var selector = _options$renderer.selector;
 	      var backend = _options$renderer.backend;
 	      var width = _options$renderer.width;
 	      var height = _options$renderer.height;
 	      var background = _options$renderer.background;
 	
-	      if (el === '') {
+	      if (selector === '') {
 	        throw new X('HTML DOM element not set in Factory');
 	      }
 	
-	      this.context = _renderer.Renderer.buildContext(el, backend, width, height, background);
+	      this.context = _renderer.Renderer.buildContext(selector, backend, width, height, background);
 	    }
 	  }, {
 	    key: 'getContext',
