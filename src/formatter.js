@@ -169,7 +169,9 @@ export class Formatter {
 
     ctx.fillText(Math.round(contextGaps.total) + 'px', x - 20, y2 + 12);
     ctx.setFillStyle('red');
-    ctx.fillText('Loss: ' + Math.round(formatter.totalCost), x - 20, y2 + 22);
+
+    ctx.fillText('Loss: ' +
+      formatter.lossHistory.map(loss => Math.round(loss)), x - 20, y2 + 22);
     ctx.restore();
   }
 
@@ -504,15 +506,23 @@ export class Formatter {
     // Just one context. Done formatting.
     if (contextList.length === 1) return;
 
-    // Pass 3: Calculate available slack per tick context. This works out how much freedom
+    this.justifyWidth = justifyWidth;
+    this.lossHistory = [];
+    this.evaluate();
+  }
+
+  // Calculate the total cost of this formatting decision.
+  evaluate() {
+    const justifyWidth = this.justifyWidth;
+    // Calculate available slack per tick context. This works out how much freedom
     // to move a context has in either direction, without affecting other notes.
     this.contextGaps.total = 0;
     this.contextGaps.gaps = [];
-    contextList.forEach((tick, index) => {
+    this.tickContexts.list.forEach((tick, index) => {
       if (index === 0) return;
-      const prevTick = contextList[index - 1];
-      const prevContext = contextMap[prevTick];
-      const context = contextMap[tick];
+      const prevTick = this.tickContexts.list[index - 1];
+      const prevContext = this.tickContexts.map[prevTick];
+      const context = this.tickContexts.map[tick];
       const prevMetrics = prevContext.getMetrics();
 
       const insideRightEdge = prevContext.getX() + prevMetrics.width;
@@ -526,19 +536,8 @@ export class Formatter {
       prevContext.setFreedomRight(gap);
     });
 
-    this.justifyWidth = justifyWidth;
-    this.lossHistory = [];
-    this.tune();
-  }
-
-  // Run a single iteration of rejustification. At a high level, this method calculates
-  // the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
-  // attempt to reduce the cost. You can call this method multiple times until it finds
-  // and oscillates around a global minimum.
-  tune() {
     // Calculate mean distance in each voice for each duration type, then calculate
     // how far each note is from the mean.
-    const justifyWidth = this.justifyWidth;
     const durationStats = this.durationStats = {};
 
     function updateStats(duration, space) {
@@ -579,9 +578,9 @@ export class Formatter {
       });
     });
 
-    // Calculate how much each note deviates from the mean. Loss function is sum
-    // of squares of deviation.
-    this.totalCost = 0;
+    // Calculate how much each note deviates from the mean. Loss function is square
+    // root of the sum of squared deviation.
+    let totalDeviation = 0;
     this.voices.forEach(voice => {
       voice.getTickables().forEach((note) => {
         const duration = note.getTicks().clone().simplify().toString();
@@ -590,11 +589,50 @@ export class Formatter {
         note.getFormatterMetrics().duration = duration;
         note.getFormatterMetrics().mean = this.durationStats[duration].mean;
 
-        this.totalCost += Math.pow(this.durationStats[duration].mean, 2);
+        totalDeviation += Math.pow(this.durationStats[duration].mean, 2);
       });
     });
 
+    this.totalCost = Math.sqrt(totalDeviation);
     this.lossHistory.push(this.totalCost);
+  }
+
+  // Run a single iteration of rejustification. At a high level, this method calculates
+  // the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
+  // attempt to reduce the cost. You can call this method multiple times until it finds
+  // and oscillates around a global minimum.
+  tune() {
+    // Reposition tick contexts to reduce cost.
+    function rootMeanSquare(means) {
+      let total = 0;
+      for (let i = 0; i < means.length; i++) {
+        total += Math.pow(means[i], 2);
+      }
+      return Math.sqrt(total);
+    }
+
+    let accumulator = 0;
+    this.tickContexts.list.forEach((tick, index) => {
+      const context = this.tickContexts.map[tick];
+      const cost = rootMeanSquare(
+        context.getTickables().map(t => t.getFormatterMetrics().spaceDeviation));
+
+      accumulator += cost;
+
+      if (index > 0) {
+        let shift = 0;
+        if (accumulator > 0) {
+          shift = Math.min(context.getFreedom().right, Math.abs(accumulator));
+        } else if (accumulator < 0) {
+          shift = -Math.min(context.getFreedom().left, Math.abs(accumulator));
+        }
+
+        context.setX(context.getX() + shift);
+        accumulator -= shift;
+      }
+    });
+
+    this.evaluate();
   }
 
   // This is the top-level call for all formatting logic completed

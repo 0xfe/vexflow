@@ -34,6 +34,7 @@ export class System extends Element {
       endPadding: 0,
       factory: null,
       debugFormatter: false,
+      formatIterations: 6,
       options: {},
     });
 
@@ -104,6 +105,10 @@ export class System extends Element {
     const justifyWidth = this.options.width
       - (startX - this.options.x) - this.options.endPadding - Note.STAVEPADDING;
     formatter.format(allVoices, justifyWidth);
+
+    for (let i = 0; i < this.options.formatIterations; i++) {
+      formatter.tune();
+    }
 
     // Render.
     this.parts.forEach(part => {
