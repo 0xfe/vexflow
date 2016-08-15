@@ -62,6 +62,7 @@ import { StringNumber } from './stringnumber';
 import { Crescendo } from './crescendo';
 import { Volta } from './stavevolta';
 import { Font } from './fonts/vexflow_font';
+import { System } from './system';
 import { Factory } from './factory';
 
 Vex.Flow = Flow;
@@ -125,6 +126,7 @@ Vex.Flow.StringNumber = StringNumber;
 Vex.Flow.Crescendo = Crescendo;
 Vex.Flow.Volta = Volta;
 Vex.Flow.Font = Font;
+Vex.Flow.System = System;
 Vex.Flow.Factory = Factory;
 
 export default Vex;

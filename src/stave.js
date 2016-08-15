@@ -58,6 +58,8 @@ export class Stave extends Element {
     this.addEndModifier(new Barline(this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE));
   }
 
+  space(spacing) { return this.options.spacing_between_lines_px * spacing; }
+
   resetLines() {
     this.options.line_config = [];
     for (let i = 0; i < this.options.num_lines; i++) {

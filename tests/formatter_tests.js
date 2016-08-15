@@ -402,36 +402,25 @@ VF.Test.Formatter = (function() {
     },
 
     proportionalFormatting: function(options) {
-      var vf = VF.Test.makeFactory(options, 600, 650);
-
-      var voices = [];
-
-      function newNote(note_struct) { return vf.StaveNote(note_struct); }
-      function newVoice(notes, y, tuplet){
-        var stave = vf.Stave({x: 10, y: y, width: 500});
-        var tickables = notes.map(function(note) {return vf.StaveNote(note);});
-        if (tuplet) vf.Tuplet({notes: tickables, options: {notes_occupied: tuplet}});
-        var voice = vf.Voice({time: {num_beats: 1, beat_value: 4}}).addTickables(tickables);
-        voices.push(voice)
-        return voice;
-      }
+      var vf = VF.Test.makeFactory(options, 600, 750);
+      var system = vf.System({x: 50, width: 500});
 
       var notes1 = [
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-      ];
-
-      var notes2 = [
         {keys: ["c/5"], stem_direction: -1, duration: "8"},
         {keys: ["c/5"], stem_direction: -1, duration: "8"},
       ];
   
+      var notes2 = [
+        {keys: ["a/4"], stem_direction: 1, duration: "8"},
+        {keys: ["a/4"], stem_direction: 1, duration: "8"},
+        {keys: ["a/4"], stem_direction: 1, duration: "8"},
+      ];
+
       var notes3 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
+        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+        {keys: ["c/5"], stem_direction: -1, duration: "16"},
       ];
 
       var notes4 = [
@@ -452,27 +441,20 @@ VF.Test.Formatter = (function() {
         {keys: ["a/4"], stem_direction: 1, duration: "32"},
       ];
 
-      var voice1 = newVoice(notes1, 30);
-      var voice2 = newVoice(notes2, 140);
-      var voice3 = newVoice(notes3, 250, 2);
-      var voice4 = newVoice(notes4, 360, 4);
-      var voice5 = newVoice(notes5, 470, 8);
+      function newVoice(notes, tuplet) {
+        var tickables = notes.map(function(note) {return vf.StaveNote(note);});
+        if (tuplet) vf.Tuplet({notes: tickables, options: {notes_occupied: tuplet}});
+        return vf.Voice({time: {num_beats: 1, beat_value: 4}}).addTickables(tickables);
+      }
 
-      var formatter = vf.Formatter();
-      voices.forEach(function(voice) {formatter.joinVoices([voice]);})
-      formatter.format(voices, 450);
+      system.addStave({voices: [newVoice(notes1)]}).addClef("treble");
+      system.addStave({voices: [newVoice(notes2, 2)]}).addClef("treble");
+      system.addStave({voices: [newVoice(notes3)]}).addClef("treble");
+      system.addStave({voices: [newVoice(notes4, 4)]}).addClef("treble");
+      system.addStave({voices: [newVoice(notes5, 8)]}).addClef("treble");
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();
-
-      var location = 140;
-      voices.forEach(function(voice) {
-        voice.getTickables().forEach(function(note) {
-          VF.Test.plotNoteWidth(vf.getContext(), note, location);
-        });
-        location = location + 110;
-      });
-
-      // VF.Test.plotLegendForNoteWidth(vf.getContext(), 300, 280);
       ok(true);
     },
 
