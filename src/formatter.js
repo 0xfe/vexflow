@@ -334,6 +334,8 @@ export class Formatter {
       total: 0,
       gaps: [],
     };
+
+    this.voices = [];
   }
 
   // Find all the rests in each of the `voices` and align them
@@ -509,13 +511,50 @@ export class Formatter {
       const prevTick = contextList[index - 1];
       const prevContext = contextMap[prevTick];
       const context = contextMap[tick];
-
       const prevMetrics = prevContext.getMetrics();
 
       const insideRightEdge = prevContext.getX() + prevMetrics.width;
       const insideLeftEdge = context.getX();
-      this.contextGaps.total += insideLeftEdge - insideRightEdge;
+      const gap = insideLeftEdge - insideRightEdge;
+      this.contextGaps.total += gap;
       this.contextGaps.gaps.push({ x1: insideRightEdge, x2: insideLeftEdge });
+
+      // Tell the tick contexts how much they can reposition themselves.
+      context.setFreedomLeft(gap);
+      prevContext.setFreedomRight(gap);
+    });
+
+    // Calculate mean distance in each voice for each duration type, then calculate
+    // how far each note is from the mean.
+    this.durationStats = {};
+    this.voices.forEach(voice => {
+      voice.getTickables().forEach((note, i, notes) => {
+        const duration = note.getTicks().clone().simplify();
+        const metrics = note.getMetrics();
+        const leftNoteEdge = note.getX() + metrics.noteWidth +
+            metrics.modRightPx + metrics.extraRightPx;
+
+        if (i < (notes.length - 1)) {
+          const rightNote = notes[i + 1];
+          const rightMetrics = rightNote.getMetrics();
+          const rightNoteEdge = rightNote.getX() -
+            rightMetrics.modLeftPx - rightMetrics.extraLeftPx;
+
+          const space = rightNoteEdge - leftNoteEdge;
+          note.setFreedomRight(space);
+          rightNote.setFreedomLeft(space);
+
+          const stats = this.durationStats[duration];
+          if (stats === undefined) {
+            this.durationStats[duration] = { mean: space, count: 1 };
+          } else {
+            stats.count += 1;
+            stats.mean = (stats.mean + space) / stats.count;
+          }
+        } else {
+          note.setFreedomRight(justifyWidth - leftNoteEdge);
+        }
+      });
     });
   }
 
@@ -556,6 +595,7 @@ export class Formatter {
     };
 
     Vex.Merge(opts, options);
+    this.voices = voices;
     this.alignRests(voices, opts.align_rests);
     this.createTickContexts(voices);
     this.preFormat(justifyWidth, opts.context, voices, opts.stave);

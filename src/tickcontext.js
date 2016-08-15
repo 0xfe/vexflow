@@ -37,6 +37,7 @@ export class TickContext extends Element {
 
     // Ignore this tick context for formatting and justification
     this.ignore_ticks = true;
+    this.freedom = { left: 0, right: 0 }; // space availabile on each side for tuning.
     this.preFormatted = false;
     this.postFormatted = false;
   }
@@ -51,6 +52,9 @@ export class TickContext extends Element {
   getMaxTicks() { return this.maxTicks; }
   getMinTicks() { return this.minTicks; }
   getTickables() { return this.tickables; }
+  getFreedom() { return this.freedom; }
+  setFreedomLeft(pixels) { this.freedom.left = pixels; return this; }
+  setFreedomRight(pixels) { this.freedom.right = pixels; return this; }
   getCenterAlignedTickables() {
     return this.tickables.filter(tickable => tickable.isCenterAligned());
   }

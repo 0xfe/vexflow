@@ -31,7 +31,7 @@ export class System extends Element {
       width: 500,
       connector: null,
       spaceBetweenStaves: 12, // stave spaces
-      endPadding: 5,
+      endPadding: 0,
       factory: null,
       debugFormatter: false,
       options: {},
@@ -101,7 +101,8 @@ export class System extends Element {
 
     // Update the start position of all staves.
     this.parts.forEach(part => part.stave.setNoteStartX(startX));
-    const justifyWidth = this.options.width - (startX - this.options.x) - this.options.endPadding;
+    const justifyWidth = this.options.width
+      - (startX - this.options.x) - this.options.endPadding - Note.STAVEPADDING;
     formatter.format(allVoices, justifyWidth);
 
     // Render.

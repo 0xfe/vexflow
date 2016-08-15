@@ -31,6 +31,7 @@ export class Note extends Tickable {
       + metrics.noteWidth
       + metrics.extraRightPx
       + metrics.modRightPx;
+    const xFreedomRight = xEnd + note.getFreedom().right;
 
     const xWidth = xEnd - xStart;
     ctx.save();
@@ -53,7 +54,8 @@ export class Note extends Tickable {
     stroke(xAbs, xPost1, 'green');
     stroke(xPost1, xPost2, '#999');
     stroke(xPost2, xEnd, 'red');
-    stroke(xStart - note.getXShift(), xStart, '#DDD'); // Shift
+    stroke(xEnd, xFreedomRight, '#DD0');
+    stroke(xStart - note.getXShift(), xStart, '#BBB'); // Shift
     Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
     ctx.restore();
   }
