@@ -38,6 +38,8 @@ export class Tickable extends Element {
     // This flag tells the formatter to ignore this tickable during
     // formatting and justification. It is set by tickables such as BarNote.
     this.ignore_ticks = false;
+    this.freedom = { left: 0, right: 0 }; // space availabile on each side for tuning.
+    this.formatterMetrics = {};
   }
 
   // Set the DOM ID of the element. Must be called before draw(). TODO: Update
@@ -49,6 +51,12 @@ export class Tickable extends Element {
   getTicks() { return this.ticks; }
   shouldIgnoreTicks() { return this.ignore_ticks; }
   getWidth() { return this.width; }
+
+  getFreedom() { return this.freedom; }
+  setFreedomLeft(pixels) { this.freedom.left = pixels; return this; }
+  setFreedomRight(pixels) { this.freedom.right = pixels; return this; }
+  getFormatterMetrics() { return this.formatterMetrics; }
+
   setXShift(x) { this.x_shift = x; }
   getCenterXShift() {
     if (this.isCenterAligned()) {
