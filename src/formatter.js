@@ -168,6 +168,8 @@ export class Formatter {
     });
 
     ctx.fillText(Math.round(contextGaps.total) + 'px', x - 20, y2 + 12);
+    ctx.setFillStyle('red');
+    ctx.fillText('Loss: ' + Math.round(formatter.totalCost), x - 20, y2 + 22);
     ctx.restore();
   }
 
@@ -524,15 +526,38 @@ export class Formatter {
       prevContext.setFreedomRight(gap);
     });
 
+    this.justifyWidth = justifyWidth;
+    this.lossHistory = [];
+    this.tune();
+  }
+
+  // Run a single iteration of rejustification. At a high level, this method calculates
+  // the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
+  // attempt to reduce the cost. You can call this method multiple times until it finds
+  // and oscillates around a global minimum.
+  tune() {
     // Calculate mean distance in each voice for each duration type, then calculate
     // how far each note is from the mean.
-    this.durationStats = {};
+    const justifyWidth = this.justifyWidth;
+    const durationStats = this.durationStats = {};
+
+    function updateStats(duration, space) {
+      const stats = durationStats[duration];
+      if (stats === undefined) {
+        durationStats[duration] = { mean: space, count: 1 };
+      } else {
+        stats.count += 1;
+        stats.mean = (stats.mean + space) / 2;
+      }
+    }
+
     this.voices.forEach(voice => {
       voice.getTickables().forEach((note, i, notes) => {
-        const duration = note.getTicks().clone().simplify();
+        const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getMetrics();
         const leftNoteEdge = note.getX() + metrics.noteWidth +
             metrics.modRightPx + metrics.extraRightPx;
+        let space = 0;
 
         if (i < (notes.length - 1)) {
           const rightNote = notes[i + 1];
@@ -540,22 +565,36 @@ export class Formatter {
           const rightNoteEdge = rightNote.getX() -
             rightMetrics.modLeftPx - rightMetrics.extraLeftPx;
 
-          const space = rightNoteEdge - leftNoteEdge;
+          space = rightNoteEdge - leftNoteEdge;
           note.setFreedomRight(space);
+          note.getFormatterMetrics().space = rightNote.getX() - note.getX();
           rightNote.setFreedomLeft(space);
-
-          const stats = this.durationStats[duration];
-          if (stats === undefined) {
-            this.durationStats[duration] = { mean: space, count: 1 };
-          } else {
-            stats.count += 1;
-            stats.mean = (stats.mean + space) / stats.count;
-          }
         } else {
-          note.setFreedomRight(justifyWidth - leftNoteEdge);
+          space = justifyWidth - leftNoteEdge;
+          note.setFreedomRight(space);
+          note.getFormatterMetrics().space = justifyWidth - note.getX();
         }
+
+        updateStats(duration, note.getFormatterMetrics().space);
       });
     });
+
+    // Calculate how much each note deviates from the mean. Loss function is sum
+    // of squares of deviation.
+    this.totalCost = 0;
+    this.voices.forEach(voice => {
+      voice.getTickables().forEach((note) => {
+        const duration = note.getTicks().clone().simplify().toString();
+        note.getFormatterMetrics().spaceDeviation =
+          note.getFormatterMetrics().space - this.durationStats[duration].mean;
+        note.getFormatterMetrics().duration = duration;
+        note.getFormatterMetrics().mean = this.durationStats[duration].mean;
+
+        this.totalCost += Math.pow(this.durationStats[duration].mean, 2);
+      });
+    });
+
+    this.lossHistory.push(this.totalCost);
   }
 
   // This is the top-level call for all formatting logic completed
