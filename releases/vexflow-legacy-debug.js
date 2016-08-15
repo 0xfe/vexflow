@@ -182,10 +182,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vexflow_font = __webpack_require__(8);
 	
-	var _factory = __webpack_require__(73);
+	var _system = __webpack_require__(73);
 	
-	_vex.Vex.Flow = _tables.Flow; // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	var _factory = __webpack_require__(74);
 	
+	// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	
+	_vex.Vex.Flow = _tables.Flow;
 	_vex.Vex.Flow.Element = _element.Element;
 	_vex.Vex.Flow.Fraction = _fraction.Fraction;
 	_vex.Vex.Flow.Renderer = _renderer.Renderer;
@@ -246,6 +249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	_vex.Vex.Flow.Crescendo = _crescendo.Crescendo;
 	_vex.Vex.Flow.Volta = _stavevolta.Volta;
 	_vex.Vex.Flow.Font = _vexflow_font.Font;
+	_vex.Vex.Flow.System = _system.System;
 	_vex.Vex.Flow.Factory = _factory.Factory;
 	
 	exports.default = _vex.Vex;
@@ -4500,12 +4504,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var width = context.getWidth();
 	      _this.minTotalWidth += width;
 	
-	      var extra = context.getExtraPx();
-	      x = x + shift + extra.left + extra.extraLeft;
+	      var metrics = context.getMetrics();
+	      x = x + shift + metrics.extraLeftPx;
 	      context.setX(x);
 	
 	      // Calculate shift for the next tick.
-	      shift = context.getWidth() - (extra.left + extra.extraLeft);
+	      shift = context.getWidth() - metrics.extraLeftPx;
 	    });
 	
 	    this.minTotalWidth = x + shift;
@@ -4517,14 +4521,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // all notes.
 	        var remainingX = justifyWidth - _this.minTotalWidth;
 	        var leftoverPxPerTick = remainingX / (_this.totalTicks.value() * resolutionMultiplier);
+	        // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
 	        var spaceAccum = 0;
 	
 	        contextList.forEach(function (tick, index) {
 	          var prevTick = contextList[index - 1] || 0;
 	          var context = contextMap[tick];
 	          var tickSpace = (tick - prevTick) * leftoverPxPerTick;
-	          spaceAccum += tickSpace;
+	          // TODO: An idea worth pursuing:
+	          //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
+	          //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
 	
+	          spaceAccum += tickSpace;
 	          context.setX(context.getX() + spaceAccum);
 	
 	          // Move center aligned tickables to middle
@@ -13109,7 +13117,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.preFormatted = false;
 	  };
 	
-	  // Get left & right pixels used for modifiers
+	  // ### DEPRECATED ###
+	  // Get left & right pixels used for modifiers. THIS METHOD IS DEPRECATED. Use
+	  // the getMetrics() method instead!
 	
 	
 	  TickContext.prototype.getExtraPx = function getExtraPx() {
@@ -13983,6 +13993,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.addEndModifier(new _stavebarline.Barline(_this.options.right_bar ? BARTYPE.SINGLE : BARTYPE.NONE));
 	    return _this;
 	  }
+	
+	  Stave.prototype.space = function space(spacing) {
+	    return this.options.spacing_between_lines_px * spacing;
+	  };
 	
 	  Stave.prototype.resetLines = function resetLines() {
 	    this.options.line_config = [];
@@ -20002,6 +20016,143 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 	
 	exports.__esModule = true;
+	exports.System = undefined;
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	//
+	// This class implements a musical system, which is a collection of staves,
+	// each which can have one or more voices. All voices across all staves in
+	// the system are formatted together.
+	
+	var _factory = __webpack_require__(74);
+	
+	var _formatter = __webpack_require__(13);
+	
+	var _element = __webpack_require__(5);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function setDefaults(params, defaults) {
+	  var default_options = defaults.options;
+	  params = _extends(defaults, params);
+	  params.options = _extends(default_options, params.options);
+	  return params;
+	}
+	
+	var System = exports.System = function (_Element) {
+	  _inherits(System, _Element);
+	
+	  function System(params) {
+	    _classCallCheck(this, System);
+	
+	    var _this = _possibleConstructorReturn(this, _Element.call(this));
+	
+	    _this.setAttribute('type', 'System');
+	    _this.setOptions(params);
+	    _this.parts = [];
+	    return _this;
+	  }
+	
+	  System.prototype.setOptions = function setOptions() {
+	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
+	    this.options = setDefaults(options, {
+	      x: 10,
+	      y: 10,
+	      width: 500,
+	      connector: null,
+	      spaceBetweenStaves: 15, // stave spaces
+	      endPadding: 5,
+	      factory: null,
+	      options: {}
+	    });
+	
+	    this.factory = this.options.factory || new _factory.Factory({ renderer: { el: null } });
+	  };
+	
+	  System.prototype.setContext = function setContext(context) {
+	    _Element.prototype.setContext.call(this, context);
+	    this.factory.setContext(context);
+	    return this;
+	  };
+	
+	  System.prototype.addConnector = function addConnector() {
+	    this.connector = this.factory.StaveConnector({
+	      top_stave: this.parts[0].stave,
+	      bottom_stave: this.parts[this.parts.length - 1].stave
+	    });
+	    return this.connector;
+	  };
+	
+	  System.prototype.addStave = function addStave(params) {
+	    params = setDefaults(params, {
+	      stave: null,
+	      voices: [],
+	      spaceAbove: 0, // stave spaces
+	      spaceBelow: 0, // stave spaces
+	      options: {}
+	    });
+	
+	    if (!params.stave) {
+	      var options = { left_bar: false };
+	      params.stave = this.factory.Stave({ x: this.options.x, y: this.options.y, width: this.options.width, options: options });
+	    }
+	
+	    this.parts.push(params);
+	    return params.stave;
+	  };
+	
+	  System.prototype.draw = function draw() {
+	    var _this2 = this;
+	
+	    var ctx = this.checkContext();
+	    var formatter = new _formatter.Formatter();
+	
+	    var y = this.options.y;
+	    var startX = 0;
+	    var allVoices = [];
+	
+	    // Join the voices for each stave.
+	    this.parts.forEach(function (part) {
+	      y = y + part.stave.space(part.spaceAbove);
+	      part.stave.setY(y);
+	      formatter.joinVoices(part.voices);
+	      y = y + part.stave.space(part.spaceBelow);
+	      y = y + part.stave.space(_this2.options.spaceBetweenStaves);
+	      allVoices = allVoices.concat(part.voices);
+	
+	      startX = Math.max(startX, part.stave.getNoteStartX());
+	    });
+	
+	    // Update the start position of all staves.
+	    this.parts.forEach(function (part) {
+	      return part.stave.setNoteStartX(startX);
+	    });
+	    var justifyWidth = this.options.width - (startX - this.options.x) - this.options.endPadding;
+	    formatter.format(allVoices, justifyWidth);
+	
+	    // Render.
+	    this.parts.forEach(function (part) {
+	      part.voices.forEach(function (voice) {
+	        return voice.draw(ctx, part.stave);
+	      });
+	    });
+	  };
+	
+	  return System;
+	}(_element.Element);
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
 	exports.Factory = undefined;
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
@@ -20027,6 +20178,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _stave = __webpack_require__(42);
 	
 	var _stavenote = __webpack_require__(19);
+	
+	var _staveconnector = __webpack_require__(18);
+	
+	var _system = __webpack_require__(73);
 	
 	var _tickcontext = __webpack_require__(38);
 	
@@ -20070,6 +20225,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        space: 10
 	      },
 	      renderer: {
+	        context: null,
 	        el: '',
 	        backend: _renderer.Renderer.Backends.SVG,
 	        width: 500,
@@ -20085,7 +20241,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.options = defaults;
 	    this.setOptions(options);
-	    if (this.options.renderer.el !== null) this.initRenderer();
+	    if (this.options.renderer.el !== null || this.options.renderer.context) this.initRenderer();
 	    this.renderQ = [];
 	    this.stave = null; // current stave
 	  }
@@ -20115,11 +20271,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new X('HTML DOM element not set in Factory');
 	    }
 	
-	    this.ctx = _renderer.Renderer.buildContext(el, backend, width, height, background);
+	    this.context = _renderer.Renderer.buildContext(el, backend, width, height, background);
 	  };
 	
 	  Factory.prototype.getContext = function getContext() {
-	    return this.ctx;
+	    return this.context;
+	  };
+	
+	  Factory.prototype.setContext = function setContext(context) {
+	    this.context = context;return this;
 	  };
 	
 	  Factory.prototype.getStave = function getStave() {
@@ -20144,7 +20304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	
 	    var stave = new _stave.Stave(params.x, params.y, params.width, params.options);
-	    stave.setContext(this.ctx);
+	    stave.setContext(this.context);
 	    this.renderQ.push(stave);
 	    this.stave = stave;
 	    return stave;
@@ -20152,8 +20312,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Factory.prototype.StaveNote = function StaveNote(noteStruct) {
 	    var note = new _stavenote.StaveNote(noteStruct);
-	    note.setStave(this.stave);
-	    note.setContext(this.ctx);
+	    if (this.stave) note.setStave(this.stave);
+	    note.setContext(this.context);
 	    this.renderQ.push(note);
 	    return note;
 	  };
@@ -20165,13 +20325,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	
 	    var acc = new _accidental.Accidental(params.type);
-	    acc.setContext(this.ctx);
+	    acc.setContext(this.context);
 	    // acc.render_options.stroke_px = this.space(0.3);
 	    return acc;
 	  };
 	
 	  Factory.prototype.TickContext = function TickContext() {
-	    return new _tickcontext.TickContext().setContext(this.ctx);
+	    return new _tickcontext.TickContext().setContext(this.context);
 	  };
 	
 	  Factory.prototype.ModifierContext = function ModifierContext() {
@@ -20186,6 +20346,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return new _voice.Voice(params.time);
 	  };
 	
+	  Factory.prototype.StaveConnector = function StaveConnector(params) {
+	    params = setDefaults(params, {
+	      top_stave: null,
+	      bottom_stave: null,
+	      options: {}
+	    });
+	    var connector = new _staveconnector.StaveConnector(params.top_stave, params.bottom_stave);
+	    connector.setContext(this.context);
+	    this.renderQ.push(connector);
+	    return connector;
+	  };
+	
 	  Factory.prototype.Formatter = function Formatter() {
 	    return new _formatter.Formatter();
 	  };
@@ -20196,16 +20368,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      options: {}
 	    });
 	
-	    var tuplet = new _tuplet.Tuplet(params.notes, params.options).setContext(this.ctx);
+	    var tuplet = new _tuplet.Tuplet(params.notes, params.options).setContext(this.context);
 	    this.renderQ.push(tuplet);
 	    return tuplet;
+	  };
+	
+	  Factory.prototype.System = function System(params) {
+	    params.factory = this;
+	    var system = new _system.System(params).setContext(this.context);
+	    this.renderQ.push(system);
+	    return system;
 	  };
 	
 	  Factory.prototype.draw = function draw() {
 	    var _this = this;
 	
 	    this.renderQ.forEach(function (i) {
-	      return i.setContext(_this.ctx).draw();
+	      return i.setContext(_this.context).draw();
 	    });
 	  };
 	
