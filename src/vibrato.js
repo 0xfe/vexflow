@@ -60,7 +60,7 @@ export class Vibrato extends Modifier {
   setHarsh(harsh) { this.render_options.harsh = harsh; return this; }
   setVibratoWidth(width) {
     this.render_options.vibrato_width = width;
-    this.setWidth(this.vibrato_width);
+    this.setWidth(width);
     return this;
   }
 
