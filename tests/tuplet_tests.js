@@ -3,22 +3,12 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-/*
-eslint-disable
-no-undef,
-no-var,
-object-shorthand,
-func-names,
-wrap-iife,
-vars-on-top,
- */
-
 VF.Test.Tuplet = (function() {
   // Ideally this would be using arrow syntax...
-  var set = function(propertyName) {
+  var set = function(key) {
     return function(value) {
       return function(object) {
-        object[propertyName] = value;
+        object[key] = value;
         return object;
       };
     };
