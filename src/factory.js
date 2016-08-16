@@ -69,8 +69,6 @@ export class Factory {
     }
     this.renderQ = [];
     this.stave = null; // current stave
-
-    this.StaveNote = this.StaveNote.bind(this);
   }
 
   getOptions() { return this.options; }

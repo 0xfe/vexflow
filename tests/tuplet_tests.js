@@ -58,7 +58,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['b/4'], duration: '8' },
         { keys: ['a/4'], duration: '8' },
         { keys: ['g/4'], duration: '8' },
-      ].map(stemUp).map(vf.StaveNote);
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
       vf.Tuplet({ notes: notes.slice(0, 3) });
       vf.Tuplet({ notes: notes.slice(3, 6) });
@@ -92,7 +92,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['a/4'], duration: '8' },
         { keys: ['f/4'], duration: '8' },
         { keys: ['g/4'], duration: '8' },
-      ].map(stemUp).map(vf.StaveNote);
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
       vf.Beam({ notes: notes.slice(0, 3) });
       vf.Beam({ notes: notes.slice(3, 10) });
@@ -124,7 +124,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['g/4'], duration: '8' },
         { keys: ['e/4'], duration: '8' },
         { keys: ['g/4'], duration: '8' },
-      ].map(stemUp).map(vf.StaveNote);
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
       vf.Beam({
         notes: notes.slice(3, 6),
@@ -163,7 +163,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['d/5'], duration: '8' },
         { keys: ['g/3'], duration: '8' },
         { keys: ['b/4'], duration: '8' },
-      ].map(stemDown).map(vf.StaveNote);
+      ].map(stemDown).map(vf.StaveNote.bind(vf));
 
       vf.Beam({
         notes: notes.slice(3, 6),
@@ -203,7 +203,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['d/5'], duration: '8' },
         { keys: ['g/5'], duration: '8' },
         { keys: ['b/4'], duration: '8' },
-      ].map(stemDown).map(vf.StaveNote);
+      ].map(stemDown).map(vf.StaveNote.bind(vf));
 
       vf.Beam({
         notes: notes.slice(3, 6),
@@ -256,7 +256,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['c/4'], duration: '8' },
         { keys: ['d/4'], duration: '8' },
         { keys: ['e/4'], duration: '8' },
-      ].map(stemUp).map(vf.StaveNote);
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
       vf.Beam({ notes: notes.slice(0, 11) });
       vf.Tuplet({
@@ -308,7 +308,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['g/4'], duration: '8' },
         { keys: ['b/4'], duration: '8' },
         { keys: ['a/4'], duration: '8' },
-      ].map(stemUp).map(vf.StaveNote);
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
       notes1[0].addDotToAll();
 
@@ -317,7 +317,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['c/4'] },
         { keys: ['c/4'] },
         { keys: ['c/4'] },
-      ].map(quarterNote).map(stemDown).map(vf.StaveNote);
+      ].map(quarterNote).map(stemDown).map(vf.StaveNote.bind(vf));
 
       vf.Beam({ notes: notes1.slice(0, 3) });
       vf.Beam({ notes: notes1.slice(5, 9) });
@@ -371,7 +371,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['f/5'], stem_direction: 1 },
         { keys: ['a/4'], stem_direction: -1 },
         { keys: ['c/6'], stem_direction: -1 },
-      ].map(quarterNote).map(vf.StaveNote);
+      ].map(quarterNote).map(vf.StaveNote.bind(vf));
 
       vf.Tuplet({
         notes: notes.slice(0, 2),
@@ -418,7 +418,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['f/3'], stem_direction: 1 },
         { keys: ['a/4'], stem_direction: -1 },
         { keys: ['c/4'], stem_direction: -1 },
-      ].map(quarterNote).map(vf.StaveNote);
+      ].map(quarterNote).map(vf.StaveNote.bind(vf));
 
       vf.Tuplet({
         notes: notes.slice(0, 2),
@@ -468,7 +468,7 @@ VF.Test.Tuplet = (function() {
         { keys: ['a/4'], duration: '16' },
         { keys: ['g/4'], duration: '16' },
         { keys: ['b/4'], duration: '2' },
-      ].map(stemUp).map(vf.StaveNote);
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
       vf.Beam({
         notes: notes.slice(2, 7),
