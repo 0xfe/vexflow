@@ -20,6 +20,7 @@ import { System } from './system';
 import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
 import { Voice } from './voice';
+import { Beam } from './beam';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -32,7 +33,7 @@ function X(message, data) {
   L(this.name + ':', message, data);
 }
 
-function setDefaults(params, defaults) {
+function setDefaults(params = {}, defaults) {
   const default_options = defaults.options;
   params = Object.assign(defaults, params);
   params.options = Object.assign(default_options, params.options);
@@ -178,6 +179,19 @@ export class Factory {
     const system = new System(params).setContext(this.context);
     this.renderQ.push(system);
     return system;
+  }
+
+  Beam(params) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {
+        autoStem: false,
+      },
+    });
+
+    const tuplet = new Beam(params.notes, params.options.autoStem).setContext(this.ctx);
+    this.renderQ.push(tuplet);
+    return tuplet;
   }
 
   draw() {
