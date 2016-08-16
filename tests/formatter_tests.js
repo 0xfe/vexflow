@@ -15,8 +15,7 @@ VF.Test.Formatter = (function() {
       runTests("Notes with Tab", Formatter.notesWithTab);
       runTests("Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0, iterations: 0});
       runTests("Multiple Staves - Justified", Formatter.multiStaves, {justify: 168, iterations: 0});
-      runTests("Multiple Staves - Justified - 15 Iterations", Formatter.multiStaves, {justify: 168, iterations: 6});
-
+      runTests("Multiple Staves - Justified - 6 Iterations", Formatter.multiStaves, {justify: 168, iterations: 6});
       runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: false, iterations: 0});
       runTests("Proportional Formatting - 15 steps", Formatter.proportionalFormatting, {debug: false, iterations: 15});
 
