@@ -34,7 +34,7 @@ export class System extends Element {
       endPadding: 0,
       factory: null,
       debugFormatter: false,
-      formatIterations: 15,
+      formatIterations: 0,   // number of formatter tuning steps
       options: {},
     });
 

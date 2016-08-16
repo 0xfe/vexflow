@@ -14,9 +14,12 @@ export class Tickable extends Element {
     super();
     this.attrs.type = 'Tickable';
 
+    // These properties represent the duration of
+    // this tickable element.
+    this.ticks = new Fraction(0, 1);
     this.intrinsicTicks = 0;
     this.tickMultiplier = new Fraction(1, 1);
-    this.ticks = new Fraction(0, 1);
+
     this.width = 0;
     this.x_shift = 0; // Shift from tick context
     this.voice = null;
@@ -28,33 +31,42 @@ export class Tickable extends Element {
     this.tuplet = null;
     this.tupletStack = [];
 
-    // For interactivity
-    this.id = null;
-    this.elem = null;
-
     this.align_center = false;
     this.center_x_shift = 0; // Shift from tick context if center aligned
 
     // This flag tells the formatter to ignore this tickable during
     // formatting and justification. It is set by tickables such as BarNote.
     this.ignore_ticks = false;
-    this.freedom = { left: 0, right: 0 }; // space availabile on each side for tuning.
-    this.formatterMetrics = {};
+
+    // This is a space for an external formatting class or function to maintain
+    // metrics.
+    this.formatterMetrics = {
+      // The freedom of a tickable is the distance it can move without colliding
+      // with neighboring elements. A formatter can set these values during its
+      // formatting pass, which a different formatter can then use to fine tune.
+      freedom: { left: 0, right: 0 },
+
+      // The simplified rational duration of this tick as a string. It can be
+      // used as an index to a map or hashtable.
+      duration: '',
+
+      // The number of formatting iterations undergone.
+      iterations: 0,
+
+      // The space in pixels allocated by this formatter, along with the mean space
+      // for tickables of this duration, and the deviation from the mean.
+      space: {
+        used: 0,
+        mean: 0,
+        deviation: 0,
+      },
+    };
   }
 
-  // Set the DOM ID of the element. Must be called before draw(). TODO: Update
-  // ID of element if has already been rendered.
-  setId(id) { this.id = id; }
-  getId() { return this.id; }
-  getElem() { return this.elem; }
-  getBoundingBox() { return null; }
   getTicks() { return this.ticks; }
   shouldIgnoreTicks() { return this.ignore_ticks; }
   getWidth() { return this.width; }
 
-  getFreedom() { return this.freedom; }
-  setFreedomLeft(pixels) { this.freedom.left = pixels; return this; }
-  setFreedomRight(pixels) { this.freedom.right = pixels; return this; }
   getFormatterMetrics() { return this.formatterMetrics; }
 
   setXShift(x) { this.x_shift = x; }

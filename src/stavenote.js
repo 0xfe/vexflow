@@ -1004,7 +1004,7 @@ export class StaveNote extends StemmableNote {
     // Draw each part of the note
     this.drawLedgerLines();
 
-    this.elem = this.context.openGroup('stavenote', this.id);
+    this.setAttribute('el', this.context.openGroup('stavenote', this.getAttribute('id')));
     this.context.openGroup('note', null, { pointerBBox: true });
     if (shouldRenderStem) this.drawStem();
     this.drawNoteHeads();

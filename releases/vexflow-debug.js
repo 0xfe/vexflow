@@ -2362,9 +2362,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.attrs = {
 	      id: '',
-	      staveSpace: 10,
+	      el: null,
 	      type: 'Base'
 	    };
+	
+	    this.boundingBox = null;
 	    this.context = null;
 	  }
 	
@@ -2393,13 +2395,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function setContext(context) {
 	      this.context = context;return this;
 	    }
-	
-	    // TODO: Bounding boxes for all elements.
-	
 	  }, {
-	    key: 'space',
-	    value: function space(spacing) {
-	      return this.attrs.staveSpace * spacing;
+	    key: 'getBoundingBox',
+	    value: function getBoundingBox() {
+	      return this.boundingBox;
 	    }
 	
 	    // Validators
@@ -4826,7 +4825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        context.setX(x);
 	
 	        // Calculate shift for the next tick.
-	        shift = context.getWidth() - metrics.extraLeftPx;
+	        shift = width - metrics.extraLeftPx;
 	      });
 	
 	      this.minTotalWidth = x + shift;
@@ -4839,16 +4838,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // all notes.
 	      var remainingX = justifyWidth - this.minTotalWidth;
 	      var leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
-	      // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
 	      var spaceAccum = 0;
 	
 	      contextList.forEach(function (tick, index) {
 	        var prevTick = contextList[index - 1] || 0;
 	        var context = contextMap[tick];
 	        var tickSpace = (tick - prevTick) * leftoverPxPerTick;
-	        // TODO: An idea worth pursuing:
-	        //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
-	        //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
 	
 	        spaceAccum += tickSpace;
 	        context.setX(context.getX() + spaceAccum);
@@ -4878,8 +4873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var justifyWidth = this.justifyWidth;
 	      // Calculate available slack per tick context. This works out how much freedom
 	      // to move a context has in either direction, without affecting other notes.
-	      this.contextGaps.total = 0;
-	      this.contextGaps.gaps = [];
+	      this.contextGaps = { total: 0, gaps: [] };
 	      this.tickContexts.list.forEach(function (tick, index) {
 	        if (index === 0) return;
 	        var prevTick = _this2.tickContexts.list[index - 1];
@@ -4894,8 +4888,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this2.contextGaps.gaps.push({ x1: insideRightEdge, x2: insideLeftEdge });
 	
 	        // Tell the tick contexts how much they can reposition themselves.
-	        context.setFreedomLeft(gap);
-	        prevContext.setFreedomRight(gap);
+	        context.getFormatterMetrics().freedom.left = gap;
+	        prevContext.getFormatterMetrics().freedom.right = gap;
 	      });
 	
 	      // Calculate mean distance in each voice for each duration type, then calculate
@@ -4916,6 +4910,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        voice.getTickables().forEach(function (note, i, notes) {
 	          var duration = note.getTicks().clone().simplify().toString();
 	          var metrics = note.getMetrics();
+	          var formatterMetrics = note.getFormatterMetrics();
 	          var leftNoteEdge = note.getX() + metrics.noteWidth + metrics.modRightPx + metrics.extraRightPx;
 	          var space = 0;
 	
@@ -4925,35 +4920,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var rightNoteEdge = rightNote.getX() - rightMetrics.modLeftPx - rightMetrics.extraLeftPx;
 	
 	            space = rightNoteEdge - leftNoteEdge;
-	            note.setFreedomRight(space);
-	            note.getFormatterMetrics().space = rightNote.getX() - note.getX();
-	            rightNote.setFreedomLeft(space);
+	            formatterMetrics.space.used = rightNote.getX() - note.getX();
+	            rightNote.getFormatterMetrics().freedom.left = space;
 	          } else {
 	            space = justifyWidth - leftNoteEdge;
-	            note.setFreedomRight(space);
-	            note.getFormatterMetrics().space = justifyWidth - note.getX();
+	            formatterMetrics.space.used = justifyWidth - note.getX();
 	          }
 	
-	          updateStats(duration, note.getFormatterMetrics().space);
+	          formatterMetrics.freedom.right = space;
+	          updateStats(duration, formatterMetrics.space.used);
 	        });
 	      });
 	
 	      // Calculate how much each note deviates from the mean. Loss function is square
-	      // root of the sum of squared deviation.
+	      // root of the sum of squared deviations.
 	      var totalDeviation = 0;
 	      this.voices.forEach(function (voice) {
 	        voice.getTickables().forEach(function (note) {
 	          var duration = note.getTicks().clone().simplify().toString();
-	          note.getFormatterMetrics().spaceDeviation = note.getFormatterMetrics().space - _this2.durationStats[duration].mean;
-	          note.getFormatterMetrics().duration = duration;
-	          note.getFormatterMetrics().mean = _this2.durationStats[duration].mean;
+	          var metrics = note.getFormatterMetrics();
+	          metrics.iterations += 1;
+	          metrics.space.deviation = metrics.space.used - durationStats[duration].mean;
+	          metrics.duration = duration;
+	          metrics.space.mean = durationStats[duration].mean;
 	
-	          totalDeviation += Math.pow(_this2.durationStats[duration].mean, 2);
+	          totalDeviation += Math.pow(durationStats[duration].mean, 2);
 	        });
 	      });
 	
 	      this.totalCost = Math.sqrt(totalDeviation);
 	      this.lossHistory.push(this.totalCost);
+	      return this;
 	    }
 	
 	    // Run a single iteration of rejustification. At a high level, this method calculates
@@ -4966,22 +4963,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function tune() {
 	      var _this3 = this;
 	
-	      // Reposition tick contexts to reduce cost.
-	      function sum(means) {
-	        var total = 0;
-	        for (var i = 0; i < means.length; i++) {
-	          total += means[i];
-	        }
-	        return total;
-	      }
+	      var sum = function sum(means) {
+	        return means.reduce(function (a, b) {
+	          return a + b;
+	        });
+	      };
 	
+	      // Move `current` tickcontext by `shift` pixels, and adjust the freedom
+	      // on adjacent tickcontexts.
 	      function move(current, prev, next, shift) {
 	        current.setX(current.getX() + shift);
-	        current.setFreedomLeft(current.getFreedom().left + shift);
-	        current.setFreedomRight(current.getFreedom().right - shift);
+	        current.getFormatterMetrics().freedom.left += shift;
+	        current.getFormatterMetrics().freedom.right -= shift;
 	
-	        if (prev) prev.setFreedomRight(prev.getFreedom().right + shift);
-	        if (next) next.setFreedomLeft(next.getFreedom().left - shift);
+	        if (prev) prev.getFormatterMetrics().freedom.right += shift;
+	        if (next) next.getFormatterMetrics().freedom.left -= shift;
 	      }
 	
 	      var shift = 0;
@@ -4993,14 +4989,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        move(context, prevContext, nextContext, shift);
 	
 	        var cost = -sum(context.getTickables().map(function (t) {
-	          return t.getFormatterMetrics().spaceDeviation;
+	          return t.getFormatterMetrics().space.deviation;
 	        }));
 	
 	        if (cost > 0) {
-	          shift = -Math.min(context.getFreedom().right, Math.abs(cost));
+	          shift = -Math.min(context.getFormatterMetrics().freedom.right, Math.abs(cost));
 	        } else if (cost < 0) {
 	          if (nextContext) {
-	            shift = Math.min(nextContext.getFreedom().right, Math.abs(cost));
+	            shift = Math.min(nextContext.getFormatterMetrics().freedom.right, Math.abs(cost));
 	          } else {
 	            shift = 0;
 	          }
@@ -5010,7 +5006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        shift = shift > 0 ? minShift : -minShift;
 	      });
 	
-	      this.evaluate();
+	      return this.evaluate();
 	    }
 	
 	    // This is the top-level call for all formatting logic completed
@@ -6768,7 +6764,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.smallestTickCount = _this.totalTicks.clone();
 	    _this.largestTickWidth = 0;
 	    _this.stave = null;
-	    _this.boundingBox = null;
 	    // Do we care about strictly timed notes
 	    _this.mode = Voice.Mode.STRICT;
 	
@@ -8497,7 +8492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Draw each part of the note
 	      this.drawLedgerLines();
 	
-	      this.elem = this.context.openGroup('stavenote', this.id);
+	      this.setAttribute('el', this.context.openGroup('stavenote', this.getAttribute('id')));
 	      this.context.openGroup('note', null, { pointerBBox: true });
 	      if (shouldRenderStem) this.drawStem();
 	      this.drawNoteHeads();
@@ -8921,7 +8916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var xPost1 = note.getAbsoluteX() + metrics.noteWidth;
 	      var xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
 	      var xEnd = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx + metrics.modRightPx;
-	      var xFreedomRight = xEnd + note.getFreedom().right;
+	      var xFreedomRight = xEnd + note.getFormatterMetrics().freedom.right;
 	
 	      var xWidth = xEnd - xStart;
 	      ctx.save();
@@ -8951,12 +8946,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _vex.Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
 	
 	      var formatterMetrics = note.getFormatterMetrics();
-	      if (formatterMetrics.spaceDeviation !== undefined) {
-	        var spaceDeviation = formatterMetrics.spaceDeviation;
+	      if (formatterMetrics.iterations > 0) {
+	        var spaceDeviation = formatterMetrics.space.deviation;
 	        var prefix = spaceDeviation >= 0 ? '+' : '';
 	        ctx.setFillStyle('red');
 	        ctx.fillText(prefix + Math.round(spaceDeviation), xAbs + note.getXShift(), yPos - 10);
-	        // ctx.fillText(Math.round(formatterMetrics.mean), (xEnd + xFreedomRight) / 2, yPos - 20);
 	      }
 	      ctx.restore();
 	    }
@@ -9492,9 +9486,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _this.attrs.type = 'Tickable';
 	
+	    // These properties represent the duration of
+	    // this tickable element.
+	    _this.ticks = new _fraction.Fraction(0, 1);
 	    _this.intrinsicTicks = 0;
 	    _this.tickMultiplier = new _fraction.Fraction(1, 1);
-	    _this.ticks = new _fraction.Fraction(0, 1);
+	
 	    _this.width = 0;
 	    _this.x_shift = 0; // Shift from tick context
 	    _this.voice = null;
@@ -9506,46 +9503,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.tuplet = null;
 	    _this.tupletStack = [];
 	
-	    // For interactivity
-	    _this.id = null;
-	    _this.elem = null;
-	
 	    _this.align_center = false;
 	    _this.center_x_shift = 0; // Shift from tick context if center aligned
 	
 	    // This flag tells the formatter to ignore this tickable during
 	    // formatting and justification. It is set by tickables such as BarNote.
 	    _this.ignore_ticks = false;
-	    _this.freedom = { left: 0, right: 0 }; // space availabile on each side for tuning.
-	    _this.formatterMetrics = {};
+	
+	    // This is a space for an external formatting class or function to maintain
+	    // metrics.
+	    _this.formatterMetrics = {
+	      // The freedom of a tickable is the distance it can move without colliding
+	      // with neighboring elements. A formatter can set these values during its
+	      // formatting pass, which a different formatter can then use to fine tune.
+	      freedom: { left: 0, right: 0 },
+	
+	      // The simplified rational duration of this tick as a string. It can be
+	      // used as an index to a map or hashtable.
+	      duration: '',
+	
+	      // The number of formatting iterations undergone.
+	      iterations: 0,
+	
+	      // The space in pixels allocated by this formatter, along with the mean space
+	      // for tickables of this duration, and the deviation from the mean.
+	      space: {
+	        used: 0,
+	        mean: 0,
+	        deviation: 0
+	      }
+	    };
 	    return _this;
 	  }
 	
-	  // Set the DOM ID of the element. Must be called before draw(). TODO: Update
-	  // ID of element if has already been rendered.
-	
-	
 	  _createClass(Tickable, [{
-	    key: 'setId',
-	    value: function setId(id) {
-	      this.id = id;
-	    }
-	  }, {
-	    key: 'getId',
-	    value: function getId() {
-	      return this.id;
-	    }
-	  }, {
-	    key: 'getElem',
-	    value: function getElem() {
-	      return this.elem;
-	    }
-	  }, {
-	    key: 'getBoundingBox',
-	    value: function getBoundingBox() {
-	      return null;
-	    }
-	  }, {
 	    key: 'getTicks',
 	    value: function getTicks() {
 	      return this.ticks;
@@ -9559,21 +9550,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'getWidth',
 	    value: function getWidth() {
 	      return this.width;
-	    }
-	  }, {
-	    key: 'getFreedom',
-	    value: function getFreedom() {
-	      return this.freedom;
-	    }
-	  }, {
-	    key: 'setFreedomLeft',
-	    value: function setFreedomLeft(pixels) {
-	      this.freedom.left = pixels;return this;
-	    }
-	  }, {
-	    key: 'setFreedomRight',
-	    value: function setFreedomRight(pixels) {
-	      this.freedom.right = pixels;return this;
 	    }
 	  }, {
 	    key: 'getFormatterMetrics',
@@ -14017,7 +13993,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vex = __webpack_require__(1);
 	
-	var _element = __webpack_require__(5);
+	var _tickable = __webpack_require__(22);
 	
 	var _fraction = __webpack_require__(3);
 	
@@ -14031,8 +14007,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	// A formatter for abstract tickable objects, such as notes, chords,
 	// tabs, etc.
 	
-	var TickContext = exports.TickContext = function (_Element) {
-	  _inherits(TickContext, _Element);
+	var TickContext = exports.TickContext = function (_Tickable) {
+	  _inherits(TickContext, _Tickable);
 	
 	  _createClass(TickContext, null, [{
 	    key: 'getNextContext',
@@ -14050,41 +14026,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TickContext).call(this));
 	
 	    _this.setAttribute('type', 'TickContext');
-	
 	    _this.currentTick = new _fraction.Fraction(0, 1);
 	    _this.maxTicks = new _fraction.Fraction(0, 1);
 	    _this.minTicks = null;
-	    _this.width = 0;
 	    _this.padding = 3; // padding on each side (width += padding * 2)
-	    _this.pixelsUsed = 0;
 	    _this.x = 0;
 	    _this.tickables = []; // Notes, tabs, chords, lyrics.
 	    _this.notePx = 0; // width of widest note in this context
 	    _this.extraLeftPx = 0; // Extra left pixels for modifers & displace notes
 	    _this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
-	    _this.align_center = false;
-	
 	    _this.tContexts = []; // Parent array of tick contexts
-	
-	    // Ignore this tick context for formatting and justification
-	    _this.ignore_ticks = true;
-	    _this.freedom = { left: 0, right: 0 }; // space availabile on each side for tuning.
-	    _this.preFormatted = false;
-	    _this.postFormatted = false;
 	    return _this;
 	  }
 	
 	  _createClass(TickContext, [{
-	    key: 'shouldIgnoreTicks',
-	    value: function shouldIgnoreTicks() {
-	      return this.ignore_ticks;
-	    }
-	  }, {
-	    key: 'getWidth',
-	    value: function getWidth() {
-	      return this.width + this.padding * 2;
-	    }
-	  }, {
 	    key: 'getX',
 	    value: function getX() {
 	      return this.x;
@@ -14095,14 +14050,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.x = x;return this;
 	    }
 	  }, {
-	    key: 'getPixelsUsed',
-	    value: function getPixelsUsed() {
-	      return this.pixelsUsed;
-	    }
-	  }, {
-	    key: 'setPixelsUsed',
-	    value: function setPixelsUsed(pixelsUsed) {
-	      this.pixelsUsed = pixelsUsed;return this;
+	    key: 'getWidth',
+	    value: function getWidth() {
+	      return this.width + this.padding * 2;
 	    }
 	  }, {
 	    key: 'setPadding',
@@ -14123,21 +14073,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'getTickables',
 	    value: function getTickables() {
 	      return this.tickables;
-	    }
-	  }, {
-	    key: 'getFreedom',
-	    value: function getFreedom() {
-	      return this.freedom;
-	    }
-	  }, {
-	    key: 'setFreedomLeft',
-	    value: function setFreedomLeft(pixels) {
-	      this.freedom.left = pixels;return this;
-	    }
-	  }, {
-	    key: 'setFreedomRight',
-	    value: function setFreedomRight(pixels) {
-	      this.freedom.right = pixels;return this;
 	    }
 	  }, {
 	    key: 'getCenterAlignedTickables',
@@ -14255,7 +14190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return TickContext;
-	}(_element.Element);
+	}(_tickable.Tickable);
 
 /***/ },
 /* 39 */
@@ -21568,7 +21503,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        endPadding: 0,
 	        factory: null,
 	        debugFormatter: false,
-	        formatIterations: 15,
+	        formatIterations: 0, // number of formatter tuning steps
 	        options: {}
 	      });
 	
