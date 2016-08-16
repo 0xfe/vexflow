@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.75 built on 2016-08-15.
+ * VexFlow 1.2.76 built on 2016-08-16.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -319,7 +319,7 @@ Vex.Flow.Test.Accidental = (function() {
       note.addToModifierContext(mc);
 
       var tickContext = new Vex.Flow.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(65);
+      tickContext.addTickable(note).preFormat().setX(x);
 
       note.setContext(ctx).setStave(stave);
       note.draw();
@@ -504,7 +504,7 @@ Vex.Flow.Test.Accidental = (function() {
 
       var tickContext = new Vex.Flow.TickContext();
       tickContext.addTickable(note1).addTickable(note2).
-        preFormat().setX(x).setPixelsUsed(65);
+        preFormat().setX(x);
 
       note1.setContext(ctx).setStave(stave).draw();
       note2.setContext(ctx).setStave(stave).draw();
@@ -4232,7 +4232,7 @@ VF.Test.Bend = (function() {
         note.addToModifierContext(mc);
 
         var tickContext = new VF.TickContext();
-        tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
+        tickContext.addTickable(note).preFormat().setX(75 * i);
 
         note.setStave(stave).setContext(ctx).draw();
         VF.Test.plotNoteWidth(ctx, note, 140);
@@ -4270,7 +4270,7 @@ VF.Test.Bend = (function() {
         note.addToModifierContext(mc);
 
         var tickContext = new VF.TickContext();
-        tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
+        tickContext.addTickable(note).preFormat().setX(75 * i);
 
         note.setStave(stave).setContext(ctx).draw();
         VF.Test.plotNoteWidth(ctx, note, 140);
@@ -4774,7 +4774,7 @@ VF.Test.Dot = (function() {
       note.addToModifierContext(mc);
 
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(65);
+      tickContext.addTickable(note).preFormat().setX(x);
 
       note.setContext(ctx).setStave(stave);
       note.draw();
@@ -4857,8 +4857,7 @@ VF.Test.Dot = (function() {
         .addTickable(note1)
         .addTickable(note2)
         .setX(x)
-        .preFormat()
-        .setPixelsUsed(65);
+        .preFormat();
 
       note1.setContext(ctx).setStave(stave).draw();
       note2.setContext(ctx).setStave(stave).draw();
@@ -4981,10 +4980,11 @@ VF.Test.Formatter = (function() {
       runTests("StaveNote Formatting", Formatter.formatStaveNotes);
       runTests("StaveNote Justification", Formatter.justifyStaveNotes);
       runTests("Notes with Tab", Formatter.notesWithTab);
-      runTests("Format Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0});
-      runTests("Format Multiple Staves - Justified", Formatter.multiStaves, {justify: 168});
-
-      runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: true, iterations: 0});
+      runTests("Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0, iterations: 0});
+      runTests("Multiple Staves - Justified", Formatter.multiStaves, {justify: 168, iterations: 0});
+      runTests("Multiple Staves - Justified - 6 Iterations", Formatter.multiStaves, {justify: 168, iterations: 6});
+      runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: false, iterations: 0});
+      runTests("Proportional Formatting - 15 steps", Formatter.proportionalFormatting, {debug: false, iterations: 15});
 
       for (var i = 2; i < 15; i++) {
         VF.Test.runSVGTest("Proportional Formatting (" + i + " iterations)",
@@ -5296,12 +5296,17 @@ VF.Test.Formatter = (function() {
       var beam31a = new VF.Beam(notes31.slice(0, 3));
       var beam31b = new VF.Beam(notes31.slice(3, 6));
 
+      var formatter;
       if (options.params.justify > 0) {
-        new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
+        formatter = new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
           format([voice11, voice21, voice31], options.params.justify);
       } else {
-        new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
+        formatter = new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
           format([voice11, voice21, voice31]);
+      }
+
+      for (var i = 0; i < options.params.iterations; i++) {
+        formatter.tune();
       }
 
       voice11.draw(ctx, stave11);
@@ -5357,12 +5362,17 @@ VF.Test.Formatter = (function() {
       voice32.addTickables(notes32);
 
       if (options.params.justify > 0) {
-        new VF.Formatter().joinVoices([voice12, voice22, voice32]).
+        formatter = new VF.Formatter().joinVoices([voice12, voice22, voice32]).
           format([voice12, voice22, voice32], 188);
       } else {
-        new VF.Formatter().joinVoices([voice12, voice22, voice32]).
+        formatter = new VF.Formatter().joinVoices([voice12, voice22, voice32]).
           format([voice12, voice22, voice32]);
       }
+
+      for (var i = 0; i < options.params.iterations; i++) {
+        formatter.tune();
+      }
+
       var beam32a = new VF.Beam(notes32.slice(0, 3));
       var beam32b = new VF.Beam(notes32.slice(3, 6));
 
@@ -7815,7 +7825,7 @@ VF.Test.Percussion = (function() {
     showNote: function(note_struct, stave, ctx, x) {
       var note = new VF.StaveNote(note_struct);
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(x);
       note.setContext(ctx).setStave(stave);
       note.draw();
       return note;
@@ -10750,7 +10760,7 @@ VF.Test.StaveNote = (function() {
     showNote: function(note_struct, stave, ctx, x, drawBoundingBox) {
       var note = new VF.StaveNote(note_struct);
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(x);
       note.setContext(ctx).setStave(stave);
       note.draw();
 
@@ -10831,7 +10841,7 @@ VF.Test.StaveNote = (function() {
         // If this is an interactivity test, then attempt to attach mouseover
         // and mouseout handlers to the notes.
         if (options.params.ui) {
-          var item = staveNote.getElem();
+          var item = staveNote.getAttribute('el');
           item.addEventListener("mouseover", function() {
             Vex.forEach($(this).find("*"), function(child) {
               child.setAttribute("fill", "green");
@@ -11122,7 +11132,7 @@ VF.Test.StaveNote = (function() {
       note.setKeyStyle(1, {shadowBlur:15, shadowColor:'blue', fillStyle:'blue'});
 
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(25);
       note.setContext(ctx).setStave(stave);
       note.draw();
 
@@ -11143,7 +11153,7 @@ VF.Test.StaveNote = (function() {
       note.setStyle({shadowBlur:15, shadowColor:'blue', fillStyle:'blue', strokeStyle:'blue'});
 
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(25);
       note.setContext(ctx).setStave(stave);
       note.draw();
 
@@ -11157,7 +11167,7 @@ VF.Test.StaveNote = (function() {
       note.addToModifierContext(mc);
 
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(65);
+      tickContext.addTickable(note).preFormat().setX(x);
 
       note.setContext(ctx).setStave(stave);
       note.draw();
@@ -12718,7 +12728,7 @@ VF.Test.TabNote = (function() {
     showNote: function(tab_struct, stave, ctx, x) {
       var note = new VF.TabNote(tab_struct);
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(x);
       note.setContext(ctx).setStave(stave);
       note.draw();
       return note;
