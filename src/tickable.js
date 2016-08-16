@@ -28,10 +28,6 @@ export class Tickable extends Element {
     this.tuplet = null;
     this.tupletStack = [];
 
-    // For interactivity
-    this.id = null;
-    this.elem = null;
-
     this.align_center = false;
     this.center_x_shift = 0; // Shift from tick context if center aligned
 
@@ -43,12 +39,6 @@ export class Tickable extends Element {
     };
   }
 
-  // Set the DOM ID of the element. Must be called before draw(). TODO: Update
-  // ID of element if has already been rendered.
-  setId(id) { this.id = id; }
-  getId() { return this.id; }
-  getElem() { return this.elem; }
-  getBoundingBox() { return null; }
   getTicks() { return this.ticks; }
   shouldIgnoreTicks() { return this.ignore_ticks; }
   getWidth() { return this.width; }

@@ -46,7 +46,6 @@ export class Voice extends Element {
     this.smallestTickCount = this.totalTicks.clone();
     this.largestTickWidth = 0;
     this.stave = null;
-    this.boundingBox = null;
     // Do we care about strictly timed notes
     this.mode = Voice.Mode.STRICT;
 

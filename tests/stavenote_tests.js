@@ -460,7 +460,7 @@ VF.Test.StaveNote = (function() {
         // If this is an interactivity test, then attempt to attach mouseover
         // and mouseout handlers to the notes.
         if (options.params.ui) {
-          var item = staveNote.getElem();
+          var item = staveNote.getAttribute('el');
           item.addEventListener("mouseover", function() {
             Vex.forEach($(this).find("*"), function(child) {
               child.setAttribute("fill", "green");
