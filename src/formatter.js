@@ -468,7 +468,7 @@ export class Formatter {
       context.setX(x);
 
       // Calculate shift for the next tick.
-      shift = context.getWidth() - metrics.extraLeftPx;
+      shift = width - metrics.extraLeftPx;
     });
 
     this.minTotalWidth = x + shift;
@@ -481,16 +481,12 @@ export class Formatter {
     // all notes.
     const remainingX = justifyWidth - this.minTotalWidth;
     const leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
-    // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
     let spaceAccum = 0;
 
     contextList.forEach((tick, index) => {
       const prevTick = contextList[index - 1] || 0;
       const context = contextMap[tick];
       const tickSpace = (tick - prevTick) * leftoverPxPerTick;
-      // TODO: An idea worth pursuing:
-      //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
-      //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
 
       spaceAccum += tickSpace;
       context.setX(context.getX() + spaceAccum);
@@ -516,8 +512,7 @@ export class Formatter {
     const justifyWidth = this.justifyWidth;
     // Calculate available slack per tick context. This works out how much freedom
     // to move a context has in either direction, without affecting other notes.
-    this.contextGaps.total = 0;
-    this.contextGaps.gaps = [];
+    this.contextGaps = { total: 0, gaps: [] };
     this.tickContexts.list.forEach((tick, index) => {
       if (index === 0) return;
       const prevTick = this.tickContexts.list[index - 1];
@@ -579,15 +574,15 @@ export class Formatter {
     });
 
     // Calculate how much each note deviates from the mean. Loss function is square
-    // root of the sum of squared deviation.
+    // root of the sum of squared deviations.
     let totalDeviation = 0;
     this.voices.forEach(voice => {
       voice.getTickables().forEach((note) => {
         const duration = note.getTicks().clone().simplify().toString();
-        note.getFormatterMetrics().spaceDeviation =
-          note.getFormatterMetrics().space - this.durationStats[duration].mean;
-        note.getFormatterMetrics().duration = duration;
-        note.getFormatterMetrics().mean = this.durationStats[duration].mean;
+        const metrics = note.getFormatterMetrics();
+        metrics.spaceDeviation = metrics.space - durationStats[duration].mean;
+        metrics.duration = duration;
+        metrics.mean = durationStats[duration].mean;
 
         totalDeviation += Math.pow(this.durationStats[duration].mean, 2);
       });
@@ -595,6 +590,7 @@ export class Formatter {
 
     this.totalCost = Math.sqrt(totalDeviation);
     this.lossHistory.push(this.totalCost);
+    return this;
   }
 
   // Run a single iteration of rejustification. At a high level, this method calculates
@@ -602,15 +598,10 @@ export class Formatter {
   // attempt to reduce the cost. You can call this method multiple times until it finds
   // and oscillates around a global minimum.
   tune() {
-    // Reposition tick contexts to reduce cost.
-    function sum(means) {
-      let total = 0;
-      for (let i = 0; i < means.length; i++) {
-        total += means[i];
-      }
-      return total;
-    }
+    const sum = (means) => means.reduce((a, b) => a + b);
 
+    // Move `current` tickcontext by `shift` pixels, and adjust the freedom
+    // on adjacent tickcontexts.
     function move(current, prev, next, shift) {
       current.setX(current.getX() + shift);
       current.setFreedomLeft(current.getFreedom().left + shift);
@@ -645,7 +636,7 @@ export class Formatter {
       shift = shift > 0 ? minShift : -minShift;
     });
 
-    this.evaluate();
+    return this.evaluate();
   }
 
   // This is the top-level call for all formatting logic completed
