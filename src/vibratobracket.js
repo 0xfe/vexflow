@@ -18,12 +18,12 @@ function L(...args) { if (VibratoBracket.DEBUG) Vex.L('Vex.Flow.VibratoBracket',
 export class VibratoBracket extends Element {
 
   // bracket_data = {
-  //   start: Vex.Flow.Note,
+  //   start: Vex.Flow.Note (optional)
   //   stop: Vex.Flow.Note (optional)
   // };
-  //
-  // If stop note is not set, then the vibrato effect stops at
-  // the end of stave
+  // Either the stop or start note must be set, or both of them.
+  // A null value for the start or stop note indicates that the vibrato
+  // is drawn from the beginning or until the end of the stave accordingly.
   constructor(bracket_data) {
     super();
     this.setAttribute('type', 'VibratoBracket');
