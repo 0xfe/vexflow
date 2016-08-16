@@ -14,9 +14,12 @@ export class Tickable extends Element {
     super();
     this.attrs.type = 'Tickable';
 
+    // These properties represent the duration of
+    // this tickable element.
+    this.ticks = new Fraction(0, 1);
     this.intrinsicTicks = 0;
     this.tickMultiplier = new Fraction(1, 1);
-    this.ticks = new Fraction(0, 1);
+
     this.width = 0;
     this.x_shift = 0; // Shift from tick context
     this.voice = null;
@@ -34,8 +37,26 @@ export class Tickable extends Element {
     // This flag tells the formatter to ignore this tickable during
     // formatting and justification. It is set by tickables such as BarNote.
     this.ignore_ticks = false;
+
+    // This is a space for an external formatting class or function to maintain
+    // metrics.
     this.formatterMetrics = {
+      // The freedom of a tickable is the distance it can move without colliding
+      // with neighboring elements. A formatter can set these values during its
+      // formatting pass, which a different formatter can then use to fine tune.
       freedom: { left: 0, right: 0 },
+
+      // The simplified rational duration of this tick as a string. It can be
+      // used as an index to a map or hashtable.
+      duration: '',
+
+      // The space in pixels allocated by this formatter, along with the mean space
+      // for tickables of this duration, and the deviation from the mean.
+      space: {
+        used: 0,
+        mean: 0,
+        deviation: 0,
+      },
     };
   }
 

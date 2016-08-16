@@ -561,15 +561,15 @@ export class Formatter {
             rightMetrics.modLeftPx - rightMetrics.extraLeftPx;
 
           space = rightNoteEdge - leftNoteEdge;
-          formatterMetrics.space = rightNote.getX() - note.getX();
+          formatterMetrics.space.used = rightNote.getX() - note.getX();
           rightNote.getFormatterMetrics().freedom.left = space;
         } else {
           space = justifyWidth - leftNoteEdge;
-          formatterMetrics.space = justifyWidth - note.getX();
+          formatterMetrics.space.used = justifyWidth - note.getX();
         }
 
         formatterMetrics.freedom.right = space;
-        updateStats(duration, note.getFormatterMetrics().space);
+        updateStats(duration, formatterMetrics.space.used);
       });
     });
 
@@ -580,11 +580,11 @@ export class Formatter {
       voice.getTickables().forEach((note) => {
         const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getFormatterMetrics();
-        metrics.spaceDeviation = metrics.space - durationStats[duration].mean;
+        metrics.space.deviation = metrics.space.used - durationStats[duration].mean;
         metrics.duration = duration;
-        metrics.mean = durationStats[duration].mean;
+        metrics.space.mean = durationStats[duration].mean;
 
-        totalDeviation += Math.pow(this.durationStats[duration].mean, 2);
+        totalDeviation += Math.pow(durationStats[duration].mean, 2);
       });
     });
 
@@ -620,7 +620,7 @@ export class Formatter {
       move(context, prevContext, nextContext, shift);
 
       const cost = -sum(
-        context.getTickables().map(t => t.getFormatterMetrics().spaceDeviation));
+        context.getTickables().map(t => t.getFormatterMetrics().space.deviation));
 
       if (cost > 0) {
         shift = -Math.min(context.getFormatterMetrics().freedom.right, Math.abs(cost));
