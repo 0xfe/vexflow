@@ -59,7 +59,7 @@ export class Note extends Tickable {
     Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
 
     const formatterMetrics = note.getFormatterMetrics();
-    if (formatterMetrics.space !== undefined) {
+    if (formatterMetrics.iterations > 0) {
       const spaceDeviation = formatterMetrics.space.deviation;
       const prefix = spaceDeviation >= 0 ? '+' : '';
       ctx.setFillStyle('red');

@@ -580,6 +580,7 @@ export class Formatter {
       voice.getTickables().forEach((note) => {
         const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getFormatterMetrics();
+        metrics.iterations += 1;
         metrics.space.deviation = metrics.space.used - durationStats[duration].mean;
         metrics.duration = duration;
         metrics.space.mean = durationStats[duration].mean;

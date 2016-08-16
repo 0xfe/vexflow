@@ -50,6 +50,9 @@ export class Tickable extends Element {
       // used as an index to a map or hashtable.
       duration: '',
 
+      // The number of formatting iterations undergone.
+      iterations: 0,
+
       // The space in pixels allocated by this formatter, along with the mean space
       // for tickables of this duration, and the deviation from the mean.
       space: {
