@@ -118,7 +118,7 @@ VF.Test.Bend = (function() {
         note.addToModifierContext(mc);
 
         var tickContext = new VF.TickContext();
-        tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
+        tickContext.addTickable(note).preFormat().setX(75 * i);
 
         note.setStave(stave).setContext(ctx).draw();
         VF.Test.plotNoteWidth(ctx, note, 140);
@@ -156,7 +156,7 @@ VF.Test.Bend = (function() {
         note.addToModifierContext(mc);
 
         var tickContext = new VF.TickContext();
-        tickContext.addTickable(note).preFormat().setX(75 * i).setPixelsUsed(95);
+        tickContext.addTickable(note).preFormat().setX(75 * i);
 
         note.setStave(stave).setContext(ctx).draw();
         VF.Test.plotNoteWidth(ctx, note, 140);

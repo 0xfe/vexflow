@@ -379,7 +379,7 @@ VF.Test.StaveNote = (function() {
     showNote: function(note_struct, stave, ctx, x, drawBoundingBox) {
       var note = new VF.StaveNote(note_struct);
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(x);
       note.setContext(ctx).setStave(stave);
       note.draw();
 
@@ -751,7 +751,7 @@ VF.Test.StaveNote = (function() {
       note.setKeyStyle(1, {shadowBlur:15, shadowColor:'blue', fillStyle:'blue'});
 
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(25);
       note.setContext(ctx).setStave(stave);
       note.draw();
 
@@ -772,7 +772,7 @@ VF.Test.StaveNote = (function() {
       note.setStyle({shadowBlur:15, shadowColor:'blue', fillStyle:'blue', strokeStyle:'blue'});
 
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(25).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(25);
       note.setContext(ctx).setStave(stave);
       note.draw();
 
@@ -786,7 +786,7 @@ VF.Test.StaveNote = (function() {
       note.addToModifierContext(mc);
 
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(65);
+      tickContext.addTickable(note).preFormat().setX(x);
 
       note.setContext(ctx).setStave(stave);
       note.draw();

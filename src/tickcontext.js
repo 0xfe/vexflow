@@ -23,7 +23,6 @@ export class TickContext extends Tickable {
     this.maxTicks = new Fraction(0, 1);
     this.minTicks = null;
     this.padding = 3;     // padding on each side (width += padding * 2)
-    this.pixelsUsed = 0;
     this.x = 0;
     this.tickables = [];   // Notes, tabs, chords, lyrics.
     this.notePx = 0;       // width of widest note in this context
@@ -35,8 +34,6 @@ export class TickContext extends Tickable {
   getX() { return this.x; }
   setX(x) { this.x = x; return this; }
   getWidth() { return this.width + (this.padding * 2); }
-  getPixelsUsed() { return this.pixelsUsed; }
-  setPixelsUsed(pixelsUsed) { this.pixelsUsed = pixelsUsed; return this; }
   setPadding(padding) { this.padding = padding; return this; }
   getMaxTicks() { return this.maxTicks; }
   getMinTicks() { return this.minTicks; }
