@@ -21,6 +21,8 @@ import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
 import { Voice } from './voice';
 import { Beam } from './beam';
+import { GraceNote } from './gracenote';
+import { GraceNoteGroup } from './gracenotegroup';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -119,6 +121,19 @@ export class Factory {
     return note;
   }
 
+  GraceNote(noteStruct) {
+    const note = new GraceNote(noteStruct);
+    if (this.stave) note.setStave(this.stave);
+    note.setContext(this.context);
+    return note;
+  }
+
+  GraceNoteGroup(params) {
+    const group = new GraceNoteGroup(params.notes, params.slur);
+    group.setContext(this.context);
+    return group;
+  }
+
   Accidental(params) {
     params = setDefaults(params, {
       type: null,
@@ -172,6 +187,19 @@ export class Factory {
     const tuplet = new Tuplet(params.notes, params.options).setContext(this.context);
     this.renderQ.push(tuplet);
     return tuplet;
+  }
+
+  Beam(params) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {
+        autoStem: false,
+      },
+    });
+
+    const beam = new Beam(params.notes, params.options.autoStem).setContext(this.context);
+    this.renderQ.push(beam);
+    return beam;
   }
 
   System(params) {
