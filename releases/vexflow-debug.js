@@ -21500,7 +21500,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        width: 500,
 	        connector: null,
 	        spaceBetweenStaves: 12, // stave spaces
-	        endPadding: 0,
 	        factory: null,
 	        debugFormatter: false,
 	        formatIterations: 0, // number of formatter tuning steps
@@ -21583,7 +21582,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.parts.forEach(function (part) {
 	        return part.stave.setNoteStartX(startX);
 	      });
-	      var justifyWidth = this.options.width - (startX - this.options.x) - this.options.endPadding - _note.Note.STAVEPADDING;
+	      var justifyWidth = this.options.width - (startX - this.options.x) - _note.Note.STAVEPADDING;
 	      formatter.format(allVoices, justifyWidth);
 	
 	      for (var i = 0; i < this.options.formatIterations; i++) {
@@ -21660,6 +21659,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _voice = __webpack_require__(17);
 	
+	var _beam = __webpack_require__(14);
+	
+	var _gracenote = __webpack_require__(59);
+	
+	var _gracenotegroup = __webpack_require__(31);
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	// To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
@@ -21679,7 +21684,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  L(this.name + ':', message, data);
 	}
 	
-	function setDefaults(params, defaults) {
+	function setDefaults() {
+	  var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var defaults = arguments[1];
+	
 	  var default_options = defaults.options;
 	  params = _extends(defaults, params);
 	  params.options = _extends(default_options, params.options);
@@ -21801,6 +21809,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return note;
 	    }
 	  }, {
+	    key: 'GraceNote',
+	    value: function GraceNote(noteStruct) {
+	      var note = new _gracenote.GraceNote(noteStruct);
+	      if (this.stave) note.setStave(this.stave);
+	      note.setContext(this.context);
+	      return note;
+	    }
+	  }, {
+	    key: 'GraceNoteGroup',
+	    value: function GraceNoteGroup(params) {
+	      var group = new _gracenotegroup.GraceNoteGroup(params.notes, params.slur);
+	      group.setContext(this.context);
+	      return group;
+	    }
+	  }, {
 	    key: 'Accidental',
 	    value: function Accidental(params) {
 	      params = setDefaults(params, {
@@ -21861,6 +21884,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var tuplet = new _tuplet.Tuplet(params.notes, params.options).setContext(this.context);
 	      this.renderQ.push(tuplet);
 	      return tuplet;
+	    }
+	  }, {
+	    key: 'Beam',
+	    value: function Beam(params) {
+	      params = setDefaults(params, {
+	        notes: [],
+	        options: {
+	          autoStem: false
+	        }
+	      });
+	
+	      var beam = new _beam.Beam(params.notes, params.options.autoStem).setContext(this.context);
+	      this.renderQ.push(beam);
+	      return beam;
 	    }
 	  }, {
 	    key: 'System',
