@@ -209,19 +209,6 @@ export class Factory {
     return system;
   }
 
-  Beam(params) {
-    params = setDefaults(params, {
-      notes: [],
-      options: {
-        autoStem: false,
-      },
-    });
-
-    const tuplet = new Beam(params.notes, params.options.autoStem).setContext(this.ctx);
-    this.renderQ.push(tuplet);
-    return tuplet;
-  }
-
   draw() {
     this.renderQ.forEach(i => i.setContext(this.context).draw());
   }
