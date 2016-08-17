@@ -7,9 +7,7 @@
 // that renders vibrato effect between two notes.
 
 import { Vex } from './vex';
-import { Flow } from './tables';
 import { Element } from './element';
-import { Renderer } from './renderer';
 import { Vibrato } from './vibrato';
 
 // To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
@@ -70,6 +68,5 @@ export class VibratoBracket extends Element {
     L('Rendering VibratoBracket: start_x:', start_x, 'stop_x:', stop_x, 'y:', y);
 
     Vibrato.renderVibrato(ctx, start_x, y, this.render_options);
-
   }
 }
