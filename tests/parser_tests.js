@@ -12,11 +12,16 @@ Vex.Flow.Test.Parser = (function() {
       resetWords: function() { words = []; },
       getWords: function() { return words; },
 
-      BEGIN: function() { return { expect: [this.BIGLINE, this.EOL] }; },
+      BEGIN: function() { return { expect: [this.BIGORLITTLE, this.EOL] }; },
+
+      BIGORLITTLE: function() { return {
+        expect: [this.BIGLINE, this.LITTLELINE],
+        or: true
+      }; },
 
       BIGLINE: function() {
         return {
-          expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE, this.EOL],
+          expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE],
           run: function(state) {words.push(state[0]);}
         };
       },
@@ -65,6 +70,7 @@ Vex.Flow.Test.Parser = (function() {
       VF.Parser.DEBUG = true;
       QUnit.test("Basic", VFT.Parser.basic);
       QUnit.test("Advanced", VFT.Parser.advanced);
+      QUnit.test("Mixed", VFT.Parser.mixed);
     },
 
     basic: function(assert) {
@@ -82,17 +88,15 @@ Vex.Flow.Test.Parser = (function() {
       assert.equal(parser.parse('first').success, true);
 
       grammar.resetWords();
-      console.log(grammar.getWords());
       assert.equal(parser.parse('first,second, third').success, true);
       console.log(grammar.getWords());
-
-      assert.ok(true);
     },
 
     advanced: function(assert) {
       var grammar = new TestGrammar();
       var parser = new VF.Parser(grammar);
 
+      grammar.BEGIN = function() { return { expect: [grammar.BIGLINE, grammar.EOL] }; };
       assert.equal(parser.parse('{first}').success, true);
       assert.equal(parser.parse('{first!}').success, true);
       assert.equal(parser.parse('{first,second}').success, true);
@@ -100,7 +104,18 @@ Vex.Flow.Test.Parser = (function() {
       assert.equal(parser.parse('{first,second,third!}').success, true);
 
       assertParseFail(assert, parser.parse('{first,second,third,}'), 19);
-      assert.ok(true);
+      assertParseFail(assert, parser.parse('first,second,third'), 0);
+      assertParseFail(assert, parser.parse('{first,second,third'), 19);
+      assertParseFail(assert, parser.parse('{!}'), 1);
+    },
+
+    mixed: function(assert) {
+      var grammar = new TestGrammar();
+      var parser = new VF.Parser(grammar);
+
+      assert.equal(parser.parse('{first,second,third!}').success, true);
+      assert.equal(parser.parse('first, second').success, true);
+      assertParseFail(assert, parser.parse('first second'), 6);
     }
   };
 
