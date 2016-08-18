@@ -50,6 +50,7 @@ VF.Test.run = function () {
   VF.Test.GhostNote.Start();
   VF.Test.Factory.Start();
   VF.Test.Parser.Start();
+  VF.Test.EasyScore.Start();
 }
 
 module.exports = VF.Test;

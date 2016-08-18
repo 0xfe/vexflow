@@ -4,7 +4,7 @@
 
 import { Vex } from './vex';
 
-// To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
+// To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 function L(...args) { if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args); }
 
 // This is the base parser class. Given an arbitrary context-free grammar, it
@@ -22,6 +22,7 @@ export class Parser {
     this.rule = rule;
     this.pos = pos;
     L(msg, rule, pos);
+    return `${msg}: ${rule}: ${pos}`;
   }
 
   // Parse `line` using current grammar. Returns {success: true} if the
@@ -137,6 +138,7 @@ export class Parser {
   // ofloads to one of the above matchers and consolidates the results. It is also
   // responsible for executing any code triggered by the rule (in `rule.run`.)
   expect(rules) {
+    L('Evaluating rules:', rules);
     let result;
     if (!rules) {
       throw new Parser.Error('Invalid Rule: ' + rules, rules);

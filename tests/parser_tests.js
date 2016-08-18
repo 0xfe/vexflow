@@ -14,11 +14,13 @@ Vex.Flow.Test.Parser = (function() {
 
       BEGIN: function() { return { expect: [this.BIGORLITTLE, this.EOL] }; },
 
+      // Test that `or` works.
       BIGORLITTLE: function() { return {
         expect: [this.BIGLINE, this.LITTLELINE],
         or: true
       }; },
 
+      // Test a combination of various rules.
       BIGLINE: function() {
         return {
           expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE],
@@ -26,6 +28,7 @@ Vex.Flow.Test.Parser = (function() {
         };
       },
 
+      // Combine a token and a rule.
       LITTLELINE: function() {
         return {
           expect: [this.WORD, this.WORDS],
@@ -33,6 +36,7 @@ Vex.Flow.Test.Parser = (function() {
         };
       },
 
+      // Test zeroOrMore.
       WORDS: function() {
         return {
           expect: [this.COMMA, this.WORD],
@@ -41,6 +45,7 @@ Vex.Flow.Test.Parser = (function() {
          };
       },
 
+      // Test maybe.
       MAYBEEXCLAIM: function() {
         return {
           expect: [this.EXCLAIM],
@@ -48,6 +53,7 @@ Vex.Flow.Test.Parser = (function() {
          };
       },
 
+      // Test various regex tokens.
       LBRACE: function() { return { token: '[{]' }; },
       RBRACE: function() { return { token: '[}]' }; },
       WORD:  function()  { return { token: '[a-zA-Z]+' }; },
@@ -67,7 +73,6 @@ Vex.Flow.Test.Parser = (function() {
       QUnit.module("Parser");
       var VFT = Vex.Flow.Test;
 
-      VF.Parser.DEBUG = true;
       QUnit.test("Basic", VFT.Parser.basic);
       QUnit.test("Advanced", VFT.Parser.advanced);
       QUnit.test("Mixed", VFT.Parser.mixed);
