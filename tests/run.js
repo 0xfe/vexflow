@@ -49,6 +49,7 @@ VF.Test.run = function () {
   VF.Test.StaveModifier.Start();
   VF.Test.GhostNote.Start();
   VF.Test.Factory.Start();
+  VF.Test.Parser.Start();
 }
 
 module.exports = VF.Test;
