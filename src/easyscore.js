@@ -37,7 +37,8 @@ class Grammar {
     return { expect: [this.NOTE], oneOrMore: true };
   }
   NOTE()   {
-    return { expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE] };
+    return { expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
+             run: (matches) => console.log('NOTE: ', matches) };
   }
   ACCIDENTAL() {
     return { expect: [this.VALIDACCIDENTALS], maybe: true };
