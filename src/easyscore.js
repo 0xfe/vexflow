@@ -8,7 +8,15 @@ import { Factory } from './factory';
 import { Parser } from './parser';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
-function L(...args) { if (Parser.DEBUG) Vex.L('Vex.Flow.EasyScore', args); }
+function L(...args) { if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args); }
+
+export class X extends Error {
+  constructor(message) {
+    super(message);
+    this.message = message;
+    this.name = 'EasyScore';
+  }
+}
 
 class Grammar {
   constructor(builder) {
@@ -22,39 +30,50 @@ class Grammar {
     return { expect: [this.PIECE, this.PIECES, this.EOL] };
   }
   PIECE()  {
-    return { expect: [this.CHORDORNOTE, this.DURATION, this.DOTS, this.OPTS] };
+    return { expect: [this.CHORDORNOTE, this.PARAMS],
+             run: () => this.builder.commitPiece() };
   }
   PIECES() {
     return { expect: [this.COMMA, this.PIECE], zeroOrMore: true };
+  }
+  PARAMS()  {
+    return { expect: [this.DURATION, this.DOTS, this.OPTS] };
   }
   CHORDORNOTE() {
     return { expect: [this.CHORD, this.NOTE], or: true };
   }
   CHORD()  {
-    return { expect: [this.LPAREN, this.NOTES, this.RPAREN] };
+    return { expect: [this.LPAREN, this.NOTES, this.RPAREN],
+             run: (state) => this.builder.addChord(state.matches[1]) };
   }
   NOTES()  {
     return { expect: [this.NOTE], oneOrMore: true };
   }
   NOTE()   {
     return { expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
-             run: (matches) => console.log('NOTE: ', matches) };
+             run: (state) => this.builder.addSingleNote(
+               state.matches[0], state.matches[1], state.matches[2]) };
   }
   ACCIDENTAL() {
-    return { expect: [this.VALIDACCIDENTALS], maybe: true };
+    return { expect: [this.ACCIDENTALS], maybe: true };
   }
   DOTS()   {
-    return { expect: [this.DOT], zeroOrMore: true };
+    return { expect: [this.DOT], zeroOrMore: true,
+             run: (state) => this.builder.setNoteDots(state.matches[0]) };
   }
   DURATION()   {
-    return { expect: [this.SLASH, this.VALIDDURATIONS], maybe: true };
+    return { expect: [this.SLASH, this.DURATIONS], maybe: true,
+             run: (state) => this.builder.setNoteDuration(state.matches[1]) };
   }
   // Options can be key=value pairs, with single or double quoted values.
   OPTS() {
     return { expect: [this.LBRACKET, this.KEYVAL, this.KEYVALS, this.RBRACKET], maybe: true };
   }
   KEYVALS() { return { expect: [this.COMMA, this.KEYVAL], zeroOrMore: true }; }
-  KEYVAL()  { return { expect: [this.KEY, this.EQUALS, this.VAL] }; }
+  KEYVAL()  {
+    return { expect: [this.KEY, this.EQUALS, this.VAL],
+             run: (state) => this.builder.addNoteOption(state.matches[0], state.matches[2]) };
+  }
   KEY()     { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
   VAL()     { return { expect: [this.SVAL, this.DVAL], or: true }; }
   DVAL()    { return { token: '["][^"]*["]' }; }
@@ -63,8 +82,8 @@ class Grammar {
   // Valid notational symbols.
   NOTENAME() { return { token: '\\s*[a-gA-GrRxXsS]', noSpace: true }; }
   OCTAVE()   { return { token: '[0-9]+' }; }
-  VALIDACCIDENTALS() { return { token: '[b#n]+' }; }
-  VALIDDURATIONS() { return { token: '[0-9whq]+' }; }
+  ACCIDENTALS() { return { token: '[b#n]+' }; }
+  DURATIONS() { return { token: '[0-9whq]+' }; }
 
   // Raw tokens used by grammar.
   LPAREN()   { return { token: '[(]' }; }
@@ -76,6 +95,47 @@ class Grammar {
   LBRACKET() { return { token: '\\[' }; }
   RBRACKET() { return { token: '\\]' }; }
   EOL()      { return { token: '$' }; }
+}
+
+class Builder {
+  constructor(factory) {
+    this.factory = factory;
+    if (!this.factory) {
+      throw new X('Builder needs a factory');
+    }
+  }
+
+  setNoteDots(dots) {
+    L('setNoteDots:', dots);
+  }
+
+  setNoteDuration(duration) {
+    L('setNoteDuration:', duration);
+  }
+
+  addNoteOption(key, value) {
+    L('addNoteOption: key:', key, 'value:', value);
+  }
+
+  addNote(key, acc, octave) {
+    L('addNote:', key, acc, octave);
+  }
+
+  addSingleNote(key, acc, octave) {
+    L('addSingleNote:', key, acc, octave);
+  }
+
+  addChord(notes) {
+    L('startChord');
+    notes.forEach(n => {
+      if (n) this.addNote(n[0], n[1], n[2]);
+    });
+    L('endChord');
+  }
+
+  commitPiece() {
+    L('commitPiece');
+  }
 }
 
 export class EasyScore {
@@ -97,14 +157,9 @@ export class EasyScore {
   }
 
   parse(line) {
-    let result;
-    try {
-      const grammar = new Grammar();
-      const parser = new Parser(grammar);
-      result = parser.parse(line);
-    } catch (error) {
-      L(error);
-    }
-    return result;
+    const builder = new Builder(this.factory);
+    const grammar = new Grammar(builder);
+    const parser = new Parser(grammar);
+    return parser.parse(line);
   }
 }

@@ -7,6 +7,16 @@ import { Vex } from './vex';
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 function L(...args) { if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args); }
 
+// Converts parser results into an easy to reference list that can be
+// used in triggers.
+function flattenMatches(results) {
+  if (results.matchedString !== undefined) return results.matchedString;
+  if (results.results) return flattenMatches(results.results);
+  if (results.length === 1) return flattenMatches(results[0]);
+  if (results.length === 0) return null;
+  return results.map(flattenMatches);
+}
+
 // This is the base parser class. Given an arbitrary context-free grammar, it
 // can parse any line and execute code when specific rules are met (e.g.,
 // when a string is terminated.)
@@ -76,10 +86,11 @@ export class Parser {
 
     let allMatches = true;
     let oneMatch = false;
-    maybe |= (rule.maybe === true);
+    maybe = (maybe === true) || (rule.maybe === true);
 
     // Execute all sub rules in sequence.
-    for (const next of rule.expect) {
+    for (let i = 0; i < rule.expect.length; i++) {
+      const next = rule.expect[i];
       const localPos = this.pos;
       const result = this.expect(next);
 
@@ -99,10 +110,10 @@ export class Parser {
     }
 
     const gotOne = (rule.or && oneMatch) || allMatches;
-    const success = gotOne || maybe;
+    const success = gotOne || (maybe === true);
     if (maybe && !gotOne) this.pos = pos;
     if (success) this.matchSuccess(); else this.matchFail(pos);
-    return { success: (gotOne || maybe), results, numMatches: gotOne ? 1 : 0 };
+    return { success, results, numMatches: gotOne ? 1 : 0 };
   }
 
   // Try to match multiple (one or more) instances of the rule. If `maybe` is set,
@@ -123,7 +134,7 @@ export class Parser {
       }
     } while (more);
 
-    const success = (numMatches > 0) || maybe;
+    const success = (numMatches > 0) || (maybe === true);
     if (maybe && !(numMatches > 0)) this.pos = pos;
     if (success) this.matchSuccess(); else this.matchFail(pos);
     return { success, results, numMatches };
@@ -169,6 +180,8 @@ export class Parser {
     }
 
     // If there's a trigger attached to this rule, then pull it.
+    result.matches = [];
+    if (result.results) result.results.forEach(r => result.matches.push(flattenMatches(r)));
     if (rule.run && result.success) rule.run(result);
     return result;
   }

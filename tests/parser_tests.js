@@ -5,12 +5,8 @@
 
 Vex.Flow.Test.Parser = (function() {
   var TestGrammar = function() {
-    var words = [];
-
     return {
       begin: function() { return this.BEGIN; },
-      resetWords: function() { words = []; },
-      getWords: function() { return words; },
 
       BEGIN: function() { return { expect: [this.BIGORLITTLE, this.EOL] }; },
 
@@ -24,7 +20,6 @@ Vex.Flow.Test.Parser = (function() {
       BIGLINE: function() {
         return {
           expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE],
-          run: function(state) {words.push(state[0]);}
         };
       },
 
@@ -32,7 +27,6 @@ Vex.Flow.Test.Parser = (function() {
       LITTLELINE: function() {
         return {
           expect: [this.WORD, this.WORDS],
-          run: function(state) { console.log("LITTLELINE: ", state); }
         };
       },
 
@@ -41,7 +35,6 @@ Vex.Flow.Test.Parser = (function() {
         return {
           expect: [this.COMMA, this.WORD],
           zeroOrMore: true,
-          run: function(state) { console.log("WORDS: ", state); }
          };
       },
 
@@ -91,10 +84,7 @@ Vex.Flow.Test.Parser = (function() {
       assert.equal(parser.parse('first, second').success, true);
       assert.equal(parser.parse('first,second').success, true);
       assert.equal(parser.parse('first').success, true);
-
-      grammar.resetWords();
       assert.equal(parser.parse('first,second, third').success, true);
-      console.log(grammar.getWords());
     },
 
     advanced: function(assert) {

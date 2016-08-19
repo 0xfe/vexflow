@@ -13,6 +13,7 @@ Vex.Flow.Test.EasyScore = (function() {
     Start: function() {
       QUnit.module("EasyScore");
       var VFT = Vex.Flow.Test;
+      VF.EasyScore.DEBUG = false;
       QUnit.test("Basic", VFT.EasyScore.basic);
       QUnit.test("Accidentals", VFT.EasyScore.accidentals);
       QUnit.test("Durations", VFT.EasyScore.durations);
@@ -22,6 +23,7 @@ Vex.Flow.Test.EasyScore = (function() {
     },
 
     basic: function(assert) {
+      // TODO(0xfe): Reduce duplication in these assertions.
       var score = new VF.EasyScore();
       assert.equal(score.parse('').success, false);
       assert.equal(score.parse('()').success, false);
@@ -96,6 +98,7 @@ Vex.Flow.Test.EasyScore = (function() {
       assert.equal(score.parse('.[').success, false);
 
       assert.equal(score.parse('(c##3 cbb3 cn3).[blah="bod4o"], cb3').success, true);
+      console.log(score.parse('(c##3 cbb3 cn3).[blah="bod4o"], cb3'));
       assert.equal(score.parse('(c5)[fooooo="booo"]').success, true);
     },
   };
