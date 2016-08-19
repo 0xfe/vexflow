@@ -126,7 +126,7 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [
-          score.voice('c#4/q, c4/q, c4/q, c4/q', {stem: 'down'}),
+          score.voice('c#4/q, c4/q, c4/q/r, c4/q', {stem: 'down'}),
           score.voice('c#5/h., c5/q', {stem: 'up'})
       ]}).addClef('treble');
 
@@ -134,6 +134,7 @@ Vex.Flow.Test.EasyScore = (function() {
         voices: [
           score.voice('c#4/q, cn4/q, bb4/q, d##4/q'),
       ]}).addClef('bass');
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();
       expect(0);

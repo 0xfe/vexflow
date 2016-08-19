@@ -68,7 +68,7 @@ class Grammar {
   }
   TYPE()   {
     return { expect: [this.SLASH, this.MAYBESLASH, this.TYPES], maybe: true,
-             run: (state) => this.builder.setNoteType(state.matches[1]) };
+             run: (state) => this.builder.setNoteType(state.matches[2]) };
   }
   DURATION()   {
     return { expect: [this.SLASH, this.DURATIONS], maybe: true,
@@ -134,7 +134,7 @@ class Builder {
       chord: [],
       duration: '8',
       dots: 0,
-      type: null,
+      type: undefined,
       options: {},
     };
   }
@@ -196,7 +196,8 @@ class Builder {
       { keys,
         duration: this.piece.duration,
         dots: this.piece.dots,
-        auto_stem: autoStem });
+        auto_stem: autoStem,
+        type: this.piece.type });
 
     if (!autoStem) note.setStemDirection(stemDirection);
 
