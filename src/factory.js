@@ -202,7 +202,7 @@ export class Factory {
     return beam;
   }
 
-  System(params) {
+  System(params = {}) {
     params.factory = this;
     const system = new System(params).setContext(this.context);
     this.renderQ.push(system);

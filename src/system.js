@@ -17,7 +17,7 @@ function setDefaults(params, defaults) {
 }
 
 export class System extends Element {
-  constructor(params) {
+  constructor(params = {}) {
     super();
     this.setAttribute('type', 'System');
     this.setOptions(params);

@@ -4,7 +4,7 @@
 // VexFlow objects.
 
 import { Vex } from './vex';
-import { Factory } from './factory';
+import { StaveNote } from './stavenote';
 import { Parser } from './parser';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
@@ -39,7 +39,7 @@ class Grammar {
     return { expect: [this.COMMA, this.PIECE], zeroOrMore: true };
   }
   PARAMS()  {
-    return { expect: [this.DURATION, this.DOTS, this.OPTS] };
+    return { expect: [this.DURATION, this.TYPE, this.DOTS, this.OPTS] };
   }
   CHORDORNOTE() {
     return { expect: [this.CHORD, this.SINGLENOTE], or: true };
@@ -66,6 +66,10 @@ class Grammar {
     return { expect: [this.DOT], zeroOrMore: true,
              run: (state) => this.builder.setNoteDots(state.matches[0]) };
   }
+  TYPE()   {
+    return { expect: [this.SLASH, this.MAYBESLASH, this.TYPES], maybe: true,
+             run: (state) => this.builder.setNoteType(state.matches[1]) };
+  }
   DURATION()   {
     return { expect: [this.SLASH, this.DURATIONS], maybe: true,
              run: (state) => this.builder.setNoteDuration(state.matches[1]) };
@@ -86,10 +90,11 @@ class Grammar {
   SVAL()    { return { token: "['][^']*[']" }; }
 
   // Valid notational symbols.
-  NOTENAME() { return { token: '\\s*[a-gA-GrRxXsS]', noSpace: true }; }
+  NOTENAME() { return { token: '[a-gA-G]' }; }
   OCTAVE()   { return { token: '[0-9]+' }; }
   ACCIDENTALS() { return { token: '[b#n]+' }; }
   DURATIONS() { return { token: '[0-9whq]+' }; }
+  TYPES() { return { token: '[rRsSxX]' }; }
 
   // Raw tokens used by grammar.
   LPAREN()   { return { token: '[(]' }; }
@@ -97,6 +102,7 @@ class Grammar {
   COMMA()    { return { token: '[,]' }; }
   DOT()      { return { token: '[.]' }; }
   SLASH()    { return { token: '[/]' }; }
+  MAYBESLASH()    { return { token: '[/]?' }; }
   EQUALS()   { return { token: '[=]' }; }
   LBRACKET() { return { token: '\\[' }; }
   RBRACKET() { return { token: '\\]' }; }
@@ -106,38 +112,56 @@ class Grammar {
 class Builder {
   constructor(factory) {
     this.factory = factory;
-    if (!this.factory) {
-      throw new X('Builder needs a factory');
-    }
-    this.resetState();
+    this.reset();
   }
 
-  resetState() {
-    this.state = {
+  reset(options = {}) {
+    this.options = {
+      stem: 'auto',
+    };
+    this.elements = {
+      notes: [],
+      accidentals: [],
+    };
+    this.resetPiece();
+    Object.assign(this.options, options);
+  }
+
+  getElements() { return this.elements; }
+
+  resetPiece() {
+    this.piece = {
       chord: [],
-      note: null,
-      duration: 8,
+      duration: '8',
       dots: 0,
+      type: null,
+      options: {},
     };
   }
 
   setNoteDots(dots) {
     L('setNoteDots:', dots);
-    if (dots) this.state.dots = dots.length;
+    if (dots) this.piece.dots = dots.length;
   }
 
   setNoteDuration(duration) {
     L('setNoteDuration:', duration);
-    this.state.duration = duration;
+    if (duration) this.piece.duration = duration;
+  }
+
+  setNoteType(type) {
+    L('setNoteType:', type);
+    if (type) this.piece.type = type;
   }
 
   addNoteOption(key, value) {
     L('addNoteOption: key:', key, 'value:', value);
+    this.piece.options[key] = value;
   }
 
   addNote(key, acc, octave) {
     L('addNote:', key, acc, octave);
-    this.state.note = { key, acc, octave };
+    this.piece.chord.push({ key, acc, octave });
   }
 
   addSingleNote(key, acc, octave) {
@@ -147,14 +171,47 @@ class Builder {
 
   addChord(notes) {
     L('startChord');
-    notes.forEach(n => {
-      if (n) this.addNote(n[0], n[1], n[2]);
-    });
+    if (typeof(notes[0]) !== 'object') {
+      this.addSingleNote(notes[0]);
+    } else {
+      notes.forEach(n => {
+        if (n) this.addNote(n[0], n[1], n[2]);
+      });
+    }
     L('endChord');
   }
 
   commitPiece() {
     L('commitPiece');
+    if (!this.factory) return;
+
+    const autoStem = this.options.stem.toLowerCase() === 'auto';
+    const stemDirection = !autoStem &&
+      (this.options.stem.toLowerCase() === 'up') ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
+
+    // Build the note.
+    const keys = this.piece.chord.map(note => note.key + '/' + note.octave);
+    const accs = this.piece.chord.map(note => note.acc || null);
+    const note = this.factory.StaveNote(
+      { keys,
+        duration: this.piece.duration,
+        dots: this.piece.dots,
+        auto_stem: autoStem });
+
+    if (!autoStem) note.setStemDirection(stemDirection);
+
+    for (let i = 0; i < this.piece.dots; i++) note.addDotToAll();
+    this.elements.notes.push(note);
+
+    // Build and attach the accidentals.
+    accs.forEach((acc, i) => {
+      if (acc) note.addAccidental(i, this.factory.Accidental({ type: acc }));
+    });
+    this.elements.accidentals.concat(accs);
+
+    // Set attributes.
+    // this.piece.options.forEach(o => note.setAttribute(o[0], o[1]));
+    this.resetPiece();
   }
 }
 
@@ -166,20 +223,32 @@ export class EasyScore {
   setOptions(options) {
     this.options = Object.assign({
       factory: null,
+      builder: null,
     }, options);
 
-    this.factory = this.options.factory || new Factory({ renderer: { selector: null } });
+    this.factory = this.options.factory;
+    this.builder = this.options.builder || new Builder(this.factory);
   }
 
   setContext(context) {
-    this.factory.setContext(context);
+    if (this.factory) this.factory.setContext(context);
     return this;
   }
 
-  parse(line) {
-    const builder = new Builder(this.factory);
-    const grammar = new Grammar(builder);
+  parse(line, options = {}) {
+    this.builder.reset(options);
+    const grammar = new Grammar(this.builder);
     const parser = new Parser(grammar);
     return parser.parse(line);
+  }
+
+  notes(line, options = {}) {
+    this.parse(line, options);
+    return this.builder.getElements().notes;
+  }
+
+  voice(line, options = { voiceOptions: null }) {
+    this.parse(line, options);
+    return this.factory.Voice(options.voiceOptions).addTickables(this.builder.getElements().notes);
   }
 }

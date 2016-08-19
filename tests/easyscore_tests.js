@@ -20,6 +20,7 @@ Vex.Flow.Test.EasyScore = (function() {
       QUnit.test("Chords", VFT.EasyScore.chords);
       QUnit.test("Dots", VFT.EasyScore.dots);
       QUnit.test("Options", VFT.EasyScore.options);
+      VFT.runTests("Basic Rendering", VFT.EasyScore.drawBasicTest);
     },
 
     basic: function(assert) {
@@ -27,10 +28,10 @@ Vex.Flow.Test.EasyScore = (function() {
       var score = new VF.EasyScore();
       assert.equal(score.parse('').success, false);
       assert.equal(score.parse('()').success, false);
-      assert.equal(score.parse('r4').success, true);
+      assert.equal(score.parse('c4/r').success, true);
       assert.equal(score.parse('7').success, false);
       assert.equal(score.parse('c#5').success, true);
-      assert.equal(score.parse('x3').success, true);
+      assert.equal(score.parse('c3//x').success, true);
 
       assert.equal(score.parse('c5/w').success, true);
       assert.equal(score.parse('c5/w').success, true);
@@ -43,7 +44,7 @@ Vex.Flow.Test.EasyScore = (function() {
       assert.equal(score.parse('c3').success, true);
       assert.equal(score.parse('c##3, cb3').success, true);
       assert.equal(score.parse('Cn3').success, true);
-      assert.equal(score.parse('x3').success, true);
+      assert.equal(score.parse('f3//x').success, true);
       assert.equal(score.parse('ct3').success, false);
       assert.equal(score.parse('cd7').success, false);
 
@@ -72,15 +73,31 @@ Vex.Flow.Test.EasyScore = (function() {
       assert.equal(score.parse('(c5)').success, true);
       assert.equal(score.parse('(c3 e0 g9)').success, true);
       assert.equal(score.parse('(c##4 cbb4 cn4)/w, (c#5 cb2 a3)/32').success, true);
-      assert.equal(score.parse('(x##4 cbb4 cn4)/w, (c#5 cb2 a3)').success, true);
-      assert.equal(score.parse('(c##4 cbb4 cn4)/x, (c#5 cb2 a3)').success, false);
+      assert.equal(score.parse('(d##4 cbb4 cn4)/w/r, (c#5 cb2 a3)').success, true);
+      assert.equal(score.parse('(c##4 cbb4 cn4)/4, (c#5 cb2 a3)').success, true);
+      assert.equal(score.parse('(c##4 cbb4 cn4)/x, (c#5 cb2 a3)').success, true);
     },
 
     dots: function(assert) {
       var score = new VF.EasyScore();
       assert.equal(score.parse('c3/4.').success, true);
       assert.equal(score.parse('c##3/w.., cb3').success, true);
-      assert.equal(score.parse('s##3/w, cb3/q...').success, true);
+      assert.equal(score.parse('f##3/s, cb3/q...').success, true);
+      assert.equal(score.parse('c##3/q, cb3/32').success, true);
+      assert.equal(score.parse('.').success, false);
+
+      assert.equal(score.parse('(c##3 cbb3 cn3)., cb3').success, true);
+      assert.equal(score.parse('(c5).').success, true);
+      assert.equal(score.parse('(c##4 cbb4 cn4)/w.., (c#5 cb2 a3)/32').success, true);
+    },
+
+    types: function(assert) {
+      var score = new VF.EasyScore();
+      assert.equal(score.parse('c3/4/x.').success, true);
+      assert.equal(score.parse('c##3//r.., cb3').success, true);
+      assert.equal(score.parse('c##3/x.., cb3').success, true);
+      assert.equal(score.parse('c##3/r.., cb3').success, true);
+      assert.equal(score.parse('d##3/w/s, cb3/q...').success, true);
       assert.equal(score.parse('c##3/q, cb3/32').success, true);
       assert.equal(score.parse('.').success, false);
 
@@ -93,13 +110,33 @@ Vex.Flow.Test.EasyScore = (function() {
       var score = new VF.EasyScore();
       assert.equal(score.parse('c3/4.[foo="bar"]').success, true);
       assert.equal(score.parse('c##3/w.., cb3[id="blah"]').success, true);
-      assert.equal(score.parse('s##3/w[], cb3/q...').success, false);
+      assert.equal(score.parse('f##3/w[], cb3/q...').success, false);
       assert.equal(score.parse('c##3/q, cb3/32').success, true);
       assert.equal(score.parse('.[').success, false);
 
       assert.equal(score.parse('(c##3 cbb3 cn3).[blah="bod4o"], cb3').success, true);
       console.log(score.parse('(c##3 cbb3 cn3).[blah="bod4o"], cb3'));
       assert.equal(score.parse('(c5)[fooooo="booo"]').success, true);
+    },
+
+    drawBasicTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 750);
+      const score = new VF.EasyScore({factory: vf});
+      const system = vf.System();
+
+      system.addStave({
+        voices: [
+          score.voice('c#4/q, c4/q, c4/q, c4/q', {stem: 'down'}),
+          score.voice('c#5/h., c5/q', {stem: 'up'})
+      ]}).addClef('treble');
+
+      system.addStave({
+        voices: [
+          score.voice('c#4/q, cn4/q, bb4/q, d##4/q'),
+      ]}).addClef('bass');
+
+      vf.draw();
+      expect(0);
     },
   };
 
