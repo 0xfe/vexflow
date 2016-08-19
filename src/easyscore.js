@@ -42,7 +42,7 @@ class Grammar {
     return { expect: [this.DURATION, this.DOTS, this.OPTS] };
   }
   CHORDORNOTE() {
-    return { expect: [this.CHORD, this.NOTE], or: true };
+    return { expect: [this.CHORD, this.SINGLENOTE], or: true };
   }
   CHORD()  {
     return { expect: [this.LPAREN, this.NOTES, this.RPAREN],
@@ -52,6 +52,9 @@ class Grammar {
     return { expect: [this.NOTE], oneOrMore: true };
   }
   NOTE()   {
+    return { expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE] };
+  }
+  SINGLENOTE()   {
     return { expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
              run: (state) => this.builder.addSingleNote(
                state.matches[0], state.matches[1], state.matches[2]) };
