@@ -122,11 +122,17 @@ VF.Test.Tuplet = (function() {
 
       vf.Tuplet({
         notes: notes.slice(0, 3),
+        options: {
+          ratioed: true,
+        },
       });
 
       vf.Tuplet({
         notes: notes.slice(3, 6),
-        options: { notes_occupied: 4 },
+        options: {
+          ratioed: true,
+          notes_occupied: 4,
+        },
       });
 
       var voice = vf.Voice()
@@ -203,6 +209,7 @@ VF.Test.Tuplet = (function() {
         notes: notes.slice(0, 3),
         options: {
           location: VF.Tuplet.LOCATION_BOTTOM,
+          ratioed: true,
         },
       });
 
