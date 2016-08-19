@@ -13,7 +13,7 @@ Vex.Flow.Test.EasyScore = (function() {
     Start: function() {
       QUnit.module("EasyScore");
       var VFT = Vex.Flow.Test;
-      VF.EasyScore.DEBUG = false;
+      VF.EasyScore.DEBUG = true;
       QUnit.test("Basic", VFT.EasyScore.basic);
       QUnit.test("Accidentals", VFT.EasyScore.accidentals);
       QUnit.test("Durations", VFT.EasyScore.durations);

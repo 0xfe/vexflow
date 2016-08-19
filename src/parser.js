@@ -7,6 +7,15 @@ import { Vex } from './vex';
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 function L(...args) { if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args); }
 
+export class X extends Error {
+  constructor(message, data) {
+    super(message);
+    this.message = message;
+    this.data = data;
+    this.name = 'Parser';
+  }
+}
+
 // Converts parser results into an easy to reference list that can be
 // used in triggers.
 function flattenMatches(results) {
@@ -25,14 +34,6 @@ export class Parser {
   // the EasyScore grammar in easyscore.js.
   constructor(grammar) {
     this.grammar = grammar;
-  }
-
-  static Error(msg, rule, pos) {
-    this.msg = msg;
-    this.rule = rule;
-    this.pos = pos;
-    L(msg, rule, pos);
-    return `${msg}: ${rule}: ${pos}`;
   }
 
   // Parse `line` using current grammar. Returns {success: true} if the
@@ -152,7 +153,7 @@ export class Parser {
     L('Evaluating rules:', rules);
     let result;
     if (!rules) {
-      throw new Parser.Error('Invalid Rule: ' + rules, rules);
+      throw new X('Invalid Rule: ' + rules, rules);
     }
 
     // Get rule from Grammar class.
@@ -176,7 +177,7 @@ export class Parser {
         result = this.expectOne(rule);
       }
     } else {
-      throw new Parser.Error('Bad grammar!', rule);
+      throw new X('Bad grammar! No `token` or `expect` property', rule);
     }
 
     // If there's a trigger attached to this rule, then pull it.

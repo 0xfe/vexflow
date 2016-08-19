@@ -18,6 +18,8 @@ export class X extends Error {
   }
 }
 
+function unquote(str) { return str.slice(1, -1); }
+
 class Grammar {
   constructor(builder) {
     this.builder = builder;
@@ -72,7 +74,8 @@ class Grammar {
   KEYVALS() { return { expect: [this.COMMA, this.KEYVAL], zeroOrMore: true }; }
   KEYVAL()  {
     return { expect: [this.KEY, this.EQUALS, this.VAL],
-             run: (state) => this.builder.addNoteOption(state.matches[0], state.matches[2]) };
+             run: (state) => this.builder.addNoteOption(
+               state.matches[0], unquote(state.matches[2])) };
   }
   KEY()     { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
   VAL()     { return { expect: [this.SVAL, this.DVAL], or: true }; }
@@ -103,14 +106,26 @@ class Builder {
     if (!this.factory) {
       throw new X('Builder needs a factory');
     }
+    this.resetState();
+  }
+
+  resetState() {
+    this.state = {
+      chord: [],
+      note: null,
+      duration: 8,
+      dots: 0,
+    };
   }
 
   setNoteDots(dots) {
     L('setNoteDots:', dots);
+    if (dots) this.state.dots = dots.length;
   }
 
   setNoteDuration(duration) {
     L('setNoteDuration:', duration);
+    this.state.duration = duration;
   }
 
   addNoteOption(key, value) {
@@ -119,10 +134,12 @@ class Builder {
 
   addNote(key, acc, octave) {
     L('addNote:', key, acc, octave);
+    this.state.note = { key, acc, octave };
   }
 
   addSingleNote(key, acc, octave) {
     L('addSingleNote:', key, acc, octave);
+    this.addNote(key, acc, octave);
   }
 
   addChord(notes) {
