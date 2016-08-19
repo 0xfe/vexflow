@@ -45,9 +45,9 @@ export class Vibrato extends Modifier {
     super();
     this.setAttribute('type', 'Vibrato');
 
-    this.harsh = false;
     this.position = Modifier.Position.RIGHT;
     this.render_options = {
+      harsh: false,
       vibrato_width: 20,
       wave_height: 6,
       wave_width: 4,
@@ -57,10 +57,10 @@ export class Vibrato extends Modifier {
     this.setVibratoWidth(this.render_options.vibrato_width);
   }
   getCategory() { return Vibrato.CATEGORY; }
-  setHarsh(harsh) { this.harsh = harsh; return this; }
+  setHarsh(harsh) { this.render_options.harsh = harsh; return this; }
   setVibratoWidth(width) {
-    this.vibrato_width = width;
-    this.setWidth(this.vibrato_width);
+    this.render_options.vibrato_width = width;
+    this.setWidth(width);
     return this;
   }
 
@@ -72,58 +72,59 @@ export class Vibrato extends Modifier {
     }
 
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
-    const vibrato_width = this.vibrato_width;
-
-    const renderVibrato = (x, y) => {
-      const { wave_width, wave_girth, wave_height } = this.render_options;
-      const num_waves = vibrato_width / wave_width;
-
-      ctx.beginPath();
-
-      let i;
-      if (this.harsh) {
-        ctx.moveTo(x, y + wave_girth + 1);
-        for (i = 0; i < num_waves / 2; ++i) {
-          ctx.lineTo(x + wave_width, y - (wave_height / 2));
-          x += wave_width;
-          ctx.lineTo(x + wave_width, y + (wave_height / 2));
-          x += wave_width;
-        }
-        for (i = 0; i < num_waves / 2; ++i) {
-          ctx.lineTo(x - wave_width, (y - (wave_height / 2)) + wave_girth + 1);
-          x -= wave_width;
-          ctx.lineTo(x - wave_width, (y + (wave_height / 2)) + wave_girth + 1);
-          x -= wave_width;
-        }
-        ctx.fill();
-      } else {
-        ctx.moveTo(x, y + wave_girth);
-        for (i = 0; i < num_waves / 2; ++i) {
-          ctx.quadraticCurveTo(x + (wave_width / 2), y - (wave_height / 2), x + wave_width, y);
-          x += wave_width;
-          ctx.quadraticCurveTo(x + (wave_width / 2), y + (wave_height / 2), x + wave_width, y);
-          x += wave_width;
-        }
-
-        for (i = 0; i < num_waves / 2; ++i) {
-          ctx.quadraticCurveTo(
-            x - (wave_width / 2),
-            (y + (wave_height / 2)) + wave_girth,
-            x - wave_width, y + wave_girth);
-          x -= wave_width;
-          ctx.quadraticCurveTo(
-            x - (wave_width / 2),
-            (y - (wave_height / 2)) + wave_girth,
-            x - wave_width, y + wave_girth);
-          x -= wave_width;
-        }
-        ctx.fill();
-      }
-    };
 
     const vx = start.x + this.x_shift;
     const vy = this.note.getYForTopText(this.text_line) + 2;
 
-    renderVibrato(vx, vy);
+    Vibrato.renderVibrato(ctx, vx, vy, this.render_options);
+  }
+
+  // Static rendering method that can be called from
+  // other classes (e.g. VibratoBracket)
+  static renderVibrato(ctx, x, y, opts) {
+    const { harsh, vibrato_width, wave_width, wave_girth, wave_height } = opts;
+    const num_waves = vibrato_width / wave_width;
+
+    ctx.beginPath();
+
+    let i;
+    if (harsh) {
+      ctx.moveTo(x, y + wave_girth + 1);
+      for (i = 0; i < num_waves / 2; ++i) {
+        ctx.lineTo(x + wave_width, y - (wave_height / 2));
+        x += wave_width;
+        ctx.lineTo(x + wave_width, y + (wave_height / 2));
+        x += wave_width;
+      }
+      for (i = 0; i < num_waves / 2; ++i) {
+        ctx.lineTo(x - wave_width, (y - (wave_height / 2)) + wave_girth + 1);
+        x -= wave_width;
+        ctx.lineTo(x - wave_width, (y + (wave_height / 2)) + wave_girth + 1);
+        x -= wave_width;
+      }
+      ctx.fill();
+    } else {
+      ctx.moveTo(x, y + wave_girth);
+      for (i = 0; i < num_waves / 2; ++i) {
+        ctx.quadraticCurveTo(x + (wave_width / 2), y - (wave_height / 2), x + wave_width, y);
+        x += wave_width;
+        ctx.quadraticCurveTo(x + (wave_width / 2), y + (wave_height / 2), x + wave_width, y);
+        x += wave_width;
+      }
+
+      for (i = 0; i < num_waves / 2; ++i) {
+        ctx.quadraticCurveTo(
+          x - (wave_width / 2),
+          (y + (wave_height / 2)) + wave_girth,
+          x - wave_width, y + wave_girth);
+        x -= wave_width;
+        ctx.quadraticCurveTo(
+          x - (wave_width / 2),
+          (y - (wave_height / 2)) + wave_girth,
+          x - wave_width, y + wave_girth);
+        x -= wave_width;
+      }
+      ctx.fill();
+    }
   }
 }
