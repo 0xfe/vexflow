@@ -3,6 +3,7 @@
 // This class implements a parser for a simple language to generate
 // VexFlow objects.
 
+import { Vex } from './vex';
 import { Factory } from './factory';
 import { Parser } from './parser';
 
@@ -36,16 +37,10 @@ class Grammar {
     return { expect: [this.NOTE], oneOrMore: true };
   }
   NOTE()   {
-    return { expect: [this.KEY, this.ACCIDENTAL, this.OCTAVE] };
-  }
-  NOTENAME() {
-    return { expect: [this.VALIDNOTES] };
+    return { expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE] };
   }
   ACCIDENTAL() {
     return { expect: [this.VALIDACCIDENTALS], maybe: true };
-  }
-  OCTAVE() {
-    return { expect: [this.VALIDOCTAVES], maybe: true };
   }
   DOTS()   {
     return { expect: [this.DOT], zeroOrMore: true };
@@ -65,18 +60,10 @@ class Grammar {
   SVAL()    { return { token: "['][^']*[']" }; }
 
   // Valid notational symbols.
-  VALIDNOTES()   {
-    return { token: '[a-gA-GrRxXsS]' };
-  }
-  VALIDACCIDENTALS() {
-    return { token: '[b#n]+' };
-  }
-  VALIDOCTAVES() {
-    return { token: '[0-9]+' };
-  }
-  VALIDDURATIONS() {
-    return { token: '[0-9whq]+' };
-  }
+  NOTENAME() { return { token: '\\s*[a-gA-GrRxXsS]', noSpace: true }; }
+  OCTAVE()   { return { token: '[0-9]+' }; }
+  VALIDACCIDENTALS() { return { token: '[b#n]+' }; }
+  VALIDDURATIONS() { return { token: '[0-9whq]+' }; }
 
   // Raw tokens used by grammar.
   LPAREN()   { return { token: '[(]' }; }
