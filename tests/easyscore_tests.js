@@ -125,13 +125,13 @@ Vex.Flow.Test.EasyScore = (function() {
       system.addStave({
         voices: [
           voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
-          voice(notes('c#5/h., c5/q', {stem: 'up'}))
-      ]}).addClef('treble');
+          voice(notes('c#5/h., c5/q', {stem: 'up'})),
+        ]
+      }).addClef('treble');
 
       system.addStave({
-        voices: [
-          voice(notes('c#4/q, cn4/q, bb4/q, d##4/q')),
-      ]}).addClef('bass');
+        voices: [ voice(notes('c#4/q, cn4/q, bb4/q, d##4/q')) ]
+      }).addClef('bass');
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();
@@ -170,11 +170,17 @@ Vex.Flow.Test.EasyScore = (function() {
       system.addStave({
         voices: [
           voice(
-            tuplet(notes('(c4 e4 g4)/q, cbb4/q, c4/q', {stem: 'down'}), {location: VF.Tuplet.LOCATION_BOTTOM})
-            .concat(notes('c4/h', {stem: 'down'}))),
-          voice(notes('c#5/h.', {stem: 'up'})
-            .concat(tuplet(beam(notes('cb5/8, cn5/8, c5/8', {stem: 'up'})))))
-      ]}).addClef('treble');
+            tuplet(
+              notes('(c4 e4 g4)/q, cbb4/q, c4/q', {stem: 'down'}),
+              {location: VF.Tuplet.LOCATION_BOTTOM}
+            ).concat(notes('c4/h', {stem: 'down'}))
+          ),
+          voice(
+            notes('c#5/h.', {stem: 'up'})
+              .concat(tuplet(beam(notes('cb5/8, cn5/8, c5/8', {stem: 'up'}))))
+          ),
+        ]
+      }).addClef('treble');
 
       vf.draw();
       expect(0);

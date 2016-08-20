@@ -147,7 +147,6 @@ export class Factory {
 
     const acc = new Accidental(params.type);
     acc.setContext(this.context);
-    // acc.render_options.stroke_px = this.space(0.3);
     return acc;
   }
 
