@@ -176,10 +176,11 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [
-          voice(tuplet(notes('(c4 e4 g4)/q, c4/q, c4/q', {stem: 'down'}), {location: VF.Tuplet.LOCATION_BOTTOM})
+          voice(
+            tuplet(notes('(c4 e4 g4)/q, cbb4/q, c4/q', {stem: 'down'}), {location: VF.Tuplet.LOCATION_BOTTOM})
             .concat(notes('c4/h', {stem: 'down'}))),
           voice(notes('c#5/h.', {stem: 'up'})
-            .concat(tuplet(beam(notes('c5/8, c5/8, c5/8', {stem: 'up'})))))
+            .concat(tuplet(beam(notes('cb5/8, cn5/8, c5/8', {stem: 'up'})))))
       ]}).addClef('treble');
 
       vf.draw();
