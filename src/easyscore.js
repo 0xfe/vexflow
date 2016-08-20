@@ -200,14 +200,14 @@ class Builder {
     this.piece.options[key] = value;
   }
 
-  addNote(key, acc, octave) {
-    L('addNote:', key, acc, octave);
-    this.piece.chord.push({ key, acc, octave });
+  addNote(key, accid, octave) {
+    L('addNote:', key, accid, octave);
+    this.piece.chord.push({ key, accid, octave });
   }
 
-  addSingleNote(key, acc, octave) {
-    L('addSingleNote:', key, acc, octave);
-    this.addNote(key, acc, octave);
+  addSingleNote(key, accid, octave) {
+    L('addSingleNote:', key, accid, octave);
+    this.addNote(key, accid, octave);
   }
 
   addChord(notes) {
@@ -241,9 +241,9 @@ class Builder {
     if (!autoStem) note.setStemDirection(stemDirection);
 
     // Attach accidentals.
-    const accs = this.piece.chord.map(note => note.acc || null);
-    accs.forEach((acc, i) => {
-      if (acc) note.addAccidental(i, this.factory.Accidental({ type: acc }));
+    const accids = this.piece.chord.map(note => note.acc || null);
+    accids.forEach((accid, i) => {
+      if (accid) note.addAccidental(i, this.factory.Accidental({ type: accid }));
     });
 
     // Attach dots.
@@ -252,7 +252,7 @@ class Builder {
     // Set attributes.
     // this.piece.options.forEach(o => note.setAttribute(o[0], o[1]));
     this.elements.notes.push(note);
-    this.elements.accidentals.concat(accs);
+    this.elements.accidentals.concat(accids);
     this.resetPiece();
   }
 }
