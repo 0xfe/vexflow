@@ -75,9 +75,9 @@ export class System extends Element {
     return params.stave;
   }
 
-  draw() {
-    const ctx = this.checkContext();
+  format() {
     const formatter = new Formatter();
+    this.formatter = formatter;
 
     let y = this.options.y;
     let startX = 0;
@@ -109,17 +109,19 @@ export class System extends Element {
       formatter.tune();
     }
 
-    // Render.
-    this.parts.forEach(part => {
-      part.voices.forEach(voice => voice.draw());
-    });
+    this.startX = startX;
+    this.debugNoteMetricsYs = debugNoteMetricsYs;
+    this.lastY = y;
+  }
 
-    // Render debug info.
+  draw() {
+    // Render debugging information, if requested.
+    const ctx = this.checkContext();
     if (this.options.debugFormatter) {
-      Formatter.plotDebugging(ctx, formatter, startX, this.options.y, y);
+      Formatter.plotDebugging(ctx, this.formatter, this.startX, this.options.y, this.lastY);
     }
 
-    debugNoteMetricsYs.forEach(d => {
+    this.debugNoteMetricsYs.forEach(d => {
       d.voice.getTickables().forEach(note => Note.plotMetrics(ctx, note, d.y));
     });
   }

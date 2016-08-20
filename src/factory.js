@@ -70,7 +70,11 @@ export class Factory {
     if (this.options.renderer.selector !== null || this.options.renderer.context) {
       this.initRenderer();
     }
+
     this.renderQ = [];
+    this.systems = [];
+    this.staves = [];
+    this.voices = [];
     this.stave = null; // current stave
   }
 
@@ -108,7 +112,7 @@ export class Factory {
     });
 
     const stave = new Stave(params.x, params.y, params.width, params.options);
-    this.renderQ.push(stave);
+    this.staves.push(stave);
     stave.setContext(this.context);
     this.stave = stave;
     return stave;
@@ -160,7 +164,9 @@ export class Factory {
       time: '4/4',
       options: {},
     });
-    return new Voice(params.time);
+    const voice = new Voice(params.time);
+    this.voices.push(voice);
+    return voice;
   }
 
   StaveConnector(params) {
@@ -206,7 +212,7 @@ export class Factory {
   System(params = {}) {
     params.factory = this;
     const system = new System(params).setContext(this.context);
-    this.renderQ.push(system);
+    this.systems.push(system);
     return system;
   }
 
@@ -216,6 +222,10 @@ export class Factory {
   }
 
   draw() {
+    this.systems.forEach(i => i.setContext(this.context).format());
+    this.staves.forEach(i => i.setContext(this.context).draw());
+    this.voices.forEach(i => i.setContext(this.context).draw());
     this.renderQ.forEach(i => i.setContext(this.context).draw());
+    this.systems.forEach(i => i.setContext(this.context).draw());
   }
 }
