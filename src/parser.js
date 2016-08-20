@@ -60,9 +60,10 @@ export class Parser {
   // Look for `token` in this.line[this.pos], and return success
   // if one is found. `token` is specified as a regular expression.
   matchToken(token, noSpace = false) {
-    const re = noSpace ? new RegExp('^((' + token + '))') : new RegExp('^((' + token + ')\\s*)');
+    const regexp = noSpace ? new RegExp('^((' + token + '))') :
+      new RegExp('^((' + token + ')\\s*)');
     const workingLine = this.line.slice(this.pos);
-    const result = workingLine.match(re);
+    const result = workingLine.match(regexp);
     if (result !== null) {
       return {
         success: true,
