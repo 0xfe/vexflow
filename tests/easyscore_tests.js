@@ -25,100 +25,96 @@ Vex.Flow.Test.EasyScore = (function() {
     },
 
     basic: function(assert) {
-      // TODO(0xfe): Reduce duplication in these assertions.
       var score = new VF.EasyScore();
-      assert.equal(score.parse('').success, false);
-      assert.equal(score.parse('()').success, false);
-      assert.equal(score.parse('c4/r').success, true);
-      assert.equal(score.parse('7').success, false);
-      assert.equal(score.parse('c#5').success, true);
-      assert.equal(score.parse('c3//x').success, true);
+      var mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/x', 'c3//x'];
+      var mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
-      assert.equal(score.parse('c5/w').success, true);
-      assert.equal(score.parse('c5/w').success, true);
-      assert.equal(score.parse('(c#4 e5 g6)').success, true);
-      assert.equal(score.parse('(c#4 e5 g6').success, false);
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
     },
 
     accidentals: function(assert) {
       var score = new VF.EasyScore();
-      assert.equal(score.parse('c3').success, true);
-      assert.equal(score.parse('c##3, cb3').success, true);
-      assert.equal(score.parse('Cn3').success, true);
-      assert.equal(score.parse('f3//x').success, true);
-      assert.equal(score.parse('ct3').success, false);
-      assert.equal(score.parse('cd7').success, false);
+      var mustPass = ['c3', 'c##3, cb3', 'Cn3', 'f3//x', '(c##3 cbb3 cn3), cb3'];
+      var mustFail = ['ct3', 'cd7', '(cq cbb3 cn3), cb3', '(cd7 cbb3 cn3), cb3'];
 
-      assert.equal(score.parse('(c##3 cbb3 cn3), cb3').success, true);
-      assert.equal(score.parse('(cq cbb3 cn3), cb3').success, false);
-      assert.equal(score.parse('(cd7 cbb3 cn3), cb3').success, false);
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
     },
 
     durations: function(assert) {
       var score = new VF.EasyScore();
-      assert.equal(score.parse('c3/4').success, true);
-      assert.equal(score.parse('c##3/w, cb3').success, true);
-      assert.equal(score.parse('c##3/w, cb3/q').success, true);
-      assert.equal(score.parse('c##3/q, cb3/32').success, true);
-      assert.equal(score.parse('Cn3/]').success, false);
-      assert.equal(score.parse('/').success, false);
+      var mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
+      var mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cd7 cbb3 cn3), cb3'];
 
-      assert.equal(score.parse('(c##3 cbb3 cn3), cb3').success, true);
-      assert.equal(score.parse('(cq cbb3 cn3), cb3').success, false);
-      assert.equal(score.parse('(cd7 cbb3 cn3), cb3').success, false);
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
     },
 
     chords: function(assert) {
       var score = new VF.EasyScore();
-      assert.equal(score.parse('(c)').success, false);
-      assert.equal(score.parse('(c5)').success, true);
-      assert.equal(score.parse('(c3 e0 g9)').success, true);
-      assert.equal(score.parse('(c##4 cbb4 cn4)/w, (c#5 cb2 a3)/32').success, true);
-      assert.equal(score.parse('(d##4 cbb4 cn4)/w/r, (c#5 cb2 a3)').success, true);
-      assert.equal(score.parse('(c##4 cbb4 cn4)/4, (c#5 cb2 a3)').success, true);
-      assert.equal(score.parse('(c##4 cbb4 cn4)/x, (c#5 cb2 a3)').success, true);
+      var mustPass = [
+        '(c5)', '(c3 e0 g9)',
+        '(c##4 cbb4 cn4)/w, (c#5 cb2 a3)/32',
+        '(d##4 cbb4 cn4)/w/r, (c#5 cb2 a3)',
+        '(c##4 cbb4 cn4)/4, (c#5 cb2 a3)', 
+        '(c##4 cbb4 cn4)/x, (c#5 cb2 a3)',
+      ];
+      var mustFail = ['(c)'];
+
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
     },
 
     dots: function(assert) {
       var score = new VF.EasyScore();
-      assert.equal(score.parse('c3/4.').success, true);
-      assert.equal(score.parse('c##3/w.., cb3').success, true);
-      assert.equal(score.parse('f##3/s, cb3/q...').success, true);
-      assert.equal(score.parse('c##3/q, cb3/32').success, true);
-      assert.equal(score.parse('.').success, false);
+      var mustPass = [
+        'c3/4.',
+        'c##3/w.., cb3',
+        'f##3/s, cb3/q...',
+        'c##3/q, cb3/32',
+        '(c##3 cbb3 cn3)., cb3',
+        '(c5).',
+        '(c##4 cbb4 cn4)/w.., (c#5 cb2 a3)/32',
+      ];
+      var mustFail = ['.', 'c.#', 'c#4./4'];
 
-      assert.equal(score.parse('(c##3 cbb3 cn3)., cb3').success, true);
-      assert.equal(score.parse('(c5).').success, true);
-      assert.equal(score.parse('(c##4 cbb4 cn4)/w.., (c#5 cb2 a3)/32').success, true);
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); }); 
     },
 
     types: function(assert) {
       var score = new VF.EasyScore();
-      assert.equal(score.parse('c3/4/x.').success, true);
-      assert.equal(score.parse('c##3//r.., cb3').success, true);
-      assert.equal(score.parse('c##3/x.., cb3').success, true);
-      assert.equal(score.parse('c##3/r.., cb3').success, true);
-      assert.equal(score.parse('d##3/w/s, cb3/q...').success, true);
-      assert.equal(score.parse('c##3/q, cb3/32').success, true);
-      assert.equal(score.parse('.').success, false);
+      var mustPass = [
+        'c3/4/x.',
+        'c##3//r.., cb3',
+        'c##3/x.., cb3',
+        'c##3/r.., cb3',
+        'd##3/w/s, cb3/q...',
+        'c##3/q, cb3/32',
+        '(c##3 cbb3 cn3)., cb3',
+        '(c5).',
+        '(c##4 cbb4 cn4)/w.., (c#5 cb2 a3)/32',
+      ];
+      var mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32'];
 
-      assert.equal(score.parse('(c##3 cbb3 cn3)., cb3').success, true);
-      assert.equal(score.parse('(c5).').success, true);
-      assert.equal(score.parse('(c##4 cbb4 cn4)/w.., (c#5 cb2 a3)/32').success, true);
-      assert.equal(score.parse('(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32').success, false);
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
     },
 
     options: function(assert) {
       var score = new VF.EasyScore();
-      assert.equal(score.parse('c3/4.[foo="bar"]').success, true);
-      assert.equal(score.parse('c##3/w.., cb3[id="blah"]').success, true);
-      assert.equal(score.parse('f##3/w[], cb3/q...').success, false);
-      assert.equal(score.parse('c##3/q, cb3/32').success, true);
-      assert.equal(score.parse('.[').success, false);
+      var mustPass = [
+        'c3/4.[foo="bar"]',
+        'c##3/w.., cb3[id="blah"]',
+        'c##3/q, cb3/32',
+        '(c##3 cbb3 cn3).[blah="bod4o"], cb3',
+        '(c5)[fooooo="booo"]',
+      ];
+      var mustFail = ['.[', 'f##3/w[], cb3/q...'];
 
-      assert.equal(score.parse('(c##3 cbb3 cn3).[blah="bod4o"], cb3').success, true);
-      console.log(score.parse('(c##3 cbb3 cn3).[blah="bod4o"], cb3'));
-      assert.equal(score.parse('(c5)[fooooo="booo"]').success, true);
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
     },
 
     drawBasicTest: function(options) {
@@ -164,7 +160,7 @@ Vex.Flow.Test.EasyScore = (function() {
       expect(0);
     },
 
-     drawTupletsTest: function(options) {
+    drawTupletsTest: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 250);
       const score = vf.EasyScore();
       const system = vf.System();
