@@ -4,11 +4,6 @@
  */
 
 Vex.Flow.Test.EasyScore = (function() {
-  function assertParseFail(assert, result, expectedPos, msg) {
-    assert.notOk(result.success, msg);
-    assert.equal(result.errorPos, expectedPos, msg);
-  }
-
   var EasyScore = {
     Start: function() {
       QUnit.module("EasyScore");

@@ -9,44 +9,12 @@ Vex.Flow.Test.Parser = (function() {
       begin: function() { return this.BEGIN; },
 
       BEGIN: function() { return { expect: [this.BIGORLITTLE, this.EOL] }; },
+      BIGORLITTLE: function() { return { expect: [this.BIGLINE, this.LITTLELINE], or: true }; },
+      BIGLINE: function() { return { expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE], }; },
+      LITTLELINE: function() { return { expect: [this.WORD, this.WORDS], }; },
+      WORDS: function() { return { expect: [this.COMMA, this.WORD], zeroOrMore: true, }; },
+      MAYBEEXCLAIM: function() { return { expect: [this.EXCLAIM], maybe: true, }; },
 
-      // Test that `or` works.
-      BIGORLITTLE: function() { return {
-        expect: [this.BIGLINE, this.LITTLELINE],
-        or: true
-      }; },
-
-      // Test a combination of various rules.
-      BIGLINE: function() {
-        return {
-          expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE],
-        };
-      },
-
-      // Combine a token and a rule.
-      LITTLELINE: function() {
-        return {
-          expect: [this.WORD, this.WORDS],
-        };
-      },
-
-      // Test zeroOrMore.
-      WORDS: function() {
-        return {
-          expect: [this.COMMA, this.WORD],
-          zeroOrMore: true,
-         };
-      },
-
-      // Test maybe.
-      MAYBEEXCLAIM: function() {
-        return {
-          expect: [this.EXCLAIM],
-          maybe: true,
-         };
-      },
-
-      // Test various regex tokens.
       LBRACE: function() { return { token: '[{]' }; },
       RBRACE: function() { return { token: '[}]' }; },
       WORD:  function()  { return { token: '[a-zA-Z]+' }; },
@@ -76,15 +44,19 @@ Vex.Flow.Test.Parser = (function() {
       var parser = new VF.Parser(grammar);
 
       grammar.BEGIN = function() { return { expect: [grammar.LITTLELINE, grammar.EOL] }; };
+      
+      var mustPass = [
+        'first, second',
+        'first,second',
+        'first',
+        'first,second, third'
+      ];
+      mustPass.forEach(function(line) { assert.equal(parser.parse(line).success, true, line); });
       assertParseFail(assert, parser.parse(''), 0);
       assertParseFail(assert, parser.parse('first second'), 6);
       assertParseFail(assert, parser.parse('first,,'), 5);
       assertParseFail(assert, parser.parse('first,'), 5);
       assertParseFail(assert, parser.parse(',,'), 0);
-      assert.equal(parser.parse('first, second').success, true);
-      assert.equal(parser.parse('first,second').success, true);
-      assert.equal(parser.parse('first').success, true);
-      assert.equal(parser.parse('first,second, third').success, true);
     },
 
     advanced: function(assert) {
@@ -92,12 +64,15 @@ Vex.Flow.Test.Parser = (function() {
       var parser = new VF.Parser(grammar);
 
       grammar.BEGIN = function() { return { expect: [grammar.BIGLINE, grammar.EOL] }; };
-      assert.equal(parser.parse('{first}').success, true);
-      assert.equal(parser.parse('{first!}').success, true);
-      assert.equal(parser.parse('{first,second}').success, true);
-      assert.equal(parser.parse('{first,second!}').success, true);
-      assert.equal(parser.parse('{first,second,third!}').success, true);
+      var mustPass = [
+        '{first}',
+        '{first!}',
+        '{first,second}',
+        '{first,second!}',
+        '{first,second,third!}',
+      ];
 
+      mustPass.forEach(function(line) { assert.equal(parser.parse(line).success, true, line); });
       assertParseFail(assert, parser.parse('{first,second,third,}'), 19);
       assertParseFail(assert, parser.parse('first,second,third'), 0);
       assertParseFail(assert, parser.parse('{first,second,third'), 19);
@@ -108,8 +83,8 @@ Vex.Flow.Test.Parser = (function() {
       var grammar = new TestGrammar();
       var parser = new VF.Parser(grammar);
 
-      assert.equal(parser.parse('{first,second,third!}').success, true);
-      assert.equal(parser.parse('first, second').success, true);
+      var mustPass = ['{first,second,third!}', 'first, second'];
+      mustPass.forEach(function(line) { assert.equal(parser.parse(line).success, true, line); });
       assertParseFail(assert, parser.parse('first second'), 6);
     }
   };
