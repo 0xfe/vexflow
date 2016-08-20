@@ -130,7 +130,7 @@ Vex.Flow.Test.EasyScore = (function() {
       }).addClef('treble');
 
       system.addStave({
-        voices: [ voice(notes('c#4/q, cn4/q, bb4/q, d##4/q')) ]
+        voices: [ voice(notes('c#3/q, cn3/q, bb3/q, d##3/q', {clef: 'bass'})) ]
       }).addClef('bass');
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
@@ -187,11 +187,22 @@ Vex.Flow.Test.EasyScore = (function() {
     },
 
     drawOptionsTest: function(options) {
-      var vf = VF.Test.makeFactory(options, 100, 100);
+      var vf = VF.Test.makeFactory(options, 500, 200);
       const score = vf.EasyScore();
-      var notes = score.notes('C#5[id="foobar"]');
-      options.assert.equal(notes[0].getAttribute('id'), 'foobar');
-      expect(1);
+      const system = vf.System();
+
+      const notes = score.notes('B4/h[id="foobar", stem="up"], B4/h[stem="down"]');
+
+      system.addStave({
+        voices: [ score.voice(notes) ]
+      });
+
+      vf.draw();
+
+      const assert = options.assert;
+      assert.equal(notes[0].getAttribute('id'), 'foobar');
+      assert.equal(notes[0].getStemDirection(), VF.StaveNote.STEM_UP);
+      assert.equal(notes[1].getStemDirection(), VF.StaveNote.STEM_DOWN);
     }
   };
 

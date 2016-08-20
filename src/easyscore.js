@@ -159,6 +159,7 @@ class Builder {
   reset(options = {}) {
     this.options = {
       stem: 'auto',
+      clef: 'treble',
     };
     this.elements = {
       notes: [],
@@ -226,10 +227,13 @@ class Builder {
   commitPiece() {
     L('commitPiece');
     if (!this.factory) return;
+    const options = this.piece.options;
+    const stem = options.stem || this.options.stem;
+    const clef = this.options.clef;
 
-    const autoStem = this.options.stem.toLowerCase() === 'auto';
+    const autoStem = stem.toLowerCase() === 'auto';
     const stemDirection = !autoStem &&
-      (this.options.stem.toLowerCase() === 'up') ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
+      (stem.toLowerCase() === 'up') ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
 
     // Build StaveNotes.
     const keys = this.piece.chord.map(note => note.key + '/' + note.octave);
@@ -238,6 +242,7 @@ class Builder {
       dots: this.piece.dots,
       auto_stem: autoStem,
       type: this.piece.type,
+      clef,
     });
     if (!autoStem) note.setStemDirection(stemDirection);
 
@@ -251,7 +256,6 @@ class Builder {
     for (let i = 0; i < this.piece.dots; i++) note.addDotToAll();
 
     // Process note options.
-    const options = this.piece.options;
     if (options.id !== undefined) {
       note.setAttribute('id', options.id);
     }
