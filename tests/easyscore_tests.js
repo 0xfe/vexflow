@@ -17,6 +17,7 @@ Vex.Flow.Test.EasyScore = (function() {
       VFT.runTests("Draw Basic", VFT.EasyScore.drawBasicTest);
       VFT.runTests("Draw Beams", VFT.EasyScore.drawBeamsTest);
       VFT.runTests("Draw Tuplets", VFT.EasyScore.drawTupletsTest);
+      VFT.runTests("Draw Options", VFT.EasyScore.drawOptionsTest);
     },
 
     basic: function(assert) {
@@ -105,6 +106,7 @@ Vex.Flow.Test.EasyScore = (function() {
         'c##3/q, cb3/32',
         '(c##3 cbb3 cn3).[blah="bod4o"], cb3',
         '(c5)[fooooo="booo"]',
+        'c#5[id="foobar"]',
       ];
       var mustFail = ['.[', 'f##3/w[], cb3/q...'];
 
@@ -177,6 +179,14 @@ Vex.Flow.Test.EasyScore = (function() {
       vf.draw();
       expect(0);
     },
+
+    drawOptionsTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 100, 100);
+      const score = vf.EasyScore();
+      var notes = score.notes('C#5[id="foobar"]');
+      options.assert.equal(notes[0].getAttribute('id'), 'foobar');
+      expect(1);
+    }
   };
 
   return EasyScore;  

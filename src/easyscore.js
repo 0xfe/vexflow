@@ -249,8 +249,12 @@ class Builder {
     // Attach dots.
     for (let i = 0; i < this.piece.dots; i++) note.addDotToAll();
 
-    // Set attributes.
-    // this.piece.options.forEach(o => note.setAttribute(o[0], o[1]));
+    // Process note options.
+    const options = this.piece.options;
+    if (options.id !== undefined) {
+      note.setAttribute('id', options.id);
+    }
+
     this.elements.notes.push(note);
     this.elements.accidentals.concat(accids);
     this.resetPiece();
