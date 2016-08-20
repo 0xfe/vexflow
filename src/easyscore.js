@@ -230,29 +230,29 @@ class Builder {
     const stemDirection = !autoStem &&
       (this.options.stem.toLowerCase() === 'up') ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
 
-    // Build the note.
+    // Build StaveNotes.
     const keys = this.piece.chord.map(note => note.key + '/' + note.octave);
-    const accs = this.piece.chord.map(note => note.acc || null);
-    const note = this.factory.StaveNote(
-      { keys,
-        duration: this.piece.duration,
-        dots: this.piece.dots,
-        auto_stem: autoStem,
-        type: this.piece.type });
-
+    const note = this.factory.StaveNote({ keys,
+      duration: this.piece.duration,
+      dots: this.piece.dots,
+      auto_stem: autoStem,
+      type: this.piece.type,
+    });
     if (!autoStem) note.setStemDirection(stemDirection);
 
-    for (let i = 0; i < this.piece.dots; i++) note.addDotToAll();
-    this.elements.notes.push(note);
-
-    // Build and attach the accidentals.
+    // Attach accidentals.
+    const accs = this.piece.chord.map(note => note.acc || null);
     accs.forEach((acc, i) => {
       if (acc) note.addAccidental(i, this.factory.Accidental({ type: acc }));
     });
-    this.elements.accidentals.concat(accs);
+
+    // Attach dots.
+    for (let i = 0; i < this.piece.dots; i++) note.addDotToAll();
 
     // Set attributes.
     // this.piece.options.forEach(o => note.setAttribute(o[0], o[1]));
+    this.elements.notes.push(note);
+    this.elements.accidentals.concat(accs);
     this.resetPiece();
   }
 }
