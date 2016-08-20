@@ -164,6 +164,7 @@ class Builder {
       notes: [],
       accidentals: [],
     };
+    this.rollingDuration = '8';
     this.resetPiece();
     Object.assign(this.options, options);
   }
@@ -173,7 +174,7 @@ class Builder {
   resetPiece() {
     this.piece = {
       chord: [],
-      duration: '8',
+      duration: this.rollingDuration,
       dots: 0,
       type: undefined,
       options: {},
@@ -187,7 +188,7 @@ class Builder {
 
   setNoteDuration(duration) {
     L('setNoteDuration:', duration);
-    if (duration) this.piece.duration = duration;
+    this.rollingDuration = this.piece.duration = duration || this.rollingDuration;
   }
 
   setNoteType(type) {
@@ -303,7 +304,7 @@ export class EasyScore {
     return this.builder.getElements().notes;
   }
 
-  voice(notes, options = { voiceOptions: null }) {
-    return this.factory.Voice(options.voiceOptions).addTickables(notes);
+  voice(notes, voiceOptions) {
+    return this.factory.Voice(voiceOptions).addTickables(notes);
   }
 }

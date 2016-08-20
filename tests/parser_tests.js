@@ -1,5 +1,5 @@
 /**
- * VexFlow - Factory Tests
+ * VexFlow - Parser Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
@@ -10,17 +10,17 @@ Vex.Flow.Test.Parser = (function() {
 
       BEGIN: function() { return { expect: [this.BIGORLITTLE, this.EOL] }; },
       BIGORLITTLE: function() { return { expect: [this.BIGLINE, this.LITTLELINE], or: true }; },
-      BIGLINE: function() { return { expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE], }; },
-      LITTLELINE: function() { return { expect: [this.WORD, this.WORDS], }; },
-      WORDS: function() { return { expect: [this.COMMA, this.WORD], zeroOrMore: true, }; },
-      MAYBEEXCLAIM: function() { return { expect: [this.EXCLAIM], maybe: true, }; },
+      BIGLINE: function() { return { expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE] }; },
+      LITTLELINE: function() { return { expect: [this.WORD, this.WORDS] }; },
+      WORDS: function() { return { expect: [this.COMMA, this.WORD], zeroOrMore: true }; },
+      MAYBEEXCLAIM: function() { return { expect: [this.EXCLAIM], maybe: true }; },
 
-      LBRACE: function() { return { token: '[{]' }; },
-      RBRACE: function() { return { token: '[}]' }; },
-      WORD:  function()  { return { token: '[a-zA-Z]+' }; },
-      COMMA: function()  { return { token: '[,]' }; },
-      EXCLAIM: function()  { return { token: '[!]' }; },
-      EOL: function()  { return { token: '$' }; },
+      LBRACE:  function() { return { token: '[{]' }; },
+      RBRACE:  function() { return { token: '[}]' }; },
+      WORD:    function() { return { token: '[a-zA-Z]+' }; },
+      COMMA:   function() { return { token: '[,]' }; },
+      EXCLAIM: function() { return { token: '[!]' }; },
+      EOL:     function() { return { token: '$' }; },
     };
   };
 
