@@ -27,86 +27,127 @@ class Grammar {
 
   begin() { return this.LINE; }
 
-  // Notation grammar for EasyScore.
-  LINE()   {
-    return { expect: [this.PIECE, this.PIECES, this.EOL] };
+  LINE() {
+    return {
+      expect: [this.PIECE, this.PIECES, this.EOL],
+    };
   }
-  PIECE()  {
-    return { expect: [this.CHORDORNOTE, this.PARAMS],
-             run: () => this.builder.commitPiece() };
+  PIECE() {
+    return {
+      expect: [this.CHORDORNOTE, this.PARAMS],
+      run: () => this.builder.commitPiece(),
+    };
   }
   PIECES() {
-    return { expect: [this.COMMA, this.PIECE], zeroOrMore: true };
+    return {
+      expect: [this.COMMA, this.PIECE],
+      zeroOrMore: true,
+    };
   }
-  PARAMS()  {
-    return { expect: [this.DURATION, this.TYPE, this.DOTS, this.OPTS] };
+  PARAMS() {
+    return {
+      expect: [this.DURATION, this.TYPE, this.DOTS, this.OPTS],
+    };
   }
   CHORDORNOTE() {
-    return { expect: [this.CHORD, this.SINGLENOTE], or: true };
+    return {
+      expect: [this.CHORD, this.SINGLENOTE],
+      or: true,
+    };
   }
-  CHORD()  {
-    return { expect: [this.LPAREN, this.NOTES, this.RPAREN],
-             run: (state) => this.builder.addChord(state.matches[1]) };
+  CHORD() {
+    return {
+      expect: [this.LPAREN, this.NOTES, this.RPAREN],
+      run: (state) => this.builder.addChord(state.matches[1]),
+    };
   }
-  NOTES()  {
-    return { expect: [this.NOTE], oneOrMore: true };
+  NOTES() {
+    return {
+      expect: [this.NOTE],
+      oneOrMore: true,
+    };
   }
-  NOTE()   {
-    return { expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE] };
+  NOTE() {
+    return {
+      expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
+    };
   }
-  SINGLENOTE()   {
-    return { expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
-             run: (state) => this.builder.addSingleNote(
-               state.matches[0], state.matches[1], state.matches[2]) };
+  SINGLENOTE() {
+    return {
+      expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
+      run: (state) => this.builder.addSingleNote(
+        state.matches[0], state.matches[1], state.matches[2]),
+    };
   }
   ACCIDENTAL() {
-    return { expect: [this.ACCIDENTALS], maybe: true };
+    return {
+      expect: [this.ACCIDENTALS],
+      maybe: true,
+    };
   }
-  DOTS()   {
-    return { expect: [this.DOT], zeroOrMore: true,
-             run: (state) => this.builder.setNoteDots(state.matches[0]) };
+  DOTS() {
+    return {
+      expect: [this.DOT],
+      zeroOrMore: true,
+      run: (state) => this.builder.setNoteDots(state.matches[0]),
+    };
   }
-  TYPE()   {
-    return { expect: [this.SLASH, this.MAYBESLASH, this.TYPES], maybe: true,
-             run: (state) => this.builder.setNoteType(state.matches[2]) };
+  TYPE() {
+    return {
+      expect: [this.SLASH, this.MAYBESLASH, this.TYPES],
+      maybe: true,
+      run: (state) => this.builder.setNoteType(state.matches[2]),
+    };
   }
-  DURATION()   {
-    return { expect: [this.SLASH, this.DURATIONS], maybe: true,
-             run: (state) => this.builder.setNoteDuration(state.matches[1]) };
+  DURATION() {
+    return {
+      expect: [this.SLASH, this.DURATIONS],
+      maybe: true,
+      run: (state) => this.builder.setNoteDuration(state.matches[1]),
+    };
   }
-  // Options can be key=value pairs, with single or double quoted values.
   OPTS() {
-    return { expect: [this.LBRACKET, this.KEYVAL, this.KEYVALS, this.RBRACKET], maybe: true };
+    return {
+      expect: [this.LBRACKET, this.KEYVAL, this.KEYVALS, this.RBRACKET],
+      maybe: true,
+    };
   }
-  KEYVALS() { return { expect: [this.COMMA, this.KEYVAL], zeroOrMore: true }; }
-  KEYVAL()  {
-    return { expect: [this.KEY, this.EQUALS, this.VAL],
-             run: (state) => this.builder.addNoteOption(
-               state.matches[0], unquote(state.matches[2])) };
+  KEYVALS() {
+    return {
+      expect: [this.COMMA, this.KEYVAL],
+      zeroOrMore: true,
+    };
   }
-  KEY()     { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
-  VAL()     { return { expect: [this.SVAL, this.DVAL], or: true }; }
-  DVAL()    { return { token: '["][^"]*["]' }; }
-  SVAL()    { return { token: "['][^']*[']" }; }
+  KEYVAL() {
+    return {
+      expect: [this.KEY, this.EQUALS, this.VAL],
+      run: (state) => this.builder.addNoteOption(state.matches[0], unquote(state.matches[2])),
+    };
+  }
+  VAL()  {
+    return {
+      expect: [this.SVAL, this.DVAL],
+      or: true };
+  }
 
-  // Valid notational symbols.
-  NOTENAME() { return { token: '[a-gA-G]' }; }
-  OCTAVE()   { return { token: '[0-9]+' }; }
+  KEY()         { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
+  DVAL()        { return { token: '["][^"]*["]' }; }
+  SVAL()        { return { token: "['][^']*[']" }; }
+  NOTENAME()    { return { token: '[a-gA-G]' }; }
+  OCTAVE()      { return { token: '[0-9]+' }; }
   ACCIDENTALS() { return { token: '[b#n]+' }; }
-  DURATIONS() { return { token: '[0-9whq]+' }; }
-  TYPES() { return { token: '[rRsSxX]' }; }
-
-  // Raw tokens used by grammar.
-  LPAREN()   { return { token: '[(]' }; }
-  RPAREN()   { return { token: '[)]' }; }
-  COMMA()    { return { token: '[,]' }; }
-  DOT()      { return { token: '[.]' }; }
-  SLASH()    { return { token: '[/]' }; }
-  MAYBESLASH()    { return { token: '[/]?' }; }
-  EQUALS()   { return { token: '[=]' }; }
-  LBRACKET() { return { token: '\\[' }; }
-  RBRACKET() { return { token: '\\]' }; }
-  EOL()      { return { token: '$' }; }
+  DURATIONS()   { return { token: '[0-9whq]+' }; }
+  TYPES()       { return { token: '[rRsSxX]' }; }
+  LPAREN()      { return { token: '[(]' }; }
+  RPAREN()      { return { token: '[)]' }; }
+  COMMA()       { return { token: '[,]' }; }
+  DOT()         { return { token: '[.]' }; }
+  SLASH()       { return { token: '[/]' }; }
+  MAYBESLASH()  { return { token: '[/]?' }; }
+  EQUALS()      { return { token: '[=]' }; }
+  LBRACKET()    { return { token: '\\[' }; }
+  RBRACKET()    { return { token: '\\]' }; }
+  EOL()         { return { token: '$' }; }
 }
 
 class Builder {
