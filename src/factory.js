@@ -224,7 +224,9 @@ export class Factory {
     this.systems.forEach(i => i.setContext(this.context).format());
     this.staves.forEach(i => i.setContext(this.context).draw());
     this.voices.forEach(i => i.setContext(this.context).draw());
-    this.renderQ.forEach(i => i.setContext(this.context).draw());
+    this.renderQ.forEach(i => {
+      if (!i.isRendered()) i.setContext(this.context).draw();
+    });
     this.systems.forEach(i => i.setContext(this.context).draw());
   }
 }

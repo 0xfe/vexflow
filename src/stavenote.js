@@ -1012,5 +1012,6 @@ export class StaveNote extends StemmableNote {
     this.context.closeGroup();
     this.drawModifiers();
     this.context.closeGroup();
+    this.setRendered();
   }
 }
