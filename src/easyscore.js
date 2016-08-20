@@ -229,6 +229,8 @@ export class EasyScore {
 
     this.factory = this.options.factory;
     this.builder = this.options.builder || new Builder(this.factory);
+    this.grammar = new Grammar(this.builder);
+    this.parser = new Parser(this.grammar);
   }
 
   setContext(context) {
@@ -238,9 +240,17 @@ export class EasyScore {
 
   parse(line, options = {}) {
     this.builder.reset(options);
-    const grammar = new Grammar(this.builder);
-    const parser = new Parser(grammar);
-    return parser.parse(line);
+    return this.parser.parse(line);
+  }
+
+  beam(notes, options = {}) {
+    this.factory.Beam({ notes, options });
+    return notes;
+  }
+
+  tuplet(notes, options = {}) {
+    this.factory.Tuplet({ notes, options });
+    return notes;
   }
 
   notes(line, options = {}) {
@@ -248,8 +258,7 @@ export class EasyScore {
     return this.builder.getElements().notes;
   }
 
-  voice(line, options = { voiceOptions: null }) {
-    this.parse(line, options);
-    return this.factory.Voice(options.voiceOptions).addTickables(this.builder.getElements().notes);
+  voice(notes, options = { voiceOptions: null }) {
+    return this.factory.Voice(options.voiceOptions).addTickables(notes);
   }
 }

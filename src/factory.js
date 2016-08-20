@@ -23,6 +23,7 @@ import { Voice } from './voice';
 import { Beam } from './beam';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
+import { EasyScore } from './easyscore';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -107,8 +108,8 @@ export class Factory {
     });
 
     const stave = new Stave(params.x, params.y, params.width, params.options);
-    stave.setContext(this.context);
     this.renderQ.push(stave);
+    stave.setContext(this.context);
     this.stave = stave;
     return stave;
   }
@@ -207,6 +208,11 @@ export class Factory {
     const system = new System(params).setContext(this.context);
     this.renderQ.push(system);
     return system;
+  }
+
+  EasyScore(params = {}) {
+    params.factory = this;
+    return new EasyScore(params);
   }
 
   draw() {
