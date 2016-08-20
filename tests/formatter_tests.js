@@ -444,7 +444,7 @@ VF.Test.Formatter = (function() {
       ];
 
       voices.map(newVoice).forEach(newStave);
-      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET); 
 
       vf.draw();
       ok(true);
