@@ -21224,7 +21224,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // Attach accidentals.
 	    var accids = this.piece.chord.map(function (note) {
-	      return note.acc || null;
+	      return note.accid || null;
 	    });
 	    accids.forEach(function (accid, i) {
 	      if (accid) note.addAccidental(i, _this10.factory.Accidental({ type: accid }));
