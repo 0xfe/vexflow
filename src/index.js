@@ -65,6 +65,8 @@ import { Volta } from './stavevolta';
 import { Font } from './fonts/vexflow_font';
 import { System } from './system';
 import { Factory } from './factory';
+import { Parser } from './parser';
+import { EasyScore } from './easyscore';
 
 Vex.Flow = Flow;
 Vex.Flow.Element = Element;
@@ -130,5 +132,7 @@ Vex.Flow.Volta = Volta;
 Vex.Flow.Font = Font;
 Vex.Flow.System = System;
 Vex.Flow.Factory = Factory;
+Vex.Flow.Parser = Parser;
+Vex.Flow.EasyScore = EasyScore;
 
 export default Vex;

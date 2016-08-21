@@ -23,6 +23,7 @@ import { Voice } from './voice';
 import { Beam } from './beam';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
+import { EasyScore } from './easyscore';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -69,7 +70,11 @@ export class Factory {
     if (this.options.renderer.selector !== null || this.options.renderer.context) {
       this.initRenderer();
     }
+
     this.renderQ = [];
+    this.systems = [];
+    this.staves = [];
+    this.voices = [];
     this.stave = null; // current stave
   }
 
@@ -107,8 +112,8 @@ export class Factory {
     });
 
     const stave = new Stave(params.x, params.y, params.width, params.options);
+    this.staves.push(stave);
     stave.setContext(this.context);
-    this.renderQ.push(stave);
     this.stave = stave;
     return stave;
   }
@@ -142,7 +147,6 @@ export class Factory {
 
     const acc = new Accidental(params.type);
     acc.setContext(this.context);
-    // acc.render_options.stroke_px = this.space(0.3);
     return acc;
   }
 
@@ -156,10 +160,12 @@ export class Factory {
 
   Voice(params) {
     params = setDefaults(params, {
-      time: { num_beats: 4,  beat_value: 4 },
+      time: '4/4',
       options: {},
     });
-    return new Voice(params.time);
+    const voice = new Voice(params.time);
+    this.voices.push(voice);
+    return voice;
   }
 
   StaveConnector(params) {
@@ -202,14 +208,25 @@ export class Factory {
     return beam;
   }
 
-  System(params) {
+  System(params = {}) {
     params.factory = this;
     const system = new System(params).setContext(this.context);
-    this.renderQ.push(system);
+    this.systems.push(system);
     return system;
   }
 
+  EasyScore(params = {}) {
+    params.factory = this;
+    return new EasyScore(params);
+  }
+
   draw() {
-    this.renderQ.forEach(i => i.setContext(this.context).draw());
+    this.systems.forEach(i => i.setContext(this.context).format());
+    this.staves.forEach(i => i.setContext(this.context).draw());
+    this.voices.forEach(i => i.setContext(this.context).draw());
+    this.renderQ.forEach(i => {
+      if (!i.isRendered()) i.setContext(this.context).draw();
+    });
+    this.systems.forEach(i => i.setContext(this.context).draw());
   }
 }

@@ -6,7 +6,6 @@
   },
   "rules": {
     "camelcase": [0],
-    "yoda": [2, "never", { "exceptRange": true }],
     "max-len": [2, 100],
     "new-cap": [0],
     "import/prefer-default-export": [0],

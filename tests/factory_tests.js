@@ -4,7 +4,7 @@
  */
 
 Vex.Flow.Test.Factory = (function() {
-  Factory = {
+  var Factory = {
     Start: function() {
       QUnit.module("Factory");
       var VFT = Vex.Flow.Test;

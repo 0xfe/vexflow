@@ -18,7 +18,11 @@ export class Element {
 
     this.boundingBox = null;
     this.context = null;
+    this.rendered = false;
   }
+
+  isRendered() { return this.rendered; }
+  setRendered(rendered = true) { this.rendered = rendered; return this; }
 
   getAttributes() { return this.attrs; }
   getAttribute(name) { return this.attrs[name]; }

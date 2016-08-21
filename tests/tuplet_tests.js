@@ -54,7 +54,7 @@ VF.Test.Tuplet = (function() {
       vf.Tuplet({ notes: notes.slice(3, 6) });
 
       // 3/4 time
-      var voice = new vf.Voice({ time: { num_beats: 3, beat_value: 4 } })
+      var voice = vf.Voice({ time: { num_beats: 3, beat_value: 4 } })
         .setStrict(true)
         .addTickables(notes);
 

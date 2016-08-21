@@ -426,70 +426,25 @@ VF.Test.Formatter = (function() {
         debugFormatter: debug,
         formatIterations: options.params.iterations,
       });
+      var score = vf.EasyScore();
 
-      var notes1 = [
-        {keys: ["c/5"], stem_direction: -1, duration: "8"},
-        {keys: ["c/5"], stem_direction: -1, duration: "8"},
-      ];
-  
-      var notes2 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-      ];
+      var newVoice = function(notes) { return score.voice(notes, {time: '1/4'})};
+      var newStave = function(voice) {
+        system.addStave({voices: [voice], debugNoteMetrics: debug})
+          .addClef('treble')
+          .addTimeSignature('1/4');
+      };
 
-      var notes3 = [
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+      var voices = [
+        score.notes('c5/8, c5'),
+        score.tuplet(score.notes('a4/8, a4, a4'), {notes_occupied: 2}),
+        score.notes('c5/16, c5, c5, c5'),
+        score.tuplet(score.notes('a4/16, a4, a4, a4, a4'), {notes_occupied: 4}),
+        score.tuplet(score.notes('a4/32, a4, a4, a4, a4, a4, a4'), {notes_occupied: 8}),
       ];
 
-      var notes4 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-      ];
-
-      var notes5 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-      ];
-
-      function newVoice(notes, tuplet) {
-        var tickables = notes.map(function(note) {return vf.StaveNote(note);});
-        if (tuplet) vf.Tuplet({notes: tickables, options: {notes_occupied: tuplet}});
-        return vf.Voice({time: {num_beats: 1, beat_value: 4}}).addTickables(tickables);
-      }
-
-      system.addStave({
-        voices: [newVoice(notes1)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes2, 2)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-         voices: [newVoice(notes3)],
-        debugNoteMetrics: debug,
-        }).addClef("bass").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes4, 4)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes5, 8)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+      voices.map(newVoice).forEach(newStave);
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET); 
 
       vf.draw();
       ok(true);
