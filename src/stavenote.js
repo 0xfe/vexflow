@@ -255,11 +255,11 @@ export class StaveNote extends StemmableNote {
       // See https://github.com/0xfe/vexflow/wiki/Development-Gotchas
       const topNotBottomY = topNote
         .getStave()
-        .getYForLine(Math.abs(5 - topKeys[0].line) + HALF_NOTEHEAD_HEIGHT);
+        .getYForLine(5 - topKeys[0].line + HALF_NOTEHEAD_HEIGHT);
 
       const bottomNoteTopY = bottomNote
         .getStave()
-        .getYForLine(Math.abs(5 - bottomKeys[bottomKeys.length - 1].line) - HALF_NOTEHEAD_HEIGHT);
+        .getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
 
       if (bottomNoteTopY - topNotBottomY <= 0) {
         xShift = topNote.getVoiceShiftWidth();
