@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.77 built on 2016-08-16.
+ * VexFlow 1.2.78 built on 2016-08-21.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -19,7 +19,8 @@ if (!window.QUnit) {
     ok: function() {return true;},
     equal: function() {return true;},
     expect: function() {return true;},
-    throws: function() {return true;}
+    throws: function() {return true;},
+    notOk: function() {return true;}
   };
 
   QUnit.module = function(name) {
@@ -37,6 +38,7 @@ if (!window.QUnit) {
   equal = QUnit.assertions.equal;
   expect = QUnit.assertions.expect;
   throws = QUnit.assertions.throws;
+  notOk = QUnit.assertions.notOk;
 }
 
 if (typeof require == "function") {
@@ -291,488 +293,449 @@ VF.Test.MockTickable = (function() {
 Vex.Flow.Test.Accidental = (function() {
   function hasAccidental(note) {
     return note.modifiers.reduce(function(hasAcc, modifier) {
-      if (hasAcc) return hasAcc;
-
-      return modifier.getCategory() === "accidentals";
+      return hasAcc || modifier.getCategory() === 'accidentals';
     }, false);
   }
 
-  Accidental = {
+  // newAccid factory
+  function makeNewAccid(factory) {
+    return function(accidType) {
+      return factory.Accidental({ type: accidType });
+    };
+  }
+
+  var Accidental = {
     Start: function() {
-      QUnit.module("Accidental");
-      Vex.Flow.Test.runTests("Basic", Vex.Flow.Test.Accidental.basic);
-      Vex.Flow.Test.runTests("Stem Down", Vex.Flow.Test.Accidental.basicStemDown);
-      Vex.Flow.Test.runTests("Accidental Arrangement Special Cases", Vex.Flow.Test.Accidental.specialCases);
-      Vex.Flow.Test.runTests("Multi Voice", Vex.Flow.Test.Accidental.multiVoice);
-      Vex.Flow.Test.runTests("Microtonal", Vex.Flow.Test.Accidental.microtonal);
-      test("Automatic Accidentals - Simple Tests", Vex.Flow.Test.Accidental.autoAccidentalWorking);
-      Vex.Flow.Test.runTests("Automatic Accidentals", Vex.Flow.Test.Accidental.automaticAccidentals0);
-      Vex.Flow.Test.runTests("Automatic Accidentals - C major scale in Ab", Vex.Flow.Test.Accidental.automaticAccidentals1);
-      Vex.Flow.Test.runTests("Automatic Accidentals - No Accidentals Necsesary", Vex.Flow.Test.Accidental.automaticAccidentals2);
-      Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Inline", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
-      Vex.Flow.Test.runTests("Automatic Accidentals - Multi Voice Offset", Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
-      Vex.Flow.Test.runTests("Factory API", Vex.Flow.Test.Accidental.factoryAPI);
+      QUnit.module('Accidental');
+      Vex.Flow.Test.runTests('Basic', Vex.Flow.Test.Accidental.basic);
+      Vex.Flow.Test.runTests('Stem Down', Vex.Flow.Test.Accidental.basicStemDown);
+      Vex.Flow.Test.runTests('Accidental Arrangement Special Cases', Vex.Flow.Test.Accidental.specialCases);
+      Vex.Flow.Test.runTests('Multi Voice', Vex.Flow.Test.Accidental.multiVoice);
+      Vex.Flow.Test.runTests('Microtonal', Vex.Flow.Test.Accidental.microtonal);
+      test('Automatic Accidentals - Simple Tests', Vex.Flow.Test.Accidental.autoAccidentalWorking);
+      Vex.Flow.Test.runTests('Automatic Accidentals', Vex.Flow.Test.Accidental.automaticAccidentals0);
+      Vex.Flow.Test.runTests('Automatic Accidentals - C major scale in Ab', Vex.Flow.Test.Accidental.automaticAccidentals1);
+      Vex.Flow.Test.runTests('Automatic Accidentals - No Accidentals Necsesary', Vex.Flow.Test.Accidental.automaticAccidentals2);
+      Vex.Flow.Test.runTests('Automatic Accidentals - Multi Voice Inline', Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
+      Vex.Flow.Test.runTests('Automatic Accidentals - Multi Voice Offset', Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
+      Vex.Flow.Test.runTests('Factory API', Vex.Flow.Test.Accidental.factoryAPI);
     },
 
-    showNote: function(note, stave, ctx, x) {
-      var mc = new Vex.Flow.ModifierContext();
-      note.addToModifierContext(mc);
-
-      var tickContext = new Vex.Flow.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x);
-
-      note.setContext(ctx).setStave(stave);
-      note.draw();
-
-      Vex.Flow.Test.plotNoteWidth(ctx, note, 140);
-      return note;
-    },
-
-    basic: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 700, 240);
-      var stave = new Vex.Flow.Stave(10, 10, 550);
-      var assert = options.assert;
-
-      ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      stave.setContext(ctx);
-      stave.draw();
-
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+    basic: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var newAccid = makeNewAccid(vf);
+      vf.Stave({ x: 10, y: 10, width: 550 });
 
       var notes = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
+          .addAccidental(0, newAccid('b'))
+          .addAccidental(1, newAccid('#')),
 
-        newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
-            duration: "h"}).
-          addAccidental(0, newAcc("##")).
-          addAccidental(1, newAcc("n")).
-          addAccidental(2, newAcc("bb")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("#")).
-          addAccidental(5, newAcc("n")).
-          addAccidental(6, newAcc("bb")),
+        vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
+          .addAccidental(0, newAccid('##'))
+          .addAccidental(1, newAccid('n'))
+          .addAccidental(2, newAccid('bb'))
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('#'))
+          .addAccidental(5, newAccid('n'))
+          .addAccidental(6, newAccid('bb')),
 
-        newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
-            duration: "16"}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#")).
-          addAccidental(2, newAcc("#")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("bb")).
-          addAccidental(5, newAcc("##")).
-          addAccidental(6, newAcc("#")),
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
+          .addAccidental(0, newAccid('n'))
+          .addAccidental(1, newAccid('#'))
+          .addAccidental(2, newAccid('#'))
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('bb'))
+          .addAccidental(5, newAccid('##'))
+          .addAccidental(6, newAccid('#')),
 
-        newNote({ keys: ["a/3", "c/4", "e/4", "b/4", "d/5", "g/5"], duration: "w"}).
-          addAccidental(0, newAcc("#")).
-          addAccidental(1, newAcc("##").setAsCautionary()).
-          addAccidental(2, newAcc("#").setAsCautionary()).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("bb").setAsCautionary()).
-          addAccidental(5, newAcc("b").setAsCautionary()),
+        vf.StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
+          .addAccidental(0, newAccid('#'))
+          .addAccidental(1, newAccid('##').setAsCautionary())
+          .addAccidental(2, newAccid('#').setAsCautionary())
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('bb').setAsCautionary())
+          .addAccidental(5, newAccid('b').setAsCautionary()),
       ];
 
-      for (var i = 0; i < notes.length; ++i) {
-        Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 125));
-        var accidentals = notes[i].getAccidentals();
-        assert.ok(accidentals.length > 0, "Note " + i + " has accidentals");
+      VF.Formatter.SimpleFormat(notes, 10, { paddingBetween: 45 });
 
-        for (var j = 0; j < accidentals.length; ++j) {
-          assert.ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
-        }
-      }
+      notes.forEach(function(note, index) {
+        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+        note.getAccidentals().forEach(function(accid, index) {
+          ok(accid.width > 0, 'Accidental ' + index + ' has set width');
+        });
+      });
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
-      assert.ok(true, "Full Accidental");
+      vf.draw();
+
+      Vex.Flow.Test.plotLegendForNoteWidth(vf.getContext(), 480, 140);
+
+      ok(true, 'Full Accidental');
     },
 
-    specialCases: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 700, 240);
-      ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      var stave = new Vex.Flow.Stave(10, 10, 550);
-      stave.setContext(ctx);
-      stave.draw();
-
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+    specialCases: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var newAccid = makeNewAccid(vf);
+      vf.Stave({ x: 10, y: 10, width: 550 });
 
       var notes = [
-        newNote({ keys: ["f/4", "d/5"], duration: "w"}).
-          addAccidental(0, newAcc("#")).
-          addAccidental(1, newAcc("b")),
+        vf.StaveNote({ keys: ['f/4', 'd/5'], duration: '1' })
+          .addAccidental(0, newAccid('#'))
+          .addAccidental(1, newAccid('b')),
 
-        newNote({ keys: ["c/4", "g/4"], duration: "h"}).
-          addAccidental(0, newAcc("##")).
-          addAccidental(1, newAcc("##")),
+        vf.StaveNote({ keys: ['c/4', 'g/4'], duration: '2' })
+          .addAccidental(0, newAccid('##'))
+          .addAccidental(1, newAccid('##')),
 
-        newNote({ keys: ["b/3", "d/4", "f/4"],
-            duration: "16"}).
-          addAccidental(0, newAcc("#")).
-          addAccidental(1, newAcc("#")).
-          addAccidental(2, newAcc("##")),
+        vf.StaveNote({ keys: ['b/3', 'd/4', 'f/4'], duration: '16' })
+          .addAccidental(0, newAccid('#'))
+          .addAccidental(1, newAccid('#'))
+          .addAccidental(2, newAccid('##')),
 
-        newNote({ keys: ["g/4", "a/4", "c/5", "e/5"],
-            duration: "16"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("b")).
-          addAccidental(3, newAcc("n")),
+        vf.StaveNote({ keys: ['g/4', 'a/4', 'c/5', 'e/5'], duration: '16' })
+          .addAccidental(0, newAccid('b'))
+          .addAccidental(1, newAccid('b'))
+          .addAccidental(3, newAccid('n')),
 
-        newNote({ keys: ["e/4", "g/4", "b/4", "c/5"], duration: "4"}).
-          addAccidental(0, newAcc("b").setAsCautionary()).
-          addAccidental(1, newAcc("b").setAsCautionary()).
-          addAccidental(2, newAcc("bb")).
-          addAccidental(3, newAcc("b")),
+        vf.StaveNote({ keys: ['e/4', 'g/4', 'b/4', 'c/5'], duration: '4' })
+          .addAccidental(0, newAccid('b').setAsCautionary())
+          .addAccidental(1, newAccid('b').setAsCautionary())
+          .addAccidental(2, newAccid('bb'))
+          .addAccidental(3, newAccid('b')),
 
-        newNote({ keys: ["b/3", "e/4", "a/4", "d/5", "g/5"], duration: "8"}).
-          addAccidental(0, newAcc("bb")).
-          addAccidental(1, newAcc("b").setAsCautionary()).
-          addAccidental(2, newAcc("n").setAsCautionary()).
-          addAccidental(3, newAcc("#")).
-          addAccidental(4, newAcc("n").setAsCautionary())
+        vf.StaveNote({ keys: ['b/3', 'e/4', 'a/4', 'd/5', 'g/5'], duration: '8' })
+          .addAccidental(0, newAccid('bb'))
+          .addAccidental(1, newAccid('b').setAsCautionary())
+          .addAccidental(2, newAccid('n').setAsCautionary())
+          .addAccidental(3, newAccid('#'))
+          .addAccidental(4, newAccid('n').setAsCautionary()),
       ];
 
-      for (var i = 0; i < notes.length; ++i) {
-        Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 70));
-        var accidentals = notes[i].getAccidentals();
-        ok(accidentals.length > 0, "Note " + i + " has accidentals");
+      VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 20 });
 
-        for (var j = 0; j < accidentals.length; ++j) {
-          ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
-        }
-      }
+      notes.forEach(function(note, index) {
+        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+        note.getAccidentals().forEach(function(accid, index) {
+          ok(accid.width > 0, 'Accidental ' + index + ' has set width');
+        });
+      });
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 480, 140);
-      ok(true, "Full Accidental");
+      vf.draw();
+
+      Vex.Flow.Test.plotLegendForNoteWidth(vf.getContext(), 480, 140);
+
+      ok(true, 'Full Accidental');
     },
 
-    basicStemDown: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 700, 240);
-      ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      var stave = new Vex.Flow.Stave(10, 10, 550);
-      stave.setContext(ctx);
-      stave.draw();
-
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+    basicStemDown: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var newAccid = makeNewAccid(vf);
+      vf.Stave({ x: 10, y: 10, width: 550 });
 
       var notes = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w", stem_direction: -1}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w', stem_direction: -1 })
+          .addAccidental(0, newAccid('b'))
+          .addAccidental(1, newAccid('#')),
 
-        newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
-            duration: "h", stem_direction: -1}).
-          addAccidental(0, newAcc("##")).
-          addAccidental(1, newAcc("n")).
-          addAccidental(2, newAcc("bb")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("#")).
-          addAccidental(5, newAcc("n")).
-          addAccidental(6, newAcc("bb")),
+        vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2', stem_direction: -1 })
+          .addAccidental(0, newAccid('##'))
+          .addAccidental(1, newAccid('n'))
+          .addAccidental(2, newAccid('bb'))
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('#'))
+          .addAccidental(5, newAccid('n'))
+          .addAccidental(6, newAccid('bb')),
 
-        newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
-            duration: "16", stem_direction: -1}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#")).
-          addAccidental(2, newAcc("#")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("bb")).
-          addAccidental(5, newAcc("##")).
-          addAccidental(6, newAcc("#")),
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16', stem_direction: -1 })
+          .addAccidental(0, newAccid('n'))
+          .addAccidental(1, newAccid('#'))
+          .addAccidental(2, newAccid('#'))
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('bb'))
+          .addAccidental(5, newAccid('##'))
+          .addAccidental(6, newAccid('#')),
       ];
 
-      for (var i = 0; i < notes.length; ++i) {
-        Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 125));
-        var accidentals = notes[i].getAccidentals();
-        ok(accidentals.length > 0, "Note " + i + " has accidentals");
+      VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 30 });
 
-        for (var j = 0; j < accidentals.length; ++j) {
-          ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
-        }
-      }
+      notes.forEach(function(note, index) {
+        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+        note.getAccidentals().forEach(function(accid, index) {
+          ok(accid.width > 0, 'Accidental ' + index + ' has set width');
+        });
+      });
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 350, 120);
-      ok(true, "Full Accidental");
+      vf.draw();
+
+      Vex.Flow.Test.plotLegendForNoteWidth(vf.getContext(), 480, 140);
+
+      ok(true, 'Full Accidental');
     },
 
     showNotes: function(note1, note2, stave, ctx, x) {
-      var mc = new Vex.Flow.ModifierContext();
-      note1.addToModifierContext(mc);
-      note2.addToModifierContext(mc);
+      var modifierContext = new Vex.Flow.ModifierContext();
+      note1.addToModifierContext(modifierContext);
+      note2.addToModifierContext(modifierContext);
 
-      var tickContext = new Vex.Flow.TickContext();
-      tickContext.addTickable(note1).addTickable(note2).
-        preFormat().setX(x);
+      new VF.TickContext()
+        .addTickable(note1)
+        .addTickable(note2)
+        .preFormat()
+        .setX(x);
 
-      note1.setContext(ctx).setStave(stave).draw();
-      note2.setContext(ctx).setStave(stave).draw();
+      note1.setContext(ctx).draw();
+      note2.setContext(ctx).draw();
 
       Vex.Flow.Test.plotNoteWidth(ctx, note1, 180);
       Vex.Flow.Test.plotNoteWidth(ctx, note2, 15);
     },
 
-    multiVoice: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 460, 250);
+    multiVoice: function(options) {
+      var vf = VF.Test.makeFactory(options, 460, 250);
+      var newAccid = makeNewAccid(vf);
+      var stave = vf.Stave({ x: 10, y: 45, width: 420 });
+      var ctx = vf.getContext();
 
-      ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      var stave = new Vex.Flow.Stave(10, 40, 420);
-      stave.setContext(ctx);
       stave.draw();
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+      var note1 = vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 })
+        .addAccidental(0, newAccid('b'))
+        .addAccidental(1, newAccid('n'))
+        .addAccidental(2, newAccid('#'))
+        .setStave(stave);
 
-      var note1 = newNote(
-          { keys: ["c/4", "e/4", "a/4"], duration: "h", stem_direction: -1}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("n")).
-          addAccidental(2, newAcc("#"));
-      var note2 = newNote(
-          { keys: ["d/5", "a/5", "b/5"], duration: "h", stem_direction: 1}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("bb")).
-          addAccidental(2, newAcc("##"));
+      var note2 = vf.StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 })
+        .addAccidental(0, newAccid('b'))
+        .addAccidental(1, newAccid('bb'))
+        .addAccidental(2, newAccid('##'))
+        .setStave(stave);
 
       Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 60);
 
-      note1 = newNote(
-          { keys: ["c/4", "e/4", "c/5"], duration: "h", stem_direction: -1}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("n")).
-          addAccidental(2, newAcc("#"));
-      note2 = newNote(
-          { keys: ["d/5", "a/5", "b/5"], duration: "q", stem_direction: 1}).
-          addAccidental(0, newAcc("b"));
+      note1 = vf.StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
+        .addAccidental(0, newAccid('b'))
+        .addAccidental(1, newAccid('n'))
+        .addAccidental(2, newAccid('#'))
+        .setStave(stave);
+
+      note2 = vf.StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 })
+        .addAccidental(0, newAccid('b'))
+        .setStave(stave);
 
       Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 150);
 
-      note1 = newNote(
-          { keys: ["d/4", "c/5", "d/5"], duration: "h", stem_direction: -1}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("n")).
-          addAccidental(2, newAcc("#"));
-      note2 = newNote(
-          { keys: ["d/5", "a/5", "b/5"], duration: "q", stem_direction: 1}).
-          addAccidental(0, newAcc("b"));
+      note1 = vf.StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
+        .addAccidental(0, newAccid('b'))
+        .addAccidental(1, newAccid('n'))
+        .addAccidental(2, newAccid('#'))
+        .setStave(stave);
+
+      note2 = vf.StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 })
+        .addAccidental(0, newAccid('b'))
+        .setStave(stave);
 
       Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 250);
       Vex.Flow.Test.plotLegendForNoteWidth(ctx, 350, 150);
-      ok(true, "Full Accidental");
+
+
+      ok(true, 'Full Accidental');
     },
 
-    microtonal: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 700, 240);
-      ctx.scale(1.0, 1.0); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      var stave = new Vex.Flow.Stave(10, 10, 650);
-      stave.setContext(ctx);
-      stave.draw();
-
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+    microtonal: function(options) {
+      var assert = options.assert;
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var newAccid = makeNewAccid(vf);
+      var ctx = vf.getContext();
+      vf.Stave({ x: 10, y: 10, width: 650 });
 
       var notes = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
-          addAccidental(0, newAcc("db")).
-          addAccidental(1, newAcc("d")),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
+          .addAccidental(0, newAccid('db'))
+          .addAccidental(1, newAccid('d')),
 
-        newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
-            duration: "h"}).
-          addAccidental(0, newAcc("bbs")).
-          addAccidental(1, newAcc("++")).
-          addAccidental(2, newAcc("+")).
-          addAccidental(3, newAcc("d")).
-          addAccidental(4, newAcc("db")).
-          addAccidental(5, newAcc("+")).
-          addAccidental(6, newAcc("##")),
+        vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
+          .addAccidental(0, newAccid('bbs'))
+          .addAccidental(1, newAccid('++'))
+          .addAccidental(2, newAccid('+'))
+          .addAccidental(3, newAccid('d'))
+          .addAccidental(4, newAccid('db'))
+          .addAccidental(5, newAccid('+'))
+          .addAccidental(6, newAccid('##')),
 
-        newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
-            duration: "16"}).
-          addAccidental(0, newAcc("++")).
-          addAccidental(1, newAcc("bbs")).
-          addAccidental(2, newAcc("+")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("db")).
-          addAccidental(5, newAcc("##")).
-          addAccidental(6, newAcc("#")),
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
+          .addAccidental(0, newAccid('++'))
+          .addAccidental(1, newAccid('bbs'))
+          .addAccidental(2, newAccid('+'))
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('db'))
+          .addAccidental(5, newAccid('##'))
+          .addAccidental(6, newAccid('#')),
 
-        newNote({ keys: ["a/3", "c/4", "e/4", "b/4", "d/5", "g/5"], duration: "w"}).
-          addAccidental(0, newAcc("#")).
-          addAccidental(1, newAcc("db").setAsCautionary()).
-          addAccidental(2, newAcc("bbs").setAsCautionary()).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("++").setAsCautionary()).
-          addAccidental(5, newAcc("d").setAsCautionary()),
+        vf.StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
+          .addAccidental(0, newAccid('#'))
+          .addAccidental(1, newAccid('db').setAsCautionary())
+          .addAccidental(2, newAccid('bbs').setAsCautionary())
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('++').setAsCautionary())
+          .addAccidental(5, newAccid('d').setAsCautionary()),
 
-        newNote({ keys: ["f/4", "g/4", "a/4", "b/4"],
-            duration: "16"}).
-          addAccidental(0, newAcc("++-")).
-          addAccidental(1, newAcc("+-")).
-          addAccidental(2, newAcc("bs")).
-          addAccidental(3, newAcc("bss")),
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '16' })
+          .addAccidental(0, newAccid('++-'))
+          .addAccidental(1, newAccid('+-'))
+          .addAccidental(2, newAccid('bs'))
+          .addAccidental(3, newAccid('bss')),
       ];
 
-      for (var i = 0; i < notes.length; ++i) {
-        Vex.Flow.Test.Accidental.showNote(notes[i], stave, ctx, 30 + (i * 125));
-        var accidentals = notes[i].getAccidentals();
-        ok(accidentals.length > 0, "Note " + i + " has accidentals");
+      VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
 
-        for (var j = 0; j < accidentals.length; ++j) {
-          ok(accidentals[j].width > 0, "Accidental " + j + " has set width");
-        }
-      }
+      notes.forEach(function(note, index) {
+        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+        note.getAccidentals().forEach(function(accid, index) {
+          assert.ok(accid.width > 0, 'Accidental ' + index + ' has set width');
+        });
+      });
+
+      vf.draw();
 
       Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
-      ok(true, "Microtonal Accidental");
+      ok(true, 'Microtonal Accidental');
     },
 
-    automaticAccidentals0: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 200);
+    automaticAccidentals0: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 200);
+      var stave = vf.Stave();
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+      const notes = [
+        { keys: ['c/4', 'c/5'], duration: '4' },
+        { keys: ['c#/4', 'c#/5'], duration: '4' },
+        { keys: ['c#/4', 'c#/5'], duration: '4' },
+        { keys: ['c##/4', 'c##/5'], duration: '4' },
+        { keys: ['c##/4', 'c##/5'], duration: '4' },
+        { keys: ['c/4', 'c/5'], duration: '4' },
+        { keys: ['cn/4', 'cn/5'], duration: '4' },
+        { keys: ['cbb/4', 'cbb/5'], duration: '4' },
+        { keys: ['cbb/4', 'cbb/5'], duration: '4' },
+        { keys: ['cb/4', 'cb/5'], duration: '4' },
+        { keys: ['cb/4', 'cb/5'], duration: '4' },
+        { keys: ['c/4', 'c/5'], duration: '4' },
+      ].map(vf.StaveNote.bind(vf));
 
-      var notes = [
-        newNote({ keys: ["c/4", "c/5"], duration: "4"}),
-        newNote({ keys: ["c#/4", "c#/5"], duration: "4"}),
-        newNote({ keys: ["c#/4", "c#/5"], duration: "4"}),
-        newNote({ keys: ["c##/4", "c##/5"], duration: "4"}),
-        newNote({ keys: ["c##/4", "c##/5"], duration: "4"}),
-        newNote({ keys: ["c/4", "c/5"], duration: "4"}),
-        newNote({ keys: ["cn/4", "cn/5"], duration: "4"}),
-        newNote({ keys: ["cbb/4", "cbb/5"], duration: "4"}),
-        newNote({ keys: ["cbb/4", "cbb/5"], duration: "4"}),
-        newNote({ keys: ["cb/4", "cb/5"], duration: "4"}),
-        newNote({ keys: ["cb/4", "cb/5"], duration: "4"}),
-        newNote({ keys: ["c/4", "c/5"], duration: "4"})
-      ];
+      const voice = vf.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes);
 
-      var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice.addTickables(notes);
+      Vex.Flow.Accidental.applyAccidentals([voice], 'C');
 
-      Vex.Flow.Accidental.applyAccidentals([voice], "C");
+      new Vex.Flow.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-        formatToStave([voice], c.stave);
+      vf.draw();
 
-      voice.draw(c.context, c.stave);
       ok(true);
     },
 
-    automaticAccidentals1: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+    automaticAccidentals1: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 150);
+      var stave = vf.Stave().addKeySignature('Ab');
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
-
-      c.context.clear();
-      c.stave.addKeySignature("Ab");
-      c.stave.draw();
       var notes = [
-        newNote({ keys: ["c/4"], duration: "4"}),
-        newNote({ keys: ["d/4"], duration: "4"}),
-        newNote({ keys: ["e/4"], duration: "4"}),
-        newNote({ keys: ["f/4"], duration: "4"}),
-        newNote({ keys: ["g/4"], duration: "4"}),
-        newNote({ keys: ["a/4"], duration: "4"}),
-        newNote({ keys: ["b/4"], duration: "4"}),
-        newNote({ keys: ["c/5"], duration: "4"}),
-      ];
+        { keys: ['c/4'], duration: '4' },
+        { keys: ['d/4'], duration: '4' },
+        { keys: ['e/4'], duration: '4' },
+        { keys: ['f/4'], duration: '4' },
+        { keys: ['g/4'], duration: '4' },
+        { keys: ['a/4'], duration: '4' },
+        { keys: ['b/4'], duration: '4' },
+        { keys: ['c/5'], duration: '4' },
+      ].map(vf.StaveNote.bind(vf));
 
-      var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice.addTickables(notes);
+      var voice = vf.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes);
 
-      Vex.Flow.Accidental.applyAccidentals([voice], "Ab");
+      Vex.Flow.Accidental.applyAccidentals([voice], 'Ab');
 
-      var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-        formatToStave([voice], c.stave);
+      new Vex.Flow.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      voice.draw(c.context, c.stave);
+      vf.draw();
+
       ok(true);
     },
 
-    automaticAccidentals2: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+    automaticAccidentals2: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 150);
+      var stave = vf.Stave().addKeySignature('A');
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
-
-      c.context.clear();
-      c.stave.addKeySignature("A");
-      c.stave.draw();
       var notes = [
-        newNote({ keys: ["a/4"], duration: "4"}),
-        newNote({ keys: ["b/4"], duration: "4"}),
-        newNote({ keys: ["c#/5"], duration: "4"}),
-        newNote({ keys: ["d/5"], duration: "4"}),
-        newNote({ keys: ["e/5"], duration: "4"}),
-        newNote({ keys: ["f#/5"], duration: "4"}),
-        newNote({ keys: ["g#/5"], duration: "4"}),
-        newNote({ keys: ["a/5"], duration: "4"}),
-      ];
+        { keys: ['a/4'], duration: '4' },
+        { keys: ['b/4'], duration: '4' },
+        { keys: ['c#/5'], duration: '4' },
+        { keys: ['d/5'], duration: '4' },
+        { keys: ['e/5'], duration: '4' },
+        { keys: ['f#/5'], duration: '4' },
+        { keys: ['g#/5'], duration: '4' },
+        { keys: ['a/5'], duration: '4' },
+      ].map(vf.StaveNote.bind(vf));
 
-      var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice.addTickables(notes);
+      var voice = vf.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes);
 
-      Vex.Flow.Accidental.applyAccidentals([voice], "A");
+      Vex.Flow.Accidental.applyAccidentals([voice], 'A');
 
-      var formatter = new Vex.Flow.Formatter().joinVoices([voice]).
-        formatToStave([voice], c.stave);
+      new Vex.Flow.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      voice.draw(c.context, c.stave);
+      vf.draw();
+
       ok(true);
     },
 
-    automaticAccidentalsMultiVoiceInline: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+    automaticAccidentalsMultiVoiceInline: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 150);
+      var stave = vf.Stave().addKeySignature('Ab');
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
-
-
-      c.context.clear();
-      c.stave.addKeySignature("Ab");
-      c.stave.draw();
       var notes0 = [
-        newNote({ keys: ["c/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["d/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["e/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["f/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["g/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["a/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["b/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["c/5"], duration: "4", stem_direction: -1})
-      ];
+        { keys: ['c/4'], duration: '4', stem_direction: -1 },
+        { keys: ['d/4'], duration: '4', stem_direction: -1 },
+        { keys: ['e/4'], duration: '4', stem_direction: -1 },
+        { keys: ['f/4'], duration: '4', stem_direction: -1 },
+        { keys: ['g/4'], duration: '4', stem_direction: -1 },
+        { keys: ['a/4'], duration: '4', stem_direction: -1 },
+        { keys: ['b/4'], duration: '4', stem_direction: -1 },
+        { keys: ['c/5'], duration: '4', stem_direction: -1 },
+      ].map(vf.StaveNote.bind(vf));
 
       var notes1 = [
-        newNote({ keys: ["c/5"], duration: "4"}),
-        newNote({ keys: ["d/5"], duration: "4"}),
-        newNote({ keys: ["e/5"], duration: "4"}),
-        newNote({ keys: ["f/5"], duration: "4"}),
-        newNote({ keys: ["g/5"], duration: "4"}),
-        newNote({ keys: ["a/5"], duration: "4"}),
-        newNote({ keys: ["b/5"], duration: "4"}),
-        newNote({ keys: ["c/6"], duration: "4"})
-      ];
+        { keys: ['c/5'], duration: '4' },
+        { keys: ['d/5'], duration: '4' },
+        { keys: ['e/5'], duration: '4' },
+        { keys: ['f/5'], duration: '4' },
+        { keys: ['g/5'], duration: '4' },
+        { keys: ['a/5'], duration: '4' },
+        { keys: ['b/5'], duration: '4' },
+        { keys: ['c/6'], duration: '4' },
+      ].map(vf.StaveNote.bind(vf));
 
-      var voice0 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice0.addTickables(notes0);
+      var voice0 = vf.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes0);
 
-      var voice1 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice1.addTickables(notes1);
+      var voice1 = vf.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes1);
 
       // Ab Major
-      Vex.Flow.Accidental.applyAccidentals([voice0, voice1], "Ab");
+      Vex.Flow.Accidental.applyAccidentals([voice0, voice1], 'Ab');
 
       equal(hasAccidental(notes0[0]), false);
       equal(hasAccidental(notes0[1]), true);
@@ -792,57 +755,52 @@ Vex.Flow.Test.Accidental = (function() {
       equal(hasAccidental(notes1[6]), true);
       equal(hasAccidental(notes1[7]), false);
 
-      var formatter = new Vex.Flow.Formatter().joinVoices([voice0, voice1]).
-        formatToStave([voice0, voice1], c.stave);
+      new Vex.Flow.Formatter()
+        .joinVoices([voice0, voice1])
+        .formatToStave([voice0, voice1], stave);
 
-      voice0.draw(c.context, c.stave);
-      voice1.draw(c.context, c.stave);
+      vf.draw();
+
       ok(true);
     },
 
-    automaticAccidentalsMultiVoiceOffset: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = Vex.Flow.Test.AutoBeamFormatting.setupContext(options, 700, 150);
+    automaticAccidentalsMultiVoiceOffset: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 150);
+      var stave = vf.Stave().addKeySignature('Cb');
 
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
-
-      c.context.clear();
-      c.stave.addKeySignature("Cb");
-      c.stave.draw();
       var notes0 = [
-        newNote({ keys: ["c/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["d/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["e/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["f/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["g/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["a/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["b/4"], duration: "4", stem_direction: -1}),
-        newNote({ keys: ["c/5"], duration: "4", stem_direction: -1})
-      ];
+        { keys: ['c/4'], duration: '4', stem_direction: -1 },
+        { keys: ['d/4'], duration: '4', stem_direction: -1 },
+        { keys: ['e/4'], duration: '4', stem_direction: -1 },
+        { keys: ['f/4'], duration: '4', stem_direction: -1 },
+        { keys: ['g/4'], duration: '4', stem_direction: -1 },
+        { keys: ['a/4'], duration: '4', stem_direction: -1 },
+        { keys: ['b/4'], duration: '4', stem_direction: -1 },
+        { keys: ['c/5'], duration: '4', stem_direction: -1 },
+      ].map(vf.StaveNote.bind(vf));
 
       var notes1 = [
-        newNote({ keys: ["c/5"], duration: "8"}),
-        newNote({ keys: ["c/5"], duration: "4"}),
-        newNote({ keys: ["d/5"], duration: "4"}),
-        newNote({ keys: ["e/5"], duration: "4"}),
-        newNote({ keys: ["f/5"], duration: "4"}),
-        newNote({ keys: ["g/5"], duration: "4"}),
-        newNote({ keys: ["a/5"], duration: "4"}),
-        newNote({ keys: ["b/5"], duration: "4"}),
-        newNote({ keys: ["c/6"], duration: "4"})
-      ];
+        { keys: ['c/5'], duration: '8' },
+        { keys: ['c/5'], duration: '4' },
+        { keys: ['d/5'], duration: '4' },
+        { keys: ['e/5'], duration: '4' },
+        { keys: ['f/5'], duration: '4' },
+        { keys: ['g/5'], duration: '4' },
+        { keys: ['a/5'], duration: '4' },
+        { keys: ['b/5'], duration: '4' },
+        { keys: ['c/6'], duration: '4' },
+      ].map(vf.StaveNote.bind(vf));
 
-      var voice0 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice0.addTickables(notes0);
+      var voice0 = vf.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes0);
 
-      var voice1 = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice1.addTickables(notes1);
+      var voice1 = vf.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes1);
 
       // Cb Major (All flats)
-      Vex.Flow.Accidental.applyAccidentals([voice0, voice1], "Cb");
+      Vex.Flow.Accidental.applyAccidentals([voice0, voice1], 'Cb');
 
       equal(hasAccidental(notes0[0]), true);
       equal(hasAccidental(notes0[1]), true);
@@ -851,7 +809,7 @@ Vex.Flow.Test.Accidental = (function() {
       equal(hasAccidental(notes0[4]), true);
       equal(hasAccidental(notes0[5]), true);
       equal(hasAccidental(notes0[6]), true);
-      equal(hasAccidental(notes0[7]), false, "Natural Remembered");
+      equal(hasAccidental(notes0[7]), false, 'Natural Remembered');
 
       equal(hasAccidental(notes1[0]), true);
       equal(hasAccidental(notes1[1]), false);
@@ -862,161 +820,157 @@ Vex.Flow.Test.Accidental = (function() {
       equal(hasAccidental(notes1[6]), false);
       equal(hasAccidental(notes1[7]), false);
 
-      var formatter = new Vex.Flow.Formatter().joinVoices([voice0, voice1]).
-        formatToStave([voice0, voice1], c.stave);
+      new Vex.Flow.Formatter()
+        .joinVoices([voice0, voice1])
+        .formatToStave([voice0, voice1], stave);
 
-      voice0.draw(c.context, c.stave);
-      voice1.draw(c.context, c.stave);
+      vf.draw();
+
       ok(true);
     },
 
-    autoAccidentalWorking: function(options, contextBuilder) {
-      function newNote(note_struct) { return new Vex.Flow.StaveNote(note_struct); }
-      function newAcc(type) { return new Vex.Flow.Accidental(type); }
+    autoAccidentalWorking: function() {
+      function makeNote(noteStruct) { return new VF.StaveNote(noteStruct); }
 
       var notes = [
-        newNote({ keys: ["bb/4"], duration: "4"}),
-        newNote({ keys: ["bb/4"], duration: "4"}),
-        newNote({ keys: ["g#/4"], duration: "4"}),
-        newNote({ keys: ["g/4"], duration: "4"}),
-        newNote({ keys: ["b/4"], duration: "4"}),
-        newNote({ keys: ["b/4"], duration: "4"}),
-        newNote({ keys: ["a#/4"], duration: "4"}),
-        newNote({ keys: ["g#/4"], duration: "4"}),
-      ];
+        { keys: ['bb/4'], duration: '4' },
+        { keys: ['bb/4'], duration: '4' },
+        { keys: ['g#/4'], duration: '4' },
+        { keys: ['g/4'], duration: '4' },
+        { keys: ['b/4'], duration: '4' },
+        { keys: ['b/4'], duration: '4' },
+        { keys: ['a#/4'], duration: '4' },
+        { keys: ['g#/4'], duration: '4' },
+      ].map(makeNote);
 
-      var voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice.addTickables(notes);
+      var voice = new VF.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes);
 
       // F Major (Bb)
-      Vex.Flow.Accidental.applyAccidentals([voice], "F");
+      Vex.Flow.Accidental.applyAccidentals([voice], 'F');
 
-      equal(hasAccidental(notes[0]), false, "No flat because of key signature");
-      equal(hasAccidental(notes[1]), false, "No flat because of key signature");
-      equal(hasAccidental(notes[2]), true, "Added a sharp");
-      equal(hasAccidental(notes[3]), true, "Back to natural");
-      equal(hasAccidental(notes[4]), true, "Back to natural");
-      equal(hasAccidental(notes[5]), false, "Natural remembered");
-      equal(hasAccidental(notes[6]), true, "Added sharp");
-      equal(hasAccidental(notes[7]), true, "Added sharp");
+      equal(hasAccidental(notes[0]), false, 'No flat because of key signature');
+      equal(hasAccidental(notes[1]), false, 'No flat because of key signature');
+      equal(hasAccidental(notes[2]), true, 'Added a sharp');
+      equal(hasAccidental(notes[3]), true, 'Back to natural');
+      equal(hasAccidental(notes[4]), true, 'Back to natural');
+      equal(hasAccidental(notes[5]), false, 'Natural remembered');
+      equal(hasAccidental(notes[6]), true, 'Added sharp');
+      equal(hasAccidental(notes[7]), true, 'Added sharp');
 
       notes = [
-        newNote({ keys: ["e#/4"], duration: "4"}),
-        newNote({ keys: ["cb/4"], duration: "4"}),
-        newNote({ keys: ["fb/4"], duration: "4"}),
-        newNote({ keys: ["b#/4"], duration: "4"}),
-        newNote({ keys: ["b#/4"], duration: "4"}),
-        newNote({ keys: ["cb/5"], duration: "4"}),
-        newNote({ keys: ["fb/5"], duration: "4"}),
-        newNote({ keys: ["e#/4"], duration: "4"}),
-      ];
+        { keys: ['e#/4'], duration: '4' },
+        { keys: ['cb/4'], duration: '4' },
+        { keys: ['fb/4'], duration: '4' },
+        { keys: ['b#/4'], duration: '4' },
+        { keys: ['b#/4'], duration: '4' },
+        { keys: ['cb/5'], duration: '4' },
+        { keys: ['fb/5'], duration: '4' },
+        { keys: ['e#/4'], duration: '4' },
+      ].map(makeNote);
 
-      voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice.addTickables(notes);
+      voice = new VF.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes);
 
       // A Major (F#,G#,C#)
-      Vex.Flow.Accidental.applyAccidentals([voice], "A");
+      Vex.Flow.Accidental.applyAccidentals([voice], 'A');
 
-      equal(hasAccidental(notes[0]), true, "Added sharp");
-      equal(hasAccidental(notes[1]), true, "Added flat");
-      equal(hasAccidental(notes[2]), true, "Added flat");
-      equal(hasAccidental(notes[3]), true, "Added sharp");
-      equal(hasAccidental(notes[4]), false, "Sharp remembered");
-      equal(hasAccidental(notes[5]), false, "Flat remembered");
-      equal(hasAccidental(notes[6]), false, "Flat remembered");
-      equal(hasAccidental(notes[7]), false, "sharp remembered");
+      equal(hasAccidental(notes[0]), true, 'Added sharp');
+      equal(hasAccidental(notes[1]), true, 'Added flat');
+      equal(hasAccidental(notes[2]), true, 'Added flat');
+      equal(hasAccidental(notes[3]), true, 'Added sharp');
+      equal(hasAccidental(notes[4]), false, 'Sharp remembered');
+      equal(hasAccidental(notes[5]), false, 'Flat remembered');
+      equal(hasAccidental(notes[6]), false, 'Flat remembered');
+      equal(hasAccidental(notes[7]), false, 'sharp remembered');
 
       notes = [
-        newNote({ keys: ["c/4"], duration: "4"}),
-        newNote({ keys: ["cb/4"], duration: "4"}),
-        newNote({ keys: ["cb/4"], duration: "4"}),
-        newNote({ keys: ["c#/4"], duration: "4"}),
-        newNote({ keys: ["c#/4"], duration: "4"}),
-        newNote({ keys: ["cbb/4"], duration: "4"}),
-        newNote({ keys: ["cbb/4"], duration: "4"}),
-        newNote({ keys: ["c##/4"], duration: "4"}),
-        newNote({ keys: ["c##/4"], duration: "4"}),
-        newNote({ keys: ["c/4"], duration: "4"}),
-        newNote({ keys: ["c/4"], duration: "4"}),
-      ];
+        { keys: ['c/4'], duration: '4' },
+        { keys: ['cb/4'], duration: '4' },
+        { keys: ['cb/4'], duration: '4' },
+        { keys: ['c#/4'], duration: '4' },
+        { keys: ['c#/4'], duration: '4' },
+        { keys: ['cbb/4'], duration: '4' },
+        { keys: ['cbb/4'], duration: '4' },
+        { keys: ['c##/4'], duration: '4' },
+        { keys: ['c##/4'], duration: '4' },
+        { keys: ['c/4'], duration: '4' },
+        { keys: ['c/4'], duration: '4' },
+      ].map(makeNote);
 
-      voice = new Vex.Flow.Voice(Vex.Flow.Test.TIME4_4)
-        .setMode(Vex.Flow.Voice.Mode.SOFT);
-      voice.addTickables(notes);
+      voice = new VF.Voice()
+        .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickables(notes);
 
       // C Major (no sharps/flats)
-      Vex.Flow.Accidental.applyAccidentals([voice], "C");
+      Vex.Flow.Accidental.applyAccidentals([voice], 'C');
 
-      equal(hasAccidental(notes[0]), false, "No accidental");
-      equal(hasAccidental(notes[1]), true, "Added flat");
-      equal(hasAccidental(notes[2]), false, "Flat remembered");
-      equal(hasAccidental(notes[3]), true, "Sharp added");
-      equal(hasAccidental(notes[4]), false, "Sharp remembered");
-      equal(hasAccidental(notes[5]), true, "Added doubled flat");
-      equal(hasAccidental(notes[6]), false, "Double flat remembered");
-      equal(hasAccidental(notes[7]), true, "Added double sharp");
-      equal(hasAccidental(notes[8]), false, "Double sharp rememberd");
-      equal(hasAccidental(notes[9]), true, "Added natural");
-      equal(hasAccidental(notes[10]), false, "Natural remembered");
+      equal(hasAccidental(notes[0]), false, 'No accidental');
+      equal(hasAccidental(notes[1]), true, 'Added flat');
+      equal(hasAccidental(notes[2]), false, 'Flat remembered');
+      equal(hasAccidental(notes[3]), true, 'Sharp added');
+      equal(hasAccidental(notes[4]), false, 'Sharp remembered');
+      equal(hasAccidental(notes[5]), true, 'Added doubled flat');
+      equal(hasAccidental(notes[6]), false, 'Double flat remembered');
+      equal(hasAccidental(notes[7]), true, 'Added double sharp');
+      equal(hasAccidental(notes[8]), false, 'Double sharp rememberd');
+      equal(hasAccidental(notes[9]), true, 'Added natural');
+      equal(hasAccidental(notes[10]), false, 'Natural remembered');
     },
 
     factoryAPI: function(options) {
-      var vf = VF.Test.makeFactory(options, 700, 240);
       var assert = options.assert;
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      vf.Stave({ x: 10, y: 10, width: 550 });
 
-      var stave = vf.Stave({x: 10, y: 10, width: 550});
-
-      function newNote(note_struct) { return vf.StaveNote(note_struct); }
-      function newAcc(type) { return vf.Accidental({type: type}); }
+      function newAcc(type) { return vf.Accidental({ type: type }); }
 
       var notes = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], duration: "w"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' })
+          .addAccidental(0, newAcc('b'))
+          .addAccidental(1, newAcc('#')),
 
-        newNote({ keys: ["d/4", "e/4", "f/4", "a/4", "c/5", "e/5", "g/5"],
-            duration: "h"}).
-          addAccidental(0, newAcc("##")).
-          addAccidental(1, newAcc("n")).
-          addAccidental(2, newAcc("bb")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("#")).
-          addAccidental(5, newAcc("n")).
-          addAccidental(6, newAcc("bb")),
+        vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: 'h' })
+          .addAccidental(0, newAcc('##'))
+          .addAccidental(1, newAcc('n'))
+          .addAccidental(2, newAcc('bb'))
+          .addAccidental(3, newAcc('b'))
+          .addAccidental(4, newAcc('#'))
+          .addAccidental(5, newAcc('n'))
+          .addAccidental(6, newAcc('bb')),
 
-        newNote({ keys: ["f/4", "g/4", "a/4", "b/4", "c/5", "e/5", "g/5"],
-            duration: "16"}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#")).
-          addAccidental(2, newAcc("#")).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("bb")).
-          addAccidental(5, newAcc("##")).
-          addAccidental(6, newAcc("#")),
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
+          .addAccidental(0, newAcc('n'))
+          .addAccidental(1, newAcc('#'))
+          .addAccidental(2, newAcc('#'))
+          .addAccidental(3, newAcc('b'))
+          .addAccidental(4, newAcc('bb'))
+          .addAccidental(5, newAcc('##'))
+          .addAccidental(6, newAcc('#')),
 
-        newNote({ keys: ["a/3", "c/4", "e/4", "b/4", "d/5", "g/5"], duration: "w"}).
-          addAccidental(0, newAcc("#")).
-          addAccidental(1, newAcc("##").setAsCautionary()).
-          addAccidental(2, newAcc("#").setAsCautionary()).
-          addAccidental(3, newAcc("b")).
-          addAccidental(4, newAcc("bb").setAsCautionary()).
-          addAccidental(5, newAcc("b").setAsCautionary()),
+        vf.StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: 'w' })
+          .addAccidental(0, newAcc('#'))
+          .addAccidental(1, newAcc('##').setAsCautionary())
+          .addAccidental(2, newAcc('#').setAsCautionary())
+          .addAccidental(3, newAcc('b'))
+          .addAccidental(4, newAcc('bb').setAsCautionary())
+          .addAccidental(5, newAcc('b').setAsCautionary()),
       ];
 
       VF.Formatter.SimpleFormat(notes);
 
       notes.forEach(function(n, i) {
-        assert.ok(n.getAccidentals().length > 0, "Note " + i + " has accidentals");
+        assert.ok(n.getAccidentals().length > 0, 'Note ' + i + ' has accidentals');
         n.getAccidentals().forEach(function(a, i) {
-          assert.ok(a.width > 0, "Accidental " + i + " has set width");
-        })
-      }) 
+          assert.ok(a.width > 0, 'Accidental ' + i + ' has set width');
+        });
+      });
 
       vf.draw();
-      assert.ok(true, "Factory API");
-    }
+      assert.ok(true, 'Factory API');
+    },
   };
 
   return Accidental;
@@ -4921,12 +4875,223 @@ VF.Test.Dot = (function() {
   return Dot;
 })()
 /**
+ * VexFlow - EasyScore Tests
+ * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ */
+
+Vex.Flow.Test.EasyScore = (function() {
+  var EasyScore = {
+    Start: function() {
+      QUnit.module("EasyScore");
+      var VFT = Vex.Flow.Test;
+      QUnit.test("Basic", VFT.EasyScore.basic);
+      QUnit.test("Accidentals", VFT.EasyScore.accidentals);
+      QUnit.test("Durations", VFT.EasyScore.durations);
+      QUnit.test("Chords", VFT.EasyScore.chords);
+      QUnit.test("Dots", VFT.EasyScore.dots);
+      QUnit.test("Options", VFT.EasyScore.options);
+      VFT.runTests("Draw Basic", VFT.EasyScore.drawBasicTest);
+      VFT.runTests("Draw Beams", VFT.EasyScore.drawBeamsTest);
+      VFT.runTests("Draw Tuplets", VFT.EasyScore.drawTupletsTest);
+      VFT.runTests("Draw Options", VFT.EasyScore.drawOptionsTest);
+    },
+
+    basic: function(assert) {
+      var score = new VF.EasyScore();
+      var mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/x', 'c3//x'];
+      var mustFail = ['', '()', '7', '(c#4 e5 g6'];
+
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
+    },
+
+    accidentals: function(assert) {
+      var score = new VF.EasyScore();
+      var mustPass = ['c3', 'c##3, cb3', 'Cn3', 'f3//x', '(c##3 cbb3 cn3), cb3'];
+      var mustFail = ['ct3', 'cd7', '(cq cbb3 cn3), cb3', '(cd7 cbb3 cn3), cb3'];
+
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
+    },
+
+    durations: function(assert) {
+      var score = new VF.EasyScore();
+      var mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
+      var mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cd7 cbb3 cn3), cb3'];
+
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
+    },
+
+    chords: function(assert) {
+      var score = new VF.EasyScore();
+      var mustPass = [
+        '(c5)', '(c3 e0 g9)',
+        '(c##4 cbb4 cn4)/w, (c#5 cb2 a3)/32',
+        '(d##4 cbb4 cn4)/w/r, (c#5 cb2 a3)',
+        '(c##4 cbb4 cn4)/4, (c#5 cb2 a3)', 
+        '(c##4 cbb4 cn4)/x, (c#5 cb2 a3)',
+      ];
+      var mustFail = ['(c)'];
+
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
+    },
+
+    dots: function(assert) {
+      var score = new VF.EasyScore();
+      var mustPass = [
+        'c3/4.',
+        'c##3/w.., cb3',
+        'f##3/s, cb3/q...',
+        'c##3/q, cb3/32',
+        '(c##3 cbb3 cn3)., cb3',
+        '(c5).',
+        '(c##4 cbb4 cn4)/w.., (c#5 cb2 a3)/32',
+      ];
+      var mustFail = ['.', 'c.#', 'c#4./4'];
+
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); }); 
+    },
+
+    types: function(assert) {
+      var score = new VF.EasyScore();
+      var mustPass = [
+        'c3/4/x.',
+        'c##3//r.., cb3',
+        'c##3/x.., cb3',
+        'c##3/r.., cb3',
+        'd##3/w/s, cb3/q...',
+        'c##3/q, cb3/32',
+        '(c##3 cbb3 cn3)., cb3',
+        '(c5).',
+        '(c##4 cbb4 cn4)/w.., (c#5 cb2 a3)/32',
+      ];
+      var mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32'];
+
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
+    },
+
+    options: function(assert) {
+      var score = new VF.EasyScore();
+      var mustPass = [
+        'c3/4.[foo="bar"]',
+        'c##3/w.., cb3[id="blah"]',
+        'c##3/q, cb3/32',
+        '(c##3 cbb3 cn3).[blah="bod4o"], cb3',
+        '(c5)[fooooo="booo"]',
+        'c#5[id="foobar"]',
+      ];
+      var mustFail = ['.[', 'f##3/w[], cb3/q...'];
+
+      mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
+    },
+
+    drawBasicTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 350);
+      var score = vf.EasyScore();
+      var system = vf.System();
+
+      var voice = score.voice.bind(score);
+      var notes = score.notes.bind(score);
+
+      system.addStave({
+        voices: [
+          voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
+          voice(notes('c#5/h., c5/q', {stem: 'up'})),
+        ]
+      }).addClef('treble');
+
+      system.addStave({
+        voices: [ voice(notes('c#3/q, cn3/q, bb3/q, d##3/q', {clef: 'bass'})) ]
+      }).addClef('bass');
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+
+      vf.draw();
+      expect(0);
+    },
+
+    drawBeamsTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 250);
+      const score = vf.EasyScore();
+      const system = vf.System();
+
+      var voice = score.voice.bind(score);
+      var notes = score.notes.bind(score);
+      var beam = score.beam.bind(score);
+
+      system.addStave({
+        voices: [
+          voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
+          voice(notes('c#5/h.', {stem: 'up'}).concat(beam(notes('c5/8, c5/8', {stem: 'up'}))))
+      ]}).addClef('treble');
+
+      vf.draw();
+      expect(0);
+    },
+
+    drawTupletsTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 250);
+      const score = vf.EasyScore();
+      const system = vf.System();
+
+      var voice = score.voice.bind(score);
+      var notes = score.notes.bind(score);
+      var tuplet = score.tuplet.bind(score);
+      var beam = score.beam.bind(score);
+
+      system.addStave({
+        voices: [
+          voice(
+            tuplet(
+              notes('(c4 e4 g4)/q, cbb4/q, c4/q', {stem: 'down'}),
+              {location: VF.Tuplet.LOCATION_BOTTOM}
+            ).concat(notes('c4/h', {stem: 'down'}))
+          ),
+          voice(
+            notes('c#5/h.', {stem: 'up'})
+              .concat(tuplet(beam(notes('cb5/8, cn5/8, c5/8', {stem: 'up'}))))
+          ),
+        ]
+      }).addClef('treble');
+
+      vf.draw();
+      expect(0);
+    },
+
+    drawOptionsTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 500, 200);
+      const score = vf.EasyScore();
+      const system = vf.System();
+
+      const notes = score.notes('B4/h[id="foobar", stem="up"], B4/h[stem="down"]');
+
+      system.addStave({
+        voices: [ score.voice(notes) ]
+      });
+
+      vf.draw();
+
+      const assert = options.assert;
+      assert.equal(notes[0].getAttribute('id'), 'foobar');
+      assert.equal(notes[0].getStemDirection(), VF.StaveNote.STEM_UP);
+      assert.equal(notes[1].getStemDirection(), VF.StaveNote.STEM_DOWN);
+    }
+  };
+
+  return EasyScore;  
+})();
+
+/**
  * VexFlow - Factory Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
 Vex.Flow.Test.Factory = (function() {
-  Factory = {
+  var Factory = {
     Start: function() {
       QUnit.module("Factory");
       var VFT = Vex.Flow.Test;
@@ -5393,70 +5558,25 @@ VF.Test.Formatter = (function() {
         debugFormatter: debug,
         formatIterations: options.params.iterations,
       });
+      var score = vf.EasyScore();
 
-      var notes1 = [
-        {keys: ["c/5"], stem_direction: -1, duration: "8"},
-        {keys: ["c/5"], stem_direction: -1, duration: "8"},
-      ];
-  
-      var notes2 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-      ];
+      var newVoice = function(notes) { return score.voice(notes, {time: '1/4'})};
+      var newStave = function(voice) {
+        system.addStave({voices: [voice], debugNoteMetrics: debug})
+          .addClef('treble')
+          .addTimeSignature('1/4');
+      };
 
-      var notes3 = [
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+      var voices = [
+        score.notes('c5/8, c5'),
+        score.tuplet(score.notes('a4/8, a4, a4'), {notes_occupied: 2}),
+        score.notes('c5/16, c5, c5, c5'),
+        score.tuplet(score.notes('a4/16, a4, a4, a4, a4'), {notes_occupied: 4}),
+        score.tuplet(score.notes('a4/32, a4, a4, a4, a4, a4, a4'), {notes_occupied: 8}),
       ];
 
-      var notes4 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-      ];
-
-      var notes5 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-      ];
-
-      function newVoice(notes, tuplet) {
-        var tickables = notes.map(function(note) {return vf.StaveNote(note);});
-        if (tuplet) vf.Tuplet({notes: tickables, options: {notes_occupied: tuplet}});
-        return vf.Voice({time: {num_beats: 1, beat_value: 4}}).addTickables(tickables);
-      }
-
-      system.addStave({
-        voices: [newVoice(notes1)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes2, 2)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-         voices: [newVoice(notes3)],
-        debugNoteMetrics: debug,
-        }).addClef("bass").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes4, 4)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes5, 8)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+      voices.map(newVoice).forEach(newStave);
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET); 
 
       vf.draw();
       ok(true);
@@ -7377,6 +7497,100 @@ VF.Test.Ornament = (function() {
 
   return Ornament;
 })();
+/**
+ * VexFlow - Parser Tests
+ * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ */
+
+Vex.Flow.Test.Parser = (function() {
+  var TestGrammar = function() {
+    return {
+      begin: function() { return this.BEGIN; },
+
+      BEGIN: function() { return { expect: [this.BIGORLITTLE, this.EOL] }; },
+      BIGORLITTLE: function() { return { expect: [this.BIGLINE, this.LITTLELINE], or: true }; },
+      BIGLINE: function() { return { expect: [this.LBRACE, this.WORD, this.WORDS, this.MAYBEEXCLAIM, this.RBRACE] }; },
+      LITTLELINE: function() { return { expect: [this.WORD, this.WORDS] }; },
+      WORDS: function() { return { expect: [this.COMMA, this.WORD], zeroOrMore: true }; },
+      MAYBEEXCLAIM: function() { return { expect: [this.EXCLAIM], maybe: true }; },
+
+      LBRACE:  function() { return { token: '[{]' }; },
+      RBRACE:  function() { return { token: '[}]' }; },
+      WORD:    function() { return { token: '[a-zA-Z]+' }; },
+      COMMA:   function() { return { token: '[,]' }; },
+      EXCLAIM: function() { return { token: '[!]' }; },
+      EOL:     function() { return { token: '$' }; },
+    };
+  };
+
+  function assertParseFail(assert, result, expectedPos, msg) {
+    assert.notOk(result.success, msg);
+    assert.equal(result.errorPos, expectedPos, msg);
+  }
+
+  var Parser = {
+    Start: function() {
+      QUnit.module("Parser");
+      var VFT = Vex.Flow.Test;
+
+      QUnit.test("Basic", VFT.Parser.basic);
+      QUnit.test("Advanced", VFT.Parser.advanced);
+      QUnit.test("Mixed", VFT.Parser.mixed);
+    },
+
+    basic: function(assert) {
+      var grammar = new TestGrammar();
+      var parser = new VF.Parser(grammar);
+
+      grammar.BEGIN = function() { return { expect: [grammar.LITTLELINE, grammar.EOL] }; };
+      
+      var mustPass = [
+        'first, second',
+        'first,second',
+        'first',
+        'first,second, third'
+      ];
+      mustPass.forEach(function(line) { assert.equal(parser.parse(line).success, true, line); });
+      assertParseFail(assert, parser.parse(''), 0);
+      assertParseFail(assert, parser.parse('first second'), 6);
+      assertParseFail(assert, parser.parse('first,,'), 5);
+      assertParseFail(assert, parser.parse('first,'), 5);
+      assertParseFail(assert, parser.parse(',,'), 0);
+    },
+
+    advanced: function(assert) {
+      var grammar = new TestGrammar();
+      var parser = new VF.Parser(grammar);
+
+      grammar.BEGIN = function() { return { expect: [grammar.BIGLINE, grammar.EOL] }; };
+      var mustPass = [
+        '{first}',
+        '{first!}',
+        '{first,second}',
+        '{first,second!}',
+        '{first,second,third!}',
+      ];
+
+      mustPass.forEach(function(line) { assert.equal(parser.parse(line).success, true, line); });
+      assertParseFail(assert, parser.parse('{first,second,third,}'), 19);
+      assertParseFail(assert, parser.parse('first,second,third'), 0);
+      assertParseFail(assert, parser.parse('{first,second,third'), 19);
+      assertParseFail(assert, parser.parse('{!}'), 1);
+    },
+
+    mixed: function(assert) {
+      var grammar = new TestGrammar();
+      var parser = new VF.Parser(grammar);
+
+      var mustPass = ['{first,second,third!}', 'first, second'];
+      mustPass.forEach(function(line) { assert.equal(parser.parse(line).success, true, line); });
+      assertParseFail(assert, parser.parse('first second'), 6);
+    }
+  };
+
+  return Parser;  
+})();
+
 /**
  * VexFlow - PedalMarking Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -14630,7 +14844,7 @@ VF.Test.Tuplet = (function() {
       vf.Tuplet({ notes: notes.slice(3, 6) });
 
       // 3/4 time
-      var voice = new vf.Voice({ time: { num_beats: 3, beat_value: 4 } })
+      var voice = vf.Voice({ time: { num_beats: 3, beat_value: 4 } })
         .setStrict(true)
         .addTickables(notes);
 
@@ -14698,11 +14912,17 @@ VF.Test.Tuplet = (function() {
 
       vf.Tuplet({
         notes: notes.slice(0, 3),
+        options: {
+          ratioed: true,
+        },
       });
 
       vf.Tuplet({
         notes: notes.slice(3, 6),
-        options: { notes_occupied: 4 },
+        options: {
+          ratioed: true,
+          notes_occupied: 4,
+        },
       });
 
       var voice = vf.Voice()
@@ -14779,6 +14999,7 @@ VF.Test.Tuplet = (function() {
         notes: notes.slice(0, 3),
         options: {
           location: VF.Tuplet.LOCATION_BOTTOM,
+          ratioed: true,
         },
       });
 
@@ -15171,6 +15392,128 @@ VF.Test.Vibrato = (function() {
   return Vibrato;
 })();
 /**
+ * VexFlow - VibratoBracket Tests
+ * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ *
+ * Author: Balazs Forian-Szabo
+ */
+
+VF.Test.VibratoBracket = (function(){
+  var VibratoBracket = {
+    Start: function() {
+      QUnit.module("VibratoBracket");
+      VF.Test.runTests("Simple VibratoBracket", VF.Test.VibratoBracket.simple);
+      VF.Test.runTests("Harsh VibratoBracket Without End Note", VF.Test.VibratoBracket.harsh);
+      VF.Test.runTests("Harsh VibratoBracket Without Start Note", VF.Test.VibratoBracket.harsh2);
+    },
+
+    simple: function(options, contextBuilder) {
+      options.contextBuilder = contextBuilder;
+      var ctx = new options.contextBuilder(options.canvas_sel, 650, 200);
+      ctx.scale(1, 1);
+      var stave = new VF.Stave(10, 40, 550).addTrebleGlyph();
+      stave.setContext(ctx).draw();
+
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+
+      var notes = [
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"}
+      ].map(newNote);
+
+      var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
+      voice.addTickables(notes);
+
+      var vibrato = new VF.VibratoBracket({
+        start: notes[0],
+        stop: notes[3],
+      });
+      vibrato.setLine(2);
+
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      voice.draw(ctx, stave);
+
+      vibrato.setContext(ctx).draw();
+      ok(true, "VibratoBracket Simple");
+    },
+
+    harsh: function(options, contextBuilder) {
+      options.contextBuilder = contextBuilder;
+      var ctx = new options.contextBuilder(options.canvas_sel, 650, 200);
+      ctx.scale(1, 1);
+
+      var stave = new VF.Stave(10, 40, 550).addTrebleGlyph();
+      stave.setContext(ctx).draw();
+
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+
+      var notes = [
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"}
+      ].map(newNote);
+
+      var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
+      voice.addTickables(notes);
+
+      var vibrato = new VF.VibratoBracket({
+        start: notes[2],
+        stop: null,
+      });
+      vibrato.setLine(2);
+      vibrato.setHarsh(true);
+
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      voice.draw(ctx, stave);
+
+      vibrato.setContext(ctx).draw();
+      ok(true, "VibratoBracket Harsh No End");
+    },
+
+    harsh2: function(options, contextBuilder) {
+      options.contextBuilder = contextBuilder;
+      var ctx = new options.contextBuilder(options.canvas_sel, 650, 200);
+      ctx.scale(1, 1);
+
+      var stave = new VF.Stave(10, 40, 550);
+      stave.setContext(ctx).draw();
+
+      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+
+      var notes = [
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"},
+        {keys: ["c/4"], duration: "4"}
+      ].map(newNote);
+
+      var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
+      voice.addTickables(notes);
+
+      var vibrato = new VF.VibratoBracket({
+        start: null,
+        stop: notes[2],
+      });
+      vibrato.setLine(2);
+      vibrato.setHarsh(true);
+
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      voice.draw(ctx, stave);
+
+      vibrato.setContext(ctx).draw();
+      ok(true, "VibratoBracket Harsh No Start");
+    }
+  };
+
+  return VibratoBracket;
+})();
+
+/**
  * VexFlow - Voice Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
@@ -15297,6 +15640,7 @@ VF.Test.run = function () {
   VF.Test.GraceNote.Start();
   VF.Test.GraceTabNote.Start();
   VF.Test.Vibrato.Start();
+  VF.Test.VibratoBracket.Start();
   VF.Test.Annotation.Start();
   VF.Test.Tuning.Start();
   VF.Test.Music.Start();
@@ -15323,6 +15667,8 @@ VF.Test.run = function () {
   VF.Test.StaveModifier.Start();
   VF.Test.GhostNote.Start();
   VF.Test.Factory.Start();
+  VF.Test.Parser.Start();
+  VF.Test.EasyScore.Start();
 }
 
 module.exports = VF.Test;
