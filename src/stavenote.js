@@ -248,11 +248,19 @@ export class StaveNote extends StemmableNote {
       const topKeys = topNote.getKeyProps();
       const bottomKeys = bottomNote.getKeyProps();
 
-      const topY = topNote.getStave().getYForLine(topKeys[0].line);
-      const bottomY = bottomNote.getStave().getYForLine(bottomKeys[bottomKeys.length - 1].line);
+      const HALF_NOTEHEAD_HEIGHT = 0.5;
 
-      const lineSpace = topNote.getStave().options.spacing_between_lines_px;
-      if (Math.abs(topY - bottomY) === lineSpace / 2) {
+      // `keyProps` and `.getYForLine` have different notions of a `line`
+      // so we have to convert the keyProps value
+      const topNotBottomY = topNote
+        .getStave()
+        .getYForLine(Math.abs(5 - topKeys[0].line) + HALF_NOTEHEAD_HEIGHT);
+
+      const bottomNoteTopY = bottomNote
+        .getStave()
+        .getYForLine(Math.abs(5 - bottomKeys[bottomKeys.length - 1].line) - HALF_NOTEHEAD_HEIGHT);
+
+      if (bottomNoteTopY - topNotBottomY <= 0) {
         xShift = topNote.getVoiceShiftWidth();
         bottomNote.setXShift(xShift);
       }
