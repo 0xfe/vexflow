@@ -250,8 +250,9 @@ export class StaveNote extends StemmableNote {
 
       const HALF_NOTEHEAD_HEIGHT = 0.5;
 
-      // `keyProps` and `.getYForLine` have different notions of a `line`
-      // so we have to convert the keyProps value
+      // `keyProps` and `stave.getYForLine` have different notions of a `line`
+      // so we have to convert the keyProps value.
+      // See https://github.com/0xfe/vexflow/wiki/Development-Gotchas
       const topNotBottomY = topNote
         .getStave()
         .getYForLine(Math.abs(5 - topKeys[0].line) + HALF_NOTEHEAD_HEIGHT);
