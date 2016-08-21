@@ -98,6 +98,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _vibrato = __webpack_require__(41);
 	
+	var _vibratobracket = __webpack_require__(56);
+	
 	var _note = __webpack_require__(21);
 	
 	var _modifiercontext = __webpack_require__(26);
@@ -114,13 +116,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _staveconnector = __webpack_require__(18);
 	
-	var _clefnote = __webpack_require__(56);
+	var _clefnote = __webpack_require__(57);
 	
 	var _keysignature = __webpack_require__(51);
 	
 	var _timesignature = __webpack_require__(52);
 	
-	var _timesignote = __webpack_require__(57);
+	var _timesignote = __webpack_require__(58);
 	
 	var _stem = __webpack_require__(16);
 	
@@ -130,19 +132,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _modifier = __webpack_require__(24);
 	
-	var _tabslide = __webpack_require__(58);
+	var _tabslide = __webpack_require__(59);
 	
 	var _tuplet = __webpack_require__(15);
 	
-	var _gracenote = __webpack_require__(59);
+	var _gracenote = __webpack_require__(60);
 	
-	var _gracetabnote = __webpack_require__(60);
+	var _gracetabnote = __webpack_require__(61);
 	
-	var _tuning = __webpack_require__(61);
+	var _tuning = __webpack_require__(62);
 	
-	var _keymanager = __webpack_require__(62);
+	var _keymanager = __webpack_require__(63);
 	
-	var _stavehairpin = __webpack_require__(63);
+	var _stavehairpin = __webpack_require__(64);
 	
 	var _boundingbox = __webpack_require__(7);
 	
@@ -150,47 +152,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _textnote = __webpack_require__(49);
 	
-	var _curve = __webpack_require__(64);
+	var _curve = __webpack_require__(65);
 	
-	var _textdynamics = __webpack_require__(65);
+	var _textdynamics = __webpack_require__(66);
 	
-	var _staveline = __webpack_require__(66);
+	var _staveline = __webpack_require__(67);
 	
 	var _ornament = __webpack_require__(37);
 	
-	var _pedalmarking = __webpack_require__(67);
+	var _pedalmarking = __webpack_require__(68);
 	
-	var _textbracket = __webpack_require__(68);
+	var _textbracket = __webpack_require__(69);
 	
 	var _frethandfinger = __webpack_require__(27);
 	
 	var _staverepetition = __webpack_require__(45);
 	
-	var _barnote = __webpack_require__(69);
+	var _barnote = __webpack_require__(70);
 	
-	var _ghostnote = __webpack_require__(70);
+	var _ghostnote = __webpack_require__(71);
 	
 	var _notesubgroup = __webpack_require__(30);
 	
 	var _gracenotegroup = __webpack_require__(31);
 	
-	var _tremolo = __webpack_require__(71);
+	var _tremolo = __webpack_require__(72);
 	
 	var _stringnumber = __webpack_require__(35);
 	
-	var _crescendo = __webpack_require__(72);
+	var _crescendo = __webpack_require__(73);
 	
 	var _stavevolta = __webpack_require__(53);
 	
 	var _vexflow_font = __webpack_require__(8);
 	
-	var _system = __webpack_require__(73);
+	var _system = __webpack_require__(74);
 	
-	var _factory = __webpack_require__(74);
+	var _factory = __webpack_require__(75);
 	
-	// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	var _parser = __webpack_require__(77);
 	
-	_vex.Vex.Flow = _tables.Flow;
+	var _easyscore = __webpack_require__(76);
+	
+	_vex.Vex.Flow = _tables.Flow; // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	
 	_vex.Vex.Flow.Element = _element.Element;
 	_vex.Vex.Flow.Fraction = _fraction.Fraction;
 	_vex.Vex.Flow.Renderer = _renderer.Renderer;
@@ -208,6 +213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	_vex.Vex.Flow.TabNote = _tabnote.TabNote;
 	_vex.Vex.Flow.Bend = _bend.Bend;
 	_vex.Vex.Flow.Vibrato = _vibrato.Vibrato;
+	_vex.Vex.Flow.VibratoBracket = _vibratobracket.VibratoBracket;
 	_vex.Vex.Flow.Note = _note.Note;
 	_vex.Vex.Flow.ModifierContext = _modifiercontext.ModifierContext;
 	_vex.Vex.Flow.TickContext = _tickcontext.TickContext;
@@ -253,6 +259,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	_vex.Vex.Flow.Font = _vexflow_font.Font;
 	_vex.Vex.Flow.System = _system.System;
 	_vex.Vex.Flow.Factory = _factory.Factory;
+	_vex.Vex.Flow.Parser = _parser.Parser;
+	_vex.Vex.Flow.EasyScore = _easyscore.EasyScore;
 	
 	exports.default = _vex.Vex;
 	module.exports = exports['default'];
@@ -2368,9 +2376,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.boundingBox = null;
 	    this.context = null;
+	    this.rendered = false;
 	  }
 	
 	  _createClass(Element, [{
+	    key: 'isRendered',
+	    value: function isRendered() {
+	      return this.rendered;
+	    }
+	  }, {
+	    key: 'setRendered',
+	    value: function setRendered() {
+	      var rendered = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+	      this.rendered = rendered;return this;
+	    }
+	  }, {
 	    key: 'getAttributes',
 	    value: function getAttributes() {
 	      return this.attrs;
@@ -4457,13 +4477,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function SimpleFormat(notes) {
 	      var x = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 	
+	      var _ref = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+	
+	      var _ref$paddingBetween = _ref.paddingBetween;
+	      var paddingBetween = _ref$paddingBetween === undefined ? 10 : _ref$paddingBetween;
+	
 	      notes.reduce(function (x, note) {
 	        note.addToModifierContext(new _modifiercontext.ModifierContext());
 	        var tick = new _tickcontext.TickContext().addTickable(note).preFormat();
 	        var extra = tick.getExtraPx();
 	        tick.setX(x + extra.left);
 	
-	        return x + tick.getWidth() + extra.right + 10;
+	        return x + tick.getWidth() + extra.right + paddingBetween;
 	      }, x);
 	    }
 	
@@ -6747,6 +6772,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Voice).call(this));
 	
 	    _this.setAttribute('type', 'Voice');
+	
+	    // Time signature shortcut: "4/4", "3/8", etc.
+	    if (typeof time === 'string') {
+	      var match = time.match(/(\d+)\/(\d+)/);
+	      if (match) {
+	        time = {
+	          num_beats: match[1],
+	          beat_value: match[2],
+	          resolution: _tables.Flow.RESOLUTION
+	        };
+	      }
+	    }
+	
+	    // Default time sig is 4/4
 	    _this.time = _vex.Vex.Merge({
 	      num_beats: 4,
 	      beat_value: 4,
@@ -8500,6 +8539,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.context.closeGroup();
 	      this.drawModifiers();
 	      this.context.closeGroup();
+	      this.setRendered();
 	    }
 	  }]);
 
@@ -14831,9 +14871,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _this.setAttribute('type', 'Vibrato');
 	
-	    _this.harsh = false;
 	    _this.position = _modifier.Modifier.Position.RIGHT;
 	    _this.render_options = {
+	      harsh: false,
 	      vibrato_width: 20,
 	      wave_height: 6,
 	      wave_width: 4,
@@ -14852,20 +14892,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'setHarsh',
 	    value: function setHarsh(harsh) {
-	      this.harsh = harsh;return this;
+	      this.render_options.harsh = harsh;return this;
 	    }
 	  }, {
 	    key: 'setVibratoWidth',
 	    value: function setVibratoWidth(width) {
-	      this.vibrato_width = width;
-	      this.setWidth(this.vibrato_width);
+	      this.render_options.vibrato_width = width;
+	      this.setWidth(width);
 	      return this;
 	    }
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
-	      var _this2 = this;
-	
 	      var ctx = this.checkContext();
 	
 	      if (!this.note) {
@@ -14873,57 +14911,62 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      var start = this.note.getModifierStartXY(_modifier.Modifier.Position.RIGHT, this.index);
-	      var vibrato_width = this.vibrato_width;
-	
-	      var renderVibrato = function renderVibrato(x, y) {
-	        var _render_options = _this2.render_options;
-	        var wave_width = _render_options.wave_width;
-	        var wave_girth = _render_options.wave_girth;
-	        var wave_height = _render_options.wave_height;
-	
-	        var num_waves = vibrato_width / wave_width;
-	
-	        ctx.beginPath();
-	
-	        var i = void 0;
-	        if (_this2.harsh) {
-	          ctx.moveTo(x, y + wave_girth + 1);
-	          for (i = 0; i < num_waves / 2; ++i) {
-	            ctx.lineTo(x + wave_width, y - wave_height / 2);
-	            x += wave_width;
-	            ctx.lineTo(x + wave_width, y + wave_height / 2);
-	            x += wave_width;
-	          }
-	          for (i = 0; i < num_waves / 2; ++i) {
-	            ctx.lineTo(x - wave_width, y - wave_height / 2 + wave_girth + 1);
-	            x -= wave_width;
-	            ctx.lineTo(x - wave_width, y + wave_height / 2 + wave_girth + 1);
-	            x -= wave_width;
-	          }
-	          ctx.fill();
-	        } else {
-	          ctx.moveTo(x, y + wave_girth);
-	          for (i = 0; i < num_waves / 2; ++i) {
-	            ctx.quadraticCurveTo(x + wave_width / 2, y - wave_height / 2, x + wave_width, y);
-	            x += wave_width;
-	            ctx.quadraticCurveTo(x + wave_width / 2, y + wave_height / 2, x + wave_width, y);
-	            x += wave_width;
-	          }
-	
-	          for (i = 0; i < num_waves / 2; ++i) {
-	            ctx.quadraticCurveTo(x - wave_width / 2, y + wave_height / 2 + wave_girth, x - wave_width, y + wave_girth);
-	            x -= wave_width;
-	            ctx.quadraticCurveTo(x - wave_width / 2, y - wave_height / 2 + wave_girth, x - wave_width, y + wave_girth);
-	            x -= wave_width;
-	          }
-	          ctx.fill();
-	        }
-	      };
 	
 	      var vx = start.x + this.x_shift;
 	      var vy = this.note.getYForTopText(this.text_line) + 2;
 	
-	      renderVibrato(vx, vy);
+	      Vibrato.renderVibrato(ctx, vx, vy, this.render_options);
+	    }
+	
+	    // Static rendering method that can be called from
+	    // other classes (e.g. VibratoBracket)
+	
+	  }], [{
+	    key: 'renderVibrato',
+	    value: function renderVibrato(ctx, x, y, opts) {
+	      var harsh = opts.harsh;
+	      var vibrato_width = opts.vibrato_width;
+	      var wave_width = opts.wave_width;
+	      var wave_girth = opts.wave_girth;
+	      var wave_height = opts.wave_height;
+	
+	      var num_waves = vibrato_width / wave_width;
+	
+	      ctx.beginPath();
+	
+	      var i = void 0;
+	      if (harsh) {
+	        ctx.moveTo(x, y + wave_girth + 1);
+	        for (i = 0; i < num_waves / 2; ++i) {
+	          ctx.lineTo(x + wave_width, y - wave_height / 2);
+	          x += wave_width;
+	          ctx.lineTo(x + wave_width, y + wave_height / 2);
+	          x += wave_width;
+	        }
+	        for (i = 0; i < num_waves / 2; ++i) {
+	          ctx.lineTo(x - wave_width, y - wave_height / 2 + wave_girth + 1);
+	          x -= wave_width;
+	          ctx.lineTo(x - wave_width, y + wave_height / 2 + wave_girth + 1);
+	          x -= wave_width;
+	        }
+	        ctx.fill();
+	      } else {
+	        ctx.moveTo(x, y + wave_girth);
+	        for (i = 0; i < num_waves / 2; ++i) {
+	          ctx.quadraticCurveTo(x + wave_width / 2, y - wave_height / 2, x + wave_width, y);
+	          x += wave_width;
+	          ctx.quadraticCurveTo(x + wave_width / 2, y + wave_height / 2, x + wave_width, y);
+	          x += wave_width;
+	        }
+	
+	        for (i = 0; i < num_waves / 2; ++i) {
+	          ctx.quadraticCurveTo(x - wave_width / 2, y + wave_height / 2 + wave_girth, x - wave_width, y + wave_girth);
+	          x -= wave_width;
+	          ctx.quadraticCurveTo(x - wave_width / 2, y - wave_height / 2 + wave_girth, x - wave_width, y + wave_girth);
+	          x -= wave_width;
+	        }
+	        ctx.fill();
+	      }
 	    }
 	  }]);
 
@@ -18662,6 +18705,119 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.VibratoBracket = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _vex = __webpack_require__(1);
+	
+	var _element = __webpack_require__(5);
+	
+	var _vibrato = __webpack_require__(41);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	// Author: Balazs Forian-Szabo
+	//
+	// ## Description
+	//
+	// This file implements `VibratoBrackets`
+	// that renders vibrato effect between two notes.
+	
+	// To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
+	function L() {
+	  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	    args[_key] = arguments[_key];
+	  }
+	
+	  if (VibratoBracket.DEBUG) _vex.Vex.L('Vex.Flow.VibratoBracket', args);
+	}
+	
+	var VibratoBracket = exports.VibratoBracket = function (_Element) {
+	  _inherits(VibratoBracket, _Element);
+	
+	  // bracket_data = {
+	  //   start: Vex.Flow.Note (optional)
+	  //   stop: Vex.Flow.Note (optional)
+	  // };
+	  // Either the stop or start note must be set, or both of them.
+	  // A null value for the start or stop note indicates that the vibrato
+	  // is drawn from the beginning or until the end of the stave accordingly.
+	  function VibratoBracket(bracket_data) {
+	    _classCallCheck(this, VibratoBracket);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VibratoBracket).call(this));
+	
+	    _this.setAttribute('type', 'VibratoBracket');
+	
+	    _this.start = bracket_data.start;
+	    _this.stop = bracket_data.stop;
+	
+	    _this.line = 1;
+	
+	    _this.render_options = {
+	      harsh: false,
+	      wave_height: 6,
+	      wave_width: 4,
+	      wave_girth: 2
+	    };
+	    return _this;
+	  }
+	
+	  // Set line position of the vibrato bracket
+	
+	
+	  _createClass(VibratoBracket, [{
+	    key: 'setLine',
+	    value: function setLine(line) {
+	      this.line = line;return this;
+	    }
+	  }, {
+	    key: 'setHarsh',
+	    value: function setHarsh(harsh) {
+	      this.render_options.harsh = harsh;return this;
+	    }
+	
+	    // Draw the vibrato bracket on the rendering context
+	
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      var ctx = this.context;
+	
+	      var y = this.start ? this.start.getStave().getYForTopText(this.line) : this.stop.getStave().getYForTopText(this.line);
+	
+	      // If start note is not set then vibrato will be drawn
+	      // from the beginning of the stave
+	      var start_x = this.start ? this.start.getAbsoluteX() : this.stop.getStave().getTieStartX();
+	
+	      // If stop note is not set then vibrato will be drawn
+	      // until the end of the stave
+	      var stop_x = this.stop ? this.stop.getAbsoluteX() - this.stop.getWidth() - 5 : this.start.getStave().getTieEndX() - 10;
+	
+	      this.render_options.vibrato_width = stop_x - start_x;
+	
+	      L('Rendering VibratoBracket: start_x:', start_x, 'stop_x:', stop_x, 'y:', y);
+	
+	      _vibrato.Vibrato.renderVibrato(ctx, start_x, y, this.render_options);
+	    }
+	  }]);
+
+	  return VibratoBracket;
+	}(_element.Element);
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.ClefNote = undefined;
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18787,7 +18943,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18866,7 +19022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18990,7 +19146,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_tabtie.TabTie);
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19108,7 +19264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stavenote.StaveNote);
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19186,7 +19342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_tabnote.TabNote);
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19294,7 +19450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19452,7 +19608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19670,7 +19826,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19846,7 +20002,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20013,7 +20169,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20401,7 +20557,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20725,7 +20881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20952,7 +21108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21080,7 +21236,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21179,7 +21335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_stemmablenote.StemmableNote);
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21275,7 +21431,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_modifier.Modifier);
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21434,7 +21590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_note.Note);
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21456,7 +21612,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _element = __webpack_require__(5);
 	
-	var _factory = __webpack_require__(74);
+	var _factory = __webpack_require__(75);
 	
 	var _formatter = __webpack_require__(13);
 	
@@ -21478,7 +21634,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var System = exports.System = function (_Element) {
 	  _inherits(System, _Element);
 	
-	  function System(params) {
+	  function System() {
+	    var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
 	    _classCallCheck(this, System);
 	
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(System).call(this));
@@ -21550,12 +21708,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return params.stave;
 	    }
 	  }, {
-	    key: 'draw',
-	    value: function draw() {
+	    key: 'format',
+	    value: function format() {
 	      var _this3 = this;
 	
-	      var ctx = this.checkContext();
 	      var formatter = new _formatter.Formatter();
+	      this.formatter = formatter;
 	
 	      var y = this.options.y;
 	      var startX = 0;
@@ -21589,19 +21747,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        formatter.tune();
 	      }
 	
-	      // Render.
-	      this.parts.forEach(function (part) {
-	        part.voices.forEach(function (voice) {
-	          return voice.draw();
-	        });
-	      });
-	
-	      // Render debug info.
+	      this.startX = startX;
+	      this.debugNoteMetricsYs = debugNoteMetricsYs;
+	      this.lastY = y;
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw() {
+	      // Render debugging information, if requested.
+	      var ctx = this.checkContext();
 	      if (this.options.debugFormatter) {
-	        _formatter.Formatter.plotDebugging(ctx, formatter, startX, this.options.y, y);
+	        _formatter.Formatter.plotDebugging(ctx, this.formatter, this.startX, this.options.y, this.lastY);
 	      }
 	
-	      debugNoteMetricsYs.forEach(function (d) {
+	      this.debugNoteMetricsYs.forEach(function (d) {
 	        d.voice.getTickables().forEach(function (note) {
 	          return _note.Note.plotMetrics(ctx, note, d.y);
 	        });
@@ -21613,7 +21772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_element.Element);
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21651,7 +21810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _staveconnector = __webpack_require__(18);
 	
-	var _system = __webpack_require__(73);
+	var _system = __webpack_require__(74);
 	
 	var _tickcontext = __webpack_require__(38);
 	
@@ -21661,9 +21820,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _beam = __webpack_require__(14);
 	
-	var _gracenote = __webpack_require__(59);
+	var _gracenote = __webpack_require__(60);
 	
 	var _gracenotegroup = __webpack_require__(31);
+	
+	var _easyscore = __webpack_require__(76);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -21723,7 +21884,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.options.renderer.selector !== null || this.options.renderer.context) {
 	      this.initRenderer();
 	    }
+	
 	    this.renderQ = [];
+	    this.systems = [];
+	    this.staves = [];
+	    this.voices = [];
 	    this.stave = null; // current stave
 	  }
 	
@@ -21794,8 +21959,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	
 	      var stave = new _stave.Stave(params.x, params.y, params.width, params.options);
+	      this.staves.push(stave);
 	      stave.setContext(this.context);
-	      this.renderQ.push(stave);
 	      this.stave = stave;
 	      return stave;
 	    }
@@ -21833,7 +21998,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var acc = new _accidental.Accidental(params.type);
 	      acc.setContext(this.context);
-	      // acc.render_options.stroke_px = this.space(0.3);
 	      return acc;
 	    }
 	  }, {
@@ -21850,10 +22014,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'Voice',
 	    value: function Voice(params) {
 	      params = setDefaults(params, {
-	        time: { num_beats: 4, beat_value: 4 },
+	        time: '4/4',
 	        options: {}
 	      });
-	      return new _voice.Voice(params.time);
+	      var voice = new _voice.Voice(params.time);
+	      this.voices.push(voice);
+	      return voice;
 	    }
 	  }, {
 	    key: 'StaveConnector',
@@ -21901,24 +22067,850 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: 'System',
-	    value: function System(params) {
+	    value: function System() {
+	      var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
 	      params.factory = this;
 	      var system = new _system.System(params).setContext(this.context);
-	      this.renderQ.push(system);
+	      this.systems.push(system);
 	      return system;
+	    }
+	  }, {
+	    key: 'EasyScore',
+	    value: function EasyScore() {
+	      var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
+	      params.factory = this;
+	      return new _easyscore.EasyScore(params);
 	    }
 	  }, {
 	    key: 'draw',
 	    value: function draw() {
 	      var _this = this;
 	
+	      this.systems.forEach(function (i) {
+	        return i.setContext(_this.context).format();
+	      });
+	      this.staves.forEach(function (i) {
+	        return i.setContext(_this.context).draw();
+	      });
+	      this.voices.forEach(function (i) {
+	        return i.setContext(_this.context).draw();
+	      });
 	      this.renderQ.forEach(function (i) {
+	        if (!i.isRendered()) i.setContext(_this.context).draw();
+	      });
+	      this.systems.forEach(function (i) {
 	        return i.setContext(_this.context).draw();
 	      });
 	    }
 	  }]);
 
 	  return Factory;
+	}();
+
+/***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.EasyScore = exports.X = undefined;
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _vex = __webpack_require__(1);
+	
+	var _stavenote = __webpack_require__(19);
+	
+	var _parser = __webpack_require__(77);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	//
+	// This class implements a parser for a simple language to generate
+	// VexFlow objects.
+	
+	// To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
+	function L() {
+	  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	    args[_key] = arguments[_key];
+	  }
+	
+	  if (EasyScore.DEBUG) _vex.Vex.L('Vex.Flow.EasyScore', args);
+	}
+	
+	var X = exports.X = function (_Error) {
+	  _inherits(X, _Error);
+	
+	  function X(message) {
+	    _classCallCheck(this, X);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(X).call(this, message));
+	
+	    _this.message = message;
+	    _this.name = 'EasyScore';
+	    return _this;
+	  }
+	
+	  return X;
+	}(Error);
+	
+	var Grammar = function () {
+	  function Grammar(builder) {
+	    _classCallCheck(this, Grammar);
+	
+	    this.builder = builder;
+	  }
+	
+	  _createClass(Grammar, [{
+	    key: 'begin',
+	    value: function begin() {
+	      return this.LINE;
+	    }
+	  }, {
+	    key: 'LINE',
+	    value: function LINE() {
+	      return {
+	        expect: [this.PIECE, this.PIECES, this.EOL]
+	      };
+	    }
+	  }, {
+	    key: 'PIECE',
+	    value: function PIECE() {
+	      var _this2 = this;
+	
+	      return {
+	        expect: [this.CHORDORNOTE, this.PARAMS],
+	        run: function run() {
+	          return _this2.builder.commitPiece();
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'PIECES',
+	    value: function PIECES() {
+	      return {
+	        expect: [this.COMMA, this.PIECE],
+	        zeroOrMore: true
+	      };
+	    }
+	  }, {
+	    key: 'PARAMS',
+	    value: function PARAMS() {
+	      return {
+	        expect: [this.DURATION, this.TYPE, this.DOTS, this.OPTS]
+	      };
+	    }
+	  }, {
+	    key: 'CHORDORNOTE',
+	    value: function CHORDORNOTE() {
+	      return {
+	        expect: [this.CHORD, this.SINGLENOTE],
+	        or: true
+	      };
+	    }
+	  }, {
+	    key: 'CHORD',
+	    value: function CHORD() {
+	      var _this3 = this;
+	
+	      return {
+	        expect: [this.LPAREN, this.NOTES, this.RPAREN],
+	        run: function run(state) {
+	          return _this3.builder.addChord(state.matches[1]);
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'NOTES',
+	    value: function NOTES() {
+	      return {
+	        expect: [this.NOTE],
+	        oneOrMore: true
+	      };
+	    }
+	  }, {
+	    key: 'NOTE',
+	    value: function NOTE() {
+	      return {
+	        expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE]
+	      };
+	    }
+	  }, {
+	    key: 'SINGLENOTE',
+	    value: function SINGLENOTE() {
+	      var _this4 = this;
+	
+	      return {
+	        expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
+	        run: function run(state) {
+	          return _this4.builder.addSingleNote(state.matches[0], state.matches[1], state.matches[2]);
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'ACCIDENTAL',
+	    value: function ACCIDENTAL() {
+	      return {
+	        expect: [this.ACCIDENTALS],
+	        maybe: true
+	      };
+	    }
+	  }, {
+	    key: 'DOTS',
+	    value: function DOTS() {
+	      var _this5 = this;
+	
+	      return {
+	        expect: [this.DOT],
+	        zeroOrMore: true,
+	        run: function run(state) {
+	          return _this5.builder.setNoteDots(state.matches[0]);
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'TYPE',
+	    value: function TYPE() {
+	      var _this6 = this;
+	
+	      return {
+	        expect: [this.SLASH, this.MAYBESLASH, this.TYPES],
+	        maybe: true,
+	        run: function run(state) {
+	          return _this6.builder.setNoteType(state.matches[2]);
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'DURATION',
+	    value: function DURATION() {
+	      var _this7 = this;
+	
+	      return {
+	        expect: [this.SLASH, this.DURATIONS],
+	        maybe: true,
+	        run: function run(state) {
+	          return _this7.builder.setNoteDuration(state.matches[1]);
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'OPTS',
+	    value: function OPTS() {
+	      return {
+	        expect: [this.LBRACKET, this.KEYVAL, this.KEYVALS, this.RBRACKET],
+	        maybe: true
+	      };
+	    }
+	  }, {
+	    key: 'KEYVALS',
+	    value: function KEYVALS() {
+	      return {
+	        expect: [this.COMMA, this.KEYVAL],
+	        zeroOrMore: true
+	      };
+	    }
+	  }, {
+	    key: 'KEYVAL',
+	    value: function KEYVAL() {
+	      var _this8 = this;
+	
+	      var unquote = function unquote(str) {
+	        return str.slice(1, -1);
+	      };
+	
+	      return {
+	        expect: [this.KEY, this.EQUALS, this.VAL],
+	        run: function run(state) {
+	          return _this8.builder.addNoteOption(state.matches[0], unquote(state.matches[2]));
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'VAL',
+	    value: function VAL() {
+	      return {
+	        expect: [this.SVAL, this.DVAL],
+	        or: true
+	      };
+	    }
+	  }, {
+	    key: 'KEY',
+	    value: function KEY() {
+	      return { token: '[a-zA-Z][a-zA-Z0-9]*' };
+	    }
+	  }, {
+	    key: 'DVAL',
+	    value: function DVAL() {
+	      return { token: '["][^"]*["]' };
+	    }
+	  }, {
+	    key: 'SVAL',
+	    value: function SVAL() {
+	      return { token: "['][^']*[']" };
+	    }
+	  }, {
+	    key: 'NOTENAME',
+	    value: function NOTENAME() {
+	      return { token: '[a-gA-G]' };
+	    }
+	  }, {
+	    key: 'OCTAVE',
+	    value: function OCTAVE() {
+	      return { token: '[0-9]+' };
+	    }
+	  }, {
+	    key: 'ACCIDENTALS',
+	    value: function ACCIDENTALS() {
+	      return { token: '[b#n]+' };
+	    }
+	  }, {
+	    key: 'DURATIONS',
+	    value: function DURATIONS() {
+	      return { token: '[0-9whq]+' };
+	    }
+	  }, {
+	    key: 'TYPES',
+	    value: function TYPES() {
+	      return { token: '[rRsSxX]' };
+	    }
+	  }, {
+	    key: 'LPAREN',
+	    value: function LPAREN() {
+	      return { token: '[(]' };
+	    }
+	  }, {
+	    key: 'RPAREN',
+	    value: function RPAREN() {
+	      return { token: '[)]' };
+	    }
+	  }, {
+	    key: 'COMMA',
+	    value: function COMMA() {
+	      return { token: '[,]' };
+	    }
+	  }, {
+	    key: 'DOT',
+	    value: function DOT() {
+	      return { token: '[.]' };
+	    }
+	  }, {
+	    key: 'SLASH',
+	    value: function SLASH() {
+	      return { token: '[/]' };
+	    }
+	  }, {
+	    key: 'MAYBESLASH',
+	    value: function MAYBESLASH() {
+	      return { token: '[/]?' };
+	    }
+	  }, {
+	    key: 'EQUALS',
+	    value: function EQUALS() {
+	      return { token: '[=]' };
+	    }
+	  }, {
+	    key: 'LBRACKET',
+	    value: function LBRACKET() {
+	      return { token: '\\[' };
+	    }
+	  }, {
+	    key: 'RBRACKET',
+	    value: function RBRACKET() {
+	      return { token: '\\]' };
+	    }
+	  }, {
+	    key: 'EOL',
+	    value: function EOL() {
+	      return { token: '$' };
+	    }
+	  }]);
+	
+	  return Grammar;
+	}();
+	
+	var Builder = function () {
+	  function Builder(factory) {
+	    _classCallCheck(this, Builder);
+	
+	    this.factory = factory;
+	    this.reset();
+	  }
+	
+	  _createClass(Builder, [{
+	    key: 'reset',
+	    value: function reset() {
+	      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
+	      this.options = {
+	        stem: 'auto',
+	        clef: 'treble'
+	      };
+	      this.elements = {
+	        notes: [],
+	        accidentals: []
+	      };
+	      this.rollingDuration = '8';
+	      this.resetPiece();
+	      _extends(this.options, options);
+	    }
+	  }, {
+	    key: 'getElements',
+	    value: function getElements() {
+	      return this.elements;
+	    }
+	  }, {
+	    key: 'resetPiece',
+	    value: function resetPiece() {
+	      this.piece = {
+	        chord: [],
+	        duration: this.rollingDuration,
+	        dots: 0,
+	        type: undefined,
+	        options: {}
+	      };
+	    }
+	  }, {
+	    key: 'setNoteDots',
+	    value: function setNoteDots(dots) {
+	      L('setNoteDots:', dots);
+	      if (dots) this.piece.dots = dots.length;
+	    }
+	  }, {
+	    key: 'setNoteDuration',
+	    value: function setNoteDuration(duration) {
+	      L('setNoteDuration:', duration);
+	      this.rollingDuration = this.piece.duration = duration || this.rollingDuration;
+	    }
+	  }, {
+	    key: 'setNoteType',
+	    value: function setNoteType(type) {
+	      L('setNoteType:', type);
+	      if (type) this.piece.type = type;
+	    }
+	  }, {
+	    key: 'addNoteOption',
+	    value: function addNoteOption(key, value) {
+	      L('addNoteOption: key:', key, 'value:', value);
+	      this.piece.options[key] = value;
+	    }
+	  }, {
+	    key: 'addNote',
+	    value: function addNote(key, accid, octave) {
+	      L('addNote:', key, accid, octave);
+	      this.piece.chord.push({ key: key, accid: accid, octave: octave });
+	    }
+	  }, {
+	    key: 'addSingleNote',
+	    value: function addSingleNote(key, accid, octave) {
+	      L('addSingleNote:', key, accid, octave);
+	      this.addNote(key, accid, octave);
+	    }
+	  }, {
+	    key: 'addChord',
+	    value: function addChord(notes) {
+	      var _this9 = this;
+	
+	      L('startChord');
+	      if (_typeof(notes[0]) !== 'object') {
+	        this.addSingleNote(notes[0]);
+	      } else {
+	        notes.forEach(function (n) {
+	          if (n) _this9.addNote(n[0], n[1], n[2]);
+	        });
+	      }
+	      L('endChord');
+	    }
+	  }, {
+	    key: 'commitPiece',
+	    value: function commitPiece() {
+	      var _this10 = this;
+	
+	      L('commitPiece');
+	      if (!this.factory) return;
+	      var options = this.piece.options;
+	      var stem = options.stem || this.options.stem;
+	      var clef = this.options.clef;
+	
+	      var autoStem = stem.toLowerCase() === 'auto';
+	      var stemDirection = !autoStem && stem.toLowerCase() === 'up' ? _stavenote.StaveNote.STEM_UP : _stavenote.StaveNote.STEM_DOWN;
+	
+	      // Build StaveNotes.
+	      var keys = this.piece.chord.map(function (note) {
+	        return note.key + '/' + note.octave;
+	      });
+	      var note = this.factory.StaveNote({ keys: keys,
+	        duration: this.piece.duration,
+	        dots: this.piece.dots,
+	        auto_stem: autoStem,
+	        type: this.piece.type,
+	        clef: clef
+	      });
+	      if (!autoStem) note.setStemDirection(stemDirection);
+	
+	      // Attach accidentals.
+	      var accids = this.piece.chord.map(function (note) {
+	        return note.accid || null;
+	      });
+	      accids.forEach(function (accid, i) {
+	        if (accid) note.addAccidental(i, _this10.factory.Accidental({ type: accid }));
+	      });
+	
+	      // Attach dots.
+	      for (var i = 0; i < this.piece.dots; i++) {
+	        note.addDotToAll();
+	      } // Process note options.
+	      if (options.id !== undefined) {
+	        note.setAttribute('id', options.id);
+	      }
+	
+	      this.elements.notes.push(note);
+	      this.elements.accidentals.concat(accids);
+	      this.resetPiece();
+	    }
+	  }]);
+	
+	  return Builder;
+	}();
+	
+	var EasyScore = exports.EasyScore = function () {
+	  function EasyScore() {
+	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
+	    _classCallCheck(this, EasyScore);
+	
+	    this.setOptions(options);
+	  }
+	
+	  _createClass(EasyScore, [{
+	    key: 'setOptions',
+	    value: function setOptions(options) {
+	      this.options = _extends({
+	        factory: null,
+	        builder: null
+	      }, options);
+	
+	      this.factory = this.options.factory;
+	      this.builder = this.options.builder || new Builder(this.factory);
+	      this.grammar = new Grammar(this.builder);
+	      this.parser = new _parser.Parser(this.grammar);
+	    }
+	  }, {
+	    key: 'setContext',
+	    value: function setContext(context) {
+	      if (this.factory) this.factory.setContext(context);
+	      return this;
+	    }
+	  }, {
+	    key: 'parse',
+	    value: function parse(line) {
+	      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	
+	      this.builder.reset(options);
+	      return this.parser.parse(line);
+	    }
+	  }, {
+	    key: 'beam',
+	    value: function beam(notes) {
+	      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	
+	      this.factory.Beam({ notes: notes, options: options });
+	      return notes;
+	    }
+	  }, {
+	    key: 'tuplet',
+	    value: function tuplet(notes) {
+	      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	
+	      this.factory.Tuplet({ notes: notes, options: options });
+	      return notes;
+	    }
+	  }, {
+	    key: 'notes',
+	    value: function notes(line) {
+	      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	
+	      this.parse(line, options);
+	      return this.builder.getElements().notes;
+	    }
+	  }, {
+	    key: 'voice',
+	    value: function voice(notes, voiceOptions) {
+	      return this.factory.Voice(voiceOptions).addTickables(notes);
+	    }
+	  }]);
+
+	  return EasyScore;
+	}();
+
+/***/ },
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.Parser = exports.X = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _vex = __webpack_require__(1);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+	//
+	// A generic text parsing class for VexFlow.
+	
+	// To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
+	function L() {
+	  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	    args[_key] = arguments[_key];
+	  }
+	
+	  if (Parser.DEBUG) _vex.Vex.L('Vex.Flow.Parser', args);
+	}
+	
+	var X = exports.X = function (_Error) {
+	  _inherits(X, _Error);
+	
+	  function X(message, data) {
+	    _classCallCheck(this, X);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(X).call(this, message));
+	
+	    _this.message = message;
+	    _this.data = data;
+	    _this.name = 'Parser';
+	    return _this;
+	  }
+	
+	  return X;
+	}(Error);
+	
+	// Converts parser results into an easy to reference list that can be
+	// used in triggers.
+	
+	
+	function flattenMatches(results) {
+	  if (results.matchedString !== undefined) return results.matchedString;
+	  if (results.results) return flattenMatches(results.results);
+	  if (results.length === 1) return flattenMatches(results[0]);
+	  if (results.length === 0) return null;
+	  return results.map(flattenMatches);
+	}
+	
+	// This is the base parser class. Given an arbitrary context-free grammar, it
+	// can parse any line and execute code when specific rules are met (e.g.,
+	// when a string is terminated.)
+	
+	var Parser = exports.Parser = function () {
+	  // For an example of a simple grammar, take a look at tests/parser_tests.js or
+	  // the EasyScore grammar in easyscore.js.
+	  function Parser(grammar) {
+	    _classCallCheck(this, Parser);
+	
+	    this.grammar = grammar;
+	  }
+	
+	  // Parse `line` using current grammar. Returns {success: true} if the
+	  // line parsed correctly, otherwise returns `{success: false, errorPos: N}`
+	  // where `errorPos` is the location of the error in the string.
+	
+	
+	  _createClass(Parser, [{
+	    key: 'parse',
+	    value: function parse(line) {
+	      this.line = line;
+	      this.pos = 0;
+	      this.errorPos = -1;
+	      var results = this.expect(this.grammar.begin());
+	      results.errorPos = this.errorPos;
+	      return results;
+	    }
+	  }, {
+	    key: 'matchFail',
+	    value: function matchFail(returnPos) {
+	      if (this.errorPos === -1) this.errorPos = this.pos;
+	      this.pos = returnPos;
+	    }
+	  }, {
+	    key: 'matchSuccess',
+	    value: function matchSuccess() {
+	      this.errorPos = -1;
+	    }
+	
+	    // Look for `token` in this.line[this.pos], and return success
+	    // if one is found. `token` is specified as a regular expression.
+	
+	  }, {
+	    key: 'matchToken',
+	    value: function matchToken(token) {
+	      var noSpace = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	
+	      var regexp = noSpace ? new RegExp('^((' + token + '))') : new RegExp('^((' + token + ')\\s*)');
+	      var workingLine = this.line.slice(this.pos);
+	      var result = workingLine.match(regexp);
+	      if (result !== null) {
+	        return {
+	          success: true,
+	          matchedString: result[2],
+	          incrementPos: result[1].length,
+	          pos: this.pos
+	        };
+	      } else {
+	        return {
+	          success: false,
+	          pos: this.pos
+	        };
+	      }
+	    }
+	
+	    // Execute rule to match a sequence of tokens (or rules). If `maybe` is
+	    // set, then return success even if the token is not found, but reset
+	    // the position before exiting.
+	
+	  }, {
+	    key: 'expectOne',
+	    value: function expectOne(rule) {
+	      var maybe = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	
+	      var results = [];
+	      var pos = this.pos;
+	
+	      var allMatches = true;
+	      var oneMatch = false;
+	      maybe = maybe === true || rule.maybe === true;
+	
+	      // Execute all sub rules in sequence.
+	      for (var i = 0; i < rule.expect.length; i++) {
+	        var next = rule.expect[i];
+	        var localPos = this.pos;
+	        var result = this.expect(next);
+	
+	        // If `rule.or` is set, then return success if any one
+	        // of the subrules match, else all subrules must match.
+	        if (result.success) {
+	          results.push(result);
+	          oneMatch = true;
+	          if (rule.or) break;
+	        } else {
+	          allMatches = false;
+	          if (!rule.or) {
+	            this.pos = localPos;
+	            break;
+	          }
+	        }
+	      }
+	
+	      var gotOne = rule.or && oneMatch || allMatches;
+	      var success = gotOne || maybe === true;
+	      if (maybe && !gotOne) this.pos = pos;
+	      if (success) this.matchSuccess();else this.matchFail(pos);
+	      return { success: success, results: results, numMatches: gotOne ? 1 : 0 };
+	    }
+	
+	    // Try to match multiple (one or more) instances of the rule. If `maybe` is set,
+	    // then a failed match is also a success (but the position is reset).
+	
+	  }, {
+	    key: 'expectOneOrMore',
+	    value: function expectOneOrMore(rule) {
+	      var maybe = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	
+	      var results = [];
+	      var pos = this.pos;
+	      var numMatches = 0;
+	      var more = true;
+	
+	      do {
+	        var result = this.expectOne(rule);
+	        if (result.success) {
+	          numMatches++;
+	          results.push(result.results);
+	        } else {
+	          more = false;
+	        }
+	      } while (more);
+	
+	      var success = numMatches > 0 || maybe === true;
+	      if (maybe && !(numMatches > 0)) this.pos = pos;
+	      if (success) this.matchSuccess();else this.matchFail(pos);
+	      return { success: success, results: results, numMatches: numMatches };
+	    }
+	
+	    // Match zero or more instances of `rule`. Offloads to `expectOneOrMore`.
+	
+	  }, {
+	    key: 'expectZeroOrMore',
+	    value: function expectZeroOrMore(rule) {
+	      return this.expectOneOrMore(rule, true);
+	    }
+	
+	    // Execute the rule produced by the provided the `rules` function. This
+	    // ofloads to one of the above matchers and consolidates the results. It is also
+	    // responsible for executing any code triggered by the rule (in `rule.run`.)
+	
+	  }, {
+	    key: 'expect',
+	    value: function expect(rules) {
+	      L('Evaluating rules:', rules);
+	      var result = void 0;
+	      if (!rules) {
+	        throw new X('Invalid Rule: ' + rules, rules);
+	      }
+	
+	      // Get rule from Grammar class.
+	      var rule = rules.bind(this.grammar)();
+	
+	      if (rule.token) {
+	        // Base case: parse the regex and throw an error if the
+	        // line doesn't match.
+	        result = this.matchToken(rule.token, rule.noSpace === true);
+	        if (result.success) {
+	          // Token match! Update position and throw away parsed portion
+	          // of string.
+	          this.pos += result.incrementPos;
+	        }
+	      } else if (rule.expect) {
+	        if (rule.oneOrMore) {
+	          result = this.expectOneOrMore(rule);
+	        } else if (rule.zeroOrMore) {
+	          result = this.expectZeroOrMore(rule);
+	        } else {
+	          result = this.expectOne(rule);
+	        }
+	      } else {
+	        throw new X('Bad grammar! No `token` or `expect` property', rule);
+	      }
+	
+	      // If there's a trigger attached to this rule, then pull it.
+	      result.matches = [];
+	      if (result.results) result.results.forEach(function (r) {
+	        return result.matches.push(flattenMatches(r));
+	      });
+	      if (rule.run && result.success) rule.run(result);
+	      return result;
+	    }
+	  }]);
+
+	  return Parser;
 	}();
 
 /***/ }

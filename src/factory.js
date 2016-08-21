@@ -78,6 +78,10 @@ export class Factory {
       this.initRenderer();
     }
 
+    this.reset();
+  }
+
+  reset() {
     this.renderQ = [];
     this.systems = [];
     this.staves = [];
@@ -235,5 +239,6 @@ export class Factory {
       if (!i.isRendered()) i.setContext(this.context).draw();
     });
     this.systems.forEach(i => i.setContext(this.context).draw());
+    this.reset();
   }
 }

@@ -12,20 +12,22 @@ Canvas and SVG, and runs on all modern browsers.
 Go try out [The VexFlow Tutorial](https://github.com/0xfe/vexflow/wiki/The-VexFlow-Tutorial) to
 learn how to use VexFlow.
 
-If you're not a developer and just want to write and share your music, go to
-[My VexFlow](http://my.vexflow.com).
-
 ## Quick Start
 
-Install via NPM:
+### Using NPM
 
     $ npm install vexflow
 
-Include `releases/vexflow-min.js` into your HTML or JS code. It works as a standalone script in a `script` tag, or as a CommonJS or AMD dependency.
+### Using the HTML `script` Tag
+
+The releases are served via [npmcdn.com](http://npmcdn.com).
+
+* Debug version: https://npmcdn.com/vexflow/releases/vexflow-debug.js
+* Minified version: https://npmcdn.com/vexflow/releases/vexflow-min.js
 
 ### Your First Stave
 
-The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/nL0cn3vL/2/).
+The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/gs4v6k6d/2/).
 
 ```javascript
 VF = Vex.Flow;
