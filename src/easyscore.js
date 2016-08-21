@@ -73,8 +73,8 @@ class Grammar {
   SINGLENOTE() {
     return {
       expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
-      run: (state) => this.builder.addSingleNote(
-        state.matches[0], state.matches[1], state.matches[2]),
+      run: (state) =>
+        this.builder.addSingleNote(state.matches[0], state.matches[1], state.matches[2]),
     };
   }
   ACCIDENTAL() {
@@ -151,6 +151,37 @@ class Grammar {
   EOL()         { return { token: '$' }; }
 }
 
+function setId({ id }, note) {
+  if (id === undefined) return;
+
+  note.setAttribute('id', id);
+}
+
+function addArticulations({ articulations }, note, factory) {
+  if (!articulations) return;
+
+  const articNameToCode = {
+    staccato: 'a.',
+    tenuto: 'a-',
+  };
+
+  const positionValueToPosition = {
+    above: Vex.Flow.Modifier.Position.ABOVE,
+    below: Vex.Flow.Modifier.Position.BELOW,
+  };
+
+  articulations
+    .split(',')
+    .map(str => str.trim().split('.'))
+    .map(([name, position]) => factory.Articulation({
+      type: articNameToCode[name],
+      options: {
+        position: positionValueToPosition[position],
+      },
+    }))
+    .map(artic => note.addModifier(0, artic));
+}
+
 class Builder {
   constructor(factory) {
     this.factory = factory;
@@ -166,6 +197,10 @@ class Builder {
       notes: [],
       accidentals: [],
     };
+    this.onCommit = [
+      setId,
+      addArticulations,
+    ];
     this.rollingDuration = '8';
     this.resetPiece();
     Object.assign(this.options, options);
@@ -227,39 +262,40 @@ class Builder {
 
   commitPiece() {
     L('commitPiece');
-    if (!this.factory) return;
-    const options = this.piece.options;
-    const stem = options.stem || this.options.stem;
-    const clef = this.options.clef;
+    const { factory } = this;
 
+    if (!factory) return;
+
+    const options = Object.assign({}, this.options, this.piece.options);
+    const { stem, clef } = options;
     const autoStem = stem.toLowerCase() === 'auto';
-    const stemDirection = !autoStem &&
-      (stem.toLowerCase() === 'up') ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
+    const stemDirection = !autoStem && stem.toLowerCase() === 'up'
+      ? StaveNote.STEM_UP
+      : StaveNote.STEM_DOWN;
 
     // Build StaveNotes.
-    const keys = this.piece.chord.map(note => note.key + '/' + note.octave);
-    const note = this.factory.StaveNote({ keys,
-      duration: this.piece.duration,
-      dots: this.piece.dots,
-      auto_stem: autoStem,
-      type: this.piece.type,
+    const { chord, duration, dots, type } = this.piece;
+    const keys = chord.map(note => note.key + '/' + note.octave);
+    const note = factory.StaveNote({
+      keys,
+      duration,
+      dots,
+      type,
       clef,
+      auto_stem: autoStem,
     });
     if (!autoStem) note.setStemDirection(stemDirection);
 
     // Attach accidentals.
-    const accids = this.piece.chord.map(note => note.accid || null);
+    const accids = chord.map(note => note.accid || null);
     accids.forEach((accid, i) => {
-      if (accid) note.addAccidental(i, this.factory.Accidental({ type: accid }));
+      if (accid) note.addAccidental(i, factory.Accidental({ type: accid }));
     });
 
     // Attach dots.
-    for (let i = 0; i < this.piece.dots; i++) note.addDotToAll();
+    for (let i = 0; i < dots; i++) note.addDotToAll();
 
-    // Process note options.
-    if (options.id !== undefined) {
-      note.setAttribute('id', options.id);
-    }
+    this.onCommit.forEach(fn => fn(options, note, factory));
 
     this.elements.notes.push(note);
     this.elements.accidentals.concat(accids);

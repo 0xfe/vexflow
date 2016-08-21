@@ -10,6 +10,7 @@
 
 import { Vex } from './vex';
 import { Accidental } from './accidental';
+import { Articulation } from './articulation';
 import { Formatter } from './formatter';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
@@ -145,9 +146,21 @@ export class Factory {
       options: {},
     });
 
-    const acc = new Accidental(params.type);
-    acc.setContext(this.context);
-    return acc;
+    const accid = new Accidental(params.type);
+    accid.setContext(this.context);
+    return accid;
+  }
+
+  Articulation(params) {
+    params = setDefaults(params, {
+      type: null,
+      options: {},
+    });
+
+    const artic = new Articulation(params.type);
+    if (params.options.position) artic.setPosition(params.options.position);
+    artic.setContext(this.context);
+    return artic;
   }
 
   TickContext() {

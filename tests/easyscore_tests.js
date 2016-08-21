@@ -53,7 +53,7 @@ Vex.Flow.Test.EasyScore = (function() {
         '(c5)', '(c3 e0 g9)',
         '(c##4 cbb4 cn4)/w, (c#5 cb2 a3)/32',
         '(d##4 cbb4 cn4)/w/r, (c#5 cb2 a3)',
-        '(c##4 cbb4 cn4)/4, (c#5 cb2 a3)', 
+        '(c##4 cbb4 cn4)/4, (c#5 cb2 a3)',
         '(c##4 cbb4 cn4)/x, (c#5 cb2 a3)',
       ];
       var mustFail = ['(c)'];
@@ -76,7 +76,7 @@ Vex.Flow.Test.EasyScore = (function() {
       var mustFail = ['.', 'c.#', 'c#4./4'];
 
       mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
-      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); }); 
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
     },
 
     types: function(assert) {
@@ -124,7 +124,7 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [
-          voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
+          voice(notes('(d4 e4 g4)/q, c4/q[articulations="staccato.above,tenuto.below"], c4/q/r, c4/q', {stem: 'down'})),
           voice(notes('c#5/h., c5/q', {stem: 'up'})),
         ]
       }).addClef('treble');
@@ -206,5 +206,5 @@ Vex.Flow.Test.EasyScore = (function() {
     }
   };
 
-  return EasyScore;  
+  return EasyScore;
 })();
