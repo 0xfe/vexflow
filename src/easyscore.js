@@ -248,7 +248,7 @@ class Builder {
     if (!autoStem) note.setStemDirection(stemDirection);
 
     // Attach accidentals.
-    const accids = this.piece.chord.map(note => note.acc || null);
+    const accids = this.piece.chord.map(note => note.accid || null);
     accids.forEach((accid, i) => {
       if (accid) note.addAccidental(i, this.factory.Accidental({ type: accid }));
     });
