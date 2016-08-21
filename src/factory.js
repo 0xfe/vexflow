@@ -74,11 +74,6 @@ export class Factory {
 
     this.options = defaults;
     this.setOptions(options);
-    if (this.options.renderer.selector !== null || this.options.renderer.context) {
-      this.initRenderer();
-    }
-
-    this.reset();
   }
 
   reset() {
@@ -94,6 +89,11 @@ export class Factory {
     for (const key of ['stave', 'renderer', 'font']) {
       Object.assign(this.options[key], options[key]);
     }
+    if (this.options.renderer.selector !== null || this.options.renderer.context) {
+      this.initRenderer();
+    }
+
+    this.reset();
   }
 
   initRenderer() {
