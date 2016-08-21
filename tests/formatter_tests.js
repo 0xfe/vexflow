@@ -331,11 +331,17 @@ VF.Test.Formatter = (function() {
 
       var formatter;
       if (options.params.justify > 0) {
-        formatter = new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
-          format([voice11, voice21, voice31], options.params.justify);
+        formatter = new VF.Formatter()
+          .joinVoices([voice11])
+          .joinVoices([voice21])
+          .joinVoices([voice31])
+          .format([voice11, voice21, voice31], options.params.justify);
       } else {
-        formatter = new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
-          format([voice11, voice21, voice31]);
+        formatter = new VF.Formatter()
+          .joinVoices([voice11])
+          .joinVoices([voice21])
+          .joinVoices([voice31])
+          .format([voice11, voice21, voice31]);
       }
 
       for (var i = 0; i < options.params.iterations; i++) {
@@ -395,11 +401,17 @@ VF.Test.Formatter = (function() {
       voice32.addTickables(notes32);
 
       if (options.params.justify > 0) {
-        formatter = new VF.Formatter().joinVoices([voice12, voice22, voice32]).
-          format([voice12, voice22, voice32], 188);
+        formatter = new VF.Formatter()
+          .joinVoices([voice12])
+          .joinVoices([voice22])
+          .joinVoices([voice32])
+          .format([voice12, voice22, voice32], 188);
       } else {
-        formatter = new VF.Formatter().joinVoices([voice12, voice22, voice32]).
-          format([voice12, voice22, voice32]);
+        formatter = new VF.Formatter()
+          .joinVoices([voice12])
+          .joinVoices([voice22])
+          .joinVoices([voice32])
+          .format([voice12, voice22, voice32]);
       }
 
       for (var i = 0; i < options.params.iterations; i++) {
@@ -444,7 +456,7 @@ VF.Test.Formatter = (function() {
       ];
 
       voices.map(newVoice).forEach(newStave);
-      system.addConnector().setType(VF.StaveConnector.type.BRACKET); 
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();
       ok(true);
