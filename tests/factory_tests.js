@@ -41,7 +41,7 @@ Vex.Flow.Test.Factory = (function() {
     },
 
     draw: function(options) {
-      var vf = new VF.Factory(options.canvas_sel);
+      var vf = VF.Factory.newFromSelector(options.canvas_sel);
       vf.Stave().setClef('treble');
       vf.draw();
       expect(0);

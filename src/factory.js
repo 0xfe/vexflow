@@ -46,13 +46,6 @@ function setDefaults(params = {}, defaults) {
 export class Factory {
   constructor(options) {
     L('New factory: ', options);
-    if (typeof(options) === 'string') {
-      // String shortcut for common case of Factory
-      // construction.
-      options = {
-        renderer: { selector: options },
-      };
-    }
     const defaults = {
       stave: {
         space: 10,
@@ -74,6 +67,10 @@ export class Factory {
 
     this.options = defaults;
     this.setOptions(options);
+  }
+
+  static newFromSelector(selector, width = 500, height = 200) {
+    return new Factory({ renderer: { selector, width, height } });
   }
 
   reset() {
