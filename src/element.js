@@ -23,6 +23,7 @@ export class Element {
 
   isRendered() { return this.rendered; }
   setRendered(rendered = true) { this.rendered = rendered; return this; }
+
   getAttributes() { return this.attrs; }
   getAttribute(name) { return this.attrs[name]; }
   setAttribute(name, value) { this.attrs[name] = value; return this; }

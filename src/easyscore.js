@@ -18,8 +18,6 @@ export class X extends Error {
   }
 }
 
-function unquote(str) { return str.slice(1, -1); }
-
 class Grammar {
   constructor(builder) {
     this.builder = builder;
@@ -119,6 +117,8 @@ class Grammar {
     };
   }
   KEYVAL() {
+    const unquote = (str) => str.slice(1, -1);
+
     return {
       expect: [this.KEY, this.EQUALS, this.VAL],
       run: (state) => this.builder.addNoteOption(state.matches[0], unquote(state.matches[2])),
@@ -127,7 +127,8 @@ class Grammar {
   VAL()  {
     return {
       expect: [this.SVAL, this.DVAL],
-      or: true };
+      or: true,
+    };
   }
 
   KEY()         { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
