@@ -248,11 +248,25 @@ export class StaveNote extends StemmableNote {
       const topKeys = topNote.getKeyProps();
       const bottomKeys = bottomNote.getKeyProps();
 
-      const topY = topNote.getStave().getYForLine(topKeys[0].line);
-      const bottomY = bottomNote.getStave().getYForLine(bottomKeys[bottomKeys.length - 1].line);
+      const HALF_NOTEHEAD_HEIGHT = 0.5;
 
-      const lineSpace = topNote.getStave().options.spacing_between_lines_px;
-      if (Math.abs(topY - bottomY) === lineSpace / 2) {
+      // `keyProps` and `stave.getYForLine` have different notions of a `line`
+      // so we have to convert the keyProps value by subtracting 5.
+      // See https://github.com/0xfe/vexflow/wiki/Development-Gotchas
+      //
+      // We also extend the y for each note by a half notehead because the
+      // notehead's origin is centered
+      const topNotBottomY = topNote
+        .getStave()
+        .getYForLine(5 - topKeys[0].line + HALF_NOTEHEAD_HEIGHT);
+
+      const bottomNoteTopY = bottomNote
+        .getStave()
+        .getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
+
+      const areNotesColliding = bottomNoteTopY - topNotBottomY < 0;
+
+      if (areNotesColliding) {
         xShift = topNote.getVoiceShiftWidth();
         bottomNote.setXShift(xShift);
       }
