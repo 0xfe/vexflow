@@ -14,7 +14,8 @@ if (!window.QUnit) {
     ok: function() {return true;},
     equal: function() {return true;},
     expect: function() {return true;},
-    throws: function() {return true;}
+    throws: function() {return true;},
+    notOk: function() {return true;}
   };
 
   QUnit.module = function(name) {
@@ -32,6 +33,7 @@ if (!window.QUnit) {
   equal = QUnit.assertions.equal;
   expect = QUnit.assertions.expect;
   throws = QUnit.assertions.throws;
+  notOk = QUnit.assertions.notOk;
 }
 
 if (typeof require == "function") {
@@ -110,10 +112,10 @@ VF.Test = (function() {
     makeFactory: function(options, width, height) {
       return new VF.Factory({
         renderer: {
-            selector: options.canvas_sel,
-            backend: options.backend,
-            width: width,
-            height: height
+          selector: options.canvas_sel,
+          backend: options.backend,
+          width: width || 450,
+          height: height || 140,
         }
       })
     },

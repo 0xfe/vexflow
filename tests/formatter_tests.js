@@ -13,10 +13,11 @@ VF.Test.Formatter = (function() {
       runTests("StaveNote Formatting", Formatter.formatStaveNotes);
       runTests("StaveNote Justification", Formatter.justifyStaveNotes);
       runTests("Notes with Tab", Formatter.notesWithTab);
-      runTests("Format Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0});
-      runTests("Format Multiple Staves - Justified", Formatter.multiStaves, {justify: 168});
-
-      runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: true, iterations: 0});
+      runTests("Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0, iterations: 0});
+      runTests("Multiple Staves - Justified", Formatter.multiStaves, {justify: 168, iterations: 0});
+      runTests("Multiple Staves - Justified - 6 Iterations", Formatter.multiStaves, {justify: 168, iterations: 6});
+      runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: false, iterations: 0});
+      runTests("Proportional Formatting - 15 steps", Formatter.proportionalFormatting, {debug: false, iterations: 15});
 
       for (var i = 2; i < 15; i++) {
         VF.Test.runSVGTest("Proportional Formatting (" + i + " iterations)",
@@ -328,12 +329,23 @@ VF.Test.Formatter = (function() {
       var beam31a = new VF.Beam(notes31.slice(0, 3));
       var beam31b = new VF.Beam(notes31.slice(3, 6));
 
+      var formatter;
       if (options.params.justify > 0) {
-        new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
-          format([voice11, voice21, voice31], options.params.justify);
+        formatter = new VF.Formatter()
+          .joinVoices([voice11])
+          .joinVoices([voice21])
+          .joinVoices([voice31])
+          .format([voice11, voice21, voice31], options.params.justify);
       } else {
-        new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
-          format([voice11, voice21, voice31]);
+        formatter = new VF.Formatter()
+          .joinVoices([voice11])
+          .joinVoices([voice21])
+          .joinVoices([voice31])
+          .format([voice11, voice21, voice31]);
+      }
+
+      for (var i = 0; i < options.params.iterations; i++) {
+        formatter.tune();
       }
 
       voice11.draw(ctx, stave11);
@@ -389,12 +401,23 @@ VF.Test.Formatter = (function() {
       voice32.addTickables(notes32);
 
       if (options.params.justify > 0) {
-        new VF.Formatter().joinVoices([voice12, voice22, voice32]).
-          format([voice12, voice22, voice32], 188);
+        formatter = new VF.Formatter()
+          .joinVoices([voice12])
+          .joinVoices([voice22])
+          .joinVoices([voice32])
+          .format([voice12, voice22, voice32], 188);
       } else {
-        new VF.Formatter().joinVoices([voice12, voice22, voice32]).
-          format([voice12, voice22, voice32]);
+        formatter = new VF.Formatter()
+          .joinVoices([voice12])
+          .joinVoices([voice22])
+          .joinVoices([voice32])
+          .format([voice12, voice22, voice32]);
       }
+
+      for (var i = 0; i < options.params.iterations; i++) {
+        formatter.tune();
+      }
+
       var beam32a = new VF.Beam(notes32.slice(0, 3));
       var beam32b = new VF.Beam(notes32.slice(3, 6));
 
@@ -415,69 +438,24 @@ VF.Test.Formatter = (function() {
         debugFormatter: debug,
         formatIterations: options.params.iterations,
       });
+      var score = vf.EasyScore();
 
-      var notes1 = [
-        {keys: ["c/5"], stem_direction: -1, duration: "8"},
-        {keys: ["c/5"], stem_direction: -1, duration: "8"},
-      ];
-  
-      var notes2 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-        {keys: ["a/4"], stem_direction: 1, duration: "8"},
-      ];
+      var newVoice = function(notes) { return score.voice(notes, {time: '1/4'})};
+      var newStave = function(voice) {
+        system.addStave({voices: [voice], debugNoteMetrics: debug})
+          .addClef('treble')
+          .addTimeSignature('1/4');
+      };
 
-      var notes3 = [
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
-        {keys: ["c/5"], stem_direction: -1, duration: "16"},
+      var voices = [
+        score.notes('c5/8, c5'),
+        score.tuplet(score.notes('a4/8, a4, a4'), {notes_occupied: 2}),
+        score.notes('c5/16, c5, c5, c5'),
+        score.tuplet(score.notes('a4/16, a4, a4, a4, a4'), {notes_occupied: 4}),
+        score.tuplet(score.notes('a4/32, a4, a4, a4, a4, a4, a4'), {notes_occupied: 8}),
       ];
 
-      var notes4 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-        {keys: ["a/4"], stem_direction: 1, duration: "16"},
-      ];
-
-      var notes5 = [
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-        {keys: ["a/4"], stem_direction: 1, duration: "32"},
-      ];
-
-      function newVoice(notes, tuplet) {
-        var tickables = notes.map(function(note) {return vf.StaveNote(note);});
-        if (tuplet) vf.Tuplet({notes: tickables, options: {notes_occupied: tuplet}});
-        return vf.Voice({time: {num_beats: 1, beat_value: 4}}).addTickables(tickables);
-      }
-
-      system.addStave({
-        voices: [newVoice(notes1)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes2, 2)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-         voices: [newVoice(notes3)],
-        debugNoteMetrics: debug,
-        }).addClef("bass").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes4, 4)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
-      system.addStave({
-        voices: [newVoice(notes5, 8)],
-        debugNoteMetrics: debug,
-        }).addClef("treble").addTimeSignature("1/4");
+      voices.map(newVoice).forEach(newStave);
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();

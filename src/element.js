@@ -12,11 +12,17 @@ export class Element {
   constructor() {
     this.attrs = {
       id: '',
-      staveSpace: 10,
+      el: null,
       type: 'Base',
     };
+
+    this.boundingBox = null;
     this.context = null;
+    this.rendered = false;
   }
+
+  isRendered() { return this.rendered; }
+  setRendered(rendered = true) { this.rendered = rendered; return this; }
 
   getAttributes() { return this.attrs; }
   getAttribute(name) { return this.attrs[name]; }
@@ -24,10 +30,7 @@ export class Element {
 
   getContext() { return this.context; }
   setContext(context) { this.context = context; return this; }
-
-  // TODO: Bounding boxes for all elements.
-
-  space(spacing) { return this.attrs.staveSpace * spacing; }
+  getBoundingBox() { return this.boundingBox; }
 
   // Validators
   checkContext() {

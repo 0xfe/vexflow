@@ -135,14 +135,14 @@ function createContexts(voices, ContextType, addToContext) {
 export class Formatter {
   // Helper function to layout "notes" one after the other without
   // regard for proportions. Useful for tests and debugging.
-  static SimpleFormat(notes, x = 0) {
+  static SimpleFormat(notes, x = 0, { paddingBetween = 10 } = {}) {
     notes.reduce((x, note) => {
       note.addToModifierContext(new ModifierContext());
       const tick = new TickContext().addTickable(note).preFormat();
       const extra = tick.getExtraPx();
       tick.setX(x + extra.left);
 
-      return x + tick.getWidth() + extra.right + 10;
+      return x + tick.getWidth() + extra.right + paddingBetween;
     }, x);
   }
 
@@ -468,7 +468,7 @@ export class Formatter {
       context.setX(x);
 
       // Calculate shift for the next tick.
-      shift = context.getWidth() - metrics.extraLeftPx;
+      shift = width - metrics.extraLeftPx;
     });
 
     this.minTotalWidth = x + shift;
@@ -481,16 +481,12 @@ export class Formatter {
     // all notes.
     const remainingX = justifyWidth - this.minTotalWidth;
     const leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
-    // const deservedPxPerTick = justifyWidth / (this.totalTicks.value() * resolutionMultiplier);
     let spaceAccum = 0;
 
     contextList.forEach((tick, index) => {
       const prevTick = contextList[index - 1] || 0;
       const context = contextMap[tick];
       const tickSpace = (tick - prevTick) * leftoverPxPerTick;
-      // TODO: An idea worth pursuing:
-      //   const currentSpace = index > 0 ? context.getX() - contextMap[prevTick].getX() : 0;
-      //   const deservedSpace = (tick - prevTick) * deservedPxPerTick;
 
       spaceAccum += tickSpace;
       context.setX(context.getX() + spaceAccum);
@@ -516,8 +512,7 @@ export class Formatter {
     const justifyWidth = this.justifyWidth;
     // Calculate available slack per tick context. This works out how much freedom
     // to move a context has in either direction, without affecting other notes.
-    this.contextGaps.total = 0;
-    this.contextGaps.gaps = [];
+    this.contextGaps = { total: 0, gaps: [] };
     this.tickContexts.list.forEach((tick, index) => {
       if (index === 0) return;
       const prevTick = this.tickContexts.list[index - 1];
@@ -532,8 +527,8 @@ export class Formatter {
       this.contextGaps.gaps.push({ x1: insideRightEdge, x2: insideLeftEdge });
 
       // Tell the tick contexts how much they can reposition themselves.
-      context.setFreedomLeft(gap);
-      prevContext.setFreedomRight(gap);
+      context.getFormatterMetrics().freedom.left = gap;
+      prevContext.getFormatterMetrics().freedom.right = gap;
     });
 
     // Calculate mean distance in each voice for each duration type, then calculate
@@ -554,6 +549,7 @@ export class Formatter {
       voice.getTickables().forEach((note, i, notes) => {
         const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getMetrics();
+        const formatterMetrics = note.getFormatterMetrics();
         const leftNoteEdge = note.getX() + metrics.noteWidth +
             metrics.modRightPx + metrics.extraRightPx;
         let space = 0;
@@ -565,36 +561,37 @@ export class Formatter {
             rightMetrics.modLeftPx - rightMetrics.extraLeftPx;
 
           space = rightNoteEdge - leftNoteEdge;
-          note.setFreedomRight(space);
-          note.getFormatterMetrics().space = rightNote.getX() - note.getX();
-          rightNote.setFreedomLeft(space);
+          formatterMetrics.space.used = rightNote.getX() - note.getX();
+          rightNote.getFormatterMetrics().freedom.left = space;
         } else {
           space = justifyWidth - leftNoteEdge;
-          note.setFreedomRight(space);
-          note.getFormatterMetrics().space = justifyWidth - note.getX();
+          formatterMetrics.space.used = justifyWidth - note.getX();
         }
 
-        updateStats(duration, note.getFormatterMetrics().space);
+        formatterMetrics.freedom.right = space;
+        updateStats(duration, formatterMetrics.space.used);
       });
     });
 
     // Calculate how much each note deviates from the mean. Loss function is square
-    // root of the sum of squared deviation.
+    // root of the sum of squared deviations.
     let totalDeviation = 0;
     this.voices.forEach(voice => {
       voice.getTickables().forEach((note) => {
         const duration = note.getTicks().clone().simplify().toString();
-        note.getFormatterMetrics().spaceDeviation =
-          note.getFormatterMetrics().space - this.durationStats[duration].mean;
-        note.getFormatterMetrics().duration = duration;
-        note.getFormatterMetrics().mean = this.durationStats[duration].mean;
+        const metrics = note.getFormatterMetrics();
+        metrics.iterations += 1;
+        metrics.space.deviation = metrics.space.used - durationStats[duration].mean;
+        metrics.duration = duration;
+        metrics.space.mean = durationStats[duration].mean;
 
-        totalDeviation += Math.pow(this.durationStats[duration].mean, 2);
+        totalDeviation += Math.pow(durationStats[duration].mean, 2);
       });
     });
 
     this.totalCost = Math.sqrt(totalDeviation);
     this.lossHistory.push(this.totalCost);
+    return this;
   }
 
   // Run a single iteration of rejustification. At a high level, this method calculates
@@ -602,22 +599,17 @@ export class Formatter {
   // attempt to reduce the cost. You can call this method multiple times until it finds
   // and oscillates around a global minimum.
   tune() {
-    // Reposition tick contexts to reduce cost.
-    function sum(means) {
-      let total = 0;
-      for (let i = 0; i < means.length; i++) {
-        total += means[i];
-      }
-      return total;
-    }
+    const sum = (means) => means.reduce((a, b) => a + b);
 
+    // Move `current` tickcontext by `shift` pixels, and adjust the freedom
+    // on adjacent tickcontexts.
     function move(current, prev, next, shift) {
       current.setX(current.getX() + shift);
-      current.setFreedomLeft(current.getFreedom().left + shift);
-      current.setFreedomRight(current.getFreedom().right - shift);
+      current.getFormatterMetrics().freedom.left += shift;
+      current.getFormatterMetrics().freedom.right -= shift;
 
-      if (prev) prev.setFreedomRight(prev.getFreedom().right + shift);
-      if (next) next.setFreedomLeft(next.getFreedom().left - shift);
+      if (prev) prev.getFormatterMetrics().freedom.right += shift;
+      if (next) next.getFormatterMetrics().freedom.left -= shift;
     }
 
     let shift = 0;
@@ -629,13 +621,13 @@ export class Formatter {
       move(context, prevContext, nextContext, shift);
 
       const cost = -sum(
-        context.getTickables().map(t => t.getFormatterMetrics().spaceDeviation));
+        context.getTickables().map(t => t.getFormatterMetrics().space.deviation));
 
       if (cost > 0) {
-        shift = -Math.min(context.getFreedom().right, Math.abs(cost));
+        shift = -Math.min(context.getFormatterMetrics().freedom.right, Math.abs(cost));
       } else if (cost < 0) {
         if (nextContext) {
-          shift = Math.min(nextContext.getFreedom().right, Math.abs(cost));
+          shift = Math.min(nextContext.getFormatterMetrics().freedom.right, Math.abs(cost));
         } else {
           shift = 0;
         }
@@ -645,7 +637,7 @@ export class Formatter {
       shift = shift > 0 ? minShift : -minShift;
     });
 
-    this.evaluate();
+    return this.evaluate();
   }
 
   // This is the top-level call for all formatting logic completed

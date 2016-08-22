@@ -82,7 +82,7 @@ VF.Test.TabNote = (function() {
     showNote: function(tab_struct, stave, ctx, x) {
       var note = new VF.TabNote(tab_struct);
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(x);
       note.setContext(ctx).setStave(stave);
       note.draw();
       return note;

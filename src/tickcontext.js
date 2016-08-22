@@ -5,10 +5,10 @@
 // tabs, etc.
 
 import { Vex } from './vex';
-import { Element } from './element';
+import { Tickable } from './tickable';
 import { Fraction } from './fraction';
 
-export class TickContext extends Element {
+export class TickContext extends Tickable {
   static getNextContext(tContext) {
     const contexts = tContext.tContexts;
     const index = contexts.indexOf(tContext);
@@ -19,42 +19,26 @@ export class TickContext extends Element {
   constructor() {
     super();
     this.setAttribute('type', 'TickContext');
-
     this.currentTick = new Fraction(0, 1);
     this.maxTicks = new Fraction(0, 1);
     this.minTicks = null;
-    this.width = 0;
     this.padding = 3;     // padding on each side (width += padding * 2)
-    this.pixelsUsed = 0;
     this.x = 0;
     this.tickables = [];   // Notes, tabs, chords, lyrics.
     this.notePx = 0;       // width of widest note in this context
     this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
     this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
-    this.align_center = false;
-
     this.tContexts = [];   // Parent array of tick contexts
-
-    // Ignore this tick context for formatting and justification
-    this.ignore_ticks = true;
-    this.freedom = { left: 0, right: 0 }; // space availabile on each side for tuning.
-    this.preFormatted = false;
-    this.postFormatted = false;
   }
 
-  shouldIgnoreTicks() { return this.ignore_ticks; }
-  getWidth() { return this.width + (this.padding * 2); }
   getX() { return this.x; }
   setX(x) { this.x = x; return this; }
-  getPixelsUsed() { return this.pixelsUsed; }
-  setPixelsUsed(pixelsUsed) { this.pixelsUsed = pixelsUsed; return this; }
+  getWidth() { return this.width + (this.padding * 2); }
   setPadding(padding) { this.padding = padding; return this; }
   getMaxTicks() { return this.maxTicks; }
   getMinTicks() { return this.minTicks; }
   getTickables() { return this.tickables; }
-  getFreedom() { return this.freedom; }
-  setFreedomLeft(pixels) { this.freedom.left = pixels; return this; }
-  setFreedomRight(pixels) { this.freedom.right = pixels; return this; }
+
   getCenterAlignedTickables() {
     return this.tickables.filter(tickable => tickable.isCenterAligned());
   }
@@ -64,6 +48,7 @@ export class TickContext extends Element {
     return { width: this.width, notePx: this.notePx,
              extraLeftPx: this.extraLeftPx, extraRightPx: this.extraRightPx };
   }
+
   getCurrentTick() { return this.currentTick; }
   setCurrentTick(tick) {
     this.currentTick = tick;

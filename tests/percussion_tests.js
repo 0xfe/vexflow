@@ -48,7 +48,7 @@ VF.Test.Percussion = (function() {
     showNote: function(note_struct, stave, ctx, x) {
       var note = new VF.StaveNote(note_struct);
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(20);
+      tickContext.addTickable(note).preFormat().setX(x);
       note.setContext(ctx).setStave(stave);
       note.draw();
       return note;

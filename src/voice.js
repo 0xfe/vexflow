@@ -28,6 +28,20 @@ export class Voice extends Element {
   constructor(time) {
     super();
     this.setAttribute('type', 'Voice');
+
+    // Time signature shortcut: "4/4", "3/8", etc.
+    if (typeof(time) === 'string') {
+      const match = time.match(/(\d+)\/(\d+)/);
+      if (match) {
+        time = {
+          num_beats: match[1],
+          beat_value: match[2],
+          resolution: Flow.RESOLUTION,
+        };
+      }
+    }
+
+    // Default time sig is 4/4
     this.time = Vex.Merge({
       num_beats: 4,
       beat_value: 4,
@@ -46,7 +60,6 @@ export class Voice extends Element {
     this.smallestTickCount = this.totalTicks.clone();
     this.largestTickWidth = 0;
     this.stave = null;
-    this.boundingBox = null;
     // Do we care about strictly timed notes
     this.mode = Voice.Mode.STRICT;
 

@@ -17,7 +17,7 @@ function setDefaults(params, defaults) {
 }
 
 export class System extends Element {
-  constructor(params) {
+  constructor(params = {}) {
     super();
     this.setAttribute('type', 'System');
     this.setOptions(params);
@@ -31,10 +31,9 @@ export class System extends Element {
       width: 500,
       connector: null,
       spaceBetweenStaves: 12, // stave spaces
-      endPadding: 0,
       factory: null,
       debugFormatter: false,
-      formatIterations: 15,
+      formatIterations: 0,   // number of formatter tuning steps
       options: {},
     });
 
@@ -76,9 +75,9 @@ export class System extends Element {
     return params.stave;
   }
 
-  draw() {
-    const ctx = this.checkContext();
+  format() {
     const formatter = new Formatter();
+    this.formatter = formatter;
 
     let y = this.options.y;
     let startX = 0;
@@ -103,25 +102,26 @@ export class System extends Element {
 
     // Update the start position of all staves.
     this.parts.forEach(part => part.stave.setNoteStartX(startX));
-    const justifyWidth = this.options.width
-      - (startX - this.options.x) - this.options.endPadding - Note.STAVEPADDING;
+    const justifyWidth = this.options.width - (startX - this.options.x) - Note.STAVEPADDING;
     formatter.format(allVoices, justifyWidth);
 
     for (let i = 0; i < this.options.formatIterations; i++) {
       formatter.tune();
     }
 
-    // Render.
-    this.parts.forEach(part => {
-      part.voices.forEach(voice => voice.draw());
-    });
+    this.startX = startX;
+    this.debugNoteMetricsYs = debugNoteMetricsYs;
+    this.lastY = y;
+  }
 
-    // Render debug info.
+  draw() {
+    // Render debugging information, if requested.
+    const ctx = this.checkContext();
     if (this.options.debugFormatter) {
-      Formatter.plotDebugging(ctx, formatter, startX, this.options.y, y);
+      Formatter.plotDebugging(ctx, this.formatter, this.startX, this.options.y, this.lastY);
     }
 
-    debugNoteMetricsYs.forEach(d => {
+    this.debugNoteMetricsYs.forEach(d => {
       d.voice.getTickables().forEach(note => Note.plotMetrics(ctx, note, d.y));
     });
   }
