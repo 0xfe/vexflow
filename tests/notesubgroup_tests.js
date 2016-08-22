@@ -217,8 +217,10 @@ VF.Test.NoteSubGroup = (function() {
       voice3.addTickables(notes3);
 
       var justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
-      var formatter = new VF.Formatter().joinVoices([voice, voice2, voice3]).
-        format([voice, voice2, voice3], justifyWidth);
+      var formatter = new VF.Formatter()
+        .joinVoices([voice, voice2])
+        .joinVoices([voice3])
+        .format([voice, voice2, voice3], justifyWidth);
 
       voice.draw(ctx, stave);
       voice2.draw(ctx, stave);
