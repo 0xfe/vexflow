@@ -10,7 +10,7 @@ completely in JavaScript, and runs right in the browser. VexFlow supports HTML5
 Canvas and SVG, and runs on all modern browsers.
 
 Go try out [The VexFlow Tutorial](https://github.com/0xfe/vexflow/wiki/The-VexFlow-Tutorial) to
-learn how to use VexFlow.
+learn how to use VexFlow. Also learn to use the simpler EasyScore API in the [Using EasyScore](https://github.com/0xfe/vexflow/wiki/Using-EasyScore) guide.
 
 ## Quick Start
 
@@ -50,6 +50,30 @@ stave.addClef("treble").addTimeSignature("4/4");
 // Connect it to the rendering context and draw!
 stave.setContext(context).draw();
 ```
+
+### Using EasyScore
+
+The EasyScore API is a quick way to create simple music notation in VexFlow. See running example in [this jsfiddle](https://jsfiddle.net/3d0nbL0n/3/).
+
+```javascript
+var vf = new Vex.Flow.Factory({
+  renderer: {selector: 'boo', width: 500, height: 200}
+});
+
+var score = vf.EasyScore();
+var system = vf.System();
+
+system.addStave({
+  voices: [
+    score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),
+    score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))
+  ]
+}).addClef('treble').addTimeSignature('4/4');
+
+vf.draw();
+```
+
+Learn more about EasyScore at: [Using EasyScore](https://github.com/0xfe/vexflow/wiki/Using-EasyScore).
 
 ## Resources
 
