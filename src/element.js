@@ -7,11 +7,14 @@
 // of general functions and properties that can be inherited by all VexFlow elements.
 
 import { Vex } from './vex';
+import { Registry } from './registry';
 
 export class Element {
+  static newID() { return 'auto' + (Element.ID++); }
+
   constructor() {
     this.attrs = {
-      id: '',
+      id: Element.newID(),
       el: null,
       type: 'Base',
     };
@@ -19,14 +22,26 @@ export class Element {
     this.boundingBox = null;
     this.context = null;
     this.rendered = false;
+    if (Registry.getDefaultRegistry()) {
+      Registry.getDefaultRegistry().register(this);
+    }
   }
 
+  onRegister(registry) { this.registry = registry; return this; }
   isRendered() { return this.rendered; }
   setRendered(rendered = true) { this.rendered = rendered; return this; }
 
   getAttributes() { return this.attrs; }
   getAttribute(name) { return this.attrs[name]; }
-  setAttribute(name, value) { this.attrs[name] = value; return this; }
+  setAttribute(name, value) {
+    const id = this.attrs.id;
+    this.attrs[name] = value;
+    if (this.registry) {
+      // Register with old id to support id changes.
+      this.registry.onUpdate(id);
+    }
+    return this;
+  }
 
   getContext() { return this.context; }
   setContext(context) { this.context = context; return this; }
@@ -41,3 +56,4 @@ export class Element {
   }
 }
 
+Element.ID = 1000;

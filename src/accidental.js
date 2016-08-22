@@ -397,7 +397,7 @@ export class Accidental extends Modifier {
   // example: `#`, `##`, `b`, `n`, etc.
   constructor(type = null) {
     super();
-    this.attrs.type = 'Accidental';
+    this.setAttribute('type', 'Accidental');
 
     L('New accidental: ', type);
 

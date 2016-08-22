@@ -174,6 +174,7 @@ class Builder {
   getElements() { return this.elements; }
 
   resetPiece() {
+    L('resetPiece');
     this.piece = {
       chord: [],
       duration: this.rollingDuration,

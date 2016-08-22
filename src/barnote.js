@@ -19,7 +19,7 @@ function L(...args) { if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args); }
 export class BarNote extends Note {
   constructor(type) {
     super({ duration: 'b' });
-    this.attrs.type = 'BarNote';
+    this.setAttribute('type', 'BarNote');
 
     const TYPE = Barline.type;
     this.metrics = {

@@ -202,7 +202,7 @@ export class Articulation extends Modifier {
   // `Vex.Flow.articulationCodes` in `tables.js`.
   constructor(type) {
     super();
-    this.attrs.type = 'Articulation';
+    this.setAttribute('type', 'Articulation');
 
     this.note = null;
     this.index = null;

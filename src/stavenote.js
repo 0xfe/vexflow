@@ -271,7 +271,7 @@ export class StaveNote extends StemmableNote {
 
   constructor(noteStruct) {
     super(noteStruct);
-    this.attrs.type = 'StaveNote';
+    this.setAttribute('type', 'StaveNote');
 
     this.keys = noteStruct.keys;
     this.clef = noteStruct.clef;
