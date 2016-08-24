@@ -12,11 +12,11 @@ import { Registry } from './registry';
 export class Element {
   static newID() { return 'auto' + (Element.ID++); }
 
-  constructor() {
+  constructor({ type } = {}) {
     this.attrs = {
       id: Element.newID(),
       el: null,
-      type: 'Base',
+      type: type || 'Base',
     };
 
     this.boundingBox = null;
@@ -35,10 +35,11 @@ export class Element {
   getAttribute(name) { return this.attrs[name]; }
   setAttribute(name, value) {
     const id = this.attrs.id;
+    const oldValue = this.attrs[name];
     this.attrs[name] = value;
     if (this.registry) {
       // Register with old id to support id changes.
-      this.registry.onUpdate(id);
+      this.registry.onUpdate({ id, name, value, oldValue });
     }
     return this;
   }

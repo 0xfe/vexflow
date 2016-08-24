@@ -26,18 +26,13 @@ export class X extends Error {
   }
 }
 
-export class Registry {
-  static get INDEXES() { return ['id', 'type']; }
+function setIndex(index, name, value, id, elem) {
+  if (!index[name][value]) index[name][value] = {}
+  index[name][value][id] = elem;
+}
 
-  static updateIndex(index, elem) {
-    Registry.INDEXES.forEach(key => {
-      const attr = elem.getAttribute(key);
-      if (index[key][attr] === undefined) {
-        index[key][attr] = [];
-      }
-      index[key][attr].push(elem);
-    });
-  }
+export class Registry {
+  static get INDEXES() { return ['type', 'class']; }
 
   constructor() {
     this.clear();
@@ -52,14 +47,23 @@ export class Registry {
   }
 
   clear() {
-    this.elements = [];
-
-    // Index by 'id' and type for now.
-    this.elementMaps = {
+    // Indexes are represented as maps of maps (of maps). This allows
+    // for both multi-labeling (e.g., an element can have multiple classes)
+    // and efficient lookup.
+    this.index = {
       id: {},
       type: {},
+      class: {},
     };
     return this;
+  }
+
+  // Updates the indexes for element 'id'. If an element's attribute changes
+  // from A -> B, make sure to remove the element from A.
+  updateIndex({ id, name, value, oldValue }) {
+    const elem = this.getElementById(id);
+    if (oldValue !== null && this.index[name][oldValue]) delete this.index[name][oldValue][id];
+    setIndex(this.index, name, value, elem.getAttribute('id'), elem);
   }
 
   register(elem, id) {
@@ -69,23 +73,24 @@ export class Registry {
       throw new X('Can\'t add element without `id` attribute to registry', elem);
     }
 
-    elem.setAttribute('id', id);
-    this.elements.push(elem);
-
     // Update indexes
-    Registry.updateIndex(this.elementMaps, elem);
+    elem.setAttribute('id', id);
+    setIndex(this.index, 'id', id, id, elem);
+    Registry.INDEXES.forEach(name => {
+      this.updateIndex({ id, name, value: elem.getAttribute(name), oldValue: null });
+    });
     elem.onRegister(this);
     return this;
   }
 
   getElementById(id) {
-    return this.elementMaps.id[id] ? this.elementMaps.id[id][0] : null;
+    return this.index.id[id] ? this.index.id[id][id] : null;
   }
 
-  getElementsByType(type) { return this.elementMaps.type[type]; }
+  getElementsByType(type) { return this.index.type[type]; }
 
-  onUpdate(id) {
-    Registry.updateIndex(this.elementMaps, this.getElementById(id));
+  onUpdate({ id, name, value, oldValue }) {
+    this.updateIndex({ id, name, value, oldValue });
     return this;
   }
 }

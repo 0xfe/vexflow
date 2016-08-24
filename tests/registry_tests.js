@@ -39,15 +39,19 @@ Vex.Flow.Test.Registry = (function() {
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
-      assert.ok(registry.getElementById('foobar'));
+      const note = registry.getElementById('foobar');
+      assert.ok(note);
+
+      note.setAttribute('id', 'boobar');
+      assert.ok(registry.getElementById('boobar'));
+      assert.notOk(registry.getElementById('foobar'));
 
       registry.clear();
       assert.equal(registry.getElementsByType('StaveNote'), undefined);
 
       score.notes('C5');
       var elements = registry.getElementsByType('StaveNote');
-      assert.equal(elements.length, 1);
-      console.log(elements[0].getAttributes());
+      assert.equal(Object.keys(elements).length, 1);
     }
   };
 
