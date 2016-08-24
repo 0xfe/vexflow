@@ -32,7 +32,7 @@ function setIndex(index, name, value, id, elem) {
 }
 
 export class Registry {
-  static get INDEXES() { return ['type', 'class']; }
+  static get INDEXES() { return ['type']; }
 
   constructor() {
     this.clear();
@@ -44,6 +44,10 @@ export class Registry {
 
   static getDefaultRegistry() {
     return Registry.defaultRegistry;
+  }
+
+  static disableDefaultRegistry() {
+    Registry.defaultRegistry = null;
   }
 
   clear() {
@@ -100,6 +104,7 @@ export class Registry {
   getElementsByClass(className) { return this.getElementsByAttr('class', className); }
 
   onUpdate({ id, name, value, oldValue }) {
+    if (!Registry.INDEXES.concat(['id', 'class']).includes(name)) return this;
     this.updateIndex({ id, name, value, oldValue });
     return this;
   }
