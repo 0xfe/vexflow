@@ -27,7 +27,7 @@ export class X extends Error {
 }
 
 function setIndex(index, name, value, id, elem) {
-  if (!index[name][value]) index[name][value] = {}
+  if (!index[name][value]) index[name][value] = {};
   index[name][value][id] = elem;
 }
 
