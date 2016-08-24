@@ -143,7 +143,7 @@ export class Ornament extends Modifier {
   // `Vex.Flow.ornamentCodes` in `tables.js`.
   constructor(type) {
     super();
-    this.attrs.type = 'Ornament';
+    this.setAttribute('type', 'Ornament');
 
     this.note = null;
     this.index = null;

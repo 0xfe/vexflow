@@ -128,7 +128,7 @@ export class Glyph extends Element {
    */
   constructor(code, point, options) {
     super();
-    this.attrs.type = 'Glyph';
+    this.setAttribute('type', 'Glyph');
 
     this.code = code;
     this.point = point;

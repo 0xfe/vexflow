@@ -19,7 +19,7 @@ export class StaveModifier extends Element {
 
   constructor() {
     super();
-    this.attrs.type = 'StaveModifier';
+    this.setAttribute('type', 'StaveModifier');
 
     this.padding = 10;
     this.position = StaveModifier.Position.ABOVE;

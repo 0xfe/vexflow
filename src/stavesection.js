@@ -8,7 +8,7 @@ export class StaveSection extends StaveModifier {
 
   constructor(section, x, shift_y) {
     super();
-    this.attrs.type = 'StaveSection';
+    this.setAttribute('type', 'StaveSection');
 
     this.setWidth(16);
     this.section = section;

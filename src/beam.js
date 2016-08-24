@@ -380,7 +380,7 @@ export class Beam extends Element {
 
   constructor(notes, auto_stem) {
     super();
-    this.attrs.type = 'Beam';
+    this.setAttribute('type', 'Beam');
 
     if (!notes || notes === []) {
       throw new Vex.RuntimeError('BadArguments', 'No notes provided for beam.');

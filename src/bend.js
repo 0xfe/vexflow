@@ -76,7 +76,7 @@ export class Bend extends Modifier {
   // ## Prototype Methods
   constructor(text, release, phrase) {
     super();
-    this.attrs.type = 'Bend';
+    this.setAttribute('type', 'Bend');
 
     this.text = text;
     this.x_shift = 0;

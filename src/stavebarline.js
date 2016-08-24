@@ -24,7 +24,7 @@ export class Barline extends StaveModifier {
    */
   constructor(type) {
     super();
-    this.attrs.type = 'Barline';
+    this.setAttribute('type', 'Barline');
     this.thickness = Flow.STAVE_LINE_THICKNESS;
 
     const TYPE = Barline.type;

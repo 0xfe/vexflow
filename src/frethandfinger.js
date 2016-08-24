@@ -94,7 +94,7 @@ export class FretHandFinger extends Modifier {
 
   constructor(number) {
     super();
-    this.attrs.type = 'FretHandFinger';
+    this.setAttribute('type', 'FretHandFinger');
 
     this.note = null;
     this.index = null;

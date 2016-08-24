@@ -75,7 +75,7 @@ export class PedalMarking extends Element {
   // ## Prototype Methods
   constructor(notes) {
     super();
-    this.attrs.type = 'PedalMarking';
+    this.setAttribute('type', 'PedalMarking');
 
     this.notes = notes;
     this.style = PedalMarking.TEXT;

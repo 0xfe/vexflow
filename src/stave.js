@@ -18,7 +18,7 @@ import { Volta } from './stavevolta';
 export class Stave extends Element {
   constructor(x, y, width, options) {
     super();
-    this.attrs.type = 'Stave';
+    this.setAttribute('type', 'Stave');
 
     this.x = x;
     this.y = y;

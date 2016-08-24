@@ -70,7 +70,7 @@ export class NoteHead extends Note {
 
   constructor(head_options) {
     super(head_options);
-    this.attrs.type = 'NoteHead';
+    this.setAttribute('type', 'NoteHead');
 
     this.index = head_options.index;
     this.x = head_options.x || 0;
