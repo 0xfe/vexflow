@@ -63,7 +63,7 @@ export class Registry {
   updateIndex({ id, name, value, oldValue }) {
     const elem = this.getElementById(id);
     if (oldValue !== null && this.index[name][oldValue]) delete this.index[name][oldValue][id];
-    setIndex(this.index, name, value, elem.getAttribute('id'), elem);
+    if (value !== null) setIndex(this.index, name, value, elem.getAttribute('id'), elem);
   }
 
   register(elem, id) {
@@ -87,7 +87,17 @@ export class Registry {
     return this.index.id[id] ? this.index.id[id][id] : null;
   }
 
-  getElementsByType(type) { return this.index.type[type]; }
+  getElementsByAttr(attrName, value) {
+    const index = this.index[attrName];
+    if (index && index[value]) {
+      return Object.keys(index[value]).map(i => index[value][i]);
+    } else {
+      return [];
+    }
+  }
+
+  getElementsByType(type) { return this.getElementsByAttr('type', type); }
+  getElementsByClass(className) { return this.getElementsByAttr('class', className); }
 
   onUpdate({ id, name, value, oldValue }) {
     this.updateIndex({ id, name, value, oldValue });

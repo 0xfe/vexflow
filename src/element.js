@@ -17,6 +17,7 @@ export class Element {
       id: Element.newID(),
       el: null,
       type: type || 'Base',
+      classes: new Set(),
     };
 
     this.boundingBox = null;
@@ -25,6 +26,34 @@ export class Element {
     if (Registry.getDefaultRegistry()) {
       Registry.getDefaultRegistry().register(this);
     }
+  }
+
+  hasClass(className) { return this.attrs.classes.has(className); }
+
+  addClass(className) {
+    this.attrs.classes.add(className);
+    if (this.registry) {
+      this.registry.onUpdate({
+        id: this.getAttribute('id'),
+        name: 'class',
+        value: className,
+        oldValue: null,
+      });
+    }
+    return this;
+  }
+
+  removeClass(className) {
+    this.attrs.classes.delete(className);
+    if (this.registry) {
+      this.registry.onUpdate({
+        id: this.getAttribute('id'),
+        name: 'class',
+        value: null,
+        oldValue: className,
+      });
+    }
+    return this;
   }
 
   onRegister(registry) { this.registry = registry; return this; }

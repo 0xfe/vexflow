@@ -11,6 +11,7 @@ Vex.Flow.Test.Registry = (function() {
 
       QUnit.test("Register and Clear", VFT.Registry.registerAndClear);
       QUnit.test("Default Registry", VFT.Registry.defaultRegistry);
+      QUnit.test("Multiple Classes", VFT.Registry.classes);
     },
 
     registerAndClear: function(assert) {
@@ -47,11 +48,39 @@ Vex.Flow.Test.Registry = (function() {
       assert.notOk(registry.getElementById('foobar'));
 
       registry.clear();
-      assert.equal(registry.getElementsByType('StaveNote'), undefined);
+      assert.equal(registry.getElementsByType('StaveNote').length, 0);
 
       score.notes('C5');
       var elements = registry.getElementsByType('StaveNote');
-      assert.equal(Object.keys(elements).length, 1);
+      assert.equal(elements.length, 1);
+    },
+
+    classes: function(assert) {
+      var registry = new VF.Registry();
+      var score = new VF.EasyScore({factory: VF.Factory.newFromSelector(null)});
+
+      VF.Registry.enableDefaultRegistry(registry);
+      score.notes('C4[id="foobar"]');
+      const note = registry.getElementById('foobar');
+ 
+      note.addClass('foo');
+      assert.ok(note.hasClass('foo'));
+      assert.notOk(note.hasClass('boo'));
+      assert.equal(registry.getElementsByClass('foo').length, 1);
+      assert.equal(registry.getElementsByClass('boo').length, 0);
+
+      note.addClass('boo');
+      assert.ok(note.hasClass('foo'));
+      assert.ok(note.hasClass('boo'));
+      assert.equal(registry.getElementsByClass('foo').length, 1);
+      assert.equal(registry.getElementsByClass('boo').length, 1);
+
+      note.removeClass('boo');
+      note.removeClass('foo');
+      assert.notOk(note.hasClass('foo'));
+      assert.notOk(note.hasClass('boo'));
+      assert.equal(registry.getElementsByClass('foo').length, 0);
+      assert.equal(registry.getElementsByClass('boo').length, 0);
     }
   };
 
