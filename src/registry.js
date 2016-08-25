@@ -104,7 +104,11 @@ export class Registry {
   getElementsByClass(className) { return this.getElementsByAttr('class', className); }
 
   onUpdate({ id, name, value, oldValue }) {
-    if (!Registry.INDEXES.concat(['id', 'class']).includes(name)) return this;
+    function includes(array, value) {
+      return array.filter(x => x === value).length > 0;
+    }
+
+    if (!includes(Registry.INDEXES.concat(['id', 'class']), name)) return this;
     this.updateIndex({ id, name, value, oldValue });
     return this;
   }

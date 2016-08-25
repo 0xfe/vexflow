@@ -17,7 +17,7 @@ export class Element {
       id: Element.newID(),
       el: null,
       type: type || 'Base',
-      classes: new Set(),
+      classes: {},
     };
 
     this.boundingBox = null;
@@ -28,10 +28,10 @@ export class Element {
     }
   }
 
-  hasClass(className) { return this.attrs.classes.has(className); }
+  hasClass(className) { return (this.attrs.classes[className] === true); }
 
   addClass(className) {
-    this.attrs.classes.add(className);
+    this.attrs.classes[className] = true;
     if (this.registry) {
       this.registry.onUpdate({
         id: this.getAttribute('id'),
@@ -44,7 +44,7 @@ export class Element {
   }
 
   removeClass(className) {
-    this.attrs.classes.delete(className);
+    delete this.attrs.classes[className];
     if (this.registry) {
       this.registry.onUpdate({
         id: this.getAttribute('id'),
