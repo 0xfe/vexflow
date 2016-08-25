@@ -17,14 +17,9 @@
 // the registry. This allows fast look up of elements by attributes like id, type,
 // and class.
 
-export class X extends Error {
-  constructor(message, data) {
-    super(message);
-    this.name = 'RegistryException';
-    this.message = message;
-    this.data = data;
-  }
-}
+import { Vex } from './vex';
+
+export const X = Vex.MakeException('RegistryError');
 
 function setIndexValue(index, name, value, id, elem) {
   if (!index[name][value]) index[name][value] = {};
@@ -68,8 +63,12 @@ export class Registry {
   // from A -> B, make sure to remove the element from A.
   updateIndex({ id, name, value, oldValue }) {
     const elem = this.getElementById(id);
-    if (oldValue !== null && this.index[name][oldValue]) delete this.index[name][oldValue][id];
-    if (value !== null) setIndexValue(this.index, name, value, elem.getAttribute('id'), elem);
+    if (oldValue !== null && this.index[name][oldValue]) {
+      delete this.index[name][oldValue][id];
+    }
+    if (value !== null) {
+      setIndexValue(this.index, name, value, elem.getAttribute('id'), elem);
+    }
   }
 
   // Register element `elem` with this registry. This adds the element to its index and watches
@@ -95,7 +94,7 @@ export class Registry {
     return this.index.id[id] ? this.index.id[id][id] : null;
   }
 
-  getElementsByAttr(attrName, value) {
+  getElementsByAttribute(attrName, value) {
     const index = this.index[attrName];
     if (index && index[value]) {
       return Object.keys(index[value]).map(i => index[value][i]);
@@ -104,8 +103,8 @@ export class Registry {
     }
   }
 
-  getElementsByType(type) { return this.getElementsByAttr('type', type); }
-  getElementsByClass(className) { return this.getElementsByAttr('class', className); }
+  getElementsByType(type) { return this.getElementsByAttribute('type', type); }
+  getElementsByClass(className) { return this.getElementsByAttribute('class', className); }
 
   // This is called by the element when an attribute value changes. If an indexed
   // attribute changes, then update the local index.
