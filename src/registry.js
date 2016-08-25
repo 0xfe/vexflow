@@ -26,7 +26,7 @@ export class X extends Error {
   }
 }
 
-function setIndex(index, name, value, id, elem) {
+function setIndexValue(index, name, value, id, elem) {
   if (!index[name][value]) index[name][value] = {};
   index[name][value][id] = elem;
 }
@@ -38,6 +38,8 @@ export class Registry {
     this.clear();
   }
 
+  // If you call `enableDefaultRegistry`, any new elements will auto-register with
+  // the provided registry as soon as they're constructed.
   static enableDefaultRegistry(registry) {
     Registry.defaultRegistry = registry;
   }
@@ -67,9 +69,11 @@ export class Registry {
   updateIndex({ id, name, value, oldValue }) {
     const elem = this.getElementById(id);
     if (oldValue !== null && this.index[name][oldValue]) delete this.index[name][oldValue][id];
-    if (value !== null) setIndex(this.index, name, value, elem.getAttribute('id'), elem);
+    if (value !== null) setIndexValue(this.index, name, value, elem.getAttribute('id'), elem);
   }
 
+  // Register element `elem` with this registry. This adds the element to its index and watches
+  // it for attribute changes.
   register(elem, id) {
     id = id || elem.getAttribute('id');
 
@@ -77,9 +81,9 @@ export class Registry {
       throw new X('Can\'t add element without `id` attribute to registry', elem);
     }
 
-    // Update indexes
+    // Manually add id to index, then update other indexes.
     elem.setAttribute('id', id);
-    setIndex(this.index, 'id', id, id, elem);
+    setIndexValue(this.index, 'id', id, id, elem);
     Registry.INDEXES.forEach(name => {
       this.updateIndex({ id, name, value: elem.getAttribute(name), oldValue: null });
     });
@@ -103,6 +107,8 @@ export class Registry {
   getElementsByType(type) { return this.getElementsByAttr('type', type); }
   getElementsByClass(className) { return this.getElementsByAttr('class', className); }
 
+  // This is called by the element when an attribute value changes. If an indexed
+  // attribute changes, then update the local index.
   onUpdate({ id, name, value, oldValue }) {
     function includes(array, value) {
       return array.filter(x => x === value).length > 0;

@@ -23,13 +23,15 @@ export class Element {
     this.boundingBox = null;
     this.context = null;
     this.rendered = false;
+
+    // If a default registry exist, then register with it right away.
     if (Registry.getDefaultRegistry()) {
       Registry.getDefaultRegistry().register(this);
     }
   }
 
+  // An element can have multiple class labels.
   hasClass(className) { return (this.attrs.classes[className] === true); }
-
   addClass(className) {
     this.attrs.classes[className] = true;
     if (this.registry) {
@@ -56,6 +58,7 @@ export class Element {
     return this;
   }
 
+  // This is called by the registry after the element is registered.
   onRegister(registry) { this.registry = registry; return this; }
   isRendered() { return this.rendered; }
   setRendered(rendered = true) { this.rendered = rendered; return this; }
