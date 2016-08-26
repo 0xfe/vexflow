@@ -149,6 +149,7 @@ export class GraceNoteGroup extends Modifier {
         "Can't draw grace note without a parent note and parent note index.");
     }
 
+    this.setRendered();
     const that = this;
     function alignGraceNotesWithNote(grace_notes, note) {
       // Shift over the tick contexts of each note

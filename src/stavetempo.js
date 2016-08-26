@@ -34,6 +34,7 @@ export class StaveTempo extends StaveModifier {
 
   draw(stave, shift_x) {
     const ctx = stave.checkContext();
+    this.setRendered();
 
     const options = this.render_options;
     // FIXME: What does the '38' mean? Why 38? Is that supposed to

@@ -300,6 +300,7 @@ export class KeySignature extends StaveModifier {
     }
 
     if (!this.formatted) this.format();
+    this.setRendered();
 
     for (let i = 0; i < this.glyphs.length; i++) {
       const glyph = this.glyphs[i];

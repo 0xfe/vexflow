@@ -502,5 +502,7 @@ export class Accidental extends Modifier {
       if (type === '##' || type === 'bb') accX -= 2;
       renderGlyphToContext(accX, accY, font_scale, parenRight.code);
     }
+
+    this.setRendered();
   }
 }

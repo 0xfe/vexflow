@@ -65,6 +65,7 @@ export class ClefNote extends Note {
       this.glyph.setContext(this.context);
     }
 
+    this.setRendered();
     const abs_x = this.getAbsoluteX();
 
     this.glyph.setStave(this.stave);

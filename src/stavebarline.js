@@ -61,6 +61,8 @@ export class Barline extends StaveModifier {
   // Draw barlines
   draw(stave) {
     stave.checkContext();
+    this.setRendered();
+
     switch (this.type) {
       case Barline.type.SINGLE:
         this.drawVerticalBar(stave, this.x, false);

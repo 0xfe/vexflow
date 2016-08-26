@@ -203,6 +203,7 @@ export class NoteHead extends Note {
   // Draw the notehead
   draw() {
     this.checkContext();
+    this.setRendered();
 
     const ctx = this.context;
     const head_x = this.getAbsoluteX();

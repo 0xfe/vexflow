@@ -146,6 +146,8 @@ export class Bend extends Modifier {
       throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
     }
 
+    this.setRendered();
+
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
         this.index);
     start.x += 3;

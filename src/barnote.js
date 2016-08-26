@@ -74,5 +74,6 @@ export class BarNote extends Note {
     const barline = new Barline(this.type);
     barline.setX(this.getAbsoluteX());
     barline.draw(this.stave);
+    this.setRendered();
   }
 }

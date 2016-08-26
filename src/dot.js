@@ -118,6 +118,7 @@ export class Dot extends Modifier {
 
   draw() {
     this.checkContext();
+    this.setRendered();
 
     if (!this.note || this.index === null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");

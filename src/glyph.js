@@ -213,6 +213,7 @@ export class Glyph extends Element {
     const outline = this.metrics.outline;
     const scale = this.scale;
 
+    this.setRendered();
     Glyph.renderOutline(ctx, outline, scale, x + this.originShift.x, y + this.originShift.y);
   }
 
@@ -230,6 +231,7 @@ export class Glyph extends Element {
     const outline = this.metrics.outline;
     const scale = this.scale;
 
+    this.setRendered();
     Glyph.renderOutline(this.context, outline, scale,
         x + this.x_shift, this.stave.getYForGlyphs() + this.y_shift);
   }

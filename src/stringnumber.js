@@ -165,6 +165,7 @@ export class StringNumber extends Modifier {
     if (!(this.note && (this.index != null))) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
     }
+    this.setRendered();
 
     const line_space = this.note.stave.options.spacing_between_lines_px;
 

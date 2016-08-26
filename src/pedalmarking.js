@@ -234,6 +234,7 @@ export class PedalMarking extends Element {
   // Render the pedal marking in position on the rendering context
   draw() {
     const ctx = this.checkContext();
+    this.setRendered();
 
     ctx.save();
     ctx.setStrokeStyle(this.render_options.color);

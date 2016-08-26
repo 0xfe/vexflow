@@ -34,5 +34,6 @@ export class GraceTabNote extends TabNote {
 
   draw() {
     super.draw();
+    this.setRendered();
   }
 }

@@ -81,6 +81,7 @@ export class Crescendo extends Note {
   // Render the Crescendo object onto the canvas
   draw() {
     this.checkContext();
+    this.setRendered();
 
     const tick_context = this.getTickContext();
     const next_context = TickContext.getNextContext(tick_context);

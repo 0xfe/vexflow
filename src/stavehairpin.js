@@ -166,6 +166,7 @@ export class StaveHairpin extends Element {
 
   draw() {
     this.checkContext();
+    this.setRendered();
 
     const firstNote = this.first_note;
     const lastNote = this.last_note;

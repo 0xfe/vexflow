@@ -43,6 +43,7 @@ export class GraceNote extends StaveNote {
 
   draw() {
     super.draw();
+    this.setRendered();
     const ctx = this.context;
     const stem_direction = this.getStemDirection();
 

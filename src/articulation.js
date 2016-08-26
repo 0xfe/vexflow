@@ -239,6 +239,8 @@ export class Articulation extends Modifier {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
     }
 
+    this.setRendered();
+
     const stave = note.getStave();
     const staffSpace = stave.getSpacingBetweenLines();
     const isTab = note.getCategory() === 'tabnotes';

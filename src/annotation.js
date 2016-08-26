@@ -114,6 +114,7 @@ export class Annotation extends Modifier {
       );
     }
 
+    this.setRendered();
     const start = this.note.getModifierStartXY(Modifier.Position.ABOVE,
         this.index);
 

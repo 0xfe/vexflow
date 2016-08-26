@@ -463,6 +463,7 @@ export class TabNote extends StemmableNote {
       throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
     }
 
+    this.setRendered();
     const render_stem = this.beam == null && this.render_options.draw_stem;
 
     this.drawPositions();

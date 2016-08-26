@@ -819,7 +819,7 @@ export class Beam extends Element {
   // Render the beam to the canvas context
   draw() {
     this.checkContext();
-
+    this.setRendered();
     if (this.unbeamable) return;
 
     if (!this.postFormatted) {

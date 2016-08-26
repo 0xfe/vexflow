@@ -234,6 +234,7 @@ export class Clef extends StaveModifier {
   draw() {
     if (!this.x) throw new Vex.RERR('ClefError', "Can't draw clef without x.");
     if (!this.stave) throw new Vex.RERR('ClefError', "Can't draw clef without stave.");
+    this.setRendered();
 
     this.glyph.setStave(this.stave);
     this.glyph.setContext(this.stave.context);

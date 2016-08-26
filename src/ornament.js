@@ -192,6 +192,7 @@ export class Ornament extends Modifier {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
     }
 
+    this.setRendered();
     const ctx = this.context;
     const stem_direction = this.note.getStemDirection();
     const stave = this.note.getStave();

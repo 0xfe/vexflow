@@ -43,6 +43,7 @@ export class Tremolo extends Modifier {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");
     }
 
+    this.setRendered();
     const start = this.note.getModifierStartXY(this.position, this.index);
     let x = start.x;
     let y = start.y;

@@ -28,6 +28,7 @@ export class StaveSection extends StaveModifier {
   setShiftY(y) { this.shift_y = y; return this; }
   draw(stave, shift_x) {
     const ctx = stave.checkContext();
+    this.setRendered();
 
     ctx.save();
     ctx.lineWidth = 2;

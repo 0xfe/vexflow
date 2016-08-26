@@ -97,6 +97,7 @@ export class Curve extends Element {
 
   draw() {
     this.checkContext();
+    this.setRendered();
 
     const first_note = this.from;
     const last_note = this.to;

@@ -489,6 +489,7 @@ export class Stave extends Element {
    */
   draw() {
     this.checkContext();
+    this.setRendered();
 
     if (!this.formatted) this.format();
 

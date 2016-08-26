@@ -84,5 +84,7 @@ export class TabSlide extends TabTie {
       ctx.closePath();
       ctx.stroke();
     }
+
+    this.setRendered();
   }
 }
