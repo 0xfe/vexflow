@@ -22,7 +22,7 @@ export class Curve extends Element {
   //    y_shift: pixels to shift
   constructor(from, to, options) {
     super();
-    this.attrs.type = 'Curve';
+    this.setAttribute('type', 'Curve');
 
     this.render_options = {
       spacing: 2,

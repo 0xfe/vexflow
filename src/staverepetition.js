@@ -25,7 +25,7 @@ export class Repetition extends StaveModifier {
 
   constructor(type, x, y_shift) {
     super();
-    this.attrs.type = 'Repetition';
+    this.setAttribute('type', 'Repetition');
 
     this.symbol_type = type;
     this.x = x;

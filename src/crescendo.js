@@ -42,7 +42,7 @@ export class Crescendo extends Note {
   // Initialize the crescendo's properties
   constructor(note_struct) {
     super(note_struct);
-    this.attrs.type = 'Crescendo';
+    this.setAttribute('type', 'Crescendo');
 
     // Whether the object is a decrescendo
     this.decrescendo = false;

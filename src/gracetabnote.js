@@ -16,7 +16,7 @@ export class GraceTabNote extends TabNote {
 
   constructor(note_struct) {
     super(note_struct, false);
-    this.attrs.type = 'GraceTabNote';
+    this.setAttribute('type', 'GraceTabNote');
 
     Vex.Merge(this.render_options, {
       // vertical shift from stave line

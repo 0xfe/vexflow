@@ -76,7 +76,7 @@ export class GraceNoteGroup extends Modifier {
   // `ModifierContext`.
   constructor(grace_notes, show_slur) {
     super();
-    this.attrs.type = 'GraceNoteGroup';
+    this.setAttribute('type', 'GraceNoteGroup');
 
     this.note = null;
     this.index = null;

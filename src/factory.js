@@ -28,13 +28,7 @@ import { EasyScore } from './easyscore';
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
 
-// Exceptions for this class.
-function X(message, data) {
-  this.name = 'FactoryException';
-  this.message = message;
-  this.data = data;
-  L(this.name + ':', message, data);
-}
+export const X = Vex.MakeException('FactoryError');
 
 function setDefaults(params = {}, defaults) {
   const default_options = defaults.options;

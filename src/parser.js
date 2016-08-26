@@ -7,14 +7,7 @@ import { Vex } from './vex';
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 function L(...args) { if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args); }
 
-export class X extends Error {
-  constructor(message, data) {
-    super(message);
-    this.message = message;
-    this.data = data;
-    this.name = 'Parser';
-  }
-}
+export const X = Vex.MakeException('ParserError');
 
 // Converts parser results into an easy to reference list that can be
 // used in triggers.

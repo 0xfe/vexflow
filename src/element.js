@@ -7,26 +7,74 @@
 // of general functions and properties that can be inherited by all VexFlow elements.
 
 import { Vex } from './vex';
+import { Registry } from './registry';
 
 export class Element {
-  constructor() {
+  static newID() { return 'auto' + (Element.ID++); }
+
+  constructor({ type } = {}) {
     this.attrs = {
-      id: '',
+      id: Element.newID(),
       el: null,
-      type: 'Base',
+      type: type || 'Base',
+      classes: {},
     };
 
     this.boundingBox = null;
     this.context = null;
     this.rendered = false;
+
+    // If a default registry exist, then register with it right away.
+    if (Registry.getDefaultRegistry()) {
+      Registry.getDefaultRegistry().register(this);
+    }
   }
 
+  // An element can have multiple class labels.
+  hasClass(className) { return (this.attrs.classes[className] === true); }
+  addClass(className) {
+    this.attrs.classes[className] = true;
+    if (this.registry) {
+      this.registry.onUpdate({
+        id: this.getAttribute('id'),
+        name: 'class',
+        value: className,
+        oldValue: null,
+      });
+    }
+    return this;
+  }
+
+  removeClass(className) {
+    delete this.attrs.classes[className];
+    if (this.registry) {
+      this.registry.onUpdate({
+        id: this.getAttribute('id'),
+        name: 'class',
+        value: null,
+        oldValue: className,
+      });
+    }
+    return this;
+  }
+
+  // This is called by the registry after the element is registered.
+  onRegister(registry) { this.registry = registry; return this; }
   isRendered() { return this.rendered; }
   setRendered(rendered = true) { this.rendered = rendered; return this; }
 
   getAttributes() { return this.attrs; }
   getAttribute(name) { return this.attrs[name]; }
-  setAttribute(name, value) { this.attrs[name] = value; return this; }
+  setAttribute(name, value) {
+    const id = this.attrs.id;
+    const oldValue = this.attrs[name];
+    this.attrs[name] = value;
+    if (this.registry) {
+      // Register with old id to support id changes.
+      this.registry.onUpdate({ id, name, value, oldValue });
+    }
+    return this;
+  }
 
   getContext() { return this.context; }
   setContext(context) { this.context = context; return this; }
@@ -41,3 +89,4 @@ export class Element {
   }
 }
 
+Element.ID = 1000;

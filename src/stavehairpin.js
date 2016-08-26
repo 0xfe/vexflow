@@ -76,7 +76,7 @@ export class StaveHairpin extends Element {
      *
      **/
     super();
-    this.attrs.type = 'StaveHairpin';
+    this.setAttribute('type', 'StaveHairpin');
     this.notes = notes;
     this.hairpin = type;
     this.position = Modifier.Position.BELOW;

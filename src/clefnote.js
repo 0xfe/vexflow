@@ -15,7 +15,7 @@ export class ClefNote extends Note {
 
   constructor(type, size, annotation) {
     super({ duration: 'b' });
-    this.attrs.type = 'ClefNote';
+    this.setAttribute('type', 'ClefNote');
 
     this.setType(type, size, annotation);
 

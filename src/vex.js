@@ -14,6 +14,19 @@ Vex.L = (block, args) => {
   window.console.log(block + ': ' + line);
 };
 
+Vex.MakeException = (name) => {
+  const exception = class extends Error {
+    constructor(message, data) {
+      super(message);
+      this.name = name;
+      this.message = message;
+      this.data = data;
+    }
+  };
+
+  return exception;
+};
+
 // Default runtime exception.
 class RuntimeError {
   constructor(code, message) {

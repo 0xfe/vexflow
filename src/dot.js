@@ -92,7 +92,7 @@ export class Dot extends Modifier {
    */
   constructor() {
     super();
-    this.attrs.type = 'Dot';
+    this.setAttribute('type', 'Dot');
 
     this.note = null;
     this.index = null;

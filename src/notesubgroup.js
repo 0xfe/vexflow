@@ -33,7 +33,7 @@ export class NoteSubGroup extends Modifier {
 
   constructor(subNotes) {
     super();
-    this.attrs.type = 'NoteSubGroup';
+    this.setAttribute('type', 'NoteSubGroup');
 
     this.note = null;
     this.index = null;

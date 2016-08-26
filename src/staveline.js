@@ -141,7 +141,7 @@ export class StaveLine extends Element {
   //  ```
   constructor(notes) {
     super();
-    this.attrs.type = 'StaveLine';
+    this.setAttribute('type', 'StaveLine');
 
     this.notes = notes;
 

@@ -34,7 +34,7 @@ export class Modifier extends Element {
 
   constructor() {
     super();
-    this.attrs.type = 'Modifier';
+    this.setAttribute('type', 'Modifier');
 
     this.width = 0;
 
