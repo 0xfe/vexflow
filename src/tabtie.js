@@ -1,19 +1,18 @@
-/// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// / [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
-import { Vex } from './vex';
 import { StaveTie } from './stavetie';
 
 export class TabTie extends StaveTie {
   static createHammeron(notes) {
-    return new TabTie(notes, "H");
+    return new TabTie(notes, 'H');
   }
 
   static createPulloff(notes) {
-    return new TabTie(notes, "P");
+    return new TabTie(notes, 'P');
   }
 
   constructor(notes, text) {
@@ -29,6 +28,8 @@ export class TabTie extends StaveTie {
      *
      **/
     super(notes, text);
+    this.setAttribute('type', 'TabTie');
+
     this.render_options.cp1 = 9;
     this.render_options.cp2 = 11;
     this.render_options.y_shift = 3;
@@ -37,11 +38,15 @@ export class TabTie extends StaveTie {
   }
 
   draw() {
-    if (!this.context)
-      throw new Vex.RERR("NoContext", "No context to render tie.");
-    var first_note = this.first_note;
-    var last_note = this.last_note;
-    var first_x_px, last_x_px, first_ys, last_ys;
+    this.checkContext();
+    this.setRendered();
+
+    const first_note = this.first_note;
+    const last_note = this.last_note;
+    let first_x_px;
+    let last_x_px;
+    let first_ys;
+    let last_ys;
 
     if (first_note) {
       first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
@@ -62,11 +67,11 @@ export class TabTie extends StaveTie {
     }
 
     this.renderTie({
-      first_x_px: first_x_px,
-      last_x_px: last_x_px,
-      first_ys: first_ys,
-      last_ys: last_ys,
-      direction: -1           // Tab tie's are always face up.
+      first_x_px,
+      last_x_px,
+      first_ys,
+      last_ys,
+      direction: -1, // Tab tie's are always face up.
     });
 
     this.renderText(first_x_px, last_x_px);

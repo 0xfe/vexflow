@@ -21,7 +21,9 @@ VF.Test.run = function () {
   VF.Test.Barline.Start();
   VF.Test.AutoBeamFormatting.Start();
   VF.Test.GraceNote.Start();
+  VF.Test.GraceTabNote.Start();
   VF.Test.Vibrato.Start();
+  VF.Test.VibratoBracket.Start();
   VF.Test.Annotation.Start();
   VF.Test.Tuning.Start();
   VF.Test.Music.Start();
@@ -29,6 +31,7 @@ VF.Test.run = function () {
   VF.Test.Articulation.Start();
   VF.Test.StaveConnector.Start();
   VF.Test.Percussion.Start();
+  VF.Test.NoteSubGroup.Start();
   VF.Test.ClefKeySignature.Start();
   VF.Test.StaveHairpin.Start();
   VF.Test.Rhythm.Start();
@@ -45,6 +48,11 @@ VF.Test.run = function () {
   VF.Test.PedalMarking.Start();
   VF.Test.TextBracket.Start();
   VF.Test.StaveModifier.Start();
+  VF.Test.GhostNote.Start();
+  VF.Test.Factory.Start();
+  VF.Test.Parser.Start();
+  VF.Test.EasyScore.Start();
+  VF.Test.Registry.Start();
 }
 
 module.exports = VF.Test;

@@ -13,8 +13,16 @@ VF.Test.Formatter = (function() {
       runTests("StaveNote Formatting", Formatter.formatStaveNotes);
       runTests("StaveNote Justification", Formatter.justifyStaveNotes);
       runTests("Notes with Tab", Formatter.notesWithTab);
-      runTests("Format Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0});
-      runTests("Format Multiple Staves - Justified", Formatter.multiStaves, {justify: 168});
+      runTests("Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0, iterations: 0});
+      runTests("Multiple Staves - Justified", Formatter.multiStaves, {justify: 168, iterations: 0});
+      runTests("Multiple Staves - Justified - 6 Iterations", Formatter.multiStaves, {justify: 168, iterations: 6});
+      runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: false, iterations: 0});
+      runTests("Proportional Formatting - 15 steps", Formatter.proportionalFormatting, {debug: false, iterations: 15});
+
+      for (var i = 2; i < 15; i++) {
+        VF.Test.runSVGTest("Proportional Formatting (" + i + " iterations)",
+          Formatter.proportionalFormatting, {debug: true, iterations: i});
+      }
     },
 
     buildTickContexts: function() {
@@ -321,12 +329,23 @@ VF.Test.Formatter = (function() {
       var beam31a = new VF.Beam(notes31.slice(0, 3));
       var beam31b = new VF.Beam(notes31.slice(3, 6));
 
+      var formatter;
       if (options.params.justify > 0) {
-        new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
-          format([voice11, voice21, voice31], options.params.justify);
+        formatter = new VF.Formatter()
+          .joinVoices([voice11])
+          .joinVoices([voice21])
+          .joinVoices([voice31])
+          .format([voice11, voice21, voice31], options.params.justify);
       } else {
-        new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
-          format([voice11, voice21, voice31]);
+        formatter = new VF.Formatter()
+          .joinVoices([voice11])
+          .joinVoices([voice21])
+          .joinVoices([voice31])
+          .format([voice11, voice21, voice31]);
+      }
+
+      for (var i = 0; i < options.params.iterations; i++) {
+        formatter.tune();
       }
 
       voice11.draw(ctx, stave11);
@@ -382,12 +401,23 @@ VF.Test.Formatter = (function() {
       voice32.addTickables(notes32);
 
       if (options.params.justify > 0) {
-        new VF.Formatter().joinVoices([voice12, voice22, voice32]).
-          format([voice12, voice22, voice32], 188);
+        formatter = new VF.Formatter()
+          .joinVoices([voice12])
+          .joinVoices([voice22])
+          .joinVoices([voice32])
+          .format([voice12, voice22, voice32], 188);
       } else {
-        new VF.Formatter().joinVoices([voice12, voice22, voice32]).
-          format([voice12, voice22, voice32]);
+        formatter = new VF.Formatter()
+          .joinVoices([voice12])
+          .joinVoices([voice22])
+          .joinVoices([voice32])
+          .format([voice12, voice22, voice32]);
       }
+
+      for (var i = 0; i < options.params.iterations; i++) {
+        formatter.tune();
+      }
+
       var beam32a = new VF.Beam(notes32.slice(0, 3));
       var beam32b = new VF.Beam(notes32.slice(3, 6));
 
@@ -397,6 +427,48 @@ VF.Test.Formatter = (function() {
       beam32a.setContext(ctx).draw();
       beam32b.setContext(ctx).draw();
 
+      ok(true);
+    },
+
+    proportionalFormatting: function(options) {
+      var debug = options.params.debug;
+      VF.Registry.enableDefaultRegistry(new VF.Registry());
+
+      var vf = VF.Test.makeFactory(options, 600, 750);
+      var system = vf.System({
+        x: 50, width: 500,
+        debugFormatter: debug,
+        formatIterations: options.params.iterations,
+      });
+      var score = vf.EasyScore();
+
+      var newVoice = function(notes) { return score.voice(notes, {time: '1/4'})};
+      var newStave = function(voice) {
+        system.addStave({voices: [voice], debugNoteMetrics: debug})
+          .addClef('treble')
+          .addTimeSignature('1/4');
+      };
+
+      var voices = [
+        score.notes('c5/8, c5'),
+        score.tuplet(score.notes('a4/8, a4, a4'), {notes_occupied: 2}),
+        score.notes('c5/16, c5, c5, c5'),
+        score.tuplet(score.notes('a4/16, a4, a4, a4, a4'), {notes_occupied: 4}),
+        score.tuplet(score.notes('a4/32, a4, a4, a4, a4, a4, a4'), {notes_occupied: 8}),
+      ];
+
+      voices.map(newVoice).forEach(newStave);
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+
+      vf.draw();
+
+      var typeMap = VF.Registry.getDefaultRegistry().index.type;
+      var table = Object.keys(typeMap).map(function (k) {
+        return k + ": " + Object.keys(typeMap[k]).length;
+      });
+
+      // console.log(table);
+      VF.Registry.disableDefaultRegistry();
       ok(true);
     },
 

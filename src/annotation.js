@@ -12,7 +12,7 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
-function L() { if (Annotation.DEBUG) Vex.L("Vex.Flow.Annotation", arguments); }
+function L(...args) { if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args); }
 
 export class Annotation extends Modifier {
   static get CATEGORY() { return 'annotations'; }
@@ -23,7 +23,7 @@ export class Annotation extends Modifier {
       LEFT: 1,
       CENTER: 2,
       RIGHT: 3,
-      CENTER_STEM: 4
+      CENTER_STEM: 4,
     };
   }
   static get VerticalJustify() {
@@ -31,7 +31,7 @@ export class Annotation extends Modifier {
       TOP: 1,
       CENTER: 2,
       BOTTOM: 3,
-      CENTER_STEM: 4
+      CENTER_STEM: 4,
     };
   }
 
@@ -39,9 +39,9 @@ export class Annotation extends Modifier {
   static format(annotations, state) {
     if (!annotations || annotations.length === 0) return false;
 
-    var width = 0;
-    for (var i = 0; i < annotations.length; ++i) {
-      var annotation = annotations[i];
+    let width = 0;
+    for (let i = 0; i < annotations.length; ++i) {
+      const annotation = annotations[i];
       width = Math.max(annotation.getWidth(), width);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
@@ -64,6 +64,7 @@ export class Annotation extends Modifier {
   // Create a new `Annotation` with the string `text`.
   constructor(text) {
     super();
+    this.setAttribute('type', 'Annotation');
 
     this.note = null;
     this.index = null;
@@ -71,9 +72,9 @@ export class Annotation extends Modifier {
     this.justification = Annotation.Justify.CENTER;
     this.vert_justification = Annotation.VerticalJustify.TOP;
     this.font = {
-      family: "Arial",
+      family: 'Arial',
       size: 10,
-      weight: ""
+      weight: '',
     };
 
     // The default width is calculated from the text.
@@ -84,7 +85,7 @@ export class Annotation extends Modifier {
 
   // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
   setFont(family, size, weight) {
-    this.font = { family: family, size: size, weight: weight };
+    this.font = { family, size, weight };
     return this;
   }
 
@@ -105,39 +106,45 @@ export class Annotation extends Modifier {
 
   // Render text beside the note.
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
-      "Can't draw text annotation without a context.");
-    if (!this.note) throw new Vex.RERR("NoNoteForAnnotation",
-      "Can't draw text annotation without an attached note.");
+    this.checkContext();
 
-    var start = this.note.getModifierStartXY(Modifier.Position.ABOVE,
+    if (!this.note) {
+      throw new Vex.RERR(
+        'NoNoteForAnnotation', "Can't draw text annotation without an attached note."
+      );
+    }
+
+    this.setRendered();
+    const start = this.note.getModifierStartXY(Modifier.Position.ABOVE,
         this.index);
 
     // We're changing context parameters. Save current state.
     this.context.save();
     this.context.setFont(this.font.family, this.font.size, this.font.weight);
-    var text_width = this.context.measureText(this.text).width;
+    const text_width = this.context.measureText(this.text).width;
 
     // Estimate text height to be the same as the width of an 'm'.
     //
     // This is a hack to work around the inability to measure text height
     // in HTML5 Canvas (and SVG).
-    var text_height = this.context.measureText("m").width;
-    var x, y;
+    const text_height = this.context.measureText('m').width;
+    let x;
+    let y;
 
-    if (this.justification == Annotation.Justify.LEFT) {
+    if (this.justification === Annotation.Justify.LEFT) {
       x = start.x;
-    } else if (this.justification == Annotation.Justify.RIGHT) {
+    } else if (this.justification === Annotation.Justify.RIGHT) {
       x = start.x - text_width;
-    } else if (this.justification == Annotation.Justify.CENTER) {
+    } else if (this.justification === Annotation.Justify.CENTER) {
       x = start.x - text_width / 2;
     } else /* CENTER_STEM */ {
       x = this.note.getStemX() - text_width / 2;
     }
 
-    var stem_ext, spacing;
-    var has_stem = this.note.hasStem();
-    var stave = this.note.getStave();
+    let stem_ext;
+    let spacing;
+    const has_stem = this.note.hasStem();
+    const stave = this.note.getStave();
 
     // The position of the text varies based on whether or not the note
     // has a stem.
@@ -146,30 +153,30 @@ export class Annotation extends Modifier {
       spacing = stave.getSpacingBetweenLines();
     }
 
-    if (this.vert_justification == Annotation.VerticalJustify.BOTTOM) {
-      y = stave.getYForBottomText(this.text_line);
+    if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
+      // HACK: We need to compensate for the text's height since its origin
+      // is bottom-right.
+      y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
       if (has_stem) {
-        var stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
+        const stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
         y = Math.max(y, stem_base + (spacing * (this.text_line + 2)));
       }
-    } else if (this.vert_justification ==
-               Annotation.VerticalJustify.CENTER) {
-      var yt = this.note.getYForTopText(this.text_line) - 1;
-      var yb = stave.getYForBottomText(this.text_line);
-      y = yt + ( yb - yt ) / 2 + text_height / 2;
-    } else if (this.vert_justification ==
-               Annotation.VerticalJustify.TOP) {
+    } else if (this.vert_justification === Annotation.VerticalJustify.CENTER) {
+      const yt = this.note.getYForTopText(this.text_line) - 1;
+      const yb = stave.getYForBottomText(this.text_line);
+      y = yt + (yb - yt) / 2 + text_height / 2;
+    } else if (this.vert_justification === Annotation.VerticalJustify.TOP) {
       y = Math.min(stave.getYForTopText(this.text_line), this.note.getYs()[0] - 10);
       if (has_stem) {
         y = Math.min(y, (stem_ext.topY - 5) - (spacing * this.text_line));
       }
     } else /* CENTER_STEM */{
-      var extents = this.note.getStemExtents();
+      const extents = this.note.getStemExtents();
       y = extents.topY + (extents.baseY - extents.topY) / 2 +
         text_height / 2;
     }
 
-    L("Rendering annotation: ", this.text, x, y);
+    L('Rendering annotation: ', this.text, x, y);
     this.context.fillText(this.text, x, y);
     this.context.restore();
   }

@@ -9,29 +9,50 @@ import { Vex } from './vex';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
 
+const assertIsValidFraction = (timeSpec) => {
+  const numbers = timeSpec.split('/').filter(number => number !== '');
+
+  if (numbers.length !== 2) {
+    throw new Vex.RERR(
+      'BadTimeSignature',
+      `Invalid time spec: ${timeSpec}. Must be in the form "<numerator>/<denominator>"`
+    );
+  }
+
+  numbers.forEach(number => {
+    if (isNaN(Number(number))) {
+      throw new Vex.RERR(
+        'BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain two valid numbers.`
+      );
+    }
+  });
+};
+
 export class TimeSignature extends StaveModifier {
   static get CATEGORY() { return 'timesignatures'; }
+
   static get glyphs() {
     return {
-      "C": {
-        code: "v41",
+      'C': {
+        code: 'v41',
         point: 40,
-        line: 2
+        line: 2,
       },
-      "C|": {
-        code: "vb6",
+      'C|': {
+        code: 'vb6',
         point: 40,
-        line: 2
-      }
+        line: 2,
+      },
     };
   }
 
   constructor(timeSpec = null, customPadding = 15) {
     super();
-    if(timeSpec === null) {
-      return;
-    }
-    var padding = customPadding;
+    this.setAttribute('type', 'TimeSignature');
+
+    if (timeSpec === null) return;
+
+    const padding = customPadding;
 
     this.point = 40;
     this.topLine = 2;
@@ -45,114 +66,89 @@ export class TimeSignature extends StaveModifier {
   getCategory() { return TimeSignature.CATEGORY; }
 
   parseTimeSpec(timeSpec) {
-    if (timeSpec == "C" || timeSpec == "C|") {
-      var glyphInfo = TimeSignature.glyphs[timeSpec];
-      return {num: false, line: glyphInfo.line,
-        glyph: new Glyph(glyphInfo.code, glyphInfo.point)};
+    if (timeSpec === 'C' || timeSpec === 'C|') {
+      const { line, code, point } = TimeSignature.glyphs[timeSpec];
+      return {
+        line,
+        num: false,
+        glyph: new Glyph(code, point),
+      };
     }
 
-    var topNums = [];
-    var i, c;
-    for (i = 0; i < timeSpec.length; ++i) {
-      c = timeSpec.charAt(i);
-      if (c == "/") {
-        break;
-      }
-      else if (/[0-9]/.test(c)) {
-        topNums.push(c);
-      }
-      else {
-        throw new Vex.RERR("BadTimeSignature",
-            "Invalid time spec: " + timeSpec);
-      }
-    }
+    assertIsValidFraction(timeSpec);
 
-    if (i === 0) {
-      throw new Vex.RERR("BadTimeSignature",
-            "Invalid time spec: " + timeSpec);
-    }
+    const [topDigits, botDigits] = timeSpec
+      .split('/')
+      .map(number => number.split(''));
 
-    // skip the "/"
-    ++i;
-
-    if (i == timeSpec.length) {
-      throw new Vex.RERR("BadTimeSignature",
-            "Invalid time spec: " + timeSpec);
-    }
-
-
-    var botNums = [];
-    for (; i < timeSpec.length; ++i) {
-      c = timeSpec.charAt(i);
-      if (/[0-9]/.test(c)) {
-        botNums.push(c);
-      }
-      else {
-        throw new Vex.RERR("BadTimeSignature",
-            "Invalid time spec: " + timeSpec);
-      }
-    }
-
-
-    return {num: true, glyph: this.makeTimeSignatureGlyph(topNums, botNums)};
+    return {
+      num: true,
+      glyph: this.makeTimeSignatureGlyph(topDigits, botDigits),
+    };
   }
 
-  makeTimeSignatureGlyph(topNums, botNums) {
-    var glyph = new Glyph("v0", this.point);
-    glyph["topGlyphs"] = [];
-    glyph["botGlyphs"] = [];
+  makeTimeSignatureGlyph(topDigits, botDigits) {
+    const glyph = new Glyph('v0', this.point);
+    glyph.topGlyphs = [];
+    glyph.botGlyphs = [];
 
-    var topWidth = 0;
-    var i, num;
-    for (i = 0; i < topNums.length; ++i) {
-      num = topNums[i];
-      var topGlyph = new Glyph("v" + num, this.point);
+    let topWidth = 0;
+    for (let i = 0; i < topDigits.length; ++i) {
+      const num = topDigits[i];
+      const topGlyph = new Glyph('v' + num, this.point);
 
       glyph.topGlyphs.push(topGlyph);
       topWidth += topGlyph.getMetrics().width;
     }
 
-    var botWidth = 0;
-    for (i = 0; i < botNums.length; ++i) {
-      num = botNums[i];
-      var botGlyph = new Glyph("v" + num, this.point);
+    let botWidth = 0;
+    for (let i = 0; i < botDigits.length; ++i) {
+      const num = botDigits[i];
+      const botGlyph = new Glyph('v' + num, this.point);
 
       glyph.botGlyphs.push(botGlyph);
       botWidth += botGlyph.getMetrics().width;
     }
 
-    var width = (topWidth > botWidth ? topWidth : botWidth);
-    var xMin = glyph.getMetrics().x_min;
+    const width = topWidth > botWidth ? topWidth : botWidth;
+    const xMin = glyph.getMetrics().x_min;
 
-    glyph.getMetrics = function() {
-      return {
-        x_min: xMin,
-        x_max: xMin + width,
-        width: width
-      };
-    };
+    glyph.getMetrics = () => ({
+      x_min: xMin,
+      x_max: xMin + width,
+      width,
+    });
 
-    var topStartX = (width - topWidth) / 2.0;
-    var botStartX = (width - botWidth) / 2.0;
+    const topStartX = (width - topWidth) / 2.0;
+    const botStartX = (width - botWidth) / 2.0;
 
-    var that = this;
-    glyph.renderToStave = function(x) {
-      var start_x = x + topStartX;
-      var i, g;
-      for (i = 0; i < this.topGlyphs.length; ++i) {
-        g = this.topGlyphs[i];
-        Glyph.renderOutline(this.context, g.metrics.outline,
-            g.scale, start_x + g.x_shift, this.stave.getYForLine(that.topLine) + 1);
-        start_x += g.getMetrics().width;
+    const that = this;
+    glyph.renderToStave = function renderToStave(x) {
+      let start_x = x + topStartX;
+      for (let i = 0; i < this.topGlyphs.length; ++i) {
+        const glyph = this.topGlyphs[i];
+        Glyph.renderOutline(
+          this.context,
+          glyph.metrics.outline,
+          glyph.scale,
+          start_x + glyph.x_shift,
+          this.stave.getYForLine(that.topLine) + 1
+        );
+        start_x += glyph.getMetrics().width;
       }
 
       start_x = x + botStartX;
-      for (i = 0; i < this.botGlyphs.length; ++i) {
-        g = this.botGlyphs[i];
-        that.placeGlyphOnLine(g, this.stave, g.line);
-        Glyph.renderOutline(this.context, g.metrics.outline,
-            g.scale, start_x + g.x_shift, this.stave.getYForLine(that.bottomLine) + 1);
-        start_x += g.getMetrics().width;
+      for (let i = 0; i < this.botGlyphs.length; ++i) {
+        const glyph = this.botGlyphs[i];
+        that.placeGlyphOnLine(glyph, this.stave, glyph.line);
+        Glyph.renderOutline(
+          this.context,
+          glyph.metrics.outline,
+          glyph.scale,
+          start_x + glyph.x_shift,
+          this.stave.getYForLine(that.bottomLine) + 1
+        );
+        start_x += glyph.getMetrics().width;
       }
     };
 
@@ -169,9 +165,15 @@ export class TimeSignature extends StaveModifier {
   }
 
   draw() {
-    if (!this.x) throw new Vex.RERR("TimeSignatureError", "Can't draw time signature without x.");
-    if (!this.stave) throw new Vex.RERR("TimeSignatureError", "Can't draw time signature without stave.");
+    if (!this.x) {
+      throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without x.");
+    }
 
+    if (!this.stave) {
+      throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without stave.");
+    }
+
+    this.setRendered();
     this.timeSig.glyph.setStave(this.stave);
     this.timeSig.glyph.setContext(this.stave.context);
     this.placeGlyphOnLine(this.timeSig.glyph, this.stave, this.timeSig.line);

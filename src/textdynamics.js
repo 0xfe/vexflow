@@ -12,36 +12,36 @@ import { Note } from './note';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
-function L() { if (TextDynamics.DEBUG) Vex.L("Vex.Flow.TextDynamics", arguments); }
+function L(...args) { if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args); }
 
 export class TextDynamics extends Note {
   // The glyph data for each dynamics letter
   static get GLYPHS() {
     return {
-      "f": {
-        code: "vba",
-        width: 12
+      'f': {
+        code: 'vba',
+        width: 12,
       },
-      "p": {
-        code: "vbf",
-        width: 14
+      'p': {
+        code: 'vbf',
+        width: 14,
       },
-      "m": {
-        code: "v62",
-        width: 17
+      'm': {
+        code: 'v62',
+        width: 17,
       },
-      "s": {
-        code: "v4a",
-        width: 10
+      's': {
+        code: 'v4a',
+        width: 10,
       },
-      "z": {
-        code: "v80",
-        width: 12
+      'z': {
+        code: 'v80',
+        width: 12,
       },
-      "r": {
-        code: "vb1",
-        width: 12
-      }
+      'r': {
+        code: 'vb1',
+        width: 12,
+      },
     };
   }
 
@@ -52,38 +52,42 @@ export class TextDynamics extends Note {
   // letters that represents the letters to render
   constructor(text_struct) {
     super(text_struct);
+    this.setAttribute('type', 'TextDynamics');
 
     this.sequence = text_struct.text.toLowerCase();
     this.line = text_struct.line || 0;
     this.glyphs = [];
 
     Vex.Merge(this.render_options, {
-      glyph_font_size: 40
+      glyph_font_size: 40,
     });
 
-    L("New Dynamics Text: ", this.sequence);
+    L('New Dynamics Text: ', this.sequence);
   }
 
   // Set the Stave line on which the note should be placed
-  setLine(line) { this.line = line;  return this; }
+  setLine(line) {
+    this.line = line;
+    return this;
+  }
 
   // Preformat the dynamics text
   preFormat() {
-    var total_width = 0;
+    let total_width = 0;
     // Iterate through each letter
-    this.sequence.split('').forEach(function(letter) {
+    this.sequence.split('').forEach(letter => {
       // Get the glyph data for the letter
-      var glyph_data = TextDynamics.GLYPHS[letter];
-      if (!glyph_data) throw new Vex.RERR("Invalid dynamics character: " + letter);
+      const glyph_data = TextDynamics.GLYPHS[letter];
+      if (!glyph_data) throw new Vex.RERR('Invalid dynamics character: ' + letter);
 
-      var size =  this.render_options.glyph_font_size;
-      var glyph = new Glyph(glyph_data.code, size);
+      const size =  this.render_options.glyph_font_size;
+      const glyph = new Glyph(glyph_data.code, size);
 
       // Add the glyph
       this.glyphs.push(glyph);
 
       total_width += glyph_data.width;
-    }, this);
+    });
 
     // Store the width of the text
     this.setWidth(total_width);
@@ -93,16 +97,17 @@ export class TextDynamics extends Note {
 
   // Draw the dynamics text on the rendering context
   draw() {
-    var x = this.getAbsoluteX();
-    var y = this.stave.getYForLine(this.line + (-3));
+    this.setRendered();
+    const x = this.getAbsoluteX();
+    const y = this.stave.getYForLine(this.line + (-3));
 
-    L("Rendering Dynamics: ", this.sequence);
+    L('Rendering Dynamics: ', this.sequence);
 
-    var letter_x = x;
-    this.glyphs.forEach(function(glyph, index) {
-      var current_letter = this.sequence[index];
+    let letter_x = x;
+    this.glyphs.forEach((glyph, index) => {
+      const current_letter = this.sequence[index];
       glyph.render(this.context, letter_x, y);
       letter_x += TextDynamics.GLYPHS[current_letter].width;
-    }, this);
+    });
   }
 }

@@ -14,11 +14,12 @@
 // `ModifierContext`. This ensures that multiple voices don't trample all over each other.
 
 import { Vex } from './vex';
+import { Element } from './element';
 
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
-function L() { if (Modifier.DEBUG) Vex.L("Vex.Flow.Modifier", arguments); }
+// function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
 
-export class Modifier {
+export class Modifier extends Element {
   static get CATEGORY() { return 'none'; }
 
   // Modifiers can be positioned almost anywhere, relative to a note.
@@ -27,13 +28,15 @@ export class Modifier {
       LEFT: 1,
       RIGHT: 2,
       ABOVE: 3,
-      BELOW: 4
+      BELOW: 4,
     };
   }
 
   constructor() {
+    super();
+    this.setAttribute('type', 'Modifier');
+
     this.width = 0;
-    this.context = null;
 
     // Modifiers are attached to a note and an index. An index is a
     // specific head in a chord.
@@ -47,7 +50,6 @@ export class Modifier {
     this.x_shift = 0;
     this.y_shift = 0;
     this.spacingFromNextModifier = 0;
-    L("Created new modifier");
   }
 
   // Every modifier has a category. The `ModifierContext` uses this to determine
@@ -65,10 +67,6 @@ export class Modifier {
   // Get and set note index, which is a specific note in a chord.
   getIndex() { return this.index; }
   setIndex(index) { this.index = index; return this; }
-
-  // Get and set rendering context.
-  getContext() { return this.context; }
-  setContext(context) { this.context = context; return this; }
 
   // Every modifier must be part of a `ModifierContext`.
   getModifierContext() { return this.modifier_context; }
@@ -88,25 +86,23 @@ export class Modifier {
     this.spacingFromNextModifier = x;
   }
 
-  getSpacingFromNextModifier() {return this.spacingFromNextModifier; }
+  getSpacingFromNextModifier() { return this.spacingFromNextModifier; }
 
   // Shift modifier `x` pixels in the direction of the modifier. Negative values
   // shift reverse.
   setXShift(x) {
     this.x_shift = 0;
-    if (this.position == Modifier.Position.LEFT) {
+    if (this.position === Modifier.Position.LEFT) {
       this.x_shift -= x;
     } else {
       this.x_shift += x;
     }
   }
-  getXShift() {return this.x_shift;}
+  getXShift() { return this.x_shift; }
 
   // Render the modifier onto the canvas.
   draw() {
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
-        "Can't draw without a canvas context.");
-    throw new Vex.RERR("MethodNotImplemented",
-        "Draw() not implemented for this modifier.");
+    this.checkContext();
+    throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
   }
 }

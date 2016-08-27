@@ -19,7 +19,8 @@ VF.Test.Stave = (function() {
       runTests("Single Line Configuration Test", Stave.configureSingleLine);
       runTests("Batch Line Configuration Test", Stave.configureAllLines);
       runTests("Stave Text Test", Stave.drawStaveText);
-      runTests("Multiple Line Stave Text Test (Raphael)", Stave.drawStaveTextMultiLine);
+      runTests("Multiple Line Stave Text Test", Stave.drawStaveTextMultiLine);
+      runTests("Factory API", Stave.factoryAPI);
     },
 
     sortByCategory: function(options) {
@@ -89,9 +90,9 @@ VF.Test.Stave = (function() {
       stave.draw();
 
       equal(stave.getYForNote(0), 100, "getYForNote(0)");
-      equal(stave.getYForLine(5), 99, "getYForLine(5)");
-      equal(stave.getYForLine(0), 49, "getYForLine(0) - Top Line");
-      equal(stave.getYForLine(4), 89, "getYForLine(4) - Bottom Line");
+      equal(stave.getYForLine(5), 100, "getYForLine(5)");
+      equal(stave.getYForLine(0), 50, "getYForLine(0) - Top Line");
+      equal(stave.getYForLine(4), 90, "getYForLine(4) - Bottom Line");
 
       ok(true, "all pass");
     },
@@ -503,6 +504,16 @@ VF.Test.Stave = (function() {
       stave.setText("Right Below Text", VF.Modifier.Position.BELOW,
         {shift_y: 10, justification: VF.TextNote.Justification.RIGHT});
       stave.setContext(ctx).draw();
+
+      ok(true, "all pass");
+    },
+
+    factoryAPI: function(options) {
+      var vf = VF.Test.makeFactory(options, 900, 200);
+      var stave = vf.Stave({x: 300, y: 40, width: 300});
+      stave.setText("Violin", VF.Modifier.Position.LEFT, {shift_y: -10});
+      stave.setText("2nd line", VF.Modifier.Position.LEFT, {shift_y: 10});
+      vf.draw();
 
       ok(true, "all pass");
     }

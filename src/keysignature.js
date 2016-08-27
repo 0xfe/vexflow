@@ -20,66 +20,67 @@ export class KeySignature extends StaveModifier {
     return {
       '#': {
         above: 6,
-        below: 4
+        below: 4,
       },
       'b': {
         above: 4,
-        below: 7
+        below: 7,
       },
       'n': {
         above: 3,
-        below: -1
+        below: -1,
       },
       '##': {
         above: 6,
-        below: 4
+        below: 4,
       },
       'bb': {
         above: 4,
-        below: 7
+        below: 7,
       },
       'db': {
         above: 4,
-        below: 7
+        below: 7,
       },
       'd': {
         above: 4,
-        below: 7
+        below: 7,
       },
       'bbs': {
         above: 4,
-        below: 7
+        below: 7,
       },
       '++': {
         above: 6,
-        below: 4
+        below: 4,
       },
       '+': {
         above: 6,
-        below: 4
+        below: 4,
       },
       '+-': {
         above: 6,
-        below: 4
+        below: 4,
       },
       '++-': {
         above: 6,
-        below: 4
+        below: 4,
       },
       'bs': {
         above: 4,
-        below: 10
+        below: 10,
       },
       'bss': {
         above: 4,
-        below: 10
-      }
+        below: 10,
+      },
     };
   }
 
   // Create a new Key Signature based on a `key_spec`
   constructor(keySpec, cancelKeySpec, alterKeySpec) {
     super();
+    this.setAttribute('type', 'KeySignature');
 
     this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
     this.setPosition(StaveModifier.Position.BEGIN);
@@ -95,15 +96,15 @@ export class KeySignature extends StaveModifier {
   // the provided `acc`. If `nextAcc` is also provided, the appropriate
   // spacing will be included in the glyph's position
   convertToGlyph(acc, nextAcc) {
-    var accGlyphData = Flow.accidentalCodes(acc.type);
-    var glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
+    const accGlyphData = Flow.accidentalCodes(acc.type);
+    const glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
 
     // Determine spacing between current accidental and the next accidental
-    var extraWidth = 0;
-    if (acc.type === "n" && nextAcc) {
-      var spacing = KeySignature.accidentalSpacing[nextAcc.type];
+    let extraWidth = 0;
+    if (acc.type === 'n' && nextAcc) {
+      const spacing = KeySignature.accidentalSpacing[nextAcc.type];
       if (spacing) {
-        var isAbove = nextAcc.line >= acc.line;
+        const isAbove = nextAcc.line >= acc.line;
         extraWidth = isAbove ? spacing.above : spacing.below;
       }
     }
@@ -112,8 +113,8 @@ export class KeySignature extends StaveModifier {
     this.placeGlyphOnLine(glyph, this.stave, acc.line);
     this.glyphs.push(glyph);
 
-    var xPosition = this.xPositions[this.xPositions.length - 1];
-    var glyphWidth = accGlyphData.width + extraWidth;
+    const xPosition = this.xPositions[this.xPositions.length - 1];
+    const glyphWidth = accGlyphData.width + extraWidth;
     // Store the next accidental's x position
     this.xPositions.push(xPosition + glyphWidth);
     // Expand size of key signature
@@ -131,33 +132,31 @@ export class KeySignature extends StaveModifier {
 
   convertToCancelAccList(spec) {
     // Get the accidental list for the cancelled key signature
-    var cancel_accList = Flow.keySignature(spec);
+    const cancel_accList = Flow.keySignature(spec);
 
     // If the cancelled key has a different accidental type, ie: # vs b
-    var different_types = this.accList.length > 0 && cancel_accList.length > 0 &&
-                          cancel_accList[0].type !== this.accList[0].type;
+    const different_types = this.accList.length > 0
+      && cancel_accList.length > 0
+      && cancel_accList[0].type !== this.accList[0].type;
 
     // Determine how many naturals needed to add
-    var naturals = 0;
-    if (different_types) {
-      naturals = cancel_accList.length;
-    } else {
-      naturals = cancel_accList.length - this.accList.length;
-    }
+    const naturals = different_types
+      ? cancel_accList.length
+      : cancel_accList.length - this.accList.length;
 
     // Return if no naturals needed
     if (naturals < 1) return;
 
     // Get the line position for each natural
-    var cancelled = [];
-    for (var i = 0; i < naturals; i++) {
-      var index = i;
+    const cancelled = [];
+    for (let i = 0; i < naturals; i++) {
+      let index = i;
       if (!different_types) {
         index = cancel_accList.length - naturals + i;
       }
 
-      var acc = cancel_accList[index];
-      cancelled.push({type: "n", line: acc.line});
+      const acc = cancel_accList[index];
+      cancelled.push({ type: 'n', line: acc.line });
     }
 
     // Combine naturals with main accidental list for the key signature
@@ -165,7 +164,7 @@ export class KeySignature extends StaveModifier {
   }
 
   // Deprecated
-  addToStave(stave, firstGlyph) {
+  addToStave(stave) {
     this.paddingForced = true;
     stave.addModifier(this);
 
@@ -175,40 +174,42 @@ export class KeySignature extends StaveModifier {
   // Apply the accidental staff line placement based on the `clef` and
   // the  accidental `type` for the key signature ('# or 'b').
   convertAccLines(clef, type) {
-    var offset = 0.0; // if clef === "treble"
-    var customLines; // when clef doesn't follow treble key sig shape
+    let offset = 0.0; // if clef === "treble"
+    let customLines; // when clef doesn't follow treble key sig shape
 
     switch (clef) {
       // Treble & Subbass both have offsets of 0, so are not included.
-      case "soprano":
-        if(type === "#") customLines = [2.5,0.5,2,0,1.5,-0.5,1];
+      case 'soprano':
+        if (type === '#') customLines = [2.5, 0.5, 2, 0, 1.5, -0.5, 1];
         else offset = -1;
         break;
-      case "mezzo-soprano":
-        if(type === "b") customLines = [0,2,0.5,2.5,1,3,1.5];
+      case 'mezzo-soprano':
+        if (type === 'b') customLines = [0, 2, 0.5, 2.5, 1, 3, 1.5];
         else offset = 1.5;
         break;
-      case "alto":
+      case 'alto':
         offset = 0.5;
         break;
-      case "tenor":
-        if(type === "#") customLines = [3, 1, 2.5, 0.5, 2, 0, 1.5];
+      case 'tenor':
+        if (type === '#') customLines = [3, 1, 2.5, 0.5, 2, 0, 1.5];
         else offset = -0.5;
         break;
-      case "baritone-f":
-      case "baritone-c":
-        if(type === "b") customLines = [0.5,2.5,1,3,1.5,3.5,2];
+      case 'baritone-f':
+      case 'baritone-c':
+        if (type === 'b') customLines = [0.5, 2.5, 1, 3, 1.5, 3.5, 2];
         else offset = 2;
         break;
-      case "bass":
-      case "french":
+      case 'bass':
+      case 'french':
         offset = 1;
+        break;
+      default:
         break;
     }
 
     // If there's a special case, assign those lines/spaces:
-    var i;
-    if (typeof customLines !== "undefined") {
+    let i;
+    if (typeof customLines !== 'undefined') {
       for (i = 0; i < this.accList.length; ++i) {
         this.accList[i].line = customLines[i];
       }
@@ -254,8 +255,8 @@ export class KeySignature extends StaveModifier {
   }
 
   convertToAlterAccList(alterKeySpec) {
-    var max = Math.min(alterKeySpec.length, this.accList.length);
-    for (var i = 0; i < max; ++i) {
+    const max = Math.min(alterKeySpec.length, this.accList.length);
+    for (let i = 0; i < max; ++i) {
       if (alterKeySpec[i]) {
         this.accList[i].type = alterKeySpec[i];
       }
@@ -263,7 +264,9 @@ export class KeySignature extends StaveModifier {
   }
 
   format() {
-    if (!this.stave) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without stave.");
+    if (!this.stave) {
+      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+    }
 
     this.width = 0;
     this.glyphs = [];
@@ -272,15 +275,15 @@ export class KeySignature extends StaveModifier {
     if (this.cancelKeySpec) {
       this.convertToCancelAccList(this.cancelKeySpec);
     }
-    var firstAccidentalType = this.accList.length > 0 ? this.accList[0].type : null;
+    const firstAccidentalType = this.accList.length > 0 ? this.accList[0].type : null;
     if (this.alterKeySpec) {
       this.convertToAlterAccList(this.alterKeySpec);
     }
 
     if (this.accList.length > 0) {
       this.convertAccLines(this.stave.clef, firstAccidentalType);
-      for (var i = 0; i < this.accList.length; ++i) {
-        this.convertToGlyph(this.accList[i], this.accList[i+1]);
+      for (let i = 0; i < this.accList.length; ++i) {
+        this.convertToGlyph(this.accList[i], this.accList[i + 1]);
       }
     }
 
@@ -288,13 +291,20 @@ export class KeySignature extends StaveModifier {
   }
 
   draw() {
-    if (!this.x) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without x.");
-    if (!this.stave) throw new Vex.RERR("KeySignatureError", "Can't draw key signature without stave.");
-    if (!this.formatted) this.format();
+    if (!this.x) {
+      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without x.");
+    }
 
-    for (var i = 0; i < this.glyphs.length; i++) {
-      var glyph = this.glyphs[i];
-      var x = this.x + this.xPositions[i];
+    if (!this.stave) {
+      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+    }
+
+    if (!this.formatted) this.format();
+    this.setRendered();
+
+    for (let i = 0; i < this.glyphs.length; i++) {
+      const glyph = this.glyphs[i];
+      const x = this.x + this.xPositions[i];
       glyph.setStave(this.stave);
       glyph.setContext(this.stave.context);
       glyph.renderToStave(x);

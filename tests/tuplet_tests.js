@@ -2,482 +2,504 @@
  * VexFlow - Tuplet Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-"use strict";
+
 VF.Test.Tuplet = (function() {
+  // Ideally this would be using arrow syntax...
+  var set = function(key) {
+    return function(value) {
+      return function(object) {
+        object[key] = value;
+        return object;
+      };
+    };
+  };
+
+  var setStemDirection = set('stem_direction');
+  var setDuration = set('duration');
+
+  var stemUp = setStemDirection(VF.Stem.UP);
+  var stemDown = setStemDirection(VF.Stem.DOWN);
+  var quarterNote = setDuration('4');
+
   var Tuplet = {
     Start: function() {
       var runTests = VF.Test.runTests;
-      QUnit.module("Tuplet");
-      runTests("Simple Tuplet", Tuplet.simple);
-      runTests("Beamed Tuplet", Tuplet.beamed);
-      runTests("Ratioed Tuplet", Tuplet.ratio);
-      runTests("Bottom Tuplet", Tuplet.bottom);
-      runTests("Bottom Ratioed Tuplet", Tuplet.bottom_ratio);
-      runTests("Awkward Tuplet", Tuplet.awkward);
-      runTests("Complex Tuplet", Tuplet.complex);
-      runTests("Mixed Stem Direction Tuplet", Tuplet.mixedTop);
-      runTests("Mixed Stem Direction Bottom Tuplet", Tuplet.mixedBottom);
-      runTests("Nested Tuplets", Tuplet.nested);
+      QUnit.module('Tuplet');
+      runTests('Simple Tuplet', Tuplet.simple);
+      runTests('Beamed Tuplet', Tuplet.beamed);
+      runTests('Ratioed Tuplet', Tuplet.ratio);
+      runTests('Bottom Tuplet', Tuplet.bottom);
+      runTests('Bottom Ratioed Tuplet', Tuplet.bottom_ratio);
+      runTests('Awkward Tuplet', Tuplet.awkward);
+      runTests('Complex Tuplet', Tuplet.complex);
+      runTests('Mixed Stem Direction Tuplet', Tuplet.mixedTop);
+      runTests('Mixed Stem Direction Bottom Tuplet', Tuplet.mixedBottom);
+      runTests('Nested Tuplets', Tuplet.nested);
     },
 
-    setupContext: function(options, x, y) {
-      var ctx = new options.contextBuilder(options.canvas_sel, x || 450, y || 140);
-
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = " 10pt Arial";
-      var stave = new VF.Stave(10, 10, x || 350).addTrebleGlyph().
-        setContext(ctx).draw();
-
-      return {context: ctx, stave: stave};
-    },
-
-    simple: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    simple: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('3/4');
 
       var notes = [
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"})
-      ];
+        { keys: ['g/4'], duration: '4' },
+        { keys: ['a/4'], duration: '4' },
+        { keys: ['b/4'], duration: '4' },
+        { keys: ['b/4'], duration: '8' },
+        { keys: ['a/4'], duration: '8' },
+        { keys: ['g/4'], duration: '8' },
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes.slice(3, 6));
+      vf.Tuplet({ notes: notes.slice(0, 3) });
+      vf.Tuplet({ notes: notes.slice(3, 6) });
 
       // 3/4 time
-      var voice = new VF.Voice({
-        num_beats: 3, beat_value: 4, resolution: VF.RESOLUTION });
+      var voice = vf.Voice({ time: { num_beats: 3, beat_value: 4 } })
+        .setStrict(true)
+        .addTickables(notes);
 
-      voice.setStrict(true);
-      voice.addTickables(notes);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      c.stave.addTimeSignature("3/4");
-      c.stave.draw(c.context);
+      vf.draw();
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
-
-      voice.draw(c.context, c.stave);
-
-      tuplet1.setContext(c.context).draw();
-      tuplet2.setContext(c.context).draw();
-
-      ok(true, "Simple Test");
+      ok(true, 'Simple Test');
     },
 
-    beamed: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    beamed: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('3/8');
 
       var notes = [
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"})
-      ];
+        { keys: ['b/4'], duration: '16' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['g/4'], duration: '16' },
+        { keys: ['a/4'], duration: '8' },
+        { keys: ['f/4'], duration: '8' },
+        { keys: ['a/4'], duration: '8' },
+        { keys: ['f/4'], duration: '8' },
+        { keys: ['a/4'], duration: '8' },
+        { keys: ['f/4'], duration: '8' },
+        { keys: ['g/4'], duration: '8' },
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
-      var beam1 = new VF.Beam(notes.slice(0, 3));
-      var beam2 = new VF.Beam(notes.slice(3, 10));
-
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes.slice(3, 10));
+      vf.Beam({ notes: notes.slice(0, 3) });
+      vf.Beam({ notes: notes.slice(3, 10) });
+      vf.Tuplet({ notes: notes.slice(0, 3) });
+      vf.Tuplet({ notes: notes.slice(3, 10) });
 
       // 3/8 time
-      var voice = new VF.Voice({
-        num_beats: 3, beat_value: 8, resolution: VF.RESOLUTION });
+      var voice = vf.Voice({ time: { num_beats: 3, beat_value: 8 } })
+        .setStrict(true)
+        .addTickables(notes);
 
-      voice.setStrict(true);
-      voice.addTickables(notes);
-      c.stave.addTimeSignature("3/8");
-      c.stave.draw(c.context);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      vf.draw();
 
-      voice.draw(c.context, c.stave);
-
-      tuplet1.setContext(c.context).draw();
-      tuplet2.setContext(c.context).draw();
-
-      beam1.setContext(c.context).draw();
-      beam2.setContext(c.context).draw();
-
-      ok(true, "Beamed Test");
+      ok(true, 'Beamed Test');
     },
 
-    ratio: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    ratio: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('4/4');
 
       var notes = [
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"})
-      ];
+        { keys: ['f/4'], duration: '4' },
+        { keys: ['a/4'], duration: '4' },
+        { keys: ['b/4'], duration: '4' },
+        { keys: ['g/4'], duration: '8' },
+        { keys: ['e/4'], duration: '8' },
+        { keys: ['g/4'], duration: '8' },
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
-      var beam = new VF.Beam(notes.slice(3, 6));
+      vf.Beam({
+        notes: notes.slice(3, 6),
+      });
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes.slice(3, 6), {notes_occupied: 4});
+      vf.Tuplet({
+        notes: notes.slice(0, 3),
+        options: {
+          ratioed: true,
+        },
+      });
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
+      vf.Tuplet({
+        notes: notes.slice(3, 6),
+        options: {
+          ratioed: true,
+          notes_occupied: 4,
+        },
+      });
 
-      voice.setStrict(true);
-      voice.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      var voice = vf.Voice()
+        .setStrict(true)
+        .addTickables(notes);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      voice.draw(c.context, c.stave);
+      vf.draw();
 
-      beam.setContext(c.context).draw();
-
-      tuplet1.setRatioed(true).setContext(c.context).draw();
-      tuplet2.setRatioed(true).setContext(c.context).draw();
-
-      ok(true, "Ratioed Test");
+      ok(true, 'Ratioed Test');
     },
 
-    bottom: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options, 350, 160);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    bottom: function(options) {
+      var vf = VF.Test.makeFactory(options, 350, 160);
+      var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('3/4');
 
       var notes = [
-        newNote({ keys: ["f/4"], stem_direction: -1, duration: "q"}),
-        newNote({ keys: ["c/4"], stem_direction: -1, duration: "q"}),
-        newNote({ keys: ["g/4"], stem_direction: -1, duration: "q"}),
-        newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["g/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"})
-      ];
+        { keys: ['f/4'], duration: '4' },
+        { keys: ['c/4'], duration: '4' },
+        { keys: ['g/4'], duration: '4' },
+        { keys: ['d/5'], duration: '8' },
+        { keys: ['g/3'], duration: '8' },
+        { keys: ['b/4'], duration: '8' },
+      ].map(stemDown).map(vf.StaveNote.bind(vf));
 
-      var beam = new VF.Beam(notes.slice(3, 6));
+      vf.Beam({
+        notes: notes.slice(3, 6),
+      });
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes.slice(3, 6));
+      vf.Tuplet({
+        notes: notes.slice(0, 3),
+        options: { location: VF.Tuplet.LOCATION_BOTTOM },
+      });
 
-      tuplet1.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
-      tuplet2.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
+      vf.Tuplet({
+        notes: notes.slice(3, 6),
+        options: { location: VF.Tuplet.LOCATION_BOTTOM },
+      });
 
-      var voice = new VF.Voice({
-        num_beats: 3, beat_value: 4, resolution: VF.RESOLUTION });
+      var voice = vf.Voice({ time: { num_beats: 3, beat_value: 4 } })
+        .setStrict(true)
+        .addTickables(notes);
 
-      voice.setStrict(true);
-      voice.addTickables(notes);
-      c.stave.addTimeSignature("3/4");
-      c.stave.draw(c.context);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      vf.draw();
 
-      voice.draw(c.context, c.stave);
-
-      beam.setContext(c.context).draw();
-
-      tuplet1.setContext(c.context).draw();
-      tuplet2.setContext(c.context).draw();
-
-      ok(true, "Bottom Test");
+      ok(true, 'Bottom Test');
     },
 
-    bottom_ratio: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options, 350, 160);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    bottom_ratio: function(options) {
+      var vf = VF.Test.makeFactory(options, 350, 160);
+      var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('5/8');
 
       var notes = [
-        newNote({ keys: ["f/4"], stem_direction: -1, duration: "q"}),
-        newNote({ keys: ["c/4"], stem_direction: -1, duration: "q"}),
-        newNote({ keys: ["d/4"], stem_direction: -1, duration: "q"}),
-        newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["g/5"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: -1, duration: "8"})
-      ];
+        { keys: ['f/4'], duration: '4' },
+        { keys: ['c/4'], duration: '4' },
+        { keys: ['d/4'], duration: '4' },
+        { keys: ['d/5'], duration: '8' },
+        { keys: ['g/5'], duration: '8' },
+        { keys: ['b/4'], duration: '8' },
+      ].map(stemDown).map(vf.StaveNote.bind(vf));
 
-      var beam = new VF.Beam(notes.slice(3, 6));
+      vf.Beam({
+        notes: notes.slice(3, 6),
+      });
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes.slice(3, 6));
+      vf.Tuplet({
+        notes: notes.slice(0, 3),
+        options: {
+          location: VF.Tuplet.LOCATION_BOTTOM,
+          ratioed: true,
+        },
+      });
 
-      tuplet2.setNotesOccupied(1);
-      tuplet1.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
-      tuplet2.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
+      vf.Tuplet({
+        notes: notes.slice(3, 6),
+        options: {
+          location: VF.Tuplet.LOCATION_BOTTOM,
+          notes_occupied: 1,
+        },
+      });
 
-      var voice = new VF.Voice({
-        num_beats: 5, beat_value: 8, resolution: VF.RESOLUTION });
+      var voice = vf.Voice({ time: { num_beats: 5, beat_value: 8 } })
+        .setStrict(true)
+        .addTickables(notes);
 
-      voice.setStrict(true);
-      voice.addTickables(notes);
-      c.stave.addTimeSignature("5/8");
-      c.stave.draw(c.context);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      vf.draw();
 
-      voice.draw(c.context, c.stave);
-
-      beam.setContext(c.context).draw();
-
-      tuplet1.setRatioed(true).setContext(c.context).draw();
-      tuplet2.setRatioed(true).setContext(c.context).draw();
-
-      ok(true, "Bottom Ratioed Test");
+      ok(true, 'Bottom Ratioed Test');
     },
 
-    awkward: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    awkward: function(options) {
+      var vf = VF.Test.makeFactory(options, 350, 160);
+      var stave = vf.Stave({ x: 10, y: 10 });
 
       var notes = [
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["e/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["c/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["c/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"})
-      ];
+        { keys: ['g/4'], duration: '16' },
+        { keys: ['b/4'], duration: '16' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['g/4'], duration: '16' },
+        { keys: ['f/4'], duration: '16' },
+        { keys: ['e/4'], duration: '16' },
+        { keys: ['c/4'], duration: '16' },
+        { keys: ['g/4'], duration: '16' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['f/4'], duration: '16' },
+        { keys: ['c/4'], duration: '8' },
+        { keys: ['d/4'], duration: '8' },
+        { keys: ['e/4'], duration: '8' },
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
-      var beam = new VF.Beam(notes.slice(0, 11));
+      vf.Beam({ notes: notes.slice(0, 11) });
+      vf.Tuplet({
+        notes: notes.slice(0, 11),
+        options: {
+          notes_occupied: 142,
+          ratioed: true,
+        },
+      });
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 11));
-      var tuplet2 = new VF.Tuplet(notes.slice(11, 14));
-      tuplet1.setNotesOccupied(142);
+      vf.Tuplet({
+        notes: notes.slice(11, 14),
+        options: {
+          ratioed: true,
+        },
+      }).setBracketed(true);
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
+      var voice = vf.Voice()
+        .setStrict(false)
+        .addTickables(notes);
 
-      voice.setStrict(false);
-      voice.addTickables(notes);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      vf.draw();
 
-      voice.draw(c.context, c.stave);
-
-      beam.setContext(c.context).draw();
-      tuplet1.setRatioed(true).setContext(c.context).draw();
-      tuplet2.setRatioed(true).setBracketed(true).setContext(c.context).draw();
-
-      ok(true, "Awkward Test");
+      ok(true, 'Awkward Test');
     },
 
-    complex: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Tuplet.setupContext(options, 600);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    complex: function(options) {
+      var vf = VF.Test.makeFactory(options, 600);
+      var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
       var notes1 = [
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8d"}).addDotToAll(),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "16r"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "32"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "32"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "32"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "32"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "8"})
-      ];
+        { keys: ['b/4'], duration: '8d' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['g/4'], duration: '8' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['b/4'], duration: '16r' },
+        { keys: ['g/4'], duration: '32' },
+        { keys: ['f/4'], duration: '32' },
+        { keys: ['g/4'], duration: '32' },
+        { keys: ['f/4'], duration: '32' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['f/4'], duration: '8' },
+        { keys: ['b/4'], duration: '8' },
+        { keys: ['a/4'], duration: '8' },
+        { keys: ['g/4'], duration: '8' },
+        { keys: ['b/4'], duration: '8' },
+        { keys: ['a/4'], duration: '8' },
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
+
+      notes1[0].addDotToAll();
+
       var notes2 = [
-        newNote({ keys: ["c/4"], stem_direction: -1, duration: "4" }),
-        newNote({ keys: ["c/4"], stem_direction: -1, duration: "4" }),
-        newNote({ keys: ["c/4"], stem_direction: -1, duration: "4" }),
-        newNote({ keys: ["c/4"], stem_direction: -1, duration: "4" })
-      ];
+        { keys: ['c/4'] },
+        { keys: ['c/4'] },
+        { keys: ['c/4'] },
+        { keys: ['c/4'] },
+      ].map(quarterNote).map(stemDown).map(vf.StaveNote.bind(vf));
 
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
-      var voice2 = new VF.Voice(VF.Test.TIME4_4);
+      vf.Beam({ notes: notes1.slice(0, 3) });
+      vf.Beam({ notes: notes1.slice(5, 9) });
+      vf.Beam({ notes: notes1.slice(11, 16) });
 
-      var beam1 = new VF.Beam(notes1.slice(0, 3));
-      var beam2 = new VF.Beam(notes1.slice(5, 9));
-      var beam3 = new VF.Beam(notes1.slice(11, 16));
-
-      var tuplet1 = new VF.Tuplet(notes1.slice(0, 3));
-      var tuplet2 = new VF.Tuplet(notes1.slice(3, 11), {
-        num_notes: 7, notes_occupied: 4, ratioed: false
+      vf.Tuplet({
+        notes: notes1.slice(0, 3),
       });
-      var tuplet3 = new VF.Tuplet(notes1.slice(11, 16), {notes_occupied: 4});
 
-      voice1.setStrict(true);
-      voice1.addTickables(notes1);
-      voice2.setStrict(true);
-      voice2.addTickables(notes2);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      vf.Tuplet({
+        notes: notes1.slice(3, 11),
+        options: {
+          num_notes: 7,
+          notes_occupied: 4,
+          ratioed: false,
+        },
+      });
 
-      var formatter = new VF.Formatter().joinVoices([voice1, voice2]).
-        format([voice1, voice2], c.stave.getNoteEndX() - c.stave.getNoteStartX() - 50);
+      vf.Tuplet({
+        notes: notes1.slice(11, 16),
+        options: {
+          notes_occupied: 4,
+        },
+      });
 
-      voice1.draw(c.context, c.stave);
-      voice2.draw(c.context, c.stave);
+      var voice1 = vf.Voice()
+        .setStrict(true)
+        .addTickables(notes1);
 
-      tuplet1.setContext(c.context).draw();
-      tuplet2.setContext(c.context).draw();
-      tuplet3.setContext(c.context).draw();
+      var voice2 = vf.Voice()
+        .setStrict(true)
+        .addTickables(notes2);
 
-      beam1.setContext(c.context).draw();
-      beam2.setContext(c.context).draw();
-      beam3.setContext(c.context).draw();
+      new VF.Formatter()
+        .joinVoices([voice1, voice2])
+        .formatToStave([voice1, voice2], stave);
 
-      ok(true, "Complex Test");
+      vf.draw();
+
+      ok(true, 'Complex Test');
     },
 
-    mixedTop: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    mixedTop: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave({ x: 10, y: 10 });
 
       var notes = [
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "4"}),
-        newNote({ keys: ["c/6"], stem_direction: -1, duration: "4"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "4"}),
-        newNote({ keys: ["f/5"], stem_direction: 1, duration: "4"}),
-        newNote({ keys: ["a/4"], stem_direction: -1, duration: "4"}),
-        newNote({ keys: ["c/6"], stem_direction: -1, duration: "4"})
-      ];
+        { keys: ['a/4'], stem_direction: 1 },
+        { keys: ['c/6'], stem_direction: -1 },
+        { keys: ['a/4'], stem_direction: 1 },
+        { keys: ['f/5'], stem_direction: 1 },
+        { keys: ['a/4'], stem_direction: -1 },
+        { keys: ['c/6'], stem_direction: -1 },
+      ].map(quarterNote).map(vf.StaveNote.bind(vf));
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 2), {notes_occupied : 3});
-      var tuplet2 = new VF.Tuplet(notes.slice(2, 4), {notes_occupied : 3});
-      var tuplet3 = new VF.Tuplet(notes.slice(4, 6), {notes_occupied : 3});
+      vf.Tuplet({
+        notes: notes.slice(0, 2),
+        options: {
+          notes_occupied: 3,
+        },
+      });
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
+      vf.Tuplet({
+        notes: notes.slice(2, 4),
+        options: {
+          notes_occupied: 3,
+        },
+      });
 
-      voice.setStrict(false);
-      voice.addTickables(notes);
+      vf.Tuplet({
+        notes: notes.slice(4, 6),
+        options: {
+          notes_occupied: 3,
+        },
+      });
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      var voice = vf.Voice()
+        .setStrict(false)
+        .addTickables(notes);
 
-      voice.draw(c.context, c.stave);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      tuplet1.setContext(c.context).draw();
-      tuplet2.setContext(c.context).draw();
-      tuplet3.setContext(c.context).draw();
+      vf.draw();
 
-      ok(true, "Mixed Stem Direction Tuplet");
+      ok(true, 'Mixed Stem Direction Tuplet');
     },
 
-    mixedBottom: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    mixedBottom: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave({ x: 10, y: 10 });
 
       var notes = [
-        newNote({ keys: ["f/3"], stem_direction: 1, duration: "4"}),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "4"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "4"}),
-        newNote({ keys: ["f/3"], stem_direction: 1, duration: "4"}),
-        newNote({ keys: ["a/4"], stem_direction: -1, duration: "4"}),
-        newNote({ keys: ["c/4"], stem_direction: -1, duration: "4"})
-      ];
+        { keys: ['f/3'], stem_direction: 1 },
+        { keys: ['a/5'], stem_direction: -1 },
+        { keys: ['a/4'], stem_direction: 1 },
+        { keys: ['f/3'], stem_direction: 1 },
+        { keys: ['a/4'], stem_direction: -1 },
+        { keys: ['c/4'], stem_direction: -1 },
+      ].map(quarterNote).map(vf.StaveNote.bind(vf));
 
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 2), {notes_occupied : 3});
-      var tuplet2 = new VF.Tuplet(notes.slice(2, 4), {notes_occupied : 3});
-      var tuplet3 = new VF.Tuplet(notes.slice(4, 6), {notes_occupied : 3});
+      vf.Tuplet({
+        notes: notes.slice(0, 2),
+        options: {
+          notes_occupied: 3,
+        },
+      });
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
+      vf.Tuplet({
+        notes: notes.slice(2, 4),
+        options: {
+          notes_occupied: 3,
+        },
+      });
 
-      voice.setStrict(false);
-      voice.addTickables(notes);
+      vf.Tuplet({
+        notes: notes.slice(4, 6),
+        options: {
+          notes_occupied: 3,
+        },
+      });
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      var voice = vf.Voice()
+        .setStrict(false)
+        .addTickables(notes);
 
-      voice.draw(c.context, c.stave);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      tuplet1.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
-      tuplet2.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
-      tuplet3.setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
+      vf.draw();
 
-      tuplet1.setContext(c.context).draw();
-      tuplet2.setContext(c.context).draw();
-      tuplet3.setContext(c.context).draw();
-
-      ok(true, "Mixed Stem Direction Bottom Tuplet");
+      ok(true, 'Mixed Stem Direction Bottom Tuplet');
     },
 
-    nested: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var c = VF.Test.Beam.setupContext(options);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
+    nested: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
       var notes = [
         // Big triplet 1:
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["f/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["a/4"], stem_direction: 1, duration: "16"}),
-        newNote({ keys: ["g/4"], stem_direction: 1, duration: "16"}),
+        { keys: ['b/4'], duration: '4' },
+        { keys: ['a/4'], duration: '4' },
+        { keys: ['g/4'], duration: '16' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['f/4'], duration: '16' },
+        { keys: ['a/4'], duration: '16' },
+        { keys: ['g/4'], duration: '16' },
+        { keys: ['b/4'], duration: '2' },
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
 
-        newNote({ keys: ["b/4"], stem_direction: 1, duration: "h"})
-      ];
-
-      var beam1 = new VF.Beam(notes.slice(2, 7));
-
-      var tuplet1 = new VF.Tuplet(notes.slice(0, 7), {
-        notes_occupied: 2, num_notes: 3
+      vf.Beam({
+        notes: notes.slice(2, 7),
       });
-      var tuplet1nested = new VF.Tuplet(notes.slice(2,7), {
-        notes_occupied: 4, num_notes: 5
+
+      vf.Tuplet({
+        notes: notes.slice(0, 7),
+        options: {
+          notes_occupied: 2,
+          num_notes: 3,
+        },
+      });
+
+      vf.Tuplet({
+        notes: notes.slice(2, 7),
+        options: {
+          notes_occupied: 4,
+          num_notes: 5,
+        },
       });
 
       // 4/4 time
-      var voice = new VF.Voice({
-        num_beats: 4, beat_value: 4, resolution: VF.RESOLUTION });
+      var voice = vf.Voice()
+        .setStrict(true)
+        .addTickables(notes);
 
-      voice.setStrict(true);
-      voice.addTickables(notes);
-      c.stave.addTimeSignature("4/4");
-      c.stave.draw(c.context);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 350);
+      vf.draw();
 
-      voice.draw(c.context, c.stave);
-
-      tuplet1.setContext(c.context).draw();
-      tuplet1nested.setContext(c.context).draw();
-
-      beam1.setContext(c.context).draw();
-
-
-      ok(true, "Nested Tuplets");
-    }
-
+      ok(true, 'Nested Tuplets');
+    },
   };
 
   return Tuplet;

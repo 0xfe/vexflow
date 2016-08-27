@@ -16,7 +16,7 @@ VF.Test.Dot = (function() {
       note.addToModifierContext(mc);
 
       var tickContext = new VF.TickContext();
-      tickContext.addTickable(note).preFormat().setX(x).setPixelsUsed(65);
+      tickContext.addTickable(note).preFormat().setX(x);
 
       note.setContext(ctx).setStave(stave);
       note.draw();
@@ -99,8 +99,7 @@ VF.Test.Dot = (function() {
         .addTickable(note1)
         .addTickable(note2)
         .setX(x)
-        .preFormat()
-        .setPixelsUsed(65);
+        .preFormat();
 
       note1.setContext(ctx).setStave(stave).draw();
       note2.setContext(ctx).setStave(stave).draw();

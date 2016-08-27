@@ -5,14 +5,21 @@
 // have a duration, i.e., they occupy space in the musical rendering dimension.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 
-export class Tickable {
+export class Tickable extends Element {
   constructor() {
+    super();
+    this.setAttribute('type', 'Tickable');
+
+    // These properties represent the duration of
+    // this tickable element.
+    this.ticks = new Fraction(0, 1);
     this.intrinsicTicks = 0;
     this.tickMultiplier = new Fraction(1, 1);
-    this.ticks = new Fraction(0, 1);
+
     this.width = 0;
     this.x_shift = 0; // Shift from tick context
     this.voice = null;
@@ -24,29 +31,44 @@ export class Tickable {
     this.tuplet = null;
     this.tupletStack = [];
 
-    // For interactivity
-    this.id = null;
-    this.elem = null;
-
     this.align_center = false;
     this.center_x_shift = 0; // Shift from tick context if center aligned
 
     // This flag tells the formatter to ignore this tickable during
     // formatting and justification. It is set by tickables such as BarNote.
     this.ignore_ticks = false;
-    this.context = null;
-  }
-  setContext(context) { this.context = context; }
 
-  // Set the DOM ID of the element. Must be called before draw(). TODO: Update
-  // ID of element if has already been rendered.
-  setId(id) { this.id = id; }
-  getId() { return this.id; }
-  getElem() { return this.elem; }
-  getBoundingBox() { return null; }
+    // This is a space for an external formatting class or function to maintain
+    // metrics.
+    this.formatterMetrics = {
+      // The freedom of a tickable is the distance it can move without colliding
+      // with neighboring elements. A formatter can set these values during its
+      // formatting pass, which a different formatter can then use to fine tune.
+      freedom: { left: 0, right: 0 },
+
+      // The simplified rational duration of this tick as a string. It can be
+      // used as an index to a map or hashtable.
+      duration: '',
+
+      // The number of formatting iterations undergone.
+      iterations: 0,
+
+      // The space in pixels allocated by this formatter, along with the mean space
+      // for tickables of this duration, and the deviation from the mean.
+      space: {
+        used: 0,
+        mean: 0,
+        deviation: 0,
+      },
+    };
+  }
+
   getTicks() { return this.ticks; }
   shouldIgnoreTicks() { return this.ignore_ticks; }
   getWidth() { return this.width; }
+
+  getFormatterMetrics() { return this.formatterMetrics; }
+
   setXShift(x) { this.x_shift = x; }
   getCenterXShift() {
     if (this.isCenterAligned()) {
@@ -64,7 +86,7 @@ export class Tickable {
   // Every tickable must be associated with a voice. This allows formatters
   // and preFormatter to associate them with the right modifierContexts.
   getVoice() {
-    if (!this.voice) throw new Vex.RERR("NoVoice", "Tickable has no voice.");
+    if (!this.voice) throw new Vex.RERR('NoVoice', 'Tickable has no voice.');
     return this.voice;
   }
   setVoice(voice) { this.voice = voice; }
@@ -80,10 +102,11 @@ export class Tickable {
    * resets the intrinsic tick value to
    */
   resetTuplet(tuplet) {
-    var noteCount, notesOccupied;
-    if(tuplet){
-      var i = this.tupletStack.indexOf(tuplet);
-      if(i !== -1){
+    let noteCount;
+    let notesOccupied;
+    if (tuplet) {
+      const i = this.tupletStack.indexOf(tuplet);
+      if (i !== -1) {
         this.tupletStack.splice(i, 1);
         noteCount = tuplet.getNoteCount();
         notesOccupied = tuplet.getNotesOccupied();
@@ -94,7 +117,7 @@ export class Tickable {
       return this;
     }
 
-    while(this.tupletStack.length){
+    while (this.tupletStack.length) {
       tuplet = this.tupletStack.pop();
       noteCount = tuplet.getNoteCount();
       notesOccupied = tuplet.getNotesOccupied();
@@ -104,14 +127,15 @@ export class Tickable {
     }
     return this;
   }
+
   setTuplet(tuplet) {
     // Attach to new tuplet
 
     if (tuplet) {
       this.tupletStack.push(tuplet);
 
-      var noteCount = tuplet.getNoteCount();
-      var notesOccupied = tuplet.getNotesOccupied();
+      const noteCount = tuplet.getNoteCount();
+      const notesOccupied = tuplet.getNotesOccupied();
 
       this.applyTickMultiplier(notesOccupied, noteCount);
     }
@@ -148,7 +172,7 @@ export class Tickable {
     }
   }
   postFormat() {
-    if (this.postFormatted) return;
+    if (this.postFormatted) return this;
     this.postFormatted = true;
     return this;
   }
@@ -167,7 +191,7 @@ export class Tickable {
     this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
   }
   setDuration(duration) {
-    var ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
+    const ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();
   }

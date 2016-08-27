@@ -13,25 +13,25 @@ import { Note } from './note';
 import { TickContext } from './tickcontext';
 
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-function L() { if (Crescendo.DEBUG) Vex.L("Vex.Flow.Crescendo", arguments); }
+function L(...args) { if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args); }
 
 // Private helper to draw the hairpin
 function renderHairpin(ctx, params) {
-  var begin_x = params.begin_x;
-  var end_x = params.end_x;
-  var y = params.y;
-  var half_height =  params.height / 2;
+  const begin_x = params.begin_x;
+  const end_x = params.end_x;
+  const y = params.y;
+  const half_height =  params.height / 2;
 
   ctx.beginPath();
 
   if (params.reverse) {
-      ctx.moveTo(begin_x, y - half_height);
-      ctx.lineTo(end_x,  y);
-      ctx.lineTo(begin_x, y + half_height);
+    ctx.moveTo(begin_x, y - half_height);
+    ctx.lineTo(end_x,  y);
+    ctx.lineTo(begin_x, y + half_height);
   } else {
-      ctx.moveTo(end_x,  y - half_height);
-      ctx.lineTo(begin_x, y);
-      ctx.lineTo(end_x,  y + half_height);
+    ctx.moveTo(end_x,  y - half_height);
+    ctx.lineTo(begin_x, y);
+    ctx.lineTo(end_x,  y + half_height);
   }
 
   ctx.stroke();
@@ -42,6 +42,7 @@ export class Crescendo extends Note {
   // Initialize the crescendo's properties
   constructor(note_struct) {
     super(note_struct);
+    this.setAttribute('type', 'Crescendo');
 
     // Whether the object is a decrescendo
     this.decrescendo = false;
@@ -57,7 +58,7 @@ export class Crescendo extends Note {
       extend_left: 0,
       extend_right: 0,
       // Vertical shift
-      y_shift: 0
+      y_shift: 0,
     });
   }
 
@@ -79,31 +80,30 @@ export class Crescendo extends Note {
 
   // Render the Crescendo object onto the canvas
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
-      "Can't draw Hairpin without a context.");
+    this.checkContext();
+    this.setRendered();
 
-    var tick_context = this.getTickContext();
-    var next_context = TickContext.getNextContext(tick_context);
+    const tick_context = this.getTickContext();
+    const next_context = TickContext.getNextContext(tick_context);
 
-    var begin_x = this.getAbsoluteX();
-    var end_x;
-    if (next_context) {
-      end_x = next_context.getX();
-    } else {
-      end_x = this.stave.x + this.stave.width;
-    }
+    const begin_x = this.getAbsoluteX();
+    const end_x  = next_context ? next_context.getX() : this.stave.x + this.stave.width;
+    const y = this.stave.getYForLine(this.line + (-3)) + 1;
 
-    var y = this.stave.getYForLine(this.line + (-3)) + 1;
-
-    L("Drawing ",  this.decrescendo ? "decrescendo " : "crescendo ",
-      this.height, "x", begin_x - end_x);
+    L(
+      'Drawing ',
+      this.decrescendo ? 'decrescendo ' : 'crescendo ',
+      this.height,
+      'x',
+      begin_x - end_x
+    );
 
     renderHairpin(this.context, {
       begin_x: begin_x - this.render_options.extend_left,
       end_x: end_x + this.render_options.extend_right,
       y: y + this.render_options.y_shift,
       height: this.height,
-      reverse: this.decrescendo
+      reverse: this.decrescendo,
     });
   }
 }

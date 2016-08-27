@@ -51,6 +51,8 @@ VF.Test.AutoBeamFormatting = (function() {
                             AutoBeamFormatting.moreBeaming);
       runTests("Duration-Based Secondary Beam Breaks",
                             AutoBeamFormatting.secondaryBreaks);
+      runTests("Duration-Based Secondary Beam Breaks 2",
+                            AutoBeamFormatting.secondaryBreaks2);
       runTests("Flat Beams Up",
                             AutoBeamFormatting.flatBeamsUp);
       runTests("Flat Beams Down",
@@ -1039,6 +1041,59 @@ VF.Test.AutoBeamFormatting = (function() {
       });
       var formatter = new VF.Formatter().joinVoices([voice]).formatToStave([voice], c.stave);
       voice.draw(c.context, c.stave);
+      beams.forEach(function(beam){
+        beam.setContext(c.context).draw();
+      });
+      ok(true, "Duration-Based Secondary Breaks Test");
+    },
+
+    secondaryBreaks2: function(options, contextBuilder) {
+      options.contextBuilder = contextBuilder;
+      var c = AutoBeamFormatting.setupContext(options);
+
+      var notes = [
+        newNote({ keys: ["e/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["c/5"], duration: "16" }),
+
+        newNote({ keys: ["a/4"], duration: "16d" }).addDotToAll(),
+        newNote({ keys: ["f/4"], duration: "32" }),
+        newNote({ keys: ["d/4"], duration: "16" }),
+        newNote({ keys: ["d/4"], duration: "16" }),
+        newNote({ keys: ["d/4"], duration: "16" }),
+
+        newNote({ keys: [ 'a/5' ], duration: "8" }),
+        newNote({ keys: [ 'e/5', 'g/5' ], duration: "8" }),
+        newNote({ keys: [ 'a/5' ], duration: "8" }),
+
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["f/5"], duration: "16" }),
+        newNote({ keys: ["a/4"], duration: "16" })
+      ];
+      var tuplets = [
+        new VF.Tuplet(notes.slice(0, 3)),
+        new VF.Tuplet(notes.slice(3, 6)),
+        new VF.Tuplet(notes.slice(8, 11)),
+        new VF.Tuplet(notes.slice(11, 14)),
+        new VF.Tuplet(notes.slice(14, 17)),
+        new VF.Tuplet(notes.slice(17))
+      ];
+      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      voice.addTickables(notes);
+      var beams = VF.Beam.generateBeams(notes, {
+        secondary_breaks: '8'
+      });
+      var formatter = new VF.Formatter().joinVoices([voice]).formatToStave([voice], c.stave);
+      voice.draw(c.context, c.stave);
+      tuplets.forEach(function(tuplet) {
+        tuplet.setContext(c.context).draw();
+      });
       beams.forEach(function(beam){
         beam.setContext(c.context).draw();
       });

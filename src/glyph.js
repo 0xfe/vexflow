@@ -1,15 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
+import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
 import { Font } from './fonts/vexflow_font';
 
 function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
-  var command;
-  var x;
-  var y;
-  var i = 0;
+  let command;
+  let x;
+  let y;
+  let i = 0;
 
   function nextX() { return originX + outline[i++] * scaleX; }
   function nextY() { return originY + outline[i++] * scaleY; }
@@ -31,22 +32,25 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
         y = nextY();
         outlineFns.b(nextX(), nextY(), nextX(), nextY(), x, y);
         break;
+      default:
+        break;
     }
   }
 }
 
-export class Glyph {
+export class Glyph extends Element {
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
-    var glyph = font.glyphs[code];
-    if (!glyph) throw new Vex.RuntimeError("BadGlyph", "Glyph " + code +
-        " does not exist in font.");
+    const glyph = font.glyphs[code];
+    if (!glyph) {
+      throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
+    }
 
-    var x_min = glyph.x_min;
-    var x_max = glyph.x_max;
-    var ha = glyph.ha;
+    const x_min = glyph.x_min;
+    const x_max = glyph.x_max;
+    const ha = glyph.ha;
 
-    var outline;
+    let outline;
 
     if (glyph.o) {
       if (cache) {
@@ -62,14 +66,13 @@ export class Glyph {
       }
 
       return {
-        x_min: x_min,
-        x_max: x_max,
-        ha: ha,
-        outline: outline
+        x_min,
+        x_max,
+        ha,
+        outline,
       };
     } else {
-      throw new Vex.RuntimeError("BadGlyph", "Glyph " + code +
-          " has no outline defined.");
+      throw new Vex.RERR('BadGlyph', `Glyph ${code} has no outline defined.`);
     }
   }
 
@@ -85,8 +88,8 @@ export class Glyph {
    * @param {boolean} nocache If set, disables caching of font outline.
    */
   static renderGlyph(ctx, x_pos, y_pos, point, val, nocache) {
-    var scale = point * 72.0 / (Font.resolution * 100.0);
-    var metrics = Glyph.loadMetrics(Font, val, !nocache);
+    const scale = point * 72.0 / (Font.resolution * 100.0);
+    const metrics = Glyph.loadMetrics(Font, val, !nocache);
     Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
   }
 
@@ -97,19 +100,19 @@ export class Glyph {
       m: ctx.moveTo.bind(ctx),
       l: ctx.lineTo.bind(ctx),
       q: ctx.quadraticCurveTo.bind(ctx),
-      b: ctx.bezierCurveTo.bind(ctx)
+      b: ctx.bezierCurveTo.bind(ctx),
     });
     ctx.fill();
   }
 
   static getOutlineBoundingBox(outline, scale, x_pos, y_pos) {
-    var bboxComp = new BoundingBoxComputation(x_pos, y_pos);
+    const bboxComp = new BoundingBoxComputation();
 
     processOutline(outline, x_pos, y_pos, scale, -scale, {
       m: bboxComp.addPoint.bind(bboxComp),
       l: bboxComp.addPoint.bind(bboxComp),
       q: bboxComp.addQuadraticCurve.bind(bboxComp),
-      b: bboxComp.addBezierCurve.bind(bboxComp)
+      b: bboxComp.addBezierCurve.bind(bboxComp),
     });
 
     return new BoundingBox(
@@ -124,17 +127,24 @@ export class Glyph {
    * @constructor
    */
   constructor(code, point, options) {
+    super();
+    this.setAttribute('type', 'Glyph');
+
     this.code = code;
     this.point = point;
-    this.context = null;
     this.options = {
       cache: true,
-      font: Font
+      font: Font,
     };
 
     this.metrics = null;
     this.x_shift = 0;
     this.y_shift = 0;
+
+    this.originShift = {
+      x: 0,
+      y: 0,
+    };
 
     if (options) {
       this.setOptions(options);
@@ -152,8 +162,6 @@ export class Glyph {
   setStave(stave) { this.stave = stave; return this; }
   setXShift(x_shift) { this.x_shift = x_shift; return this; }
   setYShift(y_shift) { this.y_shift = y_shift; return this; }
-  setContext(context) { this.context = context; return this; }
-  getContext() { return this.context; }
 
   reset() {
     this.scale = this.point * 72 / (this.options.font.resolution * 100);
@@ -171,36 +179,59 @@ export class Glyph {
   }
 
   getMetrics() {
-    if (!this.metrics) throw new Vex.RuntimeError("BadGlyph", "Glyph " +
-      this.code + " is not initialized.");
+    if (!this.metrics) {
+      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+    }
 
     return {
       x_min: this.metrics.x_min * this.scale,
       x_max: this.metrics.x_max * this.scale,
       width: this.bbox.getW(),
-      height: this.bbox.getH()
+      height: this.bbox.getH(),
     };
   }
 
-  render(ctx, x_pos, y_pos) {
-    if (!this.metrics) throw new Vex.RuntimeError("BadGlyph", "Glyph " +
-        this.code + " is not initialized.");
+  setOrigin(x, y) {
+    const { bbox } = this;
+    const originX = Math.abs(bbox.getX() / bbox.getW());
+    const originY = Math.abs(bbox.getY() / bbox.getH());
 
-    var outline = this.metrics.outline;
-    var scale = this.scale;
+    const xShift = (x - originX) * bbox.getW();
+    const yShift = (y - originY) * bbox.getH();
 
-    Glyph.renderOutline(ctx, outline, scale, x_pos, y_pos);
+    this.originShift = {
+      x: -xShift,
+      y: -yShift,
+    };
+  }
+
+  render(ctx, x, y) {
+    if (!this.metrics) {
+      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+    }
+
+    const outline = this.metrics.outline;
+    const scale = this.scale;
+
+    this.setRendered();
+    Glyph.renderOutline(ctx, outline, scale, x + this.originShift.x, y + this.originShift.y);
   }
 
   renderToStave(x) {
-    if (!this.metrics) throw new Vex.RuntimeError("BadGlyph", "Glyph " +
-        this.code + " is not initialized.");
-    if (!this.stave) throw new Vex.RuntimeError("GlyphError", "No valid stave");
-    if (!this.context) throw new Vex.RERR("GlyphError", "No valid context");
+    this.checkContext();
 
-    var outline = this.metrics.outline;
-    var scale = this.scale;
+    if (!this.metrics) {
+      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+    }
 
+    if (!this.stave) {
+      throw new Vex.RuntimeError('GlyphError', 'No valid stave');
+    }
+
+    const outline = this.metrics.outline;
+    const scale = this.scale;
+
+    this.setRendered();
     Glyph.renderOutline(this.context, outline, scale,
         x + this.x_shift, this.stave.getYForGlyphs() + this.y_shift);
   }

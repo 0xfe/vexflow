@@ -15,7 +15,7 @@ export class VoiceGroup {
   getModifierContexts() { return this.modifierContexts; }
 
   addVoice(voice) {
-    if (!voice) throw new Vex.RERR("BadArguments", "Voice cannot be null.");
+    if (!voice) throw new Vex.RERR('BadArguments', 'Voice cannot be null.');
     this.voices.push(voice);
     voice.setVoiceGroup(this);
   }

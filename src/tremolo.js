@@ -4,7 +4,6 @@
 // This class implements tremolo notation.
 
 import { Vex } from './vex';
-import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 
@@ -12,44 +11,46 @@ export class Tremolo extends Modifier {
   static get CATEGORY() { return 'tremolo'; }
   constructor(num) {
     super();
+    this.setAttribute('type', 'Tremolo');
 
     this.num = num;
     this.note = null;
     this.index = null;
     this.position = Modifier.Position.CENTER;
-    this.code = "v74";
+    this.code = 'v74';
     this.shift_right = -2;
     this.y_spacing = 4;
 
     this.render_options = {
       font_scale: 35,
       stroke_px: 3,
-      stroke_spacing: 10
+      stroke_spacing: 10,
     };
 
     this.font = {
-      family: "Arial",
+      family: 'Arial',
       size: 16,
-      weight: ""
+      weight: '',
     };
   }
 
   getCategory() { return Tremolo.CATEGORY; }
 
   draw() {
-    if (!this.context) throw new Vex.RERR("NoContext",
-      "Can't draw Tremolo without a context.");
-    if (!(this.note && (this.index != null))) throw new Vex.RERR("NoAttachedNote",
-      "Can't draw Tremolo without a note and index.");
+    this.checkContext();
 
-    var start = this.note.getModifierStartXY(this.position, this.index);
-    var x = start.x;
-    var y = start.y;
+    if (!(this.note && this.index != null)) {
+      throw new Vex.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");
+    }
+
+    this.setRendered();
+    const start = this.note.getModifierStartXY(this.position, this.index);
+    let x = start.x;
+    let y = start.y;
 
     x += this.shift_right;
-    for (var i = 0; i < this.num; ++i) {
-      Glyph.renderGlyph(this.context, x, y,
-                           this.render_options.font_scale, this.code);
+    for (let i = 0; i < this.num; ++i) {
+      Glyph.renderGlyph(this.context, x, y, this.render_options.font_scale, this.code);
       y += this.y_spacing;
     }
   }

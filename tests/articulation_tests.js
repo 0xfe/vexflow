@@ -329,10 +329,8 @@ VF.Test.Articulation = (function() {
       voice.addTickables(notes2);
       voice.addTickables(notes3);
 
-
       var formatter = new VF.Formatter().joinVoices([voice]).
         formatToStave([voice], stave);
-
 
       voice.draw(ctx, stave);
 

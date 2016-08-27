@@ -6,22 +6,25 @@
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
 if (!window.QUnit) {
+  var process = require('system');
+
   window.QUnit = {}
 
   QUnit.assertions = {
     ok: function() {return true;},
     equal: function() {return true;},
-    expect: function() {return true;}
+    expect: function() {return true;},
+    throws: function() {return true;},
+    notOk: function() {return true;}
   };
 
   QUnit.module = function(name) {
-    console.log("Module: " + name);
     QUnit.current_module = name;
   };
 
   QUnit.test = function(name, func) {
     QUnit.current_test = name;
-    console.log("  Test: " + name);
+    process.stdout.write("\033[0G" + QUnit.current_module + " :: " + name + "\033[0K");
     func(QUnit.assertions);
   };
 
@@ -29,6 +32,8 @@ if (!window.QUnit) {
   ok = QUnit.assertions.ok;
   equal = QUnit.assertions.equal;
   expect = QUnit.assertions.expect;
+  throws = QUnit.assertions.throws;
+  notOk = QUnit.assertions.notOk;
 }
 
 if (typeof require == "function") {
@@ -104,6 +109,17 @@ VF.Test = (function() {
       $("#" + sel).attr("height", height);
     },
 
+    makeFactory: function(options, width, height) {
+      return new VF.Factory({
+        renderer: {
+          selector: options.canvas_sel,
+          backend: options.backend,
+          width: width || 450,
+          height: height || 140,
+        }
+      })
+    },
+
     runCanvasTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
         // console.log("Running test (Canvas):", assert.test.module.name, "--", name);
@@ -112,6 +128,7 @@ VF.Test = (function() {
             assert.test.module.name + " (Canvas): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.CANVAS,
             params: params,
             assert: assert },
             VF.Renderer.getCanvasContext);
@@ -126,6 +143,7 @@ VF.Test = (function() {
             assert.test.module.name + " (Raphael): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.RAPHAEL,
             params: params,
             assert: assert },
             VF.Renderer.getRaphaelContext);
@@ -133,6 +151,7 @@ VF.Test = (function() {
     },
 
     runSVGTest: function(name, func, params) {
+      if (!VF.Test.RUN_SVG_TESTS) return;
       QUnit.test(name, function(assert) {
           // console.log("Running test (SVG):", assert.test.module.name, "--", name);
           var test_canvas_sel = "canvas_" + VF.Test.genID();
@@ -140,6 +159,7 @@ VF.Test = (function() {
             assert.test.module.name + " (SVG): " + name);
           func({
             canvas_sel: test_canvas_sel,
+            backend: VF.Renderer.Backends.SVG,
             params: params,
             assert: assert },
             VF.Renderer.getSVGContext);
@@ -161,6 +181,7 @@ VF.Test = (function() {
 
         func({
           canvas_sel: div,
+          backend: VF.Renderer.Backends.SVG,
           params: params,
           assert: assert },
           VF.Renderer.getSVGContext);
@@ -212,6 +233,10 @@ VF.Test = (function() {
       legend("#DDD", "Formatter Shift")
 
       ctx.restore();
+    },
+
+    almostEqual: function(value, expectedValue, errorMargin) {
+      return equal(Math.abs(value - expectedValue) < errorMargin, true);
     }
   };
 

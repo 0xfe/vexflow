@@ -14,15 +14,16 @@ import { Barline } from './stavebarline';
 import { BoundingBox } from './boundingbox';
 
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
-function L() { if (BarNote.DEBUG) Vex.L("Vex.Flow.BarNote", arguments); }
+function L(...args) { if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args); }
 
 export class BarNote extends Note {
-  constructor() {
+  constructor(type) {
     super({ duration: 'b' });
+    this.setAttribute('type', 'BarNote');
 
-    var TYPE = Barline.type;
+    const TYPE = Barline.type;
     this.metrics = {
-      widths: {}
+      widths: {},
     };
 
     // Defined this way to prevent lint errors.
@@ -36,7 +37,7 @@ export class BarNote extends Note {
 
     // Tell the formatter that bar notes have no duration.
     this.ignore_ticks = true;
-    this.type = TYPE.SINGLE;
+    this.type = type === undefined ? TYPE.SINGLE : type;
 
     // Set width to width of relevant `Barline`.
     this.setWidth(this.metrics.widths[this.type]);
@@ -67,10 +68,12 @@ export class BarNote extends Note {
 
   // Render note to stave.
   draw() {
-    if (!this.stave) throw new Vex.RERR("NoStave", "Can't draw without a stave.");
-    L("Rendering bar line at: ", this.getAbsoluteX());
-    var barline = new Barline(this.type);
+    this.checkContext();
+    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    L('Rendering bar line at: ', this.getAbsoluteX());
+    const barline = new Barline(this.type);
     barline.setX(this.getAbsoluteX());
     barline.draw(this.stave);
+    this.setRendered();
   }
 }

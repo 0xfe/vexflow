@@ -1,18 +1,19 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Vex } from './vex';
 import { StaveNote } from './stavenote';
+import { Flow } from './tables';
 
 export class GraceNote extends StaveNote {
   static get CATEGORY() { return 'gracenotes'; }
+  static get LEDGER_LINE_OFFSET() { return 2; }
+  static get SCALE() { return 0.66; }
 
   constructor(note_struct) {
-    super(note_struct);
-
-    this.render_options.glyph_font_scale = 22;
-    this.render_options.stem_height = 20;
-    this.render_options.stroke_px = 2;
-    this.glyph.head_width = 6;
+    super(Object.assign(note_struct, {
+      glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
+      stroke_px: GraceNote.LEDGER_LINE_OFFSET,
+    }));
+    this.setAttribute('type', 'GraceNote');
 
     this.slash = note_struct.slash;
     this.slur = true;
@@ -22,16 +23,17 @@ export class GraceNote extends StaveNote {
     this.width = 3;
   }
 
-  getStemExtension(){
-    var glyph = this.getGlyph();
+  getStemExtension() {
+    const glyph = this.getGlyph();
 
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
     }
 
     if (glyph) {
-      return this.getStemDirection() === 1 ? glyph.gracenote_stem_up_extension :
-        glyph.gracenote_stem_down_extension;
+      return this.getStemDirection() === 1
+        ? glyph.gracenote_stem_up_extension
+        : glyph.gracenote_stem_down_extension;
     }
 
     return 0;
@@ -39,16 +41,17 @@ export class GraceNote extends StaveNote {
 
   getCategory() { return GraceNote.CATEGORY; }
 
-  draw(){
+  draw() {
     super.draw();
-    var ctx = this.context;
-    var stem_direction = this.getStemDirection();
+    this.setRendered();
+    const ctx = this.context;
+    const stem_direction = this.getStemDirection();
 
     if (this.slash) {
       ctx.beginPath();
 
-      var x = this.getAbsoluteX();
-      var y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
+      let x = this.getAbsoluteX();
+      let y = this.getYs()[0] - (this.stem.getHeight() / 2.8);
       if (stem_direction === 1) {
         x += 1;
         ctx.moveTo(x, y);

@@ -9,19 +9,71 @@ VexFlow is an open-source web-based music notation rendering API. It is written
 completely in JavaScript, and runs right in the browser. VexFlow supports HTML5
 Canvas and SVG, and runs on all modern browsers.
 
-Go try out [The VexFlow Tutorial](http://vexflow.com/docs/tutorial.html) to
-learn how to use VexFlow.
-
-If you're not a developer and just want to write and share your music, go to
-[My VexFlow](http://my.vexflow.com).
+Go try out [The VexFlow Tutorial](https://github.com/0xfe/vexflow/wiki/The-VexFlow-Tutorial) to
+learn how to use VexFlow. Also learn to use the simpler EasyScore API in the [Using EasyScore](https://github.com/0xfe/vexflow/wiki/Using-EasyScore) guide.
 
 ## Quick Start
 
-Install via NPM:
+### Using NPM
 
     $ npm install vexflow
 
-Include `releases/vexflow-min.js` into your HTML or JS code. It works as a standalone script in a `script` tag, or as a CommonJS or AMD dependency.
+### Using the HTML `script` Tag
+
+The releases are served via [npmcdn.com](http://npmcdn.com).
+
+* Debug version: https://npmcdn.com/vexflow/releases/vexflow-debug.js
+* Minified version: https://npmcdn.com/vexflow/releases/vexflow-min.js
+
+### Your First Stave
+
+The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/gs4v6k6d/2/).
+
+```javascript
+VF = Vex.Flow;
+
+// Create an SVG renderer and attach it to the DIV element named "boo".
+var div = document.getElementById("boo")
+var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+// Configure the rendering context.
+renderer.resize(500, 500);
+var context = renderer.getContext();
+context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+
+// Create a stave of width 400 at position 10, 40 on the canvas.
+var stave = new VF.Stave(10, 40, 400);
+
+// Add a clef and time signature.
+stave.addClef("treble").addTimeSignature("4/4");
+
+// Connect it to the rendering context and draw!
+stave.setContext(context).draw();
+```
+
+### Using EasyScore
+
+The EasyScore API is a quick way to create simple music notation in VexFlow. See running example in [this jsfiddle](https://jsfiddle.net/3d0nbL0n/3/).
+
+```javascript
+var vf = new Vex.Flow.Factory({
+  renderer: {selector: 'boo', width: 500, height: 200}
+});
+
+var score = vf.EasyScore();
+var system = vf.System();
+
+system.addStave({
+  voices: [
+    score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),
+    score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))
+  ]
+}).addClef('treble').addTimeSignature('4/4');
+
+vf.draw();
+```
+
+Learn more about EasyScore at: [Using EasyScore](https://github.com/0xfe/vexflow/wiki/Using-EasyScore).
 
 ## Resources
 

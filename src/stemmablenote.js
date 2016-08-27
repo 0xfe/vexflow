@@ -7,29 +7,41 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Stem } from './stem';
+import { Glyph } from './glyph';
 import { Note } from './note';
-
-// To enable logging for this class. Set `Vex.Flow.StemmableNote.DEBUG` to `true`.
-function L() { if (StemmableNote.DEBUG) Vex.L("Vex.Flow.StemmableNote", arguments); }
 
 export class StemmableNote extends Note {
   constructor(note_struct) {
     super(note_struct);
+    this.setAttribute('type', 'StemmableNote');
 
     this.stem = null;
-    this.stem_extension_override = null;
+    this.stemExtensionOverride = null;
     this.beam = null;
   }
 
   // Get and set the note's `Stem`
-  getStem() {return this.stem; }
+  getStem() { return this.stem; }
   setStem(stem) { this.stem = stem; return this; }
 
   // Builds and sets a new stem
   buildStem() {
-    var stem = new Stem();
+    const stem = new Stem();
     this.setStem(stem);
     return this;
+  }
+
+  buildFlag() {
+    const { glyph, beam } = this;
+    const shouldRenderFlag = beam === null;
+
+    if (glyph && glyph.flag && shouldRenderFlag) {
+      const flagCode = this.getStemDirection() === Stem.DOWN
+        ? glyph.code_flag_downstem
+        : glyph.code_flag_upstem;
+
+      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale);
+    }
   }
 
   // Get the full length of stem
@@ -39,7 +51,7 @@ export class StemmableNote extends Note {
 
   // Get the number of beams for this duration
   getBeamCount() {
-    var glyph = this.getGlyph();
+    const glyph = this.getGlyph();
 
     if (glyph) {
       return glyph.beam_count;
@@ -50,36 +62,27 @@ export class StemmableNote extends Note {
 
   // Get the minimum length of stem
   getStemMinumumLength() {
-    var frac = Flow.durationToFraction(this.duration);
-    var length = (frac.value() <= 1) ? 0 : 20;
+    const frac = Flow.durationToFraction(this.duration);
+    let length = frac.value() <= 1 ? 0 : 20;
     // if note is flagged, cannot shorten beam
     switch (this.duration) {
-     case "8":
-       if (this.beam == null) length = 35;
-       break;
-     case "16":
-       if (this.beam == null)
-         length = 35;
-       else
-         length = 25;
-       break;
-     case "32":
-       if (this.beam == null)
-         length = 45;
-       else
-         length = 35;
-       break;
-     case "64":
-       if (this.beam == null)
-         length = 50;
-       else
-         length = 40;
-       break;
-     case "128":
-       if (this.beam == null)
-         length = 55;
-       else
-         length = 45;
+      case '8':
+        if (this.beam == null) length = 35;
+        break;
+      case '16':
+        length = this.beam == null ? 35 : 25;
+        break;
+      case '32':
+        length = this.beam == null ? 45 : 35;
+        break;
+      case '64':
+        length = this.beam == null ? 50 : 40;
+        break;
+      case '128':
+        length = this.beam == null ? 55 : 45;
+        break;
+      default:
+        break;
     }
     return length;
   }
@@ -88,16 +91,18 @@ export class StemmableNote extends Note {
   getStemDirection() { return this.stem_direction; }
   setStemDirection(direction) {
     if (!direction) direction = Stem.UP;
-    if (direction != Stem.UP &&
-        direction != Stem.DOWN) {
-      throw new Vex.RERR("BadArgument", "Invalid stem direction: " +
-          direction);
+    if (direction !== Stem.UP && direction !== Stem.DOWN) {
+      throw new Vex.RERR('BadArgument', `Invalid stem direction: ${direction}`);
     }
 
     this.stem_direction = direction;
     if (this.stem) {
       this.stem.setDirection(direction);
       this.stem.setExtension(this.getStemExtension());
+    }
+
+    if (this.flag) {
+      this.buildFlag();
     }
 
     this.beam = null;
@@ -109,34 +114,30 @@ export class StemmableNote extends Note {
 
   // Get the `x` coordinate of the stem
   getStemX() {
-    var x_begin = this.getAbsoluteX() + this.x_shift;
-    var x_end = this.getAbsoluteX() + this.x_shift + this.glyph.head_width;
-
-    var stem_x = this.stem_direction == Stem.DOWN ?
-      x_begin : x_end;
-
-    stem_x -= ((Stem.WIDTH / 2) * this.stem_direction);
-
+    const x_begin = this.getAbsoluteX() + this.x_shift;
+    const x_end = this.getAbsoluteX() + this.x_shift + this.getGlyphWidth();
+    const stem_x = this.stem_direction === Stem.DOWN ? x_begin : x_end;
     return stem_x;
   }
 
   // Get the `x` coordinate for the center of the glyph.
   // Used for `TabNote` stems and stemlets over rests
   getCenterGlyphX() {
-    return this.getAbsoluteX() + this.x_shift + (this.glyph.head_width / 2);
+    return this.getAbsoluteX() + this.x_shift + (this.getGlyphWidth() / 2);
   }
 
   // Get the stem extension for the current duration
   getStemExtension() {
-    var glyph = this.getGlyph();
+    const glyph = this.getGlyph();
 
-    if (this.stem_extension_override != null) {
-      return this.stem_extension_override;
+    if (this.stemExtensionOverride != null) {
+      return this.stemExtensionOverride;
     }
 
     if (glyph) {
-      return this.getStemDirection() === 1 ? glyph.stem_up_extension :
-        glyph.stem_down_extension;
+      return this.getStemDirection() === 1
+        ? glyph.stem_up_extension
+        : glyph.stem_down_extension;
     }
 
     return 0;
@@ -144,81 +145,60 @@ export class StemmableNote extends Note {
 
   // Set the stem length to a specific. Will override the default length.
   setStemLength(height) {
-    this.stem_extension_override = (height - Stem.HEIGHT);
+    this.stemExtensionOverride = (height - Stem.HEIGHT);
     return this;
   }
 
   // Get the top and bottom `y` values of the stem.
   getStemExtents() {
-    if (!this.ys || this.ys.length === 0) throw new Vex.RERR("NoYValues",
-        "Can't get top stem Y when note has no Y values.");
-
-    var top_pixel = this.ys[0];
-    var base_pixel = this.ys[0];
-    var stem_height = Stem.HEIGHT + this.getStemExtension();
-
-    for (var i = 0; i < this.ys.length; ++i) {
-      var stem_top = this.ys[i] + (stem_height * -this.stem_direction);
-
-      if (this.stem_direction == Stem.DOWN) {
-        top_pixel = Math.max(top_pixel, stem_top);
-        base_pixel = Math.min(base_pixel, this.ys[i]);
-      } else {
-        top_pixel = Math.min(top_pixel, stem_top);
-        base_pixel = Math.max(base_pixel, this.ys[i]);
-      }
-
-      if(this.noteType == "s" || this.noteType == 'x') {
-        top_pixel -= this.stem_direction * 7;
-        base_pixel -= this.stem_direction * 7;
-      }
-    }
-
-    L("Stem extents: ", top_pixel, base_pixel);
-    return { topY: top_pixel, baseY: base_pixel };
+    return this.stem.getExtents();
   }
 
   // Sets the current note's beam
   setBeam(beam) { this.beam = beam; return this; }
 
-  // Get the `y` value for the top/bottom modifiers at a specific `text_line`
-  getYForTopText(text_line) {
-    var extents = this.getStemExtents();
+  // Get the `y` value for the top/bottom modifiers at a specific `textLine`
+  getYForTopText(textLine) {
+    const extents = this.getStemExtents();
     if (this.hasStem()) {
-      return Vex.Min(this.stave.getYForTopText(text_line),
-          extents.topY - (this.render_options.annotation_spacing * (text_line + 1)));
+      return Math.min(
+        this.stave.getYForTopText(textLine),
+        extents.topY - (this.render_options.annotation_spacing * (textLine + 1))
+      );
     } else {
-      return this.stave.getYForTopText(text_line);
+      return this.stave.getYForTopText(textLine);
     }
   }
 
-  getYForBottomText(text_line) {
-    var extents = this.getStemExtents();
+  getYForBottomText(textLine) {
+    const extents = this.getStemExtents();
     if (this.hasStem()) {
-      return Vex.Max(this.stave.getYForTopText(text_line),
-        extents.baseY + (this.render_options.annotation_spacing * (text_line)));
+      return Math.max(
+        this.stave.getYForTopText(textLine),
+        extents.baseY + (this.render_options.annotation_spacing * (textLine))
+      );
     } else {
-      return this.stave.getYForBottomText(text_line);
+      return this.stave.getYForBottomText(textLine);
     }
   }
 
   hasFlag() {
-    return Flow.durationToGlyph(this.duration).flag;
+    return Flow.durationToGlyph(this.duration).flag && !this.beam;
   }
 
   // Post format the note
   postFormat() {
-    if (this.beam) {
-      this.beam.postFormat();
-    }
+    if (this.beam) this.beam.postFormat();
+
     this.postFormatted = true;
+
     return this;
   }
 
   // Render the stem onto the canvas
-  drawStem(stem_struct){
-    if (!this.context) throw new Vex.RERR("NoCanvasContext",
-        "Can't draw without a canvas context.");
+  drawStem(stem_struct) {
+    this.checkContext();
+    this.setRendered();
 
     this.setStem(new Stem(stem_struct));
     this.stem.setContext(this.context).draw();

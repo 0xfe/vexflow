@@ -24,7 +24,7 @@ VF.Test.TimeSignature = (function() {
     },
 
     parser: function() {
-      expect(6);
+      expect(7);
       var ts = new VF.TimeSignature();
 
       // Invalid time signatures

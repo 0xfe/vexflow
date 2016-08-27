@@ -8,8 +8,8 @@ export class SVGContext {
     // element is the parent DOM object
     this.element = element;
     // Create the SVG in the SVG namespace:
-    this.svgNS = "http://www.w3.org/2000/svg";
-    var svg = this.create("svg");
+    this.svgNS = 'http://www.w3.org/2000/svg';
+    const svg = this.create('svg');
     // Add it to the canvas:
     this.element.appendChild(svg);
 
@@ -18,44 +18,44 @@ export class SVGContext {
     this.groups = [this.svg]; // Create the group stack
     this.parent = this.svg;
 
-    this.path = "";
-    this.pen = {x: 0, y: 0};
+    this.path = '';
+    this.pen = { x: 0, y: 0 };
     this.lineWidth = 1.0;
     this.state = {
       scale: { x: 1, y: 1 },
-      "font-family": "Arial",
-      "font-size": "8pt",
-      "font-weight": "normal"
+      'font-family': 'Arial',
+      'font-size': '8pt',
+      'font-weight': 'normal',
     };
 
     this.attributes = {
-      "stroke-width": 0.3,
-      "fill": "black",
-      "stroke": "black",
-      "stroke-dasharray": "none",
-      "font-family": "Arial",
-      "font-size" : "10pt",
-      "font-weight" : "normal",
-      "font-style" : "normal"
+      'stroke-width': 0.3,
+      'fill': 'black',
+      'stroke': 'black',
+      'stroke-dasharray': 'none',
+      'font-family': 'Arial',
+      'font-size': '10pt',
+      'font-weight': 'normal',
+      'font-style': 'normal',
     };
 
     this.background_attributes = {
-      "stroke-width": 0,
-      "fill": "white",
-      "stroke": "white",
-      "stroke-dasharray": "none",
-      "font-family": "Arial",
-      "font-size" : "10pt",
-      "font-weight": "normal",
-      "font-style": "normal"
+      'stroke-width': 0,
+      'fill': 'white',
+      'stroke': 'white',
+      'stroke-dasharray': 'none',
+      'font-family': 'Arial',
+      'font-size': '10pt',
+      'font-weight': 'normal',
+      'font-style': 'normal',
     };
 
     this.shadow_attributes = {
       width: 0,
-      color: "black"
+      color: 'black',
     };
 
-    this.state_stack= [];
+    this.state_stack = [];
 
     // Test for Internet Explorer
     this.iePolyfill();
@@ -67,21 +67,21 @@ export class SVGContext {
 
   // Allow grouping elements in containers for interactivity.
   openGroup(cls, id, attrs) {
-    var group = this.create("g");
+    const group = this.create('g');
     this.groups.push(group);
     this.parent.appendChild(group);
     this.parent = group;
-    if (cls) group.setAttribute("class", Vex.Prefix(cls));
-    if (id) group.setAttribute("id", Vex.Prefix(id));
+    if (cls) group.setAttribute('class', Vex.Prefix(cls));
+    if (id) group.setAttribute('id', Vex.Prefix(id));
 
     if (attrs && attrs.pointerBBox) {
-      group.setAttribute("pointer-events", "bounding-box");
+      group.setAttribute('pointer-events', 'bounding-box');
     }
     return group;
   }
 
   closeGroup() {
-    var group = this.groups.pop();
+    this.groups.pop();
     this.parent = this.groups[this.groups.length - 1];
   }
 
@@ -93,11 +93,13 @@ export class SVGContext {
   // we do some tricks to improve text layout.  See the
   // note at ieMeasureTextFix() for details.
   iePolyfill() {
-    if (typeof(navigator) !== "undefined") {
-      this.ie = (  /MSIE 9/i.test(navigator.userAgent) ||
-                          /MSIE 10/i.test(navigator.userAgent) ||
-                          /rv:11\.0/i.test(navigator.userAgent) ||
-                          /Trident/i.test(navigator.userAgent) );
+    if (typeof(navigator) !== 'undefined') {
+      this.ie = (
+        /MSIE 9/i.test(navigator.userAgent) ||
+        /MSIE 10/i.test(navigator.userAgent) ||
+        /rv:11\.0/i.test(navigator.userAgent) ||
+        /Trident/i.test(navigator.userAgent)
+      );
     }
   }
 
@@ -107,35 +109,35 @@ export class SVGContext {
     // Unlike canvas, in SVG italic is handled by font-style,
     // not weight. So: we search the weight argument and
     // apply bold and italic to weight and style respectively.
-    var bold = false;
-    var italic = false;
-    var style = "normal";
+    let bold = false;
+    let italic = false;
+    let style = 'normal';
     // Weight might also be a number (200, 400, etc...) so we
     // test its type to be sure we have access to String methods.
-    if( typeof weight == "string" ) {
+    if (typeof weight === 'string') {
         // look for "italic" in the weight:
-        if(weight.indexOf("italic") !== -1) {
-          weight = weight.replace(/italic/g, "");
-          italic = true;
-        }
+      if (weight.indexOf('italic') !== -1) {
+        weight = weight.replace(/italic/g, '');
+        italic = true;
+      }
         // look for "bold" in weight
-        if(weight.indexOf("bold") !== -1) {
-          weight = weight.replace(/bold/g, "");
-          bold = true;
-        }
+      if (weight.indexOf('bold') !== -1) {
+        weight = weight.replace(/bold/g, '');
+        bold = true;
+      }
         // remove any remaining spaces
-        weight = weight.replace(/ /g, "");
+      weight = weight.replace(/ /g, '');
     }
-    weight = bold ? "bold" : weight;
-    weight = (typeof weight === "undefined" || weight === "") ? "normal" : weight;
+    weight = bold ? 'bold' : weight;
+    weight = (typeof weight === 'undefined' || weight === '') ? 'normal' : weight;
 
-    style = italic ? "italic" : style;
+    style = italic ? 'italic' : style;
 
-    var fontAttributes = {
-      "font-family": family,
-      "font-size": size + "pt",
-      "font-weight": weight,
-      "font-style" : style
+    const fontAttributes = {
+      'font-family': family,
+      'font-size': size + 'pt',
+      'font-weight': weight,
+      'font-style': style,
     };
 
     // Store the font size so that if the browser is Internet
@@ -149,16 +151,16 @@ export class SVGContext {
   }
 
   setRawFont(font) {
-    font=font.trim();
+    font = font.trim();
     // Assumes size first, splits on space -- which is presently
     // how all existing modules are calling this.
-    var fontArray = font.split(" ");
+    const fontArray = font.split(' ');
 
-    this.attributes["font-family"] = fontArray[1];
-    this.state["font-family"] = fontArray[1];
+    this.attributes['font-family'] = fontArray[1];
+    this.state['font-family'] = fontArray[1];
 
-    this.attributes["font-size"] = fontArray[0];
-    this.state["font-size"] = fontArray[0];
+    this.attributes['font-size'] = fontArray[0];
+    this.state['font-size'] = fontArray[0];
 
     // Saves fontSize for IE polyfill
     this.fontSize = Number(fontArray[0].match(/\d+/));
@@ -192,23 +194,23 @@ export class SVGContext {
   }
 
   setLineWidth(width) {
-    this.attributes["stroke-width"] = width;
+    this.attributes['stroke-width'] = width;
     this.lineWidth = width;
   }
 
   // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
   setLineDash(lineDash) {
     if (Object.prototype.toString.call(lineDash) === '[object Array]') {
-      lineDash = lineDash.join(", ");
-      this.attributes["stroke-dasharray"] = lineDash;
+      lineDash = lineDash.join(', ');
+      this.attributes['stroke-dasharray'] = lineDash;
       return this;
     } else {
-      throw new Vex.RERR("ArgumentError", "lineDash must be an array of integers.");
+      throw new Vex.RERR('ArgumentError', 'lineDash must be an array of integers.');
     }
   }
 
   setLineCap(lineCap) {
-    this.attributes["stroke-linecap"] = lineCap;
+    this.attributes['stroke-linecap'] = lineCap;
     return this;
   }
 
@@ -222,9 +224,9 @@ export class SVGContext {
     this.width = width;
     this.height = height;
     this.element.style.width = width;
-    var attributes = {
-      width : width,
-      height : height
+    const attributes = {
+      width,
+      height,
     };
     this.applyAttributes(this.svg, attributes);
     return this;
@@ -243,29 +245,34 @@ export class SVGContext {
     // handle internal scaling, am trying to make it possible
     // for us to eventually move in that direction.
 
-    this.state.scale = { x: x, y: y };
-    var visibleWidth = this.width / x;
-    var visibleHeight = this.height / y;
-    this.setViewBox(0,0, visibleWidth, visibleHeight);
+    this.state.scale = { x, y };
+    const visibleWidth = this.width / x;
+    const visibleHeight = this.height / y;
+    this.setViewBox(0, 0, visibleWidth, visibleHeight);
 
     return this;
   }
 
-  setViewBox(xMin, yMin, width, height) {
+  setViewBox(...args) {
     // Override for "x y w h" style:
-    if(arguments.length == 1) this.svg.setAttribute("viewBox", viewBox);
-    else {
-      var viewBoxString = xMin + " " + yMin + " " + width + " " + height;
-      this.svg.setAttribute("viewBox", viewBoxString);
+    if (args.length === 1) {
+      const [viewBox] = args;
+      this.svg.setAttribute('viewBox', viewBox);
+    } else {
+      const [xMin, yMin, width, height] = args;
+      const viewBoxString = xMin + ' ' + yMin + ' ' + width + ' ' + height;
+      this.svg.setAttribute('viewBox', viewBoxString);
     }
   }
 
   // ### Drawing helper methods:
 
   applyAttributes(element, attributes) {
-    for(var propertyName in attributes) {
-      element.setAttributeNS(null, propertyName, attributes[propertyName]);
-    }
+    Object
+      .keys(attributes)
+      .forEach(propertyName =>
+        element.setAttributeNS(null, propertyName, attributes[propertyName]));
+
     return element;
   }
 
@@ -295,38 +302,41 @@ export class SVGContext {
   rect(x, y, width, height, attributes) {
     // Avoid invalid negative height attribs by
     // flipping the rectangle on its head:
-    if(height < 0) {
+    if (height < 0) {
       y += height;
       height *= -1;
     }
 
     // Create the rect & style it:
-    var rect = this.create("rect");
-    if(typeof attributes === "undefined") attributes = {
-      fill: "none",
-      "stroke-width": this.lineWidth,
-      stroke: "black"
-    };
+    const rectangle = this.create('rect');
+    if (typeof attributes === 'undefined') {
+      attributes = {
+        fill: 'none',
+        'stroke-width': this.lineWidth,
+        stroke: 'black',
+      };
+    }
+
     Vex.Merge(attributes, {
-      x: x,
-      y: y,
-      width: width,
-      height: height
+      x,
+      y,
+      width,
+      height,
     });
 
-    this.applyAttributes(rect, attributes);
+    this.applyAttributes(rectangle, attributes);
 
-    this.add(rect);
+    this.add(rectangle);
     return this;
   }
 
   fillRect(x, y, width, height) {
-    if(height < 0) {
+    if (height < 0) {
       y += height;
       height *= -1;
     }
 
-    this.rect(x, y, width - 0.5, height - 0.5, this.attributes);
+    this.rect(x, y, width, height, this.attributes);
     return this;
   }
 
@@ -346,42 +356,40 @@ export class SVGContext {
     // draw lines around locations of tablature fingering.
     //
 
-    if (height < 0) this.flipRectangle(arguments);
-
-    this.rect(x, y, width - 0.5, height - 0.5, this.background_attributes);
+    this.rect(x, y, width, height, this.background_attributes);
     return this;
   }
 
   // ## Paths:
 
   beginPath() {
-    this.path = "";
+    this.path = '';
     this.pen.x = 0;
     this.pen.y = 0;
     return this;
   }
 
   moveTo(x, y) {
-    this.path += "M" + x + " " + y;
+    this.path += 'M' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
   lineTo(x, y) {
-    this.path += "L" + x + " " + y;
+    this.path += 'L' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
   bezierCurveTo(x1, y1, x2, y2, x, y) {
-    this.path += "C" +
-      x1 + " " +
-      y1 + "," +
-      x2 + " " +
-      y2 + "," +
-      x + " " +
+    this.path += 'C' +
+      x1 + ' ' +
+      y1 + ',' +
+      x2 + ' ' +
+      y2 + ',' +
+      x + ' ' +
       y;
     this.pen.x = x;
     this.pen.y = y;
@@ -389,10 +397,10 @@ export class SVGContext {
   }
 
   quadraticCurveTo(x1, y1, x, y) {
-    this.path += "Q" +
-      x1 + " " +
-      y1 + "," +
-      x + " " +
+    this.path += 'Q' +
+      x1 + ' ' +
+      y1 + ',' +
+      x + ' ' +
       y;
     this.pen.x = x;
     this.pen.y = y;
@@ -417,52 +425,48 @@ export class SVGContext {
     endAngle = normalizeAngle(endAngle);
 
     if (startAngle > endAngle) {
-        var tmp = startAngle;
-        startAngle = endAngle;
-        endAngle = tmp;
-        antiClockwise = !antiClockwise;
+      const tmp = startAngle;
+      startAngle = endAngle;
+      endAngle = tmp;
+      antiClockwise = !antiClockwise;
     }
 
-    var delta = endAngle - startAngle;
+    const delta = endAngle - startAngle;
 
     if (delta > Math.PI) {
-        this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2,
-                       antiClockwise);
-        this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle,
-                       antiClockwise);
-    }
-    else {
-        this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
+      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2, antiClockwise);
+      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle, antiClockwise);
+    } else {
+      this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
     }
     return this;
   }
 
   arcHelper(x, y, radius, startAngle, endAngle, antiClockwise) {
-    var x1 = x + radius * Math.cos(startAngle);
-    var y1 = y + radius * Math.sin(startAngle);
+    const x1 = x + radius * Math.cos(startAngle);
+    const y1 = y + radius * Math.sin(startAngle);
 
-    var x2 = x + radius * Math.cos(endAngle);
-    var y2 = y + radius * Math.sin(endAngle);
+    const x2 = x + radius * Math.cos(endAngle);
+    const y2 = y + radius * Math.sin(endAngle);
 
-    var largeArcFlag = 0;
-    var sweepFlag = 0;
+    let largeArcFlag = 0;
+    let sweepFlag = 0;
     if (antiClockwise) {
       sweepFlag = 1;
-      if (endAngle - startAngle < Math.PI)
+      if (endAngle - startAngle < Math.PI) {
         largeArcFlag = 1;
-    }
-    else if (endAngle - startAngle > Math.PI) {
-        largeArcFlag = 1;
+      }
+    } else if (endAngle - startAngle > Math.PI) {
+      largeArcFlag = 1;
     }
 
-    this.path += "M" + x1 + " " + y1 + " " + "A" +
-      radius + " " + radius + " " + "0 " + largeArcFlag + " " + sweepFlag + " " +
-      x2 + " " + y2 + "M" + this.pen.x + " " + this.pen.y;
-
+    this.path += 'M' + x1 + ' ' + y1 + ' A' +
+      radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' +
+      x2 + ' ' + y2 + 'M' + this.pen.x + ' ' + this.pen.y;
   }
 
   closePath() {
-    this.path += "Z";
+    this.path += 'Z';
 
     return this;
   }
@@ -471,19 +475,19 @@ export class SVGContext {
   glow() {
     // Calculate the width & paths of the glow:
     if (this.shadow_attributes.width > 0) {
-      var sa = this.shadow_attributes;
-      var num_paths = sa.width / 2;
+      const sa = this.shadow_attributes;
+      const num_paths = sa.width / 2;
       // Stroke at varying widths to create effect of gaussian blur:
-      for (var i = 1; i <= num_paths; i++) {
-        var attributes = {
+      for (let i = 1; i <= num_paths; i++) {
+        const attributes = {
           stroke: sa.color,
-          "stroke-linejoin": "round",
-          "stroke-linecap": "round",
-          "stroke-width": +((sa.width *0.4) / num_paths * i).toFixed(3),
+          'stroke-linejoin': 'round',
+          'stroke-linecap': 'round',
+          'stroke-width': +((sa.width * 0.4) / num_paths * i).toFixed(3),
           opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
         };
 
-        var path = this.create("path");
+        const path = this.create('path');
         attributes.d = this.path;
         this.applyAttributes(path, attributes);
         this.add(path);
@@ -496,11 +500,11 @@ export class SVGContext {
     // If our current path is set to glow, make it glow
     this.glow();
 
-    var path = this.create("path");
-    if(typeof attributes === "undefined") {
+    const path = this.create('path');
+    if (typeof attributes === 'undefined') {
       attributes = {};
       Vex.Merge(attributes, this.attributes);
-      attributes.stroke = "none";
+      attributes.stroke = 'none';
     }
 
     attributes.d = this.path;
@@ -514,11 +518,11 @@ export class SVGContext {
     // If our current path is set to glow, make it glow.
     this.glow();
 
-    var path = this.create("path");
-    var attributes = {};
+    const path = this.create('path');
+    const attributes = {};
     Vex.Merge(attributes, this.attributes);
-    attributes.fill = "none";
-    attributes["stroke-width"] = this.lineWidth;
+    attributes.fill = 'none';
+    attributes['stroke-width'] = this.lineWidth;
     attributes.d = this.path;
 
     this.applyAttributes(path, attributes);
@@ -528,9 +532,10 @@ export class SVGContext {
 
   // ## Text Methods:
   measureText(text) {
-    var txt = this.create("text");
-    if (typeof(txt.getBBox) !== "function")
+    const txt = this.create('text');
+    if (typeof(txt.getBBox) !== 'function') {
       return { x: 0, y: 0, width: 0, height: 0 };
+    }
 
     txt.textContent = text;
     this.applyAttributes(txt, this.attributes);
@@ -538,15 +543,16 @@ export class SVGContext {
     // Temporarily add it to the document for measurement.
     this.svg.appendChild(txt);
 
-    var bbox = txt.getBBox();
-    if (this.ie && text !== "" && this.attributes["font-style"] == "italic")
+    let bbox = txt.getBBox();
+    if (this.ie && text !== '' && this.attributes['font-style'] === 'italic') {
       bbox = this.ieMeasureTextFix(bbox, text);
+    }
 
     this.svg.removeChild(txt);
     return bbox;
   }
 
-  ieMeasureTextFix(bbox, text) {
+  ieMeasureTextFix(bbox) {
     // Internet Explorer over-pads text in italics,
     // resulting in giant width estimates for measureText.
     // To fix this, we use this formula, tested against
@@ -554,32 +560,32 @@ export class SVGContext {
     // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
     // And then subtract the overestimate from calculated width.
 
-    var fontSize = Number(this.fontSize);
-    var m = 1.196;
-    var b = 1.9598;
-    var widthCorrection = (m * fontSize) + b;
-    var width = bbox.width - widthCorrection;
-    var height = bbox.height - 1.5;
+    const fontSize = Number(this.fontSize);
+    const m = 1.196;
+    const b = 1.9598;
+    const widthCorrection = (m * fontSize) + b;
+    const width = bbox.width - widthCorrection;
+    const height = bbox.height - 1.5;
 
     // Get non-protected copy:
-    var box = {
-      x : bbox.x,
-      y : bbox.y,
-      width : width,
-      height : height
+    const box = {
+      x: bbox.x,
+      y: bbox.y,
+      width,
+      height,
     };
 
     return box;
   }
 
   fillText(text, x, y) {
-    var attributes = {};
+    const attributes = {};
     Vex.Merge(attributes, this.attributes);
-    attributes.stroke = "none";
+    attributes.stroke = 'none';
     attributes.x = x;
     attributes.y = y;
 
-    var txt = this.create("text");
+    const txt = this.create('text');
     txt.textContent = text;
     this.applyAttributes(txt, attributes);
     this.add(txt);
@@ -589,46 +595,46 @@ export class SVGContext {
     // TODO(mmuthanna): State needs to be deep-copied.
     this.state_stack.push({
       state: {
-        "font-family": this.state["font-family"],
-        "font-weight": this.state["font-weight"],
-        "font-style": this.state["font-style"],
-        "font-size": this.state["font-size"]
+        'font-family': this.state['font-family'],
+        'font-weight': this.state['font-weight'],
+        'font-style': this.state['font-style'],
+        'font-size': this.state['font-size'],
       },
       attributes: {
-        "font-family": this.attributes["font-family"],
-        "font-weight": this.attributes["font-weight"],
-        "font-style": this.attributes["font-style"],
-        "font-size": this.attributes["font-size"],
+        'font-family': this.attributes['font-family'],
+        'font-weight': this.attributes['font-weight'],
+        'font-style': this.attributes['font-style'],
+        'font-size': this.attributes['font-size'],
         fill: this.attributes.fill,
         stroke: this.attributes.stroke,
-        "stroke-width": this.attributes["stroke-width"],
-        "stroke-dasharray": this.attributes["stroke-dasharray"]
+        'stroke-width': this.attributes['stroke-width'],
+        'stroke-dasharray': this.attributes['stroke-dasharray'],
       },
       shadow_attributes: {
         width: this.shadow_attributes.width,
-        color: this.shadow_attributes.color
-      }
+        color: this.shadow_attributes.color,
+      },
     });
     return this;
   }
 
   restore() {
     // TODO(0xfe): State needs to be deep-restored.
-    var state = this.state_stack.pop();
-    this.state["font-family"] = state.state["font-family"];
-    this.state["font-weight"] = state.state["font-weight"];
-    this.state["font-style"] = state.state["font-style"];
-    this.state["font-size"] = state.state["font-size"];
+    const state = this.state_stack.pop();
+    this.state['font-family'] = state.state['font-family'];
+    this.state['font-weight'] = state.state['font-weight'];
+    this.state['font-style'] = state.state['font-style'];
+    this.state['font-size'] = state.state['font-size'];
 
-    this.attributes["font-family"] = state.attributes["font-family"];
-    this.attributes["font-weight"] = state.attributes["font-weight"];
-    this.attributes["font-style"] = state.attributes["font-style"];
-    this.attributes["font-size"] = state.attributes["font-size"];
+    this.attributes['font-family'] = state.attributes['font-family'];
+    this.attributes['font-weight'] = state.attributes['font-weight'];
+    this.attributes['font-style'] = state.attributes['font-style'];
+    this.attributes['font-size'] = state.attributes['font-size'];
 
     this.attributes.fill = state.attributes.fill;
     this.attributes.stroke = state.attributes.stroke;
-    this.attributes["stroke-width"] = state.attributes["stroke-width"];
-    this.attributes["stroke-dasharray"] = state.attributes["stroke-dasharray"];
+    this.attributes['stroke-width'] = state.attributes['stroke-width'];
+    this.attributes['stroke-dasharray'] = state.attributes['stroke-dasharray'];
 
     this.shadow_attributes.width = state.shadow_attributes.width;
     this.shadow_attributes.color = state.shadow_attributes.color;

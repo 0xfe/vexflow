@@ -8,6 +8,8 @@
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
 import { Vex } from './vex';
+import { Element } from './element';
+import { Flow } from './tables';
 
 // Attribution: Arrow rendering implementations based off of
 // Patrick Horgan's article, "Drawing lines and arcs with
@@ -17,9 +19,9 @@ import { Vex } from './vex';
 function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
   // all cases do this.
   ctx.beginPath();
-  ctx.moveTo(x0,y0);
-  ctx.lineTo(x1,y1);
-  ctx.lineTo(x2,y2);
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.lineTo(x2, y2);
   ctx.lineTo(x0, y0);
   ctx.closePath();
 
@@ -28,18 +30,21 @@ function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
 
 // Helper function to draw a line with arrow heads
 function drawArrowLine(ctx, point1, point2, config) {
-  var both_arrows = config.draw_start_arrow && config.draw_end_arrow;
+  const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
 
-  var x1 = point1.x;
-  var y1 = point1.y;
-  var x2 = point2.x;
-  var y2 = point2.y;
+  const x1 = point1.x;
+  const y1 = point1.y;
+  const x2 = point2.x;
+  const y2 = point2.y;
 
   // For ends with arrow we actually want to stop before we get to the arrow
   // so that wide lines won't put a flat end on the arrow.
-  var distance = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-  var ratio = (distance - config.arrowhead_length/3) / distance;
-  var end_x, end_y, start_x, start_y;
+  const distance = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+  const ratio = (distance - config.arrowhead_length / 3) / distance;
+  let end_x;
+  let end_y;
+  let start_x;
+  let start_y;
   if (config.draw_end_arrow || both_arrows) {
     end_x = Math.round(x1 + (x2 - x1) * ratio);
     end_y = Math.round(y1 + (y2 - y1) * ratio);
@@ -64,18 +69,21 @@ function drawArrowLine(ctx, point1, point2, config) {
   // Draw the shaft of the arrow
   ctx.beginPath();
   ctx.moveTo(start_x, start_y);
-  ctx.lineTo(end_x,end_y);
+  ctx.lineTo(end_x, end_y);
   ctx.stroke();
   ctx.closePath();
 
   // calculate the angle of the line
-  var line_angle = Math.atan2(y2 - y1, x2 - x1);
+  const line_angle = Math.atan2(y2 - y1, x2 - x1);
   // h is the line length of a side of the arrow head
-  var h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
+  const h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
 
-  var angle1, angle2;
-  var top_x, top_y;
-  var bottom_x, bottom_y;
+  let angle1;
+  let angle2;
+  let top_x;
+  let top_y;
+  let bottom_x;
+  let bottom_y;
 
   if (config.draw_end_arrow || both_arrows) {
     angle1 = line_angle + Math.PI + config.arrowhead_angle;
@@ -102,12 +110,12 @@ function drawArrowLine(ctx, point1, point2, config) {
   }
 }
 
-export class StaveLine {
+export class StaveLine extends Element {
   // Text Positioning
   static get TextVerticalPosition() {
     return {
       TOP: 1,
-      BOTTOM: 2
+      BOTTOM: 2,
     };
   }
 
@@ -115,7 +123,7 @@ export class StaveLine {
     return {
       LEFT: 1,
       CENTER: 2,
-      RIGHT: 3
+      RIGHT: 3,
     };
   }
 
@@ -132,15 +140,17 @@ export class StaveLine {
   //  }
   //  ```
   constructor(notes) {
-    this.notes = notes;
-    this.context = null;
+    super();
+    this.setAttribute('type', 'StaveLine');
 
-    this.text = "";
+    this.notes = notes;
+
+    this.text = '';
 
     this.font = {
-      family: "Arial",
+      family: 'Arial',
       size: 10,
-      weight: ""
+      weight: '',
     };
 
     this.render_options = {
@@ -168,14 +178,12 @@ export class StaveLine {
 
       // The position of the text
       text_position_vertical: StaveLine.TextVerticalPosition.TOP,
-      text_justification: StaveLine.TextJustification.CENTER
+      text_justification: StaveLine.TextJustification.CENTER,
     };
 
     this.setNotes(notes);
   }
 
-  // Set the rendering context
-  setContext(context) { this.context = context; return this; }
   // Set the font for the `StaveLine` text
   setFont(font) { this.font = font; return this; }
   // The the annotation for the `StaveLine`
@@ -183,16 +191,20 @@ export class StaveLine {
 
   // Set the notes for the `StaveLine`
   setNotes(notes) {
-    if (!notes.first_note && !notes.last_note)
-      throw new Vex.RuntimeError("BadArguments",
-          "Notes needs to have either first_note or last_note set.");
+    if (!notes.first_note && !notes.last_note) {
+      throw new Vex.RuntimeError(
+        'BadArguments', 'Notes needs to have either first_note or last_note set.'
+      );
+    }
 
     if (!notes.first_indices) notes.first_indices = [0];
     if (!notes.last_indices) notes.last_indices = [0];
 
-    if (notes.first_indices.length != notes.last_indices.length)
-      throw new Vex.RuntimeError("BadArguments", "Connected notes must have similar" +
-        " index sizes");
+    if (notes.first_indices.length !== notes.last_indices.length) {
+      throw new Vex.RuntimeError(
+        'BadArguments', 'Connected notes must have similar index sizes'
+      );
+    }
 
     // Success. Lets grab 'em notes.
     this.first_note = notes.first_note;
@@ -204,12 +216,8 @@ export class StaveLine {
 
   // Apply the style of the `StaveLine` to the context
   applyLineStyle() {
-    if (!this.context) {
-      throw new Vex.RERR("NoContext","No context to apply the styling to");
-    }
-
-    var render_options = this.render_options;
-    var ctx = this.context;
+    const ctx = this.checkContext();
+    const render_options = this.render_options;
 
     if (render_options.line_dash) {
       ctx.setLineDash(render_options.line_dash);
@@ -220,19 +228,15 @@ export class StaveLine {
     }
 
     if (render_options.rounded_end) {
-      ctx.setLineCap("round");
+      ctx.setLineCap('round');
     } else {
-      ctx.setLineCap("square");
+      ctx.setLineCap('square');
     }
   }
 
   // Apply the text styling to the context
   applyFontStyle() {
-    if (!this.context) {
-      throw new Vex.RERR("NoContext","No context to apply the styling to");
-    }
-
-    var ctx = this.context;
+    const ctx = this.checkContext();
 
     if (this.font) {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
@@ -246,45 +250,41 @@ export class StaveLine {
 
   // Renders the `StaveLine` on the context
   draw() {
-    if (!this.context) {
-      throw new Vex.RERR("NoContext", "No context to render StaveLine.");
-    }
+    const ctx = this.checkContext();
+    this.setRendered();
 
-    var ctx = this.context;
-    var first_note = this.first_note;
-    var last_note = this.last_note;
-    var render_options = this.render_options;
+    const first_note = this.first_note;
+    const last_note = this.last_note;
+    const render_options = this.render_options;
 
     ctx.save();
     this.applyLineStyle();
 
     // Cycle through each set of indices and draw lines
-    var start_position;
-    var end_position;
-    this.first_indices.forEach(function(first_index, i) {
-      var last_index = this.last_indices[i];
+    let start_position;
+    let end_position;
+    this.first_indices.forEach((first_index, i) => {
+      const last_index = this.last_indices[i];
 
       // Get initial coordinates for the start/end of the line
       start_position = first_note.getModifierStartXY(2, first_index);
       end_position = last_note.getModifierStartXY(1, last_index);
-      var upwards_slope = start_position.y > end_position.y;
+      const upwards_slope = start_position.y > end_position.y;
 
       // Adjust `x` coordinates for modifiers
-      start_position.x += first_note.getMetrics().modRightPx +
-                          render_options.padding_left;
-      end_position.x -= last_note.getMetrics().modLeftPx +
-                        render_options.padding_right;
+      start_position.x += first_note.getMetrics().modRightPx + render_options.padding_left;
+      end_position.x -= last_note.getMetrics().modLeftPx + render_options.padding_right;
 
 
       // Adjust first `x` coordinates for displacements
-      var notehead_width = first_note.getGlyph().head_width;
-      var first_displaced = first_note.getKeyProps()[first_index].displaced;
+      const notehead_width = first_note.getGlyph().getWidth();
+      const first_displaced = first_note.getKeyProps()[first_index].displaced;
       if (first_displaced && first_note.getStemDirection() === 1) {
         start_position.x += notehead_width + render_options.padding_left;
       }
 
       // Adjust last `x` coordinates for displacements
-      var last_displaced = last_note.getKeyProps()[last_index].displaced;
+      const last_displaced = last_note.getKeyProps()[last_index].displaced;
       if (last_displaced && last_note.getStemDirection() === -1) {
         end_position.x -= notehead_width + render_options.padding_right;
       }
@@ -294,32 +294,31 @@ export class StaveLine {
       end_position.y += upwards_slope ? 2 : 0;
 
       drawArrowLine(ctx, start_position, end_position, this.render_options);
-
-    }, this);
+    });
 
     ctx.restore();
 
     // Determine the x coordinate where to start the text
-    var text_width = ctx.measureText(this.text).width;
-    var justification = render_options.text_justification;
-    var x = 0;
+    const text_width = ctx.measureText(this.text).width;
+    const justification = render_options.text_justification;
+    let x = 0;
     if (justification === StaveLine.TextJustification.LEFT) {
       x = start_position.x;
     } else if (justification === StaveLine.TextJustification.CENTER) {
-      var delta_x = (end_position.x - start_position.x);
-      var center_x = (delta_x / 2 ) + start_position.x;
+      const delta_x = (end_position.x - start_position.x);
+      const center_x = (delta_x / 2) + start_position.x;
       x = center_x - (text_width / 2);
     } else if (justification === StaveLine.TextJustification.RIGHT) {
       x = end_position.x  -  text_width;
     }
 
     // Determine the y value to start the text
-    var y;
-    var vertical_position = render_options.text_position_vertical;
+    let y;
+    const vertical_position = render_options.text_position_vertical;
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
       y = first_note.getStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
-      y = first_note.getStave().getYForBottomText();
+      y = first_note.getStave().getYForBottomText(Flow.TEXT_HEIGHT_OFFSET_HACK);
     }
 
     // Draw the text

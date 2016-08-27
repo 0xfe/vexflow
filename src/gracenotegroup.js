@@ -12,55 +12,57 @@ import { Formatter } from './formatter';
 import { Voice } from './voice';
 import { Beam } from './beam';
 import { StaveTie } from './stavetie';
+import { TabTie } from './tabtie';
+import { StaveNote } from './stavenote';
+
+// To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
+function L(...args) { if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args); }
 
 export class GraceNoteGroup extends Modifier {
   static get CATEGORY() { return 'gracenotegroups'; }
 
   // Arrange groups inside a `ModifierContext`
   static format(gracenote_groups, state) {
-    var gracenote_spacing = 4;
+    const group_spacing_stave = 4;
+    const group_spacing_tab = 0;
 
     if (!gracenote_groups || gracenote_groups.length === 0) return false;
 
-    var group_list = [];
-    var hasStave = false;
-    var prev_note = null;
-    var shiftL = 0;
+    const group_list = [];
+    let prev_note = null;
+    let shiftL = 0;
 
-    var i, gracenote_group, props_tmp;
-    for (i = 0; i < gracenote_groups.length; ++i) {
-      gracenote_group = gracenote_groups[i];
-      var note = gracenote_group.getNote();
-      var stave = note.getStave();
-      if (note != prev_note) {
+    for (let i = 0; i < gracenote_groups.length; ++i) {
+      const gracenote_group = gracenote_groups[i];
+      const note = gracenote_group.getNote();
+      const is_stavenote = (note.getCategory() === StaveNote.CATEGORY);
+      const spacing = (is_stavenote ?  group_spacing_stave : group_spacing_tab);
+
+      if (is_stavenote && note !== prev_note) {
          // Iterate through all notes to get the displaced pixels
-         for (var n = 0; n < note.keys.length; ++n) {
-            props_tmp = note.getKeyProps()[n];
-            shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
-          }
-          prev_note = note;
+        for (let n = 0; n < note.keys.length; ++n) {
+          const props_tmp = note.getKeyProps()[n];
+          shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+        }
+        prev_note = note;
       }
-      if (stave != null) {
-        hasStave = true;
-        group_list.push({shift: shiftL, gracenote_group: gracenote_group});
-      } else {
-        group_list.push({shift: shiftL, gracenote_group: gracenote_group });
-      }
+
+      group_list.push({ shift: shiftL, gracenote_group, spacing });
     }
 
     // If first note left shift in case it is displaced
-    var group_shift = group_list[0].shift;
-    var formatWidth;
-    for (i = 0; i < group_list.length; ++i) {
-      gracenote_group = group_list[i].gracenote_group;
+    let group_shift = group_list[0].shift;
+    let formatWidth;
+    for (let i = 0; i < group_list.length; ++i) {
+      const gracenote_group = group_list[i].gracenote_group;
       gracenote_group.preFormat();
-      formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+      formatWidth = gracenote_group.getWidth() + group_list[i].spacing;
       group_shift = Math.max(formatWidth, group_shift);
     }
 
-    for (i = 0; i < group_list.length; ++i) {
-      gracenote_group = group_list[i].gracenote_group;
-      formatWidth = gracenote_group.getWidth() + gracenote_spacing;
+    for (let i = 0; i < group_list.length; ++i) {
+      const gracenote_group = group_list[i].gracenote_group;
+      formatWidth = gracenote_group.getWidth() + group_list[i].spacing;
       gracenote_group.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
     }
 
@@ -74,6 +76,7 @@ export class GraceNoteGroup extends Modifier {
   // `ModifierContext`.
   constructor(grace_notes, show_slur) {
     super();
+    this.setAttribute('type', 'GraceNoteGroup');
 
     this.note = null;
     this.index = null;
@@ -90,8 +93,12 @@ export class GraceNoteGroup extends Modifier {
     this.voice = new Voice({
       num_beats: 4,
       beat_value: 4,
-      resolution: Flow.RESOLUTION
+      resolution: Flow.RESOLUTION,
     }).setStrict(false);
+
+    this.render_options = {
+      slur_y_shift: 0,
+    };
 
     this.voice.addTickables(this.grace_notes);
 
@@ -100,7 +107,7 @@ export class GraceNoteGroup extends Modifier {
 
   getCategory() { return GraceNoteGroup.CATEGORY; }
 
-  preFormat(){
+  preFormat() {
     if (this.preFormatted) return;
 
     this.formatter.joinVoices([this.voice]).format([this.voice], 0);
@@ -108,9 +115,9 @@ export class GraceNoteGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  beamNotes(){
+  beamNotes() {
     if (this.grace_notes.length > 1) {
-      var beam = new Beam(this.grace_notes);
+      const beam = new Beam(this.grace_notes);
 
       beam.render_options.beam_width = 3;
       beam.render_options.partial_beam_length = 4;
@@ -124,48 +131,50 @@ export class GraceNoteGroup extends Modifier {
   setNote(note) {
     this.note = note;
   }
-  setWidth(width){
+  setWidth(width) {
     this.width = width;
   }
-  getWidth(){
+  getWidth() {
     return this.width;
   }
   draw() {
-    if (!this.context)  {
-      throw new Vex.RuntimeError("NoContext",
-        "Can't draw Grace note without a context.");
-    }
+    this.checkContext();
 
-    var note = this.getNote();
+    const note = this.getNote();
 
-    L("Drawing grace note group for:", note);
+    L('Drawing grace note group for:', note);
 
     if (!(note && (this.index !== null))) {
-      throw new Vex.RuntimeError("NoAttachedNote",
+      throw new Vex.RuntimeError('NoAttachedNote',
         "Can't draw grace note without a parent note and parent note index.");
     }
 
-    var that = this;
-    function alignGraceNotesWithNote(grace_notes, note, groupWidth) {
+    this.setRendered();
+    const that = this;
+    function alignGraceNotesWithNote(grace_notes, note) {
       // Shift over the tick contexts of each note
       // So that th aligned with the note
-      var tickContext = note.getTickContext();
-      var extraPx = tickContext.getExtraPx();
-      var x = tickContext.getX() - extraPx.left - extraPx.extraLeft + that.getSpacingFromNextModifier();
-      grace_notes.forEach(function(graceNote) {
-          var tick_context = graceNote.getTickContext();
-          var x_offset = tick_context.getX();
-          graceNote.setStave(note.stave);
-          tick_context.setX(x + x_offset);
+      const tickContext = note.getTickContext();
+      const extraPx = tickContext.getExtraPx();
+      const x = tickContext.getX()
+        - extraPx.left
+        - extraPx.extraLeft
+        + that.getSpacingFromNextModifier();
+
+      grace_notes.forEach(graceNote => {
+        const tick_context = graceNote.getTickContext();
+        const x_offset = tick_context.getX();
+        graceNote.setStave(note.stave);
+        tick_context.setX(x + x_offset);
       });
     }
 
     alignGraceNotesWithNote(this.grace_notes, note, this.width);
 
     // Draw notes
-    this.grace_notes.forEach(function(graceNote) {
+    this.grace_notes.forEach(graceNote => {
       graceNote.setContext(this.context).draw();
-    }, this);
+    });
 
     // Draw beam
     if (this.beam) {
@@ -174,18 +183,19 @@ export class GraceNoteGroup extends Modifier {
 
     if (this.show_slur) {
       // Create and draw slur
-      this.slur = new StaveTie({
+      const is_stavenote = (this.getNote().getCategory() === StaveNote.CATEGORY);
+      const TieClass = (is_stavenote ? StaveTie : TabTie);
+
+      this.slur = new TieClass({
         last_note: this.grace_notes[0],
         first_note: note,
         first_indices: [0],
-        last_indices: [0]
+        last_indices: [0],
       });
 
       this.slur.render_options.cp2 = 12;
+      this.slur.render_options.y_shift = (is_stavenote ? 7 : 5) + this.render_options.slur_y_shift;
       this.slur.setContext(this.context).draw();
     }
   }
 }
-
-// To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
-function L() { if (GraceNoteGroup.DEBUG) Vex.L("Vex.Flow.GraceNoteGroup", arguments); }
