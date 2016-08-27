@@ -5,7 +5,7 @@
 
 VF.Test.StaveNote = (function() {
   var StaveNote = {
-    Start() {
+    Start: function() {
       var runTests = VF.Test.runTests;
 
       QUnit.module('StaveNote');
@@ -41,7 +41,7 @@ VF.Test.StaveNote = (function() {
       runTests('Center Aligned Note with Multiple Modifiers', StaveNote.centerAlignedNoteMultiModifiers);
     },
 
-    ticks() {
+    ticks: function() {
       var BEAT = 1 * VF.RESOLUTION / 4;
 
       var tickTests = {
@@ -86,7 +86,7 @@ VF.Test.StaveNote = (function() {
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
     },
 
-    ticksNewApi() {
+    ticksNewApi: function() {
       var BEAT = 1 * VF.RESOLUTION / 4;
 
       // Key value pairs of `testName: [noteData, expectedBeats, expectedNoteType]`
@@ -134,12 +134,12 @@ VF.Test.StaveNote = (function() {
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
     },
 
-    stem() {
+    stem: function() {
       var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'w' });
       equal(note.getStemDirection(), VF.StaveNote.STEM_UP, 'Default note has UP stem');
     },
 
-    autoStem() {
+    autoStem: function() {
       [
         // [keys, expectedStemDirection]
         [['c/5', 'e/5', 'g/5'], VF.StaveNote.STEM_DOWN],
@@ -156,7 +156,7 @@ VF.Test.StaveNote = (function() {
       });
     },
 
-    staveLine() {
+    staveLine: function() {
       var stave = new VF.Stave(10, 10, 300);
       var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
       note.setStave(stave);
@@ -173,7 +173,7 @@ VF.Test.StaveNote = (function() {
       equal(ys[2], 75, 'Line for A/4');
     },
 
-    width() {
+    width: function() {
       var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
 
       throws(function() {
@@ -181,7 +181,7 @@ VF.Test.StaveNote = (function() {
       }, /UnformattedNote/, 'Unformatted note should have no width');
     },
 
-    tickContext() {
+    tickContext: function() {
       var stave = new VF.Stave(10, 10, 400);
       var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' }).setStave(stave);
 
@@ -194,7 +194,7 @@ VF.Test.StaveNote = (function() {
       VF.Test.almostEqual(tickContext.getWidth(), 17.3815, 0.0001);
     },
 
-    showNote(note_struct, stave, ctx, x, drawBoundingBox) {
+    showNote: function(note_struct, stave, ctx, x, drawBoundingBox) {
       var note = new VF.StaveNote(note_struct).setStave(stave);
 
       new VF.TickContext()
@@ -209,7 +209,7 @@ VF.Test.StaveNote = (function() {
       return note;
     },
 
-    draw(options, contextBuilder) {
+    draw: function(options, contextBuilder) {
       var clef = options.params.clef;
       var octaveShift = options.params.octaveShift;
       var restKey = options.params.restKey;
@@ -231,34 +231,34 @@ VF.Test.StaveNote = (function() {
 
       var showNote = VF.Test.StaveNote.showNote;
       var notes = [
-        { clef, keys: higherKeys, duration: '1/2' },
-        { clef, keys: lowerKeys, duration: 'w' },
-        { clef, keys: higherKeys, duration: 'h' },
-        { clef, keys: lowerKeys, duration: 'q' },
-        { clef, keys: higherKeys, duration: '8' },
-        { clef, keys: lowerKeys, duration: '16' },
-        { clef, keys: higherKeys, duration: '32' },
-        { clef, keys: higherKeys, duration: '64' },
-        { clef, keys: higherKeys, duration: '128' },
-        { clef, keys: lowerKeys, duration: '1/2', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: 'w', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: 'h', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: 'q', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '8', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '16', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '32', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '64', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '128', stem_direction: -1 },
+        { clef: clef, keys: higherKeys, duration: '1/2' },
+        { clef: clef, keys: lowerKeys, duration: 'w' },
+        { clef: clef, keys: higherKeys, duration: 'h' },
+        { clef: clef, keys: lowerKeys, duration: 'q' },
+        { clef: clef, keys: higherKeys, duration: '8' },
+        { clef: clef, keys: lowerKeys, duration: '16' },
+        { clef: clef, keys: higherKeys, duration: '32' },
+        { clef: clef, keys: higherKeys, duration: '64' },
+        { clef: clef, keys: higherKeys, duration: '128' },
+        { clef: clef, keys: lowerKeys, duration: '1/2', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: 'w', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: 'h', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: 'q', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '8', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '16', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '32', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '64', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '128', stem_direction: -1 },
 
-        { clef, keys: restKeys, duration: '1/2r' },
-        { clef, keys: restKeys, duration: 'wr' },
-        { clef, keys: restKeys, duration: 'hr' },
-        { clef, keys: restKeys, duration: 'qr' },
-        { clef, keys: restKeys, duration: '8r' },
-        { clef, keys: restKeys, duration: '16r' },
-        { clef, keys: restKeys, duration: '32r' },
-        { clef, keys: restKeys, duration: '64r' },
-        { clef, keys: restKeys, duration: '128r' },
+        { clef: clef, keys: restKeys, duration: '1/2r' },
+        { clef: clef, keys: restKeys, duration: 'wr' },
+        { clef: clef, keys: restKeys, duration: 'hr' },
+        { clef: clef, keys: restKeys, duration: 'qr' },
+        { clef: clef, keys: restKeys, duration: '8r' },
+        { clef: clef, keys: restKeys, duration: '16r' },
+        { clef: clef, keys: restKeys, duration: '32r' },
+        { clef: clef, keys: restKeys, duration: '64r' },
+        { clef: clef, keys: restKeys, duration: '128r' },
         { keys: ['x/4'], duration: 'h' },
       ];
       expect(notes.length * 2);
@@ -289,7 +289,7 @@ VF.Test.StaveNote = (function() {
       }
     },
 
-    drawBoundingBoxes(options, contextBuilder) {
+    drawBoundingBoxes: function(options, contextBuilder) {
       var clef = options.params.clef;
       var octaveShift = options.params.octaveShift;
       var restKey = options.params.restKey;
@@ -311,34 +311,34 @@ VF.Test.StaveNote = (function() {
 
       var showNote = VF.Test.StaveNote.showNote;
       var notes = [
-        { clef, keys: higherKeys, duration: '1/2' },
-        { clef, keys: lowerKeys, duration: 'w' },
-        { clef, keys: higherKeys, duration: 'h' },
-        { clef, keys: lowerKeys, duration: 'q' },
-        { clef, keys: higherKeys, duration: '8' },
-        { clef, keys: lowerKeys, duration: '16' },
-        { clef, keys: higherKeys, duration: '32' },
-        { clef, keys: higherKeys, duration: '64' },
-        { clef, keys: higherKeys, duration: '128' },
-        { clef, keys: lowerKeys, duration: '1/2', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: 'w', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: 'h', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: 'q', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '8', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '16', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '32', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '64', stem_direction: -1 },
-        { clef, keys: lowerKeys, duration: '128' },
+        { clef: clef, keys: higherKeys, duration: '1/2' },
+        { clef: clef, keys: lowerKeys, duration: 'w' },
+        { clef: clef, keys: higherKeys, duration: 'h' },
+        { clef: clef, keys: lowerKeys, duration: 'q' },
+        { clef: clef, keys: higherKeys, duration: '8' },
+        { clef: clef, keys: lowerKeys, duration: '16' },
+        { clef: clef, keys: higherKeys, duration: '32' },
+        { clef: clef, keys: higherKeys, duration: '64' },
+        { clef: clef, keys: higherKeys, duration: '128' },
+        { clef: clef, keys: lowerKeys, duration: '1/2', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: 'w', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: 'h', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: 'q', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '8', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '16', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '32', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '64', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '128' },
 
-        { clef, keys: restKeys, duration: '1/2r' },
-        { clef, keys: restKeys, duration: 'wr' },
-        { clef, keys: restKeys, duration: 'hr' },
-        { clef, keys: restKeys, duration: 'qr' },
-        { clef, keys: restKeys, duration: '8r' },
-        { clef, keys: restKeys, duration: '16r' },
-        { clef, keys: restKeys, duration: '32r' },
-        { clef, keys: restKeys, duration: '64r' },
-        { clef, keys: restKeys, duration: '128r' },
+        { clef: clef, keys: restKeys, duration: '1/2r' },
+        { clef: clef, keys: restKeys, duration: 'wr' },
+        { clef: clef, keys: restKeys, duration: 'hr' },
+        { clef: clef, keys: restKeys, duration: 'qr' },
+        { clef: clef, keys: restKeys, duration: '8r' },
+        { clef: clef, keys: restKeys, duration: '16r' },
+        { clef: clef, keys: restKeys, duration: '32r' },
+        { clef: clef, keys: restKeys, duration: '64r' },
+        { clef: clef, keys: restKeys, duration: '128r' },
         { keys: ['x/4'], duration: 'h' },
       ];
       expect(notes.length * 2);
@@ -352,7 +352,7 @@ VF.Test.StaveNote = (function() {
       }
     },
 
-    drawBass(options, contextBuilder) {
+    drawBass: function(options, contextBuilder) {
       expect(40);
       var ctx = new contextBuilder(options.canvas_sel, 600, 280);
       var stave = new VF.Stave(10, 10, 650);
@@ -394,7 +394,7 @@ VF.Test.StaveNote = (function() {
       }
     },
 
-    displacements(options, contextBuilder) {
+    displacements: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 700, 140);
       ctx.scale(0.9, 0.9);
       ctx.fillStyle = '#221';
@@ -432,8 +432,7 @@ VF.Test.StaveNote = (function() {
       }
     },
 
-    drawHarmonicAndMuted(options,
-                                                            contextBuilder) {
+    drawHarmonicAndMuted: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 300, 180);
       var stave = new VF.Stave(10, 10, 280);
       stave.setContext(ctx);
@@ -490,7 +489,7 @@ VF.Test.StaveNote = (function() {
       }
     },
 
-    drawSlash(options, contextBuilder) {
+    drawSlash: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 700, 180);
       var stave = new VF.Stave(10, 10, 650);
       stave.setContext(ctx);
@@ -536,7 +535,7 @@ VF.Test.StaveNote = (function() {
       ok('Slash Note Heads');
     },
 
-    drawKeyStyles(options, contextBuilder) {
+    drawKeyStyles: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 300, 280);
       ctx.scale(3, 3);
 
@@ -559,7 +558,7 @@ VF.Test.StaveNote = (function() {
       ok(note.getYs().length > 0, 'Note has Y values');
     },
 
-    drawNoteStyles(options, contextBuilder) {
+    drawNoteStyles: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 300, 280);
       var stave = new VF.Stave(10, 0, 100);
       ctx.scale(3, 3);
@@ -583,7 +582,7 @@ VF.Test.StaveNote = (function() {
     },
 
 
-    renderNote(note, stave, ctx, x) {
+    renderNote: function(note, stave, ctx, x) {
       note.setStave(stave);
 
       var mc = new VF.ModifierContext();
@@ -600,7 +599,7 @@ VF.Test.StaveNote = (function() {
       return note;
     },
 
-    dotsAndFlagsStemUp(options, contextBuilder) {
+    dotsAndFlagsStemUp: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 150);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
@@ -635,7 +634,7 @@ VF.Test.StaveNote = (function() {
     },
 
 
-    dotsAndFlagsStemDown(options, contextBuilder) {
+    dotsAndFlagsStemDown: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 160);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
@@ -669,7 +668,7 @@ VF.Test.StaveNote = (function() {
       ok(true, 'Full Dot');
     },
 
-    dotsAndBeamsUp(options, contextBuilder) {
+    dotsAndBeamsUp: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 150);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
@@ -705,7 +704,7 @@ VF.Test.StaveNote = (function() {
       ok(true, 'Full Dot');
     },
 
-    dotsAndBeamsDown(options, contextBuilder) {
+    dotsAndBeamsDown: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.canvas_sel, 800, 160);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
@@ -741,7 +740,7 @@ VF.Test.StaveNote = (function() {
       ok(true, 'Full Dot');
     },
 
-    centerAlignedRest(options) {
+    centerAlignedRest: function(options) {
       var vf = VF.Test.makeFactory(options, 400, 160);
 
       var stave = vf.Stave({ x: 10, y: 10, width: 350 })
@@ -763,7 +762,7 @@ VF.Test.StaveNote = (function() {
       ok(true);
     },
 
-    centerAlignedRestFermata(options) {
+    centerAlignedRestFermata: function(options) {
       var vf = VF.Test.makeFactory(options, 400, 160);
 
       var stave = vf.Stave({ x: 10, y: 10, width: 350 })
@@ -786,7 +785,7 @@ VF.Test.StaveNote = (function() {
       ok(true);
     },
 
-    centerAlignedRestAnnotation(options) {
+    centerAlignedRestAnnotation: function(options) {
       var vf = VF.Test.makeFactory(options, 400, 160);
 
       var stave = vf.Stave({ x: 10, y: 10, width: 350 })
@@ -809,7 +808,7 @@ VF.Test.StaveNote = (function() {
       ok(true);
     },
 
-    centerAlignedNoteMultiModifiers(options) {
+    centerAlignedNoteMultiModifiers: function(options) {
       var vf = VF.Test.makeFactory(options, 400, 160);
 
       var stave = vf.Stave({ x: 10, y: 10, width: 350 })
@@ -842,7 +841,7 @@ VF.Test.StaveNote = (function() {
       ok(true);
     },
 
-    centerAlignedMultiVoice(options) {
+    centerAlignedMultiVoice: function(options) {
       var vf = VF.Test.makeFactory(options, 400, 160);
 
       var stave = vf.Stave({ x: 10, y: 10, width: 350 })
