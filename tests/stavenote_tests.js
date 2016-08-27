@@ -41,7 +41,7 @@ VF.Test.StaveNote = (function() {
       runTests('Center Aligned Note with Multiple Modifiers', StaveNote.centerAlignedNoteMultiModifiers);
     },
 
-    ticks(options) {
+    ticks() {
       var BEAT = 1 * VF.RESOLUTION / 4;
 
       var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '1/2' });
@@ -185,23 +185,23 @@ VF.Test.StaveNote = (function() {
       equal(note.getTicks().value(), BEAT * 0.9375, 'Triple-dotted muted 8th note has 0.9375 beats');
       equal(note.getNoteType(), 'm', "Note type is 'm' for muted note");
 
-      var note = new VF.StaveNote({ keys: ['b/4'], duration: '1s' });
+      note = new VF.StaveNote({ keys: ['b/4'], duration: '1s' });
       equal(note.getTicks().value(), BEAT * 4, 'Whole note has 4 beats');
       equal(note.getNoteType(), 's', "Note type is 's' for slash note");
 
-      var note = new VF.StaveNote({ keys: ['b/4'], duration: '4s' });
+      note = new VF.StaveNote({ keys: ['b/4'], duration: '4s' });
       equal(note.getTicks().value(), BEAT, 'Quarter note has 1 beats');
       equal(note.getNoteType(), 's', "Note type is 's' for slash note");
 
-      var note = new VF.StaveNote({ keys: ['b/4'], duration: '2s', dots: 1 });
+      note = new VF.StaveNote({ keys: ['b/4'], duration: '2s', dots: 1 });
       equal(note.getTicks().value(), BEAT * 3, 'Dotted half note has 3 beats');
       equal(note.getNoteType(), 's', "Note type is 's' for slash note");
 
-      var note = new VF.StaveNote({ keys: ['b/4'], duration: '2s', dots: 2 });
+      note = new VF.StaveNote({ keys: ['b/4'], duration: '2s', dots: 2 });
       equal(note.getTicks().value(), BEAT * 3.5, 'Double-dotted half note has 3.5 beats');
       equal(note.getNoteType(), 's', "Note type is 's' for slash note");
 
-      var note = new VF.StaveNote({ keys: ['b/4'], duration: '2s', dots: 3 });
+      note = new VF.StaveNote({ keys: ['b/4'], duration: '2s', dots: 3 });
       equal(note.getTicks().value(), BEAT * 3.75, 'Triple-dotted half note has 3.75 beats');
       equal(note.getNoteType(), 's', "Note type is 's' for slash note");
 
@@ -272,7 +272,7 @@ VF.Test.StaveNote = (function() {
       var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
 
       try {
-        var width = note.getWidth();
+        note.getWidth();
       } catch (e) {
         equal(e.code, 'UnformattedNote', 'Unformatted note should have no width');
       }
@@ -451,7 +451,6 @@ VF.Test.StaveNote = (function() {
       expect(40);
       var ctx = new contextBuilder(options.canvas_sel, 600, 280);
       var stave = new VF.Stave(10, 10, 650);
-      var stave2 = new VF.Stave(10, 150, 650);
       stave.setContext(ctx);
       stave.addClef('bass');
       stave.draw();
@@ -592,7 +591,6 @@ VF.Test.StaveNote = (function() {
       stave.setContext(ctx);
       stave.draw();
 
-      var showNote = VF.Test.StaveNote.showNote;
       var notes = [
         { keys: ['b/4'], duration: '1/2s', stem_direction: -1 },
         { keys: ['b/4'], duration: 'ws', stem_direction: -1 },
@@ -700,7 +698,6 @@ VF.Test.StaveNote = (function() {
       stave.draw();
 
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Dot(type); }
 
       var notes = [
         newNote({ keys: ['f/4'], duration: '4', stem_direction: 1 })
@@ -749,7 +746,6 @@ VF.Test.StaveNote = (function() {
       stave.draw();
 
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Dot(type); }
 
       var notes = [
         newNote({ keys: ['e/5'], duration: '4', stem_direction: -1 })
@@ -794,7 +790,6 @@ VF.Test.StaveNote = (function() {
       stave.draw();
 
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Dot(type); }
 
       var notes = [
         newNote({ keys: ['f/4'], duration: '8', stem_direction: 1 })
@@ -840,7 +835,6 @@ VF.Test.StaveNote = (function() {
       stave.draw();
 
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Dot(type); }
 
       var notes = [
 
@@ -895,7 +889,7 @@ VF.Test.StaveNote = (function() {
       var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
       voice0.addTickables(notes0);
 
-      var formatter = new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
+      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
 
       voice0.draw(ctx, stave);
 
@@ -926,7 +920,7 @@ VF.Test.StaveNote = (function() {
       var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
       voice0.addTickables(notes0);
 
-      var formatter = new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
+      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
 
       voice0.draw(ctx, stave);
 
@@ -957,7 +951,7 @@ VF.Test.StaveNote = (function() {
       var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
       voice0.addTickables(notes0);
 
-      var formatter = new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
+      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
 
       voice0.draw(ctx, stave);
 
@@ -1000,7 +994,7 @@ VF.Test.StaveNote = (function() {
       var voice0 = new VF.Voice(VF.TIME4_4).setStrict(false);
       voice0.addTickables(notes0);
 
-      var formatter = new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
+      new VF.Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
 
       voice0.draw(ctx, stave);
 
@@ -1051,7 +1045,7 @@ VF.Test.StaveNote = (function() {
       var voice1 = new VF.Voice(TIME3_8).setStrict(false);
       voice1.addTickables(notes1);
 
-      var formatter = new VF.Formatter().joinVoices([voice0, voice1]).formatToStave([voice0, voice1], stave);
+      new VF.Formatter().joinVoices([voice0, voice1]).formatToStave([voice0, voice1], stave);
 
       voice0.draw(ctx, stave);
       voice1.draw(ctx, stave);
