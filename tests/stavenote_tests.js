@@ -104,26 +104,17 @@ VF.Test.StaveNote = (function() {
       equal(note.getTicks().value(), BEAT * 0.9375, 'Triple-dotted muted 8th note has 0.9375 beats');
       equal(note.getNoteType(), 'm', "Note type is 'm' for muted note");
 
-      try {
+      throws(function() {
         new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
-        throw new Error();
-      } catch (e) {
-        equal(e.code, 'BadArguments', "Invalid note duration '8.7' throws BadArguments exception");
-      }
+      }, /BadArguments/, "Invalid note duration '8.7' throws BadArguments exception");
 
-      try {
+      throws(function() {
         new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
-        throw new Error();
-      } catch (e) {
-        equal(e.code, 'BadArguments', "Invalid note type 'Z' throws BadArguments exception");
-      }
+      }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
 
-      try {
+      throws(function() {
         new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
-        throw new Error();
-      } catch (e) {
-        equal(e.code, 'BadArguments', "Invalid note type 'Z' for dotted note throws BadArguments exception");
-      }
+      }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
     },
 
     ticksNewApi() {
@@ -205,28 +196,18 @@ VF.Test.StaveNote = (function() {
       equal(note.getTicks().value(), BEAT * 3.75, 'Triple-dotted half note has 3.75 beats');
       equal(note.getNoteType(), 's', "Note type is 's' for slash note");
 
-      try {
+      throws(function() {
         new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7' });
-        throw new Error();
-      } catch (e) {
-        equal(e.code, 'BadArguments', "Invalid note duration '8.7' throws BadArguments exception");
-      }
+      }, /BadArguments/, "Invalid note duration '8.7' throws BadArguments exception");
 
-      try {
+      throws(function() {
         new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8', dots: 'three' });
-        throw new Error();
-      } catch (e) {
-        equal(e.code, 'BadArguments', "Invalid number of dots 'three' (as string) throws BadArguments exception");
-      }
+      }, /BadArguments/, "Invalid number of dots 'three' (as string) throws BadArguments exception");
 
-      try {
+      throws(function() {
         new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2', type: 'Z' });
-        throw new Error();
-      } catch (e) {
-        equal(e.code, 'BadArguments', "Invalid note type 'Z' throws BadArguments exception");
-      }
+      }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
     },
-
 
     stem() {
       var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'w' });
