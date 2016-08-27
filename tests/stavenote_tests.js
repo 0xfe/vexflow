@@ -69,7 +69,7 @@ VF.Test.StaveNote = (function() {
         var expectedBeats = testData[1];
         var expectedNoteType = testData[2];
         var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: durationString });
-        equal(note.getTicks().value(), BEAT * expectedBeats, testName + ' has ' + expectedBeats + ' beats');
+        equal(note.getTicks().value(), BEAT * expectedBeats, testName + ' must have ' + expectedBeats + ' beats');
         equal(note.getNoteType(), expectedNoteType, 'Note type must be ' + expectedNoteType);
       });
 
@@ -117,7 +117,7 @@ VF.Test.StaveNote = (function() {
         noteData.keys = ['c/4', 'e/4', 'g/4'];
 
         var note = new VF.StaveNote(noteData);
-        equal(note.getTicks().value(), BEAT * expectedBeats, testName + ' has ' + expectedBeats + ' beats');
+        equal(note.getTicks().value(), BEAT * expectedBeats, testName + ' must have ' + expectedBeats + ' beats');
         equal(note.getNoteType(), expectedNoteType, 'Note type must be ' + expectedNoteType);
       });
 
