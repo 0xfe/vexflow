@@ -3,6 +3,18 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
+/*
+eslint-disable
+func-names,
+max-len,
+no-undef,
+no-var,
+vars-on-top,
+wrap-iife,
+object-shorthand,
+prefer-arrow-callback,
+ */
+
 var VF = Vex.Flow;
 VF.Test.AutoBeamFormatting = (function() {
   var runTests = VF.Test.runTests;
@@ -11,7 +23,7 @@ VF.Test.AutoBeamFormatting = (function() {
   function concat(a, b) { return a.concat(b); }
 
   var AutoBeamFormatting = {
-    Start() {
+    Start: function() {
       QUnit.module('Auto-Beaming');
       runTests('Simple Auto Beaming', AutoBeamFormatting.simpleAuto);
       runTests('Even Group Stem Directions', AutoBeamFormatting.evenGroupStemDirections);
@@ -43,22 +55,7 @@ VF.Test.AutoBeamFormatting = (function() {
       runTests('Flat Beams Down Bounds', AutoBeamFormatting.flatBeamsDownBounds);
     },
 
-    setupContext(options, width, height) {
-      var ctx = new options.contextBuilder(options.canvas_sel, width || 450, height || 140);
-      ctx.scale(0.9, 0.9);
-      ctx.setFillStyle('#221');
-      ctx.setStrokeStyle('#221');
-      ctx.font = ' 10pt Arial';
-
-      var stave = new VF.Stave(10, 40, width || 450)
-        .addTrebleGlyph()
-        .setContext(ctx)
-        .draw();
-
-      return { context: ctx, stave };
-    },
-
-    simpleAuto(options) {
+    simpleAuto: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -75,12 +72,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam =>  beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beaming Applicator Test');
     },
 
-    evenGroupStemDirections(options) {
+    evenGroupStemDirections: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -97,9 +97,13 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
 
-      var { UP, DOWN } = VF.Stem;
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
+
+      var UP = VF.Stem.UP;
+      var DOWN = VF.Stem.DOWN;
       equal(beams[0].stem_direction, UP);
       equal(beams[1].stem_direction, UP);
       equal(beams[2].stem_direction, UP);
@@ -110,7 +114,7 @@ VF.Test.AutoBeamFormatting = (function() {
       ok(true, 'Auto Beaming Applicator Test');
     },
 
-    oddGroupStemDirections(options) {
+    oddGroupStemDirections: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -122,7 +126,8 @@ VF.Test.AutoBeamFormatting = (function() {
       var groups = [new VF.Fraction(3, 8)];
       var beams = VF.Beam.applyAndGetBeams(voice, null, groups);
 
-      var { UP, DOWN } = VF.Stem;
+      var UP = VF.Stem.UP;
+      var DOWN = VF.Stem.DOWN;
       equal(beams[0].stem_direction, DOWN, 'Notes are equadistant from middle line');
       equal(beams[1].stem_direction, DOWN);
       equal(beams[2].stem_direction, UP);
@@ -133,12 +138,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beaming Applicator Test');
     },
 
-    oddBeamGroups(options) {
+    oddBeamGroups: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -161,12 +169,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    moreSimple0(options) {
+    moreSimple0: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -182,12 +193,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    moreSimple1(options) {
+    moreSimple1: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -203,12 +217,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    breakBeamsOnRests(options) {
+    breakBeamsOnRests: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -226,12 +243,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamAcrossAllRestsWithStemlets(options) {
+    beamAcrossAllRestsWithStemlets: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -250,12 +270,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamAcrossAllRests(options) {
+    beamAcrossAllRests: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -273,12 +296,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamAcrossMiddleRests(options) {
+    beamAcrossMiddleRests: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -297,12 +323,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    maintainStemDirections(options) {
+    maintainStemDirections: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 200);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -324,12 +353,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    maintainStemDirectionsBeamAcrossRests(options) {
+    maintainStemDirectionsBeamAcrossRests: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 200);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -351,12 +383,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    groupWithUnbeamableNote(options) {
+    groupWithUnbeamableNote: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 200);
       var stave = vf.Stave({ x: 0, y: 0, width: 440 }).addTimeSignature('2/4');
       var score = vf.EasyScore();
@@ -376,12 +411,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    groupWithUnbeamableNote1(options) {
+    groupWithUnbeamableNote1: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 200);
       var stave = vf.Stave({ x: 0, y: 0, width: 440 }).addTimeSignature('6/8');
       var score = vf.EasyScore();
@@ -401,12 +439,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    autoOddBeamGroups(options, contextBuilder) {
+    autoOddBeamGroups: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
 
       var context = new options.contextBuilder(options.canvas_sel, 450, 400);
@@ -497,13 +538,19 @@ VF.Test.AutoBeamFormatting = (function() {
       voice2.draw(context);
       voice3.draw(context);
 
-      beams.forEach(beam => beam.setContext(context).draw());
-      beams2.forEach(beam => beam.setContext(context).draw());
-      beams3.forEach(beam => beam.setContext(context).draw());
+      beams.forEach(function(beam) {
+        return beam.setContext(context).draw();
+      });
+      beams2.forEach(function(beam) {
+        return beam.setContext(context).draw();
+      });
+      beams3.forEach(function(beam) {
+        return beam.setContext(context).draw();
+      });
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    customBeamGroups(options, contextBuilder) {
+    customBeamGroups: function(options, contextBuilder) {
       var context = new contextBuilder(options.canvas_sel, 450, 400);
       context.scale(0.9, 0.9);
       context.fillStyle = '#221';
@@ -602,13 +649,19 @@ VF.Test.AutoBeamFormatting = (function() {
       voice2.draw(context);
       voice3.draw(context);
 
-      beams.forEach(beam => beam.setContext(context).draw());
-      beams2.forEach(beam => beam.setContext(context).draw());
-      beams3.forEach(beam => beam.setContext(context).draw());
+      beams.forEach(function(beam) {
+        return beam.setContext(context).draw();
+      });
+      beams2.forEach(function(beam) {
+        return beam.setContext(context).draw();
+      });
+      beams3.forEach(function(beam) {
+        return beam.setContext(context).draw();
+      });
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    simpleTuplets(options) {
+    simpleTuplets: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -637,12 +690,14 @@ VF.Test.AutoBeamFormatting = (function() {
       vf.draw();
 
       var context = vf.getContext();
-      beams.forEach(beam => beam.setContext(context).draw());
+      beams.forEach(function(beam) {
+        return beam.setContext(context).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    moreSimpleTuplets(options) {
+    moreSimpleTuplets: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -658,12 +713,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    moreBeaming(options) {
+    moreBeaming: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -679,12 +737,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    secondaryBreaks(options) {
+    secondaryBreaks: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -705,12 +766,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Duration-Based Secondary Breaks Test');
     },
 
-    secondaryBreaks2(options) {
+    secondaryBreaks2: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -737,12 +801,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Duration-Based Secondary Breaks Test');
     },
 
-    flatBeamsUp(options) {
+    flatBeamsUp: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -767,12 +834,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Flat Beams Up Test');
     },
 
-    flatBeamsDown(options) {
+    flatBeamsDown: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -793,12 +863,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Flat Beams Down Test');
     },
 
-    flatBeamsMixed(options) {
+    flatBeamsMixed: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -816,12 +889,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Flat Beams Mixed Direction Test');
     },
 
-    flatBeamsUpUniform(options) {
+    flatBeamsUpUniform: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave().addClef('treble');
       var score = vf.EasyScore();
@@ -845,12 +921,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Flat Beams Up (uniform) Test');
     },
 
-    flatBeamsDownUniform(options) {
+    flatBeamsDownUniform: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave().addClef('treble');
       var score = vf.EasyScore();
@@ -870,12 +949,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Flat Beams Down (uniform) Test');
     },
 
-    flatBeamsUpBounds(options) {
+    flatBeamsUpBounds: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -898,12 +980,15 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Flat Beams Up (uniform) Test');
     },
 
-    flatBeamsDownBounds(options) {
+    flatBeamsDownBounds: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -926,7 +1011,10 @@ VF.Test.AutoBeamFormatting = (function() {
         .formatToStave([voice], stave);
 
       vf.draw();
-      beams.forEach(beam => beam.setContext(vf.getContext()).draw());
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
 
       ok(true, 'Flat Beams Down (uniform) Test');
     },
