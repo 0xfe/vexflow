@@ -35,7 +35,7 @@ class RuntimeError {
   }
 
   toString() {
-    return 'RuntimeError: ' + this.message;
+    return '[RuntimeError] ' + this.code + ':' + this.message;
   }
 }
 
