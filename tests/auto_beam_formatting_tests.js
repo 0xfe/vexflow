@@ -17,13 +17,11 @@ prefer-arrow-callback,
 
 var VF = Vex.Flow;
 VF.Test.AutoBeamFormatting = (function() {
-  var runTests = VF.Test.runTests;
-
-  function newNote(note_struct) { return new VF.StaveNote(note_struct); }
   function concat(a, b) { return a.concat(b); }
 
   var AutoBeamFormatting = {
     Start: function() {
+      var runTests = VF.Test.runTests;
       QUnit.module('Auto-Beaming');
       runTests('Simple Auto Beaming', AutoBeamFormatting.simpleAuto);
       runTests('Even Group Stem Directions', AutoBeamFormatting.evenGroupStemDirections);
@@ -393,7 +391,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
     groupWithUnbeamableNote: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 200);
-      var stave = vf.Stave({ x: 0, y: 0, width: 440 }).addTimeSignature('2/4');
+      var stave = vf.Stave().addTimeSignature('2/4');
       var score = vf.EasyScore();
 
       var voice = score.voice(score.notes(
@@ -421,7 +419,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
     groupWithUnbeamableNote1: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 200);
-      var stave = vf.Stave({ x: 0, y: 0, width: 440 }).addTimeSignature('6/8');
+      var stave = vf.Stave().addTimeSignature('6/8');
       var score = vf.EasyScore();
 
       var voice = score.voice(score.notes(
@@ -447,178 +445,51 @@ VF.Test.AutoBeamFormatting = (function() {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    autoOddBeamGroups: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
+    autoOddBeamGroups: function(options) {
+      var vf = VF.Test.makeFactory(options, 450, 400);
+      var score = vf.EasyScore();
 
-      var context = new options.contextBuilder(options.canvas_sel, 450, 400);
-      context.scale(0.9, 0.9);
-      context.fillStyle = '#221';
-      context.strokeStyle = '#221';
+      var stave1 = vf.Stave({ x: 10, y: 10 }).addClef('treble').addTimeSignature('5/4');
+      var voice1 = score.voice(score.notes('c5/8, g5, c5, b4, b4, c4, d4, a5, c4, g4'), { time: '5/4' });
 
-      var stave1 = new VF.Stave(10, 10, 450)
-        .addTrebleGlyph().setContext(context)
-        .addTimeSignature('5/4');
+      var stave2 = vf.Stave({ x: 10, y: 150 }).addClef('treble').addTimeSignature('5/8');
+      var voice2 = score.voice(score.notes('c5/8, g5, c5, b4, b4'), { time: '5/8' });
 
-      var stave2 = new VF.Stave(10, 150, 450)
-        .addTrebleGlyph().setContext(context)
-        .addTimeSignature('5/8');
+      var stave3 = vf.Stave({ x: 10, y: 290 }).addClef('treble').addTimeSignature('13/16');
+      var voice3 = score.voice(score.notes('c5/16, g5, c5, b4, b4, c5, g5, c5, b4, b4, c5, b4, b4'), { time: '13/16' });
 
-      var stave3 = new VF.Stave(10, 290, 450)
-        .addTrebleGlyph().setContext(context)
-        .addTimeSignature('13/16');
+      var beams = [
+        VF.Beam.applyAndGetBeams(voice1, undefined, VF.Beam.getDefaultBeamGroups('5/4')),
+        VF.Beam.applyAndGetBeams(voice2, undefined, VF.Beam.getDefaultBeamGroups('5/8')),
+        VF.Beam.applyAndGetBeams(voice3, undefined, VF.Beam.getDefaultBeamGroups('13/16')),
+      ].reduce(concat);
 
-      var notes1 = [
-        newNote({ keys: ['c/5'], duration: '8' }),
-        newNote({ keys: ['g/5'], duration: '8' }),
-        newNote({ keys: ['c/5'], duration: '8' }),
-        newNote({ keys: ['b/4'], duration: '8' }),
-        newNote({ keys: ['b/4'], duration: '8' }),
-        newNote({ keys: ['c/4'], duration: '8' }),
-        newNote({ keys: ['d/4'], duration: '8' }),
-        newNote({ keys: ['a/5'], duration: '8' }),
-        newNote({ keys: ['c/4'], duration: '8' }),
-        newNote({ keys: ['g/4'], duration: '8' }),
-      ];
+      vf.Formatter()
+        .formatToStave([voice1], stave1)
+        .formatToStave([voice2], stave2)
+        .formatToStave([voice3], stave3);
 
-      var notes2 = [
-        newNote({ keys: ['c/5'], duration: '8' }),
-        newNote({ keys: ['g/5'], duration: '8' }),
-        newNote({ keys: ['c/5'], duration: '8' }),
-        newNote({ keys: ['b/4'], duration: '8' }),
-        newNote({ keys: ['b/4'], duration: '8' }),
-      ];
-
-      var notes3 = [
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['g/5'], duration: '16' }),
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['g/5'], duration: '16' }),
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-      ];
-
-      var voice1 = new VF.Voice(VF.Test.TIME4_4)
-        .setMode(VF.Voice.Mode.SOFT)
-        .addTickables(notes1)
-        .setStave(stave1);
-
-      var voice2 = new VF.Voice(VF.Test.TIME4_4)
-        .setMode(VF.Voice.Mode.SOFT)
-        .addTickables(notes2)
-        .setStave(stave2);
-
-      var voice3 = new VF.Voice(VF.Test.TIME4_4)
-        .setMode(VF.Voice.Mode.SOFT)
-        .addTickables(notes3)
-        .setStave(stave3);
-
-      var groups1316 = [
-        new VF.Fraction(3, 16),
-        new VF.Fraction(2, 16),
-      ];
-
-      var beams = VF.Beam.applyAndGetBeams(voice1, undefined, VF.Beam.getDefaultBeamGroups('5/4'));
-      var beams2 = VF.Beam.applyAndGetBeams(voice2, undefined, VF.Beam.getDefaultBeamGroups('5/8'));
-      var beams3 = VF.Beam.applyAndGetBeams(voice3, undefined, VF.Beam.getDefaultBeamGroups('13/16'));
-
-      new VF.Formatter().formatToStave([voice1, voice2, voice3], stave1);
-
-      stave1.setContext(context).draw();
-      stave2.setContext(context).draw();
-      stave3.setContext(context).draw();
-
-      voice1.draw(context);
-      voice2.draw(context);
-      voice3.draw(context);
+      vf.draw();
 
       beams.forEach(function(beam) {
-        return beam.setContext(context).draw();
+        return beam.setContext(vf.getContext()).draw();
       });
-      beams2.forEach(function(beam) {
-        return beam.setContext(context).draw();
-      });
-      beams3.forEach(function(beam) {
-        return beam.setContext(context).draw();
-      });
+
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    customBeamGroups: function(options, contextBuilder) {
-      var context = new contextBuilder(options.canvas_sel, 450, 400);
-      context.scale(0.9, 0.9);
-      context.fillStyle = '#221';
-      context.strokeStyle = '#221';
+    customBeamGroups: function(options) {
+      var vf = VF.Test.makeFactory(options, 450, 400);
+      var score = vf.EasyScore();
 
-      var stave1 = new VF.Stave(10, 10, 450)
-        .addTrebleGlyph()
-        .addTimeSignature('5/4');
+      var stave1 = vf.Stave({ x: 10, y: 10 }).addClef('treble').addTimeSignature('5/4');
+      var voice1 = score.voice(score.notes('c5/8, g5, c5, b4, b4, c4, d4, a5, c4, g4'), { time: '5/4' });
 
-      var stave2 = new VF.Stave(10, 150, 450)
-        .addTrebleGlyph()
-        .addTimeSignature('5/8');
+      var stave2 = vf.Stave({ x: 10, y: 150 }).addClef('treble').addTimeSignature('5/8');
+      var voice2 = score.voice(score.notes('c5/8, g5, c5, b4, b4'), { time: '5/8' });
 
-      var stave3 = new VF.Stave(10, 290, 450)
-        .addTrebleGlyph()
-        .addTimeSignature('13/16');
-
-      var notes1 = [
-        newNote({ keys: ['c/5'], duration: '8' }),
-        newNote({ keys: ['g/5'], duration: '8' }),
-        newNote({ keys: ['c/5'], duration: '8' }),
-        newNote({ keys: ['b/4'], duration: '8' }),
-        newNote({ keys: ['b/4'], duration: '8' }),
-        newNote({ keys: ['c/4'], duration: '8' }),
-        newNote({ keys: ['d/4'], duration: '8' }),
-        newNote({ keys: ['a/5'], duration: '8' }),
-        newNote({ keys: ['c/4'], duration: '8' }),
-        newNote({ keys: ['g/4'], duration: '8' }),
-      ];
-
-      var notes2 = [
-        newNote({ keys: ['c/5'], duration: '8' }),
-        newNote({ keys: ['g/5'], duration: '8' }),
-        newNote({ keys: ['c/5'], duration: '8' }),
-        newNote({ keys: ['b/4'], duration: '8' }),
-        newNote({ keys: ['b/4'], duration: '8' }),
-      ];
-
-      var notes3 = [
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['g/5'], duration: '16' }),
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['g/5'], duration: '16' }),
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['c/5'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-        newNote({ keys: ['b/4'], duration: '16' }),
-      ];
-
-      var voice1 = new VF.Voice(VF.Test.TIME4_4)
-        .setMode(VF.Voice.Mode.SOFT)
-        .addTickables(notes1)
-        .setStave(stave1);
-
-      var voice2 = new VF.Voice(VF.Test.TIME4_4)
-        .setMode(VF.Voice.Mode.SOFT)
-        .addTickables(notes2)
-        .setStave(stave2);
-
-      var voice3 = new VF.Voice(VF.Test.TIME4_4)
-        .setMode(VF.Voice.Mode.SOFT)
-        .addTickables(notes3)
-        .setStave(stave3);
+      var stave3 = vf.Stave({ x: 10, y: 290 }).addClef('treble').addTimeSignature('13/16');
+      var voice3 = score.voice(score.notes('c5/16, g5, c5, b4, b4, c5, g5, c5, b4, b4, c5, b4, b4'), { time: '13/16' });
 
       var group1 = [
         new VF.Fraction(5, 8),
@@ -635,29 +506,23 @@ VF.Test.AutoBeamFormatting = (function() {
         new VF.Fraction(4, 16),
       ];
 
-      var beams = VF.Beam.applyAndGetBeams(voice1, undefined, group1);
-      var beams2 = VF.Beam.applyAndGetBeams(voice2, undefined, group2);
-      var beams3 = VF.Beam.applyAndGetBeams(voice3, undefined, group3);
+      var beams = [
+        VF.Beam.applyAndGetBeams(voice1, undefined, group1),
+        VF.Beam.applyAndGetBeams(voice2, undefined, group2),
+        VF.Beam.applyAndGetBeams(voice3, undefined, group3),
+      ].reduce(concat);
 
-      new VF.Formatter().formatToStave([voice1, voice2, voice3], stave1);
+      vf.Formatter()
+        .formatToStave([voice1], stave1)
+        .formatToStave([voice2], stave2)
+        .formatToStave([voice3], stave3);
 
-      stave1.setContext(context).draw();
-      stave2.setContext(context).draw();
-      stave3.setContext(context).draw();
-
-      voice1.draw(context);
-      voice2.draw(context);
-      voice3.draw(context);
+      vf.draw();
 
       beams.forEach(function(beam) {
-        return beam.setContext(context).draw();
+        return beam.setContext(vf.getContext()).draw();
       });
-      beams2.forEach(function(beam) {
-        return beam.setContext(context).draw();
-      });
-      beams3.forEach(function(beam) {
-        return beam.setContext(context).draw();
-      });
+
       ok(true, 'Auto Beam Applicator Test');
     },
 
@@ -666,21 +531,18 @@ VF.Test.AutoBeamFormatting = (function() {
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
-      var notes = score.notes('c4/8, g4, c5, g5, a5, a5/16, (c5 e5), a5, d5, a5');
+      var notes = score.notes.bind(score);
+      var tuplet = score.tuplet.bind(score);
 
-      vf.Tuplet({
-        notes: notes.slice(0, 3),
-      });
-
-      vf.Tuplet({
-        notes: notes.slice(5),
-        options: {
+      var voice = score.voice([
+        tuplet(notes('c4/8, g4, c5')),
+        notes('g5/8, a5'),
+        tuplet(notes('a5/16, (c5 e5), a5, d5, a5'), {
           ratioed: false,
           notes_occupied: 4,
-        },
-      });
+        }),
+      ].reduce(concat), { time: '3/4' });
 
-      var voice = score.voice(notes, { time: '3/4' });
       var beams = VF.Beam.applyAndGetBeams(voice);
 
       vf.Formatter()
@@ -689,9 +551,8 @@ VF.Test.AutoBeamFormatting = (function() {
 
       vf.draw();
 
-      var context = vf.getContext();
       beams.forEach(function(beam) {
-        return beam.setContext(context).draw();
+        return beam.setContext(vf.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
@@ -702,10 +563,14 @@ VF.Test.AutoBeamFormatting = (function() {
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
-      var notes = score.notes('d4/4, g4, c5, g5/16, a5, a5, (c5 e5)');
-      vf.Tuplet({ notes: notes.slice(0, 3) });
+      var notes = score.notes.bind(score);
+      var tuplet = score.tuplet.bind(score);
 
-      var voice = score.voice(notes, { time: '3/4' });
+      var voice = score.voice([
+        tuplet(notes('d4/4, g4, c5')),
+        notes('g5/16, a5, a5, (c5 e5)'),
+      ].reduce(concat), { time: '3/4' });
+
       var beams = VF.Beam.applyAndGetBeams(voice);
 
       vf.Formatter()
