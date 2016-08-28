@@ -42,13 +42,6 @@ function setDefaults(params = {}, defaults) {
   return params;
 }
 
-const positionMap = {
-  above: Modifier.Position.ABOVE,
-  below: Modifier.Position.BELOW,
-  left: Modifier.Position.LEFT,
-  right: Modifier.Position.RIGHT,
-};
-
 export class Factory {
   constructor(options) {
     L('New factory: ', options);
@@ -175,23 +168,9 @@ export class Factory {
       options: {},
     });
 
-    const vJustifyMap = {
-      above: Annotation.VerticalJustify.TOP,
-      below: Annotation.VerticalJustify.BOTTOM,
-      center: Annotation.VerticalJustify.CENTER,
-      center_stem: Annotation.VerticalJustify.CENTER_STEM,
-    };
-
-    const hJustifyMap = {
-      left: Annotation.Justify.LEFT,
-      right: Annotation.Justify.RIGHT,
-      center: Annotation.Justify.CENTER,
-      center_stem: Annotation.Justify.CENTER_STEM,
-    };
-
     const annotation = new Annotation(params.text);
-    annotation.setJustification(hJustifyMap[params.hJustify.toLowerCase()]);
-    annotation.setVerticalJustification(vJustifyMap[params.vJustify.toLowerCase()]);
+    annotation.setJustification(params.hJustify);
+    annotation.setVerticalJustification(params.vJustify);
     annotation.setFont(params.font_family, params.font_size, params.font_weight);
     annotation.setContext(this.context);
     return annotation;
@@ -205,7 +184,7 @@ export class Factory {
     });
 
     const articulation = new Articulation(params.type);
-    articulation.setPosition(positionMap[params.position.toLowerCase()]);
+    articulation.setPosition(params.position);
     articulation.setContext(this.context);
     return articulation;
   }
@@ -218,7 +197,7 @@ export class Factory {
     });
 
     const fingering = new FretHandFinger(params.number);
-    fingering.setPosition(positionMap[params.position.toLowerCase()]);
+    fingering.setPosition(params.position);
     fingering.setContext(this.context);
     return fingering;
   }
