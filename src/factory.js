@@ -14,6 +14,7 @@ import { Articulation } from './articulation';
 import { Annotation } from './annotation';
 import { Formatter } from './formatter';
 import { FretHandFinger } from './frethandfinger';
+import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
@@ -186,6 +187,25 @@ export class Factory {
     articulation.setPosition(params.position);
     articulation.setContext(this.context);
     return articulation;
+  }
+
+  TextDynamics(params) {
+    params = setDefaults(params, {
+      text: 'p',
+      duration: 'q',
+      dots: 0,
+      line: 0,
+      options: {},
+    });
+
+    const text = new TextDynamics({
+      text: params.text,
+      line: params.line,
+      duration: params.duration,
+      dots: params.dots,
+    });
+    text.setContext(this.context);
+    return text;
   }
 
   Fingering(params) {

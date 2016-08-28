@@ -40,7 +40,10 @@ VF.Test.BachDemo = (function() {
           voice([
             notes('D5/q[id="d1"]'),
             beam(notes('G4/8, A4, B4, C5', {stem: "up"}))
-          ].reduce(concat), {time: '3/4'})
+          ].reduce(concat), {time: '3/4'}),
+          voice([
+            vf.TextDynamics({text: 'p', duration: 'h', dots: 1, line: 9 }),
+          ], {time: '3/4'}),
         ]
       }).addClef('treble').addKeySignature('G').addTimeSignature('3/4');
 
@@ -53,7 +56,6 @@ VF.Test.BachDemo = (function() {
       system.addConnector().setType('singleRight');
       system.addConnector().setType('singleLeft');
 
-      id('d1').addModifier(0, vf.Annotation({text: 'p', vJustify: 'below'}));
       id('d1').addModifier(0, vf.Fingering({number: '5'}));
 
       system = makeSystem(150);
