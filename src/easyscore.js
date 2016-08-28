@@ -280,8 +280,7 @@ function setClass(options, note) {
 
   options.class
     .split(',')
-    .map(className => className.trim())
-    .forEach(className => note.addClass(className));
+    .forEach(className => note.addClass(className.trim()));
 }
 
 export class EasyScore {
