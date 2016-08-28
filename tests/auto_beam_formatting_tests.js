@@ -676,7 +676,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
     flatBeamsUp: function(options) {
       var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave();
+      var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
       var tuplet = score.tuplet.bind(score);
@@ -708,8 +708,8 @@ VF.Test.AutoBeamFormatting = (function() {
     },
 
     flatBeamsDown: function(options) {
-      var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave();
+      var vf = VF.Test.makeFactory(options, 450, 200);
+      var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
       var voice = score.voice(
@@ -737,8 +737,8 @@ VF.Test.AutoBeamFormatting = (function() {
     },
 
     flatBeamsMixed: function(options) {
-      var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave();
+      var vf = VF.Test.makeFactory(options, 450, 200);
+      var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
       var voice = score.voice(score.notes(
@@ -764,7 +764,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
     flatBeamsUpUniform: function(options) {
       var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave();
+      var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
       var tuplet = score.tuplet.bind(score);
@@ -777,7 +777,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
       var beams = VF.Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
-        flat_beam_offset: 10,
+        flat_beam_offset: 50,
         stem_direction: 1,
       });
 
@@ -795,8 +795,8 @@ VF.Test.AutoBeamFormatting = (function() {
     },
 
     flatBeamsDownUniform: function(options) {
-      var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave();
+      var vf = VF.Test.makeFactory(options, 450, 200);
+      var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
       var voice = score.voice(score.notes(
@@ -805,7 +805,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
       var beams = VF.Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
-        flat_beam_offset: 115,
+        flat_beam_offset: 155,
         stem_direction: -1,
       });
 
@@ -824,7 +824,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
     flatBeamsUpBounds: function(options) {
       var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave();
+      var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
       var tuplet = score.tuplet.bind(score);
@@ -836,7 +836,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
       var beams = VF.Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
-        flat_beam_offset: 20,
+        flat_beam_offset: 60,
         stem_direction: 1,
       });
 
@@ -854,8 +854,8 @@ VF.Test.AutoBeamFormatting = (function() {
     },
 
     flatBeamsDownBounds: function(options) {
-      var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave();
+      var vf = VF.Test.makeFactory(options, 450, 200);
+      var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
       var voice = score.voice(score.notes([
@@ -867,7 +867,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
       var beams = VF.Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
-        flat_beam_offset: 105,
+        flat_beam_offset: 145,
         stem_direction: -1,
       });
 
