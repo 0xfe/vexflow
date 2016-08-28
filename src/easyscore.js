@@ -278,7 +278,10 @@ function setId({ id }, note) {
 function setClass(options, note) {
   if (!options.class) return;
 
-  note.addClass(options.class);
+  options.class
+    .split(',')
+    .map(className => className.trim())
+    .forEach(className => note.addClass(className));
 }
 
 export class EasyScore {
