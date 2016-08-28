@@ -18,6 +18,7 @@ import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
+import { StaveTie } from './stavetie';
 import { StaveNote } from './stavenote';
 import { StaveConnector } from './staveconnector';
 import { System } from './system';
@@ -290,6 +291,26 @@ export class Factory {
     const curve = new Curve(params.from, params.to, params.options).setContext(this.context);
     this.renderQ.push(curve);
     return curve;
+  }
+
+  StaveTie(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      first_indices: [0],
+      last_indices: [0],
+      text: null,
+      options: {},
+    });
+
+    const tie = new StaveTie({
+      first_note: params.from,
+      last_note: params.to,
+      first_indices: params.first_indices,
+      last_indices: params.last_indices
+    }, params.text).setContext(this.context);
+    this.renderQ.push(tie);
+    return tie;
   }
 
   System(params = {}) {

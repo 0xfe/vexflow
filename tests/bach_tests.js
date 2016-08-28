@@ -25,7 +25,7 @@ VF.Test.BachDemo = (function() {
       var notes = score.notes.bind(score);
       var beam = score.beam.bind(score);
 
-      var x = 20, y = 40;
+      var x = 120, y = 40;
       function makeSystem(width) {
         var system = vf.System({x: x, y: y, width: width, spaceBetweenStaves: 10});
         x += width;
@@ -143,6 +143,59 @@ VF.Test.BachDemo = (function() {
           y_shift: 20,
         }
       });
+
+      /*  Measure 7 (New system) */
+      x = 20;
+      y += 200;
+
+      var system = makeSystem(220);
+      system.addStave({
+        voices: [
+          voice([
+            notes('F4/q[id="m7a"]'),
+            beam(notes('G4/8[id="m7b"], A4, B4, G4', {stem: "up"}))
+          ].reduce(concat))
+        ]
+      }).addClef('treble').addKeySignature('G');
+
+      system.addStave({ voices: [voice(notes('D4/q, B3[id="m7c"], G3', {clef: 'bass'}))] })
+        .addClef('bass').addKeySignature('G');
+      system.addConnector('brace');
+      system.addConnector('singleRight');
+      system.addConnector('singleLeft');
+
+      id('m7a').addModifier(0, vf.Fingering({number: '2', position: 'below'}));
+      id('m7b').addModifier(0, vf.Fingering({number: '1'}));
+      id('m7c').addModifier(0, vf.Fingering({number: '3', position: 'above'}));
+
+      /*  Measure 8 */
+      system = makeSystem(180);
+      var grace = vf.GraceNote({keys: ['d/3'], clef: 'bass', duration: '8', slash: true });
+
+      system.addStave({ voices: [voice(notes('A4/h.[id="m8c"]'))] });
+      system.addStave({ voices: [
+         score.set({clef: 'bass'}).voice([
+            notes('D4/q[id="m8a"]'),
+            beam(notes('D3/8, C4, B3[id="m8b"], A3', {stem: "down"}))
+          ].reduce(concat))
+      ]});
+      system.addConnector('singleRight');
+
+      id('m8b').addModifier(0, vf.Fingering({number: '1', position: 'above'}));
+      id('m8c').addModifier(0, vf.GraceNoteGroup({notes: [grace]}));
+
+      vf.Curve({
+        from: id('m7a'),
+        to: id('m8c'),
+        options: {
+          cps: [{x: 0, y: 20}, {x: 0, y: 20}],
+          invert: true,
+          position: 'nearTop',
+          position_end: 'nearTop',
+        }
+      });
+
+      vf.StaveTie({from: grace, to: id('m8c')});
 
       /* Done */
 
