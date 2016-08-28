@@ -449,13 +449,13 @@ VF.Test.AutoBeamFormatting = (function() {
       var vf = VF.Test.makeFactory(options, 450, 400);
       var score = vf.EasyScore();
 
-      var stave1 = vf.Stave({ x: 10, y: 10 }).addClef('treble').addTimeSignature('5/4');
+      var stave1 = vf.Stave({ y: 10 }).addTimeSignature('5/4');
       var voice1 = score.voice(score.notes('c5/8, g5, c5, b4, b4, c4, d4, a5, c4, g4'), { time: '5/4' });
 
-      var stave2 = vf.Stave({ x: 10, y: 150 }).addClef('treble').addTimeSignature('5/8');
+      var stave2 = vf.Stave({ y: 150 }).addTimeSignature('5/8');
       var voice2 = score.voice(score.notes('c5/8, g5, c5, b4, b4'), { time: '5/8' });
 
-      var stave3 = vf.Stave({ x: 10, y: 290 }).addClef('treble').addTimeSignature('13/16');
+      var stave3 = vf.Stave({ y: 290 }).addTimeSignature('13/16');
       var voice3 = score.voice(score.notes('c5/16, g5, c5, b4, b4, c5, g5, c5, b4, b4, c5, b4, b4'), { time: '13/16' });
 
       var beams = [
@@ -482,13 +482,13 @@ VF.Test.AutoBeamFormatting = (function() {
       var vf = VF.Test.makeFactory(options, 450, 400);
       var score = vf.EasyScore();
 
-      var stave1 = vf.Stave({ x: 10, y: 10 }).addClef('treble').addTimeSignature('5/4');
+      var stave1 = vf.Stave({ y: 10 }).addTimeSignature('5/4');
       var voice1 = score.voice(score.notes('c5/8, g5, c5, b4, b4, c4, d4, a5, c4, g4'), { time: '5/4' });
 
-      var stave2 = vf.Stave({ x: 10, y: 150 }).addClef('treble').addTimeSignature('5/8');
+      var stave2 = vf.Stave({ y: 150 }).addTimeSignature('5/8');
       var voice2 = score.voice(score.notes('c5/8, g5, c5, b4, b4'), { time: '5/8' });
 
-      var stave3 = vf.Stave({ x: 10, y: 290 }).addClef('treble').addTimeSignature('13/16');
+      var stave3 = vf.Stave({ y: 290 }).addTimeSignature('13/16');
       var voice3 = score.voice(score.notes('c5/16, g5, c5, b4, b4, c5, g5, c5, b4, b4, c5, b4, b4'), { time: '13/16' });
 
       var group1 = [
@@ -764,7 +764,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
     flatBeamsUpUniform: function(options) {
       var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave().addClef('treble');
+      var stave = vf.Stave();
       var score = vf.EasyScore();
 
       var tuplet = score.tuplet.bind(score);
@@ -796,7 +796,7 @@ VF.Test.AutoBeamFormatting = (function() {
 
     flatBeamsDownUniform: function(options) {
       var vf = VF.Test.makeFactory(options);
-      var stave = vf.Stave().addClef('treble');
+      var stave = vf.Stave();
       var score = vf.EasyScore();
 
       var voice = score.voice(score.notes(
