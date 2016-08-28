@@ -307,7 +307,7 @@ export class Factory {
       first_note: params.from,
       last_note: params.to,
       first_indices: params.first_indices,
-      last_indices: params.last_indices
+      last_indices: params.last_indices,
     }, params.text).setContext(this.context);
     this.renderQ.push(tie);
     return tie;

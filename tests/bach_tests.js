@@ -25,7 +25,7 @@ VF.Test.BachDemo = (function() {
       var notes = score.notes.bind(score);
       var beam = score.beam.bind(score);
 
-      var x = 120, y = 40;
+      var x = 120, y = 80;
       function makeSystem(width) {
         var system = vf.System({x: x, y: y, width: width, spaceBetweenStaves: 10});
         x += width;
@@ -46,7 +46,11 @@ VF.Test.BachDemo = (function() {
           ].reduce(concat)),
           voice([vf.TextDynamics({text: 'p', duration: 'h', dots: 1, line: 9 })]),
         ]
-      }).addClef('treble').addKeySignature('G').addTimeSignature('3/4');
+      })
+        .addClef('treble')
+        .addKeySignature('G')
+        .addTimeSignature('3/4')
+        .setTempo({ name: "Allegretto", duration: "h", dots: 1, bpm: 66}, -30);
 
       system.addStave({ voices: [voice(notes('(G3 B3 D4)/h, A3/q', {clef: 'bass'}))] })
         .addClef('bass').addKeySignature('G').addTimeSignature('3/4');
@@ -196,6 +200,81 @@ VF.Test.BachDemo = (function() {
       });
 
       vf.StaveTie({from: grace, to: id('m8c')});
+
+      /*  Measure 9 */
+      var system = makeSystem(180);
+      system.addStave({
+        voices: [
+          score.set({clef: 'treble'}).voice([
+            notes('D5/q[id="m9a"]'),
+            beam(notes('G4/8, A4, B4, C5', {stem: "up"}))
+          ].reduce(concat))
+        ]
+      });
+
+      system.addStave({ voices: [voice(notes('B3/h, A3/q', {clef: 'bass'}))] });
+      system.addConnector('singleRight');
+
+      id('m9a').addModifier(0, vf.Fingering({number: '5'}));
+
+      /*  Measure 10 */
+      system = makeSystem(170);
+      system.addStave({ voices: [voice(notes('D5/q[id="m10a"], G4[id="m10b"], G4[id="m10c"]'))] });
+      system.addStave({ voices: [voice(notes('G3/q[id="m10d"], B3, G3', {clef: 'bass'}))] });
+      system.addConnector('singleRight');
+
+      id('m10a').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
+      id('m10b').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('m10c').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('m10d').addModifier(0, vf.Fingering({number: '4'}));
+
+      vf.Curve({
+        from: id('m9a'),
+        to: id('m10a'),
+        options: { cps: [{x: 0, y: 40}, {x: 0, y: 40}]}
+      });
+
+       /*  Measure 11 */
+      system = makeSystem(150);
+      system.addStave({
+        voices: [
+          voice([
+            notes('E5/q[id="m11a"]'),
+            beam(notes('C5/8, D5, E5, F5', {stem: "down"}))
+          ].reduce(concat))
+        ]
+      });
+      id('m11a').addModifier(0, vf.Fingering({number: '3', position: 'above'}));
+
+      system.addStave({ voices: [ voice(notes('C4/h.', {clef: 'bass'})) ] });
+      system.addConnector('singleRight');
+
+      /*  Measure 12 */
+      system = makeSystem(170);
+      system.addStave({ voices: [ voice(notes('G5/q[id="m12a"], G4[id="m12b"], G4[id="m12c"]')) ] });
+
+      system.addStave({
+        voices: [
+          score.set({clef: 'bass'}).voice([
+            notes('B3/q[id="m12d"]'),
+            beam(notes('C4/8, B3, A3, G3[id="m12e"]', {stem: "down"}))
+          ].reduce(concat))
+        ]
+      });
+      system.addConnector('singleRight');
+
+      id('m12a').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
+      id('m12b').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('m12c').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+
+      id('m12d').addModifier(0, vf.Fingering({number: '2', position: 'above'}));
+      id('m12e').addModifier(0, vf.Fingering({number: '4', position: 'above'}));
+
+      vf.Curve({
+        from: id('m11a'),
+        to: id('m12a'),
+        options: { cps: [{x: 0, y: 20}, {x: 0, y: 20}]}
+      });
 
       /* Done */
 
