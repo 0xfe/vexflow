@@ -3,18 +3,6 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-/*
-eslint-disable
-func-names,
-max-len,
-no-undef,
-no-var,
-vars-on-top,
-wrap-iife,
-object-shorthand,
-prefer-arrow-callback,
- */
-
 var VF = Vex.Flow;
 VF.Test.AutoBeamFormatting = (function() {
   function concat(a, b) { return a.concat(b); }
