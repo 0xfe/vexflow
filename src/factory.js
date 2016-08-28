@@ -162,16 +162,16 @@ export class Factory {
       text: 'p',
       vJustify: 'below',
       hJustify: 'center',
-      font_family: 'Times',
-      font_size: 14,
-      font_weight: 'bold italic',
+      fontFamily: 'Times',
+      fontSize: 14,
+      fontWeight: 'bold italic',
       options: {},
     });
 
     const annotation = new Annotation(params.text);
     annotation.setJustification(params.hJustify);
     annotation.setVerticalJustification(params.vJustify);
-    annotation.setFont(params.font_family, params.font_size, params.font_weight);
+    annotation.setFont(params.fontFamily, params.fontSize, params.fontWeight);
     annotation.setContext(this.context);
     return annotation;
   }
