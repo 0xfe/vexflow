@@ -41,7 +41,7 @@ VF.Test.BachDemo = (function() {
       system.addStave({
         voices: [
           voice([
-            notes('D5/q[id="d1"]'),
+            notes('D5/q[id="m1a"]'),
             beam(notes('G4/8, A4, B4, C5', {stem: "up"}))
           ].reduce(concat)),
           voice([vf.TextDynamics({text: 'p', duration: 'h', dots: 1, line: 9 })]),
@@ -58,21 +58,21 @@ VF.Test.BachDemo = (function() {
       system.addConnector('singleRight');
       system.addConnector('singleLeft');
 
-      id('d1').addModifier(0, vf.Fingering({number: '5'}));
+      id('m1a').addModifier(0, vf.Fingering({number: '5'}));
 
       /*  Measure 2 */
       system = makeSystem(150);
-      system.addStave({ voices: [voice(notes('D5/q[id="d2"], G4[id="g3"], G4[id="g4"]'))] });
+      system.addStave({ voices: [voice(notes('D5/q[id="m2a"], G4[id="m2b"], G4[id="m2c"]'))] });
       system.addStave({ voices: [voice(notes('B3/h.', {clef: 'bass'}))] });
       system.addConnector('singleRight');
 
-      id('d2').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
-      id('g3').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
-      id('g4').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('m2a').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
+      id('m2b').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('m2c').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
 
       vf.Curve({
-        from: id('d1'),
-        to: id('d2'),
+        from: id('m1a'),
+        to: id('m2a'),
         options: { cps: [{x: 0, y: 40}, {x: 0, y: 40}]}
       });
 
@@ -81,30 +81,30 @@ VF.Test.BachDemo = (function() {
       system.addStave({
         voices: [
           voice([
-            notes('E5/q[id="e1"]'),
+            notes('E5/q[id="m3a"]'),
             beam(notes('C5/8, D5, E5, F5', {stem: "down"}))
           ].reduce(concat))
         ]
       });
-      id('e1').addModifier(0, vf.Fingering({number: '3', position: 'above'}));
+      id('m3a').addModifier(0, vf.Fingering({number: '3', position: 'above'}));
 
       system.addStave({ voices: [ voice(notes('C4/h.', {clef: 'bass'})) ] });
       system.addConnector('singleRight');
 
       /*  Measure 4 */
       system = makeSystem(150);
-      system.addStave({ voices: [ voice(notes('G5/q[id="g5"], G4[id="g6"], G4[id="g7"]')) ] });
+      system.addStave({ voices: [ voice(notes('G5/q[id="m4a"], G4[id="m4b"], G4[id="m4c"]')) ] });
 
       system.addStave({ voices: [ voice(notes('B3/h.', {clef: 'bass'})) ] });
       system.addConnector('singleRight');
 
-      id('g5').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
-      id('g6').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
-      id('g7').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('m4a').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
+      id('m4b').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('m4c').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
 
       vf.Curve({
-        from: id('e1'),
-        to: id('g5'),
+        from: id('m3a'),
+        to: id('m4a'),
         options: { cps: [{x: 0, y: 20}, {x: 0, y: 20}]}
       });
 
