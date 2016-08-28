@@ -14,6 +14,13 @@ export class Curve extends Element {
     };
   }
 
+  static get PositionString() {
+    return {
+      nearHead: Curve.Position.NEAR_HEAD,
+      nearTop: Curve.Position.NEAR_TOP,
+    };
+  }
+
   // from: Start note
   // to: End note
   // options:
@@ -30,6 +37,7 @@ export class Curve extends Element {
       x_shift: 0,
       y_shift: 10,
       position: Curve.Position.NEAR_HEAD,
+      position_end: Curve.Position.NEAR_HEAD,
       invert: false,
       cps: [{ x: 0, y: 10 }, { x: 0, y: 10 }],
     };
@@ -109,8 +117,14 @@ export class Curve extends Element {
 
     let metric = 'baseY';
     let end_metric = 'baseY';
-    const position = this.render_options.position;
-    const position_end = this.render_options.position_end;
+
+    function getPosition(position) {
+      return typeof(position) === 'string'
+        ? Curve.PositionString[position]
+        : position;
+    }
+    const position = getPosition(this.render_options.position);
+    const position_end = getPosition(this.render_options.position_end);
 
     if (position === Curve.Position.NEAR_TOP) {
       metric = 'topY';

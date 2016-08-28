@@ -243,10 +243,11 @@ export class Factory {
     params = setDefaults(params, {
       top_stave: null,
       bottom_stave: null,
+      type: 'double',
       options: {},
     });
     const connector = new StaveConnector(params.top_stave, params.bottom_stave);
-    connector.setContext(this.context);
+    connector.setType(params.type).setContext(this.context);
     this.renderQ.push(connector);
     return connector;
   }
