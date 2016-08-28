@@ -49,9 +49,9 @@ VF.Test.BachDemo = (function() {
           voice(notes('(G3 B3 D4)/h, A3/q', {clef: 'bass'}), {time: '3/4'})
         ]
       }).addClef('bass').addKeySignature('G').addTimeSignature('3/4');
-      system.addConnector().setType(VF.StaveConnector.type.BRACE);
-      system.addConnector().setType(VF.StaveConnector.type.SINGLE_RIGHT);
-      system.addConnector().setType(VF.StaveConnector.type.SINGLE_LEFT);
+      system.addConnector().setType('brace');
+      system.addConnector().setType('single_right');
+      system.addConnector().setType('single_left');
 
       id('d1').addAnnotation(0, vf.Annotation({text: 'p', vJustify: 'below'}));
       id('d1').addModifier(0, vf.Fingering({number: '5'}));
@@ -68,7 +68,8 @@ VF.Test.BachDemo = (function() {
           voice(notes('B3/h.', {clef: 'bass'}), {time: '3/4'})
         ]
       });
-      system.addConnector().setType(VF.StaveConnector.type.SINGLE_RIGHT);
+      system.addConnector().setType('single_right');
+
       id('d2').addArticulation(0, vf.Articulation({type: 'a.', position: "above"}));
       id('g3').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
       id('g4').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
@@ -95,7 +96,7 @@ VF.Test.BachDemo = (function() {
           voice(notes('C4/h.[id="c1"]', {clef: 'bass'}), {time: '3/4'})
         ]
       });
-      system.addConnector().setType(VF.StaveConnector.type.SINGLE_RIGHT);
+      system.addConnector().setType('single_right');
 
       system = makeSystem(150);
       system.addStave({
@@ -109,7 +110,7 @@ VF.Test.BachDemo = (function() {
           voice(notes('B3/h.', {clef: 'bass'}), {time: '3/4'})
         ]
       });
-      system.addConnector().setType(VF.StaveConnector.type.SINGLE_RIGHT);
+      system.addConnector().setType('single_right');
 
       id('g5').addArticulation(0, vf.Articulation({type: 'a.', position: "above"}));
       id('g6').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));

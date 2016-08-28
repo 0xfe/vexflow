@@ -26,6 +26,16 @@ export class Annotation extends Modifier {
       CENTER_STEM: 4,
     };
   }
+
+  static get JustifyString() {
+    return {
+      left: Annotation.Justify.LEFT,
+      right: Annotation.Justify.RIGHT,
+      center: Annotation.Justify.CENTER,
+      center_stem: Annotation.Justify.CENTER_STEM,
+    };
+  }
+  
   static get VerticalJustify() {
     return {
       TOP: 1,
@@ -35,21 +45,12 @@ export class Annotation extends Modifier {
     };
   }
 
-  static get JustifyString() {
+  static get VerticalJustifyString() {
     return {
       above: Annotation.VerticalJustify.TOP,
       below: Annotation.VerticalJustify.BOTTOM,
       center: Annotation.VerticalJustify.CENTER,
       center_stem: Annotation.VerticalJustify.CENTER_STEM,
-    };
-  }
-
-  static get VerticalJustifyString() {
-    return {
-      left: Annotation.Justify.LEFT,
-      right: Annotation.Justify.RIGHT,
-      center: Annotation.Justify.CENTER,
-      center_stem: Annotation.Justify.CENTER_STEM,
     };
   }
 
