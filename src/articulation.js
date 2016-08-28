@@ -216,9 +216,7 @@ export class Articulation extends Modifier {
       .map(articString => articString.trim().split('.'))
       .map(([name, position]) => factory.Articulation({
         type: articNameToCode[name],
-        options: {
-          position: positionValueToPosition[position],
-        },
+        position: positionValueToPosition[position],
       }))
       .map(artic => note.addModifier(0, artic));
   }
