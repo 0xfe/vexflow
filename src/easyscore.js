@@ -149,6 +149,7 @@ class Grammar {
 class Builder {
   constructor(factory) {
     this.factory = factory;
+    this.commitHooks = [];
     this.reset();
   }
 
@@ -161,7 +162,6 @@ class Builder {
       notes: [],
       accidentals: [],
     };
-    this.commitHooks = [];
     this.rollingDuration = '8';
     this.resetPiece();
     Object.assign(this.options, options);
@@ -275,6 +275,12 @@ function setId({ id }, note) {
   note.setAttribute('id', id);
 }
 
+function setClass(options, note) {
+  if (!options.class) return;
+
+  note.addClass(options.class);
+}
+
 export class EasyScore {
   constructor(options = {}) {
     this.setOptions(options);
@@ -286,6 +292,7 @@ export class EasyScore {
       builder: null,
       commitHooks: [
         setId,
+        setClass,
         Articulation.easyScoreHook,
       ],
     }, options);
@@ -294,6 +301,7 @@ export class EasyScore {
     this.builder = this.options.builder || new Builder(this.factory);
     this.grammar = new Grammar(this.builder);
     this.parser = new Parser(this.grammar);
+    this.options.commitHooks.forEach(commitHook => this.addCommitHook(commitHook));
   }
 
   setContext(context) {
@@ -303,7 +311,6 @@ export class EasyScore {
 
   parse(line, options = {}) {
     this.builder.reset(options);
-    this.options.commitHooks.forEach(commitHook => this.addCommitHook(commitHook));
     return this.parser.parse(line);
   }
 
