@@ -1,0 +1,132 @@
+/**
+ * VexFlow - Auto-beaming Tests
+ * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ */
+
+var VF = Vex.Flow;
+
+VF.Test.BachDemo = (function() {
+  function concat(a, b) { return a.concat(b); }
+
+  var BachDemo = {
+    Start: function() {
+      var runTests = VF.Test.runTests;
+      QUnit.module('Bach Demo');
+      runTests('Minuet 1', BachDemo.minuet1);
+    },
+
+    minuet1: function(options) {
+      var registry = new VF.Registry();
+      VF.Registry.enableDefaultRegistry(registry);
+      var vf = VF.Test.makeFactory(options, 900, 600);
+      var score = vf.EasyScore();
+
+      var voice = score.voice.bind(score);
+      var notes = score.notes.bind(score);
+      var beam = score.beam.bind(score);
+
+      var x = 20, y = 40;
+      function makeSystem(width) {
+        var system = vf.System({x: x, y: y, width: width, spaceBetweenStaves: 10});
+        x += width;
+        return system;
+      }
+
+      function id(id) { return registry.getElementById(id); }
+
+      var system = makeSystem(220);
+      system.addStave({
+        voices: [
+          voice([
+            notes('D5/q[id="d1"]'),
+            beam(notes('G4/8, A4, B4, C5', {stem: "up"}))
+          ].reduce(concat), {time: '3/4'})
+        ]
+      }).addClef('treble').addKeySignature('G').addTimeSignature('3/4');
+
+      system.addStave({
+        voices: [
+          voice(notes('(G3 B3 D4)/h, A3/q', {clef: 'bass'}), {time: '3/4'})
+        ]
+      }).addClef('bass').addKeySignature('G').addTimeSignature('3/4');
+      system.addConnector().setType(VF.StaveConnector.type.BRACE);
+      system.addConnector().setType(VF.StaveConnector.type.SINGLE_RIGHT);
+      system.addConnector().setType(VF.StaveConnector.type.SINGLE_LEFT);
+
+      id('d1').addAnnotation(0, vf.Annotation({text: 'p', vJustify: 'below'}));
+      id('d1').addModifier(0, vf.Fingering({number: '5'}));
+
+      system = makeSystem(150);
+      system.addStave({
+        voices: [
+          voice(notes('D5/q[id="d2"], G4[id="g3"], G4[id="g4"]'), {time: '3/4'})
+        ]
+      });
+
+      system.addStave({
+        voices: [
+          voice(notes('B3/h.', {clef: 'bass'}), {time: '3/4'})
+        ]
+      });
+      system.addConnector().setType(VF.StaveConnector.type.SINGLE_RIGHT);
+      id('d2').addArticulation(0, vf.Articulation({type: 'a.', position: "above"}));
+      id('g3').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('g4').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
+
+      vf.Curve({
+        from: id('d1'),
+        to: id('d2'),
+        options: { cps: [{x: 0, y: 40}, {x: 0, y: 40}]}
+      });
+
+      system = makeSystem(150);
+      system.addStave({
+        voices: [
+          voice([
+            notes('E5/q[id="e1"]'),
+            beam(notes('C5/8, D5, E5, F5', {stem: "down"}))
+          ].reduce(concat), {time: '3/4'})
+        ]
+      });
+      id('e1').addModifier(0, vf.Fingering({number: '3', position: 'above'}));
+
+      system.addStave({
+        voices: [
+          voice(notes('C4/h.[id="c1"]', {clef: 'bass'}), {time: '3/4'})
+        ]
+      });
+      system.addConnector().setType(VF.StaveConnector.type.SINGLE_RIGHT);
+
+      system = makeSystem(150);
+      system.addStave({
+        voices: [
+          voice(notes('G5/q[id="g5"], G4[id="g6"], G4[id="g7"]'), {time: '3/4'})
+        ]
+      });
+
+      system.addStave({
+        voices: [
+          voice(notes('B3/h.', {clef: 'bass'}), {time: '3/4'})
+        ]
+      });
+      system.addConnector().setType(VF.StaveConnector.type.SINGLE_RIGHT);
+
+      id('g5').addArticulation(0, vf.Articulation({type: 'a.', position: "above"}));
+      id('g6').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('g7').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
+
+      vf.Curve({
+        from: id('e1'),
+        to: id('g5'),
+        options: { cps: [{x: 0, y: 20}, {x: 0, y: 20}]}
+      });
+
+      vf.draw();
+
+      VF.Registry.disableDefaultRegistry();
+      ok(true, 'Bach Minuet 1');
+    },
+  };
+
+  return BachDemo;
+})();

@@ -10,7 +10,11 @@
 
 import { Vex } from './vex';
 import { Accidental } from './accidental';
+import { Articulation } from './articulation';
+import { Annotation } from './annotation';
+import { Modifier } from './modifier';
 import { Formatter } from './formatter';
+import { FretHandFinger } from './frethandfinger';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
@@ -21,6 +25,7 @@ import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
 import { Voice } from './voice';
 import { Beam } from './beam';
+import { Curve } from './curve';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
 import { EasyScore } from './easyscore';
@@ -36,6 +41,13 @@ function setDefaults(params = {}, defaults) {
   params.options = Object.assign(default_options, params.options);
   return params;
 }
+
+const positionMap = {
+  above: Modifier.Position.ABOVE,
+  below: Modifier.Position.BELOW,
+  left: Modifier.Position.LEFT,
+  right: Modifier.Position.RIGHT,
+};
 
 export class Factory {
   constructor(options) {
@@ -152,6 +164,65 @@ export class Factory {
     return acc;
   }
 
+  Annotation(params) {
+    params = setDefaults(params, {
+      text: 'p',
+      vJustify: 'below',
+      hJustify: 'center',
+      font_family: 'Times',
+      font_size: 14,
+      font_weight: 'bold italic',
+      options: {},
+    });
+
+    const vJustifyMap = {
+      above: Annotation.VerticalJustify.TOP,
+      below: Annotation.VerticalJustify.BOTTOM,
+      center: Annotation.VerticalJustify.CENTER,
+      center_stem: Annotation.VerticalJustify.CENTER_STEM,
+    };
+
+    const hJustifyMap = {
+      left: Annotation.Justify.LEFT,
+      right: Annotation.Justify.RIGHT,
+      center: Annotation.Justify.CENTER,
+      center_stem: Annotation.Justify.CENTER_STEM,
+    };
+
+    const annotation = new Annotation(params.text);
+    annotation.setJustification(hJustifyMap[params.hJustify.toLowerCase()]);
+    annotation.setVerticalJustification(vJustifyMap[params.vJustify.toLowerCase()]);
+    annotation.setFont(params.font_family, params.font_size, params.font_weight);
+    annotation.setContext(this.context);
+    return annotation;
+  }
+
+  Articulation(params) {
+    params = setDefaults(params, {
+      type: 'a.',
+      position: 'above',
+      options: {},
+    });
+
+    const articulation = new Articulation(params.type);
+    articulation.setPosition(positionMap[params.position.toLowerCase()]);
+    articulation.setContext(this.context);
+    return articulation;
+  }
+
+  Fingering(params) {
+    params = setDefaults(params, {
+      number: '0',
+      position: 'left',
+      options: {},
+    });
+
+    const fingering = new FretHandFinger(params.number);
+    fingering.setPosition(positionMap[params.position.toLowerCase()]);
+    fingering.setContext(this.context);
+    return fingering;
+  }
+
   TickContext() {
     return new TickContext().setContext(this.context);
   }
@@ -208,6 +279,18 @@ export class Factory {
     const beam = new Beam(params.notes, params.options.autoStem).setContext(this.context);
     this.renderQ.push(beam);
     return beam;
+  }
+
+  Curve(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      options: {},
+    });
+
+    const curve = new Curve(params.from, params.to, params.options).setContext(this.context);
+    this.renderQ.push(curve);
+    return curve;
   }
 
   System(params = {}) {
