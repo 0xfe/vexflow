@@ -29,13 +29,7 @@ import { EasyScore } from './easyscore';
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
 
-// Exceptions for this class.
-function X(message, data) {
-  this.name = 'FactoryException';
-  this.message = message;
-  this.data = data;
-  L(this.name + ':', message, data);
-}
+export const X = Vex.MakeException('FactoryError');
 
 function setDefaults(params = {}, defaults) {
   const default_options = defaults.options;
@@ -68,10 +62,13 @@ export class Factory {
 
     this.options = defaults;
     this.setOptions(options);
-    if (this.options.renderer.selector !== null || this.options.renderer.context) {
-      this.initRenderer();
-    }
+  }
 
+  static newFromSelector(selector, width = 500, height = 200) {
+    return new Factory({ renderer: { selector, width, height } });
+  }
+
+  reset() {
     this.renderQ = [];
     this.systems = [];
     this.staves = [];
@@ -84,6 +81,11 @@ export class Factory {
     for (const key of ['stave', 'renderer', 'font']) {
       Object.assign(this.options[key], options[key]);
     }
+    if (this.options.renderer.selector !== null || this.options.renderer.context) {
+      this.initRenderer();
+    }
+
+    this.reset();
   }
 
   initRenderer() {
@@ -241,5 +243,6 @@ export class Factory {
       if (!i.isRendered()) i.setContext(this.context).draw();
     });
     this.systems.forEach(i => i.setContext(this.context).draw());
+    this.reset();
   }
 }

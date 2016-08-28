@@ -52,6 +52,7 @@ VF.Test.run = function () {
   VF.Test.Factory.Start();
   VF.Test.Parser.Start();
   VF.Test.EasyScore.Start();
+  VF.Test.Registry.Start();
 }
 
 module.exports = VF.Test;

@@ -282,6 +282,7 @@ export class Tuplet extends Element {
 
   draw() {
     this.checkContext();
+    this.setRendered();
 
     // determine x value of left bound of tuplet
     const first_note = this.notes[0];

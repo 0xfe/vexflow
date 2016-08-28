@@ -77,6 +77,7 @@ module.exports = (grunt) => {
       watch: Object.assign({}, webpackCommon, {
         watch: true,
         keepalive: true,
+        failOnError: false,
         watchDelay: 0,
       }),
     },

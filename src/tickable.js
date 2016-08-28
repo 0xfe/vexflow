@@ -12,7 +12,7 @@ import { Fraction } from './fraction';
 export class Tickable extends Element {
   constructor() {
     super();
-    this.attrs.type = 'Tickable';
+    this.setAttribute('type', 'Tickable');
 
     // These properties represent the duration of
     // this tickable element.

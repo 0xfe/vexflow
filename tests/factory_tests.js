@@ -10,6 +10,7 @@ Vex.Flow.Test.Factory = (function() {
       var VFT = Vex.Flow.Test;
 
       QUnit.test("Defaults", VFT.Factory.defaults);
+      VFT.runSVGTest("Draw", VFT.Factory.draw);
     },
 
     defaults: function(assert) {
@@ -37,6 +38,13 @@ Vex.Flow.Test.Factory = (function() {
       assert.equal(options.stave.space, 10); 
 
       assert.expect(5);
+    },
+
+    draw: function(options) {
+      var vf = VF.Factory.newFromSelector(options.canvas_sel);
+      vf.Stave().setClef('treble');
+      vf.draw();
+      expect(0);
     }
   };
 

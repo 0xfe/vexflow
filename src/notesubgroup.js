@@ -33,7 +33,7 @@ export class NoteSubGroup extends Modifier {
 
   constructor(subNotes) {
     super();
-    this.attrs.type = 'NoteSubGroup';
+    this.setAttribute('type', 'NoteSubGroup');
 
     this.note = null;
     this.index = null;
@@ -85,6 +85,7 @@ export class NoteSubGroup extends Modifier {
         "Can't draw notes without a parent note and parent note index.");
     }
 
+    this.setRendered();
     const alignSubNotesWithNote = (subNotes, note) => {
       // Shift over the tick contexts of each note
       const tickContext = note.getTickContext();

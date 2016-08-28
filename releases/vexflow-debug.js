@@ -7587,11 +7587,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var topKeys = topNote.getKeyProps();
 	        var bottomKeys = bottomNote.getKeyProps();
 	
-	        var topY = topNote.getStave().getYForLine(topKeys[0].line);
-	        var bottomY = bottomNote.getStave().getYForLine(bottomKeys[bottomKeys.length - 1].line);
+	        var HALF_NOTEHEAD_HEIGHT = 0.5;
 	
-	        var lineSpace = topNote.getStave().options.spacing_between_lines_px;
-	        if (Math.abs(topY - bottomY) === lineSpace / 2) {
+	        // `keyProps` and `stave.getYForLine` have different notions of a `line`
+	        // so we have to convert the keyProps value by subtracting 5.
+	        // See https://github.com/0xfe/vexflow/wiki/Development-Gotchas
+	        //
+	        // We also extend the y for each note by a half notehead because the
+	        // notehead's origin is centered
+	        var topNotBottomY = topNote.getStave().getYForLine(5 - topKeys[0].line + HALF_NOTEHEAD_HEIGHT);
+	
+	        var bottomNoteTopY = bottomNote.getStave().getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
+	
+	        var areNotesColliding = bottomNoteTopY - topNotBottomY < 0;
+	
+	        if (areNotesColliding) {
 	          xShift = topNote.getVoiceShiftWidth();
 	          bottomNote.setXShift(xShift);
 	        }
@@ -21881,18 +21891,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.options = defaults;
 	    this.setOptions(options);
-	    if (this.options.renderer.selector !== null || this.options.renderer.context) {
-	      this.initRenderer();
-	    }
-	
-	    this.renderQ = [];
-	    this.systems = [];
-	    this.staves = [];
-	    this.voices = [];
-	    this.stave = null; // current stave
 	  }
 	
 	  _createClass(Factory, [{
+	    key: 'reset',
+	    value: function reset() {
+	      this.renderQ = [];
+	      this.systems = [];
+	      this.staves = [];
+	      this.voices = [];
+	      this.stave = null; // current stave
+	    }
+	  }, {
 	    key: 'getOptions',
 	    value: function getOptions() {
 	      return this.options;
@@ -21906,6 +21916,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var key = _arr[_i];
 	        _extends(this.options[key], options[key]);
 	      }
+	      if (this.options.renderer.selector !== null || this.options.renderer.context) {
+	        this.initRenderer();
+	      }
+	
+	      this.reset();
 	    }
 	  }, {
 	    key: 'initRenderer',
@@ -22103,6 +22118,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.systems.forEach(function (i) {
 	        return i.setContext(_this.context).draw();
 	      });
+	      this.reset();
+	    }
+	  }], [{
+	    key: 'newFromSelector',
+	    value: function newFromSelector(selector) {
+	      var width = arguments.length <= 1 || arguments[1] === undefined ? 500 : arguments[1];
+	      var height = arguments.length <= 2 || arguments[2] === undefined ? 200 : arguments[2];
+	
+	      return new Factory({ renderer: { selector: selector, width: width, height: height } });
 	    }
 	  }]);
 
@@ -22562,7 +22586,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // Attach accidentals.
 	      var accids = this.piece.chord.map(function (note) {
-	        return note.acc || null;
+	        return note.accid || null;
 	      });
 	      accids.forEach(function (accid, i) {
 	        if (accid) note.addAccidental(i, _this10.factory.Accidental({ type: accid }));

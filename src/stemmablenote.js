@@ -198,6 +198,8 @@ export class StemmableNote extends Note {
   // Render the stem onto the canvas
   drawStem(stem_struct) {
     this.checkContext();
+    this.setRendered();
+
     this.setStem(new Stem(stem_struct));
     this.stem.setContext(this.context).draw();
   }

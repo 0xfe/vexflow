@@ -67,6 +67,7 @@ import { System } from './system';
 import { Factory } from './factory';
 import { Parser } from './parser';
 import { EasyScore } from './easyscore';
+import { Registry } from './registry';
 
 Vex.Flow = Flow;
 Vex.Flow.Element = Element;
@@ -134,5 +135,6 @@ Vex.Flow.System = System;
 Vex.Flow.Factory = Factory;
 Vex.Flow.Parser = Parser;
 Vex.Flow.EasyScore = EasyScore;
+Vex.Flow.Registry = Registry;
 
 export default Vex;

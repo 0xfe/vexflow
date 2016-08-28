@@ -76,7 +76,7 @@ export class Bend extends Modifier {
   // ## Prototype Methods
   constructor(text, release, phrase) {
     super();
-    this.attrs.type = 'Bend';
+    this.setAttribute('type', 'Bend');
 
     this.text = text;
     this.x_shift = 0;
@@ -145,6 +145,8 @@ export class Bend extends Modifier {
     if (!(this.note && (this.index != null))) {
       throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
     }
+
+    this.setRendered();
 
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
         this.index);

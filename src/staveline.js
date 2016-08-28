@@ -141,7 +141,7 @@ export class StaveLine extends Element {
   //  ```
   constructor(notes) {
     super();
-    this.attrs.type = 'StaveLine';
+    this.setAttribute('type', 'StaveLine');
 
     this.notes = notes;
 
@@ -251,6 +251,8 @@ export class StaveLine extends Element {
   // Renders the `StaveLine` on the context
   draw() {
     const ctx = this.checkContext();
+    this.setRendered();
+
     const first_note = this.first_note;
     const last_note = this.last_note;
     const render_options = this.render_options;

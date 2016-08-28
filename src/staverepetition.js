@@ -25,7 +25,7 @@ export class Repetition extends StaveModifier {
 
   constructor(type, x, y_shift) {
     super();
-    this.attrs.type = 'Repetition';
+    this.setAttribute('type', 'Repetition');
 
     this.symbol_type = type;
     this.x = x;
@@ -41,7 +41,10 @@ export class Repetition extends StaveModifier {
   getCategory() { return Repetition.CATEGORY; }
   setShiftX(x) { this.x_shift = x; return this; }
   setShiftY(y) { this.y_shift = y; return this; }
+
   draw(stave, x) {
+    this.setRendered();
+
     switch (this.symbol_type) {
       case Repetition.type.CODA_RIGHT:
         this.drawCodaFixed(stave, x + stave.width);

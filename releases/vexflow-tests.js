@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.78 built on 2016-08-21.
+ * VexFlow 1.2.80 built on 2016-08-22.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -5097,6 +5097,7 @@ Vex.Flow.Test.Factory = (function() {
       var VFT = Vex.Flow.Test;
 
       QUnit.test("Defaults", VFT.Factory.defaults);
+      VFT.runSVGTest("Draw", VFT.Factory.draw);
     },
 
     defaults: function(assert) {
@@ -5124,6 +5125,13 @@ Vex.Flow.Test.Factory = (function() {
       assert.equal(options.stave.space, 10); 
 
       assert.expect(5);
+    },
+
+    draw: function(options) {
+      var vf = VF.Factory.newFromSelector(options.canvas_sel);
+      vf.Stave().setClef('treble');
+      vf.draw();
+      expect(0);
     }
   };
 
@@ -5463,11 +5471,17 @@ VF.Test.Formatter = (function() {
 
       var formatter;
       if (options.params.justify > 0) {
-        formatter = new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
-          format([voice11, voice21, voice31], options.params.justify);
+        formatter = new VF.Formatter()
+          .joinVoices([voice11])
+          .joinVoices([voice21])
+          .joinVoices([voice31])
+          .format([voice11, voice21, voice31], options.params.justify);
       } else {
-        formatter = new VF.Formatter().joinVoices( [voice11, voice21, voice31] ).
-          format([voice11, voice21, voice31]);
+        formatter = new VF.Formatter()
+          .joinVoices([voice11])
+          .joinVoices([voice21])
+          .joinVoices([voice31])
+          .format([voice11, voice21, voice31]);
       }
 
       for (var i = 0; i < options.params.iterations; i++) {
@@ -5527,11 +5541,17 @@ VF.Test.Formatter = (function() {
       voice32.addTickables(notes32);
 
       if (options.params.justify > 0) {
-        formatter = new VF.Formatter().joinVoices([voice12, voice22, voice32]).
-          format([voice12, voice22, voice32], 188);
+        formatter = new VF.Formatter()
+          .joinVoices([voice12])
+          .joinVoices([voice22])
+          .joinVoices([voice32])
+          .format([voice12, voice22, voice32], 188);
       } else {
-        formatter = new VF.Formatter().joinVoices([voice12, voice22, voice32]).
-          format([voice12, voice22, voice32]);
+        formatter = new VF.Formatter()
+          .joinVoices([voice12])
+          .joinVoices([voice22])
+          .joinVoices([voice32])
+          .format([voice12, voice22, voice32]);
       }
 
       for (var i = 0; i < options.params.iterations; i++) {
@@ -5576,7 +5596,7 @@ VF.Test.Formatter = (function() {
       ];
 
       voices.map(newVoice).forEach(newStave);
-      system.addConnector().setType(VF.StaveConnector.type.BRACKET); 
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();
       ok(true);
@@ -5591,6 +5611,7 @@ VF.Test.Formatter = (function() {
 
   return Formatter;
 })();
+
 /**
  * VexFlow - Rest Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -7277,8 +7298,10 @@ VF.Test.NoteSubGroup = (function() {
       voice3.addTickables(notes3);
 
       var justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
-      var formatter = new VF.Formatter().joinVoices([voice, voice2, voice3]).
-        format([voice, voice2, voice3], justifyWidth);
+      var formatter = new VF.Formatter()
+        .joinVoices([voice, voice2])
+        .joinVoices([voice3])
+        .format([voice, voice2, voice3], justifyWidth);
 
       voice.draw(ctx, stave);
       voice2.draw(ctx, stave);

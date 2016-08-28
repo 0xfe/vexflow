@@ -83,6 +83,7 @@ export class TextBracket extends Element {
   // Draw the octave bracket on the rendering context
   draw() {
     const ctx = this.context;
+    this.setRendered();
 
     let y = 0;
     switch (this.position) {

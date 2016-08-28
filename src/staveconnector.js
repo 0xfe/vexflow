@@ -51,7 +51,7 @@ export class StaveConnector extends Element {
 
   constructor(top_stave, bottom_stave) {
     super();
-    this.attrs.type = 'StaveConnector';
+    this.setAttribute('type', 'StaveConnector');
 
     this.thickness = Flow.STAVE_LINE_THICKNESS;
     this.width = 3;
@@ -99,6 +99,7 @@ export class StaveConnector extends Element {
 
   draw() {
     const ctx = this.checkContext();
+    this.setRendered();
 
     let topY = this.top_stave.getYForLine(0);
     let botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +

@@ -46,6 +46,7 @@ export class VibratoBracket extends Element {
   // Draw the vibrato bracket on the rendering context
   draw() {
     const ctx = this.context;
+    this.setRendered();
 
     const y = (this.start)
       ? this.start.getStave().getYForTopText(this.line)

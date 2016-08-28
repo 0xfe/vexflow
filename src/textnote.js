@@ -241,6 +241,7 @@ export class TextNote extends Note {
       throw new Vex.RERR('NoStave', "Can't draw without a stave.");
     }
 
+    this.setRendered();
     const ctx = this.context;
     let x = this.getAbsoluteX();
     if (this.justification === TextNote.Justification.CENTER) {

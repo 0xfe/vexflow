@@ -64,7 +64,7 @@ export class Annotation extends Modifier {
   // Create a new `Annotation` with the string `text`.
   constructor(text) {
     super();
-    this.attrs.type = 'Annotation';
+    this.setAttribute('type', 'Annotation');
 
     this.note = null;
     this.index = null;
@@ -114,6 +114,7 @@ export class Annotation extends Modifier {
       );
     }
 
+    this.setRendered();
     const start = this.note.getModifierStartXY(Modifier.Position.ABOVE,
         this.index);
 

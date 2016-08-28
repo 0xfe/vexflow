@@ -117,6 +117,8 @@ export class System extends Element {
   draw() {
     // Render debugging information, if requested.
     const ctx = this.checkContext();
+    this.setRendered();
+
     if (this.options.debugFormatter) {
       Formatter.plotDebugging(ctx, this.formatter, this.startX, this.options.y, this.lastY);
     }
