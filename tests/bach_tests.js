@@ -18,7 +18,7 @@ VF.Test.BachDemo = (function() {
     minuet1: function(options) {
       var registry = new VF.Registry();
       VF.Registry.enableDefaultRegistry(registry);
-      var vf = VF.Test.makeFactory(options, 1100, 600);
+      var vf = VF.Test.makeFactory(options, 1100, 900);
       var score = vf.EasyScore({throwOnError: true});
 
       var voice = score.voice.bind(score);
@@ -150,7 +150,7 @@ VF.Test.BachDemo = (function() {
 
       /*  Measure 7 (New system) */
       x = 20;
-      y += 200;
+      y += 230;
 
       var system = makeSystem(220);
       system.addStave({
@@ -274,6 +274,136 @@ VF.Test.BachDemo = (function() {
         from: id('m11a'),
         to: id('m12a'),
         options: { cps: [{x: 0, y: 20}, {x: 0, y: 20}]}
+      });
+
+      /*  Measure 13 (New system) */
+      x = 20;
+      y += 230;
+
+      var system = makeSystem(220);
+      system.addStave({
+        voices: [
+          score.set({clef: 'treble'}).voice([
+            notes('c5/q[id="m13a"]'),
+            beam(notes('d5/8, c5, b4, a4', {stem: "down"}))
+          ].reduce(concat))
+        ]
+      }).addClef('treble').addKeySignature('G');
+
+      system.addStave({ voices: [voice(notes('a3/h[id="m13b"], f3/q[id="m13c"]', {clef: 'bass'}))] })
+        .addClef('bass').addKeySignature('G');
+
+      system.addConnector('brace');
+      system.addConnector('singleRight');
+      system.addConnector('singleLeft');
+
+      id('m13a').addModifier(0, vf.Fingering({number: '4', position: 'above'}));
+      id('m13b').addModifier(0, vf.Fingering({number: '1'}));
+      id('m13c').addModifier(0, vf.Fingering({number: '3', position: 'above'}));
+
+      /*  Measure 14 */
+      var system = makeSystem(180);
+      system.addStave({
+        voices: [
+          score.set({clef: 'treble'}).voice([
+            notes('B5/q'),
+            beam(notes('C5/8, b4, a4, g4', {stem: "up"}))
+          ].reduce(concat))
+        ]
+      });
+
+      system.addStave({ voices: [voice(notes('g3/h[id="m14a"], b3/q[id="m14b"]', {clef: 'bass'}))] });
+      system.addConnector('singleRight');
+
+      id('m14a').addModifier(0, vf.Fingering({number: '2'}));
+      id('m14b').addModifier(0, vf.Fingering({number: '1'}));
+
+       /*  Measure 15 */
+      var system = makeSystem(180);
+      system.addStave({
+        voices: [
+          score.set({clef: 'treble'}).voice([
+            notes('a4/q'),
+            beam(notes('b4/8, a4, g4, f4[id="m15a"]', {stem: "up"}))
+          ].reduce(concat))
+        ]
+      });
+
+      system.addStave({ voices: [voice(notes('c4/q[id="m15b"], d4, d3', {clef: 'bass'}))] });
+      system.addConnector('singleRight');
+
+      id('m15a').addModifier(0, vf.Fingering({number: '2'}));
+      id('m15b').addModifier(0, vf.Fingering({number: '2'}));
+
+       /*  Measure 16 */
+      var system = makeSystem(130);
+      system.addStave({
+        voices: [
+          score.set({clef: 'treble'}).voice([
+            notes('g4/h.[id="m16a"]'),
+          ].reduce(concat))
+        ]
+      }).setEndBarType(VF.Barline.type.REPEAT_END);
+
+      system.addStave({ voices: [voice(notes('g3/h[id="m16b"], g2/q', {clef: 'bass'}))] })
+        .setEndBarType(VF.Barline.type.REPEAT_END);
+      system.addConnector('boldDoubleRight');
+
+      id('m16a').addModifier(0, vf.Fingering({number: '1'}));
+      id('m16b').addModifier(0, vf.Fingering({number: '1'}));
+
+      vf.Curve({
+        from: id('m13a'),
+        to: id('m16a'),
+        options: {
+          cps: [{x: 0, y: 50}, {x: 0, y: 20}],
+          invert: true,
+          position_end: 'nearTop',
+        }
+      });
+
+      /* Measure 17 */
+      var system = makeSystem(180);
+      system.addStave({
+        voices: [
+          score.set({clef: 'treble'}).voice([
+            notes('b5/q[id="m17a"]'),
+            beam(notes('g5/8, a5, b5, g5', {stem: "down"}))
+          ].reduce(concat)),
+          voice([vf.TextDynamics({text: 'mf', duration: 'h', dots: 1, line: 10 })]),
+        ]
+      }).setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+
+      system.addStave({ voices: [voice(notes('g3/h.', {clef: 'bass'}))] })
+        .setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+
+      system.addConnector('boldDoubleLeft');
+      system.addConnector('singleRight');
+
+      id('m17a').addModifier(0, vf.Fingering({number: '5', position: 'above'}));
+
+      /* Measure 18 */
+      var system = makeSystem(180);
+      system.addStave({
+        voices: [
+          score.set({clef: 'treble'}).voice([
+            notes('a5/q[id="m18a"]'),
+            beam(notes('d5/8, e5, f5, d5[id="m18b"]', {stem: "down"}))
+          ].reduce(concat))
+        ]
+      });
+
+      system.addStave({ voices: [voice(notes('f3/h.', {clef: 'bass'}))] });
+      system.addConnector('singleRight');
+
+      id('m18a').addModifier(0, vf.Fingering({number: '4', position: 'above'}));
+
+      vf.Curve({
+        from: id('m17a'),
+        to: id('m18b'),
+        options: {
+          cps: [{x: 0, y: 20}, {x: 0, y: 30}],
+        }
       });
 
       /* Done */
