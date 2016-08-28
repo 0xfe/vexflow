@@ -198,6 +198,31 @@ export class Articulation extends Modifier {
     return true;
   }
 
+  static easyScoreHook({ articulations }, note, factory) {
+    if (!articulations) return;
+
+    const articNameToCode = {
+      staccato: 'a.',
+      tenuto: 'a-',
+    };
+
+    const positionValueToPosition = {
+      above: Vex.Flow.Modifier.Position.ABOVE,
+      below: Vex.Flow.Modifier.Position.BELOW,
+    };
+
+    articulations
+      .split(',')
+      .map(articString => articString.trim().split('.'))
+      .map(([name, position]) => factory.Articulation({
+        type: articNameToCode[name],
+        options: {
+          position: positionValueToPosition[position],
+        },
+      }))
+      .map(artic => note.addModifier(0, artic));
+  }
+
   // Create a new articulation of type `type`, which is an entry in
   // `Vex.Flow.articulationCodes` in `tables.js`.
   constructor(type) {
