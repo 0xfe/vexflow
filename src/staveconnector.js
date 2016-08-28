@@ -51,15 +51,15 @@ export class StaveConnector extends Element {
 
   static get typeString() {
     return {
-      single_right: StaveConnector.type.SINGLE_RIGHT,
-      single_left: StaveConnector.type.SINGLE_LEFT,
+      singleRight: StaveConnector.type.SINGLE_RIGHT,
+      singleLeft: StaveConnector.type.SINGLE_LEFT,
       single: StaveConnector.type.SINGLE,
       double: StaveConnector.type.DOUBLE,
       brace: StaveConnector.type.BRACE,
       bracket: StaveConnector.type.BRACKET,
-      bold_double_left: StaveConnector.type.BOLD_DOUBLE_LEFT,
-      bold_double_right: StaveConnector.type.BOLD_DOUBLE_RIGHT,
-      thin_double: StaveConnector.type.THIN_DOUBLE,
+      boldDoubleLeft: StaveConnector.type.BOLD_DOUBLE_LEFT,
+      boldDoubleRight: StaveConnector.type.BOLD_DOUBLE_RIGHT,
+      thinDouble: StaveConnector.type.THIN_DOUBLE,
       none: StaveConnector.type.NONE,
     };
   }
@@ -86,7 +86,7 @@ export class StaveConnector extends Element {
 
   setType(type) {
     type = typeof(type) === 'string'
-      ? StaveConnector.typeString[type.toLowerCase()]
+      ? StaveConnector.typeString[type]
       : type;
 
     if (type >= StaveConnector.type.SINGLE_RIGHT && type <= StaveConnector.type.NONE) {

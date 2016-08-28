@@ -32,7 +32,7 @@ export class Annotation extends Modifier {
       left: Annotation.Justify.LEFT,
       right: Annotation.Justify.RIGHT,
       center: Annotation.Justify.CENTER,
-      center_stem: Annotation.Justify.CENTER_STEM,
+      centerStem: Annotation.Justify.CENTER_STEM,
     };
   }
 
@@ -52,7 +52,7 @@ export class Annotation extends Modifier {
       below: Annotation.VerticalJustify.BOTTOM,
       bottom: Annotation.VerticalJustify.BOTTOM,
       center: Annotation.VerticalJustify.CENTER,
-      center_stem: Annotation.VerticalJustify.CENTER_STEM,
+      centerStem: Annotation.VerticalJustify.CENTER_STEM,
     };
   }
 

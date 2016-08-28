@@ -50,8 +50,8 @@ VF.Test.BachDemo = (function() {
         ]
       }).addClef('bass').addKeySignature('G').addTimeSignature('3/4');
       system.addConnector().setType('brace');
-      system.addConnector().setType('single_right');
-      system.addConnector().setType('single_left');
+      system.addConnector().setType('singleRight');
+      system.addConnector().setType('singleLeft');
 
       id('d1').addModifier(0, vf.Annotation({text: 'p', vJustify: 'below'}));
       id('d1').addModifier(0, vf.Fingering({number: '5'}));
@@ -68,7 +68,7 @@ VF.Test.BachDemo = (function() {
           voice(notes('B3/h.', {clef: 'bass'}), {time: '3/4'})
         ]
       });
-      system.addConnector().setType('single_right');
+      system.addConnector().setType('singleRight');
 
       id('d2').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
       id('g3').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
@@ -96,7 +96,7 @@ VF.Test.BachDemo = (function() {
           voice(notes('C4/h.[id="c1"]', {clef: 'bass'}), {time: '3/4'})
         ]
       });
-      system.addConnector().setType('single_right');
+      system.addConnector().setType('singleRight');
 
       system = makeSystem(150);
       system.addStave({
@@ -110,7 +110,7 @@ VF.Test.BachDemo = (function() {
           voice(notes('B3/h.', {clef: 'bass'}), {time: '3/4'})
         ]
       });
-      system.addConnector().setType('single_right');
+      system.addConnector().setType('singleRight');
 
       id('g5').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
       id('g6').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
