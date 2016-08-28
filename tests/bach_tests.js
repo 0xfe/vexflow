@@ -24,6 +24,7 @@ VF.Test.BachDemo = (function() {
       var voice = score.voice.bind(score);
       var notes = score.notes.bind(score);
       var beam = score.beam.bind(score);
+      score.set({time: '3/4'});
 
       var x = 20, y = 40;
       function makeSystem(width) {
@@ -40,7 +41,7 @@ VF.Test.BachDemo = (function() {
           voice([
             notes('D5/q[id="d1"]'),
             beam(notes('G4/8, A4, B4, C5', {stem: "up"}))
-          ].reduce(concat), {time: '3/4'}),
+          ].reduce(concat)),
           voice([
             vf.TextDynamics({text: 'p', duration: 'h', dots: 1, line: 9 }),
           ], {time: '3/4'}),
@@ -49,7 +50,7 @@ VF.Test.BachDemo = (function() {
 
       system.addStave({
         voices: [
-          voice(notes('(G3 B3 D4)/h, A3/q', {clef: 'bass'}), {time: '3/4'})
+          voice(notes('(G3 B3 D4)/h, A3/q', {clef: 'bass'}))
         ]
       }).addClef('bass').addKeySignature('G').addTimeSignature('3/4');
       system.addConnector().setType('brace');
@@ -61,13 +62,13 @@ VF.Test.BachDemo = (function() {
       system = makeSystem(150);
       system.addStave({
         voices: [
-          voice(notes('D5/q[id="d2"], G4[id="g3"], G4[id="g4"]'), {time: '3/4'})
+          voice(notes('D5/q[id="d2"], G4[id="g3"], G4[id="g4"]'))
         ]
       });
 
       system.addStave({
         voices: [
-          voice(notes('B3/h.', {clef: 'bass'}), {time: '3/4'})
+          voice(notes('B3/h.', {clef: 'bass'}))
         ]
       });
       system.addConnector().setType('singleRight');
@@ -88,14 +89,14 @@ VF.Test.BachDemo = (function() {
           voice([
             notes('E5/q[id="e1"]'),
             beam(notes('C5/8, D5, E5, F5', {stem: "down"}))
-          ].reduce(concat), {time: '3/4'})
+          ].reduce(concat))
         ]
       });
       id('e1').addModifier(0, vf.Fingering({number: '3', position: 'above'}));
 
       system.addStave({
         voices: [
-          voice(notes('C4/h.[id="c1"]', {clef: 'bass'}), {time: '3/4'})
+          voice(notes('C4/h.[id="c1"]', {clef: 'bass'}))
         ]
       });
       system.addConnector().setType('singleRight');
@@ -103,13 +104,13 @@ VF.Test.BachDemo = (function() {
       system = makeSystem(150);
       system.addStave({
         voices: [
-          voice(notes('G5/q[id="g5"], G4[id="g6"], G4[id="g7"]'), {time: '3/4'})
+          voice(notes('G5/q[id="g5"], G4[id="g6"], G4[id="g7"]'))
         ]
       });
 
       system.addStave({
         voices: [
-          voice(notes('B3/h.', {clef: 'bass'}), {time: '3/4'})
+          voice(notes('B3/h.', {clef: 'bass'}))
         ]
       });
       system.addConnector().setType('singleRight');
