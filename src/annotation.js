@@ -48,7 +48,9 @@ export class Annotation extends Modifier {
   static get VerticalJustifyString() {
     return {
       above: Annotation.VerticalJustify.TOP,
+      top: Annotation.VerticalJustify.TOP,
       below: Annotation.VerticalJustify.BOTTOM,
+      bottom: Annotation.VerticalJustify.BOTTOM,
       center: Annotation.VerticalJustify.CENTER,
       center_stem: Annotation.VerticalJustify.CENTER_STEM,
     };
