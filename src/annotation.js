@@ -35,7 +35,7 @@ export class Annotation extends Modifier {
       center_stem: Annotation.Justify.CENTER_STEM,
     };
   }
-  
+
   static get VerticalJustify() {
     return {
       TOP: 1,

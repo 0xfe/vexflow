@@ -12,7 +12,6 @@ import { Vex } from './vex';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
-import { Modifier } from './modifier';
 import { Formatter } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { ModifierContext } from './modifiercontext';

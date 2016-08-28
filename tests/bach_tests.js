@@ -53,7 +53,7 @@ VF.Test.BachDemo = (function() {
       system.addConnector().setType('single_right');
       system.addConnector().setType('single_left');
 
-      id('d1').addAnnotation(0, vf.Annotation({text: 'p', vJustify: 'below'}));
+      id('d1').addModifier(0, vf.Annotation({text: 'p', vJustify: 'below'}));
       id('d1').addModifier(0, vf.Fingering({number: '5'}));
 
       system = makeSystem(150);
@@ -70,9 +70,9 @@ VF.Test.BachDemo = (function() {
       });
       system.addConnector().setType('single_right');
 
-      id('d2').addArticulation(0, vf.Articulation({type: 'a.', position: "above"}));
-      id('g3').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
-      id('g4').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('d2').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
+      id('g3').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('g4').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
 
       vf.Curve({
         from: id('d1'),
@@ -112,9 +112,9 @@ VF.Test.BachDemo = (function() {
       });
       system.addConnector().setType('single_right');
 
-      id('g5').addArticulation(0, vf.Articulation({type: 'a.', position: "above"}));
-      id('g6').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
-      id('g7').addArticulation(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('g5').addModifier(0, vf.Articulation({type: 'a.', position: "above"}));
+      id('g6').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
+      id('g7').addModifier(0, vf.Articulation({type: 'a.', position: "below"}));
 
       vf.Curve({
         from: id('e1'),
