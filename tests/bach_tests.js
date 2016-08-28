@@ -19,7 +19,7 @@ VF.Test.BachDemo = (function() {
       var registry = new VF.Registry();
       VF.Registry.enableDefaultRegistry(registry);
       var vf = VF.Test.makeFactory(options, 1100, 600);
-      var score = vf.EasyScore();
+      var score = vf.EasyScore({throwOnError: true});
 
       var voice = score.voice.bind(score);
       var notes = score.notes.bind(score);

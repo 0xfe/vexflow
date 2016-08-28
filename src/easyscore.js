@@ -281,6 +281,7 @@ export class EasyScore {
     this.options = Object.assign({
       factory: null,
       builder: null,
+      throwOnError: false,
     }, options);
 
     this.factory = this.options.factory;
@@ -297,7 +298,11 @@ export class EasyScore {
 
   parse(line, options = {}) {
     this.builder.reset(options);
-    return this.parser.parse(line);
+    const result = this.parser.parse(line);
+    if (!result.success && this.options.throwOnError) {
+      throw new X('Error parsing line: ' + line, result);
+    }
+    return result;
   }
 
   beam(notes, options = {}) {
