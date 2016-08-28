@@ -206,18 +206,14 @@ export class Articulation extends Modifier {
       tenuto: 'a-',
     };
 
-    const positionValueToPosition = {
-      above: Vex.Flow.Modifier.Position.ABOVE,
-      below: Vex.Flow.Modifier.Position.BELOW,
-    };
-
     articulations
       .split(',')
       .map(articString => articString.trim().split('.'))
-      .map(([name, position]) => factory.Articulation({
-        type: articNameToCode[name],
-        position: positionValueToPosition[position],
-      }))
+      .map(([name, position]) => {
+        const artic = { type: articNameToCode[name] };
+        if (position) artic.position = Modifier.PositionString[position];
+        return factory.Articulation(artic);
+      })
       .map(artic => note.addModifier(0, artic));
   }
 

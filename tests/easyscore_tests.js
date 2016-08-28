@@ -124,7 +124,7 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [
-          voice(notes('(d4 e4 g4)/q, c4/q[articulations="staccato.above,tenuto.below"], c4/q/r, c4/q', {stem: 'down'})),
+          voice(notes('(d4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
           voice(notes('c#5/h., c5/q', {stem: 'up'})),
         ]
       }).addClef('treble');
@@ -191,7 +191,7 @@ Vex.Flow.Test.EasyScore = (function() {
       const score = vf.EasyScore();
       const system = vf.System();
 
-      const notes = score.notes('B4/h[id="foobar", stem="up"], B4/h[stem="down"]');
+      const notes = score.notes('B4/h[id="foobar", class="red,bold", stem="up", articulations="staccato.below,tenuto"], B4/h[stem="down"]');
 
       system.addStave({
         voices: [ score.voice(notes) ]
@@ -201,6 +201,14 @@ Vex.Flow.Test.EasyScore = (function() {
 
       const assert = options.assert;
       assert.equal(notes[0].getAttribute('id'), 'foobar');
+      assert.ok(notes[0].hasClass('red'));
+      assert.ok(notes[0].hasClass('bold'));
+      assert.equal(notes[0].modifiers[0].getCategory(), 'articulations');
+      assert.equal(notes[0].modifiers[0].type, 'a.');
+      assert.equal(notes[0].modifiers[0].position, VF.Modifier.Position.BELOW);
+      assert.equal(notes[0].modifiers[1].getCategory(), 'articulations');
+      assert.equal(notes[0].modifiers[1].type, 'a-');
+      assert.equal(notes[0].modifiers[1].position, VF.Modifier.Position.ABOVE);
       assert.equal(notes[0].getStemDirection(), VF.StaveNote.STEM_UP);
       assert.equal(notes[1].getStemDirection(), VF.StaveNote.STEM_DOWN);
     }
