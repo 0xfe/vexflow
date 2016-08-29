@@ -31,8 +31,15 @@ Vex.Flow.Test.EasyScore = (function() {
 
     accidentals: function(assert) {
       var score = new VF.EasyScore();
-      var mustPass = ['c3', 'c##3, cb3', 'Cn3', 'f3//x', '(c##3 cbb3 cn3), cb3'];
-      var mustFail = ['ct3', 'cd7', '(cq cbb3 cn3), cb3', '(cd7 cbb3 cn3), cb3'];
+      var mustPass = [
+        'c3', 'c##3, cb3', 'Cn3', 'f3//x', '(c##3 cbb3 cn3), cb3',
+        'cbbs7', 'cbb7', 'cbss7', 'cbs7', 'cb7', 'cdb7', 'cd7', 'c##7', 'c#7', 'cn7', 'c++-7', 'c++7', 'c+-7', 'c+7',
+        '(cbs3 bbs3 dbs3), ebs3', '(cd7 cbb3 cn3), cb3',
+      ];
+      var mustFail = [
+        'ct3', 'cdbb7', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3',
+        'cbbbs7', 'cbbss7', 'cbsss7', 'csbs7', 'cddb7', 'cddbb7', 'cdd7', 'c##b7', 'c#bs7', 'cnb#7', 'c+#+b-d7', 'c+--7', 'c++--7', 'c+++7',
+      ];
 
       mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
       mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
@@ -41,7 +48,7 @@ Vex.Flow.Test.EasyScore = (function() {
     durations: function(assert) {
       var score = new VF.EasyScore();
       var mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
-      var mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cd7 cbb3 cn3), cb3'];
+      var mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3'];
 
       mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
       mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
@@ -53,7 +60,7 @@ Vex.Flow.Test.EasyScore = (function() {
         '(c5)', '(c3 e0 g9)',
         '(c##4 cbb4 cn4)/w, (c#5 cb2 a3)/32',
         '(d##4 cbb4 cn4)/w/r, (c#5 cb2 a3)',
-        '(c##4 cbb4 cn4)/4, (c#5 cb2 a3)', 
+        '(c##4 cbb4 cn4)/4, (c#5 cb2 a3)',
         '(c##4 cbb4 cn4)/x, (c#5 cb2 a3)',
       ];
       var mustFail = ['(c)'];
@@ -76,7 +83,7 @@ Vex.Flow.Test.EasyScore = (function() {
       var mustFail = ['.', 'c.#', 'c#4./4'];
 
       mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
-      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); }); 
+      mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
     },
 
     types: function(assert) {
@@ -206,5 +213,5 @@ Vex.Flow.Test.EasyScore = (function() {
     }
   };
 
-  return EasyScore;  
+  return EasyScore;
 })();
