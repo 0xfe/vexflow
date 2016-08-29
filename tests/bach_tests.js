@@ -306,7 +306,7 @@ VF.Test.BachDemo = (function() {
       system.addStave({
         voices: [
           score.set({clef: 'treble'}).voice([
-            notes('B5/q'),
+            notes('B4/q'),
             beam(notes('C5/8, b4, a4, g4', {stem: "up"}))
           ].reduce(concat))
         ]
