@@ -162,7 +162,7 @@ export class Formatter {
     ctx.setFont('Arial', 8, '');
 
     contextGaps.gaps.forEach(gap => {
-      stroke(x + gap.x1, x + gap.x2, '#aaa');
+      stroke(x + gap.x1, x + gap.x2, 'rgba(180, 180, 180, 0.5)');
       // Vex.drawDot(ctx, xPos + gap.x1, yPos, 'blue');
       ctx.fillText(Math.round(gap.x2 - gap.x1), x + gap.x1, y2 + 12);
     });
@@ -339,6 +339,9 @@ export class Formatter {
       gaps: [],
     };
 
+    // Number of tuning iterations complete.
+    this.tuneIteration = 0;
+    this.justifyWidth = 0;
     this.voices = [];
   }
 
@@ -513,16 +516,19 @@ export class Formatter {
     // Calculate available slack per tick context. This works out how much freedom
     // to move a context has in either direction, without affecting other notes.
     this.contextGaps = { total: 0, gaps: [] };
+    let gap = 0;
+    let context = null;
     this.tickContexts.list.forEach((tick, index) => {
       if (index === 0) return;
       const prevTick = this.tickContexts.list[index - 1];
       const prevContext = this.tickContexts.map[prevTick];
-      const context = this.tickContexts.map[tick];
       const prevMetrics = prevContext.getMetrics();
+      context = this.tickContexts.map[tick];
 
-      const insideRightEdge = prevContext.getX() + prevMetrics.width;
+      const insideRightEdge = prevContext.getX() + prevMetrics.width - prevMetrics.extraLeftPx;
       const insideLeftEdge = context.getX();
-      const gap = insideLeftEdge - insideRightEdge;
+      gap = insideLeftEdge - insideRightEdge;
+      L('index', index, 'gap', gap);
       this.contextGaps.total += gap;
       this.contextGaps.gaps.push({ x1: insideRightEdge, x2: insideLeftEdge });
 
@@ -530,6 +536,8 @@ export class Formatter {
       context.getFormatterMetrics().freedom.left = gap;
       prevContext.getFormatterMetrics().freedom.right = gap;
     });
+
+    context.getFormatterMetrics().freedom.right = gap;
 
     // Calculate mean distance in each voice for each duration type, then calculate
     // how far each note is from the mean.
@@ -550,6 +558,7 @@ export class Formatter {
         const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getMetrics();
         const formatterMetrics = note.getFormatterMetrics();
+        const tcFormatterMetrics = note.getTickContext().getFormatterMetrics();
         const leftNoteEdge = note.getX() + metrics.noteWidth +
             metrics.modRightPx + metrics.extraRightPx;
         let space = 0;
@@ -563,13 +572,23 @@ export class Formatter {
           space = rightNoteEdge - leftNoteEdge;
           formatterMetrics.space.used = rightNote.getX() - note.getX();
           rightNote.getFormatterMetrics().freedom.left = space;
+
+          const rtcFormatterMetrics = rightNote.getTickContext().getFormatterMetrics();
+          rtcFormatterMetrics.freedom.left = Math.min(rtcFormatterMetrics.freedom.left, space);
         } else {
           space = justifyWidth - leftNoteEdge;
           formatterMetrics.space.used = justifyWidth - note.getX();
         }
 
         formatterMetrics.freedom.right = space;
+        tcFormatterMetrics.freedom.right = Math.min(tcFormatterMetrics.freedom.right, space);
         updateStats(duration, formatterMetrics.space.used);
+
+        // Calculate separate mean for beam.
+        if (note.getBeam()) {
+          const beamMetrics = note.getBeam().getFormatterMetrics();
+          beamMetrics.mean = (beamMetrics + formatterMetrics.space.used) / 2;
+        }
       });
     });
 
@@ -585,6 +604,12 @@ export class Formatter {
         metrics.duration = duration;
         metrics.space.mean = durationStats[duration].mean;
 
+        if (note.getBeam()) {
+          const beamMetrics = note.getBeam().getFormatterMetrics();
+          metrics.space.beamMean = beamMetrics.mean;
+          metrics.space.beamDeviation = metrics.space.used - beamMetrics.mean;
+        }
+
         totalDeviation += Math.pow(durationStats[duration].mean, 2);
       });
     });
@@ -599,11 +624,17 @@ export class Formatter {
   // attempt to reduce the cost. You can call this method multiple times until it finds
   // and oscillates around a global minimum.
   tune() {
+    const minPadding = 2;
+    this.tuneIteration += 1;
+    L('START TUNE ITERATION: ', this.tuneIteration);
+
     const sum = (means) => means.reduce((a, b) => a + b);
+    // console.log(regression('polynomial', [[1,1], [2,4], [3,9], [4,16], [5,25]], 3));
 
     // Move `current` tickcontext by `shift` pixels, and adjust the freedom
     // on adjacent tickcontexts.
     function move(current, prev, next, shift) {
+      L('move', shift);
       current.setX(current.getX() + shift);
       current.getFormatterMetrics().freedom.left += shift;
       current.getFormatterMetrics().freedom.right -= shift;
@@ -613,30 +644,43 @@ export class Formatter {
     }
 
     let shift = 0;
+    let carryShift = 0;
+    let lastContext = null;
+    let lastShift = 0;
     this.tickContexts.list.forEach((tick, index, list) => {
+      L('tuning index', index);
+      L('carry shift', carryShift);
       const context = this.tickContexts.map[tick];
       const prevContext = (index > 0) ? this.tickContexts.map[list[index - 1]] : null;
       const nextContext = (index < list.length - 1) ? this.tickContexts.map[list[index + 1]] : null;
+      lastContext = context;
 
       move(context, prevContext, nextContext, shift);
 
-      const cost = -sum(
-        context.getTickables().map(t => t.getFormatterMetrics().space.deviation));
+      const cost = sum(
+        context.getTickables().map(t => t.getFormatterMetrics().space.deviation)) + carryShift;
+      L('cost', cost);
 
       if (cost > 0) {
-        shift = -Math.min(context.getFormatterMetrics().freedom.right, Math.abs(cost));
+        shift = -Math.min(context.getFormatterMetrics().freedom.right - minPadding, Math.abs(cost));
       } else if (cost < 0) {
         if (nextContext) {
-          shift = Math.min(nextContext.getFormatterMetrics().freedom.right, Math.abs(cost));
+          L('next freedom', nextContext.getFormatterMetrics().freedom.right);
+          shift = Math.min(
+            nextContext.getFormatterMetrics().freedom.right - minPadding, Math.abs(cost));
         } else {
-          shift = 0;
+          shift = Math.abs(cost);
+          lastShift = Math.min(Math.abs(cost), context.getFormatterMetrics().freedom.right);
+          L('lastShift', lastShift);
         }
       }
 
       const minShift = Math.min(5, Math.abs(shift));
       shift = shift > 0 ? minShift : -minShift;
+      carryShift = cost - shift;
     });
 
+    move(lastContext, null, null, lastShift);
     return this.evaluate();
   }
 

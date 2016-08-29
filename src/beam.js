@@ -436,6 +436,12 @@ export class Beam extends Element {
     this.notes = notes;
     this.beam_count = this.getBeamCount();
     this.break_on_indices = [];
+    this.formatterMetrics = {
+      space: {
+        mean: 0,
+        deviations: [],
+      },
+    };
     this.render_options = {
       beam_width: 5,
       max_slope: 0.25,
@@ -452,6 +458,7 @@ export class Beam extends Element {
 
   // Get the notes in this beam
   getNotes() { return this.notes; }
+  getFormatterMetrics() { return this.formatterMetrics; }
 
   // Get the max number of beams in the set of notes
   getBeamCount() {

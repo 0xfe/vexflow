@@ -17,7 +17,6 @@ export class StemmableNote extends Note {
 
     this.stem = null;
     this.stemExtensionOverride = null;
-    this.beam = null;
   }
 
   // Get and set the note's `Stem`
@@ -153,9 +152,6 @@ export class StemmableNote extends Note {
   getStemExtents() {
     return this.stem.getExtents();
   }
-
-  // Sets the current note's beam
-  setBeam(beam) { this.beam = beam; return this; }
 
   // Get the `y` value for the top/bottom modifiers at a specific `textLine`
   getYForTopText(textLine) {

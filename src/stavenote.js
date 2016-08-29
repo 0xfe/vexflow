@@ -290,7 +290,6 @@ export class StaveNote extends StemmableNote {
     this.keys = noteStruct.keys;
     this.clef = noteStruct.clef;
     this.octave_shift = noteStruct.octave_shift;
-    this.beam = null;
 
     // Pull note rendering properties
     this.glyph = Flow.durationToGlyph(this.duration, this.noteType);

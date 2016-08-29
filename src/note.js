@@ -135,6 +135,7 @@ export class Note extends Tickable {
     this.left_modPx = 0;        // Max width of left modifiers
     this.right_modPx = 0;       // Max width of right modifiers
     this.voice = null;          // The voice that this note is in
+    this.beam = null;
     this.preFormatted = false;  // Is this note preFormatted?
     this.ys = [];               // list of y coordinates for each note
                                 // we need to hold on to these for ties and beams.
@@ -258,7 +259,8 @@ export class Note extends Tickable {
   hasStem() { return false; }
   getDots() { return this.dots; }
   getNoteType() { return this.noteType; }
-  setBeam() { return this; } // ignore parameters
+  setBeam(beam) { this.beam = beam; return this; } // ignore parameters
+  getBeam() { return this.beam; }
 
   // Attach this note to a modifier context.
   setModifierContext(mc) { this.modifierContext = mc; return this; }

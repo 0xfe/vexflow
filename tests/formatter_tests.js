@@ -8,6 +8,8 @@ VF.Test.Formatter = (function() {
 
   var Formatter = {
     Start: function() {
+      // VF.Formatter.DEBUG = true;
+
       QUnit.module("Formatter");
       test("TickContext Building", Formatter.buildTickContexts);
       runTests("StaveNote Formatting", Formatter.formatStaveNotes);
@@ -15,14 +17,25 @@ VF.Test.Formatter = (function() {
       runTests("Notes with Tab", Formatter.notesWithTab);
       runTests("Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0, iterations: 0});
       runTests("Multiple Staves - Justified", Formatter.multiStaves, {justify: 168, iterations: 0});
-      runTests("Multiple Staves - Justified - 6 Iterations", Formatter.multiStaves, {justify: 168, iterations: 6});
+      runTests("Multiple Staves - Justified - 4 steps", Formatter.multiStaves, {justify: 168, iterations: 8});
       runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: false, iterations: 0});
       runTests("Proportional Formatting - 15 steps", Formatter.proportionalFormatting, {debug: false, iterations: 15});
+      runTests("MultiStave Tuning - no tuning", Formatter.multiStaveTuning, {debug: false, iterations: 0});
+      runTests("MultiStave Tuning - 4 steps", Formatter.multiStaveTuning, {debug: false, iterations: 4});
+      runTests("MultiStave Tuning Two - no tuning", Formatter.multiStaveTuningTwo, {debug: true, iterations: 0});
+      runTests("MultiStave Tuning Two - 4 steps", Formatter.multiStaveTuningTwo, {debug: true, iterations: 4});
+
+      /*
+      for (var i = 0; i < 10; i++) {
+        VF.Test.runSVGTest("MultiStave Tuning (" + i + " iterations)",
+          Formatter.multiStaveTuning, {debug: true, iterations: i});
+      }
 
       for (var i = 2; i < 15; i++) {
         VF.Test.runSVGTest("Proportional Formatting (" + i + " iterations)",
           Formatter.proportionalFormatting, {debug: true, iterations: i});
       }
+      */
     },
 
     buildTickContexts: function() {
@@ -344,7 +357,8 @@ VF.Test.Formatter = (function() {
           .format([voice11, voice21, voice31]);
       }
 
-      for (var i = 0; i < options.params.iterations; i++) {
+      var iterations = options.params.iterations;
+      for (var i = 0; i < iterations; i++) {
         formatter.tune();
       }
 
@@ -405,7 +419,7 @@ VF.Test.Formatter = (function() {
           .joinVoices([voice12])
           .joinVoices([voice22])
           .joinVoices([voice32])
-          .format([voice12, voice22, voice32], 188);
+          .format([voice12, voice22, voice32], 230);
       } else {
         formatter = new VF.Formatter()
           .joinVoices([voice12])
@@ -469,6 +483,66 @@ VF.Test.Formatter = (function() {
 
       // console.log(table);
       VF.Registry.disableDefaultRegistry();
+      ok(true);
+    },
+
+    multiStaveTuning: function(options) {
+      var debug = options.params.debug;
+      var vf = VF.Test.makeFactory(options, 600, 440);
+      var system = vf.System({
+        x: 50, width: 250,
+        debugFormatter: debug,
+        formatIterations: options.params.iterations,
+      });
+      var score = vf.EasyScore({throwOnError: true});
+
+      var newVoice = function(notes) { return score.voice(notes, {time: '6/8'})};
+      var newStave = function(voice) {
+        system.addStave({voices: [voice], debugNoteMetrics: debug})
+          .addClef('treble')
+          .addTimeSignature('1/4');
+      };
+
+      var voices = [
+        score.notes('f4/q, d4/8, g4/q, e4/8'),
+        score.beam(score.notes('d4/8, d4, db4')).concat(score.beam(score.notes('d4/8, eb4, e4'))),
+        score.beam(score.notes('a5/8, a5, a#5')).concat(score.beam(score.notes('a5/8, a5, a5')))
+      ];
+
+      voices.map(newVoice).forEach(newStave);
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+
+      vf.draw();
+      ok(true);
+    },
+
+    multiStaveTuningTwo: function(options) {
+      var debug = options.params.debug;
+      var vf = VF.Test.makeFactory(options, 600, 440);
+      var system = vf.System({
+        x: 50, width: 250,
+        debugFormatter: debug,
+        formatIterations: options.params.iterations,
+      });
+      var score = vf.EasyScore({throwOnError: true});
+
+      var newVoice = function(notes) { return score.voice(notes, {time: '6/8'})};
+      var newStave = function(voice) {
+        system.addStave({voices: [voice], debugNoteMetrics: debug})
+          .addClef('treble')
+          .addTimeSignature('1/4');
+      };
+
+      var voices = [
+        score.notes('ab4/q, bb4/8, (cb5 eb5)/q, d5/8'),
+        score.notes('(eb4 ab4)/q., (c4 eb4 ab4)/q, d5/8'),
+        score.beam(score.notes('a5/8, a5, a#5')).concat(score.beam(score.notes('a5/8, a5, a5')))
+      ];
+
+      voices.map(newVoice).forEach(newStave);
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+
+      vf.draw();
       ok(true);
     },
 

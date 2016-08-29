@@ -59,6 +59,8 @@ export class Tickable extends Element {
         used: 0,
         mean: 0,
         deviation: 0,
+        beamMean: 0,
+        beamDeviation: 0,
       },
     };
   }
