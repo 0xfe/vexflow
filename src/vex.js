@@ -46,7 +46,7 @@ Vex.RERR = Vex.RuntimeError;
 // Merge `destination` hash with `source` hash, overwriting like keys
 // in `source` if necessary.
 Vex.Merge = (destination, source) => {
-  for (const property in source) { // eslint-disable-line guard-for-in
+  for (let property in source) { // eslint-disable-line guard-for-in
     destination[property] = source[property];
   }
   return destination;

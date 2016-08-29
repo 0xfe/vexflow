@@ -626,7 +626,7 @@ export class Stave extends Element {
 
     // Make sure the defaults are present in case an incomplete set of
     //  configuration options were supplied.
-    for (const line_config in lines_configuration) {
+    for (let line_config in lines_configuration) {
       // Allow 'null' to be used if the caller just wants the default for a particular node.
       if (!lines_configuration[line_config]) {
         lines_configuration[line_config] = this.options.line_config[line_config];

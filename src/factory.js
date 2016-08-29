@@ -82,7 +82,7 @@ export class Factory {
 
   getOptions() { return this.options; }
   setOptions(options) {
-    for (const key of ['stave', 'renderer', 'font']) {
+    for (let key of ['stave', 'renderer', 'font']) {
       Object.assign(this.options[key], options[key]);
     }
     if (this.options.renderer.selector !== null || this.options.renderer.context) {
