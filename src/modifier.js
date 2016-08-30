@@ -32,9 +32,18 @@ export class Modifier extends Element {
     };
   }
 
+  static get PositionString() {
+    return {
+      above: Modifier.Position.ABOVE,
+      below: Modifier.Position.BELOW,
+      left: Modifier.Position.LEFT,
+      right: Modifier.Position.RIGHT,
+    };
+  }
+
   constructor() {
     super();
-    this.attrs.type = 'Modifier';
+    this.setAttribute('type', 'Modifier');
 
     this.width = 0;
 
@@ -74,7 +83,12 @@ export class Modifier extends Element {
 
   // Get and set articulation position.
   getPosition() { return this.position; }
-  setPosition(position) { this.position = position; return this; }
+  setPosition(position) {
+    this.position = typeof(position) === 'string'
+     ? Modifier.PositionString[position]
+      : position;
+    return this;
+  }
 
   // Set the `text_line` for the modifier.
   setTextLine(line) { this.text_line = line; return this; }

@@ -97,6 +97,7 @@ export class TextDynamics extends Note {
 
   // Draw the dynamics text on the rendering context
   draw() {
+    this.setRendered();
     const x = this.getAbsoluteX();
     const y = this.stave.getYForLine(this.line + (-3));
 

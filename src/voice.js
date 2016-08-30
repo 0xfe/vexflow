@@ -213,6 +213,7 @@ export class Voice extends Element {
   // If `stave` is omitted, it is expected that the notes have staves
   // already set.
   draw(context = this.context, stave = this.stave) {
+    this.setRendered();
     let boundingBox = null;
     for (let i = 0; i < this.tickables.length; ++i) {
       const tickable = this.tickables[i];

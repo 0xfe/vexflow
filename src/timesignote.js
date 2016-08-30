@@ -34,6 +34,8 @@ export class TimeSigNote extends Note {
 
   draw() {
     this.stave.checkContext();
+    this.setRendered();
+
     if (!this.timeSig.glyph.getContext()) {
       this.timeSig.glyph.setContext(this.context);
     }

@@ -44,6 +44,7 @@ export class StaveText extends StaveModifier {
 
   draw(stave) {
     const ctx = stave.checkContext();
+    this.setRendered();
 
     ctx.save();
     ctx.lineWidth = 2;

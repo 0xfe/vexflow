@@ -81,7 +81,7 @@ export class Note extends Tickable {
   // The range of values for these parameters are available in `src/tables.js`.
   constructor(note_struct) {
     super();
-    this.attrs.type = 'Note';
+    this.setAttribute('type', 'Note');
 
     if (!note_struct) {
       throw new Vex.RuntimeError(

@@ -94,7 +94,7 @@ export class FretHandFinger extends Modifier {
 
   constructor(number) {
     super();
-    this.attrs.type = 'FretHandFinger';
+    this.setAttribute('type', 'FretHandFinger');
 
     this.note = null;
     this.index = null;
@@ -112,17 +112,6 @@ export class FretHandFinger extends Modifier {
     };
   }
   getCategory() { return FretHandFinger.CATEGORY; }
-  getNote() { return this.note; }
-  setNote(note) { this.note = note; return this; }
-  getIndex() { return this.index; }
-  setIndex(index) { this.index = index; return this; }
-  getPosition() { return this.position; }
-  setPosition(position) {
-    if (position >= Modifier.Position.LEFT && position <= Modifier.Position.BELOW) {
-      this.position = position;
-    }
-    return this;
-  }
   setFretHandFinger(number) { this.finger = number; return this; }
   setOffsetX(x) { this.x_offset = x; return this; }
   setOffsetY(y) { this.y_offset = y; return this; }
@@ -134,6 +123,7 @@ export class FretHandFinger extends Modifier {
       throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
     }
 
+    this.setRendered();
     const ctx = this.context;
     const start = this.note.getModifierStartXY(this.position, this.index);
     let dot_x = start.x + this.x_shift + this.x_offset;

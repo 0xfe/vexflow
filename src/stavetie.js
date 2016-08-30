@@ -135,6 +135,8 @@ export class StaveTie extends Element {
 
   draw() {
     this.checkContext();
+    this.setRendered();
+
     const first_note = this.first_note;
     const last_note = this.last_note;
 

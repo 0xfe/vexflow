@@ -132,8 +132,10 @@ export class Stem extends Element {
 
   // Render the stem onto the canvas
   draw() {
+    this.setRendered();
     if (this.hide) return;
     const ctx = this.checkContext();
+
     let stem_x;
     let stem_y;
     const stem_direction = this.stem_direction;

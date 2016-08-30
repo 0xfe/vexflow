@@ -432,6 +432,8 @@ VF.Test.Formatter = (function() {
 
     proportionalFormatting: function(options) {
       var debug = options.params.debug;
+      VF.Registry.enableDefaultRegistry(new VF.Registry());
+
       var vf = VF.Test.makeFactory(options, 600, 750);
       var system = vf.System({
         x: 50, width: 500,
@@ -459,6 +461,14 @@ VF.Test.Formatter = (function() {
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
       vf.draw();
+
+      var typeMap = VF.Registry.getDefaultRegistry().index.type;
+      var table = Object.keys(typeMap).map(function (k) {
+        return k + ": " + Object.keys(typeMap[k]).length;
+      });
+
+      // console.log(table);
+      VF.Registry.disableDefaultRegistry();
       ok(true);
     },
 

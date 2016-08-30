@@ -13,7 +13,7 @@ export class GraceNote extends StaveNote {
       glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
       stroke_px: GraceNote.LEDGER_LINE_OFFSET,
     }));
-    this.attrs.type = 'GraceNote';
+    this.setAttribute('type', 'GraceNote');
 
     this.slash = note_struct.slash;
     this.slur = true;
@@ -43,6 +43,7 @@ export class GraceNote extends StaveNote {
 
   draw() {
     super.draw();
+    this.setRendered();
     const ctx = this.context;
     const stem_direction = this.getStemDirection();
 

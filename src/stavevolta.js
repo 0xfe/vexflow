@@ -31,8 +31,11 @@ export class Volta extends StaveModifier {
 
   getCategory() { return Volta.CATEGORY; }
   setShiftY(y) { this.y_shift = y; return this; }
+
   draw(stave, x) {
     const ctx = stave.checkContext();
+    this.setRendered();
+
     let width = stave.width;
     const top_y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     const vert_height = 1.5 * stave.options.spacing_between_lines_px;

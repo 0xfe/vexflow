@@ -80,7 +80,7 @@ export class KeySignature extends StaveModifier {
   // Create a new Key Signature based on a `key_spec`
   constructor(keySpec, cancelKeySpec, alterKeySpec) {
     super();
-    this.attrs.type = 'KeySignature';
+    this.setAttribute('type', 'KeySignature');
 
     this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
     this.setPosition(StaveModifier.Position.BEGIN);
@@ -300,6 +300,7 @@ export class KeySignature extends StaveModifier {
     }
 
     if (!this.formatted) this.format();
+    this.setRendered();
 
     for (let i = 0; i < this.glyphs.length; i++) {
       const glyph = this.glyphs[i];

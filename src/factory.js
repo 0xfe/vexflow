@@ -10,7 +10,11 @@
 
 import { Vex } from './vex';
 import { Accidental } from './accidental';
+import { Articulation } from './articulation';
+import { Annotation } from './annotation';
 import { Formatter } from './formatter';
+import { FretHandFinger } from './frethandfinger';
+import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
@@ -21,6 +25,7 @@ import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
 import { Voice } from './voice';
 import { Beam } from './beam';
+import { Curve } from './curve';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
 import { EasyScore } from './easyscore';
@@ -28,13 +33,7 @@ import { EasyScore } from './easyscore';
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
 
-// Exceptions for this class.
-function X(message, data) {
-  this.name = 'FactoryException';
-  this.message = message;
-  this.data = data;
-  L(this.name + ':', message, data);
-}
+export const X = Vex.MakeException('FactoryError');
 
 function setDefaults(params = {}, defaults) {
   const default_options = defaults.options;
@@ -158,6 +157,70 @@ export class Factory {
     return acc;
   }
 
+  Annotation(params) {
+    params = setDefaults(params, {
+      text: 'p',
+      vJustify: 'below',
+      hJustify: 'center',
+      fontFamily: 'Times',
+      fontSize: 14,
+      fontWeight: 'bold italic',
+      options: {},
+    });
+
+    const annotation = new Annotation(params.text);
+    annotation.setJustification(params.hJustify);
+    annotation.setVerticalJustification(params.vJustify);
+    annotation.setFont(params.fontFamily, params.fontSize, params.fontWeight);
+    annotation.setContext(this.context);
+    return annotation;
+  }
+
+  Articulation(params) {
+    params = setDefaults(params, {
+      type: 'a.',
+      position: 'above',
+      options: {},
+    });
+
+    const articulation = new Articulation(params.type);
+    articulation.setPosition(params.position);
+    articulation.setContext(this.context);
+    return articulation;
+  }
+
+  TextDynamics(params) {
+    params = setDefaults(params, {
+      text: 'p',
+      duration: 'q',
+      dots: 0,
+      line: 0,
+      options: {},
+    });
+
+    const text = new TextDynamics({
+      text: params.text,
+      line: params.line,
+      duration: params.duration,
+      dots: params.dots,
+    });
+    text.setContext(this.context);
+    return text;
+  }
+
+  Fingering(params) {
+    params = setDefaults(params, {
+      number: '0',
+      position: 'left',
+      options: {},
+    });
+
+    const fingering = new FretHandFinger(params.number);
+    fingering.setPosition(params.position);
+    fingering.setContext(this.context);
+    return fingering;
+  }
+
   TickContext() {
     return new TickContext().setContext(this.context);
   }
@@ -214,6 +277,18 @@ export class Factory {
     const beam = new Beam(params.notes, params.options.autoStem).setContext(this.context);
     this.renderQ.push(beam);
     return beam;
+  }
+
+  Curve(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      options: {},
+    });
+
+    const curve = new Curve(params.from, params.to, params.options).setContext(this.context);
+    this.renderQ.push(curve);
+    return curve;
   }
 
   System(params = {}) {

@@ -92,6 +92,7 @@ export class Stroke extends Modifier {
 
   draw() {
     this.checkContext();
+    this.setRendered();
 
     if (!(this.note && (this.index != null))) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");

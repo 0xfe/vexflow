@@ -202,7 +202,7 @@ export class Articulation extends Modifier {
   // `Vex.Flow.articulationCodes` in `tables.js`.
   constructor(type) {
     super();
-    this.attrs.type = 'Articulation';
+    this.setAttribute('type', 'Articulation');
 
     this.note = null;
     this.index = null;
@@ -238,6 +238,8 @@ export class Articulation extends Modifier {
     if (!note || index == null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
     }
+
+    this.setRendered();
 
     const stave = note.getStave();
     const staffSpace = stave.getSpacingBetweenLines();

@@ -8,7 +8,7 @@ export class StaveSection extends StaveModifier {
 
   constructor(section, x, shift_y) {
     super();
-    this.attrs.type = 'StaveSection';
+    this.setAttribute('type', 'StaveSection');
 
     this.setWidth(16);
     this.section = section;
@@ -28,6 +28,7 @@ export class StaveSection extends StaveModifier {
   setShiftY(y) { this.shift_y = y; return this; }
   draw(stave, shift_x) {
     const ctx = stave.checkContext();
+    this.setRendered();
 
     ctx.save();
     ctx.lineWidth = 2;

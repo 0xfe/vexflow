@@ -10,13 +10,7 @@ import { Parser } from './parser';
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 function L(...args) { if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args); }
 
-export class X extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
-    this.name = 'EasyScore';
-  }
-}
+export const X = Vex.MakeException('EasyScoreError');
 
 class Grammar {
   constructor(builder) {
@@ -174,6 +168,7 @@ class Builder {
   getElements() { return this.elements; }
 
   resetPiece() {
+    L('resetPiece');
     this.piece = {
       chord: [],
       duration: this.rollingDuration,

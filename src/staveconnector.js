@@ -49,9 +49,24 @@ export class StaveConnector extends Element {
     };
   }
 
+  static get typeString() {
+    return {
+      singleRight: StaveConnector.type.SINGLE_RIGHT,
+      singleLeft: StaveConnector.type.SINGLE_LEFT,
+      single: StaveConnector.type.SINGLE,
+      double: StaveConnector.type.DOUBLE,
+      brace: StaveConnector.type.BRACE,
+      bracket: StaveConnector.type.BRACKET,
+      boldDoubleLeft: StaveConnector.type.BOLD_DOUBLE_LEFT,
+      boldDoubleRight: StaveConnector.type.BOLD_DOUBLE_RIGHT,
+      thinDouble: StaveConnector.type.THIN_DOUBLE,
+      none: StaveConnector.type.NONE,
+    };
+  }
+
   constructor(top_stave, bottom_stave) {
     super();
-    this.attrs.type = 'StaveConnector';
+    this.setAttribute('type', 'StaveConnector');
 
     this.thickness = Flow.STAVE_LINE_THICKNESS;
     this.width = 3;
@@ -70,6 +85,10 @@ export class StaveConnector extends Element {
   }
 
   setType(type) {
+    type = typeof(type) === 'string'
+      ? StaveConnector.typeString[type]
+      : type;
+
     if (type >= StaveConnector.type.SINGLE_RIGHT && type <= StaveConnector.type.NONE) {
       this.type = type;
     }
@@ -99,6 +118,7 @@ export class StaveConnector extends Element {
 
   draw() {
     const ctx = this.checkContext();
+    this.setRendered();
 
     let topY = this.top_stave.getYForLine(0);
     let botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +

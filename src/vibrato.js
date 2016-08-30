@@ -71,6 +71,7 @@ export class Vibrato extends Modifier {
       throw new Vex.RERR('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
     }
 
+    this.setRendered();
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
 
     const vx = start.x + this.x_shift;

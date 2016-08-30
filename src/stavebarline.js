@@ -24,7 +24,7 @@ export class Barline extends StaveModifier {
    */
   constructor(type) {
     super();
-    this.attrs.type = 'Barline';
+    this.setAttribute('type', 'Barline');
     this.thickness = Flow.STAVE_LINE_THICKNESS;
 
     const TYPE = Barline.type;
@@ -61,6 +61,8 @@ export class Barline extends StaveModifier {
   // Draw barlines
   draw(stave) {
     stave.checkContext();
+    this.setRendered();
+
     switch (this.type) {
       case Barline.type.SINGLE:
         this.drawVerticalBar(stave, this.x, false);
