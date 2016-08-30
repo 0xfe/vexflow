@@ -645,15 +645,14 @@ export class Formatter {
 
     let shift = 0;
     let carryShift = 0;
-    let lastContext = null;
+    let context = null;
     let lastShift = 0;
     this.tickContexts.list.forEach((tick, index, list) => {
       L('tuning index', index);
       L('carry shift', carryShift);
-      const context = this.tickContexts.map[tick];
+      context = this.tickContexts.map[tick];
       const prevContext = (index > 0) ? this.tickContexts.map[list[index - 1]] : null;
       const nextContext = (index < list.length - 1) ? this.tickContexts.map[list[index + 1]] : null;
-      lastContext = context;
 
       move(context, prevContext, nextContext, shift);
 
@@ -680,7 +679,7 @@ export class Formatter {
       carryShift = cost - shift;
     });
 
-    move(lastContext, null, null, lastShift);
+    move(context, null, null, lastShift);
     return this.evaluate();
   }
 
