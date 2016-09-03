@@ -26,12 +26,33 @@ export class Annotation extends Modifier {
       CENTER_STEM: 4,
     };
   }
+
+  static get JustifyString() {
+    return {
+      left: Annotation.Justify.LEFT,
+      right: Annotation.Justify.RIGHT,
+      center: Annotation.Justify.CENTER,
+      centerStem: Annotation.Justify.CENTER_STEM,
+    };
+  }
+
   static get VerticalJustify() {
     return {
       TOP: 1,
       CENTER: 2,
       BOTTOM: 3,
       CENTER_STEM: 4,
+    };
+  }
+
+  static get VerticalJustifyString() {
+    return {
+      above: Annotation.VerticalJustify.TOP,
+      top: Annotation.VerticalJustify.TOP,
+      below: Annotation.VerticalJustify.BOTTOM,
+      bottom: Annotation.VerticalJustify.BOTTOM,
+      center: Annotation.VerticalJustify.CENTER,
+      centerStem: Annotation.VerticalJustify.CENTER_STEM,
     };
   }
 
@@ -92,15 +113,19 @@ export class Annotation extends Modifier {
   // Set vertical position of text (above or below stave). `just` must be
   // a value in `Annotation.VerticalJustify`.
   setVerticalJustification(just) {
-    this.vert_justification = just;
+    this.vert_justification = typeof(just) === 'string'
+      ? Annotation.VerticalJustifyString[just]
+      : just;
     return this;
   }
 
   // Get and set horizontal justification. `justification` is a value in
   // `Annotation.Justify`.
   getJustification() { return this.justification; }
-  setJustification(justification) {
-    this.justification = justification;
+  setJustification(just) {
+    this.justification = typeof(just) === 'string'
+      ? Annotation.JustifyString[just]
+      : just;
     return this;
   }
 

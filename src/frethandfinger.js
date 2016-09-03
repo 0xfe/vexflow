@@ -112,17 +112,6 @@ export class FretHandFinger extends Modifier {
     };
   }
   getCategory() { return FretHandFinger.CATEGORY; }
-  getNote() { return this.note; }
-  setNote(note) { this.note = note; return this; }
-  getIndex() { return this.index; }
-  setIndex(index) { this.index = index; return this; }
-  getPosition() { return this.position; }
-  setPosition(position) {
-    if (position >= Modifier.Position.LEFT && position <= Modifier.Position.BELOW) {
-      this.position = position;
-    }
-    return this;
-  }
   setFretHandFinger(number) { this.finger = number; return this; }
   setOffsetX(x) { this.x_offset = x; return this; }
   setOffsetY(y) { this.y_offset = y; return this; }
