@@ -15,6 +15,7 @@ Vex.Flow.Test.EasyScore = (function() {
       QUnit.test("Dots", VFT.EasyScore.dots);
       QUnit.test("Options", VFT.EasyScore.options);
       VFT.runTests("Draw Basic", VFT.EasyScore.drawBasicTest);
+      VFT.runTests("Draw Accidentals", VFT.EasyScore.drawAccidentalsTest);
       VFT.runTests("Draw Beams", VFT.EasyScore.drawBeamsTest);
       VFT.runTests("Draw Tuplets", VFT.EasyScore.drawTupletsTest);
       VFT.runTests("Draw Options", VFT.EasyScore.drawOptionsTest);
@@ -138,6 +139,30 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [ voice(notes('c#3/q, cn3/q, bb3/q, d##3/q', {clef: 'bass'})) ]
+      }).addClef('bass');
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+
+      vf.draw();
+      expect(0);
+    },
+
+    drawAccidentalsTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 350);
+      var score = vf.EasyScore();
+      var system = vf.System();
+
+      var voice = score.voice.bind(score);
+      var notes = score.notes.bind(score);
+
+      system.addStave({
+        voices: [
+          voice(notes('(cbbs4 ebb4 gbss4)/q, cbs4/q, cdb4/q/r, cd4/q', {stem: 'down'})),
+          voice(notes('c++-5/h., c++5/q', {stem: 'up'})),
+        ]
+      }).addClef('treble');
+
+      system.addStave({
+        voices: [ voice(notes('c+-3/q, c+3/q, bb3/q, d##3/q', {clef: 'bass'})) ]
       }).addClef('bass');
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
