@@ -32,6 +32,8 @@ import { GraceNoteGroup } from './gracenotegroup';
 import { EasyScore } from './easyscore';
 import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
+import { TabNote } from './tabnote';
+import { TabStave } from './tabstave';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -128,6 +130,23 @@ export class Factory {
     return stave;
   }
 
+  TabStave(params) {
+    params = setDefaults(params, {
+      x: 0,
+      y: 0,
+      width: this.options.renderer.width - this.space(1),
+      options: {
+        spacing_between_lines_px: this.options.stave.space * 1.3,
+      },
+    });
+
+    const stave = new TabStave(params.x, params.y, params.width, params.options);
+    this.staves.push(stave);
+    stave.setContext(this.context);
+    this.stave = stave;
+    return stave;
+  }
+
   StaveNote(noteStruct) {
     const note = new StaveNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
@@ -149,6 +168,14 @@ export class Factory {
     clefNote.setContext(this.context);
     this.renderQ.push(clefNote);
     return clefNote;
+  }
+
+  TabNote(noteStruct) {
+    const note = new TabNote(noteStruct);
+    if (this.stave) note.setStave(this.stave);
+    note.setContext(this.context);
+    this.renderQ.push(note);
+    return note;
   }
 
   GraceNote(noteStruct) {
@@ -290,10 +317,12 @@ export class Factory {
       notes: [],
       options: {
         autoStem: false,
+        secondaryBeamBreaks: [],
       },
     });
 
     const beam = new Beam(params.notes, params.options.autoStem).setContext(this.context);
+    beam.breakSecondaryAt(params.options.secondaryBeamBreaks);
     this.renderQ.push(beam);
     return beam;
   }
