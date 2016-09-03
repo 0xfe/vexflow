@@ -275,12 +275,15 @@ function setId({ id }, note) {
   note.setAttribute('id', id);
 }
 
+
 function setClass(options, note) {
   if (!options.class) return;
 
+  const commaSeparatedRegex = /\s*,\s*/;
+
   options.class
-    .split(',')
-    .forEach(className => note.addClass(className.trim()));
+    .split(commaSeparatedRegex)
+    .forEach(className => note.addClass(className));
 }
 
 export class EasyScore {
