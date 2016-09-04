@@ -101,12 +101,12 @@ export class StemmableNote extends Note {
       this.stem.setExtension(this.getStemExtension());
     }
 
+    this.reset();
     if (this.flag) {
       this.buildFlag();
     }
 
     this.beam = null;
-    this.reset();
     if (this.preFormatted) {
       this.preFormat();
     }
