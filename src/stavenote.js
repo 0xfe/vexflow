@@ -426,6 +426,8 @@ export class StaveNote extends StemmableNote {
 
   // Calculates and stores the properties for each key in the note
   calculateKeyProps() {
+    this.keyProps = [];
+
     let lastLine = null;
     for (let i = 0; i < this.keys.length; ++i) {
       const key = this.keys[i];
@@ -483,6 +485,30 @@ export class StaveNote extends StemmableNote {
       lastLine = key.line;
     });
     this.keyProps.sort((a, b) => a.line - b.line);
+  }
+
+  setStemDirection(direction) {
+    if (!direction) direction = Stem.UP;
+    if (direction !== Stem.UP && direction !== Stem.DOWN) {
+      throw new Vex.RERR('BadArgument', `Invalid stem direction: ${direction}`);
+    }
+
+    this.stem_direction = direction;
+    if (this.stem) {
+      this.stem.setDirection(direction);
+      this.stem.setExtension(this.getStemExtension());
+    }
+
+    this.calculateKeyProps();
+    if (this.flag) this.buildFlag();
+    this.buildNoteHeads();
+
+    this.beam = null;
+    if (this.preFormatted) {
+      this.preFormat();
+    }
+
+    return this;
   }
 
   // Get the `BoundingBox` for the entire note
