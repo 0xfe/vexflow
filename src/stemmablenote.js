@@ -106,6 +106,7 @@ export class StemmableNote extends Note {
     }
 
     this.beam = null;
+    this.reset();
     if (this.preFormatted) {
       this.preFormat();
     }

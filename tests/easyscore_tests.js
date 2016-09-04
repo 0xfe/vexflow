@@ -15,6 +15,7 @@ Vex.Flow.Test.EasyScore = (function() {
       QUnit.test("Dots", VFT.EasyScore.dots);
       QUnit.test("Options", VFT.EasyScore.options);
       VFT.runTests("Draw Basic", VFT.EasyScore.drawBasicTest);
+      VFT.runTests("Draw Accidentals", VFT.EasyScore.drawAccidentalsTest);
       VFT.runTests("Draw Beams", VFT.EasyScore.drawBeamsTest);
       VFT.runTests("Draw Tuplets", VFT.EasyScore.drawTupletsTest);
       VFT.runTests("Draw Options", VFT.EasyScore.drawOptionsTest);
@@ -31,8 +32,15 @@ Vex.Flow.Test.EasyScore = (function() {
 
     accidentals: function(assert) {
       var score = new VF.EasyScore();
-      var mustPass = ['c3', 'c##3, cb3', 'Cn3', 'f3//x', '(c##3 cbb3 cn3), cb3'];
-      var mustFail = ['ct3', 'cd7', '(cq cbb3 cn3), cb3', '(cd7 cbb3 cn3), cb3'];
+      var mustPass = [
+        'c3', 'c##3, cb3', 'Cn3', 'f3//x', '(c##3 cbb3 cn3), cb3',
+        'cbbs7', 'cbb7', 'cbss7', 'cbs7', 'cb7', 'cdb7', 'cd7', 'c##7', 'c#7', 'cn7', 'c++-7', 'c++7', 'c+-7', 'c+7',
+        '(cbs3 bbs3 dbs3), ebs3', '(cd7 cbb3 cn3), cb3',
+      ];
+      var mustFail = [
+        'ct3', 'cdbb7', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3',
+        'cbbbs7', 'cbbss7', 'cbsss7', 'csbs7', 'cddb7', 'cddbb7', 'cdd7', 'c##b7', 'c#bs7', 'cnb#7', 'c+#+b-d7', 'c+--7', 'c++--7', 'c+++7',
+      ];
 
       mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
       mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
@@ -41,7 +49,7 @@ Vex.Flow.Test.EasyScore = (function() {
     durations: function(assert) {
       var score = new VF.EasyScore();
       var mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
-      var mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cd7 cbb3 cn3), cb3'];
+      var mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3'];
 
       mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });
       mustFail.forEach(function(line) { assert.equal(score.parse(line).success, false, line); });
@@ -131,6 +139,30 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [ voice(notes('c#3/q, cn3/q, bb3/q, d##3/q', {clef: 'bass'})) ]
+      }).addClef('bass');
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+
+      vf.draw();
+      expect(0);
+    },
+
+    drawAccidentalsTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 350);
+      var score = vf.EasyScore();
+      var system = vf.System();
+
+      var voice = score.voice.bind(score);
+      var notes = score.notes.bind(score);
+
+      system.addStave({
+        voices: [
+          voice(notes('(cbbs4 ebb4 gbss4)/q, cbs4/q, cdb4/q/r, cd4/q', {stem: 'down'})),
+          voice(notes('c++-5/h., c++5/q', {stem: 'up'})),
+        ]
+      }).addClef('treble');
+
+      system.addStave({
+        voices: [ voice(notes('c+-3/q, c+3/q, bb3/q, d##3/q', {clef: 'bass'})) ]
       }).addClef('bass');
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 

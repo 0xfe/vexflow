@@ -322,7 +322,6 @@ export class StaveNote extends StemmableNote {
     });
 
     this.calculateKeyProps();
-
     this.buildStem();
 
     // Set the stem direction
@@ -331,7 +330,11 @@ export class StaveNote extends StemmableNote {
     } else {
       this.setStemDirection(noteStruct.stem_direction);
     }
+    this.reset();
+  }
 
+  reset() {
+    super.reset();
     this.buildFlag();
     this.buildNoteHeads();
 
