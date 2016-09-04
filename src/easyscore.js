@@ -131,7 +131,7 @@ class Grammar {
   SVAL()        { return { token: "['][^']*[']" }; }
   NOTENAME()    { return { token: '[a-gA-G]' }; }
   OCTAVE()      { return { token: '[0-9]+' }; }
-  ACCIDENTALS() { return { token: '[b#n]+' }; }
+  ACCIDENTALS() { return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+' }; }
   DURATIONS()   { return { token: '[0-9whq]+' }; }
   TYPES()       { return { token: '[rRsSxX]' }; }
   LPAREN()      { return { token: '[(]' }; }
@@ -291,6 +291,16 @@ function setClass(options, note) {
 export class EasyScore {
   constructor(options = {}) {
     this.setOptions(options);
+    this.defaults = {
+      clef: 'treble',
+      time: '4/4',
+      stem: 'auto',
+    };
+  }
+
+  set(defaults) {
+    Object.assign(this.defaults, defaults);
+    return this;
   }
 
   setOptions(options) {
@@ -302,6 +312,7 @@ export class EasyScore {
         setClass,
         Articulation.easyScoreHook,
       ],
+      throwOnError: false,
     }, options);
 
     this.factory = this.options.factory;
@@ -309,6 +320,7 @@ export class EasyScore {
     this.grammar = new Grammar(this.builder);
     this.parser = new Parser(this.grammar);
     this.options.commitHooks.forEach(commitHook => this.addCommitHook(commitHook));
+    return this;
   }
 
   setContext(context) {
@@ -318,7 +330,11 @@ export class EasyScore {
 
   parse(line, options = {}) {
     this.builder.reset(options);
-    return this.parser.parse(line);
+    const result = this.parser.parse(line);
+    if (!result.success && this.options.throwOnError) {
+      throw new X('Error parsing line: ' + line, result);
+    }
+    return result;
   }
 
   beam(notes, options = {}) {
@@ -332,11 +348,13 @@ export class EasyScore {
   }
 
   notes(line, options = {}) {
+    options = Object.assign({ clef: this.defaults.clef, stem: this.defaults.stem }, options);
     this.parse(line, options);
     return this.builder.getElements().notes;
   }
 
   voice(notes, voiceOptions) {
+    voiceOptions = Object.assign({ time: this.defaults.time }, voiceOptions);
     return this.factory.Voice(voiceOptions).addTickables(notes);
   }
 
