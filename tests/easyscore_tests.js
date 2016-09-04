@@ -124,7 +124,7 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [
-          voice(notes('(d4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
+          voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
           voice(notes('c#5/h., c5/q', {stem: 'up'})),
         ]
       }).addClef('treble');
