@@ -19,6 +19,8 @@ import { Glyph } from './glyph';
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
 function L(...args) { if (Accidental.DEBUG) Vex.L('Vex.Flow.Accidental', args); }
 
+const getGlyphWidth = glyph => glyph.getMetrics().width;
+
 // An `Accidental` inherits from `Modifier`, and is formatted within a
 // `ModifierContext`.
 export class Accidental extends Modifier {
@@ -26,8 +28,9 @@ export class Accidental extends Modifier {
 
   // Arrange accidentals inside a ModifierContext.
   static format(accidentals, state) {
-    const leftShift = state.left_shift;
-    const accidentalSpacing = 2;
+    const noteheadAccidentalPadding = 1;
+    const leftShift = state.left_shift + noteheadAccidentalPadding;
+    const accidentalSpacing = 3;
 
     // If there are no accidentals, we needn't format their positions
     if (!accidentals || accidentals.length === 0) return;
@@ -413,6 +416,9 @@ export class Accidental extends Modifier {
 
       // Length of stroke across heads above or below the stave.
       stroke_px: 3,
+
+      // Padding between accidental and parentheses on each side
+      cautionaryParenPadding: 2,
     };
 
     this.accidental = Flow.accidentalCodes(this.type);
@@ -425,11 +431,31 @@ export class Accidental extends Modifier {
     this.parenLeft = null;
     this.parenRight = null;
 
-    // Initial width is set from table.
-    this.setWidth(this.accidental.width);
+    this.reset();
+  }
+
+  reset() {
+    const fontScale = this.render_options.font_scale;
+    this.glyph = new Glyph(this.accidental.code, fontScale);
+    this.glyph.setOriginX(1.0);
+
+    if (this.cautionary) {
+      this.parenLeft = new Glyph(Flow.accidentalCodes('{').code, fontScale);
+      this.parenRight = new Glyph(Flow.accidentalCodes('}').code, fontScale);
+      this.parenLeft.setOriginX(1.0);
+      this.parenRight.setOriginX(1.0);
+    }
   }
 
   getCategory() { return Accidental.CATEGORY; }
+
+  getWidth() {
+    const parenWidth = this.cautionary
+      ? getGlyphWidth(this.parenLeft) + getGlyphWidth(this.parenRight)
+      : 0;
+
+    return getGlyphWidth(this.glyph) + parenWidth;
+  }
 
   // Attach this accidental to `note`, which must be a `StaveNote`.
   setNote(note) {
@@ -442,7 +468,7 @@ export class Accidental extends Modifier {
     // Accidentals attached to grace notes are rendered smaller.
     if (this.note.getCategory() === 'gracenotes') {
       this.render_options.font_scale = 25;
-      this.setWidth(this.accidental.gracenote_width);
+      this.reset();
     }
   }
 
@@ -450,18 +476,7 @@ export class Accidental extends Modifier {
   setAsCautionary() {
     this.cautionary = true;
     this.render_options.font_scale = 28;
-    this.parenLeft = Flow.accidentalCodes('{');
-    this.parenRight = Flow.accidentalCodes('}');
-    const widthAdjust = (this.type === '##' || this.type === 'bb') ? 6 : 4;
-
-    // Make sure `width` accomodates for parentheses.
-    this.setWidth(
-      this.parenLeft.width
-      + this.accidental.width
-      + this.parenRight.width
-      - widthAdjust
-    );
-
+    this.reset();
     return this;
   }
 
@@ -470,9 +485,9 @@ export class Accidental extends Modifier {
     const {
       context,
       type, position, note, index, cautionary,
-      x_shift, y_shift, width,
-      accidental, parenLeft, parenRight,
-      render_options: { font_scale },
+      x_shift, y_shift,
+      glyph, parenLeft, parenRight,
+      render_options: { cautionaryParenPadding },
     } = this;
 
     this.checkContext();
@@ -483,24 +498,21 @@ export class Accidental extends Modifier {
 
     // Figure out the start `x` and `y` coordinates for note and index.
     const start = note.getModifierStartXY(position, index);
-    let accX = ((start.x + x_shift) - width);
+    let accX = start.x + x_shift;
     const accY = start.y + y_shift;
     L('Rendering: ', type, accX, accY);
 
-    const renderGlyphToContext = Glyph.renderGlyph.bind(null, context);
-
     if (!cautionary) {
-      // Render the accidental alone.
-      renderGlyphToContext(accX, accY, font_scale, accidental.code);
+      glyph.render(context, accX, accY);
     } else {
       // Render the accidental in parentheses.
-      accX += 3;
-      renderGlyphToContext(accX, accY, font_scale, parenLeft.code);
-      accX += 2;
-      renderGlyphToContext(accX, accY, font_scale, accidental.code);
-      accX += accidental.width - 2;
-      if (type === '##' || type === 'bb') accX -= 2;
-      renderGlyphToContext(accX, accY, font_scale, parenRight.code);
+      parenRight.render(context, accX, accY);
+      accX -= getGlyphWidth(parenRight);
+      accX -= cautionaryParenPadding;
+      glyph.render(context, accX, accY);
+      accX -= getGlyphWidth(glyph);
+      accX -= cautionaryParenPadding;
+      parenLeft.render(context, accX, accY);
     }
 
     this.setRendered();

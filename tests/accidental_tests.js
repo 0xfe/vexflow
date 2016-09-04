@@ -77,7 +77,7 @@ Vex.Flow.Test.Accidental = (function() {
         Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
         ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function(accid, index) {
-          ok(accid.width > 0, 'Accidental ' + index + ' has set width');
+          ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
         });
       });
 
@@ -132,7 +132,7 @@ Vex.Flow.Test.Accidental = (function() {
         Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
         ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function(accid, index) {
-          ok(accid.width > 0, 'Accidental ' + index + ' has set width');
+          ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
         });
       });
 
@@ -178,7 +178,7 @@ Vex.Flow.Test.Accidental = (function() {
         Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
         ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function(accid, index) {
-          ok(accid.width > 0, 'Accidental ' + index + ' has set width');
+          ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
         });
       });
 
@@ -309,7 +309,7 @@ Vex.Flow.Test.Accidental = (function() {
         Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
         assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function(accid, index) {
-          assert.ok(accid.width > 0, 'Accidental ' + index + ' has set width');
+          assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
         });
       });
 
@@ -676,8 +676,8 @@ Vex.Flow.Test.Accidental = (function() {
 
       notes.forEach(function(n, i) {
         assert.ok(n.getAccidentals().length > 0, 'Note ' + i + ' has accidentals');
-        n.getAccidentals().forEach(function(a, i) {
-          assert.ok(a.width > 0, 'Accidental ' + i + ' has set width');
+        n.getAccidentals().forEach(function(accid, i) {
+          assert.ok(accid.getWidth() > 0, 'Accidental ' + i + ' has set width');
         });
       });
 

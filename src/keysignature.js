@@ -27,8 +27,8 @@ export class KeySignature extends StaveModifier {
         below: 7,
       },
       'n': {
-        above: 3,
-        below: -1,
+        above: 4,
+        below: 1,
       },
       '##': {
         above: 6,
@@ -100,7 +100,7 @@ export class KeySignature extends StaveModifier {
     const glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
 
     // Determine spacing between current accidental and the next accidental
-    let extraWidth = 0;
+    let extraWidth = 1;
     if (acc.type === 'n' && nextAcc) {
       const spacing = KeySignature.accidentalSpacing[nextAcc.type];
       if (spacing) {
@@ -114,7 +114,7 @@ export class KeySignature extends StaveModifier {
     this.glyphs.push(glyph);
 
     const xPosition = this.xPositions[this.xPositions.length - 1];
-    const glyphWidth = accGlyphData.width + extraWidth;
+    const glyphWidth = glyph.getMetrics().width + extraWidth;
     // Store the next accidental's x position
     this.xPositions.push(xPosition + glyphWidth);
     // Expand size of key signature
