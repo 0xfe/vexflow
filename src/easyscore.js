@@ -130,7 +130,7 @@ class Grammar {
   SVAL()        { return { token: "['][^']*[']" }; }
   NOTENAME()    { return { token: '[a-gA-G]' }; }
   OCTAVE()      { return { token: '[0-9]+' }; }
-  ACCIDENTALS() { return { token: '[b#n]+' }; }
+  ACCIDENTALS() { return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+' }; }
   DURATIONS()   { return { token: '[0-9whq]+' }; }
   TYPES()       { return { token: '[rRsSxX]' }; }
   LPAREN()      { return { token: '[(]' }; }
