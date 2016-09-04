@@ -452,7 +452,12 @@ export class Accidental extends Modifier {
 
   getWidth() {
     const parenWidth = this.cautionary
-      ? getGlyphWidth(this.parenLeft) + getGlyphWidth(this.parenRight)
+      ? (
+        getGlyphWidth(this.parenLeft) +
+        getGlyphWidth(this.parenRight) +
+        this.render_options.cautionaryParenLeftPadding +
+        this.render_options.cautionaryParenRightPadding
+      )
       : 0;
 
     return getGlyphWidth(this.glyph) + parenWidth;
