@@ -341,7 +341,7 @@ export class StaveNote extends StemmableNote {
     if (this.stave) {
       this.note_heads.forEach(head => head.setStave(this.stave));
     }
-   }
+  }
 
   getCategory() { return StaveNote.CATEGORY; }
 
