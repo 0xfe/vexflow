@@ -6,6 +6,7 @@
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
 import { Parser } from './parser';
+import { Articulation } from './articulation';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 function L(...args) { if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args); }
@@ -67,8 +68,8 @@ class Grammar {
   SINGLENOTE() {
     return {
       expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
-      run: (state) => this.builder.addSingleNote(
-        state.matches[0], state.matches[1], state.matches[2]),
+      run: (state) =>
+        this.builder.addSingleNote(state.matches[0], state.matches[1], state.matches[2]),
     };
   }
   ACCIDENTAL() {
@@ -148,6 +149,7 @@ class Grammar {
 class Builder {
   constructor(factory) {
     this.factory = factory;
+    this.commitHooks = [];
     this.reset();
   }
 
@@ -165,7 +167,13 @@ class Builder {
     Object.assign(this.options, options);
   }
 
+  getFactory() { return this.factory; }
+
   getElements() { return this.elements; }
+
+  addCommitHook(commitHook) {
+    this.commitHooks.push(commitHook);
+  }
 
   resetPiece() {
     L('resetPiece');
@@ -214,7 +222,7 @@ class Builder {
       this.addSingleNote(notes[0]);
     } else {
       notes.forEach(n => {
-        if (n) this.addNote(n[0], n[1], n[2]);
+        if (n) this.addNote(...n);
       });
     }
     L('endChord');
@@ -222,44 +230,62 @@ class Builder {
 
   commitPiece() {
     L('commitPiece');
-    if (!this.factory) return;
-    const options = this.piece.options;
-    const stem = options.stem || this.options.stem;
-    const clef = this.options.clef;
+    const { factory } = this;
 
+    if (!factory) return;
+
+    const options = Object.assign({}, this.options, this.piece.options);
+    const { stem, clef } = options;
     const autoStem = stem.toLowerCase() === 'auto';
-    const stemDirection = !autoStem &&
-      (stem.toLowerCase() === 'up') ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
+    const stemDirection = !autoStem && stem.toLowerCase() === 'up'
+      ? StaveNote.STEM_UP
+      : StaveNote.STEM_DOWN;
 
     // Build StaveNotes.
-    const keys = this.piece.chord.map(note => note.key + '/' + note.octave);
-    const note = this.factory.StaveNote({ keys,
-      duration: this.piece.duration,
-      dots: this.piece.dots,
-      auto_stem: autoStem,
-      type: this.piece.type,
+    const { chord, duration, dots, type } = this.piece;
+    const keys = chord.map(note => note.key + '/' + note.octave);
+    const note = factory.StaveNote({
+      keys,
+      duration,
+      dots,
+      type,
       clef,
+      auto_stem: autoStem,
     });
     if (!autoStem) note.setStemDirection(stemDirection);
 
     // Attach accidentals.
-    const accids = this.piece.chord.map(note => note.accid || null);
+    const accids = chord.map(note => note.accid || null);
     accids.forEach((accid, i) => {
-      if (accid) note.addAccidental(i, this.factory.Accidental({ type: accid }));
+      if (accid) note.addAccidental(i, factory.Accidental({ type: accid }));
     });
 
     // Attach dots.
-    for (let i = 0; i < this.piece.dots; i++) note.addDotToAll();
+    for (let i = 0; i < dots; i++) note.addDotToAll();
 
-    // Process note options.
-    if (options.id !== undefined) {
-      note.setAttribute('id', options.id);
-    }
+    this.commitHooks.forEach(fn => fn(options, note, this));
 
     this.elements.notes.push(note);
     this.elements.accidentals.concat(accids);
     this.resetPiece();
   }
+}
+
+function setId({ id }, note) {
+  if (id === undefined) return;
+
+  note.setAttribute('id', id);
+}
+
+
+function setClass(options, note) {
+  if (!options.class) return;
+
+  const commaSeparatedRegex = /\s*,\s*/;
+
+  options.class
+    .split(commaSeparatedRegex)
+    .forEach(className => note.addClass(className));
 }
 
 export class EasyScore {
@@ -271,12 +297,18 @@ export class EasyScore {
     this.options = Object.assign({
       factory: null,
       builder: null,
+      commitHooks: [
+        setId,
+        setClass,
+        Articulation.easyScoreHook,
+      ],
     }, options);
 
     this.factory = this.options.factory;
     this.builder = this.options.builder || new Builder(this.factory);
     this.grammar = new Grammar(this.builder);
     this.parser = new Parser(this.grammar);
+    this.options.commitHooks.forEach(commitHook => this.addCommitHook(commitHook));
   }
 
   setContext(context) {
@@ -306,5 +338,9 @@ export class EasyScore {
 
   voice(notes, voiceOptions) {
     return this.factory.Voice(voiceOptions).addTickables(notes);
+  }
+
+  addCommitHook(commitHook) {
+    return this.builder.addCommitHook(commitHook);
   }
 }

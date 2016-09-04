@@ -152,9 +152,9 @@ export class Factory {
       options: {},
     });
 
-    const acc = new Accidental(params.type);
-    acc.setContext(this.context);
-    return acc;
+    const accid = new Accidental(params.type);
+    accid.setContext(this.context);
+    return accid;
   }
 
   Annotation(params) {
