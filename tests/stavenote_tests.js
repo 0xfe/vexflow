@@ -13,6 +13,7 @@ VF.Test.StaveNote = (function() {
       test('Tick - New API', StaveNote.ticksNewApi);
       test('Stem', StaveNote.stem);
       test('Automatic Stem Direction', StaveNote.autoStem);
+      test('Displacement after calling setStemDirection', StaveNote.setStemDirectionDisplacement);
       test('StaveLine', StaveNote.staveLine);
       test('Width', StaveNote.width);
       test('TickContext', StaveNote.tickContext);
@@ -154,6 +155,24 @@ VF.Test.StaveNote = (function() {
         var note = new VF.StaveNote({ keys: keys, auto_stem: true, duration: '8' });
         equal(note.getStemDirection(), expectedStemDirection, 'Stem must be' + (expectedStemDirection === VF.StaveNote.STEM_UP ? 'up' : 'down'));
       });
+    },
+
+    setStemDirectionDisplacement: function() {
+      function getDisplacements(note) {
+        return note.note_heads.map(function(notehead) {
+          return notehead.isDisplaced();
+        })
+      };
+
+      var stemUpDisplacements = [false, true, false];
+      var stemDownDisplacements =  [true, false, false];
+
+      var note = new VF.StaveNote({ keys: ['c/5', 'd/5', 'g/5'], stem_direction: VF.Stem.UP, duration: '4' });
+      deepEqual(getDisplacements(note), stemUpDisplacements);
+      note.setStemDirection(VF.Stem.DOWN);
+      deepEqual(getDisplacements(note), stemDownDisplacements);
+      note.setStemDirection(VF.Stem.UP);
+      deepEqual(getDisplacements(note), stemUpDisplacements);
     },
 
     staveLine: function() {
