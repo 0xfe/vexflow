@@ -198,7 +198,7 @@ export class Articulation extends Modifier {
     return true;
   }
 
-  static easyScoreHook({ articulations }, note, factory) {
+  static easyScoreHook({ articulations }, note, builder) {
     if (!articulations) return;
 
     const articNameToCode = {
@@ -212,7 +212,7 @@ export class Articulation extends Modifier {
       .map(([name, position]) => {
         const artic = { type: articNameToCode[name] };
         if (position) artic.position = Modifier.PositionString[position];
-        return factory.Articulation(artic);
+        return builder.getFactory().Articulation(artic);
       })
       .map(artic => note.addModifier(0, artic));
   }

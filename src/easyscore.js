@@ -167,6 +167,8 @@ class Builder {
     Object.assign(this.options, options);
   }
 
+  getFactory() { return this.factory; }
+
   getElements() { return this.elements; }
 
   addCommitHook(commitHook) {
@@ -261,7 +263,7 @@ class Builder {
     // Attach dots.
     for (let i = 0; i < dots; i++) note.addDotToAll();
 
-    this.commitHooks.forEach(fn => fn(options, note, factory));
+    this.commitHooks.forEach(fn => fn(options, note, this));
 
     this.elements.notes.push(note);
     this.elements.accidentals.concat(accids);
