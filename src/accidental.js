@@ -418,8 +418,8 @@ export class Accidental extends Modifier {
       stroke_px: 3,
 
       // Padding between accidental and parentheses on each side
-      cautionaryParenLeftPadding: 2,
-      cautionaryParenRightPadding: 1,
+      parenLeftPadding: 2,
+      parenRightPadding: 2,
     };
 
     this.accidental = Flow.accidentalCodes(this.type);
@@ -455,8 +455,8 @@ export class Accidental extends Modifier {
       ? (
         getGlyphWidth(this.parenLeft) +
         getGlyphWidth(this.parenRight) +
-        this.render_options.cautionaryParenLeftPadding +
-        this.render_options.cautionaryParenRightPadding
+        this.render_options.parenLeftPadding +
+        this.render_options.parenRightPadding
       )
       : 0;
 
@@ -493,7 +493,7 @@ export class Accidental extends Modifier {
       type, position, note, index, cautionary,
       x_shift, y_shift,
       glyph, parenLeft, parenRight,
-      render_options: { cautionaryParenLeftPadding, cautionaryParenRightPadding },
+      render_options: { parenLeftPadding, parenRightPadding },
     } = this;
 
     this.checkContext();
@@ -514,10 +514,11 @@ export class Accidental extends Modifier {
       // Render the accidental in parentheses.
       parenRight.render(context, accX, accY);
       accX -= getGlyphWidth(parenRight);
-      accX -= cautionaryParenRightPadding;
+      accX -= parenRightPadding;
+      accX -= this.accidental.parenRightPaddingAdjustment;
       glyph.render(context, accX, accY);
       accX -= getGlyphWidth(glyph);
-      accX -= cautionaryParenLeftPadding;
+      accX -= parenLeftPadding;
       parenLeft.render(context, accX, accY);
     }
 

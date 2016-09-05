@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
+/* eslint-disable key-spacing */
+
 import { Vex } from './vex';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
@@ -273,22 +275,22 @@ Flow.articulationCodes.articulations = {
 Flow.accidentalCodes = acc => Flow.accidentalCodes.accidentals[acc];
 
 Flow.accidentalCodes.accidentals = {
-  '#': { code: 'v18' },
-  '##': { code: 'v7f' },
-  'b': { code: 'v44' },
-  'bb': { code: 'v26' },
-  'n': { code: 'v4e' },
-  '{': { code: 'v9c' },
-  '}': { code: 'v84' },
-  'db': { code: 'v9e' },
-  'd': { code: 'vab' },
-  'bbs': { code: 'v90' },
-  '++': { code: 'v51' },
-  '+': { code: 'v78' },
-  '+-': { code: 'v8d' },
-  '++-': { code: 'v7a' },
-  'bs': { code: 'vb7' },
-  'bss': { code: 'v39' },
+  '#':   { code: 'v18', parenRightPaddingAdjustment: -1 },
+  '##':  { code: 'v7f', parenRightPaddingAdjustment: -1 },
+  'b':   { code: 'v44', parenRightPaddingAdjustment: -2 },
+  'bb':  { code: 'v26', parenRightPaddingAdjustment: -2 },
+  'n':   { code: 'v4e', parenRightPaddingAdjustment: -1 },
+  '{':   { code: 'v9c', parenRightPaddingAdjustment: -1 },
+  '}':   { code: 'v84', parenRightPaddingAdjustment: -1 },
+  'db':  { code: 'v9e', parenRightPaddingAdjustment: -1 },
+  'd':   { code: 'vab', parenRightPaddingAdjustment:  0 },
+  'bbs': { code: 'v90', parenRightPaddingAdjustment: -1 },
+  '++':  { code: 'v51', parenRightPaddingAdjustment: -1 },
+  '+':   { code: 'v78', parenRightPaddingAdjustment: -1 },
+  '+-':  { code: 'v8d', parenRightPaddingAdjustment: -1 },
+  '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 },
+  'bs':  { code: 'vb7', parenRightPaddingAdjustment: -1 },
+  'bss': { code: 'v39', parenRightPaddingAdjustment: -1 },
 };
 
 Flow.accidentalColumnsTable = {

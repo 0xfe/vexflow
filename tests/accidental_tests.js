@@ -22,6 +22,7 @@ Vex.Flow.Test.Accidental = (function() {
       QUnit.module('Accidental');
       Vex.Flow.Test.runTests('Basic', Vex.Flow.Test.Accidental.basic);
       Vex.Flow.Test.runTests('Stem Down', Vex.Flow.Test.Accidental.basicStemDown);
+      Vex.Flow.Test.runTests('Cautionary Accidental', Vex.Flow.Test.Accidental.cautionary);
       Vex.Flow.Test.runTests('Accidental Arrangement Special Cases', Vex.Flow.Test.Accidental.specialCases);
       Vex.Flow.Test.runTests('Multi Voice', Vex.Flow.Test.Accidental.multiVoice);
       Vex.Flow.Test.runTests('Microtonal', Vex.Flow.Test.Accidental.microtonal);
@@ -86,6 +87,45 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.plotLegendForNoteWidth(vf.getContext(), 480, 140);
 
       ok(true, 'Full Accidental');
+    },
+
+    cautionary: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var stave = vf.Stave({ x: 10, y: 10, width: 550 });
+      var score = vf.EasyScore();
+
+      var accids = Object
+        .keys(VF.accidentalCodes.accidentals)
+        .filter(function(accid) { return accid !== '{' && accid !== '}'});
+
+      var notes = accids
+        .map(function(accid) {
+          return vf
+            .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: VF.Stem.UP })
+            .addAccidental(0, vf.Accidental({ type: accid }));
+          });
+
+      var voice = score.voice(notes, { time: accids.length  + '/4' });
+
+      voice
+        .getTickables()
+        .forEach(function(tickable) {
+          tickable.modifiers
+            .filter(function(modifier) {
+              return modifier.getAttribute('type') === 'Accidental';
+            })
+            .forEach(function(accid) {
+              accid.setAsCautionary();
+            });
+        });
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'Must successfully render cautionary accidentals');
     },
 
     specialCases: function(options) {
