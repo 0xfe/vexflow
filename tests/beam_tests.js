@@ -20,7 +20,7 @@ VF.Test.Beam = (function() {
   function concat(a, b) { return a.concat(b); }
 
   var Beam = {
-    Start() {
+    Start: function() {
       QUnit.module('Beam');
       runTests('Simple Beam', Beam.simple);
       runTests('Multi Beam', Beam.multi);
@@ -43,17 +43,7 @@ VF.Test.Beam = (function() {
       runTests('Complex Beams with Articulations', Beam.complexWithArticulation);
     },
 
-    setupContext(options, x, y) {
-      var ctx = new options.contextBuilder(options.canvas_sel, x || 450, y || 140);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
-      ctx.font = ' 10pt Arial';
-      var stave = new VF.Stave(10, 10, x || 450).addTrebleGlyph().
-        setContext(ctx).draw();
-
-      return { context: ctx, stave };
-    },
-
-    simple(options) {
+    simple: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -75,7 +65,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Simple Test');
     },
 
-    multi(options) {
+    multi: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -104,7 +94,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Multi Test');
     },
 
-    sixteenth(options) {
+    sixteenth: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -135,7 +125,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Sixteenth Test');
     },
 
-    breakSecondaryBeams(options) {
+    breakSecondaryBeams: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 200);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
@@ -176,7 +166,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Breaking Secondary Beams Test');
     },
 
-    slopey(options) {
+    slopey: function(options) {
       var vf = VF.Test.makeFactory(options, 350, 140);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
@@ -197,7 +187,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Slopey Test');
     },
 
-    autoStem(options) {
+    autoStem: function(options) {
       var vf = VF.Test.makeFactory(options, 350, 140);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
@@ -236,7 +226,7 @@ VF.Test.Beam = (function() {
       ok(true, 'AutoStem Beam Test');
     },
 
-    mixed(options) {
+    mixed: function(options) {
       var vf = VF.Test.makeFactory(options, 350, 140);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
@@ -268,7 +258,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Multi Test');
     },
 
-    mixed2(options) {
+    mixed2: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 180);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
@@ -295,7 +285,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Multi Test');
     },
 
-    dotted(options) {
+    dotted: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -319,7 +309,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Dotted Test');
     },
 
-    tradeoffs(options) {
+    tradeoffs: function(options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -342,7 +332,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Close Trade-offs Test');
     },
 
-    insane(options) {
+    insane: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 180);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
@@ -364,7 +354,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Insane Test');
     },
 
-    lenghty(options) {
+    lenghty: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 180);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
@@ -383,7 +373,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Lengthy Test');
     },
 
-    outlier(options) {
+    outlier: function(options) {
       var vf = VF.Test.makeFactory(options, 450, 180);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
@@ -399,14 +389,14 @@ VF.Test.Beam = (function() {
 
       vf.Formatter()
         .joinVoices([voice])
-        .formatToStave([voice], stave);
+        .formatToStave([voice], stave, { stave: stave });
 
       vf.draw();
 
       ok(true, 'Outlier Test');
     },
 
-    tabBeamsUp(options) {
+    tabBeamsUp: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 200);
       var stave = vf.TabStave({ y: 20 });
 
@@ -445,7 +435,7 @@ VF.Test.Beam = (function() {
       ok(true, 'All objects have been drawn');
     },
 
-    tabBeamsDown(options) {
+    tabBeamsDown: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 250);
       var stave = vf.TabStave({ options: { num_lines: 10 } });
 
@@ -494,7 +484,7 @@ VF.Test.Beam = (function() {
     },
 
 
-    autoTabBeams(options) {
+    autoTabBeams: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 200);
       var stave = vf.TabStave();
 
@@ -538,7 +528,7 @@ VF.Test.Beam = (function() {
 
     // This tests makes sure the auto_stem functionality is works.
     // TabNote stems within a beam group should end up normalized
-    tabBeamsAutoStem(options) {
+    tabBeamsAutoStem: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 300);
       var stave = vf.TabStave();
 
@@ -580,7 +570,7 @@ VF.Test.Beam = (function() {
       ok(true, 'All objects have been drawn');
     },
 
-    complexWithAnnotation(options) {
+    complexWithAnnotation: function(options) {
       var vf = VF.Test.makeFactory(options, 500, 200);
       var stave = vf.Stave({ y: 40 });
 
@@ -629,7 +619,7 @@ VF.Test.Beam = (function() {
       ok(true, 'Complex beam annotations');
     },
 
-    complexWithArticulation(options) {
+    complexWithArticulation: function(options) {
       var vf = VF.Test.makeFactory(options, 500, 200);
       var stave = vf.Stave({ y: 40 });
 
