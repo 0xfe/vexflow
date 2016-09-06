@@ -30,6 +30,7 @@ import { Curve } from './curve';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
 import { EasyScore } from './easyscore';
+import { ClefNote } from './clefnote';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -128,6 +129,14 @@ export class Factory {
 
   StaveNote(noteStruct) {
     const note = new StaveNote(noteStruct);
+    if (this.stave) note.setStave(this.stave);
+    note.setContext(this.context);
+    this.renderQ.push(note);
+    return note;
+  }
+
+  ClefNote(params) {
+    const note = new ClefNote(params.type, params.options.size, params.options.annotation);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
     this.renderQ.push(note);
