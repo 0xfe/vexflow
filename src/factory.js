@@ -136,11 +136,18 @@ export class Factory {
   }
 
   ClefNote(params) {
-    const note = new ClefNote(params.type, params.options.size, params.options.annotation);
-    if (this.stave) note.setStave(this.stave);
-    note.setContext(this.context);
-    this.renderQ.push(note);
-    return note;
+    params = setDefaults(params, {
+      type: 'treble',
+      options: {
+        size: 'default',
+      },
+    });
+
+    const clefNote = new ClefNote(params.type, params.options.size, params.options.annotation);
+    if (this.stave) clefNote.setStave(this.stave);
+    clefNote.setContext(this.context);
+    this.renderQ.push(clefNote);
+    return clefNote;
   }
 
   GraceNote(noteStruct) {
