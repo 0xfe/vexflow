@@ -49,6 +49,14 @@ export class PedalMarking extends Element {
     };
   }
 
+  static get StylesString() {
+    return {
+      text: PedalMarking.Styles.TEXT,
+      bracket: PedalMarking.Styles.BRACKET,
+      mixed: PedalMarking.Styles.MIXED,
+    };
+  }
+
   // Create a sustain pedal marking. Returns the defaults PedalMarking.
   // Which uses the traditional "Ped" and "*"" markings.
   static createSustain(notes) {
