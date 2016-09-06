@@ -309,105 +309,26 @@ Flow.accidentalColumnsTable = {
 Flow.ornamentCodes = acc => Flow.ornamentCodes.ornaments[acc];
 
 Flow.ornamentCodes.ornaments = {
-  'mordent': {
-    code: 'v1e',
-    shift_right: 1,
-    shift_up: 0,
-    shift_down: 5,
-    width: 14,
-  },
-  'mordent_inverted': {
-    code: 'v45',
-    shift_right: 1,
-    shift_up: 0,
-    shift_down: 5,
-    width: 14,
-  },
-  'turn': {
-    code: 'v72',
-    shift_right: 1,
-    shift_up: 0,
-    shift_down: 5,
-    width: 20,
-  },
-  'turn_inverted': {
-    code: 'v33',
-    shift_right: 1,
-    shift_up: 0,
-    shift_down: 6,
-    width: 20,
-  },
-  'tr': {
-    code: 'v1f',
-    shift_right: 0,
-    shift_up: 5,
-    shift_down: 15,
-    width: 10,
-  },
-  'upprall': {
-    code: 'v60',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'downprall': {
-    code: 'vb4',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'prallup': {
-    code: 'v6d',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'pralldown': {
-    code: 'v2c',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'upmordent': {
-    code: 'v29',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'downmordent': {
-    code: 'v68',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'lineprall': {
-    code: 'v20',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'prallprall': {
-    code: 'v86',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
+  'mordent': { code: 'v1e' },
+  'mordent_inverted': { code: 'v45' },
+  'turn': { code: 'v72' },
+  'turn_inverted': { code: 'v33' },
+  'tr': { code: 'v1f' },
+  'upprall': { code: 'v60' },
+  'downprall': { code: 'vb4' },
+  'prallup': { code: 'v6d' },
+  'pralldown': { code: 'v2c' },
+  'upmordent': { code: 'v29' },
+  'downmordent': { code: 'v68' },
+  'lineprall': { code: 'v20' },
+  'prallprall': { code: 'v86' },
 };
 
 Flow.keySignature = spec => {
   const keySpec = Flow.keySignature.keySpecs[spec];
 
   if (!keySpec) {
-    throw new Vex.RERR('BadKeySignature',
-        "Bad key signature spec: '" + spec + "'");
+    throw new Vex.RERR('BadKeySignature', `Bad key signature spec: '${spec}'`);
   }
 
   if (!keySpec.acc) {
