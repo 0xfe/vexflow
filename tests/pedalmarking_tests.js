@@ -18,10 +18,7 @@ VF.Test.PedalMarking = (function() {
         var voice1 = score.voice(score.notes('c4/4, c4, c4, c4', { stem: 'up' }));
         vf.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
-        var notes0 = voice0.getTickables();
-        var notes1 = voice1.getTickables();
-
-        makePedal(vf, notes0, notes1);
+        makePedal(vf, voice0.getTickables(), voice1.getTickables());
 
         vf.draw();
 
