@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.82 built on 2016-09-06.
+ * VexFlow 1.2.83 built on 2016-09-06.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -7499,6 +7499,7 @@ VF.Test.Ornament = (function() {
 
   return Ornament;
 })();
+
 /**
  * VexFlow - Parser Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>

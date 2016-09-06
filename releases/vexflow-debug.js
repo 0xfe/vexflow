@@ -811,104 +811,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	Flow.ornamentCodes.ornaments = {
-	  'mordent': {
-	    code: 'v1e',
-	    shift_right: 1,
-	    shift_up: 0,
-	    shift_down: 5,
-	    width: 14
-	  },
-	  'mordent_inverted': {
-	    code: 'v45',
-	    shift_right: 1,
-	    shift_up: 0,
-	    shift_down: 5,
-	    width: 14
-	  },
-	  'turn': {
-	    code: 'v72',
-	    shift_right: 1,
-	    shift_up: 0,
-	    shift_down: 5,
-	    width: 20
-	  },
-	  'turn_inverted': {
-	    code: 'v33',
-	    shift_right: 1,
-	    shift_up: 0,
-	    shift_down: 6,
-	    width: 20
-	  },
-	  'tr': {
-	    code: 'v1f',
-	    shift_right: 0,
-	    shift_up: 5,
-	    shift_down: 15,
-	    width: 10
-	  },
-	  'upprall': {
-	    code: 'v60',
-	    shift_right: 1,
-	    shift_up: -3,
-	    shift_down: 6,
-	    width: 20
-	  },
-	  'downprall': {
-	    code: 'vb4',
-	    shift_right: 1,
-	    shift_up: -3,
-	    shift_down: 6,
-	    width: 20
-	  },
-	  'prallup': {
-	    code: 'v6d',
-	    shift_right: 1,
-	    shift_up: -3,
-	    shift_down: 6,
-	    width: 20
-	  },
-	  'pralldown': {
-	    code: 'v2c',
-	    shift_right: 1,
-	    shift_up: -3,
-	    shift_down: 6,
-	    width: 20
-	  },
-	  'upmordent': {
-	    code: 'v29',
-	    shift_right: 1,
-	    shift_up: -3,
-	    shift_down: 6,
-	    width: 20
-	  },
-	  'downmordent': {
-	    code: 'v68',
-	    shift_right: 1,
-	    shift_up: -3,
-	    shift_down: 6,
-	    width: 20
-	  },
-	  'lineprall': {
-	    code: 'v20',
-	    shift_right: 1,
-	    shift_up: -3,
-	    shift_down: 6,
-	    width: 20
-	  },
-	  'prallprall': {
-	    code: 'v86',
-	    shift_right: 1,
-	    shift_up: -3,
-	    shift_down: 6,
-	    width: 20
-	  }
+	  'mordent': { code: 'v1e' },
+	  'mordent_inverted': { code: 'v45' },
+	  'turn': { code: 'v72' },
+	  'turn_inverted': { code: 'v33' },
+	  'tr': { code: 'v1f' },
+	  'upprall': { code: 'v60' },
+	  'downprall': { code: 'vb4' },
+	  'prallup': { code: 'v6d' },
+	  'pralldown': { code: 'v2c' },
+	  'upmordent': { code: 'v29' },
+	  'downmordent': { code: 'v68' },
+	  'lineprall': { code: 'v20' },
+	  'prallprall': { code: 'v86' }
 	};
 	
 	Flow.keySignature = function (spec) {
 	  var keySpec = Flow.keySignature.keySpecs[spec];
 	
 	  if (!keySpec) {
-	    throw new _vex.Vex.RERR('BadKeySignature', "Bad key signature spec: '" + spec + "'");
+	    throw new _vex.Vex.RERR('BadKeySignature', 'Bad key signature spec: \'' + spec + '\'');
 	  }
 	
 	  if (!keySpec.acc) {
@@ -14013,94 +13935,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (Ornament.DEBUG) _vex.Vex.L('Vex.Flow.Ornament', args);
 	}
 	
-	// Accidental position modifications for each glyph
-	var acc_mods = {
-	  'n': {
-	    shift_x: 1,
-	    shift_y_upper: 0,
-	    shift_y_lower: 0,
-	    height: 17
-	  },
-	  '#': {
-	    shift_x: 0,
-	    shift_y_upper: -2,
-	    shift_y_lower: -2,
-	    height: 20
-	  },
-	  'b': {
-	    shift_x: 1,
-	    shift_y_upper: 0,
-	    shift_y_lower: 3,
-	    height: 18
-	  },
-	  '##': {
-	    shift_x: 0,
-	    shift_y_upper: 0,
-	    shift_y_lower: 0,
-	    height: 12
-	  },
-	  'bb': {
-	    shift_x: 0,
-	    shift_y_upper: 0,
-	    shift_y_lower: 4,
-	    height: 17
-	  },
-	  'db': {
-	    shift_x: -3,
-	    shift_y_upper: 0,
-	    shift_y_lower: 4,
-	    height: 17
-	  },
-	  'bbs': {
-	    shift_x: 0,
-	    shift_y_upper: 0,
-	    shift_y_lower: 4,
-	    height: 17
-	  },
-	  'd': {
-	    shift_x: 0,
-	    shift_y_upper: 0,
-	    shift_y_lower: 0,
-	    height: 17
-	  },
-	  '++': {
-	    shift_x: -2,
-	    shift_y_upper: -6,
-	    shift_y_lower: -3,
-	    height: 22
-	  },
-	  '+': {
-	    shift_x: 1,
-	    shift_y_upper: -4,
-	    shift_y_lower: -2,
-	    height: 20
-	  },
-	  'bs': {
-	    shift_x: 0,
-	    shift_y_upper: 0,
-	    shift_y_lower: 4,
-	    height: 17
-	  },
-	  'bss': {
-	    shift_x: 0,
-	    shift_y_upper: 0,
-	    shift_y_lower: 4,
-	    height: 17
-	  },
-	  '++-': {
-	    shift_x: -2,
-	    shift_y_upper: -6,
-	    shift_y_lower: -3,
-	    height: 22
-	  },
-	  '+-': {
-	    shift_x: 1,
-	    shift_y_upper: -4,
-	    shift_y_lower: -2,
-	    height: 20
-	  }
-	};
-	
 	var Ornament = exports.Ornament = function (_Modifier) {
 	  _inherits(Ornament, _Modifier);
 	
@@ -14116,12 +13950,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var width = 0;
 	      for (var i = 0; i < ornaments.length; ++i) {
 	        var ornament = ornaments[i];
-	        var increment = 1;
+	        var increment = 2;
+	
 	        width = Math.max(ornament.getWidth(), width);
-	
-	        var type = _tables.Flow.ornamentCodes(ornament.type);
-	
-	        if (!type.between_lines) increment += 1.5;
 	
 	        if (ornament.getPosition() === _modifier.Modifier.Position.ABOVE) {
 	          ornament.setTextLine(state.top_text_line);
@@ -14160,11 +13991,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.position = _modifier.Modifier.Position.ABOVE;
 	    _this.delayed = false;
 	
-	    _this.accidental_upper = '';
-	    _this.accidental_lower = '';
+	    _this.accidentalUpper = null;
+	    _this.accidentalLower = null;
 	
 	    _this.render_options = {
-	      font_scale: 38
+	      font_scale: 38,
+	      accidentalLowerPadding: 3,
+	      accidentalUpperPadding: 3
 	    };
 	
 	    _this.ornament = _tables.Flow.ornamentCodes(_this.type);
@@ -14172,8 +14005,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new _vex.Vex.RERR('ArgumentError', 'Ornament not found: \'' + _this.type + '\'');
 	    }
 	
-	    // Default width comes from ornament table.
-	    _this.setWidth(_this.ornament.width);
+	    _this.glyph = new _glyph.Glyph(_this.ornament.code, _this.render_options.font_scale);
+	    _this.glyph.setOrigin(0.5, 1.0); // FIXME: SMuFL won't require a vertical origin shift
 	    return _this;
 	  }
 	
@@ -14195,8 +14028,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'setUpperAccidental',
-	    value: function setUpperAccidental(acc) {
-	      this.accidental_upper = acc;
+	    value: function setUpperAccidental(accid) {
+	      var scale = this.render_options.font_scale / 1.3;
+	      this.accidentalUpper = new _glyph.Glyph(_tables.Flow.accidentalCodes(accid).code, scale);
+	      this.accidentalUpper.setOrigin(0.5, 1.0);
 	      return this;
 	    }
 	
@@ -14204,8 +14039,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'setLowerAccidental',
-	    value: function setLowerAccidental(acc) {
-	      this.accidental_lower = acc;
+	    value: function setLowerAccidental(accid) {
+	      var scale = this.render_options.font_scale / 1.3;
+	      this.accidentalLower = new _glyph.Glyph(_tables.Flow.accidentalCodes(accid).code, scale);
+	      this.accidentalLower.setOrigin(0.5, 1.0);
 	      return this;
 	    }
 	
@@ -14221,106 +14058,71 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      this.setRendered();
+	
 	      var ctx = this.context;
-	      var stem_direction = this.note.getStemDirection();
+	      var stemDir = this.note.getStemDirection();
 	      var stave = this.note.getStave();
 	
 	      // Get stem extents
-	      var stem_ext = this.note.getStem().getExtents();
-	      var top = void 0;
-	      if (stem_direction === _stavenote.StaveNote.STEM_DOWN) {
-	        top = stem_ext.baseY;
-	      } else {
-	        top = stem_ext.topY;
-	      }
+	      var stemExtents = this.note.getStem().getExtents();
+	      var y = stemDir === _stavenote.StaveNote.STEM_DOWN ? stemExtents.baseY : stemExtents.topY;
 	
 	      // TabNotes don't have stems attached to them. Tab stems are rendered
 	      // outside the stave.
-	      var is_tabnote = this.note.getCategory() === 'tabnotes';
-	      if (is_tabnote) {
+	      if (this.note.getCategory() === 'tabnotes') {
 	        if (this.note.hasStem()) {
-	          if (stem_direction === _stavenote.StaveNote.STEM_DOWN) {
-	            top = stave.getYForTopText(this.text_line - 1.5);
+	          if (stemDir === _stavenote.StaveNote.STEM_DOWN) {
+	            y = stave.getYForTopText(this.text_line);
 	          }
 	        } else {
 	          // Without a stem
-	          top = stave.getYForTopText(this.text_line - 1);
+	          y = stave.getYForTopText(this.text_line);
 	        }
 	      }
 	
-	      var is_on_head = stem_direction === _stavenote.StaveNote.STEM_DOWN;
+	      var isPlacedOnNoteheadSide = stemDir === _stavenote.StaveNote.STEM_DOWN;
 	      var spacing = stave.getSpacingBetweenLines();
-	      var line_spacing = 1;
+	      var lineSpacing = 1;
 	
 	      // Beamed stems are longer than quarter note stems, adjust accordingly
-	      if (!is_on_head && this.note.beam) {
-	        line_spacing += 0.5;
+	      if (!isPlacedOnNoteheadSide && this.note.beam) {
+	        lineSpacing += 0.5;
 	      }
 	
-	      var total_spacing = spacing * (this.text_line + line_spacing);
-	      var glyph_y_between_lines = top - 7 - total_spacing;
+	      var totalSpacing = spacing * (this.text_line + lineSpacing);
+	      var glyphYBetweenLines = y - totalSpacing;
 	
 	      // Get initial coordinates for the modifier position
 	      var start = this.note.getModifierStartXY(this.position, this.index);
-	      var glyph_x = start.x + this.ornament.shift_right;
-	      var glyph_y = Math.min(stave.getYForTopText(this.text_line) - 3, glyph_y_between_lines);
-	      glyph_y += this.ornament.shift_up + this.y_shift;
+	      var glyphX = start.x;
+	      var glyphY = Math.min(stave.getYForTopText(this.text_line), glyphYBetweenLines);
+	      glyphY += this.y_shift;
 	
 	      // Ajdust x position if ornament is delayed
 	      if (this.delayed) {
-	        glyph_x += this.ornament.width;
-	        var next_context = _tickcontext.TickContext.getNextContext(this.note.getTickContext());
-	        if (next_context) {
-	          glyph_x += (next_context.getX() - glyph_x) * 0.5;
+	        glyphX += this.glyph.getMetrics().width;
+	        var nextContext = _tickcontext.TickContext.getNextContext(this.note.getTickContext());
+	        if (nextContext) {
+	          glyphX += (nextContext.getX() - glyphX) * 0.5;
 	        } else {
-	          glyph_x += (stave.x + stave.width - glyph_x) * 0.5;
+	          glyphX += (stave.x + stave.width - glyphX) * 0.5;
 	        }
 	      }
 	
-	      var ornament = this;
-	      function drawAccidental(ctx, code, upper) {
-	        var mods = acc_mods[code];
-	        var accidental = _tables.Flow.accidentalCodes(code);
+	      L('Rendering ornament: ', this.ornament, glyphX, glyphY);
 	
-	        var acc_x = glyph_x - 3;
-	        var acc_y = glyph_y + 2;
-	
-	        // Special adjustments for trill glyph
-	        if (upper) {
-	          acc_y -= mods ? mods.height : 18;
-	          acc_y += ornament.type === 'tr' ? -8 : 0;
-	        } else {
-	          acc_y += ornament.type === 'tr' ? -6 : 0;
-	        }
-	
-	        // Fine tune position of accidental glyph
-	        if (mods) {
-	          acc_x += mods.shift_x;
-	          acc_y += upper ? mods.shift_y_upper : mods.shift_y_lower;
-	        }
-	
-	        // Render the glyph
-	        var scale = ornament.render_options.font_scale / 1.3;
-	        _glyph.Glyph.renderGlyph(ctx, acc_x, acc_y, scale, accidental.code);
-	
-	        // If rendered a bottom accidental, increase the y value by the
-	        // accidental height so that the ornament's glyph is shifted up
-	        if (!upper) {
-	          glyph_y -= mods ? mods.height : 18;
-	        }
+	      if (this.accidentalLower) {
+	        this.accidentalLower.render(ctx, glyphX, glyphY);
+	        glyphY -= this.accidentalLower.getMetrics().height;
+	        glyphY -= this.render_options.accidentalLowerPadding;
 	      }
 	
-	      // Draw lower accidental for ornament
-	      if (this.accidental_lower) {
-	        drawAccidental(ctx, this.accidental_lower, false, glyph_x, glyph_y);
-	      }
+	      this.glyph.render(ctx, glyphX, glyphY);
+	      glyphY -= this.glyph.getMetrics().height;
 	
-	      L('Rendering ornament: ', this.ornament, glyph_x, glyph_y);
-	      _glyph.Glyph.renderGlyph(ctx, glyph_x, glyph_y, this.render_options.font_scale, this.ornament.code);
-	
-	      // Draw upper accidental for ornament
-	      if (this.accidental_upper) {
-	        drawAccidental(ctx, this.accidental_upper, true, glyph_x, glyph_y);
+	      if (this.accidentalUpper) {
+	        glyphY -= this.render_options.accidentalUpperPadding;
+	        this.accidentalUpper.render(ctx, glyphX, glyphY);
 	      }
 	    }
 	  }]);
