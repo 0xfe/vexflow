@@ -136,7 +136,7 @@ export class Factory {
   }
 
   ClefNote(params) {
-    const note = new ClefNote(params.type, params.options.size, params.options.annotation);
+    const note = new ClefNote(params.type, params.size, params.annotation);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
     this.renderQ.push(note);
