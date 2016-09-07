@@ -20,10 +20,10 @@ learn how to use VexFlow. Also learn to use the simpler EasyScore API in the [Us
 
 ### Using the HTML `script` Tag
 
-The releases are served via [npmcdn.com](http://npmcdn.com).
+The releases are served via [unpkg.com](http://unpkg.com).
 
-* Debug version: https://npmcdn.com/vexflow/releases/vexflow-debug.js
-* Minified version: https://npmcdn.com/vexflow/releases/vexflow-min.js
+* Debug version: https://unpkg.com/vexflow/releases/vexflow-debug.js
+* Minified version: https://unpkg.com/vexflow/releases/vexflow-min.js
 
 ### Your First Stave
 

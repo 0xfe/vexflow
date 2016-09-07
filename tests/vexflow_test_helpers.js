@@ -13,6 +13,7 @@ if (!window.QUnit) {
   QUnit.assertions = {
     ok: function() {return true;},
     equal: function() {return true;},
+    deepEqual: function() {return true;},
     expect: function() {return true;},
     throws: function() {return true;},
     notOk: function() {return true;}
@@ -31,6 +32,7 @@ if (!window.QUnit) {
   test = QUnit.test;
   ok = QUnit.assertions.ok;
   equal = QUnit.assertions.equal;
+  deepEqual = QUnit.assertions.deepEqual;
   expect = QUnit.assertions.expect;
   throws = QUnit.assertions.throws;
   notOk = QUnit.assertions.notOk;

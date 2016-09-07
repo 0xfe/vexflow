@@ -191,18 +191,23 @@ export class Glyph extends Element {
     };
   }
 
-  setOrigin(x, y) {
+  setOriginX(x) {
     const { bbox } = this;
     const originX = Math.abs(bbox.getX() / bbox.getW());
-    const originY = Math.abs(bbox.getY() / bbox.getH());
-
     const xShift = (x - originX) * bbox.getW();
-    const yShift = (y - originY) * bbox.getH();
+    this.originShift.x = -xShift;
+  }
 
-    this.originShift = {
-      x: -xShift,
-      y: -yShift,
-    };
+  setOriginY(y) {
+    const { bbox } = this;
+    const originY = Math.abs(bbox.getY() / bbox.getH());
+    const yShift = (y - originY) * bbox.getH();
+    this.originShift.y = -yShift;
+  }
+
+  setOrigin(x, y) {
+    this.setOriginX(x);
+    this.setOriginY(y);
   }
 
   render(ctx, x, y) {
