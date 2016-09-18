@@ -1,0 +1,9 @@
+Vex.Flow.Microtonal = { 
+'glyphs': {
+ 'vd0': { 'x_min': -10.890625, 'x_max': 299.4375, 'ha': 294, 'o': 'm 44 174 b 51 174 47 174 49 174 b 68 173 55 174 61 174 l 287 112 l 551 40 b 615 20 617 22 609 23 b 626 0 622 16 626 8 b 615 -22 626 -9 622 -18 b 613 -23 613 -23 613 -23 b 613 -23 613 -23 613 -23 b 287 -113 613 -24 597 -29 l 68 -174 b 53 -176 61 -176 57 -176 b 39 -172 47 -176 43 -174 b 27 -151 31 -167 27 -159 b 39 -129 27 -141 31 -133 b 230 -74 43 -124 20 -131 l 370 -36 l 468 -9 b 498 0 484 -4 498 -1 b 468 8 498 0 484 2 l 370 34 l 230 73 b 40 126 28 129 43 124 b 27 149 31 131 27 140 b 44 174 27 161 34 170 m 205 110 l 205 300 b 205 330 245 330 245 300 l 245 300 l 245 -300 b 245 -330 205 -330 205 -300 l 205 -300 l 205 110 l 345 90 m 345 90 l 345 330 b 345 360 385 360 385 330 l 385 330 l 385 -270 b 385 -300 345 -300 345 -270 l 345 -270 l 345 90 '},
+ 'vd1': { 'x_min': -20, 'x_max': 320, 'ha': 257, 'o': 'm -8 200 b -8 210 8 200 16 200 l 20 148 -199 l 23 -615 b 0 -629 9 -629 6 -629 l -21 -612 l -21 -201 l -21 216 l -20 200 m 16 200 l 310 0 l 240 0 l 16 140 l 16 -120 l 240 0 l 310 0 l 16 -200 '}
+},
+ 'cssFontWeight': 'normal', 'ascender': 1903, 'underlinePosition': -125, 'cssFontStyle': 'normal', 'boundingBox': { 'yMin': -2065.375, 'xMin': -695.53125, 'yMax': 1901.578125, 'xMax': 1159.671875 },
+ 'resolution': 1000, 'original_font_information': { 'postscript_name': 'Gonville-18', 'version_string': 'Version 0.1.8904 ', 'vendor_url': '', 'full_font_name': 'Gonville-18', 'font_family_name': 'Gonville-18', 'copyright': 'No copyright is claimed on this font file.', 'description': '', 'trademark': '', 'designer': '', 'designer_url': '', 'unique_font_identifier': 'FontForge 2.0 : Gonville-18 : 17-3-2010', 'license_url': '', 'license_description': '', 'manufacturer_name': '', 'font_sub_family_name': '18' },
+ 'descender': -2066, 'familyName': 'Gonville-18', 'lineHeight': 4093, 'underlineThickness': 50 
+};
