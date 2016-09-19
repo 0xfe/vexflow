@@ -396,11 +396,11 @@ export class Accidental extends Modifier {
 
         // process grace notes
         note.getModifiers().forEach(modifier => {
-          if (modifier.getCategory() === 'gracenotegroups')
+          if (modifier.getCategory() === 'gracenotegroups') {
             modifier.getGraceNotes().forEach(processNote);
+          }
         });
-
-      }
+      };
 
       notes.forEach(processNote);
     });
