@@ -137,6 +137,9 @@ export class GraceNoteGroup extends Modifier {
   getWidth() {
     return this.width;
   }
+  getGraceNotes() {
+    return this.grace_notes;
+  }
   draw() {
     this.checkContext();
 

@@ -378,8 +378,14 @@ Vex.Flow.Test.Accidental = (function() {
         { keys: ['c/4', 'c/5'], duration: '4' },
       ].map(vf.StaveNote.bind(vf));
 
+      const gracenotes = [
+        { keys: ['d#/4'], duration: '16', slash: true },
+      ].map(vf.GraceNote.bind(vf));
+      notes[0].addModifier(0, vf.GraceNoteGroup({ notes: gracenotes }).beamNotes());
+
       const voice = vf.Voice()
         .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickable(new Vex.Flow.TimeSigNote("12/4").setStave(stave))
         .addTickables(notes);
 
       Vex.Flow.Accidental.applyAccidentals([voice], 'C');
