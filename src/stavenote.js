@@ -322,7 +322,6 @@ export class StaveNote extends StemmableNote {
     });
 
     this.calculateKeyProps();
-
     this.buildStem();
 
     // Set the stem direction
@@ -331,12 +330,17 @@ export class StaveNote extends StemmableNote {
     } else {
       this.setStemDirection(noteStruct.stem_direction);
     }
-
+    this.reset();
     this.buildFlag();
-    this.buildNoteHeads();
-
-    // Calculate left/right padding
     this.calcExtraPx();
+  }
+
+  reset() {
+    super.reset();
+    this.buildNoteHeads();
+    if (this.stave) {
+      this.note_heads.forEach(head => head.setStave(this.stave));
+    }
   }
 
   getCategory() { return StaveNote.CATEGORY; }
@@ -354,6 +358,7 @@ export class StaveNote extends StemmableNote {
 
   // Builds a `NoteHead` for each key in the note
   buildNoteHeads() {
+    this.note_heads = [];
     const stemDirection = this.getStemDirection();
     const keys = this.getKeys();
 

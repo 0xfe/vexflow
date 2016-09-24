@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
+/* eslint-disable key-spacing */
+
 import { Vex } from './vex';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
@@ -273,107 +275,22 @@ Flow.articulationCodes.articulations = {
 Flow.accidentalCodes = acc => Flow.accidentalCodes.accidentals[acc];
 
 Flow.accidentalCodes.accidentals = {
-  '#': {
-    code: 'v18',
-    width: 10,
-    gracenote_width: 4.5,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  '##': {
-    code: 'v7f',
-    width: 13,
-    gracenote_width: 6,
-    shift_right: -1,
-    shift_down: 0,
-  },
-  'b': {
-    code: 'v44',
-    width: 8,
-    gracenote_width: 4.5,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  'bb': {
-    code: 'v26',
-    width: 14,
-    gracenote_width: 8,
-    shift_right: -3,
-    shift_down: 0,
-  },
-  'n': {
-    code: 'v4e',
-    width: 8,
-    gracenote_width: 4.5,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  '{': {   // Left paren for cautionary accidentals
-    code: 'v9c',
-    width: 5,
-    shift_right: 2,
-    shift_down: 0,
-  },
-  '}': {   // Right paren for cautionary accidentals
-    code: 'v84',
-    width: 5,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  'db': {
-    code: 'v9e',
-    width: 16,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  'd': {
-    code: 'vab',
-    width: 10,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  'bbs': {
-    code: 'v90',
-    width: 13,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  '++': {
-    code: 'v51',
-    width: 13,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  '+': {
-    code: 'v78',
-    width: 8,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  '+-': {
-    code: 'v8d',
-    width: 7,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  '++-': {
-    code: 'v7a',
-    width: 10,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  'bs': {
-    code: 'vb7',
-    width: 10,
-    shift_right: 0,
-    shift_down: 0,
-  },
-  'bss': {
-    code: 'v39',
-    width: 10,
-    shift_right: 0,
-    shift_down: 0,
-  },
+  '#':   { code: 'v18', parenRightPaddingAdjustment: -1 },
+  '##':  { code: 'v7f', parenRightPaddingAdjustment: -1 },
+  'b':   { code: 'v44', parenRightPaddingAdjustment: -2 },
+  'bb':  { code: 'v26', parenRightPaddingAdjustment: -2 },
+  'n':   { code: 'v4e', parenRightPaddingAdjustment: -1 },
+  '{':   { code: 'v9c', parenRightPaddingAdjustment: -1 },
+  '}':   { code: 'v84', parenRightPaddingAdjustment: -1 },
+  'db':  { code: 'v9e', parenRightPaddingAdjustment: -1 },
+  'd':   { code: 'vab', parenRightPaddingAdjustment:  0 },
+  'bbs': { code: 'v90', parenRightPaddingAdjustment: -1 },
+  '++':  { code: 'v51', parenRightPaddingAdjustment: -1 },
+  '+':   { code: 'v78', parenRightPaddingAdjustment: -1 },
+  '+-':  { code: 'v8d', parenRightPaddingAdjustment: -1 },
+  '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 },
+  'bs':  { code: 'vb7', parenRightPaddingAdjustment: -1 },
+  'bss': { code: 'v39', parenRightPaddingAdjustment: -1 },
 };
 
 Flow.accidentalColumnsTable = {
@@ -392,105 +309,26 @@ Flow.accidentalColumnsTable = {
 Flow.ornamentCodes = acc => Flow.ornamentCodes.ornaments[acc];
 
 Flow.ornamentCodes.ornaments = {
-  'mordent': {
-    code: 'v1e',
-    shift_right: 1,
-    shift_up: 0,
-    shift_down: 5,
-    width: 14,
-  },
-  'mordent_inverted': {
-    code: 'v45',
-    shift_right: 1,
-    shift_up: 0,
-    shift_down: 5,
-    width: 14,
-  },
-  'turn': {
-    code: 'v72',
-    shift_right: 1,
-    shift_up: 0,
-    shift_down: 5,
-    width: 20,
-  },
-  'turn_inverted': {
-    code: 'v33',
-    shift_right: 1,
-    shift_up: 0,
-    shift_down: 6,
-    width: 20,
-  },
-  'tr': {
-    code: 'v1f',
-    shift_right: 0,
-    shift_up: 5,
-    shift_down: 15,
-    width: 10,
-  },
-  'upprall': {
-    code: 'v60',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'downprall': {
-    code: 'vb4',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'prallup': {
-    code: 'v6d',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'pralldown': {
-    code: 'v2c',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'upmordent': {
-    code: 'v29',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'downmordent': {
-    code: 'v68',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'lineprall': {
-    code: 'v20',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
-  'prallprall': {
-    code: 'v86',
-    shift_right: 1,
-    shift_up: -3,
-    shift_down: 6,
-    width: 20,
-  },
+  'mordent': { code: 'v1e' },
+  'mordent_inverted': { code: 'v45' },
+  'turn': { code: 'v72' },
+  'turn_inverted': { code: 'v33' },
+  'tr': { code: 'v1f' },
+  'upprall': { code: 'v60' },
+  'downprall': { code: 'vb4' },
+  'prallup': { code: 'v6d' },
+  'pralldown': { code: 'v2c' },
+  'upmordent': { code: 'v29' },
+  'downmordent': { code: 'v68' },
+  'lineprall': { code: 'v20' },
+  'prallprall': { code: 'v86' },
 };
 
 Flow.keySignature = spec => {
   const keySpec = Flow.keySignature.keySpecs[spec];
 
   if (!keySpec) {
-    throw new Vex.RERR('BadKeySignature',
-        "Bad key signature spec: '" + spec + "'");
+    throw new Vex.RERR('BadKeySignature', `Bad key signature spec: '${spec}'`);
   }
 
   if (!keySpec.acc) {

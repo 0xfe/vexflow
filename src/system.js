@@ -46,10 +46,11 @@ export class System extends Element {
     return this;
   }
 
-  addConnector() {
+  addConnector(type = 'double') {
     this.connector = this.factory.StaveConnector({
       top_stave: this.parts[0].stave,
       bottom_stave: this.parts[this.parts.length - 1].stave,
+      type,
     });
     return this.connector;
   }

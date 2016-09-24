@@ -101,6 +101,7 @@ export class StemmableNote extends Note {
       this.stem.setExtension(this.getStemExtension());
     }
 
+    this.reset();
     if (this.flag) {
       this.buildFlag();
     }

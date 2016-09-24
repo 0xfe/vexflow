@@ -107,9 +107,9 @@
         "v68": true, // downmordent
         "v20": true, // lineprall
         "v1e": true, // prall
-        "v86": true,  // prallprall
+        "v86": true, // prallprall
 
-        "v53": true, //breve
+        "v53": true, // breve
         "v31": true, // breve rest
 
         "vb1": true // dynamics letter r
@@ -175,6 +175,11 @@
       // Populate source with glyphs.
       var final_source = "Vex.Flow.Font = " + JSON.stringify(Vex.Flow.Font)
         + ";";
+      final_source = final_source.replace(/\},/g, '},\n')
+        .replace(/"glyphs":\{/g, '\n"glyphs":{\n')
+        .replace(/\}\}/g, '}\n}')
+        .replace(/\};/, '\n};');
+
       $("#source").attr("value", final_source);
 
       $("#download").click(function() {

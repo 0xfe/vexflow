@@ -63,6 +63,7 @@ export class Tickable extends Element {
     };
   }
 
+  reset() { return this; }
   getTicks() { return this.ticks; }
   shouldIgnoreTicks() { return this.ignore_ticks; }
   getWidth() { return this.width; }
