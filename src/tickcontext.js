@@ -46,7 +46,7 @@ export class TickContext extends Tickable {
   // Get widths context, note and left/right modifiers for formatting
   getMetrics() {
     return { width: this.width, notePx: this.notePx,
-             extraLeftPx: this.extraLeftPx, extraRightPx: this.extraRightPx };
+      extraLeftPx: this.extraLeftPx, extraRightPx: this.extraRightPx };
   }
 
   getCurrentTick() { return this.currentTick; }
