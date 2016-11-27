@@ -80,6 +80,7 @@ export class NoteHead extends Note {
     this.displaced = head_options.displaced || false;
     this.stem_direction = head_options.stem_direction || StaveNote.STEM_UP;
     this.line = head_options.line;
+    this.key = head_options.key;
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
