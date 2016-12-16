@@ -410,6 +410,7 @@ export class StaveNote extends StemmableNote {
         glyph_font_scale: this.render_options.glyph_font_scale,
         x_shift: noteProps.shift_right,
         line: noteProps.line,
+        key: noteProps.key,
       });
 
       this.note_heads[i] = notehead;

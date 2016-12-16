@@ -504,7 +504,6 @@ export class SVGContext {
     if (typeof attributes === 'undefined') {
       attributes = {};
       Vex.Merge(attributes, this.attributes);
-      attributes.stroke = 'none';
     }
 
     attributes.d = this.path;
