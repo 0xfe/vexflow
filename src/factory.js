@@ -31,6 +31,7 @@ import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
 import { EasyScore } from './easyscore';
 import { ClefNote } from './clefnote';
+import { PedalMarking } from './pedalmarking';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -339,6 +340,21 @@ export class Factory {
   EasyScore(params = {}) {
     params.factory = this;
     return new EasyScore(params);
+  }
+
+  PedalMarking(params = {}) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {
+        style: 'mixed',
+      },
+    });
+
+    const pedal = new PedalMarking(params.notes);
+    pedal.setStyle(PedalMarking.StylesString[params.options.style]);
+    pedal.setContext(this.context);
+    this.renderQ.push(pedal);
+    return pedal;
   }
 
   draw() {
