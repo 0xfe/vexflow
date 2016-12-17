@@ -156,7 +156,7 @@ Vex.StackTrace = () => {
 
 // Dump warning to console.
 Vex.W = (...args) => {
-  const line = Array.prototype.slice.call(args).join(' ');
+  const line = args.join(' ');
   window.console.log('Warning: ', line, Vex.StackTrace());
 };
 
