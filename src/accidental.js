@@ -327,6 +327,8 @@ export class Accidental extends Modifier {
       const tickPosition = new Fraction(0, 1);
       const notes = voice.getTickables();
       notes.forEach(note => {
+        if (note.shouldIgnoreTicks()) return;
+
         const notesAtPosition = tickNoteMap[tickPosition.value()];
 
         if (!notesAtPosition) {
@@ -355,8 +357,8 @@ export class Accidental extends Modifier {
       // at this tick position
       const modifiedPitches = [];
 
-      notes.forEach(note => {
-        if (note.isRest()) return;
+      const processNote = (note) => {
+        if (note.isRest() || note.shouldIgnoreTicks()) return;
 
         // Go through each key and determine if an accidental should be
         // applied
@@ -391,7 +393,16 @@ export class Accidental extends Modifier {
             modifiedPitches.push(pitch);
           }
         });
-      });
+
+        // process grace notes
+        note.getModifiers().forEach(modifier => {
+          if (modifier.getCategory() === 'gracenotegroups') {
+            modifier.getGraceNotes().forEach(processNote);
+          }
+        });
+      };
+
+      notes.forEach(processNote);
     });
   }
 
