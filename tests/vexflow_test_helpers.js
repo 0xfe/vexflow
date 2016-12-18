@@ -244,7 +244,10 @@ VF.Test = (function() {
     runModule: function(module) {
       for (var testName in module) {
         if (testName !== 'Start' && {}.hasOwnProperty.call(module, testName)) {
-          VF.Test.runTests(testName, module[testName]);
+          var test = module[testName];
+          if (typeof test === 'function') {
+            VF.Test.runTests(testName, test);
+          }
         }
       }
     }
