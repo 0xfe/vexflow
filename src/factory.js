@@ -34,6 +34,7 @@ import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
 import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
+import { TextNote } from './textnote';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -155,6 +156,14 @@ export class Factory {
     return note;
   }
 
+  TextNote(textNoteStruct) {
+    const textNote = new TextNote(textNoteStruct);
+    if (this.stave) textNote.setStave(this.stave);
+    textNote.setContext(this.context);
+    this.renderQ.push(textNote);
+    return textNote;
+  }
+
   ClefNote(params) {
     params = setDefaults(params, {
       type: 'treble',
@@ -249,7 +258,10 @@ export class Factory {
       duration: params.duration,
       dots: params.dots,
     });
+
+    if (this.stave) text.setStave(this.stave);
     text.setContext(this.context);
+    this.renderQ.push(text);
     return text;
   }
 
