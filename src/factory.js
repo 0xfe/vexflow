@@ -33,6 +33,7 @@ import { EasyScore } from './easyscore';
 import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
 import { TextBracket } from './textbracket';
+import { GhostNote } from './ghostnote';
 import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
 import { TextNote } from './textnote';
@@ -111,6 +112,7 @@ export class Factory {
   getContext() { return this.context; }
   setContext(context) { this.context = context; return this; }
   getStave() { return this.stave; }
+  getVoices() { return this.voices; }
 
   // Returns pixels from current stave spacing.
   space(spacing) { return this.options.stave.space * spacing; }
@@ -155,6 +157,14 @@ export class Factory {
     note.setContext(this.context);
     this.renderQ.push(note);
     return note;
+  }
+
+  GhostNote(noteStruct) {
+    const ghostNote = new GhostNote(noteStruct);
+    if (this.stave) ghostNote.setStave(this.stave);
+    ghostNote.setContext(this.context);
+    this.renderQ.push(ghostNote);
+    return ghostNote;
   }
 
   TextNote(textNoteStruct) {
