@@ -239,6 +239,14 @@ VF.Test = (function() {
 
     almostEqual: function(value, expectedValue, errorMargin) {
       return equal(Math.abs(value - expectedValue) < errorMargin, true);
+    },
+
+    runModule: function(module) {
+      for (var testName in module) {
+        if (testName !== 'Start' && {}.hasOwnProperty.call(module, testName)) {
+          VF.Test.runTests(testName, module[testName]);
+        }
+      }
     }
   };
 

@@ -26,19 +26,11 @@ function createTest(notesData, setupTies) {
 VF.Test.StaveTie = (function() {
   var StaveTie = {
     Start: function() {
-      var runTests = VF.Test.runTests;
-
       QUnit.module('StaveTie');
-      runTests('Simple StaveTie', StaveTie.simple);
-      runTests('Chord StaveTie', StaveTie.chord);
-      runTests('Stem Up StaveTie', StaveTie.stemUp);
-      runTests('No End Note', StaveTie.noEndNote);
-      runTests('No Start Note', StaveTie.noStartNote);
-      runTests('Set Direction Down', StaveTie.setDirectionDown);
-      runTests('Set Direction Up', StaveTie.setDirectionUp);
+      VF.Test.runModule(this);
     },
 
-    simple: createTest(
+    'Simple StaveTie': createTest(
       ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
       function(vf, notes) {
         vf.StaveTie({
@@ -50,7 +42,7 @@ VF.Test.StaveTie = (function() {
       }
     ),
 
-    chord: createTest(
+    'Chord StaveTie': createTest(
       ['(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'down' }],
       function(vf, notes) {
         vf.StaveTie({
@@ -62,7 +54,7 @@ VF.Test.StaveTie = (function() {
       }
     ),
 
-    stemUp: createTest(
+    'Stem Up StaveTie': createTest(
       ['(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'up' }],
       function(vf, notes) {
         vf.StaveTie({
@@ -74,7 +66,7 @@ VF.Test.StaveTie = (function() {
       }
     ),
 
-    noEndNote: createTest(
+    'No End Note': createTest(
       ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
       function(vf, notes, stave) {
         stave.addEndClef('treble');
@@ -88,7 +80,7 @@ VF.Test.StaveTie = (function() {
       }
     ),
 
-    noStartNote: createTest(
+    'No Start Note': createTest(
       ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
       function(vf, notes, stave) {
         stave.addClef('treble');
@@ -102,7 +94,7 @@ VF.Test.StaveTie = (function() {
       }
     ),
 
-    setDirectionDown: createTest(
+    'Set Direction Down': createTest(
       ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
       function(vf, notes) {
         vf.StaveTie({
@@ -111,13 +103,13 @@ VF.Test.StaveTie = (function() {
           first_indices: [0, 1],
           last_indices: [0, 1],
           options: {
-            direction: Vex.Flow.Stem.DOWN,
+            direction: VF.Stem.DOWN,
           },
         });
       }
     ),
 
-    setDirectionUp: createTest(
+    'Set Direction Up': createTest(
       ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
       function(vf, notes) {
         vf.StaveTie({
@@ -126,7 +118,7 @@ VF.Test.StaveTie = (function() {
           first_indices: [0, 1],
           last_indices: [0, 1],
           options: {
-            direction: Vex.Flow.Stem.UP,
+            direction: VF.Stem.UP,
           },
         });
       }
