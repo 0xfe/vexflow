@@ -3,18 +3,6 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
- /*
- eslint-disable
- no-var,
- no-undef,
- wrap-iife,
- func-names,
- vars-on-top,
- max-len,
- object-shorthand,
- prefer-arrow-callback,
-*/
-
 VF.Test.TextBracket = (function() {
   var TextBracket = {
     Start: function() {
