@@ -240,17 +240,6 @@ VF.Test = (function() {
     almostEqual: function(value, expectedValue, errorMargin) {
       return equal(Math.abs(value - expectedValue) < errorMargin, true);
     },
-
-    runModule: function(module) {
-      for (var testName in module) {
-        if (testName !== 'Start' && {}.hasOwnProperty.call(module, testName)) {
-          var test = module[testName];
-          if (typeof test === 'function') {
-            VF.Test.runTests(testName, test);
-          }
-        }
-      }
-    }
   };
 
   Test.genID.ID = 0;
