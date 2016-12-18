@@ -8,189 +8,212 @@ VF.Test.StaveTie = (function() {
     Start: function() {
       var runTests = VF.Test.runTests;
 
-      QUnit.module("StaveTie");
-      runTests("Simple StaveTie", StaveTie.simple);
-      runTests("Chord StaveTie", StaveTie.chord);
-      runTests("Stem Up StaveTie", StaveTie.stemUp);
-      runTests("No End Note", StaveTie.noEndNote);
-      runTests("No Start Note", StaveTie.noStartNote);
-      runTests("Set Direction Down", StaveTie.setDirectionDown);
-      runTests("Set Direction Up", StaveTie.setDirectionUp);
-
+      QUnit.module('StaveTie');
+      runTests('Simple StaveTie', StaveTie.simple);
+      runTests('Chord StaveTie', StaveTie.chord);
+      runTests('Stem Up StaveTie', StaveTie.stemUp);
+      runTests('No End Note', StaveTie.noEndNote);
+      runTests('No Start Note', StaveTie.noStartNote);
+      runTests('Set Direction Down', StaveTie.setDirectionDown);
+      runTests('Set Direction Up', StaveTie.setDirectionUp);
     },
 
-    tieNotes: function(notes, indices, stave, ctx, direction) {
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables(notes);
+    simple: function(options) {
+      var vf = VF.Test.makeFactory(options, 300);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 250);
-      voice.draw(ctx, stave);
+      var voice = score.voice(score.notes(
+        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
+      ));
 
-      var tie = new VF.StaveTie({
-        first_note: notes[0],
-        last_note: notes[1],
-        first_indices: indices,
-        last_indices: indices,
+      var notes = voice.getTickables();
+
+      vf.StaveTie({
+        from: notes[0],
+        to: notes[1],
+        first_indices: [0, 1],
+        last_indices: [0, 1],
       });
 
-      tie.setContext(ctx);
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      if(direction !== undefined && direction !== null){
-        tie.setDirection(direction);
-      }
+      vf.draw();
 
-      tie.draw();
+      ok(true, 'Simple Test');
     },
 
-    drawTie: function(notes, indices, options) {
-      var ctx = new options.contextBuilder(options.canvas_sel, 350, 140);
+    chord: function(options) {
+      var vf = VF.Test.makeFactory(options, 300);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
 
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      var stave = new VF.Stave(10, 10, 350).setContext(ctx).draw();
+      var voice = score.voice(score.notes(
+        '(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'down' })
+      );
 
-      VF.Test.StaveTie.tieNotes(notes, indices, stave, ctx, options['direction']);
+      var notes = voice.getTickables();
+
+      vf.StaveTie({
+        from: notes[0],
+        to: notes[1],
+        first_indices: [0, 1, 2],
+        last_indices: [0, 1, 2],
+      });
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'Chord test');
     },
 
-    simple: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    stemUp: function(options) {
+      var vf = VF.Test.makeFactory(options, 300);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
 
-      VF.Test.StaveTie.drawTie([
-        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
-      ], [0, 1], options);
-      ok(true, "Simple Test");
+      var voice = score.voice(score.notes(
+        '(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'up' })
+      );
+
+      var notes = voice.getTickables();
+
+      vf.StaveTie({
+        from: notes[0],
+        to: notes[1],
+        first_indices: [0, 1, 2],
+        last_indices: [0, 1, 2],
+      });
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'Stem up test');
     },
 
-    chord: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    noEndNote: function(options) {
+      var vf = VF.Test.makeFactory(options, 300);
+      var stave = vf.Stave().addEndClef('treble');
+      var score = vf.EasyScore();
 
-      VF.Test.StaveTie.drawTie([
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"}),
-        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "h"}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#")),
-      ], [0, 1, 2], options);
-      ok(true, "Chord test");
-    },
+      var voice = score.voice(score.notes(
+        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
+      ));
 
-    stemUp: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+      var notes = voice.getTickables();
 
-      VF.Test.StaveTie.drawTie([
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: 1, duration: "h"}),
-        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: 1, duration: "h"}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#")),
-      ], [0, 1, 2], options);
-      ok(true, "Stem up test");
-    },
-
-    noEndNote: function(options, contextBuilder) {
-      var ctx = contextBuilder(options.canvas_sel, 350, 140);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = "10pt Arial";
-      var stave = new VF.Stave(10, 10, 350).setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
-      var notes = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
-      ];
-
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables(notes);
-
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 250);
-      voice.draw(ctx, stave);
-
-      var tie = new VF.StaveTie({
-        first_note: notes[1],
-        last_note: null,
-        first_indices: [2],
-        last_indices: [2]
-      }, "slow.").setContext(ctx).draw();
-
-      ok(true, "No end note");
-    },
-
-    noStartNote: function(options, contextBuilder) {
-      var ctx = contextBuilder(options.canvas_sel, 350, 140);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = "10pt Arial";
-      var stave = new VF.Stave(10, 10, 350).addTrebleGlyph().
-        setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-
-      var notes = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
-      ];
-
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables(notes);
-
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 250);
-      voice.draw(ctx, stave);
-
-      var tie = new VF.StaveTie({
-        first_note: null,
-        last_note: notes[0],
+      vf.StaveTie({
+        from: notes[1],
+        to: null,
         first_indices: [2],
         last_indices: [2],
-      }, "H").setContext(ctx).draw();
+        text: 'slow.',
+      });
 
-      ok(true, "No end note");
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'No end note');
     },
 
-    setDirectionDown: function(options, contextBuilder){
-      options.contextBuilder = contextBuilder;
-      options.direction = Vex.Flow.Stem.DOWN;
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    noStartNote: function(options) {
+      var vf = VF.Test.makeFactory(options, 300);
+      var stave = vf.Stave().addClef('treble');
+      var score = vf.EasyScore();
 
-      VF.Test.StaveTie.drawTie([
-        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
-            addAccidental(0, newAcc("b")).
-            addAccidental(1, newAcc("#")),
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
-      ], [0, 1], options);
-      ok(true, "Set Direction Down");
+      var voice = score.voice(score.notes(
+        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
+      ));
+
+      var notes = voice.getTickables();
+
+      vf.StaveTie({
+        from: null,
+        to: notes[0],
+        first_indices: [2],
+        last_indices: [2],
+        text: 'H',
+      });
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'No end note');
     },
 
-    setDirectionUp: function(options, contextBuilder){
-      options.contextBuilder = contextBuilder;
-      options.direction = Vex.Flow.Stem.UP;
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    setDirectionDown: function(options) {
+      var vf = VF.Test.makeFactory(options, 300);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
 
-      VF.Test.StaveTie.drawTie([
-        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
-            addAccidental(0, newAcc("b")).
-            addAccidental(1, newAcc("#")),
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "h"})
-      ], [0, 1], options);
-      ok(true, "Set Direction Down");
-    }
+      var voice = score.voice(score.notes(
+        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
+      ));
 
+      var notes = voice.getTickables();
+
+      vf.StaveTie({
+        from: notes[0],
+        to: notes[1],
+        first_indices: [0, 1],
+        last_indices: [0, 1],
+        options: {
+          direction: Vex.Flow.Stem.DOWN,
+        },
+      });
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'Set Direction Down');
+    },
+
+    setDirectionUp: function(options) {
+      var vf = VF.Test.makeFactory(options, 300);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
+
+      var voice = score.voice(score.notes(
+        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
+      ));
+
+      var notes = voice.getTickables();
+
+      vf.StaveTie({
+        from: notes[0],
+        to: notes[1],
+        first_indices: [0, 1],
+        last_indices: [0, 1],
+        options: {
+          direction: Vex.Flow.Stem.UP,
+        },
+      });
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'Set Direction Down');
+    },
   };
 
   return StaveTie;

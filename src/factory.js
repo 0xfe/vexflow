@@ -358,7 +358,9 @@ export class Factory {
       first_indices: [0],
       last_indices: [0],
       text: null,
-      options: {},
+      options: {
+        direction: undefined,
+      },
     });
 
     const tie = new StaveTie({
@@ -366,7 +368,10 @@ export class Factory {
       last_note: params.to,
       first_indices: params.first_indices,
       last_indices: params.last_indices,
-    }, params.text).setContext(this.context);
+    }, params.text);
+
+    if (params.options.direction) tie.setDirection(params.options.direction);
+    tie.setContext(this.context);
     this.renderQ.push(tie);
     return tie;
   }
