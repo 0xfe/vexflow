@@ -3,6 +3,26 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
+function createTest(notesData, setupTies) {
+  return function(options) {
+    var vf = VF.Test.makeFactory(options, 300);
+    var stave = vf.Stave();
+    var score = vf.EasyScore();
+    var voice = score.voice(score.notes.apply(score, notesData));
+    var notes = voice.getTickables();
+
+    setupTies(vf, notes, stave);
+
+    vf.Formatter()
+      .joinVoices([voice])
+      .formatToStave([voice], stave);
+
+    vf.draw();
+
+    ok(true);
+  };
+}
+
 VF.Test.StaveTie = (function() {
   var StaveTie = {
     Start: function() {
@@ -18,202 +38,99 @@ VF.Test.StaveTie = (function() {
       runTests('Set Direction Up', StaveTie.setDirectionUp);
     },
 
-    simple: function(options) {
-      var vf = VF.Test.makeFactory(options, 300);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+    simple: createTest(
+      ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
+      function(vf, notes) {
+        vf.StaveTie({
+          from: notes[0],
+          to: notes[1],
+          first_indices: [0, 1],
+          last_indices: [0, 1],
+        });
+      }
+    ),
 
-      var voice = score.voice(score.notes(
-        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
-      ));
+    chord: createTest(
+      ['(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'down' }],
+      function(vf, notes) {
+        vf.StaveTie({
+          from: notes[0],
+          to: notes[1],
+          first_indices: [0, 1, 2],
+          last_indices: [0, 1, 2],
+        });
+      }
+    ),
 
-      var notes = voice.getTickables();
+    stemUp: createTest(
+      ['(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'up' }],
+      function(vf, notes) {
+        vf.StaveTie({
+          from: notes[0],
+          to: notes[1],
+          first_indices: [0, 1, 2],
+          last_indices: [0, 1, 2],
+        });
+      }
+    ),
 
-      vf.StaveTie({
-        from: notes[0],
-        to: notes[1],
-        first_indices: [0, 1],
-        last_indices: [0, 1],
-      });
+    noEndNote: createTest(
+      ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
+      function(vf, notes, stave) {
+        stave.addEndClef('treble');
+        vf.StaveTie({
+          from: notes[1],
+          to: null,
+          first_indices: [2],
+          last_indices: [2],
+          text: 'slow.',
+        });
+      }
+    ),
 
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
+    noStartNote: createTest(
+      ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
+      function(vf, notes, stave) {
+        stave.addClef('treble');
+        vf.StaveTie({
+          from: null,
+          to: notes[0],
+          first_indices: [2],
+          last_indices: [2],
+          text: 'H',
+        });
+      }
+    ),
 
-      vf.draw();
+    setDirectionDown: createTest(
+      ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
+      function(vf, notes) {
+        vf.StaveTie({
+          from: notes[0],
+          to: notes[1],
+          first_indices: [0, 1],
+          last_indices: [0, 1],
+          options: {
+            direction: Vex.Flow.Stem.DOWN,
+          },
+        });
+      }
+    ),
 
-      ok(true, 'Simple Test');
-    },
-
-    chord: function(options) {
-      var vf = VF.Test.makeFactory(options, 300);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
-
-      var voice = score.voice(score.notes(
-        '(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'down' })
-      );
-
-      var notes = voice.getTickables();
-
-      vf.StaveTie({
-        from: notes[0],
-        to: notes[1],
-        first_indices: [0, 1, 2],
-        last_indices: [0, 1, 2],
-      });
-
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
-
-      vf.draw();
-
-      ok(true, 'Chord test');
-    },
-
-    stemUp: function(options) {
-      var vf = VF.Test.makeFactory(options, 300);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
-
-      var voice = score.voice(score.notes(
-        '(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'up' })
-      );
-
-      var notes = voice.getTickables();
-
-      vf.StaveTie({
-        from: notes[0],
-        to: notes[1],
-        first_indices: [0, 1, 2],
-        last_indices: [0, 1, 2],
-      });
-
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
-
-      vf.draw();
-
-      ok(true, 'Stem up test');
-    },
-
-    noEndNote: function(options) {
-      var vf = VF.Test.makeFactory(options, 300);
-      var stave = vf.Stave().addEndClef('treble');
-      var score = vf.EasyScore();
-
-      var voice = score.voice(score.notes(
-        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
-      ));
-
-      var notes = voice.getTickables();
-
-      vf.StaveTie({
-        from: notes[1],
-        to: null,
-        first_indices: [2],
-        last_indices: [2],
-        text: 'slow.',
-      });
-
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
-
-      vf.draw();
-
-      ok(true, 'No end note');
-    },
-
-    noStartNote: function(options) {
-      var vf = VF.Test.makeFactory(options, 300);
-      var stave = vf.Stave().addClef('treble');
-      var score = vf.EasyScore();
-
-      var voice = score.voice(score.notes(
-        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
-      ));
-
-      var notes = voice.getTickables();
-
-      vf.StaveTie({
-        from: null,
-        to: notes[0],
-        first_indices: [2],
-        last_indices: [2],
-        text: 'H',
-      });
-
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
-
-      vf.draw();
-
-      ok(true, 'No end note');
-    },
-
-    setDirectionDown: function(options) {
-      var vf = VF.Test.makeFactory(options, 300);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
-
-      var voice = score.voice(score.notes(
-        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
-      ));
-
-      var notes = voice.getTickables();
-
-      vf.StaveTie({
-        from: notes[0],
-        to: notes[1],
-        first_indices: [0, 1],
-        last_indices: [0, 1],
-        options: {
-          direction: Vex.Flow.Stem.DOWN,
-        },
-      });
-
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
-
-      vf.draw();
-
-      ok(true, 'Set Direction Down');
-    },
-
-    setDirectionUp: function(options) {
-      var vf = VF.Test.makeFactory(options, 300);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
-
-      var voice = score.voice(score.notes(
-        '(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }
-      ));
-
-      var notes = voice.getTickables();
-
-      vf.StaveTie({
-        from: notes[0],
-        to: notes[1],
-        first_indices: [0, 1],
-        last_indices: [0, 1],
-        options: {
-          direction: Vex.Flow.Stem.UP,
-        },
-      });
-
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
-
-      vf.draw();
-
-      ok(true, 'Set Direction Down');
-    },
+    setDirectionUp: createTest(
+      ['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }],
+      function(vf, notes) {
+        vf.StaveTie({
+          from: notes[0],
+          to: notes[1],
+          first_indices: [0, 1],
+          last_indices: [0, 1],
+          options: {
+            direction: Vex.Flow.Stem.UP,
+          },
+        });
+      }
+    ),
   };
 
   return StaveTie;
