@@ -32,6 +32,7 @@ import { GraceNoteGroup } from './gracenotegroup';
 import { EasyScore } from './easyscore';
 import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
+import { TextBracket } from './textbracket';
 import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
 
@@ -357,6 +358,33 @@ export class Factory {
     }, params.text).setContext(this.context);
     this.renderQ.push(tie);
     return tie;
+  }
+
+  TextBracket(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      text: '',
+      options: {
+        superscript: '',
+        position: 1,
+      },
+    });
+
+    const textBracket = new TextBracket({
+      start: params.from,
+      stop: params.to,
+      text: params.text,
+      superscript: params.options.superscript,
+      position: params.options.position,
+    });
+
+    if (params.options.line) textBracket.setLine(params.options.line);
+    if (params.options.font) textBracket.setFont(params.options.font);
+
+    textBracket.setContext(this.context);
+    this.renderQ.push(textBracket);
+    return textBracket;
   }
 
   System(params = {}) {

@@ -85,7 +85,7 @@ export class Modifier extends Element {
   getPosition() { return this.position; }
   setPosition(position) {
     this.position = typeof(position) === 'string'
-     ? Modifier.PositionString[position]
+      ? Modifier.PositionString[position]
       : position;
     return this;
   }
