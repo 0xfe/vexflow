@@ -296,16 +296,34 @@ Flow.accidentalCodes.accidentals = {
 };
 
 Flow.accidentalColumnsTable = {
-  1: { a: [1], b: [1] },
-  2: { a: [1, 2] },
-  3: { a: [1, 3, 2], b: [1, 2, 1], second_on_bottom: [1, 2, 3] },
-  4: { a: [1, 3, 4, 2], b: [1, 2, 3, 1], spaced_out_tetrachord: [1, 2, 1, 2] },
-  5: { a: [1, 3, 5, 4, 2], b: [1, 2, 4, 3, 1],
-        spaced_out_pentachord: [1, 2, 3, 2, 1],
-        very_spaced_out_pentachord: [1, 2, 1, 2, 1] },
-  6: { a: [1, 3, 5, 6, 4, 2], b: [1, 2, 4, 5, 3, 1],
-        spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
-        very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2] },
+  1: {
+    a: [1],
+    b: [1],
+  },
+  2: {
+    a: [1, 2],
+  },
+  3: {
+    a: [1, 3, 2],
+    b: [1, 2, 1],
+    second_on_bottom: [1, 2, 3],
+  },
+  4: {
+    a: [1, 3, 4, 2],
+    b: [1, 2, 3, 1],
+    spaced_out_tetrachord: [1, 2, 1, 2],
+  },
+  5: {
+    a: [1, 3, 5, 4, 2],
+    b: [1, 2, 4, 3, 1],
+    spaced_out_pentachord: [1, 2, 3, 2, 1],
+    very_spaced_out_pentachord: [1, 2, 1, 2, 1] },
+  6: {
+    a: [1, 3, 5, 6, 4, 2],
+    b: [1, 2, 4, 5, 3, 1],
+    spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
+    very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2],
+  },
 };
 
 Flow.ornamentCodes = acc => Flow.ornamentCodes.ornaments[acc];
