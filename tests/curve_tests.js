@@ -7,37 +7,38 @@ var VF = Vex.Flow;
 VF.Test.Curve = (function() {
   function concat(a, b) { return a.concat(b); }
 
-  var Curve = {
-    createTest: function(beamGroup1, beamGroup2, setupCurves) {
-      return function(options) {
-        var vf = VF.Test.makeFactory(options, 350, 200);
-        var stave = vf.Stave({ y: 50 });
-        var score = vf.EasyScore();
+  function createTest(beamGroup1, beamGroup2, setupCurves) {
+    return function(options) {
+      var vf = VF.Test.makeFactory(options, 350, 200);
+      var stave = vf.Stave({ y: 50 });
+      var score = vf.EasyScore();
 
-        var notes = [
-          score.beam(score.notes.apply(score, beamGroup1)),
-          score.beam(score.notes.apply(score, beamGroup2)),
-        ].reduce(concat);
+      var notes = [
+       score.beam(score.notes.apply(score, beamGroup1)),
+       score.beam(score.notes.apply(score, beamGroup2)),
+      ].reduce(concat);
 
-        setupCurves(vf, notes);
+      setupCurves(vf, notes);
 
-        var voice = score.voice(notes, { time: '4/4' });
+      var voice = score.voice(notes, { time: '4/4' });
 
-        vf.Formatter()
-          .joinVoices([voice])
-          .formatToStave([voice], stave);
+      vf.Formatter()
+       .joinVoices([voice])
+       .formatToStave([voice], stave);
 
-        vf.draw();
+      vf.draw();
 
-        ok('Simple Curve');
-      };
-    },
+      ok('Simple Curve');
+    };
+  };
 
+  return {
     Start: function() {
+      var run = VF.Test.runTests;
+
       QUnit.module('Curve');
 
-      var createTest = Curve.createTest;
-      VF.Test.runTests('Simple Curve', createTest(
+      run('Simple Curve', createTest(
         ['c4/8, f5, d5, g5', { stem: 'up' }],
         ['d6/8, f5, d5, g5', { stem: 'down' }],
         function(vf, notes) {
@@ -59,7 +60,7 @@ VF.Test.Curve = (function() {
         }
       ));
 
-      VF.Test.runTests('Rounded Curve', createTest(
+      run('Rounded Curve', createTest(
         ['c5/8, f4, d4, g5', { stem: 'up' }],
         ['d5/8, d6, d6, g5', { stem: 'down' }],
         function(vf, notes) {
@@ -83,7 +84,7 @@ VF.Test.Curve = (function() {
         }
       ));
 
-      VF.Test.runTests('Thick Thin Curves', createTest(
+      run('Thick Thin Curves', createTest(
         ['c5/8, f4, d4, g5', { stem: 'up' }],
         ['d5/8, d6, d6, g5', { stem: 'down' }],
         function(vf, notes) {
@@ -109,7 +110,7 @@ VF.Test.Curve = (function() {
         }
       ));
 
-      VF.Test.runTests('Top Curve', createTest(
+      run('Top Curve', createTest(
         ['c5/8, f4, d4, g5', { stem: 'up' }],
         ['d5/8, d6, d6, g5', { stem: 'down' }],
         function(vf, notes) {
@@ -128,6 +129,4 @@ VF.Test.Curve = (function() {
       ));
     },
   };
-
-  return Curve;
 })();
