@@ -4,6 +4,5 @@ Vex.Flow.Microtonal = {
  'vd1': { 'x_min': -20, 'x_max': 320, 'ha': 257, 'o': 'm -8 200 b -8 210 8 200 16 200 l 20 148 -199 l 23 -615 b 0 -629 9 -629 6 -629 l -21 -612 l -21 -201 l -21 216 l -20 200 m 16 200 l 310 0 l 240 0 l 16 140 l 16 -120 l 240 0 l 310 0 l 16 -200 '}
 },
  'cssFontWeight': 'normal', 'ascender': 1903, 'underlinePosition': -125, 'cssFontStyle': 'normal', 'boundingBox': { 'yMin': -2065.375, 'xMin': -695.53125, 'yMax': 1901.578125, 'xMax': 1159.671875 },
- 'resolution': 1000, 'original_font_information': { 'postscript_name': 'Gonville-18', 'version_string': 'Version 0.1.8904 ', 'vendor_url': '', 'full_font_name': 'Gonville-18', 'font_family_name': 'Gonville-18', 'copyright': 'No copyright is claimed on this font file.', 'description': '', 'trademark': '', 'designer': '', 'designer_url': '', 'unique_font_identifier': 'FontForge 2.0 : Gonville-18 : 17-3-2010', 'license_url': '', 'license_description': '', 'manufacturer_name': '', 'font_sub_family_name': '18' },
- 'descender': -2066, 'familyName': 'Gonville-18', 'lineHeight': 4093, 'underlineThickness': 50 
+ 'resolution': 1000, 'descender': -2066, 'familyName': 'Gonville-18', 'lineHeight': 4093, 'underlineThickness': 50 
 };
