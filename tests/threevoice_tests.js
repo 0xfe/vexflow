@@ -45,7 +45,7 @@ VF.Test.ThreeVoices = (function() {
     Start: function() {
       var run = VF.Test.runTests;
 
-      QUnit.module('Multiple Voices');
+      QUnit.module('Three Voice Rests');
 
       run('Three Voices - #1', createThreeVoicesTest(
         ['e5/2, e5', { stem: 'up' }],
