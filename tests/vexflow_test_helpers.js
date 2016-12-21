@@ -239,7 +239,7 @@ VF.Test = (function() {
 
     almostEqual: function(value, expectedValue, errorMargin) {
       return equal(Math.abs(value - expectedValue) < errorMargin, true);
-    }
+    },
   };
 
   Test.genID.ID = 0;
