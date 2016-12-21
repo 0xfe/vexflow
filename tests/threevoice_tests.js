@@ -3,18 +3,6 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
- /*
- eslint-disable
- no-var,
- no-undef,
- wrap-iife,
- func-names,
- vars-on-top,
- max-len,
- object-shorthand,
- prefer-arrow-callback,
-  */
-
 VF.Test.ThreeVoices = (function() {
   function concat(a, b) { return a.concat(b); }
 
@@ -33,7 +21,7 @@ VF.Test.ThreeVoices = (function() {
       setup(vf, voices);
 
       var beams = [
-        VF.Beam.applyAndGetBeams(voices[0], 1),
+        VF.Beam.applyAndGetBeams(voices[0], +1),
         VF.Beam.applyAndGetBeams(voices[1], -1),
         VF.Beam.applyAndGetBeams(voices[2], -1),
       ].reduce(concat);
@@ -49,7 +37,7 @@ VF.Test.ThreeVoices = (function() {
         beams[i].setContext(vf.getContext()).draw();
       }
 
-      ok(true, 'Three Voices - Test #2 Complex');
+      ok(true);
     };
   }
 
