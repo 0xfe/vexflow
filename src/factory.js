@@ -33,6 +33,7 @@ import { EasyScore } from './easyscore';
 import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
 import { TextBracket } from './textbracket';
+import { VibratoBracket } from './vibratobracket';
 import { GhostNote } from './ghostnote';
 import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
@@ -380,6 +381,29 @@ export class Factory {
     }, params.text).setContext(this.context);
     this.renderQ.push(tie);
     return tie;
+  }
+
+  VibratoBracket(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      options: {
+        harsh: false,
+      },
+    });
+
+    const vibratoBracket = new VibratoBracket({
+      start: params.from,
+      stop: params.to,
+    });
+
+    if (params.options.line) vibratoBracket.setLine(params.options.line);
+    if (params.options.harsh) vibratoBracket.setHarsh(params.options.harsh);
+
+    vibratoBracket.setContext(this.context);
+    this.renderQ.push(vibratoBracket);
+
+    return vibratoBracket;
   }
 
   TextBracket(params) {
