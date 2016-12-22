@@ -738,7 +738,6 @@ export class StaveNote extends StemmableNote {
 
   setKeyLine(index, line) {
     this.keyProps[index].line = line;
-    this.note_heads[index].setLine(line);
     this.reset();
     return this;
   }
