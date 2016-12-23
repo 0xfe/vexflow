@@ -17,36 +17,38 @@ import { BoundingBox } from './boundingbox';
 function L(...args) { if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args); }
 
 export class BarNote extends Note {
-  constructor(type) {
+  constructor(type = Barline.type.SINGLE) {
     super({ duration: 'b' });
     this.setAttribute('type', 'BarNote');
 
-    const TYPE = Barline.type;
     this.metrics = {
       widths: {},
     };
 
-    // Defined this way to prevent lint errors.
-    this.metrics.widths[TYPE.SINGLE] = 8;
-    this.metrics.widths[TYPE.DOUBLE] = 12;
-    this.metrics.widths[TYPE.END] = 15;
-    this.metrics.widths[TYPE.REPEAT_BEGIN] = 14;
-    this.metrics.widths[TYPE.REPEAT_END] = 14;
-    this.metrics.widths[TYPE.REPEAT_BOTH] = 18;
-    this.metrics.widths[TYPE.NONE] = 0;
+    const TYPE = Barline.type;
+    this.metrics.widths = {
+      [TYPE.SINGLE]: 8,
+      [TYPE.DOUBLE]: 12,
+      [TYPE.END]: 15,
+      [TYPE.REPEAT_BEGIN]: 14,
+      [TYPE.REPEAT_END]: 14,
+      [TYPE.REPEAT_BOTH]: 18,
+      [TYPE.NONE]: 0,
+    };
 
     // Tell the formatter that bar notes have no duration.
     this.ignore_ticks = true;
-    this.type = type === undefined ? TYPE.SINGLE : type;
-
-    // Set width to width of relevant `Barline`.
-    this.setWidth(this.metrics.widths[this.type]);
+    this.setType(type);
   }
 
   // Get and set the type of Bar note. `type` must be one of `Vex.Flow.Barline.type`.
   getType() { return this.type; }
   setType(type) {
-    this.type = type;
+    this.type = typeof(type) === 'string'
+      ? Barline.typeString[type]
+      : type;
+
+    // Set width to width of relevant `Barline`.
     this.setWidth(this.metrics.widths[this.type]);
     return this;
   }

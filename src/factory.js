@@ -35,6 +35,7 @@ import { PedalMarking } from './pedalmarking';
 import { TextBracket } from './textbracket';
 import { VibratoBracket } from './vibratobracket';
 import { GhostNote } from './ghostnote';
+import { BarNote } from './barnote';
 import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
 import { TextNote } from './textnote';
@@ -174,6 +175,19 @@ export class Factory {
     textNote.setContext(this.context);
     this.renderQ.push(textNote);
     return textNote;
+  }
+
+  BarNote(params) {
+    params = setDefaults(params, {
+      type: 'single',
+      options: {},
+    });
+
+    const barNote = new BarNote(params.type);
+    if (this.stave) barNote.setStave(this.stave);
+    barNote.setContext(this.context);
+    this.renderQ.push(barNote);
+    return barNote;
   }
 
   ClefNote(params) {
