@@ -19,6 +19,7 @@ import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
 import { StaveTie } from './stavetie';
+import { StaveLine } from './staveline';
 import { StaveNote } from './stavenote';
 import { StaveConnector } from './staveconnector';
 import { System } from './system';
@@ -386,6 +387,30 @@ export class Factory {
     tie.setContext(this.context);
     this.renderQ.push(tie);
     return tie;
+  }
+
+  StaveLine(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      first_indices: [0],
+      last_indices: [0],
+      options: {},
+    });
+
+    const line = new StaveLine({
+      first_note: params.from,
+      last_note: params.to,
+      first_indices: params.first_indices,
+      last_indices: params.last_indices,
+    });
+
+    if (params.options.text) line.setText(params.options.text);
+    if (params.options.font) line.setFont(params.options.font);
+
+    line.setContext(this.context);
+    this.renderQ.push(line);
+    return line;
   }
 
   VibratoBracket(params) {
