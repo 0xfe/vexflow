@@ -5,8 +5,8 @@
  */
 
 VF.Test.StaveHairpin = (function() {
-  function drawHairpin(notes, stave, ctx, type, position, options) {
-    var hairpin = new VF.StaveHairpin(notes, type);
+  function drawHairpin(from, to, stave, ctx, type, position, options) {
+    var hairpin = new VF.StaveHairpin({ first_note: from, last_note: to }, type);
 
     hairpin.setContext(ctx);
     hairpin.setPosition(position);
@@ -50,18 +50,18 @@ VF.Test.StaveHairpin = (function() {
       QUnit.module('StaveHairpin');
 
       run('Simple StaveHairpin', createTest(function(ctx, stave, notes) {
-        drawHairpin({ first_note: notes[0], last_note: notes[2] }, stave, ctx, 1, 4);
-        drawHairpin({ first_note: notes[1], last_note: notes[3] }, stave, ctx, 2, 3);
+        drawHairpin(notes[0], notes[2], stave, ctx, 1, 4);
+        drawHairpin(notes[1], notes[3], stave, ctx, 2, 3);
       }));
 
       run('Horizontal Offset StaveHairpin', createTest(function(ctx, stave, notes) {
-        drawHairpin({ first_note: notes[0], last_note: notes[2] }, stave, ctx, 1, 3, {
+        drawHairpin(notes[0], notes[2], stave, ctx, 1, 3, {
           height: 10,
           vo: 20, // vertical offset
           left_ho: 20, // left horizontal offset
           right_ho: -20, // right horizontal offset
         });
-        drawHairpin({ first_note: notes[3], last_note: notes[3] }, stave, ctx, 2, 4, {
+        drawHairpin(notes[3], notes[3], stave, ctx, 2, 4, {
           height: 10,
           y_shift: 0, // vertical offset
           left_shift_px: 0, // left horizontal offset
@@ -70,13 +70,13 @@ VF.Test.StaveHairpin = (function() {
       }));
 
       run('Vertical Offset StaveHairpin', createTest(function(ctx, stave, notes) {
-        drawHairpin({ first_note: notes[0], last_note: notes[2] }, stave, ctx, 1, 4, {
+        drawHairpin(notes[0], notes[2], stave, ctx, 1, 4, {
           height: 10,
           y_shift: 0, // vertical offset
           left_shift_px: 0, // left horizontal offset
           right_shift_px: 0, // right horizontal offset
         });
-        drawHairpin({ first_note: notes[2], last_note: notes[3] }, stave, ctx, 2, 4, {
+        drawHairpin(notes[2], notes[3], stave, ctx, 2, 4, {
           height: 10,
           y_shift: -15, // vertical offset
           left_shift_px: 2, // left horizontal offset
@@ -85,13 +85,13 @@ VF.Test.StaveHairpin = (function() {
       }));
 
       run('Height StaveHairpin', createTest(function(ctx, stave, notes) {
-        drawHairpin({ first_note: notes[0], last_note: notes[2] }, stave, ctx, 1, 4, {
+        drawHairpin(notes[0], notes[2], stave, ctx, 1, 4, {
           height: 10,
           y_shift: 0, // vertical offset
           left_shift_px: 0, // left horizontal offset
           right_shift_px: 0, // right horizontal offset
         });
-        drawHairpin({ first_note: notes[2], last_note: notes[3] }, stave, ctx, 2, 4, {
+        drawHairpin(notes[2], notes[3], stave, ctx, 2, 4, {
           height: 15,
           y_shift: 0, // vertical offset
           left_shift_px: 2, // left horizontal offset
