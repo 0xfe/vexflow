@@ -332,7 +332,6 @@ export class StaveNote extends StemmableNote {
     }
     this.reset();
     this.buildFlag();
-    this.calcExtraPx();
   }
 
   reset() {
@@ -341,6 +340,7 @@ export class StaveNote extends StemmableNote {
     if (this.stave) {
       this.note_heads.forEach(head => head.setStave(this.stave));
     }
+    this.calcExtraPx();
   }
 
   getCategory() { return StaveNote.CATEGORY; }
