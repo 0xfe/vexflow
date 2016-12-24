@@ -5,138 +5,127 @@
 VF.Test.StaveLine = (function() {
   var StaveLine = {
     Start: function() {
-      QUnit.module("StaveLine");
-      VF.Test.runTests("Simple StaveLine", VF.Test.StaveLine.simple0);
-      VF.Test.runTests("StaveLine Arrow Options", VF.Test.StaveLine.simple1);
+      QUnit.module('StaveLine');
+      VF.Test.runTests('Simple StaveLine', VF.Test.StaveLine.simple0);
+      VF.Test.runTests('StaveLine Arrow Options', VF.Test.StaveLine.simple1);
     },
 
-    simple0: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var ctx = new options.contextBuilder(options.canvas_sel, 650, 140);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = " 10pt Arial";
-      //ctx.translate(0.5, 0.5);
-      var stave = new VF.Stave(10, 10, 550).addTrebleGlyph();
-      stave.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    simple0: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave().addTrebleGlyph();
 
       var notes = [
-        {keys: ["c/4"], duration: "4", clef: "treble"},
-        {keys: ["c/5"], duration: "4", clef: "treble"},
-        {keys: ["c/4", "g/4", "b/4"], duration: "4", clef: "treble"},
-        {keys: ["f/4", "a/4", "f/5"], duration: "4", clef: "treble"}
-      ].map(newNote);
+        vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }),
+        vf.StaveNote({ keys: ['c/5'], duration: '4', clef: 'treble' }),
+        vf.StaveNote({ keys: ['c/4', 'g/4', 'b/4'], duration: '4', clef: 'treble' }),
+        vf.StaveNote({ keys: ['f/4', 'a/4', 'f/5'], duration: '4', clef: 'treble' }),
+      ];
 
-      var staveLine = new VF.StaveLine({
-        first_note: notes[0],
-        last_note: notes[1],
+      var voice = vf.Voice().addTickables(notes);
+
+      vf.StaveLine({
+        from: notes[0],
+        to: notes[1],
         first_indices: [0],
-        last_indices: [0]
+        last_indices: [0],
+        options: {
+          font: { family: 'serif', size: 12, weight: 'italic' },
+          text: 'gliss.',
+        },
       });
 
-      var staveLine2 = new VF.StaveLine({
-        first_note: notes[2],
-        last_note: notes[3],
+      var staveLine2 = vf.StaveLine({
+        from: notes[2],
+        to: notes[3],
         first_indices: [2, 1, 0],
-        last_indices: [0, 1, 2]
+        last_indices: [0, 1, 2],
       });
-      staveLine2.render_options.line_dash = [10,10];
+      staveLine2.render_options.line_dash = [10, 10];
 
-      var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice.addTickables(notes);
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-      staveLine.setText('gliss.');
-      staveLine.setFont({
-        family: "serif",
-        size: 12,
-        weight: "italic"
-      });
-
-      voice.draw(ctx, stave);
-      staveLine.setContext(ctx).draw();
-      staveLine2.setContext(ctx).draw();
+      vf.draw();
 
       ok(true);
     },
 
-
-    simple1: function(options, contextBuilder) {
-      options.contextBuilder = contextBuilder;
-      var ctx = new options.contextBuilder(options.canvas_sel, 770, 140);
-      ctx.scale(1, 1); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = " 10pt Arial";
-      //ctx.translate(0.5, 0.5);
-      var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
-      stave.setContext(ctx).draw();
-
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    simple1: function(options) {
+      var vf = VF.Test.makeFactory(options, 770);
+      var stave = vf.Stave().addTrebleGlyph();
 
       var notes = [
-        {keys: ["c#/5", "d/5"], duration: "4", clef: "treble", stem_direction: -1},
-        {keys: ["c/4"], duration: "4", clef: "treble"},
-        {keys: ["c/4", "e/4", "g/4"], duration: "4", clef: "treble"},
-        {keys: ["f/4", "a/4", "c/5"], duration: "4", clef: "treble"},
-        {keys: ["c/4",], duration: "4", clef: "treble"},
-        {keys: ["c#/5", "d/5"], duration: "4", clef: "treble", stem_direction: -1},
-        {keys: ["c/4", "d/4", "g/4"], duration: "4", clef: "treble"},
-        {keys: ["f/4", "a/4", "c/5"], duration: "4", clef: "treble"}
-      ].map(newNote);
+        vf.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 })
+          .addDotToAll(),
+        vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' })
+          .addAccidental(0, vf.Accidental({ type: '#' })),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '4', clef: 'treble' }),
+        vf.StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
+          .addAccidental(2, vf.Accidental({ type: '#' })),
+        vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' })
+          .addAccidental(0, vf.Accidental({ type: '#' })),
+        vf.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }),
+        vf.StaveNote({ keys: ['c/4', 'd/4', 'g/4'], duration: '4', clef: 'treble' }),
+        vf.StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
+          .addAccidental(2, vf.Accidental({ type: '#' })),
+      ];
+      var voice = vf.Voice().setStrict(false).addTickables(notes);
 
-      notes[0].addDotToAll();
-      notes[1].addAccidental(0, new VF.Accidental("#"));
-      notes[3].addAccidental(2, new VF.Accidental("#"));
-      notes[4].addAccidental(0, new VF.Accidental("#"));
-      notes[7].addAccidental(2, new VF.Accidental("#"));
-
-      var staveLine0 = new VF.StaveLine({
-        first_note: notes[0],
-        last_note: notes[1],
+      var staveLine0 = vf.StaveLine({
+        from: notes[0],
+        to: notes[1],
         first_indices: [0],
-        last_indices: [0]
+        last_indices: [0],
+        options: {
+          text: 'Left',
+        },
       });
 
-      var staveLine4 = new VF.StaveLine({
-        first_note: notes[2],
-        last_note: notes[3],
+      var staveLine4 = vf.StaveLine({
+        from: notes[2],
+        to: notes[3],
         first_indices: [1],
-        last_indices: [1]
+        last_indices: [1],
+        options: {
+          text: 'Right',
+        }
       });
 
-      var staveLine1 = new VF.StaveLine({
-        first_note: notes[4],
-        last_note: notes[5],
+      var staveLine1 = vf.StaveLine({
+        from: notes[4],
+        to: notes[5],
         first_indices: [0],
-        last_indices: [0]
+        last_indices: [0],
+        options: {
+          text: 'Center',
+        },
       });
 
-      var staveLine2 = new VF.StaveLine({
-        first_note: notes[6],
-        last_note: notes[7],
+      var staveLine2 = vf.StaveLine({
+        from: notes[6],
+        to: notes[7],
         first_indices: [1],
-        last_indices: [0]
+        last_indices: [0],
       });
 
-      var staveLine3 = new VF.StaveLine({
-        first_note: notes[6],
-        last_note: notes[7],
+      var staveLine3 = vf.StaveLine({
+        from: notes[6],
+        to: notes[7],
         first_indices: [2],
-        last_indices: [2]
+        last_indices: [2],
+        options: {
+          text: 'Top',
+        },
       });
 
       staveLine0.render_options.draw_end_arrow = true;
-      staveLine0.setText('Left');
       staveLine0.render_options.text_justification = 1;
       staveLine0.render_options.text_position_vertical = 2;
 
       staveLine1.render_options.draw_end_arrow = true;
       staveLine1.render_options.arrowhead_length = 30;
       staveLine1.render_options.line_width = 5;
-      staveLine1.setText('Center');
       staveLine1.render_options.text_justification = 2;
       staveLine1.render_options.text_position_vertical = 2;
 
@@ -145,7 +134,6 @@ VF.Test.StaveLine = (function() {
       staveLine4.render_options.draw_start_arrow = true;
       staveLine4.render_options.arrowhead_angle = 0.5;
       staveLine4.render_options.arrowhead_length = 20;
-      staveLine4.setText('Right');
       staveLine4.render_options.text_justification = 3;
       staveLine4.render_options.text_position_vertical = 2;
 
@@ -154,26 +142,18 @@ VF.Test.StaveLine = (function() {
 
       staveLine3.render_options.draw_end_arrow = true;
       staveLine3.render_options.draw_start_arrow = true;
-      staveLine3.render_options.color = "red";
-      staveLine3.setText('Top');
+      staveLine3.render_options.color = 'red';
       staveLine3.render_options.text_position_vertical = 1;
 
-      var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
-      voice.addTickables(notes);
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-      voice.draw(ctx, stave);
-
-      staveLine0.setContext(ctx).draw();
-      staveLine1.setContext(ctx).draw();
-      staveLine2.setContext(ctx).draw();
-      staveLine3.setContext(ctx).draw();
-      staveLine4.setContext(ctx).draw();
+      vf.draw();
 
       ok(true);
-    }
+    },
   };
 
   return StaveLine;
-})();
+}());
