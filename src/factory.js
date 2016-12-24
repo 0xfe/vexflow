@@ -14,6 +14,7 @@ import { Articulation } from './articulation';
 import { Annotation } from './annotation';
 import { Formatter } from './formatter';
 import { FretHandFinger } from './frethandfinger';
+import { StringNumber } from './stringnumber';
 import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
@@ -288,6 +289,19 @@ export class Factory {
     fingering.setPosition(params.position);
     fingering.setContext(this.context);
     return fingering;
+  }
+
+  StringNumber(params) {
+    params = setDefaults(params, {
+      number: '0',
+      position: 'left',
+      options: {},
+    });
+
+    const stringNumber = new StringNumber(params.number);
+    stringNumber.setPosition(params.position);
+    stringNumber.setContext(this.context);
+    return stringNumber;
   }
 
   TickContext() {
