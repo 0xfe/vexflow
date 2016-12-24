@@ -30,7 +30,9 @@ import { Beam } from './beam';
 import { Curve } from './curve';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
+import { NoteSubGroup } from './notesubgroup';
 import { EasyScore } from './easyscore';
+import { TimeSigNote } from './timesignote';
 import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
 import { TextBracket } from './textbracket';
@@ -190,6 +192,19 @@ export class Factory {
     clefNote.setContext(this.context);
     this.renderQ.push(clefNote);
     return clefNote;
+  }
+
+  TimeSigNote(params) {
+    params = setDefaults(params, {
+      time: '4/4',
+      options: {},
+    });
+
+    const timeSigNote = new TimeSigNote(params.time);
+    if (this.stave) timeSigNote.setStave(this.stave);
+    timeSigNote.setContext(this.context);
+    this.renderQ.push(timeSigNote);
+    return timeSigNote;
   }
 
   TabNote(noteStruct) {
@@ -488,6 +503,17 @@ export class Factory {
     pedal.setContext(this.context);
     this.renderQ.push(pedal);
     return pedal;
+  }
+
+  NoteSubGroup(params = {}) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {},
+    });
+
+    const group = new NoteSubGroup(params.notes);
+    group.setContext(this.context);
+    return group;
   }
 
   draw() {
