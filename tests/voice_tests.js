@@ -68,7 +68,7 @@ VF.Test.Voice = (function() {
     },
 
     full: function(options, contextBuilder) {
-      var ctx  = contextBuilder(options.canvas_sel, 550, 200);
+      var ctx  = contextBuilder(options.elementId, 550, 200);
 
       var stave = new VF.Stave(10, 50, 500)
         .addClef('treble')

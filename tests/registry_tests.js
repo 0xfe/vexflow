@@ -16,7 +16,7 @@ Vex.Flow.Test.Registry = (function() {
 
     registerAndClear: function(assert) {
       var registry = new VF.Registry();
-      var score = new VF.EasyScore({factory: VF.Factory.newFromSelector(null)});
+      var score = new VF.EasyScore({factory: VF.Factory.newFromElementId(null)});
 
       registry.register(score.notes('C4')[0], 'foobar');
 
@@ -27,7 +27,7 @@ Vex.Flow.Test.Registry = (function() {
       registry.clear();
       assert.notOk(registry.getElementById('foobar'));
       assert.throws(function() {registry.register(score.notes('C4'))});
-      
+
       registry.clear();
       assert.ok(registry
         .register(score.notes('C4[id="boobar"]')[0])
@@ -36,7 +36,7 @@ Vex.Flow.Test.Registry = (function() {
 
     defaultRegistry: function(assert) {
       var registry = new VF.Registry();
-      var score = new VF.EasyScore({factory: VF.Factory.newFromSelector(null)});
+      var score = new VF.EasyScore({factory: VF.Factory.newFromElementId(null)});
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
@@ -57,12 +57,12 @@ Vex.Flow.Test.Registry = (function() {
 
     classes: function(assert) {
       var registry = new VF.Registry();
-      var score = new VF.EasyScore({factory: VF.Factory.newFromSelector(null)});
+      var score = new VF.EasyScore({factory: VF.Factory.newFromElementId(null)});
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
       const note = registry.getElementById('foobar');
- 
+
       note.addClass('foo');
       assert.ok(note.hasClass('foo'));
       assert.notOk(note.hasClass('boo'));
@@ -84,5 +84,5 @@ Vex.Flow.Test.Registry = (function() {
     }
   };
 
-  return Registry;  
+  return Registry;
 })();

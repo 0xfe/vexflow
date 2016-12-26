@@ -233,7 +233,7 @@ VF.Test.StaveNote = (function() {
       var octaveShift = options.params.octaveShift;
       var restKey = options.params.restKey;
 
-      var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+      var ctx = new contextBuilder(options.elementId, 700, 180);
       var stave = new VF.Stave(10, 30, 750);
       stave.setContext(ctx);
       stave.addClef(clef);
@@ -313,7 +313,7 @@ VF.Test.StaveNote = (function() {
       var octaveShift = options.params.octaveShift;
       var restKey = options.params.restKey;
 
-      var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+      var ctx = new contextBuilder(options.elementId, 700, 180);
       var stave = new VF.Stave(10, 30, 750);
       stave.setContext(ctx);
       stave.addClef(clef);
@@ -373,7 +373,7 @@ VF.Test.StaveNote = (function() {
 
     drawBass: function(options, contextBuilder) {
       expect(40);
-      var ctx = new contextBuilder(options.canvas_sel, 600, 280);
+      var ctx = new contextBuilder(options.elementId, 600, 280);
       var stave = new VF.Stave(10, 10, 650);
       stave.setContext(ctx);
       stave.addClef('bass');
@@ -414,7 +414,7 @@ VF.Test.StaveNote = (function() {
     },
 
     displacements: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 700, 140);
+      var ctx = new contextBuilder(options.elementId, 700, 140);
       ctx.scale(0.9, 0.9);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
@@ -452,7 +452,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawHarmonicAndMuted: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 300, 180);
+      var ctx = new contextBuilder(options.elementId, 300, 180);
       var stave = new VF.Stave(10, 10, 280);
       stave.setContext(ctx);
       stave.draw();
@@ -509,7 +509,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawSlash: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+      var ctx = new contextBuilder(options.elementId, 700, 180);
       var stave = new VF.Stave(10, 10, 650);
       stave.setContext(ctx);
       stave.draw();
@@ -555,7 +555,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawKeyStyles: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 300, 280);
+      var ctx = new contextBuilder(options.elementId, 300, 280);
       ctx.scale(3, 3);
 
       var stave = new VF.Stave(10, 0, 100);
@@ -578,7 +578,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawNoteStyles: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 300, 280);
+      var ctx = new contextBuilder(options.elementId, 300, 280);
       var stave = new VF.Stave(10, 0, 100);
       ctx.scale(3, 3);
 
@@ -619,7 +619,7 @@ VF.Test.StaveNote = (function() {
     },
 
     dotsAndFlagsStemUp: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
@@ -654,7 +654,7 @@ VF.Test.StaveNote = (function() {
 
 
     dotsAndFlagsStemDown: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 160);
+      var ctx = new contextBuilder(options.elementId, 800, 160);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
@@ -688,7 +688,7 @@ VF.Test.StaveNote = (function() {
     },
 
     dotsAndBeamsUp: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
@@ -724,7 +724,7 @@ VF.Test.StaveNote = (function() {
     },
 
     dotsAndBeamsDown: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 160);
+      var ctx = new contextBuilder(options.elementId, 800, 160);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');

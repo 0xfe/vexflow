@@ -98,8 +98,7 @@ export class CanvasContext {
   }
 
   resize(width, height) {
-    return this.vexFlowCanvasContext.resize(
-        parseInt(width, 10), parseInt(height, 10));
+    return this.vexFlowCanvasContext.resize(parseInt(width, 10), parseInt(height, 10));
   }
 
   rect(x, y, width, height) {

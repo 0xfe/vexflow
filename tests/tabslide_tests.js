@@ -33,7 +33,7 @@ VF.Test.TabSlide = (function() {
     },
 
     setupContext: function(options, x, y) {
-      var ctx = options.contextBuilder(options.canvas_sel, 350, 140);
+      var ctx = options.contextBuilder(options.elementId, 350, 140);
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       ctx.font = "10pt Arial";
       var stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().

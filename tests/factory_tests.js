@@ -25,7 +25,7 @@ Vex.Flow.Test.Factory = (function() {
 
       var vf = new VF.Factory({
         renderer: {
-          selector: null,
+          elementId: null,
           width: 700,
           height: 500
         }
@@ -35,18 +35,18 @@ Vex.Flow.Test.Factory = (function() {
       assert.equal(options.renderer.width, 700);
       assert.equal(options.renderer.height, 500);
       assert.equal(options.renderer.selector, null);
-      assert.equal(options.stave.space, 10); 
+      assert.equal(options.stave.space, 10);
 
       assert.expect(5);
     },
 
     draw: function(options) {
-      var vf = VF.Factory.newFromSelector(options.canvas_sel);
+      var vf = VF.Factory.newFromElementId(options.elementId);
       vf.Stave().setClef('treble');
       vf.draw();
       expect(0);
     }
   };
 
-  return Factory;  
+  return Factory;
 })();

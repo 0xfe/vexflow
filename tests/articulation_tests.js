@@ -34,7 +34,7 @@ VF.Test.Articulation = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 625, 195);
+      var ctx = contextBuilder(options.elementId, 625, 195);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 125);
@@ -116,7 +116,7 @@ VF.Test.Articulation = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 400, 200);
+      var ctx = contextBuilder(options.elementId, 400, 200);
 
       // bar 1
       var staveBar1 = new VF.Stave(50, 30, 150);
@@ -162,7 +162,7 @@ VF.Test.Articulation = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 725, 200);
+      var ctx = contextBuilder(options.elementId, 725, 200);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 250);
@@ -277,7 +277,7 @@ VF.Test.Articulation = (function() {
     },
 
     tabNotes: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 600, 200);
+      var ctx = new contextBuilder(options.elementId, 600, 200);
       ctx.font = "10pt Arial";
       var stave = new VF.TabStave(10, 10, 550);
       stave.setContext(ctx);

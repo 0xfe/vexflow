@@ -45,8 +45,8 @@ export class Renderer {
     lastContext = ctx;
   }
 
-  static buildContext(sel, backend, width, height, background) {
-    const renderer = new Renderer(sel, backend);
+  static buildContext(elementId, backend, width, height, background) {
+    const renderer = new Renderer(elementId, backend);
     if (width && height) { renderer.resize(width, height); }
 
     if (!background) background = '#FFF';
@@ -56,16 +56,16 @@ export class Renderer {
     return ctx;
   }
 
-  static getCanvasContext(sel, width, height, background) {
-    return Renderer.buildContext(sel, Renderer.Backends.CANVAS, width, height, background);
+  static getCanvasContext(elementId, width, height, background) {
+    return Renderer.buildContext(elementId, Renderer.Backends.CANVAS, width, height, background);
   }
 
-  static getRaphaelContext(sel, width, height, background) {
-    return Renderer.buildContext(sel, Renderer.Backends.RAPHAEL, width, height, background);
+  static getRaphaelContext(elementId, width, height, background) {
+    return Renderer.buildContext(elementId, Renderer.Backends.RAPHAEL, width, height, background);
   }
 
-  static getSVGContext(sel, width, height, background) {
-    return Renderer.buildContext(sel, Renderer.Backends.SVG, width, height, background);
+  static getSVGContext(elementId, width, height, background) {
+    return Renderer.buildContext(elementId, Renderer.Backends.SVG, width, height, background);
   }
 
   static bolsterCanvasContext(ctx) {
@@ -120,16 +120,14 @@ export class Renderer {
     context.stroke();
   }
 
-  constructor(sel, backend) {
-    // Verify selector
-    this.sel = sel;
-    if (!this.sel) {
-      throw new Vex.RERR('BadArgument', 'Invalid selector for renderer.');
+  constructor(elementId, backend) {
+    this.elementId = elementId;
+    if (!this.elementId) {
+      throw new Vex.RERR('BadArgument', 'Invalid id for renderer.');
     }
 
-    // Get element from selector
-    this.element = document.getElementById(sel);
-    if (!this.element) this.element = sel;
+    this.element = document.getElementById(elementId);
+    if (!this.element) this.element = elementId;
 
     // Verify backend and create context
     this.ctx = null;
@@ -138,7 +136,7 @@ export class Renderer {
     if (this.backend === Renderer.Backends.CANVAS) {
       // Create context.
       if (!this.element.getContext) {
-        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${sel}`);
+        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${elementId}`);
       }
       this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
     } else if (this.backend === Renderer.Backends.RAPHAEL) {
@@ -153,7 +151,9 @@ export class Renderer {
   resize(width, height) {
     if (this.backend === Renderer.Backends.CANVAS) {
       if (!this.element.getContext) {
-        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${this.sel}`);
+        throw new Vex.RERR(
+          'BadElement', `Can't get canvas context from element: ${this.elementId}`
+        );
       }
       this.element.width = width;
       this.element.height = height;

@@ -15,7 +15,7 @@ VF.Test.StaveModifier = (function() {
     },
 
     draw: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 400, 120);
+      var ctx = new contextBuilder(options.elementId, 400, 120);
       var stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
       stave.draw();
@@ -29,7 +29,7 @@ VF.Test.StaveModifier = (function() {
     },
 
     drawVerticalBar: function(options, contextBuilder) {
-      var ctx = contextBuilder(options.canvas_sel, 400, 120);
+      var ctx = contextBuilder(options.elementId, 400, 120);
       var stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
       stave.draw();
@@ -41,7 +41,7 @@ VF.Test.StaveModifier = (function() {
     },
 
     drawBeginAndEnd: function(options, contextBuilder) {
-      var ctx = contextBuilder(options.canvas_sel, 500, 240);
+      var ctx = contextBuilder(options.elementId, 500, 240);
       var stave = new VF.Stave(10, 10, 400);
       stave.setContext(ctx);
       stave.setTimeSignature('C|');

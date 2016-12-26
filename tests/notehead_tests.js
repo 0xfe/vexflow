@@ -13,7 +13,7 @@ VF.Test.NoteHead = (function() {
 
     setupContext: function(options, x, y) {
 
-      var ctx = new options.contextBuilder(options.canvas_sel, x || 450, y || 140);
+      var ctx = new options.contextBuilder(options.elementId, x || 450, y || 140);
       ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       ctx.font = " 10pt Arial";
       var stave = new VF.Stave(10, 10, x || 450).addTrebleGlyph();

@@ -65,7 +65,7 @@ export class Factory {
       },
       renderer: {
         context: null,
-        selector: '',
+        elementId: '',
         backend: Renderer.Backends.SVG,
         width: 500,
         height: 200,
@@ -82,8 +82,8 @@ export class Factory {
     this.setOptions(options);
   }
 
-  static newFromSelector(selector, width = 500, height = 200) {
-    return new Factory({ renderer: { selector, width, height } });
+  static newFromElementId(elementId, width = 500, height = 200) {
+    return new Factory({ renderer: { elementId, width, height } });
   }
 
   reset() {
@@ -99,7 +99,7 @@ export class Factory {
     for (const key of ['stave', 'renderer', 'font']) {
       Object.assign(this.options[key], options[key]);
     }
-    if (this.options.renderer.selector !== null || this.options.renderer.context) {
+    if (this.options.renderer.elementId !== null || this.options.renderer.context) {
       this.initRenderer();
     }
 
@@ -107,12 +107,12 @@ export class Factory {
   }
 
   initRenderer() {
-    const { selector, backend, width, height, background } = this.options.renderer;
-    if (selector === '') {
+    const { elementId, backend, width, height, background } = this.options.renderer;
+    if (elementId === '') {
       throw new X('HTML DOM element not set in Factory');
     }
 
-    this.context = Renderer.buildContext(selector, backend, width, height, background);
+    this.context = Renderer.buildContext(elementId, backend, width, height, background);
   }
 
   getContext() { return this.context; }

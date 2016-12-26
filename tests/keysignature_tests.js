@@ -83,7 +83,7 @@ VF.Test.KeySignature = (function() {
     },
 
     majorKeys: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 400, 240);
+      var ctx = new contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
       var keys = VF.Test.KeySignature.MAJOR_KEYS;
@@ -109,7 +109,7 @@ VF.Test.KeySignature = (function() {
     },
 
     majorKeysCanceled: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 780, 500);
+      var ctx = new contextBuilder(options.elementId, 780, 500);
       ctx.scale(0.9, 0.9);
       var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
       var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
@@ -163,7 +163,7 @@ VF.Test.KeySignature = (function() {
     },
 
     majorKeysAltered: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 780, 500);
+      var ctx = new contextBuilder(options.elementId, 780, 500);
       ctx.scale(0.9, 0.9);
       var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
       var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
@@ -215,7 +215,7 @@ VF.Test.KeySignature = (function() {
     },
 
     minorKeys: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 400, 240);
+      var ctx = new contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
       var keys = VF.Test.KeySignature.MINOR_KEYS;
@@ -241,7 +241,7 @@ VF.Test.KeySignature = (function() {
     },
 
     staveHelper: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 400, 240);
+      var ctx = new contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
       var keys = VF.Test.KeySignature.MAJOR_KEYS;

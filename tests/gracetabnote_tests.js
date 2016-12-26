@@ -12,7 +12,7 @@ VF.Test.GraceTabNote = (function() {
     },
 
     setupContext: function(options, x, y) {
-      var ctx = options.contextBuilder(options.canvas_sel, 350, 140);
+      var ctx = options.contextBuilder(options.elementId, 350, 140);
       var stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().
         setContext(ctx).draw();
 

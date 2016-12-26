@@ -14,7 +14,7 @@ VF.Test.Vibrato = (function() {
     },
 
     simple: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 500, 140);
+      var ctx = new contextBuilder(options.elementId, 500, 140);
 
       ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       ctx.font = "10pt Arial";
@@ -38,7 +38,7 @@ VF.Test.Vibrato = (function() {
     },
 
     harsh: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 500, 240);
+      var ctx = new contextBuilder(options.elementId, 500, 240);
 
       ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
       ctx.font = "10pt Arial";
@@ -62,7 +62,7 @@ VF.Test.Vibrato = (function() {
     },
 
     withBend: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 500, 240);
+      var ctx = new contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.3, 1.3); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
       ctx.setFont("Arial", VF.Test.Font.size, "");
       var stave = new VF.TabStave(10, 10, 450).
