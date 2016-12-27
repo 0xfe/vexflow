@@ -281,7 +281,7 @@ export class StaveNote extends StemmableNote {
       const areNotesColliding = bottomNoteTopY - topNotBottomY < 0;
 
       if (areNotesColliding) {
-        xShift = topNote.getVoiceShiftWidth();
+        xShift = topNote.getVoiceShiftWidth() + 2;
         bottomNote.setXShift(xShift);
       }
     }
