@@ -17,8 +17,7 @@ VF.Test.TabSlide = (function() {
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables(notes);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 100);
+      new VF.Formatter().joinVoices([voice]).format([voice], 100);
       voice.draw(ctx, stave);
 
       var tie = new VF.TabSlide({
@@ -32,11 +31,16 @@ VF.Test.TabSlide = (function() {
       tie.draw();
     },
 
-    setupContext: function(options, x, y) {
+    setupContext: function(options, x) {
       var ctx = options.contextBuilder(options.elementId, 350, 140);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = '#221';
+      ctx.strokeStyle = '#221';
       ctx.font = '10pt Arial';
-      var stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().setContext(ctx).draw();
+      var stave = new VF.TabStave(10, 10, x || 350)
+        .addTabGlyph()
+        .setContext(ctx)
+        .draw();
 
       return { context: ctx, stave: stave };
     },
@@ -70,8 +74,7 @@ VF.Test.TabSlide = (function() {
       ];
 
       var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      new VF.Formatter().joinVoices([voice]).format([voice], 300);
       voice.draw(c.context, c.stave);
 
       factory({
@@ -123,4 +126,4 @@ VF.Test.TabSlide = (function() {
   };
 
   return TabSlide;
-})();
+}());

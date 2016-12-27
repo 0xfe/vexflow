@@ -28,7 +28,7 @@ VF.Test.KeyManager = (function() {
       equal(manager.getAccidental('f').accidental, '#');
     },
 
-    selectNotes: function(options) {
+    selectNotes: function() {
       var manager = new VF.KeyManager('f');
       equal(manager.selectNote('bb').note, 'bb');
       equal(manager.selectNote('bb').accidental, 'b');

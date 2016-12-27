@@ -28,7 +28,8 @@ VF.Test.KeySignature = (function() {
       'E',
       'B',
       'F#',
-      'C#'],
+      'C#',
+    ],
 
     MINOR_KEYS: [
       'Am',
@@ -45,7 +46,8 @@ VF.Test.KeySignature = (function() {
       'C#m',
       'G#m',
       'D#m',
-      'A#m'],
+      'A#m',
+    ],
 
     Start: function() {
       QUnit.module('KeySignature');
@@ -118,8 +120,8 @@ VF.Test.KeySignature = (function() {
       var keys = VF.Test.KeySignature.MAJOR_KEYS;
 
       var keySig = null;
-      var i,
-        n;
+      var i;
+      var n;
       for (i = 0; i < 8; ++i) {
         keySig = new VF.KeySignature(keys[i]);
         keySig.cancelKey('Cb');
@@ -159,7 +161,6 @@ VF.Test.KeySignature = (function() {
       stave4.setContext(ctx);
       stave4.draw();
 
-
       ok(true, 'all pass');
     },
 
@@ -173,8 +174,8 @@ VF.Test.KeySignature = (function() {
       var keys = VF.Test.KeySignature.MAJOR_KEYS;
 
       var keySig = null;
-      var i,
-        n;
+      var i;
+      var n;
       for (i = 0; i < 8; ++i) {
         keySig = new VF.KeySignature(keys[i]);
         keySig.alterKey(['bs', 'bs']);
@@ -212,7 +213,6 @@ VF.Test.KeySignature = (function() {
       stave4.setContext(ctx);
       stave4.draw();
 
-
       ok(true, 'all pass');
     },
 
@@ -232,7 +232,6 @@ VF.Test.KeySignature = (function() {
         keySig = new VF.KeySignature(keys[n]);
         keySig.addToStave(stave2);
       }
-
 
       stave.setContext(ctx);
       stave.draw();
@@ -266,4 +265,4 @@ VF.Test.KeySignature = (function() {
   };
 
   return KeySignature;
-})();
+}());

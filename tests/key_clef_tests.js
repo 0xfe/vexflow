@@ -20,7 +20,8 @@ VF.Test.ClefKeySignature = (function() {
       'E',
       'B',
       'F#',
-      'C#'],
+      'C#',
+    ],
 
     MINOR_KEYS: [
       'Am',
@@ -37,21 +38,15 @@ VF.Test.ClefKeySignature = (function() {
       'C#m',
       'G#m',
       'D#m',
-      'A#m'],
+      'A#m',
+    ],
 
     Start: function() {
       QUnit.module('Clef Keys');
       QUnit.test('Key Parser Test', VF.Test.ClefKeySignature.parser);
-      VF.Test.runTests('Major Key Clef Test',
-        VF.Test.ClefKeySignature.keys,
-        { majorKeys: true });
-
-      VF.Test.runTests('Minor Key Clef Test',
-        VF.Test.ClefKeySignature.keys,
-        { majorKeys: false });
-
-      VF.Test.runTests('Stave Helper',
-        VF.Test.ClefKeySignature.staveHelper);
+      VF.Test.runTests('Major Key Clef Test', VF.Test.ClefKeySignature.keys, { majorKeys: true });
+      VF.Test.runTests('Minor Key Clef Test', VF.Test.ClefKeySignature.keys, { majorKeys: false });
+      VF.Test.runTests('Stave Helper', VF.Test.ClefKeySignature.staveHelper);
     },
 
     catchError: function(spec) {
@@ -88,31 +83,30 @@ VF.Test.ClefKeySignature = (function() {
     },
 
     keys: function(options, contextBuilder) {
-      var clefs =
-        ['treble',
-          'soprano',
-          'mezzo-soprano',
-          'alto',
-          'tenor',
-          'baritone-f',
-          'baritone-c',
-          'bass',
-          'french',
-          'subbass',
-          'percussion'];
+      var clefs = [
+        'treble',
+        'soprano',
+        'mezzo-soprano',
+        'alto',
+        'tenor',
+        'baritone-f',
+        'baritone-c',
+        'bass',
+        'french',
+        'subbass',
+        'percussion',
+      ];
 
       var ctx = new contextBuilder(options.elementId, 400, 20 + 80 * 2 * clefs.length);
-
-
       var staves = [];
-      var keys = (options.params.majorKeys) ?
-        VF.Test.ClefKeySignature.MAJOR_KEYS :
-        VF.Test.ClefKeySignature.MINOR_KEYS;
+      var keys = (options.params.majorKeys)
+        ? VF.Test.ClefKeySignature.MAJOR_KEYS
+        : VF.Test.ClefKeySignature.MINOR_KEYS;
 
-      var i,
-        flat,
-        sharp,
-        keySig;
+      var i;
+      var flat;
+      var sharp;
+      var keySig;
 
       var yOffsetForFlatStaves = 10 + 80 * clefs.length;
       for (i = 0; i < clefs.length; i++) {
@@ -178,4 +172,4 @@ VF.Test.ClefKeySignature = (function() {
   };
 
   return ClefKeySignature;
-})();
+}());
