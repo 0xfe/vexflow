@@ -155,9 +155,16 @@ export class Renderer {
       if (!this.element.getContext) {
         throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${this.sel}`);
       }
-      this.element.width = width;
-      this.element.height = height;
+
+      const devicePixelRatio = window.devicePixelRatio || 1;
+
+      this.element.width = width * devicePixelRatio;
+      this.element.height = height * devicePixelRatio;
+      this.element.style.width = width + 'px';
+      this.element.style.height = height + 'px';
+
       this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
+      this.ctx.scale(devicePixelRatio, devicePixelRatio);
     } else {
       this.ctx.resize(width, height);
     }
