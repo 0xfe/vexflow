@@ -6,20 +6,22 @@
 VF.Test.TabTie = (function() {
   var TabTie = {
     Start: function() {
-      var runTests = VF.Test.runTests;
+      var run = VF.Test.runTests;
+
       QUnit.module('TabTie');
-      runTests('Simple TabTie', TabTie.simple);
-      runTests('Hammerons', TabTie.simpleHammeron);
-      runTests('Pulloffs', TabTie.simplePulloff);
-      runTests('Tapping', TabTie.tap);
-      runTests('Continuous', TabTie.continuous);
+
+      run('Simple TabTie', TabTie.simple);
+      run('Hammerons', TabTie.simpleHammeron);
+      run('Pulloffs', TabTie.simplePulloff);
+      run('Tapping', TabTie.tap);
+      run('Continuous', TabTie.continuous);
     },
 
     tieNotes: function(notes, indices, stave, ctx, text) {
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables(notes);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 100);
+      new VF.Formatter().joinVoices([voice]).format([voice], 100);
       voice.draw(ctx, stave);
 
       var tie = new VF.TabTie({
@@ -34,10 +36,15 @@ VF.Test.TabTie = (function() {
     },
 
     setupContext: function(options, x, y) {
-      var ctx = options.contextBuilder(options.elementId, x || 350, y || 160);
-      ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      var ctx = options.contextBuilder(options.canvas_sel, x || 350, y || 160);
+      ctx.fillStyle = '#221';
+      ctx.strokeStyle = '#221';
       ctx.setFont('Arial', VF.Test.Font.size, '');
-      var stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().setContext(ctx).draw();
+
+      var stave = new VF.TabStave(10, 10, x || 350)
+        .addTabGlyph()
+        .setContext(ctx)
+        .draw();
 
       return { context: ctx, stave: stave };
     },
@@ -64,8 +71,8 @@ VF.Test.TabTie = (function() {
       function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
 
       VF.Test.TabTie.drawTie([
-        newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).
-          addModifier(new VF.Annotation('T'), 0),
+        newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' })
+          .addModifier(new VF.Annotation('T'), 0),
         newNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' }),
       ], [0], options, 'P');
 
@@ -88,8 +95,7 @@ VF.Test.TabTie = (function() {
       ];
 
       var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      new VF.Formatter().joinVoices([voice]).format([voice], 300);
       voice.draw(c.context, c.stave);
 
       factory({
@@ -151,8 +157,7 @@ VF.Test.TabTie = (function() {
       ];
 
       var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      new VF.Formatter().joinVoices([voice]).format([voice], 300);
       voice.draw(c.context, c.stave);
 
       VF.TabTie.createHammeron({
@@ -173,4 +178,4 @@ VF.Test.TabTie = (function() {
   };
 
   return TabTie;
-})();
+}());
