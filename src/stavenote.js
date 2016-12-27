@@ -57,7 +57,21 @@ export class StaveNote extends StemmableNote {
   static format(notes, state) {
     if (!notes || notes.length < 2) return false;
 
-    if (notes[0].getStave() != null) return StaveNote.formatByY(notes, state);
+    // FIXME: VexFlow will soon require that a stave be set before formatting.
+    // Which, according to the below condition, means that following branch will
+    // always be taken and the rest of this function is dead code.
+    //
+    // Problematically, `Formatter#formatByY` was not designed to work for more
+    // than 2 voices (although, doesn't throw on this condition, just tries
+    // to power through).
+    //
+    // Based on the above:
+    //   * 2 voices can be formatted *with or without* a stave being set but
+    //     the output will be different
+    //   * 3 voices can only be formatted *without* a stave
+    if (notes[0].getStave()) {
+      return StaveNote.formatByY(notes, state);
+    }
 
     const notesList = [];
 
@@ -267,7 +281,7 @@ export class StaveNote extends StemmableNote {
       const areNotesColliding = bottomNoteTopY - topNotBottomY < 0;
 
       if (areNotesColliding) {
-        xShift = topNote.getVoiceShiftWidth();
+        xShift = topNote.getVoiceShiftWidth() + 2;
         bottomNote.setXShift(xShift);
       }
     }
@@ -724,7 +738,7 @@ export class StaveNote extends StemmableNote {
 
   setKeyLine(index, line) {
     this.keyProps[index].line = line;
-    this.note_heads[index].setLine(line);
+    this.reset();
     return this;
   }
 
