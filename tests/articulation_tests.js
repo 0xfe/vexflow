@@ -266,7 +266,6 @@ VF.Test.Articulation = (function() {
         var position1 = 3;
         if (i > 1) {
           position1 = 4;
-          position2 = 3;
         }
         notesBar4[i].addArticulation(0, new VF.Articulation('a-').setPosition(position1));
       }
