@@ -23,7 +23,7 @@ VF.Test.Stave = (function() {
       runTests('Factory API', Stave.factoryAPI);
     },
 
-    sortByCategory: function(options) {
+    sortByCategory: function() {
       var stave = new VF.Stave(0, 0, 300);
       var clef0 = new VF.Clef('treble');
       var clef1 = new VF.Clef('alto');
@@ -103,7 +103,7 @@ VF.Test.Stave = (function() {
       stave.setContext(ctx);
       stave.draw();
 
-      var stave = new VF.Stave(10, 150, 300, { right_bar: false });
+      stave = new VF.Stave(10, 150, 300, { right_bar: false });
       stave.setContext(ctx);
       stave.draw();
 
@@ -390,7 +390,7 @@ VF.Test.Stave = (function() {
 
       function drawTempoStaveBar(width, tempo, tempo_y, notes) {
         var staveBar = new VF.Stave(padding + x, y, width);
-        if (x == 0) staveBar.addClef('treble');
+        if (x === 0) staveBar.addClef('treble');
         staveBar.setTempo(tempo, tempo_y);
         staveBar.setContext(ctx).draw();
 
