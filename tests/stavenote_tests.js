@@ -161,8 +161,8 @@ VF.Test.StaveNote = (function() {
       function getDisplacements(note) {
         return note.note_heads.map(function(notehead) {
           return notehead.isDisplaced();
-        })
-      };
+        });
+      }
 
       var stemUpDisplacements = [false, true, false];
       var stemDownDisplacements =  [true, false, false];

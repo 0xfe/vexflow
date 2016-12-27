@@ -6,14 +6,14 @@
 VF.Test.TickContext = (function() {
   var TickContext = {
     Start: function() {
-      QUnit.module("TickContext");
-      test("Current Tick Test", VF.Test.TickContext.currentTick);
-      test("Tracking Test", VF.Test.TickContext.tracking);
+      QUnit.module('TickContext');
+      test('Current Tick Test', VF.Test.TickContext.currentTick);
+      test('Tracking Test', VF.Test.TickContext.tracking);
     },
 
     currentTick: function() {
       var tc = new VF.TickContext();
-      equal(tc.getCurrentTick().value(), 0, "New tick context has no ticks");
+      equal(tc.getCurrentTick().value(), 0, 'New tick context has no ticks');
     },
 
     tracking: function() {
@@ -27,7 +27,7 @@ VF.Test.TickContext = (function() {
       var tickables = [
         createTickable().setTicks(BEAT).setWidth(10),
         createTickable().setTicks(BEAT * 2).setWidth(20),
-        createTickable().setTicks(BEAT).setWidth(30)
+        createTickable().setTicks(BEAT).setWidth(30),
       ];
 
       var tc = new VF.TickContext();
@@ -45,7 +45,7 @@ VF.Test.TickContext = (function() {
       equal(tc.getWidth(), 0);
       tc.preFormat();
       equal(tc.getWidth(), 30);
-    }
+    },
   };
 
   return TickContext;

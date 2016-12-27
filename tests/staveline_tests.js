@@ -89,7 +89,7 @@ VF.Test.StaveLine = (function() {
         last_indices: [1],
         options: {
           text: 'Right',
-        }
+        },
       });
 
       var staveLine1 = vf.StaveLine({

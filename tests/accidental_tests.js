@@ -96,14 +96,14 @@ Vex.Flow.Test.Accidental = (function() {
 
       var accids = Object
         .keys(VF.accidentalCodes.accidentals)
-        .filter(function(accid) { return accid !== '{' && accid !== '}'});
+        .filter(function(accid) { return accid !== '{' && accid !== '}'; });
 
       var notes = accids
         .map(function(accid) {
           return vf
             .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: VF.Stem.UP })
             .addAccidental(0, vf.Accidental({ type: accid }));
-          });
+        });
 
       var voice = score.voice(notes, { time: accids.length  + '/4' });
 
@@ -385,7 +385,7 @@ Vex.Flow.Test.Accidental = (function() {
 
       const voice = vf.Voice()
         .setMode(Vex.Flow.Voice.Mode.SOFT)
-        .addTickable(new Vex.Flow.TimeSigNote("12/4").setStave(stave))
+        .addTickable(new Vex.Flow.TimeSigNote('12/4').setStave(stave))
         .addTickables(notes);
 
       Vex.Flow.Accidental.applyAccidentals([voice], 'C');

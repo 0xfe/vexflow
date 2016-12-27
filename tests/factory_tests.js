@@ -6,29 +6,29 @@
 Vex.Flow.Test.Factory = (function() {
   var Factory = {
     Start: function() {
-      QUnit.module("Factory");
+      QUnit.module('Factory');
       var VFT = Vex.Flow.Test;
 
-      QUnit.test("Defaults", VFT.Factory.defaults);
-      VFT.runSVGTest("Draw", VFT.Factory.draw);
+      QUnit.test('Defaults', VFT.Factory.defaults);
+      VFT.runSVGTest('Draw', VFT.Factory.draw);
     },
 
     defaults: function(assert) {
       assert.throws(function() {
         var vf = new VF.Factory({
           renderer: {
-              width: 700,
-              height: 500
-          }
-        })
+            width: 700,
+            height: 500,
+          },
+        });
       });
 
       var vf = new VF.Factory({
         renderer: {
           elementId: null,
           width: 700,
-          height: 500
-        }
+          height: 500,
+        },
       });
 
       var options = vf.getOptions();
@@ -43,7 +43,7 @@ Vex.Flow.Test.Factory = (function() {
       vf.Stave().setClef('treble');
       vf.draw();
       expect(0);
-    }
+    },
   };
 
   return Factory;

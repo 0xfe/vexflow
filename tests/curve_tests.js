@@ -14,8 +14,8 @@ VF.Test.Curve = (function() {
       var score = vf.EasyScore();
 
       var notes = [
-       score.beam(score.notes.apply(score, beamGroup1)),
-       score.beam(score.notes.apply(score, beamGroup2)),
+        score.beam(score.notes.apply(score, beamGroup1)),
+        score.beam(score.notes.apply(score, beamGroup2)),
       ].reduce(concat);
 
       setupCurves(vf, notes);
@@ -30,7 +30,7 @@ VF.Test.Curve = (function() {
 
       ok('Simple Curve');
     };
-  };
+  }
 
   return {
     Start: function() {

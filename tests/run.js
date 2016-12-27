@@ -1,4 +1,4 @@
-VF.Test.run = function () {
+VF.Test.run = function() {
   VF.Test.Accidental.Start();
   VF.Test.StaveNote.Start();
   VF.Test.Voice.Start();
@@ -54,6 +54,6 @@ VF.Test.run = function () {
   VF.Test.EasyScore.Start();
   VF.Test.Registry.Start();
   VF.Test.BachDemo.Start();
-}
+};
 
 module.exports = VF.Test;

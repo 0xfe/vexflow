@@ -6,12 +6,12 @@
 Vex.Flow.Test.Registry = (function() {
   var Registry = {
     Start: function() {
-      QUnit.module("Registry");
+      QUnit.module('Registry');
       var VFT = Vex.Flow.Test;
 
-      QUnit.test("Register and Clear", VFT.Registry.registerAndClear);
-      QUnit.test("Default Registry", VFT.Registry.defaultRegistry);
-      QUnit.test("Multiple Classes", VFT.Registry.classes);
+      QUnit.test('Register and Clear', VFT.Registry.registerAndClear);
+      QUnit.test('Default Registry', VFT.Registry.defaultRegistry);
+      QUnit.test('Multiple Classes', VFT.Registry.classes);
     },
 
     registerAndClear: function(assert) {
@@ -26,7 +26,7 @@ Vex.Flow.Test.Registry = (function() {
 
       registry.clear();
       assert.notOk(registry.getElementById('foobar'));
-      assert.throws(function() {registry.register(score.notes('C4'))});
+      assert.throws(function() { registry.register(score.notes('C4')); });
 
       registry.clear();
       assert.ok(registry
@@ -36,7 +36,7 @@ Vex.Flow.Test.Registry = (function() {
 
     defaultRegistry: function(assert) {
       var registry = new VF.Registry();
-      var score = new VF.EasyScore({factory: VF.Factory.newFromElementId(null)});
+      var score = new VF.EasyScore({ factory: VF.Factory.newFromSelector(null) });
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
@@ -57,7 +57,7 @@ Vex.Flow.Test.Registry = (function() {
 
     classes: function(assert) {
       var registry = new VF.Registry();
-      var score = new VF.EasyScore({factory: VF.Factory.newFromElementId(null)});
+      var score = new VF.EasyScore({ factory: VF.Factory.newFromSelector(null) });
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
@@ -81,7 +81,7 @@ Vex.Flow.Test.Registry = (function() {
       assert.notOk(note.hasClass('boo'));
       assert.equal(registry.getElementsByClass('foo').length, 0);
       assert.equal(registry.getElementsByClass('boo').length, 0);
-    }
+    },
   };
 
   return Registry;

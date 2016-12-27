@@ -88,7 +88,7 @@ VF.Test.StringNumber = (function() {
         .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }).setOffsetY(6))
         .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6));
 
-      var voice2 = score.voice(notes2)
+      var voice2 = score.voice(notes2);
 
       vf.Formatter()
         .joinVoices([voice2])
@@ -106,7 +106,7 @@ VF.Test.StringNumber = (function() {
         .addModifier(2, vf.StringNumber({ number: '3', position: 'left' }))
         .addModifier(3, vf.StringNumber({ number: '2', position: 'above' }));
 
-      var voice3 = score.voice(notesBar3, { time: '6/4' })
+      var voice3 = score.voice(notesBar3, { time: '6/4' });
 
       vf.Formatter()
         .joinVoices([voice3])
