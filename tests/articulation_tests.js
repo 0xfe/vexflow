@@ -156,9 +156,6 @@ VF.Test.Articulation = (function() {
     },
 
     drawArticulations2: function(options, contextBuilder) {
-      var sym1 = options.params.sym1;
-      var sym2 = options.params.sym2;
-
       expect(0);
 
       // Get the rendering context
@@ -185,7 +182,8 @@ VF.Test.Articulation = (function() {
         new VF.StaveNote({ keys: ['c/6'], duration: '16', stem_direction: -1 }),
         new VF.StaveNote({ keys: ['d/6'], duration: '16', stem_direction: -1 }),
       ];
-      for (var i = 0; i < 16; i++) {
+      var i;
+      for (i = 0; i < 16; i++) {
         notesBar1[i].addArticulation(0, new VF.Articulation('a.').setPosition(4));
         notesBar1[i].addArticulation(0, new VF.Articulation('a>').setPosition(4));
 
@@ -266,7 +264,6 @@ VF.Test.Articulation = (function() {
       ];
       for (i = 0; i < 4; i++) {
         var position1 = 3;
-        var position2 = 4;
         if (i > 1) {
           position1 = 4;
           position2 = 3;
@@ -331,8 +328,9 @@ VF.Test.Articulation = (function() {
       voice.addTickables(notes2);
       voice.addTickables(notes3);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        formatToStave([voice], stave);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
       voice.draw(ctx, stave);
 
@@ -341,4 +339,4 @@ VF.Test.Articulation = (function() {
   };
 
   return Articulation;
-})();
+}());
