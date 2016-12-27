@@ -25,8 +25,8 @@ VF.Test.BachDemo = (function() {
       var notes = score.notes.bind(score);
       var beam = score.beam.bind(score);
 
-      var x = 120,
-        y = 80;
+      var x = 120;
+      var y = 80;
       function makeSystem(width) {
         var system = vf.System({ x: x, y: y, width: width, spaceBetweenStaves: 10 });
         x += width;
@@ -153,7 +153,7 @@ VF.Test.BachDemo = (function() {
       x = 20;
       y += 230;
 
-      var system = makeSystem(220);
+      system = makeSystem(220);
       system.addStave({
         voices: [
           voice([
@@ -203,7 +203,7 @@ VF.Test.BachDemo = (function() {
       vf.StaveTie({ from: grace, to: id('m8c') });
 
       /*  Measure 9 */
-      var system = makeSystem(180);
+      system = makeSystem(180);
       system.addStave({
         voices: [
           score.set({ clef: 'treble' }).voice([
@@ -281,7 +281,7 @@ VF.Test.BachDemo = (function() {
       x = 20;
       y += 230;
 
-      var system = makeSystem(220);
+      system = makeSystem(220);
       system.addStave({
         voices: [
           score.set({ clef: 'treble' }).voice([
@@ -303,7 +303,7 @@ VF.Test.BachDemo = (function() {
       id('m13c').addModifier(0, vf.Fingering({ number: '3', position: 'above' }));
 
       /*  Measure 14 */
-      var system = makeSystem(180);
+      system = makeSystem(180);
       system.addStave({
         voices: [
           score.set({ clef: 'treble' }).voice([
@@ -320,7 +320,7 @@ VF.Test.BachDemo = (function() {
       id('m14b').addModifier(0, vf.Fingering({ number: '1' }));
 
        /*  Measure 15 */
-      var system = makeSystem(180);
+      system = makeSystem(180);
       system.addStave({
         voices: [
           score.set({ clef: 'treble' }).voice([
@@ -337,7 +337,7 @@ VF.Test.BachDemo = (function() {
       id('m15b').addModifier(0, vf.Fingering({ number: '2' }));
 
        /*  Measure 16 */
-      var system = makeSystem(130);
+      system = makeSystem(130);
       system.addStave({
         voices: [
           score.set({ clef: 'treble' }).voice([
@@ -364,7 +364,7 @@ VF.Test.BachDemo = (function() {
       });
 
       /* Measure 17 */
-      var system = makeSystem(180);
+      system = makeSystem(180);
       system.addStave({
         voices: [
           score.set({ clef: 'treble' }).voice([
@@ -384,7 +384,7 @@ VF.Test.BachDemo = (function() {
       id('m17a').addModifier(0, vf.Fingering({ number: '5', position: 'above' }));
 
       /* Measure 18 */
-      var system = makeSystem(180);
+      system = makeSystem(180);
       system.addStave({
         voices: [
           score.set({ clef: 'treble' }).voice([
