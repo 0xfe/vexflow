@@ -21,10 +21,10 @@ VF.Test.Annotation = (function() {
 
     simple: function(options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
-      ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = " 10pt Arial";
-      var stave = new VF.TabStave(10, 10, 450).
-        addTabGlyph().setContext(ctx).draw();
+      ctx.scale(1.5, 1.5); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      ctx.font = ' 10pt Arial';
+      var stave = new VF.TabStave(10, 10, 450)
+        .addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
       function newBend(text) { return new VF.Bend(text); }
@@ -46,9 +46,9 @@ VF.Test.Annotation = (function() {
 
     standard: function(options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
-      ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      var stave = new VF.Stave(10, 10, 450).
-        addClef("treble").setContext(ctx).draw();
+      ctx.scale(1.5, 1.5); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      var stave = new VF.Stave(10, 10, 450)
+        .addClef('treble').setContext(ctx).draw();
 
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
       function newAnnotation(text) {
@@ -69,10 +69,10 @@ VF.Test.Annotation = (function() {
 
     harmonic: function(options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
-      ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = " 10pt Arial";
-      var stave = new VF.TabStave(10, 10, 450).
-        addTabGlyph().setContext(ctx).draw();
+      ctx.scale(1.5, 1.5); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      ctx.font = ' 10pt Arial';
+      var stave = new VF.TabStave(10, 10, 450)
+        .addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
       function newAnnotation(text) { return new VF.Annotation(text); }
@@ -94,10 +94,10 @@ VF.Test.Annotation = (function() {
 
     picking: function(options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
-      ctx.scale(1.5, 1.5); ctx.setFillStyle("#221"); ctx.setStrokeStyle("#221");
-      ctx.setFont("Arial", VF.Test.Font.size, "");
-      var stave = new VF.TabStave(10, 10, 450).
-        addTabGlyph().setContext(ctx).draw();
+      ctx.scale(1.5, 1.5); ctx.setFillStyle('#221'); ctx.setStrokeStyle('#221');
+      ctx.setFont('Arial', VF.Test.Font.size, '');
+      var stave = new VF.TabStave(10, 10, 450)
+        .addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
       function newAnnotation(text) {
@@ -135,9 +135,9 @@ VF.Test.Annotation = (function() {
 
     bottom: function(options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
-      ctx.scale(1.5, 1.5); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      var stave = new VF.Stave(10, 10, 300).
-        addClef("treble").setContext(ctx).draw();
+      ctx.scale(1.5, 1.5); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      var stave = new VF.Stave(10, 10, 300)
+        .addClef('treble').setContext(ctx).draw();
 
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
       function newAnnotation(text) {
