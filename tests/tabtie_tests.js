@@ -36,7 +36,7 @@ VF.Test.TabTie = (function() {
     },
 
     setupContext: function(options, x, y) {
-      var ctx = options.contextBuilder(options.canvas_sel, x || 350, y || 160);
+      var ctx = options.contextBuilder(options.elementId, x || 350, y || 160);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
       ctx.setFont('Arial', VF.Test.Font.size, '');

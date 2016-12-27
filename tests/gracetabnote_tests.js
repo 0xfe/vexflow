@@ -11,10 +11,12 @@ VF.Test.GraceTabNote = (function() {
       VF.Test.runTests('Grace Tab Note Slurred', VF.Test.GraceTabNote.slurred);
     },
 
-    setupContext: function(options, x, y) {
+    setupContext: function(options, x) {
       var ctx = options.contextBuilder(options.elementId, 350, 140);
-      var stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().
-        setContext(ctx).draw();
+      var stave = new VF.TabStave(10, 10, x || 350)
+        .addTabGlyph()
+        .setContext(ctx)
+        .draw();
 
       return { context: ctx, stave: stave };
     },
@@ -64,8 +66,7 @@ VF.Test.GraceTabNote = (function() {
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables([note0, note1, note2, note3]);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 250);
+      new VF.Formatter().joinVoices([voice]).format([voice], 250);
 
       voice.draw(c.context, c.stave);
 
@@ -79,7 +80,6 @@ VF.Test.GraceTabNote = (function() {
 
       var note0 = newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' });
       var note1 = newNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' });
-
 
       var gracenote_group0 = [
         { positions: [{ str: 4, fret: 9 }], duration: '8' },
@@ -105,8 +105,7 @@ VF.Test.GraceTabNote = (function() {
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables([note0, note1]);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 200);
+      new VF.Formatter().joinVoices([voice]).format([voice], 200);
 
       voice.draw(c.context, c.stave);
 
