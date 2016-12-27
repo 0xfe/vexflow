@@ -15,7 +15,7 @@ Vex.Flow.Test.Factory = (function() {
 
     defaults: function(assert) {
       assert.throws(function() {
-        var vf = new VF.Factory({
+        return new VF.Factory({
           renderer: {
             width: 700,
             height: 500,
