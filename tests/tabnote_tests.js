@@ -7,36 +7,35 @@ VF.Test.TabNote = (function() {
   var TabNote = {
     Start: function() {
       QUnit.module('TabNote');
+
       test('Tick', VF.Test.TabNote.ticks);
       test('TabStave Line', VF.Test.TabNote.tabStaveLine);
       test('Width', VF.Test.TabNote.width);
       test('TickContext', VF.Test.TabNote.tickContext);
 
-      var runTests = VF.Test.runTests;
-      runTests('TabNote Draw', TabNote.draw);
-      runTests('TabNote Stems Up', TabNote.drawStemsUp);
-      runTests('TabNote Stems Down', TabNote.drawStemsDown);
-      runTests('TabNote Stems Up Through Stave', TabNote.drawStemsUpThrough);
-      runTests('TabNote Stems Down Through Stave', TabNote.drawStemsDownThrough);
-      runTests('TabNote Stems with Dots', TabNote.drawStemsDotted);
+      var run = VF.Test.runTests;
+      run('TabNote Draw', TabNote.draw);
+      run('TabNote Stems Up', TabNote.drawStemsUp);
+      run('TabNote Stems Down', TabNote.drawStemsDown);
+      run('TabNote Stems Up Through Stave', TabNote.drawStemsUpThrough);
+      run('TabNote Stems Down Through Stave', TabNote.drawStemsDownThrough);
+      run('TabNote Stems with Dots', TabNote.drawStemsDotted);
     },
 
     ticks: function() {
       var BEAT = 1 * VF.RESOLUTION / 4;
 
-      var note = new VF.TabNote(
-          { positions: [{ str: 6, fret: 6 }], duration: 'w' });
+      var note = new VF.TabNote({ positions: [{ str: 6, fret: 6 }], duration: '1' });
       equal(note.getTicks().value(), BEAT * 4, 'Whole note has 4 beats');
 
-      note = new VF.TabNote(
-          { positions: [{ str: 3, fret: 4 }], duration: 'q' });
+      note = new VF.TabNote({ positions: [{ str: 3, fret: 4 }], duration: '4' });
       equal(note.getTicks().value(), BEAT, 'Quarter note has 1 beat');
     },
 
     tabStaveLine: function() {
       var note = new VF.TabNote({
         positions: [{ str: 6, fret: 6 }, { str: 4, fret: 5 }],
-        duration: 'w',
+        duration: '1',
       });
 
       var positions = note.getPositions();
@@ -56,25 +55,29 @@ VF.Test.TabNote = (function() {
 
     width: function() {
       expect(1);
-      var note = new VF.TabNote(
-          { positions: [{ str: 6, fret: 6 }, { str: 4, fret: 5 }], duration: 'w' });
+      var note = new VF.TabNote({
+        positions: [{ str: 6, fret: 6 }, { str: 4, fret: 5 }],
+        duration: '1',
+      });
 
       try {
-        var width = note.getWidth();
+        note.getWidth();
       } catch (e) {
-        equal(e.code, 'UnformattedNote',
-            'Unformatted note should have no width');
+        equal(e.code, 'UnformattedNote', 'Unformatted note should have no width');
       }
     },
 
     tickContext: function() {
-      var note = new VF.TabNote(
-          { positions: [{ str: 6, fret: 6 }, { str: 4, fret: 5 }], duration: 'w' });
-      var tickContext = new VF.TickContext();
-      tickContext.addTickable(note);
-      tickContext.preFormat();
-      tickContext.setX(10);
-      tickContext.setPadding(0);
+      var note = new VF.TabNote({
+        positions: [{ str: 6, fret: 6 }, { str: 4, fret: 5 }],
+        duration: '1',
+      });
+
+      var tickContext = new VF.TickContext()
+        .addTickable(note)
+        .preFormat()
+        .setX(10)
+        .setPadding(0);
 
       equal(tickContext.getWidth(), 7);
     },
@@ -98,19 +101,19 @@ VF.Test.TabNote = (function() {
 
       var showNote = VF.Test.TabNote.showNote;
       var notes = [
-        { positions: [{ str: 6, fret: 6 }], duration: 'q' },
-        { positions: [{ str: 3, fret: 6 }, { str: 4, fret: 25 }], duration: 'q' },
-        { positions: [{ str: 2, fret: 'x' }, { str: 5, fret: 15 }], duration: 'q' },
-        { positions: [{ str: 2, fret: 'x' }, { str: 5, fret: 5 }], duration: 'q' },
-        { positions: [{ str: 2, fret: 10 }, { str: 5, fret: 12 }], duration: 'q' },
+        { positions: [{ str: 6, fret: 6 }], duration: '4' },
+        { positions: [{ str: 3, fret: 6 }, { str: 4, fret: 25 }], duration: '4' },
+        { positions: [{ str: 2, fret: 'x' }, { str: 5, fret: 15 }], duration: '4' },
+        { positions: [{ str: 2, fret: 'x' }, { str: 5, fret: 5 }], duration: '4' },
+        { positions: [{ str: 2, fret: 10 }, { str: 5, fret: 12 }], duration: '4' },
         { positions: [{ str: 6, fret: 0 },
                       { str: 5, fret: 5 },
                       { str: 4, fret: 5 },
                       { str: 3, fret: 4 },
                       { str: 2, fret: 3 },
                       { str: 1, fret: 0 }],
-          duration: 'q' },
-        { positions: [{ str: 1, fret: 6 }, { str: 4, fret: 5 }], duration: 'q' },
+          duration: '4' },
+        { positions: [{ str: 1, fret: 6 }, { str: 4, fret: 5 }], duration: '4' },
       ];
 
       for (var i = 0; i < notes.length; ++i) {
@@ -147,8 +150,7 @@ VF.Test.TabNote = (function() {
 
       var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        formatToStave([voice], stave);
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
       ok(true, 'TabNotes successfully drawn');
     },
@@ -180,8 +182,7 @@ VF.Test.TabNote = (function() {
 
       var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        formatToStave([voice], stave);
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
       ok(true, 'All objects have been drawn');
     },
@@ -213,7 +214,7 @@ VF.Test.TabNote = (function() {
       ctx.setFont('sans-serif', 10, 'bold');
       var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
       ok(true, 'TabNotes successfully drawn');
     },
@@ -248,8 +249,7 @@ VF.Test.TabNote = (function() {
 
       var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        formatToStave([voice], stave);
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
       ok(true, 'All objects have been drawn');
     },
@@ -279,8 +279,7 @@ VF.Test.TabNote = (function() {
 
       var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        formatToStave([voice], stave);
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
       ok(true, 'TabNotes successfully drawn');
     },
