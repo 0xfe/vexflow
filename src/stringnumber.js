@@ -146,14 +146,6 @@ export class StringNumber extends Modifier {
     return this;
   }
 
-  getPosition() { return this.position; }
-  setPosition(position) {
-    if (position >= Modifier.Position.LEFT && position <= Modifier.Position.BELOW) {
-      this.position = position;
-    }
-    return this;
-  }
-
   setStringNumber(number) { this.string_number = number; return this; }
   setOffsetX(x) { this.x_offset = x; return this; }
   setOffsetY(y) { this.y_offset = y; return this; }

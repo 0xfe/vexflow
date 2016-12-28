@@ -6,19 +6,19 @@
 Vex.Flow.Test.EasyScore = (function() {
   var EasyScore = {
     Start: function() {
-      QUnit.module("EasyScore");
+      QUnit.module('EasyScore');
       var VFT = Vex.Flow.Test;
-      QUnit.test("Basic", VFT.EasyScore.basic);
-      QUnit.test("Accidentals", VFT.EasyScore.accidentals);
-      QUnit.test("Durations", VFT.EasyScore.durations);
-      QUnit.test("Chords", VFT.EasyScore.chords);
-      QUnit.test("Dots", VFT.EasyScore.dots);
-      QUnit.test("Options", VFT.EasyScore.options);
-      VFT.runTests("Draw Basic", VFT.EasyScore.drawBasicTest);
-      VFT.runTests("Draw Accidentals", VFT.EasyScore.drawAccidentalsTest);
-      VFT.runTests("Draw Beams", VFT.EasyScore.drawBeamsTest);
-      VFT.runTests("Draw Tuplets", VFT.EasyScore.drawTupletsTest);
-      VFT.runTests("Draw Options", VFT.EasyScore.drawOptionsTest);
+      QUnit.test('Basic', VFT.EasyScore.basic);
+      QUnit.test('Accidentals', VFT.EasyScore.accidentals);
+      QUnit.test('Durations', VFT.EasyScore.durations);
+      QUnit.test('Chords', VFT.EasyScore.chords);
+      QUnit.test('Dots', VFT.EasyScore.dots);
+      QUnit.test('Options', VFT.EasyScore.options);
+      VFT.runTests('Draw Basic', VFT.EasyScore.drawBasicTest);
+      VFT.runTests('Draw Accidentals', VFT.EasyScore.drawAccidentalsTest);
+      VFT.runTests('Draw Beams', VFT.EasyScore.drawBeamsTest);
+      VFT.runTests('Draw Tuplets', VFT.EasyScore.drawTupletsTest);
+      VFT.runTests('Draw Options', VFT.EasyScore.drawOptionsTest);
     },
 
     basic: function(assert) {
@@ -133,13 +133,13 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [
-          voice(notes('(d4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
-          voice(notes('c#5/h., c5/q', {stem: 'up'})),
-        ]
+          voice(notes('(d4 e4 g4)/q, c4/q, c4/q/r, c4/q', { stem: 'down' })),
+          voice(notes('c#5/h., c5/q', { stem: 'up' })),
+        ],
       }).addClef('treble');
 
       system.addStave({
-        voices: [ voice(notes('c#3/q, cn3/q, bb3/q, d##3/q', {clef: 'bass'})) ]
+        voices: [voice(notes('c#3/q, cn3/q, bb3/q, d##3/q', { clef: 'bass' }))],
       }).addClef('bass');
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
@@ -157,13 +157,13 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [
-          voice(notes('(cbbs4 ebb4 gbss4)/q, cbs4/q, g4/q/r, cd4/q', {stem: 'down'})),
-          voice(notes('c++-5/h., c++5/q', {stem: 'up'})),
-        ]
+          voice(notes('(cbbs4 ebb4 gbss4)/q, cbs4/q, cdb4/q/r, cd4/q', { stem: 'down' })),
+          voice(notes('c++-5/h., c++5/q', { stem: 'up' })),
+        ],
       }).addClef('treble');
 
       system.addStave({
-        voices: [ voice(notes('c+-3/q, c+3/q, bo3/q, dk3/q', {clef: 'bass'})) ]
+        voices: [voice(notes('c+-3/q, c+3/q, bb3/q, d##3/q', { clef: 'bass' }))],
       }).addClef('bass');
       system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
@@ -182,9 +182,9 @@ Vex.Flow.Test.EasyScore = (function() {
 
       system.addStave({
         voices: [
-          voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', {stem: 'down'})),
-          voice(notes('c#5/h.', {stem: 'up'}).concat(beam(notes('c5/8, c5/8', {stem: 'up'}))))
-      ]}).addClef('treble');
+          voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', { stem: 'down' })),
+          voice(notes('c#5/h.', { stem: 'up' }).concat(beam(notes('c5/8, c5/8', { stem: 'up' })))),
+        ] }).addClef('treble');
 
       vf.draw();
       expect(0);
@@ -204,15 +204,15 @@ Vex.Flow.Test.EasyScore = (function() {
         voices: [
           voice(
             tuplet(
-              notes('(c4 e4 g4)/q, cbb4/q, c4/q', {stem: 'down'}),
-              {location: VF.Tuplet.LOCATION_BOTTOM}
-            ).concat(notes('c4/h', {stem: 'down'}))
+              notes('(c4 e4 g4)/q, cbb4/q, c4/q', { stem: 'down' }),
+              { location: VF.Tuplet.LOCATION_BOTTOM }
+            ).concat(notes('c4/h', { stem: 'down' }))
           ),
           voice(
-            notes('c#5/h.', {stem: 'up'})
-              .concat(tuplet(beam(notes('cb5/8, cn5/8, c5/8', {stem: 'up'}))))
+            notes('c#5/h.', { stem: 'up' })
+              .concat(tuplet(beam(notes('cb5/8, cn5/8, c5/8', { stem: 'up' }))))
           ),
-        ]
+        ],
       }).addClef('treble');
 
       vf.draw();
@@ -227,7 +227,7 @@ Vex.Flow.Test.EasyScore = (function() {
       const notes = score.notes('B4/h[id="foobar", class="red,bold", stem="up", articulations="staccato.below,tenuto"], B4/h[stem="down"]');
 
       system.addStave({
-        voices: [ score.voice(notes) ]
+        voices: [score.voice(notes)],
       });
 
       vf.draw();
@@ -244,7 +244,7 @@ Vex.Flow.Test.EasyScore = (function() {
       assert.equal(notes[0].modifiers[1].position, VF.Modifier.Position.ABOVE);
       assert.equal(notes[0].getStemDirection(), VF.StaveNote.STEM_UP);
       assert.equal(notes[1].getStemDirection(), VF.StaveNote.STEM_DOWN);
-    }
+    },
   };
 
   return EasyScore;

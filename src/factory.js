@@ -14,11 +14,13 @@ import { Articulation } from './articulation';
 import { Annotation } from './annotation';
 import { Formatter } from './formatter';
 import { FretHandFinger } from './frethandfinger';
+import { StringNumber } from './stringnumber';
 import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
 import { StaveTie } from './stavetie';
+import { StaveLine } from './staveline';
 import { StaveNote } from './stavenote';
 import { StaveConnector } from './staveconnector';
 import { System } from './system';
@@ -29,11 +31,15 @@ import { Beam } from './beam';
 import { Curve } from './curve';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
+import { NoteSubGroup } from './notesubgroup';
 import { EasyScore } from './easyscore';
+import { TimeSigNote } from './timesignote';
 import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
 import { TextBracket } from './textbracket';
+import { VibratoBracket } from './vibratobracket';
 import { GhostNote } from './ghostnote';
+import { BarNote } from './barnote';
 import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
 import { TextNote } from './textnote';
@@ -59,7 +65,7 @@ export class Factory {
       },
       renderer: {
         context: null,
-        selector: '',
+        elementId: '',
         backend: Renderer.Backends.SVG,
         width: 500,
         height: 200,
@@ -76,8 +82,8 @@ export class Factory {
     this.setOptions(options);
   }
 
-  static newFromSelector(selector, width = 500, height = 200) {
-    return new Factory({ renderer: { selector, width, height } });
+  static newFromElementId(elementId, width = 500, height = 200) {
+    return new Factory({ renderer: { elementId, width, height } });
   }
 
   reset() {
@@ -93,7 +99,7 @@ export class Factory {
     for (const key of ['stave', 'renderer', 'font']) {
       Object.assign(this.options[key], options[key]);
     }
-    if (this.options.renderer.selector !== null || this.options.renderer.context) {
+    if (this.options.renderer.elementId !== null || this.options.renderer.context) {
       this.initRenderer();
     }
 
@@ -101,12 +107,12 @@ export class Factory {
   }
 
   initRenderer() {
-    const { selector, backend, width, height, background } = this.options.renderer;
-    if (selector === '') {
+    const { elementId, backend, width, height, background } = this.options.renderer;
+    if (elementId === '') {
       throw new X('HTML DOM element not set in Factory');
     }
 
-    this.context = Renderer.buildContext(selector, backend, width, height, background);
+    this.context = Renderer.buildContext(elementId, backend, width, height, background);
   }
 
   getContext() { return this.context; }
@@ -175,6 +181,19 @@ export class Factory {
     return textNote;
   }
 
+  BarNote(params) {
+    params = setDefaults(params, {
+      type: 'single',
+      options: {},
+    });
+
+    const barNote = new BarNote(params.type);
+    if (this.stave) barNote.setStave(this.stave);
+    barNote.setContext(this.context);
+    this.renderQ.push(barNote);
+    return barNote;
+  }
+
   ClefNote(params) {
     params = setDefaults(params, {
       type: 'treble',
@@ -188,6 +207,19 @@ export class Factory {
     clefNote.setContext(this.context);
     this.renderQ.push(clefNote);
     return clefNote;
+  }
+
+  TimeSigNote(params) {
+    params = setDefaults(params, {
+      time: '4/4',
+      options: {},
+    });
+
+    const timeSigNote = new TimeSigNote(params.time);
+    if (this.stave) timeSigNote.setStave(this.stave);
+    timeSigNote.setContext(this.context);
+    this.renderQ.push(timeSigNote);
+    return timeSigNote;
   }
 
   TabNote(noteStruct) {
@@ -289,6 +321,19 @@ export class Factory {
     return fingering;
   }
 
+  StringNumber(params) {
+    params = setDefaults(params, {
+      number: '0',
+      position: 'left',
+      options: {},
+    });
+
+    const stringNumber = new StringNumber(params.number);
+    stringNumber.setPosition(params.position);
+    stringNumber.setContext(this.context);
+    return stringNumber;
+  }
+
   TickContext() {
     return new TickContext().setContext(this.context);
   }
@@ -369,7 +414,9 @@ export class Factory {
       first_indices: [0],
       last_indices: [0],
       text: null,
-      options: {},
+      options: {
+        direction: undefined,
+      },
     });
 
     const tie = new StaveTie({
@@ -377,9 +424,59 @@ export class Factory {
       last_note: params.to,
       first_indices: params.first_indices,
       last_indices: params.last_indices,
-    }, params.text).setContext(this.context);
+    }, params.text);
+
+    if (params.options.direction) tie.setDirection(params.options.direction);
+    tie.setContext(this.context);
     this.renderQ.push(tie);
     return tie;
+  }
+
+  StaveLine(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      first_indices: [0],
+      last_indices: [0],
+      options: {},
+    });
+
+    const line = new StaveLine({
+      first_note: params.from,
+      last_note: params.to,
+      first_indices: params.first_indices,
+      last_indices: params.last_indices,
+    });
+
+    if (params.options.text) line.setText(params.options.text);
+    if (params.options.font) line.setFont(params.options.font);
+
+    line.setContext(this.context);
+    this.renderQ.push(line);
+    return line;
+  }
+
+  VibratoBracket(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      options: {
+        harsh: false,
+      },
+    });
+
+    const vibratoBracket = new VibratoBracket({
+      start: params.from,
+      stop: params.to,
+    });
+
+    if (params.options.line) vibratoBracket.setLine(params.options.line);
+    if (params.options.harsh) vibratoBracket.setHarsh(params.options.harsh);
+
+    vibratoBracket.setContext(this.context);
+    this.renderQ.push(vibratoBracket);
+
+    return vibratoBracket;
   }
 
   TextBracket(params) {
@@ -434,6 +531,17 @@ export class Factory {
     pedal.setContext(this.context);
     this.renderQ.push(pedal);
     return pedal;
+  }
+
+  NoteSubGroup(params = {}) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {},
+    });
+
+    const group = new NoteSubGroup(params.notes);
+    group.setContext(this.context);
+    return group;
   }
 
   draw() {

@@ -75,15 +75,15 @@ VF.Test.StaveNote = (function() {
       });
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
       }, /BadArguments/, "Invalid note duration '8.7' throws BadArguments exception");
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
     },
 
@@ -123,15 +123,15 @@ VF.Test.StaveNote = (function() {
       });
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
       }, /BadArguments/, "Invalid note duration '8.7' throws BadArguments exception");
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
     },
 
@@ -161,8 +161,8 @@ VF.Test.StaveNote = (function() {
       function getDisplacements(note) {
         return note.note_heads.map(function(notehead) {
           return notehead.isDisplaced();
-        })
-      };
+        });
+      }
 
       var stemUpDisplacements = [false, true, false];
       var stemDownDisplacements =  [true, false, false];
@@ -233,7 +233,7 @@ VF.Test.StaveNote = (function() {
       var octaveShift = options.params.octaveShift;
       var restKey = options.params.restKey;
 
-      var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+      var ctx = new contextBuilder(options.elementId, 700, 180);
       var stave = new VF.Stave(10, 30, 750);
       stave.setContext(ctx);
       stave.addClef(clef);
@@ -282,6 +282,15 @@ VF.Test.StaveNote = (function() {
       ];
       expect(notes.length * 2);
 
+      function colorDescendants(color) {
+        return function() {
+          Vex.forEach($(this).find('*'), function(child) {
+            child.setAttribute('fill', color);
+            child.setAttribute('stroke', color);
+          });
+        };
+      }
+
       for (var i = 0; i < notes.length; ++i) {
         var note = notes[i];
         var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
@@ -290,18 +299,8 @@ VF.Test.StaveNote = (function() {
         // and mouseout handlers to the notes.
         if (options.params.ui) {
           var item = staveNote.getAttribute('el');
-          item.addEventListener('mouseover', function() {
-            Vex.forEach($(this).find('*'), function(child) {
-              child.setAttribute('fill', 'green');
-              child.setAttribute('stroke', 'green');
-            });
-          }, false);
-          item.addEventListener('mouseout', function() {
-            Vex.forEach($(this).find('*'), function(child) {
-              child.setAttribute('fill', 'black');
-              child.setAttribute('stroke', 'black');
-            });
-          }, false);
+          item.addEventListener('mouseover', colorDescendants('green'), false);
+          item.addEventListener('mouseout', colorDescendants('black'), false);
         }
         ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
         ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -313,7 +312,7 @@ VF.Test.StaveNote = (function() {
       var octaveShift = options.params.octaveShift;
       var restKey = options.params.restKey;
 
-      var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+      var ctx = new contextBuilder(options.elementId, 700, 180);
       var stave = new VF.Stave(10, 30, 750);
       stave.setContext(ctx);
       stave.addClef(clef);
@@ -373,7 +372,7 @@ VF.Test.StaveNote = (function() {
 
     drawBass: function(options, contextBuilder) {
       expect(40);
-      var ctx = new contextBuilder(options.canvas_sel, 600, 280);
+      var ctx = new contextBuilder(options.elementId, 600, 280);
       var stave = new VF.Stave(10, 10, 650);
       stave.setContext(ctx);
       stave.addClef('bass');
@@ -414,7 +413,7 @@ VF.Test.StaveNote = (function() {
     },
 
     displacements: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 700, 140);
+      var ctx = new contextBuilder(options.elementId, 700, 140);
       ctx.scale(0.9, 0.9);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
@@ -452,7 +451,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawHarmonicAndMuted: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 300, 180);
+      var ctx = new contextBuilder(options.elementId, 300, 180);
       var stave = new VF.Stave(10, 10, 280);
       stave.setContext(ctx);
       stave.draw();
@@ -509,7 +508,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawSlash: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 700, 180);
+      var ctx = new contextBuilder(options.elementId, 700, 180);
       var stave = new VF.Stave(10, 10, 650);
       stave.setContext(ctx);
       stave.draw();
@@ -555,7 +554,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawKeyStyles: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 300, 280);
+      var ctx = new contextBuilder(options.elementId, 300, 280);
       ctx.scale(3, 3);
 
       var stave = new VF.Stave(10, 0, 100);
@@ -578,7 +577,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawNoteStyles: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 300, 280);
+      var ctx = new contextBuilder(options.elementId, 300, 280);
       var stave = new VF.Stave(10, 0, 100);
       ctx.scale(3, 3);
 
@@ -619,7 +618,7 @@ VF.Test.StaveNote = (function() {
     },
 
     dotsAndFlagsStemUp: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
@@ -654,7 +653,7 @@ VF.Test.StaveNote = (function() {
 
 
     dotsAndFlagsStemDown: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 160);
+      var ctx = new contextBuilder(options.elementId, 800, 160);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
@@ -688,7 +687,7 @@ VF.Test.StaveNote = (function() {
     },
 
     dotsAndBeamsUp: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
@@ -724,7 +723,7 @@ VF.Test.StaveNote = (function() {
     },
 
     dotsAndBeamsDown: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 160);
+      var ctx = new contextBuilder(options.elementId, 800, 160);
       ctx.scale(1.0, 1.0);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');

@@ -4,24 +4,27 @@
  */
 
 VF.Test.Formatter = (function() {
-  var runTests = VF.Test.runTests;
+  var run = VF.Test.runTests;
 
   var Formatter = {
     Start: function() {
-      QUnit.module("Formatter");
-      test("TickContext Building", Formatter.buildTickContexts);
-      runTests("StaveNote Formatting", Formatter.formatStaveNotes);
-      runTests("StaveNote Justification", Formatter.justifyStaveNotes);
-      runTests("Notes with Tab", Formatter.notesWithTab);
-      runTests("Multiple Staves - No Justification", Formatter.multiStaves, {justify: 0, iterations: 0});
-      runTests("Multiple Staves - Justified", Formatter.multiStaves, {justify: 168, iterations: 0});
-      runTests("Multiple Staves - Justified - 6 Iterations", Formatter.multiStaves, {justify: 168, iterations: 6});
-      runTests("Proportional Formatting - no tuning", Formatter.proportionalFormatting, {debug: false, iterations: 0});
-      runTests("Proportional Formatting - 15 steps", Formatter.proportionalFormatting, {debug: false, iterations: 15});
+      QUnit.module('Formatter');
+      test('TickContext Building', Formatter.buildTickContexts);
+      run('StaveNote Formatting', Formatter.formatStaveNotes);
+      run('StaveNote Justification', Formatter.justifyStaveNotes);
+      run('Notes with Tab', Formatter.notesWithTab);
+      run('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0 });
+      run('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
+      run('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 6 });
+      run('Proportional Formatting - no tuning', Formatter.proportionalFormatting, { debug: false, iterations: 0 });
+      run('Proportional Formatting - 15 steps', Formatter.proportionalFormatting, { debug: false, iterations: 15 });
 
       for (var i = 2; i < 15; i++) {
-        VF.Test.runSVGTest("Proportional Formatting (" + i + " iterations)",
-          Formatter.proportionalFormatting, {debug: true, iterations: i});
+        VF.Test.runSVGTest(
+          'Proportional Formatting (' + i + ' iterations)',
+          Formatter.proportionalFormatting,
+          { debug: true, iterations: i }
+        );
       }
     },
 
@@ -36,13 +39,13 @@ VF.Test.Formatter = (function() {
       var tickables1 = [
         createTickable().setTicks(BEAT).setWidth(10),
         createTickable().setTicks(BEAT * 2).setWidth(20),
-        createTickable().setTicks(BEAT).setWidth(30)
+        createTickable().setTicks(BEAT).setWidth(30),
       ];
 
       var tickables2 = [
         createTickable().setTicks(BEAT * 2).setWidth(10),
         createTickable().setTicks(BEAT).setWidth(20),
-        createTickable().setTicks(BEAT).setWidth(30)
+        createTickable().setTicks(BEAT).setWidth(30),
       ];
 
       var voice1 = new VF.Voice(VF.Test.TIME4_4);
@@ -54,7 +57,7 @@ VF.Test.Formatter = (function() {
       var formatter = new VF.Formatter();
       var tContexts = formatter.createTickContexts([voice1, voice2]);
 
-      equal(tContexts.list.length, 4, "Voices should have four tick contexts");
+      equal(tContexts.list.length, 4, 'Voices should have four tick contexts');
 
       // TODO: add this after pull request #68 is merged to master
       // throws(
@@ -63,68 +66,41 @@ VF.Test.Formatter = (function() {
       //   "Expected to throw exception"
       // );
 
-      ok(formatter.preCalculateMinTotalWidth([voice1, voice2]),
-          'Successfully runs preCalculateMinTotalWidth');
-      equal(formatter.getMinTotalWidth(), 104,
-          "Get minimum total width without passing voices");
+      ok(formatter.preCalculateMinTotalWidth([voice1, voice2]), 'Successfully runs preCalculateMinTotalWidth');
+      equal(formatter.getMinTotalWidth(), 104, 'Get minimum total width without passing voices');
 
       formatter.preFormat();
-      equal(formatter.getMinTotalWidth(), 104, "Minimum total width");
 
-      equal(tickables1[0].getX(), tickables2[0].getX(),
-          "First notes of both voices have the same X");
-      equal(tickables1[2].getX(), tickables2[2].getX(),
-          "Last notes of both voices have the same X");
-      ok(tickables1[1].getX() < tickables2[1].getX(),
-          "Second note of voice 2 is to the right of the second note of voice 1");
+      equal(formatter.getMinTotalWidth(), 104, 'Minimum total width');
+      equal(tickables1[0].getX(), tickables2[0].getX(), 'First notes of both voices have the same X');
+      equal(tickables1[2].getX(), tickables2[2].getX(), 'Last notes of both voices have the same X');
+      ok(tickables1[1].getX() < tickables2[1].getX(), 'Second note of voice 2 is to the right of the second note of voice 1');
     },
 
-    renderNotes: function(
-        notes1, notes2, ctx, stave, justify) {
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
-      var voice2 = new VF.Voice(VF.Test.TIME4_4);
+    formatStaveNotes: function(options) {
+      var vf = VF.Test.makeFactory(options, 500, 250);
+      var score = vf.EasyScore();
 
-      voice1.addTickables(notes1);
-      voice2.addTickables(notes2);
+      vf.Stave({ y: 40 });
 
-      new VF.Formatter().joinVoices([voice1, voice2]).
-        format([voice1, voice2], justify);
+      var notes1 = score.notes(
+        '(cb4 e#4 a4)/2, (d4 e4 f4)/4, (cn4 f#4 a4)',
+        { stem: 'down' }
+      );
+      var notes2 = score.notes(
+        '(cb5 e#5 a5)/2, (d5 e5 f5)/4, (cn5 f#5 a5)',
+        { stem: 'up' }
+      );
 
-      voice1.draw(ctx, stave);
-      voice2.draw(ctx, stave);
-    },
+      var voices = [notes1, notes2].map(score.voice.bind(score));
 
-    formatStaveNotes: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 400, 250);
-      ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      var stave = new VF.Stave(10, 30, 500);
-      stave.setContext(ctx);
-      stave.draw();
+      vf.Formatter()
+        .joinVoices(voices)
+        .format(voices);
 
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+      vf.draw();
 
-      var notes1 = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "q"}),
-        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "q"}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#"))
-      ];
-
-      var notes2 = [
-        newNote({ keys: ["c/5", "e/5", "a/5"], stem_direction: 1,  duration: "h"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
-        newNote({ keys: ["d/5", "e/5", "f/5"], stem_direction: 1, duration: "q"}),
-        newNote({ keys: ["c/5", "f/5", "a/5"], stem_direction: 1, duration: "q"}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#"))
-      ];
-
-      VF.Test.Formatter.renderNotes(notes1, notes2, ctx, stave);
+      var ctx = vf.getContext();
 
       notes1.forEach(function(note) {
         VF.Test.plotNoteWidth(ctx, note, 180);
@@ -139,293 +115,192 @@ VF.Test.Formatter = (function() {
       ok(true);
     },
 
-    getNotes: function() {
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    justifyStaveNotes: function(options) {
+      var vf = VF.Test.makeFactory(options, 420, 580);
+      var ctx = vf.getContext();
+      var score = vf.EasyScore();
 
-      var notes1 = [
-        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: -1, duration: "h"}).
-          addAccidental(0, newAcc("bb")).
-          addAccidental(1, newAcc("n")),
-        newNote({ keys: ["d/4", "e/4", "f/4"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["d/4", "f/4", "a/4"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["c/4", "f/4", "a/4"], stem_direction: -1, duration: "q"}).
-          addAccidental(0, newAcc("n")).
-          addAccidental(1, newAcc("#"))
-      ];
+      var y = 30;
+      function justifyToWidth(width) {
+        vf.Stave({ y: y }).addTrebleGlyph();
 
-      var notes2 = [
-        newNote({ keys: ["b/4", "e/5", "a/5"], stem_direction: 1,  duration: "q"}).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("#")),
-        newNote({ keys: ["d/5", "e/5", "f/5"], stem_direction: 1, duration: "h"}),
-        newNote({ keys: ["c/5", "f/5", "a/5"], stem_direction: 1, duration: "q"}).
-          addAccidental(0, newAcc("##")).
-          addAccidental(1, newAcc("b"))
-      ];
+        var voices = [
+          score.voice(score.notes(
+            '(cbb4 en4 a4)/2, (d4 e4 f4)/8, (d4 f4 a4)/8, (cn4 f#4 a4)/4',
+            { stem: 'down' }
+          )),
+          score.voice(score.notes(
+            '(bb4 e#5 a5)/4, (d5 e5 f5)/2, (c##5 fb5 a5)/4',
+            { stem: 'up' }
+          )),
+        ];
 
-      return [notes1, notes2];
-    },
+        vf.Formatter()
+          .joinVoices(voices)
+          .format(voices, width);
 
-    justifyStaveNotes: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 420, 580);
-      ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
+        voices[0].getTickables().forEach(function(note) {
+          VF.Test.plotNoteWidth(ctx, note, y + 140);
+        });
 
-      // Get test voices.
-      var notes = VF.Test.Formatter.getNotes();
+        voices[1].getTickables().forEach(function(note) {
+          VF.Test.plotNoteWidth(ctx, note, y - 20);
+        });
+        y += 210;
+      }
 
-      var stave = new VF.Stave(10, 30, 400).addTrebleGlyph().
-        setContext(ctx).draw();
-      VF.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave);
-      notes[0].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 170);});
-      notes[1].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 15);});
-      ok(true);
+      justifyToWidth(0);
+      justifyToWidth(300);
+      justifyToWidth(400);
 
-      var stave2 = new VF.Stave(10, 220, 400).addTrebleGlyph().
-        setContext(ctx).draw();
-      VF.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave2, 300);
-      ok(true);
-      notes[0].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 350);});
-      notes[1].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 200);});
-
-      var stave3 = new VF.Stave(10, 410, 400).addTrebleGlyph().
-        setContext(ctx).draw();
-      VF.Test.Formatter.renderNotes(notes[0], notes[1], ctx, stave3, 400);
-      notes[0].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 550);});
-      notes[1].forEach(function(note) {VF.Test.plotNoteWidth(ctx, note, 390);});
+      vf.draw();
 
       ok(true);
     },
 
-    getTabNotes: function() {
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newTabNote(tab_struct) { return new VF.TabNote(tab_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    notesWithTab: function(options) {
+      var vf = VF.Test.makeFactory(options, 420, 580);
+      var score = vf.EasyScore();
 
-      var notes1 = [
-        newNote({ keys: ["d/4"], stem_direction: 1, duration: "h"}).
-          addAccidental(0, newAcc("#")),
-        newNote({ keys: ["c/4", "d/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}),
-        newNote({ keys: ["c/4", "e/4", "a/4"], stem_direction: 1, duration: "q"}).
-          addAccidental(0, newAcc("#"))
-      ];
+      var y = 10;
+      function justifyToWidth(width) {
+        var stave = vf.Stave({ y: y }).addTrebleGlyph();
 
-      var tabs1 = [
-        newTabNote({ positions: [{str: 3, fret: 6}], duration: "h"}).
-          addModifier(new VF.Bend("Full"), 0),
-        newTabNote({ positions: [{str: 2, fret: 3},
-                                 {str: 3, fret: 5}], duration: "8"}).
-          addModifier(new VF.Bend("Unison"), 1),
-        newTabNote({ positions: [{str: 3, fret: 7}], duration: "8"}),
-        newTabNote({ positions: [{str: 3, fret: 6},
-                                 {str: 4, fret: 7},
-                                 {str: 2, fret: 5}], duration: "q"})
+        var voice = score.voice(score.notes(
+          'd#4/2, (c4 d4)/8, d4/8, (c#4 e4 a4)/4',
+          { stem: 'up' }
+        ));
 
-      ];
+        y += 100;
 
-      return { notes: notes1, tabs: tabs1 }
-    },
+        vf.TabStave({ y: y })
+          .addTabGlyph()
+          .setNoteStartX(stave.getNoteStartX());
 
-    renderNotesWithTab: function(notes, ctx, staves, justify) {
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      var tabVoice = new VF.Voice(VF.Test.TIME4_4);
+        var tabVoice = score.voice([
+          vf.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new VF.Bend('Full'), 0),
+          vf.TabNote({ positions: [{ str: 2, fret: 3 },
+                                   { str: 3, fret: 5 }], duration: '8' }).addModifier(new VF.Bend('Unison'), 1),
+          vf.TabNote({ positions: [{ str: 3, fret: 7 }], duration: '8' }),
+          vf.TabNote({ positions: [{ str: 3, fret: 6 },
+                                   { str: 4, fret: 7 },
+                                   { str: 2, fret: 5 }], duration: '4' }),
 
-      voice.addTickables(notes.notes);
-      tabVoice.addTickables(notes.tabs);
+        ]);
 
-      new VF.Formatter().
-        joinVoices([voice]).joinVoices([tabVoice]).
-        format([voice, tabVoice], justify);
+        vf.Formatter()
+          .joinVoices([voice])
+          .joinVoices([tabVoice])
+          .format([voice, tabVoice], width);
 
-      voice.draw(ctx, staves.notes);
-      tabVoice.draw(ctx, staves.tabs);
-    },
+        y += 150;
+      }
 
-    notesWithTab: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 420, 400);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = "10pt Arial";
+      justifyToWidth(0);
+      justifyToWidth(300);
 
-      // Get test voices.
-      var notes = VF.Test.Formatter.getTabNotes();
-      var stave = new VF.Stave(10, 10, 400).addTrebleGlyph().
-        setContext(ctx).draw();
-      var tabstave = new VF.TabStave(10, 100, 400).addTabGlyph().
-        setNoteStartX(stave.getNoteStartX()).setContext(ctx).draw();
+      vf.draw();
 
-      VF.Test.Formatter.renderNotesWithTab(notes, ctx,
-          { notes: stave, tabs: tabstave });
-      ok(true);
-
-      var stave2 = new VF.Stave(10, 200, 400).addTrebleGlyph().
-        setContext(ctx).draw();
-      var tabstave2 = new VF.TabStave(10, 300, 400).addTabGlyph().
-        setNoteStartX(stave2.getNoteStartX()).setContext(ctx).draw();
-
-      VF.Test.Formatter.renderNotesWithTab(notes, ctx,
-          { notes: stave2, tabs: tabstave2 }, 300);
       ok(true);
     },
 
-    multiStaves: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 500, 300);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = "10pt Arial";
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
+    multiStaves: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 400);
+      var score = vf.EasyScore();
 
-      var stave11 = new VF.Stave(20, 10, 255).
-        addTrebleGlyph().
-        addTimeSignature("6/8").
-        setContext(ctx).draw();
-      var stave21 = new VF.Stave(20, 100, 255).
-        addTrebleGlyph().
-        addTimeSignature("6/8").
-        setContext(ctx).draw();
-      var stave31 = new VF.Stave(20, 200, 255).
-        addClef("bass").
-        addTimeSignature("6/8").
-        setContext(ctx).draw();
-      new VF.StaveConnector(stave21, stave31).
-        setType(VF.StaveConnector.type.BRACE).
-        setContext(ctx).draw();
+      var stave11 = vf.Stave({ y: 20, width: 275 })
+        .addTrebleGlyph()
+        .addTimeSignature('6/8');
 
-      var notes11 = [
-        newNote({ keys: ["f/4"], duration: "q"}).setStave(stave11),
-        newNote({ keys: ["d/4"], duration: "8"}).setStave(stave11),
-        newNote({ keys: ["g/4"], duration: "q"}).setStave(stave11),
-        newNote({ keys: ["e/4"], duration: "8"}).setStave(stave11).
-          addAccidental(0, newAcc("b"))
-      ];
-      var notes21 = [
-        newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}).setStave(stave21),
-        newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}).setStave(stave21),
-        newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}).setStave(stave21),
-        newNote({ keys: ["d/4"], stem_direction: 1, duration: "8"}).setStave(stave21),
-        newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"}).setStave(stave21).
-          addAccidental(0, newAcc("b")),
-        newNote({ keys: ["e/4"], stem_direction: 1, duration: "8"}).setStave(stave21).
-          addAccidental(0, newAcc("b"))
-      ];
-      var notes31 = [
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave31)
-      ];
+      var notes11 = score.notes('f4/4, d4/8, g4/4, eb4/8');
+      var voice11 = score.voice(notes11, { time: '6/8' });
 
-      var voice11 = new VF.Voice(VF.Test.Formatter.TIME6_8);
-      var voice21 = new VF.Voice(VF.Test.Formatter.TIME6_8);
-      var voice31 = new VF.Voice(VF.Test.Formatter.TIME6_8);
-      voice11.addTickables(notes11);
-      voice21.addTickables(notes21);
-      voice31.addTickables(notes31);
+      var stave21 = vf.Stave({ y: 130, width: 275 })
+        .addTrebleGlyph()
+        .addTimeSignature('6/8');
 
-      var beam21a = new VF.Beam(notes21.slice(0, 3));
-      var beam21b = new VF.Beam(notes21.slice(3, 6));
-      var beam31a = new VF.Beam(notes31.slice(0, 3));
-      var beam31b = new VF.Beam(notes31.slice(3, 6));
+      var notes21 = score.notes('d4/8, d4, d4, d4, eb4, eb4');
+      var voice21 = score.voice(notes21, { time: '6/8' });
 
-      var formatter;
-      if (options.params.justify > 0) {
-        formatter = new VF.Formatter()
-          .joinVoices([voice11])
-          .joinVoices([voice21])
-          .joinVoices([voice31])
-          .format([voice11, voice21, voice31], options.params.justify);
+      var stave31 = vf.Stave({ y: 250, width: 275 })
+        .addClef('bass')
+        .addTimeSignature('6/8');
+
+      var notes31 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
+      var voice31 = score.voice(notes31, { time: '6/8' });
+
+      vf.StaveConnector({
+        top_stave: stave21,
+        bottom_stave: stave31,
+        type: 'brace',
+      });
+
+      vf.Beam({ notes: notes21.slice(0, 3) });
+      vf.Beam({ notes: notes21.slice(3, 6) });
+      vf.Beam({ notes: notes31.slice(0, 3) });
+      vf.Beam({ notes: notes31.slice(3, 6) });
+
+      var formatter = vf.Formatter()
+        .joinVoices([voice11])
+        .joinVoices([voice21])
+        .joinVoices([voice31]);
+
+      if (options.params.justify) {
+        formatter.formatToStave([voice11, voice21, voice31], stave11);
       } else {
-        formatter = new VF.Formatter()
-          .joinVoices([voice11])
-          .joinVoices([voice21])
-          .joinVoices([voice31])
-          .format([voice11, voice21, voice31]);
+        formatter.format([voice11, voice21, voice31], 0);
       }
 
       for (var i = 0; i < options.params.iterations; i++) {
         formatter.tune();
       }
 
-      voice11.draw(ctx, stave11);
-      voice21.draw(ctx, stave21);
-      voice31.draw(ctx, stave31);
-      beam21a.setContext(ctx).draw();
-      beam21b.setContext(ctx).draw();
-      beam31a.setContext(ctx).draw();
-      beam31b.setContext(ctx).draw();
+      var stave12 = vf.Stave({
+        x: stave11.width + stave11.x,
+        y: stave11.y,
+        width: stave11.width,
+      });
 
-      var stave12 = new VF.Stave(stave11.width + stave11.x, stave11.y, 250).
-        setContext(ctx).draw();
-      var stave22 = new VF.Stave(stave21.width + stave21.x, stave21.y, 250).
-        setContext(ctx).draw();
-      var stave32 = new VF.Stave(stave31.width + stave31.x, stave31.y, 250).
-        setContext(ctx).draw();
+      var notes12 = score.notes('ab4/4, bb4/8, (cb5 eb5)/4[stem="down"], d5/8[stem="down"]');
+      var voice12 = score.voice(notes12, { time: '6/8' });
 
-      var notes12 = [
-        newNote({ keys: ["a/4"], duration: "q"}).setStave(stave12).
-         addAccidental(0, newAcc("b")),
-        newNote({ keys: ["b/4"], duration: "8"}).setStave(stave12).
-          addAccidental(0, newAcc("b")),
-        newNote({ keys: ["c/5", "e/5"], stem_direction: -1, duration: "q"}).setStave(stave12). //,
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("b")),
+      vf.Stave({
+        x: stave21.width + stave21.x,
+        y: stave21.y,
+        width: stave21.width,
+      });
 
-        newNote({ keys: ["d/5"], stem_direction: -1, duration: "8"}).setStave(stave12)
-      ];
-      var notes22 = [
-        newNote({ keys: ["e/4", "a/4"], stem_direction: 1, duration: "qd"}).setStave(stave22).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("b")).
-          addDotToAll(),
-        newNote({ keys: ["e/4", "a/4", "c/5"], stem_direction: 1, duration: "q"}).setStave(stave22).
-          addAccidental(0, newAcc("b")).
-          addAccidental(1, newAcc("b")),
-        newNote({ keys: ["d/5"], stem_direction: 1, duration: "8"}).setStave(stave22).
-          addAccidental(0, newAcc("b"))
-      ];
-      var notes32 = [
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32),
-        newNote({ keys: ["a/5"], stem_direction: -1, duration: "8"}).setStave(stave32)
-      ];
-      var voice12 = new VF.Voice(VF.Test.Formatter.TIME6_8);
-      var voice22 = new VF.Voice(VF.Test.Formatter.TIME6_8);
-      var voice32 = new VF.Voice(VF.Test.Formatter.TIME6_8);
-      voice12.addTickables(notes12);
-      voice22.addTickables(notes22);
-      voice32.addTickables(notes32);
+      var notes22 = score.notes('(eb4 ab4)/4., (eb4 ab4 c4)/4, db5/8', { stem: 'up' });
+      var voice22 = score.voice(notes22, { time: '6/8' });
 
-      if (options.params.justify > 0) {
-        formatter = new VF.Formatter()
-          .joinVoices([voice12])
-          .joinVoices([voice22])
-          .joinVoices([voice32])
-          .format([voice12, voice22, voice32], 188);
+      vf.Stave({
+        x: stave31.width + stave31.x,
+        y: stave31.y,
+        width: stave31.width,
+      });
+
+      var notes32 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
+      var voice32 = score.voice(notes32, { time: '6/8' });
+
+      formatter = vf.Formatter()
+        .joinVoices([voice12])
+        .joinVoices([voice22])
+        .joinVoices([voice32]);
+
+      if (options.params.justify) {
+        formatter.formatToStave([voice12, voice22, voice32], stave12);
       } else {
-        formatter = new VF.Formatter()
-          .joinVoices([voice12])
-          .joinVoices([voice22])
-          .joinVoices([voice32])
-          .format([voice12, voice22, voice32]);
+        formatter.format([voice12, voice22, voice32], 0);
       }
 
-      for (var i = 0; i < options.params.iterations; i++) {
+      for (var j = 0; j < options.params.iterations; j++) {
         formatter.tune();
       }
 
-      var beam32a = new VF.Beam(notes32.slice(0, 3));
-      var beam32b = new VF.Beam(notes32.slice(3, 6));
+      vf.Beam({ notes: notes32.slice(0, 3) });
+      vf.Beam({ notes: notes32.slice(3, 6) });
 
-      voice12.draw(ctx, stave12);
-      voice22.draw(ctx, stave22);
-      voice32.draw(ctx, stave32);
-      beam32a.setContext(ctx).draw();
-      beam32b.setContext(ctx).draw();
+      vf.draw();
 
       ok(true);
     },
@@ -436,25 +311,31 @@ VF.Test.Formatter = (function() {
 
       var vf = VF.Test.makeFactory(options, 600, 750);
       var system = vf.System({
-        x: 50, width: 500,
+        x: 50,
+        width: 500,
         debugFormatter: debug,
         formatIterations: options.params.iterations,
       });
+
       var score = vf.EasyScore();
 
-      var newVoice = function(notes) { return score.voice(notes, {time: '1/4'})};
+      var newVoice = function(notes) {
+        return score.voice(notes, { time: '1/4' });
+      };
+
       var newStave = function(voice) {
-        system.addStave({voices: [voice], debugNoteMetrics: debug})
+        return system
+          .addStave({ voices: [voice], debugNoteMetrics: debug })
           .addClef('treble')
           .addTimeSignature('1/4');
       };
 
       var voices = [
         score.notes('c5/8, c5'),
-        score.tuplet(score.notes('a4/8, a4, a4'), {notes_occupied: 2}),
+        score.tuplet(score.notes('a4/8, a4, a4'), { notes_occupied: 2 }),
         score.notes('c5/16, c5, c5, c5'),
-        score.tuplet(score.notes('a4/16, a4, a4, a4, a4'), {notes_occupied: 4}),
-        score.tuplet(score.notes('a4/32, a4, a4, a4, a4, a4, a4'), {notes_occupied: 8}),
+        score.tuplet(score.notes('a4/16, a4, a4, a4, a4'), { notes_occupied: 4 }),
+        score.tuplet(score.notes('a4/32, a4, a4, a4, a4, a4, a4'), { notes_occupied: 8 }),
       ];
 
       voices.map(newVoice).forEach(newStave);
@@ -462,10 +343,10 @@ VF.Test.Formatter = (function() {
 
       vf.draw();
 
-      var typeMap = VF.Registry.getDefaultRegistry().index.type;
-      var table = Object.keys(typeMap).map(function (k) {
-        return k + ": " + Object.keys(typeMap[k]).length;
-      });
+      // var typeMap = VF.Registry.getDefaultRegistry().index.type;
+      // var table = Object.keys(typeMap).map(function(typeName) {
+      //   return typeName + ': ' + Object.keys(typeMap[typeName]).length;
+      // });
 
       // console.log(table);
       VF.Registry.disableDefaultRegistry();
@@ -475,8 +356,8 @@ VF.Test.Formatter = (function() {
     TIME6_8: {
       num_beats: 6,
       beat_value: 8,
-      resolution: VF.RESOLUTION
-    }
+      resolution: VF.RESOLUTION,
+    },
   };
 
   return Formatter;

@@ -67,11 +67,22 @@ export class System extends Element {
 
     if (!params.stave) {
       const options = { left_bar: false };
-      params.stave = this.factory.Stave(
-        { x: this.options.x, y: this.options.y, width: this.options.width, options });
+      params.stave = this.factory.Stave({
+        x: this.options.x,
+        y: this.options.y,
+        width: this.options.width,
+        options,
+      });
     }
 
-    params.voices.forEach(voice => voice.setContext(this.context).setStave(params.stave));
+    params.voices.forEach(voice =>
+      voice
+        .setContext(this.context)
+        .setStave(params.stave)
+        .getTickables()
+        .forEach(tickable => tickable.setStave(params.stave))
+    );
+
     this.parts.push(params);
     return params.stave;
   }

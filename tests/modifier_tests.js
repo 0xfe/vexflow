@@ -6,14 +6,14 @@
 VF.Test.ModifierContext = (function() {
   var ModifierContext = {
     Start: function() {
-      QUnit.module("ModifierContext");
-      test("Modifier Width Test", ModifierContext.width);
-      test("Modifier Management", ModifierContext.management);
+      QUnit.module('ModifierContext');
+      test('Modifier Width Test', ModifierContext.width);
+      test('Modifier Management', ModifierContext.management);
     },
 
     width: function() {
       var mc = new VF.ModifierContext();
-      equal(mc.getWidth(), 0, "New modifier context has no width");
+      equal(mc.getWidth(), 0, 'New modifier context has no width');
     },
 
     management: function() {
@@ -24,11 +24,11 @@ VF.Test.ModifierContext = (function() {
       mc.addModifier(modifier1);
       mc.addModifier(modifier2);
 
-      var accidentals = mc.getModifiers("none");
+      var accidentals = mc.getModifiers('none');
 
-      equal(accidentals.length, 2, "Added two modifiers");
+      equal(accidentals.length, 2, 'Added two modifiers');
     },
-  }
+  };
 
   return ModifierContext;
 })();
