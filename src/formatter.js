@@ -206,7 +206,8 @@ export class Formatter {
     // Start by creating a voice and adding all the notes to it.
     const voice = new Voice(Flow.TIME4_4)
       .setMode(Voice.Mode.SOFT)
-      .addTickables(notes);
+      .addTickables(notes)
+      .updateStave(stave);
 
     // Then create beams, if requested.
     const beams = options.auto_beam ? Beam.applyAndGetBeams(voice) : [];
@@ -217,7 +218,7 @@ export class Formatter {
       .formatToStave([voice], stave, { align_rests: options.align_rests, stave });
 
     // Render the voice and beams to the stave.
-    voice.setStave(stave).draw(ctx, stave);
+    voice.draw(ctx);
     beams.forEach(beam => beam.setContext(ctx).draw());
 
     // Return the bounding box of the voice.
@@ -252,12 +253,14 @@ export class Formatter {
     // Create a `4/4` voice for `notes`.
     const notevoice = new Voice(Flow.TIME4_4)
       .setMode(Voice.Mode.SOFT)
-      .addTickables(notes);
+      .addTickables(notes)
+      .updateStave(stave);
 
     // Create a `4/4` voice for `tabnotes`.
     const tabvoice = new Voice(Flow.TIME4_4)
       .setMode(Voice.Mode.SOFT)
-      .addTickables(tabnotes);
+      .addTickables(tabnotes)
+      .updateStave(tabstave);
 
       // Then create beams, if requested.
     const beams = opts.auto_beam ? Beam.applyAndGetBeams(notevoice) : [];
@@ -269,8 +272,8 @@ export class Formatter {
       .formatToStave([notevoice, tabvoice], stave, { align_rests: opts.align_rests });
 
     // Render voices and beams to staves.
-    notevoice.draw(ctx, stave);
-    tabvoice.draw(ctx, tabstave);
+    notevoice.draw(ctx);
+    tabvoice.draw(ctx);
     beams.forEach(beam => beam.setContext(ctx).draw());
 
     // Draw a connector between tab and note staves.
@@ -441,7 +444,7 @@ export class Formatter {
     // If voices and a stave were provided, set the Stave for each voice
     // and preFormat to apply Y values to the notes;
     if (voices && stave) {
-      voices.forEach(voice => voice.setStave(stave).preFormat());
+      voices.forEach(voice => voice.updateStave(stave).preFormat());
     }
 
     // Now distribute the ticks to each tick context, and assign them their

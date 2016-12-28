@@ -839,6 +839,13 @@ export class StaveNote extends StemmableNote {
 
   // Pre-render formatting
   preFormat() {
+    if (!this.stave) {
+      throw new Vex.RERR(
+        'MissingStave',
+        'Can\'t format a StaveNote without a `stave` being set beforehand.'
+      );
+    }
+
     if (this.preFormatted) return;
     if (this.modifierContext) this.modifierContext.preFormat();
 

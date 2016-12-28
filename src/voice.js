@@ -93,9 +93,16 @@ export class Voice extends Element {
   getActualResolution() { return this.resolutionMultiplier * this.time.resolution; }
 
   // Set the voice's stave
-  setStave(stave) {
+  updateStave(stave) {
     this.stave = stave;
     this.boundingBox = null; // Reset bounding box so we can reformat
+
+    this.tickables.forEach(tickable => {
+      if (tickable.setStave) {
+        tickable.setStave(stave);
+      }
+    });
+
     return this;
   }
 
@@ -209,17 +216,22 @@ export class Voice extends Element {
     return this;
   }
 
-  // Render the voice onto the canvas `context` and an optional `stave`.
-  // If `stave` is omitted, it is expected that the notes have staves
-  // already set.
-  draw(context = this.context, stave = this.stave) {
+  // Render the voice onto the canvas `context`
+  draw(context = this.context, stave) {
+    if (stave) {
+      throw new Vex.RERR(
+        'InvalidArgument',
+        'Voice#draw no longer takes a stave because it must be set before ' +
+        'formatting. Use Voice#updateStave to set the stave on each tickable ' +
+        'contained in the voice.'
+      );
+    }
+
     this.setRendered();
+
     let boundingBox = null;
     for (let i = 0; i < this.tickables.length; ++i) {
       const tickable = this.tickables[i];
-
-      // Set the stave if provided
-      if (stave) tickable.setStave(stave);
 
       if (!tickable.getStave()) {
         throw new Vex.RuntimeError(

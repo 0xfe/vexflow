@@ -78,9 +78,7 @@ export class System extends Element {
     params.voices.forEach(voice =>
       voice
         .setContext(this.context)
-        .setStave(params.stave)
-        .getTickables()
-        .forEach(tickable => tickable.setStave(params.stave))
+        .updateStave(params.stave)
     );
 
     this.parts.push(params);
