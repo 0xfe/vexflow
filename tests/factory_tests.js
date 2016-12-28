@@ -34,10 +34,8 @@ Vex.Flow.Test.Factory = (function() {
       var options = vf.getOptions();
       assert.equal(options.renderer.width, 700);
       assert.equal(options.renderer.height, 500);
-      assert.equal(options.renderer.selector, null);
+      assert.equal(options.renderer.elementId, null);
       assert.equal(options.stave.space, 10);
-
-      assert.expect(5);
     },
 
     draw: function(options) {

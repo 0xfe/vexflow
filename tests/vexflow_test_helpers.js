@@ -147,7 +147,7 @@ VF.Test = (function() {
       });
     },
 
-    runCanvasTest: function(name, testFunc, params) {
+    runCanvasTest: function(name, func, params) {
       QUnit.test(name, function(assert) {
         var elementId = VF.Test.genID('canvas_');
         var title = VF.Test.genTitle('Canvas', assert, name);
@@ -161,7 +161,7 @@ VF.Test = (function() {
           assert: assert,
         };
 
-        testFunc(testOptions, VF.Renderer.getCanvasContext);
+        func(testOptions, VF.Renderer.getCanvasContext);
       });
     },
 
@@ -212,12 +212,14 @@ VF.Test = (function() {
       }
 
       QUnit.test(name, function(assert) {
+        var elementId = VF.Test.genID('node_');
+
         var div = document.createElement('div');
-        div.setAttribute('id', VF.Test.genID('node_'));
+        div.setAttribute('id', elementId);
         document.getElementsByTagName('body')[0].appendChild(div);
 
         var testOptions = {
-          id: div,
+          elementId: elementId,
           backend: VF.Renderer.Backends.SVG,
           params: params,
           assert: assert,
