@@ -47,7 +47,7 @@ VF.Test.Dot = (function() {
     },
 
     basic: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 1000, 240);
+      var ctx = new contextBuilder(options.elementId, 1000, 240);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
 
@@ -95,7 +95,7 @@ VF.Test.Dot = (function() {
     },
 
     multiVoice: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 500, 300);
+      var ctx = new contextBuilder(options.elementId, 500, 300);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
 

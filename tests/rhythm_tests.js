@@ -16,7 +16,7 @@ VF.Test.Rhythm = (function() {
     },
 
     drawSlash: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 350, 180);
+      var ctx = new contextBuilder(options.elementId, 350, 180);
       var stave = new VF.Stave(10, 10, 350);
       stave.setContext(ctx);
       stave.draw();
@@ -43,7 +43,7 @@ VF.Test.Rhythm = (function() {
     },
 
     drawBasic: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 150);
@@ -133,7 +133,7 @@ VF.Test.Rhythm = (function() {
     },
 
     drawBeamedSlashNotes: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 300);
@@ -186,7 +186,7 @@ VF.Test.Rhythm = (function() {
 
     drawSlashAndBeamAndRests : function(options,
                                                               contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 300);
@@ -253,7 +253,7 @@ VF.Test.Rhythm = (function() {
 
     drawSixtenthWithScratches : function(options,
                                                                contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 300);
@@ -310,7 +310,7 @@ VF.Test.Rhythm = (function() {
 
     drawThirtySecondWithScratches : function(options,
                                                                    contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 800, 150);
+      var ctx = new contextBuilder(options.elementId, 800, 150);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 300);

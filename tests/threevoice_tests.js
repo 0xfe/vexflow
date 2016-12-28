@@ -229,4 +229,4 @@ VF.Test.ThreeVoices = (function() {
   };
 
   return ThreeVoices;
-})();
+}());

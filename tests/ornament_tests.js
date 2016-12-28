@@ -20,7 +20,7 @@ VF.Test.Ornament = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 750, 195);
+      var ctx = contextBuilder(options.elementId, 750, 195);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 700);
@@ -63,7 +63,7 @@ VF.Test.Ornament = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 750, 195);
+      var ctx = contextBuilder(options.elementId, 750, 195);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 700);
@@ -106,7 +106,7 @@ VF.Test.Ornament = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 550, 195);
+      var ctx = contextBuilder(options.elementId, 550, 195);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 500);
@@ -131,7 +131,7 @@ VF.Test.Ornament = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 550, 195);
+      var ctx = contextBuilder(options.elementId, 550, 195);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 30, 500);
@@ -162,7 +162,7 @@ VF.Test.Ornament = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel,650, 250);
+      var ctx = contextBuilder(options.elementId,650, 250);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 60, 600);

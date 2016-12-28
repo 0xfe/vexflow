@@ -28,7 +28,7 @@ VF.Test.TimeSignature = (function() {
       var run = VF.Test.runTests;
 
       run('Basic Time Signatures', function(options, contextBuilder) {
-        var ctx = new contextBuilder(options.canvas_sel, 600, 120);
+        var ctx = new contextBuilder(options.elementId, 600, 120);
 
         new VF.Stave(10, 10, 500)
           .addTimeSignature('2/2')
@@ -51,7 +51,7 @@ VF.Test.TimeSignature = (function() {
       });
 
       run('Big Signature Test', function(options, contextBuilder) {
-        var ctx = new contextBuilder(options.canvas_sel, 400, 120);
+        var ctx = new contextBuilder(options.elementId, 400, 120);
 
         new VF.Stave(10, 10, 300)
           .addTimeSignature('12/8')
@@ -65,7 +65,7 @@ VF.Test.TimeSignature = (function() {
       });
 
       run('Time Signature multiple staves alignment test', function(options, contextBuilder) {
-        var ctx = new contextBuilder(options.canvas_sel, 400, 350);
+        var ctx = new contextBuilder(options.elementId, 400, 350);
 
         var stave = new VF.Stave(15, 0, 300)
           .setConfigForLines(
