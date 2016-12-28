@@ -34,12 +34,13 @@ Vex.Flow.Test.EasyScore = (function() {
       var score = new VF.EasyScore();
       var mustPass = [
         'c3', 'c##3, cb3', 'Cn3', 'f3//x', '(c##3 cbb3 cn3), cb3',
-        'cbbs7', 'cbb7', 'cbss7', 'cbs7', 'cb7', 'cdb7', 'cd7', 'c##7', 'c#7', 'cn7', 'c++-7', 'c++7', 'c+-7', 'c+7',
-        '(cbs3 bbs3 dbs3), ebs3', '(cd7 cbb3 cn3), cb3',
+        'cbbs7', 'cbb7', 'cbss7', 'cbs7', 'cb7', 'cdb7', 'cd7', 'c##7', 'c#7', 'cn7', 'c++-7',
+        'c++7', 'c+-7', 'c+7', '(cbs3 bbs3 dbs3), ebs3', '(cd7 cbb3 cn3), cb3', 'co7', 'ck7',
       ];
       var mustFail = [
         'ct3', 'cdbb7', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3',
-        'cbbbs7', 'cbbss7', 'cbsss7', 'csbs7', 'cddb7', 'cddbb7', 'cdd7', 'c##b7', 'c#bs7', 'cnb#7', 'c+#+b-d7', 'c+--7', 'c++--7', 'c+++7',
+        'cbbbs7', 'cbbss7', 'cbsss7', 'csbs7', 'cddb7', 'cddbb7', 'cdd7', 'c##b7', 'c#bs7',
+        'cnb#7', 'c+#+b-d7', 'c+--7', 'c++--7', 'c+++7', 'cbk7', 'cok7', 'cko7', 'c#s7',
       ];
 
       mustPass.forEach(function(line) { assert.equal(score.parse(line).success, true, line); });

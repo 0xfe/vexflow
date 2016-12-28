@@ -291,6 +291,8 @@ Flow.accidentalCodes.accidentals = {
   '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 },
   'bs':  { code: 'vb7', parenRightPaddingAdjustment: -1 },
   'bss': { code: 'v39', parenRightPaddingAdjustment: -1 },
+  'o':   { code: 'vd0', parenRightPaddingAdjustment: -1 },
+  'k':   { code: 'vd1', parenRightPaddingAdjustment: -1 },
 };
 
 Flow.accidentalColumnsTable = {
