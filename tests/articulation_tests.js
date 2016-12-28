@@ -321,17 +321,18 @@ VF.Test.Articulation = (function() {
       notes3[2].addModifier(new VF.Articulation('a.').setPosition(3), 0);
       notes3[3].addModifier(new VF.Articulation('a.').setPosition(4), 0);
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
-
-      voice.addTickables(notes);
-      voice.addTickables(notes2);
-      voice.addTickables(notes3);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setMode(VF.Voice.Mode.SOFT)
+        .addTickables(notes)
+        .addTickables(notes2)
+        .addTickables(notes3)
+        .updateStave(stave);
 
       new VF.Formatter()
         .joinVoices([voice])
         .formatToStave([voice], stave);
 
-      voice.draw(ctx, stave);
+      voice.draw(ctx);
 
       ok(true, 'TabNotes successfully drawn');
     },

@@ -22,74 +22,79 @@ VF.Test.NoteHead = (function() {
 
     basic: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VF.Test.NoteHead.setupContext(options, 450, 250);
 
-      c.stave = new VF.Stave(10, 0, 250).addTrebleGlyph();
+      var ctx = VF.Test.NoteHead.setupContext(options, 450, 250).context;
+      var stave = new VF.Stave(10, 0, 250).addTrebleGlyph();
+      ctx.scale(2.0, 2.0);
 
-      c.context.scale(2.0, 2.0);
-      c.stave.setContext(c.context).draw();
-
-      var formatter = new VF.Formatter();
-      var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
-
-      var note_head1 = new VF.NoteHead({
+      var notehead1 = new VF.NoteHead({
         duration: '4',
         line: 3,
       });
 
-      var note_head2 = new VF.NoteHead({
+      var notehead2 = new VF.NoteHead({
         duration: '1',
         line: 2.5,
       });
 
-      var note_head3 = new VF.NoteHead({
+      var notehead3 = new VF.NoteHead({
         duration: '2',
         line: 0,
       });
 
-      voice.addTickables([note_head1, note_head2, note_head3]);
-      formatter.joinVoices([voice]).formatToStave([voice], c.stave);
+      var voice = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables([notehead1, notehead2, notehead3])
+        .updateStave(stave);
 
-      voice.draw(c.context, c.stave);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      stave.setContext(ctx).draw();
+      voice.draw(ctx);
 
       ok('Basic NoteHead test');
     },
 
     basicBoundingBoxes: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VF.Test.NoteHead.setupContext(options, 350, 250);
 
-      c.stave = new VF.Stave(10, 0, 250).addTrebleGlyph();
+      var ctx = VF.Test.NoteHead.setupContext(options, 350, 250).context;
+      ctx.scale(2.0, 2.0);
 
-      c.context.scale(2.0, 2.0);
-      c.stave.setContext(c.context).draw();
+      var stave = new VF.Stave(10, 0, 250).addTrebleGlyph();
 
-      var formatter = new VF.Formatter();
-      var voice = new VF.Voice(VF.TIME4_4).setStrict(false);
-
-      var note_head1 = new VF.NoteHead({
+      var notehead1 = new VF.NoteHead({
         duration: '4',
         line: 3,
       });
 
-      var note_head2 = new VF.NoteHead({
+      var notehead2 = new VF.NoteHead({
         duration: '2',
         line: 2.5,
       });
 
-      var note_head3 = new VF.NoteHead({
+      var notehead3 = new VF.NoteHead({
         duration: '1',
         line: 0,
       });
 
-      voice.addTickables([note_head1, note_head2, note_head3]);
-      formatter.joinVoices([voice]).formatToStave([voice], c.stave);
+      var voice = new VF.Voice(VF.TIME4_4)
+        .setStrict(false)
+        .addTickables([notehead1, notehead2, notehead3])
+        .updateStave(stave);
 
-      voice.draw(c.context, c.stave);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      note_head1.getBoundingBox().draw(c.context);
-      note_head2.getBoundingBox().draw(c.context);
-      note_head3.getBoundingBox().draw(c.context);
+      stave.setContext(ctx).draw();
+      voice.draw(ctx);
+
+      notehead1.getBoundingBox().draw(ctx);
+      notehead2.getBoundingBox().draw(ctx);
+      notehead3.getBoundingBox().draw(ctx);
 
       ok('NoteHead Bounding Boxes');
     },

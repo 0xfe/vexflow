@@ -4,6 +4,8 @@
  */
 
 VF.Test.TabTie = (function() {
+  function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
+
   var TabTie = {
     Start: function() {
       var run = VF.Test.runTests;
@@ -18,11 +20,15 @@ VF.Test.TabTie = (function() {
     },
 
     tieNotes: function(notes, indices, stave, ctx, text) {
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables(notes);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables(notes)
+        .updateStave(stave);
 
-      new VF.Formatter().joinVoices([voice]).format([voice], 100);
-      voice.draw(ctx, stave);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], 100);
+
+      voice.draw(ctx);
 
       var tie = new VF.TabTie({
         first_note: notes[0],
@@ -56,11 +62,10 @@ VF.Test.TabTie = (function() {
 
     simple: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
 
       VF.Test.TabTie.drawTie([
-        newNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' }),
-        newNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
+        newNote({ positions: [{ str: 4, fret: 4 }], duration: '2' }),
+        newNote({ positions: [{ str: 4, fret: 6 }], duration: '2' }),
       ], [0], options);
 
       ok(true, 'Simple Test');
@@ -68,12 +73,11 @@ VF.Test.TabTie = (function() {
 
     tap: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
 
       VF.Test.TabTie.drawTie([
-        newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' })
+        newNote({ positions: [{ str: 4, fret: 12 }], duration: '2' })
           .addModifier(new VF.Annotation('T'), 0),
-        newNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' }),
+        newNote({ positions: [{ str: 4, fret: 10 }], duration: '2' }),
       ], [0], options, 'P');
 
       ok(true, 'Tapping Test');
@@ -81,7 +85,8 @@ VF.Test.TabTie = (function() {
 
     multiTest: function(options, factory) {
       var c = VF.Test.TabTie.setupContext(options, 440, 140);
-      function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
+      var ctx = c.context;
+      var stave = c.stave;
 
       var notes = [
         newNote({ positions: [{ str: 4, fret: 4 }], duration: '8' }),
@@ -94,16 +99,22 @@ VF.Test.TabTie = (function() {
         newNote({ positions: [{ str: 2, fret: 16 }, { str: 3, fret: 16 }], duration: '8' }),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
-      new VF.Formatter().joinVoices([voice]).format([voice], 300);
-      voice.draw(c.context, c.stave);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables(notes)
+        .updateStave(stave);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      voice.draw(ctx);
 
       factory({
         first_note: notes[0],
         last_note: notes[1],
         first_indices: [0],
         last_indices: [0],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       ok(true, 'Single note');
 
@@ -112,7 +123,7 @@ VF.Test.TabTie = (function() {
         last_note: notes[3],
         first_indices: [0, 1],
         last_indices: [0, 1],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       ok(true, 'Chord');
 
@@ -121,7 +132,7 @@ VF.Test.TabTie = (function() {
         last_note: notes[5],
         first_indices: [0],
         last_indices: [0],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       ok(true, 'Single note high-fret');
 
@@ -130,7 +141,7 @@ VF.Test.TabTie = (function() {
         last_note: notes[7],
         first_indices: [0, 1],
         last_indices: [0, 1],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       ok(true, 'Chord high-fret');
     },
@@ -148,31 +159,38 @@ VF.Test.TabTie = (function() {
     continuous: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
       var c = VF.Test.TabTie.setupContext(options, 440, 140);
-      function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
+      var ctx = c.context;
+      var stave = c.stave;
 
       var notes = [
-        newNote({ positions: [{ str: 4, fret: 4 }], duration: 'q' }),
-        newNote({ positions: [{ str: 4, fret: 5 }], duration: 'q' }),
-        newNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
+        newNote({ positions: [{ str: 4, fret: 4 }], duration: '4' }),
+        newNote({ positions: [{ str: 4, fret: 5 }], duration: '4' }),
+        newNote({ positions: [{ str: 4, fret: 6 }], duration: '2' }),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
-      new VF.Formatter().joinVoices([voice]).format([voice], 300);
-      voice.draw(c.context, c.stave);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables(notes)
+        .updateStave(stave);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], 300);
+
+      voice.draw(ctx);
 
       VF.TabTie.createHammeron({
         first_note: notes[0],
         last_note: notes[1],
         first_indices: [0],
         last_indices: [0],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       VF.TabTie.createPulloff({
         first_note: notes[1],
         last_note: notes[2],
         first_indices: [0],
         last_indices: [0],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
       ok(true, 'Continuous Hammeron');
     },
   };

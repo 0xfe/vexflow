@@ -148,17 +148,24 @@ VF.Test.TabNote = (function() {
         return tabNote;
       });
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
-      voice.addTickables(notes);
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-      voice.draw(ctx, stave);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setMode(VF.Voice.Mode.SOFT)
+        .addTickables(notes)
+        .updateStave(stave);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      voice.draw(ctx);
+
       ok(true, 'TabNotes successfully drawn');
     },
 
     drawStemsDown: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 600, 200);
-
       ctx.font = '10pt Arial';
+
       var stave = new VF.TabStave(10, 10, 550);
       stave.setContext(ctx);
       stave.draw();
@@ -180,10 +187,16 @@ VF.Test.TabNote = (function() {
         return tabNote;
       });
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
-      voice.addTickables(notes);
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-      voice.draw(ctx, stave);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setMode(VF.Voice.Mode.SOFT)
+        .addTickables(notes)
+        .updateStave(stave);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      voice.draw(ctx);
       ok(true, 'All objects have been drawn');
     },
 
@@ -212,10 +225,16 @@ VF.Test.TabNote = (function() {
       });
 
       ctx.setFont('sans-serif', 10, 'bold');
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
-      voice.addTickables(notes);
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-      voice.draw(ctx, stave);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setMode(VF.Voice.Mode.SOFT)
+        .addTickables(notes)
+        .updateStave(stave);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      voice.draw(ctx);
       ok(true, 'TabNotes successfully drawn');
     },
 
@@ -247,10 +266,16 @@ VF.Test.TabNote = (function() {
 
       ctx.setFont('Arial', 10, 'bold');
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
-      voice.addTickables(notes);
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-      voice.draw(ctx, stave);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setMode(VF.Voice.Mode.SOFT)
+        .addTickables(notes)
+        .updateStave(stave);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      voice.draw(ctx);
       ok(true, 'All objects have been drawn');
     },
 
@@ -277,10 +302,16 @@ VF.Test.TabNote = (function() {
       notes[2].addDot();
       notes[2].addDot();
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
-      voice.addTickables(notes);
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-      voice.draw(ctx, stave);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setMode(VF.Voice.Mode.SOFT)
+        .addTickables(notes)
+        .updateStave(stave);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      voice.draw(ctx);
       ok(true, 'TabNotes successfully drawn');
     },
   };

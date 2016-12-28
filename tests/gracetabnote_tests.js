@@ -4,6 +4,8 @@
  */
 
 VF.Test.GraceTabNote = (function() {
+  function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
+
   var GraceTabNote = {
     Start: function() {
       QUnit.module('Grace Tab Notes');
@@ -24,7 +26,8 @@ VF.Test.GraceTabNote = (function() {
     simple: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
       var c = VF.Test.GraceTabNote.setupContext(options);
-      function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
+      var ctx = c.context;
+      var stave = c.stave;
 
       var note0 = newNote({ positions: [{ str: 4, fret: 6 }], duration: '4' });
       var note1 = newNote({ positions: [{ str: 4, fret: 12 }], duration: '4' });
@@ -63,12 +66,15 @@ VF.Test.GraceTabNote = (function() {
       note2.addModifier(new VF.GraceNoteGroup(gracenotes2));
       note3.addModifier(new VF.GraceNoteGroup(gracenotes3));
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables([note0, note1, note2, note3]);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables([note0, note1, note2, note3])
+        .updateStave(stave);
 
-      new VF.Formatter().joinVoices([voice]).format([voice], 250);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      voice.draw(c.context, c.stave);
+      voice.draw(ctx);
 
       ok(true, 'Simple Test');
     },
@@ -76,7 +82,8 @@ VF.Test.GraceTabNote = (function() {
     slurred: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
       var c = VF.Test.GraceTabNote.setupContext(options);
-      function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
+      var ctx = c.context;
+      var stave = c.stave;
 
       var note0 = newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' });
       var note1 = newNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' });
@@ -102,12 +109,15 @@ VF.Test.GraceTabNote = (function() {
       note0.addModifier(new VF.GraceNoteGroup(gracenotes0, true));
       note1.addModifier(new VF.GraceNoteGroup(gracenotes1, true));
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables([note0, note1]);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables([note0, note1])
+        .updateStave(stave);
 
-      new VF.Formatter().joinVoices([voice]).format([voice], 200);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      voice.draw(c.context, c.stave);
+      voice.draw(ctx);
 
       ok(true, 'Slurred Test');
     },

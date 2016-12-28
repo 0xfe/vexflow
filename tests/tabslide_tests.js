@@ -14,11 +14,15 @@ VF.Test.TabSlide = (function() {
     },
 
     tieNotes: function(notes, indices, stave, ctx) {
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables(notes);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables(notes)
+        .updateStave(stave);
 
-      new VF.Formatter().joinVoices([voice]).format([voice], 100);
-      voice.draw(ctx, stave);
+      new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], 100);
+
+      voice.draw(ctx);
 
       var tie = new VF.TabSlide({
         first_note: notes[0],
@@ -45,7 +49,6 @@ VF.Test.TabSlide = (function() {
       return { context: ctx, stave: stave };
     },
 
-
     simple: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
       var c = VF.Test.TabSlide.setupContext(options);
@@ -60,6 +63,8 @@ VF.Test.TabSlide = (function() {
 
     multiTest: function(options, factory) {
       var c = VF.Test.TabSlide.setupContext(options, 440, 100);
+      var ctx = c.context;
+      var stave = c.stave;
       function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
 
       var notes = [
@@ -73,16 +78,22 @@ VF.Test.TabSlide = (function() {
         newNote({ positions: [{ str: 2, fret: 16 }, { str: 3, fret: 16 }], duration: '8' }),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
-      new VF.Formatter().joinVoices([voice]).format([voice], 300);
-      voice.draw(c.context, c.stave);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .addTickables(notes)
+        .updateStave(stave);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], stave);
+
+      voice.draw(ctx);
 
       factory({
         first_note: notes[0],
         last_note: notes[1],
         first_indices: [0],
         last_indices: [0],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       ok(true, 'Single note');
 
@@ -91,7 +102,7 @@ VF.Test.TabSlide = (function() {
         last_note: notes[3],
         first_indices: [0, 1],
         last_indices: [0, 1],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       ok(true, 'Chord');
 
@@ -100,7 +111,7 @@ VF.Test.TabSlide = (function() {
         last_note: notes[5],
         first_indices: [0],
         last_indices: [0],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       ok(true, 'Single note high-fret');
 
@@ -109,7 +120,7 @@ VF.Test.TabSlide = (function() {
         last_note: notes[7],
         first_indices: [0, 1],
         last_indices: [0, 1],
-      }).setContext(c.context).draw();
+      }).setContext(ctx).draw();
 
       ok(true, 'Chord high-fret');
     },

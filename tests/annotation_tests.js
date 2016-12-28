@@ -301,18 +301,18 @@ VF.Test.Annotation = (function() {
       notes3[2].addModifier(new VF.Annotation('Text').setVerticalJustification(3), 0); // U
       notes3[3].addModifier(new VF.Annotation('Text').setVerticalJustification(4), 0); // D
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(VF.Test.TIME4_4)
+        .setMode(VF.Voice.Mode.SOFT)
+        .addTickables(notes)
+        .addTickables(notes2)
+        .addTickables(notes3)
+        .updateStave(stave);
 
-      voice.addTickables(notes);
-      voice.addTickables(notes2);
-      voice.addTickables(notes3);
-
-
-      new VF.Formatter().joinVoices([voice])
+      new VF.Formatter()
+        .joinVoices([voice])
         .formatToStave([voice], stave);
 
-
-      voice.draw(ctx, stave);
+      voice.draw(ctx);
 
       ok(true, 'TabNotes successfully drawn');
     },
