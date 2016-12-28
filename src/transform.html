@@ -1,217 +1,224 @@
+<!DOCTYPE>
 <html>
-
-<head>
-  <title>Vex Glyphs</title>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-  <style type="text/css">
-    body {
-      padding: 20px;
-      background: white;
-      font-family: Caslon, Garamond, Arial, Helvetica, sans-serif;
-      font-size: 18px;
-      color: green;
-      margin: 0px;
-      height: 80%;
-    }
-
-    a {
-      color: #green;
-      text-decoration: none;
-      border-bottom: dotted 2px;
-    }
-
-    a.button {
-      color: #green;
-      background: #bfb;
-      text-decoration: none;
-      padding: 5px;
-      margin: 2px;
-      border: 5px solid #aea;
-    }
-
-    div#error {
-      width: 60%;
-      padding: 10px;
-      color: red;
-      background: #faa;
-      border: 15px solid #d99;
-    }
-  </style>
-
-
-  <script src="../build/vexflow-debug.js"></script>
-  <!-- Replace font below with transform font -->
-  <script src="fonts/gonville_all.js"></script>
-
-  <script>
-    $(function() {
-      var canvas = document.getElementById("glyphs");
-      var x = 0;
-      var y = 40;
-
-      // List of glyphs that we want
-      var valid_glyphs = {
-        "v0": true, "v1": true, "v2": true, "v3": true,
-        "v4": true, "v5": true, "v6": true, "v7": true,
-        "v8": true, "v9": true, "va": true, "vb": true, "vf": true,
-        "vc": true, "v10": true, "v11": true, "v18": true, "v1b": true,
-        "v1d": true, "v1e": true, "v1f": true, "v22": true,
-        "v23": true, "v25": true, "v26": true, "v27": true,
-        "v28": true, "v2a": true, "v2d": true, "v2f": true,
-        "v30": true, "v33": true, "v38": true, "v3b": true, "v3c": true, "v3e": true, "v3f": true,
-        "v40": true, "v41": true, "v42": true, "v43": true,
-        "v44": true, "v45": true, "v46": true, "v47": true, "v49": true,
-        "v4a": true, "v4d": true, "v4e": true, "v52": true,
-        "v54": true, "v55": true, "v58": true, "v59": true, "v5b": true, "v5c": true,
-        "v62": true, "v70": true, "v72": true, "v74": true, "v75": true,
-        "v79": true, "v7c": true, "v7d": true, "v7f": true, "v80": true,
-        "v81": true, "v83": true, "v84": true, "v8b": true,
-        "v8c": true, "v8f": true, "v92": true, "v93": true, "v94": true,
-        "v95": true, "v97": true, "v9a": true, "v9b": true, "v9c": true,
-        "vaa": true, "va3": true, "va5": true, "va9": true, "vad": true, "vb6": true,
-        "vb3": true, "vb9": true, "vba": true, "vbf": true, "vc3": true,
-
-        // Microtonal
-        "v9e": true, // db
-        "vab": true, // d
-        "v90": true, // bb/
-        "v51": true, // ++
-        "v78": true,  // +
-
-
-        // Pedal Open
-        "v36": true,
-        // Pedal close
-        "v5d": true,
-        // Caesura straight
-        "v34": true,
-        // Caesura curved
-        "v4b": true,
-        // Breath
-        "v6c": true,
-        // Tick
-        "v6f": true,
-        // Marcato
-        "v5a": true,
-        // Marcato Inverted
-        "v8a": true,
-
-        "v72": true, // Turn
-        "v33": true, // Turn inverted
-        "v45": true, // Mordent inverted
-        "v60": true, // upprall
-        "vb4": true, // downprall
-        "v6d": true, // prallup
-        "v2c": true, // pralldown
-        "v29": true, // upmordent
-        "v68": true, // downmordent
-        "v20": true, // lineprall
-        "v1e": true, // prall
-        "v86": true, // prallprall
-
-        "v53": true, // breve
-        "v31": true, // breve rest
-
-        "vb1": true // dynamics letter r
-      };
-
-      // Get number of glyphs and rename elements
-      var counter = 0;
-      var valid_counter = 1;
-      var tmp = null;
-      for (var glyph in Vex.Flow.Font.glyphs) {
-        var counter_key = "v" + (counter++).toString(16); // to hex
-
-        if (counter_key in valid_glyphs) {
-          valid_counter++;
-          tmp = Vex.Flow.Font.glyphs[glyph];
-        }
-
-        delete Vex.Flow.Font.glyphs[glyph];
-        if (tmp != null) {
-            Vex.Flow.Font.glyphs[counter_key] = tmp;
-            tmp = null;
-        }
+  <head>
+    <title>Vex Glyphs</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+      body {
+        padding: 20px;
+        background: white;
+        font-family: Caslon, Garamond, Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        color: green;
+        margin: auto;
+        height: 80%;
+        text-align: center;
       }
 
-      delete Vex.Flow.Font.original_font_information;
-      Vex.Flow.Font.familyName = "VexFlow-18";
-
-      var canvas_height = ((valid_counter + 1) / (800 / (60 * 2))) * 60;
-      canvas.height = canvas_height + 25;
-      canvas.width = 800;
-
-      var ctx = canvas.getContext("2d");
-      ctx.font = "16pt Arial";
-
-      for (var glyph in Vex.Flow.Font.glyphs) {
-        debugger;
-        ctx.fillStyle = "#666";
-        ctx.fillText(glyph, x, y);
-        x += 60;
-
-        ctx.strokeStyle = "#888";
-        ctx.beginPath();
-        ctx.moveTo(x - 5, y);
-        ctx.lineTo(x + 5, y);
-        ctx.stroke()
-
-        ctx.beginPath();
-        ctx.moveTo(x, y - 5);
-        ctx.lineTo(x, y + 5);
-        ctx.stroke()
-
-        ctx.fillStyle = "green";
-        Vex.Flow.Glyph.renderGlyph(ctx, x, y, 40, glyph, true);
-        x += 60;
-
-        if (x >= 800) {
-          x = 0;
-          y += 60;
-        }
+      a {
+        color: #green;
+        text-decoration: none;
+        border-bottom: dotted 2px;
       }
 
+      a.button {
+        color: #green;
+        background: #bfb;
+        text-decoration: none;
+        padding: 5px;
+        margin: 2px;
+        border: 5px solid #aea;
+      }
 
-      // Populate source with glyphs.
-      var final_source = "Vex.Flow.Font = " + JSON.stringify(Vex.Flow.Font)
-        + ";";
-      final_source = final_source.replace(/\},/g, '},\n')
-        .replace(/"glyphs":\{/g, '\n"glyphs":{\n')
-        .replace(/\}\}/g, '}\n}')
-        .replace(/\};/, '\n};');
+      div#error {
+        width: 60%;
+        padding: 10px;
+        color: red;
+        background: #faa;
+        border: 15px solid #d99;
+      }
+    </style>
 
-      $("#source").attr("value", final_source);
+    <script src="../build/vexflow-debug.js"></script>
 
-      $("#download").click(function() {
-        document.location.href = 'data:application/x-javascript,' + final_source;
+    <!-- Replace font below with transform font -->
+    <script src="fonts/gonville_all.js"></script>
+    <script src="fonts/microtonal.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        function combineFonts({ familyName, fonts, validCodes }) {
+          // Merge glyphs from each font together
+          const glyphCodeToData = fonts.reduce(
+            (glyphCodeToData, font) => Object.assign(glyphCodeToData, font.glyphs),
+            {}
+          );
+
+          // Omit unused glyph codes
+          for (const glyphCode of Object.keys(glyphCodeToData)) {
+            if (!validCodes.includes(glyphCode)) {
+              delete glyphCodeToData[glyphCode]
+            }
+          }
+
+          // Return a new font with combined glyph set and new familyName
+          var newFont = Object.assign({}, Vex.Flow.Font, { glyphs: glyphCodeToData, familyName });
+          delete newFont.original_font_information;
+          return newFont;
+        }
+
+        function drawGlyphs(font) {
+          const canvas = document.getElementById("glyphs");
+          const canvasHeight = ((Object.keys(font.glyphs).length + 1) / (800 / (60 * 2))) * 60;
+          canvas.height = canvasHeight + 25;
+          canvas.width = 800;
+
+          const ctx = canvas.getContext('2d');
+          ctx.font = "16px Arial";
+
+          let x = 0;
+          let y = 40;
+          Object.keys(font.glyphs).forEach(glyphCode => {
+            ctx.fillStyle = "#666";
+            ctx.fillText(glyphCode, x, y);
+            x += 60;
+
+            ctx.strokeStyle = "#888";
+            ctx.beginPath();
+            ctx.moveTo(x - 5, y);
+            ctx.lineTo(x + 5, y);
+            ctx.stroke()
+
+            ctx.beginPath();
+            ctx.moveTo(x, y - 5);
+            ctx.lineTo(x, y + 5);
+            ctx.stroke()
+
+            ctx.fillStyle = "green";
+            Vex.Flow.Glyph.renderGlyph(ctx, x, y, 40, glyphCode, true);
+            x += 60;
+
+            if (x >= 800) {
+              x = 0;
+              y += 60;
+            }
+          })
+        }
+
+        function generateFontString(font) {
+          return (`Vex.Flow.Font = ${JSON.stringify(font)};`)
+            .replace(/\},/g, '},\n')
+            .replace(/"glyphs":\{/g, '\n"glyphs":{\n')
+            .replace(/\}\}/g, '}\n}')
+            .replace(/\};/, '\n};');
+        }
+
+        function populateTextArea(string) {
+          $("#source").attr("value", string);
+
+          $("#download").click(function() {
+            document.location.href = 'data:application/x-javascript,' + string;
+          });
+        }
+
+        // List of glyphs that we want
+        const validGlyphCodes = [
+           "v0",  "v1",  "v2",  "v3",  "v4",  "v5",  "v6",  "v7",  "v8",  "v9", "va",  "vb",  "vf",  "vc",
+          "v10", "v11", "v18", "v1b", "v1d", "v1e", "v1f", "v22", "v23", "v25","v26", "v27", "v28", "v2a",
+          "v2d", "v2f", "v30", "v33", "v38", "v3b", "v3c", "v3e", "v3f", "v40","v41", "v42", "v43", "v44",
+          "v45", "v46", "v47", "v49", "v4a", "v4d", "v4e", "v52", "v54", "v55","v58", "v59", "v5b", "v5c",
+          "v62", "v70", "v72", "v74", "v75", "v79", "v7c", "v7d", "v7f", "v80","v81", "v83", "v84", "v8b",
+          "v8c", "v8f", "v92", "v93", "v94", "v95", "v97", "v9a", "v9b", "v9c","vaa", "va3", "va5", "va9",
+          "vad", "vb6", "vb3", "vb9", "vba", "vbf", "vc3",
+
+          // Microtonal
+          // db
+          "v9e",
+          // d
+          "vab",
+          // bb/
+          "v90",
+          // ++
+          "v51",
+          // +
+          "v78",
+
+          // Pedal Open
+          "v36",
+          // Pedal close
+          "v5d",
+          // Caesura straight
+          "v34",
+          // Caesura curved
+          "v4b",
+          // Breath
+          "v6c",
+          // Tick
+          "v6f",
+          // Marcato
+          "v5a",
+          // Marcato Inverted
+          "v8a",
+          // Turn
+          "v72",
+          // Turn inverted
+          "v33",
+          // Mordent inverted
+          "v45",
+          // upprall
+          "v60",
+          // downprall
+          "vb4",
+          // prallup
+          "v6d",
+          // pralldown
+          "v2c",
+          // upmordent
+          "v29",
+          // downmordent
+          "v68",
+          // lineprall
+          "v20",
+          // prall
+          "v1e",
+          // prallprall
+          "v86",
+          // breve
+          "v53",
+          // breve rest
+          "v31",
+          // dynamics letter r
+          "vb1",
+          // sori (microtonal accidental)
+          "vd0",
+          // koron (microtonal accidental)
+          "vd1",
+        ];
+
+        var newFont = combineFonts({
+          familyName: 'VexFlow-18',
+          fonts: [Vex.Flow.Font, Vex.Flow.Microtonal],
+          validCodes: validGlyphCodes,
+        });
+
+        drawGlyphs(newFont);
+        populateTextArea(generateFontString(newFont));
       });
-    });
-  </script>
-</head>
-
-<body>
-  <center>
+    </script>
+  </head>
+  <body>
     <h1>Vex Glyphs</h1>
     <p>
-      <i>Cross indicates render coordinates.</i>
+      <em>Cross indicates render coordinates.</em>
     </p>
-
-  <canvas id="glyphs">
-    HTML5 Canvas not supported on this browser.
-  </canvas>
-
-  <p/>
-  <h3>Glyph Code</h3>
-  <a href="#" id="download">Download</a>
-  <p/>
-  <textarea id="source" style="width:800; height:200">
-  </textarea>
-
-  <p>
-  For more information visit <a href="http://0xfe.blogspot.com">0xfe.blogspot.com</a>.
-  </p>
-
-  </center>
-</body>
-
+    <canvas id="glyphs">HTML5 Canvas not supported on this browser.</canvas>
+    <p>
+      <h3>Glyph Code</h3>
+      <a href="#" id="download">Download</a>
+    <p/>
+    <textarea id="source" style="width:800; height:200"></textarea>
+    <p>
+      For more information visit <a href="http://0xfe.blogspot.com">0xfe.blogspot.com</a>.
+    </p>
+  </body>
 </html>
