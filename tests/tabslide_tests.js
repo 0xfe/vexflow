@@ -7,18 +7,17 @@ VF.Test.TabSlide = (function() {
   var TabSlide = {
     Start: function() {
       var runTests = VF.Test.runTests;
-      QUnit.module("TabSlide");
-      runTests("Simple TabSlide", TabSlide.simple);
-      runTests("Slide Up", TabSlide.slideUp);
-      runTests("Slide Down", TabSlide.slideDown);
+      QUnit.module('TabSlide');
+      runTests('Simple TabSlide', TabSlide.simple);
+      runTests('Slide Up', TabSlide.slideUp);
+      runTests('Slide Down', TabSlide.slideDown);
     },
 
     tieNotes: function(notes, indices, stave, ctx) {
       var voice = new VF.Voice(VF.Test.TIME4_4);
       voice.addTickables(notes);
 
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 100);
+      new VF.Formatter().joinVoices([voice]).format([voice], 100);
       voice.draw(ctx, stave);
 
       var tie = new VF.TabSlide({
@@ -32,14 +31,18 @@ VF.Test.TabSlide = (function() {
       tie.draw();
     },
 
-    setupContext: function(options, x, y) {
+    setupContext: function(options, x) {
       var ctx = options.contextBuilder(options.elementId, 350, 140);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = "#221"; ctx.strokeStyle = "#221";
-      ctx.font = "10pt Arial";
-      var stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().
-        setContext(ctx).draw();
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = '#221';
+      ctx.strokeStyle = '#221';
+      ctx.font = '10pt Arial';
+      var stave = new VF.TabStave(10, 10, x || 350)
+        .addTabGlyph()
+        .setContext(ctx)
+        .draw();
 
-      return {context: ctx, stave: stave};
+      return { context: ctx, stave: stave };
     },
 
 
@@ -49,10 +52,10 @@ VF.Test.TabSlide = (function() {
       function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
 
       VF.Test.TabSlide.tieNotes([
-        newNote({ positions: [{str:4, fret:4}], duration: "h"}),
-        newNote({ positions: [{str:4, fret:6}], duration: "h"})
+        newNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' }),
+        newNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
       ], [0], c.stave, c.context);
-      ok(true, "Simple Test");
+      ok(true, 'Simple Test');
     },
 
     multiTest: function(options, factory) {
@@ -60,19 +63,18 @@ VF.Test.TabSlide = (function() {
       function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
 
       var notes = [
-        newNote({ positions: [{str:4, fret:4}], duration: "8"}),
-        newNote({ positions: [{str:4, fret:4}], duration: "8"}),
-        newNote({ positions: [{str:4, fret:4}, {str:5, fret:4}], duration: "8"}),
-        newNote({ positions: [{str:4, fret:6}, {str:5, fret:6}], duration: "8"}),
-        newNote({ positions: [{str:2, fret:14}], duration: "8"}),
-        newNote({ positions: [{str:2, fret:16}], duration: "8"}),
-        newNote({ positions: [{str:2, fret:14}, {str:3, fret:14}], duration: "8"}),
-        newNote({ positions: [{str:2, fret:16}, {str:3, fret:16}], duration: "8"})
+        newNote({ positions: [{ str: 4, fret: 4 }], duration: '8' }),
+        newNote({ positions: [{ str: 4, fret: 4 }], duration: '8' }),
+        newNote({ positions: [{ str: 4, fret: 4 }, { str: 5, fret: 4 }], duration: '8' }),
+        newNote({ positions: [{ str: 4, fret: 6 }, { str: 5, fret: 6 }], duration: '8' }),
+        newNote({ positions: [{ str: 2, fret: 14 }], duration: '8' }),
+        newNote({ positions: [{ str: 2, fret: 16 }], duration: '8' }),
+        newNote({ positions: [{ str: 2, fret: 14 }, { str: 3, fret: 14 }], duration: '8' }),
+        newNote({ positions: [{ str: 2, fret: 16 }, { str: 3, fret: 16 }], duration: '8' }),
       ];
 
       var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
-      var formatter = new VF.Formatter().joinVoices([voice]).
-        format([voice], 300);
+      new VF.Formatter().joinVoices([voice]).format([voice], 300);
       voice.draw(c.context, c.stave);
 
       factory({
@@ -82,7 +84,7 @@ VF.Test.TabSlide = (function() {
         last_indices: [0],
       }).setContext(c.context).draw();
 
-      ok(true, "Single note");
+      ok(true, 'Single note');
 
       factory({
         first_note: notes[2],
@@ -91,7 +93,7 @@ VF.Test.TabSlide = (function() {
         last_indices: [0, 1],
       }).setContext(c.context).draw();
 
-      ok(true, "Chord");
+      ok(true, 'Chord');
 
       factory({
         first_note: notes[4],
@@ -100,7 +102,7 @@ VF.Test.TabSlide = (function() {
         last_indices: [0],
       }).setContext(c.context).draw();
 
-      ok(true, "Single note high-fret");
+      ok(true, 'Single note high-fret');
 
       factory({
         first_note: notes[6],
@@ -109,7 +111,7 @@ VF.Test.TabSlide = (function() {
         last_indices: [0, 1],
       }).setContext(c.context).draw();
 
-      ok(true, "Chord high-fret");
+      ok(true, 'Chord high-fret');
     },
 
     slideUp: function(options, contextBuilder) {
@@ -120,8 +122,8 @@ VF.Test.TabSlide = (function() {
     slideDown: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
       VF.Test.TabSlide.multiTest(options, VF.TabSlide.createSlideDown);
-    }
+    },
   };
 
   return TabSlide;
-})();
+}());

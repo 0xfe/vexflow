@@ -88,7 +88,7 @@ VF.Test.StringNumber = (function() {
         .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }).setOffsetY(6))
         .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6));
 
-      var voice2 = score.voice(notes2)
+      var voice2 = score.voice(notes2);
 
       vf.Formatter()
         .joinVoices([voice2])
@@ -106,7 +106,7 @@ VF.Test.StringNumber = (function() {
         .addModifier(2, vf.StringNumber({ number: '3', position: 'left' }))
         .addModifier(3, vf.StringNumber({ number: '2', position: 'above' }));
 
-      var voice3 = score.voice(notesBar3, { time: '6/4' })
+      var voice3 = score.voice(notesBar3, { time: '6/4' });
 
       vf.Formatter()
         .joinVoices([voice3])
@@ -212,7 +212,7 @@ VF.Test.StringNumber = (function() {
       ok(true, 'String Number');
     },
 
-    multi: function(options, contextBuilder) {
+    multi: function(options) {
       var vf = VF.Test.makeFactory(options, 700, 200);
       var score = vf.EasyScore();
       var stave = vf.Stave();
@@ -222,14 +222,8 @@ VF.Test.StringNumber = (function() {
         { stem: 'up' }
       );
 
-      // Create the strokes
-      var stroke1 = new VF.Stroke(5);
-      var stroke2 = new VF.Stroke(6);
-      var stroke3 = new VF.Stroke(2);
-      var stroke4 = new VF.Stroke(1);
-
       notes1[0]
-        .addStroke(0, stroke1)
+        .addStroke(0, new VF.Stroke(5))
         .addModifier(0, vf.Fingering({ number: '3', position: 'left' }))
         .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
         .addModifier(2, vf.Fingering({ number: '0', position: 'left' }))
@@ -237,7 +231,7 @@ VF.Test.StringNumber = (function() {
         .addModifier(2, vf.StringNumber({ number: '3', position: 'above' }));
 
       notes1[1]
-        .addStroke(0, stroke2)
+        .addStroke(0, new VF.Stroke(6))
         .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }))
         .addModifier(2, vf.StringNumber({ number: '3', position: 'above' }))
         .addAccidental(0, vf.Accidental({ type: '#' }))
@@ -245,7 +239,7 @@ VF.Test.StringNumber = (function() {
         .addAccidental(2, vf.Accidental({ type: '#' }));
 
       notes1[2]
-        .addStroke(0, stroke3)
+        .addStroke(0, new VF.Stroke(2))
         .addModifier(0, vf.Fingering({ number: '3', position: 'left' }))
         .addModifier(1, vf.Fingering({ number: '0', position: 'right' }))
         .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }))
@@ -253,7 +247,7 @@ VF.Test.StringNumber = (function() {
         .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }));
 
       notes1[3]
-        .addStroke(0, stroke4)
+        .addStroke(0, new VF.Stroke(1))
         .addModifier(2, vf.StringNumber({ number: '3', position: 'left' }))
         .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }));
 

@@ -75,15 +75,15 @@ VF.Test.StaveNote = (function() {
       });
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
       }, /BadArguments/, "Invalid note duration '8.7' throws BadArguments exception");
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
     },
 
@@ -123,15 +123,15 @@ VF.Test.StaveNote = (function() {
       });
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
       }, /BadArguments/, "Invalid note duration '8.7' throws BadArguments exception");
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
 
       throws(function() {
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
+        return new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
       }, /BadArguments/, "Invalid note type 'Z' throws BadArguments exception");
     },
 
@@ -161,8 +161,8 @@ VF.Test.StaveNote = (function() {
       function getDisplacements(note) {
         return note.note_heads.map(function(notehead) {
           return notehead.isDisplaced();
-        })
-      };
+        });
+      }
 
       var stemUpDisplacements = [false, true, false];
       var stemDownDisplacements =  [true, false, false];
@@ -282,6 +282,15 @@ VF.Test.StaveNote = (function() {
       ];
       expect(notes.length * 2);
 
+      function colorDescendants(color) {
+        return function() {
+          Vex.forEach($(this).find('*'), function(child) {
+            child.setAttribute('fill', color);
+            child.setAttribute('stroke', color);
+          });
+        };
+      }
+
       for (var i = 0; i < notes.length; ++i) {
         var note = notes[i];
         var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
@@ -290,18 +299,8 @@ VF.Test.StaveNote = (function() {
         // and mouseout handlers to the notes.
         if (options.params.ui) {
           var item = staveNote.getAttribute('el');
-          item.addEventListener('mouseover', function() {
-            Vex.forEach($(this).find('*'), function(child) {
-              child.setAttribute('fill', 'green');
-              child.setAttribute('stroke', 'green');
-            });
-          }, false);
-          item.addEventListener('mouseout', function() {
-            Vex.forEach($(this).find('*'), function(child) {
-              child.setAttribute('fill', 'black');
-              child.setAttribute('stroke', 'black');
-            });
-          }, false);
+          item.addEventListener('mouseover', colorDescendants('green'), false);
+          item.addEventListener('mouseout', colorDescendants('black'), false);
         }
         ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
         ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');

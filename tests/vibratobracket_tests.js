@@ -5,9 +5,9 @@
  * Author: Balazs Forian-Szabo
  */
 
-VF.Test.VibratoBracket = (function(){
+VF.Test.VibratoBracket = (function() {
   function createTest(noteGroup1, setupVibratoBracket) {
-    return function (options) {
+    return function(options) {
       var vf = VF.Test.makeFactory(options, 650, 200);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -24,15 +24,15 @@ VF.Test.VibratoBracket = (function(){
 
       ok(true);
     };
-  };
+  }
 
   return {
     Start: function() {
       var run = VF.Test.runTests;
 
-      QUnit.module("VibratoBracket");
+      QUnit.module('VibratoBracket');
 
-      run("Simple VibratoBracket", createTest(
+      run('Simple VibratoBracket', createTest(
         ['c4/4, c4, c4, c4'],
         function(vf, notes) {
           vf.VibratoBracket({
@@ -40,12 +40,12 @@ VF.Test.VibratoBracket = (function(){
             to: notes[3],
             options: {
               line: 2,
-            }
+            },
           });
         }
       ));
 
-      run("Harsh VibratoBracket Without End Note", createTest(
+      run('Harsh VibratoBracket Without End Note', createTest(
         ['c4/4, c4, c4, c4'],
         function(vf, notes) {
           vf.VibratoBracket({
@@ -59,7 +59,7 @@ VF.Test.VibratoBracket = (function(){
         }
       ));
 
-      run("Harsh VibratoBracket Without Start Note", createTest(
+      run('Harsh VibratoBracket Without Start Note', createTest(
         ['c4/4, c4, c4, c4'],
         function(vf, notes) {
           vf.VibratoBracket({

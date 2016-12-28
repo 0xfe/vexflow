@@ -7,21 +7,21 @@ VF.Test.StaveConnector = (function() {
   var StaveConnector = {
     Start: function() {
       var runTests = VF.Test.runTests;
-      QUnit.module("StaveConnector");
-      runTests("Single Draw Test", StaveConnector.drawSingle);
-      runTests("Single Draw Test, 1px Stave Line Thickness", StaveConnector.drawSingle1pxBarlines);
-      runTests("Single Both Sides Test", StaveConnector.drawSingleBoth);
-      runTests("Double Draw Test", StaveConnector.drawDouble);
-      runTests("Bold Double Line Left Draw Test", StaveConnector.drawRepeatBegin);
-      runTests("Bold Double Line Right Draw Test", StaveConnector.drawRepeatEnd);
-      runTests("Thin Double Line Right Draw Test", StaveConnector.drawThinDouble);
-      runTests("Bold Double Lines Overlapping Draw Test", StaveConnector.drawRepeatAdjacent);
-      runTests("Bold Double Lines Offset Draw Test", StaveConnector.drawRepeatOffset);
-      runTests("Bold Double Lines Offset Draw Test 2", StaveConnector.drawRepeatOffset2);
-      runTests("Brace Draw Test", StaveConnector.drawBrace);
-      runTests("Brace Wide Draw Test", StaveConnector.drawBraceWide);
-      runTests("Bracket Draw Test", StaveConnector.drawBracket);
-      runTests("Combined Draw Test", StaveConnector.drawCombined);
+      QUnit.module('StaveConnector');
+      runTests('Single Draw Test', StaveConnector.drawSingle);
+      runTests('Single Draw Test, 1px Stave Line Thickness', StaveConnector.drawSingle1pxBarlines);
+      runTests('Single Both Sides Test', StaveConnector.drawSingleBoth);
+      runTests('Double Draw Test', StaveConnector.drawDouble);
+      runTests('Bold Double Line Left Draw Test', StaveConnector.drawRepeatBegin);
+      runTests('Bold Double Line Right Draw Test', StaveConnector.drawRepeatEnd);
+      runTests('Thin Double Line Right Draw Test', StaveConnector.drawThinDouble);
+      runTests('Bold Double Lines Overlapping Draw Test', StaveConnector.drawRepeatAdjacent);
+      runTests('Bold Double Lines Offset Draw Test', StaveConnector.drawRepeatOffset);
+      runTests('Bold Double Lines Offset Draw Test 2', StaveConnector.drawRepeatOffset2);
+      runTests('Brace Draw Test', StaveConnector.drawBrace);
+      runTests('Brace Wide Draw Test', StaveConnector.drawBraceWide);
+      runTests('Bracket Draw Test', StaveConnector.drawBracket);
+      runTests('Combined Draw Test', StaveConnector.drawCombined);
     },
 
     drawSingle: function(options, contextBuilder) {
@@ -37,7 +37,7 @@ VF.Test.StaveConnector = (function() {
       stave2.draw();
       connector.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawSingle1pxBarlines: function(options, contextBuilder) {
@@ -55,7 +55,7 @@ VF.Test.StaveConnector = (function() {
       connector.draw();
       VF.STAVE_LINE_THICKNESS = 2;
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawSingleBoth: function(options, contextBuilder) {
@@ -75,7 +75,7 @@ VF.Test.StaveConnector = (function() {
       connector.draw();
       connector2.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawDouble: function(options, contextBuilder) {
@@ -96,7 +96,7 @@ VF.Test.StaveConnector = (function() {
       connector.draw();
       line.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawBrace: function(options, contextBuilder) {
@@ -118,7 +118,7 @@ VF.Test.StaveConnector = (function() {
       connector.draw();
       line.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawBraceWide: function(options, contextBuilder) {
@@ -139,7 +139,7 @@ VF.Test.StaveConnector = (function() {
       connector.draw();
       line.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawBracket: function(options, contextBuilder) {
@@ -160,7 +160,7 @@ VF.Test.StaveConnector = (function() {
       connector.draw();
       line.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawRepeatBegin: function(options, contextBuilder) {
@@ -179,7 +179,7 @@ VF.Test.StaveConnector = (function() {
       stave2.draw();
       line.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawRepeatEnd: function(options, contextBuilder) {
@@ -198,7 +198,7 @@ VF.Test.StaveConnector = (function() {
       stave2.draw();
       line.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawThinDouble: function(options, contextBuilder) {
@@ -217,7 +217,7 @@ VF.Test.StaveConnector = (function() {
       stave2.draw();
       line.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawRepeatAdjacent: function(options, contextBuilder) {
@@ -261,7 +261,7 @@ VF.Test.StaveConnector = (function() {
       connector3.draw();
       connector4.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawRepeatOffset2: function(options, contextBuilder) {
@@ -326,7 +326,7 @@ VF.Test.StaveConnector = (function() {
       connector4.draw();
       connector5.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
     drawRepeatOffset: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 400, 300);
@@ -392,7 +392,7 @@ VF.Test.StaveConnector = (function() {
       connector4.draw();
       connector5.draw();
 
-      ok(true, "all pass");
+      ok(true, 'all pass');
     },
 
     drawCombined: function(options, contextBuilder) {
@@ -444,8 +444,8 @@ VF.Test.StaveConnector = (function() {
       conn_none.draw();
       conn_brace.draw();
 
-      ok(true, "all pass");
-    }
+      ok(true, 'all pass');
+    },
   };
 
   return StaveConnector;

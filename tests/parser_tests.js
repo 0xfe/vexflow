@@ -15,12 +15,12 @@ Vex.Flow.Test.Parser = (function() {
       WORDS: function() { return { expect: [this.COMMA, this.WORD], zeroOrMore: true }; },
       MAYBEEXCLAIM: function() { return { expect: [this.EXCLAIM], maybe: true }; },
 
-      LBRACE:  function() { return { token: '[{]' }; },
-      RBRACE:  function() { return { token: '[}]' }; },
-      WORD:    function() { return { token: '[a-zA-Z]+' }; },
-      COMMA:   function() { return { token: '[,]' }; },
+      LBRACE: function() { return { token: '[{]' }; },
+      RBRACE: function() { return { token: '[}]' }; },
+      WORD: function() { return { token: '[a-zA-Z]+' }; },
+      COMMA: function() { return { token: '[,]' }; },
       EXCLAIM: function() { return { token: '[!]' }; },
-      EOL:     function() { return { token: '$' }; },
+      EOL: function() { return { token: '$' }; },
     };
   };
 
@@ -31,12 +31,12 @@ Vex.Flow.Test.Parser = (function() {
 
   var Parser = {
     Start: function() {
-      QUnit.module("Parser");
+      QUnit.module('Parser');
       var VFT = Vex.Flow.Test;
 
-      QUnit.test("Basic", VFT.Parser.basic);
-      QUnit.test("Advanced", VFT.Parser.advanced);
-      QUnit.test("Mixed", VFT.Parser.mixed);
+      QUnit.test('Basic', VFT.Parser.basic);
+      QUnit.test('Advanced', VFT.Parser.advanced);
+      QUnit.test('Mixed', VFT.Parser.mixed);
     },
 
     basic: function(assert) {
@@ -44,12 +44,12 @@ Vex.Flow.Test.Parser = (function() {
       var parser = new VF.Parser(grammar);
 
       grammar.BEGIN = function() { return { expect: [grammar.LITTLELINE, grammar.EOL] }; };
-      
+
       var mustPass = [
         'first, second',
         'first,second',
         'first',
-        'first,second, third'
+        'first,second, third',
       ];
       mustPass.forEach(function(line) { assert.equal(parser.parse(line).success, true, line); });
       assertParseFail(assert, parser.parse(''), 0);
@@ -86,8 +86,8 @@ Vex.Flow.Test.Parser = (function() {
       var mustPass = ['{first,second,third!}', 'first, second'];
       mustPass.forEach(function(line) { assert.equal(parser.parse(line).success, true, line); });
       assertParseFail(assert, parser.parse('first second'), 6);
-    }
+    },
   };
 
-  return Parser;  
+  return Parser;
 })();

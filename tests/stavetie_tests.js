@@ -90,7 +90,7 @@ VF.Test.StaveTie = (function() {
             first_indices: [2],
             last_indices: [2],
             text: 'H',
-          })
+          });
         }
       ));
 
