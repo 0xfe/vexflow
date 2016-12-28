@@ -16,7 +16,7 @@ Vex.Flow.Test.Registry = (function() {
 
     registerAndClear: function(assert) {
       var registry = new VF.Registry();
-      var score = new VF.EasyScore({factory: VF.Factory.newFromElementId(null)});
+      var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
       registry.register(score.notes('C4')[0], 'foobar');
 
@@ -36,7 +36,7 @@ Vex.Flow.Test.Registry = (function() {
 
     defaultRegistry: function(assert) {
       var registry = new VF.Registry();
-      var score = new VF.EasyScore({ factory: VF.Factory.newFromSelector(null) });
+      var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
@@ -57,7 +57,7 @@ Vex.Flow.Test.Registry = (function() {
 
     classes: function(assert) {
       var registry = new VF.Registry();
-      var score = new VF.EasyScore({ factory: VF.Factory.newFromSelector(null) });
+      var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
@@ -85,4 +85,4 @@ Vex.Flow.Test.Registry = (function() {
   };
 
   return Registry;
-})();
+}());
