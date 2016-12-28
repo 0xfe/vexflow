@@ -95,7 +95,10 @@
             ctx.stroke()
 
             ctx.fillStyle = "green";
-            Vex.Flow.Glyph.renderGlyph(ctx, x, y, 40, glyphCode, true);
+
+            var glyph = new Vex.Flow.Glyph(glyphCode, 40, { cache: false, font: newFont });
+            glyph.render(ctx, x, y);
+
             x += 60;
 
             if (x >= 800) {
@@ -106,7 +109,7 @@
         }
 
         function generateFontString(font) {
-          return (`Vex.Flow.Font = ${JSON.stringify(font)};`)
+          return (`export const Font = ${JSON.stringify(font)};`)
             .replace(/\},/g, '},\n')
             .replace(/"glyphs":\{/g, '\n"glyphs":{\n')
             .replace(/\}\}/g, '}\n}')
@@ -142,6 +145,10 @@
           "v51",
           // +
           "v78",
+          "v7a",
+          "v8d",
+          "vb7",
+          "v39",
 
           // Pedal Open
           "v36",
