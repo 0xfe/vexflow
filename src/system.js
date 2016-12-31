@@ -74,12 +74,7 @@ export class System extends Element {
         options,
       });
     }
-
-    params.voices.forEach(voice =>
-      voice
-        .setContext(this.context)
-        .updateStave(params.stave)
-    );
+    params.voices.forEach(voice => voice.setContext(this.context));
 
     this.parts.push(params);
     return params.stave;
@@ -101,10 +96,15 @@ export class System extends Element {
       formatter.joinVoices(part.voices);
       y = y + part.stave.space(part.spaceBelow);
       y = y + part.stave.space(this.options.spaceBetweenStaves);
+
       if (part.debugNoteMetrics) {
         debugNoteMetricsYs.push({ y, voice: part.voices[0] });
         y += 15;
       }
+
+      // Now that the staves are positioned, we can update voice's stave
+      part.voices.forEach(voice => voice.updateStave(part.stave));
+
       allVoices = allVoices.concat(part.voices);
 
       startX = Math.max(startX, part.stave.getNoteStartX());
