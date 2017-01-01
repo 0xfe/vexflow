@@ -6,6 +6,7 @@
   },
   "rules": {
     "camelcase": [0],
+    "dot-location": [2, "property"],
     "max-len": [2, 100],
     "new-cap": [0],
     "import/prefer-default-export": [0],

@@ -162,7 +162,7 @@ VF.Test.Ornament = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.elementId,650, 250);
+      var ctx = contextBuilder(options.elementId, 650, 250);
 
       // bar 1
       var staveBar1 = new VF.Stave(10, 60, 600);
