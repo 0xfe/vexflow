@@ -26,25 +26,6 @@ const getStemAdjustment = (note) => Stem.WIDTH / (2 * -note.getStemDirection());
 const isInnerNoteIndex = (note, index) =>
   index === (note.getStemDirection() === Stem.UP ? note.keyProps.length - 1 : 0);
 
-// Helper methods for rest positioning in ModifierContext.
-function shiftRestVertical(rest, note, dir) {
-  const delta = (note.isrest ? 0.0 : 1.0) * dir;
-
-  rest.line += delta;
-  rest.maxLine += delta;
-  rest.minLine += delta;
-  rest.note.setKeyLine(0, rest.note.getKeyLine(0) + (delta));
-}
-
-// Called from formatNotes :: center a rest between two notes
-function centerRest(rest, noteU, noteL) {
-  const delta = rest.line - Vex.MidLine(noteU.minLine, noteL.maxLine);
-  rest.note.setKeyLine(0, rest.note.getKeyLine(0) - delta);
-  rest.line -= delta;
-  rest.maxLine -= delta;
-  rest.minLine -= delta;
-}
-
 export class StaveNote extends StemmableNote {
   static get CATEGORY() { return 'stavenotes'; }
   static get STEM_UP() { return Stem.UP; }
@@ -54,198 +35,23 @@ export class StaveNote extends StemmableNote {
   // ## Static Methods
   //
   // Format notes inside a ModifierContext.
+  //
+  // FIXME:
+  // Problematically, `Formatter#format` was not designed to work for more
+  // than 2 voices (although, doesn't throw on this condition, just tries
+  // to power through).
+  //
+  // Based on the above:
+  //   * 2 voices can be formatted *with or without* a stave being set but
+  //     the output will be different
+  //   * 3 voices can only be formatted *without* a stave
   static format(notes, state) {
-    if (!notes || notes.length < 2) return false;
-
-    // FIXME: VexFlow will soon require that a stave be set before formatting.
-    // Which, according to the below condition, means that following branch will
-    // always be taken and the rest of this function is dead code.
-    //
-    // Problematically, `Formatter#formatByY` was not designed to work for more
-    // than 2 voices (although, doesn't throw on this condition, just tries
-    // to power through).
-    //
-    // Based on the above:
-    //   * 2 voices can be formatted *with or without* a stave being set but
-    //     the output will be different
-    //   * 3 voices can only be formatted *without* a stave
-    if (notes[0].getStave()) {
-      return StaveNote.formatByY(notes, state);
+    if (!notes || notes.length < 2) {
+      return false;
     }
 
-    const notesList = [];
-
-    for (let i = 0; i < notes.length; i++) {
-      const props = notes[i].getKeyProps();
-      const line = props[0].line;
-      let minL = props[props.length - 1].line;
-      const stemDirection = notes[i].getStemDirection();
-      const stemMax = notes[i].getStemLength() / 10;
-      const stemMin = notes[i].getStemMinumumLength() / 10;
-
-      let maxL;
-      if (notes[i].isRest()) {
-        maxL = line + notes[i].glyph.line_above;
-        minL = line - notes[i].glyph.line_below;
-      } else {
-        maxL = stemDirection === 1
-          ? props[props.length - 1].line + stemMax
-          : props[props.length - 1].line;
-
-        minL = stemDirection === 1
-          ? props[0].line
-          : props[0].line - stemMax;
-      }
-
-      notesList.push({
-        line: props[0].line, // note/rest base line
-        maxLine: maxL, // note/rest upper bounds line
-        minLine: minL, // note/rest lower bounds line
-        isrest: notes[i].isRest(),
-        stemDirection,
-        stemMax, // Maximum (default) note stem length;
-        stemMin, // minimum note stem length
-        voice_shift: notes[i].getVoiceShiftWidth(),
-        is_displaced: notes[i].isDisplaced(), // note manually displaced
-        note: notes[i],
-      });
-    }
-
-    const voices = notesList.length;
-
-    let noteU = notesList[0];
-    const noteM = voices > 2 ? notesList[1] : null;
-    let noteL = voices > 2 ? notesList[2] : notesList[1];
-
-    // for two voice backward compatibility, ensure upper voice is stems up
-    // for three voices, the voices must be in order (upper, middle, lower)
-    if (voices === 2 && noteU.stemDirection === -1 && noteL.stemDirection === 1) {
-      noteU = notesList[1];
-      noteL = notesList[0];
-    }
-
-    const voiceXShift = Math.max(noteU.voice_shift, noteL.voice_shift);
-    let xShift = 0;
-    let stemDelta;
-
-    // Test for two voice note intersection
-    if (voices === 2) {
-      const lineSpacing = noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
-      // if top voice is a middle voice, check stem intersection with lower voice
-      if (noteU.stemDirection === noteL.stemDirection &&
-          noteU.minLine <= noteL.maxLine) {
-        if (!noteU.isrest) {
-          stemDelta = Math.abs(noteU.line - (noteL.maxLine + 0.5));
-          stemDelta = Math.max(stemDelta, noteU.stemMin);
-          noteU.minLine = noteU.line - stemDelta;
-          noteU.note.setStemLength(stemDelta * 10);
-        }
-      }
-      if (noteU.minLine <= noteL.maxLine + lineSpacing) {
-        if (noteU.isrest) {
-          // shift rest up
-          shiftRestVertical(noteU, noteL, 1);
-        } else if (noteL.isrest) {
-          // shift rest down
-          shiftRestVertical(noteL, noteU, -1);
-        } else {
-          xShift = voiceXShift;
-          if (noteU.stemDirection === noteL.stemDirection) {
-            // upper voice is middle voice, so shift it right
-            noteU.note.setXShift(xShift + 3);
-          } else {
-            // shift lower voice right
-            noteL.note.setXShift(xShift);
-          }
-        }
-      }
-
-      // format complete
-      return true;
-    }
-
-    // Check middle voice stem intersection with lower voice
-    if (noteM !== null && noteM.minLine < noteL.maxLine + 0.5) {
-      if (!noteM.isrest) {
-        stemDelta = Math.abs(noteM.line - (noteL.maxLine + 0.5));
-        stemDelta = Math.max(stemDelta, noteM.stemMin);
-        noteM.minLine = noteM.line - stemDelta;
-        noteM.note.setStemLength(stemDelta * 10);
-      }
-    }
-
-    // For three voices, test if rests can be repositioned
-    //
-    // Special case 1 :: middle voice rest between two notes
-    //
-    if (noteM.isrest && !noteU.isrest && !noteL.isrest) {
-      if (noteU.minLine <= noteM.maxLine || noteM.minLine <= noteL.maxLine) {
-        const restHeight = noteM.maxLine - noteM.minLine;
-        const space = noteU.minLine - noteL.maxLine;
-        if (restHeight < space) {
-           // center middle voice rest between the upper and lower voices
-          centerRest(noteM, noteU, noteL);
-        } else {
-          xShift = voiceXShift + 3;    // shift middle rest right
-          noteM.note.setXShift(xShift);
-        }
-         // format complete
-        return true;
-      }
-    }
-
-    // Special case 2 :: all voices are rests
-    if (noteU.isrest && noteM.isrest && noteL.isrest) {
-      // Shift upper voice rest up
-      shiftRestVertical(noteU, noteM, 1);
-      // Shift lower voice rest down
-      shiftRestVertical(noteL, noteM, -1);
-      // format complete
-      return true;
-    }
-
-    // Test if any other rests can be repositioned
-    if (noteM.isrest && noteU.isrest && noteM.minLine <= noteL.maxLine) {
-      // Shift middle voice rest up
-      shiftRestVertical(noteM, noteL, 1);
-    }
-    if (noteM.isrest && noteL.isrest && noteU.minLine <= noteM.maxLine) {
-      // Shift middle voice rest down
-      shiftRestVertical(noteM, noteU, -1);
-    }
-    if (noteU.isrest && noteU.minLine <= noteM.maxLine) {
-      // shift upper voice rest up;
-      shiftRestVertical(noteU, noteM, 1);
-    }
-    if (noteL.isrest && noteM.minLine <= noteL.maxLine) {
-      // shift lower voice rest down
-      shiftRestVertical(noteL, noteM, -1);
-    }
-
-    // If middle voice intersects upper or lower voice
-    if ((!noteU.isrest && !noteM.isrest && noteU.minLine <= noteM.maxLine + 0.5) ||
-        (!noteM.isrest && !noteL.isrest && noteM.minLine <= noteL.maxLine)) {
-      xShift = voiceXShift + 3;      // shift middle note right
-      noteM.note.setXShift(xShift);
-    }
-
-    return true;
-  }
-
-  static formatByY(notes, state) {
-    // NOTE: this function does not support more than two voices per stave
-    // use with care.
-    let hasStave = true;
-
-    for (let i = 0; i < notes.length; i++) {
-      hasStave = hasStave && notes[i].getStave() != null;
-    }
-
-    if (!hasStave) {
-      throw new Vex.RERR(
-        'Stave Missing',
-        'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!'
-      );
+    if (notes.some(note => !note.getStave())) {
+      throw new Vex.RERR('MissingStave', 'All notes must have a stave');
     }
 
     let xShift = 0;
@@ -287,6 +93,8 @@ export class StaveNote extends StemmableNote {
     }
 
     state.right_shift += xShift;
+
+    return true;
   }
 
   static postFormat(notes) {
