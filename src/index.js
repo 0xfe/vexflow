@@ -68,6 +68,7 @@ import { Factory } from './factory';
 import { Parser } from './parser';
 import { EasyScore } from './easyscore';
 import { Registry } from './registry';
+import { StaveTempo } from './stavetempo';
 
 Vex.Flow = Flow;
 Vex.Flow.Element = Element;
@@ -136,5 +137,6 @@ Vex.Flow.Factory = Factory;
 Vex.Flow.Parser = Parser;
 Vex.Flow.EasyScore = EasyScore;
 Vex.Flow.Registry = Registry;
+Vex.Flow.StaveTempo = StaveTempo;
 
 export default Vex;
