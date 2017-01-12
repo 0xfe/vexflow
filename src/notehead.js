@@ -176,6 +176,7 @@ export class NoteHead extends Note {
     if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
     if (style.fillStyle) context.setFillStyle(style.fillStyle);
     if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
+    if (style.strokeWidth) context.setLineWidth(style.strokeWidth);
     return this;
   }
 
@@ -243,7 +244,8 @@ export class NoteHead extends Note {
       if (this.style) {
         ctx.save();
         this.applyStyle(ctx);
-        Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
+        Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code,
+          false, !!this.style.strokeStyle);
         ctx.restore();
       } else {
         Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
