@@ -86,14 +86,15 @@ export class Glyph extends Element {
    * @param {number} point The point size to use.
    * @param {string} val The glyph code in Vex.Flow.Font.
    * @param {boolean} nocache If set, disables caching of font outline.
+   * @param {boolean} stroke If set, also strokes the outline.
    */
-  static renderGlyph(ctx, x_pos, y_pos, point, val, nocache) {
+  static renderGlyph(ctx, x_pos, y_pos, point, val, nocache, stroke) {
     const scale = point * 72.0 / (Font.resolution * 100.0);
     const metrics = Glyph.loadMetrics(Font, val, !nocache);
-    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
+    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos, stroke);
   }
 
-  static renderOutline(ctx, outline, scale, x_pos, y_pos) {
+  static renderOutline(ctx, outline, scale, x_pos, y_pos, stroke) {
     ctx.beginPath();
     ctx.moveTo(x_pos, y_pos);
     processOutline(outline, x_pos, y_pos, scale, -scale, {
@@ -103,6 +104,9 @@ export class Glyph extends Element {
       b: ctx.bezierCurveTo.bind(ctx),
     });
     ctx.fill();
+    if (stroke) {
+      ctx.stroke();
+    }
   }
 
   static getOutlineBoundingBox(outline, scale, x_pos, y_pos) {
