@@ -434,105 +434,106 @@ export class Accidental extends Modifier {
     };
 
     this.accidental = Flow.accidentalCodes(this.type);
-    if (!this.accidental) {
-      throw new Vex.RERR('ArgumentError', `Unknown accidental type: ${type}`);
-    }
+    
+    //only do if you have an actual accidental; if null, return without errors
+    if(this.accidental){
+  
+      // Cautionary accidentals have parentheses around them
+      this.cautionary = false;
+      this.parenLeft = null;
+      this.parenRight = null;
 
-    // Cautionary accidentals have parentheses around them
-    this.cautionary = false;
-    this.parenLeft = null;
-    this.parenRight = null;
-
-    this.reset();
-  }
-
-  reset() {
-    const fontScale = this.render_options.font_scale;
-    this.glyph = new Glyph(this.accidental.code, fontScale);
-    this.glyph.setOriginX(1.0);
-
-    if (this.cautionary) {
-      this.parenLeft = new Glyph(Flow.accidentalCodes('{').code, fontScale);
-      this.parenRight = new Glyph(Flow.accidentalCodes('}').code, fontScale);
-      this.parenLeft.setOriginX(1.0);
-      this.parenRight.setOriginX(1.0);
-    }
-  }
-
-  getCategory() { return Accidental.CATEGORY; }
-
-  getWidth() {
-    const parenWidth = this.cautionary
-      ? (
-        getGlyphWidth(this.parenLeft) +
-        getGlyphWidth(this.parenRight) +
-        this.render_options.parenLeftPadding +
-        this.render_options.parenRightPadding
-      )
-      : 0;
-
-    return getGlyphWidth(this.glyph) + parenWidth;
-  }
-
-  // Attach this accidental to `note`, which must be a `StaveNote`.
-  setNote(note) {
-    if (!note) {
-      throw new Vex.RERR('ArgumentError', `Bad note value: ${note}`);
-    }
-
-    this.note = note;
-
-    // Accidentals attached to grace notes are rendered smaller.
-    if (this.note.getCategory() === 'gracenotes') {
-      this.render_options.font_scale = 25;
       this.reset();
     }
-  }
 
-  // If called, draws parenthesis around accidental.
-  setAsCautionary() {
-    this.cautionary = true;
-    this.render_options.font_scale = 28;
-    this.reset();
-    return this;
-  }
+    reset() {
+      const fontScale = this.render_options.font_scale;
+      this.glyph = new Glyph(this.accidental.code, fontScale);
+      this.glyph.setOriginX(1.0);
 
-  // Render accidental onto canvas.
-  draw() {
-    const {
-      context,
-      type, position, note, index, cautionary,
-      x_shift, y_shift,
-      glyph, parenLeft, parenRight,
-      render_options: { parenLeftPadding, parenRightPadding },
-    } = this;
-
-    this.checkContext();
-
-    if (!(note && (index != null))) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
+      if (this.cautionary) {
+        this.parenLeft = new Glyph(Flow.accidentalCodes('{').code, fontScale);
+        this.parenRight = new Glyph(Flow.accidentalCodes('}').code, fontScale);
+        this.parenLeft.setOriginX(1.0);
+        this.parenRight.setOriginX(1.0);
+      }
     }
 
-    // Figure out the start `x` and `y` coordinates for note and index.
-    const start = note.getModifierStartXY(position, index);
-    let accX = start.x + x_shift;
-    const accY = start.y + y_shift;
-    L('Rendering: ', type, accX, accY);
+    getCategory() { return Accidental.CATEGORY; }
 
-    if (!cautionary) {
-      glyph.render(context, accX, accY);
-    } else {
-      // Render the accidental in parentheses.
-      parenRight.render(context, accX, accY);
-      accX -= getGlyphWidth(parenRight);
-      accX -= parenRightPadding;
-      accX -= this.accidental.parenRightPaddingAdjustment;
-      glyph.render(context, accX, accY);
-      accX -= getGlyphWidth(glyph);
-      accX -= parenLeftPadding;
-      parenLeft.render(context, accX, accY);
+    getWidth() {
+      const parenWidth = this.cautionary
+        ? (
+          getGlyphWidth(this.parenLeft) +
+          getGlyphWidth(this.parenRight) +
+          this.render_options.parenLeftPadding +
+          this.render_options.parenRightPadding
+        )
+        : 0;
+
+      return getGlyphWidth(this.glyph) + parenWidth;
     }
 
-    this.setRendered();
+    // Attach this accidental to `note`, which must be a `StaveNote`.
+    setNote(note) {
+      if (!note) {
+        throw new Vex.RERR('ArgumentError', `Bad note value: ${note}`);
+      }
+
+      this.note = note;
+
+      // Accidentals attached to grace notes are rendered smaller.
+      if (this.note.getCategory() === 'gracenotes') {
+        this.render_options.font_scale = 25;
+        this.reset();
+      }
+    }
+
+    // If called, draws parenthesis around accidental.
+    setAsCautionary() {
+      this.cautionary = true;
+      this.render_options.font_scale = 28;
+      this.reset();
+      return this;
+    }
+
+    // Render accidental onto canvas.
+    draw() {
+      const {
+        context,
+        type, position, note, index, cautionary,
+        x_shift, y_shift,
+        glyph, parenLeft, parenRight,
+        render_options: { parenLeftPadding, parenRightPadding },
+      } = this;
+
+      this.checkContext();
+
+      if (!(note && (index != null))) {
+        throw new Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
+      }
+
+      // Figure out the start `x` and `y` coordinates for note and index.
+      const start = note.getModifierStartXY(position, index);
+      let accX = start.x + x_shift;
+      const accY = start.y + y_shift;
+      L('Rendering: ', type, accX, accY);
+
+      if (!cautionary) {
+        glyph.render(context, accX, accY);
+      } else {
+        // Render the accidental in parentheses.
+        parenRight.render(context, accX, accY);
+        accX -= getGlyphWidth(parenRight);
+        accX -= parenRightPadding;
+        accX -= this.accidental.parenRightPaddingAdjustment;
+        glyph.render(context, accX, accY);
+        accX -= getGlyphWidth(glyph);
+        accX -= parenLeftPadding;
+        parenLeft.render(context, accX, accY);
+      }
+
+      this.setRendered();
+    }
   }
 }
