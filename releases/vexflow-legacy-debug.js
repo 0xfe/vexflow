@@ -14819,23 +14819,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  Stave.prototype.setKeySignature = function setKeySignature(keySpec, cancelKeySpec, position) {
+	  Stave.prototype.setKeySignature = function setKeySignature(keySpec, cancelKeySpec, alterKeySpec, position) {
 	    if (position === undefined) {
 	      position = _stavemodifier.StaveModifier.Position.BEGIN;
 	    }
 	
 	    var keySignatures = this.getModifiers(position, _keysignature.KeySignature.CATEGORY);
 	    if (keySignatures.length === 0) {
-	      this.addKeySignature(keySpec, cancelKeySpec, position);
+	      this.addKeySignature(keySpec, cancelKeySpec, alterKeySpec, position);
 	    } else {
-	      keySignatures[0].setKeySig(keySpec, cancelKeySpec);
+	      keySignatures[0].setKeySig(keySpec, cancelKeySpec, alterKeySpec);
 	    }
 	
 	    return this;
 	  };
 	
-	  Stave.prototype.setEndKeySignature = function setEndKeySignature(keySpec, cancelKeySpec) {
-	    this.setKeySignature(keySpec, cancelKeySpec, _stavemodifier.StaveModifier.Position.END);
+	  Stave.prototype.setEndKeySignature = function setEndKeySignature(keySpec, cancelKeySpec, alterKeySpec) {
+	    this.setKeySignature(keySpec, cancelKeySpec, alterKeySpec, _stavemodifier.StaveModifier.Position.END);
 	    return this;
 	  };
 	
@@ -14859,8 +14859,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  };
 	
-	  Stave.prototype.addKeySignature = function addKeySignature(keySpec, cancelKeySpec, position) {
-	    this.addModifier(new _keysignature.KeySignature(keySpec, cancelKeySpec), position);
+	  Stave.prototype.addKeySignature = function addKeySignature(keySpec, cancelKeySpec, alterKeySpec, position) {
+	    this.addModifier(new _keysignature.KeySignature(keySpec, cancelKeySpec, alterKeySpec), position);
 	    return this;
 	  };
 	

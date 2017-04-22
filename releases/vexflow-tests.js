@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.83 built on 2017-01-10.
+ * VexFlow 1.2.83 built on 2017-04-22.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -9518,7 +9518,7 @@ VF.Test.StaveModifier = (function() {
       stave.setBegBarType(VF.Barline.type.SINGLE);
       stave.setClef('treble', undefined, undefined, END);
       stave.setTimeSignature('C', undefined, END);
-      stave.setKeySignature('F', undefined, END);
+      stave.setKeySignature('F', undefined, undefined, END);
       stave.setEndBarType(VF.Barline.type.SINGLE);
       stave.draw();
 

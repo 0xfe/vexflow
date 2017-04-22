@@ -63,7 +63,7 @@ VF.Test.StaveModifier = (function() {
       stave.setBegBarType(VF.Barline.type.SINGLE);
       stave.setClef('treble', undefined, undefined, END);
       stave.setTimeSignature('C', undefined, END);
-      stave.setKeySignature('F', undefined, END);
+      stave.setKeySignature('F', undefined, undefined, END);
       stave.setEndBarType(VF.Barline.type.SINGLE);
       stave.draw();
 
