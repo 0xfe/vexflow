@@ -325,23 +325,23 @@ export class Stave extends Element {
     return this;
   }
 
-  setKeySignature(keySpec, cancelKeySpec, position) {
+  setKeySignature(keySpec, cancelKeySpec, alterKeySpec, position) {
     if (position === undefined) {
       position = StaveModifier.Position.BEGIN;
     }
 
     const keySignatures = this.getModifiers(position, KeySignature.CATEGORY);
     if (keySignatures.length === 0) {
-      this.addKeySignature(keySpec, cancelKeySpec, position);
+      this.addKeySignature(keySpec, cancelKeySpec, alterKeySpec, position);
     } else {
-      keySignatures[0].setKeySig(keySpec, cancelKeySpec);
+      keySignatures[0].setKeySig(keySpec, cancelKeySpec, alterKeySpec);
     }
 
     return this;
   }
 
-  setEndKeySignature(keySpec, cancelKeySpec) {
-    this.setKeySignature(keySpec, cancelKeySpec, StaveModifier.Position.END);
+  setEndKeySignature(keySpec, cancelKeySpec, alterKeySpec) {
+    this.setKeySignature(keySpec, cancelKeySpec, alterKeySpec, StaveModifier.Position.END);
     return this;
   }
 
@@ -365,8 +365,8 @@ export class Stave extends Element {
     return this;
   }
 
-  addKeySignature(keySpec, cancelKeySpec, position) {
-    this.addModifier(new KeySignature(keySpec, cancelKeySpec), position);
+  addKeySignature(keySpec, cancelKeySpec, alterKeySpec, position) {
+    this.addModifier(new KeySignature(keySpec, cancelKeySpec, alterKeySpec), position);
     return this;
   }
 
