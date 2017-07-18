@@ -3,6 +3,14 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
+/*
+eslint-disable
+no-require,
+global-require,
+import/no-unresolved,
+import/no-extraneous-dependencies,
+ */
+
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
 if (!window.QUnit) {
@@ -23,9 +31,10 @@ if (!window.QUnit) {
     QUnit.current_module = name;
   };
 
+  /* eslint-disable */
   QUnit.test = function(name, func) {
     QUnit.current_test = name;
-    process.stdout.write(" \033[0G" + QUnit.current_module + " :: " + name + "\033[0K");
+    process.stdout.write(" \u001B[0G" + QUnit.current_module + " :: " + name + "\u001B[0K");
     func(QUnit.assertions);
   };
 
