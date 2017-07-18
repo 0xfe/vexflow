@@ -521,8 +521,6 @@ VF.Test.Tuplet = (function() {
         notes: notes.slice(1, 4),
       });
 
-      console.log(notes);
-
       var bigQuartuplet = vf.Tuplet({
         notes: notes.slice(0, -1),
         options: {
