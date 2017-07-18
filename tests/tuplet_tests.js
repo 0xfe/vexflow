@@ -521,40 +521,45 @@ VF.Test.Tuplet = (function() {
         notes: notes.slice(1, 4),
       });
 
-      var bigQuartuplet = vf.Tuplet({
+      // big quartuplet
+      vf.Tuplet({
         notes: notes.slice(0, -1),
         options: {
           num_notes: 4,
           notes_occupied: 3,
           ratioed: true,
-          bracketed: true
+          bracketed: true,
         },
       });
 
-      var firstSingleton = vf.Tuplet({
+      // first singleton
+      vf.Tuplet({
         notes: notes.slice(0, 1),
         options: {
           num_notes: 3,
           notes_occupied: 2,
-          ratioed: true
+          ratioed: true,
         },
       });
-      var eighthNoteTriplet = vf.Tuplet({
+
+      // eighth note triplet
+      vf.Tuplet({
         notes: notes.slice(1, 4),
         options: {
           num_notes: 3,
-          notes_occupied: 2
-        }
+          notes_occupied: 2,
+        },
       });
 
-      var secondSingleton = vf.Tuplet({
+      // second singleton
+      vf.Tuplet({
         notes: notes.slice(4, 5),
         options: {
           num_notes: 3,
           notes_occupied: 2,
           ratioed: true,
-          bracketed: true
-        }
+          bracketed: true,
+        },
       });
 
       // 4/4 time
