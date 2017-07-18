@@ -68,10 +68,6 @@ export class Tuplet extends Element {
       throw new Vex.RuntimeError('BadArguments', 'No notes provided for tuplet.');
     }
 
-    if (notes.length === 1) {
-      throw new Vex.RuntimeError('BadArguments', 'Too few notes for tuplet.');
-    }
-
     this.options = Vex.Merge({}, options);
     this.notes = notes;
     this.num_notes = 'num_notes' in this.options ?
