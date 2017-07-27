@@ -35,6 +35,7 @@ VF.Test.Tuplet = (function() {
       runTests('Mixed Stem Direction Tuplet', Tuplet.mixedTop);
       runTests('Mixed Stem Direction Bottom Tuplet', Tuplet.mixedBottom);
       runTests('Nested Tuplets', Tuplet.nested);
+      runTests('Single Tuplets', Tuplet.single);
     },
 
     simple: function(options) {
@@ -489,6 +490,80 @@ VF.Test.Tuplet = (function() {
 
       // 4/4 time
       var voice = vf.Voice()
+        .setStrict(true)
+        .addTickables(notes);
+
+      new VF.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'Nested Tuplets');
+    },
+
+    single: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
+
+      var notes = [
+        // Big triplet 1:
+        { keys: ['c/4'], duration: '4' },
+        { keys: ['d/4'], duration: '8' },
+        { keys: ['e/4'], duration: '8' },
+        { keys: ['f/4'], duration: '8' },
+        { keys: ['g/4'], duration: '8' },
+        { keys: ['a/4'], duration: '2' },
+        { keys: ['b/4'], duration: '4' },
+      ].map(stemUp).map(vf.StaveNote.bind(vf));
+
+      vf.Beam({
+        notes: notes.slice(1, 4),
+      });
+
+      // big quartuplet
+      vf.Tuplet({
+        notes: notes.slice(0, -1),
+        options: {
+          num_notes: 4,
+          notes_occupied: 3,
+          ratioed: true,
+          bracketed: true,
+        },
+      });
+
+      // first singleton
+      vf.Tuplet({
+        notes: notes.slice(0, 1),
+        options: {
+          num_notes: 3,
+          notes_occupied: 2,
+          ratioed: true,
+        },
+      });
+
+      // eighth note triplet
+      vf.Tuplet({
+        notes: notes.slice(1, 4),
+        options: {
+          num_notes: 3,
+          notes_occupied: 2,
+        },
+      });
+
+      // second singleton
+      vf.Tuplet({
+        notes: notes.slice(4, 5),
+        options: {
+          num_notes: 3,
+          notes_occupied: 2,
+          ratioed: true,
+          bracketed: true,
+        },
+      });
+
+      // 4/4 time
+      var voice = vf.Voice({ time: { num_beats: 4, beat_value: 4 } })
         .setStrict(true)
         .addTickables(notes);
 

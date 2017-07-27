@@ -96,10 +96,7 @@ module.exports = (grunt) => {
       },
     },
     eslint: {
-      target: SOURCES,
-      options: {
-        configFile: '.eslintrc.json',
-      },
+      target: SOURCES.concat('./tests'),
     },
     qunit: {
       files: ['tests/flow.html'],

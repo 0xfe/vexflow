@@ -359,7 +359,7 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
       ok(true, 'Microtonal Accidental');
     },
-    
+
     microtonal_iranian: function(options) {
       var assert = options.assert;
       var vf = VF.Test.makeFactory(options, 700, 240);
