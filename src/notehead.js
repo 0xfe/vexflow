@@ -118,13 +118,6 @@ export class NoteHead extends Note {
   // Determine if the notehead is displaced
   isDisplaced() { return this.displaced === true; }
 
-  // Get/set the notehead's style
-  //
-  // `style` is an `object` with the following properties: `shadowColor`,
-  // `shadowBlur`, `fillStyle`, `strokeStyle`
-  getStyle() { return this.style; }
-  setStyle(style) { this.style = style; return this; }
-
   // Get the glyph data
   getGlyph() { return this.glyph; }
 
@@ -167,16 +160,6 @@ export class NoteHead extends Note {
     const min_y = this.y - half_spacing;
 
     return new Flow.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
-  }
-
-  // Apply current style to Canvas `context`
-  applyStyle(context) {
-    const style = this.getStyle();
-    if (style.shadowColor) context.setShadowColor(style.shadowColor);
-    if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
-    if (style.fillStyle) context.setFillStyle(style.fillStyle);
-    if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
-    return this;
   }
 
   // Set notehead to a provided `stave`
@@ -241,10 +224,9 @@ export class NoteHead extends Note {
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       if (this.style) {
-        ctx.save();
         this.applyStyle(ctx);
         Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
-        ctx.restore();
+        this.restoreStyle(ctx);
       } else {
         Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
       }

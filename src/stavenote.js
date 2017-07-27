@@ -728,6 +728,7 @@ export class StaveNote extends StemmableNote {
   // Sets the style of the complete StaveNote, including all keys
   // and the stem.
   setStyle(style) {
+    super.setStyle(style);
     this.note_heads.forEach(notehead => notehead.setStyle(style));
     this.stem.setStyle(style);
   }
@@ -1042,6 +1043,8 @@ export class StaveNote extends StemmableNote {
     // Draw each part of the note
     this.drawLedgerLines();
 
+    // Apply the overall style -- may be contradicted by local settings:
+    this.applyStyle();
     this.setAttribute('el', this.context.openGroup('stavenote', this.getAttribute('id')));
     this.context.openGroup('note', null, { pointerBBox: true });
     if (shouldRenderStem) this.drawStem();
@@ -1050,6 +1053,7 @@ export class StaveNote extends StemmableNote {
     this.context.closeGroup();
     this.drawModifiers();
     this.context.closeGroup();
+    this.restoreStyle();
     this.setRendered();
   }
 }
