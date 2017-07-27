@@ -350,7 +350,12 @@ export class StaveNote extends StemmableNote {
 
   reset() {
     super.reset();
+
+    // Save prior noteHead styles & reapply them after making new noteheads.
+    const noteHeadStyles = this.note_heads.map(noteHead => noteHead.getStyle());
     this.buildNoteHeads();
+    this.note_heads.forEach((noteHead, index) => noteHead.setStyle(noteHeadStyles[index]));
+
     if (this.stave) {
       this.note_heads.forEach(head => head.setStave(this.stave));
     }
