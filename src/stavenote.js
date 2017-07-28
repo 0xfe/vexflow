@@ -350,7 +350,12 @@ export class StaveNote extends StemmableNote {
 
   reset() {
     super.reset();
+
+    // Save prior noteHead styles & reapply them after making new noteheads.
+    const noteHeadStyles = this.note_heads.map(noteHead => noteHead.getStyle());
     this.buildNoteHeads();
+    this.note_heads.forEach((noteHead, index) => noteHead.setStyle(noteHeadStyles[index]));
+
     if (this.stave) {
       this.note_heads.forEach(head => head.setStave(this.stave));
     }
@@ -723,9 +728,22 @@ export class StaveNote extends StemmableNote {
   // Sets the style of the complete StaveNote, including all keys
   // and the stem.
   setStyle(style) {
+    super.setStyle(style);
     this.note_heads.forEach(notehead => notehead.setStyle(style));
     this.stem.setStyle(style);
   }
+
+  setStemStyle(style) {
+    const stem = this.getStem();
+    stem.setStyle(style);
+  }
+  getStemStyle() { return this.stem.getStyle(); }
+
+  setLedgerLineStyle(style) { this.ledgerLineStyle = style; }
+  getLedgerLineStyle() { return this.ledgerLineStyle; }
+
+  setFlagStyle(style) { this.flagStyle = style; }
+  getFlagStyle() { return this.flagStyle; }
 
   // Sets the notehead at `index` to the provided coloring `style`.
   //
@@ -923,6 +941,7 @@ export class StaveNote extends StemmableNote {
       ctx.fillRect(x, y, length, 1);
     };
 
+    this.applyStyle(ctx, this.getLedgerLineStyle() || false);
     for (let line = 6; line <= highest_line; ++line) {
       drawLedgerLine(stave.getYForNote(line));
     }
@@ -930,6 +949,7 @@ export class StaveNote extends StemmableNote {
     for (let line = 0; line >= lowest_line; --line) {
       drawLedgerLine(stave.getYForNote(line));
     }
+    this.restoreStyle(ctx, this.getLedgerLineStyle() || false);
   }
 
   // Draw all key modifiers
@@ -981,7 +1001,9 @@ export class StaveNote extends StemmableNote {
 
       // Draw the Flag
       ctx.openGroup('flag', null, { pointerBBox: true });
+      this.applyStyle(ctx, this.getFlagStyle() || false);
       this.flag.render(ctx, flagX, flagY);
+      this.restoreStyle(ctx, this.getFlagStyle() || false);
       ctx.closeGroup();
     }
   }
@@ -997,6 +1019,9 @@ export class StaveNote extends StemmableNote {
 
   // Render the stem onto the canvas
   drawStem(stemStruct) {
+    // GCR TODO: I can't find any context in which this is called with the stemStruct
+    // argument in the codebase or tests. Nor can I find a case where super.drawStem
+    // is called at all. Perhaps these should be removed?
     if (!this.context) {
       throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
     }
@@ -1037,6 +1062,8 @@ export class StaveNote extends StemmableNote {
     // Draw each part of the note
     this.drawLedgerLines();
 
+    // Apply the overall style -- may be contradicted by local settings:
+    this.applyStyle();
     this.setAttribute('el', this.context.openGroup('stavenote', this.getAttribute('id')));
     this.context.openGroup('note', null, { pointerBBox: true });
     if (shouldRenderStem) this.drawStem();
@@ -1045,6 +1072,7 @@ export class StaveNote extends StemmableNote {
     this.context.closeGroup();
     this.drawModifiers();
     this.context.closeGroup();
+    this.restoreStyle();
     this.setRendered();
   }
 }

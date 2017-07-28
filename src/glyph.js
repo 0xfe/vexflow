@@ -219,7 +219,9 @@ export class Glyph extends Element {
     const scale = this.scale;
 
     this.setRendered();
+    this.applyStyle(ctx);
     Glyph.renderOutline(ctx, outline, scale, x + this.originShift.x, y + this.originShift.y);
+    this.restoreStyle(ctx);
   }
 
   renderToStave(x) {
@@ -237,7 +239,9 @@ export class Glyph extends Element {
     const scale = this.scale;
 
     this.setRendered();
+    this.applyStyle();
     Glyph.renderOutline(this.context, outline, scale,
         x + this.x_shift, this.stave.getYForGlyphs() + this.y_shift);
+    this.restoreStyle();
   }
 }

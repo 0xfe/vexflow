@@ -31,6 +31,9 @@ VF.Test.StaveNote = (function() {
       runTests('StaveNote Draw - Bass 2', StaveNote.drawBass);
       runTests('StaveNote Draw - Key Styles', StaveNote.drawKeyStyles);
       runTests('StaveNote Draw - StaveNote Styles', StaveNote.drawNoteStyles);
+      runTests('StaveNote Draw - StaveNote Stem Styles', StaveNote.drawNoteStemStyles);
+      runTests('StaveNote Draw - StaveNote Flag Styles', StaveNote.drawNoteStylesWithFlag);
+      runTests('StaveNote Draw - Beam, Stem & Ledger Line Styles', StaveNote.drawBeamStyles);
       runTests('Flag and Dot Placement - Stem Up', StaveNote.dotsAndFlagsStemUp);
       runTests('Flag and Dots Placement - Stem Down', StaveNote.dotsAndFlagsStemDown);
       runTests('Beam and Dot Placement - Stem Up', StaveNote.dotsAndBeamsUp);
@@ -599,6 +602,102 @@ VF.Test.StaveNote = (function() {
       ok(note.getYs().length > 0, 'Note has Y values');
     },
 
+    drawNoteStemStyles: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.elementId, 300, 280);
+      var stave = new VF.Stave(10, 0, 100);
+      ctx.scale(3, 3);
+
+      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
+        .setStave(stave)
+        .addAccidental(1, new VF.Accidental('b'));
+
+      note.setStemStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
+
+      new VF.TickContext()
+        .addTickable(note)
+        .preFormat()
+        .setX(25);
+
+      stave.setContext(ctx).draw();
+      note.setContext(ctx).draw();
+
+      ok('Note Stem Style');
+    },
+
+    drawNoteStylesWithFlag: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.elementId, 300, 280);
+      var stave = new VF.Stave(10, 0, 100);
+      ctx.scale(3, 3);
+
+      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: '8' })
+        .setStave(stave)
+        .addAccidental(1, new VF.Accidental('b'));
+
+      note.setStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
+
+      new VF.TickContext()
+        .addTickable(note)
+        .preFormat()
+        .setX(25);
+
+      stave.setContext(ctx).draw();
+      note.setContext(ctx).draw();
+
+      ok(note.getX() > 0, 'Note has X value');
+      ok(note.getYs().length > 0, 'Note has Y values');
+    },
+
+    drawBeamStyles: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.elementId, 200, 180);
+      var stave = new VF.Stave(10, 10, 180);
+      stave.setContext(ctx);
+      stave.draw();
+
+      var notes = [
+        // Beam
+        { keys: ['b/4'], duration: '8', stem_direction: -1 },
+        { keys: ['b/4'], duration: '8', stem_direction: -1 },
+        { keys: ['b/4'], duration: '8', stem_direction: 1 },
+        { keys: ['b/4'], duration: '8', stem_direction: 1 },
+        { keys: ['d/6'], duration: '8', stem_direction: -1 },
+        { keys: ['c/6', 'd/6'], duration: '8', stem_direction: -1 },
+        { keys: ['d/6', 'e/6'], duration: '8', stem_direction: -1 },
+      ];
+
+      var stave_notes = notes.map(function(note) { return new VF.StaveNote(note); });
+      stave_notes[0].setStemStyle({ strokeStyle: 'green' });
+      stave_notes[1].setStemStyle({ strokeStyle: 'orange' });
+
+      stave_notes[0].setKeyStyle(0, { fillStyle: 'purple' });
+      stave_notes[4].setLedgerLineStyle({ fillStyle: 'red', strokeStyle: 'red' });
+
+      var beam1 = new VF.Beam([stave_notes[0], stave_notes[1]]);
+      var beam2 = new VF.Beam([stave_notes[2], stave_notes[3]]);
+      var beam3 = new VF.Beam(stave_notes.slice(4, 6));
+
+      stave_notes[1].setKeyStyle(0, { fillStyle: 'chartreuse' });
+      stave_notes[2].setStyle({ fillStyle: 'tomato', strokeStyle: 'tomato' });
+
+      stave_notes[6].setFlagStyle({ fillStyle: 'orange', strokeStyle: 'orante' });
+
+      beam1.setStyle({
+        fillStyle: 'blue',
+        strokeStyle: 'blue',
+      });
+
+      beam2.setStyle({
+        shadowBlur: 20,
+        shadowColor: 'blue',
+      });
+
+      VF.Formatter.FormatAndDraw(ctx, stave, stave_notes, false);
+
+      beam1.setContext(ctx).draw();
+      beam2.setContext(ctx).draw();
+      beam3.setContext(ctx).draw();
+
+      ok('draw beam styles');
+    },
 
     renderNote: function(note, stave, ctx, x) {
       note.setStave(stave);

@@ -825,7 +825,10 @@ export class Beam extends Element {
     if (!this.postFormatted) {
       this.postFormat();
     }
+
     this.drawStems();
+    this.applyStyle();
     this.drawBeamLines();
+    this.restoreStyle();
   }
 }

@@ -104,10 +104,6 @@ export class Stem extends Element {
     return { topY: stemTipY, baseY: outerMostNoteheadY };
   }
 
-  // set the draw style of a stem:
-  setStyle(style) { this.style = style; return this; }
-  getStyle() { return this.style; }
-
   setVisibility(isVisible) {
     this.hide = !isVisible;
     return this;
@@ -116,17 +112,6 @@ export class Stem extends Element {
   setStemlet(isStemlet, stemletHeight) {
     this.isStemlet = isStemlet;
     this.stemletHeight = stemletHeight;
-    return this;
-  }
-
-  // Apply current style to Canvas `context`
-  applyStyle(context) {
-    const style = this.getStyle();
-    if (style) {
-      if (style.shadowColor) context.setShadowColor(style.shadowColor);
-      if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
-      if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
-    }
     return this;
   }
 
