@@ -35,10 +35,10 @@ export class Element {
   getStyle() { return this.style; }
 
   // Apply current style to Canvas `context`
-  applyStyle(context = this.context) {
-    context.save();
-    const style = this.getStyle();
+  applyStyle(context = this.context, style = this.getStyle()) {
     if (!style) return this;
+
+    context.save();
     if (style.shadowColor) context.setShadowColor(style.shadowColor);
     if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
     if (style.fillStyle) context.setFillStyle(style.fillStyle);
@@ -47,8 +47,8 @@ export class Element {
     return this;
   }
 
-  restoreStyle(context = this.context) {
-    if (!this.style) return this;
+  restoreStyle(context = this.context, style = this.getStyle()) {
+    if (!style) return this;
     context.restore();
     return this;
   }
