@@ -742,6 +742,9 @@ export class StaveNote extends StemmableNote {
   setLedgerLineStyle(style) { this.ledgerLineStyle = style; }
   getLedgerLineStyle() { return this.ledgerLineStyle; }
 
+  setFlagStyle(style) { this.flagStyle = style; }
+  getFlagStyle() { return this.flagStyle; }
+
   // Sets the notehead at `index` to the provided coloring `style`.
   //
   // `style` is an `object` with the following properties: `shadowColor`,
@@ -998,7 +1001,9 @@ export class StaveNote extends StemmableNote {
 
       // Draw the Flag
       ctx.openGroup('flag', null, { pointerBBox: true });
+      this.applyStyle(ctx, this.getFlagStyle() || false);
       this.flag.render(ctx, flagX, flagY);
+      this.restoreStyle(ctx, this.getFlagStyle() || false);
       ctx.closeGroup();
     }
   }

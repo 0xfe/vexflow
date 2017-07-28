@@ -673,10 +673,12 @@ VF.Test.StaveNote = (function() {
 
       var beam1 = new VF.Beam([stave_notes[0], stave_notes[1]]);
       var beam2 = new VF.Beam([stave_notes[2], stave_notes[3]]);
-      var beam3 = new VF.Beam(stave_notes.slice(4));
+      var beam3 = new VF.Beam(stave_notes.slice(4, 6));
 
       stave_notes[1].setKeyStyle(0, { fillStyle: 'chartreuse' });
       stave_notes[2].setStyle({ fillStyle: 'tomato', strokeStyle: 'tomato' });
+
+      stave_notes[6].setFlagStyle({ fillStyle: 'orange', strokeStyle: 'orante' });
 
       beam1.setStyle({
         fillStyle: 'blue',
