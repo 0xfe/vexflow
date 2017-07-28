@@ -733,6 +733,15 @@ export class StaveNote extends StemmableNote {
     this.stem.setStyle(style);
   }
 
+  setStemStyle(style) {
+    const stem = this.getStem();
+    stem.setStyle(style);
+  }
+  getStemStyle() { return this.stem.getStyle(); }
+
+  setLedgerLineStyle(style) { this.ledgerLineStyle = style; }
+  getLedgerLineStyle() { return this.ledgerLineStyle; }
+
   // Sets the notehead at `index` to the provided coloring `style`.
   //
   // `style` is an `object` with the following properties: `shadowColor`,
@@ -929,6 +938,7 @@ export class StaveNote extends StemmableNote {
       ctx.fillRect(x, y, length, 1);
     };
 
+    this.applyStyle(ctx, this.getLedgerLineStyle() || false);
     for (let line = 6; line <= highest_line; ++line) {
       drawLedgerLine(stave.getYForNote(line));
     }
@@ -936,6 +946,7 @@ export class StaveNote extends StemmableNote {
     for (let line = 0; line >= lowest_line; --line) {
       drawLedgerLine(stave.getYForNote(line));
     }
+    this.restoreStyle(ctx, this.getLedgerLineStyle() || false);
   }
 
   // Draw all key modifiers
@@ -1003,6 +1014,9 @@ export class StaveNote extends StemmableNote {
 
   // Render the stem onto the canvas
   drawStem(stemStruct) {
+    // GCR TODO: I can't find any context in which this is called with the stemStruct
+    // argument in the codebase or tests. Nor can I find a case where super.drawStem
+    // is called at all. Perhaps these should be removed?
     if (!this.context) {
       throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
     }
