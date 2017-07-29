@@ -650,6 +650,10 @@ VF.Test.StaveNote = (function() {
     drawBeamStyles: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 200, 180);
       var stave = new VF.Stave(10, 10, 180);
+      stave.setStyle({
+        strokeStyle: '#EEAAEE',
+        lineWidth: '3',
+      });
       stave.setContext(ctx);
       stave.draw();
 
@@ -669,7 +673,7 @@ VF.Test.StaveNote = (function() {
       stave_notes[1].setStemStyle({ strokeStyle: 'orange' });
 
       stave_notes[0].setKeyStyle(0, { fillStyle: 'purple' });
-      stave_notes[4].setLedgerLineStyle({ fillStyle: 'red', strokeStyle: 'red' });
+      stave_notes[4].setLedgerLineStyle({ fillStyle: 'red', strokeStyle: 'red', lineWidth: 1 });
 
       var beam1 = new VF.Beam([stave_notes[0], stave_notes[1]]);
       var beam2 = new VF.Beam([stave_notes[2], stave_notes[3]]);
