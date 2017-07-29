@@ -197,27 +197,6 @@ export class NoteHead extends Note {
     // Begin and end positions for head.
     const stem_direction = this.stem_direction;
     const glyph_font_scale = this.render_options.glyph_font_scale;
-    const line = this.line;
-
-    // If note above/below the staff, draw the small staff
-    if (line <= 0 || line >= 6) {
-      let line_y = y;
-      const floor = Math.floor(line);
-      if (line < 0 && floor - line === -0.5) {
-        line_y -= 5;
-      } else if (line > 6 &&  floor - line === -0.5) {
-        line_y += 5;
-      }
-
-      if (this.note_type !== 'r') {
-        ctx.fillRect(
-          head_x - this.render_options.stroke_px,
-          line_y,
-          this.getWidth() + (this.render_options.stroke_px * 2),
-          1
-        );
-      }
-    }
 
     if (this.note_type === 's') {
       const staveSpace = this.stave.getSpacingBetweenLines();

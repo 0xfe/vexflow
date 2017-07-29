@@ -871,14 +871,39 @@ export class StaveNote extends StemmableNote {
     this.setPreFormatted(true);
   }
 
-  // Gets the staff line and y value for the highest and lowest noteheads
+  /**
+   * @typedef {Object} noteHeadBounds
+   * @property {number} y_top the highest notehead bound
+   * @property {number} y_bottom the lowest notehead bound
+   * @property {number|Null} displaced_x the starting x for displaced noteheads
+   * @property {number|Null} non_displaced_x the starting x for non-displaced noteheads
+   * @property {number} highest_line the highest notehead line in traditional music line
+   *  numbering (bottom line = 1, top line = 5)
+   * @property {number} lowest_line the lowest notehead line
+   * @property {number|false} highest_displaced_line the highest staff line number
+   *   for a displaced notehead
+   * @property {number|false} lowest_displaced_line
+   * @property {number} highest_non_displaced_line
+   * @property {number} lowest_non_displaced_line
+   */
+
+  /**
+   * Get the staff line and y value for the highest & lowest noteheads
+   * @returns {noteHeadBounds}
+   */
   getNoteHeadBounds() {
     // Top and bottom Y values for stem.
     let yTop = null;
     let yBottom = null;
+    let nonDisplacedX = null;
+    let displacedX = null;
 
     let highestLine = this.stave.getNumLines();
     let lowestLine = 1;
+    let highestDisplacedLine = false;
+    let lowestDisplacedLine = false;
+    let highestNonDisplacedLine = highestLine;
+    let lowestNonDisplacedLine = lowestLine;
 
     this.note_heads.forEach(notehead => {
       const line = notehead.getLine();
@@ -892,15 +917,39 @@ export class StaveNote extends StemmableNote {
         yBottom = y;
       }
 
+      if (displacedX === null && notehead.isDisplaced()) {
+        displacedX = notehead.getAbsoluteX();
+      }
+
+      if (nonDisplacedX === null && !notehead.isDisplaced()) {
+        nonDisplacedX = notehead.getAbsoluteX();
+      }
+
       highestLine = line > highestLine ? line : highestLine;
       lowestLine = line < lowestLine ? line : lowestLine;
+
+      if (notehead.isDisplaced()) {
+        highestDisplacedLine = (highestDisplacedLine === false) ?
+          line : Math.max(line, highestDisplacedLine);
+        lowestDisplacedLine = (lowestDisplacedLine === false) ?
+          line : Math.min(line, lowestDisplacedLine);
+      } else {
+        highestNonDisplacedLine = Math.max(line, highestNonDisplacedLine);
+        lowestNonDisplacedLine = Math.min(line, lowestNonDisplacedLine);
+      }
     }, this);
 
     return {
       y_top: yTop,
       y_bottom: yBottom,
+      displaced_x: displacedX,
+      non_displaced_x: nonDisplacedX,
       highest_line: highestLine,
       lowest_line: lowestLine,
+      highest_displaced_line: highestDisplacedLine,
+      lowest_displaced_line: lowestDisplacedLine,
+      highest_non_displaced_line: highestNonDisplacedLine,
+      lowest_non_displaced_line: lowestNonDisplacedLine,
     };
   }
 
@@ -918,38 +967,67 @@ export class StaveNote extends StemmableNote {
   // Draw the ledger lines between the stave and the highest/lowest keys
   drawLedgerLines() {
     const {
-      note_heads, stave, use_default_head_x, x_shift, glyph,
+      stave, glyph,
       render_options: { stroke_px },
       context: ctx,
     } = this;
+
+    const width = glyph.getWidth() + (stroke_px * 2);
+    const doubleWidth = 2 * (glyph.getWidth() + stroke_px) - (Stem.WIDTH / 2);
 
     if (this.isRest()) return;
     if (!ctx) {
       throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
     }
 
-    const { highest_line, lowest_line } = this.getNoteHeadBounds();
-    let headX = note_heads[0].getAbsoluteX();
+    const {
+      highest_line,
+      lowest_line,
+      highest_displaced_line,
+      highest_non_displaced_line,
+      lowest_displaced_line,
+      lowest_non_displaced_line,
+      displaced_x,
+      non_displaced_x,
+    } = this.getNoteHeadBounds();
 
-    const drawLedgerLine = (y) => {
-      if (use_default_head_x === true)  {
-        headX = this.getAbsoluteX() + x_shift;
-      }
-      const x = headX - stroke_px;
-      const length = ((headX + glyph.getWidth()) - headX) + (stroke_px * 2);
+    const min_x = Math.min(displaced_x, non_displaced_x);
 
-      ctx.fillRect(x, y, length, 1);
+    const drawLedgerLine = (y, normal, displaced) => {
+      let x;
+      if (displaced && normal) x = min_x - stroke_px;
+      else if (normal) x = non_displaced_x - stroke_px;
+      else x = displaced_x - stroke_px;
+      const ledgerWidth = (normal && displaced) ? doubleWidth : width;
+
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + ledgerWidth, y);
+      ctx.stroke();
     };
 
-    this.applyStyle(ctx, this.getLedgerLineStyle() || false);
+    const style = Object.assign({
+      strokeStyle: stave.options.fill_style,
+      lineWidth: Flow.STAVE_LINE_THICKNESS,
+    }, this.getLedgerLineStyle() || {});
+
+    this.applyStyle(ctx, style);
+
+    // Draw ledger lines below the staff:
     for (let line = 6; line <= highest_line; ++line) {
-      drawLedgerLine(stave.getYForNote(line));
+      const normal = (non_displaced_x !== null) && (line <= highest_non_displaced_line);
+      const displaced = (displaced_x !== null) && (line <= highest_displaced_line);
+      drawLedgerLine(stave.getYForNote(line), normal, displaced);
     }
 
+    // Draw ledger lines above the staff:
     for (let line = 0; line >= lowest_line; --line) {
-      drawLedgerLine(stave.getYForNote(line));
+      const normal = (non_displaced_x !== null) && (line >= lowest_non_displaced_line);
+      const displaced = (displaced_x !== null) && (line >= lowest_displaced_line);
+      drawLedgerLine(stave.getYForNote(line), normal, displaced);
     }
-    this.restoreStyle(ctx, this.getLedgerLineStyle() || false);
+
+    this.restoreStyle(ctx, style);
   }
 
   // Draw all key modifiers
