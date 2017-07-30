@@ -43,7 +43,7 @@ export class Element {
     if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
     if (style.fillStyle) context.setFillStyle(style.fillStyle);
     if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
-
+    if (style.lineWidth) context.setLineWidth(style.lineWidth);
     return this;
   }
 
