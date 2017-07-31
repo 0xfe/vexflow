@@ -10,10 +10,11 @@ module.exports = (grunt) => {
     ' */',
   ].join('\n');
   const BASE_DIR = __dirname;
+  const RELATIVE_BUILD_DIR = './build';
   const BUILD_DIR = path.join(BASE_DIR, 'build');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
-  const TARGET_RAW = path.join(BUILD_DIR, 'vexflow-debug.js');
+  const TARGET_RAW = path.join(RELATIVE_BUILD_DIR, 'vexflow-debug.js');
   const TARGET_MIN = path.join(BUILD_DIR, 'vexflow-min.js');
   const TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
 
@@ -30,34 +31,35 @@ module.exports = (grunt) => {
     return {
       entry: MODULE_ENTRY,
       output: {
-        path: '/',
         filename: target,
         library: 'Vex',
         libraryTarget: 'umd',
       },
       devtool: 'source-map',
       module: {
-        loaders: [
+        rules: [
           {
             test: /\.js?$/,
             exclude: /(node_modules|bower_components)/,
-            loader: 'babel',
-            query: {
-              presets: [preset],
-              'plugins': ['add-module-exports', 'transform-object-assign'],
-            },
+            use: [{
+              loader: 'babel-loader',
+              options: {
+                presets: [preset],
+                'plugins': ['add-module-exports', 'transform-object-assign'],
+              },
+            }],
           },
         ],
       },
     };
   }
 
-  const webpackCommon = webpackConfig(TARGET_RAW, 'es2015');
+  const webpackCommon = webpackConfig(TARGET_RAW, ['es2015']);
 
   // Unsupported build for IE versions <11
-  const TARGET_LEGACY_RAW = path.join(BUILD_DIR, 'vexflow-legacy-debug.js');
+  const TARGET_LEGACY_RAW = path.join(RELATIVE_BUILD_DIR, 'vexflow-legacy-debug.js');
   const TARGET_LEGACY_MIN = path.join(BUILD_DIR, 'vexflow-legacy-min.js');
-  const webpackLegacy = webpackConfig(TARGET_LEGACY_RAW, 'es2015-loose');
+  const webpackLegacy = webpackConfig(TARGET_LEGACY_RAW, ['es2015', { 'loose': true }]);
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -78,7 +80,9 @@ module.exports = (grunt) => {
         watch: true,
         keepalive: true,
         failOnError: false,
-        watchDelay: 0,
+        watchOptions: {
+          watchDelay: 0,
+        },
       }),
     },
     uglify: {
@@ -103,7 +107,7 @@ module.exports = (grunt) => {
     },
     watch: {
       tests: {
-        files: ['tests/*'],
+        files: ['tests/*', 'src/*'],
         tasks: ['concat:tests'],
         options: {
           interrupt: true,
@@ -168,7 +172,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-docco');
+  grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-git');
