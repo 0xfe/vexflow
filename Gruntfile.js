@@ -107,7 +107,7 @@ module.exports = (grunt) => {
     },
     watch: {
       tests: {
-        files: ['tests/*'],
+        files: ['tests/*', 'src/*'],
         tasks: ['concat:tests'],
         options: {
           interrupt: true,
@@ -172,7 +172,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-docco');
+  grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-git');
