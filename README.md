@@ -53,7 +53,7 @@ stave.setContext(context).draw();
 
 ### Using EasyScore
 
-The EasyScore API is a quick way to create simple music notation in VexFlow. See running example in [this jsfiddle](https://jsfiddle.net/3d0nbL0n/3/).
+The EasyScore API is a quick way to create simple music notation in VexFlow. See running example in [this jsfiddle](https://jsfiddle.net/3d0nbL0n/128/).
 
 ```javascript
 var vf = new Vex.Flow.Factory({
