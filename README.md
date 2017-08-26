@@ -57,7 +57,7 @@ The EasyScore API is a quick way to create simple music notation in VexFlow. See
 
 ```javascript
 var vf = new Vex.Flow.Factory({
-  renderer: {selector: 'boo', width: 500, height: 200}
+  renderer: {elementId: 'boo', width: 500, height: 200}
 });
 
 var score = vf.EasyScore();
