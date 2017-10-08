@@ -19,6 +19,18 @@ export class Barline extends StaveModifier {
     };
   }
 
+  static get typeString() {
+    return {
+      single: Barline.type.SINGLE,
+      double: Barline.type.DOUBLE,
+      end: Barline.type.END,
+      repeatBegin: Barline.type.REPEAT_BEGIN,
+      repeatEnd: Barline.type.REPEAT_END,
+      repeatBoth: Barline.type.REPEAT_BOTH,
+      none: Barline.type.NONE,
+    };
+  }
+
   /**
    * @constructor
    */
@@ -52,7 +64,10 @@ export class Barline extends StaveModifier {
   getCategory() { return Barline.CATEGORY; }
   getType() { return this.type; }
   setType(type) {
-    this.type = type;
+    this.type = typeof(type) === 'string'
+      ? Barline.typeString[type]
+      : type;
+
     this.setWidth(this.widths[this.type]);
     this.setPadding(this.paddings[this.type]);
     return this;

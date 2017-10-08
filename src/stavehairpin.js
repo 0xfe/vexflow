@@ -36,8 +36,11 @@ export class StaveHairpin extends Element {
     const ppt = formatter.pixelsPerTick;
 
     if (ppt == null) {
-      throw new Vex.RuntimeError('BadArguments',
-          'A valid Formatter must be provide to draw offsets by ticks.'); }
+      throw new Vex.RuntimeError(
+        'BadArguments',
+        'A valid Formatter must be provide to draw offsets by ticks.'
+      );
+    }
 
     const l_shift_px = ppt * options.left_shift_ticks;
     const r_shift_px = ppt * options.right_shift_ticks;

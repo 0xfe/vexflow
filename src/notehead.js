@@ -118,13 +118,6 @@ export class NoteHead extends Note {
   // Determine if the notehead is displaced
   isDisplaced() { return this.displaced === true; }
 
-  // Get/set the notehead's style
-  //
-  // `style` is an `object` with the following properties: `shadowColor`,
-  // `shadowBlur`, `fillStyle`, `strokeStyle`
-  getStyle() { return this.style; }
-  setStyle(style) { this.style = style; return this; }
-
   // Get the glyph data
   getGlyph() { return this.glyph; }
 
@@ -169,16 +162,6 @@ export class NoteHead extends Note {
     return new Flow.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
   }
 
-  // Apply current style to Canvas `context`
-  applyStyle(context) {
-    const style = this.getStyle();
-    if (style.shadowColor) context.setShadowColor(style.shadowColor);
-    if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
-    if (style.fillStyle) context.setFillStyle(style.fillStyle);
-    if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
-    return this;
-  }
-
   // Set notehead to a provided `stave`
   setStave(stave) {
     const line = this.getLine();
@@ -214,37 +197,15 @@ export class NoteHead extends Note {
     // Begin and end positions for head.
     const stem_direction = this.stem_direction;
     const glyph_font_scale = this.render_options.glyph_font_scale;
-    const line = this.line;
-
-    // If note above/below the staff, draw the small staff
-    if (line <= 0 || line >= 6) {
-      let line_y = y;
-      const floor = Math.floor(line);
-      if (line < 0 && floor - line === -0.5) {
-        line_y -= 5;
-      } else if (line > 6 &&  floor - line === -0.5) {
-        line_y += 5;
-      }
-
-      if (this.note_type !== 'r') {
-        ctx.fillRect(
-          head_x - this.render_options.stroke_px,
-          line_y,
-          this.getWidth() + (this.render_options.stroke_px * 2),
-          1
-        );
-      }
-    }
 
     if (this.note_type === 's') {
       const staveSpace = this.stave.getSpacingBetweenLines();
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       if (this.style) {
-        ctx.save();
         this.applyStyle(ctx);
         Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
-        ctx.restore();
+        this.restoreStyle(ctx);
       } else {
         Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
       }

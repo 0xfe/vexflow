@@ -30,6 +30,29 @@ export class Element {
     }
   }
 
+  // set the draw style of a stemmable note:
+  setStyle(style) { this.style = style; return this; }
+  getStyle() { return this.style; }
+
+  // Apply current style to Canvas `context`
+  applyStyle(context = this.context, style = this.getStyle()) {
+    if (!style) return this;
+
+    context.save();
+    if (style.shadowColor) context.setShadowColor(style.shadowColor);
+    if (style.shadowBlur) context.setShadowBlur(style.shadowBlur);
+    if (style.fillStyle) context.setFillStyle(style.fillStyle);
+    if (style.strokeStyle) context.setStrokeStyle(style.strokeStyle);
+    if (style.lineWidth) context.setLineWidth(style.lineWidth);
+    return this;
+  }
+
+  restoreStyle(context = this.context, style = this.getStyle()) {
+    if (!style) return this;
+    context.restore();
+    return this;
+  }
+
   // An element can have multiple class labels.
   hasClass(className) { return (this.attrs.classes[className] === true); }
   addClass(className) {

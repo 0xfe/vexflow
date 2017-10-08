@@ -4,158 +4,135 @@
  */
 
 VF.Test.TimeSignature = (function() {
-  function catchError(ts, spec) {
-    try {
-      ts.parseTimeSpec(spec);
-    } catch (e) {
-      equal(e.code, "BadTimeSignature", e.message);
-    }
-  }
-
-  var TimeSignature = {
+  return {
     Start: function() {
-      var runTests = VF.Test.runTests;
-      QUnit.module("TimeSignature");
-      test("Time Signature Parser", VF.Test.TimeSignature.parser);
-      runTests("Basic Time Signatures", TimeSignature.basic);
-      runTests("Big Signature Test", TimeSignature.big);
-      runTests("Time Signature multiple staves alignment test", TimeSignature.multiStave);
-      runTests("Time Signature Change Test", TimeSignature.timeSigNote);
-    },
+      QUnit.module('TimeSignature');
 
-    parser: function() {
-      expect(7);
-      var ts = new VF.TimeSignature();
+      test('Time Signature Parser', function() {
+        var mustFail = ['asdf', '123/', '/10', '/', '4567', 'C+'];
+        var mustPass = ['4/4', '10/12', '1/8', '1234567890/1234567890', 'C', 'C|'];
 
-      // Invalid time signatures
-      catchError(ts, "asdf");
-      catchError(ts, "123/");
-      catchError(ts, "/10");
-      catchError(ts, "/");
-      catchError(ts, "4567");
-      catchError(ts, "C+");
+        var timeSig = new VF.TimeSignature();
 
-      ts.parseTimeSpec("4/4");
-      ts.parseTimeSpec("10/12");
-      ts.parseTimeSpec("1/8");
-      ts.parseTimeSpec("1234567890/1234567890");
-      ts.parseTimeSpec("C");
-      ts.parseTimeSpec("C|");
+        mustFail.forEach(function(invalidString) {
+          throws(function() { timeSig.parseTimeSpec(invalidString); }, /BadTimeSignature/);
+        });
 
-      ok(true, "all pass");
-    },
+        mustPass.forEach(function(validString) {
+          timeSig.parseTimeSpec(validString);
+        });
 
-    basic: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 600, 120);
-      var stave = new VF.Stave(10, 10, 500);
-
-      stave.addTimeSignature("2/2");
-      stave.addTimeSignature("3/4");
-      stave.addTimeSignature("4/4");
-      stave.addTimeSignature("6/8");
-      stave.addTimeSignature("C");
-      stave.addTimeSignature("C|");
-
-      stave.addEndTimeSignature("2/2");
-      stave.addEndTimeSignature("3/4");
-      stave.addEndTimeSignature("4/4");
-      stave.addEndClef("treble");
-      stave.addEndTimeSignature("6/8");
-      stave.addEndTimeSignature("C");
-      stave.addEndTimeSignature("C|");
-
-      stave.setContext(ctx);
-      stave.draw();
-
-      ok(true, "all pass");
-    },
-
-    big: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 400, 120);
-      var stave = new VF.Stave(10, 10, 300);
-
-      stave.addTimeSignature("12/8");
-      stave.addTimeSignature("7/16");
-      stave.addTimeSignature("1234567/890");
-      stave.addTimeSignature("987/654321");
-
-      stave.setContext(ctx);
-      stave.draw();
-
-      ok(true, "all pass");
-    },
-
-    multiStave: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 400, 350);
-
-      var stave = new VF.Stave(15, 0, 300);
-
-      for (var i = 0; i < 5; i++) {
-          if (i == 2) continue;
-          stave.setConfigForLine(i, {visible: false} );
-      }
-
-      stave.addClef("percussion");
-      // passing the custom padding as second parameter (in pixels)
-      stave.addTimeSignature("4/4", 25);
-      stave.setContext(ctx).draw();
-
-      var stave2 = new VF.Stave(15, 110, 300);
-      stave2.addClef("treble");
-      stave2.addTimeSignature("4/4");
-      stave2.setContext(ctx).draw();
-
-      var connector = new VF.StaveConnector(stave, stave2);
-      connector.setType(VF.StaveConnector.type.SINGLE);
-      connector.setContext(ctx).draw();
-
-      var stave3 = new VF.Stave(15, 220, 300);
-      stave3.addClef("bass");
-      stave3.addTimeSignature("4/4");
-      stave3.setContext(ctx).draw();
-
-      var connector2 = new VF.StaveConnector(stave2, stave3);
-      connector2.setType(VF.StaveConnector.type.SINGLE);
-      connector2.setContext(ctx).draw();
-
-      var connector3 = new VF.StaveConnector(stave2, stave3);
-      connector3.setType(VF.StaveConnector.type.BRACE);
-      connector3.setContext(ctx).draw();
-
-        ok(true, "all pass");
-    },
-
-    timeSigNote: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.canvas_sel, 900, 120);
-      var stave = new VF.Stave(10, 10, 800);
-      stave.addClef("treble").addTimeSignature("C|").setContext(ctx).draw();
-
-      var notes = [
-        new VF.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" }),
-        new VF.TimeSigNote("3/4"),
-        new VF.StaveNote({ keys: ["d/4"], duration: "q", clef: "alto" }),
-        new VF.StaveNote({ keys: ["b/3"], duration: "qr", clef: "alto" }),
-        new VF.TimeSigNote("C"),
-        new VF.StaveNote({ keys: ["c/3", "e/3", "g/3"], duration: "q", clef: "bass" }),
-        new VF.TimeSigNote("9/8"),
-        new VF.StaveNote({ keys: ["c/4"], duration: "q", clef: "treble" })
-      ];
-
-      var voice = new VF.Voice({
-        num_beats: 4,
-        beat_value: 4,
-        resolution: VF.RESOLUTION
+        ok(true, 'all pass');
       });
-      voice.setMode(VF.Voice.Mode.SOFT);
-      voice.addTickables(notes);
 
-      var formatter = new VF.Formatter().
-        joinVoices([voice]).format([voice], 800);
+      var run = VF.Test.runTests;
 
-      voice.draw(ctx, stave);
-      ok(true, "all pass");
-    }
+      run('Basic Time Signatures', function(options, contextBuilder) {
+        var ctx = new contextBuilder(options.elementId, 600, 120);
+
+        new VF.Stave(10, 10, 500)
+          .addTimeSignature('2/2')
+          .addTimeSignature('3/4')
+          .addTimeSignature('4/4')
+          .addTimeSignature('6/8')
+          .addTimeSignature('C')
+          .addTimeSignature('C|')
+          .addEndTimeSignature('2/2')
+          .addEndTimeSignature('3/4')
+          .addEndTimeSignature('4/4')
+          .addEndClef('treble')
+          .addEndTimeSignature('6/8')
+          .addEndTimeSignature('C')
+          .addEndTimeSignature('C|')
+          .setContext(ctx)
+          .draw();
+
+        ok(true, 'all pass');
+      });
+
+      run('Big Signature Test', function(options, contextBuilder) {
+        var ctx = new contextBuilder(options.elementId, 400, 120);
+
+        new VF.Stave(10, 10, 300)
+          .addTimeSignature('12/8')
+          .addTimeSignature('7/16')
+          .addTimeSignature('1234567/890')
+          .addTimeSignature('987/654321')
+          .setContext(ctx)
+          .draw();
+
+        ok(true, 'all pass');
+      });
+
+      run('Time Signature multiple staves alignment test', function(options, contextBuilder) {
+        var ctx = new contextBuilder(options.elementId, 400, 350);
+
+        var stave = new VF.Stave(15, 0, 300)
+          .setConfigForLines(
+            [false, false, true, false, false].map(function(visible) {
+              return { visible: visible };
+            }))
+          .addClef('percussion')
+          .addTimeSignature('4/4', 25) // passing the custom padding in pixels
+          .setContext(ctx)
+          .draw();
+
+        var stave2 = new VF.Stave(15, 110, 300)
+          .addClef('treble')
+          .addTimeSignature('4/4')
+          .setContext(ctx)
+          .draw();
+
+        new VF.StaveConnector(stave, stave2)
+          .setType('single')
+          .setContext(ctx)
+          .draw();
+
+        var stave3 = new VF.Stave(15, 220, 300)
+          .addClef('bass')
+          .addTimeSignature('4/4')
+          .setContext(ctx)
+          .draw();
+
+        new VF.StaveConnector(stave2, stave3)
+          .setType('single')
+          .setContext(ctx)
+          .draw();
+
+        new VF.StaveConnector(stave2, stave3)
+          .setType('brace')
+          .setContext(ctx)
+          .draw();
+
+        ok(true, 'all pass');
+      });
+
+      run('Time Signature Change Test', function(options) {
+        var vf = VF.Test.makeFactory(options, 900);
+
+        var stave = vf.Stave(10, 10, 800)
+          .addClef('treble')
+          .addTimeSignature('C|');
+
+        var voice = vf.Voice().setStrict(false).addTickables([
+          vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }),
+          vf.TimeSigNote({ time: '3/4' }),
+          vf.StaveNote({ keys: ['d/4'], duration: '4', clef: 'alto' }),
+          vf.StaveNote({ keys: ['b/3'], duration: '4r', clef: 'alto' }),
+          vf.TimeSigNote({ time: 'C' }),
+          vf.StaveNote({ keys: ['c/3', 'e/3', 'g/3'], duration: '4', clef: 'bass' }),
+          vf.TimeSigNote({ time: '9/8' }),
+          vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }),
+        ]);
+
+        vf.Formatter()
+          .joinVoices([voice])
+          .formatToStave([voice], stave);
+
+        vf.draw();
+
+        ok(true, 'all pass');
+      });
+    },
   };
-
-  return TimeSignature;
-})();
+}());

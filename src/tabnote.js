@@ -163,6 +163,10 @@ export class TabNote extends StemmableNote {
     this.updateWidth();
   }
 
+  reset() {
+    if (this.stave) this.setStave(this.stave);
+  }
+
   // The ModifierContext category
   getCategory() { return TabNote.CATEGORY; }
 

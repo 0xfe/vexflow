@@ -16,6 +16,7 @@ import { Renderer } from './renderer';
 function L(...args) { if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args); }
 
 export class TextBracket extends Element {
+  // FIXME: Modifier.Position is singular while this is plural, make consistent
   static get Positions() {
     return {
       TOP: 1,
@@ -23,17 +24,33 @@ export class TextBracket extends Element {
     };
   }
 
-  constructor(bracket_data) {
+  static get PositionString() {
+    return {
+      top: TextBracket.Positions.TOP,
+      bottom: TextBracket.Positions.BOTTOM,
+    };
+  }
+
+  constructor({
+    start,
+    stop,
+    text = '',
+    superscript = '',
+    position = TextBracket.Positions.TOP,
+  }) {
     super();
     this.setAttribute('type', 'TextBracket');
 
-    this.start = bracket_data.start;
-    this.stop = bracket_data.stop;
+    this.start = start;
+    this.stop = stop;
 
-    this.text = bracket_data.text || '';
-    this.superscript = bracket_data.superscript || '';
+    this.text = text;
+    this.superscript = superscript;
 
-    this.position = bracket_data.position || TextBracket.Positions.TOP;
+    this.position = typeof position === 'string'
+      ? TextBracket.PositionString[position]
+      : position;
+
     this.line = 1;
 
     this.font = {
@@ -76,7 +93,11 @@ export class TextBracket extends Element {
   }
 
   // Set the font for the text
-  setFont(font) { this.font = font; return this; }
+  setFont(font) {
+    // We use Object.assign to support partial updates to the font object
+    this.font = Object.assign({}, this.font, font);
+    return this;
+  }
   // Set the rendering `context` for the octave bracket
   setLine(line) { this.line = line; return this; }
 

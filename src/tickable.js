@@ -159,6 +159,9 @@ export class Tickable extends Element {
     this.preFormatted = false;
     return this;
   }
+  getModifiers() {
+    return this.modifiers;
+  }
   setTickContext(tc) {
     this.tickContext = tc;
     this.preFormatted = false;

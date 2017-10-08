@@ -26,6 +26,7 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.runTests('Accidental Arrangement Special Cases', Vex.Flow.Test.Accidental.specialCases);
       Vex.Flow.Test.runTests('Multi Voice', Vex.Flow.Test.Accidental.multiVoice);
       Vex.Flow.Test.runTests('Microtonal', Vex.Flow.Test.Accidental.microtonal);
+      Vex.Flow.Test.runTests('Microtonal (Iranian)', Vex.Flow.Test.Accidental.microtonal_iranian);
       test('Automatic Accidentals - Simple Tests', Vex.Flow.Test.Accidental.autoAccidentalWorking);
       Vex.Flow.Test.runTests('Automatic Accidentals', Vex.Flow.Test.Accidental.automaticAccidentals0);
       Vex.Flow.Test.runTests('Automatic Accidentals - C major scale in Ab', Vex.Flow.Test.Accidental.automaticAccidentals1);
@@ -96,14 +97,14 @@ Vex.Flow.Test.Accidental = (function() {
 
       var accids = Object
         .keys(VF.accidentalCodes.accidentals)
-        .filter(function(accid) { return accid !== '{' && accid !== '}'});
+        .filter(function(accid) { return accid !== '{' && accid !== '}'; });
 
       var notes = accids
         .map(function(accid) {
           return vf
             .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: VF.Stem.UP })
             .addAccidental(0, vf.Accidental({ type: accid }));
-          });
+        });
 
       var voice = score.voice(notes, { time: accids.length  + '/4' });
 
@@ -359,6 +360,66 @@ Vex.Flow.Test.Accidental = (function() {
       ok(true, 'Microtonal Accidental');
     },
 
+    microtonal_iranian: function(options) {
+      var assert = options.assert;
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var newAccid = makeNewAccid(vf);
+      var ctx = vf.getContext();
+      vf.Stave({ x: 10, y: 10, width: 650 });
+
+      var notes = [
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
+          .addAccidental(0, newAccid('k'))
+          .addAccidental(1, newAccid('o')),
+
+        vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
+          .addAccidental(0, newAccid('b'))
+          .addAccidental(1, newAccid('k'))
+          .addAccidental(2, newAccid('n'))
+          .addAccidental(3, newAccid('o'))
+          .addAccidental(4, newAccid('#'))
+          .addAccidental(5, newAccid('bb'))
+          .addAccidental(6, newAccid('##')),
+
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
+          .addAccidental(0, newAccid('o'))
+          .addAccidental(1, newAccid('k'))
+          .addAccidental(2, newAccid('n'))
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('bb'))
+          .addAccidental(5, newAccid('##'))
+          .addAccidental(6, newAccid('#')),
+
+        vf.StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
+          .addAccidental(0, newAccid('#'))
+          .addAccidental(1, newAccid('o').setAsCautionary())
+          .addAccidental(2, newAccid('n').setAsCautionary())
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(4, newAccid('k').setAsCautionary()),
+
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '16' })
+          .addAccidental(0, newAccid('k'))
+          .addAccidental(1, newAccid('k'))
+          .addAccidental(2, newAccid('k'))
+          .addAccidental(3, newAccid('k')),
+      ];
+
+      VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
+
+      notes.forEach(function(note, index) {
+        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+        note.getAccidentals().forEach(function(accid, index) {
+          assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
+        });
+      });
+
+      vf.draw();
+
+      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
+      ok(true, 'Microtonal Accidental (Iranian)');
+    },
+
     automaticAccidentals0: function(options) {
       var vf = VF.Test.makeFactory(options, 700, 200);
       var stave = vf.Stave();
@@ -378,8 +439,14 @@ Vex.Flow.Test.Accidental = (function() {
         { keys: ['c/4', 'c/5'], duration: '4' },
       ].map(vf.StaveNote.bind(vf));
 
+      const gracenotes = [
+        { keys: ['d#/4'], duration: '16', slash: true },
+      ].map(vf.GraceNote.bind(vf));
+      notes[0].addModifier(0, vf.GraceNoteGroup({ notes: gracenotes }).beamNotes());
+
       const voice = vf.Voice()
         .setMode(Vex.Flow.Voice.Mode.SOFT)
+        .addTickable(new Vex.Flow.TimeSigNote('12/4').setStave(stave))
         .addTickables(notes);
 
       Vex.Flow.Accidental.applyAccidentals([voice], 'C');

@@ -136,6 +136,14 @@ export class Stave extends Element {
     return this.width;
   }
 
+  getStyle() {
+    return Object.assign({
+      fillStyle: this.options.fill_style,
+      strokeStyle: this.options.fill_style, // yes, this is correct for legacy compatibility
+      lineWidth: Flow.STAVE_LINE_THICKNESS,
+    }, this.style || {});
+  }
+
   setMeasure(measure) { this.measure = measure; return this; }
 
   /**
@@ -502,17 +510,14 @@ export class Stave extends Element {
     for (let line = 0; line < num_lines; line++) {
       y = this.getYForLine(line);
 
-      this.context.save();
-      this.context.setFillStyle(this.options.fill_style);
-      this.context.setStrokeStyle(this.options.fill_style);
-      this.context.setLineWidth(Flow.STAVE_LINE_THICKNESS);
+      this.applyStyle();
       if (this.options.line_config[line].visible) {
         this.context.beginPath();
         this.context.moveTo(x, y);
         this.context.lineTo(x + width, y);
         this.context.stroke();
       }
-      this.context.restore();
+      this.restoreStyle();
     }
 
     // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)

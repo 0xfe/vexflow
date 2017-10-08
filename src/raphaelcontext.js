@@ -138,10 +138,10 @@ export class RaphaelContext {
       height = -height;
     }
 
-    this.paper.rect(x, y, width - 0.5, height - 0.5).
-      attr(this.attributes).
-      attr('fill', 'none').
-      attr('stroke-width', this.lineWidth);
+    this.paper.rect(x, y, width - 0.5, height - 0.5)
+      .attr(this.attributes)
+      .attr('fill', 'none')
+      .attr('stroke-width', this.lineWidth);
     return this;
   }
 
@@ -161,8 +161,8 @@ export class RaphaelContext {
       height = -height;
     }
 
-    this.paper.rect(x, y, width - 0.5, height - 0.5).
-      attr(this.background_attributes);
+    this.paper.rect(x, y, width - 0.5, height - 0.5)
+      .attr(this.background_attributes);
     return this;
   }
 
@@ -296,9 +296,9 @@ export class RaphaelContext {
   }
 
   fill() {
-    const elem = this.paper.path(this.path).
-      attr(this.attributes).
-      attr('stroke-width', 0);
+    const elem = this.paper.path(this.path)
+      .attr(this.attributes)
+      .attr('stroke-width', 0);
     this.glow(elem);
     return this;
   }
@@ -322,10 +322,10 @@ export class RaphaelContext {
     // canvascontext.js as well.
 
     const strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y) / 2;
-    const elem = this.paper.path(this.path).
-      attr(this.attributes).
-      attr('fill', 'none').
-      attr('stroke-width', strokeWidth);
+    const elem = this.paper.path(this.path)
+      .attr(this.attributes)
+      .attr('fill', 'none')
+      .attr('stroke-width', strokeWidth);
     this.glow(elem);
     return this;
   }
@@ -336,10 +336,10 @@ export class RaphaelContext {
   }
 
   measureText(text) {
-    const txt = this.paper.text(0, 0, text).
-      attr(this.attributes).
-      attr('fill', 'none').
-      attr('stroke', 'none');
+    const txt = this.paper.text(0, 0, text)
+      .attr(this.attributes)
+      .attr('fill', 'none')
+      .attr('stroke', 'none');
     const bounds = txt.getBBox();
     txt.remove();
 

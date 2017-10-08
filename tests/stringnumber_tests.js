@@ -6,381 +6,353 @@
 VF.Test.StringNumber = (function() {
   var StringNumber = {
     Start: function() {
-      var runTests = VF.Test.runTests;
-      QUnit.module("StringNumber");
-      runTests("String Number In Notation", StringNumber.drawMultipleMeasures);
-      runTests("Fret Hand Finger In Notation", StringNumber.drawFretHandFingers);
-      runTests("Multi Voice With Strokes, String & Finger Numbers", StringNumber.multi);
-      runTests("Complex Measure With String & Finger Numbers", StringNumber.drawAccidentals);
+      var run = VF.Test.runTests;
+
+      QUnit.module('StringNumber');
+
+      run('String Number In Notation', StringNumber.drawMultipleMeasures);
+      run('Fret Hand Finger In Notation', StringNumber.drawFretHandFingers);
+      run('Multi Voice With Strokes, String & Finger Numbers', StringNumber.multi);
+      run('Complex Measure With String & Finger Numbers', StringNumber.drawAccidentals);
     },
 
-    drawMultipleMeasures: function(options, contextBuilder) {
-      // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 750, 200);
-      function newStringNumber(num, pos) {
-        return new VF.StringNumber(num).setPosition(pos);
-      }
+    drawMultipleMeasures: function(options) {
+      var vf = VF.Test.makeFactory(options, 775, 200);
+      var score = vf.EasyScore();
 
       // bar 1
-      var staveBar1 = new VF.Stave(10, 50, 290);
-      staveBar1.setEndBarType(VF.Barline.type.DOUBLE);
-      staveBar1.addClef("treble").setContext(ctx).draw();
-      staveBar1.setContext(ctx).draw();
-      var notesBar1 = [
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: -1, duration: "q" }).addDotToAll(),
-        new VF.StaveNote({ keys: ["c/5", "e/5", "g/5"], stem_direction: -1, duration: "8" }),
-        new VF.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: -1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: -1, duration: "q" }),
-      ];
+      var stave1 = vf.Stave({ width: 300 })
+        .setEndBarType(VF.Barline.type.DOUBLE)
+        .addClef('treble');
 
-      notesBar1[0].
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.RIGHT)).
-        addModifier(1, newStringNumber("4", VF.Modifier.Position.LEFT)).
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.RIGHT));
+      var notes1 = score.notes(
+        '(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/4, (c4 f4 g4)/4',
+        { stem: 'down' }
+      );
 
-       notesBar1[1].
-        addAccidental(0, new VF.Accidental("#")).
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.BELOW)).
-        addAccidental(1, new VF.Accidental("#").setAsCautionary()).
-        addModifier(2, newStringNumber("3",VF.Modifier.Position.ABOVE).
-                                           setLastNote(notesBar1[3]).
-                                           setLineEndType(VF.Renderer.LineEndType.DOWN));
+      notes1[0]
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'right' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'left' }))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }));
 
-      notesBar1[2].
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.LEFT)).
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.LEFT)).
-        addAccidental(1, new VF.Accidental("#"));
+      notes1[1]
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'below' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }).setAsCautionary())
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'above' })
+        .setLastNote(notes1[3])
+        .setLineEndType(VF.Renderer.LineEndType.DOWN));
 
-      notesBar1[3].
-        // Position string 5 below default
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.RIGHT).setOffsetY(7)).
-        // Position string 4 below default
-        addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT).setOffsetY(6)).
-          // Position string 3 above default
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.RIGHT).setOffsetY(-6));
+      notes1[2]
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'left' }))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'left' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }));
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+      notes1[3]
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'right' }).setOffsetY(7))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }).setOffsetY(6))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6));
+
+      var voice1 = score.voice(notes1);
+
+      vf.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
 
       // bar 2 - juxtaposing second bar next to first bar
-      var staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
-      staveBar2.setEndBarType(VF.Barline.type.DOUBLE);
-      staveBar2.setContext(ctx).draw();
+      var stave2 = vf.Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 300 })
+        .setEndBarType(VF.Barline.type.DOUBLE);
 
-      var notesBar2 = [
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: 1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/5", "e/5", "g/5"], stem_direction: 1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: 1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: 1, duration: "q" }),
-      ];
+      var notes2 = score.notes(
+        '(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)',
+        { stem: 'up' }
+      );
 
-      notesBar2[0].
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.RIGHT)).
-        addModifier(1, newStringNumber("4", VF.Modifier.Position.LEFT)).
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.RIGHT));
+      notes2[0]
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'right' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'left' }))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }));
 
-      notesBar2[1].
-        addAccidental(0, new VF.Accidental("#")).
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.BELOW)).
-        addAccidental(1, new VF.Accidental("#")).
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.ABOVE).setLastNote(notesBar2[3]).setDashed(false));
+      notes2[1]
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'below' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'above' }).setLastNote(notes2[3]).setDashed(false));
 
-      notesBar2[2].
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.LEFT)).
-        addAccidental(1, new VF.Accidental("#"));
+      notes2[2]
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'left' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }));
 
-      notesBar2[3].
-        // Position string 5 below default
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.RIGHT).setOffsetY(7)).
-        // Position string 4 below default
-        addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT).setOffsetY(6)).
-        // Position string 5 above default
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.RIGHT).setOffsetY(-6));
+      notes2[3]
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'right' }).setOffsetY(7))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }).setOffsetY(6))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6));
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+      var voice2 = score.voice(notes2);
+
+      vf.Formatter()
+        .joinVoices([voice2])
+        .formatToStave([voice2], stave2);
 
       // bar 3 - juxtaposing third bar next to second bar
-      var staveBar3 = new VF.Stave(staveBar2.width + staveBar2.x, staveBar2.y, 150);
-      staveBar3.setEndBarType(VF.Barline.type.END);
-      staveBar3.setContext(ctx).draw();
+      var stave3 = vf.Stave({ x: stave2.width + stave2.x, y: stave2.y, width: 150 })
+        .setEndBarType(VF.Barline.type.END);
 
-      var notesBar3 = [
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4", "a/4"], duration: "w" }).addDotToAll(),
-      ];
+      var notesBar3 = score.notes('(c4 e4 g4 a4)/1.');
 
-      notesBar3[0].
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.BELOW)).
-        addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT)).
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.LEFT)).
-        addModifier(3, newStringNumber("2", VF.Modifier.Position.ABOVE));
+      notesBar3[0]
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'below' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'left' }))
+        .addModifier(3, vf.StringNumber({ number: '2', position: 'above' }));
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+      var voice3 = score.voice(notesBar3, { time: '6/4' });
 
-      ok(true, "String Number");
+      vf.Formatter()
+        .joinVoices([voice3])
+        .formatToStave([voice3], stave3);
+
+      vf.draw();
+
+      ok(true, 'String Number');
     },
 
-    drawFretHandFingers: function(options, contextBuilder) {
-      // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 600, 200);
-      function newFinger(num, pos) { return new VF.FretHandFinger(num).setPosition(pos); }
-      function newStringNumber(num, pos) { return new VF.StringNumber(num).setPosition(pos);}
+    drawFretHandFingers: function(options) {
+      var vf = VF.Test.makeFactory(options, 725, 200);
+      var score = vf.EasyScore();
 
       // bar 1
-      var staveBar1 = new VF.Stave(10, 50, 290);
-      staveBar1.setEndBarType(VF.Barline.type.DOUBLE);
-      staveBar1.addClef("treble").setContext(ctx).draw();
-      staveBar1.setContext(ctx).draw();
-      var notesBar1 = [
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: -1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/5", "e/5", "g/5"], stem_direction: -1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: -1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: -1, duration: "q" }),
-      ];
+      var stave1 = vf.Stave({ width: 350 })
+        .setEndBarType(VF.Barline.type.DOUBLE)
+        .addClef('treble');
 
-      notesBar1[0].
-        addModifier(0, newFinger("3", VF.Modifier.Position.LEFT)).
-        addModifier(1, newFinger("2", VF.Modifier.Position.LEFT)).
-        addModifier(2, newFinger("0", VF.Modifier.Position.LEFT));
+      var notes1 = score.notes(
+        '(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)',
+        { stem: 'down' }
+      );
 
-       notesBar1[1].
-        addAccidental(0, new VF.Accidental("#")).
-        addModifier(0, newFinger("3", VF.Modifier.Position.LEFT)).
-        addModifier(1, newFinger("2", VF.Modifier.Position.LEFT)).
-        addAccidental(1, new VF.Accidental("#")).
-        addModifier(2, newFinger("0", VF.Modifier.Position.LEFT));
+      notes1[0]
+        .addModifier(0, vf.Fingering({ number: '3', position: 'left' }))
+        .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'left' }));
 
-      notesBar1[2].
-        addModifier(0, newFinger("3", VF.Modifier.Position.BELOW)).
-        addModifier(1, newFinger("4", VF.Modifier.Position.LEFT)).
-        addModifier(1, newStringNumber("4", VF.Modifier.Position.LEFT)).
-        addModifier(2, newFinger("0", VF.Modifier.Position.ABOVE)).
-        addAccidental(1, new VF.Accidental("#"));
+      notes1[1]
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addModifier(0, vf.Fingering({ number: '3', position: 'left' }))
+        .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'left' }));
 
-      notesBar1[3].
-        addModifier(0, newFinger("3", VF.Modifier.Position.RIGHT)).
-        // Position string 5 below default
-        addModifier(0, newStringNumber("5", VF.Modifier.Position.RIGHT).setOffsetY(7)).
-        addModifier(1, newFinger("4", VF.Modifier.Position.RIGHT)).
-        // Position String 4 below default
-        addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT).setOffsetY(6)).
-        // Position finger 0 above default
-        addModifier(2, newFinger("0", VF.Modifier.Position.RIGHT).setOffsetY(-5)).
-        // Position string 3 above default
-        addModifier(2, newStringNumber("3", VF.Modifier.Position.RIGHT).setOffsetY(-6));
+      notes1[2]
+        .addModifier(0, vf.Fingering({ number: '3', position: 'below' }))
+        .addModifier(1, vf.Fingering({ number: '4', position: 'left' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'left' }))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'above' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }));
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+      notes1[3]
+        .addModifier(0, vf.Fingering({ number: '3', position: 'right' }))
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'right' }).setOffsetY(7))
+        .addModifier(1, vf.Fingering({ number: '4', position: 'right' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }).setOffsetY(6))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'right' }).setOffsetY(-5))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6));
 
+      var voice1 = score.voice(notes1);
+
+      vf.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
 
       // bar 2 - juxtaposing second bar next to first bar
-      var staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
-      staveBar2.setEndBarType(VF.Barline.type.END);
-      staveBar2.setContext(ctx).draw();
+      var stave2 = vf.Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 350 })
+        .setEndBarType(VF.Barline.type.END);
 
-      var notesBar2 = [
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4"], stem_direction: 1, duration: "q" }).addDotToAll(),
-        new VF.StaveNote({ keys: ["c/5", "e/5", "g/5"], stem_direction: 1, duration: "8" }),
-        new VF.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: 1, duration: "8" }),
-        new VF.StaveNote({ keys: ["c/4", "f/4", "g/4"], stem_direction: -1, duration: "q" }).addDotToAll(),
-      ];
+      var notes2 = score.notes(
+        '(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/8, (c4 f4 g4)/4.[stem="down"]',
+        { stem: 'up' }
+      );
 
-     notesBar2[0].
-      addModifier(0, newFinger("3", VF.Modifier.Position.RIGHT)).
-      addModifier(1, newFinger("2", VF.Modifier.Position.LEFT)).
-      addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT)).
-      addModifier(2, newFinger("0", VF.Modifier.Position.ABOVE));
+      notes2[0]
+        .addModifier(0, vf.Fingering({ number: '3', position: 'right' }))
+        .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'above' }));
 
-     notesBar2[1].
-      addAccidental(0, new VF.Accidental("#")).
-      addModifier(0, newFinger("3", VF.Modifier.Position.RIGHT)).
-      addModifier(1, newFinger("2", VF.Modifier.Position.LEFT)).
-      addAccidental(1, new VF.Accidental("#")).
-      addModifier(2, newFinger("0", VF.Modifier.Position.LEFT));
+      notes2[1]
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addModifier(0, vf.Fingering({ number: '3', position: 'right' }))
+        .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'left' }));
 
-    notesBar2[2].
-      addModifier(0, newFinger("3", VF.Modifier.Position.BELOW)).
-      addModifier(1, newFinger("2", VF.Modifier.Position.LEFT)).
-      addModifier(1, newStringNumber("4", VF.Modifier.Position.LEFT)).
-    //  addModifier(2, newFinger("1", VF.Modifier.Position.ABOVE)).
-      addModifier(2, newFinger("1", VF.Modifier.Position.RIGHT)).
-      addAccidental(2, new VF.Accidental("#"));
+      notes2[2]
+        .addModifier(0, vf.Fingering({ number: '3', position: 'below' }))
+        .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'left' }))
+        .addModifier(2, vf.Fingering({ number: '1', position: 'right' }))
+        .addAccidental(2, vf.Accidental({ type: '#' }));
 
-    notesBar2[3].
-      addModifier(0, newFinger("3", VF.Modifier.Position.RIGHT)).
-      // position string 5 below default
-      addModifier(0, newStringNumber("5", VF.Modifier.Position.RIGHT).setOffsetY(7)).
-      // position finger 4 below default
-      addModifier(1, newFinger("4", VF.Modifier.Position.RIGHT)).
-      // position string 4 below default
-      addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT).setOffsetY(6)).
-      // position finger 1 above default
-      addModifier(2, newFinger("1", VF.Modifier.Position.RIGHT).setOffsetY(-6)).
-      // position string 3 above default
-      addModifier(2, newStringNumber("3", VF.Modifier.Position.RIGHT).setOffsetY(-6));
+      notes2[3]
+        .addModifier(0, vf.Fingering({ number: '3', position: 'right' }))
+        .addModifier(0, vf.StringNumber({ number: '5', position: 'right' }).setOffsetY(7))
+        .addModifier(1, vf.Fingering({ number: '4', position: 'right' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }).setOffsetY(6))
+        .addModifier(2, vf.Fingering({ number: '1', position: 'right' }).setOffsetY(-6))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6));
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+      var voice2 = score.voice(notes2);
 
-      ok(true, "String Number");
+      vf.Formatter()
+        .joinVoices([voice2])
+        .formatToStave([voice2], stave2);
+
+      vf.draw();
+
+      ok(true, 'String Number');
     },
 
-    multi: function(options, contextBuilder) {
-      var c = new contextBuilder(options.canvas_sel, 700, 200);
-      function newNote(note_struct) { return new VF.StaveNote(note_struct); }
-      function newAcc(type) { return new VF.Accidental(type); }
-      function newFinger(num, pos) { return new VF.FretHandFinger(num).setPosition(pos); }
-      function newStringNumber(num, pos) { return new VF.StringNumber(num).setPosition(pos);}
-      var stave = new VF.Stave(50, 10, 600);
-      stave.setContext(c);
-      stave.draw();
+    multi: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 200);
+      var score = vf.EasyScore();
+      var stave = vf.Stave();
+
+      var notes1 = score.notes(
+        '(c4 e4 g4)/4, (a3 e4 g4), (c4 d4 a4), (c4 d4 a4)',
+        { stem: 'up' }
+      );
+
+      notes1[0]
+        .addStroke(0, new VF.Stroke(5))
+        .addModifier(0, vf.Fingering({ number: '3', position: 'left' }))
+        .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'left' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'left' }))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'above' }));
+
+      notes1[1]
+        .addStroke(0, new VF.Stroke(6))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'above' }))
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addAccidental(2, vf.Accidental({ type: '#' }));
+
+      notes1[2]
+        .addStroke(0, new VF.Stroke(2))
+        .addModifier(0, vf.Fingering({ number: '3', position: 'left' }))
+        .addModifier(1, vf.Fingering({ number: '0', position: 'right' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }))
+        .addModifier(2, vf.Fingering({ number: '1', position: 'left' }))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'right' }));
+
+      notes1[3]
+        .addStroke(0, new VF.Stroke(1))
+        .addModifier(2, vf.StringNumber({ number: '3', position: 'left' }))
+        .addModifier(1, vf.StringNumber({ number: '4', position: 'right' }));
+
+      var notes2 = score.notes('e3/8, e3, e3, e3, e3, e3, e3, e3', { stem: 'down' });
+
+      notes2[0]
+        .addModifier(0, vf.Fingering({ number: '0', position: 'left' }))
+        .addModifier(0, vf.StringNumber({ number: '6', position: 'below' }));
+
+      notes2[2]
+        .addAccidental(0, vf.Accidental({ type: '#' }));
+
+      notes2[4]
+        .addModifier(0, vf.Fingering({ number: '0', position: 'left' }));
+
+      // Position string number 6 beneath the strum arrow: left (15) and down (18)
+      notes2[4]
+        .addModifier(0, vf.StringNumber({ number: '6', position: 'left' }).setOffsetX(15).setOffsetY(18));
+
+      var voices = [notes1, notes2].map(score.voice.bind(score));
+
+      vf.Formatter()
+        .joinVoices(voices)
+        .formatToStave(voices, stave);
+
+      vf.Beam({ notes: notes2.slice(0, 4) });
+      vf.Beam({ notes: notes2.slice(4, 8) });
+
+      vf.draw();
+
+      ok(true, 'Strokes Test Multi Voice');
+    },
+
+    drawAccidentals: function(options) {
+      var vf = VF.Test.makeFactory(options, 500);
+
+      var stave = vf.Stave()
+        .setEndBarType(VF.Barline.type.DOUBLE)
+        .addClef('treble');
 
       var notes = [
-        newNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" }),
-        newNote({ keys: ["a/3", "e/4", "g/4"], duration: "q" }),
-        newNote({ keys: ["c/4", "d/4", "a/4"], duration: "q" }),
-        newNote({ keys: ["c/4", "d/4", "a/4"], duration: "q" })
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5', 'e/5', 'g/5'], stem_direction: 1, duration: '4' }),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'd/5', 'e/5', 'g/5'], stem_direction: 1, duration: '4' }),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'd/5', 'e/5', 'g/5'], stem_direction: -1, duration: '4' }),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'd/5', 'e/5', 'g/5'], stem_direction: -1, duration: '4' }),
       ];
-      // Create the strokes
-      var stroke1 = new VF.Stroke(5);
-      var stroke2 = new VF.Stroke(6);
-      var stroke3 = new VF.Stroke(2);
-      var stroke4 = new VF.Stroke(1);
-      notes[0].addStroke(0, stroke1);
-      notes[0].addModifier(0, newFinger("3", VF.Modifier.Position.LEFT));
-      notes[0].addModifier(1, newFinger("2", VF.Modifier.Position.LEFT));
-      notes[0].addModifier(2, newFinger("0", VF.Modifier.Position.LEFT));
-      notes[0].addModifier(1, newStringNumber("4", VF.Modifier.Position.LEFT));
-      notes[0].addModifier(2, newStringNumber("3", VF.Modifier.Position.ABOVE));
 
-      notes[1].addStroke(0, stroke2);
-      notes[1].addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT));
-      notes[1].addModifier(2, newStringNumber("3", VF.Modifier.Position.ABOVE));
-      notes[1].addAccidental(0, new VF.Accidental("#"));
-      notes[1].addAccidental(1, new VF.Accidental("#"));
-      notes[1].addAccidental(2, new VF.Accidental("#"));
+      notes[0]
+        .addModifier(0, vf.Fingering({ number: '3', position: 'left' }))
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
+        .addModifier(1, vf.StringNumber({ number: '2', position: 'left' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'left' }))
+        .addAccidental(2, vf.Accidental({ type: '#' }))
+        .addModifier(3, vf.Fingering({ number: '3', position: 'left' }))
+        .addAccidental(3, vf.Accidental({ type: '#' }))
+        .addModifier(4, vf.Fingering({ number: '2', position: 'right' }))
+        .addModifier(4, vf.StringNumber({ number: '3', position: 'right' }))
+        .addAccidental(4, vf.Accidental({ type: '#' }))
+        .addModifier(5, vf.Fingering({ number: '0', position: 'left' }))
+        .addAccidental(5, vf.Accidental({ type: '#' }));
 
-      notes[2].addStroke(0, stroke3);
-      notes[2].addModifier(0, newFinger("3", VF.Modifier.Position.LEFT));
-      notes[2].addModifier(1, newFinger("0", VF.Modifier.Position.RIGHT));
-      notes[2].addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT));
-      notes[2].addModifier(2, newFinger("1", VF.Modifier.Position.LEFT));
-      notes[2].addModifier(2, newStringNumber("3", VF.Modifier.Position.RIGHT));
+      notes[1]
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addAccidental(2, vf.Accidental({ type: '#' }))
+        .addAccidental(3, vf.Accidental({ type: '#' }))
+        .addAccidental(4, vf.Accidental({ type: '#' }))
+        .addAccidental(5, vf.Accidental({ type: '#' }));
 
-      notes[3].addStroke(0, stroke4);
-      notes[3].addModifier(2, newStringNumber("3", VF.Modifier.Position.LEFT));
-      notes[3].addModifier(1, newStringNumber("4", VF.Modifier.Position.RIGHT));
+      notes[2]
+        .addModifier(0, vf.Fingering({ number: '3', position: 'left' }))
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addModifier(1, vf.Fingering({ number: '2', position: 'left' }))
+        .addModifier(1, vf.StringNumber({ number: '2', position: 'left' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addModifier(2, vf.Fingering({ number: '0', position: 'left' }))
+        .addAccidental(2, vf.Accidental({ type: '#' }))
+        .addModifier(3, vf.Fingering({ number: '3', position: 'left' }))
+        .addAccidental(3, vf.Accidental({ type: '#' }))
+        .addModifier(4, vf.Fingering({ number: '2', position: 'right' }))
+        .addModifier(4, vf.StringNumber({ number: '3', position: 'right' }))
+        .addAccidental(4, vf.Accidental({ type: '#' }))
+        .addModifier(5, vf.Fingering({ number: '0', position: 'left' }))
+        .addAccidental(5, vf.Accidental({ type: '#' }));
 
-      var notes2 = [
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"}),
-        newNote({ keys: ["e/3"], stem_direction: -1, duration: "8"})
-      ];
-      notes2[0].addModifier(0, newFinger("0", VF.Modifier.Position.LEFT));
-      notes2[0].addModifier(0, newStringNumber("6", VF.Modifier.Position.BELOW));
-      notes2[2].addAccidental(0, new VF.Accidental("#"));
-      notes2[4].addModifier(0, newFinger("0", VF.Modifier.Position.LEFT));
-      // Position string number 6 beneath the strum arrow: left (15) and down (18)
-      notes2[4].addModifier(0, newStringNumber("6", VF.Modifier.Position.LEFT).
-                                   setOffsetX(15).
-                                   setOffsetY(18));
+      notes[3]
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addAccidental(2, vf.Accidental({ type: '#' }))
+        .addAccidental(3, vf.Accidental({ type: '#' }))
+        .addAccidental(4, vf.Accidental({ type: '#' }))
+        .addAccidental(5, vf.Accidental({ type: '#' }));
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-      var voice2 = new VF.Voice(VF.Test.TIME4_4);
-      voice.addTickables(notes);
-      voice2.addTickables(notes2);
+      var voice = vf.Voice().addTickables(notes);
 
-      var formatter = new VF.Formatter().joinVoices([voice, voice2]).
-        format([voice, voice2], 550);
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
-      var beam2_1 = new VF.Beam(notes2.slice(0, 4));
-      var beam2_2 = new VF.Beam(notes2.slice(4, 8));
+      vf.draw();
 
-      voice2.draw(c, stave);
-      beam2_1.setContext(c).draw();
-      beam2_2.setContext(c).draw();
-      voice.draw(c, stave);
-
-      ok(true, "Strokes Test Multi Voice");
+      ok(true, 'String Number');
     },
-
-    drawAccidentals: function(options, contextBuilder) {
-      // Get the rendering context
-      var ctx = contextBuilder(options.canvas_sel, 800, 200);
-      function newFinger(num, pos) { return new VF.FretHandFinger(num).setPosition(pos); }
-      function newStringNumber(num, pos) { return new VF.StringNumber(num).setPosition(pos);}
-
-      // bar 1
-      var staveBar1 = new VF.Stave(10, 50, 475);
-      staveBar1.setEndBarType(VF.Barline.type.DOUBLE);
-      staveBar1.addClef("treble").setContext(ctx).draw();
-      staveBar1.setContext(ctx).draw();
-      var notesBar1 = [
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4", "c/5", "e/5", "g/5"], stem_direction: 1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4", "d/5", "e/5", "g/5"], stem_direction: 1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4", "d/5", "e/5", "g/5"], stem_direction: -1, duration: "q" }),
-        new VF.StaveNote({ keys: ["c/4", "e/4", "g/4", "d/5", "e/5", "g/5"], stem_direction: -1, duration: "q" }),
-      ];
-
-      notesBar1[0].
-        addModifier(0, newFinger("3", VF.Modifier.Position.LEFT)).
-        addAccidental(0, new VF.Accidental("#")).
-        addModifier(1, newFinger("2", VF.Modifier.Position.LEFT)).
-        addModifier(1, newStringNumber("2", VF.Modifier.Position.LEFT)).
-        addAccidental(1, new VF.Accidental("#")).
-        addModifier(2, newFinger("0", VF.Modifier.Position.LEFT)).
-        addAccidental(2, new VF.Accidental("#")).
-        addModifier(3, newFinger("3", VF.Modifier.Position.LEFT)).
-        addAccidental(3, new VF.Accidental("#")).
-        addModifier(4, newFinger("2", VF.Modifier.Position.RIGHT)).
-        addModifier(4, newStringNumber("3", VF.Modifier.Position.RIGHT)).
-        addAccidental(4, new VF.Accidental("#")).
-        addModifier(5, newFinger("0", VF.Modifier.Position.LEFT)).
-        addAccidental(5, new VF.Accidental("#"));
-
-      notesBar1[1].
-        addAccidental(0, new VF.Accidental("#")).
-        addAccidental(1, new VF.Accidental("#")).
-        addAccidental(2, new VF.Accidental("#")).
-        addAccidental(3, new VF.Accidental("#")).
-        addAccidental(4, new VF.Accidental("#")).
-        addAccidental(5, new VF.Accidental("#"));
-
-      notesBar1[2].
-        addModifier(0, newFinger("3", VF.Modifier.Position.LEFT)).
-        addAccidental(0, new VF.Accidental("#")).
-        addModifier(1, newFinger("2", VF.Modifier.Position.LEFT)).
-        addModifier(1, newStringNumber("2", VF.Modifier.Position.LEFT)).
-        addAccidental(1, new VF.Accidental("#")).
-        addModifier(2, newFinger("0", VF.Modifier.Position.LEFT)).
-        addAccidental(2, new VF.Accidental("#")).
-        addModifier(3, newFinger("3", VF.Modifier.Position.LEFT)).
-        addAccidental(3, new VF.Accidental("#")).
-        addModifier(4, newFinger("2", VF.Modifier.Position.RIGHT)).
-        addModifier(4, newStringNumber("3", VF.Modifier.Position.RIGHT)).
-        addAccidental(4, new VF.Accidental("#")).
-        addModifier(5, newFinger("0", VF.Modifier.Position.LEFT)).
-        addAccidental(5, new VF.Accidental("#"));
-
-      notesBar1[3].
-        addAccidental(0, new VF.Accidental("#")).
-        addAccidental(1, new VF.Accidental("#")).
-        addAccidental(2, new VF.Accidental("#")).
-        addAccidental(3, new VF.Accidental("#")).
-        addAccidental(4, new VF.Accidental("#")).
-        addAccidental(5, new VF.Accidental("#"));
-
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
-
-      ok(true, "String Number");
-    }
   };
 
   return StringNumber;

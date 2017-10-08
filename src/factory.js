@@ -14,11 +14,13 @@ import { Articulation } from './articulation';
 import { Annotation } from './annotation';
 import { Formatter } from './formatter';
 import { FretHandFinger } from './frethandfinger';
+import { StringNumber } from './stringnumber';
 import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
 import { StaveTie } from './stavetie';
+import { StaveLine } from './staveline';
 import { StaveNote } from './stavenote';
 import { StaveConnector } from './staveconnector';
 import { System } from './system';
@@ -29,7 +31,18 @@ import { Beam } from './beam';
 import { Curve } from './curve';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
+import { NoteSubGroup } from './notesubgroup';
 import { EasyScore } from './easyscore';
+import { TimeSigNote } from './timesignote';
+import { ClefNote } from './clefnote';
+import { PedalMarking } from './pedalmarking';
+import { TextBracket } from './textbracket';
+import { VibratoBracket } from './vibratobracket';
+import { GhostNote } from './ghostnote';
+import { BarNote } from './barnote';
+import { TabNote } from './tabnote';
+import { TabStave } from './tabstave';
+import { TextNote } from './textnote';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
@@ -52,7 +65,7 @@ export class Factory {
       },
       renderer: {
         context: null,
-        selector: '',
+        elementId: '',
         backend: Renderer.Backends.SVG,
         width: 500,
         height: 200,
@@ -69,8 +82,8 @@ export class Factory {
     this.setOptions(options);
   }
 
-  static newFromSelector(selector, width = 500, height = 200) {
-    return new Factory({ renderer: { selector, width, height } });
+  static newFromElementId(elementId, width = 500, height = 200) {
+    return new Factory({ renderer: { elementId, width, height } });
   }
 
   reset() {
@@ -86,7 +99,7 @@ export class Factory {
     for (const key of ['stave', 'renderer', 'font']) {
       Object.assign(this.options[key], options[key]);
     }
-    if (this.options.renderer.selector !== null || this.options.renderer.context) {
+    if (this.options.renderer.elementId !== null || this.options.renderer.context) {
       this.initRenderer();
     }
 
@@ -94,17 +107,18 @@ export class Factory {
   }
 
   initRenderer() {
-    const { selector, backend, width, height, background } = this.options.renderer;
-    if (selector === '') {
+    const { elementId, backend, width, height, background } = this.options.renderer;
+    if (elementId === '') {
       throw new X('HTML DOM element not set in Factory');
     }
 
-    this.context = Renderer.buildContext(selector, backend, width, height, background);
+    this.context = Renderer.buildContext(elementId, backend, width, height, background);
   }
 
   getContext() { return this.context; }
   setContext(context) { this.context = context; return this; }
   getStave() { return this.stave; }
+  getVoices() { return this.voices; }
 
   // Returns pixels from current stave spacing.
   space(spacing) { return this.options.stave.space * spacing; }
@@ -126,8 +140,90 @@ export class Factory {
     return stave;
   }
 
+  TabStave(params) {
+    params = setDefaults(params, {
+      x: 0,
+      y: 0,
+      width: this.options.renderer.width - this.space(1),
+      options: {
+        spacing_between_lines_px: this.options.stave.space * 1.3,
+      },
+    });
+
+    const stave = new TabStave(params.x, params.y, params.width, params.options);
+    this.staves.push(stave);
+    stave.setContext(this.context);
+    this.stave = stave;
+    return stave;
+  }
+
   StaveNote(noteStruct) {
     const note = new StaveNote(noteStruct);
+    if (this.stave) note.setStave(this.stave);
+    note.setContext(this.context);
+    this.renderQ.push(note);
+    return note;
+  }
+
+  GhostNote(noteStruct) {
+    const ghostNote = new GhostNote(noteStruct);
+    if (this.stave) ghostNote.setStave(this.stave);
+    ghostNote.setContext(this.context);
+    this.renderQ.push(ghostNote);
+    return ghostNote;
+  }
+
+  TextNote(textNoteStruct) {
+    const textNote = new TextNote(textNoteStruct);
+    if (this.stave) textNote.setStave(this.stave);
+    textNote.setContext(this.context);
+    this.renderQ.push(textNote);
+    return textNote;
+  }
+
+  BarNote(params) {
+    params = setDefaults(params, {
+      type: 'single',
+      options: {},
+    });
+
+    const barNote = new BarNote(params.type);
+    if (this.stave) barNote.setStave(this.stave);
+    barNote.setContext(this.context);
+    this.renderQ.push(barNote);
+    return barNote;
+  }
+
+  ClefNote(params) {
+    params = setDefaults(params, {
+      type: 'treble',
+      options: {
+        size: 'default',
+      },
+    });
+
+    const clefNote = new ClefNote(params.type, params.options.size, params.options.annotation);
+    if (this.stave) clefNote.setStave(this.stave);
+    clefNote.setContext(this.context);
+    this.renderQ.push(clefNote);
+    return clefNote;
+  }
+
+  TimeSigNote(params) {
+    params = setDefaults(params, {
+      time: '4/4',
+      options: {},
+    });
+
+    const timeSigNote = new TimeSigNote(params.time);
+    if (this.stave) timeSigNote.setStave(this.stave);
+    timeSigNote.setContext(this.context);
+    this.renderQ.push(timeSigNote);
+    return timeSigNote;
+  }
+
+  TabNote(noteStruct) {
+    const note = new TabNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
     this.renderQ.push(note);
@@ -205,7 +301,10 @@ export class Factory {
       duration: params.duration,
       dots: params.dots,
     });
+
+    if (this.stave) text.setStave(this.stave);
     text.setContext(this.context);
+    this.renderQ.push(text);
     return text;
   }
 
@@ -220,6 +319,19 @@ export class Factory {
     fingering.setPosition(params.position);
     fingering.setContext(this.context);
     return fingering;
+  }
+
+  StringNumber(params) {
+    params = setDefaults(params, {
+      number: '0',
+      position: 'left',
+      options: {},
+    });
+
+    const stringNumber = new StringNumber(params.number);
+    stringNumber.setPosition(params.position);
+    stringNumber.setContext(this.context);
+    return stringNumber;
   }
 
   TickContext() {
@@ -273,10 +385,12 @@ export class Factory {
       notes: [],
       options: {
         autoStem: false,
+        secondaryBeamBreaks: [],
       },
     });
 
     const beam = new Beam(params.notes, params.options.autoStem).setContext(this.context);
+    beam.breakSecondaryAt(params.options.secondaryBeamBreaks);
     this.renderQ.push(beam);
     return beam;
   }
@@ -300,7 +414,9 @@ export class Factory {
       first_indices: [0],
       last_indices: [0],
       text: null,
-      options: {},
+      options: {
+        direction: undefined,
+      },
     });
 
     const tie = new StaveTie({
@@ -308,9 +424,86 @@ export class Factory {
       last_note: params.to,
       first_indices: params.first_indices,
       last_indices: params.last_indices,
-    }, params.text).setContext(this.context);
+    }, params.text);
+
+    if (params.options.direction) tie.setDirection(params.options.direction);
+    tie.setContext(this.context);
     this.renderQ.push(tie);
     return tie;
+  }
+
+  StaveLine(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      first_indices: [0],
+      last_indices: [0],
+      options: {},
+    });
+
+    const line = new StaveLine({
+      first_note: params.from,
+      last_note: params.to,
+      first_indices: params.first_indices,
+      last_indices: params.last_indices,
+    });
+
+    if (params.options.text) line.setText(params.options.text);
+    if (params.options.font) line.setFont(params.options.font);
+
+    line.setContext(this.context);
+    this.renderQ.push(line);
+    return line;
+  }
+
+  VibratoBracket(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      options: {
+        harsh: false,
+      },
+    });
+
+    const vibratoBracket = new VibratoBracket({
+      start: params.from,
+      stop: params.to,
+    });
+
+    if (params.options.line) vibratoBracket.setLine(params.options.line);
+    if (params.options.harsh) vibratoBracket.setHarsh(params.options.harsh);
+
+    vibratoBracket.setContext(this.context);
+    this.renderQ.push(vibratoBracket);
+
+    return vibratoBracket;
+  }
+
+  TextBracket(params) {
+    params = setDefaults(params, {
+      from: null,
+      to: null,
+      text: '',
+      options: {
+        superscript: '',
+        position: 1,
+      },
+    });
+
+    const textBracket = new TextBracket({
+      start: params.from,
+      stop: params.to,
+      text: params.text,
+      superscript: params.options.superscript,
+      position: params.options.position,
+    });
+
+    if (params.options.line) textBracket.setLine(params.options.line);
+    if (params.options.font) textBracket.setFont(params.options.font);
+
+    textBracket.setContext(this.context);
+    this.renderQ.push(textBracket);
+    return textBracket;
   }
 
   System(params = {}) {
@@ -323,6 +516,32 @@ export class Factory {
   EasyScore(params = {}) {
     params.factory = this;
     return new EasyScore(params);
+  }
+
+  PedalMarking(params = {}) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {
+        style: 'mixed',
+      },
+    });
+
+    const pedal = new PedalMarking(params.notes);
+    pedal.setStyle(PedalMarking.StylesString[params.options.style]);
+    pedal.setContext(this.context);
+    this.renderQ.push(pedal);
+    return pedal;
+  }
+
+  NoteSubGroup(params = {}) {
+    params = setDefaults(params, {
+      notes: [],
+      options: {},
+    });
+
+    const group = new NoteSubGroup(params.notes);
+    group.setContext(this.context);
+    return group;
   }
 
   draw() {
