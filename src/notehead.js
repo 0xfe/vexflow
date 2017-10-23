@@ -200,7 +200,13 @@ export class NoteHead extends Note {
 
     if (this.note_type === 's') {
       const staveSpace = this.stave.getSpacingBetweenLines();
-      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
+      if (this.style) {
+        this.applyStyle(ctx);
+        drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
+        this.restoreStyle(ctx);
+      } else {
+        drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
+      }
     } else {
       if (this.style) {
         this.applyStyle(ctx);
