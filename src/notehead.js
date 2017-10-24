@@ -198,23 +198,19 @@ export class NoteHead extends Note {
     const stem_direction = this.stem_direction;
     const glyph_font_scale = this.render_options.glyph_font_scale;
 
+    if (this.style) {
+      this.applyStyle(ctx);
+    }
+
     if (this.note_type === 's') {
       const staveSpace = this.stave.getSpacingBetweenLines();
-      if (this.style) {
-        this.applyStyle(ctx);
-        drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
-        this.restoreStyle(ctx);
-      } else {
-        drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
-      }
+      drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
-      if (this.style) {
-        this.applyStyle(ctx);
-        Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
-        this.restoreStyle(ctx);
-      } else {
-        Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
-      }
+      Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code);
+    }
+
+    if (this.style) {
+      this.restoreStyle(ctx);
     }
   }
 }
