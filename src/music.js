@@ -228,7 +228,7 @@ export class Music {
   getIntervalValue(intervalString) {
     const value = Music.intervals[intervalString];
     if (value == null) {
-      throw new Vex.RERR('BadArguments', 'Invalid interval name: ${intervalString}');
+      throw new Vex.RERR('BadArguments', `Invalid interval name: ${intervalString}`);
     }
 
     return value;
