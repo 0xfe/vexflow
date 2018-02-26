@@ -30,3 +30,5 @@ npm-debug.log
 #eclipse
 .project
 .settings/
+
+package-lock.json

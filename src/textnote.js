@@ -260,7 +260,7 @@ export class TextNote extends Note {
       );
     } else {
       y = this.stave.getYForLine(this.line + -3);
-      ctx.save();
+      this.applyStyle(ctx);
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.text, x, y);
 
@@ -281,7 +281,7 @@ export class TextNote extends Note {
         ctx.fillText(this.subscript, x + width + 2, y + (height / 2.2) - 1);
       }
 
-      ctx.restore();
+      this.restoreStyle(ctx);
     }
   }
 }
