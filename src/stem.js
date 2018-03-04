@@ -152,6 +152,7 @@ export class Stem extends Element {
     ctx.moveTo(stem_x, stem_y - stemletYOffset);
     ctx.lineTo(stem_x, stem_y - stemHeight - (this.renderHeightAdjustment * stem_direction));
     ctx.stroke();
+    this.restoreStyle(ctx);
     ctx.restore();
   }
 }
