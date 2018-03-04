@@ -30,10 +30,10 @@ VF.Test.StaveNote = (function() {
       runTests('Displacements', StaveNote.displacements);
       runTests('StaveNote Draw - Bass 2', StaveNote.drawBass);
       runTests('StaveNote Draw - Key Styles', StaveNote.drawKeyStyles);
-      runTests('StaveNote Draw - StaveNote Styles', StaveNote.drawNoteStyles);
       runTests('StaveNote Draw - StaveNote Stem Styles', StaveNote.drawNoteStemStyles);
       runTests('StaveNote Draw - StaveNote Flag Styles', StaveNote.drawNoteStylesWithFlag);
-      runTests('StaveNote Draw - Beam, Stem & Ledger Line Styles', StaveNote.drawBeamStyles);
+      runTests('StaveNote Draw - StaveNote Styles', StaveNote.drawNoteStyles);
+      runTests('Stave, Ledger Line, Beam, Stem and Flag Styles', StaveNote.drawBeamStyles);
       runTests('Flag and Dot Placement - Stem Up', StaveNote.dotsAndFlagsStemUp);
       runTests('Flag and Dots Placement - Stem Down', StaveNote.dotsAndFlagsStemDown);
       runTests('Beam and Dot Placement - Stem Up', StaveNote.dotsAndBeamsUp);
@@ -584,7 +584,7 @@ VF.Test.StaveNote = (function() {
       var stave = new VF.Stave(10, 0, 100);
       ctx.scale(3, 3);
 
-      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
+      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: '8' })
         .setStave(stave)
         .addAccidental(1, new VF.Accidental('b'));
 
@@ -633,7 +633,7 @@ VF.Test.StaveNote = (function() {
         .setStave(stave)
         .addAccidental(1, new VF.Accidental('b'));
 
-      note.setStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
+      note.setFlagStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
       new VF.TickContext()
         .addTickable(note)
@@ -710,7 +710,7 @@ VF.Test.StaveNote = (function() {
         shadowColor: 'blue',
       });
 
-      staveNotes[9].setLedgerLineStyle({ fillStyle: 'red', strokeStyle: 'red', lineWidth: 1 });
+      staveNotes[9].setLedgerLineStyle({ fillStyle: 'lawngreen', strokeStyle: 'lawngreen', lineWidth: 1 });
       staveNotes[9].setFlagStyle({ fillStyle: 'orange', strokeStyle: 'orange' });
 
       VF.Formatter.FormatAndDraw(ctx, stave, staveNotes, false);
