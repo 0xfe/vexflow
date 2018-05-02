@@ -72,7 +72,7 @@ export class Dot extends Modifier {
       }
 
       // convert half_shiftY to a multiplier for dots.draw()
-      dot.dot_shiftY = -half_shiftY;
+      dot.dot_shiftY += -half_shiftY;
       prev_dotted_space = line + half_shiftY;
 
       dot.setXShift(dot_shift);
