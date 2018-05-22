@@ -1,14 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
-//
-// ## Description
-//
-// This file implements a generic base class for VexFlow, with implementations
-// of general functions and properties that can be inherited by all VexFlow elements.
 
 import { Vex } from './vex';
 import { Registry } from './registry';
 
+/**
+* This file implements a generic base class for VexFlow, with implementations
+* of general functions and properties that can be inherited by all VexFlow elements.
+*/
 export class Element {
   static newID() { return 'auto' + (Element.ID++); }
 
@@ -30,11 +29,11 @@ export class Element {
     }
   }
 
-  // set the draw style of a stemmable note:
+  /** set the draw style of a stemmable note: */
   setStyle(style) { this.style = style; return this; }
   getStyle() { return this.style; }
 
-  // Apply current style to Canvas `context`
+  /** Apply current style to Canvas `context` */
   applyStyle(context = this.context, style = this.getStyle()) {
     if (!style) return this;
 

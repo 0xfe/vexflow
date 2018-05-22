@@ -1,13 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+import { Vex } from './vex';
+import { Element } from './element';
+import { Formatter } from './formatter';
+import { Glyph } from './glyph';
+import { Stem } from './stem';
 
 /**
- * ## Description
- *
  * Create a new tuplet from the specified notes. The notes must
  * be part of the same voice. If they are of different rhythmic
  * values, then options.num_notes must be set.
- *
- * @constructor
  * @param {Array.<Vex.Flow.StaveNote>} A set of notes: staveNotes,
  *   notes, etc... any class that inherits stemmableNote at some
  *   point in its prototype chain.
@@ -43,13 +44,6 @@
  *     with articulations, etc...
  * }
  */
-
-import { Vex } from './vex';
-import { Element } from './element';
-import { Formatter } from './formatter';
-import { Glyph } from './glyph';
-import { Stem } from './stem';
-
 export class Tuplet extends Element {
   static get LOCATION_TOP() {
     return 1;
@@ -207,9 +201,11 @@ export class Tuplet extends Element {
     }
   }
 
-  // determine how many tuplets are nested within this tuplet
-  // on the same side (above/below), to calculate a y
-  // offset for this tuplet:
+  /**
+   * determine how many tuplets are nested within this tuplet
+   * on the same side (above/below), to calculate a y
+   * offset for this tuplet:
+   */
   getNestedTupletCount() {
     const location = this.location;
     const first_note = this.notes[0];
@@ -231,7 +227,7 @@ export class Tuplet extends Element {
     return maxTupletCount - minTupletCount;
   }
 
-  // determine the y position of the tuplet:
+  /** determine the y position of the tuplet: */
   getYPosition() {
     // offset the tuplet for any nested tuplets between
     // it and the notes:

@@ -2,8 +2,6 @@
 //
 // ## Description
 //
-// This file implements text annotations as modifiers that can be attached to
-// notes.
 //
 // See `tests/annotation_tests.js` for usage examples.
 
@@ -14,10 +12,20 @@ import { Modifier } from './modifier';
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
 function L(...args) { if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args); }
 
+/**
+ * This file implements text annotations as modifiers that can be attached to
+ * notes.
+ *
+ * Annotations inherit from {@link Modifier} and is positioned correctly when
+ * in a {@link ModifierContext}.
+ * Create a new `Annotation` with the string `text`.
+ *
+ * @param {string} text
+ */
 export class Annotation extends Modifier {
   static get CATEGORY() { return 'annotations'; }
 
-  // Text annotations can be positioned and justified relative to the note.
+  /** Text annotations can be positioned and justified relative to the note. */
   static get Justify() {
     return {
       LEFT: 1,
@@ -56,7 +64,7 @@ export class Annotation extends Modifier {
     };
   }
 
-  // Arrange annotations within a `ModifierContext`
+  /** Arrange annotations within a `ModifierContext` */
   static format(annotations, state) {
     if (!annotations || annotations.length === 0) return false;
 
@@ -78,11 +86,6 @@ export class Annotation extends Modifier {
     return true;
   }
 
-  // ## Prototype Methods
-  //
-  // Annotations inherit from `Modifier` and is positioned correctly when
-  // in a `ModifierContext`.
-  // Create a new `Annotation` with the string `text`.
   constructor(text) {
     super();
     this.setAttribute('type', 'Annotation');
@@ -104,14 +107,16 @@ export class Annotation extends Modifier {
 
   getCategory() { return Annotation.CATEGORY; }
 
-  // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
+  /** Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`. */
   setFont(family, size, weight) {
     this.font = { family, size, weight };
     return this;
   }
 
-  // Set vertical position of text (above or below stave). `just` must be
-  // a value in `Annotation.VerticalJustify`.
+    /**
+  * Set vertical position of text (above or below stave). `just` must be
+  * a value in `Annotation.VerticalJustify`.
+  */
   setVerticalJustification(just) {
     this.vert_justification = typeof(just) === 'string'
       ? Annotation.VerticalJustifyString[just]
@@ -119,8 +124,10 @@ export class Annotation extends Modifier {
     return this;
   }
 
-  // Get and set horizontal justification. `justification` is a value in
-  // `Annotation.Justify`.
+    /**
+  * Get and set horizontal justification. `justification` is a value in
+  * `Annotation.Justify`.
+  */
   getJustification() { return this.justification; }
   setJustification(just) {
     this.justification = typeof(just) === 'string'
@@ -129,7 +136,7 @@ export class Annotation extends Modifier {
     return this;
   }
 
-  // Render text beside the note.
+  /** Render text beside the note. */
   draw() {
     this.checkContext();
 

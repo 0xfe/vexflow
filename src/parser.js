@@ -19,19 +19,25 @@ function flattenMatches(results) {
   return results.map(flattenMatches);
 }
 
-// This is the base parser class. Given an arbitrary context-free grammar, it
-// can parse any line and execute code when specific rules are met (e.g.,
-// when a string is terminated.)
+/**
+ * This is the base parser class. Given an arbitrary context-free grammar, it
+ * can parse any line and execute code when specific rules are met (e.g.,
+ * when a string is terminated.)
+ */
 export class Parser {
-  // For an example of a simple grammar, take a look at tests/parser_tests.js or
-  // the EasyScore grammar in easyscore.js.
+  /**
+   * For an example of a simple grammar, take a look at tests/parser_tests.js or
+   * the EasyScore grammar in easyscore.js.
+   */
   constructor(grammar) {
     this.grammar = grammar;
   }
 
-  // Parse `line` using current grammar. Returns {success: true} if the
-  // line parsed correctly, otherwise returns `{success: false, errorPos: N}`
-  // where `errorPos` is the location of the error in the string.
+  /**
+   * Parse `line` using current grammar. Returns {success: true} if the
+   * line parsed correctly, otherwise returns `{success: false, errorPos: N}`
+   * where `errorPos` is the location of the error in the string.
+   */
   parse(line) {
     this.line = line;
     this.pos = 0;

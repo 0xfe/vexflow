@@ -1,7 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// This class implements a parser for a simple language to generate
-// VexFlow objects.
 
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
@@ -12,6 +10,7 @@ import { Articulation } from './articulation';
 function L(...args) { if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args); }
 
 export const X = Vex.MakeException('EasyScoreError');
+
 
 class Grammar {
   constructor(builder) {
@@ -288,6 +287,10 @@ function setClass(options, note) {
     .forEach(className => note.addClass(className));
 }
 
+/**
+* This class implements a parser for a simple language to generate
+* VexFlow objects.
+*/
 export class EasyScore {
   constructor(options = {}) {
     this.setOptions(options);

@@ -1,12 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This class implements diatonic key management.
-
 import { Vex } from './vex';
 import { Music } from './music';
 
+/** This class implements diatonic key management. */
 export class KeyManager {
   constructor(key) {
     this.music = new Music();

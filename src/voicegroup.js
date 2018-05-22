@@ -2,7 +2,7 @@
 
 import { Vex } from './vex';
 
-/** @constructor */
+/**  */
 export class VoiceGroup {
   constructor() {
     this.voices = [];

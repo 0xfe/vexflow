@@ -6,9 +6,7 @@
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 
-/**
- * @constructor
- */
+/** */
 export class FretHandFinger extends Modifier {
   static get CATEGORY() { return 'frethandfinger'; }
 

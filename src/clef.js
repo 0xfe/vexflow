@@ -3,7 +3,6 @@
 //
 // ## Description
 //
-// This file implements various types of clefs that can be rendered on a stave.
 //
 // See `tests/clef_tests.js` for usage examples.
 
@@ -14,6 +13,7 @@ import { Glyph } from './glyph';
 // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
 function L(...args) { if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', args); }
 
+/** This file implements various types of clefs that can be rendered on a stave. */
 export class Clef extends StaveModifier {
   static get CATEGORY() { return 'clefs'; }
 

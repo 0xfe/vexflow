@@ -3,9 +3,7 @@
 //
 // ## Description
 //
-// This file implements articulations and accents as modifiers that can be
-// attached to notes. The complete list of articulations is available in
-// `tables.js` under `Vex.Flow.articulationCodes`.
+
 //
 // See `tests/articulation_tests.js` for usage examples.
 
@@ -143,26 +141,33 @@ const getInitialOffset = (note, position) => {
   }
 };
 
+/**
+* This file implements articulations and accents as modifiers that can be
+* attached to notes. The complete list of articulations is available in
+* `tables.js` under `Vex.Flow.articulationCodes`.
+*/
 export class Articulation extends Modifier {
   static get CATEGORY() { return 'articulations'; }
   static get INITIAL_OFFSET() { return -0.5; }
 
-  // FIXME:
-  // Most of the complex formatting logic (ie: snapping to space) is
-  // actually done in .render(). But that logic belongs in this method.
-  //
-  // Unfortunately, this isn't possible because, by this point, stem lengths
-  // have not yet been finalized. Finalized stem lengths are required to determine the
-  // initial position of any stem-side articulation.
-  //
-  // This indicates that all objects should have their stave set before being
-  // formatted. It can't be an optional if you want accurate vertical positioning.
-  // Consistently positioned articulations that play nice with other modifiers
-  // won't be possible until we stop relying on render-time formatting.
-  //
-  // Ideally, when this function has completed, the vertical articulation positions
-  // should be ready to render without further adjustment. But the current state
-  // is far from this ideal.
+    /**
+  * FIXME:
+  * Most of the complex formatting logic (ie: snapping to space) is
+  * actually done in .render(). But that logic belongs in this method.
+  *
+  * Unfortunately, this isn't possible because, by this point, stem lengths
+  * have not yet been finalized. Finalized stem lengths are required to determine the
+  * initial position of any stem-side articulation.
+  *
+  * This indicates that all objects should have their stave set before being
+  * formatted. It can't be an optional if you want accurate vertical positioning.
+  * Consistently positioned articulations that play nice with other modifiers
+  * won't be possible until we stop relying on render-time formatting.
+  *
+  * Ideally, when this function has completed, the vertical articulation positions
+  * should be ready to render without further adjustment. But the current state
+  * is far from this ideal.
+  */
   static format(articulations, state) {
     if (!articulations || articulations.length === 0) return false;
 
@@ -217,8 +222,6 @@ export class Articulation extends Modifier {
       .map(artic => note.addModifier(0, artic));
   }
 
-  // Create a new articulation of type `type`, which is an entry in
-  // `Vex.Flow.articulationCodes` in `tables.js`.
   constructor(type) {
     super();
     this.setAttribute('type', 'Articulation');
@@ -243,7 +246,7 @@ export class Articulation extends Modifier {
 
   getCategory() { return Articulation.CATEGORY; }
 
-  // Render articulation in position next to note.
+  /** Render articulation in position next to note. */
   draw() {
     const {
       note, index, position, glyph,

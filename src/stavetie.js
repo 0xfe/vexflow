@@ -1,15 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// ## Description
-// This class implements varies types of ties between contiguous notes. The
-// ties include: regular ties, hammer ons, pull offs, and slides.
 
 import { Vex } from './vex';
 import { Element } from './element';
 
+/**
+ * This class implements varies types of ties between contiguous notes. The
+ * ties include: regular ties, hammer ons, pull offs, and slides.
+ */
 export class StaveTie extends Element {
   constructor(notes, text) {
-    /**
+    /*
      * Notes is a struct that has:
      *
      *  {

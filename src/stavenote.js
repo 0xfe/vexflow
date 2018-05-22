@@ -45,15 +45,14 @@ function centerRest(rest, noteU, noteL) {
   rest.minLine -= delta;
 }
 
+/** A Stave note */
 export class StaveNote extends StemmableNote {
   static get CATEGORY() { return 'stavenotes'; }
   static get STEM_UP() { return Stem.UP; }
   static get STEM_DOWN() { return Stem.DOWN; }
   static get DEFAULT_LEDGER_LINE_OFFSET() { return 3; }
 
-  // ## Static Methods
-  //
-  // Format notes inside a ModifierContext.
+  /** Format notes inside a ModifierContext. */
   static format(notes, state) {
     if (!notes || notes.length < 2) return false;
 
@@ -725,8 +724,10 @@ export class StaveNote extends StemmableNote {
     };
   }
 
-  // Sets the style of the complete StaveNote, including all keys
-  // and the stem.
+  /**
+   * Sets the style of the complete StaveNote, including all keys
+   * and the stem.
+   */
   setStyle(style) {
     super.setStyle(style);
     this.note_heads.forEach(notehead => notehead.setStyle(style));
@@ -745,10 +746,12 @@ export class StaveNote extends StemmableNote {
   setFlagStyle(style) { this.flagStyle = style; }
   getFlagStyle() { return this.flagStyle; }
 
-  // Sets the notehead at `index` to the provided coloring `style`.
-  //
-  // `style` is an `object` with the following properties: `shadowColor`,
-  // `shadowBlur`, `fillStyle`, `strokeStyle`
+  /**
+   * Sets the notehead at `index` to the provided coloring `style`.
+   *
+   * `style` is an `object` with the following properties: `shadowColor`,
+   * `shadowBlur`, `fillStyle`, `strokeStyle`
+   */
   setKeyStyle(index, style) {
     this.note_heads[index].setStyle(style);
     return this;
@@ -764,8 +767,10 @@ export class StaveNote extends StemmableNote {
     return this.keyProps[index].line;
   }
 
-  // Add self to modifier context. `mContext` is the `ModifierContext`
-  // to be added to.
+  /**
+   * Add self to modifier context. `mContext` is the `ModifierContext`
+   * to be added to.
+   */
   addToModifierContext(mContext) {
     this.setModifierContext(mContext);
     for (let i = 0; i < this.modifiers.length; ++i) {
@@ -776,11 +781,13 @@ export class StaveNote extends StemmableNote {
     return this;
   }
 
-  // Generic function to add modifiers to a note
-  //
-  // Parameters:
-  // * `index`: The index of the key that we're modifying
-  // * `modifier`: The modifier to add
+  /**
+   * Generic function to add modifiers to a note
+   *
+   * Parameters:
+   * * `index`: The index of the key that we're modifying
+   * * `modifier`: The modifier to add
+   */
   addModifier(index, modifier) {
     modifier.setNote(this);
     modifier.setIndex(index);

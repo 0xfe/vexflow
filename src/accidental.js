@@ -21,12 +21,14 @@ function L(...args) { if (Accidental.DEBUG) Vex.L('Vex.Flow.Accidental', args); 
 
 const getGlyphWidth = glyph => glyph.getMetrics().width;
 
-// An `Accidental` inherits from `Modifier`, and is formatted within a
-// `ModifierContext`.
+/**
+ * An `Accidental` inherits from `Modifier`, and is formatted within a
+ * `ModifierContext`.
+ */
 export class Accidental extends Modifier {
   static get CATEGORY() { return 'accidentals'; }
 
-  // Arrange accidentals inside a ModifierContext.
+  /** Arrange accidentals inside a ModifierContext. */
   static format(accidentals, state) {
     const noteheadAccidentalPadding = 1;
     const leftShift = state.left_shift + noteheadAccidentalPadding;
@@ -298,7 +300,7 @@ export class Accidental extends Modifier {
     state.left_shift += totalShift;
   }
 
-  // Helper function to determine whether two lines of accidentals collide vertically
+  /** Helper function to determine whether two lines of accidentals collide vertically */
   static checkCollision(line1, line2) {
     let clearance = line2.line - line1.line;
     let clearanceRequired = 3;
@@ -315,9 +317,11 @@ export class Accidental extends Modifier {
     return collision;
   }
 
-  // Use this method to automatically apply accidentals to a set of `voices`.
-  // The accidentals will be remembered between all the voices provided.
-  // Optionally, you can also provide an initial `keySignature`.
+  /**
+   * Use this method to automatically apply accidentals to a set of `voices`.
+   * The accidentals will be remembered between all the voices provided.
+   * Optionally, you can also provide an initial `keySignature`.
+   */
   static applyAccidentals(voices, keySignature) {
     const tickPositions = [];
     const tickNoteMap = {};
@@ -474,7 +478,7 @@ export class Accidental extends Modifier {
     return getGlyphWidth(this.glyph) + parenWidth;
   }
 
-  // Attach this accidental to `note`, which must be a `StaveNote`.
+  /** Attach this accidental to `note`, which must be a {@link StaveNote} */
   setNote(note) {
     if (!note) {
       throw new Vex.RERR('ArgumentError', `Bad note value: ${note}`);
@@ -489,7 +493,7 @@ export class Accidental extends Modifier {
     }
   }
 
-  // If called, draws parenthesis around accidental.
+  /** If called, draws parenthesis around accidental. */
   setAsCautionary() {
     this.cautionary = true;
     this.render_options.font_scale = 28;
@@ -497,7 +501,7 @@ export class Accidental extends Modifier {
     return this;
   }
 
-  // Render accidental onto canvas.
+  /** Render accidental onto canvas. */
   draw() {
     const {
       context,

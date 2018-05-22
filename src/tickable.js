@@ -1,14 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// The tickable interface. Tickables are things that sit on a score and
-// have a duration, i.e., they occupy space in the musical rendering dimension.
-
 import { Vex } from './vex';
 import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 
+/**
+ * The tickable interface. Tickables are things that sit on a score and
+ * have a duration, i.e., they occupy space in the musical rendering dimension.
+ */
 export class Tickable extends Element {
   constructor() {
     super();

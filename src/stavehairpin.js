@@ -10,6 +10,12 @@ import { Vex } from './vex';
 import { Element } from './element';
 import { Modifier } from './modifier';
 
+/**
+ * Create a new hairpin from the specified notes.
+ *
+ * @param {!Object} notes The notes to tie up.
+ * @param {!Object} type The type of hairpin
+ */
 export class StaveHairpin extends Element {
   static get type() {
     return {
@@ -61,13 +67,6 @@ export class StaveHairpin extends Element {
       .draw();
   }
 
-  /**
-   * Create a new hairpin from the specified notes.
-   *
-   * @constructor
-   * @param {!Object} notes The notes to tie up.
-   * @param {!Object} type The type of hairpin
-   */
   constructor(notes, type) {
     /**
      * Notes is a struct that has:

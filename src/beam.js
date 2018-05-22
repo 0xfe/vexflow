@@ -1,9 +1,4 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements `Beams` that span over a set of `StemmableNotes`.
-
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Element } from './element';
@@ -35,10 +30,15 @@ const getStemSlope = (firstNote, lastNote) => {
   return (lastStemTipY - firstStemTipY) / (lastStemX - firstStemX);
 };
 
+/**
+ * This file implements `Beams` that span over a set of `StemmableNotes`.
+ */
 export class Beam extends Element {
-  // Gets the default beam groups for a provided time signature.
-  // Attempts to guess if the time signature is not found in table.
-  // Currently this is fairly naive.
+  /**
+  * Gets the default beam groups for a provided time signature.
+  * Attempts to guess if the time signature is not found in table.
+  * Currently this is fairly naive.
+  */
   static getDefaultBeamGroups(time_sig) {
     if (!time_sig || time_sig === 'c') {
       time_sig = '4/4';
@@ -90,13 +90,15 @@ export class Beam extends Element {
     return [new Fraction(1, 4)];
   }
 
-  // A helper function to automatically build basic beams for a voice. For more
-  // complex auto-beaming use `Beam.generateBeams()`.
-  //
-  // Parameters:
-  // * `voice` - The voice to generate the beams for
-  // * `stem_direction` - A stem direction to apply to the entire voice
-  // * `groups` - An array of `Fraction` representing beat groupings for the beam
+  /**
+  * A helper function to automatically build basic beams for a voice. For more
+  * complex auto-beaming use `Beam.generateBeams()`.
+  *
+  * Parameters:
+  * * `voice` - The voice to generate the beams for
+  * * `stem_direction` - A stem direction to apply to the entire voice
+  * * `groups` - An array of `Fraction` representing beat groupings for the beam
+  */
   static applyAndGetBeams(voice, stem_direction, groups) {
     return Beam.generateBeams(voice.getTickables(), {
       groups,
@@ -104,31 +106,32 @@ export class Beam extends Element {
     });
   }
 
-  // A helper function to autimatically build beams for a voice with
-  // configuration options.
-  //
-  // Example configuration object:
-  //
-  // ```
-  // config = {
-  //   groups: [new Vex.Flow.Fraction(2, 8)],
-  //   stem_direction: -1,
-  //   beam_rests: true,
-  //   beam_middle_only: true,
-  //   show_stemlets: false
-  // };
-  // ```
-  //
-  // Parameters:
-  // * `notes` - An array of notes to create the beams for
-  // * `config` - The configuration object
-  //    * `groups` - Array of `Fractions` that represent the beat structure to beam the notes
-  //    * `stem_direction` - Set to apply the same direction to all notes
-  //    * `beam_rests` - Set to `true` to include rests in the beams
-  //    * `beam_middle_only` - Set to `true` to only beam rests in the middle of the beat
-  //    * `show_stemlets` - Set to `true` to draw stemlets for rests
-  //    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
-  //
+  /**
+   * A helper function to autimatically build beams for a voice with
+   * configuration options.
+   *
+   * Example configuration object:
+   *
+   * ```
+   * config = {
+   *   groups: [new Vex.Flow.Fraction(2, 8)],
+   *   stem_direction: -1,
+   *   beam_rests: true,
+   *   beam_middle_only: true,
+   *   show_stemlets: false
+   * };
+   * ```
+   *
+   * Parameters:
+   * * `notes` - An array of notes to create the beams for
+   * * `config` - The configuration object
+   *    * `groups` - Array of `Fractions` that represent the beat structure to beam the notes
+   *    * `stem_direction` - Set to apply the same direction to all notes
+   *    * `beam_rests` - Set to `true` to include rests in the beams
+   *    * `beam_middle_only` - Set to `true` to only beam rests in the middle of the beat
+   *    * `show_stemlets` - Set to `true` to draw stemlets for rests
+   *    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
+   */
   static generateBeams(notes, config) {
     if (!config) config = {};
 
@@ -462,18 +465,18 @@ export class Beam extends Element {
     return maxBeamCount;
   }
 
-  // Set which note `indices` to break the secondary beam at
+  /** Set which note `indices` to break the secondary beam at */
   breakSecondaryAt(indices) {
     this.break_on_indices = indices;
     return this;
   }
 
-  // Return the y coordinate for linear function
+  /** Return the y coordinate for linear function */
   getSlopeY(x, first_x_px, first_y_px, slope) {
     return first_y_px + ((x - first_x_px) * slope);
   }
 
-  // Calculate the best possible slope for the provided notes
+  /** Calculate the best possible slope for the provided notes */
   calculateSlope() {
     const {
       notes,
@@ -535,7 +538,7 @@ export class Beam extends Element {
     this.y_shift = yShift;
   }
 
-  // Calculate a slope and y-shift for flat beams
+  /** Calculate a slope and y-shift for flat beams */
   calculateFlatSlope() {
     const {
       notes, stem_direction,
@@ -600,8 +603,10 @@ export class Beam extends Element {
     this.y_shift = 0;
   }
 
-  // Create new stems for the notes in the beam, so that each stem
-  // extends into the beams.
+  /**
+   * Create new stems for the notes in the beam, so that each stem
+   * extends into the beams.
+   */
   applyStemExtensions() {
     const {
       notes, slope, y_shift, stem_direction, beam_count,
@@ -647,7 +652,7 @@ export class Beam extends Element {
     }
   }
 
-  // Get the x coordinates for the beam lines of specific `duration`
+  /** Get the x coordinates for the beam lines of specific `duration` */
   getBeamLines(duration) {
     const beam_lines = [];
     let beam_started = false;
@@ -741,7 +746,7 @@ export class Beam extends Element {
     return beam_lines;
   }
 
-  // Render the stems for each notes
+  /** Render the stems for each notes */
   drawStems() {
     this.notes.forEach(note => {
       if (note.getStem()) {
@@ -750,7 +755,7 @@ export class Beam extends Element {
     }, this);
   }
 
-  // Render the beam lines
+  /** Render the beam lines */
   drawBeamLines() {
     this.checkContext();
 
@@ -796,12 +801,14 @@ export class Beam extends Element {
     }
   }
 
-  // Pre-format the beam
+  /** Pre-format the beam */
   preFormat() { return this; }
 
-  // Post-format the beam. This can only be called after
-  // the notes in the beam have both `x` and `y` values. ie: they've
-  // been formatted and have staves
+    /**
+  * Post-format the beam. This can only be called after
+  * the notes in the beam have both `x` and `y` values. ie: they've
+  * been formatted and have staves
+  */
   postFormat() {
     if (this.postFormatted) return;
 
@@ -816,7 +823,7 @@ export class Beam extends Element {
     this.postFormatted = true;
   }
 
-  // Render the beam to the canvas context
+  /** Render the beam to the canvas context */
   draw() {
     this.checkContext();
     this.setRendered();

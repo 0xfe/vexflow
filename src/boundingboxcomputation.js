@@ -1,7 +1,5 @@
 // ## Description
 //
-// Object which computes metrics for a bounding box by continuously
-// taking canvas path commands
 
 // Warning: This file is merely a crutch to get bounding box information without
 // explicit metadata. This is likely to get deprecated following SMuFL support.
@@ -9,6 +7,11 @@
 // taken from: https://github.com/gabelerner/canvg/blob/860e418aca67b9a41e858a223d74d375793ec364/ca
 // nvg.js#L449
 
+/**
+* Object which computes metrics for a bounding box by continuously
+* taking canvas path commands
+* @private
+*/
 export class BoundingBoxComputation {
   constructor(x1, y1, x2, y2) { // pass in initial points if you want
     this.x1 = Number.NaN;

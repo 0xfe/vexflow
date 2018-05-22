@@ -38,8 +38,8 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   }
 }
 
+/** Static methods used to implement loading / unloading of glyphs */
 export class Glyph extends Element {
-  /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
     const glyph = font.glyphs[code];
     if (!glyph) {
@@ -123,9 +123,6 @@ export class Glyph extends Element {
     );
   }
 
-  /**
-   * @constructor
-   */
   constructor(code, point, options) {
     super();
     this.setAttribute('type', 'Glyph');

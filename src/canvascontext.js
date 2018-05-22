@@ -5,7 +5,7 @@
 //
 // Copyright Mohit Cheppudira 2010
 
-/** @constructor */
+/**  */
 export class CanvasContext {
   static get WIDTH() {
     return 600;
@@ -82,12 +82,14 @@ export class CanvasContext {
     return this;
   }
 
-  // setLineDash: is the one native method in a canvas context
-  // that begins with set, therefore we don't bolster the method
-  // if it already exists (see renderer.bolsterCanvasContext).
-  // If it doesn't exist, we bolster it and assume it's looking for
-  // a ctx.lineDash method, as previous versions of VexFlow
-  // expected.
+    /**
+  * setLineDash: is the one native method in a canvas context
+  * that begins with set, therefore we don't bolster the method
+  * if it already exists (see renderer.bolsterCanvasContext).
+  * If it doesn't exist, we bolster it and assume it's looking for
+  * a ctx.lineDash method, as previous versions of VexFlow
+  * expected.
+  */
   setLineDash(dash) {
     this.vexFlowCanvasContext.lineDash = dash;
     return this;

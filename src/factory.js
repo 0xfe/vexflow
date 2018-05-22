@@ -1,11 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
 //
-// ## Description
-//
-// This file implements a high level API around VexFlow. It will eventually
-// become the canonical way to use VexFlow.
-//
 // *This API is currently DRAFT*
 
 import { Vex } from './vex';
@@ -56,6 +51,10 @@ function setDefaults(params = {}, defaults) {
   return params;
 }
 
+/**
+* This file implements a high level API around VexFlow. It will eventually
+* become the canonical way to use VexFlow.
+*/
 export class Factory {
   constructor(options) {
     L('New factory: ', options);

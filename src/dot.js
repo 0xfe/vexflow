@@ -1,15 +1,15 @@
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 //
-// This class implements dot modifiers for notes.
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 
+/** This class implements dot modifiers for notes. */
 export class Dot extends Modifier {
   static get CATEGORY() { return 'dots'; }
 
-  // Arrange dots inside a ModifierContext.
+  /** Arrange dots inside a ModifierContext. */
   static format(dots, state) {
     const right_shift = state.right_shift;
     const dot_spacing = 1;
@@ -87,9 +87,6 @@ export class Dot extends Modifier {
     return true;
   }
 
-  /**
-   * @constructor
-   */
   constructor() {
     super();
     this.setAttribute('type', 'Dot');

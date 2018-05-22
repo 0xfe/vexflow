@@ -7,39 +7,41 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
+
 /**
-   @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
-   @param release If true, render a release. (DEPRECATED)
-   @param phrase If set, ignore "text" and "release", and use the more
-                 sophisticated phrase specified.
-
-   Example of a phrase:
-
-     [{
-       type: UP,
-       text: "whole"
-       width: 8;
-     },
-     {
-       type: DOWN,
-       text: "whole"
-       width: 8;
-     },
-     {
-       type: UP,
-       text: "half"
-       width: 8;
-     },
-     {
-       type: UP,
-       text: "whole"
-       width: 8;
-     },
-     {
-       type: DOWN,
-       text: "1 1/2"
-       width: 8;
-     }]
+ *  @param {string} text Text for bend ("Full", "Half", etc.) (DEPRECATED)
+ *  @param {boolean} release If true, render a release. (DEPRECATED)
+ *  @param {Array<Object>} phrase If set, ignore "text" and "release", and use the more
+ *  sophisticated phrase specified.
+ *  Example of a phrase:
+ *
+ *  ```js
+ *  [{
+ *    type: UP,
+ *    text: "whole"
+ *    width: 8;
+ *  },
+ *  {
+ *    type: DOWN,
+ *    text: "whole"
+ *    width: 8;
+ *  },
+ *  {
+ *    type: UP,
+ *    text: "half"
+ *    width: 8;
+ *  },
+ *  {
+ *    type: UP,
+ *    text: "whole"
+ *    width: 8;
+ *  },
+ *  {
+ *    type: DOWN,
+ *    text: "1 1/2"
+ *    width: 8;
+ *  }]
+ * ```
  */
 export class Bend extends Modifier {
   static get CATEGORY() { return 'bends'; }
@@ -51,8 +53,7 @@ export class Bend extends Modifier {
     return 1;
   }
 
-  // ## Static Methods
-  // Arrange bends in `ModifierContext`
+  /** Arrange bends in {@link ModifierContext} */
   static format(bends, state) {
     if (!bends || bends.length === 0) return false;
 
@@ -73,7 +74,6 @@ export class Bend extends Modifier {
     return true;
   }
 
-  // ## Prototype Methods
   constructor(text, release, phrase) {
     super();
     this.setAttribute('type', 'Bend');

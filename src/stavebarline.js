@@ -5,6 +5,7 @@
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
 
+/** */
 export class Barline extends StaveModifier {
   static get CATEGORY() { return 'barlines'; }
   static get type() {
@@ -31,9 +32,6 @@ export class Barline extends StaveModifier {
     };
   }
 
-  /**
-   * @constructor
-   */
   constructor(type) {
     super();
     this.setAttribute('type', 'Barline');
@@ -73,7 +71,7 @@ export class Barline extends StaveModifier {
     return this;
   }
 
-  // Draw barlines
+  /** Draw barlines */
   draw(stave) {
     stave.checkContext();
     this.setRendered();

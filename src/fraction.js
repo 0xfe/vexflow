@@ -9,6 +9,8 @@
 /* eslint-disable no-underscore-dangle */
 
 import { Vex } from './vex';
+
+/** */
 export class Fraction {
 
   /**

@@ -15,6 +15,7 @@ import { KeySignature } from './keysignature';
 import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
 
+/** A stave */
 export class Stave extends Element {
   constructor(x, y, width, options) {
     super();

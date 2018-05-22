@@ -1,22 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
-//
-// ## Description
-//
-// This file implements a registry for VexFlow elements. It allows users
-// to track, query, and manage some subset of generated elements, and
-// dynamically get and set attributes.
-//
-// There are two ways to regiser with a registry:
-//
-// 1) Explicitly call `element.register(registry)`, or,
-// 2) Call `Registry.enableDefaultRegistry(registry)` when ready, and all future
-//    elements will automatically register with it.
-//
-// Once an element is registered, selected attributes are tracked and indexed by
-// the registry. This allows fast look up of elements by attributes like id, type,
-// and class.
-
 import { Vex } from './vex';
 
 export const X = Vex.MakeException('RegistryError');
@@ -26,6 +9,21 @@ function setIndexValue(index, name, value, id, elem) {
   index[name][value][id] = elem;
 }
 
+/**
+ * This file implements a registry for VexFlow elements. It allows users
+ * to track, query, and manage some subset of generated elements, and
+ * dynamically get and set attributes.
+ *
+ * There are two ways to regiser with a registry:
+ *
+ * 1) Explicitly call `element.register(registry)`, or,
+ * 2) Call `Registry.enableDefaultRegistry(registry)` when ready, and all future
+ *    elements will automatically register with it.
+ *
+ * Once an element is registered, selected attributes are tracked and indexed by
+ * the registry. This allows fast look up of elements by attributes like id, type,
+ * and class.
+ */
 export class Registry {
   static get INDEXES() { return ['type']; }
 
@@ -59,8 +57,10 @@ export class Registry {
     return this;
   }
 
-  // Updates the indexes for element 'id'. If an element's attribute changes
-  // from A -> B, make sure to remove the element from A.
+    /**
+  * Updates the indexes for element 'id'. If an element's attribute changes
+  * from A -> B, make sure to remove the element from A.
+  */
   updateIndex({ id, name, value, oldValue }) {
     const elem = this.getElementById(id);
     if (oldValue !== null && this.index[name][oldValue]) {
@@ -71,8 +71,10 @@ export class Registry {
     }
   }
 
-  // Register element `elem` with this registry. This adds the element to its index and watches
-  // it for attribute changes.
+    /**
+  * Register element `elem` with this registry. This adds the element to its index and watches
+  * it for attribute changes.
+  */
   register(elem, id) {
     id = id || elem.getAttribute('id');
 
@@ -106,8 +108,10 @@ export class Registry {
   getElementsByType(type) { return this.getElementsByAttribute('type', type); }
   getElementsByClass(className) { return this.getElementsByAttribute('class', className); }
 
-  // This is called by the element when an attribute value changes. If an indexed
-  // attribute changes, then update the local index.
+  /**
+   * This is called by the element when an attribute value changes. If an indexed
+   * attribute changes, then update the local index.
+   */
   onUpdate({ id, name, value, oldValue }) {
     function includes(array, value) {
       return array.filter(x => x === value).length > 0;

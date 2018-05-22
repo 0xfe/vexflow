@@ -2,14 +2,16 @@
 // Author: Larry Kuhns
 //
 // ## Description
-// This file implements the `Stroke` class which renders chord strokes
-// that can be arpeggiated, brushed, rasquedo, etc.
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
+/**
+* This file implements the `Stroke` class which renders chord strokes
+* that can be arpeggiated, brushed, rasquedo, etc.
+*/
 export class Stroke extends Modifier {
   static get CATEGORY() { return 'strokes'; }
   static get Type() {

@@ -1,24 +1,22 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// `Modifier` is an abstract interface for notational elements that modify
-// a `Note`. Examples of modifiers are `Accidental`, `Annotation`, `Stroke`, etc.
-//
-// For a `Modifier` instance to be positioned correctly, it must be part of
-// a `ModifierContext`. All modifiers in the same context are rendered relative to
-// one another.
-//
-// Typically, all modifiers to a note are part of the same `ModifierContext` instance. Also,
-// in multi-voice staves, all modifiers to notes on the same `tick` are part of the same
-// `ModifierContext`. This ensures that multiple voices don't trample all over each other.
-
 import { Vex } from './vex';
 import { Element } from './element';
 
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
 // function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
 
+/**
+* `Modifier` is an abstract interface for notational elements that modify
+* a `Note`. Examples of modifiers are `Accidental`, `Annotation`, `Stroke`, etc.
+*
+* For a `Modifier` instance to be positioned correctly, it must be part of
+* a `ModifierContext`. All modifiers in the same context are rendered relative to
+* one another.
+*
+* Typically, all modifiers to a note are part of the same `ModifierContext` instance. Also,
+* in multi-voice staves, all modifiers to notes on the same `tick` are part of the same
+* `ModifierContext`. This ensures that multiple voices don't trample all over each other.
+*/
 export class Modifier extends Element {
   static get CATEGORY() { return 'none'; }
 
@@ -65,23 +63,23 @@ export class Modifier extends Element {
   // the type and order of the modifiers.
   getCategory() { return Modifier.CATEGORY; }
 
-  // Get and set modifier widths.
+  /** Get and set modifier widths. */
   getWidth() { return this.width; }
   setWidth(width) { this.width = width; return this; }
 
-  // Get and set attached note (`StaveNote`, `TabNote`, etc.)
+  /** Get and set attached note (`StaveNote`, `TabNote`, etc.) */
   getNote() { return this.note; }
   setNote(note) { this.note = note; return this; }
 
-  // Get and set note index, which is a specific note in a chord.
+  /** Get and set note index, which is a specific note in a chord. */
   getIndex() { return this.index; }
   setIndex(index) { this.index = index; return this; }
 
-  // Every modifier must be part of a `ModifierContext`.
+  /** Every modifier must be part of a `ModifierContext`. */
   getModifierContext() { return this.modifier_context; }
   setModifierContext(c) { this.modifier_context = c; return this; }
 
-  // Get and set articulation position.
+  /** Get and set articulation position. */
   getPosition() { return this.position; }
   setPosition(position) {
     this.position = typeof(position) === 'string'

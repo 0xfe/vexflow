@@ -16,7 +16,7 @@ export class TabTie extends StaveTie {
   }
 
   constructor(notes, text) {
-    /**
+    /*
      * Notes is a struct that has:
      *
      *  {
@@ -26,7 +26,7 @@ export class TabTie extends StaveTie {
      *    last_indices: [n1, n2, n3]
      *  }
      *
-     **/
+     */
     super(notes, text);
     this.setAttribute('type', 'TabTie');
 

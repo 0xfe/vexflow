@@ -1,11 +1,11 @@
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 //
-// This class implements curves (for slurs)
 
 import { Vex } from './vex';
 import { Element } from './element';
 
+/** This class implements curves (for slurs) */
 export class Curve extends Element {
   static get Position() {
     return {

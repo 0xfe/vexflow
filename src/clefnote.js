@@ -9,7 +9,7 @@ import { Note } from './note';
 import { Clef } from './clef';
 import { Glyph } from './glyph';
 
-/** @constructor */
+/**  */
 export class ClefNote extends Note {
   static get CATEGORY() { return 'clefnote'; }
 

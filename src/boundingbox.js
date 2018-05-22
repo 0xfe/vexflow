@@ -3,8 +3,7 @@
 //
 // Copyright Mohit Muthanna 2010
 
-// Bounding boxes for interactive notation
-
+/** Bounding boxes for interactive notation */
 export class BoundingBox {
   static copy(that) {
     return new BoundingBox(that.x, that.y, that.w, that.h);
@@ -27,8 +26,10 @@ export class BoundingBox {
   move(x, y) { this.x += x; this.y += y; }
   clone() { return BoundingBox.copy(this); }
 
-  // Merge my box with given box. Creates a bigger bounding box unless
-  // the given box is contained in this one.
+ /**
+  * Merge my box with given box. Creates a bigger bounding box unless
+  * the given box is contained in this one.
+  */
   mergeWith(boundingBox, ctx) {
     const that = boundingBox;
 
