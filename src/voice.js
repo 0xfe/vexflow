@@ -165,7 +165,7 @@ export class Voice extends Element {
         (this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) &&
         this.ticksUsed.greaterThan(this.totalTicks)
       ) {
-        this.totalTicks.subtract(ticks);
+        this.ticksUsed.subtract(ticks);
         throw new Vex.RERR('BadArgument', 'Too many ticks.');
       }
 
