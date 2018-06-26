@@ -13,7 +13,7 @@ VF.Test.Voice = (function() {
     },
 
     strict: function() {
-      expect(7);
+      expect(8);
       function createTickable() {
         return new VF.Test.MockTickable(VF.Test.TIME4_4);
       }
@@ -36,10 +36,12 @@ VF.Test.Voice = (function() {
       equal(voice.ticksUsed.value(), BEAT * 4, 'Four beats in voice');
       equal(voice.isComplete(), true, 'Voice is complete');
 
+      var beforeNumerator = voice.ticksUsed.numerator;
       try {
         voice.addTickable(createTickable().setTicks(BEAT));
       } catch (e) {
         equal(e.code, 'BadArgument', 'Too many ticks exception');
+        equal(voice.ticksUsed.numerator, beforeNumerator, 'Revert "ticksUsed" when it occurred "Too many ticks" exception');
       }
 
       equal(voice.getSmallestTickCount().value(), BEAT, 'Smallest tick count is BEAT');

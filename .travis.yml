@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "4.4.5"
+  - "lts/*"
 before_install:
   - wget http://www.imagemagick.org/download/ImageMagick.tar.gz
   - tar xf ImageMagick.tar.gz
