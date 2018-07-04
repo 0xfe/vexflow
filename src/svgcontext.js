@@ -3,6 +3,33 @@
 
 import { Vex } from './vex';
 
+const attrNamesToIgnoreMap = {
+  path: {
+    x: true,
+    y: true,
+    width: true,
+    height: true,
+  },
+  rect: {
+  },
+  text: {
+    width: true,
+    height: true,
+  },
+};
+
+{
+  const fontAttrNamesToIgnore = {
+    'font-family': true,
+    'font-weight': true,
+    'font-style': true,
+    'font-size': true,
+  };
+
+  Vex.Merge(attrNamesToIgnoreMap.rect, fontAttrNamesToIgnore);
+  Vex.Merge(attrNamesToIgnoreMap.path, fontAttrNamesToIgnore);
+}
+
 export class SVGContext {
   constructor(element) {
     // element is the parent DOM object
@@ -268,10 +295,15 @@ export class SVGContext {
   // ### Drawing helper methods:
 
   applyAttributes(element, attributes) {
+    const attrNamesToIgnore = attrNamesToIgnoreMap[element.nodeName];
     Object
       .keys(attributes)
-      .forEach(propertyName =>
-        element.setAttributeNS(null, propertyName, attributes[propertyName]));
+      .forEach(propertyName => {
+        if (attrNamesToIgnore && attrNamesToIgnore[propertyName]) {
+          return;
+        }
+        element.setAttributeNS(null, propertyName, attributes[propertyName]);
+      });
 
     return element;
   }
