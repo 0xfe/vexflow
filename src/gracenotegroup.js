@@ -172,7 +172,12 @@ export class GraceNoteGroup extends Modifier {
       });
     }
 
-    alignGraceNotesWithNote(this.grace_notes, note, this.width);
+    if (!note.graceNotesAligned) {
+      alignGraceNotesWithNote(this.grace_notes, note, this.width);
+      note.graceNotesAligned = true;
+    } else {
+      this.grace_notes.forEach(graceNote => graceNote.setStave(note.stave));
+    }
 
     // Draw notes
     this.grace_notes.forEach(graceNote => {
