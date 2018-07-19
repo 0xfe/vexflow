@@ -153,7 +153,7 @@ export class Ornament extends Modifier {
       if (this.delayXShift !== undefined) {
         delayXShift = this.delayXShift;
       } else {
-        delayXShift += this.glyph.getMetrics().width;
+        delayXShift += this.glyph.getMetrics().width / 2;
         const nextContext = TickContext.getNextContext(this.note.getTickContext());
         if (nextContext) {
           delayXShift += (nextContext.getX() - glyphX) * 0.5;
