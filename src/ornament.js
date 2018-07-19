@@ -149,13 +149,20 @@ export class Ornament extends Modifier {
 
     // Ajdust x position if ornament is delayed
     if (this.delayed) {
-      glyphX += this.glyph.getMetrics().width;
-      const nextContext = TickContext.getNextContext(this.note.getTickContext());
-      if (nextContext) {
-        glyphX += (nextContext.getX() - glyphX) * 0.5;
+      let delayXShift = 0;
+      if (this.delayXShift !== undefined) {
+        delayXShift = this.delayXShift;
       } else {
-        glyphX += (stave.x + stave.width - glyphX) * 0.5;
+        delayXShift += this.glyph.getMetrics().width;
+        const nextContext = TickContext.getNextContext(this.note.getTickContext());
+        if (nextContext) {
+          delayXShift += (nextContext.getX() - glyphX) * 0.5;
+        } else {
+          delayXShift += (stave.x + stave.width - glyphX) * 0.5;
+        }
+        this.delayXShift = delayXShift;
       }
+      glyphX += delayXShift;
     }
 
     L('Rendering ornament: ', this.ornament, glyphX, glyphY);
