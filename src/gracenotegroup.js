@@ -164,16 +164,21 @@ export class GraceNoteGroup extends Modifier {
         - extraPx.extraLeft
         + that.getSpacingFromNextModifier();
 
-      grace_notes.forEach(graceNote => {
-        const tick_context = graceNote.getTickContext();
-        const x_offset = tick_context.getX();
-        graceNote.setStave(note.stave);
-        tick_context.setX(x + x_offset);
-      });
-    }
-
-    alignGraceNotesWithNote(this.grace_notes, note, this.width);
-
+        grace_notes.forEach(graceNote => {
+          const tick_context = graceNote.getTickContext();
+          const x_offset = tick_context.getX();
+          graceNote.setStave(note.stave);
+          tick_context.setX(x + x_offset);
+        });
+      }
+      
+      if(!note.aligned) {
+        alignGraceNotesWithNote(this.grace_notes, note, this.width);
+        note.aligned = true;
+      } else{
+        this.grace_notes.forEach(graceNote => graceNote.setStave(note.stave));
+      }
+        
     // Draw notes
     this.grace_notes.forEach(graceNote => {
       graceNote.setContext(this.context).draw();
