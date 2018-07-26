@@ -57,7 +57,7 @@ export class Dot extends Modifier {
         if (Math.abs(line % 1) === 0.5) {
           // note is on a space, so no dot shift
           half_shiftY = 0;
-        } else if (!note.isRest()) {
+        } else {
           // note is on a line, so shift dot to space above the line
           half_shiftY = 0.5;
           if (last_note != null &&
@@ -72,7 +72,11 @@ export class Dot extends Modifier {
       }
 
       // convert half_shiftY to a multiplier for dots.draw()
-      dot.dot_shiftY += -half_shiftY;
+      if (note.isRest()) {
+        dot.dot_shiftY += -half_shiftY;
+      } else {
+        dot.dot_shiftY = -half_shiftY;
+      }
       prev_dotted_space = line + half_shiftY;
 
       dot.setXShift(dot_shift);
