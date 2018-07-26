@@ -30,10 +30,10 @@ VF.Test.StaveNote = (function() {
       runTests('Displacements', StaveNote.displacements);
       runTests('StaveNote Draw - Bass 2', StaveNote.drawBass);
       runTests('StaveNote Draw - Key Styles', StaveNote.drawKeyStyles);
-      runTests('StaveNote Draw - StaveNote Styles', StaveNote.drawNoteStyles);
       runTests('StaveNote Draw - StaveNote Stem Styles', StaveNote.drawNoteStemStyles);
       runTests('StaveNote Draw - StaveNote Flag Styles', StaveNote.drawNoteStylesWithFlag);
-      runTests('StaveNote Draw - Beam, Stem & Ledger Line Styles', StaveNote.drawBeamStyles);
+      runTests('StaveNote Draw - StaveNote Styles', StaveNote.drawNoteStyles);
+      runTests('Stave, Ledger Line, Beam, Stem and Flag Styles', StaveNote.drawBeamStyles);
       runTests('Flag and Dot Placement - Stem Up', StaveNote.dotsAndFlagsStemUp);
       runTests('Flag and Dots Placement - Stem Down', StaveNote.dotsAndFlagsStemDown);
       runTests('Beam and Dot Placement - Stem Up', StaveNote.dotsAndBeamsUp);
@@ -584,7 +584,7 @@ VF.Test.StaveNote = (function() {
       var stave = new VF.Stave(10, 0, 100);
       ctx.scale(3, 3);
 
-      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
+      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: '8' })
         .setStave(stave)
         .addAccidental(1, new VF.Accidental('b'));
 
@@ -633,7 +633,7 @@ VF.Test.StaveNote = (function() {
         .setStave(stave)
         .addAccidental(1, new VF.Accidental('b'));
 
-      note.setStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
+      note.setFlagStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
       new VF.TickContext()
         .addTickable(note)
@@ -648,8 +648,8 @@ VF.Test.StaveNote = (function() {
     },
 
     drawBeamStyles: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 200, 180);
-      var stave = new VF.Stave(10, 10, 180);
+      var ctx = new contextBuilder(options.elementId, 400, 160);
+      var stave = new VF.Stave(10, 10, 380);
       stave.setStyle({
         strokeStyle: '#EEAAEE',
         lineWidth: '3',
@@ -658,47 +658,67 @@ VF.Test.StaveNote = (function() {
       stave.draw();
 
       var notes = [
-        // Beam
+        // beam1
         { keys: ['b/4'], duration: '8', stem_direction: -1 },
         { keys: ['b/4'], duration: '8', stem_direction: -1 },
+
+        // should be unstyled...
+        { keys: ['b/4'], duration: '8', stem_direction: -1 },
+
+        // beam2 should also be unstyled
+        { keys: ['b/4'], duration: '8', stem_direction: -1 },
+        { keys: ['b/4'], duration: '8', stem_direction: -1 },
+
+        // beam3
         { keys: ['b/4'], duration: '8', stem_direction: 1 },
         { keys: ['b/4'], duration: '8', stem_direction: 1 },
+
+        // beam4
         { keys: ['d/6'], duration: '8', stem_direction: -1 },
         { keys: ['c/6', 'd/6'], duration: '8', stem_direction: -1 },
+
+        // unbeamed
         { keys: ['d/6', 'e/6'], duration: '8', stem_direction: -1 },
+
+        // unbeamed, unstyled
+        { keys: ['e/6', 'f/6'], duration: '8', stem_direction: -1 },
+
       ];
 
-      var stave_notes = notes.map(function(note) { return new VF.StaveNote(note); });
-      stave_notes[0].setStemStyle({ strokeStyle: 'green' });
-      stave_notes[1].setStemStyle({ strokeStyle: 'orange' });
+      var staveNotes = notes.map(function(note) { return new VF.StaveNote(note); });
 
-      stave_notes[0].setKeyStyle(0, { fillStyle: 'purple' });
-      stave_notes[4].setLedgerLineStyle({ fillStyle: 'red', strokeStyle: 'red', lineWidth: 1 });
+      var beam1 = new VF.Beam(staveNotes.slice(0, 2));
+      var beam2 = new VF.Beam(staveNotes.slice(3, 5));
+      var beam3 = new VF.Beam(staveNotes.slice(5, 7));
+      var beam4 = new VF.Beam(staveNotes.slice(7, 9));
 
-      var beam1 = new VF.Beam([stave_notes[0], stave_notes[1]]);
-      var beam2 = new VF.Beam([stave_notes[2], stave_notes[3]]);
-      var beam3 = new VF.Beam(stave_notes.slice(4, 6));
-
-      stave_notes[1].setKeyStyle(0, { fillStyle: 'chartreuse' });
-      stave_notes[2].setStyle({ fillStyle: 'tomato', strokeStyle: 'tomato' });
-
-      stave_notes[6].setFlagStyle({ fillStyle: 'orange', strokeStyle: 'orante' });
+      // stem, key, ledger, flag; beam.setStyle
 
       beam1.setStyle({
         fillStyle: 'blue',
         strokeStyle: 'blue',
       });
 
-      beam2.setStyle({
+      staveNotes[0].setKeyStyle(0, { fillStyle: 'purple' });
+      staveNotes[0].setStemStyle({ strokeStyle: 'green' });
+      staveNotes[1].setStemStyle({ strokeStyle: 'orange' });
+      staveNotes[1].setKeyStyle(0, { fillStyle: 'darkturquoise' });
+
+      staveNotes[5].setStyle({ fillStyle: 'tomato', strokeStyle: 'tomato' });
+      beam3.setStyle({
         shadowBlur: 20,
         shadowColor: 'blue',
       });
 
-      VF.Formatter.FormatAndDraw(ctx, stave, stave_notes, false);
+      staveNotes[9].setLedgerLineStyle({ fillStyle: 'lawngreen', strokeStyle: 'lawngreen', lineWidth: 1 });
+      staveNotes[9].setFlagStyle({ fillStyle: 'orange', strokeStyle: 'orange' });
+
+      VF.Formatter.FormatAndDraw(ctx, stave, staveNotes, false);
 
       beam1.setContext(ctx).draw();
       beam2.setContext(ctx).draw();
       beam3.setContext(ctx).draw();
+      beam4.setContext(ctx).draw();
 
       ok('draw beam styles');
     },
