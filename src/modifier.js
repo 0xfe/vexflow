@@ -120,7 +120,7 @@ export class Modifier extends Element {
     throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
   }
 
-  // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main notes with correct x-offset 
+  // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main note with correct x-offset
   alignSubNotesWithNote(subNotes, note) {
     // Shift over the tick contexts of each note
     const tickContext = note.getTickContext();

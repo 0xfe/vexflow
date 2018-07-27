@@ -12,6 +12,7 @@ VF.Test.Ornament = (function() {
       runTests('Ornaments', Ornament.drawOrnaments);
       runTests('Ornaments Vertically Shifted', Ornament.drawOrnamentsDisplaced);
       runTests('Ornaments - Delayed turns', Ornament.drawOrnamentsDelayed);
+      runTests('Ornaments - Delayed turns, Multiple Draws', Ornament.drawOrnamentsDelayedMultipleDraws);
       runTests('Stacked', Ornament.drawOrnamentsStacked);
       runTests('With Upper/Lower Accidentals', Ornament.drawOrnamentsWithAccidentals);
     },
@@ -124,6 +125,32 @@ VF.Test.Ornament = (function() {
       notesBar1[3].addModifier(0, new VF.Ornament('turn').setDelayed(true));
 
       // Helper function to justify and draw a 4/4 voice
+      VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    },
+
+    drawOrnamentsDelayedMultipleDraws: function(options, contextBuilder) {
+      expect(0);
+
+      // Get the rendering context
+      var ctx = contextBuilder(options.elementId, 550, 195);
+
+      // bar 1
+      var staveBar1 = new VF.Stave(10, 30, 500);
+      staveBar1.setContext(ctx).draw();
+      var notesBar1 = [
+        new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+        new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+        new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+        new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+      ];
+
+      notesBar1[0].addModifier(0, new VF.Ornament('turn').setDelayed(true));
+      notesBar1[1].addModifier(0, new VF.Ornament('turn_inverted').setDelayed(true));
+      notesBar1[2].addModifier(0, new VF.Ornament('turn_inverted').setDelayed(true));
+      notesBar1[3].addModifier(0, new VF.Ornament('turn').setDelayed(true));
+
+      // Helper function to justify and draw a 4/4 voice
+      VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     },
 

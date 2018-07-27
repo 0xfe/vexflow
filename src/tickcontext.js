@@ -24,8 +24,8 @@ export class TickContext extends Tickable {
     this.minTicks = null;
     this.padding = 3;     // padding on each side (width += padding * 2)
     this.x = 0;
-    this.xBase = 0;
-    this.xOffset = 0;
+    this.xBase = 0;        // base x position without xOffset
+    this.xOffset = 0;      // xBase and xOffset are an alternative way to describe x (x = xB + xO)
     this.tickables = [];   // Notes, tabs, chords, lyrics.
     this.notePx = 0;       // width of widest note in this context
     this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes

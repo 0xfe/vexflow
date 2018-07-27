@@ -10,6 +10,7 @@ VF.Test.GraceNote = (function() {
       VF.Test.runTests('Grace Note Basic', VF.Test.GraceNote.basic);
       VF.Test.runTests('Grace Note Basic with Slurs', VF.Test.GraceNote.basicSlurred);
       VF.Test.runTests('Grace Notes Multiple Voices', VF.Test.GraceNote.multipleVoices);
+      VF.Test.runTests('Grace Notes Multiple Voices Multiple Draws', VF.Test.GraceNote.multipleVoicesMultipleDraws);
     },
 
     basic: function(options) {
@@ -215,6 +216,82 @@ VF.Test.GraceNote = (function() {
       vf.draw();
 
       ok(true, 'Sixteenth Test');
+    },
+
+    multipleVoicesMultipleDraws: function(options) {
+      const vf = VF.Test.makeFactory(options, 450, 140);
+      const stave = vf.Stave({ x: 10, y: 10, width: 450 });
+
+      var notes = [
+        { keys: ['f/5'], stem_direction: 1, duration: '16' },
+        { keys: ['f/5'], stem_direction: 1, duration: '16' },
+        { keys: ['d/5'], stem_direction: 1, duration: '16' },
+        { keys: ['c/5'], stem_direction: 1, duration: '16' },
+        { keys: ['c/5'], stem_direction: 1, duration: '16' },
+        { keys: ['d/5'], stem_direction: 1, duration: '16' },
+        { keys: ['f/5'], stem_direction: 1, duration: '16' },
+        { keys: ['e/5'], stem_direction: 1, duration: '16' },
+      ].map(vf.StaveNote.bind(vf));
+
+      var notes2 = [
+        { keys: ['f/4'], stem_direction: -1, duration: '16' },
+        { keys: ['e/4'], stem_direction: -1, duration: '16' },
+        { keys: ['d/4'], stem_direction: -1, duration: '16' },
+        { keys: ['c/4'], stem_direction: -1, duration: '16' },
+        { keys: ['c/4'], stem_direction: -1, duration: '16' },
+        { keys: ['d/4'], stem_direction: -1, duration: '16' },
+        { keys: ['f/4'], stem_direction: -1, duration: '16' },
+        { keys: ['e/4'], stem_direction: -1, duration: '16' },
+      ].map(vf.StaveNote.bind(vf));
+
+      var gracenotes1 = [
+        { keys: ['b/4'], stem_direction: 1, duration: '8', slash: true },
+      ].map(vf.GraceNote.bind(vf));
+
+      var gracenotes2 = [
+        { keys: ['f/4'], stem_direction: -1, duration: '8', slash: true },
+      ].map(vf.GraceNote.bind(vf));
+
+      var gracenotes3 = [
+        { keys: ['f/4'], duration: '32', stem_direction: -1 },
+        { keys: ['e/4'], duration: '32', stem_direction: -1 },
+      ].map(vf.GraceNote.bind(vf));
+
+      var gracenotes4 = [
+        { keys: ['f/5'], duration: '32', stem_direction: 1 },
+        { keys: ['e/5'], duration: '32', stem_direction: 1 },
+        { keys: ['e/5'], duration: '8', stem_direction: 1 },
+      ].map(vf.GraceNote.bind(vf));
+
+      gracenotes2[0].setStemDirection(-1);
+      gracenotes2[0].addAccidental(0, vf.Accidental({ type: '#' }));
+
+      notes[1].addModifier(0, vf.GraceNoteGroup({ notes: gracenotes4 }).beamNotes());
+      notes[3].addModifier(0, vf.GraceNoteGroup({ notes: gracenotes1 }));
+      notes2[1].addModifier(0, vf.GraceNoteGroup({ notes: gracenotes2 }).beamNotes());
+      notes2[5].addModifier(0, vf.GraceNoteGroup({ notes: gracenotes3 }).beamNotes());
+
+      var voice = vf.Voice()
+        .setStrict(false)
+        .addTickables(notes);
+
+      var voice2 = vf.Voice()
+        .setStrict(false)
+        .addTickables(notes2);
+
+      vf.Beam({ notes: notes.slice(0, 4) });
+      vf.Beam({ notes: notes.slice(4, 8) });
+      vf.Beam({ notes: notes2.slice(0, 4) });
+      vf.Beam({ notes: notes2.slice(4, 8) });
+
+      new VF.Formatter()
+        .joinVoices([voice, voice2])
+        .formatToStave([voice, voice2], stave);
+
+      vf.draw();
+      vf.draw();
+
+      ok(true, 'Seventeenth Test');
     },
   };
 
