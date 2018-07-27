@@ -119,4 +119,19 @@ export class Modifier extends Element {
     this.checkContext();
     throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
   }
+
+  // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main notes with correct x-offset 
+  alignSubNotesWithNote(subNotes, note) {
+    // Shift over the tick contexts of each note
+    const tickContext = note.getTickContext();
+    const extraPx = tickContext.getExtraPx();
+    const subNoteXOffset = tickContext.getX() - extraPx.left - extraPx.extraLeft
+      + this.getSpacingFromNextModifier();
+
+    subNotes.forEach((subNote) => {
+      const subTickContext = subNote.getTickContext();
+      subNote.setStave(note.stave);
+      subTickContext.setXOffset(subNoteXOffset); // don't touch baseX to avoid shift each render
+    });
+  }
 }
