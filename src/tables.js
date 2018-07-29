@@ -1000,7 +1000,7 @@ Flow.smufl = {};
 
 // add references between smufl glyph names and code points.
 Flow.smufl.to_code_points = {
-  // staff brackets and deviders (e000-e00f)
+  // staff brackets and dividers (e000-e00f)
   bracketTop: 'v1b',
   bracketBottom: 'v10',
 
