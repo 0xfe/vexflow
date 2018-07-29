@@ -86,22 +86,7 @@ export class NoteSubGroup extends Modifier {
     }
 
     this.setRendered();
-    const alignSubNotesWithNote = (subNotes, note) => {
-      // Shift over the tick contexts of each note
-      const tickContext = note.getTickContext();
-      const extraPx = tickContext.getExtraPx();
-      const x = tickContext.getX() - extraPx.left - extraPx.extraLeft +
-        this.getSpacingFromNextModifier();
-
-      subNotes.forEach(subNote => {
-        const tick_context = subNote.getTickContext();
-        const x_offset = tick_context.getX();
-        subNote.setStave(note.stave);
-        tick_context.setX(x + x_offset);
-      });
-    };
-
-    alignSubNotesWithNote(this.subNotes, note, this.width);
+    this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
 
     // Draw notes
     this.subNotes.forEach(subNote => subNote.setContext(this.context).draw());

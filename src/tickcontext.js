@@ -24,6 +24,8 @@ export class TickContext extends Tickable {
     this.minTicks = null;
     this.padding = 3;     // padding on each side (width += padding * 2)
     this.x = 0;
+    this.xBase = 0;        // base x position without xOffset
+    this.xOffset = 0;      // xBase and xOffset are an alternative way to describe x (x = xB + xO)
     this.tickables = [];   // Notes, tabs, chords, lyrics.
     this.notePx = 0;       // width of widest note in this context
     this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
@@ -32,7 +34,11 @@ export class TickContext extends Tickable {
   }
 
   getX() { return this.x; }
-  setX(x) { this.x = x; return this; }
+  setX(x) { this.x = x; this.xBase = x; this.xOffset = 0; return this; }
+  getXBase() { return this.xBase; } // use of xBase and xOffset is optional, avoids offset creep
+  setXBase(xBase) { this.xBase = xBase; this.x = xBase + this.xOffset; }
+  getXOffset() { return this.xOffset; }
+  setXOffset(xOffset) { this.xOffset = xOffset; this.x = this.xBase + xOffset; }
   getWidth() { return this.width + (this.padding * 2); }
   setPadding(padding) { this.padding = padding; return this; }
   getMaxTicks() { return this.maxTicks; }

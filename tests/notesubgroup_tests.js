@@ -14,6 +14,7 @@ VF.Test.NoteSubGroup = (function() {
 
       run('Basic - ClefNote, TimeSigNote and BarNote', VF.Test.NoteSubGroup.draw);
       run('Multi Voice', VF.Test.NoteSubGroup.drawMultiVoice);
+      run('Multi Voice Multiple Draws', VF.Test.NoteSubGroup.drawMultiVoiceMultipleDraw);
       run('Multi Staff', VF.Test.NoteSubGroup.drawMultiStaff);
     },
 
@@ -136,6 +137,71 @@ VF.Test.NoteSubGroup = (function() {
         .joinVoices(voices)
         .formatToStave(voices, stave);
 
+      vf.draw();
+
+      notes1.forEach(function(note) {
+        Vex.Flow.Test.plotNoteWidth(ctx, note, 150);
+      });
+
+      ok(true, 'all pass');
+    },
+
+    // draws multiple times. prevents incremental x-shift each draw.
+    drawMultiVoiceMultipleDraw: function(options) {
+      var vf = VF.Test.makeFactory(options, 550, 200);
+      var ctx = vf.getContext();
+      var stave = vf.Stave().addClef('treble');
+
+      var notes1 = [
+        { keys: ['f/5'], stem_direction: 1, duration: '4' },
+        { keys: ['d/4'], stem_direction: 1, duration: '4', clef: 'bass' },
+        { keys: ['c/5'], stem_direction: 1, duration: '4', clef: 'alto' },
+        { keys: ['c/5'], stem_direction: 1, duration: '4', clef: 'soprano' },
+      ].map(vf.StaveNote.bind(vf));
+
+      var notes2 = [
+        { keys: ['c/4'], stem_direction: -1, duration: '4' },
+        { keys: ['c/3'], stem_direction: -1, duration: '4', clef: 'bass' },
+        { keys: ['d/4'], stem_direction: -1, duration: '4', clef: 'alto' },
+        { keys: ['f/4'], stem_direction: -1, duration: '4', clef: 'soprano' },
+      ].map(vf.StaveNote.bind(vf));
+
+      function addAccidental(note, accid) {
+        return note.addModifier(0, vf.Accidental({ type: accid }));
+      }
+      function addSubGroup(note, subNotes) {
+        return note.addModifier(0, vf.NoteSubGroup({ notes: subNotes }));
+      }
+
+      addAccidental(notes1[1], '#');
+
+      addSubGroup(notes1[1], [
+        vf.ClefNote({ type: 'bass', options: { size: 'small' } }),
+        new VF.BarNote(VF.Barline.type.REPEAT_BEGIN),
+        vf.TimeSigNote({ time: '3/4' }),
+      ]);
+      addSubGroup(notes2[2], [
+        vf.ClefNote({ type: 'alto', options: { size: 'small' } }),
+        vf.TimeSigNote({ time: '9/8' }),
+        new VF.BarNote(VF.Barline.type.DOUBLE),
+      ]);
+      addSubGroup(notes1[3], [
+        vf.ClefNote({ type: 'soprano', options: { size: 'small' } }),
+      ]);
+
+      addAccidental(notes1[2], 'b');
+      addAccidental(notes2[3], '#');
+
+      var voices = [
+        vf.Voice().addTickables(notes1),
+        vf.Voice().addTickables(notes2),
+      ];
+
+      vf.Formatter()
+        .joinVoices(voices)
+        .formatToStave(voices, stave);
+
+      vf.draw();
       vf.draw();
 
       notes1.forEach(function(note) {
