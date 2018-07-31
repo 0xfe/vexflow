@@ -69,7 +69,7 @@ VF.Test.StaveNote = (function() {
 
       Object.keys(tickTests).forEach(function(testName) {
         var testData = tickTests[testName];
-        var durationString  = testData[0];
+        var durationString = testData[0];
         var expectedBeats = testData[1];
         var expectedNoteType = testData[2];
         var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: durationString });
@@ -114,7 +114,7 @@ VF.Test.StaveNote = (function() {
 
       Object.keys(tickTests).forEach(function(testName) {
         var testData = tickTests[testName];
-        var noteData  = testData[0];
+        var noteData = testData[0];
         var expectedBeats = testData[1];
         var expectedNoteType = testData[2];
 
@@ -152,12 +152,12 @@ VF.Test.StaveNote = (function() {
         [['a/4', 'e/5', 'g/5'], VF.StaveNote.STEM_DOWN],
         [['b/4'], VF.StaveNote.STEM_DOWN],
       ]
-      .forEach(function(testData) {
-        var keys = testData[0];
-        var expectedStemDirection = testData[1];
-        var note = new VF.StaveNote({ keys: keys, auto_stem: true, duration: '8' });
-        equal(note.getStemDirection(), expectedStemDirection, 'Stem must be' + (expectedStemDirection === VF.StaveNote.STEM_UP ? 'up' : 'down'));
-      });
+        .forEach(function(testData) {
+          var keys = testData[0];
+          var expectedStemDirection = testData[1];
+          var note = new VF.StaveNote({ keys: keys, auto_stem: true, duration: '8' });
+          equal(note.getStemDirection(), expectedStemDirection, 'Stem must be' + (expectedStemDirection === VF.StaveNote.STEM_UP ? 'up' : 'down'));
+        });
     },
 
     setStemDirectionDisplacement: function() {
@@ -168,7 +168,7 @@ VF.Test.StaveNote = (function() {
       }
 
       var stemUpDisplacements = [false, true, false];
-      var stemDownDisplacements =  [true, false, false];
+      var stemDownDisplacements = [true, false, false];
 
       var note = new VF.StaveNote({ keys: ['c/5', 'd/5', 'g/5'], stem_direction: VF.Stem.UP, duration: '4' });
       deepEqual(getDisplacements(note), stemUpDisplacements);
@@ -795,7 +795,7 @@ VF.Test.StaveNote = (function() {
         newNote({ keys: ['d/5'], duration: '4', stem_direction: -1 }).addDotToAll(),
         newNote({ keys: ['d/5'], duration: '8', stem_direction: -1 }).addDotToAll(),
         newNote({ keys: ['d/5'], duration: '16', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '32',  stem_direction: -1 }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '32', stem_direction: -1 }).addDotToAll(),
         newNote({ keys: ['d/5'], duration: '64', stem_direction: -1 }).addDotToAll(),
         newNote({ keys: ['d/5'], duration: '128', stem_direction: -1 }).addDotToAll(),
       ];
@@ -863,7 +863,7 @@ VF.Test.StaveNote = (function() {
         newNote({ keys: ['e/5'], duration: '128', stem_direction: -1 }).addDotToAll(),
         newNote({ keys: ['d/5'], duration: '8', stem_direction: -1 }).addDotToAll(),
         newNote({ keys: ['d/5'], duration: '16', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '32',  stem_direction: -1 }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '32', stem_direction: -1 }).addDotToAll(),
         newNote({ keys: ['d/5'], duration: '64', stem_direction: -1 }).addDotToAll(),
         newNote({ keys: ['d/5'], duration: '128', stem_direction: -1 }).addDotToAll(),
       ];

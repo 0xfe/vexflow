@@ -95,7 +95,7 @@ Flow.keyProperties = (key, clef, params) => {
   if (line >= 6 && (((line * 2) % 2) === 0)) stroke = -1; // stroke down
 
   // Integer value for note arithmetic.
-  const int_value = typeof(value.int_val) !== 'undefined'
+  const int_value = typeof (value.int_val) !== 'undefined'
     ? (octave * 12) + value.int_val
     : null;
 
@@ -198,7 +198,7 @@ Flow.keyProperties.note_glyph = {
 };
 
 Flow.integerToNote = integer => {
-  if (typeof(integer) === 'undefined') {
+  if (typeof (integer) === 'undefined') {
     throw new Vex.RERR('BadArguments', 'Undefined integer for integerToNote');
   }
 
@@ -261,7 +261,7 @@ Flow.articulationCodes.articulations = {
   'av': { code: 'v28', between_lines: true }, // Staccatissimo
   'a>': { code: 'v42', between_lines: true }, // Accent
   'a-': { code: 'v25', between_lines: true }, // Tenuto
-  'a^': { code: 'va',  between_lines: false }, // Marcato
+  'a^': { code: 'va', between_lines: false }, // Marcato
   'a+': { code: 'v8b', between_lines: false }, // Left hand pizzicato
   'ao': { code: 'v94', between_lines: false }, // Snap pizzicato
   'ah': { code: 'vb9', between_lines: false }, // Natural harmonic or open note
@@ -275,24 +275,24 @@ Flow.articulationCodes.articulations = {
 Flow.accidentalCodes = acc => Flow.accidentalCodes.accidentals[acc];
 
 Flow.accidentalCodes.accidentals = {
-  '#':   { code: 'v18', parenRightPaddingAdjustment: -1 },
-  '##':  { code: 'v7f', parenRightPaddingAdjustment: -1 },
-  'b':   { code: 'v44', parenRightPaddingAdjustment: -2 },
-  'bb':  { code: 'v26', parenRightPaddingAdjustment: -2 },
-  'n':   { code: 'v4e', parenRightPaddingAdjustment: -1 },
-  '{':   { code: 'v9c', parenRightPaddingAdjustment: -1 },
-  '}':   { code: 'v84', parenRightPaddingAdjustment: -1 },
-  'db':  { code: 'v9e', parenRightPaddingAdjustment: -1 },
-  'd':   { code: 'vab', parenRightPaddingAdjustment:  0 },
+  '#': { code: 'v18', parenRightPaddingAdjustment: -1 },
+  '##': { code: 'v7f', parenRightPaddingAdjustment: -1 },
+  'b': { code: 'v44', parenRightPaddingAdjustment: -2 },
+  'bb': { code: 'v26', parenRightPaddingAdjustment: -2 },
+  'n': { code: 'v4e', parenRightPaddingAdjustment: -1 },
+  '{': { code: 'v9c', parenRightPaddingAdjustment: -1 },
+  '}': { code: 'v84', parenRightPaddingAdjustment: -1 },
+  'db': { code: 'v9e', parenRightPaddingAdjustment: -1 },
+  'd': { code: 'vab', parenRightPaddingAdjustment: 0 },
   'bbs': { code: 'v90', parenRightPaddingAdjustment: -1 },
-  '++':  { code: 'v51', parenRightPaddingAdjustment: -1 },
-  '+':   { code: 'v78', parenRightPaddingAdjustment: -1 },
-  '+-':  { code: 'v8d', parenRightPaddingAdjustment: -1 },
+  '++': { code: 'v51', parenRightPaddingAdjustment: -1 },
+  '+': { code: 'v78', parenRightPaddingAdjustment: -1 },
+  '+-': { code: 'v8d', parenRightPaddingAdjustment: -1 },
   '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 },
-  'bs':  { code: 'vb7', parenRightPaddingAdjustment: -1 },
+  'bs': { code: 'vb7', parenRightPaddingAdjustment: -1 },
   'bss': { code: 'v39', parenRightPaddingAdjustment: -1 },
-  'o':   { code: 'vd0', parenRightPaddingAdjustment: -1 },
-  'k':   { code: 'vd1', parenRightPaddingAdjustment: -1 },
+  'o': { code: 'vd0', parenRightPaddingAdjustment: -1 },
+  'k': { code: 'vd1', parenRightPaddingAdjustment: -1 },
 };
 
 Flow.accidentalColumnsTable = {
@@ -317,7 +317,8 @@ Flow.accidentalColumnsTable = {
     a: [1, 3, 5, 4, 2],
     b: [1, 2, 4, 3, 1],
     spaced_out_pentachord: [1, 2, 3, 2, 1],
-    very_spaced_out_pentachord: [1, 2, 1, 2, 1] },
+    very_spaced_out_pentachord: [1, 2, 1, 2, 1],
+  },
   6: {
     a: [1, 3, 5, 6, 4, 2],
     b: [1, 2, 4, 5, 3, 1],
@@ -408,7 +409,7 @@ Flow.unicode = {
   'triangle': String.fromCharCode(parseInt('25B3', 16)),
   // half-diminished
   'o-with-slash': String.fromCharCode(parseInt('00F8', 16)),
-   // Diminished
+  // Diminished
   'degrees': String.fromCharCode(parseInt('00B0', 16)),
   'circle': String.fromCharCode(parseInt('25CB', 16)),
 };
@@ -423,7 +424,7 @@ Flow.keySignature.accidentalList = (acc) => {
 };
 
 Flow.parseNoteDurationString = durationString => {
-  if (typeof(durationString) !== 'string') {
+  if (typeof (durationString) !== 'string') {
     return null;
   }
 
@@ -478,7 +479,7 @@ Flow.parseNoteData = noteData => {
 
   const dots = noteData.dots ? noteData.dots : durationStringData.dots;
 
-  if (typeof(dots) !== 'number') {
+  if (typeof (dots) !== 'number') {
     return null;
   }
 
@@ -746,7 +747,7 @@ Flow.durationToGlyph.duration_codes = {
         line_below: 1.5,
       },
       's': { // Quarter slash
-         // Drawn with canvas primitives
+        // Drawn with canvas primitives
         getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
@@ -986,7 +987,7 @@ Flow.durationToGlyph.duration_codes = {
         line_below: 3.0,
       },
       's': { // Hundred-twenty-eight rest
-              // Drawn with canvas primitives
+        // Drawn with canvas primitives
         getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },

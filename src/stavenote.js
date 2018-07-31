@@ -133,7 +133,7 @@ export class StaveNote extends StemmableNote {
       const lineSpacing = noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
       // if top voice is a middle voice, check stem intersection with lower voice
       if (noteU.stemDirection === noteL.stemDirection &&
-          noteU.minLine <= noteL.maxLine) {
+        noteU.minLine <= noteL.maxLine) {
         if (!noteU.isrest) {
           stemDelta = Math.abs(noteU.line - (noteL.maxLine + 0.5));
           stemDelta = Math.max(stemDelta, noteU.stemMin);
@@ -183,13 +183,13 @@ export class StaveNote extends StemmableNote {
         const restHeight = noteM.maxLine - noteM.minLine;
         const space = noteU.minLine - noteL.maxLine;
         if (restHeight < space) {
-           // center middle voice rest between the upper and lower voices
+          // center middle voice rest between the upper and lower voices
           centerRest(noteM, noteU, noteL);
         } else {
           xShift = voiceXShift + 3;    // shift middle rest right
           noteM.note.setXShift(xShift);
         }
-         // format complete
+        // format complete
         return true;
       }
     }
@@ -224,7 +224,7 @@ export class StaveNote extends StemmableNote {
 
     // If middle voice intersects upper or lower voice
     if ((!noteU.isrest && !noteM.isrest && noteU.minLine <= noteM.maxLine + 0.5) ||
-        (!noteM.isrest && !noteL.isrest && noteM.minLine <= noteL.maxLine)) {
+      (!noteM.isrest && !noteL.isrest && noteM.minLine <= noteL.maxLine)) {
       xShift = voiceXShift + 3;      // shift middle note right
       noteM.note.setXShift(xShift);
     }
@@ -681,7 +681,7 @@ export class StaveNote extends StemmableNote {
   getLineForRest() {
     let restLine = this.keyProps[0].line;
     if (this.keyProps.length > 1) {
-      const lastLine  = this.keyProps[this.keyProps.length - 1].line;
+      const lastLine = this.keyProps[this.keyProps.length - 1].line;
       const top = Math.max(restLine, lastLine);
       const bot = Math.min(restLine, lastLine);
       restLine = Vex.MidLine(top, bot);
@@ -709,7 +709,7 @@ export class StaveNote extends StemmableNote {
       x = -1 * 2;
     } else if (position === RIGHT) {
       // extra_right_px
-       // FIXME: What is this magical +2?
+      // FIXME: What is this magical +2?
       x = this.getGlyphWidth() + this.x_shift + 2;
 
       if (this.stem_direction === Stem.UP && this.hasFlag() && isInnerNoteIndex(this, index)) {
@@ -909,7 +909,7 @@ export class StaveNote extends StemmableNote {
       const line = notehead.getLine();
       const y = notehead.getY();
 
-      if (yTop === null || y < yTop)  {
+      if (yTop === null || y < yTop) {
         yTop = y;
       }
 
@@ -1068,10 +1068,10 @@ export class StaveNote extends StemmableNote {
       const flagX = this.getStemX();
       // FIXME: What's with the magic +/- 2
       const flagY = this.getStemDirection() === Stem.DOWN
-          // Down stems have flags on the left
-          ? y_top - noteStemHeight + 2
-          // Up stems have flags on the eft.
-          : y_bottom - noteStemHeight - 2;
+        // Down stems have flags on the left
+        ? y_top - noteStemHeight + 2
+        // Up stems have flags on the eft.
+        : y_bottom - noteStemHeight - 2;
 
       // Draw the Flag
       ctx.openGroup('flag', null, { pointerBBox: true });

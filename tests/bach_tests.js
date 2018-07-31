@@ -178,12 +178,14 @@ VF.Test.BachDemo = (function() {
       var grace = vf.GraceNote({ keys: ['d/3'], clef: 'bass', duration: '8', slash: true });
 
       system.addStave({ voices: [voice(notes('A4/h.[id="m8c"]'))] });
-      system.addStave({ voices: [
-        score.set({ clef: 'bass' }).voice([
-          notes('D4/q[id="m8a"]'),
-          beam(notes('D3/8, C4, B3[id="m8b"], A3', { stem: 'down' })),
-        ].reduce(concat)),
-      ] });
+      system.addStave({
+        voices: [
+          score.set({ clef: 'bass' }).voice([
+            notes('D4/q[id="m8a"]'),
+            beam(notes('D3/8, C4, B3[id="m8b"], A3', { stem: 'down' })),
+          ].reduce(concat)),
+        ],
+      });
       system.addConnector('singleRight');
 
       id('m8b').addModifier(0, vf.Fingering({ number: '1', position: 'above' }));
@@ -235,7 +237,7 @@ VF.Test.BachDemo = (function() {
         options: { cps: [{ x: 0, y: 40 }, { x: 0, y: 40 }] },
       });
 
-       /*  Measure 11 */
+      /*  Measure 11 */
       system = makeSystem(150);
       system.addStave({
         voices: [
@@ -319,7 +321,7 @@ VF.Test.BachDemo = (function() {
       id('m14a').addModifier(0, vf.Fingering({ number: '2' }));
       id('m14b').addModifier(0, vf.Fingering({ number: '1' }));
 
-       /*  Measure 15 */
+      /*  Measure 15 */
       system = makeSystem(180);
       system.addStave({
         voices: [
@@ -336,7 +338,7 @@ VF.Test.BachDemo = (function() {
       id('m15a').addModifier(0, vf.Fingering({ number: '2' }));
       id('m15b').addModifier(0, vf.Fingering({ number: '2' }));
 
-       /*  Measure 16 */
+      /*  Measure 16 */
       system = makeSystem(130);
       system.addStave({
         voices: [

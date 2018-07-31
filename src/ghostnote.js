@@ -11,21 +11,21 @@ export class GhostNote extends StemmableNote {
     // Sanity check
     if (!parameter) {
       throw new Vex.RuntimeError('BadArguments',
-          'Ghost note must have valid initialization data to identify ' +
-          'duration.');
+        'Ghost note must have valid initialization data to identify ' +
+        'duration.');
     }
 
     let note_struct;
 
     // Preserve backwards-compatibility
-    if (typeof(parameter) === 'string') {
+    if (typeof (parameter) === 'string') {
       note_struct = { duration: parameter };
-    } else if (typeof(parameter) === 'object') {
+    } else if (typeof (parameter) === 'object') {
       note_struct = parameter;
     } else {
       throw new Vex.RuntimeError('BadArguments',
-          'Ghost note must have valid initialization data to identify ' +
-          'duration.');
+        'Ghost note must have valid initialization data to identify ' +
+        'duration.');
     }
 
     super(note_struct);

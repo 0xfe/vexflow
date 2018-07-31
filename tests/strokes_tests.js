@@ -145,18 +145,26 @@ VF.Test.Strokes = (function() {
 
       // tablature upper voice notes
       var tabNotes1 = [
-        vf.TabNote({ positions: [{ str: 3, fret: 0 },
-                                 { str: 2, fret: 0 },
-                                 { str: 1, fret: 1 }], duration: '4' }),
-        vf.TabNote({ positions: [{ str: 3, fret: 0 },
-                                 { str: 2, fret: 0 },
-                                 { str: 1, fret: 1 }], duration: '4' }),
-        vf.TabNote({ positions: [{ str: 3, fret: 0 },
-                                 { str: 2, fret: 0 },
-                                 { str: 1, fret: 1 }], duration: '4' }),
-        vf.TabNote({ positions: [{ str: 3, fret: 0 },
-                                 { str: 2, fret: 0 },
-                                 { str: 1, fret: 1 }], duration: '4' }),
+        vf.TabNote({
+          positions: [{ str: 3, fret: 0 },
+            { str: 2, fret: 0 },
+            { str: 1, fret: 1 }], duration: '4',
+        }),
+        vf.TabNote({
+          positions: [{ str: 3, fret: 0 },
+            { str: 2, fret: 0 },
+            { str: 1, fret: 1 }], duration: '4',
+        }),
+        vf.TabNote({
+          positions: [{ str: 3, fret: 0 },
+            { str: 2, fret: 0 },
+            { str: 1, fret: 1 }], duration: '4',
+        }),
+        vf.TabNote({
+          positions: [{ str: 3, fret: 0 },
+            { str: 2, fret: 0 },
+            { str: 1, fret: 1 }], duration: '4',
+        }),
       ];
 
       tabNotes1[0].addStroke(0, new VF.Stroke(3, { all_voices: false }));
@@ -187,21 +195,29 @@ VF.Test.Strokes = (function() {
       var stave1 = vf.TabStave({ width: 250 }).setEndBarType(VF.Barline.type.DOUBLE);
 
       var tabNotes1 = [
-        vf.TabNote({ positions: [{ str: 2, fret: 8 },
-                                 { str: 3, fret: 9 },
-                                 { str: 4, fret: 10 }], duration: '4' }),
-        vf.TabNote({ positions: [{ str: 3, fret: 7 },
-                                 { str: 4, fret: 8 },
-                                 { str: 5, fret: 9 }], duration: '4' }),
-        vf.TabNote({ positions: [{ str: 1, fret: 5 },
-                                 { str: 2, fret: 6 },
-                                 { str: 3, fret: 7 },
-                                 { str: 4, fret: 7 },
-                                 { str: 5, fret: 5 },
-                                 { str: 6, fret: 5 }], duration: '4' }),
-        vf.TabNote({ positions: [{ str: 4, fret: 3 },
-                                 { str: 5, fret: 4 },
-                                 { str: 6, fret: 5 }], duration: '4' }),
+        vf.TabNote({
+          positions: [{ str: 2, fret: 8 },
+            { str: 3, fret: 9 },
+            { str: 4, fret: 10 }], duration: '4',
+        }),
+        vf.TabNote({
+          positions: [{ str: 3, fret: 7 },
+            { str: 4, fret: 8 },
+            { str: 5, fret: 9 }], duration: '4',
+        }),
+        vf.TabNote({
+          positions: [{ str: 1, fret: 5 },
+            { str: 2, fret: 6 },
+            { str: 3, fret: 7 },
+            { str: 4, fret: 7 },
+            { str: 5, fret: 5 },
+            { str: 6, fret: 5 }], duration: '4',
+        }),
+        vf.TabNote({
+          positions: [{ str: 4, fret: 3 },
+            { str: 5, fret: 4 },
+            { str: 6, fret: 5 }], duration: '4',
+        }),
       ];
 
       tabNotes1[0].addStroke(0, new VF.Stroke(1));
@@ -215,20 +231,24 @@ VF.Test.Strokes = (function() {
         .joinVoices([tabVoice1])
         .formatToStave([tabVoice1], stave1);
 
-     // bar 2
+      // bar 2
       var stave2 = vf.TabStave({ x: stave1.width + stave1.x, width: 300 })
         .setEndBarType(VF.Barline.type.DOUBLE);
 
       var tabNotes2 = [
-        vf.TabNote({ positions: [{ str: 2, fret: 7 },
-                                 { str: 3, fret: 8 },
-                                 { str: 4, fret: 9 }], duration: '2' }),
-        vf.TabNote({ positions: [{ str: 1, fret: 5 },
-                                 { str: 2, fret: 6 },
-                                 { str: 3, fret: 7 },
-                                 { str: 4, fret: 7 },
-                                 { str: 5, fret: 5 },
-                                 { str: 6, fret: 5 }], duration: '2' }),
+        vf.TabNote({
+          positions: [{ str: 2, fret: 7 },
+            { str: 3, fret: 8 },
+            { str: 4, fret: 9 }], duration: '2',
+        }),
+        vf.TabNote({
+          positions: [{ str: 1, fret: 5 },
+            { str: 2, fret: 6 },
+            { str: 3, fret: 7 },
+            { str: 4, fret: 7 },
+            { str: 5, fret: 5 },
+            { str: 6, fret: 5 }], duration: '2',
+        }),
       ];
 
       tabNotes2[0].addStroke(0, new VF.Stroke(6));
@@ -269,31 +289,43 @@ VF.Test.Strokes = (function() {
         .setNoteStartX(stave.getNoteStartX());
 
       var tabNotes = [
-        vf.TabNote({ positions: [{ str: 1, fret: 3 },
-                                 { str: 2, fret: 2 },
-                                 { str: 3, fret: 3 }], duration: '4' }).addModifier(new VF.Bend('Full'), 0),
-        vf.TabNote({ positions: [{ str: 2, fret: 3 },
-                                 { str: 3, fret: 5 }], duration: '4' }).addModifier(new VF.Bend('Unison'), 1),
-        vf.TabNote({ positions: [{ str: 3, fret: 7 },
-                                 { str: 4, fret: 7 },
-                                 { str: 5, fret: 7 },
-                                 { str: 6, fret: 7 }], duration: '8' }),
-        vf.TabNote({ positions: [{ str: 1, fret: 5 },
-                                 { str: 2, fret: 5 },
-                                 { str: 3, fret: 6 },
-                                 { str: 4, fret: 7 },
-                                 { str: 5, fret: 7 },
-                                 { str: 6, fret: 5 }], duration: '8' }),
-        vf.TabNote({ positions: [{ str: 3, fret: 7 },
-                                 { str: 4, fret: 7 },
-                                 { str: 5, fret: 7 },
-                                 { str: 6, fret: 7 }], duration: '8' }),
-        vf.TabNote({ positions: [{ str: 1, fret: 5 },
-                                 { str: 2, fret: 5 },
-                                 { str: 3, fret: 6 },
-                                 { str: 4, fret: 7 },
-                                 { str: 5, fret: 7 },
-                                 { str: 6, fret: 5 }], duration: '8' }),
+        vf.TabNote({
+          positions: [{ str: 1, fret: 3 },
+            { str: 2, fret: 2 },
+            { str: 3, fret: 3 }], duration: '4',
+        }).addModifier(new VF.Bend('Full'), 0),
+        vf.TabNote({
+          positions: [{ str: 2, fret: 3 },
+            { str: 3, fret: 5 }], duration: '4',
+        }).addModifier(new VF.Bend('Unison'), 1),
+        vf.TabNote({
+          positions: [{ str: 3, fret: 7 },
+            { str: 4, fret: 7 },
+            { str: 5, fret: 7 },
+            { str: 6, fret: 7 }], duration: '8',
+        }),
+        vf.TabNote({
+          positions: [{ str: 1, fret: 5 },
+            { str: 2, fret: 5 },
+            { str: 3, fret: 6 },
+            { str: 4, fret: 7 },
+            { str: 5, fret: 7 },
+            { str: 6, fret: 5 }], duration: '8',
+        }),
+        vf.TabNote({
+          positions: [{ str: 3, fret: 7 },
+            { str: 4, fret: 7 },
+            { str: 5, fret: 7 },
+            { str: 6, fret: 7 }], duration: '8',
+        }),
+        vf.TabNote({
+          positions: [{ str: 1, fret: 5 },
+            { str: 2, fret: 5 },
+            { str: 3, fret: 6 },
+            { str: 4, fret: 7 },
+            { str: 5, fret: 7 },
+            { str: 6, fret: 5 }], duration: '8',
+        }),
 
       ];
 

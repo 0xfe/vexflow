@@ -113,7 +113,7 @@ export class Annotation extends Modifier {
   // Set vertical position of text (above or below stave). `just` must be
   // a value in `Annotation.VerticalJustify`.
   setVerticalJustification(just) {
-    this.vert_justification = typeof(just) === 'string'
+    this.vert_justification = typeof (just) === 'string'
       ? Annotation.VerticalJustifyString[just]
       : just;
     return this;
@@ -123,7 +123,7 @@ export class Annotation extends Modifier {
   // `Annotation.Justify`.
   getJustification() { return this.justification; }
   setJustification(just) {
-    this.justification = typeof(just) === 'string'
+    this.justification = typeof (just) === 'string'
       ? Annotation.JustifyString[just]
       : just;
     return this;
@@ -141,7 +141,7 @@ export class Annotation extends Modifier {
 
     this.setRendered();
     const start = this.note.getModifierStartXY(Modifier.Position.ABOVE,
-        this.index);
+      this.index);
 
     // We're changing context parameters. Save current state.
     this.context.save();
@@ -195,7 +195,7 @@ export class Annotation extends Modifier {
       if (has_stem) {
         y = Math.min(y, (stem_ext.topY - 5) - (spacing * this.text_line));
       }
-    } else /* CENTER_STEM */{
+    } else /* CENTER_STEM */ {
       const extents = this.note.getStemExtents();
       y = extents.topY + (extents.baseY - extents.topY) / 2 +
         text_height / 2;

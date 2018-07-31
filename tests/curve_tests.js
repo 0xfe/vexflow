@@ -23,8 +23,8 @@ VF.Test.Curve = (function() {
       var voice = score.voice(notes, { time: '4/4' });
 
       vf.Formatter()
-       .joinVoices([voice])
-       .formatToStave([voice], stave);
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
 
       vf.draw();
 

@@ -187,7 +187,7 @@ VF.Test.Articulation = (function() {
         notesBar1[i].addArticulation(0, new VF.Articulation('a.').setPosition(4));
         notesBar1[i].addArticulation(0, new VF.Articulation('a>').setPosition(4));
 
-        if (i === 15)          {
+        if (i === 15) {
           notesBar1[i].addArticulation(0, new VF.Articulation('a@u').setPosition(4));
         }
       }
@@ -225,7 +225,7 @@ VF.Test.Articulation = (function() {
         notesBar2[i].addArticulation(0, new VF.Articulation('a-').setPosition(3));
         notesBar2[i].addArticulation(0, new VF.Articulation('a^').setPosition(3));
 
-        if (i === 15)          {
+        if (i === 15) {
           notesBar2[i].addArticulation(0, new VF.Articulation('a@u').setPosition(4));
         }
       }

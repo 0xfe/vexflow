@@ -149,7 +149,7 @@ export class Bend extends Modifier {
     this.setRendered();
 
     const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
-        this.index);
+      this.index);
     start.x += 3;
     start.y += 0.5;
     const x_shift = this.x_shift;
@@ -182,8 +182,8 @@ export class Bend extends Modifier {
       ctx.setFillStyle(that.render_options.line_style);
       ctx.moveTo(x, height);
       ctx.quadraticCurveTo(
-          x + width, height,
-          x + width, y);
+        x + width, height,
+        x + width, y);
       ctx.stroke();
       ctx.restore();
     }

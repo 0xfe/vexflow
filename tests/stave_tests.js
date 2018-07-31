@@ -204,7 +204,7 @@ VF.Test.Stave = (function() {
 
       // bar 2 - juxtaposing second bar next to first bar
       var staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x,
-                                         staveBar1.y, 250);
+        staveBar1.y, 250);
       staveBar2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       staveBar2.setEndBarType(VF.Barline.type.REPEAT_END);
       staveBar2.setContext(ctx).draw();
@@ -239,7 +239,7 @@ VF.Test.Stave = (function() {
 
       // bar 3 - juxtaposing third bar next to second bar
       var staveBar3 = new VF.Stave(staveBar2.width + staveBar2.x,
-                                         staveBar2.y, 50);
+        staveBar2.y, 50);
       staveBar3.setContext(ctx).draw();
       var notesBar3 = [new VF.StaveNote({ keys: ['d/5'], duration: 'wr' })];
 
@@ -248,7 +248,7 @@ VF.Test.Stave = (function() {
 
       // bar 4 - juxtaposing third bar next to third bar
       var staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x,
-                                         staveBar3.y, 250 - staveBar1.getModifierXShift());
+        staveBar3.y, 250 - staveBar1.getModifierXShift());
       staveBar4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       staveBar4.setEndBarType(VF.Barline.type.REPEAT_END);
       staveBar4.setContext(ctx).draw();

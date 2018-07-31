@@ -32,12 +32,14 @@ VF.Test.Annotation = (function() {
 
       var notes = [
         newNote({
-          positions: [{ str: 2, fret: 10 }, { str: 4, fret: 9 }], duration: 'h' })
+          positions: [{ str: 2, fret: 10 }, { str: 4, fret: 9 }], duration: 'h',
+        })
           .addModifier(newAnnotation('T'), 0),
         newNote({
-          positions: [{ str: 2, fret: 10 }], duration: 'h' })
-            .addModifier(newAnnotation('T'), 0)
-            .addModifier(newBend('Full'), 0),
+          positions: [{ str: 2, fret: 10 }], duration: 'h',
+        })
+          .addModifier(newAnnotation('T'), 0)
+          .addModifier(newBend('Full'), 0),
       ];
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes, 200);
@@ -53,7 +55,7 @@ VF.Test.Annotation = (function() {
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
       function newAnnotation(text) {
         return (new VF.Annotation(text)).setFont('Times',
-            VF.Test.Font.size, 'italic');
+          VF.Test.Font.size, 'italic');
       }
 
       var notes = [
@@ -79,13 +81,15 @@ VF.Test.Annotation = (function() {
 
       var notes = [
         newNote({
-          positions: [{ str: 2, fret: 12 }, { str: 3, fret: 12 }], duration: 'h' })
+          positions: [{ str: 2, fret: 12 }, { str: 3, fret: 12 }], duration: 'h',
+        })
           .addModifier(newAnnotation('Harm.'), 0),
         newNote({
-          positions: [{ str: 2, fret: 9 }], duration: 'h' })
-            .addModifier(newAnnotation('(8va)').setFont('Times',
-                  VF.Test.Font.size, 'italic'), 0)
-            .addModifier(newAnnotation('A.H.'), 0),
+          positions: [{ str: 2, fret: 9 }], duration: 'h',
+        })
+          .addModifier(newAnnotation('(8va)').setFont('Times',
+            VF.Test.Font.size, 'italic'), 0)
+          .addModifier(newAnnotation('A.H.'), 0),
       ];
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes, 200);
@@ -102,7 +106,7 @@ VF.Test.Annotation = (function() {
       function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
       function newAnnotation(text) {
         return new VF.Annotation(text)
-        .setFont('Times', VF.Test.Font.size, 'italic');
+          .setFont('Times', VF.Test.Font.size, 'italic');
       }
 
       var notes = [
@@ -113,20 +117,25 @@ VF.Test.Annotation = (function() {
             { str: 3, fret: 2 },
             { str: 4, fret: 2 },
             { str: 5, fret: 0 },
-          ], duration: 'h' })
+          ], duration: 'h',
+        })
           .addModifier(new VF.Vibrato().setVibratoWidth(40)),
         newNote({
-          positions: [{ str: 6, fret: 9 }], duration: '8' })
-            .addModifier(newAnnotation('p'), 0),
+          positions: [{ str: 6, fret: 9 }], duration: '8',
+        })
+          .addModifier(newAnnotation('p'), 0),
         newNote({
-          positions: [{ str: 3, fret: 9 }], duration: '8' })
-            .addModifier(newAnnotation('i'), 0),
+          positions: [{ str: 3, fret: 9 }], duration: '8',
+        })
+          .addModifier(newAnnotation('i'), 0),
         newNote({
-          positions: [{ str: 2, fret: 9 }], duration: '8' })
-            .addModifier(newAnnotation('m'), 0),
+          positions: [{ str: 2, fret: 9 }], duration: '8',
+        })
+          .addModifier(newAnnotation('m'), 0),
         newNote({
-          positions: [{ str: 1, fret: 9 }], duration: '8' })
-            .addModifier(newAnnotation('a'), 0),
+          positions: [{ str: 1, fret: 9 }], duration: '8',
+        })
+          .addModifier(newAnnotation('a'), 0),
       ];
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes, 200);
@@ -142,9 +151,9 @@ VF.Test.Annotation = (function() {
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
       function newAnnotation(text) {
         return (
-            new VF.Annotation(text))
-            .setFont('Times', VF.Test.Font.size)
-            .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+          new VF.Annotation(text))
+          .setFont('Times', VF.Test.Font.size)
+          .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
       }
 
       var notes = [
@@ -172,19 +181,19 @@ VF.Test.Annotation = (function() {
       var notes = [
         new VF.StaveNote({ keys: ['a/3'], duration: '8' })
           .addModifier(0, new VF.Annotation('good')
-          .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)),
+            .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)),
 
         new VF.StaveNote({ keys: ['g/3'], duration: '8' })
           .addModifier(0, new VF.Annotation('even')
-          .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)),
+            .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)),
 
         new VF.StaveNote({ keys: ['c/4'], duration: '8' })
           .addModifier(0, new VF.Annotation('under')
-          .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)),
+            .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)),
 
         new VF.StaveNote({ keys: ['d/4'], duration: '8' })
           .addModifier(0, new VF.Annotation('beam')
-          .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)),
+            .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)),
       ];
 
       var beam = new VF.Beam(notes.slice(1));
@@ -201,10 +210,10 @@ VF.Test.Annotation = (function() {
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
       function newAnnotation(text, hJustifcation, vJustifcation) {
         return (
-            new VF.Annotation(text))
-              .setFont('Arial', VF.Test.Font.size)
-              .setJustification(hJustifcation)
-              .setVerticalJustification(vJustifcation);
+          new VF.Annotation(text))
+          .setFont('Arial', VF.Test.Font.size)
+          .setJustification(hJustifcation)
+          .setVerticalJustification(vJustifcation);
       }
 
       for (var v = 1; v <= 4; ++v) {
@@ -231,10 +240,10 @@ VF.Test.Annotation = (function() {
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
       function newAnnotation(text, hJustifcation, vJustifcation) {
         return (
-            new VF.Annotation(text))
-              .setFont('Arial', VF.Test.Font.size)
-              .setJustification(hJustifcation)
-              .setVerticalJustification(vJustifcation);
+          new VF.Annotation(text))
+          .setFont('Arial', VF.Test.Font.size)
+          .setJustification(hJustifcation)
+          .setVerticalJustification(vJustifcation);
       }
 
       for (var v = 1; v <= 4; ++v) {

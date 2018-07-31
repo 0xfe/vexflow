@@ -103,15 +103,15 @@ export class Repetition extends StaveModifier {
 
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-      // Default to right symbol
+    // Default to right symbol
     let text_x = 0 + this.x_shift;
     let symbol_x = x + this.x_shift;
     if (this.symbol_type === Repetition.type.CODA_LEFT) {
-        // Offset Coda text to right of stave beginning
+      // Offset Coda text to right of stave beginning
       text_x = this.x + stave.options.vertical_bar_width;
       symbol_x = text_x + ctx.measureText(text).width + 12;
     } else {
-        // Offset Signo text to left stave end
+      // Offset Signo text to left stave end
       symbol_x = this.x + x + stave.width - 5 + this.x_shift;
       text_x = symbol_x - + ctx.measureText(text).width - 12;
     }

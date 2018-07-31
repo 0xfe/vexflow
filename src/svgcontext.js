@@ -120,7 +120,7 @@ export class SVGContext {
   // we do some tricks to improve text layout.  See the
   // note at ieMeasureTextFix() for details.
   iePolyfill() {
-    if (typeof(navigator) !== 'undefined') {
+    if (typeof (navigator) !== 'undefined') {
       this.ie = (
         /MSIE 9/i.test(navigator.userAgent) ||
         /MSIE 10/i.test(navigator.userAgent) ||
@@ -142,17 +142,17 @@ export class SVGContext {
     // Weight might also be a number (200, 400, etc...) so we
     // test its type to be sure we have access to String methods.
     if (typeof weight === 'string') {
-        // look for "italic" in the weight:
+      // look for "italic" in the weight:
       if (weight.indexOf('italic') !== -1) {
         weight = weight.replace(/italic/g, '');
         italic = true;
       }
-        // look for "bold" in weight
+      // look for "bold" in weight
       if (weight.indexOf('bold') !== -1) {
         weight = weight.replace(/bold/g, '');
         bold = true;
       }
-        // remove any remaining spaces
+      // remove any remaining spaces
       weight = weight.replace(/ /g, '');
     }
     weight = bold ? 'bold' : weight;
@@ -565,7 +565,7 @@ export class SVGContext {
   // ## Text Methods:
   measureText(text) {
     const txt = this.create('text');
-    if (typeof(txt.getBBox) !== 'function') {
+    if (typeof (txt.getBBox) !== 'function') {
       return { x: 0, y: 0, width: 0, height: 0 };
     }
 

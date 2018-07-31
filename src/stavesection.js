@@ -37,7 +37,7 @@ export class StaveSection extends StaveModifier {
     let width = text_width + 6;  // add left & right padding
     if (width < 18) width = 18;
     const height = 20;
-      //  Seems to be a good default y
+    //  Seems to be a good default y
     const y = stave.getYForTopText(3) + this.shift_y;
     let x = this.x + shift_x;
     ctx.beginPath();

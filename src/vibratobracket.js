@@ -14,7 +14,6 @@ import { Vibrato } from './vibrato';
 function L(...args) { if (VibratoBracket.DEBUG) Vex.L('Vex.Flow.VibratoBracket', args); }
 
 export class VibratoBracket extends Element {
-
   // bracket_data = {
   //   start: Vex.Flow.Note (optional)
   //   stop: Vex.Flow.Note (optional)
@@ -58,8 +57,8 @@ export class VibratoBracket extends Element {
       ? this.start.getAbsoluteX()
       : this.stop.getStave().getTieStartX();
 
-      // If stop note is not set then vibrato will be drawn
-      // until the end of the stave
+    // If stop note is not set then vibrato will be drawn
+    // until the end of the stave
     const stop_x = (this.stop)
       ? this.stop.getAbsoluteX() - this.stop.getWidth() - 5
       : this.start.getStave().getTieEndX() - 10;

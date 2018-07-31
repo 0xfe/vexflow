@@ -56,13 +56,13 @@ VF.Test.GhostNote = {
 
       var voice1 = score.voice([
         vf.GhostNote({ duration: '4d' }),
-        vf.StaveNote({ duration: '8',  keys: ['f/5'], stem_direction: 1 }),
-        vf.StaveNote({ duration: '4',  keys: ['d/5'], stem_direction: 1 }),
-        vf.StaveNote({ duration: '8',  keys: ['c/5'], stem_direction: 1 }),
+        vf.StaveNote({ duration: '8', keys: ['f/5'], stem_direction: 1 }),
+        vf.StaveNote({ duration: '4', keys: ['d/5'], stem_direction: 1 }),
+        vf.StaveNote({ duration: '8', keys: ['c/5'], stem_direction: 1 }),
         vf.StaveNote({ duration: '16', keys: ['c/5'], stem_direction: 1 }),
         vf.StaveNote({ duration: '16', keys: ['d/5'], stem_direction: 1 }),
         vf.GhostNote({ duration: '2dd' }),
-        vf.StaveNote({ duration: '8',  keys: ['f/5'], stem_direction: 1 }),
+        vf.StaveNote({ duration: '8', keys: ['f/5'], stem_direction: 1 }),
       ], { time: '8/4' });
 
       var voice2 = score.voice([

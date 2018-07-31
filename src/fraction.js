@@ -10,7 +10,6 @@
 
 import { Vex } from './vex';
 export class Fraction {
-
   /**
    * GCD: Find greatest common divisor using Euclidean algorithm
    */

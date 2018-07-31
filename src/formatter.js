@@ -77,7 +77,7 @@ function createContexts(voices, ContextType, addToContext) {
     if (!voice.getTotalTicks().equals(totalTicks)) {
       throw new Vex.RERR(
         'TickMismatch', 'Voices should have same total note duration in ticks.'
-       );
+      );
     }
 
     if (voice.getMode() === Voice.Mode.STRICT && !voice.isComplete()) {
@@ -259,7 +259,7 @@ export class Formatter {
       .setMode(Voice.Mode.SOFT)
       .addTickables(tabnotes);
 
-      // Then create beams, if requested.
+    // Then create beams, if requested.
     const beams = opts.auto_beam ? Beam.applyAndGetBeams(notevoice) : [];
 
     // Instantiate a `Formatter` and align tab and stave notes.
@@ -551,7 +551,7 @@ export class Formatter {
         const metrics = note.getMetrics();
         const formatterMetrics = note.getFormatterMetrics();
         const leftNoteEdge = note.getX() + metrics.noteWidth +
-            metrics.modRightPx + metrics.extraRightPx;
+          metrics.modRightPx + metrics.extraRightPx;
         let space = 0;
 
         if (i < (notes.length - 1)) {

@@ -106,7 +106,7 @@ Vex.Flow.Test.Accidental = (function() {
             .addAccidental(0, vf.Accidental({ type: accid }));
         });
 
-      var voice = score.voice(notes, { time: accids.length  + '/4' });
+      var voice = score.voice(notes, { time: accids.length + '/4' });
 
       voice
         .getTickables()

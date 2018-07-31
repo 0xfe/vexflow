@@ -115,7 +115,7 @@ export class Note extends Tickable {
     // Get the glyph code for this note from the font.
     this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
 
-    if (this.positions && (typeof(this.positions) !== 'object' || !this.positions.length)) {
+    if (this.positions && (typeof (this.positions) !== 'object' || !this.positions.length)) {
       throw new Vex.RuntimeError('BadArguments', 'Note keys must be array type.');
     }
 
@@ -137,7 +137,7 @@ export class Note extends Tickable {
     this.voice = null;          // The voice that this note is in
     this.preFormatted = false;  // Is this note preFormatted?
     this.ys = [];               // list of y coordinates for each note
-                                // we need to hold on to these for ties and beams.
+    // we need to hold on to these for ties and beams.
 
     if (note_struct.align_center) {
       this.setCenterAlignment(note_struct.align_center);

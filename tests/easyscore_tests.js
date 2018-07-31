@@ -184,7 +184,8 @@ Vex.Flow.Test.EasyScore = (function() {
         voices: [
           voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', { stem: 'down' })),
           voice(notes('c#5/h.', { stem: 'up' }).concat(beam(notes('c5/8, c5/8', { stem: 'up' })))),
-        ] }).addClef('treble');
+        ],
+      }).addClef('treble');
 
       vf.draw();
       expect(0);

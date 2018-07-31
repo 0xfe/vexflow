@@ -9,9 +9,9 @@ VF.Test.StaveModifier = (function() {
       QUnit.module('StaveModifier');
       VF.Test.runTests('Stave Draw Test', VF.Test.Stave.draw);
       VF.Test.runTests('Vertical Bar Test',
-          VF.Test.Stave.drawVerticalBar);
+        VF.Test.Stave.drawVerticalBar);
       VF.Test.runTests('Begin & End StaveModifier Test',
-          StaveModifier.drawBeginAndEnd);
+        StaveModifier.drawBeginAndEnd);
     },
 
     draw: function(options, contextBuilder) {

@@ -55,7 +55,7 @@ export class Volta extends StaveModifier {
       default:
         break;
     }
-      // If the beginning of a volta, draw measure number
+    // If the beginning of a volta, draw measure number
     if (this.volta === Volta.type.BEGIN || this.volta === Volta.type.BEGIN_END) {
       ctx.save();
       ctx.setFont(this.font.family, this.font.size, this.font.weight);

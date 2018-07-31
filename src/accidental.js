@@ -47,7 +47,7 @@ export class Accidental extends Modifier {
       const stave = note.getStave();
       const props = note.getKeyProps()[acc.getIndex()];
       if (note !== prevNote) {
-         // Iterate through all notes to get the displaced pixels
+        // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
           propsTemp = note.getKeyProps()[n];
           shiftL = propsTemp.displaced ? note.getExtraLeftPx() : shiftL;
@@ -146,7 +146,7 @@ export class Accidental extends Modifier {
       while (groupEnd + 1 < lineList.length && !noFurtherConflicts) {
         // if this note conflicts with the next:
         if (this.checkCollision(lineList[groupEnd], lineList[groupEnd + 1])) {
-        // include the next note in the group:
+          // include the next note in the group:
           groupEnd++;
         } else {
           noFurtherConflicts = true;
@@ -228,8 +228,8 @@ export class Accidental extends Modifier {
           totalColumns = (totalColumns > column) ? totalColumns : column;
         }
 
-      // Otherwise, if the group contains fewer than seven members, use the layouts from
-      // the accidentalsColumnsTable housed in tables.js.
+        // Otherwise, if the group contains fewer than seven members, use the layouts from
+        // the accidentalsColumnsTable housed in tables.js.
       } else {
         for (groupMember = i; groupMember <= groupEnd; groupMember++) {
           column = Flow.accidentalColumnsTable[groupLength][endCase][groupMember - i];
@@ -377,7 +377,7 @@ export class Accidental extends Modifier {
           // modified the accidental state
           const previouslyModified = modifiedPitches.indexOf(pitch) > -1;
 
-            // Add the accidental to the StaveNote
+          // Add the accidental to the StaveNote
           if (!sameAccidental || (sameAccidental && previouslyModified)) {
             // Modify the scale map so that the root pitch has an
             // updated state

@@ -147,8 +147,8 @@ export class Beam extends Element {
 
     const unprocessedNotes = notes;
     let currentTickGroup = 0;
-    let noteGroups       = [];
-    let currentGroup     = [];
+    let noteGroups = [];
+    let currentGroup = [];
 
     function getTotalTicks(vf_notes) {
       return vf_notes.reduce((memo, note) => note.getTicks().clone().add(memo), new Fraction(0, 1));
@@ -166,7 +166,7 @@ export class Beam extends Element {
       let nextGroup = [];
 
       unprocessedNotes.forEach(unprocessedNote => {
-        nextGroup    = [];
+        nextGroup = [];
         if (unprocessedNote.shouldIgnoreTicks()) {
           noteGroups.push(currentGroup);
           currentGroup = nextGroup;
@@ -236,7 +236,7 @@ export class Beam extends Element {
 
           let breakOnStemChange = false;
           if (config.maintain_stem_directions && prevNote &&
-              !note.isRest() && !prevNote.isRest()) {
+            !note.isRest() && !prevNote.isRest()) {
             const prevDirection = prevNote.getStemDirection();
             const currentDirection = note.getStemDirection();
             breakOnStemChange = currentDirection !== prevDirection;
@@ -246,7 +246,7 @@ export class Beam extends Element {
 
           // Determine if the group should be broken at this note
           const shouldBreak = breaksOnEachRest || breaksOnFirstOrLastRest ||
-                            breakOnStemChange || isUnbeamableDuration;
+            breakOnStemChange || isUnbeamableDuration;
 
           if (shouldBreak) {
             // Add current group
@@ -395,7 +395,7 @@ export class Beam extends Element {
 
     if (this.ticks >= Flow.durationToTicks('4')) {
       throw new Vex.RuntimeError('BadArguments',
-          'Beams can only be applied to notes shorter than a quarter note.');
+        'Beams can only be applied to notes shorter than a quarter note.');
     }
 
     let i; // shared iterator
@@ -413,7 +413,7 @@ export class Beam extends Element {
 
     let stem_direction = this.stem_direction;
     // Figure out optimal stem direction based on given notes
-    if (auto_stem && notes[0].getCategory() === 'stavenotes')  {
+    if (auto_stem && notes[0].getCategory() === 'stavenotes') {
       stem_direction = calculateStemDirection(notes);
     } else if (auto_stem && notes[0].getCategory() === 'tabnotes') {
       // Auto Stem TabNotes
@@ -455,9 +455,9 @@ export class Beam extends Element {
 
   // Get the max number of beams in the set of notes
   getBeamCount() {
-    const beamCounts =  this.notes.map(note => note.getGlyph().beam_count);
+    const beamCounts = this.notes.map(note => note.getGlyph().beam_count);
 
-    const maxBeamCount =  beamCounts.reduce((max, beamCount) => beamCount > max ? beamCount : max);
+    const maxBeamCount = beamCounts.reduce((max, beamCount) => beamCount > max ? beamCount : max);
 
     return maxBeamCount;
   }
@@ -671,7 +671,7 @@ export class Beam extends Element {
         // If the secondary breaks were auto-configured in the render options,
         //  handle that as well.
         if (this.render_options.secondary_break_ticks && tick_tally >=
-            this.render_options.secondary_break_ticks) {
+          this.render_options.secondary_break_ticks) {
           tick_tally = 0;
           should_break = true;
         }

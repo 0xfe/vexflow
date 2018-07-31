@@ -11,7 +11,7 @@ VF.Test.Bend = (function() {
       VF.Test.runTests('Reverse Bends', VF.Test.Bend.reverseBends);
       VF.Test.runTests('Bend Phrase', VF.Test.Bend.bendPhrase);
       VF.Test.runTests('Double Bends With Release',
-          VF.Test.Bend.doubleBendsWithRelease);
+        VF.Test.Bend.doubleBendsWithRelease);
       VF.Test.runTests('Whako Bend', VF.Test.Bend.whackoBends);
     },
 
@@ -27,17 +27,20 @@ VF.Test.Bend = (function() {
 
       var notes = [
         newNote({
-          positions: [{ str: 2, fret: 10 }, { str: 4, fret: 9 }], duration: 'q' })
+          positions: [{ str: 2, fret: 10 }, { str: 4, fret: 9 }], duration: 'q',
+        })
           .addModifier(newBend('Full'), 0)
           .addModifier(newBend('1/2'), 1),
 
         newNote({
-          positions: [{ str: 2, fret: 5 }, { str: 3, fret: 5 }], duration: 'q' })
+          positions: [{ str: 2, fret: 5 }, { str: 3, fret: 5 }], duration: 'q',
+        })
           .addModifier(newBend('1/4'), 0)
           .addModifier(newBend('1/4'), 1),
 
         newNote({
-          positions: [{ str: 4, fret: 7 }], duration: 'h' }),
+          positions: [{ str: 4, fret: 7 }], duration: 'h',
+        }),
       ];
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes);
@@ -61,22 +64,26 @@ VF.Test.Bend = (function() {
 
       var notes = [
         newNote({
-          positions: [{ str: 1, fret: 10 }, { str: 4, fret: 9 }], duration: 'q' })
+          positions: [{ str: 1, fret: 10 }, { str: 4, fret: 9 }], duration: 'q',
+        })
           .addModifier(newBend('1/2', true), 0)
           .addModifier(newBend('Full', true), 1),
 
         newNote({
           positions: [{ str: 2, fret: 5 },
-                      { str: 3, fret: 5 },
-                      { str: 4, fret: 5 }], duration: 'q' })
+            { str: 3, fret: 5 },
+            { str: 4, fret: 5 }], duration: 'q',
+        })
           .addModifier(newBend('1/4', true), 0)
           .addModifier(newBend('Monstrous', true), 1)
           .addModifier(newBend('1/4', true), 2),
 
         newNote({
-          positions: [{ str: 4, fret: 7 }], duration: 'q' }),
+          positions: [{ str: 4, fret: 7 }], duration: 'q',
+        }),
         newNote({
-          positions: [{ str: 4, fret: 7 }], duration: 'q' }),
+          positions: [{ str: 4, fret: 7 }], duration: 'q',
+        }),
       ];
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes);
@@ -99,17 +106,20 @@ VF.Test.Bend = (function() {
 
       var notes = [
         newNote({
-          positions: [{ str: 2, fret: 10 }, { str: 4, fret: 9 }], duration: 'w' })
+          positions: [{ str: 2, fret: 10 }, { str: 4, fret: 9 }], duration: 'w',
+        })
           .addModifier(newBend('Full'), 1)
           .addModifier(newBend('1/2'), 0),
 
         newNote({
-          positions: [{ str: 2, fret: 5 }, { str: 3, fret: 5 }], duration: 'w' })
+          positions: [{ str: 2, fret: 5 }, { str: 3, fret: 5 }], duration: 'w',
+        })
           .addModifier(newBend('1/4'), 1)
           .addModifier(newBend('1/4'), 0),
 
         newNote({
-          positions: [{ str: 4, fret: 7 }], duration: 'w' }),
+          positions: [{ str: 4, fret: 7 }], duration: 'w',
+        }),
       ];
 
       for (var i = 0; i < notes.length; ++i) {
@@ -145,7 +155,8 @@ VF.Test.Bend = (function() {
 
       var notes = [
         newNote({
-          positions: [{ str: 2, fret: 10 }], duration: 'w' })
+          positions: [{ str: 2, fret: 10 }], duration: 'w',
+        })
           .addModifier(bend1, 0),
       ];
 
@@ -192,7 +203,8 @@ VF.Test.Bend = (function() {
 
       var notes = [
         newNote({
-          positions: [{ str: 2, fret: 10 }, { str: 3, fret: 9 }], duration: 'q' })
+          positions: [{ str: 2, fret: 10 }, { str: 3, fret: 9 }], duration: 'q',
+        })
           .addModifier(newBend(phrase1), 0)
           .addModifier(newBend(phrase2), 1),
       ];

@@ -179,12 +179,16 @@ VF.Test.Formatter = (function() {
 
         var tabVoice = score.voice([
           vf.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new VF.Bend('Full'), 0),
-          vf.TabNote({ positions: [{ str: 2, fret: 3 },
-                                   { str: 3, fret: 5 }], duration: '8' }).addModifier(new VF.Bend('Unison'), 1),
+          vf.TabNote({
+            positions: [{ str: 2, fret: 3 },
+              { str: 3, fret: 5 }], duration: '8',
+          }).addModifier(new VF.Bend('Unison'), 1),
           vf.TabNote({ positions: [{ str: 3, fret: 7 }], duration: '8' }),
-          vf.TabNote({ positions: [{ str: 3, fret: 6 },
-                                   { str: 4, fret: 7 },
-                                   { str: 2, fret: 5 }], duration: '4' }),
+          vf.TabNote({
+            positions: [{ str: 3, fret: 6 },
+              { str: 4, fret: 7 },
+              { str: 2, fret: 5 }], duration: '4',
+          }),
 
         ]);
 

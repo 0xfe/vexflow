@@ -40,8 +40,8 @@ VF.Test.StringNumber = (function() {
         .addModifier(0, vf.StringNumber({ number: '5', position: 'below' }))
         .addAccidental(1, vf.Accidental({ type: '#' }).setAsCautionary())
         .addModifier(2, vf.StringNumber({ number: '3', position: 'above' })
-        .setLastNote(notes1[3])
-        .setLineEndType(VF.Renderer.LineEndType.DOWN));
+          .setLastNote(notes1[3])
+          .setLineEndType(VF.Renderer.LineEndType.DOWN));
 
       notes1[2]
         .addModifier(0, vf.StringNumber({ number: '5', position: 'left' }))

@@ -50,7 +50,7 @@ VF.Test.GraceNote = (function() {
       gracenotes3[3].addAccidental(0, vf.Accidental({ type: 'bb' }));
       gracenotes4[0].addDotToAll();
 
-      var notes =  [
+      var notes = [
         vf.StaveNote({ keys: ['b/4'], duration: '4', auto_stem: true })
           .addModifier(0, vf.GraceNoteGroup({ notes: gracenotes }).beamNotes()),
         vf.StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })

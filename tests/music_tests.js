@@ -141,48 +141,48 @@ VF.Test.Music = (function() {
       var music = new VF.Music();
 
       var value = music.getRelativeNoteValue(music.getNoteValue('c'),
-          music.getIntervalValue('b5'));
+        music.getIntervalValue('b5'));
       equal(value, 6);
 
       try {
         music.getRelativeNoteValue(music.getNoteValue('bc'),
-            music.getIntervalValue('b2'));
+          music.getIntervalValue('b2'));
       } catch (e) {
         ok(true, 'Invalid note');
       }
 
       try {
         music.getRelativeNoteValue(music.getNoteValue('b'),
-            music.getIntervalValue('p3'));
+          music.getIntervalValue('p3'));
       } catch (e) {
         ok(true, 'Invalid interval');
       }
 
       // Direction
       value = music.getRelativeNoteValue(music.getNoteValue('d'),
-          music.getIntervalValue('2'), -1);
+        music.getIntervalValue('2'), -1);
       equal(value, 0);
 
       try {
         music.getRelativeNoteValue(music.getNoteValue('b'),
-            music.getIntervalValue('p4'), 0);
+          music.getIntervalValue('p4'), 0);
       } catch (e) {
         ok(true, 'Invalid direction');
       }
 
       // Rollover
       value = music.getRelativeNoteValue(music.getNoteValue('b'),
-          music.getIntervalValue('b5'));
+        music.getIntervalValue('b5'));
       equal(value, 5);
 
       // Reverse rollover
       value = music.getRelativeNoteValue(music.getNoteValue('c'),
-          music.getIntervalValue('b2'), -1);
+        music.getIntervalValue('b2'), -1);
       equal(value, 11);
 
       // Practical tests
       value = music.getRelativeNoteValue(music.getNoteValue('g'),
-          music.getIntervalValue('p5'));
+        music.getIntervalValue('p5'));
       equal(value, 2);
     },
 
@@ -245,7 +245,7 @@ VF.Test.Music = (function() {
       var manager = new VF.KeyManager('CM');
 
       var c_major = music.getScaleTones(
-          music.getNoteValue('c'), VF.Music.scales.major);
+        music.getNoteValue('c'), VF.Music.scales.major);
       var values = ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
 
       equal(c_major.length, 7);
@@ -256,11 +256,11 @@ VF.Test.Music = (function() {
 
       // Dorian
       var c_dorian = music.getScaleTones(
-          music.getNoteValue('c'), VF.Music.scales.dorian);
+        music.getNoteValue('c'), VF.Music.scales.dorian);
       values = ['c', 'd', 'eb', 'f', 'g', 'a', 'bb'];
 
       var note = null;
-      equal(c_dorian.length,  7);
+      equal(c_dorian.length, 7);
       for (var cd = 0; cd < c_dorian.length; ++cd) {
         note = music.getCanonicalNoteName(c_dorian[cd]);
         equal(manager.selectNote(note).note, values[cd]);
@@ -268,10 +268,10 @@ VF.Test.Music = (function() {
 
       // Mixolydian
       var c_mixolydian = music.getScaleTones(
-          music.getNoteValue('c'), VF.Music.scales.mixolydian);
+        music.getNoteValue('c'), VF.Music.scales.mixolydian);
       values = ['c', 'd', 'e', 'f', 'g', 'a', 'bb'];
 
-      equal(c_mixolydian.length,  7);
+      equal(c_mixolydian.length, 7);
 
       for (var i = 0; i < c_mixolydian.length; ++i) {
         note = music.getCanonicalNoteName(c_mixolydian[i]);
@@ -285,19 +285,19 @@ VF.Test.Music = (function() {
       var music = new VF.Music();
 
       equal(music.getCanonicalIntervalName(music.getIntervalBetween(
-             music.getNoteValue('c'), music.getNoteValue('d'))), 'M2');
+        music.getNoteValue('c'), music.getNoteValue('d'))), 'M2');
       equal(music.getCanonicalIntervalName(music.getIntervalBetween(
-             music.getNoteValue('g'), music.getNoteValue('c'))), 'p4');
+        music.getNoteValue('g'), music.getNoteValue('c'))), 'p4');
       equal(music.getCanonicalIntervalName(music.getIntervalBetween(
-             music.getNoteValue('c'), music.getNoteValue('c'))), 'unison');
+        music.getNoteValue('c'), music.getNoteValue('c'))), 'unison');
       equal(music.getCanonicalIntervalName(music.getIntervalBetween(
-             music.getNoteValue('f'), music.getNoteValue('cb'))), 'dim5');
+        music.getNoteValue('f'), music.getNoteValue('cb'))), 'dim5');
 
       // Forwards and backwards
       equal(music.getCanonicalIntervalName(music.getIntervalBetween(
-             music.getNoteValue('d'), music.getNoteValue('c'), 1)), 'b7');
+        music.getNoteValue('d'), music.getNoteValue('c'), 1)), 'b7');
       equal(music.getCanonicalIntervalName(music.getIntervalBetween(
-             music.getNoteValue('d'), music.getNoteValue('c'), -1)), 'M2');
+        music.getNoteValue('d'), music.getNoteValue('c'), -1)), 'M2');
     },
   };
 

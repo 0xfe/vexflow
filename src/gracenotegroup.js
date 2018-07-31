@@ -36,10 +36,10 @@ export class GraceNoteGroup extends Modifier {
       const gracenote_group = gracenote_groups[i];
       const note = gracenote_group.getNote();
       const is_stavenote = (note.getCategory() === StaveNote.CATEGORY);
-      const spacing = (is_stavenote ?  group_spacing_stave : group_spacing_tab);
+      const spacing = (is_stavenote ? group_spacing_stave : group_spacing_tab);
 
       if (is_stavenote && note !== prev_note) {
-         // Iterate through all notes to get the displaced pixels
+        // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
           const props_tmp = note.getKeyProps()[n];
           shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);

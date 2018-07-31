@@ -106,13 +106,15 @@ VF.Test.TabNote = (function() {
         { positions: [{ str: 2, fret: 'x' }, { str: 5, fret: 15 }], duration: '4' },
         { positions: [{ str: 2, fret: 'x' }, { str: 5, fret: 5 }], duration: '4' },
         { positions: [{ str: 2, fret: 10 }, { str: 5, fret: 12 }], duration: '4' },
-        { positions: [{ str: 6, fret: 0 },
-                      { str: 5, fret: 5 },
-                      { str: 4, fret: 5 },
-                      { str: 3, fret: 4 },
-                      { str: 2, fret: 3 },
-                      { str: 1, fret: 0 }],
-          duration: '4' },
+        {
+          positions: [{ str: 6, fret: 0 },
+            { str: 5, fret: 5 },
+            { str: 4, fret: 5 },
+            { str: 3, fret: 4 },
+            { str: 2, fret: 3 },
+            { str: 1, fret: 0 }],
+          duration: '4',
+        },
         { positions: [{ str: 1, fret: 6 }, { str: 4, fret: 5 }], duration: '4' },
       ];
 

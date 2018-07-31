@@ -241,7 +241,7 @@ export class Glyph extends Element {
     this.setRendered();
     this.applyStyle();
     Glyph.renderOutline(this.context, outline, scale,
-        x + this.x_shift, this.stave.getYForGlyphs() + this.y_shift);
+      x + this.x_shift, this.stave.getYForGlyphs() + this.y_shift);
     this.restoreStyle();
   }
 }

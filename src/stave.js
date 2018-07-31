@@ -66,7 +66,7 @@ export class Stave extends Element {
       this.options.line_config.push({ visible: true });
     }
     this.height = (this.options.num_lines + this.options.space_above_staff_ln) *
-       this.options.spacing_between_lines_px;
+      this.options.spacing_between_lines_px;
     this.options.bottom_text_position = this.options.num_lines;
   }
 
@@ -223,7 +223,7 @@ export class Stave extends Element {
     const options = this.options;
     const spacing = options.spacing_between_lines_px;
     const score_bottom = this.getYForLine(options.num_lines) +
-       (options.space_below_staff_ln * spacing);
+      (options.space_below_staff_ln * spacing);
 
     return score_bottom;
   }
@@ -445,7 +445,7 @@ export class Stave extends Element {
     });
 
     if (begModifiers.length > 1 &&
-        begBarline.getType() === Barline.type.REPEAT_BEGIN) {
+      begBarline.getType() === Barline.type.REPEAT_BEGIN) {
       begModifiers.push(begModifiers.splice(0, 1)[0]);
       begModifiers.splice(0, 0, new Barline(Barline.type.SINGLE));
     }
@@ -600,7 +600,7 @@ export class Stave extends Element {
       );
     }
 
-    if (typeof(line_config.visible) !== 'boolean') {
+    if (typeof (line_config.visible) !== 'boolean') {
       throw new Vex.RERR(
         'StaveConfigError',
         "The line configuration objects 'visible' property must be true or false."
@@ -631,6 +631,7 @@ export class Stave extends Element {
 
     // Make sure the defaults are present in case an incomplete set of
     //  configuration options were supplied.
+    // eslint-disable-next-line
     for (const line_config in lines_configuration) {
       // Allow 'null' to be used if the caller just wants the default for a particular node.
       if (!lines_configuration[line_config]) {

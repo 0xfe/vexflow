@@ -359,7 +359,7 @@ VF.Test.Beam = (function() {
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
-      var voice  = score.voice(score.beam(score.notes(
+      var voice = score.voice(score.beam(score.notes(
         'g4/8, g4, g4, a4',
         { stem: 'up' }
       )), { time: '2/4' });
