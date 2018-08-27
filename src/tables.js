@@ -193,7 +193,7 @@ Flow.keyProperties.note_glyph = {
   /* Cross */
   'X0': { code: 'v92', shift_right: -2 },
   'X1': { code: 'v95', shift_right: -0.5 },
-  'X2': { code: 'v7f', shift_right: 0.5 },
+  'X2': { code: 'v3e', shift_right: 0.5 },
   'X3': { code: 'v3b', shift_right: -2 },
 };
 
