@@ -472,6 +472,17 @@ Flow.parseNoteData = noteData => {
     }
   } else {
     type = durationStringData.type;
+
+    // If we have keys, try and check if we've got a custom glyph
+    if (noteData.keys !== undefined) {
+      const regexp = /^([a-gx]?)\/(\d?)\/?([a-z][0-3])$/;
+      const result = regexp.exec(noteData.keys[0]);
+
+      // We have a custom glyph specified after the note eg. /X2
+      if (result && result.length === 4) {
+        type = result[3]; // Set the type to the custom note head
+      }
+    }
     if (!type) {
       type = 'n';
     }
@@ -572,9 +583,20 @@ Flow.durationToGlyph = (duration, type) => {
     type = 'n';
   }
 
-  const glyphTypeProperties = code.type[type];
+  let glyphTypeProperties = code.type[type];
   if (glyphTypeProperties === undefined) {
-    return null;
+    // Try and get it from the custom list of note heads
+    const customGlyphTypeProperties = Flow.keyProperties.note_glyph[type.toUpperCase()];
+
+    // If not, then return with nothing
+    if (customGlyphTypeProperties === undefined) {
+      return null;
+    }
+
+    // Otherwise set it as the code_head value
+    glyphTypeProperties = {
+      code_head: customGlyphTypeProperties.code,
+    };
   }
 
   return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
