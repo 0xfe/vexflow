@@ -63,11 +63,15 @@ import { StringNumber } from './stringnumber';
 import { Crescendo } from './crescendo';
 import { Volta } from './stavevolta';
 import { Font } from './fonts/vexflow_font';
+import { CustomGlyphs } from './fonts/custom_glyphs';
 import { System } from './system';
 import { Factory } from './factory';
 import { Parser } from './parser';
 import { EasyScore } from './easyscore';
 import { Registry } from './registry';
+
+// Merge the Font and custon glyphs
+Font.glyphs = Object.assign(Font.glyphs, CustomGlyphs.glyphs);
 
 Vex.Flow = Flow;
 Vex.Flow.Element = Element;
