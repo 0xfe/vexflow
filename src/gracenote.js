@@ -29,8 +29,17 @@ export class GraceNote extends StaveNote {
       return this.stem_extension_override;
     }
 
-    const scale = this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
-    return ((Stem.HEIGHT + super.getStemExtension()) * scale) - Stem.HEIGHT;
+    const glyph = this.getGlyph();
+    if (glyph) {
+      let ret = super.getStemExtension();
+      if (glyph.stem) {
+        const scale = this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
+        ret = ((Stem.HEIGHT + ret) * scale) - Stem.HEIGHT;
+      }
+      return ret;
+    }
+
+    return 0;
   }
 
   getCategory() { return GraceNote.CATEGORY; }
