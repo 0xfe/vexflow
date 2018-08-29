@@ -194,7 +194,7 @@ Flow.keyProperties.note_glyph = {
   'X0': { code: 'v92', shift_right: -2, stem_up_y_offset: 4, stem_down_y_offset: 4 },
   'X1': { code: 'v95', shift_right: -0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
   'X2': { code: 'v3e', shift_right: 0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
-  'X3': { code: 'v3b', shift_right: -2, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X3': { code: 'v3b', shift_right: -2, stem_up_y_offset: 2, stem_down_y_offset: 2 },
 };
 
 Flow.integerToNote = integer => {
