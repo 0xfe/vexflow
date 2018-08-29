@@ -185,16 +185,16 @@ Flow.keyProperties.note_glyph = {
   'D3': { code: 'v70', shift_right: -0.5 },
 
   /* Triangle */
-  'T0': { code: 'v49', shift_right: -2 },
-  'T1': { code: 'v93', shift_right: 0.5 },
-  'T2': { code: 'v40', shift_right: 0.5 },
-  'T3': { code: 'v7d', shift_right: 0.5 },
+  'T0': { code: 'v49', shift_right: -2, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T1': { code: 'v93', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T2': { code: 'v40', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T3': { code: 'v7d', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
 
   /* Cross */
-  'X0': { code: 'v92', shift_right: -2 },
-  'X1': { code: 'v95', shift_right: -0.5 },
-  'X2': { code: 'v3e', shift_right: 0.5 },
-  'X3': { code: 'v3b', shift_right: -2 },
+  'X0': { code: 'v92', shift_right: -2, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X1': { code: 'v95', shift_right: -0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X2': { code: 'v3e', shift_right: 0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X3': { code: 'v3b', shift_right: -2, stem_up_y_offset: 4, stem_down_y_offset: 4 },
 };
 
 Flow.integerToNote = integer => {
@@ -596,6 +596,8 @@ Flow.durationToGlyph = (duration, type) => {
     // Otherwise set it as the code_head value
     glyphTypeProperties = {
       code_head: customGlyphTypeProperties.code,
+      stem_up_y_offset: customGlyphTypeProperties.stem_up_y_offset,
+      stem_down_y_offset: customGlyphTypeProperties.stem_down_y_offset,
     };
   }
 

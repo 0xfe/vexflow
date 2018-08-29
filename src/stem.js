@@ -54,6 +54,10 @@ export class Stem extends Element {
     this.isStemlet = options.isStemlet || false;
     this.stemletHeight = options.stemletHeight || 0;
 
+    // Changing where the stem meets the head
+    this.stem_up_y_offset = options.stem_up_y_offset || 0;
+    this.stem_down_y_offset = options.stem_down_y_offset || 0;
+
     // Use to adjust the rendered height without affecting
     // the results of `.getExtents()`
     this.renderHeightAdjustment = 0;
@@ -84,8 +88,9 @@ export class Stem extends Element {
 
   // Gets the entire height for the stem
   getHeight() {
+    const y_offset = (this.stem_direction === Stem.UP) ? this.stem_up_y_offset : this.stem_down_y_offset; // eslint-disable-line max-len
     return ((this.y_bottom - this.y_top) * this.stem_direction) +
-           ((Stem.HEIGHT + this.stem_extension) * this.stem_direction);
+           ((Stem.HEIGHT - y_offset + this.stem_extension) * this.stem_direction);
   }
   getBoundingBox() {
     throw new Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
@@ -128,11 +133,11 @@ export class Stem extends Element {
     if (stem_direction === Stem.DOWN) {
       // Down stems are rendered to the left of the head.
       stem_x = this.x_begin;
-      stem_y = this.y_top;
+      stem_y = this.y_top + this.stem_down_y_offset;
     } else {
       // Up stems are rendered to the right of the head.
       stem_x = this.x_end;
-      stem_y = this.y_bottom;
+      stem_y = this.y_bottom - this.stem_up_y_offset;
     }
 
     const stemHeight = this.getHeight();

@@ -367,10 +367,11 @@ export class StaveNote extends StemmableNote {
   // Builds a `Stem` for the note
   buildStem() {
     const glyph = this.getGlyph();
-    const yExtend = glyph.code_head === 'v95' || glyph.code_head === 'v3e' ? -4 : 0;
+    // const yExtend = glyph.code_head === 'v95' || glyph.code_head === 'v3e' ? -4 : 0;
 
     this.setStem(new Stem({
-      yExtend,
+      stem_up_y_offset: glyph.stem_up_y_offset,
+      stem_down_y_offset: glyph.stem_down_y_offset,
       hide: !!this.isRest(),
     }));
   }
