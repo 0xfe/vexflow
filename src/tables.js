@@ -475,12 +475,11 @@ Flow.parseNoteData = noteData => {
 
     // If we have keys, try and check if we've got a custom glyph
     if (noteData.keys !== undefined) {
-      const regexp = /^([a-gx]?)\/(\d?)\/?([a-z][0-3])$/;
-      const result = regexp.exec(noteData.keys[0]);
+      const result = noteData.keys[0].split('/');
 
       // We have a custom glyph specified after the note eg. /X2
-      if (result && result.length === 4) {
-        type = result[3]; // Set the type to the custom note head
+      if (result && result.length === 3) {
+        type = result[2]; // Set the type to the custom note head
       }
     }
     if (!type) {
