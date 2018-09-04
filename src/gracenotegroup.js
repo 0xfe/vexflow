@@ -100,6 +100,8 @@ export class GraceNoteGroup extends Modifier {
       slur_y_shift: 0,
     };
 
+    this.beams = [];
+
     this.voice.addTickables(this.grace_notes);
 
     return this;
@@ -115,14 +117,15 @@ export class GraceNoteGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  beamNotes() {
-    if (this.grace_notes.length > 1) {
-      const beam = new Beam(this.grace_notes);
+  beamNotes(grace_notes) {
+    grace_notes = grace_notes || this.grace_notes;
+    if (grace_notes.length > 1) {
+      const beam = new Beam(grace_notes);
 
       beam.render_options.beam_width = 3;
       beam.render_options.partial_beam_length = 4;
 
-      this.beam = beam;
+      this.beams.push(beam);
     }
 
     return this;
@@ -161,9 +164,9 @@ export class GraceNoteGroup extends Modifier {
     });
 
     // Draw beam
-    if (this.beam) {
-      this.beam.setContext(this.context).draw();
-    }
+    this.beams.forEach(beam => {
+      beam.setContext(this.context).draw();
+    });
 
     if (this.show_slur) {
       // Create and draw slur
