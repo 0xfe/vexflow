@@ -103,7 +103,7 @@ do
   rsvg-convert $current >$diff-b.png
 
   # Calculate the difference metric and store the composite diff image.
-  hash=`compare -metric PHASH $diff-a.png $diff-b.png $diff-diff.png 2>&1`
+  hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
 
   isGT=`echo "$hash > $THRESHOLD" | bc -l`
   if [ "$isGT" == "1" ]
