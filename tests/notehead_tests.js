@@ -8,6 +8,7 @@ VF.Test.NoteHead = (function() {
     Start: function() {
       QUnit.module('NoteHead');
       VF.Test.runTests('Basic', VF.Test.NoteHead.basic);
+      VF.Test.runTests('Various Heads', VF.Test.NoteHead.variousHeads);
       VF.Test.runTests('Bounding Boxes', VF.Test.NoteHead.basicBoundingBoxes);
     },
 
@@ -18,6 +19,19 @@ VF.Test.NoteHead = (function() {
       var stave = new VF.Stave(10, 10, x || 450).addTrebleGlyph();
 
       return { context: ctx, stave: stave };
+    },
+
+    showNote: function(note_struct, stave, ctx, x) {
+      var note = new VF.StaveNote(note_struct).setStave(stave);
+
+      new VF.TickContext()
+        .addTickable(note)
+        .preFormat()
+        .setX(x);
+
+      note.setContext(ctx).draw();
+
+      return note;
     },
 
     basic: function(options, contextBuilder) {
@@ -53,6 +67,54 @@ VF.Test.NoteHead = (function() {
       voice.draw(c.context, c.stave);
 
       ok('Basic NoteHead test');
+    },
+
+    variousHeads: function(options, contextBuilder) {
+      var notes = [
+        { keys: ['g/5/d0'], duration: '4' },
+        { keys: ['g/5/d1'], duration: '4' },
+        { keys: ['g/5/d2'], duration: '4' },
+        { keys: ['g/5/d3'], duration: '4' },
+        { keys: ['x/'], duration: '1' },
+
+        { keys: ['g/5/t0'], duration: '1' },
+        { keys: ['g/5/t1'], duration: '4' },
+        { keys: ['g/5/t2'], duration: '4' },
+        { keys: ['g/5/t3'], duration: '4' },
+        { keys: ['x/'], duration: '1' },
+
+        { keys: ['g/5/x0'], duration: '1' },
+        { keys: ['g/5/x1'], duration: '4' },
+        { keys: ['g/5/x2'], duration: '4' },
+        { keys: ['g/5/x3'], duration: '4' },
+        { keys: ['x/'], duration: '1' },
+
+        { keys: ['g/5/s1'], duration: '4' },
+        { keys: ['g/5/s2'], duration: '4' },
+        { keys: ['x/'], duration: '1' },
+
+        { keys: ['g/5/r1'], duration: '4' },
+        { keys: ['g/5/r2'], duration: '4' },
+      ];
+
+      var ctx = new contextBuilder(options.elementId, notes.length * 25 + 100, 240);
+
+      // Draw two staves, one with up-stems and one with down-stems.
+      for (var h = 0; h < 2; ++h) {
+        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75)
+          .addClef('percussion')
+          .setContext(ctx)
+          .draw();
+
+        for (var i = 0; i < notes.length; ++i) {
+          var note = notes[i];
+          note.stem_direction = (h === 0 ? -1 : 1);
+          var staveNote = NoteHead.showNote(note, stave, ctx, (i + 1) * 25);
+
+          ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+          ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+        }
+      }
     },
 
     basicBoundingBoxes: function(options, contextBuilder) {
