@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { BoundingBox } from './boundingbox';
 import { Note } from './note';
 import { TimeSignature } from './timesignature';
 
@@ -19,7 +18,7 @@ export class TimeSigNote extends Note {
   }
 
   getBoundingBox() {
-    return new BoundingBox(0, 0, 0, 0);
+    return super.getBoundingBox();
   }
 
   addToModifierContext() {

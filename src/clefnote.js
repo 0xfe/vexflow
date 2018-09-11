@@ -4,7 +4,6 @@
 // Author Taehoon Moon 2014
 
 import { Vex } from './vex';
-import { BoundingBox } from './boundingbox';
 import { Note } from './note';
 import { Clef } from './clef';
 import { Glyph } from './glyph';
@@ -43,7 +42,7 @@ export class ClefNote extends Note {
   }
 
   getBoundingBox() {
-    return new BoundingBox(0, 0, 0, 0);
+    return super.getBoundingBox();
   }
 
   addToModifierContext() {
