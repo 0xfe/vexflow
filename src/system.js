@@ -62,7 +62,7 @@ export class System extends Element {
       spaceAbove: 0, // stave spaces
       spaceBelow: 0, // stave spaces
       debugNoteMetrics: false,
-      options: { left_bar: false }
+      options: { left_bar: false },
     });
 
     if (!params.stave) {
