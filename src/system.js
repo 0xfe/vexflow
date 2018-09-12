@@ -62,16 +62,15 @@ export class System extends Element {
       spaceAbove: 0, // stave spaces
       spaceBelow: 0, // stave spaces
       debugNoteMetrics: false,
-      options: {},
+      options: { left_bar: false }
     });
 
     if (!params.stave) {
-      const options = { left_bar: false };
       params.stave = this.factory.Stave({
         x: this.options.x,
         y: this.options.y,
         width: this.options.width,
-        options,
+        options: params.options,
       });
     }
 
