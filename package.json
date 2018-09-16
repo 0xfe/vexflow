@@ -43,10 +43,10 @@
     "grunt-release": "^0.14.0",
     "grunt-webpack": "^3.0.2",
     "jquery": "^3.1.0",
-    "jscs": "^3.0.6",
+    "jscs": "^3.0.7",
     "qunit": "^2.6.1",
     "raphael": "^2.1.0",
-    "slimerjs": "^0.906.2",
+    "slimerjs": "^1.0.0",
     "webpack": "^3",
     "webpack-dev-server": "^2.6"
   },
@@ -68,6 +68,6 @@
     "tablature"
   ],
   "dependencies": {
-    "npm": "^6.2.0"
+    "npm": "^6.4.1"
   }
 }
