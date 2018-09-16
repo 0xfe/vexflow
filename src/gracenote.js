@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { StaveNote } from './stavenote';
+import { Stem } from './stem';
 import { Flow } from './tables';
 
 export class GraceNote extends StaveNote {
@@ -24,16 +25,18 @@ export class GraceNote extends StaveNote {
   }
 
   getStemExtension() {
-    const glyph = this.getGlyph();
-
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
     }
 
+    const glyph = this.getGlyph();
     if (glyph) {
-      return this.getStemDirection() === 1
-        ? glyph.gracenote_stem_up_extension
-        : glyph.gracenote_stem_down_extension;
+      let ret = super.getStemExtension();
+      if (glyph.stem) {
+        const scale = this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
+        ret = ((Stem.HEIGHT + ret) * scale) - Stem.HEIGHT;
+      }
+      return ret;
     }
 
     return 0;
