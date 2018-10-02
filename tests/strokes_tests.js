@@ -80,11 +80,11 @@ VF.Test.Strokes = (function() {
     },
 
     arpeggioDirectionless: function(options) {
-      var vf = VF.Test.makeFactory(options, 600, 200);
+      var vf = VF.Test.makeFactory(options, 700, 200);
       var score = vf.EasyScore();
 
       // bar 1
-      var stave1 = vf.Stave({ width: 250 }).setEndBarType(VF.Barline.type.DOUBLE);
+      var stave1 = vf.Stave({ x: 100, width: 500 }).setEndBarType(VF.Barline.type.DOUBLE);
 
       var notes1 = score.notes(
         '(g4 b4 d5)/4, (g4 b4 d5 g5), (g4 b4 d5 g5), (g4 b4 d5)',
