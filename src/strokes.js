@@ -178,7 +178,7 @@ export class Stroke extends Modifier {
         break;
       case Stroke.Type.ARPEGGIO_DIRECTIONLESS:
         topY += 0.5 * line_space;
-        botY += 0.5 * line_space; // 1.0 * line_space will extend quite far below bottom note
+        botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
         break;
       default:
         throw new Vex.RERR('InvalidType', `The stroke type ${this.type} does not exist`);

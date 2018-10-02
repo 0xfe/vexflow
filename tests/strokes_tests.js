@@ -87,7 +87,7 @@ VF.Test.Strokes = (function() {
       var stave1 = vf.Stave({ width: 250 }).setEndBarType(VF.Barline.type.DOUBLE);
 
       var notes1 = score.notes(
-        '(g4 b4 d5)/4, (g4 b4 d5 g5), (g4 b4 d5), (g4 b4 d5)',
+        '(g4 b4 d5)/4, (g4 b4 d5 g5), (g4 b4 d5 g5), (g4 b4 d5)',
         { stem: 'up' }
       );
 
@@ -104,11 +104,13 @@ VF.Test.Strokes = (function() {
         .addStroke(0, new VF.Stroke(7));
       notes1[1]
         .addStroke(0, new VF.Stroke(7))
+        .addAccidental(0, vf.Accidental({ type: '#' }))
         .addAccidental(1, vf.Accidental({ type: '#' }))
         .addAccidental(2, vf.Accidental({ type: '#' }))
-        .addAccidental(0, vf.Accidental({ type: '#' }));
+        .addAccidental(3, vf.Accidental({ type: '#' }));
       notes1[2]
         .addStroke(0, new VF.Stroke(7))
+        .addAccidental(1, vf.Accidental({ type: 'b' }))
         .addModifier(0, graceNoteGroup);
       notes1[3]
         .addStroke(0, new VF.Stroke(7))
