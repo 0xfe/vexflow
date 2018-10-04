@@ -55,8 +55,9 @@ const getTopY = (note, textLine) => {
   const stave = note.getStave();
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
+  const noteCategory = note.getCategory();
 
-  if (note.getCategory() === 'stavenotes') {
+  if (noteCategory === 'stavenotes' || noteCategory === 'gracenotes') {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -66,7 +67,7 @@ const getTopY = (note, textLine) => {
     } else {
       return Math.min(...note.getYs());
     }
-  } else if (note.getCategory() === 'tabnotes') {
+  } else if (noteCategory === 'tabnotes') {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -87,8 +88,9 @@ const getBottomY = (note, textLine) => {
   const stave = note.getStave();
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
+  const noteCategory = note.getCategory();
 
-  if (note.getCategory() === 'stavenotes') {
+  if (noteCategory === 'stavenotes' || noteCategory === 'gracenotes') {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemBaseY;
@@ -98,7 +100,7 @@ const getBottomY = (note, textLine) => {
     } else {
       return Math.max(...note.getYs());
     }
-  } else if (note.getCategory() === 'tabnotes') {
+  } else if (noteCategory === 'tabnotes') {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stave.getYForBottomText(textLine);
@@ -125,8 +127,9 @@ const getInitialOffset = (note, position) => {
     (position === ABOVE && note.getStemDirection() === Stem.UP) ||
     (position === BELOW && note.getStemDirection() === Stem.DOWN)
   );
+  const noteCategory = note.getCategory();
 
-  if (note.getCategory() === 'stavenotes') {
+  if (noteCategory === 'stavenotes' || noteCategory === 'gracenotes') {
     if (note.hasStem() && isOnStemTip) {
       return 0.5;
     } else {
