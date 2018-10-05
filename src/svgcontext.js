@@ -646,6 +646,7 @@ export class SVGContext {
         width: this.shadow_attributes.width,
         color: this.shadow_attributes.color,
       },
+      lineWidth: this.lineWidth,
     });
     return this;
   }
@@ -670,6 +671,8 @@ export class SVGContext {
 
     this.shadow_attributes.width = state.shadow_attributes.width;
     this.shadow_attributes.color = state.shadow_attributes.color;
+
+    this.lineWidth = state.lineWidth;
     return this;
   }
 }
