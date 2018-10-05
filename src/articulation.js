@@ -51,12 +51,17 @@ const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) =>
   }
 };
 
+const isStaveNote = (note) => {
+  const noteCategory = note.getCategory();
+  return noteCategory === 'stavenotes' || noteCategory === 'gracenotes';
+};
+
 const getTopY = (note, textLine) => {
   const stave = note.getStave();
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
-  if (note.getCategory() === 'stavenotes') {
+  if (isStaveNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -88,7 +93,7 @@ const getBottomY = (note, textLine) => {
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
-  if (note.getCategory() === 'stavenotes') {
+  if (isStaveNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemBaseY;
@@ -126,7 +131,7 @@ const getInitialOffset = (note, position) => {
     (position === BELOW && note.getStemDirection() === Stem.DOWN)
   );
 
-  if (note.getCategory() === 'stavenotes') {
+  if (isStaveNote(note)) {
     if (note.hasStem() && isOnStemTip) {
       return 0.5;
     } else {
