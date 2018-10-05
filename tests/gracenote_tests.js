@@ -252,15 +252,15 @@ VF.Test.GraceNote = (function() {
         var gns = [
           { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
           { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
-          { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: false },
+          { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
 
           { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
           { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
-          { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: false },
+          { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
 
           { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
           { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
-          { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: false },
+          { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
         ].map(vf.GraceNote.bind(vf));
 
         gnotesToBeam.push([gns[0], gns[1], gns[2]]);
