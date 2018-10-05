@@ -6,11 +6,12 @@
 VF.Test.GraceNote = (function() {
   var stem_test_util = {
     durations: ['8', '16', '32', '64', '128'],
-    createNote: function(d, noteT, keys, stem_direction) {
+    createNote: function(d, noteT, keys, stem_direction, slash) {
       var note_prop = {
         duration: d,
       };
       note_prop.stem_direction = stem_direction;
+      note_prop.slash = slash;
       note_prop.keys = keys;
       return noteT(note_prop);
     },
@@ -23,6 +24,8 @@ VF.Test.GraceNote = (function() {
       VF.Test.runTests('Grace Note Basic with Slurs', VF.Test.GraceNote.basicSlurred);
       VF.Test.runTests('Grace Note Stem', VF.Test.GraceNote.stem);
       VF.Test.runTests('Grace Note Stem with Beams', VF.Test.GraceNote.stemWithBeamed);
+      VF.Test.runTests('Grace Note Slash', VF.Test.GraceNote.slash);
+      VF.Test.runTests('Grace Note Slash with Beams', VF.Test.GraceNote.slashWithBeams);
       VF.Test.runTests('Grace Notes Multiple Voices', VF.Test.GraceNote.multipleVoices);
       VF.Test.runTests('Grace Notes Multiple Voices Multiple Draws', VF.Test.GraceNote.multipleVoicesMultipleDraws);
     },
@@ -228,6 +231,109 @@ VF.Test.GraceNote = (function() {
       vf.draw();
 
       ok(true, 'GraceNoteStem');
+    },
+
+    slash: function(options) {
+      const vf = VF.Test.makeFactory(options, 700, 130);
+      const stave = vf.Stave({ x: 10, y: 10, width: 650 });
+
+      function createNotes(noteT, keys, stem_direction, slash) {
+        return stem_test_util.durations.map(function(d) {
+          return stem_test_util.createNote(d, noteT, keys, stem_direction, slash);
+        });
+      }
+
+      function createNoteBlock(keys, stem_direction) {
+        var notes = [vf.StaveNote({ keys: ['f/4'], stem_direction: stem_direction, duration: '16' })];
+        var gracenotes = createNotes(vf.GraceNote.bind(vf), keys, stem_direction, true);
+
+        var gnotesToBeam = [];
+        var duration = '8';
+        var gns = [
+          { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
+          { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
+          { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: false },
+
+          { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
+          { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
+          { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: false },
+
+          { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
+          { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
+          { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: false },
+        ].map(vf.GraceNote.bind(vf));
+
+        gnotesToBeam.push([gns[0], gns[1], gns[2]]);
+        gnotesToBeam.push([gns[3], gns[4], gns[5]]);
+        gnotesToBeam.push([gns[6], gns[7], gns[8]]);
+
+        gracenotes = gracenotes.concat(gns);
+        var gracenoteGroup = vf.GraceNoteGroup({ notes: gracenotes });
+        gnotesToBeam.forEach(function(gnotes) {
+          gracenoteGroup.beamNotes(gnotes);
+        });
+
+        notes[0].addModifier(0, gracenoteGroup);
+        return notes;
+      }
+
+      var voice = vf.Voice().setStrict(false);
+      voice.addTickables(createNoteBlock(['d/4', 'a/4'], 1));
+      voice.addTickables(createNoteBlock(['d/4', 'a/4'], -1));
+
+      new vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'GraceNoteSlash');
+    },
+
+    slashWithBeams: function(options) {
+      const vf = VF.Test.makeFactory(options, 800, 130);
+      const stave = vf.Stave({ x: 10, y: 10, width: 750 });
+
+      function createNoteBlock(keys, stem_direction) {
+        var notes = [vf.StaveNote({ keys: ['f/4'], stem_direction: stem_direction, duration: '16' })];
+        var gracenotes = [];
+
+        var gnotesToBeam = [];
+
+        ['8', '16', '32', '64'].forEach(function(duration) {
+          var gns = [
+            { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
+            { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: false },
+
+            { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
+            { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: false },
+
+            { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
+            { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: false },
+          ].map(vf.GraceNote.bind(vf));
+
+          gnotesToBeam.push([gns[0], gns[1]]);
+          gnotesToBeam.push([gns[2], gns[3]]);
+          gnotesToBeam.push([gns[4], gns[5]]);
+          gracenotes = gracenotes.concat(gns);
+        });
+        var gracenoteGroup = vf.GraceNoteGroup({ notes: gracenotes });
+
+        gnotesToBeam.forEach(function(gnotes) {
+          gracenoteGroup.beamNotes(gnotes);
+        });
+
+        notes[0].addModifier(0, gracenoteGroup);
+        return notes;
+      }
+
+      var voice = vf.Voice().setStrict(false);
+      voice.addTickables(createNoteBlock(['d/4', 'a/4'], 1));
+      voice.addTickables(createNoteBlock(['d/4', 'a/4'], -1));
+
+      new vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'GraceNoteSlashWithBeams');
     },
 
     multipleVoices: function(options) {
