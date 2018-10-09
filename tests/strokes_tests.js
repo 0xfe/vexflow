@@ -10,13 +10,14 @@ VF.Test.Strokes = (function() {
 
       QUnit.module('Strokes');
 
-      run('Strokes - Brush/Arpeggiate/Rasquedo', Strokes.drawMultipleMeasures);
-      run('Strokes - Multi Voice', Strokes.multi);
+      run('Strokes - Brush/Roll/Rasquedo', Strokes.brushRollRasquedo);
+      run('Strokes - Arpeggio directionless (without arrows)', Strokes.arpeggioDirectionless);
+      run('Strokes - Multi Voice', Strokes.multiVoice);
       run('Strokes - Notation and Tab', Strokes.notesWithTab);
       run('Strokes - Multi-Voice Notation and Tab', Strokes.multiNotationAndTab);
     },
 
-    drawMultipleMeasures: function(options) {
+    brushRollRasquedo: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 200);
       var score = vf.EasyScore();
 
@@ -78,7 +79,57 @@ VF.Test.Strokes = (function() {
       ok(true, 'Brush/Roll/Rasquedo');
     },
 
-    multi: function(options) {
+    arpeggioDirectionless: function(options) {
+      var vf = VF.Test.makeFactory(options, 700, 200);
+      var score = vf.EasyScore();
+
+      // bar 1
+      var stave1 = vf.Stave({ x: 100, width: 500 }).setEndBarType(VF.Barline.type.DOUBLE);
+
+      var notes1 = score.notes(
+        '(g4 b4 d5)/4, (g4 b4 d5 g5), (g4 b4 d5 g5), (g4 b4 d5)',
+        { stem: 'up' }
+      );
+
+      var graceNotes = [
+        { keys: ['e/4'], duration: '32' },
+        { keys: ['f/4'], duration: '32' },
+        { keys: ['g/4'], duration: '32' },
+      ].map(vf.GraceNote.bind(vf));
+
+      var graceNoteGroup = vf.GraceNoteGroup({ notes: graceNotes, slur: false });
+      graceNoteGroup.beamNotes();
+
+      notes1[0]
+        .addStroke(0, new VF.Stroke(7));
+      notes1[1]
+        .addStroke(0, new VF.Stroke(7))
+        .addAccidental(0, vf.Accidental({ type: '#' }))
+        .addAccidental(1, vf.Accidental({ type: '#' }))
+        .addAccidental(2, vf.Accidental({ type: '#' }))
+        .addAccidental(3, vf.Accidental({ type: '#' }));
+      notes1[2]
+        .addStroke(0, new VF.Stroke(7))
+        .addAccidental(1, vf.Accidental({ type: 'b' }))
+        .addModifier(0, graceNoteGroup);
+      notes1[3]
+        .addStroke(0, new VF.Stroke(7))
+        .addModifier(0, vf.NoteSubGroup({ notes: [
+          vf.ClefNote({ type: 'treble', options: { size: 'default', annotation: '8va' } }),
+        ] }));
+
+      var voice1 = score.voice(notes1);
+
+      vf.Formatter()
+        .joinVoices([voice1])
+        .formatToStave([voice1], stave1);
+
+      vf.draw();
+
+      ok(true, 'Arpeggio directionless (without arrows)');
+    },
+
+    multiVoice: function(options) {
       var vf = VF.Test.makeFactory(options, 500, 200);
       var score = vf.EasyScore();
       var stave = vf.Stave();

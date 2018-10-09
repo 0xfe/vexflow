@@ -294,7 +294,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _vex = __webpack_require__(0);
 
-var _fraction = __webpack_require__(8);
+var _fraction = __webpack_require__(9);
 
 var _glyph = __webpack_require__(2);
 
@@ -474,16 +474,23 @@ Flow.keyProperties.note_glyph = {
   'D3': { code: 'v70', shift_right: -0.5 },
 
   /* Triangle */
-  'T0': { code: 'v49', shift_right: -2 },
-  'T1': { code: 'v93', shift_right: 0.5 },
-  'T2': { code: 'v40', shift_right: 0.5 },
-  'T3': { code: 'v7d', shift_right: 0.5 },
+  'T0': { code: 'v49', shift_right: -2, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T1': { code: 'v93', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T2': { code: 'v40', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T3': { code: 'v7d', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
 
   /* Cross */
-  'X0': { code: 'v92', shift_right: -2 },
-  'X1': { code: 'v95', shift_right: -0.5 },
-  'X2': { code: 'v7f', shift_right: 0.5 },
-  'X3': { code: 'v3b', shift_right: -2 }
+  'X0': { code: 'v92', shift_right: -2, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X1': { code: 'v95', shift_right: -0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X2': { code: 'v3e', shift_right: 0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X3': { code: 'v3b', shift_right: -2, stem_up_y_offset: 2, stem_down_y_offset: 2 },
+
+  /* Square */
+  'S1': { code: 'vd3', shift_right: 0 },
+  'S2': { code: 'vd2', shift_right: 0 },
+  /* Rectangle */
+  'R1': { code: 'vd5', shift_right: 0 },
+  'R2': { code: 'vd4', shift_right: 0 }
 };
 
 Flow.integerToNote = function (integer) {
@@ -615,7 +622,8 @@ Flow.accidentalColumnsTable = {
     a: [1, 3, 5, 4, 2],
     b: [1, 2, 4, 3, 1],
     spaced_out_pentachord: [1, 2, 3, 2, 1],
-    very_spaced_out_pentachord: [1, 2, 1, 2, 1] },
+    very_spaced_out_pentachord: [1, 2, 1, 2, 1]
+  },
   6: {
     a: [1, 3, 5, 6, 4, 2],
     b: [1, 2, 4, 5, 3, 1],
@@ -771,6 +779,16 @@ Flow.parseNoteData = function (noteData) {
     }
   } else {
     type = durationStringData.type;
+
+    // If we have keys, try and check if we've got a custom glyph
+    if (noteData.keys !== undefined) {
+      var result = noteData.keys[0].split('/');
+
+      // We have a custom glyph specified after the note eg. /X2
+      if (result && result.length === 3) {
+        type = result[2]; // Set the type to the custom note head
+      }
+    }
     if (!type) {
       type = 'n';
     }
@@ -877,7 +895,20 @@ Flow.durationToGlyph = function (duration, type) {
 
   var glyphTypeProperties = code.type[type];
   if (glyphTypeProperties === undefined) {
-    return null;
+    // Try and get it from the custom list of note heads
+    var customGlyphTypeProperties = Flow.keyProperties.note_glyph[type.toUpperCase()];
+
+    // If not, then return with nothing
+    if (customGlyphTypeProperties === undefined) {
+      return null;
+    }
+
+    // Otherwise set it as the code_head value
+    glyphTypeProperties = {
+      code_head: customGlyphTypeProperties.code,
+      stem_up_y_offset: customGlyphTypeProperties.stem_up_y_offset,
+      stem_down_y_offset: customGlyphTypeProperties.stem_down_y_offset
+    };
   }
 
   return _vex.Vex.Merge(_vex.Vex.Merge({}, code.common), glyphTypeProperties);
@@ -897,8 +928,6 @@ Flow.durationToGlyph.duration_codes = {
       flag: false,
       stem_up_extension: -Flow.STEM_HEIGHT,
       stem_down_extension: -Flow.STEM_HEIGHT,
-      gracenote_stem_up_extension: -Flow.STEM_HEIGHT,
-      gracenote_stem_down_extension: -Flow.STEM_HEIGHT,
       tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
       tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
       dot_shiftY: 0,
@@ -944,8 +973,6 @@ Flow.durationToGlyph.duration_codes = {
       flag: false,
       stem_up_extension: -Flow.STEM_HEIGHT,
       stem_down_extension: -Flow.STEM_HEIGHT,
-      gracenote_stem_up_extension: -Flow.STEM_HEIGHT,
-      gracenote_stem_down_extension: -Flow.STEM_HEIGHT,
       tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
       tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
       dot_shiftY: 0,
@@ -991,8 +1018,6 @@ Flow.durationToGlyph.duration_codes = {
       flag: false,
       stem_up_extension: 0,
       stem_down_extension: 0,
-      gracenote_stem_up_extension: -14,
-      gracenote_stem_down_extension: -14,
       tabnote_stem_up_extension: 0,
       tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
@@ -1039,8 +1064,6 @@ Flow.durationToGlyph.duration_codes = {
       flag: false,
       stem_up_extension: 0,
       stem_down_extension: 0,
-      gracenote_stem_up_extension: -14,
-      gracenote_stem_down_extension: -14,
       tabnote_stem_up_extension: 0,
       tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
@@ -1092,8 +1115,6 @@ Flow.durationToGlyph.duration_codes = {
       code_flag_downstem: 'v9a',
       stem_up_extension: 0,
       stem_down_extension: 0,
-      gracenote_stem_up_extension: -14,
-      gracenote_stem_down_extension: -14,
       tabnote_stem_up_extension: 0,
       tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
@@ -1145,8 +1166,6 @@ Flow.durationToGlyph.duration_codes = {
       code_flag_downstem: 'v8f',
       stem_up_extension: 0,
       stem_down_extension: 0,
-      gracenote_stem_up_extension: -14,
-      gracenote_stem_down_extension: -14,
       tabnote_stem_up_extension: 0,
       tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
@@ -1198,8 +1217,6 @@ Flow.durationToGlyph.duration_codes = {
       code_flag_downstem: 'v2a',
       stem_up_extension: 9,
       stem_down_extension: 9,
-      gracenote_stem_up_extension: -12,
-      gracenote_stem_down_extension: -12,
       tabnote_stem_up_extension: 8,
       tabnote_stem_down_extension: 5,
       dot_shiftY: 0,
@@ -1251,8 +1268,6 @@ Flow.durationToGlyph.duration_codes = {
       code_flag_downstem: 'v58',
       stem_up_extension: 13,
       stem_down_extension: 13,
-      gracenote_stem_up_extension: -10,
-      gracenote_stem_down_extension: -10,
       tabnote_stem_up_extension: 12,
       tabnote_stem_down_extension: 9,
       dot_shiftY: 0,
@@ -1304,8 +1319,6 @@ Flow.durationToGlyph.duration_codes = {
       code_flag_downstem: 'v30',
       stem_up_extension: 22,
       stem_down_extension: 22,
-      gracenote_stem_up_extension: -8,
-      gracenote_stem_down_extension: -8,
       tabnote_stem_up_extension: 21,
       tabnote_stem_down_extension: 18,
       dot_shiftY: 0,
@@ -1553,7 +1566,7 @@ var _element = __webpack_require__(3);
 
 var _boundingboxcomputation = __webpack_require__(65);
 
-var _boundingbox = __webpack_require__(10);
+var _boundingbox = __webpack_require__(13);
 
 var _vexflow_font = __webpack_require__(40);
 
@@ -2243,9 +2256,9 @@ var _vex = __webpack_require__(0);
 
 var _tables = __webpack_require__(1);
 
-var _boundingbox = __webpack_require__(10);
+var _boundingbox = __webpack_require__(13);
 
-var _stem = __webpack_require__(9);
+var _stem = __webpack_require__(8);
 
 var _notehead = __webpack_require__(41);
 
@@ -2649,10 +2662,10 @@ var StaveNote = exports.StaveNote = function (_StemmableNote) {
 
   StaveNote.prototype.buildStem = function buildStem() {
     var glyph = this.getGlyph();
-    var yExtend = glyph.code_head === 'v95' || glyph.code_head === 'v3e' ? -4 : 0;
 
     this.setStem(new _stem.Stem({
-      yExtend: yExtend,
+      stem_up_y_offset: glyph.stem_up_y_offset,
+      stem_down_y_offset: glyph.stem_down_y_offset,
       hide: !!this.isRest()
     }));
   };
@@ -4203,6 +4216,242 @@ var StaveModifier = exports.StaveModifier = function (_Element) {
 
 
 exports.__esModule = true;
+exports.Stem = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _vex = __webpack_require__(0);
+
+var _element = __webpack_require__(3);
+
+var _tables = __webpack_require__(1);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// This file implements the `Stem` object. Generally this object is handled
+// by its parent `StemmableNote`.
+
+// To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
+function L() {
+  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  if (Stem.DEBUG) _vex.Vex.L('Vex.Flow.Stem', args);
+}
+
+var Stem = exports.Stem = function (_Element) {
+  _inherits(Stem, _Element);
+
+  _createClass(Stem, null, [{
+    key: 'CATEGORY',
+    get: function get() {
+      return 'stem';
+    }
+
+    // Stem directions
+
+  }, {
+    key: 'UP',
+    get: function get() {
+      return 1;
+    }
+  }, {
+    key: 'DOWN',
+    get: function get() {
+      return -1;
+    }
+
+    // Theme
+
+  }, {
+    key: 'WIDTH',
+    get: function get() {
+      return _tables.Flow.STEM_WIDTH;
+    }
+  }, {
+    key: 'HEIGHT',
+    get: function get() {
+      return _tables.Flow.STEM_HEIGHT;
+    }
+  }]);
+
+  function Stem() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, Stem);
+
+    var _this = _possibleConstructorReturn(this, _Element.call(this));
+
+    _this.setAttribute('type', 'Stem');
+
+    // Default notehead x bounds
+    _this.x_begin = options.x_begin || 0;
+    _this.x_end = options.x_end || 0;
+
+    // Y bounds for top/bottom most notehead
+    _this.y_top = options.y_top || 0;
+    _this.y_bottom = options.y_bottom || 0;
+
+    // Stem top extension
+    _this.stem_extension = options.stem_extension || 0;
+
+    // Direction of the stem
+    _this.stem_direction = options.stem_direction || 0;
+
+    // Flag to override all draw calls
+    _this.hide = options.hide || false;
+
+    _this.isStemlet = options.isStemlet || false;
+    _this.stemletHeight = options.stemletHeight || 0;
+
+    // Changing where the stem meets the head
+    _this.stem_up_y_offset = options.stem_up_y_offset || 0;
+    _this.stem_down_y_offset = options.stem_down_y_offset || 0;
+
+    // Use to adjust the rendered height without affecting
+    // the results of `.getExtents()`
+    _this.renderHeightAdjustment = 0;
+    return _this;
+  }
+
+  // Set the x bounds for the default notehead
+
+
+  Stem.prototype.setNoteHeadXBounds = function setNoteHeadXBounds(x_begin, x_end) {
+    this.x_begin = x_begin;
+    this.x_end = x_end;
+    return this;
+  };
+
+  // Set the direction of the stem in relation to the noteheads
+
+
+  Stem.prototype.setDirection = function setDirection(direction) {
+    this.stem_direction = direction;
+  };
+
+  // Set the extension for the stem, generally for flags or beams
+
+
+  Stem.prototype.setExtension = function setExtension(ext) {
+    this.stem_extension = ext;
+  };
+
+  Stem.prototype.getExtension = function getExtension() {
+    return this.stem_extension;
+  };
+
+  // The the y bounds for the top and bottom noteheads
+
+
+  Stem.prototype.setYBounds = function setYBounds(y_top, y_bottom) {
+    this.y_top = y_top;
+    this.y_bottom = y_bottom;
+  };
+
+  // The category of the object
+
+
+  Stem.prototype.getCategory = function getCategory() {
+    return Stem.CATEGORY;
+  };
+
+  // Gets the entire height for the stem
+
+
+  Stem.prototype.getHeight = function getHeight() {
+    var y_offset = this.stem_direction === Stem.UP ? this.stem_up_y_offset : this.stem_down_y_offset; // eslint-disable-line max-len
+    return (this.y_bottom - this.y_top) * this.stem_direction + (Stem.HEIGHT - y_offset + this.stem_extension) * this.stem_direction;
+  };
+
+  Stem.prototype.getBoundingBox = function getBoundingBox() {
+    throw new _vex.Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
+  };
+
+  // Get the y coordinates for the very base of the stem to the top of
+  // the extension
+
+
+  Stem.prototype.getExtents = function getExtents() {
+    var isStemUp = this.stem_direction === Stem.UP;
+    var ys = [this.y_top, this.y_bottom];
+    var stemHeight = Stem.HEIGHT + this.stem_extension;
+    var innerMostNoteheadY = (isStemUp ? Math.min : Math.max).apply(undefined, ys);
+    var outerMostNoteheadY = (isStemUp ? Math.max : Math.min).apply(undefined, ys);
+    var stemTipY = innerMostNoteheadY + stemHeight * -this.stem_direction;
+
+    return { topY: stemTipY, baseY: outerMostNoteheadY };
+  };
+
+  Stem.prototype.setVisibility = function setVisibility(isVisible) {
+    this.hide = !isVisible;
+    return this;
+  };
+
+  Stem.prototype.setStemlet = function setStemlet(isStemlet, stemletHeight) {
+    this.isStemlet = isStemlet;
+    this.stemletHeight = stemletHeight;
+    return this;
+  };
+
+  // Render the stem onto the canvas
+
+
+  Stem.prototype.draw = function draw() {
+    this.setRendered();
+    if (this.hide) return;
+    var ctx = this.checkContext();
+
+    var stem_x = void 0;
+    var stem_y = void 0;
+    var stem_direction = this.stem_direction;
+
+    if (stem_direction === Stem.DOWN) {
+      // Down stems are rendered to the left of the head.
+      stem_x = this.x_begin;
+      stem_y = this.y_top + this.stem_down_y_offset;
+    } else {
+      // Up stems are rendered to the right of the head.
+      stem_x = this.x_end;
+      stem_y = this.y_bottom - this.stem_up_y_offset;
+    }
+
+    var stemHeight = this.getHeight();
+
+    L('Rendering stem - ', 'Top Y: ', this.y_top, 'Bottom Y: ', this.y_bottom);
+
+    // The offset from the stem's base which is required fo satisfy the stemlet height
+    var stemletYOffset = this.isStemlet ? stemHeight - this.stemletHeight * this.stem_direction : 0;
+
+    // Draw the stem
+    ctx.save();
+    this.applyStyle(ctx);
+    ctx.beginPath();
+    ctx.setLineWidth(Stem.WIDTH);
+    ctx.moveTo(stem_x, stem_y - stemletYOffset);
+    ctx.lineTo(stem_x, stem_y - stemHeight - this.renderHeightAdjustment * stem_direction);
+    ctx.stroke();
+    this.restoreStyle(ctx);
+    ctx.restore();
+  };
+
+  return Stem;
+}(_element.Element);
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
 exports.Fraction = undefined;
 
 var _vex = __webpack_require__(0);
@@ -4218,7 +4467,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /* eslint-disable no-underscore-dangle */
 
 var Fraction = function () {
-
   /**
    * GCD: Find greatest common divisor using Euclidean algorithm
    */
@@ -4550,341 +4798,7 @@ Fraction.__compareB = new Fraction();
 Fraction.__tmp = new Fraction();
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.Stem = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _vex = __webpack_require__(0);
-
-var _element = __webpack_require__(3);
-
-var _tables = __webpack_require__(1);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This file implements the `Stem` object. Generally this object is handled
-// by its parent `StemmableNote`.
-
-// To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
-function L() {
-  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
-  }
-
-  if (Stem.DEBUG) _vex.Vex.L('Vex.Flow.Stem', args);
-}
-
-var Stem = exports.Stem = function (_Element) {
-  _inherits(Stem, _Element);
-
-  _createClass(Stem, null, [{
-    key: 'CATEGORY',
-    get: function get() {
-      return 'stem';
-    }
-
-    // Stem directions
-
-  }, {
-    key: 'UP',
-    get: function get() {
-      return 1;
-    }
-  }, {
-    key: 'DOWN',
-    get: function get() {
-      return -1;
-    }
-
-    // Theme
-
-  }, {
-    key: 'WIDTH',
-    get: function get() {
-      return _tables.Flow.STEM_WIDTH;
-    }
-  }, {
-    key: 'HEIGHT',
-    get: function get() {
-      return _tables.Flow.STEM_HEIGHT;
-    }
-  }]);
-
-  function Stem() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, Stem);
-
-    var _this = _possibleConstructorReturn(this, _Element.call(this));
-
-    _this.setAttribute('type', 'Stem');
-
-    // Default notehead x bounds
-    _this.x_begin = options.x_begin || 0;
-    _this.x_end = options.x_end || 0;
-
-    // Y bounds for top/bottom most notehead
-    _this.y_top = options.y_top || 0;
-    _this.y_bottom = options.y_bottom || 0;
-
-    // Stem top extension
-    _this.stem_extension = options.stem_extension || 0;
-
-    // Direction of the stem
-    _this.stem_direction = options.stem_direction || 0;
-
-    // Flag to override all draw calls
-    _this.hide = options.hide || false;
-
-    _this.isStemlet = options.isStemlet || false;
-    _this.stemletHeight = options.stemletHeight || 0;
-
-    // Use to adjust the rendered height without affecting
-    // the results of `.getExtents()`
-    _this.renderHeightAdjustment = 0;
-    return _this;
-  }
-
-  // Set the x bounds for the default notehead
-
-
-  Stem.prototype.setNoteHeadXBounds = function setNoteHeadXBounds(x_begin, x_end) {
-    this.x_begin = x_begin;
-    this.x_end = x_end;
-    return this;
-  };
-
-  // Set the direction of the stem in relation to the noteheads
-
-
-  Stem.prototype.setDirection = function setDirection(direction) {
-    this.stem_direction = direction;
-  };
-
-  // Set the extension for the stem, generally for flags or beams
-
-
-  Stem.prototype.setExtension = function setExtension(ext) {
-    this.stem_extension = ext;
-  };
-
-  Stem.prototype.getExtension = function getExtension() {
-    return this.stem_extension;
-  };
-
-  // The the y bounds for the top and bottom noteheads
-
-
-  Stem.prototype.setYBounds = function setYBounds(y_top, y_bottom) {
-    this.y_top = y_top;
-    this.y_bottom = y_bottom;
-  };
-
-  // The category of the object
-
-
-  Stem.prototype.getCategory = function getCategory() {
-    return Stem.CATEGORY;
-  };
-
-  // Gets the entire height for the stem
-
-
-  Stem.prototype.getHeight = function getHeight() {
-    return (this.y_bottom - this.y_top) * this.stem_direction + (Stem.HEIGHT + this.stem_extension) * this.stem_direction;
-  };
-
-  Stem.prototype.getBoundingBox = function getBoundingBox() {
-    throw new _vex.Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
-  };
-
-  // Get the y coordinates for the very base of the stem to the top of
-  // the extension
-
-
-  Stem.prototype.getExtents = function getExtents() {
-    var isStemUp = this.stem_direction === Stem.UP;
-    var ys = [this.y_top, this.y_bottom];
-    var stemHeight = Stem.HEIGHT + this.stem_extension;
-    var innerMostNoteheadY = (isStemUp ? Math.min : Math.max).apply(undefined, ys);
-    var outerMostNoteheadY = (isStemUp ? Math.max : Math.min).apply(undefined, ys);
-    var stemTipY = innerMostNoteheadY + stemHeight * -this.stem_direction;
-
-    return { topY: stemTipY, baseY: outerMostNoteheadY };
-  };
-
-  Stem.prototype.setVisibility = function setVisibility(isVisible) {
-    this.hide = !isVisible;
-    return this;
-  };
-
-  Stem.prototype.setStemlet = function setStemlet(isStemlet, stemletHeight) {
-    this.isStemlet = isStemlet;
-    this.stemletHeight = stemletHeight;
-    return this;
-  };
-
-  // Render the stem onto the canvas
-
-
-  Stem.prototype.draw = function draw() {
-    this.setRendered();
-    if (this.hide) return;
-    var ctx = this.checkContext();
-
-    var stem_x = void 0;
-    var stem_y = void 0;
-    var stem_direction = this.stem_direction;
-
-    if (stem_direction === Stem.DOWN) {
-      // Down stems are rendered to the left of the head.
-      stem_x = this.x_begin;
-      stem_y = this.y_top;
-    } else {
-      // Up stems are rendered to the right of the head.
-      stem_x = this.x_end;
-      stem_y = this.y_bottom;
-    }
-
-    var stemHeight = this.getHeight();
-
-    L('Rendering stem - ', 'Top Y: ', this.y_top, 'Bottom Y: ', this.y_bottom);
-
-    // The offset from the stem's base which is required fo satisfy the stemlet height
-    var stemletYOffset = this.isStemlet ? stemHeight - this.stemletHeight * this.stem_direction : 0;
-
-    // Draw the stem
-    ctx.save();
-    this.applyStyle(ctx);
-    ctx.beginPath();
-    ctx.setLineWidth(Stem.WIDTH);
-    ctx.moveTo(stem_x, stem_y - stemletYOffset);
-    ctx.lineTo(stem_x, stem_y - stemHeight - this.renderHeightAdjustment * stem_direction);
-    ctx.stroke();
-    this.restoreStyle(ctx);
-    ctx.restore();
-  };
-
-  return Stem;
-}(_element.Element);
-
-/***/ }),
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// Vex Music Notation
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// Copyright Mohit Muthanna 2010
-
-// Bounding boxes for interactive notation
-
-var BoundingBox = exports.BoundingBox = function () {
-  BoundingBox.copy = function copy(that) {
-    return new BoundingBox(that.x, that.y, that.w, that.h);
-  };
-
-  function BoundingBox(x, y, w, h) {
-    _classCallCheck(this, BoundingBox);
-
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-  }
-
-  BoundingBox.prototype.getX = function getX() {
-    return this.x;
-  };
-
-  BoundingBox.prototype.getY = function getY() {
-    return this.y;
-  };
-
-  BoundingBox.prototype.getW = function getW() {
-    return this.w;
-  };
-
-  BoundingBox.prototype.getH = function getH() {
-    return this.h;
-  };
-
-  BoundingBox.prototype.setX = function setX(x) {
-    this.x = x;return this;
-  };
-
-  BoundingBox.prototype.setY = function setY(y) {
-    this.y = y;return this;
-  };
-
-  BoundingBox.prototype.setW = function setW(w) {
-    this.w = w;return this;
-  };
-
-  BoundingBox.prototype.setH = function setH(h) {
-    this.h = h;return this;
-  };
-
-  BoundingBox.prototype.move = function move(x, y) {
-    this.x += x;this.y += y;
-  };
-
-  BoundingBox.prototype.clone = function clone() {
-    return BoundingBox.copy(this);
-  };
-
-  // Merge my box with given box. Creates a bigger bounding box unless
-  // the given box is contained in this one.
-
-
-  BoundingBox.prototype.mergeWith = function mergeWith(boundingBox, ctx) {
-    var that = boundingBox;
-
-    var new_x = this.x < that.x ? this.x : that.x;
-    var new_y = this.y < that.y ? this.y : that.y;
-    var new_w = Math.max(this.x + this.w, that.x + that.w) - new_x;
-    var new_h = Math.max(this.y + this.h, that.y + that.h) - new_y;
-
-    this.x = new_x;
-    this.y = new_y;
-    this.w = new_w;
-    this.h = new_h;
-
-    if (ctx) this.draw(ctx);
-    return this;
-  };
-
-  BoundingBox.prototype.draw = function draw(ctx, x, y) {
-    if (!x) x = 0;
-    if (!y) y = 0;
-    ctx.rect(this.x + x, this.y + y, this.w, this.h);
-    ctx.stroke();
-  };
-
-  return BoundingBox;
-}();
-
-/***/ }),
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4901,9 +4815,9 @@ var _beam = __webpack_require__(15);
 
 var _tables = __webpack_require__(1);
 
-var _fraction = __webpack_require__(8);
+var _fraction = __webpack_require__(9);
 
-var _voice = __webpack_require__(12);
+var _voice = __webpack_require__(11);
 
 var _staveconnector = __webpack_require__(19);
 
@@ -4913,7 +4827,7 @@ var _note = __webpack_require__(6);
 
 var _modifiercontext = __webpack_require__(22);
 
-var _tickcontext = __webpack_require__(13);
+var _tickcontext = __webpack_require__(12);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
@@ -5662,7 +5576,7 @@ var Formatter = exports.Formatter = function () {
 }();
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5679,7 +5593,7 @@ var _element = __webpack_require__(3);
 
 var _tables = __webpack_require__(1);
 
-var _fraction = __webpack_require__(8);
+var _fraction = __webpack_require__(9);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5993,7 +5907,7 @@ var Voice = exports.Voice = function (_Element) {
 }(_element.Element);
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6006,7 +5920,7 @@ var _vex = __webpack_require__(0);
 
 var _tickable = __webpack_require__(42);
 
-var _fraction = __webpack_require__(8);
+var _fraction = __webpack_require__(9);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6205,6 +6119,109 @@ var TickContext = exports.TickContext = function (_Tickable) {
 
   return TickContext;
 }(_tickable.Tickable);
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// Vex Music Notation
+// Mohit Muthanna <mohit@muthanna.com>
+//
+// Copyright Mohit Muthanna 2010
+
+// Bounding boxes for interactive notation
+
+var BoundingBox = exports.BoundingBox = function () {
+  BoundingBox.copy = function copy(that) {
+    return new BoundingBox(that.x, that.y, that.w, that.h);
+  };
+
+  function BoundingBox(x, y, w, h) {
+    _classCallCheck(this, BoundingBox);
+
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+  }
+
+  BoundingBox.prototype.getX = function getX() {
+    return this.x;
+  };
+
+  BoundingBox.prototype.getY = function getY() {
+    return this.y;
+  };
+
+  BoundingBox.prototype.getW = function getW() {
+    return this.w;
+  };
+
+  BoundingBox.prototype.getH = function getH() {
+    return this.h;
+  };
+
+  BoundingBox.prototype.setX = function setX(x) {
+    this.x = x;return this;
+  };
+
+  BoundingBox.prototype.setY = function setY(y) {
+    this.y = y;return this;
+  };
+
+  BoundingBox.prototype.setW = function setW(w) {
+    this.w = w;return this;
+  };
+
+  BoundingBox.prototype.setH = function setH(h) {
+    this.h = h;return this;
+  };
+
+  BoundingBox.prototype.move = function move(x, y) {
+    this.x += x;this.y += y;
+  };
+
+  BoundingBox.prototype.clone = function clone() {
+    return BoundingBox.copy(this);
+  };
+
+  // Merge my box with given box. Creates a bigger bounding box unless
+  // the given box is contained in this one.
+
+
+  BoundingBox.prototype.mergeWith = function mergeWith(boundingBox, ctx) {
+    var that = boundingBox;
+
+    var new_x = this.x < that.x ? this.x : that.x;
+    var new_y = this.y < that.y ? this.y : that.y;
+    var new_w = Math.max(this.x + this.w, that.x + that.w) - new_x;
+    var new_h = Math.max(this.y + this.h, that.y + that.h) - new_y;
+
+    this.x = new_x;
+    this.y = new_y;
+    this.w = new_w;
+    this.h = new_h;
+
+    if (ctx) this.draw(ctx);
+    return this;
+  };
+
+  BoundingBox.prototype.draw = function draw(ctx, x, y) {
+    if (!x) x = 0;
+    if (!y) y = 0;
+    ctx.rect(this.x + x, this.y + y, this.w, this.h);
+    ctx.stroke();
+  };
+
+  return BoundingBox;
+}();
 
 /***/ }),
 /* 14 */
@@ -6428,11 +6445,11 @@ var _tables = __webpack_require__(1);
 
 var _element = __webpack_require__(3);
 
-var _fraction = __webpack_require__(8);
+var _fraction = __webpack_require__(9);
 
 var _tuplet = __webpack_require__(18);
 
-var _stem = __webpack_require__(9);
+var _stem = __webpack_require__(8);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7543,7 +7560,7 @@ var _modifier = __webpack_require__(4);
 
 var _glyph = __webpack_require__(2);
 
-var _stem = __webpack_require__(9);
+var _stem = __webpack_require__(8);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7609,6 +7626,11 @@ var snapLineToStaff = function snapLineToStaff(canSitBetweenLines, line, positio
   }
 };
 
+var isStaveNote = function isStaveNote(note) {
+  var noteCategory = note.getCategory();
+  return noteCategory === 'stavenotes' || noteCategory === 'gracenotes';
+};
+
 var getTopY = function getTopY(note, textLine) {
   var stave = note.getStave();
   var stemDirection = note.getStemDirection();
@@ -7617,7 +7639,7 @@ var getTopY = function getTopY(note, textLine) {
       stemTipY = _note$getStemExtents.topY,
       stemBaseY = _note$getStemExtents.baseY;
 
-  if (note.getCategory() === 'stavenotes') {
+  if (isStaveNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === _stem.Stem.UP) {
         return stemTipY;
@@ -7650,7 +7672,7 @@ var getBottomY = function getBottomY(note, textLine) {
       stemTipY = _note$getStemExtents2.topY,
       stemBaseY = _note$getStemExtents2.baseY;
 
-  if (note.getCategory() === 'stavenotes') {
+  if (isStaveNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === _stem.Stem.UP) {
         return stemBaseY;
@@ -7683,7 +7705,7 @@ var getBottomY = function getBottomY(note, textLine) {
 var getInitialOffset = function getInitialOffset(note, position) {
   var isOnStemTip = position === ABOVE && note.getStemDirection() === _stem.Stem.UP || position === BELOW && note.getStemDirection() === _stem.Stem.DOWN;
 
-  if (note.getCategory() === 'stavenotes') {
+  if (isStaveNote(note)) {
     if (note.hasStem() && isOnStemTip) {
       return 0.5;
     } else {
@@ -7906,11 +7928,11 @@ var _vex = __webpack_require__(0);
 
 var _element = __webpack_require__(3);
 
-var _formatter = __webpack_require__(11);
+var _formatter = __webpack_require__(10);
 
 var _glyph = __webpack_require__(2);
 
-var _stem = __webpack_require__(9);
+var _stem = __webpack_require__(8);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8544,7 +8566,7 @@ var _vex = __webpack_require__(0);
 
 var _tables = __webpack_require__(1);
 
-var _stem = __webpack_require__(9);
+var _stem = __webpack_require__(8);
 
 var _glyph = __webpack_require__(2);
 
@@ -9063,7 +9085,7 @@ var ModifierContext = exports.ModifierContext = function () {
 
     // Add new modifiers to this array. The ordering is significant -- lower
     // modifiers are formatted and rendered before higher ones.
-    this.PREFORMAT = [_stavenote.StaveNote, _dot.Dot, _frethandfinger.FretHandFinger, _accidental.Accidental, _gracenotegroup.GraceNoteGroup, _notesubgroup.NoteSubGroup, _strokes.Stroke, _stringnumber.StringNumber, _articulation.Articulation, _ornament.Ornament, _annotation.Annotation, _bend.Bend, _vibrato.Vibrato];
+    this.PREFORMAT = [_stavenote.StaveNote, _dot.Dot, _frethandfinger.FretHandFinger, _accidental.Accidental, _strokes.Stroke, _gracenotegroup.GraceNoteGroup, _notesubgroup.NoteSubGroup, _stringnumber.StringNumber, _articulation.Articulation, _ornament.Ornament, _annotation.Annotation, _bend.Bend, _vibrato.Vibrato];
 
     // If post-formatting is required for an element, add it to this array.
     this.POSTFORMAT = [_stavenote.StaveNote];
@@ -9362,7 +9384,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _vex = __webpack_require__(0);
 
-var _fraction = __webpack_require__(8);
+var _fraction = __webpack_require__(9);
 
 var _tables = __webpack_require__(1);
 
@@ -10403,9 +10425,9 @@ var _tables = __webpack_require__(1);
 
 var _modifier = __webpack_require__(4);
 
-var _formatter = __webpack_require__(11);
+var _formatter = __webpack_require__(10);
 
-var _voice = __webpack_require__(12);
+var _voice = __webpack_require__(11);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -10541,9 +10563,9 @@ var _tables = __webpack_require__(1);
 
 var _modifier = __webpack_require__(4);
 
-var _formatter = __webpack_require__(11);
+var _formatter = __webpack_require__(10);
 
-var _voice = __webpack_require__(12);
+var _voice = __webpack_require__(11);
 
 var _beam = __webpack_require__(15);
 
@@ -10669,6 +10691,8 @@ var GraceNoteGroup = exports.GraceNoteGroup = function (_Modifier) {
       slur_y_shift: 0
     };
 
+    _this.beams = [];
+
     _this.voice.addTickables(_this.grace_notes);
 
     return _ret = _this, _possibleConstructorReturn(_this, _ret);
@@ -10686,14 +10710,15 @@ var GraceNoteGroup = exports.GraceNoteGroup = function (_Modifier) {
     this.preFormatted = true;
   };
 
-  GraceNoteGroup.prototype.beamNotes = function beamNotes() {
-    if (this.grace_notes.length > 1) {
-      var beam = new _beam.Beam(this.grace_notes);
+  GraceNoteGroup.prototype.beamNotes = function beamNotes(grace_notes) {
+    grace_notes = grace_notes || this.grace_notes;
+    if (grace_notes.length > 1) {
+      var beam = new _beam.Beam(grace_notes);
 
       beam.render_options.beam_width = 3;
       beam.render_options.partial_beam_length = 4;
 
-      this.beam = beam;
+      this.beams.push(beam);
     }
 
     return this;
@@ -10737,9 +10762,9 @@ var GraceNoteGroup = exports.GraceNoteGroup = function (_Modifier) {
     });
 
     // Draw beam
-    if (this.beam) {
-      this.beam.setContext(this.context).draw();
-    }
+    this.beams.forEach(function (beam) {
+      beam.setContext(_this2.context).draw();
+    });
 
     if (this.show_slur) {
       // Create and draw slur
@@ -11932,7 +11957,7 @@ var _stavetempo = __webpack_require__(70);
 
 var _stavetext = __webpack_require__(71);
 
-var _boundingbox = __webpack_require__(10);
+var _boundingbox = __webpack_require__(13);
 
 var _clef = __webpack_require__(36);
 
@@ -12612,6 +12637,7 @@ var Stave = exports.Stave = function (_Element) {
 
     // Make sure the defaults are present in case an incomplete set of
     //  configuration options were supplied.
+    // eslint-disable-next-line
     for (var line_config in lines_configuration) {
       // Allow 'null' to be used if the caller just wants the default for a particular node.
       if (!lines_configuration[line_config]) {
@@ -13704,7 +13730,7 @@ var _tables = __webpack_require__(1);
 
 var _modifier = __webpack_require__(4);
 
-var _stem = __webpack_require__(9);
+var _stem = __webpack_require__(8);
 
 var _stemmablenote = __webpack_require__(20);
 
@@ -14585,7 +14611,11 @@ var Font = exports.Font = {
     "vbf": { "x_min": -53.078125, "x_max": 513.140625, "ha": 485, "o": "m 185 383 b 196 384 187 383 191 384 b 277 334 230 384 259 365 b 288 301 281 324 288 306 b 288 297 288 298 288 297 b 294 302 289 297 291 299 b 394 370 323 338 367 367 b 404 371 398 370 401 371 b 510 272 453 371 498 328 b 513 237 513 262 513 251 b 507 172 513 217 511 192 b 326 -34 487 59 412 -26 b 314 -36 322 -36 318 -36 b 274 -24 298 -36 283 -31 l 265 -16 b 224 44 246 -1 232 20 b 223 49 224 47 223 49 b 223 49 223 49 223 49 b 149 -197 221 48 149 -194 b 149 -198 149 -197 149 -198 b 170 -210 149 -202 155 -205 b 187 -215 174 -210 175 -212 b 204 -231 201 -219 204 -222 b 197 -245 204 -240 202 -242 l 194 -248 l 76 -248 l -42 -248 l -46 -245 b -53 -231 -51 -242 -53 -240 b -35 -215 -53 -222 -49 -217 b -13 -210 -21 -212 -20 -212 b -6 -208 -10 -209 -8 -208 b 0 -206 -6 -208 -2 -206 b 25 -188 13 -201 21 -195 b 163 280 28 -183 163 276 b 166 291 163 283 164 287 b 167 302 167 295 167 299 b 155 324 167 315 161 324 b 155 324 155 324 155 324 b 65 230 125 322 85 280 b 53 215 61 217 58 215 b 51 215 53 215 51 215 b 42 224 46 215 42 217 b 57 263 42 231 47 244 b 140 360 77 305 104 337 b 152 370 144 365 149 369 b 185 383 157 376 172 381 m 374 306 b 366 308 371 308 368 308 b 300 273 348 308 321 294 b 284 254 288 262 287 259 b 280 242 283 249 281 245 b 257 169 279 240 270 213 l 236 98 l 236 93 b 251 48 238 77 243 61 b 279 27 258 37 272 27 b 281 27 279 27 280 27 b 291 31 281 27 287 30 b 396 170 334 52 378 109 b 406 247 402 197 406 224 b 401 277 406 259 405 270 b 374 306 397 290 383 303 " },
     "vc3": { "x_min": -10.890625, "x_max": 299.4375, "ha": 294, "o": "m 136 460 b 142 462 137 462 140 462 b 166 449 152 462 161 456 b 171 428 168 446 168 445 b 288 131 194 322 238 209 b 298 115 295 120 296 117 b 299 106 298 112 299 109 b 273 81 299 91 287 81 b 255 86 268 81 261 83 b 155 116 225 104 183 116 l 152 116 l 149 108 b 141 83 148 102 144 91 b 134 48 137 69 134 58 b 149 9 134 34 140 24 b 153 -1 152 5 153 1 b 149 -9 153 -5 152 -6 b 144 -11 148 -11 147 -11 b 122 2 138 -11 133 -6 b 95 61 104 20 95 38 b 107 108 95 74 99 90 b 108 113 107 111 108 112 b 107 113 108 113 108 113 b 102 113 106 113 104 113 b 31 86 76 108 53 98 b 14 80 24 81 20 80 b -10 106 0 80 -10 91 b 0 131 -10 115 -9 116 b 115 430 49 209 91 317 b 136 460 119 451 123 456 " },
     "vd0": { "x_min": -10.890625, "x_max": 299.4375, "ha": 294, "o": "m 44 174 b 51 174 47 174 49 174 b 68 173 55 174 61 174 l 287 112 l 551 40 b 615 20 617 22 609 23 b 626 0 622 16 626 8 b 615 -22 626 -9 622 -18 b 613 -23 613 -23 613 -23 b 613 -23 613 -23 613 -23 b 287 -113 613 -24 597 -29 l 68 -174 b 53 -176 61 -176 57 -176 b 39 -172 47 -176 43 -174 b 27 -151 31 -167 27 -159 b 39 -129 27 -141 31 -133 b 230 -74 43 -124 20 -131 l 370 -36 l 468 -9 b 498 0 484 -4 498 -1 b 468 8 498 0 484 2 l 370 34 l 230 73 b 40 126 28 129 43 124 b 27 149 31 131 27 140 b 44 174 27 161 34 170 m 205 110 l 205 300 b 205 330 245 330 245 300 l 245 300 l 245 -300 b 245 -330 205 -330 205 -300 l 205 -300 l 205 110 l 345 90 m 345 90 l 345 330 b 345 360 385 360 385 330 l 385 330 l 385 -270 b 385 -300 345 -300 345 -270 l 345 -270 l 345 90 " },
-    "vd1": { "x_min": -20, "x_max": 320, "ha": 257, "o": "m -8 200 b -8 210 8 200 16 200 l 20 148 -199 l 23 -615 b 0 -629 9 -629 6 -629 l -21 -612 l -21 -201 l -21 216 l -20 200 m 16 200 l 310 0 l 240 0 l 16 140 l 16 -120 l 240 0 l 310 0 l 16 -200 " }
+    "vd1": { "x_min": -20, "x_max": 320, "ha": 257, "o": "m -8 200 b -8 210 8 200 16 200 l 20 148 -199 l 23 -615 b 0 -629 9 -629 6 -629 l -21 -612 l -21 -201 l -21 216 l -20 200 m 16 200 l 310 0 l 240 0 l 16 140 l 16 -120 l 240 0 l 310 0 l 16 -200 " },
+    "vd2": { "x_min": 0, "x_max": 430.75, "ha": 386, "o": "m 0 200 l 0 -200 l 430 -200 l 430 200 l 0 200 " },
+    "vd3": { "x_min": 0, "x_max": 430.75, "ha": 386, "o": "m 0 200 l 0 -200 l 430 -200 l 430 200 l 0 200 l 50 150 l 380 150 l 380 -150 l 50 -150 l 50 150 " },
+    "vd4": { "x_min": 0, "x_max": 430.75, "ha": 360, "o": "m 0 150 l 0 -150 l 430 -150 l 430 150 l 0 150 " },
+    "vd5": { "x_min": 0, "x_max": 430.75, "ha": 360, "o": "m 0 150 l 0 -150 l 430 -150 l 430 150 l 0 150 l 50 100 l 380 100 l 380 -100 l 50 -100 l 50 100" }
   },
   "cssFontWeight": "normal", "ascender": 1903, "underlinePosition": -125, "cssFontStyle": "normal", "boundingBox": { "yMin": -2065.375, "xMin": -695.53125, "yMax": 1901.578125, "xMax": 1159.671875 },
   "resolution": 1000, "descender": -2066, "familyName": "VexFlow-18", "lineHeight": 4093, "underlineThickness": 50
@@ -14609,7 +14639,7 @@ var _tables = __webpack_require__(1);
 
 var _note = __webpack_require__(6);
 
-var _stem = __webpack_require__(9);
+var _stem = __webpack_require__(8);
 
 var _stavenote = __webpack_require__(5);
 
@@ -14901,7 +14931,7 @@ var _element = __webpack_require__(3);
 
 var _tables = __webpack_require__(1);
 
-var _fraction = __webpack_require__(8);
+var _fraction = __webpack_require__(9);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -15239,10 +15269,11 @@ var Stroke = exports.Stroke = function (_Modifier) {
       return {
         BRUSH_DOWN: 1,
         BRUSH_UP: 2,
-        ROLL_DOWN: 3, // Arpegiated chord
-        ROLL_UP: 4, // Arpegiated chord
+        ROLL_DOWN: 3, // Arpeggiated chord
+        ROLL_UP: 4, // Arpeggiated chord
         RASQUEDO_DOWN: 5,
-        RASQUEDO_UP: 6
+        RASQUEDO_UP: 6,
+        ARPEGGIO_DIRECTIONLESS: 7 // Arpeggiated chord without upwards or downwards arrow
       };
     }
   }]);
@@ -15380,6 +15411,10 @@ var Stroke = exports.Stroke = function (_Modifier) {
           text_y = topY - line_space;
         }
         break;
+      case Stroke.Type.ARPEGGIO_DIRECTIONLESS:
+        topY += 0.5 * line_space;
+        botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
+        break;
       default:
         throw new _vex.Vex.RERR('InvalidType', 'The stroke type ' + this.type + ' does not exist');
     }
@@ -15401,6 +15436,10 @@ var Stroke = exports.Stroke = function (_Modifier) {
           text_y = _i2 + 0.25 * line_space;
         }
       }
+    }
+
+    if (this.type === Stroke.Type.ARPEGGIO_DIRECTIONLESS) {
+      return; // skip drawing arrow heads or text
     }
 
     // Draw the arrow head
@@ -15436,7 +15475,7 @@ var _tables = __webpack_require__(1);
 
 var _modifier = __webpack_require__(4);
 
-var _tickcontext = __webpack_require__(13);
+var _tickcontext = __webpack_require__(12);
 
 var _stavenote = __webpack_require__(5);
 
@@ -16461,8 +16500,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _vex = __webpack_require__(0);
 
-var _boundingbox = __webpack_require__(10);
-
 var _note = __webpack_require__(6);
 
 var _clef = __webpack_require__(36);
@@ -16523,7 +16560,7 @@ var ClefNote = exports.ClefNote = function (_Note) {
   };
 
   ClefNote.prototype.getBoundingBox = function getBoundingBox() {
-    return new _boundingbox.BoundingBox(0, 0, 0, 0);
+    return _Note.prototype.getBoundingBox.call(this);
   };
 
   ClefNote.prototype.addToModifierContext = function addToModifierContext() {
@@ -16580,8 +16617,6 @@ var ClefNote = exports.ClefNote = function (_Note) {
 exports.__esModule = true;
 exports.TimeSigNote = undefined;
 
-var _boundingbox = __webpack_require__(10);
-
 var _note = __webpack_require__(6);
 
 var _timesignature = __webpack_require__(37);
@@ -16613,7 +16648,7 @@ var TimeSigNote = exports.TimeSigNote = function (_Note) {
   }
 
   TimeSigNote.prototype.getBoundingBox = function getBoundingBox() {
-    return new _boundingbox.BoundingBox(0, 0, 0, 0);
+    return _Note.prototype.getBoundingBox.call(this);
   };
 
   TimeSigNote.prototype.addToModifierContext = function addToModifierContext() {
@@ -16657,6 +16692,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _stavenote = __webpack_require__(5);
+
+var _stem = __webpack_require__(8);
 
 var _tables = __webpack_require__(1);
 
@@ -16706,14 +16743,18 @@ var GraceNote = exports.GraceNote = function (_StaveNote) {
   }
 
   GraceNote.prototype.getStemExtension = function getStemExtension() {
-    var glyph = this.getGlyph();
-
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
     }
 
+    var glyph = this.getGlyph();
     if (glyph) {
-      return this.getStemDirection() === 1 ? glyph.gracenote_stem_up_extension : glyph.gracenote_stem_down_extension;
+      var ret = _StaveNote.prototype.getStemExtension.call(this);
+      if (glyph.stem) {
+        var scale = this.render_options.glyph_font_scale / _tables.Flow.DEFAULT_NOTATION_FONT_SCALE;
+        ret = (_stem.Stem.HEIGHT + ret) * scale - _stem.Stem.HEIGHT;
+      }
+      return ret;
     }
 
     return 0;
@@ -18059,8 +18100,6 @@ var _note = __webpack_require__(6);
 
 var _stavebarline = __webpack_require__(34);
 
-var _boundingbox = __webpack_require__(10);
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -18127,7 +18166,7 @@ var BarNote = exports.BarNote = function (_Note) {
   };
 
   BarNote.prototype.getBoundingBox = function getBoundingBox() {
-    return new _boundingbox.BoundingBox(0, 0, 0, 0);
+    return _Note.prototype.getBoundingBox.call(this);
   };
 
   BarNote.prototype.addToModifierContext = function addToModifierContext() {
@@ -18265,7 +18304,7 @@ var _element = __webpack_require__(3);
 
 var _factory = __webpack_require__(61);
 
-var _formatter = __webpack_require__(11);
+var _formatter = __webpack_require__(10);
 
 var _note = __webpack_require__(6);
 
@@ -18342,16 +18381,15 @@ var System = exports.System = function (_Element) {
       spaceAbove: 0, // stave spaces
       spaceBelow: 0, // stave spaces
       debugNoteMetrics: false,
-      options: {}
+      options: { left_bar: false }
     });
 
     if (!params.stave) {
-      var options = { left_bar: false };
       params.stave = this.factory.Stave({
         x: this.options.x,
         y: this.options.y,
         width: this.options.width,
-        options: options
+        options: params.options
       });
     }
 
@@ -18455,7 +18493,7 @@ var _articulation = __webpack_require__(17);
 
 var _annotation = __webpack_require__(30);
 
-var _formatter = __webpack_require__(11);
+var _formatter = __webpack_require__(10);
 
 var _frethandfinger = __webpack_require__(23);
 
@@ -18479,11 +18517,11 @@ var _staveconnector = __webpack_require__(19);
 
 var _system = __webpack_require__(60);
 
-var _tickcontext = __webpack_require__(13);
+var _tickcontext = __webpack_require__(12);
 
 var _tuplet = __webpack_require__(18);
 
-var _voice = __webpack_require__(12);
+var _voice = __webpack_require__(11);
 
 var _beam = __webpack_require__(15);
 
@@ -19864,11 +19902,11 @@ var _tables = __webpack_require__(1);
 
 var _element = __webpack_require__(3);
 
-var _fraction = __webpack_require__(8);
+var _fraction = __webpack_require__(9);
 
 var _renderer = __webpack_require__(14);
 
-var _formatter = __webpack_require__(11);
+var _formatter = __webpack_require__(10);
 
 var _music = __webpack_require__(25);
 
@@ -19880,7 +19918,7 @@ var _stavenote = __webpack_require__(5);
 
 var _stavemodifier = __webpack_require__(7);
 
-var _voice = __webpack_require__(12);
+var _voice = __webpack_require__(11);
 
 var _accidental = __webpack_require__(24);
 
@@ -19902,7 +19940,7 @@ var _note = __webpack_require__(6);
 
 var _modifiercontext = __webpack_require__(22);
 
-var _tickcontext = __webpack_require__(13);
+var _tickcontext = __webpack_require__(12);
 
 var _articulation = __webpack_require__(17);
 
@@ -19922,7 +19960,7 @@ var _timesignature = __webpack_require__(37);
 
 var _timesignote = __webpack_require__(51);
 
-var _stem = __webpack_require__(9);
+var _stem = __webpack_require__(8);
 
 var _tabtie = __webpack_require__(28);
 
@@ -19944,7 +19982,7 @@ var _keymanager = __webpack_require__(75);
 
 var _stavehairpin = __webpack_require__(76);
 
-var _boundingbox = __webpack_require__(10);
+var _boundingbox = __webpack_require__(13);
 
 var _strokes = __webpack_require__(43);
 
@@ -20813,6 +20851,32 @@ var _vex = __webpack_require__(0);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Gregory Ristow (2015)
 
+var attrNamesToIgnoreMap = {
+  path: {
+    x: true,
+    y: true,
+    width: true,
+    height: true
+  },
+  rect: {},
+  text: {
+    width: true,
+    height: true
+  }
+};
+
+{
+  var fontAttrNamesToIgnore = {
+    'font-family': true,
+    'font-weight': true,
+    'font-style': true,
+    'font-size': true
+  };
+
+  _vex.Vex.Merge(attrNamesToIgnoreMap.rect, fontAttrNamesToIgnore);
+  _vex.Vex.Merge(attrNamesToIgnoreMap.path, fontAttrNamesToIgnore);
+}
+
 var SVGContext = exports.SVGContext = function () {
   function SVGContext(element) {
     _classCallCheck(this, SVGContext);
@@ -21092,8 +21156,12 @@ var SVGContext = exports.SVGContext = function () {
   // ### Drawing helper methods:
 
   SVGContext.prototype.applyAttributes = function applyAttributes(element, attributes) {
+    var attrNamesToIgnore = attrNamesToIgnoreMap[element.nodeName];
     Object.keys(attributes).forEach(function (propertyName) {
-      return element.setAttributeNS(null, propertyName, attributes[propertyName]);
+      if (attrNamesToIgnore && attrNamesToIgnore[propertyName]) {
+        return;
+      }
+      element.setAttributeNS(null, propertyName, attributes[propertyName]);
     });
 
     return element;
@@ -21430,7 +21498,8 @@ var SVGContext = exports.SVGContext = function () {
       shadow_attributes: {
         width: this.shadow_attributes.width,
         color: this.shadow_attributes.color
-      }
+      },
+      lineWidth: this.lineWidth
     });
     return this;
   };
@@ -21455,6 +21524,8 @@ var SVGContext = exports.SVGContext = function () {
 
     this.shadow_attributes.width = state.shadow_attributes.width;
     this.shadow_attributes.color = state.shadow_attributes.color;
+
+    this.lineWidth = state.lineWidth;
     return this;
   };
 
@@ -22595,7 +22666,7 @@ var _vex = __webpack_require__(0);
 
 var _note = __webpack_require__(6);
 
-var _tickcontext = __webpack_require__(13);
+var _tickcontext = __webpack_require__(12);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 

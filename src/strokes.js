@@ -16,10 +16,11 @@ export class Stroke extends Modifier {
     return {
       BRUSH_DOWN: 1,
       BRUSH_UP: 2,
-      ROLL_DOWN: 3,        // Arpegiated chord
-      ROLL_UP: 4,          // Arpegiated chord
+      ROLL_DOWN: 3, // Arpeggiated chord
+      ROLL_UP: 4,   // Arpeggiated chord
       RASQUEDO_DOWN: 5,
       RASQUEDO_UP: 6,
+      ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
     };
   }
 
@@ -175,6 +176,10 @@ export class Stroke extends Modifier {
           text_y = topY - line_space;
         }
         break;
+      case Stroke.Type.ARPEGGIO_DIRECTIONLESS:
+        topY += 0.5 * line_space;
+        botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
+        break;
       default:
         throw new Vex.RERR('InvalidType', `The stroke type ${this.type} does not exist`);
     }
@@ -208,6 +213,10 @@ export class Stroke extends Modifier {
           text_y = i + 0.25 * line_space;
         }
       }
+    }
+
+    if (this.type === Stroke.Type.ARPEGGIO_DIRECTIONLESS) {
+      return; // skip drawing arrow heads or text
     }
 
     // Draw the arrow head
