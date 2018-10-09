@@ -86,7 +86,7 @@ export class GraceNote extends StaveNote {
           this.glyph.stem_up_extension;
 
         let defaultOffsetY = Flow.STEM_HEIGHT;
-        defaultOffsetY /= -(1 - 2.8);
+        defaultOffsetY -= (defaultOffsetY / 2.8);
         defaultOffsetY += defaultStemExtention;
         y += ((defaultOffsetY * staveNoteScale) * stem_direction);
 
