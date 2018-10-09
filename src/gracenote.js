@@ -112,6 +112,8 @@ export class GraceNote extends StaveNote {
         };
       }
 
+      // FIXME: avoide staff lines, leadger lines or others.
+
       const ctx = this.context;
       ctx.save();
       ctx.setLineWidth(1 * offsetScale); // FIXME: use more appropriate value.
