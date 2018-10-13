@@ -160,6 +160,7 @@ export class TextNote extends Note {
     this.text = text_struct.text;
     this.superscript = text_struct.superscript;
     this.subscript = text_struct.subscript;
+    this.slash_bass = text_struct.slash_bass;
     this.glyph_type = text_struct.glyph;
     this.glyph = null;
     this.font = {
@@ -268,17 +269,25 @@ export class TextNote extends Note {
       const height = ctx.measureText('M').width;
       // Get accurate width of text
       const width = ctx.measureText(this.text).width;
+      let addedWidth = 0;
 
       // Write superscript
       if (this.superscript) {
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
         ctx.fillText(this.superscript, x + width + 2, y - (height / 2.2));
+        addedWidth = ctx.measureText(this.superscript).width / 1.3 + 4;
       }
 
       // Write subscript
       if (this.subscript) {
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
         ctx.fillText(this.subscript, x + width + 2, y + (height / 2.2) - 1);
+        addedWidth = Math.max(addedWidth, ctx.measureText(this.subscript).width / 1.3 + 5);
+      }
+
+      if (this.slash_bass) {
+        ctx.setFont(this.font.family, this.font.size, this.font.weight);
+        ctx.fillText('/' + this.slash_bass, x + width + addedWidth, y);
       }
 
       this.restoreStyle(ctx);
