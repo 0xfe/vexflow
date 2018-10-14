@@ -692,7 +692,8 @@ export class StaveNote extends StemmableNote {
 
   // Get the default `x` and `y` coordinates for the provided `position`
   // and key `index`
-  getModifierStartXY(position, index) {
+  getModifierStartXY(position, index, options) {
+    options = options || {};
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
@@ -712,7 +713,8 @@ export class StaveNote extends StemmableNote {
       // FIXME: What is this magical +2?
       x = this.getGlyphWidth() + this.x_shift + 2;
 
-      if (this.stem_direction === Stem.UP && this.hasFlag() && isInnerNoteIndex(this, index)) {
+      if (this.stem_direction === Stem.UP && this.hasFlag() &&
+        (options.forceFlagRight || isInnerNoteIndex(this, index))) {
         x += this.flag.getMetrics().width;
       }
     } else if (position === BELOW || position === ABOVE) {

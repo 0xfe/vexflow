@@ -130,7 +130,8 @@ export class Dot extends Modifier {
 
     const lineSpace = this.note.stave.options.spacing_between_lines_px;
 
-    const start = this.note.getModifierStartXY(this.position, this.index);
+    const start = this.note.getModifierStartXY(this.position, this.index,
+      { forceFlagRight: true });
 
     // Set the starting y coordinate to the base of the stem for TabNotes
     if (this.note.getCategory() === 'tabnotes') {
