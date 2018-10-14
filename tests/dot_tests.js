@@ -77,6 +77,12 @@ VF.Test.Dot = (function() {
           .addDotToAll()
           .addDotToAll()
           .addDotToAll(),
+        new VF.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16', stem_direction: 1 })
+          .addDotToAll()
+          .addDotToAll()
+          .addDotToAll(),
+        new VF.StaveNote({ keys: ['e/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'f/5'], duration: '16', stem_direction: 1 })
+          .addDotToAll(),
       ];
 
       for (var i = 0; i < notes.length; i++) {
@@ -89,17 +95,17 @@ VF.Test.Dot = (function() {
         }
       }
 
-      VF.Test.plotLegendForNoteWidth(ctx, 620, 140);
+      VF.Test.plotLegendForNoteWidth(ctx, 770, 140);
 
       ok(true, 'Full Dot');
     },
 
     multiVoice: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 500, 300);
+      var ctx = new contextBuilder(options.elementId, 750, 300);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
 
-      var stave = new VF.Stave(30, 40, 420).setContext(ctx).draw();
+      var stave = new VF.Stave(30, 40, 700).setContext(ctx).draw();
 
       var note1 = new VF.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 })
         .addDotToAll()
@@ -135,7 +141,27 @@ VF.Test.Dot = (function() {
 
       showNotes(note1, note2, stave, ctx, 250);
 
-      VF.Test.plotLegendForNoteWidth(ctx, 400, 180);
+      note1 = new VF.StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 })
+        .addDotToAll()
+        .addDotToAll()
+        .addDot(0);
+
+      note2 = new VF.StaveNote({ keys: ['d/5', 'a/5', 'g/5', 'b/5'], duration: '8', stem_direction: 1 })
+        .addDotToAll();
+
+      showNotes(note1, note2, stave, ctx, 350);
+
+      note1 = new VF.StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 })
+        .addDotToAll()
+        .addDotToAll()
+        .addDot(0);
+
+      note2 = new VF.StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 })
+        .addDotToAll();
+
+      showNotes(note1, note2, stave, ctx, 450);
+
+      VF.Test.plotLegendForNoteWidth(ctx, 620, 180);
 
       ok(true, 'Full Dot');
     },
