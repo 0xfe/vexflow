@@ -600,6 +600,19 @@ export class Beam extends Element {
     this.y_shift = 0;
   }
 
+  getBeamYToDraw() {
+    const firstNote = this.notes[0];
+    const firstStemTipY = firstNote.getStemExtents().topY;
+    let beamY = firstStemTipY;
+
+    // For flat beams, set the first and last Y to the offset, rather than
+    //  using the note's stem extents.
+    if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
+      beamY = this.render_options.flat_beam_offset;
+    }
+    return beamY;
+  }
+
   // Create new stems for the notes in the beam, so that each stem
   // extends into the beams.
   applyStemExtensions() {
@@ -607,21 +620,13 @@ export class Beam extends Element {
       notes, slope, y_shift, stem_direction, beam_count,
       render_options: {
         show_stemlets,
-        flat_beam_offset,
-        flat_beams,
         stemlet_extension,
         beam_width,
       },
     } = this;
 
     const firstNote = notes[0];
-    let firstStemTipY = firstNote.getStemExtents().topY;
-
-    // If rendering flat beams, and an offset exists, set the y-coordinat`e to
-    //  the offset so the stems all end at the beam offset.
-    if (flat_beams && flat_beam_offset) {
-      firstStemTipY = flat_beam_offset;
-    }
+    const firstStemTipY = this.getBeamYToDraw();
     const firstStemX = firstNote.getStemX();
 
     for (let i = 0; i < notes.length; ++i) {
@@ -757,16 +762,7 @@ export class Beam extends Element {
     const valid_beam_durations = ['4', '8', '16', '32', '64'];
 
     const firstNote = this.notes[0];
-
-    const firstStemTipY = firstNote.getStemExtents().topY;
-    let beamY = firstStemTipY;
-
-    // For flat beams, set the first and last Y to the offset, rather than
-    //  using the note's stem extents.
-    if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
-      beamY = this.render_options.flat_beam_offset;
-    }
-
+    let beamY = this.getBeamYToDraw();
     const firstStemX = firstNote.getStemX();
     const beamThickness = this.render_options.beam_width * this.stem_direction;
 
