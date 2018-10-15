@@ -146,7 +146,7 @@ VF.Test.Dot = (function() {
         .addDotToAll()
         .addDot(0);
 
-      note2 = new VF.StaveNote({ keys: ['d/5', 'a/5', 'g/5', 'b/5'], duration: '8', stem_direction: 1 })
+      note2 = new VF.StaveNote({ keys: ['d/5', 'g/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 })
         .addDotToAll();
 
       showNotes(note1, note2, stave, ctx, 350);
