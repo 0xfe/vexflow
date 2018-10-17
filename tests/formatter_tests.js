@@ -274,7 +274,7 @@ VF.Test.Formatter = (function() {
         width: stave21.width,
       });
 
-      var notes22 = score.notes('(eb4 ab4)/4., (eb4 ab4 c4)/4, db5/8', { stem: 'up' });
+      var notes22 = score.notes('(eb4 ab4)/4., (c4 eb4 ab4)/4, db5/8', { stem: 'up' });
       var voice22 = score.voice(notes22, { time: '6/8' });
 
       vf.Stave({
