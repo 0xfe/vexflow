@@ -17,6 +17,7 @@ export class Dot extends Modifier {
     if (!dots || dots.length === 0) return false;
 
     const dot_list = [];
+    const max_shift_map = {};
     for (let i = 0; i < dots.length; ++i) {
       const dot = dots[i];
       const note = dot.getNote();
@@ -32,7 +33,9 @@ export class Dot extends Modifier {
         shift = 0;
       }
 
-      dot_list.push({ line: props.line, shift, note, dot });
+      const note_id = note.getAttribute('id');
+      dot_list.push({ line: props.line, note, note_id, dot });
+      max_shift_map[note_id] = Math.max(max_shift_map[note_id] || shift, shift);
     }
 
     // Sort dots by line number.
@@ -46,11 +49,11 @@ export class Dot extends Modifier {
     let half_shiftY = 0;
 
     for (let i = 0; i < dot_list.length; ++i) {
-      const { dot, note, shift, line } = dot_list[i];
+      const { dot, note, note_id, line } = dot_list[i];
 
       // Reset the position of the dot every line.
       if (line !== last_line || note !== last_note) {
-        dot_shift = shift;
+        dot_shift = max_shift_map[note_id];
       }
 
       if (!note.isRest() && line !== last_line) {
