@@ -140,12 +140,25 @@ VF.Test.Percussion = (function() {
       run('Percussion Snare2', createSingleMeasureTest(function(vf) {
         vf.Voice().addTickables([
           vf.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
-            .addArticulation(0, new VF.Tremolo(0)),
-          vf.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
+            .addArticulation(0, new VF.Tremolo(1)),
+          vf.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
             .addArticulation(0, new VF.Tremolo(1)),
           vf.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
             .addArticulation(0, new VF.Tremolo(3)),
           vf.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
+            .addArticulation(0, new VF.Tremolo(5)),
+        ]);
+      }));
+
+      run('Percussion Snare3', createSingleMeasureTest(function(vf) {
+        vf.Voice().addTickables([
+          vf.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: 1 })
+            .addArticulation(0, new VF.Tremolo(2)),
+          vf.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: 1 })
+            .addArticulation(0, new VF.Tremolo(2)),
+          vf.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: 1 })
+            .addArticulation(0, new VF.Tremolo(3)),
+          vf.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: 1 })
             .addArticulation(0, new VF.Tremolo(5)),
         ]);
       }));
