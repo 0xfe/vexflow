@@ -67,6 +67,12 @@ then
   exit 1
 fi
 
+# Number of simultaneous jobs
+nproc=$(sysctl -n hw.physicalcpu 2> /dev/null || nproc)
+if [ -n "$NPROC" ]; then
+  nproc=$NPROC
+fi
+
 total=`ls -l $BLESSED/$files | wc -l | sed 's/[[:space:]]//g'`
 
 echo "Running $total tests with threshold $THRESHOLD..."
@@ -81,21 +87,22 @@ function ProgressBar {
     printf "\rProgress : [${_fill// /#}${_empty// /-}] ${_progress}%%"
 }
 
-count=0
-for image in $BLESSED/$files
-do
-  count=$((count + 1))
-  name=`basename $image .svg`
-  blessed=$BLESSED/$name.svg
-  current=$CURRENT/$name.svg
-  diff=$CURRENT/temp
-
-  ProgressBar ${count} ${total}
+function diff_image() {
+  local image=$1
+  local name=`basename $image .svg`
+  local blessed=$BLESSED/$name.svg
+  local current=$CURRENT/$name.svg
+  local diff=$current-temp
 
   if [ ! -e "$current" ]
   then
     echo "Warning: $name.svg missing in $CURRENT." >>$WARNINGS
-    continue
+    return
+  fi
+
+  if [ ! -e "$blessed" ]
+  then
+    return
   fi
 
   # Generate PNG images from SVG
@@ -103,7 +110,7 @@ do
   rsvg-convert $current >$diff-b.png
 
   # Calculate the difference metric and store the composite diff image.
-  hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
+  local hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
 
   isGT=`echo "$hash > $THRESHOLD" | bc -l`
   if [ "$isGT" == "1" ]
@@ -114,7 +121,8 @@ do
     cp $diff-diff.png $DIFF/$name.png
     cp $diff-a.png $DIFF/$name'_'Blessed.png
     cp $diff-b.png $DIFF/$name'_'Current.png
-    echo "\nTest: $name"
+    echo
+    echo "Test: $name"
     echo "  PHASH value exceeds threshold: $hash > $THRESHOLD"
     echo "  Image diff stored in $DIFF/$name.png"
     # $VIEWER "$diff-diff.png" "$diff-a.png" "$diff-b.png"
@@ -123,7 +131,25 @@ do
   else
     echo $name $hash >>$RESULTS.pass
   fi
+  rm -f $diff-a.png $diff-b.png $diff-diff.png
+}
+
+function wait_jobs () {
+  local n=$1
+  while [[ "$(jobs | grep -v Done | wc -l)" -ge "$n" ]] ; do
+     sleep 0.12
+  done
+}
+
+count=0
+for image in $CURRENT/$files
+do
+  count=$((count + 1))
+  ProgressBar ${count} ${total}
+  wait_jobs $nproc
+  diff_image $image &
 done
+wait
 
 ## Check for files newly built that are not yet blessed.
 for image in $CURRENT/$files
