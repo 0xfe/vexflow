@@ -136,8 +136,12 @@ function diff_image() {
 
 function wait_jobs () {
   local n=$1
-  while [[ "$(jobs | grep -v Done | wc -l)" -ge "$n" ]] ; do
-     sleep 0.12
+  while [[ "$(jobs -r | wc -l)" -ge "$n" ]] ; do
+     # echo ===================================== && jobs -lr
+     # wait the oldest job.
+     local pid_to_wait=`jobs -rp | head -1`
+     # echo wait $pid_to_wait
+     wait $pid_to_wait  &> /dev/null
   done
 }
 
