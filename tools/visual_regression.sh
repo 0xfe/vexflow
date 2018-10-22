@@ -75,7 +75,7 @@ fi
 
 total=`ls -l $BLESSED/$files | wc -l | sed 's/[[:space:]]//g'`
 
-echo "Running $total tests with threshold $THRESHOLD..."
+echo "Running $total tests with threshold $THRESHOLD (nproc=$nproc)..."
 
 function ProgressBar {
     let _progress=(${1}*100/${2}*100)/100
