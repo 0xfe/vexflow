@@ -96,7 +96,7 @@ function diff_image() {
 
   if [ ! -e "$current" ]
   then
-    echo "Warning: $name.svg missing in $CURRENT." >>$WARNINGS
+    echo "Warning: $name.svg missing in $CURRENT." >$diff.warn
     return
   fi
 
@@ -154,6 +154,9 @@ do
   diff_image $image &
 done
 wait
+
+cat $CURRENT/*.warn 1> $WARNINGS 2> /dev/null
+rm -f $CURRENT/*.warn
 
 ## Check for files newly built that are not yet blessed.
 for image in $CURRENT/$files
