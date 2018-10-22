@@ -116,7 +116,7 @@ function diff_image() {
   if [ "$isGT" == "1" ]
   then
     # Add the result to results.text
-    echo $name $hash >>$RESULTS.fail
+    echo $name $hash >$diff.fail
     # Threshold exceeded, save the diff and the original, current
     cp $diff-diff.png $DIFF/$name.png
     cp $diff-a.png $DIFF/$name'_'Blessed.png
@@ -129,7 +129,7 @@ function diff_image() {
     # echo 'Hit return to process next image...'
     # read
   else
-    echo $name $hash >>$RESULTS.pass
+    echo $name $hash >$diff.pass
   fi
   rm -f $diff-a.png $diff-b.png $diff-diff.png
 }
@@ -155,7 +155,7 @@ do
 done
 wait
 
-cat $CURRENT/*.warn 1> $WARNINGS 2> /dev/null
+cat $CURRENT/*.warn 1>$WARNINGS 2>/dev/null
 rm -f $CURRENT/*.warn
 
 ## Check for files newly built that are not yet blessed.
@@ -172,12 +172,15 @@ do
 done
 
 num_warnings=`cat $WARNINGS | wc -l`
+
+cat $CURRENT/*.fail 1>$RESULTS.fail 2>/dev/null
 num_fails=`cat $RESULTS.fail | wc -l`
+rm -f  $CURRENT/*.fail
 
 # Sort results by PHASH
 sort -r -n -k 2 $RESULTS.fail >$RESULTS
-sort -r -n -k 2 $RESULTS.pass >>$RESULTS
-rm $RESULTS.fail $RESULTS.pass
+sort -r -n -k 2 $CURRENT/*.pass 1>>$RESULTS 2>/dev/null
+rm -f $CURRENT/*.pass $RESULTS.fail $RESULTS.pass
 
 echo
 echo Results stored in $DIFF/results.txt
