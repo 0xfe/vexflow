@@ -112,7 +112,7 @@ function diff_image() {
   # Calculate the difference metric and store the composite diff image.
   local hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
 
-  isGT=`echo "$hash > $THRESHOLD" | bc -l`
+  local isGT=`echo "$hash > $THRESHOLD" | bc -l`
   if [ "$isGT" == "1" ]
   then
     # Add the result to results.text
