@@ -49,12 +49,12 @@ export class TimeSignature extends StaveModifier {
   constructor(timeSpec = null, customPadding = 15, validate_args = true) {
     super();
     this.setAttribute('type', 'TimeSignature');
+    this.validate_args = validate_args;
 
     if (timeSpec === null) return;
 
     const padding = customPadding;
 
-    this.validate_args = validate_args;
     this.point = 40;
     this.topLine = 2;
     this.bottomLine = 4;
