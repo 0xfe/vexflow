@@ -4,6 +4,7 @@
 // This class implements multiple measure rests
 
 import { Vex } from './vex';
+import { Flow } from './tables';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
@@ -25,39 +26,56 @@ function get_semibrave_rest() {
 
 export class MultiMeasureRest extends Element {
 
+  // number_of_measures: number of measures.
   // options:
-  //    line: staff line to render rest line or rest symbols.
-  //    number_of_measures: number of measures.
-  //    number_line: staff line to render number of measures string.
-  //    auto_scale: scale rest size by spaces between staff lines or not.
   //    show_number: show number of measures string or not.
+  //    number_line: staff line to render number of measures string.
+  //    number_glyph_point: 40, // same with TimeSignature.
   //    padding_left: left padding from stave x.
   //    padding_right: right padding from stave end x.
-  //    serif_thickness: rest serif line thickness.
+  //    line: staff line to render rest line or rest symbols.
+  //    spacing_between_lines_px: spacing between staff lines to resolve
+  //                              serif height or {2-bar and 4-bar }rest symbol height.
   //    line_thickness: rest line thickness.
+  //    serif_thickness: rest serif line thickness.
+  //    use_symbols: use rest symbols or not.
   //    symbol_spacing: spacing between each rest symbol glyphs.
   //    number_glyph_scale: size of number of measures string glyphs.
-  //    semibrave_rest_glyph_scale: size of semibrave rest symbol.
-  constructor(options) {
+  //    semibrave_rest_glyph_scale: size of semibrave(1-bar) rest symbol.
+  constructor(number_of_measures, options) {
     super();
     this.setAttribute('type', 'MultiMeasureRest');
 
     this.render_options = {
-      line: 2,
-      number_line: -0.5,
-      auto_scale: false,
-      use_symbols: false,
-      number_of_measures: 1,
       show_number: true,
+      number_line: -0.5,
+      number_glyph_point: 40, // same with TimeSignature.
+
       padding_left: undefined,
       padding_right: undefined,
-      serif_thickness: 1,
+
+      line: 2,
+
+      spacing_between_lines_px: 10, // same as Stave.
+
       line_thickness: undefined,
+      serif_thickness: 2,
+
+      use_symbols: false,
       symbol_spacing: undefined,
-      number_glyph_scale: undefined, // TODO
-      semibrave_rest_glyph_scale: undefined, // TODO
+      semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
     };
     Vex.Merge(this.render_options, options);
+
+    this.number_of_measures = number_of_measures;
+    this.xs = {
+      left: NaN,
+      right: NaN,
+    };
+  }
+
+  getXs() {
+    return this.xs;
   }
 
   setStave(stave) {
@@ -100,13 +118,14 @@ export class MultiMeasureRest extends Element {
   }
 
   drawSymbols(ctx, left, right, sbl) {
-    const n4 = Math.floor(this.render_options.number_of_measures / 4);
-    const n = this.render_options.number_of_measures % 4;
+    const n4 = Math.floor(this.number_of_measures / 4);
+    const n = this.number_of_measures % 4;
     const n2 = Math.floor(n / 2);
     const n1 = n % 2;
 
     const semibrave_rest = get_semibrave_rest();
-    const semibrave_rest_width = semibrave_rest.width;
+    const semibrave_rest_width = semibrave_rest.width *
+      (this.render_options.semibrave_rest_glyph_scale / semibrave_rest.glyph_font_scale);
     const glyphs = {
       2: {
         width: semibrave_rest_width * 0.5,
@@ -143,7 +162,8 @@ export class MultiMeasureRest extends Element {
       x += glyphs[2].width + spacing;
     }
     for (let i = 0; i < n1; ++i) {
-      Glyph.renderGlyph(ctx, x, yTop, semibrave_rest.glyph_font_scale, semibrave_rest.glyph_code);
+      Glyph.renderGlyph(ctx, x, yTop, this.render_options.semibrave_rest_glyph_scale,
+        semibrave_rest.glyph_code);
       x += glyphs[1].width + spacing;
     }
 
@@ -156,7 +176,7 @@ export class MultiMeasureRest extends Element {
 
     const ctx = this.context;
     const stave = this.stave;
-    const sbl = this.render_options.auto_scale ? stave.getSpacingBetweenLines() : 10;
+    const sbl = this.render_options.spacing_between_lines_px;
 
     let left = stave.getNoteStartX();
     let right = stave.getNoteEndX();
@@ -176,6 +196,9 @@ export class MultiMeasureRest extends Element {
       right = stave.getX() + stave.getWidth() - this.render_options.padding_right;
     }
 
+    this.xs.left = left;
+    this.xs.right = right;
+
     if (this.render_options.use_symbols) {
       this.drawSymbols(ctx, left, right, sbl);
     } else {
@@ -183,8 +206,10 @@ export class MultiMeasureRest extends Element {
     }
 
     if (this.render_options.show_number) {
-      const timeSig = new TimeSignature('/' + this.render_options.number_of_measures,
-        undefined, false);
+      const timeSpec = '/' + this.number_of_measures;
+      const timeSig = new TimeSignature('/', undefined, false);
+      timeSig.point = this.render_options.number_glyph_point;
+      timeSig.setTimeSig(timeSpec);
       timeSig.setStave(stave);
       timeSig.x = left + ((right - left) * 0.5) - (timeSig.timeSig.glyph.getMetrics().width * 0.5);
       timeSig.bottomLine = this.render_options.number_line;
