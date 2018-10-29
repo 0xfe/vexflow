@@ -25,7 +25,6 @@ function get_semibrave_rest() {
 }
 
 export class MultiMeasureRest extends Element {
-
   // number_of_measures: number of measures.
   // options:
   //    show_number: show number of measures string or not.
