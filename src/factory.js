@@ -17,6 +17,7 @@ import { FretHandFinger } from './frethandfinger';
 import { StringNumber } from './stringnumber';
 import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
+import { MultiMeasureRest } from './multimeasurerest';
 import { Renderer } from './renderer';
 import { Stave } from './stave';
 import { StaveTie } from './stavetie';
@@ -340,6 +341,13 @@ export class Factory {
 
   ModifierContext() {
     return new ModifierContext();
+  }
+
+  MultiMeasureRest(params) {
+    const multimeasurerest = new MultiMeasureRest(params.number_of_measures, params);
+    multimeasurerest.setContext(this.context);
+    this.renderQ.push(multimeasurerest);
+    return  multimeasurerest;
   }
 
   Voice(params) {
