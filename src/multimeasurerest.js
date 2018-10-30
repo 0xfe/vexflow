@@ -39,7 +39,7 @@ export class MultiMeasureRest extends Element {
   //    serif_thickness: rest serif line thickness.
   //    use_symbols: use rest symbols or not.
   //    symbol_spacing: spacing between each rest symbol glyphs.
-  //    number_glyph_scale: size of number of measures string glyphs.
+  //    number_glyph_point: size of number of measures string glyphs.
   //    semibrave_rest_glyph_scale: size of semibrave(1-bar) rest symbol.
   constructor(number_of_measures, options) {
     super();
@@ -80,6 +80,10 @@ export class MultiMeasureRest extends Element {
   setStave(stave) {
     this.stave = stave;
     return this;
+  }
+
+  getStave() {
+    return this.stave;
   }
 
   drawLine(ctx, left, right, sbl) {
@@ -135,7 +139,7 @@ export class MultiMeasureRest extends Element {
       },
     };
 
-    let spacing = sbl * 1.7;
+    let spacing = semibrave_rest_width * 1.35;
     if (!isNaN(this.render_options.symbol_spacing)) {
       spacing = this.render_options.symbol_spacing;
     }
