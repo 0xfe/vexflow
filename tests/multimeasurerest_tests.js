@@ -54,15 +54,15 @@ VF.Test.MultiMeasureRest = (function() {
       ];
 
       const staveWidth = 100;
-      let x = 0;
-      let y = 0;
+      var x = 0;
+      var y = 0;
       const mmrests = params.map(function(param) {
         if ((x + (staveWidth * 2)) > width) {
           x = 0;
           y += 80;
         }
-        let staveParams = {};
-        let mmrestParams = param;
+        var staveParams = {};
+        var mmrestParams = param;
         if (param.length) {
           staveParams = param[0];
           mmrestParams = param[1];
@@ -94,8 +94,8 @@ VF.Test.MultiMeasureRest = (function() {
       const width = 910;
       const vf = VF.Test.makeFactory(options, width, 200);
       // const stave = vf.Stave({ y: 20, width: 270 });
-      let x = 0;
-      let y = 0;
+      var x = 0;
+      var y = 0;
 
       const params = [
         [{ clef: 'treble', params: { width: 150 } },
