@@ -25,22 +25,22 @@ function get_semibrave_rest() {
 }
 
 export class MultiMeasureRest extends Element {
-  // number_of_measures: number of measures.
-  // options:
-  //    show_number: show number of measures string or not.
-  //    number_line: staff line to render number of measures string.
-  //    number_glyph_point: 40, // same with TimeSignature.
-  //    padding_left: left padding from stave x.
-  //    padding_right: right padding from stave end x.
-  //    line: staff line to render rest line or rest symbols.
-  //    spacing_between_lines_px: spacing between staff lines to resolve
-  //                              serif height or {2-bar and 4-bar }rest symbol height.
-  //    line_thickness: rest line thickness.
-  //    serif_thickness: rest serif line thickness.
-  //    use_symbols: use rest symbols or not.
-  //    symbol_spacing: spacing between each rest symbol glyphs.
-  //    number_glyph_point: size of number of measures string glyphs.
-  //    semibrave_rest_glyph_scale: size of semibrave(1-bar) rest symbol.
+  // Parameters:
+  // * `number_of_measures` - Number of measures.
+  // * `options` - The options object.
+  //   * `show_number` - Show number of measures string or not.
+  //   * `number_line` -  Staff line to render the number of measures string.
+  //   * `number_glyph_point` - Size of the number of measures string glyphs.
+  //   * `padding_left` - Left padding from stave x.
+  //   * `padding_right` - Right padding from stave end x.
+  //   * `line` - Staff line to render rest line or rest symbols.
+  //   * `spacing_between_lines_px` - Spacing between staff lines to
+  // resolve serif height or {2-bar and 4-bar}rest symbol height.
+  //   * `line_thickness` - Rest line thickness.
+  //   * `serif_thickness` - Rest serif line thickness.
+  //   * `use_symbols` - Use rest symbols or not.
+  //   * `symbol_spacing` - Spacing between each rest symbol glyphs.
+  //   * `semibrave_rest_glyph_scale` - Size of the semibrave(1-bar) rest symbol.
   constructor(number_of_measures, options) {
     super();
     this.setAttribute('type', 'MultiMeasureRest');
@@ -48,7 +48,7 @@ export class MultiMeasureRest extends Element {
     this.render_options = {
       show_number: true,
       number_line: -0.5,
-      number_glyph_point: 40, // same with TimeSignature.
+      number_glyph_point: 40, // same as TimeSignature.
 
       padding_left: undefined,
       padding_right: undefined,
@@ -62,6 +62,8 @@ export class MultiMeasureRest extends Element {
 
       use_symbols: false,
       symbol_spacing: undefined,
+
+      /* same as NoteHead. */
       semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
     };
     Vex.Merge(this.render_options, options);
