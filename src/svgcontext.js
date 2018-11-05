@@ -46,7 +46,7 @@ export class SVGContext {
     this.parent = this.svg;
 
     this.path = '';
-    this.pen = { x: 0, y: 0 };
+    this.pen = { x: NaN, y: NaN };
     this.lineWidth = 1.0;
     this.state = {
       scale: { x: 1, y: 1 },
@@ -396,8 +396,8 @@ export class SVGContext {
 
   beginPath() {
     this.path = '';
-    this.pen.x = 0;
-    this.pen.y = 0;
+    this.pen.x = NaN;
+    this.pen.y = NaN;
     return this;
   }
 
@@ -494,7 +494,10 @@ export class SVGContext {
 
     this.path += 'M' + x1 + ' ' + y1 + ' A' +
       radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' +
-      x2 + ' ' + y2 + 'M' + this.pen.x + ' ' + this.pen.y;
+      x2 + ' ' + y2;
+    if (!isNaN(this.pen.x) && !isNaN(this.pen.y)) {
+      this.peth += 'M' + this.pen.x + ' ' + this.pen.y;
+    }
   }
 
   closePath() {
