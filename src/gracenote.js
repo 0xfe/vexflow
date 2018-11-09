@@ -44,7 +44,7 @@ export class GraceNote extends StaveNote {
 
   getCategory() { return GraceNote.CATEGORY; }
 
-  // FIXME: move this to more basic calss.
+  // FIXME: move this to more basic class.
   getStaveNoteScale() {
     return this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
   }

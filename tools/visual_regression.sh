@@ -67,9 +67,15 @@ then
   exit 1
 fi
 
+# Number of simultaneous jobs
+nproc=$(sysctl -n hw.physicalcpu 2> /dev/null || nproc)
+if [ -n "$NPROC" ]; then
+  nproc=$NPROC
+fi
+
 total=`ls -l $BLESSED/$files | wc -l | sed 's/[[:space:]]//g'`
 
-echo "Running $total tests with threshold $THRESHOLD..."
+echo "Running $total tests with threshold $THRESHOLD (nproc=$nproc)..."
 
 function ProgressBar {
     let _progress=(${1}*100/${2}*100)/100
@@ -81,21 +87,22 @@ function ProgressBar {
     printf "\rProgress : [${_fill// /#}${_empty// /-}] ${_progress}%%"
 }
 
-count=0
-for image in $BLESSED/$files
-do
-  count=$((count + 1))
-  name=`basename $image .svg`
-  blessed=$BLESSED/$name.svg
-  current=$CURRENT/$name.svg
-  diff=$CURRENT/temp
-
-  ProgressBar ${count} ${total}
+function diff_image() {
+  local image=$1
+  local name=`basename $image .svg`
+  local blessed=$BLESSED/$name.svg
+  local current=$CURRENT/$name.svg
+  local diff=$current-temp
 
   if [ ! -e "$current" ]
   then
-    echo "Warning: $name.svg missing in $CURRENT." >>$WARNINGS
-    continue
+    echo "Warning: $name.svg missing in $CURRENT." >$diff.warn
+    return
+  fi
+
+  if [ ! -e "$blessed" ]
+  then
+    return
   fi
 
   # Generate PNG images from SVG
@@ -103,27 +110,53 @@ do
   rsvg-convert $current >$diff-b.png
 
   # Calculate the difference metric and store the composite diff image.
-  hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
+  local hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
 
-  isGT=`echo "$hash > $THRESHOLD" | bc -l`
+  local isGT=`echo "$hash > $THRESHOLD" | bc -l`
   if [ "$isGT" == "1" ]
   then
     # Add the result to results.text
-    echo $name $hash >>$RESULTS.fail
+    echo $name $hash >$diff.fail
     # Threshold exceeded, save the diff and the original, current
     cp $diff-diff.png $DIFF/$name.png
     cp $diff-a.png $DIFF/$name'_'Blessed.png
     cp $diff-b.png $DIFF/$name'_'Current.png
-    echo "\nTest: $name"
+    echo
+    echo "Test: $name"
     echo "  PHASH value exceeds threshold: $hash > $THRESHOLD"
     echo "  Image diff stored in $DIFF/$name.png"
     # $VIEWER "$diff-diff.png" "$diff-a.png" "$diff-b.png"
     # echo 'Hit return to process next image...'
     # read
   else
-    echo $name $hash >>$RESULTS.pass
+    echo $name $hash >$diff.pass
   fi
+  rm -f $diff-a.png $diff-b.png $diff-diff.png
+}
+
+function wait_jobs () {
+  local n=$1
+  while [[ "$(jobs -r | wc -l)" -ge "$n" ]] ; do
+     # echo ===================================== && jobs -lr
+     # wait the oldest job.
+     local pid_to_wait=`jobs -rp | head -1`
+     # echo wait $pid_to_wait
+     wait $pid_to_wait  &> /dev/null
+  done
+}
+
+count=0
+for image in $CURRENT/$files
+do
+  count=$((count + 1))
+  ProgressBar ${count} ${total}
+  wait_jobs $nproc
+  diff_image $image &
 done
+wait
+
+cat $CURRENT/*.warn 1>$WARNINGS 2>/dev/null
+rm -f $CURRENT/*.warn
 
 ## Check for files newly built that are not yet blessed.
 for image in $CURRENT/$files
@@ -139,12 +172,15 @@ do
 done
 
 num_warnings=`cat $WARNINGS | wc -l`
+
+cat $CURRENT/*.fail 1>$RESULTS.fail 2>/dev/null
 num_fails=`cat $RESULTS.fail | wc -l`
+rm -f  $CURRENT/*.fail
 
 # Sort results by PHASH
 sort -r -n -k 2 $RESULTS.fail >$RESULTS
-sort -r -n -k 2 $RESULTS.pass >>$RESULTS
-rm $RESULTS.fail $RESULTS.pass
+sort -r -n -k 2 $CURRENT/*.pass 1>>$RESULTS 2>/dev/null
+rm -f $CURRENT/*.pass $RESULTS.fail $RESULTS.pass
 
 echo
 echo Results stored in $DIFF/results.txt
