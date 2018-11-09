@@ -30,6 +30,7 @@ VF.Test.run = function() {
   VF.Test.KeyManager.Start();
   VF.Test.Articulation.Start();
   VF.Test.StaveConnector.Start();
+  VF.Test.MultiMeasureRest.Start();
   VF.Test.Percussion.Start();
   VF.Test.NoteSubGroup.Start();
   VF.Test.ClefKeySignature.Start();

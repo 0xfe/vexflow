@@ -46,9 +46,10 @@ export class TimeSignature extends StaveModifier {
     };
   }
 
-  constructor(timeSpec = null, customPadding = 15) {
+  constructor(timeSpec = null, customPadding = 15, validate_args = true) {
     super();
     this.setAttribute('type', 'TimeSignature');
+    this.validate_args = validate_args;
 
     if (timeSpec === null) return;
 
@@ -75,7 +76,9 @@ export class TimeSignature extends StaveModifier {
       };
     }
 
-    assertIsValidFraction(timeSpec);
+    if (this.validate_args) {
+      assertIsValidFraction(timeSpec);
+    }
 
     const [topDigits, botDigits] = timeSpec
       .split('/')
