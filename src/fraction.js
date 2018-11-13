@@ -220,6 +220,9 @@ export class Fraction {
 
   // Copies value of another Fraction into itself.
   copy(copy) {
+    if (typeof copy === 'number') {
+      return this.set(copy || 0, 1);
+    }
     return this.set(copy.numerator, copy.denominator);
   }
 
