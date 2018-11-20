@@ -23,6 +23,7 @@ export class StaveModifier extends Element {
 
     this.padding = 10;
     this.position = StaveModifier.Position.ABOVE;
+    this.layoutMetrics = null;
   }
 
   getPosition() { return this.position; }
@@ -54,4 +55,10 @@ export class StaveModifier extends Element {
     return (index !== undefined && index < 2 ? 0 : this.padding);
   }
   setPadding(padding) { this.padding = padding; return this; }
+  setLayoutMetrics(layoutMetrics) {
+    this.layoutMetrics = layoutMetrics; return this;
+  }
+  getLayoutMetrics() {
+    return this.layoutMetrics;
+  }
 }
