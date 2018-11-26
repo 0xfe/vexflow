@@ -614,6 +614,9 @@ export class SVGContext {
   }
 
   fillText(text, x, y) {
+    if (!text || text.length <= 0) {
+      return;
+    }
     const attributes = {};
     Vex.Merge(attributes, this.attributes);
     attributes.stroke = 'none';
