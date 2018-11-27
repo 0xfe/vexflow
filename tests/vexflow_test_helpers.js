@@ -25,6 +25,10 @@ if (!window.QUnit) {
     expect: function() { return true; },
     throws: function() { return true; },
     notOk: function() { return true; },
+    notEqual: function() { return true; },
+    notDeepEqual: function() { return true; },
+    strictEqual: function() { return true; },
+    notStrictEqual: function() { return true; },
   };
 
   QUnit.module = function(name) {
@@ -45,6 +49,10 @@ if (!window.QUnit) {
   expect = QUnit.assertions.expect;
   throws = QUnit.assertions.throws;
   notOk = QUnit.assertions.notOk;
+  notEqual = QUnit.assertions.notEqual;
+  notDeepEqual = QUnit.assertions.notDeepEqual;
+  strictEqual = QUnit.assertions.strictEqual;
+  notStrictEqual = QUnit.assertions.notStrictEqual;
 }
 
 if (typeof require === 'function') {

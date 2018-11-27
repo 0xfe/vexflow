@@ -9,6 +9,7 @@ VF.Test.run = function() {
   VF.Test.Dot.Start();
   VF.Test.Bend.Start();
   VF.Test.Formatter.Start();
+  VF.Test.Fraction.Start();
   VF.Test.Clef.Start();
   VF.Test.KeySignature.Start();
   VF.Test.TimeSignature.Start();
