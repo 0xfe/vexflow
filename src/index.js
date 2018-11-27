@@ -11,7 +11,7 @@ import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveNote } from './stavenote';
 import { StaveModifier } from './stavemodifier';
-import { StaveTempo } from "./stavetempo";
+import { StaveTempo } from './stavetempo';
 import { Voice } from './voice';
 import { Accidental } from './accidental';
 import { Beam } from './beam';
