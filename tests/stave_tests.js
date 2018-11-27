@@ -14,6 +14,7 @@ VF.Test.Stave = (function() {
       runTests('Vertical Bar Test', Stave.drawVerticalBar);
       runTests('Multiple Stave Barline Test', Stave.drawMultipleMeasures);
       runTests('Multiple Stave Repeats Test', Stave.drawRepeats);
+      runTests('Stave End Modifiers Test', Stave.drawEndModifiersTest);
       runTests('Multiple Staves Volta Test', Stave.drawVoltaTest);
       runTests('Tempo Test', Stave.drawTempo);
       runTests('Single Line Configuration Test', Stave.configureSingleLine);
@@ -261,6 +262,141 @@ VF.Test.Stave = (function() {
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+    },
+
+    drawEndModifiersTest: function(options, contextBuilder) {
+      expect(0);
+
+      var staveWidth = 230;
+      var blockHeight = 80;
+      var x = 10;
+      var y = 0;
+
+      function drawAStaves(endBarLine) {
+        function drawAStave(ctx, x, y, width, begMods, endMods) {
+          var staveBar = new VF.Stave(x, y, width - 10);
+          if (begMods) {
+            if (begMods.barLine !== undefined) {
+              staveBar.setBegBarType(begMods.barLine);
+            }
+            if (begMods.clef !== undefined) {
+              staveBar.addClef(begMods.clef);
+            }
+            if (begMods.keySig  !== undefined) {
+              staveBar.addKeySignature(begMods.keySig);
+            }
+            if (begMods.timeSig !== undefined) {
+              staveBar.setTimeSignature(begMods.timeSig);
+            }
+          }
+
+          if (endMods) {
+            if (endMods.barLine !== undefined) {
+              staveBar.setEndBarType(endMods.barLine);
+            }
+            if (endMods.clef !== undefined) {
+              staveBar.addEndClef(endMods.clef);
+            }
+            if (endMods.keySig  !== undefined) {
+              staveBar.setEndKeySignature(endMods.keySig);
+            }
+            if (endMods.timeSig !== undefined) {
+              staveBar.setEndTimeSignature(endMods.timeSig);
+            }
+          }
+
+          staveBar.setContext(ctx).draw();
+          var notesBar = [
+            new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
+            new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
+            new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
+            new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
+          ];
+
+          VF.Formatter.FormatAndDraw(ctx, staveBar, notesBar);
+        }
+
+        drawAStave(ctx, x, y, staveWidth + 50, {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+          clef: 'treble',
+          keySig: 'A',
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+        });
+        x += staveWidth + 50;
+
+        drawAStave(ctx, x, y, staveWidth, {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          keySig: 'E',
+        });
+        x += staveWidth;
+
+        drawAStave(ctx, x, y, staveWidth, {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          timeSig: '2/4',
+        });
+        x += staveWidth;
+
+        x = 10;
+        y += blockHeight;
+
+        drawAStave(ctx, x, y, staveWidth, {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+          timeSig: '2/4',
+        });
+        x += staveWidth;
+
+        drawAStave(ctx, x, y, staveWidth, {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'treble',
+          keySig: 'Ab',
+        });
+        x += staveWidth;
+
+        drawAStave(ctx, x, y, staveWidth, {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+          keySig: 'Ab',
+          timeSig: '2/4',
+        });
+        x += staveWidth;
+      }
+
+      var ctx = contextBuilder(options.elementId, 800, 700);
+
+      y = 0;
+      x = 10;
+      drawAStaves(VF.Barline.type.SINGLE);
+
+      y += blockHeight + 10;
+      x = 10;
+      drawAStaves(VF.Barline.type.DOUBLE);
+
+      y += blockHeight + 10;
+      x = 10;
+      drawAStaves(VF.Barline.type.REPEAT_END);
+
+      y += blockHeight + 10;
+      x = 10;
+      drawAStaves(VF.Barline.type.REPEAT_BOTH);
     },
 
     drawVoltaTest: function(options, contextBuilder) {

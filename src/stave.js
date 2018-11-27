@@ -474,18 +474,52 @@ export class Stave extends Element {
     this.start_x = x;
     x = this.x + this.width;
 
+    const widths = {
+      left: 0,
+      right: 0,
+      paddingRight: 0,
+      paddingLeft: 0,
+    };
+
+    let lastBarlineIdx = 0;
+
     for (let i = 0; i < endModifiers.length; i++) {
       modifier = endModifiers[i];
-      x -= modifier.getPadding(i);
-      if (i !== 0) {
-        x -= modifier.getWidth();
+      lastBarlineIdx = (modifier.getCategory() === 'barlines') ? i : lastBarlineIdx;
+
+      widths.right = 0;
+      widths.left = 0;
+      widths.paddingRight = 0;
+      widths.paddingLeft = 0;
+      const layoutMetrics = modifier.getLayoutMetrics();
+
+      if (layoutMetrics) {
+        if (i !== 0) {
+          widths.right = layoutMetrics.xMax || 0;
+          widths.paddingRight = layoutMetrics.paddingRight || 0;
+        }
+        widths.left = (-layoutMetrics.xMin) || 0;
+        widths.paddingLeft = layoutMetrics.paddingLeft || 0;
+
+        if (i === endModifiers.length - 1) {
+          widths.paddingLeft = 0;
+        }
+      } else {
+        widths.paddingRight = modifier.getPadding(i - lastBarlineIdx);
+        if (i !== 0) {
+          widths.right = modifier.getWidth();
+        }
+        if (i === 0) {
+          widths.left = modifier.getWidth();
+        }
       }
+      x -= widths.paddingRight;
+      x -= widths.right;
 
       modifier.setX(x);
 
-      if (i === 0) {
-        x -= modifier.getWidth();
-      }
+      x -= widths.left;
+      x -= widths.paddingLeft;
     }
 
     this.end_x = endModifiers.length === 1 ? this.x + this.width : x;
