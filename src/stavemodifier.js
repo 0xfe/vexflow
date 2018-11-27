@@ -56,7 +56,7 @@ export class StaveModifier extends Element {
   }
   setPadding(padding) { this.padding = padding; return this; }
   setLayoutMetrics(layoutMetrics) {
-    this.layoutMetrics = layoutMetrics; 
+    this.layoutMetrics = layoutMetrics;
     return this;
   }
   getLayoutMetrics() {
