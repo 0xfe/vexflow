@@ -21,7 +21,6 @@
     "@babel/plugin-transform-object-assign": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "babel-loader": "^8.0.4",
-    "babel-plugin-add-module-exports": "^1.0.0",
     "browserify": "^16.2.3",
     "docco": "^0.8.0",
     "eslint": "^5.11.1",

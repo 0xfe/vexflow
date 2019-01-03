@@ -47,7 +47,7 @@ module.exports = (grunt) => {
               loader: 'babel-loader',
               options: {
                 presets: [preset],
-                plugins: ['add-module-exports', '@babel/plugin-transform-object-assign'],
+                plugins: ['@babel/plugin-transform-object-assign'],
               },
             }],
           },
