@@ -10,12 +10,11 @@ module.exports = (grunt) => {
     ' */',
   ].join('\n');
   const BASE_DIR = __dirname;
-  const RELATIVE_BUILD_DIR = './build';
   const BUILD_DIR = path.join(BASE_DIR, 'build');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
-  const TARGET_RAW = path.join(RELATIVE_BUILD_DIR, 'vexflow-debug.js');
-  const TARGET_MIN = path.join(BUILD_DIR, 'vexflow-min.js');
+  const TARGET_RAW = 'vexflow-debug.js';
+  const TARGET_MIN = 'vexflow-min.js';
   const TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
 
   const SOURCES = ['src/*.js', '!src/header.js', '!src/container.js'];
@@ -29,11 +28,14 @@ module.exports = (grunt) => {
 
   function webpackConfig(target, preset) {
     return {
+      mode: 'production',
       entry: MODULE_ENTRY,
       output: {
+        path: BUILD_DIR,
         filename: target,
         library: 'Vex',
         libraryTarget: 'umd',
+        libraryExport: 'default',
       },
       devtool: 'source-map',
       module: {
@@ -45,7 +47,7 @@ module.exports = (grunt) => {
               loader: 'babel-loader',
               options: {
                 presets: [preset],
-                'plugins': ['add-module-exports', 'transform-object-assign'],
+                plugins: ['@babel/plugin-transform-object-assign'],
               },
             }],
           },
@@ -54,12 +56,12 @@ module.exports = (grunt) => {
     };
   }
 
-  const webpackCommon = webpackConfig(TARGET_RAW, ['es2015']);
+  const webpackCommon = webpackConfig(TARGET_RAW, ['@babel/preset-env']);
 
   // Unsupported build for IE versions <11
-  const TARGET_LEGACY_RAW = path.join(RELATIVE_BUILD_DIR, 'vexflow-legacy-debug.js');
-  const TARGET_LEGACY_MIN = path.join(BUILD_DIR, 'vexflow-legacy-min.js');
-  const webpackLegacy = webpackConfig(TARGET_LEGACY_RAW, ['es2015', { 'loose': true }]);
+  const TARGET_LEGACY_RAW = 'vexflow-legacy-debug.js';
+  const TARGET_LEGACY_MIN = 'vexflow-legacy-min.js';
+  const webpackLegacy = webpackConfig(TARGET_LEGACY_RAW, ['@babel/preset-env', { 'loose': true }]);
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -91,12 +93,30 @@ module.exports = (grunt) => {
         sourceMap: true,
       },
       build: {
-        src: TARGET_RAW,
-        dest: TARGET_MIN,
+        files: [
+          {
+            expand: true,
+            cwd: BUILD_DIR,
+            src: TARGET_RAW,
+            dest: BUILD_DIR,
+            rename: function (dst) {
+              return path.join(dst, TARGET_MIN);
+            }
+          }
+        ],
       },
       buildLegacy: {
-        src: TARGET_LEGACY_RAW,
-        dest: TARGET_LEGACY_MIN,
+        files: [
+          {
+            expand: true,
+            cwd: BUILD_DIR,
+            src: TARGET_LEGACY_RAW,
+            dest: BUILD_DIR,
+            rename: function (dst) {
+              return path.join(dst, TARGET_LEGACY_MIN);
+            }
+          }
+        ],
       },
     },
     eslint: {
