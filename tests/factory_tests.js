@@ -56,30 +56,30 @@ Vex.Flow.Test.Factory = (function() {
         .setKeySignature('C#')
         .setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
-
-      voice.addTickables([
-        new VF.StaveNote({ keys: ['c/4'], duration: 'w' })
-      ]);
+      var voices = [
+        vf.Voice().addTickables([
+          vf.GhostNote({ duration: 'w' })
+        ])
+      ];
 
       system.addStave({
         stave: stave,
-        voices: [voice]
+        voices: voices
       });
 
       var tabStave = vf.TabStave()
         .setClef('tab')
         .setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
 
-      var tabVoice = new VF.Voice(VF.Test.TIME4_4);
-
-      tabVoice.addTickables([
-        new VF.TabNote({ positions: [{ str: 2, fret: 5 }], duration: 'w' })
-      ]);
+      var tabVoices = [
+        vf.Voice().addTickables([
+          vf.GhostNote({ duration: 'w' })
+        ])
+      ];
 
       system.addStave({
         stave: tabStave,
-        voices: [tabVoice]
+        voices: tabVoices
       });
 
       vf.draw();
