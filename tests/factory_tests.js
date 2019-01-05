@@ -11,6 +11,7 @@ Vex.Flow.Test.Factory = (function() {
 
       QUnit.test('Defaults', VFT.Factory.defaults);
       VFT.runSVGTest('Draw', VFT.Factory.draw);
+      VFT.runSVGTest('Draw Tab (repeat barlines must be aligned)', VFT.Factory.drawTab);
     },
 
     defaults: function(assert) {
@@ -43,6 +44,47 @@ Vex.Flow.Test.Factory = (function() {
       vf.Stave().setClef('treble');
       vf.draw();
       expect(0);
+    },
+
+    drawTab: function(options) {
+      var vf = VF.Test.makeFactory(options, 500, 400);
+
+      var system = vf.System();
+
+      var stave = vf.Stave()
+        .setClef('treble')
+        .setKeySignature('C#')
+        .setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+
+      var voice = new VF.Voice(VF.Test.TIME4_4);
+
+      voice.addTickables([
+        new VF.StaveNote({ keys: ['c/4'], duration: 'w' })
+      ]);
+
+      system.addStave({
+        stave: stave,
+        voices: [voice]
+      });
+
+      var tabStave = vf.TabStave()
+        .setClef('tab')
+        .setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+
+      var tabVoice = new VF.Voice(VF.Test.TIME4_4);
+
+      tabVoice.addTickables([
+        new VF.TabNote({ positions: [{ str: 2, fret: 5 }], duration: 'w' })
+      ]);
+
+      system.addStave({
+        stave: tabStave,
+        voices: [tabVoice]
+      });
+
+      vf.draw();
+      equal(stave.getModifiers()[0].getX(), tabStave.getModifiers()[0].getX());
+      expect(1);
     },
   };
 

@@ -76,6 +76,10 @@ export class Stave extends Element {
     if (!this.formatted) this.format();
 
     this.start_x = x;
+    const begBarline = this.modifiers[0];
+    if (begBarline.getType() === Barline.type.REPEAT_BEGIN) {
+      begBarline.setX(this.start_x - begBarline.getWidth());
+    }
     return this;
   }
   getNoteStartX() {
