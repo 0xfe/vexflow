@@ -3,6 +3,8 @@
 A JavaScript library for rendering music notation.
 Copyright (c) 2010 Mohit Muthanna Cheppudira
 
+## Need Help? Ask on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
+
 ## What is VexFlow?
 
 VexFlow is an open-source web-based music notation rendering API. It is written
