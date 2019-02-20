@@ -12,6 +12,7 @@ VF.Test.AutoBeamFormatting = (function() {
       var runTests = VF.Test.runTests;
       QUnit.module('Auto-Beaming');
       runTests('Simple Auto Beaming', AutoBeamFormatting.simpleAuto);
+      runTests('Auto Beaming With Overflow Group', AutoBeamFormatting.simpleAutoWithOverflowGroup);
       runTests('Even Group Stem Directions', AutoBeamFormatting.evenGroupStemDirections);
       runTests('Odd Group Stem Directions', AutoBeamFormatting.oddGroupStemDirections);
       runTests('Odd Beam Groups Auto Beaming', AutoBeamFormatting.oddBeamGroups);
@@ -48,6 +49,31 @@ VF.Test.AutoBeamFormatting = (function() {
 
       var voice = score.voice(score.notes(
         'f5/8, e5, d5, c5/16, c5, d5/8, e5, f5, f5/32, f5, f5, f5'
+      ), { time: '4/4' });
+
+      // Takes a voice and returns it's auto beamsj
+      var beams = VF.Beam.applyAndGetBeams(voice);
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
+
+      ok(true, 'Auto Beaming Applicator Test');
+    },
+
+    simpleAutoWithOverflowGroup: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
+
+      var voice = score.voice(score.notes(
+        'f5/4., e5/8, d5/8, d5/16, c5/16, c5/16, c5/16, f5/16, f5/32, f5/32'
       ), { time: '4/4' });
 
       // Takes a voice and returns it's auto beamsj
