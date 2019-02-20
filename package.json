@@ -17,13 +17,13 @@
     "url": "https://github.com/0xfe/vexflow/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
+    "@babel/core": "^7.3.3",
     "@babel/plugin-transform-object-assign": "^7.2.0",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-env": "^7.3.1",
     "babel-loader": "^8.0.4",
     "browserify": "^16.2.3",
     "docco": "^0.8.0",
-    "eslint": "^5.11.1",
+    "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "glob": "^7.1.3",
