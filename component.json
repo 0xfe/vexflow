@@ -1,6 +1,6 @@
 {
   "name": "vexflow",
-  "version": "1.2.87",
+  "version": "1.2.88",
   "author": "Mohit Muthanna Cheppudira",
   "description": "A JavaScript library for rendering music notation and guitar tablature",
   "scripts": ["releases/vexflow-debug.js"],
