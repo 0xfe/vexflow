@@ -347,7 +347,7 @@ export class Factory {
     const multimeasurerest = new MultiMeasureRest(params.number_of_measures, params);
     multimeasurerest.setContext(this.context);
     this.renderQ.push(multimeasurerest);
-    return  multimeasurerest;
+    return multimeasurerest;
   }
 
   Voice(params) {
