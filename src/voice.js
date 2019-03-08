@@ -235,7 +235,7 @@ export class Voice extends Element {
       }
 
       tickable.setContext(context);
-      tickable.draw();
+      tickable.drawWithStyle();
     }
 
     this.boundingBox = boundingBox;

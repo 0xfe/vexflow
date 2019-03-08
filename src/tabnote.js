@@ -386,7 +386,7 @@ export class TabNote extends StemmableNote {
       if (modifier.getCategory() === 'dots' && !this.render_options.draw_dots) return;
 
       modifier.setContext(this.context);
-      modifier.draw();
+      modifier.drawWithStyle();
     });
   }
 
