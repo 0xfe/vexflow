@@ -53,6 +53,7 @@ export class Element {
     return this;
   }
 
+  // draw with style of an element.
   drawWithStyle() {
     this.checkContext();
     this.applyStyle();
