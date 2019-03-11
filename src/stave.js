@@ -29,6 +29,7 @@ export class Stave extends Element {
     this.modifiers = [];  // stave modifiers (clef, key, time, barlines, coda, segno, etc.)
     this.measure = 0;
     this.clef = 'treble';
+    this.endClef = undefined;
     this.font = {
       family: 'sans-serif',
       size: 8,
@@ -317,7 +318,12 @@ export class Stave extends Element {
       position = StaveModifier.Position.BEGIN;
     }
 
-    this.clef = clefSpec;
+    if (position === StaveModifier.Position.END) {
+      this.endClef = clefSpec;
+    } else {
+      this.clef = clefSpec;
+    }
+
     const clefs = this.getModifiers(position, Clef.CATEGORY);
     if (clefs.length === 0) {
       this.addClef(clefSpec, size, annotation, position);
@@ -374,13 +380,19 @@ export class Stave extends Element {
   }
 
   addKeySignature(keySpec, cancelKeySpec, position) {
-    this.addModifier(new KeySignature(keySpec, cancelKeySpec), position);
+    if (position === undefined) {
+      position = StaveModifier.Position.BEGIN;
+    }
+    this.addModifier(new KeySignature(keySpec, cancelKeySpec)
+      .setPosition(position), position);
     return this;
   }
 
   addClef(clef, size, annotation, position) {
     if (position === undefined || position === StaveModifier.Position.BEGIN) {
       this.clef = clef;
+    } else if (position === StaveModifier.Position.END) {
+      this.endClef = clef;
     }
 
     this.addModifier(new Clef(clef, size, annotation), position);
