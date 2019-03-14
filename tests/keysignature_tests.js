@@ -57,6 +57,7 @@ VF.Test.KeySignature = (function() {
       VF.Test.runTests('Stave Helper', VF.Test.KeySignature.staveHelper);
       VF.Test.runTests('Cancelled key test', VF.Test.KeySignature.majorKeysCanceled);
       VF.Test.runTests('Altered key test', VF.Test.KeySignature.majorKeysAltered);
+      VF.Test.runTests('Key Signature Change test', VF.Test.KeySignature.changeKey);
     },
 
     parser: function() {
@@ -262,6 +263,36 @@ VF.Test.KeySignature = (function() {
 
       ok(true, 'all pass');
     },
+
+    changeKey: function(options) {
+      var vf = VF.Test.makeFactory(options, 900);
+
+      var stave = vf.Stave(10, 10, 800)
+        .addClef('treble')
+        .addTimeSignature('C|');
+
+      var voice = vf.Voice().setStrict(false).addTickables([
+        vf.KeySigNote({ key: 'Bb' }),
+        vf.StaveNote({ keys: ['c/4'], duration: '1' }),
+        vf.BarNote(),
+        vf.KeySigNote({ key: 'D', cancelKey: 'Bb' }),
+        vf.StaveNote({ keys: ['c/4'], duration: '1' }),
+        vf.BarNote(),
+        vf.KeySigNote({ key: 'Bb' }),
+        vf.StaveNote({ keys: ['c/4'], duration: '1' }),
+        vf.BarNote(),
+        vf.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }),
+        vf.StaveNote({ keys: ['c/4'], duration: '1' }),
+      ]);
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'all pass');
+    }
   };
 
   return KeySignature;

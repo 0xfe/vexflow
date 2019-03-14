@@ -35,6 +35,7 @@ import { GraceNoteGroup } from './gracenotegroup';
 import { NoteSubGroup } from './notesubgroup';
 import { EasyScore } from './easyscore';
 import { TimeSigNote } from './timesignote';
+import { KeySigNote } from './keysignote';
 import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
 import { TextBracket } from './textbracket';
@@ -221,6 +222,14 @@ export class Factory {
     timeSigNote.setContext(this.context);
     this.renderQ.push(timeSigNote);
     return timeSigNote;
+  }
+
+  KeySigNote(params) {
+    const keySigNote = new KeySigNote(params.key, params.cancelKey, params.alterKey);
+    if (this.stave) keySigNote.setStave(this.stave);
+    keySigNote.setContext(this.context);
+    this.renderQ.push(keySigNote);
+    return keySigNote;
   }
 
   TabNote(noteStruct) {
