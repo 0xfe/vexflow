@@ -8,11 +8,7 @@ before_install:
   - ./configure --prefix=/usr
   - make
   - sudo make install
-  - sudo apt-get install -qq librsvg2-dev librsvg2-bin
 install: npm install
 before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
   - npm start
 script: npm test
