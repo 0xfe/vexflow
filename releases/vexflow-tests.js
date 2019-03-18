@@ -1,5 +1,5 @@
 /**
- * VexFlow 1.2.88 built on 2019-02-20.
+ * VexFlow 1.2.89 built on 2019-03-18.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -19,9 +19,8 @@ import/no-extraneous-dependencies,
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
 if (!window.QUnit) {
-  var process = require('system');
-
   window.QUnit = {};
+  QUnit = window.QUnit;
 
   QUnit.assertions = {
     ok: function() { return true; },
@@ -234,37 +233,29 @@ VF.Test = (function() {
       }
 
       QUnit.test(name, function(assert) {
-        var elementId = VF.Test.genID('node_');
-
-        var div = document.createElement('div');
-        div.setAttribute('id', elementId);
-        document.getElementsByTagName('body')[0].appendChild(div);
+        var elementId = VF.Test.genID('nodecanvas_');
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('id', elementId);
+        document.body.appendChild(canvas);
 
         var testOptions = {
           elementId: elementId,
-          backend: VF.Renderer.Backends.SVG,
+          backend: VF.Renderer.Backends.CANVAS,
           params: params,
           assert: assert,
         };
 
-        func(testOptions, VF.Renderer.getSVGContext);
+        func(testOptions, VF.Renderer.getCanvasContext);
 
-        if (VF.Renderer.lastContext != null) {
-          // If an SVG context was used, then serialize and save its contents to
-          // a local file.
-          var svgData = new XMLSerializer().serializeToString(VF.Renderer.lastContext.svg);
+        if (VF.Renderer.lastContext !== null) {
           var moduleName = sanitizeName(QUnit.current_module);
           var testName = sanitizeName(QUnit.current_test);
-          var filename = VF.Test.NODE_IMAGEDIR + '/' + moduleName + '.' + testName + '.svg';
+          var fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
 
-          try {
-            fs.write(filename, svgData, 'w');
-          } catch (e) {
-            console.log("Can't save file: " + filename + '. Error: ' + e);
-            slimer.exit();
-          }
+          var imageData = canvas.toDataURL().split(';base64,').pop();
+          var image = Buffer.from(imageData, 'base64');
 
-          VF.Renderer.lastContext = null;
+          fs.writeFileSync(fileName, image, { encoding: 'base64' });
         }
       });
     },
@@ -6342,6 +6333,7 @@ VF.Test.KeySignature = (function() {
       VF.Test.runTests('Stave Helper', VF.Test.KeySignature.staveHelper);
       VF.Test.runTests('Cancelled key test', VF.Test.KeySignature.majorKeysCanceled);
       VF.Test.runTests('Altered key test', VF.Test.KeySignature.majorKeysAltered);
+      VF.Test.runTests('Key Signature Change test', VF.Test.KeySignature.changeKey);
     },
 
     parser: function() {
@@ -6547,6 +6539,36 @@ VF.Test.KeySignature = (function() {
 
       ok(true, 'all pass');
     },
+
+    changeKey: function(options) {
+      var vf = VF.Test.makeFactory(options, 900);
+
+      var stave = vf.Stave(10, 10, 800)
+        .addClef('treble')
+        .addTimeSignature('C|');
+
+      var voice = vf.Voice().setStrict(false).addTickables([
+        vf.KeySigNote({ key: 'Bb' }),
+        vf.StaveNote({ keys: ['c/4'], duration: '1' }),
+        vf.BarNote(),
+        vf.KeySigNote({ key: 'D', cancelKey: 'Bb' }),
+        vf.StaveNote({ keys: ['c/4'], duration: '1' }),
+        vf.BarNote(),
+        vf.KeySigNote({ key: 'Bb' }),
+        vf.StaveNote({ keys: ['c/4'], duration: '1' }),
+        vf.BarNote(),
+        vf.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }),
+        vf.StaveNote({ keys: ['c/4'], duration: '1' }),
+      ]);
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'all pass');
+    }
   };
 
   return KeySignature;
