@@ -35,6 +35,7 @@ import { GraceNoteGroup } from './gracenotegroup';
 import { NoteSubGroup } from './notesubgroup';
 import { EasyScore } from './easyscore';
 import { TimeSigNote } from './timesignote';
+import { KeySigNote } from './keysignote';
 import { ClefNote } from './clefnote';
 import { PedalMarking } from './pedalmarking';
 import { TextBracket } from './textbracket';
@@ -223,6 +224,14 @@ export class Factory {
     return timeSigNote;
   }
 
+  KeySigNote(params) {
+    const keySigNote = new KeySigNote(params.key, params.cancelKey, params.alterKey);
+    if (this.stave) keySigNote.setStave(this.stave);
+    keySigNote.setContext(this.context);
+    this.renderQ.push(keySigNote);
+    return keySigNote;
+  }
+
   TabNote(noteStruct) {
     const note = new TabNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
@@ -347,7 +356,7 @@ export class Factory {
     const multimeasurerest = new MultiMeasureRest(params.number_of_measures, params);
     multimeasurerest.setContext(this.context);
     this.renderQ.push(multimeasurerest);
-    return  multimeasurerest;
+    return multimeasurerest;
   }
 
   Voice(params) {

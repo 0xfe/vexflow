@@ -1042,7 +1042,7 @@ export class StaveNote extends StemmableNote {
       const noteheadStyle = notehead.getStyle();
       notehead.applyStyle(ctx, noteheadStyle);
       modifier.setContext(ctx);
-      modifier.draw();
+      modifier.drawWithStyle();
       notehead.restoreStyle(ctx, noteheadStyle);
     }
     ctx.closeGroup();

@@ -51,6 +51,7 @@ VF.Test.run = function() {
   VF.Test.TextBracket.Start();
   VF.Test.StaveModifier.Start();
   VF.Test.GhostNote.Start();
+  VF.Test.Style.Start();
   VF.Test.Factory.Start();
   VF.Test.Parser.Start();
   VF.Test.EasyScore.Start();

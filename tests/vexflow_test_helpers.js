@@ -14,9 +14,8 @@ import/no-extraneous-dependencies,
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
 if (!window.QUnit) {
-  var process = require('system');
-
   window.QUnit = {};
+  QUnit = window.QUnit;
 
   QUnit.assertions = {
     ok: function() { return true; },
@@ -229,37 +228,29 @@ VF.Test = (function() {
       }
 
       QUnit.test(name, function(assert) {
-        var elementId = VF.Test.genID('node_');
-
-        var div = document.createElement('div');
-        div.setAttribute('id', elementId);
-        document.getElementsByTagName('body')[0].appendChild(div);
+        var elementId = VF.Test.genID('nodecanvas_');
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('id', elementId);
+        document.body.appendChild(canvas);
 
         var testOptions = {
           elementId: elementId,
-          backend: VF.Renderer.Backends.SVG,
+          backend: VF.Renderer.Backends.CANVAS,
           params: params,
           assert: assert,
         };
 
-        func(testOptions, VF.Renderer.getSVGContext);
+        func(testOptions, VF.Renderer.getCanvasContext);
 
-        if (VF.Renderer.lastContext != null) {
-          // If an SVG context was used, then serialize and save its contents to
-          // a local file.
-          var svgData = new XMLSerializer().serializeToString(VF.Renderer.lastContext.svg);
+        if (VF.Renderer.lastContext !== null) {
           var moduleName = sanitizeName(QUnit.current_module);
           var testName = sanitizeName(QUnit.current_test);
-          var filename = VF.Test.NODE_IMAGEDIR + '/' + moduleName + '.' + testName + '.svg';
+          var fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
 
-          try {
-            fs.write(filename, svgData, 'w');
-          } catch (e) {
-            console.log("Can't save file: " + filename + '. Error: ' + e);
-            slimer.exit();
-          }
+          var imageData = canvas.toDataURL().split(';base64,').pop();
+          var image = Buffer.from(imageData, 'base64');
 
-          VF.Renderer.lastContext = null;
+          fs.writeFileSync(fileName, image, { encoding: 'base64' });
         }
       });
     },

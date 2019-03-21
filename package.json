@@ -1,6 +1,6 @@
 {
   "name": "vexflow",
-  "version": "1.2.88",
+  "version": "1.2.89",
   "description": "A JavaScript library for rendering music notation and guitar tablature",
   "main": "releases/vexflow-debug.js",
   "repository": {
@@ -22,6 +22,7 @@
     "@babel/preset-env": "^7.3.1",
     "babel-loader": "^8.0.4",
     "browserify": "^16.2.3",
+    "canvas": "^2.4.0",
     "docco": "^0.8.0",
     "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
@@ -43,9 +44,9 @@
     "grunt-webpack": "^3.1.3",
     "jquery": "^3.3.1",
     "jscs": "^3.0.7",
+    "jsdom": "^14.0.0",
     "qunit": "^2.8.0",
     "raphael": "^2.2.7",
-    "slimerjs": "^1.0.0",
     "webpack": "^4.28.3",
     "webpack-dev-server": "^3.1.14"
   },
@@ -53,8 +54,8 @@
     "start": "grunt stage",
     "lint": "grunt eslint",
     "qunit": "grunt test",
-    "generate:current": "slimerjs ./tools/generate_svg_images.js ../build ./build/images/current",
-    "generate:blessed": "slimerjs ./tools/generate_svg_images.js ../releases ./build/images/blessed",
+    "generate:current": "node ./tools/generate_png_images.js ../build ./build/images/current",
+    "generate:blessed": "node ./tools/generate_png_images.js ../releases ./build/images/blessed",
     "generate": "npm run generate:current && npm run generate:blessed",
     "diff": "./tools/visual_regression.sh",
     "test": "npm run lint && npm run qunit && npm run generate && npm run diff"
