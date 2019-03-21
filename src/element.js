@@ -53,6 +53,14 @@ export class Element {
     return this;
   }
 
+  // draw with style of an element.
+  drawWithStyle() {
+    this.checkContext();
+    this.applyStyle();
+    this.draw();
+    this.restoreStyle();
+  }
+
   // An element can have multiple class labels.
   hasClass(className) { return (this.attrs.classes[className] === true); }
   addClass(className) {

@@ -89,6 +89,6 @@ export class NoteSubGroup extends Modifier {
     this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
 
     // Draw notes
-    this.subNotes.forEach(subNote => subNote.setContext(this.context).draw());
+    this.subNotes.forEach(subNote => subNote.setContext(this.context).drawWithStyle());
   }
 }

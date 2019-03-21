@@ -56,7 +56,7 @@ export class GhostNote extends StemmableNote {
     for (let i = 0; i < this.modifiers.length; ++i) {
       const modifier = this.modifiers[i];
       modifier.setContext(this.context);
-      modifier.draw();
+      modifier.drawWithStyle();
     }
   }
 }
