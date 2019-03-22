@@ -281,7 +281,9 @@ export class KeySignature extends StaveModifier {
     }
 
     if (this.accList.length > 0) {
-      this.convertAccLines(this.stave.clef, firstAccidentalType);
+      const clef = ((this.position === StaveModifier.Position.END) ?
+        this.stave.endClef : this.stave.clef) || this.stave.clef;
+      this.convertAccLines(clef, firstAccidentalType);
       for (let i = 0; i < this.accList.length; ++i) {
         this.convertToGlyph(this.accList[i], this.accList[i + 1]);
       }
