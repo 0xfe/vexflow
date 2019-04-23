@@ -236,7 +236,7 @@ VF.Test.Tuplet = (function() {
     },
 
     awkward: function(options) {
-      var vf = VF.Test.makeFactory(options, 350, 160);
+      var vf = VF.Test.makeFactory(options, 370, 160);
       var stave = vf.Stave({ x: 10, y: 10 });
 
       var notes = [
@@ -251,14 +251,15 @@ VF.Test.Tuplet = (function() {
         { keys: ['g/4'], duration: '16' },
         { keys: ['a/4'], duration: '16' },
         { keys: ['f/4'], duration: '16' },
+        { keys: ['e/4'], duration: '16' },
         { keys: ['c/4'], duration: '8' },
         { keys: ['d/4'], duration: '8' },
         { keys: ['e/4'], duration: '8' },
       ].map(stemUp).map(vf.StaveNote.bind(vf));
 
-      vf.Beam({ notes: notes.slice(0, 11) });
+      vf.Beam({ notes: notes.slice(0, 12) });
       vf.Tuplet({
-        notes: notes.slice(0, 11),
+        notes: notes.slice(0, 12),
         options: {
           notes_occupied: 142,
           ratioed: true,
@@ -266,7 +267,7 @@ VF.Test.Tuplet = (function() {
       });
 
       vf.Tuplet({
-        notes: notes.slice(11, 14),
+        notes: notes.slice(12, 15),
         options: {
           ratioed: true,
         },
