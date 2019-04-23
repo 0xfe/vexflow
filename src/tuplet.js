@@ -195,14 +195,14 @@ export class Tuplet extends Element {
     this.num_glyphs = [];
     let n = this.num_notes;
     while (n >= 1) {
-      this.num_glyphs.push(new Glyph('v' + (n % 10), this.point));
+      this.num_glyphs.unshift(new Glyph('v' + (n % 10), this.point));
       n = parseInt(n / 10, 10);
     }
 
     this.denom_glyphs = [];
     n = this.notes_occupied;
     while (n >= 1) {
-      this.denom_glyphs.push(new Glyph('v' + (n % 10), this.point));
+      this.denom_glyphs.unshift(new Glyph('v' + (n % 10), this.point));
       n = parseInt(n / 10, 10);
     }
   }
