@@ -192,17 +192,17 @@ export class Tuplet extends Element {
   }
 
   resolveGlyphs() {
-    this.num_glyphs = [];
+    this.numerator_glyphs = [];
     let n = this.num_notes;
     while (n >= 1) {
-      this.num_glyphs.push(new Glyph('v' + (n % 10), this.point));
+      this.numerator_glyphs.unshift(new Glyph('v' + (n % 10), this.point));
       n = parseInt(n / 10, 10);
     }
 
     this.denom_glyphs = [];
     n = this.notes_occupied;
     while (n >= 1) {
-      this.denom_glyphs.push(new Glyph('v' + (n % 10), this.point));
+      this.denom_glyphs.unshift(new Glyph('v' + (n % 10), this.point));
       n = parseInt(n / 10, 10);
     }
   }
@@ -298,7 +298,7 @@ export class Tuplet extends Element {
     const addGlyphWidth = (width, glyph) => width + glyph.getMetrics().width;
 
     // calculate total width of tuplet notation
-    let width = this.num_glyphs.reduce(addGlyphWidth, 0);
+    let width = this.numerator_glyphs.reduce(addGlyphWidth, 0);
     if (this.ratioed) {
       width = this.denom_glyphs.reduce(addGlyphWidth, width);
       width += this.point * 0.32;
@@ -337,7 +337,7 @@ export class Tuplet extends Element {
 
     // draw numerator glyphs
     let x_offset = 0;
-    this.num_glyphs.forEach(glyph => {
+    this.numerator_glyphs.forEach(glyph => {
       glyph.render(this.context, notation_start_x + x_offset, this.y_pos + (this.point / 3) - 2);
       x_offset += glyph.getMetrics().width;
     });
