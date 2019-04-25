@@ -687,7 +687,11 @@ export class Beam extends Element {
 
       // Check to see if the next note in the group will get a beam at this
       //  level. This will help to inform the partial beam logic below.
+      const prev_note = this.notes[i - 1];
       const next_note = this.notes[i + 1];
+      const beam_prev_above = (
+        prev_note && (prev_note.getIntrinsicTicks() / Flow.durationToTicks(duration)) < 2
+      );
       const beam_next = next_note && next_note.getIntrinsicTicks() < Flow.durationToTicks(duration);
       if (note_gets_beam) {
         // This note gets a beam at the current level
@@ -712,7 +716,7 @@ export class Beam extends Element {
           beam_started = true;
           if (!beam_next) {
             // The next note doesn't get a beam. Draw a partial.
-            if ((previous_should_break || i === 0) && next_note) {
+            if ((previous_should_break || i === 0 || !beam_prev_above) && next_note) {
               // This is the first note (but not the last one), or it is
               //  following a secondary break. Draw a partial to the right.
               current_beam.end = current_beam.start + partial_beam_length;
