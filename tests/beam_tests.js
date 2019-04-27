@@ -30,6 +30,7 @@ VF.Test.Beam = (function() {
       runTests('Mixed Beam 1', Beam.mixed);
       runTests('Mixed Beam 2', Beam.mixed2);
       runTests('Dotted Beam', Beam.dotted);
+      runTests('Partial Beam', Beam.partial);
       runTests('Close Trade-offs Beam', Beam.tradeoffs);
       runTests('Insane Beam', Beam.insane);
       runTests('Lengthy Beam', Beam.lenghty);
@@ -307,6 +308,29 @@ VF.Test.Beam = (function() {
       vf.draw();
 
       ok(true, 'Dotted Test');
+    },
+
+    partial: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
+
+      var voice = score.voice(score.notes(
+        'd4/8, b3/32, c4/16., d4/16., e4/8, c4/64, c4/32, a3/8., b3/32., c4/8, e4/64, b3/16., b3/64'
+      ), { time: '4/4' });
+
+      var notes = voice.getTickables();
+      vf.Beam({ notes: notes.slice(0, 3) });
+      vf.Beam({ notes: notes.slice(3, 9) });
+      vf.Beam({ notes: notes.slice(9, 13) });
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'Partial Test');
     },
 
     tradeoffs: function(options) {
