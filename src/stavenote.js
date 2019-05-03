@@ -362,6 +362,12 @@ export class StaveNote extends StemmableNote {
     this.calcExtraPx();
   }
 
+  setBeam(beam) {
+    this.beam = beam;
+    this.calcExtraPx();
+    return this;
+  }
+
   getCategory() { return StaveNote.CATEGORY; }
 
   // Builds a `Stem` for the note

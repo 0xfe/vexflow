@@ -83,7 +83,13 @@ VF.Test.Dot = (function() {
           .addDotToAll(),
         new VF.StaveNote({ keys: ['e/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'f/5'], duration: '16', stem_direction: 1 })
           .addDotToAll(),
+        new VF.StaveNote({ keys: ['e/4', 'g/4', 'a/4', 'b/4', 'c/5'], duration: '16', stem_direction: 1 })
+          .addDotToAll(),
+        new VF.StaveNote({ keys: ['e/4', 'a/4', 'b/4', 'c/5'], duration: '16', stem_direction: 1 })
+          .addDotToAll(),
       ];
+
+      var beam = new VF.Beam(notes.slice(notes.length - 2));
 
       for (var i = 0; i < notes.length; i++) {
         showNote(notes[i], stave, ctx, 30 + (i * 65));
@@ -95,7 +101,9 @@ VF.Test.Dot = (function() {
         }
       }
 
-      VF.Test.plotLegendForNoteWidth(ctx, 770, 140);
+      beam.setContext(ctx).draw();
+
+      VF.Test.plotLegendForNoteWidth(ctx, 890, 140);
 
       ok(true, 'Full Dot');
     },
