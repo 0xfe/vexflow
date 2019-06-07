@@ -56,6 +56,7 @@ VF.Test.KeySignature = (function() {
       VF.Test.runTests('Minor Key Test', VF.Test.KeySignature.minorKeys);
       VF.Test.runTests('Stave Helper', VF.Test.KeySignature.staveHelper);
       VF.Test.runTests('Cancelled key test', VF.Test.KeySignature.majorKeysCanceled);
+      VF.Test.runTests('Cancelled key (for each clef) test', VF.Test.KeySignature.keysCanceledForEachClef);
       VF.Test.runTests('Altered key test', VF.Test.KeySignature.majorKeysAltered);
       VF.Test.runTests('End key with clef test', VF.Test.KeySignature.endKeyWithClef);
       VF.Test.runTests('Key Signature Change test', VF.Test.KeySignature.changeKey);
@@ -162,6 +163,35 @@ VF.Test.KeySignature = (function() {
       stave3.draw();
       stave4.setContext(ctx);
       stave4.draw();
+
+      ok(true, 'all pass');
+    },
+
+    keysCanceledForEachClef: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.elementId, 600, 380);
+      ctx.scale(0.8, 0.8);
+      var keys = [
+        'C#',
+        'Cb'
+      ];
+
+      var x = 20;
+      var y = 20;
+      var tx = x;
+      ['bass', 'tenor', 'soprano', 'mezzo-soprano', 'baritone-f'].forEach(function(clef) {
+        keys.forEach(function(key) {
+          var cancelKey = key === keys[0] ? keys[1] : keys[0];
+          var vStave = new Vex.Flow.Stave(tx, y, 350);
+          vStave.setClef(clef);
+          vStave.addKeySignature(cancelKey);
+          vStave.addKeySignature(key, cancelKey);
+          vStave.addKeySignature(key);
+          vStave.setContext(ctx).draw();
+          tx += 350;
+        });
+        tx = x;
+        y += 80;
+      });
 
       ok(true, 'all pass');
     },
