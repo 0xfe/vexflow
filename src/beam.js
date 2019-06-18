@@ -35,6 +35,10 @@ const getStemSlope = (firstNote, lastNote) => {
   return (lastStemTipY - firstStemTipY) / (lastStemX - firstStemX);
 };
 
+const BEAM_LEFT = 'L';
+const BEAM_RIGHT = 'R';
+const BEAM_BOTH = 'B';
+
 export class Beam extends Element {
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
@@ -652,10 +656,10 @@ export class Beam extends Element {
     }
   }
 
-  // return upper level beam direction. L for Left, R for Right, B for Both
+  // return upper level beam direction.
   lookupBeamDirection(duration, prev_tick, tick, next_tick) {
     if (duration === '4') {
-      return 'L';
+      return BEAM_LEFT;
     }
 
     const lookup_duration =  `${Flow.durationToNumber(duration) / 2}`;
@@ -664,11 +668,11 @@ export class Beam extends Element {
     const note_gets_beam = tick < Flow.durationToTicks(lookup_duration);
 
     if (prev_note_gets_beam && next_note_gets_beam && note_gets_beam) {
-      return 'B';
+      return BEAM_BOTH;
     } else if (prev_note_gets_beam && !next_note_gets_beam && note_gets_beam) {
-      return 'L';
+      return BEAM_LEFT;
     } else if (!prev_note_gets_beam && next_note_gets_beam && note_gets_beam) {
-      return 'R';
+      return BEAM_RIGHT;
     }
 
     return this.lookupBeamDirection(lookup_duration, prev_tick, tick, next_tick);
@@ -746,7 +750,7 @@ export class Beam extends Element {
             const tick = note.getIntrinsicTicks();
             const beam_direction = this.lookupBeamDirection(duration, prev_tick, tick, next_tick);
 
-            if (['L', 'B'].includes(beam_direction)) {
+            if ([BEAM_LEFT, BEAM_BOTH].includes(beam_direction)) {
               current_beam.end = current_beam.start - partial_beam_length;
             } else {
               current_beam.end = current_beam.start + partial_beam_length;
