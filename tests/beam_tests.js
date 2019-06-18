@@ -316,13 +316,14 @@ VF.Test.Beam = (function() {
       var score = vf.EasyScore();
 
       var voice = score.voice(score.notes(
-        'd4/8, b3/32, c4/16., d4/16., e4/8, c4/64, c4/32, a3/8., b3/32., c4/8, e4/64, b3/16., b3/64'
-      ), { time: '4/4' });
+        'd4/8, b3/32, c4/16., d4/16., e4/8, c4/64, c4/32, a3/8., b3/32., c4/8, e4/64, b3/16., b3/64, f4/8, e4/8, g4/64, e4/8'
+      ), { time: '89/64' });
 
       var notes = voice.getTickables();
       vf.Beam({ notes: notes.slice(0, 3) });
       vf.Beam({ notes: notes.slice(3, 9) });
       vf.Beam({ notes: notes.slice(9, 13) });
+      vf.Beam({ notes: notes.slice(13, 17) });
 
       vf.Formatter()
         .joinVoices([voice])
