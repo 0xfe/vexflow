@@ -35,6 +35,10 @@ const getStemSlope = (firstNote, lastNote) => {
   return (lastStemTipY - firstStemTipY) / (lastStemX - firstStemX);
 };
 
+const BEAM_LEFT = 'L';
+const BEAM_RIGHT = 'R';
+const BEAM_BOTH = 'B';
+
 export class Beam extends Element {
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
@@ -652,8 +656,31 @@ export class Beam extends Element {
     }
   }
 
+  // return upper level beam direction.
+  lookupBeamDirection(duration, prev_tick, tick, next_tick) {
+    if (duration === '4') {
+      return BEAM_LEFT;
+    }
+
+    const lookup_duration =  `${Flow.durationToNumber(duration) / 2}`;
+    const prev_note_gets_beam = prev_tick < Flow.durationToTicks(lookup_duration);
+    const next_note_gets_beam = next_tick < Flow.durationToTicks(lookup_duration);
+    const note_gets_beam = tick < Flow.durationToTicks(lookup_duration);
+
+    if (prev_note_gets_beam && next_note_gets_beam && note_gets_beam) {
+      return BEAM_BOTH;
+    } else if (prev_note_gets_beam && !next_note_gets_beam && note_gets_beam) {
+      return BEAM_LEFT;
+    } else if (!prev_note_gets_beam && next_note_gets_beam && note_gets_beam) {
+      return BEAM_RIGHT;
+    }
+
+    return this.lookupBeamDirection(lookup_duration, prev_tick, tick, next_tick);
+  }
+
   // Get the x coordinates for the beam lines of specific `duration`
   getBeamLines(duration) {
+    const tick_of_duration = Flow.durationToTicks(duration);
     const beam_lines = [];
     let beam_started = false;
     let current_beam = null;
@@ -681,7 +708,7 @@ export class Beam extends Element {
           should_break = true;
         }
       }
-      const note_gets_beam = note.getIntrinsicTicks() < Flow.durationToTicks(duration);
+      const note_gets_beam = note.getIntrinsicTicks() < tick_of_duration;
 
       const stem_x = note.getStemX() - (Stem.WIDTH / 2);
 
@@ -689,10 +716,11 @@ export class Beam extends Element {
       //  level. This will help to inform the partial beam logic below.
       const prev_note = this.notes[i - 1];
       const next_note = this.notes[i + 1];
-      const beam_prev_above = (
-        prev_note && (prev_note.getIntrinsicTicks() / Flow.durationToTicks(duration)) < 2
-      );
-      const beam_next = next_note && next_note.getIntrinsicTicks() < Flow.durationToTicks(duration);
+      const next_note_gets_beam = next_note && next_note.getIntrinsicTicks() < tick_of_duration;
+      const prev_note_gets_beam = prev_note && prev_note.getIntrinsicTicks() < tick_of_duration;
+      const beam_alone = prev_note && next_note &&
+      note_gets_beam && !prev_note_gets_beam && !next_note_gets_beam;
+      // const beam_alone = note_gets_beam && !prev_note_gets_beam && !next_note_gets_beam;
       if (note_gets_beam) {
         // This note gets a beam at the current level
         if (beam_started) {
@@ -704,7 +732,7 @@ export class Beam extends Element {
           // If a secondary beam break is set up, end the beam right now.
           if (should_break) {
             beam_started = false;
-            if (next_note && !beam_next && current_beam.end === null) {
+            if (next_note && !next_note_gets_beam && current_beam.end === null) {
               // This note gets a beam,.but the next one does not. This means
               //  we need a partial pointing right.
               current_beam.end = current_beam.start - partial_beam_length;
@@ -714,9 +742,22 @@ export class Beam extends Element {
           // No beam started yet. Start a new one.
           current_beam = { start: stem_x, end: null };
           beam_started = true;
-          if (!beam_next) {
+
+          if (beam_alone) {
+            // previous and next beam exists and does not get a beam but current gets it.
+            const prev_tick = prev_note.getIntrinsicTicks();
+            const next_tick = next_note.getIntrinsicTicks();
+            const tick = note.getIntrinsicTicks();
+            const beam_direction = this.lookupBeamDirection(duration, prev_tick, tick, next_tick);
+
+            if ([BEAM_LEFT, BEAM_BOTH].includes(beam_direction)) {
+              current_beam.end = current_beam.start - partial_beam_length;
+            } else {
+              current_beam.end = current_beam.start + partial_beam_length;
+            }
+          } else if (!next_note_gets_beam) {
             // The next note doesn't get a beam. Draw a partial.
-            if ((previous_should_break || i === 0 || !beam_prev_above) && next_note) {
+            if ((previous_should_break || i === 0) && next_note) {
               // This is the first note (but not the last one), or it is
               //  following a secondary break. Draw a partial to the right.
               current_beam.end = current_beam.start + partial_beam_length;
