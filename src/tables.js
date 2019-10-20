@@ -300,6 +300,8 @@ Flow.accidentalCodes.accidentals = {
   'bss': { code: 'v39', parenRightPaddingAdjustment: -1 },
   'o': { code: 'vd0', parenRightPaddingAdjustment: -1 },
   'k': { code: 'vd1', parenRightPaddingAdjustment: -1 },
+  'ashs': { code: 'vd6', parenRightPaddingAdjustment: -1 },  // arabic sharp half sharp
+  'afhf': { code: 'vd7', parenRightPaddingAdjustment: -1 },  // arabic flat half flat
 };
 
 Flow.accidentalColumnsTable = {
