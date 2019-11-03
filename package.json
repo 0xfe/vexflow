@@ -48,7 +48,8 @@
     "qunit": "^2.8.0",
     "raphael": "^2.2.7",
     "webpack": "^4.28.3",
-    "webpack-dev-server": "^3.1.14"
+    "webpack-dev-server": "^3.1.14",
+    "npm": "^6.5.0"
   },
   "scripts": {
     "start": "grunt stage",
@@ -66,8 +67,5 @@
     "notation",
     "guitar",
     "tablature"
-  ],
-  "dependencies": {
-    "npm": "^6.5.0"
-  }
+  ]
 }
