@@ -22,7 +22,7 @@
     "@babel/preset-env": "^7.3.1",
     "babel-loader": "^8.0.4",
     "browserify": "^16.2.3",
-    "canvas": "^2.4.0",
+    "canvas": "^2.6.0",
     "docco": "^0.8.0",
     "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
