@@ -337,9 +337,6 @@ export class Stave extends Element {
       clefs[0].setType(clefSpec, size, annotation);
     }
 
-    const keySignatures = this.getModifiers(position, KeySignature.CATEGORY);
-    keySignatures.forEach(key => key.format())
-
     return this;
   }
 
