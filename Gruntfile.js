@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = (grunt) => {
   const BANNER = [
-    '/**',
+    '/**!',
     ' * VexFlow <%= pkg.version %> built on <%= grunt.template.today("yyyy-mm-dd") %>.',
     ' * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>',
     ' *',
