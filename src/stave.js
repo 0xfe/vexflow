@@ -427,10 +427,10 @@ export class Stave extends Element {
   }
 
   getModifiers(position, category) {
-    if (position === undefined) return this.modifiers;
+    if (position === undefined && category === undefined) return this.modifiers;
 
     return this.modifiers.filter(modifier =>
-      position === modifier.getPosition() &&
+      (position === undefined || position === modifier.getPosition()) &&
       (category === undefined || category === modifier.getCategory())
     );
   }
