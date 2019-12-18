@@ -17,7 +17,7 @@
     "url": "https://github.com/0xfe/vexflow/issues"
   },
   "dependencies": {
-    "lodash": "4.17.5"
+    "lodash": "4.17.12"
   },
   "devDependencies": {
     "babel-loader": "^6.2.4",
