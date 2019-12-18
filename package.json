@@ -16,6 +16,9 @@
   "bugs": {
     "url": "https://github.com/0xfe/vexflow/issues"
   },
+  "dependencies": {
+    "lodash": "4.17.5"
+  },
   "devDependencies": {
     "babel-loader": "^6.2.4",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -48,8 +51,7 @@
     "raphael": "^2.1.0",
     "slimerjs": "^0.906.2",
     "webpack": "*",
-    "webpack-dev-server": "^1.14.1",
-    "lodash": "4.17.5"
+    "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
     "start": "grunt stage",
