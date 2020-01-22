@@ -337,7 +337,7 @@ Vex.Flow.Test.Accidental = (function() {
           .addAccidental(4, newAccid('++').setAsCautionary())
           .addAccidental(5, newAccid('d').setAsCautionary()),
 
-        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4','d/5', 'g/5'], duration: '16' })
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'd/5', 'g/5'], duration: '16' })
           .addAccidental(0, newAccid('++-'))
           .addAccidental(1, newAccid('+-'))
           .addAccidental(2, newAccid('bs'))
