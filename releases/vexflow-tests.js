@@ -1,5 +1,5 @@
-/**
- * VexFlow 1.2.89 built on 2019-03-18.
+/**!
+ * VexFlow 1.2.90 built on 2020-01-25.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -675,11 +675,13 @@ Vex.Flow.Test.Accidental = (function() {
           .addAccidental(4, newAccid('++').setAsCautionary())
           .addAccidental(5, newAccid('d').setAsCautionary()),
 
-        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '16' })
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'd/5', 'g/5'], duration: '16' })
           .addAccidental(0, newAccid('++-'))
           .addAccidental(1, newAccid('+-'))
           .addAccidental(2, newAccid('bs'))
-          .addAccidental(3, newAccid('bss')),
+          .addAccidental(3, newAccid('bss'))
+          .addAccidental(4, newAccid('afhf'))
+          .addAccidental(5, newAccid('ashs')),
       ];
 
       VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
@@ -3178,6 +3180,7 @@ VF.Test.Beam = (function() {
       runTests('Mixed Beam 1', Beam.mixed);
       runTests('Mixed Beam 2', Beam.mixed2);
       runTests('Dotted Beam', Beam.dotted);
+      runTests('Partial Beam', Beam.partial);
       runTests('Close Trade-offs Beam', Beam.tradeoffs);
       runTests('Insane Beam', Beam.insane);
       runTests('Lengthy Beam', Beam.lenghty);
@@ -3455,6 +3458,30 @@ VF.Test.Beam = (function() {
       vf.draw();
 
       ok(true, 'Dotted Test');
+    },
+
+    partial: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
+
+      var voice = score.voice(score.notes(
+        'd4/8, b3/32, c4/16., d4/16., e4/8, c4/64, c4/32, a3/8., b3/32., c4/8, e4/64, b3/16., b3/64, f4/8, e4/8, g4/64, e4/8'
+      ), { time: '89/64' });
+
+      var notes = voice.getTickables();
+      vf.Beam({ notes: notes.slice(0, 3) });
+      vf.Beam({ notes: notes.slice(3, 9) });
+      vf.Beam({ notes: notes.slice(9, 13) });
+      vf.Beam({ notes: notes.slice(13, 17) });
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      ok(true, 'Partial Test');
     },
 
     tradeoffs: function(options) {
@@ -4484,7 +4511,13 @@ VF.Test.Dot = (function() {
           .addDotToAll(),
         new VF.StaveNote({ keys: ['e/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'f/5'], duration: '16', stem_direction: 1 })
           .addDotToAll(),
+        new VF.StaveNote({ keys: ['e/4', 'g/4', 'a/4', 'b/4', 'c/5'], duration: '16', stem_direction: 1 })
+          .addDotToAll(),
+        new VF.StaveNote({ keys: ['e/4', 'a/4', 'b/4', 'c/5'], duration: '16', stem_direction: 1 })
+          .addDotToAll(),
       ];
+
+      var beam = new VF.Beam(notes.slice(notes.length - 2));
 
       for (var i = 0; i < notes.length; i++) {
         showNote(notes[i], stave, ctx, 30 + (i * 65));
@@ -4496,7 +4529,9 @@ VF.Test.Dot = (function() {
         }
       }
 
-      VF.Test.plotLegendForNoteWidth(ctx, 770, 140);
+      beam.setContext(ctx).draw();
+
+      VF.Test.plotLegendForNoteWidth(ctx, 890, 140);
 
       ok(true, 'Full Dot');
     },
@@ -4837,6 +4872,7 @@ Vex.Flow.Test.Factory = (function() {
 
       QUnit.test('Defaults', VFT.Factory.defaults);
       VFT.runSVGTest('Draw', VFT.Factory.draw);
+      VFT.runSVGTest('Draw Tab (repeat barlines must be aligned)', VFT.Factory.drawTab);
     },
 
     defaults: function(assert) {
@@ -4869,6 +4905,47 @@ Vex.Flow.Test.Factory = (function() {
       vf.Stave().setClef('treble');
       vf.draw();
       expect(0);
+    },
+
+    drawTab: function(options) {
+      var vf = VF.Test.makeFactory(options, 500, 400);
+
+      var system = vf.System();
+
+      var stave = vf.Stave()
+        .setClef('treble')
+        .setKeySignature('C#')
+        .setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+
+      var voices = [
+        vf.Voice().addTickables([
+          vf.GhostNote({ duration: 'w' })
+        ])
+      ];
+
+      system.addStave({
+        stave: stave,
+        voices: voices
+      });
+
+      var tabStave = vf.TabStave()
+        .setClef('tab')
+        .setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+
+      var tabVoices = [
+        vf.Voice().addTickables([
+          vf.GhostNote({ duration: 'w' })
+        ])
+      ];
+
+      system.addStave({
+        stave: tabStave,
+        voices: tabVoices
+      });
+
+      vf.draw();
+      equal(stave.getModifiers()[0].getX(), tabStave.getModifiers()[0].getX());
+      expect(1);
     },
   };
 
@@ -6332,7 +6409,9 @@ VF.Test.KeySignature = (function() {
       VF.Test.runTests('Minor Key Test', VF.Test.KeySignature.minorKeys);
       VF.Test.runTests('Stave Helper', VF.Test.KeySignature.staveHelper);
       VF.Test.runTests('Cancelled key test', VF.Test.KeySignature.majorKeysCanceled);
+      VF.Test.runTests('Cancelled key (for each clef) test', VF.Test.KeySignature.keysCanceledForEachClef);
       VF.Test.runTests('Altered key test', VF.Test.KeySignature.majorKeysAltered);
+      VF.Test.runTests('End key with clef test', VF.Test.KeySignature.endKeyWithClef);
       VF.Test.runTests('Key Signature Change test', VF.Test.KeySignature.changeKey);
     },
 
@@ -6441,6 +6520,35 @@ VF.Test.KeySignature = (function() {
       ok(true, 'all pass');
     },
 
+    keysCanceledForEachClef: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.elementId, 600, 380);
+      ctx.scale(0.8, 0.8);
+      var keys = [
+        'C#',
+        'Cb'
+      ];
+
+      var x = 20;
+      var y = 20;
+      var tx = x;
+      ['bass', 'tenor', 'soprano', 'mezzo-soprano', 'baritone-f'].forEach(function(clef) {
+        keys.forEach(function(key) {
+          var cancelKey = key === keys[0] ? keys[1] : keys[0];
+          var vStave = new Vex.Flow.Stave(tx, y, 350);
+          vStave.setClef(clef);
+          vStave.addKeySignature(cancelKey);
+          vStave.addKeySignature(key, cancelKey);
+          vStave.addKeySignature(key);
+          vStave.setContext(ctx).draw();
+          tx += 350;
+        });
+        tx = x;
+        y += 80;
+      });
+
+      ok(true, 'all pass');
+    },
+
     majorKeysAltered: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 780, 500);
       ctx.scale(0.9, 0.9);
@@ -6515,6 +6623,27 @@ VF.Test.KeySignature = (function() {
       stave2.setContext(ctx);
       stave2.draw();
 
+      ok(true, 'all pass');
+    },
+    endKeyWithClef: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.elementId, 400, 200);
+      ctx.scale(0.9, 0.9);
+      var stave1 = new VF.Stave(10, 10, 350);
+      stave1.setKeySignature('G')
+        .setBegBarType(VF.Barline.type.REPEAT_BEGIN)
+        .setEndBarType(VF.Barline.type.REPEAT_END)
+        .setClef('treble')
+        .addTimeSignature('4/4')
+        .setEndClef('bass')
+        .setEndKeySignature('Cb');
+      var stave2 = new VF.Stave(10, 90, 350);
+      stave2.setKeySignature('Cb')
+        .setClef('bass')
+        .setEndClef('treble')
+        .setEndKeySignature('G');
+
+      stave1.setContext(ctx).draw();
+      stave2.setContext(ctx).draw();
       ok(true, 'all pass');
     },
 
@@ -12461,6 +12590,114 @@ VF.Test.Strokes = (function() {
 }());
 
 /**
+ * VexFlow - Style Tests
+ * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ */
+
+VF.Test.Style = (function() {
+  var runTests = VF.Test.runTests;
+  function FS(fill, stroke) {
+    var ret = { fillStyle: fill };
+    if (stroke) {
+      ret.strokeStyle = stroke;
+    }
+    return ret;
+  }
+
+  var Style = {
+    Start: function() {
+      QUnit.module('Style');
+      runTests('Basic Style', Style.stave);
+      runTests('TabNote modifiers Style', Style.tab);
+    },
+
+    stave: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 150);
+      var stave = vf.Stave({ x: 25, y: 20, width: 500 });
+
+      // Stave modifiers test.
+      var keySig = new VF.KeySignature('D');
+      keySig.addToStave(stave);
+      keySig.setStyle(FS('blue'));
+      stave.addTimeSignature('4/4');
+      var timeSig = stave.getModifiers(VF.StaveModifier.Position.BEGIN, VF.TimeSignature.CATEGORY);
+      timeSig[0].setStyle(FS('brown'));
+
+      var notes = [
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: 1, duration: '4' })
+          .addAccidental(0, vf.Accidental({ type: 'b' }))
+          .addAccidental(1, vf.Accidental({ type: '#' })),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: 1, duration: '4' })
+          .addAccidental(0, vf.Accidental({ type: 'b' }))
+          .addAccidental(1, vf.Accidental({ type: '#' })),
+        vf.StaveNote({ keys: ['e/4'], stem_direction: 1, duration: '4' }),
+        vf.StaveNote({ keys: ['f/4'], stem_direction: 1, duration: '8' }),
+
+        // voice.draw() test.
+        vf.TextDynamics({ text: 'sfz', duration: '16' }).setStyle(FS('blue')),
+
+        // GhostNote modifiers test.
+        vf.GhostNote({ duration: '16' }).addModifier(new VF.Annotation('GhostNote green text').setStyle(FS('green'))),
+      ];
+
+      notes[0].setKeyStyle(0, FS('red'));
+      notes[1].setKeyStyle(0, FS('red'));
+
+      // StaveNote modifiers test.
+      var mods1 = notes[1].getModifiers();
+      mods1[0].setStyle(FS('green'));
+      notes[0].addArticulation(0, new VF.Articulation('a.').setPosition(4).setStyle(FS('green')));
+      notes[0].addModifier(0, new VF.Ornament('mordent').setStyle(FS('lightgreen')));
+
+      notes[1].addModifier(0, new VF.Annotation('blue').setStyle(FS('blue')));
+      notes[1].addModifier(0,
+        new VF.NoteSubGroup([vf.ClefNote({ options: { size: 'small' } }).setStyle(FS('blue'))]));
+
+      var voice = vf.Voice().addTickables(notes);
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+      ok(true, 'Basic Style');
+    },
+
+    tab: function(options, contextBuilder) {
+      var ctx = contextBuilder(options.elementId, 500, 140);
+      ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      ctx.font = ' 10pt Arial';
+      var stave = new VF.TabStave(10, 10, 450)
+        .addTabGlyph();
+      stave.getModifiers()[2].setStyle(FS('blue'));
+      stave.setContext(ctx).draw();
+
+      function newNote(tab_struct) { return new VF.TabNote(tab_struct); }
+      function newBend(text) { return new VF.Bend(text); }
+      function newAnnotation(text) { return new VF.Annotation(text); }
+
+      // TabNote modifiers test.
+      var notes = [
+        newNote({
+          positions: [{ str: 2, fret: 10 }, { str: 4, fret: 9 }], duration: 'h',
+        })
+          .addModifier(newAnnotation('green text').setStyle(FS('green')), 0),
+        newNote({
+          positions: [{ str: 2, fret: 10 }, { str: 4, fret: 9 }], duration: 'h',
+        })
+          .addModifier(newBend('Full').setStyle(FS('brown')), 0)
+          .addStroke(0, new VF.Stroke(1, { all_voices: false }).setStyle(FS('blue'))),
+      ];
+
+      VF.Formatter.FormatAndDraw(ctx, stave, notes, 200);
+      ok(true, 'TabNote modifiers Style');
+    },
+  };
+
+  return Style;
+})();
+
+/**
  * VexFlow - TabNote Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
@@ -14229,7 +14466,7 @@ VF.Test.Tuplet = (function() {
     },
 
     awkward: function(options) {
-      var vf = VF.Test.makeFactory(options, 350, 160);
+      var vf = VF.Test.makeFactory(options, 370, 160);
       var stave = vf.Stave({ x: 10, y: 10 });
 
       var notes = [
@@ -14244,14 +14481,15 @@ VF.Test.Tuplet = (function() {
         { keys: ['g/4'], duration: '16' },
         { keys: ['a/4'], duration: '16' },
         { keys: ['f/4'], duration: '16' },
+        { keys: ['e/4'], duration: '16' },
         { keys: ['c/4'], duration: '8' },
         { keys: ['d/4'], duration: '8' },
         { keys: ['e/4'], duration: '8' },
       ].map(stemUp).map(vf.StaveNote.bind(vf));
 
-      vf.Beam({ notes: notes.slice(0, 11) });
+      vf.Beam({ notes: notes.slice(0, 12) });
       vf.Tuplet({
-        notes: notes.slice(0, 11),
+        notes: notes.slice(0, 12),
         options: {
           notes_occupied: 142,
           ratioed: true,
@@ -14259,7 +14497,7 @@ VF.Test.Tuplet = (function() {
       });
 
       vf.Tuplet({
-        notes: notes.slice(11, 14),
+        notes: notes.slice(12, 15),
         options: {
           ratioed: true,
         },
@@ -14909,6 +15147,7 @@ VF.Test.run = function() {
   VF.Test.TextBracket.Start();
   VF.Test.StaveModifier.Start();
   VF.Test.GhostNote.Start();
+  VF.Test.Style.Start();
   VF.Test.Factory.Start();
   VF.Test.Parser.Start();
   VF.Test.EasyScore.Start();
