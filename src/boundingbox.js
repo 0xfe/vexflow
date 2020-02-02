@@ -50,6 +50,5 @@ export class BoundingBox {
     if (!x) x = 0;
     if (!y) y = 0;
     ctx.rect(this.x + x, this.y + y, this.w, this.h);
-    ctx.stroke();
   }
 }
