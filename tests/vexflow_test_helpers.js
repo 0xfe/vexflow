@@ -3,13 +3,9 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-/*
-eslint-disable
-no-require,
-global-require,
-import/no-unresolved,
-import/no-extraneous-dependencies,
- */
+/* eslint-disable global-require, import/no-unresolved, import/no-extraneous-dependencies */
+
+/* eslint max-classes-per-file: "off" */
 
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
@@ -18,24 +14,24 @@ if (!window.QUnit) {
   QUnit = window.QUnit;
 
   QUnit.assertions = {
-    ok: function() { return true; },
-    equal: function() { return true; },
-    deepEqual: function() { return true; },
-    expect: function() { return true; },
-    throws: function() { return true; },
-    notOk: function() { return true; },
-    notEqual: function() { return true; },
-    notDeepEqual: function() { return true; },
-    strictEqual: function() { return true; },
-    notStrictEqual: function() { return true; },
+    ok: () => true,
+    equal: () => true,
+    deepEqual: () => true,
+    expect: () => true,
+    throws: () => true,
+    notOk: () => true,
+    notEqual: () => true,
+    notDeepEqual: () => true,
+    strictEqual: () => true,
+    notStrictEqual: () => true,
   };
 
-  QUnit.module = function(name) {
+  QUnit.module = (name) => {
     QUnit.current_module = name;
   };
 
   /* eslint-disable */
-  QUnit.test = function(name, func) {
+  QUnit.test = (name, func) => {
     QUnit.current_test = name;
     process.stdout.write(" \u001B[0G" + QUnit.current_module + " :: " + name + "\u001B[0K");
     func(QUnit.assertions);
@@ -59,7 +55,7 @@ if (typeof require === 'function') {
 }
 
 var VF = Vex.Flow;
-VF.Test = (function() {
+VF.Test = (function () {
   var Test = {
     // Test Options.
     RUN_CANVAS_TESTS: true,
@@ -74,17 +70,17 @@ VF.Test = (function() {
     Font: { size: 10 },
 
     // Returns a unique ID for a test.
-    genID: function(prefix) {
+    genID: function (prefix) {
       return prefix + VF.Test.genID.ID++;
     },
 
-    genTitle: function(type, assert, name) {
+    genTitle: function (type, assert, name) {
       return assert.test.module.name + ' (' + type + '): ' + name;
     },
 
     // Run `func` inside a QUnit test for each of the enabled
     // rendering backends.
-    runTests: function(name, func, params) {
+    runTests: function (name, func, params) {
       if (VF.Test.RUN_CANVAS_TESTS) {
         VF.Test.runCanvasTest(name, func, params);
       }
@@ -102,13 +98,13 @@ VF.Test = (function() {
     // Run `func` inside a QUnit test for each of the enabled
     // rendering backends. These are for interactivity tests, and
     // currently only work with the SVG backend.
-    runUITests: function(name, func, params) {
+    runUITests: function (name, func, params) {
       if (VF.Test.RUN_SVG_TESTS) {
         VF.Test.runSVGTest(name, func, params);
       }
     },
 
-    createTestCanvas: function(testId, testName) {
+    createTestCanvas: function (testId, testName) {
       var testContainer = $('<div></div>').addClass('testcanvas');
 
       testContainer.append(
@@ -128,7 +124,7 @@ VF.Test = (function() {
       $(VF.Test.testRootSelector).append(testContainer);
     },
 
-    createTestSVG: function(testId, testName) {
+    createTestSVG: function (testId, testName) {
       var testContainer = $('<div></div>').addClass('testcanvas');
 
       testContainer.append(
@@ -146,13 +142,13 @@ VF.Test = (function() {
       $(VF.Test.testRootSelector).append(testContainer);
     },
 
-    resizeCanvas: function(elementId, width, height) {
+    resizeCanvas: function (elementId, width, height) {
       $('#' + elementId).width(width);
       $('#' + elementId).attr('width', width);
       $('#' + elementId).attr('height', height);
     },
 
-    makeFactory: function(options, width, height) {
+    makeFactory: function (options, width, height) {
       return new VF.Factory({
         renderer: {
           elementId: options.elementId,
@@ -163,8 +159,8 @@ VF.Test = (function() {
       });
     },
 
-    runCanvasTest: function(name, func, params) {
-      QUnit.test(name, function(assert) {
+    runCanvasTest: function (name, func, params) {
+      QUnit.test(name, function (assert) {
         var elementId = VF.Test.genID('canvas_');
         var title = VF.Test.genTitle('Canvas', assert, name);
 
@@ -181,8 +177,8 @@ VF.Test = (function() {
       });
     },
 
-    runRaphaelTest: function(name, func, params) {
-      QUnit.test(name, function(assert) {
+    runRaphaelTest: function (name, func, params) {
+      QUnit.test(name, function (assert) {
         var elementId = VF.Test.genID('raphael_');
         var title = VF.Test.genTitle('Raphael', assert, name);
 
@@ -199,10 +195,10 @@ VF.Test = (function() {
       });
     },
 
-    runSVGTest: function(name, func, params) {
+    runSVGTest: function (name, func, params) {
       if (!VF.Test.RUN_SVG_TESTS) return;
 
-      QUnit.test(name, function(assert) {
+      QUnit.test(name, function (assert) {
         var elementId = VF.Test.genID('svg_');
         var title = VF.Test.genTitle('SVG', assert, name);
 
@@ -219,7 +215,7 @@ VF.Test = (function() {
       });
     },
 
-    runNodeTest: function(name, func, params) {
+    runNodeTest: function (name, func, params) {
       var fs = require('fs');
 
       // Allows `name` to be used inside file names.
@@ -227,7 +223,7 @@ VF.Test = (function() {
         return name.replace(/[^a-zA-Z0-9]/g, '_');
       }
 
-      QUnit.test(name, function(assert) {
+      QUnit.test(name, function (assert) {
         var elementId = VF.Test.genID('nodecanvas_');
         var canvas = document.createElement('canvas');
         canvas.setAttribute('id', elementId);
@@ -256,7 +252,7 @@ VF.Test = (function() {
     },
 
     plotNoteWidth: VF.Note.plotMetrics,
-    plotLegendForNoteWidth: function(ctx, x, y) {
+    plotLegendForNoteWidth: function (ctx, x, y) {
       ctx.save();
       ctx.setFont('Arial', 8, '');
 
@@ -285,7 +281,7 @@ VF.Test = (function() {
       ctx.restore();
     },
 
-    almostEqual: function(value, expectedValue, errorMargin) {
+    almostEqual: function (value, expectedValue, errorMargin) {
       return equal(Math.abs(value - expectedValue) < errorMargin, true);
     },
   };

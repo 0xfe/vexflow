@@ -144,11 +144,11 @@ export class Stave extends Element {
   }
 
   getStyle() {
-    return Object.assign({
+    return {
       fillStyle: this.options.fill_style,
       strokeStyle: this.options.fill_style, // yes, this is correct for legacy compatibility
-      lineWidth: Flow.STAVE_LINE_THICKNESS,
-    }, this.style || {});
+      lineWidth: Flow.STAVE_LINE_THICKNESS, ...this.style || {}
+    };
   }
 
   setMeasure(measure) { this.measure = measure; return this; }

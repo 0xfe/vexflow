@@ -3,8 +3,6 @@
 // ## Description
 // Support for different rendering contexts: Canvas, Raphael
 
-/* global document: false */
-
 import { CanvasContext } from './canvascontext';
 import { RaphaelContext } from './raphaelcontext';
 import { SVGContext } from './svgcontext';

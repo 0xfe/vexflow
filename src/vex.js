@@ -5,7 +5,9 @@
 // codebase.
 //
 
-const Vex = () => {};
+/* eslint max-classes-per-file: "off" */
+
+const Vex = () => { };
 
 // Default log function sends all arguments to console.
 Vex.L = (block, args) => {

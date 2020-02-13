@@ -95,7 +95,7 @@ export class TextBracket extends Element {
   // Set the font for the text
   setFont(font) {
     // We use Object.assign to support partial updates to the font object
-    this.font = Object.assign({}, this.font, font);
+    this.font = { ...this.font, ...font };
     return this;
   }
   // Set the rendering `context` for the octave bracket
@@ -109,10 +109,10 @@ export class TextBracket extends Element {
     let y = 0;
     switch (this.position) {
       case TextBracket.Positions.TOP:
-        y =  this.start.getStave().getYForTopText(this.line);
+        y = this.start.getStave().getYForTopText(this.line);
         break;
       case TextBracket.Positions.BOTTOM:
-        y =  this.start.getStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
+        y = this.start.getStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
         break;
       default:
         throw new Vex.RERR('InvalidPosition', `The position ${this.position} is invalid`);

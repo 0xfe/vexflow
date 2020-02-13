@@ -78,14 +78,14 @@ module.exports = (grunt) => {
     webpack: {
       build: webpackCommon,
       buildLegacy: webpackLegacy,
-      watch: Object.assign({}, webpackCommon, {
-        watch: true,
+      watch: {
+        ...webpackCommon, watch: true,
         keepalive: true,
         failOnError: false,
         watchOptions: {
           watchDelay: 0,
         },
-      }),
+      },
     },
     uglify: {
       options: {
@@ -99,7 +99,7 @@ module.exports = (grunt) => {
             cwd: BUILD_DIR,
             src: TARGET_RAW,
             dest: BUILD_DIR,
-            rename: function (dst) {
+            rename(dst) {
               return path.join(dst, TARGET_MIN);
             }
           }
@@ -112,7 +112,7 @@ module.exports = (grunt) => {
             cwd: BUILD_DIR,
             src: TARGET_LEGACY_RAW,
             dest: BUILD_DIR,
-            rename: function (dst) {
+            rename(dst) {
               return path.join(dst, TARGET_LEGACY_MIN);
             }
           }

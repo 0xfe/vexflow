@@ -3,6 +3,8 @@
 // This class implements a parser for a simple language to generate
 // VexFlow objects.
 
+/* eslint max-classes-per-file: "off" */
+
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
 import { Parser } from './parser';
@@ -119,31 +121,31 @@ class Grammar {
       run: (state) => this.builder.addNoteOption(state.matches[0], unquote(state.matches[2])),
     };
   }
-  VAL()  {
+  VAL() {
     return {
       expect: [this.SVAL, this.DVAL],
       or: true,
     };
   }
 
-  KEY()         { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
-  DVAL()        { return { token: '["][^"]*["]' }; }
-  SVAL()        { return { token: "['][^']*[']" }; }
-  NOTENAME()    { return { token: '[a-gA-G]' }; }
-  OCTAVE()      { return { token: '[0-9]+' }; }
+  KEY() { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
+  DVAL() { return { token: '["][^"]*["]' }; }
+  SVAL() { return { token: "['][^']*[']" }; }
+  NOTENAME() { return { token: '[a-gA-G]' }; }
+  OCTAVE() { return { token: '[0-9]+' }; }
   ACCIDENTALS() { return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' }; }
-  DURATIONS()   { return { token: '[0-9whq]+' }; }
-  TYPES()       { return { token: '[rRsSxX]' }; }
-  LPAREN()      { return { token: '[(]' }; }
-  RPAREN()      { return { token: '[)]' }; }
-  COMMA()       { return { token: '[,]' }; }
-  DOT()         { return { token: '[.]' }; }
-  SLASH()       { return { token: '[/]' }; }
-  MAYBESLASH()  { return { token: '[/]?' }; }
-  EQUALS()      { return { token: '[=]' }; }
-  LBRACKET()    { return { token: '\\[' }; }
-  RBRACKET()    { return { token: '\\]' }; }
-  EOL()         { return { token: '$' }; }
+  DURATIONS() { return { token: '[0-9whq]+' }; }
+  TYPES() { return { token: '[rRsSxX]' }; }
+  LPAREN() { return { token: '[(]' }; }
+  RPAREN() { return { token: '[)]' }; }
+  COMMA() { return { token: '[,]' }; }
+  DOT() { return { token: '[.]' }; }
+  SLASH() { return { token: '[/]' }; }
+  MAYBESLASH() { return { token: '[/]?' }; }
+  EQUALS() { return { token: '[=]' }; }
+  LBRACKET() { return { token: '\\[' }; }
+  RBRACKET() { return { token: '\\]' }; }
+  EOL() { return { token: '$' }; }
 }
 
 class Builder {
@@ -218,7 +220,7 @@ class Builder {
 
   addChord(notes) {
     L('startChord');
-    if (typeof(notes[0]) !== 'object') {
+    if (typeof (notes[0]) !== 'object') {
       this.addSingleNote(notes[0]);
     } else {
       notes.forEach(n => {
@@ -234,7 +236,7 @@ class Builder {
 
     if (!factory) return;
 
-    const options = Object.assign({}, this.options, this.piece.options);
+    const options = { ...this.options, ...this.piece.options };
     const { stem, clef } = options;
     const autoStem = stem.toLowerCase() === 'auto';
     const stemDirection = !autoStem && stem.toLowerCase() === 'up'
@@ -304,7 +306,7 @@ export class EasyScore {
   }
 
   setOptions(options) {
-    this.options = Object.assign({
+    this.options = {
       factory: null,
       builder: null,
       commitHooks: [
@@ -312,8 +314,8 @@ export class EasyScore {
         setClass,
         Articulation.easyScoreHook,
       ],
-      throwOnError: false,
-    }, options);
+      throwOnError: false, ...options
+    };
 
     this.factory = this.options.factory;
     this.builder = this.options.builder || new Builder(this.factory);
@@ -348,13 +350,13 @@ export class EasyScore {
   }
 
   notes(line, options = {}) {
-    options = Object.assign({ clef: this.defaults.clef, stem: this.defaults.stem }, options);
+    options = { clef: this.defaults.clef, stem: this.defaults.stem, ...options };
     this.parse(line, options);
     return this.builder.getElements().notes;
   }
 
   voice(notes, voiceOptions) {
-    voiceOptions = Object.assign({ time: this.defaults.time }, voiceOptions);
+    voiceOptions = { time: this.defaults.time, ...voiceOptions };
     return this.factory.Voice(voiceOptions).addTickables(notes);
   }
 
