@@ -48,7 +48,6 @@ then
   rm $DIFF/*
 fi
 touch $RESULTS
-touch $RESULTS.pass
 touch $RESULTS.fail
 touch $WARNINGS
 
@@ -60,11 +59,59 @@ else
   files=$1*.png
 fi
 
+
+## Sanity checks: some simple checks that the script can run correctly (doesn't validate pngs)
+
 if [ "`basename $PWD`" == "tools" ]
 then
   echo Please run this script from the VexFlow base directory.
   exit 1
 fi
+
+# Check if some png files are in the right folders and warn if not. doesn't make sure there are actual, usable png images though.
+folderWarningStringMsg="Exiting without running visual regression tests."
+# check if current directory exists / started from base OSMD folder
+if [ ! -e "$CURRENT" ]
+then
+  echo "Warning: directory $CURRENT missing.
+    Please run npm run generate:current (and if necessary npm run generate:blessed) first.
+    $folderWarningStringMsg"
+  exit 1
+fi
+# check if blessed directory exists / started from base OSMD folder
+if [ ! -e "$BLESSED" ]
+then
+  echo "Warning: directory $BLESSED missing.
+    Please run npm run generate:blessed first (or otherwise get the blessed images).
+    $folderWarningStringMsg"
+  exit 1
+fi
+# note: ls returns errors if the directory doesn't exist (that's why we do the checks above)
+totalCurrentImages=`ls -l $CURRENT/$files | wc -l | sed 's/[[:space:]]//g'`
+totalBlessedImages=`ls -l $BLESSED/$files | wc -l | sed 's/[[:space:]]//g'`
+# check if there are some current images
+if [ "$totalCurrentImages" -lt 1 ]
+then
+  echo "Warning: Found no (matching) pngs in $CURRENT.
+    Please run npm run generate (and if necessary npm run blessed) first.
+    $folderWarningStringMsg"
+  exit 1
+fi
+# check if there are some blessed images
+if [ "$totalBlessedImages" -lt 1 ]
+then
+  echo "Warning: Found no (matching) pngs in $BLESSED.
+    Please run npm run blessed first (or otherwise produce images for comparison).
+    $folderWarningStringMsg"
+  exit 1
+fi
+# check that #currentImages == #blessedImages (will continue anyways)
+if [ ! "$totalCurrentImages" -eq "$totalBlessedImages" ]
+then
+  echo "Warning: Number of (matching) current images ($totalCurrentImages) is not the same as blessed images ($totalBlessedImages). Continuing anyways."
+fi
+# ----------------- end of sanity checks -----------------
+
 
 # Number of simultaneous jobs
 nproc=$(sysctl -n hw.physicalcpu 2> /dev/null || nproc)
@@ -72,9 +119,7 @@ if [ -n "$NPROC" ]; then
   nproc=$NPROC
 fi
 
-total=`ls -l $BLESSED/$files | wc -l | sed 's/[[:space:]]//g'`
-
-echo "Running $total tests with threshold $THRESHOLD (nproc=$nproc)..."
+echo "Running $totalBlessedImages tests with threshold $THRESHOLD (nproc=$nproc)..."
 
 function ProgressBar {
     let _progress=(${1}*100/${2}*100)/100
@@ -101,6 +146,7 @@ function diff_image() {
 
   if [ ! -e "$blessed" ]
   then
+    echo "Warning: $name.png missing in $BLESSED." >$diff.warn
     return
   fi
 
@@ -147,7 +193,7 @@ count=0
 for image in $CURRENT/$files
 do
   count=$((count + 1))
-  ProgressBar ${count} ${total}
+  ProgressBar ${count} ${totalBlessedImages}
   wait_jobs $nproc
   diff_image $image &
 done
@@ -178,7 +224,7 @@ rm -f  $CURRENT/*.fail
 # Sort results by PHASH
 sort -r -n -k 2 $RESULTS.fail >$RESULTS
 sort -r -n -k 2 $CURRENT/*.pass 1>>$RESULTS 2>/dev/null
-rm -f $CURRENT/*.pass $RESULTS.fail $RESULTS.pass
+rm -f $CURRENT/*.pass $RESULTS.fail
 
 echo
 echo Results stored in $DIFF/results.txt
