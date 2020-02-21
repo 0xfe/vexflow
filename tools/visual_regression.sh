@@ -61,7 +61,6 @@ fi
 
 
 ## Sanity checks: some simple checks that the script can run correctly (doesn't validate pngs)
-
 if [ "`basename $PWD`" == "tools" ]
 then
   echo Please run this script from the VexFlow base directory.
@@ -69,40 +68,19 @@ then
 fi
 
 # Check if some png files are in the right folders and warn if not. doesn't make sure there are actual, usable png images though.
-folderWarningStringMsg="Exiting without running visual regression tests."
-# check if current directory exists / started from base OSMD folder
-if [ ! -e "$CURRENT" ]
+totalCurrentImages=`ls -1 $CURRENT/$files | wc -l | xargs` # xargs trims spaces
+if [ $? -ne 0 ] || [ "$totalCurrentImages" -lt 1 ]
 then
-  echo "Warning: directory $CURRENT missing.
-    Please run npm run generate:current (and if necessary npm run generate:blessed) first.
-    $folderWarningStringMsg"
+  echo Missing images in $CURRENT.
+  echo Please run "npm run generate:current"
   exit 1
 fi
-# check if blessed directory exists / started from base OSMD folder
-if [ ! -e "$BLESSED" ]
+
+totalBlessedImages=`ls -1 $BLESSED/$files | wc -l | xargs`
+if [ $? -ne 0 ] || [ "$totalBlessedImages" -lt 1 ]
 then
-  echo "Warning: directory $BLESSED missing.
-    Please run npm run generate:blessed first (or otherwise get the blessed images).
-    $folderWarningStringMsg"
-  exit 1
-fi
-# note: ls returns errors if the directory doesn't exist (that's why we do the checks above)
-totalCurrentImages=`ls -l $CURRENT/$files | wc -l | sed 's/[[:space:]]//g'`
-totalBlessedImages=`ls -l $BLESSED/$files | wc -l | sed 's/[[:space:]]//g'`
-# check if there are some current images
-if [ "$totalCurrentImages" -lt 1 ]
-then
-  echo "Warning: Found no (matching) pngs in $CURRENT.
-    Please run npm run generate (and if necessary npm run blessed) first.
-    $folderWarningStringMsg"
-  exit 1
-fi
-# check if there are some blessed images
-if [ "$totalBlessedImages" -lt 1 ]
-then
-  echo "Warning: Found no (matching) pngs in $BLESSED.
-    Please run npm run blessed first (or otherwise produce images for comparison).
-    $folderWarningStringMsg"
+  echo Missing images in $BLESSED.
+  echo Please run "npm run generate:blessed"
   exit 1
 fi
 # check that #currentImages == #blessedImages (will continue anyways)
