@@ -72,7 +72,7 @@ totalCurrentImages=`ls -1 $CURRENT/$files | wc -l | xargs` # xargs trims spaces
 if [ $? -ne 0 ] || [ "$totalCurrentImages" -lt 1 ]
 then
   echo Missing images in $CURRENT.
-  echo Please run "npm run generate:current"
+  echo Please run \"npm run generate:current\"
   exit 1
 fi
 
@@ -80,7 +80,7 @@ totalBlessedImages=`ls -1 $BLESSED/$files | wc -l | xargs`
 if [ $? -ne 0 ] || [ "$totalBlessedImages" -lt 1 ]
 then
   echo Missing images in $BLESSED.
-  echo Please run "npm run generate:blessed"
+  echo Please run \"npm run generate:blessed\"
   exit 1
 fi
 # check that #currentImages == #blessedImages (will continue anyways)
