@@ -45,7 +45,9 @@ export class Renderer {
 
   static buildContext(elementId, backend, width, height, background) {
     const renderer = new Renderer(elementId, backend);
-    if (width && height) { renderer.resize(width, height); }
+    if (width && height) {
+      renderer.resize(width, height);
+    }
 
     if (!background) background = '#FFF';
     const ctx = renderer.getContext();
@@ -153,6 +155,7 @@ export class Renderer {
           'BadElement', `Can't get canvas context from element: ${this.elementId}`
         );
       }
+      [width, height] = CanvasContext.SanitizeCanvasDims(width, height);
 
       const devicePixelRatio = window.devicePixelRatio || 1;
 

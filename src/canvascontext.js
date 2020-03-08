@@ -5,6 +5,8 @@
 //
 // Copyright Mohit Cheppudira 2010
 
+import { Vex } from './vex';
+
 /** @constructor */
 export class CanvasContext {
   static get WIDTH() {
@@ -12,6 +14,26 @@ export class CanvasContext {
   }
   static get HEIGHT() {
     return 400;
+  }
+  static get CANVAS_BROWSER_SIZE_LIMIT() {
+    return 32767; // Chrome/Firefox. Could be determined more precisely by npm module canvas-size
+  }
+
+  static SanitizeCanvasDims(width, height) {
+    if (Math.max(width, height) > this.CANVAS_BROWSER_SIZE_LIMIT) {
+      Vex.W(
+        'Canvas dimensions exceed browser limit. Cropping to ' +
+        this.CANVAS_BROWSER_SIZE_LIMIT
+      );
+      if (width > this.CANVAS_BROWSER_SIZE_LIMIT) {
+        width = this.CANVAS_BROWSER_SIZE_LIMIT;
+        // note: Math.min return 0 for undefined, NaN for null. Would change inputs.
+      }
+      if (height > this.CANVAS_BROWSER_SIZE_LIMIT) {
+        height = this.CANVAS_BROWSER_SIZE_LIMIT;
+      }
+    }
+    return [width, height];
   }
 
   constructor(context) {
@@ -98,7 +120,8 @@ export class CanvasContext {
   }
 
   resize(width, height) {
-    return this.vexFlowCanvasContext.resize(parseInt(width, 10), parseInt(height, 10));
+    [width, height] = this.SanitizeCanvasDims(parseInt(width, 10), parseInt(height, 10));
+    return this.vexFlowCanvasContext.resize(width, height);
   }
 
   rect(x, y, width, height) {
