@@ -19,10 +19,10 @@ export class CanvasContext {
     return 32767; // Chrome/Firefox. Could be determined more precisely by npm module canvas-size
   }
 
-  static CheckCanvasDimensionsForBrowserLimit(width, height) {
+  static SanitizeCanvasDims(width, height) {
     if (Math.max(width, height) > this.CANVAS_BROWSER_SIZE_LIMIT) {
       Vex.W(
-        'canvas dimensions exceed browser limit. reducing/cropping to ' +
+        'Canvas dimensions exceed browser limit. Cropping to ' +
         this.CANVAS_BROWSER_SIZE_LIMIT
       );
       if (width > this.CANVAS_BROWSER_SIZE_LIMIT) {
@@ -120,9 +120,7 @@ export class CanvasContext {
   }
 
   resize(width, height) {
-    width = parseInt(width, 10);
-    height = parseInt(height, 10);
-    [width, height] = this.CheckCanvasDimensionsForBrowserLimit(width, height);
+    [width, height] = this.SanitizeCanvasDims(parseInt(width, 10), parseInt(height, 10));
     return this.vexFlowCanvasContext.resize(width, height);
   }
 

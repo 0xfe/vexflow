@@ -46,9 +46,6 @@ export class Renderer {
   static buildContext(elementId, backend, width, height, background) {
     const renderer = new Renderer(elementId, backend);
     if (width && height) {
-      if (backend === Renderer.Backends.CANVAS) {
-        [width, height] = CanvasContext.CheckCanvasDimensionsForBrowserLimit(width, height);
-      }
       renderer.resize(width, height);
     }
 
@@ -158,7 +155,7 @@ export class Renderer {
           'BadElement', `Can't get canvas context from element: ${this.elementId}`
         );
       }
-      [width, height] = CanvasContext.CheckCanvasDimensionsForBrowserLimit(width, height);
+      [width, height] = CanvasContext.SanitizeCanvasDims(width, height);
 
       const devicePixelRatio = window.devicePixelRatio || 1;
 
