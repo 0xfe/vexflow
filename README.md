@@ -109,5 +109,4 @@ THE SOFTWARE.
 ## Links
 
 * [VexFlow Home](http://vexflow.com)
-* [My VexFlow](http://my.vexflow.com)
-* [Me](http://0xfe.muthanna.com)
+* [Me](http://muthanna.com)
