@@ -27,37 +27,13 @@ The releases are served via [unpkg.com](http://unpkg.com).
 * Debug version: https://unpkg.com/vexflow/releases/vexflow-debug.js
 * Minified version: https://unpkg.com/vexflow/releases/vexflow-min.js
 
-### Your First Stave
-
-The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/gs4v6k6d/2/).
-
-```javascript
-VF = Vex.Flow;
-
-// Create an SVG renderer and attach it to the DIV element named "boo".
-var div = document.getElementById("boo")
-var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
-
-// Configure the rendering context.
-renderer.resize(500, 500);
-var context = renderer.getContext();
-context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
-
-// Create a stave of width 400 at position 10, 40 on the canvas.
-var stave = new VF.Stave(10, 40, 400);
-
-// Add a clef and time signature.
-stave.addClef("treble").addTimeSignature("4/4");
-
-// Connect it to the rendering context and draw!
-stave.setContext(context).draw();
-```
-
 ### Using EasyScore
 
 The EasyScore API is a quick way to create simple music notation in VexFlow. See running example in [this jsfiddle](https://jsfiddle.net/3d0nbL0n/128/).
 
 ```javascript
+import Vex from 'vexflow';
+
 var vf = new Vex.Flow.Factory({
   renderer: {elementId: 'boo', width: 500, height: 200}
 });
@@ -76,6 +52,34 @@ vf.draw();
 ```
 
 Learn more about EasyScore at: [Using EasyScore](https://github.com/0xfe/vexflow/wiki/Using-EasyScore).
+
+### Using the Native API
+
+The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/gs4v6k6d/2/).
+
+```javascript
+import Vex from 'vexflow';
+
+const VF = Vex.Flow;
+
+// Create an SVG renderer and attach it to the DIV element named "vf".
+const div = document.getElementById("vf")
+const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+
+// Configure the rendering context.
+renderer.resize(500, 500);
+const context = renderer.getContext();
+context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+
+// Create a stave of width 400 at position 10, 40 on the canvas.
+const stave = new VF.Stave(10, 40, 400);
+
+// Add a clef and time signature.
+stave.addClef("treble").addTimeSignature("4/4");
+
+// Connect it to the rendering context and draw!
+stave.setContext(context).draw();
+```
 
 ## Resources
 
