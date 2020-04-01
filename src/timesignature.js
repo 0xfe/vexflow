@@ -135,7 +135,7 @@ export class TimeSignature extends StaveModifier {
           glyph.metrics.outline,
           glyph.scale,
           start_x + glyph.x_shift,
-          this.stave.getYForLine(that.topLine) + 1
+          this.stave.getYForLine(that.topLine)
         );
         start_x += glyph.getMetrics().width;
       }
@@ -149,7 +149,7 @@ export class TimeSignature extends StaveModifier {
           glyph.metrics.outline,
           glyph.scale,
           start_x + glyph.x_shift,
-          this.stave.getYForLine(that.bottomLine) + 1
+          this.stave.getYForLine(that.bottomLine)
         );
         start_x += glyph.getMetrics().width;
       }

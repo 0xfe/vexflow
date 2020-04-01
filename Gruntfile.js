@@ -81,12 +81,10 @@ module.exports = (grunt) => {
       build: webpackCommon,
       buildLegacy: webpackLegacy,
       watch: {
-        ...webpackCommon, watch: true,
+        ...webpackCommon,
+        watch: true,
         keepalive: true,
         failOnError: false,
-        watchOptions: {
-          watchDelay: 0,
-        },
       },
     },
     uglify: {
