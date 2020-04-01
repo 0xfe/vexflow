@@ -91,8 +91,8 @@ Vex.Flow.Test.Accidental = (function() {
     },
 
     cautionary: function(options) {
-      var vf = VF.Test.makeFactory(options, 700, 240);
-      var stave = vf.Stave({ x: 10, y: 10, width: 550 });
+      var vf = VF.Test.makeFactory(options, 800, 240);
+      var stave = vf.Stave({ x: 0, y: 10, width: 780 });
       var score = vf.EasyScore();
 
       var accids = Object
