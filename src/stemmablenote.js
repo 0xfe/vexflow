@@ -44,6 +44,15 @@ export class StemmableNote extends Note {
     }
   }
 
+  // Get the glyph associated with the top key of this note
+  getTopGlyph() {
+    if (this.getStemDirection() === Stem.DOWN) {
+      return this.customGlyphs[this.customGlyphs.length - 1];
+    } else {
+      return this.customGlyphs[0];
+    }
+  }
+
   // Get the full length of stem
   getStemLength() {
     return Stem.HEIGHT + this.getStemExtension();
@@ -99,6 +108,11 @@ export class StemmableNote extends Note {
     if (this.stem) {
       this.stem.setDirection(direction);
       this.stem.setExtension(this.getStemExtension());
+      const glyph = this.getTopGlyph() || this.getGlyph();
+      this.stem.setOptions({
+        stem_up_y_offset: glyph.stem_up_y_offset,
+        stem_down_y_offset: glyph.stem_down_y_offset
+      });
     }
 
     this.reset();
@@ -110,6 +124,7 @@ export class StemmableNote extends Note {
     if (this.preFormatted) {
       this.preFormat();
     }
+
     return this;
   }
 

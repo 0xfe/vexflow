@@ -270,7 +270,7 @@ export class StaveNote extends StemmableNote {
       //
       // We also extend the y for each note by a half notehead because the
       // notehead's origin is centered
-      const topNotBottomY = topNote
+      const topNoteBottomY = topNote
         .getStave()
         .getYForLine(5 - topKeys[0].line + HALF_NOTEHEAD_HEIGHT);
 
@@ -278,7 +278,7 @@ export class StaveNote extends StemmableNote {
         .getStave()
         .getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
 
-      const areNotesColliding = bottomNoteTopY - topNotBottomY < 0;
+      const areNotesColliding = bottomNoteTopY - topNoteBottomY < 0;
 
       if (areNotesColliding) {
         xShift = topNote.getVoiceShiftWidth() + 2;
@@ -434,6 +434,8 @@ export class StaveNote extends StemmableNote {
         custom_glyph_code: noteProps.code,
         glyph_font_scale: this.render_options.glyph_font_scale,
         x_shift: noteProps.shift_right,
+        stem_up_x_offset: noteProps.stem_up_x_offset,
+        stem_down_x_offset: noteProps.stem_down_x_offset,
         line: noteProps.line,
       });
 
@@ -1094,7 +1096,6 @@ export class StaveNote extends StemmableNote {
     });
   }
 
-  // Render the stem onto the canvas
   drawStem(stemStruct) {
     // GCR TODO: I can't find any context in which this is called with the stemStruct
     // argument in the codebase or tests. Nor can I find a case where super.drawStem

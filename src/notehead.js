@@ -91,10 +91,12 @@ export class NoteHead extends Note {
     }
 
     this.glyph_code = this.glyph.code_head;
-    this.x_shift = head_options.x_shift;
+    this.x_shift = head_options.x_shift || 0;
     if (head_options.custom_glyph_code) {
       this.custom_glyph = true;
       this.glyph_code = head_options.custom_glyph_code;
+      this.stem_up_x_offset = head_options.stem_up_x_offset || 0;
+      this.stem_down_x_offset = head_options.stem_down_x_offset || 0;
     }
 
     this.style = head_options.style;
@@ -189,7 +191,12 @@ export class NoteHead extends Note {
     this.setRendered();
 
     const ctx = this.context;
-    const head_x = this.getAbsoluteX();
+    let head_x = this.getAbsoluteX();
+    if (this.custom_glyph) {
+      // head_x += this.x_shift;
+      head_x += this.stem_direction === Stem.UP ? this.stem_up_x_offset : this.stem_down_x_offset;
+    }
+
     const y = this.y;
 
     L("Drawing note head '", this.note_type, this.duration, "' at", head_x, y);

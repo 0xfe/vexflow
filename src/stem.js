@@ -54,13 +54,16 @@ export class Stem extends Element {
     this.isStemlet = options.isStemlet || false;
     this.stemletHeight = options.stemletHeight || 0;
 
-    // Changing where the stem meets the head
-    this.stem_up_y_offset = options.stem_up_y_offset || 0;
-    this.stem_down_y_offset = options.stem_down_y_offset || 0;
-
     // Use to adjust the rendered height without affecting
     // the results of `.getExtents()`
     this.renderHeightAdjustment = 0;
+    this.setOptions(options);
+  }
+
+  setOptions(options) {
+    // Changing where the stem meets the head
+    this.stem_up_y_offset = options.stem_up_y_offset || 0;
+    this.stem_down_y_offset = options.stem_down_y_offset || 0;
   }
 
   // Set the x bounds for the default notehead
@@ -102,6 +105,7 @@ export class Stem extends Element {
     const isStemUp = this.stem_direction === Stem.UP;
     const ys = [this.y_top, this.y_bottom];
     const stemHeight = Stem.HEIGHT + this.stem_extension;
+
     const innerMostNoteheadY = (isStemUp ? Math.min : Math.max)(...ys);
     const outerMostNoteheadY = (isStemUp ? Math.max : Math.min)(...ys);
     const stemTipY = innerMostNoteheadY + (stemHeight * -this.stem_direction);

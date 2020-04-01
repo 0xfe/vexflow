@@ -100,14 +100,14 @@ Flow.keyProperties = (key, clef, params) => {
     : null;
 
   /* Check if the user specified a glyph. */
-  let code = value.code;
-  let shift_right = value.shift_right;
+  const code = value.code;
+  const shift_right = value.shift_right;
+  let extraProps = {};
   if (pieces.length > 2 && pieces[2]) {
     const glyph_name = pieces[2].toUpperCase();
     const note_glyph = Flow.keyProperties.note_glyph[glyph_name];
     if (note_glyph) {
-      code = note_glyph.code;
-      shift_right = note_glyph.shift_right;
+      extraProps = note_glyph;
     }
   }
 
@@ -121,6 +121,7 @@ Flow.keyProperties = (key, clef, params) => {
     stroke,
     shift_right,
     displaced: false,
+    ...extraProps,
   };
 };
 
@@ -177,9 +178,17 @@ Flow.keyProperties.note_values = {
   },
 };
 
+// Custom note heads
 Flow.keyProperties.note_glyph = {
   /* Diamond */
-  'D0': { code: 'v27', shift_right: -0.5 },
+  'D0': {
+    code: 'v27',
+    shift_right: 0, // deprecated for stem_{up,down}_x_offset
+    stem_up_x_offset: 0,
+    stem_down_x_offset: 0,
+    stem_up_y_offset: -1,
+    stem_down_y_offset: 0
+  },
   'D1': { code: 'v2d', shift_right: -0.5 },
   'D2': { code: 'v22', shift_right: -0.5 },
   'D3': { code: 'v70', shift_right: -0.5 },
@@ -191,14 +200,28 @@ Flow.keyProperties.note_glyph = {
   'T3': { code: 'v7d', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
 
   /* Cross */
-  'X0': { code: 'v92', shift_right: -2, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X0': {
+    code: 'v92',
+    stem_up_x_offset: -2,
+    stem_down_x_offset: 0,
+    stem_up_y_offset: 4,
+    stem_down_y_offset: 4
+  },
   'X1': { code: 'v95', shift_right: -0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
   'X2': { code: 'v3e', shift_right: 0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
-  'X3': { code: 'v3b', shift_right: -2, stem_up_y_offset: 2, stem_down_y_offset: 2 },
+  'X3': {
+    code: 'v3b',
+    shift_right: 0,
+    stem_up_x_offset: -1.2,
+    stem_down_x_offset: 0,
+    stem_up_y_offset: -1,
+    stem_down_y_offset: 2
+  },
 
   /* Square */
   'S1': { code: 'vd3', shift_right: 0 },
   'S2': { code: 'vd2', shift_right: 0 },
+
   /* Rectangle */
   'R1': { code: 'vd5', shift_right: 0 },
   'R2': { code: 'vd4', shift_right: 0 },
@@ -474,25 +497,31 @@ Flow.parseNoteData = noteData => {
   }
 
   let type = noteData.type;
+  const customTypes = [];
 
   if (type) {
     if (!(type === 'n' || type === 'r' || type === 'h' || type === 'm' || type === 's')) {
       return null;
     }
   } else {
-    type = durationStringData.type;
+    type = durationStringData.type || 'n';
 
     // If we have keys, try and check if we've got a custom glyph
     if (noteData.keys !== undefined) {
-      const result = noteData.keys[0].split('/');
+      // FIXME: We're taking the custom note head data of the bottom most note
+      // in both the stem-up and stem-down cases. This causes formatting errors
+      // for stem-up custom note heads, where the shift parameters are not
+      // respected.
+      noteData.keys.forEach((k, i) => {
+        const result = k.split('/');
+        // We have a custom glyph specified after the note eg. /X2
+        if (result && result.length === 3) {
+          type = result[2]; // Set the type to the custom note head
+          customTypes[i] = type;
+        }
+      });
 
-      // We have a custom glyph specified after the note eg. /X2
-      if (result && result.length === 3) {
-        type = result[2]; // Set the type to the custom note head
-      }
-    }
-    if (!type) {
-      type = 'n';
+      type = customTypes[0] || type;
     }
   }
 
@@ -514,6 +543,7 @@ Flow.parseNoteData = noteData => {
   return {
     duration: durationStringData.duration,
     type,
+    customTypes,
     dots,
     ticks,
   };
@@ -606,6 +636,8 @@ Flow.durationToGlyph = (duration, type) => {
       code_head: customGlyphTypeProperties.code,
       stem_up_y_offset: customGlyphTypeProperties.stem_up_y_offset,
       stem_down_y_offset: customGlyphTypeProperties.stem_down_y_offset,
+      stem_up_x_offset: customGlyphTypeProperties.stem_up_x_offset,
+      stem_down_x_offset: customGlyphTypeProperties.stem_down_x_offset,
     };
   }
 
