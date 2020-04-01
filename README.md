@@ -29,17 +29,17 @@ The releases are served via [unpkg.com](http://unpkg.com).
 
 ### Using EasyScore
 
-The EasyScore API is a quick way to create simple music notation in VexFlow. See running example in [this jsfiddle](https://jsfiddle.net/3d0nbL0n/128/).
+The EasyScore API is a quick way to create simple music notation in VexFlow. See running example in [this jsfiddle](https://jsfiddle.net/2pbh9xq0/).
 
 ```javascript
 import Vex from 'vexflow';
 
-var vf = new Vex.Flow.Factory({
+const vf = new Vex.Flow.Factory({
   renderer: {elementId: 'boo', width: 500, height: 200}
 });
 
-var score = vf.EasyScore();
-var system = vf.System();
+const score = vf.EasyScore();
+const system = vf.System();
 
 system.addStave({
   voices: [
@@ -55,7 +55,7 @@ Learn more about EasyScore at: [Using EasyScore](https://github.com/0xfe/vexflow
 
 ### Using the Native API
 
-The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/gs4v6k6d/2/).
+The example code below renders a VexFlow stave using SVG. See running example in this [jsfiddle](https://jsfiddle.net/j6dpazx2/).
 
 ```javascript
 import Vex from 'vexflow';
