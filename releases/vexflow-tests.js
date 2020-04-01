@@ -1,5 +1,5 @@
 /**!
- * VexFlow 1.2.90 built on 2020-01-25.
+ * VexFlow 1.2.91 built on 2020-04-01.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -8,13 +8,9 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-/*
-eslint-disable
-no-require,
-global-require,
-import/no-unresolved,
-import/no-extraneous-dependencies,
- */
+/* eslint-disable global-require, import/no-unresolved, import/no-extraneous-dependencies */
+
+/* eslint max-classes-per-file: "off" */
 
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
@@ -23,24 +19,24 @@ if (!window.QUnit) {
   QUnit = window.QUnit;
 
   QUnit.assertions = {
-    ok: function() { return true; },
-    equal: function() { return true; },
-    deepEqual: function() { return true; },
-    expect: function() { return true; },
-    throws: function() { return true; },
-    notOk: function() { return true; },
-    notEqual: function() { return true; },
-    notDeepEqual: function() { return true; },
-    strictEqual: function() { return true; },
-    notStrictEqual: function() { return true; },
+    ok: () => true,
+    equal: () => true,
+    deepEqual: () => true,
+    expect: () => true,
+    throws: () => true,
+    notOk: () => true,
+    notEqual: () => true,
+    notDeepEqual: () => true,
+    strictEqual: () => true,
+    notStrictEqual: () => true,
   };
 
-  QUnit.module = function(name) {
+  QUnit.module = (name) => {
     QUnit.current_module = name;
   };
 
   /* eslint-disable */
-  QUnit.test = function(name, func) {
+  QUnit.test = (name, func) => {
     QUnit.current_test = name;
     process.stdout.write(" \u001B[0G" + QUnit.current_module + " :: " + name + "\u001B[0K");
     func(QUnit.assertions);
@@ -64,7 +60,7 @@ if (typeof require === 'function') {
 }
 
 var VF = Vex.Flow;
-VF.Test = (function() {
+VF.Test = (function () {
   var Test = {
     // Test Options.
     RUN_CANVAS_TESTS: true,
@@ -79,17 +75,17 @@ VF.Test = (function() {
     Font: { size: 10 },
 
     // Returns a unique ID for a test.
-    genID: function(prefix) {
+    genID: function (prefix) {
       return prefix + VF.Test.genID.ID++;
     },
 
-    genTitle: function(type, assert, name) {
+    genTitle: function (type, assert, name) {
       return assert.test.module.name + ' (' + type + '): ' + name;
     },
 
     // Run `func` inside a QUnit test for each of the enabled
     // rendering backends.
-    runTests: function(name, func, params) {
+    runTests: function (name, func, params) {
       if (VF.Test.RUN_CANVAS_TESTS) {
         VF.Test.runCanvasTest(name, func, params);
       }
@@ -107,13 +103,13 @@ VF.Test = (function() {
     // Run `func` inside a QUnit test for each of the enabled
     // rendering backends. These are for interactivity tests, and
     // currently only work with the SVG backend.
-    runUITests: function(name, func, params) {
+    runUITests: function (name, func, params) {
       if (VF.Test.RUN_SVG_TESTS) {
         VF.Test.runSVGTest(name, func, params);
       }
     },
 
-    createTestCanvas: function(testId, testName) {
+    createTestCanvas: function (testId, testName) {
       var testContainer = $('<div></div>').addClass('testcanvas');
 
       testContainer.append(
@@ -133,7 +129,7 @@ VF.Test = (function() {
       $(VF.Test.testRootSelector).append(testContainer);
     },
 
-    createTestSVG: function(testId, testName) {
+    createTestSVG: function (testId, testName) {
       var testContainer = $('<div></div>').addClass('testcanvas');
 
       testContainer.append(
@@ -151,13 +147,13 @@ VF.Test = (function() {
       $(VF.Test.testRootSelector).append(testContainer);
     },
 
-    resizeCanvas: function(elementId, width, height) {
+    resizeCanvas: function (elementId, width, height) {
       $('#' + elementId).width(width);
       $('#' + elementId).attr('width', width);
       $('#' + elementId).attr('height', height);
     },
 
-    makeFactory: function(options, width, height) {
+    makeFactory: function (options, width, height) {
       return new VF.Factory({
         renderer: {
           elementId: options.elementId,
@@ -168,8 +164,8 @@ VF.Test = (function() {
       });
     },
 
-    runCanvasTest: function(name, func, params) {
-      QUnit.test(name, function(assert) {
+    runCanvasTest: function (name, func, params) {
+      QUnit.test(name, function (assert) {
         var elementId = VF.Test.genID('canvas_');
         var title = VF.Test.genTitle('Canvas', assert, name);
 
@@ -186,8 +182,8 @@ VF.Test = (function() {
       });
     },
 
-    runRaphaelTest: function(name, func, params) {
-      QUnit.test(name, function(assert) {
+    runRaphaelTest: function (name, func, params) {
+      QUnit.test(name, function (assert) {
         var elementId = VF.Test.genID('raphael_');
         var title = VF.Test.genTitle('Raphael', assert, name);
 
@@ -204,10 +200,10 @@ VF.Test = (function() {
       });
     },
 
-    runSVGTest: function(name, func, params) {
+    runSVGTest: function (name, func, params) {
       if (!VF.Test.RUN_SVG_TESTS) return;
 
-      QUnit.test(name, function(assert) {
+      QUnit.test(name, function (assert) {
         var elementId = VF.Test.genID('svg_');
         var title = VF.Test.genTitle('SVG', assert, name);
 
@@ -224,7 +220,7 @@ VF.Test = (function() {
       });
     },
 
-    runNodeTest: function(name, func, params) {
+    runNodeTest: function (name, func, params) {
       var fs = require('fs');
 
       // Allows `name` to be used inside file names.
@@ -232,7 +228,7 @@ VF.Test = (function() {
         return name.replace(/[^a-zA-Z0-9]/g, '_');
       }
 
-      QUnit.test(name, function(assert) {
+      QUnit.test(name, function (assert) {
         var elementId = VF.Test.genID('nodecanvas_');
         var canvas = document.createElement('canvas');
         canvas.setAttribute('id', elementId);
@@ -261,7 +257,7 @@ VF.Test = (function() {
     },
 
     plotNoteWidth: VF.Note.plotMetrics,
-    plotLegendForNoteWidth: function(ctx, x, y) {
+    plotLegendForNoteWidth: function (ctx, x, y) {
       ctx.save();
       ctx.setFont('Arial', 8, '');
 
@@ -290,7 +286,7 @@ VF.Test = (function() {
       ctx.restore();
     },
 
-    almostEqual: function(value, expectedValue, errorMargin) {
+    almostEqual: function (value, expectedValue, errorMargin) {
       return equal(Math.abs(value - expectedValue) < errorMargin, true);
     },
   };
@@ -429,8 +425,8 @@ Vex.Flow.Test.Accidental = (function() {
     },
 
     cautionary: function(options) {
-      var vf = VF.Test.makeFactory(options, 700, 240);
-      var stave = vf.Stave({ x: 10, y: 10, width: 550 });
+      var vf = VF.Test.makeFactory(options, 800, 240);
+      var stave = vf.Stave({ x: 0, y: 10, width: 780 });
       var score = vf.EasyScore();
 
       var accids = Object
@@ -7223,6 +7219,7 @@ VF.Test.NoteHead = (function() {
       QUnit.module('NoteHead');
       VF.Test.runTests('Basic', VF.Test.NoteHead.basic);
       VF.Test.runTests('Various Heads', VF.Test.NoteHead.variousHeads);
+      VF.Test.runTests('Drum Chord Heads', VF.Test.NoteHead.drumChordHeads);
       VF.Test.runTests('Bounding Boxes', VF.Test.NoteHead.basicBoundingBoxes);
     },
 
@@ -7309,6 +7306,47 @@ VF.Test.NoteHead = (function() {
 
         { keys: ['g/5/r1'], duration: '4' },
         { keys: ['g/5/r2'], duration: '4' },
+      ];
+
+      var ctx = new contextBuilder(options.elementId, notes.length * 25 + 100, 240);
+
+      // Draw two staves, one with up-stems and one with down-stems.
+      for (var h = 0; h < 2; ++h) {
+        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75)
+          .addClef('percussion')
+          .setContext(ctx)
+          .draw();
+
+        for (var i = 0; i < notes.length; ++i) {
+          var note = notes[i];
+          note.stem_direction = (h === 0 ? -1 : 1);
+          var staveNote = NoteHead.showNote(note, stave, ctx, (i + 1) * 25);
+
+          ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+          ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+        }
+      }
+    },
+
+    drumChordHeads: function(options, contextBuilder) {
+      var notes = [
+        { keys: ['a/4/d0', 'g/5/x3'], duration: '4' },
+        { keys: ['a/4/x3', 'g/5/d0'], duration: '4' },
+        { keys: ['a/4/d1', 'g/5/x2'], duration: '4' },
+        { keys: ['a/4/x2', 'g/5/d1'], duration: '4' },
+        { keys: ['a/4/d2', 'g/5/x1'], duration: '4' },
+        { keys: ['a/4/x1', 'g/5/d2'], duration: '4' },
+        { keys: ['a/4/d3', 'g/5/x0'], duration: '4' },
+        { keys: ['a/4/x0', 'g/5/d3'], duration: '4' },
+
+        { keys: ['a/4/t0', 'g/5/s1'], duration: '4' },
+        { keys: ['a/4/s1', 'g/5/t0'], duration: '4' },
+        { keys: ['a/4/t1', 'g/5/s2'], duration: '4' },
+        { keys: ['a/4/s2', 'g/5/t1'], duration: '4' },
+        { keys: ['a/4/t2', 'g/5/r1'], duration: '4' },
+        { keys: ['a/4/r1', 'g/5/t2'], duration: '4' },
+        { keys: ['a/4/t3', 'g/5/r2'], duration: '4' },
+        { keys: ['a/4/r2', 'g/5/t3'], duration: '4' },
       ];
 
       var ctx = new contextBuilder(options.elementId, notes.length * 25 + 100, 240);
