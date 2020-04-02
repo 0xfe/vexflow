@@ -105,10 +105,7 @@ Flow.keyProperties = (key, clef, params) => {
   let extraProps = {};
   if (pieces.length > 2 && pieces[2]) {
     const glyph_name = pieces[2].toUpperCase();
-    const note_glyph = Flow.keyProperties.note_glyph[glyph_name];
-    if (note_glyph) {
-      extraProps = note_glyph;
-    }
+    extraProps = Flow.keyProperties.customNoteHeads[glyph_name] || {};
   }
 
   return {
@@ -179,7 +176,7 @@ Flow.keyProperties.note_values = {
 };
 
 // Custom note heads
-Flow.keyProperties.note_glyph = {
+Flow.keyProperties.customNoteHeads = {
   /* Diamond */
   'D0': {
     code: 'v27',
@@ -258,7 +255,6 @@ Flow.integerToNote.table = {
   10: 'A#',
   11: 'B',
 };
-
 
 Flow.tabToGlyph = (fret, scale = 1.0) => {
   let glyph = null;
@@ -482,8 +478,8 @@ Flow.parseNoteDurationString = durationString => {
   };
 };
 
-Flow.parseNoteData = noteData => {
-  const duration = noteData.duration;
+Flow.parseNoteStruct = noteStruct => {
+  const duration = noteStruct.duration;
 
   // Preserve backwards-compatibility
   const durationStringData = Flow.parseNoteDurationString(duration);
@@ -496,7 +492,7 @@ Flow.parseNoteData = noteData => {
     return null;
   }
 
-  let type = noteData.type;
+  let type = noteStruct.type;
   const customTypes = [];
 
   if (type) {
@@ -507,12 +503,12 @@ Flow.parseNoteData = noteData => {
     type = durationStringData.type || 'n';
 
     // If we have keys, try and check if we've got a custom glyph
-    if (noteData.keys !== undefined) {
+    if (noteStruct.keys !== undefined) {
       // FIXME: We're taking the custom note head data of the bottom most note
       // in both the stem-up and stem-down cases. This causes formatting errors
       // for stem-up custom note heads, where the shift parameters are not
       // respected.
-      noteData.keys.forEach((k, i) => {
+      noteStruct.keys.forEach((k, i) => {
         const result = k.split('/');
         // We have a custom glyph specified after the note eg. /X2
         if (result && result.length === 3) {
@@ -525,7 +521,7 @@ Flow.parseNoteData = noteData => {
     }
   }
 
-  const dots = noteData.dots ? noteData.dots : durationStringData.dots;
+  const dots = noteStruct.dots ? noteStruct.dots : durationStringData.dots;
 
   if (typeof (dots) !== 'number') {
     return null;
@@ -609,7 +605,7 @@ Flow.durationAliases = {
   'b': '256',
 };
 
-// Return a glyph given duration and type. The type can be a custom glyph code from note_glyph.
+// Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
 Flow.getGlyphProps = (duration, type) => {
   duration = Flow.sanitizeDuration(duration);
 
@@ -626,7 +622,7 @@ Flow.getGlyphProps = (duration, type) => {
 
   if (glyphTypeProperties === undefined) {
     // Try and get it from the custom list of note heads
-    const customGlyphTypeProperties = Flow.keyProperties.note_glyph[type.toUpperCase()];
+    const customGlyphTypeProperties = Flow.keyProperties.customNoteHeads[type.toUpperCase()];
 
     // If not, then return with nothing
     if (customGlyphTypeProperties === undefined) {

@@ -71,7 +71,7 @@ export class Note extends Tickable {
 
   // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
   // positioning and layout.
-  // To create a new note you need to provide a `note_struct`, which consists
+  // To create a new note you need to provide a `noteStruct`, which consists
   // of the following fields:
   //
   // `type`: The note type (e.g., `r` for rest, `s` for slash notes, etc.)
@@ -79,36 +79,36 @@ export class Note extends Tickable {
   // `duration`: The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.)
   //
   // The range of values for these parameters are available in `src/tables.js`.
-  constructor(note_struct) {
+  constructor(noteStruct) {
     super();
     this.setAttribute('type', 'Note');
 
-    if (!note_struct) {
+    if (!noteStruct) {
       throw new Vex.RuntimeError(
         'BadArguments', 'Note must have valid initialization data to identify duration and type.'
       );
     }
 
-    // Parse `note_struct` and get note properties.
-    const initData = Flow.parseNoteData(note_struct);
-    if (!initData) {
+    // Parse `noteStruct` and get note properties.
+    const initStruct = Flow.parseNoteStruct(noteStruct);
+    if (!initStruct) {
       throw new Vex.RuntimeError(
-        'BadArguments', `Invalid note initialization object: ${JSON.stringify(note_struct)}`
+        'BadArguments', `Invalid note initialization object: ${JSON.stringify(noteStruct)}`
       );
     }
 
     // Set note properties from parameters.
-    this.duration = initData.duration;
-    this.dots = initData.dots;
-    this.noteType = initData.type;
-    this.customTypes = initData.customTypes;
+    this.duration = initStruct.duration;
+    this.dots = initStruct.dots;
+    this.noteType = initStruct.type;
+    this.customTypes = initStruct.customTypes;
 
-    if (note_struct.duration_override) {
+    if (noteStruct.duration_override) {
       // Custom duration
-      this.setDuration(note_struct.duration_override);
+      this.setDuration(noteStruct.duration_override);
     } else {
       // Default duration
-      this.setIntrinsicTicks(initData.ticks);
+      this.setIntrinsicTicks(initStruct.ticks);
     }
 
     this.modifiers = [];
@@ -141,8 +141,8 @@ export class Note extends Tickable {
     this.ys = [];               // list of y coordinates for each note
     // we need to hold on to these for ties and beams.
 
-    if (note_struct.align_center) {
-      this.setCenterAlignment(note_struct.align_center);
+    if (noteStruct.align_center) {
+      this.setCenterAlignment(noteStruct.align_center);
     }
 
     // The render surface.
