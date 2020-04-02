@@ -372,13 +372,7 @@ export class StaveNote extends StemmableNote {
 
   // Builds a `Stem` for the note
   buildStem() {
-    const glyph = this.getGlyph();
-
-    this.setStem(new Stem({
-      stem_up_y_offset: glyph.stem_up_y_offset,
-      stem_down_y_offset: glyph.stem_down_y_offset,
-      hide: !!this.isRest(),
-    }));
+    this.setStem(new Stem({ hide: !!this.isRest(), }));
   }
 
   // Builds a `NoteHead` for each key in the note

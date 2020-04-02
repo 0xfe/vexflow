@@ -500,7 +500,7 @@ Flow.parseNoteData = noteData => {
   const customTypes = [];
 
   if (type) {
-    if (!(type === 'n' || type === 'r' || type === 'h' || type === 'm' || type === 's')) {
+    if (!Flow.getGlyphProps.validTypes[type]) {
       return null;
     }
   } else {
@@ -641,6 +641,14 @@ Flow.getGlyphProps = (duration, type) => {
   }
 
   return { ...code.common, ...glyphTypeProperties };
+};
+
+Flow.getGlyphProps.validTypes = {
+  'n': { name: 'note' },
+  'r': { name: 'rest' },
+  'h': { name: 'harmonic' },
+  'm': { name: 'muted' },
+  's': { name: 'slash' },
 };
 
 Flow.getGlyphProps.duration_codes = {
