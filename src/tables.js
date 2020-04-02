@@ -609,6 +609,7 @@ Flow.durationAliases = {
   'b': '256',
 };
 
+// Return a glyph given duration and type.
 Flow.durationToGlyph = (duration, type) => {
   duration = Flow.sanitizeDuration(duration);
 
@@ -641,7 +642,7 @@ Flow.durationToGlyph = (duration, type) => {
     };
   }
 
-  return Vex.Merge(Vex.Merge({}, code.common), glyphTypeProperties);
+  return { ...code.common, ...glyphTypeProperties };
 };
 
 Flow.durationToGlyph.duration_codes = {
