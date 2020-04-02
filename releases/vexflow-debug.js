@@ -3533,8 +3533,14 @@ function (_StaveModifier) {
     key: "sizes",
     get: function get() {
       return {
-        'default': 40,
-        'small': 32
+        'default': {
+          point: 40,
+          width: 26
+        },
+        'small': {
+          point: 32,
+          width: 20
+        }
       };
     } // Annotations attach to clefs -- such as "8" for octave up or down.
 
@@ -3615,7 +3621,7 @@ function (_StaveModifier) {
 
     _this.setType(type, size, annotation);
 
-    _this.setWidth(_this.glyph.getMetrics().width);
+    _this.setWidth(Clef.sizes[_this.size].width);
 
     L('Creating clef:', type);
     return _this;
@@ -3638,7 +3644,7 @@ function (_StaveModifier) {
         this.size = size;
       }
 
-      this.clef.point = Clef.sizes[this.size];
+      this.clef.point = Clef.sizes[this.size].point;
       this.glyph = new _glyph__WEBPACK_IMPORTED_MODULE_2__["Glyph"](this.clef.code, this.clef.point); // If an annotation, such as 8va, is specified, add it to the Clef object.
 
       if (annotation !== undefined) {
@@ -11531,7 +11537,7 @@ function (_Tickable) {
       ctx.restore();
     } // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
     // positioning and layout.
-    // To create a new note you need to provide a `note_struct`, which consists
+    // To create a new note you need to provide a `noteStruct`, which consists
     // of the following fields:
     //
     // `type`: The note type (e.g., `r` for rest, `s` for slash notes, etc.)
@@ -11552,7 +11558,7 @@ function (_Tickable) {
     }
   }]);
 
-  function Note(note_struct) {
+  function Note(noteStruct) {
     var _this;
 
     _classCallCheck(this, Note);
@@ -11561,36 +11567,36 @@ function (_Tickable) {
 
     _this.setAttribute('type', 'Note');
 
-    if (!note_struct) {
+    if (!noteStruct) {
       throw new _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].RuntimeError('BadArguments', 'Note must have valid initialization data to identify duration and type.');
-    } // Parse `note_struct` and get note properties.
+    } // Parse `noteStruct` and get note properties.
 
 
-    var initData = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].parseNoteData(note_struct);
+    var initStruct = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].parseNoteStruct(noteStruct);
 
-    if (!initData) {
-      throw new _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].RuntimeError('BadArguments', "Invalid note initialization object: ".concat(JSON.stringify(note_struct)));
+    if (!initStruct) {
+      throw new _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].RuntimeError('BadArguments', "Invalid note initialization object: ".concat(JSON.stringify(noteStruct)));
     } // Set note properties from parameters.
 
 
-    _this.duration = initData.duration;
-    _this.dots = initData.dots;
-    _this.noteType = initData.type;
-    _this.customTypes = initData.customTypes;
+    _this.duration = initStruct.duration;
+    _this.dots = initStruct.dots;
+    _this.noteType = initStruct.type;
+    _this.customTypes = initStruct.customTypes;
 
-    if (note_struct.duration_override) {
+    if (noteStruct.duration_override) {
       // Custom duration
-      _this.setDuration(note_struct.duration_override);
+      _this.setDuration(noteStruct.duration_override);
     } else {
       // Default duration
-      _this.setIntrinsicTicks(initData.ticks);
+      _this.setIntrinsicTicks(initStruct.ticks);
     }
 
     _this.modifiers = []; // Get the glyph code for this note from the font.
 
-    _this.glyph = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].durationToGlyph(_this.duration, _this.noteType);
+    _this.glyph = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].getGlyphProps(_this.duration, _this.noteType);
     _this.customGlyphs = _this.customTypes.map(function (t) {
-      return _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].durationToGlyph(_this.duration, t);
+      return _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].getGlyphProps(_this.duration, t);
     });
 
     if (_this.positions && (_typeof(_this.positions) !== 'object' || !_this.positions.length)) {
@@ -11624,8 +11630,8 @@ function (_Tickable) {
     _this.ys = []; // list of y coordinates for each note
     // we need to hold on to these for ties and beams.
 
-    if (note_struct.align_center) {
-      _this.setCenterAlignment(note_struct.align_center);
+    if (noteStruct.align_center) {
+      _this.setCenterAlignment(noteStruct.align_center);
     } // The render surface.
 
 
@@ -12129,7 +12135,7 @@ function (_Note) {
     _this.line = head_options.line; // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
 
-    _this.glyph = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].durationToGlyph(_this.duration, _this.note_type);
+    _this.glyph = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].getGlyphProps(_this.duration, _this.note_type);
 
     if (!_this.glyph) {
       throw new _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].RuntimeError('BadArguments', "No glyph found for duration '".concat(_this.duration, "' and type '").concat(_this.note_type, "'"));
@@ -14300,15 +14306,8 @@ function (_Element) {
     value: function setNoteStartX(x) {
       if (!this.formatted) this.format();
       this.start_x = x;
-
-      if (this.modifiers.length > 0) {
-        var begBarline = this.modifiers[0];
-
-        if (begBarline.getType() === _stavebarline__WEBPACK_IMPORTED_MODULE_3__["Barline"].type.REPEAT_BEGIN) {
-          begBarline.setX(this.start_x - begBarline.getWidth());
-        }
-      }
-
+      var begBarline = this.modifiers[0];
+      begBarline.setX(this.start_x - begBarline.getWidth());
       return this;
     }
   }, {
@@ -14561,7 +14560,9 @@ function (_Element) {
     key: "getYForGlyphs",
     value: function getYForGlyphs() {
       return this.getYForLine(3);
-    }
+    } // This method adds a stave modifier to the stave. Note that the first two
+    // modifiers (BarLines) are automatically added upon construction.
+
   }, {
     key: "addModifier",
     value: function addModifier(modifier, position) {
@@ -16747,7 +16748,7 @@ function (_StemmableNote) {
     _this.octave_shift = noteStruct.octave_shift;
     _this.beam = null; // Pull note rendering properties
 
-    _this.glyph = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].durationToGlyph(_this.duration, _this.noteType);
+    _this.glyph = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].getGlyphProps(_this.duration, _this.noteType);
 
     if (!_this.glyph) {
       throw new _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].RuntimeError('BadArguments', "Invalid note initialization data (No glyph found): ".concat(JSON.stringify(noteStruct)));
@@ -16828,10 +16829,7 @@ function (_StemmableNote) {
   }, {
     key: "buildStem",
     value: function buildStem() {
-      var glyph = this.getGlyph();
       this.setStem(new _stem__WEBPACK_IMPORTED_MODULE_3__["Stem"]({
-        stem_up_y_offset: glyph.stem_up_y_offset,
-        stem_down_y_offset: glyph.stem_down_y_offset,
         hide: !!this.isRest()
       }));
     } // Builds a `NoteHead` for each key in the note
@@ -18168,7 +18166,7 @@ function (_StaveModifier) {
           x += ctx.measureText('(').width;
         }
 
-        var code = _tables__WEBPACK_IMPORTED_MODULE_0__["Flow"].durationToGlyph(duration);
+        var code = _tables__WEBPACK_IMPORTED_MODULE_0__["Flow"].getGlyphProps(duration);
         x += 3 * scale;
         _glyph__WEBPACK_IMPORTED_MODULE_3__["Glyph"].renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
         x += code.getWidth() * scale; // Draw stem and flags
@@ -19272,7 +19270,7 @@ function (_Note) {
   }, {
     key: "hasFlag",
     value: function hasFlag() {
-      return _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].durationToGlyph(this.duration).flag && !this.beam;
+      return _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].getGlyphProps(this.duration).flag && !this.beam;
     } // Post format the note
 
   }, {
@@ -21061,11 +21059,7 @@ Flow.keyProperties = function (key, clef, params) {
 
   if (pieces.length > 2 && pieces[2]) {
     var glyph_name = pieces[2].toUpperCase();
-    var note_glyph = Flow.keyProperties.note_glyph[glyph_name];
-
-    if (note_glyph) {
-      extraProps = note_glyph;
-    }
+    extraProps = Flow.keyProperties.customNoteHeads[glyph_name] || {};
   }
 
   return _objectSpread({
@@ -21307,7 +21301,7 @@ Flow.keyProperties.note_values = {
   }
 }; // Custom note heads
 
-Flow.keyProperties.note_glyph = {
+Flow.keyProperties.customNoteHeads = {
   /* Diamond */
   'D0': {
     code: 'v27',
@@ -21903,8 +21897,8 @@ Flow.parseNoteDurationString = function (durationString) {
   };
 };
 
-Flow.parseNoteData = function (noteData) {
-  var duration = noteData.duration; // Preserve backwards-compatibility
+Flow.parseNoteStruct = function (noteStruct) {
+  var duration = noteStruct.duration; // Preserve backwards-compatibility
 
   var durationStringData = Flow.parseNoteDurationString(duration);
 
@@ -21918,22 +21912,22 @@ Flow.parseNoteData = function (noteData) {
     return null;
   }
 
-  var type = noteData.type;
+  var type = noteStruct.type;
   var customTypes = [];
 
   if (type) {
-    if (!(type === 'n' || type === 'r' || type === 'h' || type === 'm' || type === 's')) {
+    if (!Flow.getGlyphProps.validTypes[type]) {
       return null;
     }
   } else {
     type = durationStringData.type || 'n'; // If we have keys, try and check if we've got a custom glyph
 
-    if (noteData.keys !== undefined) {
+    if (noteStruct.keys !== undefined) {
       // FIXME: We're taking the custom note head data of the bottom most note
       // in both the stem-up and stem-down cases. This causes formatting errors
       // for stem-up custom note heads, where the shift parameters are not
       // respected.
-      noteData.keys.forEach(function (k, i) {
+      noteStruct.keys.forEach(function (k, i) {
         var result = k.split('/'); // We have a custom glyph specified after the note eg. /X2
 
         if (result && result.length === 3) {
@@ -21946,7 +21940,7 @@ Flow.parseNoteData = function (noteData) {
     }
   }
 
-  var dots = noteData.dots ? noteData.dots : durationStringData.dots;
+  var dots = noteStruct.dots ? noteStruct.dots : durationStringData.dots;
 
   if (typeof dots !== 'number') {
     return null;
@@ -22030,11 +22024,11 @@ Flow.durationAliases = {
   //
   // TODO(0xfe): This needs to be cleaned up.
   'b': '256'
-};
+}; // Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
 
-Flow.durationToGlyph = function (duration, type) {
+Flow.getGlyphProps = function (duration, type) {
   duration = Flow.sanitizeDuration(duration);
-  var code = Flow.durationToGlyph.duration_codes[duration];
+  var code = Flow.getGlyphProps.duration_codes[duration];
 
   if (code === undefined) {
     return null;
@@ -22048,26 +22042,39 @@ Flow.durationToGlyph = function (duration, type) {
 
   if (glyphTypeProperties === undefined) {
     // Try and get it from the custom list of note heads
-    var customGlyphTypeProperties = Flow.keyProperties.note_glyph[type.toUpperCase()]; // If not, then return with nothing
+    var customGlyphTypeProperties = Flow.keyProperties.customNoteHeads[type.toUpperCase()]; // If not, then return with nothing
 
     if (customGlyphTypeProperties === undefined) {
       return null;
     } // Otherwise set it as the code_head value
 
 
-    glyphTypeProperties = {
-      code_head: customGlyphTypeProperties.code,
-      stem_up_y_offset: customGlyphTypeProperties.stem_up_y_offset,
-      stem_down_y_offset: customGlyphTypeProperties.stem_down_y_offset,
-      stem_up_x_offset: customGlyphTypeProperties.stem_up_x_offset,
-      stem_down_x_offset: customGlyphTypeProperties.stem_down_x_offset
-    };
+    glyphTypeProperties = _objectSpread({
+      code_head: customGlyphTypeProperties.code
+    }, customGlyphTypeProperties);
   }
 
-  return _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].Merge(_vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].Merge({}, code.common), glyphTypeProperties);
+  return _objectSpread({}, code.common, {}, glyphTypeProperties);
 };
 
-Flow.durationToGlyph.duration_codes = {
+Flow.getGlyphProps.validTypes = {
+  'n': {
+    name: 'note'
+  },
+  'r': {
+    name: 'rest'
+  },
+  'h': {
+    name: 'harmonic'
+  },
+  'm': {
+    name: 'muted'
+  },
+  's': {
+    name: 'slash'
+  }
+};
+Flow.getGlyphProps.duration_codes = {
   '1/2': {
     common: {
       getWidth: function getWidth() {
@@ -22900,7 +22907,7 @@ function (_StemmableNote) {
       // default tablature font
       font: '10pt Arial'
     });
-    _this.glyph = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].durationToGlyph(_this.duration, _this.noteType);
+    _this.glyph = _tables__WEBPACK_IMPORTED_MODULE_1__["Flow"].getGlyphProps(_this.duration, _this.noteType);
 
     if (!_this.glyph) {
       throw new _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].RuntimeError('BadArguments', "Invalid note initialization data (No glyph found): ".concat(JSON.stringify(tab_struct)));

@@ -1,5 +1,5 @@
 /**!
- * VexFlow 1.2.91 built on 2020-04-01.
+ * VexFlow 1.2.92 built on 2020-04-02.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -10216,12 +10216,13 @@ VF.Test.StaveConnector = (function() {
 
       ok(true, 'all pass');
     },
+
     drawRepeatOffset: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 400, 300);
       var stave = new VF.Stave(25, 10, 150);
       var stave2 = new VF.Stave(25, 120, 150);
-      var stave3 = new VF.Stave(175, 10, 150);
-      var stave4 = new VF.Stave(175, 120, 150);
+      var stave3 = new VF.Stave(185, 10, 150);
+      var stave4 = new VF.Stave(185, 120, 150);
       stave.setContext(ctx);
       stave2.setContext(ctx);
       stave3.setContext(ctx);
@@ -10251,6 +10252,7 @@ VF.Test.StaveConnector = (function() {
       stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+
       var connector = new VF.StaveConnector(stave, stave2);
       var connector2 = new VF.StaveConnector(stave, stave2);
       var connector3 = new VF.StaveConnector(stave3, stave4);
