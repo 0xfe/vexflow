@@ -77,12 +77,8 @@ export class Stave extends Element {
     if (!this.formatted) this.format();
 
     this.start_x = x;
-    if (this.modifiers.length > 0) {
-      const begBarline = this.modifiers[0];
-      if (begBarline.getType() === Barline.type.REPEAT_BEGIN) {
-        begBarline.setX(this.start_x - begBarline.getWidth());
-      }
-    }
+    const begBarline = this.modifiers[0];
+    begBarline.setX(this.start_x - begBarline.getWidth());
     return this;
   }
   getNoteStartX() {
@@ -283,6 +279,8 @@ export class Stave extends Element {
     return this.getYForLine(3);
   }
 
+  // This method adds a stave modifier to the stave. Note that the first two
+  // modifiers (BarLines) are automatically added upon construction.
   addModifier(modifier, position) {
     if (position !== undefined) {
       modifier.setPosition(position);

@@ -74,8 +74,14 @@ export class Clef extends StaveModifier {
   // Sizes affect the point-size of the clef.
   static get sizes() {
     return {
-      'default': 40,
-      'small': 32,
+      'default': {
+        point: 40,
+        width: 26
+      },
+      'small': {
+        point: 32,
+        width: 20,
+      },
     };
   }
 
@@ -147,7 +153,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(this.glyph.getMetrics().width);
+    this.setWidth(Clef.sizes[this.size].width);
     L('Creating clef:', type);
   }
 
@@ -161,7 +167,7 @@ export class Clef extends StaveModifier {
     } else {
       this.size = size;
     }
-    this.clef.point = Clef.sizes[this.size];
+    this.clef.point = Clef.sizes[this.size].point;
     this.glyph = new Glyph(this.clef.code, this.clef.point);
 
     // If an annotation, such as 8va, is specified, add it to the Clef object.
