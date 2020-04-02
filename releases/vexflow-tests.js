@@ -1,5 +1,5 @@
 /**!
- * VexFlow 1.2.92 built on 2020-04-02.
+ * VexFlow 1.2.93 built on 2020-04-02.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -7338,6 +7338,9 @@ VF.Test.NoteHead = (function() {
         { keys: ['a/4/x1', 'g/5/d2'], duration: '4' },
         { keys: ['a/4/d3', 'g/5/x0'], duration: '4' },
         { keys: ['a/4/x0', 'g/5/d3'], duration: '4' },
+
+        { keys: ['a/4', 'g/5/d0'], duration: '4' },
+        { keys: ['a/4/x3', 'g/5'], duration: '4' },
 
         { keys: ['a/4/t0', 'g/5/s1'], duration: '4' },
         { keys: ['a/4/s1', 'g/5/t0'], duration: '4' },
