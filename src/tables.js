@@ -609,11 +609,11 @@ Flow.durationAliases = {
   'b': '256',
 };
 
-// Return a glyph given duration and type.
-Flow.durationToGlyph = (duration, type) => {
+// Return a glyph given duration and type. The type can be a custom glyph code from note_glyph.
+Flow.getGlyphProps = (duration, type) => {
   duration = Flow.sanitizeDuration(duration);
 
-  const code = Flow.durationToGlyph.duration_codes[duration];
+  const code = Flow.getGlyphProps.duration_codes[duration];
   if (code === undefined) {
     return null;
   }
@@ -623,6 +623,7 @@ Flow.durationToGlyph = (duration, type) => {
   }
 
   let glyphTypeProperties = code.type[type];
+
   if (glyphTypeProperties === undefined) {
     // Try and get it from the custom list of note heads
     const customGlyphTypeProperties = Flow.keyProperties.note_glyph[type.toUpperCase()];
@@ -635,17 +636,14 @@ Flow.durationToGlyph = (duration, type) => {
     // Otherwise set it as the code_head value
     glyphTypeProperties = {
       code_head: customGlyphTypeProperties.code,
-      stem_up_y_offset: customGlyphTypeProperties.stem_up_y_offset,
-      stem_down_y_offset: customGlyphTypeProperties.stem_down_y_offset,
-      stem_up_x_offset: customGlyphTypeProperties.stem_up_x_offset,
-      stem_down_x_offset: customGlyphTypeProperties.stem_down_x_offset,
+      ...customGlyphTypeProperties,
     };
   }
 
   return { ...code.common, ...glyphTypeProperties };
 };
 
-Flow.durationToGlyph.duration_codes = {
+Flow.getGlyphProps.duration_codes = {
   '1/2': {
     common: {
       getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {

@@ -141,7 +141,7 @@ export class TabNote extends StemmableNote {
       font: '10pt Arial',
     });
 
-    this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
+    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
 
     if (!this.glyph) {
       throw new Vex.RuntimeError(

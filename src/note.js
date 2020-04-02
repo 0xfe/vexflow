@@ -114,8 +114,8 @@ export class Note extends Tickable {
     this.modifiers = [];
 
     // Get the glyph code for this note from the font.
-    this.glyph = Flow.durationToGlyph(this.duration, this.noteType);
-    this.customGlyphs = this.customTypes.map(t => Flow.durationToGlyph(this.duration, t));
+    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
+    this.customGlyphs = this.customTypes.map(t => Flow.getGlyphProps(this.duration, t));
 
     if (this.positions && (typeof (this.positions) !== 'object' || !this.positions.length)) {
       throw new Vex.RuntimeError('BadArguments', 'Note keys must be array type.');

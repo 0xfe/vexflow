@@ -83,7 +83,7 @@ export class NoteHead extends Note {
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
-    this.glyph = Flow.durationToGlyph(this.duration, this.note_type);
+    this.glyph = Flow.getGlyphProps(this.duration, this.note_type);
     if (!this.glyph) {
       throw new Vex.RuntimeError(
         'BadArguments',
