@@ -504,20 +504,13 @@ Flow.parseNoteStruct = noteStruct => {
 
     // If we have keys, try and check if we've got a custom glyph
     if (noteStruct.keys !== undefined) {
-      // FIXME: We're taking the custom note head data of the bottom most note
-      // in both the stem-up and stem-down cases. This causes formatting errors
-      // for stem-up custom note heads, where the shift parameters are not
-      // respected.
       noteStruct.keys.forEach((k, i) => {
         const result = k.split('/');
         // We have a custom glyph specified after the note eg. /X2
         if (result && result.length === 3) {
-          type = result[2]; // Set the type to the custom note head
-          customTypes[i] = type;
+          customTypes[i] = result[2];
         }
       });
-
-      type = customTypes[0] || type;
     }
   }
 
