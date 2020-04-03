@@ -1,4 +1,5 @@
 const fs = require('fs');
+const process = require('process');
 // eslint-disable-next-line
 const opentype = require('opentype.js');
 
@@ -32,8 +33,17 @@ function toVFPath(glyph) {
   };
 }
 
-const file = 'Bravura.otf';
-const font = opentype.loadSync(file);
+const args = process.argv.slice(2);
+if (args.length < 2) {
+  console.error('Usage: node fontgen.js [fontfile.otf] [outfile.json]');
+  console.error('E.g: node fontgen.js bravura-v1.otf bravura.smufl.js');
+  process.exit(255);
+}
+
+const fontFile = args[0];
+const outFile = args[1];
+
+const font = opentype.loadSync(fontFile);
 const glyphNamesData = fs.readFileSync('glyphnames.json');
 const glyphNames = JSON.parse(glyphNamesData);
 
@@ -44,4 +54,12 @@ Object.keys(glyphNames).forEach((k) => {
   fontData[k] = toVFPath(glyph);
 });
 
-console.log(JSON.stringify(fontData));
+const fileData = {
+  glyphs: fontData,
+  fontFamily: font.names.fontFamily.en,
+  generatedOn: new Date().toISOString(),
+};
+
+const varName = fileData.fontFamily.replace(/\s+/, '_');
+
+fs.writeFileSync(outFile, `export default ${varName}Font = ${JSON.stringify(fileData)};\n`);
