@@ -83,7 +83,8 @@ export class StaveTempo extends StaveModifier {
         ctx.fillRect(x - scale, y_top, scale, stem_height);
 
         if (code.flag) {
-          Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, code.code_flag_upstem, this.getMusicFont());
+          Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale,
+            code.code_flag_upstem, this.getMusicFont());
 
           if (!dots) x += 6 * scale;
         }
