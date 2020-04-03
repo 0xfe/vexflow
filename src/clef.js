@@ -22,11 +22,11 @@ export class Clef extends StaveModifier {
   static get types() {
     return {
       'treble': {
-        code: 'v83',
+        code: 'gClef',
         line: 3,
       },
       'bass': {
-        code: 'v79',
+        code: 'fClef',
         line: 1,
       },
       'alto': {

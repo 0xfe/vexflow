@@ -4,33 +4,47 @@ import { Vex } from './vex';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
-import { Font } from './fonts/vexflow_font';
+import { Font as DefaultFont } from './fonts/vexflow_font';
+// import { VexFlowCodePoints } from './smufl';
 
-function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
+function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns,
+  options = { debug: false }) {
   let command;
   let x;
   let y;
   let i = 0;
 
+  if (options.debug) {
+    // console.log(outline, originX, originY, scaleX, scaleY);
+  }
+
   function nextX() { return originX + outline[i++] * scaleX; }
   function nextY() { return originY + outline[i++] * scaleY; }
+  function doOutline(command, ...args) {
+    if (options.debug) {
+      // console.log(command, ...args);
+    }
+    outlineFns[command](...args);
+  }
 
   while (i < outline.length) {
     command = outline[i++];
     switch (command) {
       case 'm':
       case 'l':
-        outlineFns[command](nextX(), nextY());
+        doOutline(command, nextX(), nextY());
         break;
       case 'q':
         x = nextX();
         y = nextY();
-        outlineFns.q(nextX(), nextY(), x, y);
+        doOutline(command, nextX(), nextY(), x, y);
         break;
       case 'b':
         x = nextX();
         y = nextY();
-        outlineFns.b(nextX(), nextY(), nextX(), nextY(), x, y);
+        doOutline(command, nextX(), nextY(), nextX(), nextY(), x, y);
+        break;
+      case 'z':
         break;
       default:
         break;
@@ -41,7 +55,8 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
 export class Glyph extends Element {
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
-    const glyph = font.glyphs[code];
+    const glyph = font.glyphs[code] || DefaultFont.glyphs[code];
+
     if (!glyph) {
       throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
     }
@@ -87,13 +102,15 @@ export class Glyph extends Element {
    * @param {string} val The glyph code in Vex.Flow.Font.
    * @param {boolean} nocache If set, disables caching of font outline.
    */
-  static renderGlyph(ctx, x_pos, y_pos, point, val, nocache) {
-    const scale = point * 72.0 / (Font.resolution * 100.0);
-    const metrics = Glyph.loadMetrics(Font, val, !nocache);
-    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos);
+  static renderGlyph(ctx, x_pos, y_pos, point, val, font = DefaultFont) {
+    const metrics = Glyph.loadMetrics(font, val, true);
+    const scale = point * 72.0 / (font.resolution * 100.0);
+
+    const debug = val === 'noteheadBlack';
+    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos, { debug });
   }
 
-  static renderOutline(ctx, outline, scale, x_pos, y_pos) {
+  static renderOutline(ctx, outline, scale, x_pos, y_pos, options) {
     ctx.beginPath();
     ctx.moveTo(x_pos, y_pos);
     processOutline(outline, x_pos, y_pos, scale, -scale, {
@@ -101,7 +118,8 @@ export class Glyph extends Element {
       l: ctx.lineTo.bind(ctx),
       q: ctx.quadraticCurveTo.bind(ctx),
       b: ctx.bezierCurveTo.bind(ctx),
-    });
+      // z: ctx.fill.bind(ctx), // ignored
+    }, options);
     ctx.fill();
   }
 
@@ -113,6 +131,7 @@ export class Glyph extends Element {
       l: bboxComp.addPoint.bind(bboxComp),
       q: bboxComp.addQuadraticCurve.bind(bboxComp),
       b: bboxComp.addBezierCurve.bind(bboxComp),
+      z: bboxComp.noOp.bind(bboxComp),
     });
 
     return new BoundingBox(
@@ -134,7 +153,7 @@ export class Glyph extends Element {
     this.point = point;
     this.options = {
       cache: true,
-      font: Font,
+      font: this.getMusicFont(),
     };
 
     this.metrics = null;
@@ -148,9 +167,9 @@ export class Glyph extends Element {
 
     if (options) {
       this.setOptions(options);
-    } else {
-      this.reset();
     }
+
+    this.reset();
   }
 
   setOptions(options) {
@@ -168,7 +187,7 @@ export class Glyph extends Element {
     this.metrics = Glyph.loadMetrics(
       this.options.font,
       this.code,
-      this.options.cache
+      this.options.cache,
     );
     this.bbox = Glyph.getOutlineBoundingBox(
       this.metrics.outline,

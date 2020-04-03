@@ -28,6 +28,10 @@ export class BoundingBoxComputation {
     return this.y2 - this.y1;
   }
 
+  noOp() {
+    // do nothing
+  }
+
   addPoint(x, y) {
     if (x != null) {
       if (isNaN(this.x1) || isNaN(this.x2)) {

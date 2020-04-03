@@ -185,11 +185,11 @@ export class StaveConnector extends Element {
         ctx.stroke();
         break;
       } case StaveConnector.type.BRACKET:
-        topY -= 4;
-        botY += 4;
+        topY -= 6;
+        botY += 6;
         attachment_height = botY - topY;
-        Glyph.renderGlyph(ctx, topX - 5, topY - 3, 40, 'v1b', true);
-        Glyph.renderGlyph(ctx, topX - 5, botY + 3, 40, 'v10', true);
+        Glyph.renderGlyph(ctx, topX - 5, topY, 40, 'bracketTop', this.getMusicFont());
+        Glyph.renderGlyph(ctx, topX - 5, botY, 40, 'bracketBottom', this.getMusicFont());
         topX -= (this.width + 2);
         break;
       case StaveConnector.type.BOLD_DOUBLE_LEFT:

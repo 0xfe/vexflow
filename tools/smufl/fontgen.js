@@ -4,19 +4,22 @@ const process = require('process');
 const opentype = require('opentype.js');
 
 function toVFPath(glyph) {
+  const pointSize = 72;
+  const scale = 72 * 20;
   const bb = glyph.getBoundingBox();
-  const path = glyph.getPath();
-  function fix(f) {
-    return Math.round(f * 1000) / 1000;
+  const path = glyph.getPath(0, 0, pointSize);
+  function fix(f, invert = false) {
+    return Math.round((f / pointSize) * scale) * (invert ? -1 : 1);
   }
 
   const ops = path.commands.map((p) => {
     switch (p.type) {
-      case 'M':  return `m ${fix(p.x)} ${fix(p.y)}`;
-      case 'L':  return `l ${fix(p.x)} ${fix(p.y)}`;
-      case 'C':  return `c ${fix(p.x1)} ${fix(p.y1)} ${fix(p.x2)} ${fix(p.y2)} ${fix(p.x)} ${fix(p.y)}`;
-      case 'Q':  return `q ${fix(p.x1)} ${fix(p.y1)} ${fix(p.x)} ${fix(p.y)}`;
-      case 'Z':  return 'z';
+      case 'M': return `m ${fix(p.x)} ${fix(p.y, true)}`;
+      case 'L': return `l ${fix(p.x)} ${fix(p.y, true)}`;
+      case 'C': // Note Vexflow uses 'b' instead of 'c' to represent bezier curves.
+        return `b ${fix(p.x)} ${fix(p.y, true)} ${fix(p.x1)} ${fix(p.y1, true)} ${fix(p.x2)} ${fix(p.y2, true)}`;
+      case 'Q': return `q ${fix(p.x)} ${fix(p.y, true)} ${fix(p.x1)} ${fix(p.y1, true)}`;
+      case 'Z': return 'z';
       default: throw new Error(`unsupported path type: ${p.type}: ${p}`);
     }
   });
@@ -54,12 +57,15 @@ Object.keys(glyphNames).forEach((k) => {
   fontData[k] = toVFPath(glyph);
 });
 
+
 const fileData = {
   glyphs: fontData,
   fontFamily: font.names.fontFamily.en,
+  resolution: font.unitsPerEm,
   generatedOn: new Date().toISOString(),
 };
 
 const varName = fileData.fontFamily.replace(/\s+/, '_');
 
-fs.writeFileSync(outFile, `export default ${varName}Font = ${JSON.stringify(fileData)};\n`);
+fs.writeFileSync(outFile,
+  `export const ${varName}Font = ${JSON.stringify(fileData, null, 2)};\n`);
