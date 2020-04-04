@@ -168,7 +168,7 @@ export class MultiMeasureRest extends Element {
     }
     for (let i = 0; i < n1; ++i) {
       Glyph.renderGlyph(ctx, x, yTop, this.render_options.semibrave_rest_glyph_scale,
-        semibrave_rest.glyph_code);
+        semibrave_rest.glyph_code, this.getMusicFont());
       x += glyphs[1].width + spacing;
     }
 

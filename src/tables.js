@@ -170,7 +170,7 @@ Flow.keyProperties.note_values = {
     index: 6,
     accidental: '',
     octave: 4,
-    code: 'v3e',
+    code: 'noteheadXBlack',
     shift_right: 5.5,
   },
 };
@@ -186,8 +186,8 @@ Flow.keyProperties.customNoteHeads = {
     stem_up_y_offset: -1,
     stem_down_y_offset: 0
   },
-  'D1': { code: 'v2d', shift_right: -0.5 },
-  'D2': { code: 'v22', shift_right: -0.5 },
+  'D1': { code: 'noteheadDiamondHalf', shift_right: -0.5 },
+  'D2': { code: 'noteheadDiamondBlack', shift_right: -0.5 },
   'D3': { code: 'v70', shift_right: -0.5 },
 
   /* Triangle */
@@ -198,14 +198,14 @@ Flow.keyProperties.customNoteHeads = {
 
   /* Cross */
   'X0': {
-    code: 'v92',
+    code: 'noteheadXWhole',
     stem_up_x_offset: -2,
     stem_down_x_offset: 0,
     stem_up_y_offset: 4,
     stem_down_y_offset: 4
   },
-  'X1': { code: 'v95', shift_right: -0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
-  'X2': { code: 'v3e', shift_right: 0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X1': { code: 'noteheadXHalf', shift_right: -0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
+  'X2': { code: 'noteheadXBlack', shift_right: 0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
   'X3': {
     code: 'v3b',
     shift_right: 0,
@@ -702,10 +702,10 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadWhole',
       },
       'h': { // Whole note harmonic
-        code_head: 'v46',
+        code_head: 'noteheadDiamondWhole',
       },
       'm': { // Whole note muted
-        code_head: 'v92',
+        code_head: 'noteheadXWhole',
         stem_offset: -3,
       },
       'r': { // Whole rest
@@ -742,10 +742,10 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadHalf',
       },
       'h': { // Half note harmonic
-        code_head: 'v2d',
+        code_head: 'noteheadDiamondHalf',
       },
       'm': { // Half note muted
-        code_head: 'v95',
+        code_head: 'noteheadXHalf',
         stem_offset: -3,
       },
       'r': { // Half rest
@@ -783,11 +783,10 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadBlack',
       },
       'h': { // Quarter harmonic
-        code_head: 'v22',
+        code_head: 'noteheadDiamondBlack',
       },
       'm': { // Quarter muted
-        code_head: 'v3e',
-        stem_offset: -3,
+        code_head: 'noteheadXBlack',
       },
       'r': { // Quarter rest
         code_head: 'restQuarter',
@@ -829,10 +828,10 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadBlack',
       },
       'h': { // Eighth note harmonic
-        code_head: 'v22',
+        code_head: 'noteheadDiamondBlack',
       },
       'm': { // Eighth note muted
-        code_head: 'v3e',
+        code_head: 'noteheadXBlack',
       },
       'r': { // Eighth rest
         code_head: 'rest8th',
@@ -875,10 +874,10 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadBlack',
       },
       'h': { // Sixteenth note harmonic
-        code_head: 'v22',
+        code_head: 'noteheadDiamondBlack',
       },
       'm': { // Sixteenth note muted
-        code_head: 'v3e',
+        code_head: 'noteheadXBlack',
       },
       'r': { // Sixteenth rest
         code_head: 'rest16th',
@@ -921,10 +920,10 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadBlack',
       },
       'h': { // Thirty-second harmonic
-        code_head: 'v22',
+        code_head: 'noteheadDiamondBlack',
       },
       'm': { // Thirty-second muted
-        code_head: 'v3e',
+        code_head: 'noteheadXBlack',
       },
       'r': { // Thirty-second rest
         code_head: 'rest32nd',
@@ -967,10 +966,10 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadBlack',
       },
       'h': { // Sixty-fourth harmonic
-        code_head: 'v22',
+        code_head: 'noteheadDiamondBlack',
       },
       'm': { // Sixty-fourth muted
-        code_head: 'v3e',
+        code_head: 'noteheadXBlack',
       },
       'r': { // Sixty-fourth rest
         code_head: 'rest64th',
@@ -1013,10 +1012,10 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadBlack',
       },
       'h': { // Hundred-twenty-eight harmonic
-        code_head: 'v22',
+        code_head: 'noteheadDiamondBlack',
       },
       'm': { // Hundred-twenty-eight muted
-        code_head: 'v3e',
+        code_head: 'noteheadXBlack',
       },
       'r': {  // Hundred-twenty-eight rest
         code_head: 'rest128th',
