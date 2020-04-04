@@ -66,12 +66,13 @@ import { Tremolo } from './tremolo';
 import { StringNumber } from './stringnumber';
 import { Crescendo } from './crescendo';
 import { Volta } from './stavevolta';
-import { Font } from './fonts/vexflow_font';
 import { System } from './system';
 import { Factory } from './factory';
 import { Parser } from './parser';
 import { EasyScore } from './easyscore';
 import { Registry } from './registry';
+
+import { Fonts, DefaultFont } from './smufl';
 
 Vex.Flow = Flow;
 Vex.Flow.Element = Element;
@@ -138,11 +139,13 @@ Vex.Flow.Tremolo = Tremolo;
 Vex.Flow.StringNumber = StringNumber;
 Vex.Flow.Crescendo = Crescendo;
 Vex.Flow.Volta = Volta;
-Vex.Flow.Font = Font;
 Vex.Flow.System = System;
 Vex.Flow.Factory = Factory;
 Vex.Flow.Parser = Parser;
 Vex.Flow.EasyScore = EasyScore;
 Vex.Flow.Registry = Registry;
+
+Vex.Flow.Fonts = Fonts;
+Vex.Flow.DefaultFont = DefaultFont;
 
 export default Vex;

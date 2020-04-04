@@ -8,7 +8,7 @@
 
 import { Vex } from './vex';
 import { Registry } from './registry';
-import { Font, FontMetrics } from './smufl';
+import { Flow } from './tables';
 
 export class Element {
   static newID() { return 'auto' + (Element.ID++); }
@@ -24,8 +24,7 @@ export class Element {
     this.boundingBox = null;
     this.context = null;
     this.rendered = false;
-    this.musicFont = Font;
-    this.musicFontMetrics = FontMetrics;
+    this.musicFont = Flow.DEFAULT_FONT;
 
     // If a default registry exist, then register with it right away.
     if (Registry.getDefaultRegistry()) {
@@ -34,27 +33,12 @@ export class Element {
   }
 
   // set music font
-  setMusicFont(font, metrics) {
+  setMusicFont(font) {
     this.musicFont = font;
-    if (metrics) {
-      this.musicFontMetrics = metrics;
-    }
     return this;
   }
   getMusicFont() {
     return this.musicFont;
-  }
-  getMusicFontMetric(key) {
-    const parts = key.split('.');
-    let val = this.musicFontMetrics;
-    for (let i = 0; i < parts.length; i++) {
-      if (val[parts[i]] === undefined) {
-        return undefined;
-      }
-      val = val[parts[i]];
-    }
-
-    return val;
   }
 
   // set the draw style of a stemmable note:

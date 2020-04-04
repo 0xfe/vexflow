@@ -5,12 +5,15 @@
 import { Vex } from './vex';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
+import { DefaultFont } from './smufl';
 
 const Flow = {
   STEM_WIDTH: 1.5,
   STEM_HEIGHT: 35,
   STAVE_LINE_THICKNESS: 1,
   RESOLUTION: 16384,
+
+  DEFAULT_FONT: DefaultFont,
   DEFAULT_NOTATION_FONT_SCALE: 39,
   DEFAULT_TABLATURE_FONT_SCALE: 39,
   SLASH_NOTEHEAD_WIDTH: 15,
@@ -310,17 +313,16 @@ Flow.accidentalCodes.accidentals = {
   '}': { code: 'accidentalParensRight', parenRightPaddingAdjustment: -1 },
   'db': { code: 'accidentalThreeQuarterTonesFlatZimmermann', parenRightPaddingAdjustment: -1 },
   'd': { code: 'accidentalQuarterToneFlatStein', parenRightPaddingAdjustment: 0 },
-  'bbs': { code: 'v90', parenRightPaddingAdjustment: -1 }, // no smufl code found
   '++': { code: 'accidentalThreeQuarterTonesSharpStein', parenRightPaddingAdjustment: -1 },
   '+': { code: 'accidentalQuarterToneSharpStein', parenRightPaddingAdjustment: -1 },
   '+-': { code: 'accidentalKucukMucennebSharp', parenRightPaddingAdjustment: -1 },
-  '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 }, // no smufl code found
   'bs': { code: 'accidentalBakiyeFlat', parenRightPaddingAdjustment: -1 },
   'bss': { code: 'accidentalBuyukMucennebFlat', parenRightPaddingAdjustment: -1 },
   'o': { code: 'accidentalSori', parenRightPaddingAdjustment: -1 },
   'k': { code: 'accidentalKoron', parenRightPaddingAdjustment: -1 },
-  'ashs': { code: 'vd6',
-    parenRightPaddingAdjustment: -1 },  // arabic sharp half sharp: no smufl code
+  'bbs': { code: 'v90', parenRightPaddingAdjustment: -1 }, // no smufl code found
+  '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 }, // no smufl code found
+  'ashs': { code: 'vd6', parenRightPaddingAdjustment: -1 },  // arabic sharp half sharp: no smufl code
   'afhf': { code: 'vd7', parenRightPaddingAdjustment: -1 },  // arabic flat half flat: no smufl code
 };
 

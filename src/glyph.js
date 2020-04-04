@@ -4,8 +4,9 @@ import { Vex } from './vex';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
-import { Font as DefaultFont } from './fonts/vexflow_font';
-// import { VexFlowCodePoints } from './smufl';
+import { DefaultFont, Fonts } from './smufl';
+
+const BackupFont = Fonts.Gonville;
 
 function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns,
   options = { debug: false }) {
@@ -55,7 +56,7 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns,
 export class Glyph extends Element {
   /* Static methods used to implement loading / unloading of glyphs */
   static loadMetrics(font, code, cache) {
-    const glyph = font.glyphs[code] || DefaultFont.glyphs[code];
+    const glyph = font.getGlyphs()[code] || BackupFont.getGlyphs()[code];
 
     if (!glyph) {
       throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
@@ -104,7 +105,7 @@ export class Glyph extends Element {
    */
   static renderGlyph(ctx, x_pos, y_pos, point, val, font = DefaultFont) {
     const metrics = Glyph.loadMetrics(font, val, true);
-    const scale = point * 72.0 / (font.resolution * 100.0);
+    const scale = point * 72.0 / (font.getResolution() * 100.0);
 
     const debug = val === 'noteheadBlack';
     Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos, { debug });
@@ -184,7 +185,7 @@ export class Glyph extends Element {
   setYShift(y_shift) { this.y_shift = y_shift; return this; }
 
   reset() {
-    this.scale = this.point * 72 / (this.options.font.resolution * 100);
+    this.scale = this.point * 72 / (this.options.font.getResolution() * 100);
     this.metrics = Glyph.loadMetrics(
       this.options.font,
       this.code,
