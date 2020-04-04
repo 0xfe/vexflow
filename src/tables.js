@@ -319,7 +319,8 @@ Flow.accidentalCodes.accidentals = {
   'bss': { code: 'accidentalBuyukMucennebFlat', parenRightPaddingAdjustment: -1 },
   'o': { code: 'accidentalSori', parenRightPaddingAdjustment: -1 },
   'k': { code: 'accidentalKoron', parenRightPaddingAdjustment: -1 },
-  'ashs': { code: 'vd6', parenRightPaddingAdjustment: -1 },  // arabic sharp half sharp: no smufl code
+  'ashs': { code: 'vd6',
+    parenRightPaddingAdjustment: -1 },  // arabic sharp half sharp: no smufl code
   'afhf': { code: 'vd7', parenRightPaddingAdjustment: -1 },  // arabic flat half flat: no smufl code
 };
 
