@@ -454,8 +454,8 @@ VF.Test.StaveNote = (function() {
     },
 
     drawHarmonicAndMuted: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 300, 180);
-      var stave = new VF.Stave(10, 10, 280);
+      var ctx = new contextBuilder(options.elementId, 1000, 180);
+      var stave = new VF.Stave(10, 10, 950);
       stave.setContext(ctx);
       stave.draw();
 
@@ -503,7 +503,7 @@ VF.Test.StaveNote = (function() {
 
       for (var i = 0; i < notes.length; ++i) {
         var note = notes[i];
-        var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+        var staveNote = showNote(note, stave, ctx, (i * 25) + 5);
 
         ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
         ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');

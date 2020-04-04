@@ -659,7 +659,7 @@ Flow.getGlyphProps.duration_codes = {
     },
     type: {
       'n': { // Breve note
-        code_head: 'v53',
+        code_head: 'noteheadDoubleWhole',
       },
       'h': { // Breve note harmonic
         code_head: 'v59',
@@ -669,7 +669,7 @@ Flow.getGlyphProps.duration_codes = {
         stem_offset: 0,
       },
       'r': { // Breve rest
-        code_head: 'v31',
+        code_head: 'restDoubleWhole',
         rest: true,
         position: 'B/5',
         dot_shiftY: 0.5,
@@ -699,7 +699,7 @@ Flow.getGlyphProps.duration_codes = {
     },
     type: {
       'n': { // Whole note
-        code_head: 'v1d',
+        code_head: 'noteheadWhole',
       },
       'h': { // Whole note harmonic
         code_head: 'v46',
@@ -709,7 +709,7 @@ Flow.getGlyphProps.duration_codes = {
         stem_offset: -3,
       },
       'r': { // Whole rest
-        code_head: 'v5c',
+        code_head: 'restWhole',
         rest: true,
         position: 'D/5',
         dot_shiftY: 0.5,
@@ -739,7 +739,7 @@ Flow.getGlyphProps.duration_codes = {
     },
     type: {
       'n': { // Half note
-        code_head: 'v81',
+        code_head: 'noteheadHalf',
       },
       'h': { // Half note harmonic
         code_head: 'v2d',
@@ -749,7 +749,7 @@ Flow.getGlyphProps.duration_codes = {
         stem_offset: -3,
       },
       'r': { // Half rest
-        code_head: 'vc',
+        code_head: 'restHalf',
         stem: false,
         rest: true,
         position: 'B/4',
@@ -835,7 +835,7 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'v3e',
       },
       'r': { // Eighth rest
-        code_head: 'va5',
+        code_head: 'rest8th',
         stem: false,
         flag: false,
         rest: true,
@@ -881,7 +881,7 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'v3e',
       },
       'r': { // Sixteenth rest
-        code_head: 'v3c',
+        code_head: 'rest16th',
         stem: false,
         flag: false,
         rest: true,
@@ -927,7 +927,7 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'v3e',
       },
       'r': { // Thirty-second rest
-        code_head: 'v55',
+        code_head: 'rest32nd',
         stem: false,
         flag: false,
         rest: true,
@@ -973,7 +973,7 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'v3e',
       },
       'r': { // Sixty-fourth rest
-        code_head: 'v38',
+        code_head: 'rest64th',
         stem: false,
         flag: false,
         rest: true,
@@ -1019,7 +1019,7 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'v3e',
       },
       'r': {  // Hundred-twenty-eight rest
-        code_head: 'vaa',
+        code_head: 'rest128th',
         stem: false,
         flag: false,
         rest: true,
