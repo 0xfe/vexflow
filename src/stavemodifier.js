@@ -48,8 +48,8 @@ export class StaveModifier extends Element {
       },
     };
   }
-  placeGlyphOnLine(glyph, stave, line) {
-    glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs());
+  placeGlyphOnLine(glyph, stave, line, customShift = 0) {
+    glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs() + customShift);
   }
   getPadding(index) {
     return (index !== undefined && index < 2 ? 0 : this.padding);

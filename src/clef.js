@@ -71,20 +71,6 @@ export class Clef extends StaveModifier {
     };
   }
 
-  // Sizes affect the point-size of the clef.
-  static get sizes() {
-    return {
-      'default': {
-        point: 40,
-        width: 26
-      },
-      'small': {
-        point: 32,
-        width: 20,
-      },
-    };
-  }
-
   // Annotations attach to clefs -- such as "8" for octave up or down.
   static get annotations() {
     return {
@@ -153,7 +139,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(Clef.sizes[this.size].width);
+    this.setWidth(this.musicFontMetrics.clef[this.size].width);
     L('Creating clef:', type);
   }
 
@@ -167,7 +153,7 @@ export class Clef extends StaveModifier {
     } else {
       this.size = size;
     }
-    this.clef.point = Clef.sizes[this.size].point;
+    this.clef.point = this.musicFontMetrics.clef[this.size].point;
     this.glyph = new Glyph(this.clef.code, this.clef.point);
 
     // If an annotation, such as 8va, is specified, add it to the Clef object.
@@ -242,10 +228,13 @@ export class Clef extends StaveModifier {
     if (!this.stave) throw new Vex.RERR('ClefError', "Can't draw clef without stave.");
     this.setRendered();
 
+    const customShiftKey = `clef.${this.size}.${this.type}.shiftY`;
+    const customShift = this.getMusicFontMetric(customShiftKey) || 0;
+
     this.glyph.setStave(this.stave);
     this.glyph.setContext(this.stave.context);
     if (this.clef.line !== undefined) {
-      this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line);
+      this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line, customShift);
     }
 
     this.glyph.renderToStave(this.x);

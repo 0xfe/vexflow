@@ -108,6 +108,7 @@ export class Glyph extends Element {
 
     const debug = val === 'noteheadBlack';
     Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos, { debug });
+    return metrics;
   }
 
   static renderOutline(ctx, outline, scale, x_pos, y_pos, options) {

@@ -306,21 +306,21 @@ Flow.accidentalCodes.accidentals = {
   'b': { code: 'accidentalFlat', parenRightPaddingAdjustment: -2 },
   'bb': { code: 'accidentalDoubleFlat', parenRightPaddingAdjustment: -2 },
   'n': { code: 'accidentalNatural', parenRightPaddingAdjustment: -1 },
-  '{': { code: 'v9c', parenRightPaddingAdjustment: -1 },
-  '}': { code: 'v84', parenRightPaddingAdjustment: -1 },
-  'db': { code: 'v9e', parenRightPaddingAdjustment: -1 },
-  'd': { code: 'vab', parenRightPaddingAdjustment: 0 },
-  'bbs': { code: 'v90', parenRightPaddingAdjustment: -1 },
-  '++': { code: 'v51', parenRightPaddingAdjustment: -1 },
-  '+': { code: 'v78', parenRightPaddingAdjustment: -1 },
-  '+-': { code: 'v8d', parenRightPaddingAdjustment: -1 },
-  '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 },
-  'bs': { code: 'vb7', parenRightPaddingAdjustment: -1 },
-  'bss': { code: 'v39', parenRightPaddingAdjustment: -1 },
-  'o': { code: 'vd0', parenRightPaddingAdjustment: -1 },
-  'k': { code: 'vd1', parenRightPaddingAdjustment: -1 },
-  'ashs': { code: 'vd6', parenRightPaddingAdjustment: -1 },  // arabic sharp half sharp
-  'afhf': { code: 'vd7', parenRightPaddingAdjustment: -1 },  // arabic flat half flat
+  '{': { code: 'accidentalParensLeft', parenRightPaddingAdjustment: -1 },
+  '}': { code: 'accidentalParensRight', parenRightPaddingAdjustment: -1 },
+  'db': { code: 'accidentalThreeQuarterTonesFlatZimmermann', parenRightPaddingAdjustment: -1 },
+  'd': { code: 'accidentalQuarterToneFlatStein', parenRightPaddingAdjustment: 0 },
+  'bbs': { code: 'v90', parenRightPaddingAdjustment: -1 }, // no smufl code found
+  '++': { code: 'accidentalThreeQuarterTonesSharpStein', parenRightPaddingAdjustment: -1 },
+  '+': { code: 'accidentalQuarterToneSharpStein', parenRightPaddingAdjustment: -1 },
+  '+-': { code: 'accidentalKucukMucennebSharp', parenRightPaddingAdjustment: -1 },
+  '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 }, // no smufl code found
+  'bs': { code: 'accidentalBakiyeFlat', parenRightPaddingAdjustment: -1 },
+  'bss': { code: 'accidentalBuyukMucennebFlat', parenRightPaddingAdjustment: -1 },
+  'o': { code: 'accidentalSori', parenRightPaddingAdjustment: -1 },
+  'k': { code: 'accidentalKoron', parenRightPaddingAdjustment: -1 },
+  'ashs': { code: 'vd6', parenRightPaddingAdjustment: -1 },  // arabic sharp half sharp: no smufl code
+  'afhf': { code: 'vd7', parenRightPaddingAdjustment: -1 },  // arabic flat half flat: no smufl code
 };
 
 Flow.accidentalColumnsTable = {

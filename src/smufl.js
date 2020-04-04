@@ -1,12 +1,52 @@
 import { BravuraFont } from './fonts/bravura_all.smufl';
+import { Font as VexFlowFont } from './fonts/vexflow_font';
 
 const Fonts = {
   Bravura: {
     data: BravuraFont,
-  }
+    metrics: {
+      name: 'Bravura',
+      clef: {
+        'default': {
+          point: 32,
+          width: 26,
+          treble: {
+            shiftY: 1,
+          },
+          bass: {
+            shiftY: -1,
+          }
+        },
+        'small': {
+          point: 26,
+          width: 20,
+          treble: {
+            shiftY: 1.5,
+          },
+        },
+      },
+    }
+  },
+  Goneville: {
+    data: VexFlowFont,
+    metrics: {
+      name: 'Goneville',
+      clef: {
+        'default': {
+          point: 40,
+          width: 26
+        },
+        'small': {
+          point: 32,
+          width: 20,
+        },
+      },
+    }
+  },
 };
 
 const Font = Fonts.Bravura.data;
+const FontMetrics = Fonts.Bravura.metrics;
 
 // add references between smufl glyph names and code points.
 const VexFlowCodePoints = {
@@ -190,4 +230,4 @@ const VexFlowCodePoints = {
   // arpeggioBrushDown: 'v11',
 };
 
-export { VexFlowCodePoints, Font };
+export { VexFlowCodePoints, Font, FontMetrics };
