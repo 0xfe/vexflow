@@ -124,7 +124,7 @@ export class Glyph extends Element {
     const scale = point * 72.0 / (font.getResolution() * 100.0);
 
     const debug = val === 'noteheadBlack';
-    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, { debug });
+    Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, { debug });
     return metrics;
   }
 
@@ -249,7 +249,7 @@ export class Glyph extends Element {
     }
 
     const outline = this.metrics.outline;
-    const scale = this.scale;
+    const scale = this.scale * this.metrics.scale;
 
     this.setRendered();
     this.applyStyle(ctx);
@@ -269,7 +269,7 @@ export class Glyph extends Element {
     }
 
     const outline = this.metrics.outline;
-    const scale = this.scale;
+    const scale = this.scale * this.metrics.scale;
 
     this.setRendered();
     this.applyStyle();

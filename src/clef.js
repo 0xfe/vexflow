@@ -30,103 +30,43 @@ export class Clef extends StaveModifier {
         line: 1,
       },
       'alto': {
-        code: 'vad',
+        code: 'cClef',
         line: 2,
       },
       'tenor': {
-        code: 'vad',
+        code: 'cClef',
         line: 1,
       },
       'percussion': {
-        code: 'v59',
+        code: 'restMaxima',
         line: 2,
       },
       'soprano': {
-        code: 'vad',
+        code: 'cClef',
         line: 4,
       },
       'mezzo-soprano': {
-        code: 'vad',
+        code: 'cClef',
         line: 3,
       },
       'baritone-c': {
-        code: 'vad',
+        code: 'cClef',
         line: 0,
       },
       'baritone-f': {
-        code: 'v79',
+        code: 'fClef',
         line: 2,
       },
       'subbass': {
-        code: 'v79',
+        code: 'fClef',
         line: 0,
       },
       'french': {
-        code: 'v83',
+        code: 'gClef',
         line: 4,
       },
       'tab': {
-        code: 'v2f',
-      },
-    };
-  }
-
-  // Annotations attach to clefs -- such as "8" for octave up or down.
-  static get annotations() {
-    return {
-      '8va': {
-        code: 'v8',
-        sizes: {
-          'default': {
-            point: 20,
-            attachments: {
-              'treble': {
-                line: -1.2,
-                x_shift: 11,
-              },
-            },
-          },
-          'small': {
-            point: 18,
-            attachments: {
-              'treble': {
-                line: -0.4,
-                x_shift: 8,
-              },
-            },
-          },
-        },
-      },
-      '8vb': {
-        code: 'v8',
-        sizes: {
-          'default': {
-            point: 20,
-            attachments: {
-              'treble': {
-                line: 6.3,
-                x_shift: 10,
-              },
-              'bass': {
-                line: 4,
-                x_shift: 1,
-              },
-            },
-          },
-          'small': {
-            point: 18,
-            attachments: {
-              'treble': {
-                line: 5.8,
-                x_shift: 6,
-              },
-              'bass': {
-                line: 3.5,
-                x_shift: 0.5,
-              },
-            },
-          },
-        },
+        code: '6stringTabClef',
       },
     };
   }
@@ -154,17 +94,17 @@ export class Clef extends StaveModifier {
       this.size = size;
     }
     this.clef.point = this.getMusicFont().lookupMetric(`clef.${this.size}.point`, 0);
-    this.glyph = new Glyph(this.clef.code, this.clef.point);
+    this.glyph = new Glyph(this.clef.code, this.clef.point, {
+      category: `clef.${this.clef.code}.${this.size}`
+    });
 
     // If an annotation, such as 8va, is specified, add it to the Clef object.
     if (annotation !== undefined) {
-      const anno_dict = Clef.annotations[annotation];
-      this.annotation = {
-        code: anno_dict.code,
-        point: anno_dict.sizes[this.size].point,
-        line: anno_dict.sizes[this.size].attachments[this.type].line,
-        x_shift: anno_dict.sizes[this.size].attachments[this.type].x_shift,
-      };
+      const code = this.musicFont.lookupMetric(`clef.annotations.${annotation}.smuflCode`);
+      const point = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.point`);
+      const line = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.line`);
+      const x_shift = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.shiftX`);
+      this.annotation = { code, point, line, x_shift };
 
       this.attachment = new Glyph(this.annotation.code, this.annotation.point);
       this.attachment.metrics.x_max = 0;
@@ -186,39 +126,13 @@ export class Clef extends StaveModifier {
 
   setStave(stave) {
     this.stave = stave;
-
     if (this.type !== 'tab') return this;
 
-    let glyphScale;
-    let glyphOffset;
     const numLines = this.stave.getOptions().num_lines;
-    switch (numLines) {
-      case 8:
-        glyphScale = 55;
-        glyphOffset = 14;
-        break;
-      case 7:
-        glyphScale = 47;
-        glyphOffset = 8;
-        break;
-      case 6:
-        glyphScale = 40;
-        glyphOffset = 1;
-        break;
-      case 5:
-        glyphScale = 30;
-        glyphOffset = -6;
-        break;
-      case 4:
-        glyphScale = 23;
-        glyphOffset = -12;
-        break;
-      default:
-        throw new Vex.RERR('ClefError', `Invalid number of lines: ${numLines}`);
-    }
-
-    this.glyph.setPoint(glyphScale);
-    this.glyph.setYShift(glyphOffset);
+    const point = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
+    const shiftY = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.shiftY`);
+    this.glyph.setPoint(point);
+    this.glyph.setYShift(shiftY);
 
     return this;
   }
@@ -228,13 +142,10 @@ export class Clef extends StaveModifier {
     if (!this.stave) throw new Vex.RERR('ClefError', "Can't draw clef without stave.");
     this.setRendered();
 
-    const customShiftKey = `clef.${this.size}.${this.type}.shiftY`;
-    const customShift = this.getMusicFont().lookupMetric(customShiftKey, 0);
-
     this.glyph.setStave(this.stave);
     this.glyph.setContext(this.stave.context);
     if (this.clef.line !== undefined) {
-      this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line, customShift);
+      this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line);
     }
 
     this.glyph.renderToStave(this.x);
