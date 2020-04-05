@@ -122,8 +122,6 @@ export class StemmableNote extends Note {
         glyph = this.getGlyph();
       }
 
-      console.log(glyph.code_head, glyph, offsets);
-
       this.stem.setOptions({
         stem_up_y_offset: offsets.offsetYTopStemUp, // glyph.stem_up_y_offset,
         stem_down_y_offset: offsets.offsetYTopStemDown, // glyph.stem_down_y_offset,
