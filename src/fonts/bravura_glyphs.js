@@ -971,5 +971,5 @@ export const BravuraFont = {
   },
   "fontFamily": "Bravura",
   "resolution": 1000,
-  "generatedOn": "2020-04-05T16:55:38.233Z"
+  "generatedOn": "2020-04-05T20:01:03.681Z"
 };

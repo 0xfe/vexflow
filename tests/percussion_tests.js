@@ -89,8 +89,8 @@ VF.Test.Percussion = (function() {
         var voice0 = vf.Voice().addTickables([
           vf.StaveNote({ keys: ['a/5/x3'], duration: '8' }),
           vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
-          vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
-          vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
+          vf.StaveNote({ keys: ['g/5'], duration: '8' }),
+          vf.StaveNote({ keys: ['g/4/n', 'g/5/x2'], duration: '8' }),
           vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
           vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
           vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),

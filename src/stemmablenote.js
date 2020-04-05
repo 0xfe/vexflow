@@ -108,12 +108,27 @@ export class StemmableNote extends Note {
     if (this.stem) {
       this.stem.setDirection(direction);
       this.stem.setExtension(this.getStemExtension());
-      const glyph = this.getTopGlyph() || this.getGlyph();
+      let glyph = this.getTopGlyph();
+      let offsets = {
+        offsetYBaseStemUp: 0,
+        offsetYTopStemUp: 0,
+        offsetYBaseStemDown: 0,
+        offsetYTopStemDown: 0,
+      };
+
+      if (glyph) {
+        offsets = this.musicFont.lookupMetric(`stem.noteHead.${glyph.code_head}`, offsets);
+      } else {
+        glyph = this.getGlyph();
+      }
+
+      console.log(glyph.code_head, glyph, offsets);
+
       this.stem.setOptions({
-        stem_up_y_offset: glyph.stem_up_y_offset,
-        stem_down_y_offset: glyph.stem_down_y_offset,
-        stem_up_y_base_offset: glyph.stem_up_y_base_offset,
-        stem_down_y_base_offset: glyph.stem_down_y_base_offset,
+        stem_up_y_offset: offsets.offsetYTopStemUp, // glyph.stem_up_y_offset,
+        stem_down_y_offset: offsets.offsetYTopStemDown, // glyph.stem_down_y_offset,
+        stem_up_y_base_offset: offsets.offsetYBaseStemUp, // glyph.stem_up_y_base_offset,
+        stem_down_y_base_offset: offsets.offsetYBaseStemDown, // glyph.stem_down_y_base_offset,
       });
     }
 

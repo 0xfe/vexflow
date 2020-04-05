@@ -175,11 +175,10 @@ module.exports = {
   arrowheadBlackDown: 'v52',
 
   // not found:
-  // noteheadDiamondWhole: 'v27', stylistic alternate to v46?
-  // noteheadDiamondBlack: 'v70', stylistic alternate to v22?
-  // noteheadTriangleUpBlack: 'v7d', stylistic alternate to v40?
+  // noteheadDiamondWhole: 'v27', // stylistic alternate to v46?
+  // noteheadDiamondBlack: 'v70', // stylistic alternate to v22?
+  // noteheadTriangleUpBlack: 'v7d', // stylistic alternate to v40?
   // accidentalSlashedDoubleFlat: 'v90',
   // accidentalOneAndAHalfSharpTurned: 'v7a',
-  // unused marcato alternative?  'v5a',
   // arpeggioBrushDown: 'v11',
 };

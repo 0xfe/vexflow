@@ -8,23 +8,15 @@ import { DefaultFont, Fonts } from './smufl';
 
 const BackupFont = Fonts.Gonville;
 
-function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns,
-  options = { debug: false }) {
+function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   let command;
   let x;
   let y;
   let i = 0;
 
-  if (options.debug) {
-    // console.log(outline, originX, originY, scaleX, scaleY);
-  }
-
   function nextX() { return originX + outline[i++] * scaleX; }
   function nextY() { return originY + outline[i++] * scaleY; }
   function doOutline(command, ...args) {
-    if (options.debug) {
-      // console.log(command, ...args);
-    }
     outlineFns[command](...args);
   }
 
@@ -128,8 +120,7 @@ export class Glyph extends Element {
     const metrics = Glyph.loadMetrics(params.font, val, params.category);
     const scale = point * 72.0 / (params.font.getResolution() * 100.0);
 
-    const debug = val === 'noteheadBlack';
-    Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, { debug });
+    Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, options);
     return metrics;
   }
 

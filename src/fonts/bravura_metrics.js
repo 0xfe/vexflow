@@ -81,6 +81,38 @@ export const BravuraMetrics = {
     }
   },
 
+  stem: {
+    noteHead: {
+      noteheadTriangleUpHalf: {
+        offsetYBaseStemUp: 4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadTriangleUpBlack: {
+        offsetYBaseStemUp: 4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadTriangleUpWhole: {
+        offsetYBaseStemUp: 4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadXHalf: {
+        offsetYBaseStemUp: -4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadXBlack: {
+        offsetYBaseStemUp: -4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadXWhole: {
+        offsetYBaseStemUp: -4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadBlack: {
+        offsetYBaseStemDown: 2,
+      }
+    }
+  },
+
   // Values under here are used by the Glyph class to reposition and rescale
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.
@@ -99,6 +131,25 @@ export const BravuraMetrics = {
       fClef: {
         default: { shiftY: -0.5 }
       }
+    },
+    noteHead: {
+      custom: {
+        'noteheadDiamondHalfStemUp': {
+          shiftX: 1.5,
+        },
+        'noteheadDiamondBlackStemUp': {
+          shiftX: 1.5,
+        },
+        'noteheadDiamondWholeStemUp': {
+          shiftX: 1,
+        },
+        'noteheadXHalfStemUp': {
+          shiftX: -2,
+        },
+        'noteheadXWholeStemUp': {
+          shiftX: -2,
+        },
+      },
     },
   }
 }

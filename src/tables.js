@@ -182,22 +182,22 @@ Flow.keyProperties.note_values = {
 Flow.keyProperties.customNoteHeads = {
   /* Diamond */
   'D0': {
-    code: 'v27',
+    code: 'noteheadDiamondWhole',
     shift_right: 0, // deprecated for stem_{up,down}_x_offset
     stem_up_x_offset: 0,
     stem_down_x_offset: 0,
     stem_up_y_offset: -1,
     stem_down_y_offset: 0
   },
-  'D1': { code: 'noteheadDiamondHalf', shift_right: -0.5 },
-  'D2': { code: 'noteheadDiamondBlack', shift_right: -0.5 },
-  'D3': { code: 'v70', shift_right: -0.5 },
+  'D1': { code: 'noteheadDiamondHalf', stem_up_x_offset: 0.5 },
+  'D2': { code: 'noteheadDiamondBlack', stem_up_x_offset: 0.5 },
+  'D3': { code: 'noteheadDiamondBlack', stem_up_x_offset: 0.5 },
 
   /* Triangle */
-  'T0': { code: 'v49', shift_right: -2, stem_up_y_offset: -4, stem_down_y_offset: 4 },
-  'T1': { code: 'v93', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
-  'T2': { code: 'v40', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
-  'T3': { code: 'v7d', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T0': { code: 'noteheadTriangleUpWhole', shift_right: -2, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T1': { code: 'noteheadTriangleUpHalf', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T2': { code: 'noteheadTriangleUpBlack', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
+  'T3': { code: 'noteheadTriangleUpBlack', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
 
   /* Cross */
   'X0': {
@@ -219,12 +219,12 @@ Flow.keyProperties.customNoteHeads = {
   },
 
   /* Square */
-  'S1': { code: 'vd3', shift_right: 0 },
-  'S2': { code: 'vd2', shift_right: 0 },
+  'S1': { code: 'vd3', shift_right: 0 }, // no smufl code
+  'S2': { code: 'vd2', shift_right: 0 }, // no smufl code
 
   /* Rectangle */
-  'R1': { code: 'vd5', shift_right: 0 },
-  'R2': { code: 'vd4', shift_right: 0 },
+  'R1': { code: 'vd5', shift_right: 0 }, // no smufl code
+  'R2': { code: 'vd4', shift_right: 0 }, // no smufl code
 };
 
 Flow.integerToNote = integer => {
@@ -533,6 +533,8 @@ Flow.parseNoteStruct = noteStruct => {
         // We have a custom glyph specified after the note eg. /X2
         if (result && result.length === 3) {
           customTypes[i] = result[2];
+        } else {
+          customTypes[i] = type;
         }
       });
     }

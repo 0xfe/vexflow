@@ -209,11 +209,15 @@ export class NoteHead extends Note {
       this.applyStyle(ctx);
     }
 
+    const categorySuffix = `${this.glyph_code}Stem${stem_direction === Stem.UP ? 'Up' : 'Down'}`;
     if (this.note_type === 's') {
       const staveSpace = this.stave.getSpacingBetweenLines();
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
-      Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, { font: this.getMusicFont() });
+      Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
+        font: this.getMusicFont(),
+        category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`
+      });
     }
 
     if (this.style) {
