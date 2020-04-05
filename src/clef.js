@@ -104,6 +104,7 @@ export class Clef extends StaveModifier {
       const point = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.point`);
       const line = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.line`);
       const x_shift = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.shiftX`);
+
       this.annotation = { code, point, line, x_shift };
 
       this.attachment = new Glyph(this.annotation.code, this.annotation.point);

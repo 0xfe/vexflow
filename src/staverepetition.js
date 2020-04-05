@@ -118,7 +118,7 @@ export class Repetition extends StaveModifier {
 
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     if (draw_coda) {
-      Glyph.renderGlyph(ctx, symbol_x, y, 40, 'v4d');
+      Glyph.renderGlyph(ctx, symbol_x, y, 40, 'v4d', { font: this.getMusicFont() });
     }
 
     ctx.fillText(text, text_x, y + 5);

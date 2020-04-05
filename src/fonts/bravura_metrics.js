@@ -72,6 +72,9 @@ export const BravuraMetrics = {
   glyphs: {
     flag: {
       shiftX: -0.75,
+      tabStem: {
+        shiftX: -1.75,
+      }
     },
     clef: {
       gClef: {

@@ -68,7 +68,7 @@ export class StaveTempo extends StaveModifier {
       const code = Flow.getGlyphProps(duration);
 
       x += 3 * scale;
-      Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head, this.getMusicFont());
+      Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head, { font: this.getMusicFont() });
       x += code.getWidth() * scale;
 
       // Draw stem and flags
@@ -84,7 +84,7 @@ export class StaveTempo extends StaveModifier {
 
         if (code.flag) {
           Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale,
-            code.code_flag_upstem, this.getMusicFont());
+            code.code_flag_upstem, { font: this.getMusicFont() });
 
           if (!dots) x += 6 * scale;
         }

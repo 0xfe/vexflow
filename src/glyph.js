@@ -119,9 +119,14 @@ export class Glyph extends Element {
    * @param {number} point The point size to use.
    * @param {string} val The glyph code in font.getGlyphs()
    */
-  static renderGlyph(ctx, x_pos, y_pos, point, val, font = DefaultFont) {
-    const metrics = Glyph.loadMetrics(font, val);
-    const scale = point * 72.0 / (font.getResolution() * 100.0);
+  static renderGlyph(ctx, x_pos, y_pos, point, val, options) {
+    const params = {
+      font: DefaultFont,
+      category: null,
+      ...options
+    };
+    const metrics = Glyph.loadMetrics(params.font, val, params.category);
+    const scale = point * 72.0 / (params.font.getResolution() * 100.0);
 
     const debug = val === 'noteheadBlack';
     Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, { debug });

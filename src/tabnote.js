@@ -374,7 +374,7 @@ export class TabNote extends StemmableNote {
         : glyph.code_flag_upstem;
 
       // Draw the Flag
-      Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code);
+      Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code, { font: this.getMusicFont(), category: 'flag.tabStem' });
     }
   }
 
