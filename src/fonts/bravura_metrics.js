@@ -72,6 +72,15 @@ export const BravuraMetrics = {
     point: 34,
   },
 
+  articulation: {
+    articStaccatissimoAbove: {
+      padding: 2,
+    },
+    articStaccatissimoBelow: {
+      padding: 2,
+    }
+  },
+
   // Values under here are used by the Glyph class to reposition and rescale
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.
@@ -90,6 +99,6 @@ export const BravuraMetrics = {
       fClef: {
         default: { shiftY: -0.5 }
       }
-    }
+    },
   }
 }

@@ -1,6 +1,6 @@
 // SMuFL codepoints with Gonville backup codes. Add SMuFL codes
 // here and regenerate font file when needed.
-export const VALID_CODES = {
+module.exports = {
   // staff brackets and dividers (e000-e00f)
   bracketTop: 'v1b',
   bracketBottom: 'v10',
@@ -100,7 +100,9 @@ export const VALID_CODES = {
   articStaccatoAbove: 'v23', // = dot
   articStaccatoBelow: 'v23', // = dot
   articStaccatissimoAbove: 'v28',
+  articStaccatissimoBelow: 'v28',
   articMarcatoAbove: 'va',
+  articMarcatoBelow: 'va',
 
   // holds and pauses (e4c0-e4df)
   fermataAbove: 'v43',
@@ -155,6 +157,7 @@ export const VALID_CODES = {
 
   // plucked techniques (e630-e63f)
   pluckedSnapPizzicatoAbove: 'v94',
+  pluckedSnapPizzicatoBelow: 'v94',
   pluckedLeftHandPizzicato: 'v8b', // plus sign
 
   // keyboard techniques (e650-e67f)

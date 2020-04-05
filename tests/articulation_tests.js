@@ -78,7 +78,7 @@ VF.Test.Articulation = (function() {
 
       var notesBar3 = [
         new VF.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
-        new VF.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
+        new VF.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: 1 }),
         new VF.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
         new VF.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
       ];
@@ -95,7 +95,7 @@ VF.Test.Articulation = (function() {
       staveBar4.setContext(ctx).draw();
 
       var notesBar4 = [
-        new VF.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
+        new VF.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: -1 }),
         new VF.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
         new VF.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
         new VF.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
@@ -159,10 +159,10 @@ VF.Test.Articulation = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.elementId, 725, 200);
+      var ctx = contextBuilder(options.elementId, 1000, 200);
 
       // bar 1
-      var staveBar1 = new VF.Stave(10, 30, 250);
+      var staveBar1 = new VF.Stave(10, 30, 350);
       staveBar1.setContext(ctx).draw();
       var notesBar1 = [
         new VF.StaveNote({ keys: ['c/4'], duration: '16', stem_direction: 1 }),
@@ -201,7 +201,7 @@ VF.Test.Articulation = (function() {
       beam2.setContext(ctx).draw();
 
       // bar 2 - juxtaposing second bar next to first bar
-      var staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 250);
+      var staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 350);
       staveBar2.setContext(ctx).draw();
       var notesBar2 = [
         new VF.StaveNote({ keys: ['f/3'], duration: '16', stem_direction: 1 }),
@@ -252,7 +252,7 @@ VF.Test.Articulation = (function() {
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
       // bar 4 - juxtaposing second bar next to first bar
-      var staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 125);
+      var staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 150);
       staveBar4.setEndBarType(VF.Barline.type.END);
       staveBar4.setContext(ctx).draw();
 

@@ -195,6 +195,10 @@ export class Glyph extends Element {
     }
   }
 
+  getCode() {
+    return this.code;
+  }
+
   setOptions(options) {
     this.options = { ...this.options, ...options };
     this.reset();
@@ -258,7 +262,9 @@ export class Glyph extends Element {
 
     this.setRendered();
     this.applyStyle(ctx);
-    Glyph.renderOutline(ctx, outline, scale, x + this.originShift.x + this.metrics.x_shift, y + this.originShift.y + this.metrics.y_shift);
+    Glyph.renderOutline(ctx, outline, scale,
+      x + this.originShift.x + this.metrics.x_shift,
+      y + this.originShift.y + this.metrics.y_shift);
     this.restoreStyle(ctx);
   }
 

@@ -61,6 +61,11 @@ export class Modifier extends Element {
     this.spacingFromNextModifier = 0;
   }
 
+  // Called when position changes
+  reset() {
+    // do nothing
+  }
+
   // Every modifier has a category. The `ModifierContext` uses this to determine
   // the type and order of the modifiers.
   getCategory() { return Modifier.CATEGORY; }
@@ -87,6 +92,7 @@ export class Modifier extends Element {
     this.position = typeof(position) === 'string'
       ? Modifier.PositionString[position]
       : position;
+    this.reset();
     return this;
   }
 

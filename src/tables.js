@@ -286,19 +286,40 @@ Flow.textWidth = text => 7 * text.toString().length;
 Flow.articulationCodes = artic => Flow.articulationCodes.articulations[artic];
 
 Flow.articulationCodes.articulations = {
-  'a.': { code: 'v23', between_lines: true }, // Staccato
-  'av': { code: 'v28', between_lines: true }, // Staccatissimo
-  'a>': { code: 'v42', between_lines: true }, // Accent
-  'a-': { code: 'v25', between_lines: true }, // Tenuto
-  'a^': { code: 'va', between_lines: false }, // Marcato
-  'a+': { code: 'v8b', between_lines: false }, // Left hand pizzicato
-  'ao': { code: 'v94', between_lines: false }, // Snap pizzicato
-  'ah': { code: 'vb9', between_lines: false }, // Natural harmonic or open note
-  'a@a': { code: 'v43', between_lines: false }, // Fermata above staff
-  'a@u': { code: 'v5b', between_lines: false }, // Fermata below staff
-  'a|': { code: 'v75', between_lines: false }, // Bow up - up stroke
-  'am': { code: 'v97', between_lines: false }, // Bow down - down stroke
-  'a,': { code: 'vb3', between_lines: false }, // Choked
+  'a.': { code: 'augmentationDot', between_lines: true }, // Staccato
+  'av': {
+    aboveCode: 'articStaccatissimoAbove',
+    belowCode: 'articStaccatissimoBelow',
+    between_lines: true
+  }, // Staccatissimo
+  'a>': {
+    aboveCode: 'articAccentAbove',
+    belowCode: 'articAccentBelow',
+    between_lines: true
+  }, // Accent
+  'a-': {
+    aboveCode: 'articTenutoAbove',
+    belowCode: 'articTenutoBelow',
+    between_lines: true
+  }, // Tenuto
+  'a^': {
+    aboveCode: 'articMarcatoAbove',
+    belowCode: 'articMarcatoBelow',
+    between_lines: false
+  }, // Marcato
+  'a+': { code: 'pluckedLeftHandPizzicato', between_lines: false }, // Left hand pizzicato
+  'ao': {
+    aboveCode: 'pluckedSnapPizzicatoAbove',
+    belowCode: 'pluckedSnapPizzicatoBelow',
+    between_lines: false
+  }, // Snap pizzicato
+  'ah': { code: 'stringsHarmonic', between_lines: false }, // Natural harmonic or open note
+  'a@': { aboveCode: 'fermataAbove', belowCode: 'fermataBelow', between_lines: false }, // Fermata
+  'a@a': { code: 'fermataAbove', between_lines: false }, // Fermata above staff
+  'a@u': { code: 'fermataBelow', between_lines: false }, // Fermata below staff
+  'a|': { code: 'stringsUpBow', between_lines: false }, // Bow up - up stroke
+  'am': { code: 'stringsDownBow', between_lines: false }, // Bow down - down stroke
+  'a,': { code: 'pictChokeCymbal', between_lines: false }, // Choked
 };
 
 Flow.accidentalCodes = acc => Flow.accidentalCodes.accidentals[acc];

@@ -27,6 +27,7 @@ class Font {
   lookupMetric(key, defaultValue = undefined) {
     const parts = key.split('.');
     let val = this.metrics;
+    // console.log('lookupMetric:', key);
     for (let i = 0; i < parts.length; i++) {
       if (val[parts[i]] === undefined) {
         if (defaultValue !== undefined) {
@@ -38,7 +39,7 @@ class Font {
       val = val[parts[i]];
     }
 
-    // console.log('lookupMetric:', key, val);
+    // console.log('found:', key, val);
     return val;
   }
 

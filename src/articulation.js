@@ -236,12 +236,17 @@ export class Articulation extends Modifier {
       font_scale: 38,
     };
 
+    this.reset();
+  }
+
+  reset() {
     this.articulation = Flow.articulationCodes(this.type);
     if (!this.articulation) {
       throw new Vex.RERR('ArgumentError', `Articulation not found: ${this.type}`);
     }
 
-    this.glyph = new Glyph(this.articulation.code, this.render_options.font_scale);
+    const code = (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
+    this.glyph = new Glyph(code, this.render_options.font_scale);
 
     this.setWidth(this.glyph.getMetrics().width);
   }
@@ -275,6 +280,8 @@ export class Articulation extends Modifier {
 
     const initialOffset = getInitialOffset(note, position);
 
+    const padding = this.musicFont.lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
+
     let y = {
       [ABOVE]: () => {
         glyph.setOrigin(0.5, 1);
@@ -301,7 +308,7 @@ export class Articulation extends Modifier {
 
       if (isWithinLines(snappedLine, position)) glyph.setOrigin(0.5, 0.5);
 
-      y += Math.abs(snappedLine - articLine) * staffSpace * offsetDirection;
+      y += Math.abs(snappedLine - articLine) * staffSpace * offsetDirection + (padding * offsetDirection);
     }
 
     L(`Rendering articulation at (x: ${x}, y: ${y})`);
