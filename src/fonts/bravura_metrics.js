@@ -84,15 +84,15 @@ export const BravuraMetrics = {
   stem: {
     noteHead: {
       noteheadTriangleUpHalf: {
-        offsetYBaseStemUp: 4,
+        offsetYBaseStemUp: 5,
         offsetYBaseStemDown: 4,
       },
       noteheadTriangleUpBlack: {
-        offsetYBaseStemUp: 4,
+        offsetYBaseStemUp: 5,
         offsetYBaseStemDown: 4,
       },
       noteheadTriangleUpWhole: {
-        offsetYBaseStemUp: 4,
+        offsetYBaseStemUp: 5,
         offsetYBaseStemDown: 4,
       },
       noteheadXHalf: {
@@ -109,6 +109,10 @@ export const BravuraMetrics = {
       },
       noteheadBlack: {
         offsetYBaseStemDown: 2,
+      },
+      noteheadSquareWhite: {
+        offsetYBaseStemDown: -5,
+        offsetYBaseStemUp: 5,
       }
     }
   },
@@ -148,6 +152,18 @@ export const BravuraMetrics = {
         },
         'noteheadXWholeStemUp': {
           shiftX: -2,
+        },
+        'noteheadSquareWhiteStemDown': {
+          shiftX: 0.25,
+        },
+        'noteheadSquareWhiteStemUp': {
+          shiftX: -0.75,
+        },
+        'noteheadSquareBlackStemUp': {
+          shiftX: -0.75,
+        },
+        'noteheadTriangleUpWholeStemUp': {
+          shiftX: -0.75,
         },
       },
     },

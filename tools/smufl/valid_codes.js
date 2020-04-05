@@ -48,6 +48,10 @@ module.exports = {
   noteheadDiamondWhole: 'v46',
   noteheadDiamondHalf: 'v2d',
   noteheadDiamondBlack: 'v22',
+  noteheadSquareWhite: 'vd3',
+  noteheadSquareBlack: 'vd2',
+  // noteshapeSquareWhite: 'vd5', // rectangular note head (not found in bravura)
+  // noteshapeSquareBlack: 'vd4', // rectangular note head (not found in bravura)
 
   // individual notes (e1d0-e1ef)
   augmentationDot: 'v23',

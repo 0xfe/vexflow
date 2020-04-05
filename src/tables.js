@@ -219,8 +219,8 @@ Flow.keyProperties.customNoteHeads = {
   },
 
   /* Square */
-  'S1': { code: 'vd3', shift_right: 0 }, // no smufl code
-  'S2': { code: 'vd2', shift_right: 0 }, // no smufl code
+  'S1': { code: 'noteheadSquareWhite', shift_right: 0 },
+  'S2': { code: 'noteheadSquareBlack', shift_right: 0 },
 
   /* Rectangle */
   'R1': { code: 'vd5', shift_right: 0 }, // no smufl code

@@ -288,6 +288,22 @@ export const BravuraFont = {
       "ha": 250,
       "o": "m 4 -7 l 173 -177 b 180 -180 176 -180 177 -180 b 187 -177 181 -180 184 -180 l 357 -6 b 360 1 359 -4 360 -1 b 357 9 360 4 359 7 l 189 177 b 180 180 187 179 184 180 b 171 177 177 180 173 179 l 3 9 b 0 1 0 6 0 4 b 4 -7 0 -1 1 -4 z"
     },
+    "noteheadSquareWhite": {
+      "x_min": 0,
+      "x_max": 313,
+      "y_min": -125,
+      "y_max": 125,
+      "ha": 250,
+      "o": "m 451 -180 l 451 180 l 0 180 l 0 -180 z m 40 -138 l 40 140 l 410 140 l 410 -138 z"
+    },
+    "noteheadSquareBlack": {
+      "x_min": 0,
+      "x_max": 313,
+      "y_min": -125,
+      "y_max": 125,
+      "ha": 250,
+      "o": "m 451 -180 l 451 180 l 0 180 l 0 -180 z"
+    },
     "augmentationDot": {
       "x_min": 0,
       "x_max": 100,
@@ -971,5 +987,5 @@ export const BravuraFont = {
   },
   "fontFamily": "Bravura",
   "resolution": 1000,
-  "generatedOn": "2020-04-05T20:01:03.681Z"
+  "generatedOn": "2020-04-05T21:44:31.265Z"
 };
