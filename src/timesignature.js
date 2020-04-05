@@ -34,12 +34,12 @@ export class TimeSignature extends StaveModifier {
   static get glyphs() {
     return {
       'C': {
-        code: 'v41',
+        code: 'timeSigCommon',
         point: 40,
         line: 2,
       },
       'C|': {
-        code: 'vb6',
+        code: 'timeSigCutCommon',
         point: 40,
         line: 2,
       },
@@ -55,9 +55,9 @@ export class TimeSignature extends StaveModifier {
 
     const padding = customPadding;
 
-    this.point = 40;
-    this.topLine = 2;
-    this.bottomLine = 4;
+    this.point = this.musicFont.lookupMetric('timeSig.point');
+    this.topLine = 2 + this.musicFont.lookupMetric('timeSig.shiftTopLine', 0);
+    this.bottomLine = 4 + this.musicFont.lookupMetric('timeSig.shiftBottomLine', 0);
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setTimeSig(timeSpec);
     this.setWidth(this.timeSig.glyph.getMetrics().width);
@@ -91,14 +91,14 @@ export class TimeSignature extends StaveModifier {
   }
 
   makeTimeSignatureGlyph(topDigits, botDigits) {
-    const glyph = new Glyph('v0', this.point);
+    const glyph = new Glyph('timeSig0', this.point);
     glyph.topGlyphs = [];
     glyph.botGlyphs = [];
 
     let topWidth = 0;
     for (let i = 0; i < topDigits.length; ++i) {
       const num = topDigits[i];
-      const topGlyph = new Glyph('v' + num, this.point);
+      const topGlyph = new Glyph('timeSig' + num, this.point);
 
       glyph.topGlyphs.push(topGlyph);
       topWidth += topGlyph.getMetrics().width;
@@ -107,7 +107,7 @@ export class TimeSignature extends StaveModifier {
     let botWidth = 0;
     for (let i = 0; i < botDigits.length; ++i) {
       const num = botDigits[i];
-      const botGlyph = new Glyph('v' + num, this.point);
+      const botGlyph = new Glyph('timeSig' + num, this.point);
 
       glyph.botGlyphs.push(botGlyph);
       botWidth += botGlyph.getMetrics().width;

@@ -66,6 +66,12 @@ export const BravuraMetrics = {
     }
   },
 
+  timeSig: {
+    shiftTopLine: -1,
+    shiftBottomLine: -1,
+    point: 34,
+  },
+
   // Values under here are used by the Glyph class to reposition and rescale
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.

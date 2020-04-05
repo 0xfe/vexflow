@@ -56,6 +56,10 @@ export const GonvilleMetrics = {
       }
     },
 
+    timeSig: {
+      point: 40,
+    },
+
     // May not need these anymore
     lineCount: {
       '8': { point: 55, shiftY: 14 },
