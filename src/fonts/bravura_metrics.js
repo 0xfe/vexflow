@@ -1,5 +1,6 @@
 export const BravuraMetrics = {
   name: 'Bravura',
+  smufl: true,
   clef: {
     'default': {
       point: 32,
@@ -19,4 +20,13 @@ export const BravuraMetrics = {
       },
     },
   },
+
+  // Values under here are used by the Glyph class to reposition and rescale
+  // glyphs based on their category. This should be the first stop for
+  // custom font glyph repositioning.
+  glyphs: {
+    flag: {
+      shiftX: -0.75,
+    }
+  }
 }

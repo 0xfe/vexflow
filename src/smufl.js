@@ -38,6 +38,7 @@ class Font {
       val = val[parts[i]];
     }
 
+    // console.log('lookupMetric:', key, val);
     return val;
   }
 

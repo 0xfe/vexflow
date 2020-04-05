@@ -40,7 +40,9 @@ export class StemmableNote extends Note {
         ? glyph.code_flag_downstem
         : glyph.code_flag_upstem;
 
-      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale);
+      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale, {
+        category: 'flag'
+      });
     }
   }
 

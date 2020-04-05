@@ -54,13 +54,25 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns,
 }
 
 export class Glyph extends Element {
-  /* Static methods used to implement loading / unloading of glyphs */
-  static loadMetrics(font, code, cache) {
-    const glyph = font.getGlyphs()[code] || BackupFont.getGlyphs()[code];
+  /*
+    Static methods used to implement loading and rendering glyphs.
 
+    Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
+    to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
+  */
+  static loadMetrics(font, code, categoryPath = null) {
+    let glyph = font.getGlyphs()[code];
     if (!glyph) {
-      throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
+      font = BackupFont;
+      glyph = font.getGlyphs()[code];
+      if (!glyph) {
+        throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
+      }
     }
+
+    const x_shift = categoryPath ? font.lookupMetric(`glyphs.${categoryPath}.shiftX`, 0) : 0;
+    const y_shift = categoryPath ? font.lookupMetric(`glyphs.${categoryPath}.shiftY`, 0) : 0;
+    const scale = categoryPath ? font.lookupMetric(`glyphs.${categoryPath}.scale`, 1) : 1;
 
     const x_min = glyph.x_min;
     const x_max = glyph.x_max;
@@ -68,8 +80,9 @@ export class Glyph extends Element {
 
     let outline;
 
+    const CACHE = true;
     if (glyph.o) {
-      if (cache) {
+      if (CACHE) {
         if (glyph.cached_outline) {
           outline = glyph.cached_outline;
         } else {
@@ -84,8 +97,12 @@ export class Glyph extends Element {
       return {
         x_min,
         x_max,
+        x_shift,
+        y_shift,
+        scale,
         ha,
         outline,
+        font,
       };
     } else {
       throw new Vex.RERR('BadGlyph', `Glyph ${code} has no outline defined.`);
@@ -100,15 +117,14 @@ export class Glyph extends Element {
    * @param {number} x_pos X coordinate.
    * @param {number} y_pos Y coordinate.
    * @param {number} point The point size to use.
-   * @param {string} val The glyph code in Vex.Flow.Font.
-   * @param {boolean} nocache If set, disables caching of font outline.
+   * @param {string} val The glyph code in font.getGlyphs()
    */
   static renderGlyph(ctx, x_pos, y_pos, point, val, font = DefaultFont) {
-    const metrics = Glyph.loadMetrics(font, val, true);
+    const metrics = Glyph.loadMetrics(font, val);
     const scale = point * 72.0 / (font.getResolution() * 100.0);
 
     const debug = val === 'noteheadBlack';
-    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos, y_pos, { debug });
+    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, { debug });
     return metrics;
   }
 
@@ -154,8 +170,8 @@ export class Glyph extends Element {
     this.code = code;
     this.point = point;
     this.options = {
-      cache: true,
       font: this.getMusicFont(),
+      category: null,
     };
 
     this.metrics = null;
@@ -169,13 +185,13 @@ export class Glyph extends Element {
 
     if (options) {
       this.setOptions(options);
+    } else {
+      this.reset();
     }
-
-    this.reset();
   }
 
   setOptions(options) {
-    Vex.Merge(this.options, options);
+    this.options = { ...this.options, ...options };
     this.reset();
   }
 
@@ -186,16 +202,12 @@ export class Glyph extends Element {
 
   reset() {
     this.scale = this.point * 72 / (this.options.font.getResolution() * 100);
-    this.metrics = Glyph.loadMetrics(
-      this.options.font,
-      this.code,
-      this.options.cache,
-    );
+    this.metrics = Glyph.loadMetrics(this.options.font, this.code, this.options.category);
     this.bbox = Glyph.getOutlineBoundingBox(
       this.metrics.outline,
-      this.scale,
-      0,
-      0
+      this.scale * this.metrics.scale,
+      this.metrics.x_shift,
+      this.metrics.y_shift,
     );
   }
 
@@ -205,8 +217,8 @@ export class Glyph extends Element {
     }
 
     return {
-      x_min: this.metrics.x_min * this.scale,
-      x_max: this.metrics.x_max * this.scale,
+      x_min: this.metrics.x_min * this.scale * this.metrics.scale,
+      x_max: this.metrics.x_max * this.scale * this.metrics.scale,
       width: this.bbox.getW(),
       height: this.bbox.getH(),
     };
@@ -241,7 +253,7 @@ export class Glyph extends Element {
 
     this.setRendered();
     this.applyStyle(ctx);
-    Glyph.renderOutline(ctx, outline, scale, x + this.originShift.x, y + this.originShift.y);
+    Glyph.renderOutline(ctx, outline, scale, x + this.originShift.x + this.metrics.x_shift, y + this.originShift.y + this.metrics.y_shift);
     this.restoreStyle(ctx);
   }
 
@@ -262,7 +274,7 @@ export class Glyph extends Element {
     this.setRendered();
     this.applyStyle();
     Glyph.renderOutline(this.context, outline, scale,
-      x + this.x_shift, this.stave.getYForGlyphs() + this.y_shift);
+      x + this.x_shift + this.metrics.x_shift, this.stave.getYForGlyphs() + this.y_shift + this.metrics.y_shift);
     this.restoreStyle();
   }
 }
