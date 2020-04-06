@@ -334,19 +334,19 @@ Flow.accidentalColumnsTable = {
 Flow.ornamentCodes = acc => Flow.ornamentCodes.ornaments[acc];
 
 Flow.ornamentCodes.ornaments = {
-  'mordent': { code: 'v1e' },
-  'mordent_inverted': { code: 'v45' },
-  'turn': { code: 'v72' },
-  'turn_inverted': { code: 'v33' },
-  'tr': { code: 'v1f' },
-  'upprall': { code: 'v60' },
-  'downprall': { code: 'vb4' },
-  'prallup': { code: 'v6d' },
-  'pralldown': { code: 'v2c' },
-  'upmordent': { code: 'v29' },
-  'downmordent': { code: 'v68' },
-  'lineprall': { code: 'v20' },
-  'prallprall': { code: 'v86' },
+  'mordent': { code: 'ornamentShortTrill' },
+  'mordent_inverted': { code: 'ornamentMordent' },
+  'turn': { code: 'ornamentTurn' },
+  'turn_inverted': { code: 'ornamentTurnSlash' },
+  'tr': { code: 'ornamentTrill' },
+  'upprall': { code: 'ornamentPrecompSlideTrillDAnglebert' },
+  'downprall': { code: 'ornamentPrecompDoubleCadenceUpperPrefix' },
+  'prallup': { code: 'ornamentPrecompTrillSuffixDandrieu' },
+  'pralldown': { code: 'ornamentPrecompTrillLowerSuffix' },
+  'upmordent': { code: 'ornamentPrecompSlideTrillBach' },
+  'downmordent': { code: 'ornamentPrecompDoubleCadenceUpperPrefixTurn' },
+  'lineprall': { code: 'ornamentPrecompAppoggTrill' },
+  'prallprall': { code: 'ornamentTremblement' },
 };
 
 Flow.keySignature = spec => {

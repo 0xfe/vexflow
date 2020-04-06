@@ -142,7 +142,7 @@ module.exports = {
   ornamentTurn: 'v72',
   ornamentTurnSlash: 'v33',
   ornamentMordent: 'v45',
-  ornamentMordentInverted: 'v1e', // MISSING IN BRAVURA
+  ornamentShortTrill: 'v1e', // ornamentMordentInverted MISSING IN BRAVURA
   ornamentTremblement: 'v86',
 
   // precomposed trills and mordents (e5b0-e5cf)

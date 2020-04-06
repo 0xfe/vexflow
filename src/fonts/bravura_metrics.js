@@ -147,6 +147,14 @@ export const BravuraMetrics = {
         default: { shiftY: -0.5 }
       }
     },
+    ornament: {
+      ornamentTurn: {
+        scale: 1.2,
+      },
+      ornamentTurnSlash: {
+        scale: 1.2,
+      },
+    },
     noteHead: {
       custom: {
         'noteheadCircleXStemUp': {

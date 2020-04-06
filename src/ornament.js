@@ -74,7 +74,7 @@ export class Ornament extends Modifier {
       throw new Vex.RERR('ArgumentError', `Ornament not found: '${this.type}'`);
     }
 
-    this.glyph = new Glyph(this.ornament.code, this.render_options.font_scale);
+    this.glyph = new Glyph(this.ornament.code, this.render_options.font_scale, { category: `ornament.${this.ornament.code}` });
     this.glyph.setOrigin(0.5, 1.0); // FIXME: SMuFL won't require a vertical origin shift
   }
 
