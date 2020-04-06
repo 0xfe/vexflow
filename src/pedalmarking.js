@@ -20,7 +20,7 @@ function L(...args) { if (PedalMarking.DEBUG) Vex.L('Vex.Flow.PedalMarking', arg
 // coordinate shifts.
 function drawPedalGlyph(name, context, x, y, point) {
   const glyph_data = PedalMarking.GLYPHS[name];
-  const glyph = new Glyph(glyph_data.code, point);
+  const glyph = new Glyph(glyph_data.code, point, { category: 'pedalMarking' });
   glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
 }
 
@@ -29,12 +29,12 @@ export class PedalMarking extends Element {
   static get GLYPHS() {
     return {
       'pedal_depress': {
-        code: 'v36',
+        code: 'keyboardPedalPed',
         x_shift: -10,
         y_shift: 0,
       },
       'pedal_release': {
-        code: 'v5d',
+        code: 'keyboardPedalUp',
         x_shift: -2,
         y_shift: 3,
       },
@@ -103,7 +103,6 @@ export class PedalMarking extends Element {
       bracket_height: 10,
       text_margin_right: 6,
       bracket_line_width: 1,
-      glyph_point_size: 40,
       color: 'black',
     };
   }
@@ -160,6 +159,8 @@ export class PedalMarking extends Element {
       const prev_is_same = notes[index - 1] === note;
 
       let x_shift = 0;
+      const point = this.musicFont.lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+
       if (is_pedal_depressed) {
         // Adjustment for release+depress
         x_shift =  prev_is_same ? 5 : 0;
@@ -173,7 +174,7 @@ export class PedalMarking extends Element {
             x_shift = (text_width / 2) + pedal.render_options.text_margin_right;
           } else {
             // Render the Ped glyph in position
-            drawPedalGlyph('pedal_depress', ctx, x, y, pedal.render_options.glyph_point_size);
+            drawPedalGlyph('pedal_depress', ctx, x, y, point);
             x_shift = 20 + pedal.render_options.text_margin_right;
           }
         } else {
@@ -210,15 +211,14 @@ export class PedalMarking extends Element {
     let is_pedal_depressed = false;
     const pedal = this;
 
-    // The glyph point size
-    const point = pedal.render_options.glyph_point_size;
-
     // Iterate through each note, placing glyphs or custom text accordingly
     this.notes.forEach(note => {
       is_pedal_depressed = !is_pedal_depressed;
       const stave = note.getStave();
       const x = note.getAbsoluteX();
       const y = stave.getYForBottomText(pedal.line + 3);
+
+      const point = this.musicFont.lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
 
       let text_width = 0;
       if (is_pedal_depressed) {

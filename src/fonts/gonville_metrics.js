@@ -56,6 +56,15 @@ export const GonvilleMetrics = {
       }
     },
 
+    pedalMarking: {
+      up: {
+        point: 40
+      },
+      down: {
+        point: 40
+      }
+    },
+
     // These are for numeric digits, such as in time signatures
     digits: {
       point: 40,

@@ -66,6 +66,15 @@ export const BravuraMetrics = {
     }
   },
 
+  pedalMarking: {
+    up: {
+      point: 40
+    },
+    down: {
+      point: 34
+    }
+  },
+
   // These are for numeric digits, such as in time signatures
   digits: {
     shiftLine: -1,
