@@ -44,8 +44,8 @@ export class StemmableNote extends Note {
     }
   }
 
-  // Get the glyph associated with the top key of this note
-  getTopGlyph() {
+  // Get the custom glyph associated with the outer note head on the base of the stem.
+  getBaseCustomNoteHeadGlyph() {
     if (this.getStemDirection() === Stem.DOWN) {
       return this.customGlyphs[this.customGlyphs.length - 1];
     } else {
@@ -105,23 +105,20 @@ export class StemmableNote extends Note {
     }
 
     this.stem_direction = direction;
+
     if (this.stem) {
       this.stem.setDirection(direction);
       this.stem.setExtension(this.getStemExtension());
-      let glyph = this.getTopGlyph();
-      let offsets = {
-        offsetYBaseStemUp: 0,
-        offsetYTopStemUp: 0,
-        offsetYBaseStemDown: 0,
-        offsetYTopStemDown: 0,
-      };
 
-      if (glyph) {
-        offsets = this.musicFont.lookupMetric(`stem.noteHead.${glyph.code_head}`, offsets);
-      } else {
-        glyph = this.getGlyph();
-      }
+      // Lookup the base custom notehead (closest to the base of the stem) to extend or shorten
+      // the stem appropriately. If there's no custom note head, lookup the standard notehead.
+      const glyph = this.getBaseCustomNoteHeadGlyph() || this.getGlyph();
 
+      // Get the font-specific customizations for the note heads.
+      const offsets = this.musicFont.lookupMetric(`stem.noteHead.${glyph.code_head}`,
+        { offsetYBaseStemUp: 0, offsetYTopStemUp: 0, offsetYBaseStemDown: 0, offsetYTopStemDown: 0, });
+
+      // Configure the stem to use these offsets.
       this.stem.setOptions({
         stem_up_y_offset: offsets.offsetYTopStemUp, // glyph.stem_up_y_offset,
         stem_down_y_offset: offsets.offsetYTopStemDown, // glyph.stem_down_y_offset,
@@ -130,16 +127,11 @@ export class StemmableNote extends Note {
       });
     }
 
+    // Reset and reformat everything.
     this.reset();
-    if (this.flag) {
-      this.buildFlag();
-    }
-
+    if (this.flag) { this.buildFlag(); }
     this.beam = null;
-    if (this.preFormatted) {
-      this.preFormat();
-    }
-
+    if (this.preFormatted) { this.preFormat(); }
     return this;
   }
 

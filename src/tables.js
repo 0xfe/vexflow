@@ -178,54 +178,6 @@ Flow.keyProperties.note_values = {
   },
 };
 
-// Custom note heads
-Flow.keyProperties.customNoteHeads = {
-  /* Diamond */
-  'D0': {
-    code: 'noteheadDiamondWhole',
-    shift_right: 0, // deprecated for stem_{up,down}_x_offset
-    stem_up_x_offset: 0,
-    stem_down_x_offset: 0,
-    stem_up_y_offset: -1,
-    stem_down_y_offset: 0
-  },
-  'D1': { code: 'noteheadDiamondHalf', stem_up_x_offset: 0.5 },
-  'D2': { code: 'noteheadDiamondBlack', stem_up_x_offset: 0.5 },
-  'D3': { code: 'noteheadDiamondBlack', stem_up_x_offset: 0.5 },
-
-  /* Triangle */
-  'T0': { code: 'noteheadTriangleUpWhole', shift_right: -2, stem_up_y_offset: -4, stem_down_y_offset: 4 },
-  'T1': { code: 'noteheadTriangleUpHalf', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
-  'T2': { code: 'noteheadTriangleUpBlack', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
-  'T3': { code: 'noteheadTriangleUpBlack', shift_right: 0.5, stem_up_y_offset: -4, stem_down_y_offset: 4 },
-
-  /* Cross */
-  'X0': {
-    code: 'noteheadXWhole',
-    stem_up_x_offset: -2,
-    stem_down_x_offset: 0,
-    stem_up_y_offset: 4,
-    stem_down_y_offset: 4
-  },
-  'X1': { code: 'noteheadXHalf', shift_right: -0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
-  'X2': { code: 'noteheadXBlack', shift_right: 0.5, stem_up_y_offset: 4, stem_down_y_offset: 4 },
-  'X3': {
-    code: 'v3b',
-    shift_right: 0,
-    stem_up_x_offset: -1.2,
-    stem_down_x_offset: 0,
-    stem_up_y_offset: -1,
-    stem_down_y_offset: 2
-  },
-
-  /* Square */
-  'S1': { code: 'noteheadSquareWhite', shift_right: 0 },
-  'S2': { code: 'noteheadSquareBlack', shift_right: 0 },
-
-  /* Rectangle */
-  'R1': { code: 'vd5', shift_right: 0 }, // no smufl code
-  'R2': { code: 'vd4', shift_right: 0 }, // no smufl code
-};
 
 Flow.integerToNote = integer => {
   if (typeof (integer) === 'undefined') {
@@ -627,26 +579,22 @@ Flow.durationAliases = {
 // Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
 Flow.getGlyphProps = (duration, type) => {
   duration = Flow.sanitizeDuration(duration);
+  type = type || 'n'; // default type is a regular note
 
+  // Lookup duration for default glyph head code
   const code = Flow.getGlyphProps.duration_codes[duration];
-  if (code === undefined) {
-    return null;
-  }
+  if (code === undefined) { return null; }
 
-  if (!type) {
-    type = 'n';
-  }
-
+  // Get glyph properties for 'type' from duration string (note, rest, harmonic, muted, slash)
   let glyphTypeProperties = code.type[type];
 
+  // If this isn't a standard type, then lookup the custom note head map.
   if (glyphTypeProperties === undefined) {
     // Try and get it from the custom list of note heads
     const customGlyphTypeProperties = Flow.keyProperties.customNoteHeads[type.toUpperCase()];
 
     // If not, then return with nothing
-    if (customGlyphTypeProperties === undefined) {
-      return null;
-    }
+    if (customGlyphTypeProperties === undefined) { return null; }
 
     // Otherwise set it as the code_head value
     glyphTypeProperties = {
@@ -655,6 +603,7 @@ Flow.getGlyphProps = (duration, type) => {
     };
   }
 
+  // Merge duration props for 'duration' with the note head properties.
   return { ...code.common, ...glyphTypeProperties };
 };
 
@@ -664,6 +613,35 @@ Flow.getGlyphProps.validTypes = {
   'h': { name: 'harmonic' },
   'm': { name: 'muted' },
   's': { name: 'slash' },
+};
+
+// Custom note heads
+Flow.keyProperties.customNoteHeads = {
+  /* Diamond */
+  'D0': { code: 'noteheadDiamondWhole', },
+  'D1': { code: 'noteheadDiamondHalf' },
+  'D2': { code: 'noteheadDiamondBlack' },
+  'D3': { code: 'noteheadDiamondBlack' },
+
+  /* Triangle */
+  'T0': { code: 'noteheadTriangleUpWhole' },
+  'T1': { code: 'noteheadTriangleUpHalf' },
+  'T2': { code: 'noteheadTriangleUpBlack' },
+  'T3': { code: 'noteheadTriangleUpBlack' },
+
+  /* Cross */
+  'X0': { code: 'noteheadXWhole', },
+  'X1': { code: 'noteheadXHalf' },
+  'X2': { code: 'noteheadXBlack' },
+  'X3': { code: 'noteheadCircleX' },
+
+  /* Square */
+  'S1': { code: 'noteheadSquareWhite' },
+  'S2': { code: 'noteheadSquareBlack' },
+
+  /* Rectangle */
+  'R1': { code: 'vd5' }, // no smufl code
+  'R2': { code: 'vd4' }, // no smufl code
 };
 
 Flow.getGlyphProps.duration_codes = {

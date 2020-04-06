@@ -82,6 +82,8 @@ export const BravuraMetrics = {
   },
 
   stem: {
+    // These are stem (Y) offsets to the note heads. To shift the
+    // noteheads (x-position) themselves, see glyphs.notehead.custom.
     noteHead: {
       noteheadTriangleUpHalf: {
         offsetYBaseStemUp: 5,
@@ -138,6 +140,12 @@ export const BravuraMetrics = {
     },
     noteHead: {
       custom: {
+        'noteheadCircleXStemUp': {
+          shiftX: 1.5,
+        },
+        'noteheadCircleXStemDown': {
+          shiftX: 0.25,
+        },
         'noteheadDiamondHalfStemUp': {
           shiftX: 1.5,
         },
@@ -150,8 +158,14 @@ export const BravuraMetrics = {
         'noteheadXHalfStemUp': {
           shiftX: -2,
         },
+        'noteheadXHalfStemDown': {
+          shiftX: 1,
+        },
         'noteheadXWholeStemUp': {
-          shiftX: -2,
+          shiftX: -4,
+        },
+        'noteheadXWholeStemDown': {
+          shiftX: 1,
         },
         'noteheadSquareWhiteStemDown': {
           shiftX: 0.25,
