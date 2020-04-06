@@ -68,4 +68,4 @@ const Fonts = {
 
 const DefaultFont = Fonts.Bravura;
 
-export { Fonts, DefaultFont };
+export { Fonts, DefaultFont, Font };

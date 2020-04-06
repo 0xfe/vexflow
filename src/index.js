@@ -73,7 +73,7 @@ import { EasyScore } from './easyscore';
 import { Registry } from './registry';
 import { StaveText } from './stavetext';
 
-import { Fonts, DefaultFont } from './smufl';
+import { Font, Fonts, DefaultFont } from './smufl';
 
 Vex.Flow = Flow;
 Vex.Flow.Element = Element;
@@ -147,6 +147,7 @@ Vex.Flow.EasyScore = EasyScore;
 Vex.Flow.Registry = Registry;
 Vex.Flow.StaveText = StaveText;
 
+Vex.Flow.Font = Font;
 Vex.Flow.Fonts = Fonts;
 Vex.Flow.DefaultFont = DefaultFont;
 
