@@ -45,10 +45,13 @@ export class MultiMeasureRest extends Element {
     super();
     this.setAttribute('type', 'MultiMeasureRest');
 
+    const point = this.musicFont.lookupMetric('digits.point');
+    const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
+
     this.render_options = {
       show_number: true,
-      number_line: -0.5,
-      number_glyph_point: 40, // same as TimeSignature.
+      number_line: -0.5 + fontLineShift,
+      number_glyph_point: point, // same as TimeSignature.
 
       padding_left: undefined,
       padding_right: undefined,

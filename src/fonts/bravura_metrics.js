@@ -66,9 +66,9 @@ export const BravuraMetrics = {
     }
   },
 
-  timeSig: {
-    shiftTopLine: -1,
-    shiftBottomLine: -1,
+  // These are for numeric digits, such as in time signatures
+  digits: {
+    shiftLine: -1,
     point: 34,
   },
 
@@ -164,7 +164,7 @@ export const BravuraMetrics = {
         },
         'noteheadTriangleUpWholeStemUp': {
           shiftX: -0.75,
-        },
+        }
       },
     },
   }

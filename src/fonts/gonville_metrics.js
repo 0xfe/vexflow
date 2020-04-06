@@ -56,8 +56,9 @@ export const GonvilleMetrics = {
       }
     },
 
-    timeSig: {
-      point: 40,
+    // These are for numeric digits, such as in time signatures
+    digits: {
+      shiftLine: -1,
     },
 
     // May not need these anymore
