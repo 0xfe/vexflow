@@ -217,8 +217,8 @@ Flow.tabToGlyph = (fret, scale = 1.0) => {
   let shift_y = 0;
 
   if (fret.toString().toUpperCase() === 'X') {
-    const glyphMetrics = new Glyph('v7f', Flow.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
-    glyph = 'v7f';
+    const glyphMetrics = new Glyph('accidentalDoubleSharp', Flow.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
+    glyph = 'accidentalDoubleSharp';
     width = glyphMetrics.width;
     shift_y = -glyphMetrics.height / 2;
   } else {
@@ -578,7 +578,7 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'noteheadDoubleWhole',
       },
       'h': { // Breve note harmonic
-        code_head: 'v59',
+        code_head: 'unpitchedPercussionClef1',
       },
       'm': { // Breve note muted -
         code_head: 'vf',

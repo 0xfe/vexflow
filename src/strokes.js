@@ -122,22 +122,23 @@ export class Stroke extends Modifier {
     let arrow_y;
     let text_shift_x;
     let text_y;
+
     switch (this.type) {
       case Stroke.Type.BRUSH_DOWN:
-        arrow = 'vc3';
+        arrow = 'arrowheadBlackUp';
         arrow_shift_x = -3;
         arrow_y = topY - (line_space / 2) + 10;
         botY += (line_space / 2);
         break;
       case Stroke.Type.BRUSH_UP:
-        arrow = 'v11';
+        arrow = 'arrowheadBlackDown';
         arrow_shift_x = 0.5;
         arrow_y = botY + (line_space / 2);
         topY -= (line_space / 2);
         break;
       case Stroke.Type.ROLL_DOWN:
       case Stroke.Type.RASQUEDO_DOWN:
-        arrow = 'vc3';
+        arrow = 'arrowheadBlackUp';
         arrow_shift_x = -3;
         text_shift_x = this.x_shift + arrow_shift_x - 2;
         if (this.note instanceof StaveNote) {
@@ -158,7 +159,7 @@ export class Stroke extends Modifier {
         break;
       case Stroke.Type.ROLL_UP:
       case Stroke.Type.RASQUEDO_UP:
-        arrow = 'v52';
+        arrow = 'arrowheadBlackDown';
         arrow_shift_x = -4;
         text_shift_x = this.x_shift + arrow_shift_x - 1;
         if (this.note instanceof StaveNote) {
@@ -184,10 +185,12 @@ export class Stroke extends Modifier {
         throw new Vex.RERR('InvalidType', `The stroke type ${this.type} does not exist`);
     }
 
+    let strokeLine = 'straight';
     // Draw the stroke
     if (this.type === Stroke.Type.BRUSH_DOWN || this.type === Stroke.Type.BRUSH_UP) {
       this.context.fillRect(x + this.x_shift, topY, 1, botY - topY);
     } else {
+      strokeLine = 'wiggly';
       if (this.note instanceof StaveNote) {
         for (let i = topY; i <= botY; i += line_space) {
           Glyph.renderGlyph(
@@ -225,7 +228,8 @@ export class Stroke extends Modifier {
       x + this.x_shift + arrow_shift_x,
       arrow_y,
       this.render_options.font_scale,
-      arrow
+      arrow,
+      { category: `stroke.${arrow}.${strokeLine}` }
     );
 
     // Draw the rasquedo "R"

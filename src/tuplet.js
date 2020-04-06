@@ -91,7 +91,7 @@ export class Tuplet extends Element {
     this.ratioed = 'ratioed' in this.options ?
       this.options.ratioed :
       (Math.abs(this.notes_occupied - this.num_notes) > 1);
-    this.point = 28;
+    this.point = this.musicFont.lookupMetric('digits.tupletPoint');
     this.y_pos = 16;
     this.x_pos = 100;
     this.width = 200;
@@ -195,14 +195,14 @@ export class Tuplet extends Element {
     this.numerator_glyphs = [];
     let n = this.num_notes;
     while (n >= 1) {
-      this.numerator_glyphs.unshift(new Glyph('v' + (n % 10), this.point));
+      this.numerator_glyphs.unshift(new Glyph('timeSig' + (n % 10), this.point));
       n = parseInt(n / 10, 10);
     }
 
     this.denom_glyphs = [];
     n = this.notes_occupied;
     while (n >= 1) {
-      this.denom_glyphs.unshift(new Glyph('v' + (n % 10), this.point));
+      this.denom_glyphs.unshift(new Glyph('timeSig' + (n % 10), this.point));
       n = parseInt(n / 10, 10);
     }
   }
@@ -336,9 +336,11 @@ export class Tuplet extends Element {
     }
 
     // draw numerator glyphs
+    const shiftY = this.musicFont.lookupMetric('digits.shiftY', 0);
+
     let x_offset = 0;
     this.numerator_glyphs.forEach(glyph => {
-      glyph.render(this.context, notation_start_x + x_offset, this.y_pos + (this.point / 3) - 2);
+      glyph.render(this.context, notation_start_x + x_offset, this.y_pos + (this.point / 3) - 2 + shiftY);
       x_offset += glyph.getMetrics().width;
     });
 
@@ -356,7 +358,7 @@ export class Tuplet extends Element {
       this.context.fill();
       x_offset += this.point * 0.32;
       this.denom_glyphs.forEach(glyph => {
-        glyph.render(this.context, notation_start_x + x_offset, this.y_pos + (this.point / 3) - 2);
+        glyph.render(this.context, notation_start_x + x_offset, this.y_pos + (this.point / 3) - 2 + shiftY);
         x_offset += glyph.getMetrics().width;
       });
     }

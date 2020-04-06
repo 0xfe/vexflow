@@ -177,6 +177,8 @@ module.exports = {
   // arrows and arrowheads (eb60-eb8f)
   arrowheadBlackUp: 'vc3',
   arrowheadBlackDown: 'v52',
+  arpeggiatoUp: null, // stroke
+  arpeggiatoDown: null, // stroke
 
   // not found:
   // noteheadDiamondWhole: 'v27', // stylistic alternate to v46?

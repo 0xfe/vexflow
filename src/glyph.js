@@ -45,6 +45,20 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   }
 }
 
+// TODO: Remove
+Vex.MISSING_GLYPHS = {};
+Vex.IGNORED_MISSING_GLYPHS = {
+  'v90': true, // microtonal
+  'v7a': true, // microtonal
+  'vd6': true, // microtonal
+  'vd7': true, // microtonal
+  'vf': true, // muted breve (double whole)
+  'va3': true, // squiggly stroke
+  'vd5': true, // rectangle note head white
+  'vd4': true, // rectangle note head black
+
+};
+
 export class Glyph extends Element {
   /*
     Static methods used to implement loading and rendering glyphs.
@@ -55,6 +69,12 @@ export class Glyph extends Element {
   static loadMetrics(font, code, categoryPath = null) {
     let glyph = font.getGlyphs()[code];
     if (!glyph) {
+      if (!Vex.MISSING_GLYPHS[code] && !Vex.IGNORED_MISSING_GLYPHS[code]) {
+        // eslint-disable-next-line
+        console.log('Missing SMuFL glyph:', code);
+        Vex.MISSING_GLYPHS[code] = new Error().stack;
+      }
+
       font = BackupFont;
       glyph = font.getGlyphs()[code];
       if (!glyph) {
@@ -118,6 +138,7 @@ export class Glyph extends Element {
       ...options
     };
     const metrics = Glyph.loadMetrics(params.font, val, params.category);
+    point = params.category ? params.font.lookupMetric(`glyphs.${params.category}.point`, point) : point;
     const scale = point * 72.0 / (params.font.getResolution() * 100.0);
 
     Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, options);

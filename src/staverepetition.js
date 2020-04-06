@@ -88,13 +88,13 @@ export class Repetition extends StaveModifier {
 
   drawCodaFixed(stave, x) {
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-    Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 40, 'v4d');
+    Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 40, 'coda', { category: 'coda' });
     return this;
   }
 
   drawSignoFixed(stave, x) {
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
-    Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 30, 'v8c');
+    Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 30, 'segno', { category: 'segno' });
     return this;
   }
 
@@ -118,7 +118,7 @@ export class Repetition extends StaveModifier {
 
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     if (draw_coda) {
-      Glyph.renderGlyph(ctx, symbol_x, y, 40, 'v4d', { font: this.getMusicFont() });
+      Glyph.renderGlyph(ctx, symbol_x, y, 40, 'coda', { font: this.getMusicFont(), category: 'coda' });
     }
 
     ctx.fillText(text, text_x, y + 5);

@@ -77,8 +77,13 @@ export const BravuraMetrics = {
 
   // These are for numeric digits, such as in time signatures
   digits: {
+    // used by timesig
     shiftLine: -1,
     point: 34,
+
+    // used by tuplets
+    tupletPoint: 22,
+    shiftY: -6,
   },
 
   articulation: {
@@ -87,6 +92,25 @@ export const BravuraMetrics = {
     },
     articStaccatissimoBelow: {
       padding: 2,
+    }
+  },
+
+  tremolo: {
+    default: {
+      point: 25,
+      spacing: 5,
+      offsetYStemUp: -5,
+      offsetYStemDown: 5,
+      offsetXStemUp: 11,
+      offsetXStemDown: 1,
+    },
+    grace: {
+      point: 18,
+      spacing: 4,
+      offsetYStemUp: -5,
+      offsetYStemDown: 5,
+      offsetXStemUp: 7,
+      offsetXStemDown: 1,
     }
   },
 
@@ -132,6 +156,14 @@ export const BravuraMetrics = {
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.
   glyphs: {
+    coda: {
+      point: 20,
+      shiftX: -7,
+      shiftY: 8,
+    },
+    segno: {
+      shiftX: -7,
+    },
     flag: {
       shiftX: -0.75,
       tabStem: {
@@ -154,6 +186,26 @@ export const BravuraMetrics = {
       ornamentTurnSlash: {
         scale: 1.2,
       },
+    },
+    stroke: {
+      arrowheadBlackDown: {
+        straight: {
+          shiftX: -4.5,
+        },
+        wiggly: {
+          shiftX: -1,
+          shiftY: 1,
+        }
+      },
+      arrowheadBlackUp: {
+        straight: {
+          shiftX: -0.85,
+        },
+        wiggly: {
+          shiftX: -1,
+          shiftY: 1,
+        }
+      }
     },
     noteHead: {
       custom: {

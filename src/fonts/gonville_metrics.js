@@ -65,9 +65,29 @@ export const GonvilleMetrics = {
       }
     },
 
+    tremolo: {
+      default: {
+        point: 40,
+        spacing: 4,
+        offsetYStemUp: -9,
+        offsetYStemDown: -21,
+        offsetXStemUp: 6,
+        offsetXStemDown: -2,
+      },
+      grace: {
+        point: 30,
+        spacing: 4,
+        offsetYStemUp: -9,
+        offsetYStemDown: -21,
+        offsetXStemUp: 6,
+        offsetXStemDown: -2,
+      }
+    },
+
     // These are for numeric digits, such as in time signatures
     digits: {
       point: 40,
+      tupletPoint: 28,
     },
 
     // May not need these anymore

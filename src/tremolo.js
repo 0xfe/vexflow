@@ -7,13 +7,11 @@ import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
+import { Stem } from './stem';
 
 export class Tremolo extends Modifier {
   static get CATEGORY() { return 'tremolo'; }
-  static get YOFFSETSTEMUP() { return -9; }
-  static get YOFFSETSTEMDOWN() { return -21; }
-  static get XOFFSETSTEMUP() { return 6; }
-  static get XOFFSETSTEMDOWN() { return -2; }
+
   constructor(num) {
     super();
     this.setAttribute('type', 'Tremolo');
@@ -22,7 +20,7 @@ export class Tremolo extends Modifier {
     this.note = null;
     this.index = null;
     this.position = Modifier.Position.CENTER;
-    this.code = 'v74';
+    this.code = 'tremolo1';
   }
 
   getCategory() { return Tremolo.CATEGORY; }
@@ -36,15 +34,21 @@ export class Tremolo extends Modifier {
 
     this.setRendered();
     const stemDirection = this.note.getStemDirection();
-    this.y_spacing = 4 * stemDirection;
+
     const start = this.note.getModifierStartXY(this.position, this.index);
     let x = start.x;
-    let y = this.note.stem.getExtents().topY;
-    const scale = this.note.getCategory() === 'gracenotes' ? GraceNote.SCALE : 1;
+    const isGraceNote =  this.note.getCategory() === 'gracenotes';
+    const scale = isGraceNote ? GraceNote.SCALE : 1;
+    const category = `tremolo.${isGraceNote ? 'grace' : 'default'}`;
+
+    this.y_spacing = this.musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
+    const height = this.num * this.y_spacing;
+    let y = this.note.stem.getExtents().baseY - height;
+
     if (stemDirection < 0) {
-      y += Tremolo.YOFFSETSTEMDOWN * scale;
+      y += this.musicFont.lookupMetric(`${category}.offsetYStemDown`) * scale;
     } else {
-      y += Tremolo.YOFFSETSTEMUP * scale;
+      y += this.musicFont.lookupMetric(`${category}.offsetYStemUp`) * scale;
     }
 
     this.font = {
@@ -54,14 +58,14 @@ export class Tremolo extends Modifier {
     };
 
     this.render_options = {
-      font_scale: 35 * scale,
+      font_scale: this.musicFont.lookupMetric(`${category}.point`),
       stroke_px: 3,
       stroke_spacing: 10 * scale,
     };
 
-    x += stemDirection < 0 ? Tremolo.XOFFSETSTEMDOWN : Tremolo.XOFFSETSTEMUP;
+    x += this.musicFont.lookupMetric(`${category}.offsetXStem${stemDirection === Stem.UP ? 'Up' : 'Down'}`);
     for (let i = 0; i < this.num; ++i) {
-      Glyph.renderGlyph(this.context, x, y, this.render_options.font_scale, this.code);
+      Glyph.renderGlyph(this.context, x, y, this.render_options.font_scale, this.code, { category });
       y += this.y_spacing;
     }
   }
