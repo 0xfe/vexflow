@@ -2,8 +2,7 @@
 
 <head>
   <title>Vex Glyphs</title>
-  <script src="../../../tests/support/jquery.js"
-    type="text/javascript" charset="utf-8"></script>
+  <script src="../../../tests/support/jquery.js" type="text/javascript" charset="utf-8"></script>
   <style type="text/css">
     body {
       padding: 20px;
@@ -41,26 +40,29 @@
 
   <script src="../../../build/vexflow-debug.js"></script>
   <script>
-    $(function() {
+    $(function () {
       var canvas = document.getElementById("glyphs");
       var x = 0;
 
+      const glyphs = Vex.Flow.Fonts.Gonville.getGlyphs();
+
       // Get number of glyphs and rename elements
-      var counter = 0;
-      for (var glyph in Vex.Flow.Font.glyphs) {
-        Vex.Flow.Font.glyphs[glyph] = Vex.Flow.Font.glyphs[glyph];
-        counter++;
-      }
+      var counter = Object.keys(glyphs).length;
 
       var canvas_height = ((counter + 1) / (800 / (60 * 2))) * 60;
-      canvas.height = canvas_height;
-      canvas.width = 800;
 
-      var ctx = canvas.getContext("2d");
+      // Retina display trick
+      canvas.height = canvas_height * 2;
+      canvas.width = 800 * 2;
+      canvas.style.height = canvas_height
+      canvas.style.width = 800
+      var ctx = canvas.getContext("2d")
+      ctx.scale(2, 2);
+
       ctx.font = "10pt Courier";
 
       var y = 60;
-      for (var glyph in Vex.Flow.Font.glyphs) {
+      for (var glyph in glyphs) {
         ctx.fillStyle = "#222";
         ctx.fillText(glyph, x, y);
         x += 60;
@@ -78,14 +80,14 @@
 
         ctx.fillStyle = "green";
 
-        if (Vex.Flow.Font.glyphs[glyph].o) {
-          g = new Vex.Flow.Glyph(glyph, 38);
+        if (glyphs[glyph].o) {
+          g = new Vex.Flow.Glyph(glyph, 38, { font: Vex.Flow.Fonts.Gonville });
           g.render(ctx, x, y);
           ctx.save();
           ctx.font = "6pt Arial";
           var metrics = g.getMetrics();
-          ctx.fillText(Math.floor(g.getMetrics().width), x - 35, y - 15 );
-          ctx.fillText(Math.floor(g.getMetrics().height), x - 35, y - 8 );
+          ctx.fillText(Math.floor(g.getMetrics().width), x - 35, y - 15);
+          ctx.fillText(Math.floor(g.getMetrics().height), x - 35, y - 8);
           // ctx.fillText(Math.floor(g.getMetrics().x_min), x - 25, y - 1 );
           // ctx.fillText(Math.floor(g.getMetrics().x_max), x - 25, y + 8 );
           ctx.restore();
@@ -108,13 +110,13 @@
       <i>Cross indicates render coordinates.</i>
     </p>
 
-  <canvas id="glyphs" width="800" height="1600">
-    HTML5 Canvas not supported on this browser.
-  </canvas>
+    <canvas id="glyphs" width="800" height="1600">
+      HTML5 Canvas not supported on this browser.
+    </canvas>
 
-  <p>
-  For more information visit <a href="http://0xfe.blogspot.com">0xfe.blogspot.com</a>.
-  </p>
+    <p>
+      For more information visit <a href="http://0xfe.blogspot.com">0xfe.blogspot.com</a>.
+    </p>
 
   </center>
 </body>
