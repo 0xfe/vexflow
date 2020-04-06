@@ -50,7 +50,7 @@ export class MultiMeasureRest extends Element {
 
     this.render_options = {
       show_number: true,
-      number_line: -0.5 + fontLineShift,
+      number_line: -0.5,
       number_glyph_point: point, // same as TimeSignature.
 
       padding_left: undefined,
@@ -70,6 +70,8 @@ export class MultiMeasureRest extends Element {
       semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
     };
     Vex.Merge(this.render_options, options);
+
+    this.render_options.number_line += fontLineShift;
 
     this.number_of_measures = number_of_measures;
     this.xs = {
