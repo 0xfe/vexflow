@@ -69,6 +69,87 @@ export class Note extends Tickable {
     ctx.restore();
   }
 
+  static parseDuration(durationString) {
+    if (typeof (durationString) !== 'string') {
+      return null;
+    }
+
+    const regexp = /(\d*\/?\d+|[a-z])(d*)([nrhms]|$)/;
+
+    const result = regexp.exec(durationString);
+    if (!result) {
+      return null;
+    }
+
+    const duration = result[1];
+    const dots = result[2].length;
+    let type = result[3];
+
+    if (type.length === 0) {
+      type = 'n';
+    }
+
+    return {
+      duration,
+      dots,
+      type,
+    };
+  }
+
+  static parseNoteStruct(noteStruct) {
+    const durationString = noteStruct.duration;
+    const customTypes = [];
+
+    // Preserve backwards-compatibility
+    const durationProps = Note.parseDuration(durationString);
+    if (!durationProps) { return null; }
+
+    // If specified type is invalid, return null
+    let type = noteStruct.type;
+    if (type && !Flow.getGlyphProps.validTypes[type]) { return null; }
+
+
+    // If no type specified, check duration or custom types
+    if (!type) {
+      type = durationProps.type || 'n';
+
+      // If we have keys, try and check if we've got a custom glyph
+      if (noteStruct.keys !== undefined) {
+        noteStruct.keys.forEach((k, i) => {
+          const result = k.split('/');
+          // We have a custom glyph specified after the note eg. /X2
+          customTypes[i] = (result && result.length === 3) ? result[2] : type;
+        });
+      }
+    }
+
+    // Calculate the tick duration of the note
+    let ticks = Flow.durationToTicks(durationProps.duration);
+    if (ticks == null) { return null; }
+
+    // Are there any dots?
+    const dots = noteStruct.dots ? noteStruct.dots : durationProps.dots;
+    if (typeof (dots) !== 'number') { return null; }
+
+    // Add ticks as necessary depending on the numbr of dots
+    let currentTicks = ticks;
+    for (let i = 0; i < dots; i++) {
+      if (currentTicks <= 1) return null;
+
+      currentTicks = currentTicks / 2;
+      ticks += currentTicks;
+    }
+
+    return {
+      duration: durationProps.duration,
+      type,
+      customTypes,
+      dots,
+      ticks,
+    };
+  }
+
+
   // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
   // positioning and layout.
   // To create a new note you need to provide a `noteStruct`, which consists
@@ -90,7 +171,7 @@ export class Note extends Tickable {
     }
 
     // Parse `noteStruct` and get note properties.
-    const initStruct = Flow.parseNoteStruct(noteStruct);
+    const initStruct = Note.parseNoteStruct(noteStruct);
     if (!initStruct) {
       throw new Vex.RuntimeError(
         'BadArguments', `Invalid note initialization object: ${JSON.stringify(noteStruct)}`
