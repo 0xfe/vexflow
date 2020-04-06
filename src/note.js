@@ -70,30 +70,17 @@ export class Note extends Tickable {
   }
 
   static parseDuration(durationString) {
-    if (typeof (durationString) !== 'string') {
-      return null;
-    }
+    if (typeof (durationString) !== 'string') { return null; }
 
     const regexp = /(\d*\/?\d+|[a-z])(d*)([nrhms]|$)/;
-
     const result = regexp.exec(durationString);
-    if (!result) {
-      return null;
-    }
+    if (!result) { return null; }
 
     const duration = result[1];
     const dots = result[2].length;
-    let type = result[3];
+    const type = result[3] || 'n';
 
-    if (type.length === 0) {
-      type = 'n';
-    }
-
-    return {
-      duration,
-      dots,
-      type,
-    };
+    return { duration, dots, type };
   }
 
   static parseNoteStruct(noteStruct) {
