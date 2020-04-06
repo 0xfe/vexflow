@@ -149,6 +149,8 @@ export class StaveConnector extends Element {
         break;
       case StaveConnector.type.DOUBLE:
         topX -= (this.width + 2);
+        topY -= this.thickness;
+        attachment_height += 0.5;
         break;
       case StaveConnector.type.BRACE: {
         width = 12;
@@ -193,13 +195,14 @@ export class StaveConnector extends Element {
         topX -= (this.width + 2);
         break;
       case StaveConnector.type.BOLD_DOUBLE_LEFT:
-        drawBoldDoubleLine(ctx, this.type, topX + this.x_shift, topY, botY);
+        drawBoldDoubleLine(ctx, this.type, topX + this.x_shift, topY, botY - this.thickness);
         break;
       case StaveConnector.type.BOLD_DOUBLE_RIGHT:
-        drawBoldDoubleLine(ctx, this.type, topX, topY, botY);
+        drawBoldDoubleLine(ctx, this.type, topX, topY, botY - this.thickness);
         break;
       case StaveConnector.type.THIN_DOUBLE:
         width = 1;
+        attachment_height -= this.thickness;
         break;
       case StaveConnector.type.NONE:
         break;
