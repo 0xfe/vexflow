@@ -47,7 +47,7 @@ export class MultiMeasureRest extends Element {
 
     this.render_options = {
       show_number: true,
-      number_line: -0.5,
+      number_line: -1.5,
       number_glyph_point: 40, // same as TimeSignature.
 
       padding_left: undefined,
