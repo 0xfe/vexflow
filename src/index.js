@@ -71,6 +71,7 @@ import { Factory } from './factory';
 import { Parser } from './parser';
 import { EasyScore } from './easyscore';
 import { Registry } from './registry';
+import { StaveText } from './stavetext';
 
 import { Fonts, DefaultFont } from './smufl';
 
@@ -144,6 +145,7 @@ Vex.Flow.Factory = Factory;
 Vex.Flow.Parser = Parser;
 Vex.Flow.EasyScore = EasyScore;
 Vex.Flow.Registry = Registry;
+Vex.Flow.StaveText = StaveText;
 
 Vex.Flow.Fonts = Fonts;
 Vex.Flow.DefaultFont = DefaultFont;
