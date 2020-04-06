@@ -129,7 +129,7 @@ VF.Test.BachDemo = (function() {
       system.addStave({
         voices: [
           voice([
-            notes('B5/q'),
+            notes('B4/q'),
             beam(notes('C5/8, B4, A4, G4[id="m6a"]', { stem: 'up' })),
           ].reduce(concat)),
         ],
