@@ -100,11 +100,66 @@ export const GonvilleMetrics = {
     tupletPoint: 28,
   },
 
+  stem: {
+    // These are stem (Y) offsets to the note heads. To shift the
+    // noteheads (x-position) themselves, see glyphs.notehead.custom.
+    noteHead: {
+      noteheadTriangleUpHalf: {
+        offsetYBaseStemUp: 5,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadTriangleUpBlack: {
+        offsetYBaseStemUp: 5,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadTriangleUpWhole: {
+        offsetYBaseStemUp: 5,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadXHalf: {
+        offsetYBaseStemUp: -4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadXBlack: {
+        offsetYBaseStemUp: -4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadXWhole: {
+        offsetYBaseStemUp: -4,
+        offsetYBaseStemDown: 4,
+      },
+      noteheadBlack: {
+        offsetYBaseStemDown: 2,
+      },
+      noteheadSquareWhite: {
+        offsetYBaseStemDown: -5,
+        offsetYBaseStemUp: 5,
+      }
+    }
+  },
+
+
   glyphs: {
     textNote: {
       default: {
         point: 40,
       }
+    },
+    noteHead: {
+      custom: {
+        'noteheadDiamondWholeStemUp': {
+          shiftX: -6,
+        },
+        'noteheadCircleXStemUp': {
+          shiftX: -1.5,
+        },
+        'noteheadXWholeStemUp': {
+          shiftX: -5,
+        },
+        'noteheadTriangleUpWholeStemUp': {
+          shiftX: -6,
+        },
+      },
     },
   }
 }

@@ -84,7 +84,7 @@ export class StaveTempo extends StaveModifier {
 
         if (code.flag) {
           Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale,
-            code.code_flag_upstem);
+            code.code_flag_upstem, { category: 'flag.staveTempo' });
 
           if (!dots) x += 6 * scale;
         }

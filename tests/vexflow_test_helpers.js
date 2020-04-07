@@ -204,6 +204,7 @@ VF.Test = (function () {
       }
 
       const testFunc = (fontName) => (assert) => {
+        const defaultFontStack = VF.DEFAULT_FONT_STACK;
         VF.DEFAULT_FONT_STACK = fontStacks[fontName];
         var elementId = VF.Test.genID('svg_'+fontName);
         var title = VF.Test.genTitle('SVG '+fontName, assert, name);
@@ -218,10 +219,12 @@ VF.Test = (function () {
         };
 
         func(testOptions, VF.Renderer.getSVGContext);
+        VF.DEFAULT_FONT_STACK = defaultFontStack;
       }
 
-      QUnit.test(name, testFunc('Bravura'))
-      QUnit.test(name, testFunc('Gonville'))
+      QUnit.test(name, testFunc('Bravura'));
+      QUnit.test(name, testFunc('Gonville'));
+
     },
 
     runNodeTest: function (name, func, params) {

@@ -174,6 +174,9 @@ export const BravuraMetrics = {
       shiftX: -0.75,
       tabStem: {
         shiftX: -1.75,
+      },
+      staveTempo: {
+        shiftX: -1,
       }
     },
     clef: {
@@ -234,6 +237,14 @@ export const BravuraMetrics = {
       }
     },
     noteHead: {
+      standard: {
+        restQuarterStemUp: {
+          point: 35,
+        },
+        restQuarterStemDown: {
+          point: 35,
+        },
+      },
       custom: {
         'noteheadCircleXStemUp': {
           shiftX: 1.5,
