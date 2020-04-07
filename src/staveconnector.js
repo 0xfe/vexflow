@@ -190,8 +190,8 @@ export class StaveConnector extends Element {
         topY -= 6;
         botY += 6;
         attachment_height = botY - topY;
-        Glyph.renderGlyph(ctx, topX - 5, topY, 40, 'bracketTop', { font: this.getMusicFont() });
-        Glyph.renderGlyph(ctx, topX - 5, botY, 40, 'bracketBottom', { font: this.getMusicFont() });
+        Glyph.renderGlyph(ctx, topX - 5, topY, 40, 'bracketTop');
+        Glyph.renderGlyph(ctx, topX - 5, botY, 40, 'bracketBottom');
         topX -= (this.width + 2);
         break;
       case StaveConnector.type.BOLD_DOUBLE_LEFT:

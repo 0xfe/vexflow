@@ -11,7 +11,7 @@ const opentype = require('opentype.js');
 
 function LogError(...args) {
   // eslint-disable-next-line
-  console.error(args)
+  console.error(...args)
 }
 
 // Converte OTF glyph path to Vexflow glyph path
@@ -59,9 +59,9 @@ const fontFile = args[0];
 const outFile = args[1];
 
 const font = opentype.loadSync(fontFile);
-const glyphNamesData = fs.readFileSync('glyphnames.json');
+const glyphNamesData = fs.readFileSync('./config/glyphnames.json');
 const glyphNames = JSON.parse(glyphNamesData);
-const VALID_CODES = require('./valid_codes');
+const VALID_CODES = require('./config/valid_codes');
 
 const fontData = {};
 
@@ -90,5 +90,6 @@ const fileData = {
 // Set the variable name to the font family name
 const varName = fileData.fontFamily.replace(/\s+/, '_');
 
+LogError('Writing to file:', outFile);
 fs.writeFileSync(outFile,
   `export const ${varName}Font = ${JSON.stringify(fileData, null, 2)};\n`);

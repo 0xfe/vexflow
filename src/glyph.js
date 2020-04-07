@@ -4,9 +4,7 @@ import { Vex } from './vex';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
-import { DefaultFont, Fonts } from './smufl';
-
-const BackupFont = Fonts.Gonville;
+import { DefaultFontStack } from './smufl';
 
 function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   let command;
@@ -45,20 +43,6 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   }
 }
 
-// TODO: Remove
-Vex.MISSING_GLYPHS = {};
-Vex.IGNORED_MISSING_GLYPHS = {
-  // 'v90': true, // microtonal
-  // 'v7a': true, // microtonal
-  // 'vd6': true, // microtonal
-  // 'vd7': true, // microtonal
-  // 'vf': true, // muted breve (double whole)
-  // 'va3': true, // squiggly stroke
-  // 'vd5': true, // rectangle note head white
-  // 'vd4': true, // rectangle note head black
-
-};
-
 export class Glyph extends Element {
   /*
     Static methods used to implement loading and rendering glyphs.
@@ -74,21 +58,29 @@ export class Glyph extends Element {
     return value;
   }
 
-  static loadMetrics(font, code, category = null) {
-    let glyph = font.getGlyphs()[code];
-    if (!glyph) {
-      if (!Vex.MISSING_GLYPHS[code] && !Vex.IGNORED_MISSING_GLYPHS[code]) {
-        // eslint-disable-next-line
-        console.log('Missing SMuFL glyph:', code);
-        Vex.MISSING_GLYPHS[code] = new Error().stack;
-      }
-
-      font = BackupFont;
-      glyph = font.getGlyphs()[code];
-      if (!glyph) {
-        throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
-      }
+  static lookupGlyph(fontStack, code) {
+    if (!fontStack) {
+      throw Vex.RERR('BAD_FONTSTACK', 'Font stack is misconfigured');
     }
+
+    let glyph;
+    let font;
+    for (let i = 0; i < fontStack.length; i++) {
+      font = fontStack[i];
+      glyph = font.getGlyphs()[code];
+      if (glyph) break;
+    }
+
+    if (!glyph) {
+      throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
+    }
+
+    return { glyph, font };
+  }
+
+
+  static loadMetrics(fontStack, code, category = null) {
+    const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
     const x_shift = category ? Glyph.lookupFontMetric({
       font, category, code,
@@ -150,18 +142,19 @@ export class Glyph extends Element {
    */
   static renderGlyph(ctx, x_pos, y_pos, point, val, options) {
     const params = {
-      font: DefaultFont,
+      fontStack: DefaultFontStack,
       category: null,
       ...options
     };
-    const metrics = Glyph.loadMetrics(params.font, val, params.category);
+    const metrics = Glyph.loadMetrics(params.fontStack, val, params.category);
     point = params.category ? Glyph.lookupFontMetric({
-      ...params,
+      font: metrics.font,
+      category: params.category,
       code: val,
       key: 'point',
       defaultValue: point
     }) : point;
-    const scale = point * 72.0 / (params.font.getResolution() * 100.0);
+    const scale = point * 72.0 / (metrics.font.getResolution() * 100.0);
 
     Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, options);
     return metrics;
@@ -209,7 +202,7 @@ export class Glyph extends Element {
     this.code = code;
     this.point = point;
     this.options = {
-      font: this.getMusicFont(),
+      fontStack: this.getFontStack(),
       category: null,
     };
 
@@ -244,16 +237,17 @@ export class Glyph extends Element {
   setYShift(y_shift) { this.y_shift = y_shift; return this; }
 
   reset() {
+    this.metrics = Glyph.loadMetrics(this.options.fontStack, this.code, this.options.category);
     // Override point from metrics file
     this.point = this.options.category ? Glyph.lookupFontMetric({
-      ...this.options,
+      category: this.options.category,
+      font: this.metrics.font,
       code: this.code,
       key: 'point',
       defaultValue: this.point,
     }) : this.point;
 
-    this.scale = this.point * 72 / (this.options.font.getResolution() * 100);
-    this.metrics = Glyph.loadMetrics(this.options.font, this.code, this.options.category);
+    this.scale = this.point * 72 / (this.metrics.font.getResolution() * 100);
     this.bbox = Glyph.getOutlineBoundingBox(
       this.metrics.outline,
       this.scale * this.metrics.scale,

@@ -3,6 +3,8 @@ import { BravuraFont } from './fonts/bravura_glyphs';
 import { BravuraMetrics } from './fonts/bravura_metrics';
 import { GonvilleFont  } from './fonts/gonville_glyphs';
 import { GonvilleMetrics } from './fonts/gonville_metrics';
+import { CustomFont  } from './fonts/custom_glyphs';
+import { CustomMetrics  } from './fonts/custom_metrics';
 
 class Font {
   constructor(name, metrics, fontData) {
@@ -64,8 +66,9 @@ class Font {
 const Fonts = {
   Bravura: new Font('Bravura', BravuraMetrics, BravuraFont),
   Gonville: new Font('Gonville', GonvilleMetrics, GonvilleFont),
+  Custom: new Font('Custom', CustomMetrics, CustomFont),
 };
 
-const DefaultFont = Fonts.Bravura;
+const DefaultFontStack = [Fonts.Bravura, Fonts.Gonville, Fonts.Custom];
 
-export { Fonts, DefaultFont, Font };
+export { Fonts, DefaultFontStack, Font };

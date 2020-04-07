@@ -181,11 +181,13 @@ module.exports = {
   arpeggiatoUp: null, // stroke
   arpeggiatoDown: null, // stroke
 
-  // not found:
-  // noteheadDiamondWhole: 'v27', // stylistic alternate to v46?
-  // noteheadDiamondBlack: 'v70', // stylistic alternate to v22?
-  // noteheadTriangleUpBlack: 'v7d', // stylistic alternate to v40?
-  // accidentalSlashedDoubleFlat: 'v90',
-  // accidentalOneAndAHalfSharpTurned: 'v7a',
-  // arpeggioBrushDown: 'v11',
+  // No SMuFL glyphs for the following:
+  vexAccidentalMicrotonal1: 'v90',
+  vexAccidentalMicrotonal2: 'v7a',
+  vexAccidentalMicrotonal3: 'vd6',
+  vexAccidentalMicrotonal4: 'vd7',
+  vexWiggleArpeggioUp: 'va3',
+  vexNoteHeadMutedBreve: 'vf',
+  vexNoteHeadRectBlack: 'vd4',
+  vexNoteHeadRectWhite: 'vd5',
 };

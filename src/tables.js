@@ -5,7 +5,7 @@
 import { Vex } from './vex';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
-import { DefaultFont } from './smufl';
+import { DefaultFontStack } from './smufl';
 
 const Flow = {
   STEM_WIDTH: 1.5,
@@ -13,7 +13,7 @@ const Flow = {
   STAVE_LINE_THICKNESS: 1,
   RESOLUTION: 16384,
 
-  DEFAULT_FONT: DefaultFont,
+  DEFAULT_FONT_STACK: DefaultFontStack,
   DEFAULT_NOTATION_FONT_SCALE: 39,
   DEFAULT_TABLATURE_FONT_SCALE: 39,
   SLASH_NOTEHEAD_WIDTH: 15,
@@ -293,10 +293,10 @@ Flow.accidentalCodes.accidentals = {
   'bss': { code: 'accidentalBuyukMucennebFlat', parenRightPaddingAdjustment: -1 },
   'o': { code: 'accidentalSori', parenRightPaddingAdjustment: -1 },
   'k': { code: 'accidentalKoron', parenRightPaddingAdjustment: -1 },
-  'bbs': { code: 'v90', parenRightPaddingAdjustment: -1 }, // no smufl code found
-  '++-': { code: 'v7a', parenRightPaddingAdjustment: -1 }, // no smufl code found
-  'ashs': { code: 'vd6', parenRightPaddingAdjustment: -1 },  // arabic sharp half sharp: no smufl code
-  'afhf': { code: 'vd7', parenRightPaddingAdjustment: -1 },  // arabic flat half flat: no smufl code
+  'bbs': { code: 'vexAccidentalMicrotonal1', parenRightPaddingAdjustment: -1 },
+  '++-': { code: 'vexAccidentalMicrotonal2', parenRightPaddingAdjustment: -1 },
+  'ashs': { code: 'vexAccidentalMicrotonal3', parenRightPaddingAdjustment: -1 },
+  'afhf': { code: 'vexAccidentalMicrotonal4', parenRightPaddingAdjustment: -1 },
 };
 
 Flow.accidentalColumnsTable = {
@@ -552,8 +552,8 @@ Flow.keyProperties.customNoteHeads = {
   'S2': { code: 'noteheadSquareBlack' },
 
   /* Rectangle */
-  'R1': { code: 'vd5' }, // no smufl code
-  'R2': { code: 'vd4' }, // no smufl code
+  'R1': { code: 'vexNoteHeadRectWhite' }, // no smufl code
+  'R2': { code: 'vexNoteHeadRectBlack' }, // no smufl code
 };
 
 Flow.getGlyphProps.duration_codes = {
@@ -581,7 +581,7 @@ Flow.getGlyphProps.duration_codes = {
         code_head: 'unpitchedPercussionClef1',
       },
       'm': { // Breve note muted -
-        code_head: 'vf',
+        code_head: 'vexNoteHeadMutedBreve',
         stem_offset: 0,
       },
       'r': { // Breve rest

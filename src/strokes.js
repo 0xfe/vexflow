@@ -198,7 +198,7 @@ export class Stroke extends Modifier {
             x + this.x_shift - 4,
             i,
             this.render_options.font_scale,
-            'va3'
+            'vexWiggleArpeggioUp'
           );
         }
       } else {
@@ -209,7 +209,7 @@ export class Stroke extends Modifier {
             x + this.x_shift - 4,
             i,
             this.render_options.font_scale,
-            'va3'
+            'vexWiggleArpeggioUp'
           );
         }
         if (this.type === Stroke.Type.RASQUEDO_DOWN) {

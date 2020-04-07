@@ -79,7 +79,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(this.getMusicFont().lookupMetric(`clef.${this.size}.width`));
+    this.setWidth(this.musicFont.lookupMetric(`clef.${this.size}.width`));
     L('Creating clef:', type);
   }
 
@@ -93,7 +93,7 @@ export class Clef extends StaveModifier {
     } else {
       this.size = size;
     }
-    this.clef.point = this.getMusicFont().lookupMetric(`clef.${this.size}.point`, 0);
+    this.clef.point = this.musicFont.lookupMetric(`clef.${this.size}.point`, 0);
     this.glyph = new Glyph(this.clef.code, this.clef.point, {
       category: `clef.${this.clef.code}.${this.size}`
     });
