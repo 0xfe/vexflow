@@ -19,27 +19,27 @@ export class TextDynamics extends Note {
   static get GLYPHS() {
     return {
       'f': {
-        code: 'vba',
+        code: 'dynamicForte',
         width: 12,
       },
       'p': {
-        code: 'vbf',
+        code: 'dynamicPiano',
         width: 14,
       },
       'm': {
-        code: 'v62',
+        code: 'dynamicMezzo',
         width: 17,
       },
       's': {
-        code: 'v4a',
+        code: 'dynamicSforzando',
         width: 10,
       },
       'z': {
-        code: 'v80',
+        code: 'dynamicZ',
         width: 12,
       },
       'r': {
-        code: 'vb1',
+        code: 'dynamicRinforzando',
         width: 12,
       },
     };
@@ -81,7 +81,7 @@ export class TextDynamics extends Note {
       if (!glyph_data) throw new Vex.RERR('Invalid dynamics character: ' + letter);
 
       const size =  this.render_options.glyph_font_size;
-      const glyph = new Glyph(glyph_data.code, size);
+      const glyph = new Glyph(glyph_data.code, size, { category: 'textNote' });
 
       // Add the glyph
       this.glyphs.push(glyph);

@@ -155,6 +155,12 @@ export const BravuraMetrics = {
   // Values under here are used by the Glyph class to reposition and rescale
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.
+  //
+  // The glyph loader first looks up a specific set of settings based on the
+  // glyph code, and if not found, uses the defaults from the category. See
+  // glyphs.textNote for an example of this.
+  //
+  // Details in Glyph.lookupFontMetrics.
   glyphs: {
     coda: {
       point: 20,
@@ -205,6 +211,26 @@ export const BravuraMetrics = {
           shiftX: -1,
           shiftY: 1,
         }
+      }
+    },
+    textNote: {
+      point: 34,
+      breathMarkTick: {
+        point: 36,
+        shiftY: 9,
+      },
+      breathMarkComma: {
+        point: 36,
+      },
+      segno: {
+        point: 30,
+        shiftX: -7,
+        shiftY: 8,
+      },
+      coda: {
+        point: 20,
+        shiftX: -7,
+        shiftY: 8,
       }
     },
     noteHead: {

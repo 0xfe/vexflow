@@ -56,40 +56,6 @@ export const GonvilleMetrics = {
       }
     },
 
-    pedalMarking: {
-      up: {
-        point: 40
-      },
-      down: {
-        point: 40
-      }
-    },
-
-    tremolo: {
-      default: {
-        point: 40,
-        spacing: 4,
-        offsetYStemUp: -9,
-        offsetYStemDown: -21,
-        offsetXStemUp: 6,
-        offsetXStemDown: -2,
-      },
-      grace: {
-        point: 30,
-        spacing: 4,
-        offsetYStemUp: -9,
-        offsetYStemDown: -21,
-        offsetXStemUp: 6,
-        offsetXStemDown: -2,
-      }
-    },
-
-    // These are for numeric digits, such as in time signatures
-    digits: {
-      point: 40,
-      tupletPoint: 28,
-    },
-
     // May not need these anymore
     lineCount: {
       '8': { point: 55, shiftY: 14 },
@@ -99,4 +65,46 @@ export const GonvilleMetrics = {
       '4': { point: 23, shiftY: -12 },
     }
   },
+
+  pedalMarking: {
+    up: {
+      point: 40
+    },
+    down: {
+      point: 40
+    }
+  },
+
+  tremolo: {
+    default: {
+      point: 40,
+      spacing: 4,
+      offsetYStemUp: -9,
+      offsetYStemDown: -21,
+      offsetXStemUp: 6,
+      offsetXStemDown: -2,
+    },
+    grace: {
+      point: 30,
+      spacing: 4,
+      offsetYStemUp: -9,
+      offsetYStemDown: -21,
+      offsetXStemUp: 6,
+      offsetXStemDown: -2,
+    }
+  },
+
+  // These are for numeric digits, such as in time signatures
+  digits: {
+    point: 40,
+    tupletPoint: 28,
+  },
+
+  glyphs: {
+    textNote: {
+      default: {
+        point: 40,
+      }
+    },
+  }
 }

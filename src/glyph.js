@@ -48,14 +48,14 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
 // TODO: Remove
 Vex.MISSING_GLYPHS = {};
 Vex.IGNORED_MISSING_GLYPHS = {
-  'v90': true, // microtonal
-  'v7a': true, // microtonal
-  'vd6': true, // microtonal
-  'vd7': true, // microtonal
-  'vf': true, // muted breve (double whole)
-  'va3': true, // squiggly stroke
-  'vd5': true, // rectangle note head white
-  'vd4': true, // rectangle note head black
+  // 'v90': true, // microtonal
+  // 'v7a': true, // microtonal
+  // 'vd6': true, // microtonal
+  // 'vd7': true, // microtonal
+  // 'vf': true, // muted breve (double whole)
+  // 'va3': true, // squiggly stroke
+  // 'vd5': true, // rectangle note head white
+  // 'vd4': true, // rectangle note head black
 
 };
 
@@ -66,7 +66,15 @@ export class Glyph extends Element {
     Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
     to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
   */
-  static loadMetrics(font, code, categoryPath = null) {
+  static lookupFontMetric({ font, category, code, key, defaultValue }) {
+    let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, null);
+    if (value === null) {
+      value = font.lookupMetric(`glyphs.${category}.${key}`, defaultValue);
+    }
+    return value;
+  }
+
+  static loadMetrics(font, code, category = null) {
     let glyph = font.getGlyphs()[code];
     if (!glyph) {
       if (!Vex.MISSING_GLYPHS[code] && !Vex.IGNORED_MISSING_GLYPHS[code]) {
@@ -82,9 +90,18 @@ export class Glyph extends Element {
       }
     }
 
-    const x_shift = categoryPath ? font.lookupMetric(`glyphs.${categoryPath}.shiftX`, 0) : 0;
-    const y_shift = categoryPath ? font.lookupMetric(`glyphs.${categoryPath}.shiftY`, 0) : 0;
-    const scale = categoryPath ? font.lookupMetric(`glyphs.${categoryPath}.scale`, 1) : 1;
+    const x_shift = category ? Glyph.lookupFontMetric({
+      font, category, code,
+      key: 'shiftX', defaultValue: 0
+    }) : 0;
+    const y_shift = category ? Glyph.lookupFontMetric({
+      font, category, code,
+      key: 'shiftY', defaultValue: 0
+    }) : 0;
+    const scale = category ? Glyph.lookupFontMetric({
+      font, category, code,
+      key: 'scale', defaultValue: 1
+    }) : 1;
 
     const x_min = glyph.x_min;
     const x_max = glyph.x_max;
@@ -138,7 +155,12 @@ export class Glyph extends Element {
       ...options
     };
     const metrics = Glyph.loadMetrics(params.font, val, params.category);
-    point = params.category ? params.font.lookupMetric(`glyphs.${params.category}.point`, point) : point;
+    point = params.category ? Glyph.lookupFontMetric({
+      ...params,
+      code: val,
+      key: 'point',
+      defaultValue: point
+    }) : point;
     const scale = point * 72.0 / (params.font.getResolution() * 100.0);
 
     Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, options);
@@ -222,6 +244,14 @@ export class Glyph extends Element {
   setYShift(y_shift) { this.y_shift = y_shift; return this; }
 
   reset() {
+    // Override point from metrics file
+    this.point = this.options.category ? Glyph.lookupFontMetric({
+      ...this.options,
+      code: this.code,
+      key: 'point',
+      defaultValue: this.point,
+    }) : this.point;
+
     this.scale = this.point * 72 / (this.options.font.getResolution() * 100);
     this.metrics = Glyph.loadMetrics(this.options.font, this.code, this.options.category);
     this.bbox = Glyph.getOutlineBoundingBox(

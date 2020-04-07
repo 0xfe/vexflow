@@ -23,128 +23,109 @@ export class TextNote extends Note {
   static get GLYPHS() {
     return {
       'segno': {
-        code: 'v8c',
-        point: 40,
+        code: 'segno',
         x_shift: 0,
         y_shift: -10,
         // width: 10 // optional
       },
       'tr': {
-        code: 'v1f',
-        point: 40,
+        code: 'ornamentTrill',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
       },
       'mordent_upper': {
-        code: 'v1e',
-        point: 40,
+        code: 'ornamentShortTrill',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
       },
       'mordent_lower': {
-        code: 'v45',
-        point: 40,
+        code: 'ornamentMordent',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
       },
       'f': {
-        code: 'vba',
-        point: 40,
+        code: 'dynamicForte',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
       },
       'p': {
-        code: 'vbf',
-        point: 40,
+        code: 'dynamicPiano',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
       },
       'm': {
-        code: 'v62',
-        point: 40,
+        code: 'dynamicMezzo',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
       },
       's': {
-        code: 'v4a',
-        point: 40,
+        code: 'dynamicSforzando',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
       },
       'z': {
-        code: 'v80',
-        point: 40,
+        code: 'dynamicZ',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
       },
       'coda': {
-        code: 'v4d',
-        point: 40,
+        code: 'coda',
         x_shift: 0,
         y_shift: -8,
         // width: 10 // optional
       },
       'pedal_open': {
-        code: 'v36',
-        point: 40,
+        code: 'keyboardPedalPed',
         x_shift: 0,
         y_shift: 0,
       },
       'pedal_close': {
-        code: 'v5d',
-        point: 40,
+        code: 'keyboardPedalUp',
         x_shift: 0,
         y_shift: 3,
       },
       'caesura_straight': {
-        code: 'v34',
-        point: 40,
+        code: 'caesura',
         x_shift: 0,
         y_shift: 2,
       },
       'caesura_curved': {
-        code: 'v4b',
-        point: 40,
+        code: 'caesuraCurved',
         x_shift: 0,
         y_shift: 2,
       },
       'breath': {
-        code: 'v6c',
-        point: 40,
+        code: 'breathMarkComma',
         x_shift: 0,
         y_shift: 0,
       },
       'tick': {
-        code: 'v6f',
-        point: 50,
+        code: 'breathMarkTick',
         x_shift: 0,
         y_shift: 0,
       },
       'turn': {
-        code: 'v72',
-        point: 40,
+        code: 'ornamentTurn',
         x_shift: 0,
         y_shift: 0,
       },
       'turn_inverted': {
-        code: 'v33',
-        point: 40,
+        code: 'ornamentTurnSlash',
         x_shift: 0,
         y_shift: 0,
       },
 
       // DEPRECATED - please use "mordent_upper" or "mordent_lower"
       'mordent': {
-        code: 'v1e',
-        point: 40,
+        code: 'ornamentMordent',
         x_shift: 0,
         y_shift: 0,
         // width: 10 // optional
@@ -175,10 +156,11 @@ export class TextNote extends Note {
     // an approximation and isn't very accurate. The only way to accurately
     // measure the length of text is with `canvasmeasureText()`
     if (this.glyph_type) {
+      const defaultPoint = 40;
       const struct = TextNote.GLYPHS[this.glyph_type];
       if (!struct) throw new Vex.RERR('Invalid glyph type: ' + this.glyph_type);
 
-      this.glyph = new Glyph(struct.code, struct.point, { cache: false });
+      this.glyph = new Glyph(struct.code, defaultPoint, { category: 'textNote' });
 
       if (struct.width) {
         this.setWidth(struct.width);

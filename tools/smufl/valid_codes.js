@@ -7,6 +7,7 @@ module.exports = {
 
   // barlines (e030-e03f)
   barlineTick: 'v6f',
+  breathMarkTick: 'v6f',
 
   // repeats (e040-e04f)
   segno: 'v8c',
@@ -133,7 +134,7 @@ module.exports = {
   dynamicPiano: 'vbf',
   dynamicMezzo: 'v62',
   dynamicForte: 'vba',
-  dynamicRinforzando: 'vba',
+  dynamicRinforzando: 'vb1',
   dynamicSforzando: 'v4a',
   dynamicZ: 'v80',
 
