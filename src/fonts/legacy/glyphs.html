@@ -49,13 +49,14 @@
       // Get number of glyphs and rename elements
       var counter = Object.keys(glyphs).length;
 
-      var canvas_height = ((counter + 1) / (800 / (60 * 2))) * 60;
+      var canvas_height = ((counter + 1) / (800 / (80 * 2))) * 60;
+      var canvas_width = 900;
 
       // Retina display trick
       canvas.height = canvas_height * 2;
-      canvas.width = 800 * 2;
+      canvas.width = canvas_width * 2;
       canvas.style.height = canvas_height
-      canvas.style.width = 800
+      canvas.style.width = canvas_width
       var ctx = canvas.getContext("2d")
       ctx.scale(2, 2);
 
@@ -64,7 +65,8 @@
       var y = 60;
       for (var glyph in glyphs) {
         ctx.fillStyle = "#222";
-        ctx.fillText(glyph, x, y);
+        ctx.font = "8pt Arial";
+        ctx.fillText(glyph.slice(0, 15), x, y + 25);
         x += 60;
 
         ctx.strokeStyle = "#aaa";
@@ -96,7 +98,7 @@
 
         if (x >= 800) {
           x = 0;
-          y += 60;
+          y += 80;
         }
       }
     });

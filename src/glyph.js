@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
+import { Flow } from './tables';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
-import { DefaultFontStack } from './smufl';
 
 function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   let command;
@@ -142,7 +142,7 @@ export class Glyph extends Element {
    */
   static renderGlyph(ctx, x_pos, y_pos, point, val, options) {
     const params = {
-      fontStack: DefaultFontStack,
+      fontStack: Flow.DEFAULT_FONT_STACK,
       category: null,
       ...options
     };

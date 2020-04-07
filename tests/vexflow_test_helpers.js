@@ -198,9 +198,15 @@ VF.Test = (function () {
     runSVGTest: function (name, func, params) {
       if (!VF.Test.RUN_SVG_TESTS) return;
 
-      QUnit.test(name, function (assert) {
-        var elementId = VF.Test.genID('svg_');
-        var title = VF.Test.genTitle('SVG', assert, name);
+      const fontStacks = {
+        Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
+        Gonville:[VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
+      }
+
+      const testFunc = (fontName) => (assert) => {
+        VF.DEFAULT_FONT_STACK = fontStacks[fontName];
+        var elementId = VF.Test.genID('svg_'+fontName);
+        var title = VF.Test.genTitle('SVG '+fontName, assert, name);
 
         VF.Test.createTestSVG(elementId, title);
 
@@ -212,7 +218,10 @@ VF.Test = (function () {
         };
 
         func(testOptions, VF.Renderer.getSVGContext);
-      });
+      }
+
+      QUnit.test(name, testFunc('Bravura'))
+      QUnit.test(name, testFunc('Gonville'))
     },
 
     runNodeTest: function (name, func, params) {
