@@ -68,7 +68,7 @@ class Font {
 const Fonts = {
   Bravura: new Font('Bravura', BravuraMetrics, BravuraFont),
   Gonville: new Font('Gonville', GonvilleMetrics, GonvilleFont),
-  Petaluma: new Font('Petulama', PetalumaMetrics, PetalumaFont),
+  Petaluma: new Font('Petaluma', PetalumaMetrics, PetalumaFont),
   Custom: new Font('Custom', CustomMetrics, CustomFont),
 };
 
