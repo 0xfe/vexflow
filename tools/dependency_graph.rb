@@ -37,6 +37,7 @@ Dir.glob("../src/*.js").each do |file|
     next if file =~ /index.js$/;
     next if file =~ /tables.js$/;
     next if file =~ /vex.js$/;
+    next if file =~ /smufl.js$/;
 
     f.each_line do |line|
         if line =~ /export\s+class\s+(\S+)\s*{/
@@ -51,7 +52,6 @@ Dir.glob("../src/*.js").each do |file|
         if line =~ /import\s+{\s*(\S+)\s*} from/
             next if $1 == "Vex"
             next if $1 == "Flow"
-            next if $1 == "Font"
             uses << $1
         end
 
