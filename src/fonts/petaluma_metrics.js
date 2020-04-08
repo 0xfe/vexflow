@@ -114,6 +114,12 @@ export const PetalumaMetrics = {
     }
   },
 
+  noteHead: {
+    displaced: {
+      shiftX: -2,
+    },
+  },
+
   stem: {
     // These are stem (Y) offsets to the note heads. To shift the
     // noteheads (x-position) themselves, see glyphs.notehead.custom.
@@ -144,6 +150,7 @@ export const PetalumaMetrics = {
       },
       noteheadBlack: {
         offsetYBaseStemDown: 2,
+        offsetYBaseStemUp: -2,
       },
       noteheadSquareWhite: {
         offsetYBaseStemDown: -5,
@@ -238,6 +245,27 @@ export const PetalumaMetrics = {
     },
     noteHead: {
       standard: {
+        noteheadBlackStemUp: {
+          shiftX: 1.5,
+          point: 34,
+        },
+        noteheadBlackStemDown: {
+          point: 34,
+        },
+        noteheadHalfStemUp: {
+          shiftX: 1,
+          point: 34,
+        },
+        noteheadHalfStemDown: {
+          point: 34,
+        },
+        noteheadWholeStemUp: {
+          shiftX: 1,
+          point: 34,
+        },
+        noteheadWholeStemDown: {
+          point: 34,
+        },
         restQuarterStemUp: {
           point: 35,
         },
