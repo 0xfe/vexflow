@@ -200,7 +200,8 @@ VF.Test = (function () {
 
       const fontStacks = {
         Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
-        Gonville:[VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
+        Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
+        Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
       }
 
       const testFunc = (fontName) => (assert) => {
@@ -224,7 +225,7 @@ VF.Test = (function () {
 
       QUnit.test(name, testFunc('Bravura'));
       QUnit.test(name, testFunc('Gonville'));
-
+      QUnit.test(name, testFunc('Petaluma'));
     },
 
     runNodeTest: function (name, func, params) {
