@@ -1,5 +1,5 @@
 export const PetalumaMetrics = {
-  name: 'Bravura',
+  name: 'Petaluma',
   smufl: true,
   clef: {
     default: {
