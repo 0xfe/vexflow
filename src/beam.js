@@ -168,7 +168,8 @@ export class Beam extends Element {
 
     function createGroups() {
       let nextGroup = [];
-
+      // number of ticks in current group
+      let currentGroupTotalTicks = new Fraction(0, 1);
       unprocessedNotes.forEach(unprocessedNote => {
         nextGroup = [];
         if (unprocessedNote.shouldIgnoreTicks()) {
@@ -176,10 +177,9 @@ export class Beam extends Element {
           currentGroup = nextGroup;
           return; // Ignore untickables (like bar notes)
         }
-
         currentGroup.push(unprocessedNote);
         const ticksPerGroup = tickGroups[currentTickGroup].clone();
-        const totalTicks = getTotalTicks(currentGroup);
+        const totalTicks = getTotalTicks(currentGroup).add(currentGroupTotalTicks);
 
         // Double the amount of ticks in a group, if it's an unbeamable tuplet
         const unbeamable = Flow.durationToNumber(unprocessedNote.duration) < 8;
@@ -195,21 +195,29 @@ export class Beam extends Element {
             nextGroup.push(currentGroup.pop());
           }
           noteGroups.push(currentGroup);
+
+          // We have overflown, so we're going to next tick group. As we might have
+          // overflown by more than 1 group, we need to go forward as many times as
+          // needed, decreasing currentGroupTotalTicks by as many ticks as there are
+          // in current groups as we go forward.
+          do {
+            currentGroupTotalTicks = totalTicks.subtract(tickGroups[currentTickGroup]);
+            nextTickGroup();
+          } while (currentGroupTotalTicks.greaterThanEquals(tickGroups[currentTickGroup]));
           currentGroup = nextGroup;
-          nextTickGroup();
         } else if (totalTicks.equals(ticksPerGroup)) {
           noteGroups.push(currentGroup);
+          currentGroupTotalTicks = new Fraction(0, 1);
           currentGroup = nextGroup;
           nextTickGroup();
         }
       });
 
-      // Adds any remainder notes
+      // Adds any remainder notes beam
       if (currentGroup.length > 0) {
         noteGroups.push(currentGroup);
       }
     }
-
     function getBeamGroups() {
       return noteGroups.filter(group => {
         if (group.length > 1) {
