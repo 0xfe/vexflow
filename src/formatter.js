@@ -162,16 +162,13 @@ export class Formatter {
     ctx.setFont('Arial', 8, '');
 
     contextGaps.gaps.forEach(gap => {
-      stroke(x + gap.x1, x + gap.x2, '#aaa');
-      // Vex.drawDot(ctx, xPos + gap.x1, yPos, 'blue');
+      stroke(x + gap.x1, x + gap.x2, 'rgba(100,200,100,0.4)');
+      ctx.setFillStyle('green');
       ctx.fillText(Math.round(gap.x2 - gap.x1), x + gap.x1, y2 + 12);
     });
 
-    ctx.fillText(Math.round(contextGaps.total) + 'px', x - 20, y2 + 12);
     ctx.setFillStyle('red');
-
-    ctx.fillText('Loss: ' +
-      formatter.lossHistory.map(loss => Math.round(loss)), x - 20, y2 + 22);
+    ctx.fillText(`Loss: ${(formatter.totalCost || 0).toFixed(2)} Shift: ${(formatter.totalShift || 0).toFixed(2)} Gap: ${contextGaps.total.toFixed(2)}`, x - 20, y2 + 27);
     ctx.restore();
   }
 
@@ -340,6 +337,7 @@ export class Formatter {
     };
 
     this.voices = [];
+    this.iterationsCompleted = 0;
   }
 
   // Find all the rests in each of the `voices` and align them
@@ -582,10 +580,10 @@ export class Formatter {
         const metrics = note.getFormatterMetrics();
         metrics.iterations += 1;
         metrics.space.deviation = metrics.space.used - durationStats[duration].mean;
+
         metrics.duration = duration;
         metrics.space.mean = durationStats[duration].mean;
-
-        totalDeviation += Math.pow(durationStats[duration].mean, 2);
+        totalDeviation += Math.pow(metrics.space.deviation, 2);
       });
     });
 
@@ -613,6 +611,7 @@ export class Formatter {
     }
 
     let shift = 0;
+    this.totalShift = 0;
     this.tickContexts.list.forEach((tick, index, list) => {
       const context = this.tickContexts.map[tick];
       const prevContext = (index > 0) ? this.tickContexts.map[list[index - 1]] : null;
@@ -633,10 +632,11 @@ export class Formatter {
         }
       }
 
-      const minShift = Math.min(5, Math.abs(shift));
-      shift = shift > 0 ? minShift : -minShift;
+      this.totalShift += shift;
+      shift = Math.min(1, Math.abs(shift)) * (shift > 0 ? 1 : -1);
     });
 
+    this.iterationsCompleted++;
     return this.evaluate();
   }
 
