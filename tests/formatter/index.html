@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>VexFlow 2 - JavaScript Music Notation and Guitar Tab</title>
+  <link rel="stylesheet" href="index.css" type="text/css" media="screen" />
+  <!-- VexFlow Sources -->
+  <script src="../../build/vexflow-debug.js"></script>
+  <script src="framestack.js"></script>
+  <script src="tests.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const iterations = 100;
+      VF.Registry.enableDefaultRegistry();
+      const frameStack = new FrameStack('canvas', iterations);
+
+      for (let i = 0; i < iterations; i++) {
+        Tests.tuplets(frameStack.frameID(i), i, { debug: true });
+      }
+
+      frameStack.startAnimation();
+      VF.Registry.disableDefaultRegistry();
+    });
+  </script>
+</head>
+
+<body>
+  <div style="text-align: center;">
+    <div>
+      <div>
+        <h1>
+          Formatter Debugging
+        </h1>
+
+        <div id="container"
+          style="width: 100%; height: 80%; text-align: center; display: flex; align-items: center; justify-content: center;">
+          <div id="canvas" style="position: relative; margin: auto; width: 80%;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <p style="position: fixed; bottom: 0; width: 100%; text-align: center;">
+      [ <a href="http://vexflow.com">home</a> ]
+      [ <a href="http://github.com/0xfe/vexflow">github</a> ]
+      [ <a href="http://0xfe.muthanna.com">0xfe</a> ]
+    </p>
+  </div>
+</body>
+
+</html>

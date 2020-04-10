@@ -17,15 +17,8 @@ VF.Test.Formatter = (function() {
       run('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
       run('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 6 });
       run('Proportional Formatting - no tuning', Formatter.proportionalFormatting, { debug: false, iterations: 0 });
+      run('Proportional Formatting - 9 steps', Formatter.proportionalFormatting, { debug: false, iterations: 9 });
       run('Proportional Formatting - 15 steps', Formatter.proportionalFormatting, { debug: false, iterations: 15 });
-
-      for (var i = 2; i < 15; i++) {
-        VF.Test.runSVGTest(
-          'Proportional Formatting (' + i + ' iterations)',
-          Formatter.proportionalFormatting,
-          { debug: true, iterations: i }
-        );
-      }
     },
 
     buildTickContexts: function() {
