@@ -589,14 +589,22 @@ export class Formatter {
 
     this.totalCost = Math.sqrt(totalDeviation);
     this.lossHistory.push(this.totalCost);
-    return this;
+    return this.totalCost;
   }
 
   // Run a single iteration of rejustification. At a high level, this method calculates
   // the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
   // attempt to reduce the cost. You can call this method multiple times until it finds
   // and oscillates around a global minimum.
-  tune() {
+  //
+  // Alpha is the "learning rate" for the formatter. It determines how much of a shift
+  // the formatter should make based on its cost function.
+  tune(options) {
+    options = {
+      alpha: 0.5,
+      ...options,
+    };
+
     const sum = (means) => means.reduce((a, b) => a + b);
 
     // Move `current` tickcontext by `shift` pixels, and adjust the freedom
@@ -632,8 +640,8 @@ export class Formatter {
         }
       }
 
+      shift *= options.alpha;
       this.totalShift += shift;
-      shift = Math.min(1, Math.abs(shift)) * (shift > 0 ? 1 : -1);
     });
 
     this.iterationsCompleted++;

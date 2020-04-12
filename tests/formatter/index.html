@@ -10,17 +10,69 @@
   <script src="tests.js"></script>
 
   <script>
+    function defer(fn) {
+      setTimeout(fn, 0);
+    }
+
+    function message(text, enabled = false) {
+      const button = document.querySelector('#go');
+      if (!enabled) {
+        button.setAttribute('disabled', true);
+      } else {
+        button.removeAttribute('disabled');
+      }
+
+      button.innerHTML = text;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const iterations = 100;
       VF.Registry.enableDefaultRegistry();
-      const frameStack = new FrameStack('canvas', iterations);
 
-      for (let i = 0; i < iterations; i++) {
-        Tests.tuplets(frameStack.frameID(i), i, { debug: true });
-      }
+      let frameStacks = []
+      Object.keys(Tests).forEach(t => {
+        const test = Tests[t];
+        console.log("Running", t, test.options)
 
-      frameStack.startAnimation();
-      VF.Registry.disableDefaultRegistry();
+        const frameStack = new FrameStack(t, iterations, {
+          prefix: `test-${t}-`,
+          ...test.options,
+        });
+
+        // Run asynchronously so we don't block the UI thread
+        defer(() => {
+          message("Running " + t)
+          for (let i = 0; i < iterations; i++) {
+            test.fn(frameStack.get(i), i, { ...test.options });
+          }
+        });
+
+        // Install after building frames, so that reflows occur correctly
+        frameStack.install();
+        frameStacks.push(frameStack);
+      });
+
+      let running = false;
+      const button = document.querySelector('#go');
+      button.addEventListener('click', () => {
+        frameStacks.forEach(f => {
+          if (running) {
+            f.stop();
+          } else {
+            f.start();
+          }
+        });
+
+        running = !running;
+        if (running) {
+          button.innerHTML = 'STOP';
+        } else {
+          button.innerHTML = 'START';
+        }
+      });
+
+      defer(() => { message("START", true); });
+
     });
   </script>
 </head>
@@ -28,24 +80,31 @@
 <body>
   <div style="text-align: center;">
     <div>
-      <div>
-        <h1>
-          Formatter Debugging
-        </h1>
+      <h1>
+        Formatter Debugging
+      </h1>
 
-        <div id="container"
-          style="width: 100%; height: 80%; text-align: center; display: flex; align-items: center; justify-content: center;">
-          <div id="canvas" style="position: relative; margin: auto; width: 80%;"></div>
+      <div id="container"
+        style="width: 100%; height: 80%; text-align: center; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+        <br>
+        <div id="tuplets" style="position: relative;">
         </div>
-
+        <div id="subgroup" style="position: relative;">
+        </div>
+        <div id="multistave" style="position: relative;">
+        </div>
       </div>
     </div>
 
-    <p style="position: fixed; bottom: 0; width: 100%; text-align: center;">
+    <p style="position: fixed; bottom: 0; right: 1em;">
       [ <a href="http://vexflow.com">home</a> ]
       [ <a href="http://github.com/0xfe/vexflow">github</a> ]
       [ <a href="http://0xfe.muthanna.com">0xfe</a> ]
     </p>
+  </div>
+
+  <div style="position: fixed; top: 1rem; right: 1rem; text-align: center;">
+    <button id="go" style="background: #9e9; border: 0; padding: 1rem; font-size: 1.2rem;" disabled>RUNNING...</button>
   </div>
 </body>
 

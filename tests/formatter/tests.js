@@ -2,8 +2,6 @@ const VF = Vex.Flow;
 
 function subgroup(el, iterations, params) {
   const options = {
-    width: 650,
-    height: 350,
     systemWidth: 550,
     debug: true,
     ...params,
@@ -90,7 +88,7 @@ function subgroup(el, iterations, params) {
     .formatToStave([voice, voice2, voice3], stave1);
 
   for (let i = 0; i < iterations; i++) {
-    formatter.tune();
+    formatter.tune({ alpha: 0.01 });
   }
 
   vf.draw();
@@ -101,8 +99,6 @@ function subgroup(el, iterations, params) {
 
 function tuplets(el, iterations, params) {
   const options = {
-    width: 600,
-    height: 800,
     systemWidth: 500,
     debug: true,
     ...params,
@@ -150,9 +146,142 @@ function tuplets(el, iterations, params) {
   vf.draw();
 }
 
+function multistave(el, iterations, params) {
+  const options = {
+    systemWidth: 550,
+    debug: true,
+    justify: true,
+    alpha: 0.1,
+    ...params,
+  };
+
+  const vf = new VF.Factory({
+    renderer: {
+      elementId: el,
+      width: options.width,
+      height: options.height,
+    }
+  });
+
+  var score = vf.EasyScore();
+
+  var stave11 = vf.Stave({ y: 20, width: 275 })
+    .addTrebleGlyph()
+    .addTimeSignature('6/8');
+
+  var notes11 = score.notes('f4/4, d4/8, g4/4, eb4/8');
+  var voice11 = score.voice(notes11, { time: '6/8' });
+
+  var stave21 = vf.Stave({ y: 130, width: 275 })
+    .addTrebleGlyph()
+    .addTimeSignature('6/8');
+
+  var notes21 = score.notes('d4/8, d4, d4, d4, eb4, eb4');
+  var voice21 = score.voice(notes21, { time: '6/8' });
+
+  var stave31 = vf.Stave({ y: 250, width: 275 })
+    .addClef('bass')
+    .addTimeSignature('6/8');
+
+  var notes31 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
+  var voice31 = score.voice(notes31, { time: '6/8' });
+
+  vf.StaveConnector({
+    top_stave: stave21,
+    bottom_stave: stave31,
+    type: 'brace',
+  });
+
+  vf.Beam({ notes: notes21.slice(0, 3) });
+  vf.Beam({ notes: notes21.slice(3, 6) });
+  vf.Beam({ notes: notes31.slice(0, 3) });
+  vf.Beam({ notes: notes31.slice(3, 6) });
+
+  var formatter = vf.Formatter()
+    .joinVoices([voice11])
+    .joinVoices([voice21])
+    .joinVoices([voice31]);
+
+  if (options.justify) {
+    formatter.formatToStave([voice11, voice21, voice31], stave11);
+  } else {
+    formatter.format([voice11, voice21, voice31], 0);
+  }
+
+  for (var i = 0; i < iterations; i++) {
+    formatter.tune({ alphs: options.alpha });
+  }
+
+  if (options.debug) {
+    VF.Formatter.plotDebugging(vf.getContext(), formatter, stave11.getNoteStartX(), 20, 320);
+  }
+
+  var stave12 = vf.Stave({
+    x: stave11.width + stave11.x,
+    y: stave11.y,
+    width: stave11.width,
+  });
+
+  var notes12 = score.notes('ab4/4, bb4/8, (cb5 eb5)/4[stem="down"], d5/8[stem="down"]');
+  var voice12 = score.voice(notes12, { time: '6/8' });
+
+  vf.Stave({
+    x: stave21.width + stave21.x,
+    y: stave21.y,
+    width: stave21.width,
+  });
+
+  var notes22 = score.notes('(eb4 ab4)/4., (c4 eb4 ab4)/4, db5/8', { stem: 'up' });
+  var voice22 = score.voice(notes22, { time: '6/8' });
+
+  vf.Stave({
+    x: stave31.width + stave31.x,
+    y: stave31.y,
+    width: stave31.width,
+  });
+
+  var notes32 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
+  var voice32 = score.voice(notes32, { time: '6/8' });
+
+  formatter = vf.Formatter()
+    .joinVoices([voice12])
+    .joinVoices([voice22])
+    .joinVoices([voice32]);
+
+  if (options.justify) {
+    formatter.formatToStave([voice12, voice22, voice32], stave12);
+  } else {
+    formatter.format([voice12, voice22, voice32], 0);
+  }
+
+  for (var j = 0; j < iterations; j++) {
+    formatter.tune({ alpha: options.alpha });
+  }
+
+
+  vf.Beam({ notes: notes32.slice(0, 3) });
+  vf.Beam({ notes: notes32.slice(3, 6) });
+
+  vf.draw();
+
+  if (options.debug) {
+    VF.Formatter.plotDebugging(vf.getContext(), formatter, stave12.getNoteStartX(), 20, 320);
+  }
+}
+
 const Tests = {
-  'tuplets': tuplets,
-  'subgroup': subgroup,
+  'tuplets': {
+    options: { width: 600, height: 750, debug: true },
+    fn: tuplets,
+  },
+  'subgroup': {
+    options: { width: 650, height: 350, debug: true },
+    fn: subgroup,
+  },
+  'multistave': {
+    options: { width: 650, height: 350, debug: true },
+    fn: multistave,
+  }
 };
 
 module.exports = Tests;

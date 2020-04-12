@@ -15,10 +15,13 @@ VF.Test.Formatter = (function() {
       run('Notes with Tab', Formatter.notesWithTab);
       run('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0 });
       run('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
-      run('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 6 });
+      run('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 4, alpha: 0.01 });
       run('Proportional Formatting - no tuning', Formatter.proportionalFormatting, { debug: false, iterations: 0 });
-      run('Proportional Formatting - 9 steps', Formatter.proportionalFormatting, { debug: false, iterations: 9 });
-      run('Proportional Formatting - 15 steps', Formatter.proportionalFormatting, { debug: false, iterations: 15 });
+
+      VF.Test.runSVGTest('Proportional Formatting (20 iterations)',
+        Formatter.proportionalFormatting,
+        { debug: true, iterations: 20, alpha: 0.5 }
+      );
     },
 
     buildTickContexts: function() {
@@ -312,6 +315,7 @@ VF.Test.Formatter = (function() {
         width: 500,
         debugFormatter: debug,
         formatIterations: options.params.iterations,
+        options: { alpha: options.params.alpha }
       });
 
       var score = vf.EasyScore();

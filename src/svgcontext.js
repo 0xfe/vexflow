@@ -251,10 +251,15 @@ export class SVGContext {
     this.width = width;
     this.height = height;
     this.element.style.width = width;
+
+    this.svg.style.width = width;
+    this.svg.style.height = height;
+
     const attributes = {
       width,
       height,
     };
+
     this.applyAttributes(this.svg, attributes);
     this.scale(this.state.scale.x, this.state.scale.y);
     return this;

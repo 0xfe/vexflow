@@ -34,7 +34,9 @@ export class System extends Element {
       factory: null,
       debugFormatter: false,
       formatIterations: 0,   // number of formatter tuning steps
-      options: {},
+      options: {
+        alpha: 0.5,          // formatter tuner learning/shifting rate
+      },
     });
 
     this.factory = this.options.factory || new Factory({ renderer: { el: null } });
@@ -117,7 +119,7 @@ export class System extends Element {
     formatter.format(allVoices, justifyWidth);
 
     for (let i = 0; i < this.options.formatIterations; i++) {
-      formatter.tune();
+      formatter.tune({ alpha: this.options.options.alpha });
     }
 
     this.startX = startX;
