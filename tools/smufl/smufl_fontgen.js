@@ -75,6 +75,7 @@ Object.keys(VALID_CODES).forEach(k => {
   }
   const code = glyphCode.codepoint.substring(2);
   const glyph = font.charToGlyph(String.fromCodePoint(parseInt(code, 16)));
+
   fontData[k] = toVFPath(glyph);
 });
 

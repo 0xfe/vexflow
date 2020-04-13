@@ -181,6 +181,12 @@ module.exports = {
   arpeggiatoUp: null, // stroke
   arpeggiatoDown: null, // stroke
 
+  // Bar repeats
+  repeat1Bar: null,
+  repeat2Bars: null,
+  repeat4Bars: null,
+  repeatBarSlash: null,
+
   // No SMuFL glyphs for the following:
   vexAccidentalMicrotonal1: 'v90',
   vexAccidentalMicrotonal2: 'v7a',

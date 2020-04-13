@@ -34,6 +34,7 @@ export class System extends Element {
       factory: null,
       debugFormatter: false,
       formatIterations: 0,   // number of formatter tuning steps
+      noPadding: false,
       options: {
         alpha: 0.5,          // formatter tuner learning/shifting rate
       },
@@ -115,7 +116,10 @@ export class System extends Element {
 
     // Update the start position of all staves.
     this.parts.forEach(part => part.stave.setNoteStartX(startX));
-    const justifyWidth = this.options.width - (startX - this.options.x) - Note.STAVEPADDING;
+    const justifyWidth = this.options.noPadding ?
+      this.options.width - this.options.x :
+      this.options.width - (startX - this.options.x) - this.musicFont.lookupMetric('stave.padding', Note.STAVEPADDING);
+
     formatter.format(allVoices, justifyWidth);
 
     for (let i = 0; i < this.options.formatIterations; i++) {

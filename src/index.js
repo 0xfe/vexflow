@@ -72,6 +72,8 @@ import { Parser } from './parser';
 import { EasyScore } from './easyscore';
 import { Registry } from './registry';
 import { StaveText } from './stavetext';
+import { GlyphNote } from './glyphnote';
+import { RepeatNote } from './repeatnote';
 
 import { Font, Fonts, DefaultFontStack } from './smufl';
 
@@ -146,6 +148,8 @@ Vex.Flow.Parser = Parser;
 Vex.Flow.EasyScore = EasyScore;
 Vex.Flow.Registry = Registry;
 Vex.Flow.StaveText = StaveText;
+Vex.Flow.GlyphNote = GlyphNote;
+Vex.Flow.RepeatNote = RepeatNote;
 
 Vex.Flow.Font = Font;
 Vex.Flow.Fonts = Fonts;

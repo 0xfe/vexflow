@@ -1,6 +1,10 @@
 export const GonvilleMetrics = {
   name: 'Gonville',
   smufl: false,
+  stave: {
+    padding: 12,
+  },
+
   clef: {
     'default': {
       point: 40,

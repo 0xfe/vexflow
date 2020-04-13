@@ -1,6 +1,11 @@
 export const BravuraMetrics = {
   name: 'Bravura',
   smufl: true,
+
+  stave: {
+    padding: 12,
+  },
+
   clef: {
     default: {
       point: 32,

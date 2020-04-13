@@ -57,6 +57,7 @@ VF.Test.run = function() {
   VF.Test.EasyScore.Start();
   VF.Test.Registry.Start();
   VF.Test.BachDemo.Start();
+  VF.Test.GlyphNote.Start();
 };
 
 module.exports = VF.Test;

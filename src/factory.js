@@ -23,6 +23,8 @@ import { Stave } from './stave';
 import { StaveTie } from './stavetie';
 import { StaveLine } from './staveline';
 import { StaveNote } from './stavenote';
+import { GlyphNote } from './glyphnote';
+import { RepeatNote } from './repeatnote';
 import { StaveConnector } from './staveconnector';
 import { System } from './system';
 import { TickContext } from './tickcontext';
@@ -161,6 +163,22 @@ export class Factory {
 
   StaveNote(noteStruct) {
     const note = new StaveNote(noteStruct);
+    if (this.stave) note.setStave(this.stave);
+    note.setContext(this.context);
+    this.renderQ.push(note);
+    return note;
+  }
+
+  GlyphNote(glyph, noteStruct, options) {
+    const note = new GlyphNote(glyph, noteStruct, options);
+    if (this.stave) note.setStave(this.stave);
+    note.setContext(this.context);
+    this.renderQ.push(note);
+    return note;
+  }
+
+  RepeatNote(type, noteStruct, options) {
+    const note = new RepeatNote(type, noteStruct, options);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
     this.renderQ.push(note);

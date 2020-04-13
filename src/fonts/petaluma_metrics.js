@@ -1,6 +1,11 @@
 export const PetalumaMetrics = {
   name: 'Petaluma',
   smufl: true,
+
+  stave: {
+    padding: 15,
+  },
+
   clef: {
     default: {
       point: 32,

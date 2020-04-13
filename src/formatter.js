@@ -578,11 +578,12 @@ export class Formatter {
       voice.getTickables().forEach((note) => {
         const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getFormatterMetrics();
-        metrics.iterations += 1;
-        metrics.space.deviation = metrics.space.used - durationStats[duration].mean;
 
-        metrics.duration = duration;
         metrics.space.mean = durationStats[duration].mean;
+        metrics.duration = duration;
+        metrics.iterations += 1;
+        metrics.space.deviation = metrics.space.used - metrics.space.mean;
+
         totalDeviation += Math.pow(metrics.space.deviation, 2);
       });
     });
@@ -605,7 +606,7 @@ export class Formatter {
       ...options,
     };
 
-    const sum = (means) => means.reduce((a, b) => a + b);
+    const sum = (arr) => arr.reduce((a, b) => a + b);
 
     // Move `current` tickcontext by `shift` pixels, and adjust the freedom
     // on adjacent tickcontexts.
@@ -682,9 +683,9 @@ export class Formatter {
       align_rests: false,
       context: null,
       stave: null,
+      ...options,
     };
 
-    Vex.Merge(opts, options);
     this.voices = voices;
     this.alignRests(voices, opts.align_rests);
     this.createTickContexts(voices);
@@ -699,10 +700,13 @@ export class Formatter {
   // This method is just like `format` except that the `justifyWidth` is inferred
   // from the `stave`.
   formatToStave(voices, stave, options) {
-    const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - 10;
+    options = {
+      padding: 10,
+      ...options
+    };
+
+    const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - options.padding;
     L('Formatting voices to width: ', justifyWidth);
-    const opts = { context: stave.getContext() };
-    Vex.Merge(opts, options);
-    return this.format(voices, justifyWidth, opts);
+    return this.format(voices, justifyWidth, { context: stave.getContext(), ...options });
   }
 }
