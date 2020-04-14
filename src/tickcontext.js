@@ -28,6 +28,7 @@ export class TickContext extends Tickable {
     this.xOffset = 0;      // xBase and xOffset are an alternative way to describe x (x = xB + xO)
     this.tickables = [];   // Notes, tabs, chords, lyrics.
     this.notePx = 0;       // width of widest note in this context
+    this.glyphPx = 0;       // width of glyph (note head)
     this.extraLeftPx = 0;  // Extra left pixels for modifers & displace notes
     this.extraRightPx = 0; // Extra right pixels for modifers & displace notes
     this.tContexts = [];   // Parent array of tick contexts
@@ -51,8 +52,8 @@ export class TickContext extends Tickable {
 
   // Get widths context, note and left/right modifiers for formatting
   getMetrics() {
-    const { width, notePx, extraLeftPx, extraRightPx } = this;
-    return { width, notePx, extraLeftPx, extraRightPx };
+    const { width, glyphPx, notePx, extraLeftPx, extraRightPx } = this;
+    return { width, glyphPx, notePx, extraLeftPx, extraRightPx };
   }
 
   getCurrentTick() { return this.currentTick; }
@@ -127,6 +128,9 @@ export class TickContext extends Tickable {
 
       // Maintain the widest note for all tickables in the context
       this.notePx = Math.max(this.notePx, metrics.noteWidth);
+
+      // Maintain the widest note head
+      this.glyphPx = Math.max(this.glyphPx, metrics.glyphWidth);
 
       // Recalculate the tick context total width
       this.width = this.notePx + this.extraLeftPx + this.extraRightPx;

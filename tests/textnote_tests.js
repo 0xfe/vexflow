@@ -10,6 +10,7 @@ VF.Test.TextNote = (function() {
 
       QUnit.module('TextNote');
       runTests('TextNote Formatting', TextNote.formatTextNotes);
+      runTests('TextNote Formatting 2', TextNote.formatTextNotes2);
       runTests('TextNote Superscript and Subscript', TextNote.superscriptAndSubscript);
       runTests('TextNote Formatting With Glyphs 0', TextNote.formatTextGlyphs0);
       runTests('TextNote Formatting With Glyphs 1', TextNote.formatTextGlyphs1);
@@ -41,9 +42,64 @@ VF.Test.TextNote = (function() {
           .setJustification(VF.TextNote.Justification.RIGHT),
       ]);
 
+      const formatter = vf.Formatter();
+      formatter.joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
+
+      vf.draw();
+      ok(true);
+    },
+
+    formatTextNotes2: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 200);
+      var stave = vf.Stave({ y: 40 });
+      var score = vf.EasyScore();
+
+      var voice1 = score.voice([
+        vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+
+        vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+
+        vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+
+        vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+
+        vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: 'q' }),
+      ]);
+
+      var voice2 = score.voice([
+        vf.TextNote({ text: 'C',  duration: '16' })
+          .setJustification(VF.TextNote.Justification.CENTER),
+        vf.TextNote({ text: 'L', duration: '16' }),
+        vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+
+        vf.TextNote({ text: 'C',  duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+        vf.TextNote({ text: 'L', duration: '16' }),
+        vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+
+        vf.TextNote({ text: 'C',  duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+        vf.TextNote({ text: 'L', duration: '16' }),
+        vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+
+        vf.TextNote({ text: 'C',  duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+        vf.TextNote({ text: 'L', duration: '16' }),
+        vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+
+        vf.TextNote({ text: 'R', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
+      ]);
+
       vf.Formatter()
         .joinVoices([voice1, voice2])
         .formatToStave([voice1, voice2], stave);
+
+      voice2.getTickables().forEach(note => VF.Note.plotMetrics(vf.getContext(), note, 170));
 
       vf.draw();
 
@@ -118,6 +174,8 @@ VF.Test.TextNote = (function() {
         vf.TextNote({ glyph: 'coda', duration: '8' }),
       ]);
 
+      voice2.getTickables().forEach(n => n.setJustification(VF.TextNote.Justification.CENTER));
+
       vf.Formatter()
         .joinVoices([voice1, voice2])
         .formatToStave([voice1, voice2], stave);
@@ -154,6 +212,8 @@ VF.Test.TextNote = (function() {
         vf.TextNote({ glyph: 'tr', duration: '8', smooth: true })
           .setJustification(VF.TextNote.Justification.CENTER),
       ]);
+
+      voice2.getTickables().forEach(n => n.setJustification(VF.TextNote.Justification.CENTER));
 
       vf.Formatter()
         .joinVoices([voice1, voice2])

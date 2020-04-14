@@ -118,7 +118,7 @@ export class System extends Element {
     this.parts.forEach(part => part.stave.setNoteStartX(startX));
     const justifyWidth = this.options.noPadding ?
       this.options.width - this.options.x :
-      this.options.width - (startX - this.options.x) - this.musicFont.lookupMetric('stave.padding', Note.STAVEPADDING);
+      this.options.width - (startX - this.options.x) - this.musicFont.lookupMetric('stave.padding');
 
     formatter.format(allVoices, justifyWidth);
 

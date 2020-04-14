@@ -246,6 +246,16 @@ export const PetalumaMetrics = {
         point: 20,
         shiftX: -7,
         shiftY: 8,
+      },
+      ornamentTrill: {
+        shiftX: -10,
+        shiftY: 8,
+      },
+      ornamentMordent: {
+        shiftX: -8,
+      },
+      ornamentShortTrill: {
+        shiftX: -8,
       }
     },
     noteHead: {

@@ -6,7 +6,6 @@
 // Examples of this would be such as dynamics, lyrics, chord changes, etc.
 
 import { Vex } from './vex';
-import { Flow } from './tables';
 import { Note } from './note';
 import { Glyph } from './glyph';
 
@@ -24,157 +23,94 @@ export class TextNote extends Note {
     return {
       'segno': {
         code: 'segno',
-        x_shift: 0,
-        y_shift: -10,
-        // width: 10 // optional
       },
       'tr': {
         code: 'ornamentTrill',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
+      },
+      'mordent': {
+        code: 'ornamentMordent',
       },
       'mordent_upper': {
         code: 'ornamentShortTrill',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
       },
       'mordent_lower': {
         code: 'ornamentMordent',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
       },
       'f': {
         code: 'dynamicForte',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
       },
       'p': {
         code: 'dynamicPiano',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
       },
       'm': {
         code: 'dynamicMezzo',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
       },
       's': {
         code: 'dynamicSforzando',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
       },
       'z': {
         code: 'dynamicZ',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
       },
       'coda': {
         code: 'coda',
-        x_shift: 0,
-        y_shift: -8,
-        // width: 10 // optional
       },
       'pedal_open': {
         code: 'keyboardPedalPed',
-        x_shift: 0,
-        y_shift: 0,
       },
       'pedal_close': {
         code: 'keyboardPedalUp',
-        x_shift: 0,
-        y_shift: 3,
       },
       'caesura_straight': {
         code: 'caesura',
-        x_shift: 0,
-        y_shift: 2,
       },
       'caesura_curved': {
         code: 'caesuraCurved',
-        x_shift: 0,
-        y_shift: 2,
       },
       'breath': {
         code: 'breathMarkComma',
-        x_shift: 0,
-        y_shift: 0,
       },
       'tick': {
         code: 'breathMarkTick',
-        x_shift: 0,
-        y_shift: 0,
       },
       'turn': {
         code: 'ornamentTurn',
-        x_shift: 0,
-        y_shift: 0,
       },
       'turn_inverted': {
         code: 'ornamentTurnSlash',
-        x_shift: 0,
-        y_shift: 0,
-      },
-
-      // DEPRECATED - please use "mordent_upper" or "mordent_lower"
-      'mordent': {
-        code: 'ornamentMordent',
-        x_shift: 0,
-        y_shift: 0,
-        // width: 10 // optional
       },
     };
   }
 
-  constructor(text_struct) {
-    super(text_struct);
+  constructor(options) {
+    super(options);
     this.setAttribute('type', 'TextNote');
 
     // Note properties
-    this.text = text_struct.text;
-    this.superscript = text_struct.superscript;
-    this.subscript = text_struct.subscript;
-    this.glyph_type = text_struct.glyph;
+    this.text = options.text;
+    this.superscript = options.superscript;
+    this.subscript = options.subscript;
     this.glyph = null;
     this.font = {
       family: 'Arial',
       size: 12,
       weight: '',
+      ...options.font
     };
-
-    // Set font
-    if (text_struct.font) this.font = text_struct.font;
 
     // Determine and set initial note width. Note that the text width is
     // an approximation and isn't very accurate. The only way to accurately
     // measure the length of text is with `canvasmeasureText()`
-    if (this.glyph_type) {
-      const defaultPoint = 40;
-      const struct = TextNote.GLYPHS[this.glyph_type];
-      if (!struct) throw new Vex.RERR('Invalid glyph type: ' + this.glyph_type);
+    if (options.glyph) {
+      const struct = TextNote.GLYPHS[options.glyph];
+      if (!struct) throw new Vex.RERR('Invalid glyph type: ' + options.glyph);
 
-      this.glyph = new Glyph(struct.code, defaultPoint, { category: 'textNote' });
-
-      if (struct.width) {
-        this.setWidth(struct.width);
-      } else {
-        this.setWidth(this.glyph.getMetrics().width);
-      }
-
-      this.glyph_struct = struct;
-    } else {
-      this.setWidth(Flow.textWidth(this.text));
+      this.glyph = new Glyph(struct.code, 40, { category: 'textNote' });
+      this.setWidth(this.glyph.getMetrics().width);
     }
-    this.line = text_struct.line || 0;
-    this.smooth = text_struct.smooth || false;
-    this.ignore_ticks = text_struct.ignore_ticks || false;
+
+    this.line = options.line || 0;
+    this.smooth = options.smooth || false;
+    this.ignore_ticks = options.ignore_ticks || false;
     this.justification = TextNote.Justification.LEFT;
   }
 
@@ -202,6 +138,7 @@ export class TextNote extends Note {
       if (this.glyph) {
         // Width already set.
       } else {
+        this.context.setFont(this.font.family, this.font.size, this.font.weight);
         this.setWidth(this.context.measureText(this.text).width);
       }
     }
@@ -212,6 +149,8 @@ export class TextNote extends Note {
       this.extraLeftPx = this.width;
     }
 
+    // We reposition to the center of the note head
+    this.extraRightPx = this.tickContext.getMetrics().glyphPx / 2;
     this.setPreFormatted(true);
   }
 
@@ -225,31 +164,30 @@ export class TextNote extends Note {
 
     this.setRendered();
     const ctx = this.context;
-    let x = this.getAbsoluteX();
+
+    // Reposition to center of note head
+    let x = this.getAbsoluteX() + (this.tickContext.getMetrics().glyphPx / 2);
+
+    // Align based on tick-context width.
+    const width = this.getWidth();
+
     if (this.justification === TextNote.Justification.CENTER) {
-      x -= this.getWidth() / 2;
+      x -= width / 2;
     } else if (this.justification === TextNote.Justification.RIGHT) {
-      x -= this.getWidth();
+      x -= width;
     }
 
     let y;
     if (this.glyph) {
       y = this.stave.getYForLine(this.line + -3);
-      this.glyph.render(
-        this.context,
-        x + this.glyph_struct.x_shift,
-        y + this.glyph_struct.y_shift
-      );
+      this.glyph.render(this.context, x, y);
     } else {
       y = this.stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.text, x, y);
 
-      // Width of the letter M gives us the approximate height of the text
-      const height = ctx.measureText('M').width;
-      // Get accurate width of text
-      const width = ctx.measureText(this.text).width;
+      const height = ctx.measureText(this.text).height;
 
       // Write superscript
       if (this.superscript) {

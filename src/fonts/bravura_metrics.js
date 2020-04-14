@@ -239,6 +239,22 @@ export const BravuraMetrics = {
         point: 20,
         shiftX: -7,
         shiftY: 8,
+      },
+      ornamentTrill: {
+        shiftX: -8,
+        shiftY: 8,
+      },
+      ornamentTurn: {
+        point: 42,
+      },
+      ornamentTurnSlash: {
+        point: 42,
+      },
+      ornamentMordent: {
+        shiftX: -8,
+      },
+      ornamentShortTrill: {
+        shiftX: -8,
       }
     },
     noteHead: {

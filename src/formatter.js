@@ -24,7 +24,6 @@ import { Fraction } from './fraction';
 import { Voice } from './voice';
 import { StaveConnector } from './staveconnector';
 import { StaveNote } from './stavenote';
-import { Note } from './note';
 import { ModifierContext } from './modifiercontext';
 import { TickContext } from './tickcontext';
 
@@ -147,8 +146,13 @@ export class Formatter {
   }
 
   // Helper function to plot formatter debug info.
-  static plotDebugging(ctx, formatter, xPos, y1, y2) {
-    const x = xPos + Note.STAVEPADDING;
+  static plotDebugging(ctx, formatter, xPos, y1, y2, options) {
+    options = {
+      stavePadding: Vex.Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
+      ...options,
+    };
+
+    const x = xPos + options.stavePadding;
     const contextGaps = formatter.contextGaps;
     function stroke(x1, x2, color) {
       ctx.beginPath();

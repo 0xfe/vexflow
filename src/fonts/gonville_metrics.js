@@ -142,11 +142,14 @@ export const GonvilleMetrics = {
     }
   },
 
-
   glyphs: {
     textNote: {
+      point: 40,
       default: {
-        point: 40,
+      },
+      ornamentTrill: {
+        shiftX: -5,
+        shiftY: 4,
       }
     },
     noteHead: {

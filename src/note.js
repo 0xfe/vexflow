@@ -16,7 +16,6 @@ import { Tickable } from './tickable';
 
 export class Note extends Tickable {
   static get CATEGORY() { return 'note'; }
-  static get STAVEPADDING() { return 12; }
 
   // Debug helper. Displays various note metrics for the given
   // note.
@@ -217,7 +216,6 @@ export class Note extends Tickable {
     this.stave = null;
     this.render_options = {
       annotation_spacing: 5,
-      stave_padding: Note.STAVEPADDING,
     };
   }
 
@@ -274,7 +272,16 @@ export class Note extends Tickable {
   getGlyph() { return this.glyph; }
 
   getGlyphWidth() {
-    return this.glyph.getWidth(this.render_options.glyph_font_scale);
+    // TODO: FIXME (multiple potential values for this.glyph)
+    if (this.glyph) {
+      if (this.glyph.getMetrics) {
+        return this.glyph.getMetrics().width;
+      } else if (this.glyph.getWidth) {
+        return this.glyph.getWidth(this.render_options.glyph_font_scale);
+      }
+    }
+
+    return 0;
   }
 
   // Set and get Y positions for this note. Each Y value is associated with
@@ -379,6 +386,7 @@ export class Note extends Tickable {
     const width = this.getWidth();
     return {
       width,
+      glyphWidth: this.getGlyphWidth(),
       noteWidth: width - modLeftPx - modRightPx - this.extraLeftPx - this.extraRightPx,
       left_shift: this.x_shift, // TODO(0xfe): Make style consistent
 
@@ -426,7 +434,7 @@ export class Note extends Tickable {
     // Position note to left edge of tick context.
     let x = this.tickContext.getX();
     if (this.stave) {
-      x += this.stave.getNoteStartX() + this.render_options.stave_padding;
+      x += this.stave.getNoteStartX() + this.musicFont.lookupMetric('stave.padding');
     }
 
     if (this.isCenterAligned()) {
@@ -435,6 +443,7 @@ export class Note extends Tickable {
 
     return x;
   }
+
   setPreFormatted(value) {
     this.preFormatted = value;
 
