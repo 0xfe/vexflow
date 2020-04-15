@@ -130,8 +130,8 @@ export class Modifier extends Element {
   alignSubNotesWithNote(subNotes, note) {
     // Shift over the tick contexts of each note
     const tickContext = note.getTickContext();
-    const extraPx = tickContext.getExtraPx();
-    const subNoteXOffset = tickContext.getX() - extraPx.left - extraPx.extraLeft
+    const metrics = tickContext.getMetrics();
+    const subNoteXOffset = tickContext.getX() - metrics.modLeftPx - metrics.modRightPx
       + this.getSpacingFromNextModifier();
 
     subNotes.forEach((subNote) => {

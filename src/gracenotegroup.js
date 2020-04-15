@@ -41,8 +41,7 @@ export class GraceNoteGroup extends Modifier {
       if (is_stavenote && note !== prev_note) {
         // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
-          const props_tmp = note.getKeyProps()[n];
-          shiftL = (props_tmp.displaced ? note.getExtraLeftPx() : shiftL);
+          shiftL = Math.max(note.getLeftDisplacedHeadPx(), shiftL);
         }
         prev_note = note;
       }

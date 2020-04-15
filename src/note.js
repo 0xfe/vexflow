@@ -198,11 +198,9 @@ export class Note extends Tickable {
 
     // Positioning variables
     this.width = 0;             // Width in pixels calculated after preFormat
-    this.extraLeftPx = 0;       // Extra room on left for offset note head
-    this.extraRightPx = 0;      // Extra room on right for offset note head
+    this.extraLeftPx = 0;       // Extra room on left for displaced note head
+    this.extraRightPx = 0;      // Extra room on right for displaced note head
     this.x_shift = 0;           // X shift from tick context X
-    this.left_modPx = 0;        // Max width of left modifiers
-    this.right_modPx = 0;       // Max width of right modifiers
     this.voice = null;          // The voice that this note is in
     this.preFormatted = false;  // Is this note preFormatted?
     this.ys = [];               // list of y coordinates for each note
@@ -254,10 +252,10 @@ export class Note extends Tickable {
   setContext(context) { this.context = context; return this; }
 
   // Get and set spacing to the left and right of the notes.
-  getExtraLeftPx() { return this.extraLeftPx; }
-  getExtraRightPx() { return this.extraRightPx; }
-  setExtraLeftPx(x) { this.extraLeftPx = x; return this; }
-  setExtraRightPx(x) { this.extraRightPx = x; return this; }
+  getLeftDisplacedHeadPx() { return this.extraLeftPx; }
+  getRightDisplacedHeadPx() { return this.extraRightPx; }
+  setLeftDisplacedHeadPx(x) { this.extraLeftPx = x; return this; }
+  setRightDisplacedHeadPx(x) { this.extraRightPx = x; return this; }
 
   // Returns true if this note has no duration (e.g., bar notes, spacers, etc.)
   shouldIgnoreTicks() { return this.ignore_ticks; }
@@ -376,21 +374,24 @@ export class Note extends Tickable {
       throw new Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
     }
 
-    let modLeftPx = 0;
-    let modRightPx = 0;
-    if (this.modifierContext != null) {
-      modLeftPx = this.modifierContext.state.left_shift;
-      modRightPx = this.modifierContext.state.right_shift;
-    }
-
+    const modLeftPx = this.modifierContext ? this.modifierContext.state.left_shift : 0;
+    const modRightPx = this.modifierContext ? this.modifierContext.state.right_shift : 0;
     const width = this.getWidth();
+    const glyphWidth = this.getGlyphWidth();
+    const noteWidth = width
+      - modLeftPx           // subtract left modifiers
+      - modRightPx          // subtract right modifiers
+      - this.extraRightPx   // subtract left displaced head
+      - this.extraRightPx;  // subtract right displaced head
+
     return {
       width,
-      glyphWidth: this.getGlyphWidth(),
-      noteWidth: width - modLeftPx - modRightPx - this.extraLeftPx - this.extraRightPx,
+      glyphWidth,
+      noteWidth,
+
       left_shift: this.x_shift, // TODO(0xfe): Make style consistent
 
-      // Modifiers, accidentals etc.
+      // Modifier spacing.
       modLeftPx,
       modRightPx,
 
@@ -398,29 +399,6 @@ export class Note extends Tickable {
       extraLeftPx: this.extraLeftPx,
       extraRightPx: this.extraRightPx,
     };
-  }
-
-  // Get and set width of note. Used by the formatter for positioning.
-  setWidth(width) { this.width = width; }
-  getWidth() {
-    if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
-    }
-
-    return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
-  }
-
-  // Displace note by `x` pixels. Used by the formatter.
-  setXShift(x) { this.x_shift = x; return this; }
-  getXShift() { return this.x_shift; }
-
-  // Get `X` position of this tick context.
-  getX() {
-    if (!this.tickContext) {
-      throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
-    }
-
-    return this.tickContext.getX() + this.x_shift;
   }
 
   // Get the absolute `X` position of this note's tick context. This
@@ -446,12 +424,5 @@ export class Note extends Tickable {
 
   setPreFormatted(value) {
     this.preFormatted = value;
-
-    // Maintain the width of left and right modifiers in pixels.
-    if (this.preFormatted) {
-      const extra = this.tickContext.getExtraPx();
-      this.left_modPx = Math.max(this.left_modPx, extra.left);
-      this.right_modPx = Math.max(this.right_modPx, extra.right);
-    }
   }
 }

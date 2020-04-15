@@ -359,12 +359,12 @@ export class StaveNote extends StemmableNote {
     if (this.stave) {
       this.note_heads.forEach(head => head.setStave(this.stave));
     }
-    this.calcExtraPx();
+    this.calcNoteDisplacements();
   }
 
   setBeam(beam) {
     this.beam = beam;
-    this.calcExtraPx();
+    this.calcNoteDisplacements();
     return this;
   }
 
@@ -668,7 +668,7 @@ export class StaveNote extends StemmableNote {
   getTieRightX() {
     let tieStartX = this.getAbsoluteX();
     tieStartX += this.getGlyphWidth() + this.x_shift + this.extraRightPx;
-    if (this.modifierContext) tieStartX += this.modifierContext.getExtraRightPx();
+    if (this.modifierContext) tieStartX += this.modifierContext.getRightShift();
     return tieStartX;
   }
 
@@ -707,12 +707,10 @@ export class StaveNote extends StemmableNote {
     const { ABOVE, BELOW, LEFT, RIGHT } = Modifier.Position;
     let x = 0;
     if (position === LEFT) {
-      // extra_left_px
-      // FIXME: What are these magic numbers?
+      // FIXME: Left modifier padding, move to font file
       x = -1 * 2;
     } else if (position === RIGHT) {
-      // extra_right_px
-      // FIXME: What is this magical +2?
+      // FIXME: Right modifier padding, move to font file
       x = this.getGlyphWidth() + this.x_shift + 2;
 
       if (this.stem_direction === Stem.UP && this.hasFlag() &&
@@ -843,8 +841,8 @@ export class StaveNote extends StemmableNote {
 
   // Calculates and sets the extra pixels to the left or right
   // if the note is displaced.
-  calcExtraPx() {
-    this.setExtraLeftPx(
+  calcNoteDisplacements() {
+    this.setLeftDisplacedHeadPx(
       this.displaced && this.stem_direction === Stem.DOWN
         ? this.getGlyphWidth()
         : 0
@@ -852,7 +850,7 @@ export class StaveNote extends StemmableNote {
 
     // For upstems with flags, the extra space is unnecessary, since it's taken
     // up by the flag.
-    this.setExtraRightPx(
+    this.setRightDisplacedHeadPx(
       !this.hasFlag() && this.displaced && this.stem_direction === Stem.UP
         ? this.getGlyphWidth()
         : 0

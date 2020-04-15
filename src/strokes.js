@@ -34,8 +34,8 @@ export class Stroke extends Modifier {
     const strokeList = strokes.map((stroke) => {
       const note = stroke.getNote();
       if (note instanceof StaveNote) {
-        const { line, displaced } = note.getKeyProps()[stroke.getIndex()];
-        const shift = displaced ? note.getExtraLeftPx() : 0;
+        const { line } = note.getKeyProps()[stroke.getIndex()];
+        const shift = note.getLeftDisplacedHeadPx();
         return { line, shift, stroke };
       } else {
         const { str: string } = note.getPositions()[stroke.getIndex()];

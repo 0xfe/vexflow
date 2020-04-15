@@ -138,10 +138,10 @@ export class Formatter {
     notes.reduce((x, note) => {
       note.addToModifierContext(new ModifierContext());
       const tick = new TickContext().addTickable(note).preFormat();
-      const extra = tick.getExtraPx();
-      tick.setX(x + extra.left);
+      const metrics = tick.getMetrics();
+      tick.setX(x + metrics.modLeftPx);
 
-      return x + tick.getWidth() + extra.right + paddingBetween;
+      return x + tick.getWidth() + metrics.modRightPx + paddingBetween;
     }, x);
   }
 

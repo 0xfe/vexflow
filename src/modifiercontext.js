@@ -73,8 +73,8 @@ export class ModifierContext {
 
   getModifiers(type) { return this.modifiers[type]; }
   getWidth() { return this.width; }
-  getExtraLeftPx() { return this.state.left_shift; }
-  getExtraRightPx() { return this.state.right_shift; }
+  getLeftShift() { return this.state.left_shift; }
+  getRightShift() { return this.state.right_shift; }
   getState() { return this.state; }
 
   getMetrics() {
@@ -85,8 +85,6 @@ export class ModifierContext {
     return {
       width: this.state.left_shift + this.state.right_shift + this.spacing,
       spacing: this.spacing,
-      extra_left_px: this.state.left_shift,
-      extra_right_px: this.state.right_shift,
     };
   }
 

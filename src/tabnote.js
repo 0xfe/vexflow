@@ -309,9 +309,9 @@ export class TabNote extends StemmableNote {
 
     let x = 0;
     if (position === Modifier.Position.LEFT) {
-      x = -1 * 2;  // extra_left_px
+      x = -1 * 2;  // FIXME: modifier padding, move to font file
     } else if (position === Modifier.Position.RIGHT) {
-      x = this.width + 2; // extra_right_px
+      x = this.width + 2; // FIXME: modifier padding, move to font file
     } else if (position === Modifier.Position.BELOW || position === Modifier.Position.ABOVE) {
       const note_glyph_width = this.glyph.getWidth();
       x = note_glyph_width / 2;

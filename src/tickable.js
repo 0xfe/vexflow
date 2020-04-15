@@ -16,12 +16,14 @@ export class Tickable extends Element {
 
     // These properties represent the duration of
     // this tickable element.
-    this.ticks = new Fraction(0, 1);
-    this.intrinsicTicks = 0;
+    this.ticks = new Fraction(0, 1); // Fractional value of ticks
+    this.intrinsicTicks = 0; // Floating point value of ticks
     this.tickMultiplier = new Fraction(1, 1);
 
+    // Formatter metrics
     this.width = 0;
     this.x_shift = 0; // Shift from tick context
+
     this.voice = null;
     this.tickContext = null;
     this.modifierContext = null;
@@ -64,13 +66,36 @@ export class Tickable extends Element {
   }
 
   reset() { return this; }
+
   getTicks() { return this.ticks; }
   shouldIgnoreTicks() { return this.ignore_ticks; }
-  getWidth() { return this.width; }
+
+  // Get and set width of note. Used by the formatter for positioning.
+  setWidth(width) { this.width = width; }
+  getWidth() {
+    if (!this.preFormatted) {
+      throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
+    }
+
+    return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
+  }
+
+  // Displace note by `x` pixels. Used by the formatter.
+  setXShift(x) { this.x_shift = x; return this; }
+  getXShift() { return this.x_shift; }
+
+  // Get `X` position of this tick context.
+  getX() {
+    if (!this.tickContext) {
+      throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+    }
+
+    return this.tickContext.getX() + this.x_shift;
+  }
+
 
   getFormatterMetrics() { return this.formatterMetrics; }
 
-  setXShift(x) { this.x_shift = x; }
   getCenterXShift() {
     if (this.isCenterAligned()) {
       return this.center_x_shift;

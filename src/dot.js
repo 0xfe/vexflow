@@ -24,10 +24,11 @@ export class Dot extends Modifier {
 
       let props;
       let shift;
+
       // Only StaveNote has .getKeyProps()
       if (typeof note.getKeyProps === 'function') {
         props = note.getKeyProps()[dot.getIndex()];
-        shift = (props.displaced ? note.getExtraRightPx() : 0);
+        shift = note.getRightDisplacedHeadPx();
       } else { // Else it's a TabNote
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = 0;

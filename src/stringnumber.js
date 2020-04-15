@@ -31,7 +31,6 @@ export class StringNumber extends Modifier {
     let num;
     let note;
     let pos;
-    let props_tmp;
     for (i = 0; i < nums.length; ++i) {
       num = nums[i];
       note = num.getNote();
@@ -44,12 +43,11 @@ export class StringNumber extends Modifier {
 
         if (note !== prev_note) {
           for (let n = 0; n < note.keys.length; ++n) {
-            props_tmp = note.getKeyProps()[n];
             if (left_shift === 0) {
-              shift_left = props_tmp.displaced ? note.getExtraLeftPx() : shift_left;
+              shift_left = Math.max(note.getLeftDisplacedHeadPx(), shift_left);
             }
             if (right_shift === 0) {
-              shift_right = props_tmp.displaced ? note.getExtraRightPx() : shift_right;
+              shift_right = Math.max(note.getRightDisplacedHeadPx(), shift_right);
             }
           }
           prev_note = note;

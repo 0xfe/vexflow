@@ -31,12 +31,11 @@ export class FretHandFinger extends Modifier {
       const props = note.getKeyProps()[num.getIndex()];
       if (note !== prev_note) {
         for (let n = 0; n < note.keys.length; ++n) {
-          const props_tmp = note.getKeyProps()[n];
           if (left_shift === 0) {
-            shiftLeft = props_tmp.displaced ? note.getExtraLeftPx() : shiftLeft;
+            shiftLeft = Math.max(note.getLeftDisplacedHeadPx(), shiftLeft);
           }
           if (right_shift === 0) {
-            shiftRight = props_tmp.displaced ? note.getExtraRightPx() : shiftRight;
+            shiftRight = Math.max(note.getRightDisplacedHeadPx(), shiftRight);
           }
         }
         prev_note = note;

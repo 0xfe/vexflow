@@ -40,7 +40,6 @@ export class Accidental extends Modifier {
     let shiftL = 0;
 
     // First determine the accidentals' Y positions from the note.keys
-    let propsTemp;
     for (let i = 0; i < accidentals.length; ++i) {
       const acc = accidentals[i];
       const note = acc.getNote();
@@ -49,8 +48,7 @@ export class Accidental extends Modifier {
       if (note !== prevNote) {
         // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
-          propsTemp = note.getKeyProps()[n];
-          shiftL = propsTemp.displaced ? note.getExtraLeftPx() : shiftL;
+          shiftL = Math.max(note.getLeftDisplacedHeadPx(), shiftL);
         }
         prevNote = note;
       }
