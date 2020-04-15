@@ -139,9 +139,9 @@ export class Formatter {
       note.addToModifierContext(new ModifierContext());
       const tick = new TickContext().addTickable(note).preFormat();
       const metrics = tick.getMetrics();
-      tick.setX(x + metrics.modLeftPx);
+      tick.setX(x + metrics.totalLeftPx);
 
-      return x + tick.getWidth() + metrics.modRightPx + paddingBetween;
+      return x + tick.getWidth() + metrics.totalRightPx + paddingBetween;
     }, x);
   }
 
@@ -466,11 +466,11 @@ export class Formatter {
       this.minTotalWidth += width;
 
       const metrics = context.getMetrics();
-      x = x + shift + metrics.extraLeftPx;
+      x = x + shift + metrics.totalLeftPx;
       context.setX(x);
 
       // Calculate shift for the next tick.
-      shift = width - metrics.extraLeftPx;
+      shift = width - metrics.totalLeftPx;
     });
 
     this.minTotalWidth = x + shift;
@@ -521,9 +521,12 @@ export class Formatter {
       const prevContext = this.tickContexts.map[prevTick];
       const context = this.tickContexts.map[tick];
       const prevMetrics = prevContext.getMetrics();
+      const currMetrics = context.getMetrics();
 
-      const insideRightEdge = prevContext.getX() + prevMetrics.width;
-      const insideLeftEdge = context.getX();
+      // Calculate X position of right edge of previous note
+      const insideRightEdge = prevContext.getX() + prevMetrics.notePx + prevMetrics.totalRightPx;
+      // Calculate X position of left edge of current note
+      const insideLeftEdge = context.getX() - (currMetrics.totalLeftPx);
       const gap = insideLeftEdge - insideRightEdge;
       this.contextGaps.total += gap;
       this.contextGaps.gaps.push({ x1: insideRightEdge, x2: insideLeftEdge });
@@ -552,15 +555,13 @@ export class Formatter {
         const duration = note.getTicks().clone().simplify().toString();
         const metrics = note.getMetrics();
         const formatterMetrics = note.getFormatterMetrics();
-        const leftNoteEdge = note.getX() + metrics.noteWidth +
-          metrics.modRightPx + metrics.extraRightPx;
+        const leftNoteEdge = note.getX() + metrics.notePx + metrics.totalRightPx;
         let space = 0;
 
         if (i < (notes.length - 1)) {
           const rightNote = notes[i + 1];
           const rightMetrics = rightNote.getMetrics();
-          const rightNoteEdge = rightNote.getX() -
-            rightMetrics.modLeftPx - rightMetrics.extraLeftPx;
+          const rightNoteEdge = rightNote.getX() - rightMetrics.totalLeftPx;
 
           space = rightNoteEdge - leftNoteEdge;
           formatterMetrics.space.used = rightNote.getX() - note.getX();

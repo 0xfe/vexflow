@@ -180,7 +180,7 @@ export class NoteHead extends Note {
   preFormat() {
     if (this.preFormatted) return this;
 
-    const width = this.getWidth() + this.extraLeftPx + this.extraRightPx;
+    const width = this.getWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
 
     this.setWidth(width);
     this.setPreFormatted(true);

@@ -144,13 +144,13 @@ export class TextNote extends Note {
     }
 
     if (this.justification === TextNote.Justification.CENTER) {
-      this.extraLeftPx = this.width / 2;
+      this.leftDisplacedHeadPx = this.width / 2;
     } else if (this.justification === TextNote.Justification.RIGHT) {
-      this.extraLeftPx = this.width;
+      this.leftDisplacedHeadPx = this.width;
     }
 
     // We reposition to the center of the note head
-    this.extraRightPx = this.tickContext.getMetrics().glyphPx / 2;
+    this.rightDisplacedHeadPx = this.tickContext.getMetrics().glyphPx / 2;
     this.setPreFormatted(true);
   }
 

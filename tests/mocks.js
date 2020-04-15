@@ -15,10 +15,16 @@ VF.Test.MockTickable = (function() {
     getTicks: function() { return this.ticks; },
     setTicks: function(t) { this.ticks = new VF.Fraction(t, 1); return this; },
     getMetrics: function() {
-      return { noteWidth: this.width,
+      return {
+        width: 0,
+        glyphWidth: 0,
+        notePx: this.width,
         left_shift: 0,
-        modLeftPx: 0, modRightPx: 0,
-        extraLeftPx: 0, extraRightPx: 0 };
+        modLeftPx: 0,
+        modRightPx: 0,
+        leftDisplacedHeadPx: 0,
+        rightDisplacedHeadPx: 0,
+      };
     },
     getWidth: function() { return this.width; },
     setWidth: function(w) { this.width = w; return this; },

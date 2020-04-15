@@ -517,8 +517,8 @@ export class StaveNote extends StemmableNote {
       throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
     }
 
-    const { width: w, modLeftPx, extraLeftPx } = this.getMetrics();
-    const x = this.getAbsoluteX() - modLeftPx - extraLeftPx;
+    const { width: w, modLeftPx, leftDisplacedHeadPx } = this.getMetrics();
+    const x = this.getAbsoluteX() - modLeftPx - leftDisplacedHeadPx;
 
     let minY = 0;
     let maxY = 0;
@@ -667,7 +667,7 @@ export class StaveNote extends StemmableNote {
   // Get the starting `x` coordinate for a `StaveTie`
   getTieRightX() {
     let tieStartX = this.getAbsoluteX();
-    tieStartX += this.getGlyphWidth() + this.x_shift + this.extraRightPx;
+    tieStartX += this.getGlyphWidth() + this.x_shift + this.rightDisplacedHeadPx;
     if (this.modifierContext) tieStartX += this.modifierContext.getRightShift();
     return tieStartX;
   }
@@ -675,7 +675,7 @@ export class StaveNote extends StemmableNote {
   // Get the ending `x` coordinate for a `StaveTie`
   getTieLeftX() {
     let tieEndX = this.getAbsoluteX();
-    tieEndX += this.x_shift - this.extraLeftPx;
+    tieEndX += this.x_shift - this.leftDisplacedHeadPx;
     return tieEndX;
   }
 
@@ -862,11 +862,12 @@ export class StaveNote extends StemmableNote {
     if (this.preFormatted) return;
     if (this.modifierContext) this.modifierContext.preFormat();
 
-    let width = this.getGlyphWidth() + this.extraLeftPx + this.extraRightPx;
+    let width = this.getGlyphWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
 
     // For upward flagged notes, the width of the flag needs to be added
     if (this.glyph.flag && this.beam === null && this.stem_direction === Stem.UP) {
       width += this.getGlyphWidth();
+      // TODO: Add flag width as a separate metric
     }
 
     this.setWidth(width);

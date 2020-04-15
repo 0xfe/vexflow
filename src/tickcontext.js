@@ -31,10 +31,12 @@ export class TickContext extends Tickable {
     // Formatting metrics
     this.notePx = 0;       // width of widest note in this context
     this.glyphPx = 0;       // width of glyph (note head)
-    this.extraLeftPx = 0;  // Extra left pixels for displaced notes
-    this.extraRightPx = 0; // Extra right pixels for displaced notes
+    this.leftDisplacedHeadPx = 0;  // Extra left pixels for displaced notes
+    this.rightDisplacedHeadPx = 0; // Extra right pixels for displaced notes
     this.modLeftPx = 0; // Left modifier pixels
     this.modRightPx = 0; // Right modifier pixels
+    this.totalLeftPx = 0;  // Total left pixels
+    this.totalRightPx = 0; // Total right pixels
     this.tContexts = [];   // Parent array of tick contexts
   }
 
@@ -56,15 +58,17 @@ export class TickContext extends Tickable {
 
   // Get widths context, note and left/right modifiers for formatting
   getMetrics() {
-    const { width, glyphPx, notePx, extraLeftPx, extraRightPx, modLeftPx, modRightPx } = this;
+    const { width, glyphPx, notePx, leftDisplacedHeadPx, rightDisplacedHeadPx, modLeftPx, modRightPx, totalLeftPx, totalRightPx } = this;
     return {
       width, // Width of largest tickable in context
       glyphPx, // Width of largest glyph (note head)
       notePx, // Width of notehead + stem
-      extraLeftPx, // Left modifiers
-      extraRightPx, // Right modifiers
+      leftDisplacedHeadPx, // Left modifiers
+      rightDisplacedHeadPx, // Right modifiers
       modLeftPx,
       modRightPx,
+      totalLeftPx,
+      totalRightPx
     };
   }
 
@@ -110,11 +114,11 @@ export class TickContext extends Tickable {
       const metrics = tickable.getMetrics();
 
       // Maintain max displaced head pixels from all tickables in the context
-      this.extraLeftPx = Math.max(this.extraLeftPx, metrics.extraLeftPx + metrics.modLeftPx);
-      this.extraRightPx = Math.max(this.extraRightPx, metrics.extraRightPx + metrics.modRightPx);
+      this.leftDisplacedHeadPx = Math.max(this.leftDisplacedHeadPx, metrics.leftDisplacedHeadPx);
+      this.rightDisplacedHeadPx = Math.max(this.rightDisplacedHeadPx, metrics.rightDisplacedHeadPx);
 
       // Maintain the widest note for all tickables in the context
-      this.notePx = Math.max(this.notePx, metrics.noteWidth);
+      this.notePx = Math.max(this.notePx, metrics.notePx);
 
       // Maintain the widest note head
       this.glyphPx = Math.max(this.glyphPx, metrics.glyphWidth);
@@ -123,8 +127,12 @@ export class TickContext extends Tickable {
       this.modLeftPx = Math.max(this.modLeftPx, metrics.modLeftPx);
       this.modRightPx = Math.max(this.modRightPx, metrics.modRightPx);
 
+      // Total shift
+      this.totalLeftPx = Math.max(this.totalLeftPx, metrics.modLeftPx + metrics.leftDisplacedHeadPx);
+      this.totalRightPx = Math.max(this.totalRightPx, metrics.modRightPx + metrics.rightDisplacedHeadPx);
+
       // Recalculate the tick context total width
-      this.width = this.notePx + this.extraLeftPx + this.extraRightPx;
+      this.width = this.notePx + this.totalLeftPx + this.totalRightPx;
     }
 
     return this;

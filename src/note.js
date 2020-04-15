@@ -21,14 +21,14 @@ export class Note extends Tickable {
   // note.
   static plotMetrics(ctx, note, yPos) {
     const metrics = note.getMetrics();
-    const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.extraLeftPx;
-    const xPre1 = note.getAbsoluteX() - metrics.extraLeftPx;
+    const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.leftDisplacedHeadPx;
+    const xPre1 = note.getAbsoluteX() - metrics.leftDisplacedHeadPx;
     const xAbs = note.getAbsoluteX();
-    const xPost1 = note.getAbsoluteX() + metrics.noteWidth;
-    const xPost2 = note.getAbsoluteX() + metrics.noteWidth + metrics.extraRightPx;
+    const xPost1 = note.getAbsoluteX() + metrics.notePx;
+    const xPost2 = note.getAbsoluteX() + metrics.notePx + metrics.rightDisplacedHeadPx;
     const xEnd = note.getAbsoluteX()
-      + metrics.noteWidth
-      + metrics.extraRightPx
+      + metrics.notePx
+      + metrics.rightDisplacedHeadPx
       + metrics.modRightPx;
     const xFreedomRight = xEnd + note.getFormatterMetrics().freedom.right;
 
@@ -198,8 +198,8 @@ export class Note extends Tickable {
 
     // Positioning variables
     this.width = 0;             // Width in pixels calculated after preFormat
-    this.extraLeftPx = 0;       // Extra room on left for displaced note head
-    this.extraRightPx = 0;      // Extra room on right for displaced note head
+    this.leftDisplacedHeadPx = 0;       // Extra room on left for displaced note head
+    this.rightDisplacedHeadPx = 0;      // Extra room on right for displaced note head
     this.x_shift = 0;           // X shift from tick context X
     this.voice = null;          // The voice that this note is in
     this.preFormatted = false;  // Is this note preFormatted?
@@ -252,10 +252,10 @@ export class Note extends Tickable {
   setContext(context) { this.context = context; return this; }
 
   // Get and set spacing to the left and right of the notes.
-  getLeftDisplacedHeadPx() { return this.extraLeftPx; }
-  getRightDisplacedHeadPx() { return this.extraRightPx; }
-  setLeftDisplacedHeadPx(x) { this.extraLeftPx = x; return this; }
-  setRightDisplacedHeadPx(x) { this.extraRightPx = x; return this; }
+  getLeftDisplacedHeadPx() { return this.leftDisplacedHeadPx; }
+  getRightDisplacedHeadPx() { return this.rightDisplacedHeadPx; }
+  setLeftDisplacedHeadPx(x) { this.leftDisplacedHeadPx = x; return this; }
+  setRightDisplacedHeadPx(x) { this.rightDisplacedHeadPx = x; return this; }
 
   // Returns true if this note has no duration (e.g., bar notes, spacers, etc.)
   shouldIgnoreTicks() { return this.ignore_ticks; }
@@ -363,12 +363,12 @@ export class Note extends Tickable {
   //
   // Returns a struct with fields:
   // `width`: The total width of the note (including modifiers.)
-  // `noteWidth`: The width of the note head only.
+  // `notePx`: The width of the note head only.
   // `left_shift`: The horizontal displacement of the note.
   // `modLeftPx`: Start `X` for left modifiers.
   // `modRightPx`: Start `X` for right modifiers.
-  // `extraLeftPx`: Extra space on left of note.
-  // `extraRightPx`: Extra space on right of note.
+  // `leftDisplacedHeadPx`: Extra space on left of note.
+  // `rightDisplacedHeadPx`: Extra space on right of note.
   getMetrics() {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
@@ -378,26 +378,27 @@ export class Note extends Tickable {
     const modRightPx = this.modifierContext ? this.modifierContext.state.right_shift : 0;
     const width = this.getWidth();
     const glyphWidth = this.getGlyphWidth();
-    const noteWidth = width
+    const notePx = width
       - modLeftPx           // subtract left modifiers
       - modRightPx          // subtract right modifiers
-      - this.extraRightPx   // subtract left displaced head
-      - this.extraRightPx;  // subtract right displaced head
+      - this.leftDisplacedHeadPx   // subtract left displaced head
+      - this.rightDisplacedHeadPx;  // subtract right displaced head
 
     return {
+      // ----------
+      // NOTE: If you change this, remember to update MockTickable in the tests/ directory.
+      // --------------
       width,
       glyphWidth,
-      noteWidth,
-
-      left_shift: this.x_shift, // TODO(0xfe): Make style consistent
+      notePx,
 
       // Modifier spacing.
       modLeftPx,
       modRightPx,
 
       // Displaced note head on left or right.
-      extraLeftPx: this.extraLeftPx,
-      extraRightPx: this.extraRightPx,
+      leftDisplacedHeadPx: this.leftDisplacedHeadPx,
+      rightDisplacedHeadPx: this.rightDisplacedHeadPx,
     };
   }
 
