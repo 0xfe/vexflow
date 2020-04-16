@@ -1,5 +1,5 @@
 /**!
- * VexFlow 1.2.93 built on 2020-04-02.
+ * VexFlow 3.0.1 built on 2020-04-16.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -203,9 +203,17 @@ VF.Test = (function () {
     runSVGTest: function (name, func, params) {
       if (!VF.Test.RUN_SVG_TESTS) return;
 
-      QUnit.test(name, function (assert) {
-        var elementId = VF.Test.genID('svg_');
-        var title = VF.Test.genTitle('SVG', assert, name);
+      const fontStacks = {
+        Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
+        Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
+        Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
+      }
+
+      const testFunc = (fontName) => (assert) => {
+        const defaultFontStack = VF.DEFAULT_FONT_STACK;
+        VF.DEFAULT_FONT_STACK = fontStacks[fontName];
+        var elementId = VF.Test.genID('svg_'+fontName);
+        var title = VF.Test.genTitle('SVG '+fontName, assert, name);
 
         VF.Test.createTestSVG(elementId, title);
 
@@ -217,7 +225,12 @@ VF.Test = (function () {
         };
 
         func(testOptions, VF.Renderer.getSVGContext);
-      });
+        VF.DEFAULT_FONT_STACK = defaultFontStack;
+      }
+
+      QUnit.test(name, testFunc('Bravura'));
+      QUnit.test(name, testFunc('Gonville'));
+      QUnit.test(name, testFunc('Petaluma'));
     },
 
     runNodeTest: function (name, func, params) {
@@ -314,10 +327,16 @@ VF.Test.MockTickable = (function() {
     getTicks: function() { return this.ticks; },
     setTicks: function(t) { this.ticks = new VF.Fraction(t, 1); return this; },
     getMetrics: function() {
-      return { noteWidth: this.width,
+      return {
+        width: 0,
+        glyphWidth: 0,
+        notePx: this.width,
         left_shift: 0,
-        modLeftPx: 0, modRightPx: 0,
-        extraLeftPx: 0, extraRightPx: 0 };
+        modLeftPx: 0,
+        modRightPx: 0,
+        leftDisplacedHeadPx: 0,
+        rightDisplacedHeadPx: 0,
+      };
     },
     getWidth: function() { return this.width; },
     setWidth: function(w) { this.width = w; return this; },
@@ -1544,7 +1563,7 @@ VF.Test.Articulation = (function() {
 
       var notesBar3 = [
         new VF.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
-        new VF.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
+        new VF.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: 1 }),
         new VF.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
         new VF.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
       ];
@@ -1561,7 +1580,7 @@ VF.Test.Articulation = (function() {
       staveBar4.setContext(ctx).draw();
 
       var notesBar4 = [
-        new VF.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
+        new VF.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: -1 }),
         new VF.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
         new VF.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
         new VF.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
@@ -1625,10 +1644,10 @@ VF.Test.Articulation = (function() {
       expect(0);
 
       // Get the rendering context
-      var ctx = contextBuilder(options.elementId, 725, 200);
+      var ctx = contextBuilder(options.elementId, 1000, 200);
 
       // bar 1
-      var staveBar1 = new VF.Stave(10, 30, 250);
+      var staveBar1 = new VF.Stave(10, 30, 350);
       staveBar1.setContext(ctx).draw();
       var notesBar1 = [
         new VF.StaveNote({ keys: ['c/4'], duration: '16', stem_direction: 1 }),
@@ -1667,7 +1686,7 @@ VF.Test.Articulation = (function() {
       beam2.setContext(ctx).draw();
 
       // bar 2 - juxtaposing second bar next to first bar
-      var staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 250);
+      var staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 350);
       staveBar2.setContext(ctx).draw();
       var notesBar2 = [
         new VF.StaveNote({ keys: ['f/3'], duration: '16', stem_direction: 1 }),
@@ -1718,7 +1737,7 @@ VF.Test.Articulation = (function() {
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
       // bar 4 - juxtaposing second bar next to first bar
-      var staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 125);
+      var staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 150);
       staveBar4.setEndBarType(VF.Barline.type.END);
       staveBar4.setContext(ctx).draw();
 
@@ -2815,7 +2834,7 @@ VF.Test.BachDemo = (function() {
       system.addStave({
         voices: [
           voice([
-            notes('B5/q'),
+            notes('B4/q'),
             beam(notes('C5/8, B4, A4, G4[id="m6a"]', { stem: 'up' })),
           ].reduce(concat)),
         ],
@@ -4963,19 +4982,16 @@ VF.Test.Formatter = (function() {
       run('StaveNote Formatting', Formatter.formatStaveNotes);
       run('StaveNote Justification', Formatter.justifyStaveNotes);
       run('Notes with Tab', Formatter.notesWithTab);
-      run('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0 });
+      run('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0, debug: true });
       run('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
-      run('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 6 });
-      run('Proportional Formatting - no tuning', Formatter.proportionalFormatting, { debug: false, iterations: 0 });
-      run('Proportional Formatting - 15 steps', Formatter.proportionalFormatting, { debug: false, iterations: 15 });
+      run('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 4, alpha: 0.01 });
+      run('Proportional Formatting - No Justification', Formatter.proportionalFormatting, { justify: false, debug: true, iterations: 0 });
+      run('Proportional Formatting - No Tuning', Formatter.proportionalFormatting, { debug: true, iterations: 0 });
 
-      for (var i = 2; i < 15; i++) {
-        VF.Test.runSVGTest(
-          'Proportional Formatting (' + i + ' iterations)',
-          Formatter.proportionalFormatting,
-          { debug: true, iterations: i }
-        );
-      }
+      VF.Test.runSVGTest('Proportional Formatting (20 iterations)',
+        Formatter.proportionalFormatting,
+        { debug: true, iterations: 20, alpha: 0.5 }
+      );
     },
 
     buildTickContexts: function() {
@@ -5017,11 +5033,11 @@ VF.Test.Formatter = (function() {
       // );
 
       ok(formatter.preCalculateMinTotalWidth([voice1, voice2]), 'Successfully runs preCalculateMinTotalWidth');
-      equal(formatter.getMinTotalWidth(), 104, 'Get minimum total width without passing voices');
+      equal(formatter.getMinTotalWidth(), 88, 'Get minimum total width without passing voices');
 
       formatter.preFormat();
 
-      equal(formatter.getMinTotalWidth(), 104, 'Minimum total width');
+      equal(formatter.getMinTotalWidth(), 88, 'Minimum total width');
       equal(tickables1[0].getX(), tickables2[0].getX(), 'First notes of both voices have the same X');
       equal(tickables1[2].getX(), tickables2[2].getX(), 'Last notes of both voices have the same X');
       ok(tickables1[1].getX() < tickables2[1].getX(), 'Second note of voice 2 is to the right of the second note of voice 1');
@@ -5173,7 +5189,7 @@ VF.Test.Formatter = (function() {
         .addTrebleGlyph()
         .addTimeSignature('6/8');
 
-      var notes21 = score.notes('d4/8, d4, d4, d4, eb4, eb4');
+      var notes21 = score.notes('d4/8, d4, d4, d4, e4, eb4');
       var voice21 = score.voice(notes21, { time: '6/8' });
 
       var stave31 = vf.Stave({ y: 250, width: 275 })
@@ -5263,12 +5279,14 @@ VF.Test.Formatter = (function() {
       var debug = options.params.debug;
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 600, 750);
+      var vf = VF.Test.makeFactory(options, 660, 750);
       var system = vf.System({
         x: 50,
         width: 500,
         debugFormatter: debug,
+        noJustification: !(options.params.justify === undefined && true),
         formatIterations: options.params.iterations,
+        options: { alpha: options.params.alpha }
       });
 
       var score = vf.EasyScore();
@@ -5474,6 +5492,113 @@ VF.Test.GhostNote = {
     }));
   },
 };
+
+/**
+ * VexFlow - GlyphNote Tests
+ * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ */
+
+VF.Test.GlyphNote = (function() {
+  var run = VF.Test.runTests;
+
+  var GlyphNote = {
+    Start: function() {
+      QUnit.module('GlyphNote');
+      run('GlyphNote Positioning', GlyphNote.basic, { debug: false, noPadding: false });
+      run('GlyphNote No Stave Padding', GlyphNote.basic, { debug: true, noPadding: true });
+      run('GlyphNote RepeatNote', GlyphNote.repeatNote, { debug: false, noPadding: true });
+    },
+
+    basic: function(options) {
+      VF.Registry.enableDefaultRegistry(new VF.Registry());
+
+      var vf = VF.Test.makeFactory(options, 300, 400);
+      var system = vf.System({
+        x: 50,
+        width: 250,
+        debugFormatter: options.params.debug,
+        noPadding: options.params.noPadding,
+        options: { alpha: options.params.alpha }
+      });
+
+      var score = vf.EasyScore();
+
+      var newVoice = function(notes) {
+        return score.voice(notes, { time: '1/4' });
+      };
+
+      var newStave = function(voice) {
+        return system
+          .addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
+      };
+
+      var voices = [
+        [vf.GlyphNote(new VF.Glyph('repeat1Bar', 40), { duration: 'q' }, { line: 4 })],
+        [vf.GlyphNote(new VF.Glyph('repeat2Bars', 40), { duration: 'q', align_center: true })],
+        [
+          vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
+          vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
+          vf.GlyphNote(new VF.Glyph('repeat4Bars', 40), { duration: '16' }),
+          vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
+        ],
+      ];
+
+      voices.map(newVoice).forEach(newStave);
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+
+      vf.draw();
+
+      VF.Registry.disableDefaultRegistry();
+      ok(true);
+    },
+
+    repeatNote: function(options) {
+      VF.Registry.enableDefaultRegistry(new VF.Registry());
+
+      var vf = VF.Test.makeFactory(options, 300, 500);
+      var system = vf.System({
+        x: 50,
+        width: 250,
+        debugFormatter: options.params.debug,
+        noPadding: options.params.noPadding,
+        options: { alpha: options.params.alpha }
+      });
+
+      var score = vf.EasyScore();
+
+      var newVoice = function(notes) {
+        return score.voice(notes, { time: '1/4' });
+      };
+
+      var newStave = function(voice) {
+        return system
+          .addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
+      };
+
+      var voices = [
+        [vf.RepeatNote('1')],
+        [vf.RepeatNote('2')],
+        [vf.RepeatNote('4')],
+        [
+          vf.RepeatNote('slash', { duration: '16' }),
+          vf.RepeatNote('slash', { duration: '16' }),
+          vf.RepeatNote('slash', { duration: '16' }),
+          vf.RepeatNote('slash', { duration: '16' }),
+        ],
+      ];
+
+      voices.map(newVoice).forEach(newStave);
+      system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+
+      vf.draw();
+
+      VF.Registry.disableDefaultRegistry();
+      ok(true);
+    },
+  };
+
+  return GlyphNote;
+})();
 
 /**
  * VexFlow - GraceNote Tests
@@ -8209,8 +8334,8 @@ VF.Test.Percussion = (function() {
         var voice0 = vf.Voice().addTickables([
           vf.StaveNote({ keys: ['a/5/x3'], duration: '8' }),
           vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
-          vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
-          vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
+          vf.StaveNote({ keys: ['g/5'], duration: '8' }),
+          vf.StaveNote({ keys: ['g/4/n', 'g/5/x2'], duration: '8' }),
           vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
           vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
           vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
@@ -10893,13 +11018,13 @@ VF.Test.StaveNote = (function() {
       var stave = new VF.Stave(10, 10, 400);
       var note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' }).setStave(stave);
 
-      var tickContext = new VF.TickContext()
+      new VF.TickContext()
         .addTickable(note)
         .preFormat()
         .setX(10)
         .setPadding(0);
 
-      VF.Test.almostEqual(tickContext.getWidth(), 17.3815, 0.0001);
+      expect(0);
     },
 
     showNote: function(note_struct, stave, ctx, x, drawBoundingBox) {
@@ -11140,8 +11265,8 @@ VF.Test.StaveNote = (function() {
     },
 
     drawHarmonicAndMuted: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 300, 180);
-      var stave = new VF.Stave(10, 10, 280);
+      var ctx = new contextBuilder(options.elementId, 1000, 180);
+      var stave = new VF.Stave(10, 10, 950);
       stave.setContext(ctx);
       stave.draw();
 
@@ -11189,7 +11314,7 @@ VF.Test.StaveNote = (function() {
 
       for (var i = 0; i < notes.length; ++i) {
         var note = notes[i];
-        var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+        var staveNote = showNote(note, stave, ctx, (i * 25) + 5);
 
         ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
         ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -13531,6 +13656,7 @@ VF.Test.TextNote = (function() {
 
       QUnit.module('TextNote');
       runTests('TextNote Formatting', TextNote.formatTextNotes);
+      runTests('TextNote Formatting 2', TextNote.formatTextNotes2);
       runTests('TextNote Superscript and Subscript', TextNote.superscriptAndSubscript);
       runTests('TextNote Formatting With Glyphs 0', TextNote.formatTextGlyphs0);
       runTests('TextNote Formatting With Glyphs 1', TextNote.formatTextGlyphs1);
@@ -13562,9 +13688,64 @@ VF.Test.TextNote = (function() {
           .setJustification(VF.TextNote.Justification.RIGHT),
       ]);
 
+      const formatter = vf.Formatter();
+      formatter.joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
+
+      vf.draw();
+      ok(true);
+    },
+
+    formatTextNotes2: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 200);
+      var stave = vf.Stave({ y: 40 });
+      var score = vf.EasyScore();
+
+      var voice1 = score.voice([
+        vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+
+        vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+
+        vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+
+        vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+        vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+
+        vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: 'q' }),
+      ]);
+
+      var voice2 = score.voice([
+        vf.TextNote({ text: 'C',  duration: '16' })
+          .setJustification(VF.TextNote.Justification.CENTER),
+        vf.TextNote({ text: 'L', duration: '16' }),
+        vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+
+        vf.TextNote({ text: 'C',  duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+        vf.TextNote({ text: 'L', duration: '16' }),
+        vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+
+        vf.TextNote({ text: 'C',  duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+        vf.TextNote({ text: 'L', duration: '16' }),
+        vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+
+        vf.TextNote({ text: 'C',  duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+        vf.TextNote({ text: 'L', duration: '16' }),
+        vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+
+        vf.TextNote({ text: 'R', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
+      ]);
+
       vf.Formatter()
         .joinVoices([voice1, voice2])
         .formatToStave([voice1, voice2], stave);
+
+      voice2.getTickables().forEach(note => VF.Note.plotMetrics(vf.getContext(), note, 170));
 
       vf.draw();
 
@@ -13639,6 +13820,8 @@ VF.Test.TextNote = (function() {
         vf.TextNote({ glyph: 'coda', duration: '8' }),
       ]);
 
+      voice2.getTickables().forEach(n => n.setJustification(VF.TextNote.Justification.CENTER));
+
       vf.Formatter()
         .joinVoices([voice1, voice2])
         .formatToStave([voice1, voice2], stave);
@@ -13675,6 +13858,8 @@ VF.Test.TextNote = (function() {
         vf.TextNote({ glyph: 'tr', duration: '8', smooth: true })
           .setJustification(VF.TextNote.Justification.CENTER),
       ]);
+
+      voice2.getTickables().forEach(n => n.setJustification(VF.TextNote.Justification.CENTER));
 
       vf.Formatter()
         .joinVoices([voice1, voice2])
@@ -15196,6 +15381,7 @@ VF.Test.run = function() {
   VF.Test.EasyScore.Start();
   VF.Test.Registry.Start();
   VF.Test.BachDemo.Start();
+  VF.Test.GlyphNote.Start();
 };
 
 module.exports = VF.Test;
