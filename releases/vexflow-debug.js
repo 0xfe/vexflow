@@ -10328,10 +10328,13 @@ function () {
     }
   }]);
 
-  function Formatter() {
+  function Formatter(options) {
     _classCallCheck(this, Formatter);
 
-    // Minimum width required to render all the notes in the voices.
+    this.options = _objectSpread({
+      softmaxFactor: 200
+    }, options); // Minimum width required to render all the notes in the voices.
+
     this.minTotalWidth = 0; // This is set to `true` after `minTotalWidth` is calculated.
 
     this.hasMinTotalWidth = false; // Total number of ticks in the voice.
@@ -10483,8 +10486,9 @@ function () {
       if (justifyWidth <= 0) return this.evaluate(); // Start justification. Subtract the right extra pixels of the final context because the formatter
       // justifies based on the context's X position, which is the left-most part of the note head.
 
+      var firstContext = contextMap[contextList[0]];
       var finalContext = contextMap[contextList[contextList.length - 1]];
-      var adjustedJustifyWidth = justifyWidth - (finalContext.getMetrics().notePx + finalContext.getMetrics().totalRightPx); // Helper methods.
+      var adjustedJustifyWidth = justifyWidth - finalContext.getWidth() - firstContext.getMetrics().totalLeftPx; // Helper methods.
 
       var sum = function sum(arr) {
         return arr.reduce(function (a, b) {
@@ -10494,23 +10498,27 @@ function () {
       // the layout from looking too "mechanical" because of proportional spacing.
 
 
-      function softmax(arr) {
+      function softmax(arr, factor) {
         var totalTicks = sum(arr);
-        var expTotalTicks = sum(arr.map(function (v) {
-          return Math.exp(v / totalTicks);
-        })); // Scale the softmax'd array back up to ticks before returning.
+
+        var exp = function exp(v) {
+          return Math.pow(factor, v / totalTicks);
+        };
+
+        var expTotalTicks = sum(arr.map(exp)); // Scale the softmax'd array back up to ticks before returning.
 
         return arr.map(function (v) {
-          return Math.exp(v / totalTicks) / expTotalTicks * totalTicks;
+          return exp(v) / expTotalTicks * totalTicks;
         });
-      }
+      } // Note that if all tickables in context have ignore_ticks, then minTicks == null
 
-      var tickDurations = contextList.map(function (tick, i) {
-        return i > 0 ? tick - contextList[i - 1] : 0;
+
+      var tickDurations = contextList.map(function (tick) {
+        return contextMap[tick].minTicks ? contextMap[tick].minTicks.value() : 0;
       }); // Calculate the softmax of the tick durations. This is now effectively a log-scale of the durations, within
       // the required range.
 
-      var softTickDurations = softmax(tickDurations); // Total number of ticks -- this should be the same as sum(tickDurations). Also the same
+      var softTickDurations = softmax(tickDurations, this.options.softmaxFactor); // Total number of ticks -- this should be the same as sum(tickDurations). Also the same
       // as 'this.totalTicks - finalContext.ticks' (since we don't care about the last duration).
 
       var totalSoftTicks = sum(softTickDurations); // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
@@ -10518,7 +10526,7 @@ function () {
 
       var distanceError = contextList.map(function (tick, i) {
         var distance = i > 0 ? contextMap[tick].getX() - contextMap[contextList[i - 1]].getX() : 0;
-        var expectedDistance = softTickDurations[i] / totalSoftTicks * adjustedJustifyWidth;
+        var expectedDistance = i > 0 ? softTickDurations[i - 1] / totalSoftTicks * adjustedJustifyWidth : 0;
         return expectedDistance - distance;
       }); // Distribute ticks to the contexts based on the calculated distance error.
 
@@ -14882,7 +14890,7 @@ function (_Tickable) {
       var xPost1 = note.getAbsoluteX() + metrics.notePx;
       var xPost2 = note.getAbsoluteX() + metrics.notePx + metrics.rightDisplacedHeadPx;
       var xEnd = note.getAbsoluteX() + metrics.notePx + metrics.rightDisplacedHeadPx + metrics.modRightPx;
-      var xFreedomRight = xEnd + note.getFormatterMetrics().freedom.right;
+      var xFreedomRight = xEnd + (note.getFormatterMetrics().freedom.right || 0);
       var xWidth = xEnd - xStart;
       ctx.save();
       ctx.setFont('Arial', 8, '');
@@ -24394,6 +24402,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _note__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./note */ "./src/note.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -24414,8 +24428,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // This class implements a musical system, which is a collection of staves,
@@ -24424,14 +24436,6 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
-
-
-function setDefaults(params, defaults) {
-  var default_options = defaults.options;
-  params = _extends(defaults, params);
-  params.options = _extends(default_options, params.options);
-  return params;
-}
 
 var System =
 /*#__PURE__*/
@@ -24459,7 +24463,7 @@ function (_Element) {
     key: "setOptions",
     value: function setOptions() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      this.options = setDefaults(options, {
+      this.options = _objectSpread({
         x: 10,
         y: 10,
         width: 500,
@@ -24471,11 +24475,11 @@ function (_Element) {
         debugFormatter: false,
         formatIterations: 0,
         // number of formatter tuning steps
-        noPadding: false,
-        options: {
-          alpha: 0.5 // formatter tuner learning/shifting rate
-
-        }
+        noPadding: false
+      }, options, {
+        details: _objectSpread({
+          alpha: 0.5
+        }, options.details)
       });
       this.factory = this.options.factory || new _factory__WEBPACK_IMPORTED_MODULE_1__["Factory"]({
         renderer: {
@@ -24507,17 +24511,18 @@ function (_Element) {
     value: function addStave(params) {
       var _this2 = this;
 
-      params = setDefaults(params, {
+      params = _objectSpread({
         stave: null,
         voices: [],
         spaceAbove: 0,
         // stave spaces
         spaceBelow: 0,
         // stave spaces
-        debugNoteMetrics: false,
-        options: {
+        debugNoteMetrics: false
+      }, params, {
+        options: _objectSpread({
           left_bar: false
-        }
+        }, params.options)
       });
 
       if (!params.stave) {
@@ -24542,7 +24547,7 @@ function (_Element) {
     value: function format() {
       var _this3 = this;
 
-      var formatter = new _formatter__WEBPACK_IMPORTED_MODULE_2__["Formatter"]();
+      var formatter = new _formatter__WEBPACK_IMPORTED_MODULE_2__["Formatter"](_objectSpread({}, this.options.details));
       this.formatter = formatter;
       var y = this.options.y;
       var startX = 0;
@@ -24576,7 +24581,7 @@ function (_Element) {
 
       for (var i = 0; i < this.options.formatIterations; i++) {
         formatter.tune({
-          alpha: this.options.options.alpha
+          alpha: this.options.details.alpha
         });
       }
 
@@ -28149,7 +28154,8 @@ function (_Tickable) {
 
     _this.currentTick = new _fraction__WEBPACK_IMPORTED_MODULE_2__["Fraction"](0, 1);
     _this.maxTicks = new _fraction__WEBPACK_IMPORTED_MODULE_2__["Fraction"](0, 1);
-    _this.minTicks = null;
+    _this.minTicks = null; // this can remian null if all tickables have ignore_ticks
+
     _this.padding = 1; // padding on each side (width += padding * 2)
 
     _this.x = 0;
