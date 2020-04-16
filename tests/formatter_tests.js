@@ -13,10 +13,11 @@ VF.Test.Formatter = (function() {
       run('StaveNote Formatting', Formatter.formatStaveNotes);
       run('StaveNote Justification', Formatter.justifyStaveNotes);
       run('Notes with Tab', Formatter.notesWithTab);
-      run('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0 });
+      run('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0, debug: true });
       run('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
       run('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 4, alpha: 0.01 });
-      run('Proportional Formatting - no tuning', Formatter.proportionalFormatting, { debug: false, iterations: 0 });
+      run('Proportional Formatting - No Justification', Formatter.proportionalFormatting, { justify: false, debug: true, iterations: 0 });
+      run('Proportional Formatting - No Tuning', Formatter.proportionalFormatting, { debug: true, iterations: 0 });
 
       VF.Test.runSVGTest('Proportional Formatting (20 iterations)',
         Formatter.proportionalFormatting,
@@ -63,11 +64,11 @@ VF.Test.Formatter = (function() {
       // );
 
       ok(formatter.preCalculateMinTotalWidth([voice1, voice2]), 'Successfully runs preCalculateMinTotalWidth');
-      equal(formatter.getMinTotalWidth(), 104, 'Get minimum total width without passing voices');
+      equal(formatter.getMinTotalWidth(), 88, 'Get minimum total width without passing voices');
 
       formatter.preFormat();
 
-      equal(formatter.getMinTotalWidth(), 104, 'Minimum total width');
+      equal(formatter.getMinTotalWidth(), 88, 'Minimum total width');
       equal(tickables1[0].getX(), tickables2[0].getX(), 'First notes of both voices have the same X');
       equal(tickables1[2].getX(), tickables2[2].getX(), 'Last notes of both voices have the same X');
       ok(tickables1[1].getX() < tickables2[1].getX(), 'Second note of voice 2 is to the right of the second note of voice 1');
@@ -219,7 +220,7 @@ VF.Test.Formatter = (function() {
         .addTrebleGlyph()
         .addTimeSignature('6/8');
 
-      var notes21 = score.notes('d4/8, d4, d4, d4, eb4, eb4');
+      var notes21 = score.notes('d4/8, d4, d4, d4, e4, eb4');
       var voice21 = score.voice(notes21, { time: '6/8' });
 
       var stave31 = vf.Stave({ y: 250, width: 275 })
@@ -309,11 +310,12 @@ VF.Test.Formatter = (function() {
       var debug = options.params.debug;
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 600, 750);
+      var vf = VF.Test.makeFactory(options, 660, 750);
       var system = vf.System({
         x: 50,
         width: 500,
         debugFormatter: debug,
+        noJustification: !(options.params.justify === undefined && true),
         formatIterations: options.params.iterations,
         options: { alpha: options.params.alpha }
       });

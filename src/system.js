@@ -32,6 +32,7 @@ export class System extends Element {
       connector: null,
       spaceBetweenStaves: 12, // stave spaces
       factory: null,
+      noJustification: false,
       debugFormatter: false,
       formatIterations: 0,   // number of formatter tuning steps
       noPadding: false,
@@ -120,7 +121,7 @@ export class System extends Element {
       this.options.width - this.options.x :
       this.options.width - (startX - this.options.x) - this.musicFont.lookupMetric('stave.padding');
 
-    formatter.format(allVoices, justifyWidth);
+    formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth);
 
     for (let i = 0; i < this.options.formatIterations; i++) {
       formatter.tune({ alpha: this.options.options.alpha });

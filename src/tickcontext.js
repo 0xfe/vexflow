@@ -22,7 +22,7 @@ export class TickContext extends Tickable {
     this.currentTick = new Fraction(0, 1);
     this.maxTicks = new Fraction(0, 1);
     this.minTicks = null;
-    this.padding = 3;     // padding on each side (width += padding * 2)
+    this.padding = 1;     // padding on each side (width += padding * 2)
     this.x = 0;
     this.xBase = 0;        // base x position without xOffset
     this.xOffset = 0;      // xBase and xOffset are an alternative way to describe x (x = xB + xO)

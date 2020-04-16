@@ -342,6 +342,7 @@ export class Formatter {
 
     this.voices = [];
     this.iterationsCompleted = 0;
+    this.lossHistory = [];
   }
 
   // Find all the rests in each of the `voices` and align them
@@ -438,7 +439,10 @@ export class Formatter {
   preFormat(justifyWidth = 0, renderingContext, voices, stave) {
     // Initialize context maps.
     const contexts = this.tickContexts;
-    const { list: contextList, map: contextMap, resolutionMultiplier } = contexts;
+    const { list: contextList, map: contextMap } = contexts;
+
+    // Reset loss history for evaluator.
+    this.lossHistory = [];
 
     // If voices and a stave were provided, set the Stave for each voice
     // and preFormat to apply Y values to the notes;
@@ -450,7 +454,6 @@ export class Formatter {
     // own X positions.
     let x = 0;
     let shift = 0;
-    const centerX = justifyWidth / 2;
     this.minTotalWidth = 0;
 
     // Pass 1: Give each note maximum width requested by context.
@@ -477,36 +480,66 @@ export class Formatter {
     this.hasMinTotalWidth = true;
 
     // No justification needed. End formatting.
-    if (justifyWidth <= 0) return;
+    if (justifyWidth <= 0) return this.evaluate();
 
-    // Pass 2: Take leftover width, and distribute it to proportionately to
-    // all notes.
-    const remainingX = justifyWidth - this.minTotalWidth;
-    const leftoverPxPerTick = remainingX / (this.totalTicks.value() * resolutionMultiplier);
+    // Start justification. Subtract the right extra pixels of the final context because the formatter
+    // justifies based on the context's X position, which is the left-most part of the note head.
+    const finalContext = contextMap[contextList[contextList.length - 1]];
+    const adjustedJustifyWidth = justifyWidth - (finalContext.getMetrics().notePx + finalContext.getMetrics().totalRightPx);
+
+    // Helper methods.
+    const sum = (arr) => arr.reduce((a, b) => a + b);
+    const zip = (arr, ...arrs) => arr.map((val, i) => arrs.reduce((a, arr) => [...a, arr[i]], [val]));
+
+    // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
+    // the layout from looking too "mechanical" because of proportional spacing.
+    function softmax(arr) {
+      const totalTicks = sum(arr);
+      const expTotalTicks = sum(arr.map(v => Math.exp(v / totalTicks)));
+
+      // Scale the softmax'd array back up to ticks before returning.
+      return arr.map(v => (Math.exp(v / totalTicks) / expTotalTicks) * totalTicks);
+    }
+    const tickDurations = contextList.map((tick, i) => i > 0 ? tick - contextList[i - 1] : 0);
+
+    // Calculate the softmax of the tick durations. This is now effectively a log-scale of the durations, within
+    // the required range.
+    const softTickDurations = softmax(tickDurations);
+
+    // Total number of ticks -- this should be the same as sum(tickDurations). Also the same
+    // as 'this.totalTicks - finalContext.ticks' (since we don't care about the last duration).
+    const totalSoftTicks = sum(softTickDurations);
+
+    // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
+    // the softmax of the ticks.
+    const distanceError = contextList.map((tick, i) => {
+      const distance = i > 0 ? contextMap[tick].getX() - contextMap[contextList[i - 1]].getX() : 0;
+      const expectedDistance = (softTickDurations[i] / totalSoftTicks) * adjustedJustifyWidth;
+      return expectedDistance - distance;
+    });
+
+    // Distribute ticks to the contexts based on the calculated distance error.
+    const centerX = justifyWidth / 2;
     let spaceAccum = 0;
-
     contextList.forEach((tick, index) => {
-      const prevTick = contextList[index - 1] || 0;
       const context = contextMap[tick];
-      const tickSpace = (tick - prevTick) * leftoverPxPerTick;
-
-      spaceAccum += tickSpace;
-      context.setX(context.getX() + spaceAccum);
+      if (index !== 0) {
+        const diff = distanceError[index];
+        spaceAccum += Math.max(0, diff);
+        context.setX(context.getX() + spaceAccum);
+      }
 
       // Move center aligned tickables to middle
-      context
-        .getCenterAlignedTickables()
-        .forEach(tickable => { // eslint-disable-line
-          tickable.center_x_shift = centerX - context.getX();
-        });
+      context.getCenterAlignedTickables().forEach(tickable => { // eslint-disable-line
+        tickable.center_x_shift = centerX - context.getX();
+      });
     });
 
     // Just one context. Done formatting.
-    if (contextList.length === 1) return;
+    if (contextList.length === 1) return null;
 
     this.justifyWidth = justifyWidth;
-    this.lossHistory = [];
-    this.evaluate();
+    return this.evaluate();
   }
 
   // Calculate the total cost of this formatting decision.
