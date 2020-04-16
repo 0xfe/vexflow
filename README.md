@@ -1,7 +1,12 @@
-# VexFlow 2
+# VexFlow 3
 
 A JavaScript library for rendering music notation.
 Copyright (c) 2010 Mohit Muthanna Cheppudira
+
+## Sponsor this Project
+
+If you use VexFlow in your app, startup, institution, and find it useful, please consider sponsoring its
+development here: https://github.com/sponsors/0xfe.
 
 ## Need Help? Ask on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
 
@@ -86,6 +91,8 @@ stave.setContext(context).draw();
 To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
 
 To build VexFlow from scratch, read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build-And-Release-Instructions).
+
+Sponsor Vexflow: https://github.com/sponsors/0xfe
 
 ## MIT License
 
