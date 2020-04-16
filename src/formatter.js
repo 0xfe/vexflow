@@ -492,7 +492,7 @@ export class Formatter {
     const firstContext = contextMap[contextList[0]];
     const finalContext = contextMap[contextList[contextList.length - 1]];
     const adjustedJustifyWidth = justifyWidth
-      - finalContext.getWidth()
+      - finalContext.getMetrics().notePx
       - firstContext.getMetrics().totalLeftPx;
 
     // Helper methods.
@@ -534,9 +534,14 @@ export class Formatter {
     contextList.forEach((tick, index) => {
       const context = contextMap[tick];
       if (index !== 0) {
-        const diff = distanceError[index];
-        spaceAccum += Math.max(0, diff);
-        context.setX(context.getX() + spaceAccum);
+        const x = context.getX();
+        const diff = Math.max(0, distanceError[index]);
+        if (finalContext.getX() + diff <= adjustedJustifyWidth) {
+          // Justify only if there's space left
+          spaceAccum += diff;
+        }
+
+        context.setX(x + spaceAccum);
       }
 
       // Move center aligned tickables to middle
