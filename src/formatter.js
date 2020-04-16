@@ -508,7 +508,9 @@ export class Formatter {
       // Scale the softmax'd array back up to ticks before returning.
       return arr.map(v => (exp(v) / expTotalTicks) * totalTicks);
     }
-    const tickDurations = contextList.map((tick) => contextMap[tick].minTicks.value());
+
+    // Note that if all tickables in context have ignore_ticks, then minTicks == null
+    const tickDurations = contextList.map((tick) => (contextMap[tick].minTicks ? contextMap[tick].minTicks.value() : 0));
 
     // Calculate the softmax of the tick durations. This is now effectively a log-scale of the durations, within
     // the required range.

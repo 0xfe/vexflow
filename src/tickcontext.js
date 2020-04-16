@@ -21,7 +21,7 @@ export class TickContext extends Tickable {
     this.setAttribute('type', 'TickContext');
     this.currentTick = new Fraction(0, 1);
     this.maxTicks = new Fraction(0, 1);
-    this.minTicks = null;
+    this.minTicks = null; // this can remian null if all tickables have ignore_ticks
     this.padding = 1;     // padding on each side (width += padding * 2)
     this.x = 0;
     this.xBase = 0;        // base x position without xOffset
