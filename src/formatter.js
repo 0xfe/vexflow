@@ -321,7 +321,7 @@ export class Formatter {
 
   constructor(options) {
     this.options = {
-      softmaxFactor: 200,
+      softmaxFactor: 20,
       ...options
     };
 
