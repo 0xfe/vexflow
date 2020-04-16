@@ -30,7 +30,7 @@ export class Note extends Tickable {
       + metrics.notePx
       + metrics.rightDisplacedHeadPx
       + metrics.modRightPx;
-    const xFreedomRight = xEnd + note.getFormatterMetrics().freedom.right;
+    const xFreedomRight = xEnd + (note.getFormatterMetrics().freedom.right || 0);
 
     const xWidth = xEnd - xStart;
     ctx.save();

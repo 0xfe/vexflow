@@ -319,7 +319,12 @@ export class Formatter {
     return this;
   }
 
-  constructor() {
+  constructor(options) {
+    this.options = {
+      softmaxFactor: 200,
+      ...options
+    };
+
     // Minimum width required to render all the notes in the voices.
     this.minTotalWidth = 0;
 
@@ -484,26 +489,30 @@ export class Formatter {
 
     // Start justification. Subtract the right extra pixels of the final context because the formatter
     // justifies based on the context's X position, which is the left-most part of the note head.
+    const firstContext = contextMap[contextList[0]];
     const finalContext = contextMap[contextList[contextList.length - 1]];
-    const adjustedJustifyWidth = justifyWidth - (finalContext.getMetrics().notePx + finalContext.getMetrics().totalRightPx);
+    const adjustedJustifyWidth = justifyWidth
+      - finalContext.getWidth()
+      - firstContext.getMetrics().totalLeftPx;
 
     // Helper methods.
     const sum = (arr) => arr.reduce((a, b) => a + b);
 
     // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
     // the layout from looking too "mechanical" because of proportional spacing.
-    function softmax(arr) {
+    function softmax(arr, factor) {
       const totalTicks = sum(arr);
-      const expTotalTicks = sum(arr.map(v => Math.exp(v / totalTicks)));
+      const exp = (v) => Math.pow(factor, v / totalTicks);
+      const expTotalTicks = sum(arr.map(exp));
 
       // Scale the softmax'd array back up to ticks before returning.
-      return arr.map(v => (Math.exp(v / totalTicks) / expTotalTicks) * totalTicks);
+      return arr.map(v => (exp(v) / expTotalTicks) * totalTicks);
     }
-    const tickDurations = contextList.map((tick, i) => i > 0 ? tick - contextList[i - 1] : 0);
+    const tickDurations = contextList.map((tick) => contextMap[tick].minTicks.value());
 
     // Calculate the softmax of the tick durations. This is now effectively a log-scale of the durations, within
     // the required range.
-    const softTickDurations = softmax(tickDurations);
+    const softTickDurations = softmax(tickDurations, this.options.softmaxFactor);
 
     // Total number of ticks -- this should be the same as sum(tickDurations). Also the same
     // as 'this.totalTicks - finalContext.ticks' (since we don't care about the last duration).
@@ -513,7 +522,7 @@ export class Formatter {
     // the softmax of the ticks.
     const distanceError = contextList.map((tick, i) => {
       const distance = i > 0 ? contextMap[tick].getX() - contextMap[contextList[i - 1]].getX() : 0;
-      const expectedDistance = (softTickDurations[i] / totalSoftTicks) * adjustedJustifyWidth;
+      const expectedDistance = i > 0 ? (softTickDurations[i - 1] / totalSoftTicks) * adjustedJustifyWidth : 0;
       return expectedDistance - distance;
     });
 
