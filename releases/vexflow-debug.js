@@ -10332,7 +10332,7 @@ function () {
     _classCallCheck(this, Formatter);
 
     this.options = _objectSpread({
-      softmaxFactor: 200
+      softmaxFactor: 20
     }, options); // Minimum width required to render all the notes in the voices.
 
     this.minTotalWidth = 0; // This is set to `true` after `minTotalWidth` is calculated.
