@@ -489,7 +489,6 @@ export class Formatter {
 
     // Helper methods.
     const sum = (arr) => arr.reduce((a, b) => a + b);
-    const zip = (arr, ...arrs) => arr.map((val, i) => arrs.reduce((a, arr) => [...a, arr[i]], [val]));
 
     // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
     // the layout from looking too "mechanical" because of proportional spacing.
