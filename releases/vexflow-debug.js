@@ -5804,7 +5804,7 @@ function () {
         time: '4/4',
         options: {}
       });
-      var voice = new _voice__WEBPACK_IMPORTED_MODULE_21__["Voice"](params.time);
+      var voice = new _voice__WEBPACK_IMPORTED_MODULE_21__["Voice"](params.time, params.options);
       this.voices.push(voice);
       return voice;
     }
@@ -10332,7 +10332,7 @@ function () {
     _classCallCheck(this, Formatter);
 
     this.options = _objectSpread({
-      softmaxFactor: 20
+      softmaxFactor: null
     }, options); // Minimum width required to render all the notes in the voices.
 
     this.minTotalWidth = 0; // This is set to `true` after `minTotalWidth` is calculated.
@@ -10488,38 +10488,14 @@ function () {
 
       var firstContext = contextMap[contextList[0]];
       var finalContext = contextMap[contextList[contextList.length - 1]];
-      var adjustedJustifyWidth = justifyWidth - finalContext.getMetrics().notePx - firstContext.getMetrics().totalLeftPx; // Helper methods.
-
-      var sum = function sum(arr) {
-        return arr.reduce(function (a, b) {
-          return a + b;
-        });
-      }; // Note that if all tickables in context have ignore_ticks, then minTicks == null
-
-
-      var tickDurations = contextList.map(function (tick) {
-        return contextMap[tick].minTicks ? contextMap[tick].minTicks.value() : 0;
-      }); // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
-      // the layout from looking too "mechanical" because of proportional spacing.
-
-      var totalTicks = this.totalTicks.value(); // sum(tickDurations);
-
-      var exp = function exp(v) {
-        return Math.pow(_this.options.softmaxFactor, v / totalTicks);
-      };
-
-      var expTotalTicks = sum(tickDurations.map(exp));
-
-      var softmax = function softmax(v) {
-        return exp(v) / expTotalTicks;
-      }; // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
+      var adjustedJustifyWidth = justifyWidth - finalContext.getMetrics().notePx - firstContext.getMetrics().totalLeftPx; // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
       // the softmax of the ticks.
-
 
       var distanceError = contextList.map(function (tick, i) {
         var context = contextMap[tick];
         var voices = context.getTickablesByVoice();
         var errorPx = 0;
+        var backTickable = null;
 
         if (i > 0) {
           var lastContext = contextMap[contextList[i - 1]]; // Go through each tickable and search backwards for another tickable
@@ -10540,10 +10516,10 @@ function () {
             if (matchingVoices.length > 0) {
               // Found matching voices, get largest duration
               var maxTicks = 0;
-              var backTickable = null;
               var maxNegativeShiftPx = 0;
               var expectedDistance = 0;
-              var distance = 0;
+              var distance = 0; // eslint-disable-next-line
+
               matchingVoices.forEach(function (v) {
                 var ticks = backVoices[v].getTicks().value();
 
@@ -10564,21 +10540,31 @@ function () {
               maxNegativeShiftPx = Math.min(maxNegativeShiftPx, context.getX() - lastContext.getX()); // Calculate the error and bound it to the maximum negative shift. This allows right shifts to be
               // limited by justifyWidth, and left shifts limited by collisions (or prev tick context's note head).
 
-              distance = contextMap[tick].getX() - backTickable.getX();
-              expectedDistance = softmax(maxTicks) * adjustedJustifyWidth;
-              errorPx = Math.max(-maxNegativeShiftPx, expectedDistance - distance);
-              return "break";
+              distance = context.getX() - backTickable.getX();
+              expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
+              errorPx = expectedDistance - distance;
+              return {
+                v: {
+                  errorPx: errorPx,
+                  fromTickable: backTickable,
+                  maxNegativeShiftPx: maxNegativeShiftPx
+                }
+              };
             }
           };
 
           for (var j = i - 1; j >= 0; j--) {
             var _ret = _loop(j);
 
-            if (_ret === "break") break;
+            if (_typeof(_ret) === "object") return _ret.v;
           }
         }
 
-        return errorPx;
+        return {
+          errorPx: 0,
+          fromTickable: null,
+          maxNegativeShiftPx: 0
+        };
       }); // Distribute ticks to the contexts based on the calculated distance error.
 
       var centerX = justifyWidth / 2;
@@ -10587,18 +10573,20 @@ function () {
       contextList.forEach(function (tick, index) {
         var context = contextMap[tick];
 
-        if (index !== 0) {
+        if (index > 0) {
           var _x = context.getX();
 
-          var errorPx = distanceError[index];
+          var error = distanceError[index]; // The error reported is from the last tickable in the voice, so make sure we're
+          // accomodate for space accumulated distance between last context and the tickable.
+
+          var shiftLimit = contextMap[contextList[index - 1]].getX() - error.fromTickable.getX();
+          var errorPx = error.errorPx - shiftLimit;
           var negativeShiftPx = 0;
 
           if (errorPx > 0) {
-            if (finalContext.getX() + errorPx <= adjustedJustifyWidth) {
-              spaceAccum += errorPx;
-            }
+            spaceAccum += errorPx;
           } else if (errorPx < 0) {
-            negativeShiftPx = Math.abs(errorPx);
+            negativeShiftPx = Math.min(error.maxNegativeShiftPx, Math.abs(errorPx));
           }
 
           context.setX(_x + spaceAccum - negativeShiftPx);
@@ -10806,6 +10794,8 @@ function () {
   }, {
     key: "format",
     value: function format(voices, justifyWidth, options) {
+      var _this4 = this;
+
       var opts = _objectSpread({
         align_rests: false,
         context: null,
@@ -10813,6 +10803,13 @@ function () {
       }, options);
 
       this.voices = voices;
+
+      if (this.options.softmaxFactor) {
+        this.voices.forEach(function (v) {
+          return v.setSoftmaxFactor(_this4.options.softmaxFactor);
+        });
+      }
+
       this.alignRests(voices, opts.align_rests);
       this.createTickContexts(voices);
       this.preFormat(justifyWidth, opts.context, voices, opts.stave); // Only postFormat if a stave was supplied for y value formatting
@@ -30029,6 +30026,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fraction__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./fraction */ "./src/fraction.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
@@ -30077,15 +30080,18 @@ function (_Element) {
     }
   }]);
 
-  function Voice(time) {
+  function Voice(time, options) {
     var _this;
 
     _classCallCheck(this, Voice);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Voice).call(this));
 
-    _this.setAttribute('type', 'Voice'); // Time signature shortcut: "4/4", "3/8", etc.
+    _this.setAttribute('type', 'Voice');
 
+    _this.options = _objectSpread({
+      softmaxFactor: 20
+    }, options); // Time signature shortcut: "4/4", "3/8", etc.
 
     if (typeof time === 'string') {
       var match = time.match(/(\d+)\/(\d+)/);
@@ -30244,6 +30250,53 @@ function (_Element) {
       } else {
         return true;
       }
+    } // We use softmax to layout the tickables proportional to the exponent of
+    // their duration. The softmax factor is used to determine the 'linearness' of
+    // the layout.
+    //
+    // The softmax of all the tickables in this voice should sum to 1.
+
+  }, {
+    key: "setSoftmaxFactor",
+    value: function setSoftmaxFactor(factor) {
+      this.options.softmaxFactor = factor;
+      return this;
+    } // Calculate the sum of the exponents of all the ticks in this voice to use as the denominator
+    // of softmax.
+
+  }, {
+    key: "reCalculateExpTicksUsed",
+    value: function reCalculateExpTicksUsed() {
+      var _this2 = this;
+
+      var totalTicks = this.ticksUsed.value();
+
+      var exp = function exp(tickable) {
+        return Math.pow(_this2.options.softmaxFactor, tickable.getTicks().value() / totalTicks);
+      };
+
+      this.expTicksUsed = this.tickables.map(exp).reduce(function (a, b) {
+        return a + b;
+      });
+      return this.expTicksUsed;
+    } // Get the softmax-scaled value of a tick duration. 'tickValue' is a number.
+
+  }, {
+    key: "softmax",
+    value: function softmax(tickValue) {
+      var _this3 = this;
+
+      if (!this.expTicksUsed) {
+        this.reCalculateExpTicksUsed();
+      }
+
+      var totalTicks = this.ticksUsed.value();
+
+      var exp = function exp(v) {
+        return Math.pow(_this3.options.softmaxFactor, v / totalTicks);
+      };
+
+      return exp(tickValue) / this.expTicksUsed;
     } // Add a tickable to the voice
 
   }, {
@@ -30288,12 +30341,12 @@ function (_Element) {
   }, {
     key: "preFormat",
     value: function preFormat() {
-      var _this2 = this;
+      var _this4 = this;
 
       if (this.preFormatted) return this;
       this.tickables.forEach(function (tickable) {
         if (!tickable.getStave()) {
-          tickable.setStave(_this2.stave);
+          tickable.setStave(_this4.stave);
         }
       });
       this.preFormatted = true;
