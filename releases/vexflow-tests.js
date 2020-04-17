@@ -1,5 +1,5 @@
 /**!
- * VexFlow 3.0.4 built on 2020-04-16.
+ * VexFlow 3.0.5 built on 2020-04-17.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -4974,18 +4974,21 @@ Vex.Flow.Test.Factory = (function() {
 
 VF.Test.Formatter = (function() {
   var run = VF.Test.runTests;
+  var runSVG = VF.Test.runSVGTest;
 
   var Formatter = {
     Start: function() {
       QUnit.module('Formatter');
       test('TickContext Building', Formatter.buildTickContexts);
-      run('StaveNote Formatting', Formatter.formatStaveNotes);
-      run('StaveNote Justification', Formatter.justifyStaveNotes);
-      run('Notes with Tab', Formatter.notesWithTab);
-      run('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0, debug: true });
-      run('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
-      run('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 4, alpha: 0.01 });
-      run('Proportional Formatting - No Justification', Formatter.proportionalFormatting, { justify: false, debug: true, iterations: 0 });
+      runSVG('StaveNote - No Justification', Formatter.formatStaveNotes);
+      runSVG('StaveNote - Justification', Formatter.justifyStaveNotes);
+      runSVG('Notes with Tab', Formatter.notesWithTab);
+      runSVG('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0, debug: true });
+      runSVG('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
+      runSVG('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 4, alpha: 0.01 });
+      runSVG('Softmax', Formatter.softMax);
+      runSVG('Mixtime', Formatter.mixTime);
+      runSVG('Proportional Formatting - No Justification', Formatter.proportionalFormatting, { justify: false, debug: true, iterations: 0 });
       run('Proportional Formatting - No Tuning', Formatter.proportionalFormatting, { debug: true, iterations: 0 });
 
       VF.Test.runSVGTest('Proportional Formatting (20 iterations)',
@@ -5044,10 +5047,10 @@ VF.Test.Formatter = (function() {
     },
 
     formatStaveNotes: function(options) {
-      var vf = VF.Test.makeFactory(options, 500, 250);
+      var vf = VF.Test.makeFactory(options, 500, 280);
       var score = vf.EasyScore();
 
-      vf.Stave({ y: 40 });
+      vf.Stave({ y: 50 });
 
       var notes1 = score.notes(
         '(cb4 e#4 a4)/2, (d4 e4 f4)/4, (cn4 f#4 a4)',
@@ -5069,11 +5072,11 @@ VF.Test.Formatter = (function() {
       var ctx = vf.getContext();
 
       notes1.forEach(function(note) {
-        VF.Test.plotNoteWidth(ctx, note, 180);
+        VF.Test.plotNoteWidth(ctx, note, 190);
       });
 
       notes2.forEach(function(note) {
-        VF.Test.plotNoteWidth(ctx, note, 15);
+        VF.Test.plotNoteWidth(ctx, note, 35);
       });
 
       VF.Test.plotLegendForNoteWidth(ctx, 300, 180);
@@ -5279,7 +5282,7 @@ VF.Test.Formatter = (function() {
       var debug = options.params.debug;
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 660, 750);
+      var vf = VF.Test.makeFactory(options, 650, 750);
       var system = vf.System({
         x: 50,
         width: 500,
@@ -5322,6 +5325,69 @@ VF.Test.Formatter = (function() {
 
       // console.log(table);
       VF.Registry.disableDefaultRegistry();
+      ok(true);
+    },
+
+    softMax: function(options) {
+      var vf = VF.Test.makeFactory(options, 550, 500);
+      vf.getContext().scale(0.8, 0.8);
+
+      function draw(y, factor) {
+        var score = vf.EasyScore();
+        var system = vf.System({
+          x: 100,
+          y,
+          width: 500,
+          details: { softmaxFactor: factor }
+        });
+
+        system.addStave({
+          voices: [
+            score.voice(
+              score.notes('C#5/h, a4/q')
+                .concat(score.beam(score.notes('Abb4/8, A4/8')))
+                .concat(score.beam(score.notes('A4/16, A#4, A4, Ab4/32, A4'))),
+              { time: '5/4' })
+          ]
+        }).addClef('treble').addTimeSignature('5/4');
+
+        vf.draw();
+        ok(true);
+      }
+
+      draw(50, 1);
+      draw(150, 2);
+      draw(250, 10);
+      draw(350, 20);
+      draw(450, 200);
+    },
+
+    mixTime: function(options) {
+      var vf = VF.Test.makeFactory(options, 350, 250);
+      vf.getContext().scale(0.8, 0.8);
+      var score = vf.EasyScore();
+      var system = vf.System({ width: 300, debugFormatter: true });
+
+      system.addStave({
+        voices: [
+          score.voice(
+            score.notes('C#5/q, B4')
+              .concat(score.beam(score.notes('A4/8, E4, C4, D4')))
+          )
+        ]
+      }).addClef('treble').addTimeSignature('4/4');
+
+      system.addStave({
+        voices: [
+          score.voice(
+            score.notes('C#5/q, B4, B4')
+              .concat(
+                score.tuplet(score.beam(score.notes('A4/8, E4, C4'))))
+          )
+        ]
+      }).addClef('treble').addTimeSignature('4/4');
+
+      vf.draw();
       ok(true);
     },
 

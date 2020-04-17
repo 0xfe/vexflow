@@ -10102,7 +10102,7 @@ function createContexts(voices, ContextType, addToContext) {
   var contexts = []; // For each voice, extract notes and create a context for every
   // new tick that hasn't been seen before.
 
-  voices.forEach(function (voice) {
+  voices.forEach(function (voice, voiceIndex) {
     // Use resolution multiplier as denominator to expand ticks
     // to suitable integer values, so that no additional expansion
     // of fractional tick values is needed.
@@ -10117,7 +10117,7 @@ function createContexts(voices, ContextType, addToContext) {
       } // Add this tickable to the TickContext.
 
 
-      addToContext(tickable, tickToContextMap[integerTicks]); // Maintain a sorted list of tick contexts.
+      addToContext(tickable, tickToContextMap[integerTicks], voiceIndex); // Maintain a sorted list of tick contexts.
 
       tickList.push(integerTicks);
       ticksUsed.add(tickable.getTicks());
@@ -10172,7 +10172,7 @@ function () {
         ctx.setStrokeStyle(color);
         ctx.setFillStyle(color);
         ctx.setLineWidth(1);
-        ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+        ctx.fillRect(x1, y1, Math.max(x2 - x1, 0), y2 - y1);
       }
 
       ctx.save();
@@ -10423,8 +10423,8 @@ function () {
   }, {
     key: "createTickContexts",
     value: function createTickContexts(voices) {
-      var contexts = createContexts(voices, _tickcontext__WEBPACK_IMPORTED_MODULE_8__["TickContext"], function (tickable, context) {
-        return context.addTickable(tickable);
+      var contexts = createContexts(voices, _tickcontext__WEBPACK_IMPORTED_MODULE_8__["TickContext"], function (tickable, context, voiceIndex) {
+        return context.addTickable(tickable, voiceIndex);
       });
       contexts.array.forEach(function (context) {
         context.tContexts = contexts.array;
@@ -10488,57 +10488,120 @@ function () {
 
       var firstContext = contextMap[contextList[0]];
       var finalContext = contextMap[contextList[contextList.length - 1]];
-      var adjustedJustifyWidth = justifyWidth - finalContext.getWidth() - firstContext.getMetrics().totalLeftPx; // Helper methods.
+      var adjustedJustifyWidth = justifyWidth - finalContext.getMetrics().notePx - firstContext.getMetrics().totalLeftPx; // Helper methods.
 
       var sum = function sum(arr) {
         return arr.reduce(function (a, b) {
           return a + b;
         });
-      }; // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
-      // the layout from looking too "mechanical" because of proportional spacing.
-
-
-      function softmax(arr, factor) {
-        var totalTicks = sum(arr);
-
-        var exp = function exp(v) {
-          return Math.pow(factor, v / totalTicks);
-        };
-
-        var expTotalTicks = sum(arr.map(exp)); // Scale the softmax'd array back up to ticks before returning.
-
-        return arr.map(function (v) {
-          return exp(v) / expTotalTicks * totalTicks;
-        });
-      } // Note that if all tickables in context have ignore_ticks, then minTicks == null
+      }; // Note that if all tickables in context have ignore_ticks, then minTicks == null
 
 
       var tickDurations = contextList.map(function (tick) {
         return contextMap[tick].minTicks ? contextMap[tick].minTicks.value() : 0;
-      }); // Calculate the softmax of the tick durations. This is now effectively a log-scale of the durations, within
-      // the required range.
+      }); // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
+      // the layout from looking too "mechanical" because of proportional spacing.
 
-      var softTickDurations = softmax(tickDurations, this.options.softmaxFactor); // Total number of ticks -- this should be the same as sum(tickDurations). Also the same
-      // as 'this.totalTicks - finalContext.ticks' (since we don't care about the last duration).
+      var totalTicks = this.totalTicks.value(); // sum(tickDurations);
 
-      var totalSoftTicks = sum(softTickDurations); // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
+      var exp = function exp(v) {
+        return Math.pow(_this.options.softmaxFactor, v / totalTicks);
+      };
+
+      var expTotalTicks = sum(tickDurations.map(exp));
+
+      var softmax = function softmax(v) {
+        return exp(v) / expTotalTicks;
+      }; // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
       // the softmax of the ticks.
 
+
       var distanceError = contextList.map(function (tick, i) {
-        var distance = i > 0 ? contextMap[tick].getX() - contextMap[contextList[i - 1]].getX() : 0;
-        var expectedDistance = i > 0 ? softTickDurations[i - 1] / totalSoftTicks * adjustedJustifyWidth : 0;
-        return expectedDistance - distance;
+        var context = contextMap[tick];
+        var voices = context.getTickablesByVoice();
+        var errorPx = 0;
+
+        if (i > 0) {
+          var lastContext = contextMap[contextList[i - 1]]; // Go through each tickable and search backwards for another tickable
+          // in the same voice. If found, use that duration (ticks) to calculate
+          // the expected distance.
+
+          var _loop = function _loop(j) {
+            var backTick = contextMap[contextList[j]];
+            var backVoices = backTick.getTickablesByVoice(); // Look for matching voices between tick contexts.
+
+            var matchingVoices = [];
+            Object.keys(voices).forEach(function (v) {
+              if (backVoices[v]) {
+                matchingVoices.push(v);
+              }
+            });
+
+            if (matchingVoices.length > 0) {
+              // Found matching voices, get largest duration
+              var maxTicks = 0;
+              var backTickable = null;
+              var maxNegativeShiftPx = 0;
+              var expectedDistance = 0;
+              var distance = 0;
+              matchingVoices.forEach(function (v) {
+                var ticks = backVoices[v].getTicks().value();
+
+                if (ticks > maxTicks) {
+                  backTickable = backVoices[v];
+                  maxTicks = ticks;
+                } // Calculate the limits of the shift based on modifiers, etc.
+
+
+                var thisTickable = voices[v];
+                var insideLeftEdge = thisTickable.getX() - (thisTickable.getMetrics().modLeftPx + thisTickable.getMetrics().leftDisplacedHeadPx);
+                var backMetrics = backVoices[v].getMetrics();
+                var insideRightEdge = backVoices[v].getX() + backMetrics.notePx + backMetrics.modRightPx + backMetrics.rightDisplacedHeadPx; // Don't allow shifting if notes in the same voice can collide
+
+                maxNegativeShiftPx = Math.max(maxNegativeShiftPx, insideLeftEdge - insideRightEdge);
+              }); // Don't shift further left than the notehead of the last context
+
+              maxNegativeShiftPx = Math.min(maxNegativeShiftPx, context.getX() - lastContext.getX()); // Calculate the error and bound it to the maximum negative shift. This allows right shifts to be
+              // limited by justifyWidth, and left shifts limited by collisions (or prev tick context's note head).
+
+              distance = contextMap[tick].getX() - backTickable.getX();
+              expectedDistance = softmax(maxTicks) * adjustedJustifyWidth;
+              errorPx = Math.max(-maxNegativeShiftPx, expectedDistance - distance);
+              return "break";
+            }
+          };
+
+          for (var j = i - 1; j >= 0; j--) {
+            var _ret = _loop(j);
+
+            if (_ret === "break") break;
+          }
+        }
+
+        return errorPx;
       }); // Distribute ticks to the contexts based on the calculated distance error.
 
       var centerX = justifyWidth / 2;
-      var spaceAccum = 0;
+      var spaceAccum = 0; // let negativeSpaceAccum = 0;
+
       contextList.forEach(function (tick, index) {
         var context = contextMap[tick];
 
         if (index !== 0) {
-          var diff = distanceError[index];
-          spaceAccum += Math.max(0, diff);
-          context.setX(context.getX() + spaceAccum);
+          var _x = context.getX();
+
+          var errorPx = distanceError[index];
+          var negativeShiftPx = 0;
+
+          if (errorPx > 0) {
+            if (finalContext.getX() + errorPx <= adjustedJustifyWidth) {
+              spaceAccum += errorPx;
+            }
+          } else if (errorPx < 0) {
+            negativeShiftPx = Math.abs(errorPx);
+          }
+
+          context.setX(_x + spaceAccum - negativeShiftPx);
         } // Move center aligned tickables to middle
 
 
@@ -28164,6 +28227,8 @@ function (_Tickable) {
     _this.xOffset = 0; // xBase and xOffset are an alternative way to describe x (x = xB + xO)
 
     _this.tickables = []; // Notes, tabs, chords, lyrics.
+
+    _this.tickablesByVoice = {}; // Tickables indeced by voice number
     // Formatting metrics
 
     _this.notePx = 0; // width of widest note in this context
@@ -28250,6 +28315,16 @@ function (_Tickable) {
       return this.tickables;
     }
   }, {
+    key: "getTickablesForVoice",
+    value: function getTickablesForVoice(voiceIndex) {
+      return this.tickablesByVoice[voiceIndex];
+    }
+  }, {
+    key: "getTickablesByVoice",
+    value: function getTickablesByVoice() {
+      return this.tickablesByVoice;
+    }
+  }, {
     key: "getCenterAlignedTickables",
     value: function getCenterAlignedTickables() {
       return this.tickables.filter(function (tickable) {
@@ -28299,7 +28374,7 @@ function (_Tickable) {
     }
   }, {
     key: "addTickable",
-    value: function addTickable(tickable) {
+    value: function addTickable(tickable, voiceIndex) {
       if (!tickable) {
         throw new _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].RERR('BadArgument', 'Invalid tickable added.');
       }
@@ -28321,6 +28396,7 @@ function (_Tickable) {
 
       tickable.setTickContext(this);
       this.tickables.push(tickable);
+      this.tickablesByVoice[voiceIndex] = tickable;
       this.preFormatted = false;
       return this;
     }
