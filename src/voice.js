@@ -30,7 +30,7 @@ export class Voice extends Element {
     this.setAttribute('type', 'Voice');
 
     this.options = {
-      softmaxFactor: 20,
+      softmaxFactor: 100,
       ...options,
     };
 

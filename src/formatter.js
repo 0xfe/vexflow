@@ -497,10 +497,9 @@ export class Formatter {
 
     // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
     // the softmax of the ticks.
-    const distanceError = contextList.map((tick, i) => {
+    const idealDistances = contextList.map((tick, i) => {
       const context = contextMap[tick];
       const voices = context.getTickablesByVoice();
-      let errorPx = 0;
       let backTickable = null;
       if (i > 0) {
         const lastContext = contextMap[contextList[i - 1]];
@@ -524,7 +523,6 @@ export class Formatter {
             let maxTicks = 0;
             let maxNegativeShiftPx = 0;
             let expectedDistance = 0;
-            let distance = 0;
 
             // eslint-disable-next-line
             matchingVoices.forEach(v => {
@@ -550,19 +548,18 @@ export class Formatter {
 
             // Calculate the error and bound it to the maximum negative shift. This allows right shifts to be
             // limited by justifyWidth, and left shifts limited by collisions (or prev tick context's note head).
-            distance = context.getX() - backTickable.getX();
             expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
-            errorPx = expectedDistance - distance;
+
             return {
-              errorPx,
-              fromTickable: backTickable,
+              expectedDistance,
               maxNegativeShiftPx,
+              fromTickable: backTickable,
             };
           }
         }
       }
 
-      return { errorPx: 0, fromTickable: null, maxNegativeShiftPx: 0 };
+      return { errorPx: 0, fromTickablePx: 0, maxNegativeShiftPx: 0 };
     });
 
     // Distribute ticks to the contexts based on the calculated distance error.
@@ -573,19 +570,16 @@ export class Formatter {
       const context = contextMap[tick];
       if (index > 0) {
         const x = context.getX();
-        const error = distanceError[index];
+        const ideal = idealDistances[index];
 
-        // The error reported is from the last tickable in the voice, so make sure we're
-        // accomodate for space accumulated distance between last context and the tickable.
-        const shiftLimit = contextMap[contextList[index - 1]].getX() - error.fromTickable.getX();
-        const errorPx = error.errorPx - shiftLimit;
+        const errorPx = (ideal.fromTickable.getX() + ideal.expectedDistance) - (x + spaceAccum);
 
         let negativeShiftPx = 0;
 
         if (errorPx > 0) {
           spaceAccum += errorPx;
         } else if (errorPx < 0) {
-          negativeShiftPx = Math.min(error.maxNegativeShiftPx, Math.abs(errorPx));
+          negativeShiftPx = Math.min(ideal.maxNegativeShiftPx, Math.abs(errorPx));
         }
 
         context.setX(x + spaceAccum - negativeShiftPx);
