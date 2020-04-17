@@ -321,7 +321,7 @@ export class Formatter {
 
   constructor(options) {
     this.options = {
-      softmaxFactor: 20,
+      softmaxFactor: null,
       ...options
     };
 
@@ -495,25 +495,13 @@ export class Formatter {
       - finalContext.getMetrics().notePx
       - firstContext.getMetrics().totalLeftPx;
 
-    // Helper methods.
-    const sum = (arr) => arr.reduce((a, b) => a + b);
-
-    // Note that if all tickables in context have ignore_ticks, then minTicks == null
-    const tickDurations = contextList.map((tick) => (contextMap[tick].minTicks ? contextMap[tick].minTicks.value() : 0));
-
-    // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
-    // the layout from looking too "mechanical" because of proportional spacing.
-    const totalTicks = this.totalTicks.value(); // sum(tickDurations);
-    const exp = (v) => Math.pow(this.options.softmaxFactor, v / totalTicks);
-    const expTotalTicks = sum(tickDurations.map(exp));
-    const softmax = (v) => (exp(v) / expTotalTicks);
-
     // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
     // the softmax of the ticks.
     const distanceError = contextList.map((tick, i) => {
       const context = contextMap[tick];
       const voices = context.getTickablesByVoice();
       let errorPx = 0;
+      let backTickable = null;
       if (i > 0) {
         const lastContext = contextMap[contextList[i - 1]];
         // Go through each tickable and search backwards for another tickable
@@ -534,11 +522,11 @@ export class Formatter {
           if (matchingVoices.length > 0) {
             // Found matching voices, get largest duration
             let maxTicks = 0;
-            let backTickable = null;
             let maxNegativeShiftPx = 0;
             let expectedDistance = 0;
             let distance = 0;
 
+            // eslint-disable-next-line
             matchingVoices.forEach(v => {
               const ticks = backVoices[v].getTicks().value();
               if (ticks > maxTicks) {
@@ -562,15 +550,19 @@ export class Formatter {
 
             // Calculate the error and bound it to the maximum negative shift. This allows right shifts to be
             // limited by justifyWidth, and left shifts limited by collisions (or prev tick context's note head).
-            distance = contextMap[tick].getX() - backTickable.getX();
-            expectedDistance = softmax(maxTicks) * adjustedJustifyWidth;
-            errorPx = Math.max(-maxNegativeShiftPx, expectedDistance - distance);
-            break;
+            distance = context.getX() - backTickable.getX();
+            expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
+            errorPx = expectedDistance - distance;
+            return {
+              errorPx,
+              fromTickable: backTickable,
+              maxNegativeShiftPx,
+            };
           }
         }
       }
 
-      return errorPx;
+      return { errorPx: 0, fromTickable: null, maxNegativeShiftPx: 0 };
     });
 
     // Distribute ticks to the contexts based on the calculated distance error.
@@ -579,17 +571,21 @@ export class Formatter {
     // let negativeSpaceAccum = 0;
     contextList.forEach((tick, index) => {
       const context = contextMap[tick];
-      if (index !== 0) {
+      if (index > 0) {
         const x = context.getX();
-        const errorPx = distanceError[index];
+        const error = distanceError[index];
+
+        // The error reported is from the last tickable in the voice, so make sure we're
+        // accomodate for space accumulated distance between last context and the tickable.
+        const shiftLimit = contextMap[contextList[index - 1]].getX() - error.fromTickable.getX();
+        const errorPx = error.errorPx - shiftLimit;
+
         let negativeShiftPx = 0;
 
         if (errorPx > 0) {
-          if (finalContext.getX() + errorPx <= adjustedJustifyWidth) {
-            spaceAccum += errorPx;
-          }
+          spaceAccum += errorPx;
         } else if (errorPx < 0) {
-          negativeShiftPx = Math.abs(errorPx);
+          negativeShiftPx = Math.min(error.maxNegativeShiftPx, Math.abs(errorPx));
         }
 
         context.setX(x + spaceAccum - negativeShiftPx);
@@ -791,6 +787,10 @@ export class Formatter {
     };
 
     this.voices = voices;
+    if (this.options.softmaxFactor) {
+      this.voices.forEach(v => v.setSoftmaxFactor(this.options.softmaxFactor));
+    }
+
     this.alignRests(voices, opts.align_rests);
     this.createTickContexts(voices);
     this.preFormat(justifyWidth, opts.context, voices, opts.stave);

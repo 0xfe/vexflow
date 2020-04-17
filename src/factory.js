@@ -382,7 +382,7 @@ export class Factory {
       time: '4/4',
       options: {},
     });
-    const voice = new Voice(params.time);
+    const voice = new Voice(params.time, params.options);
     this.voices.push(voice);
     return voice;
   }

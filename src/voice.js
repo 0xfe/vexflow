@@ -25,9 +25,14 @@ export class Voice extends Element {
     };
   }
 
-  constructor(time) {
+  constructor(time, options) {
     super();
     this.setAttribute('type', 'Voice');
+
+    this.options = {
+      softmaxFactor: 20,
+      ...options,
+    };
 
     // Time signature shortcut: "4/4", "3/8", etc.
     if (typeof(time) === 'string') {
@@ -151,6 +156,36 @@ export class Voice extends Element {
     } else {
       return true;
     }
+  }
+
+  // We use softmax to layout the tickables proportional to the exponent of
+  // their duration. The softmax factor is used to determine the 'linearness' of
+  // the layout.
+  //
+  // The softmax of all the tickables in this voice should sum to 1.
+  setSoftmaxFactor(factor) {
+    this.options.softmaxFactor = factor;
+    return this;
+  }
+
+  // Calculate the sum of the exponents of all the ticks in this voice to use as the denominator
+  // of softmax.
+  reCalculateExpTicksUsed() {
+    const totalTicks = this.ticksUsed.value();
+    const exp = (tickable) => Math.pow(this.options.softmaxFactor, tickable.getTicks().value() / totalTicks);
+    this.expTicksUsed = this.tickables.map(exp).reduce((a, b) => a + b);
+    return this.expTicksUsed;
+  }
+
+  // Get the softmax-scaled value of a tick duration. 'tickValue' is a number.
+  softmax(tickValue) {
+    if (!this.expTicksUsed) {
+      this.reCalculateExpTicksUsed();
+    }
+
+    const totalTicks = this.ticksUsed.value();
+    const exp = (v) => Math.pow(this.options.softmaxFactor, v / totalTicks);
+    return exp(tickValue) / this.expTicksUsed;
   }
 
   // Add a tickable to the voice
