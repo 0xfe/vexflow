@@ -313,7 +313,7 @@ VF.Test.Formatter = (function() {
       var debug = options.params.debug;
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 660, 750);
+      var vf = VF.Test.makeFactory(options, 650, 750);
       var system = vf.System({
         x: 50,
         width: 500,

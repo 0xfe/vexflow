@@ -98,7 +98,7 @@ function createContexts(voices, ContextType, addToContext) {
 
   // For each voice, extract notes and create a context for every
   // new tick that hasn't been seen before.
-  voices.forEach(voice => {
+  voices.forEach((voice, voiceIndex) => {
     // Use resolution multiplier as denominator to expand ticks
     // to suitable integer values, so that no additional expansion
     // of fractional tick values is needed.
@@ -115,7 +115,7 @@ function createContexts(voices, ContextType, addToContext) {
       }
 
       // Add this tickable to the TickContext.
-      addToContext(tickable, tickToContextMap[integerTicks]);
+      addToContext(tickable, tickToContextMap[integerTicks], voiceIndex);
 
       // Maintain a sorted list of tick contexts.
       tickList.push(integerTicks);
@@ -159,7 +159,7 @@ export class Formatter {
       ctx.setStrokeStyle(color);
       ctx.setFillStyle(color);
       ctx.setLineWidth(1);
-      ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+      ctx.fillRect(x1, y1, Math.max(x2 - x1, 0), y2 - y1);
     }
 
     ctx.save();
@@ -425,7 +425,7 @@ export class Formatter {
     const contexts = createContexts(
       voices,
       TickContext,
-      (tickable, context) => context.addTickable(tickable)
+      (tickable, context, voiceIndex) => context.addTickable(tickable, voiceIndex)
     );
 
     contexts.array.forEach(context => {
@@ -498,50 +498,101 @@ export class Formatter {
     // Helper methods.
     const sum = (arr) => arr.reduce((a, b) => a + b);
 
-    // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
-    // the layout from looking too "mechanical" because of proportional spacing.
-    function softmax(arr, factor) {
-      const totalTicks = sum(arr);
-      const exp = (v) => Math.pow(factor, v / totalTicks);
-      const expTotalTicks = sum(arr.map(exp));
-
-      // Scale the softmax'd array back up to ticks before returning.
-      return arr.map(v => (exp(v) / expTotalTicks) * totalTicks);
-    }
-
     // Note that if all tickables in context have ignore_ticks, then minTicks == null
     const tickDurations = contextList.map((tick) => (contextMap[tick].minTicks ? contextMap[tick].minTicks.value() : 0));
 
-    // Calculate the softmax of the tick durations. This is now effectively a log-scale of the durations, within
-    // the required range.
-    const softTickDurations = softmax(tickDurations, this.options.softmaxFactor);
-
-    // Total number of ticks -- this should be the same as sum(tickDurations). Also the same
-    // as 'this.totalTicks - finalContext.ticks' (since we don't care about the last duration).
-    const totalSoftTicks = sum(softTickDurations);
+    // We use softmax to resdistribute a set of metrics into a normalized exponential distribution. This prevents
+    // the layout from looking too "mechanical" because of proportional spacing.
+    const totalTicks = this.totalTicks.value(); // sum(tickDurations);
+    const exp = (v) => Math.pow(this.options.softmaxFactor, v / totalTicks);
+    const expTotalTicks = sum(tickDurations.map(exp));
+    const softmax = (v) => (exp(v) / expTotalTicks);
 
     // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
     // the softmax of the ticks.
     const distanceError = contextList.map((tick, i) => {
-      const distance = i > 0 ? contextMap[tick].getX() - contextMap[contextList[i - 1]].getX() : 0;
-      const expectedDistance = i > 0 ? (softTickDurations[i - 1] / totalSoftTicks) * adjustedJustifyWidth : 0;
-      return expectedDistance - distance;
+      const context = contextMap[tick];
+      const voices = context.getTickablesByVoice();
+      let errorPx = 0;
+      if (i > 0) {
+        const lastContext = contextMap[contextList[i - 1]];
+        // Go through each tickable and search backwards for another tickable
+        // in the same voice. If found, use that duration (ticks) to calculate
+        // the expected distance.
+        for (let j = i - 1; j >= 0; j--) {
+          const backTick = contextMap[contextList[j]];
+          const backVoices = backTick.getTickablesByVoice();
+
+          // Look for matching voices between tick contexts.
+          const matchingVoices = [];
+          Object.keys(voices).forEach(v => {
+            if (backVoices[v]) {
+              matchingVoices.push(v);
+            }
+          });
+
+          if (matchingVoices.length > 0) {
+            // Found matching voices, get largest duration
+            let maxTicks = 0;
+            let backTickable = null;
+            let maxNegativeShiftPx = 0;
+            let expectedDistance = 0;
+            let distance = 0;
+
+            matchingVoices.forEach(v => {
+              const ticks = backVoices[v].getTicks().value();
+              if (ticks > maxTicks) {
+                backTickable = backVoices[v];
+                maxTicks = ticks;
+              }
+
+              // Calculate the limits of the shift based on modifiers, etc.
+              const thisTickable = voices[v];
+              const insideLeftEdge = thisTickable.getX() - (thisTickable.getMetrics().modLeftPx + thisTickable.getMetrics().leftDisplacedHeadPx);
+
+              const backMetrics = backVoices[v].getMetrics();
+              const insideRightEdge = backVoices[v].getX() + backMetrics.notePx + backMetrics.modRightPx + backMetrics.rightDisplacedHeadPx;
+
+              // Don't allow shifting if notes in the same voice can collide
+              maxNegativeShiftPx = Math.max(maxNegativeShiftPx, insideLeftEdge - insideRightEdge);
+            });
+
+            // Don't shift further left than the notehead of the last context
+            maxNegativeShiftPx = Math.min(maxNegativeShiftPx, context.getX() - lastContext.getX());
+
+            // Calculate the error and bound it to the maximum negative shift. This allows right shifts to be
+            // limited by justifyWidth, and left shifts limited by collisions (or prev tick context's note head).
+            distance = contextMap[tick].getX() - backTickable.getX();
+            expectedDistance = softmax(maxTicks) * adjustedJustifyWidth;
+            errorPx = Math.max(-maxNegativeShiftPx, expectedDistance - distance);
+            break;
+          }
+        }
+      }
+
+      return errorPx;
     });
 
     // Distribute ticks to the contexts based on the calculated distance error.
     const centerX = justifyWidth / 2;
     let spaceAccum = 0;
+    // let negativeSpaceAccum = 0;
     contextList.forEach((tick, index) => {
       const context = contextMap[tick];
       if (index !== 0) {
         const x = context.getX();
-        const diff = Math.max(0, distanceError[index]);
-        if (finalContext.getX() + diff <= adjustedJustifyWidth) {
-          // Justify only if there's space left
-          spaceAccum += diff;
+        const errorPx = distanceError[index];
+        let negativeShiftPx = 0;
+
+        if (errorPx > 0) {
+          if (finalContext.getX() + errorPx <= adjustedJustifyWidth) {
+            spaceAccum += errorPx;
+          }
+        } else if (errorPx < 0) {
+          negativeShiftPx = Math.abs(errorPx);
         }
 
-        context.setX(x + spaceAccum);
+        context.setX(x + spaceAccum - negativeShiftPx);
       }
 
       // Move center aligned tickables to middle

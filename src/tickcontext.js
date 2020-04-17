@@ -27,6 +27,7 @@ export class TickContext extends Tickable {
     this.xBase = 0;        // base x position without xOffset
     this.xOffset = 0;      // xBase and xOffset are an alternative way to describe x (x = xB + xO)
     this.tickables = [];   // Notes, tabs, chords, lyrics.
+    this.tickablesByVoice = {};   // Tickables indeced by voice number
 
     // Formatting metrics
     this.notePx = 0;       // width of widest note in this context
@@ -51,6 +52,8 @@ export class TickContext extends Tickable {
   getMaxTicks() { return this.maxTicks; }
   getMinTicks() { return this.minTicks; }
   getTickables() { return this.tickables; }
+  getTickablesForVoice(voiceIndex) { return this.tickablesByVoice[voiceIndex]; }
+  getTickablesByVoice() { return this.tickablesByVoice; }
 
   getCenterAlignedTickables() {
     return this.tickables.filter(tickable => tickable.isCenterAligned());
@@ -78,7 +81,7 @@ export class TickContext extends Tickable {
     this.preFormatted = false;
   }
 
-  addTickable(tickable) {
+  addTickable(tickable, voiceIndex) {
     if (!tickable) {
       throw new Vex.RERR('BadArgument', 'Invalid tickable added.');
     }
@@ -101,6 +104,7 @@ export class TickContext extends Tickable {
 
     tickable.setTickContext(this);
     this.tickables.push(tickable);
+    this.tickablesByVoice[voiceIndex] = tickable;
     this.preFormatted = false;
     return this;
   }
