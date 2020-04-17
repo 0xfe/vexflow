@@ -10491,10 +10491,9 @@ function () {
       var adjustedJustifyWidth = justifyWidth - finalContext.getMetrics().notePx - firstContext.getMetrics().totalLeftPx; // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
       // the softmax of the ticks.
 
-      var distanceError = contextList.map(function (tick, i) {
+      var idealDistances = contextList.map(function (tick, i) {
         var context = contextMap[tick];
         var voices = context.getTickablesByVoice();
-        var errorPx = 0;
         var backTickable = null;
 
         if (i > 0) {
@@ -10517,8 +10516,7 @@ function () {
               // Found matching voices, get largest duration
               var maxTicks = 0;
               var maxNegativeShiftPx = 0;
-              var expectedDistance = 0;
-              var distance = 0; // eslint-disable-next-line
+              var expectedDistance = 0; // eslint-disable-next-line
 
               matchingVoices.forEach(function (v) {
                 var ticks = backVoices[v].getTicks().value();
@@ -10540,14 +10538,12 @@ function () {
               maxNegativeShiftPx = Math.min(maxNegativeShiftPx, context.getX() - lastContext.getX()); // Calculate the error and bound it to the maximum negative shift. This allows right shifts to be
               // limited by justifyWidth, and left shifts limited by collisions (or prev tick context's note head).
 
-              distance = context.getX() - backTickable.getX();
               expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
-              errorPx = expectedDistance - distance;
               return {
                 v: {
-                  errorPx: errorPx,
-                  fromTickable: backTickable,
-                  maxNegativeShiftPx: maxNegativeShiftPx
+                  expectedDistance: expectedDistance,
+                  maxNegativeShiftPx: maxNegativeShiftPx,
+                  fromTickable: backTickable
                 }
               };
             }
@@ -10562,7 +10558,7 @@ function () {
 
         return {
           errorPx: 0,
-          fromTickable: null,
+          fromTickablePx: 0,
           maxNegativeShiftPx: 0
         };
       }); // Distribute ticks to the contexts based on the calculated distance error.
@@ -10576,17 +10572,16 @@ function () {
         if (index > 0) {
           var _x = context.getX();
 
-          var error = distanceError[index]; // The error reported is from the last tickable in the voice, so make sure we're
-          // accomodate for space accumulated distance between last context and the tickable.
+          var ideal = idealDistances[index];
 
-          var shiftLimit = contextMap[contextList[index - 1]].getX() - error.fromTickable.getX();
-          var errorPx = error.errorPx - shiftLimit;
+          var errorPx = ideal.fromTickable.getX() + ideal.expectedDistance - (_x + spaceAccum);
+
           var negativeShiftPx = 0;
 
           if (errorPx > 0) {
             spaceAccum += errorPx;
           } else if (errorPx < 0) {
-            negativeShiftPx = Math.min(error.maxNegativeShiftPx, Math.abs(errorPx));
+            negativeShiftPx = Math.min(ideal.maxNegativeShiftPx, Math.abs(errorPx));
           }
 
           context.setX(_x + spaceAccum - negativeShiftPx);
@@ -30090,7 +30085,7 @@ function (_Element) {
     _this.setAttribute('type', 'Voice');
 
     _this.options = _objectSpread({
-      softmaxFactor: 20
+      softmaxFactor: 100
     }, options); // Time signature shortcut: "4/4", "3/8", etc.
 
     if (typeof time === 'string') {

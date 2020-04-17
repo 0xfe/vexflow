@@ -1,5 +1,5 @@
 /**!
- * VexFlow 3.0.6 built on 2020-04-17.
+ * VexFlow 3.0.7 built on 2020-04-17.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -5366,7 +5366,10 @@ VF.Test.Formatter = (function() {
       var vf = VF.Test.makeFactory(options, 420, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
-      var system = vf.System({ width: 500, debugFormatter: true });
+      var system = vf.System({
+        details: { softmaxFactor: 100 },
+        width: 500, debugFormatter: true
+      });
 
       system.addStave({
         voices: [
