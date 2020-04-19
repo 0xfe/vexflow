@@ -16,12 +16,17 @@ export class TickContext extends Tickable {
     return contexts[index + 1];
   }
 
-  constructor() {
+  constructor(options) {
     super();
+    this.tickID = options && options.tickID;
     this.setAttribute('type', 'TickContext');
     this.currentTick = new Fraction(0, 1);
+
     this.maxTicks = new Fraction(0, 1);
+    this.maxTickable = null; // Biggest tickable
     this.minTicks = null; // this can remian null if all tickables have ignore_ticks
+    this.minTickable = null;
+
     this.padding = 1;     // padding on each side (width += padding * 2)
     this.x = 0;
     this.xBase = 0;        // base x position without xOffset
@@ -41,6 +46,7 @@ export class TickContext extends Tickable {
     this.tContexts = [];   // Parent array of tick contexts
   }
 
+  getTickID() { return this.tickID; }
   getX() { return this.x; }
   setX(x) { this.x = x; this.xBase = x; this.xOffset = 0; return this; }
   getXBase() { return this.xBase; } // use of xBase and xOffset is optional, avoids offset creep
@@ -51,6 +57,8 @@ export class TickContext extends Tickable {
   setPadding(padding) { this.padding = padding; return this; }
   getMaxTicks() { return this.maxTicks; }
   getMinTicks() { return this.minTicks; }
+  getMaxTickable() { return this.maxTickable; }
+  getMinTickable() { return this.minTickable; }
   getTickables() { return this.tickables; }
   getTickablesForVoice(voiceIndex) { return this.tickablesByVoice[voiceIndex]; }
   getTickablesByVoice() { return this.tickablesByVoice; }
@@ -93,12 +101,15 @@ export class TickContext extends Tickable {
 
       if (ticks.greaterThan(this.maxTicks)) {
         this.maxTicks = ticks.clone();
+        this.maxTickable = tickable;
       }
 
       if (this.minTicks == null) {
         this.minTicks = ticks.clone();
+        this.minTickable = tickable;
       } else if (ticks.lessThan(this.minTicks)) {
         this.minTicks = ticks.clone();
+        this.minTickable = tickable;
       }
     }
 

@@ -109,7 +109,7 @@ function createContexts(voices, ContextType, addToContext) {
 
       // If we have no tick context for this tick, create one.
       if (!tickToContextMap[integerTicks]) {
-        const newContext = new ContextType();
+        const newContext = new ContextType({ tickID: integerTicks });
         contexts.push(newContext);
         tickToContextMap[integerTicks] = newContext;
       }
@@ -487,109 +487,128 @@ export class Formatter {
     // No justification needed. End formatting.
     if (justifyWidth <= 0) return this.evaluate();
 
+
     // Start justification. Subtract the right extra pixels of the final context because the formatter
     // justifies based on the context's X position, which is the left-most part of the note head.
     const firstContext = contextMap[contextList[0]];
-    const finalContext = contextMap[contextList[contextList.length - 1]];
-    const adjustedJustifyWidth = justifyWidth
-      - finalContext.getMetrics().notePx
-      - firstContext.getMetrics().totalLeftPx;
+    const lastContext = contextMap[contextList[contextList.length - 1]];
 
     // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
     // the softmax of the ticks.
-    const idealDistances = contextList.map((tick, i) => {
-      const context = contextMap[tick];
-      const voices = context.getTickablesByVoice();
-      let backTickable = null;
-      if (i > 0) {
-        const lastContext = contextMap[contextList[i - 1]];
-        // Go through each tickable and search backwards for another tickable
-        // in the same voice. If found, use that duration (ticks) to calculate
-        // the expected distance.
-        for (let j = i - 1; j >= 0; j--) {
-          const backTick = contextMap[contextList[j]];
-          const backVoices = backTick.getTickablesByVoice();
+    function calculateIdealDistances(adjustedJustifyWidth) {
+      return contextList.map((tick, i) => {
+        const context = contextMap[tick];
+        const voices = context.getTickablesByVoice();
+        let backTickable = null;
+        if (i > 0) {
+          const prevContext = contextMap[contextList[i - 1]];
+          // Go through each tickable and search backwards for another tickable
+          // in the same voice. If found, use that duration (ticks) to calculate
+          // the expected distance.
+          for (let j = i - 1; j >= 0; j--) {
+            const backTick = contextMap[contextList[j]];
+            const backVoices = backTick.getTickablesByVoice();
 
-          // Look for matching voices between tick contexts.
-          const matchingVoices = [];
-          Object.keys(voices).forEach(v => {
-            if (backVoices[v]) {
-              matchingVoices.push(v);
-            }
-          });
-
-          if (matchingVoices.length > 0) {
-            // Found matching voices, get largest duration
-            let maxTicks = 0;
-            let maxNegativeShiftPx = 0;
-            let expectedDistance = 0;
-
-            // eslint-disable-next-line
-            matchingVoices.forEach(v => {
-              const ticks = backVoices[v].getTicks().value();
-              if (ticks > maxTicks) {
-                backTickable = backVoices[v];
-                maxTicks = ticks;
+            // Look for matching voices between tick contexts.
+            const matchingVoices = [];
+            Object.keys(voices).forEach(v => {
+              if (backVoices[v]) {
+                matchingVoices.push(v);
               }
-
-              // Calculate the limits of the shift based on modifiers, etc.
-              const thisTickable = voices[v];
-              const insideLeftEdge = thisTickable.getX() - (thisTickable.getMetrics().modLeftPx + thisTickable.getMetrics().leftDisplacedHeadPx);
-
-              const backMetrics = backVoices[v].getMetrics();
-              const insideRightEdge = backVoices[v].getX() + backMetrics.notePx + backMetrics.modRightPx + backMetrics.rightDisplacedHeadPx;
-
-              // Don't allow shifting if notes in the same voice can collide
-              maxNegativeShiftPx = Math.max(maxNegativeShiftPx, insideLeftEdge - insideRightEdge);
             });
 
-            // Don't shift further left than the notehead of the last context
-            maxNegativeShiftPx = Math.min(maxNegativeShiftPx, context.getX() - lastContext.getX());
+            if (matchingVoices.length > 0) {
+              // Found matching voices, get largest duration
+              let maxTicks = 0;
+              let maxNegativeShiftPx = Infinity;
+              let expectedDistance = 0;
 
-            // Calculate the error and bound it to the maximum negative shift. This allows right shifts to be
-            // limited by justifyWidth, and left shifts limited by collisions (or prev tick context's note head).
-            expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
+              // eslint-disable-next-line
+              matchingVoices.forEach(v => {
+                const ticks = backVoices[v].getTicks().value();
+                if (ticks > maxTicks) {
+                  backTickable = backVoices[v];
+                  maxTicks = ticks;
+                }
 
-            return {
-              expectedDistance,
-              maxNegativeShiftPx,
-              fromTickable: backTickable,
-            };
+                // Calculate the limits of the shift based on modifiers, etc.
+                const thisTickable = voices[v];
+                const insideLeftEdge = thisTickable.getX() - (thisTickable.getMetrics().modLeftPx + thisTickable.getMetrics().leftDisplacedHeadPx);
+
+                const backMetrics = backVoices[v].getMetrics();
+                const insideRightEdge = backVoices[v].getX() + backMetrics.notePx + backMetrics.modRightPx + backMetrics.rightDisplacedHeadPx;
+
+                // Don't allow shifting if notes in the same voice can collide
+                maxNegativeShiftPx = Math.min(maxNegativeShiftPx, insideLeftEdge - insideRightEdge);
+              });
+
+              // Don't shift further left than the notehead of the last context
+              maxNegativeShiftPx = Math.min(maxNegativeShiftPx, context.getX() - prevContext.getX());
+
+              // Calculate the expected distance of the current context from the last matching tickable. The
+              // distance is scaled down by the softmax for the voice.
+              expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
+
+              return {
+                expectedDistance,
+                maxNegativeShiftPx,
+                fromTickable: backTickable,
+              };
+            }
           }
         }
-      }
 
-      return { errorPx: 0, fromTickablePx: 0, maxNegativeShiftPx: 0 };
-    });
+        return { errorPx: 0, fromTickablePx: 0, maxNegativeShiftPx: 0 };
+      });
+    }
 
-    // Distribute ticks to the contexts based on the calculated distance error.
-    const centerX = justifyWidth / 2;
-    let spaceAccum = 0;
-    // let negativeSpaceAccum = 0;
-    contextList.forEach((tick, index) => {
-      const context = contextMap[tick];
-      if (index > 0) {
-        const x = context.getX();
-        const ideal = idealDistances[index];
 
-        const errorPx = (ideal.fromTickable.getX() + ideal.expectedDistance) - (x + spaceAccum);
+    function shiftToIdealDistances(idealDistances) {
+      // Distribute ticks to the contexts based on the calculated distance error.
+      const centerX = adjustedJustifyWidth / 2;
+      let spaceAccum = 0;
+      let negativeSpaceAccum = 0;
 
-        let negativeShiftPx = 0;
+      contextList.forEach((tick, index) => {
+        const context = contextMap[tick];
+        if (index > 0) {
+          const x = context.getX();
+          const ideal = idealDistances[index];
+          const errorPx = (ideal.fromTickable.getX() + ideal.expectedDistance) - (x + spaceAccum);
 
-        if (errorPx > 0) {
-          spaceAccum += errorPx;
-        } else if (errorPx < 0) {
-          negativeShiftPx = Math.min(ideal.maxNegativeShiftPx, Math.abs(errorPx));
+          let negativeShiftPx = 0;
+          if (errorPx > 0) {
+            spaceAccum += errorPx;
+          } else if (errorPx < 0) {
+            negativeShiftPx = Math.min(ideal.maxNegativeShiftPx + negativeSpaceAccum, Math.abs(errorPx));
+          }
+
+          context.setX(x + spaceAccum - negativeShiftPx);
+          negativeSpaceAccum += negativeShiftPx;
         }
 
-        context.setX(x + spaceAccum - negativeShiftPx);
-      }
-
-      // Move center aligned tickables to middle
-      context.getCenterAlignedTickables().forEach(tickable => { // eslint-disable-line
-        tickable.center_x_shift = centerX - context.getX();
+        // Move center aligned tickables to middle
+        context.getCenterAlignedTickables().forEach(tickable => { // eslint-disable-line
+          tickable.center_x_shift = centerX - context.getX();
+        });
       });
-    });
+
+      return lastContext.getX() - firstContext.getX();
+    }
+
+
+    const adjustedJustifyWidth = justifyWidth -
+      lastContext.getMetrics().notePx -
+      lastContext.getMetrics().totalRightPx -
+      firstContext.getMetrics().totalLeftPx;
+    const actualWidth = shiftToIdealDistances(calculateIdealDistances(adjustedJustifyWidth));
+
+    if (actualWidth > adjustedJustifyWidth) {
+      // If we couldn't fit all the notes into the jusification width, it's because the softmax-scaled
+      // widths between different durations differ across stave (e.g., 1 quarter note is not the same pixel-width
+      // as 4 16th-notes). Run a second pass, now that we know how much to justify.
+      shiftToIdealDistances(calculateIdealDistances(adjustedJustifyWidth - (actualWidth - adjustedJustifyWidth)));
+    }
 
     // Just one context. Done formatting.
     if (contextList.length === 1) return null;
