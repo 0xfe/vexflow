@@ -1,5 +1,5 @@
 /**!
- * VexFlow 3.0.7 built on 2020-04-17.
+ * VexFlow 3.0.8 built on 2020-04-19.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -4988,6 +4988,8 @@ VF.Test.Formatter = (function() {
       runSVG('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 4, alpha: 0.01 });
       runSVG('Softmax', Formatter.softMax);
       runSVG('Mixtime', Formatter.mixTime);
+      runSVG('Tight', Formatter.tightNotes);
+      runSVG('Tight 2', Formatter.tightNotes2);
       runSVG('Proportional Formatting - No Justification', Formatter.proportionalFormatting, { justify: false, debug: true, iterations: 0 });
       run('Proportional Formatting - No Tuning', Formatter.proportionalFormatting, { debug: true, iterations: 0 });
 
@@ -5394,10 +5396,62 @@ VF.Test.Formatter = (function() {
       ok(true);
     },
 
-    TIME6_8: {
-      num_beats: 6,
-      beat_value: 8,
-      resolution: VF.RESOLUTION,
+    tightNotes: function(options) {
+      var vf = VF.Test.makeFactory(options, 420, 250);
+      vf.getContext().scale(0.8, 0.8);
+      var score = vf.EasyScore();
+      var system = vf.System({
+        width: 400, debugFormatter: true
+      });
+
+      system.addStave({
+        voices: [
+          score.voice(
+            score.beam(score.notes('B4/16, B4, B4, B4, B4, B4, B4, B4'))
+              .concat(score.notes('B4/q, B4'))
+          )
+        ]
+      }).addClef('treble').addTimeSignature('4/4');
+
+      system.addStave({
+        voices: [
+          score.voice(
+            score.notes('B4/q, B4').concat(score.beam(score.notes('B4/16, B4, B4, B4, B4, B4, B4, B4')))
+          )
+        ]
+      }).addClef('treble').addTimeSignature('4/4');
+
+      vf.draw();
+      ok(true);
+    },
+
+    tightNotes2: function(options) {
+      var vf = VF.Test.makeFactory(options, 420, 250);
+      vf.getContext().scale(0.8, 0.8);
+      var score = vf.EasyScore();
+      var system = vf.System({
+        width: 400, debugFormatter: true
+      });
+
+      system.addStave({
+        voices: [
+          score.voice(
+            score.beam(score.notes('B4/16, B4, B4, B4, B4, B4, B4, B4'))
+              .concat(score.notes('B4/q, B4'))
+          )
+        ]
+      }).addClef('treble').addTimeSignature('4/4');
+
+      system.addStave({
+        voices: [
+          score.voice(
+            score.notes('B4/w')
+          )
+        ]
+      }).addClef('treble').addTimeSignature('4/4');
+
+      vf.draw();
+      ok(true);
     },
   };
 
