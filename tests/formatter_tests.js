@@ -21,6 +21,7 @@ VF.Test.Formatter = (function() {
       runSVG('Mixtime', Formatter.mixTime);
       runSVG('Tight', Formatter.tightNotes);
       runSVG('Tight 2', Formatter.tightNotes2);
+      runSVG('Annotations', Formatter.annotations);
       runSVG('Proportional Formatting - No Justification', Formatter.proportionalFormatting, { justify: false, debug: true, iterations: 0 });
       run('Proportional Formatting - No Tuning', Formatter.proportionalFormatting, { debug: true, iterations: 0 });
 
@@ -484,6 +485,126 @@ VF.Test.Formatter = (function() {
       vf.draw();
       ok(true);
     },
+
+    annotations: function(options) {
+      const pageWidth = 816;
+      const pageHeight = 600;
+      const vf = VF.Test.makeFactory(options, pageWidth, pageHeight);
+      const context = vf.getContext();
+
+      var lyrics1 = ['ipso', 'ipso-', 'ipso', 'ipso', 'ipsoz', 'ipso-', 'ipso', 'ipso', 'ipso', 'ip', 'ipso'];
+      var lyrics2 = ['ipso', 'ipso-', 'ipsoz', 'ipso', 'ipso', 'ipso-', 'ipso', 'ipso', 'ipso', 'ip', 'ipso'];
+
+      var smar = [{
+        sm: 5,
+        width: 450,
+        lyrics: lyrics1,
+        title: '450px,softMax:5'
+      }, {
+        sm: 5,
+        width: 450,
+        lyrics: lyrics2,
+        title: '450px,softmax:5,different word order'
+      },
+      {
+        sm: 5,
+        width: 460,
+        lyrics: lyrics2,
+        title: '460px,softmax:5'
+      }, {
+        sm: 100,
+        width: 460,
+        lyrics: lyrics2,
+        title: '460px,softmax:100'
+      }];
+
+      // Configure the rendering context.
+
+      var adjX = 11;
+      var rowSize = 140;
+      var beats = 12;
+      var beatsPer = 8;
+      var beamGroup = 3;
+
+      var durations = ['8d', '16', '8', '8d', '16', '8', '8d', '16', '8', '4', '8'];
+
+      var beams = [];
+      var y = 40;
+
+      smar.forEach((sm) => {
+        var stave = new VF.Stave(10, y, sm.width);
+        var notes = [];
+        var iii = 0;
+        context.fillText(sm.title, 100, y);
+        y += rowSize;
+
+        durations.forEach((dd) => {
+          var newNote = new VF.StaveNote({
+            keys: ['b/4'],
+            duration: dd
+          });
+          if (dd.indexOf('d') >= 0) {
+            newNote.addDotToAll();
+          }
+          if (sm.lyrics.length > iii) {
+            newNote.addAnnotation(0,
+              new VF.Annotation(sm.lyrics[iii])
+                .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)
+                .setFont('Times', 12, 'normal'));
+          }
+          notes.push(newNote);
+          iii += 1;
+        });
+
+        notes.forEach((note) => {
+          if (note.duration.indexOf('d') >= 0) {
+            note.addDotToAll();
+          }
+        });
+        var beam = [];
+        notes.forEach((note) => {
+          if (note.intrinsicTicks < 4096) {
+            beam.push(note);
+            if (beam.length >= beamGroup) {
+              beams.push(
+                new VF.Beam(beam)
+              );
+              beam = [];
+            }
+          } else {
+            beam = [];
+          }
+        });
+
+        var voice1 = new VF.Voice({
+          num_beats: beats,
+          beat_value: beatsPer
+        }).setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
+
+        var fmt = new VF.Formatter({
+          softmaxFactor: sm.sm
+        }).joinVoices([voice1]);
+
+        fmt.format([voice1], sm.width - adjX);
+
+        var group = context.openGroup();
+        group.id = 'mm-' + sm.sm;
+
+
+        // Connect it to the rendering context and draw!
+        stave.setContext(context).draw();
+
+        voice1.draw(context, stave);
+
+        context.closeGroup();
+
+        beams.forEach(function(b) {
+          b.setContext(context).draw();
+        });
+      });
+
+      ok(true);
+    }
   };
 
   return Formatter;
