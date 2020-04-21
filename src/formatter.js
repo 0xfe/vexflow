@@ -563,7 +563,6 @@ export class Formatter {
       });
     }
 
-
     function shiftToIdealDistances(idealDistances) {
       // Distribute ticks to the contexts based on the calculated distance error.
       const centerX = adjustedJustifyWidth / 2;
@@ -596,7 +595,6 @@ export class Formatter {
 
       return lastContext.getX() - firstContext.getX();
     }
-
 
     const adjustedJustifyWidth = justifyWidth -
       lastContext.getMetrics().notePx -

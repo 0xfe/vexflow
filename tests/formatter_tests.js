@@ -518,16 +518,12 @@ VF.Test.Formatter = (function() {
         title: '460px,softmax:100'
       }];
 
-      // Configure the rendering context.
-
-      var adjX = 11;
       var rowSize = 140;
       var beats = 12;
       var beatsPer = 8;
       var beamGroup = 3;
 
       var durations = ['8d', '16', '8', '8d', '16', '8', '8d', '16', '8', '4', '8'];
-
       var beams = [];
       var y = 40;
 
@@ -539,13 +535,8 @@ VF.Test.Formatter = (function() {
         y += rowSize;
 
         durations.forEach((dd) => {
-          var newNote = new VF.StaveNote({
-            keys: ['b/4'],
-            duration: dd
-          });
-          if (dd.indexOf('d') >= 0) {
-            newNote.addDotToAll();
-          }
+          var newNote = new VF.StaveNote({ keys: ['b/4'], duration: dd });
+          if (dd.indexOf('d') >= 0) { newNote.addDotToAll(); }
           if (sm.lyrics.length > iii) {
             newNote.addAnnotation(0,
               new VF.Annotation(sm.lyrics[iii])
@@ -556,11 +547,9 @@ VF.Test.Formatter = (function() {
           iii += 1;
         });
 
-        notes.forEach((note) => {
-          if (note.duration.indexOf('d') >= 0) {
-            note.addDotToAll();
-          }
-        });
+        notes.forEach((note) => { if (note.duration.indexOf('d') >= 0) { note.addDotToAll(); } });
+
+        // Don't beam the last group
         var beam = [];
         notes.forEach((note) => {
           if (note.intrinsicTicks < 4096) {
@@ -576,27 +565,13 @@ VF.Test.Formatter = (function() {
           }
         });
 
-        var voice1 = new VF.Voice({
-          num_beats: beats,
-          beat_value: beatsPer
-        }).setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
+        var voice1 = new VF.Voice({ num_beats: beats, beat_value: beatsPer }).setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
 
-        var fmt = new VF.Formatter({
-          softmaxFactor: sm.sm
-        }).joinVoices([voice1]);
+        var fmt = new VF.Formatter({ softmaxFactor: sm.sm }).joinVoices([voice1]);
+        fmt.format([voice1], sm.width - 11);
 
-        fmt.format([voice1], sm.width - adjX);
-
-        var group = context.openGroup();
-        group.id = 'mm-' + sm.sm;
-
-
-        // Connect it to the rendering context and draw!
         stave.setContext(context).draw();
-
         voice1.draw(context, stave);
-
-        context.closeGroup();
 
         beams.forEach(function(b) {
           b.setContext(context).draw();
