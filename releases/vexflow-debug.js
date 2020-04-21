@@ -10334,7 +10334,8 @@ function () {
     _classCallCheck(this, Formatter);
 
     this.options = _objectSpread({
-      softmaxFactor: null
+      softmaxFactor: null,
+      maxIterations: 2
     }, options); // Minimum width required to render all the notes in the voices.
 
     this.minTotalWidth = 0; // This is set to `true` after `minTotalWidth` is calculated.
@@ -10603,13 +10604,17 @@ function () {
       }
 
       var adjustedJustifyWidth = justifyWidth - lastContext.getMetrics().notePx - lastContext.getMetrics().totalRightPx - firstContext.getMetrics().totalLeftPx;
-      var actualWidth = shiftToIdealDistances(calculateIdealDistances(adjustedJustifyWidth));
+      var targetWidth = adjustedJustifyWidth;
+      var actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
+      var iterations = this.options.maxIterations;
 
-      if (actualWidth > adjustedJustifyWidth) {
+      while (actualWidth > adjustedJustifyWidth + lastContext.getMetrics().notePx && iterations > 0) {
         // If we couldn't fit all the notes into the jusification width, it's because the softmax-scaled
         // widths between different durations differ across stave (e.g., 1 quarter note is not the same pixel-width
-        // as 4 16th-notes). Run a second pass, now that we know how much to justify.
-        shiftToIdealDistances(calculateIdealDistances(adjustedJustifyWidth - (actualWidth - adjustedJustifyWidth)));
+        // as 4 16th-notes). Run another pass, now that we know how much to justify.
+        targetWidth -= actualWidth - targetWidth;
+        actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
+        iterations--;
       } // Just one context. Done formatting.
 
 
