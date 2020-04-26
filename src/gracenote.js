@@ -10,10 +10,11 @@ export class GraceNote extends StaveNote {
   static get SCALE() { return 0.66; }
 
   constructor(note_struct) {
-    super(Object.assign(note_struct, {
+    super({
       glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
       stroke_px: GraceNote.LEDGER_LINE_OFFSET,
-    }));
+      ...note_struct,
+    });
     this.setAttribute('type', 'GraceNote');
 
     this.slash = note_struct.slash;
