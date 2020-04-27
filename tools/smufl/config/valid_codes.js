@@ -196,4 +196,19 @@ module.exports = {
   vexNoteHeadMutedBreve: 'vf',
   vexNoteHeadRectBlack: 'vd4',
   vexNoteHeadRectWhite: 'vd5',
+
+  csymDiminished:null,
+  csymHalfDiminished:null,
+  csymAugmented:null,
+  csymMajorSeventh:null,
+  csymMinor:null,
+  csymParensLeftTall:null,
+  csymParensRightTall:null,
+  csymBracketLeftTall:null,
+  csymBracketRightTall:null,
+  csymParensLeftVeryTall:null,
+  csymParensRightVeryTall:null,
+
+  csymDiagonalArrangementSlash:null
+
 };
