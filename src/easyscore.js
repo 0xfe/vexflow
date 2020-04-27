@@ -84,7 +84,7 @@ class Grammar {
     return {
       expect: [this.DOT],
       zeroOrMore: true,
-      run: (state) => this.builder.setNoteDots(state.matches[0]),
+      run: (state) => this.builder.setNoteDots(state.matches),
     };
   }
   TYPE() {
