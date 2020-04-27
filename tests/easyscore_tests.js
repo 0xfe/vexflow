@@ -233,7 +233,7 @@ Vex.Flow.Test.EasyScore = (function() {
         voices: [
           voice(
             notes('(c4 e4 g4)/8., (c4 e4 g4)/8.., (c4 e4 g4)/8..., (c4 e4 g4)/8...., (c4 e4 g4)/16...')
-          ).setMode(VF.Voice.Mode.SOFT)
+          )
         ],
       }).addClef('treble');
 
