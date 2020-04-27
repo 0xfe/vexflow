@@ -609,7 +609,7 @@ VF.Test.AutoBeamFormatting = (function() {
         'c4/8, g4/4, c5/8., g5/16, a5/4, a5/16, (c5 e5)/16, a5/8'
       ), { time: '9/8' });
 
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      var beams = VF.Beam.applyAndGetBeams(voice, undefined, VF.Beam.getDefaultBeamGroups('9/8'));
 
       vf.Formatter()
         .joinVoices([voice])
