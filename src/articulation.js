@@ -209,6 +209,7 @@ export class Articulation extends Modifier {
     const articNameToCode = {
       staccato: 'a.',
       tenuto: 'a-',
+      accent: 'a>'
     };
 
     articulations
