@@ -31,6 +31,10 @@ VF.Test.AutoBeamFormatting = (function() {
       runTests('Simple Tuplet Auto Beaming', AutoBeamFormatting.simpleTuplets);
       runTests('More Simple Tuplet Auto Beaming', AutoBeamFormatting.moreSimpleTuplets);
       runTests('More Automatic Beaming', AutoBeamFormatting.moreBeaming);
+      runTests('Automatic Beaming 4/4 with  3, 3, 2 Pattern', AutoBeamFormatting.beamingWithSeveralGroups1);
+      runTests('Automatic Beaming 4/4 with  3, 3, 2 Pattern and Overflow', AutoBeamFormatting.beamingWithSeveralGroupsOverflow);
+      runTests('Automatic Beaming 8/4 with  3, 2, 3 Pattern and 2 Overflows', AutoBeamFormatting.beamingWithSeveralGroupsOverflow2);
+      runTests('Automatic Beaming 8/4 with  3, 2, 3 Pattern and 3 Overflows', AutoBeamFormatting.beamingWithSeveralGroupsOverflow3);
       runTests('Duration-Based Secondary Beam Breaks', AutoBeamFormatting.secondaryBreaks);
       runTests('Duration-Based Secondary Beam Breaks 2', AutoBeamFormatting.secondaryBreaks2);
       runTests('Flat Beams Up', AutoBeamFormatting.flatBeamsUp);
@@ -610,6 +614,102 @@ VF.Test.AutoBeamFormatting = (function() {
       ), { time: '9/8' });
 
       var beams = VF.Beam.applyAndGetBeams(voice, undefined, VF.Beam.getDefaultBeamGroups('9/8'));
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
+
+      ok(true, 'Auto Beam Applicator Test');
+    },
+
+    beamingWithSeveralGroups1: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
+
+      var voice = score.voice(score.notes(
+        'c4/8, g4/4, c5/8, g5, a5, a5, f5'
+      ), { time: '4/4' });
+
+      var beams = VF.Beam.applyAndGetBeams(voice, undefined, [new VF.Fraction(3, 8), new VF.Fraction(3, 8), new VF.Fraction(2, 8)]);
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
+
+      ok(true, 'Auto Beam Applicator Test');
+    },
+
+    beamingWithSeveralGroupsOverflow: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
+
+      var voice = score.voice(score.notes(
+        'c4/8, g4/4., c5/8, g5, a5, a5'
+      ), { time: '4/4' });
+
+      var beams = VF.Beam.applyAndGetBeams(voice, undefined, [new VF.Fraction(3, 8), new VF.Fraction(3, 8), new VF.Fraction(2, 8)]);
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
+
+      ok(true, 'Auto Beam Applicator Test');
+    },
+
+    beamingWithSeveralGroupsOverflow2: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
+
+      var voice = score.voice(score.notes(
+        'c4/16, g4/2, f4/16, c5/8, a4/16, c4/16, g4/8, b4, c5, g5, f5, e5, c5, a4/4'
+      ), { time: '8/4' });
+
+      var beams = VF.Beam.applyAndGetBeams(voice, undefined, [new VF.Fraction(3, 8), new VF.Fraction(2, 8), new VF.Fraction(3, 8)]);
+
+      vf.Formatter()
+        .joinVoices([voice])
+        .formatToStave([voice], stave);
+
+      vf.draw();
+
+      beams.forEach(function(beam) {
+        return beam.setContext(vf.getContext()).draw();
+      });
+
+      ok(true, 'Auto Beam Applicator Test');
+    },
+
+    beamingWithSeveralGroupsOverflow3: function(options) {
+      var vf = VF.Test.makeFactory(options);
+      var stave = vf.Stave();
+      var score = vf.EasyScore();
+
+      var voice = score.voice(score.notes(
+        'c4/16, g4/1, f4/16, c5/8, g5, f5, e5, c5, a4/4'
+      ), { time: '8/4' });
+
+      var beams = VF.Beam.applyAndGetBeams(voice, undefined, [new VF.Fraction(3, 8), new VF.Fraction(2, 8), new VF.Fraction(3, 8)]);
 
       vf.Formatter()
         .joinVoices([voice])
