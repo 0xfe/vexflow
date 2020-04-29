@@ -187,6 +187,20 @@ module.exports = {
   repeat4Bars: null,
   repeatBarSlash: null,
 
+  // chord symbol glyphs from smufl fonts (e870-e87c)
+  csymDiminished: null,
+  csymHalfDiminished: null,
+  csymAugmented: null,
+  csymMajorSeventh: null,
+  csymMinor: null,
+  csymParensLeftTall: null,
+  csymParensRightTall: null,
+  csymBracketLeftTall: null,
+  csymBracketRightTall: null,
+  csymParensLeftVeryTall: null,
+  csymParensRightVeryTall: null,
+  csymDiagonalArrangementSlash: null,
+
   // No SMuFL glyphs for the following:
   vexAccidentalMicrotonal1: 'v90',
   vexAccidentalMicrotonal2: 'v7a',
@@ -195,5 +209,6 @@ module.exports = {
   vexWiggleArpeggioUp: 'va3',
   vexNoteHeadMutedBreve: 'vf',
   vexNoteHeadRectBlack: 'vd4',
-  vexNoteHeadRectWhite: 'vd5',
+  vexNoteHeadRectWhite: 'vd5'
+
 };
