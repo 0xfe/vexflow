@@ -1147,5 +1147,5 @@ export const PetalumaFont = {
   },
   "fontFamily": "Petaluma",
   "resolution": 1000,
-  "generatedOn": "2020-04-23T23:49:59.876Z"
+  "generatedOn": "2020-04-29T14:49:42.602Z"
 };
