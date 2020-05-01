@@ -18,6 +18,7 @@ Vex.Flow.Test.EasyScore = (function() {
       VFT.runTests('Draw Accidentals', VFT.EasyScore.drawAccidentalsTest);
       VFT.runTests('Draw Beams', VFT.EasyScore.drawBeamsTest);
       VFT.runTests('Draw Tuplets', VFT.EasyScore.drawTupletsTest);
+      VFT.runTests('Draw Dots',  VFT.EasyScore.drawDotsTest);
       VFT.runTests('Draw Options', VFT.EasyScore.drawOptionsTest);
     },
 
@@ -213,6 +214,26 @@ Vex.Flow.Test.EasyScore = (function() {
             notes('c#5/h.', { stem: 'up' })
               .concat(tuplet(beam(notes('cb5/8, cn5/8, c5/8', { stem: 'up' }))))
           ),
+        ],
+      }).addClef('treble');
+
+      vf.draw();
+      expect(0);
+    },
+
+    drawDotsTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 600, 250);
+      const score = vf.EasyScore();
+      const system = vf.System();
+
+      var voice = score.voice.bind(score);
+      var notes = score.notes.bind(score);
+
+      system.addStave({
+        voices: [
+          voice(
+            notes('(c4 e4 g4)/8., (c4 e4 g4)/8.., (c4 e4 g4)/8..., (c4 e4 g4)/8...., (c4 e4 g4)/16...')
+          )
         ],
       }).addClef('treble');
 
