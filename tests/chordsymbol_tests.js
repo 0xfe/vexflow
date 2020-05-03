@@ -8,16 +8,16 @@ VF.Test.ChordSymbol = (function() {
   var ChordSymbol = {
     Start: function() {
       QUnit.module('ChordSymbol');
+      runSVG('Chord Symbol Kerning Tests', ChordSymbol.kern);
       runSVG('Top Chord Symbols', ChordSymbol.top);
       runSVG('Top Chord Symbols Justified', ChordSymbol.topJustify);
-      runSVG('Kitchen Sink Chord Symbols', ChordSymbol.sink);
       runSVG('Bottom Chord Symbols', ChordSymbol.bottom);
       runSVG('Bottom Stem Down Chord Symbols', ChordSymbol.bottomStemDown);
       runSVG('Double Bottom Chord Symbols', ChordSymbol.dblbottom);
     },
 
-    sink: function(options) {
-      var vf = VF.Test.makeFactory(options, 500, 220);
+    kern: function(options) {
+      var vf = VF.Test.makeFactory(options, 650, 650);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
 
@@ -25,31 +25,101 @@ VF.Test.ChordSymbol = (function() {
         return new VF.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
       }
 
-      function draw(chord1, chord2, y) {
+      function draw(chords, y) {
         var notes = [];
 
         var stave = new VF.Stave(10, y, 450)
           .addClef('treble').setContext(ctx).draw();
 
-        notes.push(newNote(['C/5'], 'h', chord1));
-        notes.push(newNote(['C/5'], 'h', chord2));
+        notes.push(newNote(['C/4'], 'q', chords[0]));
+        notes.push(newNote(['C/4'], 'q', chords[1]));
+        notes.push(newNote(['C/4'], 'q', chords[2]));
+        notes.push(newNote(['C/4'], 'q', chords[3]));
         VF.Formatter.FormatAndDraw(ctx, stave, notes);
       }
 
-      var chord1 = new VF.ChordSymbol().addGlyph('leftParenTall')
+      var chords = [];
+      /* chords.push(new VF.ChordSymbol()
+        .setHorizontal('left').addText('A')
+        .addGlyph('halfDiminished', { symbolModifier: VF.ChordSymbol.SymbolModifiers.SUPERSCRIPT }));  */
+      chords.push(new VF.ChordSymbol()
+        .addText('A')
+        .addSuperGlyph('dim'));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('A')
+        .addSuperGlyph('dim')
+        .setUseKerning(false));
+
+      chords.push(new VF.ChordSymbol()
         .setHorizontal('left').addText('C')
-        .addGlyphOrText('+5#11b9(sus4)', { symbolModifier: VF.ChordSymbol.SymbolModifiers.SUPERSCRIPT })
-        .addGlyph('rightParenTall');
+        .addGlyph('halfDiminished', { symbolModifier: VF.ChordSymbol.SymbolModifiers.SUPERSCRIPT }));
 
-      /* var chord2 = new VF.ChordSymbol()
-        .addText('C').addSuperGlyph('-').addText('F')
-        .addSuperGlyph('halfDiminished');
-      draw(chord1, chord2, 40);  */
-      var chord2 = new VF.ChordSymbol()
-        .addText('C').addGlyph('over').addText('B');
-      draw(chord1, chord2, 40);
+      chords.push(new VF.ChordSymbol()
+        .setHorizontal('left').addText('D')
+        .addGlyph('halfDiminished', { symbolModifier: VF.ChordSymbol.SymbolModifiers.SUPERSCRIPT }));
 
-      ok(true, 'Kitchen Sink Chord Symbol');
+      draw(chords, 10);
+
+      chords = [];
+      chords.push(new VF.ChordSymbol()
+        .addText('A')
+        .addSuperGlyph('dim'));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('A')
+        .addSuperGlyph('dim')
+        .setUseKerning(false));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('A')
+        .addSuperGlyph('+').addSuperText('5'));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('G')
+        .addSuperGlyph('+')
+        .addSuperText('5'));
+
+      draw(chords, 110);
+
+      chords = [];
+      chords.push(new VF.ChordSymbol()
+        .addText('A')
+        .addGlyph('-'));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('E')
+        .addGlyph('-'));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('A')
+        .addGlyphOrText('(#11)', { symbolModifier: VF.ChordSymbol.SymbolModifiers.SUPERSCRIPT }));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('E')
+        .addGlyphOrText('(#9)', { symbolModifier: VF.ChordSymbol.SymbolModifiers.SUPERSCRIPT }));
+
+      draw(chords, 210);
+
+      chords = [];
+      chords.push(new VF.ChordSymbol()
+        .addGlyphOrText('F/Bb'));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('E')
+        .addGlyphOrText('V/V'));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('A')
+        .addGlyphOrText('(#11)', { symbolModifier: VF.ChordSymbol.SymbolModifiers.SUPERSCRIPT }));
+
+      chords.push(new VF.ChordSymbol()
+        .addText('E')
+        .addGlyphOrText('(#9)', { symbolModifier: VF.ChordSymbol.SymbolModifiers.SUPERSCRIPT }));
+
+      draw(chords, 310);
+
+      ok(true, 'Chord Symbol Kerning Tests');
     },
 
     top: function(options) {

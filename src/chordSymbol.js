@@ -59,64 +59,104 @@ export class ChordSymbol extends Modifier {
   static get GLYPHS() {
     return {
       'diminished': {
-        code: 'csymDiminished'
+        code: 'csymDiminished',
+        scale: 1,
+        y_offset: 0
       },
       'dim': {
-        code: 'csymDiminished'
+        code: 'csymDiminished',
+        scale: 1,
+        y_offset: 0
       },
       'halfDiminished': {
-        code: 'csymHalfDiminished'
+        code: 'csymHalfDiminished',
+        scale: 1,
+        y_offset: 0
       },
       '+': {
-        code: 'csymAugmented'
+        code: 'csymAugmented',
+        scale: 1,
+        y_offset: 0
       },
       'augmented': {
-        code: 'csymAugmented'
+        code: 'csymAugmented',
+        scale: 1,
+        y_offset: 0
       },
       'majorSeventh': {
-        code: 'csymMajorSeventh'
+        code: 'csymMajorSeventh',
+        scale: 1,
+        y_offset: 0
       },
       'minor': {
-        code: 'csymMinor'
+        code: 'csymMinor',
+        scale: 1,
+        y_offset: 0
       },
       '-': {
-        code: 'csymMinor'
+        code: 'csymMinor',
+        scale: 1,
+        y_offset: 0
       },
       '(': {
-        code: 'csymParensLeftTall'
+        code: 'csymParensLeftTall',
+        scale: 0.8,
+        y_offset: 1
       },
       'leftParen': {
-        code: 'csymParensLeftTall'
+        code: 'csymParensLeftTall',
+        scale: 0.8,
+        y_offset: 1
       },
       ')': {
-        code: 'csymParensRightTall'
+        code: 'csymParensRightTall',
+        scale: 0.8,
+        y_offset: 1
       },
       'rightParen': {
-        code: 'csymParensRightTall'
+        code: 'csymParensRightTall',
+        scale: 0.8,
+        y_offset: 1
       },
       'leftBracket': {
-        code: 'csymBracketLeftTall'
+        code: 'csymBracketLeftTall',
+        scale: 0.8,
+        y_offset: 1
       },
       'rightBracket': {
-        code: 'csymBracketRightTall'
+        code: 'csymBracketRightTall',
+        scale: 0.8,
+        y_offset: 1
       },
       'leftParenTall': {
-        code: 'csymParensLeftVeryTall'
+        code: 'csymParensLeftVeryTall',
+        scale: 0.8,
+        y_offset: 0
       },
       'rightParenTall': {
-        code: 'csymParensRightVeryTall'
+        code: 'csymParensRightVeryTall',
+        scale: 0.8,
+        y_offset: 0
       },
       '/': {
-        code: 'csymDiagonalArrangementSlash'
+        code: 'csymDiagonalArrangementSlash',
+        scale: 0.6,
+        y_offset: 0
       },
       'over': {
-        code: 'csymDiagonalArrangementSlash'
+        code: 'csymDiagonalArrangementSlash',
+        scale: 0.6,
+        y_offset: 0
       },
       '#': {
-        code: 'accidentalSharp'
+        code: 'accidentalSharp',
+        scale: 1,
+        y_offset: -4
       },
       'b': {
-        code: 'accidentalFlat'
+        code: 'accidentalFlat',
+        scale: 1,
+        y_offset: -2
       }
     };
   }
@@ -135,6 +175,14 @@ export class ChordSymbol extends Modifier {
       SUBSCRIPT: 2,
       SUPERSCRIPT: 3
     };
+  }
+
+  static get LowerKerningText() {
+    return ['D', 'F', 'I', 'P', 'T', 'V', 'Y'];
+  }
+
+  static get UpperKerningText() {
+    return ['A', 'I', 'L'];
   }
 
   // ### format
@@ -162,10 +210,17 @@ export class ChordSymbol extends Modifier {
           lineSpaces = 2;
         }
 
-        if (symbol.symbolType === ChordSymbol.SymbolTypes &&
+        symbol.x_offset += instance.getKerningAdjustment(j);
+
+        if (symbol.symbolType === ChordSymbol.SymbolTypes.GLYPH &&
           symbol.glyph.code === ChordSymbol.GLYPHS.over.code) {
           lineSpaces = 2;
-          symbol.width = symbol.glyph.width / 2;
+          symbol.x_offset += -2;
+        }
+
+        if (j > 0 && instance.symbolBlocks[j - 1].symbolType === ChordSymbol.SymbolTypes.GLYPH &&
+          instance.symbolBlocks[j - 1].glyph.code === ChordSymbol.GLYPHS.over.code) {
+          symbol.x_offset += -2;
         }
 
         // If a subscript immediately  follows a superscript block, try to
@@ -214,6 +269,7 @@ export class ChordSymbol extends Modifier {
     this.symbolBlocks = [];
     this.horizontal = ChordSymbol.HorizontalJustify.CENTER_STEM;
     this.vertical = ChordSymbol.VerticalJustify.TOP;
+    this.useKerning = true;
 
     let fontFamily = 'Arial';
     if (this.musicFont.name === 'Petaluma') {
@@ -226,6 +282,53 @@ export class ChordSymbol extends Modifier {
     };
   }
 
+  // ### getKerningAdjustment
+  // Do some very basic kerning so that letter chords like 'A' don't have
+  // the extensions hanging off to the right.
+  getKerningAdjustment(j) {
+    if (!this.useKerning) {
+      return 0;
+    }
+    const symbol = this.symbolBlocks[j];
+    const prevSymbol = j > 0 ? this.symbolBlocks[j - 1] : null;
+    let rv = 0;
+
+    // Move things into the '/' over bar
+    if (symbol.symbolType === ChordSymbol.SymbolTypes.GLYPH &&
+      symbol.glyph.code === ChordSymbol.GLYPHS.over.code) {
+      rv += -2;
+    }
+
+    if (prevSymbol !== null &&
+      prevSymbol.symbolType === ChordSymbol.SymbolTypes.GLYPH &&
+      prevSymbol.glyph.code === ChordSymbol.GLYPHS.over.code) {
+      rv += -2;
+    }
+
+    // For superscripts that follow a letter without much top part, move it to the
+    // left slightly
+    let preKernUpper = false;
+    let preKernLower = false;
+    if (prevSymbol != null && prevSymbol.symbolType === ChordSymbol.SymbolTypes.TEXT) {
+      preKernUpper = ChordSymbol.UpperKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
+      preKernLower = ChordSymbol.LowerKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
+    }
+
+    if (preKernUpper && symbol.symbolModifier === ChordSymbol.SymbolModifiers.SUPERSCRIPT) {
+      rv += -2;
+    }
+
+    if (preKernLower && symbol.symbolType === ChordSymbol.SymbolTypes.TEXT) {
+      if (symbol.text[0] >= 'a' && symbol.text[0] <= 'z') {
+        rv += -1;
+      }
+      if (ChordSymbol.UpperKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1])) {
+        rv += -1;
+      }
+    }
+    return rv;
+  }
+
   // ### getSymbolBlock
   // ChordSymbol allows multiple blocks so we can mix glyphs and font text.
   // Each block can have its own vertical orientation
@@ -235,21 +338,23 @@ export class ChordSymbol extends Modifier {
     const text = parameters.text ? parameters.text : '';
     const symbolModifier = parameters.symbolModifier ? parameters.symbolModifier : ChordSymbol.SymbolModifiers.NONE;
     const x_offset = 0;
+    const y_offset = 0;
 
     const rv = {
-      text, symbolType, symbolModifier, x_offset
+      text, symbolType, symbolModifier, x_offset, y_offset
     };
 
     rv.width = 0;
     if (symbolType === ChordSymbol.SymbolTypes.GLYPH && typeof(parameters.glyph) === 'string') {
       const glyphArgs = ChordSymbol.GLYPHS[parameters.glyph];
-      let glyphPoints = 20;
+      let glyphPoints = 20 * glyphArgs.scale;
       // super and subscript are smaller
       if (symbolModifier !== ChordSymbol.SymbolModifiers.NONE) {
         glyphPoints = glyphPoints / 1.3;
       }
       rv.glyph = new Glyph(glyphArgs.code, glyphPoints, { category: 'chordSymbol' });
       rv.width = (rv.glyph.getMetrics().width * 3) / 2;
+      rv.y_offset = glyphArgs.y_offset;
     } else if (symbolType === ChordSymbol.SymbolTypes.TEXT) {
       rv.width = Flow.textWidth(text);
     } else if (symbolType === ChordSymbol.SymbolTypes.LINE) {
@@ -330,6 +435,11 @@ export class ChordSymbol extends Modifier {
   // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
   setFont(family, size, weight) {
     this.font = { family, size, weight };
+    return this;
+  }
+
+  setUseKerning(val) {
+    this.useKerning = val;
     return this;
   }
 
@@ -453,7 +563,7 @@ export class ChordSymbol extends Modifier {
           this.context.restore();
         }
       } else if (symbol.symbolType === ChordSymbol.SymbolTypes.GLYPH) {
-        curY -= symbol.glyph.bbox.y + symbol.glyph.bbox.h;
+        curY += symbol.y_offset;
         curY += (symbol.glyph.bbox.h > 12 ? symbol.glyph.bbox.h - 12 : 0);
         symbol.glyph.render(this.context, x + symbol.x_offset, curY);
       } else if (symbol.symbolType === ChordSymbol.SymbolTypes.LINE) {
