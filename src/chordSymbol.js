@@ -227,8 +227,6 @@ export class ChordSymbol extends Modifier {
           const prev = instance.symbolBlocks[j - 1];
           if (!instance.isSuperscript(prev)) {
             nonSuperWidth = width;
-            // If we have vertically lined up, turn kerning off.
-            instance.setUseKerning(false);
           }
         }
         if (sub && nonSuperWidth > 0) {
@@ -236,6 +234,8 @@ export class ChordSymbol extends Modifier {
           symbol.x_offset = nonSuperWidth - width;
           width = nonSuperWidth - symbol.width;
           nonSuperWidth = 0;
+          // If we have vertically lined up, turn kerning off.
+          instance.setUseKerning(false);
         }
         if (!sup && !sub) {
           nonSuperWidth = 0;
