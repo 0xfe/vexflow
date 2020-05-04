@@ -210,8 +210,6 @@ export class ChordSymbol extends Modifier {
           lineSpaces = 2;
         }
 
-        symbol.x_offset += instance.getKerningAdjustment(j);
-
         if (symbol.symbolType === ChordSymbol.SymbolTypes.GLYPH &&
           symbol.glyph.code === ChordSymbol.GLYPHS.over.code) {
           lineSpaces = 2;
@@ -229,6 +227,8 @@ export class ChordSymbol extends Modifier {
           const prev = instance.symbolBlocks[j - 1];
           if (!instance.isSuperscript(prev)) {
             nonSuperWidth = width;
+            // If we have vertically lined up, turn kerning off.
+            instance.setUseKerning(false);
           }
         }
         if (sub && nonSuperWidth > 0) {
@@ -242,6 +242,9 @@ export class ChordSymbol extends Modifier {
         }
         width += symbol.width;
       }
+
+      // make kerning adjustments after computing super/subscripts
+      instance.updateKerningAjustments();
 
       if (instance.getVertical() === ChordSymbol.VerticalJustify.TOP) {
         instance.setTextLine(state.top_text_line);
@@ -280,6 +283,13 @@ export class ChordSymbol extends Modifier {
       size: 10,
       weight: '',
     };
+  }
+
+  updateKerningAjustments() {
+    for (let j = 0; j < this.symbolBlocks.length; ++j) {
+      const symbol = this.symbolBlocks[j];
+      symbol.x_offset += this.getKerningAdjustment(j);
+    }
   }
 
   // ### getKerningAdjustment
