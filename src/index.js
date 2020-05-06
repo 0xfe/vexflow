@@ -27,7 +27,7 @@ import { MultiMeasureRest } from './multimeasurerest';
 import { TickContext } from './tickcontext';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
-import { ChordSymbol } from './chordSymbol';
+import { ChordSymbol } from './chordsymbol';
 import { Barline } from './stavebarline';
 import { NoteHead } from './notehead';
 import { StaveConnector } from './staveconnector';

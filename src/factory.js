@@ -12,7 +12,7 @@ import { Vex } from './vex';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
-import { ChordSymbol } from './chordSymbol';
+import { ChordSymbol } from './chordsymbol';
 import { Formatter } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { StringNumber } from './stringnumber';
