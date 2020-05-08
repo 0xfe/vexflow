@@ -16,6 +16,7 @@ import { Modifier } from './modifier';
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
 function L(...args) { if (ChordSymbol.DEBUG) Vex.L('Vex.Flow.ChordSymbol', args); }
 
+// change case
 export class ChordSymbol extends Modifier {
   static get CATEGORY() { return 'chordSymbol'; }
 
