@@ -12,6 +12,7 @@ import { Vex } from './vex';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
+import { ChordSymbol } from './chordsymbol';
 import { Formatter } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { StringNumber } from './stringnumber';
@@ -299,6 +300,25 @@ export class Factory {
     annotation.setFont(params.fontFamily, params.fontSize, params.fontWeight);
     annotation.setContext(this.context);
     return annotation;
+  }
+
+  ChordSymbol(params) {
+    params = setDefaults(params, {
+      text: 'p',
+      vJustify: 'below',
+      hJustify: 'center',
+      fontFamily: 'Times',
+      fontSize: 14,
+      fontWeight: 'bold italic',
+      options: {},
+    });
+
+    const chordSymbol = new ChordSymbol(params.text);
+    chordSymbol.setHorizontalJustification(params.hJustify);
+    chordSymbol.setVerticalJustification(params.vJustify);
+    chordSymbol.setFont(params.fontFamily, params.fontSize, params.fontWeight);
+    chordSymbol.setContext(this.context);
+    return chordSymbol;
   }
 
   Articulation(params) {
