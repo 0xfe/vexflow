@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>Vexflow Test</title>
+    <script type="module" src='./wc-src/vf-clef.js'></script>
+    <script type="module" src='./wc-src/vf-score.js'></script>
+    <script type="module" src='./wc-src/vf-stave.js'></script>
+    <script type="module" src='./wc-src/vf-voice.js'></script>
+  </head>
+  <body>
+    <!-- <div id="boo"></div> -->
+    <!-- <script type="module" src="./app.js"></script> -->
+    <vf-score>
+      <vf-stave clef='treble' timeSig='4/4' keySig='Bb'>
+        <vf-voice clef='treble' stem='up' generateBeams>C5/q, (C4 Eb4 G4)/q, A4, G4/16, A4, B4, C5</vf-voice>
+        <vf-voice clef='treble' stem='up'>C#4/h, C#4</vf-voice>
+      </vf-stave>
+    </vf-score>
+  </body>
+</html>

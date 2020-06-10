@@ -67,5 +67,8 @@
     "notation",
     "guitar",
     "tablature"
-  ]
+  ],
+  "dependencies": {
+    "es-dev-server": "^1.54.1"
+  }
 }
