@@ -39,7 +39,7 @@ module.exports = (grunt) => {
         libraryTarget: 'umd',
         libraryExport: 'default',
       },
-      devtool: (mode === 'production') ? 'source-map' : false,
+      devtool: (mode === 'production') ? false : 'source-map',
       module: {
         rules: [
           {
