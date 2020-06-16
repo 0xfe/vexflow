@@ -39,7 +39,7 @@ module.exports = (grunt) => {
         libraryTarget: 'umd',
         libraryExport: 'default',
       },
-      devtool: (mode === 'production') ? 'source-map' : false,
+      devtool: (process.env.VEX_GENMAP || mode === 'production') ? 'source-map' : false,
       module: {
         rules: [
           {
