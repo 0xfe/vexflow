@@ -114,8 +114,7 @@ export class Repetition extends StaveModifier {
       const modifierWidth = stave.start_x - this.x;
       text_x = this.x + x + this.x_shift + stave.width - 5 - modifierWidth - ctx.measureText(text).width;
       // TODO this is weird. setting the x position should probably be refactored, this is obtuse.
-    }
-    else {
+    } else {
       // Offset Signo text to left stave end
       symbol_x = this.x + x + stave.width - 5 + this.x_shift;
       text_x = symbol_x - + ctx.measureText(text).width - 12;
