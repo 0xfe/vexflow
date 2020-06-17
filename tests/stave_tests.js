@@ -16,6 +16,7 @@ VF.Test.Stave = (function() {
       runTests('Multiple Stave Repeats Test', Stave.drawRepeats);
       runTests('Stave End Modifiers Test', Stave.drawEndModifiersTest);
       runTests('Multiple Staves Volta Test', Stave.drawVoltaTest);
+      runTests('Volta + Modifier Measure Test', Stave.drawVoltaModifierTest);
       runTests('Tempo Test', Stave.drawTempo);
       runTests('Single Line Configuration Test', Stave.configureSingleLine);
       runTests('Batch Line Configuration Test', Stave.configureAllLines);
@@ -514,6 +515,97 @@ VF.Test.Stave = (function() {
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, mm9, notesmm9);
+    },
+
+    drawVoltaModifierTest: function(options, contextBuilder) {
+      expect(0);
+
+      // Get the rendering context
+      var ctx = contextBuilder(options.elementId, 1100, 200);
+
+      // bar 1: volta begin, with modifiers (clef, keysignature)
+      var mm1 = new VF.Stave(10, 50, 175);
+      mm1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+      mm1.setVoltaType(VF.Volta.type.BEGIN_END, '1.', -5);
+      mm1.addClef('treble');
+      mm1.addKeySignature('A');
+      mm1.setMeasure(1);
+      mm1.setSection('A', 0);
+      mm1.setContext(ctx).draw();
+      var notesmm1 = [
+        new VF.StaveNote({ keys: ['c/4'], duration: 'w' }),
+      ];
+      // Helper function to justify and draw a 4/4 voice
+      VF.Formatter.FormatAndDraw(ctx, mm1, notesmm1);
+
+      // bar 2: volta begin_mid, with modifiers (clef, keysignature)
+      var mm2 = new VF.Stave(mm1.x + mm1.width, mm1.y, 175);
+      mm2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+      mm2.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+      mm2.setVoltaType(VF.Volta.type.BEGIN_MID, '2.', -5);
+      mm2.addClef('treble');
+      mm2.addKeySignature('A');
+      mm2.setMeasure(2);
+      mm2.setContext(ctx).draw();
+      var notesmm2 = [
+        new VF.StaveNote({ keys: ['c/4'], duration: 'w' }),
+      ];
+      VF.Formatter.FormatAndDraw(ctx, mm2, notesmm2);
+
+      // bar 3: volta mid, with modifiers (clef, keysignature)
+      var mm3 = new VF.Stave(mm2.x + mm2.width, mm2.y, 175);
+      mm3.setVoltaType(VF.Volta.type.MID, '', -5);
+      mm3.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+      mm3.addClef('treble');
+      mm3.addKeySignature('B');
+      mm3.setMeasure(3);
+      mm3.setSection('B', 0);
+      mm3.setContext(ctx).draw();
+      var notesmm3 = [
+        new VF.StaveNote({ keys: ['c/4'], duration: 'w' }),
+      ];
+      VF.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
+
+      // bar 4: volta end, with modifiers (clef, keysignature)
+      var mm4 = new VF.Stave(mm3.x + mm3.width, mm3.y, 175);
+      mm4.setVoltaType(VF.Volta.type.END, '1.', -5);
+      mm4.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+      mm4.addClef('treble');
+      mm4.addKeySignature('A');
+      mm4.setMeasure(4);
+      mm4.setSection('C', 0);
+      mm4.setContext(ctx).draw();
+      var notesmm4 = [
+        new VF.StaveNote({ keys: ['c/4'], duration: 'w' }),
+      ];
+      VF.Formatter.FormatAndDraw(ctx, mm4, notesmm4);
+
+      // bar 5: d.s. shift (similar potential x-shift concern)
+      var mm5 = new VF.Stave(mm4.x + mm4.width, mm4.y, 175);
+      // mm5.addModifier(new VF.Repetition(VF.Repetition.type.DS, mm4.x + mm4.width, 50), VF.StaveModifier.Position.RIGHT);
+      mm5.setEndBarType(VF.Barline.type.DOUBLE);
+      mm5.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+      mm5.addClef('treble');
+      mm5.addKeySignature('A');
+      mm5.setMeasure(5);
+      mm5.setSection('D', 0);
+      mm5.setContext(ctx).draw();
+      var notesmm5 = [
+        new VF.StaveNote({ keys: ['c/4'], duration: 'w' }),
+      ];
+      VF.Formatter.FormatAndDraw(ctx, mm5, notesmm5);
+
+      // bar 6: d.s. without modifiers
+      var mm6 = new VF.Stave(mm5.x + mm5.width, mm5.y, 175);
+      // mm5.addModifier(new VF.Repetition(VF.Repetition.type.DS, mm4.x + mm4.width, 50), VF.StaveModifier.Position.RIGHT);
+      mm6.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+      mm6.setMeasure(6);
+      mm6.setSection('E', 0);
+      mm6.setContext(ctx).draw();
+      var notesmm6 = [
+        new VF.StaveNote({ keys: ['c/4'], duration: 'w' }),
+      ];
+      VF.Formatter.FormatAndDraw(ctx, mm6, notesmm6);
     },
 
     drawTempo: function(options, contextBuilder) {

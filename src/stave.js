@@ -166,6 +166,11 @@ export class Stave extends Element {
       return 0;
     }
 
+    // for right position modifiers zero shift seems correct, see 'Volta + Modifier Measure Test'
+    if (this.modifiers[index].getPosition() === StaveModifier.Position.RIGHT) {
+      return 0;
+    }
+
     let start_x = this.start_x - this.x;
     const begBarline = this.modifiers[0];
     if (begBarline.getType() === Barline.type.REPEAT_BEGIN && start_x > begBarline.getWidth()) {
