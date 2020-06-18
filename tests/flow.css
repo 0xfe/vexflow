@@ -1,3 +1,20 @@
+
+@font-face {
+    font-family: 'petalumaScript';
+    src: url('https://aarondavidnewman.github.io/Smoosic/build/styles/fonts/petalumascript-webfont.woff2') format('woff2'),
+         url('https://aarondavidnewman.github.io/Smoosic/build/styles/fonts/petalumascript-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'robotoSlab';
+    src: url('https://aarondavidnewman.github.io/Smoosic/build/styles/fonts/robotoslab-webfont.woff2') format('woff2'),
+         url('https://aarondavidnewman.github.io/Smoosic/build/styles/fonts/robotoslab-webfont.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
 body {
   padding: 20px;
   font-family: Arial, sans-serif;

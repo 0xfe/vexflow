@@ -101,7 +101,7 @@ VF.Test.ChordSymbol = (function() {
 
       chords = [];
       chords.push(new VF.ChordSymbol()
-        .addGlyphOrText('F/Bb'));
+        .addGlyphOrText('F/B').addGlyphOrText('b', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT }));
 
       chords.push(new VF.ChordSymbol()
         .addText('E')
@@ -121,7 +121,7 @@ VF.Test.ChordSymbol = (function() {
     },
 
     top: function(options) {
-      var vf = VF.Test.makeFactory(options, 500, 580);
+      var vf = VF.Test.makeFactory(options, 650, 650);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
 
@@ -129,31 +129,31 @@ VF.Test.ChordSymbol = (function() {
         return new VF.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
       }
 
-      function draw(chord1, chord2, y) {
+      function draw(c1, c2, y) {
         var notes = [];
 
         var stave = new VF.Stave(10, y, 450)
           .addClef('treble').setContext(ctx).draw();
 
-        notes.push(newNote(['e/4', 'a/4', 'd/5'], 'h', chord1)
+        notes.push(newNote(['e/4', 'a/4', 'd/5'], 'h', c1)
           .addAccidental(0, new VF.Accidental('b')));
-        notes.push(newNote(['c/4', 'e/4', 'B/4'], 'h', chord2));
+        notes.push(newNote(['c/4', 'e/4', 'b/4'], 'h', c2));
         VF.Formatter.FormatAndDraw(ctx, stave, notes);
       }
 
       var chord1 = new VF.ChordSymbol().addText('F7').setHorizontal('left')
         .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT });
       var chord2 = new VF.ChordSymbol()
-        .addText('C')
+        .addText('C').setHorizontal('left')
         .addGlyphSuperscript('majorSeventh');
       draw(chord1, chord2, 40);
 
-      chord1 = new VF.ChordSymbol().addText('F7').setHorizontal('left')
+      chord1 = new VF.ChordSymbol().addText('F7')
         .addTextSuperscript('(')
         .addGlyphOrText('#11b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
         .addTextSuperscript(')');
       chord2 = new VF.ChordSymbol()
-        .addText('C')
+        .addText('C').setHorizontal('left')
         .addTextSuperscript('Maj.');
       draw(chord1, chord2, 140);
 
@@ -162,14 +162,14 @@ VF.Test.ChordSymbol = (function() {
         .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT });
       chord2 = new VF.ChordSymbol()
         .addText('C')
-        .addTextSuperscript('Maj.');
+        .addTextSuperscript('sus4');
       draw(chord1, chord2, 240);
 
       ok(true, 'Top Chord Symbol');
     },
 
     fontSize: function(options) {
-      var vf = VF.Test.makeFactory(options, 650, 580);
+      var vf = VF.Test.makeFactory(options, 750, 580);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
 
@@ -191,52 +191,62 @@ VF.Test.ChordSymbol = (function() {
       }
 
       var chords = [];
-      chords.push(new VF.ChordSymbol().addText('F7')
-        .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
-        .setFontSize(8));
-      chords.push(new VF.ChordSymbol().addText('F7')
-        .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
-        .setFontSize(12));
-      chords.push(new VF.ChordSymbol().addText('F7')
-        .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
-        .setFontSize(14));
-      chords.push(new VF.ChordSymbol().addText('F7')
-        .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
-        .setFontSize(16));
+      chords.push(new VF.ChordSymbol().setFontSize(10).addText('F7')
+        .addGlyph('leftParenTall')
+        .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
+        .addGlyphOrText('#11', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
+        .addGlyph('rightParenTall')
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(12).addText('F7')
+        .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
+        .addGlyphOrText('#11', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(14).addText('F7')
+        .addGlyph('leftParenTall')
+        .addGlyphOrText('add 3', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
+        .addGlyphOrText('omit 9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
+        .addGlyph('rightParenTall')
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(16).addText('F7')
+        .addGlyph('leftParenTall')
+        .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
+        .addGlyphOrText('#11', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
+        .addGlyph('rightParenTall')
+      );
       draw(chords, 40);
 
       chords = [];
-      chords.push(new VF.ChordSymbol().addText('F7')
+      chords.push(new VF.ChordSymbol().setFontSize(10).addText('F7')
         .addGlyphOrText('#11', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
         .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
-        .setFontSize(8));
-      chords.push(new VF.ChordSymbol().addText('F7')
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(12).addText('F7')
         .addGlyphOrText('#11', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
         .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
-        .setFontSize(10));
-      chords.push(new VF.ChordSymbol().addText('F7')
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(14).addText('F7')
         .addGlyphOrText('#11', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
         .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
-        .setFontSize(12));
-      chords.push(new VF.ChordSymbol().addText('F7')
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(16).addText('F7')
         .addGlyphOrText('#11', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
         .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
-        .setFontSize(14));
+      );
       draw(chords, 140);
 
       chords = [];
-      chords.push(new VF.ChordSymbol().addText('F7')
-        .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
-        .setFontSize(6));
-      chords.push(new VF.ChordSymbol().addText('F7')
-        .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
-        .setFontSize(14));
-      chords.push(new VF.ChordSymbol().addText('F7')
-        .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
-        .setFontSize(16));
-      chords.push(new VF.ChordSymbol().addText('F7')
-        .addGlyphOrText('(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
-        .setFontSize(18));
+      chords.push(new VF.ChordSymbol().setFontSize(10).addGlyphOrText('Ab')
+        .addGlyphOrText('7(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(14).addGlyphOrText('C#')
+        .addGlyphOrText('7(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(16).addGlyphOrText('Ab')
+        .addGlyphOrText('7(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
+      );
+      chords.push(new VF.ChordSymbol().setFontSize(18).addGlyphOrText('C#')
+        .addGlyphOrText('7(#11b9)', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
+      );
       draw(chords, 240);
 
       ok(true, 'Font Size Chord Symbol');
@@ -331,37 +341,30 @@ VF.Test.ChordSymbol = (function() {
 
       chords.push(new VF.ChordSymbol()
         .setVertical('bottom')
-        .setFont('serif', 12)
         .addText('I')
         .addTextSuperscript('6')
         .addTextSubscript('4'));
       chords.push(new VF.ChordSymbol()
         .setVertical('bottom')
-        .addGlyphOrText('V')
-        .setFont('serif', 12));
+        .addGlyphOrText('V'));
       chords.push(new VF.ChordSymbol()
         .addLine(12)
         .setVertical('bottom'));
       chords.push(new VF.ChordSymbol()
         .addGlyphOrText('V/V')
-        .setVertical('bottom')
-        .setFont('serif', 12));
+        .setVertical('bottom'));
 
       chords2.push(new VF.ChordSymbol()
         .setVertical('bottom')
-        .setFont('sans', 12, 'bold')
         .addText('T'));
       chords2.push(new VF.ChordSymbol()
         .setVertical('bottom')
-        .setFont('sans', 12, 'bold')
         .addText('D'));
       chords2.push(new VF.ChordSymbol()
         .setVertical('bottom')
-        .setFont('sans', 12, 'bold')
         .addText('D'));
       chords2.push(new VF.ChordSymbol()
         .setVertical('bottom')
-        .setFont('sans', 12, 'bold')
         .addText('SD'));
 
       draw(chords, chords2, 10);
@@ -393,21 +396,18 @@ VF.Test.ChordSymbol = (function() {
 
       chords.push(new VF.ChordSymbol()
         .setVertical('bottom')
-        .setFont('serif', 12)
         .addText('I')
         .addTextSuperscript('6')
         .addTextSubscript('4'));
       chords.push(new VF.ChordSymbol()
         .setVertical('bottom')
-        .addGlyphOrText('V')
-        .setFont('serif', 12));
+        .addGlyphOrText('V'));
       chords.push(new VF.ChordSymbol()
         .addLine(12)
         .setVertical('bottom'));
       chords.push(new VF.ChordSymbol()
         .addGlyphOrText('V/V')
-        .setVertical('bottom')
-        .setFont('serif', 12));
+        .setVertical('bottom'));
 
       draw(chords, 10);
       ok(true, 'Bottom Chord Symbol');
