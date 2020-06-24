@@ -18,9 +18,11 @@ export class VFVoice extends HTMLElement {
     // Defaults
     this.stem = 'up';
     this.autoBeam = false;
-
     this.notes = [];
     this.beams = [];
+
+    this._vf = undefined;
+    this._score = undefined;
   }
 
   connectedCallback() {
@@ -28,39 +30,51 @@ export class VFVoice extends HTMLElement {
     this.autoBeam = this.hasAttribute('autoBeam');
     this.notesText = this.textContent.trim();
 
-    const getFactoryEvent = new CustomEvent('getFactory', { bubbles: true, detail: { factory: null } });
+    const getFactoryEvent = new CustomEvent('getFactory', { bubbles: true });
     this.dispatchEvent(getFactoryEvent);
-    this.vf = getFactoryEvent.detail.factory;
 
-    const getScoreEvent = new CustomEvent('getScore', { bubbles: true, detail: { score: null } });
+    const getScoreEvent = new CustomEvent('getScore', { bubbles: true });
     this.dispatchEvent(getScoreEvent);
-    this.score = getScoreEvent.detail.score;
+  }
 
-    const notes = this.createNotes();
-    this.notes.push(notes);
-    if (this.autoBeam) {
-      this.beams.push(this.autoGenerateBeams(notes));
-    }
+  set vf(value) {
+    this._vf = value;
+    this.createNotes();
+  }
 
-    this.notes = this.notes.reduce(concat);
-    if (this.beams.length > 0) {
-      this.beams = this.beams.reduce(concat);
-    }
-
-    const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', { bubbles: true, detail: { notes: this.notes, beams: this.beams } });
-    this.dispatchEvent(notesAndBeamsCreatedEvent);
+  set score(value) {
+    this._score = value;
+    this.createNotes();
   }
 
   createNotes() {
-    this.score.set({ stem: this.stem });
-    const staveNotes = this.score.notes(this.notesText);
+    if (this._vf && this._score) {
+      const notes = this.createNotesFromText();
+      this.notes.push(notes);
+      if (this.autoBeam) {
+        this.beams.push(this.autoGenerateBeams(notes));
+      }
+
+      this.notes = this.notes.reduce(concat);
+      if (this.beams.length > 0) {
+        this.beams = this.beams.reduce(concat);
+      }
+
+      const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', { bubbles: true, detail: { notes: this.notes, beams: this.beams } });
+      this.dispatchEvent(notesAndBeamsCreatedEvent);
+    }
+  }
+
+  createNotesFromText() {
+    this._score.set({ stem: this.stem });
+    const staveNotes = this._score.notes(this.notesText);
     return staveNotes;
   }
 
   autoGenerateBeams(notes) {
     const beams = Vex.Flow.Beam.generateBeams(notes);
     beams.forEach( beam => {
-      this.vf.renderQ.push(beam);
+      this._vf.renderQ.push(beam);
     })
     return beams;
   }

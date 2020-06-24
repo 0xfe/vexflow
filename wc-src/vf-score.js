@@ -14,7 +14,7 @@ export class VFScore extends HTMLElement {
     this.attachShadow({ mode:'open' });
     this.shadowRoot.appendChild(document.importNode(template.content, true));
 
-    this.addEventListener('getContext', this.getContext);
+    // this.addEventListener('getContext', this.getContext);
     this.addEventListener('getFactory', this.getFactory);
   }
 
@@ -35,16 +35,10 @@ export class VFScore extends HTMLElement {
     this.vf.setContext(this.context);
   }
 
-  /** Returns the renderer context for this vf-score component */
-  getContext = (e) => {
-    e.detail.context = this.context;
-  }
-
   /** Returns the VF.Factory for this vf-score component */
-  getFactory = (e) => {
-    e.detail.factory = this.vf;
+  getFactory = () => {
+    event.target.vf = this.vf;
   }
-
 }
 
 window.customElements.define('vf-score', VFScore);

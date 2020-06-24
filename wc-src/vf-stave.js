@@ -13,6 +13,7 @@ export class VFStave extends HTMLElement {
     // Defaults
     this.voices = [];
     this.beams = [];
+    this._vf = undefined;
 
     this.attachShadow({ mode:'open' });
     this.shadowRoot.appendChild(document.importNode(template.content, true));
@@ -27,11 +28,8 @@ export class VFStave extends HTMLElement {
     this.timeSig = this.getAttribute('timeSig');
     this.keySig = this.getAttribute('keySig');
 
-    const getFactoryEvent = new CustomEvent('getFactory', { bubbles: true, detail: { factory: null } });
+    const getFactoryEvent = new CustomEvent('getFactory', { bubbles: true });
     this.dispatchEvent(getFactoryEvent);
-    this.vf = getFactoryEvent.detail.factory;
-
-    this.setupStave();
 
     this.shadowRoot.querySelector('slot').addEventListener('slotchange', this.registerVoices);
   }
@@ -40,14 +38,19 @@ export class VFStave extends HTMLElement {
     this.shadowRoot.querySelector('slot').removeEventListener('slotchange', this.registerVoices);
   }
 
+  set vf(value) {
+    this._vf = value;
+    this.setupStave();
+  }
+
   setupStave() {
-    this.score = this.vf.EasyScore();
+    this.score = this._vf.EasyScore();
     this.score.set({
       clef: this.clef || 'treble',
       time: this.timeSig || '4/4'
     });
 
-    this.stave = this.vf.Stave( { x: 10, y: 40, width: 400 });
+    this.stave = this._vf.Stave( { x: 10, y: 40, width: 400 });
 
     if (this.clef) {
       this.stave.addClef(this.clef);
@@ -97,12 +100,12 @@ export class VFStave extends HTMLElement {
     var formatter = new Vex.Flow.Formatter()
     formatter.joinVoices(this.voices);
     formatter.formatToStave(this.voices, this.stave);
-    this.vf.draw();
+    this._vf.draw();
   }
 
    /** Returns the EasyScore instance */
-  getScore = (e) => {
-    e.detail.score = this.score;
+  getScore = () => {
+    event.target.score = this.score;
   }
 
 }
