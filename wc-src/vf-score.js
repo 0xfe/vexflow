@@ -15,10 +15,12 @@ export class VFScore extends HTMLElement {
     this.shadowRoot.appendChild(document.importNode(template.content, true));
 
     this.addEventListener('getContext', this.getContext);
+    this.addEventListener('getFactory', this.getFactory);
   }
 
   connectedCallback() {
     this.setupVexflow(this.getAttribute('width') || 500, this.getAttribute('height') || 200);
+    this.setupFactory();
   }
 
   setupVexflow(width, height) {
@@ -28,10 +30,21 @@ export class VFScore extends HTMLElement {
     this.context = renderer.getContext();
   }
 
+  setupFactory() {
+    this.vf = new Vex.Flow.Factory({renderer: {elementId: null}});
+    this.vf.setContext(this.context);
+  }
+
   /** Returns the renderer context for this vf-score component */
   getContext = (e) => {
     e.detail.context = this.context;
   }
+
+  /** Returns the VF.Factory for this vf-score component */
+  getFactory = (e) => {
+    e.detail.factory = this.vf;
+  }
+
 }
 
 window.customElements.define('vf-score', VFScore);

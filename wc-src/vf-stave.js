@@ -1,6 +1,5 @@
 import Vex from '../src/index.js';
 import './vf-score';
-import './vf-voice';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -14,17 +13,13 @@ export class VFStave extends HTMLElement {
     // Defaults
     this.voices = [];
     this.beams = [];
-    // this.notes = [];
-    // this.timeSig = '4/4';
-    // this.clef = 'treble';
-    // this.keySig = 'C';
 
     this.attachShadow({ mode:'open' });
     this.shadowRoot.appendChild(document.importNode(template.content, true));
 
+    this.addEventListener('getScore', this.getScore);
     this.addEventListener('voiceAdded', this.voiceAdded);
-
-    console.log('vf-stave constructor')
+    this.addEventListener('notesCreated', this.addVoice);
   }
 
   connectedCallback() {
@@ -32,19 +27,27 @@ export class VFStave extends HTMLElement {
     this.timeSig = this.getAttribute('timeSig');
     this.keySig = this.getAttribute('keySig');
 
-    this.setupStave();
-    this.setupFactoryScore();
+    const getFactoryEvent = new CustomEvent('getFactory', { bubbles: true, detail: { factory: null } });
+    this.dispatchEvent(getFactoryEvent);
+    this.vf = getFactoryEvent.detail.factory;
 
-    this.shadowRoot.querySelector('slot').addEventListener('slotchange', this.onSlotChange);
-    console.log('vf-stave connectedCallback')
+    this.setupStave();
+
+    this.shadowRoot.querySelector('slot').addEventListener('slotchange', this.registerVoices);
   }
 
-  setupStave() { // add attributes for size? 
-    this.stave = new Vex.Flow.Stave(10, 40, 400);
-    const getContextEvent = new CustomEvent('getContext', { bubbles: true, detail: {context: null } });
-    this.dispatchEvent(getContextEvent);
-    this.context = getContextEvent.detail.context;
-    this.stave.setContext(this.context);
+  disconnectedCallback() {
+    this.shadowRoot.querySelector('slot').removeEventListener('slotchange', this.registerVoices);
+  }
+
+  setupStave() {
+    this.score = this.vf.EasyScore();
+    this.score.set({
+      clef: this.clef || 'treble',
+      time: this.timeSig || '4/4'
+    });
+
+    this.stave = this.vf.Stave( { x: 10, y: 40, width: 400 });
 
     if (this.clef) {
       this.stave.addClef(this.clef);
@@ -61,66 +64,45 @@ export class VFStave extends HTMLElement {
     this.stave.draw();
   }
 
-  setupFactoryScore() {
-    var vf = new Vex.Flow.Factory({renderer: {elementId: null}});
-    vf.stave = this.stave
-    this.score = vf.EasyScore();
-    this.score.set({
-      clef: this.clef,
-      time: this.timeSig
-    });
-  }
+  /** slotchange event listener */
+  registerVoices = () => {
+    const voiceSlots = this.shadowRoot.querySelector('slot').assignedElements().filter( e => e.nodeName === 'VF-VOICE');
+    this.numVoices = voiceSlots.length;
 
-  onSlotChange = () => {
-    const slotElements = this.shadowRoot.querySelector('slot').assignedElements();
-    // Generate all voices first, then draw to make sure alignment is correct
-    slotElements.forEach( element => {
-      if (element.nodeName === 'VF-VOICE') {
-        this.addVoice(element);
-      }
-    });
-    this.formatAndDrawVoices();
-  }
-
-  addVoice(vfVoice) {
-    this.clef = vfVoice.clef;
-
-    // With parser
-    const results = this.createNotesAndVoice(vfVoice.notesText, vfVoice.stem);
-    const staveNotes = results[0];
-    const voice = results[1];
-    console.log('parsed voice (hopefully)');
-    console.log(voice);
-    this.voices.push(voice);
-    
-    if (vfVoice.generateBeams) {
-      this.beams = this.beams.concat(this.createBeams(staveNotes)); 
-      console.log(this.beams);
+    if (this.voices.length === this.numVoices) {
+      this.formatAndDrawVoices();
     }
   }
 
-  createNotesAndVoice(line, stemDirection) {
-    this.score.set({ stem: stemDirection });
+  /** Event listener when vf-voice returns notes */
+  addVoice = (e) => {
+    const notes = e.detail.notes;
+    const beams = e.detail.beams; 
+    const voice = this.createVoiceFromNotes(notes);
 
-    const staveNotes = this.score.notes(line);
-    const voice = this.score.voice(staveNotes);
-    return [staveNotes, voice];
+    this.voices.push(voice);
+    this.beams = this.beams.concat(beams);
+
+    // Make sure all voices are created first, then format & draw to make sure alignment is correct
+    if (this.voices.length === this.numVoices) {
+      this.formatAndDrawVoices();
+    }
   }
 
-  createBeams(notes) {
-    console.log(notes);
-    const beams = Vex.Flow.Beam.generateBeams(notes);
-    console.log(beams);
-    return beams;
+  createVoiceFromNotes(staveNotes) {
+    return this.score.voice(staveNotes);
   }
 
   formatAndDrawVoices() {
     var formatter = new Vex.Flow.Formatter()
     formatter.joinVoices(this.voices);
     formatter.formatToStave(this.voices, this.stave);
-    this.voices.forEach(voice => voice.draw(this.context, this.stave));
+    this.vf.draw();
+  }
 
-    this.beams.forEach(beam => beam.setContext(this.context).draw());
+   /** Returns the EasyScore instance */
+  getScore = (e) => {
+    e.detail.score = this.score;
   }
 
 }

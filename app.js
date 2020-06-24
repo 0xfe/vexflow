@@ -1,7 +1,6 @@
-import Vex from './src/index.js';
-
 // EasyScore API Example
 
+import Vex from './src/index.js';
 const VF = Vex.Flow;
 
 // Create an SVG renderer and attach it to the DIV element named "boo".
