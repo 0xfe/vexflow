@@ -4,10 +4,6 @@ const template = document.createElement('template');
 template.innerHTML = `
 `;
 
-function concat(a, b) {
-  return a.concat(b);
-}
-
 export class VFVoice extends HTMLElement {
   constructor() {
     super();
@@ -47,14 +43,9 @@ export class VFVoice extends HTMLElement {
   createNotes() {
     if (this._vf && this._score) {
       const notes = this.createNotesFromText();
-      this.notes.push(notes);
+      this.notes.push(...notes);
       if (this.autoBeam) {
-        this.beams.push(this.autoGenerateBeams(notes));
-      }
-
-      this.notes = this.notes.reduce(concat);
-      if (this.beams.length > 0) {
-        this.beams = this.beams.reduce(concat);
+        this.beams.push(...this.autoGenerateBeams(notes));
       }
 
       const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', { bubbles: true, detail: { notes: this.notes, beams: this.beams } });
