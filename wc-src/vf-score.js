@@ -14,8 +14,8 @@ export class VFScore extends HTMLElement {
     this.attachShadow({ mode:'open' });
     this.shadowRoot.appendChild(document.importNode(template.content, true));
 
-    // this.addEventListener('getContext', this.getContext);
-    this.addEventListener('getFactory', this.getFactory);
+    this.addEventListener('vfVoiceReady', this.setFactory);
+    this.addEventListener('vfStaveReady', this.setFactory);
   }
 
   connectedCallback() {
@@ -35,8 +35,8 @@ export class VFScore extends HTMLElement {
     this.vf.setContext(this.context);
   }
 
-  /** Returns the VF.Factory for this vf-score component */
-  getFactory = () => {
+  /** Sets the factory instance of the component that dispatched the event */
+  setFactory = () => {
     event.target.vf = this.vf;
   }
 }

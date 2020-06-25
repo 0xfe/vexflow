@@ -18,9 +18,8 @@ export class VFStave extends HTMLElement {
     this.attachShadow({ mode:'open' });
     this.shadowRoot.appendChild(document.importNode(template.content, true));
 
-    this.addEventListener('getScore', this.getScore);
-    this.addEventListener('voiceAdded', this.voiceAdded);
     this.addEventListener('notesCreated', this.addVoice);
+    this.addEventListener('vfVoiceReady', this.setScore);
   }
 
   connectedCallback() {
@@ -28,8 +27,8 @@ export class VFStave extends HTMLElement {
     this.timeSig = this.getAttribute('timeSig');
     this.keySig = this.getAttribute('keySig');
 
-    const getFactoryEvent = new CustomEvent('getFactory', { bubbles: true });
-    this.dispatchEvent(getFactoryEvent);
+    const vfStaveReadyEvent = new CustomEvent('vfStaveReady', { bubbles: true });
+    this.dispatchEvent(vfStaveReadyEvent);
 
     this.shadowRoot.querySelector('slot').addEventListener('slotchange', this.registerVoices);
   }
@@ -103,8 +102,9 @@ export class VFStave extends HTMLElement {
     this._vf.draw();
   }
 
-   /** Returns the EasyScore instance */
-  getScore = () => {
+
+  /** Sets the score instance of the component that dispatched the event */
+  setScore = () => {
     event.target.score = this.score;
   }
 

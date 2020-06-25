@@ -30,11 +30,8 @@ export class VFVoice extends HTMLElement {
     this.autoBeam = this.hasAttribute('autoBeam');
     this.notesText = this.textContent.trim();
 
-    const getFactoryEvent = new CustomEvent('getFactory', { bubbles: true });
-    this.dispatchEvent(getFactoryEvent);
-
-    const getScoreEvent = new CustomEvent('getScore', { bubbles: true });
-    this.dispatchEvent(getScoreEvent);
+    const vfVoiceReadyEvent = new CustomEvent('vfVoiceReady', { bubbles: true });
+    this.dispatchEvent(vfVoiceReadyEvent);
   }
 
   set vf(value) {
