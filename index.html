@@ -1,20 +1,25 @@
 <html>
   <head>
     <title>Vexflow Component</title>
-    <script type="module" src='./wc-src/vf-score.js'></script>
-    <script type="module" src='./wc-src/vf-stave.js'></script>
-    <script type="module" src='./wc-src/vf-voice.js'></script>
+    <script type="module" src='./src/web-components/index.js'></script>
   </head>
   <body>
     <!-- For testing the EasyScore API example
     <div id="boo"></div>
     <script type="module" src="./app.js"></script> -->
 
-    <vf-score>
-      <vf-stave clef='treble' timeSig='4/4' keySig='Bb'>
-        <vf-voice autoBeam>C5/q, (C4 Eb4 G4)/q, A4, G4/16, A4, B4, C5</vf-voice>
-        <vf-voice stem='up'>C#4/h, C#4</vf-voice>
-      </vf-stave>
+    <vf-score height=300>
+      <vf-system connected>
+        <vf-stave> <!-- clef='treble' timeSig='4/4' keySig='Bb'-->
+          <vf-voice autoBeam>C5/q, (C4 Eb4 G4)/q, A4, G4/16, A4, B4, C5</vf-voice>
+          <vf-voice stem='up'>C#4/h, C#4</vf-voice>
+        </vf-stave>
+        <vf-stave> <!-- clef='treble' timeSig='4/4' keySig='Bb'-->
+          <vf-voice autoBeam>C5/q, (C4 Eb4 G4)/q, A4, G4/16, A4, B4, C5</vf-voice>
+          <vf-voice stem='up'>C#4/h, C#4</vf-voice>
+        </vf-stave>
+      </vf-system>
     </vf-score>
+    
   </body>
 </html>

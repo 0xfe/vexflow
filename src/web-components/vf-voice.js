@@ -1,4 +1,5 @@
-import Vex from '../src/index.js';
+import Vex from '../index';
+import './vf-stave';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -8,12 +9,13 @@ export class VFVoice extends HTMLElement {
   constructor() {
     super();
 
-    this.attachShadow({ mode:'open' });
+    this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(document.importNode(template.content, true));
 
     // Defaults
     this.stem = 'up';
     this.autoBeam = false;
+
     this.notes = [];
     this.beams = [];
 
@@ -40,9 +42,10 @@ export class VFVoice extends HTMLElement {
     this.createNotes();
   }
 
-  createNotes() {
+  createNotes = () => {
     if (this._vf && this._score) {
       const notes = this.createNotesFromText();
+      // Maintaining notes in an array to set-up for future child components that will return their own notes
       this.notes.push(...notes);
       if (this.autoBeam) {
         this.beams.push(...this.autoGenerateBeams(notes));
@@ -53,6 +56,7 @@ export class VFVoice extends HTMLElement {
     }
   }
 
+  /** Returns StaveNotes, generated from a string. Leverages the EasyScore Parser */
   createNotesFromText() {
     this._score.set({ stem: this.stem });
     const staveNotes = this._score.notes(this.notesText);
@@ -60,6 +64,11 @@ export class VFVoice extends HTMLElement {
   }
 
   autoGenerateBeams(notes) {
+    // TODO: use default groups? 
+    // const groups = Vex.Flow.Beam.getDefaultBeamGroups(this._score.defaults.time);
+    // const beams = Vex.Flow.Beam.generateBeams(notes, {
+    //   groups: groups
+    // });
     const beams = Vex.Flow.Beam.generateBeams(notes);
     beams.forEach( beam => {
       this._vf.renderQ.push(beam);
