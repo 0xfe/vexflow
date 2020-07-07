@@ -9,14 +9,13 @@
     <script type="module" src="./app.js"></script> -->
 
     <vf-score height=300>
-      <vf-system connected>
-        <vf-stave> <!-- clef='treble' timeSig='4/4' keySig='Bb'-->
+      <vf-system>
+        <vf-stave clef='treble' timeSig='4/4' keySig='Bb'>
           <vf-voice autoBeam>C5/q, (C4 Eb4 G4)/q, A4, G4/16, A4, B4, C5</vf-voice>
           <vf-voice stem='up'>C#4/h, C#4</vf-voice>
         </vf-stave>
-        <vf-stave> <!-- clef='treble' timeSig='4/4' keySig='Bb'-->
-          <vf-voice autoBeam>C5/q, (C4 Eb4 G4)/q, A4, G4/16, A4, B4, C5</vf-voice>
-          <vf-voice stem='up'>C#4/h, C#4</vf-voice>
+        <vf-stave clef='bass' timeSig='4/4' keySig='Bb'>
+          <vf-voice autoBeam>C3/q, (C3 Eb3 G3)/q, A2/q, B2</vf-voice>
         </vf-stave>
       </vf-system>
     </vf-score>

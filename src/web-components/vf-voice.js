@@ -1,3 +1,14 @@
+// ## Description
+// 
+// This file implements `vf-voice`, the web component that resembles 
+// the `Voice` element. 
+// 
+// FOR THIS PR: One `vf-voice` is comprised from a text string, written in 
+// Grammer of the EasyScore API parser.  
+// `vf-voice` is responsible for generating the notes from the text string. 
+// Once the notes are created, `vf-voice` dispatches an event to its parent
+// `vf-stave` to signal that it's ready to be created and added to the stave. 
+
 import Vex from '../index';
 import './vf-stave';
 
@@ -26,43 +37,73 @@ export class VFVoice extends HTMLElement {
   connectedCallback() {
     this.stem = this.getAttribute('stem') || this.stem;
     this.autoBeam = this.hasAttribute('autoBeam');
-    this.notesText = this.textContent.trim();
 
     const vfVoiceReadyEvent = new CustomEvent('vfVoiceReady', { bubbles: true });
     this.dispatchEvent(vfVoiceReadyEvent);
   }
 
+   /**
+   * Setter to detect when the Factory instance is set. Once the Factory and
+   * EasyScore instances are set, vf-voice can start creating components. 
+   * 
+   * @param {Vex.Flow.Factory} value - The Factory instance that the overall 
+   *                                   component is using, set by the parent vf-score.
+   */
   set vf(value) {
     this._vf = value;
     this.createNotes();
   }
 
+   /**
+   * Setter to detect when the EasyScore instance is set. Once the Factory and
+   * EasyScore instances are set, vf-voice can start creating components. 
+   * 
+   * @param {Vex.Flow.EasyScore} value - The EasyScore instance that the parent stave and 
+   *                                   its children are using, set by the parent vf-stave.
+   */
   set score(value) {
     this._score = value;
     this.createNotes();
   }
 
+  /**
+   * Creates notes (and optionally, beams) from the text content of this vf-voice element.
+   */
   createNotes = () => {
     if (this._vf && this._score) {
-      const notes = this.createNotesFromText();
-      // Maintaining notes in an array to set-up for future child components that will return their own notes
+      const notes = this.createNotesFromText(this.textContent.trim());
+      // Maintaining notes in an array to set-up for future child components that will provide their own notes
       this.notes.push(...notes);
       if (this.autoBeam) {
         this.beams.push(...this.autoGenerateBeams(notes));
       }
 
+      // Tells the parent vf-stave that this vf-voice has finished creating its notes & beams 
+      // and is ready to be added to the stave.  
       const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', { bubbles: true, detail: { notes: this.notes, beams: this.beams } });
       this.dispatchEvent(notesAndBeamsCreatedEvent);
     }
   }
 
-  /** Returns StaveNotes, generated from a string. Leverages the EasyScore Parser */
-  createNotesFromText() {
+  /**
+   * Generates notes based on the text content of this vf-voice element. 
+   * Utlizes the EasyScore API Grammar & Parser. 
+   * 
+   * @param {String} text - The string to parse and create notes from. 
+   * @return {[Vex.Flow.StaveNote]} - The notes that were generated from the text. 
+   */
+  createNotesFromText(text) {
     this._score.set({ stem: this.stem });
-    const staveNotes = this._score.notes(this.notesText);
+    const staveNotes = this._score.notes(text);
     return staveNotes;
   }
 
+  /**
+   * Automatically generates beams for the provided notes. 
+   * 
+   * @param {[Vex.Flow.StaveNote]} notes - The notes to autogenerate beams for.
+   * @return {[Vex.Flow.Beam]} - The autogenreated beams. 
+   */
   autoGenerateBeams(notes) {
     // TODO: use default groups? 
     // const groups = Vex.Flow.Beam.getDefaultBeamGroups(this._score.defaults.time);
