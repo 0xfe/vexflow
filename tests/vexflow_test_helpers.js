@@ -236,14 +236,52 @@ VF.Test = (function () {
         return name.replace(/[^a-zA-Z0-9]/g, '_');
       }
 
+      if (QUnit.current_module.includes('WebComponents')) {
+        // If the module is testing the web component, use the web component test function
+        VF.Test.runNodeWebComponentTest(name, func, params);
+      } else {
+        QUnit.test(name, function (assert) {
+          var elementId = VF.Test.genID('nodecanvas_');
+          var canvas = document.createElement('canvas');
+          canvas.setAttribute('id', elementId);
+          document.body.appendChild(canvas);
+  
+          var testOptions = {
+            elementId: elementId,
+            backend: VF.Renderer.Backends.CANVAS,
+            params: params,
+            assert: assert,
+          };
+  
+          func(testOptions, VF.Renderer.getCanvasContext);
+  
+          if (VF.Renderer.lastContext !== null) {
+            var moduleName = sanitizeName(QUnit.current_module);
+            var testName = sanitizeName(QUnit.current_test);
+            var fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
+  
+            var imageData = canvas.toDataURL().split(';base64,').pop();
+            var image = Buffer.from(imageData, 'base64');
+  
+            fs.writeFileSync(fileName, image, { encoding: 'base64' });
+          }
+        });
+      }
+    },
+
+    runNodeWebComponentTest: function (name, func, params) {
+      var fs = require('fs');
+
+      function sanitizeName(name) {
+        return name.replace(/[^a-zA-Z0-9]/g, '_');
+      }
+
       QUnit.test(name, function (assert) {
-        var elementId = VF.Test.genID('nodecanvas_');
-        var canvas = document.createElement('canvas');
-        canvas.setAttribute('id', elementId);
-        document.body.appendChild(canvas);
+        // Web component creates the canvas and renderer
+        var scoreId = VF.Test.genID('nodewebcomponent_');
 
         var testOptions = {
-          elementId: elementId,
+          scoreId: scoreId,
           backend: VF.Renderer.Backends.CANVAS,
           params: params,
           assert: assert,
@@ -251,16 +289,20 @@ VF.Test = (function () {
 
         func(testOptions, VF.Renderer.getCanvasContext);
 
-        if (VF.Renderer.lastContext !== null) {
-          var moduleName = sanitizeName(QUnit.current_module);
-          var testName = sanitizeName(QUnit.current_test);
-          var fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
+        var moduleName = sanitizeName(QUnit.current_module);
+        var testName = sanitizeName(QUnit.current_test);
+        var fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
+
+        setTimeout(function() {
+          const canvas = document.querySelector('#'+scoreId).shadowRoot.querySelector('canvas');
 
           var imageData = canvas.toDataURL().split(';base64,').pop();
           var image = Buffer.from(imageData, 'base64');
 
+          console.log('Writing file with filename = ' + fileName);
           fs.writeFileSync(fileName, image, { encoding: 'base64' });
-        }
+        }, 2000);
+        
       });
     },
 

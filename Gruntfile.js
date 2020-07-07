@@ -12,7 +12,8 @@ module.exports = (grunt) => {
   const BASE_DIR = __dirname;
   const BUILD_DIR = path.join(BASE_DIR, 'build');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
-  const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  const VEXFLOW_MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  const WEB_COMPONENTS_MODULE_ENTRY = path.join(BASE_DIR, 'src/web-components/index.js');
   const TARGET_RAW = 'vexflow-debug.js';
   const TARGET_MIN = 'vexflow-min.js';
 
@@ -31,11 +32,14 @@ module.exports = (grunt) => {
   function webpackConfig(target, preset, mode) {
     return {
       mode,
-      entry: MODULE_ENTRY,
+      entry: {
+        vexflow: VEXFLOW_MODULE_ENTRY,
+        webComponents: WEB_COMPONENTS_MODULE_ENTRY,
+      },
       output: {
         path: BUILD_DIR,
-        filename: target,
-        library: 'Vex',
+        filename: (mode === 'production') ? '[name]-min.js' : '[name]-debug.js',
+        library: '[name]',
         libraryTarget: 'umd',
         libraryExport: 'default',
       },
@@ -49,7 +53,7 @@ module.exports = (grunt) => {
               loader: 'babel-loader',
               options: {
                 presets: [preset],
-                plugins: ['@babel/plugin-transform-object-assign'],
+                plugins: ['@babel/plugin-transform-object-assign', '@babel/plugin-proposal-class-properties'],
               },
             }],
           },

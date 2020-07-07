@@ -6,28 +6,38 @@
   `tools/visual_regression.sh`.
 */
 const { JSDOM } = require('jsdom');
-const dom = new JSDOM(`<!DOCTYPE html></html>`);
-window = dom.window;
-document = dom.window.document;
-
 const fs = require('fs');
-const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
-const Vex = require(`${ scriptDir }/vexflow-debug.js`);
-Vex.Flow.Test = require(`${ scriptDir }/vexflow-tests.js`);
+fs.readFile('build/webComponents-debug.js', 'utf8', function(err, data) { 
+  if (err) {
+    console.log(err)
+  }  
 
-const VF = Vex.Flow;
+  dom = new JSDOM(`<!DOCTYPE html></html>`, { runScripts: "outside-only" });
+  window = dom.window;
+  document = dom.window.document;
 
-// Tell VexFlow that we're outside the browser -- just run
-// the Node tests.
-VF.Test.RUN_CANVAS_TESTS = false;
-VF.Test.RUN_SVG_TESTS = false;
-VF.Test.RUN_RAPHAEL_TESTS = false;
-VF.Test.RUN_NODE_TESTS = true;
-VF.Test.NODE_IMAGEDIR = imageDir;
+  window.eval(data);
 
-// Create the image directory if it doesn't exist.
-fs.mkdirSync(VF.Test.NODE_IMAGEDIR, { recursive: true });
+  const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
-// Run all tests.
-VF.Test.run();
+  const Vex = require(`${ scriptDir }/vexflow-debug.js`);
+  Vex.Flow.Test = require(`${ scriptDir }/vexflow-tests.js`);
+
+  const VF = Vex.Flow;
+
+  // Tell VexFlow that we're outside the browser -- just run
+  // the Node tests.
+  VF.Test.RUN_CANVAS_TESTS = false;
+  VF.Test.RUN_SVG_TESTS = false;
+  VF.Test.RUN_RAPHAEL_TESTS = false;
+  VF.Test.RUN_NODE_TESTS = true;
+  VF.Test.NODE_IMAGEDIR = imageDir;
+
+  // Create the image directory if it doesn't exist.
+  fs.mkdirSync(VF.Test.NODE_IMAGEDIR, { recursive: true });
+
+  // Run all tests.
+  VF.Test.run();
+}); 
+
