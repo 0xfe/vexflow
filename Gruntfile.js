@@ -53,7 +53,8 @@ module.exports = (grunt) => {
               loader: 'babel-loader',
               options: {
                 presets: [preset],
-                plugins: ['@babel/plugin-transform-object-assign', '@babel/plugin-proposal-class-properties'],
+                plugins: ['@babel/plugin-transform-object-assign', 
+                          '@babel/plugin-proposal-class-properties'],
               },
             }],
           },

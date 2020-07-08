@@ -24,6 +24,7 @@
     "browserify": "^16.5.0",
     "canvas": "^2.6.1",
     "docco": "^0.8.0",
+    "es-dev-server": "^1.54.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1",
@@ -52,6 +53,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "scripts": {
+    "web-component": "es-dev-server --node-resolve --watch",
     "start": "grunt stage",
     "lint": "grunt eslint",
     "qunit": "grunt test",
@@ -67,8 +69,5 @@
     "notation",
     "guitar",
     "tablature"
-  ],
-  "dependencies": {
-    "es-dev-server": "^1.54.1"
-  }
+  ]
 }

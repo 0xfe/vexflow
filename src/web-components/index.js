@@ -1,4 +1,4 @@
-import { VFScore } from './vf-score';
-import { VFSystem } from './vf-system';
-import { VFStave } from './vf-stave';
-import { VFVoice } from './vf-voice';
+export { VFScore } from './vf-score';
+export { VFSystem } from './vf-system';
+export { VFStave } from './vf-stave';
+export { VFVoice } from './vf-voice';

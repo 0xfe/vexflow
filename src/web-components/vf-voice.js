@@ -12,26 +12,50 @@
 import Vex from '../index';
 import './vf-stave';
 
-const template = document.createElement('template');
-template.innerHTML = `
-`;
-
 export class VFVoice extends HTMLElement {
+
+  /**
+   * The Vex.Flow.Factory instance to use.
+   * @type {Vex.Flow.Factory}
+   * @private
+   */
+  _vf;
+
+  /**
+   * The Vex.Flow.EasyScore instance to use.
+   * @type {Vex.Flow.Registry}
+   * @private
+   */
+  _score;
+
+  /**
+   * The stem direction for this voice. Can be 'up' or 'down'. 
+   * @type {string}
+   */
+  stem = 'up';
+
+  /**
+   * Boolean indicating whether to autogenerate beams for this voice.
+   * @type {boolean}
+   */
+  autoBeam = false;
+
+  /**
+   * The notes that make up this voice.
+   * @type {[Vex.Flow.StaveNote]}
+   */
+  notes = [];
+
+  /**
+   * The beams that make up this voice.
+   * @type {[Vex.Flow.Beam]}
+   */
+  beams = [];
+
   constructor() {
     super();
 
     this.attachShadow({ mode: 'open' });
-    this.shadowRoot.appendChild(document.importNode(template.content, true));
-
-    // Defaults
-    this.stem = 'up';
-    this.autoBeam = false;
-
-    this.notes = [];
-    this.beams = [];
-
-    this._vf = undefined;
-    this._score = undefined;
   }
 
   connectedCallback() {
@@ -42,12 +66,19 @@ export class VFVoice extends HTMLElement {
     this.dispatchEvent(vfVoiceReadyEvent);
   }
 
+  static get observedAttributes() { return ['stem', 'autoBeam'] }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    // TODO (ywsang): Implement code to update based on changes to attributes
+  }
+
    /**
    * Setter to detect when the Factory instance is set. Once the Factory and
    * EasyScore instances are set, vf-voice can start creating components. 
    * 
    * @param {Vex.Flow.Factory} value - The Factory instance that the overall 
-   *                                   component is using, set by the parent vf-score.
+   *                                   component is using, set by the parent 
+   *                                   vf-score.
    */
   set vf(value) {
     this._vf = value;
@@ -58,8 +89,9 @@ export class VFVoice extends HTMLElement {
    * Setter to detect when the EasyScore instance is set. Once the Factory and
    * EasyScore instances are set, vf-voice can start creating components. 
    * 
-   * @param {Vex.Flow.EasyScore} value - The EasyScore instance that the parent stave and 
-   *                                   its children are using, set by the parent vf-stave.
+   * @param {Vex.Flow.EasyScore} value - The EasyScore instance that the parent 
+   *                                     stave and its children are using, set 
+   *                                     by the parent vf-stave.
    */
   set score(value) {
     this._score = value;
@@ -67,20 +99,25 @@ export class VFVoice extends HTMLElement {
   }
 
   /**
-   * Creates notes (and optionally, beams) from the text content of this vf-voice element.
+   * Creates notes (and optionally, beams) from the text content of this 
+   * vf-voice element.
    */
   createNotes = () => {
     if (this._vf && this._score) {
-      const notes = this.createNotesFromText(this.textContent.trim());
-      // Maintaining notes in an array to set-up for future child components that will provide their own notes
+      const notes = this._createNotesFromText(this.textContent.trim());
+      // Maintaining notes in an array to set-up for future child components 
+      // that will provide their own notes
       this.notes.push(...notes);
       if (this.autoBeam) {
-        this.beams.push(...this.autoGenerateBeams(notes));
+        this.beams.push(...this._autoGenerateBeams(notes));
       }
 
-      // Tells the parent vf-stave that this vf-voice has finished creating its notes & beams 
-      // and is ready to be added to the stave.  
-      const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', { bubbles: true, detail: { notes: this.notes, beams: this.beams } });
+      // Tells the parent vf-stave that this vf-voice has finished creating its 
+      // notes & beams and is ready to be added to the stave.  
+      const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', 
+        { bubbles: true, 
+          detail: { notes: this.notes, beams: this.beams } 
+        });
       this.dispatchEvent(notesAndBeamsCreatedEvent);
     }
   }
@@ -91,8 +128,9 @@ export class VFVoice extends HTMLElement {
    * 
    * @param {String} text - The string to parse and create notes from. 
    * @return {[Vex.Flow.StaveNote]} - The notes that were generated from the text. 
+   * @private
    */
-  createNotesFromText(text) {
+  _createNotesFromText(text) {
     this._score.set({ stem: this.stem });
     const staveNotes = this._score.notes(text);
     return staveNotes;
@@ -102,10 +140,11 @@ export class VFVoice extends HTMLElement {
    * Automatically generates beams for the provided notes. 
    * 
    * @param {[Vex.Flow.StaveNote]} notes - The notes to autogenerate beams for.
-   * @return {[Vex.Flow.Beam]} - The autogenreated beams. 
+   * @return {[Vex.Flow.Beam]} - The autogenerated beams. 
+   * @private
    */
-  autoGenerateBeams(notes) {
-    // TODO: use default groups? 
+  _autoGenerateBeams(notes) {
+    // TODO (ywsang): Use default beam groups?
     // const groups = Vex.Flow.Beam.getDefaultBeamGroups(this._score.defaults.time);
     // const beams = Vex.Flow.Beam.generateBeams(notes, {
     //   groups: groups

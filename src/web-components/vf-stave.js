@@ -9,32 +9,49 @@
 
 import './vf-score';
 
-const template = document.createElement('template');
-template.innerHTML = `
-  <slot></slot>
-`;
-
 export class VFStave extends HTMLElement {
+
+  /**
+   * The Vex.Flow.Factory instance to use.
+   * @type {Vex.Flow.Factory}
+   * @private
+   */
+  _vf;
+
+  /**
+   * The Vex.Flow.Registry instance to use when registering elements.
+   * @type {Vex.Flow.Registry}
+   * @private
+   */
+  _registry;
+
+  /**
+   * The voices that this vf-stave has. 
+   * @type {[Vex.Flow.Voice]}
+   */
+  voices = [];
+
+  /**
+   * The beams for the voices that this vf-stave has. 
+   * @type {[Vex.Flow.Beam]}
+   */
+  beams = [];
+
   constructor() {
     super();
-    
-    // Defaults
-    this.voices = [];
-    this.beams = [];
-    this._vf = undefined;
-    this._registry = undefined;
 
     this.attachShadow({ mode:'open' });
-    this.shadowRoot.appendChild(document.importNode(template.content, true));
+    this.shadowRoot.innerHTML = `<slot></slot>`;
 
-    // The 'notesCreated' event is dispatched by a vf-voice when it has finished generating 
-    // its notes. vf-stave listens to this event so that it can get that vf-voice's notes 
-    // and generate a Voice from it. 
+    // The 'notesCreated' event is dispatched by a vf-voice when it has 
+    // finished generating its notes. vf-stave listens to this event so that it 
+    // can get that vf-voice's notes and generate a Voice from it. 
     this.addEventListener('notesCreated', this.addVoice);
 
-    // The 'vfVoiceReady' event is dispatched by a vf-voice when it's added to the DOM. 
-    // vf-stave listens to this event so that it can set the vf-voice's EasyScore instance,
-    // since a single EasyScore instance is shared by a vf-stave and all its children. 
+    // The 'vfVoiceReady' event is dispatched by a vf-voice when it's added to 
+    // the DOM. vf-stave listens to this event so that it can set the vf-voice's
+    // EasyScore instance, since a single EasyScore instance is shared by a 
+    // vf-stave and all its children. 
     this.addEventListener('vfVoiceReady', this.setScore);
   }
 
@@ -46,8 +63,8 @@ export class VFStave extends HTMLElement {
     const vfStaveReadyEvent = new CustomEvent('vfStaveReady', { bubbles: true });
     this.dispatchEvent(vfStaveReadyEvent);
 
-    // vf-stave listens to the slotchange event so that it can detect its voices and establish
-    // how many voices it expects to receive events from. 
+    // vf-stave listens to the slotchange event so that it can detect its voices 
+    // and establish how many voices it expects to receive events from. 
     this.shadowRoot.querySelector('slot').addEventListener('slotchange', this.registerVoices);
   }
 
@@ -55,34 +72,44 @@ export class VFStave extends HTMLElement {
     this.shadowRoot.querySelector('slot').removeEventListener('slotchange', this.registerVoices);
   }
 
+  static get observedAttributes() { return ['clef', 'timeSig', 'keySig'] }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    // TODO (ywsang): Implement code to update based on changes to attributes
+  }
+
   /**
    * Setter to detect when the Factory instance is set. Once the Factory is set,
    * vf-stave can start creating components. 
    * 
    * @param {Vex.Flow.Factory} value - The Factory instance that the overall 
-   *                                   component is using, set by the parent vf-score.
+   *                                   component is using, set by the parent 
+   *                                   vf-score.
    */
   set vf(value) {
     this._vf = value;
-    this.setupScore();
+    this._setupScore();
   }
 
   /**
    * Setter to detect when the Registry instance is set.
    * 
    * @param {Vex.Flow.Factory} value - The Registry instance that the overall 
-   *                                   component is using, set by the parent vf-score.
+   *                                   component is using, set by the parent 
+   *                                   vf-score.
    */
   set registry(value) {
     this._registry = value;
   }
 
   /** 
-   * Sets up the EasyScore instance to be used by the overall component. One EasyScore instance
-   * is used for vf-stave and its children so that the clef and time can be set by the stave and 
-   * don't have to be provided as attributes on the children or set on the childrne. 
+   * Sets up the EasyScore instance to be used by the overall component. One 
+   * EasyScore instance is used for vf-stave and its children so that the clef 
+   * and time can be set by the stave and don't have to be provided as 
+   * attributes on the children or set on the children.
+   * @private 
    */
-  setupScore() {
+  _setupScore() {
     this.score = this._vf.EasyScore();
     // Defaults to treble clef, 4/4 time if not specified
     this.score.set({
@@ -92,24 +119,26 @@ export class VFStave extends HTMLElement {
   }
   
   /** 
-   * The slotchange event listener. This event listener sets the number of vf-voices that this 
-   * vf-stave expects to receive dispatched event from.
+   * The slotchange event listener. This event listener sets the number of 
+   * vf-voices that this vf-stave expects to receive dispatched event from.
    */
   registerVoices = () => {
     const voiceSlots = this.shadowRoot.querySelector('slot').assignedElements().filter(e => e.nodeName === 'VF-VOICE');
     this.numVoices = voiceSlots.length;
 
-    // Perform this check at the end of slotchange listener to catch the case in which all of 
-    // the vf-voice children dispatch events before the slot change completes. 
+    // Perform this check at the end of slotchange listener to catch the case in 
+    // which all of the vf-voice children dispatch events before the slot change 
+    // completes. 
     if (this.voices.length === this.numVoices) {
       this.staveCreated();
     }
   }
 
   /** 
-   * This is the event listener for when a vf-voice has finished creating its notes.
-   * Creates a Vex.Flow.Voice from the vf-voice's notes and adds the resulting voice
-   * and the vf-voice's beams to the corresponding arrays maintained by the vf-stave.
+   * This is the event listener for when a vf-voice has finished creating its 
+   * notes. Creates a Vex.Flow.Voice from the vf-voice's notes and adds the 
+   * resulting voice and the vf-voice's beams to the corresponding arrays 
+   * maintained by the vf-stave.
    * 
    * @param {Event} e - The event, where e.target is a vf-voice.
    * @param {[Vex.Flow.StaveNote]} e.detail.notes - The notes that belong to e.target.
@@ -124,8 +153,8 @@ export class VFStave extends HTMLElement {
     this.voices.push(voice);
     this.beams = this.beams.concat(beams);
 
-    // Check to ensure that all voices have been created before telling the parent vf-system
-    // that it's ready to be created and added to the system. 
+    // Check to ensure that all voices have been created before telling the 
+    // parent vf-system that it's ready to be created and added to the system. 
     if (this.voices.length === this.numVoices) {
       this.staveCreated();
     }
@@ -157,8 +186,8 @@ export class VFStave extends HTMLElement {
   }
 
   /** 
-   * Tells the parent vf-system that this vf-stave has finished creating its voices 
-   * and is ready to be added to the system.  
+   * Tells the parent vf-system that this vf-stave has finished creating its 
+   * voices and is ready to be added to the system.  
    */
   staveCreated() {
     const staveCreatedEvent = new CustomEvent('staveCreated', { bubbles: true });
