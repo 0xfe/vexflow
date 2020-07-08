@@ -53,7 +53,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "scripts": {
-    "web-component": "es-dev-server --node-resolve --watch",
+    "web-component": "es-dev-server --node-resolve --watch --open /src/web-components/demo/index.html",
     "start": "grunt stage",
     "lint": "grunt eslint",
     "qunit": "grunt test",
