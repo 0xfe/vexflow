@@ -94,7 +94,8 @@ export class VFScore extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     switch(name) {
-      case 'x', 'y':
+      case 'x':
+      case 'y':
         // TODO (ywsang): Implement code to update the position of the vf-system
         // children. 
         break;
