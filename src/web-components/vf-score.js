@@ -12,6 +12,30 @@ import StaveAddedEvent from './events/staveAddedEvent';
 import SystemReadyEvent from './events/systemReadyEvent';
 
 export class VFScore extends HTMLElement {
+  /**
+   * The Factory instance to be used by the overall component that this vf-score
+   * wraps.
+   */
+  vf;
+
+  /**
+   * The Registry instance to be used by the overall component that this 
+   * vf-score wraps.
+   */
+  registry;
+
+  /**
+   * The Renderer instance, attached to the div or canvas element that this
+   * vf-score component renders into.
+   * @private
+   */
+  _renderer;
+
+  /**
+   * The renderer context. 
+   * @private
+   */
+  _context;
 
   /**
    * The starting x position of a system within the score.
@@ -91,6 +115,9 @@ export class VFScore extends HTMLElement {
     this._y = parseInt(this.getAttribute('y')) || this._y;
     this._rendererType = this.getAttribute('renderer') || this._rendererType;
 
+
+    // Because connectedCallback could be called multiple times, safeguard 
+    // against setting up the renderer, factory, etc. more than once. 
     if (!this._isSetup) {
       this._setupVexflow();
       this._setupFactory();
@@ -143,13 +170,13 @@ export class VFScore extends HTMLElement {
     const element = this.shadowRoot.querySelector('#vf-score')
 
     if (this._rendererType === 'canvas') {
-      this.renderer = new Vex.Flow.Renderer(element, Vex.Flow.Renderer.Backends.CANVAS);
+      this._renderer = new Vex.Flow.Renderer(element, Vex.Flow.Renderer.Backends.CANVAS);
     } else { 
-      this.renderer = new Vex.Flow.Renderer(element, Vex.Flow.Renderer.Backends.SVG);
+      this._renderer = new Vex.Flow.Renderer(element, Vex.Flow.Renderer.Backends.SVG);
     }
 
-    this.renderer.resize(this._width, this._height);
-    this.context = this.renderer.getContext();
+    this._renderer.resize(this._width, this._height);
+    this._context = this._renderer.getContext();
     this.registry = new Vex.Flow.Registry();
   }
 
@@ -164,7 +191,7 @@ export class VFScore extends HTMLElement {
     // in order to use the simplified EasyScore API constructors, a Factory 
     // instance is still needed. 
     this.vf = new Vex.Flow.Factory({ renderer: { elementId: null } });
-    this.vf.setContext(this.context);
+    this.vf.setContext(this._context);
 
     this._isSetup = true;
   }

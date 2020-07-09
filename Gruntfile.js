@@ -39,8 +39,6 @@ module.exports = (grunt) => {
       output: {
         path: BUILD_DIR,
         filename: (mode === 'production') ? '[name]-min.js' : '[name]-debug.js',
-        // TODO (ywsang): Figure out how to name library according to entry, 
-        // not just using [name] template string
         library: 'Vex',
         libraryTarget: 'umd',
         libraryExport: 'default',

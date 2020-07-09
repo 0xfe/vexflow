@@ -145,13 +145,12 @@ export class VFStave extends HTMLElement {
    * maintained by the vf-stave.
    * 
    * @param {VoiceReadyEvent} event - The event, where event.target is a vf-voice.
-   * @param {[Vex.Flow.StaveNote]} event.detail.notes - The notes that belong to event.target.
-   * @param {[Vex.Flow.Beam]} event.detail.beams - The beams that belong to event.target.
    */
   addVoice = (event) => {
-    const notes = event.detail.notes;
+    const notes = event.target.notes;
+    const beams = event.target.beams; 
+
     this.registerNotes(notes);
-    const beams = event.detail.beams; 
     const voice = this.createVoiceFromNotes(notes);
 
     this.voices.push(voice);
