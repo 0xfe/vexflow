@@ -10,6 +10,7 @@
 import './vf-score';
 import ElementAddedEvent from './events/elementAddedEvent';
 import StaveReadyEvent from './events/staveReadyEvent';
+import SystemReadyEvent from './events/systemReadyEvent';
 
 export class VFSystem extends HTMLElement {
 
@@ -43,9 +44,6 @@ export class VFSystem extends HTMLElement {
   }
 
   connectedCallback() {
-    // const vfSystemReadyEvent = new CustomEvent('vfSystemReady', { bubbles: true });
-    // this.dispatchEvent(vfSystemReadyEvent);
-
     this.dispatchEvent(new ElementAddedEvent());
   }
 
@@ -165,8 +163,10 @@ export class VFSystem extends HTMLElement {
       }
 
       // Tells parent (vf-score) that this system has finished adding its staves
-      const systemCreatedEvent = new CustomEvent('systemCreated', { bubbles: true });
-      this.dispatchEvent(systemCreatedEvent);
+      // const systemCreatedEvent = new CustomEvent('systemCreated', { bubbles: true });
+      // this.dispatchEvent(systemCreatedEvent);
+
+      this.dispatchEvent(new SystemReadyEvent());
     }
   }
 }

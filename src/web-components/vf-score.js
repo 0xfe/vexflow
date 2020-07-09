@@ -9,6 +9,7 @@
 import Vex from '../index';
 import ElementAddedEvent from './events/elementAddedEvent';
 import StaveAddedEvent from './events/staveAddedEvent';
+import SystemReadyEvent from './events/systemReadyEvent';
 
 export class VFScore extends HTMLElement {
 
@@ -69,11 +70,11 @@ export class VFScore extends HTMLElement {
 
     this.attachShadow({ mode:'open' });
 
-    // The 'systemCreated' event is dispatched by a vf-systen when it has 
+    // The 'vf-system-ready' event is dispatched by a vf-systen when it has 
     // finished creating and adding its staves. vf-score listens to this event 
     // so that it can add that it can detect when the vf-system is ready to 
     // be drawn.
-    this.addEventListener('systemCreated', this.systemCreated);
+    this.addEventListener(SystemReadyEvent.eventName, this.systemCreated);
 
     // The 'vf-element-added' event is dispatched by all the child elements 
     // when they are added to the DOM. vf-score listens to these events so that 

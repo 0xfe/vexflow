@@ -113,14 +113,7 @@ export class VFVoice extends HTMLElement {
         this.beams.push(...this._autoGenerateBeams(notes));
       }
 
-      // Tells the parent vf-stave that this vf-voice has finished creating its 
-      // notes & beams and is ready to be added to the stave.  
-      // const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', 
-      //   { bubbles: true, 
-      //     detail: { notes: this.notes, beams: this.beams } 
-      //   });
       this.dispatchEvent(new VoiceReadyEvent(this.notes, this.beams));
-      // this.dispatchEvent(notesAndBeamsCreatedEvent);
     }
   }
 
