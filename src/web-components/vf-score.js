@@ -57,6 +57,13 @@ export class VFScore extends HTMLElement {
    */
   _rendererType = 'svg';
 
+  /**
+   * Boolean describing whether the VexFlow renderer, context, registry, and 
+   * factory instances have been created already. 
+   * @private
+   */
+  _isSetup = false;
+
   constructor() {
     super();
 
@@ -76,18 +83,25 @@ export class VFScore extends HTMLElement {
 
     // The 'vf-stave-added' event is dispatched only by the vf-stave child. 
     this.addEventListener(StaveAddedEvent.eventName, this.setRegistry);
-
-    this._setupVexflow();
-    this._setupFactory();
   }
 
   connectedCallback() {
+    this._x = parseInt(this.getAttribute('x')) || this._x;
+    this._y = parseInt(this.getAttribute('y')) || this._y;
+    this._rendererType = this.getAttribute('renderer') || this._rendererType;
+
+    if (!this._isSetup) {
+      this._setupVexflow();
+      this._setupFactory();
+    }
+
     // vf-score listens to the slotchange event so that it can detect its system 
     // and set it up accordingly
     this.shadowRoot.querySelector('slot').addEventListener('slotchange', this.registerSystem);
   }
 
   disconnectedCallback() {
+    // TODO (ywsang): Clean up any resources that may need to be cleaned up. 
     this.shadowRoot.querySelector('slot').removeEventListener('slotchange', this.registerSystem);
   }
 
@@ -101,21 +115,19 @@ export class VFScore extends HTMLElement {
         // children. 
         break;
       case 'width':
-        this._width = parseInt(newValue);
-        this.resizeRenderer();
+        this._width = newValue;
+        // TODO (ywsang): Implement code to resize the renderer. Need to make 
+        // sure the renderer is already created!
         break;
       case 'height':
-        this._height = parseInt(newValue);
-        this.resizeRenderer();
+        this._height = newValue;
+        // TODO (ywsang): Implement code to resize the renderer. Need to make 
+        // sure the renderer is already created!
         break;
       case 'renderer':
         this._rendererType = newValue;
         break;
     }
-  }
-
-  resizeRenderer() {
-    this.renderer.resize(this._width, this._height);
   }
 
   /**
@@ -124,7 +136,7 @@ export class VFScore extends HTMLElement {
    */
   _setupVexflow() {
     // Default to the SVG renderer if not specified.
-    this.shadowRoot.innerHTML = this.rendererType === 'canvas'
+    this.shadowRoot.innerHTML = this._rendererType === 'canvas'
       ? `<canvas id='vf-score'><slot></slot></canvas>`
       : `<div id='vf-score'><slot></slot></div>`
     const element = this.shadowRoot.querySelector('#vf-score')
@@ -152,6 +164,8 @@ export class VFScore extends HTMLElement {
     // instance is still needed. 
     this.vf = new Vex.Flow.Factory({ renderer: { elementId: null } });
     this.vf.setContext(this.context);
+
+    this._isSetup = true;
   }
 
   getNoteFromId(id) {
