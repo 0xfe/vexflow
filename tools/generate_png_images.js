@@ -8,7 +8,7 @@
 const { JSDOM } = require('jsdom');
 const fs = require('fs');
 
-fs.readFile('build/webComponents-debug.js', 'utf8', function(err, data) { 
+fs.readFile('build/webComponents-debug.js', 'utf8', function(err, webComponentsSource) { 
   if (err) {
     console.log(err)
   }  
@@ -17,7 +17,11 @@ fs.readFile('build/webComponents-debug.js', 'utf8', function(err, data) {
   window = dom.window;
   document = dom.window.document;
 
-  window.eval(data);
+  // Evaluate the web components source on the window instead of requiring it 
+  // in Node because it contains browser API usage that is not supported in a 
+  // Node.js environment. It must be run in an environment that more fully 
+  // implements the DOM. 
+  window.eval(webComponentsSource);
 
   const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
