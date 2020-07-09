@@ -8,7 +8,8 @@
 // parent `vf-score` to signal that it's ready to be drawn. 
 
 import './vf-score';
-import ElementReadyEvent from './events/elementReadyEvent';
+import ElementAddedEvent from './events/elementAddedEvent';
+import StaveReadyEvent from './events/staveReadyEvent';
 
 export class VFSystem extends HTMLElement {
 
@@ -38,14 +39,14 @@ export class VFSystem extends HTMLElement {
     // generating its voices. vf-system listens to this event so that it can add 
     // that vf-staves information to the staveToVoiceMap and update the 
     // numStaves counter. 
-    this.addEventListener('staveCreated', this._staveCreated);
+    this.addEventListener(StaveReadyEvent.eventName, this._staveCreated);
   }
 
   connectedCallback() {
     // const vfSystemReadyEvent = new CustomEvent('vfSystemReady', { bubbles: true });
     // this.dispatchEvent(vfSystemReadyEvent);
 
-    this.dispatchEvent(new ElementReadyEvent());
+    this.dispatchEvent(new ElementAddedEvent());
   }
 
   /**

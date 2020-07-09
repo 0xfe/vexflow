@@ -39,7 +39,7 @@ module.exports = (grunt) => {
       output: {
         path: BUILD_DIR,
         filename: (mode === 'production') ? '[name]-min.js' : '[name]-debug.js',
-        library: '[name]',
+        library: 'Vex',
         libraryTarget: 'umd',
         libraryExport: 'default',
       },

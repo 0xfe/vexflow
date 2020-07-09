@@ -8,7 +8,10 @@
 // `vf-system` to signal that it's ready to be created and added to the system. 
 
 import './vf-score';
-import ElementReadyEvent from './events/elementReadyEvent';
+import ElementAddedEvent from './events/elementAddedEvent';
+import StaveAddedEvent from './events/staveAddedEvent';
+import VoiceReadyEvent from './events/voiceReadyEvent';
+import StaveReadyEvent from './events/staveReadyEvent';
 
 export class VFStave extends HTMLElement {
 
@@ -44,16 +47,16 @@ export class VFStave extends HTMLElement {
     this.attachShadow({ mode:'open' });
     this.shadowRoot.innerHTML = `<slot></slot>`;
 
-    // The 'notesCreated' event is dispatched by a vf-voice when it has 
+    // The 'vf-voice-ready' event is dispatched by a vf-voice when it has 
     // finished generating its notes. vf-stave listens to this event so that it 
     // can get that vf-voice's notes and generate a Voice from it. 
-    this.addEventListener('notesCreated', this.addVoice);
+    this.addEventListener(VoiceReadyEvent.eventName, this.addVoice);
 
     // The 'vf-element-ready' event is dispatched by a vf-voice when it's added 
     // to the DOM. vf-stave listens to this event so that it can set the vf-voice's
     // EasyScore instance, since a single EasyScore instance is shared by a 
     // vf-stave and all its children. 
-    this.addEventListener(ElementReadyEvent.eventName, this.setScore);
+    this.addEventListener(ElementAddedEvent.eventName, this.setScore);
   }
 
   connectedCallback() {
@@ -61,10 +64,8 @@ export class VFStave extends HTMLElement {
     this.timeSig = this.getAttribute('timeSig');
     this.keySig = this.getAttribute('keySig');
 
-    const vfStaveReadyEvent = new CustomEvent('vfStaveReady', { bubbles: true });
-    this.dispatchEvent(vfStaveReadyEvent);
-
-    this.dispatchEvent(new ElementReadyEvent());
+    this.dispatchEvent(new StaveAddedEvent());
+    this.dispatchEvent(new ElementAddedEvent());
 
     // vf-stave listens to the slotchange event so that it can detect its voices 
     // and establish how many voices it expects to receive events from. 
@@ -143,14 +144,14 @@ export class VFStave extends HTMLElement {
    * resulting voice and the vf-voice's beams to the corresponding arrays 
    * maintained by the vf-stave.
    * 
-   * @param {Event} e - The event, where e.target is a vf-voice.
-   * @param {[Vex.Flow.StaveNote]} e.detail.notes - The notes that belong to e.target.
-   * @param {[Vex.Flow.Beam]} e.detail.beams - The beams that belong to e.target.
+   * @param {VoiceReadyEvent} event - The event, where event.target is a vf-voice.
+   * @param {[Vex.Flow.StaveNote]} event.detail.notes - The notes that belong to event.target.
+   * @param {[Vex.Flow.Beam]} event.detail.beams - The beams that belong to event.target.
    */
-  addVoice = (e) => {
-    const notes = e.detail.notes;
+  addVoice = (event) => {
+    const notes = event.detail.notes;
     this.registerNotes(notes);
-    const beams = e.detail.beams; 
+    const beams = event.detail.beams; 
     const voice = this.createVoiceFromNotes(notes);
 
     this.voices.push(voice);
@@ -193,8 +194,7 @@ export class VFStave extends HTMLElement {
    * voices and is ready to be added to the system.  
    */
   staveCreated() {
-    const staveCreatedEvent = new CustomEvent('staveCreated', { bubbles: true });
-    this.dispatchEvent(staveCreatedEvent);
+    this.dispatchEvent(new StaveReadyEvent());
   }
 
   /** 

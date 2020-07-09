@@ -11,7 +11,8 @@
 
 import Vex from '../index';
 import './vf-stave';
-import ElementReadyEvent from './events/elementReadyEvent';
+import ElementAddedEvent from './events/elementAddedEvent';
+import VoiceReadyEvent from './events/voiceReadyEvent';
 
 export class VFVoice extends HTMLElement {
 
@@ -63,7 +64,7 @@ export class VFVoice extends HTMLElement {
     this.stem = this.getAttribute('stem') || this.stem;
     this.autoBeam = this.hasAttribute('autoBeam');
 
-    this.dispatchEvent(new ElementReadyEvent());
+    this.dispatchEvent(new ElementAddedEvent());
   }
 
   static get observedAttributes() { return ['stem', 'autoBeam'] }
@@ -114,12 +115,12 @@ export class VFVoice extends HTMLElement {
 
       // Tells the parent vf-stave that this vf-voice has finished creating its 
       // notes & beams and is ready to be added to the stave.  
-      const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', 
-        { bubbles: true, 
-          detail: { notes: this.notes, beams: this.beams } 
-        });
-
-      this.dispatchEvent(notesAndBeamsCreatedEvent);
+      // const notesAndBeamsCreatedEvent = new CustomEvent('notesCreated', 
+      //   { bubbles: true, 
+      //     detail: { notes: this.notes, beams: this.beams } 
+      //   });
+      this.dispatchEvent(new VoiceReadyEvent(this.notes, this.beams));
+      // this.dispatchEvent(notesAndBeamsCreatedEvent);
     }
   }
 
