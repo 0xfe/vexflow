@@ -190,6 +190,7 @@ export class VFScore extends HTMLElement {
     // such, the element would not be found due to DOM encapsulation. However, 
     // in order to use the simplified EasyScore API constructors, a Factory 
     // instance is still needed. 
+    // TODO (ywsang): Allow Factory to take in an element reference? 
     this.vf = new Vex.Flow.Factory({ renderer: { elementId: null } });
     this.vf.setContext(this._context);
 
