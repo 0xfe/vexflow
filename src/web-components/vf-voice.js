@@ -11,6 +11,7 @@
 
 import Vex from '../index';
 import './vf-stave';
+import ElementReadyEvent from './events/elementReadyEvent';
 
 export class VFVoice extends HTMLElement {
 
@@ -62,8 +63,7 @@ export class VFVoice extends HTMLElement {
     this.stem = this.getAttribute('stem') || this.stem;
     this.autoBeam = this.hasAttribute('autoBeam');
 
-    const vfVoiceReadyEvent = new CustomEvent('vfVoiceReady', { bubbles: true });
-    this.dispatchEvent(vfVoiceReadyEvent);
+    this.dispatchEvent(new ElementReadyEvent());
   }
 
   static get observedAttributes() { return ['stem', 'autoBeam'] }
@@ -118,6 +118,7 @@ export class VFVoice extends HTMLElement {
         { bubbles: true, 
           detail: { notes: this.notes, beams: this.beams } 
         });
+
       this.dispatchEvent(notesAndBeamsCreatedEvent);
     }
   }

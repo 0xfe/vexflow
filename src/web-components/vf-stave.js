@@ -8,6 +8,7 @@
 // `vf-system` to signal that it's ready to be created and added to the system. 
 
 import './vf-score';
+import ElementReadyEvent from './events/elementReadyEvent';
 
 export class VFStave extends HTMLElement {
 
@@ -48,11 +49,11 @@ export class VFStave extends HTMLElement {
     // can get that vf-voice's notes and generate a Voice from it. 
     this.addEventListener('notesCreated', this.addVoice);
 
-    // The 'vfVoiceReady' event is dispatched by a vf-voice when it's added to 
-    // the DOM. vf-stave listens to this event so that it can set the vf-voice's
+    // The 'vf-element-ready' event is dispatched by a vf-voice when it's added 
+    // to the DOM. vf-stave listens to this event so that it can set the vf-voice's
     // EasyScore instance, since a single EasyScore instance is shared by a 
     // vf-stave and all its children. 
-    this.addEventListener('vfVoiceReady', this.setScore);
+    this.addEventListener(ElementReadyEvent.eventName, this.setScore);
   }
 
   connectedCallback() {
@@ -62,6 +63,8 @@ export class VFStave extends HTMLElement {
 
     const vfStaveReadyEvent = new CustomEvent('vfStaveReady', { bubbles: true });
     this.dispatchEvent(vfStaveReadyEvent);
+
+    this.dispatchEvent(new ElementReadyEvent());
 
     // vf-stave listens to the slotchange event so that it can detect its voices 
     // and establish how many voices it expects to receive events from. 

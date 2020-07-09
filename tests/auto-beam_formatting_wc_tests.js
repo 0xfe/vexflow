@@ -5,7 +5,6 @@
 
 var VF = Vex.Flow;
 VF.Test.AutoBeamFormattingWebComponents = (function() {
-
   var AutoBeamFormattingWebComponents = {
     Start: function() {
       var runTests = VF.Test.runTests;
@@ -44,7 +43,7 @@ VF.Test.AutoBeamFormattingWebComponents = (function() {
       `;
       document.body.appendChild(document.importNode(template.content, true));
 
-      // TODO: figure out how to test this with web components? 
+      // TODO: figure out how to test this with web components?
       // var UP = VF.Stem.UP;
       // var DOWN = VF.Stem.DOWN;
       // equal(beams[0].stem_direction, UP);

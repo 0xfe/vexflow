@@ -8,6 +8,7 @@
 // parent `vf-score` to signal that it's ready to be drawn. 
 
 import './vf-score';
+import ElementReadyEvent from './events/elementReadyEvent';
 
 export class VFSystem extends HTMLElement {
 
@@ -41,8 +42,10 @@ export class VFSystem extends HTMLElement {
   }
 
   connectedCallback() {
-    const vfSystemReadyEvent = new CustomEvent('vfSystemReady', { bubbles: true });
-    this.dispatchEvent(vfSystemReadyEvent);
+    // const vfSystemReadyEvent = new CustomEvent('vfSystemReady', { bubbles: true });
+    // this.dispatchEvent(vfSystemReadyEvent);
+
+    this.dispatchEvent(new ElementReadyEvent());
   }
 
   /**

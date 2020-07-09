@@ -7,6 +7,7 @@
 // All actual drawing is called from `vf-score`. 
 
 import Vex from '../index';
+import ElementReadyEvent from './events/elementReadyEvent';
 
 export class VFScore extends HTMLElement {
 
@@ -66,18 +67,19 @@ export class VFScore extends HTMLElement {
     // be drawn.
     this.addEventListener('systemCreated', this.systemCreated);
 
-    // These events are dispatched by the corresponding elements 
-    // (ex: vfVoiceReady is dispatched by a vf-voice) when they are added to the 
-    // DOM. vf-score listens to these events so that it can set the elements' 
-    // Factory and/or Registry instances, since these are shared by a vf-score 
-    // and all its children to maintain the same render queue. 
-    this.addEventListener('vfVoiceReady', this.setFactory);
-    this.addEventListener('vfStaveReady', this.setFactory);
+    // The 'vf-element-ready' event is dispatched by all the child elements 
+    // when they are added to the DOM. vf-score listens to these events so that 
+    // it can set the child elements' Factory instances, since these are shared 
+    // by a vf-score and all its children to maintain the same render queue. 
+    this.addEventListener(ElementReadyEvent.eventName, this.setFactory);
+
+    // The 'vf-stave-ready' event is dispatched only by the vf-stave child. 
     this.addEventListener('vfStaveReady', this.setRegistry);
-    this.addEventListener('vfSystemReady', this.setFactory);
 
     this._setupVexflow();
     this._setupFactory();
+
+    
   }
 
   connectedCallback() {
