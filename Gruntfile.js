@@ -29,7 +29,7 @@ module.exports = (grunt) => {
     'tests/run.js',
   ];
 
-  function webpackConfig(target, preset, mode) {
+  function webpackConfig(preset, mode) {
     return {
       mode,
       entry: {
@@ -39,6 +39,8 @@ module.exports = (grunt) => {
       output: {
         path: BUILD_DIR,
         filename: (mode === 'production') ? '[name]-min.js' : '[name]-debug.js',
+        // TODO (ywsang): Figure out how to name library according to entry, 
+        // not just using [name] template string
         library: 'Vex',
         libraryTarget: 'umd',
         libraryExport: 'default',
@@ -63,8 +65,8 @@ module.exports = (grunt) => {
     };
   }
 
-  const webpackProd = webpackConfig(TARGET_MIN, ['@babel/preset-env'], 'production');
-  const webpackDev = webpackConfig(TARGET_RAW, ['@babel/preset-env'], 'development');
+  const webpackProd = webpackConfig(['@babel/preset-env'], 'production');
+  const webpackDev = webpackConfig(['@babel/preset-env'], 'development');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
