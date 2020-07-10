@@ -87,7 +87,6 @@ VF.Test.MultiMeasureRest = (function() {
       context.fillText(str, xs.left + ((xs.right - xs.left) * 0.5) - (metrics.width * 0.5), strY);
       context.restore();
 
-
       ok(true, 'Simple Test');
     },
     staveWithModifiers: function(options) {

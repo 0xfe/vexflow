@@ -80,7 +80,6 @@ VF.Test.Rhythm = (function() {
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
-
       // bar 3 - juxtaposing second bar next to first bar
       var staveBar3 = new VF.Stave(staveBar2.width + staveBar2.x,
         staveBar2.y, 170);
@@ -167,7 +166,6 @@ VF.Test.Rhythm = (function() {
       staveBar1.addTimeSignature('4/4');
       staveBar1.addKeySignature('C');
       staveBar1.setContext(ctx).draw();
-
 
       // bar 4
       var notesBar1_part1 = [
@@ -371,14 +369,12 @@ VF.Test.Rhythm = (function() {
       VF.Formatter.FormatAndDraw(ctx, staveBar1,
         notesBar1_part1.concat(notesBar1_part2));
 
-
       // Render beams
       beam1.setContext(ctx).draw();
       beam2.setContext(ctx).draw();
 
       expect(0);
     },
-
 
     drawThirtySecondWithScratches: function(options,
       contextBuilder) {

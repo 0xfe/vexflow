@@ -93,7 +93,6 @@ export class Tickable extends Element {
     return this.tickContext.getX() + this.x_shift;
   }
 
-
   getFormatterMetrics() { return this.formatterMetrics; }
 
   getCenterXShift() {

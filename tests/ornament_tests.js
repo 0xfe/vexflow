@@ -180,7 +180,6 @@ VF.Test.Ornament = (function() {
       notesBar1[2].addModifier(0, new VF.Ornament('upmordent'));
       notesBar1[3].addModifier(0, new VF.Ornament('lineprall'));
 
-
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     },
@@ -219,7 +218,6 @@ VF.Test.Ornament = (function() {
       notesBar1[8].addModifier(0, new VF.Ornament('upmordent').setUpperAccidental('bbs').setLowerAccidental('bbs'));
       notesBar1[9].addModifier(0, new VF.Ornament('prallprall').setUpperAccidental('bb').setLowerAccidental('bb'));
       notesBar1[10].addModifier(0, new VF.Ornament('turn_inverted').setUpperAccidental('+').setLowerAccidental('+'));
-
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);

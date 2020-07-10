@@ -31,7 +31,6 @@ const Flow = {
   IsKerned: true,
 };
 
-
 Flow.clefProperties = clef => {
   if (!clef) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
 
@@ -177,7 +176,6 @@ Flow.keyProperties.note_values = {
     shift_right: 5.5,
   },
 };
-
 
 Flow.integerToNote = integer => {
   if (typeof (integer) === 'undefined') {
@@ -426,7 +424,6 @@ Flow.keySignature.accidentalList = (acc) => {
 
   return patterns[acc];
 };
-
 
 // Used to convert duration aliases to the number based duration.
 // If the input isn't an alias, simply return the input.

@@ -774,7 +774,6 @@ VF.Test.StaveNote = (function() {
       ok(true, 'Full Dot');
     },
 
-
     dotsAndFlagsStemDown: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 800, 160);
       ctx.scale(1.0, 1.0);
