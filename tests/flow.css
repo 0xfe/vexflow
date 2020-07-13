@@ -1,20 +1,17 @@
 
+/* petaluma text font not available from webfont cdn that I know of, so get it
+  fron the project
+  */
 @font-face {
     font-family: 'petalumaScript';
-    src: url('https://aarondavidnewman.github.io/Smoosic/build/styles/fonts/petalumascript-webfont.woff2') format('woff2'),
-         url('https://aarondavidnewman.github.io/Smoosic/build/styles/fonts/petalumascript-webfont.woff') format('woff');
+    src: url('../releases/fonts/petalumascript-webfont.woff2') format('woff2'),
+         url('../releases/fonts/petalumascript-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
-
 @font-face {
-    font-family: 'robotoSlab';
-    src: url('https://aarondavidnewman.github.io/Smoosic/build/styles/fonts/robotoslab-webfont.woff2') format('woff2'),
-         url('https://aarondavidnewman.github.io/Smoosic/build/styles/fonts/robotoslab-webfont.woff') format('woff');
-    font-weight: 500;
-    font-style: normal;
+    font-family: 'Roboto Slab', serif;
 }
-
 body {
   padding: 20px;
   font-family: Arial, sans-serif;
