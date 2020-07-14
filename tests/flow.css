@@ -1,3 +1,17 @@
+
+/* petaluma text font not available from webfont cdn that I know of, so get it
+  fron the project
+  */
+@font-face {
+    font-family: 'petalumaScript';
+    src: url('../releases/fonts/petalumascript-webfont.woff2') format('woff2'),
+         url('../releases/fonts/petalumascript-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto Slab', serif;
+}
 body {
   padding: 20px;
   font-family: Arial, sans-serif;
