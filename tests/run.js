@@ -27,6 +27,7 @@ VF.Test.run = function() {
   VF.Test.VibratoBracket.Start();
   VF.Test.Annotation.Start();
   VF.Test.ChordSymbol.Start();
+  VF.Test.JazzTechnique.Start();
   VF.Test.Tuning.Start();
   VF.Test.Music.Start();
   VF.Test.KeyManager.Start();
