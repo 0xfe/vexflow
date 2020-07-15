@@ -2,8 +2,8 @@
 // Author: Larry Kuhns
 //
 // ## Description
-// This file implements the `Stroke` class which renders chord strokes
-// that can be arpeggiated, brushed, rasquedo, etc.
+// This file implements the `JazzTechnique` class which renders different
+// jazz articulations, mostly for brass, like plunger etc..
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
@@ -11,11 +11,6 @@ import { Glyph } from './glyph';
 
 export class JazzTechnique extends Modifier {
   static get CATEGORY() { return 'jazztechnique'; }
-  // regardless of actual width, this is what we reports.  These symbols
-  // tend to overlap the next notes
-  static get ReportedWidth() {
-    return 5;
-  }
   static get Type() {
     return {
       SCOOP: 1,
@@ -32,6 +27,9 @@ export class JazzTechnique extends Modifier {
     };
   }
 
+  // Based on the position of the glyph, we make different adjustments.  The type of
+  // symbol determines the position: plunger techniques etc. are over top of note,
+  // scoop before the note, etc.
   static get ArticulationPosition() {
     return [JazzTechnique.Type.BEND, JazzTechnique.Type.MUTE_CLOSED, JazzTechnique.Type.MUTE_OPEN];
   }
@@ -71,7 +69,7 @@ export class JazzTechnique extends Modifier {
   }
 
 
-  // Arrange strokes inside `ModifierContext`
+  // Called by modifierContext during pre-format
   static format(techniques, state) {
     let left_shift = state.left_shift;
     let right_shift = state.right_shift;
@@ -80,6 +78,7 @@ export class JazzTechnique extends Modifier {
 
     techniques.forEach((technique) => {
       const width = technique.metrics.reportedWidth;
+      // watch out for dots/accidentals.
       if (JazzTechnique.RightPosition.indexOf(technique.type) >= 0) {
         technique.xOffset += (right_shift + 2);
       }
@@ -109,7 +108,6 @@ export class JazzTechnique extends Modifier {
     this.note = null;
     this.options = Vex.Merge({}, options);
 
-    // multi voice - end note of stroke, set in draw()
     this.type = type;
     this.glyphCode = JazzTechnique.TypeToCode[this.type];
     const metrics = this.metrics;
@@ -129,7 +127,7 @@ export class JazzTechnique extends Modifier {
       this.scale *= this.options.scaleAdjust;
     }
 
-    this.width = JazzTechnique.reportedWidth;
+    this.width = metrics.reportedWidth;
 
     this.render_options = {
       font_scale: 38,
