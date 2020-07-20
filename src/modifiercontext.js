@@ -18,7 +18,6 @@ import { Articulation } from './articulation';
 import { Ornament } from './ornament';
 import { Annotation } from './annotation';
 import { ChordSymbol } from './chordsymbol';
-import { JazzTechnique } from './jazztechnique';
 import { Bend } from './bend';
 import { Vibrato } from './vibrato';
 
@@ -57,7 +56,6 @@ export class ModifierContext {
       Ornament,
       Annotation,
       ChordSymbol,
-      JazzTechnique,
       Bend,
       Vibrato,
     ];
