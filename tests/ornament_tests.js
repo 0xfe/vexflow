@@ -231,9 +231,9 @@ VF.Test.Ornament = (function() {
       var ctx = vf.getContext();
       ctx.scale(1, 1); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
 
-      function newNote(keys, duration, modifier) {
+      function newNote(keys, duration, modifier, stemDirection) {
         const dot = duration.indexOf('d') >= 0;
-        const rv =  new VF.StaveNote({ keys, duration })
+        const rv =  new VF.StaveNote({ keys, duration, stem_direction: stemDirection })
           .addModifier(0, modifier)
           .addAccidental(0, new VF.Accidental('b'));
         if (dot) {
@@ -247,16 +247,16 @@ VF.Test.Ornament = (function() {
       var yStart = 10;
       var staffHeight = 70;
 
-      function draw(modifiers, keys, x, width, y) {
+      function draw(modifiers, keys, x, width, y, stemDirection) {
         var notes = [];
 
         var stave = new VF.Stave(x, y, width)
           .addClef('treble').setContext(ctx).draw();
 
-        notes.push(newNote(keys, '4d', modifiers[0]));
-        notes.push(newNote(keys, '8', modifiers[1]));
-        notes.push(newNote(keys, '4d', modifiers[2]));
-        notes.push(newNote(keys, '8', modifiers[3]));
+        notes.push(newNote(keys, '4d', modifiers[0], stemDirection));
+        notes.push(newNote(keys, '8', modifiers[1], stemDirection));
+        notes.push(newNote(keys, '4d', modifiers[2], stemDirection));
+        notes.push(newNote(keys, '8', modifiers[3], stemDirection));
         if (modifiers.length > 4) {
           notes[3].addModifier(0, modifiers[4]);
         }
@@ -280,7 +280,7 @@ VF.Test.Ornament = (function() {
       mods.push(new VF.Ornament('fall'));
       mods.push(new VF.Ornament('doitLong'));
 
-      draw(mods, ['a/5'], curX, xWidth, curY);
+      draw(mods, ['a/5'], curX, xWidth, curY, -1);
       curX += xWidth;
 
       mods = [];
@@ -289,7 +289,7 @@ VF.Test.Ornament = (function() {
       mods.push(new VF.Ornament('plungerClosed'));
       mods.push(new VF.Ornament('plungerOpen'));
       mods.push(new VF.Ornament('bend'));
-      draw(mods, ['a/5'], curX, xWidth, curY);
+      draw(mods, ['a/5'], curX, xWidth, curY, -1);
       curX += xWidth;
 
       mods = [];
@@ -297,7 +297,7 @@ VF.Test.Ornament = (function() {
       mods.push(new VF.Ornament('jazzTurn'));
       mods.push(new VF.Ornament('smear'));
       mods.push(new VF.Ornament('doit'));
-      draw(mods, ['a/5'], curX, xWidth, curY);
+      draw(mods, ['a/5'], curX, xWidth, curY, 1);
 
       curX = xStart;
       curY += staffHeight;

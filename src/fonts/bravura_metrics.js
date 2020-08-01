@@ -447,8 +447,8 @@ export const BravuraMetrics = {
       brassMuteClosed: {
         scale: 1.0,
         xOffset: 3,
-        yOffset: -7,
-        stemUpYOffset: 23,
+        yOffset: -8,
+        stemUpYOffset: 25,
         reportedWidth: 5
       },
       brassMuteOpen: {
