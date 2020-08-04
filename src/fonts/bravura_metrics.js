@@ -400,6 +400,85 @@ export const BravuraMetrics = {
         advanceWidth: 226,
         yOffset: -184
       }
+    },
+    jazzOrnaments: {
+      brassScoop: {
+        scale: 1.0,
+        xOffset: -12,
+        yOffset: 0,
+        stemUpYOffset: 0,
+        reportedWidth: 10
+      },
+      brassDoitMedium: {
+        scale: 1.0,
+        xOffset: 16,
+        yOffset: 0,
+        stemUpYOffset: 0,
+        reportedWidth:15
+      },
+      brassFallLipShort: {
+        scale: 1.0,
+        xOffset: 16,
+        yOffset: 0,
+        stemUpYOffset: 0,
+        reportedWidth: 5
+      },
+      brassLiftMedium: {
+        scale: 1.0,
+        xOffset: 16,
+        yOffset: 5,
+        stemUpYOffset: 0,
+        reportedWidth: 5
+      },
+      brassFallRoughMedium: {
+        scale: 1.0,
+        xOffset: 16,
+        yOffset: 28,
+        stemUpYOffset: 0,
+        reportedWidth: 5
+      },
+      brassBend: {
+        scale: 1.0,
+        xOffset: 2,
+        yOffset: -8,
+        stemUpYOffset: 25,
+        reportedWidth: 5
+      },
+      brassMuteClosed: {
+        scale: 1.0,
+        xOffset: 3,
+        yOffset: -8,
+        stemUpYOffset: 25,
+        reportedWidth: 5
+      },
+      brassMuteOpen: {
+        scale: 1.0,
+        xOffset: 3,
+        yOffset: -7,
+        stemUpYOffset: 25,
+        reportedWidth: 5
+      },
+      brassFlip: {
+        scale: 1.0,
+        xOffset: 10,
+        yOffset: -4,
+        stemUpYOffset: 0,
+        reportedWidth: 5
+      },
+      brassJazzTurn: {
+        scale: 1.0,
+        xOffset: 6,
+        yOffset: -4,
+        stemUpYOffset: 0,
+        reportedWidth: 5
+      },
+      brassSmear: {
+        scale: 1.0,
+        xOffset: 10,
+        yOffset: -4,
+        stemUpYOffset: 0,
+        reportedWidth: 5
+      },
     }
   }
 };

@@ -15,6 +15,7 @@ VF.Test.Ornament = (function() {
       runTests('Ornaments - Delayed turns, Multiple Draws', Ornament.drawOrnamentsDelayedMultipleDraws);
       runTests('Stacked', Ornament.drawOrnamentsStacked);
       runTests('With Upper/Lower Accidentals', Ornament.drawOrnamentsWithAccidentals);
+      runTests('Jazz Ornaments', Ornament.jazzOrnaments);
     },
 
     drawOrnaments: function(options, contextBuilder) {
@@ -220,9 +221,139 @@ VF.Test.Ornament = (function() {
       notesBar1[9].addModifier(0, new VF.Ornament('prallprall').setUpperAccidental('bb').setLowerAccidental('bb'));
       notesBar1[10].addModifier(0, new VF.Ornament('turn_inverted').setUpperAccidental('+').setLowerAccidental('+'));
 
-
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    },
+
+    jazzOrnaments: function(options) {
+      expect(0);
+      var vf = VF.Test.makeFactory(options, 950, 400);
+      var ctx = vf.getContext();
+      ctx.scale(1, 1); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+
+      function newNote(keys, duration, modifier, stemDirection) {
+        const dot = duration.indexOf('d') >= 0;
+        const rv =  new VF.StaveNote({ keys, duration, stem_direction: stemDirection })
+          .addModifier(0, modifier)
+          .addAccidental(0, new VF.Accidental('b'));
+        if (dot) {
+          rv.addDotToAll();
+        }
+        return rv;
+      }
+
+      var xStart = 10;
+      var xWidth = 300;
+      var yStart = 10;
+      var staffHeight = 70;
+
+      function draw(modifiers, keys, x, width, y, stemDirection) {
+        var notes = [];
+
+        var stave = new VF.Stave(x, y, width)
+          .addClef('treble').setContext(ctx).draw();
+
+        notes.push(newNote(keys, '4d', modifiers[0], stemDirection));
+        notes.push(newNote(keys, '8', modifiers[1], stemDirection));
+        notes.push(newNote(keys, '4d', modifiers[2], stemDirection));
+        notes.push(newNote(keys, '8', modifiers[3], stemDirection));
+        if (modifiers.length > 4) {
+          notes[3].addModifier(0, modifiers[4]);
+        }
+
+        VF.Beam.generateBeams(notes);
+        const voice = new VF.Voice({
+          num_beats: 4,
+          beat_value: 4
+        }).setMode(VF.Voice.Mode.SOFT);
+        voice.addTickables(notes);
+        const formatter = new VF.Formatter({ softmaxFactor: 2 }).joinVoices([voice]);
+        formatter.format([voice], xWidth);
+        stave.setContext(ctx).draw();
+        voice.draw(ctx, stave);
+      }
+      var mods = [];
+      var curX = xStart;
+      var curY = yStart;
+      mods.push(new VF.Ornament('scoop'));
+      mods.push(new VF.Ornament('doit'));
+      mods.push(new VF.Ornament('fall'));
+      mods.push(new VF.Ornament('doitLong'));
+
+      draw(mods, ['a/5'], curX, xWidth, curY, -1);
+      curX += xWidth;
+
+      mods = [];
+      mods.push(new VF.Ornament('fallLong'));
+      mods.push(new VF.Ornament('bend'));
+      mods.push(new VF.Ornament('plungerClosed'));
+      mods.push(new VF.Ornament('plungerOpen'));
+      mods.push(new VF.Ornament('bend'));
+      draw(mods, ['a/5'], curX, xWidth, curY, -1);
+      curX += xWidth;
+
+      mods = [];
+      mods.push(new VF.Ornament('flip'));
+      mods.push(new VF.Ornament('jazzTurn'));
+      mods.push(new VF.Ornament('smear'));
+      mods.push(new VF.Ornament('doit'));
+      draw(mods, ['a/5'], curX, xWidth, curY, 1);
+
+      curX = xStart;
+      curY += staffHeight;
+
+      mods = [];
+      mods.push(new VF.Ornament('scoop'));
+      mods.push(new VF.Ornament('doit'));
+      mods.push(new VF.Ornament('fall'));
+      mods.push(new VF.Ornament('doitLong'));
+
+      draw(mods, ['e/5'], curX, xWidth, curY);
+      curX += xWidth;
+
+      mods = [];
+      mods.push(new VF.Ornament('fallLong'));
+      mods.push(new VF.Ornament('bend'));
+      mods.push(new VF.Ornament('plungerClosed'));
+      mods.push(new VF.Ornament('plungerOpen'));
+      mods.push(new VF.Ornament('bend'));
+      draw(mods, ['e/5'], curX, xWidth, curY);
+      curX += xWidth;
+
+      mods = [];
+      mods.push(new VF.Ornament('flip'));
+      mods.push(new VF.Ornament('jazzTurn'));
+      mods.push(new VF.Ornament('smear'));
+      mods.push(new VF.Ornament('doit'));
+      draw(mods, ['e/5'], curX, xWidth, curY);
+
+      curX = xStart;
+      curY += staffHeight;
+
+      mods = [];
+      mods.push(new VF.Ornament('scoop'));
+      mods.push(new VF.Ornament('doit'));
+      mods.push(new VF.Ornament('fall'));
+      mods.push(new VF.Ornament('doitLong'));
+
+      draw(mods, ['e/4'], curX, xWidth, curY);
+      curX += xWidth;
+
+      mods = [];
+      mods.push(new VF.Ornament('fallLong'));
+      mods.push(new VF.Ornament('bend'));
+      mods.push(new VF.Ornament('plungerClosed'));
+      mods.push(new VF.Ornament('plungerOpen'));
+      mods.push(new VF.Ornament('bend'));
+      draw(mods, ['e/4'], curX, xWidth, curY);
+      curX += xWidth;
+
+      mods = [];
+      mods.push(new VF.Ornament('flip'));
+      mods.push(new VF.Ornament('jazzTurn'));
+      mods.push(new VF.Ornament('smear'));
+      mods.push(new VF.Ornament('doit'));
+      draw(mods, ['e/4'], curX, xWidth, curY);
     },
   };
 

@@ -347,6 +347,17 @@ Flow.ornamentCodes.ornaments = {
   'downmordent': { code: 'ornamentPrecompDoubleCadenceUpperPrefixTurn' },
   'lineprall': { code: 'ornamentPrecompAppoggTrill' },
   'prallprall': { code: 'ornamentTremblement' },
+  'scoop': { code: 'brassScoop' },
+  'doit': { code: 'brassDoitMedium' },
+  'fall': { code: 'brassFallLipShort' },
+  'doitLong': { code: 'brassLiftMedium' },
+  'fallLong': { code: 'brassFallRoughMedium' },
+  'bend': { code: 'brassBend' },
+  'plungerClosed': { code: 'brassMuteClosed' },
+  'plungerOpen': { code: 'brassMuteOpen' },
+  'flip': { code: 'brassFlip' },
+  'jazzTurn': { code: 'brassJazzTurn' },
+  'smear': { code: 'brassSmear' }
 };
 
 Flow.keySignature = spec => {
