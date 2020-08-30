@@ -675,7 +675,7 @@ VF.Test.StaveNote = (function() {
     },
 
     drawNoteStemLengths: function(options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 975, 280);
+      var ctx = new contextBuilder(options.elementId, 975, 150);
       var stave = new VF.Stave(10, 10, 975);
       stave.setContext(ctx).draw();
 
