@@ -93,10 +93,16 @@ export class Stem extends Element {
 
   // Gets the entire height for the stem
   getHeight() {
-    const y_offset = (this.stem_direction === Stem.UP) ? this.stem_up_y_offset : this.stem_down_y_offset; // eslint-disable-line max-len
-    return ((this.y_bottom - this.y_top) * this.stem_direction) +
-           ((Stem.HEIGHT - y_offset + this.stem_extension) * this.stem_direction);
+    const y_offset = (this.stem_direction === Stem.UP)
+      ? this.stem_up_y_offset
+      : this.stem_down_y_offset;
+    const unsigned_height = (
+      (this.y_bottom - this.y_top)
+      + (Stem.HEIGHT - y_offset + this.stem_extension)
+    );  // parentheses just for grouping.
+    return unsigned_height * this.stem_direction;
   }
+
   getBoundingBox() {
     throw new Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
   }

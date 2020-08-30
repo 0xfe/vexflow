@@ -70,7 +70,7 @@ export class StemmableNote extends Note {
   }
 
   // Get the minimum length of stem
-  getStemMinumumLength() {
+  getStemMinimumLength() {
     const frac = Flow.durationToFraction(this.duration);
     let length = frac.value() <= 1 ? 0 : 20;
     // if note is flagged, cannot shorten beam
@@ -158,7 +158,7 @@ export class StemmableNote extends Note {
     }
 
     if (glyph) {
-      return this.getStemDirection() === 1
+      return this.getStemDirection() === Stem.UP
         ? glyph.stem_up_extension
         : glyph.stem_down_extension;
     }
