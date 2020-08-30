@@ -1116,6 +1116,10 @@ export class StaveNote extends StemmableNote {
    */
   getStemExtension() {
     const super_stem_extension = super.getStemExtension();
+    if (!this.glyph.stem) {
+      return super_stem_extension;
+    }
+
     const stem_direction = this.getStemDirection();
     if (stem_direction !== this.calculateOptimalStemDirection()) {
       return super_stem_extension;  // no adjustment for manually set stem direction.
@@ -1129,7 +1133,7 @@ export class StaveNote extends StemmableNote {
       // of F2, when a normal octave-length stem above E4 is fine.
       //
       // maxLine and minLine are set in calculateOptimalStemDirection() so
-In      // will be known.
+      // will be known.
       mid_line_distance = MIDDLE_LINE - this.maxLine;
     } else {
       mid_line_distance = this.minLine - MIDDLE_LINE;
