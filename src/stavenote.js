@@ -81,7 +81,7 @@ export class StaveNote extends StemmableNote {
       let minL = props[props.length - 1].line;
       const stemDirection = notes[i].getStemDirection();
       const stemMax = notes[i].getStemLength() / 10;
-      const stemMin = notes[i].getStemMinumumLength() / 10;
+      const stemMin = notes[i].getStemMinimumLength() / 10;
 
       let maxL;
       if (notes[i].isRest()) {
@@ -327,6 +327,9 @@ export class StaveNote extends StemmableNote {
     // Drawing
     this.note_heads = [];
     this.modifiers = [];
+
+    // Default ledger line style. If lineWidth not specified will set to double stave width
+    this.ledgerLineStyle = {};
 
     Vex.Merge(this.render_options, {
       // font size for note heads and rests
@@ -835,7 +838,7 @@ export class StaveNote extends StemmableNote {
   // Get the width of the note if it is displaced. Used for `Voice`
   // formatting
   getVoiceShiftWidth() {
-    // TODO: may need to accomodate for dot here.
+    // TODO: may need to accommodate for dot here.
     return this.getGlyphWidth() * (this.displaced ? 2 : 1);
   }
 
@@ -1009,7 +1012,17 @@ export class StaveNote extends StemmableNote {
       ctx.stroke();
     };
 
-    const style = { ...stave.getStyle() || {}, ...this.getLedgerLineStyle() || {} };
+    const ledger_line_style = this.getLedgerLineStyle();
+    const style = { ...stave.getStyle() || {}, ...ledger_line_style };
+
+    // if lineWidth is not specified in getLedgerLineStyle will use
+    // twice stave.getStyle() lineWidth
+    if (ledger_line_style.lineWidth === undefined && style.lineWidth !== undefined) {
+      style.lineWidth *= 2;
+    } else if (style.lineWidth === undefined) {
+      style.lineWidth = Flow.STAVE_LEDGER_LINE_THICKNESS;
+    }
+
     this.applyStyle(ctx, style);
 
     // Draw ledger lines below the staff:
