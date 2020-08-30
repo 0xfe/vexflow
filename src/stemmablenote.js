@@ -16,7 +16,7 @@ export class StemmableNote extends Note {
     this.setAttribute('type', 'StemmableNote');
 
     this.stem = null;
-    this.stemExtensionOverride = null;
+    this.stem_extension_override = null;
     this.beam = null;
   }
 
@@ -153,8 +153,8 @@ export class StemmableNote extends Note {
   getStemExtension() {
     const glyph = this.getGlyph();
 
-    if (this.stemExtensionOverride != null) {
-      return this.stemExtensionOverride;
+    if (this.stem_extension_override != null) {
+      return this.stem_extension_override;
     }
 
     if (glyph) {
@@ -168,7 +168,7 @@ export class StemmableNote extends Note {
 
   // Set the stem length to a specific. Will override the default length.
   setStemLength(height) {
-    this.stemExtensionOverride = (height - Stem.HEIGHT);
+    this.stem_extension_override = (height - Stem.HEIGHT);
     return this;
   }
 
