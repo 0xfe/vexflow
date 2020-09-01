@@ -16,7 +16,7 @@ export class StemmableNote extends Note {
     this.setAttribute('type', 'StemmableNote');
 
     this.stem = null;
-    this.stemExtensionOverride = null;
+    this.stem_extension_override = null;
     this.beam = null;
   }
 
@@ -70,7 +70,7 @@ export class StemmableNote extends Note {
   }
 
   // Get the minimum length of stem
-  getStemMinumumLength() {
+  getStemMinimumLength() {
     const frac = Flow.durationToFraction(this.duration);
     let length = frac.value() <= 1 ? 0 : 20;
     // if note is flagged, cannot shorten beam
@@ -153,12 +153,12 @@ export class StemmableNote extends Note {
   getStemExtension() {
     const glyph = this.getGlyph();
 
-    if (this.stemExtensionOverride != null) {
-      return this.stemExtensionOverride;
+    if (this.stem_extension_override != null) {
+      return this.stem_extension_override;
     }
 
     if (glyph) {
-      return this.getStemDirection() === 1
+      return this.getStemDirection() === Stem.UP
         ? glyph.stem_up_extension
         : glyph.stem_down_extension;
     }
@@ -168,7 +168,7 @@ export class StemmableNote extends Note {
 
   // Set the stem length to a specific. Will override the default length.
   setStemLength(height) {
-    this.stemExtensionOverride = (height - Stem.HEIGHT);
+    this.stem_extension_override = (height - Stem.HEIGHT);
     return this;
   }
 

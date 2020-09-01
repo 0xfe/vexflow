@@ -81,7 +81,7 @@ export class StaveNote extends StemmableNote {
       let minL = props[props.length - 1].line;
       const stemDirection = notes[i].getStemDirection();
       const stemMax = notes[i].getStemLength() / 10;
-      const stemMin = notes[i].getStemMinumumLength() / 10;
+      const stemMin = notes[i].getStemMinimumLength() / 10;
 
       let maxL;
       if (notes[i].isRest()) {
@@ -439,6 +439,10 @@ export class StaveNote extends StemmableNote {
 
   // Automatically sets the stem direction based on the keys in the note
   autoStem() {
+    this.setStemDirection(this.calculateOptimalStemDirection());
+  }
+
+  calculateOptimalStemDirection() {
     // Figure out optimal stem direction based on given notes
     this.minLine = this.keyProps[0].line;
     this.maxLine = this.keyProps[this.keyProps.length - 1].line;
@@ -447,7 +451,7 @@ export class StaveNote extends StemmableNote {
     const decider = (this.minLine + this.maxLine) / 2;
     const stemDirection = decider < MIDDLE_LINE ? Stem.UP : Stem.DOWN;
 
-    this.setStemDirection(stemDirection);
+    return stemDirection;
   }
 
   // Calculates and stores the properties for each key in the note
@@ -561,8 +565,8 @@ export class StaveNote extends StemmableNote {
     return new BoundingBox(x, minY, w, maxY - minY);
   }
 
-  // Gets the line number of the top or bottom note in the chord.
-  // If `isTopNote` is `true` then get the top note
+  // Gets the line number of the bottom note in the chord.
+  // If `isTopNote` is `true` then get the top note's line number instead
   getLineNumber(isTopNote) {
     if (!this.keyProps.length) {
       throw new Vex.RERR(
@@ -1104,6 +1108,48 @@ export class StaveNote extends StemmableNote {
     this.context.openGroup('stem', null, { pointerBBox: true });
     this.stem.setContext(this.context).draw();
     this.context.closeGroup();
+  }
+
+
+  /**
+   * Override stemmablenote stem extension to adjust for distance from middle line.
+   */
+  getStemExtension() {
+    const super_stem_extension = super.getStemExtension();
+    if (!this.glyph.stem) {
+      return super_stem_extension;
+    }
+
+    const stem_direction = this.getStemDirection();
+    if (stem_direction !== this.calculateOptimalStemDirection()) {
+      return super_stem_extension;  // no adjustment for manually set stem direction.
+    }
+    let mid_line_distance;
+    const MIDDLE_LINE = 3;
+    if (stem_direction === Stem.UP) {
+      // Note that the use of maxLine here instead of minLine might
+      // seem counterintuitive, but in the case of (say) treble clef
+      // chord(F2, E4) stem up, we do not want to extend the stem because
+      // of F2, when a normal octave-length stem above E4 is fine.
+      //
+      // maxLine and minLine are set in calculateOptimalStemDirection() so
+      // will be known.
+      mid_line_distance = MIDDLE_LINE - this.maxLine;
+    } else {
+      mid_line_distance = this.minLine - MIDDLE_LINE;
+    }
+
+    // how many lines more than an octave is the relevant notehead?
+    const lines_over_octave_from_mid_line = mid_line_distance - 3.5;
+    if (lines_over_octave_from_mid_line <= 0) {
+      return super_stem_extension;
+    }
+    const stave = this.getStave();
+    let spacing_between_lines = 10;
+    if (stave != null) {
+      spacing_between_lines = stave.getSpacingBetweenLines();
+    }
+    return super_stem_extension + (lines_over_octave_from_mid_line * spacing_between_lines);
   }
 
   // Draws all the `StaveNote` parts. This is the main drawing method.
