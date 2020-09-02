@@ -11,7 +11,7 @@ const Flow = {
   STEM_WIDTH: 1.5,
   STEM_HEIGHT: 35,
   STAVE_LINE_THICKNESS: 1,
-  STAVE_LEDGER_LINE_THICKNESS: 2,  // Gould, Behind Bars: "about twice as thick"
+  LEDGER_LINE_THICKNESS_MULTIPLIER: 2.0,  // Gould, Behind Bars: "about twice as thick"
   RESOLUTION: 16384,
 
   DEFAULT_FONT_STACK: DefaultFontStack,

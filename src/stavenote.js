@@ -1018,9 +1018,9 @@ export class StaveNote extends StemmableNote {
     // if lineWidth is not specified in getLedgerLineStyle will use
     // twice stave.getStyle() lineWidth
     if (ledger_line_style.lineWidth === undefined && style.lineWidth !== undefined) {
-      style.lineWidth *= 2;
+      style.lineWidth *= Flow.LEDGER_LINE_THICKNESS_MULTIPLIER;
     } else if (style.lineWidth === undefined) {
-      style.lineWidth = Flow.STAVE_LEDGER_LINE_THICKNESS;
+      style.lineWidth = Flow.STAVE_LINE_THICKNESS * Flow.LEDGER_LINE_THICKNESS_MULTIPLIER;
     }
 
     this.applyStyle(ctx, style);
