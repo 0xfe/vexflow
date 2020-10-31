@@ -388,7 +388,7 @@ export const PetalumaMetrics = {
       csymParensLeftVeryTall: {
         scale: 0.95,
         leftSideBearing: 0,
-        advanceWidth: 200,
+        advanceWidth: 210,
         yOffset: 250
       },
       csymParensRightVeryTall: {
@@ -404,14 +404,14 @@ export const PetalumaMetrics = {
         yOffset: 0
       },
       csymMinor: {
-        scale: 0.8,
+        scale: 0.7,
         leftSideBearing: 0,
         advanceWidth: 482,
         yOffset: 0
       },
       csymMajorSeventh: {
-        scale: 1,
-        leftSideBearing: 0,
+        scale: 0.8,
+        leftSideBearing: 100,
         yOffset: 0,
         advanceWidth: 600
       },
