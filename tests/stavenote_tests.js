@@ -13,6 +13,7 @@ VF.Test.StaveNote = (function() {
       test('Tick - New API', StaveNote.ticksNewApi);
       test('Stem', StaveNote.stem);
       test('Automatic Stem Direction', StaveNote.autoStem);
+      test('Stem Extension Pitch', StaveNote.stemExtensionPitch);
       test('Displacement after calling setStemDirection', StaveNote.setStemDirectionDisplacement);
       test('StaveLine', StaveNote.staveLine);
       test('Width', StaveNote.width);
@@ -31,6 +32,7 @@ VF.Test.StaveNote = (function() {
       runTests('StaveNote Draw - Bass 2', StaveNote.drawBass);
       runTests('StaveNote Draw - Key Styles', StaveNote.drawKeyStyles);
       runTests('StaveNote Draw - StaveNote Stem Styles', StaveNote.drawNoteStemStyles);
+      runTests('StaveNote Draw - StaveNote Stem Lengths', StaveNote.drawNoteStemLengths);
       runTests('StaveNote Draw - StaveNote Flag Styles', StaveNote.drawNoteStylesWithFlag);
       runTests('StaveNote Draw - StaveNote Styles', StaveNote.drawNoteStyles);
       runTests('Stave, Ledger Line, Beam, Stem and Flag Styles', StaveNote.drawBeamStyles);
@@ -156,9 +158,57 @@ VF.Test.StaveNote = (function() {
           var keys = testData[0];
           var expectedStemDirection = testData[1];
           var note = new VF.StaveNote({ keys: keys, auto_stem: true, duration: '8' });
-          equal(note.getStemDirection(), expectedStemDirection, 'Stem must be' + (expectedStemDirection === VF.StaveNote.STEM_UP ? 'up' : 'down'));
+          equal(note.getStemDirection(), expectedStemDirection, 'Stem must be ' + (expectedStemDirection === VF.StaveNote.STEM_UP ? 'up' : 'down'));
         });
     },
+
+    stemExtensionPitch: function() {
+      [
+        // [keys, expectedStemExtension, override stem direction]
+        [['c/5', 'e/5', 'g/5'], 0, 0],
+        [['e/4', 'g/4', 'c/5'], 0, 0],
+        [['c/5'], 0, 0],
+        [['f/3'], 15, 0],
+        [['f/3'], 15, VF.Stem.UP],
+        [['f/3'], 0, VF.Stem.DOWN],
+        [['f/3', 'e/5'], 0, 0],
+        [['g/6'], 25, 0],
+        [['g/6'], 25, VF.Stem.DOWN],
+        [['g/6'], 0, VF.Stem.UP],
+      ]
+        .forEach(function(testData) {
+          var keys = testData[0];
+          var expectedStemExtension = testData[1];
+          var overrideStemDirection = testData[2];
+          var note;
+          if (overrideStemDirection === 0) {
+            note = new VF.StaveNote({ keys: keys, auto_stem: true, duration: '4' });
+          } else {
+            note = new VF.StaveNote({ keys: keys, duration: '4', stem_direction: overrideStemDirection });
+          }
+          equal(
+            note.getStemExtension(),
+            expectedStemExtension,
+            'For ' + keys.toString() + ' StemExtension must be ' + expectedStemExtension
+          );
+          // set to weird Stave
+          var stave = new VF.Stave(10, 10, 300, { spacing_between_lines_px: 20 });
+          note.setStave(stave)
+          equal(
+            note.getStemExtension(),
+            expectedStemExtension * 2,
+            'For wide staff ' + keys.toString() + ' StemExtension must be ' + expectedStemExtension * 2
+          );
+
+          var whole_note = new VF.StaveNote({ keys: keys, duration: 'w' });
+          equal(
+            whole_note.getStemExtension(),
+            -1 * VF.STEM_HEIGHT,
+            'For ' + keys.toString() + ' whole_note StemExtension must always be -1 * VF.STEM_HEIGHT'
+          );
+        });
+    },
+
 
     setStemDirectionDisplacement: function() {
       function getDisplacements(note) {
@@ -262,15 +312,15 @@ VF.Test.StaveNote = (function() {
         { clef: clef, keys: higherKeys, duration: '32' },
         { clef: clef, keys: higherKeys, duration: '64' },
         { clef: clef, keys: higherKeys, duration: '128' },
-        { clef: clef, keys: lowerKeys, duration: '1/2', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: 'w', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: 'h', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: 'q', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '8', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '16', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '32', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '64', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '128', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '1/2', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: 'w', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: 'h', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: 'q', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '8', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '16', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '32', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '64', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '128', stem_direction: VF.Stem.DOWN },
 
         { clef: clef, keys: restKeys, duration: '1/2r' },
         { clef: clef, keys: restKeys, duration: 'wr' },
@@ -341,14 +391,14 @@ VF.Test.StaveNote = (function() {
         { clef: clef, keys: higherKeys, duration: '32' },
         { clef: clef, keys: higherKeys, duration: '64' },
         { clef: clef, keys: higherKeys, duration: '128' },
-        { clef: clef, keys: lowerKeys, duration: '1/2', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: 'w', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: 'h', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: 'q', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '8', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '16', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '32', stem_direction: -1 },
-        { clef: clef, keys: lowerKeys, duration: '64', stem_direction: -1 },
+        { clef: clef, keys: lowerKeys, duration: '1/2', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: 'w', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: 'h', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: 'q', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '8', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '16', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '32', stem_direction: VF.Stem.DOWN },
+        { clef: clef, keys: lowerKeys, duration: '64', stem_direction: VF.Stem.DOWN },
         { clef: clef, keys: lowerKeys, duration: '128' },
 
         { clef: clef, keys: restKeys, duration: '1/2r' },
@@ -390,11 +440,11 @@ VF.Test.StaveNote = (function() {
         { clef: 'bass', keys: ['c/3', 'e/3', 'a/3'], duration: '8' },
         { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: '16' },
         { clef: 'bass', keys: ['c/3', 'e/3', 'a/3'], duration: '32' },
-        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: 'h', stem_direction: -1 },
-        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: 'q', stem_direction: -1 },
-        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: '8', stem_direction: -1 },
-        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: '16', stem_direction: -1 },
-        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: '32', stem_direction: -1 },
+        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: 'h', stem_direction: VF.Stem.DOWN },
+        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: 'q', stem_direction: VF.Stem.DOWN },
+        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: '8', stem_direction: VF.Stem.DOWN },
+        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: '16', stem_direction: VF.Stem.DOWN },
+        { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: '32', stem_direction: VF.Stem.DOWN },
 
         { keys: ['r/4'], duration: '1/2r' },
         { keys: ['r/4'], duration: 'wr' },
@@ -435,12 +485,12 @@ VF.Test.StaveNote = (function() {
         { keys: ['a/3', 'c/4', 'e/4', 'g/4', 'a/4', 'b/4'], duration: '16' },
         { keys: ['c/4', 'e/4', 'a/4'], duration: '32' },
         { keys: ['c/4', 'e/4', 'a/4', 'a/4'], duration: '64' },
-        { keys: ['g/3', 'c/4', 'd/4', 'e/4'], duration: 'h', stem_direction: -1 },
-        { keys: ['d/4', 'e/4', 'f/4'], duration: 'q', stem_direction: -1 },
-        { keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '8', stem_direction: -1 },
-        { keys: ['c/4', 'd/4', 'e/4', 'f/4', 'g/4', 'a/4'], duration: '16', stem_direction: -1 },
-        { keys: ['b/3', 'c/4', 'e/4', 'a/4', 'b/5', 'c/6', 'e/6'], duration: '32', stem_direction: -1 },
-        { keys: ['b/3', 'c/4', 'e/4', 'a/4', 'b/5', 'c/6', 'e/6', 'e/6'], duration: '64', stem_direction: -1 },
+        { keys: ['g/3', 'c/4', 'd/4', 'e/4'], duration: 'h', stem_direction: VF.Stem.DOWN },
+        { keys: ['d/4', 'e/4', 'f/4'], duration: 'q', stem_direction: VF.Stem.DOWN },
+        { keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'd/4', 'e/4', 'f/4', 'g/4', 'a/4'], duration: '16', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/3', 'c/4', 'e/4', 'a/4', 'b/5', 'c/6', 'e/6'], duration: '32', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/3', 'c/4', 'e/4', 'a/4', 'b/5', 'c/6', 'e/6', 'e/6'], duration: '64', stem_direction: VF.Stem.DOWN },
       ];
       expect(notes.length * 2);
 
@@ -470,15 +520,15 @@ VF.Test.StaveNote = (function() {
         { keys: ['c/4', 'e/4', 'a/4'], duration: '32h' },
         { keys: ['c/4', 'e/4', 'a/4'], duration: '64h' },
         { keys: ['c/4', 'e/4', 'a/4'], duration: '128h' },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2h', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: 'wh', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: 'hh', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: 'qh', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '8h', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '16h', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '32h', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '64h', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '128h', stem_direction: -1 },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2h', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: 'wh', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: 'hh', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: 'qh', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '8h', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '16h', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '32h', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '64h', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '128h', stem_direction: VF.Stem.DOWN },
 
         { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2m' },
         { keys: ['c/4', 'e/4', 'a/4'], duration: 'wm' },
@@ -489,15 +539,15 @@ VF.Test.StaveNote = (function() {
         { keys: ['c/4', 'e/4', 'a/4'], duration: '32m' },
         { keys: ['c/4', 'e/4', 'a/4'], duration: '64m' },
         { keys: ['c/4', 'e/4', 'a/4'], duration: '128m' },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2m', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: 'wm', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: 'hm', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: 'qm', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '8m', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '16m', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '32m', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '64m', stem_direction: -1 },
-        { keys: ['c/4', 'e/4', 'a/4'], duration: '128m', stem_direction: -1 },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2m', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: 'wm', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: 'hm', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: 'qm', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '8m', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '16m', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '32m', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '64m', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/4', 'e/4', 'a/4'], duration: '128m', stem_direction: VF.Stem.DOWN },
       ];
       expect(notes.length * 2);
 
@@ -517,31 +567,31 @@ VF.Test.StaveNote = (function() {
       stave.draw();
 
       var notes = [
-        { keys: ['b/4'], duration: '1/2s', stem_direction: -1 },
-        { keys: ['b/4'], duration: 'ws', stem_direction: -1 },
-        { keys: ['b/4'], duration: 'hs', stem_direction: -1 },
-        { keys: ['b/4'], duration: 'qs', stem_direction: -1 },
-        { keys: ['b/4'], duration: '8s', stem_direction: -1 },
-        { keys: ['b/4'], duration: '16s', stem_direction: -1 },
-        { keys: ['b/4'], duration: '32s', stem_direction: -1 },
-        { keys: ['b/4'], duration: '64s', stem_direction: -1 },
-        { keys: ['b/4'], duration: '128s', stem_direction: -1 },
+        { keys: ['b/4'], duration: '1/2s', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: 'ws', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: 'hs', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: 'qs', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '16s', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '32s', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '64s', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '128s', stem_direction: VF.Stem.DOWN },
 
-        { keys: ['b/4'], duration: '1/2s', stem_direction: 1 },
-        { keys: ['b/4'], duration: 'ws', stem_direction: 1 },
-        { keys: ['b/4'], duration: 'hs', stem_direction: 1 },
-        { keys: ['b/4'], duration: 'qs', stem_direction: 1 },
-        { keys: ['b/4'], duration: '8s', stem_direction: 1 },
-        { keys: ['b/4'], duration: '16s', stem_direction: 1 },
-        { keys: ['b/4'], duration: '32s', stem_direction: 1 },
-        { keys: ['b/4'], duration: '64s', stem_direction: 1 },
-        { keys: ['b/4'], duration: '128s', stem_direction: 1 },
+        { keys: ['b/4'], duration: '1/2s', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: 'ws', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: 'hs', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: 'qs', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: '16s', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: '32s', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: '64s', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: '128s', stem_direction: VF.Stem.UP },
 
         // Beam
-        { keys: ['b/4'], duration: '8s', stem_direction: -1 },
-        { keys: ['b/4'], duration: '8s', stem_direction: -1 },
-        { keys: ['b/4'], duration: '8s', stem_direction: 1 },
-        { keys: ['b/4'], duration: '8s', stem_direction: 1 },
+        { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.UP },
       ];
 
       var stave_notes = notes.map(function(note) { return new VF.StaveNote(note); });
@@ -624,6 +674,54 @@ VF.Test.StaveNote = (function() {
       ok('Note Stem Style');
     },
 
+    drawNoteStemLengths: function(options, contextBuilder) {
+      var ctx = new contextBuilder(options.elementId, 975, 150);
+      var stave = new VF.Stave(10, 10, 975);
+      stave.setContext(ctx).draw();
+
+      var keys = [
+        'e/3', 'f/3', 'g/3', 'a/3', 'b/3', 'c/4',
+        'd/4', 'e/4', 'f/4', 'g/4',
+        'f/5', 'g/5', 'a/5', 'b/5', 'c/6', 'd/6',
+        'e/6', 'f/6', 'g/6', 'a/6',
+      ];
+      var stave_notes = [];
+      var note;
+      var i;
+
+      for (i = 0; i < keys.length; i++) {
+        var duration = 'q';
+        if (i % 2 === 1) {
+          duration = '8';
+        }
+        note = new VF.StaveNote({ keys: [keys[i]], duration, auto_stem: true })
+          .setStave(stave);
+
+        new VF.TickContext()
+          .addTickable(note);
+
+        note.setContext(ctx);
+        stave_notes.push(note);
+      }
+
+      var whole_keys = [
+        'e/3', 'a/3', 'f/5', 'a/5', 'd/6', 'a/6'
+      ]
+      for (i = 0; i < whole_keys.length; i++) {
+        note = new VF.StaveNote({ keys: [whole_keys[i]], duration: 'w' })
+          .setStave(stave);
+
+        new VF.TickContext()
+          .addTickable(note);
+
+        note.setContext(ctx);
+        stave_notes.push(note);
+      }
+      VF.Formatter.FormatAndDraw(ctx, stave, stave_notes);
+
+      ok('Note Stem Length');
+    },
+
     drawNoteStylesWithFlag: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 300, 280);
       var stave = new VF.Stave(10, 0, 100);
@@ -659,29 +757,29 @@ VF.Test.StaveNote = (function() {
 
       var notes = [
         // beam1
-        { keys: ['b/4'], duration: '8', stem_direction: -1 },
-        { keys: ['b/4'], duration: '8', stem_direction: -1 },
+        { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
 
         // should be unstyled...
-        { keys: ['b/4'], duration: '8', stem_direction: -1 },
+        { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
 
         // beam2 should also be unstyled
-        { keys: ['b/4'], duration: '8', stem_direction: -1 },
-        { keys: ['b/4'], duration: '8', stem_direction: -1 },
+        { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
+        { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
 
         // beam3
-        { keys: ['b/4'], duration: '8', stem_direction: 1 },
-        { keys: ['b/4'], duration: '8', stem_direction: 1 },
+        { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.UP },
+        { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.UP },
 
         // beam4
-        { keys: ['d/6'], duration: '8', stem_direction: -1 },
-        { keys: ['c/6', 'd/6'], duration: '8', stem_direction: -1 },
+        { keys: ['d/6'], duration: '8', stem_direction: VF.Stem.DOWN },
+        { keys: ['c/6', 'd/6'], duration: '8', stem_direction: VF.Stem.DOWN },
 
         // unbeamed
-        { keys: ['d/6', 'e/6'], duration: '8', stem_direction: -1 },
+        { keys: ['d/6', 'e/6'], duration: '8', stem_direction: VF.Stem.DOWN },
 
         // unbeamed, unstyled
-        { keys: ['e/6', 'f/6'], duration: '8', stem_direction: -1 },
+        { keys: ['e/6', 'f/6'], duration: '8', stem_direction: VF.Stem.DOWN },
 
       ];
 
@@ -751,18 +849,18 @@ VF.Test.StaveNote = (function() {
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
 
       var notes = [
-        newNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '8', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '16', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '32', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '64', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '128', stem_direction: 1 }).addDotToAll().addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '4', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '8', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '16', stem_direction: 1 }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '4', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '8', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '16', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '32', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '64', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '128', stem_direction: VF.Stem.UP }).addDotToAll().addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '4', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '8', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '16', stem_direction: VF.Stem.UP }).addDotToAll(),
         newNote({ keys: ['g/4'], duration: '32' }).addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '64', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '128', stem_direction: 1 }).addDotToAll().addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '64', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '128', stem_direction: VF.Stem.UP }).addDotToAll().addDotToAll(),
       ];
 
       stave.setContext(ctx).draw();
@@ -786,18 +884,18 @@ VF.Test.StaveNote = (function() {
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
 
       var notes = [
-        newNote({ keys: ['e/5'], duration: '4', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '8', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '16', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '32', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '64', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '128', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '4', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '8', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '16', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '32', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '64', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '128', stem_direction: -1 }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '4', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '8', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '16', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '32', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '64', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '128', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '4', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '8', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '16', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '32', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '64', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '128', stem_direction: VF.Stem.DOWN }).addDotToAll(),
       ];
 
       stave.setContext(ctx).draw();
@@ -820,16 +918,18 @@ VF.Test.StaveNote = (function() {
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
 
       var notes = [
-        newNote({ keys: ['f/4'], duration: '8', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '16', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '32', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '64', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['f/4'], duration: '128', stem_direction: 1 }).addDotToAll().addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '8', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '16', stem_direction: 1 }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '8', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '16', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '32', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '64', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['f/4'], duration: '128', stem_direction: VF.Stem.UP })
+          .addDotToAll().addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '8', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '16', stem_direction: VF.Stem.UP }).addDotToAll(),
         newNote({ keys: ['g/4'], duration: '32' }).addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '64', stem_direction: 1 }).addDotToAll(),
-        newNote({ keys: ['g/4'], duration: '128', stem_direction: 1 }).addDotToAll().addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '64', stem_direction: VF.Stem.UP }).addDotToAll(),
+        newNote({ keys: ['g/4'], duration: '128', stem_direction: VF.Stem.UP })
+          .addDotToAll().addDotToAll(),
       ];
 
       var beam = new VF.Beam(notes);
@@ -856,16 +956,16 @@ VF.Test.StaveNote = (function() {
       function newNote(note_struct) { return new VF.StaveNote(note_struct); }
 
       var notes = [
-        newNote({ keys: ['e/5'], duration: '8', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '16', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '32', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '64', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['e/5'], duration: '128', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '8', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '16', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '32', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '64', stem_direction: -1 }).addDotToAll(),
-        newNote({ keys: ['d/5'], duration: '128', stem_direction: -1 }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '8', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '16', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '32', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '64', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['e/5'], duration: '128', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '8', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '16', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '32', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '64', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+        newNote({ keys: ['d/5'], duration: '128', stem_direction: VF.Stem.DOWN }).addDotToAll(),
       ];
 
       var beam = new VF.Beam(notes);
