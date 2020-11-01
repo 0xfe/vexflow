@@ -193,7 +193,7 @@ VF.Test.StaveNote = (function() {
           );
           // set to weird Stave
           var stave = new VF.Stave(10, 10, 300, { spacing_between_lines_px: 20 });
-          note.setStave(stave)
+          note.setStave(stave);
           equal(
             note.getStemExtension(),
             expectedStemExtension * 2,
@@ -706,7 +706,7 @@ VF.Test.StaveNote = (function() {
 
       var whole_keys = [
         'e/3', 'a/3', 'f/5', 'a/5', 'd/6', 'a/6'
-      ]
+      ];
       for (i = 0; i < whole_keys.length; i++) {
         note = new VF.StaveNote({ keys: [whole_keys[i]], duration: 'w' })
           .setStave(stave);
