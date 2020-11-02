@@ -91,6 +91,19 @@ export class FretHandFinger extends Modifier {
     return true;
   }
 
+  static easyScoreHook({ fingerings }, note, builder) {
+    if (!fingerings) return;
+
+    fingerings.split(',')
+      .map(fingeringString => fingeringString.trim().split('.'))
+      .map(([number, position]) => {
+        const params = { number };
+        if (position) params.position = position;
+        return builder.getFactory().Fingering(params);
+      })
+      .map((fingering, index) => note.addModifier(index, fingering));
+  }
+
   constructor(number) {
     super();
     this.setAttribute('type', 'FretHandFinger');

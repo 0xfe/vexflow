@@ -9,6 +9,7 @@ import { Vex } from './vex';
 import { StaveNote } from './stavenote';
 import { Parser } from './parser';
 import { Articulation } from './articulation';
+import { FretHandFinger } from './frethandfinger';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 function L(...args) { if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args); }
@@ -313,6 +314,7 @@ export class EasyScore {
         setId,
         setClass,
         Articulation.easyScoreHook,
+        FretHandFinger.easyScoreHook,
       ],
       throwOnError: false, ...options
     };
