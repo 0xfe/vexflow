@@ -20,6 +20,7 @@ Vex.Flow.Test.EasyScore = (function() {
       VFT.runTests('Draw Tuplets', VFT.EasyScore.drawTupletsTest);
       VFT.runTests('Draw Dots',  VFT.EasyScore.drawDotsTest);
       VFT.runTests('Draw Options', VFT.EasyScore.drawOptionsTest);
+      VFT.runTests('Draw Fingerings', VFT.EasyScore.drawFingeringsTest);
     },
 
     basic: function(assert) {
@@ -269,6 +270,40 @@ Vex.Flow.Test.EasyScore = (function() {
       assert.equal(notes[1].modifiers[0].type, 'a>');
       assert.equal(notes[1].modifiers[0].position, VF.Modifier.Position.ABOVE);
       assert.equal(notes[2].getStemDirection(), VF.StaveNote.STEM_DOWN);
+    },
+
+    drawFingeringsTest: function(options) {
+      var vf = VF.Test.makeFactory(options, 500, 200);
+      const score = vf.EasyScore();
+      const system = vf.System();
+
+      const notes = score.notes('C4/q[fingerings="1"], E4[fingerings="3.above"], G4[fingerings="5.below"], (C4 E4 G4)[fingerings="1,3,5"]');
+
+      system.addStave({
+        voices: [score.voice(notes)],
+      });
+
+      vf.draw();
+
+      const assert = options.assert;
+      assert.equal(notes[0].modifiers[0].getCategory(), 'frethandfinger');
+      assert.equal(notes[0].modifiers[0].finger, '1');
+      assert.equal(notes[0].modifiers[0].position, VF.Modifier.Position.LEFT);
+      assert.equal(notes[1].modifiers[0].getCategory(), 'frethandfinger');
+      assert.equal(notes[1].modifiers[0].finger, '3');
+      assert.equal(notes[1].modifiers[0].position, VF.Modifier.Position.ABOVE);
+      assert.equal(notes[2].modifiers[0].getCategory(), 'frethandfinger');
+      assert.equal(notes[2].modifiers[0].finger, '5');
+      assert.equal(notes[2].modifiers[0].position, VF.Modifier.Position.BELOW);
+      assert.equal(notes[3].modifiers[0].getCategory(), 'frethandfinger');
+      assert.equal(notes[3].modifiers[0].finger, '1');
+      assert.equal(notes[3].modifiers[0].position, VF.Modifier.Position.LEFT);
+      assert.equal(notes[3].modifiers[1].getCategory(), 'frethandfinger');
+      assert.equal(notes[3].modifiers[1].finger, '3');
+      assert.equal(notes[3].modifiers[1].position, VF.Modifier.Position.LEFT);
+      assert.equal(notes[3].modifiers[2].getCategory(), 'frethandfinger');
+      assert.equal(notes[3].modifiers[2].finger, '5');
+      assert.equal(notes[3].modifiers[2].position, VF.Modifier.Position.LEFT);
     },
   };
 
