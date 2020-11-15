@@ -1,6 +1,10 @@
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const path = require('path');
 
 module.exports = (grunt) => {
+
   const BANNER = [
     '/**!',
     ' * VexFlow <%= pkg.version %> built on <%= grunt.template.today("yyyy-mm-dd") %>.',
@@ -12,12 +16,11 @@ module.exports = (grunt) => {
   const BASE_DIR = __dirname;
   const BUILD_DIR = path.join(BASE_DIR, 'build');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
-  const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.ts');
   const TARGET_RAW = 'vexflow-debug.js';
   const TARGET_MIN = 'vexflow-min.js';
 
-  // Used for eslint and docco
-  const SOURCES = ['src/*.js', '!src/header.js'];
+  const DOCCO_SOURCES = ['src/*.ts', '!src/header.ts'];
 
   // Take all test files in 'tests/' and build TARGET_TESTS
   const TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
@@ -35,26 +38,40 @@ module.exports = (grunt) => {
       output: {
         path: BUILD_DIR,
         filename: target,
-        library: 'Vex',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
+        library: '',
+        libraryExport: '',
+        libraryTarget: 'umd'
+      },
+      resolve: {
+        extensions: ['.ts', '.js', '.json'],
+        plugins: [
+          new TsconfigPathsPlugin({/* options: see below */ })
+        ]
       },
       devtool: (process.env.VEX_GENMAP || mode === 'production') ? 'source-map' : false,
       module: {
         rules: [
           {
-            test: /\.js?$/,
-            exclude: /(node_modules|bower_components)/,
-            use: [{
-              loader: 'babel-loader',
-              options: {
-                presets: [preset],
-                plugins: ['@babel/plugin-transform-object-assign'],
-              },
-            }],
-          },
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            use: [
+              {
+                loader: 'awesome-typescript-loader'
+              }
+            ]
+          }
         ],
       },
+      plugins: [
+        new CopyWebpackPlugin({
+          patterns: [
+            {
+              from: 'src/types',
+              to: path.join(BUILD_DIR, 'types')
+            }
+          ]
+        })
+      ]
     };
   }
 
@@ -84,7 +101,7 @@ module.exports = (grunt) => {
       },
     },
     eslint: {
-      target: SOURCES.concat('./tests'),
+      target: TEST_SOURCES,
     },
     qunit: {
       files: ['tests/flow.html'],
@@ -111,7 +128,7 @@ module.exports = (grunt) => {
       },
     },
     docco: {
-      src: SOURCES,
+      src: DOCCO_SOURCES,
       options: {
         layout: 'linear',
         output: 'build/docs',

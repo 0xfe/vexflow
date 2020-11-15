@@ -2,7 +2,8 @@
   "name": "vexflow",
   "version": "3.0.9",
   "description": "A JavaScript library for rendering music notation and guitar tablature",
-  "main": "src/index.js",
+  "main": "./build/vexflow-debug.js",
+  "types": "./build/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/0xfe/vexflow.git"
@@ -20,9 +21,12 @@
     "@babel/core": "^7.8.4",
     "@babel/plugin-transform-object-assign": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
+    "@types/raphael": "^2.3.0",
+    "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
     "browserify": "^16.5.0",
     "canvas": "^2.6.1",
+    "copy-webpack-plugin": "^6.3.2",
     "docco": "^0.8.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
@@ -48,7 +52,9 @@
     "opentype.js": "^1.1.0",
     "qunit": "^2.9.3",
     "raphael": "^2.3.0",
-    "webpack": "^4.42.1",
+    "tsconfig-paths-webpack-plugin": "^3.3.0",
+    "typescript": "^4.1.2",
+    "webpack": "^4.44.2",
     "webpack-dev-server": "^3.10.3"
   },
   "scripts": {
