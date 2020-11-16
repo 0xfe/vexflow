@@ -422,6 +422,69 @@ Vex.Flow.Test.Accidental = (function() {
       ok(true, 'Microtonal Accidental (Iranian)');
     },
 
+    sagittal: function(options) {
+      var assert = options.assert;
+      var vf = VF.Test.makeFactory(options, 700, 240);
+      var newAccid = makeNewAccid(vf);
+      var ctx = vf.getContext();
+      vf.Stave({ x: 10, y: 10, width: 650 });
+
+      var notes = [
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
+          .addAccidental(0, newAccid('accSagittal5v7KleismaUp'))
+          .addAccidental(1, newAccid('accSagittal35LargeDiesisUp')),
+
+        vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
+          .addAccidental(0, newAccid('accSagittalSharp5CDown'))
+          .addAccidental(1, newAccid('accSagittalFlat25SDown'))
+          .addAccidental(2, newAccid('accSagittalSharp55CUp'))
+          .addAccidental(3, newAccid('accSagittalDoubleFlat5v23SUp'))
+          .addAccidental(4, newAccid('accSagittalFlat49SUp'))
+          .addAccidental(5, newAccid('accSagittalFlat11v19MDown'))
+          .addAccidental(6, newAccid('accSagittal4TinasDown')),
+
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
+          .addAccidental(0, newAccid('accSagittalFractionalTinaDown'))
+          .addAccidental(1, newAccid('accSagittalDoubleSharp17kDown'))
+          .addAccidental(2, newAccid('accSagittalSharp11v19MUp'))
+          .addAccidental(3, newAccid('accSagittalSharp143CDown'))
+          .addAccidental(4, newAccid('accSagittal11v19MediumDiesisDown'))
+          .addAccidental(5, newAccid('accSagittal5v19CommaDown'))
+          .addAccidental(6, newAccid('accSagittalFlat7v11CUp')),
+
+        vf.StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
+          .addAccidental(0, newAccid('accSagittalSharp11LUp'))
+          .addAccidental(1, newAccid('accidentalWilsonMinus').setAsCautionary())
+          .addAccidental(2, newAccid('accSagittal7CommaUp').setAsCautionary())
+          .addAccidental(3, newAccid('accSagittalFlat25SDown'))
+          .addAccidental(4, newAccid('accSagittalSharp17CDown').setAsCautionary())
+          .addAccidental(5, newAccid('accSagittalDoubleSharp7v11kDown').setAsCautionary()),
+
+        vf.StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'd/5', 'g/5'], duration: '16' })
+          .addAccidental(0, newAccid('accSagittalDoubleSharp5v23SDown'))
+          .addAccidental(1, newAccid('accSagittalFlat5v13LDown'))
+          .addAccidental(2, newAccid('accSagittalAcute'))
+          .addAccidental(3, newAccid('accSagittalShaftDown'))
+          .addAccidental(4, newAccid('accSagittal7TinasUp'))
+          .addAccidental(5, newAccid('accidentalNarrowReversedFlat')),
+      ];
+
+      VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
+
+      notes.forEach(function(note, index) {
+        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+        note.getAccidentals().forEach(function(accid, index) {
+          assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
+        });
+      });
+
+      vf.draw();
+
+      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
+      ok(true, 'Microtonal Accidental');
+    },
+
     automaticAccidentals0: function(options) {
       var vf = VF.Test.makeFactory(options, 700, 200);
       var stave = vf.Stave();
