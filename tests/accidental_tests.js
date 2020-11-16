@@ -27,6 +27,7 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.runTests('Multi Voice', Vex.Flow.Test.Accidental.multiVoice);
       Vex.Flow.Test.runTests('Microtonal', Vex.Flow.Test.Accidental.microtonal);
       Vex.Flow.Test.runTests('Microtonal (Iranian)', Vex.Flow.Test.Accidental.microtonal_iranian);
+      Vex.Flow.Test.runTests('Sagittal', Vex.Flow.Test.Accidental.sagittal);
       test('Automatic Accidentals - Simple Tests', Vex.Flow.Test.Accidental.autoAccidentalWorking);
       Vex.Flow.Test.runTests('Automatic Accidentals', Vex.Flow.Test.Accidental.automaticAccidentals0);
       Vex.Flow.Test.runTests('Automatic Accidentals - C major scale in Ab', Vex.Flow.Test.Accidental.automaticAccidentals1);
@@ -482,7 +483,7 @@ Vex.Flow.Test.Accidental = (function() {
       vf.draw();
 
       Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
-      ok(true, 'Microtonal Accidental');
+      ok(true, 'Sagittal');
     },
 
     automaticAccidentals0: function(options) {
