@@ -27,3 +27,11 @@ To add a custom glyph, add it's outline to `fonts/custom_glyphs.js` and a custom
 ```sh
 $ node gonville_fontgen.js ../../src/fonts/
 ```
+
+### Generate Text Metrics for a Text Font
+
+To create text metrics for your own font, first obtain an open-type font (.otf) version of the font file.  Then run:
+```sh
+$ node textmetrics_fontgen.js myFont.otf myFont_textmetrics.json
+```
+You can register your metrics using `TextFont.registerFont()` and the metrics will be available for your module.  See the `chordsymbol.js` module for examples.

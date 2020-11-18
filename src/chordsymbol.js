@@ -12,8 +12,8 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
-import { PetalumaScriptMetrics } from './fonts/petalumaScript_metrics';
-import { RobotoSlabMetrics } from './fonts/robotoSlab_metrics';
+import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
+import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
 function L(...args) { if (ChordSymbol.DEBUG) Vex.L('Vex.Flow.ChordSymbol', args); }
@@ -88,9 +88,9 @@ export class ChordSymbol extends Modifier {
 
   static get textMetricsForEngravingFont() {
     if (Vex.Flow.DEFAULT_FONT_STACK[0].name === 'Petaluma') {
-      return PetalumaScriptMetrics;
+      return PetalumaScriptTextMetrics;
     } else {
-      return RobotoSlabMetrics;
+      return RobotoSlabTextMetrics;
     }
   }
 

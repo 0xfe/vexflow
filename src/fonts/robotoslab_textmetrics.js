@@ -1,4 +1,4 @@
-export const RobotoSlabMetrics = {
+export const RobotoSlabTextMetrics = {
   name: 'RobotoSlab',
   smufl: false,
   spacing:50,

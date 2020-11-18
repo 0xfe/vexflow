@@ -7,8 +7,8 @@
 //
 
 import { Vex } from './vex';
-import { PetalumaScriptMetrics } from './fonts/petalumaScript_metrics';
-import { RobotoSlabMetrics } from './fonts/robotoSlab_metrics';
+import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
+import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 
 // To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`.
 function L(...args) { if (TextFont.DEBUG) Vex.L('Vex.Flow.TextFont', args); }
@@ -32,9 +32,9 @@ export class TextFont  {
       TextFont.registryInstance = [];
       TextFont.registryInstance.push({
         name: 'RobotoSlab',
-        resolution: RobotoSlabMetrics.resolution,
-        glyphs: RobotoSlabMetrics.glyphs,
-        family: RobotoSlabMetrics.fontFamily,
+        resolution: RobotoSlabTextMetrics.resolution,
+        glyphs: RobotoSlabTextMetrics.glyphs,
+        family: RobotoSlabTextMetrics.fontFamily,
         serifs: true,
         monospaced: false,
         italic: false,
@@ -46,9 +46,9 @@ export class TextFont  {
       });
       TextFont.registryInstance.push({
         name: 'PetalumaScript',
-        resolution: PetalumaScriptMetrics.resolution,
-        glyphs: PetalumaScriptMetrics.glyphs,
-        family: PetalumaScriptMetrics.fontFamily,
+        resolution: PetalumaScriptTextMetrics.resolution,
+        glyphs: PetalumaScriptTextMetrics.glyphs,
+        family: PetalumaScriptTextMetrics.fontFamily,
         serifs: false,
         monospaced: false,
         italic: false,
