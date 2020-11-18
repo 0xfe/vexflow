@@ -431,27 +431,77 @@ Vex.Flow.Test.Accidental = (function() {
       vf.Stave({ x: 10, y: 10, width: 650 });
 
       var notes = [
-        vf.StaveNote({ keys: ['a/4'], duration: '1' })
-          .addAccidental(0, newAccid('accSagittal5v7KleismaUp')),
+        vf.StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
+          .addAccidental(1, newAccid('accSagittal11MediumDiesisUp'))
+          .addAccidental(2, newAccid('accSagittal5CommaDown'))
+          .addAccidental(3, newAccid('b'))
+          .addAccidental(3, newAccid('accSagittal7CommaDown')),
 
-        vf.StaveNote({ keys: ['d/4'], duration: '2' })
-          .addAccidental(0, newAccid('accSagittalFlat5CDown')),
+        vf.StaveNote({ keys: ['d/4', 'f/4', 'a/4', 'b/4'], duration: '4' })
+          .addAccidental(2, newAccid('accSagittal35LargeDiesisDown')),
 
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' })
+          .addAccidental(1, newAccid('accSagittal5CommaDown')),
 
-        vf.StaveNote({ keys: ['g/5'], duration: '16' })
-          .addAccidental(0, newAccid('accSagittalDoubleSharp17kDown'))
-          .addAccidental(0, newAccid('accSagittal2TinasDown'))
-          .addAccidental(0, newAccid('accSagittalFractionalTinaDown')),
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'b/4'], duration: '8' })
+          .addAccidental(1, newAccid('b'))
+          .addAccidental(1, newAccid('accSagittal7CommaDown'))
+          .addAccidental(3, newAccid('accSagittal11LargeDiesisDown')),
 
-        vf.StaveNote({ keys: ['a/3'], duration: '1' })
-          .addAccidental(0, newAccid('#'))
-          .addAccidental(0, newAccid('accSagittal11MediumDiesisUp')),
+        vf.StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
+          .addAccidental(1, newAccid('accSagittal11MediumDiesisUp'))
+          .addAccidental(2, newAccid('accSagittal5CommaDown'))
+          .addAccidental(3, newAccid('accSagittalFlat7CDown')),
 
-        vf.StaveNote({ keys: ['f/4'], duration: '16' })
-          .addAccidental(0, newAccid('accidentalNarrowReversedFlat'))
+        vf.StaveNote({ keys: ['d/4', 'f/4', 'a/4', 'b/4'], duration: '4' })
+          .addAccidental(2, newAccid('accSagittal35LargeDiesisDown')),
+
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' })
+          .addAccidental(1, newAccid('accSagittal5CommaDown')),
+
+        vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'b/4'], duration: '8' })
+          .addAccidental(1, newAccid('accSagittalFlat7CDown'))
+          .addAccidental(3, newAccid('accSagittal11LargeDiesisDown')),
       ];
 
-      VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
+      vf.StaveTie({
+        from: notes[0],
+        to: notes[1],
+        first_indices: [0, 1],
+        last_indices: [0, 1],
+      });
+
+      vf.StaveTie({
+        from: notes[0],
+        to: notes[1],
+        first_indices: [3],
+        last_indices: [3],
+        options: {
+          direction: VF.Stem.DOWN,
+        },
+      });
+
+      vf.StaveTie({
+        from: notes[4],
+        to: notes[5],
+        first_indices: [0, 1],
+        last_indices: [0, 1],
+      });
+
+      vf.StaveTie({
+        from: notes[4],
+        to: notes[5],
+        first_indices: [3],
+        last_indices: [3],
+        options: {
+          direction: VF.Stem.DOWN,
+        },
+      });
+
+      vf.Beam({ notes: notes.slice(2, 4) });
+      vf.Beam({ notes: notes.slice(6, 8) });
+
+      VF.Formatter.SimpleFormat(notes);
 
       notes.forEach(function(note, index) {
         Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
