@@ -1,4 +1,4 @@
-export const PetalumaScriptMetrics = {
+export const PetalumaScriptTextMetrics = {
   name: 'PetalumaScript',
   smufl: false,
   spacing:50,
