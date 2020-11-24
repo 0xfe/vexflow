@@ -870,7 +870,103 @@
     "accSagittalUnused4": {
         "codepoint": "U+E3DF", 
         "description": "Unused"
-    }, 
+    },
+    "accSagittal1MinaUp": {
+        "codepoint": "U+E3F4",
+        "description": "1 mina up, 5.7.13-schismina up, 0.42 cents up"
+    },
+    "accSagittal1MinaDown": {
+        "codepoint": "U+E3F5",
+        "description": "1 mina down, 5.7.13-schismina down, 0.42 cents down"
+    },
+    "accSagittal2MinasUp": {
+        "codepoint": "U+E3F6",
+        "description": "2 minas up, 65:77-schismina up, 0.83 cents up"
+    },
+    "accSagittal2MinasDown": {
+        "codepoint": "U+E3F7",
+        "description": "2 minas down, 65:77-schismina down, 0.83 cents down"
+    },
+    "accSagittal1TinaUp": {
+        "codepoint": "U+E3F8",
+        "description": "1 tina up, 7²⋅11⋅19/5-schismina up, 0.17 cents up"
+    },
+    "accSagittal1TinaDown": {
+        "codepoint": "U+E3F9",
+        "description": "1 tina down, 7²⋅11⋅19/5-schismina down, 0.17 cents down"
+    },
+    "accSagittal2TinasUp": {
+        "codepoint": "U+E3FA",
+        "description": "2 tinas up, 1/(7³⋅17)-schismina up, 0.30 cents up"
+    },
+    "accSagittal2TinasDown": {
+        "codepoint": "U+E3FB",
+        "description": "2 tinas down, 1/(7³⋅17)-schismina down, 0.30 cents down"
+    },
+    "accSagittal3TinasUp": {
+        "codepoint": "U+E3FC",
+        "description": "3 tinas up, 1 mina up, 1/(5⋅7⋅13)-schismina up, 0.42 cents up"
+    },
+    "accSagittal3TinasDown": {
+        "codepoint": "U+E3FD",
+        "description": "3 tinas down, 1 mina down, 1/(5⋅7⋅13)-schismina down, 0.42 cents down"
+    },
+    "accSagittal4TinasUp": {
+        "codepoint": "U+E3FE",
+        "description": "4 tinas up, 5²⋅11²/7-schismina up, 0.57 cents up"
+    },
+    "accSagittal4TinasDown": {
+        "codepoint": "U+E3FF",
+        "description": "4 tinas down, 5²⋅11²/7-schismina down, 0.57 cents down"
+    },
+    "accSagittal5TinasUp": {
+        "codepoint": "U+E400",
+        "description": "5 tinas up, 7⁴/25-schismina up, 0.72 cents up"
+    },
+    "accSagittal5TinasDown": {
+        "codepoint": "U+E401",
+        "description": "5 tinas down, 7⁴/25-schismina down, 0.72 cents down"
+    },
+    "accSagittal6TinasUp": {
+        "codepoint": "U+E402",
+        "description": "6 tinas up, 2 minas up, 65/77-schismina up, 0.83 cents up"
+    },
+    "accSagittal6TinasDown": {
+        "codepoint": "U+E403",
+        "description": "6 tinas down, 2 minas down, 65/77-schismina down, 0.83 cents down"
+    },
+    "accSagittal7TinasUp": {
+        "codepoint": "U+E404",
+        "description": "7 tinas up, 7/(5²⋅17)-schismina up, 1.02 cents up"
+    },
+    "accSagittal7TinasDown": {
+        "codepoint": "U+E405",
+        "description": "7 tinas down, 7/(5²⋅17)-schismina down, 1.02 cents down"
+    },
+    "accSagittal8TinasUp": {
+        "codepoint": "U+E406",
+        "description": "8 tinas up, 11⋅17/(5²⋅7)-schismina up, 1.14 cents up"
+    },
+    "accSagittal8TinasDown": {
+        "codepoint": "U+E407",
+        "description": "8 tinas down, 11⋅17/(5²⋅7)-schismina down, 1.14 cents down"
+    },
+    "accSagittal9TinasUp": {
+        "codepoint": "U+E408",
+        "description": "9 tinas up, 1/(7²⋅11)-schismina up, 1.26 cents up"
+    },
+    "accSagittal9TinasDown": {
+        "codepoint": "U+E409",
+        "description": "9 tinas down, 1/(7²⋅11)-schismina down, 1.26 cents down"
+    },
+    "accSagittalFractionalTinaUp": {
+        "codepoint": "U+E40A",
+        "description": "fractional tina up, 77/(5⋅37)-schismina up, 0.08 cents up"
+    },
+    "accSagittalFractionalTinaDown": {
+        "codepoint": "U+E40B",
+        "description": "fractional tina down, 77/(5⋅37)-schismina down, 0.08 cents down"
+    },
     "accdnCombDot": {
         "codepoint": "U+E8CA", 
         "description": "Combining accordion coupler dot"
