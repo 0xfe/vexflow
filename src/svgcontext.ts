@@ -32,10 +32,10 @@ const attrNamesToIgnoreMap = {
 
 export class SVGContext {
   lineWidth: number;
+  svg: SVGElement;
 
   private element: any;
   private svgNS: string;
-  private svg: SVGElement;
   private groups: Element[];
   private parent: Element;
   private path: string;
