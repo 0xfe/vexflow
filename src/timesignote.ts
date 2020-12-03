@@ -3,8 +3,9 @@
 
 import {Note} from './note';
 import {TimeSignature} from './timesignature';
-import {ITimeSignature} from "./types/common";
 import {IStaveNoteStruct} from "./types/note";
+import {BoundingBox} from "./boundingbox";
+import {ITimeSignature} from "./types/timesignature";
 
 export class TimeSigNote extends Note {
   private timeSig: ITimeSignature;
@@ -21,21 +22,21 @@ export class TimeSigNote extends Note {
     this.ignore_ticks = true;
   }
 
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox {
     return super.getBoundingBox();
   }
 
-  addToModifierContext() {
+  addToModifierContext(): this {
     /* overridden to ignore */
     return this;
   }
 
-  preFormat() {
+  preFormat(): this {
     this.setPreFormatted(true);
     return this;
   }
 
-  draw() {
+  draw(): void {
     this.stave.checkContext();
     this.setRendered();
 

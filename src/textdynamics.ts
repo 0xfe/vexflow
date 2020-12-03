@@ -10,23 +10,24 @@
 import {Vex} from './vex';
 import {Note} from './note';
 import {Glyph} from './glyph';
-import {IStringTable} from "./types/common";
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
+import {ITextDynamicsGlyph} from "./types/textdynamics";
 
 // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args);
 }
 
 export class TextDynamics extends Note {
   static DEBUG: boolean;
 
-  private sequence: string;
+  private readonly sequence: string;
+
   private line: number;
   private glyphs: Glyph[];
 
   // The glyph data for each dynamics letter
-  static get GLYPHS(): IStringTable<any> {
+  static get GLYPHS(): Record<string, ITextDynamicsGlyph> {
     return {
       'f': {
         code: 'dynamicForte',
@@ -76,13 +77,13 @@ export class TextDynamics extends Note {
   }
 
   // Set the Stave line on which the note should be placed
-  setLine(line: number) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Preformat the dynamics text
-  preFormat() {
+  preFormat(): this {
     let total_width = 0;
     // Iterate through each letter
     this.sequence.split('').forEach(letter => {
@@ -106,7 +107,7 @@ export class TextDynamics extends Note {
   }
 
   // Draw the dynamics text on the rendering context
-  draw() {
+  draw(): void {
     this.setRendered();
     const x = this.getAbsoluteX();
     const y = this.stave.getYForLine(this.line + (-3));

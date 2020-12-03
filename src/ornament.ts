@@ -15,12 +15,12 @@ import {Modifier} from './modifier';
 import {TickContext} from './tickcontext';
 import {StaveNote} from './stavenote';
 import {Glyph} from './glyph';
-import {ICodeValue} from "./types/common";
+import {ICodeValue, IState} from "./types/common";
 import {StemmableNote} from "./stemmablenote";
 import {IOrnamentRenderOptions} from "./types/ornament";
 
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', args);
 }
 
@@ -29,26 +29,27 @@ export class Ornament extends Modifier {
 
   note: StemmableNote;
 
-  private ornament: ICodeValue;
+  private readonly ornament: ICodeValue;
+  private readonly stemUpYOffset: number;
+  private readonly ornamentAlignWithNoteHead: string[] | boolean;
+  private readonly type: string;
+
   private delayed: boolean;
   private reportedWidth: number;
-  private stemUpYOffset: number;
   private adjustForStemDirection: boolean;
   private render_options: IOrnamentRenderOptions;
-  private ornamentAlignWithNoteHead: string[] | boolean;
   private glyph: Glyph;
   private accidentalUpper: Glyph;
   private accidentalLower: Glyph;
-  private type: string;
   private delayXShift: number;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'ornaments';
   }
 
   // ## Static Methods
   // Arrange ornaments inside `ModifierContext`
-  static format(ornaments: Ornament[], state: any) {
+  static format(ornaments: Ornament[], state: IState): boolean {
     if (!ornaments || ornaments.length === 0) return false;
 
     let width = 0;  // width is used by ornaments, which are always centered on the note head
@@ -107,28 +108,28 @@ export class Ornament extends Modifier {
   // ### ornamentNoteTransition
   // means the jazz ornament represents an effect from one note to another,
   // these are generally on the top of the staff.
-  static get ornamentNoteTransition() {
+  static get ornamentNoteTransition(): string[] {
     return ['flip', 'jazzTurn', 'smear'];
   }
 
   // ### ornamentAttack
   // Indicates something that happens in the attach, placed before the note and
   // any accidentals
-  static get ornamentAttack() {
+  static get ornamentAttack(): string[] {
     return ['scoop'];
   }
 
   // ### ornamentAlignWithNoteHead
   // The ornament is aligned based on the note head, but without regard to whether the
   // stem goes up or down.
-  static get ornamentAlignWithNoteHead() {
+  static get ornamentAlignWithNoteHead(): string[] {
     return ['doit', 'fall', 'fallLong', 'doitLong', 'bend', 'plungerClosed', 'plungerOpen', 'scoop'];
   }
 
   // ### ornamentRelease
   // An ornament that happens on the release of the note, generally placed after the
   // note and overlapping the next beat/measure..
-  static get ornamentRelease() {
+  static get ornamentRelease(): string[] {
     return [
       'doit', 'fall', 'fallLong', 'doitLong', 'jazzTurn', 'smear', 'flip'
     ];
@@ -136,14 +137,14 @@ export class Ornament extends Modifier {
 
   // ### ornamentArticulation
   // goes above/below the note based on space availablity
-  static get ornamentArticulation() {
+  static get ornamentArticulation(): string[] {
     return ['bend', 'plungerClosed', 'plungerOpen'];
   }
 
   // ### getMetrics
   // legacy ornaments have hard-coded metrics.  If additional ornament types are
   // added, get their metrics here.
-  getMetrics() {
+  getMetrics(): any {
     return this.getFontStack()[0].metrics.glyphs.jazzOrnaments[this.ornament.code];
   }
 
@@ -208,18 +209,18 @@ export class Ornament extends Modifier {
     }
   }
 
-  getCategory() {
+  getCategory(): string {
     return Ornament.CATEGORY;
   }
 
   // Set whether the ornament is to be delayed
-  setDelayed(delayed: boolean) {
+  setDelayed(delayed: boolean): this {
     this.delayed = delayed;
     return this;
   }
 
   // Set the upper accidental for the ornament
-  setUpperAccidental(accid: string) {
+  setUpperAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
     this.accidentalUpper = new Glyph(Flow.accidentalCodes(accid).code, scale);
     this.accidentalUpper.setOrigin(0.5, 1.0);
@@ -227,7 +228,7 @@ export class Ornament extends Modifier {
   }
 
   // Set the lower accidental for the ornament
-  setLowerAccidental(accid: string) {
+  setLowerAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
     this.accidentalLower = new Glyph(Flow.accidentalCodes(accid).code, scale);
     this.accidentalLower.setOrigin(0.5, 1.0);
@@ -235,7 +236,7 @@ export class Ornament extends Modifier {
   }
 
   // Render ornament in position next to note.
-  draw() {
+  draw(): void {
     this.checkContext();
 
     if (!this.note || this.index == null) {
@@ -299,7 +300,7 @@ export class Ornament extends Modifier {
         delayXShift += this.glyph.getMetrics().width / 2;
         const nextContext = TickContext.getNextContext(this.note.getTickContext());
         if (nextContext) {
-          delayXShift += (nextContext.getX() - startX) * 0.5;
+          delayXShift += ((nextContext as TickContext).getX() - startX) * 0.5;
         } else {
           delayXShift += (stave.x + stave.width - startX) * 0.5;
         }

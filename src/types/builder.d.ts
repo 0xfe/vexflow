@@ -1,10 +1,12 @@
+import {Note} from "../note";
+
 export interface IBuilderOptions {
   clef: string;
   stem: string
 }
 
 export interface IBuilderElements {
-  notes: any[];
+  notes: Note[];
   accidentals: any[]
 }
 

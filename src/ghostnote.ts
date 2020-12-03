@@ -2,8 +2,8 @@
 //
 // ## Description
 
-import { Vex } from './vex';
-import { StemmableNote } from './stemmablenote';
+import {Vex} from './vex';
+import {StemmableNote} from './stemmablenote';
 import {Stave} from "./stave";
 
 export class GhostNote extends StemmableNote {
@@ -36,21 +36,21 @@ export class GhostNote extends StemmableNote {
     this.setWidth(0);
   }
 
-  isRest() { return true; }
+  isRest(): boolean { return true; }
 
-  setStave(stave: Stave) {
+  setStave(stave: Stave): this {
     super.setStave(stave);
     return this;
   }
 
-  addToModifierContext() { /* intentionally overridden */ return this; }
+  addToModifierContext(): this { /* intentionally overridden */ return this; }
 
-  preFormat() {
+  preFormat(): this {
     this.setPreFormatted(true);
     return this;
   }
 
-  draw() {
+  draw(): void {
     if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
     // Draw the modifiers

@@ -18,12 +18,12 @@
 // and class.
 
 import {Vex} from './vex';
-import {IStringTable} from "./types/common";
 import {Element} from "./element";
+import {IRegistryIndex, IRegistryUpdate} from "./types/registry";
 
 export const X = Vex.MakeException('RegistryError');
 
-function setIndexValue(index: IStringTable<IStringTable<any>>, name: string, value: string, id: string, elem: Element) {
+function setIndexValue(index: IRegistryIndex, name: string, value: string, id: string, elem: Element) {
   if (!index[name][value]) index[name][value] = {};
   index[name][value][id] = elem;
 }
@@ -31,11 +31,11 @@ function setIndexValue(index: IStringTable<IStringTable<any>>, name: string, val
 export class Registry {
   static defaultRegistry: Registry;
 
-  static get INDEXES() {
+  static get INDEXES(): string[] {
     return ['type'];
   }
 
-  private index: any;
+  private index: IRegistryIndex;
 
   constructor() {
     this.clear();
@@ -43,19 +43,19 @@ export class Registry {
 
   // If you call `enableDefaultRegistry`, any new elements will auto-register with
   // the provided registry as soon as they're constructed.
-  static enableDefaultRegistry(registry: Registry) {
+  static enableDefaultRegistry(registry: Registry): void {
     Registry.defaultRegistry = registry;
   }
 
-  static getDefaultRegistry() {
+  static getDefaultRegistry(): Registry {
     return Registry.defaultRegistry;
   }
 
-  static disableDefaultRegistry() {
+  static disableDefaultRegistry(): void {
     Registry.defaultRegistry = null;
   }
 
-  clear() {
+  clear(): this {
     // Indexes are represented as maps of maps (of maps). This allows
     // for both multi-labeling (e.g., an element can have multiple classes)
     // and efficient lookup.
@@ -69,7 +69,7 @@ export class Registry {
 
   // Updates the indexes for element 'id'. If an element's attribute changes
   // from A -> B, make sure to remove the element from A.
-  updateIndex({id, name, value, oldValue}: any) {
+  updateIndex({id, name, value, oldValue}: IRegistryUpdate): void {
     const elem = this.getElementById(id);
     if (oldValue !== null && this.index[name][oldValue]) {
       delete this.index[name][oldValue][id];
@@ -81,7 +81,7 @@ export class Registry {
 
   // Register element `elem` with this registry. This adds the element to its index and watches
   // it for attribute changes.
-  register(elem: Element, id?: string) {
+  register(elem: Element, id?: string): this {
     id = id || elem.getAttribute('id');
 
     if (!id) {
@@ -98,11 +98,11 @@ export class Registry {
     return this;
   }
 
-  getElementById(id: string) {
+  getElementById(id: string): Element {
     return this.index.id[id] ? this.index.id[id][id] : null;
   }
 
-  getElementsByAttribute(attrName: string, value: string) {
+  getElementsByAttribute(attrName: string, value: string): Element[] {
     const index = this.index[attrName];
     if (index && index[value]) {
       return Object.keys(index[value]).map(i => index[value][i]);
@@ -111,18 +111,18 @@ export class Registry {
     }
   }
 
-  getElementsByType(type: string) {
+  getElementsByType(type: string): Element[] {
     return this.getElementsByAttribute('type', type);
   }
 
-  getElementsByClass(className: string) {
+  getElementsByClass(className: string): Element[] {
     return this.getElementsByAttribute('class', className);
   }
 
   // This is called by the element when an attribute value changes. If an indexed
   // attribute changes, then update the local index.
-  onUpdate({id, name, value, oldValue}: any) {
-    function includes(array: any[], value: any) {
+  onUpdate({id, name, value, oldValue}: IRegistryUpdate): this {
+    function includes(array: string[], value: string) {
       return array.filter(x => x === value).length > 0;
     }
 

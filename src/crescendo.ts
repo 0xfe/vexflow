@@ -15,7 +15,7 @@ import {DrawContext, ICrescendoParams} from "./types/common";
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
 
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args);
 }
 
@@ -73,32 +73,32 @@ export class Crescendo extends Note {
   }
 
   // Set the line to center the element on
-  setLine(line: number) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Set the full height at the open end
-  setHeight(height: number) {
+  setHeight(height: number): this {
     this.height = height;
     return this;
   }
 
   // Set whether the sign should be a descresendo by passing a bool
   // to `decresc`
-  setDecrescendo(decresc: boolean) {
+  setDecrescendo(decresc: boolean): this {
     this.decrescendo = decresc;
     return this;
   }
 
   // Preformat the note
-  preFormat() {
+  preFormat(): this {
     this.preFormatted = true;
     return this;
   }
 
   // Render the Crescendo object onto the canvas
-  draw() {
+  draw(): void {
     this.checkContext();
     this.setRendered();
 
@@ -106,7 +106,7 @@ export class Crescendo extends Note {
     const next_context = TickContext.getNextContext(tick_context);
 
     const begin_x = this.getAbsoluteX();
-    const end_x = next_context ? next_context.getX() : this.stave.x + this.stave.width;
+    const end_x = next_context ? (next_context as TickContext).getX() : this.stave.x + this.stave.width;
     const y = this.stave.getYForLine(this.line + (-3)) + 1;
 
     L(

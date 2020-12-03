@@ -1,8 +1,18 @@
-import {IKeySpec, IStringTable} from "./common";
+import {IAccItem, IKeySpec} from "./common";
 
 export interface IKeySignature {
-  (spec: string): any[];
+  (spec: string): IAccItem[];
 
-  keySpecs: IStringTable<IKeySpec>;
+  keySpecs: Record<string, IKeySpec>;
   accidentalList: (acc: string) => number[]
+}
+
+export interface IAccidentalSpacing {
+  above: number;
+  below: number;
+}
+
+export interface IAccList {
+  accList: IAccItem[];
+  type: string;
 }

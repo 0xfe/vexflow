@@ -18,12 +18,12 @@ export class FretHandFinger extends Modifier {
   private y_offset: number;
   private font: IFont;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'frethandfinger';
   }
 
   // Arrange fingerings inside a ModifierContext.
-  static format(nums: FretHandFinger[], state: any) {
+  static format(nums: FretHandFinger[], state: any): boolean {
     const {left_shift, right_shift} = state;
     const num_spacing = 1;
 
@@ -101,7 +101,7 @@ export class FretHandFinger extends Modifier {
     return true;
   }
 
-  static easyScoreHook({fingerings}: any, note: StaveNote, builder: Builder) {
+  static easyScoreHook({fingerings}: any, note: StaveNote, builder: Builder): void {
     if (!fingerings) return;
 
     fingerings.split(',')
@@ -134,26 +134,26 @@ export class FretHandFinger extends Modifier {
     } as IFont;
   }
 
-  getCategory() {
+  getCategory(): string {
     return FretHandFinger.CATEGORY;
   }
 
-  setFretHandFinger(number: string) {
+  setFretHandFinger(number: string): this {
     this.finger = number;
     return this;
   }
 
-  setOffsetX(x: number) {
+  setOffsetX(x: number): this {
     this.x_offset = x;
     return this;
   }
 
-  setOffsetY(y: number) {
+  setOffsetY(y: number): this {
     this.y_offset = y;
     return this;
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
 
     if (!this.note || this.index == null) {

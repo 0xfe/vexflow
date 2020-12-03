@@ -5,7 +5,7 @@ import {IFont} from "./font";
 export interface INoteValue {
   index: number;
   int_val: number;
-  accidental: any;
+  accidental: never;
   rest: boolean;
   octave: any;
   shift_right: number;
@@ -70,7 +70,7 @@ export interface IStaveNoteStruct {
   subscript: string;
   superscript: string;
   text: string;
-  positions: any[];
+  positions: never[];
   slashed: any;
   style: any;
   stem_down_x_offset: number;
@@ -96,4 +96,18 @@ export interface IStaveNoteStruct {
   duration: string;
   dots: number;
   type: string;
+}
+
+export interface INoteDuration {
+  duration: string;
+  dots: number;
+  type: string;
+}
+
+export interface IParsedNote {
+  duration: string;
+  type: string;
+  customTypes: string[];
+  dots: number;
+  ticks: number;
 }

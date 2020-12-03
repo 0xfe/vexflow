@@ -11,35 +11,38 @@ import {Vex} from './vex';
 import {Flow} from './tables';
 import {Element} from './element';
 import {Renderer} from './renderer';
-import {DrawContext, IStringTable, ITextBracketRenderOptions} from "./types/common";
+import {DrawContext, ITextBracketRenderOptions} from "./types/common";
 import {Note} from "./note";
 import {IFont} from "./types/font";
+import {ITextBracketParams} from "./types/textbracket";
+import {IGlyphProps} from "./types/glyph";
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args);
 }
 
 export class TextBracket extends Element {
   static DEBUG: boolean;
 
-  private text: string;
-  private superscript: string;
+  private readonly text: string;
+  private readonly superscript: string;
+  private readonly position: number;
+
   private line: number;
   private start: Note;
   private stop: Note;
-  private position: number;
   private font: IFont;
   private render_options: ITextBracketRenderOptions;
 
-  static get Positions() {
+  static get Positions(): Record<string, number> {
     return {
       TOP: 1,
       BOTTOM: -1,
     };
   }
 
-  static get PositionString(): IStringTable<number> {
+  static get PositionString(): Record<string, number> {
     return {
       top: TextBracket.Positions.TOP,
       bottom: TextBracket.Positions.BOTTOM,
@@ -51,8 +54,8 @@ export class TextBracket extends Element {
                 stop,
                 text = '',
                 superscript = '',
-                position = TextBracket.Positions.TOP,
-              }: any) {
+                position = TextBracket.Positions.TOP
+              }: ITextBracketParams) {
     super();
     this.setAttribute('type', 'TextBracket');
 
@@ -89,7 +92,7 @@ export class TextBracket extends Element {
   }
 
   // Apply the text backet styling to the provided `context`
-  applyStyle(context: DrawContext) {
+  applyStyle(context: DrawContext): this {
     // Apply style for the octave bracket
     context.setFont(this.font.family, this.font.size, this.font.weight);
     context.setStrokeStyle(this.render_options.color);
@@ -101,27 +104,27 @@ export class TextBracket extends Element {
 
   // Set whether the bracket line should be `dashed`. You can also
   // optionally set the `dash` pattern by passing in an array of numbers
-  setDashed(dashed: boolean, dash: number[]) {
+  setDashed(dashed: boolean, dash: number[]): this {
     this.render_options.dashed = dashed;
     if (dash) this.render_options.dash = dash;
     return this;
   }
 
   // Set the font for the text
-  setFont(font: IFont) {
+  setFont(font: IFont): this {
     // We use Object.assign to support partial updates to the font object
     this.font = {...this.font, ...font};
     return this;
   }
 
   // Set the rendering `context` for the octave bracket
-  setLine(line: number) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Draw the octave bracket on the rendering context
-  draw() {
+  draw(): void {
     const ctx = this.context;
     this.setRendered();
 
@@ -169,7 +172,7 @@ export class TextBracket extends Element {
     // Setup initial coordinates for the bracket line
     let start_x = start.x;
     let line_y = super_y;
-    const end_x = stop.x + this.stop.getGlyph().getWidth();
+    const end_x = stop.x + (this.stop.getGlyph() as IGlyphProps).getWidth();
 
     // Adjust x and y coordinates based on position
     if (this.position === TextBracket.Positions.TOP) {

@@ -6,16 +6,17 @@ import {Stave} from "./stave";
 import {IFont} from "./types/font";
 
 export class Volta extends StaveModifier {
-  private font: IFont;
-  private volta: number;
-  private y_shift: number;
-  private number: string;
+  private readonly volta: number;
+  private readonly number: string;
 
-  static get CATEGORY() {
+  private font: IFont;
+  private y_shift: number;
+
+  static get CATEGORY(): string {
     return 'voltas';
   }
 
-  static get type() {
+  static get type(): Record<string, number> {
     return {
       NONE: 1,
       BEGIN: 2,
@@ -39,16 +40,16 @@ export class Volta extends StaveModifier {
     } as IFont;
   }
 
-  getCategory() {
+  getCategory(): string {
     return Volta.CATEGORY;
   }
 
-  setShiftY(y: number) {
+  setShiftY(y: number): this {
     this.y_shift = y;
     return this;
   }
 
-  draw(stave?: Stave, x?: number) {
+  draw(stave?: Stave, x?: number): this {
     const ctx = stave.checkContext();
     this.setRendered();
 

@@ -8,9 +8,13 @@ import {Element} from './element';
 import {Factory} from './factory';
 import {Formatter} from './formatter';
 import {Note} from './note';
-import {DrawContext, ISystemOptions} from "./types/common";
+import {DrawContext} from "./types/common";
 import {Voice} from "./voice";
 import {StaveConnector} from "./staveconnector";
+import {IDebugNoteMetrics, ISystemOptions, ISystemParams} from "./types/system";
+import {Stave} from "./stave";
+import {IFactoryParams} from "./types/factory";
+import {IStaveOptions} from "./types/stave";
 
 export class System extends Element {
   private options: ISystemOptions;
@@ -18,9 +22,9 @@ export class System extends Element {
   private formatter: Formatter;
   private startX: number;
   private lastY: number;
-  private parts: any[];
+  private parts: ISystemParams[];
   private connector: StaveConnector;
-  private debugNoteMetricsYs: any[];
+  private debugNoteMetricsYs: IDebugNoteMetrics[];
 
   constructor(params = {} as ISystemOptions) {
     super();
@@ -29,7 +33,7 @@ export class System extends Element {
     this.parts = [];
   }
 
-  setOptions(options = {} as ISystemOptions) {
+  setOptions(options = {} as ISystemOptions): void {
     this.options = {
       x: 10,
       y: 10,
@@ -48,25 +52,25 @@ export class System extends Element {
       },
     };
 
-    this.factory = this.options.factory || new Factory({renderer: {el: null}});
+    this.factory = this.options.factory || new Factory({renderer: {el: null}} as IStaveOptions);
   }
 
-  setContext(context: DrawContext) {
+  setContext(context: DrawContext): this {
     super.setContext(context);
     this.factory.setContext(context);
     return this;
   }
 
-  addConnector(type = 'double') {
+  addConnector(type = 'double'): StaveConnector {
     this.connector = this.factory.StaveConnector({
       top_stave: this.parts[0].stave,
       bottom_stave: this.parts[this.parts.length - 1].stave,
       type,
-    });
+    } as IFactoryParams);
     return this.connector;
   }
 
-  addStave(params: any) {
+  addStave(params: ISystemParams): Stave {
     params = {
       stave: null,
       voices: [],
@@ -86,7 +90,7 @@ export class System extends Element {
         y: this.options.y,
         width: this.options.width,
         options: params.options,
-      });
+      } as IFactoryParams);
     }
 
     params.voices.forEach((voice: Voice) =>
@@ -94,21 +98,21 @@ export class System extends Element {
         .setContext(this.context)
         .setStave(params.stave)
         .getTickables()
-        .forEach(tickable => (tickable as any).setStave(params.stave))
+        .forEach(tickable => tickable.setStave(params.stave))
     );
 
     this.parts.push(params);
     return params.stave;
   }
 
-  format() {
+  format(): void {
     const formatter = new Formatter({...this.options.details});
     this.formatter = formatter;
 
     let y = this.options.y;
     let startX = 0;
     let allVoices: Voice[] = [];
-    const debugNoteMetricsYs: any[] = [];
+    const debugNoteMetricsYs: IDebugNoteMetrics[] = [];
 
     // Join the voices for each stave.
     this.parts.forEach(part => {
@@ -118,7 +122,7 @@ export class System extends Element {
       y = y + part.stave.space(part.spaceBelow);
       y = y + part.stave.space(this.options.spaceBetweenStaves);
       if (part.debugNoteMetrics) {
-        debugNoteMetricsYs.push({y, voice: part.voices[0]} as any);
+        debugNoteMetricsYs.push({y, voice: part.voices[0]});
         y += 15;
       }
       allVoices = allVoices.concat(part.voices);
@@ -143,7 +147,7 @@ export class System extends Element {
     this.lastY = y;
   }
 
-  draw() {
+  draw(): void {
     // Render debugging information, if requested.
     const ctx = this.checkContext();
     this.setRendered();

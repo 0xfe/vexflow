@@ -4,6 +4,7 @@
 import {Note} from './note';
 import {KeySignature} from './keysignature';
 import {IStaveNoteStruct} from "./types/note";
+import {BoundingBox} from "./boundingbox";
 
 export class KeySigNote extends Note {
   private keySignature: KeySignature;
@@ -18,16 +19,16 @@ export class KeySigNote extends Note {
     this.ignore_ticks = true;
   }
 
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox {
     return super.getBoundingBox();
   }
 
-  addToModifierContext() {
+  addToModifierContext(): this {
     /* overridden to ignore */
     return this;
   }
 
-  preFormat() {
+  preFormat(): this {
     this.setPreFormatted(true);
     this.keySignature.setStave(this.stave);
     this.keySignature.format();
@@ -35,7 +36,7 @@ export class KeySigNote extends Note {
     return this;
   }
 
-  draw() {
+  draw(): void {
     this.stave.checkContext();
     this.setRendered();
     this.keySignature.x = this.getAbsoluteX();

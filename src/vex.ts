@@ -7,37 +7,39 @@
 
 /* eslint max-classes-per-file: "off" */
 
-import {IFlow} from "./types/common";
+import {DrawContext, IFlow} from "./types/common";
 
 export interface IPrefix {
   (text: string): string;
+
   prefix: string;
 }
 
 export interface IVex {
-  (): any;
-  L: (block: string, args?: any) => void;
-  MakeException: (name: string) => any;
+  (): never;
+
+  L: (block: string, args?: unknown[]) => void;
+  MakeException: (name: string) => typeof GenericException;
   RuntimeError: typeof RuntimeError;
   RERR: typeof RuntimeError;
   Merge: <T>(destination: T, source: T) => T;
   Min: (...values: number[]) => number;
   Max: (...values: number[]) => number;
-  forEach: (a: any, fn: (...args: any[]) => void) => void;
+  forEach: (a: never[], fn: (...args: unknown[]) => void) => void;
   RoundN: (x: number, n: number) => number;
   MidLine: (a: number, b: number) => number;
-  SortAndUnique: <T>(arr: T[], cmp: (a: T, b: T) => number, eq: <T1>(a: T1, b: T1) => boolean) => any[];
+  SortAndUnique: <T>(arr: T[], cmp: (a: T, b: T) => number, eq: <T1>(a: T1, b: T1) => boolean) => T[];
   Contains: <T>(arr: T[], obj: T) => boolean;
-  getCanvasContext: (canvasId: string) => any;
-  drawDot: (ctx: any, x: number, y: number, color: string) => void; //TODO create Interface Context
-  BM: (a: any, b: any) => void;
+  getCanvasContext: (canvasId: string) => CanvasRenderingContext2D;
+  drawDot: (ctx: DrawContext, x: number, y: number, color: string) => void; //TODO create Interface Context
+  BM: (a: never, b: () => void) => void;
   StackTrace: () => string;
-  W: (...args: any[]) => void;
+  W: (...args: unknown[]) => void;
   Prefix: IPrefix;
   Flow: IFlow;
 }
 
-const Vex: IVex = function() { } as IVex;
+const Vex: IVex = {} as IVex;
 
 // Default log function sends all arguments to console.
 Vex.L = (block, args) => {
@@ -46,22 +48,28 @@ Vex.L = (block, args) => {
   window.console.log(block + ': ' + line);
 };
 
+export class GenericException extends Error {
+  data: unknown;
 
+  constructor(message?: string, data?: unknown) {
+    super(message);
+    this.message = message;
+    this.data = data;
+  }
+}
 
-Vex.MakeException = (name: string) => {
-  return class GenericException extends Error {
-    constructor(message: string, public data: any) {
-      super(message);
+Vex.MakeException = (name: string): typeof GenericException => {
+  return class extends GenericException {
+    constructor(message?: string, data?: unknown) {
+      super(message, data);
       this.name = name;
-      this.message = message;
-      this.data = data;
     }
   };
 };
 
 // Default runtime exception.
 class RuntimeError {
-  constructor(private code: string, private message?: string) {
+  constructor(private readonly code: string, private readonly message?: string) {
     this.code = code;
     this.message = message;
   }
@@ -110,10 +118,10 @@ Vex.MidLine = (a, b) => {
 
 // Take `arr` and return a new list consisting of the sorted, unique,
 // contents of arr. Does not modify `arr`.
-Vex.SortAndUnique = <T>(arr: T[], cmp: (a: T, b: T) => number, eq: <T>(a: T, b: T) => boolean) => {
+Vex.SortAndUnique = <T>(arr: T[], cmp: (a: T, b: T) => number, eq: <T>(a: T, b: T) => boolean): T[] => {
   if (arr.length > 1) {
     const newArr = [];
-    let last;
+    let last = undefined;
     arr.sort(cmp);
 
     for (let i = 0; i < arr.length; ++i) {
@@ -194,9 +202,9 @@ Vex.W = (...args) => {
 
 // Used by various classes (e.g., SVGContext) to provide a
 // unique prefix to element names (or other keys in shared namespaces).
-Vex.Prefix = function (text) {
+Vex.Prefix = function(text) {
   return Vex.Prefix.prefix + text;
 } as IPrefix;
 Vex.Prefix.prefix = 'vf-';
 
-export { Vex };
+export {Vex};

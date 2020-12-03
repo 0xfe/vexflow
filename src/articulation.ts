@@ -14,14 +14,19 @@ import {Flow} from './tables';
 import {Modifier} from './modifier';
 import {Glyph} from './glyph';
 import {Stem} from './stem';
-import {IStringTable} from "./types/common";
 import {StaveNote} from "./stavenote";
 import {Note} from "./note";
 import {Builder} from "./easyscore";
-import {IArticulation, IArticulationRenderOptions, IArticulationState, IStringArticulation} from "./types/articulation";
+import {
+  IArticulation,
+  IArticulationRenderOptions,
+  IArticulationState,
+  IStringArticulation
+} from "./types/articulation";
+import {IFactoryParams} from "./types/factory";
 
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args);
 }
 
@@ -158,17 +163,18 @@ const getInitialOffset = (note: StaveNote, position: number) => {
 export class Articulation extends Modifier {
   note: StaveNote;
 
+  private readonly type: string;
+
   private render_options: IArticulationRenderOptions;
   private articulation: IArticulation;
   private glyph: Glyph;
-  private type: string;
   static DEBUG: boolean;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'articulations';
   }
 
-  static get INITIAL_OFFSET() {
+  static get INITIAL_OFFSET(): number {
     return -0.5;
   }
 
@@ -188,7 +194,7 @@ export class Articulation extends Modifier {
   // Ideally, when this function has completed, the vertical articulation positions
   // should be ready to render without further adjustment. But the current state
   // is far from this ideal.
-  static format(articulations: Articulation[], state: IArticulationState) {
+  static format(articulations: Articulation[], state: IArticulationState): boolean {
     if (!articulations || articulations.length === 0) return false;
 
     const isAbove = (artic: Articulation) => artic.getPosition() === ABOVE;
@@ -223,10 +229,10 @@ export class Articulation extends Modifier {
     return true;
   }
 
-  static easyScoreHook({articulations}: IStringArticulation, note: StaveNote, builder: Builder) {
+  static easyScoreHook({articulations}: IStringArticulation, note: StaveNote, builder: Builder): void {
     if (!articulations) return;
 
-    const articNameToCode: IStringTable<string> = {
+    const articNameToCode: Record<string, string> = {
       staccato: 'a.',
       tenuto: 'a-',
       accent: 'a>'
@@ -236,8 +242,8 @@ export class Articulation extends Modifier {
       .split(',')
       .map(articString => articString.trim().split('.'))
       .map(([name, position]) => {
-        const artic = {type: articNameToCode[name]} as any;
-        if (position) artic.position = Modifier.PositionString[position];
+        const artic = {type: articNameToCode[name]} as IFactoryParams;
+        if (position) artic.position = Modifier.PositionString[position] as any;
         return builder.getFactory().Articulation(artic);
       })
       .map((artic: Modifier) => note.addModifier(0, artic));
@@ -260,7 +266,7 @@ export class Articulation extends Modifier {
     this.reset();
   }
 
-  reset() {
+  reset(): void {
     this.articulation = Flow.articulationCodes(this.type);
     if (!this.articulation) {
       throw new Vex.RERR('ArgumentError', `Articulation not found: ${this.type}`);
@@ -272,12 +278,12 @@ export class Articulation extends Modifier {
     this.setWidth(this.glyph.getMetrics().width);
   }
 
-  getCategory() {
+  getCategory(): string {
     return Articulation.CATEGORY;
   }
 
   // Render articulation in position next to note.
-  draw() {
+  draw(): void {
     const {
       note, index, position, glyph,
       articulation: {between_lines: canSitBetweenLines},

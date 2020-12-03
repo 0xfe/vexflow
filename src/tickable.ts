@@ -13,29 +13,30 @@ import {Voice} from "./voice";
 import {Tuplet} from "./tuplet";
 import {ModifierContext} from "./modifiercontext";
 import {TickContext} from "./tickcontext";
-import {Modifier} from "./modifier";
 import {IFormatterMetrics} from "./types/formatter";
+import {ModifierClass} from "./types/modifiercontext";
 
 export class Tickable extends Element {
   ignore_ticks: boolean;
   tupletStack: Tuplet[];
   tuplet: Tuplet;
   ticks: Fraction;
+  center_x_shift: number;
+  voice: Voice;
 
   protected width: number;
   protected x_shift: number;
   protected preFormatted: boolean;
   protected postFormatted: boolean;
-  protected voice: Voice;
   protected modifierContext: ModifierContext | TickContext;
   protected tickContext: TickContext;
-  protected modifiers: Modifier[];
+  protected modifiers: ModifierClass[];
+
+  private readonly tickMultiplier: Fraction;
+  private readonly formatterMetrics: IFormatterMetrics;
 
   private intrinsicTicks: number;
-  private tickMultiplier: Fraction;
   private align_center: boolean;
-  center_x_shift: number;
-  private formatterMetrics: IFormatterMetrics;
 
   constructor() {
     super();
@@ -92,24 +93,24 @@ export class Tickable extends Element {
     };
   }
 
-  reset() {
+  reset(): this {
     return this;
   }
 
-  getTicks() {
+  getTicks(): Fraction {
     return this.ticks;
   }
 
-  shouldIgnoreTicks() {
+  shouldIgnoreTicks(): boolean {
     return this.ignore_ticks;
   }
 
   // Get and set width of note. Used by the formatter for positioning.
-  setWidth(width: number) {
+  setWidth(width: number): void {
     this.width = width;
   }
 
-  getWidth() {
+  getWidth(): number {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
     }
@@ -118,17 +119,17 @@ export class Tickable extends Element {
   }
 
   // Displace note by `x` pixels. Used by the formatter.
-  setXShift(x: number) {
+  setXShift(x: number): this {
     this.x_shift = x;
     return this;
   }
 
-  getXShift() {
+  getXShift(): number {
     return this.x_shift;
   }
 
   // Get `X` position of this tick context.
-  getX() {
+  getX(): number {
     if (!this.tickContext) {
       throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
     }
@@ -136,9 +137,11 @@ export class Tickable extends Element {
     return this.tickContext.getX() + this.x_shift;
   }
 
-  getFormatterMetrics() { return this.formatterMetrics; }
+  getFormatterMetrics(): IFormatterMetrics {
+    return this.formatterMetrics;
+  }
 
-  getCenterXShift() {
+  getCenterXShift(): number {
     if (this.isCenterAligned()) {
       return this.center_x_shift;
     }
@@ -146,27 +149,27 @@ export class Tickable extends Element {
     return 0;
   }
 
-  isCenterAligned() {
+  isCenterAligned(): boolean {
     return this.align_center;
   }
 
-  setCenterAlignment(align_center: boolean) {
+  setCenterAlignment(align_center: boolean): this {
     this.align_center = align_center;
     return this;
   }
 
   // Every tickable must be associated with a voice. This allows formatters
   // and preFormatter to associate them with the right modifierContexts.
-  getVoice() {
+  getVoice(): Voice {
     if (!this.voice) throw new Vex.RERR('NoVoice', 'Tickable has no voice.');
     return this.voice;
   }
 
-  setVoice(voice: Voice) {
+  setVoice(voice: Voice): void {
     this.voice = voice;
   }
 
-  getTuplet() {
+  getTuplet(): Tuplet {
     return this.tuplet;
   }
 
@@ -179,7 +182,7 @@ export class Tickable extends Element {
    * Removes any prior tuplets from the tick calculation and
    * resets the intrinsic tick value to
    */
-  resetTuplet(tuplet: Tuplet) {
+  resetTuplet(tuplet: Tuplet): this {
     let noteCount;
     let notesOccupied;
     if (tuplet) {
@@ -206,7 +209,7 @@ export class Tickable extends Element {
     return this;
   }
 
-  setTuplet(tuplet: Tuplet) {
+  setTuplet(tuplet: Tuplet): this {
     // Attach to new tuplet
 
     if (tuplet) {
@@ -224,29 +227,29 @@ export class Tickable extends Element {
   }
 
   /** optional, if tickable has modifiers **/
-  addToModifierContext(mc: ModifierContext | TickContext) {
+  addToModifierContext(mc: ModifierContext | TickContext): void {
     this.modifierContext = mc;
     // Add modifiers to modifier context (if any)
     this.preFormatted = false;
   }
 
   /** optional, if tickable has modifiers **/
-  addModifier(mod: Modifier) {
+  addModifier(mod: ModifierClass): this {
     this.modifiers.push(mod);
     this.preFormatted = false;
     return this;
   }
 
-  getModifiers() {
+  getModifiers(): ModifierClass[] {
     return this.modifiers;
   }
 
-  setTickContext(tc: TickContext) {
+  setTickContext(tc: TickContext): void {
     this.tickContext = tc;
     this.preFormatted = false;
   }
 
-  preFormat() {
+  preFormat(): void {
     if (this.preFormatted) return;
 
     this.width = 0;
@@ -256,31 +259,31 @@ export class Tickable extends Element {
     }
   }
 
-  postFormat() {
+  postFormat(): this {
     if (this.postFormatted) return this;
     this.postFormatted = true;
     return this;
   }
 
-  getIntrinsicTicks() {
+  getIntrinsicTicks(): number {
     return this.intrinsicTicks;
   }
 
-  setIntrinsicTicks(intrinsicTicks: number) {
+  setIntrinsicTicks(intrinsicTicks: number): void {
     this.intrinsicTicks = intrinsicTicks;
     this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
   }
 
-  getTickMultiplier() {
+  getTickMultiplier(): Fraction {
     return this.tickMultiplier;
   }
 
-  applyTickMultiplier(numerator: number, denominator: number) {
+  applyTickMultiplier(numerator: number, denominator: number): void {
     this.tickMultiplier.multiply(numerator, denominator);
     this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
   }
 
-  setDuration(duration: IDuration) {
+  setDuration(duration: IDuration): void {
     const ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();

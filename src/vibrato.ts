@@ -3,20 +3,23 @@
 // ## Description
 // This class implements vibratos.
 
-import { Vex } from './vex';
-import { Modifier } from './modifier';
-import { Bend } from './bend';
+import {Vex} from './vex';
+import {Modifier} from './modifier';
+import {Bend} from './bend';
 import {DrawContext, IVibratoRenderOptions} from "./types/common";
 import {ModifierContext} from "./modifiercontext";
+import {IVibratoState} from "./types/vibrato";
 
 export class Vibrato extends Modifier {
-  private render_options: IVibratoRenderOptions;
+  private readonly render_options: IVibratoRenderOptions;
 
-  static get CATEGORY() { return 'vibratos'; }
+  static get CATEGORY(): string {
+    return 'vibratos';
+  }
 
   // ## Static Methods
   // Arrange vibratos inside a `ModifierContext`.
-  static format(vibratos: Vibrato[], state: any, context: ModifierContext) {
+  static format(vibratos: Vibrato[], state: IVibratoState, context: ModifierContext): boolean {
     if (!vibratos || vibratos.length === 0) return false;
 
     // Vibratos are always on top.
@@ -60,15 +63,23 @@ export class Vibrato extends Modifier {
 
     this.setVibratoWidth(this.render_options.vibrato_width);
   }
-  getCategory() { return Vibrato.CATEGORY; }
-  setHarsh(harsh: boolean) { this.render_options.harsh = harsh; return this; }
-  setVibratoWidth(width: number) {
+
+  getCategory(): string {
+    return Vibrato.CATEGORY;
+  }
+
+  setHarsh(harsh: boolean): Vibrato {
+    this.render_options.harsh = harsh;
+    return this;
+  }
+
+  setVibratoWidth(width: number): Vibrato {
     this.render_options.vibrato_width = width;
     this.setWidth(width);
     return this;
   }
 
-  draw() {
+  draw(): void {
     const ctx = this.checkContext();
 
     if (!this.note) {
@@ -86,8 +97,8 @@ export class Vibrato extends Modifier {
 
   // Static rendering method that can be called from
   // other classes (e.g. VibratoBracket)
-  static renderVibrato(ctx: DrawContext, x: number, y: number, opts: any) {
-    const { harsh, vibrato_width, wave_width, wave_girth, wave_height } = opts;
+  static renderVibrato(ctx: DrawContext, x: number, y: number, opts: IVibratoRenderOptions): void {
+    const {harsh, vibrato_width, wave_width, wave_girth, wave_height} = opts;
     const num_waves = vibrato_width / wave_width;
 
     ctx.beginPath();

@@ -9,7 +9,7 @@
 import {Vex} from './vex';
 import {Registry} from './registry';
 import {Flow} from './tables';
-import {DrawContext, IStringTable} from "./types/common";
+import {DrawContext, IStyle} from "./types/common";
 import {BoundingBox} from "./boundingbox";
 import {Font} from "./smufl";
 
@@ -19,13 +19,13 @@ export class Element {
   context: DrawContext;
   rendered: boolean;
   style: any;
-  attrs: IStringTable<any>;
+  attrs: Record<string, any>;
   boundingBox: BoundingBox;
   fontStack: Font[];
   musicFont: Font;
   registry: Registry;
 
-  static newID() {
+  static newID(): string {
     return 'auto' + (Element.ID++);
   }
 
@@ -50,28 +50,28 @@ export class Element {
   }
 
   // set music font
-  setFontStack(fontStack: Font[]) {
+  setFontStack(fontStack: Font[]): this {
     this.fontStack = fontStack;
     this.musicFont = fontStack[0];
     return this;
   }
 
-  getFontStack() {
+  getFontStack(): Font[] {
     return this.fontStack;
   }
 
   // set the draw style of a stemmable note:
-  setStyle(style: any) {
+  setStyle(style: any): this {
     this.style = style;
     return this;
   }
 
-  getStyle() {
+  getStyle(): IStyle {
     return this.style;
   }
 
   // Apply current style to Canvas `context`
-  applyStyle(context = this.context, style = this.getStyle()) {
+  applyStyle(context = this.context, style = this.getStyle()): this {
     if (!style) return this;
 
     context.save();
@@ -83,29 +83,30 @@ export class Element {
     return this;
   }
 
-  restoreStyle(context = this.context, style = this.getStyle()) {
+  restoreStyle(context = this.context, style = this.getStyle()): this {
     if (!style) return this;
     context.restore();
     return this;
   }
 
   // draw with style of an element.
-  drawWithStyle() {
+  drawWithStyle(): void {
     this.checkContext();
     this.applyStyle();
     this.draw();
     this.restoreStyle();
   }
 
-  draw(element?: any, x_shift?: any) {
+  draw(element?: any, x_shift?: any): void {
+    // do nothing
   }
 
   // An element can have multiple class labels.
-  hasClass(className: string) {
+  hasClass(className: string): boolean {
     return (this.attrs.classes[className] === true);
   }
 
-  addClass(className: string) {
+  addClass(className: string): this {
     this.attrs.classes[className] = true;
     if (this.registry) {
       this.registry.onUpdate({
@@ -118,7 +119,7 @@ export class Element {
     return this;
   }
 
-  removeClass(className: string) {
+  removeClass(className: string): this {
     delete this.attrs.classes[className];
     if (this.registry) {
       this.registry.onUpdate({
@@ -132,29 +133,29 @@ export class Element {
   }
 
   // This is called by the registry after the element is registered.
-  onRegister(registry: Registry) {
+  onRegister(registry: Registry): this {
     this.registry = registry;
     return this;
   }
 
-  isRendered() {
+  isRendered(): boolean {
     return this.rendered;
   }
 
-  setRendered(rendered = true) {
+  setRendered(rendered = true): this {
     this.rendered = rendered;
     return this;
   }
 
-  getAttributes() {
+  getAttributes(): Record<string, any> {
     return this.attrs;
   }
 
-  getAttribute(name: string) {
+  getAttribute(name: string): any {
     return this.attrs[name];
   }
 
-  setAttribute(name: string, value: any) {
+  setAttribute(name: string, value: any): this {
     const id = this.attrs.id;
     const oldValue = this.attrs[name];
     this.attrs[name] = value;
@@ -165,21 +166,21 @@ export class Element {
     return this;
   }
 
-  getContext() {
+  getContext(): DrawContext {
     return this.context;
   }
 
-  setContext(context: DrawContext) {
+  setContext(context: DrawContext): this {
     this.context = context;
     return this;
   }
 
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox {
     return this.boundingBox;
   }
 
   // Validators
-  checkContext() {
+  checkContext(): DrawContext {
     if (!this.context) {
       throw new Vex.RERR('NoContext', 'No rendering context attached to instance');
     }

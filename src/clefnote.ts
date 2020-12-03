@@ -10,6 +10,7 @@ import {Glyph} from './glyph';
 import {DrawContext} from "./types/common";
 import {IClefType} from "./types/clef";
 import {IStaveNoteStruct} from "./types/note";
+import {BoundingBox} from "./boundingbox";
 
 /** @constructor */
 export class ClefNote extends Note {
@@ -17,7 +18,7 @@ export class ClefNote extends Note {
   private type: string;
   private clef: IClefType;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'clefnote';
   }
 
@@ -31,7 +32,7 @@ export class ClefNote extends Note {
     this.ignore_ticks = true;
   }
 
-  setType(type: string, size: string, annotation: string) {
+  setType(type: string, size: string, annotation: string): this {
     this.type = type;
     this.clef_obj = new Clef(type, size, annotation);
     this.clef = this.clef_obj.clef;
@@ -40,48 +41,48 @@ export class ClefNote extends Note {
     return this;
   }
 
-  getClef() {
+  getClef(): IClefType {
     return this.clef;
   }
 
-  setContext(context: DrawContext) {
+  setContext(context: DrawContext): this {
     this.context = context;
-    this.glyph.setContext(this.context);
+    (this.glyph as Glyph).setContext(this.context);
     return this;
   }
 
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox {
     return super.getBoundingBox();
   }
 
-  addToModifierContext() {
+  addToModifierContext(): this {
     /* overridden to ignore */
     return this;
   }
 
-  getCategory() {
+  getCategory(): string {
     return ClefNote.CATEGORY;
   }
 
-  preFormat() {
+  preFormat(): this {
     this.setPreFormatted(true);
     return this;
   }
 
-  draw() {
+  draw(): void {
     if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
-    if (!this.glyph.getContext()) {
-      this.glyph.setContext(this.context);
+    if (!(this.glyph as Glyph).getContext()) {
+      (this.glyph as Glyph).setContext(this.context);
     }
 
     this.setRendered();
     const abs_x = this.getAbsoluteX();
 
-    this.glyph.setStave(this.stave);
-    this.glyph.setYShift(
+    (this.glyph as Glyph).setStave(this.stave);
+    (this.glyph as Glyph).setYShift(
       this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
-    this.glyph.renderToStave(abs_x);
+    (this.glyph as Glyph).renderToStave(abs_x);
 
     // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
     if (this.clef_obj.annotation !== undefined) {

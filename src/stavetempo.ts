@@ -8,15 +8,17 @@ import {Glyph} from './glyph';
 import {ITempo} from "./types/common";
 import {Stave} from "./stave";
 import {IFont} from "./types/font";
+import {IStaveTempoRenderOptions} from "./types/stavetempo";
 
 export class StaveTempo extends StaveModifier {
+  private readonly font: IFont;
+  private readonly render_options: IStaveTempoRenderOptions;
+
   private tempo: ITempo;
   private shift_x: number;
-  private shift_y: any;
-  private font: IFont;
-  private render_options: any;
+  private shift_y: number;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'stavetempo';
   }
 
@@ -39,26 +41,26 @@ export class StaveTempo extends StaveModifier {
     };
   }
 
-  getCategory() {
+  getCategory(): string {
     return StaveTempo.CATEGORY;
   }
 
-  setTempo(tempo: ITempo) {
+  setTempo(tempo: ITempo): this {
     this.tempo = tempo;
     return this;
   }
 
-  setShiftX(x: number) {
+  setShiftX(x: number): this {
     this.shift_x = x;
     return this;
   }
 
-  setShiftY(y: number) {
+  setShiftY(y: number): this {
     this.shift_y = y;
     return this;
   }
 
-  draw(stave?: Stave, shift_x?: number) {
+  draw(stave?: Stave, shift_x?: number): this {
     const ctx = stave.checkContext();
     this.setRendered();
 

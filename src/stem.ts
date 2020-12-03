@@ -7,11 +7,11 @@
 import {Vex} from './vex';
 import {Element} from './element';
 import {Flow} from './tables';
-import {IStemStruct, IStringTable} from "./types/common";
 import {BoundingBox} from "./boundingbox";
+import {IStemStruct} from "./types/stem";
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args);
 }
 
@@ -34,25 +34,25 @@ export class Stem extends Element {
   private stem_direction: number;
   private stem_extension: number;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'stem';
   }
 
   // Stem directions
-  static get UP() {
+  static get UP(): number {
     return 1;
   }
 
-  static get DOWN() {
+  static get DOWN(): number {
     return -1;
   }
 
   // Theme
-  static get WIDTH() {
+  static get WIDTH(): number {
     return Flow.STEM_WIDTH;
   }
 
-  static get HEIGHT() {
+  static get HEIGHT(): number {
     return Flow.STEM_HEIGHT;
   }
 
@@ -86,7 +86,7 @@ export class Stem extends Element {
     this.setOptions(options);
   }
 
-  setOptions(options: any) {
+  setOptions(options: IStemStruct): void {
     // Changing where the stem meets the head
     this.stem_up_y_offset = options.stem_up_y_offset || 0;
     this.stem_down_y_offset = options.stem_down_y_offset || 0;
@@ -95,39 +95,39 @@ export class Stem extends Element {
   }
 
   // Set the x bounds for the default notehead
-  setNoteHeadXBounds(x_begin: number, x_end: number) {
+  setNoteHeadXBounds(x_begin: number, x_end: number): this {
     this.x_begin = x_begin;
     this.x_end = x_end;
     return this;
   }
 
   // Set the direction of the stem in relation to the noteheads
-  setDirection(direction: number) {
+  setDirection(direction: number): void {
     this.stem_direction = direction;
   }
 
   // Set the extension for the stem, generally for flags or beams
-  setExtension(ext: any) {
+  setExtension(ext: number): void {
     this.stem_extension = ext;
   }
 
-  getExtension() {
+  getExtension(): number {
     return this.stem_extension;
   }
 
   // The the y bounds for the top and bottom noteheads
-  setYBounds(y_top: number, y_bottom: number) {
+  setYBounds(y_top: number, y_bottom: number): void {
     this.y_top = y_top;
     this.y_bottom = y_bottom;
   }
 
   // The category of the object
-  getCategory() {
+  getCategory(): string {
     return Stem.CATEGORY;
   }
 
   // Gets the entire height for the stem
-  getHeight() {
+  getHeight(): number {
     const y_offset = (this.stem_direction === Stem.UP)
       ? this.stem_up_y_offset
       : this.stem_down_y_offset;
@@ -144,7 +144,7 @@ export class Stem extends Element {
 
   // Get the y coordinates for the very base of the stem to the top of
   // the extension
-  getExtents(): IStringTable<number> {
+  getExtents(): Record<string, number> {
     const isStemUp = this.stem_direction === Stem.UP;
     const ys = [this.y_top, this.y_bottom];
     const stemHeight = Stem.HEIGHT + this.stem_extension;
@@ -156,19 +156,19 @@ export class Stem extends Element {
     return {topY: stemTipY, baseY: outerMostNoteheadY};
   }
 
-  setVisibility(isVisible: boolean) {
+  setVisibility(isVisible: boolean): this {
     this.hide = !isVisible;
     return this;
   }
 
-  setStemlet(isStemlet: boolean, stemletHeight: number) {
+  setStemlet(isStemlet: boolean, stemletHeight: number): this {
     this.isStemlet = isStemlet;
     this.stemletHeight = stemletHeight;
     return this;
   }
 
   // Render the stem onto the canvas
-  draw() {
+  draw(): void {
     this.setRendered();
     if (this.hide) return;
     const ctx = this.checkContext();
@@ -177,7 +177,7 @@ export class Stem extends Element {
     let stem_y;
     const stem_direction = this.stem_direction;
 
-    let y_base_offset = 0;
+    let y_base_offset: number;
     if (stem_direction === Stem.DOWN) {
       // Down stems are rendered to the left of the head.
       stem_x = this.x_begin;

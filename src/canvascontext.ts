@@ -6,7 +6,7 @@
 // Copyright Mohit Cheppudira 2010
 
 import {Vex} from './vex';
-import {DrawContext, ISize} from "./types/common";
+import {ISize} from "./types/common";
 
 /** @constructor */
 export class CanvasContext {
@@ -14,19 +14,19 @@ export class CanvasContext {
   private background_fillStyle: string;
   private vexFlowCanvasContext: CanvasRenderingContext2D;
 
-  static get WIDTH() {
+  static get WIDTH(): number {
     return 600;
   }
 
-  static get HEIGHT() {
+  static get HEIGHT(): number {
     return 400;
   }
 
-  static get CANVAS_BROWSER_SIZE_LIMIT() {
+  static get CANVAS_BROWSER_SIZE_LIMIT(): number {
     return 32767; // Chrome/Firefox. Could be determined more precisely by npm module canvas-size
   }
 
-  static SanitizeCanvasDims(width: number, height: number) {
+  static SanitizeCanvasDims(width: number, height: number): number[] {
     if (Math.max(width, height) > this.CANVAS_BROWSER_SIZE_LIMIT) {
       Vex.W(
         'Canvas dimensions exceed browser limit. Cropping to ' +
@@ -57,61 +57,64 @@ export class CanvasContext {
     }
   }
 
-  clear() {
+  clear(): void {
     this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   // Containers not implemented
-  openGroup() {
+  openGroup(): void {
+    // do nothing
   }
 
-  closeGroup() {
+  closeGroup(): void {
+    // do nothing
   }
 
-  add() {
+  add(): void {
+    // do nothing
   }
 
-  setFont(family: string, size: number, weight?: string) {
+  setFont(family: string, size: number, weight?: string): this {
     this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
     return this;
   }
 
-  setRawFont(font: string) {
+  setRawFont(font: string): this {
     this.vexFlowCanvasContext.font = font;
     return this;
   }
 
-  setFillStyle(style: string) {
+  setFillStyle(style: string): this {
     this.vexFlowCanvasContext.fillStyle = style;
     return this;
   }
 
-  setBackgroundFillStyle(style: string) {
+  setBackgroundFillStyle(style: string): this {
     this.background_fillStyle = style;
     return this;
   }
 
-  setStrokeStyle(style: string) {
+  setStrokeStyle(style: string): this {
     this.vexFlowCanvasContext.strokeStyle = style;
     return this;
   }
 
-  setShadowColor(style: string) {
+  setShadowColor(style: string): this {
     this.vexFlowCanvasContext.shadowColor = style;
     return this;
   }
 
-  setShadowBlur(blur: number) {
+  setShadowBlur(blur: number): this {
     this.vexFlowCanvasContext.shadowBlur = blur;
     return this;
   }
 
-  setLineWidth(width: number) {
+  setLineWidth(width: number): this {
     this.vexFlowCanvasContext.lineWidth = width;
     return this;
   }
 
-  setLineCap(cap_type: CanvasLineCap) {
+  setLineCap(cap_type: CanvasLineCap): this {
     this.vexFlowCanvasContext.lineCap = cap_type;
     return this;
   }
@@ -122,88 +125,88 @@ export class CanvasContext {
   // If it doesn't exist, we bolster it and assume it's looking for
   // a ctx.lineDash method, as previous versions of VexFlow
   // expected.
-  setLineDash(dash: number[]) {
+  setLineDash(dash: number[]): this {
     (this.vexFlowCanvasContext as any).lineDash = dash;
     return this;
   }
 
-  scale(x: number, y: number) {
+  scale(x: number, y: number): void {
     return this.vexFlowCanvasContext.scale(parseFloat(x.toString()), parseFloat(y.toString()));
   }
 
-  resize(width: string, height: string) {
-    let [w, h] = CanvasContext.SanitizeCanvasDims(parseInt(width, 10), parseInt(height, 10));
+  resize(width: string, height: string): any {
+    const [w, h] = CanvasContext.SanitizeCanvasDims(parseInt(width, 10), parseInt(height, 10));
     return (this.vexFlowCanvasContext as any).resize(w, h);
   }
 
-  rect(x: number, y: number, width: number, height: number) {
+  rect(x: number, y: number, width: number, height: number): void {
     return this.vexFlowCanvasContext.rect(x, y, width, height);
   }
 
-  fillRect(x: number, y: number, width: number, height: number) {
+  fillRect(x: number, y: number, width: number, height: number): void {
     return this.vexFlowCanvasContext.fillRect(x, y, width, height);
   }
 
-  clearRect(x: number, y: number, width: number, height: number) {
+  clearRect(x: number, y: number, width: number, height: number): void {
     return this.vexFlowCanvasContext.clearRect(x, y, width, height);
   }
 
-  beginPath() {
+  beginPath(): void {
     return this.vexFlowCanvasContext.beginPath();
   }
 
-  moveTo(x: number, y: number) {
+  moveTo(x: number, y: number): void {
     return this.vexFlowCanvasContext.moveTo(x, y);
   }
 
-  lineTo(x: number, y: number) {
+  lineTo(x: number, y: number): void {
     return this.vexFlowCanvasContext.lineTo(x, y);
   }
 
-  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number) {
+  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): void {
     return this.vexFlowCanvasContext.bezierCurveTo(x1, y1, x2, y2, x, y);
   }
 
-  quadraticCurveTo(x1: number, y1: number, x: number, y: number) {
+  quadraticCurveTo(x1: number, y1: number, x: number, y: number): void {
     return this.vexFlowCanvasContext.quadraticCurveTo(x1, y1, x, y);
   }
 
   // This is an attempt (hack) to simulate the HTML5 canvas
   // arc method.
-  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean) {
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): void {
     return this.vexFlowCanvasContext.arc(x, y, radius, startAngle, endAngle, antiClockwise);
   }
 
   // Adapted from the source for Raphael's Element.glow
-  glow() {
+  glow(): any {
     return (this.vexFlowCanvasContext as any).glow();
   }
 
-  fill() {
+  fill(): void {
     return this.vexFlowCanvasContext.fill();
   }
 
-  stroke() {
+  stroke(): void {
     return this.vexFlowCanvasContext.stroke();
   }
 
-  closePath() {
+  closePath(): void {
     return this.vexFlowCanvasContext.closePath();
   }
 
-  measureText(text: string) {
+  measureText(text: string): TextMetrics {
     return this.vexFlowCanvasContext.measureText(text);
   }
 
-  fillText(text: string, x: number, y: number) {
+  fillText(text: string, x: number, y: number): void {
     return this.vexFlowCanvasContext.fillText(text, x, y);
   }
 
-  save() {
+  save(): void {
     return this.vexFlowCanvasContext.save();
   }
 
-  restore() {
+  restore(): void {
     return this.vexFlowCanvasContext.restore();
   }
 }

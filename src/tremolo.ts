@@ -15,13 +15,14 @@ import {IFont} from "./types/font";
 export class Tremolo extends Modifier {
   note: StaveNote;
 
-  private code: string;
+  private readonly code: string;
+  private readonly num: number;
+
   private y_spacing: number;
-  private num: number;
   private font: IFont;
   private render_options: ITremoloRenderOptions;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'tremolo';
   }
 
@@ -36,11 +37,11 @@ export class Tremolo extends Modifier {
     this.code = 'tremolo1';
   }
 
-  getCategory() {
+  getCategory(): string {
     return Tremolo.CATEGORY;
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
 
     if (!(this.note && this.index != null)) {

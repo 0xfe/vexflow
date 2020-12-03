@@ -10,15 +10,23 @@ import {StaveNote} from './stavenote';
 import {Parser} from './parser';
 import {Articulation} from './articulation';
 import {FretHandFinger} from './frethandfinger';
-import {DrawContext, ICommitHook} from "./types/common";
+import {DrawContext, ICommitHook, IState} from "./types/common";
 import {Factory} from "./factory";
-import {IEasyScoreDefaults, IEasyScoreOptions} from "./types/easyscore";
-import {IAnnotationState} from "./types/annotation";
+import {
+  IEasyScoreDefaults,
+  IEasyScoreOptions,
+  IGrammarVal
+} from "./types/easyscore";
 import {IBuilderElements, IBuilderOptions, IBuilderPiece} from "./types/builder";
 import {IStaveNoteStruct} from "./types/note";
+import {IFactoryParams} from "./types/factory";
+import {Note} from "./note";
+import {IStaveOptions} from "./types/stave";
+import {IParserResult} from "./types/parser";
+import {Voice} from "./voice";
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args);
 }
 
@@ -31,154 +39,155 @@ export class Grammar {
     this.builder = builder;
   }
 
-  begin(): any {
+  begin(): () => IGrammarVal {
     return this.LINE;
   }
 
-  LINE() {
+  LINE(): IGrammarVal {
     return {
       expect: [this.PIECE, this.PIECES, this.EOL],
-    };
+    } as IGrammarVal;
   }
 
-  PIECE() {
+  PIECE(): IGrammarVal {
     return {
       expect: [this.CHORDORNOTE, this.PARAMS],
       run: () => this.builder.commitPiece(),
-    };
+    } as IGrammarVal;
   }
 
-  PIECES() {
+  PIECES(): IGrammarVal {
     return {
       expect: [this.COMMA, this.PIECE],
       zeroOrMore: true,
-    };
+    } as IGrammarVal;
   }
 
-  PARAMS() {
+  PARAMS(): IGrammarVal {
     return {
       expect: [this.DURATION, this.TYPE, this.DOTS, this.OPTS],
-    };
+    } as IGrammarVal;
   }
 
-  CHORDORNOTE() {
+  CHORDORNOTE(): IGrammarVal {
     return {
       expect: [this.CHORD, this.SINGLENOTE],
       or: true,
-    };
+    } as IGrammarVal;
   }
 
-  CHORD() {
+  CHORD(): IGrammarVal {
     return {
       expect: [this.LPAREN, this.NOTES, this.RPAREN],
-      run: (state: IAnnotationState) => this.builder.addChord(state.matches[1]),
-    };
+      run: (state: IState) => this.builder.addChord(state.matches[1]),
+    } as IGrammarVal;
   }
 
-  NOTES() {
+  NOTES(): IGrammarVal {
     return {
       expect: [this.NOTE],
       oneOrMore: true,
-    };
+    } as IGrammarVal;
   }
 
-  NOTE() {
+  NOTE(): IGrammarVal {
     return {
       expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
-    };
+    } as IGrammarVal;
   }
 
-  SINGLENOTE() {
+  SINGLENOTE(): IGrammarVal {
     return {
       expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
-      run: (state: IAnnotationState) =>
+      run: (state: IState) =>
         this.builder.addSingleNote(state.matches[0], state.matches[1], state.matches[2]),
-    };
+    } as IGrammarVal;
   }
 
-  ACCIDENTAL() {
+  ACCIDENTAL(): IGrammarVal {
     return {
       expect: [this.ACCIDENTALS],
       maybe: true,
-    };
+    } as IGrammarVal;
   }
 
-  DOTS() {
+  DOTS(): IGrammarVal {
     return {
       expect: [this.DOT],
       zeroOrMore: true,
-      run: (state: IAnnotationState) => this.builder.setNoteDots(state.matches),
-    };
+      run: (state: IState) => this.builder.setNoteDots(state.matches),
+    } as IGrammarVal;
   }
 
-  TYPE() {
+  TYPE(): IGrammarVal {
     return {
       expect: [this.SLASH, this.MAYBESLASH, this.TYPES],
       maybe: true,
-      run: (state: IAnnotationState) => this.builder.setNoteType(state.matches[2]),
-    };
+      run: (state: IState) => this.builder.setNoteType(state.matches[2]),
+    } as IGrammarVal;
   }
 
-  DURATION() {
+  DURATION(): IGrammarVal {
     return {
       expect: [this.SLASH, this.DURATIONS],
       maybe: true,
-      run: (state: IAnnotationState) => this.builder.setNoteDuration(state.matches[1]),
-    };
+      run: (state: IState) => this.builder.setNoteDuration(state.matches[1]),
+    } as IGrammarVal;
   }
 
-  OPTS() {
+  OPTS(): IGrammarVal {
     return {
       expect: [this.LBRACKET, this.KEYVAL, this.KEYVALS, this.RBRACKET],
       maybe: true,
-    };
+    } as IGrammarVal;
   }
 
-  KEYVALS() {
+  KEYVALS(): IGrammarVal {
     return {
       expect: [this.COMMA, this.KEYVAL],
       zeroOrMore: true,
-    };
+    } as IGrammarVal;
   }
 
-  KEYVAL() {
+  KEYVAL(): IGrammarVal {
     const unquote = (str: string) => str.slice(1, -1);
 
     return {
       expect: [this.KEY, this.EQUALS, this.VAL],
-      run: (state: IAnnotationState) => this.builder.addNoteOption(state.matches[0], unquote(state.matches[2])),
-    };
+      run: (state: IState) => this.builder.addNoteOption(state.matches[0], unquote(state.matches[2])),
+    } as IGrammarVal;
   }
 
-  VAL() {
+  VAL(): IGrammarVal {
     return {
       expect: [this.SVAL, this.DVAL],
       or: true,
-    };
+    } as IGrammarVal;
   }
 
-  KEY() { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
-  DVAL() { return { token: '["][^"]*["]' }; }
-  SVAL() { return { token: "['][^']*[']" }; }
-  NOTENAME() { return { token: '[a-gA-G]' }; }
-  OCTAVE() { return { token: '[0-9]+' }; }
-  ACCIDENTALS() { return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' }; }
-  DURATIONS() { return { token: '[0-9whq]+' }; }
-  TYPES() { return { token: '[rRsSxX]' }; }
-  LPAREN() { return { token: '[(]' }; }
-  RPAREN() { return { token: '[)]' }; }
-  COMMA() { return { token: '[,]' }; }
-  DOT() { return { token: '[.]' }; }
-  SLASH() { return { token: '[/]' }; }
-  MAYBESLASH() { return { token: '[/]?' }; }
-  EQUALS() { return { token: '[=]' }; }
-  LBRACKET() { return { token: '\\[' }; }
-  RBRACKET() { return { token: '\\]' }; }
-  EOL() { return { token: '$' }; }
+  KEY() { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; as IGrammarVal }
+  DVAL() { return { token: '["][^"]*["]' }; as IGrammarVal }
+  SVAL() { return { token: "['][^']*[']" }; as IGrammarVal }
+  NOTENAME() { return { token: '[a-gA-G]' }; as IGrammarVal }
+  OCTAVE() { return { token: '[0-9]+' }; as IGrammarVal }
+  ACCIDENTALS() { return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' }; as IGrammarVal }
+  DURATIONS() { return { token: '[0-9whq]+' }; as IGrammarVal }
+  TYPES() { return { token: '[rRsSxX]' }; as IGrammarVal }
+  LPAREN() { return { token: '[(]' }; as IGrammarVal }
+  RPAREN() { return { token: '[)]' }; as IGrammarVal }
+  COMMA() { return { token: '[,]' }; as IGrammarVal }
+  DOT() { return { token: '[.]' }; as IGrammarVal }
+  SLASH() { return { token: '[/]' }; as IGrammarVal }
+  MAYBESLASH() { return { token: '[/]?' }; as IGrammarVal }
+  EQUALS() { return { token: '[=]' }; as IGrammarVal }
+  LBRACKET() { return { token: '\\[' }; as IGrammarVal }
+  RBRACKET() { return { token: '\\]' }; as IGrammarVal }
+  EOL() { return { token: '$' }; as IGrammarVal }
 }
 
 export class Builder {
-  private factory: Factory;
+  private readonly factory: Factory;
+
   private options: IBuilderOptions;
   private elements: IBuilderElements;
   private rollingDuration: string;
@@ -191,7 +200,7 @@ export class Builder {
     this.reset();
   }
 
-  reset(options = {}) {
+  reset(options = {}): void {
     this.options = {
       stem: 'auto',
       clef: 'treble',
@@ -205,19 +214,19 @@ export class Builder {
     Object.assign(this.options, options);
   }
 
-  getFactory() {
+  getFactory(): Factory {
     return this.factory;
   }
 
-  getElements() {
+  getElements(): IBuilderElements {
     return this.elements;
   }
 
-  addCommitHook(commitHook: ICommitHook) {
+  addCommitHook(commitHook: ICommitHook): void {
     this.commitHooks.push(commitHook);
   }
 
-  resetPiece() {
+  resetPiece(): void {
     L('resetPiece');
     this.piece = {
       chord: [],
@@ -228,37 +237,37 @@ export class Builder {
     };
   }
 
-  setNoteDots(dots: string[]) {
+  setNoteDots(dots: string[]): void {
     L('setNoteDots:', dots);
     if (dots) this.piece.dots = dots.length;
   }
 
-  setNoteDuration(duration: string) {
+  setNoteDuration(duration: string): void {
     L('setNoteDuration:', duration);
     this.rollingDuration = this.piece.duration = duration || this.rollingDuration;
   }
 
-  setNoteType(type: string) {
+  setNoteType(type: string): void {
     L('setNoteType:', type);
     if (type) this.piece.type = type;
   }
 
-  addNoteOption(key: string, value: string) {
+  addNoteOption(key: string, value: string): void {
     L('addNoteOption: key:', key, 'value:', value);
     this.piece.options[key] = value;
   }
 
-  addNote(key?: string, accid?: string, octave?: string) {
+  addNote(key?: string, accid?: string, octave?: string): void {
     L('addNote:', key, accid, octave);
     this.piece.chord.push({key, accid, octave});
   }
 
-  addSingleNote(key: string, accid?: string, octave?: string) {
+  addSingleNote(key: string, accid?: string, octave?: string): void {
     L('addSingleNote:', key, accid, octave);
     this.addNote(key, accid, octave);
   }
 
-  addChord(notes: any[]) {
+  addChord(notes: any[]): void {
     L('startChord');
     if (typeof (notes[0]) !== 'object') {
       this.addSingleNote(notes[0]);
@@ -270,7 +279,7 @@ export class Builder {
     L('endChord');
   }
 
-  commitPiece() {
+  commitPiece(): void {
     L('commitPiece');
     const {factory} = this;
 
@@ -299,7 +308,7 @@ export class Builder {
     // Attach accidentals.
     const accids = chord.map(note => note.accid || null);
     accids.forEach((accid, i) => {
-      if (accid) note.addAccidental(i, factory.Accidental({type: accid}));
+      if (accid) note.addAccidental(i, factory.Accidental({type: accid} as IFactoryParams));
     });
 
     // Attach dots.
@@ -332,14 +341,15 @@ function setClass(options: any, note: StaveNote) {
 export class EasyScore {
   static DEBUG: boolean;
 
+  private readonly defaults: IEasyScoreDefaults;
+
   private factory: Factory;
   private builder: Builder;
   private grammar: Grammar;
   private parser: Parser;
-  private defaults: IEasyScoreDefaults;
   private options: IEasyScoreOptions;
 
-  constructor(options = {}) {
+  constructor(options = {} as IEasyScoreOptions) {
     this.setOptions(options);
     this.defaults = {
       clef: 'treble',
@@ -348,12 +358,12 @@ export class EasyScore {
     };
   }
 
-  set(defaults: IEasyScoreDefaults) {
+  set(defaults: IEasyScoreDefaults): this {
     Object.assign(this.defaults, defaults);
     return this;
   }
 
-  setOptions(options: any) {
+  setOptions(options: IEasyScoreOptions): this {
     this.options = {
       factory: null,
       builder: null,
@@ -374,12 +384,12 @@ export class EasyScore {
     return this;
   }
 
-  setContext(context: DrawContext) {
+  setContext(context: DrawContext): this {
     if (this.factory) this.factory.setContext(context);
     return this;
   }
 
-  parse(line: string, options = {}) {
+  parse(line: string, options = {}): IParserResult {
     this.builder.reset(options);
     const result = this.parser.parse(line);
     if (!result.success && this.options.throwOnError) {
@@ -388,28 +398,28 @@ export class EasyScore {
     return result;
   }
 
-  beam(notes: StaveNote[], options = {}) {
-    this.factory.Beam({notes, options});
+  beam(notes: Note[], options = {}): Note[] {
+    this.factory.Beam({notes, options} as IFactoryParams);
     return notes;
   }
 
-  tuplet(notes: StaveNote[], options = {}) {
-    this.factory.Tuplet({notes, options});
+  tuplet(notes: Note[], options = {} as IStaveOptions): Note[] {
+    this.factory.Tuplet({notes, options} as IFactoryParams);
     return notes;
   }
 
-  notes(line: string, options = {}) {
+  notes(line: string, options = {}): Note[] {
     options = {clef: this.defaults.clef, stem: this.defaults.stem, ...options};
     this.parse(line, options);
     return this.builder.getElements().notes;
   }
 
-  voice(notes: StaveNote[], voiceOptions: any) {
+  voice(notes: StaveNote[], voiceOptions: any): Voice {
     voiceOptions = {time: this.defaults.time, ...voiceOptions};
     return this.factory.Voice(voiceOptions).addTickables(notes);
   }
 
-  addCommitHook(commitHook: ICommitHook) {
+  addCommitHook(commitHook: ICommitHook): void {
     return this.builder.addCommitHook(commitHook);
   }
 }

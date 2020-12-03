@@ -7,16 +7,17 @@ import {Stave} from "./stave";
 import {IFont} from "./types/font";
 
 export class Repetition extends StaveModifier {
-  private symbol_type: number;
+  private readonly symbol_type: number;
+
   private x_shift: number;
-  private y_shift: any;
+  private y_shift: number;
   private font: IFont;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'repetitions';
   }
 
-  static get type() {
+  static get type(): Record<string, number> {
     return {
       NONE: 1,         // no coda or segno
       CODA_LEFT: 2,    // coda at beginning of stave
@@ -48,21 +49,21 @@ export class Repetition extends StaveModifier {
     } as IFont;
   }
 
-  getCategory() {
+  getCategory(): string {
     return Repetition.CATEGORY;
   }
 
-  setShiftX(x: number) {
+  setShiftX(x: number): this {
     this.x_shift = x;
     return this;
   }
 
-  setShiftY(y: number) {
+  setShiftY(y: number): this {
     this.y_shift = y;
     return this;
   }
 
-  draw(stave?: Stave, x?: number) {
+  draw(stave?: Stave, x?: number): this {
     this.setRendered();
 
     switch (this.symbol_type) {
@@ -106,25 +107,25 @@ export class Repetition extends StaveModifier {
     return this;
   }
 
-  drawCodaFixed(stave: Stave, x: number) {
+  drawCodaFixed(stave: Stave, x: number): this {
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 40, 'coda', {category: 'coda'});
     return this;
   }
 
-  drawSignoFixed(stave: Stave, x: number) {
+  drawSignoFixed(stave: Stave, x: number): this {
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;
     Glyph.renderGlyph(stave.context, this.x + x + this.x_shift, y + 25, 30, 'segno', {category: 'segno'});
     return this;
   }
 
-  drawSymbolText(stave: Stave, x: number, text: string, draw_coda: boolean) {
+  drawSymbolText(stave: Stave, x: number, text: string, draw_coda: boolean): this {
     const ctx = stave.checkContext();
 
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     // Default to right symbol
-    let text_x = 0 + this.x_shift;
+    let text_x: number;
     let symbol_x = x + this.x_shift;
     if (this.symbol_type === Repetition.type.CODA_LEFT) {
       // Offset Coda text to right of stave beginning

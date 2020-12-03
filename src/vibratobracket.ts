@@ -9,11 +9,11 @@
 import {Vex} from './vex';
 import {Element} from './element';
 import {Vibrato} from './vibrato';
-import {IVibratoBracketRenderOptions} from "./types/common";
 import {Note} from "./note";
+import {IVibratoBracketData, IVibratoBracketRenderOptions} from "./types/vibratobracket";
 
 // To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (VibratoBracket.DEBUG) Vex.L('Vex.Flow.VibratoBracket', args);
 }
 
@@ -21,8 +21,10 @@ export class VibratoBracket extends Element {
   static DEBUG: boolean;
 
   private line: number;
-  private start: Note;
-  private stop: Note;
+
+  private readonly start: Note;
+  private readonly stop: Note;
+  private readonly render_options: IVibratoBracketRenderOptions;
 
   // bracket_data = {
   //   start: Vex.Flow.Note (optional)
@@ -31,9 +33,7 @@ export class VibratoBracket extends Element {
   // Either the stop or start note must be set, or both of them.
   // A null value for the start or stop note indicates that the vibrato
   // is drawn from the beginning or until the end of the stave accordingly.
-  private render_options: IVibratoBracketRenderOptions;
-
-  constructor(bracket_data: any) {
+  constructor(bracket_data: IVibratoBracketData) {
     super();
     this.setAttribute('type', 'VibratoBracket');
 
@@ -51,18 +51,18 @@ export class VibratoBracket extends Element {
   }
 
   // Set line position of the vibrato bracket
-  setLine(line: number) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
-  setHarsh(harsh: boolean) {
+  setHarsh(harsh: boolean): this {
     this.render_options.harsh = harsh;
     return this;
   }
 
   // Draw the vibrato bracket on the rendering context
-  draw() {
+  draw(): void {
     const ctx = this.context;
     this.setRendered();
 

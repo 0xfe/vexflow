@@ -5,20 +5,21 @@
 import {Flow} from './tables';
 import {StaveModifier} from './stavemodifier';
 import {Stave} from "./stave";
-import {ILayoutMetrics, INumberTable, IStringTable} from "./types/common";
+import {ILayoutMetrics} from "./types/common";
 
 export class Barline extends StaveModifier {
+  private readonly widths: Record<string, number>;
+  private readonly paddings: Record<string, number>;
+  private readonly layoutMetricsMap: Record<number, ILayoutMetrics>;
+
   private thickness: number;
-  private widths: any;
-  private paddings: any;
-  private layoutMetricsMap: INumberTable<ILayoutMetrics>;
   private type: number;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'barlines';
   }
 
-  static get type() {
+  static get type(): Record<string, number> {
     return {
       SINGLE: 1,
       DOUBLE: 2,
@@ -30,7 +31,7 @@ export class Barline extends StaveModifier {
     };
   }
 
-  static get typeString(): IStringTable<number> {
+  static get typeString(): Record<string, number> {
     return {
       single: Barline.type.SINGLE,
       double: Barline.type.DOUBLE,
@@ -116,15 +117,15 @@ export class Barline extends StaveModifier {
     this.setType(type);
   }
 
-  getCategory() {
+  getCategory(): string {
     return Barline.CATEGORY;
   }
 
-  getType() {
+  getType(): number {
     return this.type;
   }
 
-  setType(type: string | number) {
+  setType(type: string | number): this {
     this.type = typeof (type) === 'string'
       ? Barline.typeString[type]
       : type;
@@ -136,7 +137,7 @@ export class Barline extends StaveModifier {
   }
 
   // Draw barlines
-  draw(stave?: Stave) {
+  draw(stave?: Stave): void {
     stave.checkContext();
     this.setRendered();
 
@@ -172,7 +173,7 @@ export class Barline extends StaveModifier {
     }
   }
 
-  drawVerticalBar(stave: Stave, x: number, double_bar?: boolean) {
+  drawVerticalBar(stave: Stave, x: number, double_bar?: boolean): void {
     stave.checkContext();
     const topY = stave.getTopLineTopY();
     const botY = stave.getBottomLineBottomY();
@@ -182,7 +183,7 @@ export class Barline extends StaveModifier {
     stave.context.fillRect(x, topY, 1, botY - topY);
   }
 
-  drawVerticalEndBar(stave: Stave, x: number) {
+  drawVerticalEndBar(stave: Stave, x: number): void {
     stave.checkContext();
     const topY = stave.getTopLineTopY();
     const botY = stave.getBottomLineBottomY();
@@ -190,7 +191,7 @@ export class Barline extends StaveModifier {
     stave.context.fillRect(x - 2, topY, 3, botY - topY);
   }
 
-  drawRepeatBar(stave: Stave, x: number, begin: boolean) {
+  drawRepeatBar(stave: Stave, x: number, begin: boolean): void {
     stave.checkContext();
 
     const topY = stave.getTopLineTopY();

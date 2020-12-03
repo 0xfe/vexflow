@@ -10,10 +10,11 @@
 import {Vex} from './vex';
 import {Element} from './element';
 import {Flow} from './tables';
-import {DrawContext, ICoordinates, IStaveLineRenderOptions, IStringTable} from "./types/common";
-import {Note} from "./note";
+import {DrawContext, ICoordinates, IStaveLineRenderOptions} from "./types/common";
 import {StaveNote} from "./stavenote";
 import {IFont} from "./types/font";
+import {IGlyphProps} from "./types/glyph";
+import {IStaveLineDrawArrowLineConfig, IStaveLineNotes} from "./types/staveline";
 
 // Attribution: Arrow rendering implementations based off of
 // Patrick Horgan's article, "Drawing lines and arcs with
@@ -33,7 +34,7 @@ function drawArrowHead(ctx: DrawContext, x0: number, y0: number, x1: number, y1:
 }
 
 // Helper function to draw a line with arrow heads
-function drawArrowLine(ctx: DrawContext, point1: ICoordinates, point2: ICoordinates, config: any) {
+function drawArrowLine(ctx: DrawContext, point1: ICoordinates, point2: ICoordinates, config: IStaveLineDrawArrowLineConfig) {
   const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
 
   const x1 = point1.x;
@@ -115,24 +116,25 @@ function drawArrowLine(ctx: DrawContext, point1: ICoordinates, point2: ICoordina
 }
 
 export class StaveLine extends Element {
+  private readonly render_options: IStaveLineRenderOptions;
+
   private text: string;
   private font: IFont;
-  private render_options: IStaveLineRenderOptions;
   private first_indices: number[];
   private last_indices: number[];
-  private notes: IStringTable<Note>;
+  private notes: IStaveLineNotes;
   private first_note: StaveNote;
   private last_note: StaveNote;
 
   // Text Positioning
-  static get TextVerticalPosition() {
+  static get TextVerticalPosition(): Record<string, number> {
     return {
       TOP: 1,
       BOTTOM: 2,
     };
   }
 
-  static get TextJustification() {
+  static get TextJustification(): Record<string, number> {
     return {
       LEFT: 1,
       CENTER: 2,
@@ -152,7 +154,7 @@ export class StaveLine extends Element {
   //    last_indices: [n1, n2, n3]
   //  }
   //  ```
-  constructor(notes: IStringTable<Note>) {
+  constructor(notes: IStaveLineNotes) {
     super();
     this.setAttribute('type', 'StaveLine');
 
@@ -198,19 +200,19 @@ export class StaveLine extends Element {
   }
 
   // Set the font for the `StaveLine` text
-  setFont(font: IFont) {
+  setFont(font: IFont): this {
     this.font = font;
     return this;
   }
 
   // The the annotation for the `StaveLine`
-  setText(text: string) {
+  setText(text: string): this {
     this.text = text;
     return this;
   }
 
   // Set the notes for the `StaveLine`
-  setNotes(notes: IStringTable<any>) {
+  setNotes(notes: IStaveLineNotes): this {
     if (!notes.first_note && !notes.last_note) {
       throw new Vex.RuntimeError(
         'BadArguments', 'Notes needs to have either first_note or last_note set.'
@@ -235,7 +237,7 @@ export class StaveLine extends Element {
   }
 
   // Apply the style of the `StaveLine` to the context
-  applyLineStyle() {
+  applyLineStyle(): void {
     const ctx = this.checkContext();
     const render_options = this.render_options;
 
@@ -255,7 +257,7 @@ export class StaveLine extends Element {
   }
 
   // Apply the text styling to the context
-  applyFontStyle() {
+  applyFontStyle(): void {
     const ctx = this.checkContext();
 
     if (this.font) {
@@ -269,7 +271,7 @@ export class StaveLine extends Element {
   }
 
   // Renders the `StaveLine` on the context
-  draw() {
+  draw(): this {
     const ctx = this.checkContext();
     this.setRendered();
 
@@ -281,8 +283,8 @@ export class StaveLine extends Element {
     this.applyLineStyle();
 
     // Cycle through each set of indices and draw lines
-    let start_position: ICoordinates;
-    let end_position: ICoordinates;
+    let start_position: ICoordinates = undefined;
+    let end_position: ICoordinates = undefined;
     this.first_indices.forEach((first_index, i) => {
       const last_index = this.last_indices[i];
 
@@ -296,7 +298,7 @@ export class StaveLine extends Element {
       end_position.x -= last_note.getMetrics().modLeftPx + render_options.padding_right;
 
       // Adjust first `x` coordinates for displacements
-      const notehead_width = first_note.getGlyph().getWidth();
+      const notehead_width = (first_note.getGlyph() as IGlyphProps).getWidth();
       const first_displaced = first_note.getKeyProps()[first_index].displaced;
       if (first_displaced && first_note.getStemDirection() === 1) {
         start_position.x += notehead_width + render_options.padding_left;

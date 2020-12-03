@@ -4,18 +4,19 @@
 import {Vex} from './vex';
 import {StaveModifier} from './stavemodifier';
 import {TextNote} from './textnote';
-import {IStaveTextOptions} from "./types/common";
 import {Stave} from "./stave";
 import {IFont} from "./types/font";
+import {IStaveTextOptions} from "./types/stave";
 
 export class StaveText extends StaveModifier {
-  private text: string;
-  private options: IStaveTextOptions;
-  private font: IFont;
-  private shift_x: any;
-  private shift_y: any;
+  private readonly options: IStaveTextOptions;
+  private readonly font: IFont;
 
-  static get CATEGORY() {
+  private text: string;
+  private shift_x: number;
+  private shift_y: number;
+
+  static get CATEGORY(): string {
     return 'stavetext';
   }
 
@@ -40,34 +41,34 @@ export class StaveText extends StaveModifier {
     } as IFont;
   }
 
-  getCategory() {
+  getCategory(): string {
     return StaveText.CATEGORY;
   }
 
-  setStaveText(text: string) {
+  setStaveText(text: string): this {
     this.text = text;
     return this;
   }
 
-  setShiftX(x: number) {
+  setShiftX(x: number): this {
     this.shift_x = x;
     return this;
   }
 
-  setShiftY(y: number) {
+  setShiftY(y: number): this {
     this.shift_y = y;
     return this;
   }
 
-  setFont(font: IFont) {
+  setFont(font: IFont): void {
     Vex.Merge(this.font, font);
   }
 
-  setText(text: string) {
+  setText(text: string): void {
     this.text = text;
   }
 
-  draw(stave?: Stave) {
+  draw(stave?: Stave): this {
     const ctx = stave.checkContext();
     this.setRendered();
 

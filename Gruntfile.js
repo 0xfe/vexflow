@@ -101,7 +101,7 @@ module.exports = (grunt) => {
       },
     },
     eslint: {
-      target: TEST_SOURCES,
+      target: TEST_SOURCES.concat(DOCCO_SOURCES),
     },
     qunit: {
       files: ['tests/flow.html'],

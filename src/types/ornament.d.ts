@@ -1,9 +1,9 @@
-import {ICodeValue, IStringTable} from "./common";
+import {ICodeValue} from "./common";
 
 export interface IOrnamentCodes {
   (acc: string): ICodeValue;
 
-  ornaments: IStringTable<ICodeValue>
+  ornaments: Record<string, ICodeValue>
 }
 
 export interface IOrnamentRenderOptions {

@@ -81,20 +81,12 @@ import {IAccidentalCodes} from "./accidental";
 import {IKeySignature} from "./keysignature";
 import {IOrnamentCodes} from "./ornament";
 import {IGlyphProps} from "./glyph";
-import {IFont} from "./font";
-
-export interface INumberTable<T> {
-  [index: number]: T;
-}
-
-export interface IStringTable<T> {
-  [index: string]: T;
-}
+import {IGrammarVal} from "./easyscore";
 
 export interface IIntegerToNote {
-  (i: number): any;
+  (i: number): string;
 
-  table: INumberTable<string>;
+  table: Record<number, string>;
 }
 
 export interface IKeyPropertiesParams {
@@ -102,10 +94,32 @@ export interface IKeyPropertiesParams {
 }
 
 export interface IKeyProperties {
-  (key: string, clef?: string, params?: IKeyPropertiesParams): any;
+  (key: string, clef?: string, params?: IKeyPropertiesParams): IKeyProps;
 
-  note_values: IStringTable<INoteValue>;
-  customNoteHeads: IStringTable<IType>;
+  note_values: Record<string, INoteValue>;
+  customNoteHeads: Record<string, IType>;
+}
+
+export interface IKeyProps {
+  stem_down_x_offset: number;
+  stem_up_x_offset: number;
+  key: string;
+  octave: number;
+  line: number;
+  int_value: number;
+  accidental: string;
+  code: string;
+  stroke: number;
+  shift_right: number;
+  displaced: boolean;
+}
+
+export interface IState {
+  matches: any[];
+  right_shift: number;
+  left_shift: number;
+  text_line: number;
+  top_text_line: number;
 }
 
 export interface ICodeValue {
@@ -117,7 +131,7 @@ export interface IRule {
   expect: IRule[];
   maybe: boolean;
 
-  bind(grammar: any): any;
+  bind(grammar: IGrammarVal): () => IGrammarVal;
 }
 
 export interface IKeySpec {
@@ -128,7 +142,7 @@ export interface IKeySpec {
 export interface IDurationToTicks {
   (duration: string): number;
 
-  durations: IStringTable<number>;
+  durations: Record<string, number>;
 }
 
 export interface IScale {
@@ -158,10 +172,10 @@ export interface IDuration {
 
 export interface IDurationCode {
   common: IType;
-  type: IStringTable<IType>;
+  type: Record<string, IType>;
 }
 
-export interface IType {
+export interface IType extends IKeyProps {
   getWidth(scale?: number): number;
 
   code: string;
@@ -195,7 +209,7 @@ export interface IFlowDefaults {
 
 export interface ITickContextsStruct {
   list: number[];
-  map: INumberTable<TickContext>;
+  map: Record<number, TickContext>;
   array: (ModifierContext | TickContext)[];
   resolutionMultiplier: any;
 }
@@ -210,7 +224,7 @@ export interface IDistance {
 
 export interface IFlow {
   DefaultFontStack: Font[];
-  Fonts: IStringTable<Font>;
+  Fonts: Record<string, Font>;
   Font: typeof Font;
   RepeatNote: typeof RepeatNote;
   GlyphNote: typeof GlyphNote;
@@ -302,12 +316,12 @@ export interface IFlow {
   textWidth: (s: string) => number;
   articulationCodes: IArticulationCodes;
   accidentalCodes: IAccidentalCodes;
-  accidentalColumnsTable: INumberTable<IStringTable<number[]>>;
+  accidentalColumnsTable: Record<number, Record<string, number[]>>;
   ornamentCodes: IOrnamentCodes;
   keySignature: IKeySignature;
-  unicode: IStringTable<string>;
+  unicode: Record<string, string>;
   sanitizeDuration: (duration: string) => string;
-  durationAliases: IStringTable<string>;
+  durationAliases: Record<string, string>;
   durationToTicks: IDurationToTicks;
   durationToFraction: (duration: string) => any; //TODO: any to Fraction
   durationToNumber: (duration: string) => number;
@@ -324,6 +338,7 @@ export interface IMetrics {
   modLeftPx: number;
   modRightPx: number;
   leftDisplacedHeadPx: number;
+  glyphPx: number;
   rightDisplacedHeadPx: number;
 }
 
@@ -363,36 +378,9 @@ export interface ICoordinates {
   y: number
 }
 
-export interface IMultimeasureRestRenderOptions {
-  padding_left: number;
-  line: number;
-  number_glyph_point: number;
-  show_number: boolean;
-  line_thickness: number;
-  symbol_spacing: number;
-  serif_thickness: number;
-  use_symbols: boolean;
-  number_line: number;
-  spacing_between_lines_px: number;
-  semibrave_rest_glyph_scale: number;
-  padding_right: number;
-}
-
 export interface ILeftRight {
   left: number;
   right: number
-}
-
-export interface IStemStruct {
-  stemletHeight: number;
-  isStemlet: boolean;
-  hide: boolean;
-  stem_direction: number;
-  stem_extension: number;
-  y_bottom: number;
-  y_top: number;
-  x_end: number;
-  x_begin: number;
 }
 
 export interface IPedalMarkingRenderOptions {
@@ -402,44 +390,9 @@ export interface IPedalMarkingRenderOptions {
   bracket_line_width: number
 }
 
-export interface IStaveOptions {
-  bottom_text_position: number;
-  line_config: IStringTable<any>;
-  space_below_staff_ln: number;
-  glyph_spacing_px: number;
-  space_above_staff_ln: number;
-  vertical_bar_width: number;
-  fill_style: string;
-  left_bar: boolean;
-  right_bar: boolean;
-  spacing_between_lines_px: number;
-  top_text_position: number;
-  num_lines: number
-}
-
-export interface IStaveLineConfig {
-  visible: boolean;
-}
-
-export interface ITupletOptions {
-  y_offset: number;
-  location: number;
-  ratioed: boolean;
-  bracketed: boolean;
-  notes_occupied: number;
-  beats_occupied: number;
-  num_notes: number;
-}
-
 export interface IAccItem {
   type: string;
   line: number;
-}
-
-export interface IStaveTextOptions {
-  shift_x: number;
-  shift_y: number;
-  justification: number;
 }
 
 export interface IBounds {
@@ -452,13 +405,6 @@ export interface IBounds {
 export interface IText {
   options: any;
   content: string;
-}
-
-export interface IStaveHairpinRenderOptions {
-  left_shift_px: number;
-  right_shift_px: number;
-  height: number;
-  y_shift: number
 }
 
 export interface IStaveLineRenderOptions {
@@ -474,31 +420,6 @@ export interface IStaveLineRenderOptions {
   draw_end_arrow: boolean;
   arrowhead_angle: number;
   padding_right: number
-}
-
-export interface IStaveTieRenderOptions {
-  cp2: number;
-  last_x_shift: number;
-  tie_spacing: number;
-  cp1: number;
-  first_x_shift: number;
-  text_shift_x: number;
-  y_shift: number;
-  font: IFont
-}
-
-export interface ISystemOptions {
-  factory: null;
-  noPadding: boolean;
-  debugFormatter: boolean;
-  connector: null;
-  spaceBetweenStaves: number;
-  formatIterations: number;
-  x: number;
-  width: number;
-  y: number;
-  details: any;
-  noJustification: boolean
 }
 
 export interface ITextBracketRenderOptions {
@@ -517,16 +438,8 @@ export interface ISpace {
   used: number
 }
 
-export interface IVibratoBracketRenderOptions {
-  vibrato_width: number;
-  wave_height: number;
-  wave_girth: number;
-  harsh: boolean;
-  wave_width: number
-}
-
 export interface IBarnoteMetrics {
-  widths: IStringTable<number>
+  widths: Record<string, number>
 }
 
 export interface IBendRenderOptions {
@@ -547,10 +460,6 @@ export interface IPedalMarkingGlyph {
   x_shift: number;
 }
 
-export interface IVoiceOptions {
-  softmaxFactor: number;
-}
-
 export interface IGraceNoteGroupRenderOptions {
   slur_y_shift: number
 }
@@ -569,37 +478,6 @@ export interface ITremoloRenderOptions {
   font_scale: any;
 }
 
-export interface ITimeSignature {
-  glyph: Glyph;
-  line: any;
-  num: boolean
-}
-
-export interface IFactoryFontOptions {
-  face: string;
-  style: string;
-  point: number
-}
-
-export interface IFactoryStaveOptions {
-  space: number
-}
-
-export interface IFactoryRendererOptions {
-  elementId: string;
-  background: string;
-  context: null;
-  width: number;
-  backend: number;
-  height: number
-}
-
-export interface IFactoryOptions {
-  renderer: IFactoryRendererOptions;
-  stave: IFactoryStaveOptions;
-  font: IFactoryFontOptions;
-}
-
 export interface IContextGaps {
   total: number;
   gaps: any[]
@@ -616,15 +494,6 @@ export interface IModifierContextState {
   left_shift: number;
   text_line: number;
   top_text_line: number
-}
-
-export interface IKeyProps {
-  displaced: boolean;
-  line: number;
-  code: string;
-  shift_right: number;
-  stem_up_x_offset: number;
-  stem_down_x_offset: number;
 }
 
 export interface IRaphaelAttributes {
@@ -663,8 +532,6 @@ export interface ITempo {
   duration: string;
   name: string;
 }
-
-
 
 export interface IPhrase {
   x: number;

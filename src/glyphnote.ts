@@ -3,11 +3,13 @@
 import {Note} from './note';
 import {Glyph} from "./glyph";
 import {IStaveNoteStruct} from "./types/note";
+import {BoundingBox} from "./boundingbox";
+import {IGlyphNoteOptions} from "./types/glyphnote";
 
 export class GlyphNote extends Note {
-  private options: any;
+  private options: IGlyphNoteOptions;
 
-  constructor(glyph: Glyph, noteStruct: IStaveNoteStruct, options: any) {
+  constructor(glyph: Glyph, noteStruct: IStaveNoteStruct, options: IGlyphNoteOptions) {
     super(noteStruct);
     this.options = {
       ignoreTicks: false,
@@ -23,14 +25,14 @@ export class GlyphNote extends Note {
     }
   }
 
-  setGlyph(glyph: Glyph) {
+  setGlyph(glyph: Glyph): this {
     this.glyph = glyph;
     this.setWidth(this.glyph.getMetrics().width);
     return this;
   }
 
-  getBoundingBox() {
-    return this.glyph.getBoundingBox();
+  getBoundingBox(): BoundingBox {
+    return (this.glyph as Glyph).getBoundingBox();
   }
 
   /*
@@ -39,24 +41,24 @@ export class GlyphNote extends Note {
   }
   */
 
-  preFormat() {
+  preFormat(): this {
     this.setPreFormatted(true);
     return this;
   }
 
-  draw() {
+  draw(): void {
     this.stave.checkContext();
     this.setRendered();
 
     // Context is set when setStave is called on Note
-    if (!this.glyph.getContext()) {
-      this.glyph.setContext(this.context);
+    if (!(this.glyph as Glyph).getContext()) {
+      (this.glyph as Glyph).setContext(this.context);
     }
 
-    this.glyph.setStave(this.stave);
-    this.glyph.setYShift(this.stave.getYForLine(this.options.line) - this.stave.getYForGlyphs());
+    (this.glyph as Glyph).setStave(this.stave);
+    (this.glyph as Glyph).setYShift(this.stave.getYForLine(this.options.line) - this.stave.getYForGlyphs());
 
     const x = this.isCenterAligned() ? this.getAbsoluteX() - (this.getWidth() / 2) : this.getAbsoluteX();
-    this.glyph.renderToStave(x);
+    (this.glyph as Glyph).renderToStave(x);
   }
 }

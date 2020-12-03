@@ -17,30 +17,32 @@ import {StaveNote} from './stavenote';
 import {IGraceNoteGroupRenderOptions} from "./types/common";
 import {GraceNote} from "./gracenote";
 import {Note} from "./note";
+import {IGraceNoteGroupFormatOptions} from "./types/gracenotegroup";
 
 // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
 }
 
 export class GraceNoteGroup extends Modifier {
   static DEBUG: boolean;
 
+  private readonly voice: Voice;
+  private readonly grace_notes: GraceNote[];
+  private readonly show_slur: boolean;
+
   private preFormatted: boolean;
   private formatter: Formatter;
-  private voice: Voice;
   private render_options: IGraceNoteGroupRenderOptions;
-  private grace_notes: GraceNote[];
-  private show_slur: boolean;
   private slur: StaveTie|TabTie;
   private beams: Beam[];
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'gracenotegroups';
   }
 
   // Arrange groups inside a `ModifierContext`
-  static format(gracenote_groups: GraceNoteGroup[], state: any) {
+  static format(gracenote_groups: GraceNoteGroup[], state: IGraceNoteGroupFormatOptions): boolean {
     const group_spacing_stave = 4;
     const group_spacing_tab = 0;
 
@@ -124,11 +126,11 @@ export class GraceNoteGroup extends Modifier {
     return this;
   }
 
-  getCategory() {
+  getCategory(): string {
     return GraceNoteGroup.CATEGORY;
   }
 
-  preFormat() {
+  preFormat(): void {
     if (this.preFormatted) return;
 
     this.formatter.joinVoices([this.voice]).format([this.voice], 0);
@@ -136,7 +138,7 @@ export class GraceNoteGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  beamNotes(grace_notes: GraceNote[]) {
+  beamNotes(grace_notes: GraceNote[]): this {
     grace_notes = grace_notes || this.grace_notes;
     if (grace_notes.length > 1) {
       const beam = new Beam(grace_notes);
@@ -150,25 +152,25 @@ export class GraceNoteGroup extends Modifier {
     return this;
   }
 
-  setNote(note: Note) {
+  setNote(note: Note): this {
     this.note = note;
     return this;
   }
 
-  setWidth(width: number) {
+  setWidth(width: number): this {
     this.width = width;
     return this;
   }
 
-  getWidth() {
+  getWidth(): number {
     return this.width;
   }
 
-  getGraceNotes() {
+  getGraceNotes(): GraceNote[] {
     return this.grace_notes;
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
 
     const note = this.getNote();

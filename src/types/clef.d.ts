@@ -1,5 +1,3 @@
-import {IStringTable} from "./common";
-
 export interface IClefPropertyValue {
   line_shift: number;
 }
@@ -13,5 +11,5 @@ export interface IClefType {
 export interface IClefProperties {
   (clef: string): any;
 
-  values: IStringTable<IClefPropertyValue>;
+  values: Record<string, IClefPropertyValue>;
 }

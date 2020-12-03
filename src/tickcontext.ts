@@ -8,10 +8,16 @@ import {Vex} from './vex';
 import {Tickable} from './tickable';
 import {Fraction} from './fraction';
 import {Note} from "./note";
-import {INumberTable, IStringTable} from "./types/common";
+import {IMetrics} from "./types/common";
+import {ModifierContext} from "./modifiercontext";
+import {ITickContextOptions} from "./types/tickcontext";
 
 export class TickContext extends Tickable {
-  tContexts: any[];
+  tContexts: (ModifierContext|TickContext)[];
+
+  private readonly tickID: number;
+  private readonly tickables: Note[];
+  private readonly tickablesByVoice: Record<string, Note>;
 
   private currentTick: Fraction;
   private maxTicks: Fraction;
@@ -27,21 +33,18 @@ export class TickContext extends Tickable {
   private modRightPx: number;
   private totalLeftPx: number;
   private totalRightPx: number;
-  private tickID: string;
   private maxTickable: Note;
   private minTicks: Fraction;
   private minTickable: Note;
-  private tickables: Note[];
-  private tickablesByVoice: IStringTable<Note>;
 
-  static getNextContext(tContext: TickContext) {
+  static getNextContext(tContext: TickContext): ModifierContext|TickContext {
     const contexts = tContext.tContexts;
     const index = contexts.indexOf(tContext);
 
     return contexts[index + 1];
   }
 
-  constructor(options?: any) {
+  constructor(options?: ITickContextOptions) {
     super();
     this.tickID = options && options.tickID;
     this.setAttribute('type', 'TickContext');
@@ -71,81 +74,82 @@ export class TickContext extends Tickable {
     this.tContexts = [];   // Parent array of tick contexts
   }
 
-  getTickID() {
+  getTickID(): number {
     return this.tickID;
   }
 
-  getX() {
+  getX(): number {
     return this.x;
   }
 
-  setX(x: number) {
+  setX(x: number): this {
     this.x = x;
     this.xBase = x;
     this.xOffset = 0;
     return this;
   }
 
-  getXBase() {
+  getXBase(): number {
     return this.xBase;
   } // use of xBase and xOffset is optional, avoids offset creep
-  setXBase(xBase: number) {
+
+  setXBase(xBase: number): void {
     this.xBase = xBase;
     this.x = xBase + this.xOffset;
   }
 
-  getXOffset() {
+  getXOffset(): number {
     return this.xOffset;
   }
 
-  setXOffset(xOffset: number) {
+  setXOffset(xOffset: number): void {
     this.xOffset = xOffset;
     this.x = this.xBase + xOffset;
   }
 
-  getWidth() {
+  getWidth(): number {
     return this.width + (this.padding * 2);
   }
 
-  setPadding(padding: number) {
+  setPadding(padding: number): this {
     this.padding = padding;
     return this;
   }
 
-  getMaxTicks() {
+  getMaxTicks(): Fraction {
     return this.maxTicks;
   }
 
-  getMinTicks() {
+  getMinTicks(): Fraction {
     return this.minTicks;
   }
 
-  getMaxTickable() {
+  getMaxTickable(): Note {
     return this.maxTickable;
   }
 
-  getMinTickable() {
+  getMinTickable(): Note {
     return this.minTickable;
   }
 
-  getTickables() {
+  getTickables(): Note[] {
     return this.tickables;
   }
 
-  getTickablesForVoice(voiceIndex: number) {
+  getTickablesForVoice(voiceIndex: number): Note {
     return this.tickablesByVoice[voiceIndex];
   }
 
-  getTickablesByVoice() {
+  getTickablesByVoice(): Record<string, Note> {
     return this.tickablesByVoice;
   }
 
-  getCenterAlignedTickables() {
+  getCenterAlignedTickables(): Note[] {
     return this.tickables.filter(tickable => tickable.isCenterAligned());
   }
 
   // Get widths context, note and left/right modifiers for formatting
-  getMetrics() {
+  getMetrics(): IMetrics {
     const {width, glyphPx, notePx, leftDisplacedHeadPx, rightDisplacedHeadPx, modLeftPx, modRightPx, totalLeftPx, totalRightPx} = this;
     return {
       width, // Width of largest tickable in context
@@ -157,19 +161,19 @@ export class TickContext extends Tickable {
       modRightPx,
       totalLeftPx,
       totalRightPx
-    };
+    } as IMetrics;
   }
 
-  getCurrentTick() {
+  getCurrentTick(): Fraction {
     return this.currentTick;
   }
 
-  setCurrentTick(tick: Fraction) {
+  setCurrentTick(tick: Fraction): void {
     this.currentTick = tick;
     this.preFormatted = false;
   }
 
-  addTickable(tickable: Note, voiceIndex?: number) {
+  addTickable(tickable: Note, voiceIndex?: number): this {
     if (!tickable) {
       throw new Vex.RERR('BadArgument', 'Invalid tickable added.');
     }
@@ -200,7 +204,7 @@ export class TickContext extends Tickable {
     return this;
   }
 
-  preFormat() {
+  preFormat(): this {
     if (this.preFormatted) return this;
 
     for (let i = 0; i < this.tickables.length; ++i) {
@@ -233,7 +237,7 @@ export class TickContext extends Tickable {
     return this;
   }
 
-  postFormat() {
+  postFormat(): this {
     if (this.postFormatted) return this;
     this.postFormatted = true;
     return this;

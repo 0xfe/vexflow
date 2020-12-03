@@ -7,18 +7,20 @@
 //
 // See `tests/notehead_tests.js` for usage examples.
 
-import { Vex } from './vex';
-import { Flow } from './tables';
-import { Note } from './note';
-import { Stem } from './stem';
-import { StaveNote } from './stavenote';
-import { Glyph } from './glyph';
+import {Vex} from './vex';
+import {Flow} from './tables';
+import {Note} from './note';
+import {Stem} from './stem';
+import {StaveNote} from './stavenote';
+import {Glyph} from './glyph';
 import {DrawContext} from "./types/common";
 import {Stave} from "./stave";
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
+import {IGlyphProps} from "./types/glyph";
+import {BoundingBox} from "./boundingbox";
 
 // To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
-function L(...args: any[]) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args); }
+function L(...args: unknown[]) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args); }
 
 // Draw slashnote head manually. No glyph exists for this.
 //
@@ -73,19 +75,20 @@ export class NoteHead extends Note {
 
   glyph_code: string;
 
+  private readonly custom_glyph: boolean;
+  private readonly stem_up_x_offset: number;
+  private readonly stem_down_x_offset: number;
+  private readonly note_type: string;
+  private readonly displaced: boolean;
+  private readonly stem_direction: number;
+
   private x: number;
   private y: number;
   private line: number;
-  private custom_glyph: boolean;
-  private stem_up_x_offset: number;
-  private stem_down_x_offset: number;
   private index: number;
-  private note_type: string;
-  private displaced: boolean;
-  private stem_direction: number;
   private slashed: boolean;
 
-  static get CATEGORY() { return 'notehead'; }
+  static get CATEGORY(): string { return 'notehead'; }
 
   constructor(head_options: IStaveNoteStruct) {
     super(head_options);
@@ -109,7 +112,7 @@ export class NoteHead extends Note {
         `No glyph found for duration '${this.duration}' and type '${this.note_type}'`);
     }
 
-    this.glyph_code = this.glyph.code_head;
+    this.glyph_code = (this.glyph as IGlyphProps).code_head;
     this.x_shift = head_options.x_shift || 0;
     if (head_options.custom_glyph_code) {
       this.custom_glyph = true;
@@ -128,33 +131,33 @@ export class NoteHead extends Note {
       stroke_px: 3,
     } as INoteRenderOptions);
 
-    this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
+    this.setWidth((this.glyph as IGlyphProps).getWidth(this.render_options.glyph_font_scale));
   }
 
-  getCategory() { return NoteHead.CATEGORY; }
+  getCategory(): string { return NoteHead.CATEGORY; }
 
   // Get the width of the notehead
-  getWidth() { return this.width; }
+  getWidth(): number { return this.width; }
 
   // Determine if the notehead is displaced
-  isDisplaced() { return this.displaced === true; }
+  isDisplaced(): boolean { return this.displaced === true; }
 
   // Get the glyph data
-  getGlyph() { return this.glyph; }
+  getGlyph(): IGlyphProps|Glyph { return this.glyph; }
 
   // Set the X coordinate
-  setX(x: number) { this.x = x; return this; }
+  setX(x: number): this { this.x = x; return this; }
 
   // get/set the Y coordinate
-  getY() { return this.y; }
-  setY(y: number) { this.y = y;  return this; }
+  getY(): number { return this.y; }
+  setY(y: number): this { this.y = y;  return this; }
 
   // Get/set the stave line the notehead is placed on
-  getLine() { return this.line; }
-  setLine(line: number) { this.line = line; return this; }
+  getLine(): number { return this.line; }
+  setLine(line: number): this { this.line = line; return this; }
 
   // Get the canvas `x` coordinate position of the notehead.
-  getAbsoluteX() {
+  getAbsoluteX(): number {
     // If the note has not been preformatted, then get the static x value
     // Otherwise, it's been formatted and we should use it's x value relative
     // to its tick context
@@ -173,7 +176,7 @@ export class NoteHead extends Note {
   }
 
   // Get the `BoundingBox` for the `NoteHead`
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
     }
@@ -186,7 +189,7 @@ export class NoteHead extends Note {
   }
 
   // Set notehead to a provided `stave`
-  setStave(stave: Stave) {
+  setStave(stave: Stave): this {
     const line = this.getLine();
 
     this.stave = stave;
@@ -196,7 +199,7 @@ export class NoteHead extends Note {
   }
 
   // Pre-render formatting
-  preFormat() {
+  preFormat(): this {
     if (this.preFormatted) return this;
 
     const width = this.getWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
@@ -207,7 +210,7 @@ export class NoteHead extends Note {
   }
 
   // Draw the notehead
-  draw() {
+  draw(): void {
     this.checkContext();
     this.setRendered();
 

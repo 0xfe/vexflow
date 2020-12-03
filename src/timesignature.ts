@@ -8,8 +8,8 @@
 import {Vex} from './vex';
 import {Glyph} from './glyph';
 import {StaveModifier} from './stavemodifier';
-import {ITimeSignature} from "./types/common";
 import {IGlyphMetrics} from "./types/glyph";
+import {ITimeSignature, ITimeSignatureGlyph} from "./types/timesignature";
 
 const assertIsValidFraction = (timeSpec: string) => {
   const numbers = timeSpec.split('/').filter(number => number !== '');
@@ -35,14 +35,15 @@ export class TimeSignature extends StaveModifier {
   bottomLine: number;
   timeSig: ITimeSignature;
 
-  private validate_args: boolean;
+  private readonly validate_args: boolean;
+
   private topLine: number;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'timesignatures';
   }
 
-  static get glyphs() {
+  static get glyphs(): Record<string, ITimeSignatureGlyph> {
     return {
       'C': {
         code: 'timeSigCommon',
@@ -76,11 +77,11 @@ export class TimeSignature extends StaveModifier {
     this.setPadding(padding);
   }
 
-  getCategory() {
+  getCategory(): string {
     return TimeSignature.CATEGORY;
   }
 
-  parseTimeSpec(timeSpec: string) {
+  parseTimeSpec(timeSpec: string): ITimeSignature {
     if (timeSpec === 'C' || timeSpec === 'C|') {
       const {line, code, point} = TimeSignature.glyphs[timeSpec];
       return {
@@ -104,7 +105,7 @@ export class TimeSignature extends StaveModifier {
     } as ITimeSignature;
   }
 
-  makeTimeSignatureGlyph(topDigits: string[], botDigits: string[]) {
+  makeTimeSignatureGlyph(topDigits: string[], botDigits: string[]): Glyph {
     const glyph = new Glyph('timeSig0', this.point);
     glyph.topGlyphs = [];
     glyph.botGlyphs = [];
@@ -139,6 +140,7 @@ export class TimeSignature extends StaveModifier {
     const topStartX = (width - topWidth) / 2.0;
     const botStartX = (width - botWidth) / 2.0;
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     glyph.renderToStave = function renderToStave(x) {
       let start_x = x + topStartX;
@@ -172,16 +174,16 @@ export class TimeSignature extends StaveModifier {
     return glyph;
   }
 
-  getTimeSig() {
+  getTimeSig(): ITimeSignature {
     return this.timeSig;
   }
 
-  setTimeSig(timeSpec: string) {
+  setTimeSig(timeSpec: string): this {
     this.timeSig = this.parseTimeSpec(timeSpec) as ITimeSignature;
     return this;
   }
 
-  draw() {
+  draw(): void {
     if (!this.x) {
       throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without x.");
     }

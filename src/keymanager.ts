@@ -6,7 +6,8 @@
 
 import {Vex} from './vex';
 import {Music} from './music';
-import {IKeyParts, INumberTable, IStringTable} from "./types/common";
+import {IKeyParts} from "./types/common";
+import {IKeymanagerAccidental} from "./types/keymanager";
 
 export class KeyManager {
   private music: Music;
@@ -14,26 +15,26 @@ export class KeyManager {
   private keyString: string;
   private key: string;
   private scale: number[];
-  private scaleMap: IStringTable<string>;
-  private scaleMapByValue: INumberTable<string>;
-  private originalScaleMapByValue: INumberTable<string>;
+  private scaleMap: Record<string, string>;
+  private scaleMapByValue: Record<number, string>;
+  private originalScaleMapByValue: Record<number, string>;
 
   constructor(key: string) {
     this.music = new Music();
     this.setKey(key);
   }
 
-  setKey(key: string) {
+  setKey(key: string): this {
     this.key = key;
     this.reset();
     return this;
   }
 
-  getKey() {
+  getKey(): string {
     return this.key;
   }
 
-  reset() {
+  reset(): this {
     this.keyParts = this.music.getKeyParts(this.key);
 
     this.keyString = this.keyParts.root;
@@ -68,17 +69,17 @@ export class KeyManager {
     return this;
   }
 
-  getAccidental(key: string) {
+  getAccidental(key: string): IKeymanagerAccidental {
     const root = this.music.getKeyParts(key).root;
     const parts = this.music.getNoteParts(this.scaleMap[root]);
 
     return {
       note: this.scaleMap[root],
       accidental: parts.accidental,
-    };
+    } as IKeymanagerAccidental;
   }
 
-  selectNote(note: string) {
+  selectNote(note: string): IKeymanagerAccidental {
     note = note.toLowerCase();
     const parts = this.music.getNoteParts(note);
 

@@ -12,26 +12,28 @@ import {StaveNote} from './stavenote';
 import {StemmableNote} from "./stemmablenote";
 import {Note} from "./note";
 import {IFont} from "./types/font";
+import {IState} from "./types/common";
 
 export class StringNumber extends Modifier {
   note: Note;
 
-  private last_note: any;
-  private string_number: any;
+  private readonly radius: number;
+
+  private last_note: StemmableNote;
+  private string_number: string;
   private x_offset: number;
   private y_offset: number;
   private dashed: boolean;
   private leg: number;
-  private radius: number;
   private font: IFont;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'stringnumber';
   }
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
-  static format(nums: StringNumber[], state: any) {
+  static format(nums: StringNumber[], state: IState): boolean| typeof StringNumber{
     const left_shift = state.left_shift;
     const right_shift = state.right_shift;
     const num_spacing = 1;
@@ -148,61 +150,61 @@ export class StringNumber extends Modifier {
     } as IFont;
   }
 
-  getCategory() {
+  getCategory(): string {
     return StringNumber.CATEGORY;
   }
 
-  getNote() {
+  getNote(): Note {
     return this.note;
   }
 
-  setNote(note: Note) {
+  setNote(note: Note): this {
     this.note = note;
     return this;
   }
 
-  getIndex() {
+  getIndex(): number {
     return this.index;
   }
 
-  setIndex(index: number) {
+  setIndex(index: number): this {
     this.index = index;
     return this;
   }
 
-  setLineEndType(leg: number) {
+  setLineEndType(leg: number): this {
     if (leg >= Renderer.LineEndType.NONE && leg <= Renderer.LineEndType.DOWN) {
       this.leg = leg;
     }
     return this;
   }
 
-  setStringNumber(number: StringNumber) {
+  setStringNumber(number: string): this {
     this.string_number = number;
     return this;
   }
 
-  setOffsetX(x: number) {
+  setOffsetX(x: number): this {
     this.x_offset = x;
     return this;
   }
 
-  setOffsetY(y: number) {
+  setOffsetY(y: number): this {
     this.y_offset = y;
     return this;
   }
 
-  setLastNote(note: Note) {
+  setLastNote(note: StemmableNote): this {
     this.last_note = note;
     return this;
   }
 
-  setDashed(dashed: boolean) {
+  setDashed(dashed: boolean): this {
     this.dashed = dashed;
     return this;
   }
 
-  draw() {
+  draw(): void {
     const ctx = this.checkContext();
     if (!(this.note && (this.index != null))) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");

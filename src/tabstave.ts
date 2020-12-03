@@ -2,7 +2,7 @@
 
 import {Vex} from './vex';
 import {Stave} from './stave';
-import {IStaveOptions} from "./types/common";
+import {IStaveOptions} from "./types/stave";
 
 export class TabStave extends Stave {
   constructor(x: number, y: number, width: number, options: IStaveOptions) {
@@ -17,12 +17,12 @@ export class TabStave extends Stave {
     this.setAttribute('type', 'TabStave');
   }
 
-  getYForGlyphs() {
+  getYForGlyphs(): number {
     return this.getYForLine(2.5);
   }
 
   // Deprecated
-  addTabGlyph() {
+  addTabGlyph(): this {
     this.addClef('tab');
     return this;
   }

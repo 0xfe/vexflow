@@ -12,13 +12,14 @@ import {DrawContext} from "./types/common";
 let lastContext: DrawContext = null;
 
 export class Renderer {
-  private elementRef: string | HTMLElement;
-  private element: HTMLCanvasElement;
+  private readonly elementRef: string | HTMLElement;
+  private readonly element: HTMLCanvasElement;
+  private readonly backend: number;
+
   private ctx: DrawContext;
   private paper: any;
-  private backend: any;
 
-  static get Backends() {
+  static get Backends(): Record<string, number> {
     return {
       CANVAS: 1,
       RAPHAEL: 2,
@@ -28,7 +29,7 @@ export class Renderer {
   }
 
   // End of line types
-  static get LineEndType() {
+  static get LineEndType(): Record<string, number> {
     return {
       NONE: 1, // No leg
       UP: 2,   // Upward leg
@@ -39,19 +40,19 @@ export class Renderer {
   // Set this to true if you're using VexFlow inside a runtime
   // that does not allow modifiying canvas objects. There is a small
   // performance degradation due to the extra indirection.
-  static get USE_CANVAS_PROXY() {
+  static get USE_CANVAS_PROXY(): boolean {
     return false;
   }
 
-  static get lastContext() {
+  static get lastContext(): DrawContext {
     return lastContext;
   }
 
-  static set lastContext(ctx) {
+  static set lastContext(ctx: DrawContext) {
     lastContext = ctx;
   }
 
-  static buildContext(elementId: string, backend: number, width: number, height: number, background: string) {
+  static buildContext(elementId: string, backend: number, width: number, height: number, background: string): DrawContext {
     const renderer = new Renderer(elementId, backend);
     if (width && height) {
       renderer.resize(width, height);
@@ -64,19 +65,19 @@ export class Renderer {
     return ctx;
   }
 
-  static getCanvasContext(elementId: string, width: number, height: number, background: string) {
+  static getCanvasContext(elementId: string, width: number, height: number, background: string): DrawContext {
     return Renderer.buildContext(elementId, Renderer.Backends.CANVAS, width, height, background);
   }
 
-  static getRaphaelContext(elementId: string, width: number, height: number, background: string) {
+  static getRaphaelContext(elementId: string, width: number, height: number, background: string): DrawContext {
     return Renderer.buildContext(elementId, Renderer.Backends.RAPHAEL, width, height, background);
   }
 
-  static getSVGContext(elementId: string, width: number, height: number, background: string) {
+  static getSVGContext(elementId: string, width: number, height: number, background: string): DrawContext {
     return Renderer.buildContext(elementId, Renderer.Backends.SVG, width, height, background);
   }
 
-  static bolsterCanvasContext(ctx: any) {
+  static bolsterCanvasContext(ctx: any): DrawContext {
     if (Renderer.USE_CANVAS_PROXY) {
       return new CanvasContext(ctx);
     }
@@ -99,7 +100,7 @@ export class Renderer {
   // Draw a dashed line (horizontal, vertical or diagonal
   // dashPattern = [3,3] draws a 3 pixel dash followed by a three pixel space.
   // setting the second number to 0 draws a solid line.
-  static drawDashedLine(context: DrawContext, fromX: number, fromY: number, toX: number, toY: number, dashPattern: any) {
+  static drawDashedLine(context: DrawContext, fromX: number, fromY: number, toX: number, toY: number, dashPattern: number[]): void {
     context.beginPath();
 
     const dx = toX - fromX;
@@ -156,7 +157,7 @@ export class Renderer {
     }
   }
 
-  resize(width: number, height: number) {
+  resize(width: number, height: number): this {
     if (this.backend === Renderer.Backends.CANVAS) {
       if (!this.element.getContext) {
         throw new Vex.RERR(
@@ -181,7 +182,7 @@ export class Renderer {
     return this;
   }
 
-  getContext() {
+  getContext(): DrawContext {
     return this.ctx;
   }
 }

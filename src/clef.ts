@@ -10,13 +10,12 @@
 import {Vex} from './vex';
 import {StaveModifier} from './stavemodifier';
 import {Glyph} from './glyph';
-import {IStringTable} from "./types/common";
 import {Stave} from "./stave";
 import {IClefType} from "./types/clef";
 import {IAnnotation} from "./types/annotation";
 
 // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', args);
 }
 
@@ -31,13 +30,13 @@ export class Clef extends StaveModifier {
   private size: string;
   private type: string;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'clefs';
   }
 
   // Every clef name is associated with a glyph code from the font file
   // and a default stave line number.
-  static get types(): IStringTable<IClefType> {
+  static get types(): Record<string, IClefType> {
     return {
       'treble': {
         code: 'gClef',
@@ -101,11 +100,11 @@ export class Clef extends StaveModifier {
     L('Creating clef:', type);
   }
 
-  getCategory() {
+  getCategory(): string {
     return Clef.CATEGORY;
   }
 
-  setType(type: string, size: string, annotation: string) {
+  setType(type: string, size: string, annotation: string): this {
     this.type = type;
     this.clef = Clef.types[type];
     if (size === undefined) {
@@ -137,7 +136,7 @@ export class Clef extends StaveModifier {
     return this;
   }
 
-  getWidth() {
+  getWidth(): number {
     if (this.type === 'tab' && !this.stave) {
       throw new Vex.RERR('ClefError', "Can't get width without stave.");
     }
@@ -145,7 +144,7 @@ export class Clef extends StaveModifier {
     return this.width;
   }
 
-  setStave(stave: Stave) {
+  setStave(stave: Stave): this {
     this.stave = stave;
     if (this.type !== 'tab') return this;
 
@@ -158,7 +157,7 @@ export class Clef extends StaveModifier {
     return this;
   }
 
-  draw() {
+  draw(): void {
     if (!this.x) throw new Vex.RERR('ClefError', "Can't draw clef without x.");
     if (!this.stave) throw new Vex.RERR('ClefError', "Can't draw clef without stave.");
     this.setRendered();

@@ -6,20 +6,21 @@
 
 import {Vex} from './vex';
 import {Element} from './element';
-import {IStaveTieRenderOptions} from "./types/common";
 import {Note} from "./note";
 import {StaveNote} from "./stavenote";
 import {INotesStruct} from "./types/note";
 import {IFont} from "./types/font";
+import {IStaveTieRenderOptions, IStaveTieRenderTieParams} from "./types/stavetie";
 
 export class StaveTie extends Element {
   render_options: IStaveTieRenderOptions;
+
+  private readonly text: string;
 
   private font: IFont;
   protected first_indices: number[];
   protected last_indices: number[];
   private notes: INotesStruct;
-  private text: string;
   private direction: number;
   protected first_note: Note;
   protected last_note: Note;
@@ -58,12 +59,12 @@ export class StaveTie extends Element {
     this.setNotes(notes);
   }
 
-  setFont(font: IFont) {
+  setFont(font: IFont): this {
     this.font = font;
     return this;
   }
 
-  setDirection(direction: number) {
+  setDirection(direction: number): this {
     this.direction = direction;
     return this;
   }
@@ -73,7 +74,7 @@ export class StaveTie extends Element {
    *
    * @param {!Object} notes The notes to tie up.
    */
-  setNotes(notes: INotesStruct) {
+  setNotes(notes: INotesStruct): this {
     if (!notes.first_note && !notes.last_note) {
       throw new Vex.RuntimeError(
         'BadArguments', 'Tie needs to have either first_note or last_note set.'
@@ -98,11 +99,11 @@ export class StaveTie extends Element {
   /**
    * @return {boolean} Returns true if this is a partial bar.
    */
-  isPartial() {
+  isPartial(): boolean {
     return (!this.first_note || !this.last_note);
   }
 
-  renderTie(params: any) {
+  renderTie(params: IStaveTieRenderTieParams): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
       throw new Vex.RERR('BadArguments', 'No Y-values to render');
     }
@@ -142,7 +143,7 @@ export class StaveTie extends Element {
     }
   }
 
-  renderText(first_x_px: number, last_x_px: number) {
+  renderText(first_x_px: number, last_x_px: number): void {
     if (!this.text) return;
     let center_x = (first_x_px + last_x_px) / 2;
     center_x -= this.context.measureText(this.text).width / 2;
@@ -157,7 +158,7 @@ export class StaveTie extends Element {
     this.context.restore();
   }
 
-  draw() {
+  draw(): boolean {
     this.checkContext();
     this.setRendered();
 

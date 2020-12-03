@@ -12,20 +12,23 @@ import {Glyph} from './glyph';
 import {TabNote} from "./tabnote";
 import {Note} from "./note";
 import {IFont} from "./types/font";
+import {IState} from "./types/common";
+import {IStrokeOptions, IStrokeRenderOptions} from "./types/stroke";
 
 export class Stroke extends Modifier {
-  private options: any;
-  private all_voices: any;
-  private note_end: any;
-  private type: any;
-  private render_options: any;
+  private readonly options: IStrokeOptions;
+  private readonly all_voices: boolean;
+  private readonly type: number;
+
+  private note_end: Note;
+  private render_options: IStrokeRenderOptions;
   private font: IFont;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'strokes';
   }
 
-  static get Type() {
+  static get Type(): Record<string, number> {
     return {
       BRUSH_DOWN: 1,
       BRUSH_UP: 2,
@@ -38,7 +41,7 @@ export class Stroke extends Modifier {
   }
 
   // Arrange strokes inside `ModifierContext`
-  static format(strokes: Stroke[], state: any) {
+  static format(strokes: Stroke[], state: IState): typeof Stroke|boolean {
     const left_shift = state.left_shift;
     const stroke_spacing = 0;
 
@@ -68,12 +71,12 @@ export class Stroke extends Modifier {
     return true;
   }
 
-  constructor(type: number, options: any) {
+  constructor(type: number, options: never) {
     super();
     this.setAttribute('type', 'Stroke');
 
     this.note = null;
-    this.options = Vex.Merge({}, options);
+    this.options = Vex.Merge({} as IStrokeOptions, options);
 
     // multi voice - span stroke across all voices if true
     this.all_voices = 'all_voices' in this.options ? this.options.all_voices : true;
@@ -100,20 +103,20 @@ export class Stroke extends Modifier {
     this.setWidth(10);
   }
 
-  getCategory() {
+  getCategory(): string {
     return Stroke.CATEGORY;
   }
 
-  getPosition() {
+  getPosition(): number {
     return this.position;
   }
 
-  addEndNote(note: Note) {
+  addEndNote(note: Note): this {
     this.note_end = note;
     return this;
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
     this.setRendered();
 
@@ -128,7 +131,7 @@ export class Stroke extends Modifier {
     const x = start.x - 5;
     const line_space = this.note.stave.options.spacing_between_lines_px;
 
-    const notes = this.getModifierContext().getModifiers(this.note.getCategory());
+    const notes = this.getModifierContext().getModifiers(this.note.getCategory()) as Note[];
     for (let i = 0; i < notes.length; i++) {
       ys = notes[i].getYs();
       for (let n = 0; n < ys.length; n++) {

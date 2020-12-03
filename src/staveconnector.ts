@@ -7,6 +7,7 @@ import {Glyph} from './glyph';
 import {DrawContext, IText} from "./types/common";
 import {Stave} from "./stave";
 import {IFont} from "./types/font";
+import {IStaveConnectorTextOptions} from "./types/staveconnector";
 
 function drawBoldDoubleLine(ctx: DrawContext, type: number, topX: number, topY: number, botY: number) {
   if (
@@ -34,19 +35,20 @@ function drawBoldDoubleLine(ctx: DrawContext, type: number, topX: number, topY: 
 }
 
 export class StaveConnector extends Element {
-  private thickness: number;
-  private width: number;
+  private readonly thickness: number;
+  private readonly width: number;
+  private readonly font: IFont;
+  private readonly texts: IText[];
+
   private type: number;
-  private font: IFont;
   private x_shift: number;
-  private texts: IText[];
   private top_stave: Stave;
   private bottom_stave: Stave;
 
   // SINGLE_LEFT and SINGLE are the same value for compatibility
   // with older versions of vexflow which didn't have right sided
   // stave connectors
-  static get type() {
+  static get type(): Record<string, number> {
     return {
       SINGLE_RIGHT: 0,
       SINGLE_LEFT: 1,
@@ -61,7 +63,7 @@ export class StaveConnector extends Element {
     };
   }
 
-  static get typeString() {
+  static get typeString(): Record<string, number> {
     return {
       singleRight: StaveConnector.type.SINGLE_RIGHT,
       singleLeft: StaveConnector.type.SINGLE_LEFT,
@@ -96,7 +98,7 @@ export class StaveConnector extends Element {
     this.texts = [];
   }
 
-  setType(type: number) {
+  setType(type: number): this {
     type = typeof (type) === 'string'
       ? StaveConnector.typeString[type]
       : type;
@@ -107,19 +109,19 @@ export class StaveConnector extends Element {
     return this;
   }
 
-  setText(text: string, options: any) {
+  setText(text: string, options: IStaveConnectorTextOptions): this {
     this.texts.push({
       content: text,
-      options: Vex.Merge({shift_x: 0, shift_y: 0}, options),
+      options: Vex.Merge<IStaveConnectorTextOptions>({shift_x: 0, shift_y: 0}, options),
     });
     return this;
   }
 
-  setFont(font: IFont) {
+  setFont(font: IFont): void {
     Vex.Merge(this.font, font);
   }
 
-  setXShift(x_shift: number) {
+  setXShift(x_shift: number): this {
     if (typeof x_shift !== 'number') {
       throw new Vex.RERR('InvalidType', 'x_shift must be a Number');
     }
@@ -128,7 +130,7 @@ export class StaveConnector extends Element {
     return this;
   }
 
-  draw() {
+  draw(): void {
     const ctx = this.checkContext();
     this.setRendered();
 

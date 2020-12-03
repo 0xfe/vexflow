@@ -13,7 +13,7 @@ export class BoundingBox {
   private w: number;
   h: number;
 
-  static copy(that: BoundingBox) {
+  static copy(that: BoundingBox): BoundingBox {
     return new BoundingBox(that.x, that.y, that.w, that.h);
   }
 
@@ -24,54 +24,54 @@ export class BoundingBox {
     this.h = h;
   }
 
-  getX() {
+  getX(): number {
     return this.x;
   }
 
-  getY() {
+  getY(): number {
     return this.y;
   }
 
-  getW() {
+  getW(): number {
     return this.w;
   }
 
-  getH() {
+  getH(): number {
     return this.h;
   }
 
-  setX(x: number) {
+  setX(x: number): this {
     this.x = x;
     return this;
   }
 
-  setY(y: number) {
+  setY(y: number): this {
     this.y = y;
     return this;
   }
 
-  setW(w: number) {
+  setW(w: number): this {
     this.w = w;
     return this;
   }
 
-  setH(h: number) {
+  setH(h: number): this {
     this.h = h;
     return this;
   }
 
-  move(x: number, y: number) {
+  move(x: number, y: number): void {
     this.x += x;
     this.y += y;
   }
 
-  clone() {
+  clone(): BoundingBox {
     return BoundingBox.copy(this);
   }
 
   // Merge my box with given box. Creates a bigger bounding box unless
   // the given box is contained in this one.
-  mergeWith(boundingBox: BoundingBox, ctx?: DrawContext) {
+  mergeWith(boundingBox: BoundingBox, ctx?: DrawContext): this {
     const that = boundingBox;
 
     const new_x = this.x < that.x ? this.x : that.x;
@@ -88,7 +88,7 @@ export class BoundingBox {
     return this;
   }
 
-  draw(ctx: DrawContext, x?: number, y?: number) {
+  draw(ctx: DrawContext, x?: number, y?: number): void {
     if (!x) x = 0;
     if (!y) y = 0;
     ctx.rect(this.x + x, this.y + y, this.w, this.h);

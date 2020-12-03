@@ -5,20 +5,23 @@ import {Stem} from './stem';
 import {Flow} from './tables';
 import {StemmableNote} from "./stemmablenote";
 import {IStaveNoteStruct} from "./types/note";
+import {IGlyphProps} from "./types/glyph";
+import {IGraceNoteProtrusion} from "./types/gracenote";
 
 export class GraceNote extends StaveNote {
-  private slash: boolean;
+  private readonly slash: boolean;
+
   private slur: boolean;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'gracenotes';
   }
 
-  static get LEDGER_LINE_OFFSET() {
+  static get LEDGER_LINE_OFFSET(): number {
     return 2;
   }
 
-  static get SCALE() {
+  static get SCALE(): number {
     return 0.66;
   }
 
@@ -38,7 +41,7 @@ export class GraceNote extends StaveNote {
     this.width = 3;
   }
 
-  getStemExtension() {
+  getStemExtension(): number {
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
     }
@@ -46,7 +49,7 @@ export class GraceNote extends StaveNote {
     const glyph = this.getGlyph();
     if (glyph) {
       let ret = super.getStemExtension();
-      if (glyph.stem) {
+      if ((glyph as IGlyphProps).stem) {
         const staveNoteScale = this.getStaveNoteScale();
         ret = ((Stem.HEIGHT + ret) * staveNoteScale) - Stem.HEIGHT;
       }
@@ -56,16 +59,16 @@ export class GraceNote extends StaveNote {
     return 0;
   }
 
-  getCategory() {
+  getCategory(): string {
     return GraceNote.CATEGORY;
   }
 
   // FIXME: move this to more basic class.
-  getStaveNoteScale() {
+  getStaveNoteScale(): number {
     return this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
   }
 
-  draw() {
+  draw(): void {
     super.draw();
     this.setRendered();
     const stem = this.stem;
@@ -74,7 +77,7 @@ export class GraceNote extends StaveNote {
 
       // some magic numbers are based on the staveNoteScale 0.66.
       const offsetScale = staveNoteScale / 0.66;
-      let slashBBox = undefined;
+      let slashBBox: Record<string, number>;
       const beam = this.beam;
       if (beam) {
         // FIXME: should render slash after beam?
@@ -98,8 +101,8 @@ export class GraceNote extends StaveNote {
           noteHeadBounds.y_bottom - noteStemHeight;
 
         const defaultStemExtention = stem_direction === Flow.Stem.DOWN ?
-          this.glyph.stem_down_extension :
-          this.glyph.stem_up_extension;
+          (this.glyph as IGlyphProps).stem_down_extension :
+          (this.glyph as IGlyphProps).stem_up_extension;
 
         let defaultOffsetY = Flow.STEM_HEIGHT;
         defaultOffsetY -= (defaultOffsetY / 2.8);
@@ -132,7 +135,7 @@ export class GraceNote extends StaveNote {
 
       const ctx = this.context;
       ctx.save();
-      ctx.setLineWidth(1 * offsetScale); // FIXME: use more appropriate value.
+      ctx.setLineWidth(offsetScale); // FIXME: use more appropriate value.
       ctx.beginPath();
       ctx.moveTo(slashBBox.x1, slashBBox.y1);
       ctx.lineTo(slashBBox.x2, slashBBox.y2);
@@ -142,7 +145,7 @@ export class GraceNote extends StaveNote {
     }
   }
 
-  calcBeamedNotesSlashBBox(slashStemOffset: number, slashBeamOffset: number, protrusions: any) {
+  calcBeamedNotesSlashBBox(slashStemOffset: number, slashBeamOffset: number, protrusions: IGraceNoteProtrusion): Record<string, number> {
     const beam = this.beam;
     const beam_slope = beam.slope;
     const isBeamEndNote = (beam.notes[beam.notes.length - 1] === this);
@@ -166,12 +169,11 @@ export class GraceNote extends StaveNote {
     const stem0X = (beam.notes[0] as StemmableNote).getStemX();
     const stemY = this.beam.getBeamYToDraw() + ((stemX - stem0X) * beam_slope);
 
-    const ret = {
+    return {
       x1: stemX - protrusion_stem_dx,
       y1: (stemY + slashStemOffset - protrusion_stem_dy),
       x2: stemX + (iPointOnBeam.dx * scaleX) + protrusion_beam_dx,
       y2: stemY + iPointOnBeam.dy + protrusion_beam_dy,
     };
-    return ret;
   }
 }

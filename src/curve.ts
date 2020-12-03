@@ -5,22 +5,23 @@
 
 import {Vex} from './vex';
 import {Element} from './element';
-import {ICurveRenderOptions, ICurveRenderParams, IStringTable} from "./types/common";
+import {ICurveRenderParams} from "./types/common";
 import {StaveNote} from "./stavenote";
+import {IStaveOptions} from "./types/stave";
 
 export class Curve extends Element {
-  private render_options: ICurveRenderOptions;
+  private render_options: IStaveOptions;
   private from: StaveNote;
   private to: StaveNote;
 
-  static get Position() {
+  static get Position(): Record<string, number> {
     return {
       NEAR_HEAD: 1,
       NEAR_TOP: 2,
     };
   }
 
-  static get PositionString(): IStringTable<number> {
+  static get PositionString(): Record<string, number> {
     return {
       nearHead: Curve.Position.NEAR_HEAD,
       nearTop: Curve.Position.NEAR_TOP,
@@ -33,7 +34,7 @@ export class Curve extends Element {
   //    cps: List of control points
   //    x_shift: pixels to shift
   //    y_shift: pixels to shift
-  constructor(from: StaveNote, to: StaveNote, options: ICurveRenderOptions) {
+  constructor(from: StaveNote, to: StaveNote, options: IStaveOptions) {
     super();
     this.setAttribute('type', 'Curve');
 
@@ -46,13 +47,13 @@ export class Curve extends Element {
       position_end: Curve.Position.NEAR_HEAD,
       invert: false,
       cps: [{x: 0, y: 10}, {x: 0, y: 10}],
-    };
+    } as IStaveOptions;
 
     Vex.Merge(this.render_options, options);
     this.setNotes(from, to);
   }
 
-  setNotes(from: StaveNote, to: StaveNote) {
+  setNotes(from: StaveNote, to: StaveNote): this {
     if (!from && !to) {
       throw new Vex.RuntimeError(
         'BadArguments', 'Curve needs to have either first_note or last_note set.'
@@ -67,11 +68,11 @@ export class Curve extends Element {
   /**
    * @return {boolean} Returns true if this is a partial bar.
    */
-  isPartial() {
+  isPartial(): boolean {
     return (!this.from || !this.to);
   }
 
-  renderCurve(params: ICurveRenderParams) {
+  renderCurve(params: ICurveRenderParams): void {
     const ctx = this.context;
     const cps = this.render_options.cps;
 
@@ -109,7 +110,7 @@ export class Curve extends Element {
     ctx.fill();
   }
 
-  draw() {
+  draw(): boolean {
     this.checkContext();
     this.setRendered();
 

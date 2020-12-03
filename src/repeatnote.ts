@@ -2,18 +2,18 @@
 
 import {GlyphNote} from './glyphnote';
 import {Glyph} from './glyph';
-import {IStringTable} from "./types/common";
 import {INoteStruct, IStaveNoteStruct} from "./types/note";
+import {IGlyphNoteOptions} from "./types/glyphnote";
 
 export class RepeatNote extends GlyphNote {
-  constructor(type: string, noteStruct: INoteStruct, options: any) {
+  constructor(type: string, noteStruct: INoteStruct, options: IGlyphNoteOptions) {
     // Smufl Codes
     const CODES = {
       '1': 'repeat1Bar',
       '2': 'repeat2Bars',
       '4': 'repeat4Bars',
       'slash': 'repeatBarSlash',
-    } as IStringTable<string>;
+    } as Record<string, string>;
 
     noteStruct = {
       duration: 'q',

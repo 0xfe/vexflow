@@ -2,12 +2,15 @@
 //
 // A generic text parsing class for VexFlow.
 
-import { Vex } from './vex';
-import {IRule} from "./types/common";
+import {Vex} from './vex';
+import {IParserResult} from "./types/parser";
+import {IGrammarVal} from "./types/easyscore";
 import {Grammar} from "./easyscore";
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
-function L(...args: any[]) { if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args); }
+function L(...args: unknown[]) {
+  if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args);
+}
 
 export const X = Vex.MakeException('ParserError');
 
@@ -27,8 +30,9 @@ function flattenMatches(results: any): any {
 export class Parser {
   static DEBUG: boolean;
 
+  private readonly grammar: Grammar;
+
   private pos: number;
-  private grammar: Grammar;
   private errorPos: number;
   private line: string;
 
@@ -41,7 +45,7 @@ export class Parser {
   // Parse `line` using current grammar. Returns {success: true} if the
   // line parsed correctly, otherwise returns `{success: false, errorPos: N}`
   // where `errorPos` is the location of the error in the string.
-  parse(line: string) {
+  parse(line: string): IParserResult {
     this.line = line;
     this.pos = 0;
     this.errorPos = -1;
@@ -50,18 +54,18 @@ export class Parser {
     return results;
   }
 
-  matchFail(returnPos: number) {
+  matchFail(returnPos: number): void {
     if (this.errorPos === -1) this.errorPos = this.pos;
     this.pos = returnPos;
   }
 
-  matchSuccess() {
+  matchSuccess(): void {
     this.errorPos = -1;
   }
 
   // Look for `token` in this.line[this.pos], and return success
   // if one is found. `token` is specified as a regular expression.
-  matchToken(token: string, noSpace = false) {
+  matchToken(token: string, noSpace = false): IParserResult {
     const regexp = noSpace
       ? new RegExp('^((' + token + '))')
       : new RegExp('^((' + token + ')\\s*)');
@@ -73,20 +77,20 @@ export class Parser {
         matchedString: result[2],
         incrementPos: result[1].length,
         pos: this.pos,
-      };
+      } as IParserResult;
     } else {
       return {
         success: false,
         pos: this.pos,
-      };
+      } as IParserResult;
     }
   }
 
   // Execute rule to match a sequence of tokens (or rules). If `maybe` is
   // set, then return success even if the token is not found, but reset
   // the position before exiting.
-  expectOne(rule: IRule, maybe = false): any {
-    const results = [];
+  expectOne(rule: IGrammarVal, maybe = false): IParserResult {
+    const results: IParserResult[] = [];
     const pos = this.pos;
 
     let allMatches = true;
@@ -118,13 +122,13 @@ export class Parser {
     const success = gotOne || (maybe === true);
     if (maybe && !gotOne) this.pos = pos;
     if (success) this.matchSuccess(); else this.matchFail(pos);
-    return { success, results, numMatches: gotOne ? 1 : 0 };
+    return {success, results, numMatches: gotOne ? 1 : 0} as IParserResult;
   }
 
   // Try to match multiple (one or more) instances of the rule. If `maybe` is set,
   // then a failed match is also a success (but the position is reset).
-  expectOneOrMore(rule: IRule, maybe = false) {
-    const results = [];
+  expectOneOrMore(rule: IGrammarVal, maybe = false): IParserResult {
+    const results: IParserResult[] = [];
     const pos = this.pos;
     let numMatches = 0;
     let more = true;
@@ -133,7 +137,7 @@ export class Parser {
       const result = this.expectOne(rule);
       if (result.success) {
         numMatches++;
-        results.push(result.results);
+        results.push(result.results as any);
       } else {
         more = false;
       }
@@ -142,20 +146,20 @@ export class Parser {
     const success = (numMatches > 0) || (maybe === true);
     if (maybe && !(numMatches > 0)) this.pos = pos;
     if (success) this.matchSuccess(); else this.matchFail(pos);
-    return { success, results, numMatches };
+    return {success, results, numMatches} as IParserResult;
   }
 
   // Match zero or more instances of `rule`. Offloads to `expectOneOrMore`.
-  expectZeroOrMore(rule: IRule) {
+  expectZeroOrMore(rule: IGrammarVal): IParserResult {
     return this.expectOneOrMore(rule, true);
   }
 
   // Execute the rule produced by the provided the `rules` function. This
   // ofloads to one of the above matchers and consolidates the results. It is also
   // responsible for executing any code triggered by the rule (in `rule.run`.)
-  expect(rules: IRule) {
+  expect(rules: () => IGrammarVal): IParserResult {
     L('Evaluating rules:', rules);
-    let result: any;
+    let result: IParserResult;
     if (!rules) {
       throw new X('Invalid Rule: ' + rules, rules);
     }

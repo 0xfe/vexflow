@@ -1,9 +1,7 @@
-import {IStringTable} from "./common";
-
 export interface IArticulationCodes {
-  (artic: any): IArticulation;
+  (artic: string): IArticulation;
 
-  articulations: IStringTable<IArticulation>;
+  articulations: Record<string, IArticulation>;
 }
 
 export interface IStringArticulation {
@@ -26,4 +24,9 @@ export interface IArticulationState {
 
 export interface IArticulationRenderOptions {
   font_scale: number
+}
+
+export interface IArticulationPosition {
+  position: number;
+  type: string;
 }

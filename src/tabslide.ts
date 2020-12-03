@@ -9,23 +9,24 @@ import {TabTie} from './tabtie';
 import {TabNote} from "./tabnote";
 import {INotesStruct} from "./types/note";
 import {IFont} from "./types/font";
+import {ITabSlideRenderTieParams} from "./types/tabslide";
 
 export class TabSlide extends TabTie {
-  private slide_direction: number;
+  private readonly slide_direction: number;
 
-  static get SLIDE_UP() {
+  static get SLIDE_UP(): number {
     return 1;
   }
 
-  static get SLIDE_DOWN() {
+  static get SLIDE_DOWN(): number {
     return -1;
   }
 
-  static createSlideUp(notes: INotesStruct) {
+  static createSlideUp(notes: INotesStruct): TabSlide {
     return new TabSlide(notes, TabSlide.SLIDE_UP);
   }
 
-  static createSlideDown(notes: INotesStruct) {
+  static createSlideDown(notes: INotesStruct): TabSlide {
     return new TabSlide(notes, TabSlide.SLIDE_DOWN);
   }
 
@@ -61,7 +62,7 @@ export class TabSlide extends TabTie {
     this.setNotes(notes);
   }
 
-  renderTie(params: any) {
+  renderTie(params: ITabSlideRenderTieParams): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
       throw new Vex.RERR('BadArguments', 'No Y-values to render');
     }

@@ -13,9 +13,10 @@ import {Note} from './note';
 import {Barline} from './stavebarline';
 import {IBarnoteMetrics} from "./types/common";
 import {IStaveNoteStruct} from "./types/note";
+import {BoundingBox} from "./boundingbox";
 
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
-function L(...args: any) {
+function L(...args: unknown[]) {
   if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args);
 }
 
@@ -49,11 +50,11 @@ export class BarNote extends Note {
   }
 
   // Get and set the type of Bar note. `type` must be one of `Vex.Flow.Barline.type`.
-  getType() {
+  getType(): number {
     return this.type;
   }
 
-  setType(type: string | number) {
+  setType(type: string | number): this {
     this.type = typeof (type) === 'string'
       ? Barline.typeString[type]
       : type;
@@ -63,23 +64,23 @@ export class BarNote extends Note {
     return this;
   }
 
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox {
     return super.getBoundingBox();
   }
 
-  addToModifierContext() {
+  addToModifierContext(): this {
     /* overridden to ignore */
     return this;
   }
 
-  preFormat() {
+  preFormat(): this {
     /* overridden to ignore */
     this.setPreFormatted(true);
     return this;
   }
 
   // Render note to stave.
-  draw() {
+  draw(): void {
     this.checkContext();
     if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
     L('Rendering bar line at: ', this.getAbsoluteX());

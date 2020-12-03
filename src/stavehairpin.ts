@@ -9,18 +9,20 @@
 import {Vex} from './vex';
 import {Element} from './element';
 import {Modifier} from './modifier';
-import {DrawContext, IStaveHairpinRenderOptions, IStringTable} from "./types/common";
+import {DrawContext} from "./types/common";
 import {Note} from "./note";
+import {IStaveHairpinFormatter, IStaveHairpinRenderOptions, IStaveHairpinRenderParams} from "./types/stavehairpin";
 
 export class StaveHairpin extends Element {
+  private readonly hairpin: number;
+
   private position: number;
   private render_options: IStaveHairpinRenderOptions;
-  private notes: IStringTable<Note>;
-  private hairpin: number;
+  private notes: Record<string, Note>;
   private first_note: Note;
   private last_note: Note;
 
-  static get type() {
+  static get type(): Record<string, number> {
     return {
       CRESC: 1,
       DECRESC: 2,
@@ -41,7 +43,14 @@ export class StaveHairpin extends Element {
    *  }
    *
    **/
-  static FormatByTicksAndDraw(ctx: DrawContext, formatter: any, notes: IStringTable<Note>, type: number, position: number, options: any) {
+  static FormatByTicksAndDraw(
+    ctx: DrawContext,
+    formatter: IStaveHairpinFormatter,
+    notes: Record<string, Note>,
+    type: number,
+    position: number,
+    options: IStaveHairpinRenderOptions
+  ): void {
     const ppt = formatter.pixelsPerTick;
 
     if (ppt == null) {
@@ -59,7 +68,7 @@ export class StaveHairpin extends Element {
       y_shift: options.y_shift,
       left_shift_px: l_shift_px,
       right_shift_px: r_shift_px
-    };
+    } as IStaveHairpinRenderOptions;
 
     new StaveHairpin({
       first_note: notes.first_note,
@@ -78,7 +87,7 @@ export class StaveHairpin extends Element {
    * @param {!Object} notes The notes to tie up.
    * @param {!Object} type The type of hairpin
    */
-  constructor(notes: IStringTable<Note>, type: number) {
+  constructor(notes: Record<string, Note>, type: number) {
     /**
      * Notes is a struct that has:
      *
@@ -99,19 +108,19 @@ export class StaveHairpin extends Element {
       y_shift: 0, // vertical offset
       left_shift_px: 0, // left horizontal offset
       right_shift_px: 0, // right horizontal offset
-    };
+    } as IStaveHairpinRenderOptions;
 
     this.setNotes(notes);
   }
 
-  setPosition(position: number) {
+  setPosition(position: number): this {
     if (position === Modifier.Position.ABOVE || position === Modifier.Position.BELOW) {
       this.position = position;
     }
     return this;
   }
 
-  setRenderOptions(options: any) {
+  setRenderOptions(options: IStaveHairpinRenderOptions): this {
     if (
       options.height != null &&
       options.y_shift != null &&
@@ -128,7 +137,7 @@ export class StaveHairpin extends Element {
    *
    * @param {!Object} notes The start and end notes.
    */
-  setNotes(notes: IStringTable<Note>) {
+  setNotes(notes: Record<string, Note>): this {
     if (!notes.first_note && !notes.last_note) {
       throw new Vex.RuntimeError(
         'BadArguments',
@@ -142,7 +151,7 @@ export class StaveHairpin extends Element {
     return this;
   }
 
-  renderHairpin(params: any) {
+  renderHairpin(params: IStaveHairpinRenderParams): void {
     const ctx = this.checkContext();
     let dis = this.render_options.y_shift + 20;
     let y_shift = params.first_y;
@@ -177,7 +186,7 @@ export class StaveHairpin extends Element {
     ctx.closePath();
   }
 
-  draw() {
+  draw(): boolean {
     this.checkContext();
     this.setRendered();
 

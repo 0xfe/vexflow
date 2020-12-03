@@ -8,10 +8,10 @@ import {IFont} from "./types/font";
 export class StaveSection extends StaveModifier {
   private section: string;
   private shift_x: number;
-  private shift_y: any;
+  private shift_y: number;
   private font: IFont;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'stavesection';
   }
 
@@ -31,26 +31,26 @@ export class StaveSection extends StaveModifier {
     } as IFont;
   }
 
-  getCategory() {
+  getCategory(): string {
     return StaveSection.CATEGORY;
   }
 
-  setStaveSection(section: string) {
+  setStaveSection(section: string): this {
     this.section = section;
     return this;
   }
 
-  setShiftX(x: number) {
+  setShiftX(x: number): this {
     this.shift_x = x;
     return this;
   }
 
-  setShiftY(y: number) {
+  setShiftY(y: number): this {
     this.shift_y = y;
     return this;
   }
 
-  draw(stave?: Stave, shift_x?: number) {
+  draw(stave?: Stave, shift_x?: number): this {
     const ctx = stave.checkContext();
     this.setRendered();
 

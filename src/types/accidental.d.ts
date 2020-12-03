@@ -1,10 +1,9 @@
 import {Accidental} from "../accidental";
-import {IStringTable} from "./common";
 
 export interface IAccidentalCodes {
   (acc: string): any;
 
-  accidentals: IStringTable<IAccidental>
+  accidentals: Record<string, IAccidental>
 }
 
 export interface IAccidental {
@@ -22,10 +21,6 @@ export interface IAccidentalListItem {
 
 export interface IAccidentalState {
   left_shift: number;
-}
-
-export interface IAccidentalColumn {
-  (index: string): IStringTable<number[]>
 }
 
 export interface IAccidentalRenderOptions {

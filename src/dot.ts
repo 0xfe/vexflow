@@ -6,29 +6,29 @@
 import {Vex} from './vex';
 import {Modifier} from './modifier';
 import {StemmableNote} from "./stemmablenote";
-import {IStringTable} from "./types/common";
+import {IState} from "./types/common";
 import {StaveNote} from "./stavenote";
-import {IAnnotationState} from "./types/annotation";
+import {Note} from "./note";
 
 export class Dot extends Modifier {
-  note: StemmableNote;
+  note: Note;
 
   private radius: number;
   private dot_shiftY: number;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'dots';
   }
 
   // Arrange dots inside a ModifierContext.
-  static format(dots: Dot[], state: IAnnotationState) {
+  static format(dots: Dot[], state: IState): boolean {
     const right_shift = state.right_shift;
     const dot_spacing = 1;
 
     if (!dots || dots.length === 0) return false;
 
     const dot_list = [];
-    const max_shift_map: IStringTable<number> = {};
+    const max_shift_map: Record<string, number> = {};
     for (let i = 0; i < dots.length; ++i) {
       const dot = dots[i];
       const note = dot.getNote();
@@ -122,11 +122,11 @@ export class Dot extends Modifier {
     this.dot_shiftY = 0;
   }
 
-  getCategory() {
+  getCategory(): string {
     return Dot.CATEGORY;
   }
 
-  setNote(note: StaveNote) {
+  setNote(note: Note): this {
     this.note = note;
 
     if (this.note.getCategory() === 'gracenotes') {
@@ -137,12 +137,12 @@ export class Dot extends Modifier {
     return this;
   }
 
-  setDotShiftY(y: number) {
+  setDotShiftY(y: number): this {
     this.dot_shiftY = y;
     return this;
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
     this.setRendered();
 
@@ -156,7 +156,7 @@ export class Dot extends Modifier {
 
     // Set the starting y coordinate to the base of the stem for TabNotes
     if (this.note.getCategory() === 'tabnotes') {
-      start.y = this.note.getStemExtents().baseY;
+      start.y = (this.note as StemmableNote).getStemExtents().baseY;
     }
 
     const x = (start.x + this.x_shift) + this.width - this.radius;

@@ -10,12 +10,13 @@ import {Vex} from './vex';
 import {Flow} from './tables';
 import {StaveModifier} from './stavemodifier';
 import {Glyph} from './glyph';
-import {Accidental} from "./accidental";
-import {IAccItem, IStringTable} from "./types/common";
+import {IAccItem} from "./types/common";
 import {Stave} from "./stave";
+import {IAccidentalSpacing, IAccList} from "./types/keysignature";
 
 export class KeySignature extends StaveModifier {
-  private glyphFontScale: number;
+  private readonly glyphFontScale: number;
+
   private glyphs: Glyph[];
   private xPositions: number[];
   private paddingForced: boolean;
@@ -25,13 +26,13 @@ export class KeySignature extends StaveModifier {
   private keySpec: string;
   private alterKeySpec: string;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'keysignatures';
   }
 
   // Space between natural and following accidental depending
   // on vertical position
-  static get accidentalSpacing(): IStringTable<any> {
+  static get accidentalSpacing(): Record<string, IAccidentalSpacing> {
     return {
       '#': {
         above: 6,
@@ -105,14 +106,14 @@ export class KeySignature extends StaveModifier {
     this.paddingForced = false;
   }
 
-  getCategory() {
+  getCategory(): string {
     return KeySignature.CATEGORY;
   }
 
   // Add an accidental glyph to the `KeySignature` instance which represents
   // the provided `acc`. If `nextAcc` is also provided, the appropriate
   // spacing will be included in the glyph's position
-  convertToGlyph(acc: any, nextAcc: any) {
+  convertToGlyph(acc: any, nextAcc: any): void {
     const accGlyphData = Flow.accidentalCodes(acc.type);
     const glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
 
@@ -140,14 +141,14 @@ export class KeySignature extends StaveModifier {
 
   // Cancel out a key signature provided in the `spec` parameter. This will
   // place appropriate natural accidentals before the key signature.
-  cancelKey(spec: string) {
+  cancelKey(spec: string): this {
     this.formatted = false;
     this.cancelKeySpec = spec;
 
     return this;
   }
 
-  convertToCancelAccList(spec: string) {
+  convertToCancelAccList(spec: string): IAccList {
     // Get the accidental list for the cancelled key signature
     const cancel_accList = Flow.keySignature(spec);
 
@@ -186,7 +187,7 @@ export class KeySignature extends StaveModifier {
   }
 
   // Deprecated
-  addToStave(stave: Stave) {
+  addToStave(stave: Stave): this {
     this.paddingForced = true;
     stave.addModifier(this);
 
@@ -195,7 +196,7 @@ export class KeySignature extends StaveModifier {
 
   // Apply the accidental staff line placement based on the `clef` and
   // the  accidental `type` for the key signature ('# or 'b').
-  convertAccLines(clef: string, type: string, accList = this.accList) {
+  convertAccLines(clef: string, type: string, accList = this.accList): void {
     let offset = 0.0; // if clef === "treble"
     let customLines; // when clef doesn't follow treble key sig shape
 
@@ -242,7 +243,7 @@ export class KeySignature extends StaveModifier {
     }
   }
 
-  getPadding(index: number) {
+  getPadding(index: number): number {
     if (!this.formatted) this.format();
 
     return (
@@ -251,13 +252,13 @@ export class KeySignature extends StaveModifier {
     );
   }
 
-  getWidth() {
+  getWidth(): number {
     if (!this.formatted) this.format();
 
     return this.width;
   }
 
-  setKeySig(keySpec: string, cancelKeySpec: string, alterKeySpec?: string) {
+  setKeySig(keySpec: string, cancelKeySpec: string, alterKeySpec?: string): this {
     this.formatted = false;
     this.keySpec = keySpec;
     this.cancelKeySpec = cancelKeySpec;
@@ -269,14 +270,14 @@ export class KeySignature extends StaveModifier {
   // Alter the accidentals of a key spec one by one.
   // Each alteration is a new accidental that replaces the
   // original accidental (or the canceled one).
-  alterKey(alterKeySpec: string) {
+  alterKey(alterKeySpec: string): this {
     this.formatted = false;
     this.alterKeySpec = alterKeySpec;
 
     return this;
   }
 
-  convertToAlterAccList(alterKeySpec: string) {
+  convertToAlterAccList(alterKeySpec: string): void {
     const max = Math.min(alterKeySpec.length, this.accList.length);
     for (let i = 0; i < max; ++i) {
       if (alterKeySpec[i]) {
@@ -285,7 +286,7 @@ export class KeySignature extends StaveModifier {
     }
   }
 
-  format() {
+  format(): void {
     if (!this.stave) {
       throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
     }
@@ -319,7 +320,7 @@ export class KeySignature extends StaveModifier {
     this.formatted = true;
   }
 
-  draw() {
+  draw(): void {
     if (!this.x) {
       throw new Vex.RERR('KeySignatureError', "Can't draw key signature without x.");
     }

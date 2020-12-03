@@ -7,18 +7,19 @@
 // Except in instances where SVG support for IE < 9.0 is
 // needed, SVGContext is recommended.
 import Raphael from "raphael";
-import {ICoordinates, IRaphaelContextState, IStringTable} from "./types/common";
+import {ICoordinates, IRaphaelContextState} from "./types/common";
 
 export class RaphaelContext {
+  private readonly attributes: Record<string, any>;
+  private readonly background_attributes: Record<string, any>;
+  private readonly shadow_attributes: Record<string, any>;
+
   private element: any;
   private paper: any;
   private path: string;
   private pen: ICoordinates;
   private lineWidth: number;
-  private attributes: IStringTable<any>;
   private state: IRaphaelContextState;
-  private background_attributes: IStringTable<any>;
-  private shadow_attributes: IStringTable<any>;
   private state_stack: any[];
 
   constructor(element: any) {
@@ -57,16 +58,19 @@ export class RaphaelContext {
   }
 
   // Containers not implemented
-  openGroup() {
+  openGroup(): void {
+    // do nothing
   }
 
-  closeGroup() {
+  closeGroup(): void {
+    // do nothing
   }
 
-  add() {
+  add(): void {
+    // do nothing
   }
 
-  setFont(family: string, size: number, weight: string) {
+  setFont(family: string, size: number, weight: string): this {
     this.state.font_family = family;
     this.state.font_size = size;
     this.state.font_weight = weight;
@@ -76,52 +80,52 @@ export class RaphaelContext {
     return this;
   }
 
-  setRawFont(font: string) {
+  setRawFont(font: string): this {
     this.attributes.font = font;
     return this;
   }
 
-  setFillStyle(style: string) {
+  setFillStyle(style: string): this {
     this.attributes.fill = style;
     return this;
   }
 
-  setBackgroundFillStyle(style: string) {
+  setBackgroundFillStyle(style: string): this {
     this.background_attributes.fill = style;
     this.background_attributes.stroke = style;
     return this;
   }
 
-  setStrokeStyle(style: string) {
+  setStrokeStyle(style: string): this {
     this.attributes.stroke = style;
     return this;
   }
 
-  setShadowColor(style: string) {
+  setShadowColor(style: string): this {
     this.shadow_attributes.color = style;
     return this;
   }
 
-  setShadowBlur(blur: number) {
+  setShadowBlur(blur: number): this {
     this.shadow_attributes.width = blur;
     return this;
   }
 
-  setLineWidth(width: number) {
+  setLineWidth(width: number): void {
     this.attributes['stroke-width'] = width;
     this.lineWidth = width;
   }
 
   // Empty because there is no equivalent in SVG
-  setLineDash() {
+  setLineDash(): this {
     return this;
   }
 
-  setLineCap() {
+  setLineCap(): this {
     return this;
   }
 
-  scale(x: number, y: number) {
+  scale(x: number, y: number): this {
     this.state.scale = {x, y};
     // The scale() method is deprecated as of Raphael.JS 2.0, and
     // can no longer be used as an option in an Element.attr() call.
@@ -139,11 +143,11 @@ export class RaphaelContext {
     return this;
   }
 
-  clear() {
+  clear(): void {
     this.paper.clear();
   }
 
-  resize(width: string, height: string) {
+  resize(width: string, height: string): this {
     this.element.style.width = width;
     this.paper.setSize(width, height);
     return this;
@@ -153,11 +157,11 @@ export class RaphaelContext {
   // is resized.
   //
   // Usage: `ctx.setViewBox("0 0 600 400")`
-  setViewBox(viewBox: any) {
+  setViewBox(viewBox: any): void {
     this.paper.canvas.setAttribute('viewBox', viewBox);
   }
 
-  rect(x: number, y: number, width: number, height: number) {
+  rect(x: number, y: number, width: number, height: number): this {
     if (height < 0) {
       y += height;
       height = -height;
@@ -170,7 +174,7 @@ export class RaphaelContext {
     return this;
   }
 
-  fillRect(x: number, y: number, width: number, height: number) {
+  fillRect(x: number, y: number, width: number, height: number): this {
     if (height < 0) {
       y += height;
       height = -height;
@@ -180,7 +184,7 @@ export class RaphaelContext {
     return this;
   }
 
-  clearRect(x: number, y: number, width: number, height: number) {
+  clearRect(x: number, y: number, width: number, height: number): this {
     if (height < 0) {
       y += height;
       height = -height;
@@ -191,28 +195,28 @@ export class RaphaelContext {
     return this;
   }
 
-  beginPath() {
+  beginPath(): this {
     this.path = '';
     this.pen.x = 0;
     this.pen.y = 0;
     return this;
   }
 
-  moveTo(x: number, y: number) {
+  moveTo(x: number, y: number): this {
     this.path += 'M' + x + ',' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
-  lineTo(x: number, y: number) {
+  lineTo(x: number, y: number): this {
     this.path += 'L' + x + ',' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
-  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number) {
+  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): this {
     this.path += 'C' +
       x1 + ',' +
       y1 + ',' +
@@ -225,7 +229,7 @@ export class RaphaelContext {
     return this;
   }
 
-  quadraticCurveTo(x1: number, y1: number, x: number, y: number) {
+  quadraticCurveTo(x1: number, y1: number, x: number, y: number): this {
     this.path += 'Q' +
       x1 + ',' +
       y1 + ',' +
@@ -238,7 +242,7 @@ export class RaphaelContext {
 
   // This is an attempt (hack) to simulate the HTML5 canvas
   // arc method.
-  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean) {
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this {
     function normalizeAngle(angle: number) {
       while (angle < 0) {
         angle += Math.PI * 2;
@@ -271,7 +275,7 @@ export class RaphaelContext {
     return this;
   }
 
-  arcHelper(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean) {
+  arcHelper(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): void {
     const x1 = x + radius * Math.cos(startAngle);
     const y1 = y + radius * Math.sin(startAngle);
 
@@ -295,7 +299,7 @@ export class RaphaelContext {
   }
 
   // Adapted from the source for Raphael's Element.glow
-  glow() {
+  glow(): any {
     const out = this.paper.set();
     if (this.shadow_attributes.width > 0) {
       const sa = this.shadow_attributes;
@@ -320,15 +324,16 @@ export class RaphaelContext {
     return out;
   }
 
-  fill() {
-    const elem = this.paper.path(this.path)
+  fill(): this {
+    this.paper.path(this.path)
       .attr(this.attributes)
       .attr('stroke-width', 0);
     this.glow();
+
     return this;
   }
 
-  stroke() {
+  stroke(): this {
     // The first line of code below is, unfortunately, a bit of a hack:
     // Raphael's transform() scaling does not scale the stroke-width, so
     // in order to scale a stroke, we have to manually scale the
@@ -347,20 +352,21 @@ export class RaphaelContext {
     // canvascontext.js as well.
 
     const strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y) / 2;
-    const elem = this.paper.path(this.path)
+    this.paper.path(this.path)
       .attr(this.attributes)
       .attr('fill', 'none')
       .attr('stroke-width', strokeWidth);
     this.glow();
+
     return this;
   }
 
-  closePath() {
+  closePath(): this {
     this.path += 'Z';
     return this;
   }
 
-  measureText(text: string) {
+  measureText(text: string): DOMRect {
     const txt = this.paper.text(0, 0, text)
       .attr(this.attributes)
       .attr('fill', 'none')
@@ -374,7 +380,7 @@ export class RaphaelContext {
     } as DOMRect;
   }
 
-  fillText(text: string, x: number, y: number) {
+  fillText(text: string, x: number, y: number): this {
     this.paper
       .text(
         x + (this.measureText(text).width / 2),
@@ -386,7 +392,7 @@ export class RaphaelContext {
     return this;
   }
 
-  save() {
+  save(): this {
     // TODO(mmuthanna): State needs to be deep-copied.
     this.state_stack.push({
       state: {
@@ -406,7 +412,7 @@ export class RaphaelContext {
     return this;
   }
 
-  restore() {
+  restore(): this {
     // TODO(0xfe): State needs to be deep-restored.
     const state = this.state_stack.pop();
     this.state.font_family = state.state.font_family;

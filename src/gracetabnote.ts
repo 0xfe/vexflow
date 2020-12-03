@@ -13,7 +13,7 @@ import {TabNote} from './tabnote';
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
 
 export class GraceTabNote extends TabNote {
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'gracetabnotes';
   }
 
@@ -33,11 +33,11 @@ export class GraceTabNote extends TabNote {
     this.updateWidth();
   }
 
-  getCategory() {
+  getCategory(): string {
     return GraceTabNote.CATEGORY;
   }
 
-  draw() {
+  draw(): void {
     super.draw();
     this.setRendered();
   }

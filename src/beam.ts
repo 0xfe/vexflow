@@ -10,13 +10,13 @@ import {Element} from './element';
 import {Fraction} from './fraction';
 import {Tuplet} from './tuplet';
 import {Stem} from './stem';
-import {IStringTable} from "./types/common";
 import {StaveNote} from "./stavenote";
 import {Voice} from "./voice";
 import {StemmableNote} from "./stemmablenote";
 import {Tickable} from "./tickable";
 import {Note} from "./note";
 import {IBeam, IBeamRenderOptions, IGenerateBeamConfig} from "./types/beam";
+import {IGlyphProps} from "./types/glyph";
 
 function calculateStemDirection(notes: Note[]) {
   let lineSum = 0;
@@ -52,22 +52,23 @@ export class Beam extends Element {
   postFormatted: boolean;
   slope: number;
 
-  private stem_direction: number;
+  private readonly stem_direction: number;
+  private readonly ticks: number;
+
   private y_shift: number;
   private break_on_indices: number[];
-  private ticks: number;
   private beam_count: number;
   private unbeamable: boolean;
 
   // Gets the default beam groups for a provided time signature.
   // Attempts to guess if the time signature is not found in table.
   // Currently this is fairly naive.
-  static getDefaultBeamGroups(time_sig: string) {
+  static getDefaultBeamGroups(time_sig: string): Fraction[] {
     if (!time_sig || time_sig === 'c') {
       time_sig = '4/4';
     }
 
-    const defaults: IStringTable<string[]> = {
+    const defaults: Record<string, string[]> = {
       '1/2': ['1/2'],
       '2/2': ['1/2'],
       '3/2': ['1/2'],
@@ -120,7 +121,7 @@ export class Beam extends Element {
   // * `voice` - The voice to generate the beams for
   // * `stem_direction` - A stem direction to apply to the entire voice
   // * `groups` - An array of `Fraction` representing beat groupings for the beam
-  static applyAndGetBeams(voice: Voice, stem_direction?: number, groups?: Fraction[]) {
+  static applyAndGetBeams(voice: Voice, stem_direction?: number, groups?: Fraction[]): Beam[] {
     return Beam.generateBeams(voice.getTickables(), {
       groups,
       stem_direction,
@@ -152,7 +153,7 @@ export class Beam extends Element {
   //    * `show_stemlets` - Set to `true` to draw stemlets for rests
   //    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
   //
-  static generateBeams(notes: Tickable[], config: IGenerateBeamConfig) {
+  static generateBeams(notes: Tickable[], config: IGenerateBeamConfig): Beam[] {
     if (!config) config = {} as IGenerateBeamConfig;
 
     if (!config.groups || !config.groups.length) {
@@ -482,13 +483,13 @@ export class Beam extends Element {
   }
 
   // Get the notes in this beam
-  getNotes() {
+  getNotes(): Note[] {
     return this.notes;
   }
 
   // Get the max number of beams in the set of notes
-  getBeamCount() {
-    const beamCounts = this.notes.map(note => note.getGlyph().beam_count);
+  getBeamCount(): number {
+    const beamCounts = this.notes.map(note => (note.getGlyph() as IGlyphProps).beam_count);
 
     const maxBeamCount = beamCounts.reduce((max, beamCount) => beamCount > max ? beamCount : max);
 
@@ -496,18 +497,18 @@ export class Beam extends Element {
   }
 
   // Set which note `indices` to break the secondary beam at
-  breakSecondaryAt(indices: number[]) {
+  breakSecondaryAt(indices: number[]): this {
     this.break_on_indices = indices;
     return this;
   }
 
   // Return the y coordinate for linear function
-  getSlopeY(x: number, first_x_px: number, first_y_px: number, slope: number) {
+  getSlopeY(x: number, first_x_px: number, first_y_px: number, slope: number): number {
     return first_y_px + ((x - first_x_px) * slope);
   }
 
   // Calculate the best possible slope for the provided notes
-  calculateSlope() {
+  calculateSlope(): void {
     const {
       notes,
       stem_direction: stemDirection,
@@ -569,7 +570,7 @@ export class Beam extends Element {
   }
 
   // Calculate a slope and y-shift for flat beams
-  calculateFlatSlope() {
+  calculateFlatSlope(): void {
     const {
       notes, stem_direction,
       render_options: {beam_width, min_flat_beam_offset, flat_beam_offset},
@@ -633,7 +634,7 @@ export class Beam extends Element {
     this.y_shift = 0;
   }
 
-  getBeamYToDraw() {
+  getBeamYToDraw(): number {
     const firstNote = this.notes[0];
     const firstStemTipY = (firstNote as StemmableNote).getStemExtents().topY;
     let beamY = firstStemTipY;
@@ -648,7 +649,7 @@ export class Beam extends Element {
 
   // Create new stems for the notes in the beam, so that each stem
   // extends into the beams.
-  applyStemExtensions() {
+  applyStemExtensions(): void {
     const {
       notes, slope, y_shift, stem_direction, beam_count,
       render_options: {
@@ -708,7 +709,7 @@ export class Beam extends Element {
   }
 
   // Get the x coordinates for the beam lines of specific `duration`
-  getBeamLines(duration: string) {
+  getBeamLines(duration: string): IBeam[] {
     const tick_of_duration = Flow.durationToTicks(duration);
     const beam_lines = [];
     let beam_started = false;
@@ -821,7 +822,7 @@ export class Beam extends Element {
   }
 
   // Render the stems for each notes
-  drawStems() {
+  drawStems(): void {
     this.notes.forEach(note => {
       if ((note as StemmableNote).getStem()) {
         (note as StemmableNote).getStem().setContext(this.context).draw();
@@ -830,7 +831,7 @@ export class Beam extends Element {
   }
 
   // Render the beam lines
-  drawBeamLines() {
+  drawBeamLines(): void {
     this.checkContext();
 
     const valid_beam_durations = ['4', '8', '16', '32', '64'];
@@ -867,14 +868,14 @@ export class Beam extends Element {
   }
 
   // Pre-format the beam
-  preFormat() {
+  preFormat(): this {
     return this;
   }
 
   // Post-format the beam. This can only be called after
   // the notes in the beam have both `x` and `y` values. ie: they've
   // been formatted and have staves
-  postFormat() {
+  postFormat(): void {
     if (this.postFormatted) return;
 
     // Calculate a smart slope if we're not forcing the beams to be flat.
@@ -889,7 +890,7 @@ export class Beam extends Element {
   }
 
   // Render the beam to the canvas context
-  draw() {
+  draw(): void {
     this.checkContext();
     this.setRendered();
     if (this.unbeamable) return;

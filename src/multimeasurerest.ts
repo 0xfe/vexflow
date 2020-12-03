@@ -10,11 +10,12 @@ import {Glyph} from './glyph';
 import {NoteHead} from './notehead';
 import {StaveModifier} from './stavemodifier';
 import {TimeSignature} from './timesignature';
-import {DrawContext, ILeftRight, IMultimeasureRestRenderOptions} from "./types/common";
+import {DrawContext, ILeftRight} from "./types/common";
 import {Stave} from "./stave";
 import {IStaveNoteStruct} from "./types/note";
+import {IMultimeasureRestRenderOptions, IMultimeasureRestSemibraveRest} from "./types/multimeasurerest";
 
-let semibrave_rest: any;
+let semibrave_rest: IMultimeasureRestSemibraveRest;
 
 function get_semibrave_rest() {
   if (!semibrave_rest) {
@@ -29,9 +30,10 @@ function get_semibrave_rest() {
 }
 
 export class MultiMeasureRest extends Element {
-  private render_options: IMultimeasureRestRenderOptions;
-  private xs: ILeftRight;
-  private number_of_measures: number;
+  private readonly render_options: IMultimeasureRestRenderOptions;
+  private readonly xs: ILeftRight;
+  private readonly number_of_measures: number;
+
   private stave: Stave;
 
   // Parameters:
@@ -50,7 +52,7 @@ export class MultiMeasureRest extends Element {
   //   * `use_symbols` - Use rest symbols or not.
   //   * `symbol_spacing` - Spacing between each rest symbol glyphs.
   //   * `semibrave_rest_glyph_scale` - Size of the semibrave(1-bar) rest symbol.
-  constructor(number_of_measures: number, options: any) {
+  constructor(number_of_measures: number, options: IMultimeasureRestRenderOptions) {
     super();
     this.setAttribute('type', 'MultiMeasureRest');
 
@@ -77,7 +79,7 @@ export class MultiMeasureRest extends Element {
 
       /* same as NoteHead. */
       semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
-    };
+    } as IMultimeasureRestRenderOptions;
     Vex.Merge(this.render_options, options);
 
     this.render_options.number_line += fontLineShift;
@@ -89,20 +91,20 @@ export class MultiMeasureRest extends Element {
     };
   }
 
-  getXs() {
+  getXs(): ILeftRight {
     return this.xs;
   }
 
-  setStave(stave: Stave) {
+  setStave(stave: Stave): this {
     this.stave = stave;
     return this;
   }
 
-  getStave() {
+  getStave(): Stave {
     return this.stave;
   }
 
-  drawLine(ctx: DrawContext, left: number, right: number, sbl: number) {
+  drawLine(ctx: DrawContext, left: number, right: number, sbl: number): void {
     const y = this.stave.getYForLine(this.render_options.line);
     const padding = (right - left) * 0.1;
 
@@ -136,7 +138,7 @@ export class MultiMeasureRest extends Element {
     ctx.fill();
   }
 
-  drawSymbols(ctx: DrawContext, left: number, right: number, sbl: number) {
+  drawSymbols(ctx: DrawContext, left: number, right: number, sbl: number): void {
     const n4 = Math.floor(this.number_of_measures / 4);
     const n = this.number_of_measures % 4;
     const n2 = Math.floor(n / 2);
@@ -189,7 +191,7 @@ export class MultiMeasureRest extends Element {
     ctx.restore();
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
     this.setRendered();
 

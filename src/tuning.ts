@@ -5,14 +5,13 @@
 
 import {Vex} from './vex';
 import {Flow} from './tables';
-import {IStringTable} from "./types/common";
 
 export class Tuning {
   private numStrings: number;
   private tuningString: string;
   private tuningValues: number[];
 
-  static get names(): IStringTable<string> {
+  static get names(): Record<string, string> {
     return {
       'standard': 'E/5,B/4,G/4,D/4,A/3,E/3',
       'dagdad': 'D/5,A/4,G/4,D/4,A/3,D/3',
@@ -27,11 +26,11 @@ export class Tuning {
     this.setTuning(tuningString);
   }
 
-  noteToInteger(noteString: string) {
+  noteToInteger(noteString: string): number {
     return Flow.keyProperties(noteString).int_value;
   }
 
-  setTuning(noteString: string) {
+  setTuning(noteString: string): void {
     if (Tuning.names[noteString]) {
       noteString = Tuning.names[noteString];
     }
@@ -51,7 +50,7 @@ export class Tuning {
     }
   }
 
-  getValueForString(stringNum: string) {
+  getValueForString(stringNum: string): number {
     const s = parseInt(stringNum, 10);
     if (s < 1 || s > this.numStrings) {
       throw new Vex.RERR(
@@ -62,7 +61,7 @@ export class Tuning {
     return this.tuningValues[s - 1];
   }
 
-  getValueForFret(fretNum: string, stringNum: string) {
+  getValueForFret(fretNum: string, stringNum: string): number {
     const stringValue = this.getValueForString(stringNum);
     const f = parseInt(fretNum, 10);
 
@@ -74,7 +73,7 @@ export class Tuning {
     return stringValue + f;
   }
 
-  getNoteForFret(fretNum: string, stringNum: string) {
+  getNoteForFret(fretNum: string, stringNum: string): string {
     const noteValue = this.getValueForFret(fretNum, stringNum);
 
     const octave = Math.floor(noteValue / 12);

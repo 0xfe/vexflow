@@ -7,8 +7,7 @@
 import {Vex} from './vex';
 import {Flow} from './tables';
 import {Modifier} from './modifier';
-import {IBendRenderOptions, IPhrase} from "./types/common";
-import {IAnnotationState} from "./types/annotation";
+import {IBendRenderOptions, IPhrase, IState} from "./types/common";
 
 /**
  @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
@@ -45,27 +44,28 @@ import {IAnnotationState} from "./types/annotation";
     }]
  */
 export class Bend extends Modifier {
-  private font: string;
-  private text: string;
-  private render_options: IBendRenderOptions;
-  private release: boolean;
-  private phrase: IPhrase[];
+  private readonly text: string;
+  private readonly release: boolean;
+  private readonly phrase: IPhrase[];
 
-  static get CATEGORY() {
+  private font: string;
+  private render_options: IBendRenderOptions;
+
+  static get CATEGORY(): string {
     return 'bends';
   }
 
-  static get UP() {
+  static get UP(): number {
     return 0;
   }
 
-  static get DOWN() {
+  static get DOWN(): number {
     return 1;
   }
 
   // ## Static Methods
   // Arrange bends in `ModifierContext`
-  static format(bends: Bend[], state: IAnnotationState) {
+  static format(bends: Bend[], state: IState): boolean {
     if (!bends || bends.length === 0) return false;
 
     let last_width = 0;
@@ -112,37 +112,35 @@ export class Bend extends Modifier {
     this.updateWidth();
   }
 
-  getCategory() {
+  getCategory(): string {
     return Bend.CATEGORY;
   }
 
-  setXShift(value: number) {
+  setXShift(value: number): void {
     this.x_shift = value;
     this.updateWidth();
   }
 
-  setFont(font: string) {
+  setFont(font: string): this {
     this.font = font;
     return this;
   }
 
-  getText() {
+  getText(): string {
     return this.text;
   }
 
-  updateWidth() {
-    const that = this;
-
-    function measure_text(text: string) {
+  updateWidth(): this {
+    const measure_text = (text: string) => {
       let text_width;
-      if (that.context) {
-        text_width = that.context.measureText(text).width;
+      if (this.context) {
+        text_width = this.context.measureText(text).width;
       } else {
         text_width = Flow.textWidth(text);
       }
 
       return text_width;
-    }
+    };
 
     let total_width = 0;
     for (let i = 0; i < this.phrase.length; ++i) {
@@ -163,7 +161,7 @@ export class Bend extends Modifier {
     return this;
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
     if (!(this.note && (this.index != null))) {
       throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
@@ -180,29 +178,28 @@ export class Bend extends Modifier {
     const ctx = this.context;
     const bend_height = this.note.getStave().getYForTopText(this.text_line) + 3;
     const annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
-    const that = this;
 
-    function renderBend(x: number, y: number, width: number, height: number) {
+    const renderBend = (x: number, y: number, width: number, height: number) => {
       const cp_x = x + width;
       const cp_y = y;
 
       ctx.save();
       ctx.beginPath();
-      ctx.setLineWidth(that.render_options.line_width);
-      ctx.setStrokeStyle(that.render_options.line_style);
-      ctx.setFillStyle(that.render_options.line_style);
+      ctx.setLineWidth(this.render_options.line_width);
+      ctx.setStrokeStyle(this.render_options.line_style);
+      ctx.setFillStyle(this.render_options.line_style);
       ctx.moveTo(x, y);
       ctx.quadraticCurveTo(cp_x, cp_y, x + width, height);
       ctx.stroke();
       ctx.restore();
     }
 
-    function renderRelease(x: number, y: number, width: number, height: number) {
+    const renderRelease = (x: number, y: number, width: number, height: number) => {
       ctx.save();
       ctx.beginPath();
-      ctx.setLineWidth(that.render_options.line_width);
-      ctx.setStrokeStyle(that.render_options.line_style);
-      ctx.setFillStyle(that.render_options.line_style);
+      ctx.setLineWidth(this.render_options.line_width);
+      ctx.setStrokeStyle(this.render_options.line_style);
+      ctx.setFillStyle(this.render_options.line_style);
       ctx.moveTo(x, height);
       ctx.quadraticCurveTo(
         x + width, height,
@@ -223,9 +220,9 @@ export class Bend extends Modifier {
       ctx.fill();
     }
 
-    function renderText(x: number, text: string) {
+    const renderText = (x: number, text: string) => {
       ctx.save();
-      ctx.setRawFont(that.font);
+      ctx.setRawFont(this.font);
       const render_x = x - (ctx.measureText(text).width / 2);
       ctx.fillText(text, render_x, annotation_y);
       ctx.restore();

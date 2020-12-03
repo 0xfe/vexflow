@@ -1,14 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Vex } from './vex';
-import { Flow } from './tables';
-import { Element } from './element';
-import { BoundingBoxComputation } from './boundingboxcomputation';
-import { BoundingBox } from './boundingbox';
+import {Vex} from './vex';
+import {Flow} from './tables';
+import {Element} from './element';
+import {BoundingBoxComputation} from './boundingboxcomputation';
+import {BoundingBox} from './boundingbox';
 import {DrawContext, ICoordinates} from "./types/common";
 import {Font} from "./smufl";
 import {Stave} from "./stave";
-import {IGlyphMetrics, IGlyphOptions} from "./types/glyph";
+import {IGlyphLookup, IGlyphMetrics, IGlyphOptions} from "./types/glyph";
 
 function processOutline(outline: any[], originX: number, originY: number, scaleX: number, scaleY: number, outlineFns: any) {
   let command;
@@ -16,8 +16,14 @@ function processOutline(outline: any[], originX: number, originY: number, scaleX
   let y;
   let i = 0;
 
-  function nextX() { return originX + outline[i++] * scaleX; }
-  function nextY() { return originY + outline[i++] * scaleY; }
+  function nextX() {
+    return originX + outline[i++] * scaleX;
+  }
+
+  function nextY() {
+    return originY + outline[i++] * scaleY;
+  }
+
   function doOutline(command: string, ...args: any[]) {
     outlineFns[command](...args);
   }
@@ -68,7 +74,7 @@ export class Glyph extends Element {
     Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
     to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
   */
-  static lookupFontMetric({ font, category, code, key, defaultValue }: any) {
+  static lookupFontMetric({font, category, code, key, defaultValue}: any): any {
     let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, null);
     if (value === null) {
       value = font.lookupMetric(`glyphs.${category}.${key}`, defaultValue);
@@ -76,7 +82,7 @@ export class Glyph extends Element {
     return value;
   }
 
-  static lookupGlyph(fontStack: Font[], code: string) {
+  static lookupGlyph(fontStack: Font[], code: string): IGlyphLookup {
     if (!fontStack) {
       throw new Vex.RERR('BAD_FONTSTACK', 'Font stack is misconfigured');
     }
@@ -93,11 +99,11 @@ export class Glyph extends Element {
       throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
     }
 
-    return { glyph, font };
+    return {glyph, font};
   }
 
   static loadMetrics(fontStack: Font[], code: string, category: string = null): IGlyphMetrics {
-    const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
+    const {glyph, font} = Glyph.lookupGlyph(fontStack, code);
 
     const x_shift = category ? Glyph.lookupFontMetric({
       font, category, code,
@@ -124,12 +130,12 @@ export class Glyph extends Element {
         if (glyph.cached_outline) {
           outline = glyph.cached_outline;
         } else {
-          outline = glyph.o.split(' ');
+          outline = glyph.o.split(' ') as any;
           glyph.cached_outline = outline;
         }
       } else {
         if (glyph.cached_outline) delete glyph.cached_outline;
-        outline = glyph.o.split(' ');
+        outline = glyph.o.split(' ') as any;
       }
 
       return {
@@ -157,7 +163,7 @@ export class Glyph extends Element {
    * @param {number} point The point size to use.
    * @param {string} val The glyph code in font.getGlyphs()
    */
-  static renderGlyph(ctx: DrawContext, x_pos: number, y_pos: number, point: number, val: string, options?: any) {
+  static renderGlyph(ctx: DrawContext, x_pos: number, y_pos: number, point: number, val: string, options?: any): IGlyphMetrics {
     const params = {
       fontStack: Flow.DEFAULT_FONT_STACK,
       category: null,
@@ -177,7 +183,7 @@ export class Glyph extends Element {
     return metrics;
   }
 
-  static renderOutline(ctx: DrawContext, outline: any[], scale: number, x_pos: number, y_pos: number) {
+  static renderOutline(ctx: DrawContext, outline: any[], scale: number, x_pos: number, y_pos: number): void {
     ctx.beginPath();
     ctx.moveTo(x_pos, y_pos);
     processOutline(outline, x_pos, y_pos, scale, -scale, {
@@ -190,7 +196,7 @@ export class Glyph extends Element {
     ctx.fill();
   }
 
-  static getOutlineBoundingBox(outline: any[], scale: number, x_pos: number, y_pos: number) {
+  static getOutlineBoundingBox(outline: any[], scale: number, x_pos: number, y_pos: number): BoundingBox {
     const bboxComp = new BoundingBoxComputation();
 
     processOutline(outline, x_pos, y_pos, scale, -scale, {
@@ -239,21 +245,36 @@ export class Glyph extends Element {
     }
   }
 
-  getCode() {
+  getCode(): string {
     return this.code;
   }
 
-  setOptions(options: any) {
-    this.options = { ...this.options, ...options };
+  setOptions(options: any): void {
+    this.options = {...this.options, ...options};
     this.reset();
   }
 
-  setPoint(point: number) { this.point = point; return this; }
-  setStave(stave: Stave) { this.stave = stave; return this; }
-  setXShift(x_shift: number) { this.x_shift = x_shift; return this; }
-  setYShift(y_shift: number) { this.y_shift = y_shift; return this; }
+  setPoint(point: number): this {
+    this.point = point;
+    return this;
+  }
 
-  reset() {
+  setStave(stave: Stave): this {
+    this.stave = stave;
+    return this;
+  }
+
+  setXShift(x_shift: number): this {
+    this.x_shift = x_shift;
+    return this;
+  }
+
+  setYShift(y_shift: number): this {
+    this.y_shift = y_shift;
+    return this;
+  }
+
+  reset(): void {
     this.metrics = Glyph.loadMetrics(this.options.fontStack, this.code, this.options.category);
     // Override point from metrics file
     this.point = this.options.category ? Glyph.lookupFontMetric({
@@ -273,7 +294,7 @@ export class Glyph extends Element {
     );
   }
 
-  getMetrics() {
+  getMetrics(): IGlyphMetrics {
     if (!this.metrics) {
       throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
@@ -286,26 +307,26 @@ export class Glyph extends Element {
     } as IGlyphMetrics;
   }
 
-  setOriginX(x: number) {
-    const { bbox } = this;
+  setOriginX(x: number): void {
+    const {bbox} = this;
     const originX = Math.abs(bbox.getX() / bbox.getW());
     const xShift = (x - originX) * bbox.getW();
     this.originShift.x = -xShift;
   }
 
-  setOriginY(y: number) {
-    const { bbox } = this;
+  setOriginY(y: number): void {
+    const {bbox} = this;
     const originY = Math.abs(bbox.getY() / bbox.getH());
     const yShift = (y - originY) * bbox.getH();
     this.originShift.y = -yShift;
   }
 
-  setOrigin(x: number, y: number) {
+  setOrigin(x: number, y: number): void {
     this.setOriginX(x);
     this.setOriginY(y);
   }
 
-  render(ctx: DrawContext, x: number, y: number) {
+  render(ctx: DrawContext, x: number, y: number): void {
     if (!this.metrics) {
       throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
@@ -321,7 +342,7 @@ export class Glyph extends Element {
     this.restoreStyle(ctx);
   }
 
-  renderToStave(x: number) {
+  renderToStave(x: number): void {
     this.checkContext();
 
     if (!this.metrics) {

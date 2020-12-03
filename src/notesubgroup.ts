@@ -15,17 +15,18 @@ import {Voice} from './voice';
 import {Note} from "./note";
 
 export class NoteSubGroup extends Modifier {
+  private readonly voice: Voice;
+  private readonly subNotes: Note[];
+
   private preFormatted: boolean;
   private formatter: Formatter;
-  private voice: Voice;
-  private subNotes: Note[];
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'notesubgroup';
   }
 
   // Arrange groups inside a `ModifierContext`
-  static format(groups: Note[], state: any) {
+  static format(groups: Note[], state: any): boolean {
     if (!groups || groups.length === 0) return false;
 
     let width = 0;
@@ -65,11 +66,11 @@ export class NoteSubGroup extends Modifier {
     return this;
   }
 
-  getCategory() {
+  getCategory(): string {
     return NoteSubGroup.CATEGORY;
   }
 
-  preFormat() {
+  preFormat(): void {
     if (this.preFormatted) return;
 
     this.formatter.joinVoices([this.voice]).format([this.voice], 0);
@@ -77,21 +78,21 @@ export class NoteSubGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  setNote(note: Note) {
+  setNote(note: Note): this {
     this.note = note;
     return this;
   }
 
-  setWidth(width: number) {
+  setWidth(width: number): this {
     this.width = width;
     return this;
   }
 
-  getWidth() {
+  getWidth(): number {
     return this.width;
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
 
     const note = this.getNote();

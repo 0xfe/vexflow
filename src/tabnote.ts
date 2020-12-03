@@ -19,6 +19,8 @@ import {Stave} from "./stave";
 import {ModifierContext} from "./modifiercontext";
 import {TickContext} from "./tickcontext";
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
+import {IGlyphProps} from "./types/glyph";
+import {ITabNotePositon} from "./types/tabnote";
 
 // Gets the unused strings grouped together if consecutive.
 //
@@ -58,7 +60,7 @@ function getPartialStemLines(stem_y: number, unused_strings: number[][], stave: 
   const line_spacing = stave.getSpacingBetweenLines();
   const total_lines = stave.getNumLines();
 
-  const stem_lines: any[] = [];
+  const stem_lines: number[][] = [];
 
   unused_strings.forEach(strings => {
     const containsLastString = strings.indexOf(total_lines) > -1;
@@ -115,9 +117,9 @@ function getPartialStemLines(stem_y: number, unused_strings: number[][], stave: 
 
 export class TabNote extends StemmableNote {
   private ghost: boolean;
-  private glyphs: any[];
+  private glyphs: IGlyphProps[];
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'tabnotes';
   }
 
@@ -173,7 +175,7 @@ export class TabNote extends StemmableNote {
     this.updateWidth();
   }
 
-  reset() {
+  reset(): this {
     if (this.stave) {
       this.setStave(this.stave);
     }
@@ -181,26 +183,26 @@ export class TabNote extends StemmableNote {
   }
 
   // The ModifierContext category
-  getCategory() {
+  getCategory(): string {
     return TabNote.CATEGORY;
   }
 
   // Set as ghost `TabNote`, surrounds the fret positions with parenthesis.
   // Often used for indicating frets that are being bent to
-  setGhost(ghost: boolean) {
+  setGhost(ghost: boolean): this {
     this.ghost = ghost;
     this.updateWidth();
     return this;
   }
 
   // Determine if the note has a stem
-  hasStem() {
+  hasStem(): boolean {
     return this.render_options.draw_stem;
   }
 
   // Get the default stem extension for the note
-  getStemExtension() {
-    const glyph = this.getGlyph();
+  getStemExtension(): number {
+    const glyph = this.getGlyph() as IGlyphProps;
 
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
@@ -216,14 +218,14 @@ export class TabNote extends StemmableNote {
   }
 
   // Add a dot to the note
-  addDot() {
+  addDot(): this {
     const dot = new Dot();
     this.dots += 1;
     return this.addModifier(dot, 0);
   }
 
   // Calculate and store the width of the note
-  updateWidth() {
+  updateWidth(): void {
     this.glyphs = [];
     this.width = 0;
     for (let i = 0; i < this.positions.length; ++i) {
@@ -238,11 +240,11 @@ export class TabNote extends StemmableNote {
     // incorrect since a notehead is a poor approximation for the dimensions of
     // a fret number which can have multiple digits. As a result, we must
     // overwrite getWidth() to return the correct width
-    this.glyph.getWidth = () => this.width;
+    (this.glyph as IGlyphProps).getWidth = () => this.width;
   }
 
   // Set the `stave` to the note
-  setStave(stave: Stave) {
+  setStave(stave: Stave): this {
     super.setStave(stave);
     this.context = stave.context;
 
@@ -263,12 +265,12 @@ export class TabNote extends StemmableNote {
         }
         this.width = Math.max(glyph.getWidth(), this.width);
       }
-      this.glyph.getWidth = () => this.width;
+      (this.glyph as IGlyphProps).getWidth = () => this.width;
     }
 
     // we subtract 1 from `line` because getYForLine expects a 0-based index,
     // while the position.str is a 1-based index
-    const ys = this.positions.map(({str: line}: any) => stave.getYForLine(line - 1));
+    const ys = this.positions.map(({str: line}) => stave.getYForLine(line - 1));
 
     this.setYs(ys);
 
@@ -280,12 +282,12 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the fret positions for the note
-  getPositions() {
+  getPositions(): ITabNotePositon[] {
     return this.positions;
   }
 
   // Add self to the provided modifier context `mc`
-  addToModifierContext(mc: ModifierContext|TickContext) {
+  addToModifierContext(mc: ModifierContext|TickContext): this {
     this.setModifierContext(mc);
     for (let i = 0; i < this.modifiers.length; ++i) {
       this.modifierContext.addModifier(this.modifiers[i]);
@@ -296,9 +298,9 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the `x` coordinate to the right of the note
-  getTieRightX() {
+  getTieRightX(): number {
     let tieStartX = this.getAbsoluteX();
-    const note_glyph_width = this.glyph.getWidth();
+    const note_glyph_width = (this.glyph as IGlyphProps).getWidth();
     tieStartX += note_glyph_width / 2;
     tieStartX += (-this.width / 2) + this.width + 2;
 
@@ -306,9 +308,9 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the `x` coordinate to the left of the note
-  getTieLeftX() {
+  getTieLeftX(): number {
     let tieEndX = this.getAbsoluteX();
-    const note_glyph_width = this.glyph.getWidth();
+    const note_glyph_width = (this.glyph as IGlyphProps).getWidth();
     tieEndX += note_glyph_width / 2;
     tieEndX -= (this.width / 2) + 2;
 
@@ -317,7 +319,7 @@ export class TabNote extends StemmableNote {
 
   // Get the default `x` and `y` coordinates for a modifier at a specific
   // `position` at a fret position `index`
-  getModifierStartXY(position?: number, index?: number) {
+  getModifierStartXY(position?: number, index?: number): ICoordinates {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
@@ -332,7 +334,7 @@ export class TabNote extends StemmableNote {
     } else if (position === Modifier.Position.RIGHT) {
       x = this.width + 2; // FIXME: modifier padding, move to font file
     } else if (position === Modifier.Position.BELOW || position === Modifier.Position.ABOVE) {
-      const note_glyph_width = this.glyph.getWidth();
+      const note_glyph_width = (this.glyph as IGlyphProps).getWidth();
       x = note_glyph_width / 2;
     }
 
@@ -343,12 +345,12 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the default line for rest
-  getLineForRest() {
+  getLineForRest(): number {
     return this.positions[0].str;
   }
 
   // Pre-render formatting
-  preFormat() {
+  preFormat(): void {
     if (this.preFormatted) return;
     if (this.modifierContext) this.modifierContext.preFormat();
     // width is already set during init()
@@ -356,12 +358,12 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the x position for the stem
-  getStemX() {
+  getStemX(): number {
     return this.getCenterGlyphX();
   }
 
   // Get the y position for the stem
-  getStemY() {
+  getStemY(): number {
     const num_lines = this.stave.getNumLines();
 
     // The decimal staff line amounts provide optimal spacing between the
@@ -374,12 +376,12 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the stem extents for the tabnote
-  getStemExtents() {
+  getStemExtents(): Record<string, number> {
     return this.stem.getExtents();
   }
 
   // Draw the fal onto the context
-  drawFlag() {
+  drawFlag(): void {
     const {
       beam, glyph, context, stem, stem_direction,
       render_options: {draw_stem, glyph_font_scale},
@@ -388,13 +390,13 @@ export class TabNote extends StemmableNote {
     const shouldDrawFlag = beam == null && draw_stem;
 
     // Now it's the flag's turn.
-    if (glyph.flag && shouldDrawFlag) {
+    if ((glyph as IGlyphProps).flag && shouldDrawFlag) {
       const flag_x = this.getStemX() + 1;
       const flag_y = this.getStemY() - stem.getHeight();
 
       const flag_code = stem_direction === Stem.DOWN
-        ? glyph.code_flag_downstem // Down stems have flags on the left.
-        : glyph.code_flag_upstem;
+        ? (glyph as IGlyphProps).code_flag_downstem // Down stems have flags on the left.
+        : (glyph as IGlyphProps).code_flag_upstem;
 
       // Draw the Flag
       Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code, {category: 'flag.tabStem'});
@@ -402,7 +404,7 @@ export class TabNote extends StemmableNote {
   }
 
   // Render the modifiers onto the context
-  drawModifiers() {
+  drawModifiers(): void {
     // Draw the modifiers
     this.modifiers.forEach((modifier) => {
       // Only draw the dots if enabled
@@ -414,7 +416,7 @@ export class TabNote extends StemmableNote {
   }
 
   // Render the stem extension through the fret positions
-  drawStemThrough() {
+  drawStemThrough(): void {
     const stem_x = this.getStemX();
     const stem_y = this.getStemY();
     const ctx = this.context;
@@ -449,7 +451,7 @@ export class TabNote extends StemmableNote {
   }
 
   // Render the fret positions onto the context
-  drawPositions() {
+  drawPositions(): void {
     const ctx = this.context;
     const x = this.getAbsoluteX();
     const ys = this.ys;
@@ -458,7 +460,7 @@ export class TabNote extends StemmableNote {
       const glyph = this.glyphs[i];
 
       // Center the fret text beneath the notation note head
-      const note_glyph_width = this.glyph.getWidth();
+      const note_glyph_width = (this.glyph as IGlyphProps).getWidth();
       const tab_x = x + (note_glyph_width / 2) - (glyph.getWidth() / 2);
 
       // FIXME: Magic numbers.
@@ -479,7 +481,7 @@ export class TabNote extends StemmableNote {
   }
 
   // The main rendering function for the entire note
-  draw() {
+  draw(): void {
     this.checkContext();
 
     if (!this.stave) {

@@ -8,20 +8,21 @@
 import {Vex} from './vex';
 import {Note} from './note';
 import {Glyph} from './glyph';
-import {IStringTable} from "./types/common";
+import {ICodeValue} from "./types/common";
 import {IStaveNoteStruct} from "./types/note";
 import {IFont} from "./types/font";
 
 export class TextNote extends Note {
+  private readonly text: string;
+  private readonly superscript: string;
+  private readonly subscript: string;
+  private readonly smooth: boolean;
+
   private font: IFont;
   private justification: number;
-  private text: string;
-  private superscript: string;
-  private subscript: string;
   private line: number;
-  private smooth: boolean;
 
-  static get Justification() {
+  static get Justification(): Record<string, number> {
     return {
       LEFT: 1,
       CENTER: 2,
@@ -30,7 +31,7 @@ export class TextNote extends Note {
   }
 
   // Glyph data
-  static get GLYPHS(): IStringTable<any> {
+  static get GLYPHS(): Record<string, ICodeValue> {
     return {
       'segno': {
         code: 'segno',
@@ -126,19 +127,19 @@ export class TextNote extends Note {
   }
 
   // Set the horizontal justification of the TextNote
-  setJustification(just: number) {
+  setJustification(just: number): this {
     this.justification = just;
     return this;
   }
 
   // Set the Stave line on which the note should be placed
-  setLine(line: number) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Pre-render formatting
-  preFormat() {
+  preFormat(): void {
     this.checkContext();
 
     if (this.preFormatted) return;
@@ -166,7 +167,7 @@ export class TextNote extends Note {
   }
 
   // Renders the TextNote
-  draw() {
+  draw(): void {
     this.checkContext();
 
     if (!this.stave) {
@@ -191,7 +192,7 @@ export class TextNote extends Note {
     let y;
     if (this.glyph) {
       y = this.stave.getYForLine(this.line + -3);
-      this.glyph.render(this.context, x, y);
+      (this.glyph as Glyph).render(this.context, x, y);
     } else {
       y = this.stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);

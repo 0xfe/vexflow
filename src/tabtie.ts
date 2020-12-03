@@ -9,11 +9,11 @@ import {StaveNote} from "./stavenote";
 import {INotesStruct} from "./types/note";
 
 export class TabTie extends StaveTie {
-  static createHammeron(notes: INotesStruct) {
+  static createHammeron(notes: INotesStruct): TabTie {
     return new TabTie(notes, 'H');
   }
 
-  static createPulloff(notes: INotesStruct) {
+  static createPulloff(notes: INotesStruct): TabTie {
     return new TabTie(notes, 'P');
   }
 
@@ -39,7 +39,7 @@ export class TabTie extends StaveTie {
     this.setNotes(notes);
   }
 
-  draw() {
+  draw(): boolean {
     this.checkContext();
     this.setRendered();
 

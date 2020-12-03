@@ -10,13 +10,12 @@
 import {Vex} from './vex';
 import {Flow} from './tables';
 import {Modifier} from './modifier';
-import {IStringTable} from "./types/common";
+import {IState} from "./types/common";
 import {StemmableNote} from "./stemmablenote";
-import {IAnnotationState} from "./types/annotation";
 import {IFont} from "./types/font";
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
-function L(...args: any[]) {
+function L(...args: unknown[]) {
   if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args);
 }
 
@@ -30,12 +29,12 @@ export class Annotation extends Modifier {
   private text: string;
   private font: IFont;
 
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'annotations';
   }
 
   // Text annotations can be positioned and justified relative to the note.
-  static get Justify() {
+  static get Justify(): Record<string, number> {
     return {
       LEFT: 1,
       CENTER: 2,
@@ -44,7 +43,7 @@ export class Annotation extends Modifier {
     };
   }
 
-  static get JustifyString(): IStringTable<number> {
+  static get JustifyString(): Record<string, number> {
     return {
       left: Annotation.Justify.LEFT,
       right: Annotation.Justify.RIGHT,
@@ -53,7 +52,7 @@ export class Annotation extends Modifier {
     };
   }
 
-  static get VerticalJustify(): IStringTable<number> {
+  static get VerticalJustify(): Record<string, number> {
     return {
       TOP: 1,
       CENTER: 2,
@@ -62,7 +61,7 @@ export class Annotation extends Modifier {
     };
   }
 
-  static get VerticalJustifyString(): IStringTable<number> {
+  static get VerticalJustifyString(): Record<string, number> {
     return {
       above: Annotation.VerticalJustify.TOP,
       top: Annotation.VerticalJustify.TOP,
@@ -74,7 +73,7 @@ export class Annotation extends Modifier {
   }
 
   // Arrange annotations within a `ModifierContext`
-  static format(annotations: Annotation[], state: IAnnotationState) {
+  static format(annotations: Annotation[], state: IState): boolean {
     if (!annotations || annotations.length === 0) return false;
 
     let width = 0;
@@ -119,19 +118,19 @@ export class Annotation extends Modifier {
     this.setWidth(Flow.textWidth(text));
   }
 
-  getCategory() {
+  getCategory(): string {
     return Annotation.CATEGORY;
   }
 
   // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
-  setFont(family: string, size: number, weight: string) {
+  setFont(family: string, size: number, weight: string): this {
     this.font = {family, size, weight} as IFont;
     return this;
   }
 
   // Set vertical position of text (above or below stave). `just` must be
   // a value in `Annotation.VerticalJustify`.
-  setVerticalJustification(just: string | number) {
+  setVerticalJustification(just: string | number): this {
     this.vert_justification = typeof (just) === 'string'
       ? Annotation.VerticalJustifyString[just]
       : just;
@@ -140,11 +139,11 @@ export class Annotation extends Modifier {
 
   // Get and set horizontal justification. `justification` is a value in
   // `Annotation.Justify`.
-  getJustification() {
+  getJustification(): number {
     return this.justification;
   }
 
-  setJustification(just: string | number) {
+  setJustification(just: string | number): this {
     this.justification = typeof (just) === 'string'
       ? Annotation.JustifyString[just]
       : just;
@@ -152,7 +151,7 @@ export class Annotation extends Modifier {
   }
 
   // Render text beside the note.
-  draw() {
+  draw(): void {
     this.checkContext();
 
     if (!this.note) {

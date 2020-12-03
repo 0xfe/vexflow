@@ -6,7 +6,8 @@
 import {Element} from './element';
 import {Stave} from "./stave";
 import {Glyph} from "./glyph";
-import {ILayoutMetrics} from "./types/common";
+import {ILayoutMetrics, IMetrics} from "./types/common";
+import {IStaveModifierSpacer} from "./types/stavemodifier";
 
 export class StaveModifier extends Element {
   width: number;
@@ -17,7 +18,7 @@ export class StaveModifier extends Element {
   protected stave: Stave;
   private layoutMetrics: ILayoutMetrics;
 
-  static get Position() {
+  static get Position(): Record<string, number> {
     return {
       LEFT: 1,
       RIGHT: 2,
@@ -37,47 +38,47 @@ export class StaveModifier extends Element {
     this.layoutMetrics = null;
   }
 
-  getPosition() {
+  getPosition(): number {
     return this.position;
   }
 
-  setPosition(position: number) {
+  setPosition(position: number): this {
     this.position = position;
     return this;
   }
 
-  getStave() {
+  getStave(): Stave {
     return this.stave;
   }
 
-  setStave(stave: Stave) {
+  setStave(stave: Stave): this {
     this.stave = stave;
     return this;
   }
 
-  getWidth() {
+  getWidth(): number {
     return this.width;
   }
 
-  setWidth(width: number) {
+  setWidth(width: number): this {
     this.width = width;
     return this;
   }
 
-  getX() {
+  getX(): number {
     return this.x;
   }
 
-  setX(x: number) {
+  setX(x: number): this {
     this.x = x;
     return this;
   }
 
-  getCategory() {
+  getCategory(): string {
     return '';
   }
 
-  makeSpacer(padding: number) {
+  makeSpacer(padding: number): IStaveModifierSpacer {
     // TODO(0xfe): Return an instance of type `Spacer` based on `GhostNote`
     // instead of this hack.
 
@@ -86,34 +87,36 @@ export class StaveModifier extends Element {
         return true;
       },
       setStave() {
+        // do nothing
       },
       renderToStave() {
+        // do nothing
       },
-      getMetrics() {
-        return {width: padding};
-      },
+      getMetrics(): IMetrics {
+        return {width: padding} as IMetrics;
+      }
     };
   }
 
-  placeGlyphOnLine(glyph: Glyph, stave: Stave, line: number, customShift = 0) {
+  placeGlyphOnLine(glyph: Glyph, stave: Stave, line: number, customShift = 0): void {
     glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs() + customShift);
   }
 
-  getPadding(index: number) {
+  getPadding(index: number): number {
     return (index !== undefined && index < 2 ? 0 : this.padding);
   }
 
-  setPadding(padding: number) {
+  setPadding(padding: number): this {
     this.padding = padding;
     return this;
   }
 
-  setLayoutMetrics(layoutMetrics: any) {
+  setLayoutMetrics(layoutMetrics: ILayoutMetrics): this {
     this.layoutMetrics = layoutMetrics;
     return this;
   }
 
-  getLayoutMetrics() {
+  getLayoutMetrics(): ILayoutMetrics {
     return this.layoutMetrics;
   }
 }

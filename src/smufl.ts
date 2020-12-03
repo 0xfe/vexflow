@@ -1,42 +1,44 @@
-import { Vex } from './vex';
-import { BravuraFont } from './fonts/bravura_glyphs';
-import { BravuraMetrics } from './fonts/bravura_metrics';
-import { GonvilleFont  } from './fonts/gonville_glyphs';
-import { GonvilleMetrics } from './fonts/gonville_metrics';
-import { PetalumaFont  } from './fonts/petaluma_glyphs';
-import { PetalumaMetrics } from './fonts/petaluma_metrics';
-import { CustomFont  } from './fonts/custom_glyphs';
-import { CustomMetrics  } from './fonts/custom_metrics';
+import {Vex} from './vex';
+import {BravuraFont} from './fonts/bravura_glyphs';
+import {BravuraMetrics} from './fonts/bravura_metrics';
+import {GonvilleFont} from './fonts/gonville_glyphs';
+import {GonvilleMetrics} from './fonts/gonville_metrics';
+import {PetalumaFont} from './fonts/petaluma_glyphs';
+import {PetalumaMetrics} from './fonts/petaluma_metrics';
+import {CustomFont} from './fonts/custom_glyphs';
+import {CustomMetrics} from './fonts/custom_metrics';
+import {IFontData, IFontGlyph} from "./types/font";
 
 class Font {
   name: string;
-  metrics: any;
-  private fontData: any;
-  private codePoints: {};
+  metrics: Record<string, any>;
 
-  constructor(name: string, metrics: any, fontData: any) {
+  private readonly fontData: IFontData;
+
+  private codePoints: never;
+
+  constructor(name: string, metrics: Record<string, unknown>, fontData: IFontData) {
     this.name = name;
     this.metrics = metrics;
     this.fontData = fontData;
-    this.codePoints = {};
+    this.codePoints = {} as never;
   }
 
-  getName() {
+  getName(): string {
     return this.name;
   }
 
-  getResolution() {
+  getResolution(): number {
     return this.fontData.resolution;
   }
 
-  getMetrics() {
+  getMetrics(): Record<string, unknown> {
     return this.metrics;
   }
 
-  lookupMetric(key: string, defaultValue: any = undefined) {
+  lookupMetric(key: string, defaultValue: Record<string, any>|number = undefined): any {
     const parts = key.split('.');
-    let val = this.metrics;
-    // console.log('lookupMetric:', key);
+    let val: any = this.metrics;
     for (let i = 0; i < parts.length; i++) {
       if (val[parts[i]] === undefined) {
         if (defaultValue !== undefined) {
@@ -52,31 +54,31 @@ class Font {
     return val;
   }
 
-  getFontData() {
+  getFontData(): IFontData {
     return this.fontData;
   }
 
-  getGlyphs() {
+  getGlyphs(): Record<string, IFontGlyph> {
     return this.fontData.glyphs;
   }
 
-  getCodePoints() {
+  getCodePoints(): never {
     return this.codePoints;
   }
 
-  setCodePoints(codePoints: any) {
+  setCodePoints(codePoints: never): this {
     this.codePoints = codePoints;
     return this;
   }
 }
 
 const Fonts = {
-  Bravura: new Font('Bravura', BravuraMetrics, BravuraFont),
-  Gonville: new Font('Gonville', GonvilleMetrics, GonvilleFont),
-  Petaluma: new Font('Petaluma', PetalumaMetrics, PetalumaFont),
-  Custom: new Font('Custom', CustomMetrics, CustomFont),
+  Bravura: new Font('Bravura', BravuraMetrics, BravuraFont as any),
+  Gonville: new Font('Gonville', GonvilleMetrics, GonvilleFont as any),
+  Petaluma: new Font('Petaluma', PetalumaMetrics, PetalumaFont as any),
+  Custom: new Font('Custom', CustomMetrics, CustomFont as any),
 };
 
 const DefaultFontStack = [Fonts.Bravura, Fonts.Gonville, Fonts.Custom];
 
-export { Fonts, DefaultFontStack, Font };
+export {Fonts, DefaultFontStack, Font};
