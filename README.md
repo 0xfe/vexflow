@@ -1,3 +1,4 @@
+ZIP
 # VexFlow 4
 
 A JavaScript library for rendering music notation.
