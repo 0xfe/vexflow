@@ -457,7 +457,7 @@ var Accidental = /** @class */ (function (_super) {
     // Helper function to determine whether two lines of accidentals collide vertically
     Accidental.checkCollision = function (line1, line2) {
         var clearance = line2.line - line1.line;
-        var clearanceRequired = 3;
+        var clearanceRequired;
         // But less clearance is required for certain accidentals: b, bb and ##.
         if (clearance > 0) { // then line 2 is on top
             clearanceRequired = (line2.flatLine || line2.dblSharpLine) ? 2.5 : 3.0;
@@ -2276,17 +2276,17 @@ var Bend = /** @class */ (function (_super) {
         return this.text;
     };
     Bend.prototype.updateWidth = function () {
-        var that = this;
-        function measure_text(text) {
+        var _this = this;
+        var measure_text = function (text) {
             var text_width;
-            if (that.context) {
-                text_width = that.context.measureText(text).width;
+            if (_this.context) {
+                text_width = _this.context.measureText(text).width;
             }
             else {
                 text_width = tables_1.Flow.textWidth(text);
             }
             return text_width;
-        }
+        };
         var total_width = 0;
         for (var i = 0; i < this.phrase.length; ++i) {
             var bend = this.phrase[i];
@@ -2305,6 +2305,7 @@ var Bend = /** @class */ (function (_super) {
         return this;
     };
     Bend.prototype.draw = function () {
+        var _this = this;
         this.checkContext();
         if (!(this.note && (this.index != null))) {
             throw new vex_1.Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
@@ -2317,31 +2318,30 @@ var Bend = /** @class */ (function (_super) {
         var ctx = this.context;
         var bend_height = this.note.getStave().getYForTopText(this.text_line) + 3;
         var annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
-        var that = this;
-        function renderBend(x, y, width, height) {
+        var renderBend = function (x, y, width, height) {
             var cp_x = x + width;
             var cp_y = y;
             ctx.save();
             ctx.beginPath();
-            ctx.setLineWidth(that.render_options.line_width);
-            ctx.setStrokeStyle(that.render_options.line_style);
-            ctx.setFillStyle(that.render_options.line_style);
+            ctx.setLineWidth(_this.render_options.line_width);
+            ctx.setStrokeStyle(_this.render_options.line_style);
+            ctx.setFillStyle(_this.render_options.line_style);
             ctx.moveTo(x, y);
             ctx.quadraticCurveTo(cp_x, cp_y, x + width, height);
             ctx.stroke();
             ctx.restore();
-        }
-        function renderRelease(x, y, width, height) {
+        };
+        var renderRelease = function (x, y, width, height) {
             ctx.save();
             ctx.beginPath();
-            ctx.setLineWidth(that.render_options.line_width);
-            ctx.setStrokeStyle(that.render_options.line_style);
-            ctx.setFillStyle(that.render_options.line_style);
+            ctx.setLineWidth(_this.render_options.line_width);
+            ctx.setStrokeStyle(_this.render_options.line_style);
+            ctx.setFillStyle(_this.render_options.line_style);
             ctx.moveTo(x, height);
             ctx.quadraticCurveTo(x + width, height, x + width, y);
             ctx.stroke();
             ctx.restore();
-        }
+        };
         function renderArrowHead(x, y, direction) {
             var width = 4;
             var dir = direction || 1;
@@ -2352,13 +2352,13 @@ var Bend = /** @class */ (function (_super) {
             ctx.closePath();
             ctx.fill();
         }
-        function renderText(x, text) {
+        var renderText = function (x, text) {
             ctx.save();
-            ctx.setRawFont(that.font);
+            ctx.setRawFont(_this.font);
             var render_x = x - (ctx.measureText(text).width / 2);
             ctx.fillText(text, render_x, annotation_y);
             ctx.restore();
-        }
+        };
         var last_bend = null;
         var last_drawn_width = 0;
         for (var i = 0; i < this.phrase.length; ++i) {
@@ -2700,10 +2700,13 @@ var CanvasContext = /** @class */ (function () {
     };
     // Containers not implemented
     CanvasContext.prototype.openGroup = function () {
+        // do nothing
     };
     CanvasContext.prototype.closeGroup = function () {
+        // do nothing
     };
     CanvasContext.prototype.add = function () {
+        // do nothing
     };
     CanvasContext.prototype.setFont = function (family, size, weight) {
         this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
@@ -3640,9 +3643,11 @@ var ChordSymbol = /** @class */ (function (_super) {
         this.context.closeGroup();
         this.context.restore();
     };
+    //TODO: This was added during typescript migration to avoid compilation errors. Remove?
     ChordSymbol.prototype.setHorizontalJustification = function (hJustify) {
         throw new Error('method setHorizontalJustification does not exist');
     };
+    //TODO: This was added during typescript migration to avoid compilation errors. Remove?
     ChordSymbol.prototype.setVerticalJustification = function (vJustify) {
         throw new Error('method setVerticalJustification does not exist');
     };
@@ -4954,6 +4959,7 @@ var Element = /** @class */ (function () {
         this.restoreStyle();
     };
     Element.prototype.draw = function (element, x_shift) {
+        // do nothing
     };
     // An element can have multiple class labels.
     Element.prototype.hasClass = function (className) {
@@ -5118,7 +5124,7 @@ function setDefaults(params, defaults) {
 var Factory = /** @class */ (function () {
     function Factory(options) {
         L('New factory: ', options);
-        var defaults = {
+        this.options = {
             stave: {
                 space: 10,
             },
@@ -5136,7 +5142,6 @@ var Factory = /** @class */ (function () {
                 style: '',
             },
         };
-        this.options = defaults;
         this.setOptions(options);
     }
     Factory.newFromElementId = function (elementId, width, height) {
@@ -5361,7 +5366,7 @@ var Factory = /** @class */ (function () {
             options: {},
         });
         var chordSymbol = new chordsymbol_1.ChordSymbol();
-        //TODO start: Are these methods used
+        //TODO start: Are these methods used?
         chordSymbol.setHorizontalJustification(params.hJustify);
         chordSymbol.setVerticalJustification(params.vJustify);
         //TODO end
@@ -5619,8 +5624,7 @@ var Factory = /** @class */ (function () {
     Factory.prototype.TextFont = function (params) {
         if (params === void 0) { params = {}; }
         params.factory = this;
-        var textFont = new textfont_1.TextFont(params);
-        return textFont;
+        return new textfont_1.TextFont(params);
     };
     Factory.prototype.draw = function () {
         var _this = this;
@@ -16762,7 +16766,7 @@ var Formatter = /** @class */ (function () {
                 var metrics = note.getMetrics();
                 var formatterMetrics = note.getFormatterMetrics();
                 var leftNoteEdge = note.getX() + metrics.notePx + metrics.totalRightPx;
-                var space = 0;
+                var space;
                 if (i < (notes.length - 1)) {
                     var rightNote = notes[i + 1];
                     var rightMetrics = rightNote.getMetrics();
@@ -17518,8 +17522,12 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
     var x;
     var y;
     var i = 0;
-    function nextX() { return originX + outline[i++] * scaleX; }
-    function nextY() { return originY + outline[i++] * scaleY; }
+    function nextX() {
+        return originX + outline[i++] * scaleX;
+    }
+    function nextY() {
+        return originY + outline[i++] * scaleY;
+    }
     function doOutline(command) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -17714,10 +17722,22 @@ var Glyph = /** @class */ (function (_super) {
         this.options = __assign(__assign({}, this.options), options);
         this.reset();
     };
-    Glyph.prototype.setPoint = function (point) { this.point = point; return this; };
-    Glyph.prototype.setStave = function (stave) { this.stave = stave; return this; };
-    Glyph.prototype.setXShift = function (x_shift) { this.x_shift = x_shift; return this; };
-    Glyph.prototype.setYShift = function (y_shift) { this.y_shift = y_shift; return this; };
+    Glyph.prototype.setPoint = function (point) {
+        this.point = point;
+        return this;
+    };
+    Glyph.prototype.setStave = function (stave) {
+        this.stave = stave;
+        return this;
+    };
+    Glyph.prototype.setXShift = function (x_shift) {
+        this.x_shift = x_shift;
+        return this;
+    };
+    Glyph.prototype.setYShift = function (y_shift) {
+        this.y_shift = y_shift;
+        return this;
+    };
     Glyph.prototype.reset = function () {
         this.metrics = Glyph.loadMetrics(this.options.fontStack, this.code, this.options.category);
         // Override point from metrics file
@@ -17978,7 +17998,7 @@ var GraceNote = /** @class */ (function (_super) {
             var staveNoteScale = this.getStaveNoteScale();
             // some magic numbers are based on the staveNoteScale 0.66.
             var offsetScale = staveNoteScale / 0.66;
-            var slashBBox = undefined;
+            var slashBBox = void 0;
             var beam = this.beam;
             if (beam) {
                 // FIXME: should render slash after beam?
@@ -18028,7 +18048,7 @@ var GraceNote = /** @class */ (function (_super) {
             // FIXME: avoide staff lines, leadger lines or others.
             var ctx = this.context;
             ctx.save();
-            ctx.setLineWidth(1 * offsetScale); // FIXME: use more appropriate value.
+            ctx.setLineWidth(offsetScale); // FIXME: use more appropriate value.
             ctx.beginPath();
             ctx.moveTo(slashBBox.x1, slashBBox.y1);
             ctx.lineTo(slashBBox.x2, slashBBox.y2);
@@ -18057,13 +18077,12 @@ var GraceNote = /** @class */ (function (_super) {
         var stemX = this.getStemX();
         var stem0X = beam.notes[0].getStemX();
         var stemY = this.beam.getBeamYToDraw() + ((stemX - stem0X) * beam_slope);
-        var ret = {
+        return {
             x1: stemX - protrusion_stem_dx,
             y1: (stemY + slashStemOffset - protrusion_stem_dy),
             x2: stemX + (iPointOnBeam.dx * scaleX) + protrusion_beam_dx,
             y2: stemY + iPointOnBeam.dy + protrusion_beam_dy,
         };
-        return ret;
     };
     return GraceNote;
 }(stavenote_1.StaveNote));
@@ -19911,10 +19930,7 @@ var Music = /** @class */ (function () {
         configurable: true
     });
     Music.prototype.isValidNoteValue = function (note) {
-        if (note == null || note < 0 || note >= Music.NUM_TONES) {
-            return false;
-        }
-        return true;
+        return !(note == null || note < 0 || note >= Music.NUM_TONES);
     };
     Music.prototype.isValidIntervalValue = function (interval) {
         return this.isValidNoteValue(interval);
@@ -21589,8 +21605,7 @@ var PedalMarking = /** @class */ (function (_super) {
     // Create a sustain pedal marking. Returns the defaults PedalMarking.
     // Which uses the traditional "Ped" and "*"" markings.
     PedalMarking.createSustain = function (notes) {
-        var pedal = new PedalMarking(notes);
-        return pedal;
+        return new PedalMarking(notes);
     };
     // Create a sostenuto pedal marking
     PedalMarking.createSostenuto = function (notes) {
@@ -21633,14 +21648,13 @@ var PedalMarking = /** @class */ (function (_super) {
         var is_pedal_depressed = false;
         var prev_x;
         var prev_y;
-        var pedal = this;
         // Iterate through each note
         this.notes.forEach(function (note, index, notes) {
             // Each note triggers the opposite pedal action
             is_pedal_depressed = !is_pedal_depressed;
             // Get the initial coordinates for the note
             var x = note.getAbsoluteX();
-            var y = note.getStave().getYForBottomText(pedal.line + 3);
+            var y = note.getStave().getYForBottomText(_this.line + 3);
             // Throw if current note is positioned before the previous note
             if (x < prev_x) {
                 throw new vex_1.Vex.RERR('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
@@ -21650,29 +21664,29 @@ var PedalMarking = /** @class */ (function (_super) {
             // when adjustments are made for the release+depress action
             var next_is_same = notes[index + 1] === note;
             var prev_is_same = notes[index - 1] === note;
-            var x_shift = 0;
+            var x_shift;
             var point = _this.musicFont.lookupMetric("pedalMarking." + (is_pedal_depressed ? 'down' : 'up') + ".point");
             if (is_pedal_depressed) {
                 // Adjustment for release+depress
                 x_shift = prev_is_same ? 5 : 0;
-                if (pedal.style === PedalMarking.Styles.MIXED && !prev_is_same) {
+                if (_this.style === PedalMarking.Styles.MIXED && !prev_is_same) {
                     // For MIXED style, start with text instead of bracket
-                    if (pedal.custom_depress_text) {
+                    if (_this.custom_depress_text) {
                         // If we have custom text, use instead of the default "Ped" glyph
-                        var text_width = ctx.measureText(pedal.custom_depress_text).width;
-                        ctx.fillText(pedal.custom_depress_text, x - (text_width / 2), y);
-                        x_shift = (text_width / 2) + pedal.render_options.text_margin_right;
+                        var text_width = ctx.measureText(_this.custom_depress_text).width;
+                        ctx.fillText(_this.custom_depress_text, x - (text_width / 2), y);
+                        x_shift = (text_width / 2) + _this.render_options.text_margin_right;
                     }
                     else {
                         // Render the Ped glyph in position
                         drawPedalGlyph('pedal_depress', ctx, x, y, point);
-                        x_shift = 20 + pedal.render_options.text_margin_right;
+                        x_shift = 20 + _this.render_options.text_margin_right;
                     }
                 }
                 else {
                     // Draw start bracket
                     ctx.beginPath();
-                    ctx.moveTo(x, y - pedal.render_options.bracket_height);
+                    ctx.moveTo(x, y - _this.render_options.bracket_height);
                     ctx.lineTo(x + x_shift, y);
                     ctx.stroke();
                     ctx.closePath();
@@ -21685,7 +21699,7 @@ var PedalMarking = /** @class */ (function (_super) {
                 ctx.beginPath();
                 ctx.moveTo(prev_x, prev_y);
                 ctx.lineTo(x + x_shift, y);
-                ctx.lineTo(x, y - pedal.render_options.bracket_height);
+                ctx.lineTo(x, y - _this.render_options.bracket_height);
                 ctx.stroke();
                 ctx.closePath();
             }
@@ -21700,28 +21714,27 @@ var PedalMarking = /** @class */ (function (_super) {
         var _this = this;
         var ctx = this.context;
         var is_pedal_depressed = false;
-        var pedal = this;
         // Iterate through each note, placing glyphs or custom text accordingly
         this.notes.forEach(function (note) {
             is_pedal_depressed = !is_pedal_depressed;
             var stave = note.getStave();
             var x = note.getAbsoluteX();
-            var y = stave.getYForBottomText(pedal.line + 3);
+            var y = stave.getYForBottomText(_this.line + 3);
             var point = _this.musicFont.lookupMetric("pedalMarking." + (is_pedal_depressed ? 'down' : 'up') + ".point");
             var text_width = 0;
             if (is_pedal_depressed) {
-                if (pedal.custom_depress_text) {
-                    text_width = ctx.measureText(pedal.custom_depress_text).width;
-                    ctx.fillText(pedal.custom_depress_text, x - (text_width / 2), y);
+                if (_this.custom_depress_text) {
+                    text_width = ctx.measureText(_this.custom_depress_text).width;
+                    ctx.fillText(_this.custom_depress_text, x - (text_width / 2), y);
                 }
                 else {
                     drawPedalGlyph('pedal_depress', ctx, x, y, point);
                 }
             }
             else {
-                if (pedal.custom_release_text) {
-                    text_width = ctx.measureText(pedal.custom_release_text).width;
-                    ctx.fillText(pedal.custom_release_text, x - (text_width / 2), y);
+                if (_this.custom_release_text) {
+                    text_width = ctx.measureText(_this.custom_release_text).width;
+                    ctx.fillText(_this.custom_release_text, x - (text_width / 2), y);
                 }
                 else {
                     drawPedalGlyph('pedal_release', ctx, x, y, point);
@@ -21810,10 +21823,13 @@ var RaphaelContext = /** @class */ (function () {
     }
     // Containers not implemented
     RaphaelContext.prototype.openGroup = function () {
+        // do nothing
     };
     RaphaelContext.prototype.closeGroup = function () {
+        // do nothing
     };
     RaphaelContext.prototype.add = function () {
+        // do nothing
     };
     RaphaelContext.prototype.setFont = function (family, size, weight) {
         this.state.font_family = family;
@@ -22036,7 +22052,7 @@ var RaphaelContext = /** @class */ (function () {
         return out;
     };
     RaphaelContext.prototype.fill = function () {
-        var elem = this.paper.path(this.path)
+        this.paper.path(this.path)
             .attr(this.attributes)
             .attr('stroke-width', 0);
         this.glow();
@@ -22060,7 +22076,7 @@ var RaphaelContext = /** @class */ (function () {
         // This would more closely parallel the approach taken in
         // canvascontext.js as well.
         var strokeWidth = this.lineWidth * (this.state.scale.x + this.state.scale.y) / 2;
-        var elem = this.paper.path(this.path)
+        this.paper.path(this.path)
             .attr(this.attributes)
             .attr('fill', 'none')
             .attr('stroke-width', strokeWidth);
@@ -22557,7 +22573,6 @@ var Font = /** @class */ (function () {
         if (defaultValue === void 0) { defaultValue = undefined; }
         var parts = key.split('.');
         var val = this.metrics;
-        // console.log('lookupMetric:', key);
         for (var i = 0; i < parts.length; i++) {
             if (val[parts[i]] === undefined) {
                 if (defaultValue !== undefined) {
@@ -22853,9 +22868,8 @@ var Stave = /** @class */ (function (_super) {
     Stave.prototype.getBottomY = function () {
         var options = this.options;
         var spacing = options.spacing_between_lines_px;
-        var score_bottom = this.getYForLine(options.num_lines) +
+        return this.getYForLine(options.num_lines) +
             (options.space_below_staff_ln * spacing);
-        return score_bottom;
     };
     Stave.prototype.getBottomLineY = function () {
         return this.getYForLine(this.options.num_lines);
@@ -22865,8 +22879,7 @@ var Stave = /** @class */ (function (_super) {
         var options = this.options;
         var spacing = options.spacing_between_lines_px;
         var headroom = options.space_above_staff_ln;
-        var y = this.y + (line * spacing) + (headroom * spacing);
-        return y;
+        return this.y + (line * spacing) + (headroom * spacing);
     };
     Stave.prototype.getLineForY = function (y) {
         // Does the reverse of getYForLine - somewhat dumb and just calls
@@ -22888,8 +22901,7 @@ var Stave = /** @class */ (function (_super) {
         var options = this.options;
         var spacing = options.spacing_between_lines_px;
         var headroom = options.space_above_staff_ln;
-        var y = this.y + (headroom * spacing) + (5 * spacing) - (line * spacing);
-        return y;
+        return this.y + (headroom * spacing) + (5 * spacing) - (line * spacing);
     };
     Stave.prototype.getYForGlyphs = function () {
         return this.getYForLine(3);
@@ -24196,8 +24208,8 @@ var StaveLine = /** @class */ (function (_super) {
         ctx.save();
         this.applyLineStyle();
         // Cycle through each set of indices and draw lines
-        var start_position;
-        var end_position;
+        var start_position = undefined;
+        var end_position = undefined;
         this.first_indices.forEach(function (first_index, i) {
             var last_index = _this.last_indices[i];
             // Get initial coordinates for the start/end of the line
@@ -24354,12 +24366,14 @@ var StaveModifier = /** @class */ (function (_super) {
                 return true;
             },
             setStave: function () {
+                // do nothing
             },
             renderToStave: function () {
+                // do nothing
             },
             getMetrics: function () {
                 return { width: padding };
-            },
+            }
         };
     };
     StaveModifier.prototype.placeGlyphOnLine = function (glyph, stave, line, customShift) {
@@ -24455,7 +24469,7 @@ var isInnerNoteIndex = function (note, index) {
 };
 // Helper methods for rest positioning in ModifierContext.
 function shiftRestVertical(rest, note, dir) {
-    var delta = (note.isRest() ? 0.0 : 1.0) * dir;
+    var delta = (note.isrest ? 0.0 : 1.0) * dir;
     rest.line += delta;
     rest.maxLine += delta;
     rest.minLine += delta;
@@ -24749,7 +24763,7 @@ var StaveNote = /** @class */ (function (_super) {
         }
         state.right_shift += xShift;
     };
-    StaveNote.postFormat = function (notes) {
+    StaveNote.postFormat = function (notes, modifierCtx) {
         if (!notes)
             return false;
         notes.forEach(function (note) { return note.postFormat(); });
@@ -24823,7 +24837,7 @@ var StaveNote = /** @class */ (function (_super) {
                 }
             }
             lastLine = line;
-            var notehead = new notehead_1.NoteHead({
+            this.note_heads[i] = new notehead_1.NoteHead({
                 duration: this.duration,
                 note_type: this.noteType,
                 displaced: displaced,
@@ -24835,7 +24849,6 @@ var StaveNote = /** @class */ (function (_super) {
                 stem_down_x_offset: noteProps.stem_down_x_offset,
                 line: noteProps.line,
             });
-            this.note_heads[i] = notehead;
         }
     };
     // Automatically sets the stem direction based on the keys in the note
@@ -24848,8 +24861,7 @@ var StaveNote = /** @class */ (function (_super) {
         this.maxLine = this.keyProps[this.keyProps.length - 1].line;
         var MIDDLE_LINE = 3;
         var decider = (this.minLine + this.maxLine) / 2;
-        var stemDirection = decider < MIDDLE_LINE ? stem_1.Stem.UP : stem_1.Stem.DOWN;
-        return stemDirection;
+        return decider < MIDDLE_LINE ? stem_1.Stem.UP : stem_1.Stem.DOWN;
     };
     // Calculates and stores the properties for each key in the note
     StaveNote.prototype.calculateKeyProps = function () {
@@ -24911,8 +24923,8 @@ var StaveNote = /** @class */ (function (_super) {
         }
         var _a = this.getMetrics(), w = _a.width, modLeftPx = _a.modLeftPx, leftDisplacedHeadPx = _a.leftDisplacedHeadPx;
         var x = this.getAbsoluteX() - modLeftPx - leftDisplacedHeadPx;
-        var minY = 0;
-        var maxY = 0;
+        var minY;
+        var maxY;
         var halfLineSpacing = this.getStave().getSpacingBetweenLines() / 2;
         var lineSpacing = halfLineSpacing * 2;
         if (this.isRest()) {
@@ -25239,15 +25251,15 @@ var StaveNote = /** @class */ (function (_super) {
      * @property {number} highest_line the highest notehead line in traditional music line
      *  numbering (bottom line = 1, top line = 5)
      * @property {number} lowest_line the lowest notehead line
-     * @property {number|false} highest_displaced_line the highest staff line number
+     * @property {number|boolean} highest_displaced_line the highest staff line number
      *   for a displaced notehead
-     * @property {number|false} lowest_displaced_line
+     * @property {number|boolean} lowest_displaced_line
      * @property {number} highest_non_displaced_line
      * @property {number} lowest_non_displaced_line
      */
     /**
      * Get the staff line and y value for the highest & lowest noteheads
-     * @returns {noteHeadBounds}
+     * @returns {IStaveNoteHeadBounds}
      */
     StaveNote.prototype.getNoteHeadBounds = function () {
         // Top and bottom Y values for stem.
@@ -25391,9 +25403,9 @@ var StaveNote = /** @class */ (function (_super) {
                 : y_bottom - noteStemHeight - 2;
             // Draw the Flag
             ctx.openGroup('flag', null, { pointerBBox: true });
-            this.applyStyle(ctx, this.getFlagStyle() || false);
+            this.applyStyle(ctx, this.getFlagStyle() || undefined);
             this.flag.render(ctx, flagX, flagY);
-            this.restoreStyle(ctx, this.getFlagStyle() || false);
+            this.restoreStyle(ctx, this.getFlagStyle() || undefined);
             ctx.closeGroup();
         }
     };
@@ -25640,7 +25652,7 @@ var Repetition = /** @class */ (function (_super) {
         ctx.save();
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
         // Default to right symbol
-        var text_x = 0 + this.x_shift;
+        var text_x;
         var symbol_x = x + this.x_shift;
         if (this.symbol_type === Repetition.type.CODA_LEFT) {
             // Offset Coda text to right of stave beginning
@@ -26516,7 +26528,7 @@ var Stem = /** @class */ (function (_super) {
         var stem_x;
         var stem_y;
         var stem_direction = this.stem_direction;
-        var y_base_offset = 0;
+        var y_base_offset;
         if (stem_direction === Stem.DOWN) {
             // Down stems are rendered to the left of the head.
             stem_x = this.x_begin;
@@ -26714,8 +26726,7 @@ var StemmableNote = /** @class */ (function (_super) {
     StemmableNote.prototype.getStemX = function () {
         var x_begin = this.getAbsoluteX() + this.x_shift;
         var x_end = this.getAbsoluteX() + this.x_shift + this.getGlyphWidth();
-        var stem_x = this.stem_direction === stem_1.Stem.DOWN ? x_begin : x_end;
-        return stem_x;
+        return this.stem_direction === stem_1.Stem.DOWN ? x_begin : x_end;
     };
     // Get the `x` coordinate for the center of the glyph.
     // Used for `TabNote` stems and stemlets over rests
@@ -27551,14 +27562,14 @@ var SVGContext = /** @class */ (function () {
     // and style.height properties eventually to allow users to
     // apply responsive sizing attributes to the SVG.
     SVGContext.prototype.resize = function (width, height) {
-        this.width = width;
-        this.height = height;
+        this.width = +width;
+        this.height = +height;
         this.element.style.width = width;
         this.svg.style.width = width;
         this.svg.style.height = height;
         var attributes = {
-            width: width,
-            height: height,
+            width: +width,
+            height: +height,
         };
         this.applyAttributes(this.svg, attributes);
         this.scale(this.state.scale.x, this.state.scale.y);
@@ -27590,7 +27601,7 @@ var SVGContext = /** @class */ (function () {
         // Override for "x y w h" style:
         if (args.length === 1) {
             var viewBox = args[0];
-            this.svg.setAttribute('viewBox', viewBox);
+            this.svg.setAttribute('viewBox', viewBox.toString());
         }
         else {
             var xMin = args[0], yMin = args[1], width = args[2], height = args[3];
@@ -27771,7 +27782,7 @@ var SVGContext = /** @class */ (function () {
             radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' +
             x2 + ' ' + y2;
         if (!isNaN(this.pen.x) && !isNaN(this.pen.y)) {
-            this.peth += 'M' + this.pen.x + ' ' + this.pen.y;
+            this.path += 'M' + this.pen.x + ' ' + this.pen.y;
         }
     };
     SVGContext.prototype.closePath = function () {
@@ -27859,13 +27870,12 @@ var SVGContext = /** @class */ (function () {
         var width = bbox.width - widthCorrection;
         var height = bbox.height - 1.5;
         // Get non-protected copy:
-        var box = {
+        return {
             x: bbox.x,
             y: bbox.y,
             width: width,
             height: height,
         };
-        return box;
     };
     SVGContext.prototype.fillText = function (text, x, y) {
         if (!text || text.length <= 0) {
@@ -28770,7 +28780,7 @@ Flow.durationToTicks = function (duration) {
 };
 Flow.durationToTicks.durations = {
     '1/2': Flow.RESOLUTION * 2,
-    '1': Flow.RESOLUTION / 1,
+    '1': Flow.RESOLUTION,
     '2': Flow.RESOLUTION / 2,
     '4': Flow.RESOLUTION / 4,
     '8': Flow.RESOLUTION / 8,
@@ -30492,8 +30502,11 @@ var TextFont = /** @class */ (function () {
         TextFont.fontRegistry.forEach(function (font) {
             if (!hash[font.family]) {
                 hash[font.family] = {
-                    family: font.family, description: font.description,
-                    bold: font.bold, serifs: font.serifs, italic: font.italic
+                    family: font.family,
+                    description: font.description,
+                    bold: font.bold,
+                    serifs: font.serifs,
+                    italic: font.italic
                 };
             }
             else {
@@ -30534,19 +30547,18 @@ var TextFont = /** @class */ (function () {
     // Primarily we look for font family, also bold and italic attributes.  This
     // method will always return a fallback font if there are no matches.
     TextFont.getTextFontFromVexFontData = function (fd) {
-        var i = 0;
         var fallback = TextFont.fontRegistry[0];
         var candidates = [];
         var families = fd.family.split(',');
-        var _loop_1 = function () {
-            var famliy = families[i];
-            candidates = TextFont.fontRegistry.filter(function (font) { return font.family === famliy; });
+        var _loop_1 = function (i) {
+            var family = families[i];
+            candidates = TextFont.fontRegistry.filter(function (font) { return font.family === family; });
             if (candidates.length) {
                 return "break";
             }
         };
-        for (i = 0; i < families.length; ++i) {
-            var state_1 = _loop_1();
+        for (var i = 0; i < families.length; ++i) {
+            var state_1 = _loop_1(i);
             if (state_1 === "break")
                 break;
         }
@@ -31460,6 +31472,7 @@ var TimeSignature = /** @class */ (function (_super) {
         }); };
         var topStartX = (width - topWidth) / 2.0;
         var botStartX = (width - botWidth) / 2.0;
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         var that = this;
         glyph.renderToStave = function renderToStave(x) {
             var start_x = x + topStartX;
@@ -32138,8 +32151,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Vex = void 0;
-var Vex = function () { };
+exports.Vex = exports.GenericException = void 0;
+var Vex = {};
 exports.Vex = Vex;
 // Default log function sends all arguments to console.
 Vex.L = function (block, args) {
@@ -32148,19 +32161,27 @@ Vex.L = function (block, args) {
     var line = Array.prototype.slice.call(args).join(' ');
     window.console.log(block + ': ' + line);
 };
+var GenericException = /** @class */ (function (_super) {
+    __extends(GenericException, _super);
+    function GenericException(message, data) {
+        var _this = _super.call(this, message) || this;
+        _this.message = message;
+        _this.data = data;
+        return _this;
+    }
+    return GenericException;
+}(Error));
+exports.GenericException = GenericException;
 Vex.MakeException = function (name) {
     return /** @class */ (function (_super) {
-        __extends(GenericException, _super);
-        function GenericException(message, data) {
-            var _this = _super.call(this, message) || this;
-            _this.data = data;
+        __extends(class_1, _super);
+        function class_1(message, data) {
+            var _this = _super.call(this, message, data) || this;
             _this.name = name;
-            _this.message = message;
-            _this.data = data;
             return _this;
         }
-        return GenericException;
-    }(Error));
+        return class_1;
+    }(GenericException));
 };
 // Default runtime exception.
 var RuntimeError = /** @class */ (function () {
@@ -32213,7 +32234,7 @@ Vex.MidLine = function (a, b) {
 Vex.SortAndUnique = function (arr, cmp, eq) {
     if (arr.length > 1) {
         var newArr = [];
-        var last = void 0;
+        var last = undefined;
         arr.sort(cmp);
         for (var i = 0; i < arr.length; ++i) {
             if (i === 0 || !eq(arr[i], last)) {
@@ -32343,7 +32364,9 @@ var Vibrato = /** @class */ (function (_super) {
         return _this;
     }
     Object.defineProperty(Vibrato, "CATEGORY", {
-        get: function () { return 'vibratos'; },
+        get: function () {
+            return 'vibratos';
+        },
         enumerable: false,
         configurable: true
     });
@@ -32373,8 +32396,13 @@ var Vibrato = /** @class */ (function (_super) {
         state.top_text_line += 1;
         return true;
     };
-    Vibrato.prototype.getCategory = function () { return Vibrato.CATEGORY; };
-    Vibrato.prototype.setHarsh = function (harsh) { this.render_options.harsh = harsh; return this; };
+    Vibrato.prototype.getCategory = function () {
+        return Vibrato.CATEGORY;
+    };
+    Vibrato.prototype.setHarsh = function (harsh) {
+        this.render_options.harsh = harsh;
+        return this;
+    };
     Vibrato.prototype.setVibratoWidth = function (width) {
         this.render_options.vibrato_width = width;
         this.setWidth(width);
@@ -32483,6 +32511,13 @@ function L() {
 }
 var VibratoBracket = /** @class */ (function (_super) {
     __extends(VibratoBracket, _super);
+    // bracket_data = {
+    //   start: Vex.Flow.Note (optional)
+    //   stop: Vex.Flow.Note (optional)
+    // };
+    // Either the stop or start note must be set, or both of them.
+    // A null value for the start or stop note indicates that the vibrato
+    // is drawn from the beginning or until the end of the stave accordingly.
     function VibratoBracket(bracket_data) {
         var _this = _super.call(this) || this;
         _this.setAttribute('type', 'VibratoBracket');
@@ -32590,8 +32625,8 @@ var Voice = /** @class */ (function (_super) {
             var match = time.match(/(\d+)\/(\d+)/);
             if (match) {
                 time = {
-                    num_beats: match[1],
-                    beat_value: match[2],
+                    num_beats: +match[1],
+                    beat_value: +match[2],
                     resolution: tables_1.Flow.RESOLUTION,
                 };
             }
@@ -32603,7 +32638,7 @@ var Voice = /** @class */ (function (_super) {
             resolution: tables_1.Flow.RESOLUTION,
         }, time);
         // Recalculate total ticks.
-        _this.totalTicks = new fraction_1.Fraction(_this.time.num_beats * (_this.time.resolution / _this.time.beat_value), 1);
+        _this.totalTicks = typeof (_this.time) !== 'string' && new fraction_1.Fraction(_this.time.num_beats * (_this.time.resolution / _this.time.beat_value), 1);
         _this.resolutionMultiplier = 1;
         // Set defaults
         _this.tickables = [];
@@ -32668,6 +32703,9 @@ var Voice = /** @class */ (function (_super) {
     };
     // Get the actual tick resolution for the voice
     Voice.prototype.getActualResolution = function () {
+        if (typeof (this.time) === 'string') {
+            throw new vex_1.Vex.RERR('VoiceError', 'Time is of type string');
+        }
         return this.resolutionMultiplier * this.time.resolution;
     };
     // Set the voice's stave

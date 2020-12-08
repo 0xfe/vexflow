@@ -825,7 +825,7 @@ export class StaveNote extends StemmableNote {
   //
   // `style` is an `object` with the following properties: `shadowColor`,
   // `shadowBlur`, `fillStyle`, `strokeStyle`
-  setKeyStyle(index: number, style: string): this {
+  setKeyStyle(index: number, style: IStyle): this {
     this.note_heads[index].setStyle(style);
     return this;
   }

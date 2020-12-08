@@ -9,9 +9,10 @@
 import {Vex} from './vex';
 import {Registry} from './registry';
 import {Flow} from './tables';
-import {DrawContext, IStyle} from "./types/common";
+import {DrawContext} from "./types/common";
 import {BoundingBox} from "./boundingbox";
 import {Font} from "./smufl";
+import {IElementAttributes} from "./types/element";
 
 export class Element {
   static ID = 1000;
@@ -19,7 +20,7 @@ export class Element {
   context: DrawContext;
   rendered: boolean;
   style: any;
-  attrs: Record<string, any>;
+  attrs: IElementAttributes;
   boundingBox: BoundingBox;
   fontStack: Font[];
   musicFont: Font;
@@ -29,7 +30,7 @@ export class Element {
     return 'auto' + (Element.ID++);
   }
 
-  constructor({type} = {} as any) {
+  constructor({type} = {} as IElementAttributes) {
     this.attrs = {
       id: Element.newID(),
       el: null,
@@ -66,7 +67,7 @@ export class Element {
     return this;
   }
 
-  getStyle(): IStyle {
+  getStyle(): any {
     return this.style;
   }
 
@@ -147,7 +148,7 @@ export class Element {
     return this;
   }
 
-  getAttributes(): Record<string, any> {
+  getAttributes(): IElementAttributes {
     return this.attrs;
   }
 
