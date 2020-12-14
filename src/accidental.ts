@@ -185,7 +185,7 @@ export class Accidental extends Modifier {
       const notColliding = (...indexPairs: number[][]) =>
         indexPairs
           .map(getGroupLines)
-          .every((lines: never[]) => !this.checkCollision(...lines));
+          .every(([line1, line2]) => !this.checkCollision(line1, line2));
 
       // Set columns for the lines in this group:
       const groupLength = groupEnd - groupStart + 1;
@@ -320,7 +320,7 @@ export class Accidental extends Modifier {
   }
 
   // Helper function to determine whether two lines of accidentals collide vertically
-  static checkCollision(line1?: ILine, line2?: ILine): boolean {
+  static checkCollision(line1: ILine, line2: ILine): boolean {
     let clearance = line2.line - line1.line;
     let clearanceRequired: number;
     // But less clearance is required for certain accidentals: b, bb and ##.
