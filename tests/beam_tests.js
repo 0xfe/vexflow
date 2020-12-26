@@ -3,7 +3,6 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-
 /*
 eslint-disable
 no-var,
@@ -507,7 +506,6 @@ VF.Test.Beam = (function() {
 
       ok(true, 'All objects have been drawn');
     },
-
 
     autoTabBeams: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 200);

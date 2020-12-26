@@ -203,7 +203,6 @@ VF.Test.Stave = (function() {
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
-
       // bar 2 - juxtaposing second bar next to first bar
       var staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x,
         staveBar1.y, 250);

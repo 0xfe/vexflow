@@ -78,7 +78,6 @@ export class Glyph extends Element {
     return { glyph, font };
   }
 
-
   static loadMetrics(fontStack, code, category = null) {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 

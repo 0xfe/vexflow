@@ -94,7 +94,6 @@ export class Note extends Tickable {
     let type = noteStruct.type;
     if (type && !Flow.getGlyphProps.validTypes[type]) { return null; }
 
-
     // If no type specified, check duration or custom types
     if (!type) {
       type = durationProps.type || 'n';
@@ -134,7 +133,6 @@ export class Note extends Tickable {
       ticks,
     };
   }
-
 
   // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
   // positioning and layout.
