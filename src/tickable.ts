@@ -8,7 +8,6 @@ import {Vex} from './vex';
 import {Element} from './element';
 import {Flow} from './tables';
 import {Fraction} from './fraction';
-import {IDuration} from "./types/common";
 import {Voice} from "./voice";
 import {Tuplet} from "./tuplet";
 import {ModifierContext} from "./modifiercontext";
@@ -283,7 +282,7 @@ export class Tickable extends Element {
     this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
   }
 
-  setDuration(duration: IDuration): void {
+  setDuration(duration: Fraction): void {
     const ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();

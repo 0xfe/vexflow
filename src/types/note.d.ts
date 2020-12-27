@@ -1,6 +1,6 @@
-import {IDuration} from "./common";
 import {Note} from "../note";
 import {IFont} from "./font";
+import {Fraction} from "../fraction";
 
 export interface INoteValue {
   index: number;
@@ -33,7 +33,7 @@ export interface INoteStruct {
   keys: string[];
   type: string;
   align_center: boolean;
-  duration_override: IDuration;
+  duration_override: Fraction;
   duration: string;
 }
 
@@ -84,7 +84,7 @@ export interface IStaveNoteStruct {
   index: number;
   line: number;
   align_center: boolean;
-  duration_override: IDuration;
+  duration_override: Fraction;
   slash: boolean;
   stroke_px: number;
   glyph_font_scale: number;

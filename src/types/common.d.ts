@@ -164,12 +164,6 @@ export interface ILayoutMetrics {
   paddingRight: number;
 }
 
-export interface IDuration {
-  denominator: number;
-  numerator: number;
-}
-
-
 export interface IDurationCode {
   common: IType;
   type: Record<string, IType>;
