@@ -324,7 +324,10 @@ var Accidental = /** @class */ (function (_super) {
                 }
                 return indexPairs
                     .map(getGroupLines)
-                    .every(function (lines) { return !_this.checkCollision.apply(_this, lines); });
+                    .every(function (_a) {
+                    var line1 = _a[0], line2 = _a[1];
+                    return !_this.checkCollision(line1, line2);
+                });
             };
             // Set columns for the lines in this group:
             var groupLength = groupEnd - groupStart + 1;
@@ -4599,60 +4602,24 @@ var Grammar = /** @class */ (function () {
             or: true,
         };
     };
-    Grammar.prototype.KEY = function () {
-        return { token: '[a-zA-Z][a-zA-Z0-9]*' };
-    };
-    Grammar.prototype.DVAL = function () {
-        return { token: '["][^"]*["]' };
-    };
-    Grammar.prototype.SVAL = function () {
-        return { token: "['][^']*[']" };
-    };
-    Grammar.prototype.NOTENAME = function () {
-        return { token: '[a-gA-G]' };
-    };
-    Grammar.prototype.OCTAVE = function () {
-        return { token: '[0-9]+' };
-    };
-    Grammar.prototype.ACCIDENTALS = function () {
-        return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' };
-    };
-    Grammar.prototype.DURATIONS = function () {
-        return { token: '[0-9whq]+' };
-    };
-    Grammar.prototype.TYPES = function () {
-        return { token: '[rRsSxX]' };
-    };
-    Grammar.prototype.LPAREN = function () {
-        return { token: '[(]' };
-    };
-    Grammar.prototype.RPAREN = function () {
-        return { token: '[)]' };
-    };
-    Grammar.prototype.COMMA = function () {
-        return { token: '[,]' };
-    };
-    Grammar.prototype.DOT = function () {
-        return { token: '[.]' };
-    };
-    Grammar.prototype.SLASH = function () {
-        return { token: '[/]' };
-    };
-    Grammar.prototype.MAYBESLASH = function () {
-        return { token: '[/]?' };
-    };
-    Grammar.prototype.EQUALS = function () {
-        return { token: '[=]' };
-    };
-    Grammar.prototype.LBRACKET = function () {
-        return { token: '\\[' };
-    };
-    Grammar.prototype.RBRACKET = function () {
-        return { token: '\\]' };
-    };
-    Grammar.prototype.EOL = function () {
-        return { token: '$' };
-    };
+    Grammar.prototype.KEY = function () { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; };
+    Grammar.prototype.DVAL = function () { return { token: '["][^"]*["]' }; };
+    Grammar.prototype.SVAL = function () { return { token: "['][^']*[']" }; };
+    Grammar.prototype.NOTENAME = function () { return { token: '[a-gA-G]' }; };
+    Grammar.prototype.OCTAVE = function () { return { token: '[0-9]+' }; };
+    Grammar.prototype.ACCIDENTALS = function () { return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' }; };
+    Grammar.prototype.DURATIONS = function () { return { token: '[0-9whq]+' }; };
+    Grammar.prototype.TYPES = function () { return { token: '[rRsSxX]' }; };
+    Grammar.prototype.LPAREN = function () { return { token: '[(]' }; };
+    Grammar.prototype.RPAREN = function () { return { token: '[)]' }; };
+    Grammar.prototype.COMMA = function () { return { token: '[,]' }; };
+    Grammar.prototype.DOT = function () { return { token: '[.]' }; };
+    Grammar.prototype.SLASH = function () { return { token: '[/]' }; };
+    Grammar.prototype.MAYBESLASH = function () { return { token: '[/]?' }; };
+    Grammar.prototype.EQUALS = function () { return { token: '[=]' }; };
+    Grammar.prototype.LBRACKET = function () { return { token: '\\[' }; };
+    Grammar.prototype.RBRACKET = function () { return { token: '\\]' }; };
+    Grammar.prototype.EOL = function () { return { token: '$' }; };
     return Grammar;
 }());
 exports.Grammar = Grammar;
@@ -25490,15 +25457,13 @@ var StaveNote = /** @class */ (function (_super) {
         var stemX = this.getStemX();
         this.stem.setNoteHeadXBounds(stemX, stemX);
         L('Rendering ', this.isChord() ? 'chord :' : 'note :', this.keys);
-        // Draw each part of the note
-        this.drawLedgerLines();
         // Apply the overall style -- may be contradicted by local settings:
         this.applyStyle();
         this.setAttribute('el', this.context.openGroup('stavenote', this.getAttribute('id')));
+        this.drawLedgerLines();
         this.context.openGroup('note', null, { pointerBBox: true });
-        if (shouldRenderStem) {
+        if (shouldRenderStem)
             this.drawStem();
-        }
         this.drawNoteHeads();
         this.drawFlag();
         this.context.closeGroup();
