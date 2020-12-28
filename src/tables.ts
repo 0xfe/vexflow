@@ -46,7 +46,7 @@ const Flow = {
   IsKerned: true,
 } as IFlow;
 
-Flow.clefProperties = function (clef) {
+Flow.clefProperties = function(clef: string) {
   if (!clef) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
 
   const props = Flow.clefProperties.values[clef];
