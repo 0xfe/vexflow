@@ -104,7 +104,6 @@ VF.Test.KeySignature = (function() {
         keySig.addToStave(stave2);
       }
 
-
       stave.setContext(ctx);
       stave.draw();
       stave2.setContext(ctx);

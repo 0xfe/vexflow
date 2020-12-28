@@ -488,7 +488,6 @@ export class Formatter {
     // No justification needed. End formatting.
     if (justifyWidth <= 0) return this.evaluate();
 
-
     // Start justification. Subtract the right extra pixels of the final context because the formatter
     // justifies based on the context's X position, which is the left-most part of the note head.
     const firstContext = contextMap[contextList[0]];

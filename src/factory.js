@@ -606,7 +606,6 @@ export class Factory {
     return textFont;
   }
 
-
   draw() {
     this.systems.forEach(i => i.setContext(this.context).format());
     this.staves.forEach(i => i.setContext(this.context).draw());

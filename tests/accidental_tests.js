@@ -296,7 +296,6 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 250);
       Vex.Flow.Test.plotLegendForNoteWidth(ctx, 350, 150);
 
-
       ok(true, 'Full Accidental');
     },
 

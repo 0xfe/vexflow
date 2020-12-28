@@ -280,7 +280,6 @@ function setId({ id }, note) {
   note.setAttribute('id', id);
 }
 
-
 function setClass(options, note) {
   if (!options.class) return;
 

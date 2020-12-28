@@ -40,7 +40,6 @@ export class ChordSymbol extends Modifier {
     };
   }
 
-
   static get verticalJustify() {
     return {
       TOP: 1,
@@ -442,7 +441,6 @@ export class ChordSymbol extends Modifier {
     const kernConst = ChordSymbol.kerningOffset * this.pointsToPixels;
     const prevSymbol = j > 0 ? this.symbolBlocks[j - 1] : null;
     let rv = 0;
-
 
     // Move things into the '/' over bar
     if (symbol.symbolType === ChordSymbol.symbolTypes.GLYPH &&

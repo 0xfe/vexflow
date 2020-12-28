@@ -209,7 +209,6 @@ VF.Test.StaveNote = (function() {
         });
     },
 
-
     setStemDirectionDisplacement: function() {
       function getDisplacements(note) {
         return note.note_heads.map(function(notehead) {
@@ -871,7 +870,6 @@ VF.Test.StaveNote = (function() {
 
       ok(true, 'Full Dot');
     },
-
 
     dotsAndFlagsStemDown: function(options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 800, 160);

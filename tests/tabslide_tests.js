@@ -45,7 +45,6 @@ VF.Test.TabSlide = (function() {
       return { context: ctx, stave: stave };
     },
 
-
     simple: function(options, contextBuilder) {
       options.contextBuilder = contextBuilder;
       var c = VF.Test.TabSlide.setupContext(options);

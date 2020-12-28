@@ -258,7 +258,6 @@ function multistave(el, iterations, params) {
     formatter.tune({ alpha: options.alpha });
   }
 
-
   vf.Beam({ notes: notes32.slice(0, 3) });
   vf.Beam({ notes: notes32.slice(3, 6) });
 

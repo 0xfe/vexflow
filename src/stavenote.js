@@ -1110,7 +1110,6 @@ export class StaveNote extends StemmableNote {
     this.context.closeGroup();
   }
 
-
   /**
    * Override stemmablenote stem extension to adjust for distance from middle line.
    */
@@ -1176,12 +1175,10 @@ export class StaveNote extends StemmableNote {
 
     L('Rendering ', this.isChord() ? 'chord :' : 'note :', this.keys);
 
-    // Draw each part of the note
-    this.drawLedgerLines();
-
     // Apply the overall style -- may be contradicted by local settings:
     this.applyStyle();
     this.setAttribute('el', this.context.openGroup('stavenote', this.getAttribute('id')));
+    this.drawLedgerLines();
     this.context.openGroup('note', null, { pointerBBox: true });
     if (shouldRenderStem) this.drawStem();
     this.drawNoteHeads();

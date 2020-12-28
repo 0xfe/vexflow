@@ -64,7 +64,6 @@ VF.Test.Clef = (function() {
       ok(true, 'all pass');
     },
 
-
     drawSmall: function(options) {
       var vf = VF.Test.makeFactory(options, 800, 120);
 

@@ -336,7 +336,6 @@ export class Beam extends Element {
       return uniqueTuplets;
     }
 
-
     // Using closures to store the variables throughout the various functions
     // IMO Keeps it this process lot cleaner - but not super consistent with
     // the rest of the API's style - Silverwolf90 (Cyril)
