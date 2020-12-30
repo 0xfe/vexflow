@@ -8,9 +8,6 @@
 // and a "key" refers to a specific pitch/notehead within a note.*
 //
 // See `tests/stavenote_tests.js` for usage examples.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {BoundingBox} from './boundingbox';
 import {Stem} from './stem';
 import {NoteHead} from './notehead';
@@ -33,10 +30,20 @@ import {IStaveNoteFormatSettings, IStaveNoteGetModifierStartXYOptions, IStaveNot
 import {IStemStruct} from "./types/stem";
 import {TickContext} from "./tickcontext";
 import {ModifierClass} from "./types/modifiercontext";
+import {RuntimeError} from "./runtimeerror";
+import {
+  DEFAULT_NOTATION_FONT_SCALE,
+  durationToFraction,
+  getGlyphProps,
+  keyProperties,
+  LOG,
+  Merge,
+  MidLine, WARN
+} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (StaveNote.DEBUG) Vex.L('Vex.Flow.StaveNote', args);
+  if (StaveNote.DEBUG) LOG('Vex.Flow.StaveNote', args);
 }
 
 const getStemAdjustment = (note: StaveNote) => Stem.WIDTH / (2 * -note.getStemDirection());
@@ -56,7 +63,7 @@ function shiftRestVertical(rest: IStaveNoteFormatSettings, note: IStaveNoteForma
 
 // Called from formatNotes :: center a rest between two notes
 function centerRest(rest: IStaveNoteFormatSettings, noteU: IStaveNoteFormatSettings, noteL: IStaveNoteFormatSettings) {
-  const delta = rest.line - Vex.MidLine(noteU.minLine, noteL.maxLine);
+  const delta = rest.line - MidLine(noteU.minLine, noteL.maxLine);
   rest.note.setKeyLine(0, rest.note.getKeyLine(0) - delta);
   rest.line -= delta;
   rest.maxLine -= delta;
@@ -288,7 +295,7 @@ export class StaveNote extends StemmableNote {
     }
 
     if (!hasStave) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'Stave Missing',
         'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!'
       );
@@ -353,10 +360,10 @@ export class StaveNote extends StemmableNote {
     this.beam = null;
 
     // Pull note rendering properties
-    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
+    this.glyph = getGlyphProps(this.duration, this.noteType);
 
     if (!this.glyph) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments',
         `Invalid note initialization data (No glyph found): ${JSON.stringify(noteStruct)}`
       );
@@ -374,9 +381,9 @@ export class StaveNote extends StemmableNote {
     this.note_heads = [];
     this.modifiers = [];
 
-    Vex.Merge(this.render_options, {
+    Merge(this.render_options, {
       // font size for note heads and rests
-      glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+      glyph_font_scale: noteStruct.glyph_font_scale || DEFAULT_NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
       stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET,
     } as INoteRenderOptions);
@@ -512,10 +519,10 @@ export class StaveNote extends StemmableNote {
       if ((this.glyph as IGlyphProps).rest) (this.glyph as IGlyphProps).position = key;
 
       const options = {octave_shift: this.octave_shift || 0} as IKeyPropertiesParams;
-      const props = Flow.keyProperties(key, this.clef, options);
+      const props = keyProperties(key, this.clef, options);
 
       if (!props) {
-        throw new Vex.RuntimeError('BadArguments', `Invalid key for note properties: ${key}`);
+        throw new RuntimeError('BadArguments', `Invalid key for note properties: ${key}`);
       }
 
       // Override line placement for default rests
@@ -552,7 +559,7 @@ export class StaveNote extends StemmableNote {
     lastLine = -Infinity;
     this.keyProps.forEach(key => {
       if (key.line < lastLine) {
-        Vex.W(
+        WARN(
           'Unsorted keys in note will be sorted. ' +
           'See https://github.com/0xfe/vexflow/issues/104 for details.'
         );
@@ -565,7 +572,7 @@ export class StaveNote extends StemmableNote {
   // Get the `BoundingBox` for the entire note
   getBoundingBox(): BoundingBox {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+      throw new RuntimeError('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
     }
 
     const {width: w, modLeftPx, leftDisplacedHeadPx} = this.getMetrics();
@@ -578,7 +585,7 @@ export class StaveNote extends StemmableNote {
 
     if (this.isRest()) {
       const y = this.ys[0];
-      const frac = Flow.durationToFraction(this.duration);
+      const frac = durationToFraction(this.duration);
       if (frac.equals(1) || frac.equals(2)) {
         minY = y - halfLineSpacing;
         maxY = y + halfLineSpacing;
@@ -616,7 +623,7 @@ export class StaveNote extends StemmableNote {
   // If `isTopNote` is `true` then get the top note's line number instead
   getLineNumber(isTopNote?: boolean): number {
     if (!this.keyProps.length) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'NoKeyProps', "Can't get bottom note line, because note is not initialized properly."
       );
     }
@@ -746,7 +753,7 @@ export class StaveNote extends StemmableNote {
       const lastLine = this.keyProps[this.keyProps.length - 1].line;
       const top = Math.max(restLine, lastLine);
       const bot = Math.min(restLine, lastLine);
-      restLine = Vex.MidLine(top, bot);
+      restLine = MidLine(top, bot);
     }
 
     return restLine;
@@ -757,11 +764,11 @@ export class StaveNote extends StemmableNote {
   getModifierStartXY(position?: number, index?: number, options?: IStaveNoteGetModifierStartXYOptions): ICoordinates {
     options = options || {} as IStaveNoteGetModifierStartXYOptions;
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+      throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
 
     if (this.ys.length === 0) {
-      throw new Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
+      throw new RuntimeError('NoYValues', 'No Y-Values calculated for this note.');
     }
 
     const {ABOVE, BELOW, LEFT, RIGHT} = Modifier.Position;
@@ -1054,7 +1061,7 @@ export class StaveNote extends StemmableNote {
 
     if (this.isRest()) return;
     if (!ctx) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+      throw new RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
     }
 
     const {
@@ -1106,7 +1113,7 @@ export class StaveNote extends StemmableNote {
   // Draw all key modifiers
   drawModifiers(): void {
     if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+      throw new RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
     }
 
     const ctx = this.context;
@@ -1128,7 +1135,7 @@ export class StaveNote extends StemmableNote {
     const {stem, beam, context: ctx} = this;
 
     if (!ctx) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+      throw new RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
     }
 
     const shouldRenderFlag = beam === null;
@@ -1168,7 +1175,7 @@ export class StaveNote extends StemmableNote {
     // argument in the codebase or tests. Nor can I find a case where super.drawStem
     // is called at all. Perhaps these should be removed?
     if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+      throw new RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
     }
 
     if (stemStruct) {
@@ -1224,13 +1231,13 @@ export class StaveNote extends StemmableNote {
   // Draws all the `StaveNote` parts. This is the main drawing method.
   draw(): void {
     if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+      throw new RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
     }
     if (!this.stave) {
-      throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+      throw new RuntimeError('NoStave', "Can't draw without a stave.");
     }
     if (this.ys.length === 0) {
-      throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
+      throw new RuntimeError('NoYValues', "Can't draw note without Y values.");
     }
 
     const xBegin = this.getNoteHeadBeginX();

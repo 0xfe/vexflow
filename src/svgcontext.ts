@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Gregory Ristow (2015)
-
-import {Vex} from './vex';
 import {ICoordinates} from "./types/common";
 import {ISVGAttributesStackItem, ISVGContextAttributes, ISVGIgnoreAttributes} from "./types/svgcontext";
+import {RuntimeError} from "./runtimeerror";
+import {Merge, Prefix} from "./flow";
 
 const attrNamesToIgnoreMap = {
   path: {
@@ -27,8 +27,8 @@ const attrNamesToIgnoreMap = {
     'font-size': true,
   } as ISVGIgnoreAttributes;
 
-  Vex.Merge(attrNamesToIgnoreMap.rect, fontAttrNamesToIgnore);
-  Vex.Merge(attrNamesToIgnoreMap.path, fontAttrNamesToIgnore);
+  Merge(attrNamesToIgnoreMap.rect, fontAttrNamesToIgnore);
+  Merge(attrNamesToIgnoreMap.path, fontAttrNamesToIgnore);
 }
 
 export class SVGContext {
@@ -119,8 +119,8 @@ export class SVGContext {
     this.groups.push(group);
     this.parent.appendChild(group);
     this.parent = group;
-    if (cls) group.setAttribute('class', Vex.Prefix(cls));
-    if (id) group.setAttribute('id', Vex.Prefix(id));
+    if (cls) group.setAttribute('class', Prefix(cls));
+    if (id) group.setAttribute('id', Prefix(id));
 
     if (attrs && attrs.pointerBBox) {
       group.setAttribute('pointer-events', 'bounding-box');
@@ -192,8 +192,8 @@ export class SVGContext {
     // Explorer we can fix its calculations of text width.
     this.fontSize = Number(size);
 
-    Vex.Merge(this.attributes, fontAttributes);
-    Vex.Merge(this.state, fontAttributes);
+    Merge(this.attributes, fontAttributes);
+    Merge(this.state, fontAttributes);
 
     return this;
   }
@@ -253,7 +253,7 @@ export class SVGContext {
       this.attributes['stroke-dasharray'] = lineDash;
       return this;
     } else {
-      throw new Vex.RERR('ArgumentError', 'lineDash must be an array of integers.');
+      throw new RuntimeError('ArgumentError', 'lineDash must be an array of integers.');
     }
   }
 
@@ -320,7 +320,6 @@ export class SVGContext {
   }
 
   // ### Drawing helper methods:
-
   applyAttributes(element: SVGElement, attributes: ISVGContextAttributes): SVGElement {
     const attrNamesToIgnore = attrNamesToIgnoreMap[element.nodeName];
     Object
@@ -376,7 +375,7 @@ export class SVGContext {
       } as ISVGContextAttributes;
     }
 
-    Vex.Merge(attributes, {
+    Merge(attributes, {
       x,
       y,
       width,
@@ -565,7 +564,7 @@ export class SVGContext {
     const path = this.create('path');
     if (typeof attributes === 'undefined') {
       attributes = {} as ISVGContextAttributes;
-      Vex.Merge(attributes, this.attributes);
+      Merge(attributes, this.attributes);
       attributes.stroke = 'none';
     }
 
@@ -582,7 +581,7 @@ export class SVGContext {
 
     const path = this.create('path');
     const attributes = {} as ISVGContextAttributes;
-    Vex.Merge(attributes, this.attributes);
+    Merge(attributes, this.attributes);
     attributes.fill = 'none';
     attributes['stroke-width'] = this.lineWidth;
     attributes.d = this.path;
@@ -643,7 +642,7 @@ export class SVGContext {
       return;
     }
     const attributes = {} as ISVGContextAttributes;
-    Vex.Merge(attributes, this.attributes);
+    Merge(attributes, this.attributes);
     attributes.stroke = 'none';
     attributes.x = x;
     attributes.y = y;

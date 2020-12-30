@@ -3,10 +3,10 @@
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
-	else {
-		var a = factory();
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
+	else if(typeof exports === 'object')
+		exports["Vex"] = factory();
+	else
+		root["Vex"] = factory();
 })(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -116,16 +116,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// @author Mohit Cheppudira
-// @author Greg Ristow (modifications)
-//
-// ## Description
-//
-// This file implements accidentals as modifiers that can be attached to
-// notes. Support is included for both western and microtonal accidentals.
-//
-// See `tests/accidental_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -141,12 +131,23 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Accidental = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// @author Mohit Cheppudira
+// @author Greg Ristow (modifications)
+//
+// ## Description
+//
+// This file implements accidentals as modifiers that can be attached to
+// notes. Support is included for both western and microtonal accidentals.
+//
+// See `tests/accidental_tests.js` for usage examples.
 var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var music_1 = __webpack_require__(/*! ./music */ "./src/music.ts");
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -154,7 +155,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Accidental.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Accidental', args);
+        flow_1.LOG('Vex.Flow.Accidental', args);
 }
 var getGlyphWidth = function (glyph) { return glyph.getMetrics().width; };
 // An `Accidental` inherits from `Modifier`, and is formatted within a
@@ -162,7 +163,7 @@ var getGlyphWidth = function (glyph) { return glyph.getMetrics().width; };
 var Accidental = /** @class */ (function (_super) {
     __extends(Accidental, _super);
     // Create accidental. `type` can be a value from the
-    // `Vex.Flow.accidentalCodes.accidentals` table in `tables.js`. For
+    // `ACCIDENTALS` table in `tables.ts`. For
     // example: `#`, `##`, `b`, `n`, etc.
     function Accidental(type) {
         if (type === void 0) { type = null; }
@@ -183,9 +184,9 @@ var Accidental = /** @class */ (function (_super) {
             parenLeftPadding: 2,
             parenRightPadding: 2,
         };
-        _this.accidental = tables_1.Flow.accidentalCodes(_this.type);
+        _this.accidental = flow_1.accidentalCodes(_this.type);
         if (!_this.accidental) {
-            throw new vex_1.Vex.RERR('ArgumentError', "Unknown accidental type: " + type);
+            throw new runtimeerror_1.RuntimeError('ArgumentError', "Unknown accidental type: " + type);
         }
         // Cautionary accidentals have parentheses around them
         _this.cautionary = false;
@@ -392,7 +393,7 @@ var Accidental = /** @class */ (function (_super) {
             }
             else {
                 for (groupMember = i; groupMember <= groupEnd; groupMember++) {
-                    column = tables_1.Flow.accidentalColumnsTable[groupLength][endCase][groupMember - i];
+                    column = tables_1.ACCIDENTAL_COLUMNS_TABLE[groupLength][endCase][groupMember - i];
                     lineList[groupMember].column = column;
                     totalColumns = (totalColumns > column) ? totalColumns : column;
                 }
@@ -555,8 +556,8 @@ var Accidental = /** @class */ (function (_super) {
         this.glyph = new glyph_1.Glyph(this.accidental.code, fontScale);
         this.glyph.setOriginX(1.0);
         if (this.cautionary) {
-            this.parenLeft = new glyph_1.Glyph(tables_1.Flow.accidentalCodes('{').code, fontScale);
-            this.parenRight = new glyph_1.Glyph(tables_1.Flow.accidentalCodes('}').code, fontScale);
+            this.parenLeft = new glyph_1.Glyph(flow_1.accidentalCodes('{').code, fontScale);
+            this.parenRight = new glyph_1.Glyph(flow_1.accidentalCodes('}').code, fontScale);
             this.parenLeft.setOriginX(1.0);
             this.parenRight.setOriginX(1.0);
         }
@@ -576,7 +577,7 @@ var Accidental = /** @class */ (function (_super) {
     // Attach this accidental to `note`, which must be a `StaveNote`.
     Accidental.prototype.setNote = function (note) {
         if (!note) {
-            throw new vex_1.Vex.RERR('ArgumentError', "Bad note value: " + note);
+            throw new runtimeerror_1.RuntimeError('ArgumentError', "Bad note value: " + note);
         }
         this.note = note;
         // Accidentals attached to grace notes are rendered smaller.
@@ -598,7 +599,7 @@ var Accidental = /** @class */ (function (_super) {
         var _a = this, context = _a.context, type = _a.type, position = _a.position, note = _a.note, index = _a.index, cautionary = _a.cautionary, x_shift = _a.x_shift, y_shift = _a.y_shift, glyph = _a.glyph, parenLeft = _a.parenLeft, parenRight = _a.parenRight, _b = _a.render_options, parenLeftPadding = _b.parenLeftPadding, parenRightPadding = _b.parenRightPadding;
         this.checkContext();
         if (!(note && (index != null))) {
-            throw new vex_1.Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw accidental without a note and index.");
         }
         // Figure out the start `x` and `y` coordinates for note and index.
         var start = note.getModifierStartXY(position, index);
@@ -637,14 +638,6 @@ exports.Accidental = Accidental;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements text annotations as modifiers that can be attached to
-// notes.
-//
-// See `tests/annotation_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -659,10 +652,18 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Annotation = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+exports.Annotation = exports.VerticalJustify = exports.Justify = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements text annotations as modifiers that can be attached to
+// notes.
+//
+// See `tests/annotation_tests.js` for usage examples.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -670,8 +671,22 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Annotation.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Annotation', args);
+        flow_1.LOG('Vex.Flow.Annotation', args);
 }
+var Justify;
+(function (Justify) {
+    Justify[Justify["LEFT"] = 1] = "LEFT";
+    Justify[Justify["CENTER"] = 2] = "CENTER";
+    Justify[Justify["RIGHT"] = 3] = "RIGHT";
+    Justify[Justify["CENTER_STEM"] = 4] = "CENTER_STEM";
+})(Justify = exports.Justify || (exports.Justify = {}));
+var VerticalJustify;
+(function (VerticalJustify) {
+    VerticalJustify[VerticalJustify["TOP"] = 1] = "TOP";
+    VerticalJustify[VerticalJustify["CENTER"] = 2] = "CENTER";
+    VerticalJustify[VerticalJustify["BOTTOM"] = 3] = "BOTTOM";
+    VerticalJustify[VerticalJustify["CENTER_STEM"] = 4] = "CENTER_STEM";
+})(VerticalJustify = exports.VerticalJustify || (exports.VerticalJustify = {}));
 var Annotation = /** @class */ (function (_super) {
     __extends(Annotation, _super);
     // ## Prototype Methods
@@ -693,7 +708,7 @@ var Annotation = /** @class */ (function (_super) {
             weight: '',
         };
         // The default width is calculated from the text.
-        _this.setWidth(tables_1.Flow.textWidth(text));
+        _this.setWidth(flow_1.textWidth(text));
         return _this;
     }
     Object.defineProperty(Annotation, "CATEGORY", {
@@ -706,12 +721,7 @@ var Annotation = /** @class */ (function (_super) {
     Object.defineProperty(Annotation, "Justify", {
         // Text annotations can be positioned and justified relative to the note.
         get: function () {
-            return {
-                LEFT: 1,
-                CENTER: 2,
-                RIGHT: 3,
-                CENTER_STEM: 4,
-            };
+            return Justify;
         },
         enumerable: false,
         configurable: true
@@ -730,12 +740,7 @@ var Annotation = /** @class */ (function (_super) {
     });
     Object.defineProperty(Annotation, "VerticalJustify", {
         get: function () {
-            return {
-                TOP: 1,
-                CENTER: 2,
-                BOTTOM: 3,
-                CENTER_STEM: 4,
-            };
+            return VerticalJustify;
         },
         enumerable: false,
         configurable: true
@@ -806,7 +811,7 @@ var Annotation = /** @class */ (function (_super) {
     Annotation.prototype.draw = function () {
         this.checkContext();
         if (!this.note) {
-            throw new vex_1.Vex.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
+            throw new runtimeerror_1.RuntimeError('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
         }
         this.setRendered();
         var start = this.note.getModifierStartXY(modifier_1.Modifier.Position.ABOVE, this.index);
@@ -846,7 +851,7 @@ var Annotation = /** @class */ (function (_super) {
         if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
             // HACK: We need to compensate for the text's height since its origin
             // is bottom-right.
-            y = stave.getYForBottomText(this.text_line + tables_1.Flow.TEXT_HEIGHT_OFFSET_HACK);
+            y = stave.getYForBottomText(this.text_line + flow_1.TEXT_HEIGHT_OFFSET_HACK);
             if (has_stem) {
                 var stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
                 y = Math.max(y, stem_base + (spacing * (this.text_line + 2)));
@@ -888,16 +893,6 @@ exports.Annotation = Annotation;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Larry Kuhns.
-//
-// ## Description
-//
-// This file implements articulations and accents as modifiers that can be
-// attached to notes. The complete list of articulations is available in
-// `tables.js` under `Vex.Flow.articulationCodes`.
-//
-// See `tests/articulation_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -913,11 +908,21 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Articulation = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Larry Kuhns.
+//
+// ## Description
+//
+// This file implements articulations and accents as modifiers that can be
+// attached to notes. The complete list of articulations is available in
+// `tables.js` under `Vex.Flow.articulationCodes`.
+//
+// See `tests/articulation_tests.js` for usage examples.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -925,7 +930,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Articulation.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Articulation', args);
+        flow_1.LOG('Vex.Flow.Articulation', args);
 }
 var _a = modifier_1.Modifier.Position, ABOVE = _a.ABOVE, BELOW = _a.BELOW;
 var roundToNearestHalf = function (mathFn, value) { return mathFn(value / 0.5) * 0.5; };
@@ -992,7 +997,7 @@ var getTopY = function (note, textLine) {
         }
     }
     else {
-        throw new vex_1.Vex.RERR('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
+        throw new runtimeerror_1.RuntimeError('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
     }
 };
 var getBottomY = function (note, textLine) {
@@ -1026,7 +1031,7 @@ var getBottomY = function (note, textLine) {
         }
     }
     else {
-        throw new vex_1.Vex.RERR('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
+        throw new runtimeerror_1.RuntimeError('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
     }
 };
 // Gets the initial offset of the articulation from the y value of the starting position.
@@ -1153,9 +1158,9 @@ var Articulation = /** @class */ (function (_super) {
             .map(function (artic) { return note.addModifier(0, artic); });
     };
     Articulation.prototype.reset = function () {
-        this.articulation = tables_1.Flow.articulationCodes(this.type);
+        this.articulation = flow_1.articulationCodes(this.type);
         if (!this.articulation) {
-            throw new vex_1.Vex.RERR('ArgumentError', "Articulation not found: " + this.type);
+            throw new runtimeerror_1.RuntimeError('ArgumentError', "Articulation not found: " + this.type);
         }
         var code = (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
         this.glyph = new glyph_1.Glyph(code, this.render_options.font_scale);
@@ -1170,7 +1175,7 @@ var Articulation = /** @class */ (function (_super) {
         var _b = this, note = _b.note, index = _b.index, position = _b.position, glyph = _b.glyph, canSitBetweenLines = _b.articulation.between_lines, textLine = _b.text_line, ctx = _b.context;
         this.checkContext();
         if (!note || index == null) {
-            throw new vex_1.Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw Articulation without a note and index.");
         }
         this.setRendered();
         var stave = note.getStave();
@@ -1226,15 +1231,6 @@ exports.Articulation = Articulation;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// A `BarNote` is used to render bar lines (from `barline.js`). `BarNote`s can
-// be added to a voice and rendered in the middle of a stave. Since it has no
-// duration, it consumes no `tick`s, and is dealt with appropriately by the formatter.
-//
-// See `tests/barnote_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1250,9 +1246,19 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BarNote = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// A `BarNote` is used to render bar lines (from `barline.js`). `BarNote`s can
+// be added to a voice and rendered in the middle of a stave. Since it has no
+// duration, it consumes no `tick`s, and is dealt with appropriately by the formatter.
+//
+// See `tests/barnote_tests.js` for usage examples.
 var note_1 = __webpack_require__(/*! ./note */ "./src/note.ts");
 var stavebarline_1 = __webpack_require__(/*! ./stavebarline */ "./src/stavebarline.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -1260,7 +1266,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (BarNote.DEBUG)
-        vex_1.Vex.L('Vex.Flow.BarNote', args);
+        flow_1.LOG('Vex.Flow.BarNote', args);
 }
 var BarNote = /** @class */ (function (_super) {
     __extends(BarNote, _super);
@@ -1315,7 +1321,7 @@ var BarNote = /** @class */ (function (_super) {
     BarNote.prototype.draw = function () {
         this.checkContext();
         if (!this.stave)
-            throw new vex_1.Vex.RERR('NoStave', "Can't draw without a stave.");
+            throw new runtimeerror_1.RuntimeError('NoStave', "Can't draw without a stave.");
         L('Rendering bar line at: ', this.getAbsoluteX());
         var barline = new stavebarline_1.Barline(this.type);
         barline.setX(this.getAbsoluteX());
@@ -1338,11 +1344,6 @@ exports.BarNote = BarNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements `Beams` that span over a set of `StemmableNotes`.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1358,12 +1359,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Beam = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements `Beams` that span over a set of `StemmableNotes`.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
 var tuplet_1 = __webpack_require__(/*! ./tuplet */ "./src/tuplet.ts");
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 function calculateStemDirection(notes) {
     var lineSum = 0;
     notes.forEach(function (note) {
@@ -1395,15 +1401,15 @@ var Beam = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.setAttribute('type', 'Beam');
         if (!notes || notes === []) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'No notes provided for beam.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'No notes provided for beam.');
         }
         if (notes.length === 1) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Too few notes for beam.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Too few notes for beam.');
         }
         // Validate beam line, direction and ticks.
         _this.ticks = notes[0].getIntrinsicTicks();
-        if (_this.ticks >= tables_1.Flow.durationToTicks('4')) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Beams can only be applied to notes shorter than a quarter note.');
+        if (_this.ticks >= flow_1.durationToTicks('4')) {
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Beams can only be applied to notes shorter than a quarter note.');
         }
         var i; // shared iterator
         var note;
@@ -1546,9 +1552,9 @@ var Beam = /** @class */ (function (_super) {
         // Convert beam groups to tick amounts
         var tickGroups = config.groups.map(function (group) {
             if (!group.multiply) {
-                throw new vex_1.Vex.RuntimeError('InvalidBeamGroups', 'The beam groups must be an array of Vex.Flow.Fractions');
+                throw new runtimeerror_1.RuntimeError('InvalidBeamGroups', 'The beam groups must be an array of Vex.Flow.Fractions');
             }
-            return group.clone().multiply(tables_1.Flow.RESOLUTION, 1);
+            return group.clone().multiply(flow_1.RESOLUTION, 1);
         });
         var unprocessedNotes = notes;
         var currentTickGroup = 0;
@@ -1580,7 +1586,7 @@ var Beam = /** @class */ (function (_super) {
                 var ticksPerGroup = tickGroups[currentTickGroup].clone();
                 var totalTicks = getTotalTicks(currentGroup).add(currentGroupTotalTicks);
                 // Double the amount of ticks in a group, if it's an unbeamable tuplet
-                var unbeamable = tables_1.Flow.durationToNumber(unprocessedNote.duration) < 8;
+                var unbeamable = flow_1.durationToNumber(unprocessedNote.duration) < 8;
                 if (unbeamable && unprocessedNote.tuplet) {
                     ticksPerGroup.numerator *= 2;
                 }
@@ -1619,7 +1625,7 @@ var Beam = /** @class */ (function (_super) {
                 if (group.length > 1) {
                     var beamable_1 = true;
                     group.forEach(function (note) {
-                        if (note.getIntrinsicTicks() >= tables_1.Flow.durationToTicks('4')) {
+                        if (note.getIntrinsicTicks() >= flow_1.durationToTicks('4')) {
                             beamable_1 = false;
                         }
                     });
@@ -1737,7 +1743,7 @@ var Beam = /** @class */ (function (_super) {
                 beam.render_options.show_stemlets = true;
             }
             if (config.secondary_breaks) {
-                beam.render_options.secondary_break_ticks = tables_1.Flow.durationToTicks(config.secondary_breaks);
+                beam.render_options.secondary_break_ticks = flow_1.durationToTicks(config.secondary_breaks);
             }
             if (config.flat_beams === true) {
                 beam.render_options.flat_beams = true;
@@ -1928,10 +1934,10 @@ var Beam = /** @class */ (function (_super) {
         if (duration === '4') {
             return BEAM_LEFT;
         }
-        var lookup_duration = "" + tables_1.Flow.durationToNumber(duration) / 2;
-        var prev_note_gets_beam = prev_tick < tables_1.Flow.durationToTicks(lookup_duration);
-        var next_note_gets_beam = next_tick < tables_1.Flow.durationToTicks(lookup_duration);
-        var note_gets_beam = tick < tables_1.Flow.durationToTicks(lookup_duration);
+        var lookup_duration = "" + flow_1.durationToNumber(duration) / 2;
+        var prev_note_gets_beam = prev_tick < flow_1.durationToTicks(lookup_duration);
+        var next_note_gets_beam = next_tick < flow_1.durationToTicks(lookup_duration);
+        var note_gets_beam = tick < flow_1.durationToTicks(lookup_duration);
         if (prev_note_gets_beam && next_note_gets_beam && note_gets_beam) {
             return BEAM_BOTH;
         }
@@ -1945,7 +1951,7 @@ var Beam = /** @class */ (function (_super) {
     };
     // Get the x coordinates for the beam lines of specific `duration`
     Beam.prototype.getBeamLines = function (duration) {
-        var tick_of_duration = tables_1.Flow.durationToTicks(duration);
+        var tick_of_duration = flow_1.durationToTicks(duration);
         var beam_lines = [];
         var beam_started = false;
         var current_beam = null;
@@ -2139,11 +2145,6 @@ exports.Beam = Beam;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements tablature bends.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2159,9 +2160,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bend = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements tablature bends.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 /**
  @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
  @param release If true, render a release. (DEPRECATED)
@@ -2286,7 +2292,7 @@ var Bend = /** @class */ (function (_super) {
                 text_width = _this.context.measureText(text).width;
             }
             else {
-                text_width = tables_1.Flow.textWidth(text);
+                text_width = flow_1.textWidth(text);
             }
             return text_width;
         };
@@ -2299,7 +2305,7 @@ var Bend = /** @class */ (function (_super) {
             else {
                 var additional_width = (bend.type === Bend.UP) ?
                     this.render_options.bend_width : this.render_options.release_width;
-                bend.width = vex_1.Vex.Max(additional_width, measure_text(bend.text)) + 3;
+                bend.width = Math.max(additional_width, measure_text(bend.text)) + 3;
                 bend.draw_width = bend.width / 2;
                 total_width += bend.width;
             }
@@ -2311,7 +2317,7 @@ var Bend = /** @class */ (function (_super) {
         var _this = this;
         this.checkContext();
         if (!(this.note && (this.index != null))) {
-            throw new vex_1.Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
+            throw new runtimeerror_1.RuntimeError('NoNoteForBend', "Can't draw bend without a note or index.");
         }
         this.setRendered();
         var start = this.note.getModifierStartXY(modifier_1.Modifier.Position.RIGHT, this.index);
@@ -2638,15 +2644,9 @@ exports.BoundingBoxComputation = BoundingBoxComputation;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// A rendering context for the Raphael backend.
-//
-// Copyright Mohit Cheppudira 2010
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CanvasContext = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 /** @constructor */
 var CanvasContext = /** @class */ (function () {
     function CanvasContext(context) {
@@ -2686,7 +2686,7 @@ var CanvasContext = /** @class */ (function () {
     });
     CanvasContext.SanitizeCanvasDims = function (width, height) {
         if (Math.max(width, height) > this.CANVAS_BROWSER_SIZE_LIMIT) {
-            vex_1.Vex.W('Canvas dimensions exceed browser limit. Cropping to ' +
+            flow_1.WARN('Canvas dimensions exceed browser limit. Cropping to ' +
                 this.CANVAS_BROWSER_SIZE_LIMIT);
             if (width > this.CANVAS_BROWSER_SIZE_LIMIT) {
                 width = this.CANVAS_BROWSER_SIZE_LIMIT;
@@ -2834,15 +2834,6 @@ exports.CanvasContext = CanvasContext;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements chord symbols as modifiers that can be attached to
-// notes.  Chord symbols can contain multiple 'blocks' which can contain
-// text or glyphs with various positioning options.
-//
-// See `tests/chordsymbol_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2857,13 +2848,23 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChordSymbol = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+exports.ChordSymbol = exports.SymbolModifiers = exports.SymbolTypes = exports.VerticalJustify = exports.HorizontalJustify = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements chord symbols as modifiers that can be attached to
+// notes.  Chord symbols can contain multiple 'blocks' which can contain
+// text or glyphs with various positioning options.
+//
+// See `tests/chordsymbol_tests.js` for usage examples.
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var petalumascript_textmetrics_1 = __webpack_require__(/*! ./fonts/petalumascript_textmetrics */ "./src/fonts/petalumascript_textmetrics.ts");
 var robotoslab_textmetrics_1 = __webpack_require__(/*! ./fonts/robotoslab_textmetrics */ "./src/fonts/robotoslab_textmetrics.ts");
+var smufl_1 = __webpack_require__(/*! ./smufl */ "./src/smufl.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -2871,8 +2872,32 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (ChordSymbol.DEBUG)
-        vex_1.Vex.L('Vex.Flow.ChordSymbol', args);
+        flow_1.LOG('Vex.Flow.ChordSymbol', args);
 }
+var HorizontalJustify;
+(function (HorizontalJustify) {
+    HorizontalJustify[HorizontalJustify["LEFT"] = 1] = "LEFT";
+    HorizontalJustify[HorizontalJustify["CENTER"] = 2] = "CENTER";
+    HorizontalJustify[HorizontalJustify["RIGHT"] = 3] = "RIGHT";
+    HorizontalJustify[HorizontalJustify["CENTER_STEM"] = 4] = "CENTER_STEM";
+})(HorizontalJustify = exports.HorizontalJustify || (exports.HorizontalJustify = {}));
+var VerticalJustify;
+(function (VerticalJustify) {
+    VerticalJustify[VerticalJustify["TOP"] = 1] = "TOP";
+    VerticalJustify[VerticalJustify["BOTTOM"] = 2] = "BOTTOM";
+})(VerticalJustify = exports.VerticalJustify || (exports.VerticalJustify = {}));
+var SymbolTypes;
+(function (SymbolTypes) {
+    SymbolTypes[SymbolTypes["GLYPH"] = 1] = "GLYPH";
+    SymbolTypes[SymbolTypes["TEXT"] = 2] = "TEXT";
+    SymbolTypes[SymbolTypes["LINE"] = 3] = "LINE";
+})(SymbolTypes = exports.SymbolTypes || (exports.SymbolTypes = {}));
+var SymbolModifiers;
+(function (SymbolModifiers) {
+    SymbolModifiers[SymbolModifiers["NONE"] = 1] = "NONE";
+    SymbolModifiers[SymbolModifiers["SUBSCRIPT"] = 2] = "SUBSCRIPT";
+    SymbolModifiers[SymbolModifiers["SUPERSCRIPT"] = 3] = "SUPERSCRIPT";
+})(SymbolModifiers = exports.SymbolModifiers || (exports.SymbolModifiers = {}));
 var ChordSymbol = /** @class */ (function (_super) {
     __extends(ChordSymbol, _super);
     // ## Prototype Methods
@@ -2912,12 +2937,7 @@ var ChordSymbol = /** @class */ (function (_super) {
     Object.defineProperty(ChordSymbol, "horizontalJustify", {
         // Chord symbols can be positioned and justified relative to the note.
         get: function () {
-            return {
-                LEFT: 1,
-                CENTER: 2,
-                RIGHT: 3,
-                CENTER_STEM: 4,
-            };
+            return HorizontalJustify;
         },
         enumerable: false,
         configurable: true
@@ -2936,10 +2956,7 @@ var ChordSymbol = /** @class */ (function (_super) {
     });
     Object.defineProperty(ChordSymbol, "verticalJustify", {
         get: function () {
-            return {
-                TOP: 1,
-                BOTTOM: 2,
-            };
+            return VerticalJustify;
         },
         enumerable: false,
         configurable: true
@@ -2994,7 +3011,7 @@ var ChordSymbol = /** @class */ (function (_super) {
     };
     Object.defineProperty(ChordSymbol, "textMetricsForEngravingFont", {
         get: function () {
-            if (vex_1.Vex.Flow.DEFAULT_FONT_STACK[0].name === 'Petaluma') {
+            if (smufl_1.DefaultFontStack[0].name === 'Petaluma') {
                 return petalumascript_textmetrics_1.PetalumaScriptTextMetrics;
             }
             else {
@@ -3027,7 +3044,7 @@ var ChordSymbol = /** @class */ (function (_super) {
     };
     Object.defineProperty(ChordSymbol, "engravingFontResolution", {
         get: function () {
-            return vex_1.Vex.Flow.DEFAULT_FONT_STACK[0].getResolution();
+            return smufl_1.DefaultFontStack[0].getResolution();
         },
         enumerable: false,
         configurable: true
@@ -3160,43 +3177,35 @@ var ChordSymbol = /** @class */ (function (_super) {
     });
     Object.defineProperty(ChordSymbol, "symbolTypes", {
         get: function () {
-            return {
-                GLYPH: 1,
-                TEXT: 2,
-                LINE: 3
-            };
+            return SymbolTypes;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ChordSymbol, "symbolModifiers", {
         get: function () {
-            return {
-                NONE: 1,
-                SUBSCRIPT: 2,
-                SUPERSCRIPT: 3
-            };
+            return SymbolModifiers;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ChordSymbol, "chordSymbolMetrics", {
         get: function () {
-            return vex_1.Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol;
+            return smufl_1.DefaultFontStack[0].metrics.glyphs.chordSymbol;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ChordSymbol, "lowerKerningText", {
         get: function () {
-            return vex_1.Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol.global.lowerKerningText;
+            return smufl_1.DefaultFontStack[0].metrics.glyphs.chordSymbol.global.lowerKerningText;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(ChordSymbol, "upperKerningText", {
         get: function () {
-            return vex_1.Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol.global.upperKerningText;
+            return smufl_1.DefaultFontStack[0].metrics.glyphs.chordSymbol.global.upperKerningText;
         },
         enumerable: false,
         configurable: true
@@ -3549,7 +3558,7 @@ var ChordSymbol = /** @class */ (function (_super) {
         this.checkContext();
         this.setRendered();
         if (!this.note) {
-            throw new vex_1.Vex.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
+            throw new runtimeerror_1.RuntimeError('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
         }
         // We're changing context parameters. Save current state.
         this.context.save();
@@ -3571,7 +3580,7 @@ var ChordSymbol = /** @class */ (function (_super) {
         if (this.vertical === ChordSymbol.verticalJustify.BOTTOM) {
             // HACK: We need to compensate for the text's height since its origin
             // is bottom-right.
-            y = stave.getYForBottomText(this.text_line + tables_1.Flow.TEXT_HEIGHT_OFFSET_HACK);
+            y = stave.getYForBottomText(this.text_line + flow_1.TEXT_HEIGHT_OFFSET_HACK);
             if (has_stem) {
                 var stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
                 y = Math.max(y, stem_base + (spacing * (this.text_line + 2)));
@@ -3670,14 +3679,6 @@ exports.ChordSymbol = ChordSymbol;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna Cheppudira 2013.
-// Co-author: Benjamin W. Bohl
-//
-// ## Description
-//
-// This file implements various types of clefs that can be rendered on a stave.
-//
-// See `tests/clef_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3693,9 +3694,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Clef = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna Cheppudira 2013.
+// Co-author: Benjamin W. Bohl
+//
+// ## Description
+//
+// This file implements various types of clefs that can be rendered on a stave.
+//
+// See `tests/clef_tests.js` for usage examples.
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -3703,7 +3713,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Clef.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Clef', args);
+        flow_1.LOG('Vex.Flow.Clef', args);
 }
 var Clef = /** @class */ (function (_super) {
     __extends(Clef, _super);
@@ -3816,7 +3826,7 @@ var Clef = /** @class */ (function (_super) {
     };
     Clef.prototype.getWidth = function () {
         if (this.type === 'tab' && !this.stave) {
-            throw new vex_1.Vex.RERR('ClefError', "Can't get width without stave.");
+            throw new runtimeerror_1.RuntimeError('ClefError', "Can't get width without stave.");
         }
         return this.width;
     };
@@ -3833,9 +3843,9 @@ var Clef = /** @class */ (function (_super) {
     };
     Clef.prototype.draw = function () {
         if (!this.x)
-            throw new vex_1.Vex.RERR('ClefError', "Can't draw clef without x.");
+            throw new runtimeerror_1.RuntimeError('ClefError', "Can't draw clef without x.");
         if (!this.stave)
-            throw new vex_1.Vex.RERR('ClefError', "Can't draw clef without stave.");
+            throw new runtimeerror_1.RuntimeError('ClefError', "Can't draw clef without stave.");
         this.setRendered();
         this.glyph.setStave(this.stave);
         this.glyph.setContext(this.stave.context);
@@ -3866,10 +3876,6 @@ exports.Clef = Clef;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Copyright Mohit Muthanna 2010
-//
-// Author Taehoon Moon 2014
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3885,10 +3891,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClefNote = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Copyright Mohit Muthanna 2010
+//
+// Author Taehoon Moon 2014
 var note_1 = __webpack_require__(/*! ./note */ "./src/note.ts");
 var clef_1 = __webpack_require__(/*! ./clef */ "./src/clef.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 /** @constructor */
 var ClefNote = /** @class */ (function (_super) {
     __extends(ClefNote, _super);
@@ -3939,7 +3949,7 @@ var ClefNote = /** @class */ (function (_super) {
     };
     ClefNote.prototype.draw = function () {
         if (!this.stave)
-            throw new vex_1.Vex.RERR('NoStave', "Can't draw without a stave.");
+            throw new runtimeerror_1.RuntimeError('NoStave', "Can't draw without a stave.");
         if (!this.glyph.getContext()) {
             this.glyph.setContext(this.context);
         }
@@ -3976,15 +3986,6 @@ exports.ClefNote = ClefNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements the `Crescendo` object which draws crescendos and
-// decrescendo dynamics markings. A `Crescendo` is initialized with a
-// duration and formatted as part of a `Voice` like any other `Note`
-// type in VexFlow. This object would most likely be formatted in a Voice
-// with `TextNotes` - which are used to represent other dynamics markings.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4000,9 +4001,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Crescendo = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements the `Crescendo` object which draws crescendos and
+// decrescendo dynamics markings. A `Crescendo` is initialized with a
+// duration and formatted as part of a `Voice` like any other `Note`
+// type in VexFlow. This object would most likely be formatted in a Voice
+// with `TextNotes` - which are used to represent other dynamics markings.
 var note_1 = __webpack_require__(/*! ./note */ "./src/note.ts");
 var tickcontext_1 = __webpack_require__(/*! ./tickcontext */ "./src/tickcontext.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -4010,7 +4020,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Crescendo.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Crescendo', args);
+        flow_1.LOG('Vex.Flow.Crescendo', args);
 }
 // Private helper to draw the hairpin
 function renderHairpin(ctx, params) {
@@ -4044,7 +4054,7 @@ var Crescendo = /** @class */ (function (_super) {
         _this.line = note_struct.line || 0;
         // The height at the open end of the cresc/decresc
         _this.height = 15;
-        vex_1.Vex.Merge(_this.render_options, {
+        flow_1.Merge(_this.render_options, {
             // Extensions to the length of the crescendo on either side
             extend_left: 0,
             extend_right: 0,
@@ -4108,10 +4118,6 @@ exports.Crescendo = Crescendo;
 
 "use strict";
 
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
-//
-// This class implements curves (for slurs)
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4126,9 +4132,19 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Curve = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.Curve = exports.Position = void 0;
+// VexFlow - Music Engraving for HTML5
+// Copyright Mohit Muthanna 2010
+//
+// This class implements curves (for slurs)
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var Position;
+(function (Position) {
+    Position[Position["NEAR_HEAD"] = 1] = "NEAR_HEAD";
+    Position[Position["NEAR_TOP"] = 2] = "NEAR_TOP";
+})(Position = exports.Position || (exports.Position = {}));
 var Curve = /** @class */ (function (_super) {
     __extends(Curve, _super);
     // from: Start note
@@ -4150,16 +4166,13 @@ var Curve = /** @class */ (function (_super) {
             invert: false,
             cps: [{ x: 0, y: 10 }, { x: 0, y: 10 }],
         };
-        vex_1.Vex.Merge(_this.render_options, options);
+        flow_1.Merge(_this.render_options, options);
         _this.setNotes(from, to);
         return _this;
     }
     Object.defineProperty(Curve, "Position", {
         get: function () {
-            return {
-                NEAR_HEAD: 1,
-                NEAR_TOP: 2,
-            };
+            return Position;
         },
         enumerable: false,
         configurable: true
@@ -4176,7 +4189,7 @@ var Curve = /** @class */ (function (_super) {
     });
     Curve.prototype.setNotes = function (from, to) {
         if (!from && !to) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Curve needs to have either first_note or last_note set.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Curve needs to have either first_note or last_note set.');
         }
         this.from = from;
         this.to = to;
@@ -4279,10 +4292,6 @@ exports.Curve = Curve;
 
 "use strict";
 
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
-//
-// This class implements dot modifiers for notes.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4298,8 +4307,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Dot = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// VexFlow - Music Engraving for HTML5
+// Copyright Mohit Muthanna 2010
+//
+// This class implements dot modifiers for notes.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Dot = /** @class */ (function (_super) {
     __extends(Dot, _super);
     /**
@@ -4419,7 +4432,7 @@ var Dot = /** @class */ (function (_super) {
         this.checkContext();
         this.setRendered();
         if (!this.note || this.index === null) {
-            throw new vex_1.Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw dot without a note and index.");
         }
         var lineSpace = this.note.stave.options.spacing_between_lines_px;
         var start = this.note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
@@ -4466,13 +4479,14 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EasyScore = exports.Builder = exports.Grammar = exports.X = void 0;
+exports.EasyScore = exports.Builder = exports.Grammar = void 0;
 /* eslint max-classes-per-file: "off" */
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
 var parser_1 = __webpack_require__(/*! ./parser */ "./src/parser.ts");
 var articulation_1 = __webpack_require__(/*! ./articulation */ "./src/articulation.ts");
 var frethandfinger_1 = __webpack_require__(/*! ./frethandfinger */ "./src/frethandfinger.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -4480,9 +4494,9 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (EasyScore.DEBUG)
-        vex_1.Vex.L('Vex.Flow.EasyScore', args);
+        flow_1.LOG('Vex.Flow.EasyScore', args);
 }
-exports.X = vex_1.Vex.MakeException('EasyScoreError');
+var X = runtimeerror_1.MakeException('EasyScoreError');
 var Grammar = /** @class */ (function () {
     function Grammar(builder) {
         this.builder = builder;
@@ -4797,7 +4811,7 @@ var EasyScore = /** @class */ (function () {
         this.builder.reset(options);
         var result = this.parser.parse(line);
         if (!result.success && this.options.throwOnError) {
-            throw new exports.X('Error parsing line: ' + line, result);
+            throw new X('Error parsing line: ' + line, result);
         }
         return result;
     };
@@ -4840,6 +4854,8 @@ exports.EasyScore = EasyScore;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Element = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
 //
@@ -4847,11 +4863,9 @@ exports.EasyScore = EasyScore;
 //
 // This file implements a generic base class for VexFlow, with implementations
 // of general functions and properties that can be inherited by all VexFlow elements.
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Element = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var registry_1 = __webpack_require__(/*! ./registry */ "./src/registry.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+var smufl_1 = __webpack_require__(/*! ./smufl */ "./src/smufl.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Element = /** @class */ (function () {
     function Element(_a) {
         var _b = _a === void 0 ? {} : _a, type = _b.type;
@@ -4864,8 +4878,8 @@ var Element = /** @class */ (function () {
         this.boundingBox = null;
         this.context = null;
         this.rendered = false;
-        this.fontStack = tables_1.Flow.DEFAULT_FONT_STACK;
-        this.musicFont = tables_1.Flow.DEFAULT_FONT_STACK[0];
+        this.fontStack = smufl_1.DefaultFontStack;
+        this.musicFont = smufl_1.DefaultFontStack[0];
         // If a default registry exist, then register with it right away.
         if (registry_1.Registry.getDefaultRegistry()) {
             registry_1.Registry.getDefaultRegistry().register(this);
@@ -4998,7 +5012,7 @@ var Element = /** @class */ (function () {
     // Validators
     Element.prototype.checkContext = function () {
         if (!this.context) {
-            throw new vex_1.Vex.RERR('NoContext', 'No rendering context attached to instance');
+            throw new runtimeerror_1.RuntimeError('NoContext', 'No rendering context attached to instance');
         }
         return this.context;
     };
@@ -5019,6 +5033,8 @@ exports.Element = Element;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Factory = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
 //
@@ -5028,9 +5044,6 @@ exports.Element = Element;
 // become the canonical way to use VexFlow.
 //
 // *This API is currently DRAFT*
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Factory = exports.X = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var accidental_1 = __webpack_require__(/*! ./accidental */ "./src/accidental.ts");
 var articulation_1 = __webpack_require__(/*! ./articulation */ "./src/articulation.ts");
 var annotation_1 = __webpack_require__(/*! ./annotation */ "./src/annotation.ts");
@@ -5071,6 +5084,8 @@ var tabnote_1 = __webpack_require__(/*! ./tabnote */ "./src/tabnote.ts");
 var tabstave_1 = __webpack_require__(/*! ./tabstave */ "./src/tabstave.ts");
 var textnote_1 = __webpack_require__(/*! ./textnote */ "./src/textnote.ts");
 var textfont_1 = __webpack_require__(/*! ./textfont */ "./src/textfont.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -5078,9 +5093,9 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Factory.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Factory', args);
+        flow_1.LOG('Vex.Flow.Factory', args);
 }
-exports.X = vex_1.Vex.MakeException('FactoryError');
+var X = runtimeerror_1.MakeException('FactoryError');
 function setDefaults(params, defaults) {
     if (params === void 0) { params = {}; }
     var default_options = defaults.options;
@@ -5139,7 +5154,7 @@ var Factory = /** @class */ (function () {
     Factory.prototype.initRenderer = function () {
         var _a = this.options.renderer, elementId = _a.elementId, backend = _a.backend, width = _a.width, height = _a.height, background = _a.background;
         if (elementId === '') {
-            throw new exports.X('HTML DOM element not set in Factory');
+            throw new X('HTML DOM element not set in Factory');
         }
         this.context = renderer_1.Renderer.buildContext(elementId, backend, width, height, background);
     };
@@ -5608,6 +5623,330 @@ var Factory = /** @class */ (function () {
     return Factory;
 }());
 exports.Factory = Factory;
+
+
+/***/ }),
+
+/***/ "./src/flow/index.ts":
+/*!***************************!*\
+  !*** ./src/flow/index.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.tabToGlyph = exports.integerToNote = exports.keyProperties = exports.Merge = exports.keySignature = exports.durationToNumber = exports.durationToTicks = exports.getGlyphProps = exports.durationToFraction = exports.ornamentCodes = exports.accidentalCodes = exports.articulationCodes = exports.textWidth = exports.sanitizeDuration = exports.drawDot = exports.SortAndUnique = exports.MidLine = exports.Prefix = exports.LOG = exports.WARN = exports.DEFAULT_TIME = exports.STEM_WIDTH = exports.STAVE_LINE_THICKNESS = exports.DEFAULT_TABLATURE_FONT_SCALE = exports.DEFAULT_NOTATION_FONT_SCALE = exports.RESOLUTION = exports.STEM_HEIGHT = exports.SLASH_NOTEHEAD_WIDTH = exports.TEXT_HEIGHT_OFFSET_HACK = void 0;
+var runtimeerror_1 = __webpack_require__(/*! ../runtimeerror */ "./src/runtimeerror.ts");
+var tables_1 = __webpack_require__(/*! ../tables */ "./src/tables.ts");
+var glyph_1 = __webpack_require__(/*! ../glyph */ "./src/glyph.ts");
+var fraction_1 = __webpack_require__(/*! ../fraction */ "./src/fraction.ts");
+var logging_1 = __webpack_require__(/*! ./logging */ "./src/flow/logging.ts");
+Object.defineProperty(exports, "WARN", { enumerable: true, get: function () { return logging_1.WARN; } });
+Object.defineProperty(exports, "LOG", { enumerable: true, get: function () { return logging_1.LOG; } });
+exports.TEXT_HEIGHT_OFFSET_HACK = 1;
+exports.SLASH_NOTEHEAD_WIDTH = 15;
+exports.STEM_HEIGHT = 35;
+exports.RESOLUTION = 16384;
+exports.DEFAULT_NOTATION_FONT_SCALE = 39;
+exports.DEFAULT_TABLATURE_FONT_SCALE = 39;
+exports.STAVE_LINE_THICKNESS = 1;
+exports.STEM_WIDTH = 1.5;
+exports.DEFAULT_TIME = { num_beats: 4, beat_value: 4, resolution: exports.RESOLUTION };
+var VEX_PREFIX = 'vf-';
+// Used by various classes (e.g., SVGContext) to provide a
+// unique prefix to element names (or other keys in shared namespaces).
+var Prefix = function (text) {
+    return VEX_PREFIX + text;
+};
+exports.Prefix = Prefix;
+// Round number to nearest fractional value (`.5`, `.25`, etc.)
+var RoundN = function (x, n) {
+    return (x % n) >= (n / 2)
+        ? parseInt((x / n).toString(), 10) * n + n
+        : parseInt((x / n).toString(), 10) * n;
+};
+// Locate the mid point between stave lines. Returns a fractional line if a space.
+var MidLine = function (a, b) {
+    var mid_line = b + (a - b) / 2;
+    if (mid_line % 2 > 0) {
+        mid_line = RoundN(mid_line * 10, 5) / 10;
+    }
+    return mid_line;
+};
+exports.MidLine = MidLine;
+// Take `arr` and return a new list consisting of the sorted, unique,
+// contents of arr. Does not modify `arr`.
+var SortAndUnique = function (arr, cmp, eq) {
+    if (arr.length > 1) {
+        var newArr = [];
+        var last = undefined;
+        arr.sort(cmp);
+        for (var i = 0; i < arr.length; ++i) {
+            if (i === 0 || !eq(arr[i], last)) {
+                newArr.push(arr[i]);
+            }
+            last = arr[i];
+        }
+        return newArr;
+    }
+    else {
+        return arr;
+    }
+};
+exports.SortAndUnique = SortAndUnique;
+// Draw a tiny dot marker on the specified canvas. A great debugging aid.
+//
+// `ctx`: Canvas context.
+// `x`, `y`: Dot coordinates.
+var drawDot = function (ctx, x, y, color) {
+    ctx.save();
+    ctx.setFillStyle(color);
+    // draw a circle
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+};
+exports.drawDot = drawDot;
+// Used to convert duration aliases to the number based duration.
+// If the input isn't an alias, simply return the input.
+//
+// example: 'q' -> '4', '8' -> '8'
+var sanitizeDuration = function (duration) {
+    var alias = tables_1.DURATION_ALIASES[duration];
+    if (alias !== undefined) {
+        duration = alias;
+    }
+    if (tables_1.DURATIONS[duration] === undefined) {
+        throw new runtimeerror_1.RuntimeError('BadArguments', "The provided duration is not valid: " + duration);
+    }
+    return duration;
+};
+exports.sanitizeDuration = sanitizeDuration;
+var textWidth = function (text) { return 7 * text.toString().length; };
+exports.textWidth = textWidth;
+var articulationCodes = function (artic) { return tables_1.ARTICULATIONS[artic]; };
+exports.articulationCodes = articulationCodes;
+var accidentalCodes = function (acc) { return tables_1.ACCIDENTALS[acc]; };
+exports.accidentalCodes = accidentalCodes;
+var ornamentCodes = function (acc) { return tables_1.ORNAMENTS[acc]; };
+exports.ornamentCodes = ornamentCodes;
+var durationToFraction = function (duration) { return new fraction_1.Fraction().parse(exports.sanitizeDuration(duration)); };
+exports.durationToFraction = durationToFraction;
+// Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
+var getGlyphProps = function (duration, type) {
+    duration = exports.sanitizeDuration(duration);
+    type = type || 'n'; // default type is a regular note
+    // Lookup duration for default glyph head code
+    var code = tables_1.DURATION_CODES[duration];
+    if (code === undefined) {
+        return null;
+    }
+    // Get glyph properties for 'type' from duration string (note, rest, harmonic, muted, slash)
+    var glyphTypeProperties = code.type[type];
+    // If this isn't a standard type, then lookup the custom note head map.
+    if (glyphTypeProperties === undefined) {
+        // Try and get it from the custom list of note heads
+        var customGlyphTypeProperties = tables_1.CUSTOM_NOTEHEADS[type.toUpperCase()];
+        // If not, then return with nothing
+        if (customGlyphTypeProperties === undefined) {
+            return null;
+        }
+        // Otherwise set it as the code_head value
+        glyphTypeProperties = __assign({ code_head: customGlyphTypeProperties.code }, customGlyphTypeProperties);
+    }
+    // Merge duration props for 'duration' with the note head properties.
+    return __assign(__assign({}, code.common), glyphTypeProperties);
+};
+exports.getGlyphProps = getGlyphProps;
+// Convert the `duration` to total ticks
+var durationToTicks = function (duration) {
+    duration = exports.sanitizeDuration(duration);
+    var ticks = tables_1.DURATIONS[duration];
+    if (ticks === undefined) {
+        return null;
+    }
+    return ticks;
+};
+exports.durationToTicks = durationToTicks;
+// Convert the `duration` to an number
+var durationToNumber = function (duration) { return exports.durationToFraction(duration).value(); };
+exports.durationToNumber = durationToNumber;
+var keySignature = function (spec) {
+    var keySpec = tables_1.KEY_SPECS[spec];
+    if (!keySpec) {
+        throw new runtimeerror_1.RuntimeError('BadKeySignature', "Bad key signature spec: '" + spec + "'");
+    }
+    if (!keySpec.acc) {
+        return [];
+    }
+    var notes = tables_1.accidentalList(keySpec.acc);
+    var acc_list = [];
+    for (var i = 0; i < keySpec.num; ++i) {
+        var line = notes[i];
+        acc_list.push({ type: keySpec.acc, line: line });
+    }
+    return acc_list;
+};
+exports.keySignature = keySignature;
+var clefProperties = function (clef) {
+    if (!clef)
+        throw new runtimeerror_1.RuntimeError('BadArgument', 'Invalid clef: ' + clef);
+    var props = tables_1.CLEF_PROPERTIES_VALUES[clef];
+    if (!props)
+        throw new runtimeerror_1.RuntimeError('BadArgument', 'Invalid clef: ' + clef);
+    return props;
+};
+// Merge `destination` hash with `source` hash, overwriting like keys
+// in `source` if necessary.
+var Merge = function (destination, source) {
+    for (var property in source) { // eslint-disable-line guard-for-in
+        destination[property] = source[property];
+    }
+    return destination;
+};
+exports.Merge = Merge;
+/*
+  Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
+
+  The last argument, params, is a struct the currently can contain one option,
+  octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
+*/
+var keyProperties = function (key, clef, params) {
+    if (clef === undefined) {
+        clef = 'treble';
+    }
+    var options = { octave_shift: 0 };
+    if (typeof params === 'object') {
+        exports.Merge(options, params);
+    }
+    var pieces = key.split('/');
+    if (pieces.length < 2) {
+        throw new runtimeerror_1.RuntimeError('BadArguments', "Key must have note + octave and an optional glyph: " + key);
+    }
+    var k = pieces[0].toUpperCase();
+    var value = tables_1.KEY_PROPERTIES_NOTE_VALUES[k];
+    if (!value)
+        throw new runtimeerror_1.RuntimeError('BadArguments', 'Invalid key name: ' + k);
+    if (value.octave)
+        pieces[1] = value.octave;
+    var octave = parseInt(pieces[1], 10);
+    // Octave_shift is the shift to compensate for clef 8va/8vb.
+    octave += -1 * options.octave_shift;
+    var base_index = (octave * 7) - (4 * 7);
+    var line = (base_index + value.index) / 2;
+    line += clefProperties(clef).line_shift;
+    var stroke = 0;
+    if (line <= 0 && (((line * 2) % 2) === 0))
+        stroke = 1; // stroke up
+    if (line >= 6 && (((line * 2) % 2) === 0))
+        stroke = -1; // stroke down
+    // Integer value for note arithmetic.
+    var int_value = typeof (value.int_val) !== 'undefined'
+        ? (octave * 12) + value.int_val
+        : null;
+    /* Check if the user specified a glyph. */
+    var code = value.code;
+    var shift_right = value.shift_right;
+    var extraProps = {};
+    if (pieces.length > 2 && pieces[2]) {
+        var glyph_name = pieces[2].toUpperCase();
+        extraProps = tables_1.CUSTOM_NOTEHEADS[glyph_name] || {};
+    }
+    return __assign({ key: k, octave: octave,
+        line: line,
+        int_value: int_value, accidental: value.accidental, code: code,
+        stroke: stroke,
+        shift_right: shift_right, displaced: false }, extraProps);
+};
+exports.keyProperties = keyProperties;
+var integerToNote = function (integer) {
+    if (typeof (integer) === 'undefined') {
+        throw new runtimeerror_1.RuntimeError('BadArguments', 'Undefined integer for integerToNote');
+    }
+    if (integer < -2) {
+        throw new runtimeerror_1.RuntimeError('BadArguments', "integerToNote requires integer > -2: " + integer);
+    }
+    var noteValue = tables_1.INTEGER_TO_NOTE_TABLE[integer];
+    if (!noteValue) {
+        throw new runtimeerror_1.RuntimeError('BadArguments', "Unknown note value for integer: " + integer);
+    }
+    return noteValue;
+};
+exports.integerToNote = integerToNote;
+var tabToGlyph = function (fret, scale) {
+    if (scale === void 0) { scale = 1.0; }
+    var glyph = null;
+    var width = 0;
+    var shift_y = 0;
+    if (fret.toString().toUpperCase() === 'X') {
+        var glyphMetrics = new glyph_1.Glyph('accidentalDoubleSharp', exports.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
+        glyph = 'accidentalDoubleSharp';
+        width = glyphMetrics.width;
+        shift_y = -glyphMetrics.height / 2;
+    }
+    else {
+        width = exports.textWidth(fret.toString());
+    }
+    return {
+        text: fret,
+        code: glyph,
+        getWidth: function () { return width * scale; },
+        shift_y: shift_y,
+    };
+};
+exports.tabToGlyph = tabToGlyph;
+
+
+/***/ }),
+
+/***/ "./src/flow/logging.ts":
+/*!*****************************!*\
+  !*** ./src/flow/logging.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LOG = exports.WARN = void 0;
+// Dump warning to console.
+var WARN = function () {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    var line = args.join(' ');
+    window.console.log('Warning: ', line, StackTrace());
+};
+exports.WARN = WARN;
+var LOG = function (block, args) {
+    if (!args)
+        return;
+    var line = Array.prototype.slice.call(args).join(' ');
+    window.console.log(block + ': ' + line);
+};
+exports.LOG = LOG;
+// Get stack trace.
+var StackTrace = function () {
+    var err = new Error();
+    return err.stack;
+};
 
 
 /***/ }),
@@ -16152,6 +16491,19 @@ exports.RobotoSlabTextMetrics = {
 
 "use strict";
 
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Formatter = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
@@ -16170,28 +16522,16 @@ exports.RobotoSlabTextMetrics = {
 //
 // See `tests/formatter_tests.js` for usage examples. The helper functions included
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Formatter = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var beam_1 = __webpack_require__(/*! ./beam */ "./src/beam.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
 var voice_1 = __webpack_require__(/*! ./voice */ "./src/voice.ts");
 var staveconnector_1 = __webpack_require__(/*! ./staveconnector */ "./src/staveconnector.ts");
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
 var modifiercontext_1 = __webpack_require__(/*! ./modifiercontext */ "./src/modifiercontext.ts");
 var tickcontext_1 = __webpack_require__(/*! ./tickcontext */ "./src/tickcontext.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var smufl_1 = __webpack_require__(/*! ./smufl */ "./src/smufl.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -16199,7 +16539,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Formatter.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Formatter', args);
+        flow_1.LOG('Vex.Flow.Formatter', args);
 }
 // Helper function to locate the next non-rest note(s).
 function lookAhead(notes, restLine, i, compare) {
@@ -16217,7 +16557,7 @@ function lookAhead(notes, restLine, i, compare) {
     if (compare && restLine !== nextRestLine) {
         var top_1 = Math.max(restLine, nextRestLine);
         var bot = Math.min(restLine, nextRestLine);
-        nextRestLine = vex_1.Vex.MidLine(top_1, bot);
+        nextRestLine = flow_1.MidLine(top_1, bot);
     }
     return nextRestLine;
 }
@@ -16231,7 +16571,7 @@ function lookAhead(notes, restLine, i, compare) {
 // * `addToContext`: Function to add tickable to context.
 function createContexts(voices, ContextType, addToContext) {
     if (!voices || !voices.length) {
-        throw new vex_1.Vex.RERR('BadArgument', 'No voices to format');
+        throw new runtimeerror_1.RuntimeError('BadArgument', 'No voices to format');
     }
     // Find out highest common multiple of resolution multipliers.
     // The purpose of this is to find out a common denominator
@@ -16241,10 +16581,10 @@ function createContexts(voices, ContextType, addToContext) {
     var totalTicks = voices[0].getTotalTicks();
     var resolutionMultiplier = voices.reduce(function (resolutionMultiplier, voice) {
         if (!voice.getTotalTicks().equals(totalTicks)) {
-            throw new vex_1.Vex.RERR('TickMismatch', 'Voices should have same total note duration in ticks.');
+            throw new runtimeerror_1.RuntimeError('TickMismatch', 'Voices should have same total note duration in ticks.');
         }
         if (voice.getMode() === voice_1.Voice.Mode.STRICT && !voice.isComplete()) {
-            throw new vex_1.Vex.RERR('IncompleteVoice', 'Voice does not have enough notes.');
+            throw new runtimeerror_1.RuntimeError('IncompleteVoice', 'Voice does not have enough notes.');
         }
         return Math.max(resolutionMultiplier, fraction_1.Fraction.LCM(resolutionMultiplier, voice.getResolutionMultiplier()));
     }, 1);
@@ -16277,7 +16617,7 @@ function createContexts(voices, ContextType, addToContext) {
     return {
         map: tickToContextMap,
         array: contexts,
-        list: vex_1.Vex.SortAndUnique(tickList, function (a, b) { return a - b; }, function (a, b) { return a === b; }),
+        list: flow_1.SortAndUnique(tickList, function (a, b) { return a - b; }, function (a, b) { return a === b; }),
         resolutionMultiplier: resolutionMultiplier
     };
 }
@@ -16318,7 +16658,7 @@ var Formatter = /** @class */ (function () {
     };
     // Helper function to plot formatter debug info.
     Formatter.plotDebugging = function (ctx, formatter, xPos, y1, y2, options) {
-        options = __assign({ stavePadding: vex_1.Vex.Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding') }, options);
+        options = __assign({ stavePadding: smufl_1.DefaultFontStack[0].lookupMetric('stave.padding') }, options);
         var x = xPos + options.stavePadding;
         var contextGaps = formatter.contextGaps;
         function stroke(x1, x2, color) {
@@ -16361,13 +16701,13 @@ var Formatter = /** @class */ (function () {
             align_rests: false,
         };
         if (typeof params === 'object') {
-            vex_1.Vex.Merge(options, params);
+            flow_1.Merge(options, params);
         }
         else if (typeof params === 'boolean') {
             options.auto_beam = params;
         }
         // Start by creating a voice and adding all the notes to it.
-        var voice = new voice_1.Voice(tables_1.Flow.TIME4_4)
+        var voice = new voice_1.Voice(flow_1.DEFAULT_TIME)
             .setMode(voice_1.Voice.Mode.SOFT)
             .addTickables(notes);
         // Then create beams, if requested.
@@ -16401,17 +16741,17 @@ var Formatter = /** @class */ (function () {
             align_rests: false,
         };
         if (typeof params === 'object') {
-            vex_1.Vex.Merge(opts, params);
+            flow_1.Merge(opts, params);
         }
         else if (typeof params === 'boolean') {
             opts.auto_beam = params;
         }
         // Create a `4/4` voice for `notes`.
-        var notevoice = new voice_1.Voice(tables_1.Flow.TIME4_4)
+        var notevoice = new voice_1.Voice(flow_1.DEFAULT_TIME)
             .setMode(voice_1.Voice.Mode.SOFT)
             .addTickables(notes);
         // Create a `4/4` voice for `tabnotes`.
-        var tabvoice = new voice_1.Voice(tables_1.Flow.TIME4_4)
+        var tabvoice = new voice_1.Voice(flow_1.DEFAULT_TIME)
             .setMode(voice_1.Voice.Mode.SOFT)
             .addTickables(tabnotes);
         // Then create beams, if requested.
@@ -16474,7 +16814,7 @@ var Formatter = /** @class */ (function () {
     // align non-beamed notes.
     Formatter.prototype.alignRests = function (voices, alignAllNotes) {
         if (!voices || !voices.length) {
-            throw new vex_1.Vex.RERR('BadArgument', 'No voices to format rests');
+            throw new runtimeerror_1.RuntimeError('BadArgument', 'No voices to format rests');
         }
         voices.forEach(function (voice) {
             return Formatter.AlignRestsToNotes(voice.getTickables(), alignAllNotes);
@@ -16488,7 +16828,7 @@ var Formatter = /** @class */ (function () {
         // Create tick contexts if not already created.
         if (!this.tickContexts) {
             if (!voices) {
-                throw new vex_1.Vex.RERR('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
+                throw new runtimeerror_1.RuntimeError('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
             }
             this.createTickContexts(voices);
         }
@@ -16508,7 +16848,7 @@ var Formatter = /** @class */ (function () {
     // `preCalculateMinTotalWidth` must be called before this method.
     Formatter.prototype.getMinTotalWidth = function () {
         if (!this.hasMinTotalWidth) {
-            throw new vex_1.Vex.RERR('NoMinTotalWidth', "Call 'preCalculateMinTotalWidth' or 'preFormat' before calling 'getMinTotalWidth'");
+            throw new runtimeerror_1.RuntimeError('NoMinTotalWidth', "Call 'preCalculateMinTotalWidth' or 'preFormat' before calling 'getMinTotalWidth'");
         }
         return this.minTotalWidth;
     };
@@ -16890,7 +17230,7 @@ exports.Formatter = Formatter;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Fraction = void 0;
 /* eslint-disable no-underscore-dangle */
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Fraction = /** @class */ (function () {
     function Fraction(numerator, denominator) {
         this.set(numerator, denominator);
@@ -16900,7 +17240,7 @@ var Fraction = /** @class */ (function () {
      */
     Fraction.GCD = function (a, b) {
         if (typeof a !== 'number' || typeof b !== 'number') {
-            throw new vex_1.Vex.RERR('BadArgument', "Invalid numbers: " + a + ", " + b);
+            throw new runtimeerror_1.RuntimeError('BadArgument', "Invalid numbers: " + a + ", " + b);
         }
         var t;
         while (b !== 0) {
@@ -17186,8 +17526,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FretHandFinger = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 /**
  * @constructor
  */
@@ -17321,7 +17661,7 @@ var FretHandFinger = /** @class */ (function (_super) {
     FretHandFinger.prototype.draw = function () {
         this.checkContext();
         if (!this.note || this.index == null) {
-            throw new vex_1.Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw string number without a note and index.");
         }
         this.setRendered();
         var ctx = this.context;
@@ -17344,7 +17684,7 @@ var FretHandFinger = /** @class */ (function (_super) {
                 dot_x += 1;
                 break;
             default:
-                throw new vex_1.Vex.RERR('InvalidPostion', "The position " + this.position + " does not exist");
+                throw new runtimeerror_1.RuntimeError('InvalidPostion', "The position " + this.position + " does not exist");
         }
         ctx.save();
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
@@ -17367,9 +17707,6 @@ exports.FretHandFinger = FretHandFinger;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -17385,8 +17722,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GhostNote = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
 var stemmablenote_1 = __webpack_require__(/*! ./stemmablenote */ "./src/stemmablenote.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var GhostNote = /** @class */ (function (_super) {
     __extends(GhostNote, _super);
     /** @constructor */
@@ -17394,7 +17734,7 @@ var GhostNote = /** @class */ (function (_super) {
         var _this = this;
         // Sanity check
         if (!parameter) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify ' +
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify ' +
                 'duration.');
         }
         var note_struct;
@@ -17406,7 +17746,7 @@ var GhostNote = /** @class */ (function (_super) {
             note_struct = parameter;
         }
         else {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify ' +
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify ' +
                 'duration.');
         }
         _this = _super.call(this, note_struct) || this;
@@ -17427,7 +17767,7 @@ var GhostNote = /** @class */ (function (_super) {
     };
     GhostNote.prototype.draw = function () {
         if (!this.stave)
-            throw new vex_1.Vex.RERR('NoStave', "Can't draw without a stave.");
+            throw new runtimeerror_1.RuntimeError('NoStave', "Can't draw without a stave.");
         // Draw the modifiers
         this.setRendered();
         for (var i = 0; i < this.modifiers.length; ++i) {
@@ -17452,7 +17792,6 @@ exports.GhostNote = GhostNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -17479,11 +17818,12 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Glyph = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 var boundingboxcomputation_1 = __webpack_require__(/*! ./boundingboxcomputation */ "./src/boundingboxcomputation.ts");
 var boundingbox_1 = __webpack_require__(/*! ./boundingbox */ "./src/boundingbox.ts");
+var smufl_1 = __webpack_require__(/*! ./smufl */ "./src/smufl.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
     var command;
     var x;
@@ -17571,7 +17911,7 @@ var Glyph = /** @class */ (function (_super) {
     };
     Glyph.lookupGlyph = function (fontStack, code) {
         if (!fontStack) {
-            throw new vex_1.Vex.RERR('BAD_FONTSTACK', 'Font stack is misconfigured');
+            throw new runtimeerror_1.RuntimeError('BAD_FONTSTACK', 'Font stack is misconfigured');
         }
         var glyph;
         var font;
@@ -17582,7 +17922,7 @@ var Glyph = /** @class */ (function (_super) {
                 break;
         }
         if (!glyph) {
-            throw new vex_1.Vex.RERR('BadGlyph', "Glyph " + code + " does not exist in font.");
+            throw new runtimeerror_1.RuntimeError('BadGlyph', "Glyph " + code + " does not exist in font.");
         }
         return { glyph: glyph, font: font };
     };
@@ -17633,7 +17973,7 @@ var Glyph = /** @class */ (function (_super) {
             };
         }
         else {
-            throw new vex_1.Vex.RERR('BadGlyph', "Glyph " + code + " has no outline defined.");
+            throw new runtimeerror_1.RuntimeError('BadGlyph', "Glyph " + code + " has no outline defined.");
         }
     };
     /**
@@ -17647,7 +17987,7 @@ var Glyph = /** @class */ (function (_super) {
      * @param {string} val The glyph code in font.getGlyphs()
      */
     Glyph.renderGlyph = function (ctx, x_pos, y_pos, point, val, options) {
-        var params = __assign({ fontStack: tables_1.Flow.DEFAULT_FONT_STACK, category: null }, options);
+        var params = __assign({ fontStack: smufl_1.DefaultFontStack, category: null }, options);
         var metrics = Glyph.loadMetrics(params.fontStack, val, params.category);
         point = params.category ? Glyph.lookupFontMetric({
             font: metrics.font,
@@ -17720,7 +18060,7 @@ var Glyph = /** @class */ (function (_super) {
     };
     Glyph.prototype.getMetrics = function () {
         if (!this.metrics) {
-            throw new vex_1.Vex.RuntimeError('BadGlyph', "Glyph " + this.code + " is not initialized.");
+            throw new runtimeerror_1.RuntimeError('BadGlyph', "Glyph " + this.code + " is not initialized.");
         }
         return {
             x_min: this.metrics.x_min * this.scale * this.metrics.scale,
@@ -17747,7 +18087,7 @@ var Glyph = /** @class */ (function (_super) {
     };
     Glyph.prototype.render = function (ctx, x, y) {
         if (!this.metrics) {
-            throw new vex_1.Vex.RuntimeError('BadGlyph', "Glyph " + this.code + " is not initialized.");
+            throw new runtimeerror_1.RuntimeError('BadGlyph', "Glyph " + this.code + " is not initialized.");
         }
         var outline = this.metrics.outline;
         var scale = this.scale * this.metrics.scale;
@@ -17759,10 +18099,10 @@ var Glyph = /** @class */ (function (_super) {
     Glyph.prototype.renderToStave = function (x) {
         this.checkContext();
         if (!this.metrics) {
-            throw new vex_1.Vex.RuntimeError('BadGlyph', "Glyph " + this.code + " is not initialized.");
+            throw new runtimeerror_1.RuntimeError('BadGlyph', "Glyph " + this.code + " is not initialized.");
         }
         if (!this.stave) {
-            throw new vex_1.Vex.RuntimeError('GlyphError', 'No valid stave');
+            throw new runtimeerror_1.RuntimeError('GlyphError', 'No valid stave');
         }
         var outline = this.metrics.outline;
         var scale = this.scale * this.metrics.scale;
@@ -17902,11 +18242,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GraceNote = void 0;
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var GraceNote = /** @class */ (function (_super) {
     __extends(GraceNote, _super);
     function GraceNote(note_struct) {
-        var _this = _super.call(this, __assign({ glyph_font_scale: tables_1.Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE, stroke_px: GraceNote.LEDGER_LINE_OFFSET }, note_struct)) || this;
+        var _this = _super.call(this, __assign({ glyph_font_scale: flow_1.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE, stroke_px: GraceNote.LEDGER_LINE_OFFSET }, note_struct)) || this;
         _this.setAttribute('type', 'GraceNote');
         _this.slash = note_struct.slash;
         _this.slur = true;
@@ -17955,7 +18295,7 @@ var GraceNote = /** @class */ (function (_super) {
     };
     // FIXME: move this to more basic class.
     GraceNote.prototype.getStaveNoteScale = function () {
-        return this.render_options.glyph_font_scale / tables_1.Flow.DEFAULT_NOTATION_FONT_SCALE;
+        return this.render_options.glyph_font_scale / flow_1.DEFAULT_NOTATION_FONT_SCALE;
     };
     GraceNote.prototype.draw = function () {
         _super.prototype.draw.call(this);
@@ -17982,17 +18322,17 @@ var GraceNote = /** @class */ (function (_super) {
                 var noteHeadBounds = this.getNoteHeadBounds();
                 var noteStemHeight = stem.getHeight();
                 var x = this.getAbsoluteX();
-                var y = stem_direction === tables_1.Flow.Stem.DOWN ?
+                var y = stem_direction === stem_1.Stem.DOWN ?
                     noteHeadBounds.y_top - noteStemHeight :
                     noteHeadBounds.y_bottom - noteStemHeight;
-                var defaultStemExtention = stem_direction === tables_1.Flow.Stem.DOWN ?
+                var defaultStemExtention = stem_direction === stem_1.Stem.DOWN ?
                     this.glyph.stem_down_extension :
                     this.glyph.stem_up_extension;
-                var defaultOffsetY = tables_1.Flow.STEM_HEIGHT;
+                var defaultOffsetY = flow_1.STEM_HEIGHT;
                 defaultOffsetY -= (defaultOffsetY / 2.8);
                 defaultOffsetY += defaultStemExtention;
                 y += ((defaultOffsetY * staveNoteScale) * stem_direction);
-                var offsets = stem_direction === tables_1.Flow.Stem.UP ? {
+                var offsets = stem_direction === stem_1.Stem.UP ? {
                     x1: 1,
                     y1: 0,
                     x2: 13,
@@ -18067,12 +18407,6 @@ exports.GraceNote = GraceNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements `GraceNoteGroup` which is used to format and
-// render grace notes.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18088,8 +18422,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GraceNoteGroup = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements `GraceNoteGroup` which is used to format and
+// render grace notes.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var formatter_1 = __webpack_require__(/*! ./formatter */ "./src/formatter.ts");
 var voice_1 = __webpack_require__(/*! ./voice */ "./src/voice.ts");
@@ -18097,6 +18435,8 @@ var beam_1 = __webpack_require__(/*! ./beam */ "./src/beam.ts");
 var stavetie_1 = __webpack_require__(/*! ./stavetie */ "./src/stavetie.ts");
 var tabtie_1 = __webpack_require__(/*! ./tabtie */ "./src/tabtie.ts");
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -18104,7 +18444,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (GraceNoteGroup.DEBUG)
-        vex_1.Vex.L('Vex.Flow.GraceNoteGroup', args);
+        flow_1.LOG('Vex.Flow.GraceNoteGroup', args);
 }
 var GraceNoteGroup = /** @class */ (function (_super) {
     __extends(GraceNoteGroup, _super);
@@ -18127,7 +18467,7 @@ var GraceNoteGroup = /** @class */ (function (_super) {
         _this.voice = new voice_1.Voice({
             num_beats: 4,
             beat_value: 4,
-            resolution: tables_1.Flow.RESOLUTION,
+            resolution: flow_1.RESOLUTION,
         }).setStrict(false);
         _this.render_options = {
             slur_y_shift: 0,
@@ -18223,7 +18563,7 @@ var GraceNoteGroup = /** @class */ (function (_super) {
         var note = this.getNote();
         L('Drawing grace note group for:', note);
         if (!(note && (this.index !== null))) {
-            throw new vex_1.Vex.RuntimeError('NoAttachedNote', "Can't draw grace note without a parent note and parent note index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw grace note without a parent note and parent note index.");
         }
         this.setRendered();
         this.alignSubNotesWithNote(this.getGraceNotes(), note); // Modifier function
@@ -18266,15 +18606,6 @@ exports.GraceNoteGroup = GraceNoteGroup;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// @author Balazs Forian-Szabo
-//
-// ## Description
-//
-// A basic implementation of grace notes
-// to be rendered on a tab stave.
-//
-// See `tests/gracetabnote_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18290,14 +18621,23 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GraceTabNote = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// @author Balazs Forian-Szabo
+//
+// ## Description
+//
+// A basic implementation of grace notes
+// to be rendered on a tab stave.
+//
+// See `tests/gracetabnote_tests.js` for usage examples.
 var tabnote_1 = __webpack_require__(/*! ./tabnote */ "./src/tabnote.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var GraceTabNote = /** @class */ (function (_super) {
     __extends(GraceTabNote, _super);
     function GraceTabNote(note_struct) {
         var _this = _super.call(this, note_struct, false) || this;
         _this.setAttribute('type', 'GraceTabNote');
-        vex_1.Vex.Merge(_this.render_options, {
+        flow_1.Merge(_this.render_options, {
             // vertical shift from stave line
             y_shift: 0.3,
             // grace glyph scale
@@ -18344,7 +18684,6 @@ exports.TextNote = exports.Stroke = exports.BoundingBox = exports.StaveHairpin =
 exports.DefaultFontStack = exports.Fonts = exports.Font = exports.RepeatNote = exports.GlyphNote = exports.StaveText = exports.Registry = exports.EasyScore = exports.Parser = exports.Factory = exports.System = exports.Volta = exports.Crescendo = exports.StringNumber = exports.Tremolo = exports.GraceNoteGroup = exports.NoteSubGroup = exports.GhostNote = exports.BarNote = exports.Repetition = exports.FretHandFinger = exports.TextBracket = exports.PedalMarking = exports.Ornament = exports.StaveLine = exports.TextDynamics = exports.Curve = void 0;
 var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 Object.defineProperty(exports, "Vex", { enumerable: true, get: function () { return vex_1.Vex; } });
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 Object.defineProperty(exports, "Element", { enumerable: true, get: function () { return element_1.Element; } });
 var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
@@ -18495,83 +18834,7 @@ var smufl_1 = __webpack_require__(/*! ./smufl */ "./src/smufl.ts");
 Object.defineProperty(exports, "Font", { enumerable: true, get: function () { return smufl_1.Font; } });
 Object.defineProperty(exports, "Fonts", { enumerable: true, get: function () { return smufl_1.Fonts; } });
 Object.defineProperty(exports, "DefaultFontStack", { enumerable: true, get: function () { return smufl_1.DefaultFontStack; } });
-vex_1.Vex.Flow = tables_1.Flow;
-vex_1.Vex.Flow.Element = element_1.Element;
-vex_1.Vex.Flow.Fraction = fraction_1.Fraction;
-vex_1.Vex.Flow.Renderer = renderer_1.Renderer;
-vex_1.Vex.Flow.Formatter = formatter_1.Formatter;
-vex_1.Vex.Flow.Music = music_1.Music;
-vex_1.Vex.Flow.Glyph = glyph_1.Glyph;
-vex_1.Vex.Flow.Stave = stave_1.Stave;
-vex_1.Vex.Flow.StaveNote = stavenote_1.StaveNote;
-vex_1.Vex.Flow.StaveModifier = stavemodifier_1.StaveModifier;
-vex_1.Vex.Flow.StaveTempo = stavetempo_1.StaveTempo;
-vex_1.Vex.Flow.Voice = voice_1.Voice;
-vex_1.Vex.Flow.Accidental = accidental_1.Accidental;
-vex_1.Vex.Flow.Beam = beam_1.Beam;
-vex_1.Vex.Flow.StaveTie = stavetie_1.StaveTie;
-vex_1.Vex.Flow.TabStave = tabstave_1.TabStave;
-vex_1.Vex.Flow.TabNote = tabnote_1.TabNote;
-vex_1.Vex.Flow.Bend = bend_1.Bend;
-vex_1.Vex.Flow.Vibrato = vibrato_1.Vibrato;
-vex_1.Vex.Flow.VibratoBracket = vibratobracket_1.VibratoBracket;
-vex_1.Vex.Flow.Note = note_1.Note;
-vex_1.Vex.Flow.ModifierContext = modifiercontext_1.ModifierContext;
-vex_1.Vex.Flow.MultiMeasureRest = multimeasurerest_1.MultiMeasureRest;
-vex_1.Vex.Flow.TickContext = tickcontext_1.TickContext;
-vex_1.Vex.Flow.Articulation = articulation_1.Articulation;
-vex_1.Vex.Flow.Annotation = annotation_1.Annotation;
-vex_1.Vex.Flow.ChordSymbol = chordsymbol_1.ChordSymbol;
-vex_1.Vex.Flow.Barline = stavebarline_1.Barline;
-vex_1.Vex.Flow.NoteHead = notehead_1.NoteHead;
-vex_1.Vex.Flow.StaveConnector = staveconnector_1.StaveConnector;
-vex_1.Vex.Flow.ClefNote = clefnote_1.ClefNote;
-vex_1.Vex.Flow.KeySignature = keysignature_1.KeySignature;
-vex_1.Vex.Flow.KeySigNote = keysignote_1.KeySigNote;
-vex_1.Vex.Flow.TimeSignature = timesignature_1.TimeSignature;
-vex_1.Vex.Flow.TimeSigNote = timesignote_1.TimeSigNote;
-vex_1.Vex.Flow.Stem = stem_1.Stem;
-vex_1.Vex.Flow.TabTie = tabtie_1.TabTie;
-vex_1.Vex.Flow.Clef = clef_1.Clef;
-vex_1.Vex.Flow.Dot = dot_1.Dot;
-vex_1.Vex.Flow.Modifier = modifier_1.Modifier;
-vex_1.Vex.Flow.TabSlide = tabslide_1.TabSlide;
-vex_1.Vex.Flow.Tuplet = tuplet_1.Tuplet;
-vex_1.Vex.Flow.GraceNote = gracenote_1.GraceNote;
-vex_1.Vex.Flow.GraceTabNote = gracetabnote_1.GraceTabNote;
-vex_1.Vex.Flow.Tuning = tuning_1.Tuning;
-vex_1.Vex.Flow.KeyManager = keymanager_1.KeyManager;
-vex_1.Vex.Flow.StaveHairpin = stavehairpin_1.StaveHairpin;
-vex_1.Vex.Flow.BoundingBox = boundingbox_1.BoundingBox;
-vex_1.Vex.Flow.Stroke = strokes_1.Stroke;
-vex_1.Vex.Flow.TextNote = textnote_1.TextNote;
-vex_1.Vex.Flow.Curve = curve_1.Curve;
-vex_1.Vex.Flow.TextDynamics = textdynamics_1.TextDynamics;
-vex_1.Vex.Flow.StaveLine = staveline_1.StaveLine;
-vex_1.Vex.Flow.Ornament = ornament_1.Ornament;
-vex_1.Vex.Flow.PedalMarking = pedalmarking_1.PedalMarking;
-vex_1.Vex.Flow.TextBracket = textbracket_1.TextBracket;
-vex_1.Vex.Flow.FretHandFinger = frethandfinger_1.FretHandFinger;
-vex_1.Vex.Flow.Repetition = staverepetition_1.Repetition;
-vex_1.Vex.Flow.BarNote = barnote_1.BarNote;
-vex_1.Vex.Flow.GhostNote = ghostnote_1.GhostNote;
-vex_1.Vex.Flow.NoteSubGroup = notesubgroup_1.NoteSubGroup;
-vex_1.Vex.Flow.GraceNoteGroup = gracenotegroup_1.GraceNoteGroup;
-vex_1.Vex.Flow.Tremolo = tremolo_1.Tremolo;
-vex_1.Vex.Flow.StringNumber = stringnumber_1.StringNumber;
-vex_1.Vex.Flow.Crescendo = crescendo_1.Crescendo;
-vex_1.Vex.Flow.Volta = stavevolta_1.Volta;
-vex_1.Vex.Flow.System = system_1.System;
-vex_1.Vex.Flow.Factory = factory_1.Factory;
-vex_1.Vex.Flow.Parser = parser_1.Parser;
-vex_1.Vex.Flow.EasyScore = easyscore_1.EasyScore;
-vex_1.Vex.Flow.Registry = registry_1.Registry;
-vex_1.Vex.Flow.StaveText = stavetext_1.StaveText;
-vex_1.Vex.Flow.GlyphNote = glyphnote_1.GlyphNote;
-vex_1.Vex.Flow.RepeatNote = repeatnote_1.RepeatNote;
-vex_1.Vex.Flow.Font = smufl_1.Font;
-vex_1.Vex.Flow.Fonts = smufl_1.Fonts;
-vex_1.Vex.Flow.DefaultFontStack = smufl_1.DefaultFontStack;
+exports.default = vex_1.Vex;
 
 
 /***/ }),
@@ -18585,15 +18848,15 @@ vex_1.Vex.Flow.DefaultFontStack = smufl_1.DefaultFontStack;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.KeyManager = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 //
 // This class implements diatonic key management.
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.KeyManager = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var music_1 = __webpack_require__(/*! ./music */ "./src/music.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var KeyManager = /** @class */ (function () {
     function KeyManager(key) {
         this.music = new music_1.Music();
@@ -18614,7 +18877,7 @@ var KeyManager = /** @class */ (function () {
             this.keyString += this.keyParts.accidental;
         var is_supported_type = music_1.Music.scaleTypes[this.keyParts.type];
         if (!is_supported_type) {
-            throw new vex_1.Vex.RERR('BadArguments', "Unsupported key type: " + this.key);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Unsupported key type: " + this.key);
         }
         this.scale = this.music.getScaleTones(this.music.getNoteValue(this.keyString), music_1.Music.scaleTypes[this.keyParts.type]);
         this.scaleMap = {};
@@ -18711,13 +18974,6 @@ exports.KeyManager = KeyManager;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Cyril Silverman
-//
-// ## Description
-//
-// This file implements key signatures. A key signature sits on a stave
-// and indicates the notes with implicit accidentals.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18733,10 +18989,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySignature = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Cyril Silverman
+//
+// ## Description
+//
+// This file implements key signatures. A key signature sits on a stave
+// and indicates the notes with implicit accidentals.
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var KeySignature = /** @class */ (function (_super) {
     __extends(KeySignature, _super);
     // Create a new Key Signature based on a `key_spec`
@@ -18831,7 +19094,7 @@ var KeySignature = /** @class */ (function (_super) {
     // the provided `acc`. If `nextAcc` is also provided, the appropriate
     // spacing will be included in the glyph's position
     KeySignature.prototype.convertToGlyph = function (acc, nextAcc) {
-        var accGlyphData = tables_1.Flow.accidentalCodes(acc.type);
+        var accGlyphData = flow_1.accidentalCodes(acc.type);
         var glyph = new glyph_1.Glyph(accGlyphData.code, this.glyphFontScale);
         // Determine spacing between current accidental and the next accidental
         var extraWidth = 1;
@@ -18861,7 +19124,7 @@ var KeySignature = /** @class */ (function (_super) {
     };
     KeySignature.prototype.convertToCancelAccList = function (spec) {
         // Get the accidental list for the cancelled key signature
-        var cancel_accList = tables_1.Flow.keySignature(spec);
+        var cancel_accList = flow_1.keySignature(spec);
         // If the cancelled key has a different accidental type, ie: # vs b
         var different_types = this.accList.length > 0
             && cancel_accList.length > 0
@@ -18988,12 +19251,12 @@ var KeySignature = /** @class */ (function (_super) {
     };
     KeySignature.prototype.format = function () {
         if (!this.stave) {
-            throw new vex_1.Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+            throw new runtimeerror_1.RuntimeError('KeySignatureError', "Can't draw key signature without stave.");
         }
         this.width = 0;
         this.glyphs = [];
         this.xPositions = [0]; // initialize with initial x position
-        this.accList = tables_1.Flow.keySignature(this.keySpec);
+        this.accList = flow_1.keySignature(this.keySpec);
         var accList = this.accList;
         var firstAccidentalType = accList.length > 0 ? accList[0].type : null;
         var cancelAccList;
@@ -19018,10 +19281,10 @@ var KeySignature = /** @class */ (function (_super) {
     };
     KeySignature.prototype.draw = function () {
         if (!this.x) {
-            throw new vex_1.Vex.RERR('KeySignatureError', "Can't draw key signature without x.");
+            throw new runtimeerror_1.RuntimeError('KeySignatureError', "Can't draw key signature without x.");
         }
         if (!this.stave) {
-            throw new vex_1.Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+            throw new runtimeerror_1.RuntimeError('KeySignatureError', "Can't draw key signature without stave.");
         }
         if (!this.formatted)
             this.format();
@@ -19116,20 +19379,6 @@ exports.KeySigNote = KeySigNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// `Modifier` is an abstract interface for notational elements that modify
-// a `Note`. Examples of modifiers are `Accidental`, `Annotation`, `Stroke`, etc.
-//
-// For a `Modifier` instance to be positioned correctly, it must be part of
-// a `ModifierContext`. All modifiers in the same context are rendered relative to
-// one another.
-//
-// Typically, all modifiers to a note are part of the same `ModifierContext` instance. Also,
-// in multi-voice staves, all modifiers to notes on the same `tick` are part of the same
-// `ModifierContext`. This ensures that multiple voices don't trample all over each other.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19144,11 +19393,33 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Modifier = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.Modifier = exports.Position = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// `Modifier` is an abstract interface for notational elements that modify
+// a `Note`. Examples of modifiers are `Accidental`, `Annotation`, `Stroke`, etc.
+//
+// For a `Modifier` instance to be positioned correctly, it must be part of
+// a `ModifierContext`. All modifiers in the same context are rendered relative to
+// one another.
+//
+// Typically, all modifiers to a note are part of the same `ModifierContext` instance. Also,
+// in multi-voice staves, all modifiers to notes on the same `tick` are part of the same
+// `ModifierContext`. This ensures that multiple voices don't trample all over each other.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var Position;
+(function (Position) {
+    Position[Position["CENTER"] = 0] = "CENTER";
+    Position[Position["LEFT"] = 1] = "LEFT";
+    Position[Position["RIGHT"] = 2] = "RIGHT";
+    Position[Position["ABOVE"] = 3] = "ABOVE";
+    Position[Position["BELOW"] = 4] = "BELOW";
+})(Position = exports.Position || (exports.Position = {}));
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
-// function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
+// function L(...args) { if (Modifier.DEBUG) LOG('Vex.Flow.Modifier', args); }
 var Modifier = /** @class */ (function (_super) {
     __extends(Modifier, _super);
     function Modifier() {
@@ -19178,13 +19449,7 @@ var Modifier = /** @class */ (function (_super) {
     Object.defineProperty(Modifier, "Position", {
         // Modifiers can be positioned almost anywhere, relative to a note.
         get: function () {
-            return {
-                CENTER: 0,
-                LEFT: 1,
-                RIGHT: 2,
-                ABOVE: 3,
-                BELOW: 4,
-            };
+            return Position;
         },
         enumerable: false,
         configurable: true
@@ -19286,7 +19551,7 @@ var Modifier = /** @class */ (function (_super) {
     // Render the modifier onto the canvas.
     Modifier.prototype.draw = function () {
         this.checkContext();
-        throw new vex_1.Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
+        throw new runtimeerror_1.RuntimeError('MethodNotImplemented', 'draw() not implemented for this modifier.');
     };
     // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main note with correct x-offset
     Modifier.prototype.alignSubNotesWithNote = function (subNotes, note) {
@@ -19317,15 +19582,14 @@ exports.Modifier = Modifier;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModifierContext = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 //
 // This class implements various types of modifiers to notes (e.g. bends,
 // fingering positions etc.)
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModifierContext = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
 var dot_1 = __webpack_require__(/*! ./dot */ "./src/dot.ts");
 var frethandfinger_1 = __webpack_require__(/*! ./frethandfinger */ "./src/frethandfinger.ts");
@@ -19340,6 +19604,8 @@ var annotation_1 = __webpack_require__(/*! ./annotation */ "./src/annotation.ts"
 var chordsymbol_1 = __webpack_require__(/*! ./chordsymbol */ "./src/chordsymbol.ts");
 var bend_1 = __webpack_require__(/*! ./bend */ "./src/bend.ts");
 var vibrato_1 = __webpack_require__(/*! ./vibrato */ "./src/vibrato.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -19347,7 +19613,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (ModifierContext.DEBUG)
-        vex_1.Vex.L('Vex.Flow.ModifierContext', args);
+        flow_1.LOG('Vex.Flow.ModifierContext', args);
 }
 var ModifierContext = /** @class */ (function () {
     function ModifierContext() {
@@ -19411,7 +19677,7 @@ var ModifierContext = /** @class */ (function () {
     };
     ModifierContext.prototype.getMetrics = function () {
         if (!this.formatted) {
-            throw new vex_1.Vex.RERR('UnformattedModifier', 'Unformatted modifier has no metrics.');
+            throw new runtimeerror_1.RuntimeError('UnformattedModifier', 'Unformatted modifier has no metrics.');
         }
         return {
             width: this.state.left_shift + this.state.right_shift + this.spacing,
@@ -19455,10 +19721,6 @@ exports.ModifierContext = ModifierContext;
 
 "use strict";
 
-// VexFlow - Music Engraving for HTML5
-// Copyright Mohit Muthanna 2010
-//
-// This class implements multiple measure rests
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -19474,13 +19736,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MultiMeasureRest = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// VexFlow - Music Engraving for HTML5
+// Copyright Mohit Muthanna 2010
+//
+// This class implements multiple measure rests
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
 var notehead_1 = __webpack_require__(/*! ./notehead */ "./src/notehead.ts");
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
 var timesignature_1 = __webpack_require__(/*! ./timesignature */ "./src/timesignature.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var semibrave_rest;
 function get_semibrave_rest() {
     if (!semibrave_rest) {
@@ -19529,9 +19794,9 @@ var MultiMeasureRest = /** @class */ (function (_super) {
             use_symbols: false,
             symbol_spacing: undefined,
             /* same as NoteHead. */
-            semibrave_rest_glyph_scale: tables_1.Flow.DEFAULT_NOTATION_FONT_SCALE,
+            semibrave_rest_glyph_scale: flow_1.DEFAULT_NOTATION_FONT_SCALE,
         };
-        vex_1.Vex.Merge(_this.render_options, options);
+        flow_1.Merge(_this.render_options, options);
         _this.render_options.number_line += fontLineShift;
         _this.number_of_measures = number_of_measures;
         _this.xs = {
@@ -19680,13 +19945,9 @@ exports.MultiMeasureRest = MultiMeasureRest;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This class implements some standard music theory routines.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Music = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Music = /** @class */ (function () {
     function Music() {
     }
@@ -19904,10 +20165,10 @@ var Music = /** @class */ (function () {
     };
     Music.prototype.getNoteParts = function (noteString) {
         if (!noteString || noteString.length < 1) {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Invalid note name: ' + noteString);
         }
         if (noteString.length > 3) {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Invalid note name: ' + noteString);
         }
         var note = noteString.toLowerCase();
         var regex = /^([cdefgab])(b|bb|n|#|##)?$/;
@@ -19921,12 +20182,12 @@ var Music = /** @class */ (function () {
             };
         }
         else {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Invalid note name: ' + noteString);
         }
     };
     Music.prototype.getKeyParts = function (keyString) {
         if (!keyString || keyString.length < 1) {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Invalid key: ' + keyString);
         }
         var key = keyString.toLowerCase();
         // Support Major, Minor, Melodic Minor, and Harmonic Minor key types.
@@ -19946,32 +20207,32 @@ var Music = /** @class */ (function () {
             };
         }
         else {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid key: " + keyString);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid key: " + keyString);
         }
     };
     Music.prototype.getNoteValue = function (noteString) {
         var value = Music.noteValues[noteString];
         if (value == null) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid note name: " + noteString);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid note name: " + noteString);
         }
         return value.int_val;
     };
     Music.prototype.getIntervalValue = function (intervalString) {
         var value = Music.intervals[intervalString];
         if (value == null) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid interval name: " + intervalString);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid interval name: " + intervalString);
         }
         return value;
     };
     Music.prototype.getCanonicalNoteName = function (noteValue) {
         if (!this.isValidNoteValue(noteValue)) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid note value: " + noteValue);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid note value: " + noteValue);
         }
         return Music.canonical_notes[noteValue];
     };
     Music.prototype.getCanonicalIntervalName = function (intervalValue) {
         if (!this.isValidIntervalValue(intervalValue)) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid interval value: " + intervalValue);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid interval value: " + intervalValue);
         }
         return Music.diatonic_intervals[intervalValue];
     };
@@ -19982,7 +20243,7 @@ var Music = /** @class */ (function () {
         if (direction == null)
             direction = 1;
         if (direction !== 1 && direction !== -1) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid direction: " + direction);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid direction: " + direction);
         }
         var sum = (noteValue + (direction * intervalValue)) % Music.NUM_TONES;
         if (sum < 0)
@@ -20001,14 +20262,14 @@ var Music = /** @class */ (function () {
             var reverse_interval = (((noteValue + 1) + (rootValue + 1)) %
                 Music.NUM_TONES) * multiplier;
             if (Math.abs(reverse_interval) > 2) {
-                throw new vex_1.Vex.RERR('BadArguments', "Notes not related: " + root + ", " + noteValue + ")");
+                throw new runtimeerror_1.RuntimeError('BadArguments', "Notes not related: " + root + ", " + noteValue + ")");
             }
             else {
                 interval = reverse_interval;
             }
         }
         if (Math.abs(interval) > 2) {
-            throw new vex_1.Vex.RERR('BadArguments', "Notes not related: " + root + ", " + noteValue + ")");
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Notes not related: " + root + ", " + noteValue + ")");
         }
         var relativeNoteName = parts.root;
         if (interval > 0) {
@@ -20049,10 +20310,10 @@ var Music = /** @class */ (function () {
         if (direction == null)
             direction = 1;
         if (direction !== 1 && direction !== -1) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid direction: " + direction);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid direction: " + direction);
         }
         if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2)) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid notes: " + note1 + ", " + note2);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid notes: " + note1 + ", " + note2);
         }
         var difference = direction === 1
             ? note2 - note1
@@ -20072,7 +20333,7 @@ var Music = /** @class */ (function () {
         if (keySigParts.accidental)
             keySigString += keySigParts.accidental;
         if (!scaleName)
-            throw new vex_1.Vex.RERR('BadArguments', 'Unsupported key type: ' + keySignature);
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Unsupported key type: ' + keySignature);
         var scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
         var noteLocation = Music.root_indices[keySigParts.root];
         var scaleMap = {};
@@ -20103,17 +20364,6 @@ exports.Music = Music;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements an abstract interface for notes and chords that
-// are rendered on a stave. Notes have some common properties: All of them
-// have a value (e.g., pitch, fret, etc.) and a duration (quarter, half, etc.)
-//
-// Some notes have stems, heads, dots, etc. Most notational elements that
-// surround a note are called *modifiers*, and every note has an associated
-// array of them. All notes also have a rendering context and belong to a stave.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20129,9 +20379,21 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Note = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements an abstract interface for notes and chords that
+// are rendered on a stave. Notes have some common properties: All of them
+// have a value (e.g., pitch, fret, etc.) and a duration (quarter, half, etc.)
+//
+// Some notes have stems, heads, dots, etc. Most notational elements that
+// surround a note are called *modifiers*, and every note has an associated
+// array of them. All notes also have a rendering context and belong to a stave.
 var tickable_1 = __webpack_require__(/*! ./tickable */ "./src/tickable.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var Note = /** @class */ (function (_super) {
     __extends(Note, _super);
     // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
@@ -20148,12 +20410,12 @@ var Note = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.setAttribute('type', 'Note');
         if (!noteStruct) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Note must have valid initialization data to identify duration and type.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Note must have valid initialization data to identify duration and type.');
         }
         // Parse `noteStruct` and get note properties.
         var initStruct = Note.parseNoteStruct(noteStruct);
         if (!initStruct) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', "Invalid note initialization object: " + JSON.stringify(noteStruct));
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid note initialization object: " + JSON.stringify(noteStruct));
         }
         // Set note properties from parameters.
         _this.duration = initStruct.duration;
@@ -20170,10 +20432,10 @@ var Note = /** @class */ (function (_super) {
         }
         _this.modifiers = [];
         // Get the glyph code for this note from the font.
-        _this.glyph = tables_1.Flow.getGlyphProps(_this.duration, _this.noteType);
-        _this.customGlyphs = _this.customTypes.map(function (t) { return tables_1.Flow.getGlyphProps(_this.duration, t); });
+        _this.glyph = flow_1.getGlyphProps(_this.duration, _this.noteType);
+        _this.customGlyphs = _this.customTypes.map(function (t) { return flow_1.getGlyphProps(_this.duration, t); });
         if (_this.positions && (typeof (_this.positions) !== 'object' || !_this.positions.length)) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Note keys must be array type.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Note keys must be array type.');
         }
         // Note to play for audio players.
         _this.playNote = null;
@@ -20243,7 +20505,7 @@ var Note = /** @class */ (function (_super) {
         stroke(xPost2, xEnd, 'red');
         stroke(xEnd, xFreedomRight, '#DD0');
         stroke(xStart - note.getXShift(), xStart, '#BBB'); // Shift
-        vex_1.Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
+        flow_1.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
         var formatterMetrics = note.getFormatterMetrics();
         if (formatterMetrics.iterations > 0) {
             var spaceDeviation = formatterMetrics.space.deviation;
@@ -20277,7 +20539,7 @@ var Note = /** @class */ (function (_super) {
         }
         // If specified type is invalid, return null
         var type = noteStruct.type;
-        if (type && !tables_1.Flow.getGlyphProps.validTypes[type]) {
+        if (type && !tables_1.GLYPH_PROPS_VALID_TYPES[type]) {
             return null;
         }
         // If no type specified, check duration or custom types
@@ -20293,7 +20555,7 @@ var Note = /** @class */ (function (_super) {
             }
         }
         // Calculate the tick duration of the note
-        var ticks = tables_1.Flow.durationToTicks(durationProps.duration);
+        var ticks = flow_1.durationToTicks(durationProps.duration);
         if (ticks == null) {
             return null;
         }
@@ -20411,7 +20673,7 @@ var Note = /** @class */ (function (_super) {
     };
     Note.prototype.getYs = function () {
         if (this.ys.length === 0) {
-            throw new vex_1.Vex.RERR('NoYValues', 'No Y-values calculated for this note.');
+            throw new runtimeerror_1.RuntimeError('NoYValues', 'No Y-values calculated for this note.');
         }
         return this.ys;
     };
@@ -20419,7 +20681,7 @@ var Note = /** @class */ (function (_super) {
     // be rendered.
     Note.prototype.getYForTopText = function (text_line) {
         if (!this.stave) {
-            throw new vex_1.Vex.RERR('NoStave', 'No stave attached to this note.');
+            throw new runtimeerror_1.RuntimeError('NoStave', 'No stave attached to this note.');
         }
         return this.stave.getYForTopText(text_line);
     };
@@ -20430,7 +20692,7 @@ var Note = /** @class */ (function (_super) {
     // Returns the voice that this note belongs in.
     Note.prototype.getVoice = function () {
         if (!this.voice)
-            throw new vex_1.Vex.RERR('NoVoice', 'Note has no voice.');
+            throw new runtimeerror_1.RuntimeError('NoVoice', 'Note has no voice.');
         return this.voice;
     };
     // Attach this note to `voice`.
@@ -20484,7 +20746,7 @@ var Note = /** @class */ (function (_super) {
     // Get the coordinates for where modifiers begin.
     Note.prototype.getModifierStartXY = function (position, index, options) {
         if (!this.preFormatted) {
-            throw new vex_1.Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+            throw new runtimeerror_1.RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
         }
         return {
             x: this.getAbsoluteX(),
@@ -20503,7 +20765,7 @@ var Note = /** @class */ (function (_super) {
     // `rightDisplacedHeadPx`: Extra space on right of note.
     Note.prototype.getMetrics = function () {
         if (!this.preFormatted) {
-            throw new vex_1.Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
+            throw new runtimeerror_1.RuntimeError('UnformattedNote', "Can't call getMetrics on an unformatted note.");
         }
         var modLeftPx = this.modifierContext ? this.modifierContext.state.left_shift : 0;
         var modRightPx = this.modifierContext ? this.modifierContext.state.right_shift : 0;
@@ -20534,7 +20796,7 @@ var Note = /** @class */ (function (_super) {
     // looking for the post-formatted x-position.
     Note.prototype.getAbsoluteX = function () {
         if (!this.tickContext) {
-            throw new vex_1.Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+            throw new runtimeerror_1.RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
         }
         // Position note to left edge of tick context.
         var x = this.tickContext.getX();
@@ -20588,12 +20850,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NoteHead = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var note_1 = __webpack_require__(/*! ./note */ "./src/note.ts");
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var boundingbox_1 = __webpack_require__(/*! ./boundingbox */ "./src/boundingbox.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -20601,7 +20864,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (NoteHead.DEBUG)
-        vex_1.Vex.L('Vex.Flow.NoteHead', args);
+        flow_1.LOG('Vex.Flow.NoteHead', args);
 }
 // Draw slashnote head manually. No glyph exists for this.
 //
@@ -20612,15 +20875,15 @@ function L() {
 // * `y`: the y coordinate to draw at
 // * `stem_direction`: the direction of the stem
 function drawSlashNoteHead(ctx, duration, x, y, stem_direction, staveSpace) {
-    var width = tables_1.Flow.SLASH_NOTEHEAD_WIDTH;
+    var width = flow_1.SLASH_NOTEHEAD_WIDTH;
     ctx.save();
-    ctx.setLineWidth(tables_1.Flow.STEM_WIDTH);
+    ctx.setLineWidth(flow_1.STEM_WIDTH);
     var fill = false;
-    if (tables_1.Flow.durationToNumber(duration) > 2) {
+    if (flow_1.durationToNumber(duration) > 2) {
         fill = true;
     }
     if (!fill)
-        x -= (tables_1.Flow.STEM_WIDTH / 2) * stem_direction;
+        x -= (flow_1.STEM_WIDTH / 2) * stem_direction;
     ctx.beginPath();
     ctx.moveTo(x, y + staveSpace);
     ctx.lineTo(x, y + 1);
@@ -20634,7 +20897,7 @@ function drawSlashNoteHead(ctx, duration, x, y, stem_direction, staveSpace) {
     else {
         ctx.stroke();
     }
-    if (tables_1.Flow.durationToFraction(duration).equals(0.5)) {
+    if (flow_1.durationToFraction(duration).equals(0.5)) {
         var breve_lines = [-3, -1, width + 1, width + 3];
         for (var i = 0; i < breve_lines.length; i++) {
             ctx.beginPath();
@@ -20660,9 +20923,9 @@ var NoteHead = /** @class */ (function (_super) {
         _this.line = head_options.line;
         // Get glyph code based on duration and note type. This could be
         // regular notes, rests, or other custom codes.
-        _this.glyph = tables_1.Flow.getGlyphProps(_this.duration, _this.note_type);
+        _this.glyph = flow_1.getGlyphProps(_this.duration, _this.note_type);
         if (!_this.glyph) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', "No glyph found for duration '" + _this.duration + "' and type '" + _this.note_type + "'");
+            throw new runtimeerror_1.RuntimeError('BadArguments', "No glyph found for duration '" + _this.duration + "' and type '" + _this.note_type + "'");
         }
         _this.glyph_code = _this.glyph.code_head;
         _this.x_shift = head_options.x_shift || 0;
@@ -20674,9 +20937,9 @@ var NoteHead = /** @class */ (function (_super) {
         }
         _this.style = head_options.style;
         _this.slashed = head_options.slashed;
-        vex_1.Vex.Merge(_this.render_options, {
+        flow_1.Merge(_this.render_options, {
             // font size for note heads
-            glyph_font_scale: head_options.glyph_font_scale || tables_1.Flow.DEFAULT_NOTATION_FONT_SCALE,
+            glyph_font_scale: head_options.glyph_font_scale || flow_1.DEFAULT_NOTATION_FONT_SCALE,
             // number of stroke px to the left and right of head
             stroke_px: 3,
         });
@@ -20721,12 +20984,12 @@ var NoteHead = /** @class */ (function (_super) {
     // Get the `BoundingBox` for the `NoteHead`
     NoteHead.prototype.getBoundingBox = function () {
         if (!this.preFormatted) {
-            throw new vex_1.Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+            throw new runtimeerror_1.RuntimeError('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
         }
         var spacing = this.stave.getSpacingBetweenLines();
         var half_spacing = spacing / 2;
         var min_y = this.y - half_spacing;
-        return new tables_1.Flow.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
+        return new boundingbox_1.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
     };
     // Set notehead to a provided `stave`
     NoteHead.prototype.setStave = function (stave) {
@@ -20794,14 +21057,6 @@ exports.NoteHead = NoteHead;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author Taehoon Moon 2016
-//
-// ## Description
-//
-// This file implements `NoteSubGroup` which is used to format and
-// render notes as a `Modifier`
-// ex) ClefNote, TimeSigNote and BarNote.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20817,11 +21072,19 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NoteSubGroup = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author Taehoon Moon 2016
+//
+// ## Description
+//
+// This file implements `NoteSubGroup` which is used to format and
+// render notes as a `Modifier`
+// ex) ClefNote, TimeSigNote and BarNote.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var formatter_1 = __webpack_require__(/*! ./formatter */ "./src/formatter.ts");
 var voice_1 = __webpack_require__(/*! ./voice */ "./src/voice.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var NoteSubGroup = /** @class */ (function (_super) {
     __extends(NoteSubGroup, _super);
     function NoteSubGroup(subNotes) {
@@ -20840,7 +21103,7 @@ var NoteSubGroup = /** @class */ (function (_super) {
         _this.voice = new voice_1.Voice({
             num_beats: 4,
             beat_value: 4,
-            resolution: tables_1.Flow.RESOLUTION,
+            resolution: flow_1.RESOLUTION,
         }).setStrict(false);
         _this.voice.addTickables(_this.subNotes);
         return _this;
@@ -20891,7 +21154,7 @@ var NoteSubGroup = /** @class */ (function (_super) {
         this.checkContext();
         var note = this.getNote();
         if (!(note && (this.index !== null))) {
-            throw new vex_1.Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note and parent note index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note and parent note index.");
         }
         this.setRendered();
         this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
@@ -20914,16 +21177,6 @@ exports.NoteSubGroup = NoteSubGroup;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Cyril Silverman
-//
-// ## Description
-//
-// This file implements ornaments as modifiers that can be
-// attached to notes. The complete list of ornaments is available in
-// `tables.js` under `Vex.Flow.ornamentCodes`.
-//
-// See `tests/ornament_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20939,12 +21192,22 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Ornament = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Cyril Silverman
+//
+// ## Description
+//
+// This file implements ornaments as modifiers that can be
+// attached to notes. The complete list of ornaments is available in
+// `tables.js` under `Vex.Flow.ornamentCodes`.
+//
+// See `tests/ornament_tests.js` for usage examples.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var tickcontext_1 = __webpack_require__(/*! ./tickcontext */ "./src/tickcontext.ts");
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -20952,7 +21215,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Ornament.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Ornament', args);
+        flow_1.LOG('Vex.Flow.Ornament', args);
 }
 var Ornament = /** @class */ (function (_super) {
     __extends(Ornament, _super);
@@ -20972,7 +21235,7 @@ var Ornament = /** @class */ (function (_super) {
             accidentalLowerPadding: 3,
             accidentalUpperPadding: 3
         };
-        _this.ornament = tables_1.Flow.ornamentCodes(_this.type);
+        _this.ornament = flow_1.ornamentCodes(_this.type);
         // new ornaments have their origin at the origin, and have more specific
         // metrics.  Legacy ornaments do some
         // x scaling, and have hard-coded metrics
@@ -20987,7 +21250,7 @@ var Ornament = /** @class */ (function (_super) {
             metrics.stemUpYOffset : 0;
         _this.ornamentAlignWithNoteHead = Ornament.ornamentAlignWithNoteHead.indexOf(_this.type) >= 0;
         if (!_this.ornament) {
-            throw new vex_1.Vex.RERR('ArgumentError', "Ornament not found: '" + _this.type + "'");
+            throw new runtimeerror_1.RuntimeError('ArgumentError', "Ornament not found: '" + _this.type + "'");
         }
         _this.x_shift = metrics ? metrics.xOffset : 0;
         _this.y_shift = metrics ? metrics.yOffset : 0;
@@ -21137,14 +21400,14 @@ var Ornament = /** @class */ (function (_super) {
     // Set the upper accidental for the ornament
     Ornament.prototype.setUpperAccidental = function (accid) {
         var scale = this.render_options.font_scale / 1.3;
-        this.accidentalUpper = new glyph_1.Glyph(tables_1.Flow.accidentalCodes(accid).code, scale);
+        this.accidentalUpper = new glyph_1.Glyph(flow_1.accidentalCodes(accid).code, scale);
         this.accidentalUpper.setOrigin(0.5, 1.0);
         return this;
     };
     // Set the lower accidental for the ornament
     Ornament.prototype.setLowerAccidental = function (accid) {
         var scale = this.render_options.font_scale / 1.3;
-        this.accidentalLower = new glyph_1.Glyph(tables_1.Flow.accidentalCodes(accid).code, scale);
+        this.accidentalLower = new glyph_1.Glyph(flow_1.accidentalCodes(accid).code, scale);
         this.accidentalLower.setOrigin(0.5, 1.0);
         return this;
     };
@@ -21152,7 +21415,7 @@ var Ornament = /** @class */ (function (_super) {
     Ornament.prototype.draw = function () {
         this.checkContext();
         if (!this.note || this.index == null) {
-            throw new vex_1.Vex.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw Ornament without a note and index.");
         }
         this.setRendered();
         var ctx = this.context;
@@ -21247,12 +21510,10 @@ exports.Ornament = Ornament;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// A generic text parsing class for VexFlow.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Parser = exports.X = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.Parser = void 0;
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -21260,9 +21521,9 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Parser.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Parser', args);
+        flow_1.LOG('Vex.Flow.Parser', args);
 }
-exports.X = vex_1.Vex.MakeException('ParserError');
+var X = runtimeerror_1.MakeException('ParserError');
 // Converts parser results into an easy to reference list that can be
 // used in triggers.
 function flattenMatches(results) {
@@ -21407,7 +21668,7 @@ var Parser = /** @class */ (function () {
         L('Evaluating rules:', rules);
         var result;
         if (!rules) {
-            throw new exports.X('Invalid Rule: ' + rules, rules);
+            throw new X('Invalid Rule: ' + rules, rules);
         }
         // Get rule from Grammar class.
         var rule = rules.bind(this.grammar)();
@@ -21433,7 +21694,7 @@ var Parser = /** @class */ (function () {
             }
         }
         else {
-            throw new exports.X('Bad grammar! No `token` or `expect` property', rule);
+            throw new X('Bad grammar! No `token` or `expect` property', rule);
         }
         // If there's a trigger attached to this rule, then pull it.
         result.matches = [];
@@ -21459,15 +21720,6 @@ exports.Parser = Parser;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements different types of pedal markings. These notation
-// elements indicate to the performer when to depress and release the a pedal.
-//
-// In order to create "Sostenuto", and "una corda" markings, you must set
-// custom text for the release/depress pedal markings.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21482,10 +21734,20 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PedalMarking = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.PedalMarking = exports.Styles = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements different types of pedal markings. These notation
+// elements indicate to the performer when to depress and release the a pedal.
+//
+// In order to create "Sostenuto", and "una corda" markings, you must set
+// custom text for the release/depress pedal markings.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -21493,7 +21755,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (PedalMarking.DEBUG)
-        vex_1.Vex.L('Vex.Flow.PedalMarking', args);
+        flow_1.LOG('Vex.Flow.PedalMarking', args);
 }
 // Draws a pedal glyph with the provided `name` on a rendering `context`
 // at the coordinates `x` and `y. Takes into account the glyph data
@@ -21503,6 +21765,12 @@ function drawPedalGlyph(name, context, x, y, point) {
     var glyph = new glyph_1.Glyph(glyph_data.code, point, { category: 'pedalMarking' });
     glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
 }
+var Styles;
+(function (Styles) {
+    Styles[Styles["TEXT"] = 1] = "TEXT";
+    Styles[Styles["BRACKET"] = 2] = "BRACKET";
+    Styles[Styles["MIXED"] = 3] = "MIXED";
+})(Styles = exports.Styles || (exports.Styles = {}));
 var PedalMarking = /** @class */ (function (_super) {
     __extends(PedalMarking, _super);
     // ## Prototype Methods
@@ -21549,11 +21817,7 @@ var PedalMarking = /** @class */ (function (_super) {
     });
     Object.defineProperty(PedalMarking, "Styles", {
         get: function () {
-            return {
-                TEXT: 1,
-                BRACKET: 2,
-                MIXED: 3,
-            };
+            return Styles;
         },
         enumerable: false,
         configurable: true
@@ -21598,7 +21862,7 @@ var PedalMarking = /** @class */ (function (_super) {
     // Set the pedal marking style
     PedalMarking.prototype.setStyle = function (style) {
         if (style < 1 && style > 3) {
-            throw new vex_1.Vex.RERR('InvalidParameter', 'The style must be one found in PedalMarking.Styles');
+            throw new runtimeerror_1.RuntimeError('InvalidParameter', 'The style must be one found in PedalMarking.Styles');
         }
         this.style = style;
         return this;
@@ -21624,7 +21888,7 @@ var PedalMarking = /** @class */ (function (_super) {
             var y = note.getStave().getYForBottomText(_this.line + 3);
             // Throw if current note is positioned before the previous note
             if (x < prev_x) {
-                throw new vex_1.Vex.RERR('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
+                throw new runtimeerror_1.RuntimeError('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
             }
             // Determine if the previous or next note are the same
             // as the current note. We need to keep track of this for
@@ -22119,28 +22383,11 @@ exports.RaphaelContext = RaphaelContext;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// @author Mohit Cheppudira
-//
-// ## Description
-//
-// This file implements a registry for VexFlow elements. It allows users
-// to track, query, and manage some subset of generated elements, and
-// dynamically get and set attributes.
-//
-// There are two ways to regiser with a registry:
-//
-// 1) Explicitly call `element.register(registry)`, or,
-// 2) Call `Registry.enableDefaultRegistry(registry)` when ready, and all future
-//    elements will automatically register with it.
-//
-// Once an element is registered, selected attributes are tracked and indexed by
-// the registry. This allows fast look up of elements by attributes like id, type,
-// and class.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Registry = exports.X = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-exports.X = vex_1.Vex.MakeException('RegistryError');
+exports.Registry = void 0;
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+// export const X = Vex.MakeException('RegistryError');
+var X = runtimeerror_1.MakeException('RegistryError');
 function setIndexValue(index, name, value, id, elem) {
     if (!index[name][value])
         index[name][value] = {};
@@ -22197,7 +22444,7 @@ var Registry = /** @class */ (function () {
         var _this = this;
         id = id || elem.getAttribute('id');
         if (!id) {
-            throw new exports.X('Can\'t add element without `id` attribute to registry', elem);
+            throw new X('Can\'t add element without `id` attribute to registry', elem);
         }
         // Manually add id to index, then update other indexes.
         elem.setAttribute('id', id);
@@ -22255,22 +22502,35 @@ Registry.defaultRegistry = null;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Renderer = exports.LineEndType = exports.Backends = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 // Support for different rendering contexts: Canvas, Raphael
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Renderer = void 0;
 var canvascontext_1 = __webpack_require__(/*! ./canvascontext */ "./src/canvascontext.ts");
 var raphaelcontext_1 = __webpack_require__(/*! ./raphaelcontext */ "./src/raphaelcontext.ts");
 var svgcontext_1 = __webpack_require__(/*! ./svgcontext */ "./src/svgcontext.ts");
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var lastContext = null;
+var Backends;
+(function (Backends) {
+    Backends[Backends["CANVAS"] = 1] = "CANVAS";
+    Backends[Backends["RAPHAEL"] = 2] = "RAPHAEL";
+    Backends[Backends["SVG"] = 3] = "SVG";
+    Backends[Backends["VML"] = 4] = "VML";
+})(Backends = exports.Backends || (exports.Backends = {}));
+var LineEndType;
+(function (LineEndType) {
+    LineEndType[LineEndType["NONE"] = 1] = "NONE";
+    LineEndType[LineEndType["UP"] = 2] = "UP";
+    LineEndType[LineEndType["DOWN"] = 3] = "DOWN"; // Downward leg
+})(LineEndType = exports.LineEndType || (exports.LineEndType = {}));
 var Renderer = /** @class */ (function () {
     function Renderer(elementRef, backend) {
         this.elementRef = elementRef;
         if (!this.elementRef) {
-            throw new vex_1.Vex.RERR('BadArgument', 'Invalid id for renderer.');
+            throw new runtimeerror_1.RuntimeError('BadArgument', 'Invalid id for renderer.');
         }
         this.element = document.getElementById(elementRef);
         if (!this.element)
@@ -22282,7 +22542,7 @@ var Renderer = /** @class */ (function () {
         if (this.backend === Renderer.Backends.CANVAS) {
             // Create context.
             if (!this.element.getContext) {
-                throw new vex_1.Vex.RERR('BadElement', "Can't get canvas context from element: " + elementRef);
+                throw new runtimeerror_1.RuntimeError('BadElement', "Can't get canvas context from element: " + elementRef);
             }
             this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
         }
@@ -22293,17 +22553,12 @@ var Renderer = /** @class */ (function () {
             this.ctx = new svgcontext_1.SVGContext(this.element);
         }
         else {
-            throw new vex_1.Vex.RERR('InvalidBackend', "No support for backend: " + this.backend);
+            throw new runtimeerror_1.RuntimeError('InvalidBackend', "No support for backend: " + this.backend);
         }
     }
     Object.defineProperty(Renderer, "Backends", {
         get: function () {
-            return {
-                CANVAS: 1,
-                RAPHAEL: 2,
-                SVG: 3,
-                VML: 4,
-            };
+            return Backends;
         },
         enumerable: false,
         configurable: true
@@ -22311,11 +22566,7 @@ var Renderer = /** @class */ (function () {
     Object.defineProperty(Renderer, "LineEndType", {
         // End of line types
         get: function () {
-            return {
-                NONE: 1,
-                UP: 2,
-                DOWN: 3,
-            };
+            return LineEndType;
         },
         enumerable: false,
         configurable: true
@@ -22410,7 +22661,7 @@ var Renderer = /** @class */ (function () {
         var _a;
         if (this.backend === Renderer.Backends.CANVAS) {
             if (!this.element.getContext) {
-                throw new vex_1.Vex.RERR('BadElement', "Can't get canvas context from element: " + this.elementRef);
+                throw new runtimeerror_1.RuntimeError('BadElement', "Can't get canvas context from element: " + this.elementRef);
             }
             _a = canvascontext_1.CanvasContext.SanitizeCanvasDims(width, height), width = _a[0], height = _a[1];
             var devicePixelRatio_1 = window.devicePixelRatio || 1;
@@ -22500,6 +22751,71 @@ exports.RepeatNote = RepeatNote;
 
 /***/ }),
 
+/***/ "./src/runtimeerror.ts":
+/*!*****************************!*\
+  !*** ./src/runtimeerror.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MakeException = exports.GenericException = exports.RuntimeError = void 0;
+// Default runtime exception.
+var RuntimeError = /** @class */ (function () {
+    function RuntimeError(code, message) {
+        this.code = code;
+        this.message = message;
+        this.code = code;
+        this.message = message;
+    }
+    RuntimeError.prototype.toString = function () {
+        return '[RuntimeError] ' + this.code + ':' + this.message;
+    };
+    return RuntimeError;
+}());
+exports.RuntimeError = RuntimeError;
+var GenericException = /** @class */ (function (_super) {
+    __extends(GenericException, _super);
+    function GenericException(message, data) {
+        var _this = _super.call(this, message) || this;
+        _this.message = message;
+        _this.data = data;
+        return _this;
+    }
+    return GenericException;
+}(Error));
+exports.GenericException = GenericException;
+var MakeException = function (name) {
+    return /** @class */ (function (_super) {
+        __extends(class_1, _super);
+        function class_1(message, data) {
+            var _this = _super.call(this, message, data) || this;
+            _this.name = name;
+            return _this;
+        }
+        return class_1;
+    }(GenericException));
+};
+exports.MakeException = MakeException;
+
+
+/***/ }),
+
 /***/ "./src/smufl.ts":
 /*!**********************!*\
   !*** ./src/smufl.ts ***!
@@ -22511,7 +22827,6 @@ exports.RepeatNote = RepeatNote;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Font = exports.DefaultFontStack = exports.Fonts = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var bravura_glyphs_1 = __webpack_require__(/*! ./fonts/bravura_glyphs */ "./src/fonts/bravura_glyphs.ts");
 var bravura_metrics_1 = __webpack_require__(/*! ./fonts/bravura_metrics */ "./src/fonts/bravura_metrics.ts");
 var gonville_glyphs_1 = __webpack_require__(/*! ./fonts/gonville_glyphs */ "./src/fonts/gonville_glyphs.ts");
@@ -22520,6 +22835,7 @@ var petaluma_glyphs_1 = __webpack_require__(/*! ./fonts/petaluma_glyphs */ "./sr
 var petaluma_metrics_1 = __webpack_require__(/*! ./fonts/petaluma_metrics */ "./src/fonts/petaluma_metrics.ts");
 var custom_glyphs_1 = __webpack_require__(/*! ./fonts/custom_glyphs */ "./src/fonts/custom_glyphs.ts");
 var custom_metrics_1 = __webpack_require__(/*! ./fonts/custom_metrics */ "./src/fonts/custom_metrics.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Font = /** @class */ (function () {
     function Font(name, metrics, fontData) {
         this.name = name;
@@ -22546,7 +22862,7 @@ var Font = /** @class */ (function () {
                     return defaultValue;
                 }
                 else {
-                    throw new vex_1.Vex.RERR('INVALID_KEY', "Invalid music font metric key: " + key);
+                    throw new runtimeerror_1.RuntimeError('INVALID_KEY', "Invalid music font metric key: " + key);
                 }
             }
             val = val[parts[i]];
@@ -22592,7 +22908,6 @@ exports.DefaultFontStack = DefaultFontStack;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22619,9 +22934,8 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stave = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var stavebarline_1 = __webpack_require__(/*! ./stavebarline */ "./src/stavebarline.ts");
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
 var staverepetition_1 = __webpack_require__(/*! ./staverepetition */ "./src/staverepetition.ts");
@@ -22633,6 +22947,8 @@ var clef_1 = __webpack_require__(/*! ./clef */ "./src/clef.ts");
 var keysignature_1 = __webpack_require__(/*! ./keysignature */ "./src/keysignature.ts");
 var timesignature_1 = __webpack_require__(/*! ./timesignature */ "./src/timesignature.ts");
 var stavevolta_1 = __webpack_require__(/*! ./stavevolta */ "./src/stavevolta.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Stave = /** @class */ (function (_super) {
     __extends(Stave, _super);
     function Stave(x, y, width, options) {
@@ -22666,7 +22982,7 @@ var Stave = /** @class */ (function (_super) {
             top_text_position: 1,
         };
         _this.bounds = { x: _this.x, y: _this.y, w: _this.width, h: 0 };
-        vex_1.Vex.Merge(_this.options, options);
+        flow_1.Merge(_this.options, options);
         _this.resetLines();
         var BARTYPE = stavebarline_1.Barline.type;
         // beg bar
@@ -22730,10 +23046,10 @@ var Stave = /** @class */ (function (_super) {
         return this;
     };
     Stave.prototype.getTopLineTopY = function () {
-        return this.getYForLine(0) - (tables_1.Flow.STAVE_LINE_THICKNESS / 2);
+        return this.getYForLine(0) - (flow_1.STAVE_LINE_THICKNESS / 2);
     };
     Stave.prototype.getBottomLineBottomY = function () {
-        return this.getYForLine(this.getNumLines() - 1) + (tables_1.Flow.STAVE_LINE_THICKNESS / 2);
+        return this.getYForLine(this.getNumLines() - 1) + (flow_1.STAVE_LINE_THICKNESS / 2);
     };
     Stave.prototype.setX = function (x) {
         var shift = x - this.x;
@@ -22761,7 +23077,7 @@ var Stave = /** @class */ (function (_super) {
         return this.width;
     };
     Stave.prototype.getStyle = function () {
-        return __assign({ fillStyle: this.options.fill_style, strokeStyle: this.options.fill_style, lineWidth: tables_1.Flow.STAVE_LINE_THICKNESS }, this.style || {});
+        return __assign({ fillStyle: this.options.fill_style, strokeStyle: this.options.fill_style, lineWidth: flow_1.STAVE_LINE_THICKNESS }, this.style || {});
     };
     Stave.prototype.setMeasure = function (measure) {
         this.measure = measure;
@@ -22776,7 +23092,7 @@ var Stave = /** @class */ (function (_super) {
     Stave.prototype.getModifierXShift = function (index) {
         if (index === void 0) { index = 0; }
         if (typeof index !== 'number') {
-            throw new vex_1.Vex.RERR('InvalidIndex', 'Must be of number type');
+            throw new runtimeerror_1.RuntimeError('InvalidIndex', 'Must be of number type');
         }
         if (!this.formatted)
             this.format();
@@ -23180,13 +23496,13 @@ var Stave = /** @class */ (function (_super) {
      */
     Stave.prototype.setConfigForLine = function (line_number, line_config) {
         if (line_number >= this.options.num_lines || line_number < 0) {
-            throw new vex_1.Vex.RERR('StaveConfigError', 'The line number must be within the range of the number of lines in the Stave.');
+            throw new runtimeerror_1.RuntimeError('StaveConfigError', 'The line number must be within the range of the number of lines in the Stave.');
         }
         if (line_config.visible === undefined) {
-            throw new vex_1.Vex.RERR('StaveConfigError', "The line configuration object is missing the 'visible' property.");
+            throw new runtimeerror_1.RuntimeError('StaveConfigError', "The line configuration object is missing the 'visible' property.");
         }
         if (typeof (line_config.visible) !== 'boolean') {
-            throw new vex_1.Vex.RERR('StaveConfigError', "The line configuration objects 'visible' property must be true or false.");
+            throw new runtimeerror_1.RuntimeError('StaveConfigError', "The line configuration objects 'visible' property must be true or false.");
         }
         this.options.line_config[line_number] = line_config;
         return this;
@@ -23202,7 +23518,7 @@ var Stave = /** @class */ (function (_super) {
      */
     Stave.prototype.setConfigForLines = function (lines_configuration) {
         if (lines_configuration.length !== this.options.num_lines) {
-            throw new vex_1.Vex.RERR('StaveConfigError', 'The length of the lines configuration array must match the number of lines in the Stave');
+            throw new runtimeerror_1.RuntimeError('StaveConfigError', 'The length of the lines configuration array must match the number of lines in the Stave');
         }
         // Make sure the defaults are present in case an incomplete set of
         //  configuration options were supplied.
@@ -23212,7 +23528,7 @@ var Stave = /** @class */ (function (_super) {
             if (!lines_configuration[line_config]) {
                 lines_configuration[line_config] = this.options.line_config[line_config];
             }
-            vex_1.Vex.Merge(this.options.line_config[line_config], lines_configuration[line_config]);
+            flow_1.Merge(this.options.line_config[line_config], lines_configuration[line_config]);
         }
         this.options.line_config = lines_configuration;
         return this;
@@ -23233,9 +23549,6 @@ exports.Stave = Stave;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// Author Larry Kuhns 2011
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23250,9 +23563,22 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Barline = void 0;
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+exports.Barline = exports.Type = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// Author Larry Kuhns 2011
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var Type;
+(function (Type) {
+    Type[Type["SINGLE"] = 1] = "SINGLE";
+    Type[Type["DOUBLE"] = 2] = "DOUBLE";
+    Type[Type["END"] = 3] = "END";
+    Type[Type["REPEAT_BEGIN"] = 4] = "REPEAT_BEGIN";
+    Type[Type["REPEAT_END"] = 5] = "REPEAT_END";
+    Type[Type["REPEAT_BOTH"] = 6] = "REPEAT_BOTH";
+    Type[Type["NONE"] = 7] = "NONE";
+})(Type = exports.Type || (exports.Type = {}));
 var Barline = /** @class */ (function (_super) {
     __extends(Barline, _super);
     /**
@@ -23261,7 +23587,7 @@ var Barline = /** @class */ (function (_super) {
     function Barline(type) {
         var _this = _super.call(this) || this;
         _this.setAttribute('type', 'Barline');
-        _this.thickness = tables_1.Flow.STAVE_LINE_THICKNESS;
+        _this.thickness = flow_1.STAVE_LINE_THICKNESS;
         var TYPE = Barline.type;
         _this.widths = {};
         _this.widths[TYPE.SINGLE] = 5;
@@ -23335,15 +23661,7 @@ var Barline = /** @class */ (function (_super) {
     });
     Object.defineProperty(Barline, "type", {
         get: function () {
-            return {
-                SINGLE: 1,
-                DOUBLE: 2,
-                END: 3,
-                REPEAT_BEGIN: 4,
-                REPEAT_END: 5,
-                REPEAT_BOTH: 6,
-                NONE: 7,
-            };
+            return Type;
         },
         enumerable: false,
         configurable: true
@@ -23477,7 +23795,6 @@ exports.Barline = Barline;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23492,15 +23809,16 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StaveConnector = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.StaveConnector = exports.Type = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
     if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
         type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
-        throw new vex_1.Vex.RERR('InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.');
+        throw new runtimeerror_1.RuntimeError('InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.');
     }
     var x_shift = 3;
     var variableWidth = 3.5; // Width for avoiding anti-aliasing width issues
@@ -23514,12 +23832,25 @@ function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
     // Thick line
     ctx.fillRect(topX - thickLineOffset, topY, variableWidth, botY - topY);
 }
+var Type;
+(function (Type) {
+    Type[Type["SINGLE_RIGHT"] = 0] = "SINGLE_RIGHT";
+    Type[Type["SINGLE_LEFT"] = 1] = "SINGLE_LEFT";
+    Type[Type["SINGLE"] = 1] = "SINGLE";
+    Type[Type["DOUBLE"] = 2] = "DOUBLE";
+    Type[Type["BRACE"] = 3] = "BRACE";
+    Type[Type["BRACKET"] = 4] = "BRACKET";
+    Type[Type["BOLD_DOUBLE_LEFT"] = 5] = "BOLD_DOUBLE_LEFT";
+    Type[Type["BOLD_DOUBLE_RIGHT"] = 6] = "BOLD_DOUBLE_RIGHT";
+    Type[Type["THIN_DOUBLE"] = 7] = "THIN_DOUBLE";
+    Type[Type["NONE"] = 8] = "NONE";
+})(Type = exports.Type || (exports.Type = {}));
 var StaveConnector = /** @class */ (function (_super) {
     __extends(StaveConnector, _super);
     function StaveConnector(top_stave, bottom_stave) {
         var _this = _super.call(this) || this;
         _this.setAttribute('type', 'StaveConnector');
-        _this.thickness = tables_1.Flow.STAVE_LINE_THICKNESS;
+        _this.thickness = flow_1.STAVE_LINE_THICKNESS;
         _this.width = 3;
         _this.top_stave = top_stave;
         _this.bottom_stave = bottom_stave;
@@ -23540,18 +23871,7 @@ var StaveConnector = /** @class */ (function (_super) {
         // with older versions of vexflow which didn't have right sided
         // stave connectors
         get: function () {
-            return {
-                SINGLE_RIGHT: 0,
-                SINGLE_LEFT: 1,
-                SINGLE: 1,
-                DOUBLE: 2,
-                BRACE: 3,
-                BRACKET: 4,
-                BOLD_DOUBLE_LEFT: 5,
-                BOLD_DOUBLE_RIGHT: 6,
-                THIN_DOUBLE: 7,
-                NONE: 8,
-            };
+            return Type;
         },
         enumerable: false,
         configurable: true
@@ -23586,16 +23906,16 @@ var StaveConnector = /** @class */ (function (_super) {
     StaveConnector.prototype.setText = function (text, options) {
         this.texts.push({
             content: text,
-            options: vex_1.Vex.Merge({ shift_x: 0, shift_y: 0 }, options),
+            options: flow_1.Merge({ shift_x: 0, shift_y: 0 }, options),
         });
         return this;
     };
     StaveConnector.prototype.setFont = function (font) {
-        vex_1.Vex.Merge(this.font, font);
+        flow_1.Merge(this.font, font);
     };
     StaveConnector.prototype.setXShift = function (x_shift) {
         if (typeof x_shift !== 'number') {
-            throw new vex_1.Vex.RERR('InvalidType', 'x_shift must be a Number');
+            throw new runtimeerror_1.RuntimeError('InvalidType', 'x_shift must be a Number');
         }
         this.x_shift = x_shift;
         return this;
@@ -23686,7 +24006,7 @@ var StaveConnector = /** @class */ (function (_super) {
             case StaveConnector.type.NONE:
                 break;
             default:
-                throw new vex_1.Vex.RERR('InvalidType', "The provided StaveConnector.type (" + this.type + ") is invalid");
+                throw new runtimeerror_1.RuntimeError('InvalidType', "The provided StaveConnector.type (" + this.type + ") is invalid");
         }
         if (this.type !== StaveConnector.type.BRACE &&
             this.type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
@@ -23728,13 +24048,6 @@ exports.StaveConnector = StaveConnector;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This class by Raffaele Viglianti, 2012 http://itisnotsound.wordpress.com/
-//
-// This class implements hairpins between notes.
-// Hairpins can be either Crescendo or Descrescendo.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23749,10 +24062,22 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StaveHairpin = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.StaveHairpin = exports.Type = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// This class by Raffaele Viglianti, 2012 http://itisnotsound.wordpress.com/
+//
+// This class implements hairpins between notes.
+// Hairpins can be either Crescendo or Descrescendo.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var Type;
+(function (Type) {
+    Type[Type["CRESC"] = 1] = "CRESC";
+    Type[Type["DECRESC"] = 2] = "DECRESC";
+})(Type = exports.Type || (exports.Type = {}));
 var StaveHairpin = /** @class */ (function (_super) {
     __extends(StaveHairpin, _super);
     /**
@@ -23789,10 +24114,7 @@ var StaveHairpin = /** @class */ (function (_super) {
     }
     Object.defineProperty(StaveHairpin, "type", {
         get: function () {
-            return {
-                CRESC: 1,
-                DECRESC: 2,
-            };
+            return Type;
         },
         enumerable: false,
         configurable: true
@@ -23814,7 +24136,7 @@ var StaveHairpin = /** @class */ (function (_super) {
     StaveHairpin.FormatByTicksAndDraw = function (ctx, formatter, notes, type, position, options) {
         var ppt = formatter.pixelsPerTick;
         if (ppt == null) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'A valid Formatter must be provide to draw offsets by ticks.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'A valid Formatter must be provide to draw offsets by ticks.');
         }
         var l_shift_px = ppt * options.left_shift_ticks;
         var r_shift_px = ppt * options.right_shift_ticks;
@@ -23855,7 +24177,7 @@ var StaveHairpin = /** @class */ (function (_super) {
      */
     StaveHairpin.prototype.setNotes = function (notes) {
         if (!notes.first_note && !notes.last_note) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
         }
         // Success. Lets grab 'em notes.
         this.first_note = notes.first_note;
@@ -23937,7 +24259,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StaveLine = void 0;
+exports.StaveLine = exports.TextJustification = exports.TextVerticalPosition = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
@@ -23947,9 +24269,9 @@ exports.StaveLine = void 0;
 // A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 // Attribution: Arrow rendering implementations based off of
 // Patrick Horgan's article, "Drawing lines and arcs with
 // arrow heads on  HTML5 Canvas"
@@ -24035,6 +24357,17 @@ function drawArrowLine(ctx, point1, point2, config) {
         drawArrowHead(ctx, top_x, top_y, x1, y1, bottom_x, bottom_y);
     }
 }
+var TextVerticalPosition;
+(function (TextVerticalPosition) {
+    TextVerticalPosition[TextVerticalPosition["TOP"] = 1] = "TOP";
+    TextVerticalPosition[TextVerticalPosition["BOTTOM"] = 2] = "BOTTOM";
+})(TextVerticalPosition = exports.TextVerticalPosition || (exports.TextVerticalPosition = {}));
+var TextJustification;
+(function (TextJustification) {
+    TextJustification[TextJustification["LEFT"] = 1] = "LEFT";
+    TextJustification[TextJustification["CENTER"] = 2] = "CENTER";
+    TextJustification[TextJustification["RIGHT"] = 3] = "RIGHT";
+})(TextJustification = exports.TextJustification || (exports.TextJustification = {}));
 var StaveLine = /** @class */ (function (_super) {
     __extends(StaveLine, _super);
     // Initialize the StaveLine with the given `notes`.
@@ -24088,21 +24421,14 @@ var StaveLine = /** @class */ (function (_super) {
     Object.defineProperty(StaveLine, "TextVerticalPosition", {
         // Text Positioning
         get: function () {
-            return {
-                TOP: 1,
-                BOTTOM: 2,
-            };
+            return TextVerticalPosition;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(StaveLine, "TextJustification", {
         get: function () {
-            return {
-                LEFT: 1,
-                CENTER: 2,
-                RIGHT: 3,
-            };
+            return TextJustification;
         },
         enumerable: false,
         configurable: true
@@ -24120,14 +24446,14 @@ var StaveLine = /** @class */ (function (_super) {
     // Set the notes for the `StaveLine`
     StaveLine.prototype.setNotes = function (notes) {
         if (!notes.first_note && !notes.last_note) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
         }
         if (!notes.first_indices)
             notes.first_indices = [0];
         if (!notes.last_indices)
             notes.last_indices = [0];
         if (notes.first_indices.length !== notes.last_indices.length) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
         }
         // Success. Lets grab 'em notes.
         this.first_note = notes.first_note;
@@ -24225,7 +24551,7 @@ var StaveLine = /** @class */ (function (_super) {
             y = first_note.getStave().getYForTopText();
         }
         else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
-            y = first_note.getStave().getYForBottomText(tables_1.Flow.TEXT_HEIGHT_OFFSET_HACK);
+            y = first_note.getStave().getYForBottomText(flow_1.TEXT_HEIGHT_OFFSET_HACK);
         }
         // Draw the text
         ctx.save();
@@ -24268,8 +24594,18 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StaveModifier = void 0;
+exports.StaveModifier = exports.Position = void 0;
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
+var Position;
+(function (Position) {
+    Position[Position["CENTER"] = 0] = "CENTER";
+    Position[Position["LEFT"] = 1] = "LEFT";
+    Position[Position["RIGHT"] = 2] = "RIGHT";
+    Position[Position["ABOVE"] = 3] = "ABOVE";
+    Position[Position["BELOW"] = 4] = "BELOW";
+    Position[Position["BEGIN"] = 5] = "BEGIN";
+    Position[Position["END"] = 6] = "END";
+})(Position = exports.Position || (exports.Position = {}));
 var StaveModifier = /** @class */ (function (_super) {
     __extends(StaveModifier, _super);
     function StaveModifier() {
@@ -24282,14 +24618,7 @@ var StaveModifier = /** @class */ (function (_super) {
     }
     Object.defineProperty(StaveModifier, "Position", {
         get: function () {
-            return {
-                LEFT: 1,
-                RIGHT: 2,
-                ABOVE: 3,
-                BELOW: 4,
-                BEGIN: 5,
-                END: 6,
-            };
+            return Position;
         },
         enumerable: false,
         configurable: true
@@ -24377,16 +24706,6 @@ exports.StaveModifier = StaveModifier;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This file implements notes for standard notation. This consists of one or
-// more `NoteHeads`, an optional stem, and an optional flag.
-//
-// *Throughout these comments, a "note" refers to the entire `StaveNote`,
-// and a "key" refers to a specific pitch/notehead within a note.*
-//
-// See `tests/stavenote_tests.js` for usage examples.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24413,14 +24732,24 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaveNote = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// This file implements notes for standard notation. This consists of one or
+// more `NoteHeads`, an optional stem, and an optional flag.
+//
+// *Throughout these comments, a "note" refers to the entire `StaveNote`,
+// and a "key" refers to a specific pitch/notehead within a note.*
+//
+// See `tests/stavenote_tests.js` for usage examples.
 var boundingbox_1 = __webpack_require__(/*! ./boundingbox */ "./src/boundingbox.ts");
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
 var notehead_1 = __webpack_require__(/*! ./notehead */ "./src/notehead.ts");
 var stemmablenote_1 = __webpack_require__(/*! ./stemmablenote */ "./src/stemmablenote.ts");
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var dot_1 = __webpack_require__(/*! ./dot */ "./src/dot.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -24428,7 +24757,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (StaveNote.DEBUG)
-        vex_1.Vex.L('Vex.Flow.StaveNote', args);
+        flow_1.LOG('Vex.Flow.StaveNote', args);
 }
 var getStemAdjustment = function (note) { return stem_1.Stem.WIDTH / (2 * -note.getStemDirection()); };
 var isInnerNoteIndex = function (note, index) {
@@ -24444,7 +24773,7 @@ function shiftRestVertical(rest, note, dir) {
 }
 // Called from formatNotes :: center a rest between two notes
 function centerRest(rest, noteU, noteL) {
-    var delta = rest.line - vex_1.Vex.MidLine(noteU.minLine, noteL.maxLine);
+    var delta = rest.line - flow_1.MidLine(noteU.minLine, noteL.maxLine);
     rest.note.setKeyLine(0, rest.note.getKeyLine(0) - delta);
     rest.line -= delta;
     rest.maxLine -= delta;
@@ -24460,9 +24789,9 @@ var StaveNote = /** @class */ (function (_super) {
         _this.octave_shift = noteStruct.octave_shift;
         _this.beam = null;
         // Pull note rendering properties
-        _this.glyph = tables_1.Flow.getGlyphProps(_this.duration, _this.noteType);
+        _this.glyph = flow_1.getGlyphProps(_this.duration, _this.noteType);
         if (!_this.glyph) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', "Invalid note initialization data (No glyph found): " + JSON.stringify(noteStruct));
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid note initialization data (No glyph found): " + JSON.stringify(noteStruct));
         }
         // if true, displace note to right
         _this.displaced = false;
@@ -24474,9 +24803,9 @@ var StaveNote = /** @class */ (function (_super) {
         // Drawing
         _this.note_heads = [];
         _this.modifiers = [];
-        vex_1.Vex.Merge(_this.render_options, {
+        flow_1.Merge(_this.render_options, {
             // font size for note heads and rests
-            glyph_font_scale: noteStruct.glyph_font_scale || tables_1.Flow.DEFAULT_NOTATION_FONT_SCALE,
+            glyph_font_scale: noteStruct.glyph_font_scale || flow_1.DEFAULT_NOTATION_FONT_SCALE,
             // number of stroke px to the left and right of head
             stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET,
         });
@@ -24697,7 +25026,7 @@ var StaveNote = /** @class */ (function (_super) {
             hasStave = hasStave && notes[i].getStave() != null;
         }
         if (!hasStave) {
-            throw new vex_1.Vex.RERR('Stave Missing', 'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!');
+            throw new runtimeerror_1.RuntimeError('Stave Missing', 'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!');
         }
         var xShift = 0;
         for (var i = 0; i < notes.length - 1; i++) {
@@ -24840,9 +25169,9 @@ var StaveNote = /** @class */ (function (_super) {
             if (this.glyph.rest)
                 this.glyph.position = key;
             var options = { octave_shift: this.octave_shift || 0 };
-            var props = tables_1.Flow.keyProperties(key, this.clef, options);
+            var props = flow_1.keyProperties(key, this.clef, options);
             if (!props) {
-                throw new vex_1.Vex.RuntimeError('BadArguments', "Invalid key for note properties: " + key);
+                throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid key for note properties: " + key);
             }
             // Override line placement for default rests
             if (props.key === 'R') {
@@ -24876,7 +25205,7 @@ var StaveNote = /** @class */ (function (_super) {
         lastLine = -Infinity;
         this.keyProps.forEach(function (key) {
             if (key.line < lastLine) {
-                vex_1.Vex.W('Unsorted keys in note will be sorted. ' +
+                flow_1.WARN('Unsorted keys in note will be sorted. ' +
                     'See https://github.com/0xfe/vexflow/issues/104 for details.');
             }
             lastLine = key.line;
@@ -24886,7 +25215,7 @@ var StaveNote = /** @class */ (function (_super) {
     // Get the `BoundingBox` for the entire note
     StaveNote.prototype.getBoundingBox = function () {
         if (!this.preFormatted) {
-            throw new vex_1.Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+            throw new runtimeerror_1.RuntimeError('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
         }
         var _a = this.getMetrics(), w = _a.width, modLeftPx = _a.modLeftPx, leftDisplacedHeadPx = _a.leftDisplacedHeadPx;
         var x = this.getAbsoluteX() - modLeftPx - leftDisplacedHeadPx;
@@ -24896,7 +25225,7 @@ var StaveNote = /** @class */ (function (_super) {
         var lineSpacing = halfLineSpacing * 2;
         if (this.isRest()) {
             var y = this.ys[0];
-            var frac = tables_1.Flow.durationToFraction(this.duration);
+            var frac = flow_1.durationToFraction(this.duration);
             if (frac.equals(1) || frac.equals(2)) {
                 minY = y - halfLineSpacing;
                 maxY = y + halfLineSpacing;
@@ -24935,7 +25264,7 @@ var StaveNote = /** @class */ (function (_super) {
     // If `isTopNote` is `true` then get the top note's line number instead
     StaveNote.prototype.getLineNumber = function (isTopNote) {
         if (!this.keyProps.length) {
-            throw new vex_1.Vex.RERR('NoKeyProps', "Can't get bottom note line, because note is not initialized properly.");
+            throw new runtimeerror_1.RuntimeError('NoKeyProps', "Can't get bottom note line, because note is not initialized properly.");
         }
         var resultLine = this.keyProps[0].line;
         // No precondition assumed for sortedness of keyProps array
@@ -25040,7 +25369,7 @@ var StaveNote = /** @class */ (function (_super) {
             var lastLine = this.keyProps[this.keyProps.length - 1].line;
             var top_1 = Math.max(restLine, lastLine);
             var bot = Math.min(restLine, lastLine);
-            restLine = vex_1.Vex.MidLine(top_1, bot);
+            restLine = flow_1.MidLine(top_1, bot);
         }
         return restLine;
     };
@@ -25049,10 +25378,10 @@ var StaveNote = /** @class */ (function (_super) {
     StaveNote.prototype.getModifierStartXY = function (position, index, options) {
         options = options || {};
         if (!this.preFormatted) {
-            throw new vex_1.Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+            throw new runtimeerror_1.RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
         }
         if (this.ys.length === 0) {
-            throw new vex_1.Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
+            throw new runtimeerror_1.RuntimeError('NoYValues', 'No Y-Values calculated for this note.');
         }
         var _a = modifier_1.Modifier.Position, ABOVE = _a.ABOVE, BELOW = _a.BELOW, LEFT = _a.LEFT, RIGHT = _a.RIGHT;
         var x = 0;
@@ -25298,7 +25627,7 @@ var StaveNote = /** @class */ (function (_super) {
         if (this.isRest())
             return;
         if (!ctx) {
-            throw new vex_1.Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+            throw new runtimeerror_1.RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
         }
         var _b = this.getNoteHeadBounds(), highest_line = _b.highest_line, lowest_line = _b.lowest_line, highest_displaced_line = _b.highest_displaced_line, highest_non_displaced_line = _b.highest_non_displaced_line, lowest_displaced_line = _b.lowest_displaced_line, lowest_non_displaced_line = _b.lowest_non_displaced_line, displaced_x = _b.displaced_x, non_displaced_x = _b.non_displaced_x;
         var min_x = Math.min(displaced_x, non_displaced_x);
@@ -25335,7 +25664,7 @@ var StaveNote = /** @class */ (function (_super) {
     // Draw all key modifiers
     StaveNote.prototype.drawModifiers = function () {
         if (!this.context) {
-            throw new vex_1.Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+            throw new runtimeerror_1.RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
         }
         var ctx = this.context;
         ctx.openGroup('modifiers');
@@ -25354,7 +25683,7 @@ var StaveNote = /** @class */ (function (_super) {
     StaveNote.prototype.drawFlag = function () {
         var _a = this, stem = _a.stem, beam = _a.beam, ctx = _a.context;
         if (!ctx) {
-            throw new vex_1.Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+            throw new runtimeerror_1.RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
         }
         var shouldRenderFlag = beam === null;
         var glyph = this.getGlyph();
@@ -25390,7 +25719,7 @@ var StaveNote = /** @class */ (function (_super) {
         // argument in the codebase or tests. Nor can I find a case where super.drawStem
         // is called at all. Perhaps these should be removed?
         if (!this.context) {
-            throw new vex_1.Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+            throw new runtimeerror_1.RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
         }
         if (stemStruct) {
             this.setStem(new stem_1.Stem(stemStruct));
@@ -25441,13 +25770,13 @@ var StaveNote = /** @class */ (function (_super) {
     // Draws all the `StaveNote` parts. This is the main drawing method.
     StaveNote.prototype.draw = function () {
         if (!this.context) {
-            throw new vex_1.Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
+            throw new runtimeerror_1.RuntimeError('NoCanvasContext', "Can't draw without a canvas context.");
         }
         if (!this.stave) {
-            throw new vex_1.Vex.RERR('NoStave', "Can't draw without a stave.");
+            throw new runtimeerror_1.RuntimeError('NoStave', "Can't draw without a stave.");
         }
         if (this.ys.length === 0) {
-            throw new vex_1.Vex.RERR('NoYValues', "Can't draw note without Y values.");
+            throw new runtimeerror_1.RuntimeError('NoYValues', "Can't draw note without Y values.");
         }
         var xBegin = this.getNoteHeadBeginX();
         var shouldRenderStem = this.hasStem() && !this.beam;
@@ -25504,9 +25833,24 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Repetition = void 0;
+exports.Repetition = exports.Type = void 0;
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var Type;
+(function (Type) {
+    Type[Type["NONE"] = 1] = "NONE";
+    Type[Type["CODA_LEFT"] = 2] = "CODA_LEFT";
+    Type[Type["CODA_RIGHT"] = 3] = "CODA_RIGHT";
+    Type[Type["SEGNO_LEFT"] = 4] = "SEGNO_LEFT";
+    Type[Type["SEGNO_RIGHT"] = 5] = "SEGNO_RIGHT";
+    Type[Type["DC"] = 6] = "DC";
+    Type[Type["DC_AL_CODA"] = 7] = "DC_AL_CODA";
+    Type[Type["DC_AL_FINE"] = 8] = "DC_AL_FINE";
+    Type[Type["DS"] = 9] = "DS";
+    Type[Type["DS_AL_CODA"] = 10] = "DS_AL_CODA";
+    Type[Type["DS_AL_FINE"] = 11] = "DS_AL_FINE";
+    Type[Type["FINE"] = 12] = "FINE"; // Fine at end of stave
+})(Type = exports.Type || (exports.Type = {}));
 var Repetition = /** @class */ (function (_super) {
     __extends(Repetition, _super);
     function Repetition(type, x, y_shift) {
@@ -25532,20 +25876,7 @@ var Repetition = /** @class */ (function (_super) {
     });
     Object.defineProperty(Repetition, "type", {
         get: function () {
-            return {
-                NONE: 1,
-                CODA_LEFT: 2,
-                CODA_RIGHT: 3,
-                SEGNO_LEFT: 4,
-                SEGNO_RIGHT: 5,
-                DC: 6,
-                DC_AL_CODA: 7,
-                DC_AL_FINE: 8,
-                DS: 9,
-                DS_AL_CODA: 10,
-                DS_AL_FINE: 11,
-                FINE: 12,
-            };
+            return Type;
         },
         enumerable: false,
         configurable: true
@@ -25754,8 +26085,6 @@ exports.StaveSection = StaveSection;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author Radosaw Eichler 2012
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -25771,17 +26100,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaveTempo = void 0;
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
-var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author Radosaw Eichler 2012
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var StaveTempo = /** @class */ (function (_super) {
     __extends(StaveTempo, _super);
     function StaveTempo(tempo, x, shift_y) {
         var _this = _super.call(this) || this;
         _this.setAttribute('type', 'StaveTempo');
         _this.tempo = tempo;
-        _this.position = modifier_1.Modifier.Position.ABOVE;
+        _this.position = stavemodifier_1.StaveModifier.Position.ABOVE;
         _this.x = x;
         _this.shift_x = 10;
         _this.shift_y = shift_y;
@@ -25844,7 +26174,7 @@ var StaveTempo = /** @class */ (function (_super) {
                 ctx.fillText('(', x, y);
                 x += ctx.measureText('(').width;
             }
-            var code = tables_1.Flow.getGlyphProps(duration);
+            var code = flow_1.getGlyphProps(duration);
             x += 3 * scale;
             glyph_1.Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
             x += code.getWidth() * scale;
@@ -25890,8 +26220,6 @@ exports.StaveTempo = StaveTempo;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author Taehoon Moon 2014
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -25907,9 +26235,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaveText = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author Taehoon Moon 2014
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
 var textnote_1 = __webpack_require__(/*! ./textnote */ "./src/textnote.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var StaveText = /** @class */ (function (_super) {
     __extends(StaveText, _super);
     function StaveText(text, position, options) {
@@ -25923,7 +26254,7 @@ var StaveText = /** @class */ (function (_super) {
             shift_y: 0,
             justification: textnote_1.TextNote.Justification.CENTER,
         };
-        vex_1.Vex.Merge(_this.options, options);
+        flow_1.Merge(_this.options, options);
         _this.font = {
             family: 'times',
             size: 16,
@@ -25954,7 +26285,7 @@ var StaveText = /** @class */ (function (_super) {
         return this;
     };
     StaveText.prototype.setFont = function (font) {
-        vex_1.Vex.Merge(this.font, font);
+        flow_1.Merge(this.font, font);
     };
     StaveText.prototype.setText = function (text) {
         this.text = text;
@@ -25998,7 +26329,7 @@ var StaveText = /** @class */ (function (_super) {
                 }
                 break;
             default:
-                throw new vex_1.Vex.RERR('InvalidPosition', 'Value Must be in Modifier.Position.');
+                throw new runtimeerror_1.RuntimeError('InvalidPosition', 'Value Must be in Modifier.Position.');
         }
         ctx.fillText('' + this.text, x, y + 4);
         ctx.restore();
@@ -26020,11 +26351,6 @@ exports.StaveText = StaveText;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This class implements varies types of ties between contiguous notes. The
-// ties include: regular ties, hammer ons, pull offs, and slides.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -26040,8 +26366,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StaveTie = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// This class implements varies types of ties between contiguous notes. The
+// ties include: regular ties, hammer ons, pull offs, and slides.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var StaveTie = /** @class */ (function (_super) {
     __extends(StaveTie, _super);
     function StaveTie(notes, text) {
@@ -26092,14 +26423,14 @@ var StaveTie = /** @class */ (function (_super) {
      */
     StaveTie.prototype.setNotes = function (notes) {
         if (!notes.first_note && !notes.last_note) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
         }
         if (!notes.first_indices)
             notes.first_indices = [0];
         if (!notes.last_indices)
             notes.last_indices = [0];
         if (notes.first_indices.length !== notes.last_indices.length) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'Tied notes must have similar index sizes');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Tied notes must have similar index sizes');
         }
         // Success. Lets grab 'em notes.
         this.first_note = notes.first_note;
@@ -26116,7 +26447,7 @@ var StaveTie = /** @class */ (function (_super) {
     };
     StaveTie.prototype.renderTie = function (params) {
         if (params.first_ys.length === 0 || params.last_ys.length === 0) {
-            throw new vex_1.Vex.RERR('BadArguments', 'No Y-values to render');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'No Y-values to render');
         }
         var ctx = this.context;
         var cp1 = this.render_options.cp1;
@@ -26134,7 +26465,7 @@ var StaveTie = /** @class */ (function (_super) {
             var first_y_px = params.first_ys[this.first_indices[i]] + y_shift;
             var last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
             if (isNaN(first_y_px) || isNaN(last_y_px)) {
-                throw new vex_1.Vex.RERR('BadArguments', 'Bad indices for tie rendering.');
+                throw new runtimeerror_1.RuntimeError('BadArguments', 'Bad indices for tie rendering.');
             }
             var top_cp_y = ((first_y_px + last_y_px) / 2) + (cp1 * params.direction);
             var bottom_cp_y = ((first_y_px + last_y_px) / 2) + (cp2 * params.direction);
@@ -26231,8 +26562,16 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Volta = void 0;
+exports.Volta = exports.Type = void 0;
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
+var Type;
+(function (Type) {
+    Type[Type["NONE"] = 1] = "NONE";
+    Type[Type["BEGIN"] = 2] = "BEGIN";
+    Type[Type["MID"] = 3] = "MID";
+    Type[Type["END"] = 4] = "END";
+    Type[Type["BEGIN_END"] = 5] = "BEGIN_END";
+})(Type = exports.Type || (exports.Type = {}));
 var Volta = /** @class */ (function (_super) {
     __extends(Volta, _super);
     function Volta(type, number, x, y_shift) {
@@ -26258,13 +26597,7 @@ var Volta = /** @class */ (function (_super) {
     });
     Object.defineProperty(Volta, "type", {
         get: function () {
-            return {
-                NONE: 1,
-                BEGIN: 2,
-                MID: 3,
-                END: 4,
-                BEGIN_END: 5,
-            };
+            return Type;
         },
         enumerable: false,
         configurable: true
@@ -26324,11 +26657,6 @@ exports.Volta = Volta;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This file implements the `Stem` object. Generally this object is handled
-// by its parent `StemmableNote`.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -26344,9 +26672,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stem = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// This file implements the `Stem` object. Generally this object is handled
+// by its parent `StemmableNote`.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -26354,7 +26687,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (Stem.DEBUG)
-        vex_1.Vex.L('Vex.Flow.Stem', args);
+        flow_1.LOG('Vex.Flow.Stem', args);
 }
 var Stem = /** @class */ (function (_super) {
     __extends(Stem, _super);
@@ -26407,14 +26740,14 @@ var Stem = /** @class */ (function (_super) {
     Object.defineProperty(Stem, "WIDTH", {
         // Theme
         get: function () {
-            return tables_1.Flow.STEM_WIDTH;
+            return flow_1.STEM_WIDTH;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Stem, "HEIGHT", {
         get: function () {
-            return tables_1.Flow.STEM_HEIGHT;
+            return flow_1.STEM_HEIGHT;
         },
         enumerable: false,
         configurable: true
@@ -26462,7 +26795,7 @@ var Stem = /** @class */ (function (_super) {
         return unsigned_height * this.stem_direction;
     };
     Stem.prototype.getBoundingBox = function () {
-        throw new vex_1.Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
+        throw new runtimeerror_1.RuntimeError('NotImplemented', 'getBoundingBox() not implemented.');
     };
     // Get the y coordinates for the very base of the stem to the top of
     // the extension
@@ -26539,11 +26872,6 @@ exports.Stem = Stem;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// `StemmableNote` is an abstract interface for notes with optional stems.
-// Examples of stemmable notes are `StaveNote` and `TabNote`
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -26559,11 +26887,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StemmableNote = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// `StemmableNote` is an abstract interface for notes with optional stems.
+// Examples of stemmable notes are `StaveNote` and `TabNote`
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
 var note_1 = __webpack_require__(/*! ./note */ "./src/note.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var StemmableNote = /** @class */ (function (_super) {
     __extends(StemmableNote, _super);
     function StemmableNote(note_struct) {
@@ -26624,7 +26957,7 @@ var StemmableNote = /** @class */ (function (_super) {
     };
     // Get the minimum length of stem
     StemmableNote.prototype.getStemMinimumLength = function () {
-        var frac = tables_1.Flow.durationToFraction(this.duration);
+        var frac = flow_1.durationToFraction(this.duration);
         var length = frac.value() <= 1 ? 0 : 20;
         // if note is flagged, cannot shorten beam
         switch (this.duration) {
@@ -26657,7 +26990,7 @@ var StemmableNote = /** @class */ (function (_super) {
         if (!direction)
             direction = stem_1.Stem.UP;
         if (direction !== stem_1.Stem.UP && direction !== stem_1.Stem.DOWN) {
-            throw new vex_1.Vex.RERR('BadArgument', "Invalid stem direction: " + direction);
+            throw new runtimeerror_1.RuntimeError('BadArgument', "Invalid stem direction: " + direction);
         }
         this.stem_direction = direction;
         if (this.stem) {
@@ -26745,7 +27078,7 @@ var StemmableNote = /** @class */ (function (_super) {
         }
     };
     StemmableNote.prototype.hasFlag = function () {
-        return tables_1.Flow.getGlyphProps(this.duration).flag && !this.beam;
+        return flow_1.getGlyphProps(this.duration).flag && !this.beam;
     };
     // Post format the note
     StemmableNote.prototype.postFormat = function () {
@@ -26778,12 +27111,6 @@ exports.StemmableNote = StemmableNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Larry Kuhns
-//
-// ## Description
-// This file implements the `StringNumber` class which renders string
-// number annotations beside notes.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -26799,10 +27126,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StringNumber = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Larry Kuhns
+//
+// ## Description
+// This file implements the `StringNumber` class which renders string
+// number annotations beside notes.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var renderer_1 = __webpack_require__(/*! ./renderer */ "./src/renderer.ts");
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var StringNumber = /** @class */ (function (_super) {
     __extends(StringNumber, _super);
     function StringNumber(number) {
@@ -26966,7 +27299,7 @@ var StringNumber = /** @class */ (function (_super) {
     StringNumber.prototype.draw = function () {
         var ctx = this.checkContext();
         if (!(this.note && (this.index != null))) {
-            throw new vex_1.Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw string number without a note and index.");
         }
         this.setRendered();
         var line_space = this.note.stave.options.spacing_between_lines_px;
@@ -27003,7 +27336,7 @@ var StringNumber = /** @class */ (function (_super) {
                 dot_x += (this.radius / 2) + 6;
                 break;
             default:
-                throw new vex_1.Vex.RERR('InvalidPosition', "The position " + this.position + " is invalid");
+                throw new runtimeerror_1.RuntimeError('InvalidPosition', "The position " + this.position + " is invalid");
         }
         ctx.save();
         ctx.beginPath();
@@ -27059,12 +27392,6 @@ exports.StringNumber = StringNumber;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Larry Kuhns
-//
-// ## Description
-// This file implements the `Stroke` class which renders chord strokes
-// that can be arpeggiated, brushed, rasquedo, etc.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -27079,18 +27406,35 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Stroke = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.Stroke = exports.Type = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Larry Kuhns
+//
+// ## Description
+// This file implements the `Stroke` class which renders chord strokes
+// that can be arpeggiated, brushed, rasquedo, etc.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var Type;
+(function (Type) {
+    Type[Type["BRUSH_DOWN"] = 1] = "BRUSH_DOWN";
+    Type[Type["BRUSH_UP"] = 2] = "BRUSH_UP";
+    Type[Type["ROLL_DOWN"] = 3] = "ROLL_DOWN";
+    Type[Type["ROLL_UP"] = 4] = "ROLL_UP";
+    Type[Type["RASQUEDO_DOWN"] = 5] = "RASQUEDO_DOWN";
+    Type[Type["RASQUEDO_UP"] = 6] = "RASQUEDO_UP";
+    Type[Type["ARPEGGIO_DIRECTIONLESS"] = 7] = "ARPEGGIO_DIRECTIONLESS"; // Arpeggiated chord without upwards or downwards arrow
+})(Type = exports.Type || (exports.Type = {}));
 var Stroke = /** @class */ (function (_super) {
     __extends(Stroke, _super);
     function Stroke(type, options) {
         var _this = _super.call(this) || this;
         _this.setAttribute('type', 'Stroke');
         _this.note = null;
-        _this.options = vex_1.Vex.Merge({}, options);
+        _this.options = flow_1.Merge({}, options);
         // multi voice - span stroke across all voices if true
         _this.all_voices = 'all_voices' in _this.options ? _this.options.all_voices : true;
         // multi voice - end note of stroke, set in draw()
@@ -27121,15 +27465,7 @@ var Stroke = /** @class */ (function (_super) {
     });
     Object.defineProperty(Stroke, "Type", {
         get: function () {
-            return {
-                BRUSH_DOWN: 1,
-                BRUSH_UP: 2,
-                ROLL_DOWN: 3,
-                ROLL_UP: 4,
-                RASQUEDO_DOWN: 5,
-                RASQUEDO_UP: 6,
-                ARPEGGIO_DIRECTIONLESS: 7,
-            };
+            return Type;
         },
         enumerable: false,
         configurable: true
@@ -27176,7 +27512,7 @@ var Stroke = /** @class */ (function (_super) {
         this.checkContext();
         this.setRendered();
         if (!(this.note && (this.index != null))) {
-            throw new vex_1.Vex.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw stroke without a note and index.");
         }
         var start = this.note.getModifierStartXY(this.position, this.index);
         var ys = this.note.getYs();
@@ -27189,8 +27525,8 @@ var Stroke = /** @class */ (function (_super) {
             ys = notes[i].getYs();
             for (var n = 0; n < ys.length; n++) {
                 if (this.note === notes[i] || this.all_voices) {
-                    topY = vex_1.Vex.Min(topY, ys[n]);
-                    botY = vex_1.Vex.Max(botY, ys[n]);
+                    topY = Math.min(topY, ys[n]);
+                    botY = Math.max(botY, ys[n]);
                 }
             }
         }
@@ -27261,7 +27597,7 @@ var Stroke = /** @class */ (function (_super) {
                 botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
                 break;
             default:
-                throw new vex_1.Vex.RERR('InvalidType', "The stroke type " + this.type + " does not exist");
+                throw new runtimeerror_1.RuntimeError('InvalidType', "The stroke type " + this.type + " does not exist");
         }
         var strokeLine = 'straight';
         // Draw the stroke
@@ -27314,11 +27650,10 @@ exports.Stroke = Stroke;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// @author Gregory Ristow (2015)
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SVGContext = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var attrNamesToIgnoreMap = {
     path: {
         x: true,
@@ -27339,8 +27674,8 @@ var attrNamesToIgnoreMap = {
         'font-style': true,
         'font-size': true,
     };
-    vex_1.Vex.Merge(attrNamesToIgnoreMap.rect, fontAttrNamesToIgnore);
-    vex_1.Vex.Merge(attrNamesToIgnoreMap.path, fontAttrNamesToIgnore);
+    flow_1.Merge(attrNamesToIgnoreMap.rect, fontAttrNamesToIgnore);
+    flow_1.Merge(attrNamesToIgnoreMap.path, fontAttrNamesToIgnore);
 }
 var SVGContext = /** @class */ (function () {
     function SVGContext(element) {
@@ -27402,9 +27737,9 @@ var SVGContext = /** @class */ (function () {
         this.parent.appendChild(group);
         this.parent = group;
         if (cls)
-            group.setAttribute('class', vex_1.Vex.Prefix(cls));
+            group.setAttribute('class', flow_1.Prefix(cls));
         if (id)
-            group.setAttribute('id', vex_1.Vex.Prefix(id));
+            group.setAttribute('id', flow_1.Prefix(id));
         if (attrs && attrs.pointerBBox) {
             group.setAttribute('pointer-events', 'bounding-box');
         }
@@ -27464,8 +27799,8 @@ var SVGContext = /** @class */ (function () {
         // Store the font size so that if the browser is Internet
         // Explorer we can fix its calculations of text width.
         this.fontSize = Number(size);
-        vex_1.Vex.Merge(this.attributes, fontAttributes);
-        vex_1.Vex.Merge(this.state, fontAttributes);
+        flow_1.Merge(this.attributes, fontAttributes);
+        flow_1.Merge(this.state, fontAttributes);
         return this;
     };
     SVGContext.prototype.setRawFont = function (font) {
@@ -27514,7 +27849,7 @@ var SVGContext = /** @class */ (function () {
             return this;
         }
         else {
-            throw new vex_1.Vex.RERR('ArgumentError', 'lineDash must be an array of integers.');
+            throw new runtimeerror_1.RuntimeError('ArgumentError', 'lineDash must be an array of integers.');
         }
     };
     SVGContext.prototype.setLineCap = function (lineCap) {
@@ -27620,7 +27955,7 @@ var SVGContext = /** @class */ (function () {
                 stroke: 'black',
             };
         }
-        vex_1.Vex.Merge(attributes, {
+        flow_1.Merge(attributes, {
             x: x,
             y: y,
             width: width,
@@ -27783,7 +28118,7 @@ var SVGContext = /** @class */ (function () {
         var path = this.create('path');
         if (typeof attributes === 'undefined') {
             attributes = {};
-            vex_1.Vex.Merge(attributes, this.attributes);
+            flow_1.Merge(attributes, this.attributes);
             attributes.stroke = 'none';
         }
         attributes.d = this.path;
@@ -27796,7 +28131,7 @@ var SVGContext = /** @class */ (function () {
         this.glow();
         var path = this.create('path');
         var attributes = {};
-        vex_1.Vex.Merge(attributes, this.attributes);
+        flow_1.Merge(attributes, this.attributes);
         attributes.fill = 'none';
         attributes['stroke-width'] = this.lineWidth;
         attributes.d = this.path;
@@ -27847,7 +28182,7 @@ var SVGContext = /** @class */ (function () {
             return;
         }
         var attributes = {};
-        vex_1.Vex.Merge(attributes, this.attributes);
+        flow_1.Merge(attributes, this.attributes);
         attributes.stroke = 'none';
         attributes.x = x;
         attributes.y = y;
@@ -28069,264 +28404,24 @@ exports.System = System;
 "use strict";
 
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Flow = void 0;
-/* eslint-disable key-spacing */
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
+exports.ACCIDENTAL_COLUMNS_TABLE = exports.DURATION_CODES = exports.DURATIONS = exports.GLYPH_PROPS_VALID_TYPES = exports.CUSTOM_NOTEHEADS = exports.DURATION_ALIASES = exports.accidentalList = exports.KEY_SPECS = exports.ORNAMENTS = exports.INTEGER_TO_NOTE_TABLE = exports.KEY_PROPERTIES_NOTE_VALUES = exports.ARTICULATIONS = exports.CLEF_PROPERTIES_VALUES = exports.ACCIDENTALS = exports.UNICODE = void 0;
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
-var smufl_1 = __webpack_require__(/*! ./smufl */ "./src/smufl.ts");
-var boundingbox_1 = __webpack_require__(/*! ./boundingbox */ "./src/boundingbox.ts");
-var Flow = {
-    STEM_WIDTH: 1.5,
-    STEM_HEIGHT: 35,
-    STAVE_LINE_THICKNESS: 1,
-    RESOLUTION: 16384,
-    DEFAULT_FONT_STACK: smufl_1.DefaultFontStack,
-    DEFAULT_NOTATION_FONT_SCALE: 39,
-    DEFAULT_TABLATURE_FONT_SCALE: 39,
-    SLASH_NOTEHEAD_WIDTH: 15,
-    // HACK:
-    // Since text origins are positioned at the baseline, we must
-    // compensate for the ascender of the text. Of course, 1 staff space is
-    // a very poor approximation.
-    //
-    // This will be deprecated in the future. This is a temporary solution until
-    // we have more robust text metrics.
-    TEXT_HEIGHT_OFFSET_HACK: 1,
-    /* Kerning (DEPRECATED) */
-    IsKerned: true,
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+exports.UNICODE = {
+    // Unicode accidentals
+    'sharp': String.fromCharCode(parseInt('266F', 16)),
+    'flat': String.fromCharCode(parseInt('266D', 16)),
+    'natural': String.fromCharCode(parseInt('266E', 16)),
+    // Major Chord
+    'triangle': String.fromCharCode(parseInt('25B3', 16)),
+    // half-diminished
+    'o-with-slash': String.fromCharCode(parseInt('00F8', 16)),
+    // Diminished
+    'degrees': String.fromCharCode(parseInt('00B0', 16)),
+    'circle': String.fromCharCode(parseInt('25CB', 16)),
 };
-exports.Flow = Flow;
-Flow.clefProperties = function (clef) {
-    if (!clef)
-        throw new vex_1.Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
-    var props = Flow.clefProperties.values[clef];
-    if (!props)
-        throw new vex_1.Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
-    return props;
-};
-Flow.clefProperties.values = {
-    'treble': { line_shift: 0 },
-    'bass': { line_shift: 6 },
-    'tenor': { line_shift: 4 },
-    'alto': { line_shift: 3 },
-    'soprano': { line_shift: 1 },
-    'percussion': { line_shift: 0 },
-    'mezzo-soprano': { line_shift: 2 },
-    'baritone-c': { line_shift: 5 },
-    'baritone-f': { line_shift: 5 },
-    'subbass': { line_shift: 7 },
-    'french': { line_shift: -1 },
-};
-/*
-  Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
-
-  The last argument, params, is a struct the currently can contain one option,
-  octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
-*/
-Flow.keyProperties = function (key, clef, params) {
-    if (clef === undefined) {
-        clef = 'treble';
-    }
-    var options = { octave_shift: 0 };
-    if (typeof params === 'object') {
-        vex_1.Vex.Merge(options, params);
-    }
-    var pieces = key.split('/');
-    if (pieces.length < 2) {
-        throw new vex_1.Vex.RERR('BadArguments', "Key must have note + octave and an optional glyph: " + key);
-    }
-    var k = pieces[0].toUpperCase();
-    var value = Flow.keyProperties.note_values[k];
-    if (!value)
-        throw new vex_1.Vex.RERR('BadArguments', 'Invalid key name: ' + k);
-    if (value.octave)
-        pieces[1] = value.octave;
-    var octave = parseInt(pieces[1], 10);
-    // Octave_shift is the shift to compensate for clef 8va/8vb.
-    octave += -1 * options.octave_shift;
-    var base_index = (octave * 7) - (4 * 7);
-    var line = (base_index + value.index) / 2;
-    line += Flow.clefProperties(clef).line_shift;
-    var stroke = 0;
-    if (line <= 0 && (((line * 2) % 2) === 0))
-        stroke = 1; // stroke up
-    if (line >= 6 && (((line * 2) % 2) === 0))
-        stroke = -1; // stroke down
-    // Integer value for note arithmetic.
-    var int_value = typeof (value.int_val) !== 'undefined'
-        ? (octave * 12) + value.int_val
-        : null;
-    /* Check if the user specified a glyph. */
-    var code = value.code;
-    var shift_right = value.shift_right;
-    var extraProps = {};
-    if (pieces.length > 2 && pieces[2]) {
-        var glyph_name = pieces[2].toUpperCase();
-        extraProps = Flow.keyProperties.customNoteHeads[glyph_name] || {};
-    }
-    return __assign({ key: k, octave: octave,
-        line: line,
-        int_value: int_value, accidental: value.accidental, code: code,
-        stroke: stroke,
-        shift_right: shift_right, displaced: false }, extraProps);
-};
-Flow.keyProperties.note_values = {
-    'C': { index: 0, int_val: 0, accidental: null },
-    'CN': { index: 0, int_val: 0, accidental: 'n' },
-    'C#': { index: 0, int_val: 1, accidental: '#' },
-    'C##': { index: 0, int_val: 2, accidental: '##' },
-    'CB': { index: 0, int_val: -1, accidental: 'b' },
-    'CBB': { index: 0, int_val: -2, accidental: 'bb' },
-    'D': { index: 1, int_val: 2, accidental: null },
-    'DN': { index: 1, int_val: 2, accidental: 'n' },
-    'D#': { index: 1, int_val: 3, accidental: '#' },
-    'D##': { index: 1, int_val: 4, accidental: '##' },
-    'DB': { index: 1, int_val: 1, accidental: 'b' },
-    'DBB': { index: 1, int_val: 0, accidental: 'bb' },
-    'E': { index: 2, int_val: 4, accidental: null },
-    'EN': { index: 2, int_val: 4, accidental: 'n' },
-    'E#': { index: 2, int_val: 5, accidental: '#' },
-    'E##': { index: 2, int_val: 6, accidental: '##' },
-    'EB': { index: 2, int_val: 3, accidental: 'b' },
-    'EBB': { index: 2, int_val: 2, accidental: 'bb' },
-    'F': { index: 3, int_val: 5, accidental: null },
-    'FN': { index: 3, int_val: 5, accidental: 'n' },
-    'F#': { index: 3, int_val: 6, accidental: '#' },
-    'F##': { index: 3, int_val: 7, accidental: '##' },
-    'FB': { index: 3, int_val: 4, accidental: 'b' },
-    'FBB': { index: 3, int_val: 3, accidental: 'bb' },
-    'G': { index: 4, int_val: 7, accidental: null },
-    'GN': { index: 4, int_val: 7, accidental: 'n' },
-    'G#': { index: 4, int_val: 8, accidental: '#' },
-    'G##': { index: 4, int_val: 9, accidental: '##' },
-    'GB': { index: 4, int_val: 6, accidental: 'b' },
-    'GBB': { index: 4, int_val: 5, accidental: 'bb' },
-    'A': { index: 5, int_val: 9, accidental: null },
-    'AN': { index: 5, int_val: 9, accidental: 'n' },
-    'A#': { index: 5, int_val: 10, accidental: '#' },
-    'A##': { index: 5, int_val: 11, accidental: '##' },
-    'AB': { index: 5, int_val: 8, accidental: 'b' },
-    'ABB': { index: 5, int_val: 7, accidental: 'bb' },
-    'B': { index: 6, int_val: 11, accidental: null },
-    'BN': { index: 6, int_val: 11, accidental: 'n' },
-    'B#': { index: 6, int_val: 12, accidental: '#' },
-    'B##': { index: 6, int_val: 13, accidental: '##' },
-    'BB': { index: 6, int_val: 10, accidental: 'b' },
-    'BBB': { index: 6, int_val: 9, accidental: 'bb' },
-    'R': { index: 6, int_val: 9, rest: true },
-    'X': {
-        index: 6,
-        accidental: '',
-        octave: 4,
-        code: 'noteheadXBlack',
-        shift_right: 5.5,
-    },
-};
-Flow.integerToNote = function (integer) {
-    if (typeof (integer) === 'undefined') {
-        throw new vex_1.Vex.RERR('BadArguments', 'Undefined integer for integerToNote');
-    }
-    if (integer < -2) {
-        throw new vex_1.Vex.RERR('BadArguments', "integerToNote requires integer > -2: " + integer);
-    }
-    var noteValue = Flow.integerToNote.table[integer];
-    if (!noteValue) {
-        throw new vex_1.Vex.RERR('BadArguments', "Unknown note value for integer: " + integer);
-    }
-    return noteValue;
-};
-Flow.integerToNote.table = {
-    0: 'C',
-    1: 'C#',
-    2: 'D',
-    3: 'D#',
-    4: 'E',
-    5: 'F',
-    6: 'F#',
-    7: 'G',
-    8: 'G#',
-    9: 'A',
-    10: 'A#',
-    11: 'B',
-};
-Flow.tabToGlyph = function (fret, scale) {
-    if (scale === void 0) { scale = 1.0; }
-    var glyph = null;
-    var width = 0;
-    var shift_y = 0;
-    if (fret.toString().toUpperCase() === 'X') {
-        var glyphMetrics = new glyph_1.Glyph('accidentalDoubleSharp', Flow.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
-        glyph = 'accidentalDoubleSharp';
-        width = glyphMetrics.width;
-        shift_y = -glyphMetrics.height / 2;
-    }
-    else {
-        width = Flow.textWidth(fret.toString());
-    }
-    return {
-        text: fret,
-        code: glyph,
-        getWidth: function () { return width * scale; },
-        shift_y: shift_y,
-    };
-};
-Flow.textWidth = function (text) { return 7 * text.toString().length; };
-Flow.articulationCodes = function (artic) {
-    return Flow.articulationCodes.articulations[artic];
-};
-Flow.articulationCodes.articulations = {
-    'a.': { code: 'augmentationDot', between_lines: true },
-    'av': {
-        aboveCode: 'articStaccatissimoAbove',
-        belowCode: 'articStaccatissimoBelow',
-        between_lines: true
-    },
-    'a>': {
-        aboveCode: 'articAccentAbove',
-        belowCode: 'articAccentBelow',
-        between_lines: true
-    },
-    'a-': {
-        aboveCode: 'articTenutoAbove',
-        belowCode: 'articTenutoBelow',
-        between_lines: true
-    },
-    'a^': {
-        aboveCode: 'articMarcatoAbove',
-        belowCode: 'articMarcatoBelow',
-        between_lines: false
-    },
-    'a+': { code: 'pluckedLeftHandPizzicato', between_lines: false },
-    'ao': {
-        aboveCode: 'pluckedSnapPizzicatoAbove',
-        belowCode: 'pluckedSnapPizzicatoBelow',
-        between_lines: false
-    },
-    'ah': { code: 'stringsHarmonic', between_lines: false },
-    'a@': { aboveCode: 'fermataAbove', belowCode: 'fermataBelow', between_lines: false },
-    'a@a': { code: 'fermataAbove', between_lines: false },
-    'a@u': { code: 'fermataBelow', between_lines: false },
-    'a|': { code: 'stringsUpBow', between_lines: false },
-    'am': { code: 'stringsDownBow', between_lines: false },
-    'a,': { code: 'pictChokeCymbal', between_lines: false },
-};
-Flow.accidentalCodes = function (acc) {
-    return Flow.accidentalCodes.accidentals[acc];
-};
-Flow.accidentalCodes.accidentals = {
+exports.ACCIDENTALS = {
     '#': { code: 'accidentalSharp', parenRightPaddingAdjustment: -1 },
     '##': { code: 'accidentalDoubleSharp', parenRightPaddingAdjustment: -1 },
     'b': { code: 'accidentalFlat', parenRightPaddingAdjustment: -2 },
@@ -28588,41 +28683,122 @@ Flow.accidentalCodes.accidentals = {
     'accidentalWilsonPlus': { code: 'accidentalWilsonPlus', parenRightPaddingAdjustment: -1 },
     'accidentalWilsonMinus': { code: 'accidentalWilsonMinus', parenRightPaddingAdjustment: -1 },
 };
-Flow.accidentalColumnsTable = {
-    1: {
-        a: [1],
-        b: [1],
+exports.CLEF_PROPERTIES_VALUES = {
+    'treble': { line_shift: 0 },
+    'bass': { line_shift: 6 },
+    'tenor': { line_shift: 4 },
+    'alto': { line_shift: 3 },
+    'soprano': { line_shift: 1 },
+    'percussion': { line_shift: 0 },
+    'mezzo-soprano': { line_shift: 2 },
+    'baritone-c': { line_shift: 5 },
+    'baritone-f': { line_shift: 5 },
+    'subbass': { line_shift: 7 },
+    'french': { line_shift: -1 },
+};
+exports.ARTICULATIONS = {
+    'a.': { code: 'augmentationDot', between_lines: true },
+    'av': {
+        aboveCode: 'articStaccatissimoAbove',
+        belowCode: 'articStaccatissimoBelow',
+        between_lines: true
     },
-    2: {
-        a: [1, 2],
+    'a>': {
+        aboveCode: 'articAccentAbove',
+        belowCode: 'articAccentBelow',
+        between_lines: true
     },
-    3: {
-        a: [1, 3, 2],
-        b: [1, 2, 1],
-        second_on_bottom: [1, 2, 3],
+    'a-': {
+        aboveCode: 'articTenutoAbove',
+        belowCode: 'articTenutoBelow',
+        between_lines: true
     },
-    4: {
-        a: [1, 3, 4, 2],
-        b: [1, 2, 3, 1],
-        spaced_out_tetrachord: [1, 2, 1, 2],
+    'a^': {
+        aboveCode: 'articMarcatoAbove',
+        belowCode: 'articMarcatoBelow',
+        between_lines: false
     },
-    5: {
-        a: [1, 3, 5, 4, 2],
-        b: [1, 2, 4, 3, 1],
-        spaced_out_pentachord: [1, 2, 3, 2, 1],
-        very_spaced_out_pentachord: [1, 2, 1, 2, 1],
+    'a+': { code: 'pluckedLeftHandPizzicato', between_lines: false },
+    'ao': {
+        aboveCode: 'pluckedSnapPizzicatoAbove',
+        belowCode: 'pluckedSnapPizzicatoBelow',
+        between_lines: false
     },
-    6: {
-        a: [1, 3, 5, 6, 4, 2],
-        b: [1, 2, 4, 5, 3, 1],
-        spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
-        very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2],
+    'ah': { code: 'stringsHarmonic', between_lines: false },
+    'a@': { aboveCode: 'fermataAbove', belowCode: 'fermataBelow', between_lines: false },
+    'a@a': { code: 'fermataAbove', between_lines: false },
+    'a@u': { code: 'fermataBelow', between_lines: false },
+    'a|': { code: 'stringsUpBow', between_lines: false },
+    'am': { code: 'stringsDownBow', between_lines: false },
+    'a,': { code: 'pictChokeCymbal', between_lines: false },
+};
+exports.KEY_PROPERTIES_NOTE_VALUES = {
+    'C': { index: 0, int_val: 0, accidental: null },
+    'CN': { index: 0, int_val: 0, accidental: 'n' },
+    'C#': { index: 0, int_val: 1, accidental: '#' },
+    'C##': { index: 0, int_val: 2, accidental: '##' },
+    'CB': { index: 0, int_val: -1, accidental: 'b' },
+    'CBB': { index: 0, int_val: -2, accidental: 'bb' },
+    'D': { index: 1, int_val: 2, accidental: null },
+    'DN': { index: 1, int_val: 2, accidental: 'n' },
+    'D#': { index: 1, int_val: 3, accidental: '#' },
+    'D##': { index: 1, int_val: 4, accidental: '##' },
+    'DB': { index: 1, int_val: 1, accidental: 'b' },
+    'DBB': { index: 1, int_val: 0, accidental: 'bb' },
+    'E': { index: 2, int_val: 4, accidental: null },
+    'EN': { index: 2, int_val: 4, accidental: 'n' },
+    'E#': { index: 2, int_val: 5, accidental: '#' },
+    'E##': { index: 2, int_val: 6, accidental: '##' },
+    'EB': { index: 2, int_val: 3, accidental: 'b' },
+    'EBB': { index: 2, int_val: 2, accidental: 'bb' },
+    'F': { index: 3, int_val: 5, accidental: null },
+    'FN': { index: 3, int_val: 5, accidental: 'n' },
+    'F#': { index: 3, int_val: 6, accidental: '#' },
+    'F##': { index: 3, int_val: 7, accidental: '##' },
+    'FB': { index: 3, int_val: 4, accidental: 'b' },
+    'FBB': { index: 3, int_val: 3, accidental: 'bb' },
+    'G': { index: 4, int_val: 7, accidental: null },
+    'GN': { index: 4, int_val: 7, accidental: 'n' },
+    'G#': { index: 4, int_val: 8, accidental: '#' },
+    'G##': { index: 4, int_val: 9, accidental: '##' },
+    'GB': { index: 4, int_val: 6, accidental: 'b' },
+    'GBB': { index: 4, int_val: 5, accidental: 'bb' },
+    'A': { index: 5, int_val: 9, accidental: null },
+    'AN': { index: 5, int_val: 9, accidental: 'n' },
+    'A#': { index: 5, int_val: 10, accidental: '#' },
+    'A##': { index: 5, int_val: 11, accidental: '##' },
+    'AB': { index: 5, int_val: 8, accidental: 'b' },
+    'ABB': { index: 5, int_val: 7, accidental: 'bb' },
+    'B': { index: 6, int_val: 11, accidental: null },
+    'BN': { index: 6, int_val: 11, accidental: 'n' },
+    'B#': { index: 6, int_val: 12, accidental: '#' },
+    'B##': { index: 6, int_val: 13, accidental: '##' },
+    'BB': { index: 6, int_val: 10, accidental: 'b' },
+    'BBB': { index: 6, int_val: 9, accidental: 'bb' },
+    'R': { index: 6, int_val: 9, rest: true },
+    'X': {
+        index: 6,
+        accidental: '',
+        octave: 4,
+        code: 'noteheadXBlack',
+        shift_right: 5.5,
     },
 };
-Flow.ornamentCodes = function (acc) {
-    return Flow.ornamentCodes.ornaments[acc];
+exports.INTEGER_TO_NOTE_TABLE = {
+    0: 'C',
+    1: 'C#',
+    2: 'D',
+    3: 'D#',
+    4: 'E',
+    5: 'F',
+    6: 'F#',
+    7: 'G',
+    8: 'G#',
+    9: 'A',
+    10: 'A#',
+    11: 'B',
 };
-Flow.ornamentCodes.ornaments = {
+exports.ORNAMENTS = {
     'mordent': { code: 'ornamentShortTrill' },
     'mordent_inverted': { code: 'ornamentMordent' },
     'turn': { code: 'ornamentTurn' },
@@ -28648,23 +28824,7 @@ Flow.ornamentCodes.ornaments = {
     'jazzTurn': { code: 'brassJazzTurn' },
     'smear': { code: 'brassSmear' }
 };
-Flow.keySignature = function (spec) {
-    var keySpec = Flow.keySignature.keySpecs[spec];
-    if (!keySpec) {
-        throw new vex_1.Vex.RERR('BadKeySignature', "Bad key signature spec: '" + spec + "'");
-    }
-    if (!keySpec.acc) {
-        return [];
-    }
-    var notes = Flow.keySignature.accidentalList(keySpec.acc);
-    var acc_list = [];
-    for (var i = 0; i < keySpec.num; ++i) {
-        var line = notes[i];
-        acc_list.push({ type: keySpec.acc, line: line });
-    }
-    return acc_list;
-};
-Flow.keySignature.keySpecs = {
+exports.KEY_SPECS = {
     'C': { acc: null, num: 0 },
     'Am': { acc: null, num: 0 },
     'F': { acc: 'b', num: 1 },
@@ -28696,66 +28856,15 @@ Flow.keySignature.keySpecs = {
     'C#': { acc: '#', num: 7 },
     'A#m': { acc: '#', num: 7 },
 };
-Flow.unicode = {
-    // Unicode accidentals
-    'sharp': String.fromCharCode(parseInt('266F', 16)),
-    'flat': String.fromCharCode(parseInt('266D', 16)),
-    'natural': String.fromCharCode(parseInt('266E', 16)),
-    // Major Chord
-    'triangle': String.fromCharCode(parseInt('25B3', 16)),
-    // half-diminished
-    'o-with-slash': String.fromCharCode(parseInt('00F8', 16)),
-    // Diminished
-    'degrees': String.fromCharCode(parseInt('00B0', 16)),
-    'circle': String.fromCharCode(parseInt('25CB', 16)),
-};
-Flow.keySignature.accidentalList = function (acc) {
+var accidentalList = function (acc) {
     var patterns = {
         'b': [2, 0.5, 2.5, 1, 3, 1.5, 3.5],
         '#': [0, 1.5, -0.5, 1, 2.5, 0.5, 2],
     };
     return patterns[acc];
 };
-// Used to convert duration aliases to the number based duration.
-// If the input isn't an alias, simply return the input.
-//
-// example: 'q' -> '4', '8' -> '8'
-Flow.sanitizeDuration = function (duration) {
-    var alias = Flow.durationAliases[duration];
-    if (alias !== undefined) {
-        duration = alias;
-    }
-    if (Flow.durationToTicks.durations[duration] === undefined) {
-        throw new vex_1.Vex.RERR('BadArguments', "The provided duration is not valid: " + duration);
-    }
-    return duration;
-};
-// Convert the `duration` to an fraction
-Flow.durationToFraction = function (duration) { return new fraction_1.Fraction().parse(Flow.sanitizeDuration(duration)); };
-// Convert the `duration` to an number
-Flow.durationToNumber = function (duration) { return Flow.durationToFraction(duration).value(); };
-// Convert the `duration` to total ticks
-Flow.durationToTicks = function (duration) {
-    duration = Flow.sanitizeDuration(duration);
-    var ticks = Flow.durationToTicks.durations[duration];
-    if (ticks === undefined) {
-        return null;
-    }
-    return ticks;
-};
-Flow.durationToTicks.durations = {
-    '1/2': Flow.RESOLUTION * 2,
-    '1': Flow.RESOLUTION,
-    '2': Flow.RESOLUTION / 2,
-    '4': Flow.RESOLUTION / 4,
-    '8': Flow.RESOLUTION / 8,
-    '16': Flow.RESOLUTION / 16,
-    '32': Flow.RESOLUTION / 32,
-    '64': Flow.RESOLUTION / 64,
-    '128': Flow.RESOLUTION / 128,
-    '256': Flow.RESOLUTION / 256,
-};
-Flow.durationAliases = {
+exports.accidentalList = accidentalList;
+exports.DURATION_ALIASES = {
     'w': '1',
     'h': '2',
     'q': '4',
@@ -28765,40 +28874,8 @@ Flow.durationAliases = {
     // TODO(0xfe): This needs to be cleaned up.
     'b': '256',
 };
-// Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
-Flow.getGlyphProps = function (duration, type) {
-    duration = Flow.sanitizeDuration(duration);
-    type = type || 'n'; // default type is a regular note
-    // Lookup duration for default glyph head code
-    var code = Flow.getGlyphProps.duration_codes[duration];
-    if (code === undefined) {
-        return null;
-    }
-    // Get glyph properties for 'type' from duration string (note, rest, harmonic, muted, slash)
-    var glyphTypeProperties = code.type[type];
-    // If this isn't a standard type, then lookup the custom note head map.
-    if (glyphTypeProperties === undefined) {
-        // Try and get it from the custom list of note heads
-        var customGlyphTypeProperties = Flow.keyProperties.customNoteHeads[type.toUpperCase()];
-        // If not, then return with nothing
-        if (customGlyphTypeProperties === undefined) {
-            return null;
-        }
-        // Otherwise set it as the code_head value
-        glyphTypeProperties = __assign({ code_head: customGlyphTypeProperties.code }, customGlyphTypeProperties);
-    }
-    // Merge duration props for 'duration' with the note head properties.
-    return __assign(__assign({}, code.common), glyphTypeProperties);
-};
-Flow.getGlyphProps.validTypes = {
-    'n': { name: 'note' },
-    'r': { name: 'rest' },
-    'h': { name: 'harmonic' },
-    'm': { name: 'muted' },
-    's': { name: 'slash' },
-};
 // Custom note heads
-Flow.keyProperties.customNoteHeads = {
+exports.CUSTOM_NOTEHEADS = {
     /* Diamond */
     'D0': { code: 'noteheadDiamondWhole' },
     'D1': { code: 'noteheadDiamondHalf' },
@@ -28821,20 +28898,39 @@ Flow.keyProperties.customNoteHeads = {
     'R1': { code: 'vexNoteHeadRectWhite' },
     'R2': { code: 'vexNoteHeadRectBlack' },
 };
-Flow.getGlyphProps.duration_codes = {
+exports.GLYPH_PROPS_VALID_TYPES = {
+    'n': { name: 'note' },
+    'r': { name: 'rest' },
+    'h': { name: 'harmonic' },
+    'm': { name: 'muted' },
+    's': { name: 'slash' },
+};
+exports.DURATIONS = {
+    '1/2': flow_1.RESOLUTION * 2,
+    '1': flow_1.RESOLUTION,
+    '2': flow_1.RESOLUTION / 2,
+    '4': flow_1.RESOLUTION / 4,
+    '8': flow_1.RESOLUTION / 8,
+    '16': flow_1.RESOLUTION / 16,
+    '32': flow_1.RESOLUTION / 32,
+    '64': flow_1.RESOLUTION / 64,
+    '128': flow_1.RESOLUTION / 128,
+    '256': flow_1.RESOLUTION / 256,
+};
+exports.DURATION_CODES = {
     '1/2': {
         common: {
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'v53', scale).getMetrics().width;
             },
             stem: false,
             stem_offset: 0,
             flag: false,
-            stem_up_extension: -Flow.STEM_HEIGHT,
-            stem_down_extension: -Flow.STEM_HEIGHT,
-            tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
-            tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
+            stem_up_extension: -flow_1.STEM_HEIGHT,
+            stem_down_extension: -flow_1.STEM_HEIGHT,
+            tabnote_stem_up_extension: -flow_1.STEM_HEIGHT,
+            tabnote_stem_down_extension: -flow_1.STEM_HEIGHT,
             dot_shiftY: 0,
             line_above: 0,
             line_below: 0,
@@ -28858,7 +28954,7 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
@@ -28866,16 +28962,16 @@ Flow.getGlyphProps.duration_codes = {
     '1': {
         common: {
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'v1d', scale).getMetrics().width;
             },
             stem: false,
             stem_offset: 0,
             flag: false,
-            stem_up_extension: -Flow.STEM_HEIGHT,
-            stem_down_extension: -Flow.STEM_HEIGHT,
-            tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
-            tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
+            stem_up_extension: -flow_1.STEM_HEIGHT,
+            stem_down_extension: -flow_1.STEM_HEIGHT,
+            tabnote_stem_up_extension: -flow_1.STEM_HEIGHT,
+            tabnote_stem_down_extension: -flow_1.STEM_HEIGHT,
             dot_shiftY: 0,
             line_above: 0,
             line_below: 0,
@@ -28899,7 +28995,7 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
@@ -28907,7 +29003,7 @@ Flow.getGlyphProps.duration_codes = {
     '2': {
         common: {
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'noteheadHalf', scale).getMetrics().width;
             },
             stem: true,
@@ -28941,7 +29037,7 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
@@ -28949,7 +29045,7 @@ Flow.getGlyphProps.duration_codes = {
     '4': {
         common: {
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
             },
             stem: true,
@@ -28984,7 +29080,7 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
@@ -28992,7 +29088,7 @@ Flow.getGlyphProps.duration_codes = {
     '8': {
         common: {
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
             },
             stem: true,
@@ -29031,7 +29127,7 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
@@ -29040,7 +29136,7 @@ Flow.getGlyphProps.duration_codes = {
         common: {
             beam_count: 2,
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
             },
             stem: true,
@@ -29078,7 +29174,7 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
@@ -29087,7 +29183,7 @@ Flow.getGlyphProps.duration_codes = {
         common: {
             beam_count: 3,
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
             },
             stem: true,
@@ -29125,7 +29221,7 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
@@ -29134,7 +29230,7 @@ Flow.getGlyphProps.duration_codes = {
         common: {
             beam_count: 4,
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
             },
             stem: true,
@@ -29172,7 +29268,7 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
@@ -29181,7 +29277,7 @@ Flow.getGlyphProps.duration_codes = {
         common: {
             beam_count: 5,
             getWidth: function (scale) {
-                if (scale === void 0) { scale = Flow.DEFAULT_NOTATION_FONT_SCALE; }
+                if (scale === void 0) { scale = flow_1.DEFAULT_NOTATION_FONT_SCALE; }
                 return new glyph_1.Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
             },
             stem: true,
@@ -29219,19 +29315,43 @@ Flow.getGlyphProps.duration_codes = {
             },
             's': {
                 // Drawn with canvas primitives
-                getWidth: function () { return Flow.SLASH_NOTEHEAD_WIDTH; },
+                getWidth: function () { return flow_1.SLASH_NOTEHEAD_WIDTH; },
                 position: 'B/4',
             },
         },
     },
 };
-// Some defaults
-Flow.TIME4_4 = {
-    num_beats: 4,
-    beat_value: 4,
-    resolution: Flow.RESOLUTION,
+exports.ACCIDENTAL_COLUMNS_TABLE = {
+    1: {
+        a: [1],
+        b: [1],
+    },
+    2: {
+        a: [1, 2],
+    },
+    3: {
+        a: [1, 3, 2],
+        b: [1, 2, 1],
+        second_on_bottom: [1, 2, 3],
+    },
+    4: {
+        a: [1, 3, 4, 2],
+        b: [1, 2, 3, 1],
+        spaced_out_tetrachord: [1, 2, 1, 2],
+    },
+    5: {
+        a: [1, 3, 5, 4, 2],
+        b: [1, 2, 4, 3, 1],
+        spaced_out_pentachord: [1, 2, 3, 2, 1],
+        very_spaced_out_pentachord: [1, 2, 1, 2, 1],
+    },
+    6: {
+        a: [1, 3, 5, 6, 4, 2],
+        b: [1, 2, 4, 5, 3, 1],
+        spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
+        very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2],
+    },
 };
-Flow.BoundingBox = boundingbox_1.BoundingBox;
 
 
 /***/ }),
@@ -29245,14 +29365,6 @@ Flow.BoundingBox = boundingbox_1.BoundingBox;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// The file implements notes for Tablature notation. This consists of one or
-// more fret positions, and can either be drawn with or without stems.
-//
-// See `tests/tabnote_tests.js` for usage examples
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -29268,13 +29380,21 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TabNote = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// The file implements notes for Tablature notation. This consists of one or
+// more fret positions, and can either be drawn with or without stems.
+//
+// See `tests/tabnote_tests.js` for usage examples
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
 var stemmablenote_1 = __webpack_require__(/*! ./stemmablenote */ "./src/stemmablenote.ts");
 var dot_1 = __webpack_require__(/*! ./dot */ "./src/dot.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // Gets the unused strings grouped together if consecutive.
 //
 // Parameters:
@@ -29369,9 +29489,9 @@ var TabNote = /** @class */ (function (_super) {
         // The fret positions in the note. An array of `{ str: X, fret: X }`
         _this.positions = tab_struct.positions;
         // Render Options
-        vex_1.Vex.Merge(_this.render_options, {
+        flow_1.Merge(_this.render_options, {
             // font size for note heads and rests
-            glyph_font_scale: tables_1.Flow.DEFAULT_TABLATURE_FONT_SCALE,
+            glyph_font_scale: flow_1.DEFAULT_TABLATURE_FONT_SCALE,
             // Flag to draw a stem
             draw_stem: draw_stem,
             // Flag to draw dot modifiers
@@ -29385,9 +29505,9 @@ var TabNote = /** @class */ (function (_super) {
             // default tablature font
             font: '10pt Arial',
         });
-        _this.glyph = tables_1.Flow.getGlyphProps(_this.duration, _this.noteType);
+        _this.glyph = flow_1.getGlyphProps(_this.duration, _this.noteType);
         if (!_this.glyph) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', "Invalid note initialization data (No glyph found): " + JSON.stringify(tab_struct));
+            throw new runtimeerror_1.RuntimeError('BadArguments', "Invalid note initialization data (No glyph found): " + JSON.stringify(tab_struct));
         }
         _this.buildStem();
         if (tab_struct.stem_direction) {
@@ -29457,7 +29577,7 @@ var TabNote = /** @class */ (function (_super) {
             var fret = this.positions[i].fret;
             if (this.ghost)
                 fret = '(' + fret + ')';
-            var glyph = tables_1.Flow.tabToGlyph(fret, this.render_options.scale);
+            var glyph = flow_1.tabToGlyph(fret, this.render_options.scale);
             this.glyphs.push(glyph);
             this.width = Math.max(glyph.getWidth(), this.width);
         }
@@ -29542,10 +29662,10 @@ var TabNote = /** @class */ (function (_super) {
     // `position` at a fret position `index`
     TabNote.prototype.getModifierStartXY = function (position, index) {
         if (!this.preFormatted) {
-            throw new vex_1.Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+            throw new runtimeerror_1.RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
         }
         if (this.ys.length === 0) {
-            throw new vex_1.Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
+            throw new runtimeerror_1.RuntimeError('NoYValues', 'No Y-Values calculated for this note.');
         }
         var x = 0;
         if (position === modifier_1.Modifier.Position.LEFT) {
@@ -29676,10 +29796,10 @@ var TabNote = /** @class */ (function (_super) {
     TabNote.prototype.draw = function () {
         this.checkContext();
         if (!this.stave) {
-            throw new vex_1.Vex.RERR('NoStave', "Can't draw without a stave.");
+            throw new runtimeerror_1.RuntimeError('NoStave', "Can't draw without a stave.");
         }
         if (this.ys.length === 0) {
-            throw new vex_1.Vex.RERR('NoYValues', "Can't draw note without Y values.");
+            throw new runtimeerror_1.RuntimeError('NoYValues', "Can't draw note without Y values.");
         }
         this.setRendered();
         var render_stem = this.beam == null && this.render_options.draw_stem;
@@ -29713,11 +29833,6 @@ exports.TabNote = TabNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This class implements varies types of ties between contiguous notes. The
-// ties include: regular ties, hammer ons, pull offs, and slides.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -29733,8 +29848,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TabSlide = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// This class implements varies types of ties between contiguous notes. The
+// ties include: regular ties, hammer ons, pull offs, and slides.
 var tabtie_1 = __webpack_require__(/*! ./tabtie */ "./src/tabtie.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var TabSlide = /** @class */ (function (_super) {
     __extends(TabSlide, _super);
     function TabSlide(notes, direction) {
@@ -29788,7 +29908,7 @@ var TabSlide = /** @class */ (function (_super) {
     };
     TabSlide.prototype.renderTie = function (params) {
         if (params.first_ys.length === 0 || params.last_ys.length === 0) {
-            throw new vex_1.Vex.RERR('BadArguments', 'No Y-values to render');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'No Y-values to render');
         }
         var ctx = this.context;
         var first_x_px = params.first_x_px;
@@ -29796,13 +29916,13 @@ var TabSlide = /** @class */ (function (_super) {
         var last_x_px = params.last_x_px;
         var direction = this.slide_direction;
         if (direction !== TabSlide.SLIDE_UP && direction !== TabSlide.SLIDE_DOWN) {
-            throw new vex_1.Vex.RERR('BadSlide', 'Invalid slide direction');
+            throw new runtimeerror_1.RuntimeError('BadSlide', 'Invalid slide direction');
         }
         for (var i = 0; i < this.first_indices.length; ++i) {
             var slide_y = first_ys[this.first_indices[i]] +
                 this.render_options.y_shift;
             if (isNaN(slide_y)) {
-                throw new vex_1.Vex.RERR('BadArguments', 'Bad indices for slide rendering.');
+                throw new runtimeerror_1.RuntimeError('BadArguments', 'Bad indices for slide rendering.');
             }
             ctx.beginPath();
             ctx.moveTo(first_x_px, slide_y + (3 * direction));
@@ -29844,8 +29964,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TabStave = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var stave_1 = __webpack_require__(/*! ./stave */ "./src/stave.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var TabStave = /** @class */ (function (_super) {
     __extends(TabStave, _super);
     function TabStave(x, y, width, options) {
@@ -29855,7 +29975,7 @@ var TabStave = /** @class */ (function (_super) {
             num_lines: 6,
             top_text_position: 1,
         };
-        vex_1.Vex.Merge(tab_options, options);
+        flow_1.Merge(tab_options, options);
         _this = _super.call(this, x, y, width, tab_options) || this;
         _this.setAttribute('type', 'TabStave');
         return _this;
@@ -29987,14 +30107,6 @@ exports.TabTie = TabTie;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Cyril Silverman
-//
-// ## Description
-//
-// This file implement `TextBrackets` which extend between two notes.
-// The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
-// using this class.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -30020,11 +30132,19 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TextBracket = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+exports.TextBracket = exports.Position = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Cyril Silverman
+//
+// ## Description
+//
+// This file implement `TextBrackets` which extend between two notes.
+// The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
+// using this class.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 var renderer_1 = __webpack_require__(/*! ./renderer */ "./src/renderer.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -30032,8 +30152,13 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (TextBracket.DEBUG)
-        vex_1.Vex.L('Vex.Flow.TextBracket', args);
+        flow_1.LOG('Vex.Flow.TextBracket', args);
 }
+var Position;
+(function (Position) {
+    Position[Position["TOP"] = 1] = "TOP";
+    Position[Position["BOTTOM"] = -1] = "BOTTOM";
+})(Position = exports.Position || (exports.Position = {}));
 var TextBracket = /** @class */ (function (_super) {
     __extends(TextBracket, _super);
     function TextBracket(_a) {
@@ -30068,10 +30193,7 @@ var TextBracket = /** @class */ (function (_super) {
     }
     Object.defineProperty(TextBracket, "Positions", {
         get: function () {
-            return {
-                TOP: 1,
-                BOTTOM: -1,
-            };
+            return Position;
         },
         enumerable: false,
         configurable: true
@@ -30124,10 +30246,10 @@ var TextBracket = /** @class */ (function (_super) {
                 y = this.start.getStave().getYForTopText(this.line);
                 break;
             case TextBracket.Positions.BOTTOM:
-                y = this.start.getStave().getYForBottomText(this.line + tables_1.Flow.TEXT_HEIGHT_OFFSET_HACK);
+                y = this.start.getStave().getYForBottomText(this.line + flow_1.TEXT_HEIGHT_OFFSET_HACK);
                 break;
             default:
-                throw new vex_1.Vex.RERR('InvalidPosition', "The position " + this.position + " is invalid");
+                throw new runtimeerror_1.RuntimeError('InvalidPosition', "The position " + this.position + " is invalid");
         }
         // Get the preliminary start and stop coordintates for the bracket
         var start = { x: this.start.getAbsoluteX(), y: y };
@@ -30203,14 +30325,6 @@ exports.TextBracket = TextBracket;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This file implements the `TextDynamics` which renders traditional
-// text dynamics markings, **ie: p, f, sfz, rfz, ppp**
-//
-// You can render any dynamics string that contains a combination of
-// the following letters:  P, M, F, Z, R, S
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -30226,9 +30340,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextDynamics = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// This file implements the `TextDynamics` which renders traditional
+// text dynamics markings, **ie: p, f, sfz, rfz, ppp**
+//
+// You can render any dynamics string that contains a combination of
+// the following letters:  P, M, F, Z, R, S
 var note_1 = __webpack_require__(/*! ./note */ "./src/note.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -30236,7 +30359,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (TextDynamics.DEBUG)
-        vex_1.Vex.L('Vex.Flow.TextDynamics', args);
+        flow_1.LOG('Vex.Flow.TextDynamics', args);
 }
 var TextDynamics = /** @class */ (function (_super) {
     __extends(TextDynamics, _super);
@@ -30251,7 +30374,7 @@ var TextDynamics = /** @class */ (function (_super) {
         _this.sequence = text_struct.text.toLowerCase();
         _this.line = text_struct.line || 0;
         _this.glyphs = [];
-        vex_1.Vex.Merge(_this.render_options, {
+        flow_1.Merge(_this.render_options, {
             glyph_font_size: 40,
         });
         L('New Dynamics Text: ', _this.sequence);
@@ -30304,7 +30427,7 @@ var TextDynamics = /** @class */ (function (_super) {
             // Get the glyph data for the letter
             var glyph_data = TextDynamics.GLYPHS[letter];
             if (!glyph_data)
-                throw new vex_1.Vex.RERR('Invalid dynamics character: ' + letter);
+                throw new runtimeerror_1.RuntimeError('Invalid dynamics character: ' + letter);
             var size = _this.render_options.glyph_font_size;
             var glyph = new glyph_1.Glyph(glyph_data.code, size, { category: 'textNote' });
             // Add the glyph
@@ -30346,6 +30469,8 @@ exports.TextDynamics = TextDynamics;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextFont = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
@@ -30353,11 +30478,10 @@ exports.TextDynamics = TextDynamics;
 // This file handles a registry of text font metric information, so all
 // VEX modules can take advantage of font metrics in a uniform way.
 //
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TextFont = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var petalumascript_textmetrics_1 = __webpack_require__(/*! ./fonts/petalumascript_textmetrics */ "./src/fonts/petalumascript_textmetrics.ts");
 var robotoslab_textmetrics_1 = __webpack_require__(/*! ./fonts/robotoslab_textmetrics */ "./src/fonts/robotoslab_textmetrics.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -30365,7 +30489,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (TextFont.DEBUG)
-        vex_1.Vex.L('Vex.Flow.TextFont', args);
+        flow_1.LOG('Vex.Flow.TextFont', args);
 }
 var TextFont = /** @class */ (function () {
     // ## Prototype Methods
@@ -30376,7 +30500,7 @@ var TextFont = /** @class */ (function () {
     function TextFont(params) {
         this.attrs = { 'type': 'TextFont' };
         if (!params.name) {
-            throw new vex_1.Vex.RERR('BadArgument', 'Font constructor must specify a name');
+            throw new runtimeerror_1.RuntimeError('BadArgument', 'Font constructor must specify a name');
         }
         var fontData = params.glyphs ? params : TextFont.getFontDataByName(params.name);
         if (!fontData) {
@@ -30384,13 +30508,13 @@ var TextFont = /** @class */ (function () {
                 TextFont.registerFont(params);
             }
             else {
-                throw new vex_1.Vex.RERR('BadArgument', 'Unknown font, must have glyph metrics and resolution');
+                throw new runtimeerror_1.RuntimeError('BadArgument', 'Unknown font, must have glyph metrics and resolution');
             }
         }
         else {
-            vex_1.Vex.Merge(this, fontData);
+            flow_1.Merge(this, fontData);
         }
-        vex_1.Vex.Merge(this, params);
+        flow_1.Merge(this, params);
         if (!this.size) {
             this.size = 14;
         }
@@ -30615,12 +30739,6 @@ exports.TextFont = TextFont;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// `TextNote` is a notation element that is positioned in time. Generally
-// meant for objects that sit above/below the staff and inline with each other.
-// Examples of this would be such as dynamics, lyrics, chord changes, etc.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -30646,10 +30764,22 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TextNote = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.TextNote = exports.Justification = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// `TextNote` is a notation element that is positioned in time. Generally
+// meant for objects that sit above/below the staff and inline with each other.
+// Examples of this would be such as dynamics, lyrics, chord changes, etc.
 var note_1 = __webpack_require__(/*! ./note */ "./src/note.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var Justification;
+(function (Justification) {
+    Justification[Justification["LEFT"] = 1] = "LEFT";
+    Justification[Justification["CENTER"] = 2] = "CENTER";
+    Justification[Justification["RIGHT"] = 3] = "RIGHT";
+})(Justification = exports.Justification || (exports.Justification = {}));
 var TextNote = /** @class */ (function (_super) {
     __extends(TextNote, _super);
     function TextNote(options) {
@@ -30667,7 +30797,7 @@ var TextNote = /** @class */ (function (_super) {
         if (options.glyph) {
             var struct = TextNote.GLYPHS[options.glyph];
             if (!struct)
-                throw new vex_1.Vex.RERR('Invalid glyph type: ' + options.glyph);
+                throw new runtimeerror_1.RuntimeError('Invalid glyph type: ' + options.glyph);
             _this.glyph = new glyph_1.Glyph(struct.code, 40, { category: 'textNote' });
             _this.setWidth(_this.glyph.getMetrics().width);
         }
@@ -30679,11 +30809,7 @@ var TextNote = /** @class */ (function (_super) {
     }
     Object.defineProperty(TextNote, "Justification", {
         get: function () {
-            return {
-                LEFT: 1,
-                CENTER: 2,
-                RIGHT: 3,
-            };
+            return Justification;
         },
         enumerable: false,
         configurable: true
@@ -30795,7 +30921,7 @@ var TextNote = /** @class */ (function (_super) {
     TextNote.prototype.draw = function () {
         this.checkContext();
         if (!this.stave) {
-            throw new vex_1.Vex.RERR('NoStave', "Can't draw without a stave.");
+            throw new runtimeerror_1.RuntimeError('NoStave', "Can't draw without a stave.");
         }
         this.setRendered();
         var ctx = this.context;
@@ -30849,11 +30975,6 @@ exports.TextNote = TextNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// The tickable interface. Tickables are things that sit on a score and
-// have a duration, i.e., they occupy space in the musical rendering dimension.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -30869,10 +30990,15 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tickable = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// The tickable interface. Tickables are things that sit on a score and
+// have a duration, i.e., they occupy space in the musical rendering dimension.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Tickable = /** @class */ (function (_super) {
     __extends(Tickable, _super);
     function Tickable() {
@@ -30936,7 +31062,7 @@ var Tickable = /** @class */ (function (_super) {
     };
     Tickable.prototype.getWidth = function () {
         if (!this.preFormatted) {
-            throw new vex_1.Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
+            throw new runtimeerror_1.RuntimeError('UnformattedNote', "Can't call GetWidth on an unformatted note.");
         }
         return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
     };
@@ -30951,7 +31077,7 @@ var Tickable = /** @class */ (function (_super) {
     // Get `X` position of this tick context.
     Tickable.prototype.getX = function () {
         if (!this.tickContext) {
-            throw new vex_1.Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+            throw new runtimeerror_1.RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
         }
         return this.tickContext.getX() + this.x_shift;
     };
@@ -30975,7 +31101,7 @@ var Tickable = /** @class */ (function (_super) {
     // and preFormatter to associate them with the right modifierContexts.
     Tickable.prototype.getVoice = function () {
         if (!this.voice)
-            throw new vex_1.Vex.RERR('NoVoice', 'Tickable has no voice.');
+            throw new runtimeerror_1.RuntimeError('NoVoice', 'Tickable has no voice.');
         return this.voice;
     };
     Tickable.prototype.setVoice = function (voice) {
@@ -31076,7 +31202,7 @@ var Tickable = /** @class */ (function (_super) {
         this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
     };
     Tickable.prototype.setDuration = function (duration) {
-        var ticks = duration.numerator * (tables_1.Flow.RESOLUTION / duration.denominator);
+        var ticks = duration.numerator * (flow_1.RESOLUTION / duration.denominator);
         this.ticks = this.tickMultiplier.clone().multiply(ticks);
         this.intrinsicTicks = this.ticks.value();
     };
@@ -31116,9 +31242,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TickContext = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var tickable_1 = __webpack_require__(/*! ./tickable */ "./src/tickable.ts");
 var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var TickContext = /** @class */ (function (_super) {
     __extends(TickContext, _super);
     function TickContext(options) {
@@ -31234,7 +31360,7 @@ var TickContext = /** @class */ (function (_super) {
     };
     TickContext.prototype.addTickable = function (tickable, voiceIndex) {
         if (!tickable) {
-            throw new vex_1.Vex.RERR('BadArgument', 'Invalid tickable added.');
+            throw new runtimeerror_1.RuntimeError('BadArgument', 'Invalid tickable added.');
         }
         if (!tickable.shouldIgnoreTicks()) {
             this.ignore_ticks = false;
@@ -31305,12 +31431,6 @@ exports.TickContext = TickContext;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// Implements time signatures glyphs for staffs
-// See tables.js for the internal time signatures
-// representation
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -31326,17 +31446,23 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TimeSignature = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// Implements time signatures glyphs for staffs
+// See tables.js for the internal time signatures
+// representation
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
 var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var assertIsValidFraction = function (timeSpec) {
     var numbers = timeSpec.split('/').filter(function (number) { return number !== ''; });
     if (numbers.length !== 2) {
-        throw new vex_1.Vex.RERR('BadTimeSignature', "Invalid time spec: " + timeSpec + ". Must be in the form \"<numerator>/<denominator>\"");
+        throw new runtimeerror_1.RuntimeError('BadTimeSignature', "Invalid time spec: " + timeSpec + ". Must be in the form \"<numerator>/<denominator>\"");
     }
     numbers.forEach(function (number) {
         if (isNaN(Number(number))) {
-            throw new vex_1.Vex.RERR('BadTimeSignature', "Invalid time spec: " + timeSpec + ". Must contain two valid numbers.");
+            throw new runtimeerror_1.RuntimeError('BadTimeSignature', "Invalid time spec: " + timeSpec + ". Must contain two valid numbers.");
         }
     });
 };
@@ -31465,10 +31591,10 @@ var TimeSignature = /** @class */ (function (_super) {
     };
     TimeSignature.prototype.draw = function () {
         if (!this.x) {
-            throw new vex_1.Vex.RERR('TimeSignatureError', "Can't draw time signature without x.");
+            throw new runtimeerror_1.RuntimeError('TimeSignatureError', "Can't draw time signature without x.");
         }
         if (!this.stave) {
-            throw new vex_1.Vex.RERR('TimeSignatureError', "Can't draw time signature without stave.");
+            throw new runtimeerror_1.RuntimeError('TimeSignatureError', "Can't draw time signature without stave.");
         }
         this.setRendered();
         this.timeSig.glyph.setStave(this.stave);
@@ -31560,10 +31686,6 @@ exports.TimeSigNote = TimeSigNote;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Mike Corrigan <corrigan@gmail.com>
-//
-// This class implements tremolo notation.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -31579,11 +31701,15 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tremolo = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Mike Corrigan <corrigan@gmail.com>
+//
+// This class implements tremolo notation.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
 var gracenote_1 = __webpack_require__(/*! ./gracenote */ "./src/gracenote.ts");
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Tremolo = /** @class */ (function (_super) {
     __extends(Tremolo, _super);
     function Tremolo(num) {
@@ -31609,7 +31735,7 @@ var Tremolo = /** @class */ (function (_super) {
     Tremolo.prototype.draw = function () {
         this.checkContext();
         if (!(this.note && this.index != null)) {
-            throw new vex_1.Vex.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");
+            throw new runtimeerror_1.RuntimeError('NoAttachedNote', "Can't draw Tremolo without a note and index.");
         }
         this.setRendered();
         var stemDirection = this.note.getStemDirection();
@@ -31659,14 +31785,14 @@ exports.Tremolo = Tremolo;
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Tuning = void 0;
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 // This class implements varies types of tunings for tablature.
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Tuning = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var Tuning = /** @class */ (function () {
     function Tuning(tuningString) {
         if (tuningString === void 0) { tuningString = 'E/5,B/4,G/4,D/4,A/3,E/3,B/2,E/2'; }
@@ -31687,7 +31813,7 @@ var Tuning = /** @class */ (function () {
         configurable: true
     });
     Tuning.prototype.noteToInteger = function (noteString) {
-        return tables_1.Flow.keyProperties(noteString).int_value;
+        return flow_1.keyProperties(noteString).int_value;
     };
     Tuning.prototype.setTuning = function (noteString) {
         if (Tuning.names[noteString]) {
@@ -31698,7 +31824,7 @@ var Tuning = /** @class */ (function () {
         this.numStrings = 0;
         var keys = noteString.split(/\s*,\s*/);
         if (keys.length === 0) {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid tuning string: ' + noteString);
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Invalid tuning string: ' + noteString);
         }
         this.numStrings = keys.length;
         for (var i = 0; i < this.numStrings; ++i) {
@@ -31708,7 +31834,7 @@ var Tuning = /** @class */ (function () {
     Tuning.prototype.getValueForString = function (stringNum) {
         var s = parseInt(stringNum, 10);
         if (s < 1 || s > this.numStrings) {
-            throw new vex_1.Vex.RERR('BadArguments', "String number must be between 1 and " + this.numStrings + ":" + stringNum);
+            throw new runtimeerror_1.RuntimeError('BadArguments', "String number must be between 1 and " + this.numStrings + ":" + stringNum);
         }
         return this.tuningValues[s - 1];
     };
@@ -31716,7 +31842,7 @@ var Tuning = /** @class */ (function () {
         var stringValue = this.getValueForString(stringNum);
         var f = parseInt(fretNum, 10);
         if (f < 0) {
-            throw new vex_1.Vex.RERR('BadArguments', 'Fret number must be 0 or higher: ' +
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'Fret number must be 0 or higher: ' +
                 fretNum);
         }
         return stringValue + f;
@@ -31725,7 +31851,7 @@ var Tuning = /** @class */ (function () {
         var noteValue = this.getValueForFret(fretNum, stringNum);
         var octave = Math.floor(noteValue / 12);
         var value = noteValue % 12;
-        return tables_1.Flow.integerToNote(value) + '/' + octave;
+        return flow_1.integerToNote(value) + '/' + octave;
     };
     return Tuning;
 }());
@@ -31802,20 +31928,21 @@ exports.Tuplet = void 0;
  *     with articulations, etc...
  * }
  */
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 var formatter_1 = __webpack_require__(/*! ./formatter */ "./src/formatter.ts");
 var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
 var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 var Tuplet = /** @class */ (function (_super) {
     __extends(Tuplet, _super);
     function Tuplet(notes, options) {
         var _this = _super.call(this) || this;
         _this.setAttribute('type', 'Tuplet');
         if (!notes || !notes.length) {
-            throw new vex_1.Vex.RuntimeError('BadArguments', 'No notes provided for tuplet.');
+            throw new runtimeerror_1.RuntimeError('BadArguments', 'No notes provided for tuplet.');
         }
-        _this.options = vex_1.Vex.Merge({}, options);
+        _this.options = flow_1.Merge({}, options);
         _this.notes = notes;
         _this.num_notes = 'num_notes' in _this.options ?
             _this.options.num_notes : notes.length;
@@ -31902,7 +32029,7 @@ var Tuplet = /** @class */ (function (_super) {
             location = Tuplet.LOCATION_TOP;
         }
         else if (location !== Tuplet.LOCATION_TOP && location !== Tuplet.LOCATION_BOTTOM) {
-            throw new vex_1.Vex.RERR('BadArgument', 'Invalid tuplet location: ' + location);
+            throw new runtimeerror_1.RuntimeError('BadArgument', 'Invalid tuplet location: ' + location);
         }
         this.location = location;
         return this;
@@ -32102,180 +32229,186 @@ exports.Tuplet = Tuplet;
 // This file implements utility methods used by the rest of the VexFlow
 // codebase.
 //
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Vex = exports.GenericException = void 0;
-var Vex = {};
-exports.Vex = Vex;
-// Default log function sends all arguments to console.
-Vex.L = function (block, args) {
-    if (!args)
-        return;
-    var line = Array.prototype.slice.call(args).join(' ');
-    window.console.log(block + ': ' + line);
-};
-var GenericException = /** @class */ (function (_super) {
-    __extends(GenericException, _super);
-    function GenericException(message, data) {
-        var _this = _super.call(this, message) || this;
-        _this.message = message;
-        _this.data = data;
-        return _this;
-    }
-    return GenericException;
-}(Error));
-exports.GenericException = GenericException;
-Vex.MakeException = function (name) {
-    return /** @class */ (function (_super) {
-        __extends(class_1, _super);
-        function class_1(message, data) {
-            var _this = _super.call(this, message, data) || this;
-            _this.name = name;
-            return _this;
+exports.Vex = void 0;
+/* eslint max-classes-per-file: "off" */
+var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
+var smufl_1 = __webpack_require__(/*! ./smufl */ "./src/smufl.ts");
+var glyph_1 = __webpack_require__(/*! ./glyph */ "./src/glyph.ts");
+var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
+var boundingbox_1 = __webpack_require__(/*! ./boundingbox */ "./src/boundingbox.ts");
+var renderer_1 = __webpack_require__(/*! ./renderer */ "./src/renderer.ts");
+var formatter_1 = __webpack_require__(/*! ./formatter */ "./src/formatter.ts");
+var music_1 = __webpack_require__(/*! ./music */ "./src/music.ts");
+var stave_1 = __webpack_require__(/*! ./stave */ "./src/stave.ts");
+var stavenote_1 = __webpack_require__(/*! ./stavenote */ "./src/stavenote.ts");
+var stavemodifier_1 = __webpack_require__(/*! ./stavemodifier */ "./src/stavemodifier.ts");
+var stavetempo_1 = __webpack_require__(/*! ./stavetempo */ "./src/stavetempo.ts");
+var voice_1 = __webpack_require__(/*! ./voice */ "./src/voice.ts");
+var accidental_1 = __webpack_require__(/*! ./accidental */ "./src/accidental.ts");
+var beam_1 = __webpack_require__(/*! ./beam */ "./src/beam.ts");
+var stavetie_1 = __webpack_require__(/*! ./stavetie */ "./src/stavetie.ts");
+var tabstave_1 = __webpack_require__(/*! ./tabstave */ "./src/tabstave.ts");
+var tabnote_1 = __webpack_require__(/*! ./tabnote */ "./src/tabnote.ts");
+var bend_1 = __webpack_require__(/*! ./bend */ "./src/bend.ts");
+var vibrato_1 = __webpack_require__(/*! ./vibrato */ "./src/vibrato.ts");
+var vibratobracket_1 = __webpack_require__(/*! ./vibratobracket */ "./src/vibratobracket.ts");
+var note_1 = __webpack_require__(/*! ./note */ "./src/note.ts");
+var modifiercontext_1 = __webpack_require__(/*! ./modifiercontext */ "./src/modifiercontext.ts");
+var multimeasurerest_1 = __webpack_require__(/*! ./multimeasurerest */ "./src/multimeasurerest.ts");
+var tickcontext_1 = __webpack_require__(/*! ./tickcontext */ "./src/tickcontext.ts");
+var articulation_1 = __webpack_require__(/*! ./articulation */ "./src/articulation.ts");
+var annotation_1 = __webpack_require__(/*! ./annotation */ "./src/annotation.ts");
+var chordsymbol_1 = __webpack_require__(/*! ./chordsymbol */ "./src/chordsymbol.ts");
+var stavebarline_1 = __webpack_require__(/*! ./stavebarline */ "./src/stavebarline.ts");
+var notehead_1 = __webpack_require__(/*! ./notehead */ "./src/notehead.ts");
+var staveconnector_1 = __webpack_require__(/*! ./staveconnector */ "./src/staveconnector.ts");
+var clefnote_1 = __webpack_require__(/*! ./clefnote */ "./src/clefnote.ts");
+var keysignature_1 = __webpack_require__(/*! ./keysignature */ "./src/keysignature.ts");
+var keysignote_1 = __webpack_require__(/*! ./keysignote */ "./src/keysignote.ts");
+var timesignature_1 = __webpack_require__(/*! ./timesignature */ "./src/timesignature.ts");
+var timesignote_1 = __webpack_require__(/*! ./timesignote */ "./src/timesignote.ts");
+var stem_1 = __webpack_require__(/*! ./stem */ "./src/stem.ts");
+var tabtie_1 = __webpack_require__(/*! ./tabtie */ "./src/tabtie.ts");
+var clef_1 = __webpack_require__(/*! ./clef */ "./src/clef.ts");
+var dot_1 = __webpack_require__(/*! ./dot */ "./src/dot.ts");
+var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
+var tabslide_1 = __webpack_require__(/*! ./tabslide */ "./src/tabslide.ts");
+var tuplet_1 = __webpack_require__(/*! ./tuplet */ "./src/tuplet.ts");
+var gracenote_1 = __webpack_require__(/*! ./gracenote */ "./src/gracenote.ts");
+var gracetabnote_1 = __webpack_require__(/*! ./gracetabnote */ "./src/gracetabnote.ts");
+var tuning_1 = __webpack_require__(/*! ./tuning */ "./src/tuning.ts");
+var keymanager_1 = __webpack_require__(/*! ./keymanager */ "./src/keymanager.ts");
+var stavehairpin_1 = __webpack_require__(/*! ./stavehairpin */ "./src/stavehairpin.ts");
+var strokes_1 = __webpack_require__(/*! ./strokes */ "./src/strokes.ts");
+var textnote_1 = __webpack_require__(/*! ./textnote */ "./src/textnote.ts");
+var curve_1 = __webpack_require__(/*! ./curve */ "./src/curve.ts");
+var textdynamics_1 = __webpack_require__(/*! ./textdynamics */ "./src/textdynamics.ts");
+var staveline_1 = __webpack_require__(/*! ./staveline */ "./src/staveline.ts");
+var ornament_1 = __webpack_require__(/*! ./ornament */ "./src/ornament.ts");
+var pedalmarking_1 = __webpack_require__(/*! ./pedalmarking */ "./src/pedalmarking.ts");
+var textbracket_1 = __webpack_require__(/*! ./textbracket */ "./src/textbracket.ts");
+var frethandfinger_1 = __webpack_require__(/*! ./frethandfinger */ "./src/frethandfinger.ts");
+var staverepetition_1 = __webpack_require__(/*! ./staverepetition */ "./src/staverepetition.ts");
+var barnote_1 = __webpack_require__(/*! ./barnote */ "./src/barnote.ts");
+var ghostnote_1 = __webpack_require__(/*! ./ghostnote */ "./src/ghostnote.ts");
+var notesubgroup_1 = __webpack_require__(/*! ./notesubgroup */ "./src/notesubgroup.ts");
+var gracenotegroup_1 = __webpack_require__(/*! ./gracenotegroup */ "./src/gracenotegroup.ts");
+var tremolo_1 = __webpack_require__(/*! ./tremolo */ "./src/tremolo.ts");
+var stringnumber_1 = __webpack_require__(/*! ./stringnumber */ "./src/stringnumber.ts");
+var crescendo_1 = __webpack_require__(/*! ./crescendo */ "./src/crescendo.ts");
+var stavevolta_1 = __webpack_require__(/*! ./stavevolta */ "./src/stavevolta.ts");
+var system_1 = __webpack_require__(/*! ./system */ "./src/system.ts");
+var factory_1 = __webpack_require__(/*! ./factory */ "./src/factory.ts");
+var parser_1 = __webpack_require__(/*! ./parser */ "./src/parser.ts");
+var easyscore_1 = __webpack_require__(/*! ./easyscore */ "./src/easyscore.ts");
+var registry_1 = __webpack_require__(/*! ./registry */ "./src/registry.ts");
+var stavetext_1 = __webpack_require__(/*! ./stavetext */ "./src/stavetext.ts");
+var glyphnote_1 = __webpack_require__(/*! ./glyphnote */ "./src/glyphnote.ts");
+var repeatnote_1 = __webpack_require__(/*! ./repeatnote */ "./src/repeatnote.ts");
+var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+exports.Vex = {
+    Flow: {
+        unicode: tables_1.UNICODE,
+        STEM_HEIGHT: flow_1.STEM_HEIGHT,
+        ACCIDENTALS: tables_1.ACCIDENTALS,
+        keySignature: flow_1.keySignature,
+        glyphPropsValidTypes: tables_1.GLYPH_PROPS_VALID_TYPES,
+        TIME4_4: flow_1.DEFAULT_TIME,
+        DEFAULT_NOTATION_FONT_SCALE: flow_1.DEFAULT_NOTATION_FONT_SCALE,
+        RESOLUTION: flow_1.RESOLUTION,
+        DURATIONS: tables_1.DURATIONS,
+        BoundingBox: boundingbox_1.BoundingBox,
+        Element: element_1.Element,
+        Fraction: fraction_1.Fraction,
+        Renderer: renderer_1.Renderer,
+        Formatter: formatter_1.Formatter,
+        Music: music_1.Music,
+        Glyph: glyph_1.Glyph,
+        Stave: stave_1.Stave,
+        StaveNote: stavenote_1.StaveNote,
+        StaveModifier: stavemodifier_1.StaveModifier,
+        StaveTempo: stavetempo_1.StaveTempo,
+        Voice: voice_1.Voice,
+        Accidental: accidental_1.Accidental,
+        Beam: beam_1.Beam,
+        StaveTie: stavetie_1.StaveTie,
+        TabStave: tabstave_1.TabStave,
+        TabNote: tabnote_1.TabNote,
+        Bend: bend_1.Bend,
+        Vibrato: vibrato_1.Vibrato,
+        VibratoBracket: vibratobracket_1.VibratoBracket,
+        Note: note_1.Note,
+        ModifierContext: modifiercontext_1.ModifierContext,
+        MultiMeasureRest: multimeasurerest_1.MultiMeasureRest,
+        TickContext: tickcontext_1.TickContext,
+        Articulation: articulation_1.Articulation,
+        Annotation: annotation_1.Annotation,
+        ChordSymbol: chordsymbol_1.ChordSymbol,
+        Barline: stavebarline_1.Barline,
+        NoteHead: notehead_1.NoteHead,
+        StaveConnector: staveconnector_1.StaveConnector,
+        ClefNote: clefnote_1.ClefNote,
+        KeySignature: keysignature_1.KeySignature,
+        KeySigNote: keysignote_1.KeySigNote,
+        TimeSignature: timesignature_1.TimeSignature,
+        TimeSigNote: timesignote_1.TimeSigNote,
+        Stem: stem_1.Stem,
+        TabTie: tabtie_1.TabTie,
+        Clef: clef_1.Clef,
+        Dot: dot_1.Dot,
+        Modifier: modifier_1.Modifier,
+        TabSlide: tabslide_1.TabSlide,
+        Tuplet: tuplet_1.Tuplet,
+        GraceNote: gracenote_1.GraceNote,
+        GraceTabNote: gracetabnote_1.GraceTabNote,
+        Tuning: tuning_1.Tuning,
+        KeyManager: keymanager_1.KeyManager,
+        StaveHairpin: stavehairpin_1.StaveHairpin,
+        Stroke: strokes_1.Stroke,
+        TextNote: textnote_1.TextNote,
+        Curve: curve_1.Curve,
+        TextDynamics: textdynamics_1.TextDynamics,
+        StaveLine: staveline_1.StaveLine,
+        Ornament: ornament_1.Ornament,
+        PedalMarking: pedalmarking_1.PedalMarking,
+        TextBracket: textbracket_1.TextBracket,
+        FretHandFinger: frethandfinger_1.FretHandFinger,
+        Repetition: staverepetition_1.Repetition,
+        BarNote: barnote_1.BarNote,
+        GhostNote: ghostnote_1.GhostNote,
+        NoteSubGroup: notesubgroup_1.NoteSubGroup,
+        GraceNoteGroup: gracenotegroup_1.GraceNoteGroup,
+        Tremolo: tremolo_1.Tremolo,
+        StringNumber: stringnumber_1.StringNumber,
+        Crescendo: crescendo_1.Crescendo,
+        Volta: stavevolta_1.Volta,
+        System: system_1.System,
+        Factory: factory_1.Factory,
+        Parser: parser_1.Parser,
+        EasyScore: easyscore_1.EasyScore,
+        Registry: registry_1.Registry,
+        StaveText: stavetext_1.StaveText,
+        GlyphNote: glyphnote_1.GlyphNote,
+        RepeatNote: repeatnote_1.RepeatNote,
+        Font: smufl_1.Font,
+        Fonts: smufl_1.Fonts,
+        DefaultFontStack: smufl_1.DefaultFontStack
+    },
+    forEach: function (a, fn) {
+        for (var i = 0; i < a.length; i++) {
+            fn(a[i], i);
         }
-        return class_1;
-    }(GenericException));
-};
-// Default runtime exception.
-var RuntimeError = /** @class */ (function () {
-    function RuntimeError(code, message) {
-        this.code = code;
-        this.message = message;
-        this.code = code;
-        this.message = message;
-    }
-    RuntimeError.prototype.toString = function () {
-        return '[RuntimeError] ' + this.code + ':' + this.message;
-    };
-    return RuntimeError;
-}());
-// Shortcut method for `RuntimeError`.
-Vex.RuntimeError = RuntimeError;
-Vex.RERR = Vex.RuntimeError;
-// Merge `destination` hash with `source` hash, overwriting like keys
-// in `source` if necessary.
-Vex.Merge = function (destination, source) {
-    for (var property in source) { // eslint-disable-line guard-for-in
-        destination[property] = source[property];
-    }
-    return destination;
-};
-// DEPRECATED. Use `Math.*`.
-Vex.Min = Math.min;
-Vex.Max = Math.max;
-Vex.forEach = function (a, fn) {
-    for (var i = 0; i < a.length; i++) {
-        fn(a[i], i);
+    },
+    // Benchmark. Run function `f` once and report time elapsed shifted by `s` milliseconds.
+    BM: function (s, f) {
+        var start_time = new Date().getTime();
+        f();
+        var elapsed = new Date().getTime() - start_time;
+        flow_1.LOG(s + elapsed + 'ms');
     }
 };
-// Round number to nearest fractional value (`.5`, `.25`, etc.)
-Vex.RoundN = function (x, n) {
-    return (x % n) >= (n / 2)
-        ? parseInt((x / n).toString(), 10) * n + n
-        : parseInt((x / n).toString(), 10) * n;
-};
-// Locate the mid point between stave lines. Returns a fractional line if a space.
-Vex.MidLine = function (a, b) {
-    var mid_line = b + (a - b) / 2;
-    if (mid_line % 2 > 0) {
-        mid_line = Vex.RoundN(mid_line * 10, 5) / 10;
-    }
-    return mid_line;
-};
-// Take `arr` and return a new list consisting of the sorted, unique,
-// contents of arr. Does not modify `arr`.
-Vex.SortAndUnique = function (arr, cmp, eq) {
-    if (arr.length > 1) {
-        var newArr = [];
-        var last = undefined;
-        arr.sort(cmp);
-        for (var i = 0; i < arr.length; ++i) {
-            if (i === 0 || !eq(arr[i], last)) {
-                newArr.push(arr[i]);
-            }
-            last = arr[i];
-        }
-        return newArr;
-    }
-    else {
-        return arr;
-    }
-};
-// Check if array `a` contains `obj`.
-Vex.Contains = function (a, obj) {
-    var i = a.length;
-    while (i--) {
-        if (a[i] === obj) {
-            return true;
-        }
-    }
-    return false;
-};
-// Get the 2D Canvas context from DOM element `canvas_sel`.
-Vex.getCanvasContext = function (canvas_sel) {
-    if (!canvas_sel) {
-        throw new Vex.RERR('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
-    }
-    var canvas = document.getElementById(canvas_sel);
-    if (!(canvas && canvas.getContext)) {
-        throw new Vex.RERR('UnsupportedBrowserError', 'This browser does not support HTML5 Canvas');
-    }
-    return canvas.getContext('2d');
-};
-// Draw a tiny dot marker on the specified canvas. A great debugging aid.
-//
-// `ctx`: Canvas context.
-// `x`, `y`: Dot coordinates.
-Vex.drawDot = function (ctx, x, y, color) {
-    if (color === void 0) { color = '#55'; }
-    ctx.save();
-    ctx.setFillStyle(color);
-    // draw a circle
-    ctx.beginPath();
-    ctx.arc(x, y, 3, 0, Math.PI * 2, true);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-};
-// Benchmark. Run function `f` once and report time elapsed shifted by `s` milliseconds.
-Vex.BM = function (s, f) {
-    var start_time = new Date().getTime();
-    f();
-    var elapsed = new Date().getTime() - start_time;
-    Vex.L(s + elapsed + 'ms');
-};
-// Get stack trace.
-Vex.StackTrace = function () {
-    var err = new Error();
-    return err.stack;
-};
-// Dump warning to console.
-Vex.W = function () {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    var line = args.join(' ');
-    window.console.log('Warning: ', line, Vex.StackTrace());
-};
-// Used by various classes (e.g., SVGContext) to provide a
-// unique prefix to element names (or other keys in shared namespaces).
-Vex.Prefix = function (text) {
-    return Vex.Prefix.prefix + text;
-};
-Vex.Prefix.prefix = 'vf-';
 
 
 /***/ }),
@@ -32289,10 +32422,6 @@ Vex.Prefix.prefix = 'vf-';
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This class implements vibratos.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -32308,9 +32437,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Vibrato = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// This class implements vibratos.
 var modifier_1 = __webpack_require__(/*! ./modifier */ "./src/modifier.ts");
 var bend_1 = __webpack_require__(/*! ./bend */ "./src/bend.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
 var Vibrato = /** @class */ (function (_super) {
     __extends(Vibrato, _super);
     // ## Prototype Methods
@@ -32376,7 +32509,7 @@ var Vibrato = /** @class */ (function (_super) {
     Vibrato.prototype.draw = function () {
         var ctx = this.checkContext();
         if (!this.note) {
-            throw new vex_1.Vex.RERR('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
+            throw new runtimeerror_1.RuntimeError('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
         }
         this.setRendered();
         var start = this.note.getModifierStartXY(modifier_1.Modifier.Position.RIGHT, this.index);
@@ -32440,13 +32573,6 @@ exports.Vibrato = Vibrato;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Author: Balazs Forian-Szabo
-//
-// ## Description
-//
-// This file implements `VibratoBrackets`
-// that renders vibrato effect between two notes.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -32462,9 +32588,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VibratoBracket = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Balazs Forian-Szabo
+//
+// ## Description
+//
+// This file implements `VibratoBrackets`
+// that renders vibrato effect between two notes.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
 var vibrato_1 = __webpack_require__(/*! ./vibrato */ "./src/vibrato.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
 // To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
 function L() {
     var args = [];
@@ -32472,7 +32605,7 @@ function L() {
         args[_i] = arguments[_i];
     }
     if (VibratoBracket.DEBUG)
-        vex_1.Vex.L('Vex.Flow.VibratoBracket', args);
+        flow_1.LOG('Vex.Flow.VibratoBracket', args);
 }
 var VibratoBracket = /** @class */ (function (_super) {
     __extends(VibratoBracket, _super);
@@ -32543,12 +32676,6 @@ exports.VibratoBracket = VibratoBracket;
 
 "use strict";
 
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements the main Voice class. It's mainly a container
-// object to group `Tickables` for formatting.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -32574,11 +32701,23 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Voice = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.ts");
+exports.Voice = exports.Mode = void 0;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+//
+// This file implements the main Voice class. It's mainly a container
+// object to group `Tickables` for formatting.
 var element_1 = __webpack_require__(/*! ./element */ "./src/element.ts");
-var tables_1 = __webpack_require__(/*! ./tables */ "./src/tables.ts");
 var fraction_1 = __webpack_require__(/*! ./fraction */ "./src/fraction.ts");
+var runtimeerror_1 = __webpack_require__(/*! ./runtimeerror */ "./src/runtimeerror.ts");
+var flow_1 = __webpack_require__(/*! ./flow */ "./src/flow/index.ts");
+var Mode;
+(function (Mode) {
+    Mode[Mode["STRICT"] = 1] = "STRICT";
+    Mode[Mode["SOFT"] = 2] = "SOFT";
+    Mode[Mode["FULL"] = 3] = "FULL";
+})(Mode = exports.Mode || (exports.Mode = {}));
 var Voice = /** @class */ (function (_super) {
     __extends(Voice, _super);
     function Voice(time, options) {
@@ -32592,15 +32731,15 @@ var Voice = /** @class */ (function (_super) {
                 time = {
                     num_beats: +match[1],
                     beat_value: +match[2],
-                    resolution: tables_1.Flow.RESOLUTION,
+                    resolution: flow_1.RESOLUTION,
                 };
             }
         }
         // Default time sig is 4/4
-        _this.time = vex_1.Vex.Merge({
+        _this.time = flow_1.Merge({
             num_beats: 4,
             beat_value: 4,
-            resolution: tables_1.Flow.RESOLUTION,
+            resolution: flow_1.RESOLUTION,
         }, time);
         // Recalculate total ticks.
         _this.totalTicks = typeof (_this.time) !== 'string' && new fraction_1.Fraction(_this.time.num_beats * (_this.time.resolution / _this.time.beat_value), 1);
@@ -32625,11 +32764,7 @@ var Voice = /** @class */ (function (_super) {
         // FULL:   Ticks do not need to fill the voice, but can't exceed the maximum
         //         tick length.
         get: function () {
-            return {
-                STRICT: 1,
-                SOFT: 2,
-                FULL: 3,
-            };
+            return Mode;
         },
         enumerable: false,
         configurable: true
@@ -32669,7 +32804,7 @@ var Voice = /** @class */ (function (_super) {
     // Get the actual tick resolution for the voice
     Voice.prototype.getActualResolution = function () {
         if (typeof (this.time) === 'string') {
-            throw new vex_1.Vex.RERR('VoiceError', 'Time is of type string');
+            throw new runtimeerror_1.RuntimeError('VoiceError', 'Time is of type string');
         }
         return this.resolutionMultiplier * this.time.resolution;
     };
@@ -32687,7 +32822,7 @@ var Voice = /** @class */ (function (_super) {
         var i;
         if (!this.boundingBox) {
             if (!this.stave)
-                throw new vex_1.Vex.RERR('NoStave', "Can't get bounding box without stave.");
+                throw new runtimeerror_1.RuntimeError('NoStave', "Can't get bounding box without stave.");
             stave = this.stave;
             boundingBox = null;
             for (i = 0; i < this.tickables.length; ++i) {
@@ -32705,7 +32840,7 @@ var Voice = /** @class */ (function (_super) {
     // and preformatters to associate them with the right modifierContexts.
     Voice.prototype.getVoiceGroup = function () {
         if (!this.voiceGroup) {
-            throw new vex_1.Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
+            throw new runtimeerror_1.RuntimeError('NoVoiceGroup', 'No voice group for voice.');
         }
         return this.voiceGroup;
     };
@@ -32765,7 +32900,7 @@ var Voice = /** @class */ (function (_super) {
             if ((this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) &&
                 this.ticksUsed.greaterThan(this.totalTicks)) {
                 this.ticksUsed.subtract(ticks);
-                throw new vex_1.Vex.RERR('BadArgument', 'Too many ticks.');
+                throw new runtimeerror_1.RuntimeError('BadArgument', 'Too many ticks.');
             }
             // Track the smallest tickable for formatting.
             if (ticks.lessThan(this.smallestTickCount)) {
@@ -32814,7 +32949,7 @@ var Voice = /** @class */ (function (_super) {
             if (stave)
                 tickable.setStave(stave);
             if (!tickable.getStave()) {
-                throw new vex_1.Vex.RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
+                throw new runtimeerror_1.RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
             }
             if (i === 0)
                 boundingBox = tickable.getBoundingBox();
@@ -32835,5 +32970,5 @@ exports.Voice = Voice;
 
 /***/ })
 
-/******/ });
+/******/ })["default"];
 });

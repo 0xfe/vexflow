@@ -5,13 +5,17 @@
 //
 // This class implements hairpins between notes.
 // Hairpins can be either Crescendo or Descrescendo.
-
-import {Vex} from './vex';
 import {Element} from './element';
 import {Modifier} from './modifier';
 import {DrawContext} from "./types/common";
 import {Note} from "./note";
 import {IStaveHairpinFormatter, IStaveHairpinRenderOptions, IStaveHairpinRenderParams} from "./types/stavehairpin";
+import {RuntimeError} from "./runtimeerror";
+
+export enum Type {
+  CRESC = 1,
+  DECRESC = 2
+}
 
 export class StaveHairpin extends Element {
   private readonly hairpin: number;
@@ -22,11 +26,8 @@ export class StaveHairpin extends Element {
   private first_note: Note;
   private last_note: Note;
 
-  static get type(): Record<string, number> {
-    return {
-      CRESC: 1,
-      DECRESC: 2,
-    };
+  static get type(): typeof Type {
+    return Type;
   }
 
   /* Helper function to convert ticks into pixels.
@@ -54,7 +55,7 @@ export class StaveHairpin extends Element {
     const ppt = formatter.pixelsPerTick;
 
     if (ppt == null) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments',
         'A valid Formatter must be provide to draw offsets by ticks.'
       );
@@ -139,7 +140,7 @@ export class StaveHairpin extends Element {
    */
   setNotes(notes: Record<string, Note>): this {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments',
         'Hairpin needs to have either first_note or last_note set.'
       );

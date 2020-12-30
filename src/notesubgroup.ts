@@ -6,13 +6,12 @@
 // This file implements `NoteSubGroup` which is used to format and
 // render notes as a `Modifier`
 // ex) ClefNote, TimeSigNote and BarNote.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Modifier} from './modifier';
 import {Formatter} from './formatter';
 import {Voice} from './voice';
 import {Note} from "./note";
+import {RESOLUTION} from "./flow";
+import {RuntimeError} from "./runtimeerror";
 
 export class NoteSubGroup extends Modifier {
   private readonly voice: Voice;
@@ -58,7 +57,7 @@ export class NoteSubGroup extends Modifier {
     this.voice = new Voice({
       num_beats: 4,
       beat_value: 4,
-      resolution: Flow.RESOLUTION,
+      resolution: RESOLUTION,
     }).setStrict(false);
 
     this.voice.addTickables(this.subNotes);
@@ -98,7 +97,7 @@ export class NoteSubGroup extends Modifier {
     const note = this.getNote();
 
     if (!(note && (this.index !== null))) {
-      throw new Vex.RuntimeError('NoAttachedNote',
+      throw new RuntimeError('NoAttachedNote',
         "Can't draw notes without a parent note and parent note index.");
     }
 

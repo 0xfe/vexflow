@@ -7,8 +7,7 @@
 // @author incompleteopus (modifications)
 
 /* eslint-disable no-underscore-dangle */
-
-import {Vex} from './vex';
+import {RuntimeError} from "./runtimeerror";
 
 export class Fraction {
   numerator: any;
@@ -23,7 +22,7 @@ export class Fraction {
    */
   static GCD(a: number, b: number): number {
     if (typeof a !== 'number' || typeof b !== 'number') {
-      throw new Vex.RERR('BadArgument', `Invalid numbers: ${a}, ${b}`);
+      throw new RuntimeError('BadArgument', `Invalid numbers: ${a}, ${b}`);
     }
 
     let t;
@@ -197,7 +196,7 @@ export class Fraction {
   }
 
   // Simplifies both sides and checks if they are equal.
-  equals(compare: Fraction): boolean {
+  equals(compare: Fraction|number): boolean {
     const a = Fraction.__compareA.copy(compare).simplify();
     const b = Fraction.__compareB.copy(this).simplify();
 
@@ -234,7 +233,7 @@ export class Fraction {
   }
 
   // Copies value of another Fraction into itself.
-  copy(copy: Fraction): this {
+  copy(copy: Fraction|number): this {
     if (typeof copy === 'number') {
       return this.set(copy || 0, 1);
     }

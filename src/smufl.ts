@@ -1,4 +1,3 @@
-import {Vex} from './vex';
 import {BravuraFont} from './fonts/bravura_glyphs';
 import {BravuraMetrics} from './fonts/bravura_metrics';
 import {GonvilleFont} from './fonts/gonville_glyphs';
@@ -8,6 +7,7 @@ import {PetalumaMetrics} from './fonts/petaluma_metrics';
 import {CustomFont} from './fonts/custom_glyphs';
 import {CustomMetrics} from './fonts/custom_metrics';
 import {IFontData, IFontGlyph} from "./types/font";
+import {RuntimeError} from "./runtimeerror";
 
 class Font {
   name: string;
@@ -44,7 +44,7 @@ class Font {
         if (defaultValue !== undefined) {
           return defaultValue;
         } else {
-          throw new Vex.RERR('INVALID_KEY', `Invalid music font metric key: ${key}`);
+          throw new RuntimeError('INVALID_KEY', `Invalid music font metric key: ${key}`);
         }
       }
       val = val[parts[i]];

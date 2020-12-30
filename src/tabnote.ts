@@ -6,9 +6,6 @@
 // more fret positions, and can either be drawn with or without stems.
 //
 // See `tests/tabnote_tests.js` for usage examples
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Modifier} from './modifier';
 import {Stem} from './stem';
 import {StemmableNote} from './stemmablenote';
@@ -21,6 +18,8 @@ import {TickContext} from "./tickcontext";
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
 import {IGlyphProps} from "./types/glyph";
 import {ITabNotePositon} from "./types/tabnote";
+import {RuntimeError} from "./runtimeerror";
+import {DEFAULT_TABLATURE_FONT_SCALE, getGlyphProps, Merge, tabToGlyph} from "./flow";
 
 // Gets the unused strings grouped together if consecutive.
 //
@@ -136,9 +135,9 @@ export class TabNote extends StemmableNote {
     this.positions = tab_struct.positions;
 
     // Render Options
-    Vex.Merge(this.render_options, {
+    Merge(this.render_options, {
       // font size for note heads and rests
-      glyph_font_scale: Flow.DEFAULT_TABLATURE_FONT_SCALE,
+      glyph_font_scale: DEFAULT_TABLATURE_FONT_SCALE,
       // Flag to draw a stem
       draw_stem,
       // Flag to draw dot modifiers
@@ -153,10 +152,10 @@ export class TabNote extends StemmableNote {
       font: '10pt Arial',
     } as INoteRenderOptions);
 
-    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
+    this.glyph = getGlyphProps(this.duration, this.noteType);
 
     if (!this.glyph) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments',
         `Invalid note initialization data (No glyph found): ${JSON.stringify(tab_struct)}`
       );
@@ -231,7 +230,7 @@ export class TabNote extends StemmableNote {
     for (let i = 0; i < this.positions.length; ++i) {
       let fret = this.positions[i].fret;
       if (this.ghost) fret = '(' + fret + ')';
-      const glyph = Flow.tabToGlyph(fret, this.render_options.scale);
+      const glyph = tabToGlyph(fret, this.render_options.scale);
       this.glyphs.push(glyph);
       this.width = Math.max(glyph.getWidth(), this.width);
     }
@@ -321,11 +320,11 @@ export class TabNote extends StemmableNote {
   // `position` at a fret position `index`
   getModifierStartXY(position?: number, index?: number): ICoordinates {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+      throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
 
     if (this.ys.length === 0) {
-      throw new Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
+      throw new RuntimeError('NoYValues', 'No Y-Values calculated for this note.');
     }
 
     let x = 0;
@@ -485,11 +484,11 @@ export class TabNote extends StemmableNote {
     this.checkContext();
 
     if (!this.stave) {
-      throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+      throw new RuntimeError('NoStave', "Can't draw without a stave.");
     }
 
     if (this.ys.length === 0) {
-      throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
+      throw new RuntimeError('NoYValues', "Can't draw note without Y values.");
     }
 
     this.setRendered();

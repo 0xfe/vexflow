@@ -7,9 +7,6 @@
 // text or glyphs with various positioning options.
 //
 // See `tests/chordsymbol_tests.js` for usage examples.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Glyph} from './glyph';
 import {Modifier} from './modifier';
 import {PetalumaScriptTextMetrics} from './fonts/petalumascript_textmetrics';
@@ -17,10 +14,37 @@ import {RobotoSlabTextMetrics} from './fonts/robotoslab_textmetrics';
 import {ICodeValue, ISymbolBlock} from "./types/common";
 import {StemmableNote} from "./stemmablenote";
 import {IFont} from "./types/font";
+import {DefaultFontStack} from "./smufl";
+import {LOG, TEXT_HEIGHT_OFFSET_HACK} from "./flow";
+import {RuntimeError} from "./runtimeerror";
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (ChordSymbol.DEBUG) Vex.L('Vex.Flow.ChordSymbol', args);
+  if (ChordSymbol.DEBUG) LOG('Vex.Flow.ChordSymbol', args);
+}
+
+export enum HorizontalJustify {
+  LEFT = 1,
+  CENTER = 2,
+  RIGHT = 3,
+  CENTER_STEM = 4
+}
+
+export enum VerticalJustify {
+  TOP = 1,
+  BOTTOM = 2
+}
+
+export enum SymbolTypes {
+  GLYPH = 1,
+  TEXT = 2,
+  LINE = 3
+}
+
+export enum SymbolModifiers {
+  NONE = 1,
+  SUBSCRIPT = 2,
+  SUPERSCRIPT = 3
 }
 
 export class ChordSymbol extends Modifier {
@@ -31,8 +55,8 @@ export class ChordSymbol extends Modifier {
 
   private readonly symbolBlocks: ISymbolBlock[];
 
-  private horizontal: number;
-  private vertical: number;
+  private horizontal: HorizontalJustify;
+  private vertical: VerticalJustify;
   private useKerning: boolean;
   private font: IFont;
   private text: string;
@@ -42,13 +66,8 @@ export class ChordSymbol extends Modifier {
   }
 
   // Chord symbols can be positioned and justified relative to the note.
-  static get horizontalJustify(): Record<string, number> {
-    return {
-      LEFT: 1,
-      CENTER: 2,
-      RIGHT: 3,
-      CENTER_STEM: 4,
-    };
+  static get horizontalJustify(): typeof HorizontalJustify {
+    return HorizontalJustify;
   }
 
   static get horizontalJustifyString(): Record<string, number> {
@@ -60,12 +79,8 @@ export class ChordSymbol extends Modifier {
     };
   }
 
-
-  static get verticalJustify(): Record<string, number> {
-    return {
-      TOP: 1,
-      BOTTOM: 2,
-    };
+  static get verticalJustify(): typeof VerticalJustify {
+    return VerticalJustify;
   }
 
   static get superSubRatio(): any {
@@ -109,7 +124,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get textMetricsForEngravingFont(): Record<string, any> {
-    if (Vex.Flow.DEFAULT_FONT_STACK[0].name === 'Petaluma') {
+    if (DefaultFontStack[0].name === 'Petaluma') {
       return PetalumaScriptTextMetrics;
     } else {
       return RobotoSlabTextMetrics;
@@ -142,7 +157,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get engravingFontResolution(): any {
-    return Vex.Flow.DEFAULT_FONT_STACK[0].getResolution();
+    return DefaultFontStack[0].getResolution();
   }
 
   static get spacingBetweenBlocks(): number {
@@ -260,32 +275,24 @@ export class ChordSymbol extends Modifier {
     };
   }
 
-  static get symbolTypes(): Record<string, number> {
-    return {
-      GLYPH: 1,
-      TEXT: 2,
-      LINE: 3
-    };
+  static get symbolTypes(): typeof SymbolTypes {
+    return SymbolTypes;
   }
 
-  static get symbolModifiers(): Record<string, number> {
-    return {
-      NONE: 1,
-      SUBSCRIPT: 2,
-      SUPERSCRIPT: 3
-    };
+  static get symbolModifiers(): typeof SymbolModifiers {
+    return SymbolModifiers;
   }
 
   static get chordSymbolMetrics(): any {
-    return Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol;
+    return DefaultFontStack[0].metrics.glyphs.chordSymbol;
   }
 
   static get lowerKerningText(): string[] {
-    return Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol.global.lowerKerningText;
+    return DefaultFontStack[0].metrics.glyphs.chordSymbol.global.lowerKerningText;
   }
 
   static get upperKerningText(): string[] {
-    return Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol.global.upperKerningText;
+    return DefaultFontStack[0].metrics.glyphs.chordSymbol.global.upperKerningText;
   }
 
   // ### format
@@ -690,7 +697,7 @@ export class ChordSymbol extends Modifier {
     this.setRendered();
 
     if (!this.note) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'NoNoteForAnnotation', "Can't draw text annotation without an attached note."
       );
     }
@@ -721,7 +728,7 @@ export class ChordSymbol extends Modifier {
     if (this.vertical === ChordSymbol.verticalJustify.BOTTOM) {
       // HACK: We need to compensate for the text's height since its origin
       // is bottom-right.
-      y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
+      y = stave.getYForBottomText(this.text_line + TEXT_HEIGHT_OFFSET_HACK);
       if (has_stem) {
         const stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
         y = Math.max(y, stem_base + (spacing * (this.text_line + 2)));

@@ -4,8 +4,6 @@
 //
 // This class implements various types of modifiers to notes (e.g. bends,
 // fingering positions etc.)
-
-import {Vex} from './vex';
 import {StaveNote} from './stavenote';
 import {Dot} from './dot';
 import {FretHandFinger} from './frethandfinger';
@@ -27,10 +25,12 @@ import {
   PostformatModifierType,
   PreformatModifierType
 } from "./types/modifiercontext";
+import {RuntimeError} from "./runtimeerror";
+import {LOG} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (ModifierContext.DEBUG) Vex.L('Vex.Flow.ModifierContext', args);
+  if (ModifierContext.DEBUG) LOG('Vex.Flow.ModifierContext', args);
 }
 
 export class ModifierContext {
@@ -118,7 +118,7 @@ export class ModifierContext {
 
   getMetrics(): IModifierContextMetrics {
     if (!this.formatted) {
-      throw new Vex.RERR('UnformattedModifier', 'Unformatted modifier has no metrics.');
+      throw new RuntimeError('UnformattedModifier', 'Unformatted modifier has no metrics.');
     }
 
     return {

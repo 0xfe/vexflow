@@ -4,9 +4,6 @@
 //
 // This file implements `GraceNoteGroup` which is used to format and
 // render grace notes.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Modifier} from './modifier';
 import {Formatter} from './formatter';
 import {Voice} from './voice';
@@ -18,10 +15,12 @@ import {IGraceNoteGroupRenderOptions} from "./types/common";
 import {GraceNote} from "./gracenote";
 import {Note} from "./note";
 import {IGraceNoteGroupFormatOptions} from "./types/gracenotegroup";
+import {LOG, RESOLUTION} from "./flow";
+import {RuntimeError} from "./runtimeerror";
 
 // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
+  if (GraceNoteGroup.DEBUG) LOG('Vex.Flow.GraceNoteGroup', args);
 }
 
 export class GraceNoteGroup extends Modifier {
@@ -112,7 +111,7 @@ export class GraceNoteGroup extends Modifier {
     this.voice = new Voice({
       num_beats: 4,
       beat_value: 4,
-      resolution: Flow.RESOLUTION,
+      resolution: RESOLUTION,
     }).setStrict(false);
 
     this.render_options = {
@@ -178,7 +177,7 @@ export class GraceNoteGroup extends Modifier {
     L('Drawing grace note group for:', note);
 
     if (!(note && (this.index !== null))) {
-      throw new Vex.RuntimeError('NoAttachedNote',
+      throw new RuntimeError('NoAttachedNote',
         "Can't draw grace note without a parent note and parent note index.");
     }
 

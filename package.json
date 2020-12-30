@@ -18,14 +18,10 @@
     "url": "https://github.com/0xfe/vexflow/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/plugin-transform-object-assign": "^7.8.3",
-    "@babel/preset-env": "^7.8.4",
     "@types/raphael": "^2.3.0",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "^8.0.6",
     "browserify": "^16.5.0",
     "canvas": "^2.6.1",
     "copy-webpack-plugin": "^6.3.2",

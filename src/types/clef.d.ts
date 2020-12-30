@@ -7,9 +7,3 @@ export interface IClefType {
   code: string;
   line: number;
 }
-
-export interface IClefProperties {
-  (clef: string): any;
-
-  values: Record<string, IClefPropertyValue>;
-}

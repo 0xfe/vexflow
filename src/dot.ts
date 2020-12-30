@@ -2,13 +2,12 @@
 // Copyright Mohit Muthanna 2010
 //
 // This class implements dot modifiers for notes.
-
-import {Vex} from './vex';
 import {Modifier} from './modifier';
 import {StemmableNote} from "./stemmablenote";
 import {IState} from "./types/common";
 import {StaveNote} from "./stavenote";
 import {Note} from "./note";
+import {RuntimeError} from "./runtimeerror";
 
 export class Dot extends Modifier {
   note: Note;
@@ -147,7 +146,7 @@ export class Dot extends Modifier {
     this.setRendered();
 
     if (!this.note || this.index === null) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw dot without a note and index.");
     }
 
     const lineSpace = this.note.stave.options.spacing_between_lines_px;

@@ -1,93 +1,23 @@
 import {Glyph} from "../glyph";
-import {BoundingBox} from "../boundingbox";
-import {Fraction} from "../fraction";
-import {Element} from "../element";
-import {Renderer} from "src/renderer";
-import {Formatter} from "src/formatter";
-import {Music} from "src/music";
-import {StaveNote} from "src/stavenote";
-import {Stave} from "src/stave";
-import {StaveModifier} from "src/stavemodifier";
-import {StaveTempo} from "../stavetempo";
-import {Voice} from "../voice";
-import {Accidental} from "../accidental";
 import {Beam} from "../beam";
 import {StaveTie} from "../stavetie";
-import {TabStave} from "../tabstave";
-import {TabNote} from "../tabnote";
-import {Bend} from "../bend";
-import {Vibrato} from "../vibrato";
 import {VibratoBracket} from "../vibratobracket";
 import {Note} from "../note";
 import {ModifierContext} from "../modifiercontext";
 import {MultiMeasureRest} from "../multimeasurerest";
 import {TickContext} from "../tickcontext";
-import {Articulation} from "../articulation";
-import {Annotation} from "../annotation";
-import {ChordSymbol} from "../chordsymbol";
-import {Barline} from "../stavebarline";
-import {NoteHead} from "../notehead";
 import {StaveConnector} from "../staveconnector";
-import {ClefNote} from "../clefnote";
-import {KeySignature} from "../keysignature";
-import {KeySigNote} from "../keysignote";
-import {TimeSignature} from "../timesignature";
-import {TimeSigNote} from "../timesignote";
-import {TabTie} from "../tabtie";
-import {Clef} from "../clef";
-import {Dot} from "../dot";
-import {Modifier} from "../modifier";
-import {TabSlide} from "../tabslide";
 import {Tuplet} from "../tuplet";
-import {GraceNote} from "../gracenote";
-import {GraceTabNote} from "../gracetabnote";
-import {Tuning} from "../tuning";
-import {KeyManager} from "../keymanager";
-import {StaveHairpin} from "../stavehairpin";
-import {Stroke} from "../strokes";
-import {TextNote} from "../textnote";
 import {Curve} from "../curve";
-import {TextDynamics} from "../textdynamics";
 import {StaveLine} from "../staveline";
-import {Ornament} from "../ornament";
 import {PedalMarking} from "../pedalmarking";
 import {TextBracket} from "../textbracket";
-import {FretHandFinger} from "../frethandfinger";
-import {Repetition} from "../staverepetition";
-import {BarNote} from "../barnote";
-import {GhostNote} from "../ghostnote";
-import {NoteSubGroup} from "../notesubgroup";
-import {GraceNoteGroup} from "../gracenotegroup";
-import {Tremolo} from "../tremolo";
-import {StringNumber} from "../stringnumber";
-import {Crescendo} from "../crescendo";
-import {Volta} from "../stavevolta";
-import {System} from "../system";
-import {Factory} from "../factory";
-import {Parser} from "../parser";
-import {Builder, EasyScore} from "../easyscore";
-import {Registry} from "../registry";
-import {StaveText} from "../stavetext";
-import {GlyphNote} from "../glyphnote";
-import {RepeatNote} from "../repeatnote";
-import {Font} from "../smufl";
+import {Builder} from "../easyscore";
 import {SVGContext} from "../svgcontext";
 import {CanvasContext} from "../canvascontext";
 import {RaphaelContext} from "../raphaelcontext";
-import {IClefProperties} from "./clef";
 import {INoteValue} from "./note";
-import {IArticulationCodes} from "./articulation";
-import {IAccidentalCodes} from "./accidental";
-import {IKeySignature} from "./keysignature";
-import {IOrnamentCodes} from "./ornament";
-import {IGlyphProps} from "./glyph";
 import {IGrammarVal} from "./easyscore";
-
-export interface IIntegerToNote {
-  (i: number): string;
-
-  table: Record<number, string>;
-}
 
 export interface IKeyPropertiesParams {
   octave_shift: number;
@@ -214,113 +144,6 @@ export interface IDistance {
   fromTickable: any;
   errorPx: number;
   fromTickablePx: number;
-}
-
-export interface IFlow {
-  DefaultFontStack: Font[];
-  Fonts: Record<string, Font>;
-  Font: typeof Font;
-  RepeatNote: typeof RepeatNote;
-  GlyphNote: typeof GlyphNote;
-  StaveText: typeof StaveText;
-  Registry: typeof Registry;
-  EasyScore: typeof EasyScore;
-  Parser: typeof Parser;
-  Factory: typeof Factory;
-  System: typeof System;
-  Volta: typeof Volta;
-  Crescendo: typeof Crescendo;
-  StringNumber: typeof StringNumber;
-  Tremolo: typeof Tremolo;
-  GraceNoteGroup: typeof GraceNoteGroup;
-  NoteSubGroup: typeof NoteSubGroup;
-  GhostNote: typeof GhostNote;
-  BarNote: typeof BarNote;
-  Repetition: typeof Repetition;
-  FretHandFinger: typeof FretHandFinger;
-  TextBracket: typeof TextBracket;
-  PedalMarking: typeof PedalMarking;
-  Ornament: typeof Ornament;
-  StaveLine: typeof StaveLine;
-  TextDynamics: typeof TextDynamics;
-  Curve: typeof Curve;
-  TextNote: typeof TextNote;
-  Stroke: typeof Stroke;
-  StaveHairpin: typeof StaveHairpin;
-  KeyManager: typeof KeyManager;
-  Tuning: typeof Tuning;
-  GraceTabNote: typeof GraceTabNote;
-  GraceNote: typeof GraceNote;
-  Tuplet: typeof Tuplet;
-  TabSlide: typeof TabSlide;
-  Modifier: typeof Modifier;
-  Dot: typeof Dot;
-  Clef: typeof Clef;
-  TabTie: typeof TabTie;
-  TimeSigNote: typeof TimeSigNote;
-  TimeSignature: typeof TimeSignature;
-  KeySigNote: typeof KeySigNote;
-  KeySignature: typeof KeySignature;
-  ClefNote: typeof ClefNote;
-  StaveConnector: typeof StaveConnector;
-  NoteHead: typeof NoteHead;
-  Barline: typeof Barline;
-  ChordSymbol: typeof ChordSymbol;
-  Annotation: typeof Annotation;
-  Articulation: typeof Articulation;
-  TickContext: typeof TickContext;
-  MultiMeasureRest: typeof MultiMeasureRest;
-  ModifierContext: typeof ModifierContext;
-  Note: typeof Note;
-  VibratoBracket: typeof VibratoBracket;
-  Vibrato: typeof Vibrato;
-  Bend: typeof Bend;
-  TabNote: typeof TabNote;
-  TabStave: typeof TabStave;
-  StaveTie: typeof StaveTie;
-  Beam: typeof Beam;
-  Accidental: typeof Accidental;
-  Voice: typeof Voice;
-  StaveTempo: typeof StaveTempo;
-  StaveModifier: typeof StaveModifier;
-  StaveNote: typeof StaveNote;
-  Stave: typeof Stave;
-  Glyph: typeof Glyph;
-  Music: typeof Music;
-  Element: typeof Element;
-  Fraction: typeof Fraction;
-  Formatter: typeof Formatter;
-  Renderer: typeof Renderer;
-  BoundingBox: typeof BoundingBox;
-  Stem: any;
-  STEM_WIDTH: number;
-  STEM_HEIGHT: number;
-  STAVE_LINE_THICKNESS: number
-  RESOLUTION: number,
-  DEFAULT_FONT_STACK: any,
-  DEFAULT_NOTATION_FONT_SCALE: number,
-  DEFAULT_TABLATURE_FONT_SCALE: number,
-  SLASH_NOTEHEAD_WIDTH: number,
-  TEXT_HEIGHT_OFFSET_HACK: number,
-  IsKerned: boolean,
-  clefProperties: IClefProperties;
-  keyProperties: IKeyProperties;
-  integerToNote: IIntegerToNote;
-  tabToGlyph: (fret: string, scale: number) => any;
-  textWidth: (s: string) => number;
-  articulationCodes: IArticulationCodes;
-  accidentalCodes: IAccidentalCodes;
-  accidentalColumnsTable: Record<number, Record<string, number[]>>;
-  ornamentCodes: IOrnamentCodes;
-  keySignature: IKeySignature;
-  unicode: Record<string, string>;
-  sanitizeDuration: (duration: string) => string;
-  durationAliases: Record<string, string>;
-  durationToTicks: IDurationToTicks;
-  durationToFraction: (duration: string) => any; //TODO: any to Fraction
-  durationToNumber: (duration: string) => number;
-  getGlyphProps: IGlyphProps;
-  TIME4_4: IFlowDefaults;
 }
 
 export interface IMetrics {

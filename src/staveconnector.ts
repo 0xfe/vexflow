@@ -1,20 +1,19 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-
-import {Vex} from './vex';
 import {Element} from './element';
-import {Flow} from './tables';
 import {Glyph} from './glyph';
 import {DrawContext, IText} from "./types/common";
 import {Stave} from "./stave";
 import {IFont} from "./types/font";
 import {IStaveConnectorTextOptions} from "./types/staveconnector";
+import {RuntimeError} from "./runtimeerror";
+import {Merge, STAVE_LINE_THICKNESS} from "./flow";
 
 function drawBoldDoubleLine(ctx: DrawContext, type: number, topX: number, topY: number, botY: number) {
   if (
     type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
     type !== StaveConnector.type.BOLD_DOUBLE_RIGHT
   ) {
-    throw new Vex.RERR(
+    throw new RuntimeError(
       'InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.'
     );
   }
@@ -34,13 +33,26 @@ function drawBoldDoubleLine(ctx: DrawContext, type: number, topX: number, topY: 
   ctx.fillRect(topX - thickLineOffset, topY, variableWidth, botY - topY);
 }
 
+export enum Type {
+  SINGLE_RIGHT = 0,
+  SINGLE_LEFT = 1,
+  SINGLE = 1,
+  DOUBLE = 2,
+  BRACE = 3,
+  BRACKET = 4,
+  BOLD_DOUBLE_LEFT = 5,
+  BOLD_DOUBLE_RIGHT = 6,
+  THIN_DOUBLE = 7,
+  NONE = 8
+}
+
 export class StaveConnector extends Element {
   private readonly thickness: number;
   private readonly width: number;
   private readonly font: IFont;
   private readonly texts: IText[];
 
-  private type: number;
+  private type: Type;
   private x_shift: number;
   private top_stave: Stave;
   private bottom_stave: Stave;
@@ -48,19 +60,8 @@ export class StaveConnector extends Element {
   // SINGLE_LEFT and SINGLE are the same value for compatibility
   // with older versions of vexflow which didn't have right sided
   // stave connectors
-  static get type(): Record<string, number> {
-    return {
-      SINGLE_RIGHT: 0,
-      SINGLE_LEFT: 1,
-      SINGLE: 1,
-      DOUBLE: 2,
-      BRACE: 3,
-      BRACKET: 4,
-      BOLD_DOUBLE_LEFT: 5,
-      BOLD_DOUBLE_RIGHT: 6,
-      THIN_DOUBLE: 7,
-      NONE: 8,
-    };
+  static get type(): typeof Type {
+    return Type
   }
 
   static get typeString(): Record<string, number> {
@@ -82,7 +83,7 @@ export class StaveConnector extends Element {
     super();
     this.setAttribute('type', 'StaveConnector');
 
-    this.thickness = Flow.STAVE_LINE_THICKNESS;
+    this.thickness = STAVE_LINE_THICKNESS;
     this.width = 3;
     this.top_stave = top_stave;
     this.bottom_stave = bottom_stave;
@@ -112,18 +113,18 @@ export class StaveConnector extends Element {
   setText(text: string, options: IStaveConnectorTextOptions): this {
     this.texts.push({
       content: text,
-      options: Vex.Merge<IStaveConnectorTextOptions>({shift_x: 0, shift_y: 0}, options),
+      options: Merge<IStaveConnectorTextOptions>({shift_x: 0, shift_y: 0}, options),
     });
     return this;
   }
 
   setFont(font: IFont): void {
-    Vex.Merge(this.font, font);
+    Merge(this.font, font);
   }
 
   setXShift(x_shift: number): this {
     if (typeof x_shift !== 'number') {
-      throw new Vex.RERR('InvalidType', 'x_shift must be a Number');
+      throw new RuntimeError('InvalidType', 'x_shift must be a Number');
     }
 
     this.x_shift = x_shift;
@@ -222,7 +223,7 @@ export class StaveConnector extends Element {
       case StaveConnector.type.NONE:
         break;
       default:
-        throw new Vex.RERR(
+        throw new RuntimeError(
           'InvalidType', `The provided StaveConnector.type (${this.type}) is invalid`
         );
     }

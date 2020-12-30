@@ -4,8 +4,6 @@
 // ## Description
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
-
-import {Vex} from './vex';
 import {Modifier} from './modifier';
 import {Renderer} from './renderer';
 import {StaveNote} from './stavenote';
@@ -13,6 +11,7 @@ import {StemmableNote} from "./stemmablenote";
 import {Note} from "./note";
 import {IFont} from "./types/font";
 import {IState} from "./types/common";
+import {RuntimeError} from "./runtimeerror";
 
 export class StringNumber extends Modifier {
   note: Note;
@@ -207,7 +206,7 @@ export class StringNumber extends Modifier {
   draw(): void {
     const ctx = this.checkContext();
     if (!(this.note && (this.index != null))) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw string number without a note and index.");
     }
     this.setRendered();
 
@@ -250,7 +249,7 @@ export class StringNumber extends Modifier {
         dot_x += (this.radius / 2) + 6;
         break;
       default:
-        throw new Vex.RERR(
+        throw new RuntimeError(
           'InvalidPosition', `The position ${this.position} is invalid`
         );
     }

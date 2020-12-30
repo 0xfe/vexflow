@@ -31,15 +31,15 @@ module.exports = (grunt) => {
     'tests/run.js',
   ];
 
-  function webpackConfig(target, preset, mode) {
+  function webpackConfig(target, mode) {
     return {
       mode,
       entry: MODULE_ENTRY,
       output: {
         path: BUILD_DIR,
         filename: target,
-        library: '',
-        libraryExport: '',
+        library: 'Vex',
+        libraryExport: 'default',
         libraryTarget: 'umd'
       },
       resolve: {
@@ -75,8 +75,8 @@ module.exports = (grunt) => {
     };
   }
 
-  const webpackProd = webpackConfig(TARGET_MIN, ['@babel/preset-env'], 'production');
-  const webpackDev = webpackConfig(TARGET_RAW, ['@babel/preset-env'], 'development');
+  const webpackProd = webpackConfig(TARGET_MIN, 'production');
+  const webpackDev = webpackConfig(TARGET_RAW, 'development');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),

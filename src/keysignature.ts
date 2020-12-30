@@ -5,14 +5,13 @@
 //
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {StaveModifier} from './stavemodifier';
 import {Glyph} from './glyph';
 import {IAccItem} from "./types/common";
 import {Stave} from "./stave";
 import {IAccidentalSpacing, IAccList} from "./types/keysignature";
+import {RuntimeError} from "./runtimeerror";
+import {accidentalCodes, keySignature} from "./flow";
 
 export class KeySignature extends StaveModifier {
   private readonly glyphFontScale: number;
@@ -114,7 +113,7 @@ export class KeySignature extends StaveModifier {
   // the provided `acc`. If `nextAcc` is also provided, the appropriate
   // spacing will be included in the glyph's position
   convertToGlyph(acc: any, nextAcc: any): void {
-    const accGlyphData = Flow.accidentalCodes(acc.type);
+    const accGlyphData = accidentalCodes(acc.type);
     const glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
 
     // Determine spacing between current accidental and the next accidental
@@ -150,7 +149,7 @@ export class KeySignature extends StaveModifier {
 
   convertToCancelAccList(spec: string): IAccList {
     // Get the accidental list for the cancelled key signature
-    const cancel_accList = Flow.keySignature(spec);
+    const cancel_accList = keySignature(spec);
 
     // If the cancelled key has a different accidental type, ie: # vs b
     const different_types = this.accList.length > 0
@@ -288,13 +287,13 @@ export class KeySignature extends StaveModifier {
 
   format(): void {
     if (!this.stave) {
-      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+      throw new RuntimeError('KeySignatureError', "Can't draw key signature without stave.");
     }
 
     this.width = 0;
     this.glyphs = [];
     this.xPositions = [0]; // initialize with initial x position
-    this.accList = Flow.keySignature(this.keySpec);
+    this.accList = keySignature(this.keySpec);
     const accList = this.accList;
     const firstAccidentalType = accList.length > 0 ? accList[0].type : null;
     let cancelAccList;
@@ -322,11 +321,11 @@ export class KeySignature extends StaveModifier {
 
   draw(): void {
     if (!this.x) {
-      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without x.");
+      throw new RuntimeError('KeySignatureError', "Can't draw key signature without x.");
     }
 
     if (!this.stave) {
-      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+      throw new RuntimeError('KeySignatureError', "Can't draw key signature without stave.");
     }
 
     if (!this.formatted) this.format();

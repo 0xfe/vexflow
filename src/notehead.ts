@@ -7,8 +7,6 @@
 //
 // See `tests/notehead_tests.js` for usage examples.
 
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Note} from './note';
 import {Stem} from './stem';
 import {StaveNote} from './stavenote';
@@ -18,9 +16,18 @@ import {Stave} from "./stave";
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
 import {IGlyphProps} from "./types/glyph";
 import {BoundingBox} from "./boundingbox";
+import {RuntimeError} from "./runtimeerror";
+import {
+  DEFAULT_NOTATION_FONT_SCALE,
+  durationToFraction,
+  durationToNumber, getGlyphProps, LOG,
+  Merge,
+  SLASH_NOTEHEAD_WIDTH,
+  STEM_WIDTH
+} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
-function L(...args: unknown[]) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args); }
+function L(...args: unknown[]) { if (NoteHead.DEBUG) LOG('Vex.Flow.NoteHead', args); }
 
 // Draw slashnote head manually. No glyph exists for this.
 //
@@ -31,17 +38,17 @@ function L(...args: unknown[]) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', 
 // * `y`: the y coordinate to draw at
 // * `stem_direction`: the direction of the stem
 function drawSlashNoteHead(ctx: DrawContext, duration: string, x: number, y: number, stem_direction: number, staveSpace: number) {
-  const width = Flow.SLASH_NOTEHEAD_WIDTH;
+  const width = SLASH_NOTEHEAD_WIDTH;
   ctx.save();
-  ctx.setLineWidth(Flow.STEM_WIDTH);
+  ctx.setLineWidth(STEM_WIDTH);
 
   let fill = false;
 
-  if (Flow.durationToNumber(duration) > 2) {
+  if (durationToNumber(duration) > 2) {
     fill = true;
   }
 
-  if (!fill) x -= (Flow.STEM_WIDTH / 2) * stem_direction;
+  if (!fill) x -= (STEM_WIDTH / 2) * stem_direction;
 
   ctx.beginPath();
   ctx.moveTo(x, y + staveSpace);
@@ -57,7 +64,7 @@ function drawSlashNoteHead(ctx: DrawContext, duration: string, x: number, y: num
     ctx.stroke();
   }
 
-  if (Flow.durationToFraction(duration).equals(0.5)) {
+  if (durationToFraction(duration).equals(0.5)) {
     const breve_lines = [-3, -1, width + 1, width + 3];
     for (let i = 0; i < breve_lines.length; i++) {
       ctx.beginPath();
@@ -105,9 +112,9 @@ export class NoteHead extends Note {
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
-    this.glyph = Flow.getGlyphProps(this.duration, this.note_type);
+    this.glyph = getGlyphProps(this.duration, this.note_type);
     if (!this.glyph) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments',
         `No glyph found for duration '${this.duration}' and type '${this.note_type}'`);
     }
@@ -124,9 +131,9 @@ export class NoteHead extends Note {
     this.style = head_options.style;
     this.slashed = head_options.slashed;
 
-    Vex.Merge(this.render_options, {
+    Merge(this.render_options, {
       // font size for note heads
-      glyph_font_scale: head_options.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+      glyph_font_scale: head_options.glyph_font_scale || DEFAULT_NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
       stroke_px: 3,
     } as INoteRenderOptions);
@@ -178,14 +185,14 @@ export class NoteHead extends Note {
   // Get the `BoundingBox` for the `NoteHead`
   getBoundingBox(): BoundingBox {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+      throw new RuntimeError('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
     }
 
     const spacing = this.stave.getSpacingBetweenLines();
     const half_spacing = spacing / 2;
     const min_y = this.y - half_spacing;
 
-    return new Flow.BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
+    return new BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
   }
 
   // Set notehead to a provided `stave`

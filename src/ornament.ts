@@ -8,9 +8,6 @@
 // `tables.js` under `Vex.Flow.ornamentCodes`.
 //
 // See `tests/ornament_tests.js` for usage examples.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Modifier} from './modifier';
 import {TickContext} from './tickcontext';
 import {StaveNote} from './stavenote';
@@ -18,10 +15,12 @@ import {Glyph} from './glyph';
 import {ICodeValue, IState} from "./types/common";
 import {StemmableNote} from "./stemmablenote";
 import {IOrnamentRenderOptions} from "./types/ornament";
+import {RuntimeError} from "./runtimeerror";
+import {accidentalCodes, LOG, ornamentCodes} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', args);
+  if (Ornament.DEBUG) LOG('Vex.Flow.Ornament', args);
 }
 
 export class Ornament extends Modifier {
@@ -168,7 +167,7 @@ export class Ornament extends Modifier {
       accidentalUpperPadding: 3
     };
 
-    this.ornament = Flow.ornamentCodes(this.type);
+    this.ornament = ornamentCodes(this.type);
 
     // new ornaments have their origin at the origin, and have more specific
     // metrics.  Legacy ornaments do some
@@ -189,7 +188,7 @@ export class Ornament extends Modifier {
     this.ornamentAlignWithNoteHead = Ornament.ornamentAlignWithNoteHead.indexOf(this.type) >= 0;
 
     if (!this.ornament) {
-      throw new Vex.RERR('ArgumentError', `Ornament not found: '${this.type}'`);
+      throw new RuntimeError('ArgumentError', `Ornament not found: '${this.type}'`);
     }
 
     this.x_shift = metrics ? metrics.xOffset : 0;
@@ -222,7 +221,7 @@ export class Ornament extends Modifier {
   // Set the upper accidental for the ornament
   setUpperAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
-    this.accidentalUpper = new Glyph(Flow.accidentalCodes(accid).code, scale);
+    this.accidentalUpper = new Glyph(accidentalCodes(accid).code, scale);
     this.accidentalUpper.setOrigin(0.5, 1.0);
     return this;
   }
@@ -230,7 +229,7 @@ export class Ornament extends Modifier {
   // Set the lower accidental for the ornament
   setLowerAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
-    this.accidentalLower = new Glyph(Flow.accidentalCodes(accid).code, scale);
+    this.accidentalLower = new Glyph(accidentalCodes(accid).code, scale);
     this.accidentalLower.setOrigin(0.5, 1.0);
     return this;
   }
@@ -240,7 +239,7 @@ export class Ornament extends Modifier {
     this.checkContext();
 
     if (!this.note || this.index == null) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw Ornament without a note and index.");
     }
 
     this.setRendered();

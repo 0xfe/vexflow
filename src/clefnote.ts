@@ -2,8 +2,6 @@
 // Copyright Mohit Muthanna 2010
 //
 // Author Taehoon Moon 2014
-
-import {Vex} from './vex';
 import {Note} from './note';
 import {Clef} from './clef';
 import {Glyph} from './glyph';
@@ -11,6 +9,7 @@ import {DrawContext} from "./types/common";
 import {IClefType} from "./types/clef";
 import {IStaveNoteStruct} from "./types/note";
 import {BoundingBox} from "./boundingbox";
+import {RuntimeError} from "./runtimeerror";
 
 /** @constructor */
 export class ClefNote extends Note {
@@ -70,7 +69,7 @@ export class ClefNote extends Note {
   }
 
   draw(): void {
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    if (!this.stave) throw new RuntimeError('NoStave', "Can't draw without a stave.");
 
     if (!(this.glyph as Glyph).getContext()) {
       (this.glyph as Glyph).setContext(this.context);

@@ -51,7 +51,7 @@ if (!window.QUnit) {
 }
 
 if (typeof require === 'function') {
-  var { Vex } = require('./vexflow-debug.js');
+  var Vex = require('./vexflow-debug.js');
 }
 
 var VF = Vex.Flow;

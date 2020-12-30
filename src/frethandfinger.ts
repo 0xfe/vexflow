@@ -3,11 +3,11 @@
 // Author Larry Kuhns 2013
 // Class to draws string numbers into the notation.
 
-import {Vex} from './vex';
 import {Modifier} from './modifier';
 import {StaveNote} from "./stavenote";
 import {Builder} from "./easyscore";
 import {IFont} from "./types/font";
+import {RuntimeError} from "./runtimeerror";
 
 /**
  * @constructor
@@ -157,7 +157,7 @@ export class FretHandFinger extends Modifier {
     this.checkContext();
 
     if (!this.note || this.index == null) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw string number without a note and index.");
     }
 
     this.setRendered();
@@ -182,7 +182,7 @@ export class FretHandFinger extends Modifier {
         dot_x += 1;
         break;
       default:
-        throw new Vex.RERR('InvalidPostion', `The position ${this.position} does not exist`);
+        throw new RuntimeError('InvalidPostion', `The position ${this.position} does not exist`);
     }
 
     ctx.save();

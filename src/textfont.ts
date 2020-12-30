@@ -5,16 +5,16 @@
 // This file handles a registry of text font metric information, so all
 // VEX modules can take advantage of font metrics in a uniform way.
 //
-
-import {Vex} from './vex';
 import {PetalumaScriptTextMetrics} from './fonts/petalumascript_textmetrics';
 import {RobotoSlabTextMetrics} from './fonts/robotoslab_textmetrics';
 import {IFont} from "./types/font";
 import {ITextFontAttributes, ITextFontMetrics, ITextFontRegistry} from "./types/textfont";
+import {RuntimeError} from "./runtimeerror";
+import {LOG, Merge} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (TextFont.DEBUG) Vex.L('Vex.Flow.TextFont', args);
+  if (TextFont.DEBUG) LOG('Vex.Flow.TextFont', args);
 }
 
 export class TextFont {
@@ -209,19 +209,19 @@ export class TextFont {
   constructor(params: ITextFontRegistry) {
     this.attrs = {'type': 'TextFont'};
     if (!params.name) {
-      throw new Vex.RERR('BadArgument', 'Font constructor must specify a name');
+      throw new RuntimeError('BadArgument', 'Font constructor must specify a name');
     }
     const fontData = params.glyphs ? params : TextFont.getFontDataByName(params.name);
     if (!fontData) {
       if (params.glyphs && params.resolution) {
         TextFont.registerFont(params);
       } else {
-        throw new Vex.RERR('BadArgument', 'Unknown font, must have glyph metrics and resolution');
+        throw new RuntimeError('BadArgument', 'Unknown font, must have glyph metrics and resolution');
       }
     } else {
-      Vex.Merge<ITextFontRegistry>(this, fontData);
+      Merge<ITextFontRegistry>(this, fontData);
     }
-    Vex.Merge<ITextFontRegistry>(this, params);
+    Merge<ITextFontRegistry>(this, params);
 
     if (!this.size) {
       this.size = 14;

@@ -4,13 +4,18 @@
 // `TextNote` is a notation element that is positioned in time. Generally
 // meant for objects that sit above/below the staff and inline with each other.
 // Examples of this would be such as dynamics, lyrics, chord changes, etc.
-
-import {Vex} from './vex';
 import {Note} from './note';
 import {Glyph} from './glyph';
 import {ICodeValue} from "./types/common";
 import {IStaveNoteStruct} from "./types/note";
 import {IFont} from "./types/font";
+import {RuntimeError} from "./runtimeerror";
+
+export enum Justification {
+  LEFT = 1,
+  CENTER = 2,
+  RIGHT = 3
+}
 
 export class TextNote extends Note {
   private readonly text: string;
@@ -19,15 +24,11 @@ export class TextNote extends Note {
   private readonly smooth: boolean;
 
   private font: IFont;
-  private justification: number;
+  private justification: Justification;
   private line: number;
 
-  static get Justification(): Record<string, number> {
-    return {
-      LEFT: 1,
-      CENTER: 2,
-      RIGHT: 3,
-    };
+  static get Justification(): typeof Justification {
+    return Justification;
   }
 
   // Glyph data
@@ -114,7 +115,7 @@ export class TextNote extends Note {
     // measure the length of text is with `canvasmeasureText()`
     if (options.glyph) {
       const struct = TextNote.GLYPHS[options.glyph];
-      if (!struct) throw new Vex.RERR('Invalid glyph type: ' + options.glyph);
+      if (!struct) throw new RuntimeError('Invalid glyph type: ' + options.glyph);
 
       this.glyph = new Glyph(struct.code, 40, {category: 'textNote'});
       this.setWidth(this.glyph.getMetrics().width);
@@ -171,7 +172,7 @@ export class TextNote extends Note {
     this.checkContext();
 
     if (!this.stave) {
-      throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+      throw new RuntimeError('NoStave', "Can't draw without a stave.");
     }
 
     this.setRendered();

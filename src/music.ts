@@ -2,10 +2,9 @@
 //
 // ## Description
 // This class implements some standard music theory routines.
-
-import {Vex} from './vex';
 import {IMusicNoteValue} from "./types/common";
 import {IMusicAccidental, IMusicNotePart} from "./types/music";
+import {RuntimeError} from "./runtimeerror";
 
 export class Music {
   static get NUM_TONES(): number {
@@ -188,11 +187,11 @@ export class Music {
 
   getNoteParts(noteString: string): IMusicNotePart {
     if (!noteString || noteString.length < 1) {
-      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+      throw new RuntimeError('BadArguments', 'Invalid note name: ' + noteString);
     }
 
     if (noteString.length > 3) {
-      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+      throw new RuntimeError('BadArguments', 'Invalid note name: ' + noteString);
     }
 
     const note = noteString.toLowerCase();
@@ -209,13 +208,13 @@ export class Music {
         accidental,
       } as IMusicNotePart;
     } else {
-      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+      throw new RuntimeError('BadArguments', 'Invalid note name: ' + noteString);
     }
   }
 
   getKeyParts(keyString: string): IMusicNotePart {
     if (!keyString || keyString.length < 1) {
-      throw new Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
+      throw new RuntimeError('BadArguments', 'Invalid key: ' + keyString);
     }
 
     const key = keyString.toLowerCase();
@@ -238,14 +237,14 @@ export class Music {
         type,
       };
     } else {
-      throw new Vex.RERR('BadArguments', `Invalid key: ${keyString}`);
+      throw new RuntimeError('BadArguments', `Invalid key: ${keyString}`);
     }
   }
 
   getNoteValue(noteString: string): number {
     const value = Music.noteValues[noteString];
     if (value == null) {
-      throw new Vex.RERR('BadArguments', `Invalid note name: ${noteString}`);
+      throw new RuntimeError('BadArguments', `Invalid note name: ${noteString}`);
     }
 
     return value.int_val;
@@ -254,7 +253,7 @@ export class Music {
   getIntervalValue(intervalString: string): number {
     const value = Music.intervals[intervalString];
     if (value == null) {
-      throw new Vex.RERR('BadArguments', `Invalid interval name: ${intervalString}`);
+      throw new RuntimeError('BadArguments', `Invalid interval name: ${intervalString}`);
     }
 
     return value;
@@ -262,7 +261,7 @@ export class Music {
 
   getCanonicalNoteName(noteValue: number): string {
     if (!this.isValidNoteValue(noteValue)) {
-      throw new Vex.RERR('BadArguments', `Invalid note value: ${noteValue}`);
+      throw new RuntimeError('BadArguments', `Invalid note value: ${noteValue}`);
     }
 
     return Music.canonical_notes[noteValue];
@@ -270,7 +269,7 @@ export class Music {
 
   getCanonicalIntervalName(intervalValue: number): string {
     if (!this.isValidIntervalValue(intervalValue)) {
-      throw new Vex.RERR('BadArguments', `Invalid interval value: ${intervalValue}`);
+      throw new RuntimeError('BadArguments', `Invalid interval value: ${intervalValue}`);
     }
 
     return Music.diatonic_intervals[intervalValue];
@@ -283,7 +282,7 @@ export class Music {
     if (direction == null) direction = 1;
 
     if (direction !== 1 && direction !== -1) {
-      throw new Vex.RERR('BadArguments', `Invalid direction: ${direction}`);
+      throw new RuntimeError('BadArguments', `Invalid direction: ${direction}`);
     }
 
     let sum = (noteValue + (direction * intervalValue)) % Music.NUM_TONES;
@@ -306,14 +305,14 @@ export class Music {
         Music.NUM_TONES) * multiplier;
 
       if (Math.abs(reverse_interval) > 2) {
-        throw new Vex.RERR('BadArguments', `Notes not related: ${root}, ${noteValue})`);
+        throw new RuntimeError('BadArguments', `Notes not related: ${root}, ${noteValue})`);
       } else {
         interval = reverse_interval;
       }
     }
 
     if (Math.abs(interval) > 2) {
-      throw new Vex.RERR('BadArguments', `Notes not related: ${root}, ${noteValue})`);
+      throw new RuntimeError('BadArguments', `Notes not related: ${root}, ${noteValue})`);
     }
 
     let relativeNoteName = parts.root;
@@ -358,11 +357,11 @@ export class Music {
     if (direction == null) direction = 1;
 
     if (direction !== 1 && direction !== -1) {
-      throw new Vex.RERR('BadArguments', `Invalid direction: ${direction}`);
+      throw new RuntimeError('BadArguments', `Invalid direction: ${direction}`);
     }
 
     if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2)) {
-      throw new Vex.RERR('BadArguments', `Invalid notes: ${note1}, ${note2}`);
+      throw new RuntimeError('BadArguments', `Invalid notes: ${note1}, ${note2}`);
     }
 
     let difference = direction === 1
@@ -385,7 +384,7 @@ export class Music {
     let keySigString = keySigParts.root;
     if (keySigParts.accidental) keySigString += keySigParts.accidental;
 
-    if (!scaleName) throw new Vex.RERR('BadArguments', 'Unsupported key type: ' + keySignature);
+    if (!scaleName) throw new RuntimeError('BadArguments', 'Unsupported key type: ' + keySignature);
 
     const scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
     const noteLocation = Music.root_indices[keySigParts.root];

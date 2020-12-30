@@ -2,11 +2,11 @@
 
 import {StaveNote} from './stavenote';
 import {Stem} from './stem';
-import {Flow} from './tables';
 import {StemmableNote} from "./stemmablenote";
 import {IStaveNoteStruct} from "./types/note";
 import {IGlyphProps} from "./types/glyph";
 import {IGraceNoteProtrusion} from "./types/gracenote";
+import {DEFAULT_NOTATION_FONT_SCALE, STEM_HEIGHT} from "./flow";
 
 export class GraceNote extends StaveNote {
   private readonly slash: boolean;
@@ -27,7 +27,7 @@ export class GraceNote extends StaveNote {
 
   constructor(note_struct: IStaveNoteStruct) {
     super({
-      glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
+      glyph_font_scale: DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
       stroke_px: GraceNote.LEDGER_LINE_OFFSET,
       ...note_struct,
     });
@@ -65,7 +65,7 @@ export class GraceNote extends StaveNote {
 
   // FIXME: move this to more basic class.
   getStaveNoteScale(): number {
-    return this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
+    return this.render_options.glyph_font_scale / DEFAULT_NOTATION_FONT_SCALE;
   }
 
   draw(): void {
@@ -96,20 +96,20 @@ export class GraceNote extends StaveNote {
         const noteHeadBounds = this.getNoteHeadBounds();
         const noteStemHeight = stem.getHeight();
         let x = this.getAbsoluteX();
-        let y = stem_direction === Flow.Stem.DOWN ?
+        let y = stem_direction === Stem.DOWN ?
           noteHeadBounds.y_top - noteStemHeight :
           noteHeadBounds.y_bottom - noteStemHeight;
 
-        const defaultStemExtention = stem_direction === Flow.Stem.DOWN ?
+        const defaultStemExtention = stem_direction === Stem.DOWN ?
           (this.glyph as IGlyphProps).stem_down_extension :
           (this.glyph as IGlyphProps).stem_up_extension;
 
-        let defaultOffsetY = Flow.STEM_HEIGHT;
+        let defaultOffsetY = STEM_HEIGHT;
         defaultOffsetY -= (defaultOffsetY / 2.8);
         defaultOffsetY += defaultStemExtention;
         y += ((defaultOffsetY * staveNoteScale) * stem_direction);
 
-        const offsets = stem_direction === Flow.Stem.UP ? {
+        const offsets = stem_direction === Stem.UP ? {
           x1: 1,
           y1: 0,
           x2: 13,

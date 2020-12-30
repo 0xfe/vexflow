@@ -43,8 +43,6 @@
  *     with articulations, etc...
  * }
  */
-
-import {Vex} from './vex';
 import {Element} from './element';
 import {Formatter} from './formatter';
 import {Glyph} from './glyph';
@@ -53,6 +51,8 @@ import {Note} from "./note";
 import {StemmableNote} from "./stemmablenote";
 import {StaveNote} from "./stavenote";
 import {IStaveOptions} from "./types/stave";
+import {RuntimeError} from "./runtimeerror";
+import {Merge} from "./flow";
 
 export class Tuplet extends Element {
   notes: Note[];
@@ -87,10 +87,10 @@ export class Tuplet extends Element {
     super();
     this.setAttribute('type', 'Tuplet');
     if (!notes || !notes.length) {
-      throw new Vex.RuntimeError('BadArguments', 'No notes provided for tuplet.');
+      throw new RuntimeError('BadArguments', 'No notes provided for tuplet.');
     }
 
-    this.options = Vex.Merge({} as IStaveOptions, options);
+    this.options = Merge({} as IStaveOptions, options);
     this.notes = notes;
     this.num_notes = 'num_notes' in this.options ?
       this.options.num_notes : notes.length;
@@ -161,7 +161,7 @@ export class Tuplet extends Element {
     if (!location) {
       location = Tuplet.LOCATION_TOP;
     } else if (location !== Tuplet.LOCATION_TOP && location !== Tuplet.LOCATION_BOTTOM) {
-      throw new Vex.RERR('BadArgument', 'Invalid tuplet location: ' + location);
+      throw new RuntimeError('BadArgument', 'Invalid tuplet location: ' + location);
     }
 
     this.location = location;

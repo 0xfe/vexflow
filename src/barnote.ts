@@ -7,17 +7,17 @@
 // duration, it consumes no `tick`s, and is dealt with appropriately by the formatter.
 //
 // See `tests/barnote_tests.js` for usage examples.
-
-import {Vex} from './vex';
 import {Note} from './note';
 import {Barline} from './stavebarline';
 import {IBarnoteMetrics} from "./types/common";
 import {IStaveNoteStruct} from "./types/note";
 import {BoundingBox} from "./boundingbox";
+import {RuntimeError} from "./runtimeerror";
+import {LOG} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args);
+  if (BarNote.DEBUG) LOG('Vex.Flow.BarNote', args);
 }
 
 export class BarNote extends Note {
@@ -82,7 +82,7 @@ export class BarNote extends Note {
   // Render note to stave.
   draw(): void {
     this.checkContext();
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    if (!this.stave) throw new RuntimeError('NoStave', "Can't draw without a stave.");
     L('Rendering bar line at: ', this.getAbsoluteX());
     const barline = new Barline(this.type);
     barline.setX(this.getAbsoluteX());

@@ -2,9 +2,8 @@
 //
 // ## Description
 // This class implements varies types of tunings for tablature.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
+import {RuntimeError} from "./runtimeerror";
+import {integerToNote, keyProperties} from "./flow";
 
 export class Tuning {
   private numStrings: number;
@@ -27,7 +26,7 @@ export class Tuning {
   }
 
   noteToInteger(noteString: string): number {
-    return Flow.keyProperties(noteString).int_value;
+    return keyProperties(noteString).int_value;
   }
 
   setTuning(noteString: string): void {
@@ -41,7 +40,7 @@ export class Tuning {
 
     const keys = noteString.split(/\s*,\s*/);
     if (keys.length === 0) {
-      throw new Vex.RERR('BadArguments', 'Invalid tuning string: ' + noteString);
+      throw new RuntimeError('BadArguments', 'Invalid tuning string: ' + noteString);
     }
 
     this.numStrings = keys.length;
@@ -53,7 +52,7 @@ export class Tuning {
   getValueForString(stringNum: string): number {
     const s = parseInt(stringNum, 10);
     if (s < 1 || s > this.numStrings) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'BadArguments', `String number must be between 1 and ${this.numStrings}:${stringNum}`
       );
     }
@@ -66,7 +65,7 @@ export class Tuning {
     const f = parseInt(fretNum, 10);
 
     if (f < 0) {
-      throw new Vex.RERR('BadArguments', 'Fret number must be 0 or higher: ' +
+      throw new RuntimeError('BadArguments', 'Fret number must be 0 or higher: ' +
         fretNum);
     }
 
@@ -79,6 +78,6 @@ export class Tuning {
     const octave = Math.floor(noteValue / 12);
     const value = noteValue % 12;
 
-    return Flow.integerToNote(value) + '/' + octave;
+    return integerToNote(value) + '/' + octave;
   }
 }

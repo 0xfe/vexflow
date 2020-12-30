@@ -1,8 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-
-import {Vex} from './vex';
 import {Element} from './element';
-import {Flow} from './tables';
 import {Barline} from './stavebarline';
 import {StaveModifier} from './stavemodifier';
 import {Repetition} from './staverepetition';
@@ -21,6 +18,8 @@ import {
 } from "./types/common";
 import {IFont} from "./types/font";
 import {IStaveLineConfig, IStaveOptions, IStaveTextOptions} from "./types/stave";
+import {Merge, STAVE_LINE_THICKNESS} from "./flow";
+import {RuntimeError} from "./runtimeerror";
 
 export class Stave extends Element {
   x: number;
@@ -71,7 +70,7 @@ export class Stave extends Element {
       top_text_position: 1,          // in staff lines
     } as IStaveOptions;
     this.bounds = {x: this.x, y: this.y, w: this.width, h: 0};
-    Vex.Merge(this.options, options);
+    Merge(this.options, options);
 
     this.resetLines();
 
@@ -149,11 +148,11 @@ export class Stave extends Element {
   }
 
   getTopLineTopY(): number {
-    return this.getYForLine(0) - (Flow.STAVE_LINE_THICKNESS / 2);
+    return this.getYForLine(0) - (STAVE_LINE_THICKNESS / 2);
   }
 
   getBottomLineBottomY(): number {
-    return this.getYForLine(this.getNumLines() - 1) + (Flow.STAVE_LINE_THICKNESS / 2);
+    return this.getYForLine(this.getNumLines() - 1) + (STAVE_LINE_THICKNESS / 2);
   }
 
   setX(x: number): this {
@@ -189,7 +188,7 @@ export class Stave extends Element {
     return {
       fillStyle: this.options.fill_style,
       strokeStyle: this.options.fill_style, // yes, this is correct for legacy compatibility
-      lineWidth: Flow.STAVE_LINE_THICKNESS, ...(this.style as IStyle) || {}
+      lineWidth: STAVE_LINE_THICKNESS, ...(this.style as IStyle) || {}
     } as IStyle;
   }
 
@@ -206,7 +205,7 @@ export class Stave extends Element {
    */
   getModifierXShift(index = 0): number {
     if (typeof index !== 'number') {
-      throw new Vex.RERR('InvalidIndex', 'Must be of number type');
+      throw new RuntimeError('InvalidIndex', 'Must be of number type');
     }
 
     if (!this.formatted) this.format();
@@ -689,21 +688,21 @@ export class Stave extends Element {
    */
   setConfigForLine(line_number: number, line_config: IStaveLineConfig): this {
     if (line_number >= this.options.num_lines || line_number < 0) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'StaveConfigError',
         'The line number must be within the range of the number of lines in the Stave.'
       );
     }
 
     if (line_config.visible === undefined) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'StaveConfigError',
         "The line configuration object is missing the 'visible' property."
       );
     }
 
     if (typeof (line_config.visible) !== 'boolean') {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'StaveConfigError',
         "The line configuration objects 'visible' property must be true or false."
       );
@@ -725,7 +724,7 @@ export class Stave extends Element {
    */
   setConfigForLines(lines_configuration: IStaveLineConfig[]): this {
     if (lines_configuration.length !== this.options.num_lines) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'StaveConfigError',
         'The length of the lines configuration array must match the number of lines in the Stave'
       );
@@ -739,7 +738,7 @@ export class Stave extends Element {
       if (!lines_configuration[line_config]) {
         lines_configuration[line_config] = this.options.line_config[line_config];
       }
-      Vex.Merge(this.options.line_config[line_config], lines_configuration[line_config]);
+      Merge(this.options.line_config[line_config], lines_configuration[line_config]);
     }
 
     this.options.line_config = lines_configuration;

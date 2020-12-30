@@ -5,14 +5,12 @@
 //
 // This file implements a generic base class for VexFlow, with implementations
 // of general functions and properties that can be inherited by all VexFlow elements.
-
-import {Vex} from './vex';
 import {Registry} from './registry';
-import {Flow} from './tables';
 import {DrawContext} from "./types/common";
 import {BoundingBox} from "./boundingbox";
-import {Font} from "./smufl";
+import {DefaultFontStack, Font} from "./smufl";
 import {IElementAttributes} from "./types/element";
+import {RuntimeError} from "./runtimeerror";
 
 export class Element {
   static ID = 1000;
@@ -41,8 +39,8 @@ export class Element {
     this.boundingBox = null;
     this.context = null;
     this.rendered = false;
-    this.fontStack = Flow.DEFAULT_FONT_STACK;
-    this.musicFont = Flow.DEFAULT_FONT_STACK[0];
+    this.fontStack = DefaultFontStack;
+    this.musicFont = DefaultFontStack[0];
 
     // If a default registry exist, then register with it right away.
     if (Registry.getDefaultRegistry()) {
@@ -183,7 +181,7 @@ export class Element {
   // Validators
   checkContext(): DrawContext {
     if (!this.context) {
-      throw new Vex.RERR('NoContext', 'No rendering context attached to instance');
+      throw new RuntimeError('NoContext', 'No rendering context attached to instance');
     }
     return this.context;
   }

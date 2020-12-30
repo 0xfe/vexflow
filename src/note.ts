@@ -9,9 +9,6 @@
 // Some notes have stems, heads, dots, etc. Most notational elements that
 // surround a note are called *modifiers*, and every note has an associated
 // array of them. All notes also have a rendering context and belong to a stave.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Tickable} from './tickable';
 import {Stave} from "./stave";
 import {DrawContext, ICoordinates, IMetrics} from "./types/common";
@@ -27,6 +24,9 @@ import {Glyph} from "./glyph";
 import {Stroke} from "./strokes";
 import {ModifierClass} from "./types/modifiercontext";
 import {Dot} from "./dot";
+import {RuntimeError} from "./runtimeerror";
+import {drawDot, durationToTicks, getGlyphProps} from "./flow";
+import {GLYPH_PROPS_VALID_TYPES} from "./tables";
 
 export class Note extends Tickable {
   stave: Stave;
@@ -88,7 +88,7 @@ export class Note extends Tickable {
     stroke(xPost2, xEnd, 'red');
     stroke(xEnd, xFreedomRight, '#DD0');
     stroke(xStart - note.getXShift(), xStart, '#BBB'); // Shift
-    Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
+    drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
 
     const formatterMetrics = note.getFormatterMetrics();
     if (formatterMetrics.iterations > 0) {
@@ -131,7 +131,7 @@ export class Note extends Tickable {
 
     // If specified type is invalid, return null
     let type = noteStruct.type;
-    if (type && !Flow.getGlyphProps.validTypes[type]) {
+    if (type && !GLYPH_PROPS_VALID_TYPES[type]) {
       return null;
     }
 
@@ -150,7 +150,7 @@ export class Note extends Tickable {
     }
 
     // Calculate the tick duration of the note
-    let ticks = Flow.durationToTicks(durationProps.duration);
+    let ticks = durationToTicks(durationProps.duration);
     if (ticks == null) {
       return null;
     }
@@ -194,7 +194,7 @@ export class Note extends Tickable {
     this.setAttribute('type', 'Note');
 
     if (!noteStruct) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments', 'Note must have valid initialization data to identify duration and type.'
       );
     }
@@ -202,7 +202,7 @@ export class Note extends Tickable {
     // Parse `noteStruct` and get note properties.
     const initStruct = Note.parseNoteStruct(noteStruct);
     if (!initStruct) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments', `Invalid note initialization object: ${JSON.stringify(noteStruct)}`
       );
     }
@@ -224,11 +224,11 @@ export class Note extends Tickable {
     this.modifiers = [];
 
     // Get the glyph code for this note from the font.
-    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
-    this.customGlyphs = this.customTypes.map(t => Flow.getGlyphProps(this.duration, t));
+    this.glyph = getGlyphProps(this.duration, this.noteType);
+    this.customGlyphs = this.customTypes.map(t => getGlyphProps(this.duration, t));
 
     if (this.positions && (typeof (this.positions) !== 'object' || !this.positions.length)) {
-      throw new Vex.RuntimeError('BadArguments', 'Note keys must be array type.');
+      throw new RuntimeError('BadArguments', 'Note keys must be array type.');
     }
 
     // Note to play for audio players.
@@ -371,7 +371,7 @@ export class Note extends Tickable {
 
   getYs(): number[] {
     if (this.ys.length === 0) {
-      throw new Vex.RERR('NoYValues', 'No Y-values calculated for this note.');
+      throw new RuntimeError('NoYValues', 'No Y-values calculated for this note.');
     }
 
     return this.ys;
@@ -381,7 +381,7 @@ export class Note extends Tickable {
   // be rendered.
   getYForTopText(text_line: number): number {
     if (!this.stave) {
-      throw new Vex.RERR('NoStave', 'No stave attached to this note.');
+      throw new RuntimeError('NoStave', 'No stave attached to this note.');
     }
 
     return this.stave.getYForTopText(text_line);
@@ -394,7 +394,7 @@ export class Note extends Tickable {
 
   // Returns the voice that this note belongs in.
   getVoice(): Voice {
-    if (!this.voice) throw new Vex.RERR('NoVoice', 'Note has no voice.');
+    if (!this.voice) throw new RuntimeError('NoVoice', 'Note has no voice.');
     return this.voice;
   }
 
@@ -459,7 +459,7 @@ export class Note extends Tickable {
   // Get the coordinates for where modifiers begin.
   getModifierStartXY(position?: number, index?: number, options?: any): ICoordinates {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+      throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
 
     return {
@@ -480,7 +480,7 @@ export class Note extends Tickable {
   // `rightDisplacedHeadPx`: Extra space on right of note.
   getMetrics(): IMetrics {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
+      throw new RuntimeError('UnformattedNote', "Can't call getMetrics on an unformatted note.");
     }
 
     const modLeftPx = this.modifierContext ? (this.modifierContext as ModifierContext).state.left_shift : 0;
@@ -516,7 +516,7 @@ export class Note extends Tickable {
   // looking for the post-formatted x-position.
   getAbsoluteX(): number {
     if (!this.tickContext) {
-      throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
     }
 
     // Position note to left edge of tick context.

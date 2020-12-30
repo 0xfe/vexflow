@@ -6,9 +6,6 @@
 // This file implement `TextBrackets` which extend between two notes.
 // The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
 // using this class.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Element} from './element';
 import {Renderer} from './renderer';
 import {DrawContext, ITextBracketRenderOptions} from "./types/common";
@@ -16,10 +13,17 @@ import {Note} from "./note";
 import {IFont} from "./types/font";
 import {ITextBracketParams} from "./types/textbracket";
 import {IGlyphProps} from "./types/glyph";
+import {RuntimeError} from "./runtimeerror";
+import {LOG, TEXT_HEIGHT_OFFSET_HACK} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args);
+  if (TextBracket.DEBUG) LOG('Vex.Flow.TextBracket', args);
+}
+
+export enum Position {
+  TOP = 1,
+  BOTTOM = -1
 }
 
 export class TextBracket extends Element {
@@ -27,7 +31,7 @@ export class TextBracket extends Element {
 
   private readonly text: string;
   private readonly superscript: string;
-  private readonly position: number;
+  private readonly position: Position;
 
   private line: number;
   private start: Note;
@@ -35,11 +39,8 @@ export class TextBracket extends Element {
   private font: IFont;
   private render_options: ITextBracketRenderOptions;
 
-  static get Positions(): Record<string, number> {
-    return {
-      TOP: 1,
-      BOTTOM: -1,
-    };
+  static get Positions(): typeof Position {
+    return Position;
   }
 
   static get PositionString(): Record<string, number> {
@@ -134,10 +135,10 @@ export class TextBracket extends Element {
         y = this.start.getStave().getYForTopText(this.line);
         break;
       case TextBracket.Positions.BOTTOM:
-        y = this.start.getStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
+        y = this.start.getStave().getYForBottomText(this.line + TEXT_HEIGHT_OFFSET_HACK);
         break;
       default:
-        throw new Vex.RERR('InvalidPosition', `The position ${this.position} is invalid`);
+        throw new RuntimeError('InvalidPosition', `The position ${this.position} is invalid`);
     }
 
     // Get the preliminary start and stop coordintates for the bracket

@@ -7,14 +7,14 @@
 // A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
-import {Vex} from './vex';
 import {Element} from './element';
-import {Flow} from './tables';
 import {DrawContext, ICoordinates, IStaveLineRenderOptions} from "./types/common";
 import {StaveNote} from "./stavenote";
 import {IFont} from "./types/font";
 import {IGlyphProps} from "./types/glyph";
 import {IStaveLineDrawArrowLineConfig, IStaveLineNotes} from "./types/staveline";
+import {TEXT_HEIGHT_OFFSET_HACK} from "./flow";
+import {RuntimeError} from "./runtimeerror";
 
 // Attribution: Arrow rendering implementations based off of
 // Patrick Horgan's article, "Drawing lines and arcs with
@@ -115,6 +115,17 @@ function drawArrowLine(ctx: DrawContext, point1: ICoordinates, point2: ICoordina
   }
 }
 
+export enum TextVerticalPosition {
+  TOP = 1,
+  BOTTOM = 2
+}
+
+export enum TextJustification {
+  LEFT = 1,
+  CENTER = 2,
+  RIGHT = 3
+}
+
 export class StaveLine extends Element {
   private readonly render_options: IStaveLineRenderOptions;
 
@@ -127,19 +138,12 @@ export class StaveLine extends Element {
   private last_note: StaveNote;
 
   // Text Positioning
-  static get TextVerticalPosition(): Record<string, number> {
-    return {
-      TOP: 1,
-      BOTTOM: 2,
-    };
+  static get TextVerticalPosition(): typeof TextVerticalPosition {
+    return TextVerticalPosition;
   }
 
-  static get TextJustification(): Record<string, number> {
-    return {
-      LEFT: 1,
-      CENTER: 2,
-      RIGHT: 3,
-    };
+  static get TextJustification(): typeof TextJustification {
+    return TextJustification;
   }
 
   // Initialize the StaveLine with the given `notes`.
@@ -214,7 +218,7 @@ export class StaveLine extends Element {
   // Set the notes for the `StaveLine`
   setNotes(notes: IStaveLineNotes): this {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments', 'Notes needs to have either first_note or last_note set.'
       );
     }
@@ -223,7 +227,7 @@ export class StaveLine extends Element {
     if (!notes.last_indices) notes.last_indices = [0];
 
     if (notes.first_indices.length !== notes.last_indices.length) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments', 'Connected notes must have similar index sizes'
       );
     }
@@ -339,7 +343,7 @@ export class StaveLine extends Element {
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
       y = first_note.getStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
-      y = first_note.getStave().getYForBottomText(Flow.TEXT_HEIGHT_OFFSET_HACK);
+      y = first_note.getStave().getYForBottomText(TEXT_HEIGHT_OFFSET_HACK);
     }
 
     // Draw the text

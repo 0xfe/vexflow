@@ -7,8 +7,6 @@
 // become the canonical way to use VexFlow.
 //
 // *This API is currently DRAFT*
-
-import {Vex} from './vex';
 import {Accidental} from './accidental';
 import {Articulation} from './articulation';
 import {Annotation} from './annotation';
@@ -59,13 +57,15 @@ import {IMultimeasureRestRenderOptions} from "./types/multimeasurerest";
 import {ISystemOptions} from "./types/system";
 import {ITextFontRegistry} from "./types/textfont";
 import {IEasyScoreOptions} from "./types/easyscore";
+import {LOG} from "./flow";
+import {MakeException} from "./runtimeerror";
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args);
+  if (Factory.DEBUG) LOG('Vex.Flow.Factory', args);
 }
 
-export const X = Vex.MakeException('FactoryError');
+const X = MakeException('FactoryError');
 
 function setDefaults(params = {} as IFactoryParams, defaults: IFactoryParams) {
   const default_options = defaults.options;

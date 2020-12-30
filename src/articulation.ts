@@ -8,9 +8,6 @@
 // `tables.js` under `Vex.Flow.articulationCodes`.
 //
 // See `tests/articulation_tests.js` for usage examples.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Modifier} from './modifier';
 import {Glyph} from './glyph';
 import {Stem} from './stem';
@@ -24,10 +21,12 @@ import {
   IStringArticulation
 } from "./types/articulation";
 import {IFactoryParams} from "./types/factory";
+import {RuntimeError} from "./runtimeerror";
+import {articulationCodes, LOG} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args);
+  if (Articulation.DEBUG) LOG('Vex.Flow.Articulation', args);
 }
 
 const {ABOVE, BELOW} = Modifier.Position;
@@ -94,7 +93,7 @@ const getTopY = (note: StaveNote, textLine: number) => {
       return stave.getYForTopText(textLine);
     }
   } else {
-    throw new Vex.RERR(
+    throw new RuntimeError(
       'UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes'
     );
   }
@@ -126,7 +125,7 @@ const getBottomY = (note: StaveNote, textLine: number) => {
       return stave.getYForBottomText(textLine);
     }
   } else {
-    throw new Vex.RERR(
+    throw new RuntimeError(
       'UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes'
     );
   }
@@ -267,9 +266,9 @@ export class Articulation extends Modifier {
   }
 
   reset(): void {
-    this.articulation = Flow.articulationCodes(this.type);
+    this.articulation = articulationCodes(this.type);
     if (!this.articulation) {
-      throw new Vex.RERR('ArgumentError', `Articulation not found: ${this.type}`);
+      throw new RuntimeError('ArgumentError', `Articulation not found: ${this.type}`);
     }
 
     const code = (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
@@ -294,7 +293,7 @@ export class Articulation extends Modifier {
     this.checkContext();
 
     if (!note || index == null) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw Articulation without a note and index.");
     }
 
     this.setRendered();
@@ -311,7 +310,7 @@ export class Articulation extends Modifier {
 
     const padding = this.musicFont.lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
 
-    let y = {
+    let y = ({
       [ABOVE]: () => {
         glyph.setOrigin(0.5, 1);
         const y = getTopY(note, textLine) - ((textLine + initialOffset) * staffSpace);
@@ -326,7 +325,7 @@ export class Articulation extends Modifier {
           ? Math.max(stave.getYForBottomText(Articulation.INITIAL_OFFSET), y)
           : y;
       },
-    }[position]();
+    } as Record<number, () => number>)[position]();
 
     if (!isTab) {
       const offsetDirection = position === ABOVE ? -1 : +1;

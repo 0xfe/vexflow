@@ -1,18 +1,18 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // A generic text parsing class for VexFlow.
-
-import {Vex} from './vex';
 import {IParserResult} from "./types/parser";
 import {IGrammarVal} from "./types/easyscore";
 import {Grammar} from "./easyscore";
+import {LOG} from "./flow";
+import {MakeException} from "./runtimeerror";
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args);
+  if (Parser.DEBUG) LOG('Vex.Flow.Parser', args);
 }
 
-export const X = Vex.MakeException('ParserError');
+const X = MakeException('ParserError');
 
 // Converts parser results into an easy to reference list that can be
 // used in triggers.

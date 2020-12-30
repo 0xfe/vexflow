@@ -3,9 +3,6 @@
 // ## Description
 //
 // This file implements `Beams` that span over a set of `StemmableNotes`.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Element} from './element';
 import {Fraction} from './fraction';
 import {Tuplet} from './tuplet';
@@ -17,6 +14,8 @@ import {Tickable} from "./tickable";
 import {Note} from "./note";
 import {IBeam, IBeamRenderOptions, IGenerateBeamConfig} from "./types/beam";
 import {IGlyphProps} from "./types/glyph";
+import {durationToNumber, durationToTicks, RESOLUTION} from "./flow";
+import {RuntimeError} from "./runtimeerror";
 
 function calculateStemDirection(notes: Note[]) {
   let lineSum = 0;
@@ -163,10 +162,10 @@ export class Beam extends Element {
     // Convert beam groups to tick amounts
     const tickGroups = config.groups.map(group => {
       if (!group.multiply) {
-        throw new Vex.RuntimeError('InvalidBeamGroups',
+        throw new RuntimeError('InvalidBeamGroups',
           'The beam groups must be an array of Vex.Flow.Fractions');
       }
-      return group.clone().multiply(Flow.RESOLUTION, 1);
+      return group.clone().multiply(RESOLUTION, 1);
     });
 
     const unprocessedNotes = notes;
@@ -202,7 +201,7 @@ export class Beam extends Element {
         const totalTicks = getTotalTicks(currentGroup).add(currentGroupTotalTicks);
 
         // Double the amount of ticks in a group, if it's an unbeamable tuplet
-        const unbeamable = Flow.durationToNumber((unprocessedNote as Note).duration) < 8;
+        const unbeamable = durationToNumber((unprocessedNote as Note).duration) < 8;
         if (unbeamable && unprocessedNote.tuplet) {
           ticksPerGroup.numerator *= 2;
         }
@@ -244,7 +243,7 @@ export class Beam extends Element {
         if (group.length > 1) {
           let beamable = true;
           group.forEach(note => {
-            if (note.getIntrinsicTicks() >= Flow.durationToTicks('4')) {
+            if (note.getIntrinsicTicks() >= durationToTicks('4')) {
               beamable = false;
             }
           });
@@ -379,7 +378,7 @@ export class Beam extends Element {
         beam.render_options.show_stemlets = true;
       }
       if (config.secondary_breaks) {
-        beam.render_options.secondary_break_ticks = Flow.durationToTicks(config.secondary_breaks);
+        beam.render_options.secondary_break_ticks = durationToTicks(config.secondary_breaks);
       }
       if (config.flat_beams === true) {
         beam.render_options.flat_beams = true;
@@ -415,18 +414,18 @@ export class Beam extends Element {
     this.setAttribute('type', 'Beam');
 
     if (!notes || notes === []) {
-      throw new Vex.RuntimeError('BadArguments', 'No notes provided for beam.');
+      throw new RuntimeError('BadArguments', 'No notes provided for beam.');
     }
 
     if (notes.length === 1) {
-      throw new Vex.RuntimeError('BadArguments', 'Too few notes for beam.');
+      throw new RuntimeError('BadArguments', 'Too few notes for beam.');
     }
 
     // Validate beam line, direction and ticks.
     this.ticks = notes[0].getIntrinsicTicks();
 
-    if (this.ticks >= Flow.durationToTicks('4')) {
-      throw new Vex.RuntimeError('BadArguments',
+    if (this.ticks >= durationToTicks('4')) {
+      throw new RuntimeError('BadArguments',
         'Beams can only be applied to notes shorter than a quarter note.');
     }
 
@@ -692,10 +691,10 @@ export class Beam extends Element {
       return BEAM_LEFT;
     }
 
-    const lookup_duration = `${Flow.durationToNumber(duration) / 2}`;
-    const prev_note_gets_beam = prev_tick < Flow.durationToTicks(lookup_duration);
-    const next_note_gets_beam = next_tick < Flow.durationToTicks(lookup_duration);
-    const note_gets_beam = tick < Flow.durationToTicks(lookup_duration);
+    const lookup_duration = `${durationToNumber(duration) / 2}`;
+    const prev_note_gets_beam = prev_tick < durationToTicks(lookup_duration);
+    const next_note_gets_beam = next_tick < durationToTicks(lookup_duration);
+    const note_gets_beam = tick < durationToTicks(lookup_duration);
 
     if (prev_note_gets_beam && next_note_gets_beam && note_gets_beam) {
       return BEAM_BOTH;
@@ -710,7 +709,7 @@ export class Beam extends Element {
 
   // Get the x coordinates for the beam lines of specific `duration`
   getBeamLines(duration: string): IBeam[] {
-    const tick_of_duration = Flow.durationToTicks(duration);
+    const tick_of_duration = durationToTicks(duration);
     const beam_lines = [];
     let beam_started = false;
     let current_beam: IBeam = null;

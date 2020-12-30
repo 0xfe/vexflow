@@ -3,10 +3,7 @@
 // ## Description
 // The tickable interface. Tickables are things that sit on a score and
 // have a duration, i.e., they occupy space in the musical rendering dimension.
-
-import {Vex} from './vex';
 import {Element} from './element';
-import {Flow} from './tables';
 import {Fraction} from './fraction';
 import {Voice} from "./voice";
 import {Tuplet} from "./tuplet";
@@ -14,6 +11,8 @@ import {ModifierContext} from "./modifiercontext";
 import {TickContext} from "./tickcontext";
 import {IFormatterMetrics} from "./types/formatter";
 import {ModifierClass} from "./types/modifiercontext";
+import {RESOLUTION} from "./flow";
+import {RuntimeError} from "./runtimeerror";
 
 export class Tickable extends Element {
   ignore_ticks: boolean;
@@ -111,7 +110,7 @@ export class Tickable extends Element {
 
   getWidth(): number {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
+      throw new RuntimeError('UnformattedNote', "Can't call GetWidth on an unformatted note.");
     }
 
     return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
@@ -130,7 +129,7 @@ export class Tickable extends Element {
   // Get `X` position of this tick context.
   getX(): number {
     if (!this.tickContext) {
-      throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
     }
 
     return this.tickContext.getX() + this.x_shift;
@@ -160,7 +159,7 @@ export class Tickable extends Element {
   // Every tickable must be associated with a voice. This allows formatters
   // and preFormatter to associate them with the right modifierContexts.
   getVoice(): Voice {
-    if (!this.voice) throw new Vex.RERR('NoVoice', 'Tickable has no voice.');
+    if (!this.voice) throw new RuntimeError('NoVoice', 'Tickable has no voice.');
     return this.voice;
   }
 
@@ -283,7 +282,7 @@ export class Tickable extends Element {
   }
 
   setDuration(duration: Fraction): void {
-    const ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
+    const ticks = duration.numerator * (RESOLUTION / duration.denominator);
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();
   }

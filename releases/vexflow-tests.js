@@ -1,5 +1,5 @@
 /**!
- * VexFlow 3.0.9 built on 2020-12-28.
+ * VexFlow 3.0.9 built on 2020-12-31.
  * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>
  *
  * http://www.vexflow.com  http://github.com/0xfe/vexflow
@@ -56,7 +56,7 @@ if (!window.QUnit) {
 }
 
 if (typeof require === 'function') {
-  var { Vex } = require('./vexflow-debug.js');
+  var Vex = require('./vexflow-debug.js');
 }
 
 var VF = Vex.Flow;
@@ -450,7 +450,7 @@ Vex.Flow.Test.Accidental = (function() {
       var score = vf.EasyScore();
 
       var accids = Object
-        .keys(VF.accidentalCodes.accidentals)
+        .keys(VF.ACCIDENTALS)
         .filter(function(accid) { return accid !== '{' && accid !== '}'; });
 
       var notes = accids

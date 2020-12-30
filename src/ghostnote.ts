@@ -1,17 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-
-import {Vex} from './vex';
 import {StemmableNote} from './stemmablenote';
 import {Stave} from "./stave";
+import {RuntimeError} from "./runtimeerror";
 
 export class GhostNote extends StemmableNote {
   /** @constructor */
   constructor(parameter: any) {
     // Sanity check
     if (!parameter) {
-      throw new Vex.RuntimeError('BadArguments',
+      throw new RuntimeError('BadArguments',
         'Ghost note must have valid initialization data to identify ' +
         'duration.');
     }
@@ -24,7 +23,7 @@ export class GhostNote extends StemmableNote {
     } else if (typeof (parameter) === 'object') {
       note_struct = parameter;
     } else {
-      throw new Vex.RuntimeError('BadArguments',
+      throw new RuntimeError('BadArguments',
         'Ghost note must have valid initialization data to identify ' +
         'duration.');
     }
@@ -51,7 +50,7 @@ export class GhostNote extends StemmableNote {
   }
 
   draw(): void {
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    if (!this.stave) throw new RuntimeError('NoStave', "Can't draw without a stave.");
 
     // Draw the modifiers
     this.setRendered();

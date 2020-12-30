@@ -2,14 +2,26 @@
 //
 // ## Description
 // Support for different rendering contexts: Canvas, Raphael
-
 import {CanvasContext} from './canvascontext';
 import {RaphaelContext} from './raphaelcontext';
 import {SVGContext} from './svgcontext';
-import {Vex} from './vex';
 import {DrawContext} from "./types/common";
+import {RuntimeError} from "./runtimeerror";
 
 let lastContext: DrawContext = null;
+
+export enum Backends {
+  CANVAS = 1,
+  RAPHAEL = 2,
+  SVG = 3,
+  VML = 4
+}
+
+export enum LineEndType {
+  NONE = 1,   // No leg
+  UP = 2,     // Upward leg
+  DOWN = 3    // Downward leg
+}
 
 export class Renderer {
   private readonly elementRef: string | HTMLElement;
@@ -19,22 +31,13 @@ export class Renderer {
   private ctx: DrawContext;
   private paper: any;
 
-  static get Backends(): Record<string, number> {
-    return {
-      CANVAS: 1,
-      RAPHAEL: 2,
-      SVG: 3,
-      VML: 4,
-    };
+  static get Backends(): typeof Backends {
+    return Backends;
   }
 
   // End of line types
-  static get LineEndType(): Record<string, number> {
-    return {
-      NONE: 1, // No leg
-      UP: 2,   // Upward leg
-      DOWN: 3, // Downward leg
-    };
+  static get LineEndType(): typeof LineEndType {
+    return LineEndType;
   }
 
   // Set this to true if you're using VexFlow inside a runtime
@@ -132,7 +135,7 @@ export class Renderer {
   constructor(elementRef: string | HTMLElement, backend: number) {
     this.elementRef = elementRef;
     if (!this.elementRef) {
-      throw new Vex.RERR('BadArgument', 'Invalid id for renderer.');
+      throw new RuntimeError('BadArgument', 'Invalid id for renderer.');
     }
 
     this.element = document.getElementById(elementRef as string) as HTMLCanvasElement;
@@ -145,7 +148,7 @@ export class Renderer {
     if (this.backend === Renderer.Backends.CANVAS) {
       // Create context.
       if (!this.element.getContext) {
-        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${elementRef}`);
+        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${elementRef}`);
       }
       this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
     } else if (this.backend === Renderer.Backends.RAPHAEL) {
@@ -153,14 +156,14 @@ export class Renderer {
     } else if (this.backend === Renderer.Backends.SVG) {
       this.ctx = new SVGContext(this.element);
     } else {
-      throw new Vex.RERR('InvalidBackend', `No support for backend: ${this.backend}`);
+      throw new RuntimeError('InvalidBackend', `No support for backend: ${this.backend}`);
     }
   }
 
   resize(width: number, height: number): this {
     if (this.backend === Renderer.Backends.CANVAS) {
       if (!this.element.getContext) {
-        throw new Vex.RERR(
+        throw new RuntimeError(
           'BadElement', `Can't get canvas context from element: ${this.elementRef}`
         );
       }

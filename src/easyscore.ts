@@ -5,7 +5,6 @@
 
 /* eslint max-classes-per-file: "off" */
 
-import {Vex} from './vex';
 import {StaveNote} from './stavenote';
 import {Parser} from './parser';
 import {Articulation} from './articulation';
@@ -24,13 +23,15 @@ import {Note} from "./note";
 import {IStaveOptions} from "./types/stave";
 import {IParserResult} from "./types/parser";
 import {Voice} from "./voice";
+import {LOG} from "./flow";
+import {MakeException} from "./runtimeerror";
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args);
+  if (EasyScore.DEBUG) LOG('Vex.Flow.EasyScore', args);
 }
 
-export const X = Vex.MakeException('EasyScoreError');
+const X = MakeException('EasyScoreError');
 
 export class Grammar {
   private builder: Builder;

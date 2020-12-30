@@ -2,23 +2,25 @@
 // Copyright Mohit Muthanna 2010
 //
 // This class implements curves (for slurs)
-
-import {Vex} from './vex';
 import {Element} from './element';
 import {ICurveRenderParams} from "./types/common";
 import {StaveNote} from "./stavenote";
 import {IStaveOptions} from "./types/stave";
+import {Merge} from "./flow";
+import {RuntimeError} from "./runtimeerror";
+
+export enum Position {
+  NEAR_HEAD = 1,
+  NEAR_TOP = 2
+}
 
 export class Curve extends Element {
-  private render_options: IStaveOptions;
+  private readonly render_options: IStaveOptions;
   private from: StaveNote;
   private to: StaveNote;
 
-  static get Position(): Record<string, number> {
-    return {
-      NEAR_HEAD: 1,
-      NEAR_TOP: 2,
-    };
+  static get Position(): typeof Position {
+    return Position;
   }
 
   static get PositionString(): Record<string, number> {
@@ -49,13 +51,13 @@ export class Curve extends Element {
       cps: [{x: 0, y: 10}, {x: 0, y: 10}],
     } as IStaveOptions;
 
-    Vex.Merge(this.render_options, options);
+    Merge(this.render_options, options);
     this.setNotes(from, to);
   }
 
   setNotes(from: StaveNote, to: StaveNote): this {
     if (!from && !to) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments', 'Curve needs to have either first_note or last_note set.'
       );
     }

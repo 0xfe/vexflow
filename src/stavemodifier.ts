@@ -9,24 +9,27 @@ import {Glyph} from "./glyph";
 import {ILayoutMetrics, IMetrics} from "./types/common";
 import {IStaveModifierSpacer} from "./types/stavemodifier";
 
+export enum Position {
+  CENTER = 0,
+  LEFT = 1,
+  RIGHT = 2,
+  ABOVE = 3,
+  BELOW = 4,
+  BEGIN = 5,
+  END = 6
+}
+
 export class StaveModifier extends Element {
   width: number;
   x: number;
 
   protected padding: number;
-  protected position: number;
+  protected position: Position;
   protected stave: Stave;
   private layoutMetrics: ILayoutMetrics;
 
-  static get Position(): Record<string, number> {
-    return {
-      LEFT: 1,
-      RIGHT: 2,
-      ABOVE: 3,
-      BELOW: 4,
-      BEGIN: 5,
-      END: 6,
-    };
+  static get Position(): typeof Position {
+    return Position;
   }
 
   constructor() {

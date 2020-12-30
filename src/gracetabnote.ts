@@ -7,10 +7,9 @@
 // to be rendered on a tab stave.
 //
 // See `tests/gracetabnote_tests.js` for usage examples.
-
-import {Vex} from './vex';
 import {TabNote} from './tabnote';
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
+import {Merge} from "./flow";
 
 export class GraceTabNote extends TabNote {
   static get CATEGORY(): string {
@@ -21,7 +20,7 @@ export class GraceTabNote extends TabNote {
     super(note_struct, false);
     this.setAttribute('type', 'GraceTabNote');
 
-    Vex.Merge(this.render_options, {
+    Merge(this.render_options, {
       // vertical shift from stave line
       y_shift: 0.3,
       // grace glyph scale

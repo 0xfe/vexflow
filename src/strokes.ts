@@ -4,8 +4,6 @@
 // ## Description
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
-
-import {Vex} from './vex';
 import {Modifier} from './modifier';
 import {StaveNote} from './stavenote';
 import {Glyph} from './glyph';
@@ -14,11 +12,23 @@ import {Note} from "./note";
 import {IFont} from "./types/font";
 import {IState} from "./types/common";
 import {IStrokeOptions, IStrokeRenderOptions} from "./types/stroke";
+import {Merge} from "./flow";
+import {RuntimeError} from "./runtimeerror";
+
+export enum Type {
+  BRUSH_DOWN = 1,
+  BRUSH_UP = 2,
+  ROLL_DOWN = 3, // Arpeggiated chord
+  ROLL_UP = 4,   // Arpeggiated chord
+  RASQUEDO_DOWN = 5,
+  RASQUEDO_UP = 6,
+  ARPEGGIO_DIRECTIONLESS = 7 // Arpeggiated chord without upwards or downwards arrow
+}
 
 export class Stroke extends Modifier {
   private readonly options: IStrokeOptions;
   private readonly all_voices: boolean;
-  private readonly type: number;
+  private readonly type: Type;
 
   private note_end: Note;
   private render_options: IStrokeRenderOptions;
@@ -28,16 +38,8 @@ export class Stroke extends Modifier {
     return 'strokes';
   }
 
-  static get Type(): Record<string, number> {
-    return {
-      BRUSH_DOWN: 1,
-      BRUSH_UP: 2,
-      ROLL_DOWN: 3, // Arpeggiated chord
-      ROLL_UP: 4,   // Arpeggiated chord
-      RASQUEDO_DOWN: 5,
-      RASQUEDO_UP: 6,
-      ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
-    };
+  static get Type(): typeof Type {
+    return Type;
   }
 
   // Arrange strokes inside `ModifierContext`
@@ -76,7 +78,7 @@ export class Stroke extends Modifier {
     this.setAttribute('type', 'Stroke');
 
     this.note = null;
-    this.options = Vex.Merge({} as IStrokeOptions, options);
+    this.options = Merge({} as IStrokeOptions, options);
 
     // multi voice - span stroke across all voices if true
     this.all_voices = 'all_voices' in this.options ? this.options.all_voices : true;
@@ -121,7 +123,7 @@ export class Stroke extends Modifier {
     this.setRendered();
 
     if (!(this.note && (this.index != null))) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw stroke without a note and index.");
     }
 
     const start = this.note.getModifierStartXY(this.position, this.index);
@@ -136,8 +138,8 @@ export class Stroke extends Modifier {
       ys = notes[i].getYs();
       for (let n = 0; n < ys.length; n++) {
         if (this.note === notes[i] || this.all_voices) {
-          topY = Vex.Min(topY, ys[n]);
-          botY = Vex.Max(botY, ys[n]);
+          topY = Math.min(topY, ys[n]);
+          botY = Math.max(botY, ys[n]);
         }
       }
     }
@@ -207,7 +209,7 @@ export class Stroke extends Modifier {
         botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
         break;
       default:
-        throw new Vex.RERR('InvalidType', `The stroke type ${this.type} does not exist`);
+        throw new RuntimeError('InvalidType', `The stroke type ${this.type} does not exist`);
     }
 
     let strokeLine = 'straight';

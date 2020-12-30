@@ -4,9 +4,8 @@
 // A rendering context for the Raphael backend.
 //
 // Copyright Mohit Cheppudira 2010
-
-import {Vex} from './vex';
 import {ISize} from "./types/common";
+import {WARN} from "./flow";
 
 /** @constructor */
 export class CanvasContext {
@@ -28,7 +27,7 @@ export class CanvasContext {
 
   static SanitizeCanvasDims(width: number, height: number): number[] {
     if (Math.max(width, height) > this.CANVAS_BROWSER_SIZE_LIMIT) {
-      Vex.W(
+      WARN(
         'Canvas dimensions exceed browser limit. Cropping to ' +
         this.CANVAS_BROWSER_SIZE_LIMIT
       );

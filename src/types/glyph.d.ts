@@ -23,8 +23,7 @@ export interface IGlyphProps {
   beam_count: number;
   duration_codes: Record<string, IDurationCode>;
   validTypes: Record<string, INameValue>;
-
-  (duration: string, type?: string): any;
+  shift_y: number;
 
   getWidth(a?: number): number;
 

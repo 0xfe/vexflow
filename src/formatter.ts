@@ -16,10 +16,7 @@
 //
 // See `tests/formatter_tests.js` for usage examples. The helper functions included
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
-
-import {Vex} from './vex';
 import {Beam} from './beam';
-import {Flow} from './tables';
 import {Fraction} from './fraction';
 import {Voice} from './voice';
 import {StaveConnector} from './staveconnector';
@@ -46,10 +43,13 @@ import {
 } from "./types/formatter";
 import {IGlyphProps} from "./types/glyph";
 import {BoundingBox} from "./boundingbox";
+import {RuntimeError} from "./runtimeerror";
+import {DefaultFontStack} from "./smufl";
+import {DEFAULT_TIME, LOG, Merge, MidLine, SortAndUnique} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Formatter.DEBUG) Vex.L('Vex.Flow.Formatter', args);
+  if (Formatter.DEBUG) LOG('Vex.Flow.Formatter', args);
 }
 
 // Helper function to locate the next non-rest note(s).
@@ -70,7 +70,7 @@ function lookAhead(notes: Tickable[], restLine: number, i: number, compare: bool
   if (compare && restLine !== nextRestLine) {
     const top = Math.max(restLine, nextRestLine);
     const bot = Math.min(restLine, nextRestLine);
-    nextRestLine = Vex.MidLine(top, bot);
+    nextRestLine = MidLine(top, bot);
   }
   return nextRestLine;
 }
@@ -89,7 +89,7 @@ function createContexts(
   addToContext: (tickable: Note, context: TickContext | ModifierContext, voiceIndex?: number) => void
 ): ITickContextsStruct {
   if (!voices || !voices.length) {
-    throw new Vex.RERR('BadArgument', 'No voices to format');
+    throw new RuntimeError('BadArgument', 'No voices to format');
   }
 
   // Find out highest common multiple of resolution multipliers.
@@ -100,13 +100,13 @@ function createContexts(
   const totalTicks = voices[0].getTotalTicks();
   const resolutionMultiplier = voices.reduce((resolutionMultiplier, voice) => {
     if (!voice.getTotalTicks().equals(totalTicks)) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'TickMismatch', 'Voices should have same total note duration in ticks.'
       );
     }
 
     if (voice.getMode() === Voice.Mode.STRICT && !voice.isComplete()) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'IncompleteVoice', 'Voice does not have enough notes.'
       );
     }
@@ -152,7 +152,7 @@ function createContexts(
   return {
     map: tickToContextMap,
     array: contexts,
-    list: Vex.SortAndUnique(tickList, (a: number, b: number) => a - b, (a, b) => a === b),
+    list: SortAndUnique(tickList, (a: number, b: number) => a - b, (a, b) => a === b),
     resolutionMultiplier
   } as ITickContextsStruct;
 }
@@ -191,7 +191,7 @@ export class Formatter {
   // Helper function to plot formatter debug info.
   static plotDebugging(ctx: DrawContext, formatter: Formatter, xPos: number, y1: number, y2: number, options?: IFormatterPlotDebuggingOptions): void {
     options = {
-      stavePadding: Vex.Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
+      stavePadding: DefaultFontStack[0].lookupMetric('stave.padding'),
       ...options,
     };
 
@@ -243,13 +243,13 @@ export class Formatter {
     } as IFormatAndDrawOptions;
 
     if (typeof params === 'object') {
-      Vex.Merge(options, params);
+      Merge(options, params);
     } else if (typeof params === 'boolean') {
       options.auto_beam = params;
     }
 
     // Start by creating a voice and adding all the notes to it.
-    const voice = new Voice(Flow.TIME4_4)
+    const voice = new Voice(DEFAULT_TIME)
       .setMode(Voice.Mode.SOFT)
       .addTickables(notes);
 
@@ -297,18 +297,18 @@ export class Formatter {
     } as IFormatAndDrawOptions;
 
     if (typeof params === 'object') {
-      Vex.Merge(opts, params);
+      Merge(opts, params);
     } else if (typeof params === 'boolean') {
       opts.auto_beam = params;
     }
 
     // Create a `4/4` voice for `notes`.
-    const notevoice = new Voice(Flow.TIME4_4)
+    const notevoice = new Voice(DEFAULT_TIME)
       .setMode(Voice.Mode.SOFT)
       .addTickables(notes);
 
     // Create a `4/4` voice for `tabnotes`.
-    const tabvoice = new Voice(Flow.TIME4_4)
+    const tabvoice = new Voice(DEFAULT_TIME)
       .setMode(Voice.Mode.SOFT)
       .addTickables(tabnotes);
 
@@ -408,7 +408,7 @@ export class Formatter {
   // align non-beamed notes.
   alignRests(voices: Voice[], alignAllNotes: boolean): void {
     if (!voices || !voices.length) {
-      throw new Vex.RERR('BadArgument', 'No voices to format rests');
+      throw new RuntimeError('BadArgument', 'No voices to format rests');
     }
 
     voices.forEach(voice =>
@@ -423,7 +423,7 @@ export class Formatter {
     // Create tick contexts if not already created.
     if (!this.tickContexts) {
       if (!voices) {
-        throw new Vex.RERR(
+        throw new RuntimeError(
           'BadArgument', "'voices' required to run preCalculateMinTotalWidth"
         );
       }
@@ -451,7 +451,7 @@ export class Formatter {
   // `preCalculateMinTotalWidth` must be called before this method.
   getMinTotalWidth(): number {
     if (!this.hasMinTotalWidth) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'NoMinTotalWidth',
         "Call 'preCalculateMinTotalWidth' or 'preFormat' before calling 'getMinTotalWidth'"
       );

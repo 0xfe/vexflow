@@ -3,13 +3,12 @@
 // ## Description
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
-
-import {Vex} from './vex';
 import {TabTie} from './tabtie';
 import {TabNote} from "./tabnote";
 import {INotesStruct} from "./types/note";
 import {IFont} from "./types/font";
 import {ITabSlideRenderTieParams} from "./types/tabslide";
+import {RuntimeError} from "./runtimeerror";
 
 export class TabSlide extends TabTie {
   private readonly slide_direction: number;
@@ -64,7 +63,7 @@ export class TabSlide extends TabTie {
 
   renderTie(params: ITabSlideRenderTieParams): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
-      throw new Vex.RERR('BadArguments', 'No Y-values to render');
+      throw new RuntimeError('BadArguments', 'No Y-values to render');
     }
 
     const ctx = this.context;
@@ -74,7 +73,7 @@ export class TabSlide extends TabTie {
 
     const direction = this.slide_direction;
     if (direction !== TabSlide.SLIDE_UP && direction !== TabSlide.SLIDE_DOWN) {
-      throw new Vex.RERR('BadSlide', 'Invalid slide direction');
+      throw new RuntimeError('BadSlide', 'Invalid slide direction');
     }
 
     for (let i = 0; i < this.first_indices.length; ++i) {
@@ -82,7 +81,7 @@ export class TabSlide extends TabTie {
         this.render_options.y_shift;
 
       if (isNaN(slide_y)) {
-        throw new Vex.RERR('BadArguments', 'Bad indices for slide rendering.');
+        throw new RuntimeError('BadArguments', 'Bad indices for slide rendering.');
       }
 
       ctx.beginPath();

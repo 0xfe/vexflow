@@ -16,12 +16,12 @@
 // Once an element is registered, selected attributes are tracked and indexed by
 // the registry. This allows fast look up of elements by attributes like id, type,
 // and class.
-
-import {Vex} from './vex';
 import {Element} from "./element";
 import {IRegistryIndex, IRegistryUpdate} from "./types/registry";
+import {MakeException} from "./runtimeerror";
 
-export const X = Vex.MakeException('RegistryError');
+// export const X = Vex.MakeException('RegistryError');
+const X = MakeException('RegistryError');
 
 function setIndexValue(index: IRegistryIndex, name: string, value: string, id: string, elem: Element) {
   if (!index[name][value]) index[name][value] = {};

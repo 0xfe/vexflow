@@ -3,9 +3,6 @@
 // ## Description
 // `StemmableNote` is an abstract interface for notes with optional stems.
 // Examples of stemmable notes are `StaveNote` and `TabNote`
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Stem} from './stem';
 import {Glyph} from './glyph';
 import {Note} from './note';
@@ -13,6 +10,8 @@ import {Beam} from "./beam";
 import {IStaveNoteStruct} from "./types/note";
 import {IGlyphProps} from "./types/glyph";
 import {IStemStruct} from "./types/stem";
+import {RuntimeError} from "./runtimeerror";
+import {durationToFraction, getGlyphProps} from "./flow";
 
 export class StemmableNote extends Note {
   stem_direction: number;
@@ -88,7 +87,7 @@ export class StemmableNote extends Note {
 
   // Get the minimum length of stem
   getStemMinimumLength(): number {
-    const frac = Flow.durationToFraction(this.duration);
+    const frac = durationToFraction(this.duration);
     let length = frac.value() <= 1 ? 0 : 20;
     // if note is flagged, cannot shorten beam
     switch (this.duration) {
@@ -121,7 +120,7 @@ export class StemmableNote extends Note {
   setStemDirection(direction: number): this {
     if (!direction) direction = Stem.UP;
     if (direction !== Stem.UP && direction !== Stem.DOWN) {
-      throw new Vex.RERR('BadArgument', `Invalid stem direction: ${direction}`);
+      throw new RuntimeError('BadArgument', `Invalid stem direction: ${direction}`);
     }
 
     this.stem_direction = direction;
@@ -233,7 +232,7 @@ export class StemmableNote extends Note {
   }
 
   hasFlag(): boolean {
-    return Flow.getGlyphProps(this.duration).flag && !this.beam;
+    return getGlyphProps(this.duration).flag && !this.beam;
   }
 
   // Post format the note

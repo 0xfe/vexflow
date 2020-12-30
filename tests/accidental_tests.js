@@ -97,7 +97,7 @@ Vex.Flow.Test.Accidental = (function() {
       var score = vf.EasyScore();
 
       var accids = Object
-        .keys(VF.accidentalCodes.accidentals)
+        .keys(VF.ACCIDENTALS)
         .filter(function(accid) { return accid !== '{' && accid !== '}'; });
 
       var notes = accids

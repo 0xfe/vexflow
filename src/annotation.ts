@@ -6,17 +6,30 @@
 // notes.
 //
 // See `tests/annotation_tests.js` for usage examples.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Modifier} from './modifier';
 import {IState} from "./types/common";
 import {StemmableNote} from "./stemmablenote";
 import {IFont} from "./types/font";
+import {RuntimeError} from "./runtimeerror";
+import {LOG, TEXT_HEIGHT_OFFSET_HACK, textWidth} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args);
+  if (Annotation.DEBUG) LOG('Vex.Flow.Annotation', args);
+}
+
+export enum Justify {
+  LEFT = 1,
+  CENTER = 2,
+  RIGHT = 3,
+  CENTER_STEM = 4
+}
+
+export enum VerticalJustify {
+  TOP = 1,
+  CENTER = 2,
+  BOTTOM = 3,
+  CENTER_STEM = 4
 }
 
 export class Annotation extends Modifier {
@@ -24,8 +37,8 @@ export class Annotation extends Modifier {
 
   note: StemmableNote;
 
-  private justification: number;
-  private vert_justification: number;
+  private justification: Justify;
+  private vert_justification: VerticalJustify;
   private text: string;
   private font: IFont;
 
@@ -34,13 +47,8 @@ export class Annotation extends Modifier {
   }
 
   // Text annotations can be positioned and justified relative to the note.
-  static get Justify(): Record<string, number> {
-    return {
-      LEFT: 1,
-      CENTER: 2,
-      RIGHT: 3,
-      CENTER_STEM: 4,
-    };
+  static get Justify(): typeof Justify {
+    return Justify;
   }
 
   static get JustifyString(): Record<string, number> {
@@ -52,13 +60,8 @@ export class Annotation extends Modifier {
     };
   }
 
-  static get VerticalJustify(): Record<string, number> {
-    return {
-      TOP: 1,
-      CENTER: 2,
-      BOTTOM: 3,
-      CENTER_STEM: 4,
-    };
+  static get VerticalJustify(): typeof VerticalJustify{
+    return VerticalJustify;
   }
 
   static get VerticalJustifyString(): Record<string, number> {
@@ -115,7 +118,7 @@ export class Annotation extends Modifier {
     } as IFont;
 
     // The default width is calculated from the text.
-    this.setWidth(Flow.textWidth(text));
+    this.setWidth(textWidth(text));
   }
 
   getCategory(): string {
@@ -139,7 +142,7 @@ export class Annotation extends Modifier {
 
   // Get and set horizontal justification. `justification` is a value in
   // `Annotation.Justify`.
-  getJustification(): number {
+  getJustification(): Justify {
     return this.justification;
   }
 
@@ -155,7 +158,7 @@ export class Annotation extends Modifier {
     this.checkContext();
 
     if (!this.note) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'NoNoteForAnnotation', "Can't draw text annotation without an attached note."
       );
     }
@@ -202,7 +205,7 @@ export class Annotation extends Modifier {
     if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
       // HACK: We need to compensate for the text's height since its origin
       // is bottom-right.
-      y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
+      y = stave.getYForBottomText(this.text_line + TEXT_HEIGHT_OFFSET_HACK);
       if (has_stem) {
         const stem_base = (this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY);
         y = Math.max(y, stem_base + (spacing * (this.text_line + 2)));

@@ -6,17 +6,17 @@
 // This file implements various types of clefs that can be rendered on a stave.
 //
 // See `tests/clef_tests.js` for usage examples.
-
-import {Vex} from './vex';
 import {StaveModifier} from './stavemodifier';
 import {Glyph} from './glyph';
 import {Stave} from "./stave";
 import {IClefType} from "./types/clef";
 import {IAnnotation} from "./types/annotation";
+import {RuntimeError} from "./runtimeerror";
+import {LOG} from "./flow";
 
 // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', args);
+  if (Clef.DEBUG) LOG('Vex.Flow.Clef', args);
 }
 
 export class Clef extends StaveModifier {
@@ -138,7 +138,7 @@ export class Clef extends StaveModifier {
 
   getWidth(): number {
     if (this.type === 'tab' && !this.stave) {
-      throw new Vex.RERR('ClefError', "Can't get width without stave.");
+      throw new RuntimeError('ClefError', "Can't get width without stave.");
     }
 
     return this.width;
@@ -158,8 +158,8 @@ export class Clef extends StaveModifier {
   }
 
   draw(): void {
-    if (!this.x) throw new Vex.RERR('ClefError', "Can't draw clef without x.");
-    if (!this.stave) throw new Vex.RERR('ClefError', "Can't draw clef without stave.");
+    if (!this.x) throw new RuntimeError('ClefError', "Can't draw clef without x.");
+    if (!this.stave) throw new RuntimeError('ClefError', "Can't draw clef without stave.");
     this.setRendered();
 
     this.glyph.setStave(this.stave);

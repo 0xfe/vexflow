@@ -2,9 +2,6 @@
 // Copyright Mohit Muthanna 2010
 //
 // This class implements multiple measure rests
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Element} from './element';
 import {Glyph} from './glyph';
 import {NoteHead} from './notehead';
@@ -14,6 +11,7 @@ import {DrawContext, ILeftRight} from "./types/common";
 import {Stave} from "./stave";
 import {IStaveNoteStruct} from "./types/note";
 import {IMultimeasureRestRenderOptions, IMultimeasureRestSemibraveRest} from "./types/multimeasurerest";
+import {DEFAULT_NOTATION_FONT_SCALE, Merge} from "./flow";
 
 let semibrave_rest: IMultimeasureRestSemibraveRest;
 
@@ -78,9 +76,9 @@ export class MultiMeasureRest extends Element {
       symbol_spacing: undefined,
 
       /* same as NoteHead. */
-      semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
+      semibrave_rest_glyph_scale: DEFAULT_NOTATION_FONT_SCALE,
     } as IMultimeasureRestRenderOptions;
-    Vex.Merge(this.render_options, options);
+    Merge(this.render_options, options);
 
     this.render_options.number_line += fontLineShift;
 

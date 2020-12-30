@@ -7,17 +7,17 @@
 //
 // In order to create "Sostenuto", and "una corda" markings, you must set
 // custom text for the release/depress pedal markings.
-
-import {Vex} from './vex';
 import {Element} from './element';
 import {Glyph} from './glyph';
 import {DrawContext, IPedalMarkingGlyph, IPedalMarkingRenderOptions, IStyle} from "./types/common";
 import {StaveNote} from "./stavenote";
 import {IFont} from "./types/font";
+import {RuntimeError} from "./runtimeerror";
+import {LOG} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (PedalMarking.DEBUG) Vex.L('Vex.Flow.PedalMarking', args);
+  if (PedalMarking.DEBUG) LOG('Vex.Flow.PedalMarking', args);
 }
 
 // Draws a pedal glyph with the provided `name` on a rendering `context`
@@ -27,6 +27,12 @@ function drawPedalGlyph(name: string, context: DrawContext, x: number, y: number
   const glyph_data = PedalMarking.GLYPHS[name];
   const glyph = new Glyph(glyph_data.code, point, {category: 'pedalMarking'});
   glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
+}
+
+export enum Styles {
+  TEXT = 1,
+  BRACKET = 2,
+  MIXED = 3
 }
 
 export class PedalMarking extends Element {
@@ -56,12 +62,8 @@ export class PedalMarking extends Element {
     };
   }
 
-  static get Styles(): Record<string, number> {
-    return {
-      TEXT: 1,
-      BRACKET: 2,
-      MIXED: 3,
-    };
+  static get Styles(): typeof Styles {
+    return Styles;
   }
 
   static get StylesString(): Record<string, number> {
@@ -132,7 +134,7 @@ export class PedalMarking extends Element {
   // Set the pedal marking style
   setStyle(style: IStyle | number): this {
     if (style < 1 && style > 3) {
-      throw new Vex.RERR('InvalidParameter', 'The style must be one found in PedalMarking.Styles');
+      throw new RuntimeError('InvalidParameter', 'The style must be one found in PedalMarking.Styles');
     }
 
     this.style = style;
@@ -163,7 +165,7 @@ export class PedalMarking extends Element {
 
       // Throw if current note is positioned before the previous note
       if (x < prev_x) {
-        throw new Vex.RERR(
+        throw new RuntimeError(
           'InvalidConfiguration', 'The notes provided must be in order of ascending x positions'
         );
       }

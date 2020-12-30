@@ -12,21 +12,27 @@
 // Typically, all modifiers to a note are part of the same `ModifierContext` instance. Also,
 // in multi-voice staves, all modifiers to notes on the same `tick` are part of the same
 // `ModifierContext`. This ensures that multiple voices don't trample all over each other.
-
-import {Vex} from './vex';
 import {Element} from './element';
 import {ModifierContext} from "./modifiercontext";
 import {Note} from "./note";
+import {RuntimeError} from "./runtimeerror";
+
+export enum Position {
+  CENTER = 0,
+  LEFT = 1,
+  RIGHT = 2,
+  ABOVE = 3,
+  BELOW = 4
+}
 
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
-// function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
-
+// function L(...args) { if (Modifier.DEBUG) LOG('Vex.Flow.Modifier', args); }
 export class Modifier extends Element {
   public note: Note;
 
   protected width: number;
   protected text_line: number;
-  protected position: number;
+  protected position: Position;
   protected y_shift: number;
   protected index: number;
   protected x_shift: number;
@@ -39,14 +45,8 @@ export class Modifier extends Element {
   }
 
   // Modifiers can be positioned almost anywhere, relative to a note.
-  static get Position(): Record<string, number> {
-    return {
-      CENTER: 0,
-      LEFT: 1,
-      RIGHT: 2,
-      ABOVE: 3,
-      BELOW: 4,
-    };
+  static get Position(): typeof Position {
+    return Position;
   }
 
   static get PositionString(): Record<string, number> {
@@ -180,7 +180,7 @@ export class Modifier extends Element {
   // Render the modifier onto the canvas.
   draw(): void {
     this.checkContext();
-    throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
+    throw new RuntimeError('MethodNotImplemented', 'draw() not implemented for this modifier.');
   }
 
   // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main note with correct x-offset

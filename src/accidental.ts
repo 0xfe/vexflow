@@ -8,10 +8,7 @@
 // notes. Support is included for both western and microtonal accidentals.
 //
 // See `tests/accidental_tests.js` for usage examples.
-
-import {Vex} from './vex';
 import {Fraction} from './fraction';
-import {Flow} from './tables';
 import {Music} from './music';
 import {Modifier} from './modifier';
 import {Glyph} from './glyph';
@@ -22,10 +19,13 @@ import {GraceNoteGroup} from "./gracenotegroup";
 import {StemmableNote} from "./stemmablenote";
 import {IAccidental, IAccidentalListItem, IAccidentalRenderOptions, IAccidentalState} from "./types/accidental";
 import {Note} from "./note";
+import {accidentalCodes, LOG} from "./flow";
+import {RuntimeError} from "./runtimeerror";
+import {ACCIDENTAL_COLUMNS_TABLE} from "./tables";
 
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Accidental.DEBUG) Vex.L('Vex.Flow.Accidental', args);
+  if (Accidental.DEBUG) LOG('Vex.Flow.Accidental', args);
 }
 
 const getGlyphWidth = (glyph: Glyph) => glyph.getMetrics().width;
@@ -253,7 +253,7 @@ export class Accidental extends Modifier {
         // the accidentalsColumnsTable housed in tables.js.
       } else {
         for (groupMember = i; groupMember <= groupEnd; groupMember++) {
-          column = Flow.accidentalColumnsTable[groupLength][endCase][groupMember - i];
+          column = ACCIDENTAL_COLUMNS_TABLE[groupLength][endCase][groupMember - i];
           lineList[groupMember].column = column;
           totalColumns = (totalColumns > column) ? totalColumns : column;
         }
@@ -428,7 +428,7 @@ export class Accidental extends Modifier {
   }
 
   // Create accidental. `type` can be a value from the
-  // `Vex.Flow.accidentalCodes.accidentals` table in `tables.js`. For
+  // `ACCIDENTALS` table in `tables.ts`. For
   // example: `#`, `##`, `b`, `n`, etc.
   constructor(type: string = null) {
     super();
@@ -454,9 +454,9 @@ export class Accidental extends Modifier {
       parenRightPadding: 2,
     };
 
-    this.accidental = Flow.accidentalCodes(this.type);
+    this.accidental = accidentalCodes(this.type);
     if (!this.accidental) {
-      throw new Vex.RERR('ArgumentError', `Unknown accidental type: ${type}`);
+      throw new RuntimeError('ArgumentError', `Unknown accidental type: ${type}`);
     }
 
     // Cautionary accidentals have parentheses around them
@@ -473,8 +473,8 @@ export class Accidental extends Modifier {
     this.glyph.setOriginX(1.0);
 
     if (this.cautionary) {
-      this.parenLeft = new Glyph(Flow.accidentalCodes('{').code, fontScale);
-      this.parenRight = new Glyph(Flow.accidentalCodes('}').code, fontScale);
+      this.parenLeft = new Glyph(accidentalCodes('{').code, fontScale);
+      this.parenRight = new Glyph(accidentalCodes('}').code, fontScale);
       this.parenLeft.setOriginX(1.0);
       this.parenRight.setOriginX(1.0);
     }
@@ -500,7 +500,7 @@ export class Accidental extends Modifier {
   // Attach this accidental to `note`, which must be a `StaveNote`.
   setNote(note: Note): this {
     if (!note) {
-      throw new Vex.RERR('ArgumentError', `Bad note value: ${note}`);
+      throw new RuntimeError('ArgumentError', `Bad note value: ${note}`);
     }
 
     this.note = note;
@@ -534,7 +534,7 @@ export class Accidental extends Modifier {
     this.checkContext();
 
     if (!(note && (index != null))) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw accidental without a note and index.");
     }
 
     // Figure out the start `x` and `y` coordinates for note and index.

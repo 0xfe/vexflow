@@ -7,16 +7,15 @@
 // duration and formatted as part of a `Voice` like any other `Note`
 // type in VexFlow. This object would most likely be formatted in a Voice
 // with `TextNotes` - which are used to represent other dynamics markings.
-
-import {Vex} from './vex';
 import {Note} from './note';
 import {TickContext} from './tickcontext';
 import {DrawContext, ICrescendoParams} from "./types/common";
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
+import {LOG, Merge} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args);
+  if (Crescendo.DEBUG) LOG('Vex.Flow.Crescendo', args);
 }
 
 // Private helper to draw the hairpin
@@ -63,7 +62,7 @@ export class Crescendo extends Note {
     // The height at the open end of the cresc/decresc
     this.height = 15;
 
-    Vex.Merge(this.render_options, {
+    Merge(this.render_options, {
       // Extensions to the length of the crescendo on either side
       extend_left: 0,
       extend_right: 0,

@@ -1,14 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Element} from './element';
 import {BoundingBoxComputation} from './boundingboxcomputation';
 import {BoundingBox} from './boundingbox';
 import {DrawContext, ICoordinates} from "./types/common";
-import {Font} from "./smufl";
+import {DefaultFontStack, Font} from "./smufl";
 import {Stave} from "./stave";
 import {IGlyphLookup, IGlyphMetrics, IGlyphOptions} from "./types/glyph";
+import {RuntimeError} from "./runtimeerror";
 
 function processOutline(outline: any[], originX: number, originY: number, scaleX: number, scaleY: number, outlineFns: any) {
   let command;
@@ -84,7 +82,7 @@ export class Glyph extends Element {
 
   static lookupGlyph(fontStack: Font[], code: string): IGlyphLookup {
     if (!fontStack) {
-      throw new Vex.RERR('BAD_FONTSTACK', 'Font stack is misconfigured');
+      throw new RuntimeError('BAD_FONTSTACK', 'Font stack is misconfigured');
     }
 
     let glyph;
@@ -96,7 +94,7 @@ export class Glyph extends Element {
     }
 
     if (!glyph) {
-      throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
+      throw new RuntimeError('BadGlyph', `Glyph ${code} does not exist in font.`);
     }
 
     return {glyph, font};
@@ -149,7 +147,7 @@ export class Glyph extends Element {
         font,
       } as IGlyphMetrics;
     } else {
-      throw new Vex.RERR('BadGlyph', `Glyph ${code} has no outline defined.`);
+      throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);
     }
   }
 
@@ -165,7 +163,7 @@ export class Glyph extends Element {
    */
   static renderGlyph(ctx: DrawContext, x_pos: number, y_pos: number, point: number, val: string, options?: any): IGlyphMetrics {
     const params = {
-      fontStack: Flow.DEFAULT_FONT_STACK,
+      fontStack: DefaultFontStack,
       category: null,
       ...options
     };
@@ -296,7 +294,7 @@ export class Glyph extends Element {
 
   getMetrics(): IGlyphMetrics {
     if (!this.metrics) {
-      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
 
     return {
@@ -328,7 +326,7 @@ export class Glyph extends Element {
 
   render(ctx: DrawContext, x: number, y: number): void {
     if (!this.metrics) {
-      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
 
     const outline = this.metrics.outline;
@@ -346,11 +344,11 @@ export class Glyph extends Element {
     this.checkContext();
 
     if (!this.metrics) {
-      throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
+      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
 
     if (!this.stave) {
-      throw new Vex.RuntimeError('GlyphError', 'No valid stave');
+      throw new RuntimeError('GlyphError', 'No valid stave');
     }
 
     const outline = this.metrics.outline;

@@ -3,16 +3,15 @@
 // ## Description
 // This file implements the `Stem` object. Generally this object is handled
 // by its parent `StemmableNote`.
-
-import {Vex} from './vex';
 import {Element} from './element';
-import {Flow} from './tables';
 import {BoundingBox} from "./boundingbox";
 import {IStemStruct} from "./types/stem";
+import {RuntimeError} from "./runtimeerror";
+import {LOG, STEM_HEIGHT, STEM_WIDTH} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args);
+  if (Stem.DEBUG) LOG('Vex.Flow.Stem', args);
 }
 
 export class Stem extends Element {
@@ -49,11 +48,11 @@ export class Stem extends Element {
 
   // Theme
   static get WIDTH(): number {
-    return Flow.STEM_WIDTH;
+    return STEM_WIDTH;
   }
 
   static get HEIGHT(): number {
-    return Flow.STEM_HEIGHT;
+    return STEM_HEIGHT;
   }
 
   constructor(options = {} as IStemStruct) {
@@ -139,7 +138,7 @@ export class Stem extends Element {
   }
 
   getBoundingBox(): BoundingBox {
-    throw new Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
+    throw new RuntimeError('NotImplemented', 'getBoundingBox() not implemented.');
   }
 
   // Get the y coordinates for the very base of the stem to the top of

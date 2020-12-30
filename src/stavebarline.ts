@@ -1,11 +1,20 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // Author Larry Kuhns 2011
-
-import {Flow} from './tables';
 import {StaveModifier} from './stavemodifier';
 import {Stave} from "./stave";
 import {ILayoutMetrics} from "./types/common";
+import {STAVE_LINE_THICKNESS} from "./flow";
+
+export enum Type {
+  SINGLE = 1,
+  DOUBLE = 2,
+  END = 3,
+  REPEAT_BEGIN = 4,
+  REPEAT_END = 5,
+  REPEAT_BOTH = 6,
+  NONE = 7
+}
 
 export class Barline extends StaveModifier {
   private readonly widths: Record<string, number>;
@@ -13,22 +22,14 @@ export class Barline extends StaveModifier {
   private readonly layoutMetricsMap: Record<number, ILayoutMetrics>;
 
   private thickness: number;
-  private type: number;
+  private type: Type;
 
   static get CATEGORY(): string {
     return 'barlines';
   }
 
-  static get type(): Record<string, number> {
-    return {
-      SINGLE: 1,
-      DOUBLE: 2,
-      END: 3,
-      REPEAT_BEGIN: 4,
-      REPEAT_END: 5,
-      REPEAT_BOTH: 6,
-      NONE: 7,
-    };
+  static get type(): typeof Type {
+    return Type;
   }
 
   static get typeString(): Record<string, number> {
@@ -49,7 +50,7 @@ export class Barline extends StaveModifier {
   constructor(type: number | string) {
     super();
     this.setAttribute('type', 'Barline');
-    this.thickness = Flow.STAVE_LINE_THICKNESS;
+    this.thickness = STAVE_LINE_THICKNESS;
 
     const TYPE = Barline.type;
     this.widths = {};

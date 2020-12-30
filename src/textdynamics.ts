@@ -6,16 +6,16 @@
 //
 // You can render any dynamics string that contains a combination of
 // the following letters:  P, M, F, Z, R, S
-
-import {Vex} from './vex';
 import {Note} from './note';
 import {Glyph} from './glyph';
 import {INoteRenderOptions, IStaveNoteStruct} from "./types/note";
 import {ITextDynamicsGlyph} from "./types/textdynamics";
+import {RuntimeError} from "./runtimeerror";
+import {LOG, Merge} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args);
+  if (TextDynamics.DEBUG) LOG('Vex.Flow.TextDynamics', args);
 }
 
 export class TextDynamics extends Note {
@@ -69,7 +69,7 @@ export class TextDynamics extends Note {
     this.line = text_struct.line || 0;
     this.glyphs = [];
 
-    Vex.Merge(this.render_options, {
+    Merge(this.render_options, {
       glyph_font_size: 40,
     } as INoteRenderOptions);
 
@@ -89,7 +89,7 @@ export class TextDynamics extends Note {
     this.sequence.split('').forEach(letter => {
       // Get the glyph data for the letter
       const glyph_data = TextDynamics.GLYPHS[letter];
-      if (!glyph_data) throw new Vex.RERR('Invalid dynamics character: ' + letter);
+      if (!glyph_data) throw new RuntimeError('Invalid dynamics character: ' + letter);
 
       const size = this.render_options.glyph_font_size;
       const glyph = new Glyph(glyph_data.code, size, {category: 'textNote'});

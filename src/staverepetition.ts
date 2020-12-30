@@ -6,6 +6,21 @@ import {Glyph} from './glyph';
 import {Stave} from "./stave";
 import {IFont} from "./types/font";
 
+export enum Type {
+  NONE = 1,         // no coda or segno
+  CODA_LEFT = 2,    // coda at beginning of stave
+  CODA_RIGHT = 3,   // coda at end of stave
+  SEGNO_LEFT = 4,   // segno at beginning of stave
+  SEGNO_RIGHT = 5,  // segno at end of stave
+  DC = 6,           // D.C. at end of stave
+  DC_AL_CODA = 7,   // D.C. al coda at end of stave
+  DC_AL_FINE = 8,   // D.C. al Fine end of stave
+  DS = 9,           // D.S. at end of stave
+  DS_AL_CODA = 10,  // D.S. al coda at end of stave
+  DS_AL_FINE = 11,  // D.S. al Fine at end of stave
+  FINE = 12         // Fine at end of stave
+}
+
 export class Repetition extends StaveModifier {
   private readonly symbol_type: number;
 
@@ -17,21 +32,8 @@ export class Repetition extends StaveModifier {
     return 'repetitions';
   }
 
-  static get type(): Record<string, number> {
-    return {
-      NONE: 1,         // no coda or segno
-      CODA_LEFT: 2,    // coda at beginning of stave
-      CODA_RIGHT: 3,   // coda at end of stave
-      SEGNO_LEFT: 4,   // segno at beginning of stave
-      SEGNO_RIGHT: 5,  // segno at end of stave
-      DC: 6,           // D.C. at end of stave
-      DC_AL_CODA: 7,   // D.C. al coda at end of stave
-      DC_AL_FINE: 8,   // D.C. al Fine end of stave
-      DS: 9,           // D.S. at end of stave
-      DS_AL_CODA: 10,  // D.S. al coda at end of stave
-      DS_AL_FINE: 11,  // D.S. al Fine at end of stave
-      FINE: 12,        // Fine at end of stave
-    };
+  static get type(): typeof Type {
+    return Type;
   }
 
   constructor(type: number, x: number, y_shift: number) {

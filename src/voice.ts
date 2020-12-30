@@ -4,10 +4,7 @@
 //
 // This file implements the main Voice class. It's mainly a container
 // object to group `Tickables` for formatting.
-
-import {Vex} from './vex';
 import {Element} from './element';
-import {Flow} from './tables';
 import {Fraction} from './fraction';
 import {Stave} from "./stave";
 import {Note} from "./note";
@@ -17,12 +14,20 @@ import {VoiceGroup} from "./voicegroup";
 import {BoundingBox} from "./boundingbox";
 import {IVoiceTime} from "./types/voice";
 import {IStaveOptions} from "./types/stave";
+import {RuntimeError} from "./runtimeerror";
+import {Merge, RESOLUTION} from "./flow";
+
+export enum Mode {
+  STRICT = 1,
+  SOFT = 2,
+  FULL = 3
+}
 
 export class Voice extends Element {
   private resolutionMultiplier: number;
   private smallestTickCount: Fraction;
   private stave: Stave;
-  private mode: number;
+  private mode: Mode;
   private voiceGroup: VoiceGroup;
   private expTicksUsed: number;
   private preFormatted: boolean;
@@ -40,12 +45,8 @@ export class Voice extends Element {
   // SOFT:   Ticks can be added without restrictions.
   // FULL:   Ticks do not need to fill the voice, but can't exceed the maximum
   //         tick length.
-  static get Mode(): Record<string, number> {
-    return {
-      STRICT: 1,
-      SOFT: 2,
-      FULL: 3,
-    };
+  static get Mode(): typeof Mode {
+    return Mode;
   }
 
   constructor(time: IVoiceTime|string, options?: IStaveOptions) {
@@ -64,16 +65,16 @@ export class Voice extends Element {
         time = {
           num_beats: +match[1],
           beat_value: +match[2],
-          resolution: Flow.RESOLUTION,
+          resolution: RESOLUTION,
         };
       }
     }
 
     // Default time sig is 4/4
-    this.time = Vex.Merge({
+    this.time = Merge({
       num_beats: 4,
       beat_value: 4,
-      resolution: Flow.RESOLUTION,
+      resolution: RESOLUTION,
     }, time);
 
     // Recalculate total ticks.
@@ -139,7 +140,7 @@ export class Voice extends Element {
   // Get the actual tick resolution for the voice
   getActualResolution(): number {
     if (typeof (this.time) === 'string') {
-      throw new Vex.RERR('VoiceError', 'Time is of type string');
+      throw new RuntimeError('VoiceError', 'Time is of type string');
     }
     return this.resolutionMultiplier * this.time.resolution;
   }
@@ -159,7 +160,7 @@ export class Voice extends Element {
     let i;
 
     if (!this.boundingBox) {
-      if (!this.stave) throw new Vex.RERR('NoStave', "Can't get bounding box without stave.");
+      if (!this.stave) throw new RuntimeError('NoStave', "Can't get bounding box without stave.");
       stave = this.stave;
       boundingBox = null;
 
@@ -181,7 +182,7 @@ export class Voice extends Element {
   // and preformatters to associate them with the right modifierContexts.
   getVoiceGroup(): VoiceGroup {
     if (!this.voiceGroup) {
-      throw new Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
+      throw new RuntimeError('NoVoiceGroup', 'No voice group for voice.');
     }
 
     return this.voiceGroup;
@@ -251,7 +252,7 @@ export class Voice extends Element {
         this.ticksUsed.greaterThan(this.totalTicks)
       ) {
         this.ticksUsed.subtract(ticks);
-        throw new Vex.RERR('BadArgument', 'Too many ticks.');
+        throw new RuntimeError('BadArgument', 'Too many ticks.');
       }
 
       // Track the smallest tickable for formatting.
@@ -307,7 +308,7 @@ export class Voice extends Element {
       if (stave) (tickable as Note).setStave(stave);
 
       if (!(tickable as Note).getStave()) {
-        throw new Vex.RuntimeError(
+        throw new RuntimeError(
           'MissingStave', 'The voice cannot draw tickables without staves.'
         );
       }

@@ -5,16 +5,15 @@
 //
 // This file implements `VibratoBrackets`
 // that renders vibrato effect between two notes.
-
-import {Vex} from './vex';
 import {Element} from './element';
 import {Vibrato} from './vibrato';
 import {Note} from "./note";
 import {IVibratoBracketData, IVibratoBracketRenderOptions} from "./types/vibratobracket";
+import {LOG} from "./flow";
 
 // To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
 function L(...args: unknown[]) {
-  if (VibratoBracket.DEBUG) Vex.L('Vex.Flow.VibratoBracket', args);
+  if (VibratoBracket.DEBUG) LOG('Vex.Flow.VibratoBracket', args);
 }
 
 export class VibratoBracket extends Element {

@@ -4,13 +4,13 @@
 // A formatter for abstract tickable objects, such as notes, chords,
 // tabs, etc.
 
-import {Vex} from './vex';
 import {Tickable} from './tickable';
 import {Fraction} from './fraction';
 import {Note} from "./note";
 import {IMetrics} from "./types/common";
 import {ModifierContext} from "./modifiercontext";
 import {ITickContextOptions} from "./types/tickcontext";
+import {RuntimeError} from "./runtimeerror";
 
 export class TickContext extends Tickable {
   tContexts: (ModifierContext|TickContext)[];
@@ -175,7 +175,7 @@ export class TickContext extends Tickable {
 
   addTickable(tickable: Note, voiceIndex?: number): this {
     if (!tickable) {
-      throw new Vex.RERR('BadArgument', 'Invalid tickable added.');
+      throw new RuntimeError('BadArgument', 'Invalid tickable added.');
     }
 
     if (!tickable.shouldIgnoreTicks()) {

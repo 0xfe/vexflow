@@ -3,11 +3,10 @@
 // ## Description
 //
 // This file implements tablature bends.
-
-import {Vex} from './vex';
-import {Flow} from './tables';
 import {Modifier} from './modifier';
 import {IBendRenderOptions, IPhrase, IState} from "./types/common";
+import {RuntimeError} from "./runtimeerror";
+import {textWidth} from "./flow";
 
 /**
  @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
@@ -136,7 +135,7 @@ export class Bend extends Modifier {
       if (this.context) {
         text_width = this.context.measureText(text).width;
       } else {
-        text_width = Flow.textWidth(text);
+        text_width = textWidth(text);
       }
 
       return text_width;
@@ -151,7 +150,7 @@ export class Bend extends Modifier {
         const additional_width = (bend.type === Bend.UP) ?
           this.render_options.bend_width : this.render_options.release_width;
 
-        bend.width = Vex.Max(additional_width, measure_text(bend.text)) + 3;
+        bend.width = Math.max(additional_width, measure_text(bend.text)) + 3;
         bend.draw_width = bend.width / 2;
         total_width += bend.width;
       }
@@ -164,7 +163,7 @@ export class Bend extends Modifier {
   draw(): void {
     this.checkContext();
     if (!(this.note && (this.index != null))) {
-      throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
+      throw new RuntimeError('NoNoteForBend', "Can't draw bend without a note or index.");
     }
 
     this.setRendered();

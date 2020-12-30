@@ -5,6 +5,14 @@ import {StaveModifier} from './stavemodifier';
 import {Stave} from "./stave";
 import {IFont} from "./types/font";
 
+export enum Type {
+  NONE = 1,
+  BEGIN = 2,
+  MID = 3,
+  END = 4,
+  BEGIN_END = 5
+}
+
 export class Volta extends StaveModifier {
   private readonly volta: number;
   private readonly number: string;
@@ -16,14 +24,8 @@ export class Volta extends StaveModifier {
     return 'voltas';
   }
 
-  static get type(): Record<string, number> {
-    return {
-      NONE: 1,
-      BEGIN: 2,
-      MID: 3,
-      END: 4,
-      BEGIN_END: 5,
-    };
+  static get type(): typeof Type {
+    return Type;
   }
 
   constructor(type: number, number: string, x: number, y_shift: number) {

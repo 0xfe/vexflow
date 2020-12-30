@@ -1,300 +1,29 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-/* eslint-disable key-spacing */
-
-import {Vex} from './vex';
-import {Fraction} from './fraction';
 import {Glyph} from './glyph';
-import {DefaultFontStack} from './smufl';
 import {
-  IAccItem,
-  ICodeValue, IDurationToTicks,
-  IFlow,
-  IIntegerToNote,
-  IKeyProperties, IKeyPropertiesParams, IKeyProps, IType
+  ICodeValue, IDurationCode, IKeySpec, IType
 } from './types/common';
-import {BoundingBox} from "./boundingbox";
-import {IClefProperties} from "./types/clef";
+import {IClefPropertyValue} from "./types/clef";
 import {INoteValue} from "./types/note";
-import {IArticulation, IArticulationCodes} from "./types/articulation";
-import {IAccidentalCodes} from "./types/accidental";
-import {IKeySignature} from "./types/keysignature";
-import {IOrnamentCodes} from "./types/ornament";
-import {IGlyphProps} from "./types/glyph";
+import {IArticulation} from "./types/articulation";
+import {IAccidental} from "./types/accidental";
+import {DEFAULT_NOTATION_FONT_SCALE, RESOLUTION, SLASH_NOTEHEAD_WIDTH, STEM_HEIGHT} from "./flow";
 
-const Flow = {
-  STEM_WIDTH: 1.5,
-  STEM_HEIGHT: 35,
-  STAVE_LINE_THICKNESS: 1,
-  RESOLUTION: 16384,
-
-  DEFAULT_FONT_STACK: DefaultFontStack,
-  DEFAULT_NOTATION_FONT_SCALE: 39,
-  DEFAULT_TABLATURE_FONT_SCALE: 39,
-  SLASH_NOTEHEAD_WIDTH: 15,
-
-  // HACK:
-  // Since text origins are positioned at the baseline, we must
-  // compensate for the ascender of the text. Of course, 1 staff space is
-  // a very poor approximation.
-  //
-  // This will be deprecated in the future. This is a temporary solution until
-  // we have more robust text metrics.
-  TEXT_HEIGHT_OFFSET_HACK: 1,
-
-  /* Kerning (DEPRECATED) */
-  IsKerned: true,
-} as IFlow;
-
-Flow.clefProperties = function(clef: string) {
-  if (!clef) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
-
-  const props = Flow.clefProperties.values[clef];
-  if (!props) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
-
-  return props;
-} as IClefProperties;
-
-Flow.clefProperties.values = {
-  'treble': {line_shift: 0},
-  'bass': {line_shift: 6},
-  'tenor': {line_shift: 4},
-  'alto': {line_shift: 3},
-  'soprano': {line_shift: 1},
-  'percussion': {line_shift: 0},
-  'mezzo-soprano': {line_shift: 2},
-  'baritone-c': {line_shift: 5},
-  'baritone-f': {line_shift: 5},
-  'subbass': {line_shift: 7},
-  'french': {line_shift: -1},
+export const UNICODE = {
+  // Unicode accidentals
+  'sharp': String.fromCharCode(parseInt('266F', 16)),
+  'flat': String.fromCharCode(parseInt('266D', 16)),
+  'natural': String.fromCharCode(parseInt('266E', 16)),
+  // Major Chord
+  'triangle': String.fromCharCode(parseInt('25B3', 16)),
+  // half-diminished
+  'o-with-slash': String.fromCharCode(parseInt('00F8', 16)),
+  // Diminished
+  'degrees': String.fromCharCode(parseInt('00B0', 16)),
+  'circle': String.fromCharCode(parseInt('25CB', 16)),
 };
-
-/*
-  Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
-
-  The last argument, params, is a struct the currently can contain one option,
-  octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
-*/
-Flow.keyProperties = function(key: string, clef: string, params: IKeyPropertiesParams): IKeyProps {
-  if (clef === undefined) {
-    clef = 'treble';
-  }
-
-  const options = {octave_shift: 0};
-
-  if (typeof params === 'object') {
-    Vex.Merge(options, params);
-  }
-
-  const pieces = key.split('/');
-
-  if (pieces.length < 2) {
-    throw new Vex.RERR('BadArguments', `Key must have note + octave and an optional glyph: ${key}`);
-  }
-
-  const k = pieces[0].toUpperCase();
-  const value = Flow.keyProperties.note_values[k];
-  if (!value) throw new Vex.RERR('BadArguments', 'Invalid key name: ' + k);
-  if (value.octave) pieces[1] = value.octave;
-
-  let octave = parseInt(pieces[1], 10);
-
-  // Octave_shift is the shift to compensate for clef 8va/8vb.
-  octave += -1 * options.octave_shift;
-
-  const base_index = (octave * 7) - (4 * 7);
-  let line = (base_index + value.index) / 2;
-  line += Flow.clefProperties(clef).line_shift;
-
-  let stroke = 0;
-
-  if (line <= 0 && (((line * 2) % 2) === 0)) stroke = 1;  // stroke up
-  if (line >= 6 && (((line * 2) % 2) === 0)) stroke = -1; // stroke down
-
-  // Integer value for note arithmetic.
-  const int_value = typeof (value.int_val) !== 'undefined'
-    ? (octave * 12) + value.int_val
-    : null;
-
-  /* Check if the user specified a glyph. */
-  const code = value.code;
-  const shift_right = value.shift_right;
-  let extraProps: IType = {} as IType;
-  if (pieces.length > 2 && pieces[2]) {
-    const glyph_name = pieces[2].toUpperCase();
-    extraProps = Flow.keyProperties.customNoteHeads[glyph_name] || {} as IType;
-  }
-
-  return {
-    key: k,
-    octave,
-    line,
-    int_value,
-    accidental: value.accidental,
-    code,
-    stroke,
-    shift_right,
-    displaced: false,
-    ...extraProps,
-  } as IKeyProps;
-} as IKeyProperties;
-
-Flow.keyProperties.note_values = {
-  'C': {index: 0, int_val: 0, accidental: null} as INoteValue,
-  'CN': {index: 0, int_val: 0, accidental: 'n'} as INoteValue,
-  'C#': {index: 0, int_val: 1, accidental: '#'} as INoteValue,
-  'C##': {index: 0, int_val: 2, accidental: '##'} as INoteValue,
-  'CB': {index: 0, int_val: -1, accidental: 'b'} as INoteValue,
-  'CBB': {index: 0, int_val: -2, accidental: 'bb'} as INoteValue,
-  'D': {index: 1, int_val: 2, accidental: null} as INoteValue,
-  'DN': {index: 1, int_val: 2, accidental: 'n'} as INoteValue,
-  'D#': {index: 1, int_val: 3, accidental: '#'} as INoteValue,
-  'D##': {index: 1, int_val: 4, accidental: '##'} as INoteValue,
-  'DB': {index: 1, int_val: 1, accidental: 'b'} as INoteValue,
-  'DBB': {index: 1, int_val: 0, accidental: 'bb'} as INoteValue,
-  'E': {index: 2, int_val: 4, accidental: null} as INoteValue,
-  'EN': {index: 2, int_val: 4, accidental: 'n'} as INoteValue,
-  'E#': {index: 2, int_val: 5, accidental: '#'} as INoteValue,
-  'E##': {index: 2, int_val: 6, accidental: '##'} as INoteValue,
-  'EB': {index: 2, int_val: 3, accidental: 'b'} as INoteValue,
-  'EBB': {index: 2, int_val: 2, accidental: 'bb'} as INoteValue,
-  'F': {index: 3, int_val: 5, accidental: null} as INoteValue,
-  'FN': {index: 3, int_val: 5, accidental: 'n'} as INoteValue,
-  'F#': {index: 3, int_val: 6, accidental: '#'} as INoteValue,
-  'F##': {index: 3, int_val: 7, accidental: '##'} as INoteValue,
-  'FB': {index: 3, int_val: 4, accidental: 'b'} as INoteValue,
-  'FBB': {index: 3, int_val: 3, accidental: 'bb'} as INoteValue,
-  'G': {index: 4, int_val: 7, accidental: null} as INoteValue,
-  'GN': {index: 4, int_val: 7, accidental: 'n'} as INoteValue,
-  'G#': {index: 4, int_val: 8, accidental: '#'} as INoteValue,
-  'G##': {index: 4, int_val: 9, accidental: '##'} as INoteValue,
-  'GB': {index: 4, int_val: 6, accidental: 'b'} as INoteValue,
-  'GBB': {index: 4, int_val: 5, accidental: 'bb'} as INoteValue,
-  'A': {index: 5, int_val: 9, accidental: null} as INoteValue,
-  'AN': {index: 5, int_val: 9, accidental: 'n'} as INoteValue,
-  'A#': {index: 5, int_val: 10, accidental: '#'} as INoteValue,
-  'A##': {index: 5, int_val: 11, accidental: '##'} as INoteValue,
-  'AB': {index: 5, int_val: 8, accidental: 'b'} as INoteValue,
-  'ABB': {index: 5, int_val: 7, accidental: 'bb'} as INoteValue,
-  'B': {index: 6, int_val: 11, accidental: null} as INoteValue,
-  'BN': {index: 6, int_val: 11, accidental: 'n'} as INoteValue,
-  'B#': {index: 6, int_val: 12, accidental: '#'} as INoteValue,
-  'B##': {index: 6, int_val: 13, accidental: '##'} as INoteValue,
-  'BB': {index: 6, int_val: 10, accidental: 'b'} as INoteValue,
-  'BBB': {index: 6, int_val: 9, accidental: 'bb'} as INoteValue,
-  'R': {index: 6, int_val: 9, rest: true} as INoteValue, // Rest
-  'X': {
-    index: 6,
-    accidental: '',
-    octave: 4,
-    code: 'noteheadXBlack',
-    shift_right: 5.5,
-  } as INoteValue,
-};
-
-
-Flow.integerToNote = function(integer) {
-  if (typeof (integer) === 'undefined') {
-    throw new Vex.RERR('BadArguments', 'Undefined integer for integerToNote');
-  }
-
-  if (integer < -2) {
-    throw new Vex.RERR('BadArguments', `integerToNote requires integer > -2: ${integer}`);
-  }
-
-  const noteValue = Flow.integerToNote.table[integer];
-  if (!noteValue) {
-    throw new Vex.RERR('BadArguments', `Unknown note value for integer: ${integer}`);
-  }
-
-  return noteValue;
-} as IIntegerToNote;
-
-Flow.integerToNote.table = {
-  0: 'C',
-  1: 'C#',
-  2: 'D',
-  3: 'D#',
-  4: 'E',
-  5: 'F',
-  6: 'F#',
-  7: 'G',
-  8: 'G#',
-  9: 'A',
-  10: 'A#',
-  11: 'B',
-};
-
-Flow.tabToGlyph = (fret: string, scale = 1.0) => {
-  let glyph = null;
-  let width = 0;
-  let shift_y = 0;
-
-  if (fret.toString().toUpperCase() === 'X') {
-    const glyphMetrics = new Glyph('accidentalDoubleSharp', Flow.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
-    glyph = 'accidentalDoubleSharp';
-    width = glyphMetrics.width;
-    shift_y = -glyphMetrics.height / 2;
-  } else {
-    width = Flow.textWidth(fret.toString());
-  }
-
-  return {
-    text: fret,
-    code: glyph,
-    getWidth: () => width * scale,
-    shift_y,
-  };
-};
-
-Flow.textWidth = text => 7 * text.toString().length;
-
-Flow.articulationCodes = function(artic: string): IArticulation {
-  return Flow.articulationCodes.articulations[artic]
-} as IArticulationCodes;
-
-Flow.articulationCodes.articulations = {
-  'a.': {code: 'augmentationDot', between_lines: true} as IArticulation, // Staccato
-  'av': {
-    aboveCode: 'articStaccatissimoAbove',
-    belowCode: 'articStaccatissimoBelow',
-    between_lines: true
-  } as IArticulation, // Staccatissimo
-  'a>': {
-    aboveCode: 'articAccentAbove',
-    belowCode: 'articAccentBelow',
-    between_lines: true
-  } as IArticulation, // Accent
-  'a-': {
-    aboveCode: 'articTenutoAbove',
-    belowCode: 'articTenutoBelow',
-    between_lines: true
-  } as IArticulation, // Tenuto
-  'a^': {
-    aboveCode: 'articMarcatoAbove',
-    belowCode: 'articMarcatoBelow',
-    between_lines: false
-  } as IArticulation, // Marcato
-  'a+': {code: 'pluckedLeftHandPizzicato', between_lines: false} as IArticulation, // Left hand pizzicato
-  'ao': {
-    aboveCode: 'pluckedSnapPizzicatoAbove',
-    belowCode: 'pluckedSnapPizzicatoBelow',
-    between_lines: false
-  } as IArticulation, // Snap pizzicato
-  'ah': {code: 'stringsHarmonic', between_lines: false} as IArticulation, // Natural harmonic or open note
-  'a@': {aboveCode: 'fermataAbove', belowCode: 'fermataBelow', between_lines: false} as IArticulation, // Fermata
-  'a@a': {code: 'fermataAbove', between_lines: false} as IArticulation, // Fermata above staff
-  'a@u': {code: 'fermataBelow', between_lines: false} as IArticulation, // Fermata below staff
-  'a|': {code: 'stringsUpBow', between_lines: false} as IArticulation, // Bow up - up stroke
-  'am': {code: 'stringsDownBow', between_lines: false} as IArticulation, // Bow down - down stroke
-  'a,': {code: 'pictChokeCymbal', between_lines: false} as IArticulation, // Choked
-};
-
-Flow.accidentalCodes = function(acc) {
-  return Flow.accidentalCodes.accidentals[acc];
-} as IAccidentalCodes;
-
-Flow.accidentalCodes.accidentals = {
+export const ACCIDENTALS: Record<string, IAccidental> = {
   '#': {code: 'accidentalSharp', parenRightPaddingAdjustment: -1},
   '##': {code: 'accidentalDoubleSharp', parenRightPaddingAdjustment: -1},
   'b': {code: 'accidentalFlat', parenRightPaddingAdjustment: -2},
@@ -556,44 +285,122 @@ Flow.accidentalCodes.accidentals = {
   'accidentalWilsonPlus': {code: 'accidentalWilsonPlus', parenRightPaddingAdjustment: -1},
   'accidentalWilsonMinus': {code: 'accidentalWilsonMinus', parenRightPaddingAdjustment: -1},
 };
-
-Flow.accidentalColumnsTable = {
-  1: {
-    a: [1],
-    b: [1],
-  },
-  2: {
-    a: [1, 2],
-  },
-  3: {
-    a: [1, 3, 2],
-    b: [1, 2, 1],
-    second_on_bottom: [1, 2, 3],
-  },
-  4: {
-    a: [1, 3, 4, 2],
-    b: [1, 2, 3, 1],
-    spaced_out_tetrachord: [1, 2, 1, 2],
-  },
-  5: {
-    a: [1, 3, 5, 4, 2],
-    b: [1, 2, 4, 3, 1],
-    spaced_out_pentachord: [1, 2, 3, 2, 1],
-    very_spaced_out_pentachord: [1, 2, 1, 2, 1],
-  },
-  6: {
-    a: [1, 3, 5, 6, 4, 2],
-    b: [1, 2, 4, 5, 3, 1],
-    spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
-    very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2],
-  },
+export const CLEF_PROPERTIES_VALUES: Record<string, IClefPropertyValue> = {
+  'treble': {line_shift: 0},
+  'bass': {line_shift: 6},
+  'tenor': {line_shift: 4},
+  'alto': {line_shift: 3},
+  'soprano': {line_shift: 1},
+  'percussion': {line_shift: 0},
+  'mezzo-soprano': {line_shift: 2},
+  'baritone-c': {line_shift: 5},
+  'baritone-f': {line_shift: 5},
+  'subbass': {line_shift: 7},
+  'french': {line_shift: -1},
 };
-
-Flow.ornamentCodes = function(acc): ICodeValue {
-  return Flow.ornamentCodes.ornaments[acc];
-} as IOrnamentCodes;
-
-Flow.ornamentCodes.ornaments = {
+export const ARTICULATIONS: Record<string, IArticulation> = {
+  'a.': {code: 'augmentationDot', between_lines: true} as IArticulation, // Staccato
+  'av': {
+    aboveCode: 'articStaccatissimoAbove',
+    belowCode: 'articStaccatissimoBelow',
+    between_lines: true
+  } as IArticulation, // Staccatissimo
+  'a>': {
+    aboveCode: 'articAccentAbove',
+    belowCode: 'articAccentBelow',
+    between_lines: true
+  } as IArticulation, // Accent
+  'a-': {
+    aboveCode: 'articTenutoAbove',
+    belowCode: 'articTenutoBelow',
+    between_lines: true
+  } as IArticulation, // Tenuto
+  'a^': {
+    aboveCode: 'articMarcatoAbove',
+    belowCode: 'articMarcatoBelow',
+    between_lines: false
+  } as IArticulation, // Marcato
+  'a+': {code: 'pluckedLeftHandPizzicato', between_lines: false} as IArticulation, // Left hand pizzicato
+  'ao': {
+    aboveCode: 'pluckedSnapPizzicatoAbove',
+    belowCode: 'pluckedSnapPizzicatoBelow',
+    between_lines: false
+  } as IArticulation, // Snap pizzicato
+  'ah': {code: 'stringsHarmonic', between_lines: false} as IArticulation, // Natural harmonic or open note
+  'a@': {aboveCode: 'fermataAbove', belowCode: 'fermataBelow', between_lines: false} as IArticulation, // Fermata
+  'a@a': {code: 'fermataAbove', between_lines: false} as IArticulation, // Fermata above staff
+  'a@u': {code: 'fermataBelow', between_lines: false} as IArticulation, // Fermata below staff
+  'a|': {code: 'stringsUpBow', between_lines: false} as IArticulation, // Bow up - up stroke
+  'am': {code: 'stringsDownBow', between_lines: false} as IArticulation, // Bow down - down stroke
+  'a,': {code: 'pictChokeCymbal', between_lines: false} as IArticulation, // Choked
+};
+export const KEY_PROPERTIES_NOTE_VALUES: Record<string, INoteValue> = {
+  'C': {index: 0, int_val: 0, accidental: null} as INoteValue,
+  'CN': {index: 0, int_val: 0, accidental: 'n'} as INoteValue,
+  'C#': {index: 0, int_val: 1, accidental: '#'} as INoteValue,
+  'C##': {index: 0, int_val: 2, accidental: '##'} as INoteValue,
+  'CB': {index: 0, int_val: -1, accidental: 'b'} as INoteValue,
+  'CBB': {index: 0, int_val: -2, accidental: 'bb'} as INoteValue,
+  'D': {index: 1, int_val: 2, accidental: null} as INoteValue,
+  'DN': {index: 1, int_val: 2, accidental: 'n'} as INoteValue,
+  'D#': {index: 1, int_val: 3, accidental: '#'} as INoteValue,
+  'D##': {index: 1, int_val: 4, accidental: '##'} as INoteValue,
+  'DB': {index: 1, int_val: 1, accidental: 'b'} as INoteValue,
+  'DBB': {index: 1, int_val: 0, accidental: 'bb'} as INoteValue,
+  'E': {index: 2, int_val: 4, accidental: null} as INoteValue,
+  'EN': {index: 2, int_val: 4, accidental: 'n'} as INoteValue,
+  'E#': {index: 2, int_val: 5, accidental: '#'} as INoteValue,
+  'E##': {index: 2, int_val: 6, accidental: '##'} as INoteValue,
+  'EB': {index: 2, int_val: 3, accidental: 'b'} as INoteValue,
+  'EBB': {index: 2, int_val: 2, accidental: 'bb'} as INoteValue,
+  'F': {index: 3, int_val: 5, accidental: null} as INoteValue,
+  'FN': {index: 3, int_val: 5, accidental: 'n'} as INoteValue,
+  'F#': {index: 3, int_val: 6, accidental: '#'} as INoteValue,
+  'F##': {index: 3, int_val: 7, accidental: '##'} as INoteValue,
+  'FB': {index: 3, int_val: 4, accidental: 'b'} as INoteValue,
+  'FBB': {index: 3, int_val: 3, accidental: 'bb'} as INoteValue,
+  'G': {index: 4, int_val: 7, accidental: null} as INoteValue,
+  'GN': {index: 4, int_val: 7, accidental: 'n'} as INoteValue,
+  'G#': {index: 4, int_val: 8, accidental: '#'} as INoteValue,
+  'G##': {index: 4, int_val: 9, accidental: '##'} as INoteValue,
+  'GB': {index: 4, int_val: 6, accidental: 'b'} as INoteValue,
+  'GBB': {index: 4, int_val: 5, accidental: 'bb'} as INoteValue,
+  'A': {index: 5, int_val: 9, accidental: null} as INoteValue,
+  'AN': {index: 5, int_val: 9, accidental: 'n'} as INoteValue,
+  'A#': {index: 5, int_val: 10, accidental: '#'} as INoteValue,
+  'A##': {index: 5, int_val: 11, accidental: '##'} as INoteValue,
+  'AB': {index: 5, int_val: 8, accidental: 'b'} as INoteValue,
+  'ABB': {index: 5, int_val: 7, accidental: 'bb'} as INoteValue,
+  'B': {index: 6, int_val: 11, accidental: null} as INoteValue,
+  'BN': {index: 6, int_val: 11, accidental: 'n'} as INoteValue,
+  'B#': {index: 6, int_val: 12, accidental: '#'} as INoteValue,
+  'B##': {index: 6, int_val: 13, accidental: '##'} as INoteValue,
+  'BB': {index: 6, int_val: 10, accidental: 'b'} as INoteValue,
+  'BBB': {index: 6, int_val: 9, accidental: 'bb'} as INoteValue,
+  'R': {index: 6, int_val: 9, rest: true} as INoteValue, // Rest
+  'X': {
+    index: 6,
+    accidental: '',
+    octave: 4,
+    code: 'noteheadXBlack',
+    shift_right: 5.5,
+  } as INoteValue,
+};
+export const INTEGER_TO_NOTE_TABLE: Record<number, string> = {
+  0: 'C',
+  1: 'C#',
+  2: 'D',
+  3: 'D#',
+  4: 'E',
+  5: 'F',
+  6: 'F#',
+  7: 'G',
+  8: 'G#',
+  9: 'A',
+  10: 'A#',
+  11: 'B',
+};
+export const ORNAMENTS: Record<string, ICodeValue> = {
   'mordent': {code: 'ornamentShortTrill'},
   'mordent_inverted': {code: 'ornamentMordent'},
   'turn': {code: 'ornamentTurn'},
@@ -619,30 +426,7 @@ Flow.ornamentCodes.ornaments = {
   'jazzTurn': {code: 'brassJazzTurn'},
   'smear': {code: 'brassSmear'}
 };
-
-Flow.keySignature = function(spec: string): IAccItem[] {
-  const keySpec = Flow.keySignature.keySpecs[spec];
-
-  if (!keySpec) {
-    throw new Vex.RERR('BadKeySignature', `Bad key signature spec: '${spec}'`);
-  }
-
-  if (!keySpec.acc) {
-    return [];
-  }
-
-  const notes = Flow.keySignature.accidentalList(keySpec.acc);
-
-  const acc_list: IAccItem[] = [];
-  for (let i = 0; i < keySpec.num; ++i) {
-    const line = notes[i];
-    acc_list.push({type: keySpec.acc, line});
-  }
-
-  return acc_list;
-} as IKeySignature;
-
-Flow.keySignature.keySpecs = {
+export const KEY_SPECS: Record<string, IKeySpec> = {
   'C': {acc: null, num: 0},
   'Am': {acc: null, num: 0},
   'F': {acc: 'b', num: 1},
@@ -674,22 +458,7 @@ Flow.keySignature.keySpecs = {
   'C#': {acc: '#', num: 7},
   'A#m': {acc: '#', num: 7},
 };
-
-Flow.unicode = {
-  // Unicode accidentals
-  'sharp': String.fromCharCode(parseInt('266F', 16)),
-  'flat': String.fromCharCode(parseInt('266D', 16)),
-  'natural': String.fromCharCode(parseInt('266E', 16)),
-  // Major Chord
-  'triangle': String.fromCharCode(parseInt('25B3', 16)),
-  // half-diminished
-  'o-with-slash': String.fromCharCode(parseInt('00F8', 16)),
-  // Diminished
-  'degrees': String.fromCharCode(parseInt('00B0', 16)),
-  'circle': String.fromCharCode(parseInt('25CB', 16)),
-};
-
-Flow.keySignature.accidentalList = (acc) => {
+export const accidentalList = (acc: string) => {
   const patterns = {
     'b': [2, 0.5, 2.5, 1, 3, 1.5, 3.5],
     '#': [0, 1.5, -0.5, 1, 2.5, 0.5, 2],
@@ -697,56 +466,7 @@ Flow.keySignature.accidentalList = (acc) => {
 
   return patterns[acc];
 };
-
-// Used to convert duration aliases to the number based duration.
-// If the input isn't an alias, simply return the input.
-//
-// example: 'q' -> '4', '8' -> '8'
-Flow.sanitizeDuration = function(duration) {
-  const alias = Flow.durationAliases[duration];
-  if (alias !== undefined) {
-    duration = alias;
-  }
-
-  if (Flow.durationToTicks.durations[duration] === undefined) {
-    throw new Vex.RERR('BadArguments', `The provided duration is not valid: ${duration}`);
-  }
-
-  return duration;
-};
-
-// Convert the `duration` to an fraction
-Flow.durationToFraction = (duration: string) => new Fraction().parse(Flow.sanitizeDuration(duration));
-
-// Convert the `duration` to an number
-Flow.durationToNumber = duration => Flow.durationToFraction(duration).value();
-
-// Convert the `duration` to total ticks
-Flow.durationToTicks = function(duration) {
-  duration = Flow.sanitizeDuration(duration);
-
-  const ticks = Flow.durationToTicks.durations[duration];
-  if (ticks === undefined) {
-    return null;
-  }
-
-  return ticks;
-} as IDurationToTicks;
-
-Flow.durationToTicks.durations = {
-  '1/2': Flow.RESOLUTION * 2,
-  '1': Flow.RESOLUTION,
-  '2': Flow.RESOLUTION / 2,
-  '4': Flow.RESOLUTION / 4,
-  '8': Flow.RESOLUTION / 8,
-  '16': Flow.RESOLUTION / 16,
-  '32': Flow.RESOLUTION / 32,
-  '64': Flow.RESOLUTION / 64,
-  '128': Flow.RESOLUTION / 128,
-  '256': Flow.RESOLUTION / 256,
-};
-
-Flow.durationAliases = {
+export const DURATION_ALIASES: Record<string, string> = {
   'w': '1',
   'h': '2',
   'q': '4',
@@ -758,51 +478,8 @@ Flow.durationAliases = {
   'b': '256',
 };
 
-// Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
-Flow.getGlyphProps = function(duration: string, type?: string) {
-  duration = Flow.sanitizeDuration(duration);
-  type = type || 'n'; // default type is a regular note
-
-  // Lookup duration for default glyph head code
-  const code = Flow.getGlyphProps.duration_codes[duration];
-  if (code === undefined) {
-    return null;
-  }
-
-  // Get glyph properties for 'type' from duration string (note, rest, harmonic, muted, slash)
-  let glyphTypeProperties = code.type[type];
-
-  // If this isn't a standard type, then lookup the custom note head map.
-  if (glyphTypeProperties === undefined) {
-    // Try and get it from the custom list of note heads
-    const customGlyphTypeProperties = Flow.keyProperties.customNoteHeads[type.toUpperCase()];
-
-    // If not, then return with nothing
-    if (customGlyphTypeProperties === undefined) {
-      return null;
-    }
-
-    // Otherwise set it as the code_head value
-    glyphTypeProperties = {
-      code_head: customGlyphTypeProperties.code,
-      ...customGlyphTypeProperties,
-    };
-  }
-
-  // Merge duration props for 'duration' with the note head properties.
-  return {...code.common, ...glyphTypeProperties};
-} as IGlyphProps;
-
-Flow.getGlyphProps.validTypes = {
-  'n': {name: 'note'},
-  'r': {name: 'rest'},
-  'h': {name: 'harmonic'},
-  'm': {name: 'muted'},
-  's': {name: 'slash'},
-};
-
 // Custom note heads
-Flow.keyProperties.customNoteHeads = {
+export const CUSTOM_NOTEHEADS: Record<string, IType> = {
   /* Diamond */
   'D0': {code: 'noteheadDiamondWhole'} as IType,
   'D1': {code: 'noteheadDiamondHalf'} as IType,
@@ -830,19 +507,40 @@ Flow.keyProperties.customNoteHeads = {
   'R2': {code: 'vexNoteHeadRectBlack'} as IType, // no smufl code
 };
 
-Flow.getGlyphProps.duration_codes = {
+export const GLYPH_PROPS_VALID_TYPES: Record<string, Record<string, string>> = {
+  'n': {name: 'note'},
+  'r': {name: 'rest'},
+  'h': {name: 'harmonic'},
+  'm': {name: 'muted'},
+  's': {name: 'slash'},
+};
+
+export const DURATIONS: Record<string, number> = {
+  '1/2': RESOLUTION * 2,
+  '1': RESOLUTION,
+  '2': RESOLUTION / 2,
+  '4': RESOLUTION / 4,
+  '8': RESOLUTION / 8,
+  '16': RESOLUTION / 16,
+  '32': RESOLUTION / 32,
+  '64': RESOLUTION / 64,
+  '128': RESOLUTION / 128,
+  '256': RESOLUTION / 256,
+};
+
+export const DURATION_CODES: Record<string, IDurationCode> = {
   '1/2': {
     common: {
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'v53', scale).getMetrics().width;
       },
       stem: false,
       stem_offset: 0,
       flag: false,
-      stem_up_extension: -Flow.STEM_HEIGHT,
-      stem_down_extension: -Flow.STEM_HEIGHT,
-      tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
-      tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
+      stem_up_extension: -STEM_HEIGHT,
+      stem_down_extension: -STEM_HEIGHT,
+      tabnote_stem_up_extension: -STEM_HEIGHT,
+      tabnote_stem_down_extension: -STEM_HEIGHT,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0,
@@ -866,23 +564,23 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Breve note slash -
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
   },
   '1': {
     common: {
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'v1d', scale).getMetrics().width;
       },
       stem: false,
       stem_offset: 0,
       flag: false,
-      stem_up_extension: -Flow.STEM_HEIGHT,
-      stem_down_extension: -Flow.STEM_HEIGHT,
-      tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
-      tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
+      stem_up_extension: -STEM_HEIGHT,
+      stem_down_extension: -STEM_HEIGHT,
+      tabnote_stem_up_extension: -STEM_HEIGHT,
+      tabnote_stem_down_extension: -STEM_HEIGHT,
       dot_shiftY: 0,
       line_above: 0,
       line_below: 0,
@@ -906,14 +604,14 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Whole note slash
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
   },
   '2': {
     common: {
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'noteheadHalf', scale).getMetrics().width;
       },
       stem: true,
@@ -947,14 +645,14 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Half note slash
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
   },
   '4': {
     common: {
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
       },
       stem: true,
@@ -989,14 +687,14 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Quarter slash
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
   },
   '8': {
     common: {
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
       },
       stem: true,
@@ -1035,7 +733,7 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Eight slash
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
@@ -1043,7 +741,7 @@ Flow.getGlyphProps.duration_codes = {
   '16': {
     common: {
       beam_count: 2,
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
       },
       stem: true,
@@ -1081,7 +779,7 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Sixteenth slash
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
@@ -1089,7 +787,7 @@ Flow.getGlyphProps.duration_codes = {
   '32': {
     common: {
       beam_count: 3,
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
       },
       stem: true,
@@ -1127,7 +825,7 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Thirty-second slash
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
@@ -1135,7 +833,7 @@ Flow.getGlyphProps.duration_codes = {
   '64': {
     common: {
       beam_count: 4,
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
       },
       stem: true,
@@ -1173,7 +871,7 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Sixty-fourth slash
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
@@ -1181,7 +879,7 @@ Flow.getGlyphProps.duration_codes = {
   '128': {
     common: {
       beam_count: 5,
-      getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE) {
+      getWidth(scale = DEFAULT_NOTATION_FONT_SCALE) {
         return new Glyph(this.code_head || 'noteheadBlack', scale).getMetrics().width;
       },
       stem: true,
@@ -1219,20 +917,40 @@ Flow.getGlyphProps.duration_codes = {
       } as IType,
       's': { // Hundred-twenty-eight rest
         // Drawn with canvas primitives
-        getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+        getWidth: () => SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       } as IType,
     },
   },
 };
-
-// Some defaults
-Flow.TIME4_4 = {
-  num_beats: 4,
-  beat_value: 4,
-  resolution: Flow.RESOLUTION,
+export const ACCIDENTAL_COLUMNS_TABLE: Record<number, Record<string, number[]>> = {
+  1: {
+    a: [1],
+    b: [1],
+  },
+  2: {
+    a: [1, 2],
+  },
+  3: {
+    a: [1, 3, 2],
+    b: [1, 2, 1],
+    second_on_bottom: [1, 2, 3],
+  },
+  4: {
+    a: [1, 3, 4, 2],
+    b: [1, 2, 3, 1],
+    spaced_out_tetrachord: [1, 2, 1, 2],
+  },
+  5: {
+    a: [1, 3, 5, 4, 2],
+    b: [1, 2, 4, 3, 1],
+    spaced_out_pentachord: [1, 2, 3, 2, 1],
+    very_spaced_out_pentachord: [1, 2, 1, 2, 1],
+  },
+  6: {
+    a: [1, 3, 5, 6, 4, 2],
+    b: [1, 2, 4, 5, 3, 1],
+    spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
+    very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2],
+  },
 };
-
-Flow.BoundingBox = BoundingBox;
-
-export {Flow};
