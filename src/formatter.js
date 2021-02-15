@@ -386,7 +386,9 @@ export class Formatter {
       .map(tick => {
         const context = contextMap[tick];
         context.preFormat();
-        return context.getWidth();
+        const width =  context.getWidth();
+        const metrics = context.getMetrics();
+        return width + metrics.totalLeftPx;
       })
       .reduce((a, b) => a + b, 0);
 
