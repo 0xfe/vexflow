@@ -74,9 +74,14 @@ Object.keys(VALID_CODES).forEach(k => {
     return;
   }
   const code = glyphCode.codepoint.substring(2);
-  const glyph = font.charToGlyph(String.fromCodePoint(parseInt(code, 16)));
-
-  fontData[k] = toVFPath(glyph);
+  const intCode = String.fromCodePoint(parseInt(code, 16));
+  const testGlyph = font.charToGlyphIndex(intCode);
+  if (testGlyph === 0) {
+    console.log('No glyph for  ' + k);
+  } else {
+    const glyph = font.charToGlyph(intCode);
+    fontData[k] = toVFPath(glyph);
+  }
 });
 
 

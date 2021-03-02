@@ -305,19 +305,25 @@ export class Factory {
 
   ChordSymbol(params) {
     params = setDefaults(params, {
-      text: 'p',
-      vJustify: 'below',
+      vJustify: 'top',
       hJustify: 'center',
-      fontFamily: 'Times',
-      fontSize: 14,
-      fontWeight: 'bold italic',
+      kerning: true,
+      reportWidth: true,
       options: {},
     });
 
-    const chordSymbol = new ChordSymbol(params.text);
-    chordSymbol.setHorizontalJustification(params.hJustify);
-    chordSymbol.setVerticalJustification(params.vJustify);
-    chordSymbol.setFont(params.fontFamily, params.fontSize, params.fontWeight);
+    const chordSymbol = new ChordSymbol();
+    chordSymbol.setHorizontal(params.hJustify);
+    chordSymbol.setVertical(params.vJustify);
+    chordSymbol.setEnableKerning(params.kerning);
+    chordSymbol.setReportWidth(params.reportWidth);
+    // There is a default font based on the engraving font.  Only set then
+    // font if it is specific, else use the default
+    if (typeof(params.fontFamily) === 'string') {
+      chordSymbol.setFont(params.fontFamily, params.fontSize, params.fontWeight);
+    } else if (typeof(params.fontSize) === 'number') {
+      chordSymbol.setFontSize(params.fontSize);
+    }
     chordSymbol.setContext(this.context);
     return chordSymbol;
   }
