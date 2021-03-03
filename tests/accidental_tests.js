@@ -20,6 +20,7 @@ Vex.Flow.Test.Accidental = (function() {
   var Accidental = {
     Start: function() {
       QUnit.module('Accidental');
+      Vex.Flow.Test.runTests('Accidental Padding', Vex.Flow.Test.Accidental.formatAccidentalSpaces);
       Vex.Flow.Test.runTests('Basic', Vex.Flow.Test.Accidental.basic);
       Vex.Flow.Test.runTests('Stem Down', Vex.Flow.Test.Accidental.basicStemDown);
       Vex.Flow.Test.runTests('Cautionary Accidental', Vex.Flow.Test.Accidental.cautionary);
@@ -35,6 +36,80 @@ Vex.Flow.Test.Accidental = (function() {
       Vex.Flow.Test.runTests('Automatic Accidentals - Multi Voice Inline', Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline);
       Vex.Flow.Test.runTests('Automatic Accidentals - Multi Voice Offset', Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset);
       Vex.Flow.Test.runTests('Factory API', Vex.Flow.Test.Accidental.factoryAPI);
+    },
+    formatAccidentalSpaces: function(options) {
+      var vf = VF.Test.makeFactory(options, 750, 280);
+      const context = vf.getContext();
+      var softmaxFactor = 100;
+      // Create the notes
+      var notes = [
+        new VF.StaveNote({
+          keys: ['e##/5'],
+          duration: '8d'
+        }).addAccidental(0, new VF.Accidental('##')).addDotToAll(),
+        new VF.StaveNote({
+          keys: ['b/4'],
+          duration: '16'
+        }).addAccidental(0, new VF.Accidental('b')),
+        new VF.StaveNote({
+          keys: ['f/3'],
+          duration: '8'
+        }),
+        new VF.StaveNote({
+          keys: ['a/3'],
+          duration: '16'
+        }),
+        new VF.StaveNote({
+          keys: ['e/4', 'g/4'],
+          duration: '16'
+        }).addAccidental(0, new VF.Accidental('bb')).addAccidental(1, new VF.Accidental('bb')),
+        new VF.StaveNote({
+          keys: ['d/4'],
+          duration: '16'
+        }),
+        new VF.StaveNote({
+          keys: ['e/4', 'g/4'],
+          duration: '16'
+        }).addAccidental(0, new VF.Accidental('#')).addAccidental(1, new VF.Accidental('#')),
+        new VF.StaveNote({
+          keys: ['g/4'],
+          duration: '32'
+        }),
+        new VF.StaveNote({
+          keys: ['a/4'],
+          duration: '32'
+        }),
+        new VF.StaveNote({
+          keys: ['g/4'],
+          duration: '16'
+        }),
+        new VF.StaveNote({
+          keys: ['d/4'],
+          duration: 'q'
+        })
+      ];
+      var beams = VF.Beam.generateBeams(notes);
+      var voice = new VF.Voice({
+        num_beats: 4,
+        beat_value: 4
+      });
+      voice.addTickables(notes);
+      var formatter = new VF.Formatter({ softmaxFactor }).joinVoices([voice]);
+      var width = formatter.preCalculateMinTotalWidth([voice]);
+      var stave = new VF.Stave(10, 40, width + 20);
+      stave.setContext(context).draw();
+      formatter.format([voice], width);
+      voice.draw(context, stave);
+      beams.forEach(function(b) {
+        b.setContext(context).draw();
+      });
+
+      notes.forEach(function(note) {
+        VF.Test.plotNoteWidth(context, note, 30);
+      });
+
+      VF.Test.plotLegendForNoteWidth(context, 300, 150);
+      ok(true);
     },
 
     basic: function(options) {

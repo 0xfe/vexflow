@@ -11,7 +11,6 @@ VF.Test.Formatter = (function() {
     Start: function() {
       QUnit.module('Formatter');
       test('TickContext Building', Formatter.buildTickContexts);
-      runSVG('Accidental Padding', Formatter.formatAccidentalSpaces);
       runSVG('Justification and alignment with accidentals', Formatter.accidentalJustification);
       runSVG('Vertical alignment - few unaligned beats', Formatter.unalignedNoteDurations);
       runSVG('Vertical alignment - many unaligned beats', Formatter.unalignedNoteDurations2);
@@ -83,80 +82,7 @@ VF.Test.Formatter = (function() {
       equal(tickables1[2].getX(), tickables2[2].getX(), 'Last notes of both voices have the same X');
       ok(tickables1[1].getX() < tickables2[1].getX(), 'Second note of voice 2 is to the right of the second note of voice 1');
     },
-    formatAccidentalSpaces: function(options) {
-      var vf = VF.Test.makeFactory(options, 750, 280);
-      const context = vf.getContext();
-      var softmaxFactor = 100;
-      // Create the notes
-      var notes = [
-        new VF.StaveNote({
-          keys: ['e##/5'],
-          duration: '8d'
-        }).addAccidental(0, new VF.Accidental('##')).addDotToAll(),
-        new VF.StaveNote({
-          keys: ['b/4'],
-          duration: '16'
-        }).addAccidental(0, new VF.Accidental('b')),
-        new VF.StaveNote({
-          keys: ['f/3'],
-          duration: '8'
-        }),
-        new VF.StaveNote({
-          keys: ['a/3'],
-          duration: '16'
-        }),
-        new VF.StaveNote({
-          keys: ['e/4', 'g/4'],
-          duration: '16'
-        }).addAccidental(0, new VF.Accidental('bb')).addAccidental(1, new VF.Accidental('bb')),
-        new VF.StaveNote({
-          keys: ['d/4'],
-          duration: '16'
-        }),
-        new VF.StaveNote({
-          keys: ['e/4', 'g/4'],
-          duration: '16'
-        }).addAccidental(0, new VF.Accidental('#')).addAccidental(1, new VF.Accidental('#')),
-        new VF.StaveNote({
-          keys: ['g/4'],
-          duration: '32'
-        }),
-        new VF.StaveNote({
-          keys: ['a/4'],
-          duration: '32'
-        }),
-        new VF.StaveNote({
-          keys: ['g/4'],
-          duration: '16'
-        }),
-        new VF.StaveNote({
-          keys: ['d/4'],
-          duration: 'q'
-        })
-      ];
-      var beams = VF.Beam.generateBeams(notes);
-      var voice = new VF.Voice({
-        num_beats: 4,
-        beat_value: 4
-      });
-      voice.addTickables(notes);
-      var formatter = new VF.Formatter({ softmaxFactor }).joinVoices([voice]);
-      var width = formatter.preCalculateMinTotalWidth([voice]);
-      var stave = new VF.Stave(10, 40, width + 20);
-      stave.setContext(context).draw();
-      formatter.format([voice], width);
-      voice.draw(context, stave);
-      beams.forEach(function(b) {
-        b.setContext(context).draw();
-      });
 
-      notes.forEach(function(note) {
-        VF.Test.plotNoteWidth(context, note, 30);
-      });
-
-      VF.Test.plotLegendForNoteWidth(context, 300, 150);
-      ok(true);
-    },
 
     accidentalJustification: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 300);
