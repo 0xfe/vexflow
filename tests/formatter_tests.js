@@ -157,7 +157,7 @@ VF.Test.Formatter = (function() {
       beams11.forEach(function(b) {
         b.setContext(ctx).draw();
       });
-      if (voice11.tickables[1].getX() >= voice21.tickables[1].getX()) {
+      if (voice11.tickables[1].getX() <= voice21.tickables[1].getX()) {
         console.warn('Second note of voice 1 is not to the right of the second note of voice 2');
       }
       ok(true);
@@ -204,7 +204,7 @@ VF.Test.Formatter = (function() {
       stave2.setContext(context).draw();
       voice1.draw(context, stave1);
       voice2.draw(context, stave2);
-      if (voice1.tickables[1].getX() >= voice2.tickables[1].getX()) {
+      if (voice1.tickables[1].getX() <= voice2.tickables[1].getX()) {
         console.warn('Second note of voice 1 is not to the right of the second note of voice 2');
       }
 
