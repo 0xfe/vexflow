@@ -104,12 +104,14 @@ VF.Test.Formatter = (function() {
       var width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
       var stave11 = vf.Stave({ y: 20, width: width + 20 });
       var stave21 = vf.Stave({ y: 130, width: width + 20 });
-      formatter.format([voice11, voice21], width);
+      formatter.format([voice11, voice21], width, { maxIterations: 10 });
+
       vf.StaveConnector({
         top_stave: stave11,
         bottom_stave: stave21,
         type: 'brace',
       });
+
       var ctx = vf.getContext();
       stave11.setContext(ctx).draw();
       stave21.setContext(ctx).draw();
@@ -120,6 +122,7 @@ VF.Test.Formatter = (function() {
       });
       ok(true);
     },
+
     unalignedNoteDurations: function(options) {
       var vf = VF.Test.makeFactory(options, 600, 400);
       var score = vf.EasyScore();
@@ -143,7 +146,7 @@ VF.Test.Formatter = (function() {
       var formatter = new VF.Formatter();
       formatter.joinVoices([voice11]);
       formatter.joinVoices([voice21]);
-      var width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
+      var width = formatter.preCalculateMinTotalWidth([voice11, voice21]) + 100;
       var stave11 = vf.Stave({ y: 20, width: width + 20 });
       var stave21 = vf.Stave({ y: 130, width: width + 20 });
       formatter.format([voice11, voice21], width);
@@ -158,10 +161,11 @@ VF.Test.Formatter = (function() {
         b.setContext(ctx).draw();
       });
       if (voice11.tickables[1].getX() <= voice21.tickables[1].getX()) {
-        console.warn('Second note of voice 1 is not to the right of the second note of voice 2');
+        console.warn('unalignedNoteDurations: Second note of voice 1 is not to the right of the second note of voice 2');
       }
       ok(true);
     },
+
     unalignedNoteDurations2: function(options) {
       var notes1 = [
         new VF.StaveNote({ keys: ['b/4'], duration: '8r' }),
@@ -171,6 +175,8 @@ VF.Test.Formatter = (function() {
         new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
         new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
         new VF.StaveNote({ keys: ['e/5'], duration: '16' }),
+        new VF.StaveNote({ keys: ['e/5'], duration: '2' }),
+        /*
         new VF.StaveNote({ keys: ['b/4'], duration: '8r' }),
         new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
         new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
@@ -178,6 +184,7 @@ VF.Test.Formatter = (function() {
         new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
         new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
         new VF.StaveNote({ keys: ['e/5'], duration: '16' }),
+        */
       ];
       var notes2 = [
         new VF.StaveNote({ keys: ['a/4'], duration: '16r' }),
@@ -193,10 +200,12 @@ VF.Test.Formatter = (function() {
       voice1.addTickables(notes1);
       var voice2 = new VF.Voice({ num_beats: 4,  beat_value: 4 });
       voice2.addTickables(notes2);
-      var formatter = new VF.Formatter();
+
+      var formatter = new VF.Formatter({ maxIterations: 0 });
       formatter.joinVoices([voice1]);
       formatter.joinVoices([voice2]);
-      var width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
+      var width = formatter.preCalculateMinTotalWidth([voice1, voice2]) + 200;
+
       formatter.format([voice1, voice2], width + 20);
       var stave1 = new VF.Stave(10, 40, width + 30);
       var stave2 = new VF.Stave(10, 100, width + 30);
@@ -205,7 +214,7 @@ VF.Test.Formatter = (function() {
       voice1.draw(context, stave1);
       voice2.draw(context, stave2);
       if (voice1.tickables[1].getX() <= voice2.tickables[1].getX()) {
-        console.warn('Second note of voice 1 is not to the right of the second note of voice 2');
+        console.warn('unalignedNoteDurations2: Second note of voice 1 is not to the right of the second note of voice 2');
       }
 
       ok(true);
@@ -564,7 +573,7 @@ VF.Test.Formatter = (function() {
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
-        width: 400, debugFormatter: true
+        width: 400, debugFormatter: true, details: { maxIterations: 10 },
       });
 
       system.addStave({
@@ -698,7 +707,7 @@ VF.Test.Formatter = (function() {
 
         var voice1 = new VF.Voice({ num_beats: beats, beat_value: beatsPer }).setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
 
-        var fmt = new VF.Formatter({ softmaxFactor: sm.sm }).joinVoices([voice1]);
+        var fmt = new VF.Formatter({ softmaxFactor: sm.sm, maxIterations: 5 }).joinVoices([voice1]);
         fmt.format([voice1], sm.width - 11);
 
         stave.setContext(context).draw();

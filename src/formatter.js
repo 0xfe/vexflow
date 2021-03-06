@@ -381,14 +381,13 @@ export class Formatter {
 
     const { list: contextList, map: contextMap } = this.tickContexts;
 
+    // const maxTicks = contextList.map(tick => tick.maxTicks.value()).reduce((a, b) => a + b, 0);
     // Go through each tick context and calculate total width.
     this.minTotalWidth = contextList
       .map(tick => {
         const context = contextMap[tick];
         context.preFormat();
-        const width =  context.getWidth();
-        const metrics = context.getMetrics();
-        return width + metrics.totalLeftPx;
+        return context.getWidth();
       })
       .reduce((a, b) => a + b, 0);
 
@@ -568,7 +567,6 @@ export class Formatter {
       // Distribute ticks to the contexts based on the calculated distance error.
       const centerX = adjustedJustifyWidth / 2;
       let spaceAccum = 0;
-      let negativeSpaceAccum = 0;
 
       contextList.forEach((tick, index) => {
         const context = contextMap[tick];
@@ -581,11 +579,11 @@ export class Formatter {
           if (errorPx > 0) {
             spaceAccum += errorPx;
           } else if (errorPx < 0) {
-            negativeShiftPx = Math.min(ideal.maxNegativeShiftPx + negativeSpaceAccum, Math.abs(errorPx));
+            negativeShiftPx = Math.min(ideal.maxNegativeShiftPx, Math.abs(errorPx));
+            spaceAccum += -negativeShiftPx;
           }
 
-          context.setX(x + spaceAccum - negativeShiftPx);
-          negativeSpaceAccum += negativeShiftPx;
+          context.setX(x + spaceAccum);
         }
 
         // Move center aligned tickables to middle
