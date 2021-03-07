@@ -14,7 +14,9 @@ import { Formatter } from './formatter';
 import { Voice } from './voice';
 
 export class NoteSubGroup extends Modifier {
-  static get CATEGORY() { return 'notesubgroup'; }
+  static get CATEGORY() {
+    return 'notesubgroup';
+  }
 
   // Arrange groups inside a `ModifierContext`
   static format(groups, state) {
@@ -39,7 +41,9 @@ export class NoteSubGroup extends Modifier {
     this.index = null;
     this.position = Modifier.Position.LEFT;
     this.subNotes = subNotes;
-    this.subNotes.forEach(subNote => { subNote.ignore_ticks = false; });
+    this.subNotes.forEach((subNote) => {
+      subNote.ignore_ticks = false;
+    });
     this.width = 0;
     this.preFormatted = false;
 
@@ -55,7 +59,9 @@ export class NoteSubGroup extends Modifier {
     return this;
   }
 
-  getCategory() { return NoteSubGroup.CATEGORY; }
+  getCategory() {
+    return NoteSubGroup.CATEGORY;
+  }
 
   preFormat() {
     if (this.preFormatted) return;
@@ -80,15 +86,14 @@ export class NoteSubGroup extends Modifier {
 
     const note = this.getNote();
 
-    if (!(note && (this.index !== null))) {
-      throw new Vex.RuntimeError('NoAttachedNote',
-        "Can't draw notes without a parent note and parent note index.");
+    if (!(note && this.index !== null)) {
+      throw new Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note and parent note index.");
     }
 
     this.setRendered();
     this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
 
     // Draw notes
-    this.subNotes.forEach(subNote => subNote.setContext(this.context).drawWithStyle());
+    this.subNotes.forEach((subNote) => subNote.setContext(this.context).drawWithStyle());
   }
 }

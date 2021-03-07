@@ -3,20 +3,20 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.ModifierContext = (function() {
+VF.Test.ModifierContext = (function () {
   var ModifierContext = {
-    Start: function() {
+    Start: function () {
       QUnit.module('ModifierContext');
       test('Modifier Width Test', ModifierContext.width);
       test('Modifier Management', ModifierContext.management);
     },
 
-    width: function() {
+    width: function () {
       var mc = new VF.ModifierContext();
       equal(mc.getWidth(), 0, 'New modifier context has no width');
     },
 
-    management: function() {
+    management: function () {
       var mc = new VF.ModifierContext();
       var modifier1 = new VF.Modifier();
       var modifier2 = new VF.Modifier();

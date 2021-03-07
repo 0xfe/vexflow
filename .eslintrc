@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "env": { "browser": true },
+  "plugins": ["prettier"],
+  "extends": ["eslint:recommended", "prettier"],
+  "rules": {
+    "no-console": 1, // Means warning
+    "prettier/prettier": 2 // Means error
+  }
+}

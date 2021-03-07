@@ -3,16 +3,16 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.Tuning = (function() {
+VF.Test.Tuning = (function () {
   var Tuning = {
-    Start: function() {
+    Start: function () {
       QUnit.module('Tuning');
       test('Standard Tuning', VF.Test.Tuning.standard);
       test('Standard Banjo Tuning', VF.Test.Tuning.banjo);
       test('Return note for fret', VF.Test.Tuning.noteForFret);
     },
 
-    checkStandard: function(tuning) {
+    checkStandard: function (tuning) {
       try {
         tuning.getValueForString(0);
       } catch (e) {
@@ -33,7 +33,7 @@ VF.Test.Tuning = (function() {
       equal(tuning.getValueForString(1), 64, 'High E string');
     },
 
-    checkStandardBanjo: function(tuning) {
+    checkStandardBanjo: function (tuning) {
       try {
         tuning.getValueForString(0);
       } catch (e) {
@@ -53,7 +53,7 @@ VF.Test.Tuning = (function() {
       equal(tuning.getValueForString(1), 62, 'High D string');
     },
 
-    banjo: function() {
+    banjo: function () {
       expect(7);
 
       var tuning = new VF.Tuning();
@@ -61,7 +61,7 @@ VF.Test.Tuning = (function() {
       VF.Test.Tuning.checkStandardBanjo(tuning);
     },
 
-    standard: function() {
+    standard: function () {
       expect(16);
 
       var tuning = new VF.Tuning();
@@ -72,7 +72,7 @@ VF.Test.Tuning = (function() {
       VF.Test.Tuning.checkStandard(tuning);
     },
 
-    noteForFret: function() {
+    noteForFret: function () {
       expect(8);
       var tuning = new VF.Tuning('E/5,B/4,G/4,D/4,A/3,E/3');
       try {

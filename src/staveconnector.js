@@ -6,13 +6,8 @@ import { Flow } from './tables';
 import { Glyph } from './glyph';
 
 function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
-  if (
-    type !== StaveConnector.type.BOLD_DOUBLE_LEFT &&
-    type !== StaveConnector.type.BOLD_DOUBLE_RIGHT
-  ) {
-    throw new Vex.RERR(
-      'InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.'
-    );
+  if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT && type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
+    throw new Vex.RERR('InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.');
   }
 
   let x_shift = 3;
@@ -85,9 +80,7 @@ export class StaveConnector extends Element {
   }
 
   setType(type) {
-    type = typeof(type) === 'string'
-      ? StaveConnector.typeString[type]
-      : type;
+    type = typeof type === 'string' ? StaveConnector.typeString[type] : type;
 
     if (type >= StaveConnector.type.SINGLE_RIGHT && type <= StaveConnector.type.NONE) {
       this.type = type;
@@ -121,16 +114,14 @@ export class StaveConnector extends Element {
     this.setRendered();
 
     let topY = this.top_stave.getYForLine(0);
-    let botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) +
-      this.thickness;
+    let botY = this.bottom_stave.getYForLine(this.bottom_stave.getNumLines() - 1) + this.thickness;
     let width = this.width;
     let topX = this.top_stave.getX();
 
-    const isRightSidedConnector = (
+    const isRightSidedConnector =
       this.type === StaveConnector.type.SINGLE_RIGHT ||
       this.type === StaveConnector.type.BOLD_DOUBLE_RIGHT ||
-      this.type === StaveConnector.type.THIN_DOUBLE
-    );
+      this.type === StaveConnector.type.THIN_DOUBLE;
 
     if (isRightSidedConnector) {
       topX = this.top_stave.getX() + this.top_stave.width;
@@ -148,7 +139,7 @@ export class StaveConnector extends Element {
         width = 1;
         break;
       case StaveConnector.type.DOUBLE:
-        topX -= (this.width + 2);
+        topX -= this.width + 2;
         topY -= this.thickness;
         attachment_height += 0.5;
         break;
@@ -161,20 +152,20 @@ export class StaveConnector extends Element {
         const y3 = botY;
         const x2 = x1 - width;
         const y2 = y1 + attachment_height / 2.0;
-        const cpx1 = x2 - (0.90 * width);
-        const cpy1 = y1 + (0.2 * attachment_height);
-        const cpx2 = x1 + (1.10 * width);
-        const cpy2 = y2 - (0.135 * attachment_height);
+        const cpx1 = x2 - 0.9 * width;
+        const cpy1 = y1 + 0.2 * attachment_height;
+        const cpx2 = x1 + 1.1 * width;
+        const cpy2 = y2 - 0.135 * attachment_height;
         const cpx3 = cpx2;
-        const cpy3 = y2 + (0.135 * attachment_height);
+        const cpy3 = y2 + 0.135 * attachment_height;
         const cpx4 = cpx1;
-        const cpy4 = y3 - (0.2 * attachment_height);
+        const cpy4 = y3 - 0.2 * attachment_height;
         const cpx5 = x2 - width;
         const cpy5 = cpy4;
-        const cpx6 = x1 + (0.40 * width);
-        const cpy6 = y2 + (0.135 * attachment_height);
+        const cpx6 = x1 + 0.4 * width;
+        const cpy6 = y2 + 0.135 * attachment_height;
         const cpx7 = cpx6;
-        const cpy7 = y2 - (0.135 * attachment_height);
+        const cpy7 = y2 - 0.135 * attachment_height;
         const cpx8 = cpx5;
         const cpy8 = cpy1;
         ctx.beginPath();
@@ -186,13 +177,14 @@ export class StaveConnector extends Element {
         ctx.fill();
         ctx.stroke();
         break;
-      } case StaveConnector.type.BRACKET:
+      }
+      case StaveConnector.type.BRACKET:
         topY -= 6;
         botY += 6;
         attachment_height = botY - topY;
         Glyph.renderGlyph(ctx, topX - 5, topY, 40, 'bracketTop');
         Glyph.renderGlyph(ctx, topX - 5, botY, 40, 'bracketBottom');
-        topX -= (this.width + 2);
+        topX -= this.width + 2;
         break;
       case StaveConnector.type.BOLD_DOUBLE_LEFT:
         drawBoldDoubleLine(ctx, this.type, topX + this.x_shift, topY, botY - this.thickness);
@@ -207,9 +199,7 @@ export class StaveConnector extends Element {
       case StaveConnector.type.NONE:
         break;
       default:
-        throw new Vex.RERR(
-          'InvalidType', `The provided StaveConnector.type (${this.type}) is invalid`
-        );
+        throw new Vex.RERR('InvalidType', `The provided StaveConnector.type (${this.type}) is invalid`);
     }
 
     if (
@@ -234,8 +224,7 @@ export class StaveConnector extends Element {
       const text = this.texts[i];
       const text_width = ctx.measureText('' + text.content).width;
       const x = this.top_stave.getX() - text_width - 24 + text.options.shift_x;
-      const y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 +
-        text.options.shift_y;
+      const y = (this.top_stave.getYForLine(0) + this.bottom_stave.getBottomLineY()) / 2 + text.options.shift_y;
 
       ctx.fillText('' + text.content, x, y + 4);
     }

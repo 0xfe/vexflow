@@ -3,15 +3,15 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.KeyManager = (function() {
+VF.Test.KeyManager = (function () {
   var KeyManager = {
-    Start: function() {
+    Start: function () {
       QUnit.module('KeyManager');
       test('Valid Notes', VF.Test.KeyManager.works);
       test('Select Notes', VF.Test.KeyManager.selectNotes);
     },
 
-    works: function() {
+    works: function () {
       // expect(1);
 
       var manager = new VF.KeyManager('g');
@@ -28,7 +28,7 @@ VF.Test.KeyManager = (function() {
       equal(manager.getAccidental('f').accidental, '#');
     },
 
-    selectNotes: function() {
+    selectNotes: function () {
       var manager = new VF.KeyManager('f');
       equal(manager.selectNote('bb').note, 'bb');
       equal(manager.selectNote('bb').accidental, 'b');

@@ -39,7 +39,10 @@ export class Curve extends Element {
       position: Curve.Position.NEAR_HEAD,
       position_end: Curve.Position.NEAR_HEAD,
       invert: false,
-      cps: [{ x: 0, y: 10 }, { x: 0, y: 10 }],
+      cps: [
+        { x: 0, y: 10 },
+        { x: 0, y: 10 },
+      ],
     };
 
     Vex.Merge(this.render_options, options);
@@ -48,9 +51,7 @@ export class Curve extends Element {
 
   setNotes(from, to) {
     if (!from && !to) {
-      throw new Vex.RuntimeError(
-        'BadArguments', 'Curve needs to have either first_note or last_note set.'
-      );
+      throw new Vex.RuntimeError('BadArguments', 'Curve needs to have either first_note or last_note set.');
     }
 
     this.from = from;
@@ -62,7 +63,7 @@ export class Curve extends Element {
    * @return {boolean} Returns true if this is a partial bar.
    */
   isPartial() {
-    return (!this.from || !this.to);
+    return !this.from || !this.to;
   }
 
   renderCurve(params) {
@@ -84,17 +85,17 @@ export class Curve extends Element {
     ctx.moveTo(first_x, first_y);
     ctx.bezierCurveTo(
       first_x + cp_spacing + cps[0].x,
-      first_y + (cps[0].y * params.direction),
+      first_y + cps[0].y * params.direction,
       last_x - cp_spacing + cps[1].x,
-      last_y + (cps[1].y * params.direction),
+      last_y + cps[1].y * params.direction,
       last_x,
       last_y
     );
     ctx.bezierCurveTo(
       last_x - cp_spacing + cps[1].x,
-      last_y + ((cps[1].y + thickness) * params.direction),
+      last_y + (cps[1].y + thickness) * params.direction,
       first_x + cp_spacing + cps[0].x,
-      first_y + ((cps[0].y + thickness) * params.direction),
+      first_y + (cps[0].y + thickness) * params.direction,
       first_x,
       first_y
     );
@@ -119,9 +120,7 @@ export class Curve extends Element {
     let end_metric = 'baseY';
 
     function getPosition(position) {
-      return typeof(position) === 'string'
-        ? Curve.PositionString[position]
-        : position;
+      return typeof position === 'string' ? Curve.PositionString[position] : position;
     }
     const position = getPosition(this.render_options.position);
     const position_end = getPosition(this.render_options.position_end);

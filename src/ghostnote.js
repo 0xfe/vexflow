@@ -10,22 +10,24 @@ export class GhostNote extends StemmableNote {
   constructor(parameter) {
     // Sanity check
     if (!parameter) {
-      throw new Vex.RuntimeError('BadArguments',
-        'Ghost note must have valid initialization data to identify ' +
-        'duration.');
+      throw new Vex.RuntimeError(
+        'BadArguments',
+        'Ghost note must have valid initialization data to identify ' + 'duration.'
+      );
     }
 
     let note_struct;
 
     // Preserve backwards-compatibility
-    if (typeof (parameter) === 'string') {
+    if (typeof parameter === 'string') {
       note_struct = { duration: parameter };
-    } else if (typeof (parameter) === 'object') {
+    } else if (typeof parameter === 'object') {
       note_struct = parameter;
     } else {
-      throw new Vex.RuntimeError('BadArguments',
-        'Ghost note must have valid initialization data to identify ' +
-        'duration.');
+      throw new Vex.RuntimeError(
+        'BadArguments',
+        'Ghost note must have valid initialization data to identify ' + 'duration.'
+      );
     }
 
     super(note_struct);
@@ -35,13 +37,17 @@ export class GhostNote extends StemmableNote {
     this.setWidth(0);
   }
 
-  isRest() { return true; }
+  isRest() {
+    return true;
+  }
 
   setStave(stave) {
     super.setStave(stave);
   }
 
-  addToModifierContext() { /* intentionally overridden */ return this; }
+  addToModifierContext() {
+    /* intentionally overridden */ return this;
+  }
 
   preFormat() {
     this.setPreFormatted(true);

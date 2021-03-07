@@ -5,21 +5,23 @@ import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
 export class Repetition extends StaveModifier {
-  static get CATEGORY() { return 'repetitions'; }
+  static get CATEGORY() {
+    return 'repetitions';
+  }
   static get type() {
     return {
-      NONE: 1,         // no coda or segno
-      CODA_LEFT: 2,    // coda at beginning of stave
-      CODA_RIGHT: 3,   // coda at end of stave
-      SEGNO_LEFT: 4,   // segno at beginning of stave
-      SEGNO_RIGHT: 5,  // segno at end of stave
-      DC: 6,           // D.C. at end of stave
-      DC_AL_CODA: 7,   // D.C. al coda at end of stave
-      DC_AL_FINE: 8,   // D.C. al Fine end of stave
-      DS: 9,           // D.S. at end of stave
-      DS_AL_CODA: 10,  // D.S. al coda at end of stave
-      DS_AL_FINE: 11,  // D.S. al Fine at end of stave
-      FINE: 12,        // Fine at end of stave
+      NONE: 1, // no coda or segno
+      CODA_LEFT: 2, // coda at beginning of stave
+      CODA_RIGHT: 3, // coda at end of stave
+      SEGNO_LEFT: 4, // segno at beginning of stave
+      SEGNO_RIGHT: 5, // segno at end of stave
+      DC: 6, // D.C. at end of stave
+      DC_AL_CODA: 7, // D.C. al coda at end of stave
+      DC_AL_FINE: 8, // D.C. al Fine end of stave
+      DS: 9, // D.S. at end of stave
+      DS_AL_CODA: 10, // D.S. al coda at end of stave
+      DS_AL_FINE: 11, // D.S. al Fine at end of stave
+      FINE: 12, // Fine at end of stave
     };
   }
 
@@ -38,9 +40,17 @@ export class Repetition extends StaveModifier {
     };
   }
 
-  getCategory() { return Repetition.CATEGORY; }
-  setShiftX(x) { this.x_shift = x; return this; }
-  setShiftY(y) { this.y_shift = y; return this; }
+  getCategory() {
+    return Repetition.CATEGORY;
+  }
+  setShiftX(x) {
+    this.x_shift = x;
+    return this;
+  }
+  setShiftY(y) {
+    this.y_shift = y;
+    return this;
+  }
 
   draw(stave, x) {
     this.setRendered();
@@ -117,7 +127,7 @@ export class Repetition extends StaveModifier {
     } else {
       // Offset Signo text to left stave end
       symbol_x = this.x + x + stave.width - 5 + this.x_shift;
-      text_x = symbol_x - + ctx.measureText(text).width - 12;
+      text_x = symbol_x - +ctx.measureText(text).width - 12;
     }
 
     const y = stave.getYForTopText(stave.options.num_lines) + this.y_shift;

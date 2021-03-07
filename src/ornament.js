@@ -17,18 +17,22 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
-function L(...args) { if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', args); }
+function L(...args) {
+  if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', args);
+}
 
 export class Ornament extends Modifier {
-  static get CATEGORY() { return 'ornaments'; }
+  static get CATEGORY() {
+    return 'ornaments';
+  }
 
   // ## Static Methods
   // Arrange ornaments inside `ModifierContext`
   static format(ornaments, state) {
     if (!ornaments || ornaments.length === 0) return false;
 
-    let width = 0;  // width is used by ornaments, which are always centered on the note head
-    let right_shift = state.right_shift;  // jazz ornaments calculate r/l shift separately
+    let width = 0; // width is used by ornaments, which are always centered on the note head
+    let right_shift = state.right_shift; // jazz ornaments calculate r/l shift separately
     let left_shift = state.left_shift;
     let yOffset = 0;
 
@@ -37,10 +41,10 @@ export class Ornament extends Modifier {
       const increment = 2;
 
       if (Ornament.ornamentRelease.indexOf(ornament.type) >= 0) {
-        ornament.x_shift += (right_shift + 2);
+        ornament.x_shift += right_shift + 2;
       }
       if (Ornament.ornamentAttack.indexOf(ornament.type) >= 0) {
-        ornament.x_shift -= (left_shift + 2);
+        ornament.x_shift -= left_shift + 2;
       }
       if (ornament.reportedWidth && ornament.x_shift < 0) {
         left_shift += ornament.reportedWidth;
@@ -75,8 +79,8 @@ export class Ornament extends Modifier {
 
     // Note: 'legit' ornaments don't consider other modifiers when calculating their
     // X position, but jazz ornaments sometimes need to.
-    state.left_shift = left_shift + (width / 2);
-    state.right_shift = right_shift + (width / 2);
+    state.left_shift = left_shift + width / 2;
+    state.right_shift = right_shift + width / 2;
     return true;
   }
 
@@ -105,9 +109,7 @@ export class Ornament extends Modifier {
   // An ornament that happens on the release of the note, generally placed after the
   // note and overlapping the next beat/measure..
   static get ornamentRelease() {
-    return [
-      'doit', 'fall', 'fallLong', 'doitLong', 'jazzTurn', 'smear', 'flip'
-    ];
+    return ['doit', 'fall', 'fallLong', 'doitLong', 'jazzTurn', 'smear', 'flip'];
   }
 
   // ### ornamentArticulation
@@ -140,7 +142,7 @@ export class Ornament extends Modifier {
     this.render_options = {
       font_scale: 38,
       accidentalLowerPadding: 3,
-      accidentalUpperPadding: 3
+      accidentalUpperPadding: 3,
     };
 
     this.ornament = Flow.ornamentCodes(this.type);
@@ -155,11 +157,9 @@ export class Ornament extends Modifier {
 
     // some jazz ornaments like falls are supposed to overlap with future bars
     // and so we report a different width than they actually take up.
-    this.reportedWidth = (metrics && metrics.reportedWidth) ?
-      metrics.reportedWidth : 0;
+    this.reportedWidth = metrics && metrics.reportedWidth ? metrics.reportedWidth : 0;
 
-    this.stemUpYOffset = (metrics && metrics.stemUpYOffset) ?
-      metrics.stemUpYOffset : 0;
+    this.stemUpYOffset = metrics && metrics.stemUpYOffset ? metrics.stemUpYOffset : 0;
 
     this.ornamentAlignWithNoteHead = Ornament.ornamentAlignWithNoteHead.indexOf(this.type) >= 0;
 
@@ -170,7 +170,9 @@ export class Ornament extends Modifier {
     this.x_shift = metrics ? metrics.xOffset : 0;
     this.y_shift = metrics ? metrics.yOffset : 0;
 
-    this.glyph = new Glyph(this.ornament.code, this.render_options.font_scale, { category: `ornament.${this.ornament.code}` });
+    this.glyph = new Glyph(this.ornament.code, this.render_options.font_scale, {
+      category: `ornament.${this.ornament.code}`,
+    });
 
     // Is this a jazz ornament that goes between this note and the next note.
     if (Ornament.ornamentNoteTransition.indexOf(this.type) >= 0) {
@@ -184,10 +186,15 @@ export class Ornament extends Modifier {
     }
   }
 
-  getCategory() { return Ornament.CATEGORY; }
+  getCategory() {
+    return Ornament.CATEGORY;
+  }
 
   // Set whether the ornament is to be delayed
-  setDelayed(delayed) { this.delayed = delayed; return this; }
+  setDelayed(delayed) {
+    this.delayed = delayed;
+    return this;
+  }
 
   // Set the upper accidental for the ornament
   setUpperAccidental(accid) {
@@ -233,7 +240,8 @@ export class Ornament extends Modifier {
         if (stemDir === StaveNote.STEM_DOWN) {
           y = stave.getYForTopText(this.text_line);
         }
-      } else { // Without a stem
+      } else {
+        // Without a stem
         y = stave.getYForTopText(this.text_line);
       }
     }
@@ -256,8 +264,9 @@ export class Ornament extends Modifier {
 
     // If the ornament is aligned with the note head, don't consider the stave y
     // but use the 'natural' modifier y
-    let glyphY = this.ornamentAlignWithNoteHead ? start.y :
-      Math.min(stave.getYForTopText(this.text_line), glyphYBetweenLines);
+    let glyphY = this.ornamentAlignWithNoteHead
+      ? start.y
+      : Math.min(stave.getYForTopText(this.text_line), glyphYBetweenLines);
     glyphY += this.y_shift;
 
     // Ajdust x position if ornament is delayed
@@ -297,7 +306,7 @@ export class Ornament extends Modifier {
     this.glyph.render(ctx, glyphX + this.x_shift, glyphY);
 
     if (this.accidentalUpper) {
-      glyphY -= (this.glyph.getMetrics().height + this.render_options.accidentalUpperPadding);
+      glyphY -= this.glyph.getMetrics().height + this.render_options.accidentalUpperPadding;
       this.accidentalUpper.render(ctx, glyphX, glyphY);
     }
     this.context.closeGroup();

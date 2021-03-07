@@ -51,7 +51,9 @@ import { TextNote } from './textnote';
 import { TextFont } from './textfont';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
-function L(...args) { if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args); }
+function L(...args) {
+  if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args);
+}
 
 export const X = Vex.MakeException('FactoryError');
 
@@ -100,7 +102,9 @@ export class Factory {
     this.stave = null; // current stave
   }
 
-  getOptions() { return this.options; }
+  getOptions() {
+    return this.options;
+  }
   setOptions(options) {
     for (const key of ['stave', 'renderer', 'font']) {
       Object.assign(this.options[key], options[key]);
@@ -121,13 +125,24 @@ export class Factory {
     this.context = Renderer.buildContext(elementId, backend, width, height, background);
   }
 
-  getContext() { return this.context; }
-  setContext(context) { this.context = context; return this; }
-  getStave() { return this.stave; }
-  getVoices() { return this.voices; }
+  getContext() {
+    return this.context;
+  }
+  setContext(context) {
+    this.context = context;
+    return this;
+  }
+  getStave() {
+    return this.stave;
+  }
+  getVoices() {
+    return this.voices;
+  }
 
   // Returns pixels from current stave spacing.
-  space(spacing) { return this.options.stave.space * spacing; }
+  space(spacing) {
+    return this.options.stave.space * spacing;
+  }
 
   Stave(params) {
     params = setDefaults(params, {
@@ -319,9 +334,9 @@ export class Factory {
     chordSymbol.setReportWidth(params.reportWidth);
     // There is a default font based on the engraving font.  Only set then
     // font if it is specific, else use the default
-    if (typeof(params.fontFamily) === 'string') {
+    if (typeof params.fontFamily === 'string') {
       chordSymbol.setFont(params.fontFamily, params.fontSize, params.fontWeight);
-    } else if (typeof(params.fontSize) === 'number') {
+    } else if (typeof params.fontSize === 'number') {
       chordSymbol.setFontSize(params.fontSize);
     }
     chordSymbol.setContext(this.context);
@@ -427,8 +442,8 @@ export class Factory {
     return connector;
   }
 
-  Formatter() {
-    return new Formatter();
+  Formatter(options) {
+    return new Formatter(options);
   }
 
   Tuplet(params) {
@@ -481,12 +496,15 @@ export class Factory {
       },
     });
 
-    const tie = new StaveTie({
-      first_note: params.from,
-      last_note: params.to,
-      first_indices: params.first_indices,
-      last_indices: params.last_indices,
-    }, params.text);
+    const tie = new StaveTie(
+      {
+        first_note: params.from,
+        last_note: params.to,
+        first_indices: params.first_indices,
+        last_indices: params.last_indices,
+      },
+      params.text
+    );
 
     if (params.options.direction) tie.setDirection(params.options.direction);
     tie.setContext(this.context);
@@ -613,13 +631,13 @@ export class Factory {
   }
 
   draw() {
-    this.systems.forEach(i => i.setContext(this.context).format());
-    this.staves.forEach(i => i.setContext(this.context).draw());
-    this.voices.forEach(i => i.setContext(this.context).draw());
-    this.renderQ.forEach(i => {
+    this.systems.forEach((i) => i.setContext(this.context).format());
+    this.staves.forEach((i) => i.setContext(this.context).draw());
+    this.voices.forEach((i) => i.setContext(this.context).draw());
+    this.renderQ.forEach((i) => {
       if (!i.isRendered()) i.setContext(this.context).draw();
     });
-    this.systems.forEach(i => i.setContext(this.context).draw());
+    this.systems.forEach((i) => i.setContext(this.context).draw());
     this.reset();
   }
 }

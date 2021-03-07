@@ -11,7 +11,9 @@ import { Renderer } from './renderer';
 import { StaveNote } from './stavenote';
 
 export class StringNumber extends Modifier {
-  static get CATEGORY() { return 'stringnumber'; }
+  static get CATEGORY() {
+    return 'stringnumber';
+  }
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
@@ -93,11 +95,11 @@ export class StringNumber extends Modifier {
       if (pos === Modifier.Position.LEFT) {
         num.setXShift(left_shift);
         num_shift = shift_left + num_width; // spacing
-        x_widthL = (num_shift > x_widthL) ? num_shift : x_widthL;
+        x_widthL = num_shift > x_widthL ? num_shift : x_widthL;
       } else if (pos === Modifier.Position.RIGHT) {
         num.setXShift(num_shiftR);
         num_shift += num_width; // spacing
-        x_widthR = (num_shift > x_widthR) ? num_shift : x_widthR;
+        x_widthR = num_shift > x_widthR ? num_shift : x_widthR;
       }
       last_line = line;
       last_note = note;
@@ -123,7 +125,7 @@ export class StringNumber extends Modifier {
     this.x_offset = 0; // Horizontal offset from default
     this.y_offset = 0; // Vertical offset from default
     this.dashed = true; // true - draw dashed extension  false - no extension
-    this.leg = Renderer.LineEndType.NONE;   // draw upward/downward leg at the of extension line
+    this.leg = Renderer.LineEndType.NONE; // draw upward/downward leg at the of extension line
     this.radius = 8;
     this.font = {
       family: 'sans-serif',
@@ -131,11 +133,23 @@ export class StringNumber extends Modifier {
       weight: 'bold',
     };
   }
-  getCategory() { return StringNumber.CATEGORY; }
-  getNote() { return this.note; }
-  setNote(note) { this.note = note; return this; }
-  getIndex() { return this.index; }
-  setIndex(index) { this.index = index; return this; }
+  getCategory() {
+    return StringNumber.CATEGORY;
+  }
+  getNote() {
+    return this.note;
+  }
+  setNote(note) {
+    this.note = note;
+    return this;
+  }
+  getIndex() {
+    return this.index;
+  }
+  setIndex(index) {
+    this.index = index;
+    return this;
+  }
 
   setLineEndType(leg) {
     if (leg >= Renderer.LineEndType.NONE && leg <= Renderer.LineEndType.DOWN) {
@@ -144,15 +158,30 @@ export class StringNumber extends Modifier {
     return this;
   }
 
-  setStringNumber(number) { this.string_number = number; return this; }
-  setOffsetX(x) { this.x_offset = x; return this; }
-  setOffsetY(y) { this.y_offset = y; return this; }
-  setLastNote(note) { this.last_note = note; return this; }
-  setDashed(dashed) { this.dashed = dashed; return this; }
+  setStringNumber(number) {
+    this.string_number = number;
+    return this;
+  }
+  setOffsetX(x) {
+    this.x_offset = x;
+    return this;
+  }
+  setOffsetY(y) {
+    this.y_offset = y;
+    return this;
+  }
+  setLastNote(note) {
+    this.last_note = note;
+    return this;
+  }
+  setDashed(dashed) {
+    this.dashed = dashed;
+    return this;
+  }
 
   draw() {
     const ctx = this.checkContext();
-    if (!(this.note && (this.index != null))) {
+    if (!(this.note && this.index != null)) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
     }
     this.setRendered();
@@ -160,7 +189,7 @@ export class StringNumber extends Modifier {
     const line_space = this.note.stave.options.spacing_between_lines_px;
 
     const start = this.note.getModifierStartXY(this.position, this.index);
-    let dot_x = (start.x + this.x_shift + this.x_offset);
+    let dot_x = start.x + this.x_shift + this.x_offset;
     let dot_y = start.y + this.y_shift + this.y_offset;
 
     switch (this.position) {
@@ -176,28 +205,23 @@ export class StringNumber extends Modifier {
         }
 
         if (this.position === Modifier.Position.ABOVE) {
-          dot_y = this.note.hasStem()
-            ? top - (line_space * 1.75)
-            : start.y - (line_space * 1.75);
+          dot_y = this.note.hasStem() ? top - line_space * 1.75 : start.y - line_space * 1.75;
         } else {
-          dot_y = this.note.hasStem()
-            ? bottom + (line_space * 1.5)
-            : start.y + (line_space * 1.75);
+          dot_y = this.note.hasStem() ? bottom + line_space * 1.5 : start.y + line_space * 1.75;
         }
 
         dot_y += this.y_shift + this.y_offset;
 
         break;
-      } case Modifier.Position.LEFT:
-        dot_x -= (this.radius / 2) + 5;
+      }
+      case Modifier.Position.LEFT:
+        dot_x -= this.radius / 2 + 5;
         break;
       case Modifier.Position.RIGHT:
-        dot_x += (this.radius / 2) + 6;
+        dot_x += this.radius / 2 + 6;
         break;
       default:
-        throw new Vex.RERR(
-          'InvalidPosition', `The position ${this.position} is invalid`
-        );
+        throw new Vex.RERR('InvalidPosition', `The position ${this.position} is invalid`);
     }
 
     ctx.save();

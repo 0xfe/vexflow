@@ -5,7 +5,9 @@
 import { Vex } from './vex';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
-function L(...args) { if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args); }
+function L(...args) {
+  if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args);
+}
 
 export const X = Vex.MakeException('ParserError');
 
@@ -53,9 +55,7 @@ export class Parser {
   // Look for `token` in this.line[this.pos], and return success
   // if one is found. `token` is specified as a regular expression.
   matchToken(token, noSpace = false) {
-    const regexp = noSpace
-      ? new RegExp('^((' + token + '))')
-      : new RegExp('^((' + token + ')\\s*)');
+    const regexp = noSpace ? new RegExp('^((' + token + '))') : new RegExp('^((' + token + ')\\s*)');
     const workingLine = this.line.slice(this.pos);
     const result = workingLine.match(regexp);
     if (result !== null) {
@@ -82,7 +82,7 @@ export class Parser {
 
     let allMatches = true;
     let oneMatch = false;
-    maybe = (maybe === true) || (rule.maybe === true);
+    maybe = maybe === true || rule.maybe === true;
 
     // Execute all sub rules in sequence.
     for (let i = 0; i < rule.expect.length; i++) {
@@ -106,9 +106,10 @@ export class Parser {
     }
 
     const gotOne = (rule.or && oneMatch) || allMatches;
-    const success = gotOne || (maybe === true);
+    const success = gotOne || maybe === true;
     if (maybe && !gotOne) this.pos = pos;
-    if (success) this.matchSuccess(); else this.matchFail(pos);
+    if (success) this.matchSuccess();
+    else this.matchFail(pos);
     return { success, results, numMatches: gotOne ? 1 : 0 };
   }
 
@@ -130,9 +131,10 @@ export class Parser {
       }
     } while (more);
 
-    const success = (numMatches > 0) || (maybe === true);
+    const success = numMatches > 0 || maybe === true;
     if (maybe && !(numMatches > 0)) this.pos = pos;
-    if (success) this.matchSuccess(); else this.matchFail(pos);
+    if (success) this.matchSuccess();
+    else this.matchFail(pos);
     return { success, results, numMatches };
   }
 
@@ -157,7 +159,7 @@ export class Parser {
     if (rule.token) {
       // Base case: parse the regex and throw an error if the
       // line doesn't match.
-      result = this.matchToken(rule.token, (rule.noSpace === true));
+      result = this.matchToken(rule.token, rule.noSpace === true);
       if (result.success) {
         // Token match! Update position and throw away parsed portion
         // of string.
@@ -177,7 +179,7 @@ export class Parser {
 
     // If there's a trigger attached to this rule, then pull it.
     result.matches = [];
-    if (result.results) result.results.forEach(r => result.matches.push(flattenMatches(r)));
+    if (result.results) result.results.forEach((r) => result.matches.push(flattenMatches(r)));
     if (rule.run && result.success) rule.run(result);
     return result;
   }

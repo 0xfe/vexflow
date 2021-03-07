@@ -4,7 +4,9 @@
 import { StaveModifier } from './stavemodifier';
 
 export class StaveSection extends StaveModifier {
-  static get CATEGORY() { return 'stavesection'; }
+  static get CATEGORY() {
+    return 'stavesection';
+  }
 
   constructor(section, x, shift_y) {
     super();
@@ -22,10 +24,21 @@ export class StaveSection extends StaveModifier {
     };
   }
 
-  getCategory() { return StaveSection.CATEGORY; }
-  setStaveSection(section) { this.section = section; return this; }
-  setShiftX(x) { this.shift_x = x; return this; }
-  setShiftY(y) { this.shift_y = y; return this; }
+  getCategory() {
+    return StaveSection.CATEGORY;
+  }
+  setStaveSection(section) {
+    this.section = section;
+    return this;
+  }
+  setShiftX(x) {
+    this.shift_x = x;
+    return this;
+  }
+  setShiftY(y) {
+    this.shift_y = y;
+    return this;
+  }
   draw(stave, shift_x) {
     const ctx = stave.checkContext();
     this.setRendered();
@@ -34,7 +47,7 @@ export class StaveSection extends StaveModifier {
     ctx.lineWidth = 2;
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const text_width = ctx.measureText('' + this.section).width;
-    let width = text_width + 6;  // add left & right padding
+    let width = text_width + 6; // add left & right padding
     if (width < 18) width = 18;
     const height = 20;
     //  Seems to be a good default y

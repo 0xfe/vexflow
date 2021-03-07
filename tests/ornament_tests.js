@@ -4,9 +4,9 @@
   Author: Cyril Silverman
 */
 
-VF.Test.Ornament = (function() {
+VF.Test.Ornament = (function () {
   var Ornament = {
-    Start: function() {
+    Start: function () {
       var runTests = VF.Test.runTests;
       QUnit.module('Ornament');
       runTests('Ornaments', Ornament.drawOrnaments);
@@ -18,7 +18,7 @@ VF.Test.Ornament = (function() {
       runTests('Jazz Ornaments', Ornament.jazzOrnaments);
     },
 
-    drawOrnaments: function(options, contextBuilder) {
+    drawOrnaments: function (options, contextBuilder) {
       expect(0);
 
       // Get the rendering context
@@ -61,7 +61,7 @@ VF.Test.Ornament = (function() {
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     },
 
-    drawOrnamentsDisplaced: function(options, contextBuilder) {
+    drawOrnamentsDisplaced: function (options, contextBuilder) {
       expect(0);
 
       // Get the rendering context
@@ -104,7 +104,7 @@ VF.Test.Ornament = (function() {
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     },
 
-    drawOrnamentsDelayed: function(options, contextBuilder) {
+    drawOrnamentsDelayed: function (options, contextBuilder) {
       expect(0);
 
       // Get the rendering context
@@ -129,7 +129,7 @@ VF.Test.Ornament = (function() {
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     },
 
-    drawOrnamentsDelayedMultipleDraws: function(options, contextBuilder) {
+    drawOrnamentsDelayedMultipleDraws: function (options, contextBuilder) {
       expect(0);
 
       // Get the rendering context
@@ -155,7 +155,7 @@ VF.Test.Ornament = (function() {
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     },
 
-    drawOrnamentsStacked: function(options, contextBuilder) {
+    drawOrnamentsStacked: function (options, contextBuilder) {
       expect(0);
 
       // Get the rendering context
@@ -185,7 +185,7 @@ VF.Test.Ornament = (function() {
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     },
 
-    drawOrnamentsWithAccidentals: function(options, contextBuilder) {
+    drawOrnamentsWithAccidentals: function (options, contextBuilder) {
       expect(0);
 
       // Get the rendering context
@@ -211,7 +211,10 @@ VF.Test.Ornament = (function() {
       notesBar1[0].addModifier(0, new VF.Ornament('mordent').setUpperAccidental('#').setLowerAccidental('#'));
       notesBar1[1].addModifier(0, new VF.Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'));
       notesBar1[2].addModifier(0, new VF.Ornament('turn').setUpperAccidental('##').setLowerAccidental('##'));
-      notesBar1[3].addModifier(0, new VF.Ornament('mordent_inverted').setLowerAccidental('db').setUpperAccidental('db'));
+      notesBar1[3].addModifier(
+        0,
+        new VF.Ornament('mordent_inverted').setLowerAccidental('db').setUpperAccidental('db')
+      );
       notesBar1[4].addModifier(0, new VF.Ornament('turn_inverted').setUpperAccidental('++').setLowerAccidental('++'));
       notesBar1[5].addModifier(0, new VF.Ornament('tr').setUpperAccidental('n').setLowerAccidental('n'));
       notesBar1[6].addModifier(0, new VF.Ornament('prallup').setUpperAccidental('d').setLowerAccidental('d'));
@@ -224,15 +227,17 @@ VF.Test.Ornament = (function() {
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     },
 
-    jazzOrnaments: function(options) {
+    jazzOrnaments: function (options) {
       expect(0);
       var vf = VF.Test.makeFactory(options, 950, 400);
       var ctx = vf.getContext();
-      ctx.scale(1, 1); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      ctx.scale(1, 1);
+      ctx.fillStyle = '#221';
+      ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, modifier, stemDirection) {
         const dot = duration.indexOf('d') >= 0;
-        const rv =  new VF.StaveNote({ keys, duration, stem_direction: stemDirection })
+        const rv = new VF.StaveNote({ keys, duration, stem_direction: stemDirection })
           .addModifier(0, modifier)
           .addAccidental(0, new VF.Accidental('b'));
         if (dot) {
@@ -249,8 +254,7 @@ VF.Test.Ornament = (function() {
       function draw(modifiers, keys, x, width, y, stemDirection) {
         var notes = [];
 
-        var stave = new VF.Stave(x, y, width)
-          .addClef('treble').setContext(ctx).draw();
+        var stave = new VF.Stave(x, y, width).addClef('treble').setContext(ctx).draw();
 
         notes.push(newNote(keys, '4d', modifiers[0], stemDirection));
         notes.push(newNote(keys, '8', modifiers[1], stemDirection));
@@ -263,7 +267,7 @@ VF.Test.Ornament = (function() {
         VF.Beam.generateBeams(notes);
         const voice = new VF.Voice({
           num_beats: 4,
-          beat_value: 4
+          beat_value: 4,
         }).setMode(VF.Voice.Mode.SOFT);
         voice.addTickables(notes);
         const formatter = new VF.Formatter({ softmaxFactor: 2 }).joinVoices([voice]);

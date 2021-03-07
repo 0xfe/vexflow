@@ -10,7 +10,9 @@ import { Glyph } from './glyph';
 
 /** @constructor */
 export class ClefNote extends Note {
-  static get CATEGORY() { return 'clefnote'; }
+  static get CATEGORY() {
+    return 'clefnote';
+  }
 
   constructor(type, size, annotation) {
     super({ duration: 'b' });
@@ -50,7 +52,9 @@ export class ClefNote extends Note {
     return this;
   }
 
-  getCategory() { return ClefNote.CATEGORY; }
+  getCategory() {
+    return ClefNote.CATEGORY;
+  }
 
   preFormat() {
     this.setPreFormatted(true);
@@ -68,8 +72,7 @@ export class ClefNote extends Note {
     const abs_x = this.getAbsoluteX();
 
     this.glyph.setStave(this.stave);
-    this.glyph.setYShift(
-      this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
+    this.glyph.setYShift(this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
     this.glyph.renderToStave(abs_x);
 
     // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
@@ -79,8 +82,7 @@ export class ClefNote extends Note {
         attachment.setContext(this.context);
       }
       attachment.setStave(this.stave);
-      attachment.setYShift(
-        this.stave.getYForLine(this.clef_obj.annotation.line) - this.stave.getYForGlyphs());
+      attachment.setYShift(this.stave.getYForLine(this.clef_obj.annotation.line) - this.stave.getYForGlyphs());
       attachment.setXShift(this.clef_obj.annotation.x_shift);
       attachment.renderToStave(abs_x);
     }

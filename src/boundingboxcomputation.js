@@ -10,7 +10,8 @@
 // nvg.js#L449
 
 export class BoundingBoxComputation {
-  constructor(x1, y1, x2, y2) { // pass in initial points if you want
+  constructor(x1, y1, x2, y2) {
+    // pass in initial points if you want
     this.x1 = Number.NaN;
     this.y1 = Number.NaN;
     this.x2 = Number.NaN;
@@ -61,10 +62,10 @@ export class BoundingBoxComputation {
   }
 
   addQuadraticCurve(p0x, p0y, p1x, p1y, p2x, p2y) {
-    const cp1x = p0x + 2 / 3 * (p1x - p0x); // CP1 = QP0 + 2/3 *(QP1-QP0)
-    const cp1y = p0y + 2 / 3 * (p1y - p0y); // CP1 = QP0 + 2/3 *(QP1-QP0)
-    const cp2x = cp1x + 1 / 3 * (p2x - p0x); // CP2 = CP1 + 1/3 *(QP2-QP0)
-    const cp2y = cp1y + 1 / 3 * (p2y - p0y); // CP2 = CP1 + 1/3 *(QP2-QP0)
+    const cp1x = p0x + (2 / 3) * (p1x - p0x); // CP1 = QP0 + 2/3 *(QP1-QP0)
+    const cp1y = p0y + (2 / 3) * (p1y - p0y); // CP1 = QP0 + 2/3 *(QP1-QP0)
+    const cp2x = cp1x + (1 / 3) * (p2x - p0x); // CP2 = CP1 + 1/3 *(QP2-QP0)
+    const cp2y = cp1y + (1 / 3) * (p2y - p0y); // CP2 = CP1 + 1/3 *(QP2-QP0)
     this.addBezierCurve(p0x, p0y, cp1x, cp1y, cp2x, cp2y, p2x, p2y);
   }
 
@@ -79,7 +80,8 @@ export class BoundingBoxComputation {
     this.addPoint(p0[0], p0[1]);
     this.addPoint(p3[0], p3[1]);
 
-    const f = (t, i) => Math.pow(1 - t, 3) * p0[i] +
+    const f = (t, i) =>
+      Math.pow(1 - t, 3) * p0[i] +
       3 * Math.pow(1 - t, 2) * t * p1[i] +
       3 * (1 - t) * Math.pow(t, 2) * p2[i] +
       Math.pow(t, 3) * p3[i];

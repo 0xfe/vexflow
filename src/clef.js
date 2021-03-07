@@ -12,36 +12,40 @@ import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
 // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
-function L(...args) { if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', args); }
+function L(...args) {
+  if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', args);
+}
 
 export class Clef extends StaveModifier {
-  static get CATEGORY() { return 'clefs'; }
+  static get CATEGORY() {
+    return 'clefs';
+  }
 
   // Every clef name is associated with a glyph code from the font file
   // and a default stave line number.
   static get types() {
     return {
-      'treble': {
+      treble: {
         code: 'gClef',
         line: 3,
       },
-      'bass': {
+      bass: {
         code: 'fClef',
         line: 1,
       },
-      'alto': {
+      alto: {
         code: 'cClef',
         line: 2,
       },
-      'tenor': {
+      tenor: {
         code: 'cClef',
         line: 1,
       },
-      'percussion': {
+      percussion: {
         code: 'restMaxima',
         line: 2,
       },
-      'soprano': {
+      soprano: {
         code: 'cClef',
         line: 4,
       },
@@ -57,15 +61,15 @@ export class Clef extends StaveModifier {
         code: 'fClef',
         line: 2,
       },
-      'subbass': {
+      subbass: {
         code: 'fClef',
         line: 0,
       },
-      'french': {
+      french: {
         code: 'gClef',
         line: 4,
       },
-      'tab': {
+      tab: {
         code: '6stringTabClef',
       },
     };
@@ -83,7 +87,9 @@ export class Clef extends StaveModifier {
     L('Creating clef:', type);
   }
 
-  getCategory() { return Clef.CATEGORY; }
+  getCategory() {
+    return Clef.CATEGORY;
+  }
 
   setType(type, size, annotation) {
     this.type = type;
@@ -95,7 +101,7 @@ export class Clef extends StaveModifier {
     }
     this.clef.point = this.musicFont.lookupMetric(`clef.${this.size}.point`, 0);
     this.glyph = new Glyph(this.clef.code, this.clef.point, {
-      category: `clef.${this.clef.code}.${this.size}`
+      category: `clef.${this.clef.code}.${this.size}`,
     });
 
     // If an annotation, such as 8va, is specified, add it to the Clef object.

@@ -185,25 +185,27 @@ export class StaveLine extends Element {
   }
 
   // Set the font for the `StaveLine` text
-  setFont(font) { this.font = font; return this; }
+  setFont(font) {
+    this.font = font;
+    return this;
+  }
   // The the annotation for the `StaveLine`
-  setText(text) { this.text = text; return this; }
+  setText(text) {
+    this.text = text;
+    return this;
+  }
 
   // Set the notes for the `StaveLine`
   setNotes(notes) {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RuntimeError(
-        'BadArguments', 'Notes needs to have either first_note or last_note set.'
-      );
+      throw new Vex.RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
     }
 
     if (!notes.first_indices) notes.first_indices = [0];
     if (!notes.last_indices) notes.last_indices = [0];
 
     if (notes.first_indices.length !== notes.last_indices.length) {
-      throw new Vex.RuntimeError(
-        'BadArguments', 'Connected notes must have similar index sizes'
-      );
+      throw new Vex.RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
     }
 
     // Success. Lets grab 'em notes.
@@ -304,11 +306,11 @@ export class StaveLine extends Element {
     if (justification === StaveLine.TextJustification.LEFT) {
       x = start_position.x;
     } else if (justification === StaveLine.TextJustification.CENTER) {
-      const delta_x = (end_position.x - start_position.x);
-      const center_x = (delta_x / 2) + start_position.x;
-      x = center_x - (text_width / 2);
+      const delta_x = end_position.x - start_position.x;
+      const center_x = delta_x / 2 + start_position.x;
+      x = center_x - text_width / 2;
     } else if (justification === StaveLine.TextJustification.RIGHT) {
-      x = end_position.x  -  text_width;
+      x = end_position.x - text_width;
     }
 
     // Determine the y value to start the text

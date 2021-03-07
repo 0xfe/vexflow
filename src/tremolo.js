@@ -10,7 +10,9 @@ import { GraceNote } from './gracenote';
 import { Stem } from './stem';
 
 export class Tremolo extends Modifier {
-  static get CATEGORY() { return 'tremolo'; }
+  static get CATEGORY() {
+    return 'tremolo';
+  }
 
   constructor(num) {
     super();
@@ -23,7 +25,9 @@ export class Tremolo extends Modifier {
     this.code = 'tremolo1';
   }
 
-  getCategory() { return Tremolo.CATEGORY; }
+  getCategory() {
+    return Tremolo.CATEGORY;
+  }
 
   draw() {
     this.checkContext();
@@ -37,7 +41,7 @@ export class Tremolo extends Modifier {
 
     const start = this.note.getModifierStartXY(this.position, this.index);
     let x = start.x;
-    const isGraceNote =  this.note.getCategory() === 'gracenotes';
+    const isGraceNote = this.note.getCategory() === 'gracenotes';
     const scale = isGraceNote ? GraceNote.SCALE : 1;
     const category = `tremolo.${isGraceNote ? 'grace' : 'default'}`;
 

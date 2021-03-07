@@ -11,7 +11,9 @@ import { Element } from './element';
 import { Vibrato } from './vibrato';
 
 // To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
-function L(...args) { if (VibratoBracket.DEBUG) Vex.L('Vex.Flow.VibratoBracket', args); }
+function L(...args) {
+  if (VibratoBracket.DEBUG) Vex.L('Vex.Flow.VibratoBracket', args);
+}
 
 export class VibratoBracket extends Element {
   // bracket_data = {
@@ -39,27 +41,31 @@ export class VibratoBracket extends Element {
   }
 
   // Set line position of the vibrato bracket
-  setLine(line) { this.line = line; return this; }
-  setHarsh(harsh) { this.render_options.harsh = harsh; return this; }
+  setLine(line) {
+    this.line = line;
+    return this;
+  }
+  setHarsh(harsh) {
+    this.render_options.harsh = harsh;
+    return this;
+  }
 
   // Draw the vibrato bracket on the rendering context
   draw() {
     const ctx = this.context;
     this.setRendered();
 
-    const y = (this.start)
+    const y = this.start
       ? this.start.getStave().getYForTopText(this.line)
       : this.stop.getStave().getYForTopText(this.line);
 
     // If start note is not set then vibrato will be drawn
     // from the beginning of the stave
-    const start_x = (this.start)
-      ? this.start.getAbsoluteX()
-      : this.stop.getStave().getTieStartX();
+    const start_x = this.start ? this.start.getAbsoluteX() : this.stop.getStave().getTieStartX();
 
     // If stop note is not set then vibrato will be drawn
     // until the end of the stave
-    const stop_x = (this.stop)
+    const stop_x = this.stop
       ? this.stop.getAbsoluteX() - this.stop.getWidth() - 5
       : this.start.getStave().getTieEndX() - 10;
 

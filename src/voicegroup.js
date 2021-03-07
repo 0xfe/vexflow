@@ -11,8 +11,12 @@ export class VoiceGroup {
 
   // Every tickable must be associated with a voiceGroup. This allows formatters
   // and preformatters to associate them with the right modifierContexts.
-  getVoices() { return this.voices; }
-  getModifierContexts() { return this.modifierContexts; }
+  getVoices() {
+    return this.voices;
+  }
+  getModifierContexts() {
+    return this.modifierContexts;
+  }
 
   addVoice(voice) {
     if (!voice) throw new Vex.RERR('BadArguments', 'Voice cannot be null.');

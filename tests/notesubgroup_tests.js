@@ -5,9 +5,9 @@
  * Author Taehoon Moon 2016
  */
 
-VF.Test.NoteSubGroup = (function() {
+VF.Test.NoteSubGroup = (function () {
   var NoteSubGroup = {
-    Start: function() {
+    Start: function () {
       var run = VF.Test.runTests;
 
       QUnit.module('NoteSubGroup');
@@ -18,7 +18,7 @@ VF.Test.NoteSubGroup = (function() {
       run('Multi Staff', VF.Test.NoteSubGroup.drawMultiStaff);
     },
 
-    draw: function(options) {
+    draw: function (options) {
       var vf = VF.Test.makeFactory(options, 750, 200);
       var ctx = vf.getContext();
       var stave = vf.Stave({ width: 600 }).addClef('treble');
@@ -46,35 +46,22 @@ VF.Test.NoteSubGroup = (function() {
       addAccidental(notes[1], '#');
       addAccidental(notes[2], 'n');
 
-      addSubGroup(notes[1], [
-        vf.ClefNote({ type: 'bass', options: { size: 'small' } }),
-      ]);
-      addSubGroup(notes[2], [
-        vf.ClefNote({ type: 'alto', options: { size: 'small' } }),
-      ]);
-      addSubGroup(notes[4], [
-        vf.ClefNote({ type: 'tenor', options: { size: 'small' } }),
-        new VF.BarNote(),
-      ]);
-      addSubGroup(notes[5], [
-        vf.TimeSigNote({ time: '6/8' }),
-      ]);
-      addSubGroup(notes[6], [
-        new VF.BarNote(VF.Barline.type.REPEAT_BEGIN),
-      ]);
+      addSubGroup(notes[1], [vf.ClefNote({ type: 'bass', options: { size: 'small' } })]);
+      addSubGroup(notes[2], [vf.ClefNote({ type: 'alto', options: { size: 'small' } })]);
+      addSubGroup(notes[4], [vf.ClefNote({ type: 'tenor', options: { size: 'small' } }), new VF.BarNote()]);
+      addSubGroup(notes[5], [vf.TimeSigNote({ time: '6/8' })]);
+      addSubGroup(notes[6], [new VF.BarNote(VF.Barline.type.REPEAT_BEGIN)]);
 
       addAccidental(notes[4], 'b');
       addAccidental(notes[6], 'bb');
 
       var voice = vf.Voice().setStrict(false).addTickables(notes);
 
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 
-      notes.forEach(function(note) {
+      notes.forEach(function (note) {
         Vex.Flow.Test.plotNoteWidth(ctx, note, 150);
       });
 
@@ -83,7 +70,7 @@ VF.Test.NoteSubGroup = (function() {
       ok(true, 'all pass');
     },
 
-    drawMultiVoice: function(options) {
+    drawMultiVoice: function (options) {
       var vf = VF.Test.makeFactory(options, 550, 200);
       var ctx = vf.getContext();
       var stave = vf.Stave().addClef('treble');
@@ -121,25 +108,18 @@ VF.Test.NoteSubGroup = (function() {
         vf.TimeSigNote({ time: '9/8' }),
         new VF.BarNote(VF.Barline.type.DOUBLE),
       ]);
-      addSubGroup(notes1[3], [
-        vf.ClefNote({ type: 'soprano', options: { size: 'small' } }),
-      ]);
+      addSubGroup(notes1[3], [vf.ClefNote({ type: 'soprano', options: { size: 'small' } })]);
 
       addAccidental(notes1[2], 'b');
       addAccidental(notes2[3], '#');
 
-      var voices = [
-        vf.Voice().addTickables(notes1),
-        vf.Voice().addTickables(notes2),
-      ];
+      var voices = [vf.Voice().addTickables(notes1), vf.Voice().addTickables(notes2)];
 
-      vf.Formatter()
-        .joinVoices(voices)
-        .formatToStave(voices, stave);
+      vf.Formatter().joinVoices(voices).formatToStave(voices, stave);
 
       vf.draw();
 
-      notes1.forEach(function(note) {
+      notes1.forEach(function (note) {
         Vex.Flow.Test.plotNoteWidth(ctx, note, 150);
       });
 
@@ -147,7 +127,7 @@ VF.Test.NoteSubGroup = (function() {
     },
 
     // draws multiple times. prevents incremental x-shift each draw.
-    drawMultiVoiceMultipleDraw: function(options) {
+    drawMultiVoiceMultipleDraw: function (options) {
       var vf = VF.Test.makeFactory(options, 550, 200);
       var ctx = vf.getContext();
       var stave = vf.Stave().addClef('treble');
@@ -185,33 +165,26 @@ VF.Test.NoteSubGroup = (function() {
         vf.TimeSigNote({ time: '9/8' }),
         new VF.BarNote(VF.Barline.type.DOUBLE),
       ]);
-      addSubGroup(notes1[3], [
-        vf.ClefNote({ type: 'soprano', options: { size: 'small' } }),
-      ]);
+      addSubGroup(notes1[3], [vf.ClefNote({ type: 'soprano', options: { size: 'small' } })]);
 
       addAccidental(notes1[2], 'b');
       addAccidental(notes2[3], '#');
 
-      var voices = [
-        vf.Voice().addTickables(notes1),
-        vf.Voice().addTickables(notes2),
-      ];
+      var voices = [vf.Voice().addTickables(notes1), vf.Voice().addTickables(notes2)];
 
-      vf.Formatter()
-        .joinVoices(voices)
-        .formatToStave(voices, stave);
+      vf.Formatter().joinVoices(voices).formatToStave(voices, stave);
 
       vf.draw();
       vf.draw();
 
-      notes1.forEach(function(note) {
+      notes1.forEach(function (note) {
         Vex.Flow.Test.plotNoteWidth(ctx, note, 150);
       });
 
       ok(true, 'all pass');
     },
 
-    drawMultiStaff: function(options) {
+    drawMultiStaff: function (options) {
       var vf = VF.Test.makeFactory(options, 550, 400);
 
       vf.StaveNote = vf.StaveNote.bind(vf);
@@ -280,10 +253,7 @@ VF.Test.NoteSubGroup = (function() {
       var voice2 = vf.Voice().addTickables(notes2);
       var voice3 = vf.Voice().addTickables(notes3);
 
-      vf.Formatter()
-        .joinVoices([voice, voice2])
-        .joinVoices([voice3])
-        .formatToStave([voice, voice2, voice3], stave1);
+      vf.Formatter().joinVoices([voice, voice2]).joinVoices([voice3]).formatToStave([voice, voice2, voice3], stave1);
 
       vf.draw();
 

@@ -11,10 +11,14 @@ import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 
 // To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`.
-function L(...args) { if (TextFont.DEBUG) Vex.L('Vex.Flow.TextFont', args); }
+function L(...args) {
+  if (TextFont.DEBUG) Vex.L('Vex.Flow.TextFont', args);
+}
 
-export class TextFont  {
-  static get CATEGORY() { return 'textFont'; }
+export class TextFont {
+  static get CATEGORY() {
+    return 'textFont';
+  }
 
   static get DEBUG() {
     return TextFont.debug;
@@ -71,8 +75,13 @@ export class TextFont  {
     const rv = [];
     TextFont.fontRegistry.forEach((font) => {
       if (!hash[font.family]) {
-        hash[font.family] = { family: font.family, description: font.description,
-          bold: font.bold, serifs: font.serifs, italic: font.italic };
+        hash[font.family] = {
+          family: font.family,
+          description: font.description,
+          bold: font.bold,
+          serifs: font.serifs,
+          italic: font.italic,
+        };
       } else {
         ['bold', 'italic', 'monospaced', 'serifs'].forEach((attr) => {
           if (font[attr]) {
@@ -105,8 +114,8 @@ export class TextFont  {
   // ### fontStyleToItalic
   // return true if the font style indicates we desire 'italic' style
   // used in getTextFontFromVexFontData
-  static  fontStyleToItalic(fs) {
-    return (fs && typeof(fs) === 'string' && fs.toLowerCase() === 'italic');
+  static fontStyleToItalic(fs) {
+    return fs && typeof fs === 'string' && fs.toLowerCase() === 'italic';
   }
 
   // ### getTextFontFromVexFontData
@@ -145,7 +154,7 @@ export class TextFont  {
     return new TextFont(candidates[0]);
   }
 
-  static getFontDataByName(fontName)  {
+  static getFontDataByName(fontName) {
     return TextFont.fontRegistry.find((fd) => fd.name === fontName);
   }
 
@@ -173,7 +182,7 @@ export class TextFont  {
   // The preferred method for returning an instance of this class is via
   // getTextFontFromVexFontData
   constructor(params) {
-    this.attrs = { 'type': 'TextFont' };
+    this.attrs = { type: 'TextFont' };
     if (!params.name) {
       Vex.RERR('BadArgument', 'Font constructor must specify a name');
     }
@@ -206,7 +215,7 @@ export class TextFont  {
 
   get maxHeight() {
     const glyph = this.getMetricForCharacter(this.maxSizeGlyph);
-    return  (glyph.ha / this.resolution) *  this.pointsToPixels;
+    return (glyph.ha / this.resolution) * this.pointsToPixels;
   }
 
   getWidthForCharacter(c) {
@@ -220,7 +229,7 @@ export class TextFont  {
   // ### pointsToPixels
   // The font size is specified in points, convert to 'pixels' in the svg space
   get pointsToPixels() {
-    return (this.size / 72) / (1 / 96);
+    return this.size / 72 / (1 / 96);
   }
 
   setFontSize(size) {

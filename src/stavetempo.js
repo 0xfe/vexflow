@@ -7,7 +7,9 @@ import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
 export class StaveTempo extends StaveModifier {
-  static get CATEGORY() { return 'stavetempo'; }
+  static get CATEGORY() {
+    return 'stavetempo';
+  }
 
   constructor(tempo, x, shift_y) {
     super();
@@ -24,13 +26,24 @@ export class StaveTempo extends StaveModifier {
       weight: 'bold',
     };
     this.render_options = {
-      glyph_font_scale: 30,  // font size for note
+      glyph_font_scale: 30, // font size for note
     };
   }
-  getCategory() { return StaveTempo.CATEGORY; }
-  setTempo(tempo) { this.tempo = tempo; return this; }
-  setShiftX(x) { this.shift_x = x; return this; }
-  setShiftY(y) { this.shift_y = y; return this; }
+  getCategory() {
+    return StaveTempo.CATEGORY;
+  }
+  setTempo(tempo) {
+    this.tempo = tempo;
+    return this;
+  }
+  setShiftX(x) {
+    this.shift_x = x;
+    return this;
+  }
+  setShiftY(y) {
+    this.shift_y = y;
+    return this;
+  }
 
   draw(stave, shift_x) {
     const ctx = stave.checkContext();
@@ -83,8 +96,9 @@ export class StaveTempo extends StaveModifier {
         ctx.fillRect(x - scale, y_top, scale, stem_height);
 
         if (code.flag) {
-          Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale,
-            code.code_flag_upstem, { category: 'flag.staveTempo' });
+          Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, code.code_flag_upstem, {
+            category: 'flag.staveTempo',
+          });
 
           if (!dots) x += 6 * scale;
         }

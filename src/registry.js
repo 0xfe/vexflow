@@ -27,7 +27,9 @@ function setIndexValue(index, name, value, id, elem) {
 }
 
 export class Registry {
-  static get INDEXES() { return ['type']; }
+  static get INDEXES() {
+    return ['type'];
+  }
 
   constructor() {
     this.clear();
@@ -77,13 +79,13 @@ export class Registry {
     id = id || elem.getAttribute('id');
 
     if (!id) {
-      throw new X('Can\'t add element without `id` attribute to registry', elem);
+      throw new X("Can't add element without `id` attribute to registry", elem);
     }
 
     // Manually add id to index, then update other indexes.
     elem.setAttribute('id', id);
     setIndexValue(this.index, 'id', id, id, elem);
-    Registry.INDEXES.forEach(name => {
+    Registry.INDEXES.forEach((name) => {
       this.updateIndex({ id, name, value: elem.getAttribute(name), oldValue: null });
     });
     elem.onRegister(this);
@@ -97,20 +99,24 @@ export class Registry {
   getElementsByAttribute(attrName, value) {
     const index = this.index[attrName];
     if (index && index[value]) {
-      return Object.keys(index[value]).map(i => index[value][i]);
+      return Object.keys(index[value]).map((i) => index[value][i]);
     } else {
       return [];
     }
   }
 
-  getElementsByType(type) { return this.getElementsByAttribute('type', type); }
-  getElementsByClass(className) { return this.getElementsByAttribute('class', className); }
+  getElementsByType(type) {
+    return this.getElementsByAttribute('type', type);
+  }
+  getElementsByClass(className) {
+    return this.getElementsByAttribute('class', className);
+  }
 
   // This is called by the element when an attribute value changes. If an indexed
   // attribute changes, then update the local index.
   onUpdate({ id, name, value, oldValue }) {
     function includes(array, value) {
-      return array.filter(x => x === value).length > 0;
+      return array.filter((x) => x === value).length > 0;
     }
 
     if (!includes(Registry.INDEXES.concat(['id', 'class']), name)) return this;

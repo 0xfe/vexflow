@@ -8,7 +8,7 @@ export class GlyphNote extends Note {
     this.options = {
       ignoreTicks: false,
       line: 2,
-      ...options
+      ...options,
     };
     this.setAttribute('type', 'GlyphNote');
 
@@ -52,7 +52,7 @@ export class GlyphNote extends Note {
     this.glyph.setStave(this.stave);
     this.glyph.setYShift(this.stave.getYForLine(this.options.line) - this.stave.getYForGlyphs());
 
-    const x = this.isCenterAligned() ? this.getAbsoluteX() - (this.getWidth() / 2) : this.getAbsoluteX();
+    const x = this.isCenterAligned() ? this.getAbsoluteX() - this.getWidth() / 2 : this.getAbsoluteX();
     this.glyph.renderToStave(x);
   }
 }

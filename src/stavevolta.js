@@ -4,7 +4,9 @@
 import { StaveModifier } from './stavemodifier';
 
 export class Volta extends StaveModifier {
-  static get CATEGORY() { return 'voltas'; }
+  static get CATEGORY() {
+    return 'voltas';
+  }
   static get type() {
     return {
       NONE: 1,
@@ -29,8 +31,13 @@ export class Volta extends StaveModifier {
     };
   }
 
-  getCategory() { return Volta.CATEGORY; }
-  setShiftY(y) { this.y_shift = y; return this; }
+  getCategory() {
+    return Volta.CATEGORY;
+  }
+  setShiftY(y) {
+    this.y_shift = y;
+    return this;
+  }
 
   draw(stave, x) {
     const ctx = stave.checkContext();

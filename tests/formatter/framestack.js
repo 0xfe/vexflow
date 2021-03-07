@@ -7,7 +7,7 @@ class FrameStack {
       width: 700,
       height: 800,
       iterationCallback: null,
-      ...params
+      ...params,
     };
 
     this.frames = [];
@@ -66,7 +66,7 @@ class FrameStack {
     };
 
     this.animationTimer = setInterval(() => {
-      const frame = (this.currentFrame + 1) === this.numFrames ? 0 : this.currentFrame + 1;
+      const frame = this.currentFrame + 1 === this.numFrames ? 0 : this.currentFrame + 1;
       this.show(frame);
       if (this.options.iterationCallback) this.options.iterationCallback(frame);
     }, options.intervalms);

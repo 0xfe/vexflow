@@ -3,9 +3,9 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.Clef = (function() {
+VF.Test.Clef = (function () {
   var Clef = {
-    Start: function() {
+    Start: function () {
       QUnit.module('Clef');
       VF.Test.runTests('Clef Test', VF.Test.Clef.draw);
       VF.Test.runTests('Clef End Test', VF.Test.Clef.drawEnd);
@@ -14,7 +14,7 @@ VF.Test.Clef = (function() {
       VF.Test.runTests('Clef Change Test', VF.Test.Clef.drawClefChange);
     },
 
-    draw: function(options) {
+    draw: function (options) {
       var vf = VF.Test.makeFactory(options, 800, 120);
 
       vf.Stave()
@@ -39,7 +39,7 @@ VF.Test.Clef = (function() {
       ok(true, 'all pass');
     },
 
-    drawEnd: function(options) {
+    drawEnd: function (options) {
       var vf = VF.Test.makeFactory(options, 800, 120);
 
       vf.Stave()
@@ -64,7 +64,7 @@ VF.Test.Clef = (function() {
       ok(true, 'all pass');
     },
 
-    drawSmall: function(options) {
+    drawSmall: function (options) {
       var vf = VF.Test.makeFactory(options, 800, 120);
 
       vf.Stave()
@@ -89,7 +89,7 @@ VF.Test.Clef = (function() {
       ok(true, 'all pass');
     },
 
-    drawSmallEnd: function(options) {
+    drawSmallEnd: function (options) {
       var vf = VF.Test.makeFactory(options, 800, 120);
 
       vf.Stave()
@@ -114,7 +114,7 @@ VF.Test.Clef = (function() {
       ok(true, 'all pass');
     },
 
-    drawClefChange: function(options) {
+    drawClefChange: function (options) {
       var vf = VF.Test.makeFactory(options, 800, 180);
       var stave = vf.Stave().addClef('treble');
 
@@ -146,9 +146,7 @@ VF.Test.Clef = (function() {
 
       var voice = vf.Voice({ time: '12/4' }).addTickables(notes);
 
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 

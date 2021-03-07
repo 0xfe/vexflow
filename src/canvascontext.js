@@ -21,10 +21,7 @@ export class CanvasContext {
 
   static SanitizeCanvasDims(width, height) {
     if (Math.max(width, height) > this.CANVAS_BROWSER_SIZE_LIMIT) {
-      Vex.W(
-        'Canvas dimensions exceed browser limit. Cropping to ' +
-        this.CANVAS_BROWSER_SIZE_LIMIT
-      );
+      Vex.W('Canvas dimensions exceed browser limit. Cropping to ' + this.CANVAS_BROWSER_SIZE_LIMIT);
       if (width > this.CANVAS_BROWSER_SIZE_LIMIT) {
         width = this.CANVAS_BROWSER_SIZE_LIMIT;
         // note: Math.min return 0 for undefined, NaN for null. Would change inputs.

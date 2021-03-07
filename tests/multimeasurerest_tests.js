@@ -3,15 +3,15 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.MultiMeasureRest = (function() {
+VF.Test.MultiMeasureRest = (function () {
   return {
-    Start: function() {
+    Start: function () {
       QUnit.module('MultiMeasureRest');
       VF.Test.runTests('Simple Test', VF.Test.MultiMeasureRest.simple0);
       VF.Test.runTests('Stave with modifiers Test', VF.Test.MultiMeasureRest.staveWithModifiers);
     },
 
-    simple0: function(options) {
+    simple0: function (options) {
       const width = 910;
       const vf = VF.Test.makeFactory(options, width, 300);
       const params = [
@@ -33,31 +33,33 @@ VF.Test.MultiMeasureRest = (function() {
         { number_of_measures: 11, use_symbols: true, symbol_spacing: 5 },
         { number_of_measures: 11, use_symbols: false, line: 3, number_line: 2 },
         { number_of_measures: 11, use_symbols: true, line: 3, number_line: 2 },
-        [{ options: { spacing_between_lines_px: 15 } },
-          { number_of_measures: 12 },
-        ],
-        [{ options: { spacing_between_lines_px: 15 } },
-          { number_of_measures: 9, use_symbols: true },
-        ],
-        [{ options: { spacing_between_lines_px: 15 } },
+        [{ options: { spacing_between_lines_px: 15 } }, { number_of_measures: 12 }],
+        [{ options: { spacing_between_lines_px: 15 } }, { number_of_measures: 9, use_symbols: true }],
+        [
+          { options: { spacing_between_lines_px: 15 } },
           { number_of_measures: 12, spacing_between_lines_px: 15, number_glyph_point: 40 * 1.5 },
         ],
-        [{ options: { spacing_between_lines_px: 15 } },
-          { number_of_measures: 9, spacing_between_lines_px: 15, use_symbols: true,
-            number_glyph_point: 40 * 1.5 },
+        [
+          { options: { spacing_between_lines_px: 15 } },
+          { number_of_measures: 9, spacing_between_lines_px: 15, use_symbols: true, number_glyph_point: 40 * 1.5 },
         ],
-        [{ options: { spacing_between_lines_px: 15 } },
-          { number_of_measures: 9, spacing_between_lines_px: 15, use_symbols: true,
+        [
+          { options: { spacing_between_lines_px: 15 } },
+          {
+            number_of_measures: 9,
+            spacing_between_lines_px: 15,
+            use_symbols: true,
             number_glyph_point: 40 * 1.5,
-            semibrave_rest_glyph_scale: VF.DEFAULT_NOTATION_FONT_SCALE * 1.5 },
+            semibrave_rest_glyph_scale: VF.DEFAULT_NOTATION_FONT_SCALE * 1.5,
+          },
         ],
       ];
 
       const staveWidth = 100;
       var x = 0;
       var y = 0;
-      const mmrests = params.map(function(param) {
-        if ((x + (staveWidth * 2)) > width) {
+      const mmrests = params.map(function (param) {
+        if (x + staveWidth * 2 > width) {
           x = 0;
           y += 80;
         }
@@ -84,12 +86,12 @@ VF.Test.MultiMeasureRest = (function() {
       context.save();
       context.setFont('Times', 16, 'bold');
       const metrics = context.measureText('TACET');
-      context.fillText(str, xs.left + ((xs.right - xs.left) * 0.5) - (metrics.width * 0.5), strY);
+      context.fillText(str, xs.left + (xs.right - xs.left) * 0.5 - metrics.width * 0.5, strY);
       context.restore();
 
       ok(true, 'Simple Test');
     },
-    staveWithModifiers: function(options) {
+    staveWithModifiers: function (options) {
       const width = 910;
       const vf = VF.Test.makeFactory(options, width, 200);
       // const stave = vf.Stave({ y: 20, width: 270 });
@@ -97,33 +99,20 @@ VF.Test.MultiMeasureRest = (function() {
       var y = 0;
 
       const params = [
-        [{ clef: 'treble', params: { width: 150 } },
-          { number_of_measures: 5 },
-        ],
-        [{ clef: 'treble', keySig: 'G', params: { width: 150 } },
-          { number_of_measures: 5 },
-        ],
-        [{ clef: 'treble', timeSig: '4/4', keySig: 'G', params: { width: 150 } },
-          { number_of_measures: 5 },
-        ],
-        [{ clef: 'treble', endClef: 'bass', params: { width: 150 } },
-          { number_of_measures: 5 },
-        ],
-        [{ clef: 'treble', endKeySig: 'F', params: { width: 150 } },
-          { number_of_measures: 5 },
-        ],
-        [{ clef: 'treble', endTimeSig: '2/4', params: { width: 150 } },
-          { number_of_measures: 5 },
-        ],
-        [{ clef: 'treble', endClef: 'bass', endTimeSig: '2/4', params: { width: 150 } },
-          { number_of_measures: 5 },
-        ],
-        [{ clef: 'treble', endClef: 'bass', endTimeSig: '2/4', params: { width: 150 } },
+        [{ clef: 'treble', params: { width: 150 } }, { number_of_measures: 5 }],
+        [{ clef: 'treble', keySig: 'G', params: { width: 150 } }, { number_of_measures: 5 }],
+        [{ clef: 'treble', timeSig: '4/4', keySig: 'G', params: { width: 150 } }, { number_of_measures: 5 }],
+        [{ clef: 'treble', endClef: 'bass', params: { width: 150 } }, { number_of_measures: 5 }],
+        [{ clef: 'treble', endKeySig: 'F', params: { width: 150 } }, { number_of_measures: 5 }],
+        [{ clef: 'treble', endTimeSig: '2/4', params: { width: 150 } }, { number_of_measures: 5 }],
+        [{ clef: 'treble', endClef: 'bass', endTimeSig: '2/4', params: { width: 150 } }, { number_of_measures: 5 }],
+        [
+          { clef: 'treble', endClef: 'bass', endTimeSig: '2/4', params: { width: 150 } },
           { number_of_measures: 5, use_symbols: true },
         ],
       ];
 
-      params.map(function(param) {
+      params.map(function (param) {
         const staveOptions = param[0];
         const staveParams = staveOptions.params;
         const mmrestParams = param[1];
@@ -163,4 +152,4 @@ VF.Test.MultiMeasureRest = (function() {
       ok(true, 'Stave with modifiers Test');
     },
   };
-}());
+})();

@@ -11,4 +11,7 @@
 	},
   "editor.tabSize": 2,
   "eslint.format.enable": true,
+  "javascript.format.enable": false,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
 }

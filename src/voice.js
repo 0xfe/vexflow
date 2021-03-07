@@ -35,7 +35,7 @@ export class Voice extends Element {
     };
 
     // Time signature shortcut: "4/4", "3/8", etc.
-    if (typeof(time) === 'string') {
+    if (typeof time === 'string') {
       const match = time.match(/(\d+)\/(\d+)/);
       if (match) {
         time = {
@@ -47,15 +47,17 @@ export class Voice extends Element {
     }
 
     // Default time sig is 4/4
-    this.time = Vex.Merge({
-      num_beats: 4,
-      beat_value: 4,
-      resolution: Flow.RESOLUTION,
-    }, time);
+    this.time = Vex.Merge(
+      {
+        num_beats: 4,
+        beat_value: 4,
+        resolution: Flow.RESOLUTION,
+      },
+      time
+    );
 
     // Recalculate total ticks.
-    this.totalTicks = new Fraction(
-      this.time.num_beats * (this.time.resolution / this.time.beat_value), 1);
+    this.totalTicks = new Fraction(this.time.num_beats * (this.time.resolution / this.time.beat_value), 1);
 
     this.resolutionMultiplier = 1;
 
@@ -73,29 +75,48 @@ export class Voice extends Element {
   }
 
   // Get the total ticks in the voice
-  getTotalTicks() { return this.totalTicks; }
+  getTotalTicks() {
+    return this.totalTicks;
+  }
 
   // Get the total ticks used in the voice by all the tickables
-  getTicksUsed() { return this.ticksUsed; }
+  getTicksUsed() {
+    return this.ticksUsed;
+  }
 
   // Get the largest width of all the tickables
-  getLargestTickWidth() { return this.largestTickWidth; }
+  getLargestTickWidth() {
+    return this.largestTickWidth;
+  }
 
   // Get the tick count for the shortest tickable
-  getSmallestTickCount() { return this.smallestTickCount; }
+  getSmallestTickCount() {
+    return this.smallestTickCount;
+  }
 
   // Get the tickables in the voice
-  getTickables() { return this.tickables; }
+  getTickables() {
+    return this.tickables;
+  }
 
   // Get/set the voice mode, use a value from `Voice.Mode`
-  getMode() { return this.mode; }
-  setMode(mode) { this.mode = mode; return this; }
+  getMode() {
+    return this.mode;
+  }
+  setMode(mode) {
+    this.mode = mode;
+    return this;
+  }
 
   // Get the resolution multiplier for the voice
-  getResolutionMultiplier() { return this.resolutionMultiplier; }
+  getResolutionMultiplier() {
+    return this.resolutionMultiplier;
+  }
 
   // Get the actual tick resolution for the voice
-  getActualResolution() { return this.resolutionMultiplier * this.time.resolution; }
+  getActualResolution() {
+    return this.resolutionMultiplier * this.time.resolution;
+  }
 
   // Set the voice's stave
   setStave(stave) {
@@ -141,7 +162,10 @@ export class Voice extends Element {
   }
 
   // Set the voice group
-  setVoiceGroup(g) { this.voiceGroup = g; return this; }
+  setVoiceGroup(g) {
+    this.voiceGroup = g;
+    return this;
+  }
 
   // Set the voice mode to strict or soft
   setStrict(strict) {
@@ -259,9 +283,7 @@ export class Voice extends Element {
       if (stave) tickable.setStave(stave);
 
       if (!tickable.getStave()) {
-        throw new Vex.RuntimeError(
-          'MissingStave', 'The voice cannot draw tickables without staves.'
-        );
+        throw new Vex.RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
       }
 
       if (i === 0) boundingBox = tickable.getBoundingBox();

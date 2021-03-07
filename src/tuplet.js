@@ -70,27 +70,22 @@ export class Tuplet extends Element {
 
     this.options = Vex.Merge({}, options);
     this.notes = notes;
-    this.num_notes = 'num_notes' in this.options ?
-      this.options.num_notes : notes.length;
+    this.num_notes = 'num_notes' in this.options ? this.options.num_notes : notes.length;
 
     // We accept beats_occupied, but warn that it's deprecated:
     // the preferred property name is now notes_occupied.
     if (this.options.beats_occupied) {
       this.beatsOccupiedDeprecationWarning();
     }
-    this.notes_occupied = this.options.notes_occupied ||
-      this.options.beats_occupied ||
-      2;
+    this.notes_occupied = this.options.notes_occupied || this.options.beats_occupied || 2;
     if ('bracketed' in this.options) {
       this.bracketed = this.options.bracketed;
     } else {
-      this.bracketed =
-        notes.some(note => note.beam === null);
+      this.bracketed = notes.some((note) => note.beam === null);
     }
 
-    this.ratioed = 'ratioed' in this.options ?
-      this.options.ratioed :
-      (Math.abs(this.notes_occupied - this.num_notes) > 1);
+    this.ratioed =
+      'ratioed' in this.options ? this.options.ratioed : Math.abs(this.notes_occupied - this.num_notes) > 1;
     this.point = this.musicFont.lookupMetric('digits.tupletPoint');
     this.y_pos = 16;
     this.x_pos = 100;
@@ -163,10 +158,13 @@ export class Tuplet extends Element {
       'getNotesOccupied and setNotesOccupied instead',
     ].join('');
 
-    if (console && console.warn) { // eslint-disable-line no-console
-      console.warn(msg); // eslint-disable-line no-console
+    // eslint-disable-next-line
+    if (console && console.warn) {
+      // eslint-disable-next-line
+      console.warn(msg);
     } else if (console) {
-      console.log(msg); // eslint-disable-line no-console
+      // eslint-disable-next-line
+      console.log(msg);
     }
   }
 
@@ -219,10 +217,10 @@ export class Tuplet extends Element {
     // Count the tuplets that are on the same side (above/below)
     // as this tuplet:
     function countTuplets(note, location) {
-      return note.tupletStack.filter(tuplet => tuplet.location === location).length;
+      return note.tupletStack.filter((tuplet) => tuplet.location === location).length;
     }
 
-    this.notes.forEach(note => {
+    this.notes.forEach((note) => {
       const tupletCount = countTuplets(note, location);
       maxTupletCount = tupletCount > maxTupletCount ? tupletCount : maxTupletCount;
       minTupletCount = tupletCount < minTupletCount ? tupletCount : minTupletCount;
@@ -235,10 +233,7 @@ export class Tuplet extends Element {
   getYPosition() {
     // offset the tuplet for any nested tuplets between
     // it and the notes:
-    const nested_tuplet_y_offset =
-      this.getNestedTupletCount() *
-      Tuplet.NESTING_OFFSET *
-      -this.location;
+    const nested_tuplet_y_offset = this.getNestedTupletCount() * Tuplet.NESTING_OFFSET * -this.location;
 
     // offset the tuplet for any manual y_offset:
     const y_offset = this.options.y_offset || 0;
@@ -252,9 +247,10 @@ export class Tuplet extends Element {
       // y_pos = first_note.getStemExtents().topY - 10;
 
       for (let i = 0; i < this.notes.length; ++i) {
-        const top_y = this.notes[i].getStemDirection() === Stem.UP
-          ? this.notes[i].getStemExtents().topY - 10
-          : this.notes[i].getStemExtents().baseY - 20;
+        const top_y =
+          this.notes[i].getStemDirection() === Stem.UP
+            ? this.notes[i].getStemExtents().topY - 10
+            : this.notes[i].getStemExtents().baseY - 20;
 
         if (top_y < y_pos) {
           y_pos = top_y;
@@ -264,9 +260,10 @@ export class Tuplet extends Element {
       y_pos = first_note.getStave().getYForLine(4) + 20;
 
       for (let i = 0; i < this.notes.length; ++i) {
-        const bottom_y = this.notes[i].getStemDirection() === Stem.UP
-          ? this.notes[i].getStemExtents().baseY + 20
-          : this.notes[i].getStemExtents().topY + 10;
+        const bottom_y =
+          this.notes[i].getStemDirection() === Stem.UP
+            ? this.notes[i].getStemExtents().baseY + 20
+            : this.notes[i].getStemExtents().topY + 10;
         if (bottom_y > y_pos) {
           y_pos = bottom_y;
         }
@@ -304,8 +301,8 @@ export class Tuplet extends Element {
       width += this.point * 0.32;
     }
 
-    const notation_center_x = this.x_pos + (this.width / 2);
-    const notation_start_x = notation_center_x - (width / 2);
+    const notation_center_x = this.x_pos + this.width / 2;
+    const notation_start_x = notation_center_x - width / 2;
 
     // draw bracket if the tuplet is not beamed
     if (this.bracketed) {
@@ -314,12 +311,7 @@ export class Tuplet extends Element {
       // only draw the bracket if it has positive length
       if (line_width > 0) {
         this.context.fillRect(this.x_pos, this.y_pos, line_width, 1);
-        this.context.fillRect(
-          this.x_pos + this.width / 2 + width / 2 + 5,
-          this.y_pos,
-          line_width,
-          1
-        );
+        this.context.fillRect(this.x_pos + this.width / 2 + width / 2 + 5, this.y_pos, line_width, 1);
         this.context.fillRect(
           this.x_pos,
           this.y_pos + (this.location === Tuplet.LOCATION_BOTTOM),
@@ -339,8 +331,8 @@ export class Tuplet extends Element {
     const shiftY = this.musicFont.lookupMetric('digits.shiftY', 0);
 
     let x_offset = 0;
-    this.numerator_glyphs.forEach(glyph => {
-      glyph.render(this.context, notation_start_x + x_offset, this.y_pos + (this.point / 3) - 2 + shiftY);
+    this.numerator_glyphs.forEach((glyph) => {
+      glyph.render(this.context, notation_start_x + x_offset, this.y_pos + this.point / 3 - 2 + shiftY);
       x_offset += glyph.getMetrics().width;
     });
 
@@ -357,8 +349,8 @@ export class Tuplet extends Element {
       this.context.closePath();
       this.context.fill();
       x_offset += this.point * 0.32;
-      this.denom_glyphs.forEach(glyph => {
-        glyph.render(this.context, notation_start_x + x_offset, this.y_pos + (this.point / 3) - 2 + shiftY);
+      this.denom_glyphs.forEach((glyph) => {
+        glyph.render(this.context, notation_start_x + x_offset, this.y_pos + this.point / 3 - 2 + shiftY);
         x_offset += glyph.getMetrics().width;
       });
     }

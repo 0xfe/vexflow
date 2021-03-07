@@ -27,11 +27,11 @@ export class System extends Element {
       factory: null,
       noJustification: false,
       debugFormatter: false,
-      formatIterations: 0,   // number of formatter tuning steps
+      formatIterations: 0, // number of formatter tuning steps
       noPadding: false,
       ...options,
       details: {
-        alpha: 0.5,          // formatter tuner learning/shifting rate
+        alpha: 0.5, // formatter tuner learning/shifting rate
         ...options.details,
       },
     };
@@ -77,12 +77,12 @@ export class System extends Element {
       });
     }
 
-    params.voices.forEach(voice =>
+    params.voices.forEach((voice) =>
       voice
         .setContext(this.context)
         .setStave(params.stave)
         .getTickables()
-        .forEach(tickable => tickable.setStave(params.stave))
+        .forEach((tickable) => tickable.setStave(params.stave))
     );
 
     this.parts.push(params);
@@ -99,7 +99,7 @@ export class System extends Element {
     const debugNoteMetricsYs = [];
 
     // Join the voices for each stave.
-    this.parts.forEach(part => {
+    this.parts.forEach((part) => {
       y = y + part.stave.space(part.spaceAbove);
       part.stave.setY(y);
       formatter.joinVoices(part.voices);
@@ -115,10 +115,10 @@ export class System extends Element {
     });
 
     // Update the start position of all staves.
-    this.parts.forEach(part => part.stave.setNoteStartX(startX));
-    const justifyWidth = this.options.noPadding ?
-      this.options.width - this.options.x :
-      this.options.width - (startX - this.options.x) - this.musicFont.lookupMetric('stave.padding');
+    this.parts.forEach((part) => part.stave.setNoteStartX(startX));
+    const justifyWidth = this.options.noPadding
+      ? this.options.width - this.options.x
+      : this.options.width - (startX - this.options.x) - this.musicFont.lookupMetric('stave.padding');
 
     formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth);
 
@@ -140,8 +140,8 @@ export class System extends Element {
       Formatter.plotDebugging(ctx, this.formatter, this.startX, this.options.y, this.lastY);
     }
 
-    this.debugNoteMetricsYs.forEach(d => {
-      d.voice.getTickables().forEach(note => Note.plotMetrics(ctx, note, d.y));
+    this.debugNoteMetricsYs.forEach((d) => {
+      d.voice.getTickables().forEach((note) => Note.plotMetrics(ctx, note, d.y));
     });
   }
 }

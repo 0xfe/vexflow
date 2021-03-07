@@ -3,15 +3,15 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.BoundingBox = (function() {
+VF.Test.BoundingBox = (function () {
   var BoundingBox = {
-    Start: function() {
+    Start: function () {
       QUnit.module('BoundingBox');
       test('Initialization Test', VF.Test.BoundingBox.initialization);
       test('Merging Text', VF.Test.BoundingBox.merging);
     },
 
-    initialization: function() {
+    initialization: function () {
       var bb = new VF.BoundingBox(4, 5, 6, 7);
       equal(bb.getX(), 4, 'Bad X');
       equal(bb.getY(), 5, 'Bad Y');
@@ -22,7 +22,7 @@ VF.Test.BoundingBox = (function() {
       equal(bb.getX(), 5, 'Bad X');
     },
 
-    merging: function() {
+    merging: function () {
       var tests = [
         {
           type: 'Intersection',
@@ -44,7 +44,7 @@ VF.Test.BoundingBox = (function() {
         },
       ];
 
-      tests.forEach(function(test) {
+      tests.forEach(function (test) {
         const type = test.type;
         const bb1 = test.bb1;
         const bb2 = test.bb2;

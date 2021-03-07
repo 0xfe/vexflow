@@ -10,8 +10,7 @@ const attrNamesToIgnoreMap = {
     width: true,
     height: true,
   },
-  rect: {
-  },
+  rect: {},
   text: {
     width: true,
     height: true,
@@ -57,8 +56,8 @@ export class SVGContext {
 
     this.attributes = {
       'stroke-width': 0.3,
-      'fill': 'black',
-      'stroke': 'black',
+      fill: 'black',
+      stroke: 'black',
       'stroke-dasharray': 'none',
       'font-family': 'Arial',
       'font-size': '10pt',
@@ -68,8 +67,8 @@ export class SVGContext {
 
     this.background_attributes = {
       'stroke-width': 0,
-      'fill': 'white',
-      'stroke': 'white',
+      fill: 'white',
+      stroke: 'white',
       'stroke-dasharray': 'none',
       'font-family': 'Arial',
       'font-size': '10pt',
@@ -120,13 +119,12 @@ export class SVGContext {
   // we do some tricks to improve text layout.  See the
   // note at ieMeasureTextFix() for details.
   iePolyfill() {
-    if (typeof (navigator) !== 'undefined') {
-      this.ie = (
+    if (typeof navigator !== 'undefined') {
+      this.ie =
         /MSIE 9/i.test(navigator.userAgent) ||
         /MSIE 10/i.test(navigator.userAgent) ||
         /rv:11\.0/i.test(navigator.userAgent) ||
-        /Trident/i.test(navigator.userAgent)
-      );
+        /Trident/i.test(navigator.userAgent);
     }
   }
 
@@ -156,7 +154,7 @@ export class SVGContext {
       weight = weight.replace(/ /g, '');
     }
     weight = bold ? 'bold' : weight;
-    weight = (typeof weight === 'undefined' || weight === '') ? 'normal' : weight;
+    weight = typeof weight === 'undefined' || weight === '' ? 'normal' : weight;
 
     style = italic ? 'italic' : style;
 
@@ -302,14 +300,12 @@ export class SVGContext {
 
   applyAttributes(element, attributes) {
     const attrNamesToIgnore = attrNamesToIgnoreMap[element.nodeName];
-    Object
-      .keys(attributes)
-      .forEach(propertyName => {
-        if (attrNamesToIgnore && attrNamesToIgnore[propertyName]) {
-          return;
-        }
-        element.setAttributeNS(null, propertyName, attributes[propertyName]);
-      });
+    Object.keys(attributes).forEach((propertyName) => {
+      if (attrNamesToIgnore && attrNamesToIgnore[propertyName]) {
+        return;
+      }
+      element.setAttributeNS(null, propertyName, attributes[propertyName]);
+    });
 
     return element;
   }
@@ -422,24 +418,14 @@ export class SVGContext {
   }
 
   bezierCurveTo(x1, y1, x2, y2, x, y) {
-    this.path += 'C' +
-      x1 + ' ' +
-      y1 + ',' +
-      x2 + ' ' +
-      y2 + ',' +
-      x + ' ' +
-      y;
+    this.path += 'C' + x1 + ' ' + y1 + ',' + x2 + ' ' + y2 + ',' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
   quadraticCurveTo(x1, y1, x, y) {
-    this.path += 'Q' +
-      x1 + ' ' +
-      y1 + ',' +
-      x + ' ' +
-      y;
+    this.path += 'Q' + x1 + ' ' + y1 + ',' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
@@ -498,9 +484,8 @@ export class SVGContext {
       largeArcFlag = 1;
     }
 
-    this.path += 'M' + x1 + ' ' + y1 + ' A' +
-      radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' +
-      x2 + ' ' + y2;
+    this.path +=
+      'M' + x1 + ' ' + y1 + ' A' + radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' + x2 + ' ' + y2;
     if (!isNaN(this.pen.x) && !isNaN(this.pen.y)) {
       this.peth += 'M' + this.pen.x + ' ' + this.pen.y;
     }
@@ -524,7 +509,7 @@ export class SVGContext {
           stroke: sa.color,
           'stroke-linejoin': 'round',
           'stroke-linecap': 'round',
-          'stroke-width': +((sa.width * 0.4) / num_paths * i).toFixed(3),
+          'stroke-width': +(((sa.width * 0.4) / num_paths) * i).toFixed(3),
           opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
         };
 
@@ -574,7 +559,7 @@ export class SVGContext {
   // ## Text Methods:
   measureText(text) {
     const txt = this.create('text');
-    if (typeof (txt.getBBox) !== 'function') {
+    if (typeof txt.getBBox !== 'function') {
       return { x: 0, y: 0, width: 0, height: 0 };
     }
 
@@ -604,7 +589,7 @@ export class SVGContext {
     const fontSize = Number(this.fontSize);
     const m = 1.196;
     const b = 1.9598;
-    const widthCorrection = (m * fontSize) + b;
+    const widthCorrection = m * fontSize + b;
     const width = bbox.width - widthCorrection;
     const height = bbox.height - 1.5;
 

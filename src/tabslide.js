@@ -42,8 +42,7 @@ export class TabSlide extends TabTie {
       const first_fret = notes.first_note.getPositions()[0].fret;
       const last_fret = notes.last_note.getPositions()[0].fret;
 
-      direction = ((parseInt(first_fret, 10) > parseInt(last_fret, 10)) ?
-        TabSlide.SLIDE_DOWN : TabSlide.SLIDE_UP);
+      direction = parseInt(first_fret, 10) > parseInt(last_fret, 10) ? TabSlide.SLIDE_DOWN : TabSlide.SLIDE_UP;
     }
 
     this.slide_direction = direction;
@@ -71,16 +70,15 @@ export class TabSlide extends TabTie {
     }
 
     for (let i = 0; i < this.first_indices.length; ++i) {
-      const slide_y = first_ys[this.first_indices[i]] +
-        this.render_options.y_shift;
+      const slide_y = first_ys[this.first_indices[i]] + this.render_options.y_shift;
 
       if (isNaN(slide_y)) {
         throw new Vex.RERR('BadArguments', 'Bad indices for slide rendering.');
       }
 
       ctx.beginPath();
-      ctx.moveTo(first_x_px, slide_y + (3 * direction));
-      ctx.lineTo(last_x_px, slide_y - (3 * direction));
+      ctx.moveTo(first_x_px, slide_y + 3 * direction);
+      ctx.lineTo(last_x_px, slide_y - 3 * direction);
       ctx.closePath();
       ctx.stroke();
     }

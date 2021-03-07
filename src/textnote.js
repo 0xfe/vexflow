@@ -21,61 +21,61 @@ export class TextNote extends Note {
   // Glyph data
   static get GLYPHS() {
     return {
-      'segno': {
+      segno: {
         code: 'segno',
       },
-      'tr': {
+      tr: {
         code: 'ornamentTrill',
       },
-      'mordent': {
+      mordent: {
         code: 'ornamentMordent',
       },
-      'mordent_upper': {
+      mordent_upper: {
         code: 'ornamentShortTrill',
       },
-      'mordent_lower': {
+      mordent_lower: {
         code: 'ornamentMordent',
       },
-      'f': {
+      f: {
         code: 'dynamicForte',
       },
-      'p': {
+      p: {
         code: 'dynamicPiano',
       },
-      'm': {
+      m: {
         code: 'dynamicMezzo',
       },
-      's': {
+      s: {
         code: 'dynamicSforzando',
       },
-      'z': {
+      z: {
         code: 'dynamicZ',
       },
-      'coda': {
+      coda: {
         code: 'coda',
       },
-      'pedal_open': {
+      pedal_open: {
         code: 'keyboardPedalPed',
       },
-      'pedal_close': {
+      pedal_close: {
         code: 'keyboardPedalUp',
       },
-      'caesura_straight': {
+      caesura_straight: {
         code: 'caesura',
       },
-      'caesura_curved': {
+      caesura_curved: {
         code: 'caesuraCurved',
       },
-      'breath': {
+      breath: {
         code: 'breathMarkComma',
       },
-      'tick': {
+      tick: {
         code: 'breathMarkTick',
       },
-      'turn': {
+      turn: {
         code: 'ornamentTurn',
       },
-      'turn_inverted': {
+      turn_inverted: {
         code: 'ornamentTurnSlash',
       },
     };
@@ -94,7 +94,7 @@ export class TextNote extends Note {
       family: 'Arial',
       size: 12,
       weight: '',
-      ...options.font
+      ...options.font,
     };
 
     // Determine and set initial note width. Note that the text width is
@@ -166,7 +166,7 @@ export class TextNote extends Note {
     const ctx = this.context;
 
     // Reposition to center of note head
-    let x = this.getAbsoluteX() + (this.tickContext.getMetrics().glyphPx / 2);
+    let x = this.getAbsoluteX() + this.tickContext.getMetrics().glyphPx / 2;
 
     // Align based on tick-context width.
     const width = this.getWidth();
@@ -192,13 +192,13 @@ export class TextNote extends Note {
       // Write superscript
       if (this.superscript) {
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
-        ctx.fillText(this.superscript, x + width + 2, y - (height / 2.2));
+        ctx.fillText(this.superscript, x + width + 2, y - height / 2.2);
       }
 
       // Write subscript
       if (this.subscript) {
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
-        ctx.fillText(this.subscript, x + width + 2, y + (height / 2.2) - 1);
+        ctx.fillText(this.subscript, x + width + 2, y + height / 2.2 - 1);
       }
 
       this.restoreStyle(ctx);

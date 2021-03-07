@@ -3,18 +3,16 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.StaveModifier = (function() {
+VF.Test.StaveModifier = (function () {
   var StaveModifier = {
-    Start: function() {
+    Start: function () {
       QUnit.module('StaveModifier');
       VF.Test.runTests('Stave Draw Test', VF.Test.Stave.draw);
-      VF.Test.runTests('Vertical Bar Test',
-        VF.Test.Stave.drawVerticalBar);
-      VF.Test.runTests('Begin & End StaveModifier Test',
-        StaveModifier.drawBeginAndEnd);
+      VF.Test.runTests('Vertical Bar Test', VF.Test.Stave.drawVerticalBar);
+      VF.Test.runTests('Begin & End StaveModifier Test', StaveModifier.drawBeginAndEnd);
     },
 
-    draw: function(options, contextBuilder) {
+    draw: function (options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 400, 120);
       var stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
@@ -28,7 +26,7 @@ VF.Test.StaveModifier = (function() {
       ok(true, 'all pass');
     },
 
-    drawVerticalBar: function(options, contextBuilder) {
+    drawVerticalBar: function (options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 400, 120);
       var stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
@@ -40,7 +38,7 @@ VF.Test.StaveModifier = (function() {
       ok(true, 'all pass');
     },
 
-    drawBeginAndEnd: function(options, contextBuilder) {
+    drawBeginAndEnd: function (options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
       var stave = new VF.Stave(10, 10, 400);
       stave.setContext(ctx);

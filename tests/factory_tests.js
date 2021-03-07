@@ -3,9 +3,9 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-Vex.Flow.Test.Factory = (function() {
+Vex.Flow.Test.Factory = (function () {
   var Factory = {
-    Start: function() {
+    Start: function () {
       QUnit.module('Factory');
       var VFT = Vex.Flow.Test;
 
@@ -14,8 +14,8 @@ Vex.Flow.Test.Factory = (function() {
       VFT.runSVGTest('Draw Tab (repeat barlines must be aligned)', VFT.Factory.drawTab);
     },
 
-    defaults: function(assert) {
-      assert.throws(function() {
+    defaults: function (assert) {
+      assert.throws(function () {
         return new VF.Factory({
           renderer: {
             width: 700,
@@ -39,47 +39,34 @@ Vex.Flow.Test.Factory = (function() {
       assert.equal(options.stave.space, 10);
     },
 
-    draw: function(options) {
+    draw: function (options) {
       var vf = VF.Factory.newFromElementId(options.elementId);
       vf.Stave().setClef('treble');
       vf.draw();
       expect(0);
     },
 
-    drawTab: function(options) {
+    drawTab: function (options) {
       var vf = VF.Test.makeFactory(options, 500, 400);
 
       var system = vf.System();
 
-      var stave = vf.Stave()
-        .setClef('treble')
-        .setKeySignature('C#')
-        .setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+      var stave = vf.Stave().setClef('treble').setKeySignature('C#').setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
 
-      var voices = [
-        vf.Voice().addTickables([
-          vf.GhostNote({ duration: 'w' })
-        ])
-      ];
+      var voices = [vf.Voice().addTickables([vf.GhostNote({ duration: 'w' })])];
 
       system.addStave({
         stave: stave,
-        voices: voices
+        voices: voices,
       });
 
-      var tabStave = vf.TabStave()
-        .setClef('tab')
-        .setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+      var tabStave = vf.TabStave().setClef('tab').setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
 
-      var tabVoices = [
-        vf.Voice().addTickables([
-          vf.GhostNote({ duration: 'w' })
-        ])
-      ];
+      var tabVoices = [vf.Voice().addTickables([vf.GhostNote({ duration: 'w' })])];
 
       system.addStave({
         stave: tabStave,
-        voices: tabVoices
+        voices: tabVoices,
       });
 
       vf.draw();

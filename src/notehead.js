@@ -15,7 +15,9 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
-function L(...args) { if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args); }
+function L(...args) {
+  if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args);
+}
 
 // Draw slashnote head manually. No glyph exists for this.
 //
@@ -66,7 +68,9 @@ function drawSlashNoteHead(ctx, duration, x, y, stem_direction, staveSpace) {
 }
 
 export class NoteHead extends Note {
-  static get CATEGORY() { return 'notehead'; }
+  static get CATEGORY() {
+    return 'notehead';
+  }
 
   constructor(head_options) {
     super(head_options);
@@ -87,7 +91,8 @@ export class NoteHead extends Note {
     if (!this.glyph) {
       throw new Vex.RuntimeError(
         'BadArguments',
-        `No glyph found for duration '${this.duration}' and type '${this.note_type}'`);
+        `No glyph found for duration '${this.duration}' and type '${this.note_type}'`
+      );
     }
 
     this.glyph_code = this.glyph.code_head;
@@ -112,27 +117,48 @@ export class NoteHead extends Note {
     this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
   }
 
-  getCategory() { return NoteHead.CATEGORY; }
+  getCategory() {
+    return NoteHead.CATEGORY;
+  }
 
   // Get the width of the notehead
-  getWidth() { return this.width; }
+  getWidth() {
+    return this.width;
+  }
 
   // Determine if the notehead is displaced
-  isDisplaced() { return this.displaced === true; }
+  isDisplaced() {
+    return this.displaced === true;
+  }
 
   // Get the glyph data
-  getGlyph() { return this.glyph; }
+  getGlyph() {
+    return this.glyph;
+  }
 
   // Set the X coordinate
-  setX(x) { this.x = x; return this; }
+  setX(x) {
+    this.x = x;
+    return this;
+  }
 
   // get/set the Y coordinate
-  getY() { return this.y; }
-  setY(y) { this.y = y;  return this; }
+  getY() {
+    return this.y;
+  }
+  setY(y) {
+    this.y = y;
+    return this;
+  }
 
   // Get/set the stave line the notehead is placed on
-  getLine() { return this.line; }
-  setLine(line) { this.line = line; return this; }
+  getLine() {
+    return this.line;
+  }
+  setLine(line) {
+    this.line = line;
+    return this;
+  }
 
   // Get the canvas `x` coordinate position of the notehead.
   getAbsoluteX() {
@@ -143,13 +169,14 @@ export class NoteHead extends Note {
 
     // For a more natural displaced notehead, we adjust the displacement amount
     // by half the stem width in order to maintain a slight overlap with the stem
-    const displacementStemAdjustment = (Stem.WIDTH / 2);
+    const displacementStemAdjustment = Stem.WIDTH / 2;
     const fontShift = this.musicFont.lookupMetric('notehead.shiftX', 0) * this.stem_direction;
     const displacedFontShift = this.musicFont.lookupMetric('noteHead.displaced.shiftX', 0) * this.stem_direction;
 
-    return x + fontShift + (this.displaced
-      ? ((this.width - displacementStemAdjustment) * this.stem_direction) + displacedFontShift
-      : 0
+    return (
+      x +
+      fontShift +
+      (this.displaced ? (this.width - displacementStemAdjustment) * this.stem_direction + displacedFontShift : 0)
     );
   }
 
@@ -218,7 +245,7 @@ export class NoteHead extends Note {
     } else {
       Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
         font: this.musicFont,
-        category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`
+        category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
       });
     }
 

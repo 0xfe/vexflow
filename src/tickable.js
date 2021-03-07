@@ -65,13 +65,21 @@ export class Tickable extends Element {
     };
   }
 
-  reset() { return this; }
+  reset() {
+    return this;
+  }
 
-  getTicks() { return this.ticks; }
-  shouldIgnoreTicks() { return this.ignore_ticks; }
+  getTicks() {
+    return this.ticks;
+  }
+  shouldIgnoreTicks() {
+    return this.ignore_ticks;
+  }
 
   // Get and set width of note. Used by the formatter for positioning.
-  setWidth(width) { this.width = width; }
+  setWidth(width) {
+    this.width = width;
+  }
   getWidth() {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
@@ -81,8 +89,13 @@ export class Tickable extends Element {
   }
 
   // Displace note by `x` pixels. Used by the formatter.
-  setXShift(x) { this.x_shift = x; return this; }
-  getXShift() { return this.x_shift; }
+  setXShift(x) {
+    this.x_shift = x;
+    return this;
+  }
+  getXShift() {
+    return this.x_shift;
+  }
 
   // Get `X` position of this tick context.
   getX() {
@@ -93,7 +106,9 @@ export class Tickable extends Element {
     return this.tickContext.getX() + this.x_shift;
   }
 
-  getFormatterMetrics() { return this.formatterMetrics; }
+  getFormatterMetrics() {
+    return this.formatterMetrics;
+  }
 
   getCenterXShift() {
     if (this.isCenterAligned()) {
@@ -102,7 +117,9 @@ export class Tickable extends Element {
 
     return 0;
   }
-  isCenterAligned() { return this.align_center; }
+  isCenterAligned() {
+    return this.align_center;
+  }
   setCenterAlignment(align_center) {
     this.align_center = align_center;
     return this;
@@ -114,8 +131,12 @@ export class Tickable extends Element {
     if (!this.voice) throw new Vex.RERR('NoVoice', 'Tickable has no voice.');
     return this.voice;
   }
-  setVoice(voice) { this.voice = voice; }
-  getTuplet() { return this.tuplet; }
+  setVoice(voice) {
+    this.voice = voice;
+  }
+  getTuplet() {
+    return this.tuplet;
+  }
 
   /*
    * resetTuplet

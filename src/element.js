@@ -11,7 +11,9 @@ import { Registry } from './registry';
 import { Flow } from './tables';
 
 export class Element {
-  static newID() { return 'auto' + (Element.ID++); }
+  static newID() {
+    return 'auto' + Element.ID++;
+  }
 
   constructor({ type } = {}) {
     this.attrs = {
@@ -44,8 +46,13 @@ export class Element {
   }
 
   // set the draw style of a stemmable note:
-  setStyle(style) { this.style = style; return this; }
-  getStyle() { return this.style; }
+  setStyle(style) {
+    this.style = style;
+    return this;
+  }
+  getStyle() {
+    return this.style;
+  }
 
   // Apply current style to Canvas `context`
   applyStyle(context = this.context, style = this.getStyle()) {
@@ -75,7 +82,9 @@ export class Element {
   }
 
   // An element can have multiple class labels.
-  hasClass(className) { return (this.attrs.classes[className] === true); }
+  hasClass(className) {
+    return this.attrs.classes[className] === true;
+  }
   addClass(className) {
     this.attrs.classes[className] = true;
     if (this.registry) {
@@ -103,12 +112,24 @@ export class Element {
   }
 
   // This is called by the registry after the element is registered.
-  onRegister(registry) { this.registry = registry; return this; }
-  isRendered() { return this.rendered; }
-  setRendered(rendered = true) { this.rendered = rendered; return this; }
+  onRegister(registry) {
+    this.registry = registry;
+    return this;
+  }
+  isRendered() {
+    return this.rendered;
+  }
+  setRendered(rendered = true) {
+    this.rendered = rendered;
+    return this;
+  }
 
-  getAttributes() { return this.attrs; }
-  getAttribute(name) { return this.attrs[name]; }
+  getAttributes() {
+    return this.attrs;
+  }
+  getAttribute(name) {
+    return this.attrs[name];
+  }
   setAttribute(name, value) {
     const id = this.attrs.id;
     const oldValue = this.attrs[name];
@@ -120,9 +141,16 @@ export class Element {
     return this;
   }
 
-  getContext() { return this.context; }
-  setContext(context) { this.context = context; return this; }
-  getBoundingBox() { return this.boundingBox; }
+  getContext() {
+    return this.context;
+  }
+  setContext(context) {
+    this.context = context;
+    return this;
+  }
+  getBoundingBox() {
+    return this.boundingBox;
+  }
 
   // Validators
   checkContext() {

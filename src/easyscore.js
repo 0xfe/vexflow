@@ -12,7 +12,9 @@ import { Articulation } from './articulation';
 import { FretHandFinger } from './frethandfinger';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
-function L(...args) { if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args); }
+function L(...args) {
+  if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args);
+}
 
 export const X = Vex.MakeException('EasyScoreError');
 
@@ -21,7 +23,9 @@ class Grammar {
     this.builder = builder;
   }
 
-  begin() { return this.LINE; }
+  begin() {
+    return this.LINE;
+  }
 
   LINE() {
     return {
@@ -71,8 +75,7 @@ class Grammar {
   SINGLENOTE() {
     return {
       expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
-      run: (state) =>
-        this.builder.addSingleNote(state.matches[0], state.matches[1], state.matches[2]),
+      run: (state) => this.builder.addSingleNote(state.matches[0], state.matches[1], state.matches[2]),
     };
   }
   ACCIDENTAL() {
@@ -129,24 +132,60 @@ class Grammar {
     };
   }
 
-  KEY() { return { token: '[a-zA-Z][a-zA-Z0-9]*' }; }
-  DVAL() { return { token: '["][^"]*["]' }; }
-  SVAL() { return { token: "['][^']*[']" }; }
-  NOTENAME() { return { token: '[a-gA-G]' }; }
-  OCTAVE() { return { token: '[0-9]+' }; }
-  ACCIDENTALS() { return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' }; }
-  DURATIONS() { return { token: '[0-9whq]+' }; }
-  TYPES() { return { token: '[rRsSxX]' }; }
-  LPAREN() { return { token: '[(]' }; }
-  RPAREN() { return { token: '[)]' }; }
-  COMMA() { return { token: '[,]' }; }
-  DOT() { return { token: '[.]' }; }
-  SLASH() { return { token: '[/]' }; }
-  MAYBESLASH() { return { token: '[/]?' }; }
-  EQUALS() { return { token: '[=]' }; }
-  LBRACKET() { return { token: '\\[' }; }
-  RBRACKET() { return { token: '\\]' }; }
-  EOL() { return { token: '$' }; }
+  KEY() {
+    return { token: '[a-zA-Z][a-zA-Z0-9]*' };
+  }
+  DVAL() {
+    return { token: '["][^"]*["]' };
+  }
+  SVAL() {
+    return { token: "['][^']*[']" };
+  }
+  NOTENAME() {
+    return { token: '[a-gA-G]' };
+  }
+  OCTAVE() {
+    return { token: '[0-9]+' };
+  }
+  ACCIDENTALS() {
+    return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' };
+  }
+  DURATIONS() {
+    return { token: '[0-9whq]+' };
+  }
+  TYPES() {
+    return { token: '[rRsSxX]' };
+  }
+  LPAREN() {
+    return { token: '[(]' };
+  }
+  RPAREN() {
+    return { token: '[)]' };
+  }
+  COMMA() {
+    return { token: '[,]' };
+  }
+  DOT() {
+    return { token: '[.]' };
+  }
+  SLASH() {
+    return { token: '[/]' };
+  }
+  MAYBESLASH() {
+    return { token: '[/]?' };
+  }
+  EQUALS() {
+    return { token: '[=]' };
+  }
+  LBRACKET() {
+    return { token: '\\[' };
+  }
+  RBRACKET() {
+    return { token: '\\]' };
+  }
+  EOL() {
+    return { token: '$' };
+  }
 }
 
 class Builder {
@@ -170,9 +209,13 @@ class Builder {
     Object.assign(this.options, options);
   }
 
-  getFactory() { return this.factory; }
+  getFactory() {
+    return this.factory;
+  }
 
-  getElements() { return this.elements; }
+  getElements() {
+    return this.elements;
+  }
 
   addCommitHook(commitHook) {
     this.commitHooks.push(commitHook);
@@ -221,10 +264,10 @@ class Builder {
 
   addChord(notes) {
     L('startChord');
-    if (typeof (notes[0]) !== 'object') {
+    if (typeof notes[0] !== 'object') {
       this.addSingleNote(notes[0]);
     } else {
-      notes.forEach(n => {
+      notes.forEach((n) => {
         if (n) this.addNote(...n);
       });
     }
@@ -240,13 +283,11 @@ class Builder {
     const options = { ...this.options, ...this.piece.options };
     const { stem, clef } = options;
     const autoStem = stem.toLowerCase() === 'auto';
-    const stemDirection = !autoStem && stem.toLowerCase() === 'up'
-      ? StaveNote.STEM_UP
-      : StaveNote.STEM_DOWN;
+    const stemDirection = !autoStem && stem.toLowerCase() === 'up' ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
 
     // Build StaveNotes.
     const { chord, duration, dots, type } = this.piece;
-    const keys = chord.map(note => note.key + '/' + note.octave);
+    const keys = chord.map((note) => note.key + '/' + note.octave);
     const note = factory.StaveNote({
       keys,
       duration,
@@ -258,7 +299,7 @@ class Builder {
     if (!autoStem) note.setStemDirection(stemDirection);
 
     // Attach accidentals.
-    const accids = chord.map(note => note.accid || null);
+    const accids = chord.map((note) => note.accid || null);
     accids.forEach((accid, i) => {
       if (accid) note.addAccidental(i, factory.Accidental({ type: accid }));
     });
@@ -266,7 +307,7 @@ class Builder {
     // Attach dots.
     for (let i = 0; i < dots; i++) note.addDotToAll();
 
-    this.commitHooks.forEach(fn => fn(options, note, this));
+    this.commitHooks.forEach((fn) => fn(options, note, this));
 
     this.elements.notes.push(note);
     this.elements.accidentals.concat(accids);
@@ -285,9 +326,7 @@ function setClass(options, note) {
 
   const commaSeparatedRegex = /\s*,\s*/;
 
-  options.class
-    .split(commaSeparatedRegex)
-    .forEach(className => note.addClass(className));
+  options.class.split(commaSeparatedRegex).forEach((className) => note.addClass(className));
 }
 
 export class EasyScore {
@@ -309,20 +348,16 @@ export class EasyScore {
     this.options = {
       factory: null,
       builder: null,
-      commitHooks: [
-        setId,
-        setClass,
-        Articulation.easyScoreHook,
-        FretHandFinger.easyScoreHook,
-      ],
-      throwOnError: false, ...options
+      commitHooks: [setId, setClass, Articulation.easyScoreHook, FretHandFinger.easyScoreHook],
+      throwOnError: false,
+      ...options,
     };
 
     this.factory = this.options.factory;
     this.builder = this.options.builder || new Builder(this.factory);
     this.grammar = new Grammar(this.builder);
     this.parser = new Parser(this.grammar);
-    this.options.commitHooks.forEach(commitHook => this.addCommitHook(commitHook));
+    this.options.commitHooks.forEach((commitHook) => this.addCommitHook(commitHook));
     return this;
   }
 

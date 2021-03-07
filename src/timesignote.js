@@ -40,8 +40,7 @@ export class TimeSigNote extends Note {
     }
 
     this.timeSig.glyph.setStave(this.stave);
-    this.timeSig.glyph.setYShift(
-      this.stave.getYForLine(this.timeSig.line) - this.stave.getYForGlyphs());
+    this.timeSig.glyph.setYShift(this.stave.getYForLine(this.timeSig.line) - this.stave.getYForGlyphs());
     this.timeSig.glyph.renderToStave(this.getAbsoluteX());
   }
 }

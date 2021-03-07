@@ -19,7 +19,9 @@ export class KeyManager {
     return this;
   }
 
-  getKey() { return this.key; }
+  getKey() {
+    return this.key;
+  }
 
   reset() {
     this.keyParts = this.music.getKeyParts(this.key);
@@ -76,9 +78,9 @@ export class KeyManager {
 
     if (scaleNote === note) {
       return {
-        'note': scaleNote,
-        'accidental': parts.accidental,
-        'change': false,
+        note: scaleNote,
+        accidental: parts.accidental,
+        change: false,
       };
     }
 
@@ -86,35 +88,34 @@ export class KeyManager {
     const valueNote = this.scaleMapByValue[this.music.getNoteValue(note)];
     if (valueNote != null) {
       return {
-        'note': valueNote,
-        'accidental': this.music.getNoteParts(valueNote).accidental,
-        'change': false,
+        note: valueNote,
+        accidental: this.music.getNoteParts(valueNote).accidental,
+        change: false,
       };
     }
 
     // Then search for a note of equivalent value in the original scale
-    const originalValueNote = this.originalScaleMapByValue[
-      this.music.getNoteValue(note)];
+    const originalValueNote = this.originalScaleMapByValue[this.music.getNoteValue(note)];
     if (originalValueNote != null) {
       this.scaleMap[modparts.root] = originalValueNote;
       delete this.scaleMapByValue[this.music.getNoteValue(scaleNote)];
       this.scaleMapByValue[this.music.getNoteValue(note)] = originalValueNote;
       return {
-        'note': originalValueNote,
-        'accidental': this.music.getNoteParts(originalValueNote).accidental,
-        'change': true,
+        note: originalValueNote,
+        accidental: this.music.getNoteParts(originalValueNote).accidental,
+        change: true,
       };
     }
 
     // Then try to unmodify a currently modified note.
     if (modparts.root === note) {
       delete this.scaleMapByValue[this.music.getNoteValue(this.scaleMap[parts.root])];
-      this.scaleMapByValue[this.music.getNoteValue(modparts.root)] =  modparts.root;
+      this.scaleMapByValue[this.music.getNoteValue(modparts.root)] = modparts.root;
       this.scaleMap[modparts.root] = modparts.root;
       return {
-        'note': modparts.root,
-        'accidental': null,
-        'change': true,
+        note: modparts.root,
+        accidental: null,
+        change: true,
       };
     }
 
@@ -127,8 +128,8 @@ export class KeyManager {
 
     return {
       note,
-      'accidental': parts.accidental,
-      'change': true,
+      accidental: parts.accidental,
+      change: true,
     };
   }
 }

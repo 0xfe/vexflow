@@ -3,7 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-/* eslint-disable global-require, import/no-unresolved, import/no-extraneous-dependencies */
+/* eslint-disable global-require */
 
 /* eslint max-classes-per-file: "off" */
 
@@ -33,7 +33,7 @@ if (!window.QUnit) {
   /* eslint-disable */
   QUnit.test = (name, func) => {
     QUnit.current_test = name;
-    process.stdout.write(" \u001B[0G" + QUnit.current_module + " :: " + name + "\u001B[0K");
+    process.stdout.write(' \u001B[0G' + QUnit.current_module + ' :: ' + name + '\u001B[0K');
     func(QUnit.assertions);
   };
 
@@ -107,18 +107,10 @@ VF.Test = (function () {
     createTestCanvas: function (testId, testName) {
       var testContainer = $('<div></div>').addClass('testcanvas');
 
-      testContainer.append(
-        $('<div></div>')
-          .addClass('name')
-          .text(testName)
-      );
+      testContainer.append($('<div></div>').addClass('name').text(testName));
 
       testContainer.append(
-        $('<canvas></canvas>')
-          .addClass('vex-tabdiv')
-          .attr('id', testId)
-          .addClass('name')
-          .text(name)
+        $('<canvas></canvas>').addClass('vex-tabdiv').attr('id', testId).addClass('name').text(name)
       );
 
       $(VF.Test.testRootSelector).append(testContainer);
@@ -127,17 +119,9 @@ VF.Test = (function () {
     createTestSVG: function (testId, testName) {
       var testContainer = $('<div></div>').addClass('testcanvas');
 
-      testContainer.append(
-        $('<div></div>')
-          .addClass('name')
-          .text(testName)
-      );
+      testContainer.append($('<div></div>').addClass('name').text(testName));
 
-      testContainer.append(
-        $('<div></div>')
-          .addClass('vex-tabdiv')
-          .attr('id', testId)
-      );
+      testContainer.append($('<div></div>').addClass('vex-tabdiv').attr('id', testId));
 
       $(VF.Test.testRootSelector).append(testContainer);
     },
@@ -202,13 +186,13 @@ VF.Test = (function () {
         Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
         Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
         Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
-      }
+      };
 
       const testFunc = (fontName) => (assert) => {
         const defaultFontStack = VF.DEFAULT_FONT_STACK;
         VF.DEFAULT_FONT_STACK = fontStacks[fontName];
-        var elementId = VF.Test.genID('svg_'+fontName);
-        var title = VF.Test.genTitle('SVG '+fontName, assert, name);
+        var elementId = VF.Test.genID('svg_' + fontName);
+        var title = VF.Test.genTitle('SVG ' + fontName, assert, name);
 
         VF.Test.createTestSVG(elementId, title);
 
@@ -221,7 +205,7 @@ VF.Test = (function () {
 
         func(testOptions, VF.Renderer.getSVGContext);
         VF.DEFAULT_FONT_STACK = defaultFontStack;
-      }
+      };
 
       QUnit.test(name, testFunc('Bravura'));
       QUnit.test(name, testFunc('Gonville'));
@@ -303,4 +287,4 @@ VF.Test = (function () {
   Test.testRootSelector = '#vexflow_testoutput';
 
   return Test;
-}());
+})();

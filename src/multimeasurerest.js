@@ -134,8 +134,8 @@ export class MultiMeasureRest extends Element {
     const n1 = n % 2;
 
     const semibrave_rest = get_semibrave_rest();
-    const semibrave_rest_width = semibrave_rest.width *
-      (this.render_options.semibrave_rest_glyph_scale / semibrave_rest.glyph_font_scale);
+    const semibrave_rest_width =
+      semibrave_rest.width * (this.render_options.semibrave_rest_glyph_scale / semibrave_rest.glyph_font_scale);
     const glyphs = {
       2: {
         width: semibrave_rest_width * 0.5,
@@ -151,9 +151,8 @@ export class MultiMeasureRest extends Element {
       spacing = this.render_options.symbol_spacing;
     }
 
-    const width = (n4 * glyphs[2].width) + (n2 * glyphs[2].width)
-      + (n1 * glyphs[1].width) + ((n4 + n2 + n1 - 1) * spacing);
-    let x = left + ((right - left) * 0.5) - (width * 0.5);
+    const width = n4 * glyphs[2].width + n2 * glyphs[2].width + n1 * glyphs[1].width + (n4 + n2 + n1 - 1) * spacing;
+    let x = left + (right - left) * 0.5 - width * 0.5;
     const yTop = this.stave.getYForLine(this.render_options.line - 1);
     const yMiddle = this.stave.getYForLine(this.render_options.line);
     const yBottom = this.stave.getYForLine(this.render_options.line + 1);
@@ -172,8 +171,7 @@ export class MultiMeasureRest extends Element {
       x += glyphs[2].width + spacing;
     }
     for (let i = 0; i < n1; ++i) {
-      Glyph.renderGlyph(ctx, x, yTop, this.render_options.semibrave_rest_glyph_scale,
-        semibrave_rest.glyph_code);
+      Glyph.renderGlyph(ctx, x, yTop, this.render_options.semibrave_rest_glyph_scale, semibrave_rest.glyph_code);
       x += glyphs[1].width + spacing;
     }
 
@@ -221,7 +219,7 @@ export class MultiMeasureRest extends Element {
       timeSig.point = this.render_options.number_glyph_point;
       timeSig.setTimeSig(timeSpec);
       timeSig.setStave(stave);
-      timeSig.x = left + ((right - left) * 0.5) - (timeSig.timeSig.glyph.getMetrics().width * 0.5);
+      timeSig.x = left + (right - left) * 0.5 - timeSig.timeSig.glyph.getMetrics().width * 0.5;
       timeSig.bottomLine = this.render_options.number_line;
       timeSig.setContext(ctx).draw();
     }

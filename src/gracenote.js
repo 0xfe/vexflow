@@ -5,9 +5,15 @@ import { Stem } from './stem';
 import { Flow } from './tables';
 
 export class GraceNote extends StaveNote {
-  static get CATEGORY() { return 'gracenotes'; }
-  static get LEDGER_LINE_OFFSET() { return 2; }
-  static get SCALE() { return 0.66; }
+  static get CATEGORY() {
+    return 'gracenotes';
+  }
+  static get LEDGER_LINE_OFFSET() {
+    return 2;
+  }
+  static get SCALE() {
+    return 0.66;
+  }
 
   constructor(note_struct) {
     super({
@@ -35,7 +41,7 @@ export class GraceNote extends StaveNote {
       let ret = super.getStemExtension();
       if (glyph.stem) {
         const staveNoteScale = this.getStaveNoteScale();
-        ret = ((Stem.HEIGHT + ret) * staveNoteScale) - Stem.HEIGHT;
+        ret = (Stem.HEIGHT + ret) * staveNoteScale - Stem.HEIGHT;
       }
       return ret;
     }
@@ -43,7 +49,9 @@ export class GraceNote extends StaveNote {
     return 0;
   }
 
-  getCategory() { return GraceNote.CATEGORY; }
+  getCategory() {
+    return GraceNote.CATEGORY;
+  }
 
   // FIXME: move this to more basic class.
   getStaveNoteScale() {
@@ -67,49 +75,50 @@ export class GraceNote extends StaveNote {
           beam.postFormat();
         }
 
-        slashBBox = this.calcBeamedNotesSlashBBox(8 * offsetScale,
-          8 * offsetScale,
-          {
-            stem: 6 * offsetScale,
-            beam: 5 * offsetScale,
-          });
+        slashBBox = this.calcBeamedNotesSlashBBox(8 * offsetScale, 8 * offsetScale, {
+          stem: 6 * offsetScale,
+          beam: 5 * offsetScale,
+        });
       } else {
         const stem_direction = this.getStemDirection();
         const noteHeadBounds = this.getNoteHeadBounds();
         const noteStemHeight = stem.getHeight();
         let x = this.getAbsoluteX();
-        let y = stem_direction === Flow.Stem.DOWN ?
-          noteHeadBounds.y_top - noteStemHeight :
-          noteHeadBounds.y_bottom - noteStemHeight;
+        let y =
+          stem_direction === Flow.Stem.DOWN
+            ? noteHeadBounds.y_top - noteStemHeight
+            : noteHeadBounds.y_bottom - noteStemHeight;
 
-        const defaultStemExtention = stem_direction === Flow.Stem.DOWN ?
-          this.glyph.stem_down_extension :
-          this.glyph.stem_up_extension;
+        const defaultStemExtention =
+          stem_direction === Flow.Stem.DOWN ? this.glyph.stem_down_extension : this.glyph.stem_up_extension;
 
         let defaultOffsetY = Flow.STEM_HEIGHT;
-        defaultOffsetY -= (defaultOffsetY / 2.8);
+        defaultOffsetY -= defaultOffsetY / 2.8;
         defaultOffsetY += defaultStemExtention;
-        y += ((defaultOffsetY * staveNoteScale) * stem_direction);
+        y += defaultOffsetY * staveNoteScale * stem_direction;
 
-        const offsets = stem_direction === Flow.Stem.UP ? {
-          x1: 1,
-          y1: 0,
-          x2: 13,
-          y2: -9,
-        } : {
-          x1: -4,
-          y1: 1,
-          x2: 13,
-          y2: 9,
-        };
+        const offsets =
+          stem_direction === Flow.Stem.UP
+            ? {
+                x1: 1,
+                y1: 0,
+                x2: 13,
+                y2: -9,
+              }
+            : {
+                x1: -4,
+                y1: 1,
+                x2: 13,
+                y2: 9,
+              };
 
-        x += (offsets.x1 * offsetScale);
-        y += (offsets.y1 * offsetScale);
+        x += offsets.x1 * offsetScale;
+        y += offsets.y1 * offsetScale;
         slashBBox = {
           x1: x,
           y1: y,
-          x2: x + (offsets.x2 * offsetScale),
-          y2: y + (offsets.y2 * offsetScale),
+          x2: x + offsets.x2 * offsetScale,
+          y2: y + offsets.y2 * offsetScale,
         };
       }
 
@@ -130,7 +139,7 @@ export class GraceNote extends StaveNote {
   calcBeamedNotesSlashBBox(slashStemOffset, slashBeamOffset, protrusions) {
     const beam = this.beam;
     const beam_slope = beam.slope;
-    const isBeamEndNote = (beam.notes[beam.notes.length - 1] === this);
+    const isBeamEndNote = beam.notes[beam.notes.length - 1] === this;
     const scaleX = isBeamEndNote ? -1 : 1;
     const beam_angle = Math.atan(beam_slope * scaleX);
 
@@ -149,12 +158,12 @@ export class GraceNote extends StaveNote {
 
     const stemX = this.getStemX();
     const stem0X = beam.notes[0].getStemX();
-    const stemY = this.beam.getBeamYToDraw() + ((stemX - stem0X) * beam_slope);
+    const stemY = this.beam.getBeamYToDraw() + (stemX - stem0X) * beam_slope;
 
     const ret = {
       x1: stemX - protrusion_stem_dx,
-      y1: (stemY + slashStemOffset - protrusion_stem_dy),
-      x2: stemX + (iPointOnBeam.dx * scaleX) + protrusion_beam_dx,
+      y1: stemY + slashStemOffset - protrusion_stem_dy,
+      x2: stemX + iPointOnBeam.dx * scaleX + protrusion_beam_dx,
       y2: stemY + iPointOnBeam.dy + protrusion_beam_dy,
     };
     return ret;

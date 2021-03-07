@@ -13,7 +13,9 @@ import { Element } from './element';
 import { Renderer } from './renderer';
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
-function L(...args) { if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args); }
+function L(...args) {
+  if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args);
+}
 
 export class TextBracket extends Element {
   // FIXME: Modifier.Position is singular while this is plural, make consistent
@@ -31,13 +33,7 @@ export class TextBracket extends Element {
     };
   }
 
-  constructor({
-    start,
-    stop,
-    text = '',
-    superscript = '',
-    position = TextBracket.Positions.TOP,
-  }) {
+  constructor({ start, stop, text = '', superscript = '', position = TextBracket.Positions.TOP }) {
     super();
     this.setAttribute('type', 'TextBracket');
 
@@ -47,9 +43,7 @@ export class TextBracket extends Element {
     this.text = text;
     this.superscript = superscript;
 
-    this.position = typeof position === 'string'
-      ? TextBracket.PositionString[position]
-      : position;
+    this.position = typeof position === 'string' ? TextBracket.PositionString[position] : position;
 
     this.line = 1;
 
@@ -99,7 +93,10 @@ export class TextBracket extends Element {
     return this;
   }
   // Set the rendering `context` for the octave bracket
-  setLine(line) { this.line = line; return this; }
+  setLine(line) {
+    this.line = line;
+    return this;
+  }
 
   // Draw the octave bracket on the rendering context
   draw() {
@@ -137,7 +134,7 @@ export class TextBracket extends Element {
     const main_height = ctx.measureText('M').width;
 
     // Calculate the y position for the super script
-    const super_y = start.y - (main_height / 2.5);
+    const super_y = start.y - main_height / 2.5;
 
     // Draw the superscript
     ctx.setFont(this.font.family, this.font.size / 1.4, this.font.weight);
@@ -167,20 +164,13 @@ export class TextBracket extends Element {
 
     if (this.render_options.dashed) {
       // Main line
-      Renderer.drawDashedLine(
-        ctx,
-        start_x,
-        line_y,
-        end_x,
-        line_y,
-        this.render_options.dash
-      );
+      Renderer.drawDashedLine(ctx, start_x, line_y, end_x, line_y, this.render_options.dash);
       // Ending Bracket
       if (this.render_options.show_bracket) {
         Renderer.drawDashedLine(
           ctx,
           end_x,
-          line_y + (1 * this.position),
+          line_y + 1 * this.position,
           end_x,
           line_y + bracket_height,
           this.render_options.dash

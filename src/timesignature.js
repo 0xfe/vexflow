@@ -10,7 +10,7 @@ import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
 
 const assertIsValidFraction = (timeSpec) => {
-  const numbers = timeSpec.split('/').filter(number => number !== '');
+  const numbers = timeSpec.split('/').filter((number) => number !== '');
 
   if (numbers.length !== 2) {
     throw new Vex.RERR(
@@ -19,21 +19,21 @@ const assertIsValidFraction = (timeSpec) => {
     );
   }
 
-  numbers.forEach(number => {
+  numbers.forEach((number) => {
     if (isNaN(Number(number))) {
-      throw new Vex.RERR(
-        'BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain two valid numbers.`
-      );
+      throw new Vex.RERR('BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain two valid numbers.`);
     }
   });
 };
 
 export class TimeSignature extends StaveModifier {
-  static get CATEGORY() { return 'timesignatures'; }
+  static get CATEGORY() {
+    return 'timesignatures';
+  }
 
   static get glyphs() {
     return {
-      'C': {
+      C: {
         code: 'timeSigCommon',
         point: 40,
         line: 2,
@@ -65,7 +65,9 @@ export class TimeSignature extends StaveModifier {
     this.setPadding(padding);
   }
 
-  getCategory() { return TimeSignature.CATEGORY; }
+  getCategory() {
+    return TimeSignature.CATEGORY;
+  }
 
   parseTimeSpec(timeSpec) {
     if (timeSpec === 'C' || timeSpec === 'C|') {
@@ -81,9 +83,7 @@ export class TimeSignature extends StaveModifier {
       assertIsValidFraction(timeSpec);
     }
 
-    const [topDigits, botDigits] = timeSpec
-      .split('/')
-      .map(number => number.split(''));
+    const [topDigits, botDigits] = timeSpec.split('/').map((number) => number.split(''));
 
     return {
       num: true,
