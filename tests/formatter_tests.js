@@ -201,11 +201,11 @@ VF.Test.Formatter = (function() {
       var formatter = new VF.Formatter({ maxIterations: 2, softmaxFactor: 100, globalSoftmax: options.globalSoftmax || false });
       formatter.joinVoices([voice1]);
       formatter.joinVoices([voice2]);
-      var width = formatter.preCalculateMinTotalWidth([voice1, voice2]) + 200;
+      var width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
 
       formatter.format([voice1, voice2], width);
-      var stave1 = new VF.Stave(10, 40, width + 30);
-      var stave2 = new VF.Stave(10, 100, width + 30);
+      var stave1 = new VF.Stave(10, 40, width + 50);
+      var stave2 = new VF.Stave(10, 100, width + 50);
       stave1.setContext(context).draw();
       stave2.setContext(context).draw();
       voice1.draw(context, stave1);

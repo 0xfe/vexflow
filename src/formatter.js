@@ -568,7 +568,6 @@ export class Formatter {
                 expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
               }
 
-
               return {
                 expectedDistance,
                 maxNegativeShiftPx,
