@@ -322,6 +322,7 @@ export class Formatter {
   constructor(options) {
     this.options = {
       softmaxFactor: null,
+      globalSoftmax: false,
       maxIterations: 2,
       ...options
     };
@@ -462,6 +463,7 @@ export class Formatter {
     let x = 0;
     let shift = 0;
     this.minTotalWidth = 0;
+    let totalTicks = 0;
 
     // Pass 1: Give each note maximum width requested by context.
     contextList.forEach((tick) => {
@@ -475,6 +477,9 @@ export class Formatter {
       const width = context.getWidth();
       this.minTotalWidth += width;
 
+      const maxTicks = context.getMaxTicks().value();
+      totalTicks += maxTicks;
+
       const metrics = context.getMetrics();
       x = x + shift + metrics.totalLeftPx;
       context.setX(x);
@@ -482,6 +487,12 @@ export class Formatter {
       // Calculate shift for the next tick.
       shift = width - metrics.totalLeftPx;
     });
+
+    // Use softmax based on all notes across all staves. (options.globalSoftmax)
+    const options = this.options;
+    const softmaxFactor = options.softmaxFactor || 100;
+    const exp = (tick) => Math.pow(softmaxFactor, contextMap[tick].getMaxTicks().value() / totalTicks);
+    const expTicksUsed = contextList.map(exp).reduce((a, b) => a + b);
 
     this.minTotalWidth = x + shift;
     this.hasMinTotalWidth = true;
@@ -543,12 +554,20 @@ export class Formatter {
                 maxNegativeShiftPx = Math.min(maxNegativeShiftPx, insideLeftEdge - insideRightEdge);
               });
 
-              // Don't shift further left than the notehead of the last context
-              maxNegativeShiftPx = Math.min(maxNegativeShiftPx, context.getX() - prevContext.getX());
+              // Don't shift further left than the notehead of the last context. Actually, stay at most 5% to the right
+              // so that two different tick contexts don't align across staves.
+              maxNegativeShiftPx = Math.min(maxNegativeShiftPx, context.getX() - (prevContext.getX() + (adjustedJustifyWidth * 0.05)));
 
               // Calculate the expected distance of the current context from the last matching tickable. The
               // distance is scaled down by the softmax for the voice.
-              expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
+              if (options.globalSoftmax) {
+                const t = totalTicks;
+                const exp = (v) => Math.pow(softmaxFactor, v / t);
+                expectedDistance = (exp(maxTicks) / expTicksUsed) * adjustedJustifyWidth;
+              } else {
+                expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
+              }
+
 
               return {
                 expectedDistance,
@@ -559,7 +578,7 @@ export class Formatter {
           }
         }
 
-        return { errorPx: 0, fromTickablePx: 0, maxNegativeShiftPx: 0 };
+        return { expectedDistance: 0, fromTickablePx: 0, maxNegativeShiftPx: 0 };
       });
     }
 

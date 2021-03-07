@@ -185,7 +185,8 @@ export class Voice extends Element {
 
     const totalTicks = this.ticksUsed.value();
     const exp = (v) => Math.pow(this.options.softmaxFactor, v / totalTicks);
-    return exp(tickValue) / this.expTicksUsed;
+    const sm = exp(tickValue) / this.expTicksUsed;
+    return sm;
   }
 
   // Add a tickable to the voice
@@ -195,6 +196,7 @@ export class Voice extends Element {
 
       // Update the total ticks for this line.
       this.ticksUsed.add(ticks);
+      this.expTicksUsed = 0; // reset
 
       if (
         (this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) &&

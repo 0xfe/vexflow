@@ -14,12 +14,10 @@ VF.Test.Formatter = (function() {
       runSVG('Justification and alignment with accidentals', Formatter.accidentalJustification);
       runSVG('Vertical alignment - few unaligned beats', Formatter.unalignedNoteDurations);
       runSVG('Vertical alignment - many unaligned beats', Formatter.unalignedNoteDurations2);
-      runSVG('StaveNote - No Justification', Formatter.formatStaveNotes);
+      runSVG('Vertical alignment - many unaligned beats (global softmax)', Formatter.unalignedNoteDurations2, { globalSoftmax: true });
       runSVG('StaveNote - Justification', Formatter.justifyStaveNotes);
       runSVG('Notes with Tab', Formatter.notesWithTab);
-      runSVG('Multiple Staves - No Justification', Formatter.multiStaves, { justify: false, iterations: 0, debug: true });
       runSVG('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
-      runSVG('Multiple Staves - Justified - 6 Iterations', Formatter.multiStaves, { justify: true, iterations: 4, alpha: 0.01 });
       runSVG('Softmax', Formatter.softMax);
       runSVG('Mixtime', Formatter.mixTime);
       runSVG('Tight', Formatter.tightNotes);
@@ -124,7 +122,7 @@ VF.Test.Formatter = (function() {
     },
 
     unalignedNoteDurations: function(options) {
-      var vf = VF.Test.makeFactory(options, 600, 400);
+      var vf = VF.Test.makeFactory(options, 600, 250);
       var score = vf.EasyScore();
 
       var notes11 = [
@@ -146,7 +144,8 @@ VF.Test.Formatter = (function() {
       var formatter = new VF.Formatter();
       formatter.joinVoices([voice11]);
       formatter.joinVoices([voice21]);
-      var width = formatter.preCalculateMinTotalWidth([voice11, voice21]) + 100;
+
+      var width = formatter.preCalculateMinTotalWidth([voice11, voice21]) + 50;
       var stave11 = vf.Stave({ y: 20, width: width + 20 });
       var stave21 = vf.Stave({ y: 130, width: width + 20 });
       formatter.format([voice11, voice21], width);
@@ -154,16 +153,15 @@ VF.Test.Formatter = (function() {
       stave21.setContext(ctx).draw();
       voice11.draw(ctx, stave11);
       voice21.draw(ctx, stave21);
+
       beams21.forEach(function(b) {
         b.setContext(ctx).draw();
       });
       beams11.forEach(function(b) {
         b.setContext(ctx).draw();
       });
-      if (voice11.tickables[1].getX() <= voice21.tickables[1].getX()) {
-        console.warn('unalignedNoteDurations: Second note of voice 1 is not to the right of the second note of voice 2');
-      }
-      ok(true);
+
+      ok(voice11.tickables[1].getX() > voice21.tickables[1].getX());
     },
 
     unalignedNoteDurations2: function(options) {
@@ -175,8 +173,6 @@ VF.Test.Formatter = (function() {
         new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
         new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
         new VF.StaveNote({ keys: ['e/5'], duration: '16' }),
-        new VF.StaveNote({ keys: ['e/5'], duration: '2' }),
-        /*
         new VF.StaveNote({ keys: ['b/4'], duration: '8r' }),
         new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
         new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
@@ -184,8 +180,8 @@ VF.Test.Formatter = (function() {
         new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
         new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
         new VF.StaveNote({ keys: ['e/5'], duration: '16' }),
-        */
       ];
+
       var notes2 = [
         new VF.StaveNote({ keys: ['a/4'], duration: '16r' }),
         new VF.StaveNote({ keys: ['e/4.'], duration: '8d' }),
@@ -194,6 +190,7 @@ VF.Test.Formatter = (function() {
         new VF.StaveNote({ keys: ['e/4.'], duration: '8d' }),
         new VF.StaveNote({ keys: ['e/4'], duration: '4' }),
       ];
+
       var vf = VF.Test.makeFactory(options, 750, 280);
       const context = vf.getContext();
       var voice1 = new VF.Voice({ num_beats: 4,  beat_value: 4 });
@@ -201,65 +198,24 @@ VF.Test.Formatter = (function() {
       var voice2 = new VF.Voice({ num_beats: 4,  beat_value: 4 });
       voice2.addTickables(notes2);
 
-      var formatter = new VF.Formatter({ maxIterations: 0 });
+      var formatter = new VF.Formatter({ maxIterations: 2, softmaxFactor: 100, globalSoftmax: options.globalSoftmax || false });
       formatter.joinVoices([voice1]);
       formatter.joinVoices([voice2]);
       var width = formatter.preCalculateMinTotalWidth([voice1, voice2]) + 200;
 
-      formatter.format([voice1, voice2], width + 20);
+      formatter.format([voice1, voice2], width);
       var stave1 = new VF.Stave(10, 40, width + 30);
       var stave2 = new VF.Stave(10, 100, width + 30);
       stave1.setContext(context).draw();
       stave2.setContext(context).draw();
       voice1.draw(context, stave1);
       voice2.draw(context, stave2);
-      if (voice1.tickables[1].getX() <= voice2.tickables[1].getX()) {
-        console.warn('unalignedNoteDurations2: Second note of voice 1 is not to the right of the second note of voice 2');
-      }
 
-      ok(true);
-    },
-
-    formatStaveNotes: function(options) {
-      var vf = VF.Test.makeFactory(options, 500, 280);
-      var score = vf.EasyScore();
-
-      vf.Stave({ y: 50 });
-
-      var notes1 = score.notes(
-        '(cb4 e#4 a4)/2, (d4 e4 f4)/4, (cn4 f#4 a4)',
-        { stem: 'down' }
-      );
-      var notes2 = score.notes(
-        '(cb5 e#5 a5)/2, (d5 e5 f5)/4, (cn5 f#5 a5)',
-        { stem: 'up' }
-      );
-
-      var voices = [notes1, notes2].map(score.voice.bind(score));
-
-      vf.Formatter()
-        .joinVoices(voices)
-        .format(voices);
-
-      vf.draw();
-
-      var ctx = vf.getContext();
-
-      notes1.forEach(function(note) {
-        VF.Test.plotNoteWidth(ctx, note, 190);
-      });
-
-      notes2.forEach(function(note) {
-        VF.Test.plotNoteWidth(ctx, note, 35);
-      });
-
-      VF.Test.plotLegendForNoteWidth(ctx, 300, 180);
-
-      ok(true);
+      ok(voice1.tickables[1].getX() > voice2.tickables[1].getX());
     },
 
     justifyStaveNotes: function(options) {
-      var vf = VF.Test.makeFactory(options, 420, 580);
+      var vf = VF.Test.makeFactory(options, 420, 280);
       var ctx = vf.getContext();
       var score = vf.EasyScore();
 
@@ -292,9 +248,7 @@ VF.Test.Formatter = (function() {
         y += 210;
       }
 
-      justifyToWidth(0);
-      justifyToWidth(300);
-      justifyToWidth(400);
+      justifyToWidth(500);
 
       vf.draw();
 
