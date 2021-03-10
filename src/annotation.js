@@ -10,6 +10,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
+import { TextFont } from './textfont';
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
 function L(...args) { if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args); }
@@ -62,8 +63,15 @@ export class Annotation extends Modifier {
 
     let width = 0;
     for (let i = 0; i < annotations.length; ++i) {
+      let testWidth = 0;
       const annotation = annotations[i];
-      width = Math.max(annotation.getWidth(), width);
+      const textFont = TextFont.getTextFontFromVexFontData({ family: annotation.font.family,
+        size: annotation.font.size, weight: 'normal' });
+      textFont.setFontSize(annotation.font.size);
+      for (let j = 0; j < annotation.text.length; ++j) {
+        testWidth += textFont.getWidthForCharacter(annotation.text[j]) * (72 / 96);
+      }
+      width = Math.max(width, testWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
         state.top_text_line++;
@@ -145,6 +153,8 @@ export class Annotation extends Modifier {
 
     // We're changing context parameters. Save current state.
     this.context.save();
+    const classString = Object.keys(this.getAttribute('classes')).join(' ');
+    this.context.openGroup(classString, this.getAttribute('id'));
     this.context.setFont(this.font.family, this.font.size, this.font.weight);
     const text_width = this.context.measureText(this.text).width;
 
@@ -203,6 +213,7 @@ export class Annotation extends Modifier {
 
     L('Rendering annotation: ', this.text, x, y);
     this.context.fillText(this.text, x, y);
+    this.context.closeGroup();
     this.context.restore();
   }
 }
