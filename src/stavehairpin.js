@@ -36,10 +36,7 @@ export class StaveHairpin extends Element {
     const ppt = formatter.pixelsPerTick;
 
     if (ppt == null) {
-      throw new Vex.RuntimeError(
-        'BadArguments',
-        'A valid Formatter must be provide to draw offsets by ticks.'
-      );
+      throw new Vex.RuntimeError('BadArguments', 'A valid Formatter must be provide to draw offsets by ticks.');
     }
 
     const l_shift_px = ppt * options.left_shift_ticks;
@@ -49,12 +46,16 @@ export class StaveHairpin extends Element {
       height: options.height,
       y_shift: options.y_shift,
       left_shift_px: l_shift_px,
-      right_shift_px: r_shift_px };
+      right_shift_px: r_shift_px,
+    };
 
-    new StaveHairpin({
-      first_note: notes.first_note,
-      last_note: notes.last_note,
-    }, type)
+    new StaveHairpin(
+      {
+        first_note: notes.first_note,
+        last_note: notes.last_note,
+      },
+      type
+    )
       .setContext(ctx)
       .setRenderOptions(hairpin_options)
       .setPosition(position)
@@ -120,10 +121,7 @@ export class StaveHairpin extends Element {
    */
   setNotes(notes) {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RuntimeError(
-        'BadArguments',
-        'Hairpin needs to have either first_note or last_note set.'
-      );
+      throw new Vex.RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
     }
 
     // Success. Lets grab 'em notes.
@@ -150,12 +148,12 @@ export class StaveHairpin extends Element {
     switch (this.hairpin) {
       case StaveHairpin.type.CRESC:
         ctx.moveTo(params.last_x + r_shift, y_shift + dis);
-        ctx.lineTo(params.first_x + l_shift, y_shift + (this.render_options.height / 2) + dis);
+        ctx.lineTo(params.first_x + l_shift, y_shift + this.render_options.height / 2 + dis);
         ctx.lineTo(params.last_x + r_shift, y_shift + this.render_options.height + dis);
         break;
       case StaveHairpin.type.DECRESC:
         ctx.moveTo(params.first_x + l_shift, y_shift + dis);
-        ctx.lineTo(params.last_x + r_shift, y_shift + (this.render_options.height / 2) + dis);
+        ctx.lineTo(params.last_x + r_shift, y_shift + this.render_options.height / 2 + dis);
         ctx.lineTo(params.first_x + l_shift, y_shift + this.render_options.height + dis);
         break;
       default:

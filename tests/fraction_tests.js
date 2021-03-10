@@ -3,14 +3,14 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.Fraction = (function() {
+VF.Test.Fraction = (function () {
   var Fraction = {
-    Start: function() {
+    Start: function () {
       QUnit.module('Fraction');
       test('Basic', VF.Test.Fraction.basic);
     },
 
-    basic: function() {
+    basic: function () {
       var f_1_2 = new Vex.Flow.Fraction(1, 2);
       ok(f_1_2.equals(0.5), 'Fraction: 1/2 equals 0.5');
       ok(f_1_2.equals(new Vex.Flow.Fraction(1, 2)), 'Fraction: 1/2 equals 1/2');
@@ -52,7 +52,6 @@ VF.Test.Fraction = (function() {
 
       // TODO: Add more detailed tests.
     },
-
   };
 
   return Fraction;

@@ -2,15 +2,15 @@
  * VexFlow - StaveLine Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-VF.Test.StaveLine = (function() {
+VF.Test.StaveLine = (function () {
   var StaveLine = {
-    Start: function() {
+    Start: function () {
       QUnit.module('StaveLine');
       VF.Test.runTests('Simple StaveLine', VF.Test.StaveLine.simple0);
       VF.Test.runTests('StaveLine Arrow Options', VF.Test.StaveLine.simple1);
     },
 
-    simple0: function(options) {
+    simple0: function (options) {
       var vf = VF.Test.makeFactory(options);
       var stave = vf.Stave().addTrebleGlyph();
 
@@ -42,32 +42,29 @@ VF.Test.StaveLine = (function() {
       });
       staveLine2.render_options.line_dash = [10, 10];
 
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 
       ok(true);
     },
 
-    simple1: function(options) {
+    simple1: function (options) {
       var vf = VF.Test.makeFactory(options, 770);
       var stave = vf.Stave().addTrebleGlyph();
 
       var notes = [
-        vf.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 })
-          .addDotToAll(),
-        vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' })
-          .addAccidental(0, vf.Accidental({ type: '#' })),
+        vf.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }).addDotToAll(),
+        vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addAccidental(0, vf.Accidental({ type: '#' })),
         vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '4', clef: 'treble' }),
-        vf.StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
+        vf
+          .StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
           .addAccidental(2, vf.Accidental({ type: '#' })),
-        vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' })
-          .addAccidental(0, vf.Accidental({ type: '#' })),
+        vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addAccidental(0, vf.Accidental({ type: '#' })),
         vf.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }),
         vf.StaveNote({ keys: ['c/4', 'd/4', 'g/4'], duration: '4', clef: 'treble' }),
-        vf.StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
+        vf
+          .StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
           .addAccidental(2, vf.Accidental({ type: '#' })),
       ];
       var voice = vf.Voice().setStrict(false).addTickables(notes);
@@ -145,9 +142,7 @@ VF.Test.StaveLine = (function() {
       staveLine3.render_options.color = 'red';
       staveLine3.render_options.text_position_vertical = 1;
 
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 
@@ -156,4 +151,4 @@ VF.Test.StaveLine = (function() {
   };
 
   return StaveLine;
-}());
+})();

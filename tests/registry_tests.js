@@ -3,9 +3,9 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-Vex.Flow.Test.Registry = (function() {
+Vex.Flow.Test.Registry = (function () {
   var Registry = {
-    Start: function() {
+    Start: function () {
       QUnit.module('Registry');
       var VFT = Vex.Flow.Test;
 
@@ -14,7 +14,7 @@ Vex.Flow.Test.Registry = (function() {
       QUnit.test('Multiple Classes', VFT.Registry.classes);
     },
 
-    registerAndClear: function(assert) {
+    registerAndClear: function (assert) {
       var registry = new VF.Registry();
       var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
@@ -26,15 +26,15 @@ Vex.Flow.Test.Registry = (function() {
 
       registry.clear();
       assert.notOk(registry.getElementById('foobar'));
-      assert.throws(function() { registry.register(score.notes('C4')); });
+      assert.throws(function () {
+        registry.register(score.notes('C4'));
+      });
 
       registry.clear();
-      assert.ok(registry
-        .register(score.notes('C4[id="boobar"]')[0])
-        .getElementById('boobar'));
+      assert.ok(registry.register(score.notes('C4[id="boobar"]')[0]).getElementById('boobar'));
     },
 
-    defaultRegistry: function(assert) {
+    defaultRegistry: function (assert) {
       var registry = new VF.Registry();
       var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
@@ -55,7 +55,7 @@ Vex.Flow.Test.Registry = (function() {
       assert.equal(elements.length, 1);
     },
 
-    classes: function(assert) {
+    classes: function (assert) {
       var registry = new VF.Registry();
       var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
@@ -85,4 +85,4 @@ Vex.Flow.Test.Registry = (function() {
   };
 
   return Registry;
-}());
+})();

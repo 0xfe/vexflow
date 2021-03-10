@@ -3,30 +3,32 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.TickContext = (function() {
+VF.Test.TickContext = (function () {
   var TickContext = {
-    Start: function() {
+    Start: function () {
       QUnit.module('TickContext');
       test('Current Tick Test', VF.Test.TickContext.currentTick);
       test('Tracking Test', VF.Test.TickContext.tracking);
     },
 
-    currentTick: function() {
+    currentTick: function () {
       var tc = new VF.TickContext();
       equal(tc.getCurrentTick().value(), 0, 'New tick context has no ticks');
     },
 
-    tracking: function() {
+    tracking: function () {
       function createTickable() {
         return new VF.Test.MockTickable(VF.Test.TIME4_4);
       }
 
       var R = VF.RESOLUTION;
-      var BEAT = 1 * R / 4;
+      var BEAT = (1 * R) / 4;
 
       var tickables = [
         createTickable().setTicks(BEAT).setWidth(10),
-        createTickable().setTicks(BEAT * 2).setWidth(20),
+        createTickable()
+          .setTicks(BEAT * 2)
+          .setWidth(20),
         createTickable().setTicks(BEAT).setWidth(30),
       ];
 

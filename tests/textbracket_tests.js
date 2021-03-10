@@ -3,15 +3,15 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.TextBracket = (function() {
+VF.Test.TextBracket = (function () {
   var TextBracket = {
-    Start: function() {
+    Start: function () {
       QUnit.module('TextBracket');
       VF.Test.runTests('Simple TextBracket', VF.Test.TextBracket.simple0);
       VF.Test.runTests('TextBracket Styles', VF.Test.TextBracket.simple1);
     },
 
-    simple0: function(options) {
+    simple0: function (options) {
       var vf = VF.Test.makeFactory(options, 550);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -40,16 +40,14 @@ VF.Test.TextBracket = (function() {
         },
       });
 
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 
       ok(true);
     },
 
-    simple1: function(options) {
+    simple1: function (options) {
       var vf = VF.Test.makeFactory(options, 550);
       var stave = vf.Stave();
       var score = vf.EasyScore();
@@ -112,9 +110,7 @@ VF.Test.TextBracket = (function() {
       bottomOctaves[1].render_options.bracket_height = 40;
       bottomOctaves[1].setDashed(true, [2, 2]);
 
-      vf.Formatter()
-        .joinVoices([voice])
-        .formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 

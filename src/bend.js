@@ -42,7 +42,9 @@ import { Modifier } from './modifier';
      }]
  */
 export class Bend extends Modifier {
-  static get CATEGORY() { return 'bends'; }
+  static get CATEGORY() {
+    return 'bends';
+  }
 
   static get UP() {
     return 0;
@@ -100,14 +102,21 @@ export class Bend extends Modifier {
     this.updateWidth();
   }
 
-  getCategory() { return Bend.CATEGORY; }
+  getCategory() {
+    return Bend.CATEGORY;
+  }
 
   setXShift(value) {
     this.x_shift = value;
     this.updateWidth();
   }
-  setFont(font) { this.font = font; return this; }
-  getText() { return this.text; }
+  setFont(font) {
+    this.font = font;
+    return this;
+  }
+  getText() {
+    return this.text;
+  }
   updateWidth() {
     const that = this;
 
@@ -128,8 +137,8 @@ export class Bend extends Modifier {
       if ('width' in bend) {
         total_width += bend.width;
       } else {
-        const additional_width = (bend.type === Bend.UP) ?
-          this.render_options.bend_width : this.render_options.release_width;
+        const additional_width =
+          bend.type === Bend.UP ? this.render_options.bend_width : this.render_options.release_width;
 
         bend.width = Vex.Max(additional_width, measure_text(bend.text)) + 3;
         bend.draw_width = bend.width / 2;
@@ -142,14 +151,13 @@ export class Bend extends Modifier {
   }
   draw() {
     this.checkContext();
-    if (!(this.note && (this.index != null))) {
+    if (!(this.note && this.index != null)) {
       throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
     }
 
     this.setRendered();
 
-    const start = this.note.getModifierStartXY(Modifier.Position.RIGHT,
-      this.index);
+    const start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
     start.x += 3;
     start.y += 0.5;
     const x_shift = this.x_shift;
@@ -181,9 +189,7 @@ export class Bend extends Modifier {
       ctx.setStrokeStyle(that.render_options.line_style);
       ctx.setFillStyle(that.render_options.line_style);
       ctx.moveTo(x, height);
-      ctx.quadraticCurveTo(
-        x + width, height,
-        x + width, y);
+      ctx.quadraticCurveTo(x + width, height, x + width, y);
       ctx.stroke();
       ctx.restore();
     }
@@ -203,7 +209,7 @@ export class Bend extends Modifier {
     function renderText(x, text) {
       ctx.save();
       ctx.setRawFont(that.font);
-      const render_x = x - (ctx.measureText(text).width / 2);
+      const render_x = x - ctx.measureText(text).width / 2;
       ctx.fillText(text, render_x, annotation_y);
       ctx.restore();
     }
@@ -214,9 +220,7 @@ export class Bend extends Modifier {
       const bend = this.phrase[i];
       if (i === 0) bend.draw_width += x_shift;
 
-      last_drawn_width = bend.draw_width +
-        (last_bend ? last_bend.draw_width : 0) -
-        (i === 1 ? x_shift : 0);
+      last_drawn_width = bend.draw_width + (last_bend ? last_bend.draw_width : 0) - (i === 1 ? x_shift : 0);
       if (bend.type === Bend.UP) {
         if (last_bend && last_bend.type === Bend.UP) {
           renderArrowHead(start.x, bend_height);

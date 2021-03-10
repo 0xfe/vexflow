@@ -10,7 +10,9 @@ import { Modifier } from './modifier';
  * @constructor
  */
 export class FretHandFinger extends Modifier {
-  static get CATEGORY() { return 'frethandfinger'; }
+  static get CATEGORY() {
+    return 'frethandfinger';
+  }
 
   // Arrange fingerings inside a ModifierContext.
   static format(nums, state) {
@@ -94,8 +96,9 @@ export class FretHandFinger extends Modifier {
   static easyScoreHook({ fingerings }, note, builder) {
     if (!fingerings) return;
 
-    fingerings.split(',')
-      .map(fingeringString => fingeringString.trim().split('.'))
+    fingerings
+      .split(',')
+      .map((fingeringString) => fingeringString.trim().split('.'))
       .map(([number, position]) => {
         const params = { number };
         if (position) params.position = position;
@@ -112,21 +115,32 @@ export class FretHandFinger extends Modifier {
     this.index = null;
     this.finger = number;
     this.width = 7;
-    this.position = Modifier.Position.LEFT;  // Default position above stem or note head
+    this.position = Modifier.Position.LEFT; // Default position above stem or note head
     this.x_shift = 0;
     this.y_shift = 0;
-    this.x_offset = 0;       // Horizontal offset from default
-    this.y_offset = 0;       // Vertical offset from default
+    this.x_offset = 0; // Horizontal offset from default
+    this.y_offset = 0; // Vertical offset from default
     this.font = {
       family: 'sans-serif',
       size: 9,
       weight: 'bold',
     };
   }
-  getCategory() { return FretHandFinger.CATEGORY; }
-  setFretHandFinger(number) { this.finger = number; return this; }
-  setOffsetX(x) { this.x_offset = x; return this; }
-  setOffsetY(y) { this.y_offset = y; return this; }
+  getCategory() {
+    return FretHandFinger.CATEGORY;
+  }
+  setFretHandFinger(number) {
+    this.finger = number;
+    return this;
+  }
+  setOffsetX(x) {
+    this.x_offset = x;
+    return this;
+  }
+  setOffsetY(y) {
+    this.y_offset = y;
+    return this;
+  }
 
   draw() {
     this.checkContext();

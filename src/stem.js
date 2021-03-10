@@ -9,10 +9,14 @@ import { Element } from './element';
 import { Flow } from './tables';
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
-function L(...args) { if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args); }
+function L(...args) {
+  if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args);
+}
 
 export class Stem extends Element {
-  static get CATEGORY() { return 'stem'; }
+  static get CATEGORY() {
+    return 'stem';
+  }
 
   // Stem directions
   static get UP() {
@@ -76,11 +80,17 @@ export class Stem extends Element {
   }
 
   // Set the direction of the stem in relation to the noteheads
-  setDirection(direction) { this.stem_direction = direction; }
+  setDirection(direction) {
+    this.stem_direction = direction;
+  }
 
   // Set the extension for the stem, generally for flags or beams
-  setExtension(ext) { this.stem_extension = ext; }
-  getExtension() { return this.stem_extension; }
+  setExtension(ext) {
+    this.stem_extension = ext;
+  }
+  getExtension() {
+    return this.stem_extension;
+  }
 
   // The the y bounds for the top and bottom noteheads
   setYBounds(y_top, y_bottom) {
@@ -89,17 +99,14 @@ export class Stem extends Element {
   }
 
   // The category of the object
-  getCategory() { return Stem.CATEGORY; }
+  getCategory() {
+    return Stem.CATEGORY;
+  }
 
   // Gets the entire height for the stem
   getHeight() {
-    const y_offset = (this.stem_direction === Stem.UP)
-      ? this.stem_up_y_offset
-      : this.stem_down_y_offset;
-    const unsigned_height = (
-      (this.y_bottom - this.y_top)
-      + (Stem.HEIGHT - y_offset + this.stem_extension)
-    );  // parentheses just for grouping.
+    const y_offset = this.stem_direction === Stem.UP ? this.stem_up_y_offset : this.stem_down_y_offset;
+    const unsigned_height = this.y_bottom - this.y_top + (Stem.HEIGHT - y_offset + this.stem_extension); // parentheses just for grouping.
     return unsigned_height * this.stem_direction;
   }
 
@@ -116,7 +123,7 @@ export class Stem extends Element {
 
     const innerMostNoteheadY = (isStemUp ? Math.min : Math.max)(...ys);
     const outerMostNoteheadY = (isStemUp ? Math.max : Math.min)(...ys);
-    const stemTipY = innerMostNoteheadY + (stemHeight * -this.stem_direction);
+    const stemTipY = innerMostNoteheadY + stemHeight * -this.stem_direction;
 
     return { topY: stemTipY, baseY: outerMostNoteheadY };
   }
@@ -160,9 +167,7 @@ export class Stem extends Element {
     L('Rendering stem - ', 'Top Y: ', this.y_top, 'Bottom Y: ', this.y_bottom);
 
     // The offset from the stem's base which is required fo satisfy the stemlet height
-    const stemletYOffset = this.isStemlet
-      ? stemHeight - this.stemletHeight * this.stem_direction
-      : 0;
+    const stemletYOffset = this.isStemlet ? stemHeight - this.stemletHeight * this.stem_direction : 0;
 
     // Draw the stem
     ctx.save();
@@ -170,7 +175,7 @@ export class Stem extends Element {
     ctx.beginPath();
     ctx.setLineWidth(Stem.WIDTH);
     ctx.moveTo(stem_x, stem_y - stemletYOffset + y_base_offset);
-    ctx.lineTo(stem_x, stem_y - stemHeight - (this.renderHeightAdjustment * stem_direction));
+    ctx.lineTo(stem_x, stem_y - stemHeight - this.renderHeightAdjustment * stem_direction);
     ctx.stroke();
     this.restoreStyle(ctx);
     ctx.restore();

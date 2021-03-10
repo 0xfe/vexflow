@@ -20,7 +20,9 @@ import { Element } from './element';
 // function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
 
 export class Modifier extends Element {
-  static get CATEGORY() { return 'none'; }
+  static get CATEGORY() {
+    return 'none';
+  }
 
   // Modifiers can be positioned almost anywhere, relative to a note.
   static get Position() {
@@ -68,45 +70,75 @@ export class Modifier extends Element {
 
   // Every modifier has a category. The `ModifierContext` uses this to determine
   // the type and order of the modifiers.
-  getCategory() { return Modifier.CATEGORY; }
+  getCategory() {
+    return Modifier.CATEGORY;
+  }
 
   // Get and set modifier widths.
-  getWidth() { return this.width; }
-  setWidth(width) { this.width = width; return this; }
+  getWidth() {
+    return this.width;
+  }
+  setWidth(width) {
+    this.width = width;
+    return this;
+  }
 
   // Get and set attached note (`StaveNote`, `TabNote`, etc.)
-  getNote() { return this.note; }
-  setNote(note) { this.note = note; return this; }
+  getNote() {
+    return this.note;
+  }
+  setNote(note) {
+    this.note = note;
+    return this;
+  }
 
   // Get and set note index, which is a specific note in a chord.
-  getIndex() { return this.index; }
-  setIndex(index) { this.index = index; return this; }
+  getIndex() {
+    return this.index;
+  }
+  setIndex(index) {
+    this.index = index;
+    return this;
+  }
 
   // Every modifier must be part of a `ModifierContext`.
-  getModifierContext() { return this.modifier_context; }
-  setModifierContext(c) { this.modifier_context = c; return this; }
+  getModifierContext() {
+    return this.modifier_context;
+  }
+  setModifierContext(c) {
+    this.modifier_context = c;
+    return this;
+  }
 
   // Get and set articulation position.
-  getPosition() { return this.position; }
+  getPosition() {
+    return this.position;
+  }
   setPosition(position) {
-    this.position = typeof(position) === 'string'
-      ? Modifier.PositionString[position]
-      : position;
+    this.position = typeof position === 'string' ? Modifier.PositionString[position] : position;
     this.reset();
     return this;
   }
 
   // Set the `text_line` for the modifier.
-  setTextLine(line) { this.text_line = line; return this; }
+  setTextLine(line) {
+    this.text_line = line;
+    return this;
+  }
 
   // Shift modifier down `y` pixels. Negative values shift up.
-  setYShift(y) { this.y_shift = y; return this; }
+  setYShift(y) {
+    this.y_shift = y;
+    return this;
+  }
 
   setSpacingFromNextModifier(x) {
     this.spacingFromNextModifier = x;
   }
 
-  getSpacingFromNextModifier() { return this.spacingFromNextModifier; }
+  getSpacingFromNextModifier() {
+    return this.spacingFromNextModifier;
+  }
 
   // Shift modifier `x` pixels in the direction of the modifier. Negative values
   // shift reverse.
@@ -118,7 +150,9 @@ export class Modifier extends Element {
       this.x_shift += x;
     }
   }
-  getXShift() { return this.x_shift; }
+  getXShift() {
+    return this.x_shift;
+  }
 
   // Render the modifier onto the canvas.
   draw() {
@@ -131,8 +165,8 @@ export class Modifier extends Element {
     // Shift over the tick contexts of each note
     const tickContext = note.getTickContext();
     const metrics = tickContext.getMetrics();
-    const subNoteXOffset = tickContext.getX() - metrics.modLeftPx - metrics.modRightPx
-      + this.getSpacingFromNextModifier();
+    const subNoteXOffset =
+      tickContext.getX() - metrics.modLeftPx - metrics.modRightPx + this.getSpacingFromNextModifier();
 
     subNotes.forEach((subNote) => {
       const subTickContext = subNote.getTickContext();

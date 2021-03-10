@@ -12,8 +12,12 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
   let y;
   let i = 0;
 
-  function nextX() { return originX + outline[i++] * scaleX; }
-  function nextY() { return originY + outline[i++] * scaleY; }
+  function nextX() {
+    return originX + outline[i++] * scaleX;
+  }
+  function nextY() {
+    return originY + outline[i++] * scaleY;
+  }
   function doOutline(command, ...args) {
     outlineFns[command](...args);
   }
@@ -81,18 +85,33 @@ export class Glyph extends Element {
   static loadMetrics(fontStack, code, category = null) {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
-    const x_shift = category ? Glyph.lookupFontMetric({
-      font, category, code,
-      key: 'shiftX', defaultValue: 0
-    }) : 0;
-    const y_shift = category ? Glyph.lookupFontMetric({
-      font, category, code,
-      key: 'shiftY', defaultValue: 0
-    }) : 0;
-    const scale = category ? Glyph.lookupFontMetric({
-      font, category, code,
-      key: 'scale', defaultValue: 1
-    }) : 1;
+    const x_shift = category
+      ? Glyph.lookupFontMetric({
+          font,
+          category,
+          code,
+          key: 'shiftX',
+          defaultValue: 0,
+        })
+      : 0;
+    const y_shift = category
+      ? Glyph.lookupFontMetric({
+          font,
+          category,
+          code,
+          key: 'shiftY',
+          defaultValue: 0,
+        })
+      : 0;
+    const scale = category
+      ? Glyph.lookupFontMetric({
+          font,
+          category,
+          code,
+          key: 'scale',
+          defaultValue: 1,
+        })
+      : 1;
 
     const x_min = glyph.x_min;
     const x_max = glyph.x_max;
@@ -143,32 +162,49 @@ export class Glyph extends Element {
     const params = {
       fontStack: Flow.DEFAULT_FONT_STACK,
       category: null,
-      ...options
+      ...options,
     };
     const metrics = Glyph.loadMetrics(params.fontStack, val, params.category);
-    point = params.category ? Glyph.lookupFontMetric({
-      font: metrics.font,
-      category: params.category,
-      code: val,
-      key: 'point',
-      defaultValue: point
-    }) : point;
-    const scale = point * 72.0 / (metrics.font.getResolution() * 100.0);
+    point = params.category
+      ? Glyph.lookupFontMetric({
+          font: metrics.font,
+          category: params.category,
+          code: val,
+          key: 'point',
+          defaultValue: point,
+        })
+      : point;
+    const scale = (point * 72.0) / (metrics.font.getResolution() * 100.0);
 
-    Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift, options);
+    Glyph.renderOutline(
+      ctx,
+      metrics.outline,
+      scale * metrics.scale,
+      x_pos + metrics.x_shift,
+      y_pos + metrics.y_shift,
+      options
+    );
     return metrics;
   }
 
   static renderOutline(ctx, outline, scale, x_pos, y_pos, options) {
     ctx.beginPath();
     ctx.moveTo(x_pos, y_pos);
-    processOutline(outline, x_pos, y_pos, scale, -scale, {
-      m: ctx.moveTo.bind(ctx),
-      l: ctx.lineTo.bind(ctx),
-      q: ctx.quadraticCurveTo.bind(ctx),
-      b: ctx.bezierCurveTo.bind(ctx),
-      // z: ctx.fill.bind(ctx), // ignored
-    }, options);
+    processOutline(
+      outline,
+      x_pos,
+      y_pos,
+      scale,
+      -scale,
+      {
+        m: ctx.moveTo.bind(ctx),
+        l: ctx.lineTo.bind(ctx),
+        q: ctx.quadraticCurveTo.bind(ctx),
+        b: ctx.bezierCurveTo.bind(ctx),
+        // z: ctx.fill.bind(ctx), // ignored
+      },
+      options
+    );
     ctx.fill();
   }
 
@@ -183,12 +219,7 @@ export class Glyph extends Element {
       z: bboxComp.noOp.bind(bboxComp),
     });
 
-    return new BoundingBox(
-      bboxComp.x1,
-      bboxComp.y1,
-      bboxComp.width(),
-      bboxComp.height()
-    );
+    return new BoundingBox(bboxComp.x1, bboxComp.y1, bboxComp.width(), bboxComp.height());
   }
 
   /**
@@ -230,28 +261,42 @@ export class Glyph extends Element {
     this.reset();
   }
 
-  setPoint(point) { this.point = point; return this; }
-  setStave(stave) { this.stave = stave; return this; }
-  setXShift(x_shift) { this.x_shift = x_shift; return this; }
-  setYShift(y_shift) { this.y_shift = y_shift; return this; }
+  setPoint(point) {
+    this.point = point;
+    return this;
+  }
+  setStave(stave) {
+    this.stave = stave;
+    return this;
+  }
+  setXShift(x_shift) {
+    this.x_shift = x_shift;
+    return this;
+  }
+  setYShift(y_shift) {
+    this.y_shift = y_shift;
+    return this;
+  }
 
   reset() {
     this.metrics = Glyph.loadMetrics(this.options.fontStack, this.code, this.options.category);
     // Override point from metrics file
-    this.point = this.options.category ? Glyph.lookupFontMetric({
-      category: this.options.category,
-      font: this.metrics.font,
-      code: this.code,
-      key: 'point',
-      defaultValue: this.point,
-    }) : this.point;
+    this.point = this.options.category
+      ? Glyph.lookupFontMetric({
+          category: this.options.category,
+          font: this.metrics.font,
+          code: this.code,
+          key: 'point',
+          defaultValue: this.point,
+        })
+      : this.point;
 
-    this.scale = this.point * 72 / (this.metrics.font.getResolution() * 100);
+    this.scale = (this.point * 72) / (this.metrics.font.getResolution() * 100);
     this.bbox = Glyph.getOutlineBoundingBox(
       this.metrics.outline,
       this.scale * this.metrics.scale,
       this.metrics.x_shift,
-      this.metrics.y_shift,
+      this.metrics.y_shift
     );
   }
 
@@ -297,9 +342,13 @@ export class Glyph extends Element {
 
     this.setRendered();
     this.applyStyle(ctx);
-    Glyph.renderOutline(ctx, outline, scale,
+    Glyph.renderOutline(
+      ctx,
+      outline,
+      scale,
       x + this.originShift.x + this.metrics.x_shift,
-      y + this.originShift.y + this.metrics.y_shift);
+      y + this.originShift.y + this.metrics.y_shift
+    );
     this.restoreStyle(ctx);
   }
 
@@ -319,8 +368,13 @@ export class Glyph extends Element {
 
     this.setRendered();
     this.applyStyle();
-    Glyph.renderOutline(this.context, outline, scale,
-      x + this.x_shift + this.metrics.x_shift, this.stave.getYForGlyphs() + this.y_shift + this.metrics.y_shift);
+    Glyph.renderOutline(
+      this.context,
+      outline,
+      scale,
+      x + this.x_shift + this.metrics.x_shift,
+      this.stave.getYForGlyphs() + this.y_shift + this.metrics.y_shift
+    );
     this.restoreStyle();
   }
 }

@@ -16,10 +16,14 @@ import { TabTie } from './tabtie';
 import { StaveNote } from './stavenote';
 
 // To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
-function L(...args) { if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args); }
+function L(...args) {
+  if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
+}
 
 export class GraceNoteGroup extends Modifier {
-  static get CATEGORY() { return 'gracenotegroups'; }
+  static get CATEGORY() {
+    return 'gracenotegroups';
+  }
 
   // Arrange groups inside a `ModifierContext`
   static format(gracenote_groups, state) {
@@ -35,8 +39,8 @@ export class GraceNoteGroup extends Modifier {
     for (let i = 0; i < gracenote_groups.length; ++i) {
       const gracenote_group = gracenote_groups[i];
       const note = gracenote_group.getNote();
-      const is_stavenote = (note.getCategory() === StaveNote.CATEGORY);
-      const spacing = (is_stavenote ? group_spacing_stave : group_spacing_tab);
+      const is_stavenote = note.getCategory() === StaveNote.CATEGORY;
+      const spacing = is_stavenote ? group_spacing_stave : group_spacing_tab;
 
       if (is_stavenote && note !== prev_note) {
         // Iterate through all notes to get the displaced pixels
@@ -106,7 +110,9 @@ export class GraceNoteGroup extends Modifier {
     return this;
   }
 
-  getCategory() { return GraceNoteGroup.CATEGORY; }
+  getCategory() {
+    return GraceNoteGroup.CATEGORY;
+  }
 
   preFormat() {
     if (this.preFormatted) return;
@@ -149,28 +155,30 @@ export class GraceNoteGroup extends Modifier {
 
     L('Drawing grace note group for:', note);
 
-    if (!(note && (this.index !== null))) {
-      throw new Vex.RuntimeError('NoAttachedNote',
-        "Can't draw grace note without a parent note and parent note index.");
+    if (!(note && this.index !== null)) {
+      throw new Vex.RuntimeError(
+        'NoAttachedNote',
+        "Can't draw grace note without a parent note and parent note index."
+      );
     }
 
     this.setRendered();
     this.alignSubNotesWithNote(this.getGraceNotes(), note); // Modifier function
 
     // Draw notes
-    this.grace_notes.forEach(graceNote => {
+    this.grace_notes.forEach((graceNote) => {
       graceNote.setContext(this.context).draw();
     });
 
     // Draw beam
-    this.beams.forEach(beam => {
+    this.beams.forEach((beam) => {
       beam.setContext(this.context).draw();
     });
 
     if (this.show_slur) {
       // Create and draw slur
-      const is_stavenote = (this.getNote().getCategory() === StaveNote.CATEGORY);
-      const TieClass = (is_stavenote ? StaveTie : TabTie);
+      const is_stavenote = this.getNote().getCategory() === StaveNote.CATEGORY;
+      const TieClass = is_stavenote ? StaveTie : TabTie;
 
       this.slur = new TieClass({
         last_note: this.grace_notes[0],

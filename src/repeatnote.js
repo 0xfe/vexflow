@@ -7,10 +7,10 @@ export class RepeatNote extends GlyphNote {
   constructor(type, noteStruct, options) {
     // Smufl Codes
     const CODES = {
-      '1': 'repeat1Bar',
-      '2': 'repeat2Bars',
-      '4': 'repeat4Bars',
-      'slash': 'repeatBarSlash',
+      1: 'repeat1Bar',
+      2: 'repeat2Bars',
+      4: 'repeat4Bars',
+      slash: 'repeatBarSlash',
     };
 
     noteStruct = {

@@ -28,8 +28,8 @@ export class StaveTie extends Element {
     this.direction = null;
 
     this.render_options = {
-      cp1: 8,      // Curve control point 1
-      cp2: 12,      // Curve control point 2
+      cp1: 8, // Curve control point 1
+      cp2: 12, // Curve control point 2
       text_shift_x: 0,
       first_x_shift: 0,
       last_x_shift: 0,
@@ -42,8 +42,14 @@ export class StaveTie extends Element {
     this.setNotes(notes);
   }
 
-  setFont(font) { this.font = font; return this; }
-  setDirection(direction) { this.direction = direction; return this; }
+  setFont(font) {
+    this.font = font;
+    return this;
+  }
+  setDirection(direction) {
+    this.direction = direction;
+    return this;
+  }
 
   /**
    * Set the notes to attach this tie to.
@@ -52,9 +58,7 @@ export class StaveTie extends Element {
    */
   setNotes(notes) {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RuntimeError(
-        'BadArguments', 'Tie needs to have either first_note or last_note set.'
-      );
+      throw new Vex.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
     }
 
     if (!notes.first_indices) notes.first_indices = [0];
@@ -76,7 +80,7 @@ export class StaveTie extends Element {
    * @return {boolean} Returns true if this is a partial bar.
    */
   isPartial() {
-    return (!this.first_note || !this.last_note);
+    return !this.first_note || !this.last_note;
   }
 
   renderTie(params) {
@@ -89,7 +93,8 @@ export class StaveTie extends Element {
     let cp2 = this.render_options.cp2;
 
     if (Math.abs(params.last_x_px - params.first_x_px) < 10) {
-      cp1 = 2; cp2 = 8;
+      cp1 = 2;
+      cp2 = 8;
     }
 
     const first_x_shift = this.render_options.first_x_shift;
@@ -97,8 +102,7 @@ export class StaveTie extends Element {
     const y_shift = this.render_options.y_shift * params.direction;
 
     for (let i = 0; i < this.first_indices.length; ++i) {
-      const cp_x = ((params.last_x_px + last_x_shift) +
-          (params.first_x_px + first_x_shift)) / 2;
+      const cp_x = (params.last_x_px + last_x_shift + (params.first_x_px + first_x_shift)) / 2;
       const first_y_px = params.first_ys[this.first_indices[i]] + y_shift;
       const last_y_px = params.last_ys[this.last_indices[i]] + y_shift;
 
@@ -106,8 +110,8 @@ export class StaveTie extends Element {
         throw new Vex.RERR('BadArguments', 'Bad indices for tie rendering.');
       }
 
-      const top_cp_y = ((first_y_px + last_y_px) / 2) + (cp1 * params.direction);
-      const bottom_cp_y = ((first_y_px + last_y_px) / 2) + (cp2 * params.direction);
+      const top_cp_y = (first_y_px + last_y_px) / 2 + cp1 * params.direction;
+      const bottom_cp_y = (first_y_px + last_y_px) / 2 + cp2 * params.direction;
 
       ctx.beginPath();
       ctx.moveTo(params.first_x_px + first_x_shift, first_y_px);

@@ -24,7 +24,7 @@ export class Renderer {
   static get LineEndType() {
     return {
       NONE: 1, // No leg
-      UP: 2,   // Upward leg
+      UP: 2, // Upward leg
       DOWN: 3, // Downward leg
     };
   }
@@ -74,14 +74,25 @@ export class Renderer {
     }
 
     const methodNames = [
-      'clear', 'setFont', 'setRawFont', 'setFillStyle', 'setBackgroundFillStyle',
-      'setStrokeStyle', 'setShadowColor', 'setShadowBlur', 'setLineWidth',
-      'setLineCap', 'setLineDash', 'openGroup', 'closeGroup', 'getGroup',
+      'clear',
+      'setFont',
+      'setRawFont',
+      'setFillStyle',
+      'setBackgroundFillStyle',
+      'setStrokeStyle',
+      'setShadowColor',
+      'setShadowBlur',
+      'setLineWidth',
+      'setLineCap',
+      'setLineDash',
+      'openGroup',
+      'closeGroup',
+      'getGroup',
     ];
 
     ctx.vexFlowCanvasContext = ctx;
 
-    methodNames.forEach(methodName => {
+    methodNames.forEach((methodName) => {
       ctx[methodName] = ctx[methodName] || CanvasContext.prototype[methodName];
     });
 
@@ -104,9 +115,9 @@ export class Renderer {
     let draw = true;
     while (!((dx < 0 ? x <= toX : x >= toX) && (dy < 0 ? y <= toY : y >= toY))) {
       const dashLength = dashPattern[idx++ % dashPattern.length];
-      const nx = x + (Math.cos(angle) * dashLength);
+      const nx = x + Math.cos(angle) * dashLength;
       x = dx < 0 ? Math.max(toX, nx) : Math.min(toX, nx);
-      const ny = y + (Math.sin(angle) * dashLength);
+      const ny = y + Math.sin(angle) * dashLength;
       y = dy < 0 ? Math.max(toY, ny) : Math.min(toY, ny);
       if (draw) {
         context.lineTo(x, y);
@@ -151,9 +162,7 @@ export class Renderer {
   resize(width, height) {
     if (this.backend === Renderer.Backends.CANVAS) {
       if (!this.element.getContext) {
-        throw new Vex.RERR(
-          'BadElement', `Can't get canvas context from element: ${this.elementId}`
-        );
+        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${this.elementId}`);
       }
       [width, height] = CanvasContext.SanitizeCanvasDims(width, height);
 
@@ -173,5 +182,7 @@ export class Renderer {
     return this;
   }
 
-  getContext() { return this.ctx; }
+  getContext() {
+    return this.ctx;
+  }
 }

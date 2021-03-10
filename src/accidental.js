@@ -17,14 +17,18 @@ import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
-function L(...args) { if (Accidental.DEBUG) Vex.L('Vex.Flow.Accidental', args); }
+function L(...args) {
+  if (Accidental.DEBUG) Vex.L('Vex.Flow.Accidental', args);
+}
 
-const getGlyphWidth = glyph => glyph.getMetrics().width;
+const getGlyphWidth = (glyph) => glyph.getMetrics().width;
 
 // An `Accidental` inherits from `Modifier`, and is formatted within a
 // `ModifierContext`.
 export class Accidental extends Modifier {
-  static get CATEGORY() { return 'accidentals'; }
+  static get CATEGORY() {
+    return 'accidentals';
+  }
 
   // Arrange accidentals inside a ModifierContext.
   static format(accidentals, state) {
@@ -55,7 +59,7 @@ export class Accidental extends Modifier {
       if (stave !== null) {
         const lineSpace = stave.options.spacing_between_lines_px;
         const y = stave.getYForLine(props.line);
-        const accLine = Math.round(y / lineSpace * 2) / 2;
+        const accLine = Math.round((y / lineSpace) * 2) / 2;
         accList.push({ y, line: accLine, shift: shiftL, acc, lineSpace });
       } else {
         accList.push({ line: props.line, shift: shiftL, acc });
@@ -155,14 +159,12 @@ export class Accidental extends Modifier {
       const getGroupLine = (index) => lineList[groupStart + index];
       const getGroupLines = (indexes) => indexes.map(getGroupLine);
       const lineDifference = (indexA, indexB) => {
-        const [a, b] = getGroupLines([indexA, indexB]).map(item => item.line);
+        const [a, b] = getGroupLines([indexA, indexB]).map((item) => item.line);
         return a - b;
       };
 
       const notColliding = (...indexPairs) =>
-        indexPairs
-          .map(getGroupLines)
-          .every(lines => !this.checkCollision(...lines));
+        indexPairs.map(getGroupLines).every((lines) => !this.checkCollision(...lines));
 
       // Set columns for the lines in this group:
       const groupLength = groupEnd - groupStart + 1;
@@ -223,7 +225,7 @@ export class Accidental extends Modifier {
         for (groupMember = i; groupMember <= groupEnd; groupMember++) {
           column = ((groupMember - i) % patternLength) + 1;
           lineList[groupMember].column = column;
-          totalColumns = (totalColumns > column) ? totalColumns : column;
+          totalColumns = totalColumns > column ? totalColumns : column;
         }
 
         // Otherwise, if the group contains fewer than seven members, use the layouts from
@@ -232,7 +234,7 @@ export class Accidental extends Modifier {
         for (groupMember = i; groupMember <= groupEnd; groupMember++) {
           column = Flow.accidentalColumnsTable[groupLength][endCase][groupMember - i];
           lineList[groupMember].column = column;
-          totalColumns = (totalColumns > column) ? totalColumns : column;
+          totalColumns = totalColumns > column ? totalColumns : column;
         }
       }
 
@@ -266,7 +268,7 @@ export class Accidental extends Modifier {
 
     // Fill columnWidths with widest needed x-space;
     // this is what keeps the columns parallel.
-    lineList.forEach(line => {
+    lineList.forEach((line) => {
       if (line.width > columnWidths[line.column]) columnWidths[line.column] = line.width;
     });
 
@@ -278,12 +280,12 @@ export class Accidental extends Modifier {
     const totalShift = columnXOffsets[columnXOffsets.length - 1];
     // Set the xShift for each accidental according to column offsets:
     let accCount = 0;
-    lineList.forEach(line => {
+    lineList.forEach((line) => {
       let lineWidth = 0;
       const lastAccOnLine = accCount + line.numAcc;
       // handle all of the accidentals on a given line:
       for (accCount; accCount < lastAccOnLine; accCount++) {
-        const xShift = (columnXOffsets[line.column - 1] + lineWidth);
+        const xShift = columnXOffsets[line.column - 1] + lineWidth;
         accList[accCount].acc.setXShift(xShift);
         // keep track of the width of accidentals we've added so far, so that when
         // we loop, we add space for them.
@@ -301,11 +303,13 @@ export class Accidental extends Modifier {
     let clearance = line2.line - line1.line;
     let clearanceRequired = 3;
     // But less clearance is required for certain accidentals: b, bb and ##.
-    if (clearance > 0) { // then line 2 is on top
-      clearanceRequired = (line2.flatLine || line2.dblSharpLine) ? 2.5 : 3.0;
+    if (clearance > 0) {
+      // then line 2 is on top
+      clearanceRequired = line2.flatLine || line2.dblSharpLine ? 2.5 : 3.0;
       if (line1.dblSharpLine) clearance -= 0.5;
-    } else { // line 1 is on top
-      clearanceRequired = (line1.flatLine || line1.dblSharpLine) ? 2.5 : 3.0;
+    } else {
+      // line 1 is on top
+      clearanceRequired = line1.flatLine || line1.dblSharpLine ? 2.5 : 3.0;
       if (line2.dblSharpLine) clearance -= 0.5;
     }
     const collision = Math.abs(clearance) < clearanceRequired;
@@ -321,10 +325,10 @@ export class Accidental extends Modifier {
     const tickNoteMap = {};
 
     // Sort the tickables in each voice by their tick position in the voice
-    voices.forEach(voice => {
+    voices.forEach((voice) => {
       const tickPosition = new Fraction(0, 1);
       const notes = voice.getTickables();
-      notes.forEach(note => {
+      notes.forEach((note) => {
         if (note.shouldIgnoreTicks()) return;
 
         const notesAtPosition = tickNoteMap[tickPosition.value()];
@@ -348,7 +352,7 @@ export class Accidental extends Modifier {
     // Get the scale map, which represents the current state of each pitch
     const scaleMap = music.createScaleMap(keySignature);
 
-    tickPositions.forEach(tick => {
+    tickPositions.forEach((tick) => {
       const notes = tickNoteMap[tick];
 
       // Array to store all pitches that modified accidental states
@@ -393,7 +397,7 @@ export class Accidental extends Modifier {
         });
 
         // process grace notes
-        note.getModifiers().forEach(modifier => {
+        note.getModifiers().forEach((modifier) => {
           if (modifier.getCategory() === 'gracenotegroups') {
             modifier.getGraceNotes().forEach(processNote);
           }
@@ -457,16 +461,16 @@ export class Accidental extends Modifier {
     }
   }
 
-  getCategory() { return Accidental.CATEGORY; }
+  getCategory() {
+    return Accidental.CATEGORY;
+  }
 
   getWidth() {
     const parenWidth = this.cautionary
-      ? (
-        getGlyphWidth(this.parenLeft) +
+      ? getGlyphWidth(this.parenLeft) +
         getGlyphWidth(this.parenRight) +
         this.render_options.parenLeftPadding +
         this.render_options.parenRightPadding
-      )
       : 0;
 
     return getGlyphWidth(this.glyph) + parenWidth;
@@ -499,15 +503,22 @@ export class Accidental extends Modifier {
   draw() {
     const {
       context,
-      type, position, note, index, cautionary,
-      x_shift, y_shift,
-      glyph, parenLeft, parenRight,
+      type,
+      position,
+      note,
+      index,
+      cautionary,
+      x_shift,
+      y_shift,
+      glyph,
+      parenLeft,
+      parenRight,
       render_options: { parenLeftPadding, parenRightPadding },
     } = this;
 
     this.checkContext();
 
-    if (!(note && (index != null))) {
+    if (!(note && index != null)) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw accidental without a note and index.");
     }
 

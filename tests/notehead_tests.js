@@ -3,9 +3,9 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.NoteHead = (function() {
+VF.Test.NoteHead = (function () {
   var NoteHead = {
-    Start: function() {
+    Start: function () {
       QUnit.module('NoteHead');
       VF.Test.runTests('Basic', VF.Test.NoteHead.basic);
       VF.Test.runTests('Various Heads', VF.Test.NoteHead.variousHeads);
@@ -13,29 +13,28 @@ VF.Test.NoteHead = (function() {
       VF.Test.runTests('Bounding Boxes', VF.Test.NoteHead.basicBoundingBoxes);
     },
 
-    setupContext: function(options, x, y) {
+    setupContext: function (options, x, y) {
       var ctx = new options.contextBuilder(options.elementId, x || 450, y || 140);
-      ctx.scale(0.9, 0.9); ctx.fillStyle = '#221'; ctx.strokeStyle = '#221';
+      ctx.scale(0.9, 0.9);
+      ctx.fillStyle = '#221';
+      ctx.strokeStyle = '#221';
       ctx.font = ' 10pt Arial';
       var stave = new VF.Stave(10, 10, x || 450).addTrebleGlyph();
 
       return { context: ctx, stave: stave };
     },
 
-    showNote: function(note_struct, stave, ctx, x) {
+    showNote: function (note_struct, stave, ctx, x) {
       var note = new VF.StaveNote(note_struct).setStave(stave);
 
-      new VF.TickContext()
-        .addTickable(note)
-        .preFormat()
-        .setX(x);
+      new VF.TickContext().addTickable(note).preFormat().setX(x);
 
       note.setContext(ctx).draw();
 
       return note;
     },
 
-    basic: function(options, contextBuilder) {
+    basic: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
       var c = VF.Test.NoteHead.setupContext(options, 450, 250);
 
@@ -70,7 +69,7 @@ VF.Test.NoteHead = (function() {
       ok('Basic NoteHead test');
     },
 
-    variousHeads: function(options, contextBuilder) {
+    variousHeads: function (options, contextBuilder) {
       var notes = [
         { keys: ['g/5/d0'], duration: '4' },
         { keys: ['g/5/d1'], duration: '4' },
@@ -102,14 +101,11 @@ VF.Test.NoteHead = (function() {
 
       // Draw two staves, one with up-stems and one with down-stems.
       for (var h = 0; h < 2; ++h) {
-        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75)
-          .addClef('percussion')
-          .setContext(ctx)
-          .draw();
+        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75).addClef('percussion').setContext(ctx).draw();
 
         for (var i = 0; i < notes.length; ++i) {
           var note = notes[i];
-          note.stem_direction = (h === 0 ? -1 : 1);
+          note.stem_direction = h === 0 ? -1 : 1;
           var staveNote = NoteHead.showNote(note, stave, ctx, (i + 1) * 25);
 
           ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
@@ -118,7 +114,7 @@ VF.Test.NoteHead = (function() {
       }
     },
 
-    drumChordHeads: function(options, contextBuilder) {
+    drumChordHeads: function (options, contextBuilder) {
       var notes = [
         { keys: ['a/4/d0', 'g/5/x3'], duration: '4' },
         { keys: ['a/4/x3', 'g/5/d0'], duration: '4' },
@@ -146,14 +142,11 @@ VF.Test.NoteHead = (function() {
 
       // Draw two staves, one with up-stems and one with down-stems.
       for (var h = 0; h < 2; ++h) {
-        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75)
-          .addClef('percussion')
-          .setContext(ctx)
-          .draw();
+        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75).addClef('percussion').setContext(ctx).draw();
 
         for (var i = 0; i < notes.length; ++i) {
           var note = notes[i];
-          note.stem_direction = (h === 0 ? -1 : 1);
+          note.stem_direction = h === 0 ? -1 : 1;
           var staveNote = NoteHead.showNote(note, stave, ctx, (i + 1) * 25);
 
           ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
@@ -162,7 +155,7 @@ VF.Test.NoteHead = (function() {
       }
     },
 
-    basicBoundingBoxes: function(options, contextBuilder) {
+    basicBoundingBoxes: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
       var c = VF.Test.NoteHead.setupContext(options, 350, 250);
 

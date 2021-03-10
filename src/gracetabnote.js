@@ -12,7 +12,9 @@ import { Vex } from './vex';
 import { TabNote } from './tabnote';
 
 export class GraceTabNote extends TabNote {
-  static get CATEGORY() { return 'gracetabnotes'; }
+  static get CATEGORY() {
+    return 'gracetabnotes';
+  }
 
   constructor(note_struct) {
     super(note_struct, false);
@@ -30,7 +32,9 @@ export class GraceTabNote extends TabNote {
     this.updateWidth();
   }
 
-  getCategory() { return GraceTabNote.CATEGORY; }
+  getCategory() {
+    return GraceTabNote.CATEGORY;
+  }
 
   draw() {
     super.draw();

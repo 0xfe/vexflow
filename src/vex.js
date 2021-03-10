@@ -7,7 +7,7 @@
 
 /* eslint max-classes-per-file: "off" */
 
-const Vex = () => { };
+const Vex = () => {};
 
 // Default log function sends all arguments to console.
 Vex.L = (block, args) => {
@@ -48,7 +48,8 @@ Vex.RERR = Vex.RuntimeError;
 // Merge `destination` hash with `source` hash, overwriting like keys
 // in `source` if necessary.
 Vex.Merge = (destination, source) => {
-  for (const property in source) { // eslint-disable-line guard-for-in
+  for (const property in source) {
+    // eslint-disable-line guard-for-in
     destination[property] = source[property];
   }
   return destination;
@@ -64,10 +65,7 @@ Vex.forEach = (a, fn) => {
 };
 
 // Round number to nearest fractional value (`.5`, `.25`, etc.)
-Vex.RoundN = (x, n) =>
-  (x % n) >= (n / 2)
-    ? parseInt(x / n, 10) * n + n
-    : parseInt(x / n, 10) * n;
+Vex.RoundN = (x, n) => (x % n >= n / 2 ? parseInt(x / n, 10) * n + n : parseInt(x / n, 10) * n);
 
 // Locate the mid point between stave lines. Returns a fractional line if a space.
 Vex.MidLine = (a, b) => {
@@ -111,16 +109,14 @@ Vex.Contains = (a, obj) => {
 };
 
 // Get the 2D Canvas context from DOM element `canvas_sel`.
-Vex.getCanvasContext = canvas_sel => {
+Vex.getCanvasContext = (canvas_sel) => {
   if (!canvas_sel) {
     throw new Vex.RERR('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
   }
 
   const canvas = document.getElementById(canvas_sel);
   if (!(canvas && canvas.getContext)) {
-    throw new Vex.RERR(
-      'UnsupportedBrowserError', 'This browser does not support HTML5 Canvas'
-    );
+    throw new Vex.RERR('UnsupportedBrowserError', 'This browser does not support HTML5 Canvas');
   }
 
   return canvas.getContext('2d');
@@ -164,7 +160,7 @@ Vex.W = (...args) => {
 
 // Used by various classes (e.g., SVGContext) to provide a
 // unique prefix to element names (or other keys in shared namespaces).
-Vex.Prefix = text => Vex.Prefix.prefix + text;
+Vex.Prefix = (text) => Vex.Prefix.prefix + text;
 Vex.Prefix.prefix = 'vf-';
 
 export { Vex };

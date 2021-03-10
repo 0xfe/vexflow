@@ -13,25 +13,27 @@ import { Note } from './note';
 import { TickContext } from './tickcontext';
 
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-function L(...args) { if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args); }
+function L(...args) {
+  if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args);
+}
 
 // Private helper to draw the hairpin
 function renderHairpin(ctx, params) {
   const begin_x = params.begin_x;
   const end_x = params.end_x;
   const y = params.y;
-  const half_height =  params.height / 2;
+  const half_height = params.height / 2;
 
   ctx.beginPath();
 
   if (params.reverse) {
     ctx.moveTo(begin_x, y - half_height);
-    ctx.lineTo(end_x,  y);
+    ctx.lineTo(end_x, y);
     ctx.lineTo(begin_x, y + half_height);
   } else {
-    ctx.moveTo(end_x,  y - half_height);
+    ctx.moveTo(end_x, y - half_height);
     ctx.lineTo(begin_x, y);
-    ctx.lineTo(end_x,  y + half_height);
+    ctx.lineTo(end_x, y + half_height);
   }
 
   ctx.stroke();
@@ -63,10 +65,16 @@ export class Crescendo extends Note {
   }
 
   // Set the line to center the element on
-  setLine(line) { this.line = line; return this; }
+  setLine(line) {
+    this.line = line;
+    return this;
+  }
 
   // Set the full height at the open end
-  setHeight(height) { this.height = height; return this; }
+  setHeight(height) {
+    this.height = height;
+    return this;
+  }
 
   // Set whether the sign should be a descresendo by passing a bool
   // to `decresc`
@@ -76,7 +84,10 @@ export class Crescendo extends Note {
   }
 
   // Preformat the note
-  preFormat() { this.preFormatted = true; return this; }
+  preFormat() {
+    this.preFormatted = true;
+    return this;
+  }
 
   // Render the Crescendo object onto the canvas
   draw() {
@@ -87,16 +98,10 @@ export class Crescendo extends Note {
     const next_context = TickContext.getNextContext(tick_context);
 
     const begin_x = this.getAbsoluteX();
-    const end_x  = next_context ? next_context.getX() : this.stave.x + this.stave.width;
-    const y = this.stave.getYForLine(this.line + (-3)) + 1;
+    const end_x = next_context ? next_context.getX() : this.stave.x + this.stave.width;
+    const y = this.stave.getYForLine(this.line + -3) + 1;
 
-    L(
-      'Drawing ',
-      this.decrescendo ? 'decrescendo ' : 'crescendo ',
-      this.height,
-      'x',
-      begin_x - end_x
-    );
+    L('Drawing ', this.decrescendo ? 'decrescendo ' : 'crescendo ', this.height, 'x', begin_x - end_x);
 
     renderHairpin(this.context, {
       begin_x: begin_x - this.render_options.extend_left,

@@ -27,49 +27,97 @@ export class TickContext extends Tickable {
     this.minTicks = null; // this can remian null if all tickables have ignore_ticks
     this.minTickable = null;
 
-    this.padding = 1;     // padding on each side (width += padding * 2)
+    this.padding = 1; // padding on each side (width += padding * 2)
     this.x = 0;
-    this.xBase = 0;        // base x position without xOffset
-    this.xOffset = 0;      // xBase and xOffset are an alternative way to describe x (x = xB + xO)
-    this.tickables = [];   // Notes, tabs, chords, lyrics.
-    this.tickablesByVoice = {};   // Tickables indeced by voice number
+    this.xBase = 0; // base x position without xOffset
+    this.xOffset = 0; // xBase and xOffset are an alternative way to describe x (x = xB + xO)
+    this.tickables = []; // Notes, tabs, chords, lyrics.
+    this.tickablesByVoice = {}; // Tickables indeced by voice number
 
     // Formatting metrics
-    this.notePx = 0;       // width of widest note in this context
-    this.glyphPx = 0;       // width of glyph (note head)
-    this.leftDisplacedHeadPx = 0;  // Extra left pixels for displaced notes
+    this.notePx = 0; // width of widest note in this context
+    this.glyphPx = 0; // width of glyph (note head)
+    this.leftDisplacedHeadPx = 0; // Extra left pixels for displaced notes
     this.rightDisplacedHeadPx = 0; // Extra right pixels for displaced notes
     this.modLeftPx = 0; // Left modifier pixels
     this.modRightPx = 0; // Right modifier pixels
-    this.totalLeftPx = 0;  // Total left pixels
+    this.totalLeftPx = 0; // Total left pixels
     this.totalRightPx = 0; // Total right pixels
-    this.tContexts = [];   // Parent array of tick contexts
+    this.tContexts = []; // Parent array of tick contexts
   }
 
-  getTickID() { return this.tickID; }
-  getX() { return this.x; }
-  setX(x) { this.x = x; this.xBase = x; this.xOffset = 0; return this; }
-  getXBase() { return this.xBase; } // use of xBase and xOffset is optional, avoids offset creep
-  setXBase(xBase) { this.xBase = xBase; this.x = xBase + this.xOffset; }
-  getXOffset() { return this.xOffset; }
-  setXOffset(xOffset) { this.xOffset = xOffset; this.x = this.xBase + xOffset; }
-  getWidth() { return this.width + (this.padding * 2); }
-  setPadding(padding) { this.padding = padding; return this; }
-  getMaxTicks() { return this.maxTicks; }
-  getMinTicks() { return this.minTicks; }
-  getMaxTickable() { return this.maxTickable; }
-  getMinTickable() { return this.minTickable; }
-  getTickables() { return this.tickables; }
-  getTickablesForVoice(voiceIndex) { return this.tickablesByVoice[voiceIndex]; }
-  getTickablesByVoice() { return this.tickablesByVoice; }
+  getTickID() {
+    return this.tickID;
+  }
+  getX() {
+    return this.x;
+  }
+  setX(x) {
+    this.x = x;
+    this.xBase = x;
+    this.xOffset = 0;
+    return this;
+  }
+  getXBase() {
+    return this.xBase;
+  } // use of xBase and xOffset is optional, avoids offset creep
+  setXBase(xBase) {
+    this.xBase = xBase;
+    this.x = xBase + this.xOffset;
+  }
+  getXOffset() {
+    return this.xOffset;
+  }
+  setXOffset(xOffset) {
+    this.xOffset = xOffset;
+    this.x = this.xBase + xOffset;
+  }
+  getWidth() {
+    return this.width + this.padding * 2;
+  }
+  setPadding(padding) {
+    this.padding = padding;
+    return this;
+  }
+  getMaxTicks() {
+    return this.maxTicks;
+  }
+  getMinTicks() {
+    return this.minTicks;
+  }
+  getMaxTickable() {
+    return this.maxTickable;
+  }
+  getMinTickable() {
+    return this.minTickable;
+  }
+  getTickables() {
+    return this.tickables;
+  }
+  getTickablesForVoice(voiceIndex) {
+    return this.tickablesByVoice[voiceIndex];
+  }
+  getTickablesByVoice() {
+    return this.tickablesByVoice;
+  }
 
   getCenterAlignedTickables() {
-    return this.tickables.filter(tickable => tickable.isCenterAligned());
+    return this.tickables.filter((tickable) => tickable.isCenterAligned());
   }
 
   // Get widths context, note and left/right modifiers for formatting
   getMetrics() {
-    const { width, glyphPx, notePx, leftDisplacedHeadPx, rightDisplacedHeadPx, modLeftPx, modRightPx, totalLeftPx, totalRightPx } = this;
+    const {
+      width,
+      glyphPx,
+      notePx,
+      leftDisplacedHeadPx,
+      rightDisplacedHeadPx,
+      modLeftPx,
+      modRightPx,
+      totalLeftPx,
+      totalRightPx,
+    } = this;
     return {
       width, // Width of largest tickable in context
       glyphPx, // Width of largest glyph (note head)
@@ -79,11 +127,13 @@ export class TickContext extends Tickable {
       modLeftPx,
       modRightPx,
       totalLeftPx,
-      totalRightPx
+      totalRightPx,
     };
   }
 
-  getCurrentTick() { return this.currentTick; }
+  getCurrentTick() {
+    return this.currentTick;
+  }
   setCurrentTick(tick) {
     this.currentTick = tick;
     this.preFormatted = false;

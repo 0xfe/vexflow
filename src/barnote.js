@@ -13,7 +13,9 @@ import { Note } from './note';
 import { Barline } from './stavebarline';
 
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
-function L(...args) { if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args); }
+function L(...args) {
+  if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args);
+}
 
 export class BarNote extends Note {
   constructor(type = Barline.type.SINGLE) {
@@ -41,11 +43,11 @@ export class BarNote extends Note {
   }
 
   // Get and set the type of Bar note. `type` must be one of `Vex.Flow.Barline.type`.
-  getType() { return this.type; }
+  getType() {
+    return this.type;
+  }
   setType(type) {
-    this.type = typeof(type) === 'string'
-      ? Barline.typeString[type]
-      : type;
+    this.type = typeof type === 'string' ? Barline.typeString[type] : type;
 
     // Set width to width of relevant `Barline`.
     this.setWidth(this.metrics.widths[this.type]);

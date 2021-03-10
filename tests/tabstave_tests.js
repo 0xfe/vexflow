@@ -3,15 +3,15 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.TabStave = (function() {
+VF.Test.TabStave = (function () {
   var TabStave = {
-    Start: function() {
+    Start: function () {
       QUnit.module('TabStave');
       VF.Test.runTests('TabStave Draw Test', VF.Test.TabStave.draw);
       VF.Test.runTests('Vertical Bar Test', VF.Test.TabStave.drawVerticalBar);
     },
 
-    draw: function(options, contextBuilder) {
+    draw: function (options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 400, 160);
       var stave = new VF.TabStave(10, 10, 300);
       stave.setNumLines(6);
@@ -26,7 +26,7 @@ VF.Test.TabStave = (function() {
       ok(true, 'all pass');
     },
 
-    drawVerticalBar: function(options, contextBuilder) {
+    drawVerticalBar: function (options, contextBuilder) {
       var ctx = new contextBuilder(options.elementId, 400, 160);
       var stave = new VF.TabStave(10, 10, 300);
       stave.setNumLines(6);

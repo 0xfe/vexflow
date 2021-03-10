@@ -7,7 +7,9 @@ import { Vex } from './vex';
 import { Modifier } from './modifier';
 
 export class Dot extends Modifier {
-  static get CATEGORY() { return 'dots'; }
+  static get CATEGORY() {
+    return 'dots';
+  }
 
   // Arrange dots inside a ModifierContext.
   static format(dots, state) {
@@ -29,7 +31,8 @@ export class Dot extends Modifier {
       if (typeof note.getKeyProps === 'function') {
         props = note.getKeyProps()[dot.getIndex()];
         shift = note.getRightDisplacedHeadPx();
-      } else { // Else it's a TabNote
+      } else {
+        // Else it's a TabNote
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = 0;
       }
@@ -64,8 +67,7 @@ export class Dot extends Modifier {
         } else {
           // note is on a line, so shift dot to space above the line
           half_shiftY = 0.5;
-          if (last_note != null &&
-              !last_note.isRest() && last_line - line === 0.5) {
+          if (last_note != null && !last_note.isRest() && last_line - line === 0.5) {
             // previous note on a space, so shift dot to space below the line
             half_shiftY = -0.5;
           } else if (line + half_shiftY === prev_dotted_space) {
@@ -85,7 +87,7 @@ export class Dot extends Modifier {
 
       dot.setXShift(dot_shift);
       dot_shift += dot.getWidth() + dot_spacing; // spacing
-      x_width = (dot_shift > x_width) ? dot_shift : x_width;
+      x_width = dot_shift > x_width ? dot_shift : x_width;
       last_line = line;
       last_note = note;
     }
@@ -111,18 +113,23 @@ export class Dot extends Modifier {
     this.dot_shiftY = 0;
   }
 
-  getCategory() { return Dot.CATEGORY; }
+  getCategory() {
+    return Dot.CATEGORY;
+  }
 
   setNote(note) {
     this.note = note;
 
     if (this.note.getCategory() === 'gracenotes') {
-      this.radius *= 0.50;
+      this.radius *= 0.5;
       this.setWidth(3);
     }
   }
 
-  setDotShiftY(y) { this.dot_shiftY = y; return this; }
+  setDotShiftY(y) {
+    this.dot_shiftY = y;
+    return this;
+  }
 
   draw() {
     this.checkContext();
@@ -134,16 +141,15 @@ export class Dot extends Modifier {
 
     const lineSpace = this.note.stave.options.spacing_between_lines_px;
 
-    const start = this.note.getModifierStartXY(this.position, this.index,
-      { forceFlagRight: true });
+    const start = this.note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
 
     // Set the starting y coordinate to the base of the stem for TabNotes
     if (this.note.getCategory() === 'tabnotes') {
       start.y = this.note.getStemExtents().baseY;
     }
 
-    const x = (start.x + this.x_shift) + this.width - this.radius;
-    const y = start.y + this.y_shift + (this.dot_shiftY * lineSpace);
+    const x = start.x + this.x_shift + this.width - this.radius;
+    const y = start.y + this.y_shift + this.dot_shiftY * lineSpace;
     const ctx = this.context;
 
     ctx.beginPath();

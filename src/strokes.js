@@ -11,13 +11,15 @@ import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 
 export class Stroke extends Modifier {
-  static get CATEGORY() { return 'strokes'; }
+  static get CATEGORY() {
+    return 'strokes';
+  }
   static get Type() {
     return {
       BRUSH_DOWN: 1,
       BRUSH_UP: 2,
       ROLL_DOWN: 3, // Arpeggiated chord
-      ROLL_UP: 4,   // Arpeggiated chord
+      ROLL_UP: 4, // Arpeggiated chord
       RASQUEDO_DOWN: 5,
       RASQUEDO_UP: 6,
       ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
@@ -87,15 +89,22 @@ export class Stroke extends Modifier {
     this.setWidth(10);
   }
 
-  getCategory() { return Stroke.CATEGORY; }
-  getPosition() { return this.position; }
-  addEndNote(note) { this.note_end = note; return this; }
+  getCategory() {
+    return Stroke.CATEGORY;
+  }
+  getPosition() {
+    return this.position;
+  }
+  addEndNote(note) {
+    this.note_end = note;
+    return this;
+  }
 
   draw() {
     this.checkContext();
     this.setRendered();
 
-    if (!(this.note && (this.index != null))) {
+    if (!(this.note && this.index != null)) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");
     }
 
@@ -127,14 +136,14 @@ export class Stroke extends Modifier {
       case Stroke.Type.BRUSH_DOWN:
         arrow = 'arrowheadBlackUp';
         arrow_shift_x = -3;
-        arrow_y = topY - (line_space / 2) + 10;
-        botY += (line_space / 2);
+        arrow_y = topY - line_space / 2 + 10;
+        botY += line_space / 2;
         break;
       case Stroke.Type.BRUSH_UP:
         arrow = 'arrowheadBlackDown';
         arrow_shift_x = 0.5;
-        arrow_y = botY + (line_space / 2);
-        topY -= (line_space / 2);
+        arrow_y = botY + line_space / 2;
+        topY -= line_space / 2;
         break;
       case Stroke.Type.ROLL_DOWN:
       case Stroke.Type.RASQUEDO_DOWN:
@@ -223,14 +232,9 @@ export class Stroke extends Modifier {
     }
 
     // Draw the arrow head
-    Glyph.renderGlyph(
-      this.context,
-      x + this.x_shift + arrow_shift_x,
-      arrow_y,
-      this.render_options.font_scale,
-      arrow,
-      { category: `stroke.${arrow}.${strokeLine}` }
-    );
+    Glyph.renderGlyph(this.context, x + this.x_shift + arrow_shift_x, arrow_y, this.render_options.font_scale, arrow, {
+      category: `stroke.${arrow}.${strokeLine}`,
+    });
 
     // Draw the rasquedo "R"
     if (this.type === Stroke.Type.RASQUEDO_DOWN || this.type === Stroke.Type.RASQUEDO_UP) {

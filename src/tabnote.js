@@ -55,12 +55,11 @@ function getPartialStemLines(stem_y, unused_strings, stave, stem_direction) {
 
   const stem_lines = [];
 
-  unused_strings.forEach(strings => {
+  unused_strings.forEach((strings) => {
     const containsLastString = strings.indexOf(total_lines) > -1;
-    const containsFirstString =  strings.indexOf(1) > -1;
+    const containsFirstString = strings.indexOf(1) > -1;
 
-    if ((up_stem && containsFirstString) ||
-       (down_stem && containsLastString)) {
+    if ((up_stem && containsFirstString) || (down_stem && containsLastString)) {
       return;
     }
 
@@ -109,7 +108,9 @@ function getPartialStemLines(stem_y, unused_strings, stave, stem_direction) {
 }
 
 export class TabNote extends StemmableNote {
-  static get CATEGORY() { return 'tabnotes'; }
+  static get CATEGORY() {
+    return 'tabnotes';
+  }
 
   // Initialize the TabNote with a `tab_struct` full of properties
   // and whether to `draw_stem` when rendering the note
@@ -168,7 +169,9 @@ export class TabNote extends StemmableNote {
   }
 
   // The ModifierContext category
-  getCategory() { return TabNote.CATEGORY; }
+  getCategory() {
+    return TabNote.CATEGORY;
+  }
 
   // Set as ghost `TabNote`, surrounds the fret positions with parenthesis.
   // Often used for indicating frets that are being bent to
@@ -179,7 +182,9 @@ export class TabNote extends StemmableNote {
   }
 
   // Determine if the note has a stem
-  hasStem() { return this.render_options.draw_stem; }
+  hasStem() {
+    return this.render_options.draw_stem;
+  }
 
   // Get the default stem extension for the note
   getStemExtension() {
@@ -190,9 +195,7 @@ export class TabNote extends StemmableNote {
     }
 
     if (glyph) {
-      return this.getStemDirection() === 1
-        ? glyph.tabnote_stem_up_extension
-        : glyph.tabnote_stem_down_extension;
+      return this.getStemDirection() === 1 ? glyph.tabnote_stem_up_extension : glyph.tabnote_stem_down_extension;
     }
 
     return 0;
@@ -263,7 +266,9 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the fret positions for the note
-  getPositions() { return this.positions; }
+  getPositions() {
+    return this.positions;
+  }
 
   // Add self to the provided modifier context `mc`
   addToModifierContext(mc) {
@@ -281,7 +286,7 @@ export class TabNote extends StemmableNote {
     let tieStartX = this.getAbsoluteX();
     const note_glyph_width = this.glyph.getWidth();
     tieStartX += note_glyph_width / 2;
-    tieStartX += (-this.width / 2) + this.width + 2;
+    tieStartX += -this.width / 2 + this.width + 2;
 
     return tieStartX;
   }
@@ -291,7 +296,7 @@ export class TabNote extends StemmableNote {
     let tieEndX = this.getAbsoluteX();
     const note_glyph_width = this.glyph.getWidth();
     tieEndX += note_glyph_width / 2;
-    tieEndX -= (this.width / 2) + 2;
+    tieEndX -= this.width / 2 + 2;
 
     return tieEndX;
   }
@@ -309,7 +314,7 @@ export class TabNote extends StemmableNote {
 
     let x = 0;
     if (position === Modifier.Position.LEFT) {
-      x = -1 * 2;  // FIXME: modifier padding, move to font file
+      x = -1 * 2; // FIXME: modifier padding, move to font file
     } else if (position === Modifier.Position.RIGHT) {
       x = this.width + 2; // FIXME: modifier padding, move to font file
     } else if (position === Modifier.Position.BELOW || position === Modifier.Position.ABOVE) {
@@ -324,7 +329,9 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the default line for rest
-  getLineForRest() { return this.positions[0].str; }
+  getLineForRest() {
+    return this.positions[0].str;
+  }
 
   // Pre-render formatting
   preFormat() {
@@ -335,7 +342,9 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the x position for the stem
-  getStemX() { return this.getCenterGlyphX(); }
+  getStemX() {
+    return this.getCenterGlyphX();
+  }
 
   // Get the y position for the stem
   getStemY() {
@@ -358,7 +367,11 @@ export class TabNote extends StemmableNote {
   // Draw the fal onto the context
   drawFlag() {
     const {
-      beam, glyph, context, stem, stem_direction,
+      beam,
+      glyph,
+      context,
+      stem,
+      stem_direction,
       render_options: { draw_stem, glyph_font_scale },
     } = this;
 
@@ -369,9 +382,10 @@ export class TabNote extends StemmableNote {
       const flag_x = this.getStemX() + 1;
       const flag_y = this.getStemY() - stem.getHeight();
 
-      const flag_code = stem_direction === Stem.DOWN
-        ? glyph.code_flag_downstem // Down stems have flags on the left.
-        : glyph.code_flag_upstem;
+      const flag_code =
+        stem_direction === Stem.DOWN
+          ? glyph.code_flag_downstem // Down stems have flags on the left.
+          : glyph.code_flag_upstem;
 
       // Draw the Flag
       Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code, { category: 'flag.tabStem' });
@@ -400,19 +414,14 @@ export class TabNote extends StemmableNote {
     const draw_stem = this.render_options.draw_stem;
     if (draw_stem && stem_through) {
       const total_lines = this.stave.getNumLines();
-      const strings_used = this.positions.map(position => position.str);
+      const strings_used = this.positions.map((position) => position.str);
 
       const unused_strings = getUnusedStringGroups(total_lines, strings_used);
-      const stem_lines = getPartialStemLines(
-        stem_y,
-        unused_strings,
-        this.getStave(),
-        this.getStemDirection()
-      );
+      const stem_lines = getPartialStemLines(stem_y, unused_strings, this.getStave(), this.getStemDirection());
 
       ctx.save();
       ctx.setLineWidth(Stem.WIDTH);
-      stem_lines.forEach(bounds => {
+      stem_lines.forEach((bounds) => {
         if (bounds.length === 0) return;
 
         ctx.beginPath();
@@ -436,15 +445,13 @@ export class TabNote extends StemmableNote {
 
       // Center the fret text beneath the notation note head
       const note_glyph_width = this.glyph.getWidth();
-      const tab_x = x + (note_glyph_width / 2) - (glyph.getWidth() / 2);
+      const tab_x = x + note_glyph_width / 2 - glyph.getWidth() / 2;
 
       // FIXME: Magic numbers.
       ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
 
       if (glyph.code) {
-        Glyph.renderGlyph(ctx, tab_x, y,
-          this.render_options.glyph_font_scale * this.render_options.scale,
-          glyph.code);
+        Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale * this.render_options.scale, glyph.code);
       } else {
         ctx.save();
         ctx.setRawFont(this.render_options.font);

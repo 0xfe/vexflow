@@ -33,7 +33,7 @@ export class Fraction {
    * LCM: Lowest common multiple
    */
   static LCM(a, b) {
-    return ((a * b) / Fraction.GCD(a, b));
+    return (a * b) / Fraction.GCD(a, b);
   }
 
   /**
@@ -186,31 +186,31 @@ export class Fraction {
     const a = Fraction.__compareA.copy(compare).simplify();
     const b = Fraction.__compareB.copy(this).simplify();
 
-    return (a.numerator === b.numerator) && (a.denominator === b.denominator);
+    return a.numerator === b.numerator && a.denominator === b.denominator;
   }
 
   // Greater than operator.
   greaterThan(compare) {
     const a = Fraction.__compareB.copy(this);
     a.subtract(compare);
-    return (a.numerator > 0);
+    return a.numerator > 0;
   }
 
   // Greater than or equals operator.
   greaterThanEquals(compare) {
     const a = Fraction.__compareB.copy(this);
     a.subtract(compare);
-    return (a.numerator >= 0);
+    return a.numerator >= 0;
   }
 
   // Less than operator.
   lessThan(compare) {
-    return !(this.greaterThanEquals(compare));
+    return !this.greaterThanEquals(compare);
   }
 
   // Less than or equals operator.
   lessThanEquals(compare) {
-    return !(this.greaterThan(compare));
+    return !this.greaterThan(compare);
   }
 
   // Creates a new copy with this current values.
@@ -286,7 +286,7 @@ export class Fraction {
   parse(str) {
     const i = str.split('/');
     const n = parseInt(i[0], 10);
-    const d = (i[1]) ? parseInt(i[1], 10) : 1;
+    const d = i[1] ? parseInt(i[1], 10) : 1;
 
     return this.set(n, d);
   }

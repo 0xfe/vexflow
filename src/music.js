@@ -20,65 +20,84 @@ export class Music {
 
   static get root_indices() {
     return {
-      'c': 0,
-      'd': 1,
-      'e': 2,
-      'f': 3,
-      'g': 4,
-      'a': 5,
-      'b': 6,
+      c: 0,
+      d: 1,
+      e: 2,
+      f: 3,
+      g: 4,
+      a: 5,
+      b: 6,
     };
   }
 
   static get canonical_notes() {
-    return [
-      'c', 'c#', 'd', 'd#',
-      'e', 'f', 'f#', 'g',
-      'g#', 'a', 'a#', 'b',
-    ];
+    return ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
   }
 
   static get diatonic_intervals() {
-    return [
-      'unison', 'm2', 'M2', 'm3', 'M3',
-      'p4', 'dim5', 'p5', 'm6', 'M6',
-      'b7', 'M7', 'octave',
-    ];
+    return ['unison', 'm2', 'M2', 'm3', 'M3', 'p4', 'dim5', 'p5', 'm6', 'M6', 'b7', 'M7', 'octave'];
   }
 
   static get diatonic_accidentals() {
     return {
-      'unison': { note: 0, accidental: 0 },
-      'm2': { note: 1, accidental: -1 },
-      'M2': { note: 1, accidental: 0 },
-      'm3': { note: 2, accidental: -1 },
-      'M3': { note: 2, accidental: 0 },
-      'p4': { note: 3, accidental: 0 },
-      'dim5': { note: 4, accidental: -1 },
-      'p5': { note: 4, accidental: 0 },
-      'm6': { note: 5, accidental: -1 },
-      'M6': { note: 5, accidental: 0 },
-      'b7': { note: 6, accidental: -1 },
-      'M7': { note: 6, accidental: 0 },
-      'octave': { note: 7, accidental: 0 },
+      unison: { note: 0, accidental: 0 },
+      m2: { note: 1, accidental: -1 },
+      M2: { note: 1, accidental: 0 },
+      m3: { note: 2, accidental: -1 },
+      M3: { note: 2, accidental: 0 },
+      p4: { note: 3, accidental: 0 },
+      dim5: { note: 4, accidental: -1 },
+      p5: { note: 4, accidental: 0 },
+      m6: { note: 5, accidental: -1 },
+      M6: { note: 5, accidental: 0 },
+      b7: { note: 6, accidental: -1 },
+      M7: { note: 6, accidental: 0 },
+      octave: { note: 7, accidental: 0 },
     };
   }
 
   static get intervals() {
     return {
-      'u': 0, 'unison': 0,
-      'm2': 1, 'b2': 1, 'min2': 1, 'S': 1, 'H': 1,
-      '2': 2, 'M2': 2, 'maj2': 2, 'T': 2, 'W': 2,
-      'm3': 3, 'b3': 3, 'min3': 3,
-      'M3': 4, '3': 4, 'maj3': 4,
-      '4': 5, 'p4': 5,
-      '#4': 6, 'b5': 6, 'aug4': 6, 'dim5': 6,
-      '5': 7, 'p5': 7,
-      '#5': 8, 'b6': 8, 'aug5': 8,
-      '6': 9, 'M6': 9, 'maj6': 9,
-      'b7': 10, 'm7': 10, 'min7': 10, 'dom7': 10,
-      'M7': 11, 'maj7': 11,
-      '8': 12, 'octave': 12,
+      u: 0,
+      unison: 0,
+      m2: 1,
+      b2: 1,
+      min2: 1,
+      S: 1,
+      H: 1,
+      2: 2,
+      M2: 2,
+      maj2: 2,
+      T: 2,
+      W: 2,
+      m3: 3,
+      b3: 3,
+      min3: 3,
+      M3: 4,
+      3: 4,
+      maj3: 4,
+      4: 5,
+      p4: 5,
+      '#4': 6,
+      b5: 6,
+      aug4: 6,
+      dim5: 6,
+      5: 7,
+      p5: 7,
+      '#5': 8,
+      b6: 8,
+      aug5: 8,
+      6: 9,
+      M6: 9,
+      maj6: 9,
+      b7: 10,
+      m7: 10,
+      min7: 10,
+      dom7: 10,
+      M7: 11,
+      maj7: 11,
+      8: 12,
+      octave: 12,
     };
   }
 
@@ -93,8 +112,8 @@ export class Music {
 
   static get scaleTypes() {
     return {
-      'M': Music.scales.major,
-      'm': Music.scales.minor,
+      M: Music.scales.major,
+      m: Music.scales.minor,
     };
   }
 
@@ -104,48 +123,48 @@ export class Music {
 
   static get noteValues() {
     return {
-      'c': { root_index: 0, int_val: 0 },
-      'cn': { root_index: 0, int_val: 0 },
+      c: { root_index: 0, int_val: 0 },
+      cn: { root_index: 0, int_val: 0 },
       'c#': { root_index: 0, int_val: 1 },
       'c##': { root_index: 0, int_val: 2 },
-      'cb': { root_index: 0, int_val: 11 },
-      'cbb': { root_index: 0, int_val: 10 },
-      'd': { root_index: 1, int_val: 2 },
-      'dn': { root_index: 1, int_val: 2 },
+      cb: { root_index: 0, int_val: 11 },
+      cbb: { root_index: 0, int_val: 10 },
+      d: { root_index: 1, int_val: 2 },
+      dn: { root_index: 1, int_val: 2 },
       'd#': { root_index: 1, int_val: 3 },
       'd##': { root_index: 1, int_val: 4 },
-      'db': { root_index: 1, int_val: 1 },
-      'dbb': { root_index: 1, int_val: 0 },
-      'e': { root_index: 2, int_val: 4 },
-      'en': { root_index: 2, int_val: 4 },
+      db: { root_index: 1, int_val: 1 },
+      dbb: { root_index: 1, int_val: 0 },
+      e: { root_index: 2, int_val: 4 },
+      en: { root_index: 2, int_val: 4 },
       'e#': { root_index: 2, int_val: 5 },
       'e##': { root_index: 2, int_val: 6 },
-      'eb': { root_index: 2, int_val: 3 },
-      'ebb': { root_index: 2, int_val: 2 },
-      'f': { root_index: 3, int_val: 5 },
-      'fn': { root_index: 3, int_val: 5 },
+      eb: { root_index: 2, int_val: 3 },
+      ebb: { root_index: 2, int_val: 2 },
+      f: { root_index: 3, int_val: 5 },
+      fn: { root_index: 3, int_val: 5 },
       'f#': { root_index: 3, int_val: 6 },
       'f##': { root_index: 3, int_val: 7 },
-      'fb': { root_index: 3, int_val: 4 },
-      'fbb': { root_index: 3, int_val: 3 },
-      'g': { root_index: 4, int_val: 7 },
-      'gn': { root_index: 4, int_val: 7 },
+      fb: { root_index: 3, int_val: 4 },
+      fbb: { root_index: 3, int_val: 3 },
+      g: { root_index: 4, int_val: 7 },
+      gn: { root_index: 4, int_val: 7 },
       'g#': { root_index: 4, int_val: 8 },
       'g##': { root_index: 4, int_val: 9 },
-      'gb': { root_index: 4, int_val: 6 },
-      'gbb': { root_index: 4, int_val: 5 },
-      'a': { root_index: 5, int_val: 9 },
-      'an': { root_index: 5, int_val: 9 },
+      gb: { root_index: 4, int_val: 6 },
+      gbb: { root_index: 4, int_val: 5 },
+      a: { root_index: 5, int_val: 9 },
+      an: { root_index: 5, int_val: 9 },
       'a#': { root_index: 5, int_val: 10 },
       'a##': { root_index: 5, int_val: 11 },
-      'ab': { root_index: 5, int_val: 8 },
-      'abb': { root_index: 5, int_val: 7 },
-      'b': { root_index: 6, int_val: 11 },
-      'bn': { root_index: 6, int_val: 11 },
+      ab: { root_index: 5, int_val: 8 },
+      abb: { root_index: 5, int_val: 7 },
+      b: { root_index: 6, int_val: 11 },
+      bn: { root_index: 6, int_val: 11 },
       'b#': { root_index: 6, int_val: 0 },
       'b##': { root_index: 6, int_val: 1 },
-      'bb': { root_index: 6, int_val: 10 },
-      'bbb': { root_index: 6, int_val: 9 },
+      bb: { root_index: 6, int_val: 10 },
+      bbb: { root_index: 6, int_val: 9 },
     };
   }
 
@@ -260,7 +279,7 @@ export class Music {
       throw new Vex.RERR('BadArguments', `Invalid direction: ${direction}`);
     }
 
-    let sum = (noteValue + (direction * intervalValue)) % Music.NUM_TONES;
+    let sum = (noteValue + direction * intervalValue) % Music.NUM_TONES;
     if (sum < 0) sum += Music.NUM_TONES;
 
     return sum;
@@ -276,8 +295,7 @@ export class Music {
       if (interval > 0) multiplier = -1;
 
       // Possibly wrap around. (Add +1 for modulo operator)
-      const reverse_interval = (((noteValue + 1) + (rootValue + 1)) %
-        Music.NUM_TONES) * multiplier;
+      const reverse_interval = ((noteValue + 1 + (rootValue + 1)) % Music.NUM_TONES) * multiplier;
 
       if (Math.abs(reverse_interval) > 2) {
         throw new Vex.RERR('BadArguments', `Notes not related: ${root}, ${noteValue})`);
@@ -339,9 +357,7 @@ export class Music {
       throw new Vex.RERR('BadArguments', `Invalid notes: ${note1}, ${note2}`);
     }
 
-    let difference = direction === 1
-      ? note2 - note1
-      : note1 - note2;
+    let difference = direction === 1 ? note2 - note1 : note1 - note2;
 
     if (difference < 0) difference += Music.NUM_TONES;
 

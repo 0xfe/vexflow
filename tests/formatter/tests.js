@@ -12,7 +12,7 @@ function subgroup(el, iterations, params) {
       elementId: el,
       width: options.width,
       height: options.height,
-    }
+    },
   });
 
   vf.StaveNote = vf.StaveNote.bind(vf);
@@ -60,14 +60,8 @@ function subgroup(el, iterations, params) {
   vf.Beam({ notes: notes3.slice(5) });
 
   addAccidental(notes1[1], '#');
-  addSubGroup(notes1[1], [
-    vf.ClefNote({ type: 'bass', options: { size: 'small' } }),
-    vf.TimeSigNote({ time: '3/4' }),
-  ]);
-  addSubGroup(notes2[2], [
-    vf.ClefNote({ type: 'alto', options: { size: 'small' } }),
-    vf.TimeSigNote({ time: '9/8' }),
-  ]);
+  addSubGroup(notes1[1], [vf.ClefNote({ type: 'bass', options: { size: 'small' } }), vf.TimeSigNote({ time: '3/4' })]);
+  addSubGroup(notes2[2], [vf.ClefNote({ type: 'alto', options: { size: 'small' } }), vf.TimeSigNote({ time: '9/8' })]);
   addSubGroup(notes1[3], [vf.ClefNote({ type: 'soprano', options: { size: 'small' } })]);
   addSubGroup(notes3[1], [vf.ClefNote({ type: 'treble', options: { size: 'small' } })]);
   addSubGroup(notes3[5], [vf.ClefNote({ type: 'bass', options: { size: 'small' } })]);
@@ -82,10 +76,7 @@ function subgroup(el, iterations, params) {
   var voice3 = vf.Voice().addTickables(notes3);
 
   const formatter = vf.Formatter();
-  formatter
-    .joinVoices([voice, voice2])
-    .joinVoices([voice3])
-    .formatToStave([voice, voice2, voice3], stave1);
+  formatter.joinVoices([voice, voice2]).joinVoices([voice3]).formatToStave([voice, voice2, voice3], stave1);
 
   for (let i = 0; i < iterations; i++) {
     formatter.tune({ alpha: 0.01 });
@@ -109,23 +100,23 @@ function tuplets(el, iterations, params) {
       elementId: el,
       width: options.width,
       height: options.height,
-    }
+    },
   });
 
   var system = vf.System({
     x: 50,
     width: options.systemWidth,
     debugFormatter: options.debug,
-    formatIterations: iterations
+    formatIterations: iterations,
   });
 
   var score = vf.EasyScore();
 
-  var newVoice = function(notes) {
+  var newVoice = function (notes) {
     return score.voice(notes, { time: '1/4' });
   };
 
-  var newStave = function(voice) {
+  var newStave = function (voice) {
     return system
       .addStave({ voices: [voice], debugNoteMetrics: options.debug })
       .addClef('treble')
@@ -160,28 +151,22 @@ function multistave(el, iterations, params) {
       elementId: el,
       width: options.width,
       height: options.height,
-    }
+    },
   });
 
   var score = vf.EasyScore();
 
-  var stave11 = vf.Stave({ y: 20, width: 275 })
-    .addTrebleGlyph()
-    .addTimeSignature('6/8');
+  var stave11 = vf.Stave({ y: 20, width: 275 }).addTrebleGlyph().addTimeSignature('6/8');
 
   var notes11 = score.notes('f4/4, d4/8, g4/4, eb4/8');
   var voice11 = score.voice(notes11, { time: '6/8' });
 
-  var stave21 = vf.Stave({ y: 130, width: 275 })
-    .addTrebleGlyph()
-    .addTimeSignature('6/8');
+  var stave21 = vf.Stave({ y: 130, width: 275 }).addTrebleGlyph().addTimeSignature('6/8');
 
   var notes21 = score.notes('d4/8, d4, d4, d4, eb4, eb4');
   var voice21 = score.voice(notes21, { time: '6/8' });
 
-  var stave31 = vf.Stave({ y: 250, width: 275 })
-    .addClef('bass')
-    .addTimeSignature('6/8');
+  var stave31 = vf.Stave({ y: 250, width: 275 }).addClef('bass').addTimeSignature('6/8');
 
   var notes31 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
   var voice31 = score.voice(notes31, { time: '6/8' });
@@ -197,10 +182,7 @@ function multistave(el, iterations, params) {
   vf.Beam({ notes: notes31.slice(0, 3) });
   vf.Beam({ notes: notes31.slice(3, 6) });
 
-  var formatter = vf.Formatter()
-    .joinVoices([voice11])
-    .joinVoices([voice21])
-    .joinVoices([voice31]);
+  var formatter = vf.Formatter().joinVoices([voice11]).joinVoices([voice21]).joinVoices([voice31]);
 
   if (options.justify) {
     formatter.formatToStave([voice11, voice21, voice31], stave11);
@@ -243,10 +225,7 @@ function multistave(el, iterations, params) {
   var notes32 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
   var voice32 = score.voice(notes32, { time: '6/8' });
 
-  formatter = vf.Formatter()
-    .joinVoices([voice12])
-    .joinVoices([voice22])
-    .joinVoices([voice32]);
+  formatter = vf.Formatter().joinVoices([voice12]).joinVoices([voice22]).joinVoices([voice32]);
 
   if (options.justify) {
     formatter.formatToStave([voice12, voice22, voice32], stave12);
@@ -269,18 +248,18 @@ function multistave(el, iterations, params) {
 }
 
 const Tests = {
-  'tuplets': {
+  tuplets: {
     options: { width: 600, height: 750, debug: true },
     fn: tuplets,
   },
-  'subgroup': {
+  subgroup: {
     options: { width: 650, height: 350, debug: true },
     fn: subgroup,
   },
-  'multistave': {
+  multistave: {
     options: { width: 650, height: 350, debug: true },
     fn: multistave,
-  }
+  },
 };
 
 module.exports = Tests;

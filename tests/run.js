@@ -1,4 +1,4 @@
-VF.Test.run = function() {
+VF.Test.run = function () {
   VF.Test.Accidental.Start();
   VF.Test.StaveNote.Start();
   VF.Test.Voice.Start();

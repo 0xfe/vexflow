@@ -3,18 +3,18 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.GlyphNote = (function() {
+VF.Test.GlyphNote = (function () {
   var run = VF.Test.runTests;
 
   var GlyphNote = {
-    Start: function() {
+    Start: function () {
       QUnit.module('GlyphNote');
       run('GlyphNote Positioning', GlyphNote.basic, { debug: false, noPadding: false });
       run('GlyphNote No Stave Padding', GlyphNote.basic, { debug: true, noPadding: true });
       run('GlyphNote RepeatNote', GlyphNote.repeatNote, { debug: false, noPadding: true });
     },
 
-    basic: function(options) {
+    basic: function (options) {
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
       var vf = VF.Test.makeFactory(options, 300, 400);
@@ -23,18 +23,17 @@ VF.Test.GlyphNote = (function() {
         width: 250,
         debugFormatter: options.params.debug,
         noPadding: options.params.noPadding,
-        options: { alpha: options.params.alpha }
+        options: { alpha: options.params.alpha },
       });
 
       var score = vf.EasyScore();
 
-      var newVoice = function(notes) {
+      var newVoice = function (notes) {
         return score.voice(notes, { time: '1/4' });
       };
 
-      var newStave = function(voice) {
-        return system
-          .addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
+      var newStave = function (voice) {
+        return system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
       };
 
       var voices = [
@@ -57,7 +56,7 @@ VF.Test.GlyphNote = (function() {
       ok(true);
     },
 
-    repeatNote: function(options) {
+    repeatNote: function (options) {
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
       var vf = VF.Test.makeFactory(options, 300, 500);
@@ -66,18 +65,17 @@ VF.Test.GlyphNote = (function() {
         width: 250,
         debugFormatter: options.params.debug,
         noPadding: options.params.noPadding,
-        options: { alpha: options.params.alpha }
+        options: { alpha: options.params.alpha },
       });
 
       var score = vf.EasyScore();
 
-      var newVoice = function(notes) {
+      var newVoice = function (notes) {
         return score.voice(notes, { time: '1/4' });
       };
 
-      var newStave = function(voice) {
-        return system
-          .addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
+      var newStave = function (voice) {
+        return system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
       };
 
       var voices = [

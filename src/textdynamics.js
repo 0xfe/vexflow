@@ -12,33 +12,35 @@ import { Note } from './note';
 import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
-function L(...args) { if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args); }
+function L(...args) {
+  if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args);
+}
 
 export class TextDynamics extends Note {
   // The glyph data for each dynamics letter
   static get GLYPHS() {
     return {
-      'f': {
+      f: {
         code: 'dynamicForte',
         width: 12,
       },
-      'p': {
+      p: {
         code: 'dynamicPiano',
         width: 14,
       },
-      'm': {
+      m: {
         code: 'dynamicMezzo',
         width: 17,
       },
-      's': {
+      s: {
         code: 'dynamicSforzando',
         width: 10,
       },
-      'z': {
+      z: {
         code: 'dynamicZ',
         width: 12,
       },
-      'r': {
+      r: {
         code: 'dynamicRinforzando',
         width: 12,
       },
@@ -75,12 +77,12 @@ export class TextDynamics extends Note {
   preFormat() {
     let total_width = 0;
     // Iterate through each letter
-    this.sequence.split('').forEach(letter => {
+    this.sequence.split('').forEach((letter) => {
       // Get the glyph data for the letter
       const glyph_data = TextDynamics.GLYPHS[letter];
       if (!glyph_data) throw new Vex.RERR('Invalid dynamics character: ' + letter);
 
-      const size =  this.render_options.glyph_font_size;
+      const size = this.render_options.glyph_font_size;
       const glyph = new Glyph(glyph_data.code, size, { category: 'textNote' });
 
       // Add the glyph
@@ -99,7 +101,7 @@ export class TextDynamics extends Note {
   draw() {
     this.setRendered();
     const x = this.getAbsoluteX();
-    const y = this.stave.getYForLine(this.line + (-3));
+    const y = this.stave.getYForLine(this.line + -3);
 
     L('Rendering Dynamics: ', this.sequence);
 

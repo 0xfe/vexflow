@@ -6,7 +6,9 @@ import { StaveModifier } from './stavemodifier';
 import { TextNote } from './textnote';
 
 export class StaveText extends StaveModifier {
-  static get CATEGORY() { return 'stavetext'; }
+  static get CATEGORY() {
+    return 'stavetext';
+  }
 
   constructor(text, position, options) {
     super();
@@ -29,10 +31,21 @@ export class StaveText extends StaveModifier {
     };
   }
 
-  getCategory() { return StaveText.CATEGORY; }
-  setStaveText(text) { this.text = text; return this; }
-  setShiftX(x) { this.shift_x = x; return this; }
-  setShiftY(y) { this.shift_y = y; return this; }
+  getCategory() {
+    return StaveText.CATEGORY;
+  }
+  setStaveText(text) {
+    this.text = text;
+    return this;
+  }
+  setShiftX(x) {
+    this.shift_x = x;
+    return this;
+  }
+  setShiftY(y) {
+    this.shift_y = y;
+    return this;
+  }
 
   setFont(font) {
     Vex.Merge(this.font, font);
