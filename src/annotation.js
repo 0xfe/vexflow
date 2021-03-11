@@ -71,9 +71,8 @@ export class Annotation extends Modifier {
       const annotation = annotations[i];
       const textFont = TextFont.getTextFontFromVexFontData({ family: annotation.font.family,
         size: annotation.font.size, weight: 'normal' });
-      textFont.setFontSize(annotation.font.size);
       for (let j = 0; j < annotation.text.length; ++j) {
-        testWidth += textFont.getWidthForCharacter(annotation.text[j]) * (72 / 96);
+        testWidth += textFont.getWidthForCharacter(annotation.text[j]);
       }
       width = Math.max(width, testWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
@@ -114,9 +113,7 @@ export class Annotation extends Modifier {
     this.setWidth(Flow.textWidth(text));
   }
 
-  getCategory() {
-    return Annotation.CATEGORY;
-  }
+  getCategory() { return Annotation.CATEGORY; }
 
   // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
   setFont(family, size, weight) {
@@ -127,17 +124,19 @@ export class Annotation extends Modifier {
   // Set vertical position of text (above or below stave). `just` must be
   // a value in `Annotation.VerticalJustify`.
   setVerticalJustification(just) {
-    this.vert_justification = typeof just === 'string' ? Annotation.VerticalJustifyString[just] : just;
+    this.vert_justification = typeof (just) === 'string'
+      ? Annotation.VerticalJustifyString[just]
+      : just;
     return this;
   }
 
   // Get and set horizontal justification. `justification` is a value in
   // `Annotation.Justify`.
-  getJustification() {
-    return this.justification;
-  }
+  getJustification() { return this.justification; }
   setJustification(just) {
-    this.justification = typeof just === 'string' ? Annotation.JustifyString[just] : just;
+    this.justification = typeof (just) === 'string'
+      ? Annotation.JustifyString[just]
+      : just;
     return this;
   }
 
@@ -146,7 +145,9 @@ export class Annotation extends Modifier {
     this.checkContext();
 
     if (!this.note) {
-      throw new Vex.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
+      throw new Vex.RERR(
+        'NoNoteForAnnotation', "Can't draw text annotation without an attached note."
+      );
     }
 
     this.setRendered();

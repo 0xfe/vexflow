@@ -124,6 +124,7 @@ export class TextFont {
   // method will always return a fallback font if there are no matches.
   static getTextFontFromVexFontData(fd) {
     let i = 0;
+    let rv = null;
     const fallback = TextFont.fontRegistry[0];
     let candidates = [];
     const families = fd.family.split(',');
@@ -135,23 +136,28 @@ export class TextFont {
       }
     }
     if (candidates.length === 0) {
-      return new TextFont(fallback);
+      rv = new TextFont(fallback);
+    } else if (candidates.length === 1) {
+      rv = new TextFont(candidates[0]);
+    } else {
+      const bold = TextFont.fontWeightToBold(fd.weight);
+      const italic = TextFont.fontStyleToItalic(fd.style);
+      const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
+      if (perfect) {
+        rv = new TextFont(perfect);
+      } else {
+        const ok = candidates.find((font) => font.italic === italic || font.bold === bold);
+        if (ok) {
+          rv = new TextFont(ok);
+        } else {
+          rv = new TextFont(candidates[0]);
+        }
+      }
     }
-    if (candidates.length === 1) {
-      return new TextFont(candidates[0]);
+    if (typeof(fd.size) === 'number' && fd.size > 0) {
+      rv.setFontSize(fd.size);
     }
-    const bold = TextFont.fontWeightToBold(fd.weight);
-    const italic = TextFont.fontStyleToItalic(fd.style);
-
-    const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
-    if (perfect) {
-      return new TextFont(perfect);
-    }
-    const ok = candidates.find((font) => font.italic === italic || font.bold === bold);
-    if (ok) {
-      return new TextFont(ok);
-    }
-    return new TextFont(candidates[0]);
+    return rv;
   }
 
   static getFontDataByName(fontName) {
