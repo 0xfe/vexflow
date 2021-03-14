@@ -19,251 +19,47 @@ VF.Test.Annotation = (function () {
       runTests('Test Justification Annotation Stem Down', Annotation.justificationStemDown);
       runTests('TabNote Annotations', Annotation.tabNotes);
     },
-    buildNotesFromJson: function(json) {
-      const rv = {
-        notes: [],
-        beamGroups: []
+    lyrics: function (options) {
+      const id = (ii) => {
+        return registry.getElementById(ii);
       };
-      let currentBeam = [];
-      const beamNotes = () => {
-        if (currentBeam.length > 1) {
-          rv.beamGroups.push(new VF.Beam(currentBeam));
-        }
-        currentBeam = [];
-      };
-      json.notes.forEach((nn) => {
-        const keys = nn.pitches.map((pp) => pp.pitch.key);
-        const params = {
-          duration: nn.duration,
-          keys,
-          clef: nn.clef
-        };
-        const note = new VF.StaveNote(params);
-        nn.lyrics.forEach((lyric) => {
-          const vexL = new VF.Annotation(lyric.text);
-          vexL.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
-          note.addAnnotation(lyric.verse, vexL);
-        });
-        if (nn.duration.indexOf('d') >= 0) {
-          note.addDotToAll();
-        }
-        if (note.ticks.value() <= 2048) {
-          currentBeam.push(note);
-          if (nn.endBeam) {
-            beamNotes();
-          }
-        } else {
-          beamNotes();
-        }
-        nn.pitches.forEach((pp, ix) => {
-          if (pp.pitch.accidental) {
-            note.addAccidental(ix, new VF.Accidental(pp.pitch.accidental));
-          }
-        });
-        rv.notes.push(note);
-      });
-      beamNotes();
-      rv.voice = new VF.Voice({
-        num_beats: json.beats.num_beats,
-        beat_value: json.beats.beat_value
-      });
-      rv.voice.addTickables(rv.notes);
-      return rv;
-    },
-    drawMusic(context, formatter, musicArray) {
-      let y = 40;
-      const voices = [];
-      musicArray.forEach((music) => {
-        formatter.joinVoices([music.voice]);
-        voices.push(music.voice);
-      });
-      const width = formatter.preCalculateMinTotalWidth(voices);
-      formatter.format(voices, width);
-      voices.forEach((voice) => {
-        const stave = new VF.Stave(10, y, width + 20);
-        y += 120;
-        stave.setContext(context).draw();
-        voice.draw(context, stave);
-      });
-      musicArray.forEach((music) => {
-        music.beamGroups.forEach((beam) => {
-          beam.setContext(context).draw();
-        });
-      });
-    },
-    lyrics: function(options) {
-      const json1 =
-        [
-          {
-            'notes': [
-              {
-                'pitches': [
-                  {
-                    'pitch': {
-                      'key': 'cn/4'
-                    }
-                  },
-                  {
-                    'pitch': {
-                      'key': 'fn/4'
-                    }
-                  }
-                ],
-                'duration': '2',
-                'lyrics': [
-                  {
-                    'text': 'hand,',
-                    'verse': 0
-                  },
-                  {
-                    'text': 'pears ',
-                    'verse': 1
-                  }
-                ],
-                'clef': 'treble',
-                'endBeam': false
-              },
-              {
-                'pitches': [
-                  {
-                    'pitch': {
-                      'key': 'cn/4'
-                    }
-                  },
-                  {
-                    'pitch': {
-                      'key': 'an/4'
-                    }
-                  }
-                ],
-                'duration': '8',
-                'lyrics': [
-                  {
-                    'text': 'and  ',
-                    'verse': 1
-                  },
-                  {
-                    'text': 'lead  ',
-                    'verse': 0
-                  }
-                ],
-                'clef': 'treble',
-                'endBeam': false
-              },
-              {
-                'pitches': [
-                  {
-                    'pitch': {
-                      'key': 'c#/4',
-                      'accidental': '#'
-                    }
-                  },
-                  {
-                    'pitch': {
-                      'key': 'an/4'
-                    }
-                  }
-                ],
-                'duration': '8',
-                'lyrics': [
-                  {
-                    'text': 'me',
-                    'verse': 0
-                  },
-                  {
-                    'text': 'the',
-                    'verse': 1
-                  }
-                ],
-                'clef': 'treble',
-                'endBeam': false
-              }
-            ],
-            'beats': {
-              'num_beats': 3,
-              'beat_value': 4
-            }
-          }
-        ];
-      const json2 = [
-        {
-          'notes': [
-            {
-              'pitches': [
-                {
-                  'pitch': {
-                    'key': 'an/2'
-                  }
-                },
-                {
-                  'pitch': {
-                    'key': 'fn/3'
-                  }
-                }
-              ],
-              'duration': '2',
-              'lyrics': [
-                {
-                  'text': ' ',
-                  'verse': 0
-                }
-              ],
-              'clef': 'bass',
-              'endBeam': false
-            },
-            {
-              'pitches': [
-                {
-                  'pitch': {
-                    'key': 'fn/2'
-                  }
-                },
-                {
-                  'pitch': {
-                    'key': 'fn/3'
-                  }
-                }
-              ],
-              'duration': '8',
-              'lyrics': [],
-              'clef': 'bass',
-              'endBeam': false
-            },
-            {
-              'pitches': [
-                {
-                  'pitch': {
-                    'key': 'fn/2'
-                  }
-                },
-                {
-                  'pitch': {
-                    'key': 'fn/3'
-                  }
-                }
-              ],
-              'duration': '8',
-              'lyrics': [],
-              'clef': 'bass',
-              'endBeam': false
-            }
+      let fontSize = 10;
+      let x = 10;
+      let width = 170;
+      let ratio = 1;
+      var registry = new VF.Registry();
+      VF.Registry.enableDefaultRegistry(registry);
+      var vf = VF.Test.makeFactory(options, 750, 260);
+      for (var i = 0; i < 3; ++i) {
+        var score = vf.EasyScore();
+        score.set({ time: '3/4' });
+        var system = vf.System({ width, x });
+        system.addStave({
+          voices: [
+            score.voice(
+              score
+                .notes('(C4 F4)/2[id="n0"]')
+                .concat(score.beam(score.notes('(C4 A4)/8[id="n1"], (C#4 A4)/8[id="n2"]')))
+            ),
           ],
-          'beats': {
-            'num_beats': 3,
-            'beat_value': 4
-          }
-        }
-      ];
-      var vf = VF.Test.makeFactory(options, 750, 280);
-      const context = vf.getContext();
-      const formatter = new VF.Formatter({ softmaxFactor: 100 });
-      const musicArray = [];
-      musicArray.push(Annotation.buildNotesFromJson(json1[0]));
-      musicArray.push(Annotation.buildNotesFromJson(json2[0]));
-      Annotation.drawMusic(context, formatter, musicArray);
+        });
+        system.addStave({
+          voices: [score.voice(score.notes('(F4 D5)/2').concat(score.beam(score.notes('(F4 F5)/8, (F4 F5)/8'))))],
+        });
+        ['hand,', 'and', 'me', 'pears', 'lead', 'the'].forEach((text, ix) => {
+          const verse = Math.floor(ix / 3);
+          const nid = 'n' + (ix % 3);
+          id(nid).addModifier(verse, vf.Annotation({ text }).setFont('Roboto Slab', fontSize, 'normal'));
+        });
+        vf.draw();
+        ratio = (fontSize + 2) / fontSize;
+        width = width * ratio;
+        x = x + width;
+        fontSize = fontSize + 2;
+      }
       ok(true);
     },
-    simple: function(options, contextBuilder) {
+    simple: function (options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';

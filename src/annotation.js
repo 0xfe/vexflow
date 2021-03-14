@@ -22,6 +22,11 @@ export class Annotation extends Modifier {
     return 'annotations';
   }
 
+  // Is there a better source for this?
+  static get distanceBetweenLines() {
+    return 10;
+  }
+
   // Text annotations can be positioned and justified relative to the note.
   static get Justify() {
     return {
@@ -69,21 +74,24 @@ export class Annotation extends Modifier {
     for (let i = 0; i < annotations.length; ++i) {
       let testWidth = 0;
       const annotation = annotations[i];
-      const textFont = TextFont.getTextFontFromVexFontData({ family: annotation.font.family,
-        size: annotation.font.size, weight: 'normal' });
-      for (let j = 0; j < annotation.text.length; ++j) {
-        testWidth += textFont.getWidthForCharacter(annotation.text[j]);
-      }
+      const textFont = TextFont.getTextFontFromVexFontData({
+        family: annotation.font.family,
+        size: annotation.font.size,
+        weight: 'normal',
+      });
+      // Calculate if the vertical extent will exceed a single line and adjust accordingly.
+      const numLines = Math.floor(textFont.maxHeight / Annotation.distanceBetweenLines) + 1;
+      // Get the string width from the font metrics
+      testWidth = textFont.getWidthForString(annotation.text);
       width = Math.max(width, testWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
-        state.top_text_line++;
+        state.top_text_line += numLines;
       } else {
         annotation.setTextLine(state.text_line);
-        state.text_line++;
+        state.text_line += numLines;
       }
     }
-
     state.left_shift += width / 2;
     state.right_shift += width / 2;
     return true;
@@ -113,7 +121,9 @@ export class Annotation extends Modifier {
     this.setWidth(Flow.textWidth(text));
   }
 
-  getCategory() { return Annotation.CATEGORY; }
+  getCategory() {
+    return Annotation.CATEGORY;
+  }
 
   // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
   setFont(family, size, weight) {
@@ -124,19 +134,17 @@ export class Annotation extends Modifier {
   // Set vertical position of text (above or below stave). `just` must be
   // a value in `Annotation.VerticalJustify`.
   setVerticalJustification(just) {
-    this.vert_justification = typeof (just) === 'string'
-      ? Annotation.VerticalJustifyString[just]
-      : just;
+    this.vert_justification = typeof just === 'string' ? Annotation.VerticalJustifyString[just] : just;
     return this;
   }
 
   // Get and set horizontal justification. `justification` is a value in
   // `Annotation.Justify`.
-  getJustification() { return this.justification; }
+  getJustification() {
+    return this.justification;
+  }
   setJustification(just) {
-    this.justification = typeof (just) === 'string'
-      ? Annotation.JustifyString[just]
-      : just;
+    this.justification = typeof just === 'string' ? Annotation.JustifyString[just] : just;
     return this;
   }
 
@@ -145,9 +153,7 @@ export class Annotation extends Modifier {
     this.checkContext();
 
     if (!this.note) {
-      throw new Vex.RERR(
-        'NoNoteForAnnotation', "Can't draw text annotation without an attached note."
-      );
+      throw new Vex.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
     }
 
     this.setRendered();

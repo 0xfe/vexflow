@@ -35,7 +35,7 @@ export class TextFont {
     if (!TextFont.registryInstance) {
       TextFont.registryInstance = [];
       TextFont.registryInstance.push({
-        name: 'RobotoSlab',
+        name: 'Roboto Slab',
         resolution: RobotoSlabTextMetrics.resolution,
         glyphs: RobotoSlabTextMetrics.glyphs,
         family: RobotoSlabTextMetrics.fontFamily,
@@ -49,7 +49,7 @@ export class TextFont {
         description: 'Default serif text font to pair with Bravura/Gonville engraving font',
       });
       TextFont.registryInstance.push({
-        name: 'PetalumaScript',
+        name: 'petalumaScript',
         resolution: PetalumaScriptTextMetrics.resolution,
         glyphs: PetalumaScriptTextMetrics.glyphs,
         family: PetalumaScriptTextMetrics.fontFamily,
@@ -118,6 +118,13 @@ export class TextFont {
     return fs && typeof fs === 'string' && fs.toLowerCase() === 'italic';
   }
 
+  static get fontTextHash() {
+    if (typeof TextFont.fontTextHashInstance === 'undefined') {
+      TextFont.fontTextHashInstance = {};
+    }
+    return TextFont.fontTextHashInstance;
+  }
+
   // ### getTextFontFromVexFontData
   // Find the font that most closely matches the parameters from the given font data.
   // Primarily we look for font family, also bold and italic attributes.  This
@@ -154,7 +161,7 @@ export class TextFont {
         }
       }
     }
-    if (typeof(fd.size) === 'number' && fd.size > 0) {
+    if (typeof fd.size === 'number' && fd.size > 0) {
       rv.setFontSize(fd.size);
     }
     return rv;
@@ -210,6 +217,13 @@ export class TextFont {
     if (!this.maxSizeGlyph) {
       this.maxSizeGlyph = 'H';
     }
+    this.weight = typeof this.weight === 'undefined' ? '' : this.weight;
+    this.style = typeof this.style === 'undefined' ? '' : this.style;
+    this.setHashBase();
+  }
+
+  setHashBase() {
+    this.textHashBase = this.family + '-' + this.size + '-' + this.weight + '-' + this.style;
   }
 
   getMetricForCharacter(c) {
@@ -232,6 +246,18 @@ export class TextFont {
     return (metric.advanceWidth / this.resolution) * this.pointsToPixels;
   }
 
+  getWidthForString(s) {
+    const key = this.textHashBase + '-' + s;
+    let width = 0;
+    if (!TextFont.fontTextHash[key]) {
+      for (let j = 0; j < s.length; ++j) {
+        width += this.getWidthForCharacter(s[j]);
+      }
+      TextFont.fontTextHash[key] = width;
+    }
+    return TextFont.fontTextHash[key];
+  }
+
   // ### pointsToPixels
   // The font size is specified in points, convert to 'pixels' in the svg space
   get pointsToPixels() {
@@ -240,6 +266,7 @@ export class TextFont {
 
   setFontSize(size) {
     this.size = size;
+    this.setHashBase();
     return this;
   }
 }
