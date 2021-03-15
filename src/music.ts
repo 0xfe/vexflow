@@ -4,7 +4,7 @@
 // This class implements some standard music theory routines.
 
 import { Vex } from './vex';
-import { IMusicAccidental, IMusicNoteParts, IMusicNoteValue } from './types/common';
+import { MusicAccidental, MusicNoteParts, Key, KeyValue, RootValue } from './types/common';
 
 export class Music {
   static get NUM_TONES(): number {
@@ -15,11 +15,11 @@ export class Music {
     return ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
   }
 
-  static get root_values(): number[] {
+  static get root_values(): KeyValue[] {
     return [0, 2, 4, 5, 7, 9, 11];
   }
 
-  static get root_indices(): Record<string, number> {
+  static get root_indices(): Record<string, RootValue> {
     return {
       c: 0,
       d: 1,
@@ -39,7 +39,7 @@ export class Music {
     return ['unison', 'm2', 'M2', 'm3', 'M3', 'p4', 'dim5', 'p5', 'm6', 'M6', 'b7', 'M7', 'octave'];
   }
 
-  static get diatonic_accidentals(): Record<string, IMusicAccidental> {
+  static get diatonic_accidentals(): Record<string, MusicAccidental> {
     return {
       unison: { note: 0, accidental: 0 },
       m2: { note: 1, accidental: -1 },
@@ -122,7 +122,7 @@ export class Music {
     return ['bb', 'b', 'n', '#', '##'];
   }
 
-  static get noteValues(): Record<string, IMusicNoteValue> {
+  static get noteValues(): Record<string, Key> {
     return {
       c: { root_index: 0, int_val: 0 },
       cn: { root_index: 0, int_val: 0 },
@@ -180,7 +180,7 @@ export class Music {
     return this.isValidNoteValue(interval);
   }
 
-  getNoteParts(noteString: string): IMusicNoteParts {
+  getNoteParts(noteString: string): MusicNoteParts {
     if (!noteString || noteString.length < 1) {
       throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
     }
@@ -207,7 +207,7 @@ export class Music {
     }
   }
 
-  getKeyParts(keyString: string): IMusicNoteParts {
+  getKeyParts(keyString: string): MusicNoteParts {
     if (!keyString || keyString.length < 1) {
       throw new Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
     }
