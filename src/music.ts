@@ -4,7 +4,7 @@
 // This class implements some standard music theory routines.
 
 import { Vex } from './vex';
-import { MusicAccidental, MusicNoteParts, Key, KeyValue, RootValue } from './types/common';
+import { NoteParts, NoteAccidental, Key, KeyValue, RootValue } from './types/common';
 
 export class Music {
   static get NUM_TONES(): number {
@@ -39,7 +39,7 @@ export class Music {
     return ['unison', 'm2', 'M2', 'm3', 'M3', 'p4', 'dim5', 'p5', 'm6', 'M6', 'b7', 'M7', 'octave'];
   }
 
-  static get diatonic_accidentals(): Record<string, MusicAccidental> {
+  static get diatonic_accidentals(): Record<string, NoteAccidental> {
     return {
       unison: { note: 0, accidental: 0 },
       m2: { note: 1, accidental: -1 },
@@ -180,7 +180,7 @@ export class Music {
     return this.isValidNoteValue(interval);
   }
 
-  getNoteParts(noteString: string): MusicNoteParts {
+  getNoteParts(noteString: string): NoteParts {
     if (!noteString || noteString.length < 1) {
       throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
     }
@@ -207,7 +207,7 @@ export class Music {
     }
   }
 
-  getKeyParts(keyString: string): MusicNoteParts {
+  getKeyParts(keyString: string): NoteParts {
     if (!keyString || keyString.length < 1) {
       throw new Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
     }

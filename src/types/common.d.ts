@@ -1,20 +1,19 @@
-export interface MusicAccidental {
+export interface NoteAccidental {
   note: number;
-  accidental: number;
+  accidental: AccidentalValue;
 }
 
-export interface MusicNoteParts {
+export interface NoteParts {
   root: string;
   accidental: string;
   type?: string;
 }
 
-/** Range 0 - 11 */
-export type KeyValue = number;
-/** Range 0 - 6 */
-export type RootValue = number;
-/** Range -2 to +2 */
-export type AccidentalValue = number;
+export type KeyValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+
+export type RootValue = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+export type AccidentalValue = -2 | -1 | 0 | 1 | 2;
 
 export interface Key {
   root_index: RootValue;
