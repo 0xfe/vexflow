@@ -223,8 +223,6 @@ export class TextFont {
     this.style = typeof this.style === 'undefined' ? '' : this.style;
     this.updateCacheKey();
   }
-
-  // ### updateCacheKey
   // Create a hash with the current font data, so we can cache computed widths
   updateCacheKey() {
     this.fontCacheKey = this.family + '-' + this.size + '-' + this.weight + '-' + this.style;
