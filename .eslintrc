@@ -11,5 +11,26 @@
   "rules": {
     "no-console": 1, // Means warning
     "prettier/prettier": 2 // Means error
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts"],
+      "env": { "browser": true, "es6": true, "node": true },
+      "extends": [
+        "eslint:recommended",
+        "prettier"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+      },
+      "plugins": ["@typescript-eslint","prettier"],
+      "rules": {
+        "no-console": 1, // Means warning
+        "prettier/prettier": 2 // Means error
+      }
+    }
+  ]
 }
