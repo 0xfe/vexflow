@@ -72,7 +72,7 @@ export class TextFont {
   // We assume descriptions are the same for different weights/styles.
   static getFontFamilies() {
     const hash = {};
-    const rv = [];
+    const returnedFonts = [];
     TextFont.fontRegistry.forEach((font) => {
       if (!hash[font.family]) {
         hash[font.family] = {
@@ -92,9 +92,9 @@ export class TextFont {
     });
     const keys = Object.keys(hash);
     keys.forEach((key) => {
-      rv.push(hash[key]);
+      returnedFonts.push(hash[key]);
     });
-    return rv;
+    return returnedFonts;
   }
 
   // ### fontWeightToBold
@@ -118,11 +118,13 @@ export class TextFont {
     return fs && typeof fs === 'string' && fs.toLowerCase() === 'italic';
   }
 
-  static get fontTextHash() {
-    if (typeof TextFont.fontTextHashInstance === 'undefined') {
-      TextFont.fontTextHashInstance = {};
+  // ### textWidthCache
+  // Static cache of widths hashed on font/string.
+  static get textWidthCache() {
+    if (typeof TextFont.textWidthCacheInstance === 'undefined') {
+      TextFont.textWidthCacheInstance = {};
     }
-    return TextFont.fontTextHashInstance;
+    return TextFont.textWidthCacheInstance;
   }
 
   // ### getTextFontFromVexFontData
@@ -131,7 +133,7 @@ export class TextFont {
   // method will always return a fallback font if there are no matches.
   static getTextFontFromVexFontData(fd) {
     let i = 0;
-    let rv = null;
+    let selectedFont = null;
     const fallback = TextFont.fontRegistry[0];
     let candidates = [];
     const families = fd.family.split(',');
@@ -143,28 +145,28 @@ export class TextFont {
       }
     }
     if (candidates.length === 0) {
-      rv = new TextFont(fallback);
+      selectedFont = new TextFont(fallback);
     } else if (candidates.length === 1) {
-      rv = new TextFont(candidates[0]);
+      selectedFont = new TextFont(candidates[0]);
     } else {
       const bold = TextFont.fontWeightToBold(fd.weight);
       const italic = TextFont.fontStyleToItalic(fd.style);
       const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
       if (perfect) {
-        rv = new TextFont(perfect);
+        selectedFont = new TextFont(perfect);
       } else {
         const ok = candidates.find((font) => font.italic === italic || font.bold === bold);
         if (ok) {
-          rv = new TextFont(ok);
+          selectedFont = new TextFont(ok);
         } else {
-          rv = new TextFont(candidates[0]);
+          selectedFont = new TextFont(candidates[0]);
         }
       }
     }
     if (typeof fd.size === 'number' && fd.size > 0) {
-      rv.setFontSize(fd.size);
+      selectedFont.setFontSize(fd.size);
     }
-    return rv;
+    return selectedFont;
   }
 
   static getFontDataByName(fontName) {
@@ -219,11 +221,13 @@ export class TextFont {
     }
     this.weight = typeof this.weight === 'undefined' ? '' : this.weight;
     this.style = typeof this.style === 'undefined' ? '' : this.style;
-    this.setHashBase();
+    this.updateCacheKey();
   }
 
-  setHashBase() {
-    this.textHashBase = this.family + '-' + this.size + '-' + this.weight + '-' + this.style;
+  // ### updateCacheKey
+  // Create a hash with the current font data, so we can cache computed widths
+  updateCacheKey() {
+    this.fontCacheKey = this.family + '-' + this.size + '-' + this.weight + '-' + this.style;
   }
 
   getMetricForCharacter(c) {
@@ -247,15 +251,19 @@ export class TextFont {
   }
 
   getWidthForString(s) {
-    const key = this.textHashBase + '-' + s;
+    // Store width in 2-level cache, so I don't have to recompute for
+    // same string/font
+    if (typeof TextFont.textWidthCache[this.fontCacheKey] === 'undefined') {
+      TextFont.textWidthCache[this.fontCacheKey] = {};
+    }
     let width = 0;
-    if (!TextFont.fontTextHash[key]) {
+    if (!TextFont.textWidthCache[this.fontCacheKey][s]) {
       for (let j = 0; j < s.length; ++j) {
         width += this.getWidthForCharacter(s[j]);
       }
-      TextFont.fontTextHash[key] = width;
+      TextFont.textWidthCache[this.fontCacheKey][s] = width;
     }
-    return TextFont.fontTextHash[key];
+    return TextFont.textWidthCache[this.fontCacheKey][s];
   }
 
   // ### pointsToPixels
@@ -266,7 +274,8 @@ export class TextFont {
 
   setFontSize(size) {
     this.size = size;
-    this.setHashBase();
+    // font size mangled into cache key, so use the correct one.
+    this.updateCacheKey();
     return this;
   }
 }

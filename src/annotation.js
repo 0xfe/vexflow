@@ -22,11 +22,6 @@ export class Annotation extends Modifier {
     return 'annotations';
   }
 
-  // Is there a better source for this?
-  static get distanceBetweenLines() {
-    return 10;
-  }
-
   // Text annotations can be positioned and justified relative to the note.
   static get Justify() {
     return {
@@ -80,7 +75,7 @@ export class Annotation extends Modifier {
         weight: 'normal',
       });
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
-      const numLines = Math.floor(textFont.maxHeight / Annotation.distanceBetweenLines) + 1;
+      const numLines = Math.floor(textFont.maxHeight / Flow.STAVE_LINE_DISTANCE) + 1;
       // Get the string width from the font metrics
       testWidth = textFont.getWidthForString(annotation.text);
       width = Math.max(width, testWidth);

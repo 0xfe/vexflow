@@ -42,7 +42,7 @@ export class Stave extends Element {
       fill_style: '#999999',
       left_bar: true, // draw vertical bar on left
       right_bar: true, // draw vertical bar on right
-      spacing_between_lines_px: 10, // in pixels
+      spacing_between_lines_px: Flow.STAVE_LINE_DISTANCE, // in pixels
       space_above_staff_ln: 4, // in staff lines
       space_below_staff_ln: 4, // in staff lines
       top_text_position: 1, // in staff lines
