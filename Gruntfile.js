@@ -18,7 +18,7 @@ module.exports = (grunt) => {
   const TARGET_MIN = 'vexflow-min.js';
 
   // Used for eslint and docco
-  const SOURCES = ['src/*.js', '!src/header.js'];
+  const SOURCES = ['src/*.ts', 'src/*.js', '!src/header.js'];
 
   // Take all test files in 'tests/' and build TARGET_TESTS
   const TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
@@ -35,6 +35,9 @@ module.exports = (grunt) => {
         libraryTarget: 'umd',
         libraryExport: 'default',
       },
+      resolve: {
+        extensions: ['.ts', '.js', '.json']
+      },
       devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : false,
       module: {
         rules: [
@@ -48,6 +51,15 @@ module.exports = (grunt) => {
                   presets: [preset],
                   plugins: ['@babel/plugin-transform-object-assign'],
                 },
+              },
+            ],
+          },
+          {
+            test: /\.ts?$/,
+            exclude: /(node_modules|bower_components)/,
+            use: [
+              {
+                loader: 'ts-loader',
               },
             ],
           },
