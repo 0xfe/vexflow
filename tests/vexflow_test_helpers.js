@@ -50,11 +50,7 @@ if (!window.QUnit) {
   notStrictEqual = QUnit.assertions.notStrictEqual;
 }
 
-if (typeof require === 'function') {
-  Vex = require('./vexflow-debug.js');
-}
-
-var VF = Vex.Flow;
+global['VF'] = Vex.Flow;
 VF.Test = (function () {
   var Test = {
     // Test Options.
