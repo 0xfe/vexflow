@@ -1,35 +1,45 @@
 {
   "root": true,
-  "parser": "babel-eslint",
+  "env": { "browser": true, "node": true },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module"
+    "project": "tsconfig.json"
   },
-  "env": { "browser": true },
-  "plugins": ["prettier"],
-  "extends": ["eslint:recommended", "prettier"],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier"
+  ],
   "rules": {
     "no-console": 1, // Means warning
     "prettier/prettier": 2 // Means error
   },
   "overrides": [
     {
-      "files": ["**/*.ts"],
-      "env": { "browser": true, "es6": true, "node": true },
+      "files": [ "**/*.ts" ],
+      "extends": [
+        "airbnb-typescript/base",
+        "prettier"
+      ],
+    },
+    {
+      "files": [ "src/**/*.js" ],
+      "extends": [
+        "eslint:recommended",
+        "prettier"
+      ]
+    },
+    {
+      "files": [ "tests/**/*.js" ],
       "extends": [
         "eslint:recommended",
         "prettier"
       ],
-      "parser": "@typescript-eslint/parser",
-      "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module",
-        "project": "./tsconfig.json"
-      },
-      "plugins": ["@typescript-eslint","prettier"],
-      "rules": {
+      "rules": {  
         "no-console": 1, // Means warning
-        "prettier/prettier": 2 // Means error
+        "prettier/prettier": 2, // Means error
+        "no-restricted-globals": 0,
+        "no-undef": 0,
+        "no-undef-init": 0
       }
     }
   ]

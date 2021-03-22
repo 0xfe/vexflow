@@ -42,20 +42,7 @@ module.exports = (grunt) => {
       module: {
         rules: [
           {
-            test: /\.js?$/,
-            exclude: /(node_modules|bower_components)/,
-            use: [
-              {
-                loader: 'babel-loader',
-                options: {
-                  presets: [preset],
-                  plugins: ['@babel/plugin-transform-object-assign'],
-                },
-              },
-            ],
-          },
-          {
-            test: /\.ts?$/,
+            test: /\.?s?$/,
             exclude: /(node_modules|bower_components)/,
             use: [
               {
@@ -94,7 +81,7 @@ module.exports = (grunt) => {
       },
     },
     eslint: {
-      target: SOURCES.concat('./tests'),
+      target: SOURCES.concat('./tests/**/*.?s'),
       options: { fix: true },
     },
     qunit: {
@@ -116,7 +103,7 @@ module.exports = (grunt) => {
             expand: true,
             dest: RELEASE_DIR,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
+            src: ['*.ts', '*.js', 'docs/**', '*.map'],
           },
         ],
       },
@@ -175,8 +162,8 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-webpack');
 
   // Default task(s).
-  grunt.registerTask('default', ['eslint', 'webpack:buildDev', 'webpack:build', 'concat', 'docco']);
-  grunt.registerTask('test', 'Run qunit tests.', ['webpack:buildDev', 'concat', 'qunit']);
+  grunt.registerTask('default', ['clean', 'eslint', 'webpack:buildDev', 'webpack:build', 'concat', 'docco']);
+  grunt.registerTask('test', 'Run qunit tests.', ['clean', 'webpack:buildDev', 'concat', 'qunit']);
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current bundles to releases/.', () => {
