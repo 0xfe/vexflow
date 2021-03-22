@@ -17,7 +17,7 @@
     {
       "files": [ "**/*.ts" ],
       "extends": [
-        "airbnb-typescript/base",
+        "eslint:recommended",
         "prettier"
       ],
     },

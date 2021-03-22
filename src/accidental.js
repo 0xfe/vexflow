@@ -344,11 +344,13 @@ export class Accidental extends Modifier {
       });
     });
 
+    const music = new Music();
+
     // Default key signature is C major
     if (!keySignature) keySignature = 'C';
 
     // Get the scale map, which represents the current state of each pitch
-    const scaleMap = Music.createScaleMap(keySignature);
+    const scaleMap = music.createScaleMap(keySignature);
 
     tickPositions.forEach((tick) => {
       const notes = tickNoteMap[tick];
@@ -363,7 +365,7 @@ export class Accidental extends Modifier {
         // Go through each key and determine if an accidental should be
         // applied
         note.keys.forEach((keyString, keyIndex) => {
-          const key = Music.getNoteParts(keyString.split('/')[0]);
+          const key = music.getNoteParts(keyString.split('/')[0]);
 
           // Force a natural for every key without an accidental
           const accidentalString = key.accidental || 'n';

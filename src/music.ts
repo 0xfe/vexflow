@@ -5,12 +5,6 @@
 
 import { Vex } from './vex';
 
-export type KeyValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
-
-export type RootValue = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-
-export type AccidentalValue = -2 | -1 | 0 | 1 | 2;
-
 export interface NoteAccidental {
   note: number;
   accidental: AccidentalValue;
@@ -21,6 +15,12 @@ export interface NoteParts {
   accidental: string;
   type?: string;
 }
+
+export type KeyValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+
+export type RootValue = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+export type AccidentalValue = -2 | -1 | 0 | 1 | 2;
 
 export interface Key {
   root_index: RootValue;
@@ -189,24 +189,24 @@ export class Music {
     };
   }
 
-  static isValidNoteValue(note: number): boolean {
+  isValidNoteValue(note: number): boolean {
     if (note == null || note < 0 || note >= Music.NUM_TONES) {
       return false;
     }
     return true;
   }
 
-  static isValidIntervalValue(interval: number): boolean {
+  isValidIntervalValue(interval: number): boolean {
     return this.isValidNoteValue(interval);
   }
 
-  static getNoteParts(noteString: string): NoteParts {
+  getNoteParts(noteString: string): NoteParts {
     if (!noteString || noteString.length < 1) {
-      throw new Vex.RERR('BadArguments', `Invalid note name: ${noteString}`);
+      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
     }
 
     if (noteString.length > 3) {
-      throw new Vex.RERR('BadArguments', `Invalid note name: ${noteString}`);
+      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
     }
 
     const note = noteString.toLowerCase();
@@ -222,13 +222,14 @@ export class Music {
         root,
         accidental,
       };
+    } else {
+      throw new Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
     }
-    throw new Vex.RERR('BadArguments', `Invalid note name: ${noteString}`);
   }
 
-  static getKeyParts(keyString: string): NoteParts {
+  getKeyParts(keyString: string): NoteParts {
     if (!keyString || keyString.length < 1) {
-      throw new Vex.RERR('BadArguments', `Invalid key: ${keyString}`);
+      throw new Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
     }
 
     const key = keyString.toLowerCase();
@@ -250,11 +251,12 @@ export class Music {
         accidental,
         type,
       };
+    } else {
+      throw new Vex.RERR('BadArguments', `Invalid key: ${keyString}`);
     }
-    throw new Vex.RERR('BadArguments', `Invalid key: ${keyString}`);
   }
 
-  static getNoteValue(noteString: string): number {
+  getNoteValue(noteString: string): number {
     const value = Music.noteValues[noteString];
     if (value == null) {
       throw new Vex.RERR('BadArguments', `Invalid note name: ${noteString}`);
@@ -263,7 +265,7 @@ export class Music {
     return value.int_val;
   }
 
-  static getIntervalValue(intervalString: string): number {
+  getIntervalValue(intervalString: string): number {
     const value = Music.intervals[intervalString];
     if (value == null) {
       throw new Vex.RERR('BadArguments', `Invalid interval name: ${intervalString}`);
@@ -272,7 +274,7 @@ export class Music {
     return value;
   }
 
-  static getCanonicalNoteName(noteValue: number): string {
+  getCanonicalNoteName(noteValue: number): string {
     if (!this.isValidNoteValue(noteValue)) {
       throw new Vex.RERR('BadArguments', `Invalid note value: ${noteValue}`);
     }
@@ -280,7 +282,7 @@ export class Music {
     return Music.canonical_notes[noteValue];
   }
 
-  static getCanonicalIntervalName(intervalValue: number): string {
+  getCanonicalIntervalName(intervalValue: number): string {
     if (!this.isValidIntervalValue(intervalValue)) {
       throw new Vex.RERR('BadArguments', `Invalid interval value: ${intervalValue}`);
     }
@@ -291,20 +293,20 @@ export class Music {
   /* Given a note, interval, and interval direction, product the
    * relative note.
    */
-  static getRelativeNoteValue(noteValue: number, intervalValue: number, direction?: number): number {
-    const dir = direction == null ? 1 : direction;
+  getRelativeNoteValue(noteValue: number, intervalValue: number, direction?: number): number {
+    if (direction == null) direction = 1;
 
-    if (dir !== 1 && dir !== -1) {
+    if (direction !== 1 && direction !== -1) {
       throw new Vex.RERR('BadArguments', `Invalid direction: ${direction}`);
     }
 
-    let sum = (noteValue + dir * intervalValue) % Music.NUM_TONES;
+    let sum = (noteValue + direction * intervalValue) % Music.NUM_TONES;
     if (sum < 0) sum += Music.NUM_TONES;
 
     return sum;
   }
 
-  static getRelativeNoteName(root: string, noteValue: number): string {
+  getRelativeNoteName(root: string, noteValue: number): string {
     const parts = this.getNoteParts(root);
     const rootValue = this.getNoteValue(parts.root);
     let interval = noteValue - rootValue;
@@ -314,12 +316,12 @@ export class Music {
       if (interval > 0) multiplier = -1;
 
       // Possibly wrap around. (Add +1 for modulo operator)
-      const reverseInterval = ((noteValue + 1 + (rootValue + 1)) % Music.NUM_TONES) * multiplier;
+      const reverse_interval = ((noteValue + 1 + (rootValue + 1)) % Music.NUM_TONES) * multiplier;
 
-      if (Math.abs(reverseInterval) > 2) {
+      if (Math.abs(reverse_interval) > 2) {
         throw new Vex.RERR('BadArguments', `Notes not related: ${root}, ${noteValue})`);
       } else {
-        interval = reverseInterval;
+        interval = reverse_interval;
       }
     }
 
@@ -329,11 +331,11 @@ export class Music {
 
     let relativeNoteName = parts.root;
     if (interval > 0) {
-      for (let i = 1; i <= interval; i += 1) {
+      for (let i = 1; i <= interval; ++i) {
         relativeNoteName += '#';
       }
     } else if (interval < 0) {
-      for (let i = -1; i >= interval; i -= 1) {
+      for (let i = -1; i >= interval; --i) {
         relativeNoteName += 'b';
       }
     }
@@ -349,7 +351,7 @@ export class Music {
    * When used with key = 0, returns C scale (which is isomorphic to
    * interval list).
    */
-  static getScaleTones(key: number, intervals: number[]): number[] {
+  getScaleTones(key: number, intervals: number[]): number[] {
     const tones = [key];
 
     let nextNote = key;
@@ -365,17 +367,18 @@ export class Music {
    *
    * E.g., Given the scale C, and the note E, returns M3
    */
-  static getIntervalBetween(note1: number, note2: number, direction?: number): number {
-    const dir = direction == null ? 1 : direction;
+  getIntervalBetween(note1: number, note2: number, direction?: number): number {
+    if (direction == null) direction = 1;
 
-    if (dir !== 1 && dir !== -1) {
+    if (direction !== 1 && direction !== -1) {
       throw new Vex.RERR('BadArguments', `Invalid direction: ${direction}`);
     }
+
     if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2)) {
       throw new Vex.RERR('BadArguments', `Invalid notes: ${note1}, ${note2}`);
     }
 
-    let difference = dir === 1 ? note2 - note1 : note1 - note2;
+    let difference = direction === 1 ? note2 - note1 : note1 - note2;
 
     if (difference < 0) difference += Music.NUM_TONES;
 
@@ -386,7 +389,7 @@ export class Music {
   // `keySignature`. For example, passing a `G` to `keySignature` would
   // return a scale map with every note naturalized except for `F` which
   // has an `F#` state.
-  static createScaleMap(keySignature: string): Record<string, string> {
+  createScaleMap(keySignature: string): Record<string, string> {
     const keySigParts = this.getKeyParts(keySignature);
     if (!keySigParts.type) throw new Vex.RERR('BadArguments', 'Unsupported key type: undefined');
     const scaleName = Music.scaleTypes[keySigParts.type];
@@ -394,13 +397,13 @@ export class Music {
     let keySigString = keySigParts.root;
     if (keySigParts.accidental) keySigString += keySigParts.accidental;
 
-    if (!scaleName) throw new Vex.RERR('BadArguments', `Unsupported key type: ${keySignature}`);
+    if (!scaleName) throw new Vex.RERR('BadArguments', 'Unsupported key type: ' + keySignature);
 
     const scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
     const noteLocation = Music.root_indices[keySigParts.root];
 
     const scaleMap = {} as Record<string, string>;
-    for (let i = 0; i < Music.roots.length; i += 1) {
+    for (let i = 0; i < Music.roots.length; ++i) {
       const index = (noteLocation + i) % Music.roots.length;
       const rootName = Music.roots[index];
       let noteName = this.getRelativeNoteName(rootName, scale[i]);

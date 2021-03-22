@@ -22,30 +22,32 @@ VF.Test.Music = (function () {
     validNotes: function () {
       expect(10);
 
-      var parts = VF.Music.getNoteParts('c');
+      var music = new VF.Music();
+
+      var parts = music.getNoteParts('c');
       equal(parts.root, 'c');
       equal(parts.accidental, null);
 
-      parts = VF.Music.getNoteParts('C');
+      parts = music.getNoteParts('C');
       equal(parts.root, 'c');
       equal(parts.accidental, null);
 
-      parts = VF.Music.getNoteParts('c#');
+      parts = music.getNoteParts('c#');
       equal(parts.root, 'c');
       equal(parts.accidental, '#');
 
-      parts = VF.Music.getNoteParts('c##');
+      parts = music.getNoteParts('c##');
       equal(parts.root, 'c');
       equal(parts.accidental, '##');
 
       try {
-        VF.Music.getNoteParts('r');
+        music.getNoteParts('r');
       } catch (e) {
         equal(e.code, 'BadArguments', 'Invalid note: r');
       }
 
       try {
-        VF.Music.getNoteParts('');
+        music.getNoteParts('');
       } catch (e) {
         equal(e.code, 'BadArguments', "Invalid note: ''");
       }
@@ -54,45 +56,47 @@ VF.Test.Music = (function () {
     validKeys: function () {
       expect(18);
 
-      var parts = VF.Music.getKeyParts('c');
+      var music = new VF.Music();
+
+      var parts = music.getKeyParts('c');
       equal(parts.root, 'c');
       equal(parts.accidental, null);
       equal(parts.type, 'M');
 
-      parts = VF.Music.getKeyParts('d#');
+      parts = music.getKeyParts('d#');
       equal(parts.root, 'd');
       equal(parts.accidental, '#');
       equal(parts.type, 'M');
 
-      parts = VF.Music.getKeyParts('fbm');
+      parts = music.getKeyParts('fbm');
       equal(parts.root, 'f');
       equal(parts.accidental, 'b');
       equal(parts.type, 'm');
 
-      parts = VF.Music.getKeyParts('c#mel');
+      parts = music.getKeyParts('c#mel');
       equal(parts.root, 'c');
       equal(parts.accidental, '#');
       equal(parts.type, 'mel');
 
-      parts = VF.Music.getKeyParts('g#harm');
+      parts = music.getKeyParts('g#harm');
       equal(parts.root, 'g');
       equal(parts.accidental, '#');
       equal(parts.type, 'harm');
 
       try {
-        VF.Music.getKeyParts('r');
+        music.getKeyParts('r');
       } catch (e) {
         equal(e.code, 'BadArguments', 'Invalid key: r');
       }
 
       try {
-        VF.Music.getKeyParts('');
+        music.getKeyParts('');
       } catch (e) {
         equal(e.code, 'BadArguments', "Invalid key: ''");
       }
 
       try {
-        VF.Music.getKeyParts('#m');
+        music.getKeyParts('#m');
       } catch (e) {
         equal(e.code, 'BadArguments', 'Invalid key: #m');
       }
@@ -101,27 +105,31 @@ VF.Test.Music = (function () {
     noteValue: function () {
       expect(3);
 
-      var note = VF.Music.getNoteValue('c');
+      var music = new VF.Music();
+
+      var note = music.getNoteValue('c');
       equal(note, 0);
 
       try {
-        VF.Music.getNoteValue('r');
+        music.getNoteValue('r');
       } catch (e) {
         ok(true, 'Invalid note');
       }
 
-      note = VF.Music.getNoteValue('f#');
+      note = music.getNoteValue('f#');
       equal(note, 6);
     },
 
     intervalValue: function () {
       expect(2);
 
-      var value = VF.Music.getIntervalValue('b2');
+      var music = new VF.Music();
+
+      var value = music.getIntervalValue('b2');
       equal(value, 1);
 
       try {
-        VF.Music.getIntervalValue('7');
+        music.getIntervalValue('7');
       } catch (e) {
         ok(true, 'Invalid note');
       }
@@ -130,72 +138,77 @@ VF.Test.Music = (function () {
     relativeNotes: function () {
       expect(8);
 
-      var value = VF.Music.getRelativeNoteValue(VF.Music.getNoteValue('c'), VF.Music.getIntervalValue('b5'));
+      var music = new VF.Music();
+
+      var value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b5'));
       equal(value, 6);
 
       try {
-        VF.Music.getRelativeNoteValue(VF.Music.getNoteValue('bc'), VF.Music.getIntervalValue('b2'));
+        music.getRelativeNoteValue(music.getNoteValue('bc'), music.getIntervalValue('b2'));
       } catch (e) {
         ok(true, 'Invalid note');
       }
 
       try {
-        VF.Music.getRelativeNoteValue(VF.Music.getNoteValue('b'), VF.Music.getIntervalValue('p3'));
+        music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p3'));
       } catch (e) {
         ok(true, 'Invalid interval');
       }
 
       // Direction
-      value = VF.Music.getRelativeNoteValue(VF.Music.getNoteValue('d'), VF.Music.getIntervalValue('2'), -1);
+      value = music.getRelativeNoteValue(music.getNoteValue('d'), music.getIntervalValue('2'), -1);
       equal(value, 0);
 
       try {
-        VF.Music.getRelativeNoteValue(VF.Music.getNoteValue('b'), VF.Music.getIntervalValue('p4'), 0);
+        music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p4'), 0);
       } catch (e) {
         ok(true, 'Invalid direction');
       }
 
       // Rollover
-      value = VF.Music.getRelativeNoteValue(VF.Music.getNoteValue('b'), VF.Music.getIntervalValue('b5'));
+      value = music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('b5'));
       equal(value, 5);
 
       // Reverse rollover
-      value = VF.Music.getRelativeNoteValue(VF.Music.getNoteValue('c'), VF.Music.getIntervalValue('b2'), -1);
+      value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b2'), -1);
       equal(value, 11);
 
       // Practical tests
-      value = VF.Music.getRelativeNoteValue(VF.Music.getNoteValue('g'), VF.Music.getIntervalValue('p5'));
+      value = music.getRelativeNoteValue(music.getNoteValue('g'), music.getIntervalValue('p5'));
       equal(value, 2);
     },
 
     relativeNoteNames: function () {
       expect(9);
 
-      equal(VF.Music.getRelativeNoteName('c', VF.Music.getNoteValue('c')), 'c');
-      equal(VF.Music.getRelativeNoteName('c', VF.Music.getNoteValue('db')), 'c#');
-      equal(VF.Music.getRelativeNoteName('c#', VF.Music.getNoteValue('db')), 'c#');
-      equal(VF.Music.getRelativeNoteName('e', VF.Music.getNoteValue('f#')), 'e##');
-      equal(VF.Music.getRelativeNoteName('e', VF.Music.getNoteValue('d#')), 'eb');
-      equal(VF.Music.getRelativeNoteName('e', VF.Music.getNoteValue('fb')), 'e');
+      var music = new VF.Music();
+      equal(music.getRelativeNoteName('c', music.getNoteValue('c')), 'c');
+      equal(music.getRelativeNoteName('c', music.getNoteValue('db')), 'c#');
+      equal(music.getRelativeNoteName('c#', music.getNoteValue('db')), 'c#');
+      equal(music.getRelativeNoteName('e', music.getNoteValue('f#')), 'e##');
+      equal(music.getRelativeNoteName('e', music.getNoteValue('d#')), 'eb');
+      equal(music.getRelativeNoteName('e', music.getNoteValue('fb')), 'e');
 
       try {
-        VF.Music.getRelativeNoteName('e', VF.Music.getNoteValue('g#'));
+        music.getRelativeNoteName('e', music.getNoteValue('g#'));
       } catch (e) {
         ok(true, 'Too far');
       }
 
-      equal(VF.Music.getRelativeNoteName('b', VF.Music.getNoteValue('c#')), 'b##');
-      equal(VF.Music.getRelativeNoteName('c', VF.Music.getNoteValue('b')), 'cb');
+      equal(music.getRelativeNoteName('b', music.getNoteValue('c#')), 'b##');
+      equal(music.getRelativeNoteName('c', music.getNoteValue('b')), 'cb');
     },
 
     canonicalNotes: function () {
       expect(3);
 
-      equal(VF.Music.getCanonicalNoteName(0), 'c');
-      equal(VF.Music.getCanonicalNoteName(2), 'd');
+      var music = new VF.Music();
+
+      equal(music.getCanonicalNoteName(0), 'c');
+      equal(music.getCanonicalNoteName(2), 'd');
 
       try {
-        VF.Music.getCanonicalNoteName(-1);
+        music.getCanonicalNoteName(-1);
       } catch (e) {
         ok(true, 'Invalid note value');
       }
@@ -204,11 +217,13 @@ VF.Test.Music = (function () {
     canonicalIntervals: function () {
       expect(3);
 
-      equal(VF.Music.getCanonicalIntervalName(0), 'unison');
-      equal(VF.Music.getCanonicalIntervalName(2), 'M2');
+      var music = new VF.Music();
+
+      equal(music.getCanonicalIntervalName(0), 'unison');
+      equal(music.getCanonicalIntervalName(2), 'M2');
 
       try {
-        VF.Music.getCanonicalIntervalName(-1);
+        music.getCanonicalIntervalName(-1);
       } catch (e) {
         ok(true, 'Invalid interval value');
       }
@@ -218,36 +233,37 @@ VF.Test.Music = (function () {
       expect(24);
 
       // C Major
+      var music = new VF.Music();
       var manager = new VF.KeyManager('CM');
 
-      var c_major = VF.Music.getScaleTones(VF.Music.getNoteValue('c'), VF.Music.scales.major);
+      var c_major = music.getScaleTones(music.getNoteValue('c'), VF.Music.scales.major);
       var values = ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
 
       equal(c_major.length, 7);
 
       for (var cm = 0; cm < c_major.length; ++cm) {
-        equal(VF.Music.getCanonicalNoteName(c_major[cm]), values[cm]);
+        equal(music.getCanonicalNoteName(c_major[cm]), values[cm]);
       }
 
       // Dorian
-      var c_dorian = VF.Music.getScaleTones(VF.Music.getNoteValue('c'), VF.Music.scales.dorian);
+      var c_dorian = music.getScaleTones(music.getNoteValue('c'), VF.Music.scales.dorian);
       values = ['c', 'd', 'eb', 'f', 'g', 'a', 'bb'];
 
       var note = null;
       equal(c_dorian.length, 7);
       for (var cd = 0; cd < c_dorian.length; ++cd) {
-        note = VF.Music.getCanonicalNoteName(c_dorian[cd]);
+        note = music.getCanonicalNoteName(c_dorian[cd]);
         equal(manager.selectNote(note).note, values[cd]);
       }
 
       // Mixolydian
-      var c_mixolydian = VF.Music.getScaleTones(VF.Music.getNoteValue('c'), VF.Music.scales.mixolydian);
+      var c_mixolydian = music.getScaleTones(music.getNoteValue('c'), VF.Music.scales.mixolydian);
       values = ['c', 'd', 'e', 'f', 'g', 'a', 'bb'];
 
       equal(c_mixolydian.length, 7);
 
       for (var i = 0; i < c_mixolydian.length; ++i) {
-        note = VF.Music.getCanonicalNoteName(c_mixolydian[i]);
+        note = music.getCanonicalNoteName(c_mixolydian[i]);
         equal(manager.selectNote(note).note, values[i]);
       }
     },
@@ -255,42 +271,32 @@ VF.Test.Music = (function () {
     scaleIntervals: function () {
       expect(6);
 
+      var music = new VF.Music();
+
       equal(
-        VF.Music.getCanonicalIntervalName(
-          VF.Music.getIntervalBetween(VF.Music.getNoteValue('c'), VF.Music.getNoteValue('d'))
-        ),
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('d'))),
         'M2'
       );
       equal(
-        VF.Music.getCanonicalIntervalName(
-          VF.Music.getIntervalBetween(VF.Music.getNoteValue('g'), VF.Music.getNoteValue('c'))
-        ),
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('g'), music.getNoteValue('c'))),
         'p4'
       );
       equal(
-        VF.Music.getCanonicalIntervalName(
-          VF.Music.getIntervalBetween(VF.Music.getNoteValue('c'), VF.Music.getNoteValue('c'))
-        ),
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('c'))),
         'unison'
       );
       equal(
-        VF.Music.getCanonicalIntervalName(
-          VF.Music.getIntervalBetween(VF.Music.getNoteValue('f'), VF.Music.getNoteValue('cb'))
-        ),
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('f'), music.getNoteValue('cb'))),
         'dim5'
       );
 
       // Forwards and backwards
       equal(
-        VF.Music.getCanonicalIntervalName(
-          VF.Music.getIntervalBetween(VF.Music.getNoteValue('d'), VF.Music.getNoteValue('c'), 1)
-        ),
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), 1)),
         'b7'
       );
       equal(
-        VF.Music.getCanonicalIntervalName(
-          VF.Music.getIntervalBetween(VF.Music.getNoteValue('d'), VF.Music.getNoteValue('c'), -1)
-        ),
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), -1)),
         'M2'
       );
     },
