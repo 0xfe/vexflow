@@ -35,7 +35,7 @@ export class TextFont {
     if (!TextFont.registryInstance) {
       TextFont.registryInstance = [];
       TextFont.registryInstance.push({
-        name: 'RobotoSlab',
+        name: 'Roboto Slab',
         resolution: RobotoSlabTextMetrics.resolution,
         glyphs: RobotoSlabTextMetrics.glyphs,
         family: RobotoSlabTextMetrics.fontFamily,
@@ -49,7 +49,7 @@ export class TextFont {
         description: 'Default serif text font to pair with Bravura/Gonville engraving font',
       });
       TextFont.registryInstance.push({
-        name: 'PetalumaScript',
+        name: 'petalumaScript',
         resolution: PetalumaScriptTextMetrics.resolution,
         glyphs: PetalumaScriptTextMetrics.glyphs,
         family: PetalumaScriptTextMetrics.fontFamily,
@@ -72,7 +72,7 @@ export class TextFont {
   // We assume descriptions are the same for different weights/styles.
   static getFontFamilies() {
     const hash = {};
-    const rv = [];
+    const returnedFonts = [];
     TextFont.fontRegistry.forEach((font) => {
       if (!hash[font.family]) {
         hash[font.family] = {
@@ -92,9 +92,9 @@ export class TextFont {
     });
     const keys = Object.keys(hash);
     keys.forEach((key) => {
-      rv.push(hash[key]);
+      returnedFonts.push(hash[key]);
     });
-    return rv;
+    return returnedFonts;
   }
 
   // ### fontWeightToBold
@@ -118,12 +118,22 @@ export class TextFont {
     return fs && typeof fs === 'string' && fs.toLowerCase() === 'italic';
   }
 
+  // ### textWidthCache
+  // Static cache of widths hashed on font/string.
+  static get textWidthCache() {
+    if (typeof TextFont.textWidthCacheInstance === 'undefined') {
+      TextFont.textWidthCacheInstance = {};
+    }
+    return TextFont.textWidthCacheInstance;
+  }
+
   // ### getTextFontFromVexFontData
   // Find the font that most closely matches the parameters from the given font data.
   // Primarily we look for font family, also bold and italic attributes.  This
   // method will always return a fallback font if there are no matches.
   static getTextFontFromVexFontData(fd) {
     let i = 0;
+    let selectedFont = null;
     const fallback = TextFont.fontRegistry[0];
     let candidates = [];
     const families = fd.family.split(',');
@@ -135,23 +145,28 @@ export class TextFont {
       }
     }
     if (candidates.length === 0) {
-      return new TextFont(fallback);
+      selectedFont = new TextFont(fallback);
+    } else if (candidates.length === 1) {
+      selectedFont = new TextFont(candidates[0]);
+    } else {
+      const bold = TextFont.fontWeightToBold(fd.weight);
+      const italic = TextFont.fontStyleToItalic(fd.style);
+      const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
+      if (perfect) {
+        selectedFont = new TextFont(perfect);
+      } else {
+        const ok = candidates.find((font) => font.italic === italic || font.bold === bold);
+        if (ok) {
+          selectedFont = new TextFont(ok);
+        } else {
+          selectedFont = new TextFont(candidates[0]);
+        }
+      }
     }
-    if (candidates.length === 1) {
-      return new TextFont(candidates[0]);
+    if (typeof fd.size === 'number' && fd.size > 0) {
+      selectedFont.setFontSize(fd.size);
     }
-    const bold = TextFont.fontWeightToBold(fd.weight);
-    const italic = TextFont.fontStyleToItalic(fd.style);
-
-    const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
-    if (perfect) {
-      return new TextFont(perfect);
-    }
-    const ok = candidates.find((font) => font.italic === italic || font.bold === bold);
-    if (ok) {
-      return new TextFont(ok);
-    }
-    return new TextFont(candidates[0]);
+    return selectedFont;
   }
 
   static getFontDataByName(fontName) {
@@ -204,6 +219,13 @@ export class TextFont {
     if (!this.maxSizeGlyph) {
       this.maxSizeGlyph = 'H';
     }
+    this.weight = typeof this.weight === 'undefined' ? '' : this.weight;
+    this.style = typeof this.style === 'undefined' ? '' : this.style;
+    this.updateCacheKey();
+  }
+  // Create a hash with the current font data, so we can cache computed widths
+  updateCacheKey() {
+    this.fontCacheKey = this.family + '-' + this.size + '-' + this.weight + '-' + this.style;
   }
 
   getMetricForCharacter(c) {
@@ -226,6 +248,22 @@ export class TextFont {
     return (metric.advanceWidth / this.resolution) * this.pointsToPixels;
   }
 
+  getWidthForString(s) {
+    // Store width in 2-level cache, so I don't have to recompute for
+    // same string/font
+    if (typeof TextFont.textWidthCache[this.fontCacheKey] === 'undefined') {
+      TextFont.textWidthCache[this.fontCacheKey] = {};
+    }
+    let width = 0;
+    if (!TextFont.textWidthCache[this.fontCacheKey][s]) {
+      for (let j = 0; j < s.length; ++j) {
+        width += this.getWidthForCharacter(s[j]);
+      }
+      TextFont.textWidthCache[this.fontCacheKey][s] = width;
+    }
+    return TextFont.textWidthCache[this.fontCacheKey][s];
+  }
+
   // ### pointsToPixels
   // The font size is specified in points, convert to 'pixels' in the svg space
   get pointsToPixels() {
@@ -234,6 +272,8 @@ export class TextFont {
 
   setFontSize(size) {
     this.size = size;
+    // font size mangled into cache key, so use the correct one.
+    this.updateCacheKey();
     return this;
   }
 }

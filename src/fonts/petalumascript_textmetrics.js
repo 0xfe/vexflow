@@ -1,5 +1,5 @@
 export const PetalumaScriptTextMetrics = {
-  name: 'PetalumaScript',
+  name: 'petalumaScript',
   smufl: false,
   spacing:50,
   "glyphs": {

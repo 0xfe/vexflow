@@ -17,6 +17,7 @@ const Flow = {
   DEFAULT_NOTATION_FONT_SCALE: 39,
   DEFAULT_TABLATURE_FONT_SCALE: 39,
   SLASH_NOTEHEAD_WIDTH: 15,
+  STAVE_LINE_DISTANCE: 10,
 
   // HACK:
   // Since text origins are positioned at the baseline, we must

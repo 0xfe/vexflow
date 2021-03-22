@@ -1,5 +1,5 @@
 export const RobotoSlabTextMetrics = {
-  name: 'RobotoSlab',
+  name: 'Roboto Slab',
   smufl: false,
   spacing:50,
   "glyphs": {

@@ -8,6 +8,7 @@ VF.Test.Annotation = (function () {
   var Annotation = {
     Start: function () {
       QUnit.module('Annotation');
+      runTests('Lyrics', Annotation.lyrics);
       runTests('Simple Annotation', Annotation.simple);
       runTests('Standard Notation Annotation', Annotation.standard);
       runTests('Harmonics', Annotation.harmonic);
@@ -18,7 +19,46 @@ VF.Test.Annotation = (function () {
       runTests('Test Justification Annotation Stem Down', Annotation.justificationStemDown);
       runTests('TabNote Annotations', Annotation.tabNotes);
     },
-
+    lyrics: function (options) {
+      const id = (ii) => {
+        return registry.getElementById(ii);
+      };
+      let fontSize = 10;
+      let x = 10;
+      let width = 170;
+      let ratio = 1;
+      var registry = new VF.Registry();
+      VF.Registry.enableDefaultRegistry(registry);
+      var vf = VF.Test.makeFactory(options, 750, 260);
+      for (var i = 0; i < 3; ++i) {
+        var score = vf.EasyScore();
+        score.set({ time: '3/4' });
+        var system = vf.System({ width, x });
+        system.addStave({
+          voices: [
+            score.voice(
+              score
+                .notes('(C4 F4)/2[id="n0"]')
+                .concat(score.beam(score.notes('(C4 A4)/8[id="n1"], (C#4 A4)/8[id="n2"]')))
+            ),
+          ],
+        });
+        system.addStave({
+          voices: [score.voice(score.notes('(F4 D5)/2').concat(score.beam(score.notes('(F4 F5)/8, (F4 F5)/8'))))],
+        });
+        ['hand,', 'and', 'me', 'pears', 'lead', 'the'].forEach((text, ix) => {
+          const verse = Math.floor(ix / 3);
+          const nid = 'n' + (ix % 3);
+          id(nid).addModifier(verse, vf.Annotation({ text }).setFont('Roboto Slab', fontSize, 'normal'));
+        });
+        vf.draw();
+        ratio = (fontSize + 2) / fontSize;
+        width = width * ratio;
+        x = x + width;
+        fontSize = fontSize + 2;
+      }
+      ok(true);
+    },
     simple: function (options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);

@@ -10,6 +10,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
+import { TextFont } from './textfont';
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
 function L(...args) {
@@ -66,17 +67,26 @@ export class Annotation extends Modifier {
 
     let width = 0;
     for (let i = 0; i < annotations.length; ++i) {
+      let testWidth = 0;
       const annotation = annotations[i];
-      width = Math.max(annotation.getWidth(), width);
+      const textFont = TextFont.getTextFontFromVexFontData({
+        family: annotation.font.family,
+        size: annotation.font.size,
+        weight: 'normal',
+      });
+      // Calculate if the vertical extent will exceed a single line and adjust accordingly.
+      const numLines = Math.floor(textFont.maxHeight / Flow.STAVE_LINE_DISTANCE) + 1;
+      // Get the string width from the font metrics
+      testWidth = textFont.getWidthForString(annotation.text);
+      width = Math.max(width, testWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
-        state.top_text_line++;
+        state.top_text_line += numLines;
       } else {
         annotation.setTextLine(state.text_line);
-        state.text_line++;
+        state.text_line += numLines;
       }
     }
-
     state.left_shift += width / 2;
     state.right_shift += width / 2;
     return true;
@@ -146,6 +156,8 @@ export class Annotation extends Modifier {
 
     // We're changing context parameters. Save current state.
     this.context.save();
+    const classString = Object.keys(this.getAttribute('classes')).join(' ');
+    this.context.openGroup(classString, this.getAttribute('id'));
     this.context.setFont(this.font.family, this.font.size, this.font.weight);
     const text_width = this.context.measureText(this.text).width;
 
@@ -203,6 +215,7 @@ export class Annotation extends Modifier {
 
     L('Rendering annotation: ', this.text, x, y);
     this.context.fillText(this.text, x, y);
+    this.context.closeGroup();
     this.context.restore();
   }
 }
