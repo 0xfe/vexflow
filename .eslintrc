@@ -17,9 +17,14 @@
     {
       "files": [ "**/*.ts" ],
       "extends": [
-        "eslint:recommended",
+        "eslint-config-airbnb-typescript/base",
         "prettier"
       ],
+      "rules": {  
+        "no-console": 1, // Means warning
+        "prettier/prettier": 2, // Means error
+        "class-methods-use-this": "warn"
+      }
     },
     {
       "files": [ "src/**/*.js" ],

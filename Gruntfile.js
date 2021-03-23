@@ -24,9 +24,9 @@ module.exports = (grunt) => {
   const TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
   const TEST_SOURCES = ['tests/vexflow_test_helpers.js', 'tests/mocks.js', 'tests/*_tests.js', 'tests/run.js'];
 
-  function webpackConfig(target, preset, mode) {
+  function webpackConfig(target, mode) {
     return {
-      mode,
+      mode: mode,
       entry: MODULE_ENTRY,
       output: {
         path: BUILD_DIR,
@@ -36,27 +36,23 @@ module.exports = (grunt) => {
         libraryExport: 'default',
       },
       resolve: {
-        extensions: ['.ts', '.js', '.json']
+        extensions: ['.ts', '.js', '.json'],
       },
       devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : false,
       module: {
         rules: [
           {
-            test: /\.?s?$/,
-            exclude: /(node_modules|bower_components)/,
-            use: [
-              {
-                loader: 'ts-loader',
-              },
-            ],
+            test: /(\.ts?$|\.js?$)/,
+            exclude: /node_modules/,
+            loader: 'ts-loader',
           },
         ],
       },
     };
   }
 
-  const webpackProd = webpackConfig(TARGET_MIN, ['@babel/preset-env'], 'production');
-  const webpackDev = webpackConfig(TARGET_RAW, ['@babel/preset-env'], 'development');
+  const webpackProd = webpackConfig(TARGET_MIN, 'production');
+  const webpackDev = webpackConfig(TARGET_RAW, 'development');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
