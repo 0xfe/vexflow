@@ -13,7 +13,7 @@ VF.Test.StaveModifier = (function () {
     },
 
     draw: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 120);
+      var ctx = contextBuilder(options.elementId, 400, 120);
       var stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
       stave.draw();

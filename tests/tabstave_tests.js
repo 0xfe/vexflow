@@ -12,7 +12,7 @@ VF.Test.TabStave = (function () {
     },
 
     draw: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 160);
+      var ctx = contextBuilder(options.elementId, 400, 160);
       var stave = new VF.TabStave(10, 10, 300);
       stave.setNumLines(6);
       stave.setContext(ctx);
@@ -27,7 +27,7 @@ VF.Test.TabStave = (function () {
     },
 
     drawVerticalBar: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 160);
+      var ctx = contextBuilder(options.elementId, 400, 160);
       var stave = new VF.TabStave(10, 10, 300);
       stave.setNumLines(6);
       stave.setContext(ctx);

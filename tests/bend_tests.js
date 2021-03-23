@@ -15,7 +15,7 @@ VF.Test.Bend = (function () {
     },
 
     doubleBends: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 500, 240);
+      var ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
@@ -65,7 +65,7 @@ VF.Test.Bend = (function () {
     },
 
     doubleBendsWithRelease: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 550, 240);
+      var ctx = contextBuilder(options.elementId, 550, 240);
       ctx.scale(1.0, 1.0);
       ctx.setBackgroundFillStyle('#FFF');
       ctx.setFont('Arial', VF.Test.Font.size);
@@ -119,7 +119,7 @@ VF.Test.Bend = (function () {
     },
 
     reverseBends: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 500, 240);
+      var ctx = contextBuilder(options.elementId, 500, 240);
 
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -179,7 +179,7 @@ VF.Test.Bend = (function () {
     },
 
     bendPhrase: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 500, 240);
+      var ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
@@ -226,7 +226,7 @@ VF.Test.Bend = (function () {
     },
 
     whackoBends: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 240);
+      var ctx = contextBuilder(options.elementId, 400, 240);
       ctx.scale(1.0, 1.0);
       ctx.setBackgroundFillStyle('#FFF');
       ctx.setFont('Arial', VF.Test.Font.size);

@@ -56,7 +56,7 @@ VF.Test.KeySignature = (function () {
     },
 
     majorKeys: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 240);
+      var ctx = contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
       var keys = VF.Test.KeySignature.MAJOR_KEYS;
@@ -81,7 +81,7 @@ VF.Test.KeySignature = (function () {
     },
 
     majorKeysCanceled: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 780, 500);
+      var ctx = contextBuilder(options.elementId, 780, 500);
       ctx.scale(0.9, 0.9);
       var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
       var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
@@ -135,7 +135,7 @@ VF.Test.KeySignature = (function () {
     },
 
     keysCanceledForEachClef: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 380);
+      var ctx = contextBuilder(options.elementId, 600, 380);
       ctx.scale(0.8, 0.8);
       var keys = ['C#', 'Cb'];
 
@@ -161,7 +161,7 @@ VF.Test.KeySignature = (function () {
     },
 
     majorKeysAltered: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 780, 500);
+      var ctx = contextBuilder(options.elementId, 780, 500);
       ctx.scale(0.9, 0.9);
       var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
       var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
@@ -213,7 +213,7 @@ VF.Test.KeySignature = (function () {
     },
 
     minorKeys: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 240);
+      var ctx = contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
       var keys = VF.Test.KeySignature.MINOR_KEYS;
@@ -237,7 +237,7 @@ VF.Test.KeySignature = (function () {
       ok(true, 'all pass');
     },
     endKeyWithClef: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 200);
+      var ctx = contextBuilder(options.elementId, 400, 200);
       ctx.scale(0.9, 0.9);
       var stave1 = new VF.Stave(10, 10, 350);
       stave1
@@ -257,7 +257,7 @@ VF.Test.KeySignature = (function () {
     },
 
     staveHelper: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 240);
+      var ctx = contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
       var keys = VF.Test.KeySignature.MAJOR_KEYS;

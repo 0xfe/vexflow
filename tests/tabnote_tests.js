@@ -97,7 +97,7 @@ VF.Test.TabNote = (function () {
     },
 
     draw: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 140);
+      var ctx = contextBuilder(options.elementId, 600, 140);
 
       ctx.font = '10pt Arial';
       var stave = new VF.TabStave(10, 10, 550);
@@ -165,7 +165,7 @@ VF.Test.TabNote = (function () {
     },
 
     drawStemsUp: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 200);
+      var ctx = contextBuilder(options.elementId, 600, 200);
       ctx.font = '10pt Arial';
       var stave = new VF.TabStave(10, 30, 550);
       stave.setContext(ctx);
@@ -237,7 +237,7 @@ VF.Test.TabNote = (function () {
     },
 
     drawStemsDown: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 200);
+      var ctx = contextBuilder(options.elementId, 600, 200);
 
       ctx.font = '10pt Arial';
       var stave = new VF.TabStave(10, 10, 550);
@@ -311,7 +311,7 @@ VF.Test.TabNote = (function () {
     },
 
     drawStemsUpThrough: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 200);
+      var ctx = contextBuilder(options.elementId, 600, 200);
       ctx.font = '10pt Arial';
       var stave = new VF.TabStave(10, 30, 550);
       stave.setContext(ctx);
@@ -385,7 +385,7 @@ VF.Test.TabNote = (function () {
     },
 
     drawStemsDownThrough: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 250);
+      var ctx = contextBuilder(options.elementId, 600, 250);
 
       ctx.font = '10pt Arial';
       var stave = new VF.TabStave(10, 10, 550, { num_lines: 8 });
@@ -465,7 +465,7 @@ VF.Test.TabNote = (function () {
     },
 
     drawStemsDotted: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 200);
+      var ctx = contextBuilder(options.elementId, 600, 200);
       ctx.font = '10pt Arial';
       var stave = new VF.TabStave(10, 10, 550);
       stave.setContext(ctx);

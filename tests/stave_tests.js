@@ -86,7 +86,7 @@ VF.Test.Stave = (function () {
     },
 
     draw: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 150);
+      var ctx = contextBuilder(options.elementId, 400, 150);
       var stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
       stave.draw();
@@ -100,7 +100,7 @@ VF.Test.Stave = (function () {
     },
 
     drawOpenStave: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 350);
+      var ctx = contextBuilder(options.elementId, 400, 350);
       var stave = new VF.Stave(10, 10, 300, { left_bar: false });
       stave.setContext(ctx);
       stave.draw();
@@ -670,7 +670,7 @@ VF.Test.Stave = (function () {
     },
 
     configureSingleLine: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 120);
+      var ctx = contextBuilder(options.elementId, 400, 120);
       var stave = new VF.Stave(10, 10, 300);
       stave
         .setConfigForLine(0, { visible: true })
@@ -691,7 +691,7 @@ VF.Test.Stave = (function () {
     },
 
     configureAllLines: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 120);
+      var ctx = contextBuilder(options.elementId, 400, 120);
       var stave = new VF.Stave(10, 10, 300);
       stave
         .setConfigForLines([{ visible: false }, null, { visible: false }, { visible: true }, { visible: false }])
@@ -709,7 +709,7 @@ VF.Test.Stave = (function () {
     },
 
     drawStaveText: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 900, 140);
+      var ctx = contextBuilder(options.elementId, 900, 140);
       var stave = new VF.Stave(300, 10, 300);
       stave.setText('Violin', VF.Modifier.Position.LEFT);
       stave.setText('Right Text', VF.Modifier.Position.RIGHT);
@@ -721,7 +721,7 @@ VF.Test.Stave = (function () {
     },
 
     drawStaveTextMultiLine: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 900, 200);
+      var ctx = contextBuilder(options.elementId, 900, 200);
       var stave = new VF.Stave(300, 40, 300);
       stave.setText('Violin', VF.Modifier.Position.LEFT, { shift_y: -10 });
       stave.setText('2nd line', VF.Modifier.Position.LEFT, { shift_y: 10 });

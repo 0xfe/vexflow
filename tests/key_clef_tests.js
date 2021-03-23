@@ -65,7 +65,7 @@ VF.Test.ClefKeySignature = (function () {
         'percussion',
       ];
 
-      var ctx = new contextBuilder(options.elementId, 400, 20 + 80 * 2 * clefs.length);
+      var ctx = contextBuilder(options.elementId, 400, 20 + 80 * 2 * clefs.length);
       var staves = [];
       var keys = options.params.majorKeys ? VF.Test.ClefKeySignature.MAJOR_KEYS : VF.Test.ClefKeySignature.MINOR_KEYS;
 
@@ -102,7 +102,7 @@ VF.Test.ClefKeySignature = (function () {
     },
 
     staveHelper: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 400);
+      var ctx = contextBuilder(options.elementId, 400, 400);
       var stave = new VF.Stave(10, 10, 370);
       var stave2 = new VF.Stave(10, 90, 370);
       var stave3 = new VF.Stave(10, 170, 370);
