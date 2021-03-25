@@ -3,6 +3,8 @@
 // ## Description
 // This class implements some standard music theory routines.
 
+/* eslint-disable class-methods-use-this */
+
 import { Vex } from './vex';
 
 export type KeyValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;

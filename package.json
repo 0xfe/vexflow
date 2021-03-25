@@ -63,7 +63,7 @@
     "generate:blessed": "node ./tools/generate_png_images.js ../releases ./build/images/blessed",
     "generate": "npm run generate:current && npm run generate:blessed",
     "diff": "./tools/visual_regression.sh",
-    "test": "npm run start && npm run generate && npm run diff"
+    "test": "npm run lint && npm run qunit && npm run generate && npm run diff"
   },
   "homepage": "http://vexflow.com",
   "keywords": [
