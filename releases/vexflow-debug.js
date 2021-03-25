@@ -19647,7 +19647,6 @@ exports.MultiMeasureRest = MultiMeasureRest;
 // This class implements some standard music theory routines.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Music = void 0;
-/* eslint-disable class-methods-use-this */
 var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.js");
 var Music = /** @class */ (function () {
     function Music() {
@@ -19861,10 +19860,10 @@ var Music = /** @class */ (function () {
     };
     Music.prototype.getNoteParts = function (noteString) {
         if (!noteString || noteString.length < 1) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid note name: " + noteString);
+            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
         }
         if (noteString.length > 3) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid note name: " + noteString);
+            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
         }
         var note = noteString.toLowerCase();
         var regex = /^([cdefgab])(b|bb|n|#|##)?$/;
@@ -19877,11 +19876,13 @@ var Music = /** @class */ (function () {
                 accidental: accidental,
             };
         }
-        throw new vex_1.Vex.RERR('BadArguments', "Invalid note name: " + noteString);
+        else {
+            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
+        }
     };
     Music.prototype.getKeyParts = function (keyString) {
         if (!keyString || keyString.length < 1) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid key: " + keyString);
+            throw new vex_1.Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
         }
         var key = keyString.toLowerCase();
         // Support Major, Minor, Melodic Minor, and Harmonic Minor key types.
@@ -19900,7 +19901,9 @@ var Music = /** @class */ (function () {
                 type: type,
             };
         }
-        throw new vex_1.Vex.RERR('BadArguments', "Invalid key: " + keyString);
+        else {
+            throw new vex_1.Vex.RERR('BadArguments', "Invalid key: " + keyString);
+        }
     };
     Music.prototype.getNoteValue = function (noteString) {
         var value = Music.noteValues[noteString];
@@ -19932,11 +19935,12 @@ var Music = /** @class */ (function () {
      * relative note.
      */
     Music.prototype.getRelativeNoteValue = function (noteValue, intervalValue, direction) {
-        var dir = direction == null ? 1 : direction;
-        if (dir !== 1 && dir !== -1) {
+        if (direction == null)
+            direction = 1;
+        if (direction !== 1 && direction !== -1) {
             throw new vex_1.Vex.RERR('BadArguments', "Invalid direction: " + direction);
         }
-        var sum = (noteValue + dir * intervalValue) % Music.NUM_TONES;
+        var sum = (noteValue + direction * intervalValue) % Music.NUM_TONES;
         if (sum < 0)
             sum += Music.NUM_TONES;
         return sum;
@@ -19950,12 +19954,12 @@ var Music = /** @class */ (function () {
             if (interval > 0)
                 multiplier = -1;
             // Possibly wrap around. (Add +1 for modulo operator)
-            var reverseInterval = ((noteValue + 1 + (rootValue + 1)) % Music.NUM_TONES) * multiplier;
-            if (Math.abs(reverseInterval) > 2) {
+            var reverse_interval = ((noteValue + 1 + (rootValue + 1)) % Music.NUM_TONES) * multiplier;
+            if (Math.abs(reverse_interval) > 2) {
                 throw new vex_1.Vex.RERR('BadArguments', "Notes not related: " + root + ", " + noteValue + ")");
             }
             else {
-                interval = reverseInterval;
+                interval = reverse_interval;
             }
         }
         if (Math.abs(interval) > 2) {
@@ -19963,12 +19967,12 @@ var Music = /** @class */ (function () {
         }
         var relativeNoteName = parts.root;
         if (interval > 0) {
-            for (var i = 1; i <= interval; i += 1) {
+            for (var i = 1; i <= interval; ++i) {
                 relativeNoteName += '#';
             }
         }
         else if (interval < 0) {
-            for (var i = -1; i >= interval; i -= 1) {
+            for (var i = -1; i >= interval; --i) {
                 relativeNoteName += 'b';
             }
         }
@@ -19997,14 +20001,15 @@ var Music = /** @class */ (function () {
      * E.g., Given the scale C, and the note E, returns M3
      */
     Music.prototype.getIntervalBetween = function (note1, note2, direction) {
-        var dir = direction == null ? 1 : direction;
-        if (dir !== 1 && dir !== -1) {
+        if (direction == null)
+            direction = 1;
+        if (direction !== 1 && direction !== -1) {
             throw new vex_1.Vex.RERR('BadArguments', "Invalid direction: " + direction);
         }
         if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2)) {
             throw new vex_1.Vex.RERR('BadArguments', "Invalid notes: " + note1 + ", " + note2);
         }
-        var difference = dir === 1 ? note2 - note1 : note1 - note2;
+        var difference = direction === 1 ? note2 - note1 : note1 - note2;
         if (difference < 0)
             difference += Music.NUM_TONES;
         return difference;
@@ -20022,11 +20027,11 @@ var Music = /** @class */ (function () {
         if (keySigParts.accidental)
             keySigString += keySigParts.accidental;
         if (!scaleName)
-            throw new vex_1.Vex.RERR('BadArguments', "Unsupported key type: " + keySignature);
+            throw new vex_1.Vex.RERR('BadArguments', 'Unsupported key type: ' + keySignature);
         var scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
         var noteLocation = Music.root_indices[keySigParts.root];
         var scaleMap = {};
-        for (var i = 0; i < Music.roots.length; i += 1) {
+        for (var i = 0; i < Music.roots.length; ++i) {
             var index = (noteLocation + i) % Music.roots.length;
             var rootName = Music.roots[index];
             var noteName = this.getRelativeNoteName(rootName, scale[i]);
