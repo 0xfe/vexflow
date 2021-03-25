@@ -22,7 +22,7 @@ VF.Test.Rests = (function () {
     },
 
     setupContext: function (options, contextBuilder, x, y) {
-      var ctx = new contextBuilder(options.elementId, x || 350, y || 150);
+      var ctx = contextBuilder(options.elementId, x || 350, y || 150);
       ctx.scale(0.9, 0.9);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
@@ -294,7 +294,7 @@ VF.Test.Rests = (function () {
     },
 
     multi: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 200);
+      var ctx = contextBuilder(options.elementId, 600, 200);
 
       var stave = new VF.Stave(50, 10, 500).addClef('treble').setContext(ctx).addTimeSignature('4/4').draw();
 

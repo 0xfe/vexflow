@@ -14,7 +14,7 @@ VF.Test.NoteHead = (function () {
     },
 
     setupContext: function (options, x, y) {
-      var ctx = new options.contextBuilder(options.elementId, x || 450, y || 140);
+      var ctx = options.contextBuilder(options.elementId, x || 450, y || 140);
       ctx.scale(0.9, 0.9);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
@@ -97,7 +97,7 @@ VF.Test.NoteHead = (function () {
         { keys: ['g/5/r2'], duration: '4' },
       ];
 
-      var ctx = new contextBuilder(options.elementId, notes.length * 25 + 100, 240);
+      var ctx = contextBuilder(options.elementId, notes.length * 25 + 100, 240);
 
       // Draw two staves, one with up-stems and one with down-stems.
       for (var h = 0; h < 2; ++h) {
@@ -138,7 +138,7 @@ VF.Test.NoteHead = (function () {
         { keys: ['a/4/r2', 'g/5/t3'], duration: '4' },
       ];
 
-      var ctx = new contextBuilder(options.elementId, notes.length * 25 + 100, 240);
+      var ctx = contextBuilder(options.elementId, notes.length * 25 + 100, 240);
 
       // Draw two staves, one with up-stems and one with down-stems.
       for (var h = 0; h < 2; ++h) {

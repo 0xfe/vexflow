@@ -175,7 +175,7 @@ VF.Test.GraceNote = (function () {
       voice.addTickables(createNoteBlock(['g/4'], 1));
       voice.addTickables(createNoteBlock(['d/5'], -1));
 
-      new vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 
@@ -220,7 +220,7 @@ VF.Test.GraceNote = (function () {
       voice.addTickables(createBeamdNoteBlock(['g/4'], 1, beams));
       voice.addTickables(createBeamdNoteBlock(['d/5'], -1, beams));
 
-      new vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 
@@ -275,7 +275,7 @@ VF.Test.GraceNote = (function () {
       voice.addTickables(createNoteBlock(['d/4', 'a/4'], 1));
       voice.addTickables(createNoteBlock(['d/4', 'a/4'], -1));
 
-      new vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 
@@ -323,7 +323,7 @@ VF.Test.GraceNote = (function () {
       voice.addTickables(createNoteBlock(['d/4', 'a/4'], 1));
       voice.addTickables(createNoteBlock(['d/4', 'a/4'], -1));
 
-      new vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
       vf.draw();
 
@@ -388,7 +388,7 @@ VF.Test.GraceNote = (function () {
       vf.Beam({ notes: notes2.slice(0, 4) });
       vf.Beam({ notes: notes2.slice(4, 8) });
 
-      new VF.Formatter().joinVoices([voice, voice2]).formatToStave([voice, voice2], stave);
+      vf.Formatter().joinVoices([voice, voice2]).formatToStave([voice, voice2], stave);
 
       vf.draw();
 
@@ -453,7 +453,7 @@ VF.Test.GraceNote = (function () {
       vf.Beam({ notes: notes2.slice(0, 4) });
       vf.Beam({ notes: notes2.slice(4, 8) });
 
-      new VF.Formatter().joinVoices([voice, voice2]).formatToStave([voice, voice2], stave);
+      vf.Formatter().joinVoices([voice, voice2]).formatToStave([voice, voice2], stave);
 
       vf.draw();
       vf.draw();

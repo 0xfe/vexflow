@@ -188,7 +188,7 @@ VF.Test.Percussion = (function () {
     },
 
     draw: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 400, 120);
+      var ctx = contextBuilder(options.elementId, 400, 120);
 
       new VF.Stave(10, 10, 300).addClef('percussion').setContext(ctx).draw();
 
@@ -215,7 +215,7 @@ VF.Test.Percussion = (function () {
         { keys: ['g/5/x3'], duration: '4' },
       ];
 
-      var ctx = new contextBuilder(options.elementId, notes.length * 25 + 100, 240);
+      var ctx = contextBuilder(options.elementId, notes.length * 25 + 100, 240);
 
       // Draw two staves, one with up-stems and one with down-stems.
       for (var h = 0; h < 2; ++h) {

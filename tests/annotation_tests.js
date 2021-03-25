@@ -340,7 +340,7 @@ VF.Test.Annotation = (function () {
     },
 
     tabNotes: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 600, 200);
+      var ctx = contextBuilder(options.elementId, 600, 200);
       ctx.font = '10pt Arial';
       var stave = new VF.TabStave(10, 10, 550);
       stave.setContext(ctx);

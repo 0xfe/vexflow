@@ -14,7 +14,7 @@ VF.Test.Vibrato = (function () {
     },
 
     simple: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 500, 140);
+      var ctx = contextBuilder(options.elementId, 500, 140);
 
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -48,7 +48,7 @@ VF.Test.Vibrato = (function () {
     },
 
     harsh: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 500, 240);
+      var ctx = contextBuilder(options.elementId, 500, 240);
 
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -82,7 +82,7 @@ VF.Test.Vibrato = (function () {
     },
 
     withBend: function (options, contextBuilder) {
-      var ctx = new contextBuilder(options.elementId, 500, 240);
+      var ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.3, 1.3);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
