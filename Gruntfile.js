@@ -36,7 +36,7 @@ module.exports = (grunt) => {
         libraryExport: 'default',
       },
       resolve: {
-        extensions: ['.ts', '.js', '.json'],
+        extensions: ['.ts', '.js', '.json']
       },
       devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : false,
       module: {
@@ -77,7 +77,7 @@ module.exports = (grunt) => {
       },
     },
     eslint: {
-      target: SOURCES.concat('./tests/**/*.?s'),
+      target: SOURCES.concat(['./tests/**/*.ts', './tests/**/*.js']),
       options: { fix: true },
     },
     qunit: {
