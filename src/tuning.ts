@@ -7,7 +7,13 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 
 export class Tuning {
-  static get names() {
+  protected numStrings: number;
+
+  protected tuningString: string;
+
+  protected tuningValues: number[];
+
+  static get names(): Record<string, string> {
     return {
       standard: 'E/5,B/4,G/4,D/4,A/3,E/3',
       dagdad: 'D/5,A/4,G/4,D/4,A/3,D/3',
@@ -19,35 +25,39 @@ export class Tuning {
 
   constructor(tuningString = 'E/5,B/4,G/4,D/4,A/3,E/3,B/2,E/2') {
     // Default to standard tuning.
+    this.tuningString = '';
+    this.tuningValues = [];
+    this.numStrings = 0;
     this.setTuning(tuningString);
   }
 
-  noteToInteger(noteString) {
+  static noteToInteger(noteString: string): number {
     return Flow.keyProperties(noteString).int_value;
   }
 
-  setTuning(noteString) {
+  setTuning(noteString: string): void {
+    let noteName = noteString;
     if (Tuning.names[noteString]) {
-      noteString = Tuning.names[noteString];
+      noteName = Tuning.names[noteString];
     }
 
-    this.tuningString = noteString;
+    this.tuningString = noteName;
     this.tuningValues = [];
     this.numStrings = 0;
 
-    const keys = noteString.split(/\s*,\s*/);
+    const keys = noteName.split(/\s*,\s*/);
     if (keys.length === 0) {
-      throw new Vex.RERR('BadArguments', 'Invalid tuning string: ' + noteString);
+      throw new Vex.RERR('BadArguments', `Invalid tuning string: ${noteString}`);
     }
 
     this.numStrings = keys.length;
-    for (let i = 0; i < this.numStrings; ++i) {
-      this.tuningValues[i] = this.noteToInteger(keys[i]);
+    for (let i = 0; i < this.numStrings; i += 1) {
+      this.tuningValues[i] = Tuning.noteToInteger(keys[i]);
     }
   }
 
-  getValueForString(stringNum) {
-    const s = parseInt(stringNum, 10);
+  getValueForString(stringNum: string | number): number {
+    const s = typeof stringNum === 'string' ? parseInt(stringNum, 10) : stringNum;
     if (s < 1 || s > this.numStrings) {
       throw new Vex.RERR('BadArguments', `String number must be between 1 and ${this.numStrings}:${stringNum}`);
     }
@@ -55,23 +65,23 @@ export class Tuning {
     return this.tuningValues[s - 1];
   }
 
-  getValueForFret(fretNum, stringNum) {
+  getValueForFret(fretNum: string | number, stringNum: string | number): number {
     const stringValue = this.getValueForString(stringNum);
-    const f = parseInt(fretNum, 10);
+    const f = typeof fretNum === 'string' ? parseInt(fretNum, 10) : fretNum;
 
     if (f < 0) {
-      throw new Vex.RERR('BadArguments', 'Fret number must be 0 or higher: ' + fretNum);
+      throw new Vex.RERR('BadArguments', `Fret number must be 0 or higher: ${fretNum}`);
     }
 
     return stringValue + f;
   }
 
-  getNoteForFret(fretNum, stringNum) {
+  getNoteForFret(fretNum: string | number, stringNum: string | number): string {
     const noteValue = this.getValueForFret(fretNum, stringNum);
 
     const octave = Math.floor(noteValue / 12);
     const value = noteValue % 12;
 
-    return Flow.integerToNote(value) + '/' + octave;
+    return `${Flow.integerToNote(value)}/${octave}`;
   }
 }

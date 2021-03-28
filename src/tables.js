@@ -30,6 +30,8 @@ const Flow = {
 
   /* Kerning (DEPRECATED) */
   IsKerned: true,
+  keyProperties: keyProperties,
+  integerToNote: integerToNote,
 };
 
 Flow.clefProperties = (clef) => {
@@ -61,7 +63,7 @@ Flow.clefProperties.values = {
   The last argument, params, is a struct the currently can contain one option,
   octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
 */
-Flow.keyProperties = (key, clef, params) => {
+function keyProperties(key, clef, params) {
   if (clef === undefined) {
     clef = 'treble';
   }
@@ -121,7 +123,7 @@ Flow.keyProperties = (key, clef, params) => {
     displaced: false,
     ...extraProps,
   };
-};
+}
 
 Flow.keyProperties.note_values = {
   C: { index: 0, int_val: 0, accidental: null },
@@ -176,7 +178,7 @@ Flow.keyProperties.note_values = {
   },
 };
 
-Flow.integerToNote = (integer) => {
+function integerToNote(integer) {
   if (typeof integer === 'undefined') {
     throw new Vex.RERR('BadArguments', 'Undefined integer for integerToNote');
   }
@@ -191,7 +193,7 @@ Flow.integerToNote = (integer) => {
   }
 
   return noteValue;
-};
+}
 
 Flow.integerToNote.table = {
   0: 'C',
