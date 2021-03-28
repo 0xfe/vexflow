@@ -30,14 +30,10 @@ Vex.MakeException = (name) => {
 };
 
 // Default runtime exception.
-class RuntimeError {
+class RuntimeError extends Error {
   constructor(code, message) {
+    super('[RuntimeError] ' + code + ':' + message);
     this.code = code;
-    this.message = message;
-  }
-
-  toString() {
-    return '[RuntimeError] ' + this.code + ':' + this.message;
   }
 }
 
