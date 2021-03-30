@@ -38,7 +38,7 @@ module.exports = (grunt) => {
       resolve: {
         extensions: ['.ts', '.js', '.json']
       },
-      devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : 'source-map',
+      devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : false,
       module: {
         rules: [
           {
