@@ -87,7 +87,7 @@ export class StringNumber extends Modifier {
 
       // Reset the position of the string number every line.
       if (line !== last_line || note !== last_note) {
-        num_shiftL = left_shift + shiftL;
+        num_shiftL = left_shift + shiftL; // eslint-disable-line
         num_shiftR = right_shift + shiftR;
       }
 
