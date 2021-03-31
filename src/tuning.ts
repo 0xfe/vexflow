@@ -31,31 +31,35 @@ export class Tuning {
     this.setTuning(tuningString);
   }
 
-  static noteToInteger(noteString: string): number {
+  noteToInteger(noteString: string): number {
     return Flow.keyProperties(noteString).int_value;
   }
 
+  /**
+   * Set tuning identified by tuning name (ie.: 'dagdad')
+   * or comma separated notes string (ie.: 'D/5,A/4,G/4,D/4,A/3,D/3')
+   * */
   setTuning(noteString: string): void {
-    let noteName = noteString;
     if (Tuning.names[noteString]) {
-      noteName = Tuning.names[noteString];
+      noteString = Tuning.names[noteString];
     }
 
-    this.tuningString = noteName;
+    this.tuningString = noteString;
     this.tuningValues = [];
     this.numStrings = 0;
 
-    const keys = noteName.split(/\s*,\s*/);
+    const keys = noteString.split(/\s*,\s*/);
     if (keys.length === 0) {
       throw new Vex.RERR('BadArguments', `Invalid tuning string: ${noteString}`);
     }
 
     this.numStrings = keys.length;
     for (let i = 0; i < this.numStrings; i += 1) {
-      this.tuningValues[i] = Tuning.noteToInteger(keys[i]);
+      this.tuningValues[i] = this.noteToInteger(keys[i]);
     }
   }
 
+  /** Returns the number representing the note associated with a string */
   getValueForString(stringNum: string | number): number {
     const s = typeof stringNum === 'string' ? parseInt(stringNum, 10) : stringNum;
     if (s < 1 || s > this.numStrings) {
@@ -65,6 +69,7 @@ export class Tuning {
     return this.tuningValues[s - 1];
   }
 
+  /** Returns the number representing the note associated with a string and a fret */
   getValueForFret(fretNum: string | number, stringNum: string | number): number {
     const stringValue = this.getValueForString(stringNum);
     const f = typeof fretNum === 'string' ? parseInt(fretNum, 10) : fretNum;
@@ -76,6 +81,7 @@ export class Tuning {
     return stringValue + f;
   }
 
+  /** Returns the string representing the note associated with a string and a fret */
   getNoteForFret(fretNum: string | number, stringNum: string | number): string {
     const noteValue = this.getValueForFret(fretNum, stringNum);
 

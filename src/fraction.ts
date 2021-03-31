@@ -221,8 +221,8 @@ export class Fraction {
     return Math.floor(this.numerator / this.denominator);
   }
 
-  /** Returns the fraction component when reduced to a mixed number */
-  fraction(): number {
+  /** Returns the remainder component when reduced to a mixed number */
+  remainder(): number {
     return this.numerator % this.denominator;
   }
 
@@ -250,9 +250,7 @@ export class Fraction {
     const f = Fraction.__staticFractionTmp.copy(this);
 
     if (q < 0) {
-      f.makeAbs().fraction();
-    } else {
-      f.fraction();
+      f.makeAbs();
     }
 
     if (q !== 0) {
