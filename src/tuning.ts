@@ -54,7 +54,7 @@ export class Tuning {
     }
 
     this.numStrings = keys.length;
-    for (let i = 0; i < this.numStrings; i += 1) {
+    for (let i = 0; i < this.numStrings; ++i) {
       this.tuningValues[i] = this.noteToInteger(keys[i]);
     }
   }
