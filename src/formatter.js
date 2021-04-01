@@ -55,81 +55,6 @@ function lookAhead(notes, restLine, i, compare) {
   return nextRestLine;
 }
 
-// Take an array of `voices` and place aligned tickables in the same context. Returns
-// a mapping from `tick` to `ContextType`, a list of `tick`s, and the resolution
-// multiplier.
-//
-// Params:
-// * `voices`: Array of `Voice` instances.
-// * `ContextType`: A context class (e.g., `ModifierContext`, `TickContext`)
-// * `addToContext`: Function to add tickable to context.
-function createContexts(voices, ContextType, addToContext) {
-  if (!voices || !voices.length) {
-    throw new Vex.RERR('BadArgument', 'No voices to format');
-  }
-
-  // Find out highest common multiple of resolution multipliers.
-  // The purpose of this is to find out a common denominator
-  // for all fractional tick values in all tickables of all voices,
-  // so that the values can be expanded and the numerator used
-  // as an integer tick value.
-  const totalTicks = voices[0].getTotalTicks();
-  const resolutionMultiplier = voices.reduce((resolutionMultiplier, voice) => {
-    if (!voice.getTotalTicks().equals(totalTicks)) {
-      throw new Vex.RERR('TickMismatch', 'Voices should have same total note duration in ticks.');
-    }
-
-    if (voice.getMode() === Voice.Mode.STRICT && !voice.isComplete()) {
-      throw new Vex.RERR('IncompleteVoice', 'Voice does not have enough notes.');
-    }
-
-    return Math.max(resolutionMultiplier, Fraction.LCM(resolutionMultiplier, voice.getResolutionMultiplier()));
-  }, 1);
-
-  // Initialize tick maps.
-  const tickToContextMap = {};
-  const tickList = [];
-  const contexts = [];
-
-  // For each voice, extract notes and create a context for every
-  // new tick that hasn't been seen before.
-  voices.forEach((voice, voiceIndex) => {
-    // Use resolution multiplier as denominator to expand ticks
-    // to suitable integer values, so that no additional expansion
-    // of fractional tick values is needed.
-    const ticksUsed = new Fraction(0, resolutionMultiplier);
-
-    voice.getTickables().forEach((tickable) => {
-      const integerTicks = ticksUsed.numerator;
-
-      // If we have no tick context for this tick, create one.
-      if (!tickToContextMap[integerTicks]) {
-        const newContext = new ContextType({ tickID: integerTicks });
-        contexts.push(newContext);
-        tickToContextMap[integerTicks] = newContext;
-      }
-
-      // Add this tickable to the TickContext.
-      addToContext(tickable, tickToContextMap[integerTicks], voiceIndex);
-
-      // Maintain a sorted list of tick contexts.
-      tickList.push(integerTicks);
-      ticksUsed.add(tickable.getTicks());
-    });
-  });
-
-  return {
-    map: tickToContextMap,
-    array: contexts,
-    list: Vex.SortAndUnique(
-      tickList,
-      (a, b) => a - b,
-      (a, b) => a === b
-    ),
-    resolutionMultiplier,
-  };
-}
-
 export class Formatter {
   // Helper function to layout "notes" one after the other without
   // regard for proportions. Useful for tests and debugging.
@@ -404,30 +329,114 @@ export class Formatter {
     return this.minTotalWidth;
   }
 
+  // calculates the resolution multiplier for `voices`.
+  static getResolutionMultiplier(voices) {
+    if (!voices || !voices.length) {
+      throw new Vex.RERR('BadArgument', 'No voices to format');
+    }
+    const totalTicks = voices[0].getTotalTicks();
+    const resolutionMultiplier = voices.reduce((resolutionMultiplier, voice) => {
+      if (!voice.getTotalTicks().equals(totalTicks)) {
+        throw new Vex.RERR('TickMismatch', 'Voices should have same total note duration in ticks.');
+      }
+
+      if (voice.getMode() === Voice.Mode.STRICT && !voice.isComplete()) {
+        throw new Vex.RERR('IncompleteVoice', 'Voice does not have enough notes.');
+      }
+
+      return Math.max(resolutionMultiplier, Fraction.LCM(resolutionMultiplier, voice.getResolutionMultiplier()));
+    }, 1);
+    return resolutionMultiplier;
+  }
+
   // Create `ModifierContext`s for each tick in `voices`.
   createModifierContexts(voices) {
-    const contexts = createContexts(voices, ModifierContext, (tickable, context) =>
-      tickable.addToModifierContext(context)
-    );
+    const resolutionMultiplier = Formatter.getResolutionMultiplier(voices);
+    // Initialize tick maps.
+    const tickToContextMap = {};
+    const tickList = [];
+    const contexts = [];
 
-    this.modiferContexts = contexts;
-    return contexts;
+    // For each voice, extract notes and create a context for every
+    // new tick that hasn't been seen before.
+    voices.forEach((voice) => {
+      // Use resolution multiplier as denominator so that no additional expansion
+      // of fractional tick values is needed.
+      const ticksUsed = new Fraction(0, resolutionMultiplier);
+
+      voice.getTickables().forEach((tickable) => {
+        const integerTicks = ticksUsed.numerator;
+
+        // If we have no modifier context for this tick, create one.
+        if (!tickToContextMap[integerTicks]) {
+          const newContext = new ModifierContext();
+          contexts.push(newContext);
+          tickToContextMap[integerTicks] = newContext;
+          // Maintain a list of unique integerTicks.
+          tickList.push(integerTicks);
+        }
+
+        // Add this ModifierContext to the tickable.
+        tickable.addToModifierContext(tickToContextMap[integerTicks]);
+        ticksUsed.add(tickable.getTicks());
+      });
+    });
+
+    this.modiferContexts = {
+      map: tickToContextMap,
+      array: contexts,
+      list: tickList.sort((a, b) => a - b),
+      resolutionMultiplier,
+    };
+    return this.modiferContexts;
   }
 
   // Create `TickContext`s for each tick in `voices`. Also calculate the
   // total number of ticks in voices.
   createTickContexts(voices) {
-    const contexts = createContexts(voices, TickContext, (tickable, context, voiceIndex) =>
-      context.addTickable(tickable, voiceIndex)
-    );
+    const resolutionMultiplier = Formatter.getResolutionMultiplier(voices);
+    // Initialize tick maps.
+    const tickToContextMap = {};
+    const tickList = [];
+    const contexts = [];
 
-    contexts.array.forEach((context) => {
-      context.tContexts = contexts.array;
+    // For each voice, extract notes and create a context for every
+    // new tick that hasn't been seen before.
+    voices.forEach((voice, voiceIndex) => {
+      // Use resolution multiplier as denominator so that no additional expansion
+      // of fractional tick values is needed.
+      const ticksUsed = new Fraction(0, resolutionMultiplier);
+
+      voice.getTickables().forEach((tickable) => {
+        const integerTicks = ticksUsed.numerator;
+
+        // If we have no tick context for this tick, create one.
+        if (!tickToContextMap[integerTicks]) {
+          const newContext = new TickContext({ tickID: integerTicks });
+          contexts.push(newContext);
+          tickToContextMap[integerTicks] = newContext;
+          // Maintain a list of unique integerTicks.
+          tickList.push(integerTicks);
+        }
+
+        // Add this tickable to the TickContext.
+        tickToContextMap[integerTicks].addTickable(tickable, voiceIndex);
+        ticksUsed.add(tickable.getTicks());
+      });
+    });
+
+    contexts.forEach((context) => {
+      context.tContexts = contexts;
     });
 
     this.totalTicks = voices[0].getTicksUsed().clone();
-    this.tickContexts = contexts;
-    return contexts;
+    this.tickContexts = {
+      map: tickToContextMap,
+      array: contexts,
+      list: tickList.sort((a, b) => a - b),
+      resolutionMultiplier,
+    };
+    return this.tickContexts;
   }
 
   // This is the core formatter logic. Format voices and justify them
