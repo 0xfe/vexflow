@@ -217,7 +217,7 @@ export class Formatter {
 
     // Instantiate a `Formatter` and format the notes.
     new Formatter()
-      .joinVoices([voice], { align_rests: options.align_rests })
+      .joinVoices([voice])
       .formatToStave([voice], stave, { align_rests: options.align_rests, stave });
 
     // Render the voice and beams to the stave.
@@ -264,7 +264,7 @@ export class Formatter {
 
     // Instantiate a `Formatter` and align tab and stave notes.
     new Formatter()
-      .joinVoices([notevoice], { align_rests: opts.align_rests })
+      .joinVoices([notevoice])
       .joinVoices([tabvoice])
       .formatToStave([notevoice, tabvoice], stave, { align_rests: opts.align_rests });
 
