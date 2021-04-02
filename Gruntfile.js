@@ -95,7 +95,7 @@ module.exports = (grunt) => {
     },
     eslint: {
       target: SOURCES.concat('./tests'),
-      options: { fix: false },
+      options: { fix: true },
     },
     qunit: {
       files: ['tests/flow.html'],

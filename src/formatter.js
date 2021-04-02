@@ -216,9 +216,7 @@ export class Formatter {
     const beams = options.auto_beam ? Beam.applyAndGetBeams(voice) : [];
 
     // Instantiate a `Formatter` and format the notes.
-    new Formatter()
-      .joinVoices([voice])
-      .formatToStave([voice], stave, { align_rests: options.align_rests, stave });
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave, { align_rests: options.align_rests, stave });
 
     // Render the voice and beams to the stave.
     voice.setStave(stave).draw(ctx, stave);
