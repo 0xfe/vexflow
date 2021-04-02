@@ -14,6 +14,7 @@ module.exports = (grunt) => {
   const BUILD_DIR = path.join(BASE_DIR, 'build');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  const TEST_TS_ENTRY = path.join(BASE_DIR, 'tests/run_ts.ts')
   const TARGET_RAW = 'vexflow-debug.js';
   const TARGET_MIN = 'vexflow-min.js';
 
@@ -24,10 +25,10 @@ module.exports = (grunt) => {
   const TARGET_TESTS = path.join(BUILD_DIR, 'vexflow-tests.js');
   const TEST_SOURCES = ['tests/vexflow_test_helpers.js', 'tests/mocks.js', 'tests/*_tests.js', 'tests/run.js'];
 
-  function webpackConfig(target, mode) {
+  function webpackConfig(target, entry, mode) {
     return {
       mode: mode,
-      entry: MODULE_ENTRY,
+      entry: entry,
       output: {
         path: BUILD_DIR,
         filename: target,
@@ -51,8 +52,9 @@ module.exports = (grunt) => {
     };
   }
 
-  const webpackProd = webpackConfig(TARGET_MIN, 'production');
-  const webpackDev = webpackConfig(TARGET_RAW, 'development');
+  const webpackProd = webpackConfig(TARGET_MIN, MODULE_ENTRY, 'production');
+  const webpackDev = webpackConfig(TARGET_RAW, MODULE_ENTRY, 'development');
+  const webpackTest = webpackConfig('vexflow-tests-ts.js', TEST_TS_ENTRY, 'development');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -69,6 +71,7 @@ module.exports = (grunt) => {
     webpack: {
       build: webpackProd,
       buildDev: webpackDev,
+      buildTest: webpackTest,
       watch: {
         ...webpackDev,
         watch: true,
@@ -81,7 +84,7 @@ module.exports = (grunt) => {
       options: { fix: true },
     },
     qunit: {
-      files: ['tests/flow.html'],
+      files: ['tests/flow.html', 'tests/flow_ts.html'],
     },
     watch: {
       tests: {
@@ -158,8 +161,8 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-webpack');
 
   // Default task(s).
-  grunt.registerTask('default', ['clean', 'eslint', 'webpack:buildDev', 'webpack:build', 'concat', 'docco']);
-  grunt.registerTask('test', 'Run qunit tests.', ['clean', 'webpack:buildDev', 'concat', 'qunit']);
+  grunt.registerTask('default', ['clean', 'eslint', 'webpack:buildDev', 'webpack:build', 'webpack:buildTest', 'concat', 'docco']);
+  grunt.registerTask('test', 'Run qunit tests.', ['clean', 'webpack:buildDev', 'webpack:buildTest', 'concat', 'qunit']);
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current bundles to releases/.', () => {

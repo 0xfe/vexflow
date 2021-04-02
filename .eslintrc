@@ -15,7 +15,7 @@
   },
   "overrides": [
     {
-      "files": [ "**/*.ts" ],
+      "files": [ "src/**/*.ts" ],
       "extends": [
         "eslint:recommended",
         "prettier"
@@ -31,6 +31,18 @@
         "eslint:recommended",
         "prettier"
       ]
+    },
+    {
+      "files": [ "tests/**/*.ts" ],
+      "extends": [
+        "eslint:recommended",
+        "prettier"
+      ],
+      "rules": {  
+        "no-console": 1, // Means warning
+        "prettier/prettier": 2, // Means error
+        "no-unused-vars": "warn"
+      }
     },
     {
       "files": [ "tests/**/*.js" ],

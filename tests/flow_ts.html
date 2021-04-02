@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>VexFlow 2 - JavaScript Music Notation and Guitar Tab</title>
+  <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
+  <!-- VexFlow Sources -->
+<!--  <script src="../build/vexflow-debug.js"></script>-->
+
+  <!-- Test Dependencies: jQuery, QUnit -->
+  <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet">
+  <script src="support/jquery.js"></script>
+  <script src="support/qunit.js"></script>
+
+  <!-- VexFlow Tests. Note the charset below: this is required for
+       the measureText cache, since the index contains weird unicode
+       characters. -->
+  <script src="../build/vexflow-tests-ts.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <div style="text-align: center;">
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <div>
+      <h2>
+        [ <a href="http://vexflow.com">Home</a> ]
+        [ <a href="http://github.com/0xfe/vexflow">GitHub</a> ]
+      </h2>
+      <h3>Don't forget to run the <a href="https://github.com/0xfe/vexflow/wiki/Visual-Regression-Tests">Visual Regression Tests</a>!</h3>
+    </div>
+
+    <p/>
+    <div id="vexflow_testoutput"></div>
+    <p/>
+    <p class="vf-footer">
+      [ <a href="http://vexflow.com">home</a> ]
+      [ <a href="http://github.com/0xfe/vexflow">github</a> ]
+      [ <a href="http://0xfe.muthanna.com">0xfe</a> ]
+    </p>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Show only failed tests.
+      QUnit.config.hidepassed = true;
+      QUnit.config.noglobals = true;
+      Vex.Test.run();
+    });
+  </script>
+</body>
+</html>
