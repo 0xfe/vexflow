@@ -8,6 +8,7 @@
 
 import { Vex } from './vex';
 
+/** Fraction represents a rational number. */
 export class Fraction {
   numerator: number = 1;
 
@@ -21,7 +22,7 @@ export class Fraction {
   private static __staticFractionTmp = new Fraction();
 
   /**
-   * GCD: Find greatest common divisor using Euclidean algorithm
+   * GCD: Greatest common divisor using Euclidean algorithm.
    */
   static GCD(a: number, b: number): number {
     if (typeof a !== 'number' || typeof b !== 'number') {
@@ -40,14 +41,14 @@ export class Fraction {
   }
 
   /**
-   * LCM: Lowest common multiple
+   * LCM: Lowest common multiple.
    */
   static LCM(a: number, b: number): number {
     return (a * b) / Fraction.GCD(a, b);
   }
 
   /**
-   * LCMM: Lowest common multiple for more than two numbers
+   * LCMM: Lowest common multiple for more than two numbers.
    */
   static LCMM(args: any): number {
     if (args.length === 0) {
@@ -64,24 +65,24 @@ export class Fraction {
     return Fraction.LCM(arg0, Fraction.LCMM(args));
   }
 
-  /** Constructs providing numerator and denominator */
+  /** Constructs providing numerator and denominator. */
   constructor(numerator?: number, denominator?: number) {
     this.set(numerator, denominator);
   }
 
-  /** Sets numerator and denominator */
+  /** Sets numerator and denominator. */
   set(numerator: number = 1, denominator: number = 1): this {
     this.numerator = numerator;
     this.denominator = denominator;
     return this;
   }
 
-  /** Returns the value of the fraction */
+  /** Returns the value of the fraction. */
   value(): number {
     return this.numerator / this.denominator;
   }
 
-  /** Simplifies numerator and denominator using GCD */
+  /** Simplifies numerator and denominator using GCD. */
   simplify(): this {
     let u = this.numerator;
     let d = this.denominator;
@@ -97,7 +98,7 @@ export class Fraction {
     return this.set(u, d);
   }
 
-  /** Adds value of another Fraction */
+  /** Adds value of another fraction. */
   add(param1: Fraction | number = 0, param2: number = 1): this {
     let otherNumerator: number;
     let otherDenominator: number;
@@ -118,7 +119,7 @@ export class Fraction {
     return this.set(u, lcm);
   }
 
-  /** Substract value of another Fraction */
+  /** Substracts value of another fraction. */
   subtract(param1: Fraction | number = 0, param2: number = 1): this {
     let otherNumerator: number;
     let otherDenominator: number;
@@ -139,7 +140,7 @@ export class Fraction {
     return this.set(u, lcm);
   }
 
-  /** Multiplies by value of another Fraction */
+  /** Multiplies by value of another fraction. */
   multiply(param1: Fraction | number = 1, param2: number = 1): this {
     let otherNumerator: number;
     let otherDenominator: number;
@@ -155,7 +156,7 @@ export class Fraction {
     return this.set(this.numerator * otherNumerator, this.denominator * otherDenominator);
   }
 
-  /** Divides by value of another Fraction */
+  /** Divides by value of another Fraction. */
   divide(param1: Fraction | number = 1, param2: number = 1): this {
     let otherNumerator: number;
     let otherDenominator: number;
@@ -203,12 +204,12 @@ export class Fraction {
     return !this.greaterThan(compare);
   }
 
-  /** Creates a new copy with this current values. */
+  /** Returns a new copy with current values. */
   clone(): Fraction {
     return new Fraction(this.numerator, this.denominator);
   }
 
-  /** Copies value of another Fraction into itself. */
+  /** Copies value of another fraction. */
   copy(copy: Fraction | number): this {
     if (typeof copy === 'number') {
       return this.set(copy || 0, 1);
@@ -216,34 +217,34 @@ export class Fraction {
     return this.set(copy.numerator, copy.denominator);
   }
 
-  /** Returns the integer component eg. (5/2) == 2 */
+  /** Returns the integer component (eg. 5/2 => 2). */
   quotient(): number {
     return Math.floor(this.numerator / this.denominator);
   }
 
-  /** Returns the remainder component when reduced to a mixed number */
+  /** Returns the remainder component (eg. 5/2 => 1). */
   remainder(): number {
     return this.numerator % this.denominator;
   }
 
-  /** Calculates absolute value of itself */
+  /** Calculates absolute value. */
   makeAbs(): this {
     this.denominator = Math.abs(this.denominator);
     this.numerator = Math.abs(this.numerator);
     return this;
   }
 
-  /** Returns a raw string representation */
+  /** Returns a raw string representation (eg. "5/2"). */
   toString(): string {
     return `${this.numerator}/${this.denominator}`;
   }
 
-  /** Returns a simplified string respresentation */
+  /** Returns a simplified string respresentation. */
   toSimplifiedString(): string {
     return Fraction.__staticFractionTmp.copy(this).simplify().toString();
   }
 
-  /** Returns string representation in mixed form */
+  /** Returns string representation in mixed form. */
   toMixedString(): string {
     let s = '';
     const q = this.quotient();
@@ -268,7 +269,7 @@ export class Fraction {
     return s;
   }
 
-  /** Parses a fraction string */
+  /** Parses a fraction string. */
   parse(str: string): this {
     const i = str.split('/');
     const n = parseInt(i[0], 10);

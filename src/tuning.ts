@@ -6,12 +6,13 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 
+/** Tuning implements varies types of tunings for tablature. */
 export class Tuning {
-  protected numStrings: number;
+  protected numStrings: number = 0;
 
-  protected tuningString: string;
+  protected tuningString: string = '';
 
-  protected tuningValues: number[];
+  protected tuningValues: number[] = [];
 
   static get names(): Record<string, string> {
     return {
@@ -23,22 +24,24 @@ export class Tuning {
     };
   }
 
+  /**
+   * Constructs providing tuning by name (eg. 'dagdad')
+   * or by comma separated note strings.
+   */
   constructor(tuningString = 'E/5,B/4,G/4,D/4,A/3,E/3,B/2,E/2') {
     // Default to standard tuning.
-    this.tuningString = '';
-    this.tuningValues = [];
-    this.numStrings = 0;
     this.setTuning(tuningString);
   }
 
+  /** Returns the note number associated to the note string. */
   noteToInteger(noteString: string): number {
     return Flow.keyProperties(noteString).int_value;
   }
 
   /**
-   * Set tuning identified by tuning name (ie.: 'dagdad')
-   * or comma separated notes string (ie.: 'D/5,A/4,G/4,D/4,A/3,D/3')
-   * */
+   * Set tuning identified by tuning name (eg. 'dagdad')
+   * or comma separated note strings (eg. 'D/5,A/4,G/4,D/4,A/3,D/3').
+   */
   setTuning(noteString: string): void {
     if (Tuning.names[noteString]) {
       noteString = Tuning.names[noteString];
@@ -59,9 +62,9 @@ export class Tuning {
     }
   }
 
-  /** Returns the number representing the note associated with a string */
+  /** Returns the note number associated with a tablature string. */
   getValueForString(stringNum: string | number): number {
-    const s = typeof stringNum === 'string' ? parseInt(stringNum, 10) : stringNum;
+    const s = Number(stringNum);
     if (s < 1 || s > this.numStrings) {
       throw new Vex.RERR('BadArguments', `String number must be between 1 and ${this.numStrings}:${stringNum}`);
     }
@@ -69,10 +72,10 @@ export class Tuning {
     return this.tuningValues[s - 1];
   }
 
-  /** Returns the number representing the note associated with a string and a fret */
+  /** Returns the note number associated with a tablature string and fret. */
   getValueForFret(fretNum: string | number, stringNum: string | number): number {
     const stringValue = this.getValueForString(stringNum);
-    const f = typeof fretNum === 'string' ? parseInt(fretNum, 10) : fretNum;
+    const f = Number(fretNum);
 
     if (f < 0) {
       throw new Vex.RERR('BadArguments', `Fret number must be 0 or higher: ${fretNum}`);
@@ -81,7 +84,7 @@ export class Tuning {
     return stringValue + f;
   }
 
-  /** Returns the string representing the note associated with a string and a fret */
+  /** Returns the note string associated with tablature string and fret. */
   getNoteForFret(fretNum: string | number, stringNum: string | number): string {
     const noteValue = this.getValueForFret(fretNum, stringNum);
 
