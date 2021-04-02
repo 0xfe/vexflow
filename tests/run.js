@@ -1,5 +1,5 @@
 import { MusicTests } from './music_tests';
-
+var d;
 VF.Test.run = function () {
   VF.Test.Accidental.Start();
   VF.Test.StaveNote.Start();

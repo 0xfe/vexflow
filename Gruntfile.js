@@ -32,7 +32,6 @@ module.exports = (grunt) => {
   ];
 
   function webpackConfig(target, moduleEntry, mode, libraryName, compilationTarget) {
-    console.log('CONCAT', SOURCES.concat('./tests'));
     return {
       node: compilationTarget !== 'node' ? { fs: 'empty' } : undefined,
       mode: mode,

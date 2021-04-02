@@ -47,7 +47,7 @@
     "prettier": "^2.2.1",
     "qunit": "^2.14.1",
     "raphael": "^2.3.0",
-    "ts-loader": "^8.0.18",
+    "ts-loader": "^8.1.0",
     "typescript": "^4.2.3",
     "webpack": "^4.46.0",
     "webpack-dev-server": "^3.11.2"

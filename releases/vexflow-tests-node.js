@@ -9470,18 +9470,6 @@ exports.MusicTests = {
             ok(true, 'Invalid note value');
         }
     },
-    canonicalIntervals: function () {
-        expect(3);
-        var music = new music_1.Music();
-        equal(music.getCanonicalIntervalName(0), 'unison');
-        equal(music.getCanonicalIntervalName(2), 'M2');
-        try {
-            music.getCanonicalIntervalName(-1);
-        }
-        catch (e) {
-            ok(true, 'Invalid interval value');
-        }
-    },
     scaleTones: function () {
         expect(24);
         // C Major
@@ -9521,7 +9509,7 @@ exports.MusicTests = {
         // Forwards and backwards
         equal(music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), 1)), 'b7');
         equal(music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), -1)), 'M2');
-    }
+    },
 };
 
 
