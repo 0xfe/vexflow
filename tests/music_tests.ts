@@ -129,7 +129,6 @@ export const MusicTests = {
   },
 
   intervalValue: function () {
-    var e;
     expect(2);
 
     const music = new Music();
