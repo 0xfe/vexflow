@@ -5,13 +5,13 @@
 import { KeyManager } from '../src/keymanager';
 import { Music } from '../src/music';
 
-declare var QUnit: any;
+declare let QUnit: any;
 declare function ok(...args: any): any;
 declare function test(...args: any): any;
 declare function expect(...args: any): any;
 declare function equal(...args: any): any;
 
-export var MusicTests = (function () {
+export const MusicTests = (function () {
   return {
     Start: function () {
       QUnit.module('Music');
@@ -29,9 +29,9 @@ export var MusicTests = (function () {
     validNotes: function () {
       expect(10);
 
-      var music = new Music();
+      const music = new Music();
 
-      var parts = music.getNoteParts('c');
+      let parts = music.getNoteParts('c');
       equal(parts.root, 'c');
       equal(parts.accidental, null);
 
@@ -63,9 +63,9 @@ export var MusicTests = (function () {
     validKeys: function () {
       expect(18);
 
-      var music = new Music();
+      const music = new Music();
 
-      var parts = music.getKeyParts('c');
+      let parts = music.getKeyParts('c');
       equal(parts.root, 'c');
       equal(parts.accidental, null);
       equal(parts.type, 'M');
@@ -112,9 +112,9 @@ export var MusicTests = (function () {
     noteValue: function () {
       expect(3);
 
-      var music = new Music();
+      const music = new Music();
 
-      var note = music.getNoteValue('c');
+      let note = music.getNoteValue('c');
       equal(note, 0);
 
       try {
@@ -130,9 +130,9 @@ export var MusicTests = (function () {
     intervalValue: function () {
       expect(2);
 
-      var music = new Music();
+      const music = new Music();
 
-      var value = music.getIntervalValue('b2');
+      const value = music.getIntervalValue('b2');
       equal(value, 1);
 
       try {
@@ -145,9 +145,9 @@ export var MusicTests = (function () {
     relativeNotes: function () {
       expect(8);
 
-      var music = new Music();
+      const music = new Music();
 
-      var value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b5'));
+      let value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b5'));
       equal(value, 6);
 
       try {
@@ -188,7 +188,7 @@ export var MusicTests = (function () {
     relativeNoteNames: function () {
       expect(9);
 
-      var music = new Music();
+      const music = new Music();
       equal(music.getRelativeNoteName('c', music.getNoteValue('c')), 'c');
       equal(music.getRelativeNoteName('c', music.getNoteValue('db')), 'c#');
       equal(music.getRelativeNoteName('c#', music.getNoteValue('db')), 'c#');
@@ -209,7 +209,7 @@ export var MusicTests = (function () {
     canonicalNotes: function () {
       expect(3);
 
-      var music = new Music();
+      const music = new Music();
 
       equal(music.getCanonicalNoteName(0), 'c');
       equal(music.getCanonicalNoteName(2), 'd');
@@ -224,7 +224,7 @@ export var MusicTests = (function () {
     canonicalIntervals: function () {
       expect(3);
 
-      var music = new Music();
+      const music = new Music();
 
       equal(music.getCanonicalIntervalName(0), 'unison');
       equal(music.getCanonicalIntervalName(2), 'M2');
@@ -240,36 +240,36 @@ export var MusicTests = (function () {
       expect(24);
 
       // C Major
-      var music = new Music();
-      var manager = new KeyManager('CM');
+      const music = new Music();
+      const manager = new KeyManager('CM');
 
-      var c_major = music.getScaleTones(music.getNoteValue('c'), Music.scales.major);
-      var values = ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
+      const c_major = music.getScaleTones(music.getNoteValue('c'), Music.scales.major);
+      let values = ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
 
       equal(c_major.length, 7);
 
-      for (var cm = 0; cm < c_major.length; ++cm) {
+      for (let cm = 0; cm < c_major.length; ++cm) {
         equal(music.getCanonicalNoteName(c_major[cm]), values[cm]);
       }
 
       // Dorian
-      var c_dorian = music.getScaleTones(music.getNoteValue('c'), Music.scales.dorian);
+      const c_dorian = music.getScaleTones(music.getNoteValue('c'), Music.scales.dorian);
       values = ['c', 'd', 'eb', 'f', 'g', 'a', 'bb'];
 
-      var note = null;
+      let note = null;
       equal(c_dorian.length, 7);
-      for (var cd = 0; cd < c_dorian.length; ++cd) {
+      for (let cd = 0; cd < c_dorian.length; ++cd) {
         note = music.getCanonicalNoteName(c_dorian[cd]);
         equal(manager.selectNote(note).note, values[cd]);
       }
 
       // Mixolydian
-      var c_mixolydian = music.getScaleTones(music.getNoteValue('c'), Music.scales.mixolydian);
+      const c_mixolydian = music.getScaleTones(music.getNoteValue('c'), Music.scales.mixolydian);
       values = ['c', 'd', 'e', 'f', 'g', 'a', 'bb'];
 
       equal(c_mixolydian.length, 7);
 
-      for (var i = 0; i < c_mixolydian.length; ++i) {
+      for (let i = 0; i < c_mixolydian.length; ++i) {
         note = music.getCanonicalNoteName(c_mixolydian[i]);
         equal(manager.selectNote(note).note, values[i]);
       }
@@ -278,7 +278,7 @@ export var MusicTests = (function () {
     scaleIntervals: function () {
       expect(6);
 
-      var music = new Music();
+      const music = new Music();
 
       equal(
         music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('d'))),
