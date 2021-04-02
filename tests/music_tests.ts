@@ -15,16 +15,16 @@ export const MusicTests = (function () {
   return {
     Start: function () {
       QUnit.module('Music');
-      test('Valid Notes', this.validNotes);
-      test('Valid Keys', this.validKeys);
-      test('Note Values', this.noteValue);
-      test('Interval Values', this.intervalValue);
-      test('Relative Notes', this.relativeNotes);
-      test('Relative Note Names', this.relativeNoteNames);
-      test('Canonical Notes', this.canonicalNotes);
-      test('Canonical Intervals', this.canonicalNotes);
-      test('Scale Tones', this.scaleTones);
-      test('Scale Intervals', this.scaleIntervals);
+      test('Valid Notes', MusicTests.validNotes);
+      test('Valid Keys', MusicTests.validKeys);
+      test('Note Values', MusicTests.noteValue);
+      test('Interval Values', MusicTests.intervalValue);
+      test('Relative Notes', MusicTests.relativeNotes);
+      test('Relative Note Names', MusicTests.relativeNoteNames);
+      test('Canonical Notes', MusicTests.canonicalNotes);
+      test('Canonical Intervals', MusicTests.canonicalNotes);
+      test('Scale Tones', MusicTests.scaleTones);
+      test('Scale Intervals', MusicTests.scaleIntervals);
     },
 
     validNotes: function () {
