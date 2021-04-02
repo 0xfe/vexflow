@@ -5,16 +5,17 @@
 import { KeyManager } from '../src/keymanager';
 import { Music } from '../src/music';
 
-declare let QUnit: any;
-declare function ok(...args: any): any;
-declare function test(...args: any): any;
-declare function expect(...args: any): any;
-declare function equal(...args: any): any;
+declare const QUnit: any;
+declare const ok: any;
+declare const test: any;
+declare const expect: any;
+declare const equal: any;
 
 export const MusicTests = (function () {
   return {
     Start: function () {
       QUnit.module('Music');
+      test('Valid Notes', this.validNotes);
       test('Valid Keys', this.validKeys);
       test('Note Values', this.noteValue);
       test('Interval Values', this.intervalValue);
