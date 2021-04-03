@@ -39,6 +39,7 @@
     "grunt-eslint": "^23.0.0",
     "grunt-git": "^1.0.14",
     "grunt-release": "^0.14.0",
+    "grunt-typedoc": "^0.2.4",
     "grunt-webpack": "^4.0.2",
     "jquery": "^3.6.0",
     "jsdom": "^16.5.2",
@@ -48,6 +49,7 @@
     "qunit": "^2.14.1",
     "raphael": "^2.3.0",
     "ts-loader": "^8.1.0",
+    "typedoc": "^0.20.34",
     "typescript": "^4.2.3",
     "webpack": "^4.46.0",
     "webpack-dev-server": "^3.11.2"
@@ -68,9 +70,5 @@
     "notation",
     "guitar",
     "tablature"
-  ],
-  "dependencies": {
-    "grunt-typedoc": "^0.2.4",
-    "typedoc": "^0.20.34"
-  }
+  ]
 }
