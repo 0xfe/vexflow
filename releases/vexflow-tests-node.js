@@ -96,751 +96,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/keymanager.js":
-/*!***************************!*\
-  !*** ./src/keymanager.js ***!
-  \***************************/
-/*! exports provided: KeyManager */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KeyManager", function() { return KeyManager; });
-/* harmony import */ var _vex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vex */ "./src/vex.js");
-/* harmony import */ var _music__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./music */ "./src/music.ts");
-/* harmony import */ var _music__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_music__WEBPACK_IMPORTED_MODULE_1__);
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This class implements diatonic key management.
-
-
-
-
-class KeyManager {
-  constructor(key) {
-    this.music = new _music__WEBPACK_IMPORTED_MODULE_1__["Music"]();
-    this.setKey(key);
-  }
-
-  setKey(key) {
-    this.key = key;
-    this.reset();
-    return this;
-  }
-
-  getKey() {
-    return this.key;
-  }
-
-  reset() {
-    this.keyParts = this.music.getKeyParts(this.key);
-
-    this.keyString = this.keyParts.root;
-    if (this.keyParts.accidental) this.keyString += this.keyParts.accidental;
-
-    const is_supported_type = _music__WEBPACK_IMPORTED_MODULE_1__["Music"].scaleTypes[this.keyParts.type];
-    if (!is_supported_type) {
-      throw new _vex__WEBPACK_IMPORTED_MODULE_0__["Vex"].RERR('BadArguments', `Unsupported key type: ${this.key}`);
-    }
-
-    this.scale = this.music.getScaleTones(
-      this.music.getNoteValue(this.keyString),
-      _music__WEBPACK_IMPORTED_MODULE_1__["Music"].scaleTypes[this.keyParts.type]
-    );
-
-    this.scaleMap = {};
-    this.scaleMapByValue = {};
-    this.originalScaleMapByValue = {};
-
-    const noteLocation = _music__WEBPACK_IMPORTED_MODULE_1__["Music"].root_indices[this.keyParts.root];
-
-    for (let i = 0; i < _music__WEBPACK_IMPORTED_MODULE_1__["Music"].roots.length; ++i) {
-      const index = (noteLocation + i) % _music__WEBPACK_IMPORTED_MODULE_1__["Music"].roots.length;
-      const rootName = _music__WEBPACK_IMPORTED_MODULE_1__["Music"].roots[index];
-
-      const noteName = this.music.getRelativeNoteName(rootName, this.scale[i]);
-      this.scaleMap[rootName] = noteName;
-      this.scaleMapByValue[this.scale[i]] = noteName;
-      this.originalScaleMapByValue[this.scale[i]] = noteName;
-    }
-
-    return this;
-  }
-
-  getAccidental(key) {
-    const root = this.music.getKeyParts(key).root;
-    const parts = this.music.getNoteParts(this.scaleMap[root]);
-
-    return {
-      note: this.scaleMap[root],
-      accidental: parts.accidental,
-    };
-  }
-
-  selectNote(note) {
-    note = note.toLowerCase();
-    const parts = this.music.getNoteParts(note);
-
-    // First look for matching note in our altered scale
-    const scaleNote = this.scaleMap[parts.root];
-    const modparts = this.music.getNoteParts(scaleNote);
-
-    if (scaleNote === note) {
-      return {
-        note: scaleNote,
-        accidental: parts.accidental,
-        change: false,
-      };
-    }
-
-    // Then search for a note of equivalent value in our altered scale
-    const valueNote = this.scaleMapByValue[this.music.getNoteValue(note)];
-    if (valueNote != null) {
-      return {
-        note: valueNote,
-        accidental: this.music.getNoteParts(valueNote).accidental,
-        change: false,
-      };
-    }
-
-    // Then search for a note of equivalent value in the original scale
-    const originalValueNote = this.originalScaleMapByValue[this.music.getNoteValue(note)];
-    if (originalValueNote != null) {
-      this.scaleMap[modparts.root] = originalValueNote;
-      delete this.scaleMapByValue[this.music.getNoteValue(scaleNote)];
-      this.scaleMapByValue[this.music.getNoteValue(note)] = originalValueNote;
-      return {
-        note: originalValueNote,
-        accidental: this.music.getNoteParts(originalValueNote).accidental,
-        change: true,
-      };
-    }
-
-    // Then try to unmodify a currently modified note.
-    if (modparts.root === note) {
-      delete this.scaleMapByValue[this.music.getNoteValue(this.scaleMap[parts.root])];
-      this.scaleMapByValue[this.music.getNoteValue(modparts.root)] = modparts.root;
-      this.scaleMap[modparts.root] = modparts.root;
-      return {
-        note: modparts.root,
-        accidental: null,
-        change: true,
-      };
-    }
-
-    // Last resort -- shitshoot
-    delete this.scaleMapByValue[this.music.getNoteValue(this.scaleMap[parts.root])];
-    this.scaleMapByValue[this.music.getNoteValue(note)] = note;
-
-    delete this.scaleMap[modparts.root];
-    this.scaleMap[modparts.root] = note;
-
-    return {
-      note,
-      accidental: parts.accidental,
-      change: true,
-    };
-  }
-}
-
-
-/***/ }),
-
-/***/ "./src/music.ts":
-/*!**********************!*\
-  !*** ./src/music.ts ***!
-  \**********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This class implements some standard music theory routines.
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Music = void 0;
-var vex_1 = __webpack_require__(/*! ./vex */ "./src/vex.js");
-var Music = /** @class */ (function () {
-    function Music() {
-    }
-    Object.defineProperty(Music, "NUM_TONES", {
-        get: function () {
-            return 12;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "roots", {
-        get: function () {
-            return ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "root_values", {
-        get: function () {
-            return [0, 2, 4, 5, 7, 9, 11];
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "root_indices", {
-        get: function () {
-            return {
-                c: 0,
-                d: 1,
-                e: 2,
-                f: 3,
-                g: 4,
-                a: 5,
-                b: 6,
-            };
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "canonical_notes", {
-        get: function () {
-            return ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "diatonic_intervals", {
-        get: function () {
-            return ['unison', 'm2', 'M2', 'm3', 'M3', 'p4', 'dim5', 'p5', 'm6', 'M6', 'b7', 'M7', 'octave'];
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "diatonic_accidentals", {
-        get: function () {
-            return {
-                unison: { note: 0, accidental: 0 },
-                m2: { note: 1, accidental: -1 },
-                M2: { note: 1, accidental: 0 },
-                m3: { note: 2, accidental: -1 },
-                M3: { note: 2, accidental: 0 },
-                p4: { note: 3, accidental: 0 },
-                dim5: { note: 4, accidental: -1 },
-                p5: { note: 4, accidental: 0 },
-                m6: { note: 5, accidental: -1 },
-                M6: { note: 5, accidental: 0 },
-                b7: { note: 6, accidental: -1 },
-                M7: { note: 6, accidental: 0 },
-                octave: { note: 7, accidental: 0 },
-            };
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "intervals", {
-        get: function () {
-            return {
-                u: 0,
-                unison: 0,
-                m2: 1,
-                b2: 1,
-                min2: 1,
-                S: 1,
-                H: 1,
-                2: 2,
-                M2: 2,
-                maj2: 2,
-                T: 2,
-                W: 2,
-                m3: 3,
-                b3: 3,
-                min3: 3,
-                M3: 4,
-                3: 4,
-                maj3: 4,
-                4: 5,
-                p4: 5,
-                '#4': 6,
-                b5: 6,
-                aug4: 6,
-                dim5: 6,
-                5: 7,
-                p5: 7,
-                '#5': 8,
-                b6: 8,
-                aug5: 8,
-                6: 9,
-                M6: 9,
-                maj6: 9,
-                b7: 10,
-                m7: 10,
-                min7: 10,
-                dom7: 10,
-                M7: 11,
-                maj7: 11,
-                8: 12,
-                octave: 12,
-            };
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "scales", {
-        get: function () {
-            return {
-                major: [2, 2, 1, 2, 2, 2, 1],
-                dorian: [2, 1, 2, 2, 2, 1, 2],
-                mixolydian: [2, 2, 1, 2, 2, 1, 2],
-                minor: [2, 1, 2, 2, 1, 2, 2],
-            };
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "scaleTypes", {
-        get: function () {
-            return {
-                M: Music.scales.major,
-                m: Music.scales.minor,
-            };
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "accidentals", {
-        get: function () {
-            return ['bb', 'b', 'n', '#', '##'];
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Music, "noteValues", {
-        get: function () {
-            return {
-                c: { root_index: 0, int_val: 0 },
-                cn: { root_index: 0, int_val: 0 },
-                'c#': { root_index: 0, int_val: 1 },
-                'c##': { root_index: 0, int_val: 2 },
-                cb: { root_index: 0, int_val: 11 },
-                cbb: { root_index: 0, int_val: 10 },
-                d: { root_index: 1, int_val: 2 },
-                dn: { root_index: 1, int_val: 2 },
-                'd#': { root_index: 1, int_val: 3 },
-                'd##': { root_index: 1, int_val: 4 },
-                db: { root_index: 1, int_val: 1 },
-                dbb: { root_index: 1, int_val: 0 },
-                e: { root_index: 2, int_val: 4 },
-                en: { root_index: 2, int_val: 4 },
-                'e#': { root_index: 2, int_val: 5 },
-                'e##': { root_index: 2, int_val: 6 },
-                eb: { root_index: 2, int_val: 3 },
-                ebb: { root_index: 2, int_val: 2 },
-                f: { root_index: 3, int_val: 5 },
-                fn: { root_index: 3, int_val: 5 },
-                'f#': { root_index: 3, int_val: 6 },
-                'f##': { root_index: 3, int_val: 7 },
-                fb: { root_index: 3, int_val: 4 },
-                fbb: { root_index: 3, int_val: 3 },
-                g: { root_index: 4, int_val: 7 },
-                gn: { root_index: 4, int_val: 7 },
-                'g#': { root_index: 4, int_val: 8 },
-                'g##': { root_index: 4, int_val: 9 },
-                gb: { root_index: 4, int_val: 6 },
-                gbb: { root_index: 4, int_val: 5 },
-                a: { root_index: 5, int_val: 9 },
-                an: { root_index: 5, int_val: 9 },
-                'a#': { root_index: 5, int_val: 10 },
-                'a##': { root_index: 5, int_val: 11 },
-                ab: { root_index: 5, int_val: 8 },
-                abb: { root_index: 5, int_val: 7 },
-                b: { root_index: 6, int_val: 11 },
-                bn: { root_index: 6, int_val: 11 },
-                'b#': { root_index: 6, int_val: 0 },
-                'b##': { root_index: 6, int_val: 1 },
-                bb: { root_index: 6, int_val: 10 },
-                bbb: { root_index: 6, int_val: 9 },
-            };
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Music.prototype.isValidNoteValue = function (note) {
-        if (note == null || note < 0 || note >= Music.NUM_TONES) {
-            return false;
-        }
-        return true;
-    };
-    Music.prototype.isValidIntervalValue = function (interval) {
-        return this.isValidNoteValue(interval);
-    };
-    Music.prototype.getNoteParts = function (noteString) {
-        if (!noteString || noteString.length < 1) {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
-        }
-        if (noteString.length > 3) {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
-        }
-        var note = noteString.toLowerCase();
-        var regex = /^([cdefgab])(b|bb|n|#|##)?$/;
-        var match = regex.exec(note);
-        if (match != null) {
-            var root = match[1];
-            var accidental = match[2];
-            return {
-                root: root,
-                accidental: accidental,
-            };
-        }
-        else {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid note name: ' + noteString);
-        }
-    };
-    Music.prototype.getKeyParts = function (keyString) {
-        if (!keyString || keyString.length < 1) {
-            throw new vex_1.Vex.RERR('BadArguments', 'Invalid key: ' + keyString);
-        }
-        var key = keyString.toLowerCase();
-        // Support Major, Minor, Melodic Minor, and Harmonic Minor key types.
-        var regex = /^([cdefgab])(b|#)?(mel|harm|m|M)?$/;
-        var match = regex.exec(key);
-        if (match != null) {
-            var root = match[1];
-            var accidental = match[2];
-            var type = match[3];
-            // Unspecified type implies major
-            if (!type)
-                type = 'M';
-            return {
-                root: root,
-                accidental: accidental,
-                type: type,
-            };
-        }
-        else {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid key: " + keyString);
-        }
-    };
-    Music.prototype.getNoteValue = function (noteString) {
-        var value = Music.noteValues[noteString];
-        if (value == null) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid note name: " + noteString);
-        }
-        return value.int_val;
-    };
-    Music.prototype.getIntervalValue = function (intervalString) {
-        var value = Music.intervals[intervalString];
-        if (value == null) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid interval name: " + intervalString);
-        }
-        return value;
-    };
-    Music.prototype.getCanonicalNoteName = function (noteValue) {
-        if (!this.isValidNoteValue(noteValue)) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid note value: " + noteValue);
-        }
-        return Music.canonical_notes[noteValue];
-    };
-    Music.prototype.getCanonicalIntervalName = function (intervalValue) {
-        if (!this.isValidIntervalValue(intervalValue)) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid interval value: " + intervalValue);
-        }
-        return Music.diatonic_intervals[intervalValue];
-    };
-    /* Given a note, interval, and interval direction, product the
-     * relative note.
-     */
-    Music.prototype.getRelativeNoteValue = function (noteValue, intervalValue, direction) {
-        if (direction == null)
-            direction = 1;
-        if (direction !== 1 && direction !== -1) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid direction: " + direction);
-        }
-        var sum = (noteValue + direction * intervalValue) % Music.NUM_TONES;
-        if (sum < 0)
-            sum += Music.NUM_TONES;
-        return sum;
-    };
-    Music.prototype.getRelativeNoteName = function (root, noteValue) {
-        var parts = this.getNoteParts(root);
-        var rootValue = this.getNoteValue(parts.root);
-        var interval = noteValue - rootValue;
-        if (Math.abs(interval) > Music.NUM_TONES - 3) {
-            var multiplier = 1;
-            if (interval > 0)
-                multiplier = -1;
-            // Possibly wrap around. (Add +1 for modulo operator)
-            var reverse_interval = ((noteValue + 1 + (rootValue + 1)) % Music.NUM_TONES) * multiplier;
-            if (Math.abs(reverse_interval) > 2) {
-                throw new vex_1.Vex.RERR('BadArguments', "Notes not related: " + root + ", " + noteValue + ")");
-            }
-            else {
-                interval = reverse_interval;
-            }
-        }
-        if (Math.abs(interval) > 2) {
-            throw new vex_1.Vex.RERR('BadArguments', "Notes not related: " + root + ", " + noteValue + ")");
-        }
-        var relativeNoteName = parts.root;
-        if (interval > 0) {
-            for (var i = 1; i <= interval; ++i) {
-                relativeNoteName += '#';
-            }
-        }
-        else if (interval < 0) {
-            for (var i = -1; i >= interval; --i) {
-                relativeNoteName += 'b';
-            }
-        }
-        return relativeNoteName;
-    };
-    /* Return scale tones, given intervals. Each successive interval is
-     * relative to the previous one, e.g., Major Scale:
-     *
-     *   TTSTTTS = [2,2,1,2,2,2,1]
-     *
-     * When used with key = 0, returns C scale (which is isomorphic to
-     * interval list).
-     */
-    Music.prototype.getScaleTones = function (key, intervals) {
-        var tones = [key];
-        var nextNote = key;
-        for (var i = 0; i < intervals.length; i += 1) {
-            nextNote = this.getRelativeNoteValue(nextNote, intervals[i]);
-            if (nextNote !== key)
-                tones.push(nextNote);
-        }
-        return tones;
-    };
-    /* Returns the interval of a note, given a diatonic scale.
-     *
-     * E.g., Given the scale C, and the note E, returns M3
-     */
-    Music.prototype.getIntervalBetween = function (note1, note2, direction) {
-        if (direction == null)
-            direction = 1;
-        if (direction !== 1 && direction !== -1) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid direction: " + direction);
-        }
-        if (!this.isValidNoteValue(note1) || !this.isValidNoteValue(note2)) {
-            throw new vex_1.Vex.RERR('BadArguments', "Invalid notes: " + note1 + ", " + note2);
-        }
-        var difference = direction === 1 ? note2 - note1 : note1 - note2;
-        if (difference < 0)
-            difference += Music.NUM_TONES;
-        return difference;
-    };
-    // Create a scale map that represents the pitch state for a
-    // `keySignature`. For example, passing a `G` to `keySignature` would
-    // return a scale map with every note naturalized except for `F` which
-    // has an `F#` state.
-    Music.prototype.createScaleMap = function (keySignature) {
-        var keySigParts = this.getKeyParts(keySignature);
-        if (!keySigParts.type)
-            throw new vex_1.Vex.RERR('BadArguments', 'Unsupported key type: undefined');
-        var scaleName = Music.scaleTypes[keySigParts.type];
-        var keySigString = keySigParts.root;
-        if (keySigParts.accidental)
-            keySigString += keySigParts.accidental;
-        if (!scaleName)
-            throw new vex_1.Vex.RERR('BadArguments', 'Unsupported key type: ' + keySignature);
-        var scale = this.getScaleTones(this.getNoteValue(keySigString), scaleName);
-        var noteLocation = Music.root_indices[keySigParts.root];
-        var scaleMap = {};
-        for (var i = 0; i < Music.roots.length; ++i) {
-            var index = (noteLocation + i) % Music.roots.length;
-            var rootName = Music.roots[index];
-            var noteName = this.getRelativeNoteName(rootName, scale[i]);
-            if (noteName.length === 1) {
-                noteName += 'n';
-            }
-            scaleMap[rootName] = noteName;
-        }
-        return scaleMap;
-    };
-    return Music;
-}());
-exports.Music = Music;
-
-
-/***/ }),
-
-/***/ "./src/vex.js":
-/*!********************!*\
-  !*** ./src/vex.js ***!
-  \********************/
-/*! exports provided: Vex */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Vex", function() { return Vex; });
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This file implements utility methods used by the rest of the VexFlow
-// codebase.
-//
-
-/* eslint max-classes-per-file: "off" */
-
-const Vex = () => {};
-
-// Default log function sends all arguments to console.
-Vex.L = (block, args) => {
-  if (!args) return;
-  const line = Array.prototype.slice.call(args).join(' ');
-  window.console.log(block + ': ' + line);
-};
-
-Vex.MakeException = (name) => {
-  const exception = class extends Error {
-    constructor(message, data) {
-      super(message);
-      this.name = name;
-      this.message = message;
-      this.data = data;
-    }
-  };
-
-  return exception;
-};
-
-// Default runtime exception.
-class RuntimeError extends Error {
-  constructor(code, message) {
-    super('[RuntimeError] ' + code + ':' + message);
-    this.code = code;
-  }
-}
-
-// Shortcut method for `RuntimeError`.
-Vex.RuntimeError = RuntimeError;
-Vex.RERR = Vex.RuntimeError;
-
-// Merge `destination` hash with `source` hash, overwriting like keys
-// in `source` if necessary.
-Vex.Merge = (destination, source) => {
-  for (const property in source) {
-    // eslint-disable-line guard-for-in
-    destination[property] = source[property];
-  }
-  return destination;
-};
-
-// DEPRECATED. Use `Math.*`.
-Vex.Min = Math.min;
-Vex.Max = Math.max;
-Vex.forEach = (a, fn) => {
-  for (let i = 0; i < a.length; i++) {
-    fn(a[i], i);
-  }
-};
-
-// Round number to nearest fractional value (`.5`, `.25`, etc.)
-Vex.RoundN = (x, n) => (x % n >= n / 2 ? parseInt(x / n, 10) * n + n : parseInt(x / n, 10) * n);
-
-// Locate the mid point between stave lines. Returns a fractional line if a space.
-Vex.MidLine = (a, b) => {
-  let mid_line = b + (a - b) / 2;
-  if (mid_line % 2 > 0) {
-    mid_line = Vex.RoundN(mid_line * 10, 5) / 10;
-  }
-  return mid_line;
-};
-
-// Take `arr` and return a new list consisting of the sorted, unique,
-// contents of arr. Does not modify `arr`.
-Vex.SortAndUnique = (arr, cmp, eq) => {
-  if (arr.length > 1) {
-    const newArr = [];
-    let last;
-    arr.sort(cmp);
-
-    for (let i = 0; i < arr.length; ++i) {
-      if (i === 0 || !eq(arr[i], last)) {
-        newArr.push(arr[i]);
-      }
-      last = arr[i];
-    }
-
-    return newArr;
-  } else {
-    return arr;
-  }
-};
-
-// Check if array `a` contains `obj`.
-Vex.Contains = (a, obj) => {
-  let i = a.length;
-  while (i--) {
-    if (a[i] === obj) {
-      return true;
-    }
-  }
-  return false;
-};
-
-// Get the 2D Canvas context from DOM element `canvas_sel`.
-Vex.getCanvasContext = (canvas_sel) => {
-  if (!canvas_sel) {
-    throw new Vex.RERR('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
-  }
-
-  const canvas = document.getElementById(canvas_sel);
-  if (!(canvas && canvas.getContext)) {
-    throw new Vex.RERR('UnsupportedBrowserError', 'This browser does not support HTML5 Canvas');
-  }
-
-  return canvas.getContext('2d');
-};
-
-// Draw a tiny dot marker on the specified canvas. A great debugging aid.
-//
-// `ctx`: Canvas context.
-// `x`, `y`: Dot coordinates.
-Vex.drawDot = (ctx, x, y, color = '#55') => {
-  ctx.save();
-  ctx.setFillStyle(color);
-
-  // draw a circle
-  ctx.beginPath();
-  ctx.arc(x, y, 3, 0, Math.PI * 2, true);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-};
-
-// Benchmark. Run function `f` once and report time elapsed shifted by `s` milliseconds.
-Vex.BM = (s, f) => {
-  const start_time = new Date().getTime();
-  f();
-  const elapsed = new Date().getTime() - start_time;
-  Vex.L(s + elapsed + 'ms');
-};
-
-// Get stack trace.
-Vex.StackTrace = () => {
-  const err = new Error();
-  return err.stack;
-};
-
-// Dump warning to console.
-Vex.W = (...args) => {
-  const line = args.join(' ');
-  window.console.log('Warning: ', line, Vex.StackTrace());
-};
-
-// Used by various classes (e.g., SVGContext) to provide a
-// unique prefix to element names (or other keys in shared namespaces).
-Vex.Prefix = (text) => Vex.Prefix.prefix + text;
-Vex.Prefix.prefix = 'vf-';
-
-
-
-
-/***/ }),
-
 /***/ "./tests/accidental_tests.js":
 /*!***********************************!*\
   !*** ./tests/accidental_tests.js ***!
@@ -9277,240 +8532,319 @@ VF.Test.MultiMeasureRest = (function () {
 
 /***/ }),
 
-/***/ "./tests/music_tests.ts":
+/***/ "./tests/music_tests.js":
 /*!******************************!*\
-  !*** ./tests/music_tests.ts ***!
+  !*** ./tests/music_tests.js ***!
   \******************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
+/***/ (function(module, exports) {
 
 /**
  * VexFlow - Music API Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MusicTests = void 0;
-var music_1 = __webpack_require__(/*! ../src/music */ "./src/music.ts");
-var keymanager_1 = __webpack_require__(/*! ../src/keymanager */ "./src/keymanager.js");
-exports.MusicTests = {
+
+VF.Test.Music = (function () {
+  var Music = {
     Start: function () {
-        QUnit.module('Music');
-        test('Valid Notes', exports.MusicTests.validNotes);
-        test('Valid Keys', this.validKeys);
-        test('Note Values', this.noteValue);
-        test('Interval Values', this.intervalValue);
-        test('Relative Notes', this.relativeNotes);
-        test('Relative Note Names', this.relativeNoteNames);
-        test('Canonical Notes', this.canonicalNotes);
-        test('Canonical Intervals', this.canonicalNotes);
-        test('Scale Tones', this.scaleTones);
-        test('Scale Intervals', this.scaleIntervals);
+      QUnit.module('Music');
+      test('Valid Notes', Music.validNotes);
+      test('Valid Keys', Music.validKeys);
+      test('Note Values', Music.noteValue);
+      test('Interval Values', Music.intervalValue);
+      test('Relative Notes', Music.relativeNotes);
+      test('Relative Note Names', Music.relativeNoteNames);
+      test('Canonical Notes', Music.canonicalNotes);
+      test('Canonical Intervals', Music.canonicalNotes);
+      test('Scale Tones', Music.scaleTones);
+      test('Scale Intervals', Music.scaleIntervals);
     },
+
     validNotes: function () {
-        expect(10);
-        var music = new music_1.Music();
-        var parts = music.getNoteParts('c');
-        equal(parts.root, 'c');
-        equal(parts.accidental, null);
-        parts = music.getNoteParts('C');
-        equal(parts.root, 'c');
-        equal(parts.accidental, null);
-        parts = music.getNoteParts('c#');
-        equal(parts.root, 'c');
-        equal(parts.accidental, '#');
-        parts = music.getNoteParts('c##');
-        equal(parts.root, 'c');
-        equal(parts.accidental, '##');
-        try {
-            music.getNoteParts('r');
-        }
-        catch (e) {
-            equal(e.code, 'BadArguments', 'Invalid note: r');
-        }
-        try {
-            music.getNoteParts('');
-        }
-        catch (e) {
-            equal(e.code, 'BadArguments', "Invalid note: ''");
-        }
+      expect(10);
+
+      var music = new VF.Music();
+
+      var parts = music.getNoteParts('c');
+      equal(parts.root, 'c');
+      equal(parts.accidental, null);
+
+      parts = music.getNoteParts('C');
+      equal(parts.root, 'c');
+      equal(parts.accidental, null);
+
+      parts = music.getNoteParts('c#');
+      equal(parts.root, 'c');
+      equal(parts.accidental, '#');
+
+      parts = music.getNoteParts('c##');
+      equal(parts.root, 'c');
+      equal(parts.accidental, '##');
+
+      try {
+        music.getNoteParts('r');
+      } catch (e) {
+        equal(e.code, 'BadArguments', 'Invalid note: r');
+      }
+
+      try {
+        music.getNoteParts('');
+      } catch (e) {
+        equal(e.code, 'BadArguments', "Invalid note: ''");
+      }
     },
+
     validKeys: function () {
-        expect(18);
-        var music = new music_1.Music();
-        var parts = music.getKeyParts('c');
-        equal(parts.root, 'c');
-        equal(parts.accidental, null);
-        equal(parts.type, 'M');
-        parts = music.getKeyParts('d#');
-        equal(parts.root, 'd');
-        equal(parts.accidental, '#');
-        equal(parts.type, 'M');
-        parts = music.getKeyParts('fbm');
-        equal(parts.root, 'f');
-        equal(parts.accidental, 'b');
-        equal(parts.type, 'm');
-        parts = music.getKeyParts('c#mel');
-        equal(parts.root, 'c');
-        equal(parts.accidental, '#');
-        equal(parts.type, 'mel');
-        parts = music.getKeyParts('g#harm');
-        equal(parts.root, 'g');
-        equal(parts.accidental, '#');
-        equal(parts.type, 'harm');
-        try {
-            music.getKeyParts('r');
-        }
-        catch (e) {
-            equal(e.code, 'BadArguments', 'Invalid key: r');
-        }
-        try {
-            music.getKeyParts('');
-        }
-        catch (e) {
-            equal(e.code, 'BadArguments', "Invalid key: ''");
-        }
-        try {
-            music.getKeyParts('#m');
-        }
-        catch (e) {
-            equal(e.code, 'BadArguments', 'Invalid key: #m');
-        }
+      expect(18);
+
+      var music = new VF.Music();
+
+      var parts = music.getKeyParts('c');
+      equal(parts.root, 'c');
+      equal(parts.accidental, null);
+      equal(parts.type, 'M');
+
+      parts = music.getKeyParts('d#');
+      equal(parts.root, 'd');
+      equal(parts.accidental, '#');
+      equal(parts.type, 'M');
+
+      parts = music.getKeyParts('fbm');
+      equal(parts.root, 'f');
+      equal(parts.accidental, 'b');
+      equal(parts.type, 'm');
+
+      parts = music.getKeyParts('c#mel');
+      equal(parts.root, 'c');
+      equal(parts.accidental, '#');
+      equal(parts.type, 'mel');
+
+      parts = music.getKeyParts('g#harm');
+      equal(parts.root, 'g');
+      equal(parts.accidental, '#');
+      equal(parts.type, 'harm');
+
+      try {
+        music.getKeyParts('r');
+      } catch (e) {
+        equal(e.code, 'BadArguments', 'Invalid key: r');
+      }
+
+      try {
+        music.getKeyParts('');
+      } catch (e) {
+        equal(e.code, 'BadArguments', "Invalid key: ''");
+      }
+
+      try {
+        music.getKeyParts('#m');
+      } catch (e) {
+        equal(e.code, 'BadArguments', 'Invalid key: #m');
+      }
     },
+
     noteValue: function () {
-        expect(3);
-        var music = new music_1.Music();
-        var note = music.getNoteValue('c');
-        equal(note, 0);
-        try {
-            music.getNoteValue('r');
-        }
-        catch (e) {
-            ok(true, 'Invalid note');
-        }
-        note = music.getNoteValue('f#');
-        equal(note, 6);
+      expect(3);
+
+      var music = new VF.Music();
+
+      var note = music.getNoteValue('c');
+      equal(note, 0);
+
+      try {
+        music.getNoteValue('r');
+      } catch (e) {
+        ok(true, 'Invalid note');
+      }
+
+      note = music.getNoteValue('f#');
+      equal(note, 6);
     },
+
     intervalValue: function () {
-        expect(2);
-        var music = new music_1.Music();
-        var value = music.getIntervalValue('b2');
-        equal(value, 1);
-        try {
-            music.getIntervalValue('7');
-        }
-        catch (e) {
-            ok(true, 'Invalid note');
-        }
+      expect(2);
+
+      var music = new VF.Music();
+
+      var value = music.getIntervalValue('b2');
+      equal(value, 1);
+
+      try {
+        music.getIntervalValue('7');
+      } catch (e) {
+        ok(true, 'Invalid note');
+      }
     },
+
     relativeNotes: function () {
-        expect(8);
-        var music = new music_1.Music();
-        var value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b5'));
-        equal(value, 6);
-        try {
-            music.getRelativeNoteValue(music.getNoteValue('bc'), music.getIntervalValue('b2'));
-        }
-        catch (e) {
-            ok(true, 'Invalid note');
-        }
-        try {
-            music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p3'));
-        }
-        catch (e) {
-            ok(true, 'Invalid interval');
-        }
-        // Direction
-        value = music.getRelativeNoteValue(music.getNoteValue('d'), music.getIntervalValue('2'), -1);
-        equal(value, 0);
-        try {
-            music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p4'), 0);
-        }
-        catch (e) {
-            ok(true, 'Invalid direction');
-        }
-        // Rollover
-        value = music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('b5'));
-        equal(value, 5);
-        // Reverse rollover
-        value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b2'), -1);
-        equal(value, 11);
-        // Practical tests
-        value = music.getRelativeNoteValue(music.getNoteValue('g'), music.getIntervalValue('p5'));
-        equal(value, 2);
+      expect(8);
+
+      var music = new VF.Music();
+
+      var value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b5'));
+      equal(value, 6);
+
+      try {
+        music.getRelativeNoteValue(music.getNoteValue('bc'), music.getIntervalValue('b2'));
+      } catch (e) {
+        ok(true, 'Invalid note');
+      }
+
+      try {
+        music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p3'));
+      } catch (e) {
+        ok(true, 'Invalid interval');
+      }
+
+      // Direction
+      value = music.getRelativeNoteValue(music.getNoteValue('d'), music.getIntervalValue('2'), -1);
+      equal(value, 0);
+
+      try {
+        music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p4'), 0);
+      } catch (e) {
+        ok(true, 'Invalid direction');
+      }
+
+      // Rollover
+      value = music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('b5'));
+      equal(value, 5);
+
+      // Reverse rollover
+      value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b2'), -1);
+      equal(value, 11);
+
+      // Practical tests
+      value = music.getRelativeNoteValue(music.getNoteValue('g'), music.getIntervalValue('p5'));
+      equal(value, 2);
     },
+
     relativeNoteNames: function () {
-        expect(9);
-        var music = new music_1.Music();
-        equal(music.getRelativeNoteName('c', music.getNoteValue('c')), 'c');
-        equal(music.getRelativeNoteName('c', music.getNoteValue('db')), 'c#');
-        equal(music.getRelativeNoteName('c#', music.getNoteValue('db')), 'c#');
-        equal(music.getRelativeNoteName('e', music.getNoteValue('f#')), 'e##');
-        equal(music.getRelativeNoteName('e', music.getNoteValue('d#')), 'eb');
-        equal(music.getRelativeNoteName('e', music.getNoteValue('fb')), 'e');
-        try {
-            music.getRelativeNoteName('e', music.getNoteValue('g#'));
-        }
-        catch (e) {
-            ok(true, 'Too far');
-        }
-        equal(music.getRelativeNoteName('b', music.getNoteValue('c#')), 'b##');
-        equal(music.getRelativeNoteName('c', music.getNoteValue('b')), 'cb');
+      expect(9);
+
+      var music = new VF.Music();
+      equal(music.getRelativeNoteName('c', music.getNoteValue('c')), 'c');
+      equal(music.getRelativeNoteName('c', music.getNoteValue('db')), 'c#');
+      equal(music.getRelativeNoteName('c#', music.getNoteValue('db')), 'c#');
+      equal(music.getRelativeNoteName('e', music.getNoteValue('f#')), 'e##');
+      equal(music.getRelativeNoteName('e', music.getNoteValue('d#')), 'eb');
+      equal(music.getRelativeNoteName('e', music.getNoteValue('fb')), 'e');
+
+      try {
+        music.getRelativeNoteName('e', music.getNoteValue('g#'));
+      } catch (e) {
+        ok(true, 'Too far');
+      }
+
+      equal(music.getRelativeNoteName('b', music.getNoteValue('c#')), 'b##');
+      equal(music.getRelativeNoteName('c', music.getNoteValue('b')), 'cb');
     },
+
     canonicalNotes: function () {
-        expect(3);
-        var music = new music_1.Music();
-        equal(music.getCanonicalNoteName(0), 'c');
-        equal(music.getCanonicalNoteName(2), 'd');
-        try {
-            music.getCanonicalNoteName(-1);
-        }
-        catch (e) {
-            ok(true, 'Invalid note value');
-        }
+      expect(3);
+
+      var music = new VF.Music();
+
+      equal(music.getCanonicalNoteName(0), 'c');
+      equal(music.getCanonicalNoteName(2), 'd');
+
+      try {
+        music.getCanonicalNoteName(-1);
+      } catch (e) {
+        ok(true, 'Invalid note value');
+      }
     },
+
+    canonicalIntervals: function () {
+      expect(3);
+
+      var music = new VF.Music();
+
+      equal(music.getCanonicalIntervalName(0), 'unison');
+      equal(music.getCanonicalIntervalName(2), 'M2');
+
+      try {
+        music.getCanonicalIntervalName(-1);
+      } catch (e) {
+        ok(true, 'Invalid interval value');
+      }
+    },
+
     scaleTones: function () {
-        expect(24);
-        // C Major
-        var music = new music_1.Music();
-        var manager = new keymanager_1.KeyManager('CM');
-        var c_major = music.getScaleTones(music.getNoteValue('c'), music_1.Music.scales.major);
-        var values = ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
-        equal(c_major.length, 7);
-        for (var cm = 0; cm < c_major.length; ++cm) {
-            equal(music.getCanonicalNoteName(c_major[cm]), values[cm]);
-        }
-        // Dorian
-        var c_dorian = music.getScaleTones(music.getNoteValue('c'), music_1.Music.scales.dorian);
-        values = ['c', 'd', 'eb', 'f', 'g', 'a', 'bb'];
-        var note;
-        equal(c_dorian.length, 7);
-        for (var cd = 0; cd < c_dorian.length; ++cd) {
-            note = music.getCanonicalNoteName(c_dorian[cd]);
-            equal(manager.selectNote(note).note, values[cd]);
-        }
-        // Mixolydian
-        var c_mixolydian = music.getScaleTones(music.getNoteValue('c'), music_1.Music.scales.mixolydian);
-        values = ['c', 'd', 'e', 'f', 'g', 'a', 'bb'];
-        equal(c_mixolydian.length, 7);
-        for (var i = 0; i < c_mixolydian.length; ++i) {
-            note = music.getCanonicalNoteName(c_mixolydian[i]);
-            equal(manager.selectNote(note).note, values[i]);
-        }
+      expect(24);
+
+      // C Major
+      var music = new VF.Music();
+      var manager = new VF.KeyManager('CM');
+
+      var c_major = music.getScaleTones(music.getNoteValue('c'), VF.Music.scales.major);
+      var values = ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
+
+      equal(c_major.length, 7);
+
+      for (var cm = 0; cm < c_major.length; ++cm) {
+        equal(music.getCanonicalNoteName(c_major[cm]), values[cm]);
+      }
+
+      // Dorian
+      var c_dorian = music.getScaleTones(music.getNoteValue('c'), VF.Music.scales.dorian);
+      values = ['c', 'd', 'eb', 'f', 'g', 'a', 'bb'];
+
+      var note = null;
+      equal(c_dorian.length, 7);
+      for (var cd = 0; cd < c_dorian.length; ++cd) {
+        note = music.getCanonicalNoteName(c_dorian[cd]);
+        equal(manager.selectNote(note).note, values[cd]);
+      }
+
+      // Mixolydian
+      var c_mixolydian = music.getScaleTones(music.getNoteValue('c'), VF.Music.scales.mixolydian);
+      values = ['c', 'd', 'e', 'f', 'g', 'a', 'bb'];
+
+      equal(c_mixolydian.length, 7);
+
+      for (var i = 0; i < c_mixolydian.length; ++i) {
+        note = music.getCanonicalNoteName(c_mixolydian[i]);
+        equal(manager.selectNote(note).note, values[i]);
+      }
     },
+
     scaleIntervals: function () {
-        expect(6);
-        var music = new music_1.Music();
-        equal(music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('d'))), 'M2');
-        equal(music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('g'), music.getNoteValue('c'))), 'p4');
-        equal(music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('c'))), 'unison');
-        equal(music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('f'), music.getNoteValue('cb'))), 'dim5');
-        // Forwards and backwards
-        equal(music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), 1)), 'b7');
-        equal(music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), -1)), 'M2');
+      expect(6);
+
+      var music = new VF.Music();
+
+      equal(
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('d'))),
+        'M2'
+      );
+      equal(
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('g'), music.getNoteValue('c'))),
+        'p4'
+      );
+      equal(
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('c'))),
+        'unison'
+      );
+      equal(
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('f'), music.getNoteValue('cb'))),
+        'dim5'
+      );
+
+      // Forwards and backwards
+      equal(
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), 1)),
+        'b7'
+      );
+      equal(
+        music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), -1)),
+        'M2'
+      );
     },
-};
+  };
+
+  return Music;
+})();
 
 
 /***/ }),
@@ -11785,14 +11119,8 @@ VF.Test.Rhythm = (function () {
 /*!**********************!*\
   !*** ./tests/run.js ***!
   \**********************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _music_tests__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./music_tests */ "./tests/music_tests.ts");
-/* harmony import */ var _music_tests__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_music_tests__WEBPACK_IMPORTED_MODULE_0__);
-
+/*! no static exports found */
+/***/ (function(module, exports) {
 
 VF.Test.run = function () {
   VF.Test.Accidental.Start();
@@ -11824,7 +11152,7 @@ VF.Test.run = function () {
   VF.Test.Annotation.Start();
   VF.Test.ChordSymbol.Start();
   VF.Test.Tuning.Start();
-  _music_tests__WEBPACK_IMPORTED_MODULE_0__["MusicTests"].Start();
+  VF.Test.Music.Start();
   VF.Test.KeyManager.Start();
   VF.Test.Articulation.Start();
   VF.Test.StaveConnector.Start();
@@ -18868,7 +18196,7 @@ VF.Test.Voice = (function () {
 
 /***/ 0:
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./tests/vexflow_test_helpers.js ./tests/mocks.js ./tests/accidental_tests.js ./tests/annotation_tests.js ./tests/articulation_tests.js ./tests/auto_beam_formatting_tests.js ./tests/bach_tests.js ./tests/barline_tests.js ./tests/beam_tests.js ./tests/bend_tests.js ./tests/boundingbox_tests.js ./tests/chordsymbol_tests.js ./tests/clef_tests.js ./tests/curve_tests.js ./tests/dot_tests.js ./tests/easyscore_tests.js ./tests/factory_tests.js ./tests/formatter_tests.js ./tests/fraction_tests.js ./tests/ghostnote_tests.js ./tests/glyphnote_tests.js ./tests/gracenote_tests.js ./tests/gracetabnote_tests.js ./tests/key_clef_tests.js ./tests/keymanager_tests.js ./tests/keysignature_tests.js ./tests/modifier_tests.js ./tests/multimeasurerest_tests.js ./tests/notehead_tests.js ./tests/notesubgroup_tests.js ./tests/ornament_tests.js ./tests/parser_tests.js ./tests/pedalmarking_tests.js ./tests/percussion_tests.js ./tests/registry_tests.js ./tests/rests_tests.js ./tests/rhythm_tests.js ./tests/stave_tests.js ./tests/staveconnector_tests.js ./tests/stavehairpin_tests.js ./tests/staveline_tests.js ./tests/stavemodifier_tests.js ./tests/stavenote_tests.js ./tests/stavetie_tests.js ./tests/stringnumber_tests.js ./tests/strokes_tests.js ./tests/style_tests.js ./tests/tabnote_tests.js ./tests/tabslide_tests.js ./tests/tabstave_tests.js ./tests/tabtie_tests.js ./tests/textbracket_tests.js ./tests/textnote_tests.js ./tests/threevoice_tests.js ./tests/tickcontext_tests.js ./tests/timesignature_tests.js ./tests/tuning_tests.js ./tests/tuplet_tests.js ./tests/vibrato_tests.js ./tests/vibratobracket_tests.js ./tests/voice_tests.js ./tests/music_tests.ts ./tests/run.js ***!
+  !*** multi ./tests/vexflow_test_helpers.js ./tests/mocks.js ./tests/accidental_tests.js ./tests/annotation_tests.js ./tests/articulation_tests.js ./tests/auto_beam_formatting_tests.js ./tests/bach_tests.js ./tests/barline_tests.js ./tests/beam_tests.js ./tests/bend_tests.js ./tests/boundingbox_tests.js ./tests/chordsymbol_tests.js ./tests/clef_tests.js ./tests/curve_tests.js ./tests/dot_tests.js ./tests/easyscore_tests.js ./tests/factory_tests.js ./tests/formatter_tests.js ./tests/fraction_tests.js ./tests/ghostnote_tests.js ./tests/glyphnote_tests.js ./tests/gracenote_tests.js ./tests/gracetabnote_tests.js ./tests/key_clef_tests.js ./tests/keymanager_tests.js ./tests/keysignature_tests.js ./tests/modifier_tests.js ./tests/multimeasurerest_tests.js ./tests/music_tests.js ./tests/notehead_tests.js ./tests/notesubgroup_tests.js ./tests/ornament_tests.js ./tests/parser_tests.js ./tests/pedalmarking_tests.js ./tests/percussion_tests.js ./tests/registry_tests.js ./tests/rests_tests.js ./tests/rhythm_tests.js ./tests/stave_tests.js ./tests/staveconnector_tests.js ./tests/stavehairpin_tests.js ./tests/staveline_tests.js ./tests/stavemodifier_tests.js ./tests/stavenote_tests.js ./tests/stavetie_tests.js ./tests/stringnumber_tests.js ./tests/strokes_tests.js ./tests/style_tests.js ./tests/tabnote_tests.js ./tests/tabslide_tests.js ./tests/tabstave_tests.js ./tests/tabtie_tests.js ./tests/textbracket_tests.js ./tests/textnote_tests.js ./tests/threevoice_tests.js ./tests/tickcontext_tests.js ./tests/timesignature_tests.js ./tests/tuning_tests.js ./tests/tuplet_tests.js ./tests/vibrato_tests.js ./tests/vibratobracket_tests.js ./tests/voice_tests.js ./tests/run.js ***!
   \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -18901,6 +18229,7 @@ __webpack_require__(/*! ./tests/keymanager_tests.js */"./tests/keymanager_tests.
 __webpack_require__(/*! ./tests/keysignature_tests.js */"./tests/keysignature_tests.js");
 __webpack_require__(/*! ./tests/modifier_tests.js */"./tests/modifier_tests.js");
 __webpack_require__(/*! ./tests/multimeasurerest_tests.js */"./tests/multimeasurerest_tests.js");
+__webpack_require__(/*! ./tests/music_tests.js */"./tests/music_tests.js");
 __webpack_require__(/*! ./tests/notehead_tests.js */"./tests/notehead_tests.js");
 __webpack_require__(/*! ./tests/notesubgroup_tests.js */"./tests/notesubgroup_tests.js");
 __webpack_require__(/*! ./tests/ornament_tests.js */"./tests/ornament_tests.js");
@@ -18934,7 +18263,6 @@ __webpack_require__(/*! ./tests/tuplet_tests.js */"./tests/tuplet_tests.js");
 __webpack_require__(/*! ./tests/vibrato_tests.js */"./tests/vibrato_tests.js");
 __webpack_require__(/*! ./tests/vibratobracket_tests.js */"./tests/vibratobracket_tests.js");
 __webpack_require__(/*! ./tests/voice_tests.js */"./tests/voice_tests.js");
-__webpack_require__(/*! ./tests/music_tests.ts */"./tests/music_tests.ts");
 module.exports = __webpack_require__(/*! ./tests/run.js */"./tests/run.js");
 
 

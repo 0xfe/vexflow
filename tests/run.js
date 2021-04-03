@@ -1,5 +1,3 @@
-import { MusicTests } from './music_tests';
-
 VF.Test.run = function () {
   VF.Test.Accidental.Start();
   VF.Test.StaveNote.Start();
@@ -30,7 +28,7 @@ VF.Test.run = function () {
   VF.Test.Annotation.Start();
   VF.Test.ChordSymbol.Start();
   VF.Test.Tuning.Start();
-  MusicTests.Start();
+  VF.Test.Music.Start();
   VF.Test.KeyManager.Start();
   VF.Test.Articulation.Start();
   VF.Test.StaveConnector.Start();
