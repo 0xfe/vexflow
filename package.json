@@ -68,5 +68,9 @@
     "notation",
     "guitar",
     "tablature"
-  ]
+  ],
+  "dependencies": {
+    "grunt-typedoc": "^0.2.4",
+    "typedoc": "^0.20.34"
+  }
 }
