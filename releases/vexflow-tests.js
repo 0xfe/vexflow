@@ -5475,17 +5475,17 @@ VF.Test.Formatter = (function() {
         lyrics: lyrics2,
         title: '450px,softmax:5,different word order'
       },
-        {
-          sm: 5,
-          width: 460,
-          lyrics: lyrics2,
-          title: '460px,softmax:5'
-        }, {
-          sm: 100,
-          width: 460,
-          lyrics: lyrics2,
-          title: '460px,softmax:100'
-        }];
+      {
+        sm: 5,
+        width: 460,
+        lyrics: lyrics2,
+        title: '460px,softmax:5'
+      }, {
+        sm: 100,
+        width: 460,
+        lyrics: lyrics2,
+        title: '460px,softmax:100'
+      }];
 
       // Configure the rendering context.
 
@@ -9916,66 +9916,66 @@ VF.Test.Stave = (function() {
         }
 
         drawAStave(ctx, x, y, staveWidth + 50, {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-            clef: 'treble',
-            keySig: 'A',
-          },
-          {
-            barLine: endBarLine,
-            clef: 'bass',
-          });
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+          clef: 'treble',
+          keySig: 'A',
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+        });
         x += staveWidth + 50;
 
         drawAStave(ctx, x, y, staveWidth, {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            keySig: 'E',
-          });
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          keySig: 'E',
+        });
         x += staveWidth;
 
         drawAStave(ctx, x, y, staveWidth, {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            timeSig: '2/4',
-          });
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          timeSig: '2/4',
+        });
         x += staveWidth;
 
         x = 10;
         y += blockHeight;
 
         drawAStave(ctx, x, y, staveWidth, {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            clef: 'bass',
-            timeSig: '2/4',
-          });
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+          timeSig: '2/4',
+        });
         x += staveWidth;
 
         drawAStave(ctx, x, y, staveWidth, {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            clef: 'treble',
-            keySig: 'Ab',
-          });
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'treble',
+          keySig: 'Ab',
+        });
         x += staveWidth;
 
         drawAStave(ctx, x, y, staveWidth, {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            clef: 'bass',
-            keySig: 'Ab',
-            timeSig: '2/4',
-          });
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+          keySig: 'Ab',
+          timeSig: '2/4',
+        });
         x += staveWidth;
       }
 
@@ -12688,8 +12688,8 @@ VF.Test.Strokes = (function() {
       notes1[3]
         .addStroke(0, new VF.Stroke(7))
         .addModifier(0, vf.NoteSubGroup({ notes: [
-            vf.ClefNote({ type: 'treble', options: { size: 'default', annotation: '8va' } }),
-          ] }));
+          vf.ClefNote({ type: 'treble', options: { size: 'default', annotation: '8va' } }),
+        ] }));
 
       var voice1 = score.voice(notes1);
 
