@@ -3,12 +3,12 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
+import { Tuning } from '../src/tuning';
+
 declare const QUnit: any;
 declare const test: any;
 declare const equal: any;
 declare const expect: any;
-
-import { Tuning } from '../src/tuning';
 
 export default (function () {
   const TuningTests = {
@@ -63,7 +63,7 @@ export default (function () {
     banjo: function () {
       expect(7);
 
-      let tuning = new Tuning();
+      const tuning = new Tuning();
       tuning.setTuning('standardBanjo');
       TuningTests.checkStandardBanjo(tuning);
     },
@@ -71,7 +71,7 @@ export default (function () {
     standard: function () {
       expect(16);
 
-      let tuning = new Tuning();
+      const tuning = new Tuning();
       TuningTests.checkStandard(tuning);
 
       // Test named tuning
@@ -81,7 +81,7 @@ export default (function () {
 
     noteForFret: function () {
       expect(8);
-      let tuning = new Tuning('E/5,B/4,G/4,D/4,A/3,E/3');
+      const tuning = new Tuning('E/5,B/4,G/4,D/4,A/3,E/3');
       try {
         tuning.getNoteForFret(-1, 1);
       } catch (e) {

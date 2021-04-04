@@ -3,6 +3,8 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
+import { Fraction } from '../src/fraction';
+
 declare const QUnit: any;
 declare const ok: any;
 declare const test: any;
@@ -12,8 +14,6 @@ declare const strictEqual: any;
 declare const notStrictEqual: any;
 declare const deepEqual: any;
 declare const notDeepEqual: any;
-
-import { Fraction } from '../src/fraction';
 
 export default (function () {
   const FractionTests = {
