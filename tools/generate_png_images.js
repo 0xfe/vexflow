@@ -18,8 +18,10 @@ global['Vex'] = require(`${scriptDir}/vexflow-debug.js`);
 require(`${scriptDir}/vexflow-tests.js`);
 
 const VF = Vex.Flow;
-VF['fs'] = fs;
-VF['process'] = process;
+VF.shims = {
+  fs,
+  process,
+};
 
 // Tell VexFlow that we're outside the browser -- just run
 // the Node tests.

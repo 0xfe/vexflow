@@ -33,7 +33,7 @@ if (!window.QUnit) {
   /* eslint-disable */
   QUnit.test = (name, func) => {
     QUnit.current_test = name;
-    VF['process'].stdout.write(' \u001B[0G' + QUnit.current_module + ' :: ' + name + '\u001B[0K');
+    VF.shims.process.stdout.write(' \u001B[0G' + QUnit.current_module + ' :: ' + name + '\u001B[0K');
     func(QUnit.assertions);
   };
 
@@ -209,7 +209,7 @@ VF.Test = (function () {
     },
 
     runNodeTest: function (name, func, params) {
-      var fs = VF['fs'];
+      var fs = VF.shims.fs;
 
       // Allows `name` to be used inside file names.
       function sanitizeName(name) {

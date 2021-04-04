@@ -24,19 +24,16 @@ module.exports = (grunt) => {
 
   // Take all test files in 'tests/' and build TARGET_TESTS_BROWSER
   const TARGET_TESTS_BROWSER = 'vexflow-tests.js';
-  const TARGET_TESTS_NODE = 'vexflow-tests-node.js';
   const TEST_SOURCES = [
     './tests/vexflow_test_helpers.js',
     ...['./tests/mocks.js', './tests/*_tests.js', './tests/*_tests.ts'].flatMap((file) => glob.sync(file)),
     './tests/run.js',
   ];
 
-  function webpackConfig(target, moduleEntry, mode, libraryName, compilationTarget) {
+  function webpackConfig(target, moduleEntry, mode, libraryName) {
     return {
-      node: compilationTarget !== 'node' ? { fs: 'empty' } : undefined,
       mode: mode,
       entry: moduleEntry,
-      target: compilationTarget,
       output: {
         path: BUILD_DIR,
         filename: target,
