@@ -3,18 +3,30 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.Fraction = (function () {
-  var Fraction = {
+declare const QUnit: any;
+declare const ok: any;
+declare const test: any;
+declare const notOk: any;
+declare const notEqual: any;
+declare const strictEqual: any;
+declare const notStrictEqual: any;
+declare const deepEqual: any;
+declare const notDeepEqual: any;
+
+import { Fraction } from '../src/fraction';
+
+export default (function () {
+  const FractionTests = {
     Start: function () {
       QUnit.module('Fraction');
-      test('Basic', VF.Test.Fraction.basic);
+      test('Basic', FractionTests.basic);
     },
 
     basic: function () {
-      var f_1_2 = new Vex.Flow.Fraction(1, 2);
+      const f_1_2 = new Fraction(1, 2);
       ok(f_1_2.equals(0.5), 'Fraction: 1/2 equals 0.5');
-      ok(f_1_2.equals(new Vex.Flow.Fraction(1, 2)), 'Fraction: 1/2 equals 1/2');
-      ok(f_1_2.equals(new Vex.Flow.Fraction(2, 4)), 'Fraction: 1/2 equals 2/4');
+      ok(f_1_2.equals(new Fraction(1, 2)), 'Fraction: 1/2 equals 1/2');
+      ok(f_1_2.equals(new Fraction(2, 4)), 'Fraction: 1/2 equals 2/4');
 
       notOk(f_1_2.greaterThan(1), 'Fraction: ! 1/2 > 1');
       ok(f_1_2.greaterThan(0.2), 'Fraction: 1/2 > 0.2');
@@ -30,12 +42,12 @@ VF.Test.Fraction = (function () {
       ok(f_1_2.lessThanEquals(0.5), 'Fraction: 1/2 <= 0.5');
       notOk(f_1_2.lessThanEquals(0.4), 'Fraction: ! 1/2 <= 0.4');
 
-      var f_05 = f_1_2.copy(0.5);
+      const f_05 = f_1_2.copy(0.5);
       strictEqual(f_05, f_1_2, 'Fraction: f_05 === f_1_2');
       strictEqual(f_05.toString(), '0.5/1', 'Fraction: f_05.toString() === "0.5/1"');
       strictEqual(f_05.toSimplifiedString(), '1/2', 'Fraction: f_05.toSimplifiedString() === "1/2"');
 
-      var tF_n = f_05.clone();
+      const tF_n = f_05.clone();
       notStrictEqual(tF_n, f_05, 'Fraction: tF_n !== f_05');
       notEqual(tF_n, f_05, 'Fraction: tF_n != f_05');
       deepEqual(tF_n, f_05, 'tF_n deepEqual f_05');
@@ -54,5 +66,5 @@ VF.Test.Fraction = (function () {
     },
   };
 
-  return Fraction;
+  return FractionTests;
 })();

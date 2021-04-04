@@ -1,4 +1,6 @@
+import FractionTests from './fraction_tests';
 import MusicTests from './music_tests';
+import TuningTests from './tuning_tests';
 
 VF.Test.run = function () {
   VF.Test.Accidental.Start();
@@ -11,7 +13,7 @@ VF.Test.run = function () {
   VF.Test.Dot.Start();
   VF.Test.Bend.Start();
   VF.Test.Formatter.Start();
-  VF.Test.Fraction.Start();
+  FractionTests.Start();
   VF.Test.Clef.Start();
   VF.Test.KeySignature.Start();
   VF.Test.TimeSignature.Start();
@@ -29,7 +31,7 @@ VF.Test.run = function () {
   VF.Test.VibratoBracket.Start();
   VF.Test.Annotation.Start();
   VF.Test.ChordSymbol.Start();
-  VF.Test.Tuning.Start();
+  TuningTests.Start();
   MusicTests.Start();
   VF.Test.KeyManager.Start();
   VF.Test.Articulation.Start();

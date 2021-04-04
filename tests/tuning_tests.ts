@@ -3,16 +3,23 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.Tuning = (function () {
-  var Tuning = {
+declare const QUnit: any;
+declare const test: any;
+declare const equal: any;
+declare const expect: any;
+
+import { Tuning } from '../src/tuning';
+
+export default (function () {
+  const TuningTests = {
     Start: function () {
       QUnit.module('Tuning');
-      test('Standard Tuning', VF.Test.Tuning.standard);
-      test('Standard Banjo Tuning', VF.Test.Tuning.banjo);
-      test('Return note for fret', VF.Test.Tuning.noteForFret);
+      test('Standard Tuning', TuningTests.standard);
+      test('Standard Banjo Tuning', TuningTests.banjo);
+      test('Return note for fret', TuningTests.noteForFret);
     },
 
-    checkStandard: function (tuning) {
+    checkStandard: function (tuning: Tuning) {
       try {
         tuning.getValueForString(0);
       } catch (e) {
@@ -33,7 +40,7 @@ VF.Test.Tuning = (function () {
       equal(tuning.getValueForString(1), 64, 'High E string');
     },
 
-    checkStandardBanjo: function (tuning) {
+    checkStandardBanjo: function (tuning: Tuning) {
       try {
         tuning.getValueForString(0);
       } catch (e) {
@@ -56,25 +63,25 @@ VF.Test.Tuning = (function () {
     banjo: function () {
       expect(7);
 
-      var tuning = new VF.Tuning();
+      let tuning = new Tuning();
       tuning.setTuning('standardBanjo');
-      VF.Test.Tuning.checkStandardBanjo(tuning);
+      TuningTests.checkStandardBanjo(tuning);
     },
 
     standard: function () {
       expect(16);
 
-      var tuning = new VF.Tuning();
-      VF.Test.Tuning.checkStandard(tuning);
+      let tuning = new Tuning();
+      TuningTests.checkStandard(tuning);
 
       // Test named tuning
       tuning.setTuning('standard');
-      VF.Test.Tuning.checkStandard(tuning);
+      TuningTests.checkStandard(tuning);
     },
 
     noteForFret: function () {
       expect(8);
-      var tuning = new VF.Tuning('E/5,B/4,G/4,D/4,A/3,E/3');
+      let tuning = new Tuning('E/5,B/4,G/4,D/4,A/3,E/3');
       try {
         tuning.getNoteForFret(-1, 1);
       } catch (e) {
@@ -96,5 +103,5 @@ VF.Test.Tuning = (function () {
     },
   };
 
-  return Tuning;
+  return TuningTests;
 })();
