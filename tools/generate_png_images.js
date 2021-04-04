@@ -15,9 +15,11 @@ const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
 global['Vex'] = require(`${scriptDir}/vexflow-debug.js`);
 
-require(`${scriptDir}/vexflow-tests-node.js`);
+require(`${scriptDir}/vexflow-tests.js`);
 
 const VF = Vex.Flow;
+VF['fs'] = fs;
+VF['process'] = process;
 
 // Tell VexFlow that we're outside the browser -- just run
 // the Node tests.
