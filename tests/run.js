@@ -1,4 +1,4 @@
-import { MusicTests } from './music_tests';
+import MusicTests from './music_tests';
 
 VF.Test.run = function () {
   VF.Test.Accidental.Start();
