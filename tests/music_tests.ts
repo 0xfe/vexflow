@@ -22,7 +22,7 @@ export default (function () {
       test('Relative Notes', MusicTests.relativeNotes);
       test('Relative Note Names', MusicTests.relativeNoteNames);
       test('Canonical Notes', MusicTests.canonicalNotes);
-      test('Canonical Intervals', MusicTests.canonicalNotes);
+      test('Canonical Intervals', MusicTests.canonicalIntervals);
       test('Scale Tones', MusicTests.scaleTones);
       test('Scale Intervals', MusicTests.scaleIntervals);
     },
@@ -219,6 +219,21 @@ export default (function () {
         music.getCanonicalNoteName(-1);
       } catch (e) {
         ok(true, 'Invalid note value');
+      }
+    },
+
+    canonicalIntervals: function () {
+      expect(3);
+
+      var music = new Music();
+
+      equal(music.getCanonicalIntervalName(0), 'unison');
+      equal(music.getCanonicalIntervalName(2), 'M2');
+
+      try {
+        music.getCanonicalIntervalName(-1);
+      } catch (e) {
+        ok(true, 'Invalid interval value');
       }
     },
 
