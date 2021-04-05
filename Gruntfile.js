@@ -111,7 +111,7 @@ module.exports = (grunt) => {
             expand: true,
             dest: RELEASE_DIR,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', 'typedocy/**', '*.map'],
+            src: ['*.js', 'docs/**', 'typedocs/**', '*.map'],
           },
         ],
       },
@@ -180,7 +180,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-webpack');
 
   // Default task(s).
-  grunt.registerTask('default', ['clean', 'eslint', 'webpack:build', 'webpack:buildDev', 'webpack:buildTest', 'docco', 'typedo']);
+  grunt.registerTask('default', ['clean', 'eslint', 'webpack:build', 'webpack:buildDev', 'webpack:buildTest', 'docco', 'typedoc']);
   grunt.registerTask('test', 'Run qunit tests.', [
     'clean',
     'webpack:build',
