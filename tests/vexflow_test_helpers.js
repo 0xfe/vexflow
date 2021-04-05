@@ -33,7 +33,7 @@ if (!window.QUnit) {
   /* eslint-disable */
   QUnit.test = (name, func) => {
     QUnit.current_test = name;
-    process.stdout.write(' \u001B[0G' + QUnit.current_module + ' :: ' + name + '\u001B[0K');
+    VF.shims.process.stdout.write(' \u001B[0G' + QUnit.current_module + ' :: ' + name + '\u001B[0K');
     func(QUnit.assertions);
   };
 
@@ -50,11 +50,7 @@ if (!window.QUnit) {
   notStrictEqual = QUnit.assertions.notStrictEqual;
 }
 
-if (typeof require === 'function') {
-  Vex = require('./vexflow-debug.js');
-}
-
-var VF = Vex.Flow;
+global['VF'] = Vex.Flow;
 VF.Test = (function () {
   var Test = {
     // Test Options.
@@ -213,7 +209,7 @@ VF.Test = (function () {
     },
 
     runNodeTest: function (name, func, params) {
-      var fs = require('fs');
+      var fs = VF.shims.fs;
 
       // Allows `name` to be used inside file names.
       function sanitizeName(name) {
