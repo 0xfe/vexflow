@@ -14,11 +14,9 @@ import { Font } from './smufl';
 
 /** Element attributes. */
 export interface ElementAttributes {
-  [name: string]: any;
+  [name: string]: string;
   id: string;
-  el?: SVGSVGElement;
   type: string;
-  classes: Record<string, boolean>;
 }
 
 /** Contexts common interface */
@@ -67,7 +65,7 @@ export interface RenderContext {
   measureText(text: string): { width: number };
 }
 
-//** Element style */
+/** Element style */
 export interface Style {
   shadowColor?: string;
   shadowBlur?: string;
@@ -89,7 +87,9 @@ export abstract class Element {
 
   protected style?: Style;
 
-  private attrs: ElementAttributes;
+  protected attrs: ElementAttributes;
+
+  protected classes: Record<string, boolean>;
 
   protected boundingBox?: BoundingBox;
 
@@ -103,14 +103,13 @@ export abstract class Element {
     return `auto${Element.ID++}`;
   }
 
-  //** Constructor, type is optional. */
-  constructor({ type } = {} as ElementAttributes) {
+  /** Constructor. */
+  constructor() {
     this.attrs = {
       id: Element.newID(),
-      el: undefined,
-      type: type || 'Base',
-      classes: {},
+      type: 'Base',
     };
+    this.classes = {};
 
     this.rendered = false;
     this.fontStack = Flow.DEFAULT_FONT_STACK;
@@ -180,12 +179,12 @@ export abstract class Element {
 
   /** Checkes if it has a class label (An element can have multiple class labels).  */
   hasClass(className: string): boolean {
-    return this.attrs.classes[className] === true;
+    return this.classes[className] === true;
   }
 
   /** Adds a class label (An element can have multiple class labels).  */
   addClass(className: string): this {
-    this.attrs.classes[className] = true;
+    this.classes[className] = true;
     if (this.registry) {
       this.registry.onUpdate({
         id: this.getAttribute('id'),
@@ -199,7 +198,7 @@ export abstract class Element {
 
   /** Removes a class label (An element can have multiple class labels).  */
   removeClass(className: string): this {
-    delete this.attrs.classes[className];
+    delete this.classes[className];
     if (this.registry) {
       this.registry.onUpdate({
         id: this.getAttribute('id'),
