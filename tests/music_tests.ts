@@ -2,6 +2,7 @@
  * VexFlow - Music API Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
+
 import { Music } from '../src/music';
 import { KeyManager } from '../src/keymanager';
 import { QUnit, ok, test, expect, equal } from './declarations';

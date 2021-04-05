@@ -4,16 +4,7 @@
  */
 
 import { Fraction } from '../src/fraction';
-
-declare const QUnit: any;
-declare const ok: any;
-declare const test: any;
-declare const notOk: any;
-declare const notEqual: any;
-declare const strictEqual: any;
-declare const notStrictEqual: any;
-declare const deepEqual: any;
-declare const notDeepEqual: any;
+import { QUnit, ok, test, notOk, notEqual, strictEqual, deepEqual, notDeepEqual, notStrictEqual } from './declarations';
 
 export default (function () {
   const FractionTests = {

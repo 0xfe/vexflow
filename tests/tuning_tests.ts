@@ -4,11 +4,7 @@
  */
 
 import { Tuning } from '../src/tuning';
-
-declare const QUnit: any;
-declare const test: any;
-declare const equal: any;
-declare const expect: any;
+import { QUnit, test, equal, expect } from './declarations';
 
 export default (function () {
   const TuningTests = {
