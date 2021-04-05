@@ -18,8 +18,13 @@
       "files": [ "**/*.ts" ],
       "extends": [
         "eslint:recommended",
-        "prettier"
-      ]
+        "prettier",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"    
+      ],
+      "rules": {
+        "@typescript-eslint/no-inferrable-types": "off"
+      }
     },
     {
       "files": [ "src/**/*.js" ],
