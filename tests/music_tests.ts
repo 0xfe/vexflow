@@ -2,14 +2,9 @@
  * VexFlow - Music API Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-declare const QUnit: any;
-declare const ok: any;
-declare const test: any;
-declare const expect: any;
-declare const equal: any;
-
 import { Music } from '../src/music';
 import { KeyManager } from '../src/keymanager';
+import { QUnit, ok, test, expect, equal } from './declarations';
 
 export default (function () {
   var MusicTests = {
