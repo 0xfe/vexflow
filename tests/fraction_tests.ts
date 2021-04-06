@@ -7,10 +7,10 @@ import { Fraction } from '../src/fraction';
 import { QUnit, ok, test, notOk, notEqual, strictEqual, deepEqual, notDeepEqual, notStrictEqual } from './declarations';
 
 export default (function () {
-  return {
+  const FractionTests = {
     Start: function () {
       QUnit.module('Fraction');
-      test('Basic', this.basic);
+      test('Basic', FractionTests.basic);
     },
 
     basic: function () {
@@ -56,4 +56,6 @@ export default (function () {
       // TODO: Add more detailed tests.
     },
   };
+
+  return FractionTests;
 })();

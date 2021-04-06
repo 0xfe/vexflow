@@ -7,12 +7,12 @@ import { Tuning } from '../src/tuning';
 import { QUnit, test, equal, expect } from './declarations';
 
 export default (function () {
-  return {
+  const TuningTests = {
     Start: function () {
       QUnit.module('Tuning');
-      test('Standard Tuning', this.standard.bind(this));
-      test('Standard Banjo Tuning', this.banjo.bind(this));
-      test('Return note for fret', this.noteForFret.bind(this));
+      test('Standard Tuning', TuningTests.standard);
+      test('Standard Banjo Tuning', TuningTests.banjo);
+      test('Return note for fret', TuningTests.noteForFret);
     },
 
     checkStandard: function (tuning: Tuning) {
@@ -61,18 +61,18 @@ export default (function () {
 
       const tuning = new Tuning();
       tuning.setTuning('standardBanjo');
-      this.checkStandardBanjo(tuning);
+      TuningTests.checkStandardBanjo(tuning);
     },
 
     standard: function () {
       expect(16);
 
       const tuning = new Tuning();
-      this.checkStandard(tuning);
+      TuningTests.checkStandard(tuning);
 
       // Test named tuning
       tuning.setTuning('standard');
-      this.checkStandard(tuning);
+      TuningTests.checkStandard(tuning);
     },
 
     noteForFret: function () {
@@ -98,4 +98,6 @@ export default (function () {
       equal(tuning.getNoteForFret(0, 6), 'E/3', 'Low E string');
     },
   };
+
+  return TuningTests;
 })();
