@@ -10,9 +10,9 @@ import { Vex } from './vex';
 
 /** Fraction represents a rational number. */
 export class Fraction {
-  numerator = 1;
+  numerator: number = 1;
 
-  denominator = 1;
+  denominator: number = 1;
 
   // Cached objects for comparisons
   private static __staticFractionA = new Fraction();
@@ -71,7 +71,7 @@ export class Fraction {
   }
 
   /** Sets numerator and denominator. */
-  set(numerator = 1, denominator = 1): this {
+  set(numerator: number = 1, denominator: number = 1): this {
     this.numerator = numerator;
     this.denominator = denominator;
     return this;
@@ -99,7 +99,7 @@ export class Fraction {
   }
 
   /** Adds value of another fraction. */
-  add(param1: Fraction | number = 0, param2 = 1): this {
+  add(param1: Fraction | number = 0, param2: number = 1): this {
     let otherNumerator: number;
     let otherDenominator: number;
 
@@ -120,7 +120,7 @@ export class Fraction {
   }
 
   /** Substracts value of another fraction. */
-  subtract(param1: Fraction | number = 0, param2 = 1): this {
+  subtract(param1: Fraction | number = 0, param2: number = 1): this {
     let otherNumerator: number;
     let otherDenominator: number;
 
@@ -141,7 +141,7 @@ export class Fraction {
   }
 
   /** Multiplies by value of another fraction. */
-  multiply(param1: Fraction | number = 1, param2 = 1): this {
+  multiply(param1: Fraction | number = 1, param2: number = 1): this {
     let otherNumerator: number;
     let otherDenominator: number;
 
@@ -157,7 +157,7 @@ export class Fraction {
   }
 
   /** Divides by value of another Fraction. */
-  divide(param1: Fraction | number = 1, param2 = 1): this {
+  divide(param1: Fraction | number = 1, param2: number = 1): this {
     let otherNumerator: number;
     let otherDenominator: number;
 
