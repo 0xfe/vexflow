@@ -111,7 +111,7 @@ module.exports = (grunt) => {
             expand: true,
             dest: RELEASE_DIR,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
+            src: ['*.js', 'docs/**', 'typedocs/**', '*.map'],
           },
         ],
       },
@@ -122,6 +122,15 @@ module.exports = (grunt) => {
         layout: 'linear',
         output: 'build/docs',
       },
+    },
+    typedoc: {
+      build: {
+        options: {
+          out: 'build/typedocs',
+          name: 'vexflow',
+        },
+        src: ['./typedoc.ts']
+      }
     },
     gitcommit: {
       releases: {
@@ -163,6 +172,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-docco');
+  grunt.loadNpmTasks('grunt-typedoc');
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-git');
@@ -170,7 +180,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-webpack');
 
   // Default task(s).
-  grunt.registerTask('default', ['clean', 'eslint', 'webpack:build', 'webpack:buildDev', 'webpack:buildTest', 'docco']);
+  grunt.registerTask('default', ['clean', 'eslint', 'webpack:build', 'webpack:buildDev', 'webpack:buildTest', 'docco', 'typedoc']);
   grunt.registerTask('test', 'Run qunit tests.', [
     'clean',
     'webpack:build',
