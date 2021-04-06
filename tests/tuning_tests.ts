@@ -7,7 +7,7 @@ import { Tuning } from '../src/tuning';
 import { QUnit, test, equal, expect } from './declarations';
 
 export default (function () {
-  return  {
+  return {
     Start: function () {
       QUnit.module('Tuning');
       test('Standard Tuning', this.standard.bind(this));

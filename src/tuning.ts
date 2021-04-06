@@ -8,9 +8,9 @@ import { Flow } from './tables';
 
 /** Tuning implements varies types of tunings for tablature. */
 export class Tuning {
-  protected numStrings: number = 0;
+  protected numStrings = 0;
 
-  protected tuningString: string = '';
+  protected tuningString = '';
 
   protected tuningValues: number[] = [];
 
