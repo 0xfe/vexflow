@@ -5,6 +5,8 @@
 // eslint-disable-next-line
 declare const global: any;
 
+export const VF = global.VF;
+export const Vex = global.Vex;
 export const QUnit = global.QUnit;
 export const ok = global.ok;
 export const notOk = global.notOk;

@@ -1,3 +1,13 @@
+import { Accidental } from '../accidental';
+
+/** Element attributes. */
+export interface ElementAttributes {
+  [name: string]: any;
+  id: string;
+  type: string;
+  classes: Record<string, boolean>;
+}
+
 /** Contexts common interface */
 export interface RenderContext {
   clear(): void;
@@ -42,4 +52,37 @@ export interface RenderContext {
    * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width : number, height : number}. Only width is used throughout VexFlow.
    */
   measureText(text: string): { width: number };
+}
+
+export interface AccidentalCode {
+  code: string;
+  parenRightPaddingAdjustment: number;
+}
+
+export interface AccidentalRenderOptions {
+  parenLeftPadding: number;
+  stroke_px: number;
+  font_scale: number;
+  parenRightPadding: number;
+}
+
+export interface AccidentalState {
+  left_shift: number;
+}
+
+export interface AccidentalListItem {
+  y: number;
+  line: number;
+  shift: number;
+  acc: Accidental;
+  lineSpace: number;
+}
+
+export interface Line {
+  column: number;
+  line: number;
+  flatLine: boolean;
+  dblSharpLine: boolean;
+  numAcc: number;
+  width: number;
 }

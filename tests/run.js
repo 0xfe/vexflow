@@ -1,9 +1,10 @@
+import { AccidentalTests } from './accidental_tests';
 import { FractionTests } from './fraction_tests';
 import { MusicTests } from './music_tests';
 import { TuningTests } from './tuning_tests';
 
 VF.Test.run = function () {
-  VF.Test.Accidental.Start();
+  AccidentalTests.Start();
   VF.Test.StaveNote.Start();
   VF.Test.Voice.Start();
   VF.Test.NoteHead.Start();
