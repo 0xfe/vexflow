@@ -226,7 +226,7 @@ export class Ornament extends Modifier {
     const stemDir = this.note.getStemDirection();
     const stave = this.note.getStave();
 
-    const classString = Object.keys(this.classes).join(' ');
+    const classString = Object.keys(this.getAttribute('classes')).join(' ');
     this.context.openGroup(classString, this.getAttribute('id'));
 
     // Get stem extents
