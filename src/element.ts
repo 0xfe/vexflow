@@ -11,7 +11,7 @@ import { Registry } from './registry';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
 import { Font } from './smufl';
-import { RenderContext, Style, ElementAttributes } from './types/common';
+import { RenderContext, ElementStyle, ElementAttributes } from './types/common';
 
 export abstract class Element {
   protected static ID: number = 1000;
@@ -20,7 +20,7 @@ export abstract class Element {
 
   protected rendered: boolean;
 
-  protected style?: Style;
+  protected style?: ElementStyle;
 
   protected attrs: ElementAttributes;
 
@@ -66,16 +66,19 @@ export abstract class Element {
   }
 
   // set the draw style of a stemmable note:
-  setStyle(style: Style): this {
+  setStyle(style: ElementStyle): this {
     this.style = style;
     return this;
   }
-  getStyle(): Style | undefined {
+  getStyle(): ElementStyle | undefined {
     return this.style;
   }
 
   // Apply current style to Canvas `context`
-  applyStyle(context: RenderContext | undefined = this.context, style: Style | undefined = this.getStyle()): this {
+  applyStyle(
+    context: RenderContext | undefined = this.context,
+    style: ElementStyle | undefined = this.getStyle()
+  ): this {
     if (!style) return this;
     if (!context) return this;
 
@@ -88,7 +91,10 @@ export abstract class Element {
     return this;
   }
 
-  restoreStyle(context: RenderContext | undefined = this.context, style: Style | undefined = this.getStyle()): this {
+  restoreStyle(
+    context: RenderContext | undefined = this.context,
+    style: ElementStyle | undefined = this.getStyle()
+  ): this {
     if (!style) return this;
     if (!context) return this;
     context.restore();

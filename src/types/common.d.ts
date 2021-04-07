@@ -52,7 +52,7 @@ export interface RenderContext {
 }
 
 /** Element style */
-export interface Style {
+export interface ElementStyle {
   shadowColor?: string;
   shadowBlur?: string;
   fillStyle?: string;
