@@ -9,9 +9,9 @@
 
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
-if (!window.QUnit) {
-  window.QUnit = {};
-  QUnit = window.QUnit;
+if (!global.QUnit) {
+  global.QUnit = {};
+  QUnit = global.QUnit;
 
   QUnit.assertions = {
     ok: () => true,
@@ -37,17 +37,17 @@ if (!window.QUnit) {
     func(QUnit.assertions);
   };
 
-  test = QUnit.test;
-  ok = QUnit.assertions.ok;
-  equal = QUnit.assertions.equal;
-  deepEqual = QUnit.assertions.deepEqual;
-  expect = QUnit.assertions.expect;
-  throws = QUnit.assertions.throws;
-  notOk = QUnit.assertions.notOk;
-  notEqual = QUnit.assertions.notEqual;
-  notDeepEqual = QUnit.assertions.notDeepEqual;
-  strictEqual = QUnit.assertions.strictEqual;
-  notStrictEqual = QUnit.assertions.notStrictEqual;
+  global.test = QUnit.test;
+  global.ok = QUnit.assertions.ok;
+  global.equal = QUnit.assertions.equal;
+  global.deepEqual = QUnit.assertions.deepEqual;
+  global.expect = QUnit.assertions.expect;
+  global.throws = QUnit.assertions.throws;
+  global.notOk = QUnit.assertions.notOk;
+  global.notEqual = QUnit.assertions.notEqual;
+  global.notDeepEqual = QUnit.assertions.notDeepEqual;
+  global.strictEqual = QUnit.assertions.strictEqual;
+  global.notStrictEqual = QUnit.assertions.notStrictEqual;
 }
 
 global['VF'] = Vex.Flow;
