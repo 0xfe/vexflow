@@ -11,73 +11,8 @@ import { Registry } from './registry';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
 import { Font } from './smufl';
+import { RenderContext, Style, ElementAttributes } from './types/common';
 
-/** Element attributes. */
-export interface ElementAttributes {
-  [name: string]: string;
-  id: string;
-  type: string;
-}
-
-/** Contexts common interface */
-export interface RenderContext {
-  clear(): void;
-  setFont(family: string, size: number, weight?: string): RenderContext;
-  setRawFont(font: string): RenderContext;
-  setFillStyle(style: string): RenderContext;
-  setBackgroundFillStyle(style: string): RenderContext;
-  setStrokeStyle(style: string): RenderContext;
-  setShadowColor(color: string): RenderContext;
-  setShadowBlur(blur: string): RenderContext;
-  setLineWidth(width: number): RenderContext;
-  setLineCap(cap_type: string): RenderContext;
-  setLineDash(dash: string): RenderContext;
-  scale(x: number, y: number): RenderContext;
-  resize(width: number, height: number): RenderContext;
-  fillRect(x: number, y: number, width: number, height: number): RenderContext;
-  clearRect(x: number, y: number, width: number, height: number): RenderContext;
-  beginPath(): RenderContext;
-  moveTo(x: number, y: number): RenderContext;
-  lineTo(x: number, y: number): RenderContext;
-  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): RenderContext;
-  quadraticCurveTo(x1: number, y1: number, x2: number, y2: number): RenderContext;
-  arc(
-    x: number,
-    y: number,
-    radius: number,
-    startAngle: number,
-    endAngle: number,
-    antiClockwise: boolean
-  ): RenderContext;
-  glow(): RenderContext;
-  fill(): RenderContext;
-  stroke(): RenderContext;
-  closePath(): RenderContext;
-  fillText(text: string, x: number, y: number): RenderContext;
-  save(): RenderContext;
-  restore(): RenderContext;
-  openGroup(): Node | undefined;
-  closeGroup(): void;
-
-  /**
-   * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width : number, height : number}. Only width is used throughout VexFlow.
-   */
-  measureText(text: string): { width: number };
-}
-
-/** Element style */
-export interface Style {
-  shadowColor?: string;
-  shadowBlur?: string;
-  fillStyle?: string;
-  strokeStyle?: string;
-  lineWidth?: number;
-}
-
-/**
- * Element implements a generic base class for VexFlow, with implementations
- * of general functions and properties that can be inherited by all VexFlow elements.
- */
 export abstract class Element {
   protected static ID: number = 1000;
 
@@ -103,7 +38,6 @@ export abstract class Element {
     return `auto${Element.ID++}`;
   }
 
-  /** Constructor. */
   constructor() {
     this.attrs = {
       id: Element.newID(),
@@ -121,30 +55,26 @@ export abstract class Element {
     }
   }
 
-  /** Sets music fonts stack. */
+  // set music font
   setFontStack(fontStack: Font[]): this {
     this.fontStack = fontStack;
     this.musicFont = fontStack[0];
     return this;
   }
-
-  /** gets music fonts stack. */
   getFontStack(): Font[] {
     return this.fontStack;
   }
 
-  /** Sets the draw style of a stemmable note. */
+  // set the draw style of a stemmable note:
   setStyle(style: Style): this {
     this.style = style;
     return this;
   }
-
-  /** Gets the draw style of a stemmable note. */
   getStyle(): Style | undefined {
     return this.style;
   }
 
-  /** Applies current style to Canvas `context`. */
+  // Apply current style to Canvas `context`
   applyStyle(context: RenderContext | undefined = this.context, style: Style | undefined = this.getStyle()): this {
     if (!style) return this;
     if (!context) return this;
@@ -158,7 +88,6 @@ export abstract class Element {
     return this;
   }
 
-  /** Restores style of Canvas `context`. */
   restoreStyle(context: RenderContext | undefined = this.context, style: Style | undefined = this.getStyle()): this {
     if (!style) return this;
     if (!context) return this;
@@ -166,7 +95,7 @@ export abstract class Element {
     return this;
   }
 
-  /** Draws with style of an element. */
+  // draw with style of an element. */
   drawWithStyle(): void {
     this.checkContext();
     this.applyStyle();
@@ -174,15 +103,12 @@ export abstract class Element {
     this.restoreStyle();
   }
 
-  /** Draws an element. */
   abstract draw(element?: Element, x_shift?: number): void;
 
-  /** Checkes if it has a class label (An element can have multiple class labels).  */
+  // An element can have multiple class labels.
   hasClass(className: string): boolean {
     return this.classes[className] === true;
   }
-
-  /** Adds a class label (An element can have multiple class labels).  */
   addClass(className: string): this {
     this.classes[className] = true;
     if (this.registry) {
@@ -196,7 +122,6 @@ export abstract class Element {
     return this;
   }
 
-  /** Removes a class label (An element can have multiple class labels).  */
   removeClass(className: string): this {
     delete this.classes[className];
     if (this.registry) {
@@ -210,34 +135,25 @@ export abstract class Element {
     return this;
   }
 
-  /** Call back from registry after the element is registered. */
+  // This is called by the registry after the element is registered.
   onRegister(registry: Registry): this {
     this.registry = registry;
     return this;
   }
-
-  /** Returns the rendered status. */
   isRendered(): boolean {
     return this.rendered;
   }
-
-  /** Sets the rendered status. */
   setRendered(rendered = true): this {
     this.rendered = rendered;
     return this;
   }
 
-  /** Returns the element attributes. */
   getAttributes(): ElementAttributes {
     return this.attrs;
   }
-
-  /** Returns an attribute. */
   getAttribute(name: string): string {
     return this.attrs[name];
   }
-
-  /** Sets an attribute. */
   setAttribute(name: string, value: string): this {
     const { id } = this.attrs;
     const oldValue = this.attrs[name];
@@ -249,23 +165,18 @@ export abstract class Element {
     return this;
   }
 
-  /** Returns the context. */
   getContext(): RenderContext | undefined {
     return this.context;
   }
-
-  /** Sets the context. */
   setContext(context?: RenderContext): this {
     this.context = context;
     return this;
   }
-
-  /** Gets the boundingBox. */
   getBoundingBox(): BoundingBox | undefined {
     return this.boundingBox;
   }
 
-  /** Validates and returns the context. */
+  // Validators
   checkContext(): RenderContext {
     if (!this.context) {
       throw new Vex.RERR('NoContext', 'No rendering context attached to instance');
