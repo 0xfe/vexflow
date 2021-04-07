@@ -15,35 +15,26 @@ import { RenderContext, ElementStyle, ElementAttributes } from './types/common';
 
 export abstract class Element {
   protected static ID: number = 1000;
-
   protected context?: RenderContext;
-
   protected rendered: boolean;
-
   protected style?: ElementStyle;
-
-  protected attrs: ElementAttributes;
-
-  protected classes: Record<string, boolean>;
-
+  private attrs: ElementAttributes;
   protected boundingBox?: BoundingBox;
-
   protected fontStack: Font[];
-
   protected musicFont: Font;
-
   protected registry?: Registry;
 
   static newID(): string {
     return `auto${Element.ID++}`;
   }
 
-  constructor() {
+  constructor(type: string) {
     this.attrs = {
       id: Element.newID(),
-      type: 'Base',
+      el: null,
+      type: type || 'Base',
+      classes: {},
     };
-    this.classes = {};
 
     this.rendered = false;
     this.fontStack = Flow.DEFAULT_FONT_STACK;
@@ -113,10 +104,10 @@ export abstract class Element {
 
   // An element can have multiple class labels.
   hasClass(className: string): boolean {
-    return this.classes[className] === true;
+    return this.attrs.classes[className] === true;
   }
   addClass(className: string): this {
-    this.classes[className] = true;
+    this.attrs.classes[className] = true;
     if (this.registry) {
       this.registry.onUpdate({
         id: this.getAttribute('id'),
@@ -129,7 +120,7 @@ export abstract class Element {
   }
 
   removeClass(className: string): this {
-    delete this.classes[className];
+    delete this.attrs.classes[className];
     if (this.registry) {
       this.registry.onUpdate({
         id: this.getAttribute('id'),

@@ -1,8 +1,9 @@
 /** Element attributes. */
 export interface ElementAttributes {
-  [name: string]: string;
+  [name: string]: any;
   id: string;
   type: string;
+  classes: Record<string, boolean>;
 }
 
 /** Contexts common interface */
