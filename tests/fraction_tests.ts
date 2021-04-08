@@ -7,12 +7,12 @@ import { Fraction } from '../src/fraction';
 import { QUnit, ok, test, notOk, notEqual, strictEqual, deepEqual, notDeepEqual, notStrictEqual } from './declarations';
 
 export const FractionTests = {
-  Start: function () {
+  Start(): void {
     QUnit.module('Fraction');
     test('Basic', FractionTests.basic);
   },
 
-  basic: function () {
+  basic(): void {
     const f_1_2 = new Fraction(1, 2);
     ok(f_1_2.equals(0.5), 'Fraction: 1/2 equals 0.5');
     ok(f_1_2.equals(new Fraction(1, 2)), 'Fraction: 1/2 equals 1/2');

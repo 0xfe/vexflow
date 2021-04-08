@@ -8,7 +8,7 @@ import { KeyManager } from '../src/keymanager';
 import { QUnit, ok, test, expect, equal } from './declarations';
 
 export const MusicTests = {
-  Start: function () {
+  Start(): void {
     QUnit.module('MusicTests');
     test('Valid Notes', MusicTests.validNotes);
     test('Valid Keys', MusicTests.validKeys);
@@ -22,7 +22,7 @@ export const MusicTests = {
     test('Scale Intervals', MusicTests.scaleIntervals);
   },
 
-  validNotes: function () {
+  validNotes(): void {
     expect(10);
 
     const music = new Music();
@@ -56,7 +56,7 @@ export const MusicTests = {
     }
   },
 
-  validKeys: function () {
+  validKeys(): void {
     expect(18);
 
     const music = new Music();
@@ -105,7 +105,7 @@ export const MusicTests = {
     }
   },
 
-  noteValue: function () {
+  noteValue(): void {
     expect(3);
 
     const music = new Music();
@@ -123,7 +123,7 @@ export const MusicTests = {
     equal(note, 6);
   },
 
-  intervalValue: function () {
+  intervalValue(): void {
     expect(2);
 
     const music = new Music();
@@ -138,7 +138,7 @@ export const MusicTests = {
     }
   },
 
-  relativeNotes: function () {
+  relativeNotes(): void {
     expect(8);
 
     const music = new Music();
@@ -181,7 +181,7 @@ export const MusicTests = {
     equal(value, 2);
   },
 
-  relativeNoteNames: function () {
+  relativeNoteNames(): void {
     expect(9);
 
     const music = new Music();
@@ -202,7 +202,7 @@ export const MusicTests = {
     equal(music.getRelativeNoteName('c', music.getNoteValue('b')), 'cb');
   },
 
-  canonicalNotes: function () {
+  canonicalNotes(): void {
     expect(3);
 
     const music = new Music();
@@ -217,7 +217,7 @@ export const MusicTests = {
     }
   },
 
-  canonicalIntervals: function () {
+  canonicalIntervals(): void {
     expect(3);
 
     const music = new Music();
@@ -232,7 +232,7 @@ export const MusicTests = {
     }
   },
 
-  scaleTones: function () {
+  scaleTones(): void {
     expect(24);
 
     // C Major
@@ -271,7 +271,7 @@ export const MusicTests = {
     }
   },
 
-  scaleIntervals: function () {
+  scaleIntervals(): void {
     expect(6);
 
     const music = new Music();
