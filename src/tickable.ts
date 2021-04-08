@@ -8,8 +8,54 @@ import { Vex } from './vex';
 import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
+import { TickContext } from './tickcontext';
+import { ModifierContext } from './modifiercontext';
+import { Tuplet } from './tuplet';
+import { Voice } from './voice';
+import { Modifier } from './modifier';
 
-export class Tickable extends Element {
+//** Spacing */
+export interface Space {
+  used: number;
+  mean: number;
+  deviation: number;
+}
+
+/** Formatter metrics interface */
+export interface FormatterMetrics {
+  duration: string;
+  freedom: {
+    left: number;
+    right: number;
+  };
+  iterations: number;
+  space: Space;
+}
+
+/**
+ * Tickable represents a element that sit on a score and
+ * has a duration, i.e., Tickables occupy space in the musical rendering dimension.
+ */
+export abstract class Tickable extends Element {
+  protected ignore_ticks: boolean;
+  protected tupletStack: Tuplet[];
+  protected tuplet?: Tuplet;
+  protected ticks: Fraction;
+  protected center_x_shift: number;
+  protected voice?: Voice;
+  protected width: number;
+  protected x_shift: number;
+  protected preFormatted: boolean;
+  protected postFormatted: boolean;
+  protected modifierContext?: ModifierContext;
+  protected tickContext?: TickContext;
+  protected modifiers: Modifier[];
+  protected tickMultiplier: Fraction;
+  protected formatterMetrics: FormatterMetrics;
+  protected intrinsicTicks: number;
+  protected align_center: boolean;
+
+  /** Constructor */
   constructor() {
     super();
     this.setAttribute('type', 'Tickable');
@@ -24,13 +70,9 @@ export class Tickable extends Element {
     this.width = 0;
     this.x_shift = 0; // Shift from tick context
 
-    this.voice = null;
-    this.tickContext = null;
-    this.modifierContext = null;
     this.modifiers = [];
     this.preFormatted = false;
     this.postFormatted = false;
-    this.tuplet = null;
     this.tupletStack = [];
 
     this.align_center = false;
@@ -65,22 +107,28 @@ export class Tickable extends Element {
     };
   }
 
-  reset() {
+  /** Resets the Tickable, this function will be overloaded. */
+  reset(): this {
     return this;
   }
 
-  getTicks() {
+  /** Returns the ticks. */
+  getTicks(): Fraction {
     return this.ticks;
   }
-  shouldIgnoreTicks() {
+
+  /** Checks if it ignores the ticks. */
+  shouldIgnoreTicks(): boolean {
     return this.ignore_ticks;
   }
 
-  // Get and set width of note. Used by the formatter for positioning.
-  setWidth(width) {
+  /** Sets width of note. Used by the formatter for positioning. */
+  setWidth(width: number): void {
     this.width = width;
   }
-  getWidth() {
+
+  /** Gets width of note. Used by the formatter for positioning. */
+  getWidth(): number {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
     }
@@ -88,17 +136,19 @@ export class Tickable extends Element {
     return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
   }
 
-  // Displace note by `x` pixels. Used by the formatter.
-  setXShift(x) {
+  /** Displaces note by `x` pixels. Used by the formatter. */
+  setXShift(x: number): this {
     this.x_shift = x;
     return this;
   }
-  getXShift() {
+
+  /** Gets the `x`pixels of the note. */
+  getXShift(): number {
     return this.x_shift;
   }
 
-  // Get `X` position of this tick context.
-  getX() {
+  /** Gets `X` position of this tick context. */
+  getX(): number {
     if (!this.tickContext) {
       throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
     }
@@ -106,48 +156,56 @@ export class Tickable extends Element {
     return this.tickContext.getX() + this.x_shift;
   }
 
-  getFormatterMetrics() {
+  /** Returns the formatterMetrics */
+  getFormatterMetrics(): FormatterMetrics {
     return this.formatterMetrics;
   }
 
-  getCenterXShift() {
+  /** Returns the center x shift. */
+  getCenterXShift(): number {
     if (this.isCenterAligned()) {
       return this.center_x_shift;
     }
 
     return 0;
   }
-  isCenterAligned() {
+
+  // Checks if tickable is center aligned. */
+  isCenterAligned(): boolean {
     return this.align_center;
   }
-  setCenterAlignment(align_center) {
+
+  // Sets/unsets center alignment. */
+  setCenterAlignment(align_center: boolean): this {
     this.align_center = align_center;
     return this;
   }
 
-  // Every tickable must be associated with a voice. This allows formatters
-  // and preFormatter to associate them with the right modifierContexts.
-  getVoice() {
+  /**
+   * Returns the associated voice. Every tickable must be associated with a voice.
+   * This allows formatters and preFormatter to associate them with the right modifierContexts.
+   */
+  getVoice(): Voice {
     if (!this.voice) throw new Vex.RERR('NoVoice', 'Tickable has no voice.');
     return this.voice;
   }
-  setVoice(voice) {
+
+  /** Sets the associated voice. */
+  setVoice(voice: Voice): void {
     this.voice = voice;
   }
-  getTuplet() {
+
+  /** Gets the tuplet */
+  getTuplet(): Tuplet | undefined {
     return this.tuplet;
   }
 
   /*
-   * resetTuplet
-   * @param tuplet -- the specific tuplet to reset
-   *   if this is not provided, all tuplets are reset.
-   * @returns this
-   *
+   * Resets the specific Tuplet if this is not provided, all tuplets are reset.
    * Removes any prior tuplets from the tick calculation and
    * resets the intrinsic tick value to
    */
-  resetTuplet(tuplet) {
+  resetTuplet(tuplet?: Tuplet): this {
     let noteCount;
     let notesOccupied;
     if (tuplet) {
@@ -164,7 +222,7 @@ export class Tickable extends Element {
     }
 
     while (this.tupletStack.length) {
-      tuplet = this.tupletStack.pop();
+      tuplet = this.tupletStack.pop() as Tuplet;
       noteCount = tuplet.getNoteCount();
       notesOccupied = tuplet.getNotesOccupied();
 
@@ -174,9 +232,8 @@ export class Tickable extends Element {
     return this;
   }
 
-  setTuplet(tuplet) {
-    // Attach to new tuplet
-
+  /** Attaches to new tuplet. */
+  setTuplet(tuplet: Tuplet): this {
     if (tuplet) {
       this.tupletStack.push(tuplet);
 
@@ -191,27 +248,33 @@ export class Tickable extends Element {
     return this;
   }
 
-  /** optional, if tickable has modifiers **/
-  addToModifierContext(mc) {
+  /** Optional, if tickable has modifiers, sets modifierContext. */
+  addToModifierContext(mc: ModifierContext): void {
     this.modifierContext = mc;
     // Add modifiers to modifier context (if any)
     this.preFormatted = false;
   }
 
-  /** optional, if tickable has modifiers **/
-  addModifier(mod) {
+  /** Optional, if tickable has modifiers, associates a Modifier. */
+  addModifier(mod: Modifier): this {
     this.modifiers.push(mod);
     this.preFormatted = false;
     return this;
   }
-  getModifiers() {
+
+  /** Gets the list of associated modifiers. */
+  getModifiers(): Modifier[] {
     return this.modifiers;
   }
-  setTickContext(tc) {
+
+  /** Sets the Tick Contxt. */
+  setTickContext(tc: TickContext): void {
     this.tickContext = tc;
     this.preFormatted = false;
   }
-  preFormat() {
+
+  /** Preformats the Tickable. */
+  preFormat(): void {
     if (this.preFormatted) return;
 
     this.width = 0;
@@ -220,26 +283,38 @@ export class Tickable extends Element {
       this.width += this.modifierContext.getWidth();
     }
   }
-  postFormat() {
+
+  /** Postformats the Tickable. */
+  postFormat(): this {
     if (this.postFormatted) return this;
     this.postFormatted = true;
     return this;
   }
-  getIntrinsicTicks() {
+
+  /** Returns the intrinsic ticks */
+  getIntrinsicTicks(): number {
     return this.intrinsicTicks;
   }
-  setIntrinsicTicks(intrinsicTicks) {
+
+  /** Sets the intrinsic ticks. */
+  setIntrinsicTicks(intrinsicTicks: number): void {
     this.intrinsicTicks = intrinsicTicks;
     this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
   }
-  getTickMultiplier() {
+
+  /** Gets the tick multiplier. */
+  getTickMultiplier(): Fraction {
     return this.tickMultiplier;
   }
-  applyTickMultiplier(numerator, denominator) {
+
+  /** Applies a tick multiplier. */
+  applyTickMultiplier(numerator: number, denominator: number): void {
     this.tickMultiplier.multiply(numerator, denominator);
     this.ticks = this.tickMultiplier.clone().multiply(this.intrinsicTicks);
   }
-  setDuration(duration) {
+
+  /** Sets the duration. */
+  setDuration(duration: Fraction): void {
     const ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();
