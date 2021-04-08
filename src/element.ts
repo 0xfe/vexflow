@@ -15,6 +15,7 @@ import { RenderContext } from './types/common';
 
 /** Element attributes. */
 export interface ElementAttributes {
+  // eslint-disable-next-line
   [name: string]: any;
   id: string;
   type: string;

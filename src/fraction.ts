@@ -50,7 +50,9 @@ export class Fraction {
   /**
    * LCMM: Lowest common multiple for more than two numbers.
    */
-  static LCMM(args: any): number {
+  static LCMM(
+    // eslint-disable-next-line
+    args: any): number {
     if (args.length === 0) {
       return 0;
     }
