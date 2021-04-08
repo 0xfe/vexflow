@@ -36,37 +36,21 @@ export interface FormatterMetrics {
  */
 export abstract class Tickable extends Element {
   protected ignore_ticks: boolean;
-
   protected tupletStack: Tuplet[];
-
   protected tuplet?: Tuplet;
-
   protected ticks: Fraction;
-
   protected center_x_shift: number;
-
   protected voice?: Voice;
-
   protected width: number;
-
   protected x_shift: number;
-
   protected preFormatted: boolean;
-
   protected postFormatted: boolean;
-
   protected modifierContext?: ModifierContext;
-
   protected tickContext?: TickContext;
-
   protected modifiers: Modifier[];
-
   protected tickMultiplier: Fraction;
-
   protected formatterMetrics: FormatterMetrics;
-
   protected intrinsicTicks: number;
-
   protected align_center: boolean;
 
   /** Constructor */
