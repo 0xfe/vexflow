@@ -28,7 +28,7 @@ export abstract class Element {
     return `auto${Element.ID++}`;
   }
 
-  constructor(type: string) {
+  constructor({ type }: { type?: string } = {}) {
     this.attrs = {
       id: Element.newID(),
       el: null,
