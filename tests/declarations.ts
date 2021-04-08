@@ -2,6 +2,7 @@
  * VexFlow - Declarations to interface with ./support/qunit.js
  */
 
+// eslint-disable-next-line
 declare const global: any;
 
 export const QUnit = global.QUnit;
