@@ -14,18 +14,20 @@ import { Tuplet } from './tuplet';
 import { Voice } from './voice';
 import { Modifier } from './modifier';
 
-export interface LeftRight {
-  left: number;
-  right: number;
-}
+//** Spacing */
 export interface Space {
   used: number;
   mean: number;
   deviation: number;
 }
+
+/** Formatter metrics interface */
 export interface FormatterMetrics {
   duration: string;
-  freedom: LeftRight;
+  freedom: {
+    left: number;
+    right: number;
+  };
   iterations: number;
   space: Space;
 }
