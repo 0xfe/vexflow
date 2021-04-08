@@ -11,8 +11,29 @@ import { Registry } from './registry';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
 import { Font } from './smufl';
-import { RenderContext, ElementStyle, ElementAttributes } from './types/common';
+import { RenderContext } from './types/common';
 
+/** Element attributes. */
+export interface ElementAttributes {
+  [name: string]: any;
+  id: string;
+  type: string;
+  classes: Record<string, boolean>;
+}
+
+/** Element style */
+export interface ElementStyle {
+  shadowColor?: string;
+  shadowBlur?: string;
+  fillStyle?: string;
+  strokeStyle?: string;
+  lineWidth?: number;
+}
+
+/**
+ * Element implements a generic base class for VexFlow, with implementations
+ * of general functions and properties that can be inherited by all VexFlow elements.
+ */
 export abstract class Element {
   protected static ID: number = 1000;
   protected context?: RenderContext;
@@ -28,6 +49,7 @@ export abstract class Element {
     return `auto${Element.ID++}`;
   }
 
+  /** Constructor. */
   constructor({ type }: { type?: string } = {}) {
     this.attrs = {
       id: Element.newID(),
@@ -46,26 +68,30 @@ export abstract class Element {
     }
   }
 
-  // set music font
+  /** Sets music fonts stack. */
   setFontStack(fontStack: Font[]): this {
     this.fontStack = fontStack;
     this.musicFont = fontStack[0];
     return this;
   }
+
+  /** gets music fonts stack. */
   getFontStack(): Font[] {
     return this.fontStack;
   }
 
-  // set the draw style of a stemmable note:
+  /** Sets the draw style of a stemmable note. */
   setStyle(style: ElementStyle): this {
     this.style = style;
     return this;
   }
+
+  /** Gets the draw style of a stemmable note. */
   getStyle(): ElementStyle | undefined {
     return this.style;
   }
 
-  // Apply current style to Canvas `context`
+  /** Applies current style to Canvas `context`. */
   applyStyle(
     context: RenderContext | undefined = this.context,
     style: ElementStyle | undefined = this.getStyle()
@@ -82,6 +108,7 @@ export abstract class Element {
     return this;
   }
 
+  /** Restores style of Canvas `context`. */
   restoreStyle(
     context: RenderContext | undefined = this.context,
     style: ElementStyle | undefined = this.getStyle()
@@ -92,7 +119,7 @@ export abstract class Element {
     return this;
   }
 
-  // draw with style of an element. */
+  /** Draws with style of an element. */
   drawWithStyle(): void {
     this.checkContext();
     this.applyStyle();
@@ -100,12 +127,15 @@ export abstract class Element {
     this.restoreStyle();
   }
 
+  /** Draws an element. */
   abstract draw(element?: Element, x_shift?: number): void;
 
-  // An element can have multiple class labels.
+  /** Checkes if it has a class label (An element can have multiple class labels).  */
   hasClass(className: string): boolean {
     return this.attrs.classes[className] === true;
   }
+
+  /** Adds a class label (An element can have multiple class labels).  */
   addClass(className: string): this {
     this.attrs.classes[className] = true;
     if (this.registry) {
@@ -119,6 +149,7 @@ export abstract class Element {
     return this;
   }
 
+  /** Removes a class label (An element can have multiple class labels).  */
   removeClass(className: string): this {
     delete this.attrs.classes[className];
     if (this.registry) {
@@ -132,25 +163,34 @@ export abstract class Element {
     return this;
   }
 
-  // This is called by the registry after the element is registered.
+  /** Call back from registry after the element is registered. */
   onRegister(registry: Registry): this {
     this.registry = registry;
     return this;
   }
+
+  /** Returns the rendered status. */
   isRendered(): boolean {
     return this.rendered;
   }
+
+  /** Sets the rendered status. */
   setRendered(rendered = true): this {
     this.rendered = rendered;
     return this;
   }
 
+  /** Returns the element attributes. */
   getAttributes(): ElementAttributes {
     return this.attrs;
   }
+
+  /** Returns an attribute. */
   getAttribute(name: string): string {
     return this.attrs[name];
   }
+
+  /** Sets an attribute. */
   setAttribute(name: string, value: string): this {
     const { id } = this.attrs;
     const oldValue = this.attrs[name];
@@ -162,18 +202,23 @@ export abstract class Element {
     return this;
   }
 
+  /** Returns the context. */
   getContext(): RenderContext | undefined {
     return this.context;
   }
+
+  /** Sets the context. */
   setContext(context?: RenderContext): this {
     this.context = context;
     return this;
   }
+
+  /** Gets the boundingBox. */
   getBoundingBox(): BoundingBox | undefined {
     return this.boundingBox;
   }
 
-  // Validators
+  /** Validates and returns the context. */
   checkContext(): RenderContext {
     if (!this.context) {
       throw new Vex.RERR('NoContext', 'No rendering context attached to instance');
