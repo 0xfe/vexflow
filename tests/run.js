@@ -1,6 +1,6 @@
-import FractionTests from './fraction_tests';
-import MusicTests from './music_tests';
-import TuningTests from './tuning_tests';
+import { FractionTests } from './fraction_tests';
+import { MusicTests } from './music_tests';
+import { TuningTests } from './tuning_tests';
 
 VF.Test.run = function () {
   VF.Test.Accidental.Start();
