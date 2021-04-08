@@ -1,11 +1,3 @@
-/** Element attributes. */
-export interface ElementAttributes {
-  [name: string]: any;
-  id: string;
-  type: string;
-  classes: Record<string, boolean>;
-}
-
 /** Contexts common interface */
 export interface RenderContext {
   clear(): void;
@@ -50,13 +42,4 @@ export interface RenderContext {
    * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width : number, height : number}. Only width is used throughout VexFlow.
    */
   measureText(text: string): { width: number };
-}
-
-/** Element style */
-export interface ElementStyle {
-  shadowColor?: string;
-  shadowBlur?: string;
-  fillStyle?: string;
-  strokeStyle?: string;
-  lineWidth?: number;
 }
