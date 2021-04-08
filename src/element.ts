@@ -9,13 +9,26 @@
 import { Vex } from './vex';
 import { Registry } from './registry';
 import { Flow } from './tables';
+import { BoundingBox } from './boundingbox';
+import { Font } from './smufl';
+import { RenderContext, ElementStyle, ElementAttributes } from './types/common';
 
-export class Element {
-  static newID() {
-    return 'auto' + Element.ID++;
+export abstract class Element {
+  protected static ID: number = 1000;
+  protected context?: RenderContext;
+  protected rendered: boolean;
+  protected style?: ElementStyle;
+  private attrs: ElementAttributes;
+  protected boundingBox?: BoundingBox;
+  protected fontStack: Font[];
+  protected musicFont: Font;
+  protected registry?: Registry;
+
+  static newID(): string {
+    return `auto${Element.ID++}`;
   }
 
-  constructor({ type } = {}) {
+  constructor({ type }: { type?: string } = {}) {
     this.attrs = {
       id: Element.newID(),
       el: null,
@@ -23,8 +36,6 @@ export class Element {
       classes: {},
     };
 
-    this.boundingBox = null;
-    this.context = null;
     this.rendered = false;
     this.fontStack = Flow.DEFAULT_FONT_STACK;
     this.musicFont = Flow.DEFAULT_FONT_STACK[0];
@@ -36,27 +47,31 @@ export class Element {
   }
 
   // set music font
-  setFontStack(fontStack) {
+  setFontStack(fontStack: Font[]): this {
     this.fontStack = fontStack;
     this.musicFont = fontStack[0];
     return this;
   }
-  getFontStack() {
+  getFontStack(): Font[] {
     return this.fontStack;
   }
 
   // set the draw style of a stemmable note:
-  setStyle(style) {
+  setStyle(style: ElementStyle): this {
     this.style = style;
     return this;
   }
-  getStyle() {
+  getStyle(): ElementStyle | undefined {
     return this.style;
   }
 
   // Apply current style to Canvas `context`
-  applyStyle(context = this.context, style = this.getStyle()) {
+  applyStyle(
+    context: RenderContext | undefined = this.context,
+    style: ElementStyle | undefined = this.getStyle()
+  ): this {
     if (!style) return this;
+    if (!context) return this;
 
     context.save();
     if (style.shadowColor) context.setShadowColor(style.shadowColor);
@@ -67,25 +82,31 @@ export class Element {
     return this;
   }
 
-  restoreStyle(context = this.context, style = this.getStyle()) {
+  restoreStyle(
+    context: RenderContext | undefined = this.context,
+    style: ElementStyle | undefined = this.getStyle()
+  ): this {
     if (!style) return this;
+    if (!context) return this;
     context.restore();
     return this;
   }
 
-  // draw with style of an element.
-  drawWithStyle() {
+  // draw with style of an element. */
+  drawWithStyle(): void {
     this.checkContext();
     this.applyStyle();
     this.draw();
     this.restoreStyle();
   }
 
+  abstract draw(element?: Element, x_shift?: number): void;
+
   // An element can have multiple class labels.
-  hasClass(className) {
+  hasClass(className: string): boolean {
     return this.attrs.classes[className] === true;
   }
-  addClass(className) {
+  addClass(className: string): this {
     this.attrs.classes[className] = true;
     if (this.registry) {
       this.registry.onUpdate({
@@ -98,7 +119,7 @@ export class Element {
     return this;
   }
 
-  removeClass(className) {
+  removeClass(className: string): this {
     delete this.attrs.classes[className];
     if (this.registry) {
       this.registry.onUpdate({
@@ -112,26 +133,26 @@ export class Element {
   }
 
   // This is called by the registry after the element is registered.
-  onRegister(registry) {
+  onRegister(registry: Registry): this {
     this.registry = registry;
     return this;
   }
-  isRendered() {
+  isRendered(): boolean {
     return this.rendered;
   }
-  setRendered(rendered = true) {
+  setRendered(rendered = true): this {
     this.rendered = rendered;
     return this;
   }
 
-  getAttributes() {
+  getAttributes(): ElementAttributes {
     return this.attrs;
   }
-  getAttribute(name) {
+  getAttribute(name: string): string {
     return this.attrs[name];
   }
-  setAttribute(name, value) {
-    const id = this.attrs.id;
+  setAttribute(name: string, value: string): this {
+    const { id } = this.attrs;
     const oldValue = this.attrs[name];
     this.attrs[name] = value;
     if (this.registry) {
@@ -141,24 +162,22 @@ export class Element {
     return this;
   }
 
-  getContext() {
+  getContext(): RenderContext | undefined {
     return this.context;
   }
-  setContext(context) {
+  setContext(context?: RenderContext): this {
     this.context = context;
     return this;
   }
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox | undefined {
     return this.boundingBox;
   }
 
   // Validators
-  checkContext() {
+  checkContext(): RenderContext {
     if (!this.context) {
       throw new Vex.RERR('NoContext', 'No rendering context attached to instance');
     }
     return this.context;
   }
 }
-
-Element.ID = 1000;
