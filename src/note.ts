@@ -26,8 +26,8 @@ import { Fraction } from './fraction';
 import { Beam } from './beam';
 
 export interface Metrics {
-  totalLeftPx?: number;
-  totalRightPx?: number;
+  totalLeftPx: number;
+  totalRightPx: number;
   /** The total width of the note (including modifiers). */
   width: number;
   glyphWidth?: number;
@@ -592,6 +592,8 @@ export abstract class Note extends Tickable {
       // Modifier spacing.
       modLeftPx,
       modRightPx,
+      totalLeftPx: 0,
+      totalRightPx: 0,
 
       // Displaced note head on left or right.
       leftDisplacedHeadPx: this.leftDisplacedHeadPx,

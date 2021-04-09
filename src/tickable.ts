@@ -170,6 +170,12 @@ export abstract class Tickable extends Element {
     return 0;
   }
 
+  /** Sets the center x shift. */
+  setCenterXShift(centerXShift: number): this {
+    this.center_x_shift = centerXShift;
+    return this;
+  }
+
   // Checks if tickable is center aligned. */
   isCenterAligned(): boolean {
     return this.align_center;
