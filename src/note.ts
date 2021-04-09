@@ -256,15 +256,13 @@ export abstract class Note extends Tickable {
   render_options: NoteRenderOptions;
   duration: string;
   positions?: TabNotePositon[];
-
   dots: number;
   leftDisplacedHeadPx: number;
   rightDisplacedHeadPx: number;
   noteType: string;
   customGlyphs: GlyphProps[];
   ys: number[];
-  glyph: Glyph;
-
+  glyph: Glyph | GlyphProps;
   customTypes: string[];
   playNote?: Note;
 
@@ -502,7 +500,7 @@ export abstract class Note extends Tickable {
   setStave(stave: Stave): this {
     this.stave = stave;
     this.setYs([stave.getYForLine(0)]); // Update Y values if the stave is changed.
-    this.context = this.stave.context;
+    this.setContext(this.stave.getContext());
     return this;
   }
 
@@ -510,12 +508,6 @@ export abstract class Note extends Tickable {
   // a `ModifierContext`.
   getCategory(): string {
     return Note.CATEGORY;
-  }
-
-  // Set the rendering context for the note.
-  setContext(context: RenderContext): this {
-    this.context = context;
-    return this;
   }
 
   // Get and set spacing to the left and right of the notes.
@@ -550,7 +542,7 @@ export abstract class Note extends Tickable {
   }
 
   // Get the glyph associated with this note.
-  getGlyph(): Glyph {
+  getGlyph(): Glyph | GlyphProps {
     return this.glyph;
   }
 
@@ -559,8 +551,8 @@ export abstract class Note extends Tickable {
     if (this.glyph) {
       if (this.glyph.getMetrics) {
         return this.glyph.getMetrics().width;
-        // } else if (this.glyph.getWidth) {
-        // return this.glyph.getWidth(this.render_options.glyph_font_scale);
+        //} else if (this.glyph.getWidth) {
+        //  return this.glyph.getWidth(this.render_options.glyph_font_scale);
       }
     }
 
