@@ -23,6 +23,7 @@ import { ModifierContext } from './modifiercontext';
 import { Modifier } from './modifier';
 import { RenderContext } from './types/common';
 import { Fraction } from './fraction';
+import { ElementStyle } from './element';
 
 export const GLYPH_PROPS_VALID_TYPES: Record<string, Record<string, string>> = {
   n: { name: 'note' },
@@ -218,14 +219,14 @@ export interface StaveNoteStruct {
   superscript: string;
   text: string;
   positions: number[];
-  slashed: any;
-  style: any;
+  slashed: boolean;
+  style: ElementStyle;
   stem_down_x_offset: number;
   stem_up_x_offset: number;
-  custom_glyph_code: any;
+  custom_glyph_code: string;
   x_shift: number;
   displaced: boolean;
-  note_type: any;
+  note_type: string;
   y: number;
   x: number;
   index: number;
