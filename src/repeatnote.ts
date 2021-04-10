@@ -2,22 +2,18 @@
 
 import { GlyphNote } from './glyphnote';
 import { Glyph } from './glyph';
+import { NoteStruct } from './note';
+import { GlyphNoteOptions } from './types/common';
 
 export class RepeatNote extends GlyphNote {
-  constructor(type, noteStruct, options) {
+  constructor(type: string, noteStruct?: NoteStruct, options?: GlyphNoteOptions) {
     // Smufl Codes
     const CODES = {
-      1: 'repeat1Bar',
-      2: 'repeat2Bars',
-      4: 'repeat4Bars',
+      '1': 'repeat1Bar',
+      '2': 'repeat2Bars',
+      '4': 'repeat4Bars',
       slash: 'repeatBarSlash',
-    };
-
-    noteStruct = {
-      duration: 'q',
-      align_center: type !== 'slash',
-      ...noteStruct,
-    };
+    } as Record<string, string>;
 
     super(null, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
     this.setAttribute('type', 'RepeatNote');
