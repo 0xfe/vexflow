@@ -20,7 +20,8 @@ import { Voice } from './voice';
 import { TickContext } from './tickcontext';
 import { ModifierContext } from './modifiercontext';
 import { Modifier } from './modifier';
-import { RenderContext, GLYPH_PROPS_VALID_TYPES, GlyphProps } from './types/common';
+import { RenderContext, GlyphProps } from './types/common';
+import { GLYPH_PROPS_VALID_TYPES } from './common';
 import { Fraction } from './fraction';
 import { Beam } from './beam';
 

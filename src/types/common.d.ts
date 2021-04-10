@@ -1,12 +1,3 @@
-//** TODO: Resolve duplication with Flow */
-export const GLYPH_PROPS_VALID_TYPES: Record<string, Record<string, string>> = {
-  n: { name: 'note' },
-  r: { name: 'rest' },
-  h: { name: 'harmonic' },
-  m: { name: 'muted' },
-  s: { name: 'slash' },
-};
-
 //** TODO: Simplify */
 export interface Font {
   glyphs: { x_min: number; x_max: number; ha: number; o: string[] }[];
