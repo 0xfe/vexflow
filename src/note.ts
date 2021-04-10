@@ -20,101 +20,9 @@ import { Voice } from './voice';
 import { TickContext } from './tickcontext';
 import { ModifierContext } from './modifiercontext';
 import { Modifier } from './modifier';
-import { RenderContext } from './types/common';
+import { RenderContext, GLYPH_PROPS_VALID_TYPES, GlyphProps } from './types/common';
 import { Fraction } from './fraction';
 import { Beam } from './beam';
-
-export const GLYPH_PROPS_VALID_TYPES: Record<string, Record<string, string>> = {
-  n: { name: 'note' },
-  r: { name: 'rest' },
-  h: { name: 'harmonic' },
-  m: { name: 'muted' },
-  s: { name: 'slash' },
-};
-
-export interface Coordinates {
-  x: number;
-  y: number;
-}
-
-export interface Font {
-  glyphs: { x_min: number; x_max: number; ha: number; o: string[] }[];
-  cssFontWeight: string;
-  ascender: number;
-  underlinePosition: number;
-  cssFontStyle: string;
-  boundingBox: { yMin: number; xMin: number; yMax: number; xMax: number };
-  resolution: number;
-  descender: number;
-  familyName: string;
-  lineHeight: number;
-  underlineThickness: number;
-  /**
-   * This property is missing in vexflow_font.js, but present in gonville_original.js and gonville_all.js.
-   */
-  original_font_information?: {
-    postscript_name: string;
-    version_string: string;
-    vendor_url: string;
-    full_font_name: string;
-    font_family_name: string;
-    copyright: string;
-    description: string;
-    trademark: string;
-    designer: string;
-    designer_url: string;
-    unique_font_identifier: string;
-    license_url: string;
-    license_description: string;
-    manufacturer_name: string;
-    font_sub_family_name: string;
-  };
-}
-export interface GlyphProps {
-  code_head: string;
-  dot_shiftY: number;
-  position: string;
-  rest: boolean;
-  line_below: number;
-  line_above: number;
-  stem_up_extension: never;
-  stem_down_extension: never;
-  stem: never;
-  code: string;
-  code_flag_upstem: string;
-  code_flag_downstem: string;
-  flag: boolean;
-  width: number;
-  text: string;
-  tabnote_stem_down_extension: number;
-  tabnote_stem_up_extension: number;
-  beam_count: number;
-  duration_codes: Record<string, DurationCode>;
-  validTypes: Record<string, NameValue>;
-  shift_y: number;
-
-  getWidth(a?: number): number;
-
-  getMetrics(): GlyphMetrics;
-}
-
-export interface GlyphOptions {
-  fontStack: Font[];
-  category: string;
-}
-
-export interface GlyphMetrics {
-  width: number;
-  height: number;
-  x_min: number;
-  x_max: number;
-  x_shift: number;
-  y_shift: number;
-  scale: number;
-  ha: number;
-  outline: number[];
-  font: Font;
-}
 
 export interface Metrics {
   totalLeftPx?: number;
@@ -141,37 +49,6 @@ export interface NoteDuration {
   type: string;
 }
 
-export interface DurationCode {
-  common: Type;
-  type: Record<string, Type>;
-}
-
-export interface Type extends KeyProps {
-  getWidth(scale?: number): number;
-
-  code: string;
-  code_head: string;
-  stem: boolean;
-  rest: boolean;
-  flag: boolean;
-  stem_offset: number;
-  stem_up_extension: number;
-  stem_down_extension: number;
-  tabnote_stem_up_extension: number;
-  tabnote_stem_down_extension: number;
-  dot_shiftY: number;
-  line_above: number;
-  line_below: number;
-  beam_count: number;
-  code_flag_upstem: string;
-  code_flag_downstem: string;
-  position: string;
-}
-
-export interface NameValue {
-  name: string;
-}
-
 export interface NoteRenderOptions {
   draw_stem_through_stave?: boolean;
   draw_dots?: boolean;
@@ -195,20 +72,6 @@ export interface ParsedNote {
   ticks: number;
 }
 
-export interface KeyProps {
-  stem_down_x_offset: number;
-  stem_up_x_offset: number;
-  key: string;
-  octave: number;
-  line: number;
-  int_value: number;
-  accidental: string;
-  code: string;
-  stroke: number;
-  shift_right: number;
-  displaced: boolean;
-}
-
 export interface NoteStruct {
   line: number;
   /** The number of dots, which affects the duration. */
@@ -220,11 +83,6 @@ export interface NoteStruct {
   duration_override: Fraction;
   /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
   duration: string;
-}
-
-export interface TabNotePositon {
-  fret: string;
-  str: number;
 }
 
 /**
@@ -240,7 +98,6 @@ export abstract class Note extends Tickable {
   protected stave?: Stave;
   protected render_options: NoteRenderOptions;
   protected duration: string;
-  protected positions?: TabNotePositon[];
   protected dots: number;
   protected leftDisplacedHeadPx: number;
   protected rightDisplacedHeadPx: number;
@@ -420,10 +277,6 @@ export abstract class Note extends Tickable {
     // Get the glyph code for this note from the font.
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
     this.customGlyphs = this.customTypes.map((t) => Flow.getGlyphProps(this.duration, t));
-
-    if (this.positions && (typeof this.positions !== 'object' || !this.positions.length)) {
-      throw new Vex.RuntimeError('BadArguments', 'Note keys must be array type.');
-    }
 
     // Note to play for audio players.
     this.playNote = undefined;
@@ -656,7 +509,7 @@ export abstract class Note extends Tickable {
   }
 
   /** Get the coordinates for where modifiers begin. */
-  getModifierStartXY(): Coordinates {
+  getModifierStartXY(): { x: number; y: number } {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
