@@ -15,7 +15,6 @@ import { Flow } from './tables';
 import { Tickable } from './tickable';
 import { Stroke } from './strokes';
 import { Stave } from './stave';
-import { Glyph } from './glyph';
 import { BoundingBox } from './boundingbox';
 import { Voice } from './voice';
 import { TickContext } from './tickcontext';
@@ -23,7 +22,6 @@ import { ModifierContext } from './modifiercontext';
 import { Modifier } from './modifier';
 import { RenderContext } from './types/common';
 import { Fraction } from './fraction';
-import { ElementStyle } from './element';
 import { Beam } from './beam';
 
 export const GLYPH_PROPS_VALID_TYPES: Record<string, Record<string, string>> = {
@@ -211,40 +209,17 @@ export interface KeyProps {
   displaced: boolean;
 }
 
-export interface StaveNoteStruct {
-  ignore_ticks: boolean;
-  smooth: boolean;
-  glyph: string;
-  font: Font;
-  subscript: string;
-  superscript: string;
-  text: string;
-  positions: number[];
-  slashed: boolean;
-  style: ElementStyle;
-  stem_down_x_offset: number;
-  stem_up_x_offset: number;
-  custom_glyph_code: string;
-  x_shift: number;
-  displaced: boolean;
-  note_type: string;
-  y: number;
-  x: number;
-  index: number;
+export interface NoteStruct {
   line: number;
+  /** The number of dots, which affects the duration. */
+  dots: number;
+  keys: string[];
+  /** The note type (e.g., `r` for rest, `s` for slash notes, etc.). */
+  type: string;
   align_center: boolean;
   duration_override: Fraction;
-  slash: boolean;
-  stroke_px: number;
-  glyph_font_scale: number;
-  stem_direction: number;
-  auto_stem: boolean;
-  octave_shift: number;
-  clef: string;
-  keys: string[];
+  /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
   duration: string;
-  dots: number;
-  type: string;
 }
 
 export interface TabNotePositon {
@@ -252,6 +227,15 @@ export interface TabNotePositon {
   str: number;
 }
 
+/**
+ * Note implements an abstract interface for notes and chords that
+ * are rendered on a stave. Notes have some common properties: All of them
+ * have a value (e.g., pitch, fret, etc.) and a duration (quarter, half, etc.)
+ *
+ * Some notes have stems, heads, dots, etc. Most notational elements that
+ * surround a note are called *modifiers*, and every note has an associated
+ * array of them. All notes also have a rendering context and belong to a stave.
+ */
 export abstract class Note extends Tickable {
   protected stave?: Stave;
   protected render_options: NoteRenderOptions;
@@ -273,8 +257,9 @@ export abstract class Note extends Tickable {
     return 'note';
   }
 
-  // Debug helper. Displays various note metrics for the given
-  // note.
+  /** Debug helper. Displays various note metrics for the given
+   * note.
+   */
   static plotMetrics(ctx: RenderContext, note: Note, yPos: number): void {
     const metrics = note.getMetrics();
     const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.leftDisplacedHeadPx;
@@ -334,7 +319,7 @@ export abstract class Note extends Tickable {
     return { duration, dots, type };
   }
 
-  static parseNoteStruct(noteStruct: StaveNoteStruct): ParsedNote | undefined {
+  static parseNoteStruct(noteStruct: NoteStruct): ParsedNote | undefined {
     const durationString = noteStruct.duration;
     const customTypes: string[] = [];
 
@@ -394,17 +379,12 @@ export abstract class Note extends Tickable {
     };
   }
 
-  // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
-  // positioning and layout.
-  // To create a new note you need to provide a `noteStruct`, which consists
-  // of the following fields:
-  //
-  // `type`: The note type (e.g., `r` for rest, `s` for slash notes, etc.)
-  // `dots`: The number of dots, which affects the duration.
-  // `duration`: The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.)
-  //
-  // The range of values for these parameters are available in `src/tables.js`.
-  constructor(noteStruct: StaveNoteStruct) {
+  /**
+   * Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
+   * positioning and layout.
+   * To create a new note you need to provide a `noteStruct`.
+   */
+  constructor(noteStruct: NoteStruct) {
     super();
     this.setAttribute('type', 'Note');
 
@@ -415,7 +395,7 @@ export abstract class Note extends Tickable {
       );
     }
 
-    // Parse `noteStruct` and get note properties.
+    /** Parses `noteStruct` and get note properties. */
     const initStruct = Note.parseNoteStruct(noteStruct);
     if (!initStruct) {
       throw new Vex.RuntimeError('BadArguments', `Invalid note initialization object: ${JSON.stringify(noteStruct)}`);
@@ -507,8 +487,10 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  // `Note` is not really a modifier, but is used in
-  // a `ModifierContext`.
+  /**
+   * `Note` is not really a modifier, but is used in
+   * a `ModifierContext`.
+   */
   getCategory(): string {
     return Note.CATEGORY;
   }
@@ -529,47 +511,54 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  // Returns true if this note has no duration (e.g., bar notes, spacers, etc.)
+  /** Returns true if this note has no duration (e.g., bar notes, spacers, etc.) */
   shouldIgnoreTicks(): boolean {
     return this.ignore_ticks;
   }
 
-  // Get the stave line number for the note.
+  /** Gets the stave line number for the note. */
   getLineNumber(): number {
     return 0;
   }
 
-  // Get the stave line number for rest.
+  /** Gets the stave line number for rest. */
   getLineForRest(): number {
     return 0;
   }
 
-  // Get the glyph associated with this note.
+  /** Get the glyph associated with this note. */
   getGlyph(): // eslint-disable-next-line
   any {
     return this.glyph;
   }
 
+  /** Get the glyph width. */
   getGlyphWidth(): number {
     // TODO: FIXME (multiple potential values for this.glyph)
     if (this.glyph) {
       if (this.glyph.getMetrics) {
         return this.glyph.getMetrics().width;
-        //} else if (this.glyph.getWidth) {
-        //  return this.glyph.getWidth(this.render_options.glyph_font_scale);
+      } else if (this.glyph.getWidth) {
+        return this.glyph.getWidth(this.render_options.glyph_font_scale);
       }
     }
 
     return 0;
   }
 
-  // Set and get Y positions for this note. Each Y value is associated with
-  // an individual pitch/key within the note/chord.
+  /**
+   * Sets Y positions for this note. Each Y value is associated with
+   * an individual pitch/key within the note/chord.
+   */
   setYs(ys: number[]): this {
     this.ys = ys;
     return this;
   }
 
+  /**
+   * Gets Y positions for this note. Each Y value is associated with
+   * an individual pitch/key within the note/chord.
+   */
   getYs(): number[] {
     if (this.ys.length === 0) {
       throw new Vex.RERR('NoYValues', 'No Y-values calculated for this note.');
@@ -578,8 +567,10 @@ export abstract class Note extends Tickable {
     return this.ys;
   }
 
-  // Get the Y position of the space above the stave onto which text can
-  // be rendered.
+  /**
+   * Get the Y position of the space above the stave onto which text can
+   * be rendered.
+   */
   getYForTopText(text_line: number): number {
     if (!this.stave) {
       throw new Vex.RERR('NoStave', 'No stave attached to this note.');
@@ -588,12 +579,12 @@ export abstract class Note extends Tickable {
     return this.stave.getYForTopText(text_line);
   }
 
-  // Gets a `BoundingBox` for this note.
+  /** Gets a `BoundingBox` for this note. */
   getBoundingBox(): BoundingBox | undefined {
     return undefined;
   }
 
-  // Returns the voice that this note belongs in.
+  /** Returns the voice that this note belongs in. */
   getVoice(): Voice {
     if (!this.voice) throw new Vex.RERR('NoVoice', 'Note has no voice.');
     return this.voice;
@@ -647,7 +638,7 @@ export abstract class Note extends Tickable {
   setBeam(beam: Beam): this {
     this.beam = beam;
     return this;
-  } // ignore parameters
+  }
 
   /** Attach this note to a modifier context. */
   setModifierContext(mc?: ModifierContext): this {
