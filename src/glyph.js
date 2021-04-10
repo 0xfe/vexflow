@@ -313,11 +313,6 @@ export class Glyph extends Element {
     };
   }
 
-  // eslint-disable-next-line
-  getWidth(a) {
-    return this.bbox.getW();
-  }
-
   setOriginX(x) {
     const { bbox } = this;
     const originX = Math.abs(bbox.getX() / bbox.getW());

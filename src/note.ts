@@ -262,7 +262,8 @@ export abstract class Note extends Tickable {
   noteType: string;
   customGlyphs: GlyphProps[];
   ys: number[];
-  glyph: Glyph | GlyphProps;
+  // eslint-disable-next-line
+  glyph: any;
   customTypes: string[];
   playNote?: Note;
 
@@ -542,7 +543,8 @@ export abstract class Note extends Tickable {
   }
 
   // Get the glyph associated with this note.
-  getGlyph(): Glyph | GlyphProps {
+  getGlyph(): // eslint-disable-next-line
+  any {
     return this.glyph;
   }
 
