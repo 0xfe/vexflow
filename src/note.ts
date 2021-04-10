@@ -24,6 +24,7 @@ import { Modifier } from './modifier';
 import { RenderContext } from './types/common';
 import { Fraction } from './fraction';
 import { ElementStyle } from './element';
+import { Beam } from './beam';
 
 export const GLYPH_PROPS_VALID_TYPES: Record<string, Record<string, string>> = {
   n: { name: 'note' },
@@ -252,20 +253,21 @@ export interface TabNotePositon {
 }
 
 export abstract class Note extends Tickable {
-  stave?: Stave;
-  render_options: NoteRenderOptions;
-  duration: string;
-  positions?: TabNotePositon[];
-  dots: number;
-  leftDisplacedHeadPx: number;
-  rightDisplacedHeadPx: number;
-  noteType: string;
-  customGlyphs: GlyphProps[];
-  ys: number[];
+  protected stave?: Stave;
+  protected render_options: NoteRenderOptions;
+  protected duration: string;
+  protected positions?: TabNotePositon[];
+  protected dots: number;
+  protected leftDisplacedHeadPx: number;
+  protected rightDisplacedHeadPx: number;
+  protected noteType: string;
+  protected customGlyphs: GlyphProps[];
+  protected ys: number[];
   // eslint-disable-next-line
-  glyph: any;
-  customTypes: string[];
-  playNote?: Note;
+  protected glyph: any;
+  protected customTypes: string[];
+  protected playNote?: Note;
+  protected beam?: Beam;
 
   static get CATEGORY(): string {
     return 'note';
@@ -641,8 +643,9 @@ export abstract class Note extends Tickable {
     return this.noteType;
   }
 
-  /** TODO: description. */
-  setBeam(): this {
+  /** Sets the beam. */
+  setBeam(beam: Beam): this {
+    this.beam = beam;
     return this;
   } // ignore parameters
 
