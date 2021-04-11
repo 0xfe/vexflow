@@ -30,7 +30,7 @@ export interface Metrics {
   totalRightPx?: number;
   /** The total width of the note (including modifiers). */
   width: number;
-  glyphWidth: number;
+  glyphWidth?: number;
   /** The width of the note head only. */
   notePx: number;
   /** Start `X` for left modifiers. */

@@ -7,20 +7,7 @@
 import { Vex } from './vex';
 import { Tickable } from './tickable';
 import { Fraction } from './fraction';
-import { Note } from './note';
-
-export interface Metrics {
-  totalLeftPx: number;
-  totalRightPx: number;
-  width: number;
-  glyphWidth?: number;
-  notePx: number;
-  modLeftPx: number;
-  modRightPx: number;
-  leftDisplacedHeadPx: number;
-  glyphPx: number;
-  rightDisplacedHeadPx: number;
-}
+import { Metrics, Note } from './note';
 
 export interface TickContextOptions {
   tickID: number;
@@ -249,7 +236,7 @@ export class TickContext extends Tickable {
       this.notePx = Math.max(this.notePx, metrics.notePx);
 
       // Maintain the widest note head
-      this.glyphPx = Math.max(this.glyphPx, metrics.glyphWidth);
+      this.glyphPx = Math.max(this.glyphPx, metrics.glyphWidth || 0);
 
       // Total modifier shift
       this.modLeftPx = Math.max(this.modLeftPx, metrics.modLeftPx);
