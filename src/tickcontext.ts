@@ -26,37 +26,41 @@ export interface TickContextOptions {
   tickID: number;
 }
 
+/**
+ * Tickcontext formats abstract tickable objects, such as notes, chords,
+ * tabs, etc.
+ */
 export class TickContext extends Tickable {
-  private readonly tickID: number;
-  private readonly tickables: Note[];
-  private readonly tickablesByVoice: Record<string, Note>;
-  private currentTick: Fraction;
-  private maxTicks: Fraction;
-  private padding: number;
-  private xBase: number;
-  private x: number;
-  private xOffset: number;
-  private notePx: number;
-  private glyphPx: number;
-  private leftDisplacedHeadPx: number;
-  private rightDisplacedHeadPx: number;
-  private modLeftPx: number;
-  private modRightPx: number;
-  private totalLeftPx: number;
-  private totalRightPx: number;
-  private maxTickable?: Note;
-  private minTicks?: Fraction;
-  private minTickable?: Note;
+  protected readonly tickID: number;
+  protected readonly tickables: Note[];
+  protected readonly tickablesByVoice: Record<string, Note>;
+  protected currentTick: Fraction;
+  protected maxTicks: Fraction;
+  protected padding: number;
+  protected xBase: number;
+  protected x: number;
+  protected xOffset: number;
+  protected notePx: number;
+  protected glyphPx: number;
+  protected leftDisplacedHeadPx: number;
+  protected rightDisplacedHeadPx: number;
+  protected modLeftPx: number;
+  protected modRightPx: number;
+  protected totalLeftPx: number;
+  protected totalRightPx: number;
+  protected maxTickable?: Note;
+  protected minTicks?: Fraction;
+  protected minTickable?: Note;
   tContexts: TickContext[];
 
   // eslint-disable-next-line
   draw() {}
 
-  static getNextContext(tContext: TickContext): TickContext {
+  static getNextContext(tContext: TickContext): TickContext | undefined {
     const contexts = tContext.tContexts;
     const index = contexts.indexOf(tContext);
 
-    return contexts[index + 1];
+    if (index + 1 < contexts.length) return contexts[index + 1];
   }
 
   constructor(options?: TickContextOptions) {
@@ -163,7 +167,7 @@ export class TickContext extends Tickable {
     return this.tickables.filter((tickable) => tickable.isCenterAligned());
   }
 
-  // Get widths context, note and left/right modifiers for formatting
+  /** Gets widths context, note and left/right modifiers for formatting. */
   getMetrics(): Metrics {
     const {
       width,
