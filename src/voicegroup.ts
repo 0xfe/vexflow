@@ -1,10 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { ModifierContext } from './modifiercontext';
+import type { ModifierContext } from './modifiercontext';
 import { Vex } from './vex';
 import { Voice } from './voice';
 
-/** @constructor */
 export class VoiceGroup {
   protected voices: Voice[];
   protected modifierContexts: ModifierContext[];
