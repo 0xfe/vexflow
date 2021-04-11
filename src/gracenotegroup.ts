@@ -23,29 +23,30 @@ export interface GraceNoteGroupRenderOptions {
   slur_y_shift: number;
 }
 
-// To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
+// To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 function L(...args: string[]) {
   if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
 }
 
+/** GraceNoteGroup is used to format and render grace notes. */
 export class GraceNoteGroup extends Modifier {
   static DEBUG: boolean;
 
-  private readonly voice: Voice;
-  private readonly grace_notes: Note[];
-  private readonly show_slur?: boolean;
+  protected readonly voice: Voice;
+  protected readonly grace_notes: Note[];
+  protected readonly show_slur?: boolean;
 
-  private preFormatted: boolean;
-  private formatter: Formatter;
-  private render_options: GraceNoteGroupRenderOptions;
-  private slur?: StaveTie | TabTie;
-  private beams: Beam[];
+  protected preFormatted: boolean;
+  protected formatter: Formatter;
+  protected render_options: GraceNoteGroupRenderOptions;
+  protected slur?: StaveTie | TabTie;
+  protected beams: Beam[];
 
   static get CATEGORY(): string {
     return 'gracenotegroups';
   }
 
-  // Arrange groups inside a `ModifierContext`
+  /** Arranges groups inside a `ModifierContext`. */
   static format(gracenote_groups: GraceNoteGroup[], state: GraceNoteGroupFormatOptions): boolean {
     const group_spacing_stave = 4;
     const group_spacing_tab = 0;
@@ -93,10 +94,7 @@ export class GraceNoteGroup extends Modifier {
     return true;
   }
 
-  // ## Prototype Methods
-  //
-  // `GraceNoteGroup` inherits from `Modifier` and is placed inside a
-  // `ModifierContext`.
+  //** `GraceNoteGroup` inherits from `Modifier` and is placed inside a `ModifierContext`. */
   constructor(grace_notes: Note[], show_slur?: boolean) {
     super();
     this.setAttribute('type', 'GraceNoteGroup');
@@ -160,16 +158,20 @@ export class GraceNoteGroup extends Modifier {
     this.note = note;
     return this;
   }
+
   setWidth(width: number): this {
     this.width = width;
     return this;
   }
+
   getWidth(): number {
     return this.width;
   }
+
   getGraceNotes(): Note[] {
     return this.grace_notes;
   }
+
   draw(): void {
     this.checkContext();
 
