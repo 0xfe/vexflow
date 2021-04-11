@@ -33,6 +33,7 @@ const Flow = {
   keyProperties: keyProperties,
   integerToNote: integerToNote,
   durationToTicks: durationToTicks,
+  durationToFraction: durationToFraction,
   getGlyphProps: getGlyphProps,
 };
 
@@ -697,7 +698,9 @@ Flow.sanitizeDuration = (duration) => {
 };
 
 // Convert the `duration` to an fraction
-Flow.durationToFraction = (duration) => new Fraction().parse(Flow.sanitizeDuration(duration));
+function durationToFraction(duration) {
+  return new Fraction().parse(Flow.sanitizeDuration(duration));
+}
 
 // Convert the `duration` to an number
 Flow.durationToNumber = (duration) => Flow.durationToFraction(duration).value();
