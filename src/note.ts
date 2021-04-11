@@ -13,15 +13,112 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Tickable } from './tickable';
+import { Stroke } from './strokes';
+import { Stave } from './stave';
+import { BoundingBox } from './boundingbox';
+import { Voice } from './voice';
+import { TickContext } from './tickcontext';
+import { ModifierContext } from './modifiercontext';
+import { Modifier } from './modifier';
+import { RenderContext, GlyphProps } from './types/common';
+import { GLYPH_PROPS_VALID_TYPES } from './common';
+import { Fraction } from './fraction';
+import { Beam } from './beam';
 
-export class Note extends Tickable {
-  static get CATEGORY() {
+export interface Metrics {
+  totalLeftPx?: number;
+  totalRightPx?: number;
+  /** The total width of the note (including modifiers). */
+  width: number;
+  glyphWidth: number;
+  /** The width of the note head only. */
+  notePx: number;
+  /** Start `X` for left modifiers. */
+  modLeftPx: number;
+  /** Start `X` for right modifiers. */
+  modRightPx: number;
+  /** Extra space on left of note. */
+  leftDisplacedHeadPx: number;
+  glyphPx?: number;
+  /** Extra space on right of note. */
+  rightDisplacedHeadPx: number;
+}
+
+export interface NoteDuration {
+  duration: string;
+  dots: number;
+  type: string;
+}
+
+export interface NoteRenderOptions {
+  draw_stem_through_stave?: boolean;
+  draw_dots?: boolean;
+  draw_stem?: boolean;
+  y_shift?: number;
+  extend_left?: number;
+  extend_right?: number;
+  glyph_font_scale?: number;
+  annotation_spacing: number;
+  glyph_font_size?: number;
+  scale?: number;
+  font?: string;
+  stroke_px?: number;
+}
+
+export interface ParsedNote {
+  duration: string;
+  type: string;
+  customTypes: string[];
+  dots: number;
+  ticks: number;
+}
+
+export interface NoteStruct {
+  line: number;
+  /** The number of dots, which affects the duration. */
+  dots: number;
+  keys: string[];
+  /** The note type (e.g., `r` for rest, `s` for slash notes, etc.). */
+  type: string;
+  align_center: boolean;
+  duration_override: Fraction;
+  /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
+  duration: string;
+}
+
+/**
+ * Note implements an abstract interface for notes and chords that
+ * are rendered on a stave. Notes have some common properties: All of them
+ * have a value (e.g., pitch, fret, etc.) and a duration (quarter, half, etc.)
+ *
+ * Some notes have stems, heads, dots, etc. Most notational elements that
+ * surround a note are called *modifiers*, and every note has an associated
+ * array of them. All notes also have a rendering context and belong to a stave.
+ */
+export abstract class Note extends Tickable {
+  protected stave?: Stave;
+  protected render_options: NoteRenderOptions;
+  protected duration: string;
+  protected dots: number;
+  protected leftDisplacedHeadPx: number;
+  protected rightDisplacedHeadPx: number;
+  protected noteType: string;
+  protected customGlyphs: GlyphProps[];
+  protected ys: number[];
+  // eslint-disable-next-line
+  protected glyph: any;
+  protected customTypes: string[];
+  protected playNote?: Note;
+  protected beam?: Beam;
+
+  static get CATEGORY(): string {
     return 'note';
   }
 
-  // Debug helper. Displays various note metrics for the given
-  // note.
-  static plotMetrics(ctx, note, yPos) {
+  /** Debug helper. Displays various note metrics for the given
+   * note.
+   */
+  static plotMetrics(ctx: RenderContext, note: Note, yPos: number): void {
     const metrics = note.getMetrics();
     const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.leftDisplacedHeadPx;
     const xPre1 = note.getAbsoluteX() - metrics.leftDisplacedHeadPx;
@@ -37,7 +134,7 @@ export class Note extends Tickable {
     ctx.fillText(Math.round(xWidth) + 'px', xStart + note.getXShift(), yPos);
 
     const y = yPos + 7;
-    function stroke(x1, x2, color, yy = y) {
+    function stroke(x1: number, x2: number, color: string, yy: number = y) {
       ctx.beginPath();
       ctx.setStrokeStyle(color);
       ctx.setFillStyle(color);
@@ -66,15 +163,11 @@ export class Note extends Tickable {
     ctx.restore();
   }
 
-  static parseDuration(durationString) {
-    if (typeof durationString !== 'string') {
-      return null;
-    }
-
+  static parseDuration(durationString: string): NoteDuration | undefined {
     const regexp = /(\d*\/?\d+|[a-z])(d*)([nrhms]|$)/;
     const result = regexp.exec(durationString);
     if (!result) {
-      return null;
+      return undefined;
     }
 
     const duration = result[1];
@@ -84,20 +177,20 @@ export class Note extends Tickable {
     return { duration, dots, type };
   }
 
-  static parseNoteStruct(noteStruct) {
+  static parseNoteStruct(noteStruct: NoteStruct): ParsedNote | undefined {
     const durationString = noteStruct.duration;
-    const customTypes = [];
+    const customTypes: string[] = [];
 
     // Preserve backwards-compatibility
     const durationProps = Note.parseDuration(durationString);
     if (!durationProps) {
-      return null;
+      return undefined;
     }
 
-    // If specified type is invalid, return null
+    // If specified type is invalid, return undefined
     let type = noteStruct.type;
-    if (type && !Flow.getGlyphProps.validTypes[type]) {
-      return null;
+    if (type && !GLYPH_PROPS_VALID_TYPES[type]) {
+      return undefined;
     }
 
     // If no type specified, check duration or custom types
@@ -116,20 +209,20 @@ export class Note extends Tickable {
 
     // Calculate the tick duration of the note
     let ticks = Flow.durationToTicks(durationProps.duration);
-    if (ticks == null) {
-      return null;
+    if (!ticks) {
+      return undefined;
     }
 
     // Are there any dots?
     const dots = noteStruct.dots ? noteStruct.dots : durationProps.dots;
     if (typeof dots !== 'number') {
-      return null;
+      return undefined;
     }
 
     // Add ticks as necessary depending on the numbr of dots
     let currentTicks = ticks;
     for (let i = 0; i < dots; i++) {
-      if (currentTicks <= 1) return null;
+      if (currentTicks <= 1) return undefined;
 
       currentTicks = currentTicks / 2;
       ticks += currentTicks;
@@ -144,17 +237,12 @@ export class Note extends Tickable {
     };
   }
 
-  // Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
-  // positioning and layout.
-  // To create a new note you need to provide a `noteStruct`, which consists
-  // of the following fields:
-  //
-  // `type`: The note type (e.g., `r` for rest, `s` for slash notes, etc.)
-  // `dots`: The number of dots, which affects the duration.
-  // `duration`: The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.)
-  //
-  // The range of values for these parameters are available in `src/tables.js`.
-  constructor(noteStruct) {
+  /**
+   * Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
+   * positioning and layout.
+   * To create a new note you need to provide a `noteStruct`.
+   */
+  constructor(noteStruct: NoteStruct) {
     super();
     this.setAttribute('type', 'Note');
 
@@ -165,7 +253,7 @@ export class Note extends Tickable {
       );
     }
 
-    // Parse `noteStruct` and get note properties.
+    /** Parses `noteStruct` and get note properties. */
     const initStruct = Note.parseNoteStruct(noteStruct);
     if (!initStruct) {
       throw new Vex.RuntimeError('BadArguments', `Invalid note initialization object: ${JSON.stringify(noteStruct)}`);
@@ -191,16 +279,10 @@ export class Note extends Tickable {
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
     this.customGlyphs = this.customTypes.map((t) => Flow.getGlyphProps(this.duration, t));
 
-    if (this.positions && (typeof this.positions !== 'object' || !this.positions.length)) {
-      throw new Vex.RuntimeError('BadArguments', 'Note keys must be array type.');
-    }
-
     // Note to play for audio players.
-    this.playNote = null;
+    this.playNote = undefined;
 
     // Positioning contexts used by the Formatter.
-    this.tickContext = null; // The current tick context.
-    this.modifierContext = null;
     this.ignore_ticks = false;
 
     // Positioning variables
@@ -208,7 +290,6 @@ export class Note extends Tickable {
     this.leftDisplacedHeadPx = 0; // Extra room on left for displaced note head
     this.rightDisplacedHeadPx = 0; // Extra room on right for displaced note head
     this.x_shift = 0; // X shift from tick context X
-    this.voice = null; // The voice that this note is in
     this.preFormatted = false; // Is this note preFormatted?
     this.ys = []; // list of y coordinates for each note
     // we need to hold on to these for ties and beams.
@@ -218,7 +299,6 @@ export class Note extends Tickable {
     }
 
     // The render surface.
-    this.stave = null;
     this.render_options = {
       annotation_spacing: 5,
     };
@@ -226,22 +306,23 @@ export class Note extends Tickable {
 
   // Get and set the play note, which is arbitrary data that can be used by an
   // audio player.
-  getPlayNote() {
+  getPlayNote(): Note | undefined {
     return this.playNote;
   }
-  setPlayNote(note) {
+
+  setPlayNote(note: Note): this {
     this.playNote = note;
     return this;
   }
 
   // Don't play notes by default, call them rests. This is also used by things like
   // beams and dots for positioning.
-  isRest() {
+  isRest(): boolean {
     return false;
   }
 
   // TODO(0xfe): Why is this method here?
-  addStroke(index, stroke) {
+  addStroke(index: number, stroke: Stroke): this {
     stroke.setNote(this);
     stroke.setIndex(index);
     this.modifiers.push(stroke);
@@ -250,65 +331,63 @@ export class Note extends Tickable {
   }
 
   // Get and set the target stave.
-  getStave() {
+  getStave(): Stave | undefined {
     return this.stave;
   }
-  setStave(stave) {
+  setStave(stave: Stave): this {
     this.stave = stave;
     this.setYs([stave.getYForLine(0)]); // Update Y values if the stave is changed.
-    this.context = this.stave.context;
+    this.setContext(this.stave.getContext());
     return this;
   }
 
-  // `Note` is not really a modifier, but is used in
-  // a `ModifierContext`.
-  getCategory() {
+  /**
+   * `Note` is not really a modifier, but is used in
+   * a `ModifierContext`.
+   */
+  getCategory(): string {
     return Note.CATEGORY;
   }
 
-  // Set the rendering context for the note.
-  setContext(context) {
-    this.context = context;
-    return this;
-  }
-
   // Get and set spacing to the left and right of the notes.
-  getLeftDisplacedHeadPx() {
+  getLeftDisplacedHeadPx(): number {
     return this.leftDisplacedHeadPx;
   }
-  getRightDisplacedHeadPx() {
+  getRightDisplacedHeadPx(): number {
     return this.rightDisplacedHeadPx;
   }
-  setLeftDisplacedHeadPx(x) {
+  setLeftDisplacedHeadPx(x: number): this {
     this.leftDisplacedHeadPx = x;
     return this;
   }
-  setRightDisplacedHeadPx(x) {
+  setRightDisplacedHeadPx(x: number): this {
     this.rightDisplacedHeadPx = x;
     return this;
   }
 
-  // Returns true if this note has no duration (e.g., bar notes, spacers, etc.)
-  shouldIgnoreTicks() {
+  /** Returns true if this note has no duration (e.g., bar notes, spacers, etc.) */
+  shouldIgnoreTicks(): boolean {
     return this.ignore_ticks;
   }
 
-  // Get the stave line number for the note.
-  getLineNumber() {
+  /** Gets the stave line number for the note. */
+  getLineNumber(): number {
     return 0;
   }
 
-  // Get the stave line number for rest.
-  getLineForRest() {
+  /** Gets the stave line number for rest. */
+  getLineForRest(): number {
     return 0;
   }
 
-  // Get the glyph associated with this note.
-  getGlyph() {
+  /** Get the glyph associated with this note. */
+  getGlyph(): // eslint-disable-next-line
+  any {
     return this.glyph;
   }
 
-  getGlyphWidth() {
+  /** Get the glyph width. */
+  getGlyphWidth(): number {
     // TODO: FIXME (multiple potential values for this.glyph)
     if (this.glyph) {
       if (this.glyph.getMetrics) {
@@ -321,13 +400,20 @@ export class Note extends Tickable {
     return 0;
   }
 
-  // Set and get Y positions for this note. Each Y value is associated with
-  // an individual pitch/key within the note/chord.
-  setYs(ys) {
+  /**
+   * Sets Y positions for this note. Each Y value is associated with
+   * an individual pitch/key within the note/chord.
+   */
+  setYs(ys: number[]): this {
     this.ys = ys;
     return this;
   }
-  getYs() {
+
+  /**
+   * Gets Y positions for this note. Each Y value is associated with
+   * an individual pitch/key within the note/chord.
+   */
+  getYs(): number[] {
     if (this.ys.length === 0) {
       throw new Vex.RERR('NoYValues', 'No Y-values calculated for this note.');
     }
@@ -335,9 +421,11 @@ export class Note extends Tickable {
     return this.ys;
   }
 
-  // Get the Y position of the space above the stave onto which text can
-  // be rendered.
-  getYForTopText(text_line) {
+  /**
+   * Get the Y position of the space above the stave onto which text can
+   * be rendered.
+   */
+  getYForTopText(text_line: number): number {
     if (!this.stave) {
       throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     }
@@ -345,62 +433,75 @@ export class Note extends Tickable {
     return this.stave.getYForTopText(text_line);
   }
 
-  // Get a `BoundingBox` for this note.
-  getBoundingBox() {
-    return null;
+  /** Gets a `BoundingBox` for this note. */
+  getBoundingBox(): BoundingBox | undefined {
+    return undefined;
   }
 
-  // Returns the voice that this note belongs in.
-  getVoice() {
+  /** Returns the voice that this note belongs in. */
+  getVoice(): Voice {
     if (!this.voice) throw new Vex.RERR('NoVoice', 'Note has no voice.');
     return this.voice;
   }
 
-  // Attach this note to `voice`.
-  setVoice(voice) {
+  /** Attaches this note to `voice`. */
+  setVoice(voice: Voice): this {
     this.voice = voice;
     this.preFormatted = false;
     return this;
   }
 
-  // Get and set the `TickContext` for this note.
-  getTickContext() {
+  /** Gets the `TickContext` for this note. */
+  getTickContext(): TickContext | undefined {
     return this.tickContext;
   }
-  setTickContext(tc) {
+
+  /** Sets the `TickContext` for this note. */
+  setTickContext(tc: TickContext): this {
     this.tickContext = tc;
     this.preFormatted = false;
     return this;
   }
 
-  // Accessors for the note type.
-  getDuration() {
+  /** Accessors to duration. */
+  getDuration(): string {
     return this.duration;
   }
-  isDotted() {
+
+  /** Accessors to isDotted. */
+  isDotted(): boolean {
     return this.dots > 0;
   }
-  hasStem() {
+
+  /** Accessors to hasStem. */
+  hasStem(): boolean {
     return false;
   }
-  getDots() {
+
+  /** Accessors to dots. */
+  getDots(): number {
     return this.dots;
   }
-  getNoteType() {
+
+  /** Accessors to note type. */
+  getNoteType(): string {
     return this.noteType;
   }
-  setBeam() {
-    return this;
-  } // ignore parameters
 
-  // Attach this note to a modifier context.
-  setModifierContext(mc) {
+  /** Sets the beam. */
+  setBeam(beam: Beam): this {
+    this.beam = beam;
+    return this;
+  }
+
+  /** Attach this note to a modifier context. */
+  setModifierContext(mc?: ModifierContext): this {
     this.modifierContext = mc;
     return this;
   }
 
-  // Attach a modifier to this note.
-  addModifier(modifier, index = 0) {
+  /** Attach a modifier to this note. */
+  addModifier(modifier: Modifier, index = 0): this {
     modifier.setNote(this);
     modifier.setIndex(index);
     this.modifiers.push(modifier);
@@ -408,8 +509,8 @@ export class Note extends Tickable {
     return this;
   }
 
-  // Get the coordinates for where modifiers begin.
-  getModifierStartXY() {
+  /** Get the coordinates for where modifiers begin. */
+  getModifierStartXY(): { x: number; y: number } {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
@@ -420,17 +521,8 @@ export class Note extends Tickable {
     };
   }
 
-  // Get bounds and metrics for this note.
-  //
-  // Returns a struct with fields:
-  // `width`: The total width of the note (including modifiers.)
-  // `notePx`: The width of the note head only.
-  // `left_shift`: The horizontal displacement of the note.
-  // `modLeftPx`: Start `X` for left modifiers.
-  // `modRightPx`: Start `X` for right modifiers.
-  // `leftDisplacedHeadPx`: Extra space on left of note.
-  // `rightDisplacedHeadPx`: Extra space on right of note.
-  getMetrics() {
+  /** Get the metrics for this note. */
+  getMetrics(): Metrics {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
     }
@@ -464,10 +556,12 @@ export class Note extends Tickable {
     };
   }
 
-  // Get the absolute `X` position of this note's tick context. This
-  // excludes x_shift, so you'll need to factor it in if you're
-  // looking for the post-formatted x-position.
-  getAbsoluteX() {
+  /**
+   * Gets the absolute `X` position of this note's tick context. This
+   * excludes x_shift, so you'll need to factor it in if you're
+   * looking for the post-formatted x-position.
+   */
+  getAbsoluteX(): number {
     if (!this.tickContext) {
       throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
     }
@@ -485,7 +579,8 @@ export class Note extends Tickable {
     return x;
   }
 
-  setPreFormatted(value) {
+  /** Sets preformatted status. */
+  setPreFormatted(value: boolean): void {
     this.preFormatted = value;
   }
 }

@@ -37,7 +37,7 @@ export interface ElementStyle {
  */
 export abstract class Element {
   protected static ID: number = 1000;
-  protected context?: RenderContext;
+  private context?: RenderContext;
   protected rendered: boolean;
   protected style?: ElementStyle;
   private attrs: ElementAttributes;
