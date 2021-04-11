@@ -14,19 +14,35 @@ import { Beam } from './beam';
 import { StaveTie } from './stavetie';
 import { TabTie } from './tabtie';
 import { StaveNote } from './stavenote';
+import { Note } from './note';
 
-// To enable logging for this class. Set `Vex.Flow.GraceNoteGroup.DEBUG` to `true`.
-function L(...args) {
+// To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
+function L(
+  // eslint-disable-next-line
+  ...args: any) {
   if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
 }
 
+/** GraceNoteGroup is used to format and render grace notes. */
 export class GraceNoteGroup extends Modifier {
-  static get CATEGORY() {
+  static DEBUG: boolean;
+
+  protected readonly voice: Voice;
+  protected readonly grace_notes: Note[];
+  protected readonly show_slur?: boolean;
+
+  protected preFormatted: boolean;
+  protected formatter: Formatter;
+  protected render_options: { slur_y_shift: number };
+  protected slur?: StaveTie | TabTie;
+  protected beams: Beam[];
+
+  static get CATEGORY(): string {
     return 'gracenotegroups';
   }
 
-  // Arrange groups inside a `ModifierContext`
-  static format(gracenote_groups, state) {
+  /** Arranges groups inside a `ModifierContext`. */
+  static format(gracenote_groups: GraceNoteGroup[], state: { left_shift: number }): boolean {
     const group_spacing_stave = 4;
     const group_spacing_tab = 0;
 
@@ -73,11 +89,8 @@ export class GraceNoteGroup extends Modifier {
     return true;
   }
 
-  // ## Prototype Methods
-  //
-  // `GraceNoteGroup` inherits from `Modifier` and is placed inside a
-  // `ModifierContext`.
-  constructor(grace_notes, show_slur) {
+  //** `GraceNoteGroup` inherits from `Modifier` and is placed inside a `ModifierContext`. */
+  constructor(grace_notes: Note[], show_slur?: boolean) {
     super();
     this.setAttribute('type', 'GraceNoteGroup');
 
@@ -90,7 +103,7 @@ export class GraceNoteGroup extends Modifier {
     this.preFormatted = false;
 
     this.show_slur = show_slur;
-    this.slur = null;
+    this.slur = undefined;
 
     this.formatter = new Formatter();
     this.voice = new Voice({
@@ -110,11 +123,11 @@ export class GraceNoteGroup extends Modifier {
     return this;
   }
 
-  getCategory() {
+  getCategory(): string {
     return GraceNoteGroup.CATEGORY;
   }
 
-  preFormat() {
+  preFormat(): void {
     if (this.preFormatted) return;
 
     this.formatter.joinVoices([this.voice]).format([this.voice], 0);
@@ -122,7 +135,7 @@ export class GraceNoteGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  beamNotes(grace_notes) {
+  beamNotes(grace_notes?: Note[]): this {
     grace_notes = grace_notes || this.grace_notes;
     if (grace_notes.length > 1) {
       const beam = new Beam(grace_notes);
@@ -136,19 +149,25 @@ export class GraceNoteGroup extends Modifier {
     return this;
   }
 
-  setNote(note) {
+  setNote(note: Note): this {
     this.note = note;
+    return this;
   }
-  setWidth(width) {
+
+  setWidth(width: number): this {
     this.width = width;
+    return this;
   }
-  getWidth() {
+
+  getWidth(): number {
     return this.width;
   }
-  getGraceNotes() {
+
+  getGraceNotes(): Note[] {
     return this.grace_notes;
   }
-  draw() {
+
+  draw(): void {
     this.checkContext();
 
     const note = this.getNote();
@@ -167,12 +186,12 @@ export class GraceNoteGroup extends Modifier {
 
     // Draw notes
     this.grace_notes.forEach((graceNote) => {
-      graceNote.setContext(this.context).draw();
+      graceNote.setContext(this.getContext()).draw();
     });
 
     // Draw beam
     this.beams.forEach((beam) => {
-      beam.setContext(this.context).draw();
+      beam.setContext(this.getContext()).draw();
     });
 
     if (this.show_slur) {
@@ -189,7 +208,7 @@ export class GraceNoteGroup extends Modifier {
 
       this.slur.render_options.cp2 = 12;
       this.slur.render_options.y_shift = (is_stavenote ? 7 : 5) + this.render_options.slur_y_shift;
-      this.slur.setContext(this.context).draw();
+      this.slur.setContext(this.getContext()).draw();
     }
   }
 }
