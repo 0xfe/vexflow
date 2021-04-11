@@ -17,7 +17,9 @@ import { StaveNote } from './stavenote';
 import { Note } from './note';
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
-function L(...args: string[]) {
+function L(
+  // eslint-disable-next-line
+  ...args: any) {
   if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
 }
 
