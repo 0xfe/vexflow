@@ -6,8 +6,8 @@ import { Voice } from './voice';
 
 /** @constructor */
 export class VoiceGroup {
-  private voices: Voice[];
-  private modifierContexts: ModifierContext[];
+  protected voices: Voice[];
+  protected modifierContexts: ModifierContext[];
 
   constructor() {
     this.voices = [];
