@@ -16,13 +16,6 @@ import { TabTie } from './tabtie';
 import { StaveNote } from './stavenote';
 import { Note } from './note';
 
-export interface GraceNoteGroupFormatOptions {
-  left_shift: number;
-}
-export interface GraceNoteGroupRenderOptions {
-  slur_y_shift: number;
-}
-
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 function L(...args: string[]) {
   if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
@@ -38,7 +31,7 @@ export class GraceNoteGroup extends Modifier {
 
   protected preFormatted: boolean;
   protected formatter: Formatter;
-  protected render_options: GraceNoteGroupRenderOptions;
+  protected render_options: { slur_y_shift: number };
   protected slur?: StaveTie | TabTie;
   protected beams: Beam[];
 
@@ -47,7 +40,7 @@ export class GraceNoteGroup extends Modifier {
   }
 
   /** Arranges groups inside a `ModifierContext`. */
-  static format(gracenote_groups: GraceNoteGroup[], state: GraceNoteGroupFormatOptions): boolean {
+  static format(gracenote_groups: GraceNoteGroup[], state: { left_shift: number }): boolean {
     const group_spacing_stave = 4;
     const group_spacing_tab = 0;
 
