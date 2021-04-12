@@ -58,10 +58,9 @@ export abstract class StemmableNote extends Note {
   }
 
   buildFlag(category = 'flag'): void {
-    const { glyph, beam } = this;
-    const shouldRenderFlag = beam === null;
+    const { glyph } = this;
 
-    if (glyph && glyph.flag && shouldRenderFlag) {
+    if (this.hasFlag()) {
       const flagCode = this.getStemDirection() === Stem.DOWN ? glyph.code_flag_downstem : glyph.code_flag_upstem;
 
       this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale, { category });
@@ -215,11 +214,11 @@ export abstract class StemmableNote extends Note {
     const extents = this.getStemExtents();
     if (this.hasStem()) {
       return Math.min(
-        this.stave?.getYForTopText(textLine) || 0,
-        extents?.topY || 0 - this.render_options.annotation_spacing * (textLine + 1)
+        this.stave?.getYForTopText(textLine) ?? 0,
+        extents?.topY ?? 0 - this.render_options.annotation_spacing * (textLine + 1)
       );
     } else {
-      return this.stave?.getYForTopText(textLine) || 0;
+      return this.stave?.getYForTopText(textLine) ?? 0;
     }
   }
 
@@ -228,16 +227,16 @@ export abstract class StemmableNote extends Note {
     const extents = this.getStemExtents();
     if (this.hasStem()) {
       return Math.max(
-        this.stave?.getYForTopText(textLine) || 0,
-        extents?.baseY || 0 + this.render_options.annotation_spacing * textLine
+        this.stave?.getYForTopText(textLine) ?? 0,
+        extents?.baseY ?? 0 + this.render_options.annotation_spacing * textLine
       );
     } else {
-      return this.stave?.getYForBottomText(textLine) || 0;
+      return this.stave?.getYForBottomText(textLine) ?? 0;
     }
   }
 
   hasFlag(): boolean {
-    return Flow.getGlyphProps(this.duration).flag && !this.beam && this.flag;
+    return Flow.getGlyphProps(this.duration).flag && !this.beam;
   }
 
   /** Post formats the note. */
