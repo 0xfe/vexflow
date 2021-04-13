@@ -159,7 +159,7 @@ export abstract class StemmableNote extends Note {
 
     // Reset and reformat everything.
     this.reset();
-    if (this.flag) {
+    if (this.hasFlag()) {
       this.buildFlag();
     }
     this.beam = undefined;
