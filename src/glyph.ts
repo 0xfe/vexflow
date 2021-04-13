@@ -5,20 +5,133 @@ import { Flow } from './tables';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
+import { Font } from './smufl';
+import { RenderContext } from './types/common';
+import { Stave } from './stave';
 
-function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
-  let command;
-  let x;
-  let y;
+export interface KeyProps {
+  stem_down_x_offset: number;
+  stem_up_x_offset: number;
+  key: string;
+  octave: number;
+  line: number;
+  int_value: number;
+  accidental: string;
+  code: string;
+  stroke: number;
+  shift_right: number;
+  displaced: boolean;
+}
+
+export interface TypeProps extends KeyProps {
+  getWidth(scale?: number): number;
+
+  code: string;
+  code_head: string;
+  stem: boolean;
+  rest: boolean;
+  flag: boolean;
+  stem_offset: number;
+  stem_up_extension: number;
+  stem_down_extension: number;
+  tabnote_stem_up_extension: number;
+  tabnote_stem_down_extension: number;
+  dot_shiftY: number;
+  line_above: number;
+  line_below: number;
+  beam_count: number;
+  code_flag_upstem: string;
+  code_flag_downstem: string;
+  position: string;
+}
+export interface DurationCode {
+  common: TypeProps;
+  type: Record<string, TypeProps>;
+}
+
+export interface GlyphProps {
+  code_head: string;
+  dot_shiftY: number;
+  position: string;
+  rest: boolean;
+  line_below: number;
+  line_above: number;
+  stem_up_extension: never;
+  stem_down_extension: never;
+  stem: never;
+  code: string;
+  code_flag_upstem: string;
+  code_flag_downstem: string;
+  flag: boolean;
+  width: number;
+  text: string;
+  tabnote_stem_down_extension: number;
+  tabnote_stem_up_extension: number;
+  beam_count: number;
+  duration_codes: Record<string, DurationCode>;
+  validTypes: Record<string, string>;
+  shift_y: number;
+
+  getWidth(a?: number): number;
+
+  getMetrics(): GlyphMetrics;
+}
+export interface GlyphOptions {
+  fontStack: Font[];
+  category?: string;
+}
+export interface GlyphMetrics {
+  width?: number;
+  height?: number;
+  x_min: number;
+  x_max: number;
+  x_shift: number;
+  y_shift: number;
+  scale: number;
+  ha?: number;
+  outline: string[];
+  font?: Font;
+}
+
+export interface FontGlyph {
+  x_min: number;
+  x_max: number;
+  y_min: number;
+  y_max: number;
+  ha: number;
+  o: string;
+  leftSideBearing?: number;
+  advanceWidth?: number;
+  cached_outline?: string[];
+}
+
+export interface GlyphLookup {
+  font: Font;
+  glyph: FontGlyph;
+}
+
+function processOutline(
+  outline: string[],
+  originX: number,
+  originY: number,
+  scaleX: number,
+  scaleY: number,
+  // eslint-disable-next-line
+  outlineFns: Record<string, ((...args: any[]) => void) >
+): void {
+  let command: string;
+  let x: number;
+  let y: number;
   let i = 0;
 
-  function nextX() {
-    return originX + outline[i++] * scaleX;
+  function nextX(): number {
+    return originX + parseInt(outline[i++]) * scaleX;
   }
-  function nextY() {
-    return originY + outline[i++] * scaleY;
+  function nextY(): number {
+    return originY + parseInt(outline[i++]) * scaleY;
   }
-  function doOutline(command, ...args) {
+  // eslint-disable-next-line
+  function doOutline(command: string, ...args: any[]) {
     outlineFns[command](...args);
   }
 
@@ -48,13 +161,30 @@ function processOutline(outline, originX, originY, scaleX, scaleY, outlineFns) {
 }
 
 export class Glyph extends Element {
+  bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
+  code: string;
+  metrics?: GlyphMetrics;
+  topGlyphs?: Glyph[];
+  botGlyphs?: Glyph[];
+
+  protected options: GlyphOptions;
+  protected originShift: { x: number; y: number };
+  protected x_shift: number;
+  protected y_shift: number;
+  protected scale: number = 1;
+  protected point: number;
+  protected stave?: Stave;
+
+  // eslint-disable-next-line
+  draw() {};
+
   /*
     Static methods used to implement loading and rendering glyphs.
 
     Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
     to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
   */
-  static lookupFontMetric({ font, category, code, key, defaultValue }) {
+  static lookupFontMetric({ font, category, code, key, defaultValue }: any): any {
     let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, null);
     if (value === null) {
       value = font.lookupMetric(`glyphs.${category}.${key}`, defaultValue);
@@ -62,27 +192,23 @@ export class Glyph extends Element {
     return value;
   }
 
-  static lookupGlyph(fontStack, code) {
+  static lookupGlyph(fontStack: Font[], code: string): GlyphLookup {
     if (!fontStack) {
-      throw Vex.RERR('BAD_FONTSTACK', 'Font stack is misconfigured');
+      throw new Vex.RERR('BAD_FONTSTACK', 'Font stack is misconfigured');
     }
 
-    let glyph;
-    let font;
+    let glyph: FontGlyph;
+    let font: Font;
     for (let i = 0; i < fontStack.length; i++) {
       font = fontStack[i];
       glyph = font.getGlyphs()[code];
-      if (glyph) break;
+      if (glyph) return { glyph, font };
     }
 
-    if (!glyph) {
-      throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
-    }
-
-    return { glyph, font };
+    throw new Vex.RERR('BadGlyph', `Glyph ${code} does not exist in font.`);
   }
 
-  static loadMetrics(fontStack, code, category = null) {
+  static loadMetrics(fontStack: Font[], code: string, category?: string): GlyphMetrics {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
     const x_shift = category
@@ -117,7 +243,7 @@ export class Glyph extends Element {
     const x_max = glyph.x_max;
     const ha = glyph.ha;
 
-    let outline;
+    let outline: string[];
 
     const CACHE = true;
     if (glyph.o) {
@@ -158,10 +284,16 @@ export class Glyph extends Element {
    * @param {number} point The point size to use.
    * @param {string} val The glyph code in font.getGlyphs()
    */
-  static renderGlyph(ctx, x_pos, y_pos, point, val, options) {
+  static renderGlyph(
+    ctx: RenderContext,
+    x_pos: number,
+    y_pos: number,
+    point: number,
+    val: string,
+    options: { font?: Font; category: string }
+  ): GlyphMetrics {
     const params = {
       fontStack: Flow.DEFAULT_FONT_STACK,
-      category: null,
       ...options,
     };
     const metrics = Glyph.loadMetrics(params.fontStack, val, params.category);
@@ -174,41 +306,26 @@ export class Glyph extends Element {
           defaultValue: point,
         })
       : point;
-    const scale = (point * 72.0) / (metrics.font.getResolution() * 100.0);
+    const scale = metrics.font ? (point * 72.0) / (metrics.font?.getResolution() * 100.0) : 1;
 
-    Glyph.renderOutline(
-      ctx,
-      metrics.outline,
-      scale * metrics.scale,
-      x_pos + metrics.x_shift,
-      y_pos + metrics.y_shift,
-      options
-    );
+    Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
     return metrics;
   }
 
-  static renderOutline(ctx, outline, scale, x_pos, y_pos, options) {
+  static renderOutline(ctx: RenderContext, outline: string[], scale: number, x_pos: number, y_pos: number): void {
     ctx.beginPath();
     ctx.moveTo(x_pos, y_pos);
-    processOutline(
-      outline,
-      x_pos,
-      y_pos,
-      scale,
-      -scale,
-      {
-        m: ctx.moveTo.bind(ctx),
-        l: ctx.lineTo.bind(ctx),
-        q: ctx.quadraticCurveTo.bind(ctx),
-        b: ctx.bezierCurveTo.bind(ctx),
-        // z: ctx.fill.bind(ctx), // ignored
-      },
-      options
-    );
+    processOutline(outline, x_pos, y_pos, scale, -scale, {
+      m: ctx.moveTo.bind(ctx),
+      l: ctx.lineTo.bind(ctx),
+      q: ctx.quadraticCurveTo.bind(ctx),
+      b: ctx.bezierCurveTo.bind(ctx),
+      // z: ctx.fill.bind(ctx), // ignored
+    });
     ctx.fill();
   }
 
-  static getOutlineBoundingBox(outline, scale, x_pos, y_pos) {
+  static getOutlineBoundingBox(outline: string[], scale: number, x_pos: number, y_pos: number): BoundingBox {
     const bboxComp = new BoundingBoxComputation();
 
     processOutline(outline, x_pos, y_pos, scale, -scale, {
@@ -225,7 +342,7 @@ export class Glyph extends Element {
   /**
    * @constructor
    */
-  constructor(code, point, options) {
+  constructor(code: string, point: number, options?: { category: string }) {
     super();
     this.setAttribute('type', 'Glyph');
 
@@ -233,10 +350,8 @@ export class Glyph extends Element {
     this.point = point;
     this.options = {
       fontStack: this.getFontStack(),
-      category: null,
     };
 
-    this.metrics = null;
     this.x_shift = 0;
     this.y_shift = 0;
 
@@ -252,33 +367,37 @@ export class Glyph extends Element {
     }
   }
 
-  getCode() {
+  getCode(): string {
     return this.code;
   }
 
-  setOptions(options) {
+  // eslint-disable-next-line
+  setOptions(options: any): void {
     this.options = { ...this.options, ...options };
     this.reset();
   }
 
-  setPoint(point) {
+  setPoint(point: number): this {
     this.point = point;
     return this;
   }
-  setStave(stave) {
+
+  setStave(stave: Stave): this {
     this.stave = stave;
     return this;
   }
-  setXShift(x_shift) {
+
+  setXShift(x_shift: number): this {
     this.x_shift = x_shift;
     return this;
   }
-  setYShift(y_shift) {
+
+  setYShift(y_shift: number): this {
     this.y_shift = y_shift;
     return this;
   }
 
-  reset() {
+  reset(): void {
     this.metrics = Glyph.loadMetrics(this.options.fontStack, this.code, this.options.category);
     // Override point from metrics file
     this.point = this.options.category
@@ -291,7 +410,7 @@ export class Glyph extends Element {
         })
       : this.point;
 
-    this.scale = (this.point * 72) / (this.metrics.font.getResolution() * 100);
+    this.scale = this.metrics.font ? (this.point * 72) / (this.metrics.font?.getResolution() * 100) : 1;
     this.bbox = Glyph.getOutlineBoundingBox(
       this.metrics.outline,
       this.scale * this.metrics.scale,
@@ -300,7 +419,7 @@ export class Glyph extends Element {
     );
   }
 
-  getMetrics() {
+  getMetrics(): GlyphMetrics {
     if (!this.metrics) {
       throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
@@ -310,29 +429,33 @@ export class Glyph extends Element {
       x_max: this.metrics.x_max * this.scale * this.metrics.scale,
       width: this.bbox.getW(),
       height: this.bbox.getH(),
+      scale: 1,
+      x_shift: 0,
+      y_shift: 0,
+      outline: [],
     };
   }
 
-  setOriginX(x) {
+  setOriginX(x: number): void {
     const { bbox } = this;
     const originX = Math.abs(bbox.getX() / bbox.getW());
     const xShift = (x - originX) * bbox.getW();
     this.originShift.x = -xShift;
   }
 
-  setOriginY(y) {
+  setOriginY(y: number): void {
     const { bbox } = this;
     const originY = Math.abs(bbox.getY() / bbox.getH());
     const yShift = (y - originY) * bbox.getH();
     this.originShift.y = -yShift;
   }
 
-  setOrigin(x, y) {
+  setOrigin(x: number, y: number): void {
     this.setOriginX(x);
     this.setOriginY(y);
   }
 
-  render(ctx, x, y) {
+  render(ctx: RenderContext, x: number, y: number): void {
     if (!this.metrics) {
       throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
@@ -352,8 +475,8 @@ export class Glyph extends Element {
     this.restoreStyle(ctx);
   }
 
-  renderToStave(x) {
-    this.checkContext();
+  renderToStave(x: number): void {
+    const context = this.checkContext();
 
     if (!this.metrics) {
       throw new Vex.RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
@@ -369,7 +492,7 @@ export class Glyph extends Element {
     this.setRendered();
     this.applyStyle();
     Glyph.renderOutline(
-      this.context,
+      context,
       outline,
       scale,
       x + this.x_shift + this.metrics.x_shift,
