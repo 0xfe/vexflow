@@ -1,4 +1,4 @@
-//** TODO: Simplify */
+//** TODO: Simplify FonData, is it used? */
 export interface FontData {
   glyphs: { x_min: number; x_max: number; ha: number; o: string[] }[];
   cssFontWeight: string;
@@ -33,6 +33,41 @@ export interface FontData {
   };
 }
 
+export interface KeyProps {
+  stem_down_x_offset: number;
+  stem_up_x_offset: number;
+  key: string;
+  octave: number;
+  line: number;
+  int_value: number;
+  accidental: string;
+  code: string;
+  stroke: number;
+  shift_right: number;
+  displaced: boolean;
+}
+
+export interface TypeProps extends KeyProps {
+  getWidth(scale?: number): number;
+
+  code: string;
+  code_head: string;
+  stem: boolean;
+  rest: boolean;
+  flag: boolean;
+  stem_offset: number;
+  stem_up_extension: number;
+  stem_down_extension: number;
+  tabnote_stem_up_extension: number;
+  tabnote_stem_down_extension: number;
+  dot_shiftY: number;
+  line_above: number;
+  line_below: number;
+  beam_count: number;
+  code_flag_upstem: string;
+  code_flag_downstem: string;
+  position: string;
+}
 
 /** Contexts common interface */
 export interface RenderContext {

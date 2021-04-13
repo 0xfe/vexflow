@@ -6,44 +6,9 @@ import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
 import { Font } from './smufl';
-import { RenderContext } from './types/common';
+import { RenderContext, TypeProps } from './types/common';
 import { Stave } from './stave';
 
-export interface KeyProps {
-  stem_down_x_offset: number;
-  stem_up_x_offset: number;
-  key: string;
-  octave: number;
-  line: number;
-  int_value: number;
-  accidental: string;
-  code: string;
-  stroke: number;
-  shift_right: number;
-  displaced: boolean;
-}
-
-export interface TypeProps extends KeyProps {
-  getWidth(scale?: number): number;
-
-  code: string;
-  code_head: string;
-  stem: boolean;
-  rest: boolean;
-  flag: boolean;
-  stem_offset: number;
-  stem_up_extension: number;
-  stem_down_extension: number;
-  tabnote_stem_up_extension: number;
-  tabnote_stem_down_extension: number;
-  dot_shiftY: number;
-  line_above: number;
-  line_below: number;
-  beam_count: number;
-  code_flag_upstem: string;
-  code_flag_downstem: string;
-  position: string;
-}
 export interface DurationCode {
   common: TypeProps;
   type: Record<string, TypeProps>;
@@ -103,11 +68,6 @@ export interface FontGlyph {
   leftSideBearing?: number;
   advanceWidth?: number;
   cached_outline?: string[];
-}
-
-export interface GlyphLookup {
-  font: Font;
-  glyph: FontGlyph;
 }
 
 function processOutline(
@@ -184,7 +144,19 @@ export class Glyph extends Element {
     Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
     to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
   */
-  static lookupFontMetric({ font, category, code, key, defaultValue }: any): any {
+  static lookupFontMetric({
+    font,
+    category,
+    code,
+    key,
+    defaultValue,
+  }: {
+    font: Font;
+    category: string;
+    code: string;
+    key: string;
+    defaultValue: number;
+  }): number {
     let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, null);
     if (value === null) {
       value = font.lookupMetric(`glyphs.${category}.${key}`, defaultValue);
@@ -192,7 +164,7 @@ export class Glyph extends Element {
     return value;
   }
 
-  static lookupGlyph(fontStack: Font[], code: string): GlyphLookup {
+  static lookupGlyph(fontStack: Font[], code: string): { font: Font; glyph: FontGlyph } {
     if (!fontStack) {
       throw new Vex.RERR('BAD_FONTSTACK', 'Font stack is misconfigured');
     }
@@ -211,33 +183,14 @@ export class Glyph extends Element {
   static loadMetrics(fontStack: Font[], code: string, category?: string): GlyphMetrics {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
-    const x_shift = category
-      ? Glyph.lookupFontMetric({
-          font,
-          category,
-          code,
-          key: 'shiftX',
-          defaultValue: 0,
-        })
-      : 0;
-    const y_shift = category
-      ? Glyph.lookupFontMetric({
-          font,
-          category,
-          code,
-          key: 'shiftY',
-          defaultValue: 0,
-        })
-      : 0;
-    const scale = category
-      ? Glyph.lookupFontMetric({
-          font,
-          category,
-          code,
-          key: 'scale',
-          defaultValue: 1,
-        })
-      : 1;
+    let x_shift = 0;
+    let y_shift = 0;
+    let scale = 1;
+    if (category && font) {
+      x_shift = Glyph.lookupFontMetric({ font, category, code, key: 'shiftX', defaultValue: 0 });
+      y_shift = Glyph.lookupFontMetric({ font, category, code, key: 'shiftY', defaultValue: 0 });
+      scale = Glyph.lookupFontMetric({ font, category, code, key: 'scale', defaultValue: 1 });
+    }
 
     const x_min = glyph.x_min;
     const x_max = glyph.x_max;
@@ -277,18 +230,17 @@ export class Glyph extends Element {
   /**
    * A quick and dirty static glyph renderer. Renders glyphs from the default
    * font defined in Vex.Flow.Font.
-   *
-   * @param {!Object} ctx The canvas context.
-   * @param {number} x_pos X coordinate.
-   * @param {number} y_pos Y coordinate.
-   * @param {number} point The point size to use.
-   * @param {string} val The glyph code in font.getGlyphs()
    */
   static renderGlyph(
+    /** The canvas context. */
     ctx: RenderContext,
+    /** X coordinate. */
     x_pos: number,
+    /** Y coordinate. */
     y_pos: number,
+    /** The point size to use. */
     point: number,
+    /** The glyph code in font.getGlyphs() */
     val: string,
     options: { font?: Font; category: string }
   ): GlyphMetrics {
@@ -297,16 +249,17 @@ export class Glyph extends Element {
       ...options,
     };
     const metrics = Glyph.loadMetrics(params.fontStack, val, params.category);
-    point = params.category
-      ? Glyph.lookupFontMetric({
-          font: metrics.font,
-          category: params.category,
-          code: val,
-          key: 'point',
-          defaultValue: point,
-        })
-      : point;
-    const scale = metrics.font ? (point * 72.0) / (metrics.font?.getResolution() * 100.0) : 1;
+    if (params.category && metrics.font) {
+      point = Glyph.lookupFontMetric({
+        font: metrics.font,
+        category: params.category,
+        code: val,
+        key: 'point',
+        defaultValue: point,
+      });
+    }
+
+    const scale = metrics.font ? (point * 72.0) / (metrics.font.getResolution() * 100.0) : 1;
 
     Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
     return metrics;
@@ -400,17 +353,17 @@ export class Glyph extends Element {
   reset(): void {
     this.metrics = Glyph.loadMetrics(this.options.fontStack, this.code, this.options.category);
     // Override point from metrics file
-    this.point = this.options.category
-      ? Glyph.lookupFontMetric({
-          category: this.options.category,
-          font: this.metrics.font,
-          code: this.code,
-          key: 'point',
-          defaultValue: this.point,
-        })
-      : this.point;
+    if (this.options.category && this.metrics?.font) {
+      this.point = Glyph.lookupFontMetric({
+        category: this.options.category,
+        font: this.metrics.font,
+        code: this.code,
+        key: 'point',
+        defaultValue: this.point,
+      });
+    }
 
-    this.scale = this.metrics.font ? (this.point * 72) / (this.metrics.font?.getResolution() * 100) : 1;
+    this.scale = this.metrics?.font ? (this.point * 72) / (this.metrics.font.getResolution() * 100) : 1;
     this.bbox = Glyph.getOutlineBoundingBox(
       this.metrics.outline,
       this.scale * this.metrics.scale,
