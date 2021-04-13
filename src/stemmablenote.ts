@@ -103,7 +103,8 @@ export abstract class StemmableNote extends Note {
   }
 
   // Get/set the direction of the stem
-  getStemDirection(): number | undefined {
+  getStemDirection(): number {
+    if (!this.stem_direction) throw new Vex.RERR('NoStem', 'No stem attached to this note.');
     return this.stem_direction;
   }
 
@@ -188,8 +189,9 @@ export abstract class StemmableNote extends Note {
   }
 
   // Get the top and bottom `y` values of the stem.
-  getStemExtents(): Record<string, number> | undefined {
-    return this.stem?.getExtents();
+  getStemExtents(): Record<string, number> {
+    if (!this.stem) throw new Vex.RERR('NoStem', 'No stem attached to this note.');
+    return this.stem.getExtents();
   }
 
   /** Gets the `y` value for the top modifiers at a specific `textLine`. */

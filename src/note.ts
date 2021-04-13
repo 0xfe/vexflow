@@ -63,7 +63,7 @@ export interface NoteRenderOptions {
   glyph_font_size?: number;
   scale?: number;
   font?: string;
-  stroke_px?: number;
+  stroke_px: number;
 }
 
 export interface ParsedNote {
@@ -303,6 +303,7 @@ export abstract class Note extends Tickable {
     this.render_options = {
       annotation_spacing: 5,
       glyph_font_scale: 1,
+      stroke_px: 1,
     };
   }
 
@@ -373,7 +374,9 @@ export abstract class Note extends Tickable {
   }
 
   /** Gets the stave line number for the note. */
-  getLineNumber(): number {
+  getLineNumber(
+    // eslint-disable-next-line
+    isTopNote: boolean): number {
     return 0;
   }
 
@@ -480,11 +483,6 @@ export abstract class Note extends Tickable {
     return false;
   }
 
-  /** Accessors to dots. */
-  getDots(): number {
-    return this.dots;
-  }
-
   /** Accessors to note type. */
   getNoteType(): string {
     return this.noteType;
@@ -503,16 +501,30 @@ export abstract class Note extends Tickable {
   }
 
   /** Attach a modifier to this note. */
-  addModifier(modifier: Modifier, index = 0): this {
+  addModifier(a: number | Modifier, b: number | Modifier = 0): this {
+    let index: number;
+    let modifier: Modifier;
+
+    if (typeof a === 'object' && typeof b === 'number') {
+      index = b;
+      modifier = a;
+    } else {
+      throw new Vex.RERR(
+        'WrongParams',
+        'Call signature to addModifier not supported, use addModifier(modifier, index) instead.'
+      );
+    }
     modifier.setNote(this);
     modifier.setIndex(index);
     this.modifiers.push(modifier);
     this.setPreFormatted(false);
     return this;
   }
-
   /** Get the coordinates for where modifiers begin. */
-  getModifierStartXY(): { x: number; y: number } {
+  getModifierStartXY(
+    // eslint-disable-next-line
+    position?: number, index?: number, options?: any
+  ): { x: number; y: number } {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }

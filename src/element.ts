@@ -18,6 +18,7 @@ export interface ElementAttributes {
   // eslint-disable-next-line
   [name: string]: any;
   id: string;
+  el?: SVGElement;
   type: string;
   classes: Record<string, boolean>;
 }
@@ -37,7 +38,7 @@ export interface ElementStyle {
  */
 export abstract class Element {
   protected static ID: number = 1000;
-  private context?: RenderContext;
+  protected context?: RenderContext;
   protected rendered: boolean;
   protected style?: ElementStyle;
   private attrs: ElementAttributes;
@@ -54,7 +55,7 @@ export abstract class Element {
   constructor({ type }: { type?: string } = {}) {
     this.attrs = {
       id: Element.newID(),
-      el: null,
+      el: undefined,
       type: type || 'Base',
       classes: {},
     };
@@ -130,6 +131,17 @@ export abstract class Element {
 
   /** Draws an element. */
   abstract draw(element?: Element, x_shift?: number): void;
+
+  /** Gets SVGElement.  */
+  getSvgElement(): SVGElement | undefined {
+    return this.attrs.el;
+  }
+
+  /** Sets SVGElement.  */
+  setSvgElement(el?: SVGElement): this {
+    this.attrs.el = el;
+    return this;
+  }
 
   /** Checkes if it has a class label (An element can have multiple class labels).  */
   hasClass(className: string): boolean {
