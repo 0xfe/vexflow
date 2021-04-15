@@ -1,4 +1,3 @@
-import { Vex } from './vex';
 import { BravuraFont } from './fonts/bravura_glyphs';
 import { BravuraMetrics } from './fonts/bravura_metrics';
 import { GonvilleFont } from './fonts/gonville_glyphs';
@@ -8,37 +7,59 @@ import { PetalumaMetrics } from './fonts/petaluma_metrics';
 import { CustomFont } from './fonts/custom_glyphs';
 import { CustomMetrics } from './fonts/custom_metrics';
 
+export interface FontData {
+  glyphs: Record<string, FontGlyph>;
+  fontFamily?: string;
+  resolution: number;
+  generatedOn?: string;
+}
+
+export interface FontGlyph {
+  x_min: number;
+  x_max: number;
+  y_min?: number;
+  y_max?: number;
+  ha: number;
+  o: string;
+  leftSideBearing?: number;
+  advanceWidth?: number;
+  cached_outline?: string[];
+}
+
 class Font {
-  constructor(name, metrics, fontData) {
+  protected name: string;
+  // eslint-disable-next-line
+  protected metrics: Record<string, any>;
+  protected readonly fontData: FontData;
+
+  // eslint-disable-next-line
+  constructor(name: string, metrics: Record<string, any>, fontData: FontData) {
     this.name = name;
     this.metrics = metrics;
     this.fontData = fontData;
-    this.codePoints = {};
   }
 
-  getName() {
+  getName(): string {
     return this.name;
   }
 
-  getResolution() {
+  getResolution(): number {
     return this.fontData.resolution;
   }
 
-  getMetrics() {
+  // eslint-disable-next-line
+  getMetrics(): Record<string, any> {
     return this.metrics;
   }
 
-  lookupMetric(key, defaultValue = undefined) {
+  // eslint-disable-next-line
+  lookupMetric(key: string, defaultValue?: Record<string, any> | number): any {
     const parts = key.split('.');
     let val = this.metrics;
     // console.log('lookupMetric:', key);
     for (let i = 0; i < parts.length; i++) {
       if (val[parts[i]] === undefined) {
-        if (defaultValue !== undefined) {
-          return defaultValue;
-        } else {
-          throw new Vex.RERR('INVALID_KEY', `Invalid music font metric key: ${key}`);
-        }
+        return defaultValue;
       }
       val = val[parts[i]];
     }
@@ -47,21 +68,12 @@ class Font {
     return val;
   }
 
-  getFontData() {
+  getFontData(): FontData {
     return this.fontData;
   }
 
-  getGlyphs() {
+  getGlyphs(): Record<string, FontGlyph> {
     return this.fontData.glyphs;
-  }
-
-  getCodePoints() {
-    return this.codePoints;
-  }
-
-  setCodePoints(codePoints) {
-    this.codePoints = codePoints;
-    return this;
   }
 }
 

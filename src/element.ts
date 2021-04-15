@@ -10,7 +10,7 @@ import { Vex } from './vex';
 import { Registry } from './registry';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
-import { Font } from './smufl';
+import { Font } from './font';
 import { RenderContext } from './types/common';
 
 /** Element attributes. */
