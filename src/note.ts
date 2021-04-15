@@ -58,7 +58,7 @@ export interface NoteRenderOptions {
   y_shift?: number;
   extend_left?: number;
   extend_right?: number;
-  glyph_font_scale?: number;
+  glyph_font_scale: number;
   annotation_spacing: number;
   glyph_font_size?: number;
   scale?: number;
@@ -302,6 +302,7 @@ export abstract class Note extends Tickable {
     // The render surface.
     this.render_options = {
       annotation_spacing: 5,
+      glyph_font_scale: 1,
     };
   }
 

@@ -9,7 +9,7 @@ import { Flow } from './tables';
 import { Stem } from './stem';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
-import { GlyphProps } from './types/common';
+import { GlyphProps } from './glyph';
 
 //** TODO: Move to Stem.ts */
 export interface StemStruct {
@@ -211,27 +211,29 @@ export abstract class StemmableNote extends Note {
 
   /** Gets the `y` value for the top modifiers at a specific `textLine`. */
   getYForTopText(textLine: number): number {
+    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     const extents = this.getStemExtents();
-    if (this.hasStem()) {
+    if (extents) {
       return Math.min(
-        this.stave?.getYForTopText(textLine) ?? 0,
-        extents?.topY ?? 0 - this.render_options.annotation_spacing * (textLine + 1)
+        this.stave.getYForTopText(textLine),
+        extents.topY - this.render_options.annotation_spacing * (textLine + 1)
       );
     } else {
-      return this.stave?.getYForTopText(textLine) ?? 0;
+      return this.stave.getYForTopText(textLine);
     }
   }
 
   /** Gets the `y` value for the bottom modifiers at a specific `textLine`. */
   getYForBottomText(textLine: number): number {
+    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     const extents = this.getStemExtents();
-    if (this.hasStem()) {
+    if (extents) {
       return Math.max(
-        this.stave?.getYForTopText(textLine) ?? 0,
-        extents?.baseY ?? 0 + this.render_options.annotation_spacing * textLine
+        this.stave.getYForTopText(textLine),
+        extents.baseY + this.render_options.annotation_spacing * textLine
       );
     } else {
-      return this.stave?.getYForBottomText(textLine) ?? 0;
+      return this.stave.getYForBottomText(textLine);
     }
   }
 
