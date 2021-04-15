@@ -79,7 +79,7 @@ import { TextFont } from './textfont';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 
-import { Font, Fonts, DefaultFontStack } from './smufl';
+import { Font, Fonts, DefaultFontStack } from './font';
 
 Vex.Flow = Flow;
 Vex.Flow.Element = Element;

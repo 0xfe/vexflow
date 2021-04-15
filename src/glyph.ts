@@ -5,7 +5,7 @@ import { Flow } from './tables';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
-import { Font } from './smufl';
+import { Font, FontGlyph } from './font';
 import { RenderContext, TypeProps } from './types/common';
 import { Stave } from './stave';
 import { Stem } from './stem';
@@ -57,18 +57,6 @@ export interface GlyphMetrics {
   ha?: number;
   outline: string[];
   font?: Font;
-}
-
-export interface FontGlyph {
-  x_min: number;
-  x_max: number;
-  y_min: number;
-  y_max: number;
-  ha: number;
-  o: string;
-  leftSideBearing?: number;
-  advanceWidth?: number;
-  cached_outline?: string[];
 }
 
 function processOutline(
@@ -158,8 +146,8 @@ export class Glyph extends Element {
     key: string;
     defaultValue: number;
   }): number {
-    let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, null);
-    if (value === null) {
+    let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, undefined);
+    if (value === undefined) {
       value = font.lookupMetric(`glyphs.${category}.${key}`, defaultValue);
     }
     return value;

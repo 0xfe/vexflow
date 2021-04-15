@@ -5,7 +5,7 @@
 import { Vex } from './vex';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
-import { DefaultFontStack } from './smufl';
+import { DefaultFontStack } from './font';
 
 const Flow = {
   STEM_WIDTH: 1.5,
