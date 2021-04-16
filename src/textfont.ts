@@ -70,8 +70,7 @@ export class TextFont {
   protected fontCacheKey: string = '';
 
   protected static registryInstance: TextFontRegistry[];
-  // eslint-disable-next-line
-  protected static textWidthCacheInstance?: any;
+  protected static textWidthCacheInstance?: Record<string, Record<string, number>>;
 
   protected size: number;
   protected attrs: TextFontAttributes;
@@ -181,8 +180,7 @@ export class TextFont {
 
   // ### textWidthCache
   // Static cache of widths hashed on font/string.
-  static get textWidthCache(): // eslint-disable-next-line
-  any {
+  static get textWidthCache(): Record<string, Record<string, number>> {
     if (typeof TextFont.textWidthCacheInstance === 'undefined') {
       TextFont.textWidthCacheInstance = {};
     }
