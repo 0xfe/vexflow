@@ -52,22 +52,22 @@ function L(
 }
 
 export class TextFont {
-  static debug: boolean;
-  resolution: number = 1000;
-  name?: string;
-  glyphs: Record<string, TextFontMetrics> = {};
-  family: string = '';
-  serifs?: boolean;
-  monospaced?: boolean;
-  italic?: boolean;
-  bold?: boolean;
-  superscriptOffset?: number;
-  subscriptOffset?: number;
-  description?: string;
-  maxSizeGlyph: string;
-  weight: string;
-  style: string;
-  fontCacheKey: string = '';
+  protected static debug: boolean;
+  protected resolution: number = 1000;
+  protected name?: string;
+  protected glyphs: Record<string, TextFontMetrics> = {};
+  protected family: string = '';
+  protected serifs?: boolean;
+  protected monospaced?: boolean;
+  protected italic?: boolean;
+  protected bold?: boolean;
+  protected superscriptOffset?: number;
+  protected subscriptOffset?: number;
+  protected description?: string;
+  protected maxSizeGlyph: string;
+  protected weight: string;
+  protected style: string;
+  protected fontCacheKey: string = '';
 
   protected static registryInstance: TextFontRegistry[];
   // eslint-disable-next-line
