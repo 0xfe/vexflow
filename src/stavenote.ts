@@ -938,17 +938,17 @@ export class StaveNote extends StemmableNote {
 
   // Helper function to add an accidental to a key
   addAccidental(index: number, accidental: Modifier): this {
-    return this.addModifier(index, accidental);
+    return this.addModifier(accidental, index);
   }
 
   // Helper function to add an articulation to a key
   addArticulation(index: number, articulation: Modifier): this {
-    return this.addModifier(index, articulation);
+    return this.addModifier(articulation, index);
   }
 
   // Helper function to add an annotation to a key
   addAnnotation(index: number, annotation: Modifier): this {
-    return this.addModifier(index, annotation);
+    return this.addModifier(annotation, index);
   }
 
   // Helper function to add a dot on a specific key
@@ -956,7 +956,7 @@ export class StaveNote extends StemmableNote {
     const dot = new Dot();
     dot.setDotShiftY(this.glyph.dot_shiftY);
     this.dots++;
-    return this.addModifier(index, dot);
+    return this.addModifier(dot, index);
   }
 
   // Convenience method to add dot to all keys in note
