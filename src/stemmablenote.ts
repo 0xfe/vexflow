@@ -6,27 +6,10 @@
 
 import { Vex } from './vex';
 import { Flow } from './tables';
-import { Stem } from './stem';
+import { Stem, StemStruct } from './stem';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
 import { GlyphProps } from './glyph';
-
-//** TODO: Move to Stem.ts */
-export interface StemStruct {
-  stem_down_y_base_offset: number;
-  stem_up_y_base_offset: number;
-  stem_down_y_offset: number;
-  stem_up_y_offset: number;
-  stemletHeight: number;
-  isStemlet: boolean;
-  hide: boolean;
-  stem_direction: number;
-  stem_extension: number;
-  y_bottom: number;
-  y_top: number;
-  x_end: number;
-  x_begin: number;
-}
 
 export abstract class StemmableNote extends Note {
   stem_direction?: number;
