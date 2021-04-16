@@ -25,7 +25,7 @@ VF.Test.ChordSymbol = (function () {
       ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, chordSymbol) {
-        return new VF.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
+        return new VF.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
       }
 
       function draw(chords, y) {
@@ -130,7 +130,7 @@ VF.Test.ChordSymbol = (function () {
       ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, chordSymbol) {
-        return new VF.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
+        return new VF.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
       }
 
       function draw(c1, c2, y) {
@@ -185,7 +185,7 @@ VF.Test.ChordSymbol = (function () {
       ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, chordSymbol) {
-        return new VF.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
+        return new VF.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
       }
 
       function draw(chords, y) {
@@ -312,7 +312,7 @@ VF.Test.ChordSymbol = (function () {
       ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, chordSymbol) {
-        return new VF.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
+        return new VF.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
       }
 
       function draw(chord1, chord2, y) {
@@ -370,7 +370,7 @@ VF.Test.ChordSymbol = (function () {
       ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, chordSymbol1, chordSymbol2) {
-        return new VF.StaveNote({ keys, duration }).addModifier(0, chordSymbol1).addModifier(0, chordSymbol2);
+        return new VF.StaveNote({ keys, duration }).addModifier(chordSymbol1, 0).addModifier(chordSymbol2, 0);
       }
 
       function draw(chords, chords2, y) {
@@ -409,7 +409,7 @@ VF.Test.ChordSymbol = (function () {
       ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, chordSymbol) {
-        return new VF.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
+        return new VF.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
       }
 
       function draw(chords, y) {
@@ -441,7 +441,7 @@ VF.Test.ChordSymbol = (function () {
       ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, chordSymbol) {
-        return new VF.StaveNote({ keys, duration, stem_direction: -1 }).addModifier(0, chordSymbol);
+        return new VF.StaveNote({ keys, duration, stem_direction: -1 }).addModifier(chordSymbol, 0);
       }
 
       function draw(chords, y) {

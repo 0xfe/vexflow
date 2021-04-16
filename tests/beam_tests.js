@@ -745,11 +745,11 @@ VF.Test.Beam = (function () {
       ];
 
       notes = notes.map(function (note) {
-        return vf.StaveNote(note).addModifier(0, vf.Annotation({ text: '1', vJustify: 'above' }));
+        return vf.StaveNote(note).addModifier(vf.Annotation({ text: '1', vJustify: 'above' }), 0);
       });
 
       notes2 = notes2.map(function (note) {
-        return vf.StaveNote(note).addModifier(0, vf.Annotation({ text: '3', vJustify: 'below' }));
+        return vf.StaveNote(note).addModifier(vf.Annotation({ text: '3', vJustify: 'below' }), 0);
       });
 
       vf.Beam({ notes: notes });
@@ -789,11 +789,11 @@ VF.Test.Beam = (function () {
       ];
 
       notes = notes.map(function (note) {
-        return vf.StaveNote(note).addModifier(0, vf.Articulation({ type: 'am', position: 'above' }));
+        return vf.StaveNote(note).addModifier(vf.Articulation({ type: 'am', position: 'above' }), 0);
       });
 
       notes2 = notes2.map(function (note) {
-        return vf.StaveNote(note).addModifier(0, vf.Articulation({ type: 'a>', position: 'below' }));
+        return vf.StaveNote(note).addModifier(vf.Articulation({ type: 'a>', position: 'below' }), 0);
       });
 
       vf.Beam({ notes: notes });
