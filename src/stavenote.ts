@@ -20,10 +20,9 @@ import { Dot } from './dot';
 import { KeyProps, ModifierContextState } from './types/common';
 import { Beam } from './beam';
 import { ModifierContext } from './modifiercontext';
-import { Font } from './font';
-import { Fraction } from './fraction';
 import { ElementStyle } from './element';
 import { Stave } from './stave';
+import { NoteStruct } from './note';
 export interface StaveNoteGetModifierStartXYOptions {
   forceFlagRight: boolean;
 }
@@ -54,40 +53,15 @@ export interface StaveNoteFormatSettings {
   note: StaveNote;
 }
 
-export interface StaveNoteStruct {
-  ignore_ticks: boolean;
-  smooth: boolean;
-  glyph: string;
-  font: Font;
-  subscript: string;
-  superscript: string;
-  text: string;
-  positions?: { str: number; fret: number }[];
-  slashed?: boolean;
-  style?: string;
+export interface StaveNoteStruct extends NoteStruct {
   stem_down_x_offset: number;
   stem_up_x_offset: number;
-  custom_glyph_code?: string;
-  x_shift: number;
-  displaced: boolean;
-  note_type?: string;
-  y: number;
-  x: number;
-  index: number;
-  line: number;
-  align_center: boolean;
-  duration_override: Fraction;
-  slash: boolean;
   stroke_px: number;
   glyph_font_scale: number;
   stem_direction: number;
   auto_stem: boolean;
   octave_shift: number;
   clef: string;
-  keys: string[];
-  duration: string;
-  dots: number;
-  type: string;
 }
 
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
