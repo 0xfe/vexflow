@@ -20,7 +20,7 @@ export interface FontGlyph {
   y_min?: number;
   y_max?: number;
   ha: number;
-  o: string;
+  o?: string;
   leftSideBearing?: number;
   advanceWidth?: number;
   cached_outline?: string[];

@@ -9,26 +9,17 @@
 import { Vex } from './vex';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
+import { FontGlyph } from './font';
 export interface TextFontMetrics {
   advanceWidth: number;
   ha: number;
-}
-
-export interface TextFontGlyph {
-  x_min: number;
-  x_max: number;
-  y_min: number;
-  y_max: number;
-  ha: number;
-  leftSideBearing: number;
-  advanceWidth: number;
 }
 
 export interface TextFontRegistry {
   [name: string]: unknown;
   name?: string;
   resolution?: number;
-  glyphs?: Record<string, TextFontGlyph>;
+  glyphs?: Record<string, FontGlyph>;
   family: string;
   serifs: boolean;
   monospaced?: boolean;
@@ -38,10 +29,6 @@ export interface TextFontRegistry {
   superscriptOffset?: number;
   subscriptOffset?: number;
   description: string;
-}
-
-export interface TextFontAttributes {
-  type: string;
 }
 
 // To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`.
@@ -73,7 +60,7 @@ export class TextFont {
   protected static textWidthCacheInstance?: Record<string, Record<string, number>>;
 
   protected size: number;
-  protected attrs: TextFontAttributes;
+  protected attrs: { type: string };
 
   static get CATEGORY(): string {
     return 'textFont';
@@ -95,7 +82,7 @@ export class TextFont {
     if (!TextFont.registryInstance) {
       TextFont.registryInstance = [];
       TextFont.registryInstance.push({
-        name: 'RobotoSlab',
+        name: 'Roboto Slab',
         resolution: RobotoSlabTextMetrics.resolution,
         glyphs: RobotoSlabTextMetrics.glyphs,
         family: RobotoSlabTextMetrics.fontFamily,
@@ -281,7 +268,7 @@ export class TextFont {
   }
   // Create a hash with the current font data, so we can cache computed widths
   updateCacheKey(): void {
-    this.fontCacheKey = this.family + '-' + this.size.toString() + '-' + this.weight + '-' + this.style;
+    this.fontCacheKey = `${this.family}-${this.size}-${this.weight}-${this.style}`;
   }
 
   getMetricForCharacter(c: string): TextFontMetrics {
