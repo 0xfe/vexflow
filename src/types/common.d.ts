@@ -1,3 +1,25 @@
+/** TODO: Move to Factory */
+export interface FactoryStaveOptions {
+  space: number;
+}
+
+/** TODO: Move to Factory */
+export interface FactoryRendererOptions {
+  elementId: string;
+  background: string;
+  context: null;
+  width: number;
+  backend: number;
+  height: number;
+  el: SVGAElement;
+}
+export interface Bounds {
+  w: number;
+  x: number;
+  h: number;
+  y: number;
+}
+
 /** TODO: Move to GlyphNote */
 export interface GlyphNoteOptions {
   ignoreTicks: boolean;
@@ -16,6 +38,13 @@ export interface KeyProps {
   stroke: number;
   shift_right: number;
   displaced: boolean;
+}
+
+export interface Tempo {
+  bpm: number;
+  dots: number;
+  duration: string;
+  name: string;
 }
 
 export interface TypeProps extends KeyProps {
