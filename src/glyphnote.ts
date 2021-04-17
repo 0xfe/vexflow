@@ -1,9 +1,18 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
+import { Vex } from './vex';
+import { BoundingBox } from './boundingbox';
+import { Glyph } from './glyph';
 import { Note } from './note';
+import { StaveNoteStruct } from './stavenote';
+export interface GlyphNoteOptions {
+  ignoreTicks?: boolean;
+  line?: number;
+}
 
 export class GlyphNote extends Note {
-  constructor(glyph, noteStruct, options) {
+  protected options: GlyphNoteOptions;
+  constructor(glyph: Glyph | undefined, noteStruct: StaveNoteStruct, options?: GlyphNoteOptions) {
     super(noteStruct);
     this.options = {
       ignoreTicks: false,
@@ -13,19 +22,19 @@ export class GlyphNote extends Note {
     this.setAttribute('type', 'GlyphNote');
 
     // Note properties
-    this.ignore_ticks = this.options.ignoreTicks;
+    this.ignore_ticks = this.options.ignoreTicks as boolean;
     if (glyph) {
       this.setGlyph(glyph);
     }
   }
 
-  setGlyph(glyph) {
+  setGlyph(glyph: Glyph): this {
     this.glyph = glyph;
     this.setWidth(this.glyph.getMetrics().width);
     return this;
   }
 
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox {
     return this.glyph.getBoundingBox();
   }
 
@@ -35,18 +44,22 @@ export class GlyphNote extends Note {
   }
   */
 
-  preFormat() {
+  preFormat(): this {
     this.setPreFormatted(true);
     return this;
   }
 
-  draw() {
-    this.stave.checkContext();
+  draw(): void {
+    if (!this.stave) {
+      throw new Vex.RERR('NoStave', 'No stave attached to this note.');
+    }
+
+    const ctx = this.stave.checkContext();
     this.setRendered();
 
     // Context is set when setStave is called on Note
     if (!this.glyph.getContext()) {
-      this.glyph.setContext(this.context);
+      this.glyph.setContext(ctx);
     }
 
     this.glyph.setStave(this.stave);

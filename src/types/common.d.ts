@@ -11,12 +11,6 @@ export interface Bounds {
   y: number;
 }
 
-/** TODO: Move to GlyphNote */
-export interface GlyphNoteOptions {
-  ignoreTicks: boolean;
-  line: number;
-}
-
 export interface KeyProps {
   stem_down_x_offset: number;
   stem_up_x_offset: number;
