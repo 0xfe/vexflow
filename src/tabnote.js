@@ -375,7 +375,7 @@ export class TabNote extends StemmableNote {
       render_options: { draw_stem, glyph_font_scale },
     } = this;
 
-    const shouldDrawFlag = beam == null && draw_stem;
+    const shouldDrawFlag = beam == undefined && draw_stem;
 
     // Now it's the flag's turn.
     if (glyph.flag && shouldDrawFlag) {
@@ -475,7 +475,7 @@ export class TabNote extends StemmableNote {
     }
 
     this.setRendered();
-    const render_stem = this.beam == null && this.render_options.draw_stem;
+    const render_stem = this.beam == undefined && this.render_options.draw_stem;
 
     this.context.openGroup('tabnote', null, { pointerBBox: true });
     this.drawPositions();

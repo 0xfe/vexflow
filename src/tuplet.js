@@ -81,7 +81,7 @@ export class Tuplet extends Element {
     if ('bracketed' in this.options) {
       this.bracketed = this.options.bracketed;
     } else {
-      this.bracketed = notes.some((note) => note.beam === null);
+      this.bracketed = notes.some((note) => note.beam === undefined);
     }
 
     this.ratioed =
