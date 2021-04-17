@@ -97,6 +97,7 @@ export interface NoteStruct {
  * array of them. All notes also have a rendering context and belong to a stave.
  */
 export abstract class Note extends Tickable {
+  keys: string[];
   protected stave?: Stave;
   protected render_options: NoteRenderOptions;
   protected duration: string;
@@ -261,6 +262,7 @@ export abstract class Note extends Tickable {
     }
 
     // Set note properties from parameters.
+    this.keys = noteStruct.keys;
     this.duration = initStruct.duration;
     this.dots = initStruct.dots;
     this.noteType = initStruct.type;
@@ -457,7 +459,8 @@ export abstract class Note extends Tickable {
   }
 
   /** Gets the `TickContext` for this note. */
-  getTickContext(): TickContext | undefined {
+  getTickContext(): TickContext {
+    if (!this.tickContext) throw new Vex.RERR('NoTickContext', 'Note has no tick context.');
     return this.tickContext;
   }
 

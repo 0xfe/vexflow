@@ -124,7 +124,6 @@ export class StaveNote extends StemmableNote {
   static DEBUG: boolean;
 
   keyProps: KeyProps[];
-  keys: string[];
   minLine: number = 0;
   maxLine: number = 0;
 
@@ -395,7 +394,6 @@ export class StaveNote extends StemmableNote {
     super(noteStruct);
     this.setAttribute('type', 'StaveNote');
 
-    this.keys = noteStruct.keys;
     this.clef = noteStruct.clef;
     this.octave_shift = noteStruct.octave_shift;
 
