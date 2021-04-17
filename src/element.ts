@@ -132,17 +132,6 @@ export abstract class Element {
   /** Draws an element. */
   abstract draw(element?: Element, x_shift?: number): void;
 
-  /** Gets SVGElement.  */
-  getSvgElement(): SVGElement | undefined {
-    return this.attrs.el;
-  }
-
-  /** Sets SVGElement.  */
-  setSvgElement(el?: SVGElement): this {
-    this.attrs.el = el;
-    return this;
-  }
-
   /** Checkes if it has a class label (An element can have multiple class labels).  */
   hasClass(className: string): boolean {
     return this.attrs.classes[className] === true;
@@ -199,12 +188,16 @@ export abstract class Element {
   }
 
   /** Returns an attribute. */
-  getAttribute(name: string): string {
+  getAttribute(
+    // eslint-disable-next-line
+    name: string ): any {
     return this.attrs[name];
   }
 
   /** Sets an attribute. */
-  setAttribute(name: string, value: string): this {
+  setAttribute(
+    // eslint-disable-next-line
+    name: string, value: any): this {
     const { id } = this.attrs;
     const oldValue = this.attrs[name];
     this.attrs[name] = value;

@@ -1281,7 +1281,7 @@ export class StaveNote extends StemmableNote {
 
     // Apply the overall style -- may be contradicted by local settings:
     this.applyStyle();
-    this.setSvgElement(ctx.openGroup('stavenote', this.getAttribute('id')));
+    this.setAttribute('el', ctx.openGroup('stavenote', this.getAttribute('id')));
     this.drawLedgerLines();
     ctx.openGroup('note', undefined, { pointerBBox: true });
     if (shouldRenderStem) this.drawStem();
