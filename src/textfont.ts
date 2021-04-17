@@ -9,21 +9,68 @@
 import { Vex } from './vex';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
+import { FontGlyph } from './font';
+export interface TextFontMetrics {
+  advanceWidth: number;
+  ha: number;
+}
+
+export interface TextFontRegistry {
+  [name: string]: unknown;
+  name?: string;
+  resolution?: number;
+  glyphs?: Record<string, FontGlyph>;
+  family: string;
+  serifs: boolean;
+  monospaced?: boolean;
+  italic: boolean;
+  bold: boolean;
+  maxSizeGlyph?: string;
+  superscriptOffset?: number;
+  subscriptOffset?: number;
+  description: string;
+}
 
 // To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any[]) {
   if (TextFont.DEBUG) Vex.L('Vex.Flow.TextFont', args);
 }
 
 export class TextFont {
-  static get CATEGORY() {
+  protected static debug: boolean;
+  protected resolution: number = 1000;
+  protected name?: string;
+  protected glyphs: Record<string, TextFontMetrics> = {};
+  protected family: string = '';
+  protected serifs?: boolean;
+  protected monospaced?: boolean;
+  protected italic?: boolean;
+  protected bold?: boolean;
+  protected superscriptOffset?: number;
+  protected subscriptOffset?: number;
+  protected description?: string;
+  protected maxSizeGlyph: string;
+  protected weight: string;
+  protected style: string;
+  protected fontCacheKey: string = '';
+
+  protected static registryInstance: TextFontRegistry[];
+  protected static textWidthCacheInstance?: Record<string, Record<string, number>>;
+
+  protected size: number;
+  protected attrs: { type: string };
+
+  static get CATEGORY(): string {
     return 'textFont';
   }
 
-  static get DEBUG() {
+  static get DEBUG(): boolean {
     return TextFont.debug;
   }
-  static set DEBUG(val) {
+
+  static set DEBUG(val: boolean) {
     TextFont.debug = val;
   }
 
@@ -31,7 +78,7 @@ export class TextFont {
   // Getter of an array of available fonts.  Applications may register their
   // own fonts and the metrics for those fonts will be available to the
   // application.
-  static get fontRegistry() {
+  static get fontRegistry(): TextFontRegistry[] {
     if (!TextFont.registryInstance) {
       TextFont.registryInstance = [];
       TextFont.registryInstance.push({
@@ -70,9 +117,9 @@ export class TextFont {
   // Web font files are generally distributed per weight and style (bold, italic).
   // return the family with the attributes that are available for that font.
   // We assume descriptions are the same for different weights/styles.
-  static getFontFamilies() {
-    const hash = {};
-    const returnedFonts = [];
+  static getFontFamilies(): TextFontRegistry[] {
+    const hash: Record<string, TextFontRegistry> = {};
+    const returnedFonts: TextFontRegistry[] = [];
     TextFont.fontRegistry.forEach((font) => {
       if (!hash[font.family]) {
         hash[font.family] = {
@@ -100,7 +147,7 @@ export class TextFont {
   // ### fontWeightToBold
   // return true if the font weight indicates we desire a 'bold'
   // used in getTextFontFromVexFontData
-  static fontWeightToBold(fw) {
+  static fontWeightToBold(fw: string): boolean {
     if (!fw) {
       return false;
     }
@@ -114,13 +161,13 @@ export class TextFont {
   // ### fontStyleToItalic
   // return true if the font style indicates we desire 'italic' style
   // used in getTextFontFromVexFontData
-  static fontStyleToItalic(fs) {
-    return fs && typeof fs === 'string' && fs.toLowerCase() === 'italic';
+  static fontStyleToItalic(fs: string): boolean {
+    return typeof fs === 'string' && fs.toLowerCase() === 'italic';
   }
 
   // ### textWidthCache
   // Static cache of widths hashed on font/string.
-  static get textWidthCache() {
+  static get textWidthCache(): Record<string, Record<string, number>> {
     if (typeof TextFont.textWidthCacheInstance === 'undefined') {
       TextFont.textWidthCacheInstance = {};
     }
@@ -131,11 +178,11 @@ export class TextFont {
   // Find the font that most closely matches the parameters from the given font data.
   // Primarily we look for font family, also bold and italic attributes.  This
   // method will always return a fallback font if there are no matches.
-  static getTextFontFromVexFontData(fd) {
+  static getTextFontFromVexFontData(fd: TextFont): TextFont {
     let i = 0;
     let selectedFont = null;
     const fallback = TextFont.fontRegistry[0];
-    let candidates = [];
+    let candidates: TextFontRegistry[] = [];
     const families = fd.family.split(',');
     for (i = 0; i < families.length; ++i) {
       const famliy = families[i];
@@ -169,7 +216,7 @@ export class TextFont {
     return selectedFont;
   }
 
-  static getFontDataByName(fontName) {
+  static getFontDataByName(fontName: string): TextFontRegistry | undefined {
     return TextFont.fontRegistry.find((fd) => fd.name === fontName);
   }
 
@@ -178,7 +225,7 @@ export class TextFont {
   // will be available to the application for formatting.  See fontRegistry
   // for format of font metrics.  Metrics can be generated from any font file
   // using font_fontgen.js in the tools/smufl directory.
-  static registerFont(fontData, overwrite) {
+  static registerFont(fontData: TextFontRegistry, overwrite?: boolean): void {
     // Get via external reference to make sure initial object is created
     const reg = TextFont.fontRegistry;
     const exists = reg.find((td) => fontData.name === td.name);
@@ -196,51 +243,47 @@ export class TextFont {
   // create a font instance.
   // The preferred method for returning an instance of this class is via
   // getTextFontFromVexFontData
-  constructor(params) {
+  constructor(params: TextFontRegistry) {
+    this.size = 14;
+    this.maxSizeGlyph = 'H';
+    this.weight = '';
+    this.style = '';
     this.attrs = { type: 'TextFont' };
     if (!params.name) {
-      Vex.RERR('BadArgument', 'Font constructor must specify a name');
+      throw new Vex.RERR('BadArgument', 'Font constructor must specify a name');
     }
     const fontData = params.glyphs ? params : TextFont.getFontDataByName(params.name);
     if (!fontData) {
       if (params.glyphs && params.resolution) {
         TextFont.registerFont(params);
       } else {
-        Vex.RERR('BadArgument', 'Unknown font, must have glyph metrics and resolution');
+        throw new Vex.RERR('BadArgument', 'Unknown font, must have glyph metrics and resolution');
       }
     } else {
       Vex.Merge(this, fontData);
     }
     Vex.Merge(this, params);
 
-    if (!this.size) {
-      this.size = 14;
-    }
-    if (!this.maxSizeGlyph) {
-      this.maxSizeGlyph = 'H';
-    }
-    this.weight = typeof this.weight === 'undefined' ? '' : this.weight;
-    this.style = typeof this.style === 'undefined' ? '' : this.style;
     this.updateCacheKey();
   }
   // Create a hash with the current font data, so we can cache computed widths
-  updateCacheKey() {
-    this.fontCacheKey = this.family + '-' + this.size + '-' + this.weight + '-' + this.style;
+  updateCacheKey(): void {
+    this.fontCacheKey = `${this.family}-${this.size}-${this.weight}-${this.style}`;
   }
 
-  getMetricForCharacter(c) {
+  getMetricForCharacter(c: string): TextFontMetrics {
     if (this.glyphs[c]) {
       return this.glyphs[c];
     }
     return this.glyphs[this.maxSizeGlyph];
   }
 
-  get maxHeight() {
+  get maxHeight(): number {
     const glyph = this.getMetricForCharacter(this.maxSizeGlyph);
     return (glyph.ha / this.resolution) * this.pointsToPixels;
   }
 
-  getWidthForCharacter(c) {
+  getWidthForCharacter(c: string): number {
     const metric = this.getMetricForCharacter(c);
     if (!metric) {
       return 0.65 * this.pointsToPixels;
@@ -248,7 +291,7 @@ export class TextFont {
     return (metric.advanceWidth / this.resolution) * this.pointsToPixels;
   }
 
-  getWidthForString(s) {
+  getWidthForString(s: string): number {
     // Store width in 2-level cache, so I don't have to recompute for
     // same string/font
     if (typeof TextFont.textWidthCache[this.fontCacheKey] === 'undefined') {
@@ -266,11 +309,11 @@ export class TextFont {
 
   // ### pointsToPixels
   // The font size is specified in points, convert to 'pixels' in the svg space
-  get pointsToPixels() {
+  get pointsToPixels(): number {
     return this.size / 72 / (1 / 96);
   }
 
-  setFontSize(size) {
+  setFontSize(size: number): this {
     this.size = size;
     // font size mangled into cache key, so use the correct one.
     this.updateCacheKey();
