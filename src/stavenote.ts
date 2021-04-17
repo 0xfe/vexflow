@@ -1114,9 +1114,8 @@ export class StaveNote extends StemmableNote {
       stave,
       glyph,
       render_options: { stroke_px },
-      context: ctx,
     } = this;
-
+    const ctx = this.checkContext();
     const width = glyph.getWidth() + stroke_px * 2;
     const doubleWidth = 2 * (glyph.getWidth() + stroke_px) - Stem.WIDTH / 2;
 
@@ -1173,11 +1172,7 @@ export class StaveNote extends StemmableNote {
 
   // Draw all key modifiers
   drawModifiers(): void {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
-
-    const ctx = this.context;
+    const ctx = this.checkContext();
     ctx.openGroup('modifiers');
     for (let i = 0; i < this.modifiers.length; i++) {
       const modifier = this.modifiers[i];
@@ -1193,7 +1188,8 @@ export class StaveNote extends StemmableNote {
 
   // Draw the flag for the note
   drawFlag(): void {
-    const { stem, beam, context: ctx } = this;
+    const { stem, beam } = this;
+    const ctx = this.checkContext();
 
     if (!ctx) {
       throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
@@ -1225,10 +1221,11 @@ export class StaveNote extends StemmableNote {
 
   // Draw the NoteHeads
   drawNoteHeads(): void {
+    const ctx = this.checkContext();
     this.note_heads.forEach((notehead) => {
-      this.context?.openGroup('notehead', undefined, { pointerBBox: true });
-      notehead.setContext(this.context).draw();
-      this.context?.closeGroup();
+      ctx.openGroup('notehead', undefined, { pointerBBox: true });
+      notehead.setContext(ctx).draw();
+      ctx.closeGroup();
     });
   }
 
@@ -1236,17 +1233,15 @@ export class StaveNote extends StemmableNote {
     // GCR TODO: I can't find any context in which this is called with the stemStruct
     // argument in the codebase or tests. Nor can I find a case where super.drawStem
     // is called at all. Perhaps these should be removed?
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
+    const ctx = this.checkContext();
 
     if (stemStruct) {
       this.setStem(new Stem(stemStruct));
     }
 
-    this.context.openGroup('stem', undefined, { pointerBBox: true });
-    this.stem?.setContext(this.context).draw();
-    this.context.closeGroup();
+    ctx.openGroup('stem', undefined, { pointerBBox: true });
+    this.stem?.setContext(ctx).draw();
+    ctx.closeGroup();
   }
 
   /**
@@ -1292,9 +1287,6 @@ export class StaveNote extends StemmableNote {
 
   // Draws all the `StaveNote` parts. This is the main drawing method.
   draw(): void {
-    if (!this.context) {
-      throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
-    }
     if (!this.stave) {
       throw new Vex.RERR('NoStave', "Can't draw without a stave.");
     }
@@ -1302,6 +1294,7 @@ export class StaveNote extends StemmableNote {
       throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
     }
 
+    const ctx = this.checkContext();
     const xBegin = this.getNoteHeadBeginX();
     const shouldRenderStem = this.hasStem() && !this.beam;
 
@@ -1316,15 +1309,15 @@ export class StaveNote extends StemmableNote {
 
     // Apply the overall style -- may be contradicted by local settings:
     this.applyStyle();
-    this.setSvgElement(this.context?.openGroup('stavenote', this.getAttribute('id')));
+    this.setSvgElement(ctx.openGroup('stavenote', this.getAttribute('id')));
     this.drawLedgerLines();
-    this.context?.openGroup('note', undefined, { pointerBBox: true });
+    ctx.openGroup('note', undefined, { pointerBBox: true });
     if (shouldRenderStem) this.drawStem();
     this.drawNoteHeads();
     this.drawFlag();
-    this.context?.closeGroup();
+    ctx.closeGroup();
     this.drawModifiers();
-    this.context?.closeGroup();
+    ctx.closeGroup();
     this.restoreStyle();
     this.setRendered();
   }
