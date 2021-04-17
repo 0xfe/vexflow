@@ -14,8 +14,7 @@ import { Clef } from './clef';
 import { KeySignature } from './keysignature';
 import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
-import { FontStruct } from './font';
-import { Bounds, Tempo, FactoryRendererOptions, FactoryStaveOptions } from './types/common';
+import { Bounds, Tempo, FactoryRendererOptions, FactoryStaveOptions, FontInfo } from './types/common';
 export interface StaveLineConfig {
   visible: boolean;
 }
@@ -44,7 +43,7 @@ export interface StaveOptions {
   size?: string;
   renderer?: FactoryRendererOptions;
   stave?: FactoryStaveOptions;
-  font?: FontStruct;
+  font?: FontInfo;
   autoStem?: boolean;
   secondaryBeamBreaks?: never[];
   direction?: number;
@@ -73,7 +72,7 @@ export class Stave extends Element {
   protected formatted: boolean;
   protected end_x: number;
   protected measure: number;
-  protected font: FontStruct;
+  protected font: FontInfo;
   protected bounds: Bounds;
   protected readonly modifiers: StaveModifier[];
 

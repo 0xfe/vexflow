@@ -1,3 +1,9 @@
+export interface FontInfo {
+  size: number;
+  weight: string;
+  family: string;
+}
+
 /** TODO: Move to Factory */
 export interface FactoryStaveOptions {
   space: number;

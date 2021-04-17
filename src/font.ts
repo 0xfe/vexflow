@@ -7,15 +7,6 @@ import { PetalumaMetrics } from './fonts/petaluma_metrics';
 import { CustomFont } from './fonts/custom_glyphs';
 import { CustomMetrics } from './fonts/custom_metrics';
 
-export interface FontStruct {
-  size: number;
-  weight: string;
-  family: string;
-  style?: string;
-  font?: string;
-  face?: string;
-  point?: number;
-}
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
   fontFamily?: string;
