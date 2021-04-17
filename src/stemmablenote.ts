@@ -6,7 +6,7 @@
 
 import { Vex } from './vex';
 import { Flow } from './tables';
-import { Stem, StemStruct } from './stem';
+import { Stem, StemOptions } from './stem';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
 import { GlyphProps } from './glyph';
@@ -233,11 +233,11 @@ export abstract class StemmableNote extends Note {
   }
 
   /** Renders the stem onto the canvas. */
-  drawStem(stem_struct: StemStruct): void {
+  drawStem(stemOptions: StemOptions): void {
     this.checkContext();
     this.setRendered();
 
-    this.setStem(new Stem(stem_struct));
+    this.setStem(new Stem(stemOptions));
     this.stem?.setContext(this.getContext()).draw();
   }
 }

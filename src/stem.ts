@@ -16,7 +16,7 @@ function L(
   if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args);
 }
 
-export interface StemStruct {
+export interface StemOptions {
   stem_down_y_base_offset: number;
   stem_up_y_base_offset: number;
   stem_down_y_offset: number;
@@ -73,7 +73,7 @@ export class Stem extends Element {
     return Flow.STEM_HEIGHT;
   }
 
-  constructor(options?: StemStruct) {
+  constructor(options?: StemOptions) {
     super();
     this.setAttribute('type', 'Stem');
 
@@ -103,7 +103,7 @@ export class Stem extends Element {
     this.setOptions(options);
   }
 
-  setOptions(options?: StemStruct): void {
+  setOptions(options?: StemOptions): void {
     // Changing where the stem meets the head
     this.stem_up_y_offset = options?.stem_up_y_offset || 0;
     this.stem_down_y_offset = options?.stem_down_y_offset || 0;
