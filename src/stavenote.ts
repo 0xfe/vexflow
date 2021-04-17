@@ -14,7 +14,8 @@ import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
 import { Stem } from './stem';
 import { NoteHead } from './notehead';
-import { StemmableNote, StemStruct } from './stemmablenote';
+import { StemmableNote } from './stemmablenote';
+import { StemOptions } from './stem';
 import { Modifier } from './modifier';
 import { Dot } from './dot';
 import { KeyProps, ModifierContextState } from './types/common';
@@ -1201,14 +1202,14 @@ export class StaveNote extends StemmableNote {
     });
   }
 
-  drawStem(stemStruct?: StemStruct): void {
+  drawStem(stemOptions?: StemOptions): void {
     // GCR TODO: I can't find any context in which this is called with the stemStruct
     // argument in the codebase or tests. Nor can I find a case where super.drawStem
     // is called at all. Perhaps these should be removed?
     const ctx = this.checkContext();
 
-    if (stemStruct) {
-      this.setStem(new Stem(stemStruct));
+    if (stemOptions) {
+      this.setStem(new Stem(stemOptions));
     }
 
     ctx.openGroup('stem', undefined, { pointerBBox: true });

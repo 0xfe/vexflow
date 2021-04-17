@@ -17,10 +17,10 @@ function L(
 }
 
 export interface StemOptions {
-  stem_down_y_base_offset: number;
-  stem_up_y_base_offset: number;
-  stem_down_y_offset: number;
-  stem_up_y_offset: number;
+  stem_down_y_base_offset?: number;
+  stem_up_y_base_offset?: number;
+  stem_down_y_offset?: number;
+  stem_up_y_offset?: number;
   stemletHeight?: number;
   isStemlet?: boolean;
   hide?: boolean;
