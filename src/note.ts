@@ -75,14 +75,14 @@ export interface ParsedNote {
 }
 
 export interface NoteStruct {
-  line: number;
+  line?: number;
   /** The number of dots, which affects the duration. */
-  dots: number;
-  keys: string[];
+  dots?: number;
+  keys?: string[];
   /** The note type (e.g., `r` for rest, `s` for slash notes, etc.). */
-  type: string;
-  align_center: boolean;
-  duration_override: Fraction;
+  type?: string;
+  align_center?: boolean;
+  duration_override?: Fraction;
   /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
   duration: string;
 }
@@ -206,7 +206,7 @@ export abstract class Note extends Tickable {
         noteStruct.keys.forEach((k, i) => {
           const result = k.split('/');
           // We have a custom glyph specified after the note eg. /X2
-          customTypes[i] = result && result.length === 3 ? result[2] : type;
+          customTypes[i] = (result && result.length === 3 ? result[2] : type) as string;
         });
       }
     }
