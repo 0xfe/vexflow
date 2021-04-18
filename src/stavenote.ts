@@ -95,7 +95,6 @@ function centerRest(rest: StaveNoteFormatSettings, noteU: StaveNoteFormatSetting
 export class StaveNote extends StemmableNote {
   static DEBUG: boolean;
 
-  keyProps: KeyProps[];
   minLine: number = 0;
   maxLine: number = 0;
 

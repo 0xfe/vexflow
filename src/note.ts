@@ -20,7 +20,7 @@ import { Voice } from './voice';
 import { TickContext } from './tickcontext';
 import { ModifierContext } from './modifiercontext';
 import { Modifier } from './modifier';
-import { RenderContext } from './types/common';
+import { KeyProps, RenderContext } from './types/common';
 import { GlyphProps } from './glyph';
 import { GLYPH_PROPS_VALID_TYPES } from './common';
 import { Fraction } from './fraction';
@@ -98,6 +98,8 @@ export interface NoteStruct {
  */
 export abstract class Note extends Tickable {
   keys: string[];
+  keyProps: KeyProps[];
+
   protected stave?: Stave;
   protected render_options: NoteRenderOptions;
   protected duration: string;
@@ -263,6 +265,9 @@ export abstract class Note extends Tickable {
 
     // Set note properties from parameters.
     this.keys = noteStruct.keys;
+    // per-pitch properties
+    this.keyProps = [];
+
     this.duration = initStruct.duration;
     this.dots = initStruct.dots;
     this.noteType = initStruct.type;
