@@ -381,8 +381,6 @@ export class StaveNote extends StemmableNote {
     // if true, displace note to right
     this.displaced = false;
     this.dot_shiftY = 0;
-    // per-pitch properties
-    this.keyProps = [];
     // for displaced ledger lines
     this.use_default_head_x = false;
 
@@ -551,7 +549,7 @@ export class StaveNote extends StemmableNote {
 
       // Calculate displacement of this note
       const line = props.line;
-      if (!lastLine) {
+      if (lastLine == undefined) {
         lastLine = line;
       } else {
         if (Math.abs(lastLine - line) === 0.5) {
