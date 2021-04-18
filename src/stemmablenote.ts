@@ -82,19 +82,19 @@ export abstract class StemmableNote extends Note {
     // if note is flagged, cannot shorten beam
     switch (this.duration) {
       case '8':
-        if (this.beam == null) length = 35;
+        if (this.beam == undefined) length = 35;
         break;
       case '16':
-        length = this.beam == null ? 35 : 25;
+        length = this.beam == undefined ? 35 : 25;
         break;
       case '32':
-        length = this.beam == null ? 45 : 35;
+        length = this.beam == undefined ? 45 : 35;
         break;
       case '64':
-        length = this.beam == null ? 50 : 40;
+        length = this.beam == undefined ? 50 : 40;
         break;
       case '128':
-        length = this.beam == null ? 55 : 45;
+        length = this.beam == undefined ? 55 : 45;
         break;
       default:
         break;
