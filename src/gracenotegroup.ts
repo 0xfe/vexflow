@@ -15,6 +15,7 @@ import { StaveTie } from './stavetie';
 import { TabTie } from './tabtie';
 import { StaveNote } from './stavenote';
 import { Note } from './note';
+import { StemmableNote } from './stemmablenote';
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 function L(
@@ -28,7 +29,7 @@ export class GraceNoteGroup extends Modifier {
   static DEBUG: boolean;
 
   protected readonly voice: Voice;
-  protected readonly grace_notes: Note[];
+  protected readonly grace_notes: StemmableNote[];
   protected readonly show_slur?: boolean;
 
   protected preFormatted: boolean;
@@ -90,7 +91,7 @@ export class GraceNoteGroup extends Modifier {
   }
 
   //** `GraceNoteGroup` inherits from `Modifier` and is placed inside a `ModifierContext`. */
-  constructor(grace_notes: Note[], show_slur?: boolean) {
+  constructor(grace_notes: StemmableNote[], show_slur?: boolean) {
     super();
     this.setAttribute('type', 'GraceNoteGroup');
 
@@ -133,7 +134,7 @@ export class GraceNoteGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  beamNotes(grace_notes?: Note[]): this {
+  beamNotes(grace_notes?: StemmableNote[]): this {
     grace_notes = grace_notes || this.grace_notes;
     if (grace_notes.length > 1) {
       const beam = new Beam(grace_notes);
