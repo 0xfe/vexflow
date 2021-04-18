@@ -94,8 +94,6 @@ export class GraceNoteGroup extends Modifier {
     super();
     this.setAttribute('type', 'GraceNoteGroup');
 
-    this.note = null;
-    this.index = null;
     this.position = Modifier.Position.LEFT;
     this.grace_notes = grace_notes;
     this.width = 0;

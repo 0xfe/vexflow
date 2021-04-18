@@ -104,8 +104,6 @@ export class Dot extends Modifier {
     super();
     this.setAttribute('type', 'Dot');
 
-    this.note = null;
-    this.index = null;
     this.position = Modifier.Position.RIGHT;
 
     this.radius = 2;
