@@ -182,6 +182,7 @@ export class Modifier extends Element {
 
   // Render the modifier onto the canvas.
   draw(): void {
+    this.checkContext();
     throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
   }
 
