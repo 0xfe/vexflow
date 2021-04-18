@@ -24,9 +24,6 @@ import { ModifierContext } from './modifiercontext';
 import { ElementStyle } from './element';
 import { Stave } from './stave';
 import { NoteStruct } from './note';
-export interface StaveNoteGetModifierStartXYOptions {
-  forceFlagRight: boolean;
-}
 
 export interface StaveNoteHeadBounds {
   y_top: number;
@@ -779,7 +776,9 @@ export class StaveNote extends StemmableNote {
   getModifierStartXY(
     position: number,
     index: number,
-    options: StaveNoteGetModifierStartXYOptions
+    options: {
+      forceFlagRight?: boolean;
+    }
   ): { x: number; y: number } {
     options = options || {};
     if (!this.preFormatted) {

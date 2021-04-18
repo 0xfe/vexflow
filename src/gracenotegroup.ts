@@ -128,7 +128,7 @@ export class GraceNoteGroup extends Modifier {
   preFormat(): void {
     if (this.preFormatted) return;
 
-    this.formatter.joinVoices([this.voice]).format([this.voice], 0);
+    this.formatter.joinVoices([this.voice]).format([this.voice], 0, {});
     this.setWidth(this.formatter.getMinTotalWidth());
     this.preFormatted = true;
   }
