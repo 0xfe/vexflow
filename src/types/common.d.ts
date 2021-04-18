@@ -4,21 +4,6 @@ export interface FontInfo {
   family: string;
 }
 
-/** TODO: Move to Factory */
-export interface FactoryStaveOptions {
-  space: number;
-}
-
-/** TODO: Move to Factory */
-export interface FactoryRendererOptions {
-  elementId: string;
-  background: string;
-  context: null;
-  width: number;
-  backend: number;
-  height: number;
-  el: SVGAElement;
-}
 export interface Bounds {
   w: number;
   x: number;
