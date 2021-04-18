@@ -46,7 +46,8 @@ export interface KeyProps {
   displaced: boolean;
 }
 
-export interface Tempo {
+/** TODO: Move to StaveTempo */
+export interface StaveTempoOptions {
   bpm: number;
   dots: number;
   duration: string;

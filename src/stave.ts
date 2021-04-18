@@ -14,7 +14,7 @@ import { Clef } from './clef';
 import { KeySignature } from './keysignature';
 import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
-import { Bounds, Tempo, FactoryRendererOptions, FactoryStaveOptions, FontInfo } from './types/common';
+import { Bounds, StaveTempoOptions, FontInfo } from './types/common';
 export interface StaveLineConfig {
   visible: boolean;
 }
@@ -40,23 +40,6 @@ export interface StaveOptions {
   spacing_between_lines_px: number;
   top_text_position: number;
   num_lines: number;
-  size?: string;
-  renderer?: FactoryRendererOptions;
-  stave?: FactoryStaveOptions;
-  font?: FontInfo;
-  autoStem?: boolean;
-  secondaryBeamBreaks?: never[];
-  direction?: number;
-  harsh?: boolean;
-  superscript?: string;
-  position?: number;
-  style?: string;
-}
-
-export interface StaveTextOptions {
-  shift_x: number;
-  shift_y: number;
-  justification: number;
 }
 
 export class Stave extends Element {
@@ -296,13 +279,21 @@ export class Stave extends Element {
   }
 
   // Tempo functions
-  setTempo(tempo: Tempo, y: number): this {
+  setTempo(tempo: StaveTempoOptions, y: number): this {
     this.modifiers.push(new StaveTempo(tempo, this.x, y));
     return this;
   }
 
   // Text functions
-  setText(text: string, position: number, options: StaveTextOptions): this {
+  setText(
+    text: string,
+    position: number,
+    options: {
+      shift_x: number;
+      shift_y: number;
+      justification: number;
+    }
+  ): this {
     this.modifiers.push(new StaveText(text, position, options));
     return this;
   }
