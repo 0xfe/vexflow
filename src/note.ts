@@ -264,7 +264,7 @@ export abstract class Note extends Tickable {
     }
 
     // Set note properties from parameters.
-    this.keys = noteStruct.keys;
+    this.keys = noteStruct.keys || [];
     // per-pitch properties
     this.keyProps = [];
 
