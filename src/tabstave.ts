@@ -1,6 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Stave } from './stave';
+import { Stave, StaveOptions } from './stave';
 
 export class TabStave extends Stave {
   constructor(x: number, y: number, width: number, options: StaveOptions) {
