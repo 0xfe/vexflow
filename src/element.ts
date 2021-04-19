@@ -18,7 +18,8 @@ export interface ElementAttributes {
   // eslint-disable-next-line
   [name: string]: any;
   id: string;
-  el?: SVGElement;
+  // eslint-disable-next-line
+  el?: any;
   type: string;
   classes: Record<string, boolean>;
 }
