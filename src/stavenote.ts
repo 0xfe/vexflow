@@ -342,7 +342,8 @@ export class StaveNote extends StemmableNote {
         .getStave()
         ?.getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
 
-      const areNotesColliding = bottomNoteTopY - topNoteBottomY < 0;
+      const areNotesColliding =
+        bottomNoteTopY != undefined && topNoteBottomY != undefined ? bottomNoteTopY - topNoteBottomY < 0 : false;
 
       if (areNotesColliding) {
         xShift = topNote.getVoiceShiftWidth() + 2;
