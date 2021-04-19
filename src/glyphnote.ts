@@ -3,8 +3,7 @@
 import { Vex } from './vex';
 import { BoundingBox } from './boundingbox';
 import { Glyph } from './glyph';
-import { Note } from './note';
-import { StaveNoteStruct } from './stavenote';
+import { Note, NoteStruct } from './note';
 export interface GlyphNoteOptions {
   ignoreTicks?: boolean;
   line?: number;
@@ -12,7 +11,7 @@ export interface GlyphNoteOptions {
 
 export class GlyphNote extends Note {
   protected options: GlyphNoteOptions;
-  constructor(glyph: Glyph | undefined, noteStruct: StaveNoteStruct, options?: GlyphNoteOptions) {
+  constructor(glyph: Glyph | undefined, noteStruct: NoteStruct, options?: GlyphNoteOptions) {
     super(noteStruct);
     this.options = {
       ignoreTicks: false,
@@ -63,7 +62,7 @@ export class GlyphNote extends Note {
     }
 
     this.glyph.setStave(this.stave);
-    this.glyph.setYShift(this.stave.getYForLine(this.options.line) - this.stave.getYForGlyphs());
+    this.glyph.setYShift(this.stave.getYForLine(this.options.line as number) - this.stave.getYForGlyphs());
 
     const x = this.isCenterAligned() ? this.getAbsoluteX() - this.getWidth() / 2 : this.getAbsoluteX();
     this.glyph.renderToStave(x);
