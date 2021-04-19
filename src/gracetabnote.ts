@@ -9,7 +9,7 @@
 // See `tests/gracetabnote_tests.js` for usage examples.
 
 import { TabNote } from './tabnote';
-import { StaveNoteStruct } from './types/common';
+import { StaveNoteStruct } from './stavenote';
 
 /** Implements Crace Tab Note. */
 export class GraceTabNote extends TabNote {
