@@ -171,7 +171,7 @@ export abstract class StemmableNote extends Note {
   getStemExtension(): number {
     const glyph = this.getGlyph();
 
-    if (this.stem_extension_override != null) {
+    if (this.stem_extension_override != undefined) {
       return this.stem_extension_override;
     }
 
@@ -196,29 +196,27 @@ export abstract class StemmableNote extends Note {
 
   /** Gets the `y` value for the top modifiers at a specific `textLine`. */
   getYForTopText(textLine: number): number {
-    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     const extents = this.getStemExtents();
-    if (extents) {
+    if (this.hasStem()) {
       return Math.min(
-        this.stave.getYForTopText(textLine),
-        extents.topY - this.render_options.annotation_spacing * (textLine + 1)
+        this.stave?.getYForTopText(textLine) ?? 0,
+        extents?.topY ?? 0 - this.render_options.annotation_spacing * (textLine + 1)
       );
     } else {
-      return this.stave.getYForTopText(textLine);
+      return this.stave?.getYForTopText(textLine) ?? 0;
     }
   }
 
   /** Gets the `y` value for the bottom modifiers at a specific `textLine`. */
   getYForBottomText(textLine: number): number {
-    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     const extents = this.getStemExtents();
-    if (extents) {
+    if (this.hasStem()) {
       return Math.max(
-        this.stave.getYForTopText(textLine),
-        extents.baseY + this.render_options.annotation_spacing * textLine
+        this.stave?.getYForTopText(textLine) ?? 0,
+        extents?.baseY ?? 0 + this.render_options.annotation_spacing * textLine
       );
     } else {
-      return this.stave.getYForBottomText(textLine);
+      return this.stave?.getYForBottomText(textLine) ?? 0;
     }
   }
 
