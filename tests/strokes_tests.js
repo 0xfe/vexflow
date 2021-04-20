@@ -92,13 +92,13 @@ VF.Test.Strokes = (function () {
       notes1[2]
         .addStroke(0, new VF.Stroke(7))
         .addAccidental(1, vf.Accidental({ type: 'b' }))
-        .addModifier(0, graceNoteGroup);
-      notes1[3]
-        .addStroke(0, new VF.Stroke(7))
-        .addModifier(
-          0,
-          vf.NoteSubGroup({ notes: [vf.ClefNote({ type: 'treble', options: { size: 'default', annotation: '8va' } })] })
-        );
+        .addModifier(graceNoteGroup, 0);
+      notes1[3].addStroke(0, new VF.Stroke(7)).addModifier(
+        vf.NoteSubGroup({
+          notes: [vf.ClefNote({ type: 'treble', options: { size: 'default', annotation: '8va' } })],
+        }),
+        0
+      );
 
       var voice1 = score.voice(notes1);
 

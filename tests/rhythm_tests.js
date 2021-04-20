@@ -254,7 +254,7 @@ VF.Test.Rhythm = (function () {
         new VF.StaveNote({ keys: ['b/4'], duration: '8s', stem_direction: -1 }),
       ];
 
-      notesBar1_part1[0].addModifier(0, new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 2));
+      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 2), 0);
 
       var notesBar1_part2 = [
         new VF.StaveNote({
@@ -310,7 +310,7 @@ VF.Test.Rhythm = (function () {
         }),
       ];
 
-      notesBar2[0].addModifier(0, new VF.Annotation('F').setFont('Times', VF.Test.Font.size + 2));
+      notesBar2[0].addModifier(new VF.Annotation('F').setFont('Times', VF.Test.Font.size + 2), 0);
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
@@ -376,7 +376,7 @@ VF.Test.Rhythm = (function () {
         }),
       ];
 
-      notesBar1_part1[0].addModifier(0, new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 3));
+      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 3), 0);
 
       // create the beams for 8th notes in 2nd measure
       var beam1 = new VF.Beam(notesBar1_part1);
@@ -448,7 +448,7 @@ VF.Test.Rhythm = (function () {
         }),
       ];
 
-      notesBar1_part1[0].addModifier(0, new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 3));
+      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 3), 0);
 
       // create the beams for 8th notes in 2nd measure
       var beam1 = new VF.Beam(notesBar1_part1);
