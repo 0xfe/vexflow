@@ -20,7 +20,7 @@ import { Voice } from './voice';
 import { TickContext } from './tickcontext';
 import { ModifierContext } from './modifiercontext';
 import { Modifier } from './modifier';
-import { RenderContext } from './types/common';
+import { KeyProps, RenderContext } from './types/common';
 import { GlyphProps } from './glyph';
 import { GLYPH_PROPS_VALID_TYPES } from './common';
 import { Fraction } from './fraction';
@@ -63,7 +63,7 @@ export interface NoteRenderOptions {
   glyph_font_size?: number;
   scale?: number;
   font?: string;
-  stroke_px?: number;
+  stroke_px: number;
 }
 
 export interface ParsedNote {
@@ -97,6 +97,9 @@ export interface NoteStruct {
  * array of them. All notes also have a rendering context and belong to a stave.
  */
 export abstract class Note extends Tickable {
+  keys: string[];
+  keyProps: KeyProps[];
+
   protected stave?: Stave;
   protected render_options: NoteRenderOptions;
   protected duration: string;
@@ -261,6 +264,10 @@ export abstract class Note extends Tickable {
     }
 
     // Set note properties from parameters.
+    this.keys = noteStruct.keys;
+    // per-pitch properties
+    this.keyProps = [];
+
     this.duration = initStruct.duration;
     this.dots = initStruct.dots;
     this.noteType = initStruct.type;
@@ -303,6 +310,7 @@ export abstract class Note extends Tickable {
     this.render_options = {
       annotation_spacing: 5,
       glyph_font_scale: 1,
+      stroke_px: 1,
     };
   }
 
@@ -373,7 +381,9 @@ export abstract class Note extends Tickable {
   }
 
   /** Gets the stave line number for the note. */
-  getLineNumber(): number {
+  getLineNumber(
+    // eslint-disable-next-line
+    isTopNote: boolean): number {
     return 0;
   }
 
@@ -454,7 +464,8 @@ export abstract class Note extends Tickable {
   }
 
   /** Gets the `TickContext` for this note. */
-  getTickContext(): TickContext | undefined {
+  getTickContext(): TickContext {
+    if (!this.tickContext) throw new Vex.RERR('NoTickContext', 'Note has no tick context.');
     return this.tickContext;
   }
 
@@ -480,11 +491,6 @@ export abstract class Note extends Tickable {
     return false;
   }
 
-  /** Accessors to dots. */
-  getDots(): number {
-    return this.dots;
-  }
-
   /** Accessors to note type. */
   getNoteType(): string {
     return this.noteType;
@@ -503,16 +509,30 @@ export abstract class Note extends Tickable {
   }
 
   /** Attach a modifier to this note. */
-  addModifier(modifier: Modifier, index = 0): this {
+  addModifier(a: number | Modifier, b: number | Modifier = 0): this {
+    let index: number;
+    let modifier: Modifier;
+
+    if (typeof a === 'object' && typeof b === 'number') {
+      index = b;
+      modifier = a;
+    } else {
+      throw new Vex.RERR(
+        'WrongParams',
+        'Call signature to addModifier not supported, use addModifier(modifier, index) instead.'
+      );
+    }
     modifier.setNote(this);
     modifier.setIndex(index);
     this.modifiers.push(modifier);
     this.setPreFormatted(false);
     return this;
   }
-
   /** Get the coordinates for where modifiers begin. */
-  getModifierStartXY(): { x: number; y: number } {
+  getModifierStartXY(
+    // eslint-disable-next-line
+    position?: number, index?: number, options?: any
+  ): { x: number; y: number } {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }

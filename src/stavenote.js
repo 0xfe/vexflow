@@ -303,7 +303,6 @@ export class StaveNote extends StemmableNote {
     super(noteStruct);
     this.setAttribute('type', 'StaveNote');
 
-    this.keys = noteStruct.keys;
     this.clef = noteStruct.clef;
     this.octave_shift = noteStruct.octave_shift;
     this.beam = null;
@@ -321,8 +320,6 @@ export class StaveNote extends StemmableNote {
     // if true, displace note to right
     this.displaced = false;
     this.dot_shiftY = 0;
-    // per-pitch properties
-    this.keyProps = [];
     // for displaced ledger lines
     this.use_default_head_x = false;
 
