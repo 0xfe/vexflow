@@ -27,6 +27,9 @@
 # PNG viewer on OSX. Switch this to whatever your system uses.
 # VIEWER=open
 
+# Check ImageMagick installation
+command -v convert >/dev/null 2>&1 || { echo >&2 "Error: ImageMagick not found."; exit 1; }
+
 # Show images over this PHASH threshold. This is probably too low, but
 # a good first pass.
 THRESHOLD=0.01
@@ -34,9 +37,23 @@ THRESHOLD=0.01
 # Directories. You might want to change BASE, if you're running from a
 # different working directory.
 BASE=.
-BLESSED=$BASE/build/images/blessed
-CURRENT=$BASE/build/images/current
+if [ "$1" == "ref" ]
+then
+ADIR=$BASE/images-ref
+ANAME=Ref
+BDIR=$BASE/build/images/current
+BNAME=Current
+DIFF=$BASE/build/images/diff-ref
+else
+ADIR=$BASE/build/images/blessed
+ANAME=Blessed
+BDIR=$BASE/build/images/current
+BNAME=Current
 DIFF=$BASE/build/images/diff
+fi
+
+echo $ADIR
+echo $BDIR
 
 # All results are stored here.
 RESULTS=$DIFF/results.txt
@@ -52,11 +69,11 @@ touch $RESULTS.fail
 touch $WARNINGS
 
 # If no prefix is provided, test all images.
-if [ "$1" == "" ]
+if [ "$2" == "" ]
 then
   files=*.png
 else
-  files=$1*.png
+  files=$2*.png
 fi
 
 
@@ -68,18 +85,18 @@ then
 fi
 
 # Check if some png files are in the right folders and warn if not. doesn't make sure there are actual, usable png images though.
-totalCurrentImages=`ls -1 $CURRENT/$files | wc -l | xargs` # xargs trims spaces
+totalCurrentImages=`ls -1 $BDIR/$files | wc -l | xargs` # xargs trims spaces
 if [ $? -ne 0 ] || [ "$totalCurrentImages" -lt 1 ]
 then
-  echo Missing images in $CURRENT.
+  echo Missing images in $BDIR.
   echo Please run \"npm run generate:current\"
   exit 1
 fi
 
-totalBlessedImages=`ls -1 $BLESSED/$files | wc -l | xargs`
+totalBlessedImages=`ls -1 $ADIR/$files | wc -l | xargs`
 if [ $? -ne 0 ] || [ "$totalBlessedImages" -lt 1 ]
 then
-  echo Missing images in $BLESSED.
+  echo Missing images in $ADIR.
   echo Please run \"npm run generate:blessed\"
   exit 1
 fi
@@ -112,19 +129,19 @@ function ProgressBar {
 function diff_image() {
   local image=$1
   local name=`basename $image .png`
-  local blessed=$BLESSED/$name.png
-  local current=$CURRENT/$name.png
+  local blessed=$ADIR/$name.png
+  local current=$BDIR/$name.png
   local diff=$current-temp
 
   if [ ! -e "$current" ]
   then
-    echo "Warning: $name.png missing in $CURRENT." >$diff.warn
+    echo "Warning: $name.png missing in $BDIR." >$diff.warn
     return
   fi
 
   if [ ! -e "$blessed" ]
   then
-    echo "Warning: $name.png missing in $BLESSED." >$diff.warn
+    echo "Warning: $name.png missing in $ADIR." >$diff.warn
     return
   fi
 
@@ -141,8 +158,8 @@ function diff_image() {
     echo $name $hash >$diff.fail
     # Threshold exceeded, save the diff and the original, current
     cp $diff-diff.png $DIFF/$name.png
-    cp $diff-a.png $DIFF/$name'_'Blessed.png
-    cp $diff-b.png $DIFF/$name'_'Current.png
+    cp $diff-a.png $DIFF/$name'_'$ANAME.png
+    cp $diff-b.png $DIFF/$name'_'$BNAME.png
     echo
     echo "Test: $name"
     echo "  PHASH value exceeds threshold: $hash > $THRESHOLD"
@@ -168,7 +185,7 @@ function wait_jobs () {
 }
 
 count=0
-for image in $CURRENT/$files
+for image in $BDIR/$files
 do
   count=$((count + 1))
   ProgressBar ${count} ${totalBlessedImages}
@@ -177,32 +194,32 @@ do
 done
 wait
 
-cat $CURRENT/*.warn 1>$WARNINGS 2>/dev/null
-rm -f $CURRENT/*.warn
+cat $BDIR/*.warn 1>$WARNINGS 2>/dev/null
+rm -f $BDIR/*.warn
 
 ## Check for files newly built that are not yet blessed.
-for image in $CURRENT/$files
+for image in $BDIR/$files
 do
   name=`basename $image .png`
-  blessed=$BLESSED/$name.png
-  current=$CURRENT/$name.png
+  blessed=$ADIR/$name.png
+  current=$BDIR/$name.png
 
-  if [ ! -e "$blessed" ]
+  if [ ! -e "$ADIR" ]
   then
-    echo "  Warning: $name.png missing in $BLESSED." >>$WARNINGS
+    echo "  Warning: $name.png missing in $ADIR." >>$WARNINGS
   fi
 done
 
 num_warnings=`cat $WARNINGS | wc -l`
 
-cat $CURRENT/*.fail 1>$RESULTS.fail 2>/dev/null
+cat $BDIR/*.fail 1>$RESULTS.fail 2>/dev/null
 num_fails=`cat $RESULTS.fail | wc -l`
-rm -f  $CURRENT/*.fail
+rm -f  $BDIR/*.fail
 
 # Sort results by PHASH
 sort -r -n -k 2 $RESULTS.fail >$RESULTS
-sort -r -n -k 2 $CURRENT/*.pass 1>>$RESULTS 2>/dev/null
-rm -f $CURRENT/*.pass $RESULTS.fail
+sort -r -n -k 2 $BDIR/*.pass 1>>$RESULTS 2>/dev/null
+rm -f $BDIR/*.pass $RESULTS.fail
 
 echo
 echo Results stored in $DIFF/results.txt
