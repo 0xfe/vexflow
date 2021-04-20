@@ -1,3 +1,16 @@
+export interface FontInfo {
+  size: number;
+  weight: string;
+  family: string;
+}
+
+export interface Bounds {
+  w: number;
+  x: number;
+  h: number;
+  y: number;
+}
+
 /** TODO: Move to GlyphNote */
 export interface GlyphNoteOptions {
   ignoreTicks: boolean;
@@ -16,6 +29,14 @@ export interface KeyProps {
   stroke: number;
   shift_right: number;
   displaced: boolean;
+}
+
+/** TODO: Move to StaveTempo */
+export interface StaveTempoOptions {
+  bpm: number;
+  dots: number;
+  duration: string;
+  name: string;
 }
 
 export interface TypeProps extends KeyProps {
