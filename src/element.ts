@@ -18,6 +18,8 @@ export interface ElementAttributes {
   // eslint-disable-next-line
   [name: string]: any;
   id: string;
+  // eslint-disable-next-line
+  el?: any;
   type: string;
   classes: Record<string, boolean>;
 }
@@ -54,7 +56,7 @@ export abstract class Element {
   constructor({ type }: { type?: string } = {}) {
     this.attrs = {
       id: Element.newID(),
-      el: null,
+      el: undefined,
       type: type || 'Base',
       classes: {},
     };
@@ -187,12 +189,16 @@ export abstract class Element {
   }
 
   /** Returns an attribute. */
-  getAttribute(name: string): string {
+  getAttribute(
+    // eslint-disable-next-line
+    name: string ): any {
     return this.attrs[name];
   }
 
   /** Sets an attribute. */
-  setAttribute(name: string, value: string): this {
+  setAttribute(
+    // eslint-disable-next-line
+    name: string, value: any): this {
     const { id } = this.attrs;
     const oldValue = this.attrs[name];
     this.attrs[name] = value;
