@@ -13,9 +13,9 @@
 #
 #    $ ./tools/generate_png_images.js
 #
-#  Run the regression tests against the blessed images in tests/blessed.
+#  Run the regression tests against the reference or blessed images in tests/blessed.
 #
-#    $ ./tools/visual_regression.js [test_prefix]
+#    $ ./tools/visual_regression.js (reference|blessed) [test_prefix]
 #
 #  Check build/images/diff/results.txt for results. This file is sorted
 #  by PHASH difference (most different files on top.) The composite diff
@@ -37,23 +37,23 @@ THRESHOLD=0.01
 # Directories. You might want to change BASE, if you're running from a
 # different working directory.
 BASE=.
-if [ "$1" == "ref" ]
+if [ "$1" == "reference" ]
 then
-ADIR=$BASE/images-ref
-ANAME=Ref
-BDIR=$BASE/build/images/current
-BNAME=Current
-DIFF=$BASE/build/images/diff-ref
+  ADIR=$BASE/build/images/reference
+  ANAME=Reference
+  BDIR=$BASE/build/images/current
+  BNAME=Current
+  DIFF=$BASE/build/images/diff
+elif  [ "$1" == "blessed" ]
+then
+  ADIR=$BASE/build/images/blessed
+  ANAME=Blessed
+  BDIR=$BASE/build/images/current
+  BNAME=Current
+  DIFF=$BASE/build/images/diff
 else
-ADIR=$BASE/build/images/blessed
-ANAME=Blessed
-BDIR=$BASE/build/images/current
-BNAME=Current
-DIFF=$BASE/build/images/diff
+  echo >&2 "Usage: visual_regresion.sh (reference|blessed) [test_prefix]"; exit 1;
 fi
-
-echo $ADIR
-echo $BDIR
 
 # All results are stored here.
 RESULTS=$DIFF/results.txt
@@ -85,25 +85,25 @@ then
 fi
 
 # Check if some png files are in the right folders and warn if not. doesn't make sure there are actual, usable png images though.
-totalCurrentImages=`ls -1 $BDIR/$files | wc -l | xargs` # xargs trims spaces
-if [ $? -ne 0 ] || [ "$totalCurrentImages" -lt 1 ]
+totalImagesB=`ls -1 $BDIR/$files | wc -l | xargs` # xargs trims spaces
+if [ $? -ne 0 ] || [ "$totalImagesB" -lt 1 ]
 then
   echo Missing images in $BDIR.
-  echo Please run \"npm run generate:current\"
+  echo Please run \"npm run generate\"
   exit 1
 fi
 
-totalBlessedImages=`ls -1 $ADIR/$files | wc -l | xargs`
-if [ $? -ne 0 ] || [ "$totalBlessedImages" -lt 1 ]
+totalImagesA=`ls -1 $ADIR/$files | wc -l | xargs`
+if [ $? -ne 0 ] || [ "$totalImagesA" -lt 1 ]
 then
   echo Missing images in $ADIR.
-  echo Please run \"npm run generate:blessed\"
+  echo Please run \"npm run generate\"
   exit 1
 fi
-# check that #currentImages == #blessedImages (will continue anyways)
-if [ ! "$totalCurrentImages" -eq "$totalBlessedImages" ]
+# check that #ImagesA == #ImagesB (will continue anyways)
+if [ ! "$totalImagesA" -eq "$totalImagesB" ]
 then
-  echo "Warning: Number of (matching) current images ($totalCurrentImages) is not the same as blessed images ($totalBlessedImages). Continuing anyways."
+  echo "Warning: Number of (matching) $BNAME images ($totalImagesB) is not the same as $ANAME images ($totalImagesA). Continuing anyways."
 fi
 # ----------------- end of sanity checks -----------------
 
@@ -114,7 +114,7 @@ if [ -n "$NPROC" ]; then
   nproc=$NPROC
 fi
 
-echo "Running $totalBlessedImages tests with threshold $THRESHOLD (nproc=$nproc)..."
+echo "Running $totalImagesA tests with threshold $THRESHOLD (nproc=$nproc)..."
 
 function ProgressBar {
     let _progress=(${1}*100/${2}*100)/100
@@ -129,24 +129,24 @@ function ProgressBar {
 function diff_image() {
   local image=$1
   local name=`basename $image .png`
-  local blessed=$ADIR/$name.png
-  local current=$BDIR/$name.png
-  local diff=$current-temp
+  local fileA=$ADIR/$name.png
+  local fileB=$BDIR/$name.png
+  local diff=$fileB-temp
 
-  if [ ! -e "$current" ]
+  if [ ! -e "$fileB" ]
   then
     echo "Warning: $name.png missing in $BDIR." >$diff.warn
     return
   fi
 
-  if [ ! -e "$blessed" ]
+  if [ ! -e "$fileA" ]
   then
     echo "Warning: $name.png missing in $ADIR." >$diff.warn
     return
   fi
 
-  cp $blessed $diff-a.png
-  cp $current $diff-b.png
+  cp $fileA $diff-a.png
+  cp $fileB $diff-b.png
 
   # Calculate the difference metric and store the composite diff image.
   local hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
@@ -188,7 +188,7 @@ count=0
 for image in $BDIR/$files
 do
   count=$((count + 1))
-  ProgressBar ${count} ${totalBlessedImages}
+  ProgressBar ${count} ${totalImagesA}
   wait_jobs $nproc
   diff_image $image &
 done
@@ -201,8 +201,8 @@ rm -f $BDIR/*.warn
 for image in $BDIR/$files
 do
   name=`basename $image .png`
-  blessed=$ADIR/$name.png
-  current=$BDIR/$name.png
+  fileA=$ADIR/$name.png
+  fileB=$BDIR/$name.png
 
   if [ ! -e "$ADIR" ]
   then
