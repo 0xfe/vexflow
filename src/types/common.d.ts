@@ -98,11 +98,19 @@ export interface RenderContext {
   fillText(text: string, x: number, y: number): RenderContext;
   save(): RenderContext;
   restore(): RenderContext;
-  openGroup(): Node | undefined;
+  // eslint-disable-next-line
+  openGroup(...args: any[]):any;
   closeGroup(): void;
 
   /**
    * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width : number, height : number}. Only width is used throughout VexFlow.
    */
   measureText(text: string): { width: number };
+}
+
+export interface ModifierContextState {
+  right_shift: number;
+  left_shift: number;
+  text_line: number;
+  top_text_line: number;
 }
