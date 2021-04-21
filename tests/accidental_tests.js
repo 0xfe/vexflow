@@ -657,7 +657,7 @@ Vex.Flow.Test.Accidental = (function () {
       ].map(vf.StaveNote.bind(vf));
 
       const gracenotes = [{ keys: ['d#/4'], duration: '16', slash: true }].map(vf.GraceNote.bind(vf));
-      notes[0].addModifier(0, vf.GraceNoteGroup({ notes: gracenotes }).beamNotes());
+      notes[0].addModifier(vf.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0);
 
       const voice = vf
         .Voice()

@@ -58,10 +58,10 @@ VF.Test.Style = (function () {
       var mods1 = notes[1].getModifiers();
       mods1[0].setStyle(FS('green'));
       notes[0].addArticulation(0, new VF.Articulation('a.').setPosition(4).setStyle(FS('green')));
-      notes[0].addModifier(0, new VF.Ornament('mordent').setStyle(FS('lightgreen')));
+      notes[0].addModifier(new VF.Ornament('mordent').setStyle(FS('lightgreen')), 0);
 
-      notes[1].addModifier(0, new VF.Annotation('blue').setStyle(FS('blue')));
-      notes[1].addModifier(0, new VF.NoteSubGroup([vf.ClefNote({ options: { size: 'small' } }).setStyle(FS('blue'))]));
+      notes[1].addModifier(new VF.Annotation('blue').setStyle(FS('blue')), 0);
+      notes[1].addModifier(new VF.NoteSubGroup([vf.ClefNote({ options: { size: 'small' } }).setStyle(FS('blue'))]), 0);
 
       var voice = vf.Voice().addTickables(notes);
 

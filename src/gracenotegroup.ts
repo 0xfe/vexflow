@@ -94,8 +94,6 @@ export class GraceNoteGroup extends Modifier {
     super();
     this.setAttribute('type', 'GraceNoteGroup');
 
-    this.note = null;
-    this.index = null;
     this.position = Modifier.Position.LEFT;
     this.grace_notes = grace_notes;
     this.width = 0;
@@ -130,7 +128,7 @@ export class GraceNoteGroup extends Modifier {
   preFormat(): void {
     if (this.preFormatted) return;
 
-    this.formatter.joinVoices([this.voice]).format([this.voice], 0);
+    this.formatter.joinVoices([this.voice]).format([this.voice], 0, {});
     this.setWidth(this.formatter.getMinTotalWidth());
     this.preFormatted = true;
   }

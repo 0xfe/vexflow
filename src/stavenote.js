@@ -303,7 +303,6 @@ export class StaveNote extends StemmableNote {
     super(noteStruct);
     this.setAttribute('type', 'StaveNote');
 
-    this.keys = noteStruct.keys;
     this.clef = noteStruct.clef;
     this.octave_shift = noteStruct.octave_shift;
     this.beam = null;
@@ -321,8 +320,6 @@ export class StaveNote extends StemmableNote {
     // if true, displace note to right
     this.displaced = false;
     this.dot_shiftY = 0;
-    // per-pitch properties
-    this.keyProps = [];
     // for displaced ledger lines
     this.use_default_head_x = false;
 
@@ -807,7 +804,23 @@ export class StaveNote extends StemmableNote {
   // Parameters:
   // * `index`: The index of the key that we're modifying
   // * `modifier`: The modifier to add
-  addModifier(index, modifier) {
+  addModifier(a, b) {
+    var index;
+    var modifier;
+    if (typeof a === 'object' && typeof b === 'number') {
+      index = b;
+      modifier = a;
+    } else if (typeof a === 'number' && typeof b === 'object') {
+      // eslint-disable-next-line
+      console.warn("deprecated call signature to addModifier, use addModifier(modifier, index) instead");
+      index = a;
+      modifier = b;
+    } else {
+      throw new Vex.RERR(
+        'WrongParams',
+        'Call signature to addModifier not supported, use addModifier(modifier, index) instead.'
+      );
+    }
     modifier.setNote(this);
     modifier.setIndex(index);
     this.modifiers.push(modifier);
@@ -817,17 +830,17 @@ export class StaveNote extends StemmableNote {
 
   // Helper function to add an accidental to a key
   addAccidental(index, accidental) {
-    return this.addModifier(index, accidental);
+    return this.addModifier(accidental, index);
   }
 
   // Helper function to add an articulation to a key
   addArticulation(index, articulation) {
-    return this.addModifier(index, articulation);
+    return this.addModifier(articulation, index);
   }
 
   // Helper function to add an annotation to a key
   addAnnotation(index, annotation) {
-    return this.addModifier(index, annotation);
+    return this.addModifier(annotation, index);
   }
 
   // Helper function to add a dot on a specific key
@@ -835,7 +848,7 @@ export class StaveNote extends StemmableNote {
     const dot = new Dot();
     dot.setDotShiftY(this.glyph.dot_shiftY);
     this.dots++;
-    return this.addModifier(index, dot);
+    return this.addModifier(dot, index);
   }
 
   // Convenience method to add dot to all keys in note

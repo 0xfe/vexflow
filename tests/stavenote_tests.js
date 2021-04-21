@@ -1096,10 +1096,10 @@ VF.Test.StaveNote = (function () {
         .addAnnotation(0, new VF.Annotation('Test').setPosition(3))
         .addStroke(0, new VF.Stroke(2))
         .addAccidental(1, new VF.Accidental('#'))
-        .addModifier(0, newFinger('3', VF.Modifier.Position.LEFT))
-        .addModifier(2, newFinger('2', VF.Modifier.Position.LEFT))
-        .addModifier(1, newFinger('1', VF.Modifier.Position.RIGHT))
-        .addModifier(2, newStringNumber('4', VF.Modifier.Position.BELOW))
+        .addModifier(newFinger('3', VF.Modifier.Position.LEFT), 0)
+        .addModifier(newFinger('2', VF.Modifier.Position.LEFT), 2)
+        .addModifier(newFinger('1', VF.Modifier.Position.RIGHT), 1)
+        .addModifier(newStringNumber('4', VF.Modifier.Position.BELOW), 2)
         .addDotToAll();
 
       var voice = vf.Voice().setStrict(false).addTickables([note]);

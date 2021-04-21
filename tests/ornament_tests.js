@@ -43,19 +43,19 @@ VF.Test.Ornament = (function () {
         new VF.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
       ];
 
-      notesBar1[0].addModifier(0, new VF.Ornament('mordent'));
-      notesBar1[1].addModifier(0, new VF.Ornament('mordent_inverted'));
-      notesBar1[2].addModifier(0, new VF.Ornament('turn'));
-      notesBar1[3].addModifier(0, new VF.Ornament('turn_inverted'));
-      notesBar1[4].addModifier(0, new VF.Ornament('tr'));
-      notesBar1[5].addModifier(0, new VF.Ornament('upprall'));
-      notesBar1[6].addModifier(0, new VF.Ornament('downprall'));
-      notesBar1[7].addModifier(0, new VF.Ornament('prallup'));
-      notesBar1[8].addModifier(0, new VF.Ornament('pralldown'));
-      notesBar1[9].addModifier(0, new VF.Ornament('upmordent'));
-      notesBar1[10].addModifier(0, new VF.Ornament('downmordent'));
-      notesBar1[11].addModifier(0, new VF.Ornament('lineprall'));
-      notesBar1[12].addModifier(0, new VF.Ornament('prallprall'));
+      notesBar1[0].addModifier(new VF.Ornament('mordent'), 0);
+      notesBar1[1].addModifier(new VF.Ornament('mordent_inverted'), 0);
+      notesBar1[2].addModifier(new VF.Ornament('turn'), 0);
+      notesBar1[3].addModifier(new VF.Ornament('turn_inverted'), 0);
+      notesBar1[4].addModifier(new VF.Ornament('tr'), 0);
+      notesBar1[5].addModifier(new VF.Ornament('upprall'), 0);
+      notesBar1[6].addModifier(new VF.Ornament('downprall'), 0);
+      notesBar1[7].addModifier(new VF.Ornament('prallup'), 0);
+      notesBar1[8].addModifier(new VF.Ornament('pralldown'), 0);
+      notesBar1[9].addModifier(new VF.Ornament('upmordent'), 0);
+      notesBar1[10].addModifier(new VF.Ornament('downmordent'), 0);
+      notesBar1[11].addModifier(new VF.Ornament('lineprall'), 0);
+      notesBar1[12].addModifier(new VF.Ornament('prallprall'), 0);
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
@@ -86,19 +86,20 @@ VF.Test.Ornament = (function () {
         new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       ];
 
-      notesBar1[0].addModifier(0, new VF.Ornament('mordent'));
-      notesBar1[1].addModifier(0, new VF.Ornament('mordent_inverted'));
-      notesBar1[2].addModifier(0, new VF.Ornament('turn'));
-      notesBar1[3].addModifier(0, new VF.Ornament('turn_inverted'));
-      notesBar1[4].addModifier(0, new VF.Ornament('tr'));
-      notesBar1[5].addModifier(0, new VF.Ornament('upprall'));
-      notesBar1[6].addModifier(0, new VF.Ornament('downprall'));
-      notesBar1[7].addModifier(0, new VF.Ornament('prallup'));
-      notesBar1[8].addModifier(0, new VF.Ornament('pralldown'));
-      notesBar1[9].addModifier(0, new VF.Ornament('upmordent'));
-      notesBar1[10].addModifier(0, new VF.Ornament('downmordent'));
-      notesBar1[11].addModifier(0, new VF.Ornament('lineprall'));
-      notesBar1[12].addModifier(0, new VF.Ornament('prallprall'));
+      notesBar1[0].addModifier(new VF.Ornament('mordent'), 0);
+      notesBar1[1].addModifier(new VF.Ornament('mordent_inverted'), 0);
+      notesBar1[1].addModifier(new VF.Ornament('mordent_inverted'), 0);
+      notesBar1[2].addModifier(new VF.Ornament('turn'), 0);
+      notesBar1[3].addModifier(new VF.Ornament('turn_inverted'), 0);
+      notesBar1[4].addModifier(new VF.Ornament('tr'), 0);
+      notesBar1[5].addModifier(new VF.Ornament('upprall'), 0);
+      notesBar1[6].addModifier(new VF.Ornament('downprall'), 0);
+      notesBar1[7].addModifier(new VF.Ornament('prallup'), 0);
+      notesBar1[8].addModifier(new VF.Ornament('pralldown'), 0);
+      notesBar1[9].addModifier(new VF.Ornament('upmordent'), 0);
+      notesBar1[10].addModifier(new VF.Ornament('downmordent'), 0);
+      notesBar1[11].addModifier(new VF.Ornament('lineprall'), 0);
+      notesBar1[12].addModifier(new VF.Ornament('prallprall'), 0);
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
@@ -120,10 +121,10 @@ VF.Test.Ornament = (function () {
         new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       ];
 
-      notesBar1[0].addModifier(0, new VF.Ornament('turn').setDelayed(true));
-      notesBar1[1].addModifier(0, new VF.Ornament('turn_inverted').setDelayed(true));
-      notesBar1[2].addModifier(0, new VF.Ornament('turn_inverted').setDelayed(true));
-      notesBar1[3].addModifier(0, new VF.Ornament('turn').setDelayed(true));
+      notesBar1[0].addModifier(new VF.Ornament('turn').setDelayed(true), 0);
+      notesBar1[1].addModifier(new VF.Ornament('turn_inverted').setDelayed(true), 0);
+      notesBar1[2].addModifier(new VF.Ornament('turn_inverted').setDelayed(true), 0);
+      notesBar1[3].addModifier(new VF.Ornament('turn').setDelayed(true), 0);
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
@@ -145,10 +146,10 @@ VF.Test.Ornament = (function () {
         new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       ];
 
-      notesBar1[0].addModifier(0, new VF.Ornament('turn').setDelayed(true));
-      notesBar1[1].addModifier(0, new VF.Ornament('turn_inverted').setDelayed(true));
-      notesBar1[2].addModifier(0, new VF.Ornament('turn_inverted').setDelayed(true));
-      notesBar1[3].addModifier(0, new VF.Ornament('turn').setDelayed(true));
+      notesBar1[0].addModifier(new VF.Ornament('turn').setDelayed(true), 0);
+      notesBar1[1].addModifier(new VF.Ornament('turn_inverted').setDelayed(true), 0);
+      notesBar1[2].addModifier(new VF.Ornament('turn_inverted').setDelayed(true), 0);
+      notesBar1[3].addModifier(new VF.Ornament('turn').setDelayed(true), 0);
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
@@ -171,15 +172,15 @@ VF.Test.Ornament = (function () {
         new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       ];
 
-      notesBar1[0].addModifier(0, new VF.Ornament('mordent'));
-      notesBar1[1].addModifier(0, new VF.Ornament('turn_inverted'));
-      notesBar1[2].addModifier(0, new VF.Ornament('turn'));
-      notesBar1[3].addModifier(0, new VF.Ornament('turn_inverted'));
+      notesBar1[0].addModifier(new VF.Ornament('mordent'), 0);
+      notesBar1[1].addModifier(new VF.Ornament('turn_inverted'), 0);
+      notesBar1[2].addModifier(new VF.Ornament('turn'), 0);
+      notesBar1[3].addModifier(new VF.Ornament('turn_inverted'), 0);
 
-      notesBar1[0].addModifier(0, new VF.Ornament('turn'));
-      notesBar1[1].addModifier(0, new VF.Ornament('prallup'));
-      notesBar1[2].addModifier(0, new VF.Ornament('upmordent'));
-      notesBar1[3].addModifier(0, new VF.Ornament('lineprall'));
+      notesBar1[0].addModifier(new VF.Ornament('turn'), 0);
+      notesBar1[1].addModifier(new VF.Ornament('prallup'), 0);
+      notesBar1[2].addModifier(new VF.Ornament('upmordent'), 0);
+      notesBar1[3].addModifier(new VF.Ornament('lineprall'), 0);
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
@@ -208,20 +209,21 @@ VF.Test.Ornament = (function () {
         new VF.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
       ];
 
-      notesBar1[0].addModifier(0, new VF.Ornament('mordent').setUpperAccidental('#').setLowerAccidental('#'));
-      notesBar1[1].addModifier(0, new VF.Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'));
-      notesBar1[2].addModifier(0, new VF.Ornament('turn').setUpperAccidental('##').setLowerAccidental('##'));
+      notesBar1[0].addModifier(new VF.Ornament('mordent').setUpperAccidental('#').setLowerAccidental('#'), 0);
+      notesBar1[1].addModifier(new VF.Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'), 0);
+      notesBar1[1].addModifier(new VF.Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'), 0);
+      notesBar1[2].addModifier(new VF.Ornament('turn').setUpperAccidental('##').setLowerAccidental('##'), 0);
       notesBar1[3].addModifier(
-        0,
-        new VF.Ornament('mordent_inverted').setLowerAccidental('db').setUpperAccidental('db')
+        new VF.Ornament('mordent_inverted').setLowerAccidental('db').setUpperAccidental('db'),
+        0
       );
-      notesBar1[4].addModifier(0, new VF.Ornament('turn_inverted').setUpperAccidental('++').setLowerAccidental('++'));
-      notesBar1[5].addModifier(0, new VF.Ornament('tr').setUpperAccidental('n').setLowerAccidental('n'));
-      notesBar1[6].addModifier(0, new VF.Ornament('prallup').setUpperAccidental('d').setLowerAccidental('d'));
-      notesBar1[7].addModifier(0, new VF.Ornament('lineprall').setUpperAccidental('db').setLowerAccidental('db'));
-      notesBar1[8].addModifier(0, new VF.Ornament('upmordent').setUpperAccidental('bbs').setLowerAccidental('bbs'));
-      notesBar1[9].addModifier(0, new VF.Ornament('prallprall').setUpperAccidental('bb').setLowerAccidental('bb'));
-      notesBar1[10].addModifier(0, new VF.Ornament('turn_inverted').setUpperAccidental('+').setLowerAccidental('+'));
+      notesBar1[4].addModifier(new VF.Ornament('turn_inverted').setUpperAccidental('++').setLowerAccidental('++'), 0);
+      notesBar1[5].addModifier(new VF.Ornament('tr').setUpperAccidental('n').setLowerAccidental('n'), 0);
+      notesBar1[6].addModifier(new VF.Ornament('prallup').setUpperAccidental('d').setLowerAccidental('d'), 0);
+      notesBar1[7].addModifier(new VF.Ornament('lineprall').setUpperAccidental('db').setLowerAccidental('db'), 0);
+      notesBar1[8].addModifier(new VF.Ornament('upmordent').setUpperAccidental('bbs').setLowerAccidental('bbs'), 0);
+      notesBar1[9].addModifier(new VF.Ornament('prallprall').setUpperAccidental('bb').setLowerAccidental('bb'), 0);
+      notesBar1[10].addModifier(new VF.Ornament('turn_inverted').setUpperAccidental('+').setLowerAccidental('+'), 0);
 
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
@@ -238,7 +240,7 @@ VF.Test.Ornament = (function () {
       function newNote(keys, duration, modifier, stemDirection) {
         const dot = duration.indexOf('d') >= 0;
         const rv = new VF.StaveNote({ keys, duration, stem_direction: stemDirection })
-          .addModifier(0, modifier)
+          .addModifier(modifier, 0)
           .addAccidental(0, new VF.Accidental('b'));
         if (dot) {
           rv.addDotToAll();
@@ -261,7 +263,7 @@ VF.Test.Ornament = (function () {
         notes.push(newNote(keys, '4d', modifiers[2], stemDirection));
         notes.push(newNote(keys, '8', modifiers[3], stemDirection));
         if (modifiers.length > 4) {
-          notes[3].addModifier(0, modifiers[4]);
+          notes[3].addModifier(modifiers[4], 0);
         }
 
         VF.Beam.generateBeams(notes);

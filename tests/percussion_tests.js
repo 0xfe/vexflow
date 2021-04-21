@@ -130,16 +130,16 @@ VF.Test.Percussion = (function () {
             vf
               .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
               .addArticulation(0, vf.Articulation({ type: 'a>' }))
-              .addModifier(0, vf.Annotation({ text: 'L' })),
+              .addModifier(vf.Annotation({ text: 'L' }), 0),
             vf
               .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
-              .addModifier(0, vf.Annotation({ text: 'R' })),
+              .addModifier(vf.Annotation({ text: 'R' }), 0),
             vf
               .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
-              .addModifier(0, vf.Annotation({ text: 'L' })),
+              .addModifier(vf.Annotation({ text: 'L' }), 0),
             vf
               .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
-              .addModifier(0, vf.Annotation({ text: 'L' })),
+              .addModifier(vf.Annotation({ text: 'L' }), 0),
           ]);
         })
       );

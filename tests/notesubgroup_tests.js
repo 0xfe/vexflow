@@ -35,11 +35,11 @@ VF.Test.NoteSubGroup = (function () {
       ].map(vf.StaveNote.bind(vf));
 
       function addAccidental(note, acc) {
-        return note.addModifier(0, vf.Accidental({ type: acc }));
+        return note.addModifier(vf.Accidental({ type: acc }), 0);
       }
 
       function addSubGroup(note, subNotes) {
-        return note.addModifier(0, vf.NoteSubGroup({ notes: subNotes }));
+        return note.addModifier(vf.NoteSubGroup({ notes: subNotes }), 0);
       }
 
       // {SubNotes} | {Accidental} | {StaveNote}
@@ -90,10 +90,10 @@ VF.Test.NoteSubGroup = (function () {
       ].map(vf.StaveNote.bind(vf));
 
       function addAccidental(note, accid) {
-        return note.addModifier(0, vf.Accidental({ type: accid }));
+        return note.addModifier(vf.Accidental({ type: accid }), 0);
       }
       function addSubGroup(note, subNotes) {
-        return note.addModifier(0, vf.NoteSubGroup({ notes: subNotes }));
+        return note.addModifier(vf.NoteSubGroup({ notes: subNotes }), 0);
       }
 
       addAccidental(notes1[1], '#');
@@ -147,10 +147,10 @@ VF.Test.NoteSubGroup = (function () {
       ].map(vf.StaveNote.bind(vf));
 
       function addAccidental(note, accid) {
-        return note.addModifier(0, vf.Accidental({ type: accid }));
+        return note.addModifier(vf.Accidental({ type: accid }), 0);
       }
       function addSubGroup(note, subNotes) {
-        return note.addModifier(0, vf.NoteSubGroup({ notes: subNotes }));
+        return note.addModifier(vf.NoteSubGroup({ notes: subNotes }), 0);
       }
 
       addAccidental(notes1[1], '#');
@@ -222,10 +222,10 @@ VF.Test.NoteSubGroup = (function () {
       vf.StaveConnector({ top_stave: stave1, bottom_stave: stave2, type: 'singleRight' });
 
       function addAccidental(note, acc) {
-        return note.addModifier(0, vf.Accidental({ type: acc }));
+        return note.addModifier(vf.Accidental({ type: acc }), 0);
       }
       function addSubGroup(note, subNotes) {
-        return note.addModifier(0, vf.NoteSubGroup({ notes: subNotes }));
+        return note.addModifier(vf.NoteSubGroup({ notes: subNotes }), 0);
       }
 
       vf.Beam({ notes: notes3.slice(1, 4) });

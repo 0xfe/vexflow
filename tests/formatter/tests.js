@@ -50,10 +50,10 @@ function subgroup(el, iterations, params) {
   vf.StaveConnector({ top_stave: stave1, bottom_stave: stave2, type: 'singleRight' });
 
   function addAccidental(note, acc) {
-    return note.addModifier(0, vf.Accidental({ type: acc }));
+    return note.addModifier(vf.Accidental({ type: acc }), 0);
   }
   function addSubGroup(note, subNotes) {
-    return note.addModifier(0, vf.NoteSubGroup({ notes: subNotes }));
+    return note.addModifier(vf.NoteSubGroup({ notes: subNotes }), 0);
   }
 
   vf.Beam({ notes: notes3.slice(1, 4) });
