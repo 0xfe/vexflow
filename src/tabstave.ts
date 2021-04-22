@@ -1,27 +1,28 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Vex } from './vex';
-import { Stave } from './stave';
+import { Stave, StaveOptions } from './stave';
 
 export class TabStave extends Stave {
-  constructor(x, y, width, options) {
+  constructor(x: number, y: number, width: number, options: StaveOptions) {
     const tab_options = {
-      spacing_between_lines_px: 13,
-      num_lines: 6,
-      top_text_position: 1,
+      ...{
+        spacing_between_lines_px: 13,
+        num_lines: 6,
+        top_text_position: 1,
+      },
+      ...options,
     };
 
-    Vex.Merge(tab_options, options);
     super(x, y, width, tab_options);
     this.setAttribute('type', 'TabStave');
   }
 
-  getYForGlyphs() {
+  getYForGlyphs(): number {
     return this.getYForLine(2.5);
   }
 
   // Deprecated
-  addTabGlyph() {
+  addTabGlyph(): this {
     this.addClef('tab');
     return this;
   }
