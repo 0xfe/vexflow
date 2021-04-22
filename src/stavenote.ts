@@ -230,8 +230,10 @@ export class StaveNote extends StemmableNote {
       return true;
     }
 
+    if (!noteM) throw new Vex.RERR('InvalidState', 'noteM not defined.');
+
     // Check middle voice stem intersection with lower voice
-    if (noteM && noteM.minLine < noteL.maxLine + 0.5) {
+    if (noteM.minLine < noteL.maxLine + 0.5) {
       if (!noteM.isrest) {
         stemDelta = Math.abs(noteM.line - (noteL.maxLine + 0.5));
         stemDelta = Math.max(stemDelta, noteM.stemMin);
@@ -244,7 +246,7 @@ export class StaveNote extends StemmableNote {
     //
     // Special case 1 :: middle voice rest between two notes
     //
-    if (noteM?.isrest && !noteU.isrest && !noteL.isrest) {
+    if (noteM.isrest && !noteU.isrest && !noteL.isrest) {
       if (noteU.minLine <= noteM.maxLine || noteM.minLine <= noteL.maxLine) {
         const restHeight = noteM.maxLine - noteM.minLine;
         const space = noteU.minLine - noteL.maxLine;
@@ -261,7 +263,7 @@ export class StaveNote extends StemmableNote {
     }
 
     // Special case 2 :: all voices are rests
-    if (noteU.isrest && noteM?.isrest && noteL.isrest) {
+    if (noteU.isrest && noteM.isrest && noteL.isrest) {
       // Shift upper voice rest up
       shiftRestVertical(noteU, noteM, 1);
       // Shift lower voice rest down
@@ -271,28 +273,27 @@ export class StaveNote extends StemmableNote {
     }
 
     // Test if any other rests can be repositioned
-    if (noteM?.isrest && noteU.isrest && noteM.minLine <= noteL.maxLine) {
+    if (noteM.isrest && noteU.isrest && noteM.minLine <= noteL.maxLine) {
       // Shift middle voice rest up
       shiftRestVertical(noteM, noteL, 1);
     }
-    if (noteM?.isrest && noteL.isrest && noteU.minLine <= noteM.maxLine) {
+    if (noteM.isrest && noteL.isrest && noteU.minLine <= noteM.maxLine) {
       // Shift middle voice rest down
       shiftRestVertical(noteM, noteU, -1);
     }
-    if (noteM && noteU.isrest && noteU.minLine <= noteM.maxLine) {
+    if (noteU.isrest && noteU.minLine <= noteM.maxLine) {
       // shift upper voice rest up;
       shiftRestVertical(noteU, noteM, 1);
     }
-    if (noteM && noteL.isrest && noteM.minLine <= noteL.maxLine) {
+    if (noteL.isrest && noteM.minLine <= noteL.maxLine) {
       // shift lower voice rest down
       shiftRestVertical(noteL, noteM, -1);
     }
 
     // If middle voice intersects upper or lower voice
     if (
-      noteM &&
-      ((!noteU.isrest && !noteM.isrest && noteU.minLine <= noteM.maxLine + 0.5) ||
-        (!noteM.isrest && !noteL.isrest && noteM.minLine <= noteL.maxLine))
+      (!noteU.isrest && !noteM.isrest && noteU.minLine <= noteM.maxLine + 0.5) ||
+      (!noteM.isrest && !noteL.isrest && noteM.minLine <= noteL.maxLine)
     ) {
       xShift = voiceXShift + 3; // shift middle note right
       noteM.note.setXShift(xShift);
@@ -336,11 +337,13 @@ export class StaveNote extends StemmableNote {
       //
       // We also extend the y for each note by a half notehead because the
       // notehead's origin is centered
-      const topNoteBottomY = topNote.getStave()?.getYForLine(5 - topKeys[0].line + HALF_NOTEHEAD_HEIGHT);
+      const topStave = topNote.getStave();
+      if (!topStave) throw new Vex.RERR('NoStave', 'No stave attached to top note.');
+      const topNoteBottomY = topStave.getYForLine(5 - topKeys[0].line + HALF_NOTEHEAD_HEIGHT);
 
-      const bottomNoteTopY = bottomNote
-        .getStave()
-        ?.getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
+      const bottomStave = bottomNote.getStave();
+      if (!bottomStave) throw new Vex.RERR('NoStave', 'No stave attached to bottom note.');
+      const bottomNoteTopY = bottomStave.getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
 
       const areNotesColliding =
         bottomNoteTopY != undefined && topNoteBottomY != undefined ? bottomNoteTopY - topNoteBottomY < 0 : false;
@@ -1008,8 +1011,8 @@ export class StaveNote extends StemmableNote {
   getNoteHeadBounds(): StaveNoteHeadBounds {
     if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     // Top and bottom Y values for stem.
-    let yTop: number | undefined;
-    let yBottom: number | undefined;
+    let yTop: number = 100000;
+    let yBottom: number = -100000;
     let nonDisplacedX: number | undefined;
     let displacedX: number | undefined;
 
@@ -1024,11 +1027,11 @@ export class StaveNote extends StemmableNote {
       const line: number = notehead.getLine();
       const y = notehead.getY();
 
-      if (yTop === undefined || y < yTop) {
+      if (y < yTop) {
         yTop = y;
       }
 
-      if (yBottom === undefined || y > yBottom) {
+      if (y > yBottom) {
         yBottom = y;
       }
 
@@ -1053,8 +1056,8 @@ export class StaveNote extends StemmableNote {
     }, this);
 
     return {
-      y_top: yTop ?? 0,
-      y_bottom: yBottom ?? 0,
+      y_top: yTop,
+      y_bottom: yBottom,
       displaced_x: displacedX,
       non_displaced_x: nonDisplacedX,
       highest_line: highestLine,

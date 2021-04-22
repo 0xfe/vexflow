@@ -108,6 +108,7 @@ export interface RenderContext {
   measureText(text: string): { width: number };
 }
 
+/** TODO: Move to ModifierContext */
 export interface ModifierContextState {
   right_shift: number;
   left_shift: number;
