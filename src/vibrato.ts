@@ -6,15 +6,32 @@
 import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Bend } from './bend';
+import { RenderContext } from './types/common';
+import { ModifierContext } from './modifiercontext';
+
+export interface VibratoState {
+  right_shift: number;
+  top_text_line: number;
+}
+
+export interface VibratoRenderOptions {
+  wave_height: number;
+  wave_girth: number;
+  vibrato_width: number;
+  harsh: boolean;
+  wave_width: number;
+}
 
 export class Vibrato extends Modifier {
-  static get CATEGORY() {
+  render_options: VibratoRenderOptions;
+
+  static get CATEGORY(): string {
     return 'vibratos';
   }
 
   // ## Static Methods
   // Arrange vibratos inside a `ModifierContext`.
-  static format(vibratos, state, context) {
+  static format(vibratos: Vibrato[], state: VibratoState, context: ModifierContext): boolean {
     if (!vibratos || vibratos.length === 0) return false;
 
     // Vibratos are always on top.
@@ -58,20 +75,23 @@ export class Vibrato extends Modifier {
 
     this.setVibratoWidth(this.render_options.vibrato_width);
   }
-  getCategory() {
+
+  getCategory(): string {
     return Vibrato.CATEGORY;
   }
-  setHarsh(harsh) {
+
+  setHarsh(harsh: boolean): this {
     this.render_options.harsh = harsh;
     return this;
   }
-  setVibratoWidth(width) {
+
+  setVibratoWidth(width: number): this {
     this.render_options.vibrato_width = width;
     this.setWidth(width);
     return this;
   }
 
-  draw() {
+  draw(): void {
     const ctx = this.checkContext();
 
     if (!this.note) {
@@ -89,7 +109,7 @@ export class Vibrato extends Modifier {
 
   // Static rendering method that can be called from
   // other classes (e.g. VibratoBracket)
-  static renderVibrato(ctx, x, y, opts) {
+  static renderVibrato(ctx: RenderContext, x: number, y: number, opts: VibratoRenderOptions): void {
     const { harsh, vibrato_width, wave_width, wave_girth, wave_height } = opts;
     const num_waves = vibrato_width / wave_width;
 
