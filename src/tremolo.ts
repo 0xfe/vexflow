@@ -8,29 +8,41 @@ import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
 import { Stem } from './stem';
+import { FontInfo } from './types/common';
+
+export interface TremoloRenderOptions {
+  stroke_spacing: number;
+  stroke_px: number;
+  // eslint-disable-next-line
+  font_scale: any;
+}
 
 export class Tremolo extends Modifier {
-  static get CATEGORY() {
+  protected readonly code: string;
+  protected readonly num: number;
+  protected y_spacing?: number;
+  protected font?: FontInfo;
+  protected render_options?: TremoloRenderOptions;
+
+  static get CATEGORY(): string {
     return 'tremolo';
   }
 
-  constructor(num) {
+  constructor(num: number) {
     super();
     this.setAttribute('type', 'Tremolo');
 
     this.num = num;
-    this.note = null;
-    this.index = null;
     this.position = Modifier.Position.CENTER;
     this.code = 'tremolo1';
   }
 
-  getCategory() {
+  getCategory(): string {
     return Tremolo.CATEGORY;
   }
 
-  draw() {
-    this.checkContext();
+  draw(): void {
+    const ctx = this.checkContext();
 
     if (!(this.note && this.index != null)) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");
@@ -47,7 +59,7 @@ export class Tremolo extends Modifier {
 
     this.y_spacing = this.musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
     const height = this.num * this.y_spacing;
-    let y = this.note.stem.getExtents().baseY - height;
+    let y = this.note.getStemExtents().baseY - height;
 
     if (stemDirection < 0) {
       y += this.musicFont.lookupMetric(`${category}.offsetYStemDown`) * scale;
@@ -69,7 +81,7 @@ export class Tremolo extends Modifier {
 
     x += this.musicFont.lookupMetric(`${category}.offsetXStem${stemDirection === Stem.UP ? 'Up' : 'Down'}`);
     for (let i = 0; i < this.num; ++i) {
-      Glyph.renderGlyph(this.context, x, y, this.render_options.font_scale, this.code, { category });
+      Glyph.renderGlyph(ctx, x, y, this.render_options.font_scale, this.code, { category });
       y += this.y_spacing;
     }
   }
