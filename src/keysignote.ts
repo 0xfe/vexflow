@@ -4,7 +4,6 @@
 import { Vex } from './vex';
 import { Note } from './note';
 import { KeySignature } from './keysignature';
-import { BoundingBox } from './boundingbox';
 
 export class KeySigNote extends Note {
   protected keySignature: KeySignature;
@@ -16,10 +15,6 @@ export class KeySigNote extends Note {
 
     // Note properties
     this.ignore_ticks = true;
-  }
-
-  getBoundingBox(): BoundingBox | undefined {
-    return super.getBoundingBox();
   }
 
   addToModifierContext(): this {
