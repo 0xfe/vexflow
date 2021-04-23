@@ -15,33 +15,6 @@ import { StemmableNote } from './stemmablenote';
 import { Voice } from './voice';
 import { RenderContext } from './types/common';
 
-export interface BeamRenderOptions {
-  flat_beam_offset?: number;
-  flat_beams: boolean;
-  secondary_break_ticks?: number;
-  show_stemlets: boolean;
-  beam_width: number;
-  max_slope: number;
-  min_slope: number;
-  slope_iterations: number;
-  slope_cost: number;
-  stemlet_extension: number;
-  partial_beam_length: number;
-  min_flat_beam_offset: number;
-}
-
-export interface GenerateBeamConfig {
-  flat_beam_offset?: number;
-  flat_beams?: boolean;
-  secondary_breaks?: string;
-  show_stemlets?: boolean;
-  maintain_stem_directions?: boolean;
-  beam_middle_only?: boolean;
-  beam_rests?: boolean;
-  groups?: Fraction[];
-  stem_direction?: number;
-}
-
 function calculateStemDirection(notes: StemmableNote[]) {
   let lineSum = 0;
   notes.forEach((note) => {
@@ -75,7 +48,20 @@ type tDefaults = {
 };
 
 export class Beam extends Element {
-  render_options: BeamRenderOptions;
+  render_options: {
+    flat_beam_offset?: number;
+    flat_beams: boolean;
+    secondary_break_ticks?: number;
+    show_stemlets: boolean;
+    beam_width: number;
+    max_slope: number;
+    min_slope: number;
+    slope_iterations: number;
+    slope_cost: number;
+    stemlet_extension: number;
+    partial_beam_length: number;
+    min_flat_beam_offset: number;
+  };
   notes: StemmableNote[];
   postFormatted: boolean;
   slope: number = 0;
@@ -180,7 +166,20 @@ export class Beam extends Element {
   //    * `show_stemlets` - Set to `true` to draw stemlets for rests
   //    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
   //
-  static generateBeams(notes: StemmableNote[], config: GenerateBeamConfig): Beam[] {
+  static generateBeams(
+    notes: StemmableNote[],
+    config: {
+      flat_beam_offset?: number;
+      flat_beams?: boolean;
+      secondary_breaks?: string;
+      show_stemlets?: boolean;
+      maintain_stem_directions?: boolean;
+      beam_middle_only?: boolean;
+      beam_rests?: boolean;
+      groups?: Fraction[];
+      stem_direction?: number;
+    }
+  ): Beam[] {
     if (!config) config = {};
 
     if (!config.groups || !config.groups.length) {
@@ -190,7 +189,7 @@ export class Beam extends Element {
     // Convert beam groups to tick amounts
     const tickGroups = config.groups.map((group) => {
       if (!group.multiply) {
-        throw new Vex.RuntimeError('InvalidBeamGroups', 'The beam groups must be an array of Vex.Flow.Fractions');
+        throw new Vex.RERR('InvalidBeamGroups', 'The beam groups must be an array of Vex.Flow.Fractions');
       }
       return group.clone().multiply(Flow.RESOLUTION, 1);
     });
@@ -439,18 +438,18 @@ export class Beam extends Element {
     this.setAttribute('type', 'Beam');
 
     if (!notes || notes === []) {
-      throw new Vex.RuntimeError('BadArguments', 'No notes provided for beam.');
+      throw new Vex.RERR('BadArguments', 'No notes provided for beam.');
     }
 
     if (notes.length === 1) {
-      throw new Vex.RuntimeError('BadArguments', 'Too few notes for beam.');
+      throw new Vex.RERR('BadArguments', 'Too few notes for beam.');
     }
 
     // Validate beam line, direction and ticks.
     this.ticks = notes[0].getIntrinsicTicks();
 
     if (this.ticks >= Flow.durationToTicks('4')) {
-      throw new Vex.RuntimeError('BadArguments', 'Beams can only be applied to notes shorter than a quarter note.');
+      throw new Vex.RERR('BadArguments', 'Beams can only be applied to notes shorter than a quarter note.');
     }
 
     let i; // shared iterator
@@ -700,6 +699,8 @@ export class Beam extends Element {
           const totalBeamWidth = (beam_count - 1) * beamWidth * 1.5 + beamWidth;
           stem.setVisibility(true).setStemlet(true, totalBeamWidth + stemlet_extension);
         }
+      } else {
+        throw new Vex.RERR('NoStem', 'stem undefined.');
       }
     }
   }
@@ -728,10 +729,11 @@ export class Beam extends Element {
 
   // Get the x coordinates for the beam lines of specific `duration`
   getBeamLines(duration: string): { start: number; end?: number }[] {
-    type BeamInfo = { start: number; end?: number };
     const tick_of_duration = Flow.durationToTicks(duration);
-    const beam_lines: BeamInfo[] = [];
     let beam_started = false;
+
+    type BeamInfo = { start: number; end?: number };
+    const beam_lines: BeamInfo[] = [];
     let current_beam: BeamInfo | undefined = undefined;
     const partial_beam_length = this.render_options.partial_beam_length;
     let previous_should_break = false;
@@ -878,6 +880,8 @@ export class Beam extends Element {
           ctx.lineTo(lastBeamX + 1, lastBeamY);
           ctx.closePath();
           ctx.fill();
+        } else {
+          throw new Vex.RERR('NoLastBeamX', 'lastBeamX undefined.');
         }
       }
 
