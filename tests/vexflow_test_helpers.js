@@ -65,6 +65,12 @@ VF.Test = (function () {
     // Default font properties for tests.
     Font: { size: 10 },
 
+    FONT_STACKS: {
+      Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
+      Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
+      Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
+    },
+
     // Returns a unique ID for a test.
     genID: function (prefix) {
       return prefix + VF.Test.genID.ID++;
@@ -178,15 +184,9 @@ VF.Test = (function () {
     runSVGTest: function (name, func, params) {
       if (!VF.Test.RUN_SVG_TESTS) return;
 
-      const fontStacks = {
-        Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
-        Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
-        Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
-      };
-
       const testFunc = (fontName) => (assert) => {
         const defaultFontStack = VF.DEFAULT_FONT_STACK;
-        VF.DEFAULT_FONT_STACK = fontStacks[fontName];
+        VF.DEFAULT_FONT_STACK = VF.Test.FONT_STACKS[fontName];
         var elementId = VF.Test.genID('svg_' + fontName);
         var title = VF.Test.genTitle('SVG ' + fontName, assert, name);
 
@@ -216,7 +216,11 @@ VF.Test = (function () {
         return name.replace(/[^a-zA-Z0-9]/g, '_');
       }
 
-      QUnit.test(name, function (assert) {
+      // Use an arrow function sequence (currying) to handle tests for all three fonts.
+      // This is the same approach as seen above in runSVGTest(...).
+      const testFunc = (fontName) => (assert) => {
+        const defaultFontStack = VF.DEFAULT_FONT_STACK;
+        VF.DEFAULT_FONT_STACK = VF.Test.FONT_STACKS[fontName];
         var elementId = VF.Test.genID('nodecanvas_');
         var canvas = document.createElement('canvas');
         canvas.setAttribute('id', elementId);
@@ -230,18 +234,23 @@ VF.Test = (function () {
         };
 
         func(testOptions, VF.Renderer.getCanvasContext);
+        VF.DEFAULT_FONT_STACK = defaultFontStack;
 
         if (VF.Renderer.lastContext !== null) {
           var moduleName = sanitizeName(QUnit.current_module);
           var testName = sanitizeName(QUnit.current_test);
-          var fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
+          var fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.${fontName}.png`;
 
           var imageData = canvas.toDataURL().split(';base64,').pop();
           var image = Buffer.from(imageData, 'base64');
 
           fs.writeFileSync(fileName, image, { encoding: 'base64' });
         }
-      });
+      };
+
+      QUnit.test(name, testFunc('Bravura'));
+      QUnit.test(name, testFunc('Gonville'));
+      QUnit.test(name, testFunc('Petaluma'));
     },
 
     plotNoteWidth: VF.Note.plotMetrics,
