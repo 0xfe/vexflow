@@ -15,7 +15,6 @@ import { Flow } from './tables';
 import { Tickable } from './tickable';
 import { Stroke } from './strokes';
 import { Stave } from './stave';
-import { BoundingBox } from './boundingbox';
 import { Voice } from './voice';
 import { TickContext } from './tickcontext';
 import { ModifierContext } from './modifiercontext';
