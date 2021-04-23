@@ -3,7 +3,7 @@
 import { GlyphNote } from './glyphnote';
 import { Glyph } from './glyph';
 import { NoteStruct } from './note';
-import { GlyphNoteOptions } from './types/common';
+import { GlyphNoteOptions } from './glyphnote';
 
 export class RepeatNote extends GlyphNote {
   constructor(type: string, noteStruct?: NoteStruct, options?: GlyphNoteOptions) {
@@ -15,7 +15,7 @@ export class RepeatNote extends GlyphNote {
       slash: 'repeatBarSlash',
     } as Record<string, string>;
 
-    super(null, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
+    super(undefined, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
     this.setAttribute('type', 'RepeatNote');
 
     const glyphCode = CODES[type] || 'repeat1Bar';
