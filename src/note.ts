@@ -445,11 +445,6 @@ export abstract class Note extends Tickable {
     return this.stave.getYForTopText(text_line);
   }
 
-  /** Gets a `BoundingBox` for this note. */
-  getBoundingBox(): BoundingBox | undefined {
-    return undefined;
-  }
-
   /** Returns the voice that this note belongs in. */
   getVoice(): Voice {
     if (!this.voice) throw new Vex.RERR('NoVoice', 'Note has no voice.');
