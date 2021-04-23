@@ -132,7 +132,12 @@ export const GonvilleMetrics = {
         offsetYBaseStemUp: -4,
         offsetYBaseStemDown: 4,
       },
+      noteheadHalf: {
+        offsetYBaseStemUp: -1.5,
+        offsetYBaseStemDown: 1.5,
+      },
       noteheadBlack: {
+        offsetYBaseStemUp: -2,
         offsetYBaseStemDown: 2,
       },
       noteheadSquareWhite: {
@@ -143,6 +148,9 @@ export const GonvilleMetrics = {
   },
 
   glyphs: {
+    flag: {
+      shiftX: -0.16,
+    },      
     textNote: {
       point: 40,
       default: {
