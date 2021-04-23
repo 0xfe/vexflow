@@ -15,11 +15,6 @@ import { StemmableNote } from './stemmablenote';
 import { Voice } from './voice';
 import { RenderContext } from './types/common';
 
-export interface BeamInfo {
-  start: number;
-  end?: number;
-}
-
 export interface BeamRenderOptions {
   flat_beam_offset?: number;
   flat_beams: boolean;
@@ -732,7 +727,8 @@ export class Beam extends Element {
   }
 
   // Get the x coordinates for the beam lines of specific `duration`
-  getBeamLines(duration: string): BeamInfo[] {
+  getBeamLines(duration: string): { start: number; end?: number }[] {
+    type BeamInfo = { start: number; end?: number };
     const tick_of_duration = Flow.durationToTicks(duration);
     const beam_lines: BeamInfo[] = [];
     let beam_started = false;
