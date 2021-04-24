@@ -5,16 +5,32 @@
 
 import { Vex } from './vex';
 import { Element } from './element';
+import { StaveNote } from './stavenote';
+import { StaveOptions } from './stave';
+
+export enum Position {
+  NEAR_HEAD = 1,
+  NEAR_TOP = 2,
+}
+
+export interface CurveRenderParams {
+  last_y: number;
+  last_x: number;
+  first_y: number;
+  first_x: number;
+  direction: number;
+}
 
 export class Curve extends Element {
-  static get Position() {
-    return {
-      NEAR_HEAD: 1,
-      NEAR_TOP: 2,
-    };
+  protected readonly render_options: StaveOptions;
+  protected from: StaveNote;
+  protected to: StaveNote;
+
+  static get Position(): typeof Position {
+    return Position;
   }
 
-  static get PositionString() {
+  static get PositionString(): Record<string, number> {
     return {
       nearHead: Curve.Position.NEAR_HEAD,
       nearTop: Curve.Position.NEAR_TOP,
@@ -27,7 +43,7 @@ export class Curve extends Element {
   //    cps: List of control points
   //    x_shift: pixels to shift
   //    y_shift: pixels to shift
-  constructor(from, to, options) {
+  constructor(from: StaveNote, to: StaveNote, options: StaveOptions) {
     super();
     this.setAttribute('type', 'Curve');
 
@@ -43,15 +59,16 @@ export class Curve extends Element {
         { x: 0, y: 10 },
         { x: 0, y: 10 },
       ],
+      ...options,
     };
 
-    Vex.Merge(this.render_options, options);
-    this.setNotes(from, to);
+    this.from = from;
+    this.to = to;
   }
 
-  setNotes(from, to) {
+  setNotes(from: StaveNote, to: StaveNote): this {
     if (!from && !to) {
-      throw new Vex.RuntimeError('BadArguments', 'Curve needs to have either first_note or last_note set.');
+      throw new Vex.RERR('BadArguments', 'Curve needs to have either first_note or last_note set.');
     }
 
     this.from = from;
@@ -62,13 +79,23 @@ export class Curve extends Element {
   /**
    * @return {boolean} Returns true if this is a partial bar.
    */
-  isPartial() {
+  isPartial(): boolean {
     return !this.from || !this.to;
   }
 
-  renderCurve(params) {
-    const ctx = this.context;
+  renderCurve(params: CurveRenderParams): void {
+    const ctx = this.checkContext();
     const cps = this.render_options.cps;
+    if (
+      cps == undefined ||
+      cps[0] == undefined ||
+      cps[1] == undefined ||
+      this.render_options.x_shift == undefined ||
+      this.render_options.y_shift == undefined ||
+      this.render_options.thickness == undefined
+    ) {
+      throw new Vex.RERR('InternalInvalid', 'Curve internal error.');
+    }
 
     const x_shift = this.render_options.x_shift;
     const y_shift = this.render_options.y_shift * params.direction;
@@ -104,9 +131,12 @@ export class Curve extends Element {
     ctx.fill();
   }
 
-  draw() {
+  draw(): boolean {
     this.checkContext();
     this.setRendered();
+    if (this.render_options.position == undefined || this.render_options.position_end == undefined) {
+      throw new Vex.RERR('InternalInvalid', 'Curve internal error.');
+    }
 
     const first_note = this.from;
     const last_note = this.to;
@@ -114,12 +144,12 @@ export class Curve extends Element {
     let last_x;
     let first_y;
     let last_y;
-    let stem_direction;
+    let stem_direction = 0;
 
     let metric = 'baseY';
     let end_metric = 'baseY';
 
-    function getPosition(position) {
+    function getPosition(position: string | number) {
       return typeof position === 'string' ? Curve.PositionString[position] : position;
     }
     const position = getPosition(this.render_options.position);
@@ -141,7 +171,9 @@ export class Curve extends Element {
       stem_direction = first_note.getStemDirection();
       first_y = first_note.getStemExtents()[metric];
     } else {
-      first_x = last_note.getStave().getTieStartX();
+      const stave = last_note.getStave();
+      if (!stave) throw new Vex.RERR('NoStave', 'No stave attached.');
+      first_x = stave.getTieStartX();
       first_y = last_note.getStemExtents()[metric];
     }
 
@@ -150,7 +182,9 @@ export class Curve extends Element {
       stem_direction = last_note.getStemDirection();
       last_y = last_note.getStemExtents()[end_metric];
     } else {
-      last_x = first_note.getStave().getTieEndX();
+      const stave = first_note.getStave();
+      if (!stave) throw new Vex.RERR('NoStave', 'No stave attached.');
+      last_x = stave.getTieEndX();
       last_y = first_note.getStemExtents()[end_metric];
     }
 

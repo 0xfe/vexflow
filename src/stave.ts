@@ -21,10 +21,11 @@ export interface StaveLineConfig {
 
 export interface StaveOptions {
   //[name: string]: any;
-  spacing: number;
-  thickness: number;
-  x_shift: number;
-  y_shift: number;
+  spacing?: number;
+  thickness?: number;
+  x_shift?: number;
+  y_shift?: number;
+  position?: number;
   position_end?: number;
   invert?: boolean;
   cps?: { x: number; y: number }[];
