@@ -69,6 +69,8 @@ export interface RenderContext {
   setLineCap(cap_type: string): RenderContext;
   setLineDash(dash: string): RenderContext;
   scale(x: number, y: number): RenderContext;
+  // eslint-disable-next-line
+  rect(x: number, y: number, width: number, height: number, attributes?: any): RenderContext;
   resize(width: number, height: number): RenderContext;
   fillRect(x: number, y: number, width: number, height: number): RenderContext;
   clearRect(x: number, y: number, width: number, height: number): RenderContext;
