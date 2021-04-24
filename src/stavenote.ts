@@ -1171,11 +1171,14 @@ export class StaveNote extends StemmableNote {
       const noteStemHeight = stem?.getHeight() ?? 0;
       const flagX = this.getStemX();
       // FIXME: What's with the magic +/- 2
+      // ANSWER: a corner of the note stem pokes out beyond the tip of the flag.
+      // The extra +/- 2 pushes the flag glyph outward so it covers the stem entirely.
+      // Alternatively, we could shorten the stem.
       const flagY =
         this.getStemDirection() === Stem.DOWN
-          ? // Down stems have flags on the left
+          ? // Down stems are below the note head and have flags on the right.
             y_top - noteStemHeight + 2
-          : // Up stems have flags on the eft.
+          : // Up stems are above the note head and have flags on the right.
             y_bottom - noteStemHeight - 2;
 
       // Draw the Flag
