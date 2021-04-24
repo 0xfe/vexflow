@@ -149,7 +149,7 @@ export const GonvilleMetrics = {
 
   glyphs: {
     flag: {
-      shiftX: -0.16,
+      shiftX: -0.10,
     },      
     textNote: {
       point: 40,
