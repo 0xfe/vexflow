@@ -979,7 +979,7 @@ export class StaveNote extends StemmableNote {
     let width = this.getGlyphWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
 
     // For upward flagged notes, the width of the flag needs to be added
-    if (this.glyph.flag && this.beam === undefined && this.stem_direction === Stem.UP) {
+    if (this.shouldDrawFlag() && this.stem_direction === Stem.UP) {
       width += this.getGlyphWidth();
       // TODO: Add flag width as a separate metric
     }
@@ -1154,21 +1154,22 @@ export class StaveNote extends StemmableNote {
     ctx.closeGroup();
   }
 
+  shouldDrawFlag(): boolean {
+    const hasFlag = this.getGlyph().flag; // this.glyph.flag is a boolean, as specified in tables.js
+    const hasNoBeam = this.beam === undefined;
+    return hasFlag && hasNoBeam;
+  }
+
   // Draw the flag for the note
   drawFlag(): void {
-    const { stem, beam } = this;
     const ctx = this.checkContext();
-
     if (!ctx) {
       throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
     }
 
-    const shouldRenderFlag = beam === undefined;
-    const glyph = this.getGlyph();
-
-    if (glyph.flag && shouldRenderFlag) {
+    if (this.shouldDrawFlag()) {
       const { y_top, y_bottom } = this.getNoteHeadBounds();
-      const noteStemHeight = stem?.getHeight() ?? 0;
+      const noteStemHeight = this.stem?.getHeight() ?? 0;
       const flagX = this.getStemX();
       // FIXME: What's with the magic +/- 2
       // ANSWER: a corner of the note stem pokes out beyond the tip of the flag.
@@ -1208,6 +1209,12 @@ export class StaveNote extends StemmableNote {
 
     if (stemOptions) {
       this.setStem(new Stem(stemOptions));
+    }
+
+    // If we will render a flag, we shorten the stem so that the tip
+    // does not poke through the flag.
+    if (this.shouldDrawFlag() && this.stem) {
+      this.stem.renderHeightAdjustment = -3;
     }
 
     ctx.openGroup('stem', undefined, { pointerBBox: true });
