@@ -31,6 +31,13 @@ VF.Test.RUN_RAPHAEL_TESTS = false;
 VF.Test.RUN_NODE_TESTS = true;
 VF.Test.NODE_IMAGEDIR = imageDir;
 
+// By default we test all fonts.
+// Modify VF.Test.FONTS_TO_TEST to test fewer fonts at a time.
+// In the future, we can allow customization via process.argv.
+// VF.Test.FONTS_TO_TEST = [VF.Fonts.Petaluma];
+// VF.Test.FONTS_TO_TEST = [VF.Fonts.Gonville];
+// VF.Test.FONTS_TO_TEST = [VF.Fonts.Bravura];
+
 // Create the image directory if it doesn't exist.
 fs.mkdirSync(VF.Test.NODE_IMAGEDIR, { recursive: true });
 

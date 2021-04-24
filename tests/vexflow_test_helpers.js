@@ -52,6 +52,8 @@ if (!global.QUnit) {
 
 global['VF'] = Vex.Flow;
 VF.Test = (function () {
+  var DEFAULT_FONTS_TO_TEST = [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Petaluma];
+
   var Test = {
     // Test Options.
     RUN_CANVAS_TESTS: true,
@@ -64,6 +66,9 @@ VF.Test = (function () {
 
     // Default font properties for tests.
     Font: { size: 10 },
+
+    // Test all three fonts by default. Customize the FONTS_TO_TEST array to test fewer fonts.
+    FONTS_TO_TEST: DEFAULT_FONTS_TO_TEST,
 
     FONT_STACKS: {
       Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
@@ -203,9 +208,7 @@ VF.Test = (function () {
         VF.DEFAULT_FONT_STACK = defaultFontStack;
       };
 
-      QUnit.test(name, testFunc('Bravura'));
-      QUnit.test(name, testFunc('Gonville'));
-      QUnit.test(name, testFunc('Petaluma'));
+      VF.Test.runTestWithFonts(name, testFunc);
     },
 
     runNodeTest: function (name, func, params) {
@@ -248,9 +251,18 @@ VF.Test = (function () {
         }
       };
 
-      QUnit.test(name, testFunc('Bravura'));
-      QUnit.test(name, testFunc('Gonville'));
-      QUnit.test(name, testFunc('Petaluma'));
+      VF.Test.runTestWithFonts(name, testFunc);
+    },
+
+    // Run QUnit.test() for each font that is included in VF.Test.FONTS_TO_TEST.
+    runTestWithFonts: function (name, func) {
+      if (!Array.isArray(VF.Test.FONTS_TO_TEST)) {
+        VF.Test.FONTS_TO_TEST = DEFAULT_FONTS_TO_TEST;
+      }
+
+      VF.Test.FONTS_TO_TEST.forEach((font) => {
+        QUnit.test(name, func(font.getName()));
+      });
     },
 
     plotNoteWidth: VF.Note.plotMetrics,
