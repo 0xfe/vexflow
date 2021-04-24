@@ -11,7 +11,6 @@ export * from './src/note';
 export * from './src/repeatnote';
 export * from './src/stave';
 export * from './src/stem';
-export * from './src/stemmablenote';
 export * from './src/tabstave';
 export * from './src/tickable';
 export * from './src/tickcontext';

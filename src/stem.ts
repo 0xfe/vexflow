@@ -2,7 +2,7 @@
 //
 // ## Description
 // This file implements the `Stem` object. Generally this object is handled
-// by its parent `StemmableNote`.
+// by its parent `Note`.
 
 import { Vex } from './vex';
 import { Element } from './element';

@@ -11,7 +11,7 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Stem } from './stem';
-import { StemmableNote } from './stemmablenote';
+import { Note } from './note';
 import { Dot } from './dot';
 import { Glyph } from './glyph';
 
@@ -107,7 +107,7 @@ function getPartialStemLines(stem_y, unused_strings, stave, stem_direction) {
   return stem_lines;
 }
 
-export class TabNote extends StemmableNote {
+export class TabNote extends Note {
   static get CATEGORY() {
     return 'tabnotes';
   }

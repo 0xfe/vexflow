@@ -14,7 +14,7 @@ import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
 import { Stem } from './stem';
 import { NoteHead } from './notehead';
-import { StemmableNote } from './stemmablenote';
+import { Note } from './note';
 import { StemOptions } from './stem';
 import { Modifier } from './modifier';
 import { Dot } from './dot';
@@ -92,7 +92,7 @@ function centerRest(rest: StaveNoteFormatSettings, noteU: StaveNoteFormatSetting
   rest.minLine -= delta;
 }
 
-export class StaveNote extends StemmableNote {
+export class StaveNote extends Note {
   static DEBUG: boolean;
 
   minLine: number = 0;
@@ -1213,7 +1213,7 @@ export class StaveNote extends StemmableNote {
   }
 
   /**
-   * Override stemmablenote stem extension to adjust for distance from middle line.
+   * Override note stem extension to adjust for distance from middle line.
    */
   getStemExtension(): number {
     const super_stem_extension = super.getStemExtension();

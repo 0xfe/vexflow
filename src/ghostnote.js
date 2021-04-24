@@ -3,9 +3,9 @@
 // ## Description
 
 import { Vex } from './vex';
-import { StemmableNote } from './stemmablenote';
+import { Note } from './note';
 
-export class GhostNote extends StemmableNote {
+export class GhostNote extends Note {
   /** @constructor */
   constructor(parameter) {
     // Sanity check

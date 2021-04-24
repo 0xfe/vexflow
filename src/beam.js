@@ -2,7 +2,7 @@
 //
 // ## Description
 //
-// This file implements `Beams` that span over a set of `StemmableNotes`.
+// This file implements `Beams` that span over a set of `Notes`.
 
 import { Vex } from './vex';
 import { Flow } from './tables';
