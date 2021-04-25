@@ -8,8 +8,20 @@
 import { Vex } from './vex';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
+import { TimeSignatureGlyph } from './timesigglyph';
+export interface TimeSignatureInfo {
+  glyph: Glyph;
+  line?: number;
+  num: boolean;
+}
 
-const assertIsValidFraction = (timeSpec) => {
+export interface TimeSignatureGlyphInfo {
+  code: string;
+  point: number;
+  line: number;
+}
+
+const assertIsValidFraction = (timeSpec: string) => {
   const numbers = timeSpec.split('/').filter((number) => number !== '');
 
   if (numbers.length !== 2) {
@@ -27,11 +39,19 @@ const assertIsValidFraction = (timeSpec) => {
 };
 
 export class TimeSignature extends StaveModifier {
-  static get CATEGORY() {
+  point?: number;
+  bottomLine?: number;
+  protected timeSig?: TimeSignatureInfo;
+
+  protected validate_args: boolean;
+
+  topLine?: number;
+
+  static get CATEGORY(): string {
     return 'timesignatures';
   }
 
-  static get glyphs() {
+  static get glyphs(): Record<string, TimeSignatureGlyphInfo> {
     return {
       C: {
         code: 'timeSigCommon',
@@ -46,13 +66,12 @@ export class TimeSignature extends StaveModifier {
     };
   }
 
-  constructor(timeSpec = null, customPadding = 15, validate_args = true) {
+  constructor(timeSpec?: string, customPadding = 15, validate_args = true) {
     super();
     this.setAttribute('type', 'TimeSignature');
     this.validate_args = validate_args;
 
-    if (timeSpec === null) return;
-
+    if (!timeSpec) return;
     const padding = customPadding;
 
     this.point = this.musicFont.lookupMetric('digits.point');
@@ -60,16 +79,16 @@ export class TimeSignature extends StaveModifier {
     this.topLine = 2 + fontLineShift;
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifier.Position.BEGIN);
-    this.setTimeSig(timeSpec);
-    this.setWidth(this.timeSig.glyph.getMetrics().width);
+    this.timeSig = this.parseTimeSpec(timeSpec);
+    this.setWidth(this.getTimeSig().glyph.getMetrics().width!);
     this.setPadding(padding);
   }
 
-  getCategory() {
+  getCategory(): string {
     return TimeSignature.CATEGORY;
   }
 
-  parseTimeSpec(timeSpec) {
+  parseTimeSpec(timeSpec: string): TimeSignatureInfo {
     if (timeSpec === 'C' || timeSpec === 'C|') {
       const { line, code, point } = TimeSignature.glyphs[timeSpec];
       return {
@@ -91,84 +110,21 @@ export class TimeSignature extends StaveModifier {
     };
   }
 
-  makeTimeSignatureGlyph(topDigits, botDigits) {
-    const glyph = new Glyph('timeSig0', this.point);
-    glyph.topGlyphs = [];
-    glyph.botGlyphs = [];
-
-    let topWidth = 0;
-    for (let i = 0; i < topDigits.length; ++i) {
-      const num = topDigits[i];
-      const topGlyph = new Glyph('timeSig' + num, this.point);
-
-      glyph.topGlyphs.push(topGlyph);
-      topWidth += topGlyph.getMetrics().width;
-    }
-
-    let botWidth = 0;
-    for (let i = 0; i < botDigits.length; ++i) {
-      const num = botDigits[i];
-      const botGlyph = new Glyph('timeSig' + num, this.point);
-
-      glyph.botGlyphs.push(botGlyph);
-      botWidth += botGlyph.getMetrics().width;
-    }
-
-    const width = topWidth > botWidth ? topWidth : botWidth;
-    const xMin = glyph.getMetrics().x_min;
-
-    glyph.getMetrics = () => ({
-      x_min: xMin,
-      x_max: xMin + width,
-      width,
-    });
-
-    const topStartX = (width - topWidth) / 2.0;
-    const botStartX = (width - botWidth) / 2.0;
-
-    const that = this;
-    glyph.renderToStave = function renderToStave(x) {
-      let start_x = x + topStartX;
-      for (let i = 0; i < this.topGlyphs.length; ++i) {
-        const glyph = this.topGlyphs[i];
-        Glyph.renderOutline(
-          this.context,
-          glyph.metrics.outline,
-          glyph.scale,
-          start_x + glyph.x_shift,
-          this.stave.getYForLine(that.topLine)
-        );
-        start_x += glyph.getMetrics().width;
-      }
-
-      start_x = x + botStartX;
-      for (let i = 0; i < this.botGlyphs.length; ++i) {
-        const glyph = this.botGlyphs[i];
-        that.placeGlyphOnLine(glyph, this.stave, glyph.line);
-        Glyph.renderOutline(
-          this.context,
-          glyph.metrics.outline,
-          glyph.scale,
-          start_x + glyph.x_shift,
-          this.stave.getYForLine(that.bottomLine)
-        );
-        start_x += glyph.getMetrics().width;
-      }
-    };
-
+  makeTimeSignatureGlyph(topDigits: string[], botDigits: string[]): Glyph {
+    const glyph = new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point!);
     return glyph;
   }
 
-  getTimeSig() {
-    return this.timeSig;
+  getTimeSig(): TimeSignatureInfo {
+    return this.timeSig!;
   }
 
-  setTimeSig(timeSpec) {
+  setTimeSig(timeSpec: string): this {
     this.timeSig = this.parseTimeSpec(timeSpec);
     return this;
   }
 
-  draw() {
+  draw(): void {
     if (!this.x) {
       throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without x.");
     }
@@ -178,9 +134,9 @@ export class TimeSignature extends StaveModifier {
     }
 
     this.setRendered();
-    this.timeSig.glyph.setStave(this.stave);
-    this.timeSig.glyph.setContext(this.stave.context);
-    this.placeGlyphOnLine(this.timeSig.glyph, this.stave, this.timeSig.line);
-    this.timeSig.glyph.renderToStave(this.x);
+    this.timeSig!.glyph.setStave(this.stave);
+    this.timeSig!.glyph.setContext(this.stave.getContext());
+    this.placeGlyphOnLine(this.timeSig!.glyph, this.stave, this.timeSig!.line!);
+    this.timeSig!.glyph.renderToStave(this.x);
   }
 }
