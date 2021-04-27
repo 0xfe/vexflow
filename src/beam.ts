@@ -43,10 +43,6 @@ const BEAM_LEFT = 'L';
 const BEAM_RIGHT = 'R';
 const BEAM_BOTH = 'B';
 
-type tDefaults = {
-  [key: string]: [string];
-};
-
 export class Beam extends Element {
   render_options: {
     flat_beam_offset?: number;
@@ -81,7 +77,7 @@ export class Beam extends Element {
       time_sig = '4/4';
     }
 
-    const defaults: tDefaults = {
+    const defaults: { [key: string]: [string] } = {
       '1/2': ['1/2'],
       '2/2': ['1/2'],
       '3/2': ['1/2'],
