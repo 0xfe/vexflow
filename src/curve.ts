@@ -5,26 +5,27 @@
 
 import { Vex } from './vex';
 import { Element } from './element';
-import { StaveNote } from './stavenote';
-import { StaveOptions } from './stave';
+import { Note } from './note';
+export interface CurveOptions {
+  //[name: string]: any;
+  thickness: number;
+  x_shift: number;
+  y_shift: number;
+  position: number;
+  position_end: number;
+  invert: boolean;
+  cps: { x: number; y: number }[];
+}
 
 export enum Position {
   NEAR_HEAD = 1,
   NEAR_TOP = 2,
 }
 
-export interface CurveRenderParams {
-  last_y: number;
-  last_x: number;
-  first_y: number;
-  first_x: number;
-  direction: number;
-}
-
 export class Curve extends Element {
-  protected readonly render_options: StaveOptions;
-  protected from: StaveNote;
-  protected to: StaveNote;
+  protected readonly render_options: CurveOptions;
+  protected from: Note;
+  protected to: Note;
 
   static get Position(): typeof Position {
     return Position;
@@ -43,12 +44,11 @@ export class Curve extends Element {
   //    cps: List of control points
   //    x_shift: pixels to shift
   //    y_shift: pixels to shift
-  constructor(from: StaveNote, to: StaveNote, options: StaveOptions) {
+  constructor(from: Note, to: Note, options?: CurveOptions) {
     super();
     this.setAttribute('type', 'Curve');
 
     this.render_options = {
-      spacing: 2,
       thickness: 2,
       x_shift: 0,
       y_shift: 10,
@@ -66,7 +66,7 @@ export class Curve extends Element {
     this.to = to;
   }
 
-  setNotes(from: StaveNote, to: StaveNote): this {
+  setNotes(from: Note, to: Note): this {
     if (!from && !to) {
       throw new Vex.RERR('BadArguments', 'Curve needs to have either first_note or last_note set.');
     }
@@ -83,19 +83,9 @@ export class Curve extends Element {
     return !this.from || !this.to;
   }
 
-  renderCurve(params: CurveRenderParams): void {
+  renderCurve(params: { last_y: number; last_x: number; first_y: number; first_x: number; direction: number }): void {
     const ctx = this.checkContext();
     const cps = this.render_options.cps;
-    if (
-      cps == undefined ||
-      cps[0] == undefined ||
-      cps[1] == undefined ||
-      this.render_options.x_shift == undefined ||
-      this.render_options.y_shift == undefined ||
-      this.render_options.thickness == undefined
-    ) {
-      throw new Vex.RERR('InternalInvalid', 'Curve internal error.');
-    }
 
     const x_shift = this.render_options.x_shift;
     const y_shift = this.render_options.y_shift * params.direction;
@@ -134,9 +124,6 @@ export class Curve extends Element {
   draw(): boolean {
     this.checkContext();
     this.setRendered();
-    if (this.render_options.position == undefined || this.render_options.position_end == undefined) {
-      throw new Vex.RERR('InternalInvalid', 'Curve internal error.');
-    }
 
     const first_note = this.from;
     const last_note = this.to;
