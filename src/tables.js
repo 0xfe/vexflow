@@ -34,6 +34,7 @@ const Flow = {
   integerToNote: integerToNote,
   durationToTicks: durationToTicks,
   durationToFraction: durationToFraction,
+  durationToNumber: durationToNumber,
   getGlyphProps: getGlyphProps,
 };
 
@@ -703,7 +704,9 @@ function durationToFraction(duration) {
 }
 
 // Convert the `duration` to an number
-Flow.durationToNumber = (duration) => Flow.durationToFraction(duration).value();
+function durationToNumber(duration) {
+  return durationToFraction(duration).value();
+}
 
 // Convert the `duration` to total ticks
 function durationToTicks(duration) {
