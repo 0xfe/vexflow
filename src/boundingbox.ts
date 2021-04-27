@@ -8,8 +8,8 @@ import { RenderContext } from './types/common';
 // Bounding boxes for interactive notation
 
 export class BoundingBox {
-  protected y: number;
   protected x: number;
+  protected y: number;
   protected w: number;
   protected h: number;
 

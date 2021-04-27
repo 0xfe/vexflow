@@ -10,8 +10,8 @@
 // nvg.js#L449
 
 export class BoundingBoxComputation {
-  x1: number;
-  y1: number;
+  protected x1: number;
+  protected y1: number;
   protected x2: number;
   protected y2: number;
 
@@ -24,6 +24,14 @@ export class BoundingBoxComputation {
 
     this.addPoint(x1, y1);
     this.addPoint(x2, y2);
+  }
+
+  getX1(): number {
+    return this.x1;
+  }
+
+  getY1(): number {
+    return this.y1;
   }
 
   width(): number {

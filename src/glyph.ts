@@ -278,7 +278,7 @@ export class Glyph extends Element {
       z: bboxComp.noOp.bind(bboxComp),
     });
 
-    return new BoundingBox(bboxComp.x1, bboxComp.y1, bboxComp.width(), bboxComp.height());
+    return new BoundingBox(bboxComp.getX1(), bboxComp.getY1(), bboxComp.width(), bboxComp.height());
   }
 
   /**
