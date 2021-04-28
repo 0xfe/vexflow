@@ -149,7 +149,23 @@ export const GonvilleMetrics = {
 
   glyphs: {
     flag: {
-      shiftX: -0.10,
+      shiftX: -0.08,
+      flag8thDown: {
+        shiftX: -0.16,
+      },
+      flag16thDown: {
+        shiftX: -0.16,
+      },
+      flag32ndDown: {
+        shiftX: -0.16,
+      },
+      flag64thDown: {
+        shiftX: -0.16,
+      },
+      flag128thDown: {
+        shiftX: -0.16,
+      },
+
     },      
     textNote: {
       point: 40,
