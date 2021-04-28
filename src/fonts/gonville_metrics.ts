@@ -137,8 +137,8 @@ export const GonvilleMetrics = {
         offsetYBaseStemDown: 1.5,
       },
       noteheadBlack: {
-        offsetYBaseStemUp: -2,
-        offsetYBaseStemDown: 2,
+        offsetYBaseStemUp: -1.5,
+        offsetYBaseStemDown: 1.5,
       },
       noteheadSquareWhite: {
         offsetYBaseStemDown: -5,
