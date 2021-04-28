@@ -6,8 +6,8 @@
 import { Vex } from './vex';
 import { Element } from './element';
 import { Note } from './note';
+
 export interface CurveOptions {
-  //[name: string]: any;
   thickness: number;
   x_shift: number;
   y_shift: number;
