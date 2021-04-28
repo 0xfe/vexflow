@@ -2,7 +2,7 @@
 //
 // ## Description
 //
-// This file implements `Beams` that span over a set of `Notes`.
+// This file implements `Beams` that span over a set of `StemmableNotes`.
 
 import { Vex } from './vex';
 import { Flow } from './tables';
@@ -11,10 +11,11 @@ import { Fraction } from './fraction';
 import { Tuplet } from './tuplet';
 import { Stem } from './stem';
 import { Note } from './note';
+import { StemmableNote } from './stemmablenote';
 import { Voice } from './voice';
 import { RenderContext } from './types/common';
 
-function calculateStemDirection(notes: Note[]) {
+function calculateStemDirection(notes: StemmableNote[]) {
   let lineSum = 0;
   notes.forEach((note) => {
     if (note.keyProps) {
@@ -30,7 +31,7 @@ function calculateStemDirection(notes: Note[]) {
   return Stem.UP;
 }
 
-const getStemSlope = (firstNote: Note, lastNote: Note) => {
+const getStemSlope = (firstNote: StemmableNote, lastNote: StemmableNote) => {
   const firstStemTipY = firstNote.getStemExtents().topY;
   const firstStemX = firstNote.getStemX();
   const lastStemTipY = lastNote.getStemExtents().topY;
@@ -57,7 +58,7 @@ export class Beam extends Element {
     partial_beam_length: number;
     min_flat_beam_offset: number;
   };
-  notes: Note[];
+  notes: StemmableNote[];
   postFormatted: boolean;
   slope: number = 0;
 
@@ -130,7 +131,7 @@ export class Beam extends Element {
   // * `stem_direction` - A stem direction to apply to the entire voice
   // * `groups` - An array of `Fraction` representing beat groupings for the beam
   static applyAndGetBeams(voice: Voice, stem_direction?: number, groups?: Fraction[]): Beam[] {
-    return Beam.generateBeams(voice.getTickables(), {
+    return Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       groups,
       stem_direction,
     });
@@ -162,7 +163,7 @@ export class Beam extends Element {
   //    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
   //
   static generateBeams(
-    notes: Note[],
+    notes: StemmableNote[],
     config: {
       flat_beam_offset?: number;
       flat_beams?: boolean;
@@ -189,10 +190,10 @@ export class Beam extends Element {
       return group.clone().multiply(Flow.RESOLUTION, 1);
     });
 
-    const unprocessedNotes: Note[] = notes;
+    const unprocessedNotes: StemmableNote[] = notes;
     let currentTickGroup = 0;
-    let noteGroups: Note[][] = [];
-    let currentGroup: Note[] = [];
+    let noteGroups: StemmableNote[][] = [];
+    let currentGroup: StemmableNote[] = [];
 
     function getTotalTicks(vf_notes: Note[]) {
       return vf_notes.reduce((memo, note) => note.getTicks().clone().add(memo), new Fraction(0, 1));
@@ -207,7 +208,7 @@ export class Beam extends Element {
     }
 
     function createGroups() {
-      let nextGroup: Note[] = [];
+      let nextGroup: StemmableNote[] = [];
       // number of ticks in current group
       let currentGroupTotalTicks = new Fraction(0, 1);
       unprocessedNotes.forEach((unprocessedNote) => {
@@ -276,9 +277,9 @@ export class Beam extends Element {
 
     // Splits up groups by Rest
     function sanitizeGroups() {
-      const sanitizedGroups: Note[][] = [];
+      const sanitizedGroups: StemmableNote[][] = [];
       noteGroups.forEach((group) => {
-        let tempGroup: Note[] = [];
+        let tempGroup: StemmableNote[] = [];
         group.forEach((note, index, group) => {
           const isFirstOrLast = index === 0 || index === group.length - 1;
           const prevNote = group[index - 1];
@@ -341,7 +342,7 @@ export class Beam extends Element {
       });
     }
 
-    function findFirstNote(group: Note[]) {
+    function findFirstNote(group: StemmableNote[]) {
       for (let i = 0; i < group.length; i++) {
         const note = group[i];
         if (!note.isRest()) {
@@ -352,7 +353,7 @@ export class Beam extends Element {
       return false;
     }
 
-    function applyStemDirection(group: Note[], direction: number) {
+    function applyStemDirection(group: StemmableNote[], direction: number) {
       group.forEach((note) => {
         note.setStemDirection(direction);
       });
@@ -428,7 +429,7 @@ export class Beam extends Element {
     return beams;
   }
 
-  constructor(notes: Note[], auto_stem: boolean = false) {
+  constructor(notes: StemmableNote[], auto_stem: boolean = false) {
     super();
     this.setAttribute('type', 'Beam');
 
@@ -500,7 +501,7 @@ export class Beam extends Element {
   }
 
   // Get the notes in this beam
-  getNotes(): Note[] {
+  getNotes(): StemmableNote[] {
     return this.notes;
   }
 
