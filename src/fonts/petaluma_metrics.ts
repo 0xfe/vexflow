@@ -154,8 +154,8 @@ export const PetalumaMetrics = {
         offsetYBaseStemDown: 4,
       },
       noteheadHalf: {
-        offsetYBaseStemDown: 2,
-        offsetYBaseStemUp: -2,
+        offsetYBaseStemDown: 1.8,
+        offsetYBaseStemUp: -1.8,
       },
       noteheadBlack: {
         offsetYBaseStemDown: 2,
