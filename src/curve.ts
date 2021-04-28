@@ -5,16 +5,33 @@
 
 import { Vex } from './vex';
 import { Element } from './element';
+import { Note } from './note';
+
+export interface CurveOptions {
+  thickness: number;
+  x_shift: number;
+  y_shift: number;
+  position: number;
+  position_end: number;
+  invert: boolean;
+  cps: { x: number; y: number }[];
+}
+
+export enum Position {
+  NEAR_HEAD = 1,
+  NEAR_TOP = 2,
+}
 
 export class Curve extends Element {
-  static get Position() {
-    return {
-      NEAR_HEAD: 1,
-      NEAR_TOP: 2,
-    };
+  protected readonly render_options: CurveOptions;
+  protected from: Note;
+  protected to: Note;
+
+  static get Position(): typeof Position {
+    return Position;
   }
 
-  static get PositionString() {
+  static get PositionString(): Record<string, number> {
     return {
       nearHead: Curve.Position.NEAR_HEAD,
       nearTop: Curve.Position.NEAR_TOP,
@@ -27,12 +44,11 @@ export class Curve extends Element {
   //    cps: List of control points
   //    x_shift: pixels to shift
   //    y_shift: pixels to shift
-  constructor(from, to, options) {
+  constructor(from: Note, to: Note, options?: CurveOptions) {
     super();
     this.setAttribute('type', 'Curve');
 
     this.render_options = {
-      spacing: 2,
       thickness: 2,
       x_shift: 0,
       y_shift: 10,
@@ -43,15 +59,16 @@ export class Curve extends Element {
         { x: 0, y: 10 },
         { x: 0, y: 10 },
       ],
+      ...options,
     };
 
-    Vex.Merge(this.render_options, options);
-    this.setNotes(from, to);
+    this.from = from;
+    this.to = to;
   }
 
-  setNotes(from, to) {
+  setNotes(from: Note, to: Note): this {
     if (!from && !to) {
-      throw new Vex.RuntimeError('BadArguments', 'Curve needs to have either first_note or last_note set.');
+      throw new Vex.RERR('BadArguments', 'Curve needs to have either first_note or last_note set.');
     }
 
     this.from = from;
@@ -62,12 +79,12 @@ export class Curve extends Element {
   /**
    * @return {boolean} Returns true if this is a partial bar.
    */
-  isPartial() {
+  isPartial(): boolean {
     return !this.from || !this.to;
   }
 
-  renderCurve(params) {
-    const ctx = this.context;
+  renderCurve(params: { last_y: number; last_x: number; first_y: number; first_x: number; direction: number }): void {
+    const ctx = this.checkContext();
     const cps = this.render_options.cps;
 
     const x_shift = this.render_options.x_shift;
@@ -104,7 +121,7 @@ export class Curve extends Element {
     ctx.fill();
   }
 
-  draw() {
+  draw(): boolean {
     this.checkContext();
     this.setRendered();
 
@@ -114,12 +131,12 @@ export class Curve extends Element {
     let last_x;
     let first_y;
     let last_y;
-    let stem_direction;
+    let stem_direction = 0;
 
     let metric = 'baseY';
     let end_metric = 'baseY';
 
-    function getPosition(position) {
+    function getPosition(position: string | number) {
       return typeof position === 'string' ? Curve.PositionString[position] : position;
     }
     const position = getPosition(this.render_options.position);
@@ -141,7 +158,9 @@ export class Curve extends Element {
       stem_direction = first_note.getStemDirection();
       first_y = first_note.getStemExtents()[metric];
     } else {
-      first_x = last_note.getStave().getTieStartX();
+      const stave = last_note.getStave();
+      if (!stave) throw new Vex.RERR('NoStave', 'No stave attached.');
+      first_x = stave.getTieStartX();
       first_y = last_note.getStemExtents()[metric];
     }
 
@@ -150,7 +169,9 @@ export class Curve extends Element {
       stem_direction = last_note.getStemDirection();
       last_y = last_note.getStemExtents()[end_metric];
     } else {
-      last_x = first_note.getStave().getTieEndX();
+      const stave = first_note.getStave();
+      if (!stave) throw new Vex.RERR('NoStave', 'No stave attached.');
+      last_x = stave.getTieEndX();
       last_y = first_note.getStemExtents()[end_metric];
     }
 
