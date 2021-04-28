@@ -2,7 +2,7 @@
 //
 // ## Description
 //
-// This file implements `Beams` that span over a set of `StemmableNotes`.
+// This file implements `Beams` that span over a set of `Notes`.
 
 import { Vex } from './vex';
 import { Flow } from './tables';
@@ -11,11 +11,10 @@ import { Fraction } from './fraction';
 import { Tuplet } from './tuplet';
 import { Stem } from './stem';
 import { Note } from './note';
-import { StemmableNote } from './stemmablenote';
 import { Voice } from './voice';
 import { RenderContext } from './types/common';
 
-function calculateStemDirection(notes: StemmableNote[]) {
+function calculateStemDirection(notes: Note[]) {
   let lineSum = 0;
   notes.forEach((note) => {
     if (note.keyProps) {
@@ -31,7 +30,7 @@ function calculateStemDirection(notes: StemmableNote[]) {
   return Stem.UP;
 }
 
-const getStemSlope = (firstNote: StemmableNote, lastNote: StemmableNote) => {
+const getStemSlope = (firstNote: Note, lastNote: Note) => {
   const firstStemTipY = firstNote.getStemExtents().topY;
   const firstStemX = firstNote.getStemX();
   const lastStemTipY = lastNote.getStemExtents().topY;
@@ -58,7 +57,7 @@ export class Beam extends Element {
     partial_beam_length: number;
     min_flat_beam_offset: number;
   };
-  notes: StemmableNote[];
+  notes: Note[];
   postFormatted: boolean;
   slope: number = 0;
 
@@ -163,7 +162,7 @@ export class Beam extends Element {
   //    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
   //
   static generateBeams(
-    notes: StemmableNote[],
+    notes: Note[],
     config: {
       flat_beam_offset?: number;
       flat_beams?: boolean;
@@ -190,10 +189,10 @@ export class Beam extends Element {
       return group.clone().multiply(Flow.RESOLUTION, 1);
     });
 
-    const unprocessedNotes: StemmableNote[] = notes;
+    const unprocessedNotes: Note[] = notes;
     let currentTickGroup = 0;
-    let noteGroups: StemmableNote[][] = [];
-    let currentGroup: StemmableNote[] = [];
+    let noteGroups: Note[][] = [];
+    let currentGroup: Note[] = [];
 
     function getTotalTicks(vf_notes: Note[]) {
       return vf_notes.reduce((memo, note) => note.getTicks().clone().add(memo), new Fraction(0, 1));
@@ -208,7 +207,7 @@ export class Beam extends Element {
     }
 
     function createGroups() {
-      let nextGroup: StemmableNote[] = [];
+      let nextGroup: Note[] = [];
       // number of ticks in current group
       let currentGroupTotalTicks = new Fraction(0, 1);
       unprocessedNotes.forEach((unprocessedNote) => {
@@ -277,9 +276,9 @@ export class Beam extends Element {
 
     // Splits up groups by Rest
     function sanitizeGroups() {
-      const sanitizedGroups: StemmableNote[][] = [];
+      const sanitizedGroups: Note[][] = [];
       noteGroups.forEach((group) => {
-        let tempGroup: StemmableNote[] = [];
+        let tempGroup: Note[] = [];
         group.forEach((note, index, group) => {
           const isFirstOrLast = index === 0 || index === group.length - 1;
           const prevNote = group[index - 1];
@@ -342,7 +341,7 @@ export class Beam extends Element {
       });
     }
 
-    function findFirstNote(group: StemmableNote[]) {
+    function findFirstNote(group: Note[]) {
       for (let i = 0; i < group.length; i++) {
         const note = group[i];
         if (!note.isRest()) {
@@ -353,7 +352,7 @@ export class Beam extends Element {
       return false;
     }
 
-    function applyStemDirection(group: StemmableNote[], direction: number) {
+    function applyStemDirection(group: Note[], direction: number) {
       group.forEach((note) => {
         note.setStemDirection(direction);
       });
@@ -429,7 +428,7 @@ export class Beam extends Element {
     return beams;
   }
 
-  constructor(notes: StemmableNote[], auto_stem: boolean = false) {
+  constructor(notes: Note[], auto_stem: boolean = false) {
     super();
     this.setAttribute('type', 'Beam');
 
@@ -501,7 +500,7 @@ export class Beam extends Element {
   }
 
   // Get the notes in this beam
-  getNotes(): StemmableNote[] {
+  getNotes(): Note[] {
     return this.notes;
   }
 
