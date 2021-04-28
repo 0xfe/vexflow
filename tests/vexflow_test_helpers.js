@@ -65,6 +65,15 @@ VF.Test = (function () {
     // Default font properties for tests.
     Font: { size: 10 },
 
+    // Customize this array to test more fonts (e.g., ['Bravura', 'Gonville', 'Petaluma']).
+    FONT_STACKS_TO_TEST: ['Bravura'],
+
+    FONT_STACKS: {
+      Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
+      Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
+      Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
+    },
+
     // Returns a unique ID for a test.
     genID: function (prefix) {
       return prefix + VF.Test.genID.ID++;
@@ -178,15 +187,9 @@ VF.Test = (function () {
     runSVGTest: function (name, func, params) {
       if (!VF.Test.RUN_SVG_TESTS) return;
 
-      const fontStacks = {
-        Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
-        Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
-        Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
-      };
-
       const testFunc = (fontName) => (assert) => {
         const defaultFontStack = VF.DEFAULT_FONT_STACK;
-        VF.DEFAULT_FONT_STACK = fontStacks[fontName];
+        VF.DEFAULT_FONT_STACK = VF.Test.FONT_STACKS[fontName];
         var elementId = VF.Test.genID('svg_' + fontName);
         var title = VF.Test.genTitle('SVG ' + fontName, assert, name);
 
@@ -203,9 +206,7 @@ VF.Test = (function () {
         VF.DEFAULT_FONT_STACK = defaultFontStack;
       };
 
-      QUnit.test(name, testFunc('Bravura'));
-      QUnit.test(name, testFunc('Gonville'));
-      QUnit.test(name, testFunc('Petaluma'));
+      VF.Test.runTestWithFonts(name, testFunc);
     },
 
     runNodeTest: function (name, func, params) {
@@ -216,7 +217,11 @@ VF.Test = (function () {
         return name.replace(/[^a-zA-Z0-9]/g, '_');
       }
 
-      QUnit.test(name, function (assert) {
+      // Use an arrow function sequence (currying) to handle tests for all three fonts.
+      // This is the same approach as seen above in runSVGTest(...).
+      const testFunc = (fontName) => (assert) => {
+        const defaultFontStack = VF.DEFAULT_FONT_STACK;
+        VF.DEFAULT_FONT_STACK = VF.Test.FONT_STACKS[fontName];
         var elementId = VF.Test.genID('nodecanvas_');
         var canvas = document.createElement('canvas');
         canvas.setAttribute('id', elementId);
@@ -230,17 +235,36 @@ VF.Test = (function () {
         };
 
         func(testOptions, VF.Renderer.getCanvasContext);
+        VF.DEFAULT_FONT_STACK = defaultFontStack;
 
         if (VF.Renderer.lastContext !== null) {
           var moduleName = sanitizeName(QUnit.current_module);
           var testName = sanitizeName(QUnit.current_test);
-          var fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
+          var fileName;
+          if (fontName === 'Bravura' && VF.Test.FONT_STACKS_TO_TEST.length === 1) {
+            // If we are only testing Bravura, we do not add the font name
+            // to the output image file's name, which allows visual diffs against
+            // the previous release: version 3.0.9. In the future, if we decide
+            // to test all fonts by default, we can remove this check.
+            fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
+          } else {
+            fileName = `${VF.Test.NODE_IMAGEDIR}/${moduleName}.${testName}.${fontName}.png`;
+          }
 
           var imageData = canvas.toDataURL().split(';base64,').pop();
           var image = Buffer.from(imageData, 'base64');
 
           fs.writeFileSync(fileName, image, { encoding: 'base64' });
         }
+      };
+
+      VF.Test.runTestWithFonts(name, testFunc);
+    },
+
+    // Run QUnit.test() for each font that is included in VF.Test.FONT_STACKS_TO_TEST.
+    runTestWithFonts: function (name, func) {
+      VF.Test.FONT_STACKS_TO_TEST.forEach((fontName) => {
+        QUnit.test(name, func(fontName));
       });
     },
 

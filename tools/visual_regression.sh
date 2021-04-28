@@ -15,7 +15,7 @@
 #
 #  Run the regression tests against the reference or blessed images in tests/blessed.
 #
-#    $ ./tools/visual_regression.js (reference|blessed) [test_prefix]
+#    $ ./tools/visual_regression.sh (reference|blessed) [test_prefix]
 #
 #  Check build/images/diff/results.txt for results. This file is sorted
 #  by PHASH difference (most different files on top.) The composite diff
@@ -52,7 +52,7 @@ then
   BNAME=Current
   DIFF=$BASE/build/images/diff
 else
-  echo >&2 "Usage: visual_regresion.sh (reference|blessed) [test_prefix]"; exit 1;
+  echo >&2 "Usage: visual_regression.sh (reference|blessed) [test_prefix]"; exit 1;
 fi
 
 # All results are stored here.
