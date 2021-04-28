@@ -153,6 +153,10 @@ export const PetalumaMetrics = {
         offsetYBaseStemUp: -4,
         offsetYBaseStemDown: 4,
       },
+      noteheadHalf: {
+        offsetYBaseStemDown: 2,
+        offsetYBaseStemUp: -2,
+      },
       noteheadBlack: {
         offsetYBaseStemDown: 2,
         offsetYBaseStemUp: -2,
@@ -261,14 +265,14 @@ export const PetalumaMetrics = {
     noteHead: {
       standard: {
         noteheadBlackStemUp: {
-          shiftX: 1.5,
+          shiftX: 1.625,
           point: 34,
         },
         noteheadBlackStemDown: {
           point: 34,
         },
         noteheadHalfStemUp: {
-          shiftX: 1,
+          shiftX: 1.725,
           point: 34,
         },
         noteheadHalfStemDown: {
