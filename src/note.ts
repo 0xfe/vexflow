@@ -15,7 +15,6 @@ import { Flow } from './tables';
 import { Tickable } from './tickable';
 import { Stroke } from './strokes';
 import { Stave } from './stave';
-import { BoundingBox } from './boundingbox';
 import { Voice } from './voice';
 import { TickContext } from './tickcontext';
 import { ModifierContext } from './modifiercontext';
@@ -445,11 +444,6 @@ export abstract class Note extends Tickable {
     return this.stave.getYForTopText(text_line);
   }
 
-  /** Gets a `BoundingBox` for this note. */
-  getBoundingBox(): BoundingBox | undefined {
-    return undefined;
-  }
-
   /** Returns the voice that this note belongs in. */
   getVoice(): Voice {
     if (!this.voice) throw new Vex.RERR('NoVoice', 'Note has no voice.');
@@ -604,5 +598,35 @@ export abstract class Note extends Tickable {
   /** Sets preformatted status. */
   setPreFormatted(value: boolean): void {
     this.preFormatted = value;
+  }
+
+  // Get the direction of the stem
+  getStemDirection(): number {
+    throw new Vex.RERR('NoStem', 'No stem attached to this note.');
+  }
+
+  // Get the top and bottom `y` values of the stem.
+  getStemExtents(): Record<string, number> {
+    throw new Vex.RERR('NoStem', 'No stem attached to this note.');
+  }
+
+  // Get the `x` coordinate to the right of the note
+  getTieRightX(): number {
+    let tieStartX = this.getAbsoluteX();
+    const note_glyph_width = this.glyph.getWidth();
+    tieStartX += note_glyph_width / 2;
+    tieStartX += -this.width / 2 + this.width + 2;
+
+    return tieStartX;
+  }
+
+  // Get the `x` coordinate to the left of the note
+  getTieLeftX(): number {
+    let tieEndX = this.getAbsoluteX();
+    const note_glyph_width = this.glyph.getWidth();
+    tieEndX += note_glyph_width / 2;
+    tieEndX -= this.width / 2 + 2;
+
+    return tieEndX;
   }
 }
