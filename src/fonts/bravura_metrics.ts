@@ -146,8 +146,8 @@ export const BravuraMetrics = {
         offsetYBaseStemDown: 4,
       },
       noteheadHalf: {
-        offsetYBaseStemUp: -2.5,
-        offsetYBaseStemDown: 2.6,
+        offsetYBaseStemUp: -2.55,
+        offsetYBaseStemDown: 2.65,
       },
       noteheadBlack: {
         offsetYBaseStemUp: -2,
