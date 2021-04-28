@@ -187,7 +187,31 @@ export const PetalumaMetrics = {
       shiftX: -7,
     },
     flag: {
-      shiftX: -0.75,
+      shiftX: -0.77,
+      flag16thUp: {
+        shiftX: -0.75,
+      },
+      flag32ndUp: {
+        shiftX: -0.85,
+      },
+      flag64thUp: {
+        shiftX: -1.55,
+      },
+      flag128thUp: {
+        shiftX: -1.3,
+      },
+      flag16thDown: {
+        shiftX: -0.75,
+      },
+      flag32ndDown: {
+        shiftX: -0.76,
+      },
+      flag64thDown: {
+        shiftX: -1.5,
+      },
+      flag128thDown: {
+        shiftX: -1.2,
+      },
       tabStem: {
         shiftX: -1.75,
       },
