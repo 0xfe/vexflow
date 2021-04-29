@@ -111,3 +111,12 @@ export interface ModifierContextState {
   text_line: number;
   top_text_line: number;
 }
+
+/** TODO: Move to ModifierContext */
+export interface ClefType {
+  // eslint-disable-next-line
+  point: any;
+  code: string;
+  line: number;
+}
+
