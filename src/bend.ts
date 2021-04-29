@@ -8,19 +8,12 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 
-export interface Phrase {
+export interface BendPhrase {
   x?: number;
   type: number;
   text: string;
   width?: number;
   draw_width?: number;
-}
-
-export interface State {
-  right_shift: number;
-  left_shift: number;
-  text_line: number;
-  top_text_line: number;
 }
 
 export interface BendRenderOptions {
@@ -67,7 +60,7 @@ export interface BendRenderOptions {
 export class Bend extends Modifier {
   protected text: string;
   protected release: boolean;
-  protected phrase: Phrase[];
+  protected phrase: BendPhrase[];
   protected font: string;
   protected render_options: BendRenderOptions;
 
@@ -85,7 +78,15 @@ export class Bend extends Modifier {
 
   // ## Static Methods
   // Arrange bends in `ModifierContext`
-  static format(bends: Bend[], state: State): boolean {
+  static format(
+    bends: Bend[],
+    state: {
+      right_shift: number;
+      left_shift: number;
+      text_line: number;
+      top_text_line: number;
+    }
+  ): boolean {
     if (!bends || bends.length === 0) return false;
 
     let last_width = 0;
@@ -106,7 +107,7 @@ export class Bend extends Modifier {
   }
 
   // ## Prototype Methods
-  constructor(text: string, release: boolean, phrase: Phrase[]) {
+  constructor(text: string, release: boolean, phrase: BendPhrase[]) {
     super();
     this.setAttribute('type', 'Bend');
 
@@ -170,7 +171,7 @@ export class Bend extends Modifier {
     let total_width = 0;
     for (let i = 0; i < this.phrase.length; ++i) {
       const bend = this.phrase[i];
-      if (bend.width) {
+      if (bend.width != undefined) {
         total_width += bend.width;
       } else {
         const additional_width =
