@@ -24,7 +24,6 @@ import { GlyphProps } from './glyph';
 import { GLYPH_PROPS_VALID_TYPES } from './common';
 import { Fraction } from './fraction';
 import { Beam } from './beam';
-import { Stem } from './stem';
 
 export interface Metrics {
   totalLeftPx?: number;
@@ -599,32 +598,6 @@ export abstract class Note extends Tickable {
   /** Sets preformatted status. */
   setPreFormatted(value: boolean): void {
     this.preFormatted = value;
-  }
-
-  // Get the number of beams for this duration
-  getBeamCount(): number {
-    const glyph = this.getGlyph();
-
-    if (glyph) {
-      return glyph.beam_count;
-    } else {
-      return 0;
-    }
-  }
-
-  // Get and set the note's `Stem`
-  getStem(): Stem | undefined {
-    return undefined;
-  }
-
-  // Get StemX
-  getStemX(): number {
-    throw new Vex.RERR('NoStem', 'No stem attached to this note.');
-  }
-
-  // Set the direction of the stem
-  setStemDirection(direction: number): this {
-    throw new Vex.RERR('NoStem', `Calling getStemDirection(${direction}) in Note.`);
   }
 
   // Get the direction of the stem
