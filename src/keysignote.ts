@@ -23,6 +23,9 @@ export class KeySigNote extends Note {
   }
 
   preFormat(): this {
+    if (!this.stave) {
+      throw new Vex.RERR('NoStave', 'No stave attached to this note.');
+    }
     this.setPreFormatted(true);
     this.keySignature.setStave(this.stave);
     this.keySignature.format();
@@ -37,7 +40,7 @@ export class KeySigNote extends Note {
 
     const ctx = this.stave.checkContext();
     this.setRendered();
-    this.keySignature.x = this.getAbsoluteX();
+    this.keySignature.setX(this.getAbsoluteX());
     this.keySignature.setContext(ctx);
     this.keySignature.draw();
   }
