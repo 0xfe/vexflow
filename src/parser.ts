@@ -4,7 +4,6 @@
 
 import { Vex } from './vex';
 import { Grammar } from './easyscore';
-import { Rule, Match, RuleFunction, TriggerState } from './types/common';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -15,6 +14,24 @@ function L(...args: any[]) {
 export const X = Vex.MakeException('ParserError');
 
 const NO_ERROR_POS = -1;
+
+type Match = string | Match[] | null;
+type RuleFunction = () => Rule;
+type TriggerFunction = (state?: { matches: Match[] }) => void;
+
+interface Rule {
+  // Lexer Rules
+  token?: string; // The token property is a string that is compiled into a RegExp.
+  noSpace?: boolean; // TODO: None of the EasyScore rules specify noSpace, so it is not used anywhere.
+
+  // Parser Rules
+  expect?: RuleFunction[];
+  zeroOrMore?: boolean;
+  oneOrMore?: boolean;
+  maybe?: boolean;
+  or?: boolean;
+  run?: TriggerFunction;
+}
 
 interface Result {
   success: boolean;
@@ -230,18 +247,17 @@ export class Parser {
     }
 
     // If there's a trigger attached to this rule, then run it.
-    // Make the matches accessible through `result.matches`, which is
-    // mapped to `state.matches` in the `run: (state) => ...` trigger.
-    result.matches = [];
+    // Make the matches accessible through `state.matches` in the
+    // `run: (state) => ...` trigger.
+    const matches: Match[] = [];
+    result.matches = matches;
     if (result.results) {
       result.results.forEach((r) => {
-        if (result.matches) {
-          result.matches.push(flattenMatches(r));
-        }
+        matches.push(flattenMatches(r));
       });
     }
     if (rule.run && result.success) {
-      rule.run(result as TriggerState);
+      rule.run({ matches });
     }
     return result;
   }
