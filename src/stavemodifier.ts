@@ -6,7 +6,7 @@
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
-
+import { Metrics } from './note';
 export interface LayoutMetrics {
   xMin: number;
   xMax: number;
@@ -14,18 +14,6 @@ export interface LayoutMetrics {
   paddingRight: number;
 }
 
-export interface Metrics {
-  totalLeftPx?: number;
-  totalRightPx?: number;
-  width: number;
-  glyphWidth?: number;
-  notePx?: number;
-  modLeftPx?: number;
-  modRightPx?: number;
-  leftDisplacedHeadPx?: number;
-  glyphPx?: number;
-  rightDisplacedHeadPx?: number;
-}
 export interface StaveModifierSpacer {
   getContext(): boolean;
   setStave(): void;
@@ -116,8 +104,15 @@ export class StaveModifier extends Element {
       renderToStave() {
         // do nothing
       },
-      getMetrics(): Metrics {
-        return { width: padding };
+      getMetrics(): Metrics  {
+        return {
+          width: padding,
+          notePx: 0,
+          modLeftPx: 0,
+          modRightPx: 0,
+          leftDisplacedHeadPx: 0,
+          rightDisplacedHeadPx: 0,
+        };
       },
     };
   }
