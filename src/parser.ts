@@ -13,14 +13,35 @@ function L(...args: any[]) {
 
 export const X = Vex.MakeException('ParserError');
 
+const NO_ERROR_POS = -1;
+
+interface Result {
+  success: boolean;
+
+  // Lexer Results
+  pos?: number;
+  incrementPos?: number;
+  matchedString?: string;
+
+  // Parser Results
+  matches?: Match[];
+  numMatches?: number;
+  results?: Result[];
+  errorPos?: number; // Set to NO_ERROR if successful. N if there is an error in the string.
+}
+
 // Converts parser results into an easy to reference list that can be
-// used in triggers.
-function flattenMatches(results) {
-  if (results.matchedString !== undefined) return results.matchedString;
-  if (results.results) return flattenMatches(results.results);
+// used in triggers. This function returns:
+// - nested array in which the leaf elements are string or null
+// - string (including empty strings)
+// - null
+function flattenMatches(r: Result | Result[]): Match {
+  if ('matchedString' in r) return r.matchedString as string; // string
+  if ('results' in r) return flattenMatches(r.results as Result[]);
+  const results = r as Result[];
   if (results.length === 1) return flattenMatches(results[0]);
   if (results.length === 0) return null;
-  return results.map(flattenMatches);
+  return results.map(flattenMatches); // nested array
 }
 
 // This is the base parser class. Given an arbitrary context-free grammar, it
