@@ -3,6 +3,7 @@
 // A generic text parsing class for VexFlow.
 
 import { Vex } from './vex';
+import { Grammar } from './easyscore';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 function L(...args) {
