@@ -10,9 +10,8 @@ import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args);
 }
 
@@ -35,8 +34,6 @@ export interface StemOptions {
 export class Stem extends Element {
   static DEBUG: boolean;
 
-  renderHeightAdjustment: number;
-
   protected hide: boolean;
   protected isStemlet: boolean;
   protected stemletHeight: number;
@@ -50,6 +47,7 @@ export class Stem extends Element {
   protected stem_down_y_base_offset: number = 0;
   protected stem_direction: number;
   protected stem_extension: number;
+  protected renderHeightAdjustment: number;
 
   static get CATEGORY(): string {
     return 'stem';
@@ -177,6 +175,14 @@ export class Stem extends Element {
     this.isStemlet = isStemlet;
     this.stemletHeight = stemletHeight;
     return this;
+  }
+
+  adjustHeightForFlag() {
+    this.renderHeightAdjustment = this.musicFont.lookupMetric('stem.renderHeightAdjustmentForFlag', -3);
+  }
+
+  adjustHeightForBeam() {
+    this.renderHeightAdjustment = -Stem.WIDTH / 2;
   }
 
   // Render the stem onto the canvas

@@ -893,7 +893,7 @@ export class StaveNote extends StemmableNote {
       modifier = a;
     } else if (typeof a === 'number' && typeof b === 'object') {
       // eslint-disable-next-line
-      console.warn("deprecated call signature to addModifier, use addModifier(modifier, index) instead");
+      console.warn('deprecated call signature to addModifier, use addModifier(modifier, index) instead');
       index = a;
       modifier = b;
     } else {
@@ -1214,7 +1214,7 @@ export class StaveNote extends StemmableNote {
     // If we will render a flag, we shorten the stem so that the tip
     // does not poke through the flag.
     if (this.shouldDrawFlag() && this.stem) {
-      this.stem.renderHeightAdjustment = -3;
+      this.stem.adjustHeightForFlag();
     }
 
     ctx.openGroup('stem', undefined, { pointerBBox: true });
