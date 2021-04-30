@@ -50,31 +50,40 @@ function flattenMatches(r: Result | Result[]): Match {
 export class Parser {
   static DEBUG: boolean = false;
 
+  protected grammar: Grammar;
+
+  protected line: string; // Use RegExp to extract tokens from this line.
+  protected pos: number;
+  protected errorPos: number;
+
   // For an example of a simple grammar, take a look at tests/parser_tests.js or
-  // the EasyScore grammar in easyscore.js.
-  constructor(grammar) {
+  // the EasyScore grammar in easyscore.ts.
+  constructor(grammar: Grammar) {
     this.grammar = grammar;
+    this.line = '';
+    this.pos = 0;
+    this.errorPos = NO_ERROR_POS;
   }
 
-  // Parse `line` using current grammar. Returns {success: true} if the
+  // Parse `line` using current grammar. Returns `{success: true}` if the
   // line parsed correctly, otherwise returns `{success: false, errorPos: N}`
   // where `errorPos` is the location of the error in the string.
-  parse(line) {
+  parse(line: string): Result {
     this.line = line;
     this.pos = 0;
-    this.errorPos = -1;
-    const results = this.expect(this.grammar.begin());
-    results.errorPos = this.errorPos;
-    return results;
+    this.errorPos = NO_ERROR_POS;
+    const result = this.expect(this.grammar.begin());
+    result.errorPos = this.errorPos;
+    return result;
   }
 
-  matchFail(returnPos) {
-    if (this.errorPos === -1) this.errorPos = this.pos;
+  matchFail(returnPos: number): void {
+    if (this.errorPos === NO_ERROR_POS) this.errorPos = this.pos;
     this.pos = returnPos;
   }
 
-  matchSuccess() {
-    this.errorPos = -1;
+  matchSuccess(): void {
+    this.errorPos = NO_ERROR_POS;
   }
 
   // Look for `token` in this.line[this.pos], and return success
