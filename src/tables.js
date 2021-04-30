@@ -36,6 +36,7 @@ const Flow = {
   durationToFraction: durationToFraction,
   durationToNumber: durationToNumber,
   getGlyphProps: getGlyphProps,
+  textWidth: textWidth,
 };
 
 Flow.clefProperties = (clef) => {
@@ -236,7 +237,9 @@ Flow.tabToGlyph = (fret, scale = 1.0) => {
   };
 };
 
-Flow.textWidth = (text) => 7 * text.toString().length;
+function textWidth(text) {
+  return 7 * text.toString().length;
+}
 
 Flow.articulationCodes = (artic) => Flow.articulationCodes.articulations[artic];
 

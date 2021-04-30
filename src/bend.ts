@@ -7,6 +7,22 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
+
+export interface BendPhrase {
+  x?: number;
+  type: number;
+  text: string;
+  width?: number;
+  draw_width?: number;
+}
+
+export interface BendRenderOptions {
+  line_width: number;
+  release_width: number;
+  bend_width: number;
+  line_style: string;
+}
+
 /**
    @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
    @param release If true, render a release. (DEPRECATED)
@@ -42,20 +58,35 @@ import { Modifier } from './modifier';
      }]
  */
 export class Bend extends Modifier {
-  static get CATEGORY() {
+  protected text: string;
+  protected release: boolean;
+  protected phrase: BendPhrase[];
+  protected font: string;
+  protected render_options: BendRenderOptions;
+
+  static get CATEGORY(): string {
     return 'bends';
   }
 
-  static get UP() {
+  static get UP(): number {
     return 0;
   }
-  static get DOWN() {
+
+  static get DOWN(): number {
     return 1;
   }
 
   // ## Static Methods
   // Arrange bends in `ModifierContext`
-  static format(bends, state) {
+  static format(
+    bends: Bend[],
+    state: {
+      right_shift: number;
+      left_shift: number;
+      text_line: number;
+      top_text_line: number;
+    }
+  ): boolean {
     if (!bends || bends.length === 0) return false;
 
     let last_width = 0;
@@ -76,7 +107,7 @@ export class Bend extends Modifier {
   }
 
   // ## Prototype Methods
-  constructor(text, release, phrase) {
+  constructor(text: string, release: boolean, phrase: BendPhrase[]) {
     super();
     this.setAttribute('type', 'Bend');
 
@@ -102,28 +133,34 @@ export class Bend extends Modifier {
     this.updateWidth();
   }
 
-  getCategory() {
+  getCategory(): string {
     return Bend.CATEGORY;
   }
 
-  setXShift(value) {
+  setXShift(value: number): this {
     this.x_shift = value;
     this.updateWidth();
+    return this;
   }
-  setFont(font) {
+
+  setFont(font: string): this {
     this.font = font;
     return this;
   }
-  getText() {
+
+  getText(): string {
     return this.text;
   }
-  updateWidth() {
+
+  updateWidth(): this {
+    // eslint-disable-next-line
     const that = this;
 
-    function measure_text(text) {
+    function measure_text(text: string) {
       let text_width;
-      if (that.context) {
-        text_width = that.context.measureText(text).width;
+      const ctxThat = that.getContext();
+      if (ctxThat) {
+        text_width = ctxThat.measureText(text).width;
       } else {
         text_width = Flow.textWidth(text);
       }
@@ -134,7 +171,7 @@ export class Bend extends Modifier {
     let total_width = 0;
     for (let i = 0; i < this.phrase.length; ++i) {
       const bend = this.phrase[i];
-      if ('width' in bend) {
+      if (bend.width != undefined) {
         total_width += bend.width;
       } else {
         const additional_width =
@@ -149,8 +186,9 @@ export class Bend extends Modifier {
     this.setWidth(total_width + this.x_shift);
     return this;
   }
-  draw() {
-    this.checkContext();
+
+  draw(): void {
+    const ctx = this.checkContext();
     if (!(this.note && this.index != null)) {
       throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
     }
@@ -162,12 +200,16 @@ export class Bend extends Modifier {
     start.y += 0.5;
     const x_shift = this.x_shift;
 
-    const ctx = this.context;
-    const bend_height = this.note.getStave().getYForTopText(this.text_line) + 3;
-    const annotation_y = this.note.getStave().getYForTopText(this.text_line) - 1;
+    const stave = this.note.getStave();
+    if (!stave) {
+      throw new Vex.RERR('NoStaveForBend', "Can't draw bend without a stave.");
+    }
+    const bend_height = stave.getYForTopText(this.text_line) + 3;
+    const annotation_y = stave.getYForTopText(this.text_line) - 1;
+    // eslint-disable-next-line
     const that = this;
 
-    function renderBend(x, y, width, height) {
+    function renderBend(x: number, y: number, width: number, height: number) {
       const cp_x = x + width;
       const cp_y = y;
 
@@ -182,7 +224,7 @@ export class Bend extends Modifier {
       ctx.restore();
     }
 
-    function renderRelease(x, y, width, height) {
+    function renderRelease(x: number, y: number, width: number, height: number) {
       ctx.save();
       ctx.beginPath();
       ctx.setLineWidth(that.render_options.line_width);
@@ -194,7 +236,7 @@ export class Bend extends Modifier {
       ctx.restore();
     }
 
-    function renderArrowHead(x, y, direction) {
+    function renderArrowHead(x: number, y: number, direction?: number) {
       const width = 4;
       const dir = direction || 1;
 
@@ -206,7 +248,7 @@ export class Bend extends Modifier {
       ctx.fill();
     }
 
-    function renderText(x, text) {
+    function renderText(x: number, text: string) {
       ctx.save();
       ctx.setRawFont(that.font);
       const render_x = x - ctx.measureText(text).width / 2;
@@ -214,13 +256,15 @@ export class Bend extends Modifier {
       ctx.restore();
     }
 
-    let last_bend = null;
+    let last_bend = undefined;
+    let last_bend_draw_width = 0;
     let last_drawn_width = 0;
     for (let i = 0; i < this.phrase.length; ++i) {
       const bend = this.phrase[i];
+      if (!bend.draw_width) bend.draw_width = 0;
       if (i === 0) bend.draw_width += x_shift;
 
-      last_drawn_width = bend.draw_width + (last_bend ? last_bend.draw_width : 0) - (i === 1 ? x_shift : 0);
+      last_drawn_width = bend.draw_width + last_bend_draw_width - (i === 1 ? x_shift : 0);
       if (bend.type === Bend.UP) {
         if (last_bend && last_bend.type === Bend.UP) {
           renderArrowHead(start.x, bend_height);
@@ -247,9 +291,14 @@ export class Bend extends Modifier {
 
       renderText(start.x + last_drawn_width, bend.text);
       last_bend = bend;
+      last_bend_draw_width = bend.draw_width;
       last_bend.x = start.x;
 
       start.x += last_drawn_width;
+    }
+
+    if (!last_bend || last_bend.x == undefined) {
+      throw new Vex.RERR('NoLastBendForBend', 'Internal error.');
     }
 
     // Final arrowhead and text
