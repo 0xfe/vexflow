@@ -4,9 +4,10 @@
 
 import { Vex } from './vex';
 import { Grammar } from './easyscore';
+import { Rule, Match, RuleFunction, TriggerFunction, TriggerState } from './types/common';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
-function L(...args) {
+function L(...args: any[]) {
   if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args);
 }
 
@@ -26,6 +27,8 @@ function flattenMatches(results) {
 // can parse any line and execute code when specific rules are met (e.g.,
 // when a string is terminated.)
 export class Parser {
+  static DEBUG: boolean = false;
+
   // For an example of a simple grammar, take a look at tests/parser_tests.js or
   // the EasyScore grammar in easyscore.js.
   constructor(grammar) {

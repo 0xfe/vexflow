@@ -103,3 +103,25 @@ export interface ModifierContextState {
   text_line: number;
   top_text_line: number;
 }
+
+
+/* TODO: Move to EasyScore / Grammar / Parser */
+export type Match = string | Match[];
+export interface Rule {
+  // Lexer Rules
+  token?: string; // The token property is a string that is compiled into a RegExp.
+  noSpace?: boolean; // TODO: None of the EasyScore rules specify noSpace, so it is not used anywhere.
+
+  // Parser Rules
+  expect?: RuleFunction[];
+  zeroOrMore?: boolean;
+  oneOrMore?: boolean;
+  maybe?: boolean;
+  or?: boolean;
+  run?: TriggerFunction;
+}
+export interface TriggerState {
+    matches: Match[];
+}
+export type RuleFunction = () => Rule;
+export type TriggerFunction = (state?: TriggerState) => void;
