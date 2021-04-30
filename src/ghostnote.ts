@@ -4,16 +4,15 @@
 
 import { Vex } from './vex';
 import { StemmableNote } from './stemmablenote';
+import { Stave } from './stave';
+import { NoteStruct } from './note';
 
 export class GhostNote extends StemmableNote {
   /** @constructor */
-  constructor(parameter) {
+  constructor(parameter: string | NoteStruct) {
     // Sanity check
     if (!parameter) {
-      throw new Vex.RuntimeError(
-        'BadArguments',
-        'Ghost note must have valid initialization data to identify ' + 'duration.'
-      );
+      throw new Vex.RERR('BadArguments', 'Ghost note must have valid initialization data to identify duration.');
     }
 
     let note_struct;
@@ -37,31 +36,32 @@ export class GhostNote extends StemmableNote {
     this.setWidth(0);
   }
 
-  isRest() {
+  isRest(): boolean {
     return true;
   }
 
-  setStave(stave) {
+  setStave(stave: Stave): this {
     super.setStave(stave);
+    return this;
   }
 
-  addToModifierContext() {
+  addToModifierContext(): this {
     /* intentionally overridden */ return this;
   }
 
-  preFormat() {
+  preFormat(): this {
     this.setPreFormatted(true);
     return this;
   }
 
-  draw() {
+  draw(): void {
     if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
 
     // Draw the modifiers
     this.setRendered();
     for (let i = 0; i < this.modifiers.length; ++i) {
       const modifier = this.modifiers[i];
-      modifier.setContext(this.context);
+      modifier.setContext(this.getContext());
       modifier.drawWithStyle();
     }
   }
