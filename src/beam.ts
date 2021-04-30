@@ -131,7 +131,7 @@ export class Beam extends Element {
   // * `stem_direction` - A stem direction to apply to the entire voice
   // * `groups` - An array of `Fraction` representing beat groupings for the beam
   static applyAndGetBeams(voice: Voice, stem_direction?: number, groups?: Fraction[]): Beam[] {
-    return Beam.generateBeams(voice.getTickables(), {
+    return Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       groups,
       stem_direction,
     });

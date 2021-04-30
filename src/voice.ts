@@ -9,23 +9,52 @@ import { Vex } from './vex';
 import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
+import { Stave } from './stave';
+import { VoiceGroup } from './voicegroup';
+import { Note } from './note';
+import { BoundingBox } from './boundingbox';
+import { Tickable } from './tickable';
+import { RenderContext } from './types/common';
+
+export interface VoiceTime {
+  num_beats: number;
+  beat_value: number;
+  resolution: number;
+}
+
+export enum VoiceMode {
+  STRICT = 1,
+  SOFT = 2,
+  FULL = 3,
+}
 
 export class Voice extends Element {
+  protected resolutionMultiplier: number;
+  protected smallestTickCount: Fraction;
+  protected stave?: Stave;
+  protected mode: VoiceMode;
+  protected voiceGroup?: VoiceGroup;
+  protected expTicksUsed?: number;
+  protected preFormatted?: boolean;
+  protected options: { softmaxFactor: number };
+
+  protected readonly totalTicks: Fraction;
+  protected readonly ticksUsed: Fraction;
+  protected readonly largestTickWidth: number;
+  protected readonly tickables: Note[];
+  protected readonly time: VoiceTime;
+
   // Modes allow the addition of ticks in three different ways:
   //
   // STRICT: This is the default. Ticks must fill the voice.
   // SOFT:   Ticks can be added without restrictions.
   // FULL:   Ticks do not need to fill the voice, but can't exceed the maximum
   //         tick length.
-  static get Mode() {
-    return {
-      STRICT: 1,
-      SOFT: 2,
-      FULL: 3,
-    };
+  static get Mode(): typeof VoiceMode {
+    return VoiceMode;
   }
 
-  constructor(time, options) {
+  constructor(time: VoiceTime | string, options?: { softmaxFactor: number }) {
     super();
     this.setAttribute('type', 'Voice');
 
@@ -39,8 +68,8 @@ export class Voice extends Element {
       const match = time.match(/(\d+)\/(\d+)/);
       if (match) {
         time = {
-          num_beats: match[1],
-          beat_value: match[2],
+          num_beats: parseInt(match[1]),
+          beat_value: parseInt(match[2]),
           resolution: Flow.RESOLUTION,
         };
       }
@@ -66,67 +95,64 @@ export class Voice extends Element {
     this.ticksUsed = new Fraction(0, 1);
     this.smallestTickCount = this.totalTicks.clone();
     this.largestTickWidth = 0;
-    this.stave = null;
     // Do we care about strictly timed notes
     this.mode = Voice.Mode.STRICT;
-
-    // This must belong to a VoiceGroup
-    this.voiceGroup = null;
   }
 
   // Get the total ticks in the voice
-  getTotalTicks() {
+  getTotalTicks(): Fraction {
     return this.totalTicks;
   }
 
   // Get the total ticks used in the voice by all the tickables
-  getTicksUsed() {
+  getTicksUsed(): Fraction {
     return this.ticksUsed;
   }
 
   // Get the largest width of all the tickables
-  getLargestTickWidth() {
+  getLargestTickWidth(): number {
     return this.largestTickWidth;
   }
 
   // Get the tick count for the shortest tickable
-  getSmallestTickCount() {
+  getSmallestTickCount(): Fraction {
     return this.smallestTickCount;
   }
 
   // Get the tickables in the voice
-  getTickables() {
+  getTickables(): Note[] {
     return this.tickables;
   }
 
   // Get/set the voice mode, use a value from `Voice.Mode`
-  getMode() {
+  getMode(): number {
     return this.mode;
   }
-  setMode(mode) {
+
+  setMode(mode: number): this {
     this.mode = mode;
     return this;
   }
 
   // Get the resolution multiplier for the voice
-  getResolutionMultiplier() {
+  getResolutionMultiplier(): number {
     return this.resolutionMultiplier;
   }
 
   // Get the actual tick resolution for the voice
-  getActualResolution() {
+  getActualResolution(): number {
     return this.resolutionMultiplier * this.time.resolution;
   }
 
   // Set the voice's stave
-  setStave(stave) {
+  setStave(stave: Stave): this {
     this.stave = stave;
-    this.boundingBox = null; // Reset bounding box so we can reformat
+    this.boundingBox = undefined; // Reset bounding box so we can reformat
     return this;
   }
 
   // Get the bounding box for the voice
-  getBoundingBox() {
+  getBoundingBox(): BoundingBox | undefined {
     let stave;
     let boundingBox;
     let bb;
@@ -135,7 +161,7 @@ export class Voice extends Element {
     if (!this.boundingBox) {
       if (!this.stave) throw new Vex.RERR('NoStave', "Can't get bounding box without stave.");
       stave = this.stave;
-      boundingBox = null;
+      boundingBox = undefined;
 
       for (i = 0; i < this.tickables.length; ++i) {
         this.tickables[i].setStave(stave);
@@ -153,7 +179,7 @@ export class Voice extends Element {
 
   // Every tickable must be associated with a voiceGroup. This allows formatters
   // and preformatters to associate them with the right modifierContexts.
-  getVoiceGroup() {
+  getVoiceGroup(): VoiceGroup {
     if (!this.voiceGroup) {
       throw new Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
     }
@@ -162,19 +188,19 @@ export class Voice extends Element {
   }
 
   // Set the voice group
-  setVoiceGroup(g) {
+  setVoiceGroup(g: VoiceGroup): this {
     this.voiceGroup = g;
     return this;
   }
 
   // Set the voice mode to strict or soft
-  setStrict(strict) {
+  setStrict(strict: boolean): this {
     this.mode = strict ? Voice.Mode.STRICT : Voice.Mode.SOFT;
     return this;
   }
 
   // Determine if the voice is complete according to the voice mode
-  isComplete() {
+  isComplete(): boolean {
     if (this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) {
       return this.ticksUsed.equals(this.totalTicks);
     } else {
@@ -187,34 +213,34 @@ export class Voice extends Element {
   // the layout.
   //
   // The softmax of all the tickables in this voice should sum to 1.
-  setSoftmaxFactor(factor) {
+  setSoftmaxFactor(factor: number): this {
     this.options.softmaxFactor = factor;
     return this;
   }
 
   // Calculate the sum of the exponents of all the ticks in this voice to use as the denominator
   // of softmax.
-  reCalculateExpTicksUsed() {
+  reCalculateExpTicksUsed(): number {
     const totalTicks = this.ticksUsed.value();
-    const exp = (tickable) => Math.pow(this.options.softmaxFactor, tickable.getTicks().value() / totalTicks);
+    const exp = (tickable: Tickable) => Math.pow(this.options.softmaxFactor, tickable.getTicks().value() / totalTicks);
     this.expTicksUsed = this.tickables.map(exp).reduce((a, b) => a + b);
     return this.expTicksUsed;
   }
 
   // Get the softmax-scaled value of a tick duration. 'tickValue' is a number.
-  softmax(tickValue) {
+  softmax(tickValue: number): number {
     if (!this.expTicksUsed) {
-      this.reCalculateExpTicksUsed();
+      this.expTicksUsed = this.reCalculateExpTicksUsed();
     }
 
     const totalTicks = this.ticksUsed.value();
-    const exp = (v) => Math.pow(this.options.softmaxFactor, v / totalTicks);
+    const exp = (v: number) => Math.pow(this.options.softmaxFactor, v / totalTicks);
     const sm = exp(tickValue) / this.expTicksUsed;
     return sm;
   }
 
   // Add a tickable to the voice
-  addTickable(tickable) {
+  addTickable(tickable: Note): this {
     if (!tickable.shouldIgnoreTicks()) {
       const ticks = tickable.getTicks();
 
@@ -248,7 +274,7 @@ export class Voice extends Element {
   }
 
   // Add an array of tickables to the voice.
-  addTickables(tickables) {
+  addTickables(tickables: Note[]): this {
     for (let i = 0; i < tickables.length; ++i) {
       this.addTickable(tickables[i]);
     }
@@ -257,12 +283,15 @@ export class Voice extends Element {
   }
 
   // Preformats the voice by applying the voice's stave to each note.
-  preFormat() {
+  preFormat(): this {
     if (this.preFormatted) return this;
-
+    const stave = this.stave;
+    if (!stave) {
+      throw new Vex.RERR('NoStave', "Can't preFormat without stave.");
+    }
     this.tickables.forEach((tickable) => {
       if (!tickable.getStave()) {
-        tickable.setStave(this.stave);
+        tickable.setStave(stave);
       }
     });
 
@@ -273,9 +302,9 @@ export class Voice extends Element {
   // Render the voice onto the canvas `context` and an optional `stave`.
   // If `stave` is omitted, it is expected that the notes have staves
   // already set.
-  draw(context = this.context, stave = this.stave) {
+  draw(context: RenderContext = this.checkContext(), stave: Stave | undefined = this.stave): void {
     this.setRendered();
-    let boundingBox = null;
+    let boundingBox = undefined;
     for (let i = 0; i < this.tickables.length; ++i) {
       const tickable = this.tickables[i];
 

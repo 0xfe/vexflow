@@ -131,7 +131,9 @@ export abstract class Element {
   }
 
   /** Draws an element. */
-  abstract draw(element?: Element, x_shift?: number): void;
+  abstract draw(
+    // eslint-disable-next-line
+    ...args: any []): void;
 
   /** Checkes if it has a class label (An element can have multiple class labels).  */
   hasClass(className: string): boolean {
