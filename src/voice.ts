@@ -22,7 +22,7 @@ export interface VoiceTime {
   resolution: number;
 }
 
-export enum Mode {
+export enum VoiceMode {
   STRICT = 1,
   SOFT = 2,
   FULL = 3,
@@ -32,7 +32,7 @@ export class Voice extends Element {
   protected resolutionMultiplier: number;
   protected smallestTickCount: Fraction;
   protected stave?: Stave;
-  protected mode: Mode;
+  protected mode: VoiceMode;
   protected voiceGroup?: VoiceGroup;
   protected expTicksUsed?: number;
   protected preFormatted?: boolean;
@@ -50,8 +50,8 @@ export class Voice extends Element {
   // SOFT:   Ticks can be added without restrictions.
   // FULL:   Ticks do not need to fill the voice, but can't exceed the maximum
   //         tick length.
-  static get Mode(): typeof Mode {
-    return Mode;
+  static get Mode(): typeof VoiceMode {
+    return VoiceMode;
   }
 
   constructor(time: VoiceTime | string, options?: { softmaxFactor: number }) {
@@ -285,10 +285,13 @@ export class Voice extends Element {
   // Preformats the voice by applying the voice's stave to each note.
   preFormat(): this {
     if (this.preFormatted) return this;
-
+    const stave = this.stave;
+    if (!stave) {
+      throw new Vex.RERR('NoStave', "Can't preFormat without stave.");
+    }
     this.tickables.forEach((tickable) => {
-      if (!tickable.getStave() && this.stave) {
-        tickable.setStave(this.stave);
+      if (!tickable.getStave()) {
+        tickable.setStave(stave);
       }
     });
 
