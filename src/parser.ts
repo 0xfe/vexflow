@@ -50,8 +50,11 @@ interface Result {
 }
 
 // Converts parser results into an easy to reference list that can be used in triggers.
-// eventually returns: string (including empty strings) | nested array | null
-type Match = null | string | Array<Match>;
+// returns:
+// - nested array in which the leaf elements are string or null
+// - string (including empty strings)
+// - null
+type Match = string | Match[] | null;
 function flattenMatches(r: Result | Result[]): Match {
   if ('matchedString' in r) return r.matchedString as string; // string
   if ('results' in r) return flattenMatches(r.results as Result[]);
@@ -73,7 +76,7 @@ export class Parser {
   private errorPos: number;
 
   // For an example of a simple grammar, take a look at tests/parser_tests.js or
-  // the EasyScore grammar in easyscore.js.
+  // the EasyScore grammar in easyscore.ts.
   constructor(grammar: Grammar) {
     this.grammar = grammar;
     this.line = '';
@@ -81,7 +84,7 @@ export class Parser {
     this.errorPos = NO_ERROR_POS;
   }
 
-  // Parse `line` using current grammar. Returns {success: true} if the
+  // Parse `line` using current grammar. Returns `{success: true}` if the
   // line parsed correctly, otherwise returns `{success: false, errorPos: N}`
   // where `errorPos` is the location of the error in the string.
   public parse(line: string): Result {
@@ -126,7 +129,7 @@ export class Parser {
   // Execute rule to match a sequence of tokens (or rules). If `maybe` is
   // set, then return success even if the token is not found, but reset
   // the position before exiting.
-  // TODO: expectOne(...) is never called with the 'maybe' parameter.
+  // TODO: expectOne(...) is never called with the `maybe` parameter.
   private expectOne(rule: Rule, maybe: boolean = false): Result {
     const results: Result[] = [];
     const pos = this.pos;
@@ -183,9 +186,8 @@ export class Parser {
       if (result.success && result.results) {
         numMatches++;
         // TODO: Is it okay to use the spread operator here to flatten the results?
-        // It fixes a TypeScript error, and seems help reduce the number of calls to flattenMatches()
+        // It fixes a TypeScript error, and reduces the number of calls to flattenMatches().
         results.push(...result.results);
-        // results.push(result.results);
       } else {
         more = false;
       }
@@ -234,7 +236,7 @@ export class Parser {
         this.pos += result.incrementPos as number;
       }
     } else if (rule.expect) {
-      // A parser rule has a `expect` property.
+      // A parser rule has an `expect` property.
       if (rule.oneOrMore) {
         result = this.expectOneOrMore(rule);
       } else if (rule.zeroOrMore) {
