@@ -106,7 +106,7 @@ export interface ModifierContextState {
 
 
 /* TODO: Move to EasyScore / Grammar / Parser */
-export type Match = string | Match[];
+export type Match = string | Match[] | null;
 export interface Rule {
   // Lexer Rules
   token?: string; // The token property is a string that is compiled into a RegExp.
