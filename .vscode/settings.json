@@ -1,17 +1,18 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "eslint.enable": true,
-    "files.associations": {
-		"src/*.js": "javascript"
-	},
-    "search.exclude": {
-		"build/": true,
-		"node_modules/": true,
-        "docs": true
-	},
+  "eslint.enable": true,
+  "files.associations": {
+    "src/*.js": "javascript"
+  },
+  "search.exclude": {
+    "build/": true,
+    "node_modules/": true,
+    "docs/": true,
+    "releases/": true
+  },
   "editor.tabSize": 2,
   "eslint.format.enable": true,
   "javascript.format.enable": false,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
