@@ -2,7 +2,6 @@
 // Author Radosaw Eichler 2012
 
 import { Flow } from './tables';
-import { Modifier } from './modifier';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 
@@ -16,7 +15,7 @@ export class StaveTempo extends StaveModifier {
     this.setAttribute('type', 'StaveTempo');
 
     this.tempo = tempo;
-    this.position = Modifier.Position.ABOVE;
+    this.position = StaveModifier.Position.ABOVE;
     this.x = x;
     this.shift_x = 10;
     this.shift_y = shift_y;
