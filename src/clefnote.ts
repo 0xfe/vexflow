@@ -7,8 +7,9 @@ import { Vex } from './vex';
 import { Note } from './note';
 import { Clef } from './clef';
 import { Glyph } from './glyph';
-import { RenderContext, ClefType } from './types/common';
+import { RenderContext } from './types/common';
 import { BoundingBox } from './boundingbox';
+import { ClefType } from './clef';
 
 /** @constructor */
 export class ClefNote extends Note {
@@ -82,7 +83,7 @@ export class ClefNote extends Note {
     const abs_x = this.getAbsoluteX();
 
     this.glyph.setStave(this.stave);
-    this.glyph.setYShift(this.stave.getYForLine(this.clef.line) - this.stave.getYForGlyphs());
+    this.glyph.setYShift(this.stave.getYForLine(this.clef.line ?? 0) - this.stave.getYForGlyphs());
     this.glyph.renderToStave(abs_x);
 
     // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
