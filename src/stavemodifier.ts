@@ -6,19 +6,12 @@
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
-import { Metrics } from './note';
+
 export interface LayoutMetrics {
   xMin: number;
   xMax: number;
   paddingLeft: number;
   paddingRight: number;
-}
-
-export interface StaveModifierSpacer {
-  getContext(): boolean;
-  setStave(): void;
-  renderToStave(): void;
-  getMetrics(): Metrics;
 }
 
 export enum Position {
@@ -88,33 +81,6 @@ export class StaveModifier extends Element {
 
   getCategory(): string {
     return '';
-  }
-
-  makeSpacer(padding: number): StaveModifierSpacer {
-    // TODO(0xfe): Return an instance of type `Spacer` based on `GhostNote`
-    // instead of this hack.
-
-    return {
-      getContext() {
-        return true;
-      },
-      setStave() {
-        // do nothing
-      },
-      renderToStave() {
-        // do nothing
-      },
-      getMetrics(): Metrics  {
-        return {
-          width: padding,
-          notePx: 0,
-          modLeftPx: 0,
-          modRightPx: 0,
-          leftDisplacedHeadPx: 0,
-          rightDisplacedHeadPx: 0,
-        };
-      },
-    };
   }
 
   placeGlyphOnLine(glyph: Glyph, stave: Stave, line: number, customShift = 0): void {
