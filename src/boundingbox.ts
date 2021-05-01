@@ -3,58 +3,76 @@
 //
 // Copyright Mohit Muthanna 2010
 
+import { RenderContext } from './types/common';
+
 // Bounding boxes for interactive notation
 
 export class BoundingBox {
-  static copy(that) {
+  protected x: number;
+  protected y: number;
+  protected w: number;
+  protected h: number;
+
+  static copy(that: BoundingBox): BoundingBox {
     return new BoundingBox(that.x, that.y, that.w, that.h);
   }
 
-  constructor(x, y, w, h) {
+  constructor(x: number, y: number, w: number, h: number) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
   }
-  getX() {
+
+  getX(): number {
     return this.x;
   }
-  getY() {
+
+  getY(): number {
     return this.y;
   }
-  getW() {
+
+  getW(): number {
     return this.w;
   }
-  getH() {
+
+  getH(): number {
     return this.h;
   }
-  setX(x) {
+
+  setX(x: number): this {
     this.x = x;
     return this;
   }
-  setY(y) {
+
+  setY(y: number): this {
     this.y = y;
     return this;
   }
-  setW(w) {
+
+  setW(w: number): this {
     this.w = w;
     return this;
   }
-  setH(h) {
+
+  setH(h: number): this {
     this.h = h;
     return this;
   }
-  move(x, y) {
+
+  move(x: number, y: number): this {
     this.x += x;
     this.y += y;
+    return this;
   }
-  clone() {
+
+  clone(): BoundingBox {
     return BoundingBox.copy(this);
   }
 
   // Merge my box with given box. Creates a bigger bounding box unless
   // the given box is contained in this one.
-  mergeWith(boundingBox, ctx) {
+  mergeWith(boundingBox: BoundingBox, ctx?: RenderContext): this {
     const that = boundingBox;
 
     const new_x = this.x < that.x ? this.x : that.x;
@@ -71,7 +89,7 @@ export class BoundingBox {
     return this;
   }
 
-  draw(ctx, x, y) {
+  draw(ctx: RenderContext, x?: number, y?: number): void {
     if (!x) x = 0;
     if (!y) y = 0;
     ctx.rect(this.x + x, this.y + y, this.w, this.h);

@@ -10,7 +10,12 @@
 // nvg.js#L449
 
 export class BoundingBoxComputation {
-  constructor(x1, y1, x2, y2) {
+  protected x1: number;
+  protected y1: number;
+  protected x2: number;
+  protected y2: number;
+
+  constructor(x1?: number, y1?: number, x2?: number, y2?: number) {
     // pass in initial points if you want
     this.x1 = Number.NaN;
     this.y1 = Number.NaN;
@@ -21,20 +26,28 @@ export class BoundingBoxComputation {
     this.addPoint(x2, y2);
   }
 
-  width() {
+  getX1(): number {
+    return this.x1;
+  }
+
+  getY1(): number {
+    return this.y1;
+  }
+
+  width(): number {
     return this.x2 - this.x1;
   }
 
-  height() {
+  height(): number {
     return this.y2 - this.y1;
   }
 
-  noOp() {
+  noOp(): void {
     // do nothing
   }
 
-  addPoint(x, y) {
-    if (x != null) {
+  addPoint(x: number | undefined, y: number | undefined): void {
+    if (x != undefined) {
       if (isNaN(this.x1) || isNaN(this.x2)) {
         this.x1 = x;
         this.x2 = x;
@@ -43,7 +56,7 @@ export class BoundingBoxComputation {
       if (x > this.x2) this.x2 = x;
     }
 
-    if (y != null) {
+    if (y != undefined) {
       if (isNaN(this.y1) || isNaN(this.y2)) {
         this.y1 = y;
         this.y2 = y;
@@ -53,15 +66,15 @@ export class BoundingBoxComputation {
     }
   }
 
-  addX(x) {
-    this.addPoint(x, null);
+  addX(x: number): void {
+    this.addPoint(x, undefined);
   }
 
-  addY(y) {
-    this.addPoint(null, y);
+  addY(y: number): void {
+    this.addPoint(undefined, y);
   }
 
-  addQuadraticCurve(p0x, p0y, p1x, p1y, p2x, p2y) {
+  addQuadraticCurve(p0x: number, p0y: number, p1x: number, p1y: number, p2x: number, p2y: number): void {
     const cp1x = p0x + (2 / 3) * (p1x - p0x); // CP1 = QP0 + 2/3 *(QP1-QP0)
     const cp1y = p0y + (2 / 3) * (p1y - p0y); // CP1 = QP0 + 2/3 *(QP1-QP0)
     const cp2x = cp1x + (1 / 3) * (p2x - p0x); // CP2 = CP1 + 1/3 *(QP2-QP0)
@@ -69,7 +82,16 @@ export class BoundingBoxComputation {
     this.addBezierCurve(p0x, p0y, cp1x, cp1y, cp2x, cp2y, p2x, p2y);
   }
 
-  addBezierCurve(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y) {
+  addBezierCurve(
+    p0x: number,
+    p0y: number,
+    p1x: number,
+    p1y: number,
+    p2x: number,
+    p2y: number,
+    p3x: number,
+    p3y: number
+  ): void {
     // from http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html
     const p0 = [p0x, p0y];
     const p1 = [p1x, p1y];
@@ -80,7 +102,7 @@ export class BoundingBoxComputation {
     this.addPoint(p0[0], p0[1]);
     this.addPoint(p3[0], p3[1]);
 
-    const f = (t, i) =>
+    const f = (t: number, i: number) =>
       Math.pow(1 - t, 3) * p0[i] +
       3 * Math.pow(1 - t, 2) * t * p1[i] +
       3 * (1 - t) * Math.pow(t, 2) * p2[i] +
