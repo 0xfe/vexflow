@@ -6,11 +6,11 @@ export const GonvilleMetrics = {
   },
 
   clef: {
-    'default': {
+    default: {
       point: 40,
-      width: 26
+      width: 26,
     },
-    'small': {
+    small: {
       point: 32,
       width: 20,
     },
@@ -31,7 +31,7 @@ export const GonvilleMetrics = {
             line: -0.4,
             shiftX: 8,
           },
-        }
+        },
       },
       '8vb': {
         smuflCode: 'timeSig8',
@@ -44,7 +44,7 @@ export const GonvilleMetrics = {
           bass: {
             line: 4,
             shiftX: 1,
-          }
+          },
         },
         small: {
           point: 18,
@@ -55,9 +55,9 @@ export const GonvilleMetrics = {
           bass: {
             line: 3.5,
             shiftX: 0.5,
-          }
-        }
-      }
+          },
+        },
+      },
     },
 
     // May not need these anymore
@@ -67,16 +67,16 @@ export const GonvilleMetrics = {
       '6': { point: 40, shiftY: 1 },
       '5': { point: 30, shiftY: -6 },
       '4': { point: 23, shiftY: -12 },
-    }
+    },
   },
 
   pedalMarking: {
     up: {
-      point: 40
+      point: 40,
     },
     down: {
-      point: 40
-    }
+      point: 40,
+    },
   },
 
   tremolo: {
@@ -95,7 +95,7 @@ export const GonvilleMetrics = {
       offsetYStemDown: -21,
       offsetXStemUp: 6,
       offsetXStemDown: -2,
-    }
+    },
   },
 
   // These are for numeric digits, such as in time signatures
@@ -105,6 +105,7 @@ export const GonvilleMetrics = {
   },
 
   stem: {
+    heightAdjustmentForFlag: -3,
     // These are stem (Y) offsets to the note heads. To shift the
     // noteheads (x-position) themselves, see glyphs.notehead.custom.
     noteHead: {
@@ -132,38 +133,60 @@ export const GonvilleMetrics = {
         offsetYBaseStemUp: -4,
         offsetYBaseStemDown: 4,
       },
+      noteheadHalf: {
+        offsetYBaseStemUp: -1.5,
+        offsetYBaseStemDown: 1.5,
+      },
       noteheadBlack: {
-        offsetYBaseStemDown: 2,
+        offsetYBaseStemUp: -1.5,
+        offsetYBaseStemDown: 1.5,
       },
       noteheadSquareWhite: {
         offsetYBaseStemDown: -5,
         offsetYBaseStemUp: 5,
-      }
-    }
+      },
+    },
   },
 
   glyphs: {
+    flag: {
+      shiftX: -0.08,
+      flag8thDown: {
+        shiftX: -0.16,
+      },
+      flag16thDown: {
+        shiftX: -0.16,
+      },
+      flag32ndDown: {
+        shiftX: -0.16,
+      },
+      flag64thDown: {
+        shiftX: -0.16,
+      },
+      flag128thDown: {
+        shiftX: -0.16,
+      },
+    },
     textNote: {
       point: 40,
-      default: {
-      },
+      default: {},
       ornamentTrill: {
         shiftX: -5,
         shiftY: 4,
-      }
+      },
     },
     noteHead: {
       custom: {
-        'noteheadDiamondWholeStemUp': {
+        noteheadDiamondWholeStemUp: {
           shiftX: -6,
         },
-        'noteheadCircleXStemUp': {
+        noteheadCircleXStemUp: {
           shiftX: -1.5,
         },
-        'noteheadXWholeStemUp': {
+        noteheadXWholeStemUp: {
           shiftX: -5,
         },
-        'noteheadTriangleUpWholeStemUp': {
+        noteheadTriangleUpWholeStemUp: {
           shiftX: -6,
         },
       },
@@ -173,95 +196,95 @@ export const GonvilleMetrics = {
         superscriptOffset: -400,
         subscriptOffset: 300,
         kerningOffset: -250,
-        lowerKerningText:  ['D', 'F', 'P', 'T', 'V', 'Y'],
-        upperKerningText:  ['A', 'L'],
+        lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
+        upperKerningText: ['A', 'L'],
         spacing: 100,
-        superSubRatio: 0.66
+        superSubRatio: 0.66,
       },
       csymDiminished: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 506,
-        yOffset: 0
+        yOffset: 0,
       },
       csymHalfDiminished: {
         scale: 0.8,
         leftSideBearing: -32,
         advanceWidth: 506,
-        yOffset: 0
+        yOffset: 0,
       },
       csymAugmented: {
         scale: 1,
         leftSideBearing: 0,
         advanceWidth: 530,
-        yOffset: 0
+        yOffset: 0,
       },
       csymParensLeftTall: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 155,
-        yOffset: 250
+        yOffset: 250,
       },
       csymParensRightTall: {
         scale: 0.8,
         leftSideBearing: -40,
         advanceWidth: 189,
-        yOffset: 250
+        yOffset: 250,
       },
       csymBracketLeftTall: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 328,
-        yOffset: 0
+        yOffset: 0,
       },
       csymBracketRightTall: {
         scale: 0.8,
         leftSideBearing: 1,
         advanceWidth: 600,
-        yOffset: 0
+        yOffset: 0,
       },
       csymParensLeftVeryTall: {
         scale: 0.9,
         leftSideBearing: 0,
         advanceWidth: 121,
-        yOffset: 350
+        yOffset: 350,
       },
       csymParensRightVeryTall: {
         scale: 0.9,
         leftSideBearing: 50,
         advanceWidth: 111,
-        yOffset: 350
+        yOffset: 350,
       },
       csymDiagonalArrangementSlash: {
         scale: 0.6,
         leftSideBearing: -1,
         advanceWidth: 990,
-        yOffset: 0
+        yOffset: 0,
       },
       csymMinor: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 482,
-        yOffset: 0
+        yOffset: 0,
       },
       csymMajorSeventh: {
         scale: 0.9,
         leftSideBearing: 200,
         yOffset: 0,
-        advanceWidth: 600
+        advanceWidth: 600,
       },
       accidentalSharp: {
         scale: 0.75,
         leftSideBearing: 40,
         advanceWidth: 250,
-        yOffset: -402
+        yOffset: -402,
       },
       accidentalFlat: {
         scale: 0.95,
         leftSideBearing: -50,
         advanceWidth: 208,
-        yOffset: -184
-      }
+        yOffset: -184,
+      },
     },
     jazzOrnaments: {
       brassScoop: {
@@ -269,78 +292,78 @@ export const GonvilleMetrics = {
         xOffset: -12,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth: 10
+        reportedWidth: 10,
       },
       brassDoitMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassFallLipShort: {
         scale: 1.0,
         xOffset: 17,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassLiftMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 5,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassFallRoughMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 28,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassBend: {
         scale: 1.0,
         xOffset: 2,
         yOffset: -8,
         stemUpYOffset: 24,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassMuteClosed: {
         scale: 1.0,
         xOffset: 3,
         yOffset: -9,
         stemUpYOffset: 24,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassMuteOpen: {
         scale: 1.0,
         xOffset: 3,
         yOffset: -7,
         stemUpYOffset: 25,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassFlip: {
         scale: 1.0,
         xOffset: 10,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassJazzTurn: {
         scale: 1.0,
         xOffset: 6,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassSmear: {
         scale: 1.0,
         xOffset: 10,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
-    }
-  }
+    },
+  },
 };

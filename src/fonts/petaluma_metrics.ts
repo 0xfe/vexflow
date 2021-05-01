@@ -32,7 +32,7 @@ export const PetalumaMetrics = {
             line: -0.2,
             shiftX: 8,
           },
-        }
+        },
       },
       '8vb': {
         smuflCode: 'timeSig8',
@@ -45,7 +45,7 @@ export const PetalumaMetrics = {
           bass: {
             line: 3.5,
             shiftX: 1,
-          }
+          },
         },
         small: {
           point: 16,
@@ -56,9 +56,9 @@ export const PetalumaMetrics = {
           bass: {
             line: 3.1,
             shiftX: 0.5,
-          }
-        }
-      }
+          },
+        },
+      },
     },
 
     // These may no longer be necessary
@@ -68,16 +68,16 @@ export const PetalumaMetrics = {
       '6': { point: 32, shiftY: 1 },
       '5': { point: 30, shiftY: -6 },
       '4': { point: 23, shiftY: -12 },
-    }
+    },
   },
 
   pedalMarking: {
     up: {
-      point: 40
+      point: 40,
     },
     down: {
-      point: 34
-    }
+      point: 34,
+    },
   },
 
   // These are for numeric digits, such as in time signatures
@@ -97,7 +97,7 @@ export const PetalumaMetrics = {
     },
     articStaccatissimoBelow: {
       padding: 2,
-    }
+    },
   },
 
   tremolo: {
@@ -116,7 +116,7 @@ export const PetalumaMetrics = {
       offsetYStemDown: 5,
       offsetXStemUp: 7,
       offsetXStemDown: 1,
-    }
+    },
   },
 
   noteHead: {
@@ -126,6 +126,7 @@ export const PetalumaMetrics = {
   },
 
   stem: {
+    heightAdjustmentForFlag: -3,
     // These are stem (Y) offsets to the note heads. To shift the
     // noteheads (x-position) themselves, see glyphs.notehead.custom.
     noteHead: {
@@ -153,6 +154,10 @@ export const PetalumaMetrics = {
         offsetYBaseStemUp: -4,
         offsetYBaseStemDown: 4,
       },
+      noteheadHalf: {
+        offsetYBaseStemDown: 1.8,
+        offsetYBaseStemUp: -1.8,
+      },
       noteheadBlack: {
         offsetYBaseStemDown: 2,
         offsetYBaseStemUp: -2,
@@ -160,8 +165,8 @@ export const PetalumaMetrics = {
       noteheadSquareWhite: {
         offsetYBaseStemDown: -5,
         offsetYBaseStemUp: 5,
-      }
-    }
+      },
+    },
   },
 
   // Values under here are used by the Glyph class to reposition and rescale
@@ -183,22 +188,46 @@ export const PetalumaMetrics = {
       shiftX: -7,
     },
     flag: {
-      shiftX: -0.75,
+      shiftX: -0.77,
+      flag16thUp: {
+        shiftX: -0.75,
+      },
+      flag32ndUp: {
+        shiftX: -0.85,
+      },
+      flag64thUp: {
+        shiftX: -1.55,
+      },
+      flag128thUp: {
+        shiftX: -1.3,
+      },
+      flag16thDown: {
+        shiftX: -0.75,
+      },
+      flag32ndDown: {
+        shiftX: -0.76,
+      },
+      flag64thDown: {
+        shiftX: -1.5,
+      },
+      flag128thDown: {
+        shiftX: -1.2,
+      },
       tabStem: {
         shiftX: -1.75,
       },
       staveTempo: {
         shiftX: -1,
-      }
+      },
     },
     clef: {
       gClef: {
         default: { scale: 1.1, shiftY: 1 },
-        small: { shiftY: 1.5 }
+        small: { shiftY: 1.5 },
       },
       fClef: {
-        default: { shiftY: -0.5 }
-      }
+        default: { shiftY: -0.5 },
+      },
     },
     ornament: {
       ornamentTurn: {
@@ -216,7 +245,7 @@ export const PetalumaMetrics = {
         wiggly: {
           shiftX: -1,
           shiftY: 1,
-        }
+        },
       },
       arrowheadBlackUp: {
         straight: {
@@ -225,8 +254,8 @@ export const PetalumaMetrics = {
         wiggly: {
           shiftX: -1,
           shiftY: 1,
-        }
-      }
+        },
+      },
     },
     textNote: {
       point: 34,
@@ -256,19 +285,19 @@ export const PetalumaMetrics = {
       },
       ornamentShortTrill: {
         shiftX: -8,
-      }
+      },
     },
     noteHead: {
       standard: {
         noteheadBlackStemUp: {
-          shiftX: 1.5,
+          shiftX: 1.625,
           point: 34,
         },
         noteheadBlackStemDown: {
           point: 34,
         },
         noteheadHalfStemUp: {
-          shiftX: 1,
+          shiftX: 1.725,
           point: 34,
         },
         noteheadHalfStemDown: {
@@ -289,48 +318,48 @@ export const PetalumaMetrics = {
         },
       },
       custom: {
-        'noteheadCircleXStemUp': {
+        noteheadCircleXStemUp: {
           shiftX: -1,
         },
-        'noteheadCircleXStemDown': {
+        noteheadCircleXStemDown: {
           shiftX: 0.25,
         },
-        'noteheadDiamondHalfStemUp': {
+        noteheadDiamondHalfStemUp: {
           shiftX: 1.5,
         },
-        'noteheadDiamondBlackStemUp': {
+        noteheadDiamondBlackStemUp: {
           shiftX: 1.5,
         },
-        'noteheadDiamondWholeStemUp': {
+        noteheadDiamondWholeStemUp: {
           shiftX: 1,
         },
-        'noteheadXBlackStemUp': {
+        noteheadXBlackStemUp: {
           shiftX: 1,
         },
-        'noteheadXHalfStemUp': {
+        noteheadXHalfStemUp: {
           shiftX: -3,
         },
-        'noteheadXHalfStemDown': {
+        noteheadXHalfStemDown: {
           shiftX: 1,
         },
-        'noteheadXWholeStemUp': {
+        noteheadXWholeStemUp: {
           shiftX: -7,
         },
-        'noteheadXWholeStemDown': {
+        noteheadXWholeStemDown: {
           shiftX: 1,
         },
-        'noteheadSquareWhiteStemDown': {
+        noteheadSquareWhiteStemDown: {
           shiftX: 0.25,
         },
-        'noteheadSquareWhiteStemUp': {
+        noteheadSquareWhiteStemUp: {
           shiftX: -0.75,
         },
-        'noteheadSquareBlackStemUp': {
+        noteheadSquareBlackStemUp: {
           shiftX: -0.75,
         },
-        'noteheadTriangleUpWholeStemUp': {
+        noteheadTriangleUpWholeStemUp: {
           shiftX: -0.75,
-        }
+        },
       },
     },
     chordSymbol: {
@@ -338,95 +367,95 @@ export const PetalumaMetrics = {
         superscriptOffset: -400,
         subscriptOffset: 300,
         kerningOffset: -150,
-        lowerKerningText:  ['D', 'F', 'P', 'T', 'V', 'Y'],
-        upperKerningText:  ['L'],
+        lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
+        upperKerningText: ['L'],
         spacing: 20,
-        superSubRatio: 0.73
+        superSubRatio: 0.73,
       },
       csymDiminished: {
         scale: 0.8,
         leftSideBearing: -95,
         advanceWidth: 506,
-        yOffset: 0
+        yOffset: 0,
       },
       csymHalfDiminished: {
         scale: 0.8,
         leftSideBearing: -32,
         advanceWidth: 506,
-        yOffset: 0
+        yOffset: 0,
       },
       csymAugmented: {
         scale: 1,
         leftSideBearing: -25,
         advanceWidth: 530,
-        yOffset: 0
+        yOffset: 0,
       },
       csymParensLeftTall: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 155,
-        yOffset: 150
+        yOffset: 150,
       },
       csymParensRightTall: {
         scale: 0.8,
         leftSideBearing: 40,
         advanceWidth: 189,
-        yOffset: 150
+        yOffset: 150,
       },
       csymBracketLeftTall: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 328,
-        yOffset: 0
+        yOffset: 0,
       },
       csymBracketRightTall: {
         scale: 0.8,
         leftSideBearing: 1,
         advanceWidth: 600,
-        yOffset: 0
+        yOffset: 0,
       },
       csymParensLeftVeryTall: {
         scale: 0.95,
         leftSideBearing: 0,
         advanceWidth: 210,
-        yOffset: 250
+        yOffset: 250,
       },
       csymParensRightVeryTall: {
         scale: 0.9,
         leftSideBearing: -100,
         advanceWidth: 111,
-        yOffset: 250
+        yOffset: 250,
       },
       csymDiagonalArrangementSlash: {
         scale: 0.6,
         leftSideBearing: -1,
         advanceWidth: 990,
-        yOffset: 0
+        yOffset: 0,
       },
       csymMinor: {
         scale: 0.7,
         leftSideBearing: 0,
         advanceWidth: 482,
-        yOffset: 0
+        yOffset: 0,
       },
       csymMajorSeventh: {
         scale: 0.8,
         leftSideBearing: 100,
         yOffset: 0,
-        advanceWidth: 600
+        advanceWidth: 600,
       },
       accidentalSharp: {
         scale: 0.7,
         leftSideBearing: 0,
         advanceWidth: 425,
-        yOffset: -422
+        yOffset: -422,
       },
       accidentalFlat: {
         scale: 0.8,
         leftSideBearing: -10,
         advanceWidth: 228,
-        yOffset: -284
-      }
+        yOffset: -284,
+      },
     },
     jazzOrnaments: {
       brassScoop: {
@@ -434,78 +463,78 @@ export const PetalumaMetrics = {
         xOffset: -12,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth: 10
+        reportedWidth: 10,
       },
       brassDoitMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassFallLipShort: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassLiftMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 5,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassFallRoughMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 26,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassBend: {
         scale: 1.0,
         xOffset: 3,
         yOffset: -8,
         stemUpYOffset: 28,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassMuteClosed: {
         scale: 1.0,
         xOffset: 3,
         yOffset: -8,
         stemUpYOffset: 26,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassMuteOpen: {
         scale: 1.0,
         xOffset: 4,
         yOffset: -8,
         stemUpYOffset: 27,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassFlip: {
         scale: 1.0,
         xOffset: 10,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassJazzTurn: {
         scale: 1.0,
         xOffset: 6,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassSmear: {
         scale: 1.0,
         xOffset: 10,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
-    }
-  }
+    },
+  },
 };

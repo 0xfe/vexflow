@@ -893,7 +893,7 @@ export class StaveNote extends StemmableNote {
       modifier = a;
     } else if (typeof a === 'number' && typeof b === 'object') {
       // eslint-disable-next-line
-      console.warn("deprecated call signature to addModifier, use addModifier(modifier, index) instead");
+      console.warn('deprecated call signature to addModifier, use addModifier(modifier, index) instead');
       index = a;
       modifier = b;
     } else {
@@ -979,7 +979,7 @@ export class StaveNote extends StemmableNote {
     let width = this.getGlyphWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
 
     // For upward flagged notes, the width of the flag needs to be added
-    if (this.glyph.flag && this.beam === undefined && this.stem_direction === Stem.UP) {
+    if (this.shouldDrawFlag() && this.stem_direction === Stem.UP) {
       width += this.getGlyphWidth();
       // TODO: Add flag width as a separate metric
     }
@@ -1154,28 +1154,34 @@ export class StaveNote extends StemmableNote {
     ctx.closeGroup();
   }
 
+  shouldDrawFlag(): boolean {
+    const hasStem = this.stem !== undefined;
+    const hasFlag = this.glyph.flag as boolean; // specified in tables.js
+    const hasNoBeam = this.beam === undefined;
+    return hasStem && hasFlag && hasNoBeam;
+  }
+
   // Draw the flag for the note
   drawFlag(): void {
-    const { stem, beam } = this;
     const ctx = this.checkContext();
-
     if (!ctx) {
       throw new Vex.RERR('NoCanvasContext', "Can't draw without a canvas context.");
     }
 
-    const shouldRenderFlag = beam === undefined;
-    const glyph = this.getGlyph();
-
-    if (glyph.flag && shouldRenderFlag) {
+    if (this.shouldDrawFlag()) {
       const { y_top, y_bottom } = this.getNoteHeadBounds();
-      const noteStemHeight = stem?.getHeight() ?? 0;
+      // eslint-disable-next-line
+      const noteStemHeight = this.stem!.getHeight();
       const flagX = this.getStemX();
       // FIXME: What's with the magic +/- 2
+      // ANSWER: a corner of the note stem pokes out beyond the tip of the flag.
+      // The extra +/- 2 pushes the flag glyph outward so it covers the stem entirely.
+      // Alternatively, we could shorten the stem.
       const flagY =
         this.getStemDirection() === Stem.DOWN
-          ? // Down stems have flags on the left
+          ? // Down stems are below the note head and have flags on the right.
             y_top - noteStemHeight + 2
-          : // Up stems have flags on the eft.
+          : // Up stems are above the note head and have flags on the right.
             y_bottom - noteStemHeight - 2;
 
       // Draw the Flag
@@ -1205,6 +1211,12 @@ export class StaveNote extends StemmableNote {
 
     if (stemOptions) {
       this.setStem(new Stem(stemOptions));
+    }
+
+    // If we will render a flag, we shorten the stem so that the tip
+    // does not poke through the flag.
+    if (this.shouldDrawFlag() && this.stem) {
+      this.stem.adjustHeightForFlag();
     }
 
     ctx.openGroup('stem', undefined, { pointerBBox: true });

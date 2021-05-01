@@ -32,7 +32,7 @@ export const BravuraMetrics = {
             line: -0.2,
             shiftX: 8,
           },
-        }
+        },
       },
       '8vb': {
         smuflCode: 'timeSig8',
@@ -45,7 +45,7 @@ export const BravuraMetrics = {
           bass: {
             line: 3.5,
             shiftX: 1,
-          }
+          },
         },
         small: {
           point: 16,
@@ -56,9 +56,9 @@ export const BravuraMetrics = {
           bass: {
             line: 3.1,
             shiftX: 0.5,
-          }
-        }
-      }
+          },
+        },
+      },
     },
     // These may no longer be necessary
     lineCount: {
@@ -67,15 +67,15 @@ export const BravuraMetrics = {
       '6': { point: 32, shiftY: 1 },
       '5': { point: 30, shiftY: -6 },
       '4': { point: 23, shiftY: -12 },
-    }
+    },
   },
   pedalMarking: {
     up: {
-      point: 40
+      point: 40,
     },
     down: {
-      point: 34
-    }
+      point: 34,
+    },
   },
 
   // These are for numeric digits, such as in time signatures
@@ -95,7 +95,7 @@ export const BravuraMetrics = {
     },
     articStaccatissimoBelow: {
       padding: 2,
-    }
+    },
   },
 
   tremolo: {
@@ -114,10 +114,11 @@ export const BravuraMetrics = {
       offsetYStemDown: 5,
       offsetXStemUp: 7,
       offsetXStemDown: 1,
-    }
+    },
   },
 
   stem: {
+    heightAdjustmentForFlag: -3,
     // These are stem (Y) offsets to the note heads. To shift the
     // noteheads (x-position) themselves, see glyphs.notehead.custom.
     noteHead: {
@@ -146,8 +147,8 @@ export const BravuraMetrics = {
         offsetYBaseStemDown: 4,
       },
       noteheadHalf: {
-        offsetYBaseStemUp: -2.5,
-        offsetYBaseStemDown: 2.6,
+        offsetYBaseStemUp: -2.55,
+        offsetYBaseStemDown: 2.65,
       },
       noteheadBlack: {
         offsetYBaseStemUp: -2,
@@ -156,8 +157,8 @@ export const BravuraMetrics = {
       noteheadSquareWhite: {
         offsetYBaseStemDown: -5,
         offsetYBaseStemUp: 5,
-      }
-    }
+      },
+    },
   },
 
   // Values under here are used by the Glyph class to reposition and rescale
@@ -185,16 +186,16 @@ export const BravuraMetrics = {
       },
       staveTempo: {
         shiftX: -1,
-      }
+      },
     },
     clef: {
       gClef: {
         default: { scale: 1.1, shiftY: 1 },
-        small: { shiftY: 1.5 }
+        small: { shiftY: 1.5 },
       },
       fClef: {
-        default: { shiftY: -0.5 }
-      }
+        default: { shiftY: -0.5 },
+      },
     },
     ornament: {
       ornamentTurn: {
@@ -212,7 +213,7 @@ export const BravuraMetrics = {
         wiggly: {
           shiftX: -1,
           shiftY: 1,
-        }
+        },
       },
       arrowheadBlackUp: {
         straight: {
@@ -221,8 +222,8 @@ export const BravuraMetrics = {
         wiggly: {
           shiftX: -1,
           shiftY: 1,
-        }
-      }
+        },
+      },
     },
     textNote: {
       point: 34,
@@ -258,7 +259,7 @@ export const BravuraMetrics = {
       },
       ornamentShortTrill: {
         shiftX: -8,
-      }
+      },
     },
     noteHead: {
       standard: {
@@ -270,45 +271,45 @@ export const BravuraMetrics = {
         },
       },
       custom: {
-        'noteheadCircleXStemUp': {
+        noteheadCircleXStemUp: {
           shiftX: 1.5,
         },
-        'noteheadCircleXStemDown': {
+        noteheadCircleXStemDown: {
           shiftX: 0.25,
         },
-        'noteheadDiamondHalfStemUp': {
+        noteheadDiamondHalfStemUp: {
           shiftX: 1.5,
         },
-        'noteheadDiamondBlackStemUp': {
+        noteheadDiamondBlackStemUp: {
           shiftX: 1.5,
         },
-        'noteheadDiamondWholeStemUp': {
+        noteheadDiamondWholeStemUp: {
           shiftX: 1,
         },
-        'noteheadXHalfStemUp': {
+        noteheadXHalfStemUp: {
           shiftX: -2,
         },
-        'noteheadXHalfStemDown': {
+        noteheadXHalfStemDown: {
           shiftX: 1,
         },
-        'noteheadXWholeStemUp': {
+        noteheadXWholeStemUp: {
           shiftX: -4,
         },
-        'noteheadXWholeStemDown': {
+        noteheadXWholeStemDown: {
           shiftX: 1,
         },
-        'noteheadSquareWhiteStemDown': {
+        noteheadSquareWhiteStemDown: {
           shiftX: 0.25,
         },
-        'noteheadSquareWhiteStemUp': {
+        noteheadSquareWhiteStemUp: {
           shiftX: -0.75,
         },
-        'noteheadSquareBlackStemUp': {
+        noteheadSquareBlackStemUp: {
           shiftX: -0.75,
         },
-        'noteheadTriangleUpWholeStemUp': {
+        noteheadTriangleUpWholeStemUp: {
           shiftX: -0.75,
-        }
+        },
       },
     },
     chordSymbol: {
@@ -316,95 +317,95 @@ export const BravuraMetrics = {
         superscriptOffset: -400,
         subscriptOffset: 300,
         kerningOffset: -250,
-        lowerKerningText:  ['D', 'F', 'P', 'T', 'V', 'Y'],
-        upperKerningText:  ['A', 'L'],
+        lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
+        upperKerningText: ['A', 'L'],
         spacing: 100,
-        superSubRatio: 0.66
+        superSubRatio: 0.66,
       },
       csymDiminished: {
         scale: 0.8,
         leftSideBearing: -32,
         advanceWidth: 506,
-        yOffset: 0
+        yOffset: 0,
       },
       csymHalfDiminished: {
         scale: 0.8,
         leftSideBearing: -32,
         advanceWidth: 506,
-        yOffset: 0
+        yOffset: 0,
       },
       csymAugmented: {
         scale: 1,
         leftSideBearing: 0,
         advanceWidth: 530,
-        yOffset: 0
+        yOffset: 0,
       },
       csymParensLeftTall: {
         scale: 0.8,
         leftSideBearing: -20,
         advanceWidth: 184,
-        yOffset: 250
+        yOffset: 250,
       },
       csymParensRightTall: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 189,
-        yOffset: 250
+        yOffset: 250,
       },
       csymBracketLeftTall: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 328,
-        yOffset: 0
+        yOffset: 0,
       },
       csymBracketRightTall: {
         scale: 0.8,
         leftSideBearing: 1,
         advanceWidth: 600,
-        yOffset: 0
+        yOffset: 0,
       },
       csymParensLeftVeryTall: {
         scale: 0.9,
         leftSideBearing: 50,
         advanceWidth: 121,
-        yOffset: 350
+        yOffset: 350,
       },
       csymParensRightVeryTall: {
         scale: 0.9,
         leftSideBearing: 0,
         advanceWidth: 111,
-        yOffset: 350
+        yOffset: 350,
       },
       csymDiagonalArrangementSlash: {
         scale: 0.6,
         leftSideBearing: -1,
         advanceWidth: 990,
-        yOffset: 0
+        yOffset: 0,
       },
       csymMinor: {
         scale: 0.8,
         leftSideBearing: 0,
         advanceWidth: 482,
-        yOffset: 0
+        yOffset: 0,
       },
       csymMajorSeventh: {
         scale: 0.9,
         leftSideBearing: 200,
         yOffset: 0,
-        advanceWidth: 600
+        advanceWidth: 600,
       },
       accidentalSharp: {
         scale: 0.75,
         leftSideBearing: 20,
         advanceWidth: 250,
-        yOffset: -302
+        yOffset: -302,
       },
       accidentalFlat: {
         scale: 0.9,
         leftSideBearing: -20,
         advanceWidth: 226,
-        yOffset: -184
-      }
+        yOffset: -184,
+      },
     },
     jazzOrnaments: {
       brassScoop: {
@@ -412,78 +413,78 @@ export const BravuraMetrics = {
         xOffset: -12,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth: 10
+        reportedWidth: 10,
       },
       brassDoitMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth:15
+        reportedWidth: 15,
       },
       brassFallLipShort: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 0,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassLiftMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 5,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassFallRoughMedium: {
         scale: 1.0,
         xOffset: 16,
         yOffset: 28,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassBend: {
         scale: 1.0,
         xOffset: 2,
         yOffset: -8,
         stemUpYOffset: 25,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassMuteClosed: {
         scale: 1.0,
         xOffset: 3,
         yOffset: -8,
         stemUpYOffset: 25,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassMuteOpen: {
         scale: 1.0,
         xOffset: 3,
         yOffset: -7,
         stemUpYOffset: 25,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassFlip: {
         scale: 1.0,
         xOffset: 10,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassJazzTurn: {
         scale: 1.0,
         xOffset: 6,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
       brassSmear: {
         scale: 1.0,
         xOffset: 10,
         yOffset: -4,
         stemUpYOffset: 0,
-        reportedWidth: 5
+        reportedWidth: 5,
       },
-    }
-  }
+    },
+  },
 };

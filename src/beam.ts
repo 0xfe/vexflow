@@ -688,7 +688,7 @@ export class Beam extends Element {
         const beamExtension = stem_direction === Stem.UP ? stemTipY - beamedStemTipY : beamedStemTipY - stemTipY;
 
         stem.setExtension(preBeamExtension + beamExtension);
-        stem.renderHeightAdjustment = -Stem.WIDTH / 2;
+        stem.adjustHeightForBeam();
 
         if (note.isRest() && show_stemlets) {
           const beamWidth = beam_width;
