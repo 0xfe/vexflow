@@ -1155,9 +1155,10 @@ export class StaveNote extends StemmableNote {
   }
 
   shouldDrawFlag(): boolean {
-    const hasFlag = this.getGlyph().flag; // this.glyph.flag is a boolean, as specified in tables.js
+    const hasStem = this.stem !== undefined;
+    const hasFlag = this.glyph.flag as boolean; // specified in tables.js
     const hasNoBeam = this.beam === undefined;
-    return hasFlag && hasNoBeam;
+    return hasStem && hasFlag && hasNoBeam;
   }
 
   // Draw the flag for the note
@@ -1169,7 +1170,8 @@ export class StaveNote extends StemmableNote {
 
     if (this.shouldDrawFlag()) {
       const { y_top, y_bottom } = this.getNoteHeadBounds();
-      const noteStemHeight = this.stem?.getHeight() ?? 0;
+      // eslint-disable-next-line
+      const noteStemHeight = this.stem!.getHeight();
       const flagX = this.getStemX();
       // FIXME: What's with the magic +/- 2
       // ANSWER: a corner of the note stem pokes out beyond the tip of the flag.

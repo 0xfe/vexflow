@@ -118,7 +118,7 @@ export const BravuraMetrics = {
   },
 
   stem: {
-    renderHeightAdjustmentForFlag: -3,
+    heightAdjustmentForFlag: -3,
     // These are stem (Y) offsets to the note heads. To shift the
     // noteheads (x-position) themselves, see glyphs.notehead.custom.
     noteHead: {
