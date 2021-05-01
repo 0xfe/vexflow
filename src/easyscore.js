@@ -188,7 +188,7 @@ class Grammar {
   }
 }
 
-class Builder {
+export class Builder {
   constructor(factory) {
     this.factory = factory;
     this.commitHooks = [];

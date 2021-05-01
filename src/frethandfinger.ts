@@ -5,17 +5,25 @@
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
+import { FontInfo, ModifierContextState } from './types/common';
+import { StaveNote } from './stavenote';
+import { Builder } from './easyscore';
 
 /**
  * @constructor
  */
 export class FretHandFinger extends Modifier {
-  static get CATEGORY() {
+  protected finger: string;
+  protected x_offset: number;
+  protected y_offset: number;
+  protected font: FontInfo;
+
+  static get CATEGORY(): string {
     return 'frethandfinger';
   }
 
   // Arrange fingerings inside a ModifierContext.
-  static format(nums, state) {
+  static format(nums: FretHandFinger[], state: ModifierContextState): boolean {
     const { left_shift, right_shift } = state;
     const num_spacing = 1;
 
@@ -28,7 +36,7 @@ export class FretHandFinger extends Modifier {
 
     for (let i = 0; i < nums.length; ++i) {
       const num = nums[i];
-      const note = num.getNote();
+      const note = num.getNote() as StaveNote;
       const pos = num.getPosition();
       const props = note.getKeyProps()[num.getIndex()];
       if (note !== prev_note) {
@@ -93,27 +101,25 @@ export class FretHandFinger extends Modifier {
     return true;
   }
 
-  static easyScoreHook({ fingerings }, note, builder) {
+  static easyScoreHook({ fingerings }: { fingerings?: string } = {}, note: StaveNote, builder: Builder): void {
     if (!fingerings) return;
 
     fingerings
       .split(',')
-      .map((fingeringString) => fingeringString.trim().split('.'))
-      .map(([number, position]) => {
-        const params = { number };
-        if (position) params.position = position;
+      .map((fingeringString: string) => {
+        const split = fingeringString.trim().split('.');
+        const params: { number: string; position?: string } = { number: split[0] };
+        if (split[1]) params.position = split[1];
         return builder.getFactory().Fingering(params);
       })
-      .map((fingering, index) => note.addModifier(fingering, index));
+      .map((fingering: Modifier, index: number) => note.addModifier(fingering, index));
   }
 
-  constructor(number) {
+  constructor(finger: string) {
     super();
     this.setAttribute('type', 'FretHandFinger');
 
-    this.note = null;
-    this.index = null;
-    this.finger = number;
+    this.finger = finger;
     this.width = 7;
     this.position = Modifier.Position.LEFT; // Default position above stem or note head
     this.x_shift = 0;
@@ -126,23 +132,27 @@ export class FretHandFinger extends Modifier {
       weight: 'bold',
     };
   }
-  getCategory() {
+
+  getCategory(): string {
     return FretHandFinger.CATEGORY;
   }
-  setFretHandFinger(number) {
-    this.finger = number;
+
+  setFretHandFinger(finger: string): this {
+    this.finger = finger;
     return this;
   }
-  setOffsetX(x) {
+
+  setOffsetX(x: number): this {
     this.x_offset = x;
     return this;
   }
-  setOffsetY(y) {
+
+  setOffsetY(y: number): this {
     this.y_offset = y;
     return this;
   }
 
-  draw() {
+  draw(): void {
     this.checkContext();
 
     if (!this.note || this.index == null) {
@@ -150,7 +160,7 @@ export class FretHandFinger extends Modifier {
     }
 
     this.setRendered();
-    const ctx = this.context;
+    const ctx = this.checkContext();
     const start = this.note.getModifierStartXY(this.position, this.index);
     let dot_x = start.x + this.x_shift + this.x_offset;
     let dot_y = start.y + this.y_shift + this.y_offset + 5;
