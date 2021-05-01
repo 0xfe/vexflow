@@ -1,14 +1,21 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
+import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
+import { FontInfo } from './types/common';
 
 export class StaveSection extends StaveModifier {
-  static get CATEGORY() {
+  protected section: string;
+  protected shift_x: number;
+  protected shift_y: number;
+  protected font: FontInfo;
+
+  static get CATEGORY(): string {
     return 'stavesection';
   }
 
-  constructor(section, x, shift_y) {
+  constructor(section: string, x: number, shift_y: number) {
     super();
     this.setAttribute('type', 'StaveSection');
 
@@ -24,27 +31,31 @@ export class StaveSection extends StaveModifier {
     };
   }
 
-  getCategory() {
+  getCategory(): string {
     return StaveSection.CATEGORY;
   }
-  setStaveSection(section) {
+
+  setStaveSection(section: string): this {
     this.section = section;
     return this;
   }
-  setShiftX(x) {
+
+  setShiftX(x: number): this {
     this.shift_x = x;
     return this;
   }
-  setShiftY(y) {
+
+  setShiftY(y: number): this {
     this.shift_y = y;
     return this;
   }
-  draw(stave, shift_x) {
+
+  draw(stave: Stave, shift_x: number): this {
     const ctx = stave.checkContext();
     this.setRendered();
 
     ctx.save();
-    ctx.lineWidth = 2;
+    ctx.setLineWidth(2);
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const text_width = ctx.measureText('' + this.section).width;
     let width = text_width + 6; // add left & right padding
@@ -54,7 +65,7 @@ export class StaveSection extends StaveModifier {
     const y = stave.getYForTopText(3) + this.shift_y;
     let x = this.x + shift_x;
     ctx.beginPath();
-    ctx.lineWidth = 2;
+    ctx.setLineWidth(2);
     ctx.rect(x, y, width, height);
     ctx.stroke();
     x += (width - text_width) / 2;
