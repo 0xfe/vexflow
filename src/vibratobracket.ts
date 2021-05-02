@@ -11,19 +11,6 @@ import { Element } from './element';
 import { Vibrato } from './vibrato';
 import { Note } from './note';
 
-export interface VibratoBracketData {
-  stop: Note;
-  start: Note;
-}
-
-export interface VibratoBracketRenderOptions {
-  vibrato_width: number;
-  wave_height: number;
-  wave_girth: number;
-  harsh: boolean;
-  wave_width: number;
-}
-
 // To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
@@ -38,7 +25,13 @@ export class VibratoBracket extends Element {
 
   protected start: Note;
   protected stop: Note;
-  protected render_options: VibratoBracketRenderOptions;
+  protected render_options: {
+    vibrato_width: number;
+    wave_height: number;
+    wave_girth: number;
+    harsh: boolean;
+    wave_width: number;
+  };
 
   // bracket_data = {
   //   start: Vex.Flow.Note (optional)
@@ -47,7 +40,7 @@ export class VibratoBracket extends Element {
   // Either the stop or start note must be set, or both of them.
   // A null value for the start or stop note indicates that the vibrato
   // is drawn from the beginning or until the end of the stave accordingly.
-  constructor(bracket_data: VibratoBracketData) {
+  constructor(bracket_data: { stop: Note; start: Note }) {
     super();
     this.setAttribute('type', 'VibratoBracket');
 
@@ -82,7 +75,14 @@ export class VibratoBracket extends Element {
     const startStave = this.start ? this.start.getStave() : undefined;
     const stopStave = this.stop ? this.stop.getStave() : undefined;
 
-    const y = startStave ? startStave.getYForTopText(this.line) : stopStave ? stopStave.getYForTopText(this.line) : 0;
+    let y = 0;
+    if (startStave) {
+      y = startStave.getYForTopText(this.line);
+    } else if (stopStave) {
+      y = stopStave.getYForTopText(this.line);
+    } else {
+      throw new Vex.RERR('NoStave', 'Either star or stop stave is required.');
+    }
 
     // If start note is not set then vibrato will be drawn
     // from the beginning of the stave
