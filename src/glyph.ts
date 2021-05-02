@@ -231,7 +231,7 @@ export class Glyph extends Element {
     point: number,
     /** The glyph code in font.getGlyphs() */
     val: string,
-    options: { font?: Font; category: string }
+    options?: { font?: Font; category: string }
   ): GlyphMetrics {
     const params = {
       fontStack: Flow.DEFAULT_FONT_STACK,

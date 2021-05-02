@@ -4,13 +4,38 @@
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
+import { FontInfo } from './types/common';
+import { Stave } from './stave';
+
+export interface StaveTempoOptions {
+  bpm: number;
+  dots: number;
+  duration: string;
+  name: string;
+}
+
+export interface Tempo {
+  bpm: number;
+  dots: number;
+  duration: string;
+  name: string;
+}
 
 export class StaveTempo extends StaveModifier {
-  static get CATEGORY() {
+  protected font: FontInfo;
+  protected render_options: {
+    glyph_font_scale: number;
+  };
+
+  protected tempo: Tempo;
+  protected shift_x: number;
+  protected shift_y: number;
+
+  static get CATEGORY(): string {
     return 'stavetempo';
   }
 
-  constructor(tempo, x, shift_y) {
+  constructor(tempo: Tempo, x: number, shift_y: number) {
     super();
     this.setAttribute('type', 'StaveTempo');
 
@@ -28,23 +53,27 @@ export class StaveTempo extends StaveModifier {
       glyph_font_scale: 30, // font size for note
     };
   }
-  getCategory() {
+
+  getCategory(): string {
     return StaveTempo.CATEGORY;
   }
-  setTempo(tempo) {
+
+  setTempo(tempo: Tempo): this {
     this.tempo = tempo;
     return this;
   }
-  setShiftX(x) {
+
+  setShiftX(x: number): this {
     this.shift_x = x;
     return this;
   }
-  setShiftY(y) {
+
+  setShiftY(y: number): this {
     this.shift_y = y;
     return this;
   }
 
-  draw(stave, shift_x) {
+  draw(stave: Stave, shift_x: number): this {
     const ctx = stave.checkContext();
     this.setRendered();
 

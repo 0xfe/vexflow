@@ -25,14 +25,6 @@ export interface KeyProps {
   displaced: boolean;
 }
 
-/** TODO: Move to StaveTempo */
-export interface StaveTempoOptions {
-  bpm: number;
-  dots: number;
-  duration: string;
-  name: string;
-}
-
 export interface TypeProps extends KeyProps {
   getWidth(scale?: number): number;
 
