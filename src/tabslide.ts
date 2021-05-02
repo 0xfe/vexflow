@@ -6,24 +6,46 @@
 
 import { Vex } from './vex';
 import { TabTie } from './tabtie';
+import { Note } from './note';
+import { TabNote } from './tabnote';
+import { StaveTieRenderTieParams } from './stavetie';
 
 export class TabSlide extends TabTie {
-  static get SLIDE_UP() {
+  static get SLIDE_UP(): number {
     return 1;
   }
-  static get SLIDE_DOWN() {
+
+  static get SLIDE_DOWN(): number {
     return -1;
   }
 
-  static createSlideUp(notes) {
+  static createSlideUp(notes: {
+    first_note: Note;
+    last_note: Note;
+    first_indices: number[];
+    last_indices: number[];
+  }): TabSlide {
     return new TabSlide(notes, TabSlide.SLIDE_UP);
   }
 
-  static createSlideDown(notes) {
+  static createSlideDown(notes: {
+    first_note: Note;
+    last_note: Note;
+    first_indices: number[];
+    last_indices: number[];
+  }): TabSlide {
     return new TabSlide(notes, TabSlide.SLIDE_DOWN);
   }
 
-  constructor(notes, direction) {
+  constructor(
+    notes: {
+      first_note: Note;
+      last_note: Note;
+      first_indices: number[];
+      last_indices: number[];
+    },
+    direction?: number
+  ) {
     /**
      * Notes is a struct that has:
      *
@@ -39,38 +61,38 @@ export class TabSlide extends TabTie {
     this.setAttribute('type', 'TabSlide');
 
     if (!direction) {
-      const first_fret = notes.first_note.getPositions()[0].fret;
-      const last_fret = notes.last_note.getPositions()[0].fret;
+      const first_fret = ((notes.first_note as unknown) as TabNote).getPositions()[0].fret;
+      const last_fret = ((notes.last_note as unknown) as TabNote).getPositions()[0].fret;
 
       direction = parseInt(first_fret, 10) > parseInt(last_fret, 10) ? TabSlide.SLIDE_DOWN : TabSlide.SLIDE_UP;
     }
 
-    this.slide_direction = direction;
+    this.direction = direction;
     this.render_options.cp1 = 11;
     this.render_options.cp2 = 14;
     this.render_options.y_shift = 0.5;
 
-    this.setFont({ font: 'Times', size: 10, style: 'bold italic' });
+    this.setFont({ family: 'Times', size: 10, weight: 'bold italic' });
     this.setNotes(notes);
   }
 
-  renderTie(params) {
+  renderTie(params: StaveTieRenderTieParams): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
       throw new Vex.RERR('BadArguments', 'No Y-values to render');
     }
 
-    const ctx = this.context;
+    const ctx = this.checkContext();
     const first_x_px = params.first_x_px;
     const first_ys = params.first_ys;
     const last_x_px = params.last_x_px;
 
-    const direction = this.slide_direction;
+    const direction = params.direction;
     if (direction !== TabSlide.SLIDE_UP && direction !== TabSlide.SLIDE_DOWN) {
       throw new Vex.RERR('BadSlide', 'Invalid slide direction');
     }
 
-    for (let i = 0; i < this.first_indices.length; ++i) {
-      const slide_y = first_ys[this.first_indices[i]] + this.render_options.y_shift;
+    for (let i = 0; i < this.notes.first_indices.length; ++i) {
+      const slide_y = first_ys[this.notes.first_indices[i]] + this.render_options.y_shift;
 
       if (isNaN(slide_y)) {
         throw new Vex.RERR('BadArguments', 'Bad indices for slide rendering.');
