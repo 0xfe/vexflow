@@ -111,11 +111,3 @@ export interface ModifierContextState {
   text_line: number;
   top_text_line: number;
 }
-
-/** TODO: Move to Annotation */
-export interface AnnotationInfo {
-  code: string;
-  line: number;
-  x_shift: number;
-  point: number;
-}

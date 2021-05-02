@@ -11,7 +11,13 @@ import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
-import { AnnotationInfo } from './types/common';
+
+export interface ClefAnnotation {
+  code: string;
+  line: number;
+  x_shift: number;
+  point: number;
+}
 
 export interface ClefType {
   // eslint-disable-next-line
@@ -30,7 +36,7 @@ function L(
 export class Clef extends StaveModifier {
   static DEBUG: boolean;
 
-  annotation?: AnnotationInfo;
+  annotation?: ClefAnnotation;
   clef: ClefType = Clef.types['treble'];
 
   protected glyph?: Glyph;
