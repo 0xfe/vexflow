@@ -18,9 +18,9 @@ import { StemmableNote } from './stemmablenote';
 import { StemOptions } from './stem';
 import { Modifier } from './modifier';
 import { Dot } from './dot';
-import { KeyProps, ModifierContextState } from './types/common';
+import { KeyProps } from './types/common';
 import { Beam } from './beam';
-import { ModifierContext } from './modifiercontext';
+import { ModifierClass, ModifierContext, ModifierContextState } from './modifiercontext';
 import { ElementStyle } from './element';
 import { Stave } from './stave';
 import { NoteStruct } from './note';
@@ -884,9 +884,9 @@ export class StaveNote extends StemmableNote {
   // Parameters:
   // * `index`: The index of the key that we're modifying
   // * `modifier`: The modifier to add
-  addModifier(a: number | Modifier, b: number | Modifier): this {
+  addModifier(a: number | ModifierClass, b: number | ModifierClass): this {
     let index: number;
-    let modifier: Modifier;
+    let modifier: ModifierClass;
 
     if (typeof a === 'object' && typeof b === 'number') {
       index = b;
@@ -902,25 +902,25 @@ export class StaveNote extends StemmableNote {
         'Call signature to addModifier not supported, use addModifier(modifier, index) instead.'
       );
     }
-    modifier.setNote(this);
-    modifier.setIndex(index);
+    if ('setNote' in modifier) modifier.setNote(this);
+    if ('setIndex' in modifier) modifier.setIndex(index);
     this.modifiers.push(modifier);
     this.setPreFormatted(false);
     return this;
   }
 
   // Helper function to add an accidental to a key
-  addAccidental(index: number, accidental: Modifier): this {
+  addAccidental(index: number, accidental: ModifierClass): this {
     return this.addModifier(accidental, index);
   }
 
   // Helper function to add an articulation to a key
-  addArticulation(index: number, articulation: Modifier): this {
+  addArticulation(index: number, articulation: ModifierClass): this {
     return this.addModifier(articulation, index);
   }
 
   // Helper function to add an annotation to a key
-  addAnnotation(index: number, annotation: Modifier): this {
+  addAnnotation(index: number, annotation: ModifierClass): this {
     return this.addModifier(annotation, index);
   }
 
@@ -941,13 +941,13 @@ export class StaveNote extends StemmableNote {
   }
 
   // Get all accidentals in the `ModifierContext`
-  getAccidentals(): Modifier[] {
+  getAccidentals(): ModifierClass[] {
     if (!this.modifierContext) throw new Vex.RERR('NoModifierContext', 'No modifier context attached to this note.');
     return this.modifierContext.getModifiers('accidentals');
   }
 
   // Get all dots in the `ModifierContext`
-  getDots(): Modifier[] {
+  getDots(): ModifierClass[] {
     if (!this.modifierContext) throw new Vex.RERR('NoModifierContext', 'No modifier context attached to this note.');
     return this.modifierContext.getModifiers('dots');
   }
@@ -1143,8 +1143,12 @@ export class StaveNote extends StemmableNote {
     const ctx = this.checkContext();
     ctx.openGroup('modifiers');
     for (let i = 0; i < this.modifiers.length; i++) {
+      let index = 0;
       const modifier = this.modifiers[i];
-      const notehead = this.note_heads[modifier.getIndex()];
+      if ('getIndex' in modifier) {
+        index = modifier.getIndex() as number;
+      }
+      const notehead = this.note_heads[index];
       const noteheadStyle = notehead.getStyle();
       notehead.applyStyle(ctx, noteheadStyle);
       modifier.setContext(ctx);

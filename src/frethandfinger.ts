@@ -5,9 +5,10 @@
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
-import { FontInfo, ModifierContextState } from './types/common';
+import { FontInfo } from './types/common';
 import { StaveNote } from './stavenote';
 import { Builder } from './easyscore';
+import { ModifierClass, ModifierContextState } from './modifiercontext';
 
 /**
  * @constructor
@@ -112,7 +113,7 @@ export class FretHandFinger extends Modifier {
         if (split[1]) params.position = split[1];
         return builder.getFactory().Fingering(params);
       })
-      .map((fingering: Modifier, index: number) => note.addModifier(fingering, index));
+      .map((fingering: ModifierClass, index: number) => note.addModifier(fingering, index));
   }
 
   constructor(finger: string) {

@@ -17,8 +17,7 @@ import { Stroke } from './strokes';
 import { Stave } from './stave';
 import { Voice } from './voice';
 import { TickContext } from './tickcontext';
-import { ModifierContext } from './modifiercontext';
-import { Modifier } from './modifier';
+import { ModifierClass, ModifierContext } from './modifiercontext';
 import { KeyProps, RenderContext } from './types/common';
 import { GlyphProps } from './glyph';
 import { GLYPH_PROPS_VALID_TYPES } from './common';
@@ -503,9 +502,9 @@ export abstract class Note extends Tickable {
   }
 
   /** Attach a modifier to this note. */
-  addModifier(a: number | Modifier, b: number | Modifier = 0): this {
+  addModifier(a: number | ModifierClass, b: number | ModifierClass = 0): this {
     let index: number;
-    let modifier: Modifier;
+    let modifier: ModifierClass;
 
     if (typeof a === 'object' && typeof b === 'number') {
       index = b;
@@ -516,8 +515,8 @@ export abstract class Note extends Tickable {
         'Call signature to addModifier not supported, use addModifier(modifier, index) instead.'
       );
     }
-    modifier.setNote(this);
-    modifier.setIndex(index);
+    if ('setNote' in modifier) modifier.setNote(this);
+    if ('setIndex' in modifier) modifier.setIndex(index);
     this.modifiers.push(modifier);
     this.setPreFormatted(false);
     return this;

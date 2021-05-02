@@ -21,12 +21,74 @@ import { ChordSymbol } from './chordsymbol';
 import { Bend } from './bend';
 import { Vibrato } from './vibrato';
 
+export interface ModifierContextState {
+  right_shift: number;
+  left_shift: number;
+  text_line: number;
+  top_text_line: number;
+}
+
+export interface ModifierContextMetrics {
+  width: number;
+  spacing: number;
+}
+
+export type PreformatModifierType =
+  | typeof StaveNote
+  | typeof Dot
+  | typeof FretHandFinger
+  | typeof Accidental
+  | typeof Stroke
+  | typeof GraceNoteGroup
+  | typeof NoteSubGroup
+  | typeof StringNumber
+  | typeof Articulation
+  | typeof Ornament
+  | typeof Annotation
+  | typeof ChordSymbol
+  | typeof Bend
+  | typeof Vibrato;
+
+export type PostformatModifierType = typeof StaveNote;
+
+export type ModifierClass =
+  | StaveNote
+  | Dot
+  | FretHandFinger
+  | Accidental
+  | Stroke
+  | GraceNoteGroup
+  | NoteSubGroup
+  | StringNumber
+  | Articulation
+  | Ornament
+  | Annotation
+  | ChordSymbol
+  | Bend
+  | Vibrato;
+
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any[]) {
   if (ModifierContext.DEBUG) Vex.L('Vex.Flow.ModifierContext', args);
 }
 
 export class ModifierContext {
+  static DEBUG: boolean;
+
+  state: ModifierContextState;
+
+  protected postFormatted: boolean;
+  protected spacing: number;
+  protected modifiers: Record<string, ModifierClass[]>;
+
+  protected preFormatted: boolean;
+  protected width: number;
+  protected formatted?: boolean;
+  protected PREFORMAT: PreformatModifierType[];
+  protected POSTFORMAT: PostformatModifierType[];
+
   constructor() {
     // Current modifiers
     this.modifiers = {};
@@ -66,7 +128,7 @@ export class ModifierContext {
     this.POSTFORMAT = [StaveNote];
   }
 
-  addModifier(modifier) {
+  addModifier(modifier: ModifierClass): this {
     const type = modifier.getCategory();
     if (!this.modifiers[type]) this.modifiers[type] = [];
     this.modifiers[type].push(modifier);
@@ -75,23 +137,27 @@ export class ModifierContext {
     return this;
   }
 
-  getModifiers(type) {
+  getModifiers(type: string): ModifierClass[] {
     return this.modifiers[type];
   }
-  getWidth() {
+
+  getWidth(): number {
     return this.width;
   }
-  getLeftShift() {
+
+  getLeftShift(): number {
     return this.state.left_shift;
   }
-  getRightShift() {
+
+  getRightShift(): number {
     return this.state.right_shift;
   }
-  getState() {
+
+  getState(): ModifierContextState {
     return this.state;
   }
 
-  getMetrics() {
+  getMetrics(): ModifierContextMetrics {
     if (!this.formatted) {
       throw new Vex.RERR('UnformattedModifier', 'Unformatted modifier has no metrics.');
     }
@@ -102,7 +168,7 @@ export class ModifierContext {
     };
   }
 
-  preFormat() {
+  preFormat(): void {
     if (this.preFormatted) return;
     this.PREFORMAT.forEach((modifier) => {
       L('Preformatting ModifierContext: ', modifier.CATEGORY);
@@ -114,11 +180,11 @@ export class ModifierContext {
     this.preFormatted = true;
   }
 
-  postFormat() {
+  postFormat(): void {
     if (this.postFormatted) return;
     this.POSTFORMAT.forEach((modifier) => {
       L('Postformatting ModifierContext: ', modifier.CATEGORY);
-      modifier.postFormat(this.getModifiers(modifier.CATEGORY), this);
+      modifier.postFormat(this.getModifiers(modifier.CATEGORY) as StaveNote[]);
     });
   }
 }
