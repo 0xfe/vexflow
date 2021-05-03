@@ -4,7 +4,6 @@
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
 import { FontInfo } from './types/common';
-import { Vex } from './vex';
 
 export enum VoltaType {
   NONE = 1,
@@ -13,6 +12,7 @@ export enum VoltaType {
   END = 4,
   BEGIN_END = 5,
 }
+
 export class Volta extends StaveModifier {
   protected volta: number;
   protected number: string;
