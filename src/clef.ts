@@ -141,7 +141,7 @@ export class Clef extends StaveModifier {
       this.annotation = { code, point, line, x_shift };
 
       this.attachment = new Glyph(this.annotation.code, this.annotation.point);
-      if (this.attachment.metrics) this.attachment.metrics.x_max = 0;
+      this.attachment.metrics!.x_max = 0;
       this.attachment.setXShift(this.annotation.x_shift);
     } else {
       this.annotation = undefined;
