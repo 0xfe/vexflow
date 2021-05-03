@@ -6,9 +6,9 @@
 
 import { Vex } from './vex';
 import { TabTie } from './tabtie';
-import { Note } from './note';
 import { TabNote } from './tabnote';
-import { StaveTieRenderTieParams } from './stavetie';
+import { Notes } from './stavetie';
+import { RenderTieParams } from './types/common';
 
 export class TabSlide extends TabTie {
   static get SLIDE_UP(): number {
@@ -19,33 +19,15 @@ export class TabSlide extends TabTie {
     return -1;
   }
 
-  static createSlideUp(notes: {
-    first_note: Note;
-    last_note: Note;
-    first_indices: number[];
-    last_indices: number[];
-  }): TabSlide {
+  static createSlideUp(notes: Notes): TabSlide {
     return new TabSlide(notes, TabSlide.SLIDE_UP);
   }
 
-  static createSlideDown(notes: {
-    first_note: Note;
-    last_note: Note;
-    first_indices: number[];
-    last_indices: number[];
-  }): TabSlide {
+  static createSlideDown(notes: Notes): TabSlide {
     return new TabSlide(notes, TabSlide.SLIDE_DOWN);
   }
 
-  constructor(
-    notes: {
-      first_note: Note;
-      last_note: Note;
-      first_indices: number[];
-      last_indices: number[];
-    },
-    direction?: number
-  ) {
+  constructor(notes: Notes, direction?: number) {
     /**
      * Notes is a struct that has:
      *
@@ -76,7 +58,7 @@ export class TabSlide extends TabTie {
     this.setNotes(notes);
   }
 
-  renderTie(params: StaveTieRenderTieParams): void {
+  renderTie(params: RenderTieParams): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
       throw new Vex.RERR('BadArguments', 'No Y-values to render');
     }

@@ -6,9 +6,16 @@
 
 import { Vex } from './vex';
 import { Element } from './element';
-import { FontInfo } from './types/common';
+import { FontInfo, RenderTieParams } from './types/common';
 import { Note } from './note';
 import { Stave } from './stave';
+
+export interface Notes {
+  first_note: Note;
+  last_note: Note;
+  first_indices: number[];
+  last_indices: number[];
+}
 
 export interface StaveTieRenderOptions {
   cp2: number;
@@ -21,37 +28,16 @@ export interface StaveTieRenderOptions {
   font: FontInfo;
 }
 
-export interface StaveTieRenderTieParams {
-  direction: number;
-  first_x_px: number;
-  last_x_px: number;
-  last_ys: number[];
-  first_ys: number[];
-}
-
 export class StaveTie extends Element {
   render_options: StaveTieRenderOptions;
 
   protected text?: string;
 
   protected font: FontInfo;
-  protected notes: {
-    first_note: Note;
-    last_note: Note;
-    first_indices: number[];
-    last_indices: number[];
-  };
+  protected notes: Notes;
   protected direction?: number;
 
-  constructor(
-    notes: {
-      first_note: Note;
-      last_note: Note;
-      first_indices: number[];
-      last_indices: number[];
-    },
-    text?: string
-  ) {
+  constructor(notes: Notes, text?: string) {
     /**
      * Notes is a struct that has:
      *
@@ -97,7 +83,7 @@ export class StaveTie extends Element {
    *
    * @param {!Object} notes The notes to tie up.
    */
-  setNotes(notes: { first_note: Note; last_note: Note; first_indices: number[]; last_indices: number[] }): this {
+  setNotes(notes: Notes): this {
     if (!notes.first_note && !notes.last_note) {
       throw new Vex.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
     }
@@ -121,7 +107,7 @@ export class StaveTie extends Element {
     return !this.notes.first_note || !this.notes.last_note;
   }
 
-  renderTie(params: StaveTieRenderTieParams): void {
+  renderTie(params: RenderTieParams): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
       throw new Vex.RERR('BadArguments', 'No Y-values to render');
     }
@@ -165,20 +151,11 @@ export class StaveTie extends Element {
     const ctx = this.checkContext();
     let center_x = (first_x_px + last_x_px) / 2;
     center_x -= ctx.measureText(this.text).width / 2;
-    let stave: Stave;
-    const firstNoteStave = this.notes.first_note ? this.notes.first_note.getStave() : undefined;
-    const lastNoteStave = this.notes.last_note ? this.notes.last_note.getStave() : undefined;
-    if (firstNoteStave) {
-      stave = firstNoteStave;
-    } else if (lastNoteStave) {
-      stave = lastNoteStave;
-    } else {
-      throw new Vex.RERR('NoStave', 'Stave required');
-    }
+    const stave = this.notes.first_note?.getStave() ?? this.notes.last_note?.getStave();
 
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
+    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave!.getYForTopText() - 1);
     ctx.restore();
   }
 
