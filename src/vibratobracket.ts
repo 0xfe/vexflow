@@ -72,29 +72,18 @@ export class VibratoBracket extends Element {
   draw(): void {
     const ctx = this.checkContext();
     this.setRendered();
-    const startStave = this.start ? this.start.getStave() : undefined;
-    const stopStave = this.stop ? this.stop.getStave() : undefined;
-
-    let y = 0;
-    if (startStave) {
-      y = startStave.getYForTopText(this.line);
-    } else if (stopStave) {
-      y = stopStave.getYForTopText(this.line);
-    } else {
-      throw new Vex.RERR('NoStave', 'Either star or stop stave is required.');
-    }
-
+    const y = this.start
+      ? this.start!.getStave()!.getYForTopText(this.line)
+      : this.stop!.getStave()!.getYForTopText(this.line);
     // If start note is not set then vibrato will be drawn
     // from the beginning of the stave
-    const start_x = this.start ? this.start.getAbsoluteX() : stopStave ? stopStave.getTieStartX() : 0;
+    const start_x = this.start ? this.start.getAbsoluteX() : this.stop!.getStave()!.getTieStartX();
 
     // If stop note is not set then vibrato will be drawn
     // until the end of the stave
     const stop_x = this.stop
       ? this.stop.getAbsoluteX() - this.stop.getWidth() - 5
-      : startStave
-      ? startStave.getTieEndX() - 10
-      : 0;
+      : this.start!.getStave()!.getTieEndX() - 10;
 
     this.render_options.vibrato_width = stop_x - start_x;
 
