@@ -4,20 +4,21 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
-import { Notes, StaveTie } from './stavetie';
+import { StaveTie } from './stavetie';
+import { TieNotes } from './types/common';
 
 export class TabTie extends StaveTie {
-  static createHammeron(notes: Notes): TabTie {
+  static createHammeron(notes: TieNotes): TabTie {
     return new TabTie(notes, 'H');
   }
 
-  static createPulloff(notes: Notes): TabTie {
+  static createPulloff(notes: TieNotes): TabTie {
     return new TabTie(notes, 'P');
   }
 
-  constructor(notes: Notes, text?: string) {
+  constructor(notes: TieNotes, text?: string) {
     /**
-     * Notes is a struct that has:
+     * TieNotes is a struct that has:
      *
      *  {
      *    first_note: Note,

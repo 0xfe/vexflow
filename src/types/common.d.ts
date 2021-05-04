@@ -96,11 +96,10 @@ export interface RenderContext {
   measureText(text: string): { width: number };
 }
 
-export interface RenderTieParams {
-  direction: number;
-  first_x_px: number;
-  last_x_px: number;
-  last_ys: number[];
-  first_ys: number[];
+export interface TieNotes {
+  first_note: Note;
+  last_note: Note;
+  first_indices: number[];
+  last_indices: number[];
 }
 

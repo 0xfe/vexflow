@@ -7,8 +7,7 @@
 import { Vex } from './vex';
 import { TabTie } from './tabtie';
 import { TabNote } from './tabnote';
-import { Notes } from './stavetie';
-import { RenderTieParams } from './types/common';
+import { TieNotes } from './types/common';
 
 export class TabSlide extends TabTie {
   static get SLIDE_UP(): number {
@@ -19,15 +18,15 @@ export class TabSlide extends TabTie {
     return -1;
   }
 
-  static createSlideUp(notes: Notes): TabSlide {
+  static createSlideUp(notes: TieNotes): TabSlide {
     return new TabSlide(notes, TabSlide.SLIDE_UP);
   }
 
-  static createSlideDown(notes: Notes): TabSlide {
+  static createSlideDown(notes: TieNotes): TabSlide {
     return new TabSlide(notes, TabSlide.SLIDE_DOWN);
   }
 
-  constructor(notes: Notes, direction?: number) {
+  constructor(notes: TieNotes, direction?: number) {
     /**
      * Notes is a struct that has:
      *
@@ -58,7 +57,13 @@ export class TabSlide extends TabTie {
     this.setNotes(notes);
   }
 
-  renderTie(params: RenderTieParams): void {
+  renderTie(params: {
+    direction: number;
+    first_x_px: number;
+    last_x_px: number;
+    last_ys: number[];
+    first_ys: number[];
+  }): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
       throw new Vex.RERR('BadArguments', 'No Y-values to render');
     }

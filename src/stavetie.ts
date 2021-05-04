@@ -6,40 +6,29 @@
 
 import { Vex } from './vex';
 import { Element } from './element';
-import { FontInfo, RenderTieParams } from './types/common';
-import { Note } from './note';
-import { Stave } from './stave';
-
-export interface Notes {
-  first_note: Note;
-  last_note: Note;
-  first_indices: number[];
-  last_indices: number[];
-}
-
-export interface StaveTieRenderOptions {
-  cp2: number;
-  last_x_shift: number;
-  tie_spacing: number;
-  cp1: number;
-  first_x_shift: number;
-  text_shift_x: number;
-  y_shift: number;
-  font: FontInfo;
-}
+import { FontInfo, TieNotes } from './types/common';
 
 export class StaveTie extends Element {
-  render_options: StaveTieRenderOptions;
+  render_options: {
+    cp2: number;
+    last_x_shift: number;
+    tie_spacing: number;
+    cp1: number;
+    first_x_shift: number;
+    text_shift_x: number;
+    y_shift: number;
+    font: FontInfo;
+  };
 
   protected text?: string;
 
   protected font: FontInfo;
-  protected notes: Notes;
+  protected notes: TieNotes;
   protected direction?: number;
 
-  constructor(notes: Notes, text?: string) {
+  constructor(notes: TieNotes, text?: string) {
     /**
-     * Notes is a struct that has:
+     * TieNotes is a struct that has:
      *
      *  {
      *    first_note: Note,
@@ -83,7 +72,7 @@ export class StaveTie extends Element {
    *
    * @param {!Object} notes The notes to tie up.
    */
-  setNotes(notes: Notes): this {
+  setNotes(notes: TieNotes): this {
     if (!notes.first_note && !notes.last_note) {
       throw new Vex.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
     }
@@ -107,7 +96,13 @@ export class StaveTie extends Element {
     return !this.notes.first_note || !this.notes.last_note;
   }
 
-  renderTie(params: RenderTieParams): void {
+  renderTie(params: {
+    direction: number;
+    first_x_px: number;
+    last_x_px: number;
+    last_ys: number[];
+    first_ys: number[];
+  }): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
       throw new Vex.RERR('BadArguments', 'No Y-values to render');
     }
