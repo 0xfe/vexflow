@@ -10,20 +10,47 @@
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
+import { Stave } from './stave';
+
+export interface ClefAnnotation {
+  code: string;
+  line: number;
+  x_shift: number;
+  point: number;
+}
+
+export interface ClefType {
+  // eslint-disable-next-line
+  point?: any;
+  code: string;
+  line?: number;
+}
 
 // To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any []) {
   if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', args);
 }
 
 export class Clef extends StaveModifier {
-  static get CATEGORY() {
+  static DEBUG: boolean;
+
+  annotation?: ClefAnnotation;
+  clef: ClefType = Clef.types['treble'];
+
+  protected glyph?: Glyph;
+  protected attachment?: Glyph;
+  protected size?: string;
+  protected type?: string;
+
+  static get CATEGORY(): string {
     return 'clefs';
   }
 
   // Every clef name is associated with a glyph code from the font file
   // and a default stave line number.
-  static get types() {
+  static get types(): Record<string, ClefType> {
     return {
       treble: {
         code: 'gClef',
@@ -77,7 +104,7 @@ export class Clef extends StaveModifier {
 
   // Create a new clef. The parameter `clef` must be a key from
   // `Clef.types`.
-  constructor(type, size, annotation) {
+  constructor(type: string, size?: string, annotation?: string) {
     super();
     this.setAttribute('type', 'Clef');
 
@@ -87,11 +114,11 @@ export class Clef extends StaveModifier {
     L('Creating clef:', type);
   }
 
-  getCategory() {
+  getCategory(): string {
     return Clef.CATEGORY;
   }
 
-  setType(type, size, annotation) {
+  setType(type: string, size?: string, annotation?: string): this {
     this.type = type;
     this.clef = Clef.types[type];
     if (size === undefined) {
@@ -114,7 +141,7 @@ export class Clef extends StaveModifier {
       this.annotation = { code, point, line, x_shift };
 
       this.attachment = new Glyph(this.annotation.code, this.annotation.point);
-      this.attachment.metrics.x_max = 0;
+      this.attachment.metrics!.x_max = 0;
       this.attachment.setXShift(this.annotation.x_shift);
     } else {
       this.annotation = undefined;
@@ -123,7 +150,7 @@ export class Clef extends StaveModifier {
     return this;
   }
 
-  getWidth() {
+  getWidth(): number {
     if (this.type === 'tab' && !this.stave) {
       throw new Vex.RERR('ClefError', "Can't get width without stave.");
     }
@@ -131,9 +158,10 @@ export class Clef extends StaveModifier {
     return this.width;
   }
 
-  setStave(stave) {
+  setStave(stave: Stave): this {
     this.stave = stave;
     if (this.type !== 'tab') return this;
+    if (!this.glyph) throw new Vex.RERR('ClefError', "Can't set stave without glyph.");
 
     const numLines = this.stave.getOptions().num_lines;
     const point = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
@@ -144,23 +172,24 @@ export class Clef extends StaveModifier {
     return this;
   }
 
-  draw() {
+  draw(): void {
     if (!this.x) throw new Vex.RERR('ClefError', "Can't draw clef without x.");
     if (!this.stave) throw new Vex.RERR('ClefError', "Can't draw clef without stave.");
+    if (!this.glyph) throw new Vex.RERR('ClefError', "Can't draw clef without glyph.");
     this.setRendered();
 
     this.glyph.setStave(this.stave);
-    this.glyph.setContext(this.stave.context);
+    this.glyph.setContext(this.stave.getContext());
     if (this.clef.line !== undefined) {
       this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line);
     }
 
     this.glyph.renderToStave(this.x);
 
-    if (this.annotation !== undefined) {
+    if (this.annotation !== undefined && this.attachment !== undefined) {
       this.placeGlyphOnLine(this.attachment, this.stave, this.annotation.line);
       this.attachment.setStave(this.stave);
-      this.attachment.setContext(this.stave.context);
+      this.attachment.setContext(this.stave.getContext());
       this.attachment.renderToStave(this.x);
     }
   }
