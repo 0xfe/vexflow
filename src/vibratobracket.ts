@@ -9,13 +9,30 @@
 import { Vex } from './vex';
 import { Element } from './element';
 import { Vibrato } from './vibrato';
+import { Note } from './note';
 
 // To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any []) {
   if (VibratoBracket.DEBUG) Vex.L('Vex.Flow.VibratoBracket', args);
 }
 
 export class VibratoBracket extends Element {
+  static DEBUG: boolean;
+
+  protected line: number;
+
+  protected start: Note;
+  protected stop: Note;
+  protected render_options: {
+    vibrato_width: number;
+    wave_height: number;
+    wave_girth: number;
+    harsh: boolean;
+    wave_width: number;
+  };
+
   // bracket_data = {
   //   start: Vex.Flow.Note (optional)
   //   stop: Vex.Flow.Note (optional)
@@ -23,7 +40,7 @@ export class VibratoBracket extends Element {
   // Either the stop or start note must be set, or both of them.
   // A null value for the start or stop note indicates that the vibrato
   // is drawn from the beginning or until the end of the stave accordingly.
-  constructor(bracket_data) {
+  constructor(bracket_data: { stop: Note; start: Note }) {
     super();
     this.setAttribute('type', 'VibratoBracket');
 
@@ -37,37 +54,36 @@ export class VibratoBracket extends Element {
       wave_height: 6,
       wave_width: 4,
       wave_girth: 2,
+      vibrato_width: 0,
     };
   }
 
   // Set line position of the vibrato bracket
-  setLine(line) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
-  setHarsh(harsh) {
+  setHarsh(harsh: boolean): this {
     this.render_options.harsh = harsh;
     return this;
   }
 
   // Draw the vibrato bracket on the rendering context
-  draw() {
-    const ctx = this.context;
+  draw(): void {
+    const ctx = this.checkContext();
     this.setRendered();
-
     const y = this.start
-      ? this.start.getStave().getYForTopText(this.line)
-      : this.stop.getStave().getYForTopText(this.line);
-
+      ? this.start!.getStave()!.getYForTopText(this.line)
+      : this.stop!.getStave()!.getYForTopText(this.line);
     // If start note is not set then vibrato will be drawn
     // from the beginning of the stave
-    const start_x = this.start ? this.start.getAbsoluteX() : this.stop.getStave().getTieStartX();
+    const start_x = this.start ? this.start.getAbsoluteX() : this.stop!.getStave()!.getTieStartX();
 
     // If stop note is not set then vibrato will be drawn
     // until the end of the stave
     const stop_x = this.stop
       ? this.stop.getAbsoluteX() - this.stop.getWidth() - 5
-      : this.start.getStave().getTieEndX() - 10;
+      : this.start!.getStave()!.getTieEndX() - 10;
 
     this.render_options.vibrato_width = stop_x - start_x;
 
