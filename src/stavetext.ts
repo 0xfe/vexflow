@@ -13,7 +13,7 @@ export class StaveText extends StaveModifier {
     shift_y: number;
     justification: number;
   };
-  protected readonly font: FontInfo;
+  protected font: FontInfo;
 
   protected text: string;
   protected shift_x?: number;
@@ -72,7 +72,7 @@ export class StaveText extends StaveModifier {
   }
 
   setFont(font: FontInfo): this {
-    Vex.Merge(this.font, font);
+    this.font = font;
     return this;
   }
 
