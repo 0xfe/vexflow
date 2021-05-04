@@ -14,20 +14,13 @@ export interface StaveTempoOptions {
   name: string;
 }
 
-export interface Tempo {
-  bpm: number;
-  dots: number;
-  duration: string;
-  name: string;
-}
-
 export class StaveTempo extends StaveModifier {
   protected font: FontInfo;
   protected render_options: {
     glyph_font_scale: number;
   };
 
-  protected tempo: Tempo;
+  protected tempo: StaveTempoOptions;
   protected shift_x: number;
   protected shift_y: number;
 
@@ -35,7 +28,7 @@ export class StaveTempo extends StaveModifier {
     return 'stavetempo';
   }
 
-  constructor(tempo: Tempo, x: number, shift_y: number) {
+  constructor(tempo: StaveTempoOptions, x: number, shift_y: number) {
     super();
     this.setAttribute('type', 'StaveTempo');
 
@@ -58,7 +51,7 @@ export class StaveTempo extends StaveModifier {
     return StaveTempo.CATEGORY;
   }
 
-  setTempo(tempo: Tempo): this {
+  setTempo(tempo: StaveTempoOptions): this {
     this.tempo = tempo;
     return this;
   }
