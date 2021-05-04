@@ -19,14 +19,14 @@ export interface BarnoteMetrics {
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
-  ...args: [any]) {
+  ...args: any[]) {
   if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args);
 }
 
 export class BarNote extends Note {
   protected metrics: BarnoteMetrics;
   static DEBUG: boolean;
-  protected type?: number;
+  protected type!: number;
 
   constructor(type = Barline.type.SINGLE) {
     super({ duration: 'b' });
@@ -56,6 +56,7 @@ export class BarNote extends Note {
   getType(): number {
     return this.type;
   }
+
   setType(type: string | number): this {
     this.type = typeof type === 'string' ? Barline.typeString[type] : type;
 
