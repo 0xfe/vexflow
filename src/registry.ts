@@ -7,9 +7,9 @@
 // to track, query, and manage some subset of generated elements, and
 // dynamically get and set attributes.
 //
-// There are two ways to regiser with a registry:
+// There are two ways to register with a registry:
 //
-// 1) Explicitly call `element.register(registry)`, or,
+// 1) Explicitly call `registry.register(elem:Element, id?:string)`, or,
 // 2) Call `Registry.enableDefaultRegistry(registry)` when ready, and all future
 //    elements will automatically register with it.
 //
@@ -18,111 +18,122 @@
 // and class.
 
 import { Vex } from './vex';
+import { Element } from './element';
 
 export const X = Vex.MakeException('RegistryError');
 
-function setIndexValue(index, name, value, id, elem) {
-  if (!index[name][value]) index[name][value] = {};
-  index[name][value][id] = elem;
+// Indexes are represented as maps of maps of maps. This allows
+// for both multi-labeling (e.g., an element can have multiple classes)
+// and efficient lookup.
+class Index {
+  // [attribute_name][attribute_value][element_id] => Element
+  [key: string]: { [key: string]: { [key: string]: Element } };
+  constructor() {
+    this.id = {};
+    this.type = {};
+    this.class = {};
+  }
 }
 
 export class Registry {
-  static get INDEXES() {
-    return ['type'];
-  }
+  private static defaultRegistry?: Registry;
 
-  constructor() {
-    this.clear();
+  static getDefaultRegistry(): Registry | undefined {
+    return Registry.defaultRegistry;
   }
 
   // If you call `enableDefaultRegistry`, any new elements will auto-register with
   // the provided registry as soon as they're constructed.
-  static enableDefaultRegistry(registry) {
+  static enableDefaultRegistry(registry: Registry): void {
     Registry.defaultRegistry = registry;
   }
 
-  static getDefaultRegistry() {
-    return Registry.defaultRegistry;
+  static disableDefaultRegistry(): void {
+    Registry.defaultRegistry = undefined;
   }
 
-  static disableDefaultRegistry() {
-    Registry.defaultRegistry = null;
+  protected index: Index;
+
+  constructor() {
+    this.index = new Index();
   }
 
-  clear() {
-    // Indexes are represented as maps of maps (of maps). This allows
-    // for both multi-labeling (e.g., an element can have multiple classes)
-    // and efficient lookup.
-    this.index = {
-      id: {},
-      type: {},
-      class: {},
-    };
+  clear(): Registry {
+    this.index = new Index();
     return this;
+  }
+
+  setIndexValue(name: string, value: string, id: string, elem: Element): void {
+    const index = this.index;
+    if (!index[name][value]) {
+      index[name][value] = {};
+    }
+    index[name][value][id] = elem;
   }
 
   // Updates the indexes for element 'id'. If an element's attribute changes
   // from A -> B, make sure to remove the element from A.
-  updateIndex({ id, name, value, oldValue }) {
+  updateIndex(id: string, name: string, value: string | undefined, oldValue: string | undefined): void {
     const elem = this.getElementById(id);
-    if (oldValue !== null && this.index[name][oldValue]) {
+    if (oldValue !== undefined && this.index[name][oldValue]) {
       delete this.index[name][oldValue][id];
     }
-    if (value !== null) {
-      setIndexValue(this.index, name, value, elem.getAttribute('id'), elem);
+    if (value && elem) {
+      this.setIndexValue(name, value, elem.getAttribute('id'), elem);
     }
   }
 
   // Register element `elem` with this registry. This adds the element to its index and watches
   // it for attribute changes.
-  register(elem, id) {
+  register(elem: Element, id?: string): Registry {
     id = id || elem.getAttribute('id');
-
     if (!id) {
       throw new X("Can't add element without `id` attribute to registry", elem);
     }
 
     // Manually add id to index, then update other indexes.
     elem.setAttribute('id', id);
-    setIndexValue(this.index, 'id', id, id, elem);
-    Registry.INDEXES.forEach((name) => {
-      this.updateIndex({ id, name, value: elem.getAttribute(name), oldValue: null });
-    });
+    this.setIndexValue('id', id, id, elem);
+    this.updateIndex(id, 'type', elem.getAttribute('type'), undefined);
     elem.onRegister(this);
     return this;
   }
 
-  getElementById(id) {
-    return this.index.id[id] ? this.index.id[id][id] : null;
-  }
-
-  getElementsByAttribute(attrName, value) {
-    const index = this.index[attrName];
-    if (index && index[value]) {
-      return Object.keys(index[value]).map((i) => index[value][i]);
+  getElementById(id: string): Element | undefined {
+    if (this.index.id && this.index.id[id]) {
+      return this.index.id[id][id];
     } else {
-      return [];
+      return undefined;
     }
   }
 
-  getElementsByType(type) {
+  getElementsByAttribute(attribute: string, value: string): Element[] {
+    const index_attr = this.index[attribute];
+    if (index_attr) {
+      const index_attr_val = index_attr[value];
+      if (index_attr_val) {
+        const keys = Object.keys(index_attr_val);
+        return keys.map((k) => index_attr_val[k]);
+      }
+    }
+    return [];
+  }
+
+  getElementsByType(type: string): Element[] {
     return this.getElementsByAttribute('type', type);
   }
-  getElementsByClass(className) {
+
+  getElementsByClass(className: string): Element[] {
     return this.getElementsByAttribute('class', className);
   }
 
   // This is called by the element when an attribute value changes. If an indexed
   // attribute changes, then update the local index.
-  onUpdate({ id, name, value, oldValue }) {
-    function includes(array, value) {
-      return array.filter((x) => x === value).length > 0;
+  onUpdate(id: string, name: string, value: string | undefined, oldValue: string | undefined): Registry {
+    const allowedNames = ['id', 'type', 'class'];
+    if (allowedNames.includes(name)) {
+      this.updateIndex(id, name, value, oldValue);
     }
-
-    if (!includes(Registry.INDEXES.concat(['id', 'class']), name)) return this;
-    this.updateIndex({ id, name, value, oldValue });
     return this;
   }
 }
-
-Registry.defaultRegistry = null;
