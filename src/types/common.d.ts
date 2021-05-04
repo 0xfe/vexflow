@@ -102,4 +102,3 @@ export interface TieNotes {
   first_indices: number[];
   last_indices: number[];
 }
-

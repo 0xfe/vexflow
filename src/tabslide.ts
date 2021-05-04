@@ -73,7 +73,7 @@ export class TabSlide extends TabTie {
     const first_ys = params.first_ys;
     const last_x_px = params.last_x_px;
 
-    const direction = params.direction;
+    const direction = this.direction;
     if (direction !== TabSlide.SLIDE_UP && direction !== TabSlide.SLIDE_DOWN) {
       throw new Vex.RERR('BadSlide', 'Invalid slide direction');
     }
