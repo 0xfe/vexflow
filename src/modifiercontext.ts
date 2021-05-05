@@ -2,7 +2,7 @@
 //
 // ## Description
 //
-// This class implements various types of modifiers to notes (e.g. bends,
+// This class implements various types of members to notes (e.g. bends,
 // fingering positions etc.)
 
 import { Vex } from './vex';
@@ -21,6 +21,7 @@ import { ChordSymbol } from './chordsymbol';
 import { Bend } from './bend';
 import { Vibrato } from './vibrato';
 import { Modifier } from './modifier';
+import { TabNote } from './tabnote';
 
 export interface ModifierContextState {
   right_shift: number;
@@ -52,7 +53,7 @@ export type PreformatModifierType =
 
 export type PostformatModifierType = typeof StaveNote;
 
-export type ModifierClass = Modifier | StaveNote;
+export type ModifierContextMember = Modifier | StaveNote | TabNote;
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
 function L(
@@ -68,7 +69,7 @@ export class ModifierContext {
 
   protected postFormatted: boolean;
   protected spacing: number;
-  protected modifiers: Record<string, ModifierClass[]>;
+  protected members: Record<string, ModifierContextMember[]>;
 
   protected preFormatted: boolean;
   protected width: number;
@@ -77,8 +78,8 @@ export class ModifierContext {
   protected POSTFORMAT: PostformatModifierType[];
 
   constructor() {
-    // Current modifiers
-    this.modifiers = {};
+    // Current members
+    this.members = {};
 
     // Formatting data.
     this.preFormatted = false;
@@ -92,8 +93,8 @@ export class ModifierContext {
       top_text_line: 0,
     };
 
-    // Add new modifiers to this array. The ordering is significant -- lower
-    // modifiers are formatted and rendered before higher ones.
+    // Add new members to this array. The ordering is significant -- lower
+    // members are formatted and rendered before higher ones.
     this.PREFORMAT = [
       StaveNote,
       Dot,
@@ -115,17 +116,17 @@ export class ModifierContext {
     this.POSTFORMAT = [StaveNote];
   }
 
-  addModifier(modifier: ModifierClass): this {
-    const type = modifier.getCategory();
-    if (!this.modifiers[type]) this.modifiers[type] = [];
-    this.modifiers[type].push(modifier);
-    modifier.setModifierContext(this);
+  addMember(member: ModifierContextMember): this {
+    const type = member.getCategory();
+    if (!this.members[type]) this.members[type] = [];
+    this.members[type].push(member);
+    member.setModifierContext(this);
     this.preFormatted = false;
     return this;
   }
 
-  getModifiers(type: string): ModifierClass[] {
-    return this.modifiers[type];
+  getMembers(type: string): ModifierContextMember[] {
+    return this.members[type];
   }
 
   getWidth(): number {
@@ -146,7 +147,7 @@ export class ModifierContext {
 
   getMetrics(): ModifierContextMetrics {
     if (!this.formatted) {
-      throw new Vex.RERR('UnformattedModifier', 'Unformatted modifier has no metrics.');
+      throw new Vex.RERR('UnformattedMember', 'Unformatted member has no metrics.');
     }
 
     return {
@@ -157,21 +158,21 @@ export class ModifierContext {
 
   preFormat(): void {
     if (this.preFormatted) return;
-    this.PREFORMAT.forEach((modifier) => {
-      L('Preformatting ModifierContext: ', modifier.CATEGORY);
-      modifier.format(this.getModifiers(modifier.CATEGORY), this.state, this);
+    this.PREFORMAT.forEach((member) => {
+      L('Preformatting ModifierContext: ', member.CATEGORY);
+      member.format(this.getMembers(member.CATEGORY), this.state, this);
     });
 
-    // Update width of this modifier context
+    // Update width of this member context
     this.width = this.state.left_shift + this.state.right_shift;
     this.preFormatted = true;
   }
 
   postFormat(): void {
     if (this.postFormatted) return;
-    this.POSTFORMAT.forEach((modifier) => {
-      L('Postformatting ModifierContext: ', modifier.CATEGORY);
-      modifier.postFormat(this.getModifiers(modifier.CATEGORY) as StaveNote[]);
+    this.POSTFORMAT.forEach((member) => {
+      L('Postformatting ModifierContext: ', member.CATEGORY);
+      member.postFormat(this.getMembers(member.CATEGORY) as StaveNote[]);
     });
   }
 }

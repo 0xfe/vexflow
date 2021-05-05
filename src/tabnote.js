@@ -274,9 +274,9 @@ export class TabNote extends StemmableNote {
   addToModifierContext(mc) {
     this.setModifierContext(mc);
     for (let i = 0; i < this.modifiers.length; ++i) {
-      this.modifierContext.addModifier(this.modifiers[i]);
+      this.modifierContext.addMember(this.modifiers[i]);
     }
-    this.modifierContext.addModifier(this);
+    this.modifierContext.addMember(this);
     this.preFormatted = false;
     return this;
   }

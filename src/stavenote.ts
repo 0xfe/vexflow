@@ -873,9 +873,9 @@ export class StaveNote extends StemmableNote {
   addToModifierContext(mContext: ModifierContext): this {
     this.setModifierContext(mContext);
     for (let i = 0; i < this.modifiers.length; ++i) {
-      mContext.addModifier(this.modifiers[i]);
+      mContext.addMember(this.modifiers[i]);
     }
-    mContext.addModifier(this);
+    mContext.addMember(this);
     this.setPreFormatted(false);
     return this;
   }
@@ -944,13 +944,13 @@ export class StaveNote extends StemmableNote {
   // Get all accidentals in the `ModifierContext`
   getAccidentals(): Modifier[] {
     if (!this.modifierContext) throw new Vex.RERR('NoModifierContext', 'No modifier context attached to this note.');
-    return this.modifierContext.getModifiers('accidentals') as Modifier[];
+    return this.modifierContext.getMembers('accidentals') as Modifier[];
   }
 
   // Get all dots in the `ModifierContext`
   getDots(): Modifier[] {
     if (!this.modifierContext) throw new Vex.RERR('NoModifierContext', 'No modifier context attached to this note.');
-    return this.modifierContext.getModifiers('dots') as Modifier[];
+    return this.modifierContext.getMembers('dots') as Modifier[];
   }
 
   // Get the width of the note if it is displaced. Used for `Voice`
