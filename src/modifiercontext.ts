@@ -20,6 +20,7 @@ import { Annotation } from './annotation';
 import { ChordSymbol } from './chordsymbol';
 import { Bend } from './bend';
 import { Vibrato } from './vibrato';
+import { Modifier } from './modifier';
 
 export interface ModifierContextState {
   right_shift: number;
@@ -51,21 +52,7 @@ export type PreformatModifierType =
 
 export type PostformatModifierType = typeof StaveNote;
 
-export type ModifierClass =
-  | StaveNote
-  | Dot
-  | FretHandFinger
-  | Accidental
-  | Stroke
-  | GraceNoteGroup
-  | NoteSubGroup
-  | StringNumber
-  | Articulation
-  | Ornament
-  | Annotation
-  | ChordSymbol
-  | Bend
-  | Vibrato;
+export type ModifierClass = Modifier | StaveNote;
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
 function L(

@@ -9,9 +9,10 @@ import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
 import { TickContext } from './tickcontext';
-import { ModifierClass, ModifierContext } from './modifiercontext';
+import { ModifierContext } from './modifiercontext';
 import { Tuplet } from './tuplet';
 import { Voice } from './voice';
+import { Modifier } from './modifier';
 
 //** Spacing */
 export interface Space {
@@ -48,7 +49,7 @@ export abstract class Tickable extends Element {
   protected postFormatted: boolean;
   protected modifierContext?: ModifierContext;
   protected tickContext?: TickContext;
-  protected modifiers: ModifierClass[];
+  protected modifiers: Modifier[];
   protected tickMultiplier: Fraction;
   protected formatterMetrics: FormatterMetrics;
   protected intrinsicTicks: number;
@@ -255,14 +256,14 @@ export abstract class Tickable extends Element {
   }
 
   /** Optional, if tickable has modifiers, associates a Modifier. */
-  addModifier(mod: ModifierClass): this {
+  addModifier(mod: Modifier): this {
     this.modifiers.push(mod);
     this.preFormatted = false;
     return this;
   }
 
   /** Gets the list of associated modifiers. */
-  getModifiers(): ModifierClass[] {
+  getModifiers(): Modifier[] {
     return this.modifiers;
   }
 
