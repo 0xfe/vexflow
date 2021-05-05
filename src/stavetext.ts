@@ -72,7 +72,7 @@ export class StaveText extends StaveModifier {
   }
 
   setFont(font: FontInfo): this {
-    this.font = font;
+    this.font = { ...this.font, ...font };
     return this;
   }
 
