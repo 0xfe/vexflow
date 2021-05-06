@@ -66,10 +66,7 @@ export abstract class Element {
     this.musicFont = Flow.DEFAULT_FONT_STACK[0];
 
     // If a default registry exist, then register with it right away.
-    const defaultRegistry = Registry.getDefaultRegistry();
-    if (defaultRegistry) {
-      defaultRegistry.register(this);
-    }
+    Registry.getDefaultRegistry()?.register(this);
   }
 
   /** Sets music fonts stack. */
@@ -144,12 +141,12 @@ export abstract class Element {
   addClass(className: string): this {
     this.attrs.classes[className] = true;
     if (this.registry) {
-      this.registry.onUpdate(
-        /* id */ this.attrs.id,
-        /* name */ 'class',
-        /* value */ className,
-        /* oldValue */ undefined
-      );
+      this.registry.onUpdate({
+        id: this.attrs.id,
+        name: 'class',
+        value: className,
+        oldValue: undefined,
+      });
     }
     return this;
   }
@@ -158,12 +155,12 @@ export abstract class Element {
   removeClass(className: string): this {
     delete this.attrs.classes[className];
     if (this.registry) {
-      this.registry.onUpdate(
-        /* id */ this.attrs.id,
-        /* name */ 'class',
-        /* value */ undefined,
-        /* oldValue */ className
-      );
+      this.registry.onUpdate({
+        id: this.attrs.id,
+        name: 'class',
+        value: undefined,
+        oldValue: className,
+      });
     }
     return this;
   }
@@ -204,7 +201,7 @@ export abstract class Element {
     this.attrs[name] = value;
     if (this.registry) {
       // Register with old id to support id changes.
-      this.registry.onUpdate(oldID, name, value, oldValue);
+      this.registry.onUpdate({ id: oldID, name, value, oldValue });
     }
     return this;
   }

@@ -35,6 +35,13 @@ class Index {
   }
 }
 
+interface RegistryUpdate {
+  id: string;
+  name: string;
+  value: string | undefined;
+  oldValue: string | undefined;
+}
+
 export class Registry {
   private static defaultRegistry?: Registry;
 
@@ -73,7 +80,7 @@ export class Registry {
 
   // Updates the indexes for element 'id'. If an element's attribute changes
   // from A -> B, make sure to remove the element from A.
-  updateIndex(id: string, name: string, value: string | undefined, oldValue: string | undefined): void {
+  updateIndex({ id, name, value, oldValue }: RegistryUpdate): void {
     const elem = this.getElementById(id);
     if (oldValue !== undefined && this.index[name][oldValue]) {
       delete this.index[name][oldValue][id];
@@ -94,17 +101,13 @@ export class Registry {
     // Manually add id to index, then update other indexes.
     elem.setAttribute('id', id);
     this.setIndexValue('id', id, id, elem);
-    this.updateIndex(id, 'type', elem.getAttribute('type'), undefined);
+    this.updateIndex({ id, name: 'type', value: elem.getAttribute('type'), oldValue: undefined });
     elem.onRegister(this);
     return this;
   }
 
   getElementById(id: string): Element | undefined {
-    if (this.index.id && this.index.id[id]) {
-      return this.index.id[id][id];
-    } else {
-      return undefined;
-    }
+    return this.index.id?.[id]?.[id]; // return undefined if the id is not found.
   }
 
   getElementsByAttribute(attribute: string, value: string): Element[] {
@@ -129,10 +132,10 @@ export class Registry {
 
   // This is called by the element when an attribute value changes. If an indexed
   // attribute changes, then update the local index.
-  onUpdate(id: string, name: string, value: string | undefined, oldValue: string | undefined): Registry {
+  onUpdate(info: RegistryUpdate): Registry {
     const allowedNames = ['id', 'type', 'class'];
-    if (allowedNames.includes(name)) {
-      this.updateIndex(id, name, value, oldValue);
+    if (allowedNames.includes(info.name)) {
+      this.updateIndex(info);
     }
     return this;
   }
