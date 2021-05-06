@@ -87,7 +87,7 @@ export interface RenderContext {
   save(): RenderContext;
   restore(): RenderContext;
   // eslint-disable-next-line
-  openGroup(...args: any[]):any;
+  openGroup(...args: any[]): any;
   closeGroup(): void;
 
   /**

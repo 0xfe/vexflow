@@ -18,7 +18,7 @@ function L(...args) {
 
 export const X = Vex.MakeException('EasyScoreError');
 
-class Grammar {
+export class Grammar {
   constructor(builder) {
     this.builder = builder;
   }
