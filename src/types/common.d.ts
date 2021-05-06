@@ -93,7 +93,7 @@ export interface RenderContext {
   /**
    * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width : number, height : number}. Only width is used throughout VexFlow.
    */
-  measureText(text: string): { width: number };
+  measureText(text: string): { width: number; height: number };
 }
 
 /** TODO: Move to ModifierContext */
