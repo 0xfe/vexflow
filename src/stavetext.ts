@@ -4,13 +4,34 @@
 import { Vex } from './vex';
 import { StaveModifier } from './stavemodifier';
 import { TextNote } from './textnote';
+import { FontInfo } from './types/common';
+import { Stave } from './stave';
 
 export class StaveText extends StaveModifier {
-  static get CATEGORY() {
+  protected options: {
+    shift_x: number;
+    shift_y: number;
+    justification: number;
+  };
+  protected font: FontInfo;
+
+  protected text: string;
+  protected shift_x?: number;
+  protected shift_y?: number;
+
+  static get CATEGORY(): string {
     return 'stavetext';
   }
 
-  constructor(text, position, options) {
+  constructor(
+    text: string,
+    position: number,
+    options: {
+      shift_x: number;
+      shift_y: number;
+      justification: number;
+    }
+  ) {
     super();
     this.setAttribute('type', 'StaveText');
 
@@ -31,36 +52,41 @@ export class StaveText extends StaveModifier {
     };
   }
 
-  getCategory() {
+  getCategory(): string {
     return StaveText.CATEGORY;
   }
-  setStaveText(text) {
+
+  setStaveText(text: string): this {
     this.text = text;
     return this;
   }
-  setShiftX(x) {
+
+  setShiftX(x: number): this {
     this.shift_x = x;
     return this;
   }
-  setShiftY(y) {
+
+  setShiftY(y: number): this {
     this.shift_y = y;
     return this;
   }
 
-  setFont(font) {
-    Vex.Merge(this.font, font);
+  setFont(font: FontInfo): this {
+    this.font = { ...this.font, ...font };
+    return this;
   }
 
-  setText(text) {
+  setText(text: string): this {
     this.text = text;
+    return this;
   }
 
-  draw(stave) {
+  draw(stave: Stave): this {
     const ctx = stave.checkContext();
     this.setRendered();
 
     ctx.save();
-    ctx.lineWidth = 2;
+    ctx.setLineWidth(2);
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const text_width = ctx.measureText('' + this.text).width;
 
