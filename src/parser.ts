@@ -183,8 +183,6 @@ export class Parser {
       const result = this.expectOne(rule);
       if (result.success && result.results) {
         numMatches++;
-        // TODO: Is it okay to use the spread operator here to flatten the results?
-        // It fixes a TypeScript error and reduces the number of calls to flattenMatches().
         results.push(...result.results);
       } else {
         more = false;
