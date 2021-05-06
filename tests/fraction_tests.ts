@@ -25,7 +25,7 @@ export const FractionTests = {
     ok(f_1_2.greaterThanEquals(0.5), 'Fraction: 1/2 >= 0.5');
     notOk(f_1_2.greaterThanEquals(1), 'Fraction: ! 1/2 >= 1');
 
-    notOk(f_1_2.lessThan(0.5), 'Fracion: ! 1/2 < 0.5');
+    notOk(f_1_2.lessThan(0.5), 'Fraction: ! 1/2 < 0.5');
     ok(f_1_2.lessThan(1), 'Fraction: 1/2 < 1');
 
     ok(f_1_2.lessThanEquals(0.6), 'Fraction: 1/2 <= 0.6');
