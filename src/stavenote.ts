@@ -23,7 +23,7 @@ import { Beam } from './beam';
 import { ModifierContext } from './modifiercontext';
 import { ElementStyle } from './element';
 import { Stave } from './stave';
-import { NoteStruct } from './note';
+import { Note, NoteStruct } from './note';
 import { ModifierContextState } from './modifiercontext';
 
 export interface StaveNoteHeadBounds {
@@ -358,7 +358,7 @@ export class StaveNote extends StemmableNote {
     state.right_shift += xShift;
   }
 
-  static postFormat(notes: StaveNote[]): boolean {
+  static postFormat(notes: Note[]): boolean {
     if (!notes) return false;
 
     notes.forEach((note) => note.postFormat());

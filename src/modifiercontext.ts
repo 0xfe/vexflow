@@ -22,6 +22,7 @@ import { Bend } from './bend';
 import { Vibrato } from './vibrato';
 import { Modifier } from './modifier';
 import { TabNote } from './tabnote';
+import { Note } from './note';
 
 export interface ModifierContextState {
   right_shift: number;
@@ -34,24 +35,6 @@ export interface ModifierContextMetrics {
   width: number;
   spacing: number;
 }
-
-export type PreformatModifierType =
-  | typeof StaveNote
-  | typeof Dot
-  | typeof FretHandFinger
-  | typeof Accidental
-  | typeof Stroke
-  | typeof GraceNoteGroup
-  | typeof NoteSubGroup
-  | typeof StringNumber
-  | typeof Articulation
-  | typeof Ornament
-  | typeof Annotation
-  | typeof ChordSymbol
-  | typeof Bend
-  | typeof Vibrato;
-
-export type PostformatModifierType = typeof StaveNote;
 
 export type ModifierContextMember = Modifier | StaveNote | TabNote;
 
@@ -74,8 +57,10 @@ export class ModifierContext {
   protected preFormatted: boolean;
   protected width: number;
   protected formatted?: boolean;
-  protected PREFORMAT: PreformatModifierType[];
-  protected POSTFORMAT: PostformatModifierType[];
+  // eslint-disable-next-line
+  protected PREFORMAT: any[];
+  // eslint-disable-next-line
+  protected POSTFORMAT: any[];
 
   constructor() {
     // Current members
@@ -116,6 +101,11 @@ export class ModifierContext {
     this.POSTFORMAT = [StaveNote];
   }
 
+  addModifier(member: ModifierContextMember): this {
+    L('addModifier is deprecated, use addMember instead.');
+    return this.addMember(member);
+  }
+
   addMember(member: ModifierContextMember): this {
     const type = member.getCategory();
     if (!this.members[type]) this.members[type] = [];
@@ -123,6 +113,11 @@ export class ModifierContext {
     member.setModifierContext(this);
     this.preFormatted = false;
     return this;
+  }
+
+  getModifiers(type: string): ModifierContextMember[] {
+    L('getModifiers is deprecated, use getMembers instead.');
+    return this.getMembers(type);
   }
 
   getMembers(type: string): ModifierContextMember[] {
@@ -172,7 +167,7 @@ export class ModifierContext {
     if (this.postFormatted) return;
     this.POSTFORMAT.forEach((member) => {
       L('Postformatting ModifierContext: ', member.CATEGORY);
-      member.postFormat(this.getMembers(member.CATEGORY) as StaveNote[]);
+      member.postFormat(this.getMembers(member.CATEGORY) as Note[]);
     });
   }
 }
