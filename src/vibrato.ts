@@ -40,7 +40,7 @@ export class Vibrato extends Modifier {
     let shift = state.right_shift - 7;
 
     // If there's a bend, drop the text line
-    const bends = context.getModifiers(Bend.CATEGORY);
+    const bends = context.getMembers(Bend.CATEGORY) as Modifier[];
     if (bends && bends.length > 0) {
       text_line--;
     }

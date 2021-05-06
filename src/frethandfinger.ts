@@ -5,9 +5,10 @@
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
-import { FontInfo, ModifierContextState } from './types/common';
+import { FontInfo } from './types/common';
 import { StaveNote } from './stavenote';
 import { Builder } from './easyscore';
+import { ModifierContextState } from './modifiercontext';
 
 /**
  * @constructor
