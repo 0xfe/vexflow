@@ -15,6 +15,7 @@ export enum BarlineType {
   REPEAT_BOTH = 6,
   NONE = 7,
 }
+
 export class Barline extends StaveModifier {
   protected widths: Record<string, number>;
   protected paddings: Record<string, number>;
@@ -31,7 +32,7 @@ export class Barline extends StaveModifier {
     return BarlineType;
   }
 
-  static get typeString(): Record<string, number> {
+  static get typeString(): Record<string, BarlineType> {
     return {
       single: Barline.type.SINGLE,
       double: Barline.type.DOUBLE,
@@ -46,7 +47,7 @@ export class Barline extends StaveModifier {
   /**
    * @constructor
    */
-  constructor(type: number | string) {
+  constructor(type: BarlineType | string) {
     super();
     this.setAttribute('type', 'Barline');
     this.thickness = Flow.STAVE_LINE_THICKNESS;

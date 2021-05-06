@@ -10,7 +10,7 @@
 
 import { Vex } from './vex';
 import { Note } from './note';
-import { Barline } from './stavebarline';
+import { Barline, BarlineType } from './stavebarline';
 
 export interface BarnoteMetrics {
   widths: Record<string, number>;
@@ -26,7 +26,7 @@ function L(
 export class BarNote extends Note {
   protected metrics: BarnoteMetrics;
   static DEBUG: boolean;
-  protected type!: number;
+  protected type!: BarlineType;
 
   constructor(type = Barline.type.SINGLE) {
     super({ duration: 'b' });
@@ -53,11 +53,11 @@ export class BarNote extends Note {
   }
 
   // Get and set the type of Bar note. `type` must be one of `Vex.Flow.Barline.type`.
-  getType(): number {
+  getType(): BarlineType {
     return this.type;
   }
 
-  setType(type: string | number): this {
+  setType(type: string | BarlineType): this {
     this.type = typeof type === 'string' ? Barline.typeString[type] : type;
 
     // Set width to width of relevant `Barline`.
