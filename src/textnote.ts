@@ -9,7 +9,6 @@ import { Vex } from './vex';
 import { Note, NoteStruct } from './note';
 import { Glyph } from './glyph';
 import { FontInfo } from './types/common';
-import { StaveNoteStruct } from './stavenote';
 
 export enum Justification {
   LEFT = 1,
