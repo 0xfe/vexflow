@@ -22,7 +22,7 @@ type TriggerFunction = (state?: { matches: Match[] }) => void;
 interface Rule {
   // Lexer Rules
   token?: string; // The token property is a string that is compiled into a RegExp.
-  noSpace?: boolean; // TODO: None of the EasyScore rules specify noSpace, so it is not used anywhere.
+  noSpace?: boolean;
 
   // Parser Rules
   expect?: RuleFunction[];
@@ -44,9 +44,13 @@ interface Result {
   // Parser Results
   matches?: Match[];
   numMatches?: number;
-  results?: Result[];
+  results?: GroupedResults;
   errorPos?: number; // Set to NO_ERROR if successful. N if there is an error in the string.
 }
+
+// Represents a mixed array containing Result and/or Result[].
+// The grouping is determined by the structure of the Grammar.
+type GroupedResults = (Result | Result[])[];
 
 // Converts parser results into an easy to reference list that can be
 // used in triggers. This function returns:
@@ -130,7 +134,7 @@ export class Parser {
   // the position before exiting.
   // TODO: expectOne(...) is never called with the `maybe` parameter.
   expectOne(rule: Rule, maybe: boolean = false): Result {
-    const results: Result[] = [];
+    const results: GroupedResults = [];
     const pos = this.pos;
 
     let allMatches = true;
@@ -174,7 +178,7 @@ export class Parser {
   // Try to match multiple (one or more) instances of the rule. If `maybe` is set,
   // then a failed match is also a success (but the position is reset).
   expectOneOrMore(rule: Rule, maybe: boolean = false): Result {
-    const results: Result[] = [];
+    const results: GroupedResults = [];
     const pos = this.pos;
     let numMatches = 0;
     let more = true;
@@ -183,7 +187,7 @@ export class Parser {
       const result = this.expectOne(rule);
       if (result.success && result.results) {
         numMatches++;
-        results.push(...result.results);
+        results.push(result.results as Result[]);
       } else {
         more = false;
       }
