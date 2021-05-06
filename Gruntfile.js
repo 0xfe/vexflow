@@ -82,12 +82,24 @@ module.exports = (grunt) => {
       build: webpackProd,
       buildDev: webpackDev,
       buildTest: webpackTest,
-      watch: {
+      watchDev: {
         ...webpackDev,
         watch: true,
         keepalive: true,
         failOnError: false,
       },
+      watchTest: {
+        ...webpackTest,
+        watch: true,
+        keepalive: true,
+        failOnError: false,
+      },
+    },
+    concurrent: {
+      options: {
+        logConcurrentOutput: true,
+      },
+      tasks: ['webpack:watchDev', 'webpack:watchTest'],
     },
     eslint: {
       target: SOURCES.concat('./tests'),
@@ -95,15 +107,6 @@ module.exports = (grunt) => {
     },
     qunit: {
       files: ['tests/flow.html'],
-    },
-    watch: {
-      tests: {
-        files: ['tests/*', 'src/*'],
-        tasks: ['concat:tests'],
-        options: {
-          interrupt: true,
-        },
-      },
     },
     copy: {
       release: {
@@ -140,8 +143,8 @@ module.exports = (grunt) => {
           out: 'build/typedocs',
           name: 'vexflow',
         },
-        src: ['./typedoc.ts']
-      }
+        src: ['./typedoc.ts'],
+      },
     },
     gitcommit: {
       releases: {
@@ -178,7 +181,6 @@ module.exports = (grunt) => {
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -189,9 +191,19 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-git');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-webpack');
+  grunt.loadNpmTasks('grunt-concurrent');
 
   // Default task(s).
-  grunt.registerTask('default', ['clean', 'eslint', 'webpack:build', 'webpack:buildDev', 'webpack:buildTest', 'docco', 'typedoc']);
+  grunt.registerTask('default', [
+    'clean',
+    'eslint',
+    'webpack:build',
+    'webpack:buildDev',
+    'webpack:buildTest',
+    'docco',
+    'typedoc',
+  ]);
+  grunt.registerTask('watch', 'Watch src/ and tests/ concurrently', ['clean', 'eslint', 'concurrent']);
   grunt.registerTask('test', 'Run qunit tests.', [
     'clean',
     'webpack:build',
