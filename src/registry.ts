@@ -65,7 +65,7 @@ export class Registry {
     this.index = new Index();
   }
 
-  clear(): Registry {
+  clear(): this {
     this.index = new Index();
     return this;
   }
@@ -92,7 +92,7 @@ export class Registry {
 
   // Register element `elem` with this registry. This adds the element to its index and watches
   // it for attribute changes.
-  register(elem: Element, id?: string): Registry {
+  register(elem: Element, id?: string): this {
     id = id || elem.getAttribute('id');
     if (!id) {
       throw new X("Can't add element without `id` attribute to registry", elem);
@@ -132,7 +132,7 @@ export class Registry {
 
   // This is called by the element when an attribute value changes. If an indexed
   // attribute changes, then update the local index.
-  onUpdate(info: RegistryUpdate): Registry {
+  onUpdate(info: RegistryUpdate): this {
     const allowedNames = ['id', 'type', 'class'];
     if (allowedNames.includes(info.name)) {
       this.updateIndex(info);
