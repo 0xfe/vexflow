@@ -39,7 +39,7 @@ export class TimeSignatureGlyph extends Glyph {
       botWidth += botGlyph.getMetrics().width!;
     }
 
-    this.width = topWidth > botWidth ? topWidth : botWidth;
+    this.width = Math.max(topWidth, botWidth);
     this.xMin = this.getMetrics().x_min;
     this.topStartX = (this.width - topWidth) / 2.0;
     this.botStartX = (this.width - botWidth) / 2.0;
