@@ -66,9 +66,7 @@ export abstract class Element {
     this.musicFont = Flow.DEFAULT_FONT_STACK[0];
 
     // If a default registry exist, then register with it right away.
-    if (Registry.getDefaultRegistry()) {
-      Registry.getDefaultRegistry().register(this);
-    }
+    Registry.getDefaultRegistry()?.register(this);
   }
 
   /** Sets music fonts stack. */
@@ -131,9 +129,8 @@ export abstract class Element {
   }
 
   /** Draws an element. */
-  abstract draw(
-    // eslint-disable-next-line
-    ...args: any []): void;
+  // eslint-disable-next-line
+  abstract draw(...args: any[]): void;
 
   /** Checkes if it has a class label (An element can have multiple class labels).  */
   hasClass(className: string): boolean {
@@ -145,10 +142,10 @@ export abstract class Element {
     this.attrs.classes[className] = true;
     if (this.registry) {
       this.registry.onUpdate({
-        id: this.getAttribute('id'),
+        id: this.attrs.id,
         name: 'class',
         value: className,
-        oldValue: null,
+        oldValue: undefined,
       });
     }
     return this;
@@ -159,9 +156,9 @@ export abstract class Element {
     delete this.attrs.classes[className];
     if (this.registry) {
       this.registry.onUpdate({
-        id: this.getAttribute('id'),
+        id: this.attrs.id,
         name: 'class',
-        value: null,
+        value: undefined,
         oldValue: className,
       });
     }
@@ -191,22 +188,20 @@ export abstract class Element {
   }
 
   /** Returns an attribute. */
-  getAttribute(
-    // eslint-disable-next-line
-    name: string ): any {
+  // eslint-disable-next-line
+  getAttribute(name: string): any {
     return this.attrs[name];
   }
 
   /** Sets an attribute. */
-  setAttribute(
-    // eslint-disable-next-line
-    name: string, value: any): this {
-    const { id } = this.attrs;
+  // eslint-disable-next-line
+  setAttribute(name: string, value: any): this {
+    const oldID = this.attrs.id;
     const oldValue = this.attrs[name];
     this.attrs[name] = value;
     if (this.registry) {
       // Register with old id to support id changes.
-      this.registry.onUpdate({ id, name, value, oldValue });
+      this.registry.onUpdate({ id: oldID, name, value, oldValue });
     }
     return this;
   }
