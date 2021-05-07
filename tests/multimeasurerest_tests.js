@@ -2,8 +2,7 @@
  * VexFlow - MultiMeasureRest Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.MultiMeasureRest = (function () {
+const MultiMeasureRestTests = (function () {
   return {
     Start: function () {
       QUnit.module('MultiMeasureRest');
@@ -153,3 +152,5 @@ VF.Test.MultiMeasureRest = (function () {
     },
   };
 })();
+VF.Test.MultiMeasureRest = MultiMeasureRestTests;
+export { MultiMeasureRestTests };

@@ -2,8 +2,7 @@
  * VexFlow - Accidental Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Bend = (function () {
+const BendTests = (function () {
   var Bend = {
     Start: function () {
       QUnit.module('Bend');
@@ -277,3 +276,5 @@ VF.Test.Bend = (function () {
 
   return Bend;
 })();
+VF.Test.Bend = BendTests;
+export { BendTests };

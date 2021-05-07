@@ -2,7 +2,6 @@
  * VexFlow - Percussion Tests
  * Copyright Mike Corrigan 2012 <corrigan@gmail.com>
  */
-
 function createSingleMeasureTest(setup) {
   return function (options) {
     var vf = VF.Test.makeFactory(options, 500);
@@ -18,7 +17,7 @@ function createSingleMeasureTest(setup) {
   };
 }
 
-VF.Test.Percussion = (function () {
+const PercussionTests = (function () {
   function showNote(note_struct, stave, ctx, x) {
     var note = new VF.StaveNote(note_struct).setStave(stave);
 
@@ -235,3 +234,5 @@ VF.Test.Percussion = (function () {
 
   return Percussion;
 })();
+VF.Test.Percussion = PercussionTests;
+export { PercussionTests };

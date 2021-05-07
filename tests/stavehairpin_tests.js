@@ -3,8 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  * Author: Raffaele Viglianti, 2012
  */
-
-VF.Test.StaveHairpin = (function () {
+const StaveHairpinTests = (function () {
   function drawHairpin(from, to, stave, ctx, type, position, options) {
     var hairpin = new VF.StaveHairpin({ first_note: from, last_note: to }, type);
 
@@ -112,3 +111,5 @@ VF.Test.StaveHairpin = (function () {
     },
   };
 })();
+VF.Test.StaveHairpin = StaveHairpinTests;
+export { StaveHairpinTests };

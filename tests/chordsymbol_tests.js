@@ -2,8 +2,7 @@
  * VexFlow - Annotation Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.ChordSymbol = (function () {
+const ChordSymbolTests = (function () {
   var runSVG = VF.Test.runSVGTest;
   var ChordSymbol = {
     Start: function () {
@@ -469,3 +468,5 @@ VF.Test.ChordSymbol = (function () {
 
   return ChordSymbol;
 })();
+VF.Test.ChordSymbol = ChordSymbolTests;
+export { ChordSymbolTests };

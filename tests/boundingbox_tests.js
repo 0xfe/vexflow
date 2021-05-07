@@ -2,8 +2,7 @@
  * VexFlow - Bounding Box Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.BoundingBox = (function () {
+const BoundingBoxTests = (function () {
   var BoundingBox = {
     Start: function () {
       QUnit.module('BoundingBox');
@@ -61,3 +60,5 @@ VF.Test.BoundingBox = (function () {
 
   return BoundingBox;
 })();
+VF.Test.BoundingBox = BoundingBoxTests;
+export { BoundingBoxTests };

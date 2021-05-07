@@ -2,18 +2,7 @@
  * VexFlow - Beam Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-/*
-eslint-disable
-no-var,
-no-undef,
-wrap-iife,
-func-names,
-vars-on-top,
-max-len,
- */
-
-VF.Test.Beam = (function () {
+const BeamTests = (function () {
   var runTests = VF.Test.runTests;
 
   function concat(a, b) {
@@ -811,3 +800,5 @@ VF.Test.Beam = (function () {
 
   return Beam;
 })();
+VF.Test.Beam = BeamTests;
+export { BeamTests };

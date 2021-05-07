@@ -2,8 +2,7 @@
  * VexFlow - Annotation Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Annotation = (function () {
+const AnnotationTests = (function () {
   var runTests = VF.Test.runTests;
   var Annotation = {
     Start: function () {
@@ -426,3 +425,5 @@ VF.Test.Annotation = (function () {
 
   return Annotation;
 })();
+VF.Test.Annotation = AnnotationTests;
+export { AnnotationTests };

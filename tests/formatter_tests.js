@@ -2,8 +2,9 @@
  * VexFlow - TickContext Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
+import { MockTickable } from './mocks';
 
-VF.Test.Formatter = (function () {
+const FormatterTests = (function () {
   var run = VF.Test.runTests;
   var runSVG = VF.Test.runSVGTest;
 
@@ -41,7 +42,7 @@ VF.Test.Formatter = (function () {
 
     buildTickContexts: () => {
       function createTickable() {
-        return new VF.Test.MockTickable();
+        return new MockTickable();
       }
 
       var R = VF.RESOLUTION;
@@ -686,3 +687,5 @@ VF.Test.Formatter = (function () {
 
   return Formatter;
 })();
+VF.Test.Formatter = FormatterTests;
+export { FormatterTests };

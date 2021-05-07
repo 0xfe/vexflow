@@ -19,7 +19,7 @@ function createTest(setup) {
   };
 }
 
-VF.Test.GhostNote = {
+const GhostNoteTests = {
   Start: function () {
     var run = VF.Test.runTests;
 
@@ -108,3 +108,5 @@ VF.Test.GhostNote = {
     );
   },
 };
+VF.Test.GhostNote = GhostNoteTests;
+export { GhostNoteTests };

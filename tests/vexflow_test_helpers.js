@@ -7,6 +7,8 @@
 
 /* eslint max-classes-per-file: "off" */
 
+global.VF = Vex.Flow;
+
 // Mock out the QUnit stuff for generating svg images,
 // since we don't really care about the assertions.
 if (!global.QUnit) {
@@ -50,8 +52,7 @@ if (!global.QUnit) {
   global.notStrictEqual = QUnit.assertions.notStrictEqual;
 }
 
-global['VF'] = Vex.Flow;
-VF.Test = (function () {
+const VexFlowTests = (function () {
   var Test = {
     // Test Options.
     RUN_CANVAS_TESTS: true,
@@ -308,3 +309,7 @@ VF.Test = (function () {
 
   return Test;
 })();
+
+global.VF.Test = VexFlowTests;
+
+export { VexFlowTests };

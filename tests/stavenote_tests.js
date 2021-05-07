@@ -2,8 +2,7 @@
  * VexFlow - StaveNote Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.StaveNote = (function () {
+const StaveNoteTests = (function () {
   var StaveNote = {
     Start: function () {
       var runTests = VF.Test.runTests;
@@ -1147,3 +1146,5 @@ VF.Test.StaveNote = (function () {
 
   return StaveNote;
 })();
+VF.Test.StaveNote = StaveNoteTests;
+export { StaveNoteTests };

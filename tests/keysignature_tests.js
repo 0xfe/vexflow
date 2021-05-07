@@ -2,8 +2,7 @@
  * VexFlow - Key Signature Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.KeySignature = (function () {
+const KeySignatureTests = (function () {
   function catchError(spec) {
     try {
       VF.keySignature(spec);
@@ -310,3 +309,5 @@ VF.Test.KeySignature = (function () {
 
   return KeySignature;
 })();
+VF.Test.KeySignature = KeySignatureTests;
+export { KeySignatureTests };

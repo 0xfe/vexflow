@@ -3,9 +3,9 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-var VF = Vex.Flow;
+const VF = Vex.Flow;
 
-VF.Test.BachDemo = (function () {
+const BachDemoTests = (function () {
   function concat(a, b) {
     return a.concat(b);
   }
@@ -443,3 +443,5 @@ VF.Test.BachDemo = (function () {
 
   return BachDemo;
 })();
+VF.Test.BachDemo = BachDemoTests;
+export { BachDemoTests };

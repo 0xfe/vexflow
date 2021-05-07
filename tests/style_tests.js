@@ -2,8 +2,7 @@
  * VexFlow - Style Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Style = (function () {
+const StyleTests = (function () {
   var runTests = VF.Test.runTests;
   function FS(fill, stroke) {
     var ret = { fillStyle: fill };
@@ -117,3 +116,5 @@ VF.Test.Style = (function () {
 
   return Style;
 })();
+VF.Test.Style = StyleTests;
+export { StyleTests };

@@ -2,8 +2,7 @@
  * VexFlow - Factory Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-Vex.Flow.Test.Factory = (function () {
+const FactoryTests = (function () {
   var Factory = {
     Start: function () {
       QUnit.module('Factory');
@@ -77,3 +76,5 @@ Vex.Flow.Test.Factory = (function () {
 
   return Factory;
 })();
+Vex.Flow.Test.Factory = FactoryTests;
+export { FactoryTests };

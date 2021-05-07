@@ -6,7 +6,7 @@
 import { Fraction } from '../src/fraction';
 import { QUnit, ok, test, notOk, notEqual, strictEqual, deepEqual, notDeepEqual, notStrictEqual } from './declarations';
 
-export const FractionTests = {
+const FractionTests = {
   Start(): void {
     QUnit.module('Fraction');
     test('Basic', FractionTests.basic);
@@ -55,3 +55,4 @@ export const FractionTests = {
     // TODO: Add more detailed tests.
   },
 };
+export { FractionTests };

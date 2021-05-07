@@ -2,9 +2,7 @@
  * VexFlow - TickContext Mocks
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-/* Mock Tickable */
-VF.Test.MockTickable = (function () {
+const MT = (function () {
   function MockTickable() {
     this.ignore_ticks = false;
   }
@@ -63,6 +61,6 @@ VF.Test.MockTickable = (function () {
     },
     preFormat: function () {},
   };
-
   return MockTickable;
 })();
+export { MT as MockTickable };

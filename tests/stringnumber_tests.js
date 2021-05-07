@@ -2,8 +2,7 @@
  * VexFlow - StringNumber Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.StringNumber = (function () {
+const StringNumberTests = (function () {
   var StringNumber = {
     Start: function () {
       var run = VF.Test.runTests;
@@ -322,3 +321,5 @@ VF.Test.StringNumber = (function () {
 
   return StringNumber;
 })();
+VF.Test.StringNumber = StringNumberTests;
+export { StringNumberTests };

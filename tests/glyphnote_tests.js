@@ -2,8 +2,7 @@
  * VexFlow - GlyphNote Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.GlyphNote = (function () {
+const GlyphNoteTests = (function () {
   var run = VF.Test.runTests;
 
   var GlyphNote = {
@@ -102,3 +101,5 @@ VF.Test.GlyphNote = (function () {
 
   return GlyphNote;
 })();
+VF.Test.GlyphNote = GlyphNoteTests;
+export { GlyphNoteTests };

@@ -3,8 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  *
  */
-
-VF.Test.Rests = (function () {
+const RestsTests = (function () {
   var Rests = {
     Start: function () {
       var run = VF.Test.runTests;
@@ -340,3 +339,5 @@ VF.Test.Rests = (function () {
 
   return Rests;
 })();
+VF.Test.Rests = RestsTests;
+export { RestsTests };

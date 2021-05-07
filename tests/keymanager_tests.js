@@ -2,8 +2,7 @@
  * VexFlow - Music Key Management Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.KeyManager = (function () {
+const KeyManagerTests = (function () {
   var KeyManager = {
     Start: function () {
       QUnit.module('KeyManager');
@@ -82,3 +81,5 @@ VF.Test.KeyManager = (function () {
 
   return KeyManager;
 })();
+VF.Test.KeyManager = KeyManagerTests;
+export { KeyManagerTests };
