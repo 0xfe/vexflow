@@ -6,20 +6,42 @@
 // Examples of this would be such as dynamics, lyrics, chord changes, etc.
 
 import { Vex } from './vex';
-import { Note } from './note';
+import { Note, NoteStruct } from './note';
 import { Glyph } from './glyph';
+import { FontInfo } from './types/common';
+
+export enum Justification {
+  LEFT = 1,
+  CENTER = 2,
+  RIGHT = 3,
+}
+
+export interface TextNoteStruct extends NoteStruct {
+  ignore_ticks: boolean;
+  smooth: boolean;
+  glyph: string;
+  font?: FontInfo;
+  subscript: string;
+  superscript: string;
+  text: string;
+}
 
 export class TextNote extends Note {
-  static get Justification() {
-    return {
-      LEFT: 1,
-      CENTER: 2,
-      RIGHT: 3,
-    };
+  protected text: string;
+  protected superscript: string;
+  protected subscript: string;
+  protected smooth: boolean;
+
+  protected font: FontInfo;
+  protected justification: Justification;
+  protected line: number;
+
+  static get Justification(): typeof Justification {
+    return Justification;
   }
 
   // Glyph data
-  static get GLYPHS() {
+  static get GLYPHS(): Record<string, { code: string }> {
     return {
       segno: {
         code: 'segno',
@@ -81,7 +103,7 @@ export class TextNote extends Note {
     };
   }
 
-  constructor(options) {
+  constructor(options: TextNoteStruct) {
     super(options);
     this.setAttribute('type', 'TextNote');
 
@@ -115,20 +137,20 @@ export class TextNote extends Note {
   }
 
   // Set the horizontal justification of the TextNote
-  setJustification(just) {
+  setJustification(just: Justification): this {
     this.justification = just;
     return this;
   }
 
   // Set the Stave line on which the note should be placed
-  setLine(line) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Pre-render formatting
-  preFormat() {
-    this.checkContext();
+  preFormat(): void {
+    const ctx = this.checkContext();
 
     if (this.preFormatted) return;
 
@@ -138,8 +160,8 @@ export class TextNote extends Note {
       if (this.glyph) {
         // Width already set.
       } else {
-        this.context.setFont(this.font.family, this.font.size, this.font.weight);
-        this.setWidth(this.context.measureText(this.text).width);
+        ctx.setFont(this.font.family, this.font.size, this.font.weight);
+        this.setWidth(ctx.measureText(this.text).width);
       }
     }
 
@@ -150,23 +172,22 @@ export class TextNote extends Note {
     }
 
     // We reposition to the center of the note head
-    this.rightDisplacedHeadPx = this.tickContext.getMetrics().glyphPx / 2;
+    this.rightDisplacedHeadPx = this.tickContext!.getMetrics().glyphPx! / 2;
     this.setPreFormatted(true);
   }
 
   // Renders the TextNote
-  draw() {
-    this.checkContext();
+  draw(): void {
+    const ctx = this.checkContext();
 
     if (!this.stave) {
       throw new Vex.RERR('NoStave', "Can't draw without a stave.");
     }
 
     this.setRendered();
-    const ctx = this.context;
 
     // Reposition to center of note head
-    let x = this.getAbsoluteX() + this.tickContext.getMetrics().glyphPx / 2;
+    let x = this.getAbsoluteX() + this.tickContext!.getMetrics().glyphPx! / 2;
 
     // Align based on tick-context width.
     const width = this.getWidth();
@@ -180,7 +201,7 @@ export class TextNote extends Note {
     let y;
     if (this.glyph) {
       y = this.stave.getYForLine(this.line + -3);
-      this.glyph.render(this.context, x, y);
+      this.glyph.render(ctx, x, y);
     } else {
       y = this.stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);
