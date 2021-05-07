@@ -242,14 +242,13 @@ export class TabNote extends StemmableNote {
   // Set the `stave` to the note
   setStave(stave: Stave): this {
     super.setStave(stave);
-    this.setContext(stave.getContext());
+    const ctx = stave.getContext();
+    this.setContext(ctx);
 
     // Calculate the fret number width based on font used
-    let i;
-    const ctx = this.getContext();
     if (ctx) {
       this.width = 0;
-      for (i = 0; i < this.glyphs.length; ++i) {
+      for (let i = 0; i < this.glyphs.length; ++i) {
         const glyph = this.glyphs[i];
         const text = '' + glyph.text;
         if (text.toUpperCase() !== 'X') {
