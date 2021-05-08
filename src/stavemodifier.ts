@@ -14,7 +14,7 @@ export interface LayoutMetrics {
   paddingRight: number;
 }
 
-export enum Position {
+export enum StaveModifierPosition {
   CENTER = 0,
   LEFT = 1,
   RIGHT = 2,
@@ -29,11 +29,11 @@ export class StaveModifier extends Element {
   protected x: number = 0;
 
   protected padding: number;
-  protected position: Position;
+  protected position: StaveModifierPosition;
   protected stave?: Stave;
   protected layoutMetrics?: LayoutMetrics;
-  static get Position(): typeof Position {
-    return Position;
+  static get Position(): typeof StaveModifierPosition {
+    return StaveModifierPosition;
   }
 
   constructor() {
