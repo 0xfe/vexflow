@@ -9,16 +9,11 @@ import { Vex } from './vex';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
+
 export interface TimeSignatureInfo {
   glyph: Glyph;
   line?: number;
   num: boolean;
-}
-
-export interface TimeSignatureGlyphInfo {
-  code: string;
-  point: number;
-  line: number;
 }
 
 const assertIsValidFraction = (timeSpec: string) => {
@@ -51,7 +46,7 @@ export class TimeSignature extends StaveModifier {
     return 'timesignatures';
   }
 
-  static get glyphs(): Record<string, TimeSignatureGlyphInfo> {
+  static get glyphs(): Record<string, { code: string; point: number; line: number }> {
     return {
       C: {
         code: 'timeSigCommon',
@@ -136,7 +131,7 @@ export class TimeSignature extends StaveModifier {
     this.setRendered();
     this.timeSig!.glyph.setStave(this.stave);
     this.timeSig!.glyph.setContext(this.stave.getContext());
-    this.placeGlyphOnLine(this.timeSig!.glyph, this.stave, this.timeSig!.line!);
+    this.placeGlyphOnLine(this.timeSig!.glyph, this.stave, 2);
     this.timeSig!.glyph.renderToStave(this.x);
   }
 }
