@@ -12,6 +12,7 @@ VF.Test.Formatter = (function () {
       QUnit.module('Formatter');
       test('TickContext Building', Formatter.buildTickContexts);
       runSVG('Justification and alignment with accidentals', Formatter.accidentalJustification);
+      runSVG('Long measure taking full space', Formatter.longMeasureProblems);
       runSVG('Vertical alignment - few unaligned beats', Formatter.unalignedNoteDurations);
       runSVG('Vertical alignment - many unaligned beats', Formatter.unalignedNoteDurations2, { globalSoftmax: false });
       runSVG('Vertical alignment - many unaligned beats (global softmax)', Formatter.unalignedNoteDurations2, {
@@ -93,6 +94,48 @@ VF.Test.Formatter = (function () {
         tickables1[1].getX() < tickables2[1].getX(),
         'Second note of voice 2 is to the right of the second note of voice 1'
       );
+    },
+    longMeasureProblems: (options) => {
+      var registry = new VF.Registry();
+      VF.Registry.enableDefaultRegistry(registry);
+      var vf = VF.Test.makeFactory(options, 1500, 300);
+      var score = vf.EasyScore();
+      score.set({
+        time: '4/4',
+      });
+      const notes1 = score.notes(
+        'b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/2,b4/8,b4/8'
+      );
+      const voice1 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+      const notes2 = score.notes(
+        'd3/4,(ab3 f4)/2,d3/4,ab3/4,d3/2,ab3/4,d3/4,ab3/2,d3/4,ab3/4,d3/2,ab3/4,d3/4,ab3/2,d3/4,ab3/4,d3/2,ab3/4,d4/4,d4/2,d4/4',
+        {
+          clef: 'bass',
+        }
+      );
+      const voice2 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+      voice2.addTickables(notes2);
+      voice1.addTickables(notes1);
+      const stave1 = vf.Stave({
+        y: 50,
+        width: 1500,
+      });
+      const stave2 = vf.Stave({
+        y: 200,
+        width: 1500,
+      });
+      vf.StaveConnector({
+        top_stave: stave1,
+        bottom_stave: stave2,
+        type: 'brace',
+      });
+      var formatter = vf.Formatter().joinVoices([voice1]).joinVoices([voice2]);
+      formatter.format([voice1, voice2], 1500);
+      stave1.draw();
+      stave2.draw();
+      voice1.draw(vf.context, stave1);
+      voice2.draw(vf.context, stave2);
+      ok(true);
     },
 
     accidentalJustification: (options) => {

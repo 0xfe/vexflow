@@ -617,13 +617,14 @@ export class Formatter {
       firstContext.getMetrics().totalLeftPx;
     let targetWidth = adjustedJustifyWidth;
     let actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
+    const maxX = adjustedJustifyWidth + lastContext.getMetrics().notePx;
 
     let iterations = this.options.maxIterations;
-    while (actualWidth > adjustedJustifyWidth + lastContext.getMetrics().notePx && iterations > 0) {
+    while (actualWidth > maxX && iterations > 0) {
       // If we couldn't fit all the notes into the jusification width, it's because the softmax-scaled
       // widths between different durations differ across stave (e.g., 1 quarter note is not the same pixel-width
       // as 4 16th-notes). Run another pass, now that we know how much to justify.
-      targetWidth -= actualWidth - targetWidth;
+      targetWidth -= actualWidth - maxX;
       actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
       iterations--;
     }
