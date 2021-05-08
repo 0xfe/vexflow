@@ -11,7 +11,7 @@ function L(...args: any[]) {
   if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args);
 }
 
-export const X = Vex.MakeException('ParserError');
+const X = Vex.MakeException('ParserError');
 
 const NO_ERROR_POS = -1;
 
