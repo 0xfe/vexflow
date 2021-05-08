@@ -7,12 +7,7 @@ import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Bend } from './bend';
 import { RenderContext } from './types/common';
-import { ModifierContext } from './modifiercontext';
-
-export interface VibratoState {
-  right_shift: number;
-  top_text_line: number;
-}
+import { ModifierContext, ModifierContextState } from './modifiercontext';
 
 export interface VibratoRenderOptions {
   wave_height: number;
@@ -31,7 +26,7 @@ export class Vibrato extends Modifier {
 
   // ## Static Methods
   // Arrange vibratos inside a `ModifierContext`.
-  static format(vibratos: Vibrato[], state: VibratoState, context: ModifierContext): boolean {
+  static format(vibratos: Vibrato[], state: ModifierContextState, context: ModifierContext): boolean {
     if (!vibratos || vibratos.length === 0) return false;
 
     // Vibratos are always on top.

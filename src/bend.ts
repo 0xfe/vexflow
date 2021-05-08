@@ -7,6 +7,7 @@
 import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
+import { ModifierContextState } from './modifiercontext';
 
 export interface BendPhrase {
   x?: number;
@@ -78,15 +79,7 @@ export class Bend extends Modifier {
 
   // ## Static Methods
   // Arrange bends in `ModifierContext`
-  static format(
-    bends: Bend[],
-    state: {
-      right_shift: number;
-      left_shift: number;
-      text_line: number;
-      top_text_line: number;
-    }
-  ): boolean {
+  static format(bends: Bend[], state: ModifierContextState): boolean {
     if (!bends || bends.length === 0) return false;
 
     let last_width = 0;

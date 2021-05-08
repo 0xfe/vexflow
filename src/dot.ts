@@ -7,6 +7,8 @@ import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
+import { TabNote } from './tabnote';
+import { ModifierContextState } from './modifiercontext';
 
 export class Dot extends Modifier {
   protected note?: Note;
@@ -18,15 +20,7 @@ export class Dot extends Modifier {
   }
 
   // Arrange dots inside a ModifierContext.
-  static format(
-    dots: Dot[],
-    state: {
-      right_shift: number;
-      left_shift: number;
-      text_line: number;
-      top_text_line: number;
-    }
-  ): boolean {
+  static format(dots: Dot[], state: ModifierContextState): boolean {
     const right_shift = state.right_shift;
     const dot_spacing = 1;
 
@@ -45,10 +39,12 @@ export class Dot extends Modifier {
       if (note instanceof StaveNote) {
         props = note.getKeyProps()[dot.getIndex()];
         shift = note.getRightDisplacedHeadPx();
-      } else {
+      } else if (note instanceof TabNote) {
         // Else it's a TabNote
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = 0;
+      } else {
+        throw new Vex.RERR('Internal', 'Unexpected instance.');
       }
 
       const note_id = note.getAttribute('id');
@@ -147,12 +143,16 @@ export class Dot extends Modifier {
   draw(): void {
     const ctx = this.checkContext();
     this.setRendered();
-
-    if (!this.note || this.index === undefined) {
+    if (!this.note || !this.note.getStave() || this.index === undefined) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
     }
 
-    const lineSpace = this.note.getStave()?.getOptions().spacing_between_lines_px ?? 0;
+    const stave = this.note.getStave();
+    if (!stave) {
+      throw new Vex.RERR('NoStave', "Can't draw dot without a stave.");
+    }
+
+    const lineSpace = stave.getOptions().spacing_between_lines_px;
 
     const start = this.note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
 
