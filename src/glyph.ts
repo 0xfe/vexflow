@@ -371,7 +371,7 @@ export class Glyph extends Element {
       x_max: this.metrics.x_max * this.scale * this.metrics.scale,
       width: this.bbox.getW(),
       height: this.bbox.getH(),
-      scale: this.metrics.scale,
+      scale: this.scale * this.metrics.scale,
       x_shift: this.metrics.x_shift,
       y_shift: this.metrics.y_shift,
       outline: this.metrics.outline,
