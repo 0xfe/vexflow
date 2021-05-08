@@ -95,3 +95,10 @@ export interface RenderContext {
    */
   measureText(text: string): { width: number; height: number };
 }
+
+export interface TieNotes {
+  first_note: Note;
+  last_note: Note;
+  first_indices: number[];
+  last_indices: number[];
+}
