@@ -2,8 +2,7 @@
  * VexFlow - StaveTie Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.StaveTie = (function () {
+const StaveTieTests = (function () {
   function createTest(notesData, setupTies) {
     return function (options) {
       var vf = VF.Test.makeFactory(options, 300);
@@ -124,3 +123,5 @@ VF.Test.StaveTie = (function () {
     },
   };
 })();
+VF.Test.StaveTie = StaveTieTests;
+export { StaveTieTests };

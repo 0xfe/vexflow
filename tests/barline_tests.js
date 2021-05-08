@@ -2,8 +2,7 @@
  * VexFlow - Barline Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Barline = (function () {
+const BarlineTests = (function () {
   return {
     Start: function () {
       var run = VF.Test.runTests;
@@ -34,3 +33,5 @@ VF.Test.Barline = (function () {
     },
   };
 })();
+VF.Test.Barline = BarlineTests;
+export { BarlineTests };

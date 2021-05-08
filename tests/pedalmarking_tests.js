@@ -2,8 +2,7 @@
  * VexFlow - PedalMarking Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.PedalMarking = (function () {
+const PedalMarkingTests = (function () {
   var PedalMarking = {
     test: function (makePedal) {
       return function (options) {
@@ -85,3 +84,5 @@ VF.Test.PedalMarking = (function () {
 
   return PedalMarking;
 })();
+VF.Test.PedalMarking = PedalMarkingTests;
+export { PedalMarkingTests };

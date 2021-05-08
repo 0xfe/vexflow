@@ -2,8 +2,7 @@
  * VexFlow - Basic Stave Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Stave = (function () {
+const StaveTests = (function () {
   var Stave = {
     Start: function () {
       var runTests = VF.Test.runTests;
@@ -755,3 +754,5 @@ VF.Test.Stave = (function () {
 
   return Stave;
 })();
+VF.Test.Stave = StaveTests;
+export { StaveTests };

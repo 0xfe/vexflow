@@ -2,8 +2,7 @@
  * VexFlow - Vibrato Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Vibrato = (function () {
+const VibratoTests = (function () {
   var Vibrato = {
     Start: function () {
       var runTests = VF.Test.runTests;
@@ -129,3 +128,5 @@ VF.Test.Vibrato = (function () {
 
   return Vibrato;
 })();
+VF.Test.Vibrato = VibratoTests;
+export { VibratoTests };

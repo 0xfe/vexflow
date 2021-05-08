@@ -2,8 +2,7 @@
  * VexFlow - Tuplet Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Tuplet = (function () {
+const TupletTests = (function () {
   // Ideally this would be using arrow syntax...
   var set = function (key) {
     return function (value) {
@@ -569,3 +568,5 @@ VF.Test.Tuplet = (function () {
 
   return Tuplet;
 })();
+VF.Test.Tuplet = TupletTests;
+export { TupletTests };

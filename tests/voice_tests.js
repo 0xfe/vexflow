@@ -2,8 +2,8 @@
  * VexFlow - Voice Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Voice = (function () {
+import { MockTickable } from './mocks';
+const VoiceTests = (function () {
   var Voice = {
     Start: function () {
       QUnit.module('Voice');
@@ -15,7 +15,7 @@ VF.Test.Voice = (function () {
     strict: function () {
       expect(8);
       function createTickable() {
-        return new VF.Test.MockTickable(VF.Test.TIME4_4);
+        return new MockTickable(VF.Test.TIME4_4);
       }
 
       var R = VF.RESOLUTION;
@@ -53,7 +53,7 @@ VF.Test.Voice = (function () {
 
     ignore: function () {
       function createTickable() {
-        return new VF.Test.MockTickable(VF.Test.TIME4_4);
+        return new MockTickable(VF.Test.TIME4_4);
       }
 
       var R = VF.RESOLUTION;
@@ -111,3 +111,5 @@ VF.Test.Voice = (function () {
 
   return Voice;
 })();
+VF.Test.Voice = VoiceTests;
+export { VoiceTests };

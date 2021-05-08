@@ -2,11 +2,10 @@
  * VexFlow - Tuning Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
 import { Tuning } from '../src/tuning';
 import { QUnit, test, equal, expect } from './declarations';
 
-export const TuningTests = {
+const TuningTests = {
   Start(): void {
     QUnit.module('Tuning');
     test('Standard Tuning', TuningTests.standard);
@@ -97,3 +96,4 @@ export const TuningTests = {
     equal(tuning.getNoteForFret(0, 6), 'E/3', 'Low E string');
   },
 };
+export { TuningTests };

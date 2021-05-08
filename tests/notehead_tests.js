@@ -2,8 +2,7 @@
  * VexFlow - NoteHead Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.NoteHead = (function () {
+const NoteHeadTests = (function () {
   var NoteHead = {
     Start: function () {
       QUnit.module('NoteHead');
@@ -197,3 +196,5 @@ VF.Test.NoteHead = (function () {
 
   return NoteHead;
 })();
+VF.Test.NoteHead = NoteHeadTests;
+export { NoteHeadTests };

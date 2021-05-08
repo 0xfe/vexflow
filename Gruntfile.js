@@ -1,7 +1,6 @@
 /* global module, __dirname, process, require */
 
 const path = require('path');
-const glob = require('glob');
 
 module.exports = (grunt) => {
   const BANNER = [
@@ -17,19 +16,13 @@ module.exports = (grunt) => {
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
   const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.js');
   const TARGET_RAW = 'vexflow-debug.js';
   const TARGET_MIN = 'vexflow-min.js';
+  const TARGET_TESTS = 'vexflow-tests.js';
 
   // Used for eslint and docco
   const SOURCES = ['./src/*.ts', './src/*.js', '!./src/header.js'];
-
-  // Take all test files in 'tests/' and build TARGET_TESTS_BROWSER
-  const TARGET_TESTS_BROWSER = 'vexflow-tests.js';
-  const TEST_SOURCES = [
-    './tests/vexflow_test_helpers.js',
-    ...['./tests/mocks.js', './tests/*_tests.js', './tests/*_tests.ts'].flatMap((file) => glob.sync(file)),
-    './tests/run.js',
-  ];
 
   function webpackConfig(target, moduleEntry, mode, libraryName) {
     return {
@@ -64,20 +57,10 @@ module.exports = (grunt) => {
 
   const webpackProd = webpackConfig(TARGET_MIN, MODULE_ENTRY, 'production', 'Vex');
   const webpackDev = webpackConfig(TARGET_RAW, MODULE_ENTRY, 'development', 'Vex');
-  const webpackTest = webpackConfig(TARGET_TESTS_BROWSER, TEST_SOURCES, 'development', 'VFTests');
+  const webpackTest = webpackConfig(TARGET_TESTS, MODULE_ENTRY_TESTS, 'development', 'VFTests');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    concat: {
-      options: {
-        banner: BANNER,
-        sourceMap: true,
-      },
-      tests: {
-        src: TEST_SOURCES,
-        dest: TARGET_TESTS_BROWSER,
-      },
-    },
     webpack: {
       build: webpackProd,
       buildDev: webpackDev,
@@ -180,7 +163,6 @@ module.exports = (grunt) => {
   });
 
   // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');

@@ -2,9 +2,7 @@
  * VexFlow - Curve Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-var VF = Vex.Flow;
-VF.Test.Curve = (function () {
+const CurveTests = (function () {
   function concat(a, b) {
     return a.concat(b);
   }
@@ -147,3 +145,5 @@ VF.Test.Curve = (function () {
     },
   };
 })();
+VF.Test.Curve = CurveTests;
+export { CurveTests };

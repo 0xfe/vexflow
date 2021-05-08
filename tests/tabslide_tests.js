@@ -2,8 +2,7 @@
  * VexFlow - TabSlide Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.TabSlide = (function () {
+const TabSlideTests = (function () {
   var TabSlide = {
     Start: function () {
       var runTests = VF.Test.runTests;
@@ -167,3 +166,5 @@ VF.Test.TabSlide = (function () {
 
   return TabSlide;
 })();
+VF.Test.TabSlide = TabSlideTests;
+export { TabSlideTests };

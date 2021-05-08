@@ -2,8 +2,7 @@
  * VexFlow - TabNote Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.TabNote = (function () {
+const TabNoteTests = (function () {
   var TabNote = {
     Start: function () {
       QUnit.module('TabNote');
@@ -523,3 +522,5 @@ VF.Test.TabNote = (function () {
 
   return TabNote;
 })();
+VF.Test.TabNote = TabNoteTests;
+export { TabNoteTests };

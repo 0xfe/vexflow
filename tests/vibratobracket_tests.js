@@ -4,8 +4,7 @@
  *
  * Author: Balazs Forian-Szabo
  */
-
-VF.Test.VibratoBracket = (function () {
+const VibratoBracketTests = (function () {
   function createTest(noteGroup1, setupVibratoBracket) {
     return function (options) {
       var vf = VF.Test.makeFactory(options, 650, 200);
@@ -73,3 +72,5 @@ VF.Test.VibratoBracket = (function () {
     },
   };
 })();
+VF.Test.VibratoBracket = VibratoBracketTests;
+export { VibratoBracketTests };

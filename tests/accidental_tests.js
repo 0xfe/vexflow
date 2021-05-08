@@ -2,8 +2,7 @@
  * VexFlow - Accidental Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-Vex.Flow.Test.Accidental = (function () {
+const AccidentalTests = (function () {
   function hasAccidental(note) {
     return note.modifiers.reduce(function (hasAcc, modifier) {
       return hasAcc || modifier.getCategory() === 'accidentals';
@@ -991,3 +990,5 @@ Vex.Flow.Test.Accidental = (function () {
 
   return Accidental;
 })();
+Vex.Flow.Test.Accidental = AccidentalTests;
+export { AccidentalTests };
