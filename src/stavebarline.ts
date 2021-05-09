@@ -3,25 +3,36 @@
 // Author Larry Kuhns 2011
 
 import { Flow } from './tables';
-import { StaveModifier } from './stavemodifier';
+import { LayoutMetrics, StaveModifier } from './stavemodifier';
+import { Stave } from './stave';
+
+export enum BarlineType {
+  SINGLE = 1,
+  DOUBLE = 2,
+  END = 3,
+  REPEAT_BEGIN = 4,
+  REPEAT_END = 5,
+  REPEAT_BOTH = 6,
+  NONE = 7,
+}
 
 export class Barline extends StaveModifier {
-  static get CATEGORY() {
+  protected widths: Record<string, number>;
+  protected paddings: Record<string, number>;
+  protected layoutMetricsMap: Record<number, LayoutMetrics>;
+
+  protected thickness: number;
+  protected type!: BarlineType;
+
+  static get CATEGORY(): string {
     return 'barlines';
   }
-  static get type() {
-    return {
-      SINGLE: 1,
-      DOUBLE: 2,
-      END: 3,
-      REPEAT_BEGIN: 4,
-      REPEAT_END: 5,
-      REPEAT_BOTH: 6,
-      NONE: 7,
-    };
+
+  static get type(): typeof BarlineType {
+    return BarlineType;
   }
 
-  static get typeString() {
+  static get typeString(): Record<string, BarlineType> {
     return {
       single: Barline.type.SINGLE,
       double: Barline.type.DOUBLE,
@@ -36,7 +47,7 @@ export class Barline extends StaveModifier {
   /**
    * @constructor
    */
-  constructor(type) {
+  constructor(type: BarlineType | string) {
     super();
     this.setAttribute('type', 'Barline');
     this.thickness = Flow.STAVE_LINE_THICKNESS;
@@ -106,13 +117,16 @@ export class Barline extends StaveModifier {
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setType(type);
   }
-  getCategory() {
+
+  getCategory(): string {
     return Barline.CATEGORY;
   }
-  getType() {
+
+  getType(): number {
     return this.type;
   }
-  setType(type) {
+
+  setType(type: string | number): this {
     this.type = typeof type === 'string' ? Barline.typeString[type] : type;
 
     this.setWidth(this.widths[this.type]);
@@ -122,7 +136,7 @@ export class Barline extends StaveModifier {
   }
 
   // Draw barlines
-  draw(stave) {
+  draw(stave: Stave): void {
     stave.checkContext();
     this.setRendered();
 
@@ -158,26 +172,26 @@ export class Barline extends StaveModifier {
     }
   }
 
-  drawVerticalBar(stave, x, double_bar) {
-    stave.checkContext();
+  drawVerticalBar(stave: Stave, x: number, double_bar?: boolean): void {
+    const staveCtx = stave.checkContext();
     const topY = stave.getTopLineTopY();
     const botY = stave.getBottomLineBottomY();
     if (double_bar) {
-      stave.context.fillRect(x - 3, topY, 1, botY - topY);
+      staveCtx.fillRect(x - 3, topY, 1, botY - topY);
     }
-    stave.context.fillRect(x, topY, 1, botY - topY);
+    staveCtx.fillRect(x, topY, 1, botY - topY);
   }
 
-  drawVerticalEndBar(stave, x) {
-    stave.checkContext();
+  drawVerticalEndBar(stave: Stave, x: number): void {
+    const staveCtx = stave.checkContext();
     const topY = stave.getTopLineTopY();
     const botY = stave.getBottomLineBottomY();
-    stave.context.fillRect(x - 5, topY, 1, botY - topY);
-    stave.context.fillRect(x - 2, topY, 3, botY - topY);
+    staveCtx.fillRect(x - 5, topY, 1, botY - topY);
+    staveCtx.fillRect(x - 2, topY, 3, botY - topY);
   }
 
-  drawRepeatBar(stave, x, begin) {
-    stave.checkContext();
+  drawRepeatBar(stave: Stave, x: number, begin: boolean): void {
+    const staveCtx = stave.checkContext();
 
     const topY = stave.getTopLineTopY();
     const botY = stave.getBottomLineBottomY();
@@ -187,8 +201,8 @@ export class Barline extends StaveModifier {
       x_shift = -5;
     }
 
-    stave.context.fillRect(x + x_shift, topY, 1, botY - topY);
-    stave.context.fillRect(x - 2, topY, 3, botY - topY);
+    staveCtx.fillRect(x + x_shift, topY, 1, botY - topY);
+    staveCtx.fillRect(x - 2, topY, 3, botY - topY);
 
     const dot_radius = 2;
 
@@ -207,14 +221,14 @@ export class Barline extends StaveModifier {
     let dot_y = topY + y_offset + dot_radius / 2;
 
     // draw the top repeat dot
-    stave.context.beginPath();
-    stave.context.arc(dot_x, dot_y, dot_radius, 0, Math.PI * 2, false);
-    stave.context.fill();
+    staveCtx.beginPath();
+    staveCtx.arc(dot_x, dot_y, dot_radius, 0, Math.PI * 2, false);
+    staveCtx.fill();
 
     // draw the bottom repeat dot
     dot_y += stave.getSpacingBetweenLines();
-    stave.context.beginPath();
-    stave.context.arc(dot_x, dot_y, dot_radius, 0, Math.PI * 2, false);
-    stave.context.fill();
+    staveCtx.beginPath();
+    staveCtx.arc(dot_x, dot_y, dot_radius, 0, Math.PI * 2, false);
+    staveCtx.fill();
   }
 }
