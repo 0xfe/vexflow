@@ -144,7 +144,7 @@ export class Dot extends Modifier {
     const ctx = this.checkContext();
     this.setRendered();
     if (!this.note || !this.note.getStave() || this.index === undefined) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
+      throw new Vex.RERR('NoStaveNoteIndex', 'Drawing a dot requires a stave, a note, and an index.');
     }
 
     const stave = this.note.getStave();
