@@ -6,7 +6,7 @@ import { Note } from './note';
 import { TimeSignature, TimeSignatureInfo } from './timesignature';
 
 export class TimeSigNote extends Note {
-  protected timeSig: TimeSignatureInfo;
+  protected timeSig?: TimeSignatureInfo;
 
   constructor(timeSpec: string, customPadding?: number) {
     super({ duration: 'b' });
@@ -14,7 +14,7 @@ export class TimeSigNote extends Note {
 
     const timeSignature = new TimeSignature(timeSpec, customPadding);
     this.timeSig = timeSignature.getTimeSig();
-    this.setWidth(this.timeSig.glyph.getMetrics().width!);
+    this.setWidth(this.timeSig?.glyph.getMetrics().width ?? 0);
 
     // Note properties
     this.ignore_ticks = true;
@@ -32,6 +32,7 @@ export class TimeSigNote extends Note {
 
   draw(): void {
     if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
+    if (!this.timeSig) throw new Vex.RERR('NoTimeSignatureInfo', 'No TimeSignatureInfo attached to this note.');
     const ctx = this.checkContext();
     this.setRendered();
 
