@@ -243,7 +243,7 @@ export class NoteHead extends Note {
   }
 
   // Set notehead to a provided `stave`
-  setStave(stave?: Stave): this {
+  setStave(stave: Stave): this {
     const line = this.getLine();
 
     this.stave = stave;
