@@ -57,6 +57,13 @@ export class Crescendo extends Note {
   protected decrescendo: boolean;
   protected height: number;
   protected line: number;
+  protected options = {
+    // Extensions to the length of the crescendo on either side
+    extend_left: 0,
+    extend_right: 0,
+    // Vertical shift
+    y_shift: 0,
+  };
 
   // Initialize the crescendo's properties
   constructor(note_struct: NoteStruct) {
@@ -71,17 +78,6 @@ export class Crescendo extends Note {
 
     // The height at the open end of the cresc/decresc
     this.height = 15;
-
-    this.render_options = {
-      ...this.render_options,
-      ...{
-        // Extensions to the length of the crescendo on either side
-        extend_left: 0,
-        extend_right: 0,
-        // Vertical shift
-        y_shift: 0,
-      },
-    };
   }
 
   // Set the line to center the element on
@@ -126,11 +122,11 @@ export class Crescendo extends Note {
 
     renderHairpin(ctx, {
       // eslint-disable-next-line
-      begin_x: begin_x - this.render_options.extend_left!,
+      begin_x: begin_x - this.options.extend_left,
       // eslint-disable-next-line
-      end_x: end_x + this.render_options.extend_right!,
+      end_x: end_x + this.options.extend_right,
       // eslint-disable-next-line
-      y: y + this.render_options.y_shift!,
+      y: y + this.options.y_shift,
       height: this.height,
       reverse: this.decrescendo,
     });
