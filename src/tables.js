@@ -37,6 +37,7 @@ const Flow = {
   durationToNumber: durationToNumber,
   getGlyphProps: getGlyphProps,
   textWidth: textWidth,
+  tabToGlyph: tabToGlyph,
 };
 
 Flow.clefProperties = (clef) => {
@@ -215,7 +216,7 @@ Flow.integerToNote.table = {
   11: 'B',
 };
 
-Flow.tabToGlyph = (fret, scale = 1.0) => {
+function tabToGlyph(fret, scale = 1.0) {
   let glyph = null;
   let width = 0;
   let shift_y = 0;
@@ -235,7 +236,7 @@ Flow.tabToGlyph = (fret, scale = 1.0) => {
     getWidth: () => width * scale,
     shift_y,
   };
-};
+}
 
 function textWidth(text) {
   return 7 * text.toString().length;

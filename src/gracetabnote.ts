@@ -8,8 +8,7 @@
 //
 // See `tests/gracetabnote_tests.js` for usage examples.
 
-import { TabNote } from './tabnote';
-import { StaveNoteStruct } from './stavenote';
+import { TabNote, TabNoteStruct } from './tabnote';
 
 /** Implements Crace Tab Note. */
 export class GraceTabNote extends TabNote {
@@ -18,7 +17,7 @@ export class GraceTabNote extends TabNote {
   }
 
   /** Constructor providing a stave note struct */
-  constructor(note_struct: StaveNoteStruct) {
+  constructor(note_struct: TabNoteStruct) {
     super(note_struct, false);
     this.setAttribute('type', 'GraceTabNote');
 
