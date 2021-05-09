@@ -143,13 +143,13 @@ export class Dot extends Modifier {
   draw(): void {
     const ctx = this.checkContext();
     this.setRendered();
-    if (!this.note || !this.note.getStave() || this.index === undefined) {
-      throw new Vex.RERR('NoStaveNoteIndex', 'Drawing a dot requires a stave, a note, and an index.');
+    if (!this.note || this.index === undefined) {
+      throw new Vex.RERR('NoNoteIndex', 'Drawing a dot requires a note and an index.');
     }
 
     const stave = this.note.getStave();
     if (!stave) {
-      throw new Vex.RERR('NoStave', "Can't draw dot without a stave.");
+      throw new Vex.RERR('NoStave', 'Drawing a dot requires a stave.');
     }
 
     const lineSpace = stave.getOptions().spacing_between_lines_px;
