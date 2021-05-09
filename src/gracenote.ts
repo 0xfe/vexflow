@@ -1,24 +1,35 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { StaveNote } from './stavenote';
+import { Vex } from './vex';
+import { StaveNote, StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { Flow } from './tables';
 
+export interface GraceNoteStruct extends StaveNoteStruct {
+  slash: boolean;
+}
 export class GraceNote extends StaveNote {
-  static get CATEGORY() {
+  protected slash: boolean;
+  protected slur: boolean;
+
+  static get CATEGORY(): string {
     return 'gracenotes';
   }
-  static get LEDGER_LINE_OFFSET() {
+
+  static get LEDGER_LINE_OFFSET(): number {
     return 2;
   }
-  static get SCALE() {
+
+  static get SCALE(): number {
     return 0.66;
   }
 
-  constructor(note_struct) {
+  constructor(note_struct: GraceNoteStruct) {
     super({
-      glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
-      stroke_px: GraceNote.LEDGER_LINE_OFFSET,
+      ...{
+        glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
+        stroke_px: GraceNote.LEDGER_LINE_OFFSET,
+      },
       ...note_struct,
     });
     this.setAttribute('type', 'GraceNote');
@@ -31,8 +42,8 @@ export class GraceNote extends StaveNote {
     this.width = 3;
   }
 
-  getStemExtension() {
-    if (this.stem_extension_override != null) {
+  getStemExtension(): number {
+    if (this.stem_extension_override) {
       return this.stem_extension_override;
     }
 
@@ -49,16 +60,16 @@ export class GraceNote extends StaveNote {
     return 0;
   }
 
-  getCategory() {
+  getCategory(): string {
     return GraceNote.CATEGORY;
   }
 
   // FIXME: move this to more basic class.
-  getStaveNoteScale() {
+  getStaveNoteScale(): number {
     return this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
   }
 
-  draw() {
+  draw(): void {
     super.draw();
     this.setRendered();
     const stem = this.stem;
@@ -85,12 +96,12 @@ export class GraceNote extends StaveNote {
         const noteStemHeight = stem.getHeight();
         let x = this.getAbsoluteX();
         let y =
-          stem_direction === Flow.Stem.DOWN
+          stem_direction === Stem.DOWN
             ? noteHeadBounds.y_top - noteStemHeight
             : noteHeadBounds.y_bottom - noteStemHeight;
 
         const defaultStemExtention =
-          stem_direction === Flow.Stem.DOWN ? this.glyph.stem_down_extension : this.glyph.stem_up_extension;
+          stem_direction === Stem.DOWN ? this.glyph.stem_down_extension : this.glyph.stem_up_extension;
 
         let defaultOffsetY = Flow.STEM_HEIGHT;
         defaultOffsetY -= defaultOffsetY / 2.8;
@@ -98,7 +109,7 @@ export class GraceNote extends StaveNote {
         y += defaultOffsetY * staveNoteScale * stem_direction;
 
         const offsets =
-          stem_direction === Flow.Stem.UP
+          stem_direction === Stem.UP
             ? {
                 x1: 1,
                 y1: 0,
@@ -124,7 +135,7 @@ export class GraceNote extends StaveNote {
 
       // FIXME: avoide staff lines, leadger lines or others.
 
-      const ctx = this.context;
+      const ctx = this.checkContext();
       ctx.save();
       ctx.setLineWidth(1 * offsetScale); // FIXME: use more appropriate value.
       ctx.beginPath();
@@ -136,8 +147,14 @@ export class GraceNote extends StaveNote {
     }
   }
 
-  calcBeamedNotesSlashBBox(slashStemOffset, slashBeamOffset, protrusions) {
+  calcBeamedNotesSlashBBox(
+    slashStemOffset: number,
+    slashBeamOffset: number,
+    protrusions: { beam: number; stem: number }
+  ): Record<string, number> {
     const beam = this.beam;
+    if (!beam) throw new Vex.RERR('NoBeam', "Can't calculate without a beam.");
+
     const beam_slope = beam.slope;
     const isBeamEndNote = beam.notes[beam.notes.length - 1] === this;
     const scaleX = isBeamEndNote ? -1 : 1;
@@ -158,7 +175,7 @@ export class GraceNote extends StaveNote {
 
     const stemX = this.getStemX();
     const stem0X = beam.notes[0].getStemX();
-    const stemY = this.beam.getBeamYToDraw() + (stemX - stem0X) * beam_slope;
+    const stemY = beam.getBeamYToDraw() + (stemX - stem0X) * beam_slope;
 
     const ret = {
       x1: stemX - protrusion_stem_dx,
