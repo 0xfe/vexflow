@@ -12,10 +12,6 @@ import { Vex } from './vex';
 import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
 
-export interface BarnoteMetrics {
-  widths: Record<string, number>;
-}
-
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
@@ -24,7 +20,7 @@ function L(
 }
 
 export class BarNote extends Note {
-  protected metrics: BarnoteMetrics;
+  protected metrics: { widths: Record<string, number> };
   static DEBUG: boolean;
   protected type!: BarlineType;
 
