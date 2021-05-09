@@ -471,10 +471,6 @@ export class TabNote extends StemmableNote {
       throw new Vex.RERR('NoStave', "Can't draw without a stave.");
     }
 
-    if (!this.stem) {
-      throw new Vex.RERR('NoStem', "Can't draw without a stem.");
-    }
-
     if (this.ys.length === 0) {
       throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
     }
@@ -486,11 +482,9 @@ export class TabNote extends StemmableNote {
     this.drawPositions();
     this.drawStemThrough();
 
-    const stem_x = this.getStemX();
-
-    this.stem.setNoteHeadXBounds(stem_x, stem_x);
-
-    if (render_stem) {
+    if (this.stem && render_stem) {
+      const stem_x = this.getStemX();
+      this.stem.setNoteHeadXBounds(stem_x, stem_x);
       ctx.openGroup('stem', null, { pointerBBox: true });
       this.stem.setContext(ctx).draw();
       ctx.closeGroup();
