@@ -121,11 +121,8 @@ export class Crescendo extends Note {
     L('Drawing ', this.decrescendo ? 'decrescendo ' : 'crescendo ', this.height, 'x', begin_x - end_x);
 
     renderHairpin(ctx, {
-      // eslint-disable-next-line
       begin_x: begin_x - this.options.extend_left,
-      // eslint-disable-next-line
       end_x: end_x + this.options.extend_right,
-      // eslint-disable-next-line
       y: y + this.options.y_shift,
       height: this.height,
       reverse: this.decrescendo,
