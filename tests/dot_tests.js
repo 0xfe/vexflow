@@ -2,8 +2,7 @@
  * VexFlow - Dot Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Dot = (function () {
+const DotTests = (function () {
   function showNote(note, stave, ctx, x) {
     note.setStave(stave).addToModifierContext(new VF.ModifierContext());
 
@@ -170,3 +169,5 @@ VF.Test.Dot = (function () {
 
   return Dot;
 })();
+VF.Test.Dot = DotTests;
+export { DotTests };

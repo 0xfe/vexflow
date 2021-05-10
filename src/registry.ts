@@ -20,7 +20,7 @@
 import { Vex } from './vex';
 import { Element } from './element';
 
-export const X = Vex.MakeException('RegistryError');
+const X = Vex.MakeException('RegistryError');
 
 // Indexes are represented as maps of maps of maps. This allows
 // for both multi-labeling (e.g., an element can have multiple classes)

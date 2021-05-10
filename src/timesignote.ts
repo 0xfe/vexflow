@@ -1,46 +1,47 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
+import { Vex } from './vex';
 import { Note } from './note';
-import { TimeSignature } from './timesignature';
+import { TimeSignature, TimeSignatureInfo } from './timesignature';
 
 export class TimeSigNote extends Note {
-  constructor(timeSpec, customPadding) {
+  protected timeSig?: TimeSignatureInfo;
+
+  constructor(timeSpec: string, customPadding?: number) {
     super({ duration: 'b' });
     this.setAttribute('type', 'TimeSigNote');
 
     const timeSignature = new TimeSignature(timeSpec, customPadding);
     this.timeSig = timeSignature.getTimeSig();
-    this.setWidth(this.timeSig.glyph.getMetrics().width);
+    this.setWidth(this.timeSig?.glyph.getMetrics().width ?? 0);
 
     // Note properties
     this.ignore_ticks = true;
   }
 
-  getBoundingBox() {
-    return super.getBoundingBox();
-  }
-
-  addToModifierContext() {
+  addToModifierContext(): this {
     /* overridden to ignore */
     return this;
   }
 
-  preFormat() {
+  preFormat(): this {
     this.setPreFormatted(true);
     return this;
   }
 
-  draw() {
-    this.stave.checkContext();
+  draw(): void {
+    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
+    if (!this.timeSig) throw new Vex.RERR('NoTimeSignatureInfo', 'No TimeSignatureInfo attached to this note.');
+    const ctx = this.checkContext();
     this.setRendered();
 
     if (!this.timeSig.glyph.getContext()) {
-      this.timeSig.glyph.setContext(this.context);
+      this.timeSig.glyph.setContext(ctx);
     }
 
     this.timeSig.glyph.setStave(this.stave);
-    this.timeSig.glyph.setYShift(this.stave.getYForLine(this.timeSig.line) - this.stave.getYForGlyphs());
+    this.timeSig.glyph.setYShift(this.stave.getYForLine(2) - this.stave.getYForGlyphs());
     this.timeSig.glyph.renderToStave(this.getAbsoluteX());
   }
 }

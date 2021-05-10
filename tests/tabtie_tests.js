@@ -2,8 +2,7 @@
  * VexFlow - TabTie Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.TabTie = (function () {
+const TabTieTests = (function () {
   var TabTie = {
     Start: function () {
       var run = VF.Test.runTests;
@@ -231,3 +230,5 @@ VF.Test.TabTie = (function () {
 
   return TabTie;
 })();
+VF.Test.TabTie = TabTieTests;
+export { TabTieTests };

@@ -17,7 +17,7 @@ export interface CurveOptions {
   cps: { x: number; y: number }[];
 }
 
-export enum Position {
+export enum CurvePosition {
   NEAR_HEAD = 1,
   NEAR_TOP = 2,
 }
@@ -27,8 +27,8 @@ export class Curve extends Element {
   protected from: Note;
   protected to: Note;
 
-  static get Position(): typeof Position {
-    return Position;
+  static get Position(): typeof CurvePosition {
+    return CurvePosition;
   }
 
   static get PositionString(): Record<string, number> {

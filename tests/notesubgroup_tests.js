@@ -4,8 +4,7 @@
  *
  * Author Taehoon Moon 2016
  */
-
-VF.Test.NoteSubGroup = (function () {
+const NoteSubGroupTests = (function () {
   var NoteSubGroup = {
     Start: function () {
       var run = VF.Test.runTests;
@@ -263,3 +262,5 @@ VF.Test.NoteSubGroup = (function () {
 
   return NoteSubGroup;
 })();
+VF.Test.NoteSubGroup = NoteSubGroupTests;
+export { NoteSubGroupTests };

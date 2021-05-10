@@ -2,8 +2,7 @@
  * VexFlow - Clef-Key Signature Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.ClefKeySignature = (function () {
+const ClefKeySignatureTests = (function () {
   var ClefKeySignature = {
     MAJOR_KEYS: ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'],
 
@@ -139,3 +138,5 @@ VF.Test.ClefKeySignature = (function () {
 
   return ClefKeySignature;
 })();
+VF.Test.ClefKeySignature = ClefKeySignatureTests;
+export { ClefKeySignatureTests };

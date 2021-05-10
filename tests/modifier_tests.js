@@ -2,8 +2,7 @@
  * VexFlow - ModifierContext Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.ModifierContext = (function () {
+const ModifierContextTests = (function () {
   var ModifierContext = {
     Start: function () {
       QUnit.module('ModifierContext');
@@ -32,3 +31,5 @@ VF.Test.ModifierContext = (function () {
 
   return ModifierContext;
 })();
+VF.Test.ModifierContext = ModifierContextTests;
+export { ModifierContextTests };

@@ -2,8 +2,7 @@
  * VexFlow - TimeSignature Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.TimeSignature = (function () {
+const TimeSignatureTests = (function () {
   return {
     Start: function () {
       QUnit.module('TimeSignature');
@@ -121,3 +120,5 @@ VF.Test.TimeSignature = (function () {
     },
   };
 })();
+VF.Test.TimeSignature = TimeSignatureTests;
+export { TimeSignatureTests };

@@ -2,12 +2,11 @@
  * VexFlow - Music API Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
 import { Music } from '../src/music';
 import { KeyManager } from '../src/keymanager';
 import { QUnit, ok, test, expect, equal } from './declarations';
 
-export const MusicTests = {
+const MusicTests = {
   Start(): void {
     QUnit.module('MusicTests');
     test('Valid Notes', MusicTests.validNotes);
@@ -304,3 +303,4 @@ export const MusicTests = {
     );
   },
 };
+export { MusicTests };

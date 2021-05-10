@@ -2,8 +2,7 @@
  * VexFlow - GraceTabNote Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.GraceTabNote = (function () {
+const GraceTabNoteTests = (function () {
   var GraceTabNote = {
     Start: function () {
       QUnit.module('Grace Tab Notes');
@@ -112,3 +111,5 @@ VF.Test.GraceTabNote = (function () {
 
   return GraceTabNote;
 })();
+VF.Test.GraceTabNote = GraceTabNoteTests;
+export { GraceTabNoteTests };

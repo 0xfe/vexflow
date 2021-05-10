@@ -2,8 +2,7 @@
  * VexFlow - Stroke Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Strokes = (function () {
+const StrokesTests = (function () {
   var Strokes = {
     Start: function () {
       var run = VF.Test.runTests;
@@ -433,3 +432,5 @@ VF.Test.Strokes = (function () {
 
   return Strokes;
 })();
+VF.Test.Strokes = StrokesTests;
+export { StrokesTests };

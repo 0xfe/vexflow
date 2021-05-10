@@ -113,14 +113,14 @@ export class Glyph extends Element {
   bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
   code: string;
   metrics?: GlyphMetrics;
-  topGlyphs?: Glyph[];
-  botGlyphs?: Glyph[];
+  topGlyphs: Glyph[] = [];
+  botGlyphs: Glyph[] = [];
 
   protected options: GlyphOptions;
   protected originShift: { x: number; y: number };
   protected x_shift: number;
   protected y_shift: number;
-  protected scale: number = 1;
+  scale: number = 1;
   protected point: number;
   protected stave?: Stave;
 
@@ -371,10 +371,10 @@ export class Glyph extends Element {
       x_max: this.metrics.x_max * this.scale * this.metrics.scale,
       width: this.bbox.getW(),
       height: this.bbox.getH(),
-      scale: 1,
-      x_shift: 0,
-      y_shift: 0,
-      outline: [],
+      scale: this.scale * this.metrics.scale,
+      x_shift: this.metrics.x_shift,
+      y_shift: this.metrics.y_shift,
+      outline: this.metrics.outline,
     };
   }
 

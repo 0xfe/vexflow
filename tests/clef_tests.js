@@ -3,7 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-VF.Test.Clef = (function () {
+const ClefTests = (function () {
   var Clef = {
     Start: function () {
       QUnit.module('Clef');
@@ -156,3 +156,5 @@ VF.Test.Clef = (function () {
 
   return Clef;
 })();
+VF.Test.Clef = ClefTests;
+export { ClefTests };

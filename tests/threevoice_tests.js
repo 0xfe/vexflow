@@ -2,8 +2,7 @@
  * VexFlow - Three Voices in single staff tests.
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.ThreeVoices = (function () {
+const ThreeVoicesTests = (function () {
   function concat(a, b) {
     return a.concat(b);
   }
@@ -208,3 +207,5 @@ VF.Test.ThreeVoices = (function () {
 
   return ThreeVoices;
 })();
+VF.Test.ThreeVoices = ThreeVoicesTests;
+export { ThreeVoicesTests };

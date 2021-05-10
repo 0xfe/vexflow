@@ -2,8 +2,9 @@
  * VexFlow - TickContext Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
+import { MockTickable } from './mocks';
 
-VF.Test.TickContext = (function () {
+const TickContextTests = (function () {
   var TickContext = {
     Start: function () {
       QUnit.module('TickContext');
@@ -18,7 +19,7 @@ VF.Test.TickContext = (function () {
 
     tracking: function () {
       function createTickable() {
-        return new VF.Test.MockTickable(VF.Test.TIME4_4);
+        return new MockTickable(VF.Test.TIME4_4);
       }
 
       var R = VF.RESOLUTION;
@@ -52,3 +53,5 @@ VF.Test.TickContext = (function () {
 
   return TickContext;
 })();
+VF.Test.TickContext = TickContextTests;
+export { TickContextTests };

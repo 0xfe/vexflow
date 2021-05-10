@@ -3,7 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-Vex.Flow.Test.Registry = (function () {
+const RegistryTests = (function () {
   var Registry = {
     Start: function () {
       QUnit.module('Registry');
@@ -86,3 +86,5 @@ Vex.Flow.Test.Registry = (function () {
 
   return Registry;
 })();
+Vex.Flow.Test.Registry = RegistryTests;
+export { RegistryTests };

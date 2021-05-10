@@ -93,5 +93,12 @@ export interface RenderContext {
   /**
    * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width : number, height : number}. Only width is used throughout VexFlow.
    */
-  measureText(text: string): { width: number };
+  measureText(text: string): { width: number; height: number };
+}
+
+export interface TieNotes {
+  first_note: Note;
+  last_note: Note;
+  first_indices: number[];
+  last_indices: number[];
 }

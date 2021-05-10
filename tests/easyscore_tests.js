@@ -2,8 +2,7 @@
  * VexFlow - EasyScore Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-Vex.Flow.Test.EasyScore = (function () {
+const EasyScoreTests = (function () {
   var EasyScore = {
     Start: function () {
       QUnit.module('EasyScore');
@@ -387,3 +386,5 @@ Vex.Flow.Test.EasyScore = (function () {
 
   return EasyScore;
 })();
+Vex.Flow.Test.EasyScore = EasyScoreTests;
+export { EasyScoreTests };

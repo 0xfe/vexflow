@@ -2,8 +2,7 @@
  * VexFlow - TextBracket Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.TextBracket = (function () {
+const TextBracketTests = (function () {
   var TextBracket = {
     Start: function () {
       QUnit.module('TextBracket');
@@ -120,3 +119,5 @@ VF.Test.TextBracket = (function () {
 
   return TextBracket;
 })();
+VF.Test.TextBracket = TextBracketTests;
+export { TextBracketTests };

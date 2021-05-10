@@ -2,8 +2,7 @@
  * VexFlow - StaveModifier Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.StaveModifier = (function () {
+const StaveModifierTests = (function () {
   var StaveModifier = {
     Start: function () {
       QUnit.module('StaveModifier');
@@ -71,3 +70,5 @@ VF.Test.StaveModifier = (function () {
 
   return StaveModifier;
 })();
+VF.Test.StaveModifier = StaveModifierTests;
+export { StaveModifierTests };

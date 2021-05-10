@@ -2,8 +2,7 @@
  * VexFlow - Parser Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-Vex.Flow.Test.Parser = (function () {
+const ParserTests = (function () {
   var TestGrammar = function () {
     return {
       begin: function () {
@@ -207,3 +206,5 @@ Vex.Flow.Test.Parser = (function () {
 
   return Parser;
 })();
+Vex.Flow.Test.Parser = ParserTests;
+export { ParserTests };

@@ -2,8 +2,7 @@
  * VexFlow - Rhythm Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.Rhythm = (function () {
+const RhythmTests = (function () {
   var Rhythm = {
     Start: function () {
       var runTests = VF.Test.runTests;
@@ -465,3 +464,5 @@ VF.Test.Rhythm = (function () {
 
   return Rhythm;
 })();
+VF.Test.Rhythm = RhythmTests;
+export { RhythmTests };

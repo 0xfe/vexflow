@@ -2,7 +2,7 @@
  * VexFlow - StaveLine Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-VF.Test.StaveLine = (function () {
+const StaveLineTests = (function () {
   var StaveLine = {
     Start: function () {
       QUnit.module('StaveLine');
@@ -152,3 +152,5 @@ VF.Test.StaveLine = (function () {
 
   return StaveLine;
 })();
+VF.Test.StaveLine = StaveLineTests;
+export { StaveLineTests };

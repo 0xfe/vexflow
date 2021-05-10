@@ -3,8 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-var VF = Vex.Flow;
-VF.Test.AutoBeamFormatting = (function () {
+const AutoBeamFormattingTests = (function () {
   function concat(a, b) {
     return a.concat(b);
   }
@@ -967,3 +966,5 @@ VF.Test.AutoBeamFormatting = (function () {
 
   return AutoBeamFormatting;
 })();
+VF.Test.AutoBeamFormatting = AutoBeamFormattingTests;
+export { AutoBeamFormattingTests };

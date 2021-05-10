@@ -343,14 +343,12 @@ export class Stave extends Element {
     return (y - this.y) / spacing - headroom;
   }
 
-  getYForTopText(line: number): number {
-    const l = line || 0;
-    return this.getYForLine(-l - this.options.top_text_position);
+  getYForTopText(line: number = 0): number {
+    return this.getYForLine(-line - this.options.top_text_position);
   }
 
-  getYForBottomText(line: number): number {
-    const l = line || 0;
-    return this.getYForLine(this.options.bottom_text_position + l);
+  getYForBottomText(line: number = 0): number {
+    return this.getYForLine(this.options.bottom_text_position + line);
   }
 
   getYForNote(line: number): number {

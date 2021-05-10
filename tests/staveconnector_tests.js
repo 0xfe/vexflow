@@ -2,8 +2,7 @@
  * VexFlow - StaveConnector Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.StaveConnector = (function () {
+const StaveConnectorTests = (function () {
   var StaveConnector = {
     Start: function () {
       var runTests = VF.Test.runTests;
@@ -452,3 +451,5 @@ VF.Test.StaveConnector = (function () {
 
   return StaveConnector;
 })();
+VF.Test.StaveConnector = StaveConnectorTests;
+export { StaveConnectorTests };

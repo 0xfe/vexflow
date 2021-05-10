@@ -2,8 +2,7 @@
  * VexFlow - TabStave Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.TabStave = (function () {
+const TabStaveTests = (function () {
   var TabStave = {
     Start: function () {
       QUnit.module('TabStave');
@@ -43,5 +42,5 @@ VF.Test.TabStave = (function () {
 
   return TabStave;
 })();
-
-module.exports = VF.Test.TabStave;
+VF.Test.TabStave = TabStaveTests;
+export { TabStaveTests };

@@ -3,8 +3,7 @@
   Copyright Mohit Cheppudira 2010 <mohit@muthanna.com>
   Author: Cyril Silverman
 */
-
-VF.Test.Ornament = (function () {
+const OrnamentTests = (function () {
   var Ornament = {
     Start: function () {
       var runTests = VF.Test.runTests;
@@ -364,3 +363,5 @@ VF.Test.Ornament = (function () {
 
   return Ornament;
 })();
+VF.Test.Ornament = OrnamentTests;
+export { OrnamentTests };

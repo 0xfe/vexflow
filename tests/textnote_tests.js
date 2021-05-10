@@ -2,8 +2,7 @@
  * VexFlow - Text Note Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.TextNote = (function () {
+const TextNoteTests = (function () {
   var TextNote = {
     Start: function () {
       var runTests = VF.Test.runTests;
@@ -265,3 +264,5 @@ VF.Test.TextNote = (function () {
 
   return TextNote;
 })();
+VF.Test.TextNote = TextNoteTests;
+export { TextNoteTests };

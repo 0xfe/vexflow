@@ -2,8 +2,7 @@
  * VexFlow - GraceNote Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-
-VF.Test.GraceNote = (function () {
+const GraceNoteTests = (function () {
   var stem_test_util = {
     durations: ['8', '16', '32', '64', '128'],
     createNote: function (d, noteT, keys, stem_direction, slash) {
@@ -464,3 +463,5 @@ VF.Test.GraceNote = (function () {
 
   return GraceNote;
 })();
+VF.Test.GraceNote = GraceNoteTests;
+export { GraceNoteTests };
