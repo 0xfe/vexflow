@@ -40,6 +40,7 @@ export * from './src/tabnote';
 export * from './src/tabslide';
 export * from './src/tabstave';
 export * from './src/tabtie';
+export * from './src/textnote';
 export * from './src/tickable';
 export * from './src/tickcontext';
 export * from './src/timesigglyph';
