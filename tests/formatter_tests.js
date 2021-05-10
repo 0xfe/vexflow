@@ -269,7 +269,7 @@ VF.Test.Formatter = (function () {
     },
 
     justifyStaveNotes: (options) => {
-      var vf = VF.Test.makeFactory(options, 420, 280);
+      var vf = VF.Test.makeFactory(options, 520, 280);
       var ctx = vf.getContext();
       var score = vf.EasyScore();
 
@@ -294,7 +294,7 @@ VF.Test.Formatter = (function () {
         y += 210;
       }
 
-      justifyToWidth(500);
+      justifyToWidth(520);
 
       vf.draw();
 
@@ -559,11 +559,11 @@ VF.Test.Formatter = (function () {
     },
 
     tightNotes: function (options) {
-      var vf = VF.Test.makeFactory(options, 420, 250);
+      var vf = VF.Test.makeFactory(options, 440, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
-        width: 400,
+        width: 450,
         debugFormatter: true,
         details: { maxIterations: 10 },
       });
@@ -591,11 +591,11 @@ VF.Test.Formatter = (function () {
     },
 
     tightNotes2: function (options) {
-      var vf = VF.Test.makeFactory(options, 420, 250);
+      var vf = VF.Test.makeFactory(options, 440, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
-        width: 400,
+        width: 440,
         debugFormatter: true,
       });
 
@@ -620,7 +620,7 @@ VF.Test.Formatter = (function () {
     },
 
     annotations: function (options) {
-      const pageWidth = 816;
+      const pageWidth = 916;
       const pageHeight = 600;
       const vf = VF.Test.makeFactory(options, pageWidth, pageHeight);
       const context = vf.getContext();
@@ -631,25 +631,25 @@ VF.Test.Formatter = (function () {
       var smar = [
         {
           sm: 5,
-          width: 450,
+          width: 880,
           lyrics: lyrics1,
           title: '450px,softMax:5',
         },
         {
           sm: 10,
-          width: 450,
+          width: 880,
           lyrics: lyrics2,
           title: '450px,softmax:10,different word order',
         },
         {
           sm: 5,
-          width: 460,
+          width: 880,
           lyrics: lyrics2,
           title: '460px,softmax:5',
         },
         {
           sm: 100,
-          width: 460,
+          width: 880,
           lyrics: lyrics2,
           title: '460px,softmax:100',
         },
