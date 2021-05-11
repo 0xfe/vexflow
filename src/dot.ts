@@ -5,21 +5,29 @@
 
 import { Vex } from './vex';
 import { Modifier } from './modifier';
+import { Note } from './note';
+import { StaveNote } from './stavenote';
+import { TabNote } from './tabnote';
+import { ModifierContextState } from './modifiercontext';
 
 export class Dot extends Modifier {
-  static get CATEGORY() {
+  protected note?: Note;
+  protected radius: number;
+  protected dot_shiftY: number;
+
+  static get CATEGORY(): string {
     return 'dots';
   }
 
   // Arrange dots inside a ModifierContext.
-  static format(dots, state) {
+  static format(dots: Dot[], state: ModifierContextState): boolean {
     const right_shift = state.right_shift;
     const dot_spacing = 1;
 
     if (!dots || dots.length === 0) return false;
 
     const dot_list = [];
-    const max_shift_map = {};
+    const max_shift_map: Record<string, number> = {};
     for (let i = 0; i < dots.length; ++i) {
       const dot = dots[i];
       const note = dot.getNote();
@@ -27,14 +35,16 @@ export class Dot extends Modifier {
       let props;
       let shift;
 
-      // Only StaveNote has .getKeyProps()
-      if (typeof note.getKeyProps === 'function') {
+      // If it's a StaveNote
+      if (note instanceof StaveNote) {
         props = note.getKeyProps()[dot.getIndex()];
         shift = note.getRightDisplacedHeadPx();
-      } else {
+      } else if (note instanceof TabNote) {
         // Else it's a TabNote
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = 0;
+      } else {
+        throw new Vex.RERR('Internal', 'Unexpected instance.');
       }
 
       const note_id = note.getAttribute('id');
@@ -67,7 +77,7 @@ export class Dot extends Modifier {
         } else {
           // note is on a line, so shift dot to space above the line
           half_shiftY = 0.5;
-          if (last_note != null && !last_note.isRest() && last_line - line === 0.5) {
+          if (last_note != null && !last_note.isRest() && last_line != null && last_line - line === 0.5) {
             // previous note on a space, so shift dot to space below the line
             half_shiftY = -0.5;
           } else if (line + half_shiftY === prev_dotted_space) {
@@ -111,11 +121,11 @@ export class Dot extends Modifier {
     this.dot_shiftY = 0;
   }
 
-  getCategory() {
+  getCategory(): string {
     return Dot.CATEGORY;
   }
 
-  setNote(note) {
+  setNote(note: Note): this {
     this.note = note;
 
     if (this.note.getCategory() === 'gracenotes') {
@@ -125,20 +135,24 @@ export class Dot extends Modifier {
     return this;
   }
 
-  setDotShiftY(y) {
+  setDotShiftY(y: number): this {
     this.dot_shiftY = y;
     return this;
   }
 
-  draw() {
-    this.checkContext();
+  draw(): void {
+    const ctx = this.checkContext();
     this.setRendered();
-
-    if (!this.note || this.index === null) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw dot without a note and index.");
+    if (!this.note || this.index === undefined) {
+      throw new Vex.RERR('NoNoteIndex', 'Drawing a dot requires a note and an index.');
     }
 
-    const lineSpace = this.note.stave.options.spacing_between_lines_px;
+    const stave = this.note.getStave();
+    if (!stave) {
+      throw new Vex.RERR('NoStave', 'Drawing a dot requires a stave.');
+    }
+
+    const lineSpace = stave.getOptions().spacing_between_lines_px;
 
     const start = this.note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
 
@@ -149,7 +163,6 @@ export class Dot extends Modifier {
 
     const x = start.x + this.x_shift + this.width - this.radius;
     const y = start.y + this.y_shift + this.dot_shiftY * lineSpace;
-    const ctx = this.context;
 
     ctx.beginPath();
     ctx.arc(x, y, this.radius, 0, Math.PI * 2, false);
