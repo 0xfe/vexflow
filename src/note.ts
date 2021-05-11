@@ -498,7 +498,15 @@ export abstract class Note extends Tickable {
   getNoteType(): string {
     return this.noteType;
   }
-
+  getBeam(): Beam | undefined {
+    return this.beam;
+  }
+  checkBeam(): Beam {
+    if (!this.beam) {
+      throw new Vex.RERR('NoBeam', 'No beam attached to instance');
+    }
+    return this.beam;
+  }
   /** Sets the beam. */
   setBeam(beam: Beam): this {
     this.beam = beam;
