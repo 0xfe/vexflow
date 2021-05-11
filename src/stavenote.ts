@@ -424,8 +424,9 @@ export class StaveNote extends StemmableNote {
       if (noteHeadStyle) noteHead.setStyle(noteHeadStyle);
     });
 
-    if (this.stave) {
-      this.note_heads.forEach((head) => head.setStave(this.stave));
+    const stave = this.stave;
+    if (stave) {
+      this.note_heads.forEach((head) => head.setStave(stave));
     }
     this.calcNoteDisplacements();
     return this;
