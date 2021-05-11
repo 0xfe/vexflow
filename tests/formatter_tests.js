@@ -632,27 +632,27 @@ const FormatterTests = (function () {
       var smar = [
         {
           sm: 5,
-          width: 880,
+          width: 550,
           lyrics: lyrics1,
-          title: '450px,softMax:5',
+          title: '550px,softMax:5',
         },
         {
           sm: 10,
-          width: 880,
+          width: 550,
           lyrics: lyrics2,
-          title: '450px,softmax:10,different word order',
+          title: '550px,softmax:10,different word order',
         },
         {
           sm: 5,
-          width: 880,
+          width: 550,
           lyrics: lyrics2,
-          title: '460px,softmax:5',
+          title: '550px,softmax:5',
         },
         {
           sm: 100,
-          width: 880,
+          width: 550,
           lyrics: lyrics2,
-          title: '460px,softmax:100',
+          title: '550px,softmax:100',
         },
       ];
 
