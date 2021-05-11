@@ -13,6 +13,7 @@ const FormatterTests = (function () {
       QUnit.module('Formatter');
       test('TickContext Building', Formatter.buildTickContexts);
       runSVG('Justification and alignment with accidentals', Formatter.accidentalJustification);
+      runSVG('Long measure taking full space', Formatter.longMeasureProblems);
       runSVG('Vertical alignment - few unaligned beats', Formatter.unalignedNoteDurations);
       runSVG('Vertical alignment - many unaligned beats', Formatter.unalignedNoteDurations2, { globalSoftmax: false });
       runSVG('Vertical alignment - many unaligned beats (global softmax)', Formatter.unalignedNoteDurations2, {
@@ -94,6 +95,48 @@ const FormatterTests = (function () {
         tickables1[1].getX() < tickables2[1].getX(),
         'Second note of voice 2 is to the right of the second note of voice 1'
       );
+    },
+    longMeasureProblems: (options) => {
+      var registry = new VF.Registry();
+      VF.Registry.enableDefaultRegistry(registry);
+      var vf = VF.Test.makeFactory(options, 1500, 300);
+      var score = vf.EasyScore();
+      score.set({
+        time: '4/4',
+      });
+      const notes1 = score.notes(
+        'b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/2,b4/8,b4/8'
+      );
+      const voice1 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+      const notes2 = score.notes(
+        'd3/4,(ab3 f4)/2,d3/4,ab3/4,d3/2,ab3/4,d3/4,ab3/2,d3/4,ab3/4,d3/2,ab3/4,d3/4,ab3/2,d3/4,ab3/4,d3/2,ab3/4,d4/4,d4/2,d4/4',
+        {
+          clef: 'bass',
+        }
+      );
+      const voice2 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+      voice2.addTickables(notes2);
+      voice1.addTickables(notes1);
+      const stave1 = vf.Stave({
+        y: 50,
+        width: 1500,
+      });
+      const stave2 = vf.Stave({
+        y: 200,
+        width: 1500,
+      });
+      vf.StaveConnector({
+        top_stave: stave1,
+        bottom_stave: stave2,
+        type: 'brace',
+      });
+      var formatter = vf.Formatter().joinVoices([voice1]).joinVoices([voice2]);
+      formatter.format([voice1, voice2], 1500);
+      stave1.draw();
+      stave2.draw();
+      voice1.draw(vf.context, stave1);
+      voice2.draw(vf.context, stave2);
+      ok(true);
     },
 
     accidentalJustification: (options) => {
@@ -227,7 +270,7 @@ const FormatterTests = (function () {
     },
 
     justifyStaveNotes: (options) => {
-      var vf = VF.Test.makeFactory(options, 420, 280);
+      var vf = VF.Test.makeFactory(options, 520, 280);
       var ctx = vf.getContext();
       var score = vf.EasyScore();
 
@@ -252,7 +295,7 @@ const FormatterTests = (function () {
         y += 210;
       }
 
-      justifyToWidth(500);
+      justifyToWidth(520);
 
       vf.draw();
 
@@ -517,11 +560,11 @@ const FormatterTests = (function () {
     },
 
     tightNotes: function (options) {
-      var vf = VF.Test.makeFactory(options, 420, 250);
+      var vf = VF.Test.makeFactory(options, 440, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
-        width: 400,
+        width: 450,
         debugFormatter: true,
         details: { maxIterations: 10 },
       });
@@ -549,11 +592,11 @@ const FormatterTests = (function () {
     },
 
     tightNotes2: function (options) {
-      var vf = VF.Test.makeFactory(options, 420, 250);
+      var vf = VF.Test.makeFactory(options, 440, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
-        width: 400,
+        width: 440,
         debugFormatter: true,
       });
 
@@ -578,7 +621,7 @@ const FormatterTests = (function () {
     },
 
     annotations: function (options) {
-      const pageWidth = 816;
+      const pageWidth = 916;
       const pageHeight = 600;
       const vf = VF.Test.makeFactory(options, pageWidth, pageHeight);
       const context = vf.getContext();
@@ -589,27 +632,27 @@ const FormatterTests = (function () {
       var smar = [
         {
           sm: 5,
-          width: 450,
+          width: 550,
           lyrics: lyrics1,
-          title: '450px,softMax:5',
+          title: '550px,softMax:5',
         },
         {
           sm: 10,
-          width: 450,
+          width: 550,
           lyrics: lyrics2,
-          title: '450px,softmax:10,different word order',
+          title: '550px,softmax:10,different word order',
         },
         {
           sm: 5,
-          width: 460,
+          width: 550,
           lyrics: lyrics2,
-          title: '460px,softmax:5',
+          title: '550px,softmax:5',
         },
         {
           sm: 100,
-          width: 460,
+          width: 550,
           lyrics: lyrics2,
-          title: '460px,softmax:100',
+          title: '550px,softmax:100',
         },
       ];
 
