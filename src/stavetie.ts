@@ -147,10 +147,11 @@ export class StaveTie extends Element {
     let center_x = (first_x_px + last_x_px) / 2;
     center_x -= ctx.measureText(this.text).width / 2;
     const stave = this.notes.first_note?.getStave() ?? this.notes.last_note?.getStave();
+    if (!stave) throw new Vex.RERR('NoStave', "Can't render text without a stave.");
 
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave!.getYForTopText() - 1);
+    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
     ctx.restore();
   }
 

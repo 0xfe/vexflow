@@ -339,8 +339,7 @@ export class TabNote extends StemmableNote {
 
   // Get the y position for the stem
   getStemY(): number {
-    // eslint-disable-next-line
-    const num_lines = this.stave!.getNumLines();
+    const num_lines = this.checkStave().getNumLines();
 
     // The decimal staff line amounts provide optimal spacing between the
     // fret number and the stem
@@ -348,14 +347,12 @@ export class TabNote extends StemmableNote {
     const stemDownLine = num_lines - 0.5;
     const stemStartLine = Stem.UP === this.stem_direction ? stemUpLine : stemDownLine;
 
-    // eslint-disable-next-line
-    return this.stave!.getYForLine(stemStartLine);
+    return this.checkStave().getYForLine(stemStartLine);
   }
 
   // Get the stem extents for the tabnote
   getStemExtents(): Record<string, number> {
-    // eslint-disable-next-line
-    return this.stem!.getExtents();
+    return this.checkStem().getExtents();
   }
 
   // Draw the fal onto the context
@@ -363,7 +360,6 @@ export class TabNote extends StemmableNote {
     const {
       beam,
       glyph,
-      stem,
       stem_direction,
       render_options: { draw_stem, glyph_font_scale },
     } = this;
@@ -374,8 +370,7 @@ export class TabNote extends StemmableNote {
     // Now it's the flag's turn.
     if (glyph.flag && shouldDrawFlag) {
       const flag_x = this.getStemX() + 1;
-      // eslint-disable-next-line
-      const flag_y = this.getStemY() - stem!.getHeight();
+      const flag_y = this.getStemY() - this.checkStem().getHeight();
 
       const flag_code =
         stem_direction === Stem.DOWN
@@ -408,13 +403,11 @@ export class TabNote extends StemmableNote {
     const stem_through = this.render_options.draw_stem_through_stave;
     const draw_stem = this.render_options.draw_stem;
     if (draw_stem && stem_through) {
-      // eslint-disable-next-line
-      const total_lines = this.stave!.getNumLines();
+      const total_lines = this.checkStave().getNumLines();
       const strings_used = this.positions.map((position) => Number(position.str));
 
       const unused_strings = getUnusedStringGroups(total_lines, strings_used);
-      // eslint-disable-next-line
-      const stem_lines = getPartialStemLines(stem_y, unused_strings, this.stave!, this.getStemDirection());
+      const stem_lines = getPartialStemLines(stem_y, unused_strings, this.checkStave(), this.getStemDirection());
 
       ctx.save();
       ctx.setLineWidth(Stem.WIDTH);
@@ -437,8 +430,7 @@ export class TabNote extends StemmableNote {
     const x = this.getAbsoluteX();
     const ys = this.ys;
     for (let i = 0; i < this.positions.length; ++i) {
-      // eslint-disable-next-line
-      const y = ys[i] + this.render_options.y_shift!;
+      const y = ys[i] + this.render_options.y_shift;
       const glyph = this.glyphs[i];
 
       // Center the fret text beneath the notation note head
@@ -449,15 +441,12 @@ export class TabNote extends StemmableNote {
       ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
 
       if (glyph.code) {
-        // eslint-disable-next-line
-        Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale * this.render_options.scale!, glyph.code);
+        Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale * this.render_options.scale, glyph.code);
       } else {
         ctx.save();
-        // eslint-disable-next-line
-        ctx.setRawFont(this.render_options.font!);
+        ctx.setRawFont(this.render_options.font);
         const text = glyph.text.toString();
-        // eslint-disable-next-line
-        ctx.fillText(text, tab_x, y + 5 * this.render_options.scale!);
+        ctx.fillText(text, tab_x, y + 5 * this.render_options.scale);
         ctx.restore();
       }
     }

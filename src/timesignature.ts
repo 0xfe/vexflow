@@ -34,13 +34,12 @@ const assertIsValidFraction = (timeSpec: string) => {
 };
 
 export class TimeSignature extends StaveModifier {
-  point?: number;
-  bottomLine?: number;
-  protected timeSig?: TimeSignatureInfo;
+  point: number;
+  bottomLine: number;
+  topLine: number;
 
+  protected timeSig: TimeSignatureInfo;
   protected validate_args: boolean;
-
-  topLine?: number;
 
   static get CATEGORY(): string {
     return 'timesignatures';
@@ -61,12 +60,11 @@ export class TimeSignature extends StaveModifier {
     };
   }
 
-  constructor(timeSpec?: string, customPadding = 15, validate_args = true) {
+  constructor(timeSpec: string = '4/4', customPadding = 15, validate_args = true) {
     super();
     this.setAttribute('type', 'TimeSignature');
     this.validate_args = validate_args;
 
-    if (!timeSpec) return;
     const padding = customPadding;
 
     this.point = this.musicFont.lookupMetric('digits.point');
@@ -75,7 +73,7 @@ export class TimeSignature extends StaveModifier {
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifier.Position.BEGIN);
     this.timeSig = this.parseTimeSpec(timeSpec);
-    this.setWidth(this.timeSig.glyph.getMetrics().width!);
+    this.setWidth(this.timeSig.glyph.getMetrics().width ?? 0);
     this.setPadding(padding);
   }
 
@@ -106,7 +104,7 @@ export class TimeSignature extends StaveModifier {
   }
 
   makeTimeSignatureGlyph(topDigits: string[], botDigits: string[]): Glyph {
-    const glyph = new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point!);
+    const glyph = new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point);
     return glyph;
   }
 
@@ -129,9 +127,9 @@ export class TimeSignature extends StaveModifier {
     }
 
     this.setRendered();
-    this.timeSig!.glyph.setStave(this.stave);
-    this.timeSig!.glyph.setContext(this.stave.getContext());
-    this.placeGlyphOnLine(this.timeSig!.glyph, this.stave, 2);
-    this.timeSig!.glyph.renderToStave(this.x);
+    this.timeSig.glyph.setStave(this.stave);
+    this.timeSig.glyph.setContext(this.stave.getContext());
+    this.placeGlyphOnLine(this.timeSig.glyph, this.stave, this.timeSig.line);
+    this.timeSig.glyph.renderToStave(this.x);
   }
 }

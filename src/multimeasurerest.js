@@ -215,7 +215,7 @@ export class MultiMeasureRest extends Element {
 
     if (this.render_options.show_number) {
       const timeSpec = '/' + this.number_of_measures;
-      const timeSig = new TimeSignature(null, undefined, false);
+      const timeSig = new TimeSignature(timeSpec, 0, false);
       timeSig.point = this.render_options.number_glyph_point;
       timeSig.setTimeSig(timeSpec);
       timeSig.setStave(stave);

@@ -28,7 +28,7 @@ export class ClefNote extends Note {
     this.type = type;
     this.clef_obj = new Clef(type, size, annotation);
     this.clef = this.clef_obj.clef;
-    this.glyph = new Glyph(this.clef.code, this.clef.point);
+    this.glyph = new Glyph(this.clef.code, this.clef.point ?? 0);
     this.setWidth(this.glyph.getMetrics().width);
 
     // Note properties
@@ -39,7 +39,7 @@ export class ClefNote extends Note {
     this.type = type;
     this.clef_obj = new Clef(type, size, annotation);
     this.clef = this.clef_obj.clef;
-    this.glyph = new Glyph(this.clef.code, this.clef.point);
+    this.glyph = new Glyph(this.clef.code, this.clef.point ?? 0);
     this.setWidth(this.glyph.getMetrics().width);
     return this;
   }

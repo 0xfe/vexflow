@@ -83,8 +83,8 @@ export class StaveModifier extends Element {
     return '';
   }
 
-  placeGlyphOnLine(glyph: Glyph, stave: Stave, line: number, customShift = 0): void {
-    glyph.setYShift(stave.getYForLine(line) - stave.getYForGlyphs() + customShift);
+  placeGlyphOnLine(glyph: Glyph, stave: Stave, line?: number, customShift = 0): void {
+    glyph.setYShift(stave.getYForLine(line ?? 0) - stave.getYForGlyphs() + customShift);
   }
 
   getPadding(index: number): number {
