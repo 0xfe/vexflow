@@ -9,16 +9,27 @@
 // with `TextNotes` - which are used to represent other dynamics markings.
 
 import { Vex } from './vex';
-import { Note } from './note';
+import { Note, NoteStruct } from './note';
 import { TickContext } from './tickcontext';
+import { RenderContext } from './types/common';
+
+export interface CrescendoParams {
+  reverse: boolean;
+  height: number;
+  y: number;
+  end_x: number;
+  begin_x: number;
+}
 
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any []) {
   if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args);
 }
 
 // Private helper to draw the hairpin
-function renderHairpin(ctx, params) {
+function renderHairpin(ctx: RenderContext, params: CrescendoParams) {
   const begin_x = params.begin_x;
   const end_x = params.end_x;
   const y = params.y;
@@ -41,8 +52,21 @@ function renderHairpin(ctx, params) {
 }
 
 export class Crescendo extends Note {
+  static DEBUG: boolean;
+
+  protected decrescendo: boolean;
+  protected height: number;
+  protected line: number;
+  protected options = {
+    // Extensions to the length of the crescendo on either side
+    extend_left: 0,
+    extend_right: 0,
+    // Vertical shift
+    y_shift: 0,
+  };
+
   // Initialize the crescendo's properties
-  constructor(note_struct) {
+  constructor(note_struct: NoteStruct) {
     super(note_struct);
     this.setAttribute('type', 'Crescendo');
 
@@ -54,59 +78,52 @@ export class Crescendo extends Note {
 
     // The height at the open end of the cresc/decresc
     this.height = 15;
-
-    Vex.Merge(this.render_options, {
-      // Extensions to the length of the crescendo on either side
-      extend_left: 0,
-      extend_right: 0,
-      // Vertical shift
-      y_shift: 0,
-    });
   }
 
   // Set the line to center the element on
-  setLine(line) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Set the full height at the open end
-  setHeight(height) {
+  setHeight(height: number): this {
     this.height = height;
     return this;
   }
 
   // Set whether the sign should be a descresendo by passing a bool
   // to `decresc`
-  setDecrescendo(decresc) {
+  setDecrescendo(decresc: boolean): this {
     this.decrescendo = decresc;
     return this;
   }
 
   // Preformat the note
-  preFormat() {
+  preFormat(): this {
     this.preFormatted = true;
     return this;
   }
 
   // Render the Crescendo object onto the canvas
-  draw() {
-    this.checkContext();
+  draw(): void {
+    const ctx = this.checkContext();
+    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
     this.setRendered();
 
     const tick_context = this.getTickContext();
     const next_context = TickContext.getNextContext(tick_context);
 
     const begin_x = this.getAbsoluteX();
-    const end_x = next_context ? next_context.getX() : this.stave.x + this.stave.width;
+    const end_x = next_context ? next_context.getX() : this.stave.getX() + this.stave.getWidth();
     const y = this.stave.getYForLine(this.line + -3) + 1;
 
     L('Drawing ', this.decrescendo ? 'decrescendo ' : 'crescendo ', this.height, 'x', begin_x - end_x);
 
-    renderHairpin(this.context, {
-      begin_x: begin_x - this.render_options.extend_left,
-      end_x: end_x + this.render_options.extend_right,
-      y: y + this.render_options.y_shift,
+    renderHairpin(ctx, {
+      begin_x: begin_x - this.options.extend_left,
+      end_x: end_x + this.options.extend_right,
+      y: y + this.options.y_shift,
       height: this.height,
       reverse: this.decrescendo,
     });
