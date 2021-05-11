@@ -21,7 +21,7 @@ module.exports = (grunt) => {
   const TARGET_MIN = 'vexflow-min.js';
   const TARGET_TESTS = 'vexflow-tests.js';
 
-  // Used for eslint and docco
+  // Used for eslint
   const SOURCES = ['./src/*.ts', './src/*.js', '!./src/header.js'];
 
   function webpackConfig(target, moduleEntry, mode, libraryName) {
@@ -98,7 +98,7 @@ module.exports = (grunt) => {
             expand: true,
             dest: RELEASE_DIR,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', 'typedocs/**', '*.map'],
+            src: ['*.js', 'docs/**', '*.map'],
           },
         ],
       },
@@ -108,22 +108,15 @@ module.exports = (grunt) => {
             expand: true,
             dest: REFERENCE_DIR,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', 'typedocs/**', '*.map'],
+            src: ['*.js', 'docs/**', '*.map'],
           },
         ],
-      },
-    },
-    docco: {
-      src: SOURCES,
-      options: {
-        layout: 'linear',
-        output: 'build/docs',
       },
     },
     typedoc: {
       build: {
         options: {
-          out: 'build/typedocs',
+          out: 'build/docs',
           name: 'vexflow',
         },
         src: ['./typedoc.ts'],
@@ -166,7 +159,6 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-typedoc');
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-bump');
@@ -182,7 +174,6 @@ module.exports = (grunt) => {
     'webpack:build',
     'webpack:buildDev',
     'webpack:buildTest',
-    'docco',
     'typedoc',
   ]);
   grunt.registerTask('watch', 'Watch src/ and tests/ concurrently', ['clean', 'eslint', 'concurrent']);
