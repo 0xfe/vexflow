@@ -38,6 +38,7 @@ const Flow = {
   getGlyphProps: getGlyphProps,
   textWidth: textWidth,
   tabToGlyph: tabToGlyph,
+  articulationCodes: articulationCodes,
 };
 
 Flow.clefProperties = (clef) => {
@@ -242,7 +243,9 @@ function textWidth(text) {
   return 7 * text.toString().length;
 }
 
-Flow.articulationCodes = (artic) => Flow.articulationCodes.articulations[artic];
+function articulationCodes(artic) {
+  return Flow.articulationCodes.articulations[artic];
+}
 
 Flow.articulationCodes.articulations = {
   'a.': { code: 'augmentationDot', between_lines: true }, // Staccato

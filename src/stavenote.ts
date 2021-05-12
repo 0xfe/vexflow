@@ -775,7 +775,7 @@ export class StaveNote extends StemmableNote {
   getModifierStartXY(
     position: number,
     index: number,
-    options: {
+    options?: {
       forceFlagRight?: boolean;
     }
   ): { x: number; y: number } {
