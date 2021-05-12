@@ -34,6 +34,7 @@ import { TabStave } from './tabstave';
 import { TabNote } from './tabnote';
 import { BoundingBox } from './boundingbox';
 import { StaveNote } from './stavenote';
+import { check } from './common';
 
 interface ContextGaps {
   total: number;
@@ -592,7 +593,7 @@ export class Formatter {
     // Use softmax based on all notes across all staves. (options.globalSoftmax)
     const formatterOptions = this.formatterOptions;
     const softmaxFactor = formatterOptions.softmaxFactor || 100;
-    const exp = (tick: number) => softmaxFactor ** contextMap[tick].getMaxTicks().value() / totalTicks;
+    const exp = (tick: number) => softmaxFactor ** (contextMap[tick].getMaxTicks().value() / totalTicks);
     const expTicksUsed = contextList.map(exp).reduce((a: number, b: number) => a + b);
 
     this.minTotalWidth = x + shift;
@@ -668,7 +669,7 @@ export class Formatter {
               // distance is scaled down by the softmax for the voice.
               if (formatterOptions.globalSoftmax) {
                 const t = totalTicks;
-                expectedDistance = (softmaxFactor ** maxTicks / t / expTicksUsed) * adjustedJustifyWidth;
+                expectedDistance = (softmaxFactor ** (maxTicks / t) / expTicksUsed) * adjustedJustifyWidth;
               } else if (backTickable) {
                 expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
               }
@@ -697,7 +698,7 @@ export class Formatter {
         if (index > 0) {
           const contextX = context.getX();
           const ideal = idealDistances[index];
-          const errorPx = (ideal.fromTickable?.getX() ?? 0) + ideal.expectedDistance - (contextX + spaceAccum);
+          const errorPx = check<Tickable>(ideal.fromTickable).getX() + ideal.expectedDistance - (contextX + spaceAccum);
 
           let negativeShiftPx = 0;
           if (errorPx > 0) {
@@ -886,7 +887,7 @@ export class Formatter {
         }
       }
 
-      if (options) shift *= options.alpha;
+      shift *= check<{ alpha: number }>(options).alpha;
       this.totalShift += shift;
     });
 
