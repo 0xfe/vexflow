@@ -1,6 +1,7 @@
 import { Vex } from './vex';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
+import { check } from './common';
 
 export class TimeSignatureGlyph extends Glyph {
   timeSignature: TimeSignature;
@@ -37,7 +38,7 @@ export class TimeSignatureGlyph extends Glyph {
       const botGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
 
       this.botGlyphs.push(botGlyph);
-      botWidth += botGlyph.getMetrics().width ?? 0;
+      botWidth += check<number>(botGlyph.getMetrics().width);
     }
 
     this.width = Math.max(topWidth, botWidth);
@@ -68,7 +69,7 @@ export class TimeSignatureGlyph extends Glyph {
         start_x + this.x_shift,
         this.stave.getYForLine(this.timeSignature.topLine)
       );
-      start_x += glyph.getMetrics().width ?? 0;
+      start_x += check<number>(glyph.getMetrics().width);
     }
 
     start_x = x + this.botStartX;
@@ -82,7 +83,7 @@ export class TimeSignatureGlyph extends Glyph {
         start_x + glyph.getMetrics().x_shift,
         this.stave.getYForLine(this.timeSignature.bottomLine)
       );
-      start_x += glyph.getMetrics().width ?? 0;
+      start_x += check<number>(glyph.getMetrics().width);
     }
   }
 }

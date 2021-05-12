@@ -9,6 +9,7 @@ import { Vex } from './vex';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
+import { check } from './common';
 
 export interface TimeSignatureInfo {
   glyph: Glyph;
@@ -73,7 +74,7 @@ export class TimeSignature extends StaveModifier {
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifier.Position.BEGIN);
     this.timeSig = this.parseTimeSpec(timeSpec);
-    this.setWidth(this.timeSig.glyph.getMetrics().width ?? 0);
+    this.setWidth(check<number>(this.timeSig.glyph.getMetrics().width));
     this.setPadding(padding);
   }
 
