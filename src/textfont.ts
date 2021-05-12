@@ -10,6 +10,7 @@ import { Vex } from './vex';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 import { FontGlyph } from './font';
+import { FontInfo } from './types/common';
 export interface TextFontMetrics {
   advanceWidth: number;
   ha: number;
@@ -178,7 +179,7 @@ export class TextFont {
   // Find the font that most closely matches the parameters from the given font data.
   // Primarily we look for font family, also bold and italic attributes.  This
   // method will always return a fallback font if there are no matches.
-  static getTextFontFromVexFontData(fd: TextFont): TextFont {
+  static getTextFontFromVexFontData(fd: FontInfo): TextFont {
     let i = 0;
     let selectedFont = null;
     const fallback = TextFont.fontRegistry[0];
@@ -197,7 +198,7 @@ export class TextFont {
       selectedFont = new TextFont(candidates[0]);
     } else {
       const bold = TextFont.fontWeightToBold(fd.weight);
-      const italic = TextFont.fontStyleToItalic(fd.style);
+      const italic = TextFont.fontStyleToItalic(fd.weight);
       const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
       if (perfect) {
         selectedFont = new TextFont(perfect);
