@@ -314,7 +314,7 @@ export class Formatter {
         const position = note.getGlyph().position.toUpperCase();
         if (position !== 'R/4' && position !== 'B/4') return;
 
-        if (alignAllNotes) {
+        if (alignAllNotes || note.getBeam()) {
           // Align rests with previous/next notes.
           const props = note.getKeyProps()[0];
           if (index === 0) {

@@ -523,6 +523,11 @@ export abstract class Note extends Tickable {
     return this;
   }
 
+  /** Gets the beam. */
+  getBeam(): Beam | undefined {
+    return this.beam;
+  }
+
   /** Attach this note to a modifier context. */
   setModifierContext(mc?: ModifierContext): this {
     this.modifierContext = mc;
