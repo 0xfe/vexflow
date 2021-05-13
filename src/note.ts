@@ -586,6 +586,9 @@ export abstract class Note extends Tickable {
       this.leftDisplacedHeadPx - // subtract left displaced head
       this.rightDisplacedHeadPx; // subtract right displaced head
 
+    const totalLeftPx = modLeftPx + this.leftDisplacedHeadPx;
+    const totalRightPx = modRightPx + this.rightDisplacedHeadPx;
+
     return {
       // ----------
       // NOTE: If you change this, remember to update MockTickable in the tests/ directory.
@@ -597,8 +600,8 @@ export abstract class Note extends Tickable {
       // Modifier spacing.
       modLeftPx,
       modRightPx,
-      totalLeftPx: 0,
-      totalRightPx: 0,
+      totalLeftPx,
+      totalRightPx,
 
       // Displaced note head on left or right.
       leftDisplacedHeadPx: this.leftDisplacedHeadPx,
