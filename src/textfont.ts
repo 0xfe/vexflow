@@ -148,7 +148,7 @@ export class TextFont {
   // ### fontWeightToBold
   // return true if the font weight indicates we desire a 'bold'
   // used in getTextFontFromVexFontData
-  static fontWeightToBold(fw: string): boolean {
+  static fontWeightToBold(fw?: string): boolean {
     if (!fw) {
       return false;
     }
@@ -162,7 +162,7 @@ export class TextFont {
   // ### fontStyleToItalic
   // return true if the font style indicates we desire 'italic' style
   // used in getTextFontFromVexFontData
-  static fontStyleToItalic(fs: string): boolean {
+  static fontStyleToItalic(fs?: string): boolean {
     return typeof fs === 'string' && fs.toLowerCase() === 'italic';
   }
 
@@ -198,7 +198,7 @@ export class TextFont {
       selectedFont = new TextFont(candidates[0]);
     } else {
       const bold = TextFont.fontWeightToBold(fd.weight);
-      const italic = TextFont.fontStyleToItalic(fd.weight);
+      const italic = TextFont.fontStyleToItalic(fd.style);
       const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
       if (perfect) {
         selectedFont = new TextFont(perfect);
