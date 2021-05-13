@@ -31,6 +31,7 @@ const MT = (function () {
         modRightPx: 0,
         leftDisplacedHeadPx: 0,
         rightDisplacedHeadPx: 0,
+        glyphPx: 0,
       };
     },
     getWidth: function () {

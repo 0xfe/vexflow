@@ -39,7 +39,7 @@ export interface Metrics {
   modRightPx: number;
   /** Extra space on left of note. */
   leftDisplacedHeadPx: number;
-  glyphPx?: number;
+  glyphPx: number;
   /** Extra space on right of note. */
   rightDisplacedHeadPx: number;
 }
@@ -54,14 +54,14 @@ export interface NoteRenderOptions {
   draw_stem_through_stave?: boolean;
   draw_dots?: boolean;
   draw_stem?: boolean;
-  y_shift?: number;
+  y_shift: number;
   extend_left?: number;
   extend_right?: number;
   glyph_font_scale: number;
   annotation_spacing: number;
   glyph_font_size?: number;
-  scale?: number;
-  font?: string;
+  scale: number;
+  font: string;
   stroke_px: number;
 }
 
@@ -310,6 +310,9 @@ export abstract class Note extends Tickable {
       annotation_spacing: 5,
       glyph_font_scale: 1,
       stroke_px: 1,
+      scale: 1,
+      font: '',
+      y_shift: 0,
     };
   }
 
@@ -341,6 +344,12 @@ export abstract class Note extends Tickable {
 
   // Get and set the target stave.
   getStave(): Stave | undefined {
+    return this.stave;
+  }
+  checkStave(): Stave {
+    if (!this.stave) {
+      throw new Vex.RERR('NoStave', 'No stave attached to instance');
+    }
     return this.stave;
   }
   setStave(stave: Stave): this {
@@ -569,6 +578,7 @@ export abstract class Note extends Tickable {
       // Displaced note head on left or right.
       leftDisplacedHeadPx: this.leftDisplacedHeadPx,
       rightDisplacedHeadPx: this.rightDisplacedHeadPx,
+      glyphPx: 0,
     };
   }
 

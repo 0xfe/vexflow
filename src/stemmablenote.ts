@@ -28,6 +28,13 @@ export abstract class StemmableNote extends Note {
     return this.stem;
   }
 
+  checkStem(): Stem {
+    if (!this.stem) {
+      throw new Vex.RERR('NoStem', 'No stem attached to instance');
+    }
+    return this.stem;
+  }
+
   setStem(stem: Stem): this {
     this.stem = stem;
     return this;

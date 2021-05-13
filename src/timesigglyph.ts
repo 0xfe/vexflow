@@ -1,5 +1,7 @@
+import { Vex } from './vex';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
+import { check } from './common';
 
 export class TimeSignatureGlyph extends Glyph {
   timeSignature: TimeSignature;
@@ -24,19 +26,19 @@ export class TimeSignatureGlyph extends Glyph {
     let topWidth = 0;
     for (let i = 0; i < topDigits.length; ++i) {
       const num = topDigits[i];
-      const topGlyph = new Glyph('timeSig' + num, this.timeSignature.point!);
+      const topGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
 
       this.topGlyphs.push(topGlyph);
-      topWidth += topGlyph.getMetrics().width!;
+      topWidth += topGlyph.getMetrics().width ?? 0;
     }
 
     let botWidth = 0;
     for (let i = 0; i < botDigits.length; ++i) {
       const num = botDigits[i];
-      const botGlyph = new Glyph('timeSig' + num, this.timeSignature.point!);
+      const botGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
 
       this.botGlyphs.push(botGlyph);
-      botWidth += botGlyph.getMetrics().width!;
+      botWidth += check<number>(botGlyph.getMetrics().width);
     }
 
     this.width = Math.max(topWidth, botWidth);
@@ -55,6 +57,8 @@ export class TimeSignatureGlyph extends Glyph {
   }
 
   renderToStave(x: number): void {
+    if (!this.stave) throw new Vex.RERR('NoStave', "Can't render without a stave.");
+
     let start_x = x + this.topStartX;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
@@ -63,23 +67,23 @@ export class TimeSignatureGlyph extends Glyph {
         glyph.getMetrics().outline,
         this.scale,
         start_x + this.x_shift,
-        this.stave!.getYForLine(this.timeSignature.topLine!)
+        this.stave.getYForLine(this.timeSignature.topLine)
       );
-      start_x += glyph.getMetrics().width!;
+      start_x += check<number>(glyph.getMetrics().width);
     }
 
     start_x = x + this.botStartX;
     for (let i = 0; i < this.botGlyphs.length; ++i) {
       const glyph = this.botGlyphs[i];
-      this.timeSignature.placeGlyphOnLine(glyph, this.stave!, 0);
+      this.timeSignature.placeGlyphOnLine(glyph, this.stave, 0);
       Glyph.renderOutline(
         this.checkContext(),
         glyph.getMetrics().outline,
         this.scale,
         start_x + glyph.getMetrics().x_shift,
-        this.stave!.getYForLine(this.timeSignature.bottomLine!)
+        this.stave.getYForLine(this.timeSignature.bottomLine)
       );
-      start_x += glyph.getMetrics().width!;
+      start_x += check<number>(glyph.getMetrics().width);
     }
   }
 }

@@ -54,9 +54,9 @@ export interface GlyphMetrics {
   x_shift: number;
   y_shift: number;
   scale: number;
-  ha?: number;
+  ha: number;
   outline: string[];
-  font?: Font;
+  font: Font;
 }
 
 function processOutline(
@@ -112,7 +112,9 @@ function processOutline(
 export class Glyph extends Element {
   bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
   code: string;
-  metrics?: GlyphMetrics;
+  // metrics is initialised in the constructor by either setOptions or reset
+  // eslint-disable-next-line
+  metrics!: GlyphMetrics; 
   topGlyphs: Glyph[] = [];
   botGlyphs: Glyph[] = [];
 
@@ -248,7 +250,7 @@ export class Glyph extends Element {
       });
     }
 
-    const scale = metrics.font ? (point * 72.0) / (metrics.font.getResolution() * 100.0) : 1;
+    const scale = (point * 72.0) / (metrics.font.getResolution() * 100.0);
 
     Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
     return metrics;
@@ -342,7 +344,7 @@ export class Glyph extends Element {
   reset(): void {
     this.metrics = Glyph.loadMetrics(this.options.fontStack, this.code, this.options.category);
     // Override point from metrics file
-    if (this.options.category && this.metrics?.font) {
+    if (this.options.category) {
       this.point = Glyph.lookupFontMetric({
         category: this.options.category,
         font: this.metrics.font,
@@ -352,7 +354,7 @@ export class Glyph extends Element {
       });
     }
 
-    this.scale = this.metrics?.font ? (this.point * 72) / (this.metrics.font.getResolution() * 100) : 1;
+    this.scale = (this.point * 72) / (this.metrics.font.getResolution() * 100);
     this.bbox = Glyph.getOutlineBoundingBox(
       this.metrics.outline,
       this.scale * this.metrics.scale,
@@ -375,6 +377,8 @@ export class Glyph extends Element {
       x_shift: this.metrics.x_shift,
       y_shift: this.metrics.y_shift,
       outline: this.metrics.outline,
+      font: this.metrics.font,
+      ha: this.metrics.ha,
     };
   }
 

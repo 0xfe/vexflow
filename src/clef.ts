@@ -20,8 +20,7 @@ export interface ClefAnnotation {
 }
 
 export interface ClefType {
-  // eslint-disable-next-line
-  point?: any;
+  point: number;
   code: string;
   line?: number;
 }
@@ -55,49 +54,61 @@ export class Clef extends StaveModifier {
       treble: {
         code: 'gClef',
         line: 3,
+        point: 0,
       },
       bass: {
         code: 'fClef',
         line: 1,
+        point: 0,
       },
       alto: {
         code: 'cClef',
         line: 2,
+        point: 0,
       },
       tenor: {
         code: 'cClef',
         line: 1,
+        point: 0,
       },
       percussion: {
         code: 'restMaxima',
         line: 2,
+        point: 0,
       },
       soprano: {
         code: 'cClef',
         line: 4,
+        point: 0,
       },
       'mezzo-soprano': {
         code: 'cClef',
         line: 3,
+        point: 0,
       },
       'baritone-c': {
         code: 'cClef',
         line: 0,
+        point: 0,
       },
       'baritone-f': {
         code: 'fClef',
         line: 2,
+        point: 0,
       },
       subbass: {
         code: 'fClef',
         line: 0,
+        point: 0,
       },
       french: {
         code: 'gClef',
         line: 4,
+        point: 0,
       },
       tab: {
         code: '6stringTabClef',
+        point: 0,
       },
     };
   }
@@ -141,7 +152,7 @@ export class Clef extends StaveModifier {
       this.annotation = { code, point, line, x_shift };
 
       this.attachment = new Glyph(this.annotation.code, this.annotation.point);
-      this.attachment.metrics!.x_max = 0;
+      this.attachment.metrics.x_max = 0;
       this.attachment.setXShift(this.annotation.x_shift);
     } else {
       this.annotation = undefined;
