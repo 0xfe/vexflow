@@ -31,7 +31,7 @@ export class TimeSigNote extends Note {
   }
 
   draw(): void {
-    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
+    const stave = this.checkStave();
     if (!this.timeSig) throw new Vex.RERR('NoTimeSignatureInfo', 'No TimeSignatureInfo attached to this note.');
     const ctx = this.checkContext();
     this.setRendered();
@@ -40,8 +40,8 @@ export class TimeSigNote extends Note {
       this.timeSig.glyph.setContext(ctx);
     }
 
-    this.timeSig.glyph.setStave(this.stave);
-    this.timeSig.glyph.setYShift(this.stave.getYForLine(2) - this.stave.getYForGlyphs());
+    this.timeSig.glyph.setStave(stave);
+    this.timeSig.glyph.setYShift(stave.getYForLine(2) - stave.getYForGlyphs());
     this.timeSig.glyph.renderToStave(this.getAbsoluteX());
   }
 }

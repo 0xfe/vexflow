@@ -23,22 +23,15 @@ export class KeySigNote extends Note {
   }
 
   preFormat(): this {
-    if (!this.stave) {
-      throw new Vex.RERR('NoStave', 'No stave attached to this note.');
-    }
     this.setPreFormatted(true);
-    this.keySignature.setStave(this.stave);
+    this.keySignature.setStave(this.checkStave());
     this.keySignature.format();
     this.setWidth(this.keySignature.width);
     return this;
   }
 
   draw(): void {
-    if (!this.stave) {
-      throw new Vex.RERR('NoStave', 'No stave attached to this note.');
-    }
-
-    const ctx = this.stave.checkContext();
+    const ctx = this.checkStave().checkContext();
     this.setRendered();
     this.keySignature.setX(this.getAbsoluteX());
     this.keySignature.setContext(ctx);

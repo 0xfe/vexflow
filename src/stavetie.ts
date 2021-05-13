@@ -146,8 +146,7 @@ export class StaveTie extends Element {
     const ctx = this.checkContext();
     let center_x = (first_x_px + last_x_px) / 2;
     center_x -= ctx.measureText(this.text).width / 2;
-    const stave = this.notes.first_note?.getStave() ?? this.notes.last_note?.getStave();
-    if (!stave) throw new Vex.RERR('NoStave', "Can't render text without a stave.");
+    const stave = this.notes.first_note?.checkStave() ?? this.notes.last_note?.checkStave();
 
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
@@ -172,10 +171,7 @@ export class StaveTie extends Element {
       stem_direction = first_note.getStemDirection();
       first_ys = first_note.getYs();
     } else {
-      const stave = last_note.getStave();
-      if (!stave) {
-        throw new Vex.RERR('NoStave', 'Stave required');
-      }
+      const stave = last_note.checkStave();
       first_x_px = stave.getTieStartX();
       first_ys = last_note.getYs();
       this.notes.first_indices = this.notes.last_indices;
@@ -186,10 +182,7 @@ export class StaveTie extends Element {
       stem_direction = last_note.getStemDirection();
       last_ys = last_note.getYs();
     } else {
-      const stave = first_note.getStave();
-      if (!stave) {
-        throw new Vex.RERR('NoStave', 'Stave required');
-      }
+      const stave = first_note.checkStave();
       last_x_px = stave.getTieEndX();
       last_ys = first_note.getYs();
       this.notes.last_indices = this.notes.first_indices;

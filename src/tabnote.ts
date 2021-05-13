@@ -456,10 +456,6 @@ export class TabNote extends StemmableNote {
   draw(): void {
     const ctx = this.checkContext();
 
-    if (!this.stave) {
-      throw new Vex.RERR('NoStave', "Can't draw without a stave.");
-    }
-
     if (this.ys.length === 0) {
       throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
     }

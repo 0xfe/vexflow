@@ -108,15 +108,15 @@ export class Crescendo extends Note {
   // Render the Crescendo object onto the canvas
   draw(): void {
     const ctx = this.checkContext();
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
+    const stave = this.checkStave();
     this.setRendered();
 
     const tick_context = this.getTickContext();
     const next_context = TickContext.getNextContext(tick_context);
 
     const begin_x = this.getAbsoluteX();
-    const end_x = next_context ? next_context.getX() : this.stave.getX() + this.stave.getWidth();
-    const y = this.stave.getYForLine(this.line + -3) + 1;
+    const end_x = next_context ? next_context.getX() : stave.getX() + stave.getWidth();
+    const y = stave.getYForLine(this.line + -3) + 1;
 
     L('Drawing ', this.decrescendo ? 'decrescendo ' : 'crescendo ', this.height, 'x', begin_x - end_x);
 

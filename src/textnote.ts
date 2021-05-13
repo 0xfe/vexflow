@@ -180,11 +180,8 @@ export class TextNote extends Note {
   // Renders the TextNote
   draw(): void {
     const ctx = this.checkContext();
+    const stave = this.checkStave();
     if (!this.tickContext) throw new Vex.RERR('NoTickContext', "Can't draw without a TickContext.");
-
-    if (!this.stave) {
-      throw new Vex.RERR('NoStave', "Can't draw without a stave.");
-    }
 
     this.setRendered();
 
@@ -202,10 +199,10 @@ export class TextNote extends Note {
 
     let y;
     if (this.glyph) {
-      y = this.stave.getYForLine(this.line + -3);
+      y = stave.getYForLine(this.line + -3);
       this.glyph.render(ctx, x, y);
     } else {
-      y = this.stave.getYForLine(this.line + -3);
+      y = stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.text, x, y);

@@ -15,6 +15,7 @@ import { Note } from './note';
 import { BoundingBox } from './boundingbox';
 import { Tickable } from './tickable';
 import { RenderContext } from './types/common';
+import { check } from './common';
 
 export interface VoiceTime {
   num_beats: number;
@@ -153,18 +154,15 @@ export class Voice extends Element {
 
   // Get the bounding box for the voice
   getBoundingBox(): BoundingBox | undefined {
-    let stave;
     let boundingBox;
     let bb;
     let i;
 
     if (!this.boundingBox) {
-      if (!this.stave) throw new Vex.RERR('NoStave', "Can't get bounding box without stave.");
-      stave = this.stave;
       boundingBox = undefined;
 
       for (i = 0; i < this.tickables.length; ++i) {
-        this.tickables[i].setStave(stave);
+        this.tickables[i].setStave(check<Stave>(this.stave));
 
         bb = this.tickables[i].getBoundingBox();
         if (!bb) continue;
@@ -285,10 +283,7 @@ export class Voice extends Element {
   // Preformats the voice by applying the voice's stave to each note.
   preFormat(): this {
     if (this.preFormatted) return this;
-    const stave = this.stave;
-    if (!stave) {
-      throw new Vex.RERR('NoStave', "Can't preFormat without stave.");
-    }
+    const stave = check<Stave>(this.stave);
     this.tickables.forEach((tickable) => {
       if (!tickable.getStave()) {
         tickable.setStave(stave);

@@ -2,6 +2,7 @@ import { Vex } from './vex';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
 import { check } from './common';
+import { Stave } from './stave';
 
 export class TimeSignatureGlyph extends Glyph {
   timeSignature: TimeSignature;
@@ -57,8 +58,7 @@ export class TimeSignatureGlyph extends Glyph {
   }
 
   renderToStave(x: number): void {
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't render without a stave.");
-
+    const stave = check<Stave>(this.stave);
     let start_x = x + this.topStartX;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
@@ -67,7 +67,7 @@ export class TimeSignatureGlyph extends Glyph {
         glyph.getMetrics().outline,
         this.scale,
         start_x + this.x_shift,
-        this.stave.getYForLine(this.timeSignature.topLine)
+        stave.getYForLine(this.timeSignature.topLine)
       );
       start_x += check<number>(glyph.getMetrics().width);
     }
@@ -75,13 +75,13 @@ export class TimeSignatureGlyph extends Glyph {
     start_x = x + this.botStartX;
     for (let i = 0; i < this.botGlyphs.length; ++i) {
       const glyph = this.botGlyphs[i];
-      this.timeSignature.placeGlyphOnLine(glyph, this.stave, 0);
+      this.timeSignature.placeGlyphOnLine(glyph, stave, 0);
       Glyph.renderOutline(
         this.checkContext(),
         glyph.getMetrics().outline,
         this.scale,
         start_x + glyph.getMetrics().x_shift,
-        this.stave.getYForLine(this.timeSignature.bottomLine)
+        stave.getYForLine(this.timeSignature.bottomLine)
       );
       start_x += check<number>(glyph.getMetrics().width);
     }

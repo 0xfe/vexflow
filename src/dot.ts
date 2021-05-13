@@ -147,11 +147,7 @@ export class Dot extends Modifier {
       throw new Vex.RERR('NoNoteIndex', 'Drawing a dot requires a note and an index.');
     }
 
-    const stave = this.note.getStave();
-    if (!stave) {
-      throw new Vex.RERR('NoStave', 'Drawing a dot requires a stave.');
-    }
-
+    const stave = this.note.checkStave();
     const lineSpace = stave.getOptions().spacing_between_lines_px;
 
     const start = this.note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
