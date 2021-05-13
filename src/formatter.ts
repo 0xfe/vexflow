@@ -29,7 +29,7 @@ import { TickContext } from './tickcontext';
 import { RenderContext } from './types/common';
 import { Stave } from './stave';
 import { StemmableNote } from './stemmablenote';
-import { Space, Tickable } from './tickable';
+import { Tickable } from './tickable';
 import { TabStave } from './tabstave';
 import { TabNote } from './tabnote';
 import { BoundingBox } from './boundingbox';
@@ -53,16 +53,6 @@ export interface FormatterOptions {
   softmaxFactor?: number;
   globalSoftmax?: boolean;
   maxIterations: number;
-}
-
-export interface FormatterMetrics {
-  duration: string;
-  freedom: {
-    left: number;
-    right: number;
-  };
-  iterations: number;
-  space: Space;
 }
 
 export interface FormatOptions {
