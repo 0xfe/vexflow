@@ -1,4 +1,3 @@
-import { Vex } from './vex';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
 import { check } from './common';

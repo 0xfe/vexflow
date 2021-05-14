@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Mark Meeus 2019
 
-import { Vex } from './vex';
 import { Note } from './note';
 import { KeySignature } from './keysignature';
 

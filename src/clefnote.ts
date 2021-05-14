@@ -3,7 +3,6 @@
 //
 // Author Taehoon Moon 2014
 
-import { Vex } from './vex';
 import { Note } from './note';
 import { Clef } from './clef';
 import { Glyph } from './glyph';
