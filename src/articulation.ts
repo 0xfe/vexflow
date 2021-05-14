@@ -20,7 +20,6 @@ import { ModifierContextState } from './modifiercontext';
 import { check } from './common';
 import { Builder } from './easyscore';
 import { TabNote } from './tabnote';
-import { Stave } from './stave';
 
 export interface ArticulationStruct {
   code: string;
