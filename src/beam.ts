@@ -419,7 +419,7 @@ export class Beam extends Element {
       let bracketed = false;
       for (let i = 0; i < tuplet.notes.length; i++) {
         const note = tuplet.notes[i];
-        if (note.getBeam() === undefined) {
+        if (!note.hasBeam()) {
           bracketed = true;
           break;
         }

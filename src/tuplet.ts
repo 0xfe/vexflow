@@ -110,7 +110,7 @@ export class Tuplet extends Element {
     if ('bracketed' in this.options) {
       this.bracketed = this.options.bracketed;
     } else {
-      this.bracketed = notes.some((note) => note.getBeam() === undefined);
+      this.bracketed = notes.some((note) => !note.hasBeam());
     }
 
     this.ratioed =
@@ -341,10 +341,15 @@ export class Tuplet extends Element {
       if (line_width > 0) {
         ctx.fillRect(this.x_pos, this.y_pos, line_width, 1);
         ctx.fillRect(this.x_pos + this.width / 2 + width / 2 + 5, this.y_pos, line_width, 1);
-        ctx.fillRect(this.x_pos, this.y_pos + +(this.location === Tuplet.LOCATION_BOTTOM), 1, this.location * 10);
+        ctx.fillRect(
+          this.x_pos,
+          this.y_pos + (this.location === Tuplet.LOCATION_BOTTOM ? 1 : 0),
+          1,
+          this.location * 10
+        );
         ctx.fillRect(
           this.x_pos + this.width,
-          this.y_pos + +(this.location === Tuplet.LOCATION_BOTTOM),
+          this.y_pos + (this.location === Tuplet.LOCATION_BOTTOM ? 1 : 0),
           1,
           this.location * 10
         );
