@@ -38,7 +38,7 @@ export interface FormatterMetrics {
  */
 export abstract class Tickable extends Element {
   protected ignore_ticks: boolean;
-  protected tupletStack: Tuplet[];
+  tupletStack: Tuplet[];
   protected tuplet?: Tuplet;
   protected ticks: Fraction;
   protected center_x_shift: number;

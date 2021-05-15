@@ -411,14 +411,15 @@ export class Beam extends Element {
     // Reformat tuplets
     allTuplets.forEach((tuplet) => {
       // Set the tuplet location based on the stem direction
-      const direction = tuplet.notes[0].stem_direction === Stem.DOWN ? Tuplet.LOCATION_BOTTOM : Tuplet.LOCATION_TOP;
+      const direction =
+        (tuplet.notes[0] as StemmableNote).stem_direction === Stem.DOWN ? Tuplet.LOCATION_BOTTOM : Tuplet.LOCATION_TOP;
       tuplet.setTupletLocation(direction);
 
       // If any of the notes in the tuplet are not beamed, draw a bracket.
       let bracketed = false;
       for (let i = 0; i < tuplet.notes.length; i++) {
         const note = tuplet.notes[i];
-        if (note.beam === undefined) {
+        if (!note.hasBeam()) {
           bracketed = true;
           break;
         }

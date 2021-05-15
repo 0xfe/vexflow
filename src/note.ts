@@ -342,16 +342,20 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  // Get and set the target stave.
+  /** Get the target stave. */
   getStave(): Stave | undefined {
     return this.stave;
   }
+
+  /** Check and get the target stave. */
   checkStave(): Stave {
     if (!this.stave) {
       throw new Vex.RERR('NoStave', 'No stave attached to instance');
     }
     return this.stave;
   }
+
+  /** Set the target stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
     this.setYs([stave.getYForLine(0)]); // Update Y values if the stave is changed.
@@ -497,6 +501,24 @@ export abstract class Note extends Tickable {
   /** Accessors to note type. */
   getNoteType(): string {
     return this.noteType;
+  }
+
+  /** Gets the beam. */
+  getBeam(): Beam | undefined {
+    return this.beam;
+  }
+
+  /** Checks and gets the beam. */
+  checkBeam(): Beam {
+    if (!this.beam) {
+      throw new Vex.RERR('NoBeam', 'No beam attached to instance');
+    }
+    return this.beam;
+  }
+
+  /** Checks it has a beam. */
+  hasBeam(): boolean {
+    return this.beam != undefined;
   }
 
   /** Sets the beam. */
