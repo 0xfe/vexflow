@@ -338,12 +338,10 @@ export class StaveNote extends StemmableNote {
       //
       // We also extend the y for each note by a half notehead because the
       // notehead's origin is centered
-      const topStave = topNote.getStave();
-      if (!topStave) throw new Vex.RERR('NoStave', 'No stave attached to top note.');
+      const topStave = topNote.checkStave();
       const topNoteBottomY = topStave.getYForLine(5 - topKeys[0].line + HALF_NOTEHEAD_HEIGHT);
 
-      const bottomStave = bottomNote.getStave();
-      if (!bottomStave) throw new Vex.RERR('NoStave', 'No stave attached to bottom note.');
+      const bottomStave = bottomNote.checkStave();
       const bottomNoteTopY = bottomStave.getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
 
       const areNotesColliding =
@@ -689,18 +687,16 @@ export class StaveNote extends StemmableNote {
   // Get the `y` coordinate for text placed on the top/bottom of a
   // note at a desired `text_line`
   getYForTopText(textLine: number): number {
-    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     const extents = this.getStemExtents();
     return Math.min(
-      this.stave.getYForTopText(textLine),
+      this.checkStave().getYForTopText(textLine),
       extents.topY - this.render_options.annotation_spacing * (textLine + 1)
     );
   }
   getYForBottomText(textLine: number): number {
-    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     const extents = this.getStemExtents();
     return Math.max(
-      this.stave.getYForTopText(textLine),
+      this.checkStave().getYForTopText(textLine),
       extents.baseY + this.render_options.annotation_spacing * textLine
     );
   }
@@ -1011,14 +1007,13 @@ export class StaveNote extends StemmableNote {
    * @returns {noteHeadBounds}
    */
   getNoteHeadBounds(): StaveNoteHeadBounds {
-    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
     // Top and bottom Y values for stem.
     let yTop: number = +Infinity;
     let yBottom: number = -Infinity;
     let nonDisplacedX: number | undefined;
     let displacedX: number | undefined;
 
-    let highestLine = this.stave.getNumLines();
+    let highestLine = this.checkStave().getNumLines();
     let lowestLine = 1;
     let highestDisplacedLine: number | undefined;
     let lowestDisplacedLine: number | undefined;
@@ -1079,9 +1074,8 @@ export class StaveNote extends StemmableNote {
 
   // Draw the ledger lines between the stave and the highest/lowest keys
   drawLedgerLines(): void {
-    if (!this.stave) throw new Vex.RERR('NoStave', 'No stave attached to this note.');
+    const stave = this.checkStave();
     const {
-      stave,
       glyph,
       render_options: { stroke_px },
     } = this;
@@ -1120,21 +1114,21 @@ export class StaveNote extends StemmableNote {
       ctx.stroke();
     };
 
-    const style = { ...(stave?.getStyle() || {}), ...(this.getLedgerLineStyle() || {}) };
+    const style = { ...stave.getStyle(), ...(this.getLedgerLineStyle() || {}) };
     this.applyStyle(ctx, style);
 
     // Draw ledger lines below the staff:
     for (let line = 6; line <= highest_line; ++line) {
       const normal = non_displaced_x !== undefined && line <= highest_non_displaced_line;
       const displaced = highest_displaced_line !== undefined && line <= highest_displaced_line;
-      drawLedgerLine(stave?.getYForNote(line), normal, displaced);
+      drawLedgerLine(stave.getYForNote(line), normal, displaced);
     }
 
     // Draw ledger lines above the staff:
     for (let line = 0; line >= lowest_line; --line) {
       const normal = non_displaced_x !== undefined && line >= lowest_non_displaced_line;
       const displaced = lowest_displaced_line !== undefined && line >= lowest_displaced_line;
-      drawLedgerLine(stave?.getYForNote(line), normal, displaced);
+      drawLedgerLine(stave.getYForNote(line), normal, displaced);
     }
 
     this.restoreStyle(ctx, style);
@@ -1269,9 +1263,6 @@ export class StaveNote extends StemmableNote {
 
   // Draws all the `StaveNote` parts. This is the main drawing method.
   draw(): void {
-    if (!this.stave) {
-      throw new Vex.RERR('NoStave', "Can't draw without a stave.");
-    }
     if (this.ys.length === 0) {
       throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
     }

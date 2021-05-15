@@ -193,10 +193,7 @@ export class Bend extends Modifier {
     start.y += 0.5;
     const x_shift = this.x_shift;
 
-    const stave = this.note.getStave();
-    if (!stave) {
-      throw new Vex.RERR('NoStaveForBend', "Can't draw bend without a stave.");
-    }
+    const stave = this.note.checkStave();
     const bend_height = stave.getYForTopText(this.text_line) + 3;
     const annotation_y = stave.getYForTopText(this.text_line) - 1;
     // eslint-disable-next-line

@@ -3,7 +3,6 @@
 //
 // Author Taehoon Moon 2014
 
-import { Vex } from './vex';
 import { Note } from './note';
 import { Clef } from './clef';
 import { Glyph } from './glyph';
@@ -73,8 +72,7 @@ export class ClefNote extends Note {
   }
 
   draw(): void {
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
-
+    const stave = this.checkStave();
     if (!this.glyph.getContext()) {
       this.glyph.setContext(this.getContext());
     }
@@ -82,8 +80,8 @@ export class ClefNote extends Note {
     this.setRendered();
     const abs_x = this.getAbsoluteX();
 
-    this.glyph.setStave(this.stave);
-    this.glyph.setYShift(this.stave.getYForLine(this.clef.line ?? 0) - this.stave.getYForGlyphs());
+    this.glyph.setStave(stave);
+    this.glyph.setYShift(stave.getYForLine(this.clef.line ?? 0) - stave.getYForGlyphs());
     this.glyph.renderToStave(abs_x);
 
     // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
@@ -92,8 +90,8 @@ export class ClefNote extends Note {
       if (!attachment.getContext()) {
         attachment.setContext(this.getContext());
       }
-      attachment.setStave(this.stave);
-      attachment.setYShift(this.stave.getYForLine(this.clef_obj.annotation.line) - this.stave.getYForGlyphs());
+      attachment.setStave(stave);
+      attachment.setYShift(stave.getYForLine(this.clef_obj.annotation.line) - stave.getYForGlyphs());
       attachment.setXShift(this.clef_obj.annotation.x_shift);
       attachment.renderToStave(abs_x);
     }

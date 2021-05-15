@@ -158,8 +158,7 @@ export class Curve extends Element {
       stem_direction = first_note.getStemDirection();
       first_y = first_note.getStemExtents()[metric];
     } else {
-      const stave = last_note.getStave();
-      if (!stave) throw new Vex.RERR('NoStave', 'No stave attached.');
+      const stave = last_note.checkStave();
       first_x = stave.getTieStartX();
       first_y = last_note.getStemExtents()[metric];
     }
@@ -169,8 +168,7 @@ export class Curve extends Element {
       stem_direction = last_note.getStemDirection();
       last_y = last_note.getStemExtents()[end_metric];
     } else {
-      const stave = first_note.getStave();
-      if (!stave) throw new Vex.RERR('NoStave', 'No stave attached.');
+      const stave = first_note.checkStave();
       last_x = stave.getTieEndX();
       last_y = first_note.getStemExtents()[end_metric];
     }

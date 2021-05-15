@@ -450,11 +450,7 @@ export abstract class Note extends Tickable {
    * be rendered.
    */
   getYForTopText(text_line: number): number {
-    if (!this.stave) {
-      throw new Vex.RERR('NoStave', 'No stave attached to this note.');
-    }
-
-    return this.stave.getYForTopText(text_line);
+    return this.checkStave().getYForTopText(text_line);
   }
 
   /** Returns the voice that this note belongs in. */

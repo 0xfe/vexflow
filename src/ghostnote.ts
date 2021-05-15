@@ -55,8 +55,6 @@ export class GhostNote extends StemmableNote {
   }
 
   draw(): void {
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
-
     // Draw the modifiers
     this.setRendered();
     for (let i = 0; i < this.modifiers.length; ++i) {

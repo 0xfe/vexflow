@@ -233,9 +233,7 @@ export class NoteHead extends Note {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
     }
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't call getBoundingBox without a stave.");
-
-    const spacing = this.stave.getSpacingBetweenLines();
+    const spacing = this.checkStave().getSpacingBetweenLines();
     const half_spacing = spacing / 2;
     const min_y = this.y - half_spacing;
 
@@ -268,7 +266,6 @@ export class NoteHead extends Note {
   // Draw the notehead
   draw(): void {
     const ctx = this.checkContext();
-    if (!this.stave) throw new Vex.RERR('NoStave', "Can't draw without a stave.");
     this.setRendered();
 
     let head_x = this.getAbsoluteX();
@@ -291,7 +288,7 @@ export class NoteHead extends Note {
 
     const categorySuffix = `${this.glyph_code}Stem${stem_direction === Stem.UP ? 'Up' : 'Down'}`;
     if (this.note_type === 's') {
-      const staveSpace = this.stave.getSpacingBetweenLines();
+      const staveSpace = this.checkStave().getSpacingBetweenLines();
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
