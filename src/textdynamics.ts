@@ -12,7 +12,6 @@ import { Note } from './note';
 import { Glyph } from './glyph';
 import { TextNoteStruct } from './textnote';
 import { check } from './common';
-import { Stave } from './stave';
 
 // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
 function L(
@@ -113,7 +112,7 @@ export class TextDynamics extends Note {
   draw(): void {
     this.setRendered();
     const x = this.getAbsoluteX();
-    const y = check<Stave>(this.stave).getYForLine(this.line + -3);
+    const y = this.checkStave().getYForLine(this.line + -3);
 
     L('Rendering Dynamics: ', this.sequence);
 
