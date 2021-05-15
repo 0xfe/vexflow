@@ -25,9 +25,7 @@ import { GLYPH_PROPS_VALID_TYPES } from './common';
 import { Fraction } from './fraction';
 import { Beam } from './beam';
 
-export interface Metrics {
-  totalLeftPx: number;
-  totalRightPx: number;
+export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
   width: number;
   glyphWidth?: number;
@@ -565,7 +563,7 @@ export abstract class Note extends Tickable {
   }
 
   /** Get the metrics for this note. */
-  getMetrics(): Metrics {
+  getMetrics(): NoteMetrics {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
     }
@@ -581,9 +579,6 @@ export abstract class Note extends Tickable {
       this.leftDisplacedHeadPx - // subtract left displaced head
       this.rightDisplacedHeadPx; // subtract right displaced head
 
-    const totalLeftPx = modLeftPx + this.leftDisplacedHeadPx;
-    const totalRightPx = modRightPx + this.rightDisplacedHeadPx;
-
     return {
       // ----------
       // NOTE: If you change this, remember to update MockTickable in the tests/ directory.
@@ -595,8 +590,6 @@ export abstract class Note extends Tickable {
       // Modifier spacing.
       modLeftPx,
       modRightPx,
-      totalLeftPx,
-      totalRightPx,
 
       // Displaced note head on left or right.
       leftDisplacedHeadPx: this.leftDisplacedHeadPx,
