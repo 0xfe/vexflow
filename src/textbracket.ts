@@ -56,8 +56,18 @@ export class TextBracket extends Element {
   protected stop: Note;
   protected font: FontInfo;
 
+  static get Positions(): typeof TextBracketPosition {
+    L('Positions is deprecated, use Position instead.');
+    return TextBracket.Position;
+  }
+
   static get Position(): typeof TextBracketPosition {
     return TextBracketPosition;
+  }
+
+  static get PositionsString(): Record<string, number> {
+    L('PositionsString is deprecated, use PositionString instead.');
+    return TextBracket.PositionsString;
   }
 
   static get PositionString(): Record<string, number> {
