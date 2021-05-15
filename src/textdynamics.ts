@@ -10,15 +10,26 @@
 import { Vex } from './vex';
 import { Note } from './note';
 import { Glyph } from './glyph';
+import { TextNoteStruct } from './textnote';
+import { check } from './common';
 
 // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any[]) {
   if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args);
 }
 
 export class TextDynamics extends Note {
+  static DEBUG: boolean;
+
+  protected sequence: string;
+
+  protected line: number;
+  protected glyphs: Glyph[];
+
   // The glyph data for each dynamics letter
-  static get GLYPHS() {
+  static get GLYPHS(): Record<string, { code: string; width: number }> {
     return {
       f: {
         code: 'dynamicForte',
@@ -52,7 +63,7 @@ export class TextDynamics extends Note {
   // Create the dynamics marking. `text_struct` is an object
   // that contains a `duration` property and a `sequence` of
   // letters that represents the letters to render
-  constructor(text_struct) {
+  constructor(text_struct: TextNoteStruct) {
     super(text_struct);
     this.setAttribute('type', 'TextDynamics');
 
@@ -68,13 +79,13 @@ export class TextDynamics extends Note {
   }
 
   // Set the Stave line on which the note should be placed
-  setLine(line) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Preformat the dynamics text
-  preFormat() {
+  preFormat(): this {
     let total_width = 0;
     // Iterate through each letter
     this.sequence.split('').forEach((letter) => {
@@ -82,7 +93,7 @@ export class TextDynamics extends Note {
       const glyph_data = TextDynamics.GLYPHS[letter];
       if (!glyph_data) throw new Vex.RERR('Invalid dynamics character: ' + letter);
 
-      const size = this.render_options.glyph_font_size;
+      const size = check<number>(this.render_options.glyph_font_size);
       const glyph = new Glyph(glyph_data.code, size, { category: 'textNote' });
 
       // Add the glyph
@@ -98,17 +109,17 @@ export class TextDynamics extends Note {
   }
 
   // Draw the dynamics text on the rendering context
-  draw() {
+  draw(): void {
     this.setRendered();
     const x = this.getAbsoluteX();
-    const y = this.stave.getYForLine(this.line + -3);
+    const y = this.checkStave().getYForLine(this.line + -3);
 
     L('Rendering Dynamics: ', this.sequence);
 
     let letter_x = x;
     this.glyphs.forEach((glyph, index) => {
       const current_letter = this.sequence[index];
-      glyph.render(this.context, letter_x, y);
+      glyph.render(this.checkContext(), letter_x, y);
       letter_x += TextDynamics.GLYPHS[current_letter].width;
     });
   }
