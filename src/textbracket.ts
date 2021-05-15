@@ -22,16 +22,6 @@ export interface TextBracketParams {
   position: number | string;
 }
 
-export interface TextBracketRenderOptions {
-  dashed: boolean;
-  color: string;
-  line_width: number;
-  underline_superscript: boolean;
-  show_bracket: boolean;
-  dash: number[];
-  bracket_height: number;
-}
-
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
@@ -47,7 +37,15 @@ export enum TextBracketPosition {
 export class TextBracket extends Element {
   static DEBUG: boolean;
 
-  render_options: TextBracketRenderOptions;
+  render_options: {
+    dashed: boolean;
+    color: string;
+    line_width: number;
+    underline_superscript: boolean;
+    show_bracket: boolean;
+    dash: number[];
+    bracket_height: number;
+  };
 
   protected readonly text: string;
   protected readonly superscript: string;
