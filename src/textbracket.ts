@@ -11,29 +11,73 @@ import { Vex } from './vex';
 import { Flow } from './tables';
 import { Element } from './element';
 import { Renderer } from './renderer';
+import { FontInfo, RenderContext } from './types/common';
+import { Note } from './note';
+
+export interface TextBracketParams {
+  start: Note;
+  stop: Note;
+  text: string;
+  superscript: string;
+  position: number | string;
+}
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any[]) {
   if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args);
 }
 
+export enum TextBracketPosition {
+  TOP = 1,
+  BOTTOM = -1,
+}
+
 export class TextBracket extends Element {
-  // FIXME: Modifier.Position is singular while this is plural, make consistent
-  static get Positions() {
+  static DEBUG: boolean;
+
+  render_options: {
+    dashed: boolean;
+    color: string;
+    line_width: number;
+    underline_superscript: boolean;
+    show_bracket: boolean;
+    dash: number[];
+    bracket_height: number;
+  };
+
+  protected readonly text: string;
+  protected readonly superscript: string;
+  protected readonly position: TextBracketPosition;
+
+  protected line: number;
+  protected start: Note;
+  protected stop: Note;
+  protected font: FontInfo;
+
+  static get Positions(): typeof TextBracketPosition {
+    L('Positions is deprecated, use Position instead.');
+    return TextBracket.Position;
+  }
+
+  static get Position(): typeof TextBracketPosition {
+    return TextBracketPosition;
+  }
+
+  static get PositionsString(): Record<string, number> {
+    L('PositionsString is deprecated, use PositionString instead.');
+    return TextBracket.PositionsString;
+  }
+
+  static get PositionString(): Record<string, number> {
     return {
-      TOP: 1,
-      BOTTOM: -1,
+      top: TextBracket.Position.TOP,
+      bottom: TextBracket.Position.BOTTOM,
     };
   }
 
-  static get PositionString() {
-    return {
-      top: TextBracket.Positions.TOP,
-      bottom: TextBracket.Positions.BOTTOM,
-    };
-  }
-
-  constructor({ start, stop, text = '', superscript = '', position = TextBracket.Positions.TOP }) {
+  constructor({ start, stop, text = '', superscript = '', position = TextBracket.Position.TOP }: TextBracketParams) {
     super();
     this.setAttribute('type', 'TextBracket');
 
@@ -68,7 +112,7 @@ export class TextBracket extends Element {
   }
 
   // Apply the text backet styling to the provided `context`
-  applyStyle(context) {
+  applyStyle(context: RenderContext): this {
     // Apply style for the octave bracket
     context.setFont(this.font.family, this.font.size, this.font.weight);
     context.setStrokeStyle(this.render_options.color);
@@ -80,36 +124,36 @@ export class TextBracket extends Element {
 
   // Set whether the bracket line should be `dashed`. You can also
   // optionally set the `dash` pattern by passing in an array of numbers
-  setDashed(dashed, dash) {
+  setDashed(dashed: boolean, dash?: number[]): this {
     this.render_options.dashed = dashed;
     if (dash) this.render_options.dash = dash;
     return this;
   }
 
   // Set the font for the text
-  setFont(font) {
+  setFont(font: FontInfo): this {
     // We use Object.assign to support partial updates to the font object
     this.font = { ...this.font, ...font };
     return this;
   }
   // Set the rendering `context` for the octave bracket
-  setLine(line) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Draw the octave bracket on the rendering context
-  draw() {
-    const ctx = this.context;
+  draw(): void {
+    const ctx = this.checkContext();
     this.setRendered();
 
     let y = 0;
     switch (this.position) {
-      case TextBracket.Positions.TOP:
-        y = this.start.getStave().getYForTopText(this.line);
+      case TextBracket.Position.TOP:
+        y = this.start.checkStave().getYForTopText(this.line);
         break;
-      case TextBracket.Positions.BOTTOM:
-        y = this.start.getStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
+      case TextBracket.Position.BOTTOM:
+        y = this.start.checkStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
         break;
       default:
         throw new Vex.RERR('InvalidPosition', `The position ${this.position} is invalid`);
@@ -150,10 +194,10 @@ export class TextBracket extends Element {
     const end_x = stop.x + this.stop.getGlyph().getWidth();
 
     // Adjust x and y coordinates based on position
-    if (this.position === TextBracket.Positions.TOP) {
+    if (this.position === TextBracket.Position.TOP) {
       start_x += main_width + superscript_width + 5;
       line_y -= super_height / 2.7;
-    } else if (this.position === TextBracket.Positions.BOTTOM) {
+    } else if (this.position === TextBracket.Position.BOTTOM) {
       line_y += super_height / 2.7;
       start_x += main_width + 2;
 
