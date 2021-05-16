@@ -22,14 +22,14 @@ function L(
   if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args);
 }
 
-export enum Justify {
+enum Justify {
   LEFT = 1,
   CENTER = 2,
   RIGHT = 3,
   CENTER_STEM = 4,
 }
 
-export enum VerticalJustify {
+enum VerticalJustify {
   TOP = 1,
   CENTER = 2,
   BOTTOM = 3,
@@ -50,33 +50,25 @@ export class Annotation extends Modifier {
   }
 
   // Text annotations can be positioned and justified relative to the note.
-  static get Justify(): typeof Justify {
-    return Justify;
-  }
+  static Justify = Justify;
 
-  static get JustifyString(): Record<string, number> {
-    return {
-      left: Annotation.Justify.LEFT,
-      right: Annotation.Justify.RIGHT,
-      center: Annotation.Justify.CENTER,
-      centerStem: Annotation.Justify.CENTER_STEM,
-    };
-  }
+  static JustifyString: Record<string, number> = {
+    left: Annotation.Justify.LEFT,
+    right: Annotation.Justify.RIGHT,
+    center: Annotation.Justify.CENTER,
+    centerStem: Annotation.Justify.CENTER_STEM,
+  };
 
-  static get VerticalJustify(): typeof VerticalJustify {
-    return VerticalJustify;
-  }
+  static VerticalJustify = VerticalJustify;
 
-  static get VerticalJustifyString(): Record<string, number> {
-    return {
-      above: Annotation.VerticalJustify.TOP,
-      top: Annotation.VerticalJustify.TOP,
-      below: Annotation.VerticalJustify.BOTTOM,
-      bottom: Annotation.VerticalJustify.BOTTOM,
-      center: Annotation.VerticalJustify.CENTER,
-      centerStem: Annotation.VerticalJustify.CENTER_STEM,
-    };
-  }
+  static VerticalJustifyString: Record<string, number> = {
+    above: Annotation.VerticalJustify.TOP,
+    top: Annotation.VerticalJustify.TOP,
+    below: Annotation.VerticalJustify.BOTTOM,
+    bottom: Annotation.VerticalJustify.BOTTOM,
+    center: Annotation.VerticalJustify.CENTER,
+    centerStem: Annotation.VerticalJustify.CENTER_STEM,
+  };
 
   // Arrange annotations within a `ModifierContext`
   static format(annotations: Annotation[], state: ModifierContextState): boolean {
@@ -143,7 +135,7 @@ export class Annotation extends Modifier {
 
   // Set vertical position of text (above or below stave). `just` must be
   // a value in `Annotation.VerticalJustify`.
-  setVerticalJustification(just: string | number): this {
+  setVerticalJustification(just: string | VerticalJustify): this {
     this.vert_justification = typeof just === 'string' ? Annotation.VerticalJustifyString[just] : just;
     return this;
   }
@@ -153,7 +145,7 @@ export class Annotation extends Modifier {
   getJustification(): Justify {
     return this.justification;
   }
-  setJustification(just: string | number): this {
+  setJustification(just: string | Justify): this {
     this.justification = typeof just === 'string' ? Annotation.JustifyString[just] : just;
     return this;
   }
