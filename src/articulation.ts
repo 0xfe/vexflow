@@ -165,6 +165,7 @@ function getInitialOffset(note: Note, position: number): number {
 export class Articulation extends Modifier {
   note?: Note;
   readonly type: string;
+  static readonly INITIAL_OFFSET: number = -0.5;
 
   protected render_options: { font_scale: number };
   protected articulation?: ArticulationStruct;
@@ -175,10 +176,6 @@ export class Articulation extends Modifier {
 
   static get CATEGORY(): string {
     return 'articulations';
-  }
-
-  static get INITIAL_OFFSET(): number {
-    return -0.5;
   }
 
   // FIXME:
