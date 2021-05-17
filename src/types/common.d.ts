@@ -2,6 +2,7 @@ export interface FontInfo {
   size: number;
   weight: string;
   family: string;
+  style?: string;
 }
 
 export interface Bounds {
