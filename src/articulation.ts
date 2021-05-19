@@ -14,20 +14,39 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { Stem } from './stem';
+import { Note } from './note';
+import { StaveNote } from './stavenote';
+import { ModifierContextState } from './modifiercontext';
+import { check } from './common';
+import { Builder } from './easyscore';
+import { TabNote } from './tabnote';
+
+export interface ArticulationStruct {
+  code: string;
+  aboveCode: string;
+  belowCode: string;
+  between_lines: boolean;
+}
 
 // To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any[]) {
   if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args);
 }
 
 const { ABOVE, BELOW } = Modifier.Position;
 
-const roundToNearestHalf = (mathFn, value) => mathFn(value / 0.5) * 0.5;
+function roundToNearestHalf(mathFn: (a: number) => number, value: number): number {
+  return mathFn(value / 0.5) * 0.5;
+}
 
 // This includes both staff and ledger lines
-const isWithinLines = (line, position) => (position === ABOVE ? line <= 5 : line >= 1);
+function isWithinLines(line: number, position: number): boolean {
+  return position === ABOVE ? line <= 5 : line >= 1;
+}
 
-const getRoundingFunction = (line, position) => {
+function getRoundingFunction(line: number, position: number): (a: number) => number {
   if (isWithinLines(line, position)) {
     if (position === ABOVE) {
       return Math.ceil;
@@ -37,9 +56,9 @@ const getRoundingFunction = (line, position) => {
   } else {
     return Math.round;
   }
-};
+}
 
-const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) => {
+function snapLineToStaff(canSitBetweenLines: boolean, line: number, position: number, offsetDirection: number): number {
   // Initially, snap to nearest staff line or space
   const snappedLine = roundToNearestHalf(getRoundingFunction(line, position), line);
   const canSnapToStaffSpace = canSitBetweenLines && isWithinLines(snappedLine, position);
@@ -51,15 +70,14 @@ const snapLineToStaff = (canSitBetweenLines, line, position, offsetDirection) =>
   } else {
     return snappedLine;
   }
-};
+}
 
-const isStaveNote = (note) => {
+function isStaveNote(note: Note): boolean {
   const noteCategory = note.getCategory();
   return noteCategory === 'stavenotes' || noteCategory === 'gracenotes';
-};
+}
 
-const getTopY = (note, textLine) => {
-  const stave = note.getStave();
+function getTopY(note: Note, textLine: number): number {
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
@@ -78,18 +96,17 @@ const getTopY = (note, textLine) => {
       if (stemDirection === Stem.UP) {
         return stemTipY;
       } else {
-        return stave.getYForTopText(textLine);
+        return note.checkStave().getYForTopText(textLine);
       }
     } else {
-      return stave.getYForTopText(textLine);
+      return note.checkStave().getYForTopText(textLine);
     }
   } else {
     throw new Vex.RERR('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
   }
-};
+}
 
-const getBottomY = (note, textLine) => {
-  const stave = note.getStave();
+function getBottomY(note: Note, textLine: number): number {
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
@@ -106,24 +123,24 @@ const getBottomY = (note, textLine) => {
   } else if (note.getCategory() === 'tabnotes') {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
-        return stave.getYForBottomText(textLine);
+        return note.checkStave().getYForBottomText(textLine);
       } else {
         return stemTipY;
       }
     } else {
-      return stave.getYForBottomText(textLine);
+      return note.checkStave().getYForBottomText(textLine);
     }
   } else {
     throw new Vex.RERR('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
   }
-};
+}
 
 // Gets the initial offset of the articulation from the y value of the starting position.
 // This is required because the top/bottom text positions already have spacing applied to
 // provide a "visually pleasent" default position. However the y values provided from
 // the stavenote's top/bottom do *not* have any pre-applied spacing. This function
 // normalizes this asymmetry.
-const getInitialOffset = (note, position) => {
+function getInitialOffset(note: Note, position: number): number {
   const isOnStemTip =
     (position === ABOVE && note.getStemDirection() === Stem.UP) ||
     (position === BELOW && note.getStemDirection() === Stem.DOWN);
@@ -143,14 +160,22 @@ const getInitialOffset = (note, position) => {
       return 0;
     }
   }
-};
+}
 
 export class Articulation extends Modifier {
-  static get CATEGORY() {
+  note?: Note;
+  readonly type: string;
+  static readonly INITIAL_OFFSET: number = -0.5;
+
+  protected render_options: { font_scale: number };
+  protected articulation?: ArticulationStruct;
+  // glyph defined calling reset in constructor
+  // eslint-disable-next-line
+  protected glyph!: Glyph;
+  static DEBUG: boolean;
+
+  static get CATEGORY(): string {
     return 'articulations';
-  }
-  static get INITIAL_OFFSET() {
-    return -0.5;
   }
 
   // FIXME:
@@ -169,14 +194,17 @@ export class Articulation extends Modifier {
   // Ideally, when this function has completed, the vertical articulation positions
   // should be ready to render without further adjustment. But the current state
   // is far from this ideal.
-  static format(articulations, state) {
+  static format(articulations: Articulation[], state: ModifierContextState): boolean {
     if (!articulations || articulations.length === 0) return false;
 
-    const isAbove = (artic) => artic.getPosition() === ABOVE;
-    const isBelow = (artic) => artic.getPosition() === BELOW;
+    const isAbove = (artic: Articulation) => artic.getPosition() === ABOVE;
+    const isBelow = (artic: Articulation) => artic.getPosition() === BELOW;
     const margin = 0.5;
-    const getIncrement = (articulation, line, position) =>
-      roundToNearestHalf(getRoundingFunction(line, position), articulation.glyph.getMetrics().height / 10 + margin);
+    const getIncrement = (articulation: Articulation, line: number, position: number) =>
+      roundToNearestHalf(
+        getRoundingFunction(line, position),
+        check<number>(articulation.glyph.getMetrics().height) / 10 + margin
+      );
 
     articulations.filter(isAbove).forEach((articulation) => {
       articulation.setTextLine(state.top_text_line);
@@ -197,10 +225,10 @@ export class Articulation extends Modifier {
     return true;
   }
 
-  static easyScoreHook({ articulations }, note, builder) {
+  static easyScoreHook({ articulations }: { articulations: string }, note: StaveNote, builder: Builder): void {
     if (!articulations) return;
 
-    const articNameToCode = {
+    const articNameToCode: Record<string, string> = {
       staccato: 'a.',
       tenuto: 'a-',
       accent: 'a>',
@@ -210,7 +238,7 @@ export class Articulation extends Modifier {
       .split(',')
       .map((articString) => articString.trim().split('.'))
       .map(([name, position]) => {
-        const artic = { type: articNameToCode[name] };
+        const artic: { type: string; position?: number } = { type: articNameToCode[name] };
         if (position) artic.position = Modifier.PositionString[position];
         return builder.getFactory().Articulation(artic);
       })
@@ -219,12 +247,10 @@ export class Articulation extends Modifier {
 
   // Create a new articulation of type `type`, which is an entry in
   // `Vex.Flow.articulationCodes` in `tables.js`.
-  constructor(type) {
+  constructor(type: string) {
     super();
     this.setAttribute('type', 'Articulation');
 
-    this.note = null;
-    this.index = null;
     this.type = type;
     this.position = BELOW;
     this.render_options = {
@@ -234,7 +260,7 @@ export class Articulation extends Modifier {
     this.reset();
   }
 
-  reset() {
+  reset(): void {
     this.articulation = Flow.articulationCodes(this.type);
     if (!this.articulation) {
       throw new Vex.RERR('ArgumentError', `Articulation not found: ${this.type}`);
@@ -244,26 +270,19 @@ export class Articulation extends Modifier {
       (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
     this.glyph = new Glyph(code, this.render_options.font_scale);
 
-    this.setWidth(this.glyph.getMetrics().width);
+    this.setWidth(check<number>(this.glyph.getMetrics().width));
   }
 
-  getCategory() {
+  getCategory(): string {
     return Articulation.CATEGORY;
   }
 
   // Render articulation in position next to note.
-  draw() {
-    const {
-      note,
-      index,
-      position,
-      glyph,
-      articulation: { between_lines: canSitBetweenLines },
-      text_line: textLine,
-      context: ctx,
-    } = this;
+  draw(): void {
+    const { note, index, position, glyph, text_line: textLine } = this;
+    const canSitBetweenLines = this.articulation?.between_lines ?? false;
 
-    this.checkContext();
+    const ctx = this.checkContext();
 
     if (!note || index == null) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw Articulation without a note and index.");
@@ -271,7 +290,7 @@ export class Articulation extends Modifier {
 
     this.setRendered();
 
-    const stave = note.getStave();
+    const stave = note.checkStave();
     const staffSpace = stave.getSpacingBetweenLines();
     const isTab = note.getCategory() === 'tabnotes';
 
@@ -283,7 +302,7 @@ export class Articulation extends Modifier {
 
     const padding = this.musicFont.lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
 
-    let y = {
+    let y = ({
       [ABOVE]: () => {
         glyph.setOrigin(0.5, 1);
         const y = getTopY(note, textLine) - (textLine + initialOffset) * staffSpace;
@@ -294,13 +313,15 @@ export class Articulation extends Modifier {
         const y = getBottomY(note, textLine) + (textLine + initialOffset) * staffSpace;
         return shouldSitOutsideStaff ? Math.max(stave.getYForBottomText(Articulation.INITIAL_OFFSET), y) : y;
       },
-    }[position]();
+    } as Record<number, () => number>)[position]();
 
     if (!isTab) {
       const offsetDirection = position === ABOVE ? -1 : +1;
-      const noteLine = isTab ? note.positions[index].str : note.getKeyProps()[index].line;
+      const noteLine = isTab
+        ? (note as TabNote).getPositions()[index].str
+        : (note as StaveNote).getKeyProps()[index].line;
       const distanceFromNote = (note.getYs()[index] - y) / staffSpace;
-      const articLine = distanceFromNote + noteLine;
+      const articLine = distanceFromNote + Number(noteLine);
       const snappedLine = snapLineToStaff(canSitBetweenLines, articLine, position, offsetDirection);
 
       if (isWithinLines(snappedLine, position)) glyph.setOrigin(0.5, 0.5);

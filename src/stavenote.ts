@@ -777,9 +777,8 @@ export class StaveNote extends StemmableNote {
     index: number,
     options: {
       forceFlagRight?: boolean;
-    }
+    } = {}
   ): { x: number; y: number } {
-    options = options || {};
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
