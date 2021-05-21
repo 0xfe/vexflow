@@ -7,117 +7,119 @@
 
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
-import { Parser } from './parser';
+import { Match, Parser, Rule, RuleFunction } from './parser';
 import { Articulation } from './articulation';
 import { FretHandFinger } from './frethandfinger';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
-function L(...args) {
+function L(...args: any[]): void {
   if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args);
 }
 
 export const X = Vex.MakeException('EasyScoreError');
 
 export class Grammar {
-  constructor(builder) {
+  builder: Builder;
+
+  constructor(builder: Builder) {
     this.builder = builder;
   }
 
-  begin() {
+  begin(): RuleFunction {
     return this.LINE;
   }
 
-  LINE() {
+  LINE(): Rule {
     return {
       expect: [this.PIECE, this.PIECES, this.EOL],
     };
   }
-  PIECE() {
+  PIECE(): Rule {
     return {
       expect: [this.CHORDORNOTE, this.PARAMS],
       run: () => this.builder.commitPiece(),
     };
   }
-  PIECES() {
+  PIECES(): Rule {
     return {
       expect: [this.COMMA, this.PIECE],
       zeroOrMore: true,
     };
   }
-  PARAMS() {
+  PARAMS(): Rule {
     return {
       expect: [this.DURATION, this.TYPE, this.DOTS, this.OPTS],
     };
   }
-  CHORDORNOTE() {
+  CHORDORNOTE(): Rule {
     return {
       expect: [this.CHORD, this.SINGLENOTE],
       or: true,
     };
   }
-  CHORD() {
+  CHORD(): Rule {
     return {
       expect: [this.LPAREN, this.NOTES, this.RPAREN],
       run: (state) => this.builder.addChord(state.matches[1]),
     };
   }
-  NOTES() {
+  NOTES(): Rule {
     return {
       expect: [this.NOTE],
       oneOrMore: true,
     };
   }
-  NOTE() {
+  NOTE(): Rule {
     return {
       expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
     };
   }
-  SINGLENOTE() {
+  SINGLENOTE(): Rule {
     return {
       expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
       run: (state) => this.builder.addSingleNote(state.matches[0], state.matches[1], state.matches[2]),
     };
   }
-  ACCIDENTAL() {
+  ACCIDENTAL(): Rule {
     return {
       expect: [this.ACCIDENTALS],
       maybe: true,
     };
   }
-  DOTS() {
+  DOTS(): Rule {
     return {
       expect: [this.DOT],
       zeroOrMore: true,
       run: (state) => this.builder.setNoteDots(state.matches),
     };
   }
-  TYPE() {
+  TYPE(): Rule {
     return {
       expect: [this.SLASH, this.MAYBESLASH, this.TYPES],
       maybe: true,
       run: (state) => this.builder.setNoteType(state.matches[2]),
     };
   }
-  DURATION() {
+  DURATION(): Rule {
     return {
       expect: [this.SLASH, this.DURATIONS],
       maybe: true,
       run: (state) => this.builder.setNoteDuration(state.matches[1]),
     };
   }
-  OPTS() {
+  OPTS(): Rule {
     return {
       expect: [this.LBRACKET, this.KEYVAL, this.KEYVALS, this.RBRACKET],
       maybe: true,
     };
   }
-  KEYVALS() {
+  KEYVALS(): Rule {
     return {
       expect: [this.COMMA, this.KEYVAL],
       zeroOrMore: true,
     };
   }
-  KEYVAL() {
+  KEYVAL(): Rule {
     const unquote = (str) => str.slice(1, -1);
 
     return {
@@ -125,65 +127,65 @@ export class Grammar {
       run: (state) => this.builder.addNoteOption(state.matches[0], unquote(state.matches[2])),
     };
   }
-  VAL() {
+  VAL(): Rule {
     return {
       expect: [this.SVAL, this.DVAL],
       or: true,
     };
   }
 
-  KEY() {
+  KEY(): Rule {
     return { token: '[a-zA-Z][a-zA-Z0-9]*' };
   }
-  DVAL() {
+  DVAL(): Rule {
     return { token: '["][^"]*["]' };
   }
-  SVAL() {
+  SVAL(): Rule {
     return { token: "['][^']*[']" };
   }
-  NOTENAME() {
+  NOTENAME(): Rule {
     return { token: '[a-gA-G]' };
   }
-  OCTAVE() {
+  OCTAVE(): Rule {
     return { token: '[0-9]+' };
   }
-  ACCIDENTALS() {
+  ACCIDENTALS(): Rule {
     return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' };
   }
-  DURATIONS() {
+  DURATIONS(): Rule {
     return { token: '[0-9whq]+' };
   }
-  TYPES() {
+  TYPES(): Rule {
     return { token: '[rRsSxX]' };
   }
-  LPAREN() {
+  LPAREN(): Rule {
     return { token: '[(]' };
   }
-  RPAREN() {
+  RPAREN(): Rule {
     return { token: '[)]' };
   }
-  COMMA() {
+  COMMA(): Rule {
     return { token: '[,]' };
   }
-  DOT() {
+  DOT(): Rule {
     return { token: '[.]' };
   }
-  SLASH() {
+  SLASH(): Rule {
     return { token: '[/]' };
   }
-  MAYBESLASH() {
+  MAYBESLASH(): Rule {
     return { token: '[/]?' };
   }
-  EQUALS() {
+  EQUALS(): Rule {
     return { token: '[=]' };
   }
-  LBRACKET() {
+  LBRACKET(): Rule {
     return { token: '\\[' };
   }
-  RBRACKET() {
+  RBRACKET(): Rule {
     return { token: '\\]' };
   }
-  EOL() {
+  EOL(): Rule {
     return { token: '$' };
   }
 }
@@ -330,6 +332,8 @@ function setClass(options, note) {
 }
 
 export class EasyScore {
+  static DEBUG: boolean = false;
+
   constructor(options = {}) {
     this.setOptions(options);
     this.defaults = {
