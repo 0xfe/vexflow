@@ -7,6 +7,7 @@
 
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
+import { GlyphNote } from './glyphnote';
 import { Dot } from './dot';
 import { FretHandFinger } from './frethandfinger';
 import { Accidental } from './accidental';
@@ -36,7 +37,7 @@ export interface ModifierContextMetrics {
   spacing: number;
 }
 
-export type ModifierContextMember = Modifier | StaveNote | TabNote;
+export type ModifierContextMember = Modifier | StaveNote | TabNote | GlyphNote;
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
 function L(
@@ -82,6 +83,7 @@ export class ModifierContext {
     // members are formatted and rendered before higher ones.
     this.PREFORMAT = [
       StaveNote,
+      GlyphNote,
       Dot,
       FretHandFinger,
       Accidental,
