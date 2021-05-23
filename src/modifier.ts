@@ -128,6 +128,11 @@ export class Modifier extends Element {
     return this.modifier_context;
   }
 
+  checkModifierContext(): ModifierContext {
+    if (!this.modifier_context) throw new Vex.RERR('NoModifierContext', 'Modifier Context Required');
+    return this.modifier_context;
+  }
+
   setModifierContext(c: ModifierContext): this {
     this.modifier_context = c;
     return this;
