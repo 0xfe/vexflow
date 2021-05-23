@@ -14,9 +14,7 @@ export interface GlyphNoteOptions {
 
 export class GlyphNote extends Note {
   protected options: GlyphNoteOptions;
-  static format(notes: GlyphNote[], state: ModifierContextState): boolean {
-    return false;
-  }
+
   constructor(glyph: Glyph | undefined, noteStruct: NoteStruct, options?: GlyphNoteOptions) {
     super(noteStruct);
     this.options = {
@@ -50,7 +48,6 @@ export class GlyphNote extends Note {
     for (let i = 0; i < this.modifiers.length; ++i) {
       this.modifierContext.addMember(this.modifiers[i]);
     }
-    this.modifierContext.addMember(this);
     this.setPreFormatted(false);
     return this;
   }
@@ -62,7 +59,6 @@ export class GlyphNote extends Note {
     this.setPreFormatted(true);
     return this;
   }
-  // Draw all key modifiers
   drawModifiers(): void {
     const ctx = this.checkContext();
     ctx.openGroup('modifiers');

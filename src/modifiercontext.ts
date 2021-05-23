@@ -37,7 +37,7 @@ export interface ModifierContextMetrics {
   spacing: number;
 }
 
-export type ModifierContextMember = Modifier | StaveNote | TabNote | GlyphNote;
+export type ModifierContextMember = Modifier | StaveNote | TabNote;
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
 function L(
@@ -83,7 +83,6 @@ export class ModifierContext {
     // members are formatted and rendered before higher ones.
     this.PREFORMAT = [
       StaveNote,
-      GlyphNote,
       Dot,
       FretHandFinger,
       Accidental,

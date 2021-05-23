@@ -16,7 +16,7 @@ const GlyphNoteTests = (function () {
     chordChanges: function (options) {
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 300, 400);
+      var vf = VF.Test.makeFactory(options, 300, 200);
       var system = vf.System({
         x: 50,
         width: 250,
