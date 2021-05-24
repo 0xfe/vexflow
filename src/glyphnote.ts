@@ -5,7 +5,6 @@ import { BoundingBox } from './boundingbox';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
 import { ModifierContext } from './modifiercontext';
-import { ModifierContextState } from './modifiercontext';
 
 export interface GlyphNoteOptions {
   ignoreTicks?: boolean;
@@ -70,11 +69,8 @@ export class GlyphNote extends Note {
     ctx.closeGroup();
   }
   draw(): void {
-    if (!this.stave) {
-      throw new Vex.RERR('NoStave', 'No stave attached to this note.');
-    }
-
-    const ctx = this.stave.checkContext();
+    const stave = this.checkStave();
+    const ctx = stave.checkContext();
     this.setRendered();
     ctx.openGroup('glypheNote', this.getAttribute('id'));
 
@@ -83,8 +79,8 @@ export class GlyphNote extends Note {
       this.glyph.setContext(ctx);
     }
 
-    this.glyph.setStave(this.stave);
-    this.glyph.setYShift(this.stave.getYForLine(this.options.line as number) - this.stave.getYForGlyphs());
+    this.glyph.setStave(stave);
+    this.glyph.setYShift(stave.getYForLine(this.options.line as number) - stave.getYForGlyphs());
 
     const x = this.isCenterAligned() ? this.getAbsoluteX() - this.getWidth() / 2 : this.getAbsoluteX();
     this.glyph.renderToStave(x);

@@ -7,7 +7,6 @@
 
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
-import { GlyphNote } from './glyphnote';
 import { Dot } from './dot';
 import { FretHandFinger } from './frethandfinger';
 import { Accidental } from './accidental';
