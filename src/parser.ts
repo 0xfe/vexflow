@@ -33,7 +33,7 @@ export interface Rule {
   run?: TriggerFunction;
 }
 
-interface Result {
+export interface Result {
   success: boolean;
 
   // Lexer Results

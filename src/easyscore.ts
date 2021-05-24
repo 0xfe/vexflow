@@ -7,9 +7,14 @@
 
 import { Vex } from './vex';
 import { StaveNote } from './stavenote';
-import { Match, Parser, Rule, RuleFunction } from './parser';
+import { Match, Parser, Result, Rule, RuleFunction } from './parser';
 import { Articulation } from './articulation';
 import { FretHandFinger } from './frethandfinger';
+import { Factory } from './factory';
+import { RenderContext } from './types/common';
+import { Accidental } from './accidental';
+import { Modifier } from './modifier';
+import { Voice } from './voice';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 function L(...args: any[]): void {
@@ -17,6 +22,9 @@ function L(...args: any[]): void {
 }
 
 export const X = Vex.MakeException('EasyScoreError');
+
+type NoteIDUpdate = { id: string };
+type CommitHook = (obj: any, note: StaveNote, builder: Builder) => void;
 
 export class Grammar {
   builder: Builder;
@@ -60,7 +68,7 @@ export class Grammar {
   CHORD(): Rule {
     return {
       expect: [this.LPAREN, this.NOTES, this.RPAREN],
-      run: (state) => this.builder.addChord(state.matches[1]),
+      run: (state) => this.builder.addChord(state!.matches[1] as Match[]),
     };
   }
   NOTES(): Rule {
@@ -77,7 +85,12 @@ export class Grammar {
   SINGLENOTE(): Rule {
     return {
       expect: [this.NOTENAME, this.ACCIDENTAL, this.OCTAVE],
-      run: (state) => this.builder.addSingleNote(state.matches[0], state.matches[1], state.matches[2]),
+      run: (state) =>
+        this.builder.addSingleNote(
+          state!.matches[0] as string,
+          state!.matches[1] as string,
+          state!.matches[2] as string
+        ),
     };
   }
   ACCIDENTAL(): Rule {
@@ -90,21 +103,21 @@ export class Grammar {
     return {
       expect: [this.DOT],
       zeroOrMore: true,
-      run: (state) => this.builder.setNoteDots(state.matches),
+      run: (state) => this.builder.setNoteDots(state!.matches),
     };
   }
   TYPE(): Rule {
     return {
       expect: [this.SLASH, this.MAYBESLASH, this.TYPES],
       maybe: true,
-      run: (state) => this.builder.setNoteType(state.matches[2]),
+      run: (state) => this.builder.setNoteType(state!.matches[2] as string),
     };
   }
   DURATION(): Rule {
     return {
       expect: [this.SLASH, this.DURATIONS],
       maybe: true,
-      run: (state) => this.builder.setNoteDuration(state.matches[1]),
+      run: (state) => this.builder.setNoteDuration(state!.matches[1] as string),
     };
   }
   OPTS(): Rule {
@@ -120,11 +133,11 @@ export class Grammar {
     };
   }
   KEYVAL(): Rule {
-    const unquote = (str) => str.slice(1, -1);
+    const unquote = (str: string) => str.slice(1, -1);
 
     return {
       expect: [this.KEY, this.EQUALS, this.VAL],
-      run: (state) => this.builder.addNoteOption(state.matches[0], unquote(state.matches[2])),
+      run: (state) => this.builder.addNoteOption(state!.matches[0] as string, unquote(state!.matches[2] as string)),
     };
   }
   VAL(): Rule {
@@ -190,14 +203,48 @@ export class Grammar {
   }
 }
 
+interface NotePiece {
+  key: string;
+  accid?: string | null;
+  octave?: string;
+}
+
+class Piece {
+  chord: NotePiece[] = [];
+  duration: string;
+  dots: number = 0;
+  type?: string;
+  options: any = {};
+  constructor(duration: string) {
+    this.duration = duration;
+  }
+}
+
+interface BuilderElements {
+  notes: StaveNote[];
+  accidentals: Accidental[];
+}
+
+interface BuilderOptions {
+  stem?: string;
+  clef?: string;
+  [x: string]: any; // allow arbitrary options via reset(...)
+}
+
 export class Builder {
-  constructor(factory) {
+  factory: Factory;
+  elements!: BuilderElements;
+  options!: BuilderOptions; // TODO: Should BuilderOptions be the same type as EasyScoreDefaults?
+  commitHooks: CommitHook[] = [];
+  piece!: Piece;
+  rollingDuration!: string;
+
+  constructor(factory: Factory) {
     this.factory = factory;
-    this.commitHooks = [];
     this.reset();
   }
 
-  reset(options = {}) {
+  reset(options: BuilderOptions = {}) {
     this.options = {
       stem: 'auto',
       clef: 'treble',
@@ -211,7 +258,7 @@ export class Builder {
     Object.assign(this.options, options);
   }
 
-  getFactory() {
+  getFactory(): Factory {
     return this.factory;
   }
 
@@ -219,58 +266,57 @@ export class Builder {
     return this.elements;
   }
 
-  addCommitHook(commitHook) {
+  addCommitHook(commitHook: CommitHook): void {
     this.commitHooks.push(commitHook);
   }
 
-  resetPiece() {
+  resetPiece(): void {
     L('resetPiece');
-    this.piece = {
-      chord: [],
-      duration: this.rollingDuration,
-      dots: 0,
-      type: undefined,
-      options: {},
-    };
+    this.piece = new Piece(this.rollingDuration);
   }
 
-  setNoteDots(dots) {
+  setNoteDots(dots: Match[]): void {
     L('setNoteDots:', dots);
     if (dots) this.piece.dots = dots.length;
   }
 
-  setNoteDuration(duration) {
+  setNoteDuration(duration?: string) {
     L('setNoteDuration:', duration);
     this.rollingDuration = this.piece.duration = duration || this.rollingDuration;
   }
 
-  setNoteType(type) {
+  setNoteType(type?: string) {
     L('setNoteType:', type);
     if (type) this.piece.type = type;
   }
 
-  addNoteOption(key, value) {
+  addNoteOption(key: string, value: string) {
     L('addNoteOption: key:', key, 'value:', value);
     this.piece.options[key] = value;
   }
 
-  addNote(key, accid, octave) {
+  addNote(key?: string, accid?: string | null, octave?: string) {
     L('addNote:', key, accid, octave);
-    this.piece.chord.push({ key, accid, octave });
+    this.piece.chord.push({
+      key: key as string,
+      accid: accid,
+      octave: octave,
+    });
   }
 
-  addSingleNote(key, accid, octave) {
+  addSingleNote(key: string, accid?: string | null, octave?: string) {
     L('addSingleNote:', key, accid, octave);
     this.addNote(key, accid, octave);
   }
 
-  addChord(notes) {
+  // notes is an array with 3 entries
+  addChord(notes: Match[]) {
     L('startChord');
     if (typeof notes[0] !== 'object') {
       this.addSingleNote(notes[0]);
     } else {
-      notes.forEach((n) => {
-        if (n) this.addNote(...n);
+      notes.forEach((n: any) => {
+        if (n) this.addNote(...n); // n => [string, string | null, string]
       });
     }
     L('endChord');
@@ -303,7 +349,8 @@ export class Builder {
     // Attach accidentals.
     const accids = chord.map((note) => note.accid || null);
     accids.forEach((accid, i) => {
-      if (accid) note.addAccidental(i, factory.Accidental({ type: accid }));
+      // TODO: Remove "as unknown". This compilation warning will be fixed after factory & accidental are migrated.
+      if (accid) note.addAccidental(i, (factory.Accidental({ type: accid }) as unknown) as Modifier);
     });
 
     // Attach dots.
@@ -312,29 +359,48 @@ export class Builder {
     this.commitHooks.forEach((fn) => fn(options, note, this));
 
     this.elements.notes.push(note);
-    this.elements.accidentals.concat(accids);
+    this.elements.accidentals.concat((accids as unknown) as Accidental[]); // TODO: FIX THIS!
     this.resetPiece();
   }
 }
 
-function setId({ id }, note) {
+function setId({ id }: NoteIDUpdate, note: StaveNote) {
   if (id === undefined) return;
 
   note.setAttribute('id', id);
 }
 
-function setClass(options, note) {
+function setClass(options: any, note: StaveNote) {
   if (!options.class) return;
-
   const commaSeparatedRegex = /\s*,\s*/;
+  options.class.split(commaSeparatedRegex).forEach((className: string) => note.addClass(className));
+}
 
-  options.class.split(commaSeparatedRegex).forEach((className) => note.addClass(className));
+export interface EasyScoreOptions {
+  factory?: Factory;
+  builder?: Builder;
+  commitHooks?: CommitHook[];
+  throwOnError?: boolean;
+}
+
+interface EasyScoreDefaults {
+  clef: string;
+  time: string;
+  stem: string;
+  [x: string]: any; // allow arbitrary properties via set(defaults)
 }
 
 export class EasyScore {
   static DEBUG: boolean = false;
 
-  constructor(options = {}) {
+  defaults: EasyScoreDefaults;
+  options!: EasyScoreOptions;
+  factory!: Factory;
+  builder!: Builder;
+  grammar!: Grammar;
+  parser!: Parser;
+
+  constructor(options: EasyScoreOptions = {}) {
     this.setOptions(options);
     this.defaults = {
       clef: 'treble',
@@ -343,34 +409,32 @@ export class EasyScore {
     };
   }
 
-  set(defaults) {
+  set(defaults: EasyScoreDefaults): this {
     Object.assign(this.defaults, defaults);
     return this;
   }
 
-  setOptions(options) {
+  setOptions(options: EasyScoreOptions): this {
     this.options = {
-      factory: null,
-      builder: null,
       commitHooks: [setId, setClass, Articulation.easyScoreHook, FretHandFinger.easyScoreHook],
       throwOnError: false,
       ...options,
     };
 
-    this.factory = this.options.factory;
-    this.builder = this.options.builder || new Builder(this.factory);
+    this.factory = this.options.factory!; // ! operator, because we know it is set in Factory.EasyScore()
+    this.builder = this.options.builder ?? new Builder(this.factory);
     this.grammar = new Grammar(this.builder);
     this.parser = new Parser(this.grammar);
-    this.options.commitHooks.forEach((commitHook) => this.addCommitHook(commitHook));
+    this.options.commitHooks!.forEach((commitHook) => this.addCommitHook(commitHook));
     return this;
   }
 
-  setContext(context) {
+  setContext(context: RenderContext): this {
     if (this.factory) this.factory.setContext(context);
     return this;
   }
 
-  parse(line, options = {}) {
+  parse(line: string, options: any = {}): Result {
     this.builder.reset(options);
     const result = this.parser.parse(line);
     if (!result.success && this.options.throwOnError) {
@@ -379,28 +443,28 @@ export class EasyScore {
     return result;
   }
 
-  beam(notes, options = {}) {
+  beam(notes: StaveNote[], options: any = {}): StaveNote[] {
     this.factory.Beam({ notes, options });
     return notes;
   }
 
-  tuplet(notes, options = {}) {
+  tuplet(notes: StaveNote[], options: any = {}): StaveNote[] {
     this.factory.Tuplet({ notes, options });
     return notes;
   }
 
-  notes(line, options = {}) {
+  notes(line: string, options: any = {}): StaveNote[] {
     options = { clef: this.defaults.clef, stem: this.defaults.stem, ...options };
     this.parse(line, options);
     return this.builder.getElements().notes;
   }
 
-  voice(notes, voiceOptions) {
-    voiceOptions = { time: this.defaults.time, ...voiceOptions };
-    return this.factory.Voice(voiceOptions).addTickables(notes);
+  voice(notes: StaveNote[], options: any): Voice {
+    options = { time: this.defaults.time, ...options };
+    return this.factory.Voice(options).addTickables(notes);
   }
 
-  addCommitHook(commitHook) {
-    return this.builder.addCommitHook(commitHook);
+  addCommitHook(commitHook: CommitHook): void {
+    this.builder.addCommitHook(commitHook); // Removed the "return" keyword because the called method has no return statement.
   }
 }
