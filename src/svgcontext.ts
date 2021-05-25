@@ -4,31 +4,28 @@
 import { Vex } from './vex';
 import { RenderContext } from './types/common';
 
-const attrNamesToIgnoreMap = {
+const attrNamesToIgnoreMap: { [key: string]: any } = {
   path: {
     x: true,
     y: true,
     width: true,
     height: true,
+    'font-family': true,
+    'font-weight': true,
+    'font-style': true,
+    'font-size': true,
   },
-  rect: {},
+  rect: {
+    'font-family': true,
+    'font-weight': true,
+    'font-style': true,
+    'font-size': true,
+  },
   text: {
     width: true,
     height: true,
   },
 };
-
-{
-  const fontAttrNamesToIgnore = {
-    'font-family': true,
-    'font-weight': true,
-    'font-style': true,
-    'font-size': true,
-  };
-
-  Vex.Merge(attrNamesToIgnoreMap.rect, fontAttrNamesToIgnore);
-  Vex.Merge(attrNamesToIgnoreMap.path, fontAttrNamesToIgnore);
-}
 
 // Create the SVG in the SVG namespace:
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -45,6 +42,8 @@ interface State {
 export class SVGContext implements RenderContext {
   element: HTMLElement; // the parent DOM object
   svg: SVGSVGElement;
+  width: number = 0;
+  height: number = 0;
   path: string;
   pen: { x: number; y: number };
   lineWidth: number;
@@ -53,6 +52,10 @@ export class SVGContext implements RenderContext {
   shadow_attributes: Attributes;
   state: Attributes;
   state_stack: State[];
+  parent: SVGGElement;
+  groups: SVGGElement[];
+  fontSize: number = 0;
+  ie!: boolean; // true if the browser is Internet Explorer.
 
   constructor(element: HTMLElement) {
     this.element = element;
@@ -114,7 +117,7 @@ export class SVGContext implements RenderContext {
   }
 
   // Allow grouping elements in containers for interactivity.
-  openGroup(cls, id, attrs) {
+  openGroup(cls: string, id: any, attrs: { pointerBBox: boolean }): SVGGElement {
     const group: SVGGElement = this.create('g') as SVGGElement;
     this.groups.push(group);
     this.parent.appendChild(group);
@@ -128,19 +131,19 @@ export class SVGContext implements RenderContext {
     return group;
   }
 
-  closeGroup() {
+  closeGroup(): void {
     this.groups.pop();
     this.parent = this.groups[this.groups.length - 1];
   }
 
-  add(elem) {
+  add(elem: SVGElement): void {
     this.parent.appendChild(elem);
   }
 
   // Tests if the browser is Internet Explorer; if it is,
-  // we do some tricks to improve text layout.  See the
+  // we do some tricks to improve text layout. See the
   // note at ieMeasureTextFix() for details.
-  iePolyfill() {
+  iePolyfill(): void {
     if (typeof navigator !== 'undefined') {
       this.ie =
         /MSIE 9/i.test(navigator.userAgent) ||
@@ -152,7 +155,7 @@ export class SVGContext implements RenderContext {
 
   // ### Styling & State Methods:
 
-  setFont(family, size, weight) {
+  setFont(family: string, size: number, weight: string): this {
     // Unlike canvas, in SVG italic is handled by font-style,
     // not weight. So: we search the weight argument and
     // apply bold and italic to weight and style respectively.
@@ -197,52 +200,57 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  setRawFont(font) {
+  setRawFont(font: string): this {
     font = font.trim();
     // Assumes size first, splits on space -- which is presently
     // how all existing modules are calling this.
     const fontArray = font.split(' ');
 
-    this.attributes['font-family'] = fontArray[1];
-    this.state['font-family'] = fontArray[1];
+    const family = fontArray[1];
+    const size = fontArray[0];
 
-    this.attributes['font-size'] = fontArray[0];
-    this.state['font-size'] = fontArray[0];
+    this.attributes['font-family'] = family;
+    this.state['font-family'] = family;
 
-    // Saves fontSize for IE polyfill
-    this.fontSize = Number(fontArray[0].match(/\d+/));
+    this.attributes['font-size'] = size;
+    this.state['font-size'] = size;
+
+    // Saves fontSize for IE polyfill.
+    // Use the Number() function to parse the array returned by String.prototype.match()!
+    this.fontSize = Number(size.match(/\d+/));
     return this;
   }
 
-  setFillStyle(style) {
+  setFillStyle(style: string): this {
     this.attributes.fill = style;
     return this;
   }
 
-  setBackgroundFillStyle(style) {
+  setBackgroundFillStyle(style: string): this {
     this.background_attributes.fill = style;
     this.background_attributes.stroke = style;
     return this;
   }
 
-  setStrokeStyle(style) {
+  setStrokeStyle(style: string): this {
     this.attributes.stroke = style;
     return this;
   }
 
-  setShadowColor(style) {
-    this.shadow_attributes.color = style;
+  setShadowColor(color: string): this {
+    this.shadow_attributes.color = color;
     return this;
   }
 
-  setShadowBlur(blur) {
+  setShadowBlur(blur: string): this {
     this.shadow_attributes.width = blur;
     return this;
   }
 
-  setLineWidth(width) {
+  setLineWidth(width: number): this {
     this.attributes['stroke-width'] = width;
     this.lineWidth = width;
+    return this;
   }
 
   // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
@@ -271,10 +279,10 @@ export class SVGContext implements RenderContext {
   resize(width: number, height: number): this {
     this.width = width;
     this.height = height;
-    this.element.style.width = width;
+    this.element.style.width = width.toString();
 
-    this.svg.style.width = width;
-    this.svg.style.height = height;
+    this.svg.style.width = width.toString();
+    this.svg.style.height = height.toString();
 
     const attributes = {
       width,
@@ -286,7 +294,7 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  scale(x, y): this {
+  scale(x: number, y: number): this {
     // uses viewBox to scale
     // TODO (GCR): we may at some point want to distinguish the
     // style.width / style.height properties that are applied to
@@ -307,21 +315,22 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  setViewBox(...args) {
-    // Override for "x y w h" style:
-    if (args.length === 1) {
-      const [viewBox] = args;
-      this.svg.setAttribute('viewBox', viewBox);
+  /**
+   * 1 arg: string in the "x y w h" format
+   * 4 args: x:number, y:number, w:number, h:number
+   */
+  setViewBox(viewBox_or_minX: string | number, minY?: number, width?: number, height?: number): void {
+    if (typeof viewBox_or_minX === 'string') {
+      this.svg.setAttribute('viewBox', viewBox_or_minX);
     } else {
-      const [xMin, yMin, width, height] = args;
-      const viewBoxString = xMin + ' ' + yMin + ' ' + width + ' ' + height;
+      const viewBoxString = viewBox_or_minX + ' ' + minY + ' ' + width + ' ' + height;
       this.svg.setAttribute('viewBox', viewBoxString);
     }
   }
 
   // ### Drawing helper methods:
 
-  applyAttributes(element: SVGElement, attributes): SVGElement {
+  applyAttributes(element: SVGElement, attributes: Attributes): SVGElement {
     const attrNamesToIgnore = attrNamesToIgnoreMap[element.nodeName];
     Object.keys(attributes).forEach((propertyName) => {
       if (attrNamesToIgnore && attrNamesToIgnore[propertyName]) {
@@ -364,7 +373,7 @@ export class SVGContext implements RenderContext {
     }
 
     // Create the rect & style it:
-    const rectangle = this.create('rect');
+    const rectangle: SVGRectElement = this.create('rect') as SVGRectElement;
     if (typeof attributes === 'undefined') {
       attributes = {
         fill: 'none',
@@ -529,7 +538,7 @@ export class SVGContext implements RenderContext {
       const num_paths = sa.width / 2;
       // Stroke at varying widths to create effect of gaussian blur:
       for (let i = 1; i <= num_paths; i++) {
-        const attributes = {
+        const attributes: Attributes = {
           stroke: sa.color,
           'stroke-linejoin': 'round',
           'stroke-linecap': 'round',
@@ -581,10 +590,10 @@ export class SVGContext implements RenderContext {
   }
 
   // ## Text Methods:
-  measureText(text) {
-    const txt = this.create('text');
+  measureText(text: string): SVGRect {
+    const txt = this.create('text') as SVGTextElement;
     if (typeof txt.getBBox !== 'function') {
-      return { x: 0, y: 0, width: 0, height: 0 };
+      return { x: 0, y: 0, width: 0, height: 0 } as SVGRect;
     }
 
     txt.textContent = text;
@@ -593,16 +602,16 @@ export class SVGContext implements RenderContext {
     // Temporarily add it to the document for measurement.
     this.svg.appendChild(txt);
 
-    let bbox = txt.getBBox();
+    let bbox: SVGRect = txt.getBBox();
     if (this.ie && text !== '' && this.attributes['font-style'] === 'italic') {
-      bbox = this.ieMeasureTextFix(bbox, text);
+      bbox = this.ieMeasureTextFix(bbox);
     }
 
     this.svg.removeChild(txt);
     return bbox;
   }
 
-  ieMeasureTextFix(bbox) {
+  ieMeasureTextFix(bbox: DOMRect): SVGRect {
     // Internet Explorer over-pads text in italics,
     // resulting in giant width estimates for measureText.
     // To fix this, we use this formula, tested against
@@ -625,14 +634,14 @@ export class SVGContext implements RenderContext {
       height,
     };
 
-    return box;
+    return box as SVGRect;
   }
 
-  fillText(text, x, y) {
+  fillText(text: string, x: number, y: number): this {
     if (!text || text.length <= 0) {
-      return;
+      return this;
     }
-    const attributes = {};
+    const attributes: any = {};
     Vex.Merge(attributes, this.attributes);
     attributes.stroke = 'none';
     attributes.x = x;
@@ -642,6 +651,7 @@ export class SVGContext implements RenderContext {
     txt.textContent = text;
     this.applyAttributes(txt, attributes);
     this.add(txt);
+    return this;
   }
 
   save(): this {

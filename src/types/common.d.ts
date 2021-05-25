@@ -51,17 +51,17 @@ export interface TypeProps extends KeyProps {
 /** Contexts common interface */
 export interface RenderContext {
   clear(): void;
-  setFont(family: string, size: number, weight?: string): RenderContext;
-  setRawFont(font: string): RenderContext;
-  setFillStyle(style: string): RenderContext;
-  setBackgroundFillStyle(style: string): RenderContext;
-  setStrokeStyle(style: string): RenderContext;
-  setShadowColor(color: string): RenderContext;
-  setShadowBlur(blur: string): RenderContext;
-  setLineWidth(width: number): RenderContext;
+  setFont(family: string, size: number, weight: string): this;
+  setRawFont(font: string): this;
+  setFillStyle(style: string): this;
+  setBackgroundFillStyle(style: string): this;
+  setStrokeStyle(style: string): this;
+  setShadowColor(color: string): this;
+  setShadowBlur(blur: string): this;
+  setLineWidth(width: number): this;
   setLineCap(cap_type: string): this;
   setLineDash(dashPattern: number[]): this;
-  scale(x: number, y: number): RenderContext;
+  scale(x: number, y: number): this;
   rect(x: number, y: number, width: number, height: number, attributes?: any): this;
   resize(width: number, height: number): this;
   fillRect(x: number, y: number, width: number, height: number): this;
@@ -76,12 +76,12 @@ export interface RenderContext {
   fill(attributes?: any): this;
   stroke(): this;
   closePath(): this;
-  fillText(text: string, x: number, y: number): RenderContext;
+  fillText(text: string, x: number, y: number): this;
   save(): this;
   restore(): this;
-  // eslint-disable-next-line
-  openGroup(...args: any[]): any;
+  openGroup(cls: string, id?: any, attrs?: any): any;
   closeGroup(): void;
+  add(child: any): void;
 
   /**
    * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width : number, height : number}. Only width is used throughout VexFlow.
