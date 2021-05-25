@@ -455,8 +455,6 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  // TODO: Canvas returns void:
-  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/quadraticCurveTo
   quadraticCurveTo(x1: number, y1: number, x: number, y: number): this {
     this.path += 'Q' + x1 + ' ' + y1 + ',' + x + ' ' + y;
     this.pen.x = x;
@@ -465,8 +463,6 @@ export class SVGContext implements RenderContext {
   }
 
   // This is an attempt (hack) to simulate the HTML5 canvas arc method.
-  // TODO: Canvas returns void:
-  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc returns void.
   arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this {
     function normalizeAngle(angle: number) {
       while (angle < 0) {
