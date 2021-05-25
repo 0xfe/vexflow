@@ -15,6 +15,7 @@ import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+import { TabNote } from './tabnote';
 
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
 function L(...args) {
@@ -132,7 +133,6 @@ export class Ornament extends Modifier {
     this.setAttribute('type', 'Ornament');
 
     this.note = null;
-    this.index = null;
     this.type = type;
     this.delayed = false;
 
@@ -215,11 +215,7 @@ export class Ornament extends Modifier {
   // Render ornament in position next to note.
   draw() {
     this.checkContext();
-
-    if (!this.note || this.index == null) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
-    }
-
+    this.checkAttachedNote();
     this.setRendered();
 
     const ctx = this.context;
@@ -235,7 +231,7 @@ export class Ornament extends Modifier {
 
     // TabNotes don't have stems attached to them. Tab stems are rendered
     // outside the stave.
-    if (this.note.getCategory() === 'tabnotes') {
+    if (this.note.getCategory() === TabNote.CATEGORY) {
       if (this.note.hasStem()) {
         if (stemDir === StaveNote.STEM_DOWN) {
           y = stave.getYForTopText(this.text_line);

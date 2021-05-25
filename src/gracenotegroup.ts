@@ -20,7 +20,8 @@ import { StemmableNote } from './stemmablenote';
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
-  ...args: any) {
+  ...args: any
+) {
   if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
 }
 
@@ -168,19 +169,12 @@ export class GraceNoteGroup extends Modifier {
 
   draw(): void {
     this.checkContext();
+    this.checkAttachedNote();
+    this.setRendered();
 
     const note = this.getNote();
-
     L('Drawing grace note group for:', note);
 
-    if (!(note && this.index !== null)) {
-      throw new Vex.RuntimeError(
-        'NoAttachedNote',
-        "Can't draw grace note without a parent note and parent note index."
-      );
-    }
-
-    this.setRendered();
     this.alignSubNotesWithNote(this.getGraceNotes(), note); // Modifier function
 
     // Draw notes

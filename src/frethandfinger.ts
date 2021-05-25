@@ -154,15 +154,12 @@ export class FretHandFinger extends Modifier {
   }
 
   draw(): void {
-    this.checkContext();
-
-    if (!this.note || this.index == null) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
-    }
-
-    this.setRendered();
     const ctx = this.checkContext();
-    const start = this.note.getModifierStartXY(this.position, this.index);
+    this.checkAttachedNote();
+    this.setRendered();
+
+    const note = this.getNote();
+    const start = note.getModifierStartXY(this.position, this.index);
     let dot_x = start.x + this.x_shift + this.x_offset;
     let dot_y = start.y + this.y_shift + this.y_offset + 5;
 

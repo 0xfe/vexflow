@@ -29,6 +29,8 @@ export enum ModifierPosition {
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
 // function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
 
+const UNATTACHED_INDEX: number = -1;
+
 export class Modifier extends Element {
   protected note?: Note;
 
@@ -70,7 +72,7 @@ export class Modifier extends Element {
     // Modifiers are attached to a note and an index. An index is a
     // specific head in a chord.
     this.note = undefined;
-    this.index = 0;
+    this.index = UNATTACHED_INDEX;
 
     // The `text_line` is reserved space above or below a stave.
     this.text_line = 0;
@@ -184,6 +186,12 @@ export class Modifier extends Element {
   draw(): void {
     this.checkContext();
     throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
+  }
+
+  checkAttachedNote(): void {
+    if (!this.note || this.index === UNATTACHED_INDEX) {
+      throw new Vex.RERR('NoAttachedNote', `Can't draw ${this.getCategory()} without a note and index.`);
+    }
   }
 
   // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main note with correct x-offset

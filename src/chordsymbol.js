@@ -350,7 +350,6 @@ export class ChordSymbol extends Modifier {
     super();
     this.setAttribute('type', 'ChordSymbol');
     this.note = null;
-    this.index = null;
     this.symbolBlocks = [];
     this.horizontal = ChordSymbol.horizontalJustify.LEFT;
     this.vertical = ChordSymbol.verticalJustify.TOP;
@@ -666,11 +665,8 @@ export class ChordSymbol extends Modifier {
   // Render text and glyphs above/below the note
   draw() {
     this.checkContext();
+    this.checkAttachedNote();
     this.setRendered();
-
-    if (!this.note) {
-      throw new Vex.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
-    }
 
     // We're changing context parameters. Save current state.
     this.context.save();

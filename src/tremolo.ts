@@ -3,7 +3,6 @@
 //
 // This class implements tremolo notation.
 
-import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
@@ -43,23 +42,21 @@ export class Tremolo extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-
-    if (!(this.note && this.index != null)) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");
-    }
-
+    this.checkAttachedNote();
     this.setRendered();
-    const stemDirection = this.note.getStemDirection();
 
-    const start = this.note.getModifierStartXY(this.position, this.index);
+    const note = this.getNote();
+    const stemDirection = note.getStemDirection();
+
+    const start = note.getModifierStartXY(this.position, this.index);
     let x = start.x;
-    const isGraceNote = this.note.getCategory() === 'gracenotes';
+    const isGraceNote = note.getCategory() === GraceNote.CATEGORY;
     const scale = isGraceNote ? GraceNote.SCALE : 1;
     const category = `tremolo.${isGraceNote ? 'grace' : 'default'}`;
 
     this.y_spacing = this.musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
     const height = this.num * this.y_spacing;
-    let y = this.note.getStemExtents().baseY - height;
+    let y = note.getStemExtents().baseY - height;
 
     if (stemDirection < 0) {
       y += this.musicFont.lookupMetric(`${category}.offsetYStemDown`) * scale;

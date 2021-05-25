@@ -7,7 +7,6 @@
 // render notes as a `Modifier`
 // ex) ClefNote, TimeSigNote and BarNote.
 
-import { Vex } from './vex';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
@@ -38,7 +37,6 @@ export class NoteSubGroup extends Modifier {
     this.setAttribute('type', 'NoteSubGroup');
 
     this.note = null;
-    this.index = null;
     this.position = Modifier.Position.LEFT;
     this.subNotes = subNotes;
     this.subNotes.forEach((subNote) => {
@@ -83,14 +81,11 @@ export class NoteSubGroup extends Modifier {
 
   draw() {
     this.checkContext();
+    this.checkAttachedNote();
+    this.setRendered();
 
     const note = this.getNote();
 
-    if (!(note && this.index !== null)) {
-      throw new Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note and parent note index.");
-    }
-
-    this.setRendered();
     this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
 
     // Draw notes

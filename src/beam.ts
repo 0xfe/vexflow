@@ -14,6 +14,8 @@ import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { Voice } from './voice';
 import { RenderContext } from './types/common';
+import { TabNote } from './tabnote';
+import { StaveNote } from './stavenote';
 
 function calculateStemDirection(notes: StemmableNote[]) {
   let lineSum = 0;
@@ -464,9 +466,9 @@ export class Beam extends Element {
 
     let stem_direction = this.stem_direction;
     // Figure out optimal stem direction based on given notes
-    if (auto_stem && notes[0].getCategory() === 'stavenotes') {
+    if (auto_stem && notes[0].getCategory() === StaveNote.CATEGORY) {
       stem_direction = calculateStemDirection(notes);
-    } else if (auto_stem && notes[0].getCategory() === 'tabnotes') {
+    } else if (auto_stem && notes[0].getCategory() === TabNote.CATEGORY) {
       // Auto Stem TabNotes
       const stem_weight = notes.reduce((memo, note) => memo + note.getStemDirection(), 0);
 
@@ -898,7 +900,7 @@ export class Beam extends Element {
     if (this.postFormatted) return;
 
     // Calculate a smart slope if we're not forcing the beams to be flat.
-    if (this.notes[0].getCategory() === 'tabnotes' || this.render_options.flat_beams) {
+    if (this.notes[0].getCategory() === TabNote.CATEGORY || this.render_options.flat_beams) {
       this.calculateFlatSlope();
     } else {
       this.calculateSlope();

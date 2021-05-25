@@ -69,7 +69,6 @@ export class Stroke extends Modifier {
 
     // multi voice - end note of stroke, set in draw()
     this.note_end = null;
-    this.index = null;
     this.type = type;
     this.position = Modifier.Position.LEFT;
 
@@ -102,11 +101,8 @@ export class Stroke extends Modifier {
 
   draw() {
     this.checkContext();
+    this.checkAttachedNote();
     this.setRendered();
-
-    if (!(this.note && this.index != null)) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");
-    }
 
     const start = this.note.getModifierStartXY(this.position, this.index);
     let ys = this.note.getYs();

@@ -116,7 +116,6 @@ export class StringNumber extends Modifier {
 
     this.note = null;
     this.last_note = null;
-    this.index = null;
     this.string_number = number;
     this.setWidth(20); // ???
     this.position = Modifier.Position.ABOVE; // Default position above stem or note head
@@ -141,13 +140,6 @@ export class StringNumber extends Modifier {
   }
   setNote(note) {
     this.note = note;
-    return this;
-  }
-  getIndex() {
-    return this.index;
-  }
-  setIndex(index) {
-    this.index = index;
     return this;
   }
 
@@ -181,9 +173,7 @@ export class StringNumber extends Modifier {
 
   draw() {
     const ctx = this.checkContext();
-    if (!(this.note && this.index != null)) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
-    }
+    this.checkAttachedNote();
     this.setRendered();
 
     const line_space = this.note.stave.options.spacing_between_lines_px;
