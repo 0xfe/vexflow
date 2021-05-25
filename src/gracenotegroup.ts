@@ -17,6 +17,7 @@ import { TabTie } from './tabtie';
 import { StaveNote } from './stavenote';
 import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
+import { ModifierContextState } from './modifiercontext';
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 function L(
@@ -44,7 +45,7 @@ export class GraceNoteGroup extends Modifier {
   }
 
   /** Arranges groups inside a `ModifierContext`. */
-  static format(gracenote_groups: GraceNoteGroup[], state: { left_shift: number }): boolean {
+  static format(gracenote_groups: GraceNoteGroup[], state: ModifierContextState): boolean {
     const group_spacing_stave = 4;
     const group_spacing_tab = 0;
 
