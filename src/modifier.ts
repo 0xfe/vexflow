@@ -69,8 +69,7 @@ export class Modifier extends Element {
 
     this.width = 0;
 
-    // Modifiers are attached to a note and an index. An index is a
-    // specific head in a chord.
+    // Modifiers are attached to a note and an index. An index is a specific head in a chord.
     this.note = undefined;
     this.index = UNATTACHED_INDEX;
 

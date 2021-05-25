@@ -61,7 +61,6 @@ export class Stroke extends Modifier {
     super();
     this.setAttribute('type', 'Stroke');
 
-    this.note = null;
     this.options = Vex.Merge({}, options);
 
     // multi voice - span stroke across all voices if true
@@ -103,19 +102,19 @@ export class Stroke extends Modifier {
     this.checkContext();
     this.checkAttachedNote();
     this.setRendered();
-
-    const start = this.note.getModifierStartXY(this.position, this.index);
-    let ys = this.note.getYs();
+    const note = this.getNote();
+    const start = note.getModifierStartXY(this.position, this.index);
+    let ys = note.getYs();
     let topY = start.y;
     let botY = start.y;
     const x = start.x - 5;
-    const line_space = this.note.stave.options.spacing_between_lines_px;
+    const line_space = note.stave.options.spacing_between_lines_px;
 
-    const notes = this.getModifierContext().getMembers(this.note.getCategory());
+    const notes = this.getModifierContext().getMembers(note.getCategory());
     for (let i = 0; i < notes.length; i++) {
       ys = notes[i].getYs();
       for (let n = 0; n < ys.length; n++) {
-        if (this.note === notes[i] || this.all_voices) {
+        if (note === notes[i] || this.all_voices) {
           topY = Vex.Min(topY, ys[n]);
           botY = Vex.Max(botY, ys[n]);
         }
@@ -146,7 +145,7 @@ export class Stroke extends Modifier {
         arrow = 'arrowheadBlackUp';
         arrow_shift_x = -3;
         text_shift_x = this.x_shift + arrow_shift_x - 2;
-        if (this.note instanceof StaveNote) {
+        if (note instanceof StaveNote) {
           topY += 1.5 * line_space;
           if ((botY - topY) % 2 !== 0) {
             botY += 0.5 * line_space;
@@ -167,7 +166,7 @@ export class Stroke extends Modifier {
         arrow = 'arrowheadBlackDown';
         arrow_shift_x = -4;
         text_shift_x = this.x_shift + arrow_shift_x - 1;
-        if (this.note instanceof StaveNote) {
+        if (note instanceof StaveNote) {
           arrow_y = line_space / 2;
           topY += 0.5 * line_space;
           if ((botY - topY) % 2 === 0) {
@@ -196,7 +195,7 @@ export class Stroke extends Modifier {
       this.context.fillRect(x + this.x_shift, topY, 1, botY - topY);
     } else {
       strokeLine = 'wiggly';
-      if (this.note instanceof StaveNote) {
+      if (note instanceof StaveNote) {
         for (let i = topY; i <= botY; i += line_space) {
           Glyph.renderGlyph(
             this.context,

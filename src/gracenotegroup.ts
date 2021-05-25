@@ -149,11 +149,6 @@ export class GraceNoteGroup extends Modifier {
     return this;
   }
 
-  setNote(note: Note): this {
-    this.note = note;
-    return this;
-  }
-
   setWidth(width: number): this {
     this.width = width;
     return this;

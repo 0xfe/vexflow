@@ -36,7 +36,6 @@ export class NoteSubGroup extends Modifier {
     super();
     this.setAttribute('type', 'NoteSubGroup');
 
-    this.note = null;
     this.position = Modifier.Position.LEFT;
     this.subNotes = subNotes;
     this.subNotes.forEach((subNote) => {
@@ -69,9 +68,6 @@ export class NoteSubGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  setNote(note) {
-    this.note = note;
-  }
   setWidth(width) {
     this.width = width;
   }

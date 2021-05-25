@@ -349,7 +349,6 @@ export class ChordSymbol extends Modifier {
   constructor() {
     super();
     this.setAttribute('type', 'ChordSymbol');
-    this.note = null;
     this.symbolBlocks = [];
     this.horizontal = ChordSymbol.horizontalJustify.LEFT;
     this.vertical = ChordSymbol.verticalJustify.TOP;
@@ -673,20 +672,21 @@ export class ChordSymbol extends Modifier {
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     this.context.openGroup(classString, this.getAttribute('id'));
 
-    const start = this.note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
+    const note = this.getNote();
+    const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
     this.context.setFont(this.font.family, this.font.size, this.font.weight);
 
     let y;
 
     let stem_ext;
     let spacing;
-    const has_stem = this.note.hasStem();
-    const stave = this.note.getStave();
+    const has_stem = note.hasStem();
+    const stave = note.getStave();
 
     // The position of the text varies based on whether or not the note
     // has a stem.
     if (has_stem) {
-      stem_ext = this.note.getStem().getExtents();
+      stem_ext = note.getStem().getExtents();
       spacing = stave.getSpacingBetweenLines();
     }
 
@@ -695,12 +695,12 @@ export class ChordSymbol extends Modifier {
       // is bottom-right.
       y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
       if (has_stem) {
-        const stem_base = this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
+        const stem_base = note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
         y = Math.max(y, stem_base + spacing * (this.text_line + 2));
       }
     } else {
       // (this.vertical === ChordSymbol.verticalJustify.TOP)
-      y = Math.min(stave.getYForTopText(this.text_line), this.note.getYs()[0] - 10);
+      y = Math.min(stave.getYForTopText(this.text_line), note.getYs()[0] - 10);
       if (has_stem) {
         y = Math.min(y, stem_ext.topY - 5 - spacing * this.text_line);
       }
@@ -714,7 +714,7 @@ export class ChordSymbol extends Modifier {
     } else if (this.horizontal === ChordSymbol.horizontalJustify.CENTER) {
       x = start.x - this.getWidth() / 2;
     } /* CENTER_STEM */ else {
-      x = this.note.getStemX() - this.getWidth() / 2;
+      x = note.getStemX() - this.getWidth() / 2;
     }
     L('Rendering ChordSymbol: ', this.text, x, y);
 

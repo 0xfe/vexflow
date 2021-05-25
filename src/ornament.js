@@ -132,7 +132,6 @@ export class Ornament extends Modifier {
     super();
     this.setAttribute('type', 'Ornament');
 
-    this.note = null;
     this.type = type;
     this.delayed = false;
 
@@ -214,25 +213,25 @@ export class Ornament extends Modifier {
 
   // Render ornament in position next to note.
   draw() {
-    this.checkContext();
+    const ctx = this.checkContext();
     this.checkAttachedNote();
     this.setRendered();
 
-    const ctx = this.context;
-    const stemDir = this.note.getStemDirection();
-    const stave = this.note.getStave();
+    const note = this.getNote();
+    const stemDir = note.getStemDirection();
+    const stave = note.getStave();
 
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     this.context.openGroup(classString, this.getAttribute('id'));
 
     // Get stem extents
-    const stemExtents = this.note.getStem().getExtents();
+    const stemExtents = note.getStem().getExtents();
     let y = stemDir === StaveNote.STEM_DOWN ? stemExtents.baseY : stemExtents.topY;
 
     // TabNotes don't have stems attached to them. Tab stems are rendered
     // outside the stave.
-    if (this.note.getCategory() === TabNote.CATEGORY) {
-      if (this.note.hasStem()) {
+    if (note.getCategory() === TabNote.CATEGORY) {
+      if (note.hasStem()) {
         if (stemDir === StaveNote.STEM_DOWN) {
           y = stave.getYForTopText(this.text_line);
         }
@@ -247,7 +246,7 @@ export class Ornament extends Modifier {
     let lineSpacing = 1;
 
     // Beamed stems are longer than quarter note stems, adjust accordingly
-    if (!isPlacedOnNoteheadSide && this.note.beam) {
+    if (!isPlacedOnNoteheadSide && note.beam) {
       lineSpacing += 0.5;
     }
 
@@ -255,7 +254,7 @@ export class Ornament extends Modifier {
     const glyphYBetweenLines = y - totalSpacing;
 
     // Get initial coordinates for the modifier position
-    const start = this.note.getModifierStartXY(this.position, this.index);
+    const start = note.getModifierStartXY(this.position, this.index);
     let glyphX = start.x;
 
     // If the ornament is aligned with the note head, don't consider the stave y
@@ -273,7 +272,7 @@ export class Ornament extends Modifier {
         delayXShift = this.delayXShift;
       } else {
         delayXShift += this.glyph.getMetrics().width / 2;
-        const nextContext = TickContext.getNextContext(this.note.getTickContext());
+        const nextContext = TickContext.getNextContext(note.getTickContext());
         if (nextContext) {
           delayXShift += (nextContext.getX() - startX) * 0.5;
         } else {
@@ -292,11 +291,11 @@ export class Ornament extends Modifier {
       glyphY -= this.render_options.accidentalLowerPadding;
     }
 
-    if (this.stemUpYOffset && this.note.hasStem() && this.note.getStemDirection() === 1) {
+    if (this.stemUpYOffset && note.hasStem() && note.getStemDirection() === 1) {
       glyphY += this.stemUpYOffset;
     }
-    if (this.note.getLineNumber() < 5 && Ornament.ornamentNoteTransition.indexOf(this.type) >= 0) {
-      glyphY = this.note.getStave().getBoundingBox().y + 40;
+    if (note.getLineNumber() < 5 && Ornament.ornamentNoteTransition.indexOf(this.type) >= 0) {
+      glyphY = note.getStave().getBoundingBox().y + 40;
     }
 
     this.glyph.render(ctx, glyphX + this.x_shift, glyphY);
