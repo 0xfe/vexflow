@@ -35,6 +35,13 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 
 type Attributes = { [key: string]: any };
 
+interface State {
+  state: Attributes;
+  attributes: Attributes;
+  shadow_attributes: Attributes;
+  lineWidth: number;
+}
+
 export class SVGContext implements RenderContext {
   element: HTMLElement; // the parent DOM object
   svg: SVGSVGElement;
@@ -44,6 +51,8 @@ export class SVGContext implements RenderContext {
   attributes: Attributes;
   background_attributes: Attributes;
   shadow_attributes: Attributes;
+  state: Attributes;
+  state_stack: State[];
 
   constructor(element: HTMLElement) {
     this.element = element;
@@ -635,7 +644,7 @@ export class SVGContext implements RenderContext {
     this.add(txt);
   }
 
-  save() {
+  save(): this {
     // TODO(mmuthanna): State needs to be deep-copied.
     this.state_stack.push({
       state: {
@@ -664,29 +673,32 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  restore() {
+  restore(): this {
     // TODO(0xfe): State needs to be deep-restored.
-    const state = this.state_stack.pop();
-    this.state['font-family'] = state.state['font-family'];
-    this.state['font-weight'] = state.state['font-weight'];
-    this.state['font-style'] = state.state['font-style'];
-    this.state['font-size'] = state.state['font-size'];
-    this.state.scale = state.state.scale;
+    const savedState = this.state_stack.pop();
+    if (savedState) {
+      const state = savedState;
+      this.state['font-family'] = state.state['font-family'];
+      this.state['font-weight'] = state.state['font-weight'];
+      this.state['font-style'] = state.state['font-style'];
+      this.state['font-size'] = state.state['font-size'];
+      this.state.scale = state.state.scale;
 
-    this.attributes['font-family'] = state.attributes['font-family'];
-    this.attributes['font-weight'] = state.attributes['font-weight'];
-    this.attributes['font-style'] = state.attributes['font-style'];
-    this.attributes['font-size'] = state.attributes['font-size'];
+      this.attributes['font-family'] = state.attributes['font-family'];
+      this.attributes['font-weight'] = state.attributes['font-weight'];
+      this.attributes['font-style'] = state.attributes['font-style'];
+      this.attributes['font-size'] = state.attributes['font-size'];
 
-    this.attributes.fill = state.attributes.fill;
-    this.attributes.stroke = state.attributes.stroke;
-    this.attributes['stroke-width'] = state.attributes['stroke-width'];
-    this.attributes['stroke-dasharray'] = state.attributes['stroke-dasharray'];
+      this.attributes.fill = state.attributes.fill;
+      this.attributes.stroke = state.attributes.stroke;
+      this.attributes['stroke-width'] = state.attributes['stroke-width'];
+      this.attributes['stroke-dasharray'] = state.attributes['stroke-dasharray'];
 
-    this.shadow_attributes.width = state.shadow_attributes.width;
-    this.shadow_attributes.color = state.shadow_attributes.color;
+      this.shadow_attributes.width = state.shadow_attributes.width;
+      this.shadow_attributes.color = state.shadow_attributes.color;
 
-    this.lineWidth = state.lineWidth;
+      this.lineWidth = state.lineWidth;
+    }
     return this;
   }
 }

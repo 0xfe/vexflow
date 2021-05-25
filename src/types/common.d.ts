@@ -77,8 +77,8 @@ export interface RenderContext {
   stroke(): this;
   closePath(): this;
   fillText(text: string, x: number, y: number): RenderContext;
-  save(): RenderContext;
-  restore(): RenderContext;
+  save(): this;
+  restore(): this;
   // eslint-disable-next-line
   openGroup(...args: any[]): any;
   closeGroup(): void;
