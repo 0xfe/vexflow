@@ -14,7 +14,6 @@ import { Formatter } from './formatter';
 import { Voice } from './voice';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { Tickable } from './tickable';
 import { RenderContext } from './types/common';
 
 export class NoteSubGroup extends Modifier {
@@ -92,8 +91,7 @@ export class NoteSubGroup extends Modifier {
   }
 
   draw(): void {
-    this.checkContext();
-
+    const ctx: RenderContext = this.checkContext();
     const note = this.getNote();
 
     if (!(note && this.index !== -1)) {
@@ -102,9 +100,6 @@ export class NoteSubGroup extends Modifier {
 
     this.setRendered();
     this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
-
-    // Draw notes
-    const ctx: RenderContext | undefined = this.getContext();
     this.subNotes.forEach((subNote) => subNote.setContext(ctx).drawWithStyle());
   }
 }
