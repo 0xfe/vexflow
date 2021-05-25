@@ -10,13 +10,11 @@
 
 import { TabNote, TabNoteStruct } from './tabnote';
 
-/** Implements Crace Tab Note. */
 export class GraceTabNote extends TabNote {
   static get CATEGORY(): string {
     return 'gracetabnotes';
   }
 
-  /** Constructor providing a stave note struct */
   constructor(note_struct: TabNoteStruct) {
     super(note_struct, false);
     this.setAttribute('type', 'GraceTabNote');
@@ -36,12 +34,10 @@ export class GraceTabNote extends TabNote {
     this.updateWidth();
   }
 
-  /** Returns the category. */
   getCategory(): string {
     return GraceTabNote.CATEGORY;
   }
 
-  /** Draws the note. */
   draw(): void {
     super.draw();
     this.setRendered();
