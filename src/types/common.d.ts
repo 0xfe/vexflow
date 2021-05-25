@@ -59,31 +59,23 @@ export interface RenderContext {
   setShadowColor(color: string): RenderContext;
   setShadowBlur(blur: string): RenderContext;
   setLineWidth(width: number): RenderContext;
-  setLineCap(cap_type: string): RenderContext;
-  setLineDash(dash: string): RenderContext;
+  setLineCap(cap_type: string): this;
+  setLineDash(dashPattern: number[]): this;
   scale(x: number, y: number): RenderContext;
-  // eslint-disable-next-line
-  rect(x: number, y: number, width: number, height: number, attributes?: any): RenderContext;
-  resize(width: number, height: number): RenderContext;
-  fillRect(x: number, y: number, width: number, height: number): RenderContext;
-  clearRect(x: number, y: number, width: number, height: number): RenderContext;
-  beginPath(): RenderContext;
-  moveTo(x: number, y: number): RenderContext;
-  lineTo(x: number, y: number): RenderContext;
-  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): RenderContext;
-  quadraticCurveTo(x1: number, y1: number, x2: number, y2: number): RenderContext;
-  arc(
-    x: number,
-    y: number,
-    radius: number,
-    startAngle: number,
-    endAngle: number,
-    antiClockwise: boolean
-  ): RenderContext;
-  glow(): RenderContext;
-  fill(): RenderContext;
-  stroke(): RenderContext;
-  closePath(): RenderContext;
+  rect(x: number, y: number, width: number, height: number, attributes?: any): this;
+  resize(width: number, height: number): this;
+  fillRect(x: number, y: number, width: number, height: number): this;
+  clearRect(x: number, y: number, width: number, height: number): this;
+  beginPath(): this;
+  moveTo(x: number, y: number): this;
+  lineTo(x: number, y: number): this;
+  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): this;
+  quadraticCurveTo(x1: number, y1: number, x2: number, y2: number): this;
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this;
+  glow(): this;
+  fill(attributes?: any): this;
+  stroke(): this;
+  closePath(): this;
   fillText(text: string, x: number, y: number): RenderContext;
   save(): RenderContext;
   restore(): RenderContext;

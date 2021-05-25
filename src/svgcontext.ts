@@ -2,6 +2,7 @@
 // @author Gregory Ristow (2015)
 
 import { Vex } from './vex';
+import { RenderContext } from './types/common';
 
 const attrNamesToIgnoreMap = {
   path: {
@@ -29,13 +30,25 @@ const attrNamesToIgnoreMap = {
   Vex.Merge(attrNamesToIgnoreMap.path, fontAttrNamesToIgnore);
 }
 
-export class SVGContext {
-  constructor(element) {
-    // element is the parent DOM object
+// Create the SVG in the SVG namespace:
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+type Attributes = { [key: string]: any };
+
+export class SVGContext implements RenderContext {
+  element: HTMLElement; // the parent DOM object
+  svg: SVGSVGElement;
+  path: string;
+  pen: { x: number; y: number };
+  lineWidth: number;
+  attributes: Attributes;
+  background_attributes: Attributes;
+  shadow_attributes: Attributes;
+
+  constructor(element: HTMLElement) {
     this.element = element;
-    // Create the SVG in the SVG namespace:
-    this.svgNS = 'http://www.w3.org/2000/svg';
-    const svg = this.create('svg');
+
+    const svg = this.create('svg') as SVGSVGElement;
     // Add it to the canvas:
     this.element.appendChild(svg);
 
@@ -87,13 +100,13 @@ export class SVGContext {
     this.iePolyfill();
   }
 
-  create(svgElementType) {
-    return document.createElementNS(this.svgNS, svgElementType);
+  create(svgElementType: string): SVGElement {
+    return document.createElementNS(SVG_NS, svgElementType);
   }
 
   // Allow grouping elements in containers for interactivity.
   openGroup(cls, id, attrs) {
-    const group = this.create('g');
+    const group: SVGGElement = this.create('g') as SVGGElement;
     this.groups.push(group);
     this.parent.appendChild(group);
     this.parent = group;
@@ -224,17 +237,18 @@ export class SVGContext {
   }
 
   // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
-  setLineDash(lineDash) {
+  // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray
+  // comma and/or white space separated. So we can probably shorten the delimiter by one character.
+  setLineDash(lineDash: number[]): this {
     if (Object.prototype.toString.call(lineDash) === '[object Array]') {
-      lineDash = lineDash.join(', ');
-      this.attributes['stroke-dasharray'] = lineDash;
+      this.attributes['stroke-dasharray'] = lineDash.join(', ');
       return this;
     } else {
       throw new Vex.RERR('ArgumentError', 'lineDash must be an array of integers.');
     }
   }
 
-  setLineCap(lineCap) {
+  setLineCap(lineCap: string): this {
     this.attributes['stroke-linecap'] = lineCap;
     return this;
   }
@@ -245,7 +259,7 @@ export class SVGContext {
   // conception of pixel-based width/height from the style.width
   // and style.height properties eventually to allow users to
   // apply responsive sizing attributes to the SVG.
-  resize(width, height) {
+  resize(width: number, height: number): this {
     this.width = width;
     this.height = height;
     this.element.style.width = width;
@@ -263,7 +277,7 @@ export class SVGContext {
     return this;
   }
 
-  scale(x, y) {
+  scale(x, y): this {
     // uses viewBox to scale
     // TODO (GCR): we may at some point want to distinguish the
     // style.width / style.height properties that are applied to
@@ -298,7 +312,7 @@ export class SVGContext {
 
   // ### Drawing helper methods:
 
-  applyAttributes(element, attributes) {
+  applyAttributes(element: SVGElement, attributes): SVGElement {
     const attrNamesToIgnore = attrNamesToIgnoreMap[element.nodeName];
     Object.keys(attributes).forEach((propertyName) => {
       if (attrNamesToIgnore && attrNamesToIgnore[propertyName]) {
@@ -312,7 +326,7 @@ export class SVGContext {
 
   // ### Shape & Path Methods:
 
-  clear() {
+  clear(): void {
     // Clear the SVG by removing all inner children.
 
     // (This approach is usually slightly more efficient
@@ -332,8 +346,7 @@ export class SVGContext {
   }
 
   // ## Rectangles:
-
-  rect(x, y, width, height, attributes) {
+  rect(x: number, y: number, width: number, height: number, attributes?: any): this {
     // Avoid invalid negative height attribs by
     // flipping the rectangle on its head:
     if (height < 0) {
@@ -364,7 +377,7 @@ export class SVGContext {
     return this;
   }
 
-  fillRect(x, y, width, height) {
+  fillRect(x: number, y: number, width: number, height: number): this {
     if (height < 0) {
       y += height;
       height *= -1;
@@ -374,7 +387,7 @@ export class SVGContext {
     return this;
   }
 
-  clearRect(x, y, width, height) {
+  clearRect(x: number, y: number, width: number, height: number): this {
     // TODO(GCR): Improve implementation of this...
     // Currently it draws a box of the background color, rather
     // than creating alpha through lower z-levels.
@@ -396,45 +409,48 @@ export class SVGContext {
 
   // ## Paths:
 
-  beginPath() {
+  beginPath(): this {
     this.path = '';
     this.pen.x = NaN;
     this.pen.y = NaN;
     return this;
   }
 
-  moveTo(x, y) {
+  moveTo(x: number, y: number): this {
     this.path += 'M' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
-  lineTo(x, y) {
+  lineTo(x: number, y: number): this {
     this.path += 'L' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
-  bezierCurveTo(x1, y1, x2, y2, x, y) {
+  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): this {
     this.path += 'C' + x1 + ' ' + y1 + ',' + x2 + ' ' + y2 + ',' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
-  quadraticCurveTo(x1, y1, x, y) {
+  // TODO: Canvas returns void:
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/quadraticCurveTo
+  quadraticCurveTo(x1: number, y1: number, x: number, y: number): this {
     this.path += 'Q' + x1 + ' ' + y1 + ',' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
-  // This is an attempt (hack) to simulate the HTML5 canvas
-  // arc method.
-  arc(x, y, radius, startAngle, endAngle, antiClockwise) {
-    function normalizeAngle(angle) {
+  // This is an attempt (hack) to simulate the HTML5 canvas arc method.
+  // TODO: Canvas returns void:
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc returns void.
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this {
+    function normalizeAngle(angle: number) {
       while (angle < 0) {
         angle += Math.PI * 2;
       }
@@ -466,7 +482,7 @@ export class SVGContext {
     return this;
   }
 
-  arcHelper(x, y, radius, startAngle, endAngle, antiClockwise) {
+  arcHelper(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): void {
     const x1 = x + radius * Math.cos(startAngle);
     const y1 = y + radius * Math.sin(startAngle);
 
@@ -487,18 +503,17 @@ export class SVGContext {
     this.path +=
       'M' + x1 + ' ' + y1 + ' A' + radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' + x2 + ' ' + y2;
     if (!isNaN(this.pen.x) && !isNaN(this.pen.y)) {
-      this.peth += 'M' + this.pen.x + ' ' + this.pen.y;
+      this.path += 'M' + this.pen.x + ' ' + this.pen.y; // BUG? this.peth => this.path
     }
   }
 
-  closePath() {
+  closePath(): this {
     this.path += 'Z';
-
     return this;
   }
 
   // Adapted from the source for Raphael's Element.glow
-  glow() {
+  glow(): this {
     // Calculate the width & paths of the glow:
     if (this.shadow_attributes.width > 0) {
       const sa = this.shadow_attributes;
@@ -522,7 +537,7 @@ export class SVGContext {
     return this;
   }
 
-  fill(attributes) {
+  fill(attributes: any): this {
     // If our current path is set to glow, make it glow
     this.glow();
 
@@ -540,12 +555,12 @@ export class SVGContext {
     return this;
   }
 
-  stroke() {
+  stroke(): this {
     // If our current path is set to glow, make it glow.
     this.glow();
 
     const path = this.create('path');
-    const attributes = {};
+    const attributes: Attributes = {};
     Vex.Merge(attributes, this.attributes);
     attributes.fill = 'none';
     attributes['stroke-width'] = this.lineWidth;
