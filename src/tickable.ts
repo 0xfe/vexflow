@@ -122,6 +122,10 @@ export abstract class Tickable extends Element {
     return this.ignore_ticks;
   }
 
+  setIgnoreTicks(flag: boolean): void {
+    this.ignore_ticks = flag;
+  }
+
   /** Sets width of note. Used by the formatter for positioning. */
   setWidth(width: number): void {
     this.width = width;
