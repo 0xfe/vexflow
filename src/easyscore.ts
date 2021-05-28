@@ -229,7 +229,7 @@ class Piece {
 
 interface BuilderElements {
   notes: StaveNote[];
-  accidentals: Accidental[];
+  accidentals: (Accidental | undefined)[][];
 }
 
 interface BuilderOptions {
@@ -353,7 +353,7 @@ export class Builder {
 
     // Build StaveNotes.
     const { chord, duration, dots, type } = this.piece;
-    const keys: string[] = chord.map((note) => note.key + '/' + note.octave);
+    const keys: string[] = chord.map((notePiece) => notePiece.key + '/' + notePiece.octave);
     const note = factory.StaveNote({
       keys,
       duration,
@@ -365,10 +365,18 @@ export class Builder {
     if (!autoStem) note.setStemDirection(stemDirection);
 
     // Attach accidentals.
-    const accids = chord.map((note) => note.accid || null);
-    accids.forEach((accid, i) => {
-      // TODO: Remove "as unknown". This compilation warning will be fixed after factory & accidental are migrated.
-      if (accid) note.addAccidental(i, (factory.Accidental({ type: accid }) as unknown) as Modifier);
+    const accidentals: (Accidental | undefined)[] = [];
+    chord.forEach((notePiece: NotePiece, index: number) => {
+      const accid = notePiece.accid;
+      if (typeof accid === 'string') {
+        const accidental: Accidental = factory.Accidental({ type: accid });
+        // TODO: Remove "as unknown as Modifier".
+        // This compilation warning will be fixed after factory & accidental are migrated to typescript.
+        note.addAccidental(index, (accidental as unknown) as Modifier);
+        accidentals.push(accidental);
+      } else {
+        accidentals.push(undefined);
+      }
     });
 
     // Attach dots.
@@ -377,7 +385,7 @@ export class Builder {
     this.commitHooks.forEach((fn) => fn(options, note, this));
 
     this.elements.notes.push(note);
-    this.elements.accidentals.concat((accids as unknown) as Accidental[]); // TODO: FIX THIS!
+    this.elements.accidentals.push(accidentals);
     this.resetPiece();
   }
 }
