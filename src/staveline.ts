@@ -20,21 +20,6 @@ export interface StaveLineNotes {
   first_note: StaveNote;
 }
 
-export interface StaveLineRenderOptions {
-  draw_start_arrow: boolean;
-  padding_left: number;
-  text_justification: number;
-  color?: string;
-  line_width: number;
-  line_dash?: string;
-  rounded_end: boolean;
-  arrowhead_length: number;
-  text_position_vertical: number;
-  draw_end_arrow: boolean;
-  arrowhead_angle: number;
-  padding_right: number;
-}
-
 // Attribution: Arrow rendering implementations based off of
 // Patrick Horgan's article, "Drawing lines and arcs with
 // arrow heads on  HTML5 Canvas"
@@ -57,7 +42,20 @@ function drawArrowLine(
   ctx: RenderContext,
   point1: { x: number; y: number },
   point2: { x: number; y: number },
-  config: StaveLineRenderOptions
+  config: {
+    draw_start_arrow: boolean;
+    padding_left: number;
+    text_justification: number;
+    color?: string;
+    line_width: number;
+    line_dash?: string;
+    rounded_end: boolean;
+    arrowhead_length: number;
+    text_position_vertical: number;
+    draw_end_arrow: boolean;
+    arrowhead_angle: number;
+    padding_right: number;
+  }
 ) {
   const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
 
@@ -140,7 +138,20 @@ function drawArrowLine(
 }
 
 export class StaveLine extends Element {
-  readonly render_options: StaveLineRenderOptions;
+  readonly render_options: {
+    draw_start_arrow: boolean;
+    padding_left: number;
+    text_justification: number;
+    color?: string;
+    line_width: number;
+    line_dash?: string;
+    rounded_end: boolean;
+    arrowhead_length: number;
+    text_position_vertical: number;
+    draw_end_arrow: boolean;
+    arrowhead_angle: number;
+    padding_right: number;
+  };
 
   protected text: string;
   protected font: FontInfo;
