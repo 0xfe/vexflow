@@ -14,16 +14,6 @@ import { FontInfo } from './types/common';
 import { TabNote } from './tabnote';
 import { ModifierContextState } from './modifiercontext';
 
-export interface StrokeOptions {
-  all_voices: boolean;
-}
-
-export interface StrokeRenderOptions {
-  font_scale: number;
-  stroke_px: number;
-  stroke_spacing: number;
-}
-
 export class Stroke extends Modifier {
   protected options: {
     all_voices: boolean;
@@ -32,7 +22,11 @@ export class Stroke extends Modifier {
   protected type: number;
 
   protected note_end?: Note;
-  protected render_options: StrokeRenderOptions;
+  protected render_options: {
+    font_scale: number;
+    stroke_px: number;
+    stroke_spacing: number;
+  };
   protected font: FontInfo;
 
   static get CATEGORY(): string {
