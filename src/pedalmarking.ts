@@ -9,23 +9,10 @@
 // custom text for the release/depress pedal markings.
 
 import { Vex } from './vex';
-import { Element, ElementStyle } from './element';
+import { Element } from './element';
 import { Glyph } from './glyph';
 import { FontInfo, RenderContext } from './types/common';
 import { StaveNote } from './stavenote';
-
-export interface PedalMarkingRenderOptions {
-  color: string;
-  bracket_height: number;
-  text_margin_right: number;
-  bracket_line_width: number;
-}
-
-export interface PedalMarkingGlyph {
-  code: string;
-  y_shift: number;
-  x_shift: number;
-}
 
 // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
 function L(
@@ -50,12 +37,17 @@ export class PedalMarking extends Element {
   protected type: number;
   protected custom_depress_text: string;
   protected custom_release_text: string;
-  protected render_options: PedalMarkingRenderOptions;
+  protected render_options: {
+    color: string;
+    bracket_height: number;
+    text_margin_right: number;
+    bracket_line_width: number;
+  };
   protected font: FontInfo;
   protected notes: StaveNote[];
 
   // Glyph data
-  static readonly GLYPHS: Record<string, PedalMarkingGlyph> = {
+  static readonly GLYPHS: Record<string, { code: string; y_shift: number; x_shift: number }> = {
     pedal_depress: {
       code: 'keyboardPedalPed',
       x_shift: -10,
