@@ -242,7 +242,7 @@ interface BuilderOptions {
 export class Builder {
   factory: Factory;
   elements!: BuilderElements;
-  options!: BuilderOptions; // TODO: Should BuilderOptions be the same type as EasyScoreDefaults?
+  options!: BuilderOptions;
   commitHooks: CommitHook[] = [];
   piece!: Piece;
   rollingDuration!: string;
@@ -338,11 +338,15 @@ export class Builder {
 
     const options = { ...this.options, ...this.piece.options };
 
-    // Use the ! operator in the next two lines because reset(...) guarantees that stem and clef are defined.
-    // eslint-disable-next-line
-    const stem: string = options.stem!.toLowerCase(); // e.g., auto | up | down
-    // eslint-disable-next-line
-    const clef: string = options.clef!; // e.g., treble | bass
+    // reset() sets this.options.stem & this.options.clef but we check to make sure nothing has changed.
+    if (options.stem === undefined) {
+      throw new Vex.RERR('options.stem is not defined');
+    }
+    if (options.clef === undefined) {
+      throw new Vex.RERR('options.clef is not defined');
+    }
+    const stem: string = options.stem.toLowerCase(); // e.g., auto | up | down
+    const clef: string = options.clef; // e.g., treble | bass
 
     const autoStem = stem === 'auto';
     const stemDirection = !autoStem && stem === 'up' ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
@@ -396,7 +400,7 @@ export interface EasyScoreOptions {
   throwOnError?: boolean;
 }
 
-interface EasyScoreDefaults {
+export interface EasyScoreDefaults {
   clef: string;
   time: string;
   stem: string;
