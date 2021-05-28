@@ -1,6 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Vex } from './vex';
 import { BoundingBox } from './boundingbox';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
@@ -58,6 +57,7 @@ export class GlyphNote extends Note {
     this.setPreFormatted(true);
     return this;
   }
+
   drawModifiers(): void {
     const ctx = this.checkContext();
     ctx.openGroup('modifiers');
