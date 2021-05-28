@@ -9,20 +9,36 @@ import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { Renderer } from './renderer';
 import { StaveNote } from './stavenote';
+import { FontInfo } from './types/common';
+import { Note } from './note';
+import { ModifierContextState } from './modifiercontext';
+import { StemmableNote } from './stemmablenote';
 
 export class StringNumber extends Modifier {
-  static get CATEGORY() {
+  protected note?: Note;
+
+  protected radius: number;
+
+  protected last_note?: Note;
+  protected string_number: string;
+  protected x_offset: number;
+  protected y_offset: number;
+  protected dashed: boolean;
+  protected leg: number;
+  protected font: FontInfo;
+
+  static get CATEGORY(): string {
     return 'stringnumber';
   }
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
-  static format(nums, state) {
+  static format(nums: StringNumber[], state: ModifierContextState): boolean {
     const left_shift = state.left_shift;
     const right_shift = state.right_shift;
     const num_spacing = 1;
 
-    if (!nums || nums.length === 0) return this;
+    if (!nums || nums.length === 0) return false;
 
     const nums_list = [];
     let prev_note = null;
@@ -41,6 +57,11 @@ export class StringNumber extends Modifier {
         num = nums[i];
         note = num.getNote();
         pos = num.getPosition();
+
+        if (!(note instanceof StaveNote)) {
+          throw new Vex.RERR('NoStaveNote');
+        }
+
         const props = note.getKeyProps()[num.getIndex()];
 
         if (note !== prev_note) {
@@ -110,13 +131,10 @@ export class StringNumber extends Modifier {
     return true;
   }
 
-  constructor(number) {
+  constructor(number: string) {
     super();
     this.setAttribute('type', 'StringNumber');
 
-    this.note = null;
-    this.last_note = null;
-    this.index = null;
     this.string_number = number;
     this.setWidth(20); // ???
     this.position = Modifier.Position.ABOVE; // Default position above stem or note head
@@ -133,60 +151,51 @@ export class StringNumber extends Modifier {
       weight: 'bold',
     };
   }
-  getCategory() {
+
+  getCategory(): string {
     return StringNumber.CATEGORY;
   }
-  getNote() {
-    return this.note;
-  }
-  setNote(note) {
-    this.note = note;
-    return this;
-  }
-  getIndex() {
-    return this.index;
-  }
-  setIndex(index) {
-    this.index = index;
-    return this;
-  }
 
-  setLineEndType(leg) {
+  setLineEndType(leg: number): this {
     if (leg >= Renderer.LineEndType.NONE && leg <= Renderer.LineEndType.DOWN) {
       this.leg = leg;
     }
     return this;
   }
 
-  setStringNumber(number) {
+  setStringNumber(number: string): this {
     this.string_number = number;
     return this;
   }
-  setOffsetX(x) {
+
+  setOffsetX(x: number): this {
     this.x_offset = x;
     return this;
   }
-  setOffsetY(y) {
+
+  setOffsetY(y: number): this {
     this.y_offset = y;
     return this;
   }
-  setLastNote(note) {
+
+  setLastNote(note: Note): this {
     this.last_note = note;
     return this;
   }
-  setDashed(dashed) {
+
+  setDashed(dashed: boolean): this {
     this.dashed = dashed;
     return this;
   }
 
-  draw() {
+  draw(): void {
     const ctx = this.checkContext();
     if (!(this.note && this.index != null)) {
       throw new Vex.RERR('NoAttachedNote', "Can't draw string number without a note and index.");
     }
     this.setRendered();
 
-    const line_space = this.note.stave.options.spacing_between_lines_px;
+    const line_space = this.note.checkStave().getOptions().spacing_between_lines_px;
 
     const start = this.note.getModifierStartXY(this.position, this.index);
     let dot_x = start.x + this.x_shift + this.x_offset;
@@ -199,7 +208,7 @@ export class StringNumber extends Modifier {
         let top = stem_ext.topY;
         let bottom = stem_ext.baseY + 2;
 
-        if (this.note.stem_direction === StaveNote.STEM_DOWN) {
+        if (this.note.getStemDirection() === StaveNote.STEM_DOWN) {
           top = stem_ext.baseY;
           bottom = stem_ext.topY - 2;
         }
@@ -227,17 +236,17 @@ export class StringNumber extends Modifier {
     ctx.save();
     ctx.beginPath();
     ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
-    ctx.lineWidth = 1.5;
+    ctx.setLineWidth(1.5);
     ctx.stroke();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);
 
-    if (this.last_note != null) {
+    if (this.last_note instanceof StemmableNote) {
       const end = this.last_note.getStemX() - this.note.getX() + 5;
-      ctx.strokeStyle = '#000000';
-      ctx.lineCap = 'round';
-      ctx.lineWidth = 0.6;
+      ctx.setStrokeStyle('#000000');
+      ctx.setLineCap('round');
+      ctx.setLineWidth(0.6);
       if (this.dashed) {
         Renderer.drawDashedLine(ctx, dot_x + 10, dot_y, dot_x + end, dot_y, [3, 3]);
       } else {
