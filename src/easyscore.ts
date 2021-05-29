@@ -499,6 +499,6 @@ export class EasyScore {
   }
 
   addCommitHook(commitHook: CommitHook): void {
-    this.builder.addCommitHook(commitHook); // Removed the "return" keyword because the called method has no return statement.
+    this.builder.addCommitHook(commitHook);
   }
 }
