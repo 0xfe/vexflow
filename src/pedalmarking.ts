@@ -11,84 +11,106 @@
 import { Vex } from './vex';
 import { Element } from './element';
 import { Glyph } from './glyph';
+import { FontInfo, RenderContext } from './types/common';
+import { StaveNote } from './stavenote';
 
 // To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any[]) {
   if (PedalMarking.DEBUG) Vex.L('Vex.Flow.PedalMarking', args);
 }
 
 // Draws a pedal glyph with the provided `name` on a rendering `context`
 // at the coordinates `x` and `y. Takes into account the glyph data
 // coordinate shifts.
-function drawPedalGlyph(name, context, x, y, point) {
+function drawPedalGlyph(name: string, context: RenderContext, x: number, y: number, point: number) {
   const glyph_data = PedalMarking.GLYPHS[name];
   const glyph = new Glyph(glyph_data.code, point, { category: 'pedalMarking' });
   glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
 }
 
 export class PedalMarking extends Element {
+  static DEBUG: boolean;
+
+  protected line: number;
+  protected type: number;
+  protected custom_depress_text: string;
+  protected custom_release_text: string;
+  protected render_options: {
+    color: string;
+    bracket_height: number;
+    text_margin_right: number;
+    bracket_line_width: number;
+  };
+  protected font: FontInfo;
+  protected notes: StaveNote[];
+
   // Glyph data
-  static get GLYPHS() {
-    return {
-      pedal_depress: {
-        code: 'keyboardPedalPed',
-        x_shift: -10,
-        y_shift: 0,
-      },
-      pedal_release: {
-        code: 'keyboardPedalUp',
-        x_shift: -2,
-        y_shift: 3,
-      },
-    };
-  }
+  static readonly GLYPHS: Record<string, { code: string; y_shift: number; x_shift: number }> = {
+    pedal_depress: {
+      code: 'keyboardPedalPed',
+      x_shift: -10,
+      y_shift: 0,
+    },
+    pedal_release: {
+      code: 'keyboardPedalUp',
+      x_shift: -2,
+      y_shift: 3,
+    },
+  };
 
-  static get Styles() {
-    return {
-      TEXT: 1,
-      BRACKET: 2,
-      MIXED: 3,
-    };
-  }
+  static readonly type = {
+    TEXT: 1,
+    BRACKET: 2,
+    MIXED: 3,
+  };
 
-  static get StylesString() {
-    return {
-      text: PedalMarking.Styles.TEXT,
-      bracket: PedalMarking.Styles.BRACKET,
-      mixed: PedalMarking.Styles.MIXED,
-    };
+  static readonly typeString: Record<string, number> = {
+    text: PedalMarking.type.TEXT,
+    bracket: PedalMarking.type.BRACKET,
+    mixed: PedalMarking.type.MIXED,
+  };
+
+  setType(type: string | number): this {
+    type = typeof type === 'string' ? PedalMarking.typeString[type] : type;
+
+    if (type >= PedalMarking.type.TEXT && type <= PedalMarking.type.MIXED) {
+      this.type = type;
+    }
+    return this;
   }
 
   // Create a sustain pedal marking. Returns the defaults PedalMarking.
   // Which uses the traditional "Ped" and "*"" markings.
-  static createSustain(notes) {
+  static createSustain(notes: StaveNote[]): PedalMarking {
     const pedal = new PedalMarking(notes);
     return pedal;
   }
 
   // Create a sostenuto pedal marking
-  static createSostenuto(notes) {
+  static createSostenuto(notes: StaveNote[]): PedalMarking {
     const pedal = new PedalMarking(notes);
-    pedal.setStyle(PedalMarking.Styles.MIXED);
+    pedal.setType(PedalMarking.type.MIXED);
     pedal.setCustomText('Sost. Ped.');
     return pedal;
   }
 
   // Create an una corda pedal marking
-  static createUnaCorda(notes) {
+  static createUnaCorda(notes: StaveNote[]): PedalMarking {
     const pedal = new PedalMarking(notes);
-    pedal.setStyle(PedalMarking.Styles.TEXT);
+    pedal.setType(PedalMarking.type.TEXT);
     pedal.setCustomText('una corda', 'tre corda');
     return pedal;
   }
 
   // ## Prototype Methods
-  constructor(notes) {
+  constructor(notes: StaveNote[]) {
     super();
     this.setAttribute('type', 'PedalMarking');
 
     this.notes = notes;
-    this.style = PedalMarking.TEXT;
+    this.type = PedalMarking.type.TEXT;
     this.line = 0;
 
     // Custom text for the release/depress markings
@@ -111,35 +133,24 @@ export class PedalMarking extends Element {
 
   // Set custom text for the `depress`/`release` pedal markings. No text is
   // set if the parameter is falsy.
-  setCustomText(depress, release) {
+  setCustomText(depress: string, release?: string): this {
     this.custom_depress_text = depress || '';
     this.custom_release_text = release || '';
     return this;
   }
 
-  // Set the pedal marking style
-  setStyle(style) {
-    if (style < 1 && style > 3) {
-      throw new Vex.RERR('InvalidParameter', 'The style must be one found in PedalMarking.Styles');
-    }
-
-    this.style = style;
-    return this;
-  }
-
   // Set the staff line to render the markings on
-  setLine(line) {
+  setLine(line: number): this {
     this.line = line;
     return this;
   }
 
   // Draw the bracket based pedal markings
-  drawBracketed() {
-    const ctx = this.context;
+  drawBracketed(): void {
+    const ctx = this.checkContext();
     let is_pedal_depressed = false;
-    let prev_x;
-    let prev_y;
-    const pedal = this;
+    let prev_x: number;
+    let prev_y: number;
 
     // Iterate through each note
     this.notes.forEach((note, index, notes) => {
@@ -148,7 +159,7 @@ export class PedalMarking extends Element {
 
       // Get the initial coordinates for the note
       const x = note.getAbsoluteX();
-      const y = note.getStave().getYForBottomText(pedal.line + 3);
+      const y = note.checkStave().getYForBottomText(this.line + 3);
 
       // Throw if current note is positioned before the previous note
       if (x < prev_x) {
@@ -168,22 +179,22 @@ export class PedalMarking extends Element {
         // Adjustment for release+depress
         x_shift = prev_is_same ? 5 : 0;
 
-        if (pedal.style === PedalMarking.Styles.MIXED && !prev_is_same) {
+        if (this.type === PedalMarking.type.MIXED && !prev_is_same) {
           // For MIXED style, start with text instead of bracket
-          if (pedal.custom_depress_text) {
+          if (this.custom_depress_text) {
             // If we have custom text, use instead of the default "Ped" glyph
-            const text_width = ctx.measureText(pedal.custom_depress_text).width;
-            ctx.fillText(pedal.custom_depress_text, x - text_width / 2, y);
-            x_shift = text_width / 2 + pedal.render_options.text_margin_right;
+            const text_width = ctx.measureText(this.custom_depress_text).width;
+            ctx.fillText(this.custom_depress_text, x - text_width / 2, y);
+            x_shift = text_width / 2 + this.render_options.text_margin_right;
           } else {
             // Render the Ped glyph in position
             drawPedalGlyph('pedal_depress', ctx, x, y, point);
-            x_shift = 20 + pedal.render_options.text_margin_right;
+            x_shift = 20 + this.render_options.text_margin_right;
           }
         } else {
           // Draw start bracket
           ctx.beginPath();
-          ctx.moveTo(x, y - pedal.render_options.bracket_height);
+          ctx.moveTo(x, y - this.render_options.bracket_height);
           ctx.lineTo(x + x_shift, y);
           ctx.stroke();
           ctx.closePath();
@@ -196,7 +207,7 @@ export class PedalMarking extends Element {
         ctx.beginPath();
         ctx.moveTo(prev_x, prev_y);
         ctx.lineTo(x + x_shift, y);
-        ctx.lineTo(x, y - pedal.render_options.bracket_height);
+        ctx.lineTo(x, y - this.render_options.bracket_height);
         ctx.stroke();
         ctx.closePath();
       }
@@ -209,32 +220,31 @@ export class PedalMarking extends Element {
 
   // Draw the text based pedal markings. This defaults to the traditional
   // "Ped" and "*"" symbols if no custom text has been provided.
-  drawText() {
-    const ctx = this.context;
+  drawText(): void {
+    const ctx = this.checkContext();
     let is_pedal_depressed = false;
-    const pedal = this;
 
     // Iterate through each note, placing glyphs or custom text accordingly
     this.notes.forEach((note) => {
       is_pedal_depressed = !is_pedal_depressed;
-      const stave = note.getStave();
+      const stave = note.checkStave();
       const x = note.getAbsoluteX();
-      const y = stave.getYForBottomText(pedal.line + 3);
+      const y = stave.getYForBottomText(this.line + 3);
 
       const point = this.musicFont.lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
 
       let text_width = 0;
       if (is_pedal_depressed) {
-        if (pedal.custom_depress_text) {
-          text_width = ctx.measureText(pedal.custom_depress_text).width;
-          ctx.fillText(pedal.custom_depress_text, x - text_width / 2, y);
+        if (this.custom_depress_text) {
+          text_width = ctx.measureText(this.custom_depress_text).width;
+          ctx.fillText(this.custom_depress_text, x - text_width / 2, y);
         } else {
           drawPedalGlyph('pedal_depress', ctx, x, y, point);
         }
       } else {
-        if (pedal.custom_release_text) {
-          text_width = ctx.measureText(pedal.custom_release_text).width;
-          ctx.fillText(pedal.custom_release_text, x - text_width / 2, y);
+        if (this.custom_release_text) {
+          text_width = ctx.measureText(this.custom_release_text).width;
+          ctx.fillText(this.custom_release_text, x - text_width / 2, y);
         } else {
           drawPedalGlyph('pedal_release', ctx, x, y, point);
         }
@@ -243,7 +253,7 @@ export class PedalMarking extends Element {
   }
 
   // Render the pedal marking in position on the rendering context
-  draw() {
+  draw(): void {
     const ctx = this.checkContext();
     this.setRendered();
 
@@ -254,10 +264,10 @@ export class PedalMarking extends Element {
 
     L('Rendering Pedal Marking');
 
-    if (this.style === PedalMarking.Styles.BRACKET || this.style === PedalMarking.Styles.MIXED) {
+    if (this.type === PedalMarking.type.BRACKET || this.type === PedalMarking.type.MIXED) {
       ctx.setLineWidth(this.render_options.bracket_line_width);
       this.drawBracketed();
-    } else if (this.style === PedalMarking.Styles.TEXT) {
+    } else if (this.type === PedalMarking.type.TEXT) {
       this.drawText();
     }
 
