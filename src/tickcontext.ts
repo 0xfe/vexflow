@@ -7,7 +7,12 @@
 import { Vex } from './vex';
 import { Tickable } from './tickable';
 import { Fraction } from './fraction';
-import { Metrics, Note } from './note';
+import { NoteMetrics, Note } from './note';
+
+export interface TickContextMetrics extends NoteMetrics {
+  totalLeftPx: number;
+  totalRightPx: number;
+}
 
 export interface TickContextOptions {
   tickID: number;
@@ -155,7 +160,7 @@ export class TickContext extends Tickable {
   }
 
   /** Gets widths context, note and left/right modifiers for formatting. */
-  getMetrics(): Metrics {
+  getMetrics(): TickContextMetrics {
     const {
       width,
       glyphPx,

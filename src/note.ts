@@ -25,9 +25,7 @@ import { GLYPH_PROPS_VALID_TYPES } from './common';
 import { Fraction } from './fraction';
 import { Beam } from './beam';
 
-export interface Metrics {
-  totalLeftPx?: number;
-  totalRightPx?: number;
+export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
   width: number;
   glyphWidth?: number;
@@ -565,7 +563,7 @@ export abstract class Note extends Tickable {
   }
 
   /** Get the metrics for this note. */
-  getMetrics(): Metrics {
+  getMetrics(): NoteMetrics {
     if (!this.preFormatted) {
       throw new Vex.RERR('UnformattedNote', "Can't call getMetrics on an unformatted note.");
     }
