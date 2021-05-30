@@ -51,7 +51,8 @@ export class Stave extends Element {
   protected options: StaveOptions;
   protected endClef?: string;
   protected width: number;
-  protected height?: number;
+  // Initialised in resetLines called in constructor
+  protected height: number = 0;
   protected y: number;
 
   protected formatted: boolean;
@@ -302,7 +303,7 @@ export class Stave extends Element {
     return this;
   }
 
-  getHeight(): number | undefined {
+  getHeight(): number {
     return this.height;
   }
 

@@ -12,14 +12,6 @@ import { Modifier } from './modifier';
 import { Note } from './note';
 import { RenderContext } from './types/common';
 
-export interface StaveHairpinRenderParams {
-  first_x: number;
-  last_x: number;
-  first_y: number;
-  last_y: number;
-  staff_height: number;
-}
-
 export interface StaveHairpinRenderOptions {
   right_shift_ticks: number;
   left_shift_ticks: number;
@@ -168,7 +160,13 @@ export class StaveHairpin extends Element {
     return this;
   }
 
-  renderHairpin(params: StaveHairpinRenderParams): void {
+  renderHairpin(params: {
+    first_x: number;
+    last_x: number;
+    first_y: number;
+    last_y: number;
+    staff_height: number;
+  }): void {
     const ctx = this.checkContext();
     let dis = this.render_options.y_shift + 20;
     let y_shift = params.first_y;
@@ -217,9 +215,9 @@ export class StaveHairpin extends Element {
     this.renderHairpin({
       first_x: start.x,
       last_x: end.x,
-      first_y: firstNote.checkStave().getY() + (firstNote.checkStave().getHeight() ?? 0),
-      last_y: lastNote.checkStave().getY() + (lastNote.checkStave().getHeight() ?? 0),
-      staff_height: firstNote.checkStave().getHeight() ?? 0,
+      first_y: firstNote.checkStave().getY() + firstNote.checkStave().getHeight(),
+      last_y: lastNote.checkStave().getY() + lastNote.checkStave().getHeight(),
+      staff_height: firstNote.checkStave().getHeight(),
     });
   }
 }
