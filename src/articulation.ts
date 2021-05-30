@@ -23,9 +23,9 @@ import { TabNote } from './tabnote';
 import { GraceNote } from './gracenote';
 
 export interface ArticulationStruct {
-  code: string;
-  aboveCode: string;
-  belowCode: string;
+  code?: string;
+  aboveCode?: string;
+  belowCode?: string;
   between_lines: boolean;
 }
 
@@ -269,7 +269,7 @@ export class Articulation extends Modifier {
 
     const code =
       (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
-    this.glyph = new Glyph(code, this.render_options.font_scale);
+    this.glyph = new Glyph(code ?? '', this.render_options.font_scale);
 
     this.setWidth(check<number>(this.glyph.getMetrics().width));
   }
