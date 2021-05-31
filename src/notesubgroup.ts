@@ -45,7 +45,6 @@ export class NoteSubGroup extends Modifier {
     super();
     this.setAttribute('type', 'NoteSubGroup');
 
-    this.index = -1;
     this.position = Modifier.Position.LEFT;
     this.subNotes = subNotes;
     this.subNotes.forEach((subNote) => {
@@ -94,8 +93,8 @@ export class NoteSubGroup extends Modifier {
     const ctx: RenderContext = this.checkContext();
     const note = this.getNote();
 
-    if (!(note && this.index !== -1)) {
-      throw new Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note and parent note index.");
+    if (!note) {
+      throw new Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note.");
     }
 
     this.setRendered();
