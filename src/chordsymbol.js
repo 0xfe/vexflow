@@ -9,6 +9,7 @@
 // See `tests/chordsymbol_tests.js` for usage examples.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
 import { TextFont } from './textfont';
@@ -669,7 +670,7 @@ export class ChordSymbol extends Modifier {
     this.setRendered();
 
     if (!this.note) {
-      throw new Vex.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
+      throw new RuntimeError('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
     }
 
     // We're changing context parameters. Save current state.

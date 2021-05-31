@@ -8,6 +8,7 @@
 // the following letters:  P, M, F, Z, R, S
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Note } from './note';
 import { Glyph } from './glyph';
 import { TextNoteStruct } from './textnote';
@@ -91,7 +92,7 @@ export class TextDynamics extends Note {
     this.sequence.split('').forEach((letter) => {
       // Get the glyph data for the letter
       const glyph_data = TextDynamics.GLYPHS[letter];
-      if (!glyph_data) throw new Vex.RERR('Invalid dynamics character: ' + letter);
+      if (!glyph_data) throw new RuntimeError('Invalid dynamics character: ' + letter);
 
       const size = check<number>(this.render_options.glyph_font_size);
       const glyph = new Glyph(glyph_data.code, size, { category: 'textNote' });

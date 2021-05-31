@@ -6,6 +6,7 @@
 // that can be arpeggiated, brushed, rasquedo, etc.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
@@ -60,7 +61,7 @@ export class Stroke extends Modifier {
         const { str: string } = note.getPositions()[stroke.getIndex()];
         return { line: string, shift: 0, stroke };
       } else {
-        throw new Vex.RERR('Internal', 'Unexpexted');
+        throw new RuntimeError('Internal', 'Unexpexted');
       }
     });
 
@@ -124,7 +125,7 @@ export class Stroke extends Modifier {
     this.setRendered();
 
     if (!(this.note && this.index != null)) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw stroke without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw stroke without a note and index.");
     }
 
     const start = this.note.getModifierStartXY(this.position, this.index);
@@ -213,7 +214,7 @@ export class Stroke extends Modifier {
         botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
         break;
       default:
-        throw new Vex.RERR('InvalidType', `The stroke type ${this.type} does not exist`);
+        throw new RuntimeError('InvalidType', `The stroke type ${this.type} does not exist`);
     }
 
     let strokeLine = 'straight';

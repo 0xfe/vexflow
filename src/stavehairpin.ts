@@ -6,7 +6,7 @@
 // This class implements hairpins between notes.
 // Hairpins can be either Crescendo or Descrescendo.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Modifier } from './modifier';
 import { Note } from './note';
@@ -62,7 +62,7 @@ export class StaveHairpin extends Element {
     const ppt = formatter.pixelsPerTick;
 
     if (ppt == null) {
-      throw new Vex.RERR('BadArguments', 'A valid Formatter must be provide to draw offsets by ticks.');
+      throw new RuntimeError('BadArguments', 'A valid Formatter must be provide to draw offsets by ticks.');
     }
 
     const l_shift_px = ppt * options.left_shift_ticks;
@@ -151,7 +151,7 @@ export class StaveHairpin extends Element {
    */
   setNotes(notes: Record<string, Note>): this {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
+      throw new RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
     }
 
     // Success. Lets grab 'em notes.
@@ -207,7 +207,7 @@ export class StaveHairpin extends Element {
 
     const firstNote = this.first_note;
     const lastNote = this.last_note;
-    if (!firstNote || !lastNote) throw new Vex.RERR('NoNote', 'Notes required to draw');
+    if (!firstNote || !lastNote) throw new RuntimeError('NoNote', 'Notes required to draw');
 
     const start = firstNote.getModifierStartXY(this.position, 0);
     const end = lastNote.getModifierStartXY(this.position, 0);

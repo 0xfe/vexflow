@@ -8,6 +8,7 @@
 // See `tests/annotation_tests.js` for usage examples.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { TextFont } from './textfont';
@@ -155,7 +156,7 @@ export class Annotation extends Modifier {
     const ctx = this.checkContext();
 
     if (!this.note) {
-      throw new Vex.RERR('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
+      throw new RuntimeError('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
     }
 
     this.setRendered();

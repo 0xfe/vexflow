@@ -3,7 +3,7 @@
 //
 // This class implements tremolo notation.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
@@ -45,7 +45,7 @@ export class Tremolo extends Modifier {
     const ctx = this.checkContext();
 
     if (!(this.note && this.index != null)) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw Tremolo without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw Tremolo without a note and index.");
     }
 
     this.setRendered();

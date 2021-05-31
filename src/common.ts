@@ -1,8 +1,8 @@
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 
 export function check<T>(x?: T): T {
   if (x === undefined) {
-    throw new Vex.RERR('undefined');
+    throw new RuntimeError('undefined');
   }
   return x;
 }

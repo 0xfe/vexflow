@@ -2,6 +2,7 @@
 // Author Taehoon Moon 2014
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { StaveModifier } from './stavemodifier';
 import { TextNote } from './textnote';
 import { FontInfo } from './types/common';
@@ -120,7 +121,7 @@ export class StaveText extends StaveModifier {
         }
         break;
       default:
-        throw new Vex.RERR('InvalidPosition', 'Value Must be in Modifier.Position.');
+        throw new RuntimeError('InvalidPosition', 'Value Must be in Modifier.Position.');
     }
 
     ctx.fillText('' + this.text, x, y + 4);

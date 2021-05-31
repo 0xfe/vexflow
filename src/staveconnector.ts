@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
@@ -9,7 +10,7 @@ import { Stave } from './stave';
 
 function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY: number, botY: number) {
   if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT && type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
-    throw new Vex.RERR('InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.');
+    throw new RuntimeError('InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.');
   }
 
   let x_shift = 3;
@@ -122,7 +123,7 @@ export class StaveConnector extends Element {
 
   setXShift(x_shift: number): this {
     if (typeof x_shift !== 'number') {
-      throw new Vex.RERR('InvalidType', 'x_shift must be a Number');
+      throw new RuntimeError('InvalidType', 'x_shift must be a Number');
     }
 
     this.x_shift = x_shift;
@@ -219,7 +220,7 @@ export class StaveConnector extends Element {
       case StaveConnector.type.NONE:
         break;
       default:
-        throw new Vex.RERR('InvalidType', `The provided StaveConnector.type (${this.type}) is invalid`);
+        throw new RuntimeError('InvalidType', `The provided StaveConnector.type (${this.type}) is invalid`);
     }
 
     if (

@@ -5,6 +5,7 @@
 // by its parent `StemmableNote`.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
@@ -149,7 +150,7 @@ export class Stem extends Element {
   }
 
   getBoundingBox(): BoundingBox {
-    throw new Vex.RERR('NotImplemented', 'getBoundingBox() not implemented.');
+    throw new RuntimeError('NotImplemented', 'getBoundingBox() not implemented.');
   }
 
   // Get the y coordinates for the very base of the stem to the top of

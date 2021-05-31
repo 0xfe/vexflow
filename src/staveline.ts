@@ -7,7 +7,7 @@
 // A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
 import { FontInfo, RenderContext } from './types/common';
@@ -243,14 +243,14 @@ export class StaveLine extends Element {
   // Set the notes for the `StaveLine`
   setNotes(notes: StaveLineNotes): this {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RERR('BadArguments', 'Notes needs to have either first_note or last_note set.');
+      throw new RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
     }
 
     if (!notes.first_indices) notes.first_indices = [0];
     if (!notes.last_indices) notes.last_indices = [0];
 
     if (notes.first_indices.length !== notes.last_indices.length) {
-      throw new Vex.RERR('BadArguments', 'Connected notes must have similar index sizes');
+      throw new RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
     }
 
     // Success. Lets grab 'em notes.

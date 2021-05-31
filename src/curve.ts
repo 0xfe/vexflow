@@ -3,7 +3,7 @@
 //
 // This class implements curves (for slurs)
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Note } from './note';
 
@@ -68,7 +68,7 @@ export class Curve extends Element {
 
   setNotes(from: Note, to: Note): this {
     if (!from && !to) {
-      throw new Vex.RERR('BadArguments', 'Curve needs to have either first_note or last_note set.');
+      throw new RuntimeError('BadArguments', 'Curve needs to have either first_note or last_note set.');
     }
 
     this.from = from;

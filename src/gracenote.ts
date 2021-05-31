@@ -1,6 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { StaveNote, StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { Flow } from './tables';
@@ -153,7 +153,7 @@ export class GraceNote extends StaveNote {
     protrusions: { beam: number; stem: number }
   ): Record<string, number> {
     const beam = this.beam;
-    if (!beam) throw new Vex.RERR('NoBeam', "Can't calculate without a beam.");
+    if (!beam) throw new RuntimeError('NoBeam', "Can't calculate without a beam.");
 
     const beam_slope = beam.slope;
     const isBeamEndNote = beam.notes[beam.notes.length - 1] === this;

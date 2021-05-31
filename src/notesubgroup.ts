@@ -7,7 +7,7 @@
 // render notes as a `Modifier`
 // ex) ClefNote, TimeSigNote and BarNote.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
@@ -94,7 +94,7 @@ export class NoteSubGroup extends Modifier {
     const note = this.getNote();
 
     if (!note) {
-      throw new Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw notes without a parent note.");
     }
 
     this.setRendered();

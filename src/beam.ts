@@ -4,7 +4,7 @@
 //
 // This file implements `Beams` that span over a set of `StemmableNotes`.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Element } from './element';
 import { Fraction } from './fraction';
@@ -185,7 +185,7 @@ export class Beam extends Element {
     // Convert beam groups to tick amounts
     const tickGroups = config.groups.map((group) => {
       if (!group.multiply) {
-        throw new Vex.RERR('InvalidBeamGroups', 'The beam groups must be an array of Vex.Flow.Fractions');
+        throw new RuntimeError('InvalidBeamGroups', 'The beam groups must be an array of Vex.Flow.Fractions');
       }
       return group.clone().multiply(Flow.RESOLUTION, 1);
     });
@@ -435,18 +435,18 @@ export class Beam extends Element {
     this.setAttribute('type', 'Beam');
 
     if (!notes || notes === []) {
-      throw new Vex.RERR('BadArguments', 'No notes provided for beam.');
+      throw new RuntimeError('BadArguments', 'No notes provided for beam.');
     }
 
     if (notes.length === 1) {
-      throw new Vex.RERR('BadArguments', 'Too few notes for beam.');
+      throw new RuntimeError('BadArguments', 'Too few notes for beam.');
     }
 
     // Validate beam line, direction and ticks.
     this.ticks = notes[0].getIntrinsicTicks();
 
     if (this.ticks >= Flow.durationToTicks('4')) {
-      throw new Vex.RERR('BadArguments', 'Beams can only be applied to notes shorter than a quarter note.');
+      throw new RuntimeError('BadArguments', 'Beams can only be applied to notes shorter than a quarter note.');
     }
 
     let i; // shared iterator
@@ -697,7 +697,7 @@ export class Beam extends Element {
           stem.setVisibility(true).setStemlet(true, totalBeamWidth + stemlet_extension);
         }
       } else {
-        throw new Vex.RERR('NoStem', 'stem undefined.');
+        throw new RuntimeError('NoStem', 'stem undefined.');
       }
     }
   }
@@ -878,7 +878,7 @@ export class Beam extends Element {
           ctx.closePath();
           ctx.fill();
         } else {
-          throw new Vex.RERR('NoLastBeamX', 'lastBeamX undefined.');
+          throw new RuntimeError('NoLastBeamX', 'lastBeamX undefined.');
         }
       }
 

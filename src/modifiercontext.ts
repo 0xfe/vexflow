@@ -6,6 +6,7 @@
 // fingering positions etc.)
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { StaveNote } from './stavenote';
 import { Dot } from './dot';
 import { FretHandFinger } from './frethandfinger';
@@ -142,7 +143,7 @@ export class ModifierContext {
 
   getMetrics(): ModifierContextMetrics {
     if (!this.formatted) {
-      throw new Vex.RERR('UnformattedMember', 'Unformatted member has no metrics.');
+      throw new RuntimeError('UnformattedMember', 'Unformatted member has no metrics.');
     }
 
     return {

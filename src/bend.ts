@@ -5,6 +5,7 @@
 // This file implements tablature bends.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -183,7 +184,7 @@ export class Bend extends Modifier {
   draw(): void {
     const ctx = this.checkContext();
     if (!(this.note && this.index != null)) {
-      throw new Vex.RERR('NoNoteForBend', "Can't draw bend without a note or index.");
+      throw new RuntimeError('NoNoteForBend', "Can't draw bend without a note or index.");
     }
 
     this.setRendered();
@@ -288,7 +289,7 @@ export class Bend extends Modifier {
     }
 
     if (!last_bend || last_bend.x == undefined) {
-      throw new Vex.RERR('NoLastBendForBend', 'Internal error.');
+      throw new RuntimeError('NoLastBendForBend', 'Internal error.');
     }
 
     // Final arrowhead and text
