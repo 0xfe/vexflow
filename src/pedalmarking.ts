@@ -9,6 +9,7 @@
 // custom text for the release/depress pedal markings.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { FontInfo, RenderContext } from './types/common';
@@ -163,7 +164,7 @@ export class PedalMarking extends Element {
 
       // Throw if current note is positioned before the previous note
       if (x < prev_x) {
-        throw new Vex.RERR('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
+        throw new RuntimeError('InvalidConfiguration', 'The notes provided must be in order of ascending x positions');
       }
 
       // Determine if the previous or next note are the same

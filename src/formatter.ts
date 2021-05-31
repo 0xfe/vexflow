@@ -18,6 +18,7 @@
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -407,7 +408,7 @@ export class Formatter {
   // align non-beamed notes.
   alignRests(voices: Voice[], alignAllNotes: boolean): void {
     if (!voices || !voices.length) {
-      throw new Vex.RERR('BadArgument', 'No voices to format rests');
+      throw new RuntimeError('BadArgument', 'No voices to format rests');
     }
 
     voices.forEach((voice) => Formatter.AlignRestsToNotes(voice.getTickables(), alignAllNotes));
@@ -421,7 +422,7 @@ export class Formatter {
     // Create tick contexts if not already created.
     if (!this.tickContexts) {
       if (!voices) {
-        throw new Vex.RERR('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
+        throw new RuntimeError('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
       }
 
       this.createTickContexts(voices);
@@ -449,7 +450,7 @@ export class Formatter {
   // `preCalculateMinTotalWidth` must be called before this method.
   getMinTotalWidth(): number {
     if (!this.hasMinTotalWidth) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'NoMinTotalWidth',
         "Call 'preCalculateMinTotalWidth' or 'preFormat' before calling 'getMinTotalWidth'"
       );
@@ -461,16 +462,16 @@ export class Formatter {
   // calculates the resolution multiplier for `voices`.
   static getResolutionMultiplier(voices: Voice[]): number {
     if (!voices || !voices.length) {
-      throw new Vex.RERR('BadArgument', 'No voices to format');
+      throw new RuntimeError('BadArgument', 'No voices to format');
     }
     const totalTicks = voices[0].getTotalTicks();
     const resolutionMultiplier = voices.reduce((accumulator, voice) => {
       if (!voice.getTotalTicks().equals(totalTicks)) {
-        throw new Vex.RERR('TickMismatch', 'Voices should have same total note duration in ticks.');
+        throw new RuntimeError('TickMismatch', 'Voices should have same total note duration in ticks.');
       }
 
       if (voice.getMode() === Voice.Mode.STRICT && !voice.isComplete()) {
-        throw new Vex.RERR('IncompleteVoice', 'Voice does not have enough notes.');
+        throw new RuntimeError('IncompleteVoice', 'Voice does not have enough notes.');
       }
 
       return Math.max(accumulator, Fraction.LCM(accumulator, voice.getResolutionMultiplier()));
@@ -510,7 +511,7 @@ export class Formatter {
     // Initialize context maps.
     const contexts = this.tickContexts;
     if (!contexts) {
-      throw new Vex.RERR('NoTickContexts', 'preFormat requires TickContexs');
+      throw new RuntimeError('NoTickContexts', 'preFormat requires TickContexs');
     }
 
     const { list: contextList, map: contextMap } = contexts;

@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Note } from './note';
 import { TimeSignature, TimeSignatureInfo } from './timesignature';
 
@@ -32,7 +32,7 @@ export class TimeSigNote extends Note {
 
   draw(): void {
     const stave = this.checkStave();
-    if (!this.timeSig) throw new Vex.RERR('NoTimeSignatureInfo', 'No TimeSignatureInfo attached to this note.');
+    if (!this.timeSig) throw new RuntimeError('NoTimeSignatureInfo', 'No TimeSignatureInfo attached to this note.');
     const ctx = this.checkContext();
     this.setRendered();
 

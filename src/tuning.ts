@@ -3,7 +3,7 @@
 // ## Description
 // This class implements varies types of tunings for tablature.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 
 /** Tuning implements varies types of tunings for tablature. */
@@ -53,7 +53,7 @@ export class Tuning {
 
     const keys = noteString.split(/\s*,\s*/);
     if (keys.length === 0) {
-      throw new Vex.RERR('BadArguments', `Invalid tuning string: ${noteString}`);
+      throw new RuntimeError('BadArguments', `Invalid tuning string: ${noteString}`);
     }
 
     this.numStrings = keys.length;
@@ -66,7 +66,7 @@ export class Tuning {
   getValueForString(stringNum: string | number): number {
     const s = Number(stringNum);
     if (s < 1 || s > this.numStrings) {
-      throw new Vex.RERR('BadArguments', `String number must be between 1 and ${this.numStrings}:${stringNum}`);
+      throw new RuntimeError('BadArguments', `String number must be between 1 and ${this.numStrings}:${stringNum}`);
     }
 
     return this.tuningValues[s - 1];
@@ -78,7 +78,7 @@ export class Tuning {
     const f = Number(fretNum);
 
     if (f < 0) {
-      throw new Vex.RERR('BadArguments', `Fret number must be 0 or higher: ${fretNum}`);
+      throw new RuntimeError('BadArguments', `Fret number must be 0 or higher: ${fretNum}`);
     }
 
     return stringValue + f;

@@ -8,6 +8,7 @@
 // See `tests/notehead_tests.js` for usage examples.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
@@ -137,7 +138,7 @@ export class NoteHead extends Note {
     // regular notes, rests, or other custom codes.
     this.glyph = Flow.getGlyphProps(this.duration, this.note_type);
     if (!this.glyph) {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments',
         `No glyph found for duration '${this.duration}' and type '${this.note_type}'`
       );
@@ -231,7 +232,7 @@ export class NoteHead extends Note {
   // Get the `BoundingBox` for the `NoteHead`
   getBoundingBox(): BoundingBox {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
+      throw new RuntimeError('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
     }
     const spacing = this.checkStave().getSpacingBetweenLines();
     const half_spacing = spacing / 2;

@@ -5,7 +5,7 @@
 // meant for objects that sit above/below the staff and inline with each other.
 // Examples of this would be such as dynamics, lyrics, chord changes, etc.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Note, NoteStruct } from './note';
 import { Glyph } from './glyph';
 import { FontInfo } from './types/common';
@@ -124,7 +124,7 @@ export class TextNote extends Note {
     // measure the length of text is with `canvasmeasureText()`
     if (options.glyph) {
       const struct = TextNote.GLYPHS[options.glyph];
-      if (!struct) throw new Vex.RERR('Invalid glyph type: ' + options.glyph);
+      if (!struct) throw new RuntimeError('Invalid glyph type: ' + options.glyph);
 
       this.glyph = new Glyph(struct.code, 40, { category: 'textNote' });
       this.setWidth(this.glyph.getMetrics().width);
@@ -151,7 +151,7 @@ export class TextNote extends Note {
   // Pre-render formatting
   preFormat(): void {
     const ctx = this.checkContext();
-    if (!this.tickContext) throw new Vex.RERR('NoTickContext', "Can't preformat without a TickContext.");
+    if (!this.tickContext) throw new RuntimeError('NoTickContext', "Can't preformat without a TickContext.");
 
     if (this.preFormatted) return;
 
@@ -181,7 +181,7 @@ export class TextNote extends Note {
   draw(): void {
     const ctx = this.checkContext();
     const stave = this.checkStave();
-    if (!this.tickContext) throw new Vex.RERR('NoTickContext', "Can't draw without a TickContext.");
+    if (!this.tickContext) throw new RuntimeError('NoTickContext', "Can't draw without a TickContext.");
 
     this.setRendered();
 

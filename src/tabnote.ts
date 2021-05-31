@@ -8,6 +8,7 @@
 // See `tests/tabnote_tests.js` for usage examples
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Stem } from './stem';
@@ -155,7 +156,7 @@ export class TabNote extends StemmableNote {
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
 
     if (!this.glyph) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'BadArguments',
         `Invalid note initialization data (No glyph found): ${JSON.stringify(tab_struct)}`
       );
@@ -296,11 +297,11 @@ export class TabNote extends StemmableNote {
   // `position` at a fret position `index`
   getModifierStartXY(position: number, index: number): { x: number; y: number } {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+      throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
 
     if (this.ys.length === 0) {
-      throw new Vex.RERR('NoYValues', 'No Y-Values calculated for this note.');
+      throw new RuntimeError('NoYValues', 'No Y-Values calculated for this note.');
     }
 
     let x = 0;
@@ -457,7 +458,7 @@ export class TabNote extends StemmableNote {
     const ctx = this.checkContext();
 
     if (this.ys.length === 0) {
-      throw new Vex.RERR('NoYValues', "Can't draw note without Y values.");
+      throw new RuntimeError('NoYValues', "Can't draw note without Y values.");
     }
 
     this.setRendered();

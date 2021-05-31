@@ -6,7 +6,7 @@
 // This file implements a generic base class for VexFlow, with implementations
 // of general functions and properties that can be inherited by all VexFlow elements.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Registry } from './registry';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
@@ -225,7 +225,7 @@ export abstract class Element {
   /** Validates and returns the context. */
   checkContext(): RenderContext {
     if (!this.context) {
-      throw new Vex.RERR('NoContext', 'No rendering context attached to instance');
+      throw new RuntimeError('NoContext', 'No rendering context attached to instance');
     }
     return this.context;
   }
