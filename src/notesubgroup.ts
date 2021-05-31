@@ -12,14 +12,17 @@ import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
 import { Voice } from './voice';
+import { ModifierContextState } from './modifiercontext';
+import { Note } from './note';
+import { RenderContext } from './types/common';
 
 export class NoteSubGroup extends Modifier {
-  static get CATEGORY() {
+  static get CATEGORY(): string {
     return 'notesubgroup';
   }
 
   // Arrange groups inside a `ModifierContext`
-  static format(groups, state) {
+  static format(groups: NoteSubGroup[], state: ModifierContextState): boolean {
     if (!groups || groups.length === 0) return false;
 
     let width = 0;
@@ -33,16 +36,19 @@ export class NoteSubGroup extends Modifier {
     return true;
   }
 
-  constructor(subNotes) {
+  protected subNotes: Note[];
+  protected preFormatted: boolean;
+  protected formatter: Formatter;
+  protected voice: Voice;
+
+  constructor(subNotes: Note[]) {
     super();
     this.setAttribute('type', 'NoteSubGroup');
 
-    this.note = null;
-    this.index = null;
     this.position = Modifier.Position.LEFT;
     this.subNotes = subNotes;
     this.subNotes.forEach((subNote) => {
-      subNote.ignore_ticks = false;
+      subNote.setIgnoreTicks(false);
     });
     this.width = 0;
     this.preFormatted = false;
@@ -55,15 +61,13 @@ export class NoteSubGroup extends Modifier {
     }).setStrict(false);
 
     this.voice.addTickables(this.subNotes);
-
-    return this;
   }
 
-  getCategory() {
+  getCategory(): string {
     return NoteSubGroup.CATEGORY;
   }
 
-  preFormat() {
+  preFormat(): void {
     if (this.preFormatted) return;
 
     this.formatter.joinVoices([this.voice]).format([this.voice], 0);
@@ -71,29 +75,30 @@ export class NoteSubGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  setNote(note) {
+  setNote(note: Note): this {
     this.note = note;
+    return this;
   }
-  setWidth(width) {
+
+  setWidth(width: number): this {
     this.width = width;
+    return this;
   }
-  getWidth() {
+
+  getWidth(): number {
     return this.width;
   }
 
-  draw() {
-    this.checkContext();
-
+  draw(): void {
+    const ctx: RenderContext = this.checkContext();
     const note = this.getNote();
 
-    if (!(note && this.index !== null)) {
-      throw new Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note and parent note index.");
+    if (!note) {
+      throw new Vex.RuntimeError('NoAttachedNote', "Can't draw notes without a parent note.");
     }
 
     this.setRendered();
     this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
-
-    // Draw notes
-    this.subNotes.forEach((subNote) => subNote.setContext(this.context).drawWithStyle());
+    this.subNotes.forEach((subNote) => subNote.setContext(ctx).drawWithStyle());
   }
 }
