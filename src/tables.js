@@ -39,6 +39,7 @@ const Flow = {
   textWidth: textWidth,
   tabToGlyph: tabToGlyph,
   articulationCodes: articulationCodes,
+  TIME4_4: TIME4_4,
 };
 
 Flow.clefProperties = (clef) => {
@@ -1266,7 +1267,7 @@ Flow.getGlyphProps.duration_codes = {
 };
 
 // Some defaults
-Flow.TIME4_4 = {
+const TIME4_4 = {
   num_beats: 4,
   beat_value: 4,
   resolution: Flow.RESOLUTION,

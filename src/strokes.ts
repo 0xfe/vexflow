@@ -9,29 +9,46 @@ import { Vex } from './vex';
 import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+import { Note } from './note';
+import { FontInfo } from './types/common';
+import { TabNote } from './tabnote';
+import { ModifierContextState } from './modifiercontext';
 
 export class Stroke extends Modifier {
-  static get CATEGORY() {
+  protected options: {
+    all_voices: boolean;
+  };
+  protected all_voices: boolean;
+  protected type: number;
+
+  protected note_end?: Note;
+  protected render_options: {
+    font_scale: number;
+    stroke_px: number;
+    stroke_spacing: number;
+  };
+  protected font: FontInfo;
+
+  static get CATEGORY(): string {
     return 'strokes';
   }
-  static get Type() {
-    return {
-      BRUSH_DOWN: 1,
-      BRUSH_UP: 2,
-      ROLL_DOWN: 3, // Arpeggiated chord
-      ROLL_UP: 4, // Arpeggiated chord
-      RASQUEDO_DOWN: 5,
-      RASQUEDO_UP: 6,
-      ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
-    };
-  }
+
+  static readonly Type = {
+    BRUSH_DOWN: 1,
+    BRUSH_UP: 2,
+    ROLL_DOWN: 3, // Arpeggiated chord
+    ROLL_UP: 4, // Arpeggiated chord
+    RASQUEDO_DOWN: 5,
+    RASQUEDO_UP: 6,
+    ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
+  };
 
   // Arrange strokes inside `ModifierContext`
-  static format(strokes, state) {
+  static format(strokes: Stroke[], state: ModifierContextState): boolean {
     const left_shift = state.left_shift;
     const stroke_spacing = 0;
 
-    if (!strokes || strokes.length === 0) return this;
+    if (!strokes || strokes.length === 0) return false;
 
     const strokeList = strokes.map((stroke) => {
       const note = stroke.getNote();
@@ -39,9 +56,11 @@ export class Stroke extends Modifier {
         const { line } = note.getKeyProps()[stroke.getIndex()];
         const shift = note.getLeftDisplacedHeadPx();
         return { line, shift, stroke };
-      } else {
+      } else if (note instanceof TabNote) {
         const { str: string } = note.getPositions()[stroke.getIndex()];
         return { line: string, shift: 0, stroke };
+      } else {
+        throw new Vex.RERR('Internal', 'Unexpexted');
       }
     });
 
@@ -54,22 +73,20 @@ export class Stroke extends Modifier {
     }, 0);
 
     state.left_shift += xShift;
+
     return true;
   }
 
-  constructor(type, options) {
+  constructor(type: number, options: { all_voices: boolean }) {
     super();
     this.setAttribute('type', 'Stroke');
 
-    this.note = null;
     this.options = Vex.Merge({}, options);
 
     // multi voice - span stroke across all voices if true
     this.all_voices = 'all_voices' in this.options ? this.options.all_voices : true;
 
     // multi voice - end note of stroke, set in draw()
-    this.note_end = null;
-    this.index = null;
     this.type = type;
     this.position = Modifier.Position.LEFT;
 
@@ -89,19 +106,21 @@ export class Stroke extends Modifier {
     this.setWidth(10);
   }
 
-  getCategory() {
+  getCategory(): string {
     return Stroke.CATEGORY;
   }
-  getPosition() {
+
+  getPosition(): number {
     return this.position;
   }
-  addEndNote(note) {
+
+  addEndNote(note: Note): this {
     this.note_end = note;
     return this;
   }
 
-  draw() {
-    this.checkContext();
+  draw(): void {
+    const ctx = this.checkContext();
     this.setRendered();
 
     if (!(this.note && this.index != null)) {
@@ -113,24 +132,27 @@ export class Stroke extends Modifier {
     let topY = start.y;
     let botY = start.y;
     const x = start.x - 5;
-    const line_space = this.note.stave.options.spacing_between_lines_px;
+    const line_space = this.note.checkStave().getOptions().spacing_between_lines_px;
 
-    const notes = this.getModifierContext().getMembers(this.note.getCategory());
+    const notes = this.checkModifierContext().getMembers(this.note.getCategory());
     for (let i = 0; i < notes.length; i++) {
-      ys = notes[i].getYs();
-      for (let n = 0; n < ys.length; n++) {
-        if (this.note === notes[i] || this.all_voices) {
-          topY = Vex.Min(topY, ys[n]);
-          botY = Vex.Max(botY, ys[n]);
+      const note = notes[i];
+      if (note instanceof Note) {
+        ys = note.getYs();
+        for (let n = 0; n < ys.length; n++) {
+          if (this.note === notes[i] || this.all_voices) {
+            topY = Vex.Min(topY, ys[n]);
+            botY = Vex.Max(botY, ys[n]);
+          }
         }
       }
     }
 
-    let arrow;
-    let arrow_shift_x;
-    let arrow_y;
-    let text_shift_x;
-    let text_y;
+    let arrow = '';
+    let arrow_shift_x = 0;
+    let arrow_y = 0;
+    let text_shift_x = 0;
+    let text_y = 0;
 
     switch (this.type) {
       case Stroke.Type.BRUSH_DOWN:
@@ -197,29 +219,17 @@ export class Stroke extends Modifier {
     let strokeLine = 'straight';
     // Draw the stroke
     if (this.type === Stroke.Type.BRUSH_DOWN || this.type === Stroke.Type.BRUSH_UP) {
-      this.context.fillRect(x + this.x_shift, topY, 1, botY - topY);
+      ctx.fillRect(x + this.x_shift, topY, 1, botY - topY);
     } else {
       strokeLine = 'wiggly';
       if (this.note instanceof StaveNote) {
         for (let i = topY; i <= botY; i += line_space) {
-          Glyph.renderGlyph(
-            this.context,
-            x + this.x_shift - 4,
-            i,
-            this.render_options.font_scale,
-            'vexWiggleArpeggioUp'
-          );
+          Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.render_options.font_scale, 'vexWiggleArpeggioUp');
         }
       } else {
         let i;
         for (i = topY; i <= botY; i += 10) {
-          Glyph.renderGlyph(
-            this.context,
-            x + this.x_shift - 4,
-            i,
-            this.render_options.font_scale,
-            'vexWiggleArpeggioUp'
-          );
+          Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.render_options.font_scale, 'vexWiggleArpeggioUp');
         }
         if (this.type === Stroke.Type.RASQUEDO_DOWN) {
           text_y = i + 0.25 * line_space;
@@ -232,16 +242,16 @@ export class Stroke extends Modifier {
     }
 
     // Draw the arrow head
-    Glyph.renderGlyph(this.context, x + this.x_shift + arrow_shift_x, arrow_y, this.render_options.font_scale, arrow, {
+    Glyph.renderGlyph(ctx, x + this.x_shift + arrow_shift_x, arrow_y, this.render_options.font_scale, arrow, {
       category: `stroke.${arrow}.${strokeLine}`,
     });
 
     // Draw the rasquedo "R"
     if (this.type === Stroke.Type.RASQUEDO_DOWN || this.type === Stroke.Type.RASQUEDO_UP) {
-      this.context.save();
-      this.context.setFont(this.font.family, this.font.size, this.font.weight);
-      this.context.fillText('R', x + text_shift_x, text_y);
-      this.context.restore();
+      ctx.save();
+      ctx.setFont(this.font.family, this.font.size, this.font.weight);
+      ctx.fillText('R', x + text_shift_x, text_y);
+      ctx.restore();
     }
   }
 }

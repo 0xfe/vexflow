@@ -4,8 +4,10 @@ import { Vex } from './vex';
 import { Element } from './element';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
+import { FontInfo, RenderContext } from './types/common';
+import { Stave } from './stave';
 
-function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
+function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY: number, botY: number) {
   if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT && type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {
     throw new Vex.RERR('InvalidConnector', 'A REPEAT_BEGIN or REPEAT_END type must be provided.');
   }
@@ -26,40 +28,52 @@ function drawBoldDoubleLine(ctx, type, topX, topY, botY) {
 }
 
 export class StaveConnector extends Element {
+  protected thickness: number;
+  protected width: number;
+  protected font: FontInfo;
+  protected texts: {
+    content: string;
+    options: {
+      shift_x: number;
+      shift_y: number;
+    };
+  }[];
+
+  protected type: number;
+  protected x_shift: number;
+  protected top_stave: Stave;
+  protected bottom_stave: Stave;
+
   // SINGLE_LEFT and SINGLE are the same value for compatibility
   // with older versions of vexflow which didn't have right sided
   // stave connectors
-  static get type() {
-    return {
-      SINGLE_RIGHT: 0,
-      SINGLE_LEFT: 1,
-      SINGLE: 1,
-      DOUBLE: 2,
-      BRACE: 3,
-      BRACKET: 4,
-      BOLD_DOUBLE_LEFT: 5,
-      BOLD_DOUBLE_RIGHT: 6,
-      THIN_DOUBLE: 7,
-      NONE: 8,
-    };
-  }
+  static readonly type = {
+    SINGLE_RIGHT: 0,
+    SINGLE_LEFT: 1,
+    SINGLE: 1,
+    DOUBLE: 2,
+    BRACE: 3,
+    BRACKET: 4,
+    BOLD_DOUBLE_LEFT: 5,
+    BOLD_DOUBLE_RIGHT: 6,
+    THIN_DOUBLE: 7,
+    NONE: 8,
+  };
 
-  static get typeString() {
-    return {
-      singleRight: StaveConnector.type.SINGLE_RIGHT,
-      singleLeft: StaveConnector.type.SINGLE_LEFT,
-      single: StaveConnector.type.SINGLE,
-      double: StaveConnector.type.DOUBLE,
-      brace: StaveConnector.type.BRACE,
-      bracket: StaveConnector.type.BRACKET,
-      boldDoubleLeft: StaveConnector.type.BOLD_DOUBLE_LEFT,
-      boldDoubleRight: StaveConnector.type.BOLD_DOUBLE_RIGHT,
-      thinDouble: StaveConnector.type.THIN_DOUBLE,
-      none: StaveConnector.type.NONE,
-    };
-  }
+  static readonly typeString: Record<string, number> = {
+    singleRight: StaveConnector.type.SINGLE_RIGHT,
+    singleLeft: StaveConnector.type.SINGLE_LEFT,
+    single: StaveConnector.type.SINGLE,
+    double: StaveConnector.type.DOUBLE,
+    brace: StaveConnector.type.BRACE,
+    bracket: StaveConnector.type.BRACKET,
+    boldDoubleLeft: StaveConnector.type.BOLD_DOUBLE_LEFT,
+    boldDoubleRight: StaveConnector.type.BOLD_DOUBLE_RIGHT,
+    thinDouble: StaveConnector.type.THIN_DOUBLE,
+    none: StaveConnector.type.NONE,
+  };
 
-  constructor(top_stave, bottom_stave) {
+  constructor(top_stave: Stave, bottom_stave: Stave) {
     super();
     this.setAttribute('type', 'StaveConnector');
 
@@ -79,7 +93,7 @@ export class StaveConnector extends Element {
     this.texts = [];
   }
 
-  setType(type) {
+  setType(type: number | string): this {
     type = typeof type === 'string' ? StaveConnector.typeString[type] : type;
 
     if (type >= StaveConnector.type.SINGLE_RIGHT && type <= StaveConnector.type.NONE) {
@@ -88,7 +102,13 @@ export class StaveConnector extends Element {
     return this;
   }
 
-  setText(text, options) {
+  setText(
+    text: string,
+    options?: {
+      shift_x: number;
+      shift_y: number;
+    }
+  ): this {
     this.texts.push({
       content: text,
       options: Vex.Merge({ shift_x: 0, shift_y: 0 }, options),
@@ -96,20 +116,20 @@ export class StaveConnector extends Element {
     return this;
   }
 
-  setFont(font) {
+  setFont(font: FontInfo): void {
     Vex.Merge(this.font, font);
   }
 
-  setXShift(x_shift) {
+  setXShift(x_shift: number): this {
     if (typeof x_shift !== 'number') {
-      throw Vex.RERR('InvalidType', 'x_shift must be a Number');
+      throw new Vex.RERR('InvalidType', 'x_shift must be a Number');
     }
 
     this.x_shift = x_shift;
     return this;
   }
 
-  draw() {
+  draw(): void {
     const ctx = this.checkContext();
     this.setRendered();
 
@@ -124,7 +144,7 @@ export class StaveConnector extends Element {
       this.type === StaveConnector.type.THIN_DOUBLE;
 
     if (isRightSidedConnector) {
-      topX = this.top_stave.getX() + this.top_stave.width;
+      topX = this.top_stave.getX() + this.top_stave.getWidth();
     }
 
     let attachment_height = botY - topY;
@@ -217,7 +237,7 @@ export class StaveConnector extends Element {
     }
 
     ctx.save();
-    ctx.lineWidth = 2;
+    ctx.setLineWidth(2);
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     // Add stave connector text
     for (let i = 0; i < this.texts.length; i++) {

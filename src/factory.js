@@ -607,7 +607,7 @@ export class Factory {
     });
 
     const pedal = new PedalMarking(params.notes);
-    pedal.setStyle(PedalMarking.StylesString[params.options.style]);
+    pedal.setType(PedalMarking.typeString[params.options.style]);
     pedal.setContext(this.context);
     this.renderQ.push(pedal);
     return pedal;

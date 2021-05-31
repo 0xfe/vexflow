@@ -10,13 +10,22 @@
 import { Vex } from './vex';
 import { Element } from './element';
 import { Flow } from './tables';
+import { FontInfo, RenderContext } from './types/common';
+import { StaveNote } from './stavenote';
+
+export interface StaveLineNotes {
+  last_indices: number[];
+  first_indices: number[];
+  last_note: StaveNote;
+  first_note: StaveNote;
+}
 
 // Attribution: Arrow rendering implementations based off of
 // Patrick Horgan's article, "Drawing lines and arcs with
 // arrow heads on  HTML5 Canvas"
 //
 // Draw an arrow head that connects between 3 coordinates
-function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
+function drawArrowHead(ctx: RenderContext, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number) {
   // all cases do this.
   ctx.beginPath();
   ctx.moveTo(x0, y0);
@@ -29,7 +38,25 @@ function drawArrowHead(ctx, x0, y0, x1, y1, x2, y2) {
 }
 
 // Helper function to draw a line with arrow heads
-function drawArrowLine(ctx, point1, point2, config) {
+function drawArrowLine(
+  ctx: RenderContext,
+  point1: { x: number; y: number },
+  point2: { x: number; y: number },
+  config: {
+    draw_start_arrow: boolean;
+    padding_left: number;
+    text_justification: number;
+    color?: string;
+    line_width: number;
+    line_dash?: string;
+    rounded_end: boolean;
+    arrowhead_length: number;
+    text_position_vertical: number;
+    draw_end_arrow: boolean;
+    arrowhead_angle: number;
+    padding_right: number;
+  }
+) {
   const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
 
   const x1 = point1.x;
@@ -111,21 +138,39 @@ function drawArrowLine(ctx, point1, point2, config) {
 }
 
 export class StaveLine extends Element {
-  // Text Positioning
-  static get TextVerticalPosition() {
-    return {
-      TOP: 1,
-      BOTTOM: 2,
-    };
-  }
+  readonly render_options: {
+    draw_start_arrow: boolean;
+    padding_left: number;
+    text_justification: number;
+    color?: string;
+    line_width: number;
+    line_dash?: string;
+    rounded_end: boolean;
+    arrowhead_length: number;
+    text_position_vertical: number;
+    draw_end_arrow: boolean;
+    arrowhead_angle: number;
+    padding_right: number;
+  };
 
-  static get TextJustification() {
-    return {
-      LEFT: 1,
-      CENTER: 2,
-      RIGHT: 3,
-    };
-  }
+  protected text: string;
+  protected font: FontInfo;
+  protected first_indices!: number[];
+  protected last_indices!: number[];
+  protected notes: StaveLineNotes;
+  protected first_note!: StaveNote;
+  protected last_note!: StaveNote;
+  // Text Positioning
+  static readonly TextVerticalPosition = {
+    TOP: 1,
+    BOTTOM: 2,
+  };
+
+  static readonly TextJustification = {
+    LEFT: 1,
+    CENTER: 2,
+    RIGHT: 3,
+  };
 
   // Initialize the StaveLine with the given `notes`.
   //
@@ -139,7 +184,7 @@ export class StaveLine extends Element {
   //    last_indices: [n1, n2, n3]
   //  }
   //  ```
-  constructor(notes) {
+  constructor(notes: StaveLineNotes) {
     super();
     this.setAttribute('type', 'StaveLine');
 
@@ -161,11 +206,11 @@ export class StaveLine extends Element {
       // The width of the line in pixels
       line_width: 1,
       // An array of line/space lengths. Unsupported with Raphael (SVG)
-      line_dash: null,
+      line_dash: undefined,
       // Can draw rounded line end, instead of a square. Unsupported with Raphael (SVG)
       rounded_end: true,
       // The color of the line and arrowheads
-      color: null,
+      color: undefined,
 
       // Flags to draw arrows on each end of the line
       draw_start_arrow: false,
@@ -185,27 +230,27 @@ export class StaveLine extends Element {
   }
 
   // Set the font for the `StaveLine` text
-  setFont(font) {
+  setFont(font: FontInfo): this {
     this.font = font;
     return this;
   }
   // The the annotation for the `StaveLine`
-  setText(text) {
+  setText(text: string): this {
     this.text = text;
     return this;
   }
 
   // Set the notes for the `StaveLine`
-  setNotes(notes) {
+  setNotes(notes: StaveLineNotes): this {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RuntimeError('BadArguments', 'Notes needs to have either first_note or last_note set.');
+      throw new Vex.RERR('BadArguments', 'Notes needs to have either first_note or last_note set.');
     }
 
     if (!notes.first_indices) notes.first_indices = [0];
     if (!notes.last_indices) notes.last_indices = [0];
 
     if (notes.first_indices.length !== notes.last_indices.length) {
-      throw new Vex.RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
+      throw new Vex.RERR('BadArguments', 'Connected notes must have similar index sizes');
     }
 
     // Success. Lets grab 'em notes.
@@ -217,7 +262,7 @@ export class StaveLine extends Element {
   }
 
   // Apply the style of the `StaveLine` to the context
-  applyLineStyle() {
+  applyLineStyle(): void {
     const ctx = this.checkContext();
     const render_options = this.render_options;
 
@@ -237,7 +282,7 @@ export class StaveLine extends Element {
   }
 
   // Apply the text styling to the context
-  applyFontStyle() {
+  applyFontStyle(): void {
     const ctx = this.checkContext();
 
     if (this.font) {
@@ -251,7 +296,7 @@ export class StaveLine extends Element {
   }
 
   // Renders the `StaveLine` on the context
-  draw() {
+  draw(): this {
     const ctx = this.checkContext();
     this.setRendered();
 
@@ -263,8 +308,8 @@ export class StaveLine extends Element {
     this.applyLineStyle();
 
     // Cycle through each set of indices and draw lines
-    let start_position;
-    let end_position;
+    let start_position = { x: 0, y: 0 };
+    let end_position = { x: 0, y: 0 };
     this.first_indices.forEach((first_index, i) => {
       const last_index = this.last_indices[i];
 
@@ -314,12 +359,12 @@ export class StaveLine extends Element {
     }
 
     // Determine the y value to start the text
-    let y;
+    let y = 0;
     const vertical_position = render_options.text_position_vertical;
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
-      y = first_note.getStave().getYForTopText();
+      y = first_note.checkStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
-      y = first_note.getStave().getYForBottomText(Flow.TEXT_HEIGHT_OFFSET_HACK);
+      y = first_note.checkStave().getYForBottomText(Flow.TEXT_HEIGHT_OFFSET_HACK);
     }
 
     // Draw the text
