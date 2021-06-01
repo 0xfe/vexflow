@@ -19,6 +19,7 @@
 
 import { Vex } from './vex';
 import { RuntimeError, log } from './util';
+import { DefaultFontStack } from './font';
 import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -187,7 +188,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
+      stavePadding: DefaultFontStack[0].lookupMetric('stave.padding'),
       ...options,
     };
 
