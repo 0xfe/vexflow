@@ -165,7 +165,7 @@ export class GraceNoteGroup extends Modifier {
   }
 
   draw(): void {
-    const ctx:RenderContext = this.checkContext();
+    const ctx: RenderContext = this.checkContext();
     this.checkAttachedNote();
     this.setRendered();
 

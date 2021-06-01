@@ -1145,7 +1145,8 @@ export class StaveNote extends StemmableNote {
     ctx.openGroup('modifiers');
     for (let i = 0; i < this.modifiers.length; i++) {
       const modifier = this.modifiers[i];
-      const notehead = this.note_heads[modifier.getIndex()];
+      const index = modifier.checkIndex();
+      const notehead = this.note_heads[index];
       const noteheadStyle = notehead.getStyle();
       notehead.applyStyle(ctx, noteheadStyle);
       modifier.setContext(ctx);

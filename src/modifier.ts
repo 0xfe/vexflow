@@ -68,7 +68,6 @@ export class Modifier extends Element {
 
     this.width = 0;
 
-
     // The `text_line` is reserved space above or below a stave.
     this.text_line = 0;
     this.position = Modifier.Position.LEFT;
@@ -111,6 +110,13 @@ export class Modifier extends Element {
 
   // Get and set note index, which is a specific note in a chord.
   getIndex(): number | undefined {
+    return this.index;
+  }
+
+  checkIndex(): number {
+    if (this.index === undefined) {
+      throw new RuntimeError('NoIndex', 'Modifier has an invalid index.');
+    }
     return this.index;
   }
 

@@ -53,12 +53,13 @@ export class Stroke extends Modifier {
 
     const strokeList = strokes.map((stroke) => {
       const note = stroke.getNote();
+      const index = stroke.checkIndex();
       if (note instanceof StaveNote) {
-        const { line } = note.getKeyProps()[stroke.getIndex()];
+        const { line } = note.getKeyProps()[index];
         const shift = note.getLeftDisplacedHeadPx();
         return { line, shift, stroke };
       } else if (note instanceof TabNote) {
-        const { str: string } = note.getPositions()[stroke.getIndex()];
+        const { str: string } = note.getPositions()[index];
         return { line: string, shift: 0, stroke };
       } else {
         throw new RuntimeError('Internal', 'Unexpexted');

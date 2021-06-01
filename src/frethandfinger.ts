@@ -39,7 +39,8 @@ export class FretHandFinger extends Modifier {
       const num = nums[i];
       const note = num.getNote() as StaveNote;
       const pos = num.getPosition();
-      const props = note.getKeyProps()[num.getIndex()];
+      const index = num.checkIndex();
+      const props = note.getKeyProps()[index];
       if (note !== prev_note) {
         for (let n = 0; n < note.keys.length; ++n) {
           if (left_shift === 0) {

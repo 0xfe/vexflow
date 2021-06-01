@@ -62,10 +62,7 @@ export class StringNumber extends Modifier {
           throw new RuntimeError('NoStaveNote');
         }
 
-        const index = num.getIndex();
-        if (index === undefined) {
-            throw new RuntimeError('NoIndex');
-        }
+        const index = num.checkIndex();
         const props = note.getKeyProps()[index];
 
         if (note !== prev_note) {

@@ -51,7 +51,8 @@ export class Accidental extends Modifier {
       const acc = accidentals[i];
       const note = acc.getNote();
       const stave = note.getStave();
-      const props = note.getKeyProps()[acc.getIndex()];
+      const index = acc.checkIndex();
+      const props = note.getKeyProps()[index];
       if (note !== prevNote) {
         // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {

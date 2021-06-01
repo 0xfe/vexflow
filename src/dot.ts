@@ -38,10 +38,7 @@ export class Dot extends Modifier {
 
       // If it's a StaveNote
       if (note instanceof StaveNote) {
-        const index = dot.getIndex();
-        if (index === undefined) {
-            throw new RuntimeError('NoIndex');
-        }
+        const index = dot.checkIndex();
         props = note.getKeyProps()[index];
         shift = note.getRightDisplacedHeadPx();
       } else if (note instanceof TabNote) {
