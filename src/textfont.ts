@@ -6,16 +6,11 @@
 // VEX modules can take advantage of font metrics in a uniform way.
 //
 
-import { Vex } from './vex';
 import { RuntimeError, log } from './util';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 import { FontGlyph } from './font';
 import { FontInfo } from './types/common';
-export interface TextFontMetrics {
-  advanceWidth: number;
-  ha: number;
-}
 
 export interface TextFontRegistry {
   [name: string]: unknown;
@@ -44,7 +39,7 @@ export class TextFont {
   protected static debug: boolean;
   protected resolution: number = 1000;
   protected name?: string;
-  protected glyphs: Record<string, TextFontMetrics> = {};
+  protected glyphs: Record<string, FontGlyph> = {};
   protected family: string = '';
   protected serifs?: boolean;
   protected monospaced?: boolean;
@@ -262,18 +257,33 @@ export class TextFont {
         throw new RuntimeError('BadArgument', 'Unknown font, must have glyph metrics and resolution');
       }
     } else {
-      Vex.Merge(this, fontData);
+      this.updateParams(fontData);
     }
-    Vex.Merge(this, params);
+    this.updateParams(params);
 
     this.updateCacheKey();
   }
+
+  updateParams(params: TextFontRegistry): void {
+    if (params.name) this.name = params.name;
+    if (params.resolution) this.resolution = params.resolution;
+    if (params.glyphs) this.glyphs = params.glyphs;
+    this.family = params.family;
+    this.serifs = params.serifs;
+    if (params.monospaced) this.monospaced = params.monospaced;
+    this.italic = params.italic;
+    this.bold = params.bold;
+    if (params.maxSizeGlyph) this.maxSizeGlyph = params.maxSizeGlyph;
+    if (params.superscriptOffset) this.superscriptOffset = params.superscriptOffset;
+    if (params.subscriptOffset) this.subscriptOffset = params.subscriptOffset;
+  }
+
   // Create a hash with the current font data, so we can cache computed widths
   updateCacheKey(): void {
     this.fontCacheKey = `${this.family}-${this.size}-${this.weight}-${this.style}`;
   }
 
-  getMetricForCharacter(c: string): TextFontMetrics {
+  getMetricForCharacter(c: string): FontGlyph {
     if (this.glyphs[c]) {
       return this.glyphs[c];
     }
@@ -290,7 +300,7 @@ export class TextFont {
     if (!metric) {
       return 0.65 * this.pointsToPixels;
     }
-    return (metric.advanceWidth / this.resolution) * this.pointsToPixels;
+    return ((metric.advanceWidth ?? 1000) / this.resolution) * this.pointsToPixels;
   }
 
   getWidthForString(s: string): number {
