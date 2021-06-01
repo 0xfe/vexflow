@@ -7,7 +7,7 @@
 //
 
 import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 import { FontGlyph } from './font';
@@ -37,7 +37,7 @@ export interface TextFontRegistry {
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (TextFont.DEBUG) Vex.L('Vex.Flow.TextFont', args);
+  if (TextFont.DEBUG) log('Vex.Flow.TextFont', args);
 }
 
 export class TextFont {

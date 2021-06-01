@@ -8,7 +8,7 @@
 // See `tests/notehead_tests.js` for usage examples.
 
 import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Flow } from './tables';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
@@ -23,7 +23,7 @@ import { ElementStyle } from './element';
 function L(
   // eslint-disable-next-line
   ...args: any []) {
-  if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args);
+  if (NoteHead.DEBUG) log('Vex.Flow.NoteHead', args);
 }
 
 export interface NoteHeadStruct extends NoteStruct {

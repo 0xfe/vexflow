@@ -9,8 +9,7 @@
 //
 // See `tests/articulation_tests.js` for usage examples.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
@@ -33,7 +32,7 @@ export interface ArticulationStruct {
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args);
+  if (Articulation.DEBUG) log('Vex.Flow.Articulation', args);
 }
 
 const { ABOVE, BELOW } = Modifier.Position;

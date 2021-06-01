@@ -8,7 +8,7 @@
 // the following letters:  P, M, F, Z, R, S
 
 import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Note } from './note';
 import { Glyph } from './glyph';
 import { TextNoteStruct } from './textnote';
@@ -18,7 +18,7 @@ import { check } from './common';
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args);
+  if (TextDynamics.DEBUG) log('Vex.Flow.TextDynamics', args);
 }
 
 export class TextDynamics extends Note {

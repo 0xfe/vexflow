@@ -6,7 +6,7 @@
 /* eslint max-classes-per-file: "off" */
 
 import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { StaveNote } from './stavenote';
 import { Match, Parser, Result, Rule, RuleFunction } from './parser';
 import { Articulation } from './articulation';
@@ -20,7 +20,7 @@ import { Voice } from './voice';
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]): void {
-  if (EasyScore.DEBUG) Vex.L('Vex.Flow.EasyScore', args);
+  if (EasyScore.DEBUG) log('Vex.Flow.EasyScore', args);
 }
 
 export const X = Vex.MakeException('EasyScoreError');

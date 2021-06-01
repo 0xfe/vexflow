@@ -4,8 +4,7 @@
 // This file implements the `Stem` object. Generally this object is handled
 // by its parent `StemmableNote`.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
@@ -13,7 +12,7 @@ import { BoundingBox } from './boundingbox';
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]) {
-  if (Stem.DEBUG) Vex.L('Vex.Flow.Stem', args);
+  if (Stem.DEBUG) log('Vex.Flow.Stem', args);
 }
 
 export interface StemOptions {

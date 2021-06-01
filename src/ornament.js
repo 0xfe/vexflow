@@ -9,8 +9,7 @@
 //
 // See `tests/ornament_tests.js` for usage examples.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
@@ -19,7 +18,7 @@ import { Glyph } from './glyph';
 
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
 function L(...args) {
-  if (Ornament.DEBUG) Vex.L('Vex.Flow.Ornament', args);
+  if (Ornament.DEBUG) log('Vex.Flow.Ornament', args);
 }
 
 export class Ornament extends Modifier {

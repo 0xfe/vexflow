@@ -5,8 +5,7 @@
 // This class implements various types of members to notes (e.g. bends,
 // fingering positions etc.)
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { StaveNote } from './stavenote';
 import { Dot } from './dot';
 import { FretHandFinger } from './frethandfinger';
@@ -43,7 +42,7 @@ export type ModifierContextMember = Modifier | StaveNote | TabNote;
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (ModifierContext.DEBUG) Vex.L('Vex.Flow.ModifierContext', args);
+  if (ModifierContext.DEBUG) log('Vex.Flow.ModifierContext', args);
 }
 
 export class ModifierContext {
