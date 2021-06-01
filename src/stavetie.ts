@@ -4,7 +4,7 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { FontInfo, TieNotes } from './types/common';
 
@@ -74,14 +74,14 @@ export class StaveTie extends Element {
    */
   setNotes(notes: TieNotes): this {
     if (!notes.first_note && !notes.last_note) {
-      throw new Vex.RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
+      throw new RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
     }
 
     if (!notes.first_indices) notes.first_indices = [0];
     if (!notes.last_indices) notes.last_indices = [0];
 
     if (notes.first_indices.length !== notes.last_indices.length) {
-      throw new Vex.RuntimeError('BadArguments', 'Tied notes must have similar index sizes');
+      throw new RuntimeError('BadArguments', 'Tied notes must have similar index sizes');
     }
 
     // Success. Lets grab 'em notes.
@@ -104,7 +104,7 @@ export class StaveTie extends Element {
     first_ys: number[];
   }): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
-      throw new Vex.RERR('BadArguments', 'No Y-values to render');
+      throw new RuntimeError('BadArguments', 'No Y-values to render');
     }
 
     const ctx = this.checkContext();
@@ -126,7 +126,7 @@ export class StaveTie extends Element {
       const last_y_px = params.last_ys[this.notes.last_indices[i]] + y_shift;
 
       if (isNaN(first_y_px) || isNaN(last_y_px)) {
-        throw new Vex.RERR('BadArguments', 'Bad indices for tie rendering.');
+        throw new RuntimeError('BadArguments', 'Bad indices for tie rendering.');
       }
 
       const top_cp_y = (first_y_px + last_y_px) / 2 + cp1 * params.direction;

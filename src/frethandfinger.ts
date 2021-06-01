@@ -3,7 +3,7 @@
 // Author Larry Kuhns 2013
 // Class to draws string numbers into the notation.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { FontInfo } from './types/common';
 import { StaveNote } from './stavenote';
@@ -179,7 +179,7 @@ export class FretHandFinger extends Modifier {
         dot_x += 1;
         break;
       default:
-        throw new Vex.RERR('InvalidPostion', `The position ${this.position} does not exist`);
+        throw new RuntimeError('InvalidPosition', `The position ${this.position} does not exist`);
     }
 
     ctx.save();

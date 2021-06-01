@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
+import { RuntimeError } from './util';
 import type { ModifierContext } from './modifiercontext';
-import { Vex } from './vex';
 import { Voice } from './voice';
 
 export class VoiceGroup {
@@ -26,7 +26,7 @@ export class VoiceGroup {
   }
 
   addVoice(voice: Voice): void {
-    if (!voice) throw new Vex.RERR('BadArguments', 'Voice cannot be null.');
+    if (!voice) throw new RuntimeError('BadArguments', 'Voice cannot be null.');
     this.voices.push(voice);
     voice.setVoiceGroup(this);
   }

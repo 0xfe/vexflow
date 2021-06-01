@@ -10,6 +10,7 @@
 // See `tests/accidental_tests.js` for usage examples.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Fraction } from './fraction';
 import { Flow } from './tables';
 import { Music } from './music';
@@ -436,7 +437,7 @@ export class Accidental extends Modifier {
 
     this.accidental = Flow.accidentalCodes(this.type);
     if (!this.accidental) {
-      throw new Vex.RERR('ArgumentError', `Unknown accidental type: ${type}`);
+      throw new RuntimeError('ArgumentError', `Unknown accidental type: ${type}`);
     }
 
     // Cautionary accidentals have parentheses around them
@@ -478,7 +479,7 @@ export class Accidental extends Modifier {
   // Attach this accidental to `note`, which must be a `StaveNote`.
   setNote(note) {
     if (!note) {
-      throw new Vex.RERR('ArgumentError', `Bad note value: ${note}`);
+      throw new RuntimeError('ArgumentError', `Bad note value: ${note}`);
     }
 
     this.note = note;

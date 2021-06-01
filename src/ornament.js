@@ -10,6 +10,7 @@
 // See `tests/ornament_tests.js` for usage examples.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
@@ -163,7 +164,7 @@ export class Ornament extends Modifier {
     this.ornamentAlignWithNoteHead = Ornament.ornamentAlignWithNoteHead.indexOf(this.type) >= 0;
 
     if (!this.ornament) {
-      throw new Vex.RERR('ArgumentError', `Ornament not found: '${this.type}'`);
+      throw new RuntimeError('ArgumentError', `Ornament not found: '${this.type}'`);
     }
 
     this.x_shift = metrics ? metrics.xOffset : 0;
@@ -222,7 +223,7 @@ export class Ornament extends Modifier {
     const stave = note.getStave();
 
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
-    this.context.openGroup(classString, this.getAttribute('id'));
+    ctx.openGroup(classString, this.getAttribute('id'));
 
     // Get stem extents
     const stemExtents = note.getStem().getExtents();
@@ -304,6 +305,6 @@ export class Ornament extends Modifier {
       glyphY -= this.glyph.getMetrics().height + this.render_options.accidentalUpperPadding;
       this.accidentalUpper.render(ctx, glyphX, glyphY);
     }
-    this.context.closeGroup();
+    ctx.closeGroup();
   }
 }

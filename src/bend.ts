@@ -5,6 +5,7 @@
 // This file implements tablature bends.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -286,7 +287,7 @@ export class Bend extends Modifier {
     }
 
     if (!last_bend || last_bend.x == undefined) {
-      throw new Vex.RERR('NoLastBendForBend', 'Internal error.');
+      throw new RuntimeError('NoLastBendForBend', 'Internal error.');
     }
 
     // Final arrowhead and text

@@ -6,6 +6,7 @@
 //
 
 /* eslint max-classes-per-file: "off" */
+import { RuntimeError } from './util';
 
 const Vex = () => {};
 
@@ -28,18 +29,6 @@ Vex.MakeException = (name) => {
 
   return exception;
 };
-
-// Default runtime exception.
-class RuntimeError extends Error {
-  constructor(code, message) {
-    super('[RuntimeError] ' + code + ':' + message);
-    this.code = code;
-  }
-}
-
-// Shortcut method for `RuntimeError`.
-Vex.RuntimeError = RuntimeError;
-Vex.RERR = Vex.RuntimeError;
 
 // Merge `destination` hash with `source` hash, overwriting like keys
 // in `source` if necessary.
@@ -107,12 +96,12 @@ Vex.Contains = (a, obj) => {
 // Get the 2D Canvas context from DOM element `canvas_sel`.
 Vex.getCanvasContext = (canvas_sel) => {
   if (!canvas_sel) {
-    throw new Vex.RERR('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
+    throw new RuntimeError('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
   }
 
   const canvas = document.getElementById(canvas_sel);
   if (!(canvas && canvas.getContext)) {
-    throw new Vex.RERR('UnsupportedBrowserError', 'This browser does not support HTML5 Canvas');
+    throw new RuntimeError('UnsupportedBrowserError', 'This browser does not support HTML5 Canvas');
   }
 
   return canvas.getContext('2d');

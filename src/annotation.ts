@@ -158,7 +158,6 @@ export class Annotation extends Modifier {
     this.setRendered();
 
     const note = this.getNote();
-
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
 
     // We're changing context parameters. Save current state.

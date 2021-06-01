@@ -4,7 +4,7 @@
 // `StemmableNote` is an abstract interface for notes with optional stems.
 // Examples of stemmable notes are `StaveNote` and `TabNote`
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Stem, StemOptions } from './stem';
 import { Glyph } from './glyph';
@@ -30,7 +30,7 @@ export abstract class StemmableNote extends Note {
 
   checkStem(): Stem {
     if (!this.stem) {
-      throw new Vex.RERR('NoStem', 'No stem attached to instance');
+      throw new RuntimeError('NoStem', 'No stem attached to instance');
     }
     return this.stem;
   }
@@ -111,14 +111,14 @@ export abstract class StemmableNote extends Note {
 
   // Get/set the direction of the stem
   getStemDirection(): number {
-    if (!this.stem_direction) throw new Vex.RERR('NoStem', 'No stem attached to this note.');
+    if (!this.stem_direction) throw new RuntimeError('NoStem', 'No stem attached to this note.');
     return this.stem_direction;
   }
 
   setStemDirection(direction: number): this {
     if (!direction) direction = Stem.UP;
     if (direction !== Stem.UP && direction !== Stem.DOWN) {
-      throw new Vex.RERR('BadArgument', `Invalid stem direction: ${direction}`);
+      throw new RuntimeError('BadArgument', `Invalid stem direction: ${direction}`);
     }
 
     this.stem_direction = direction;
@@ -197,7 +197,7 @@ export abstract class StemmableNote extends Note {
 
   // Get the top and bottom `y` values of the stem.
   getStemExtents(): Record<string, number> {
-    if (!this.stem) throw new Vex.RERR('NoStem', 'No stem attached to this note.');
+    if (!this.stem) throw new RuntimeError('NoStem', 'No stem attached to this note.');
     return this.stem.getExtents();
   }
 
@@ -206,7 +206,7 @@ export abstract class StemmableNote extends Note {
     const stave = this.checkStave();
     if (this.hasStem()) {
       const extents = this.getStemExtents();
-      if (!extents) throw new Vex.RERR('InvalidState', 'Stem does not have extents.');
+      if (!extents) throw new RuntimeError('InvalidState', 'Stem does not have extents.');
 
       return Math.min(
         stave.getYForTopText(textLine),
@@ -222,7 +222,7 @@ export abstract class StemmableNote extends Note {
     const stave = this.checkStave();
     if (this.hasStem()) {
       const extents = this.getStemExtents();
-      if (!extents) throw new Vex.RERR('InvalidState', 'Stem does not have extents.');
+      if (!extents) throw new RuntimeError('InvalidState', 'Stem does not have extents.');
 
       return Math.max(
         stave.getYForTopText(textLine),

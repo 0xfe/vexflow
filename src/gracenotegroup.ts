@@ -17,6 +17,7 @@ import { StaveNote } from './stavenote';
 import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
+import { RenderContext } from './types/common';
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 function L(
@@ -164,7 +165,7 @@ export class GraceNoteGroup extends Modifier {
   }
 
   draw(): void {
-    this.checkContext();
+    const ctx:RenderContext = this.checkContext();
     this.checkAttachedNote();
     this.setRendered();
 
@@ -175,12 +176,12 @@ export class GraceNoteGroup extends Modifier {
 
     // Draw notes
     this.grace_notes.forEach((graceNote) => {
-      graceNote.setContext(this.getContext()).draw();
+      graceNote.setContext(ctx).draw();
     });
 
     // Draw beam
     this.beams.forEach((beam) => {
-      beam.setContext(this.getContext()).draw();
+      beam.setContext(ctx).draw();
     });
 
     if (this.show_slur) {
@@ -197,7 +198,7 @@ export class GraceNoteGroup extends Modifier {
 
       this.slur.render_options.cp2 = 12;
       this.slur.render_options.y_shift = (is_stavenote ? 7 : 5) + this.render_options.slur_y_shift;
-      this.slur.setContext(this.getContext()).draw();
+      this.slur.setContext(ctx).draw();
     }
   }
 }

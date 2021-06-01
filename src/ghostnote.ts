@@ -2,7 +2,7 @@
 //
 // ## Description
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { StemmableNote } from './stemmablenote';
 import { Stave } from './stave';
 import { NoteStruct } from './note';
@@ -12,7 +12,7 @@ export class GhostNote extends StemmableNote {
   constructor(parameter: string | NoteStruct) {
     // Sanity check
     if (!parameter) {
-      throw new Vex.RERR('BadArguments', 'Ghost note must have valid initialization data to identify duration.');
+      throw new RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify duration.');
     }
 
     let note_struct;
@@ -23,7 +23,7 @@ export class GhostNote extends StemmableNote {
     } else if (typeof parameter === 'object') {
       note_struct = parameter;
     } else {
-      throw new Vex.RuntimeError(
+      throw new RuntimeError(
         'BadArguments',
         'Ghost note must have valid initialization data to identify ' + 'duration.'
       );

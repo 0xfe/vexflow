@@ -3,7 +3,7 @@
 //
 // This class implements dot modifiers for notes.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
@@ -38,14 +38,18 @@ export class Dot extends Modifier {
 
       // If it's a StaveNote
       if (note instanceof StaveNote) {
-        props = note.getKeyProps()[dot.getIndex()];
+        const index = dot.getIndex();
+        if (index === undefined) {
+            throw new RuntimeError('NoIndex');
+        }
+        props = note.getKeyProps()[index];
         shift = note.getRightDisplacedHeadPx();
       } else if (note instanceof TabNote) {
         // Else it's a TabNote
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = 0;
       } else {
-        throw new Vex.RERR('Internal', 'Unexpected instance.');
+        throw new RuntimeError('Internal', 'Unexpected instance.');
       }
 
       const note_id = note.getAttribute('id');

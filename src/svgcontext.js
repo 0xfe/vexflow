@@ -2,6 +2,7 @@
 // @author Gregory Ristow (2015)
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 
 const attrNamesToIgnoreMap = {
   path: {
@@ -230,7 +231,7 @@ export class SVGContext {
       this.attributes['stroke-dasharray'] = lineDash;
       return this;
     } else {
-      throw new Vex.RERR('ArgumentError', 'lineDash must be an array of integers.');
+      throw new RuntimeError('ArgumentError', 'lineDash must be an array of integers.');
     }
   }
 

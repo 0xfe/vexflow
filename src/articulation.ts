@@ -10,6 +10,7 @@
 // See `tests/articulation_tests.js` for usage examples.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
@@ -104,7 +105,7 @@ function getTopY(note: Note, textLine: number): number {
       return note.checkStave().getYForTopText(textLine);
     }
   } else {
-    throw new Vex.RERR('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
+    throw new RuntimeError('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
   }
 }
 
@@ -133,7 +134,7 @@ function getBottomY(note: Note, textLine: number): number {
       return note.checkStave().getYForBottomText(textLine);
     }
   } else {
-    throw new Vex.RERR('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
+    throw new RuntimeError('UnknownCategory', 'Only can get the top and bottom ys of stavenotes and tabnotes');
   }
 }
 
@@ -265,7 +266,7 @@ export class Articulation extends Modifier {
   reset(): void {
     this.articulation = Flow.articulationCodes(this.type);
     if (!this.articulation) {
-      throw new Vex.RERR('ArgumentError', `Articulation not found: ${this.type}`);
+      throw new RuntimeError('ArgumentError', `Articulation not found: ${this.type}`);
     }
 
     const code =
@@ -285,7 +286,8 @@ export class Articulation extends Modifier {
     this.checkAttachedNote();
     this.setRendered();
 
-    const { index, position, glyph, text_line: textLine } = this;
+    const index = this.index as number; // this.checkAttachedNote() already verified this.index.
+    const { position, glyph, text_line: textLine } = this;
     const canSitBetweenLines = this.articulation?.between_lines ?? false;
 
     const note = this.getNote();

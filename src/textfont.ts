@@ -7,6 +7,7 @@
 //
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 import { FontGlyph } from './font';
@@ -251,14 +252,14 @@ export class TextFont {
     this.style = '';
     this.attrs = { type: 'TextFont' };
     if (!params.name) {
-      throw new Vex.RERR('BadArgument', 'Font constructor must specify a name');
+      throw new RuntimeError('BadArgument', 'Font constructor must specify a name');
     }
     const fontData = params.glyphs ? params : TextFont.getFontDataByName(params.name);
     if (!fontData) {
       if (params.glyphs && params.resolution) {
         TextFont.registerFont(params);
       } else {
-        throw new Vex.RERR('BadArgument', 'Unknown font, must have glyph metrics and resolution');
+        throw new RuntimeError('BadArgument', 'Unknown font, must have glyph metrics and resolution');
       }
     } else {
       Vex.Merge(this, fontData);

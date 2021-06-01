@@ -8,6 +8,7 @@
 // using this class.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Element } from './element';
 import { Renderer } from './renderer';
@@ -156,7 +157,7 @@ export class TextBracket extends Element {
         y = this.start.checkStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
         break;
       default:
-        throw new Vex.RERR('InvalidPosition', `The position ${this.position} is invalid`);
+        throw new RuntimeError('InvalidPosition', `The position ${this.position} is invalid.`);
     }
 
     // Get the preliminary start and stop coordintates for the bracket
