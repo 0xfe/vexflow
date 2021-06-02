@@ -283,14 +283,12 @@ export class Articulation extends Modifier {
   // Render articulation in position next to note.
   draw(): void {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const index = this.index as number; // this.checkAttachedNote() already verified this.index.
+    const index = this.checkIndex();
     const { position, glyph, text_line: textLine } = this;
     const canSitBetweenLines = this.articulation?.between_lines ?? false;
-
-    const note = this.getNote();
 
     const stave = note.checkStave();
     const staffSpace = stave.getSpacingBetweenLines();

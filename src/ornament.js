@@ -215,10 +215,9 @@ export class Ornament extends Modifier {
   // Render ornament in position next to note.
   draw() {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const note = this.getNote();
     const stemDir = note.getStemDirection();
     const stave = note.getStave();
 

@@ -42,10 +42,9 @@ export class Tremolo extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const note = this.getNote();
     const stemDirection = note.getStemDirection();
 
     const start = note.getModifierStartXY(this.position, this.index);

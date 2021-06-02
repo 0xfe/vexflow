@@ -143,10 +143,9 @@ export class Dot extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const note = this.getNote();
     const stave = note.checkStave();
     const lineSpace = stave.getOptions().spacing_between_lines_px;
 

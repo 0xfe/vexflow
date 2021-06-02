@@ -506,7 +506,6 @@ export class Accidental extends Modifier {
       context,
       type,
       position,
-      note,
       index,
       cautionary,
       x_shift,
@@ -518,7 +517,7 @@ export class Accidental extends Modifier {
     } = this;
 
     this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
     // Figure out the start `x` and `y` coordinates for note and index.

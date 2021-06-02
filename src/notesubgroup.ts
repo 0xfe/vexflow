@@ -85,9 +85,8 @@ export class NoteSubGroup extends Modifier {
 
   draw(): void {
     const ctx: RenderContext = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
-    const note = this.getNote();
     this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
     this.subNotes.forEach((subNote) => subNote.setContext(ctx).drawWithStyle());
   }

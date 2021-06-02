@@ -663,18 +663,17 @@ export class ChordSymbol extends Modifier {
 
   // Render text and glyphs above/below the note
   draw() {
-    this.checkContext();
-    this.checkAttachedNote();
+    const ctx = this.checkContext();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
     // We're changing context parameters. Save current state.
-    this.context.save();
+    ctx.save();
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
-    this.context.openGroup(classString, this.getAttribute('id'));
+    ctx.openGroup(classString, this.getAttribute('id'));
 
-    const note = this.getNote();
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
-    this.context.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.font.family, this.font.size, this.font.weight);
 
     let y;
 
@@ -734,30 +733,30 @@ export class ChordSymbol extends Modifier {
 
       if (symbol.symbolType === ChordSymbol.symbolTypes.TEXT) {
         if (sp || sub) {
-          this.context.save();
-          this.context.setFont(this.font.family, this.font.size * ChordSymbol.superSubRatio, this.font.weight);
+          ctx.save();
+          ctx.setFont(this.font.family, this.font.size * ChordSymbol.superSubRatio, this.font.weight);
         }
         // We estimate the text width, fill it in with the empirical value so the
         // formatting is even.
-        /* const textDim = this.context.measureText(symbol.text);
+        /* const textDim = ctx.measureText(symbol.text);
         symbol.width = textDim.width; */
         L('Rendering Text: ', symbol.text, x + symbol.xShift, curY + symbol.yShift);
 
-        this.context.fillText(symbol.text, x + symbol.xShift, curY + symbol.yShift);
+        ctx.fillText(symbol.text, x + symbol.xShift, curY + symbol.yShift);
         if (sp || sub) {
-          this.context.restore();
+          ctx.restore();
         }
       } else if (symbol.symbolType === ChordSymbol.symbolTypes.GLYPH) {
         curY += symbol.yShift;
         L('Rendering Glyph: ', symbol.glyph.code, x + symbol.xShift, curY);
-        symbol.glyph.render(this.context, x + symbol.xShift, curY);
+        symbol.glyph.render(ctx, x + symbol.xShift, curY);
       } else if (symbol.symbolType === ChordSymbol.symbolTypes.LINE) {
         L('Rendering Line : ', symbol.width, x, curY);
-        this.context.beginPath();
-        this.context.setLineWidth(1); // ?
-        this.context.moveTo(x, y);
-        this.context.lineTo(x + symbol.width, curY);
-        this.context.stroke();
+        ctx.beginPath();
+        ctx.setLineWidth(1); // ?
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + symbol.width, curY);
+        ctx.stroke();
       }
 
       x += symbol.width;
@@ -765,7 +764,7 @@ export class ChordSymbol extends Modifier {
         x += symbol.xShift;
       }
     });
-    this.context.closeGroup();
-    this.context.restore();
+    ctx.closeGroup();
+    ctx.restore();
   }
 }

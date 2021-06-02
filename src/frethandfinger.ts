@@ -156,10 +156,9 @@ export class FretHandFinger extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const note = this.getNote();
     const start = note.getModifierStartXY(this.position, this.index);
     let dot_x = start.x + this.x_shift + this.x_offset;
     let dot_y = start.y + this.y_shift + this.y_offset + 5;

@@ -103,6 +103,13 @@ export class Modifier extends Element {
     return this.note;
   }
 
+  checkAttachedNote(): Note {
+    if (!this.note || this.index === undefined) {
+      throw new RuntimeError('NoAttachedNote', `Can't draw ${this.getCategory()} without a note and index.`);
+    }
+    return this.note;
+  }
+
   setNote(note: Note): this {
     this.note = note;
     return this;
@@ -191,12 +198,6 @@ export class Modifier extends Element {
   draw(): void {
     this.checkContext();
     throw new RuntimeError('MethodNotImplemented', 'draw() not implemented for this modifier.');
-  }
-
-  checkAttachedNote(): void {
-    if (!this.note || this.index === undefined) {
-      throw new RuntimeError('NoAttachedNote', `Can't draw ${this.getCategory()} without a note and index.`);
-    }
   }
 
   // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main note with correct x-offset

@@ -183,10 +183,9 @@ export class Bend extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const note = this.getNote();
     const start = note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
     start.x += 3;
     start.y += 0.5;

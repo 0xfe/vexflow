@@ -166,10 +166,9 @@ export class GraceNoteGroup extends Modifier {
 
   draw(): void {
     const ctx: RenderContext = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const note = this.getNote();
     L('Drawing grace note group for:', note);
 
     this.alignSubNotesWithNote(this.getGraceNotes(), note); // Modifier function
@@ -186,7 +185,7 @@ export class GraceNoteGroup extends Modifier {
 
     if (this.show_slur) {
       // Create and draw slur
-      const is_stavenote = this.getNote().getCategory() === StaveNote.CATEGORY;
+      const is_stavenote = note.getCategory() === StaveNote.CATEGORY;
       const TieClass = is_stavenote ? StaveTie : TabTie;
 
       this.slur = new TieClass({

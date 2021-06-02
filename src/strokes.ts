@@ -123,9 +123,8 @@ export class Stroke extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
-    const note = this.getNote();
 
     const start = note.getModifierStartXY(this.position, this.index);
     let ys = note.getYs();

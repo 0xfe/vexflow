@@ -191,10 +191,9 @@ export class StringNumber extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const note = this.getNote();
     const line_space = note.checkStave().getOptions().spacing_between_lines_px;
 
     const start = note.getModifierStartXY(this.position, this.index);

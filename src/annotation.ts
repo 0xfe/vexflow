@@ -154,10 +154,9 @@ export class Annotation extends Modifier {
   // Render text beside the note.
   draw(): void {
     const ctx = this.checkContext();
-    this.checkAttachedNote();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const note = this.getNote();
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
 
     // We're changing context parameters. Save current state.
