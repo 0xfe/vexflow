@@ -99,7 +99,7 @@ export abstract class Note extends Tickable {
   keyProps: KeyProps[];
 
   protected stave?: Stave;
-  protected render_options: NoteRenderOptions;
+  render_options: NoteRenderOptions;
   protected duration: string;
   protected dots: number;
   protected leftDisplacedHeadPx: number;
