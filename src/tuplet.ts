@@ -45,6 +45,7 @@
  */
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Formatter } from './formatter';
 import { Glyph } from './glyph';
@@ -94,7 +95,7 @@ export class Tuplet extends Element {
     super();
     this.setAttribute('type', 'Tuplet');
     if (!notes || !notes.length) {
-      throw new Vex.RERR('BadArguments', 'No notes provided for tuplet.');
+      throw new RuntimeError('BadArguments', 'No notes provided for tuplet.');
     }
 
     this.options = Vex.Merge({}, options);
@@ -163,7 +164,7 @@ export class Tuplet extends Element {
     if (!location) {
       location = Tuplet.LOCATION_TOP;
     } else if (location !== Tuplet.LOCATION_TOP && location !== Tuplet.LOCATION_BOTTOM) {
-      throw new Vex.RERR('BadArgument', 'Invalid tuplet location: ' + location);
+      throw new RuntimeError('BadArgument', 'Invalid tuplet location: ' + location);
     }
 
     this.location = location;

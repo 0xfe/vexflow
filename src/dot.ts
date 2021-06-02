@@ -3,7 +3,7 @@
 //
 // This class implements dot modifiers for notes.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
@@ -44,7 +44,7 @@ export class Dot extends Modifier {
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = 0;
       } else {
-        throw new Vex.RERR('Internal', 'Unexpected instance.');
+        throw new RuntimeError('Internal', 'Unexpected instance.');
       }
 
       const note_id = note.getAttribute('id');
@@ -144,7 +144,7 @@ export class Dot extends Modifier {
     const ctx = this.checkContext();
     this.setRendered();
     if (!this.note || this.index === undefined) {
-      throw new Vex.RERR('NoNoteIndex', 'Drawing a dot requires a note and an index.');
+      throw new RuntimeError('NoNoteIndex', 'Drawing a dot requires a note and an index.');
     }
 
     const stave = this.note.checkStave();

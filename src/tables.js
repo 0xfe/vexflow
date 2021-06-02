@@ -3,6 +3,7 @@
 /* eslint-disable key-spacing */
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
 import { DefaultFontStack } from './font';
@@ -39,13 +40,14 @@ const Flow = {
   textWidth: textWidth,
   tabToGlyph: tabToGlyph,
   articulationCodes: articulationCodes,
+  TIME4_4: TIME4_4,
 };
 
 Flow.clefProperties = (clef) => {
-  if (!clef) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
+  if (!clef) throw new RuntimeError('BadArgument', 'Invalid clef: ' + clef);
 
   const props = Flow.clefProperties.values[clef];
-  if (!props) throw new Vex.RERR('BadArgument', 'Invalid clef: ' + clef);
+  if (!props) throw new RuntimeError('BadArgument', 'Invalid clef: ' + clef);
 
   return props;
 };
@@ -84,12 +86,12 @@ function keyProperties(key, clef, params) {
   const pieces = key.split('/');
 
   if (pieces.length < 2) {
-    throw new Vex.RERR('BadArguments', `Key must have note + octave and an optional glyph: ${key}`);
+    throw new RuntimeError('BadArguments', `Key must have note + octave and an optional glyph: ${key}`);
   }
 
   const k = pieces[0].toUpperCase();
   const value = Flow.keyProperties.note_values[k];
-  if (!value) throw new Vex.RERR('BadArguments', 'Invalid key name: ' + k);
+  if (!value) throw new RuntimeError('BadArguments', 'Invalid key name: ' + k);
   if (value.octave) pieces[1] = value.octave;
 
   let octave = parseInt(pieces[1], 10);
@@ -187,16 +189,16 @@ Flow.keyProperties.note_values = {
 
 function integerToNote(integer) {
   if (typeof integer === 'undefined') {
-    throw new Vex.RERR('BadArguments', 'Undefined integer for integerToNote');
+    throw new RuntimeError('BadArguments', 'Undefined integer for integerToNote');
   }
 
   if (integer < -2) {
-    throw new Vex.RERR('BadArguments', `integerToNote requires integer > -2: ${integer}`);
+    throw new RuntimeError('BadArguments', `integerToNote requires integer > -2: ${integer}`);
   }
 
   const noteValue = Flow.integerToNote.table[integer];
   if (!noteValue) {
-    throw new Vex.RERR('BadArguments', `Unknown note value for integer: ${integer}`);
+    throw new RuntimeError('BadArguments', `Unknown note value for integer: ${integer}`);
   }
 
   return noteValue;
@@ -614,7 +616,7 @@ Flow.keySignature = (spec) => {
   const keySpec = Flow.keySignature.keySpecs[spec];
 
   if (!keySpec) {
-    throw new Vex.RERR('BadKeySignature', `Bad key signature spec: '${spec}'`);
+    throw new RuntimeError('BadKeySignature', `Bad key signature spec: '${spec}'`);
   }
 
   if (!keySpec.acc) {
@@ -699,7 +701,7 @@ Flow.sanitizeDuration = (duration) => {
   }
 
   if (Flow.durationToTicks.durations[duration] === undefined) {
-    throw new Vex.RERR('BadArguments', `The provided duration is not valid: ${duration}`);
+    throw new RuntimeError('BadArguments', `The provided duration is not valid: ${duration}`);
   }
 
   return duration;
@@ -1266,7 +1268,7 @@ Flow.getGlyphProps.duration_codes = {
 };
 
 // Some defaults
-Flow.TIME4_4 = {
+const TIME4_4 = {
   num_beats: 4,
   beat_value: 4,
   resolution: Flow.RESOLUTION,

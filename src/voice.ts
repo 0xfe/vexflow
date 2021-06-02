@@ -6,6 +6,7 @@
 // object to group `Tickables` for formatting.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -179,7 +180,7 @@ export class Voice extends Element {
   // and preformatters to associate them with the right modifierContexts.
   getVoiceGroup(): VoiceGroup {
     if (!this.voiceGroup) {
-      throw new Vex.RERR('NoVoiceGroup', 'No voice group for voice.');
+      throw new RuntimeError('NoVoiceGroup', 'No voice group for voice.');
     }
 
     return this.voiceGroup;
@@ -251,7 +252,7 @@ export class Voice extends Element {
         this.ticksUsed.greaterThan(this.totalTicks)
       ) {
         this.ticksUsed.subtract(ticks);
-        throw new Vex.RERR('BadArgument', 'Too many ticks.');
+        throw new RuntimeError('BadArgument', 'Too many ticks.');
       }
 
       // Track the smallest tickable for formatting.
@@ -307,7 +308,7 @@ export class Voice extends Element {
       if (stave) tickable.setStave(stave);
 
       if (!tickable.getStave()) {
-        throw new Vex.RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
+        throw new RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
       }
 
       if (i === 0) boundingBox = tickable.getBoundingBox();

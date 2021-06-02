@@ -7,7 +7,7 @@ import { Grammar } from './easyscore';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 // eslint-disable-next-line
-function L(...args: any[]) {
+function L(...args: any[]): void {
   if (Parser.DEBUG) Vex.L('Vex.Flow.Parser', args);
 }
 
@@ -15,11 +15,11 @@ const X = Vex.MakeException('ParserError');
 
 const NO_ERROR_POS = -1;
 
-type Match = string | Match[] | null;
-type RuleFunction = () => Rule;
-type TriggerFunction = (state?: { matches: Match[] }) => void;
+export type Match = string | Match[] | null;
+export type RuleFunction = () => Rule;
+export type TriggerFunction = (state?: { matches: Match[] }) => void;
 
-interface Rule {
+export interface Rule {
   // Lexer Rules
   token?: string; // The token property is a string that is compiled into a RegExp.
   noSpace?: boolean;
@@ -33,7 +33,7 @@ interface Rule {
   run?: TriggerFunction;
 }
 
-interface Result {
+export interface Result {
   success: boolean;
 
   // Lexer Results

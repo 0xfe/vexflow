@@ -6,7 +6,7 @@
 import { CanvasContext } from './canvascontext';
 import { RaphaelContext } from './raphaelcontext';
 import { SVGContext } from './svgcontext';
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 
 let lastContext = null;
 
@@ -134,7 +134,7 @@ export class Renderer {
   constructor(elementId, backend) {
     this.elementId = elementId;
     if (!this.elementId) {
-      throw new Vex.RERR('BadArgument', 'Invalid id for renderer.');
+      throw new RuntimeError('BadArgument', 'Invalid id for renderer.');
     }
 
     this.element = document.getElementById(elementId);
@@ -147,7 +147,7 @@ export class Renderer {
     if (this.backend === Renderer.Backends.CANVAS) {
       // Create context.
       if (!this.element.getContext) {
-        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${elementId}`);
+        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${elementId}`);
       }
       this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
     } else if (this.backend === Renderer.Backends.RAPHAEL) {
@@ -155,14 +155,14 @@ export class Renderer {
     } else if (this.backend === Renderer.Backends.SVG) {
       this.ctx = new SVGContext(this.element);
     } else {
-      throw new Vex.RERR('InvalidBackend', `No support for backend: ${this.backend}`);
+      throw new RuntimeError('InvalidBackend', `No support for backend: ${this.backend}`);
     }
   }
 
   resize(width, height) {
     if (this.backend === Renderer.Backends.CANVAS) {
       if (!this.element.getContext) {
-        throw new Vex.RERR('BadElement', `Can't get canvas context from element: ${this.elementId}`);
+        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${this.elementId}`);
       }
       [width, height] = CanvasContext.SanitizeCanvasDims(width, height);
 

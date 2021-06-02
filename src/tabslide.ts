@@ -4,7 +4,7 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { TabTie } from './tabtie';
 import { TabNote } from './tabnote';
 import { TieNotes } from './types/common';
@@ -42,8 +42,8 @@ export class TabSlide extends TabTie {
     this.setAttribute('type', 'TabSlide');
 
     if (!direction) {
-      const first_fret = ((notes.first_note as unknown) as TabNote).getPositions()[0].fret;
-      const last_fret = ((notes.last_note as unknown) as TabNote).getPositions()[0].fret;
+      const first_fret = (notes.first_note as TabNote).getPositions()[0].fret;
+      const last_fret = (notes.last_note as TabNote).getPositions()[0].fret;
 
       direction = parseInt(first_fret, 10) > parseInt(last_fret, 10) ? TabSlide.SLIDE_DOWN : TabSlide.SLIDE_UP;
     }
@@ -65,7 +65,7 @@ export class TabSlide extends TabTie {
     first_ys: number[];
   }): void {
     if (params.first_ys.length === 0 || params.last_ys.length === 0) {
-      throw new Vex.RERR('BadArguments', 'No Y-values to render');
+      throw new RuntimeError('BadArguments', 'No Y-values to render');
     }
 
     const ctx = this.checkContext();
@@ -75,14 +75,14 @@ export class TabSlide extends TabTie {
 
     const direction = params.direction;
     if (direction !== TabSlide.SLIDE_UP && direction !== TabSlide.SLIDE_DOWN) {
-      throw new Vex.RERR('BadSlide', 'Invalid slide direction');
+      throw new RuntimeError('BadSlide', 'Invalid slide direction');
     }
 
     for (let i = 0; i < this.notes.first_indices.length; ++i) {
       const slide_y = first_ys[this.notes.first_indices[i]] + this.render_options.y_shift;
 
       if (isNaN(slide_y)) {
-        throw new Vex.RERR('BadArguments', 'Bad indices for slide rendering.');
+        throw new RuntimeError('BadArguments', 'Bad indices for slide rendering.');
       }
 
       ctx.beginPath();

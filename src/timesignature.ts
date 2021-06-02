@@ -5,7 +5,7 @@
 // See tables.js for the internal time signatures
 // representation
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
@@ -21,7 +21,7 @@ const assertIsValidFraction = (timeSpec: string) => {
   const numbers = timeSpec.split('/').filter((number) => number !== '');
 
   if (numbers.length !== 2) {
-    throw new Vex.RERR(
+    throw new RuntimeError(
       'BadTimeSignature',
       `Invalid time spec: ${timeSpec}. Must be in the form "<numerator>/<denominator>"`
     );
@@ -29,7 +29,7 @@ const assertIsValidFraction = (timeSpec: string) => {
 
   numbers.forEach((number) => {
     if (isNaN(Number(number))) {
-      throw new Vex.RERR('BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain two valid numbers.`);
+      throw new RuntimeError('BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain two valid numbers.`);
     }
   });
 };
@@ -120,11 +120,11 @@ export class TimeSignature extends StaveModifier {
 
   draw(): void {
     if (!this.x) {
-      throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without x.");
+      throw new RuntimeError('TimeSignatureError', "Can't draw time signature without x.");
     }
 
     if (!this.stave) {
-      throw new Vex.RERR('TimeSignatureError', "Can't draw time signature without stave.");
+      throw new RuntimeError('TimeSignatureError', "Can't draw time signature without stave.");
     }
 
     this.setRendered();

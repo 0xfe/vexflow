@@ -6,6 +6,7 @@
 // render grace notes.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
@@ -174,10 +175,7 @@ export class GraceNoteGroup extends Modifier {
     L('Drawing grace note group for:', note);
 
     if (!(note && this.index !== null)) {
-      throw new Vex.RuntimeError(
-        'NoAttachedNote',
-        "Can't draw grace note without a parent note and parent note index."
-      );
+      throw new RuntimeError('NoAttachedNote', "Can't draw grace note without a parent note and parent note index.");
     }
 
     this.setRendered();
