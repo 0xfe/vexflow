@@ -99,7 +99,7 @@ export class Tuplet extends Element {
 
     this.options = { ...options };
     this.notes = notes;
-    this.num_notes = this.options.num_notes ? this.options.num_notes : notes.length;
+    this.num_notes = this.options.num_notes != undefined ? this.options.num_notes : notes.length;
 
     // We accept beats_occupied, but warn that it's deprecated:
     // the preferred property name is now notes_occupied.
@@ -107,13 +107,14 @@ export class Tuplet extends Element {
       this.beatsOccupiedDeprecationWarning();
     }
     this.notes_occupied = this.options.notes_occupied || this.options.beats_occupied || 2;
-    if (this.options.bracketed) {
+    if (this.options.bracketed != undefined) {
       this.bracketed = this.options.bracketed;
     } else {
       this.bracketed = notes.some((note) => !note.hasBeam());
     }
 
-    this.ratioed = this.options.ratioed ? this.options.ratioed : Math.abs(this.notes_occupied - this.num_notes) > 1;
+    this.ratioed =
+      this.options.ratioed != undefined ? this.options.ratioed : Math.abs(this.notes_occupied - this.num_notes) > 1;
     this.point = this.musicFont.lookupMetric('digits.tupletPoint');
     this.y_pos = 16;
     this.x_pos = 100;
