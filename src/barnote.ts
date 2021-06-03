@@ -13,10 +13,8 @@ import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
 
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]
-) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args);
 }
 
