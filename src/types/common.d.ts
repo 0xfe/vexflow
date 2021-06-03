@@ -53,7 +53,10 @@ export interface TypeProps extends KeyProps {
   position: string;
 }
 
-/** Contexts common interface */
+export interface GroupAttributes {
+  pointerBBox: boolean;
+}
+
 export interface RenderContext {
   clear(): void;
   setFont(family: string, size: number, weight: string): this;
@@ -67,7 +70,7 @@ export interface RenderContext {
   setLineCap(cap_type: string): this;
   setLineDash(dashPattern: number[]): this;
   scale(x: number, y: number): this;
-  rect(x: number, y: number, width: number, height: number, attributes?: any): this;
+  rect(x: number, y: number, width: number, height: number): this;
   resize(width: number, height: number): this;
   fillRect(x: number, y: number, width: number, height: number): this;
   clearRect(x: number, y: number, width: number, height: number): this;
@@ -84,12 +87,12 @@ export interface RenderContext {
   fillText(text: string, x: number, y: number): this;
   save(): this;
   restore(): this;
-  openGroup(cls: string, id?: any, attrs?: any): any;
+  openGroup(cls: string, id?: string, attrs?: GroupAttributes): any;
   closeGroup(): void;
   add(child: any): void;
 
   /**
-   * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width : number, height : number}. Only width is used throughout VexFlow.
+   * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width: number, height: number}. Only width is used throughout VexFlow.
    */
   measureText(text: string): { width: number; height: number };
 }

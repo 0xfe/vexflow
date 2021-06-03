@@ -2,10 +2,13 @@
 // @author Gregory Ristow (2015)
 
 import { Vex } from './vex';
-import { RenderContext } from './types/common';
+import { GroupAttributes, Point, RenderContext } from './types/common';
 import { RuntimeError } from './util';
 
-const attrNamesToIgnoreMap: { [key: string]: any } = {
+// eslint-disable-next-line
+type Attributes = { [key: string]: any };
+
+const attrNamesToIgnoreMap: { [nodeName: string]: Attributes } = {
   path: {
     x: true,
     y: true,
@@ -31,8 +34,6 @@ const attrNamesToIgnoreMap: { [key: string]: any } = {
 // Create the SVG in the SVG namespace:
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-type Attributes = { [key: string]: any };
-
 interface State {
   state: Attributes;
   attributes: Attributes;
@@ -46,7 +47,7 @@ export class SVGContext implements RenderContext {
   width: number = 0;
   height: number = 0;
   path: string;
-  pen: { x: number; y: number };
+  pen: Point;
   lineWidth: number;
   attributes: Attributes;
   background_attributes: Attributes;
@@ -80,10 +81,7 @@ export class SVGContext implements RenderContext {
       'font-weight': 'normal',
     };
 
-    this.attributes = {
-      'stroke-width': 0.3,
-      fill: 'black',
-      stroke: 'black',
+    const defaultAttributes = {
       'stroke-dasharray': 'none',
       'font-family': 'Arial',
       'font-size': '10pt',
@@ -91,15 +89,18 @@ export class SVGContext implements RenderContext {
       'font-style': 'normal',
     };
 
+    this.attributes = {
+      'stroke-width': 0.3,
+      fill: 'black',
+      stroke: 'black',
+      ...defaultAttributes,
+    };
+
     this.background_attributes = {
       'stroke-width': 0,
       fill: 'white',
       stroke: 'white',
-      'stroke-dasharray': 'none',
-      'font-family': 'Arial',
-      'font-size': '10pt',
-      'font-weight': 'normal',
-      'font-style': 'normal',
+      ...defaultAttributes,
     };
 
     this.shadow_attributes = {
@@ -118,7 +119,7 @@ export class SVGContext implements RenderContext {
   }
 
   // Allow grouping elements in containers for interactivity.
-  openGroup(cls: string, id: any, attrs: { pointerBBox: boolean }): SVGGElement {
+  openGroup(cls: string, id?: string, attrs?: GroupAttributes): SVGGElement {
     const group: SVGGElement = this.create('g') as SVGGElement;
     this.groups.push(group);
     this.parent.appendChild(group);
@@ -195,8 +196,8 @@ export class SVGContext implements RenderContext {
     // Explorer we can fix its calculations of text width.
     this.fontSize = Number(size);
 
-    Vex.Merge(this.attributes, fontAttributes);
-    Vex.Merge(this.state, fontAttributes);
+    this.attributes = { ...this.attributes, ...fontAttributes };
+    this.state = { ...this.state, ...fontAttributes };
 
     return this;
   }
@@ -368,7 +369,7 @@ export class SVGContext implements RenderContext {
   }
 
   // ## Rectangles:
-  rect(x: number, y: number, width: number, height: number, attributes?: any): this {
+  rect(x: number, y: number, width: number, height: number, attributes?: Attributes): this {
     // Avoid invalid negative height attribs by
     // flipping the rectangle on its head:
     if (height < 0) {
@@ -386,12 +387,7 @@ export class SVGContext implements RenderContext {
       };
     }
 
-    Vex.Merge(attributes, {
-      x,
-      y,
-      width,
-      height,
-    });
+    attributes = { ...attributes, x, y, width, height };
 
     this.applyAttributes(rectangle, attributes);
 
@@ -472,7 +468,6 @@ export class SVGContext implements RenderContext {
       while (angle < 0) {
         angle += Math.PI * 2;
       }
-
       while (angle > Math.PI * 2) {
         angle -= Math.PI * 2;
       }
@@ -482,6 +477,7 @@ export class SVGContext implements RenderContext {
     startAngle = normalizeAngle(startAngle);
     endAngle = normalizeAngle(endAngle);
 
+    // Swap the start and end angles if necessary.
     if (startAngle > endAngle) {
       const tmp = startAngle;
       startAngle = endAngle;
@@ -490,7 +486,6 @@ export class SVGContext implements RenderContext {
     }
 
     const delta = endAngle - startAngle;
-
     if (delta > Math.PI) {
       this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2, antiClockwise);
       this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle, antiClockwise);
@@ -518,10 +513,10 @@ export class SVGContext implements RenderContext {
       largeArcFlag = 1;
     }
 
-    this.path +=
-      'M' + x1 + ' ' + y1 + ' A' + radius + ' ' + radius + ' 0 ' + largeArcFlag + ' ' + sweepFlag + ' ' + x2 + ' ' + y2;
+    this.path += `M${x1} ${y1} A${radius} ${radius} 0 ${largeArcFlag} ${sweepFlag} ${x2} ${y2}`;
+
     if (!isNaN(this.pen.x) && !isNaN(this.pen.y)) {
-      this.path += 'M' + this.pen.x + ' ' + this.pen.y; // BUG? this.peth => this.path
+      this.path += 'M' + this.pen.x + ' ' + this.pen.y;
     }
   }
 
@@ -555,15 +550,13 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  fill(attributes: any): this {
+  fill(attributes: Attributes): this {
     // If our current path is set to glow, make it glow
     this.glow();
 
     const path = this.create('path');
     if (typeof attributes === 'undefined') {
-      attributes = {};
-      Vex.Merge(attributes, this.attributes);
-      attributes.stroke = 'none';
+      attributes = { ...this.attributes, stroke: 'none' };
     }
 
     attributes.d = this.path;
@@ -578,11 +571,12 @@ export class SVGContext implements RenderContext {
     this.glow();
 
     const path = this.create('path');
-    const attributes: Attributes = {};
-    Vex.Merge(attributes, this.attributes);
-    attributes.fill = 'none';
-    attributes['stroke-width'] = this.lineWidth;
-    attributes.d = this.path;
+    const attributes: Attributes = {
+      ...this.attributes,
+      fill: 'none',
+      'stroke-width': this.lineWidth,
+      d: this.path,
+    };
 
     this.applyAttributes(path, attributes);
     this.add(path);
@@ -641,11 +635,12 @@ export class SVGContext implements RenderContext {
     if (!text || text.length <= 0) {
       return this;
     }
-    const attributes: any = {};
-    Vex.Merge(attributes, this.attributes);
-    attributes.stroke = 'none';
-    attributes.x = x;
-    attributes.y = y;
+    const attributes: Attributes = {
+      ...this.attributes,
+      stroke: 'none',
+      x,
+      y,
+    };
 
     const txt = this.create('text');
     txt.textContent = text;
