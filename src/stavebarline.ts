@@ -34,13 +34,13 @@ export class Barline extends StaveModifier {
 
   static get typeString(): Record<string, BarlineType> {
     return {
-      single: Barline.type.SINGLE,
-      double: Barline.type.DOUBLE,
-      end: Barline.type.END,
-      repeatBegin: Barline.type.REPEAT_BEGIN,
-      repeatEnd: Barline.type.REPEAT_END,
-      repeatBoth: Barline.type.REPEAT_BOTH,
-      none: Barline.type.NONE,
+      single: BarlineType.SINGLE,
+      double: BarlineType.DOUBLE,
+      end: BarlineType.END,
+      repeatBegin: BarlineType.REPEAT_BEGIN,
+      repeatEnd: BarlineType.REPEAT_END,
+      repeatBoth: BarlineType.REPEAT_BOTH,
+      none: BarlineType.NONE,
     };
   }
 
@@ -52,7 +52,7 @@ export class Barline extends StaveModifier {
     this.setAttribute('type', 'Barline');
     this.thickness = Flow.STAVE_LINE_THICKNESS;
 
-    const TYPE = Barline.type;
+    const TYPE = BarlineType;
     this.widths = {};
     this.widths[TYPE.SINGLE] = 5;
     this.widths[TYPE.DOUBLE] = 5;
@@ -141,16 +141,16 @@ export class Barline extends StaveModifier {
     this.setRendered();
 
     switch (this.type) {
-      case Barline.type.SINGLE:
+      case BarlineType.SINGLE:
         this.drawVerticalBar(stave, this.x, false);
         break;
-      case Barline.type.DOUBLE:
+      case BarlineType.DOUBLE:
         this.drawVerticalBar(stave, this.x, true);
         break;
-      case Barline.type.END:
+      case BarlineType.END:
         this.drawVerticalEndBar(stave, this.x);
         break;
-      case Barline.type.REPEAT_BEGIN:
+      case BarlineType.REPEAT_BEGIN:
         // If the barline is shifted over (in front of clef/time/key)
         // Draw vertical bar at the beginning.
         this.drawRepeatBar(stave, this.x, true);
@@ -159,10 +159,10 @@ export class Barline extends StaveModifier {
         }
 
         break;
-      case Barline.type.REPEAT_END:
+      case BarlineType.REPEAT_END:
         this.drawRepeatBar(stave, this.x, false);
         break;
-      case Barline.type.REPEAT_BOTH:
+      case BarlineType.REPEAT_BOTH:
         this.drawRepeatBar(stave, this.x, false);
         this.drawRepeatBar(stave, this.x, true);
         break;
