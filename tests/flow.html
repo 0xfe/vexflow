@@ -3,13 +3,11 @@
   <head>
     <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
     <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet" />
     <!-- Test Dependencies: jQuery, QUnit -->
     <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet" />
     <script src="support/jquery.js"></script>
     <script src="support/qunit.js"></script>
-
     <script>
       function loadScript(url) {
         return new Promise(function (resolve, reject) {
@@ -17,21 +15,31 @@
           script.onload = resolve;
           script.onerror = reject;
           script.src = url;
-          // The utf-8 charset is required for the measureText cache, since the index contains weird unicode characters.
+          // The utf-8 charset is required for the measureText cache,
+          // since the index contains weird unicode characters.
           script.charset = 'utf-8';
           document.getElementsByTagName('head')[0].appendChild(script);
         });
       }
 
       $(function () {
-        var urlParams = new URLSearchParams(window.location.search);
-        var ver = urlParams.get('ver') || 'build';
-        var vexSrcURL = '../' + ver + '/vexflow-debug.js';
-        var vexTestsURL = '../' + ver + '/vexflow-tests.js';
+        // Support a query param ver=(build|reference|releases|etc...)
+        // If omitted, ver defaults to 'build'.
+        var params = new URLSearchParams(window.location.search);
+        var param_ver = params.get('ver');
+        var path = param_ver || 'build';
+        var vexURL = '../' + path + '/vexflow-debug.js';
+        var testsURL = '../' + path + '/vexflow-tests.js';
 
-        loadScript(vexSrcURL)
+        // Display which VexFlow version we loaded, if the `ver` param was specified.
+        var info = param_ver !== null ? ` [${param_ver}]` : '';
+        $('#vex-src')
+          .attr('href', vexURL)
+          .text('VexFlow Source' + info);
+
+        loadScript(vexURL)
           .then(function () {
-            return loadScript(vexTestsURL);
+            return loadScript(testsURL);
           })
           .then(function () {
             // Show only failed tests.
@@ -50,7 +58,7 @@
       <div>
         <h2>[ <a href="http://vexflow.com">Home</a> ] [ <a href="http://github.com/0xfe/vexflow">GitHub</a> ]</h2>
         <h3>
-          Don't forget to run the
+          See the: <a id="vex-src" target="_blank"></a>. Don't forget to run the
           <a href="https://github.com/0xfe/vexflow/wiki/Visual-Regression-Tests">Visual Regression Tests</a>!
         </h3>
       </div>
