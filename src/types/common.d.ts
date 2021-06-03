@@ -5,11 +5,16 @@ export interface FontInfo {
   style?: string;
 }
 
-export interface Bounds {
-  w: number;
+export interface Point {
   x: number;
-  h: number;
   y: number;
+}
+
+export interface Bounds {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 export interface KeyProps {

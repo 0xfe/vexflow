@@ -10,7 +10,7 @@
 import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
-import { FontInfo, RenderContext } from './types/common';
+import { FontInfo, RenderContext, Point } from './types/common';
 import { StaveNote } from './stavenote';
 
 export interface StaveLineNotes {
@@ -38,25 +38,7 @@ function drawArrowHead(ctx: RenderContext, x0: number, y0: number, x1: number, y
 }
 
 // Helper function to draw a line with arrow heads
-function drawArrowLine(
-  ctx: RenderContext,
-  point1: { x: number; y: number },
-  point2: { x: number; y: number },
-  config: {
-    draw_start_arrow: boolean;
-    padding_left: number;
-    text_justification: number;
-    color?: string;
-    line_width: number;
-    line_dash?: string;
-    rounded_end: boolean;
-    arrowhead_length: number;
-    text_position_vertical: number;
-    draw_end_arrow: boolean;
-    arrowhead_angle: number;
-    padding_right: number;
-  }
-) {
+function drawArrowLine(ctx: RenderContext, point1: Point, point2: Point, config: RenderOptions) {
   const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
 
   const x1 = point1.x;
@@ -137,21 +119,23 @@ function drawArrowLine(
   }
 }
 
+interface RenderOptions {
+  padding_left: number;
+  padding_right: number;
+  line_width: number;
+  line_dash?: number[];
+  rounded_end: boolean;
+  color?: string;
+  draw_start_arrow: boolean;
+  draw_end_arrow: boolean;
+  arrowhead_length: number;
+  arrowhead_angle: number;
+  text_position_vertical: number;
+  text_justification: number;
+}
+
 export class StaveLine extends Element {
-  readonly render_options: {
-    draw_start_arrow: boolean;
-    padding_left: number;
-    text_justification: number;
-    color?: string;
-    line_width: number;
-    line_dash?: string;
-    rounded_end: boolean;
-    arrowhead_length: number;
-    text_position_vertical: number;
-    draw_end_arrow: boolean;
-    arrowhead_angle: number;
-    padding_right: number;
-  };
+  readonly render_options: RenderOptions;
 
   protected text: string;
   protected font: FontInfo;
@@ -160,6 +144,7 @@ export class StaveLine extends Element {
   protected notes: StaveLineNotes;
   protected first_note!: StaveNote;
   protected last_note!: StaveNote;
+
   // Text Positioning
   static readonly TextVerticalPosition = {
     TOP: 1,
@@ -205,9 +190,9 @@ export class StaveLine extends Element {
 
       // The width of the line in pixels
       line_width: 1,
-      // An array of line/space lengths. Unsupported with Raphael (SVG)
+      // An array of line/space lengths. Unsupported with Raphael (SVG).
       line_dash: undefined,
-      // Can draw rounded line end, instead of a square. Unsupported with Raphael (SVG)
+      // Can draw rounded line end, instead of a square. Unsupported with Raphael (SVG).
       rounded_end: true,
       // The color of the line and arrowheads
       color: undefined,
@@ -289,9 +274,11 @@ export class StaveLine extends Element {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
     }
 
-    if (this.render_options.color) {
-      ctx.setStrokeStyle(this.render_options.color);
-      ctx.setFillStyle(this.render_options.color);
+    const render_options = this.render_options;
+    const color = render_options.color;
+    if (color) {
+      ctx.setStrokeStyle(color);
+      ctx.setFillStyle(color);
     }
   }
 
@@ -308,8 +295,8 @@ export class StaveLine extends Element {
     this.applyLineStyle();
 
     // Cycle through each set of indices and draw lines
-    let start_position = { x: 0, y: 0 };
-    let end_position = { x: 0, y: 0 };
+    let start_position: Point = { x: 0, y: 0 };
+    let end_position: Point = { x: 0, y: 0 };
     this.first_indices.forEach((first_index, i) => {
       const last_index = this.last_indices[i];
 

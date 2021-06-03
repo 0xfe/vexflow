@@ -254,13 +254,15 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  // @param array {lineDash} as [dashInt, spaceInt, dashInt, spaceInt, etc...]
-  // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray
-  // comma and/or white space separated. So we can probably shorten the delimiter by one character.
-  // Also see: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
+  /**
+   * @param lineDash an array of integers in the form of [dash, space, dash, space, etc...]
+   * @returns this
+   *
+   * See: [SVG `stroke-dasharray` attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
+   */
   setLineDash(lineDash: number[]): this {
     if (Object.prototype.toString.call(lineDash) === '[object Array]') {
-      this.attributes['stroke-dasharray'] = lineDash.join(', ');
+      this.attributes['stroke-dasharray'] = lineDash.join(',');
       return this;
     } else {
       throw new RuntimeError('ArgumentError', 'lineDash must be an array of integers.');
