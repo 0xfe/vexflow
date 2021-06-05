@@ -3,7 +3,7 @@
 // ## Description
 // This class implements vibratos.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Bend } from './bend';
 import { RenderContext } from './types/common';
@@ -90,7 +90,7 @@ export class Vibrato extends Modifier {
     const ctx = this.checkContext();
 
     if (!this.note) {
-      throw new Vex.RERR('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
+      throw new RuntimeError('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
     }
 
     this.setRendered();

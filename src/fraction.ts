@@ -6,7 +6,7 @@
 // @author zz85
 // @author incompleteopus (modifications)
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 
 /** Fraction represents a rational number. */
 export class Fraction {
@@ -26,7 +26,7 @@ export class Fraction {
    */
   static GCD(a: number, b: number): number {
     if (typeof a !== 'number' || typeof b !== 'number') {
-      throw new Vex.RERR('BadArgument', `Invalid numbers: ${a}, ${b}`);
+      throw new RuntimeError('BadArgument', `Invalid numbers: ${a}, ${b}`);
     }
 
     let t;

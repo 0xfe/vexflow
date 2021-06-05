@@ -88,7 +88,7 @@ const FormatterTests = (function () {
       // TODO: add this after pull request #68 is merged to master
       // throws(
       //   function() { formatter.getMinTotalWidth(); },
-      //   Vex.RERR,
+      //   RuntimeError,
       //   "Expected to throw exception"
       // );
 

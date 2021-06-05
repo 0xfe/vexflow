@@ -4,7 +4,7 @@
 // The tickable interface. Tickables are things that sit on a score and
 // have a duration, i.e., they occupy space in the musical rendering dimension.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -122,6 +122,10 @@ export abstract class Tickable extends Element {
     return this.ignore_ticks;
   }
 
+  setIgnoreTicks(flag: boolean): void {
+    this.ignore_ticks = flag;
+  }
+
   /** Sets width of note. Used by the formatter for positioning. */
   setWidth(width: number): void {
     this.width = width;
@@ -130,7 +134,7 @@ export abstract class Tickable extends Element {
   /** Gets width of note. Used by the formatter for positioning. */
   getWidth(): number {
     if (!this.preFormatted) {
-      throw new Vex.RERR('UnformattedNote', "Can't call GetWidth on an unformatted note.");
+      throw new RuntimeError('UnformattedNote', "Can't call GetWidth on an unformatted note.");
     }
 
     return this.width + (this.modifierContext ? this.modifierContext.getWidth() : 0);
@@ -150,7 +154,7 @@ export abstract class Tickable extends Element {
   /** Gets `X` position of this tick context. */
   getX(): number {
     if (!this.tickContext) {
-      throw new Vex.RERR('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
     }
 
     return this.tickContext.getX() + this.x_shift;
@@ -192,7 +196,7 @@ export abstract class Tickable extends Element {
    * This allows formatters and preFormatter to associate them with the right modifierContexts.
    */
   getVoice(): Voice {
-    if (!this.voice) throw new Vex.RERR('NoVoice', 'Tickable has no voice.');
+    if (!this.voice) throw new RuntimeError('NoVoice', 'Tickable has no voice.');
     return this.voice;
   }
 

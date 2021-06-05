@@ -4,7 +4,7 @@
 //
 // This class implements diatonic key management.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Music } from './music';
 
 export class KeyManager {
@@ -31,7 +31,7 @@ export class KeyManager {
 
     const is_supported_type = Music.scaleTypes[this.keyParts.type];
     if (!is_supported_type) {
-      throw new Vex.RERR('BadArguments', `Unsupported key type: ${this.key}`);
+      throw new RuntimeError('BadArguments', `Unsupported key type: ${this.key}`);
     }
 
     this.scale = this.music.getScaleTones(

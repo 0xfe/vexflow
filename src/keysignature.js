@@ -6,7 +6,7 @@
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
@@ -268,7 +268,7 @@ export class KeySignature extends StaveModifier {
 
   format() {
     if (!this.stave) {
-      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+      throw new RuntimeError('KeySignatureError', "Can't draw key signature without stave.");
     }
 
     this.width = 0;
@@ -302,11 +302,11 @@ export class KeySignature extends StaveModifier {
 
   draw() {
     if (!this.x) {
-      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without x.");
+      throw new RuntimeError('KeySignatureError', "Can't draw key signature without x.");
     }
 
     if (!this.stave) {
-      throw new Vex.RERR('KeySignatureError', "Can't draw key signature without stave.");
+      throw new RuntimeError('KeySignatureError', "Can't draw key signature without stave.");
     }
 
     if (!this.formatted) this.format();

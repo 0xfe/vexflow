@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element, ElementStyle } from './element';
 import { Flow } from './tables';
 import { Barline } from './stavebarline';
@@ -51,7 +52,8 @@ export class Stave extends Element {
   protected options: StaveOptions;
   protected endClef?: string;
   protected width: number;
-  protected height?: number;
+  // Initialised in resetLines called in constructor
+  protected height: number = 0;
   protected y: number;
 
   protected formatted: boolean;
@@ -182,6 +184,10 @@ export class Stave extends Element {
     return this;
   }
 
+  getY(): number {
+    return this.y;
+  }
+
   getTopLineTopY(): number {
     return this.getYForLine(0) - Flow.STAVE_LINE_THICKNESS / 2;
   }
@@ -239,7 +245,7 @@ export class Stave extends Element {
    */
   getModifierXShift(index = 0): number {
     if (typeof index !== 'number') {
-      throw new Vex.RERR('InvalidIndex', 'Must be of number type');
+      throw new RuntimeError('InvalidIndex', 'Must be of number type');
     }
 
     if (!this.formatted) this.format();
@@ -305,7 +311,7 @@ export class Stave extends Element {
     return this;
   }
 
-  getHeight(): number | undefined {
+  getHeight(): number {
     return this.height;
   }
 
@@ -731,23 +737,23 @@ export class Stave extends Element {
    * Configure properties of the lines in the Stave
    * @param line_number The index of the line to configure.
    * @param line_config An configuration object for the specified line.
-   * @throws Vex.RERR "StaveConfigError" When the specified line number is out of
+   * @throws RuntimeError "StaveConfigError" When the specified line number is out of
    *   range of the number of lines specified in the constructor.
    */
   setConfigForLine(line_number: number, line_config: StaveLineConfig): this {
     if (line_number >= this.options.num_lines || line_number < 0) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'StaveConfigError',
         'The line number must be within the range of the number of lines in the Stave.'
       );
     }
 
     if (line_config.visible === undefined) {
-      throw new Vex.RERR('StaveConfigError', "The line configuration object is missing the 'visible' property.");
+      throw new RuntimeError('StaveConfigError', "The line configuration object is missing the 'visible' property.");
     }
 
     if (typeof line_config.visible !== 'boolean') {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'StaveConfigError',
         "The line configuration objects 'visible' property must be true or false."
       );
@@ -763,13 +769,13 @@ export class Stave extends Element {
    * @param lines_configuration An array of line configuration objects.  These objects
    *   are of the same format as the single one passed in to setLineConfiguration().
    *   The caller can set null for any line config entry if it is desired that the default be used
-   * @throws Vex.RERR "StaveConfigError" When the lines_configuration array does not have
+   * @throws RuntimeError "StaveConfigError" When the lines_configuration array does not have
    *   exactly the same number of elements as the num_lines configuration object set in
    *   the constructor.
    */
   setConfigForLines(lines_configuration: StaveLineConfig[]): this {
     if (lines_configuration.length !== this.options.num_lines) {
-      throw new Vex.RERR(
+      throw new RuntimeError(
         'StaveConfigError',
         'The length of the lines configuration array must match the number of lines in the Stave'
       );

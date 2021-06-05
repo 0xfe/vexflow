@@ -13,7 +13,7 @@
 // in multi-voice staves, all modifiers to notes on the same `tick` are part of the same
 // `ModifierContext`. This ensures that multiple voices don't trample all over each other.
 
-import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
@@ -104,7 +104,7 @@ export class Modifier extends Element {
 
   // Get and set attached note (`StaveNote`, `TabNote`, etc.)
   getNote(): Note {
-    if (!this.note) throw new Vex.RERR('NoNote', 'Modifier has no note.');
+    if (!this.note) throw new RuntimeError('NoNote', 'Modifier has no note.');
     return this.note;
   }
 
@@ -129,7 +129,7 @@ export class Modifier extends Element {
   }
 
   checkModifierContext(): ModifierContext {
-    if (!this.modifier_context) throw new Vex.RERR('NoModifierContext', 'Modifier Context Required');
+    if (!this.modifier_context) throw new RuntimeError('NoModifierContext', 'Modifier Context Required');
     return this.modifier_context;
   }
 
@@ -188,7 +188,7 @@ export class Modifier extends Element {
   // Render the modifier onto the canvas.
   draw(): void {
     this.checkContext();
-    throw new Vex.RERR('MethodNotImplemented', 'draw() not implemented for this modifier.');
+    throw new RuntimeError('MethodNotImplemented', 'draw() not implemented for this modifier.');
   }
 
   // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main note with correct x-offset

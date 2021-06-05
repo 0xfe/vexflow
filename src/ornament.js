@@ -10,6 +10,7 @@
 // See `tests/ornament_tests.js` for usage examples.
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
@@ -164,7 +165,7 @@ export class Ornament extends Modifier {
     this.ornamentAlignWithNoteHead = Ornament.ornamentAlignWithNoteHead.indexOf(this.type) >= 0;
 
     if (!this.ornament) {
-      throw new Vex.RERR('ArgumentError', `Ornament not found: '${this.type}'`);
+      throw new RuntimeError('ArgumentError', `Ornament not found: '${this.type}'`);
     }
 
     this.x_shift = metrics ? metrics.xOffset : 0;
@@ -217,7 +218,7 @@ export class Ornament extends Modifier {
     this.checkContext();
 
     if (!this.note || this.index == null) {
-      throw new Vex.RERR('NoAttachedNote', "Can't draw Ornament without a note and index.");
+      throw new RuntimeError('NoAttachedNote', "Can't draw Ornament without a note and index.");
     }
 
     this.setRendered();

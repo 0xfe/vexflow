@@ -6,6 +6,7 @@
 /* eslint max-classes-per-file: "off" */
 
 import { Vex } from './vex';
+import { RuntimeError } from './util';
 import { StaveNote } from './stavenote';
 import { Match, Parser, Result, Rule, RuleFunction } from './parser';
 import { Articulation } from './articulation';
@@ -340,10 +341,10 @@ export class Builder {
 
     // reset() sets this.options.stem & this.options.clef but we check to make sure nothing has changed.
     if (options.stem === undefined) {
-      throw new Vex.RERR('options.stem is not defined');
+      throw new RuntimeError('options.stem is not defined');
     }
     if (options.clef === undefined) {
-      throw new Vex.RERR('options.clef is not defined');
+      throw new RuntimeError('options.clef is not defined');
     }
     const stem: string = options.stem.toLowerCase(); // e.g., auto | up | down
     const clef: string = options.clef; // e.g., treble | bass
