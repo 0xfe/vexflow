@@ -388,7 +388,7 @@ export class TabNote extends StemmableNote {
     // Draw the modifiers
     this.modifiers.forEach((modifier) => {
       // Only draw the dots if enabled
-      if (modifier.getCategory() === 'dots' && !this.render_options.draw_dots) return;
+      if (modifier.getCategory() === Dot.CATEGORY && !this.render_options.draw_dots) return;
 
       modifier.setContext(this.getContext());
       modifier.drawWithStyle();

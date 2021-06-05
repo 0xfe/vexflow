@@ -39,7 +39,8 @@ export class FretHandFinger extends Modifier {
       const num = nums[i];
       const note = num.getNote() as StaveNote;
       const pos = num.getPosition();
-      const props = note.getKeyProps()[num.getIndex()];
+      const index = num.checkIndex();
+      const props = note.getKeyProps()[index];
       if (note !== prev_note) {
         for (let n = 0; n < note.keys.length; ++n) {
           if (left_shift === 0) {
@@ -154,15 +155,11 @@ export class FretHandFinger extends Modifier {
   }
 
   draw(): void {
-    this.checkContext();
-
-    if (!this.note || this.index == null) {
-      throw new RuntimeError('NoAttachedNote', "Can't draw string number without a note and index.");
-    }
-
-    this.setRendered();
     const ctx = this.checkContext();
-    const start = this.note.getModifierStartXY(this.position, this.index);
+    const note = this.checkAttachedNote();
+    this.setRendered();
+
+    const start = note.getModifierStartXY(this.position, this.index);
     let dot_x = start.x + this.x_shift + this.x_offset;
     let dot_y = start.y + this.y_shift + this.y_offset + 5;
 
@@ -182,7 +179,7 @@ export class FretHandFinger extends Modifier {
         dot_x += 1;
         break;
       default:
-        throw new RuntimeError('InvalidPostion', `The position ${this.position} does not exist`);
+        throw new RuntimeError('InvalidPosition', `The position ${this.position} does not exist`);
     }
 
     ctx.save();

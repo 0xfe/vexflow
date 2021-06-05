@@ -6,7 +6,6 @@
 // render grace notes.
 
 import { Vex } from './vex';
-import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
@@ -18,11 +17,13 @@ import { StaveNote } from './stavenote';
 import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
+import { RenderContext } from './types/common';
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
-  ...args: any) {
+  ...args: any
+) {
   if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
 }
 
@@ -150,11 +151,6 @@ export class GraceNoteGroup extends Modifier {
     return this;
   }
 
-  setNote(note: Note): this {
-    this.note = note;
-    return this;
-  }
-
   setWidth(width: number): this {
     this.width = width;
     return this;
@@ -169,32 +165,27 @@ export class GraceNoteGroup extends Modifier {
   }
 
   draw(): void {
-    this.checkContext();
-
-    const note = this.getNote();
+    const ctx: RenderContext = this.checkContext();
+    const note = this.checkAttachedNote();
+    this.setRendered();
 
     L('Drawing grace note group for:', note);
 
-    if (!(note && this.index !== null)) {
-      throw new RuntimeError('NoAttachedNote', "Can't draw grace note without a parent note and parent note index.");
-    }
-
-    this.setRendered();
     this.alignSubNotesWithNote(this.getGraceNotes(), note); // Modifier function
 
     // Draw notes
     this.grace_notes.forEach((graceNote) => {
-      graceNote.setContext(this.getContext()).draw();
+      graceNote.setContext(ctx).draw();
     });
 
     // Draw beam
     this.beams.forEach((beam) => {
-      beam.setContext(this.getContext()).draw();
+      beam.setContext(ctx).draw();
     });
 
     if (this.show_slur) {
       // Create and draw slur
-      const is_stavenote = this.getNote().getCategory() === StaveNote.CATEGORY;
+      const is_stavenote = note.getCategory() === StaveNote.CATEGORY;
       const TieClass = is_stavenote ? StaveTie : TabTie;
 
       this.slur = new TieClass({
@@ -206,7 +197,7 @@ export class GraceNoteGroup extends Modifier {
 
       this.slur.render_options.cp2 = 12;
       this.slur.render_options.y_shift = (is_stavenote ? 7 : 5) + this.render_options.slur_y_shift;
-      this.slur.setContext(this.getContext()).draw();
+      this.slur.setContext(ctx).draw();
     }
   }
 }

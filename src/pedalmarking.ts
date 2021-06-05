@@ -25,7 +25,7 @@ function L(
 // Draws a pedal glyph with the provided `name` on a rendering `context`
 // at the coordinates `x` and `y. Takes into account the glyph data
 // coordinate shifts.
-function drawPedalGlyph(name: string, context: RenderContext, x: number, y: number, point: number) {
+function drawPedalGlyph(name: string, context: RenderContext, x: number, y: number, point: number): void {
   const glyph_data = PedalMarking.GLYPHS[name];
   const glyph = new Glyph(glyph_data.code, point, { category: 'pedalMarking' });
   glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);

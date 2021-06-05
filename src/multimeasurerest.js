@@ -10,6 +10,7 @@ import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
 import { StaveModifier } from './stavemodifier';
 import { TimeSignature } from './timesignature';
+import { Barline } from './stavebarline';
 
 let semibrave_rest;
 function get_semibrave_rest() {
@@ -192,7 +193,7 @@ export class MultiMeasureRest extends Element {
     // FIXME: getNoteStartX() returns x+5(barline width) and
     // getNoteEndX() returns x + width(no barline width) by default. how to fix?
     const begModifiers = stave.getModifiers(StaveModifier.Position.BEGIN);
-    if (begModifiers.length === 1 && begModifiers[0].getCategory() === 'barlines') {
+    if (begModifiers.length === 1 && begModifiers[0].getCategory() === Barline.CATEGORY) {
       left -= begModifiers[0].getWidth();
     }
 

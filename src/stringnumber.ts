@@ -54,7 +54,8 @@ export class StringNumber extends Modifier {
         throw new RuntimeError('NoStaveNote');
       }
 
-      const props = note.getKeyProps()[num.getIndex()];
+      const index = num.checkIndex();
+      const props = note.getKeyProps()[index];
 
       if (note !== prev_note) {
         for (let n = 0; n < note.keys.length; ++n) {
@@ -181,33 +182,31 @@ export class StringNumber extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-    if (!(this.note && this.index != null)) {
-      throw new RuntimeError('NoAttachedNote', "Can't draw string number without a note and index.");
-    }
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const line_space = this.note.checkStave().getOptions().spacing_between_lines_px;
+    const line_space = note.checkStave().getOptions().spacing_between_lines_px;
 
-    const start = this.note.getModifierStartXY(this.position, this.index);
+    const start = note.getModifierStartXY(this.position, this.index);
     let dot_x = start.x + this.x_shift + this.x_offset;
     let dot_y = start.y + this.y_shift + this.y_offset;
 
     switch (this.position) {
       case Modifier.Position.ABOVE:
       case Modifier.Position.BELOW: {
-        const stem_ext = this.note.getStemExtents();
+        const stem_ext = note.getStemExtents();
         let top = stem_ext.topY;
         let bottom = stem_ext.baseY + 2;
 
-        if (this.note.getStemDirection() === StaveNote.STEM_DOWN) {
+        if (note.getStemDirection() === StaveNote.STEM_DOWN) {
           top = stem_ext.baseY;
           bottom = stem_ext.topY - 2;
         }
 
         if (this.position === Modifier.Position.ABOVE) {
-          dot_y = this.note.hasStem() ? top - line_space * 1.75 : start.y - line_space * 1.75;
+          dot_y = note.hasStem() ? top - line_space * 1.75 : start.y - line_space * 1.75;
         } else {
-          dot_y = this.note.hasStem() ? bottom + line_space * 1.5 : start.y + line_space * 1.75;
+          dot_y = note.hasStem() ? bottom + line_space * 1.5 : start.y + line_space * 1.75;
         }
 
         dot_y += this.y_shift + this.y_offset;
@@ -234,7 +233,7 @@ export class StringNumber extends Modifier {
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);
 
     if (this.last_note instanceof StemmableNote) {
-      const end = this.last_note.getStemX() - this.note.getX() + 5;
+      const end = this.last_note.getStemX() - note.getX() + 5;
       ctx.setStrokeStyle('#000000');
       ctx.setLineCap('round');
       ctx.setLineWidth(0.6);

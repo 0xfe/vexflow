@@ -16,6 +16,8 @@ import { Flow } from './tables';
 import { Music } from './music';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
+import { GraceNoteGroup } from './gracenotegroup';
+import { GraceNote } from './gracenote';
 
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
 function L(...args) {
@@ -49,7 +51,8 @@ export class Accidental extends Modifier {
       const acc = accidentals[i];
       const note = acc.getNote();
       const stave = note.getStave();
-      const props = note.getKeyProps()[acc.getIndex()];
+      const index = acc.checkIndex();
+      const props = note.getKeyProps()[index];
       if (note !== prevNote) {
         // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
@@ -399,7 +402,7 @@ export class Accidental extends Modifier {
 
         // process grace notes
         note.getModifiers().forEach((modifier) => {
-          if (modifier.getCategory() === 'gracenotegroups') {
+          if (modifier.getCategory() === GraceNoteGroup.CATEGORY) {
             modifier.getGraceNotes().forEach(processNote);
           }
         });
@@ -418,9 +421,6 @@ export class Accidental extends Modifier {
 
     L('New accidental: ', type);
 
-    this.note = null;
-    // The `index` points to a specific note in a chord.
-    this.index = null;
     this.type = type;
     this.position = Modifier.Position.LEFT;
 
@@ -486,7 +486,7 @@ export class Accidental extends Modifier {
     this.note = note;
 
     // Accidentals attached to grace notes are rendered smaller.
-    if (this.note.getCategory() === 'gracenotes') {
+    if (note.getCategory() === GraceNote.CATEGORY) {
       this.render_options.font_scale = 25;
       this.reset();
     }
@@ -506,7 +506,6 @@ export class Accidental extends Modifier {
       context,
       type,
       position,
-      note,
       index,
       cautionary,
       x_shift,
@@ -518,10 +517,8 @@ export class Accidental extends Modifier {
     } = this;
 
     this.checkContext();
-
-    if (!(note && index != null)) {
-      throw new RuntimeError('NoAttachedNote', "Can't draw accidental without a note and index.");
-    }
+    const note = this.checkAttachedNote();
+    this.setRendered();
 
     // Figure out the start `x` and `y` coordinates for note and index.
     const start = note.getModifierStartXY(position, index);
@@ -542,7 +539,5 @@ export class Accidental extends Modifier {
       accX -= parenLeftPadding;
       parenLeft.render(context, accX, accY);
     }
-
-    this.setRendered();
   }
 }

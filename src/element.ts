@@ -225,7 +225,7 @@ export abstract class Element {
   /** Validates and returns the context. */
   checkContext(): RenderContext {
     if (!this.context) {
-      throw new RuntimeError('NoContext', 'No rendering context attached to instance');
+      throw new RuntimeError('NoContext', 'No rendering context attached to instance.');
     }
     return this.context;
   }

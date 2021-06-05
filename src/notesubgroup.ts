@@ -7,7 +7,6 @@
 // render notes as a `Modifier`
 // ex) ClefNote, TimeSigNote and BarNote.
 
-import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
@@ -75,11 +74,6 @@ export class NoteSubGroup extends Modifier {
     this.preFormatted = true;
   }
 
-  setNote(note: Note): this {
-    this.note = note;
-    return this;
-  }
-
   setWidth(width: number): this {
     this.width = width;
     return this;
@@ -91,12 +85,7 @@ export class NoteSubGroup extends Modifier {
 
   draw(): void {
     const ctx: RenderContext = this.checkContext();
-    const note = this.getNote();
-
-    if (!note) {
-      throw new RuntimeError('NoAttachedNote', "Can't draw notes without a parent note.");
-    }
-
+    const note = this.checkAttachedNote();
     this.setRendered();
     this.alignSubNotesWithNote(this.subNotes, note); // Modifier function
     this.subNotes.forEach((subNote) => subNote.setContext(ctx).drawWithStyle());
