@@ -3,6 +3,7 @@
 // ## Description
 // A base class for stave modifiers (e.g. clefs, key signatures)
 
+import { RuntimeError } from './util';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
@@ -52,7 +53,15 @@ export class StaveModifier extends Element {
     this.position = position;
     return this;
   }
+
   getStave(): Stave | undefined {
+    return this.stave;
+  }
+
+  checkStave(): Stave {
+    if (!this.stave) {
+      throw new RuntimeError('NoStave', 'No stave attached to instance');
+    }
     return this.stave;
   }
 
