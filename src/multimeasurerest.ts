@@ -30,13 +30,11 @@ export interface MultimeasureRestRenderOptions {
   padding_right?: number;
 }
 
-export interface MultimeasureRestSemibraveRest {
+let semibrave_rest: {
   glyph_font_scale: number;
   glyph_code: string;
   width: number;
-}
-
-let semibrave_rest: MultimeasureRestSemibraveRest;
+};
 
 function get_semibrave_rest() {
   if (!semibrave_rest) {
