@@ -6,6 +6,7 @@
 
 import { Element } from './element';
 import { Factory } from './factory';
+import { Stave } from './stave';
 import { Formatter } from './formatter';
 import { Note } from './note';
 
@@ -118,7 +119,7 @@ export class System extends Element {
     this.parts.forEach((part) => part.stave.setNoteStartX(startX));
     const justifyWidth = this.options.noPadding
       ? this.options.width - this.options.x
-      : this.options.width - (startX - this.options.x) - this.musicFont.lookupMetric('stave.padding');
+      : this.options.width - (startX - this.options.x) - Stave.defaultPadding;
 
     formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth);
 

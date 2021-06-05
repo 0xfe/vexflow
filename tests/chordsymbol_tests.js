@@ -20,8 +20,6 @@ const ChordSymbolTests = (function () {
       var vf = VF.Test.makeFactory(options, 650, 650);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5);
-      ctx.fillStyle = '#221';
-      ctx.strokeStyle = '#221';
 
       function newNote(keys, duration, chordSymbol) {
         return new VF.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
@@ -30,7 +28,7 @@ const ChordSymbolTests = (function () {
       function draw(chords, y) {
         var notes = [];
 
-        var stave = new VF.Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+        var stave = new VF.Stave(10, y, 650 / 1.5).addClef('treble').setContext(ctx).draw();
 
         notes.push(newNote(['C/4'], 'q', chords[0]));
         notes.push(newNote(['C/4'], 'q', chords[1]));
@@ -53,7 +51,7 @@ const ChordSymbolTests = (function () {
 
       chords.push(
         vf
-          .ChordSymbol({ reportWidth: false })
+          .ChordSymbol({ reportWidth: true })
           .addText('D')
           .addGlyph('halfDiminished', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
       );
@@ -135,7 +133,7 @@ const ChordSymbolTests = (function () {
       function draw(c1, c2, y) {
         var notes = [];
 
-        var stave = new VF.Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+        var stave = new VF.Stave(10, y, 430).addClef('treble').setContext(ctx).draw();
 
         notes.push(newNote(['e/4', 'a/4', 'd/5'], 'h', c1).addAccidental(0, new VF.Accidental('b')));
         notes.push(newNote(['c/4', 'e/4', 'b/4'], 'h', c2));
@@ -190,7 +188,7 @@ const ChordSymbolTests = (function () {
       function draw(chords, y) {
         var notes = [];
 
-        var stave = new VF.Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+        var stave = new VF.Stave(10, y, 750 / 1.5).addClef('treble').setContext(ctx).draw();
 
         notes.push(newNote(['c/4'], 'q', chords[0]));
         notes.push(newNote(['c/4'], 'q', chords[1]));
@@ -236,7 +234,7 @@ const ChordSymbolTests = (function () {
           .addGlyphOrText('b9', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUPERSCRIPT })
           .addGlyphOrText('#11', { symbolModifier: VF.ChordSymbol.symbolModifiers.SUBSCRIPT })
           .addGlyph('rightParenTall')
-          .setReportWidth(false)
+          .setReportWidth(true)
       );
       draw(chords, 40);
 
@@ -317,7 +315,7 @@ const ChordSymbolTests = (function () {
       function draw(chord1, chord2, y) {
         var notes = [];
 
-        var stave = new VF.Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+        var stave = new VF.Stave(10, y, 500 / 2).addClef('treble').setContext(ctx).draw();
 
         notes.push(newNote(['e/4', 'a/4', 'd/5'], 'h', chord1).addAccidental(0, new VF.Accidental('b')));
         notes.push(newNote(['c/4', 'e/4', 'B/4'], 'h', chord2));
@@ -375,7 +373,7 @@ const ChordSymbolTests = (function () {
       function draw(chords, chords2, y) {
         var notes = [];
 
-        var stave = new VF.Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+        var stave = new VF.Stave(10, y, 600 / 1.5).addClef('treble').setContext(ctx).draw();
 
         notes.push(newNote(['c/4', 'f/4', 'a/4'], 'q', chords[0], chords2[0]));
         notes.push(newNote(['c/4', 'e/4', 'b/4'], 'q', chords[1], chords2[1]).addAccidental(2, new VF.Accidental('b')));
@@ -414,7 +412,7 @@ const ChordSymbolTests = (function () {
       function draw(chords, y) {
         var notes = [];
 
-        var stave = new VF.Stave(10, y, 400).addClef('treble').setContext(ctx).draw();
+        var stave = new VF.Stave(10, y, 600 / 1.5).addClef('treble').setContext(ctx).draw();
 
         notes.push(newNote(['c/4', 'f/4', 'a/4'], 'q', chords[0]));
         notes.push(newNote(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new VF.Accidental('b')));
@@ -446,7 +444,7 @@ const ChordSymbolTests = (function () {
       function draw(chords, y) {
         var notes = [];
 
-        var stave = new VF.Stave(10, y, 400).addClef('treble').setContext(ctx).draw();
+        var stave = new VF.Stave(10, y, 600 / 1.5).addClef('treble').setContext(ctx).draw();
 
         notes.push(newNote(['c/4', 'f/4', 'a/4'], 'q', chords[0]));
         notes.push(newNote(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new VF.Accidental('b')));

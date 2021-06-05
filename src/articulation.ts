@@ -302,18 +302,20 @@ export class Articulation extends Modifier {
 
     const padding = this.musicFont.lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
 
-    let y = ({
-      [ABOVE]: () => {
-        glyph.setOrigin(0.5, 1);
-        const y = getTopY(note, textLine) - (textLine + initialOffset) * staffSpace;
-        return shouldSitOutsideStaff ? Math.min(stave.getYForTopText(Articulation.INITIAL_OFFSET), y) : y;
-      },
-      [BELOW]: () => {
-        glyph.setOrigin(0.5, 0);
-        const y = getBottomY(note, textLine) + (textLine + initialOffset) * staffSpace;
-        return shouldSitOutsideStaff ? Math.max(stave.getYForBottomText(Articulation.INITIAL_OFFSET), y) : y;
-      },
-    } as Record<number, () => number>)[position]();
+    let y = (
+      {
+        [ABOVE]: () => {
+          glyph.setOrigin(0.5, 1);
+          const y = getTopY(note, textLine) - (textLine + initialOffset) * staffSpace;
+          return shouldSitOutsideStaff ? Math.min(stave.getYForTopText(Articulation.INITIAL_OFFSET), y) : y;
+        },
+        [BELOW]: () => {
+          glyph.setOrigin(0.5, 0);
+          const y = getBottomY(note, textLine) + (textLine + initialOffset) * staffSpace;
+          return shouldSitOutsideStaff ? Math.max(stave.getYForBottomText(Articulation.INITIAL_OFFSET), y) : y;
+        },
+      } as Record<number, () => number>
+    )[position]();
 
     if (!isTab) {
       const offsetDirection = position === ABOVE ? -1 : +1;

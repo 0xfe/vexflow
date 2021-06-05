@@ -187,7 +187,6 @@ const OrnamentTests = (function () {
 
     drawOrnamentsWithAccidentals: function (options, contextBuilder) {
       expect(0);
-
       // Get the rendering context
       var ctx = contextBuilder(options.elementId, 650, 250);
 
@@ -230,7 +229,14 @@ const OrnamentTests = (function () {
 
     jazzOrnaments: function (options) {
       expect(0);
-      var vf = VF.Test.makeFactory(options, 950, 400);
+      const glyphWidth = (vexGlyph) => {
+        const vf = VF.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
+        return (vf.x_max - vf.x_min) * (96 * (38 / (VF.DefaultFontStack[0].getResolution() * 72)));
+      };
+
+      const lineWidth = 960;
+      const xinc = lineWidth / 3;
+      var vf = VF.Test.makeFactory(options, lineWidth, 400);
       var ctx = vf.getContext();
       ctx.scale(1, 1);
       ctx.fillStyle = '#221';
@@ -248,7 +254,6 @@ const OrnamentTests = (function () {
       }
 
       var xStart = 10;
-      var xWidth = 300;
       var yStart = 10;
       var staffHeight = 70;
 
@@ -272,7 +277,7 @@ const OrnamentTests = (function () {
         }).setMode(VF.Voice.Mode.SOFT);
         voice.addTickables(notes);
         const formatter = new VF.Formatter({ softmaxFactor: 2 }).joinVoices([voice]);
-        formatter.format([voice], xWidth);
+        formatter.format([voice], width - (VF.Stave.defaultPadding + glyphWidth('gClef')));
         stave.setContext(ctx).draw();
         voice.draw(ctx, stave);
       }
@@ -284,8 +289,8 @@ const OrnamentTests = (function () {
       mods.push(new VF.Ornament('fall'));
       mods.push(new VF.Ornament('doitLong'));
 
-      draw(mods, ['a/5'], curX, xWidth, curY, -1);
-      curX += xWidth;
+      draw(mods, ['a/5'], curX, xinc, curY, -1);
+      curX += xinc;
 
       mods = [];
       mods.push(new VF.Ornament('fallLong'));
@@ -293,15 +298,15 @@ const OrnamentTests = (function () {
       mods.push(new VF.Ornament('plungerClosed'));
       mods.push(new VF.Ornament('plungerOpen'));
       mods.push(new VF.Ornament('bend'));
-      draw(mods, ['a/5'], curX, xWidth, curY, -1);
-      curX += xWidth;
+      draw(mods, ['a/5'], curX, xinc, curY, -1);
+      curX += xinc;
 
       mods = [];
       mods.push(new VF.Ornament('flip'));
       mods.push(new VF.Ornament('jazzTurn'));
       mods.push(new VF.Ornament('smear'));
       mods.push(new VF.Ornament('doit'));
-      draw(mods, ['a/5'], curX, xWidth, curY, 1);
+      draw(mods, ['a/5'], curX, xinc, curY, 1);
 
       curX = xStart;
       curY += staffHeight;
@@ -312,8 +317,8 @@ const OrnamentTests = (function () {
       mods.push(new VF.Ornament('fall'));
       mods.push(new VF.Ornament('doitLong'));
 
-      draw(mods, ['e/5'], curX, xWidth, curY);
-      curX += xWidth;
+      draw(mods, ['e/5'], curX, xinc, curY);
+      curX += xinc;
 
       mods = [];
       mods.push(new VF.Ornament('fallLong'));
@@ -321,15 +326,15 @@ const OrnamentTests = (function () {
       mods.push(new VF.Ornament('plungerClosed'));
       mods.push(new VF.Ornament('plungerOpen'));
       mods.push(new VF.Ornament('bend'));
-      draw(mods, ['e/5'], curX, xWidth, curY);
-      curX += xWidth;
+      draw(mods, ['e/5'], curX, xinc, curY);
+      curX += xinc;
 
       mods = [];
       mods.push(new VF.Ornament('flip'));
       mods.push(new VF.Ornament('jazzTurn'));
       mods.push(new VF.Ornament('smear'));
       mods.push(new VF.Ornament('doit'));
-      draw(mods, ['e/5'], curX, xWidth, curY);
+      draw(mods, ['e/5'], curX, xinc, curY);
 
       curX = xStart;
       curY += staffHeight;
@@ -340,8 +345,8 @@ const OrnamentTests = (function () {
       mods.push(new VF.Ornament('fall'));
       mods.push(new VF.Ornament('doitLong'));
 
-      draw(mods, ['e/4'], curX, xWidth, curY);
-      curX += xWidth;
+      draw(mods, ['e/4'], curX, xinc, curY);
+      curX += xinc;
 
       mods = [];
       mods.push(new VF.Ornament('fallLong'));
@@ -349,15 +354,15 @@ const OrnamentTests = (function () {
       mods.push(new VF.Ornament('plungerClosed'));
       mods.push(new VF.Ornament('plungerOpen'));
       mods.push(new VF.Ornament('bend'));
-      draw(mods, ['e/4'], curX, xWidth, curY);
-      curX += xWidth;
+      draw(mods, ['e/4'], curX, xinc, curY);
+      curX += xinc;
 
       mods = [];
       mods.push(new VF.Ornament('flip'));
       mods.push(new VF.Ornament('jazzTurn'));
       mods.push(new VF.Ornament('smear'));
       mods.push(new VF.Ornament('doit'));
-      draw(mods, ['e/4'], curX, xWidth, curY);
+      draw(mods, ['e/4'], curX, xinc, curY);
     },
   };
 

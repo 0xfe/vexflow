@@ -61,6 +61,13 @@ export class Stave extends Element {
   protected bounds: Bounds;
   protected readonly modifiers: StaveModifier[];
 
+  // This is the sum of the padding that normally goes on left + right of a stave during
+  // drawing.  Used to size staves correctly with content width
+  static get defaultPadding() {
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    return musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
+  }
+
   constructor(x: number, y: number, width: number, options?: StaveOptions) {
     super();
     this.setAttribute('type', 'Stave');
