@@ -45,46 +45,37 @@ export class StringNumber extends Modifier {
     let shift_left = 0;
     let shift_right = 0;
 
-    let i;
-    let num;
-    let note;
-    let pos;
-    for (i = 0; i < nums.length; ++i) {
-      num = nums[i];
-      note = num.getNote();
+    for (let i = 0; i < nums.length; ++i) {
+      const num = nums[i];
+      const note = num.getNote();
+      const pos = num.getPosition();
 
-      for (i = 0; i < nums.length; ++i) {
-        num = nums[i];
-        note = num.getNote();
-        pos = num.getPosition();
-
-        if (!(note instanceof StaveNote)) {
-          throw new RuntimeError('NoStaveNote');
-        }
-
-        const props = note.getKeyProps()[num.getIndex()];
-
-        if (note !== prev_note) {
-          for (let n = 0; n < note.keys.length; ++n) {
-            if (left_shift === 0) {
-              shift_left = Math.max(note.getLeftDisplacedHeadPx(), shift_left);
-            }
-            if (right_shift === 0) {
-              shift_right = Math.max(note.getRightDisplacedHeadPx(), shift_right);
-            }
-          }
-          prev_note = note;
-        }
-
-        nums_list.push({
-          pos,
-          note,
-          num,
-          line: props.line,
-          shiftL: shift_left,
-          shiftR: shift_right,
-        });
+      if (!(note instanceof StaveNote)) {
+        throw new RuntimeError('NoStaveNote');
       }
+
+      const props = note.getKeyProps()[num.getIndex()];
+
+      if (note !== prev_note) {
+        for (let n = 0; n < note.keys.length; ++n) {
+          if (left_shift === 0) {
+            shift_left = Math.max(note.getLeftDisplacedHeadPx(), shift_left);
+          }
+          if (right_shift === 0) {
+            shift_right = Math.max(note.getRightDisplacedHeadPx(), shift_right);
+          }
+        }
+        prev_note = note;
+      }
+
+      nums_list.push({
+        pos,
+        note,
+        num,
+        line: props.line,
+        shiftL: shift_left,
+        shiftR: shift_right,
+      });
     }
 
     // Sort string numbers by line number.
@@ -97,11 +88,11 @@ export class StringNumber extends Modifier {
     let x_widthR = 0;
     let last_line = null;
     let last_note = null;
-    for (i = 0; i < nums_list.length; ++i) {
+    for (let i = 0; i < nums_list.length; ++i) {
       let num_shift = 0;
-      note = nums_list[i].note;
-      pos = nums_list[i].pos;
-      num = nums_list[i].num;
+      const note = nums_list[i].note;
+      const pos = nums_list[i].pos;
+      const num = nums_list[i].num;
       const line = nums_list[i].line;
       const shiftL = nums_list[i].shiftL;
       const shiftR = nums_list[i].shiftR;
