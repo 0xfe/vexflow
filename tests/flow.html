@@ -1,53 +1,74 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
+    <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet" />
+    <!-- Test Dependencies: jQuery, QUnit -->
+    <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
+    <script src="support/jquery.js"></script>
+    <script src="support/qunit.js"></script>
+    <script>
+      function loadScript(url) {
+        return new Promise(function (resolve, reject) {
+          var script = document.createElement('script');
+          script.onload = resolve;
+          script.onerror = reject;
+          script.src = url;
+          // The utf-8 charset is required for the measureText cache,
+          // since the index contains weird unicode characters.
+          script.charset = 'utf-8';
+          document.getElementsByTagName('head')[0].appendChild(script);
+        });
+      }
 
-<head>
-  <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
-  <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
-  <!-- VexFlow Sources -->
-  <script src="../build/vexflow-debug.js"></script>
+      $(function () {
+        // Support a query param ver=(build|reference|releases|etc...)
+        // If omitted, ver defaults to 'build'.
+        var params = new URLSearchParams(window.location.search);
+        var param_ver = params.get('ver');
+        var path = param_ver || 'build';
+        var vexURL = '../' + path + '/vexflow-debug.js';
+        var testsURL = '../' + path + '/vexflow-tests.js';
 
-  <!-- Test Dependencies: jQuery, QUnit -->
-  <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet">
-  <script src="support/jquery.js"></script>
-  <script src="support/qunit.js"></script>
+        // Display which VexFlow version we loaded, if the `ver` param was specified.
+        var info = param_ver !== null ? ` [${param_ver}]` : '';
+        $('#vex-src')
+          .attr('href', vexURL)
+          .text('VexFlow Source' + info);
 
-  <!-- VexFlow Tests. Note the charset below: this is required for
-       the measureText cache, since the index contains weird unicode
-       characters. -->
-  <script src="../build/vexflow-tests.js" charset="utf-8"></script>
+        loadScript(vexURL)
+          .then(function () {
+            return loadScript(testsURL);
+          })
+          .then(function () {
+            // Show only failed tests.
+            QUnit.config.hidepassed = true;
+            QUnit.config.noglobals = true;
+            VF.Test.run();
+          });
+      });
+    </script>
+  </head>
 
-  <script>
-    $(function() {
-      // Show only failed tests.
-      QUnit.config.hidepassed = true;
-      QUnit.config.noglobals = true;
-      VF.Test.run();
-    });
-  </script>
-</head>
-
-<body>
-  <div style="text-align: center;">
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <div>
-      <h2>
-        [ <a href="http://vexflow.com">Home</a> ]
-        [ <a href="http://github.com/0xfe/vexflow">GitHub</a> ]
-      </h2>
-      <h3>Don't forget to run the <a href="https://github.com/0xfe/vexflow/wiki/Visual-Regression-Tests">Visual Regression Tests</a>!</h3>
+  <body>
+    <div style="text-align: center">
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <div>
+        <h2>[ <a href="http://vexflow.com">Home</a> ] [ <a href="http://github.com/0xfe/vexflow">GitHub</a> ]</h2>
+        <h3>
+          See the: <a id="vex-src" target="_blank"></a>. Don't forget to run the
+          <a href="https://github.com/0xfe/vexflow/wiki/Visual-Regression-Tests">Visual Regression Tests</a>!
+        </h3>
+      </div>
+      <p>&nbsp;</p>
+      <div id="vexflow_testoutput"></div>
+      <p>&nbsp;</p>
+      <p class="vf-footer">
+        [ <a href="http://vexflow.com">home</a> ] [ <a href="http://github.com/0xfe/vexflow">github</a> ] [
+        <a href="http://0xfe.muthanna.com">0xfe</a> ]
+      </p>
     </div>
-
-    <p/>
-    <div id="vexflow_testoutput"></div>
-    <p/>
-    <p class="vf-footer">
-      [ <a href="http://vexflow.com">home</a> ]
-      [ <a href="http://github.com/0xfe/vexflow">github</a> ]
-      [ <a href="http://0xfe.muthanna.com">0xfe</a> ]
-    </p>
-  </div>
-</body>
+  </body>
 </html>
