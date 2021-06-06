@@ -9,14 +9,23 @@
 import { RuntimeError, log } from './util';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
-import { FontGlyph } from './font';
 import { FontInfo } from './types/common';
+
+export interface TextFontMetrics {
+  x_min: number;
+  x_max: number;
+  y_min: number;
+  y_max: number;
+  ha: number;
+  leftSideBearing: number;
+  advanceWidth: number;
+}
 
 export interface TextFontRegistry {
   [name: string]: unknown;
   name?: string;
   resolution?: number;
-  glyphs?: Record<string, FontGlyph>;
+  glyphs?: Record<string, TextFontMetrics>;
   family: string;
   serifs: boolean;
   monospaced?: boolean;
@@ -39,7 +48,7 @@ export class TextFont {
   protected static debug: boolean;
   protected resolution: number = 1000;
   protected name?: string;
-  protected glyphs: Record<string, FontGlyph> = {};
+  protected glyphs: Record<string, TextFontMetrics> = {};
   protected family: string = '';
   protected serifs?: boolean;
   protected monospaced?: boolean;
@@ -177,7 +186,7 @@ export class TextFont {
   // method will always return a fallback font if there are no matches.
   static getTextFontFromVexFontData(fd: FontInfo): TextFont {
     let i = 0;
-    let selectedFont = null;
+    let selectedFont = undefined;
     const fallback = TextFont.fontRegistry[0];
     let candidates: TextFontRegistry[] = [];
     const families = fd.family.split(',');
@@ -283,7 +292,7 @@ export class TextFont {
     this.fontCacheKey = `${this.family}-${this.size}-${this.weight}-${this.style}`;
   }
 
-  getMetricForCharacter(c: string): FontGlyph {
+  getMetricForCharacter(c: string): TextFontMetrics {
     if (this.glyphs[c]) {
       return this.glyphs[c];
     }
@@ -300,7 +309,7 @@ export class TextFont {
     if (!metric) {
       return 0.65 * this.pointsToPixels;
     }
-    return ((metric.advanceWidth ?? 1000) / this.resolution) * this.pointsToPixels;
+    return (metric.advanceWidth / this.resolution) * this.pointsToPixels;
   }
 
   getWidthForString(s: string): number {
