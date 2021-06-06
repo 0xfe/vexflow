@@ -2,7 +2,7 @@
 // @author Gregory Ristow (2015)
 
 import { Vex } from './vex';
-import { GroupAttributes, Point, RenderContext } from './types/common';
+import { RenderContext } from './types/common';
 import { RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -47,7 +47,7 @@ export class SVGContext implements RenderContext {
   width: number = 0;
   height: number = 0;
   path: string;
-  pen: Point;
+  pen: { x: number; y: number };
   lineWidth: number;
   attributes: Attributes;
   background_attributes: Attributes;
@@ -119,7 +119,7 @@ export class SVGContext implements RenderContext {
   }
 
   // Allow grouping elements in containers for interactivity.
-  openGroup(cls: string, id?: string, attrs?: GroupAttributes): SVGGElement {
+  openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): SVGGElement {
     const group: SVGGElement = this.create('g') as SVGGElement;
     this.groups.push(group);
     this.parent.appendChild(group);

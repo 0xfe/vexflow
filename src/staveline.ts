@@ -10,7 +10,7 @@
 import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
-import { FontInfo, RenderContext, Point } from './types/common';
+import { FontInfo, RenderContext } from './types/common';
 import { StaveNote } from './stavenote';
 
 export interface StaveLineNotes {
@@ -24,8 +24,16 @@ export interface StaveLineNotes {
 // Patrick Horgan's article, "Drawing lines and arcs with
 // arrow heads on  HTML5 Canvas"
 //
-// Draw an arrow head that connects between 3 coordinates
-function drawArrowHead(ctx: RenderContext, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number) {
+// Draw an arrow head that connects between 3 coordinates.
+function drawArrowHead(
+  ctx: RenderContext,
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+): void {
   // all cases do this.
   ctx.beginPath();
   ctx.moveTo(x0, y0);
@@ -38,13 +46,18 @@ function drawArrowHead(ctx: RenderContext, x0: number, y0: number, x1: number, y
 }
 
 // Helper function to draw a line with arrow heads
-function drawArrowLine(ctx: RenderContext, point1: Point, point2: Point, config: RenderOptions) {
+function drawArrowLine(
+  ctx: RenderContext,
+  pt1: { x: number; y: number },
+  pt2: { x: number; y: number },
+  config: RenderOptions
+): void {
   const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
 
-  const x1 = point1.x;
-  const y1 = point1.y;
-  const x2 = point2.x;
-  const y2 = point2.y;
+  const x1 = pt1.x;
+  const y1 = pt1.y;
+  const x2 = pt2.x;
+  const y2 = pt2.y;
 
   // For ends with arrow we actually want to stop before we get to the arrow
   // so that wide lines won't put a flat end on the arrow.
@@ -295,8 +308,8 @@ export class StaveLine extends Element {
     this.applyLineStyle();
 
     // Cycle through each set of indices and draw lines
-    let start_position: Point = { x: 0, y: 0 };
-    let end_position: Point = { x: 0, y: 0 };
+    let start_position = { x: 0, y: 0 };
+    let end_position = { x: 0, y: 0 };
     this.first_indices.forEach((first_index, i) => {
       const last_index = this.last_indices[i];
 

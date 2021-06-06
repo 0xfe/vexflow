@@ -5,11 +5,6 @@ export interface FontInfo {
   style?: string;
 }
 
-export interface Point {
-  x: number;
-  y: number;
-}
-
 export interface Bounds {
   x: number;
   y: number;
@@ -53,10 +48,6 @@ export interface TypeProps extends KeyProps {
   position: string;
 }
 
-export interface GroupAttributes {
-  pointerBBox: boolean;
-}
-
 export interface RenderContext {
   clear(): void;
   setFont(family: string, size: number, weight: string): this;
@@ -87,7 +78,7 @@ export interface RenderContext {
   fillText(text: string, x: number, y: number): this;
   save(): this;
   restore(): this;
-  openGroup(cls: string, id?: string, attrs?: GroupAttributes): any;
+  openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): any;
   closeGroup(): void;
   add(child: any): void;
 
