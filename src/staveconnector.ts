@@ -219,7 +219,7 @@ export class StaveConnector extends Element {
       case StaveConnector.type.NONE:
         break;
       default:
-        throw new RuntimeError('InvalidType', `The provided StaveConnector.type (${this.type}) is invalid`);
+        throw new RuntimeError('InvalidType', `The provided StaveConnector.type (${this.type}) is invalid.`);
     }
 
     if (

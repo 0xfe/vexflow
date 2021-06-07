@@ -8,7 +8,7 @@
 //
 // See `tests/chordsymbol_tests.js` for usage examples.
 
-import { RuntimeError, log } from './util';
+import { log } from './util';
 import { DefaultFontStack } from './font';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
@@ -350,8 +350,6 @@ export class ChordSymbol extends Modifier {
   constructor() {
     super();
     this.setAttribute('type', 'ChordSymbol');
-    this.note = null;
-    this.index = null;
     this.symbolBlocks = [];
     this.horizontal = ChordSymbol.horizontalJustify.LEFT;
     this.vertical = ChordSymbol.verticalJustify.TOP;
@@ -666,32 +664,29 @@ export class ChordSymbol extends Modifier {
 
   // Render text and glyphs above/below the note
   draw() {
-    this.checkContext();
+    const ctx = this.checkContext();
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    if (!this.note) {
-      throw new RuntimeError('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
-    }
-
     // We're changing context parameters. Save current state.
-    this.context.save();
+    ctx.save();
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
-    this.context.openGroup(classString, this.getAttribute('id'));
+    ctx.openGroup(classString, this.getAttribute('id'));
 
-    const start = this.note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
-    this.context.setFont(this.font.family, this.font.size, this.font.weight);
+    const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
+    ctx.setFont(this.font.family, this.font.size, this.font.weight);
 
     let y;
 
     let stem_ext;
     let spacing;
-    const has_stem = this.note.hasStem();
-    const stave = this.note.getStave();
+    const has_stem = note.hasStem();
+    const stave = note.getStave();
 
     // The position of the text varies based on whether or not the note
     // has a stem.
     if (has_stem) {
-      stem_ext = this.note.getStem().getExtents();
+      stem_ext = note.getStem().getExtents();
       spacing = stave.getSpacingBetweenLines();
     }
 
@@ -700,12 +695,12 @@ export class ChordSymbol extends Modifier {
       // is bottom-right.
       y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
       if (has_stem) {
-        const stem_base = this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
+        const stem_base = note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
         y = Math.max(y, stem_base + spacing * (this.text_line + 2));
       }
     } else {
       // (this.vertical === ChordSymbol.verticalJustify.TOP)
-      y = Math.min(stave.getYForTopText(this.text_line), this.note.getYs()[0] - 10);
+      y = Math.min(stave.getYForTopText(this.text_line), note.getYs()[0] - 10);
       if (has_stem) {
         y = Math.min(y, stem_ext.topY - 5 - spacing * this.text_line);
       }
@@ -719,7 +714,7 @@ export class ChordSymbol extends Modifier {
     } else if (this.horizontal === ChordSymbol.horizontalJustify.CENTER) {
       x = start.x - this.getWidth() / 2;
     } /* CENTER_STEM */ else {
-      x = this.note.getStemX() - this.getWidth() / 2;
+      x = note.getStemX() - this.getWidth() / 2;
     }
     L('Rendering ChordSymbol: ', this.text, x, y);
 
@@ -739,30 +734,30 @@ export class ChordSymbol extends Modifier {
 
       if (symbol.symbolType === ChordSymbol.symbolTypes.TEXT) {
         if (sp || sub) {
-          this.context.save();
-          this.context.setFont(this.font.family, this.font.size * ChordSymbol.superSubRatio, this.font.weight);
+          ctx.save();
+          ctx.setFont(this.font.family, this.font.size * ChordSymbol.superSubRatio, this.font.weight);
         }
         // We estimate the text width, fill it in with the empirical value so the
         // formatting is even.
-        /* const textDim = this.context.measureText(symbol.text);
+        /* const textDim = ctx.measureText(symbol.text);
         symbol.width = textDim.width; */
         L('Rendering Text: ', symbol.text, x + symbol.xShift, curY + symbol.yShift);
 
-        this.context.fillText(symbol.text, x + symbol.xShift, curY + symbol.yShift);
+        ctx.fillText(symbol.text, x + symbol.xShift, curY + symbol.yShift);
         if (sp || sub) {
-          this.context.restore();
+          ctx.restore();
         }
       } else if (symbol.symbolType === ChordSymbol.symbolTypes.GLYPH) {
         curY += symbol.yShift;
         L('Rendering Glyph: ', symbol.glyph.code, x + symbol.xShift, curY);
-        symbol.glyph.render(this.context, x + symbol.xShift, curY);
+        symbol.glyph.render(ctx, x + symbol.xShift, curY);
       } else if (symbol.symbolType === ChordSymbol.symbolTypes.LINE) {
         L('Rendering Line : ', symbol.width, x, curY);
-        this.context.beginPath();
-        this.context.setLineWidth(1); // ?
-        this.context.moveTo(x, y);
-        this.context.lineTo(x + symbol.width, curY);
-        this.context.stroke();
+        ctx.beginPath();
+        ctx.setLineWidth(1); // ?
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + symbol.width, curY);
+        ctx.stroke();
       }
 
       x += symbol.width;
@@ -770,7 +765,7 @@ export class ChordSymbol extends Modifier {
         x += symbol.xShift;
       }
     });
-    this.context.closeGroup();
-    this.context.restore();
+    ctx.closeGroup();
+    ctx.restore();
   }
 }

@@ -595,7 +595,7 @@ export class Stave extends Element {
 
     for (let i = 0; i < endModifiers.length; i++) {
       modifier = endModifiers[i];
-      lastBarlineIdx = modifier.getCategory() === 'barlines' ? i : lastBarlineIdx;
+      lastBarlineIdx = modifier.getCategory() === Barline.CATEGORY ? i : lastBarlineIdx;
 
       widths.right = 0;
       widths.left = 0;

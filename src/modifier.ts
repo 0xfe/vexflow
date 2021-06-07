@@ -30,13 +30,14 @@ export enum ModifierPosition {
 // function L(...args) { if (Modifier.DEBUG) log('Vex.Flow.Modifier', args); }
 
 export class Modifier extends Element {
+  // Modifiers are attached to a note and an index. An index is a specific head in a chord.
   protected note?: Note;
+  protected index?: number;
 
   protected width: number;
   protected text_line: number;
   protected position: ModifierPosition;
   protected y_shift: number;
-  protected index: number;
   protected x_shift: number;
 
   private spacingFromNextModifier: number;
@@ -67,15 +68,9 @@ export class Modifier extends Element {
 
     this.width = 0;
 
-    // Modifiers are attached to a note and an index. An index is a
-    // specific head in a chord.
-    this.note = undefined;
-    this.index = 0;
-
     // The `text_line` is reserved space above or below a stave.
     this.text_line = 0;
     this.position = Modifier.Position.LEFT;
-    this.modifier_context = undefined;
     this.x_shift = 0;
     this.y_shift = 0;
     this.spacingFromNextModifier = 0;
@@ -108,13 +103,27 @@ export class Modifier extends Element {
     return this.note;
   }
 
+  checkAttachedNote(): Note {
+    if (!this.note || this.index === undefined) {
+      throw new RuntimeError('NoAttachedNote', `Can't draw ${this.getCategory()} without a note and index.`);
+    }
+    return this.note;
+  }
+
   setNote(note: Note): this {
     this.note = note;
     return this;
   }
 
   // Get and set note index, which is a specific note in a chord.
-  getIndex(): number {
+  getIndex(): number | undefined {
+    return this.index;
+  }
+
+  checkIndex(): number {
+    if (this.index === undefined) {
+      throw new RuntimeError('NoIndex', 'Modifier has an invalid index.');
+    }
     return this.index;
   }
 
