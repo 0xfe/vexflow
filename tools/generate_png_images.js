@@ -14,7 +14,7 @@ const fs = require('fs');
 const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
 // Optional: 3rd argument specifies which font stacks to test.
-// For example: 
+// For example:
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=all
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=petaluma
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville
@@ -52,6 +52,8 @@ VF.Test.FONT_STACKS_TO_TEST = fontStacksToTest;
 
 // Create the image directory if it doesn't exist.
 fs.mkdirSync(VF.Test.NODE_IMAGEDIR, { recursive: true });
+
+console.log('GENERATE_PNG_IMAGES');
 
 // Run all tests.
 VF.Test.run();

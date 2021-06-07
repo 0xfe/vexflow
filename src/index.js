@@ -155,7 +155,6 @@ Vex.Flow.Registry = Registry;
 Vex.Flow.StaveText = StaveText;
 Vex.Flow.GlyphNote = GlyphNote;
 Vex.Flow.RepeatNote = RepeatNote;
-
 Vex.Flow.Font = Font;
 Vex.Flow.Fonts = Fonts;
 Vex.Flow.TextFont = TextFont;
