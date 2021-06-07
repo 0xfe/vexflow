@@ -10,8 +10,7 @@
 // surround a note are called *modifiers*, and every note has an associated
 // array of them. All notes also have a rendering context and belong to a stave.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, drawDot } from './util';
 import { Flow } from './tables';
 import { Tickable } from './tickable';
 import { Stroke } from './strokes';
@@ -153,7 +152,7 @@ export abstract class Note extends Tickable {
     stroke(xPost2, xEnd, 'red');
     stroke(xEnd, xFreedomRight, '#DD0');
     stroke(xStart - note.getXShift(), xStart, '#BBB'); // Shift
-    Vex.drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
+    drawDot(ctx, xAbs + note.getXShift(), y, 'blue');
 
     const formatterMetrics = note.getFormatterMetrics();
     if (formatterMetrics.iterations > 0) {
