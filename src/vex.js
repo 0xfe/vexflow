@@ -6,16 +6,9 @@
 //
 
 /* eslint max-classes-per-file: "off" */
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 
 const Vex = () => {};
-
-// Default log function sends all arguments to console.
-Vex.L = (block, args) => {
-  if (!args) return;
-  const line = Array.prototype.slice.call(args).join(' ');
-  window.console.log(block + ': ' + line);
-};
 
 Vex.MakeException = (name) => {
   const exception = class extends Error {
@@ -40,9 +33,6 @@ Vex.Merge = (destination, source) => {
   return destination;
 };
 
-// DEPRECATED. Use `Math.*`.
-Vex.Min = Math.min;
-Vex.Max = Math.max;
 Vex.forEach = (a, fn) => {
   for (let i = 0; i < a.length; i++) {
     fn(a[i], i);
@@ -128,19 +118,7 @@ Vex.BM = (s, f) => {
   const start_time = new Date().getTime();
   f();
   const elapsed = new Date().getTime() - start_time;
-  Vex.L(s + elapsed + 'ms');
-};
-
-// Get stack trace.
-Vex.StackTrace = () => {
-  const err = new Error();
-  return err.stack;
-};
-
-// Dump warning to console.
-Vex.W = (...args) => {
-  const line = args.join(' ');
-  window.console.log('Warning: ', line, Vex.StackTrace());
+  log(s + elapsed + 'ms');
 };
 
 // Used by various classes (e.g., SVGContext) to provide a

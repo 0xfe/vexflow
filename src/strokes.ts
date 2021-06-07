@@ -5,7 +5,6 @@
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { StaveNote } from './stavenote';
@@ -83,7 +82,7 @@ export class Stroke extends Modifier {
     super();
     this.setAttribute('type', 'Stroke');
 
-    this.options = Vex.Merge({}, options);
+    this.options = { ...options };
 
     // multi voice - span stroke across all voices if true
     this.all_voices = 'all_voices' in this.options ? this.options.all_voices : true;
@@ -140,8 +139,8 @@ export class Stroke extends Modifier {
         ys = note.getYs();
         for (let n = 0; n < ys.length; n++) {
           if (this.note === notes[i] || this.all_voices) {
-            topY = Vex.Min(topY, ys[n]);
-            botY = Vex.Max(botY, ys[n]);
+            topY = Math.min(topY, ys[n]);
+            botY = Math.max(botY, ys[n]);
           }
         }
       }

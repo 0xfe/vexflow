@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { StaveModifier } from './stavemodifier';
 import { TextNote } from './textnote';
@@ -44,7 +43,7 @@ export class StaveText extends StaveModifier {
       shift_y: 0,
       justification: TextNote.Justification.CENTER,
     };
-    Vex.Merge(this.options, options);
+    this.options = { ...this.options, ...options };
 
     this.font = {
       family: 'times',

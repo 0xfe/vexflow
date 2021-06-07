@@ -9,8 +9,7 @@
 //
 // See `tests/accidental_tests.js` for usage examples.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Fraction } from './fraction';
 import { Flow } from './tables';
 import { Music } from './music';
@@ -21,7 +20,7 @@ import { GraceNote } from './gracenote';
 
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
 function L(...args) {
-  if (Accidental.DEBUG) Vex.L('Vex.Flow.Accidental', args);
+  if (Accidental.DEBUG) log('Vex.Flow.Accidental', args);
 }
 
 const getGlyphWidth = (glyph) => glyph.getMetrics().width;

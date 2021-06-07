@@ -4,7 +4,6 @@
 //
 // This file implements tablature bends.
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
@@ -171,7 +170,7 @@ export class Bend extends Modifier {
         const additional_width =
           bend.type === Bend.UP ? this.render_options.bend_width : this.render_options.release_width;
 
-        bend.width = Vex.Max(additional_width, measure_text(bend.text)) + 3;
+        bend.width = Math.max(additional_width, measure_text(bend.text)) + 3;
         bend.draw_width = bend.width / 2;
         total_width += bend.width;
       }

@@ -7,7 +7,6 @@
 //
 // See `tests/tabnote_tests.js` for usage examples
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
@@ -136,22 +135,25 @@ export class TabNote extends StemmableNote {
     this.positions = tab_struct.positions;
 
     // Render Options
-    Vex.Merge(this.render_options, {
-      // font size for note heads and rests
-      glyph_font_scale: Flow.DEFAULT_TABLATURE_FONT_SCALE,
-      // Flag to draw a stem
-      draw_stem,
-      // Flag to draw dot modifiers
-      draw_dots: draw_stem,
-      // Flag to extend the main stem through the stave and fret positions
-      draw_stem_through_stave: false,
-      // vertical shift from stave line
-      y_shift: 0,
-      // normal glyph scale
-      scale: 1.0,
-      // default tablature font
-      font: '10pt Arial',
-    });
+    this.render_options = {
+      ...this.render_options,
+      ...{
+        // font size for note heads and rests
+        glyph_font_scale: Flow.DEFAULT_TABLATURE_FONT_SCALE,
+        // Flag to draw a stem
+        draw_stem,
+        // Flag to draw dot modifiers
+        draw_dots: draw_stem,
+        // Flag to extend the main stem through the stave and fret positions
+        draw_stem_through_stave: false,
+        // vertical shift from stave line
+        y_shift: 0,
+        // normal glyph scale
+        scale: 1.0,
+        // default tablature font
+        font: '10pt Arial',
+      },
+    };
 
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
 
@@ -464,14 +466,14 @@ export class TabNote extends StemmableNote {
     this.setRendered();
     const render_stem = this.beam == undefined && this.render_options.draw_stem;
 
-    ctx.openGroup('tabnote', null, { pointerBBox: true });
+    ctx.openGroup('tabnote', undefined, { pointerBBox: true });
     this.drawPositions();
     this.drawStemThrough();
 
     if (this.stem && render_stem) {
       const stem_x = this.getStemX();
       this.stem.setNoteHeadXBounds(stem_x, stem_x);
-      ctx.openGroup('stem', null, { pointerBBox: true });
+      ctx.openGroup('stem', undefined, { pointerBBox: true });
       this.stem.setContext(ctx).draw();
       ctx.closeGroup();
     }

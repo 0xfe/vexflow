@@ -7,8 +7,7 @@
 //
 // See `tests/notehead_tests.js` for usage examples.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Flow } from './tables';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
@@ -23,7 +22,7 @@ import { ElementStyle } from './element';
 function L(
   // eslint-disable-next-line
   ...args: any []) {
-  if (NoteHead.DEBUG) Vex.L('Vex.Flow.NoteHead', args);
+  if (NoteHead.DEBUG) log('Vex.Flow.NoteHead', args);
 }
 
 export interface NoteHeadStruct extends NoteStruct {
@@ -156,12 +155,15 @@ export class NoteHead extends Note {
     this.style = head_options.style;
     this.slashed = head_options.slashed || false;
 
-    Vex.Merge(this.render_options, {
-      // font size for note heads
-      glyph_font_scale: head_options.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
-      // number of stroke px to the left and right of head
-      stroke_px: 3,
-    });
+    this.render_options = {
+      ...this.render_options,
+      ...{
+        // font size for note heads
+        glyph_font_scale: head_options.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+        // number of stroke px to the left and right of head
+        stroke_px: 3,
+      },
+    };
 
     this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
   }

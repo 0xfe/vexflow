@@ -8,7 +8,8 @@
 //
 // See `tests/chordsymbol_tests.js` for usage examples.
 
-import { Vex } from './vex';
+import { RuntimeError, log } from './util';
+import { DefaultFontStack } from './font';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
 import { TextFont } from './textfont';
@@ -16,7 +17,7 @@ import { Modifier } from './modifier';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
 function L(...args) {
-  if (ChordSymbol.DEBUG) Vex.L('Vex.Flow.ChordSymbol', args);
+  if (ChordSymbol.DEBUG) log('Vex.Flow.ChordSymbol', args);
 }
 
 export class ChordSymbol extends Modifier {
@@ -104,7 +105,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get engravingFontResolution() {
-    return Vex.Flow.DEFAULT_FONT_STACK[0].getResolution();
+    return DefaultFontStack[0].getResolution();
   }
 
   static get spacingBetweenBlocks() {
@@ -234,15 +235,15 @@ export class ChordSymbol extends Modifier {
   }
 
   static get chordSymbolMetrics() {
-    return Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol;
+    return DefaultFontStack[0].metrics.glyphs.chordSymbol;
   }
 
   static get lowerKerningText() {
-    return Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol.global.lowerKerningText;
+    return DefaultFontStack[0].metrics.glyphs.chordSymbol.global.lowerKerningText;
   }
 
   static get upperKerningText() {
-    return Vex.Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol.global.upperKerningText;
+    return DefaultFontStack[0].metrics.glyphs.chordSymbol.global.upperKerningText;
   }
 
   // ### format

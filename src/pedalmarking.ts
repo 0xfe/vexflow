@@ -8,8 +8,7 @@
 // In order to create "Sostenuto", and "una corda" markings, you must set
 // custom text for the release/depress pedal markings.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { FontInfo, RenderContext } from './types/common';
@@ -19,7 +18,7 @@ import { StaveNote } from './stavenote';
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (PedalMarking.DEBUG) Vex.L('Vex.Flow.PedalMarking', args);
+  if (PedalMarking.DEBUG) log('Vex.Flow.PedalMarking', args);
 }
 
 // Draws a pedal glyph with the provided `name` on a rendering `context`

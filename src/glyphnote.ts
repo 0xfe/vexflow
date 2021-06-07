@@ -72,7 +72,7 @@ export class GlyphNote extends Note {
     const stave = this.checkStave();
     const ctx = stave.checkContext();
     this.setRendered();
-    ctx.openGroup('glypheNote', this.getAttribute('id'));
+    ctx.openGroup('glyphNote', this.getAttribute('id'));
 
     // Context is set when setStave is called on Note
     if (!this.glyph.getContext()) {

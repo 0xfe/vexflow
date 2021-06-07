@@ -5,7 +5,6 @@
 // This file implements the main Voice class. It's mainly a container
 // object to group `Tickables` for formatting.
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
@@ -78,14 +77,14 @@ export class Voice extends Element {
     }
 
     // Default time sig is 4/4
-    this.time = Vex.Merge(
-      {
+    this.time = {
+      ...{
         num_beats: 4,
         beat_value: 4,
         resolution: Flow.RESOLUTION,
       },
-      time
-    );
+      ...(time as VoiceTime),
+    };
 
     // Recalculate total ticks.
     this.totalTicks = new Fraction(this.time.num_beats * (this.time.resolution / this.time.beat_value), 1);

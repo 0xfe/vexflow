@@ -7,8 +7,7 @@
 //
 // See `tests/clef_tests.js` for usage examples.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
@@ -30,7 +29,7 @@ export interface ClefType {
 function L(
   // eslint-disable-next-line
   ...args: any []) {
-  if (Clef.DEBUG) Vex.L('Vex.Flow.Clef', args);
+  if (Clef.DEBUG) log('Vex.Flow.Clef', args);
 }
 
 export class Clef extends StaveModifier {

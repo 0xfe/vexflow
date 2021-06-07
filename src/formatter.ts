@@ -18,7 +18,8 @@
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
 import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
+import { DefaultFontStack } from './font';
 import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -120,7 +121,7 @@ function createContexts<T>(
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (Formatter.DEBUG) Vex.L('Vex.Flow.Formatter', args);
+  if (Formatter.DEBUG) log('Vex.Flow.Formatter', args);
 }
 
 // Helper function to locate the next non-rest note(s).
@@ -187,7 +188,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
+      stavePadding: DefaultFontStack[0].lookupMetric('stave.padding'),
       ...options,
     };
 
