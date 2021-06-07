@@ -10,7 +10,7 @@
 // See `tests/stavenote_tests.js` for usage examples.
 
 import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log, warn } from './util';
 import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
 import { Stem } from './stem';
@@ -69,7 +69,7 @@ function L(
   ...args: // eslint-disable-next-line
   any[]
 ) {
-  if (StaveNote.DEBUG) Vex.L('Vex.Flow.StaveNote', args);
+  if (StaveNote.DEBUG) log('Vex.Flow.StaveNote', args);
 }
 
 const isInnerNoteIndex = (note: StaveNote, index: number) =>
@@ -395,12 +395,15 @@ export class StaveNote extends StemmableNote {
     this.note_heads = [];
     this.modifiers = [];
 
-    Vex.Merge(this.render_options, {
-      // font size for note heads and rests
-      glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
-      // number of stroke px to the left and right of head
-      stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET,
-    });
+    this.render_options = {
+      ...this.render_options,
+      ...{
+        // font size for note heads and rests
+        glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+        // number of stroke px to the left and right of head
+        stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET,
+      },
+    };
 
     this.calculateKeyProps();
     this.buildStem();
@@ -580,7 +583,7 @@ export class StaveNote extends StemmableNote {
     lastLine = undefined;
     this.keyProps.forEach((key) => {
       if (lastLine && key.line < lastLine) {
-        Vex.W('Unsorted keys in note will be sorted. ' + 'See https://github.com/0xfe/vexflow/issues/104 for details.');
+        warn('Unsorted keys in note will be sorted. ' + 'See https://github.com/0xfe/vexflow/issues/104 for details.');
       }
       lastLine = key.line;
     });

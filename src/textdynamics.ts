@@ -7,8 +7,7 @@
 // You can render any dynamics string that contains a combination of
 // the following letters:  P, M, F, Z, R, S
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Note } from './note';
 import { Glyph } from './glyph';
 import { TextNoteStruct } from './textnote';
@@ -18,7 +17,7 @@ import { check } from './common';
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (TextDynamics.DEBUG) Vex.L('Vex.Flow.TextDynamics', args);
+  if (TextDynamics.DEBUG) log('Vex.Flow.TextDynamics', args);
 }
 
 export class TextDynamics extends Note {
@@ -72,9 +71,12 @@ export class TextDynamics extends Note {
     this.line = text_struct.line || 0;
     this.glyphs = [];
 
-    Vex.Merge(this.render_options, {
-      glyph_font_size: 40,
-    });
+    this.render_options = {
+      ...this.render_options,
+      ...{
+        glyph_font_size: 40,
+      },
+    };
 
     L('New Dynamics Text: ', this.sequence);
   }

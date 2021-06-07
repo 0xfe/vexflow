@@ -8,14 +8,15 @@
 //
 // See `tests/barnote_tests.js` for usage examples.
 
-import { Vex } from './vex';
+import { log } from './util';
 import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
 
 // To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
-// eslint-disable-next-line
-function L(...args: any[]) {
-  if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args);
+function L(
+  // eslint-disable-next-line
+  ...args: any[]) {
+  if (BarNote.DEBUG) log('Vex.Flow.BarNote', args);
 }
 
 export class BarNote extends Note {

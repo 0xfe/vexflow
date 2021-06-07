@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { DefaultFontStack } from './font';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
@@ -236,7 +236,7 @@ export class Glyph extends Element {
     options?: { font?: Font; category: string }
   ): GlyphMetrics {
     const params = {
-      fontStack: Flow.DEFAULT_FONT_STACK,
+      fontStack: DefaultFontStack,
       ...options,
     };
     const metrics = Glyph.loadMetrics(params.fontStack, val, params.category);

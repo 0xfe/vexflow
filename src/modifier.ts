@@ -27,7 +27,7 @@ export enum ModifierPosition {
 }
 
 // To enable logging for this class. Set `Vex.Flow.Modifier.DEBUG` to `true`.
-// function L(...args) { if (Modifier.DEBUG) Vex.L('Vex.Flow.Modifier', args); }
+// function L(...args) { if (Modifier.DEBUG) log('Vex.Flow.Modifier', args); }
 
 export class Modifier extends Element {
   protected note?: Note;

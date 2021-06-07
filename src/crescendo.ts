@@ -8,7 +8,7 @@
 // type in VexFlow. This object would most likely be formatted in a Voice
 // with `TextNotes` - which are used to represent other dynamics markings.
 
-import { Vex } from './vex';
+import { log } from './util';
 import { Note, NoteStruct } from './note';
 import { TickContext } from './tickcontext';
 import { RenderContext } from './types/common';
@@ -25,7 +25,7 @@ export interface CrescendoParams {
 function L(
   // eslint-disable-next-line
   ...args: any []) {
-  if (Crescendo.DEBUG) Vex.L('Vex.Flow.Crescendo', args);
+  if (Crescendo.DEBUG) log('Vex.Flow.Crescendo', args);
 }
 
 // Private helper to draw the hairpin

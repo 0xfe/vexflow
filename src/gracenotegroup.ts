@@ -5,8 +5,7 @@
 // This file implements `GraceNoteGroup` which is used to format and
 // render grace notes.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
@@ -22,7 +21,7 @@ import { StemmableNote } from './stemmablenote';
 function L(
   // eslint-disable-next-line
   ...args: any) {
-  if (GraceNoteGroup.DEBUG) Vex.L('Vex.Flow.GraceNoteGroup', args);
+  if (GraceNoteGroup.DEBUG) log('Vex.Flow.GraceNoteGroup', args);
 }
 
 /** GraceNoteGroup is used to format and render grace notes. */

@@ -1,6 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { Element, ElementStyle } from './element';
 import { Flow } from './tables';
@@ -101,7 +100,7 @@ export class Stave extends Element {
       line_config: [],
     };
     this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
-    Vex.Merge(this.options, options);
+    this.options = { ...this.options, ...options };
 
     this.resetLines();
 
@@ -781,7 +780,10 @@ export class Stave extends Element {
       if (!lines_configuration[line_config]) {
         lines_configuration[line_config] = this.options.line_config[line_config];
       }
-      Vex.Merge(this.options.line_config[line_config], lines_configuration[line_config]);
+      this.options.line_config[line_config] = {
+        ...this.options.line_config[line_config],
+        ...lines_configuration[line_config],
+      };
     }
 
     this.options.line_config = lines_configuration;
