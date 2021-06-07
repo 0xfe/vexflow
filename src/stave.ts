@@ -22,7 +22,7 @@ export interface StaveLineConfig {
 }
 
 export interface StaveOptions {
-  //[name: string]: any;
+  // [name: string]: any;
   spacing: number;
   thickness: number;
   x_shift: number;

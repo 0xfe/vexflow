@@ -782,9 +782,7 @@ export class StaveNote extends StemmableNote {
   getModifierStartXY(
     position: number,
     index: number,
-    options: {
-      forceFlagRight?: boolean;
-    } = {}
+    options: { forceFlagRight?: boolean } = {}
   ): { x: number; y: number } {
     if (!this.preFormatted) {
       throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
