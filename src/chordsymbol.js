@@ -8,7 +8,7 @@
 //
 // See `tests/chordsymbol_tests.js` for usage examples.
 
-import { RuntimeError, log } from './util';
+import { log } from './util';
 import { DefaultFontStack } from './font';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
