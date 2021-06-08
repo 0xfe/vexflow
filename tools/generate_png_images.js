@@ -53,7 +53,5 @@ VF.Test.FONT_STACKS_TO_TEST = fontStacksToTest;
 // Create the image directory if it doesn't exist.
 fs.mkdirSync(VF.Test.NODE_IMAGEDIR, { recursive: true });
 
-console.log('GENERATE_PNG_IMAGES');
-
 // Run all tests.
 VF.Test.run();
