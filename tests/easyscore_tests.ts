@@ -9,7 +9,9 @@ import { FretHandFinger } from '../src/frethandfinger';
 import { QUnit, expect, Assert, TestOptions } from './declarations';
 import { Articulation } from '../src/articulation';
 
+// eslint-disable-next-line
 declare const VF: any; // TODO: Remove after migrating vexflow_test_helpers.js.
+// eslint-disable-next-line
 declare let Vex: any; // TODO: Remove after migrating vex.js.
 
 const EasyScoreTests = {
