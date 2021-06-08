@@ -101,25 +101,10 @@ const VexFlowTests = (function () {
       }
     },
 
-    createTestCanvas: function (testId, testName) {
+    createTest: function (testId, testName, tagName) {
       var testContainer = $('<div></div>').addClass('testcanvas');
-
       testContainer.append($('<div></div>').addClass('name').text(testName));
-
-      testContainer.append(
-        $('<canvas></canvas>').addClass('vex-tabdiv').attr('id', testId).addClass('name').text(name)
-      );
-
-      $(VF.Test.testRootSelector).append(testContainer);
-    },
-
-    createTestSVG: function (testId, testName) {
-      var testContainer = $('<div></div>').addClass('testcanvas');
-
-      testContainer.append($('<div></div>').addClass('name').text(testName));
-
-      testContainer.append($('<div></div>').addClass('vex-tabdiv').attr('id', testId));
-
+      testContainer.append($(`<${tagName}></${tagName}>`).addClass('vex-tabdiv').attr('id', testId));
       $(VF.Test.testRootSelector).append(testContainer);
     },
 
@@ -145,7 +130,7 @@ const VexFlowTests = (function () {
         var elementId = VF.Test.genID('canvas_');
         var title = VF.Test.genTitle('Canvas', assert, name);
 
-        VF.Test.createTestCanvas(elementId, title);
+        VF.Test.createTest(elementId, title, 'canvas');
 
         var testOptions = {
           backend: VF.Renderer.Backends.CANVAS,
@@ -167,7 +152,7 @@ const VexFlowTests = (function () {
         var elementId = VF.Test.genID('svg_' + fontName);
         var title = VF.Test.genTitle('SVG ' + fontName, assert, name);
 
-        VF.Test.createTestSVG(elementId, title);
+        VF.Test.createTest(elementId, title, 'div');
 
         var testOptions = {
           elementId: elementId,
