@@ -43,9 +43,6 @@ export interface Assert {
   throws(block: () => void, expected?: any, message?: any): void;
   raises(block: () => void, expected?: any, message?: any): void;
 }
-
-export declare let VF: any; // TODO: Remove after migrating vexflow_test_helpers.js.
-export declare let Vex: any; // TODO: Remove after migrating vex.js.
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 // See: vexflow_test_helpers.

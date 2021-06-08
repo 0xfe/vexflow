@@ -9,8 +9,8 @@ import { FretHandFinger } from '../src/frethandfinger';
 import { QUnit, expect, Assert, TestOptions } from './declarations';
 import { Articulation } from '../src/articulation';
 
-// TODO: Remove after migrating vex.js and vexflow_test_helpers.js.
-import { VF, Vex } from './declarations';
+declare const VF: any; // TODO: Remove after migrating vexflow_test_helpers.js.
+declare let Vex: any; // TODO: Remove after migrating vex.js.
 
 const EasyScoreTests = {
   Start: function (): void {
@@ -409,6 +409,6 @@ const EasyScoreTests = {
   },
 };
 
-Vex.Flow.Test.EasyScore = EasyScoreTests;
+// Vex.Flow.Test.EasyScore = EasyScoreTests;
 
 export { EasyScoreTests };
