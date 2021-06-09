@@ -5,21 +5,25 @@
 //
 // Copyright Mohit Cheppudira 2010
 
+import { RenderContext } from './types/common';
 import { warn } from './util';
 
-/** @constructor */
-export class CanvasContext {
-  static get WIDTH() {
+export class CanvasContext implements RenderContext {
+  vexFlowCanvasContext: CanvasRenderingContext2D;
+  canvas: HTMLCanvasElement | { width: number; height: number };
+  background_fillStyle?: string;
+
+  static get WIDTH(): number {
     return 600;
   }
-  static get HEIGHT() {
+  static get HEIGHT(): number {
     return 400;
   }
-  static get CANVAS_BROWSER_SIZE_LIMIT() {
-    return 32767; // Chrome/Firefox. Could be determined more precisely by npm module canvas-size
+  static get CANVAS_BROWSER_SIZE_LIMIT(): number {
+    return 32767; // Chrome/Firefox. Could be determined more precisely by npm module canvas-size.
   }
 
-  static SanitizeCanvasDims(width, height) {
+  static SanitizeCanvasDims(width: number, height: number): [number, number] {
     if (Math.max(width, height) > this.CANVAS_BROWSER_SIZE_LIMIT) {
       warn('Canvas dimensions exceed browser limit. Cropping to ' + this.CANVAS_BROWSER_SIZE_LIMIT);
       if (width > this.CANVAS_BROWSER_SIZE_LIMIT) {
@@ -33,9 +37,14 @@ export class CanvasContext {
     return [width, height];
   }
 
-  constructor(context) {
-    // Use a name that is unlikely to clash with a canvas context
-    // property
+  /**
+   * This constructor is only called if Renderer.USE_CANVAS_PROXY is true.
+   * In most instances, we do not need to
+   * See Renderer.bolsterCanvasContext().
+   * @param context
+   */
+  constructor(context: CanvasRenderingContext2D) {
+    // Use a name that is unlikely to clash with a canvas context property.
     this.vexFlowCanvasContext = context;
     if (!context.canvas) {
       this.canvas = {
@@ -47,147 +56,189 @@ export class CanvasContext {
     }
   }
 
-  clear() {
+  clear(): void {
     this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  // Containers not implemented
-  openGroup() {}
-  closeGroup() {}
-  add() {}
+  // eslint-disable-next-line
+  openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): any {
+    // Containers not implemented.
+  }
 
-  setFont(family, size, weight) {
+  closeGroup(): void {
+    // Containers not implemented.
+  }
+
+  // eslint-disable-next-line
+  add(child: any): void {
+    // Containers not implemented.
+  }
+
+  setFont(family: string, size: number, weight: string): this {
     this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
     return this;
   }
 
-  setRawFont(font) {
+  setRawFont(font: string): this {
     this.vexFlowCanvasContext.font = font;
     return this;
   }
 
-  setFillStyle(style) {
+  setFillStyle(style: string): this {
     this.vexFlowCanvasContext.fillStyle = style;
     return this;
   }
 
-  setBackgroundFillStyle(style) {
-    this.background_fillStyle = style;
+  // TODO: What is this method supposed to do?
+  // The SVGContext version doesn't do much...
+  // It only fills the area behind some tab number annotations.
+  setBackgroundFillStyle(style: string): this {
+    /*
+    // The CanvasContext version only sets a field which is never referenced anywhere else.
+    // Should it fill the entire canvas rect? For example:
+    const oldFillStyle = this.vexFlowCanvasContext.fillStyle;
+    this.vexFlowCanvasContext.fillStyle = style;
+    this.vexFlowCanvasContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.vexFlowCanvasContext.fillStyle = oldFillStyle;
+    */
+    this.background_fillStyle = style; // BUG? It is never referenced anywhere else.
     return this;
   }
 
-  setStrokeStyle(style) {
+  setStrokeStyle(style: string): this {
     this.vexFlowCanvasContext.strokeStyle = style;
     return this;
   }
 
-  setShadowColor(style) {
-    this.vexFlowCanvasContext.shadowColor = style;
+  setShadowColor(color: string): this {
+    this.vexFlowCanvasContext.shadowColor = color;
     return this;
   }
 
-  setShadowBlur(blur) {
+  setShadowBlur(blur: number): this {
     this.vexFlowCanvasContext.shadowBlur = blur;
     return this;
   }
 
-  setLineWidth(width) {
+  setLineWidth(width: number): this {
     this.vexFlowCanvasContext.lineWidth = width;
     return this;
   }
 
-  setLineCap(cap_type) {
-    this.vexFlowCanvasContext.lineCap = cap_type;
+  setLineCap(capType: CanvasLineCap): this {
+    this.vexFlowCanvasContext.lineCap = capType;
     return this;
   }
 
-  // setLineDash: is the one native method in a canvas context
+  // setLineDash is the one native method in a canvas context
   // that begins with set, therefore we don't bolster the method
-  // if it already exists (see renderer.bolsterCanvasContext).
+  // if it already exists (see Renderer.bolsterCanvasContext).
   // If it doesn't exist, we bolster it and assume it's looking for
   // a ctx.lineDash method, as previous versions of VexFlow
   // expected.
-  setLineDash(dash) {
-    this.vexFlowCanvasContext.lineDash = dash;
+  setLineDash(dash: number[]): this {
+    // eslint-disable-next-line
+    (this.vexFlowCanvasContext as any).lineDash = dash;
     return this;
   }
 
-  scale(x, y) {
-    return this.vexFlowCanvasContext.scale(parseFloat(x), parseFloat(y));
+  // Only called if Renderer.USE_CANVAS_PROXY is true.
+  scale(x: number, y: number): this {
+    this.vexFlowCanvasContext.scale(x, y);
+    return this;
   }
 
-  resize(width, height) {
-    [width, height] = this.SanitizeCanvasDims(parseInt(width, 10), parseInt(height, 10));
-    return this.vexFlowCanvasContext.resize(width, height);
+  // renderer.js calls ctx.scale() instead, so this method is never used.
+  // eslint-disable-next-line
+  resize(width: number, height: number): this {
+    // Do nothing for now.
+    // CanvasRenderingContext2D does not have a resize function.
+    return this;
   }
 
-  rect(x, y, width, height) {
-    return this.vexFlowCanvasContext.rect(x, y, width, height);
+  rect(x: number, y: number, width: number, height: number): this {
+    this.vexFlowCanvasContext.rect(x, y, width, height);
+    return this;
   }
 
-  fillRect(x, y, width, height) {
-    return this.vexFlowCanvasContext.fillRect(x, y, width, height);
+  fillRect(x: number, y: number, width: number, height: number): this {
+    this.vexFlowCanvasContext.fillRect(x, y, width, height);
+    return this;
   }
 
-  clearRect(x, y, width, height) {
-    return this.vexFlowCanvasContext.clearRect(x, y, width, height);
+  clearRect(x: number, y: number, width: number, height: number): this {
+    this.vexFlowCanvasContext.clearRect(x, y, width, height);
+    return this;
   }
 
-  beginPath() {
-    return this.vexFlowCanvasContext.beginPath();
+  beginPath(): this {
+    this.vexFlowCanvasContext.beginPath();
+    return this;
   }
 
-  moveTo(x, y) {
-    return this.vexFlowCanvasContext.moveTo(x, y);
+  moveTo(x: number, y: number): this {
+    this.vexFlowCanvasContext.moveTo(x, y);
+    return this;
   }
 
-  lineTo(x, y) {
-    return this.vexFlowCanvasContext.lineTo(x, y);
+  lineTo(x: number, y: number): this {
+    this.vexFlowCanvasContext.lineTo(x, y);
+    return this;
   }
 
-  bezierCurveTo(x1, y1, x2, y2, x, y) {
-    return this.vexFlowCanvasContext.bezierCurveTo(x1, y1, x2, y2, x, y);
+  bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this {
+    this.vexFlowCanvasContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    return this;
   }
 
-  quadraticCurveTo(x1, y1, x, y) {
-    return this.vexFlowCanvasContext.quadraticCurveTo(x1, y1, x, y);
+  quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): this {
+    this.vexFlowCanvasContext.quadraticCurveTo(cpx, cpy, x, y);
+    return this;
   }
 
-  // This is an attempt (hack) to simulate the HTML5 canvas
-  // arc method.
-  arc(x, y, radius, startAngle, endAngle, antiClockwise) {
-    return this.vexFlowCanvasContext.arc(x, y, radius, startAngle, endAngle, antiClockwise);
+  // This is an attempt (hack) to simulate the HTML5 canvas arc method.
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this {
+    this.vexFlowCanvasContext.arc(x, y, radius, startAngle, endAngle, antiClockwise);
+    return this;
   }
 
-  glow() {
-    return this.vexFlowCanvasContext.glow();
+  glow(): this {
+    // Do nothing for now.
+    // CanvasRenderingContext2D does not have a glow function.
+    return this;
   }
 
-  fill() {
-    return this.vexFlowCanvasContext.fill();
+  fill(): this {
+    this.vexFlowCanvasContext.fill();
+    return this;
   }
 
-  stroke() {
-    return this.vexFlowCanvasContext.stroke();
+  stroke(): this {
+    this.vexFlowCanvasContext.stroke();
+    return this;
   }
 
-  closePath() {
-    return this.vexFlowCanvasContext.closePath();
+  closePath(): this {
+    this.vexFlowCanvasContext.closePath();
+    return this;
   }
 
-  measureText(text) {
+  measureText(text: string): TextMetrics {
     return this.vexFlowCanvasContext.measureText(text);
   }
 
-  fillText(text, x, y) {
-    return this.vexFlowCanvasContext.fillText(text, x, y);
+  fillText(text: string, x: number, y: number): this {
+    this.vexFlowCanvasContext.fillText(text, x, y);
+    return this;
   }
 
-  save() {
-    return this.vexFlowCanvasContext.save();
+  save(): this {
+    this.vexFlowCanvasContext.save();
+    return this;
   }
 
-  restore() {
-    return this.vexFlowCanvasContext.restore();
+  restore(): this {
+    this.vexFlowCanvasContext.restore();
+    return this;
   }
 }

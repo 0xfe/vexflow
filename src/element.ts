@@ -27,7 +27,7 @@ export interface ElementAttributes {
 /** Element style */
 export interface ElementStyle {
   shadowColor?: string;
-  shadowBlur?: string;
+  shadowBlur?: number;
   fillStyle?: string;
   strokeStyle?: string;
   lineWidth?: number;

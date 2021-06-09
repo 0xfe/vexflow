@@ -243,7 +243,12 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  setShadowBlur(blur: string): this {
+  /**
+   * @param blur A non-negative float specifying the level of shadow blur, where 0
+   *             represents no blur and larger numbers represent increasingly more blur.
+   * @returns this
+   */
+  setShadowBlur(blur: number): this {
     this.shadow_attributes.width = blur;
     return this;
   }
@@ -269,14 +274,14 @@ export class SVGContext implements RenderContext {
     }
   }
 
-  setLineCap(lineCap: string): this {
-    this.attributes['stroke-linecap'] = lineCap;
+  setLineCap(capType: CanvasLineCap): this {
+    this.attributes['stroke-linecap'] = capType;
     return this;
   }
 
   // ### Sizing & Scaling Methods:
 
-  // TODO (GCR): See note at scale() -- seperate our internal
+  // TODO (GCR): See note at scale() -- separate our internal
   // conception of pixel-based width/height from the style.width
   // and style.height properties eventually to allow users to
   // apply responsive sizing attributes to the SVG.
@@ -416,10 +421,9 @@ export class SVGContext implements RenderContext {
     // Adding a large number of transform paths (as we would
     // have to do) could be a real performance hit.  Since
     // tabNote seems to be the only module that makes use of this
-    // it may be worth creating a seperate tabStave that would
+    // it may be worth creating a separate tabStave that would
     // draw lines around locations of tablature fingering.
     //
-
     this.rect(x, y, width, height, this.background_attributes);
     return this;
   }

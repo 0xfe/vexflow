@@ -207,7 +207,7 @@ export class TextNote extends Note {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.text, x, y);
 
-      const height = ctx.measureText(this.text).height;
+      const height = ctx.measureText(this.text).height ?? 0;
 
       // Write superscript
       if (this.superscript) {
