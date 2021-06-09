@@ -7,7 +7,7 @@
 //
 // See `tests/annotation_tests.js` for usage examples.
 
-import { RuntimeError, log } from './util';
+import { log } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { TextFont } from './textfont';
@@ -16,9 +16,8 @@ import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any []) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Annotation.DEBUG) log('Vex.Flow.Annotation', args);
 }
 

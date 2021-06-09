@@ -84,6 +84,4 @@ const Fonts = {
   Custom: new Font('Custom', CustomMetrics, CustomFont),
 };
 
-const DefaultFontStack = [Fonts.Bravura, Fonts.Gonville, Fonts.Custom];
-
-export { Fonts, DefaultFontStack, Font };
+export { Fonts, Font };

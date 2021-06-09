@@ -66,8 +66,8 @@ const VexFlowTests = (function () {
     // Default font properties for tests.
     Font: { size: 10 },
 
-    // Customize this array to test more fonts (e.g., ['Bravura', 'Gonville', 'Petaluma']).
-    FONT_STACKS_TO_TEST: ['Bravura'],
+    // Customize this array to test fewer fonts (e.g., ['Bravura', 'Petaluma']).
+    FONT_STACKS_TO_TEST: ['Bravura', 'Gonville', 'Petaluma'],
 
     FONT_STACKS: {
       Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],

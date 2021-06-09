@@ -13,21 +13,17 @@ document = dom.window.document;
 const fs = require('fs');
 const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
-// Optional: 3rd argument specifies which font stacks to test.
-// For example: 
-//   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=all
+// Optional: 3rd argument specifies which font stacks to test. Defaults to all.
+// For example:
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=petaluma
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville
-let fontStacksToTest = ['Bravura'];
+const ALL_FONTS = ['Bravura', 'Petaluma', 'Gonville'];
+let fontStacksToTest = ALL_FONTS;
 if (process.argv.length >= 5) {
   const fontsOption = process.argv[4].toLowerCase();
   if (fontsOption.startsWith('--fonts=')) {
     const fontsList = fontsOption.split('=')[1].split(',');
-    if (fontsList.includes('all')) {
-      fontStacksToTest = ['Bravura', 'Petaluma', 'Gonville'];
-    } else {
-      fontStacksToTest = fontsList.map((fontName) => fontName.charAt(0).toUpperCase() + fontName.slice(1));
-    }
+    fontStacksToTest = fontsList.map((fontName) => fontName.charAt(0).toUpperCase() + fontName.slice(1));
   }
 }
 
