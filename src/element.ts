@@ -8,10 +8,10 @@
 
 import { RuntimeError } from './util';
 import { Registry } from './registry';
-import { DefaultFontStack } from './font';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
 import { RenderContext } from './types/common';
+import { Flow } from './tables';
 
 /** Element attributes. */
 export interface ElementAttributes {
@@ -62,8 +62,9 @@ export abstract class Element {
     };
 
     this.rendered = false;
-    this.fontStack = DefaultFontStack;
-    this.musicFont = DefaultFontStack[0];
+
+    this.fontStack = Flow.DEFAULT_FONT_STACK;
+    this.musicFont = Flow.DEFAULT_FONT_STACK[0];
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);

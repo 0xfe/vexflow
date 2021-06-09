@@ -19,7 +19,6 @@
 
 import { Vex } from './vex';
 import { RuntimeError, log } from './util';
-import { DefaultFontStack } from './font';
 import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -120,7 +119,8 @@ function createContexts<T>(
 // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
-  ...args: any[]) {
+  ...args: any[]
+) {
   if (Formatter.DEBUG) log('Vex.Flow.Formatter', args);
 }
 
@@ -188,7 +188,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: DefaultFontStack[0].lookupMetric('stave.padding'),
+      stavePadding: Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
       ...options,
     };
 

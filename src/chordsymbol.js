@@ -9,7 +9,6 @@
 // See `tests/chordsymbol_tests.js` for usage examples.
 
 import { log } from './util';
-import { DefaultFontStack } from './font';
 import { Flow } from './tables';
 import { Glyph } from './glyph';
 import { TextFont } from './textfont';
@@ -105,7 +104,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get engravingFontResolution() {
-    return DefaultFontStack[0].getResolution();
+    return Flow.DEFAULT_FONT_STACK[0].getResolution();
   }
 
   static get spacingBetweenBlocks() {
@@ -235,15 +234,15 @@ export class ChordSymbol extends Modifier {
   }
 
   static get chordSymbolMetrics() {
-    return DefaultFontStack[0].metrics.glyphs.chordSymbol;
+    return Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol;
   }
 
   static get lowerKerningText() {
-    return DefaultFontStack[0].metrics.glyphs.chordSymbol.global.lowerKerningText;
+    return Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol.global.lowerKerningText;
   }
 
   static get upperKerningText() {
-    return DefaultFontStack[0].metrics.glyphs.chordSymbol.global.upperKerningText;
+    return Flow.DEFAULT_FONT_STACK[0].metrics.glyphs.chordSymbol.global.upperKerningText;
   }
 
   // ### format
