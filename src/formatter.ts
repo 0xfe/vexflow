@@ -482,7 +482,7 @@ export class Formatter {
 
   // Create `ModifierContext`s for each tick in `voices`.
   createModifierContexts(voices: Voice[]): AlignmentContexts<ModifierContext> {
-    const fn: addToContextFn<ModifierContext> = (tickable: Note, context: ModifierContext, voiceIndex: number) =>
+    const fn: addToContextFn<ModifierContext> = (tickable: Note, context: ModifierContext) =>
       tickable.addToModifierContext(context);
     const contexts = createContexts(voices, () => new ModifierContext(), fn);
     this.modifierContexts = contexts;
