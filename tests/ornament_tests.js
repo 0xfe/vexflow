@@ -231,7 +231,7 @@ const OrnamentTests = (function () {
       expect(0);
       const glyphWidth = (vexGlyph) => {
         const vf = VF.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
-        return (vf.x_max - vf.x_min) * (96 * (38 / (VF.DefaultFontStack[0].getResolution() * 72)));
+        return (vf.x_max - vf.x_min) * (96 * (38 / (VF.DEFAULT_FONT_STACK[0].getResolution() * 72)));
       };
 
       const lineWidth = 960;

@@ -14,7 +14,7 @@ const FormatterTests = (function () {
     return (vf.x_max - vf.x_min) * glyphPixels();
   };
   const glyphPixels = () => {
-    return 96 * (38 / (VF.DefaultFontStack[0].getResolution() * 72));
+    return 96 * (38 / (VF.DEFAULT_FONT_STACK[0].getResolution() * 72));
   };
 
   var Formatter = {
