@@ -18,7 +18,7 @@
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
 import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -119,8 +119,9 @@ function createContexts<T>(
 // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
-  ...args: any[]) {
-  if (Formatter.DEBUG) Vex.L('Vex.Flow.Formatter', args);
+  ...args: any[]
+) {
+  if (Formatter.DEBUG) log('Vex.Flow.Formatter', args);
 }
 
 // Helper function to locate the next non-rest note(s).
@@ -425,7 +426,14 @@ export class Formatter {
   // Calculate the minimum width required to align and format `voices`.
   preCalculateMinTotalWidth(voices: Voice[]): number {
     const unalignedPadding = Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.unalignedNotePadding');
+    // Calculate additional padding based on 3 methods:
+    // 1) unaligned beats in voices, 2) variance of width, 3) variance of durations
     let unalignedCtxCount = 0;
+    let wsum = 0;
+    let dsum = 0;
+    const widths: number[] = [];
+    const durations: number[] = [];
+
     // Cache results.
     if (this.hasMinTotalWidth) return this.minTotalWidth;
 
@@ -441,7 +449,6 @@ export class Formatter {
     // eslint-disable-next-line
     const { list: contextList, map: contextMap } = this.tickContexts!;
 
-    // const maxTicks = contextList.map(tick => tick.maxTicks.value()).reduce((a, b) => a + b, 0);
     // Go through each tick context and calculate total width.
     this.minTotalWidth = contextList
       .map((tick) => {
@@ -450,13 +457,31 @@ export class Formatter {
         if (context.getTickables().length < voices.length) {
           unalignedCtxCount += 1;
         }
-        return context.getWidth();
+        const width = context.getWidth();
+        const duration = context.getMaxTicks().value();
+        wsum += width;
+        dsum += duration;
+        widths.push(width);
+        durations.push(duration);
+        return width;
       })
       .reduce((a: number, b: number) => a + b, 0);
 
     this.hasMinTotalWidth = true;
+    // normalized STDDEV of widths/durations gives us padding hints.
+    const wavg = wsum / contextList.length;
+    const wvar = widths.map((ll) => Math.pow(ll - wavg, 2)).reduce((a, b) => a + b);
+    const wpads = Math.pow(wvar / contextList.length, 0.5) / wavg;
 
-    return this.minTotalWidth + unalignedPadding * unalignedCtxCount;
+    const davg = dsum / contextList.length;
+    const dvar = durations.map((ll) => Math.pow(ll - davg, 2)).reduce((a, b) => a + b);
+    const dpads = Math.pow(dvar / contextList.length, 0.5) / davg;
+
+    // Find max of 3 methods and use that
+    const padmax = Math.max(dpads, wpads) * contextList.length * unalignedPadding;
+    const unalignedPad = unalignedPadding * unalignedCtxCount;
+
+    return this.minTotalWidth + Math.max(unalignedPad, padmax);
   }
 
   // Get minimum width required to render all voices. Either `format` or
@@ -494,7 +519,7 @@ export class Formatter {
 
   // Create `ModifierContext`s for each tick in `voices`.
   createModifierContexts(voices: Voice[]): AlignmentContexts<ModifierContext> {
-    const fn: addToContextFn<ModifierContext> = (tickable: Note, context: ModifierContext, voiceIndex: number) =>
+    const fn: addToContextFn<ModifierContext> = (tickable: Note, context: ModifierContext) =>
       tickable.addToModifierContext(context);
     const contexts = createContexts(voices, () => new ModifierContext(), fn);
     this.modifierContexts = contexts;
