@@ -60,7 +60,6 @@
     "lint": "grunt eslint",
     "qunit": "grunt test",
     "generate:current": "node ./tools/generate_png_images.js ../build ./build/images/current",
-    "generate:current:all-fonts": "node ./tools/generate_png_images.js ../build ./build/images/current --fonts=all",
     "generate:reference": "node ./tools/generate_png_images.js ../reference ./build/images/reference",
     "generate:blessed": "node ./tools/generate_png_images.js ../releases ./build/images/blessed",
     "generate": "npm run generate:current && npm run generate:blessed",

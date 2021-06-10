@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
@@ -9,6 +8,7 @@ import { Font, FontGlyph } from './font';
 import { RenderContext, TypeProps } from './types/common';
 import { Stave } from './stave';
 import { Stem } from './stem';
+import { Flow } from './tables';
 
 export interface DurationCode {
   common: TypeProps;
@@ -66,7 +66,7 @@ function processOutline(
   scaleX: number,
   scaleY: number,
   // eslint-disable-next-line
-  outlineFns: Record<string, ((...args: any[]) => void) >
+  outlineFns: Record<string, (...args: any[]) => void>
 ): void {
   let command: string;
   let x: number;
@@ -114,7 +114,7 @@ export class Glyph extends Element {
   code: string;
   // metrics is initialised in the constructor by either setOptions or reset
   // eslint-disable-next-line
-  metrics!: GlyphMetrics; 
+  metrics!: GlyphMetrics;
   topGlyphs: Glyph[] = [];
   botGlyphs: Glyph[] = [];
 
@@ -127,7 +127,7 @@ export class Glyph extends Element {
   protected stave?: Stave;
 
   // eslint-disable-next-line
-  draw() {};
+  draw() {}
 
   /*
     Static methods used to implement loading and rendering glyphs.

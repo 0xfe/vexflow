@@ -4,7 +4,6 @@
 //
 // This file implements tablature bends.
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
@@ -171,7 +170,7 @@ export class Bend extends Modifier {
         const additional_width =
           bend.type === Bend.UP ? this.render_options.bend_width : this.render_options.release_width;
 
-        bend.width = Vex.Max(additional_width, measure_text(bend.text)) + 3;
+        bend.width = Math.max(additional_width, measure_text(bend.text)) + 3;
         bend.draw_width = bend.width / 2;
         total_width += bend.width;
       }
@@ -183,18 +182,15 @@ export class Bend extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-    if (!(this.note && this.index != null)) {
-      throw new RuntimeError('NoNoteForBend', "Can't draw bend without a note or index.");
-    }
-
+    const note = this.checkAttachedNote();
     this.setRendered();
 
-    const start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
+    const start = note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
     start.x += 3;
     start.y += 0.5;
     const x_shift = this.x_shift;
 
-    const stave = this.note.checkStave();
+    const stave = note.checkStave();
     const bend_height = stave.getYForTopText(this.text_line) + 3;
     const annotation_y = stave.getYForTopText(this.text_line) - 1;
     // eslint-disable-next-line

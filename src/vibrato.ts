@@ -3,7 +3,6 @@
 // ## Description
 // This class implements vibratos.
 
-import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Bend } from './bend';
 import { RenderContext } from './types/common';
@@ -88,16 +87,13 @@ export class Vibrato extends Modifier {
 
   draw(): void {
     const ctx = this.checkContext();
-
-    if (!this.note) {
-      throw new RuntimeError('NoNoteForVibrato', "Can't draw vibrato without an attached note.");
-    }
-
+    const note = this.checkAttachedNote();
     this.setRendered();
-    const start = this.note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
+
+    const start = note.getModifierStartXY(Modifier.Position.RIGHT, this.index);
 
     const vx = start.x + this.x_shift;
-    const vy = this.note.getYForTopText(this.text_line) + 2;
+    const vy = note.getYForTopText(this.text_line) + 2;
 
     Vibrato.renderVibrato(ctx, vx, vy, this.render_options);
   }

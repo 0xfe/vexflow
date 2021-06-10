@@ -24,8 +24,16 @@ export interface StaveLineNotes {
 // Patrick Horgan's article, "Drawing lines and arcs with
 // arrow heads on  HTML5 Canvas"
 //
-// Draw an arrow head that connects between 3 coordinates
-function drawArrowHead(ctx: RenderContext, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number) {
+// Draw an arrow head that connects between 3 coordinates.
+function drawArrowHead(
+  ctx: RenderContext,
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+): void {
   // all cases do this.
   ctx.beginPath();
   ctx.moveTo(x0, y0);
@@ -40,29 +48,16 @@ function drawArrowHead(ctx: RenderContext, x0: number, y0: number, x1: number, y
 // Helper function to draw a line with arrow heads
 function drawArrowLine(
   ctx: RenderContext,
-  point1: { x: number; y: number },
-  point2: { x: number; y: number },
-  config: {
-    draw_start_arrow: boolean;
-    padding_left: number;
-    text_justification: number;
-    color?: string;
-    line_width: number;
-    line_dash?: string;
-    rounded_end: boolean;
-    arrowhead_length: number;
-    text_position_vertical: number;
-    draw_end_arrow: boolean;
-    arrowhead_angle: number;
-    padding_right: number;
-  }
-) {
+  pt1: { x: number; y: number },
+  pt2: { x: number; y: number },
+  config: RenderOptions
+): void {
   const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
 
-  const x1 = point1.x;
-  const y1 = point1.y;
-  const x2 = point2.x;
-  const y2 = point2.y;
+  const x1 = pt1.x;
+  const y1 = pt1.y;
+  const x2 = pt2.x;
+  const y2 = pt2.y;
 
   // For ends with arrow we actually want to stop before we get to the arrow
   // so that wide lines won't put a flat end on the arrow.
@@ -137,21 +132,23 @@ function drawArrowLine(
   }
 }
 
+interface RenderOptions {
+  padding_left: number;
+  padding_right: number;
+  line_width: number;
+  line_dash?: number[];
+  rounded_end: boolean;
+  color?: string;
+  draw_start_arrow: boolean;
+  draw_end_arrow: boolean;
+  arrowhead_length: number;
+  arrowhead_angle: number;
+  text_position_vertical: number;
+  text_justification: number;
+}
+
 export class StaveLine extends Element {
-  readonly render_options: {
-    draw_start_arrow: boolean;
-    padding_left: number;
-    text_justification: number;
-    color?: string;
-    line_width: number;
-    line_dash?: string;
-    rounded_end: boolean;
-    arrowhead_length: number;
-    text_position_vertical: number;
-    draw_end_arrow: boolean;
-    arrowhead_angle: number;
-    padding_right: number;
-  };
+  readonly render_options: RenderOptions;
 
   protected text: string;
   protected font: FontInfo;
@@ -160,6 +157,7 @@ export class StaveLine extends Element {
   protected notes: StaveLineNotes;
   protected first_note!: StaveNote;
   protected last_note!: StaveNote;
+
   // Text Positioning
   static readonly TextVerticalPosition = {
     TOP: 1,
@@ -205,9 +203,9 @@ export class StaveLine extends Element {
 
       // The width of the line in pixels
       line_width: 1,
-      // An array of line/space lengths. Unsupported with Raphael (SVG)
+      // An array of line/space lengths. Unsupported with Raphael (SVG).
       line_dash: undefined,
-      // Can draw rounded line end, instead of a square. Unsupported with Raphael (SVG)
+      // Can draw rounded line end, instead of a square. Unsupported with Raphael (SVG).
       rounded_end: true,
       // The color of the line and arrowheads
       color: undefined,
@@ -289,9 +287,11 @@ export class StaveLine extends Element {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
     }
 
-    if (this.render_options.color) {
-      ctx.setStrokeStyle(this.render_options.color);
-      ctx.setFillStyle(this.render_options.color);
+    const render_options = this.render_options;
+    const color = render_options.color;
+    if (color) {
+      ctx.setStrokeStyle(color);
+      ctx.setFillStyle(color);
     }
   }
 

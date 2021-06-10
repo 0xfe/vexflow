@@ -8,10 +8,10 @@
 
 import { RuntimeError } from './util';
 import { Registry } from './registry';
-import { Flow } from './tables';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
 import { RenderContext } from './types/common';
+import { Flow } from './tables';
 
 /** Element attributes. */
 export interface ElementAttributes {
@@ -62,6 +62,7 @@ export abstract class Element {
     };
 
     this.rendered = false;
+
     this.fontStack = Flow.DEFAULT_FONT_STACK;
     this.musicFont = Flow.DEFAULT_FONT_STACK[0];
 
@@ -225,7 +226,7 @@ export abstract class Element {
   /** Validates and returns the context. */
   checkContext(): RenderContext {
     if (!this.context) {
-      throw new RuntimeError('NoContext', 'No rendering context attached to instance');
+      throw new RuntimeError('NoContext', 'No rendering context attached to instance.');
     }
     return this.context;
   }

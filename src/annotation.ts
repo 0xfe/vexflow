@@ -7,8 +7,7 @@
 //
 // See `tests/annotation_tests.js` for usage examples.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { log } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { TextFont } from './textfont';
@@ -17,10 +16,9 @@ import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
 
 // To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any []) {
-  if (Annotation.DEBUG) Vex.L('Vex.Flow.Annotation', args);
+// eslint-disable-next-line
+function L(...args: any[]) {
+  if (Annotation.DEBUG) log('Vex.Flow.Annotation', args);
 }
 
 enum Justify {
@@ -154,13 +152,10 @@ export class Annotation extends Modifier {
   // Render text beside the note.
   draw(): void {
     const ctx = this.checkContext();
-
-    if (!this.note) {
-      throw new RuntimeError('NoNoteForAnnotation', "Can't draw text annotation without an attached note.");
-    }
-
+    const note = this.checkAttachedNote();
     this.setRendered();
-    const start = this.note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
+
+    const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
 
     // We're changing context parameters. Save current state.
     ctx.save();
@@ -184,18 +179,18 @@ export class Annotation extends Modifier {
     } else if (this.justification === Annotation.Justify.CENTER) {
       x = start.x - text_width / 2;
     } /* CENTER_STEM */ else {
-      x = this.note.getStemX() - text_width / 2;
+      x = (note as StemmableNote).getStemX() - text_width / 2;
     }
 
     let stem_ext: Record<string, number> = {};
     let spacing = 0;
-    const has_stem = this.note.hasStem();
-    const stave = this.note.checkStave();
+    const has_stem = note.hasStem();
+    const stave = note.checkStave();
 
     // The position of the text varies based on whether or not the note
     // has a stem.
     if (has_stem) {
-      stem_ext = this.note.checkStem().getExtents();
+      stem_ext = (note as StemmableNote).checkStem().getExtents();
       spacing = stave.getSpacingBetweenLines();
     }
 
@@ -204,20 +199,20 @@ export class Annotation extends Modifier {
       // is bottom-right.
       y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
       if (has_stem) {
-        const stem_base = this.note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
+        const stem_base = note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
         y = Math.max(y, stem_base + spacing * (this.text_line + 2));
       }
     } else if (this.vert_justification === Annotation.VerticalJustify.CENTER) {
-      const yt = this.note.getYForTopText(this.text_line) - 1;
+      const yt = note.getYForTopText(this.text_line) - 1;
       const yb = stave.getYForBottomText(this.text_line);
       y = yt + (yb - yt) / 2 + text_height / 2;
     } else if (this.vert_justification === Annotation.VerticalJustify.TOP) {
-      y = Math.min(stave.getYForTopText(this.text_line), this.note.getYs()[0] - 10);
+      y = Math.min(stave.getYForTopText(this.text_line), note.getYs()[0] - 10);
       if (has_stem) {
         y = Math.min(y, stem_ext.topY - 5 - spacing * this.text_line);
       }
     } /* CENTER_STEM */ else {
-      const extents = this.note.getStemExtents();
+      const extents = note.getStemExtents();
       y = extents.topY + (extents.baseY - extents.topY) / 2 + text_height / 2;
     }
 

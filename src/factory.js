@@ -9,6 +9,7 @@
 // *This API is currently DRAFT*
 
 import { Vex } from './vex';
+import { log } from './util';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
@@ -52,7 +53,7 @@ import { TextFont } from './textfont';
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 function L(...args) {
-  if (Factory.DEBUG) Vex.L('Vex.Flow.Factory', args);
+  if (Factory.DEBUG) log('Vex.Flow.Factory', args);
 }
 
 export const X = Vex.MakeException('FactoryError');

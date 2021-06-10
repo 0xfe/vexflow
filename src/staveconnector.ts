@@ -1,6 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './tables';
@@ -112,13 +111,13 @@ export class StaveConnector extends Element {
   ): this {
     this.texts.push({
       content: text,
-      options: Vex.Merge({ shift_x: 0, shift_y: 0 }, options),
+      options: { ...{ shift_x: 0, shift_y: 0 }, ...options },
     });
     return this;
   }
 
   setFont(font: FontInfo): void {
-    Vex.Merge(this.font, font);
+    this.font = { ...this.font, ...font };
   }
 
   setXShift(x_shift: number): this {
@@ -220,7 +219,7 @@ export class StaveConnector extends Element {
       case StaveConnector.type.NONE:
         break;
       default:
-        throw new RuntimeError('InvalidType', `The provided StaveConnector.type (${this.type}) is invalid`);
+        throw new RuntimeError('InvalidType', `The provided StaveConnector.type (${this.type}) is invalid.`);
     }
 
     if (

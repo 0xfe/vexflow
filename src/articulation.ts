@@ -9,8 +9,7 @@
 //
 // See `tests/articulation_tests.js` for usage examples.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
@@ -21,6 +20,7 @@ import { ModifierContextState } from './modifiercontext';
 import { check } from './common';
 import { Builder } from './easyscore';
 import { TabNote } from './tabnote';
+import { GraceNote } from './gracenote';
 
 export interface ArticulationStruct {
   code: string;
@@ -33,7 +33,7 @@ export interface ArticulationStruct {
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (Articulation.DEBUG) Vex.L('Vex.Flow.Articulation', args);
+  if (Articulation.DEBUG) log('Vex.Flow.Articulation', args);
 }
 
 const { ABOVE, BELOW } = Modifier.Position;
@@ -75,7 +75,7 @@ function snapLineToStaff(canSitBetweenLines: boolean, line: number, position: nu
 
 function isStaveNote(note: Note): boolean {
   const noteCategory = note.getCategory();
-  return noteCategory === 'stavenotes' || noteCategory === 'gracenotes';
+  return noteCategory === StaveNote.CATEGORY || noteCategory === GraceNote.CATEGORY;
 }
 
 function getTopY(note: Note, textLine: number): number {
@@ -92,7 +92,7 @@ function getTopY(note: Note, textLine: number): number {
     } else {
       return Math.min(...note.getYs());
     }
-  } else if (note.getCategory() === 'tabnotes') {
+  } else if (note.getCategory() === TabNote.CATEGORY) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -121,7 +121,7 @@ function getBottomY(note: Note, textLine: number): number {
     } else {
       return Math.max(...note.getYs());
     }
-  } else if (note.getCategory() === 'tabnotes') {
+  } else if (note.getCategory() === TabNote.CATEGORY) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return note.checkStave().getYForBottomText(textLine);
@@ -280,20 +280,17 @@ export class Articulation extends Modifier {
 
   // Render articulation in position next to note.
   draw(): void {
-    const { note, index, position, glyph, text_line: textLine } = this;
-    const canSitBetweenLines = this.articulation?.between_lines ?? false;
-
     const ctx = this.checkContext();
-
-    if (!note || index == null) {
-      throw new RuntimeError('NoAttachedNote', "Can't draw Articulation without a note and index.");
-    }
-
+    const note = this.checkAttachedNote();
     this.setRendered();
+
+    const index = this.checkIndex();
+    const { position, glyph, text_line: textLine } = this;
+    const canSitBetweenLines = this.articulation?.between_lines ?? false;
 
     const stave = note.checkStave();
     const staffSpace = stave.getSpacingBetweenLines();
-    const isTab = note.getCategory() === 'tabnotes';
+    const isTab = note.getCategory() === TabNote.CATEGORY;
 
     // Articulations are centered over/under the note head.
     const { x } = note.getModifierStartXY(position, index);

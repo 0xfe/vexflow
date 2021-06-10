@@ -7,8 +7,7 @@
 // The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
 // using this class.
 
-import { Vex } from './vex';
-import { RuntimeError } from './util';
+import { RuntimeError, log } from './util';
 import { Flow } from './tables';
 import { Element } from './element';
 import { Renderer } from './renderer';
@@ -27,7 +26,7 @@ export interface TextBracketParams {
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (TextBracket.DEBUG) Vex.L('Vex.Flow.TextBracket', args);
+  if (TextBracket.DEBUG) log('Vex.Flow.TextBracket', args);
 }
 
 export enum TextBracketPosition {
@@ -157,7 +156,7 @@ export class TextBracket extends Element {
         y = this.start.checkStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
         break;
       default:
-        throw new RuntimeError('InvalidPosition', `The position ${this.position} is invalid`);
+        throw new RuntimeError('InvalidPosition', `The position ${this.position} is invalid.`);
     }
 
     // Get the preliminary start and stop coordintates for the bracket

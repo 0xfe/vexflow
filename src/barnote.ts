@@ -8,7 +8,7 @@
 //
 // See `tests/barnote_tests.js` for usage examples.
 
-import { Vex } from './vex';
+import { log } from './util';
 import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
 
@@ -16,7 +16,7 @@ import { Barline, BarlineType } from './stavebarline';
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
-  if (BarNote.DEBUG) Vex.L('Vex.Flow.BarNote', args);
+  if (BarNote.DEBUG) log('Vex.Flow.BarNote', args);
 }
 
 export class BarNote extends Note {
@@ -24,7 +24,7 @@ export class BarNote extends Note {
   static DEBUG: boolean;
   protected type!: BarlineType;
 
-  constructor(type = Barline.type.SINGLE) {
+  constructor(type = BarlineType.SINGLE) {
     super({ duration: 'b' });
     this.setAttribute('type', 'BarNote');
 
@@ -32,7 +32,7 @@ export class BarNote extends Note {
       widths: {},
     };
 
-    const TYPE = Barline.type;
+    const TYPE = BarlineType;
     this.metrics.widths = {
       [TYPE.SINGLE]: 8,
       [TYPE.DOUBLE]: 12,
@@ -48,7 +48,7 @@ export class BarNote extends Note {
     this.setType(type);
   }
 
-  // Get and set the type of Bar note. `type` must be one of `Vex.Flow.Barline.type`.
+  // Get and set the type of bar note. `type` must be one of `BarlineType`.
   getType(): BarlineType {
     return this.type;
   }
