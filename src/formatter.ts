@@ -368,7 +368,7 @@ export class Formatter {
     });
   }
 
-  constructor(formatterOptions?: FormatterOptions) {
+  constructor(formatterOptions: Partial<FormatterOptions> = {}) {
     this.formatterOptions = {
       globalSoftmax: false,
       maxIterations: 2,

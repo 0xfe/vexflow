@@ -14,28 +14,18 @@ import { RenderContext } from './types/common';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
 
+export interface SystemFormatterOptions extends Partial<FormatterOptions> {
+  alpha: number;
+}
+
 export interface SystemParams {
   stave: Stave;
   voices: Voice[];
   noJustification?: boolean;
-  // TO REVIEW somehow StaveOptions but missing info
-  // eslint-disable-next-line
-  options?: any;
+  options: Partial<StaveOptions>;
   spaceAbove: number;
   spaceBelow: number;
   debugNoteMetrics: boolean;
-}
-
-export interface SystemParamsItems {
-  stave?: Stave;
-  voices?: Voice[];
-  noJustification?: boolean;
-  // TO REVIEW somehow StaveOptions but missing info
-  // eslint-disable-next-line
-  options?: any;
-  spaceAbove?: number;
-  spaceBelow?: number;
-  debugNoteMetrics?: boolean;
 }
 
 export interface SystemOptions {
@@ -48,26 +38,8 @@ export interface SystemOptions {
   x: number;
   width: number;
   y: number;
-  // TO REVIEW somehow FormatterOptions + alpha
-  // eslint-disable-next-line
-  details: any;
+  details: SystemFormatterOptions;
   noJustification: boolean;
-}
-
-export interface SystemOptionsItems {
-  factory?: Factory;
-  noPadding?: boolean;
-  debugFormatter?: boolean;
-  connector?: StaveConnector;
-  spaceBetweenStaves?: number;
-  formatIterations?: number;
-  x?: number;
-  width?: number;
-  y?: number;
-  // TO REVIEW somehow FormatterOptions + alpha
-  // eslint-disable-next-line
-  details?: any;
-  noJustification?: boolean;
 }
 
 export interface DebugNoteMetrics {
@@ -85,14 +57,14 @@ export class System extends Element {
   protected connector?: StaveConnector;
   protected debugNoteMetricsYs?: DebugNoteMetrics[];
 
-  constructor(params: SystemOptionsItems = {}) {
+  constructor(params: Partial<SystemOptions> = {}) {
     super();
     this.setAttribute('type', 'System');
     this.setOptions(params);
     this.parts = [];
   }
 
-  setOptions(options: SystemOptionsItems = {}): void {
+  setOptions(options: Partial<SystemOptions> = {}): void {
     this.options = {
       x: 10,
       y: 10,
@@ -127,14 +99,17 @@ export class System extends Element {
     return this.connector;
   }
 
-  addStave(paramsItems: SystemParamsItems): Stave {
+  addStave(paramsItems: Partial<SystemParams>): Stave {
     let stave = paramsItems.stave;
     if (!stave) {
       stave = this.factory.Stave({
         x: this.options.x,
         y: this.options.y,
         width: this.options.width,
-        options: paramsItems.options,
+        options: {
+          left_bar: false,
+          ...paramsItems.options,
+        },
       });
     }
 
