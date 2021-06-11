@@ -53,13 +53,13 @@ export interface StaveNoteFormatSettings {
 }
 
 export interface StaveNoteStruct extends NoteStruct {
-  stem_down_x_offset: number;
-  stem_up_x_offset: number;
-  stroke_px: number;
-  glyph_font_scale: number;
-  stem_direction: number;
+  stem_down_x_offset?: number;
+  stem_up_x_offset?: number;
+  stroke_px?: number;
+  glyph_font_scale?: number;
+  stem_direction?: number;
   auto_stem: boolean;
-  octave_shift: number;
+  octave_shift?: number;
   clef: string;
 }
 
@@ -100,7 +100,7 @@ export class StaveNote extends StemmableNote {
   maxLine: number = 0;
 
   protected readonly clef: string;
-  protected readonly octave_shift: number;
+  protected readonly octave_shift?: number;
 
   protected displaced: boolean;
   protected dot_shiftY: number;

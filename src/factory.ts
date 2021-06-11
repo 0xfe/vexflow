@@ -8,35 +8,35 @@
 //
 // *This API is currently DRAFT*
 
-import { MakeException, log } from './util';
+import { RuntimeError, MakeException, log } from './util';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
 import { ChordSymbol } from './chordsymbol';
-import { Formatter } from './formatter';
+import { Formatter, FormatterOptions } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { StringNumber } from './stringnumber';
 import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
 import { MultiMeasureRest } from './multimeasurerest';
 import { Renderer } from './renderer';
-import { Stave } from './stave';
+import { Stave, StaveOptions } from './stave';
 import { StaveTie } from './stavetie';
 import { StaveLine } from './staveline';
-import { StaveNote } from './stavenote';
-import { GlyphNote } from './glyphnote';
+import { StaveNote, StaveNoteStruct } from './stavenote';
+import { GlyphNote, GlyphNoteOptions } from './glyphnote';
 import { RepeatNote } from './repeatnote';
 import { StaveConnector } from './staveconnector';
 import { System } from './system';
 import { TickContext } from './tickcontext';
-import { Tuplet } from './tuplet';
+import { Tuplet, TupletOptions } from './tuplet';
 import { Voice } from './voice';
 import { Beam } from './beam';
-import { Curve } from './curve';
-import { GraceNote } from './gracenote';
+import { Curve, CurveOptions } from './curve';
+import { GraceNote, GraceNoteStruct } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
 import { NoteSubGroup } from './notesubgroup';
-import { EasyScore } from './easyscore';
+import { EasyScore, EasyScoreOptions } from './easyscore';
 import { TimeSigNote } from './timesignote';
 import { KeySigNote } from './keysignote';
 import { ClefNote } from './clefnote';
@@ -45,34 +45,62 @@ import { TextBracket } from './textbracket';
 import { VibratoBracket } from './vibratobracket';
 import { GhostNote } from './ghostnote';
 import { BarNote } from './barnote';
-import { TabNote } from './tabnote';
+import { TabNote, TabNoteStruct } from './tabnote';
 import { TabStave } from './tabstave';
-import { TextNote } from './textnote';
-import { TextFont } from './textfont';
+import { TextNote, TextNoteStruct } from './textnote';
+import { TextFont, TextFontRegistry } from './textfont';
+import { FontInfo, RenderContext } from './types/common';
+import { Note, NoteStruct } from './note';
+import { Glyph } from './glyph';
+import { BarlineType } from './stavebarline';
+import { StemmableNote } from './stemmablenote';
+import { Element } from './element';
+
+export interface FactoryOptions {
+  stave: {
+    space: number;
+  };
+  renderer: {
+    elementId: string | null;
+    backend?: number;
+    width: number;
+    height: number;
+    background?: string;
+  };
+  font: {
+    family: string;
+    size: number;
+    weight: string;
+  };
+}
 
 // To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
-function L(...args) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Factory.DEBUG) log('Vex.Flow.Factory', args);
 }
 
 export const X = MakeException('FactoryError');
 
-function setDefaults(params = {}, defaults) {
-  const default_options = defaults.options;
-  params = Object.assign(defaults, params);
-  params.options = Object.assign(default_options, params.options);
-  return params;
-}
-
 export class Factory {
-  constructor(options) {
+  static DEBUG: boolean;
+
+  protected options: FactoryOptions;
+
+  protected stave?: Stave;
+  protected context!: RenderContext;
+  protected staves!: Stave[];
+  protected voices!: Voice[];
+  protected renderQ!: Element[];
+  protected systems!: System[];
+
+  constructor(options: Partial<FactoryOptions> = {}) {
     L('New factory: ', options);
-    const defaults = {
+    const defaults: FactoryOptions = {
       stave: {
         space: 10,
       },
       renderer: {
-        context: null,
         elementId: '',
         backend: Renderer.Backends.SVG,
         width: 500,
@@ -80,9 +108,9 @@ export class Factory {
         background: '#FFF',
       },
       font: {
-        face: 'Arial',
-        point: 10,
-        style: '',
+        family: 'Arial',
+        size: 10,
+        weight: '',
       },
     };
 
@@ -90,86 +118,107 @@ export class Factory {
     this.setOptions(options);
   }
 
-  static newFromElementId(elementId, width = 500, height = 200) {
-    return new Factory({ renderer: { elementId, width, height } });
+  static newFromElementId(elementId: string | null, width = 500, height = 200): Factory {
+    return new Factory({ renderer: { elementId, width, height, backend: Renderer.Backends.SVG } });
   }
 
-  reset() {
+  reset(): void {
     this.renderQ = [];
     this.systems = [];
     this.staves = [];
     this.voices = [];
-    this.stave = null; // current stave
+    this.stave = undefined; // current stave
   }
 
-  getOptions() {
+  getOptions(): FactoryOptions {
     return this.options;
   }
-  setOptions(options) {
-    for (const key of ['stave', 'renderer', 'font']) {
-      Object.assign(this.options[key], options[key]);
-    }
-    if (this.options.renderer.elementId !== null || this.options.renderer.context) {
+
+  setOptions(options: Partial<FactoryOptions> = {}): void {
+    if (options.stave) this.options.stave = options.stave;
+    if (options.renderer) this.options.renderer = options.renderer;
+    if (options.font) this.options.font = options.font;
+    if (this.options.renderer.elementId !== null) {
       this.initRenderer();
     }
-
     this.reset();
   }
 
-  initRenderer() {
+  initRenderer(): void {
+    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
     const { elementId, backend, width, height, background } = this.options.renderer;
     if (elementId === '') {
-      throw new X('HTML DOM element not set in Factory');
+      throw new X('HTML DOM element not set in Factory', this);
     }
 
-    this.context = Renderer.buildContext(elementId, backend, width, height, background);
+    this.context = Renderer.buildContext(
+      elementId as string,
+      backend ?? Renderer.Backends.SVG,
+      width,
+      height,
+      background
+    );
   }
 
-  getContext() {
+  getContext(): RenderContext {
     return this.context;
   }
-  setContext(context) {
+
+  setContext(context: RenderContext): this {
     this.context = context;
     return this;
   }
-  getStave() {
+
+  getStave(): Stave | undefined {
     return this.stave;
   }
-  getVoices() {
+
+  getVoices(): Voice[] {
     return this.voices;
   }
 
   // Returns pixels from current stave spacing.
-  space(spacing) {
+  space(spacing: number): number {
+    if (!this.options.stave) throw new RuntimeError('NoStave');
     return this.options.stave.space * spacing;
   }
 
-  Stave(params) {
-    params = setDefaults(params, {
-      x: 0,
-      y: 0,
-      width: this.options.renderer.width - this.space(1),
-      options: {
-        spacing_between_lines_px: this.options.stave.space,
+  Stave(paramsP: { x?: number; y?: number; width?: number; options?: Partial<StaveOptions> } = {}): Stave {
+    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
+    if (!this.options.stave) throw new RuntimeError('NoStave');
+    const params = {
+      ...{
+        x: 0,
+        y: 0,
+        width: this.options.renderer.width - this.space(1),
+        options: {
+          spacing_between_lines_px: this.options.stave.space,
+        },
       },
-    });
+      ...paramsP,
+    };
 
-    const stave = new Stave(params.x, params.y, params.width, params.options);
+    const stave: Stave = new Stave(params.x, params.y, params.width, params.options);
     this.staves.push(stave);
     stave.setContext(this.context);
     this.stave = stave;
     return stave;
   }
 
-  TabStave(params) {
-    params = setDefaults(params, {
-      x: 0,
-      y: 0,
-      width: this.options.renderer.width - this.space(1),
-      options: {
-        spacing_between_lines_px: this.options.stave.space * 1.3,
+  TabStave(paramsP: { x?: number; y?: number; width?: number; options?: Partial<StaveOptions> } = {}): TabStave {
+    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
+    if (!this.options.stave) throw new RuntimeError('NoStave');
+    const params = {
+      ...{
+        x: 0,
+        y: 0,
+        width: this.options.renderer.width - this.space(1),
+        options: {
+          spacing_between_lines_px: this.options.stave.space * 1.3,
+        },
       },
-    });
+      ...paramsP,
+    };
 
     const stave = new TabStave(params.x, params.y, params.width, params.options);
     this.staves.push(stave);
@@ -178,7 +227,7 @@ export class Factory {
     return stave;
   }
 
-  StaveNote(noteStruct) {
+  StaveNote(noteStruct: StaveNoteStruct): StaveNote {
     const note = new StaveNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -186,7 +235,7 @@ export class Factory {
     return note;
   }
 
-  GlyphNote(glyph, noteStruct, options) {
+  GlyphNote(glyph: Glyph, noteStruct: NoteStruct, options: GlyphNoteOptions): GlyphNote {
     const note = new GlyphNote(glyph, noteStruct, options);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -194,7 +243,7 @@ export class Factory {
     return note;
   }
 
-  RepeatNote(type, noteStruct, options) {
+  RepeatNote(type: string, noteStruct: NoteStruct, options: GlyphNoteOptions): RepeatNote {
     const note = new RepeatNote(type, noteStruct, options);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -202,7 +251,7 @@ export class Factory {
     return note;
   }
 
-  GhostNote(noteStruct) {
+  GhostNote(noteStruct: string | NoteStruct): GhostNote {
     const ghostNote = new GhostNote(noteStruct);
     if (this.stave) ghostNote.setStave(this.stave);
     ghostNote.setContext(this.context);
@@ -210,7 +259,7 @@ export class Factory {
     return ghostNote;
   }
 
-  TextNote(textNoteStruct) {
+  TextNote(textNoteStruct: TextNoteStruct): TextNote {
     const textNote = new TextNote(textNoteStruct);
     if (this.stave) textNote.setStave(this.stave);
     textNote.setContext(this.context);
@@ -218,12 +267,7 @@ export class Factory {
     return textNote;
   }
 
-  BarNote(params) {
-    params = setDefaults(params, {
-      type: 'single',
-      options: {},
-    });
-
+  BarNote(params: { type?: BarlineType } = {}): BarNote {
     const barNote = new BarNote(params.type);
     if (this.stave) barNote.setStave(this.stave);
     barNote.setContext(this.context);
@@ -231,13 +275,17 @@ export class Factory {
     return barNote;
   }
 
-  ClefNote(params) {
-    params = setDefaults(params, {
-      type: 'treble',
-      options: {
-        size: 'default',
+  ClefNote(paramsP: { type?: string; options?: { size?: string; annotation?: string } } = {}): ClefNote {
+    const params = {
+      ...{
+        type: 'treble',
+        options: {
+          size: 'default',
+          annotation: undefined,
+        },
       },
-    });
+      ...paramsP,
+    };
 
     const clefNote = new ClefNote(params.type, params.options.size, params.options.annotation);
     if (this.stave) clefNote.setStave(this.stave);
@@ -246,11 +294,13 @@ export class Factory {
     return clefNote;
   }
 
-  TimeSigNote(params) {
-    params = setDefaults(params, {
-      time: '4/4',
-      options: {},
-    });
+  TimeSigNote(paramsP: { time?: string } = {}): TimeSigNote {
+    const params = {
+      ...{
+        time: '4/4',
+      },
+      ...paramsP,
+    };
 
     const timeSigNote = new TimeSigNote(params.time);
     if (this.stave) timeSigNote.setStave(this.stave);
@@ -259,7 +309,7 @@ export class Factory {
     return timeSigNote;
   }
 
-  KeySigNote(params) {
+  KeySigNote(params: { key: string; cancelKey: string; alterKey: string }): KeySigNote {
     const keySigNote = new KeySigNote(params.key, params.cancelKey, params.alterKey);
     if (this.stave) keySigNote.setStave(this.stave);
     keySigNote.setContext(this.context);
@@ -267,7 +317,7 @@ export class Factory {
     return keySigNote;
   }
 
-  TabNote(noteStruct) {
+  TabNote(noteStruct: TabNoteStruct): TabNote {
     const note = new TabNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -275,40 +325,54 @@ export class Factory {
     return note;
   }
 
-  GraceNote(noteStruct) {
+  GraceNote(noteStruct: GraceNoteStruct): GraceNote {
     const note = new GraceNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
     return note;
   }
 
-  GraceNoteGroup(params) {
+  GraceNoteGroup(params: { notes: StemmableNote[]; slur?: boolean }): GraceNoteGroup {
     const group = new GraceNoteGroup(params.notes, params.slur);
     group.setContext(this.context);
     return group;
   }
 
-  Accidental(params) {
-    params = setDefaults(params, {
-      type: null,
-      options: {},
-    });
+  Accidental(paramsP: { type?: string } = {}): Accidental {
+    const params = {
+      ...{
+        type: undefined,
+      },
+      ...paramsP,
+    };
 
     const accid = new Accidental(params.type);
     accid.setContext(this.context);
     return accid;
   }
 
-  Annotation(params) {
-    params = setDefaults(params, {
-      text: 'p',
-      vJustify: 'below',
-      hJustify: 'center',
-      fontFamily: 'Times',
-      fontSize: 14,
-      fontWeight: 'bold italic',
-      options: {},
-    });
+  Annotation(
+    paramsP: {
+      text?: string;
+      vJustify?: string;
+      hJustify?: string;
+      fontFamily?: string;
+      fontSize?: number;
+      fontWeight?: string;
+    } = {}
+  ): Annotation {
+    const params = {
+      ...{
+        text: 'p',
+        vJustify: 'below',
+        hJustify: 'center',
+        fontFamily: 'Times',
+        fontSize: 14,
+        fontWeight: 'bold italic',
+        options: {},
+      },
+      ...paramsP,
+    };
 
     const annotation = new Annotation(params.text);
     annotation.setJustification(params.hJustify);
@@ -318,14 +382,26 @@ export class Factory {
     return annotation;
   }
 
-  ChordSymbol(params) {
-    params = setDefaults(params, {
-      vJustify: 'top',
-      hJustify: 'center',
-      kerning: true,
-      reportWidth: true,
-      options: {},
-    });
+  ChordSymbol(
+    paramsP: {
+      vJustify?: string;
+      hJustify?: string;
+      kerning?: boolean;
+      reportWidth?: boolean;
+      fontFamily?: string;
+      fontSize?: number;
+      fontWeight?: string;
+    } = {}
+  ): ChordSymbol {
+    const params = {
+      ...{
+        vJustify: 'top',
+        hJustify: 'center',
+        kerning: true,
+        reportWidth: true,
+      },
+      ...paramsP,
+    };
 
     const chordSymbol = new ChordSymbol();
     chordSymbol.setHorizontal(params.hJustify);
@@ -343,12 +419,14 @@ export class Factory {
     return chordSymbol;
   }
 
-  Articulation(params) {
-    params = setDefaults(params, {
-      type: 'a.',
-      position: 'above',
-      options: {},
-    });
+  Articulation(paramsP: { type?: string; position?: string | number } = {}): Articulation {
+    const params = {
+      ...{
+        type: 'a.',
+        position: 'above',
+      },
+      ...paramsP,
+    };
 
     const articulation = new Articulation(params.type);
     articulation.setPosition(params.position);
@@ -356,14 +434,16 @@ export class Factory {
     return articulation;
   }
 
-  TextDynamics(params) {
-    params = setDefaults(params, {
-      text: 'p',
-      duration: 'q',
-      dots: 0,
-      line: 0,
-      options: {},
-    });
+  TextDynamics(paramsP: { text?: string; duration?: string; dots?: number; line?: number } = {}): TextDynamics {
+    const params = {
+      ...{
+        text: 'p',
+        duration: 'q',
+        dots: 0,
+        line: 0,
+      },
+      ...paramsP,
+    };
 
     const text = new TextDynamics({
       text: params.text,
@@ -378,12 +458,14 @@ export class Factory {
     return text;
   }
 
-  Fingering(params) {
-    params = setDefaults(params, {
-      number: '0',
-      position: 'left',
-      options: {},
-    });
+  Fingering(paramsP: { number: string; position?: string }): FretHandFinger {
+    const params = {
+      ...{
+        number: '0',
+        position: 'left',
+      },
+      ...paramsP,
+    };
 
     const fingering = new FretHandFinger(params.number);
     fingering.setPosition(params.position);
@@ -391,111 +473,87 @@ export class Factory {
     return fingering;
   }
 
-  StringNumber(params) {
-    params = setDefaults(params, {
-      number: '0',
-      position: 'left',
-      options: {},
-    });
-
+  StringNumber(params: { number: string; position: string }): StringNumber {
     const stringNumber = new StringNumber(params.number);
     stringNumber.setPosition(params.position);
     stringNumber.setContext(this.context);
     return stringNumber;
   }
 
-  TickContext() {
+  TickContext(): TickContext {
     return new TickContext().setContext(this.context);
   }
 
-  ModifierContext() {
+  ModifierContext(): ModifierContext {
     return new ModifierContext();
   }
 
-  MultiMeasureRest(params) {
+  // eslint-disable-next-line
+  MultiMeasureRest(params: any = {}): MultiMeasureRest {
     const multimeasurerest = new MultiMeasureRest(params.number_of_measures, params);
     multimeasurerest.setContext(this.context);
     this.renderQ.push(multimeasurerest);
     return multimeasurerest;
   }
 
-  Voice(params) {
-    params = setDefaults(params, {
-      time: '4/4',
-      options: {},
-    });
+  Voice(paramsP: { time?: string; options?: { softmaxFactor: number } } = {}): Voice {
+    const params = {
+      ...{
+        time: '4/4',
+      },
+      ...paramsP,
+    };
     const voice = new Voice(params.time, params.options);
     this.voices.push(voice);
     return voice;
   }
 
-  StaveConnector(params) {
-    params = setDefaults(params, {
-      top_stave: null,
-      bottom_stave: null,
-      type: 'double',
-      options: {},
-    });
+  StaveConnector(params: { top_stave: Stave; bottom_stave: Stave; type: string }): StaveConnector {
     const connector = new StaveConnector(params.top_stave, params.bottom_stave);
     connector.setType(params.type).setContext(this.context);
     this.renderQ.push(connector);
     return connector;
   }
 
-  Formatter(options) {
+  Formatter(options: Partial<FormatterOptions> = {}): Formatter {
     return new Formatter(options);
   }
 
-  Tuplet(params) {
-    params = setDefaults(params, {
-      notes: [],
-      options: {},
-    });
+  Tuplet(paramsP: { notes?: Note[]; options?: TupletOptions } = {}): Tuplet {
+    const params = {
+      ...{
+        notes: [],
+        options: {},
+      },
+      ...paramsP,
+    };
 
     const tuplet = new Tuplet(params.notes, params.options).setContext(this.context);
     this.renderQ.push(tuplet);
     return tuplet;
   }
 
-  Beam(params) {
-    params = setDefaults(params, {
-      notes: [],
-      options: {
-        autoStem: false,
-        secondaryBeamBreaks: [],
-      },
-    });
-
-    const beam = new Beam(params.notes, params.options.autoStem).setContext(this.context);
-    beam.breakSecondaryAt(params.options.secondaryBeamBreaks);
+  Beam(params: { notes: StemmableNote[]; options?: { autoStem?: boolean; secondaryBeamBreaks?: number[] } }): Beam {
+    const beam = new Beam(params.notes, params.options?.autoStem).setContext(this.context);
+    beam.breakSecondaryAt(params.options?.secondaryBeamBreaks ?? []);
     this.renderQ.push(beam);
     return beam;
   }
 
-  Curve(params) {
-    params = setDefaults(params, {
-      from: null,
-      to: null,
-      options: {},
-    });
-
+  Curve(params: { from: Note; to: Note; options: Partial<CurveOptions> }): Curve {
     const curve = new Curve(params.from, params.to, params.options).setContext(this.context);
     this.renderQ.push(curve);
     return curve;
   }
 
-  StaveTie(params) {
-    params = setDefaults(params, {
-      from: null,
-      to: null,
-      first_indices: [0],
-      last_indices: [0],
-      text: null,
-      options: {
-        direction: undefined,
-      },
-    });
-
+  StaveTie(params: {
+    from: Note;
+    to: Note;
+    first_indices: [0];
+    last_indices: [0];
+    text?: string;
+    options?: { direction?: number };
+  }): StaveTie {
     const tie = new StaveTie(
       {
         first_note: params.from,
@@ -506,21 +564,19 @@ export class Factory {
       params.text
     );
 
-    if (params.options.direction) tie.setDirection(params.options.direction);
+    if (params.options?.direction) tie.setDirection(params.options.direction);
     tie.setContext(this.context);
     this.renderQ.push(tie);
     return tie;
   }
 
-  StaveLine(params) {
-    params = setDefaults(params, {
-      from: null,
-      to: null,
-      first_indices: [0],
-      last_indices: [0],
-      options: {},
-    });
-
+  StaveLine(params: {
+    from: StaveNote;
+    to: StaveNote;
+    first_indices: number[];
+    last_indices: number[];
+    options?: { text?: string; font?: FontInfo };
+  }): StaveLine {
     const line = new StaveLine({
       first_note: params.from,
       last_note: params.to,
@@ -528,23 +584,22 @@ export class Factory {
       last_indices: params.last_indices,
     });
 
-    if (params.options.text) line.setText(params.options.text);
-    if (params.options.font) line.setFont(params.options.font);
+    if (params.options?.text) line.setText(params.options.text);
+    if (params.options?.font) line.setFont(params.options.font);
 
     line.setContext(this.context);
     this.renderQ.push(line);
     return line;
   }
 
-  VibratoBracket(params) {
-    params = setDefaults(params, {
-      from: null,
-      to: null,
-      options: {
-        harsh: false,
-      },
-    });
-
+  VibratoBracket(params: {
+    from: Note;
+    to: Note;
+    options: {
+      harsh?: boolean;
+      line?: number;
+    };
+  }): VibratoBracket {
     const vibratoBracket = new VibratoBracket({
       start: params.from,
       stop: params.to,
@@ -559,17 +614,17 @@ export class Factory {
     return vibratoBracket;
   }
 
-  TextBracket(params) {
-    params = setDefaults(params, {
-      from: null,
-      to: null,
-      text: '',
-      options: {
-        superscript: '',
-        position: 1,
-      },
-    });
-
+  TextBracket(params: {
+    from: Note;
+    to: Note;
+    text: string;
+    options: {
+      superscript: string;
+      position: string;
+      line?: number;
+      font?: Partial<FontInfo>;
+    };
+  }): TextBracket {
     const textBracket = new TextBracket({
       start: params.from,
       stop: params.to,
@@ -586,25 +641,29 @@ export class Factory {
     return textBracket;
   }
 
-  System(params = {}) {
+  // eslint-disable-next-line
+  System(params: any = {}): System {
     params.factory = this;
     const system = new System(params).setContext(this.context);
     this.systems.push(system);
     return system;
   }
 
-  EasyScore(params = {}) {
+  EasyScore(params: EasyScoreOptions = {}): EasyScore {
     params.factory = this;
     return new EasyScore(params);
   }
 
-  PedalMarking(params = {}) {
-    params = setDefaults(params, {
-      notes: [],
-      options: {
-        style: 'mixed',
+  PedalMarking(paramsP: { notes?: StaveNote[]; options?: { style: string } } = {}): PedalMarking {
+    const params = {
+      ...{
+        notes: [],
+        options: {
+          style: 'mixed',
+        },
       },
-    });
+      ...paramsP,
+    };
 
     const pedal = new PedalMarking(params.notes);
     pedal.setType(PedalMarking.typeString[params.options.style]);
@@ -613,24 +672,26 @@ export class Factory {
     return pedal;
   }
 
-  NoteSubGroup(params = {}) {
-    params = setDefaults(params, {
-      notes: [],
-      options: {},
-    });
+  NoteSubGroup(paramsP: { notes?: Note[] } = {}): NoteSubGroup {
+    const params = {
+      ...{
+        notes: [],
+      },
+      ...paramsP,
+    };
 
     const group = new NoteSubGroup(params.notes);
     group.setContext(this.context);
     return group;
   }
 
-  TextFont(params = {}) {
+  TextFont(params: TextFontRegistry): TextFont {
     params.factory = this;
     const textFont = new TextFont(params);
     return textFont;
   }
 
-  draw() {
+  draw(): void {
     this.systems.forEach((i) => i.setContext(this.context).format());
     this.staves.forEach((i) => i.setContext(this.context).draw());
     this.voices.forEach((i) => i.setContext(this.context).draw());

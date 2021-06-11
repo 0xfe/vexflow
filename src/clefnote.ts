@@ -20,7 +20,7 @@ export class ClefNote extends Note {
     return 'clefnote';
   }
 
-  constructor(type: string, size: string, annotation: string) {
+  constructor(type: string, size?: string, annotation?: string) {
     super({ duration: 'b' });
     this.setAttribute('type', 'ClefNote');
 
