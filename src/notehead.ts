@@ -26,14 +26,14 @@ function L(
 }
 
 export interface NoteHeadStruct extends NoteStruct {
-  glyph_font_scale: number;
+  glyph_font_scale?: number;
   slashed?: boolean;
   style?: ElementStyle;
-  stem_down_x_offset: number;
-  stem_up_x_offset: number;
+  stem_down_x_offset?: number;
+  stem_up_x_offset?: number;
   custom_glyph_code?: string;
-  x_shift: number;
-  line: number;
+  x_shift?: number;
+  line?: number;
   stem_direction?: number;
   displaced?: boolean;
   //  duration: string;
@@ -101,7 +101,7 @@ function drawSlashNoteHead(
 export class NoteHead extends Note {
   static DEBUG: boolean;
 
-  protected glyph_code: string;
+  glyph_code: string;
 
   protected custom_glyph: boolean = false;
   protected stem_up_x_offset: number = 0;
@@ -131,7 +131,7 @@ export class NoteHead extends Note {
     this.duration = head_options.duration;
     this.displaced = head_options.displaced || false;
     this.stem_direction = head_options.stem_direction || StaveNote.STEM_UP;
-    this.line = head_options.line;
+    this.line = head_options.line || 0;
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
