@@ -16,7 +16,7 @@ import { Modifier } from './modifier';
 import { FontInfo } from './types/common';
 import { StemmableNote } from './stemmablenote';
 
-export interface SymbolBlock {
+export interface ChordSymbolBlock {
   vAlign: boolean;
   symbolModifier: number;
   text: string;
@@ -39,7 +39,7 @@ export class ChordSymbol extends Modifier {
   static DEBUG: boolean = false;
   protected static noFormat: boolean;
 
-  protected readonly symbolBlocks: SymbolBlock[];
+  protected symbolBlocks: ChordSymbolBlock[];
 
   protected horizontal: number;
   protected vertical: number;
@@ -674,11 +674,11 @@ export class ChordSymbol extends Modifier {
     return rv;
   }
 
-  isSuperscript(symbol: SymbolBlock): boolean {
+  isSuperscript(symbol: ChordSymbolBlock): boolean {
     return symbol.symbolModifier !== undefined && symbol.symbolModifier === ChordSymbol.symbolModifiers.SUPERSCRIPT;
   }
 
-  isSubscript(symbol: SymbolBlock): boolean {
+  isSubscript(symbol: ChordSymbolBlock): boolean {
     return symbol.symbolModifier !== undefined && symbol.symbolModifier === ChordSymbol.symbolModifiers.SUBSCRIPT;
   }
 
