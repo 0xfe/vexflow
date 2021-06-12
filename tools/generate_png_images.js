@@ -41,7 +41,6 @@ VF.shims = {
 // the Node tests.
 VF.Test.RUN_CANVAS_TESTS = false;
 VF.Test.RUN_SVG_TESTS = false;
-VF.Test.RUN_RAPHAEL_TESTS = false;
 VF.Test.RUN_NODE_TESTS = true;
 VF.Test.NODE_IMAGEDIR = imageDir;
 VF.Test.FONT_STACKS_TO_TEST = fontStacksToTest;

@@ -306,7 +306,7 @@ export class SVGContext implements RenderContext {
     // width/height.  This would allow us to create automatically
     // scaling SVG's that filled their containers, for instance.
     //
-    // As this isn't implemented in Canvas or Raphael contexts,
+    // As this isn't implemented in Canvas contexts,
     // I've left as is for now, but in using the viewBox to
     // handle internal scaling, am trying to make it possible
     // for us to eventually move in that direction.

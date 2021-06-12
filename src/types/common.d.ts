@@ -83,7 +83,7 @@ export interface RenderContext {
   add(child: any): void;
 
   /**
-   * canvas returns TextMetrics, SVG returns SVGRect, Raphael returns {width: number, height: number}. Only width is used throughout VexFlow.
+   * canvas returns TextMetrics and SVG returns SVGRect.
    */
   measureText(text: string): { width: number; height: number };
 }
