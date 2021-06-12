@@ -2,8 +2,7 @@
 //
 // A generic text parsing class for VexFlow.
 
-import { Vex } from './vex';
-import { log } from './util';
+import { MakeException, log } from './util';
 import { Grammar } from './easyscore';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
@@ -12,7 +11,7 @@ function L(...args: any[]): void {
   if (Parser.DEBUG) log('Vex.Flow.Parser', args);
 }
 
-const X = Vex.MakeException('ParserError');
+const X = MakeException('ParserError');
 
 const NO_ERROR_POS = -1;
 

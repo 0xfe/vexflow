@@ -1,9 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Gregory Ristow (2015)
 
-import { Vex } from './vex';
+import { RuntimeError, prefix } from './util';
 import { RenderContext } from './types/common';
-import { RuntimeError } from './util';
 
 // eslint-disable-next-line
 type Attributes = { [key: string]: any };
@@ -124,8 +123,8 @@ export class SVGContext implements RenderContext {
     this.groups.push(group);
     this.parent.appendChild(group);
     this.parent = group;
-    if (cls) group.setAttribute('class', Vex.Prefix(cls));
-    if (id) group.setAttribute('id', Vex.Prefix(id));
+    if (cls) group.setAttribute('class', prefix(cls));
+    if (id) group.setAttribute('id', prefix(id));
 
     if (attrs && attrs.pointerBBox) {
       group.setAttribute('pointer-events', 'bounding-box');

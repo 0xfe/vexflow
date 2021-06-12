@@ -8,8 +8,7 @@
 //
 // *This API is currently DRAFT*
 
-import { Vex } from './vex';
-import { log } from './util';
+import { MakeException, log } from './util';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
@@ -56,7 +55,7 @@ function L(...args) {
   if (Factory.DEBUG) log('Vex.Flow.Factory', args);
 }
 
-export const X = Vex.MakeException('FactoryError');
+export const X = MakeException('FactoryError');
 
 function setDefaults(params = {}, defaults) {
   const default_options = defaults.options;

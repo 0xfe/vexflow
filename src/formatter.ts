@@ -18,7 +18,7 @@
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
 import { Vex } from './vex';
-import { RuntimeError, log } from './util';
+import { RuntimeError, midLine, log } from './util';
 import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -142,7 +142,7 @@ function lookAhead(notes: Note[], restLine: number, i: number, compare: boolean)
   if (compare && restLine !== nextRestLine) {
     const top = Math.max(restLine, nextRestLine);
     const bot = Math.min(restLine, nextRestLine);
-    nextRestLine = Vex.MidLine(top, bot);
+    nextRestLine = midLine(top, bot);
   }
   return nextRestLine;
 }
