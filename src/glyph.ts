@@ -47,8 +47,8 @@ export interface GlyphOptions {
   category?: string;
 }
 export interface GlyphMetrics {
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
   x_min: number;
   x_max: number;
   x_shift: number;
@@ -212,6 +212,8 @@ export class Glyph extends Element {
         ha,
         outline,
         font,
+        width: x_max - x_min,
+        height: ha,
       };
     } else {
       throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);

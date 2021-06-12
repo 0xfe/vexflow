@@ -273,7 +273,7 @@ export class Ornament extends Modifier {
     let lineSpacing = 1;
 
     // Beamed stems are longer than quarter note stems, adjust accordingly
-    if (!isPlacedOnNoteheadSide && note.getBeam()) {
+    if (!isPlacedOnNoteheadSide && note.hasBeam()) {
       lineSpacing += 0.5;
     }
 
@@ -298,7 +298,7 @@ export class Ornament extends Modifier {
       if (this.delayXShift !== undefined) {
         delayXShift = this.delayXShift;
       } else {
-        delayXShift += (this.glyph.getMetrics().width ?? 0) / 2;
+        delayXShift += this.glyph.getMetrics().width / 2;
         const nextContext = TickContext.getNextContext(note.getTickContext());
         if (nextContext) {
           delayXShift += (nextContext.getX() - startX) * 0.5;
@@ -314,7 +314,7 @@ export class Ornament extends Modifier {
 
     if (this.accidentalLower) {
       this.accidentalLower.render(ctx, glyphX, glyphY);
-      glyphY -= this.accidentalLower.getMetrics().height ?? 0;
+      glyphY -= this.accidentalLower.getMetrics().height;
       glyphY -= this.render_options.accidentalLowerPadding;
     }
 
@@ -328,7 +328,7 @@ export class Ornament extends Modifier {
     this.glyph.render(ctx, glyphX + this.x_shift, glyphY);
 
     if (this.accidentalUpper) {
-      glyphY -= (this.glyph.getMetrics().height ?? 0) + this.render_options.accidentalUpperPadding;
+      glyphY -= this.glyph.getMetrics().height + this.render_options.accidentalUpperPadding;
       this.accidentalUpper.render(ctx, glyphX, glyphY);
     }
     ctx.closeGroup();
