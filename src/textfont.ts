@@ -46,7 +46,7 @@ function L(
 
 export class TextFont {
   protected static debug: boolean;
-  protected resolution: number = 1000;
+  resolution: number = 1000;
   protected name?: string;
   protected glyphs: Record<string, TextFontMetrics> = {};
   protected family: string = '';
