@@ -15,21 +15,48 @@ import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
+import { StemmableNote } from './stemmablenote';
+import { ModifierContextState } from './modifiercontext';
 import { TabNote } from './tabnote';
 
 // To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
-function L(...args) {
+function L(
+  // eslint-disable-next-line
+  ...args: any[]
+) {
   if (Ornament.DEBUG) log('Vex.Flow.Ornament', args);
 }
 
 export class Ornament extends Modifier {
-  static get CATEGORY() {
+  static DEBUG: boolean;
+
+  protected ornament: {
+    code: string;
+  };
+  protected stemUpYOffset: number;
+  protected ornamentAlignWithNoteHead: string[] | boolean;
+  protected type: string;
+
+  protected delayed: boolean;
+  protected reportedWidth: number;
+  protected adjustForStemDirection: boolean;
+  protected render_options: {
+    accidentalUpperPadding: number;
+    accidentalLowerPadding: number;
+    font_scale: number;
+  };
+  protected glyph: Glyph;
+  protected accidentalUpper?: Glyph;
+  protected accidentalLower?: Glyph;
+  protected delayXShift?: number;
+
+  static get CATEGORY(): string {
     return 'ornaments';
   }
 
   // ## Static Methods
   // Arrange ornaments inside `ModifierContext`
-  static format(ornaments, state) {
+  static format(ornaments: Ornament[], state: ModifierContextState): boolean {
     if (!ornaments || ornaments.length === 0) return false;
 
     let width = 0; // width is used by ornaments, which are always centered on the note head
@@ -58,14 +85,17 @@ export class Ornament extends Modifier {
       if (Ornament.ornamentArticulation.indexOf(ornament.type) >= 0) {
         // Unfortunately we don't know the stem direction.  So we base it
         // on the line number, but also allow it to be overridden.
+        if (!ornament.note) {
+          throw new RuntimeError('NoAttachedNote');
+        }
         if (ornament.note.getLineNumber() >= 3 || ornament.getPosition() === Modifier.Position.ABOVE) {
           state.top_text_line += increment;
           ornament.y_shift += yOffset;
-          yOffset -= ornament.glyph.bbox.h;
+          yOffset -= ornament.glyph.bbox.getH();
         } else {
           state.text_line += increment;
           ornament.y_shift += yOffset;
-          yOffset += ornament.glyph.bbox.h;
+          yOffset += ornament.glyph.bbox.getH();
         }
       } else {
         if (ornament.getPosition() === Modifier.Position.ABOVE) {
@@ -88,55 +118,53 @@ export class Ornament extends Modifier {
   // ### ornamentNoteTransition
   // means the jazz ornament represents an effect from one note to another,
   // these are generally on the top of the staff.
-  static get ornamentNoteTransition() {
+  static get ornamentNoteTransition(): string[] {
     return ['flip', 'jazzTurn', 'smear'];
   }
 
   // ### ornamentAttack
   // Indicates something that happens in the attach, placed before the note and
   // any accidentals
-  static get ornamentAttack() {
+  static get ornamentAttack(): string[] {
     return ['scoop'];
   }
 
   // ### ornamentAlignWithNoteHead
   // The ornament is aligned based on the note head, but without regard to whether the
   // stem goes up or down.
-  static get ornamentAlignWithNoteHead() {
+  static get ornamentAlignWithNoteHead(): string[] {
     return ['doit', 'fall', 'fallLong', 'doitLong', 'bend', 'plungerClosed', 'plungerOpen', 'scoop'];
   }
 
   // ### ornamentRelease
   // An ornament that happens on the release of the note, generally placed after the
   // note and overlapping the next beat/measure..
-  static get ornamentRelease() {
+  static get ornamentRelease(): string[] {
     return ['doit', 'fall', 'fallLong', 'doitLong', 'jazzTurn', 'smear', 'flip'];
   }
 
   // ### ornamentArticulation
   // goes above/below the note based on space availablity
-  static get ornamentArticulation() {
+  static get ornamentArticulation(): string[] {
     return ['bend', 'plungerClosed', 'plungerOpen'];
   }
 
   // ### getMetrics
   // legacy ornaments have hard-coded metrics.  If additional ornament types are
   // added, get their metrics here.
-  getMetrics() {
-    return this.getFontStack()[0].metrics.glyphs.jazzOrnaments[this.ornament.code];
+  // eslint-disable-next-line
+  getMetrics(): any {
+    return this.getFontStack()[0].getMetrics().glyphs.jazzOrnaments[this.ornament.code];
   }
 
   // Create a new ornament of type `type`, which is an entry in
   // `Vex.Flow.ornamentCodes` in `tables.js`.
-  constructor(type) {
+  constructor(type: string) {
     super();
     this.setAttribute('type', 'Ornament');
 
     this.type = type;
     this.delayed = false;
-
-    this.accidentalUpper = null;
-    this.accidentalLower = null;
 
     this.render_options = {
       font_scale: 38,
@@ -185,18 +213,18 @@ export class Ornament extends Modifier {
     }
   }
 
-  getCategory() {
+  getCategory(): string {
     return Ornament.CATEGORY;
   }
 
   // Set whether the ornament is to be delayed
-  setDelayed(delayed) {
+  setDelayed(delayed: boolean): this {
     this.delayed = delayed;
     return this;
   }
 
   // Set the upper accidental for the ornament
-  setUpperAccidental(accid) {
+  setUpperAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
     this.accidentalUpper = new Glyph(Flow.accidentalCodes(accid).code, scale);
     this.accidentalUpper.setOrigin(0.5, 1.0);
@@ -204,7 +232,7 @@ export class Ornament extends Modifier {
   }
 
   // Set the lower accidental for the ornament
-  setLowerAccidental(accid) {
+  setLowerAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
     this.accidentalLower = new Glyph(Flow.accidentalCodes(accid).code, scale);
     this.accidentalLower.setOrigin(0.5, 1.0);
@@ -212,19 +240,19 @@ export class Ornament extends Modifier {
   }
 
   // Render ornament in position next to note.
-  draw() {
+  draw(): void {
     const ctx = this.checkContext();
-    const note = this.checkAttachedNote();
+    const note = this.checkAttachedNote() as StemmableNote;
     this.setRendered();
 
     const stemDir = note.getStemDirection();
-    const stave = note.getStave();
+    const stave = note.checkStave();
 
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     ctx.openGroup(classString, this.getAttribute('id'));
 
     // Get stem extents
-    const stemExtents = note.getStem().getExtents();
+    const stemExtents = note.checkStem().getExtents();
     let y = stemDir === StaveNote.STEM_DOWN ? stemExtents.baseY : stemExtents.topY;
 
     // TabNotes don't have stems attached to them. Tab stems are rendered
@@ -245,7 +273,7 @@ export class Ornament extends Modifier {
     let lineSpacing = 1;
 
     // Beamed stems are longer than quarter note stems, adjust accordingly
-    if (!isPlacedOnNoteheadSide && note.beam) {
+    if (!isPlacedOnNoteheadSide && note.hasBeam()) {
       lineSpacing += 0.5;
     }
 
@@ -275,7 +303,7 @@ export class Ornament extends Modifier {
         if (nextContext) {
           delayXShift += (nextContext.getX() - startX) * 0.5;
         } else {
-          delayXShift += (stave.x + stave.width - startX) * 0.5;
+          delayXShift += (stave.getX() + stave.getWidth() - startX) * 0.5;
         }
         this.delayXShift = delayXShift;
       }
@@ -294,7 +322,7 @@ export class Ornament extends Modifier {
       glyphY += this.stemUpYOffset;
     }
     if (note.getLineNumber() < 5 && Ornament.ornamentNoteTransition.indexOf(this.type) >= 0) {
-      glyphY = note.getStave().getBoundingBox().y + 40;
+      glyphY = note.checkStave().getBoundingBox().getY() + 40;
     }
 
     this.glyph.render(ctx, glyphX + this.x_shift, glyphY);

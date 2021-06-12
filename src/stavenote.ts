@@ -641,7 +641,7 @@ export class StaveNote extends StemmableNote {
 
   // Gets the line number of the bottom note in the chord.
   // If `isTopNote` is `true` then get the top note's line number instead
-  getLineNumber(isTopNote: boolean): number {
+  getLineNumber(isTopNote?: boolean): number {
     if (!this.keyProps.length) {
       throw new RuntimeError('NoKeyProps', "Can't get bottom note line, because note is not initialized properly.");
     }
