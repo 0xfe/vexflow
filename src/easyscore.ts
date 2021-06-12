@@ -493,7 +493,7 @@ export class EasyScore {
 
   // TODO: Add stricter typing after migrating Factory
   // eslint-disable-next-line
-  voice(notes: StaveNote[], options: any): Voice {
+  voice(notes: StaveNote[], options?: any): Voice {
     options = { time: this.defaults.time, ...options };
     return this.factory.Voice(options).addTickables(notes);
   }

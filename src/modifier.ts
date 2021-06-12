@@ -147,7 +147,6 @@ export class Modifier extends Element {
     return this;
   }
 
-  // Get and set articulation position.
   getPosition(): number {
     return this.position;
   }

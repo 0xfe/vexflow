@@ -3,17 +3,12 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
-/* eslint-disable global-require */
+const VF = Vex.Flow;
 
-/* eslint max-classes-per-file: "off" */
-
-global.VF = Vex.Flow;
-
-// Mock out the QUnit stuff for generating svg images,
-// since we don't really care about the assertions.
-if (!global.QUnit) {
-  global.QUnit = {};
-  QUnit = global.QUnit;
+// When generating PNG images for the visual regression tests,
+// we mock out the QUnit methods (since we don't care about assertions).
+function setupQUnitMockObject() {
+  const QUnit = {};
 
   QUnit.assertions = {
     ok: () => true,
@@ -32,13 +27,13 @@ if (!global.QUnit) {
     QUnit.current_module = name;
   };
 
-  /* eslint-disable */
   QUnit.test = (name, func) => {
     QUnit.current_test = name;
     VF.shims.process.stdout.write(' \u001B[0G' + QUnit.current_module + ' :: ' + name + '\u001B[0K');
     func(QUnit.assertions);
   };
 
+  global.QUnit = QUnit;
   global.test = QUnit.test;
   global.ok = QUnit.assertions.ok;
   global.equal = QUnit.assertions.equal;
@@ -310,6 +305,11 @@ const VexFlowTests = (function () {
   return Test;
 })();
 
+if (!global.QUnit) {
+  setupQUnitMockObject();
+}
+
+global.VF = VF;
 global.VF.Test = VexFlowTests;
 
 export { VexFlowTests };

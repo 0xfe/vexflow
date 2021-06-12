@@ -144,6 +144,10 @@ export class FretHandFinger extends Modifier {
     return this;
   }
 
+  getFretHandFinger(): string {
+    return this.finger;
+  }
+
   setOffsetX(x: number): this {
     this.x_offset = x;
     return this;
