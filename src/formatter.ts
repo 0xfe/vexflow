@@ -18,8 +18,7 @@
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
 import { Vex } from './vex';
-import { RuntimeError, log } from './util';
-import { DefaultFontStack } from './font';
+import { RuntimeError, midLine, log } from './util';
 import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -120,7 +119,8 @@ function createContexts<T>(
 // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
-  ...args: any[]) {
+  ...args: any[]
+) {
   if (Formatter.DEBUG) log('Vex.Flow.Formatter', args);
 }
 
@@ -142,7 +142,7 @@ function lookAhead(notes: Note[], restLine: number, i: number, compare: boolean)
   if (compare && restLine !== nextRestLine) {
     const top = Math.max(restLine, nextRestLine);
     const bot = Math.min(restLine, nextRestLine);
-    nextRestLine = Vex.MidLine(top, bot);
+    nextRestLine = midLine(top, bot);
   }
   return nextRestLine;
 }
@@ -188,7 +188,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: DefaultFontStack[0].lookupMetric('stave.padding'),
+      stavePadding: Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
       ...options,
     };
 
@@ -482,7 +482,7 @@ export class Formatter {
 
   // Create `ModifierContext`s for each tick in `voices`.
   createModifierContexts(voices: Voice[]): AlignmentContexts<ModifierContext> {
-    const fn: addToContextFn<ModifierContext> = (tickable: Note, context: ModifierContext, voiceIndex: number) =>
+    const fn: addToContextFn<ModifierContext> = (tickable: Note, context: ModifierContext) =>
       tickable.addToModifierContext(context);
     const contexts = createContexts(voices, () => new ModifierContext(), fn);
     this.modifierContexts = contexts;

@@ -78,8 +78,7 @@ import { RepeatNote } from './repeatnote';
 import { TextFont } from './textfont';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
-
-import { Font, Fonts, DefaultFontStack } from './font';
+import { Font, Fonts } from './font';
 
 Vex.Flow = Flow;
 Vex.Flow.Element = Element;
@@ -158,7 +157,6 @@ Vex.Flow.RepeatNote = RepeatNote;
 Vex.Flow.Font = Font;
 Vex.Flow.Fonts = Fonts;
 Vex.Flow.TextFont = TextFont;
-Vex.Flow.DefaultFontStack = DefaultFontStack;
 Vex.Flow.PetalumaScriptTextMetrics = PetalumaScriptTextMetrics;
 Vex.Flow.RobotoSlabTextMetrics = RobotoSlabTextMetrics;
 

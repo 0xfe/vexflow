@@ -17,10 +17,10 @@
 // the registry. This allows fast look up of elements by attributes like id, type,
 // and class.
 
-import { Vex } from './vex';
+import { MakeException } from './util';
 import { Element } from './element';
 
-const X = Vex.MakeException('RegistryError');
+const X = MakeException('RegistryError');
 
 // Indexes are represented as maps of maps of maps. This allows
 // for both multi-labeling (e.g., an element can have multiple classes)
