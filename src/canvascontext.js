@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Mohit Muthanna <mohit@muthanna.com>
 //
-// A rendering context for the Raphael backend.
+// A rendering context for the Canvas backend (CanvasRenderingContext2D).
 //
 // Copyright Mohit Cheppudira 2010
 
@@ -159,7 +159,6 @@ export class CanvasContext {
     return this.vexFlowCanvasContext.arc(x, y, radius, startAngle, endAngle, antiClockwise);
   }
 
-  // Adapted from the source for Raphael's Element.glow
   glow() {
     return this.vexFlowCanvasContext.glow();
   }

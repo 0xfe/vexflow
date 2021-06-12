@@ -52,7 +52,6 @@ const VexFlowTests = (function () {
     // Test Options.
     RUN_CANVAS_TESTS: true,
     RUN_SVG_TESTS: true,
-    RUN_RAPHAEL_TESTS: false,
     RUN_NODE_TESTS: false,
 
     // Where images are stored for NodeJS tests.
@@ -87,9 +86,6 @@ const VexFlowTests = (function () {
       }
       if (VF.Test.RUN_SVG_TESTS) {
         VF.Test.runSVGTest(name, func, params);
-      }
-      if (VF.Test.RUN_RAPHAEL_TESTS) {
-        VF.Test.runRaphaelTest(name, func, params);
       }
       if (VF.Test.RUN_NODE_TESTS) {
         VF.Test.runNodeTest(name, func, params);
@@ -159,24 +155,6 @@ const VexFlowTests = (function () {
         };
 
         func(testOptions, VF.Renderer.getCanvasContext);
-      });
-    },
-
-    runRaphaelTest: function (name, func, params) {
-      QUnit.test(name, function (assert) {
-        var elementId = VF.Test.genID('raphael_');
-        var title = VF.Test.genTitle('Raphael', assert, name);
-
-        VF.Test.createTestSVG(elementId, title);
-
-        var testOptions = {
-          elementId: elementId,
-          backend: VF.Renderer.Backends.RAPHAEL,
-          params: params,
-          assert: assert,
-        };
-
-        func(testOptions, VF.Renderer.getRaphaelContext);
       });
     },
 
