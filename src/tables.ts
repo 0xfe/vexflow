@@ -757,7 +757,7 @@ export const Flow = {
     return articulations[artic];
   },
 
-  accidentalCodesAccidentals: accidentals,
+  accidentalMap: accidentals,
 
   accidentalCodes(acc: string): { code: string; parenRightPaddingAdjustment: number } {
     return accidentals[acc];
