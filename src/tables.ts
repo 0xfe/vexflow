@@ -2,7 +2,6 @@
 
 /* eslint-disable key-spacing */
 
-import { Vex } from './vex';
 import { RuntimeError } from './util';
 import { Element } from './element';
 import { Fraction } from './fraction';
@@ -601,10 +600,10 @@ export const Flow = {
       clef = 'treble';
     }
 
-    const options = { octave_shift: 0 };
+    let options = { octave_shift: 0 };
 
     if (typeof params === 'object') {
-      Vex.Merge(options, params);
+      options = { ...options, ...params };
     }
 
     const pieces = key.split('/');

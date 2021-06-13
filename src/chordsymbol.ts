@@ -117,7 +117,7 @@ export class ChordSymbol extends Modifier {
     return ix > 0 ? -1 * (acc / resolution) : 0;
   }
 
-  static get engravingFontResolution() {
+  static get engravingFontResolution(): number {
     return Flow.DEFAULT_FONT_STACK[0].getResolution();
   }
 
