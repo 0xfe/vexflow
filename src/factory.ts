@@ -18,7 +18,7 @@ import { FretHandFinger } from './frethandfinger';
 import { StringNumber } from './stringnumber';
 import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
-import { MultiMeasureRest } from './multimeasurerest';
+import { MultiMeasureRest, MultimeasureRestRenderOptions } from './multimeasurerest';
 import { Renderer } from './renderer';
 import { Stave, StaveOptions } from './stave';
 import { StaveTie } from './stavetie';
@@ -490,8 +490,8 @@ export class Factory {
     return new ModifierContext();
   }
 
-  // eslint-disable-next-line
-  MultiMeasureRest(params: any = {}): MultiMeasureRest {
+  MultiMeasureRest(params: Partial<MultimeasureRestRenderOptions>): MultiMeasureRest {
+    if (params.number_of_measures === undefined) throw new RuntimeError('NoNumberOfMeasures');
     const multimeasurerest = new MultiMeasureRest(params.number_of_measures, params);
     multimeasurerest.setContext(this.context);
     this.renderQ.push(multimeasurerest);
