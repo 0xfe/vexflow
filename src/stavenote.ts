@@ -978,14 +978,18 @@ export class StaveNote extends StemmableNote {
   preFormat(): void {
     if (this.preFormatted) return;
     if (this.modifierContext) this.modifierContext.preFormat();
+    const glyphWidth = this.getGlyphWidth();
+    let noteWidth: number;
 
-    let width = this.getGlyphWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
-
-    // For upward flagged notes, the width of the flag needs to be added
-    if (this.shouldDrawFlag() && this.stem_direction === Stem.UP) {
-      width += this.getGlyphWidth();
-      // TODO: Add flag width as a separate metric
+    const flagWidth: number = this.flag?.getMetrics()?.width ?? 0;
+    if (this.shouldDrawFlag() && this.stem_direction === Stem.DOWN) {
+      noteWidth = Math.max(flagWidth + Flow.STEM_WIDTH, glyphWidth);
+    } else if (this.shouldDrawFlag() && this.stem_direction === Stem.UP) {
+      noteWidth = flagWidth + glyphWidth + Flow.STEM_WIDTH;
+    } else {
+      noteWidth = glyphWidth;
     }
+    const width = noteWidth + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
 
     this.setWidth(width);
     this.setPreFormatted(true);

@@ -372,10 +372,18 @@ export class Formatter {
     });
   }
 
+  static estimateJustifiedMinWidth(voices: Voice[], formatterOptions?: FormatterOptions): number {
+    const formatter = new Formatter(formatterOptions);
+    voices.forEach((voice) => {
+      formatter.joinVoices([voice]);
+    });
+    return formatter.preCalculateMinTotalWidth(voices);
+  }
+
   constructor(formatterOptions?: FormatterOptions) {
     this.formatterOptions = {
       globalSoftmax: false,
-      maxIterations: 2,
+      maxIterations: 5,
       ...formatterOptions,
     };
     this.justifyWidth = 0;
@@ -417,6 +425,15 @@ export class Formatter {
 
   // Calculate the minimum width required to align and format `voices`.
   preCalculateMinTotalWidth(voices: Voice[]): number {
+    const unalignedPadding = Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.unalignedNotePadding');
+    // Calculate additional padding based on 3 methods:
+    // 1) unaligned beats in voices, 2) variance of width, 3) variance of durations
+    let unalignedCtxCount = 0;
+    let wsum = 0;
+    let dsum = 0;
+    const widths: number[] = [];
+    const durations: number[] = [];
+
     // Cache results.
     if (this.hasMinTotalWidth) return this.minTotalWidth;
 
@@ -432,19 +449,39 @@ export class Formatter {
     // eslint-disable-next-line
     const { list: contextList, map: contextMap } = this.tickContexts!;
 
-    // const maxTicks = contextList.map(tick => tick.maxTicks.value()).reduce((a, b) => a + b, 0);
     // Go through each tick context and calculate total width.
     this.minTotalWidth = contextList
       .map((tick) => {
         const context = contextMap[tick];
         context.preFormat();
-        return context.getWidth();
+        if (context.getTickables().length < voices.length) {
+          unalignedCtxCount += 1;
+        }
+        const width = context.getWidth();
+        const duration = context.getMaxTicks().value();
+        wsum += width;
+        dsum += duration;
+        widths.push(width);
+        durations.push(duration);
+        return width;
       })
       .reduce((a: number, b: number) => a + b, 0);
 
     this.hasMinTotalWidth = true;
+    // normalized STDDEV of widths/durations gives us padding hints.
+    const wavg = wsum / contextList.length;
+    const wvar = widths.map((ll) => Math.pow(ll - wavg, 2)).reduce((a, b) => a + b);
+    const wpads = Math.pow(wvar / contextList.length, 0.5) / wavg;
 
-    return this.minTotalWidth;
+    const davg = dsum / contextList.length;
+    const dvar = durations.map((ll) => Math.pow(ll - davg, 2)).reduce((a, b) => a + b);
+    const dpads = Math.pow(dvar / contextList.length, 0.5) / davg;
+
+    // Find max of 3 methods and use that
+    const padmax = Math.max(dpads, wpads) * contextList.length * unalignedPadding;
+    const unalignedPad = unalignedPadding * unalignedCtxCount;
+
+    return this.minTotalWidth + Math.max(unalignedPad, padmax);
   }
 
   // Get minimum width required to render all voices. Either `format` or
@@ -693,14 +730,22 @@ export class Formatter {
       firstContext.getMetrics().totalLeftPx;
     let targetWidth = adjustedJustifyWidth;
     let actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
-    const maxX = adjustedJustifyWidth + lastContext.getMetrics().notePx;
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    // The min padding we allow to the left of the right bar, before moving things left
+    const paddingMin = musicFont.lookupMetric('stave.endPaddingMin');
+    // the max padding we allow to the left of the right bar, before moving things back right.
+    const paddingMax = musicFont.lookupMetric('stave.endPaddingMax');
+    const maxX = adjustedJustifyWidth + lastContext.getMetrics().notePx - paddingMin;
 
     let iterations = this.formatterOptions.maxIterations;
-    while (actualWidth > maxX && iterations > 0) {
-      // If we couldn't fit all the notes into the jusification width, it's because the softmax-scaled
-      // widths between different durations differ across stave (e.g., 1 quarter note is not the same pixel-width
-      // as 4 16th-notes). Run another pass, now that we know how much to justify.
-      targetWidth -= actualWidth - maxX;
+    while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
+      // If we couldn't fit all the notes into the jusification width, recalculate softmax over a smaller width
+      if (actualWidth > maxX) {
+        targetWidth -= actualWidth - maxX;
+      } else {
+        // If we overshoot and add too much right padding, split the difference and move right again
+        targetWidth += (maxX - actualWidth) / 2;
+      }
       actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
       iterations--;
     }
@@ -914,7 +959,9 @@ export class Formatter {
   // This method is just like `format` except that the `justifyWidth` is inferred
   // from the `stave`.
   formatToStave(voices: Voice[], stave: Stave, optionsParam?: FormatOptions): this {
-    const options: FormatOptions = { padding: 10, /*stave,*/ context: stave.getContext(), ...optionsParam };
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    const padding = musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
+    const options: FormatOptions = { padding, /*stave,*/ context: stave.getContext(), ...optionsParam };
 
     // eslint-disable-next-line
     const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - options.padding!;
