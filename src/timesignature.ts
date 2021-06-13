@@ -109,7 +109,7 @@ export class TimeSignature extends StaveModifier {
     return glyph;
   }
 
-  getTimeSig(): TimeSignatureInfo | undefined {
+  getTimeSig(): TimeSignatureInfo {
     return this.timeSig;
   }
 
