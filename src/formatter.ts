@@ -693,10 +693,13 @@ export class Formatter {
       firstContext.getMetrics().totalLeftPx;
     let targetWidth = adjustedJustifyWidth;
     let actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
-    const maxX = adjustedJustifyWidth + lastContext.getMetrics().notePx;
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    const paddingMax = musicFont.lookupMetric('stave.endPaddingMax');
+    const paddingMin = musicFont.lookupMetric('stave.endPaddingMin');
+    const maxX = adjustedJustifyWidth + lastContext.getMetrics().notePx - paddingMin;
 
     let iterations = this.formatterOptions.maxIterations;
-    while (actualWidth > maxX && iterations > 0) {
+    while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
       // If we couldn't fit all the notes into the jusification width, it's because the softmax-scaled
       // widths between different durations differ across stave (e.g., 1 quarter note is not the same pixel-width
       // as 4 16th-notes). Run another pass, now that we know how much to justify.
@@ -917,7 +920,7 @@ export class Formatter {
     const options: FormatOptions = { padding: 10, /*stave,*/ context: stave.getContext(), ...optionsParam };
 
     // eslint-disable-next-line
-    const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - options.padding!;
+    const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - Stave.defaultPadding;
     L('Formatting voices to width: ', justifyWidth);
     return this.format(voices, justifyWidth, options);
   }

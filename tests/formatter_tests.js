@@ -2,6 +2,7 @@
  * VexFlow - TickContext Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
+import { Stave } from '../releases/vexflow-tests';
 import { MockTickable } from './mocks';
 
 const FormatterTests = (function () {
@@ -530,7 +531,7 @@ const FormatterTests = (function () {
     },
 
     mixTime: function (options) {
-      var vf = VF.Test.makeFactory(options, 420, 250);
+      var vf = VF.Test.makeFactory(options, 400 + Stave.defaultPadding, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
