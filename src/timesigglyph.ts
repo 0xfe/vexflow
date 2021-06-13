@@ -1,6 +1,6 @@
+import { check } from './util';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
-import { check } from './common';
 import { Stave } from './stave';
 
 export class TimeSignatureGlyph extends Glyph {

@@ -8,6 +8,13 @@ export class RuntimeError extends Error {
   }
 }
 
+export function check<T>(x?: T): T {
+  if (x === undefined) {
+    throw new RuntimeError('undefined');
+  }
+  return x;
+}
+
 export function MakeException(name: string): typeof exception {
   const exception = class extends Error {
     // eslint-disable-next-line

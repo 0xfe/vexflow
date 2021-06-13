@@ -1516,7 +1516,7 @@ export const Flow = {
     h: { name: 'harmonic' },
     m: { name: 'muted' },
     s: { name: 'slash' },
-  },
+  } as Record<string, Record<string, string>>,
   // Some defaults
   TIME4_4: {
     num_beats: 4,

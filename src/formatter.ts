@@ -17,7 +17,7 @@
 // See `tests/formatter_tests.js` for usage examples. The helper functions included
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
-import { RuntimeError, midLine, log } from './util';
+import { RuntimeError, midLine, log, check } from './util';
 import { Beam } from './beam';
 import { Flow } from './tables';
 import { Fraction } from './fraction';
@@ -34,7 +34,6 @@ import { TabStave } from './tabstave';
 import { TabNote } from './tabnote';
 import { BoundingBox } from './boundingbox';
 import { StaveNote } from './stavenote';
-import { check } from './common';
 
 interface Distance {
   maxNegativeShiftPx: number;
