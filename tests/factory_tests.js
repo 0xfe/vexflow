@@ -14,14 +14,15 @@ const FactoryTests = (function () {
     },
 
     defaults: function (assert) {
-      /*assert.throws(function () {
+      assert.throws(function () {
         return new VF.Factory({
           renderer: {
+            elementId: '',
             width: 700,
             height: 500,
           },
         });
-      });*/
+      });
 
       var vf = new VF.Factory({
         renderer: {
