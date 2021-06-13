@@ -5,7 +5,6 @@
 
 import { CanvasContext } from './canvascontext';
 import { SVGContext } from './svgcontext';
-import { RaphaelContext } from './raphaelcontext';
 import { RuntimeError } from './util';
 
 let lastContext = null;
