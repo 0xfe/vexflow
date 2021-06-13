@@ -1,20 +1,19 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { RuntimeError } from './util';
 import { Note } from './note';
 import { TimeSignature, TimeSignatureInfo } from './timesignature';
 
 export class TimeSigNote extends Note {
-  protected timeSig?: TimeSignatureInfo;
+  protected timeSigInfo: TimeSignatureInfo;
 
   constructor(timeSpec: string, customPadding?: number) {
     super({ duration: 'b' });
     this.setAttribute('type', 'TimeSigNote');
 
     const timeSignature = new TimeSignature(timeSpec, customPadding);
-    this.timeSig = timeSignature.getTimeSig();
-    this.setWidth(this.timeSig?.glyph.getMetrics().width ?? 0);
+    this.timeSigInfo = timeSignature.getInfo();
+    this.setWidth(this.timeSigInfo.glyph.getMetrics().width);
 
     // Note properties
     this.ignore_ticks = true;
@@ -32,16 +31,15 @@ export class TimeSigNote extends Note {
 
   draw(): void {
     const stave = this.checkStave();
-    if (!this.timeSig) throw new RuntimeError('NoTimeSignatureInfo', 'No TimeSignatureInfo attached to this note.');
     const ctx = this.checkContext();
     this.setRendered();
 
-    if (!this.timeSig.glyph.getContext()) {
-      this.timeSig.glyph.setContext(ctx);
+    if (!this.timeSigInfo.glyph.getContext()) {
+      this.timeSigInfo.glyph.setContext(ctx);
     }
 
-    this.timeSig.glyph.setStave(stave);
-    this.timeSig.glyph.setYShift(stave.getYForLine(2) - stave.getYForGlyphs());
-    this.timeSig.glyph.renderToStave(this.getAbsoluteX());
+    this.timeSigInfo.glyph.setStave(stave);
+    this.timeSigInfo.glyph.setYShift(stave.getYForLine(2) - stave.getYForGlyphs());
+    this.timeSigInfo.glyph.renderToStave(this.getAbsoluteX());
   }
 }

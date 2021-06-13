@@ -250,7 +250,7 @@ export class MultiMeasureRest extends Element {
       timeSig.point = this.render_options.number_glyph_point;
       timeSig.setTimeSig(timeSpec);
       timeSig.setStave(stave);
-      timeSig.setX(left + (right - left) * 0.5 - timeSig.getTimeSig().glyph.getMetrics().width * 0.5);
+      timeSig.setX(left + (right - left) * 0.5 - timeSig.getInfo().glyph.getMetrics().width * 0.5);
       timeSig.bottomLine = this.render_options.number_line;
       timeSig.setContext(ctx).draw();
     }
