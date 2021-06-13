@@ -9,7 +9,7 @@
 //
 // See `tests/articulation_tests.js` for usage examples.
 
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, check } from './util';
 import { Flow } from './tables';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
@@ -17,7 +17,6 @@ import { Stem } from './stem';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
 import { ModifierContextState } from './modifiercontext';
-import { check } from './common';
 import { Builder } from './easyscore';
 import { TabNote } from './tabnote';
 import { GraceNote } from './gracenote';
