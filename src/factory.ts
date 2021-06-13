@@ -410,8 +410,10 @@ export class Factory {
     chordSymbol.setReportWidth(params.reportWidth);
     // There is a default font based on the engraving font.  Only set then
     // font if it is specific, else use the default
-    if (typeof params.fontFamily === 'string') {
-      chordSymbol.setFont(params.fontFamily, params.fontSize, params.fontWeight);
+    if (typeof params.fontFamily === 'string' && typeof params.fontSize === 'number') {
+      if (typeof params.fontWeight === 'string')
+        chordSymbol.setFont(params.fontFamily, params.fontSize, params.fontWeight);
+      else chordSymbol.setFont(params.fontFamily, params.fontSize, '');
     } else if (typeof params.fontSize === 'number') {
       chordSymbol.setFontSize(params.fontSize);
     }
