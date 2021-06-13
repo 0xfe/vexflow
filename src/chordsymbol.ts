@@ -15,7 +15,6 @@ import { TextFont } from './textfont';
 import { Modifier } from './modifier';
 import { FontInfo } from './types/common';
 import { StemmableNote } from './stemmablenote';
-import { Font } from './font';
 
 export interface ChordSymbolBlock {
   vAlign: boolean;
@@ -117,7 +116,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get engravingFontResolution(): number {
-    return (Flow.DEFAULT_FONT_STACK[0] as Font).getResolution();
+    return Flow.DEFAULT_FONT_STACK[0].getResolution();
   }
 
   static get spacingBetweenBlocks(): number {
