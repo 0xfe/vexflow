@@ -13,8 +13,8 @@ export class TimeSigNote extends Note {
     this.setAttribute('type', 'TimeSigNote');
 
     const timeSignature = new TimeSignature(timeSpec, customPadding);
-    this.timeSig = timeSignature.getTimeSig();
-    this.setWidth(this.timeSig?.glyph.getMetrics().width ?? 0);
+    this.timeSig = timeSignature.getInfo();
+    this.setWidth(this.timeSig.glyph.getMetrics().width);
 
     // Note properties
     this.ignore_ticks = true;
