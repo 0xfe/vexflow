@@ -6,7 +6,7 @@
 // render grace notes.
 
 import { log } from './util';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
 import { Voice } from './voice';
@@ -109,7 +109,7 @@ export class GraceNoteGroup extends Modifier {
     this.voice = new Voice({
       num_beats: 4,
       beat_value: 4,
-      resolution: Flow.RESOLUTION,
+      resolution: Tables.RESOLUTION,
     }).setStrict(false);
 
     this.render_options = {

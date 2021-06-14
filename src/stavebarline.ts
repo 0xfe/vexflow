@@ -2,7 +2,7 @@
 //
 // Author Larry Kuhns 2011
 
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { LayoutMetrics, StaveModifier } from './stavemodifier';
 import { Stave } from './stave';
 
@@ -50,7 +50,7 @@ export class Barline extends StaveModifier {
   constructor(type: BarlineType | string) {
     super();
     this.setAttribute('type', 'Barline');
-    this.thickness = Flow.STAVE_LINE_THICKNESS;
+    this.thickness = Tables.STAVE_LINE_THICKNESS;
 
     const TYPE = BarlineType;
     this.widths = {};

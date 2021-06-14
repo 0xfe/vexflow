@@ -11,7 +11,7 @@ import { Registry } from './registry';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
 import { RenderContext } from './types/common';
-import { Flow } from './tables';
+import { Tables } from './tables';
 
 /** Element attributes. */
 export interface ElementAttributes {
@@ -63,8 +63,8 @@ export abstract class Element {
 
     this.rendered = false;
 
-    this.fontStack = Flow.DEFAULT_FONT_STACK;
-    this.musicFont = Flow.DEFAULT_FONT_STACK[0];
+    this.fontStack = Tables.DEFAULT_FONT_STACK;
+    this.musicFont = Tables.DEFAULT_FONT_STACK[0];
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);

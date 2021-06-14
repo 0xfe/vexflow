@@ -8,7 +8,7 @@
 // using this class.
 
 import { RuntimeError, log } from './util';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Element } from './element';
 import { Renderer } from './renderer';
 import { FontInfo, RenderContext } from './types/common';
@@ -153,7 +153,7 @@ export class TextBracket extends Element {
         y = this.start.checkStave().getYForTopText(this.line);
         break;
       case TextBracket.Position.BOTTOM:
-        y = this.start.checkStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
+        y = this.start.checkStave().getYForBottomText(this.line + Tables.TEXT_HEIGHT_OFFSET_HACK);
         break;
       default:
         throw new RuntimeError('InvalidPosition', `The position ${this.position} is invalid.`);

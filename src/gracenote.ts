@@ -3,7 +3,7 @@
 import { RuntimeError } from './util';
 import { StaveNote, StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
-import { Flow } from './tables';
+import { Tables } from './tables';
 
 export interface GraceNoteStruct extends StaveNoteStruct {
   slash: boolean;
@@ -27,7 +27,7 @@ export class GraceNote extends StaveNote {
   constructor(note_struct: GraceNoteStruct) {
     super({
       ...{
-        glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
+        glyph_font_scale: Tables.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
         stroke_px: GraceNote.LEDGER_LINE_OFFSET,
       },
       ...note_struct,
@@ -66,7 +66,7 @@ export class GraceNote extends StaveNote {
 
   // FIXME: move this to more basic class.
   getStaveNoteScale(): number {
-    return this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
+    return this.render_options.glyph_font_scale / Tables.DEFAULT_NOTATION_FONT_SCALE;
   }
 
   draw(): void {
@@ -103,7 +103,7 @@ export class GraceNote extends StaveNote {
         const defaultStemExtention =
           stem_direction === Stem.DOWN ? this.glyph.stem_down_extension : this.glyph.stem_up_extension;
 
-        let defaultOffsetY = Flow.STEM_HEIGHT;
+        let defaultOffsetY = Tables.STEM_HEIGHT;
         defaultOffsetY -= defaultOffsetY / 2.8;
         defaultOffsetY += defaultStemExtention;
         y += defaultOffsetY * staveNoteScale * stem_direction;

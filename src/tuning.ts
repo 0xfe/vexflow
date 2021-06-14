@@ -4,7 +4,7 @@
 // This class implements varies types of tunings for tablature.
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Tables } from './tables';
 
 /** Tuning implements varies types of tunings for tablature. */
 export class Tuning {
@@ -35,7 +35,7 @@ export class Tuning {
 
   /** Returns the note number associated to the note string. */
   noteToInteger(noteString: string): number {
-    return Flow.keyProperties(noteString).int_value;
+    return Tables.keyProperties(noteString).int_value;
   }
 
   /**
@@ -91,6 +91,6 @@ export class Tuning {
     const octave = Math.floor(noteValue / 12);
     const value = noteValue % 12;
 
-    return `${Flow.integerToNote(value)}/${octave}`;
+    return `${Tables.integerToNote(value)}/${octave}`;
   }
 }

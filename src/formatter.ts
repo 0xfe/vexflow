@@ -19,7 +19,7 @@
 
 import { RuntimeError, midLine, log, check } from './util';
 import { Beam } from './beam';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { Voice } from './voice';
 import { StaveConnector } from './staveconnector';
@@ -186,7 +186,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
+      stavePadding: Tables.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
       ...options,
     };
 
@@ -255,7 +255,7 @@ export class Formatter {
     }
 
     // Start by creating a voice and adding all the notes to it.
-    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
+    const voice = new Voice(Tables.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
 
     // Then create beams, if requested.
     const beams = options.auto_beam ? Beam.applyAndGetBeams(voice) : [];
@@ -307,10 +307,10 @@ export class Formatter {
     }
 
     // Create a `4/4` voice for `notes`.
-    const notevoice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
+    const notevoice = new Voice(Tables.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
 
     // Create a `4/4` voice for `tabnotes`.
-    const tabvoice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(tabnotes);
+    const tabvoice = new Voice(Tables.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(tabnotes);
 
     // Then create beams, if requested.
     const beams = opts.auto_beam ? Beam.applyAndGetBeams(notevoice) : [];
@@ -691,7 +691,7 @@ export class Formatter {
       firstContext.getMetrics().totalLeftPx;
     let targetWidth = adjustedJustifyWidth;
     let actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
-    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.DEFAULT_FONT_STACK[0];
     const paddingMax = musicFont.lookupMetric('stave.endPaddingMax');
     const paddingMin = musicFont.lookupMetric('stave.endPaddingMin');
     const maxX = adjustedJustifyWidth + lastContext.getMetrics().notePx - paddingMin;

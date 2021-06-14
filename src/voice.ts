@@ -7,7 +7,7 @@
 
 import { RuntimeError, check } from './util';
 import { Element } from './element';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { Stave } from './stave';
 import { VoiceGroup } from './voicegroup';
@@ -70,7 +70,7 @@ export class Voice extends Element {
         time = {
           num_beats: parseInt(match[1]),
           beat_value: parseInt(match[2]),
-          resolution: Flow.RESOLUTION,
+          resolution: Tables.RESOLUTION,
         };
       }
     }
@@ -80,7 +80,7 @@ export class Voice extends Element {
       ...{
         num_beats: 4,
         beat_value: 4,
-        resolution: Flow.RESOLUTION,
+        resolution: Tables.RESOLUTION,
       },
       ...(time as VoiceTime),
     };

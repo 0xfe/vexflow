@@ -6,7 +6,7 @@
 
 import { RuntimeError } from './util';
 import { Element } from './element';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { TickContext } from './tickcontext';
 import { ModifierContext } from './modifiercontext';
@@ -325,7 +325,7 @@ export abstract class Tickable extends Element {
 
   /** Sets the duration. */
   setDuration(duration: Fraction): void {
-    const ticks = duration.numerator * (Flow.RESOLUTION / duration.denominator);
+    const ticks = duration.numerator * (Tables.RESOLUTION / duration.denominator);
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();
   }

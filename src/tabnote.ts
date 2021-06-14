@@ -8,7 +8,7 @@
 // See `tests/tabnote_tests.js` for usage examples
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
@@ -139,7 +139,7 @@ export class TabNote extends StemmableNote {
       ...this.render_options,
       ...{
         // font size for note heads and rests
-        glyph_font_scale: Flow.DEFAULT_TABLATURE_FONT_SCALE,
+        glyph_font_scale: Tables.DEFAULT_TABLATURE_FONT_SCALE,
         // Flag to draw a stem
         draw_stem,
         // Flag to draw dot modifiers
@@ -155,7 +155,7 @@ export class TabNote extends StemmableNote {
       },
     };
 
-    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
+    this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
 
     if (!this.glyph) {
       throw new RuntimeError(
@@ -230,7 +230,7 @@ export class TabNote extends StemmableNote {
     for (let i = 0; i < this.positions.length; ++i) {
       let fret = this.positions[i].fret;
       if (this.ghost) fret = '(' + fret + ')';
-      const glyph = Flow.tabToGlyph(fret, this.render_options.scale);
+      const glyph = Tables.tabToGlyph(fret, this.render_options.scale);
       this.glyphs.push(glyph as GlyphProps);
       this.width = Math.max(glyph.getWidth(), this.width);
     }

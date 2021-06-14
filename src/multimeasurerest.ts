@@ -4,7 +4,7 @@
 // This class implements multiple measure rests
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
@@ -91,7 +91,7 @@ export class MultiMeasureRest extends Element {
       use_symbols: false,
 
       /* same as NoteHead. */
-      semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
+      semibrave_rest_glyph_scale: Tables.DEFAULT_NOTATION_FONT_SCALE,
     };
     this.render_options = { ...this.render_options, ...options };
 

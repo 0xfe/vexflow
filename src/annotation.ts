@@ -8,7 +8,7 @@
 // See `tests/annotation_tests.js` for usage examples.
 
 import { log } from './util';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
 import { TextFont } from './textfont';
 import { FontInfo } from './types/common';
@@ -83,7 +83,7 @@ export class Annotation extends Modifier {
         weight: 'normal',
       });
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
-      const numLines = Math.floor(textFont.maxHeight / Flow.STAVE_LINE_DISTANCE) + 1;
+      const numLines = Math.floor(textFont.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
       // Get the string width from the font metrics
       testWidth = textFont.getWidthForString(annotation.text);
       width = Math.max(width, testWidth);
@@ -119,7 +119,7 @@ export class Annotation extends Modifier {
     };
 
     // The default width is calculated from the text.
-    this.setWidth(Flow.textWidth(text));
+    this.setWidth(Tables.textWidth(text));
   }
 
   getCategory(): string {
@@ -197,7 +197,7 @@ export class Annotation extends Modifier {
     if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
       // HACK: We need to compensate for the text's height since its origin
       // is bottom-right.
-      y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
+      y = stave.getYForBottomText(this.text_line + Tables.TEXT_HEIGHT_OFFSET_HACK);
       if (has_stem) {
         const stem_base = note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
         y = Math.max(y, stem_base + spacing * (this.text_line + 2));

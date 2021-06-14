@@ -10,7 +10,7 @@
 // See `tests/articulation_tests.js` for usage examples.
 
 import { RuntimeError, log, check } from './util';
-import { Flow } from './tables';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { Stem } from './stem';
@@ -261,7 +261,7 @@ export class Articulation extends Modifier {
   }
 
   reset(): void {
-    this.articulation = Flow.articulationCodes(this.type);
+    this.articulation = Tables.articulationCodes(this.type);
     if (!this.articulation) {
       throw new RuntimeError('ArgumentError', `Articulation not found: ${this.type}`);
     }
