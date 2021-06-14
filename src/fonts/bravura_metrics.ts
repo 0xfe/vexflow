@@ -4,6 +4,8 @@ export const BravuraMetrics = {
 
   stave: {
     padding: 12,
+    endPaddingMax: 10,
+    endPaddingMin: 5
   },
 
   clef: {

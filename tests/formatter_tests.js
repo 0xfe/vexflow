@@ -530,7 +530,7 @@ const FormatterTests = (function () {
     },
 
     mixTime: function (options) {
-      var vf = VF.Test.makeFactory(options, 420, 250);
+      var vf = VF.Test.makeFactory(options, 400 + VF.Stave.defaultPadding, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({

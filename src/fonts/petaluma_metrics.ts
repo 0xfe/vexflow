@@ -4,6 +4,8 @@ export const PetalumaMetrics = {
 
   stave: {
     padding: 15,
+    endPaddingMax: 15,
+    endPaddingMin: 7
   },
 
   clef: {
