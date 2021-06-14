@@ -17,7 +17,6 @@
 // See `tests/formatter_tests.js` for usage examples. The helper functions included
 // here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
 
-import { Vex } from './vex';
 import { RuntimeError, midLine, log } from './util';
 import { Beam } from './beam';
 import { Flow } from './tables';
