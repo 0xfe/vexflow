@@ -7,7 +7,11 @@ export const PetalumaMetrics = {
     endPaddingMax: 15,
     endPaddingMin: 7
   },
-
+  accidental: {
+    noteheadAccidentalPadding: 1,
+    leftPadding: 2,
+    accidentalSpacing: 3
+  },
   clef: {
     default: {
       point: 32,

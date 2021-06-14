@@ -34,9 +34,11 @@ export class Accidental extends Modifier {
 
   // Arrange accidentals inside a ModifierContext.
   static format(accidentals, state) {
-    const noteheadAccidentalPadding = 1;
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    const noteheadAccidentalPadding = musicFont.lookupMetric('accidental.noteheadAccidentalPadding');
     const leftShift = state.left_shift + noteheadAccidentalPadding;
-    const accidentalSpacing = 3;
+    const accidentalSpacing = musicFont.lookupMetric('accidental.accidentalSpacing');
+    const additionalPadding = musicFont.lookupMetric('accidental.leftPadding'); // padding to the left of all accidentals
 
     // If there are no accidentals, we needn't format their positions
     if (!accidentals || accidentals.length === 0) return;
@@ -298,7 +300,7 @@ export class Accidental extends Modifier {
     });
 
     // update the overall layout with the full width of the accidental shapes:
-    state.left_shift += totalShift;
+    state.left_shift += totalShift + additionalPadding;
   }
 
   // Helper function to determine whether two lines of accidentals collide vertically
