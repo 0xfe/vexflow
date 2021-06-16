@@ -8,7 +8,7 @@
 // See `tests/notehead_tests.js` for usage examples.
 
 import { RuntimeError, log } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
 import { StaveNote } from './stavenote';

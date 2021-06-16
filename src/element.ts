@@ -11,7 +11,7 @@ import { Registry } from './registry';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
 import { RenderContext } from './types/common';
-import { Flow } from './tables';
+import { Flow } from './flow';
 
 /** Element attributes. */
 export interface ElementAttributes {

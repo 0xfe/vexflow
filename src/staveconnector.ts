@@ -2,7 +2,7 @@
 
 import { RuntimeError } from './util';
 import { Element } from './element';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { FontInfo, RenderContext } from './types/common';
 import { Stave } from './stave';

@@ -10,7 +10,7 @@
 // See `tests/articulation_tests.js` for usage examples.
 
 import { RuntimeError, log, check } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { Stem } from './stem';

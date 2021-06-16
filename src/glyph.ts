@@ -8,7 +8,7 @@ import { Font, FontGlyph } from './font';
 import { RenderContext, TypeProps } from './types/common';
 import { Stave } from './stave';
 import { Stem } from './stem';
-import { Flow } from './tables';
+import { Flow } from './flow';
 
 export interface DurationCode {
   common: TypeProps;

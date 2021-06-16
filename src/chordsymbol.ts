@@ -9,7 +9,7 @@
 // See `tests/chordsymbol_tests.js` for usage examples.
 
 import { log } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { TextFont } from './textfont';
 import { Modifier } from './modifier';

@@ -8,7 +8,7 @@
 // using this class.
 
 import { RuntimeError, log } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Element } from './element';
 import { Renderer } from './renderer';
 import { FontInfo, RenderContext } from './types/common';

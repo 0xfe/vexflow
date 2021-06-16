@@ -11,7 +11,7 @@
 
 import { RuntimeError, log } from './util';
 import { Fraction } from './fraction';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Music } from './music';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';

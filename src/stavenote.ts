@@ -10,7 +10,7 @@
 // See `tests/stavenote_tests.js` for usage examples.
 
 import { RuntimeError, log, midLine, warn } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { BoundingBox } from './boundingbox';
 import { Stem } from './stem';
 import { NoteHead } from './notehead';

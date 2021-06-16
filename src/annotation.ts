@@ -8,7 +8,7 @@
 // See `tests/annotation_tests.js` for usage examples.
 
 import { log } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { TextFont } from './textfont';
 import { FontInfo } from './types/common';

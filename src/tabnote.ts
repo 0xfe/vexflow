@@ -8,7 +8,7 @@
 // See `tests/tabnote_tests.js` for usage examples
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';

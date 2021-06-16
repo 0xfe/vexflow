@@ -6,7 +6,7 @@
 
 import { RuntimeError, log } from './util';
 import { Element } from './element';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { BoundingBox } from './boundingbox';
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.

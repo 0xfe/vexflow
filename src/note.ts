@@ -11,7 +11,7 @@
 // array of them. All notes also have a rendering context and belong to a stave.
 
 import { RuntimeError, drawDot } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Tickable } from './tickable';
 import { Stroke } from './strokes';
 import { Stave } from './stave';

@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
 
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 import { FontInfo } from './types/common';

@@ -7,7 +7,7 @@
 
 import { RuntimeError, check } from './util';
 import { Element } from './element';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { Stave } from './stave';
 import { VoiceGroup } from './voicegroup';

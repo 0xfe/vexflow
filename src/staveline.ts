@@ -9,7 +9,7 @@
 // purposes, such as diagrams.
 import { RuntimeError } from './util';
 import { Element } from './element';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { FontInfo, RenderContext } from './types/common';
 import { StaveNote } from './stavenote';
 

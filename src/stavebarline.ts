@@ -2,7 +2,7 @@
 //
 // Author Larry Kuhns 2011
 
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { LayoutMetrics, StaveModifier } from './stavemodifier';
 import { Stave } from './stave';
 

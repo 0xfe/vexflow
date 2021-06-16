@@ -10,7 +10,7 @@
 // See `tests/ornament_tests.js` for usage examples.
 
 import { RuntimeError, log } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { StaveNote } from './stavenote';

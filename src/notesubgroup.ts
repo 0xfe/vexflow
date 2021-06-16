@@ -7,7 +7,7 @@
 // render notes as a `Modifier`
 // ex) ClefNote, TimeSigNote and BarNote.
 
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { Formatter } from './formatter';
 import { Voice } from './voice';

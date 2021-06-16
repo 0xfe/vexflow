@@ -6,7 +6,7 @@
 //
 
 import { log, RuntimeError } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 
 export const Vex = {
   Flow: Flow,

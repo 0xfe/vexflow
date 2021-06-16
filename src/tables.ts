@@ -3,84 +3,11 @@
 /* eslint-disable key-spacing */
 
 import { RuntimeError } from './util';
-import { Element } from './element';
 import { Fraction } from './fraction';
-import { Renderer } from './renderer';
-import { Formatter } from './formatter';
-import { Music } from './music';
 import { Glyph } from './glyph';
-import { Stave } from './stave';
-import { StaveNote } from './stavenote';
-import { StaveModifier } from './stavemodifier';
-import { StaveTempo } from './stavetempo';
-import { Voice } from './voice';
-import { Accidental } from './accidental';
-import { Beam } from './beam';
-import { StaveTie } from './stavetie';
-import { TabStave } from './tabstave';
-import { TabNote } from './tabnote';
-import { Bend } from './bend';
-import { Vibrato } from './vibrato';
-import { VibratoBracket } from './vibratobracket';
-import { Note } from './note';
-import { ModifierContext } from './modifiercontext';
-import { MultiMeasureRest } from './multimeasurerest';
-import { TickContext } from './tickcontext';
-import { Articulation, ArticulationStruct } from './articulation';
-import { Annotation } from './annotation';
-import { ChordSymbol } from './chordsymbol';
-import { Barline } from './stavebarline';
-import { NoteHead } from './notehead';
-import { StaveConnector } from './staveconnector';
-import { ClefNote } from './clefnote';
-import { KeySignature } from './keysignature';
-import { KeySigNote } from './keysignote';
-import { TimeSignature } from './timesignature';
-import { TimeSigNote } from './timesignote';
-import { Stem } from './stem';
-import { TabTie } from './tabtie';
-import { Clef } from './clef';
-import { Dot } from './dot';
-import { Modifier } from './modifier';
-import { TabSlide } from './tabslide';
-import { Tuplet } from './tuplet';
-import { GraceNote } from './gracenote';
-import { GraceTabNote } from './gracetabnote';
-import { Tuning } from './tuning';
-import { KeyManager } from './keymanager';
-import { StaveHairpin } from './stavehairpin';
-import { BoundingBox } from './boundingbox';
-import { Stroke } from './strokes';
-import { TextNote } from './textnote';
-import { Curve } from './curve';
-import { TextDynamics } from './textdynamics';
-import { StaveLine } from './staveline';
-import { Ornament } from './ornament';
-import { PedalMarking } from './pedalmarking';
-import { TextBracket } from './textbracket';
-import { FretHandFinger } from './frethandfinger';
-import { Repetition } from './staverepetition';
-import { BarNote } from './barnote';
-import { GhostNote } from './ghostnote';
-import { NoteSubGroup } from './notesubgroup';
-import { GraceNoteGroup } from './gracenotegroup';
-import { Tremolo } from './tremolo';
-import { StringNumber } from './stringnumber';
-import { Crescendo } from './crescendo';
-import { Volta } from './stavevolta';
-import { System } from './system';
-import { Factory } from './factory';
-import { Parser } from './parser';
-import { EasyScore } from './easyscore';
-import { Registry } from './registry';
-import { StaveText } from './stavetext';
-import { GlyphNote } from './glyphnote';
-import { RepeatNote } from './repeatnote';
-import { TextFont } from './textfont';
-import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
-import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
+import { ArticulationStruct } from './articulation';
 
-import { Font, Fonts } from './font';
+import { Fonts } from './font';
 
 // Custom note heads
 const customNoteHeads: Record<string, { code: string }> = {
@@ -392,7 +319,7 @@ const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: n
   accidentalWilsonMinus: { code: 'accidentalWilsonMinus', parenRightPaddingAdjustment: -1 },
 };
 
-export const Flow = {
+export const Tables = {
   STEM_WIDTH: 1.5,
   STEM_HEIGHT: 35,
   STAVE_LINE_THICKNESS: 1,
@@ -419,85 +346,6 @@ export const Flow = {
 
   /* Kerning (DEPRECATED) */
   IsKerned: true,
-  Element: Element,
-  Fraction: Fraction,
-  Renderer: Renderer,
-  Formatter: Formatter,
-  Music: Music,
-  Glyph: Glyph,
-  Stave: Stave,
-  StaveNote: StaveNote,
-  StaveModifier: StaveModifier,
-  StaveTempo: StaveTempo,
-  Voice: Voice,
-  Accidental: Accidental,
-  Beam: Beam,
-  StaveTie: StaveTie,
-  TabStave: TabStave,
-  TabNote: TabNote,
-  Bend: Bend,
-  Vibrato: Vibrato,
-  VibratoBracket: VibratoBracket,
-  Note: Note,
-  ModifierContext: ModifierContext,
-  MultiMeasureRest: MultiMeasureRest,
-  TickContext: TickContext,
-  Articulation: Articulation,
-  Annotation: Annotation,
-  ChordSymbol: ChordSymbol,
-  Barline: Barline,
-  NoteHead: NoteHead,
-  StaveConnector: StaveConnector,
-  ClefNote: ClefNote,
-  KeySignature: KeySignature,
-  KeySigNote: KeySigNote,
-  TimeSignature: TimeSignature,
-  TimeSigNote: TimeSigNote,
-  Stem: Stem,
-  TabTie: TabTie,
-  Clef: Clef,
-  Dot: Dot,
-  Modifier: Modifier,
-  TabSlide: TabSlide,
-  Tuplet: Tuplet,
-  GraceNote: GraceNote,
-  GraceTabNote: GraceTabNote,
-  Tuning: Tuning,
-  KeyManager: KeyManager,
-  StaveHairpin: StaveHairpin,
-  BoundingBox: BoundingBox,
-  Stroke: Stroke,
-  TextNote: TextNote,
-  Curve: Curve,
-  TextDynamics: TextDynamics,
-  StaveLine: StaveLine,
-  Ornament: Ornament,
-  PedalMarking: PedalMarking,
-  TextBracket: TextBracket,
-  FretHandFinger: FretHandFinger,
-  Repetition: Repetition,
-  BarNote: BarNote,
-  GhostNote: GhostNote,
-  NoteSubGroup: NoteSubGroup,
-  GraceNoteGroup: GraceNoteGroup,
-  Tremolo: Tremolo,
-  StringNumber: StringNumber,
-  Crescendo: Crescendo,
-  Volta: Volta,
-  System: System,
-  Factory: Factory,
-  Parser: Parser,
-  EasyScore: EasyScore,
-  Registry: Registry,
-  StaveText: StaveText,
-  GlyphNote: GlyphNote,
-  RepeatNote: RepeatNote,
-
-  Font: Font,
-  Fonts: Fonts,
-  TextFont: TextFont,
-  PetalumaScriptTextMetrics: PetalumaScriptTextMetrics,
-  RobotoSlabTextMetrics: RobotoSlabTextMetrics,
 
   clefProperties: (clef: string): { line_shift: number } => {
     const values: Record<string, { line_shift: number }> = {
@@ -624,7 +472,7 @@ export const Flow = {
 
     const base_index = octave * 7 - 4 * 7;
     let line = (base_index + value.index) / 2;
-    line += Flow.clefProperties(clef).line_shift;
+    line += Tables.clefProperties(clef).line_shift;
 
     let stroke = 0;
 
@@ -695,14 +543,14 @@ export const Flow = {
     let shift_y = 0;
 
     if (fret.toString().toUpperCase() === 'X') {
-      const glyphMetrics = new Glyph('accidentalDoubleSharp', Flow.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
+      const glyphMetrics = new Glyph('accidentalDoubleSharp', Tables.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
       glyph = 'accidentalDoubleSharp';
       if (glyphMetrics.width == undefined || glyphMetrics.height == undefined)
         throw new RuntimeError('InvalidMetrics', 'Width and height required');
       width = glyphMetrics.width;
       shift_y = -glyphMetrics.height / 2;
     } else {
-      width = Flow.textWidth(fret.toString());
+      width = Tables.textWidth(fret.toString());
     }
 
     return {
@@ -928,17 +776,17 @@ export const Flow = {
 
   // Convert the `duration` to an fraction
   durationToFraction(duration: string): Fraction {
-    return new Fraction().parse(Flow.sanitizeDuration(duration));
+    return new Fraction().parse(Tables.sanitizeDuration(duration));
   },
 
   // Convert the `duration` to an number
   durationToNumber(duration: string): number {
-    return Flow.durationToFraction(duration).value();
+    return Tables.durationToFraction(duration).value();
   },
 
   // Convert the `duration` to total ticks
   durationToTicks(duration: string): number {
-    duration = Flow.sanitizeDuration(duration);
+    duration = Tables.sanitizeDuration(duration);
 
     const ticks = durations[duration];
     if (ticks === undefined) {
@@ -961,10 +809,10 @@ export const Flow = {
           stem: false,
           stem_offset: 0,
           flag: false,
-          stem_up_extension: -Flow.STEM_HEIGHT,
-          stem_down_extension: -Flow.STEM_HEIGHT,
-          tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
-          tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
+          stem_up_extension: -Tables.STEM_HEIGHT,
+          stem_down_extension: -Tables.STEM_HEIGHT,
+          tabnote_stem_up_extension: -Tables.STEM_HEIGHT,
+          tabnote_stem_down_extension: -Tables.STEM_HEIGHT,
           dot_shiftY: 0,
           line_above: 0,
           line_below: 0,
@@ -973,14 +821,14 @@ export const Flow = {
           n: {
             // Breve note
             code_head: 'noteheadDoubleWhole',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDoubleWhole', scale).getMetrics().width;
             },
           },
           h: {
             // Breve note harmonic
             code_head: 'unpitchedPercussionClef1',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('unpitchedPercussionClef1', scale).getMetrics().width;
             },
           },
@@ -988,7 +836,7 @@ export const Flow = {
             // Breve note muted -
             code_head: 'vexNoteHeadMutedBreve',
             stem_offset: 0,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('vexNoteHeadMutedBreve', scale).getMetrics().width;
             },
           },
@@ -998,14 +846,14 @@ export const Flow = {
             rest: true,
             position: 'B/5',
             dot_shiftY: 0.5,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('restDoubleWhole', scale).getMetrics().width;
             },
           },
           s: {
             // Breve note slash -
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
@@ -1015,10 +863,10 @@ export const Flow = {
           stem: false,
           stem_offset: 0,
           flag: false,
-          stem_up_extension: -Flow.STEM_HEIGHT,
-          stem_down_extension: -Flow.STEM_HEIGHT,
-          tabnote_stem_up_extension: -Flow.STEM_HEIGHT,
-          tabnote_stem_down_extension: -Flow.STEM_HEIGHT,
+          stem_up_extension: -Tables.STEM_HEIGHT,
+          stem_down_extension: -Tables.STEM_HEIGHT,
+          tabnote_stem_up_extension: -Tables.STEM_HEIGHT,
+          tabnote_stem_down_extension: -Tables.STEM_HEIGHT,
           dot_shiftY: 0,
           line_above: 0,
           line_below: 0,
@@ -1027,14 +875,14 @@ export const Flow = {
           n: {
             // Whole note
             code_head: 'noteheadWhole',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadWhole', scale).getMetrics().width;
             },
           },
           h: {
             // Whole note harmonic
             code_head: 'noteheadDiamondWhole',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDiamondWhole', scale).getMetrics().width;
             },
           },
@@ -1042,7 +890,7 @@ export const Flow = {
             // Whole note muted
             code_head: 'noteheadXWhole',
             stem_offset: -3,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadXWhole', scale).getMetrics().width;
             },
           },
@@ -1052,14 +900,14 @@ export const Flow = {
             rest: true,
             position: 'D/5',
             dot_shiftY: 0.5,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('restWhole', scale).getMetrics().width;
             },
           },
           s: {
             // Whole note slash
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
@@ -1081,14 +929,14 @@ export const Flow = {
           n: {
             // Half note
             code_head: 'noteheadHalf',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadHalf', scale).getMetrics().width;
             },
           },
           h: {
             // Half note harmonic
             code_head: 'noteheadDiamondHalf',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDiamondHalf', scale).getMetrics().width;
             },
           },
@@ -1096,7 +944,7 @@ export const Flow = {
             // Half note muted
             code_head: 'noteheadXHalf',
             stem_offset: -3,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadXHalf', scale).getMetrics().width;
             },
           },
@@ -1107,14 +955,14 @@ export const Flow = {
             rest: true,
             position: 'B/4',
             dot_shiftY: -0.5,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('restHalf', scale).getMetrics().width;
             },
           },
           s: {
             // Half note slash
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
@@ -1136,21 +984,21 @@ export const Flow = {
           n: {
             // Quarter note
             code_head: 'noteheadBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadBlack', scale).getMetrics().width;
             },
           },
           h: {
             // Quarter harmonic
             code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDiamondBlack', scale).getMetrics().width;
             },
           },
           m: {
             // Quarter muted
             code_head: 'noteheadXBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadXBlack', scale).getMetrics().width;
             },
           },
@@ -1163,14 +1011,14 @@ export const Flow = {
             dot_shiftY: -0.5,
             line_above: 1.5,
             line_below: 1.5,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('restQuarter', scale).getMetrics().width;
             },
           },
           s: {
             // Quarter slash
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
@@ -1195,21 +1043,21 @@ export const Flow = {
           n: {
             // Eighth note
             code_head: 'noteheadBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadBlack', scale).getMetrics().width;
             },
           },
           h: {
             // Eighth note harmonic
             code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDiamondBlack', scale).getMetrics().width;
             },
           },
           m: {
             // Eighth note muted
             code_head: 'noteheadXBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadXBlack', scale).getMetrics().width;
             },
           },
@@ -1223,14 +1071,14 @@ export const Flow = {
             dot_shiftY: -0.5,
             line_above: 1.0,
             line_below: 1.0,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('rest8th', scale).getMetrics().width;
             },
           },
           s: {
             // Eight slash
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
@@ -1255,21 +1103,21 @@ export const Flow = {
           n: {
             // Sixteenth note
             code_head: 'noteheadBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadBlack', scale).getMetrics().width;
             },
           },
           h: {
             // Sixteenth note harmonic
             code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDiamondBlack', scale).getMetrics().width;
             },
           },
           m: {
             // Sixteenth note muted
             code_head: 'noteheadXBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadXBlack', scale).getMetrics().width;
             },
           },
@@ -1283,14 +1131,14 @@ export const Flow = {
             dot_shiftY: -0.5,
             line_above: 1.0,
             line_below: 2.0,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('rest16th', scale).getMetrics().width;
             },
           },
           s: {
             // Sixteenth slash
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
@@ -1315,21 +1163,21 @@ export const Flow = {
           n: {
             // Thirty-second note
             code_head: 'noteheadBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadBlack', scale).getMetrics().width;
             },
           },
           h: {
             // Thirty-second harmonic
             code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDiamondBlack', scale).getMetrics().width;
             },
           },
           m: {
             // Thirty-second muted
             code_head: 'noteheadXBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadXBlack', scale).getMetrics().width;
             },
           },
@@ -1343,14 +1191,14 @@ export const Flow = {
             dot_shiftY: -1.5,
             line_above: 2.0,
             line_below: 2.0,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('rest32nd', scale).getMetrics().width;
             },
           },
           s: {
             // Thirty-second slash
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
@@ -1375,21 +1223,21 @@ export const Flow = {
           n: {
             // Sixty-fourth note
             code_head: 'noteheadBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadBlack', scale).getMetrics().width;
             },
           },
           h: {
             // Sixty-fourth harmonic
             code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDiamondBlack', scale).getMetrics().width;
             },
           },
           m: {
             // Sixty-fourth muted
             code_head: 'noteheadXBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadXBlack', scale).getMetrics().width;
             },
           },
@@ -1403,14 +1251,14 @@ export const Flow = {
             dot_shiftY: -1.5,
             line_above: 2.0,
             line_below: 3.0,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('rest64th', scale).getMetrics().width;
             },
           },
           s: {
             // Sixty-fourth slash
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
@@ -1435,21 +1283,21 @@ export const Flow = {
           n: {
             // Hundred-twenty-eight note
             code_head: 'noteheadBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadBlack', scale).getMetrics().width;
             },
           },
           h: {
             // Hundred-twenty-eight harmonic
             code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadDiamondBlack', scale).getMetrics().width;
             },
           },
           m: {
             // Hundred-twenty-eight muted
             code_head: 'noteheadXBlack',
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('noteheadXBlack', scale).getMetrics().width;
             },
           },
@@ -1463,21 +1311,21 @@ export const Flow = {
             dot_shiftY: 1.5,
             line_above: 3.0,
             line_below: 3.0,
-            getWidth(scale = Flow.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
+            getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
               return new Glyph('rest128th', scale).getMetrics().width;
             },
           },
           s: {
             // Hundred-twenty-eight rest
             // Drawn with canvas primitives
-            getWidth: () => Flow.SLASH_NOTEHEAD_WIDTH,
+            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
             position: 'B/4',
           },
         },
       },
     };
 
-    duration = Flow.sanitizeDuration(duration);
+    duration = Tables.sanitizeDuration(duration);
     type = type || 'n'; // default type is a regular note
 
     // Lookup duration for default glyph head code

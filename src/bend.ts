@@ -5,7 +5,7 @@
 // This file implements tablature bends.
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 

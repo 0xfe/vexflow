@@ -19,7 +19,7 @@
 
 import { RuntimeError, midLine, log, check } from './util';
 import { Beam } from './beam';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { Voice } from './voice';
 import { StaveConnector } from './staveconnector';

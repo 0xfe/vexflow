@@ -3,7 +3,7 @@
 import { RuntimeError } from './util';
 import { StaveNote, StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
-import { Flow } from './tables';
+import { Flow } from './flow';
 
 export interface GraceNoteStruct extends StaveNoteStruct {
   slash: boolean;

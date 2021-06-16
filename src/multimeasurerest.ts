@@ -4,7 +4,7 @@
 // This class implements multiple measure rests
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
