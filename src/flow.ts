@@ -21,7 +21,7 @@ import { Note } from './note';
 import { ModifierContext } from './modifiercontext';
 import { MultiMeasureRest } from './multimeasurerest';
 import { TickContext } from './tickcontext';
-import { Articulation, ArticulationStruct } from './articulation';
+import { Articulation } from './articulation';
 import { Annotation } from './annotation';
 import { ChordSymbol } from './chordsymbol';
 import { Barline } from './stavebarline';
