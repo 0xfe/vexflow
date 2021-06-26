@@ -15,7 +15,7 @@ module.exports = (grunt) => {
   const BUILD_DIR = path.join(BASE_DIR, 'build');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
-  const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.js');
+  const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.ts');
   const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.js');
   const TARGET_RAW = 'vexflow-debug.js';
   const TARGET_MIN = 'vexflow-min.js';

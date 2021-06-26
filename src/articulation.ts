@@ -9,23 +9,22 @@
 //
 // See `tests/articulation_tests.js` for usage examples.
 
-import { RuntimeError, log } from './util';
-import { Flow } from './tables';
+import { RuntimeError, log, check } from './util';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { Stem } from './stem';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
 import { ModifierContextState } from './modifiercontext';
-import { check } from './common';
 import { Builder } from './easyscore';
 import { TabNote } from './tabnote';
 import { GraceNote } from './gracenote';
 
 export interface ArticulationStruct {
-  code: string;
-  aboveCode: string;
-  belowCode: string;
+  code?: string;
+  aboveCode?: string;
+  belowCode?: string;
   between_lines: boolean;
 }
 
@@ -269,7 +268,7 @@ export class Articulation extends Modifier {
 
     const code =
       (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
-    this.glyph = new Glyph(code, this.render_options.font_scale);
+    this.glyph = new Glyph(code ?? '', this.render_options.font_scale);
 
     this.setWidth(check<number>(this.glyph.getMetrics().width));
   }

@@ -4,7 +4,7 @@
 // This class implements varies types of tunings for tablature.
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 
 /** Tuning implements varies types of tunings for tablature. */
 export class Tuning {

@@ -2,7 +2,7 @@
 
 import { RuntimeError } from './util';
 import { Element, ElementStyle } from './element';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier } from './stavemodifier';
 import { Repetition } from './staverepetition';

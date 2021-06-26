@@ -5,7 +5,7 @@
 // Examples of stemmable notes are `StaveNote` and `TabNote`
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Stem, StemOptions } from './stem';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';

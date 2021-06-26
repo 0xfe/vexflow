@@ -11,7 +11,7 @@
 // array of them. All notes also have a rendering context and belong to a stave.
 
 import { RuntimeError, drawDot } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Tickable } from './tickable';
 import { Stroke } from './strokes';
 import { Stave } from './stave';
@@ -21,7 +21,6 @@ import { ModifierContext } from './modifiercontext';
 import { Modifier } from './modifier';
 import { KeyProps, RenderContext } from './types/common';
 import { GlyphProps } from './glyph';
-import { GLYPH_PROPS_VALID_TYPES } from './common';
 import { Fraction } from './fraction';
 import { Beam } from './beam';
 
@@ -190,7 +189,7 @@ export abstract class Note extends Tickable {
 
     // If specified type is invalid, return undefined
     let type = noteStruct.type;
-    if (type && !GLYPH_PROPS_VALID_TYPES[type]) {
+    if (type && !Flow.validTypes[type]) {
       return undefined;
     }
 

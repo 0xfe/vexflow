@@ -7,7 +7,7 @@
 // and indicates the notes with implicit accidentals.
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 

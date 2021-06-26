@@ -5,9 +5,9 @@
 // This file implements the main Voice class. It's mainly a container
 // object to group `Tickables` for formatting.
 
-import { RuntimeError } from './util';
+import { RuntimeError, check } from './util';
 import { Element } from './element';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { Stave } from './stave';
 import { VoiceGroup } from './voicegroup';
@@ -15,7 +15,6 @@ import { Note } from './note';
 import { BoundingBox } from './boundingbox';
 import { Tickable } from './tickable';
 import { RenderContext } from './types/common';
-import { check } from './common';
 
 export interface VoiceTime {
   num_beats: number;

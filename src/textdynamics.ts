@@ -7,11 +7,10 @@
 // You can render any dynamics string that contains a combination of
 // the following letters:  P, M, F, Z, R, S
 
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, check } from './util';
 import { Note } from './note';
 import { Glyph } from './glyph';
 import { TextNoteStruct } from './textnote';
-import { check } from './common';
 
 // To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
 function L(

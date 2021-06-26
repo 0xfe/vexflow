@@ -5,7 +5,7 @@
 // This file implements `Beams` that span over a set of `StemmableNotes`.
 
 import { RuntimeError } from './util';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Element } from './element';
 import { Fraction } from './fraction';
 import { Tuplet } from './tuplet';

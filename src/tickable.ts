@@ -6,7 +6,7 @@
 
 import { RuntimeError } from './util';
 import { Element } from './element';
-import { Flow } from './tables';
+import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { TickContext } from './tickcontext';
 import { ModifierContext } from './modifiercontext';
