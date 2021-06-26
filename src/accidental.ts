@@ -22,22 +22,22 @@ import { Voice } from './voice';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
 
-export interface Line {
+type Line = {
   column: number;
   line: number;
   flatLine: boolean;
   dblSharpLine: boolean;
   numAcc: number;
   width: number;
-}
+};
 
-export interface AccidentalListItem {
+type AccidentalListItem = {
   y?: number;
   line: number;
   shift: number;
   acc: Accidental;
   lineSpace?: number;
-}
+};
 
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -61,7 +61,8 @@ export class Accidental extends Modifier {
     parenRightPadding: number;
   };
   protected cautionary: boolean;
-  protected glyph?: Glyph;
+  // initialised in reset which is called by the constructor
+  protected glyph!: Glyph;
   protected parenRight?: Glyph;
   protected parenLeft?: Glyph;
 
@@ -511,7 +512,7 @@ export class Accidental extends Modifier {
         this.render_options.parenRightPadding
       : 0;
 
-    return (this.glyph?.getMetrics().width ?? 0) + parenWidth;
+    return (this.glyph.getMetrics().width ?? 0) + parenWidth;
   }
 
   // Attach this accidental to `note`, which must be a `StaveNote`.
@@ -564,15 +565,15 @@ export class Accidental extends Modifier {
     L('Rendering: ', type, accX, accY);
 
     if (!cautionary) {
-      glyph?.render(ctx, accX, accY);
+      glyph.render(ctx, accX, accY);
     } else {
       // Render the accidental in parentheses.
       parenRight?.render(ctx, accX, accY);
       accX -= parenRight?.getMetrics().width ?? 0;
       accX -= parenRightPadding;
       accX -= this.accidental.parenRightPaddingAdjustment;
-      glyph?.render(ctx, accX, accY);
-      accX -= glyph?.getMetrics().width ?? 0;
+      glyph.render(ctx, accX, accY);
+      accX -= glyph.getMetrics().width ?? 0;
       accX -= parenLeftPadding;
       parenLeft?.render(ctx, accX, accY);
     }
