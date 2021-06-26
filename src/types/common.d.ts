@@ -56,9 +56,9 @@ export interface RenderContext {
   setBackgroundFillStyle(style: string): this;
   setStrokeStyle(style: string): this;
   setShadowColor(color: string): this;
-  setShadowBlur(blur: string): this;
+  setShadowBlur(blur: number): this;
   setLineWidth(width: number): this;
-  setLineCap(cap_type: string): this;
+  setLineCap(capType: CanvasLineCap): this;
   setLineDash(dashPattern: number[]): this;
   scale(x: number, y: number): this;
   rect(x: number, y: number, width: number, height: number): this;
@@ -68,8 +68,8 @@ export interface RenderContext {
   beginPath(): this;
   moveTo(x: number, y: number): this;
   lineTo(x: number, y: number): this;
-  bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): this;
-  quadraticCurveTo(x1: number, y1: number, x2: number, y2: number): this;
+  bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this;
+  quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): this;
   arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this;
   glow(): this;
   fill(attributes?: any): this;
@@ -85,7 +85,7 @@ export interface RenderContext {
   /**
    * canvas returns TextMetrics and SVG returns SVGRect.
    */
-  measureText(text: string): { width: number; height: number };
+  measureText(text: string): { width: number; height?: number };
 }
 
 export interface TieNotes {

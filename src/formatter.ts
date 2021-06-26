@@ -116,10 +116,8 @@ function createContexts<T>(
 }
 
 // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]
-) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Formatter.DEBUG) log('Vex.Flow.Formatter', args);
 }
 

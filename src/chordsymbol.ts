@@ -15,6 +15,7 @@ import { TextFont } from './textfont';
 import { Modifier } from './modifier';
 import { FontInfo } from './types/common';
 import { StemmableNote } from './stemmablenote';
+import { Font } from './font';
 
 export interface ChordSymbolBlock {
   vAlign: boolean;
@@ -28,10 +29,8 @@ export interface ChordSymbolBlock {
 }
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]
-) {
+// eslint-disable-next-line
+function L(...args: any[]): void {
   if (ChordSymbol.DEBUG) log('Vex.Flow.ChordSymbol', args);
 }
 
@@ -117,8 +116,8 @@ export class ChordSymbol extends Modifier {
     return ix > 0 ? -1 * (acc / resolution) : 0;
   }
 
-  static get engravingFontResolution() {
-    return Flow.DEFAULT_FONT_STACK[0].getResolution();
+  static get engravingFontResolution(): number {
+    return (Flow.DEFAULT_FONT_STACK[0] as Font).getResolution();
   }
 
   static get spacingBetweenBlocks(): number {
@@ -258,10 +257,8 @@ export class ChordSymbol extends Modifier {
   // try to estimate the width of the whole chord symbol, based on the
   // sum of the widths of the individual blocks.  Also estimate how many
   // lines above/below the staff we need`
-  static format(
-    // eslint-disable-next-line
-    instances: any, state: any
-  ): boolean {
+  // eslint-disable-next-line
+  static format(instances: any, state: any): boolean {
     if (!instances || instances.length === 0) return false;
 
     let width = 0;

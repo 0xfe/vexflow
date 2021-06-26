@@ -207,7 +207,12 @@ export class TextNote extends Note {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.text, x, y);
 
-      const height = ctx.measureText(this.text).height;
+      let height = ctx.measureText(this.text).height;
+      // CanvasRenderingContext2D.measureText() does not have a height field.
+      if (typeof height === 'undefined') {
+        // TODO: Consolidate calls to ctx.measureText('M').
+        height = ctx.measureText('M').width;
+      }
 
       // Write superscript
       if (this.superscript) {

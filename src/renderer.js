@@ -66,6 +66,8 @@ export class Renderer {
       return new CanvasContext(ctx);
     }
 
+    // Modify the CanvasRenderingContext2D to include the following methods, if they do not already exist.
+    // setLineDash exists natively: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
     const methodNames = [
       'clear',
       'setFont',
