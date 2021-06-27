@@ -34,6 +34,7 @@ module.exports = (grunt) => {
         library: libraryName,
         libraryTarget: 'umd',
         libraryExport: 'default',
+        globalObject: 'this',
       },
       resolve: {
         extensions: ['.ts', '.js', '.json'],
