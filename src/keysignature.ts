@@ -6,7 +6,7 @@
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 
-import { RuntimeError } from './util';
+import { check, RuntimeError } from './util';
 import { Flow } from './flow';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
@@ -282,7 +282,7 @@ export class KeySignature extends StaveModifier {
     this.width = 0;
     this.glyphs = [];
     this.xPositions = [0]; // initialize with initial x position
-    this.accList = Flow.keySignature(this.keySpec);
+    this.accList = Flow.keySignature(check<string>(this.keySpec));
     const accList = this.accList;
     const firstAccidentalType = accList.length > 0 ? accList[0].type : undefined;
     let cancelAccList;
