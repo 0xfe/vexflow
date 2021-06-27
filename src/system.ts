@@ -42,11 +42,6 @@ export interface SystemOptions {
   noJustification: boolean;
 }
 
-export interface DebugNoteMetrics {
-  y: number;
-  voice: Voice;
-}
-
 export class System extends Element {
   protected options!: SystemOptions;
   protected factory!: Factory;
@@ -55,7 +50,7 @@ export class System extends Element {
   protected lastY?: number;
   protected parts: SystemParams[];
   protected connector?: StaveConnector;
-  protected debugNoteMetricsYs?: DebugNoteMetrics[];
+  protected debugNoteMetricsYs?: { y: number; voice: Voice }[];
 
   constructor(params: Partial<SystemOptions> = {}) {
     super();
@@ -145,7 +140,7 @@ export class System extends Element {
     let y = this.options.y;
     let startX = 0;
     let allVoices: Voice[] = [];
-    const debugNoteMetricsYs: DebugNoteMetrics[] = [];
+    const debugNoteMetricsYs: { y: number; voice: Voice }[] = [];
 
     // Join the voices for each stave.
     this.parts.forEach((part) => {
