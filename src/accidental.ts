@@ -22,6 +22,15 @@ import { Voice } from './voice';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
 
+type Line = {
+  column: number;
+  line: number;
+  flatLine: boolean;
+  dblSharpLine: boolean;
+  numAcc: number;
+  width: number;
+};
+
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -55,15 +64,6 @@ export class Accidental extends Modifier {
 
   // Arrange accidentals inside a ModifierContext.
   static format(accidentals: Accidental[], state: ModifierContextState): void {
-    type Line = {
-      column: number;
-      line: number;
-      flatLine: boolean;
-      dblSharpLine: boolean;
-      numAcc: number;
-      width: number;
-    };
-
     type AccidentalListItem = {
       y?: number;
       line: number;
