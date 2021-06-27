@@ -641,7 +641,7 @@ export const Tables = {
       spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
       very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2],
     },
-  },
+  } as Record<number, { [name: string]: number[] }>,
 
   ornamentCodes(acc: string): { code: string } {
     const ornaments: Record<string, { code: string }> = {
