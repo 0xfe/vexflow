@@ -24,7 +24,7 @@ module.exports = (grunt) => {
     `http://www.vexflow.com   http://github.com/0xfe/vexflow`;
 
   // Used for eslint
-  const SOURCES = ['./src/*.ts', './src/*.js', '!./src/header.js'];
+  const SOURCES = ['./src/*.ts', './src/*.js'];
 
   function webpackConfig(target, moduleEntry, mode, libraryName) {
     return {

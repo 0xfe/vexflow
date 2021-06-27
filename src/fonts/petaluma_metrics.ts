@@ -1,3 +1,7 @@
+/**
+ * The Petaluma font was created by Steinberg Media.
+ * https://github.com/steinbergmedia/petaluma
+ */
 export const PetalumaMetrics = {
   name: 'Petaluma',
   smufl: true,
@@ -5,12 +9,12 @@ export const PetalumaMetrics = {
   stave: {
     padding: 15,
     endPaddingMax: 15,
-    endPaddingMin: 7
+    endPaddingMin: 7,
   },
   accidental: {
     noteheadAccidentalPadding: 1,
     leftPadding: 2,
-    accidentalSpacing: 3
+    accidentalSpacing: 3,
   },
   clef: {
     default: {
