@@ -3,13 +3,15 @@
 const path = require('path');
 const webpack = require('webpack');
 const child_process = require('child_process');
+const InjectPlugin = require('webpack-inject-plugin').default;
+const ENTRY_ORDER = require('webpack-inject-plugin').ENTRY_ORDER;
 
 module.exports = (grunt) => {
   const BASE_DIR = __dirname;
   const BUILD_DIR = path.join(BASE_DIR, 'build');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
-  const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.ts');
+  const MODULE_ENTRY_SRC = path.join(BASE_DIR, 'src/index.ts');
   const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.js');
   const TARGET_RAW = 'vexflow-debug.js';
   const TARGET_MIN = 'vexflow-min.js';
@@ -56,17 +58,26 @@ module.exports = (grunt) => {
         ],
       },
       plugins: [
-        new webpack.DefinePlugin({
-          _VEXFLOW_VERSION_: JSON.stringify(packageJSON.version),
-          _VEXFLOW_BUILD_: JSON.stringify(GIT_COMMIT_HASH),
+        new InjectPlugin(function () {
+          // Both Vex.Flow and Vex.Flow.Test will have the VERSION and BUILD properties.
+          const im =
+            moduleEntry === MODULE_ENTRY_SRC
+              ? `import { Vex } from './src/vex';\n`
+              : `import { VexFlowTests } from './tests/vexflow_test_helpers';\n`;
+          const vf = moduleEntry === MODULE_ENTRY_SRC ? 'Vex.Flow' : 'Vex.Flow.Test';
+          return (
+            im +
+            `${vf}.VERSION = ${JSON.stringify(packageJSON.version)};\n` +
+            `${vf}.BUILD = ${JSON.stringify(GIT_COMMIT_HASH)};`
+          );
         }),
         new webpack.BannerPlugin(BANNER),
       ],
     };
   }
 
-  const webpackProd = webpackConfig(TARGET_MIN, MODULE_ENTRY, 'production', 'Vex');
-  const webpackDev = webpackConfig(TARGET_RAW, MODULE_ENTRY, 'development', 'Vex');
+  const webpackProd = webpackConfig(TARGET_MIN, MODULE_ENTRY_SRC, 'production', 'Vex');
+  const webpackDev = webpackConfig(TARGET_RAW, MODULE_ENTRY_SRC, 'development', 'Vex');
   const webpackTest = webpackConfig(TARGET_TESTS, MODULE_ENTRY_TESTS, 'development', 'VFTests');
 
   grunt.initConfig({
