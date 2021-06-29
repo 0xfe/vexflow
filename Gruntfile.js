@@ -58,19 +58,18 @@ module.exports = (grunt) => {
         ],
       },
       plugins: [
+        // Add VERSION and BUILD properties to both Vex.Flow and Vex.Flow.Test.
         new InjectPlugin(function () {
-          // Both Vex.Flow and Vex.Flow.Test will have the VERSION and BUILD properties.
-          const im =
-            moduleEntry === MODULE_ENTRY_SRC
-              ? `import { Vex } from './src/vex';\n`
-              : `import { VexFlowTests } from './tests/vexflow_test_helpers';\n`;
-          const vf = moduleEntry === MODULE_ENTRY_SRC ? 'Vex.Flow' : 'Vex.Flow.Test';
-          return (
-            im +
-            `${vf}.VERSION = ${JSON.stringify(packageJSON.version)};\n` +
-            `${vf}.BUILD = ${JSON.stringify(GIT_COMMIT_HASH)};`
-          );
+          const isVexSRC = moduleEntry === MODULE_ENTRY_SRC;
+          const importVex = isVexSRC
+            ? `import { Vex } from './src/vex';`
+            : `import { VexFlowTests } from './tests/vexflow_test_helpers';`;
+          const vf = isVexSRC ? 'Vex.Flow' : 'Vex.Flow.Test';
+          return `${importVex}
+            ${vf}.VERSION = "${packageJSON.version}";
+            ${vf}.BUILD = "${GIT_COMMIT_HASH}";`;
         }),
+        // Add a banner at the top of the file.
         new webpack.BannerPlugin(BANNER),
       ],
     };
