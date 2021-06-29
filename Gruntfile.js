@@ -146,6 +146,8 @@ module.exports = (grunt) => {
         options: {
           out: 'build/docs',
           name: 'vexflow',
+          excludeProtected: true,
+          excludePrivate: true,
         },
         src: ['./typedoc.ts'],
       },
