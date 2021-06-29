@@ -4,7 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const child_process = require('child_process');
 const InjectPlugin = require('webpack-inject-plugin').default;
-const ENTRY_ORDER = require('webpack-inject-plugin').ENTRY_ORDER;
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (grunt) => {
   const BASE_DIR = __dirname;
@@ -72,6 +72,14 @@ module.exports = (grunt) => {
         // Add a banner at the top of the file.
         new webpack.BannerPlugin(BANNER),
       ],
+      optimization: {
+        minimizer: [
+          new TerserPlugin({
+            // Tell webpack 5 to NOT extract the banner into a separate file.
+            extractComments: false,
+          }),
+        ],
+      },
     };
   }
 
