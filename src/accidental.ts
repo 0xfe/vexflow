@@ -9,7 +9,7 @@
 //
 // See `tests/accidental_tests.js` for usage examples.
 
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, check } from './util';
 import { Fraction } from './fraction';
 import { Flow } from './flow';
 import { Music } from './music';
@@ -506,8 +506,8 @@ export class Accidental extends Modifier {
 
   getWidth(): number {
     const parenWidth = this.cautionary
-      ? (this.parenLeft?.getMetrics().width ?? 0) +
-        (this.parenRight?.getMetrics().width ?? 0) +
+      ? check<Glyph>(this.parenLeft).getMetrics().width +
+        check<Glyph>(this.parenRight).getMetrics().width +
         this.render_options.parenLeftPadding +
         this.render_options.parenRightPadding
       : 0;
@@ -568,14 +568,14 @@ export class Accidental extends Modifier {
       glyph.render(ctx, accX, accY);
     } else {
       // Render the accidental in parentheses.
-      parenRight?.render(ctx, accX, accY);
-      accX -= parenRight?.getMetrics().width ?? 0;
+      check<Glyph>(parenRight).render(ctx, accX, accY);
+      accX -= check<Glyph>(parenRight).getMetrics().width ?? 0;
       accX -= parenRightPadding;
       accX -= this.accidental.parenRightPaddingAdjustment;
       glyph.render(ctx, accX, accY);
       accX -= glyph.getMetrics().width ?? 0;
       accX -= parenLeftPadding;
-      parenLeft?.render(ctx, accX, accY);
+      check<Glyph>(parenLeft).render(ctx, accX, accY);
     }
   }
 }
