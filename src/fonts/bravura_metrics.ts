@@ -1,3 +1,7 @@
+/**
+ * The Bravura font was created by Daniel Spreadbury @ Steinberg.
+ * https://github.com/steinbergmedia/bravura/
+ */
 export const BravuraMetrics = {
   name: 'Bravura',
   smufl: true,
@@ -5,12 +9,12 @@ export const BravuraMetrics = {
   stave: {
     padding: 12,
     endPaddingMax: 10,
-    endPaddingMin: 5
+    endPaddingMin: 5,
   },
   accidental: {
     noteheadAccidentalPadding: 1,
     leftPadding: 2,
-    accidentalSpacing: 3
+    accidentalSpacing: 3,
   },
   clef: {
     default: {

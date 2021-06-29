@@ -1,28 +1,32 @@
 /* global module, __dirname, process, require */
 
 const path = require('path');
+const webpack = require('webpack');
+const child_process = require('child_process');
+const InjectPlugin = require('webpack-inject-plugin').default;
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (grunt) => {
-  const BANNER = [
-    '/**!',
-    ' * VexFlow <%= pkg.version %> built on <%= grunt.template.today("yyyy-mm-dd") %>.',
-    ' * Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>',
-    ' *',
-    ' * http://www.vexflow.com  http://github.com/0xfe/vexflow',
-    ' */',
-  ].join('\n');
   const BASE_DIR = __dirname;
   const BUILD_DIR = path.join(BASE_DIR, 'build');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
-  const MODULE_ENTRY = path.join(BASE_DIR, 'src/index.ts');
+  const MODULE_ENTRY_SRC = path.join(BASE_DIR, 'src/index.ts');
   const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.js');
   const TARGET_RAW = 'vexflow-debug.js';
   const TARGET_MIN = 'vexflow-min.js';
   const TARGET_TESTS = 'vexflow-tests.js';
 
+  // Get current build information from git and package.json.
+  const GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
+  const packageJSON = grunt.file.readJSON('package.json');
+  const BANNER =
+    `VexFlow ${packageJSON.version}   ${new Date().toISOString()}   ${GIT_COMMIT_HASH}\n` +
+    `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
+    `http://www.vexflow.com   http://github.com/0xfe/vexflow`;
+
   // Used for eslint
-  const SOURCES = ['./src/*.ts', './src/*.js', '!./src/header.js'];
+  const SOURCES = ['./src/*.ts', './src/*.js'];
 
   function webpackConfig(target, moduleEntry, mode, libraryName) {
     return {
@@ -53,15 +57,38 @@ module.exports = (grunt) => {
           },
         ],
       },
+      plugins: [
+        // Add VERSION and BUILD properties to both Vex.Flow and Vex.Flow.Test.
+        new InjectPlugin(function () {
+          const isVexSRC = moduleEntry === MODULE_ENTRY_SRC;
+          const importVex = isVexSRC
+            ? `import { Vex } from './src/vex';`
+            : `import { VexFlowTests } from './tests/vexflow_test_helpers';`;
+          const vf = isVexSRC ? 'Vex.Flow' : 'Vex.Flow.Test';
+          return `${importVex}
+            ${vf}.VERSION = "${packageJSON.version}";
+            ${vf}.BUILD = "${GIT_COMMIT_HASH}";`;
+        }),
+        // Add a banner at the top of the file.
+        new webpack.BannerPlugin(BANNER),
+      ],
+      optimization: {
+        minimizer: [
+          new TerserPlugin({
+            // Tell webpack 5 to NOT extract the banner into a separate file.
+            extractComments: false,
+          }),
+        ],
+      },
     };
   }
 
-  const webpackProd = webpackConfig(TARGET_MIN, MODULE_ENTRY, 'production', 'Vex');
-  const webpackDev = webpackConfig(TARGET_RAW, MODULE_ENTRY, 'development', 'Vex');
+  const webpackProd = webpackConfig(TARGET_MIN, MODULE_ENTRY_SRC, 'production', 'Vex');
+  const webpackDev = webpackConfig(TARGET_RAW, MODULE_ENTRY_SRC, 'development', 'Vex');
   const webpackTest = webpackConfig(TARGET_TESTS, MODULE_ENTRY_TESTS, 'development', 'VFTests');
 
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: packageJSON,
     webpack: {
       build: webpackProd,
       buildDev: webpackDev,
@@ -156,7 +183,6 @@ module.exports = (grunt) => {
     clean: [BUILD_DIR],
   });
 
-  // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -168,7 +194,7 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-webpack');
   grunt.loadNpmTasks('grunt-concurrent');
 
-  // Default task(s).
+  // Default tasks that run when you type `grunt`.
   grunt.registerTask('default', [
     'clean',
     'eslint',
@@ -177,7 +203,9 @@ module.exports = (grunt) => {
     'webpack:buildTest',
     'typedoc',
   ]);
+
   grunt.registerTask('watch', 'Watch src/ and tests/ concurrently', ['clean', 'eslint', 'concurrent']);
+
   grunt.registerTask('test', 'Run qunit tests.', [
     'clean',
     'webpack:build',
