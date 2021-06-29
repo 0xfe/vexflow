@@ -58,16 +58,14 @@ export interface StaveNoteStruct extends NoteStruct {
   stroke_px?: number;
   glyph_font_scale?: number;
   stem_direction?: number;
-  auto_stem: boolean;
+  auto_stem?: boolean;
   octave_shift?: number;
-  clef: string;
+  clef?: string;
 }
 
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.
-function L(
-  ...args: // eslint-disable-next-line
-  any[]
-) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (StaveNote.DEBUG) log('Vex.Flow.StaveNote', args);
 }
 

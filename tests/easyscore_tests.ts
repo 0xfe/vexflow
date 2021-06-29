@@ -203,7 +203,7 @@ const EasyScoreTests = {
   },
 
   drawBasicTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 350);
+    const vf = VexFlowTests.makeFactory(options, 600, 350);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -231,7 +231,7 @@ const EasyScoreTests = {
   },
 
   drawAccidentalsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 350);
+    const vf = VexFlowTests.makeFactory(options, 600, 350);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -259,7 +259,7 @@ const EasyScoreTests = {
   },
 
   drawBeamsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 250);
+    const vf = VexFlowTests.makeFactory(options, 600, 250);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -281,7 +281,7 @@ const EasyScoreTests = {
   },
 
   drawTupletsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 250);
+    const vf = VexFlowTests.makeFactory(options, 600, 250);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -308,7 +308,7 @@ const EasyScoreTests = {
   },
 
   drawDotsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 250);
+    const vf = VexFlowTests.makeFactory(options, 600, 250);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -326,7 +326,7 @@ const EasyScoreTests = {
   },
 
   drawOptionsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 500, 200);
+    const vf = VexFlowTests.makeFactory(options, 500, 200);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -364,7 +364,7 @@ const EasyScoreTests = {
   },
 
   drawFingeringsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 500, 200);
+    const vf = VexFlowTests.makeFactory(options, 500, 200);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 

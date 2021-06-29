@@ -62,6 +62,8 @@ export interface ParsedNote {
 }
 
 export interface NoteStruct {
+  /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
+  duration: string;
   line?: number;
   /** The number of dots, which affects the duration. */
   dots?: number;
@@ -70,8 +72,6 @@ export interface NoteStruct {
   type?: string;
   align_center?: boolean;
   duration_override?: Fraction;
-  /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
-  duration: string;
 }
 
 /**
