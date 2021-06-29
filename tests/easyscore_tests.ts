@@ -8,15 +8,13 @@ import { System } from '../src/system';
 import { FretHandFinger } from '../src/frethandfinger';
 import { QUnit, expect, Assert, TestOptions } from './declarations';
 import { Articulation } from '../src/articulation';
+import { Flow } from '../src/flow';
+import { VexFlowTests } from './vexflow_test_helpers';
 
-// eslint-disable-next-line
-declare const VF: any; // TODO: Remove after migrating vexflow_test_helpers.js.
-// eslint-disable-next-line
-declare let Vex: any; // TODO: Remove after migrating vex.js.
+const VF = Flow;
 
 const EasyScoreTests = {
   Start: function (): void {
-    const VFT = Vex.Flow.Test;
     QUnit.module('EasyScore');
     QUnit.test('Basic', EasyScoreTests.basic);
     QUnit.test('Accidentals', EasyScoreTests.accidentals);
@@ -24,13 +22,13 @@ const EasyScoreTests = {
     QUnit.test('Chords', EasyScoreTests.chords);
     QUnit.test('Dots', EasyScoreTests.dots);
     QUnit.test('Options', EasyScoreTests.options);
-    VFT.runTests('Draw Basic', EasyScoreTests.drawBasicTest);
-    VFT.runTests('Draw Accidentals', EasyScoreTests.drawAccidentalsTest);
-    VFT.runTests('Draw Beams', EasyScoreTests.drawBeamsTest);
-    VFT.runTests('Draw Tuplets', EasyScoreTests.drawTupletsTest);
-    VFT.runTests('Draw Dots', EasyScoreTests.drawDotsTest);
-    VFT.runTests('Draw Options', EasyScoreTests.drawOptionsTest);
-    VFT.runTests('Draw Fingerings', EasyScoreTests.drawFingeringsTest);
+    VexFlowTests.runTests('Draw Basic', EasyScoreTests.drawBasicTest);
+    VexFlowTests.runTests('Draw Accidentals', EasyScoreTests.drawAccidentalsTest);
+    VexFlowTests.runTests('Draw Beams', EasyScoreTests.drawBeamsTest);
+    VexFlowTests.runTests('Draw Tuplets', EasyScoreTests.drawTupletsTest);
+    VexFlowTests.runTests('Draw Dots', EasyScoreTests.drawDotsTest);
+    VexFlowTests.runTests('Draw Options', EasyScoreTests.drawOptionsTest);
+    VexFlowTests.runTests('Draw Fingerings', EasyScoreTests.drawFingeringsTest);
   },
 
   basic: function (assert: Assert): void {
@@ -204,7 +202,7 @@ const EasyScoreTests = {
   },
 
   drawBasicTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 350);
+    const vf = VexFlowTests.makeFactory(options, 600, 350);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -232,7 +230,7 @@ const EasyScoreTests = {
   },
 
   drawAccidentalsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 350);
+    const vf = VexFlowTests.makeFactory(options, 600, 350);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -260,7 +258,7 @@ const EasyScoreTests = {
   },
 
   drawBeamsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 250);
+    const vf = VexFlowTests.makeFactory(options, 600, 250);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -282,7 +280,7 @@ const EasyScoreTests = {
   },
 
   drawTupletsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 250);
+    const vf = VexFlowTests.makeFactory(options, 600, 250);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -309,7 +307,7 @@ const EasyScoreTests = {
   },
 
   drawDotsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 600, 250);
+    const vf = VexFlowTests.makeFactory(options, 600, 250);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -327,7 +325,7 @@ const EasyScoreTests = {
   },
 
   drawOptionsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 500, 200);
+    const vf = VexFlowTests.makeFactory(options, 500, 200);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -365,7 +363,7 @@ const EasyScoreTests = {
   },
 
   drawFingeringsTest: function (options: TestOptions): void {
-    const vf = VF.Test.makeFactory(options, 500, 200);
+    const vf = VexFlowTests.makeFactory(options, 500, 200);
     const score: EasyScore = vf.EasyScore();
     const system: System = vf.System();
 
@@ -410,7 +408,5 @@ const EasyScoreTests = {
     assert.equal(note3_modifier2.getPosition(), VF.Modifier.Position.LEFT);
   },
 };
-
-// Vex.Flow.Test.EasyScore = EasyScoreTests;
 
 export { EasyScoreTests };
