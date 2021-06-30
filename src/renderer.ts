@@ -55,11 +55,11 @@ export class Renderer {
     return ctx;
   }
 
-  static getCanvasContext(elementId: string, width: number, height: number, background: string): RenderContext {
+  static getCanvasContext(elementId: string, width: number, height: number, background?: string): RenderContext {
     return Renderer.buildContext(elementId, Renderer.Backends.CANVAS, width, height, background);
   }
 
-  static getSVGContext(elementId: string, width: number, height: number, background: string): RenderContext {
+  static getSVGContext(elementId: string, width: number, height: number, background?: string): RenderContext {
     return Renderer.buildContext(elementId, Renderer.Backends.SVG, width, height, background);
   }
 
