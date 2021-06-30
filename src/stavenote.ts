@@ -368,10 +368,10 @@ export class StaveNote extends StemmableNote {
   constructor(noteStruct: StaveNoteStruct) {
     super(noteStruct);
     this.setAttribute('type', 'StaveNote');
-    // Ledger Lines default width 2.0
-    this.ledgerLineStyle = { lineWidth: 2.0 };
-    this.clef = noteStruct.clef;
-    this.octave_shift = noteStruct.octave_shift;
+
+    this.ledgerLineStyle = { lineWidth: 2.0 }; // Set default width of ledger lines to 2.0.
+    this.clef = noteStruct.clef ?? 'treble';
+    this.octave_shift = noteStruct.octave_shift ?? 0;
 
     // Pull note rendering properties
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
@@ -410,7 +410,7 @@ export class StaveNote extends StemmableNote {
     if (noteStruct.auto_stem) {
       this.autoStem();
     } else {
-      this.setStemDirection(noteStruct.stem_direction);
+      this.setStemDirection(noteStruct.stem_direction ?? Stem.UP);
     }
     this.reset();
     this.buildFlag();
