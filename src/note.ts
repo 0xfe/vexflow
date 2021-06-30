@@ -71,6 +71,8 @@ export interface ParsedNote {
 }
 
 export interface NoteStruct {
+  /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
+  duration: string;
   line?: number;
   /** The number of dots, which affects the duration. */
   dots?: number;
@@ -79,8 +81,6 @@ export interface NoteStruct {
   type?: string;
   align_center?: boolean;
   duration_override?: Fraction;
-  /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
-  duration: string;
 }
 
 /**
@@ -547,7 +547,9 @@ export abstract class Note extends Tickable {
   /** Get the coordinates for where modifiers begin. */
   getModifierStartXY(
     // eslint-disable-next-line
-    position?: number, index?: number, options?: any
+    position?: number,
+    index?: number,
+    options?: any
   ): { x: number; y: number } {
     if (!this.preFormatted) {
       throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
