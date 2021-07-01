@@ -37,7 +37,7 @@ module.exports = (grunt) => {
         library: libraryName,
         libraryTarget: 'umd',
         libraryExport: 'default',
-        globalObject: 'this',
+        globalObject: `typeof window !== 'undefined' ? window : this`,
         publicPath: 'auto',
       },
       resolve: {
