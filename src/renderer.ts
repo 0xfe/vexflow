@@ -13,7 +13,7 @@ export type ContextBuilder = typeof Renderer.getSVGContext | typeof Renderer.get
  * Support Canvas & SVG rendering contexts.
  */
 export class Renderer {
-  protected elementId?: string | HTMLElement;
+  protected elementId?: string | HTMLCanvasElement;
   protected element: HTMLCanvasElement;
   protected backend: number;
 
@@ -43,7 +43,7 @@ export class Renderer {
   static lastContext: RenderContext | undefined = undefined;
 
   static buildContext(
-    elementId: string | HTMLElement,
+    elementId: string | HTMLCanvasElement,
     backend: number,
     width: number,
     height: number,
@@ -145,18 +145,20 @@ export class Renderer {
     context.stroke();
   }
 
-  constructor(elementId: string | HTMLElement, backend: number) {
+  constructor(elementId: string | HTMLCanvasElement, backend: number) {
     if (!elementId) {
       throw new RuntimeError('BadArgument', 'Invalid id for renderer.');
     }
 
-    this.element = document.getElementById(elementId as string) as HTMLCanvasElement;
-    if (!this.element) this.element = elementId as HTMLCanvasElement;
+    this.element =
+      typeof elementId === 'string' && typeof document !== 'undefined'
+        ? (document.getElementById(elementId as string) as HTMLCanvasElement)
+        : (elementId as HTMLCanvasElement);
 
     // Verify backend and create context
     this.backend = backend;
     if (this.backend === Renderer.Backends.CANVAS) {
-      if (!this.element.getContext) {
+      if (!this.element?.getContext) {
         throw new RuntimeError('BadElement', `Can't get canvas context from element: ${elementId}`);
       }
       this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
