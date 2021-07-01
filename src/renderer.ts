@@ -146,8 +146,7 @@ export class Renderer {
   }
 
   constructor(elementId: string | HTMLElement, backend: number) {
-    this.elementId = elementId;
-    if (this.elementId === undefined) {
+    if (!elementId) {
       throw new RuntimeError('BadArgument', 'Invalid id for renderer.');
     }
 
@@ -170,9 +169,6 @@ export class Renderer {
 
   resize(width: number, height: number): this {
     if (this.backend === Renderer.Backends.CANVAS) {
-      if (!this.element.getContext) {
-        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${this.elementId}`);
-      }
       [width, height] = CanvasContext.SanitizeCanvasDims(width, height);
 
       const devicePixelRatio = window.devicePixelRatio || 1;
