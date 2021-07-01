@@ -118,8 +118,8 @@ export class System extends Element {
     // Update the start position of all staves.
     this.parts.forEach((part) => part.stave.setNoteStartX(startX));
     const justifyWidth = this.options.noPadding
-      ? this.options.width - Stave.defaultPadding
-      : this.options.width - (startX - this.options.x) - this.musicFont.lookupMetric('stave.padding');
+      ? this.options.width - this.options.x
+      : this.options.width - (startX - this.options.x) - Stave.defaultPadding;
 
     formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth);
 
