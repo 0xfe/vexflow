@@ -512,7 +512,7 @@ export class Accidental extends Modifier {
         this.render_options.parenRightPadding
       : 0;
 
-    return (this.glyph.getMetrics().width ?? 0) + parenWidth;
+    return this.glyph.getMetrics().width + parenWidth;
   }
 
   // Attach this accidental to `note`, which must be a `StaveNote`.
@@ -569,11 +569,11 @@ export class Accidental extends Modifier {
     } else {
       // Render the accidental in parentheses.
       check<Glyph>(parenRight).render(ctx, accX, accY);
-      accX -= check<Glyph>(parenRight).getMetrics().width ?? 0;
+      accX -= check<Glyph>(parenRight).getMetrics().width;
       accX -= parenRightPadding;
       accX -= this.accidental.parenRightPaddingAdjustment;
       glyph.render(ctx, accX, accY);
-      accX -= glyph.getMetrics().width ?? 0;
+      accX -= glyph.getMetrics().width;
       accX -= parenLeftPadding;
       check<Glyph>(parenLeft).render(ctx, accX, accY);
     }
