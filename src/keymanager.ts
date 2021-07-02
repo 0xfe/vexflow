@@ -68,9 +68,7 @@ export class KeyManager {
     return this;
   }
 
-  getAccidental(
-    key: string
-  ): {
+  getAccidental(key: string): {
     note: string;
     accidental?: string;
     change?: boolean;
@@ -84,9 +82,7 @@ export class KeyManager {
     };
   }
 
-  selectNote(
-    note: string
-  ): {
+  selectNote(note: string): {
     note: string;
     accidental?: string;
     change: boolean;
