@@ -9,7 +9,7 @@
 //
 // See `tests/accidental_tests.js` for usage examples.
 
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, check } from './util';
 import { Fraction } from './fraction';
 import { Flow } from './flow';
 import { Music } from './music';
@@ -17,23 +17,61 @@ import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { GraceNoteGroup } from './gracenotegroup';
 import { GraceNote } from './gracenote';
+import { ModifierContextState } from './modifiercontext';
+import { Voice } from './voice';
+import { Note } from './note';
+import { StaveNote } from './stavenote';
+
+type Line = {
+  column: number;
+  line: number;
+  flatLine: boolean;
+  dblSharpLine: boolean;
+  numAcc: number;
+  width: number;
+};
 
 // To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
-function L(...args) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Accidental.DEBUG) log('Vex.Flow.Accidental', args);
 }
-
-const getGlyphWidth = (glyph) => glyph.getMetrics().width;
 
 // An `Accidental` inherits from `Modifier`, and is formatted within a
 // `ModifierContext`.
 export class Accidental extends Modifier {
-  static get CATEGORY() {
+  type: string;
+  static DEBUG: boolean;
+  protected accidental: {
+    code: string;
+    parenRightPaddingAdjustment: number;
+  };
+  protected render_options: {
+    parenLeftPadding: number;
+    stroke_px: number;
+    font_scale: number;
+    parenRightPadding: number;
+  };
+  protected cautionary: boolean;
+  // initialised in reset which is called by the constructor
+  protected glyph!: Glyph;
+  protected parenRight?: Glyph;
+  protected parenLeft?: Glyph;
+
+  static get CATEGORY(): string {
     return 'accidentals';
   }
 
   // Arrange accidentals inside a ModifierContext.
-  static format(accidentals, state) {
+  static format(accidentals: Accidental[], state: ModifierContextState): void {
+    type AccidentalListItem = {
+      y?: number;
+      line: number;
+      shift: number;
+      acc: Accidental;
+      lineSpace?: number;
+    };
+
     const musicFont = Flow.DEFAULT_FONT_STACK[0];
     const noteheadAccidentalPadding = musicFont.lookupMetric('accidental.noteheadAccidentalPadding');
     const leftShift = state.left_shift + noteheadAccidentalPadding;
@@ -43,14 +81,14 @@ export class Accidental extends Modifier {
     // If there are no accidentals, we needn't format their positions
     if (!accidentals || accidentals.length === 0) return;
 
-    const accList = [];
+    const accList: AccidentalListItem[] = [];
     let prevNote = null;
     let shiftL = 0;
 
     // First determine the accidentals' Y positions from the note.keys
     for (let i = 0; i < accidentals.length; ++i) {
       const acc = accidentals[i];
-      const note = acc.getNote();
+      const note = acc.getNote() as StaveNote;
       const stave = note.getStave();
       const index = acc.checkIndex();
       const props = note.getKeyProps()[index];
@@ -62,7 +100,7 @@ export class Accidental extends Modifier {
         prevNote = note;
       }
       if (stave) {
-        const lineSpace = stave.options.spacing_between_lines_px;
+        const lineSpace = stave.getOptions().spacing_between_lines_px;
         const y = stave.getYForLine(props.line);
         const accLine = Math.round((y / lineSpace) * 2) / 2;
         accList.push({ y, line: accLine, shift: shiftL, acc, lineSpace });
@@ -76,7 +114,7 @@ export class Accidental extends Modifier {
 
     // FIXME: Confusing name. Each object in this array has a property called `line`.
     // So if this is a list of lines, you end up with: `line.line` which is very awkward.
-    const lineList = [];
+    const lineList: Line[] = [];
 
     // amount by which all accidentals must be shifted right or left for
     // stem flipping, notehead shifting concerns.
@@ -95,6 +133,7 @@ export class Accidental extends Modifier {
           dblSharpLine: true,
           numAcc: 0,
           width: 0,
+          column: 0,
         });
       }
       // if this accidental is not a flat, the accidental needs 3.0 lines lower
@@ -161,15 +200,15 @@ export class Accidental extends Modifier {
       }
 
       // Gets an a line from the `lineList`, relative to the current group
-      const getGroupLine = (index) => lineList[groupStart + index];
-      const getGroupLines = (indexes) => indexes.map(getGroupLine);
-      const lineDifference = (indexA, indexB) => {
+      const getGroupLine = (index: number) => lineList[groupStart + index];
+      const getGroupLines = (indexes: number[]) => indexes.map(getGroupLine);
+      const lineDifference = (indexA: number, indexB: number) => {
         const [a, b] = getGroupLines([indexA, indexB]).map((item) => item.line);
         return a - b;
       };
 
-      const notColliding = (...indexPairs) =>
-        indexPairs.map(getGroupLines).every((lines) => !this.checkCollision(...lines));
+      const notColliding = (...indexPairs: number[][]) =>
+        indexPairs.map(getGroupLines).every(([line1, line2]) => !this.checkCollision(line1, line2));
 
       // Set columns for the lines in this group:
       const groupLength = groupEnd - groupStart + 1;
@@ -261,8 +300,8 @@ export class Accidental extends Modifier {
     // parallel columns.
 
     // track each column's max width, which will be used as initial shift of later columns:
-    const columnWidths = [];
-    const columnXOffsets = [];
+    const columnWidths: number[] = [];
+    const columnXOffsets: number[] = [];
     for (let i = 0; i <= totalColumns; i++) {
       columnWidths[i] = 0;
       columnXOffsets[i] = 0;
@@ -304,7 +343,7 @@ export class Accidental extends Modifier {
   }
 
   // Helper function to determine whether two lines of accidentals collide vertically
-  static checkCollision(line1, line2) {
+  static checkCollision(line1: Line, line2: Line): boolean {
     let clearance = line2.line - line1.line;
     let clearanceRequired = 3;
     // But less clearance is required for certain accidentals: b, bb and ##.
@@ -325,9 +364,9 @@ export class Accidental extends Modifier {
   // Use this method to automatically apply accidentals to a set of `voices`.
   // The accidentals will be remembered between all the voices provided.
   // Optionally, you can also provide an initial `keySignature`.
-  static applyAccidentals(voices, keySignature) {
-    const tickPositions = [];
-    const tickNoteMap = {};
+  static applyAccidentals(voices: Voice[], keySignature: string): void {
+    const tickPositions: number[] = [];
+    const tickNoteMap: Record<number, Note[]> = {};
 
     // Sort the tickables in each voice by their tick position in the voice
     voices.forEach((voice) => {
@@ -362,14 +401,14 @@ export class Accidental extends Modifier {
 
       // Array to store all pitches that modified accidental states
       // at this tick position
-      const modifiedPitches = [];
+      const modifiedPitches: string[] = [];
 
-      const processNote = (note) => {
+      const processNote = (note: Note) => {
         if (note.isRest() || note.shouldIgnoreTicks()) return;
 
         // Go through each key and determine if an accidental should be
         // applied
-        note.keys.forEach((keyString, keyIndex) => {
+        note.keys.forEach((keyString: string, keyIndex: number) => {
           const key = music.getNoteParts(keyString.split('/')[0]);
 
           // Force a natural for every key without an accidental
@@ -394,7 +433,7 @@ export class Accidental extends Modifier {
             const accidental = new Accidental(accidentalString);
 
             // Attach the accidental to the StaveNote
-            note.addAccidental(keyIndex, accidental);
+            (note as StaveNote).addAccidental(keyIndex, accidental);
 
             // Add the pitch to list of pitches that modified accidentals
             modifiedPitches.push(pitch);
@@ -404,7 +443,7 @@ export class Accidental extends Modifier {
         // process grace notes
         note.getModifiers().forEach((modifier) => {
           if (modifier.getCategory() === GraceNoteGroup.CATEGORY) {
-            modifier.getGraceNotes().forEach(processNote);
+            (modifier as GraceNoteGroup).getGraceNotes().forEach(processNote);
           }
         });
       };
@@ -416,7 +455,7 @@ export class Accidental extends Modifier {
   // Create accidental. `type` can be a value from the
   // `Vex.Flow.accidentalCodes.accidentals` table in `tables.js`. For
   // example: `#`, `##`, `b`, `n`, etc.
-  constructor(type = null) {
+  constructor(type: string) {
     super();
     this.setAttribute('type', 'Accidental');
 
@@ -444,13 +483,11 @@ export class Accidental extends Modifier {
 
     // Cautionary accidentals have parentheses around them
     this.cautionary = false;
-    this.parenLeft = null;
-    this.parenRight = null;
 
     this.reset();
   }
 
-  reset() {
+  reset(): void {
     const fontScale = this.render_options.font_scale;
     this.glyph = new Glyph(this.accidental.code, fontScale);
     this.glyph.setOriginX(1.0);
@@ -463,23 +500,23 @@ export class Accidental extends Modifier {
     }
   }
 
-  getCategory() {
+  getCategory(): string {
     return Accidental.CATEGORY;
   }
 
-  getWidth() {
+  getWidth(): number {
     const parenWidth = this.cautionary
-      ? getGlyphWidth(this.parenLeft) +
-        getGlyphWidth(this.parenRight) +
+      ? check<Glyph>(this.parenLeft).getMetrics().width +
+        check<Glyph>(this.parenRight).getMetrics().width +
         this.render_options.parenLeftPadding +
         this.render_options.parenRightPadding
       : 0;
 
-    return getGlyphWidth(this.glyph) + parenWidth;
+    return this.glyph.getMetrics().width + parenWidth;
   }
 
   // Attach this accidental to `note`, which must be a `StaveNote`.
-  setNote(note) {
+  setNote(note: Note): this {
     if (!note) {
       throw new RuntimeError('ArgumentError', `Bad note value: ${note}`);
     }
@@ -491,10 +528,11 @@ export class Accidental extends Modifier {
       this.render_options.font_scale = 25;
       this.reset();
     }
+    return this;
   }
 
   // If called, draws parenthesis around accidental.
-  setAsCautionary() {
+  setAsCautionary(): this {
     this.cautionary = true;
     this.render_options.font_scale = 28;
     this.reset();
@@ -502,9 +540,8 @@ export class Accidental extends Modifier {
   }
 
   // Render accidental onto canvas.
-  draw() {
+  draw(): void {
     const {
-      context,
       type,
       position,
       index,
@@ -517,7 +554,7 @@ export class Accidental extends Modifier {
       render_options: { parenLeftPadding, parenRightPadding },
     } = this;
 
-    this.checkContext();
+    const ctx = this.checkContext();
     const note = this.checkAttachedNote();
     this.setRendered();
 
@@ -528,17 +565,17 @@ export class Accidental extends Modifier {
     L('Rendering: ', type, accX, accY);
 
     if (!cautionary) {
-      glyph.render(context, accX, accY);
+      glyph.render(ctx, accX, accY);
     } else {
       // Render the accidental in parentheses.
-      parenRight.render(context, accX, accY);
-      accX -= getGlyphWidth(parenRight);
+      check<Glyph>(parenRight).render(ctx, accX, accY);
+      accX -= check<Glyph>(parenRight).getMetrics().width;
       accX -= parenRightPadding;
       accX -= this.accidental.parenRightPaddingAdjustment;
-      glyph.render(context, accX, accY);
-      accX -= getGlyphWidth(glyph);
+      glyph.render(ctx, accX, accY);
+      accX -= glyph.getMetrics().width;
       accX -= parenLeftPadding;
-      parenLeft.render(context, accX, accY);
+      check<Glyph>(parenLeft).render(ctx, accX, accY);
     }
   }
 }
