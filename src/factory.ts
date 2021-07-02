@@ -27,7 +27,7 @@ import { StaveNote, StaveNoteStruct } from './stavenote';
 import { GlyphNote, GlyphNoteOptions } from './glyphnote';
 import { RepeatNote } from './repeatnote';
 import { StaveConnector } from './staveconnector';
-import { System } from './system';
+import { System, SystemOptions } from './system';
 import { TickContext } from './tickcontext';
 import { Tuplet, TupletOptions } from './tuplet';
 import { Voice } from './voice';
@@ -338,14 +338,7 @@ export class Factory {
     return group;
   }
 
-  Accidental(paramsP: { type?: string } = {}): Accidental {
-    const params = {
-      ...{
-        type: undefined,
-      },
-      ...paramsP,
-    };
-
+  Accidental(params: { type: string }): Accidental {
     const accid = new Accidental(params.type);
     accid.setContext(this.context);
     return accid;
@@ -643,8 +636,7 @@ export class Factory {
     return textBracket;
   }
 
-  // eslint-disable-next-line
-  System(params: any = {}): System {
+  System(params: Partial<SystemOptions> = {}): System {
     params.factory = this;
     const system = new System(params).setContext(this.context);
     this.systems.push(system);
