@@ -23,8 +23,7 @@ export enum VoiceMode {
 }
 
 /**
- * Voice class is mainly a container
- * object to group `Tickables` for formatting.
+ * `Voice` is mainly a container object to group `Tickables` for formatting.
  */
 export class Voice extends Element {
   protected resolutionMultiplier: number;
@@ -43,11 +42,9 @@ export class Voice extends Element {
 
   /**
    * Modes allow the addition of ticks in three different ways:
-   *
-   * STRICT: This is the default. Ticks must fill the voice.<br>
-   * SOFT:   Ticks can be added without restrictions.<br>
-   * FULL:   Ticks do not need to fill the voice, but can't exceed the maximum
-   *         tick length.
+   * - STRICT: This is the default. Ticks must fill the voice.
+   * - SOFT: Ticks can be added without restrictions.
+   * - FULL: Ticks do not need to fill the voice, but can't exceed the maximum tick length.
    */
   static get Mode(): typeof VoiceMode {
     return VoiceMode;
@@ -98,17 +95,17 @@ export class Voice extends Element {
     this.mode = Voice.Mode.STRICT;
   }
 
-  /** Get the total ticks in the voice */
+  /** Get the total ticks in the voice. */
   getTotalTicks(): Fraction {
     return this.totalTicks;
   }
 
-  /** Get the total ticks used in the voice by all the tickables */
+  /** Get the total ticks used in the voice by all the tickables. */
   getTicksUsed(): Fraction {
     return this.ticksUsed;
   }
 
-  /** Get the largest width of all the tickables */
+  /** Get the largest width of all the tickables. */
   getLargestTickWidth(): number {
     return this.largestTickWidth;
   }
@@ -118,18 +115,18 @@ export class Voice extends Element {
     return this.smallestTickCount;
   }
 
-  /** Get the tickables in the voice */
+  /** Get the tickables in the voice. */
   getTickables(): Note[] {
     return this.tickables;
   }
 
-  /** Get the voice mode */
+  /** Get the voice mode. */
   getMode(): number {
     return this.mode;
   }
 
   /**
-   * Set the voice mode
+   * Set the voice mode.
    * @param mode value from `Voice.Mode`
    */
   setMode(mode: number): this {
@@ -137,24 +134,24 @@ export class Voice extends Element {
     return this;
   }
 
-  /** Get the resolution multiplier for the voice */
+  /** Get the resolution multiplier for the voice. */
   getResolutionMultiplier(): number {
     return this.resolutionMultiplier;
   }
 
-  /** Get the actual tick resolution for the voice */
+  /** Get the actual tick resolution for the voice. */
   getActualResolution(): number {
     return this.resolutionMultiplier * this.time.resolution;
   }
 
-  /** Set the voice's stave */
+  /** Set the voice's stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
     this.boundingBox = undefined; // Reset bounding box so we can reformat
     return this;
   }
 
-  /** Get the bounding box for the voice */
+  /** Get the bounding box for the voice. */
   getBoundingBox(): BoundingBox | undefined {
     let boundingBox;
     let bb;
@@ -177,13 +174,13 @@ export class Voice extends Element {
     return this.boundingBox;
   }
 
-  /** Set the voice mode to strict or soft */
+  /** Set the voice mode to strict or soft. */
   setStrict(strict: boolean): this {
     this.mode = strict ? Voice.Mode.STRICT : Voice.Mode.SOFT;
     return this;
   }
 
-  /** Determine if the voice is complete according to the voice mode */
+  /** Determine if the voice is complete according to the voice mode. */
   isComplete(): boolean {
     if (this.mode === Voice.Mode.STRICT || this.mode === Voice.Mode.FULL) {
       return this.ticksUsed.equals(this.totalTicks);
@@ -205,8 +202,8 @@ export class Voice extends Element {
   }
 
   /**
-   * Calculate the sum of the exponents of all the ticks in this voice to use as the denominator
-   * of softmax.
+   * Calculate the sum of the exponents of all the ticks in this voice to use
+   * as the denominator of softmax.
    */
   protected reCalculateExpTicksUsed(): number {
     const totalTicks = this.ticksUsed.value();
@@ -227,7 +224,7 @@ export class Voice extends Element {
     return sm;
   }
 
-  /** Add a tickable to the voice */
+  /** Add a tickable to the voice. */
   addTickable(tickable: Note): this {
     if (!tickable.shouldIgnoreTicks()) {
       const ticks = tickable.getTicks();
