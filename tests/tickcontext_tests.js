@@ -19,7 +19,7 @@ const TickContextTests = (function () {
 
     tracking: function () {
       function createTickable() {
-        return new MockTickable(VF.Test.TIME4_4);
+        return new MockTickable(VF.TIME4_4);
       }
 
       var R = VF.RESOLUTION;

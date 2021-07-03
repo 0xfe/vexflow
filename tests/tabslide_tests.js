@@ -13,7 +13,7 @@ const TabSlideTests = (function () {
     },
 
     tieNotes: function (notes, indices, stave, ctx) {
-      var voice = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.TIME4_4);
       voice.addTickables(notes);
 
       new VF.Formatter().joinVoices([voice]).format([voice], 100);
@@ -104,7 +104,7 @@ const TabSlideTests = (function () {
         }),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
+      var voice = new VF.Voice(VF.TIME4_4).addTickables(notes);
       new VF.Formatter().joinVoices([voice]).format([voice], 300);
       voice.draw(c.context, c.stave);
 

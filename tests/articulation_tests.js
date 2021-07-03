@@ -341,7 +341,7 @@ const ArticulationTests = (function () {
       notes3[2].addModifier(new VF.Articulation('a.').setPosition(3), 0);
       notes3[3].addModifier(new VF.Articulation('a.').setPosition(4), 0);
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.SOFT);
 
       voice.addTickables(notes);
       voice.addTickables(notes2);

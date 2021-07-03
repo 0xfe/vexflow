@@ -228,7 +228,7 @@ const TabNoteTests = (function () {
         return tabNote;
       });
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
       new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
@@ -302,7 +302,7 @@ const TabNoteTests = (function () {
         return tabNote;
       });
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
       new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
@@ -376,7 +376,7 @@ const TabNoteTests = (function () {
       });
 
       ctx.setFont('sans-serif', 10, 'bold');
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
       new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
@@ -456,7 +456,7 @@ const TabNoteTests = (function () {
 
       ctx.setFont('Arial', 10, 'bold');
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
       new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);
@@ -512,7 +512,7 @@ const TabNoteTests = (function () {
       notes[2].addDot();
       notes[2].addDot();
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.SOFT);
       voice.addTickables(notes);
       new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
       voice.draw(ctx, stave);

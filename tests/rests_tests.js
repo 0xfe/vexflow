@@ -319,8 +319,8 @@ const RestsTests = (function () {
         newNote({ keys: ['e/3'], stem_direction: -1, duration: '8' }),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes1);
-      var voice2 = new VF.Voice(VF.Test.TIME4_4).addTickables(notes2);
+      var voice = new VF.Voice(VF.TIME4_4).addTickables(notes1);
+      var voice2 = new VF.Voice(VF.TIME4_4).addTickables(notes2);
 
       // Set option to position rests near the notes in each voice
       new VF.Formatter().joinVoices([voice, voice2]).formatToStave([voice, voice2], stave, { align_rests: true });
