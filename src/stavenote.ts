@@ -106,7 +106,7 @@ export class StaveNote extends StemmableNote {
   protected dot_shiftY: number;
   protected use_default_head_x: boolean;
   protected note_heads: NoteHead[];
-  protected ledgerLineStyle?: ElementStyle;
+  protected ledgerLineStyle: ElementStyle;
   protected flagStyle?: ElementStyle;
 
   static get CATEGORY(): string {
@@ -370,7 +370,8 @@ export class StaveNote extends StemmableNote {
   constructor(noteStruct: StaveNoteStruct) {
     super(noteStruct);
     this.setAttribute('type', 'StaveNote');
-
+    // Ledger Lines default width 2.0
+    this.ledgerLineStyle = { lineWidth: 2.0 };
     this.clef = noteStruct.clef;
     this.octave_shift = noteStruct.octave_shift;
 
@@ -838,7 +839,8 @@ export class StaveNote extends StemmableNote {
   setLedgerLineStyle(style: ElementStyle): void {
     this.ledgerLineStyle = style;
   }
-  getLedgerLineStyle(): ElementStyle | undefined {
+
+  getLedgerLineStyle(): ElementStyle {
     return this.ledgerLineStyle;
   }
 
@@ -1119,12 +1121,7 @@ export class StaveNote extends StemmableNote {
       ctx.stroke();
     };
 
-    const style = {
-      ...stave.getStyle(),
-      ...(this.getLedgerLineStyle() || {
-        lineWidth: stave.getStyle().lineWidth * Flow.LEDGER_LINE_THICKNESS_MULTIPLIER,
-      }),
-    };
+    const style = { ...stave.getStyle(), ...this.getLedgerLineStyle() };
     this.applyStyle(ctx, style);
 
     // Draw ledger lines below the staff:
