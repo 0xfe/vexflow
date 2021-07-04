@@ -434,9 +434,17 @@ export class Stave extends Element {
     return this;
   }
 
+  getClef(): string {
+    return this.clef;
+  }
+
   setEndClef(clefSpec: string, size: string, annotation: string): this {
     this.setClef(clefSpec, size, annotation, StaveModifier.Position.END);
     return this;
+  }
+
+  getEndClef(): string | undefined {
+    return this.endClef;
   }
 
   setKeySignature(keySpec: string, cancelKeySpec: string, position?: number): this {
