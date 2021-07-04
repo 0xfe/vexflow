@@ -44,7 +44,7 @@ export class Curve extends Element {
   //    cps: List of control points
   //    x_shift: pixels to shift
   //    y_shift: pixels to shift
-  constructor(from: Note, to: Note, options?: CurveOptions) {
+  constructor(from: Note, to: Note, options: Partial<CurveOptions>) {
     super();
     this.setAttribute('type', 'Curve');
 

@@ -115,7 +115,7 @@ export abstract class StemmableNote extends Note {
     return this.stem_direction;
   }
 
-  setStemDirection(direction: number): this {
+  setStemDirection(direction?: number): this {
     if (!direction) direction = Stem.UP;
     if (direction !== Stem.UP && direction !== Stem.DOWN) {
       throw new RuntimeError('BadArgument', `Invalid stem direction: ${direction}`);

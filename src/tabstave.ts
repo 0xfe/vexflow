@@ -3,7 +3,7 @@
 import { Stave, StaveOptions } from './stave';
 
 export class TabStave extends Stave {
-  constructor(x: number, y: number, width: number, options: StaveOptions) {
+  constructor(x: number, y: number, width: number, options: Partial<StaveOptions>) {
     const tab_options = {
       ...{
         spacing_between_lines_px: 13,

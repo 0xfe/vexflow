@@ -6,81 +6,91 @@
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 
-import { RuntimeError } from './util';
+import { check, RuntimeError } from './util';
 import { Flow } from './flow';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
+import { Stave } from './stave';
 
 export class KeySignature extends StaveModifier {
-  static get CATEGORY() {
+  protected glyphFontScale: number;
+
+  protected glyphs: Glyph[];
+  protected xPositions: number[];
+  protected paddingForced: boolean;
+  protected formatted?: boolean;
+  protected cancelKeySpec?: string;
+  protected accList: { type: string; line: number }[] = [];
+  protected keySpec?: string;
+  protected alterKeySpec?: string;
+
+  static get CATEGORY(): string {
     return 'keysignatures';
   }
 
   // Space between natural and following accidental depending
   // on vertical position
-  static get accidentalSpacing() {
-    return {
-      '#': {
-        above: 6,
-        below: 4,
-      },
-      b: {
-        above: 4,
-        below: 7,
-      },
-      n: {
-        above: 4,
-        below: 1,
-      },
-      '##': {
-        above: 6,
-        below: 4,
-      },
-      bb: {
-        above: 4,
-        below: 7,
-      },
-      db: {
-        above: 4,
-        below: 7,
-      },
-      d: {
-        above: 4,
-        below: 7,
-      },
-      bbs: {
-        above: 4,
-        below: 7,
-      },
-      '++': {
-        above: 6,
-        below: 4,
-      },
-      '+': {
-        above: 6,
-        below: 4,
-      },
-      '+-': {
-        above: 6,
-        below: 4,
-      },
-      '++-': {
-        above: 6,
-        below: 4,
-      },
-      bs: {
-        above: 4,
-        below: 10,
-      },
-      bss: {
-        above: 4,
-        below: 10,
-      },
-    };
-  }
+  static accidentalSpacing: Record<string, { above: number; below: number }> = {
+    '#': {
+      above: 6,
+      below: 4,
+    },
+    b: {
+      above: 4,
+      below: 7,
+    },
+    n: {
+      above: 4,
+      below: 1,
+    },
+    '##': {
+      above: 6,
+      below: 4,
+    },
+    bb: {
+      above: 4,
+      below: 7,
+    },
+    db: {
+      above: 4,
+      below: 7,
+    },
+    d: {
+      above: 4,
+      below: 7,
+    },
+    bbs: {
+      above: 4,
+      below: 7,
+    },
+    '++': {
+      above: 6,
+      below: 4,
+    },
+    '+': {
+      above: 6,
+      below: 4,
+    },
+    '+-': {
+      above: 6,
+      below: 4,
+    },
+    '++-': {
+      above: 6,
+      below: 4,
+    },
+    bs: {
+      above: 4,
+      below: 10,
+    },
+    bss: {
+      above: 4,
+      below: 10,
+    },
+  };
 
   // Create a new Key Signature based on a `key_spec`
-  constructor(keySpec, cancelKeySpec, alterKeySpec) {
+  constructor(keySpec: string, cancelKeySpec: string, alterKeySpec?: string) {
     super();
     this.setAttribute('type', 'KeySignature');
 
@@ -92,14 +102,14 @@ export class KeySignature extends StaveModifier {
     this.paddingForced = false;
   }
 
-  getCategory() {
+  getCategory(): string {
     return KeySignature.CATEGORY;
   }
 
   // Add an accidental glyph to the `KeySignature` instance which represents
   // the provided `acc`. If `nextAcc` is also provided, the appropriate
   // spacing will be included in the glyph's position
-  convertToGlyph(acc, nextAcc) {
+  convertToGlyph(acc: { type: string; line: number }, nextAcc: { type: string; line: number }): void {
     const accGlyphData = Flow.accidentalCodes(acc.type);
     const glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
 
@@ -114,7 +124,7 @@ export class KeySignature extends StaveModifier {
     }
 
     // Place the glyph on the stave
-    this.placeGlyphOnLine(glyph, this.stave, acc.line);
+    this.placeGlyphOnLine(glyph, this.checkStave(), acc.line);
     this.glyphs.push(glyph);
 
     const xPosition = this.xPositions[this.xPositions.length - 1];
@@ -127,14 +137,14 @@ export class KeySignature extends StaveModifier {
 
   // Cancel out a key signature provided in the `spec` parameter. This will
   // place appropriate natural accidentals before the key signature.
-  cancelKey(spec) {
+  cancelKey(spec: string): this {
     this.formatted = false;
     this.cancelKeySpec = spec;
 
     return this;
   }
 
-  convertToCancelAccList(spec) {
+  convertToCancelAccList(spec: string): { type: string; accList: { type: string; line: number }[] } | undefined {
     // Get the accidental list for the cancelled key signature
     const cancel_accList = Flow.keySignature(spec);
 
@@ -149,7 +159,7 @@ export class KeySignature extends StaveModifier {
     if (naturals < 1) return undefined;
 
     // Get the line position for each natural
-    const cancelled = [];
+    const cancelled: { type: string; line: number }[] = [];
     for (let i = 0; i < naturals; i++) {
       let index = i;
       if (!different_types) {
@@ -170,7 +180,7 @@ export class KeySignature extends StaveModifier {
   }
 
   // Deprecated
-  addToStave(stave) {
+  addToStave(stave: Stave): this {
     this.paddingForced = true;
     stave.addModifier(this);
 
@@ -179,7 +189,7 @@ export class KeySignature extends StaveModifier {
 
   // Apply the accidental staff line placement based on the `clef` and
   // the  accidental `type` for the key signature ('# or 'b').
-  convertAccLines(clef, type, accList = this.accList) {
+  convertAccLines(clef: string, type?: string, accList = this.accList): void {
     let offset = 0.0; // if clef === "treble"
     let customLines; // when clef doesn't follow treble key sig shape
 
@@ -226,19 +236,19 @@ export class KeySignature extends StaveModifier {
     }
   }
 
-  getPadding(index) {
+  getPadding(index: number): number {
     if (!this.formatted) this.format();
 
     return this.glyphs.length === 0 || (!this.paddingForced && index < 2) ? 0 : this.padding;
   }
 
-  getWidth() {
+  getWidth(): number {
     if (!this.formatted) this.format();
 
     return this.width;
   }
 
-  setKeySig(keySpec, cancelKeySpec, alterKeySpec) {
+  setKeySig(keySpec: string, cancelKeySpec: string, alterKeySpec?: string): this {
     this.formatted = false;
     this.keySpec = keySpec;
     this.cancelKeySpec = cancelKeySpec;
@@ -250,14 +260,14 @@ export class KeySignature extends StaveModifier {
   // Alter the accidentals of a key spec one by one.
   // Each alteration is a new accidental that replaces the
   // original accidental (or the canceled one).
-  alterKey(alterKeySpec) {
+  alterKey(alterKeySpec: string): this {
     this.formatted = false;
     this.alterKeySpec = alterKeySpec;
 
     return this;
   }
 
-  convertToAlterAccList(alterKeySpec) {
+  convertToAlterAccList(alterKeySpec: string): void {
     const max = Math.min(alterKeySpec.length, this.accList.length);
     for (let i = 0; i < max; ++i) {
       if (alterKeySpec[i]) {
@@ -266,17 +276,15 @@ export class KeySignature extends StaveModifier {
     }
   }
 
-  format() {
-    if (!this.stave) {
-      throw new RuntimeError('KeySignatureError', "Can't draw key signature without stave.");
-    }
+  format(): void {
+    const stave = this.checkStave();
 
     this.width = 0;
     this.glyphs = [];
     this.xPositions = [0]; // initialize with initial x position
-    this.accList = Flow.keySignature(this.keySpec);
+    this.accList = Flow.keySignature(check<string>(this.keySpec));
     const accList = this.accList;
-    const firstAccidentalType = accList.length > 0 ? accList[0].type : null;
+    const firstAccidentalType = accList.length > 0 ? accList[0].type : undefined;
     let cancelAccList;
     if (this.cancelKeySpec) {
       cancelAccList = this.convertToCancelAccList(this.cancelKeySpec);
@@ -287,7 +295,7 @@ export class KeySignature extends StaveModifier {
 
     if (this.accList.length > 0) {
       const clef =
-        (this.position === StaveModifier.Position.END ? this.stave.endClef : this.stave.clef) || this.stave.clef;
+        (this.position === StaveModifier.Position.END ? stave.getEndClef() : stave.getClef()) || stave.getClef();
       if (cancelAccList) {
         this.convertAccLines(clef, cancelAccList.type, cancelAccList.accList);
       }
@@ -300,7 +308,7 @@ export class KeySignature extends StaveModifier {
     this.formatted = true;
   }
 
-  draw() {
+  draw(): void {
     if (!this.x) {
       throw new RuntimeError('KeySignatureError', "Can't draw key signature without x.");
     }
@@ -316,7 +324,7 @@ export class KeySignature extends StaveModifier {
       const glyph = this.glyphs[i];
       const x = this.x + this.xPositions[i];
       glyph.setStave(this.stave);
-      glyph.setContext(this.stave.context);
+      glyph.setContext(this.stave.checkContext());
       glyph.renderToStave(x);
     }
   }

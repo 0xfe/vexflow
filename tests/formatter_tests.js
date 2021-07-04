@@ -73,8 +73,8 @@ const FormatterTests = (function () {
         createTickable().setTicks(BEAT).setWidth(30),
       ];
 
-      var voice1 = new VF.Voice(VF.Test.TIME4_4);
-      var voice2 = new VF.Voice(VF.Test.TIME4_4);
+      var voice1 = new VF.Voice(VF.TIME4_4);
+      var voice2 = new VF.Voice(VF.TIME4_4);
 
       voice1.addTickables(tickables1);
       voice2.addTickables(tickables2);

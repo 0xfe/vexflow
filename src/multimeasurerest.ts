@@ -70,7 +70,7 @@ export class MultiMeasureRest extends Element {
   //   * `use_symbols` - Use rest symbols or not.
   //   * `symbol_spacing` - Spacing between each rest symbol glyphs.
   //   * `semibrave_rest_glyph_scale` - Size of the semibrave(1-bar) rest symbol.
-  constructor(number_of_measures: number, options: MultimeasureRestRenderOptions) {
+  constructor(number_of_measures: number, options: Partial<MultimeasureRestRenderOptions>) {
     super();
     this.setAttribute('type', 'MultiMeasureRest');
 

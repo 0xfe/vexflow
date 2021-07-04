@@ -15,7 +15,7 @@ const VoiceTests = (function () {
     strict: function () {
       expect(8);
       function createTickable() {
-        return new MockTickable(VF.Test.TIME4_4);
+        return new MockTickable(VF.TIME4_4);
       }
 
       var R = VF.RESOLUTION;
@@ -27,7 +27,7 @@ const VoiceTests = (function () {
         createTickable().setTicks(BEAT),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.TIME4_4);
       equal(voice.totalTicks.value(), BEAT * 4, '4/4 Voice has 4 beats');
       equal(voice.ticksUsed.value(), BEAT * 0, 'No beats in voice');
       voice.addTickables(tickables);
@@ -53,7 +53,7 @@ const VoiceTests = (function () {
 
     ignore: function () {
       function createTickable() {
-        return new MockTickable(VF.Test.TIME4_4);
+        return new MockTickable(VF.TIME4_4);
       }
 
       var R = VF.RESOLUTION;
@@ -68,7 +68,7 @@ const VoiceTests = (function () {
         createTickable().setTicks(BEAT),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.TIME4_4);
       voice.addTickables(tickables);
       ok(true, 'all pass');
     },
@@ -91,7 +91,7 @@ const VoiceTests = (function () {
         note.setStave(stave);
       });
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.FULL).addTickables(notes);
+      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.FULL).addTickables(notes);
 
       new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 

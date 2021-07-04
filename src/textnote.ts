@@ -17,19 +17,19 @@ export enum Justification {
 }
 
 export interface TextNoteStruct extends NoteStruct {
-  ignore_ticks: boolean;
-  smooth: boolean;
-  glyph: string;
+  ignore_ticks?: boolean;
+  smooth?: boolean;
+  glyph?: string;
   font?: FontInfo;
-  subscript: string;
-  superscript: string;
+  subscript?: string;
+  superscript?: string;
   text: string;
 }
 
 export class TextNote extends Note {
   protected text: string;
-  protected superscript: string;
-  protected subscript: string;
+  protected superscript?: string;
+  protected subscript?: string;
   protected smooth: boolean;
 
   protected font: FontInfo;

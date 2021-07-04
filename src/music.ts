@@ -13,7 +13,12 @@ export interface NoteAccidental {
 export interface NoteParts {
   root: string;
   accidental: string;
-  type?: string;
+}
+
+export interface KeyParts {
+  root: string;
+  accidental: string;
+  type: string;
 }
 
 export type KeyValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
@@ -224,7 +229,7 @@ export class Music {
     }
   }
 
-  getKeyParts(keyString: string): NoteParts {
+  getKeyParts(keyString: string): KeyParts {
     if (!keyString || keyString.length < 1) {
       throw new RuntimeError('BadArguments', 'Invalid key: ' + keyString);
     }

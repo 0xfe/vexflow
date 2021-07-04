@@ -151,7 +151,7 @@ export class Modifier extends Element {
     return this.position;
   }
 
-  setPosition(position: number): this {
+  setPosition(position: string | number): this {
     this.position = typeof position === 'string' ? Modifier.PositionString[position] : position;
     this.reset();
     return this;

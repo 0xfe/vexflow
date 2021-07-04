@@ -76,7 +76,7 @@ export class System extends Element {
       },
     };
 
-    this.factory = this.options.factory || new Factory({ renderer: { el: null } });
+    this.factory = this.options.factory || new Factory({ renderer: { elementId: null, width: 0, height: 0 } });
   }
 
   setContext(context: RenderContext): this {

@@ -131,7 +131,7 @@ export class TextBracket extends Element {
   }
 
   // Set the font for the text
-  setFont(font: FontInfo): this {
+  setFont(font: Partial<FontInfo>): this {
     // We use Object.assign to support partial updates to the font object
     this.font = { ...this.font, ...font };
     return this;
