@@ -709,4 +709,22 @@ export class SVGContext implements RenderContext {
     }
     return this;
   }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set font(value: string) {
+    console.log('SVG Context .font! [' + value + ']');
+    this.setRawFont(value);
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set fillStyle(style: string) {
+    console.log('SVG Context .fillStyle! [' + style + ']');
+    this.setFillStyle(style);
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set strokeStyle(style: string) {
+    console.log('SVG Context .strokeStyle! [' + style + ']');
+    this.setStrokeStyle(style);
+  }
 }

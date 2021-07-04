@@ -71,6 +71,8 @@ export class Renderer {
 
     // Modify the CanvasRenderingContext2D to include the following methods, if they do not already exist.
     // setLineDash exists natively: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
+    // TODO: Is a Proxy object appropriate here?
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
     const methodNames = [
       'clear',
       'setFont',
@@ -90,9 +92,14 @@ export class Renderer {
 
     ctx.vexFlowCanvasContext = ctx;
 
+    // TODO: Do we get called with the same context over and over again?
+    // TODO: Keep references to the context to see if it's the same one.
+    // ANSWER: PROBABLY YES!!!
     methodNames.forEach((methodName) => {
-      // eslint-disable-next-line
-      ctx[methodName] = ctx[methodName] || (CanvasContext.prototype as any)[methodName];
+      if (!(methodName in ctx)) {
+        // eslint-disable-next-line
+        ctx[methodName] = (CanvasContext.prototype as any)[methodName];
+      }
     });
 
     return ctx;

@@ -39,7 +39,7 @@ export class CanvasContext implements RenderContext {
 
   /**
    * This constructor is only called if Renderer.USE_CANVAS_PROXY is true.
-   * In most instances, we do not need to
+   * In most instances, we do not need to create a CanvasContext object.
    * See Renderer.bolsterCanvasContext().
    * @param context
    */
@@ -240,5 +240,26 @@ export class CanvasContext implements RenderContext {
   restore(): this {
     this.vexFlowCanvasContext.restore();
     return this;
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set font(value: string) {
+    debugger;
+    console.log('CanvasContext .font! [' + value + ']');
+    this.vexFlowCanvasContext.font = value;
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set fillStyle(style: string) {
+    debugger;
+    console.log('CanvasContext .fillStyle! [' + style + ']');
+    this.vexFlowCanvasContext.fillStyle = style;
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set strokeStyle(style: string) {
+    debugger;
+    console.log('CanvasContext .strokeStyle! [' + style + ']');
+    this.vexFlowCanvasContext.strokeStyle = style;
   }
 }
