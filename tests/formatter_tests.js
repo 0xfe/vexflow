@@ -7,6 +7,14 @@ import { MockTickable } from './mocks';
 const FormatterTests = (function () {
   var run = VF.Test.runTests;
   var runSVG = VF.Test.runSVGTest;
+  // Should this be a static call in glyph?  Or font?
+  const glyphWidth = (vexGlyph) => {
+    const vf = VF.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
+    return (vf.x_max - vf.x_min) * glyphPixels();
+  };
+  const glyphPixels = () => {
+    return 96 * (38 / (VF.DEFAULT_FONT_STACK[0].getResolution() * 72));
+  };
 
   var Formatter = {
     Start: () => {
@@ -21,7 +29,7 @@ const FormatterTests = (function () {
       });
       runSVG('StaveNote - Justification', Formatter.justifyStaveNotes);
       runSVG('Notes with Tab', Formatter.notesWithTab);
-      runSVG('Multiple Staves - Justified', Formatter.multiStaves, { justify: true, iterations: 0 });
+      runSVG('Multiple Staves - Justified', Formatter.multiStaves, { debug: true });
       runSVG('Softmax', Formatter.softMax);
       runSVG('Mixtime', Formatter.mixTime);
       runSVG('Tight', Formatter.tightNotes);
@@ -117,21 +125,22 @@ const FormatterTests = (function () {
       const voice2 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
       voice2.addTickables(notes2);
       voice1.addTickables(notes1);
+      var formatter = vf.Formatter().joinVoices([voice1]).joinVoices([voice2]);
+      const width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
+      formatter.format([voice1, voice2], width);
       const stave1 = vf.Stave({
         y: 50,
-        width: 1500,
+        width: width + VF.Stave.leftPadding,
       });
       const stave2 = vf.Stave({
         y: 200,
-        width: 1500,
+        width: width + VF.Stave.leftPadding,
       });
       vf.StaveConnector({
         top_stave: stave1,
         bottom_stave: stave2,
         type: 'brace',
       });
-      var formatter = vf.Formatter().joinVoices([voice1]).joinVoices([voice2]);
-      formatter.format([voice1, voice2], 1500);
       stave1.draw();
       stave2.draw();
       voice1.draw(vf.context, stave1);
@@ -152,11 +161,11 @@ const FormatterTests = (function () {
       var beams = VF.Beam.generateBeams(notes11.slice(2));
       beams = beams.concat(beams, VF.Beam.generateBeams(notes21.slice(1, 3)));
       beams = beams.concat(VF.Beam.generateBeams(notes21.slice(3)));
-      var formatter = vf.Formatter({ softmaxFactor: 10 }).joinVoices([voice11]).joinVoices([voice21]);
+      var formatter = vf.Formatter({ softmaxFactor: 100 }).joinVoices([voice11]).joinVoices([voice21]);
 
-      var width = formatter.preCalculateMinTotalWidth([voice11, voice21]) + 50;
-      var stave11 = vf.Stave({ y: 20, width: width + 30 });
-      var stave21 = vf.Stave({ y: 130, width: width + 30 });
+      var width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
+      var stave11 = vf.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
+      var stave21 = vf.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
       formatter.format([voice11, voice21], width);
 
       vf.StaveConnector({
@@ -200,9 +209,9 @@ const FormatterTests = (function () {
       formatter.joinVoices([voice11]);
       formatter.joinVoices([voice21]);
 
-      var width = formatter.preCalculateMinTotalWidth([voice11, voice21]) + 50;
-      var stave11 = vf.Stave({ y: 20, width: width + 20 });
-      var stave21 = vf.Stave({ y: 130, width: width + 20 });
+      var width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
+      var stave11 = vf.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
+      var stave21 = vf.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
       formatter.format([voice11, voice21], width);
       stave11.setContext(ctx).draw();
       stave21.setContext(ctx).draw();
@@ -253,14 +262,14 @@ const FormatterTests = (function () {
       var voice2 = new VF.Voice({ num_beats: 4, beat_value: 4 });
       voice2.addTickables(notes2);
 
-      var formatter = new VF.Formatter({ softmaxFactor: 10, globalSoftmax: options.params.globalSoftmax });
+      var formatter = new VF.Formatter({ softmaxFactor: 100, globalSoftmax: options.params.globalSoftmax });
       formatter.joinVoices([voice1]);
       formatter.joinVoices([voice2]);
       var width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
 
       formatter.format([voice1, voice2], width);
-      var stave1 = new VF.Stave(10, 40, width + 50);
-      var stave2 = new VF.Stave(10, 100, width + 50);
+      var stave1 = new VF.Stave(10, 40, width + VF.Stave.defaultPadding);
+      var stave2 = new VF.Stave(10, 100, width + VF.Stave.defaultPadding);
       stave1.setContext(context).draw();
       stave2.setContext(context).draw();
       voice1.draw(context, stave1);
@@ -353,90 +362,92 @@ const FormatterTests = (function () {
 
     multiStaves: (options) => {
       var vf = VF.Test.makeFactory(options, 600, 400);
+      var ctx = vf.getContext();
       var score = vf.EasyScore();
-
-      var stave11 = vf.Stave({ y: 20, width: 275 }).addTrebleGlyph().addTimeSignature('6/8');
+      var staves = [];
+      var beams = [];
+      var voices = [];
 
       var notes11 = score.notes('f4/4, d4/8, g4/4, eb4/8');
-      var voice11 = score.voice(notes11, { time: '6/8' });
-
-      var stave21 = vf.Stave({ y: 130, width: 275 }).addTrebleGlyph().addTimeSignature('6/8');
+      voices.push(score.voice(notes11, { time: '6/8' }));
 
       var notes21 = score.notes('d4/8, d4, d4, d4, e4, eb4');
-      var voice21 = score.voice(notes21, { time: '6/8' });
-
-      var stave31 = vf.Stave({ y: 250, width: 275 }).addClef('bass').addTimeSignature('6/8');
+      voices.push(score.voice(notes21, { time: '6/8' }));
 
       var notes31 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
-      var voice31 = score.voice(notes31, { time: '6/8' });
+      voices.push(score.voice(notes31, { time: '6/8' }));
+
+      var formatter = vf.Formatter();
+      voices.forEach((vv) => formatter.joinVoices([vv]));
+      var width = formatter.preCalculateMinTotalWidth(voices);
+      var staveWidth = width + glyphWidth('gClef') + glyphWidth('timeSig8') + VF.Stave.defaultPadding;
+
+      staves.push(vf.Stave({ y: 20, width: staveWidth }).addTrebleGlyph().addTimeSignature('6/8'));
+      staves.push(vf.Stave({ y: 130, width: staveWidth }).addTrebleGlyph().addTimeSignature('6/8'));
+      staves.push(vf.Stave({ y: 250, width: staveWidth }).addClef('bass').addTimeSignature('6/8'));
+      formatter.format(voices, width);
+      beams.push(new VF.Beam(notes21.slice(0, 3), true));
+      beams.push(new VF.Beam(notes21.slice(3, 6), true));
+      beams.push(new VF.Beam(notes31.slice(0, 3), true));
+      beams.push(new VF.Beam(notes31.slice(3, 6), true));
 
       vf.StaveConnector({
-        top_stave: stave21,
-        bottom_stave: stave31,
+        top_stave: staves[1],
+        bottom_stave: staves[2],
         type: 'brace',
       });
-
-      vf.Beam({ notes: notes21.slice(0, 3) });
-      vf.Beam({ notes: notes21.slice(3, 6) });
-      vf.Beam({ notes: notes31.slice(0, 3) });
-      vf.Beam({ notes: notes31.slice(3, 6) });
-
-      var formatter = vf.Formatter().joinVoices([voice11]).joinVoices([voice21]).joinVoices([voice31]);
-
-      if (options.params.justify) {
-        formatter.formatToStave([voice11, voice21, voice31], stave11);
-      } else {
-        formatter.format([voice11, voice21, voice31], 0);
+      for (var i = 0; i < staves.length; ++i) {
+        staves[i].setContext(ctx).draw();
+        voices[i].draw(ctx, staves[i]);
       }
+      beams.forEach((beam) => beam.setContext(ctx).draw());
 
-      for (var i = 0; i < options.params.iterations; i++) {
-        formatter.tune();
-      }
-
-      var stave12 = vf.Stave({
-        x: stave11.width + stave11.x,
-        y: stave11.y,
-        width: stave11.width,
-      });
-
+      const x = staves[0].x + staves[0].width;
+      const ys = staves.map((ss) => ss.y);
+      voices = [];
+      staves = [];
       var notes12 = score.notes('ab4/4, bb4/8, (cb5 eb5)/4[stem="down"], d5/8[stem="down"]');
-      var voice12 = score.voice(notes12, { time: '6/8' });
-
-      vf.Stave({
-        x: stave21.width + stave21.x,
-        y: stave21.y,
-        width: stave21.width,
-      });
-
+      voices.push(score.voice(notes12, { time: '6/8' }));
       var notes22 = score.notes('(eb4 ab4)/4., (c4 eb4 ab4)/4, db5/8', { stem: 'up' });
-      var voice22 = score.voice(notes22, { time: '6/8' });
-
-      vf.Stave({
-        x: stave31.width + stave31.x,
-        y: stave31.y,
-        width: stave31.width,
-      });
-
+      voices.push(score.voice(notes22, { time: '6/8' }));
       var notes32 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
-      var voice32 = score.voice(notes32, { time: '6/8' });
+      voices.push(score.voice(notes32, { time: '6/8' }));
 
-      formatter = vf.Formatter().joinVoices([voice12]).joinVoices([voice22]).joinVoices([voice32]);
-
-      if (options.params.justify) {
-        formatter.formatToStave([voice12, voice22, voice32], stave12);
-      } else {
-        formatter.format([voice12, voice22, voice32], 0);
+      formatter = vf.Formatter();
+      voices.forEach((vv) => formatter.joinVoices([vv]));
+      width = formatter.preCalculateMinTotalWidth(voices);
+      staveWidth = width + VF.Stave.defaultPadding;
+      staves.push(
+        vf.Stave({
+          x,
+          y: ys[0],
+          width: staveWidth,
+        })
+      );
+      staves.push(
+        vf.Stave({
+          x,
+          y: ys[1],
+          width: staveWidth,
+        })
+      );
+      staves.push(
+        vf.Stave({
+          x,
+          y: ys[2],
+          width: staveWidth,
+        })
+      );
+      formatter.format(voices, width);
+      beams = [];
+      beams.push(new VF.Beam(notes32.slice(0, 3), true));
+      beams.push(new VF.Beam(notes32.slice(3, 6), true));
+      for (i = 0; i < staves.length; ++i) {
+        staves[i].setContext(ctx).draw();
+        voices[i].draw(ctx, staves[i]);
+        voices[i].getTickables().forEach((note) => VF.Note.plotMetrics(ctx, note, ys[i] - 20));
       }
-
-      for (var j = 0; j < options.params.iterations; j++) {
-        formatter.tune();
-      }
-
-      vf.Beam({ notes: notes32.slice(0, 3) });
-      vf.Beam({ notes: notes32.slice(3, 6) });
-
-      vf.draw();
-
+      beams.forEach((beam) => beam.setContext(ctx).draw());
       ok(true);
     },
 

@@ -68,6 +68,10 @@ export class Stave extends Element {
     const musicFont = Flow.DEFAULT_FONT_STACK[0];
     return musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
   }
+  static get leftPadding(): number {
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    return musicFont.lookupMetric('stave.padding');
+  }
 
   constructor(x: number, y: number, width: number, options: Partial<StaveOptions>) {
     super();
