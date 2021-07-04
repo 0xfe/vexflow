@@ -130,16 +130,11 @@ const FormatterTests = (function () {
       formatter.format([voice1, voice2], width);
       const stave1 = vf.Stave({
         y: 50,
-        width: width + VF.Stave.leftPadding,
+        width: width + VF.Stave.defaultPadding,
       });
       const stave2 = vf.Stave({
         y: 200,
-        width: width + VF.Stave.leftPadding,
-      });
-      vf.StaveConnector({
-        top_stave: stave1,
-        bottom_stave: stave2,
-        type: 'brace',
+        width: width + VF.Stave.defaultPadding,
       });
       stave1.draw();
       stave2.draw();
@@ -167,13 +162,6 @@ const FormatterTests = (function () {
       var stave11 = vf.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
       var stave21 = vf.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
       formatter.format([voice11, voice21], width);
-
-      vf.StaveConnector({
-        top_stave: stave11,
-        bottom_stave: stave21,
-        type: 'brace',
-      });
-
       var ctx = vf.getContext();
       stave11.setContext(ctx).draw();
       stave21.setContext(ctx).draw();
