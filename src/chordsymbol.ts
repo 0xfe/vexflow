@@ -58,7 +58,7 @@ export class ChordSymbol extends Modifier {
     CENTER_STEM: 4,
   };
 
-  static readonly horizontalJustifyString = {
+  static readonly horizontalJustifyString: Record<string, number> = {
     left: ChordSymbol.horizontalJustify.LEFT,
     right: ChordSymbol.horizontalJustify.RIGHT,
     center: ChordSymbol.horizontalJustify.CENTER,
@@ -85,7 +85,7 @@ export class ChordSymbol extends Modifier {
     ChordSymbol.noFormat = val;
   }
 
-  static readonly verticalJustifyString = {
+  static readonly verticalJustifyString: Record<string, number> = {
     top: ChordSymbol.verticalJustify.TOP,
     above: ChordSymbol.verticalJustify.TOP,
     below: ChordSymbol.verticalJustify.BOTTOM,
@@ -646,7 +646,7 @@ export class ChordSymbol extends Modifier {
 
   // Set vertical position of text (above or below stave). `just` must be
   // a value in `ChordSymbol.vertical`.
-  setVertical(just: number): this {
+  setVertical(just: string | number): this {
     this.vertical = typeof just === 'string' ? ChordSymbol.verticalJustifyString[just] : just;
     return this;
   }
@@ -657,7 +657,7 @@ export class ChordSymbol extends Modifier {
 
   // Get and set horizontal justification. `justification` is a value in
   // `ChordSymbol.Justify`.
-  setHorizontal(just: number): this {
+  setHorizontal(just: string | number): this {
     this.horizontal = typeof just === 'string' ? ChordSymbol.horizontalJustifyString[just] : just;
     return this;
   }
