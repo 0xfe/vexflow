@@ -17,7 +17,7 @@ const TabTieTests = (function () {
     },
 
     tieNotes: function (notes, indices, stave, ctx, text) {
-      var voice = new VF.Voice(VF.Test.TIME4_4);
+      var voice = new VF.Voice(VF.TIME4_4);
       voice.addTickables(notes);
 
       new VF.Formatter().joinVoices([voice]).format([voice], 100);
@@ -131,7 +131,7 @@ const TabTieTests = (function () {
         }),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
+      var voice = new VF.Voice(VF.TIME4_4).addTickables(notes);
       new VF.Formatter().joinVoices([voice]).format([voice], 300);
       voice.draw(c.context, c.stave);
 
@@ -203,7 +203,7 @@ const TabTieTests = (function () {
         newNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
       ];
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).addTickables(notes);
+      var voice = new VF.Voice(VF.TIME4_4).addTickables(notes);
       new VF.Formatter().joinVoices([voice]).format([voice], 300);
       voice.draw(c.context, c.stave);
 

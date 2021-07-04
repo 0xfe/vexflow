@@ -409,7 +409,7 @@ const AnnotationTests = (function () {
       notes3[2].addModifier(new VF.Annotation('Text').setVerticalJustification(3), 0); // U
       notes3[3].addModifier(new VF.Annotation('Text').setVerticalJustification(4), 0); // D
 
-      var voice = new VF.Voice(VF.Test.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.SOFT);
 
       voice.addTickables(notes);
       voice.addTickables(notes2);
