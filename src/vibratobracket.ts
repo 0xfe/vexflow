@@ -1,30 +1,27 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Balazs Forian-Szabo
-//
-// ## Description
-//
-// This file implements `VibratoBrackets`
-// that renders vibrato effect between two notes.
+// MIT License
 
 import { log } from './util';
 import { Element } from './element';
 import { Vibrato } from './vibrato';
 import { Note } from './note';
 
-// To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
   ...args: any []) {
   if (VibratoBracket.DEBUG) log('Vex.Flow.VibratoBracket', args);
 }
 
+/** `VibratoBracket` renders vibrato effect between two notes. */
 export class VibratoBracket extends Element {
+  /** To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`. */
   static DEBUG: boolean;
 
   protected line: number;
 
-  protected start: Note;
-  protected stop: Note;
+  protected start?: Note;
+  protected stop?: Note;
   protected render_options: {
     vibrato_width: number;
     wave_height: number;
@@ -33,14 +30,12 @@ export class VibratoBracket extends Element {
     wave_width: number;
   };
 
-  // bracket_data = {
-  //   start: Vex.Flow.Note (optional)
-  //   stop: Vex.Flow.Note (optional)
-  // };
-  // Either the stop or start note must be set, or both of them.
-  // A null value for the start or stop note indicates that the vibrato
-  // is drawn from the beginning or until the end of the stave accordingly.
-  constructor(bracket_data: { stop: Note; start: Note }) {
+  /**
+   * Either the stop or start note must be set, or both of them.
+   * An undefined value for the start or stop note indicates that the vibrato
+   * is drawn from the beginning or until the end of the stave accordingly.
+   */
+  constructor(bracket_data: { stop?: Note; start?: Note }) {
     super();
     this.setAttribute('type', 'VibratoBracket');
 
@@ -58,17 +53,19 @@ export class VibratoBracket extends Element {
     };
   }
 
-  // Set line position of the vibrato bracket
+  /** Set line position of the vibrato bracket. */
   setLine(line: number): this {
     this.line = line;
     return this;
   }
+
+  /** Set harsh vibrato bracket. */
   setHarsh(harsh: boolean): this {
     this.render_options.harsh = harsh;
     return this;
   }
 
-  // Draw the vibrato bracket on the rendering context
+  /** Draw the vibrato bracket on the rendering context. */
   draw(): void {
     const ctx = this.checkContext();
     this.setRendered();
