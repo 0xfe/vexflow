@@ -323,6 +323,7 @@ export const Tables = {
   STEM_WIDTH: 1.5,
   STEM_HEIGHT: 35,
   STAVE_LINE_THICKNESS: 1,
+  LEDGER_LINE_THICKNESS_MULTIPLIER: 2.0, // Gould, Behind Bars: "about twice as thick"
   RESOLUTION: RESOLUTION,
 
   /**
