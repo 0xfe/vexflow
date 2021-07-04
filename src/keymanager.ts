@@ -5,25 +5,35 @@
 // This class implements diatonic key management.
 
 import { RuntimeError } from './util';
-import { Music } from './music';
+import { Music, KeyParts } from './music';
 
 export class KeyManager {
-  constructor(key) {
+  protected music: Music;
+  // all attributes below are initialised in setKey which calls reset in the constructor
+  protected keyParts!: KeyParts;
+  protected keyString!: string;
+  protected key!: string;
+  protected scale!: number[];
+  protected scaleMap!: Record<string, string>;
+  protected scaleMapByValue!: Record<number, string>;
+  protected originalScaleMapByValue!: Record<number, string>;
+
+  constructor(key: string) {
     this.music = new Music();
     this.setKey(key);
   }
 
-  setKey(key) {
+  setKey(key: string): this {
     this.key = key;
     this.reset();
     return this;
   }
 
-  getKey() {
+  getKey(): string {
     return this.key;
   }
 
-  reset() {
+  reset(): this {
     this.keyParts = this.music.getKeyParts(this.key);
 
     this.keyString = this.keyParts.root;
@@ -58,7 +68,11 @@ export class KeyManager {
     return this;
   }
 
-  getAccidental(key) {
+  getAccidental(key: string): {
+    note: string;
+    accidental?: string;
+    change?: boolean;
+  } {
     const root = this.music.getKeyParts(key).root;
     const parts = this.music.getNoteParts(this.scaleMap[root]);
 
@@ -68,7 +82,11 @@ export class KeyManager {
     };
   }
 
-  selectNote(note) {
+  selectNote(note: string): {
+    note: string;
+    accidental?: string;
+    change: boolean;
+  } {
     note = note.toLowerCase();
     const parts = this.music.getNoteParts(note);
 
@@ -114,7 +132,7 @@ export class KeyManager {
       this.scaleMap[modparts.root] = modparts.root;
       return {
         note: modparts.root,
-        accidental: null,
+        accidental: undefined,
         change: true,
       };
     }
