@@ -128,7 +128,7 @@ export class KeySignature extends StaveModifier {
     this.glyphs.push(glyph);
 
     const xPosition = this.xPositions[this.xPositions.length - 1];
-    const glyphWidth = glyph.getMetrics().width ?? 0 + extraWidth;
+    const glyphWidth = glyph.getMetrics().width + extraWidth;
     // Store the next accidental's x position
     this.xPositions.push(xPosition + glyphWidth);
     // Expand size of key signature
