@@ -22,7 +22,7 @@ function L(...args: any[]): void {
   if (EasyScore.DEBUG) log('Vex.Flow.EasyScore', args);
 }
 
-export const X = MakeException('EasyScoreError');
+const X = MakeException('EasyScoreError');
 
 type IDUpdate = { id: string };
 type ClassUpdate = { class: string };

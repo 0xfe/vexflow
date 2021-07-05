@@ -80,7 +80,7 @@ function L(...args: any[]) {
   if (Factory.DEBUG) log('Vex.Flow.Factory', args);
 }
 
-export const X = MakeException('FactoryError');
+const X = MakeException('FactoryError');
 
 export class Factory {
   static DEBUG: boolean;
