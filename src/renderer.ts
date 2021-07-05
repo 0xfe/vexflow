@@ -30,9 +30,11 @@ export class Renderer {
     DOWN: 3, // Downward leg
   };
 
-  // Set this to true if you're using VexFlow inside a runtime
-  // that does not allow modifiying canvas objects. There is a small
-  // performance degradation due to the extra indirection.
+  /**
+   * Set this to true if you're using VexFlow inside a runtime
+   * that does not allow modifying canvas objects. There is a small
+   * performance degradation due to the extra indirection.
+   */
   static readonly USE_CANVAS_PROXY = false;
 
   static lastContext: RenderContext | undefined = undefined;
