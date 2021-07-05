@@ -98,7 +98,7 @@ export class CanvasContext implements RenderContext {
     this.vexFlowCanvasContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.vexFlowCanvasContext.fillStyle = oldFillStyle;
     */
-    this.background_fillStyle = style; // TODO: Is this a BUG? The field is never referenced anywhere else.
+    this.background_fillStyle = style;
     return this;
   }
 
