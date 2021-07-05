@@ -1,7 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This class implements vibratos.
+// MIT Licnse
 
 import { Modifier } from './modifier';
 import { Bend } from './bend';
@@ -16,15 +14,16 @@ export interface VibratoRenderOptions {
   wave_width: number;
 }
 
+/** `Vibrato` implements diverse vibratos. */
 export class Vibrato extends Modifier {
-  render_options: VibratoRenderOptions;
+  protected render_options: VibratoRenderOptions;
 
+  /** Get element CATEGORY string. */
   static get CATEGORY(): string {
     return 'vibratos';
   }
 
-  // ## Static Methods
-  // Arrange vibratos inside a `ModifierContext`.
+  /** Arrange vibratos inside a `ModifierContext`. */
   static format(vibratos: Vibrato[], state: ModifierContextState, context: ModifierContext): boolean {
     if (!vibratos || vibratos.length === 0) return false;
 
@@ -53,7 +52,6 @@ export class Vibrato extends Modifier {
     return true;
   }
 
-  // ## Prototype Methods
   constructor() {
     super();
     this.setAttribute('type', 'Vibrato');
@@ -70,21 +68,25 @@ export class Vibrato extends Modifier {
     this.setVibratoWidth(this.render_options.vibrato_width);
   }
 
+  /** Get element category string. */
   getCategory(): string {
     return Vibrato.CATEGORY;
   }
 
+  /** Set harsh vibrato. */
   setHarsh(harsh: boolean): this {
     this.render_options.harsh = harsh;
     return this;
   }
 
+  /** Set vibrato width in pixels. */
   setVibratoWidth(width: number): this {
     this.render_options.vibrato_width = width;
     this.setWidth(width);
     return this;
   }
 
+  /** Draw the vibrato on the rendering context. */
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
@@ -98,8 +100,10 @@ export class Vibrato extends Modifier {
     Vibrato.renderVibrato(ctx, vx, vy, this.render_options);
   }
 
-  // Static rendering method that can be called from
-  // other classes (e.g. VibratoBracket)
+  /**
+   * Static rendering method that can be called from
+   * other classes (e.g. VibratoBracket).
+   */
   static renderVibrato(ctx: RenderContext, x: number, y: number, opts: VibratoRenderOptions): void {
     const { harsh, vibrato_width, wave_width, wave_girth, wave_height } = opts;
     const num_waves = vibrato_width / wave_width;
