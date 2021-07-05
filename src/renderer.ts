@@ -1,13 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// Support for different rendering contexts: Canvas & SVG
+// MIT License
 
 import { CanvasContext } from './canvascontext';
 import { SVGContext } from './svgcontext';
 import { RenderContext } from './types/common';
 import { RuntimeError } from './util';
 
+/**
+ * Support Canvas & SVG rendering contexts.
+ */
 export class Renderer {
   protected elementId?: string | HTMLElement;
   protected element: HTMLCanvasElement;
@@ -70,7 +71,6 @@ export class Renderer {
     }
 
     // Modify the CanvasRenderingContext2D to include the following methods, if they do not already exist.
-    // setLineDash exists natively: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash
     // TODO: Is a Proxy object appropriate here?
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
     const methodNames = [
@@ -84,7 +84,6 @@ export class Renderer {
       'setShadowBlur',
       'setLineWidth',
       'setLineCap',
-      'setLineDash',
       'openGroup',
       'closeGroup',
       'getGroup',
@@ -92,9 +91,6 @@ export class Renderer {
 
     ctx.vexFlowCanvasContext = ctx;
 
-    // TODO: Do we get called with the same context over and over again?
-    // TODO: Keep references to the context to see if it's the same one.
-    // ANSWER: PROBABLY YES!!!
     methodNames.forEach((methodName) => {
       if (!(methodName in ctx)) {
         // eslint-disable-next-line
