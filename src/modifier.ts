@@ -77,7 +77,7 @@ export class Modifier extends Element {
   }
 
   // Called when position changes
-  reset(): void {
+  protected reset(): void {
     // do nothing
   }
 
