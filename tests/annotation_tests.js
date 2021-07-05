@@ -61,10 +61,8 @@ const AnnotationTests = (function () {
     simple: function (options, contextBuilder) {
       var ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
-      // ctx.fillStyle = '#221';
-      // ctx.strokeStyle = '#221';
-      ctx.fillStyle = '#F21';
-      ctx.strokeStyle = '#F21';
+      ctx.fillStyle = '#221';
+      ctx.strokeStyle = '#221';
       ctx.font = ' 10pt Arial';
       var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
