@@ -10,6 +10,7 @@ export const BravuraMetrics = {
     padding: 12,
     endPaddingMax: 10,
     endPaddingMin: 5,
+    unalignedNotePadding: 10
   },
   accidental: {
     noteheadAccidentalPadding: 1,

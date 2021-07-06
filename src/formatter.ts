@@ -371,7 +371,7 @@ export class Formatter {
   constructor(formatterOptions: Partial<FormatterOptions> = {}) {
     this.formatterOptions = {
       globalSoftmax: false,
-      maxIterations: 2,
+      maxIterations: 5,
       ...formatterOptions,
     };
     this.justifyWidth = 0;
@@ -411,8 +411,34 @@ export class Formatter {
     voices.forEach((voice) => Formatter.AlignRestsToNotes(voice.getTickables(), alignAllNotes));
   }
 
-  // Calculate the minimum width required to align and format `voices`.
+  /**
+   * Estimate the width required to render 'voices'.  This is done by:
+   * 1. Sum the widths of all the tick contexts
+   * 2. Estimate the padding.
+   * The latter is done by calculating the padding 3 different ways, and taking the
+   * greatest value:
+   * 1. the padding required for unaligned notes in different voices
+   * 2. the padding based on the stddev of the tickable widths
+   * 3. the padding based on the stddev of the tickable durations.
+   *
+   * The last 2 quantities estimate a 'width entropy', where notes might need more
+   * room than the proportional formatting gives them.  A measure of all same duration
+   * and width will need no extra padding, and all these quantities will be
+   * zero in that case.
+   *
+   * @param {Voice []} voices - the voices that contain the notes
+   * @returns {number} - the estimated width in pixels
+   */
   preCalculateMinTotalWidth(voices: Voice[]): number {
+    const unalignedPadding = Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.unalignedNotePadding');
+    // Calculate additional padding based on 3 methods:
+    // 1) unaligned beats in voices, 2) variance of width, 3) variance of durations
+    let unalignedCtxCount = 0;
+    let wsum = 0;
+    let dsum = 0;
+    const widths: number[] = [];
+    const durations: number[] = [];
+
     // Cache results.
     if (this.hasMinTotalWidth) return this.minTotalWidth;
 
@@ -427,20 +453,44 @@ export class Formatter {
 
     // eslint-disable-next-line
     const { list: contextList, map: contextMap } = this.tickContexts!;
+    this.minTotalWidth = 0;
 
-    // const maxTicks = contextList.map(tick => tick.maxTicks.value()).reduce((a, b) => a + b, 0);
-    // Go through each tick context and calculate total width.
-    this.minTotalWidth = contextList
-      .map((tick) => {
-        const context = contextMap[tick];
-        context.preFormat();
-        return context.getWidth();
-      })
-      .reduce((a: number, b: number) => a + b, 0);
+    // Go through each tick context and calculate total width,
+    // and also accumulate values used in padding hints
+    contextList.forEach((tick) => {
+      const context = contextMap[tick];
+      context.preFormat();
+      // If this TC doesn't have all the voices on it, it's unaligned.
+      // so increment the unaligned padding accumulator
+      if (context.getTickables().length < voices.length) {
+        unalignedCtxCount += 1;
+      }
+      // calculate the 'width entropy' over all the tickables
+      context.getTickables().forEach((tt) => {
+        wsum += tt.getMetrics().width;
+        dsum += tt.getTicks().value();
+        widths.push(tt.getMetrics().width);
+        durations.push(tt.getTicks().value());
+      });
+      const width = context.getWidth();
+      this.minTotalWidth += width;
+    });
 
     this.hasMinTotalWidth = true;
+    // normalized (0-1) STDDEV of widths/durations gives us padding hints.
+    const wavg = wsum > 0 ? wsum / widths.length : 1 / widths.length;
+    const wvar = widths.map((ll) => Math.pow(ll - wavg, 2)).reduce((a, b) => a + b);
+    const wpads = Math.pow(wvar / widths.length, 0.5) / wavg;
 
-    return this.minTotalWidth;
+    const davg = dsum / durations.length;
+    const dvar = durations.map((ll) => Math.pow(ll - davg, 2)).reduce((a, b) => a + b);
+    const dpads = Math.pow(dvar / durations.length, 0.5) / davg;
+
+    // Find max of 3 methods pad the width with that
+    const padmax = Math.max(dpads, wpads) * contextList.length * unalignedPadding;
+    const unalignedPad = unalignedPadding * unalignedCtxCount;
+
+    return this.minTotalWidth + Math.max(unalignedPad, padmax);
   }
 
   // Get minimum width required to render all voices. Either `format` or
@@ -692,7 +742,7 @@ export class Formatter {
     const musicFont = Flow.DEFAULT_FONT_STACK[0];
     const paddingMax = musicFont.lookupMetric('stave.endPaddingMax');
     const paddingMin = musicFont.lookupMetric('stave.endPaddingMin');
-    const maxX = adjustedJustifyWidth + lastContext.getMetrics().notePx - paddingMin;
+    const maxX = adjustedJustifyWidth - paddingMin;
 
     let iterations = this.formatterOptions.maxIterations;
     while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
