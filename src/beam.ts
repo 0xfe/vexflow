@@ -154,10 +154,8 @@ export class Beam extends Element {
    *   show_stemlets: false
    * };
    * ```
-   *
-   * Parameters:
-   * * `notes` - An array of notes to create the beams for
-   * * `config` - The configuration object
+   * @param notes an array of notes to create the beams for
+   * @param config The configuration object:
    *    * `groups` - Array of `Fractions` that represent the beat structure to beam the notes
    *    * `stem_direction` - Set to apply the same direction to all notes
    *    * `beam_rests` - Set to `true` to include rests in the beams
@@ -505,12 +503,12 @@ export class Beam extends Element {
     };
   }
 
-  // Get the notes in this beam
+  /** Get the notes in this beam. */
   getNotes(): StemmableNote[] {
     return this.notes;
   }
 
-  // Get the max number of beams in the set of notes
+  /** Get the max number of beams in the set of notes. */
   getBeamCount(): number {
     const beamCounts = this.notes.map((note) => note.getGlyph().beam_count);
 
@@ -519,18 +517,18 @@ export class Beam extends Element {
     return maxBeamCount;
   }
 
-  // Set which note `indices` to break the secondary beam at
+  /** Set which note `indices` to break the secondary beam at. */
   breakSecondaryAt(indices: number[]): this {
     this.break_on_indices = indices;
     return this;
   }
 
-  // Return the y coordinate for linear function
+  /** Return the y coordinate for linear function. */
   getSlopeY(x: number, first_x_px: number, first_y_px: number, slope: number): number {
     return first_y_px + (x - first_x_px) * slope;
   }
 
-  // Calculate the best possible slope for the provided notes
+  /** Calculate the best possible slope for the provided notes. */
   calculateSlope(): void {
     const {
       notes,
@@ -589,7 +587,7 @@ export class Beam extends Element {
     this.y_shift = yShift;
   }
 
-  // Calculate a slope and y-shift for flat beams
+  /** Calculate a slope and y-shift for flat beams. */
   calculateFlatSlope(): void {
     const {
       notes,
@@ -653,6 +651,7 @@ export class Beam extends Element {
     this.y_shift = 0;
   }
 
+  /** Return the Beam y offset. */
   getBeamYToDraw(): number {
     const firstNote = this.notes[0];
     const firstStemTipY = firstNote.getStemExtents().topY;
@@ -666,8 +665,10 @@ export class Beam extends Element {
     return beamY;
   }
 
-  // Create new stems for the notes in the beam, so that each stem
-  // extends into the beams.
+  /**
+   * Create new stems for the notes in the beam, so that each stem
+   * extends into the beams.
+   */
   applyStemExtensions(): void {
     const {
       notes,
@@ -706,7 +707,7 @@ export class Beam extends Element {
     }
   }
 
-  // return upper level beam direction.
+  /** Return upper level beam direction. */
   lookupBeamDirection(duration: string, prev_tick: number, tick: number, next_tick: number): string {
     if (duration === '4') {
       return BEAM_LEFT;
@@ -728,7 +729,7 @@ export class Beam extends Element {
     return this.lookupBeamDirection(lookup_duration, prev_tick, tick, next_tick);
   }
 
-  // Get the x coordinates for the beam lines of specific `duration`
+  /** Get the x coordinates for the beam lines of specific `duration`. */
   getBeamLines(duration: string): { start: number; end?: number }[] {
     const tick_of_duration = Flow.durationToTicks(duration);
     let beam_started = false;
@@ -841,8 +842,8 @@ export class Beam extends Element {
     return beam_lines;
   }
 
-  // Render the stems for each notes
-  drawStems(ctx: RenderContext): void {
+  /** Render the stems for each note. */
+  protected drawStems(ctx: RenderContext): void {
     this.notes.forEach((note) => {
       const stem = note.getStem();
       if (stem) {
@@ -852,7 +853,7 @@ export class Beam extends Element {
   }
 
   // Render the beam lines
-  drawBeamLines(ctx: RenderContext): void {
+  protected drawBeamLines(ctx: RenderContext): void {
     const valid_beam_durations = ['4', '8', '16', '32', '64'];
 
     const firstNote = this.notes[0];
@@ -890,14 +891,16 @@ export class Beam extends Element {
     }
   }
 
-  // Pre-format the beam
+  /** Pre-format the beam. */
   preFormat(): this {
     return this;
   }
 
-  // Post-format the beam. This can only be called after
-  // the notes in the beam have both `x` and `y` values. ie: they've
-  // been formatted and have staves
+  /**
+   * Post-format the beam. This can only be called after
+   * the notes in the beam have both `x` and `y` values. ie: they've
+   * been formatted and have staves.
+   */
   postFormat(): void {
     if (this.postFormatted) return;
 
@@ -912,7 +915,7 @@ export class Beam extends Element {
     this.postFormatted = true;
   }
 
-  // Render the beam to the canvas context
+  /** Render the beam to the canvas context */
   draw(): void {
     const ctx = this.checkContext();
     this.setRendered();
