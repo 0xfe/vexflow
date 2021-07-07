@@ -1,8 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements `Beams` that span over a set of `StemmableNotes`.
+// MIT License
 
 import { RuntimeError } from './util';
 import { Flow } from './flow';
@@ -45,6 +42,7 @@ const BEAM_LEFT = 'L';
 const BEAM_RIGHT = 'R';
 const BEAM_BOTH = 'B';
 
+/** `Beams` span over a set of `StemmableNotes`. */
 export class Beam extends Element {
   render_options: {
     flat_beam_offset?: number;
@@ -71,9 +69,11 @@ export class Beam extends Element {
   private break_on_indices: number[];
   private beam_count: number;
   private unbeamable?: boolean;
-  // Gets the default beam groups for a provided time signature.
-  // Attempts to guess if the time signature is not found in table.
-  // Currently this is fairly naive.
+  /**
+   * Get the default beam groups for a provided time signature.
+   * Attempt to guess if the time signature is not found in table.
+   * Currently this is fairly naive.
+   */
   static getDefaultBeamGroups(time_sig: string): Fraction[] {
     if (!time_sig || time_sig === 'c') {
       time_sig = '4/4';
@@ -125,13 +125,13 @@ export class Beam extends Element {
     return [new Fraction(1, 4)];
   }
 
-  // A helper function to automatically build basic beams for a voice. For more
-  // complex auto-beaming use `Beam.generateBeams()`.
-  //
-  // Parameters:
-  // * `voice` - The voice to generate the beams for
-  // * `stem_direction` - A stem direction to apply to the entire voice
-  // * `groups` - An array of `Fraction` representing beat groupings for the beam
+  /**
+   * A helper function to automatically build basic beams for a voice. For more
+   * complex auto-beaming use `Beam.generateBeams()`.
+   * @param voice the voice to generate the beams for
+   * @param stem_direction a stem direction to apply to the entire voice
+   * @param groups an array of `Fraction` representing beat groupings for the beam
+   */
   static applyAndGetBeams(voice: Voice, stem_direction?: number, groups?: Fraction[]): Beam[] {
     return Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       groups,
@@ -139,31 +139,33 @@ export class Beam extends Element {
     });
   }
 
-  // A helper function to autimatically build beams for a voice with
-  // configuration options.
-  //
-  // Example configuration object:
-  //
-  // ```
-  // config = {
-  //   groups: [new Vex.Flow.Fraction(2, 8)],
-  //   stem_direction: -1,
-  //   beam_rests: true,
-  //   beam_middle_only: true,
-  //   show_stemlets: false
-  // };
-  // ```
-  //
-  // Parameters:
-  // * `notes` - An array of notes to create the beams for
-  // * `config` - The configuration object
-  //    * `groups` - Array of `Fractions` that represent the beat structure to beam the notes
-  //    * `stem_direction` - Set to apply the same direction to all notes
-  //    * `beam_rests` - Set to `true` to include rests in the beams
-  //    * `beam_middle_only` - Set to `true` to only beam rests in the middle of the beat
-  //    * `show_stemlets` - Set to `true` to draw stemlets for rests
-  //    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
-  //
+  /**
+   * A helper function to autimatically build beams for a voice with
+   * configuration options.
+   *
+   * Example configuration object:
+   *
+   * ```
+   * config = {
+   *   groups: [new Vex.Flow.Fraction(2, 8)],
+   *   stem_direction: -1,
+   *   beam_rests: true,
+   *   beam_middle_only: true,
+   *   show_stemlets: false
+   * };
+   * ```
+   *
+   * Parameters:
+   * * `notes` - An array of notes to create the beams for
+   * * `config` - The configuration object
+   *    * `groups` - Array of `Fractions` that represent the beat structure to beam the notes
+   *    * `stem_direction` - Set to apply the same direction to all notes
+   *    * `beam_rests` - Set to `true` to include rests in the beams
+   *    * `beam_middle_only` - Set to `true` to only beam rests in the middle of the beat
+   *    * `show_stemlets` - Set to `true` to draw stemlets for rests
+   *    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
+   *
+   */
   static generateBeams(
     notes: StemmableNote[],
     config: {
