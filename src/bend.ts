@@ -1,8 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements tablature bends.
+// MIT License
 
 import { RuntimeError } from './util';
 import { Flow } from './flow';
@@ -24,40 +21,7 @@ export interface BendRenderOptions {
   line_style: string;
 }
 
-/**
-   @param text Text for bend ("Full", "Half", etc.) (DEPRECATED)
-   @param release If true, render a release. (DEPRECATED)
-   @param phrase If set, ignore "text" and "release", and use the more
-                 sophisticated phrase specified.
-
-   Example of a phrase:
-
-     [{
-       type: UP,
-       text: "whole"
-       width: 8;
-     },
-     {
-       type: DOWN,
-       text: "whole"
-       width: 8;
-     },
-     {
-       type: UP,
-       text: "half"
-       width: 8;
-     },
-     {
-       type: UP,
-       text: "whole"
-       width: 8;
-     },
-     {
-       type: DOWN,
-       text: "1 1/2"
-       width: 8;
-     }]
- */
+/** Bend implements tablature bends. */
 export class Bend extends Modifier {
   protected text: string;
   protected release: boolean;
@@ -99,7 +63,38 @@ export class Bend extends Modifier {
     return true;
   }
 
-  // ## Prototype Methods
+  /**
+   * Constructor.
+   * Example of a phrase:
+   *    [{
+   *     type: UP,
+   *     text: "whole"
+   *     width: 8;
+   *   },
+   *   {
+   *     type: DOWN,
+   *     text: "whole"
+   *     width: 8;
+   *   },
+   *   {
+   *     type: UP,
+   *     text: "half"
+   *     width: 8;
+   *   },
+   *   {
+   *     type: UP,
+   *     text: "whole"
+   *     width: 8;
+   *   },
+   *   {
+   *     type: DOWN,
+   *     text: "1 1/2"
+   *     width: 8;
+   *   }]
+   * @param text text for bend ("Full", "Half", etc.) (DEPRECATED)
+   * @param release if true, render a release. (DEPRECATED)
+   * @param phrase if set, ignore "text" and "release", and use the more sophisticated phrase specified
+   */
   constructor(text: string, release: boolean, phrase: BendPhrase[]) {
     super();
     this.setAttribute('type', 'Bend');
@@ -126,26 +121,31 @@ export class Bend extends Modifier {
     this.updateWidth();
   }
 
+  /** Get element category string. */
   getCategory(): string {
     return Bend.CATEGORY;
   }
 
+  /** Set horizontal shift in pixels. */
   setXShift(value: number): this {
     this.x_shift = value;
     this.updateWidth();
     return this;
   }
 
+  /** Set text's font. */
   setFont(font: string): this {
     this.font = font;
     return this;
   }
 
+  /** Get text provided in the constructor. */
   getText(): string {
     return this.text;
   }
 
-  updateWidth(): this {
+  /** Recalculate width. */
+  protected updateWidth(): this {
     // eslint-disable-next-line
     const that = this;
 
@@ -180,6 +180,7 @@ export class Bend extends Modifier {
     return this;
   }
 
+  /** Draw the bend on the rendering context. */
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
@@ -270,7 +271,7 @@ export class Bend extends Modifier {
           renderRelease(start.x, start.y, last_drawn_width, bend_height);
         }
 
-        if (last_bend === null) {
+        if (!last_bend) {
           last_drawn_width = bend.draw_width;
           renderRelease(start.x, start.y, last_drawn_width, bend_height);
         }
