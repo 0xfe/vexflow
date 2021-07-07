@@ -155,13 +155,13 @@ export class Beam extends Element {
    * };
    * ```
    * @param notes an array of notes to create the beams for
-   * @param config The configuration object:
-   *    * `groups` - Array of `Fractions` that represent the beat structure to beam the notes
-   *    * `stem_direction` - Set to apply the same direction to all notes
-   *    * `beam_rests` - Set to `true` to include rests in the beams
-   *    * `beam_middle_only` - Set to `true` to only beam rests in the middle of the beat
-   *    * `show_stemlets` - Set to `true` to draw stemlets for rests
-   *    * `maintain_stem_directions` - Set to `true` to not apply new stem directions
+   * @param config the configuration object
+   * @param config.stem_direction set to apply the same direction to all notes
+   * @param config.beam_rests set to `true` to include rests in the beams
+   * @param config.beam_middle_only set to `true` to only beam rests in the middle of the beat
+   * @param config.show_stemlets set to `true` to draw stemlets for rests
+   * @param config.maintain_stem_directions set to `true` to not apply new stem directions
+   * @param config.groups array of `Fractions` that represent the beat structure to beam the notes
    *
    */
   static generateBeams(
