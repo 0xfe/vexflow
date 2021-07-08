@@ -1,32 +1,26 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Mike Corrigan <corrigan@gmail.com>
-//
-// This class implements tremolo notation.
+// MIT License
 
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
 import { Stem } from './stem';
-import { FontInfo } from './types/common';
 
-export interface TremoloRenderOptions {
-  stroke_spacing: number;
-  stroke_px: number;
-  // eslint-disable-next-line
-  font_scale: any;
-}
-
+/** Tremolo implements tremolo notation. */
 export class Tremolo extends Modifier {
   protected readonly code: string;
   protected readonly num: number;
-  protected y_spacing?: number;
-  protected font?: FontInfo;
-  protected render_options?: TremoloRenderOptions;
 
+  /** Tremolos category string. */
   static get CATEGORY(): string {
     return 'tremolo';
   }
 
+  /**
+   * Constructor.
+   * @param num number of bars
+   */
   constructor(num: number) {
     super();
     this.setAttribute('type', 'Tremolo');
@@ -36,10 +30,12 @@ export class Tremolo extends Modifier {
     this.code = 'tremolo1';
   }
 
+  /** Get element CATEGORY string. */
   getCategory(): string {
     return Tremolo.CATEGORY;
   }
 
+  /** Draw the tremolo on the rendering context. */
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
@@ -53,8 +49,8 @@ export class Tremolo extends Modifier {
     const scale = isGraceNote ? GraceNote.SCALE : 1;
     const category = `tremolo.${isGraceNote ? 'grace' : 'default'}`;
 
-    this.y_spacing = this.musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
-    const height = this.num * this.y_spacing;
+    const y_spacing = this.musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
+    const height = this.num * y_spacing;
     let y = note.getStemExtents().baseY - height;
 
     if (stemDirection < 0) {
@@ -63,22 +59,12 @@ export class Tremolo extends Modifier {
       y += this.musicFont.lookupMetric(`${category}.offsetYStemUp`) * scale;
     }
 
-    this.font = {
-      family: 'Arial',
-      size: 16 * scale,
-      weight: '',
-    };
-
-    this.render_options = {
-      font_scale: this.musicFont.lookupMetric(`${category}.point`),
-      stroke_px: 3,
-      stroke_spacing: 10 * scale,
-    };
+    const fontScale = this.musicFont.lookupMetric(`${category}.point`);
 
     x += this.musicFont.lookupMetric(`${category}.offsetXStem${stemDirection === Stem.UP ? 'Up' : 'Down'}`);
     for (let i = 0; i < this.num; ++i) {
-      Glyph.renderGlyph(ctx, x, y, this.render_options.font_scale, this.code, { category });
-      y += this.y_spacing;
+      Glyph.renderGlyph(ctx, x, y, fontScale, this.code, { category });
+      y += y_spacing;
     }
   }
 }
