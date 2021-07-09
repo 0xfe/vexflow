@@ -6,7 +6,7 @@ import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 
-export interface BendPhrase {
+interface BendPhrase {
   x?: number;
   type: number;
   text: string;

@@ -162,16 +162,14 @@ function getInitialOffset(note: Note, position: number): number {
  * See `tests/articulation_tests.js` for usage examples.
  */
 export class Articulation extends Modifier {
-  protected note?: Note;
-
   /** Articulation code provided to the constructor. */
   readonly type: string;
   protected static readonly INITIAL_OFFSET: number = -0.5;
 
   protected render_options: { font_scale: number };
-  protected articulation?: ArticulationStruct;
+  // articulation defined calling reset in constructor
+  protected articulation!: ArticulationStruct;
   // glyph defined calling reset in constructor
-  // eslint-disable-next-line
   protected glyph!: Glyph;
   /** To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`. */
   static DEBUG: boolean;
@@ -293,7 +291,7 @@ export class Articulation extends Modifier {
 
     const index = this.checkIndex();
     const { position, glyph, text_line: textLine } = this;
-    const canSitBetweenLines = this.articulation?.between_lines ?? false;
+    const canSitBetweenLines = this.articulation.between_lines;
 
     const stave = note.checkStave();
     const staffSpace = stave.getSpacingBetweenLines();

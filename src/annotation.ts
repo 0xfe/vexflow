@@ -38,8 +38,6 @@ export class Annotation extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`. */
   static DEBUG: boolean;
 
-  protected note?: StemmableNote;
-
   protected justification: Justify;
   protected vert_justification: VerticalJustify;
   protected text: string;
