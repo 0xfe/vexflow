@@ -1,11 +1,9 @@
-// Vex Music Notation
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// Copyright Mohit Muthanna 2010
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 
 import { RenderContext } from './types/common';
 
-// Bounding boxes for interactive notation
+/** Bounding boxes for interactive notation */
 
 export class BoundingBox {
   protected x: number;
@@ -13,6 +11,9 @@ export class BoundingBox {
   protected w: number;
   protected h: number;
 
+  /**
+   * Create a new copy.
+   */
   static copy(that: BoundingBox): BoundingBox {
     return new BoundingBox(that.x, that.y, that.w, that.h);
   }
@@ -24,54 +25,66 @@ export class BoundingBox {
     this.h = h;
   }
 
+  /** Get x position. */
   getX(): number {
     return this.x;
   }
 
+  /** Get y position. */
   getY(): number {
     return this.y;
   }
 
+  /** Get width. */
   getW(): number {
     return this.w;
   }
 
+  /** Get height. */
   getH(): number {
     return this.h;
   }
 
+  /** Set x position. */
   setX(x: number): this {
     this.x = x;
     return this;
   }
 
+  /** Set y position. */
   setY(y: number): this {
     this.y = y;
     return this;
   }
 
+  /** Set width. */
   setW(w: number): this {
     this.w = w;
     return this;
   }
 
+  /** Set height. */
   setH(h: number): this {
     this.h = h;
     return this;
   }
 
+  /** Move to position. */
   move(x: number, y: number): this {
     this.x += x;
     this.y += y;
     return this;
   }
 
+  /** Clone. */
   clone(): BoundingBox {
     return BoundingBox.copy(this);
   }
 
-  // Merge my box with given box. Creates a bigger bounding box unless
-  // the given box is contained in this one.
+  /**
+   * Merge my box with given box. Creates a bigger bounding box unless
+   * the given box is contained in this one.
+   */
   mergeWith(boundingBox: BoundingBox, ctx?: RenderContext): this {
     const that = boundingBox;
 
@@ -89,6 +102,12 @@ export class BoundingBox {
     return this;
   }
 
+  /**
+   * Render the BoundingBox.
+   * @param ctx rendering context
+   * @param x horizontal shift
+   * @param y vertical shift
+   */
   draw(ctx: RenderContext, x?: number, y?: number): void {
     if (!x) x = 0;
     if (!y) y = 0;
