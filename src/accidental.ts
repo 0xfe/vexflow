@@ -84,7 +84,7 @@ export class Accidental extends Modifier {
     if (!accidentals || accidentals.length === 0) return;
 
     const accList: AccidentalListItem[] = [];
-    let prevNote = null;
+    let prevNote = undefined;
     let shiftL = 0;
 
     // First determine the accidentals' Y positions from the note.keys
@@ -121,14 +121,14 @@ export class Accidental extends Modifier {
     // amount by which all accidentals must be shifted right or left for
     // stem flipping, notehead shifting concerns.
     let accShift = 0;
-    let previousLine = null;
+    let previousLine = undefined;
 
     // Create an array of unique line numbers (lineList) from accList
     for (let i = 0; i < accList.length; i++) {
       const acc = accList[i];
 
       // if this is the first line, or a new line, add a lineList
-      if (previousLine === null || previousLine !== acc.line) {
+      if (previousLine === undefined || previousLine !== acc.line) {
         lineList.push({
           line: acc.line,
           flatLine: true,

@@ -783,7 +783,7 @@ export class Beam extends Element {
           // If a secondary beam break is set up, end the beam right now.
           if (should_break) {
             beam_started = false;
-            if (next_note && !next_note_gets_beam && current_beam.end === null) {
+            if (next_note && !next_note_gets_beam && current_beam.end === undefined) {
               // This note gets a beam,.but the next one does not. This means
               //  we need a partial pointing right.
               current_beam.end = current_beam.start - partial_beam_length;
@@ -836,7 +836,7 @@ export class Beam extends Element {
 
     // Add a partial beam pointing left if this is the last note in the group
     const last_beam = beam_lines[beam_lines.length - 1];
-    if (last_beam && last_beam.end === null) {
+    if (last_beam && last_beam.end === undefined) {
       last_beam.end = last_beam.start - partial_beam_length;
     }
     return beam_lines;
