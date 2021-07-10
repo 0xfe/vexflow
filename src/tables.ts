@@ -396,8 +396,8 @@ export const Tables = {
       CN: { index: 0, int_val: 0, accidental: 'n' },
       'C#': { index: 0, int_val: 1, accidental: '#' },
       'C##': { index: 0, int_val: 2, accidental: '##' },
-      CB: { index: 0, int_val: -1, accidental: 'b' },
-      CBB: { index: 0, int_val: -2, accidental: 'bb' },
+      CB: { index: 0, int_val: 11, accidental: 'b' },
+      CBB: { index: 0, int_val: 10, accidental: 'bb' },
       D: { index: 1, int_val: 2 },
       DN: { index: 1, int_val: 2, accidental: 'n' },
       'D#': { index: 1, int_val: 3, accidental: '#' },
@@ -434,7 +434,7 @@ export const Tables = {
       'B##': { index: 6, int_val: 13, accidental: '##' },
       BB: { index: 6, int_val: 10, accidental: 'b' },
       BBB: { index: 6, int_val: 9, accidental: 'bb' },
-      R: { index: 6, int_val: 9, rest: true }, // Rest
+      R: { index: 6, rest: true }, // Rest
       X: {
         index: 6,
         accidental: '',
@@ -480,7 +480,7 @@ export const Tables = {
     if (line >= 6 && (line * 2) % 2 === 0) stroke = -1; // stroke down
 
     // Integer value for note arithmetic.
-    const int_value = typeof value.int_val !== 'undefined' ? octave * 12 + value.int_val : null;
+    const int_value = typeof value.int_val !== 'undefined' ? octave * 12 + value.int_val : undefined;
 
     /* Check if the user specified a glyph. */
     const code = value.code;
