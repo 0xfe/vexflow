@@ -1,8 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This class implements some standard music theory routines.
+// MIT Licnse
 
+import { Tables } from './tables';
 import { RuntimeError } from './util';
 
 export interface NoteAccidental {
@@ -31,19 +30,25 @@ export interface Key {
   root_index: RootValue;
   int_val: KeyValue;
 }
+
+/** Music implements some standard music theory routines. */
 export class Music {
+  /** Number of an canonical notes (12). */
   static get NUM_TONES(): number {
-    return 12;
+    return this.canonical_notes.length;
   }
 
+  /** Names of root notes ('c', 'd',...) */
   static get roots(): string[] {
     return ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
   }
 
+  /** Values of the root notes.*/
   static get root_values(): KeyValue[] {
     return [0, 2, 4, 5, 7, 9, 11];
   }
 
+  /** Indices of the root notes.*/
   static get root_indices(): Record<string, RootValue> {
     return {
       c: 0,
@@ -56,14 +61,17 @@ export class Music {
     };
   }
 
+  /** Names of canonical notes ('c', 'c#', 'd',...). */
   static get canonical_notes(): string[] {
     return ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
   }
 
+  /** Names of diatonic intervals ('unison', 'm2', 'M2',...). */
   static get diatonic_intervals(): string[] {
     return ['unison', 'm2', 'M2', 'm3', 'M3', 'p4', 'dim5', 'p5', 'm6', 'M6', 'b7', 'M7', 'octave'];
   }
 
+  /** NoteAccidental associated to diatonic intervals. */
   static get diatonic_accidentals(): Record<string, NoteAccidental> {
     return {
       unison: { note: 0, accidental: 0 },
@@ -82,6 +90,7 @@ export class Music {
     };
   }
 
+  /** Semitones shift associated to intervals .*/
   static get intervals(): Record<string, number> {
     return {
       u: 0,
@@ -127,15 +136,22 @@ export class Music {
     };
   }
 
+  /** Semitones shifts associated with scales. */
   static get scales(): Record<string, number[]> {
     return {
       major: [2, 2, 1, 2, 2, 2, 1],
-      dorian: [2, 1, 2, 2, 2, 1, 2],
-      mixolydian: [2, 2, 1, 2, 2, 1, 2],
       minor: [2, 1, 2, 2, 1, 2, 2],
+      ionian: [2, 2, 1, 2, 2, 2, 1],
+      dorian: [2, 1, 2, 2, 2, 1, 2],
+      phyrgian: [1, 2, 2, 2, 1, 2, 2],
+      lydian: [2, 2, 2, 1, 2, 2, 1],
+      mixolydian: [2, 2, 1, 2, 2, 1, 2],
+      aeolian: [2, 1, 2, 2, 1, 2, 2],
+      locrian: [1, 2, 2, 1, 2, 2, 2],
     };
   }
 
+  /** Scales associated with m (minor) and M (major). */
   static get scaleTypes(): Record<string, number[]> {
     return {
       M: Music.scales.major,
@@ -143,65 +159,20 @@ export class Music {
     };
   }
 
+  /** Accidentals abreviations. */
   static get accidentals(): string[] {
     return ['bb', 'b', 'n', '#', '##'];
   }
 
-  static get noteValues(): Record<string, Key> {
-    return {
-      c: { root_index: 0, int_val: 0 },
-      cn: { root_index: 0, int_val: 0 },
-      'c#': { root_index: 0, int_val: 1 },
-      'c##': { root_index: 0, int_val: 2 },
-      cb: { root_index: 0, int_val: 11 },
-      cbb: { root_index: 0, int_val: 10 },
-      d: { root_index: 1, int_val: 2 },
-      dn: { root_index: 1, int_val: 2 },
-      'd#': { root_index: 1, int_val: 3 },
-      'd##': { root_index: 1, int_val: 4 },
-      db: { root_index: 1, int_val: 1 },
-      dbb: { root_index: 1, int_val: 0 },
-      e: { root_index: 2, int_val: 4 },
-      en: { root_index: 2, int_val: 4 },
-      'e#': { root_index: 2, int_val: 5 },
-      'e##': { root_index: 2, int_val: 6 },
-      eb: { root_index: 2, int_val: 3 },
-      ebb: { root_index: 2, int_val: 2 },
-      f: { root_index: 3, int_val: 5 },
-      fn: { root_index: 3, int_val: 5 },
-      'f#': { root_index: 3, int_val: 6 },
-      'f##': { root_index: 3, int_val: 7 },
-      fb: { root_index: 3, int_val: 4 },
-      fbb: { root_index: 3, int_val: 3 },
-      g: { root_index: 4, int_val: 7 },
-      gn: { root_index: 4, int_val: 7 },
-      'g#': { root_index: 4, int_val: 8 },
-      'g##': { root_index: 4, int_val: 9 },
-      gb: { root_index: 4, int_val: 6 },
-      gbb: { root_index: 4, int_val: 5 },
-      a: { root_index: 5, int_val: 9 },
-      an: { root_index: 5, int_val: 9 },
-      'a#': { root_index: 5, int_val: 10 },
-      'a##': { root_index: 5, int_val: 11 },
-      ab: { root_index: 5, int_val: 8 },
-      abb: { root_index: 5, int_val: 7 },
-      b: { root_index: 6, int_val: 11 },
-      bn: { root_index: 6, int_val: 11 },
-      'b#': { root_index: 6, int_val: 0 },
-      'b##': { root_index: 6, int_val: 1 },
-      bb: { root_index: 6, int_val: 10 },
-      bbb: { root_index: 6, int_val: 9 },
-    };
+  protected isValidNoteValue(note: number): boolean {
+    return note >= 0 && note < Music.canonical_notes.length;
   }
 
-  isValidNoteValue(note: number): boolean {
-    return note >= 0 && note < Music.NUM_TONES;
+  protected isValidIntervalValue(interval: number): boolean {
+    return interval >= 0 && interval < Music.diatonic_intervals.length;
   }
 
-  isValidIntervalValue(interval: number): boolean {
-    return this.isValidNoteValue(interval);
-  }
-
+  /** Return root and accidental associated to a note. */
   getNoteParts(noteString: string): NoteParts {
     if (!noteString || noteString.length < 1) {
       throw new RuntimeError('BadArguments', 'Invalid note name: ' + noteString);
@@ -229,6 +200,7 @@ export class Music {
     }
   }
 
+  /** Return root, accidental and type associated to a key. */
   getKeyParts(keyString: string): KeyParts {
     if (!keyString || keyString.length < 1) {
       throw new RuntimeError('BadArguments', 'Invalid key: ' + keyString);
@@ -258,14 +230,16 @@ export class Music {
     }
   }
 
+  /** Note value associated to a note name. */
   getNoteValue(noteString: string): number {
-    const value = Music.noteValues[noteString];
-    if (value === undefined) {
+    const value = Tables.keyProperties(`${noteString.toUpperCase()}/0`);
+    if (value === undefined || value.int_value === undefined) {
       throw new RuntimeError('BadArguments', `Invalid note name: ${noteString}`);
     }
-    return value.int_val;
+    return value.int_value;
   }
 
+  /** Interval value associated to an interval name. */
   getIntervalValue(intervalString: string): number {
     const value = Music.intervals[intervalString];
     if (value === undefined) {
@@ -274,6 +248,7 @@ export class Music {
     return value;
   }
 
+  /** Canonical note name associated to a value. */
   getCanonicalNoteName(noteValue: number): string {
     if (!this.isValidNoteValue(noteValue)) {
       throw new RuntimeError('BadArguments', `Invalid note value: ${noteValue}`);
@@ -281,6 +256,7 @@ export class Music {
     return Music.canonical_notes[noteValue];
   }
 
+  /** Interval name associated to a value. */
   getCanonicalIntervalName(intervalValue: number): string {
     if (!this.isValidIntervalValue(intervalValue)) {
       throw new RuntimeError('BadArguments', `Invalid interval value: ${intervalValue}`);
@@ -302,6 +278,9 @@ export class Music {
     return sum;
   }
 
+  /**
+   * Given a root and note value, produce the relative note name.
+   */
   getRelativeNoteName(root: string, noteValue: number): string {
     const parts = this.getNoteParts(root);
     const rootValue = this.getNoteValue(parts.root);
