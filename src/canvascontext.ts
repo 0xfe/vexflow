@@ -1,13 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Mohit Muthanna <mohit@muthanna.com>
-//
-// A rendering context for the Canvas backend (CanvasRenderingContext2D).
-//
-// Copyright Mohit Cheppudira 2010
-
+// MIT License
 import { RenderContext } from './types/common';
 import { warn } from './util';
 
+/**
+ * A rendering context for the Canvas backend (CanvasRenderingContext2D).
+ */
 export class CanvasContext implements RenderContext {
   vexFlowCanvasContext: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement | { width: number; height: number };
@@ -39,7 +37,7 @@ export class CanvasContext implements RenderContext {
 
   /**
    * This constructor is only called if Renderer.USE_CANVAS_PROXY is true.
-   * In most instances, we do not need to
+   * In most instances, we do not need to create a CanvasContext object.
    * See Renderer.bolsterCanvasContext().
    * @param context
    */
@@ -94,14 +92,13 @@ export class CanvasContext implements RenderContext {
   // It only fills the area behind some tab number annotations.
   setBackgroundFillStyle(style: string): this {
     /*
-    // The CanvasContext version only sets a field which is never referenced anywhere else.
     // Should it fill the entire canvas rect? For example:
     const oldFillStyle = this.vexFlowCanvasContext.fillStyle;
     this.vexFlowCanvasContext.fillStyle = style;
     this.vexFlowCanvasContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.vexFlowCanvasContext.fillStyle = oldFillStyle;
     */
-    this.background_fillStyle = style; // BUG? It is never referenced anywhere else.
+    this.background_fillStyle = style;
     return this;
   }
 
@@ -240,5 +237,20 @@ export class CanvasContext implements RenderContext {
   restore(): this {
     this.vexFlowCanvasContext.restore();
     return this;
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set font(value: string) {
+    this.vexFlowCanvasContext.font = value;
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set fillStyle(style: string) {
+    this.vexFlowCanvasContext.fillStyle = style;
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set strokeStyle(style: string) {
+    this.vexFlowCanvasContext.strokeStyle = style;
   }
 }

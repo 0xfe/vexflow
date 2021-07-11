@@ -1,4 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 // @author Gregory Ristow (2015)
 
 import { RuntimeError, prefix } from './util';
@@ -30,7 +31,7 @@ const attrNamesToIgnoreMap: { [nodeName: string]: Attributes } = {
   },
 };
 
-// Create the SVG in the SVG namespace:
+/** Create the SVG in the SVG namespace. */
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 interface State {
@@ -40,6 +41,9 @@ interface State {
   lineWidth: number;
 }
 
+/**
+ * SVG rendering context with an API similar to CanvasRenderingContext2D.
+ */
 export class SVGContext implements RenderContext {
   element: HTMLElement; // the parent DOM object
   svg: SVGSVGElement;
@@ -253,6 +257,10 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
+  /**
+   * @param width
+   * @returns this
+   */
   setLineWidth(width: number): this {
     this.attributes['stroke-width'] = width;
     this.lineWidth = width;
@@ -274,6 +282,10 @@ export class SVGContext implements RenderContext {
     }
   }
 
+  /**
+   * @param capType
+   * @returns this
+   */
   setLineCap(capType: CanvasLineCap): this {
     this.attributes['stroke-linecap'] = capType;
     return this;
@@ -708,5 +720,20 @@ export class SVGContext implements RenderContext {
       this.lineWidth = state.lineWidth;
     }
     return this;
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set font(value: string) {
+    this.setRawFont(value);
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set fillStyle(style: string) {
+    this.setFillStyle(style);
+  }
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  set strokeStyle(style: string) {
+    this.setStrokeStyle(style);
   }
 }
