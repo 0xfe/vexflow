@@ -68,6 +68,11 @@ export class Stave extends Element {
     const musicFont = Flow.DEFAULT_FONT_STACK[0];
     return musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
   }
+  // Right padding, used by system if startX is already determined.
+  static get rightPadding(): number {
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    return musicFont.lookupMetric('stave.endPaddingMax');
+  }
 
   constructor(x: number, y: number, width: number, options: Partial<StaveOptions>) {
     super();

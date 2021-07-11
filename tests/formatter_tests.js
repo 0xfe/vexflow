@@ -446,7 +446,7 @@ const FormatterTests = (function () {
       var vf = VF.Test.makeFactory(options, 650, 750);
       var system = vf.System({
         x: 50,
-        width: 500,
+        autoWidth: true,
         debugFormatter: debug,
         noJustification: !(options.params.justify === undefined && true),
         formatIterations: options.params.iterations,
@@ -498,8 +498,8 @@ const FormatterTests = (function () {
         var system = vf.System({
           x: 100,
           y,
-          width: 500,
           details: { softmaxFactor: factor },
+          autoWidth: true,
         });
 
         system
@@ -534,7 +534,7 @@ const FormatterTests = (function () {
       var score = vf.EasyScore();
       var system = vf.System({
         details: { softmaxFactor: 100 },
-        width: 500,
+        autoWidth: true,
         debugFormatter: true,
       });
 
@@ -563,7 +563,7 @@ const FormatterTests = (function () {
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
-        width: 450,
+        autoWidth: true,
         debugFormatter: true,
         details: { maxIterations: 10 },
       });
@@ -595,7 +595,7 @@ const FormatterTests = (function () {
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
-        width: 440,
+        autoWidth: true,
         debugFormatter: true,
       });
 

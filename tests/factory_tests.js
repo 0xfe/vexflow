@@ -49,7 +49,7 @@ const FactoryTests = (function () {
     drawTab: function (options) {
       var vf = VF.Test.makeFactory(options, 500, 400);
 
-      var system = vf.System();
+      var system = vf.System({ width: 500 });
 
       var stave = vf.Stave().setClef('treble').setKeySignature('C#').setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
 
