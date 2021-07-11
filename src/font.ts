@@ -6,6 +6,7 @@ import { PetalumaFont } from './fonts/petaluma_glyphs';
 import { PetalumaMetrics } from './fonts/petaluma_metrics';
 import { CustomFont } from './fonts/custom_glyphs';
 import { CustomMetrics } from './fonts/custom_metrics';
+import { RuntimeError } from './util';
 
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
@@ -33,10 +34,30 @@ class Font {
   protected readonly fontData: FontData;
 
   // eslint-disable-next-line
-  constructor(name: string, metrics: Record<string, any>, fontData: FontData) {
+  constructor(name: string, metrics?: Record<string, any>, fontData?: FontData) {
     this.name = name;
-    this.metrics = metrics;
-    this.fontData = fontData;
+    switch (name) {
+      case 'Bravura':
+        this.metrics = BravuraMetrics;
+        this.fontData = BravuraFont;
+        break;
+      case 'Gonville':
+        this.metrics = GonvilleMetrics;
+        this.fontData = GonvilleFont;
+        break;
+      case 'Petaluma':
+        this.metrics = PetalumaMetrics;
+        this.fontData = PetalumaFont;
+        break;
+      case 'Custom':
+        this.metrics = CustomMetrics;
+        this.fontData = CustomFont;
+        break;
+      default:
+        if (!metrics || !fontData) throw new RuntimeError('Missing metrics or font data');
+        this.metrics = metrics;
+        this.fontData = fontData;
+    }
   }
 
   getName(): string {
@@ -78,10 +99,18 @@ class Font {
 }
 
 const Fonts = {
-  Bravura: new Font('Bravura', BravuraMetrics, BravuraFont),
-  Gonville: new Font('Gonville', GonvilleMetrics, GonvilleFont),
-  Petaluma: new Font('Petaluma', PetalumaMetrics, PetalumaFont),
-  Custom: new Font('Custom', CustomMetrics, CustomFont),
+  Bravura: (): Font => {
+    return new Font('Bravura');
+  },
+  Gonville: (): Font => {
+    return new Font('Gonville');
+  },
+  Petaluma: (): Font => {
+    return new Font('Petaluma');
+  },
+  Custom: (): Font => {
+    return new Font('Custom');
+  },
 };
 
 export { Fonts, Font };

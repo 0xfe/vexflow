@@ -327,9 +327,9 @@ export const Tables = {
 
   /**
    * Customize this to choose a different music font.
-   * For example: Vex.Flow.DEFAULT_FONT_STACK = [Fonts.Petaluma, Fonts.Custom];
+   * For example: Vex.Flow.DEFAULT_FONT_STACK = [Fonts.Petaluma(), Fonts.Custom()];
    */
-  DEFAULT_FONT_STACK: [Fonts.Bravura, Fonts.Gonville, Fonts.Custom],
+  DEFAULT_FONT_STACK: [Fonts.Bravura(), Fonts.Gonville(), Fonts.Custom()],
   DEFAULT_NOTATION_FONT_SCALE: 39,
   DEFAULT_TABLATURE_FONT_SCALE: 39,
   SLASH_NOTEHEAD_WIDTH: 15,
