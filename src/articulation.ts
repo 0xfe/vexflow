@@ -1,13 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Larry Kuhns.
-//
-// ## Description
-//
-// This file implements articulations and accents as modifiers that can be
-// attached to notes. The complete list of articulations is available in
-// `tables.js` under `Vex.Flow.articulationCodes`.
-//
-// See `tests/articulation_tests.js` for usage examples.
+// MIT License
 
 import { RuntimeError, log, check } from './util';
 import { Flow } from './flow';
@@ -28,7 +21,6 @@ export interface ArticulationStruct {
   between_lines: boolean;
 }
 
-// To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
@@ -162,38 +154,49 @@ function getInitialOffset(note: Note, position: number): number {
   }
 }
 
+/**
+ * Articulations and Accents are modifiers that can be
+ * attached to notes. The complete list of articulations is available in
+ * `tables.ts` under `Vex.Flow.articulationCodes`.
+ *
+ * See `tests/articulation_tests.js` for usage examples.
+ */
 export class Articulation extends Modifier {
-  note?: Note;
+  /** Articulation code provided to the constructor. */
   readonly type: string;
-  static readonly INITIAL_OFFSET: number = -0.5;
+  protected static readonly INITIAL_OFFSET: number = -0.5;
 
   protected render_options: { font_scale: number };
-  protected articulation?: ArticulationStruct;
+  // articulation defined calling reset in constructor
+  protected articulation!: ArticulationStruct;
   // glyph defined calling reset in constructor
-  // eslint-disable-next-line
   protected glyph!: Glyph;
+  /** To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`. */
   static DEBUG: boolean;
 
+  /** Articulations category string. */
   static get CATEGORY(): string {
     return 'articulations';
   }
 
-  // FIXME:
-  // Most of the complex formatting logic (ie: snapping to space) is
-  // actually done in .render(). But that logic belongs in this method.
-  //
-  // Unfortunately, this isn't possible because, by this point, stem lengths
-  // have not yet been finalized. Finalized stem lengths are required to determine the
-  // initial position of any stem-side articulation.
-  //
-  // This indicates that all objects should have their stave set before being
-  // formatted. It can't be an optional if you want accurate vertical positioning.
-  // Consistently positioned articulations that play nice with other modifiers
-  // won't be possible until we stop relying on render-time formatting.
-  //
-  // Ideally, when this function has completed, the vertical articulation positions
-  // should be ready to render without further adjustment. But the current state
-  // is far from this ideal.
+  /**
+   * FIXME:
+   * Most of the complex formatting logic (ie: snapping to space) is
+   * actually done in .render(). But that logic belongs in this method.
+   *
+   * Unfortunately, this isn't possible because, by this point, stem lengths
+   * have not yet been finalized. Finalized stem lengths are required to determine the
+   * initial position of any stem-side articulation.
+   *
+   * This indicates that all objects should have their stave set before being
+   * formatted. It can't be an optional if you want accurate vertical positioning.
+   * Consistently positioned articulations that play nice with other modifiers
+   * won't be possible until we stop relying on render-time formatting.
+   *
+   * Ideally, when this function has completed, the vertical articulation positions
+   * should be ready to render without further adjustment. But the current state
+   * is far from this ideal.
+   */
   static format(articulations: Articulation[], state: ModifierContextState): boolean {
     if (!articulations || articulations.length === 0) return false;
 
@@ -245,8 +248,10 @@ export class Articulation extends Modifier {
       .map((artic) => note.addModifier(artic, 0));
   }
 
-  // Create a new articulation of type `type`, which is an entry in
-  // `Vex.Flow.articulationCodes` in `tables.js`.
+  /**
+   * Create a new articulation.
+   * @param type entry in `Vex.Flow.articulationCodes` in `tables.ts`
+   */
   constructor(type: string) {
     super();
     this.setAttribute('type', 'Articulation');
@@ -260,7 +265,7 @@ export class Articulation extends Modifier {
     this.reset();
   }
 
-  reset(): void {
+  protected reset(): void {
     this.articulation = Flow.articulationCodes(this.type);
     if (!this.articulation) {
       throw new RuntimeError('ArgumentError', `Articulation not found: ${this.type}`);
@@ -273,11 +278,12 @@ export class Articulation extends Modifier {
     this.setWidth(check<number>(this.glyph.getMetrics().width));
   }
 
+  /** Get element category string. */
   getCategory(): string {
     return Articulation.CATEGORY;
   }
 
-  // Render articulation in position next to note.
+  /** Render articulation in position next to note. */
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
@@ -285,7 +291,7 @@ export class Articulation extends Modifier {
 
     const index = this.checkIndex();
     const { position, glyph, text_line: textLine } = this;
-    const canSitBetweenLines = this.articulation?.between_lines ?? false;
+    const canSitBetweenLines = this.articulation.between_lines;
 
     const stave = note.checkStave();
     const staffSpace = stave.getSpacingBetweenLines();

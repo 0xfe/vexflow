@@ -1,11 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements text annotations as modifiers that can be attached to
-// notes.
-//
-// See `tests/annotation_tests.js` for usage examples.
+// MIT License
 
 import { log } from './util';
 import { Flow } from './flow';
@@ -15,7 +9,6 @@ import { FontInfo } from './types/common';
 import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
 
-// To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]) {
   if (Annotation.DEBUG) log('Vex.Flow.Annotation', args);
@@ -34,21 +27,28 @@ enum VerticalJustify {
   BOTTOM = 3,
   CENTER_STEM = 4,
 }
-export class Annotation extends Modifier {
-  static DEBUG: boolean;
 
-  note?: StemmableNote;
+/**
+ * Annotations are modifiers that can be attached to
+ * notes.
+ *
+ * See `tests/annotation_tests.ts` for usage examples.
+ */
+export class Annotation extends Modifier {
+  /** To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`. */
+  static DEBUG: boolean;
 
   protected justification: Justify;
   protected vert_justification: VerticalJustify;
   protected text: string;
   protected font: FontInfo;
 
+  /** Articulations category string. */
   static get CATEGORY(): string {
     return 'annotations';
   }
 
-  // Text annotations can be positioned and justified relative to the note.
+  /** Text annotations can be positioned and justified relative to the note. */
   static Justify = Justify;
 
   static JustifyString: Record<string, number> = {
@@ -69,7 +69,7 @@ export class Annotation extends Modifier {
     centerStem: Annotation.VerticalJustify.CENTER_STEM,
   };
 
-  // Arrange annotations within a `ModifierContext`
+  /** Arrange annotations within a `ModifierContext` */
   static format(annotations: Annotation[], state: ModifierContextState): boolean {
     if (!annotations || annotations.length === 0) return false;
 
@@ -100,11 +100,11 @@ export class Annotation extends Modifier {
     return true;
   }
 
-  // ## Prototype Methods
-  //
-  // Annotations inherit from `Modifier` and is positioned correctly when
-  // in a `ModifierContext`.
-  // Create a new `Annotation` with the string `text`.
+  /**
+   * Annotations inherit from `Modifier` and is positioned correctly when
+   * in a `ModifierContext`.
+   * Create a new `Annotation` with the string `text`.
+   */
   constructor(text: string) {
     super();
     this.setAttribute('type', 'Annotation');
@@ -122,34 +122,43 @@ export class Annotation extends Modifier {
     this.setWidth(Flow.textWidth(text));
   }
 
+  /** Get element category string. */
   getCategory(): string {
     return Annotation.CATEGORY;
   }
 
-  // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
+  /** Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`. */
   setFont(family: string, size: number, weight: string): this {
     this.font = { family, size, weight };
     return this;
   }
 
-  // Set vertical position of text (above or below stave). `just` must be
-  // a value in `Annotation.VerticalJustify`.
+  /**
+   * Set vertical position of text (above or below stave).
+   * @param just value in `Annotation.VerticalJustify`.
+   */
   setVerticalJustification(just: string | VerticalJustify): this {
     this.vert_justification = typeof just === 'string' ? Annotation.VerticalJustifyString[just] : just;
     return this;
   }
 
-  // Get and set horizontal justification. `justification` is a value in
-  // `Annotation.Justify`.
+  /**
+   * Get horizontal justification.
+   */
   getJustification(): Justify {
     return this.justification;
   }
+
+  /**
+   * Set horizontal justification.
+   * @param justification value in `Annotation.Justify`.
+   */
   setJustification(just: string | Justify): this {
     this.justification = typeof just === 'string' ? Annotation.JustifyString[just] : just;
     return this;
   }
 
-  // Render text beside the note.
+  /** Render text beside the note. */
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();

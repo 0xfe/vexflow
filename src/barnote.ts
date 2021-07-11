@@ -1,26 +1,26 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// A `BarNote` is used to render bar lines (from `barline.js`). `BarNote`s can
-// be added to a voice and rendered in the middle of a stave. Since it has no
-// duration, it consumes no `tick`s, and is dealt with appropriately by the formatter.
-//
-// See `tests/barnote_tests.js` for usage examples.
+// MIT License
 
 import { log } from './util';
 import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
 
-// To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`.
 function L(
   // eslint-disable-next-line
   ...args: any[]) {
   if (BarNote.DEBUG) log('Vex.Flow.BarNote', args);
 }
 
+/**
+ * A `BarNote` is used to render bar lines (from `barline.ts`). `BarNote`s can
+ * be added to a voice and rendered in the middle of a stave. Since it has no
+ * duration, it consumes no `tick`s, and is dealt with appropriately by the formatter.
+ *
+ * See `tests/barnote_tests.js` for usage examples.
+ */
 export class BarNote extends Note {
   protected metrics: { widths: Record<string, number> };
+  /** To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`. */
   static DEBUG: boolean;
   protected type!: BarlineType;
 
@@ -48,11 +48,12 @@ export class BarNote extends Note {
     this.setType(type);
   }
 
-  // Get and set the type of bar note. `type` must be one of `BarlineType`.
+  /** Get the type of bar note.*/
   getType(): BarlineType {
     return this.type;
   }
 
+  /** Set the type of bar note. */
   setType(type: string | BarlineType): this {
     this.type = typeof type === 'string' ? Barline.typeString[type] : type;
 
@@ -61,18 +62,18 @@ export class BarNote extends Note {
     return this;
   }
 
+  /** overridden to ignore. */
   addToModifierContext(): this {
-    /* overridden to ignore */
     return this;
   }
 
+  /** overridden to ignore. */
   preFormat(): this {
-    /* overridden to ignore */
     this.setPreFormatted(true);
     return this;
   }
 
-  // Render note to stave.
+  /** Render note to stave. */
   draw(): void {
     const ctx = this.checkContext();
     L('Rendering bar line at: ', this.getAbsoluteX());

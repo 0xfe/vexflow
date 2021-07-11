@@ -1,13 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
 // @author Greg Ristow (modifications)
-//
-// ## Description
-//
-// This file implements accidentals as modifiers that can be attached to
-// notes. Support is included for both western and microtonal accidentals.
-//
-// See `tests/accidental_tests.js` for usage examples.
+// MIT License
 
 import { RuntimeError, log, check } from './util';
 import { Fraction } from './fraction';
@@ -31,16 +25,23 @@ type Line = {
   width: number;
 };
 
-// To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]) {
   if (Accidental.DEBUG) log('Vex.Flow.Accidental', args);
 }
 
-// An `Accidental` inherits from `Modifier`, and is formatted within a
-// `ModifierContext`.
+/**
+ * An `Accidental` inherits from `Modifier`, and is formatted within a
+ * `ModifierContext`. Accidentals are modifiers that can be attached to
+ * notes. Support is included for both western and microtonal accidentals.
+ *
+ * See `tests/accidental_tests.js` for usage examples.
+ */
+
 export class Accidental extends Modifier {
-  type: string;
+  /** Accidental code provided to the constructor. */
+  readonly type: string;
+  /** To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`. */
   static DEBUG: boolean;
   protected accidental: {
     code: string;
@@ -58,11 +59,12 @@ export class Accidental extends Modifier {
   protected parenRight?: Glyph;
   protected parenLeft?: Glyph;
 
+  /** Accidentals category string. */
   static get CATEGORY(): string {
     return 'accidentals';
   }
 
-  // Arrange accidentals inside a ModifierContext.
+  /** Arrange accidentals inside a ModifierContext. */
   static format(accidentals: Accidental[], state: ModifierContextState): void {
     type AccidentalListItem = {
       y?: number;
@@ -82,7 +84,7 @@ export class Accidental extends Modifier {
     if (!accidentals || accidentals.length === 0) return;
 
     const accList: AccidentalListItem[] = [];
-    let prevNote = null;
+    let prevNote = undefined;
     let shiftL = 0;
 
     // First determine the accidentals' Y positions from the note.keys
@@ -119,14 +121,14 @@ export class Accidental extends Modifier {
     // amount by which all accidentals must be shifted right or left for
     // stem flipping, notehead shifting concerns.
     let accShift = 0;
-    let previousLine = null;
+    let previousLine = undefined;
 
     // Create an array of unique line numbers (lineList) from accList
     for (let i = 0; i < accList.length; i++) {
       const acc = accList[i];
 
       // if this is the first line, or a new line, add a lineList
-      if (previousLine === null || previousLine !== acc.line) {
+      if (previousLine === undefined || previousLine !== acc.line) {
         lineList.push({
           line: acc.line,
           flatLine: true,
@@ -342,7 +344,7 @@ export class Accidental extends Modifier {
     state.left_shift += totalShift + additionalPadding;
   }
 
-  // Helper function to determine whether two lines of accidentals collide vertically
+  /** Helper function to determine whether two lines of accidentals collide vertically */
   static checkCollision(line1: Line, line2: Line): boolean {
     let clearance = line2.line - line1.line;
     let clearanceRequired = 3;
@@ -361,9 +363,11 @@ export class Accidental extends Modifier {
     return collision;
   }
 
-  // Use this method to automatically apply accidentals to a set of `voices`.
-  // The accidentals will be remembered between all the voices provided.
-  // Optionally, you can also provide an initial `keySignature`.
+  /**
+   * Use this method to automatically apply accidentals to a set of `voices`.
+   * The accidentals will be remembered between all the voices provided.
+   * Optionally, you can also provide an initial `keySignature`.
+   */
   static applyAccidentals(voices: Voice[], keySignature: string): void {
     const tickPositions: number[] = [];
     const tickNoteMap: Record<number, Note[]> = {};
@@ -452,9 +456,11 @@ export class Accidental extends Modifier {
     });
   }
 
-  // Create accidental. `type` can be a value from the
-  // `Vex.Flow.accidentalCodes.accidentals` table in `tables.js`. For
-  // example: `#`, `##`, `b`, `n`, etc.
+  /**
+   * Create accidental.
+   * @param type value from `Vex.Flow.accidentalCodes.accidentals` table in `tables.ts`.
+   * For example: `#`, `##`, `b`, `n`, etc.
+   */
   constructor(type: string) {
     super();
     this.setAttribute('type', 'Accidental');
@@ -487,7 +493,7 @@ export class Accidental extends Modifier {
     this.reset();
   }
 
-  reset(): void {
+  protected reset(): void {
     const fontScale = this.render_options.font_scale;
     this.glyph = new Glyph(this.accidental.code, fontScale);
     this.glyph.setOriginX(1.0);
@@ -500,10 +506,12 @@ export class Accidental extends Modifier {
     }
   }
 
+  /** Get element category string. */
   getCategory(): string {
     return Accidental.CATEGORY;
   }
 
+  /** Get width in pixels. */
   getWidth(): number {
     const parenWidth = this.cautionary
       ? check<Glyph>(this.parenLeft).getMetrics().width +
@@ -515,7 +523,7 @@ export class Accidental extends Modifier {
     return this.glyph.getMetrics().width + parenWidth;
   }
 
-  // Attach this accidental to `note`, which must be a `StaveNote`.
+  /** Attach this accidental to `note`, which must be a `StaveNote`. */
   setNote(note: Note): this {
     if (!note) {
       throw new RuntimeError('ArgumentError', `Bad note value: ${note}`);
@@ -531,7 +539,7 @@ export class Accidental extends Modifier {
     return this;
   }
 
-  // If called, draws parenthesis around accidental.
+  /** If called, draws parenthesis around accidental. */
   setAsCautionary(): this {
     this.cautionary = true;
     this.render_options.font_scale = 28;
@@ -539,7 +547,7 @@ export class Accidental extends Modifier {
     return this;
   }
 
-  // Render accidental onto canvas.
+  /** Render accidental onto canvas. */
   draw(): void {
     const {
       type,
