@@ -8,14 +8,10 @@ import { RenderContext } from '../src/types/common';
 import { Flow } from '../src/flow';
 import { StaveNoteStruct } from '../src/stavenote';
 import { Stave } from '../src/stave';
+import { ContextBuilder } from '../src/renderer';
 
-// TODO: Fix later!
-// Currently we need to prepend all classes with VF.
+// TODO: Fix later! Currently we need to prepend all classes with VF.
 const VF: any = Vex.Flow;
-
-// TODO: Move to renderer.ts or maybe vexflow_test_helpers.ts
-// A ContextBuilder is a static function either Renderer.getSVGContext or Renderer.getCanvasContext.
-type ContextBuilder = (elementId: string, width: number, height: number, background?: string) => RenderContext;
 
 // TODO: Move to vexflow_test_helpers.ts
 interface TestOptions {
@@ -312,7 +308,7 @@ const RestsTests = {
 
   multi: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
-    const stave = new Stave(50, 10, 500).addClef('treble').setContext(ctx).addTimeSignature('4/4').draw();
+    const stave = new VF.Stave(50, 10, 500).addClef('treble').setContext(ctx).addTimeSignature('4/4').draw();
 
     const noteOnStave = (s: StaveNoteStruct) => new VF.StaveNote(s).setStave(stave);
 

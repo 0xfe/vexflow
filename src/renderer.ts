@@ -6,6 +6,9 @@ import { SVGContext } from './svgcontext';
 import { RenderContext } from './types/common';
 import { RuntimeError } from './util';
 
+// A ContextBuilder is either Renderer.getSVGContext or Renderer.getCanvasContext.
+export type ContextBuilder = typeof Renderer.getSVGContext | typeof Renderer.getCanvasContext;
+
 /**
  * Support Canvas & SVG rendering contexts.
  */
