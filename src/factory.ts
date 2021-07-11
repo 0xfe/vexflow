@@ -8,7 +8,7 @@
 //
 // *This API is currently DRAFT*
 
-import { RuntimeError, MakeException, log } from './util';
+import { RuntimeError, log } from './util';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
@@ -80,8 +80,6 @@ function L(...args: any[]) {
   if (Factory.DEBUG) log('Vex.Flow.Factory', args);
 }
 
-const X = MakeException('FactoryError');
-
 export class Factory {
   static DEBUG: boolean;
 
@@ -148,7 +146,8 @@ export class Factory {
     if (!this.options.renderer) throw new RuntimeError('NoRenderer');
     const { elementId, backend, width, height, background } = this.options.renderer;
     if (elementId === '') {
-      throw new X('HTML DOM element not set in Factory', this);
+      L(this);
+      throw new RuntimeError('HTML DOM element not set in Factory');
     }
 
     this.context = Renderer.buildContext(

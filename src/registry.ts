@@ -17,10 +17,8 @@
 // the registry. This allows fast look up of elements by attributes like id, type,
 // and class.
 
-import { MakeException } from './util';
+import { RuntimeError } from './util';
 import { Element } from './element';
-
-const X = MakeException('RegistryError');
 
 // Indexes are represented as maps of maps of maps. This allows
 // for both multi-labeling (e.g., an element can have multiple classes)
@@ -95,7 +93,7 @@ export class Registry {
   register(elem: Element, id?: string): this {
     id = id || elem.getAttribute('id');
     if (!id) {
-      throw new X("Can't add element without `id` attribute to registry", elem);
+      throw new RuntimeError("Can't add element without `id` attribute to registry");
     }
 
     // Manually add id to index, then update other indexes.

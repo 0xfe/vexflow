@@ -2,7 +2,7 @@
 //
 // A generic text parsing class for VexFlow.
 
-import { MakeException, log } from './util';
+import { RuntimeError, log } from './util';
 import { Grammar } from './easyscore';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
@@ -10,8 +10,6 @@ import { Grammar } from './easyscore';
 function L(...args: any[]): void {
   if (Parser.DEBUG) log('Vex.Flow.Parser', args);
 }
-
-const X = MakeException('ParserError');
 
 const NO_ERROR_POS = -1;
 
@@ -214,7 +212,7 @@ export class Parser {
   expect(ruleFunc: RuleFunction): Result {
     L('Evaluating rule function:', ruleFunc);
     if (!ruleFunc) {
-      throw new X('Invalid rule function: ' + ruleFunc, ruleFunc);
+      throw new RuntimeError('Invalid rule function');
     }
     let result: Result;
 
@@ -245,7 +243,8 @@ export class Parser {
         result = this.expectOne(rule);
       }
     } else {
-      throw new X('Bad grammar! No `token` or `expect` property', rule);
+      L(rule);
+      throw new RuntimeError('Bad grammar! No `token` or `expect` property ' + rule);
     }
 
     // If there's a trigger attached to this rule, then run it.
