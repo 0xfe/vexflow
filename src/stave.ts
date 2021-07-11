@@ -76,7 +76,7 @@ export class Stave extends Element {
     return musicFont.lookupMetric('stave.endPaddingMax');
   }
 
-  constructor(x: number, y: number, width: number, options: Partial<StaveOptions>) {
+  constructor(x: number, y: number, width: number, options?: Partial<StaveOptions>) {
     super();
     this.setAttribute('type', 'Stave');
 
