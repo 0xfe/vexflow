@@ -5,7 +5,7 @@
 
 /* eslint max-classes-per-file: "off" */
 
-import { RuntimeError, MakeException, log } from './util';
+import { RuntimeError, log } from './util';
 import { StaveNote } from './stavenote';
 import { Match, Parser, Result, Rule, RuleFunction } from './parser';
 import { Articulation } from './articulation';
@@ -21,8 +21,6 @@ import { Voice } from './voice';
 function L(...args: any[]): void {
   if (EasyScore.DEBUG) log('Vex.Flow.EasyScore', args);
 }
-
-const X = MakeException('EasyScoreError');
 
 type IDUpdate = { id: string };
 type ClassUpdate = { class: string };
@@ -466,7 +464,8 @@ export class EasyScore {
     this.builder.reset(options);
     const result = this.parser.parse(line);
     if (!result.success && this.options.throwOnError) {
-      throw new X('Error parsing line: ' + line, result);
+      L(result);
+      throw new RuntimeError('Error parsing line: ' + line);
     }
     return result;
   }
