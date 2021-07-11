@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const child_process = require('child_process');
 const InjectPlugin = require('webpack-inject-plugin').default;
 const TerserPlugin = require('terser-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = (grunt) => {
   const BASE_DIR = __dirname;
@@ -13,9 +14,6 @@ module.exports = (grunt) => {
   const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
   const MODULE_ENTRY_SRC = path.join(BASE_DIR, 'src/index.ts');
   const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.js');
-  const TARGET_RAW = 'vexflow-debug.js';
-  const TARGET_MIN = 'vexflow-min.js';
-  const TARGET_TESTS = 'vexflow-tests.js';
 
   // Get current build information from git and package.json.
   const GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
@@ -28,20 +26,23 @@ module.exports = (grunt) => {
   // Used for eslint
   const SOURCES = ['./src/*.ts', './src/*.js'];
 
-  function webpackConfig(target, moduleEntry, mode, libraryName) {
+  function webpackConfig(target, chunkFilename, configFile, moduleEntry, mode, libraryName) {
     return {
       mode: mode,
       entry: moduleEntry,
       output: {
         path: BUILD_DIR,
         filename: target,
+        chunkFilename: chunkFilename,
         library: libraryName,
         libraryTarget: 'umd',
         libraryExport: 'default',
         globalObject: 'this',
+        publicPath: 'auto',
       },
       resolve: {
         extensions: ['.ts', '.js', '.json'],
+        plugins: [new TsconfigPathsPlugin({ configFile: configFile })],
       },
       devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : false,
       module: {
@@ -52,6 +53,9 @@ module.exports = (grunt) => {
             use: [
               {
                 loader: 'ts-loader',
+                options: {
+                  configFile: configFile,
+                },
               },
             ],
           },
@@ -83,14 +87,44 @@ module.exports = (grunt) => {
     };
   }
 
-  const webpackProd = webpackConfig(TARGET_MIN, MODULE_ENTRY_SRC, 'production', 'Vex');
-  const webpackDev = webpackConfig(TARGET_RAW, MODULE_ENTRY_SRC, 'development', 'Vex');
-  const webpackTest = webpackConfig(TARGET_TESTS, MODULE_ENTRY_TESTS, 'development', 'VFTests');
+  const webpackProdStatic = webpackConfig(
+    'vexflow-full-min.js',
+    'vexflow-[name]-min.js',
+    'tsconfig.json',
+    MODULE_ENTRY_SRC,
+    'production',
+    'Vex'
+  );
+  const webpackProdDynamic = webpackConfig(
+    'vexflow-core-min.js',
+    'vexflow-font-[name]-min.js',
+    'tsconfig.dynamic.json',
+    MODULE_ENTRY_SRC,
+    'production',
+    'Vex'
+  );
+  const webpackDev = webpackConfig(
+    'vexflow-debug.js',
+    'vexflow-[name]-debug.js',
+    'tsconfig.json',
+    MODULE_ENTRY_SRC,
+    'development',
+    'Vex'
+  );
+  const webpackTest = webpackConfig(
+    'vexflow-tests.js',
+    'vexflow-[name]-test.js',
+    'tsconfig.json',
+    MODULE_ENTRY_TESTS,
+    'development',
+    'VFTests'
+  );
 
   grunt.initConfig({
     pkg: packageJSON,
     webpack: {
-      build: webpackProd,
+      buildStatic: webpackProdStatic,
+      buildDynamic: webpackProdDynamic,
       buildDev: webpackDev,
       buildTest: webpackTest,
       watchDev: {
@@ -200,7 +234,8 @@ module.exports = (grunt) => {
   grunt.registerTask('default', [
     'clean',
     'eslint',
-    'webpack:build',
+    'webpack:buildStatic',
+    'webpack:buildDynamic',
     'webpack:buildDev',
     'webpack:buildTest',
     'typedoc',
@@ -208,13 +243,7 @@ module.exports = (grunt) => {
 
   grunt.registerTask('watch', 'Watch src/ and tests/ concurrently', ['clean', 'eslint', 'concurrent']);
 
-  grunt.registerTask('test', 'Run qunit tests.', [
-    'clean',
-    'webpack:build',
-    'webpack:buildDev',
-    'webpack:buildTest',
-    'qunit',
-  ]);
+  grunt.registerTask('test', 'Run qunit tests.', ['clean', 'webpack:buildDev', 'webpack:buildTest', 'qunit']);
 
   // Release current build.
   grunt.registerTask('stage', 'Stage current bundles to releases/.', () => {

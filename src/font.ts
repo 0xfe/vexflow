@@ -1,12 +1,8 @@
-import { BravuraFont } from './fonts/bravura_glyphs';
-import { BravuraMetrics } from './fonts/bravura_metrics';
-import { GonvilleFont } from './fonts/gonville_glyphs';
-import { GonvilleMetrics } from './fonts/gonville_metrics';
-import { PetalumaFont } from './fonts/petaluma_glyphs';
-import { PetalumaMetrics } from './fonts/petaluma_metrics';
-import { CustomFont } from './fonts/custom_glyphs';
-import { CustomMetrics } from './fonts/custom_metrics';
 import { RuntimeError } from './util';
+import { loadBravura } from '@bravura';
+import { loadGonville } from '@gonville';
+import { loadPetaluma } from '@petaluma';
+import { loadCustom } from '@custom';
 
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
@@ -30,31 +26,42 @@ export interface FontGlyph {
 class Font {
   protected name: string;
   // eslint-disable-next-line
-  protected metrics: Record<string, any>;
-  protected readonly fontData: FontData;
+  protected metrics?: Record<string, any>;
+  protected fontData?: FontData;
 
   // eslint-disable-next-line
   constructor(name: string, metrics?: Record<string, any>, fontData?: FontData) {
     this.name = name;
     switch (name) {
       case 'Bravura':
-        this.metrics = BravuraMetrics;
-        this.fontData = BravuraFont;
-        break;
-      case 'Gonville':
-        this.metrics = GonvilleMetrics;
-        this.fontData = GonvilleFont;
-        break;
-      case 'Petaluma':
-        this.metrics = PetalumaMetrics;
-        this.fontData = PetalumaFont;
+        // eslint-disable-next-line
+        loadBravura().then((data: { metrics: Record<string, any>; fontData: FontData }) => {
+          this.metrics = data.metrics;
+          this.fontData = data.fontData;
+        });
         break;
       case 'Custom':
-        this.metrics = CustomMetrics;
-        this.fontData = CustomFont;
+        // eslint-disable-next-line
+        loadCustom().then((data: { metrics: Record<string, any>; fontData: FontData }) => {
+          this.metrics = data.metrics;
+          this.fontData = data.fontData;
+        });
+        break;
+      case 'Gonville':
+        // eslint-disable-next-line
+        loadGonville().then((data: { metrics: Record<string, any>; fontData: FontData }) => {
+          this.metrics = data.metrics;
+          this.fontData = data.fontData;
+        });
+        break;
+      case 'Petaluma':
+        // eslint-disable-next-line
+        loadPetaluma().then((data: { metrics: Record<string, any>; fontData: FontData }) => {
+          this.metrics = data.metrics;
+          this.fontData = data.fontData;
+        });
         break;
       default:
-        if (!metrics || !fontData) throw new RuntimeError('Missing metrics or font data');
         this.metrics = metrics;
         this.fontData = fontData;
     }
@@ -65,16 +72,19 @@ class Font {
   }
 
   getResolution(): number {
+    if (!this.metrics || !this.fontData) throw new RuntimeError('Missing metrics or font data');
     return this.fontData.resolution;
   }
 
   // eslint-disable-next-line
   getMetrics(): Record<string, any> {
+    if (!this.metrics || !this.fontData) throw new RuntimeError('Missing metrics or font data');
     return this.metrics;
   }
 
   // eslint-disable-next-line
   lookupMetric(key: string, defaultValue?: Record<string, any> | number): any {
+    if (!this.metrics || !this.fontData) throw new RuntimeError('Missing metrics or font data');
     const parts = key.split('.');
     let val = this.metrics;
     // console.log('lookupMetric:', key);
@@ -90,10 +100,12 @@ class Font {
   }
 
   getFontData(): FontData {
+    if (!this.metrics || !this.fontData) throw new RuntimeError('Missing metrics or font data');
     return this.fontData;
   }
 
   getGlyphs(): Record<string, FontGlyph> {
+    if (!this.metrics || !this.fontData) throw new RuntimeError('Missing metrics or font data');
     return this.fontData.glyphs;
   }
 }

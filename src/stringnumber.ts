@@ -15,8 +15,6 @@ import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 
 export class StringNumber extends Modifier {
-  protected note?: Note;
-
   protected radius: number;
 
   protected last_note?: Note;
