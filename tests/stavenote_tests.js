@@ -18,6 +18,7 @@ const StaveNoteTests = (function () {
       test('Width', StaveNote.width);
       test('TickContext', StaveNote.tickContext);
 
+      // This interactivity test currently only works with the SVG backend.
       VF.Test.runSVGTest('Interactive Mouseover StaveNote', StaveNote.draw, {
         clef: 'treble',
         octaveShift: 0,

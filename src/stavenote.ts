@@ -369,7 +369,9 @@ export class StaveNote extends StemmableNote {
     super(noteStruct);
     this.setAttribute('type', 'StaveNote');
 
-    this.ledgerLineStyle = { lineWidth: 2.0 }; // Set default width of ledger lines to 2.0.
+    // Set default width of ledger lines to 2.0.
+    this.ledgerLineStyle = { lineWidth: 2.0 };
+
     this.clef = noteStruct.clef ?? 'treble';
     this.octave_shift = noteStruct.octave_shift ?? 0;
 
