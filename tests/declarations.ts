@@ -21,6 +21,7 @@ export const notStrictEqual = global.notStrictEqual;
 // TODO: npm install @types/qunit
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Assert {
+  test: any;
   expect(amount: number): void;
   ok(state: any, message?: string): void;
   notOk(state: any, message?: string): void;
