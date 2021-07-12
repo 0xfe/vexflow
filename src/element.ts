@@ -44,8 +44,8 @@ export abstract class Element {
   protected style?: ElementStyle;
   private attrs: ElementAttributes;
   protected boundingBox?: BoundingBox;
-  protected fontStack: Font[];
-  protected musicFont: Font;
+  protected fontStack!: Font[];
+  protected musicFont!: Font;
   protected registry?: Registry;
 
   static newID(): string {
@@ -62,9 +62,7 @@ export abstract class Element {
     };
 
     this.rendered = false;
-
-    this.fontStack = Flow.DEFAULT_FONT_STACK;
-    this.musicFont = Flow.DEFAULT_FONT_STACK[0];
+    this.setFontStack(Flow.DEFAULT_FONT_STACK);
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);
@@ -77,7 +75,7 @@ export abstract class Element {
     return this;
   }
 
-  /** gets music fonts stack. */
+  /** Gets music fonts stack. */
   getFontStack(): Font[] {
     return this.fontStack;
   }

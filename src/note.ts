@@ -71,6 +71,8 @@ export interface ParsedNote {
 }
 
 export interface NoteStruct {
+  /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
+  duration: string;
   line?: number;
   /** The number of dots, which affects the duration. */
   dots?: number;
@@ -79,8 +81,6 @@ export interface NoteStruct {
   type?: string;
   align_center?: boolean;
   duration_override?: Fraction;
-  /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
-  duration: string;
 }
 
 /**
@@ -115,8 +115,8 @@ export abstract class Note extends Tickable {
     return 'note';
   }
 
-  /** Debug helper. Displays various note metrics for the given
-   * note.
+  /**
+   * Debug helper. Displays various note metrics for the given note.
    */
   static plotMetrics(ctx: RenderContext, note: Note, yPos: number): void {
     const metrics = note.getMetrics();
@@ -387,10 +387,8 @@ export abstract class Note extends Tickable {
   }
 
   /** Gets the stave line number for the note. */
-  getLineNumber(
-    // eslint-disable-next-line
-    isTopNote?: boolean
-  ): number {
+  // eslint-disable-next-line
+  getLineNumber(isTopNote?: boolean): number {
     return 0;
   }
 
@@ -400,8 +398,8 @@ export abstract class Note extends Tickable {
   }
 
   /** Get the glyph associated with this note. */
-  getGlyph(): // eslint-disable-next-line
-  any {
+  // eslint-disable-next-line
+  getGlyph(): any {
     return this.glyph;
   }
 
@@ -545,10 +543,8 @@ export abstract class Note extends Tickable {
     return this;
   }
   /** Get the coordinates for where modifiers begin. */
-  getModifierStartXY(
-    // eslint-disable-next-line
-    position?: number, index?: number, options?: any
-  ): { x: number; y: number } {
+  // eslint-disable-next-line
+  getModifierStartXY(position?: number, index?: number, options?: any): { x: number; y: number } {
     if (!this.preFormatted) {
       throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
