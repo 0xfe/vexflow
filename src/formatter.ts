@@ -400,9 +400,13 @@ export class Formatter {
     this.lossHistory = [];
   }
 
-  // Find all the rests in each of the `voices` and align them
-  // to neighboring notes. If `alignAllNotes` is `false`, then only
-  // align non-beamed notes.
+  /**
+   * Find all the rests in each of the `voices` and align them to neighboring notes.
+   * If `alignAllNotes` is `false`, then only align non-beamed notes.
+   *
+   * @param voices
+   * @param alignAllNotes
+   */
   alignRests(voices: Voice[], alignAllNotes: boolean): void {
     if (!voices || !voices.length) {
       throw new RuntimeError('BadArgument', 'No voices to format rests');

@@ -32,8 +32,8 @@ export interface SystemParams {
  * Formatting for systems created/drawn from factory:
  * If width is provided, the system will use the specified width.
  * If noJustification flag is 'true', there is no justification between voices
- * Otherwise, autoWidth defaults to true.  
- * If autowidth is true, the system uses format.preCalculateMinWidth 
+ * Otherwise, autoWidth defaults to true.
+ * If autowidth is true, the system uses format.preCalculateMinWidth
  * for the width of all voices, and default stave padding
  */
 export interface SystemOptions {

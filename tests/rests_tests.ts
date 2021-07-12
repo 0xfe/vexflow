@@ -1,7 +1,5 @@
-/**
- * VexFlow - Rest Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 import { QUnit, ok, Assert } from './declarations';
 import { VexFlowTests } from './vexflow_test_helpers';
 import { RenderContext } from '../src/types/common';
@@ -11,7 +9,7 @@ import { Stave } from '../src/stave';
 import { ContextBuilder } from '../src/renderer';
 
 // TODO: Fix later! Currently we need to prepend all classes with VF.
-const VF: any = Vex.Flow;
+const VF: any = Vex.Flow; // eslint-disable-line
 
 // TODO: Move to vexflow_test_helpers.ts
 interface TestOptions {
@@ -32,7 +30,7 @@ const RestsTests = {
     runTests('Rests - Dotted', RestsTests.basic);
     runTests('Auto Align Rests - Beamed Notes Stems Up', RestsTests.beamsUp);
     runTests('Auto Align Rests - Beamed Notes Stems Down', RestsTests.beamsDown);
-    runTests('Auto Align Rests - Tuplets Stems Up', RestsTests.tuplets);
+    runTests('Auto Align Rests - Tuplets Stems Up', RestsTests.tupletsTop);
     runTests('Auto Align Rests - Tuplets Stems Down', RestsTests.tupletsdown);
     runTests('Auto Align Rests - Single Voice (Default)', RestsTests.staveRests);
     runTests('Auto Align Rests - Single Voice (Align All)', RestsTests.staveRestsAll);
@@ -67,6 +65,11 @@ const RestsTests = {
     };
   },
 
+  /**
+   * Eight dotted rests, from whole to 128th.
+   * @param options
+   * @param contextBuilder
+   */
   basic: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 700);
 
@@ -78,6 +81,7 @@ const RestsTests = {
       new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '16r' }).addDotToAll(),
       new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '32r' }).addDotToAll(),
       new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '64r' }).addDotToAll(),
+      new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }).addDotToAll(),
     ];
 
     VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
@@ -85,6 +89,11 @@ const RestsTests = {
     ok(true, 'Dotted Rest Test');
   },
 
+  /**
+   * Rests are intermixed within beamed notes (with the stems and beams at the top).
+   * @param options
+   * @param contextBuilder
+   */
   beamsUp: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
@@ -118,6 +127,12 @@ const RestsTests = {
     ok(true, 'Auto Align Rests - Beams Up Test');
   },
 
+  /**
+   * Rests are intermixed within beamed notes (with the stems and beams at the bottom).
+   *
+   * @param options
+   * @param contextBuilder
+   */
   beamsDown: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
@@ -151,7 +166,14 @@ const RestsTests = {
     ok(true, 'Auto Align Rests - Beams Down Test');
   },
 
-  tuplets: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  /**
+   * Call setTupletLocation(Tuplet.LOCATION_TOP) to place the tuplet indicator (bracket and number) at the
+   * top of the group of notes. Tuplet.LOCATION_TOP is the default, so this is optional.
+   *
+   * @param options
+   * @param contextBuilder
+   */
+  tupletsTop: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -187,6 +209,13 @@ const RestsTests = {
     ok(true, 'Auto Align Rests - Tuplets Stem Up Test');
   },
 
+  /**
+   * Call setTupletLocation(Tuplet.LOCATION_BOTTOM) to place the tuplet indicator (bracket and number) at the
+   * bottom of the group of notes.
+   *
+   * @param options
+   * @param contextBuilder
+   */
   tupletsdown: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
@@ -233,6 +262,14 @@ const RestsTests = {
     ok(true, 'Auto Align Rests - Tuplets Stem Down Test');
   },
 
+  /**
+   * By default rests are centered vertically within the stave, except
+   * when they are inside a group of beamed notes (in which case they are
+   * centered vertically within that group).
+   *
+   * @param options
+   * @param contextBuilder
+   */
   staveRests: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
@@ -258,17 +295,24 @@ const RestsTests = {
       note({ keys: ['b/4'], stem_direction: -1, duration: '4r' }),
     ];
 
-    const beam1 = new VF.Beam(notes.slice(5, 9));
+    const beam = new VF.Beam(notes.slice(5, 9));
     const tuplet = new VF.Tuplet(notes.slice(9, 12)).setTupletLocation(VF.Tuplet.LOCATION_TOP);
 
     VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
 
     tuplet.setContext(c.context).draw();
-    beam1.setContext(c.context).draw();
+    beam.setContext(c.context).draw();
 
     ok(true, 'Auto Align Rests - Default Test');
   },
 
+  /**
+   * The only difference between staveRestsAll() and staveRests() is that this test case
+   * passes { align_rests: true } to Formatter.FormatAndDraw(...).
+   *
+   * @param options
+   * @param contextBuilder
+   */
   staveRestsAll: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
@@ -294,18 +338,26 @@ const RestsTests = {
       note({ keys: ['b/4'], stem_direction: -1, duration: '4r' }),
     ];
 
-    const beam1 = new VF.Beam(notes.slice(5, 9));
+    const beam = new VF.Beam(notes.slice(5, 9));
     const tuplet = new VF.Tuplet(notes.slice(9, 12)).setTupletLocation(VF.Tuplet.LOCATION_TOP);
 
-    // Set option to position rests near the notes in the voice
+    // Set { align_rests: true } to align rests (vertically) with nearby notes in each voice.
     VF.Formatter.FormatAndDraw(c.context, c.stave, notes, { align_rests: true });
 
     tuplet.setContext(c.context).draw();
-    beam1.setContext(c.context).draw();
+    beam.setContext(c.context).draw();
 
     ok(true, 'Auto Align Rests - Align All Test');
   },
 
+  /**
+   * Multi Voice
+   * The top voice shows quarter-note chords alternating with quarter rests.
+   * The bottom voice shows two groups of beamed eighth notes, with eighth rests.
+   *
+   * @param options
+   * @param contextBuilder
+   */
   multi: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     const stave = new VF.Stave(50, 10, 500).addClef('treble').setContext(ctx).addTimeSignature('4/4').draw();
@@ -333,7 +385,7 @@ const RestsTests = {
     const voice1 = new VF.Voice(Flow.TIME4_4).addTickables(notes1);
     const voice2 = new VF.Voice(Flow.TIME4_4).addTickables(notes2);
 
-    // Set option to position rests near the notes in each voice
+    // Set { align_rests: true } to align rests (vertically) with nearby notes in each voice.
     new VF.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave, { align_rests: true });
 
     const beam2_1 = new VF.Beam(notes2.slice(0, 4));
