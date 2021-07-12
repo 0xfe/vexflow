@@ -16,8 +16,7 @@ interface TestOptions {
   elementId: string;
   backend: number;
   assert: Assert;
-  // eslint-disable-next-line
-  params: any;
+  params: any /* eslint-disable-line */;
 }
 
 // Optional: arrow function to make your code more concise.
@@ -30,11 +29,11 @@ const RestsTests = {
     runTests('Rests - Dotted', RestsTests.basic);
     runTests('Auto Align Rests - Beamed Notes Stems Up', RestsTests.beamsUp);
     runTests('Auto Align Rests - Beamed Notes Stems Down', RestsTests.beamsDown);
-    runTests('Auto Align Rests - Tuplets Stems Up', RestsTests.tupletsTop);
-    runTests('Auto Align Rests - Tuplets Stems Down', RestsTests.tupletsdown);
-    runTests('Auto Align Rests - Single Voice (Default)', RestsTests.staveRests);
-    runTests('Auto Align Rests - Single Voice (Align All)', RestsTests.staveRestsAll);
-    runTests('Auto Align Rests - Multi Voice', RestsTests.multi);
+    runTests('Auto Align Rests - Tuplets Stems Up', RestsTests.tupletsUp);
+    runTests('Auto Align Rests - Tuplets Stems Down', RestsTests.tupletsDown);
+    runTests('Auto Align Rests - Single Voice (Default)', RestsTests.singleVoiceDefaultAlignment);
+    runTests('Auto Align Rests - Single Voice (Align All)', RestsTests.singleVoiceAlignAll);
+    runTests('Auto Align Rests - Multi Voice', RestsTests.multiVoice);
   },
 
   /**
@@ -42,7 +41,7 @@ const RestsTests = {
    * @param contextBuilder static function in renderer.ts (Renderer.getSVGContext or Renderer.getCanvasContext).
    * @param width
    * @param height
-   * @returns
+   * @returns object with .context and .stave properties
    */
   setupContext: function (
     options: TestOptions,
@@ -173,7 +172,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  tupletsTop: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  tupletsUp: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -216,7 +215,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  tupletsdown: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  tupletsDown: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -270,7 +269,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  staveRests: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  singleVoiceDefaultAlignment: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -313,7 +312,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  staveRestsAll: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  singleVoiceAlignAll: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -358,7 +357,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  multi: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  multiVoice: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     const stave = new VF.Stave(50, 10, 500).addClef('treble').setContext(ctx).addTimeSignature('4/4').draw();
 
