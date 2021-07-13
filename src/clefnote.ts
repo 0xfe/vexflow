@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// Copyright Mohit Muthanna 2010
-//
 // Author Taehoon Moon 2014
+// MIT License
 
 import { Note } from './note';
 import { Clef } from './clef';
@@ -10,7 +9,7 @@ import { RenderContext } from './types/common';
 import { BoundingBox } from './boundingbox';
 import { ClefType } from './clef';
 
-/** @constructor */
+/** ClefNote implements clef annotations in measures. */
 export class ClefNote extends Note {
   protected clef_obj: Clef;
   protected type: string;
@@ -34,6 +33,7 @@ export class ClefNote extends Note {
     this.ignore_ticks = true;
   }
 
+  /** Set clef type, size and annotation. */
   setType(type: string, size: string, annotation: string): this {
     this.type = type;
     this.clef_obj = new Clef(type, size, annotation);
@@ -43,34 +43,41 @@ export class ClefNote extends Note {
     return this;
   }
 
+  /** Get associated clef. */
   getClef(): ClefType {
     return this.clef;
   }
 
+  /** Set associated context. */
   setContext(context: RenderContext): this {
     super.setContext(context);
     this.glyph.setContext(this.getContext());
     return this;
   }
 
+  /** Get bounding box. */
   getBoundingBox(): BoundingBox | undefined {
     return super.getBoundingBox();
   }
 
+  /** Overridden to ignore. */
   addToModifierContext(): this {
     /* overridden to ignore */
     return this;
   }
 
+  /** Get element category string. */
   getCategory(): string {
     return ClefNote.CATEGORY;
   }
 
+  /** Set preformatted. */
   preFormat(): this {
     this.setPreFormatted(true);
     return this;
   }
 
+  /** Render clef note. */
   draw(): void {
     const stave = this.checkStave();
     if (!this.glyph.getContext()) {

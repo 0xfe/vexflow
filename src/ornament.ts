@@ -1,13 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Cyril Silverman
-//
-// ## Description
-//
-// This file implements ornaments as modifiers that can be
-// attached to notes. The complete list of ornaments is available in
-// `tables.js` under `Vex.Flow.ornamentCodes`.
-//
-// See `tests/ornament_tests.js` for usage examples.
+// MIT License
 
 import { RuntimeError, log } from './util';
 import { Flow } from './flow';
@@ -19,15 +12,20 @@ import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
 import { TabNote } from './tabnote';
 
-// To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]
-) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Ornament.DEBUG) log('Vex.Flow.Ornament', args);
 }
 
+/**
+ * Ornament implements ornaments as modifiers that can be
+ * attached to notes. The complete list of ornaments is available in
+ * `tables.ts` under `Vex.Flow.ornamentCodes`.
+ *
+ * See `tests/ornament_tests.ts` for usage examples.
+ */
 export class Ornament extends Modifier {
+  /** To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`. */
   static DEBUG: boolean;
 
   protected ornament: {
@@ -50,12 +48,12 @@ export class Ornament extends Modifier {
   protected accidentalLower?: Glyph;
   protected delayXShift?: number;
 
+  /** Ornaments category string. */
   static get CATEGORY(): string {
     return 'ornaments';
   }
 
-  // ## Static Methods
-  // Arrange ornaments inside `ModifierContext`
+  /** Arrange ornaments inside `ModifierContext` */
   static format(ornaments: Ornament[], state: ModifierContextState): boolean {
     if (!ornaments || ornaments.length === 0) return false;
 
@@ -115,50 +113,56 @@ export class Ornament extends Modifier {
     return true;
   }
 
-  // ### ornamentNoteTransition
-  // means the jazz ornament represents an effect from one note to another,
-  // these are generally on the top of the staff.
+  /**
+   * ornamentNoteTransition means the jazz ornament represents an effect from one note to another,
+   * these are generally on the top of the staff.
+   */
   static get ornamentNoteTransition(): string[] {
     return ['flip', 'jazzTurn', 'smear'];
   }
 
-  // ### ornamentAttack
-  // Indicates something that happens in the attach, placed before the note and
-  // any accidentals
+  /**
+   * ornamentAttack indicates something that happens in the attach, placed before the note and
+   * any accidentals
+   */
   static get ornamentAttack(): string[] {
     return ['scoop'];
   }
 
-  // ### ornamentAlignWithNoteHead
-  // The ornament is aligned based on the note head, but without regard to whether the
-  // stem goes up or down.
+  /**
+   * The ornament is aligned based on the note head, but without regard to whether the
+   * stem goes up or down.
+   */
   static get ornamentAlignWithNoteHead(): string[] {
     return ['doit', 'fall', 'fallLong', 'doitLong', 'bend', 'plungerClosed', 'plungerOpen', 'scoop'];
   }
 
-  // ### ornamentRelease
-  // An ornament that happens on the release of the note, generally placed after the
-  // note and overlapping the next beat/measure..
+  /**
+   * An ornament that happens on the release of the note, generally placed after the
+   * note and overlapping the next beat/measure..
+   */
   static get ornamentRelease(): string[] {
     return ['doit', 'fall', 'fallLong', 'doitLong', 'jazzTurn', 'smear', 'flip'];
   }
 
-  // ### ornamentArticulation
-  // goes above/below the note based on space availablity
+  /** ornamentArticulation goes above/below the note based on space availablity */
   static get ornamentArticulation(): string[] {
     return ['bend', 'plungerClosed', 'plungerOpen'];
   }
 
-  // ### getMetrics
-  // legacy ornaments have hard-coded metrics.  If additional ornament types are
-  // added, get their metrics here.
+  /**
+   * Legacy ornaments have hard-coded metrics.  If additional ornament types are
+   * added, get their metrics here.
+   */
   // eslint-disable-next-line
   getMetrics(): any {
     return this.getFontStack()[0].getMetrics().glyphs.jazzOrnaments[this.ornament.code];
   }
 
-  // Create a new ornament of type `type`, which is an entry in
-  // `Vex.Flow.ornamentCodes` in `tables.js`.
+  /**
+   * Create a new ornament of type `type`, which is an entry in
+   * `Vex.Flow.ornamentCodes` in `tables.ts`.
+   */
   constructor(type: string) {
     super();
     this.setAttribute('type', 'Ornament');
@@ -213,17 +217,18 @@ export class Ornament extends Modifier {
     }
   }
 
+  /** Get element category string. */
   getCategory(): string {
     return Ornament.CATEGORY;
   }
 
-  // Set whether the ornament is to be delayed
+  /** Set whether the ornament is to be delayed. */
   setDelayed(delayed: boolean): this {
     this.delayed = delayed;
     return this;
   }
 
-  // Set the upper accidental for the ornament
+  /** Set the upper accidental for the ornament. */
   setUpperAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
     this.accidentalUpper = new Glyph(Flow.accidentalCodes(accid).code, scale);
@@ -231,7 +236,7 @@ export class Ornament extends Modifier {
     return this;
   }
 
-  // Set the lower accidental for the ornament
+  /** Set the lower accidental for the ornament. */
   setLowerAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
     this.accidentalLower = new Glyph(Flow.accidentalCodes(accid).code, scale);
@@ -239,7 +244,7 @@ export class Ornament extends Modifier {
     return this;
   }
 
-  // Render ornament in position next to note.
+  /** Render ornament in position next to note. */
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote() as StemmableNote;

@@ -1,25 +1,25 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// This file implements the `TextDynamics` which renders traditional
-// text dynamics markings, **ie: p, f, sfz, rfz, ppp**
-//
-// You can render any dynamics string that contains a combination of
-// the following letters:  P, M, F, Z, R, S
+// MIT License
 
 import { RuntimeError, log, check } from './util';
 import { Note } from './note';
 import { Glyph } from './glyph';
 import { TextNoteStruct } from './textnote';
 
-// To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (TextDynamics.DEBUG) log('Vex.Flow.TextDynamics', args);
 }
 
+/**
+ * `TextDynamics` renders traditional
+ * text dynamics markings, **ie: p, f, sfz, rfz, ppp**
+ *
+ * You can render any dynamics string that contains a combination of
+ * the following letters:  P, M, F, Z, R, S
+ */
 export class TextDynamics extends Note {
+  /** To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`. */
   static DEBUG: boolean;
 
   protected sequence: string;
@@ -27,7 +27,7 @@ export class TextDynamics extends Note {
   protected line: number;
   protected glyphs: Glyph[];
 
-  // The glyph data for each dynamics letter
+  /** The glyph data for each dynamics letter. */
   static get GLYPHS(): Record<string, { code: string; width: number }> {
     return {
       f: {
@@ -57,11 +57,13 @@ export class TextDynamics extends Note {
     };
   }
 
-  // A `TextDynamics` object inherits from `Note` so that it can be formatted
-  // within a `Voice`.
-  // Create the dynamics marking. `text_struct` is an object
-  // that contains a `duration` property and a `sequence` of
-  // letters that represents the letters to render
+  /**
+   * A `TextDynamics` object inherits from `Note` so that it can be formatted
+   * within a `Voice`.
+   * Create the dynamics marking. `text_struct` is an object
+   * that contains a `duration` property and a `sequence` of
+   * letters that represents the letters to render
+   */
   constructor(text_struct: TextNoteStruct) {
     super(text_struct);
     this.setAttribute('type', 'TextDynamics');
@@ -80,13 +82,13 @@ export class TextDynamics extends Note {
     L('New Dynamics Text: ', this.sequence);
   }
 
-  // Set the Stave line on which the note should be placed
+  /** Set the Stave line on which the note should be placed. */
   setLine(line: number): this {
     this.line = line;
     return this;
   }
 
-  // Preformat the dynamics text
+  /** Preformat the dynamics text. */
   preFormat(): this {
     let total_width = 0;
     // Iterate through each letter
@@ -110,7 +112,7 @@ export class TextDynamics extends Note {
     return this;
   }
 
-  // Draw the dynamics text on the rendering context
+  /** Draw the dynamics text on the rendering context. */
   draw(): void {
     this.setRendered();
     const x = this.getAbsoluteX();

@@ -1,23 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna Cheppudira 2013.
 // Co-author: Benjamin W. Bohl
-//
-// ## Description
-//
-// This file implements various types of clefs that can be rendered on a stave.
-//
-// See `tests/clef_tests.js` for usage examples.
+// MIT License
 
 import { RuntimeError, log } from './util';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
-
-export interface ClefAnnotation {
-  code: string;
-  line: number;
-  x_shift: number;
-  point: number;
-}
 
 export interface ClefType {
   point: number;
@@ -25,17 +13,31 @@ export interface ClefType {
   line?: number;
 }
 
-// To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any []) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Clef.DEBUG) log('Vex.Flow.Clef', args);
 }
 
+/**
+ * Clef implements various types of clefs that can be rendered on a stave.
+ *
+ * See `tests/clef_tests.ts` for usage examples.
+ */
 export class Clef extends StaveModifier {
+  /** To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`. */
   static DEBUG: boolean;
 
-  annotation?: ClefAnnotation;
+  annotation?: {
+    code: string;
+    line: number;
+    x_shift: number;
+    point: number;
+  };
+
+  /**
+   * The attribute `clef` must be a key from
+   * `Clef.types`
+   */
   clef: ClefType = Clef.types['treble'];
 
   protected glyph?: Glyph;
@@ -43,12 +45,15 @@ export class Clef extends StaveModifier {
   protected size?: string;
   protected type?: string;
 
+  /** Clefs category string. */
   static get CATEGORY(): string {
     return 'clefs';
   }
 
-  // Every clef name is associated with a glyph code from the font file
-  // and a default stave line number.
+  /**
+   * Every clef name is associated with a glyph code from the font file
+   * and a default stave line number.
+   */
   static get types(): Record<string, ClefType> {
     return {
       treble: {
@@ -113,8 +118,7 @@ export class Clef extends StaveModifier {
     };
   }
 
-  // Create a new clef. The parameter `clef` must be a key from
-  // `Clef.types`.
+  /** Create a new clef. */
   constructor(type: string, size?: string, annotation?: string) {
     super();
     this.setAttribute('type', 'Clef');
@@ -125,10 +129,12 @@ export class Clef extends StaveModifier {
     L('Creating clef:', type);
   }
 
+  /** Get element category string. */
   getCategory(): string {
     return Clef.CATEGORY;
   }
 
+  /** Set clef type, size and annotation. */
   setType(type: string, size?: string, annotation?: string): this {
     this.type = type;
     this.clef = Clef.types[type];
@@ -161,6 +167,7 @@ export class Clef extends StaveModifier {
     return this;
   }
 
+  /** Get clef width. */
   getWidth(): number {
     if (this.type === 'tab' && !this.stave) {
       throw new RuntimeError('ClefError', "Can't get width without stave.");
@@ -169,6 +176,7 @@ export class Clef extends StaveModifier {
     return this.width;
   }
 
+  /** Set associated stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
     if (this.type !== 'tab') return this;
@@ -183,6 +191,7 @@ export class Clef extends StaveModifier {
     return this;
   }
 
+  /** Render clef. */
   draw(): void {
     if (!this.x) throw new RuntimeError('ClefError', "Can't draw clef without x.");
     if (!this.stave) throw new RuntimeError('ClefError', "Can't draw clef without stave.");

@@ -1,9 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-// `TextNote` is a notation element that is positioned in time. Generally
-// meant for objects that sit above/below the staff and inline with each other.
-// Examples of this would be such as dynamics, lyrics, chord changes, etc.
+// MIT License
 
 import { RuntimeError } from './util';
 import { Note, NoteStruct } from './note';
@@ -26,6 +22,11 @@ export interface TextNoteStruct extends NoteStruct {
   text: string;
 }
 
+/**
+ * `TextNote` is a notation element that is positioned in time. Generally
+ * meant for objects that sit above/below the staff and inline with each other.
+ * Examples of this would be such as dynamics, lyrics, chord changes, etc.
+ */
 export class TextNote extends Note {
   protected text: string;
   protected superscript?: string;
@@ -40,7 +41,7 @@ export class TextNote extends Note {
     return Justification;
   }
 
-  // Glyph data
+  /** Glyph data. */
   static get GLYPHS(): Record<string, { code: string }> {
     return {
       segno: {
@@ -111,7 +112,7 @@ export class TextNote extends Note {
     this.text = options.text;
     this.superscript = options.superscript;
     this.subscript = options.subscript;
-    this.glyph = null;
+    this.glyph = undefined;
     this.font = {
       family: 'Arial',
       size: 12,
@@ -136,19 +137,19 @@ export class TextNote extends Note {
     this.justification = TextNote.Justification.LEFT;
   }
 
-  // Set the horizontal justification of the TextNote
+  /** Set the horizontal justification of the TextNote. */
   setJustification(just: Justification): this {
     this.justification = just;
     return this;
   }
 
-  // Set the Stave line on which the note should be placed
+  /** Set the Stave line on which the note should be placed. */
   setLine(line: number): this {
     this.line = line;
     return this;
   }
 
-  // Pre-render formatting
+  /** Pre-render formatting. */
   preFormat(): void {
     const ctx = this.checkContext();
     if (!this.tickContext) throw new RuntimeError('NoTickContext', "Can't preformat without a TickContext.");
@@ -177,7 +178,7 @@ export class TextNote extends Note {
     this.setPreFormatted(true);
   }
 
-  // Renders the TextNote
+  /** Renders the TextNote. */
   draw(): void {
     const ctx = this.checkContext();
     const stave = this.checkStave();
