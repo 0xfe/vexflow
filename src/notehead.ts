@@ -1,11 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements `NoteHeads`. `NoteHeads` are typically not manipulated
-// directly, but used internally in `StaveNote`.
-//
-// See `tests/notehead_tests.js` for usage examples.
+// MIT License
 
 import { RuntimeError, log } from './util';
 import { Flow } from './flow';
@@ -18,10 +12,8 @@ import { BoundingBox } from './boundingbox';
 import { Stave } from './stave';
 import { ElementStyle } from './element';
 
-// To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any []) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (NoteHead.DEBUG) log('Vex.Flow.NoteHead', args);
 }
 
@@ -43,14 +35,14 @@ export interface NoteHeadStruct extends NoteStruct {
   index?: number;
 }
 
-// Draw slashnote head manually. No glyph exists for this.
-//
-// Parameters:
-// * `ctx`: the Canvas context
-// * `duration`: the duration of the note. ex: "4"
-// * `x`: the x coordinate to draw at
-// * `y`: the y coordinate to draw at
-// * `stem_direction`: the direction of the stem
+/**
+ * Draw slashnote head manually. No glyph exists for this.
+ * @param ctx the Canvas context
+ * @param duration the duration of the note. ex: "4"
+ * @param x the x coordinate to draw at
+ * @param y the y coordinate to draw at
+ * @param stem_direction the direction of the stem
+ */
 function drawSlashNoteHead(
   ctx: RenderContext,
   duration: string,
@@ -98,7 +90,14 @@ function drawSlashNoteHead(
   ctx.restore();
 }
 
+/**
+ * `NoteHeads` are typically not manipulated
+ * directly, but used internally in `StaveNote`.
+ *
+ * See `tests/notehead_tests.ts` for usage examples.
+ */
 export class NoteHead extends Note {
+  /** To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`. */
   static DEBUG: boolean;
 
   glyph_code: string;
@@ -172,46 +171,50 @@ export class NoteHead extends Note {
     return NoteHead.CATEGORY;
   }
 
-  // Get the width of the notehead
+  /** Get the width of the notehead. */
   getWidth(): number {
     return this.width;
   }
 
-  // Determine if the notehead is displaced
+  /** Determine if the notehead is displaced. */
   isDisplaced(): boolean {
     return this.displaced === true;
   }
 
-  // Get the glyph data
+  /** Get the glyph data. */
   getGlyph(): GlyphProps {
     return this.glyph;
   }
 
-  // Set the X coordinate
+  /** Set the X coordinate. */
   setX(x: number): this {
     this.x = x;
     return this;
   }
 
-  // get/set the Y coordinate
+  /** Get the Y coordinate. */
   getY(): number {
     return this.y;
   }
+
+  /** Set the Y coordinate. */
   setY(y: number): this {
     this.y = y;
     return this;
   }
 
-  // Get/set the stave line the notehead is placed on
+  /** Get the stave line the notehead is placed on. */
   getLine(): number {
     return this.line;
   }
+
+  /** Set the stave line the notehead is placed on. */
   setLine(line: number): this {
     this.line = line;
     return this;
   }
 
-  // Get the canvas `x` coordinate position of the notehead.
+  /** Get the canvas `x` coordinate position of the notehead. */
   getAbsoluteX(): number {
     // If the note has not been preformatted, then get the static x value
     // Otherwise, it's been formatted and we should use it's x value relative
@@ -231,7 +234,7 @@ export class NoteHead extends Note {
     );
   }
 
-  // Get the `BoundingBox` for the `NoteHead`
+  /** Get the `BoundingBox` for the `NoteHead`. */
   getBoundingBox(): BoundingBox {
     if (!this.preFormatted) {
       throw new RuntimeError('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
@@ -243,7 +246,7 @@ export class NoteHead extends Note {
     return new BoundingBox(this.getAbsoluteX(), min_y, this.width, spacing);
   }
 
-  // Set notehead to a provided `stave`
+  /** Set notehead to a provided `stave`. */
   setStave(stave: Stave): this {
     const line = this.getLine();
 
@@ -255,7 +258,7 @@ export class NoteHead extends Note {
     return this;
   }
 
-  // Pre-render formatting
+  /** Pre-render formatting. */
   preFormat(): this {
     if (this.preFormatted) return this;
 
@@ -266,7 +269,7 @@ export class NoteHead extends Note {
     return this;
   }
 
-  // Draw the notehead
+  /** Draw the notehead. */
   draw(): void {
     const ctx = this.checkContext();
     this.setRendered();

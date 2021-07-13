@@ -513,7 +513,7 @@ export class Formatter {
     return this.minTotalWidth;
   }
 
-  /** calculate the resolution multiplier for `voices`. */
+  /** Calculate the resolution multiplier for `voices`. */
   static getResolutionMultiplier(voices: Voice[]): number {
     if (!voices || !voices.length) {
       throw new RuntimeError('BadArgument', 'No voices to format');

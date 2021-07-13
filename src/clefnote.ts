@@ -60,7 +60,7 @@ export class ClefNote extends Note {
     return super.getBoundingBox();
   }
 
-  /* Overridden to ignore. */
+  /** Overridden to ignore. */
   addToModifierContext(): this {
     /* overridden to ignore */
     return this;
