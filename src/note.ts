@@ -115,9 +115,7 @@ export abstract class Note extends Tickable {
     return 'note';
   }
 
-  /** Debug helper. Displays various note metrics for the given
-   * note.
-   */
+  /** Debug helper. Displays various note metrics for the given note. */
   static plotMetrics(ctx: RenderContext, note: Note, yPos: number): void {
     const metrics = note.getMetrics();
     const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.leftDisplacedHeadPx;
@@ -545,10 +543,8 @@ export abstract class Note extends Tickable {
     return this;
   }
   /** Get the coordinates for where modifiers begin. */
-  getModifierStartXY(
-    // eslint-disable-next-line
-    position?: number, index?: number, options?: any
-  ): { x: number; y: number } {
+  // eslint-disable-next-line
+  getModifierStartXY(position?: number, index?: number, options?: any): { x: number; y: number } {
     if (!this.preFormatted) {
       throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
     }
