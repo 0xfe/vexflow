@@ -191,22 +191,34 @@ class VexFlowTests {
    */
   // eslint-disable-next-line
   static runCanvasTest(name: string, func: Function, params: any): void {
-    // eslint-disable-next-line
-    QUnit.test(name, function (assert: Assert) {
-      const elementId = VexFlowTests.generateTestID('canvas_');
-      const title = VexFlowTests.generateTestTitle('Canvas', assert, name);
+    // Set to true if you want to test all fonts on the CANVAS context.
+    // By default we only test all fonts on the SVG context.
+    const TEST_ALL_FONTS = false;
+
+    const testFunc: TestFunction = (fontName: string) => (assert: Assert) => {
+      const defaultFontStack = VF.DEFAULT_FONT_STACK;
+      VF.DEFAULT_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
+      const elementId = VexFlowTests.generateTestID('canvas_' + fontName);
+      const title = VexFlowTests.generateTestTitle('Canvas ' + fontName, assert, name);
 
       VexFlowTests.createTest(elementId, title, 'canvas');
 
       const testOptions = {
-        backend: VF.Renderer.Backends.CANVAS,
         elementId: elementId,
+        backend: VF.Renderer.Backends.CANVAS,
         params: params,
         assert: assert,
       };
 
       func(testOptions, VF.Renderer.getCanvasContext);
-    });
+      VF.DEFAULT_FONT_STACK = defaultFontStack;
+    };
+
+    if (TEST_ALL_FONTS) {
+      VexFlowTests.runTestWithFonts(name, testFunc);
+    } else {
+      QUnit.test(name, testFunc('Bravura'));
+    }
   }
 
   /**
