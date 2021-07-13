@@ -197,16 +197,15 @@ class VexFlowTests {
 
     const testFunc: TestFunction = (fontName: string) => (assert: Assert) => {
       const defaultFontStack = VF.DEFAULT_FONT_STACK;
-      VF.DEFAULT_FONT_STACK = VF.Test.FONT_STACKS[fontName];
-
+      VF.DEFAULT_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
       const elementId = VexFlowTests.generateTestID('canvas_' + fontName);
       const title = VexFlowTests.generateTestTitle('Canvas ' + fontName, assert, name);
 
       VexFlowTests.createTest(elementId, title, 'canvas');
 
       const testOptions = {
-        backend: VF.Renderer.Backends.CANVAS,
         elementId: elementId,
+        backend: VF.Renderer.Backends.CANVAS,
         params: params,
         assert: assert,
       };
