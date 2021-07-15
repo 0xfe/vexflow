@@ -40,7 +40,9 @@ export abstract class Element {
   protected style?: ElementStyle;
   private attrs: ElementAttributes;
   protected boundingBox?: BoundingBox;
+  // Initialized in the constructor via setFontStack(...).
   protected fontStack!: Font[];
+  // Initialized in the constructor via setFontStack(...).
   protected musicFont!: Font;
   protected registry?: Registry;
 

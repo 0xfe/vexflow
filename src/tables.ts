@@ -1305,7 +1305,7 @@ export const Tables = {
             flag: false,
             rest: true,
             position: 'B/4',
-            dot_shiftY: 1.5,
+            dot_shiftY: -2.5,
             line_above: 3.0,
             line_below: 3.0,
             getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {

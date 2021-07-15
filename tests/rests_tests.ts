@@ -72,6 +72,7 @@ const RestsTests = {
       new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '16r' }).addDotToAll(),
       new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '32r' }).addDotToAll(),
       new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '64r' }).addDotToAll(),
+      // TODO: 128th rests' dot location seem to be wrong.
       new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }).addDotToAll(),
     ];
 
@@ -382,8 +383,10 @@ const RestsTests = {
     const beam2_1 = new VF.Beam(notes2.slice(0, 4));
     const beam2_2 = new VF.Beam(notes2.slice(4, 8));
 
-    voice1.draw(ctx);
+    // Note: we need to draw voice2 first, since voice2 generates ledger lines.
+    // Otherwise, the ledger lines will be drawn on top of middle C notes in voice1.
     voice2.draw(ctx);
+    voice1.draw(ctx);
     beam2_1.setContext(ctx).draw();
     beam2_2.setContext(ctx).draw();
 
