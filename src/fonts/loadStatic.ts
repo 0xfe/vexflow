@@ -2,24 +2,24 @@ import Bravura from '../fonts/bravura';
 import Gonville from '../fonts/gonville';
 import Petaluma from '../fonts/petaluma';
 import Custom from '../fonts/custom';
-import { FontData } from '../font';
+import { FontDataMetrics } from '../font';
 
-// eslint-disable-next-line
-export async function loadBravura(): Promise<{ metrics: Record<string, any>; fontData: FontData }> {
-  return Bravura;
+export function loadBravura(fontDataMetrics: FontDataMetrics) {
+  fontDataMetrics.fontData = Bravura.fontData;
+  fontDataMetrics.metrics = Bravura.metrics;
 }
 
-// eslint-disable-next-line
-export async function loadGonville(): Promise<{ metrics: Record<string, any>; fontData: FontData }> {
-  return Gonville;
+export function loadGonville(fontDataMetrics: FontDataMetrics) {
+  fontDataMetrics.fontData = Gonville.fontData;
+  fontDataMetrics.metrics = Gonville.metrics;
 }
 
-// eslint-disable-next-line
-export async function loadPetaluma(): Promise<{ metrics: Record<string, any>; fontData: FontData }> {
-  return Petaluma;
+export function loadPetaluma(fontDataMetrics: FontDataMetrics) {
+  fontDataMetrics.fontData = Petaluma.fontData;
+  fontDataMetrics.metrics = Petaluma.metrics;
 }
 
-// eslint-disable-next-line
-export async function loadCustom(): Promise<{ metrics: Record<string, any>; fontData: FontData }> {
-  return Custom;
+export function loadCustom(fontDataMetrics: FontDataMetrics) {
+  fontDataMetrics.fontData = Custom.fontData;
+  fontDataMetrics.metrics = Custom.metrics;
 }
