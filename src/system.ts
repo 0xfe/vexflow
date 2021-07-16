@@ -101,7 +101,10 @@ export class System extends Element {
     return this;
   }
 
-  /** Add connector between staves. */
+  /**
+   * Add connector between staves.
+   * @param type see {@link StaveConnector.typeString}
+   */
   addConnector(type = 'double'): StaveConnector {
     this.connector = this.factory.StaveConnector({
       top_stave: this.parts[0].stave,
