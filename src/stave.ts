@@ -62,6 +62,8 @@ export class Stave extends Element {
   protected bounds: Bounds;
   protected readonly modifiers: StaveModifier[];
 
+  protected defaultLedgerLineStyle: ElementStyle;
+
   // This is the sum of the padding that normally goes on left + right of a stave during
   // drawing.  Used to size staves correctly with content width
   static get defaultPadding(): number {
@@ -113,6 +115,7 @@ export class Stave extends Element {
     };
     this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
     this.options = { ...this.options, ...options };
+    this.defaultLedgerLineStyle = {};
 
     this.resetLines();
 
@@ -122,6 +125,15 @@ export class Stave extends Element {
     this.addEndModifier(new Barline(this.options.right_bar ? BarlineType.SINGLE : BarlineType.NONE));
   }
 
+  /** Set default style for ledger lines. */
+  setDefaultLedgerLineStyle(style: ElementStyle): void {
+    this.defaultLedgerLineStyle = style;
+  }
+
+  /** Get default style for ledger lines. */
+  getDefaultLedgerLineStyle(): ElementStyle {
+    return { ...this.getStyle(), ...this.defaultLedgerLineStyle };
+  }
   space(spacing: number): number {
     return this.options.spacing_between_lines_px * spacing;
   }
