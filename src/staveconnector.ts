@@ -1,4 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 
 import { RuntimeError } from './util';
 import { Element } from './element';
@@ -27,6 +28,7 @@ function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY
   ctx.fillRect(topX - thickLineOffset, topY, variableWidth, botY - topY);
 }
 
+/** StaveConnector implements the connector lines between staves of a system. */
 export class StaveConnector extends Element {
   protected thickness: number;
   protected width: number;
@@ -44,9 +46,11 @@ export class StaveConnector extends Element {
   protected top_stave: Stave;
   protected bottom_stave: Stave;
 
-  // SINGLE_LEFT and SINGLE are the same value for compatibility
-  // with older versions of vexflow which didn't have right sided
-  // stave connectors
+  /**
+   * SINGLE_LEFT and SINGLE are the same value for compatibility
+   * with older versions of vexflow which didn't have right sided
+   * stave connectors.
+   */
   static readonly type = {
     SINGLE_RIGHT: 0,
     SINGLE_LEFT: 1,
@@ -60,6 +64,19 @@ export class StaveConnector extends Element {
     NONE: 8,
   };
 
+  /**
+   * Connector type:
+   * * "singleRight"
+   * * "singleLeft"
+   * * "single"
+   * * "double"
+   * * "brace"
+   * * "bracket"
+   * * "boldDoubleLeft"
+   * * "boldDoubleRight"
+   * * "thinDouble"
+   * * "none"
+   */
   static readonly typeString: Record<string, number> = {
     singleRight: StaveConnector.type.SINGLE_RIGHT,
     singleLeft: StaveConnector.type.SINGLE_LEFT,
@@ -93,6 +110,10 @@ export class StaveConnector extends Element {
     this.texts = [];
   }
 
+  /**
+   * Set type.
+   * @param type see {@link StaveConnector.type} & {@link StaveConnector.typeString}
+   */
   setType(type: number | string): this {
     type = typeof type === 'string' ? StaveConnector.typeString[type] : type;
 
@@ -102,6 +123,7 @@ export class StaveConnector extends Element {
     return this;
   }
 
+  /** Set optional associated Text. */
   setText(
     text: string,
     options?: {
@@ -116,10 +138,12 @@ export class StaveConnector extends Element {
     return this;
   }
 
+  /** Set text font. */
   setFont(font: FontInfo): void {
     this.font = { ...this.font, ...font };
   }
 
+  /** Set connector x shift. */
   setXShift(x_shift: number): this {
     if (typeof x_shift !== 'number') {
       throw new RuntimeError('InvalidType', 'x_shift must be a Number');
@@ -129,6 +153,7 @@ export class StaveConnector extends Element {
     return this;
   }
 
+  /** Render connector and associated text. */
   draw(): void {
     const ctx = this.checkContext();
     this.setRendered();

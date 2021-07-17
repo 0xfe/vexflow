@@ -1,12 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements different types of pedal markings. These notation
-// elements indicate to the performer when to depress and release the a pedal.
-//
-// In order to create "Sostenuto", and "una corda" markings, you must set
-// custom text for the release/depress pedal markings.
+// MIT License
 
 import { RuntimeError, log } from './util';
 import { Element } from './element';
@@ -14,23 +7,31 @@ import { Glyph } from './glyph';
 import { FontInfo, RenderContext } from './types/common';
 import { StaveNote } from './stavenote';
 
-// To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (PedalMarking.DEBUG) log('Vex.Flow.PedalMarking', args);
 }
 
-// Draws a pedal glyph with the provided `name` on a rendering `context`
-// at the coordinates `x` and `y. Takes into account the glyph data
-// coordinate shifts.
+/**
+ * Draws a pedal glyph with the provided `name` on a rendering `context`
+ * at the coordinates `x` and `y. Takes into account the glyph data
+ * coordinate shifts.
+ */
 function drawPedalGlyph(name: string, context: RenderContext, x: number, y: number, point: number): void {
   const glyph_data = PedalMarking.GLYPHS[name];
   const glyph = new Glyph(glyph_data.code, point, { category: 'pedalMarking' });
   glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
 }
 
+/**
+ * PedalMarking implements different types of pedal markings. These notation
+ * elements indicate to the performer when to depress and release the a pedal.
+ *
+ * In order to create "Sostenuto", and "una corda" markings, you must set
+ * custom text for the release/depress pedal markings.
+ */
 export class PedalMarking extends Element {
+  /** To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`. */
   static DEBUG: boolean;
 
   protected line: number;
@@ -46,7 +47,7 @@ export class PedalMarking extends Element {
   protected font: FontInfo;
   protected notes: StaveNote[];
 
-  // Glyph data
+  /** Glyph data */
   static readonly GLYPHS: Record<string, { code: string; y_shift: number; x_shift: number }> = {
     pedal_depress: {
       code: 'keyboardPedalPed',
@@ -60,18 +61,21 @@ export class PedalMarking extends Element {
     },
   };
 
+  /** Pedal type as number. */
   static readonly type = {
     TEXT: 1,
     BRACKET: 2,
     MIXED: 3,
   };
 
+  /** Pedal type as string. */
   static readonly typeString: Record<string, number> = {
     text: PedalMarking.type.TEXT,
     bracket: PedalMarking.type.BRACKET,
     mixed: PedalMarking.type.MIXED,
   };
 
+  /** Set pedal type. */
   setType(type: string | number): this {
     type = typeof type === 'string' ? PedalMarking.typeString[type] : type;
 
@@ -81,14 +85,16 @@ export class PedalMarking extends Element {
     return this;
   }
 
-  // Create a sustain pedal marking. Returns the defaults PedalMarking.
-  // Which uses the traditional "Ped" and "*"" markings.
+  /**
+   * Create a sustain pedal marking. Returns the defaults PedalMarking.
+   * Which uses the traditional "Ped" and "*"" markings.
+   */
   static createSustain(notes: StaveNote[]): PedalMarking {
     const pedal = new PedalMarking(notes);
     return pedal;
   }
 
-  // Create a sostenuto pedal marking
+  /** Create a sostenuto pedal marking */
   static createSostenuto(notes: StaveNote[]): PedalMarking {
     const pedal = new PedalMarking(notes);
     pedal.setType(PedalMarking.type.MIXED);
@@ -96,7 +102,7 @@ export class PedalMarking extends Element {
     return pedal;
   }
 
-  // Create an una corda pedal marking
+  /** Create an una corda pedal marking */
   static createUnaCorda(notes: StaveNote[]): PedalMarking {
     const pedal = new PedalMarking(notes);
     pedal.setType(PedalMarking.type.TEXT);
@@ -104,7 +110,6 @@ export class PedalMarking extends Element {
     return pedal;
   }
 
-  // ## Prototype Methods
   constructor(notes: StaveNote[]) {
     super();
     this.setAttribute('type', 'PedalMarking');
@@ -131,21 +136,23 @@ export class PedalMarking extends Element {
     };
   }
 
-  // Set custom text for the `depress`/`release` pedal markings. No text is
-  // set if the parameter is falsy.
+  /**
+   * Set custom text for the `depress`/`release` pedal markings. No text is
+   * set if the parameter is falsy.
+   */
   setCustomText(depress: string, release?: string): this {
     this.custom_depress_text = depress || '';
     this.custom_release_text = release || '';
     return this;
   }
 
-  // Set the staff line to render the markings on
+  /** Set the staff line to render the markings on. */
   setLine(line: number): this {
     this.line = line;
     return this;
   }
 
-  // Draw the bracket based pedal markings
+  /** Draw the bracket based pedal markings. */
   drawBracketed(): void {
     const ctx = this.checkContext();
     let is_pedal_depressed = false;
@@ -218,8 +225,10 @@ export class PedalMarking extends Element {
     });
   }
 
-  // Draw the text based pedal markings. This defaults to the traditional
-  // "Ped" and "*"" symbols if no custom text has been provided.
+  /**
+   * Draw the text based pedal markings. This defaults to the traditional
+   * "Ped" and "*"" symbols if no custom text has been provided.
+   */
   drawText(): void {
     const ctx = this.checkContext();
     let is_pedal_depressed = false;
@@ -252,7 +261,7 @@ export class PedalMarking extends Element {
     });
   }
 
-  // Render the pedal marking in position on the rendering context
+  /** Render the pedal marking in position on the rendering context. */
   draw(): void {
     const ctx = this.checkContext();
     this.setRendered();

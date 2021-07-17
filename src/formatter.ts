@@ -1,21 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
-//
-// This file implements the formatting and layout algorithms that are used
-// to position notes in a voice. The algorithm can align multiple voices both
-// within a stave, and across multiple staves.
-//
-// To do this, the formatter breaks up voices into a grid of rational-valued
-// `ticks`, to which each note is assigned. Then, minimum widths are assigned
-// to each tick based on the widths of the notes and modifiers in that tick. This
-// establishes the smallest amount of space required for each tick.
-//
-// Finally, the formatter distributes the left over space proportionally to
-// all the ticks, setting the `x` values of the notes in each tick.
-//
-// See `tests/formatter_tests.js` for usage examples. The helper functions included
-// here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
+// MIT License
 
 import { RuntimeError, midLine, log, check } from './util';
 import { Beam } from './beam';
@@ -67,8 +51,10 @@ export interface AlignmentContexts<T> {
 type addToContextFn<T> = (tickable: Note, context: T, voiceIndex: number) => void;
 type makeContextFn<T> = (tick?: { tickID: number }) => T;
 
-// Create `Alignment`s for each tick in `voices`. Also calculate the
-// total number of ticks in voices.
+/**
+ * Create `Alignment`s for each tick in `voices`. Also calculate the
+ * total number of ticks in voices.
+ */
 function createContexts<T>(
   voices: Voice[],
   makeContext: makeContextFn<T>,
@@ -114,13 +100,12 @@ function createContexts<T>(
   };
 }
 
-// To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]) {
   if (Formatter.DEBUG) log('Vex.Flow.Formatter', args);
 }
 
-// Helper function to locate the next non-rest note(s).
+/** Helper function to locate the next non-rest note(s). */
 function lookAhead(notes: Note[], restLine: number, i: number, compare: boolean) {
   // If no valid next note group, nextRestLine is same as current.
   let nextRestLine = restLine;
@@ -143,7 +128,24 @@ function lookAhead(notes: Note[], restLine: number, i: number, compare: boolean)
   return nextRestLine;
 }
 
+/**
+ * Format implements the formatting and layout algorithms that are used
+ * to position notes in a voice. The algorithm can align multiple voices both
+ * within a stave, and across multiple staves.
+ *
+ * To do this, the formatter breaks up voices into a grid of rational-valued
+ * `ticks`, to which each note is assigned. Then, minimum widths are assigned
+ * to each tick based on the widths of the notes and modifiers in that tick. This
+ * establishes the smallest amount of space required for each tick.
+ *
+ * Finally, the formatter distributes the left over space proportionally to
+ * all the ticks, setting the `x` values of the notes in each tick.
+ *
+ * See `tests/formatter_tests.ts` for usage examples. The helper functions included
+ * here (`FormatAndDraw`, `FormatAndDrawTab`) also serve as useful usage examples.
+ */
 export class Formatter {
+  // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
   static DEBUG: boolean;
   protected hasMinTotalWidth: boolean;
   protected minTotalWidth: number;
@@ -161,8 +163,10 @@ export class Formatter {
   protected lossHistory: number[];
   protected durationStats: Record<string, { mean: number; count: number }>;
 
-  // Helper function to layout "notes" one after the other without
-  // regard for proportions. Useful for tests and debugging.
+  /**
+   * Helper function to layout "notes" one after the other without
+   * regard for proportions. Useful for tests and debugging.
+   */
   static SimpleFormat(notes: Note[], x = 0, { paddingBetween = 10 } = {}): void {
     notes.reduce((accumulator, note) => {
       note.addToModifierContext(new ModifierContext());
@@ -174,7 +178,7 @@ export class Formatter {
     }, x);
   }
 
-  // Helper function to plot formatter debug info.
+  /** Helper function to plot formatter debug info. */
   static plotDebugging(
     ctx: RenderContext,
     formatter: Formatter,
@@ -219,22 +223,21 @@ export class Formatter {
     ctx.restore();
   }
 
-  // Helper function to format and draw a single voice. Returns a bounding
-  // box for the notation.
-  //
-  // Parameters:
-  // * `ctx` - The rendering context
-  // * `stave` - The stave to which to draw (`Stave` or `TabStave`)
-  // * `notes` - Array of `Note` instances (`Note`, `TextNote`, `TabNote`, etc.)
-  // * `params` - One of below:
-  //    * Setting `autobeam` only `(context, stave, notes, true)` or
-  //      `(ctx, stave, notes, {autobeam: true})`
-  //    * Setting `align_rests` a struct is needed `(context, stave, notes, {align_rests: true})`
-  //    * Setting both a struct is needed `(context, stave, notes, {
-  //      autobeam: true, align_rests: true})`
-  //
-  // `autobeam` automatically generates beams for the notes.
-  // `align_rests` aligns rests with nearby notes.
+  /**
+   * Helper function to format and draw a single voice. Returns a bounding
+   * box for the notation.
+   * @param ctx  the rendering context
+   * @param stave the stave to which to draw (`Stave` or `TabStave`)
+   * @param notes array of `Note` instances (`Note`, `TextNote`, `TabNote`, etc.)
+   * @param params one of below:
+   *    * Setting `autobeam` only `(context, stave, notes, true)` or
+   *      `(ctx, stave, notes, {autobeam: true})`
+   *    * Setting `align_rests` a struct is needed `(context, stave, notes, {align_rests: true})`
+   *    * Setting both a struct is needed `(context, stave, notes, {
+   *      autobeam: true, align_rests: true})`
+   *    * `autobeam` automatically generates beams for the notes.
+   *    * `align_rests` aligns rests with nearby notes.
+   */
   static FormatAndDraw(
     ctx: RenderContext,
     stave: Stave,
@@ -271,19 +274,19 @@ export class Formatter {
     return voice.getBoundingBox();
   }
 
-  // Helper function to format and draw aligned tab and stave notes in two
-  // separate staves.
-  //
-  // Parameters:
-  // * `ctx` - The rendering context
-  // * `tabstave` - A `TabStave` instance on which to render `TabNote`s.
-  // * `stave` - A `Stave` instance on which to render `Note`s.
-  // * `notes` - Array of `Note` instances for the stave (`Note`, `BarNote`, etc.)
-  // * `tabnotes` - Array of `Note` instances for the tab stave (`TabNote`, `BarNote`, etc.)
-  // * `autobeam` - Automatically generate beams.
-  // * `params` - A configuration object:
-  //    * `autobeam` automatically generates beams for the notes.
-  //    * `align_rests` aligns rests with nearby notes.
+  /**
+   * Helper function to format and draw aligned tab and stave notes in two
+   * separate staves.
+   * @param ctx the rendering context
+   * @param tabstave a `TabStave` instance on which to render `TabNote`s.
+   * @param stave a `Stave` instance on which to render `Note`s.
+   * @param notes array of `Note` instances for the stave (`Note`, `BarNote`, etc.)
+   * @param tabnotes array of `Note` instances for the tab stave (`TabNote`, `BarNote`, etc.)
+   * @param autobeam automatically generate beams.
+   * @param params a configuration object:
+   *    * `autobeam` automatically generates beams for the notes.
+   *    * `align_rests` aligns rests with nearby notes.
+   */
   static FormatAndDrawTab(
     ctx: RenderContext,
     tabstave: TabStave,
@@ -328,12 +331,12 @@ export class Formatter {
     new StaveConnector(stave, tabstave).setContext(ctx).draw();
   }
 
-  // Auto position rests based on previous/next note positions.
-  //
-  // Params:
-  // * `notes`: An array of notes.
-  // * `alignAllNotes`: If set to false, only aligns non-beamed notes.
-  // * `alignTuplets`: If set to false, ignores tuplets.
+  /**
+   * Auto position rests based on previous/next note positions.
+   * @param notes an array of notes.
+   * @param alignAllNotes if set to false, only aligns non-beamed notes.
+   * @param alignTuplets if set to false, ignores tuplets.
+   */
   static AlignRestsToNotes(notes: Note[], alignAllNotes: boolean, alignTuplets?: boolean): void {
     notes.forEach((note, index) => {
       if (note instanceof StaveNote && note.isRest()) {
@@ -400,9 +403,11 @@ export class Formatter {
     this.lossHistory = [];
   }
 
-  // Find all the rests in each of the `voices` and align them
-  // to neighboring notes. If `alignAllNotes` is `false`, then only
-  // align non-beamed notes.
+  /**
+   * Find all the rests in each of the `voices` and align them
+   * to neighboring notes. If `alignAllNotes` is `false`, then only
+   * align non-beamed notes.
+   */
   alignRests(voices: Voice[], alignAllNotes: boolean): void {
     if (!voices || !voices.length) {
       throw new RuntimeError('BadArgument', 'No voices to format rests');
@@ -426,8 +431,8 @@ export class Formatter {
    * and width will need no extra padding, and all these quantities will be
    * zero in that case.
    *
-   * @param {Voice []} voices - the voices that contain the notes
-   * @returns {number} - the estimated width in pixels
+   * @param voices the voices that contain the notes
+   * @returns the estimated width in pixels
    */
   preCalculateMinTotalWidth(voices: Voice[]): number {
     const unalignedPadding = Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.unalignedNotePadding');
@@ -493,8 +498,10 @@ export class Formatter {
     return this.minTotalWidth + Math.max(unalignedPad, padmax);
   }
 
-  // Get minimum width required to render all voices. Either `format` or
-  // `preCalculateMinTotalWidth` must be called before this method.
+  /**
+   * Get minimum width required to render all voices. Either `format` or
+   * `preCalculateMinTotalWidth` must be called before this method.
+   */
   getMinTotalWidth(): number {
     if (!this.hasMinTotalWidth) {
       throw new RuntimeError(
@@ -506,7 +513,7 @@ export class Formatter {
     return this.minTotalWidth;
   }
 
-  // calculates the resolution multiplier for `voices`.
+  /** Calculate the resolution multiplier for `voices`. */
   static getResolutionMultiplier(voices: Voice[]): number {
     if (!voices || !voices.length) {
       throw new RuntimeError('BadArgument', 'No voices to format');
@@ -526,7 +533,7 @@ export class Formatter {
     return resolutionMultiplier;
   }
 
-  // Create `ModifierContext`s for each tick in `voices`.
+  /** Create `ModifierContext`s for each tick in `voices`. */
   createModifierContexts(voices: Voice[]): AlignmentContexts<ModifierContext> {
     const fn: addToContextFn<ModifierContext> = (tickable: Note, context: ModifierContext) =>
       tickable.addToModifierContext(context);
@@ -535,8 +542,10 @@ export class Formatter {
     return contexts;
   }
 
-  // Create `TickContext`s for each tick in `voices`. Also calculate the
-  // total number of ticks in voices.
+  /**
+   * Create `TickContext`s for each tick in `voices`. Also calculate the
+   * total number of ticks in voices.
+   */
   createTickContexts(voices: Voice[]): AlignmentContexts<TickContext> {
     const fn: addToContextFn<TickContext> = (tickable: Note, context: TickContext, voiceIndex: number) =>
       context.addTickable(tickable, voiceIndex);
@@ -550,10 +559,12 @@ export class Formatter {
     return contexts;
   }
 
-  // This is the core formatter logic. Format voices and justify them
-  // to `justifyWidth` pixels. `renderingContext` is required to justify elements
-  // that can't retreive widths without a canvas. This method sets the `x` positions
-  // of all the tickables/notes in the formatter.
+  /**
+   * This is the core formatter logic. Format voices and justify them
+   * to `justifyWidth` pixels. `renderingContext` is required to justify elements
+   * that can't retreive widths without a canvas. This method sets the `x` positions
+   * of all the tickables/notes in the formatter.
+   */
   preFormat(justifyWidth = 0, renderingContext?: RenderContext, voicesParam?: Voice[], stave?: Stave): number {
     // Initialize context maps.
     const contexts = this.tickContexts;
@@ -761,7 +772,7 @@ export class Formatter {
     return this.evaluate();
   }
 
-  // Calculate the total cost of this formatting decision.
+  /** Calculate the total cost of this formatting decision. */
   evaluate(): number {
     if (!this.tickContexts) return 0;
     const contexts = this.tickContexts;
@@ -853,13 +864,14 @@ export class Formatter {
     return this.totalCost;
   }
 
-  // Run a single iteration of rejustification. At a high level, this method calculates
-  // the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
-  // attempt to reduce the cost. You can call this method multiple times until it finds
-  // and oscillates around a global minimum.
-  //
-  // Alpha is the "learning rate" for the formatter. It determines how much of a shift
-  // the formatter should make based on its cost function.
+  /**
+   * Run a single iteration of rejustification. At a high level, this method calculates
+   * the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
+   * attempt to reduce the cost. You can call this method multiple times until it finds
+   * and oscillates around a global minimum.
+   * @param alpha the "learning rate" for the formatter. It determines how much of a shift
+   * the formatter should make based on its cost function.
+   */
   tune(options?: { alpha: number }): number {
     if (!this.tickContexts) return 0;
     const contexts = this.tickContexts;
@@ -909,9 +921,11 @@ export class Formatter {
     return this.evaluate();
   }
 
-  // This is the top-level call for all formatting logic completed
-  // after `x` *and* `y` values have been computed for the notes
-  // in the voices.
+  /**
+   * This is the top-level call for all formatting logic completed
+   * after `x` *and* `y` values have been computed for the notes
+   * in the voices.
+   */
   postFormat(): this {
     const postFormatContexts = (contexts: AlignmentContexts<ModifierContext> | AlignmentContexts<TickContext>) =>
       contexts.list.forEach((tick) => contexts.map[tick].postFormat());
@@ -922,22 +936,26 @@ export class Formatter {
     return this;
   }
 
-  // Take all `voices` and create `ModifierContext`s out of them. This tells
-  // the formatters that the voices belong on a single stave.
+  /**
+   * Take all `voices` and create `ModifierContext`s out of them. This tells
+   * the formatters that the voices belong on a single stave.
+   */
   joinVoices(voices: Voice[]): this {
     this.createModifierContexts(voices);
     this.hasMinTotalWidth = false;
     return this;
   }
 
-  // Align rests in voices, justify the contexts, and position the notes
-  // so voices are aligned and ready to render onto the stave. This method
-  // mutates the `x` positions of all tickables in `voices`.
-  //
-  // Voices are full justified to fit in `justifyWidth` pixels.
-  //
-  // Set `options.context` to the rendering context. Set `options.align_rests`
-  // to true to enable rest alignment.
+  /**
+   * Align rests in voices, justify the contexts, and position the notes
+   * so voices are aligned and ready to render onto the stave. This method
+   * mutates the `x` positions of all tickables in `voices`.
+   *
+   * Voices are full justified to fit in `justifyWidth` pixels.
+   *
+   * Set `options.context` to the rendering context. Set `options.align_rests`
+   * to true to enable rest alignment.
+   */
   format(voices: Voice[], justifyWidth?: number, options?: FormatOptions): this {
     const opts = {
       align_rests: false,
