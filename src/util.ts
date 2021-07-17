@@ -20,23 +20,6 @@ export function check<T>(x?: T): T {
   return x;
 }
 
-/** Create exception class with a given name. */
-export function MakeException(name: string): typeof exception {
-  const exception = class extends Error {
-    // eslint-disable-next-line
-    data: any;
-    // eslint-disable-next-line
-    constructor(message: string, data: any) {
-      super(message);
-      this.name = name;
-      this.message = message;
-      this.data = data;
-    }
-  };
-
-  return exception;
-}
-
 /** Default log function sends all arguments to console. */
 export function log(
   block: string,
