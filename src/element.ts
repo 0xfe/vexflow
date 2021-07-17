@@ -1,10 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
-//
-// ## Description
-//
-// This file implements a generic base class for VexFlow, with implementations
-// of general functions and properties that can be inherited by all VexFlow elements.
+// MIT License
 
 import { RuntimeError } from './util';
 import { Registry } from './registry';
@@ -48,7 +44,7 @@ export abstract class Element {
   protected musicFont: Font;
   protected registry?: Registry;
 
-  static newID(): string {
+  protected static newID(): string {
     return `auto${Element.ID++}`;
   }
 
@@ -70,30 +66,30 @@ export abstract class Element {
     Registry.getDefaultRegistry()?.register(this);
   }
 
-  /** Sets music fonts stack. */
+  /** Set music fonts stack. */
   setFontStack(fontStack: Font[]): this {
     this.fontStack = fontStack;
     this.musicFont = fontStack[0];
     return this;
   }
 
-  /** gets music fonts stack. */
+  /** Get music fonts stack. */
   getFontStack(): Font[] {
     return this.fontStack;
   }
 
-  /** Sets the draw style of a stemmable note. */
+  /** Set the draw style of a stemmable note. */
   setStyle(style: ElementStyle): this {
     this.style = style;
     return this;
   }
 
-  /** Gets the draw style of a stemmable note. */
+  /** Get the draw style of a stemmable note. */
   getStyle(): ElementStyle | undefined {
     return this.style;
   }
 
-  /** Applies current style to Canvas `context`. */
+  /** Apply current style to Canvas `context`. */
   applyStyle(
     context: RenderContext | undefined = this.context,
     style: ElementStyle | undefined = this.getStyle()
@@ -110,7 +106,7 @@ export abstract class Element {
     return this;
   }
 
-  /** Restores style of Canvas `context`. */
+  /** Restore style of `context`. */
   restoreStyle(
     context: RenderContext | undefined = this.context,
     style: ElementStyle | undefined = this.getStyle()
@@ -121,7 +117,7 @@ export abstract class Element {
     return this;
   }
 
-  /** Draws with style of an element. */
+  /** Draw with style of an element. */
   drawWithStyle(): void {
     this.checkContext();
     this.applyStyle();
@@ -129,16 +125,16 @@ export abstract class Element {
     this.restoreStyle();
   }
 
-  /** Draws an element. */
+  /** Draw an element. */
   // eslint-disable-next-line
   abstract draw(...args: any[]): void;
 
-  /** Checkes if it has a class label (An element can have multiple class labels).  */
+  /** Check if it has a class label (An element can have multiple class labels).  */
   hasClass(className: string): boolean {
     return this.attrs.classes[className] === true;
   }
 
-  /** Adds a class label (An element can have multiple class labels).  */
+  /** Add a class label (An element can have multiple class labels).  */
   addClass(className: string): this {
     this.attrs.classes[className] = true;
     if (this.registry) {
@@ -152,7 +148,7 @@ export abstract class Element {
     return this;
   }
 
-  /** Removes a class label (An element can have multiple class labels).  */
+  /** Remove a class label (An element can have multiple class labels).  */
   removeClass(className: string): this {
     delete this.attrs.classes[className];
     if (this.registry) {
@@ -172,29 +168,29 @@ export abstract class Element {
     return this;
   }
 
-  /** Returns the rendered status. */
+  /** Return the rendered status. */
   isRendered(): boolean {
     return this.rendered;
   }
 
-  /** Sets the rendered status. */
+  /** Set the rendered status. */
   setRendered(rendered = true): this {
     this.rendered = rendered;
     return this;
   }
 
-  /** Returns the element attributes. */
+  /** Return the element attributes. */
   getAttributes(): ElementAttributes {
     return this.attrs;
   }
 
-  /** Returns an attribute. */
+  /** Return an attribute. */
   // eslint-disable-next-line
   getAttribute(name: string): any {
     return this.attrs[name];
   }
 
-  /** Sets an attribute. */
+  /** Set an attribute. */
   // eslint-disable-next-line
   setAttribute(name: string, value: any): this {
     const oldID = this.attrs.id;
@@ -207,23 +203,23 @@ export abstract class Element {
     return this;
   }
 
-  /** Returns the context. */
+  /** Return the context. */
   getContext(): RenderContext | undefined {
     return this.context;
   }
 
-  /** Sets the context. */
+  /** Set the context. */
   setContext(context?: RenderContext): this {
     this.context = context;
     return this;
   }
 
-  /** Gets the boundingBox. */
+  /** Get the boundingBox. */
   getBoundingBox(): BoundingBox | undefined {
     return this.boundingBox;
   }
 
-  /** Validates and returns the context. */
+  /** Validate and return the context. */
   checkContext(): RenderContext {
     if (!this.context) {
       throw new RuntimeError('NoContext', 'No rendering context attached to instance.');
