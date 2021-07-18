@@ -7,9 +7,9 @@ import { EasyScore } from '../src/easyscore';
 import { StaveNote } from '../src/stavenote';
 import { System } from '../src/system';
 import { FretHandFinger } from '../src/frethandfinger';
-import { QUnit, expect, Assert, TestOptions } from './declarations';
+import { QUnit, expect, Assert } from './declarations';
 import { Articulation } from '../src/articulation';
-import { VexFlowTests } from './vexflow_test_helpers';
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 
 // eslint-disable-next-line
 declare const VF: any; // TODO: Remove soon!

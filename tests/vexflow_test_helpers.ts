@@ -3,6 +3,8 @@
 //
 // VexFlow Test Support Library
 
+import { Font } from '../src/font';
+import { ContextBuilder, Renderer } from '../src/renderer';
 import { RenderContext } from '../src/types/common';
 import { Assert } from './declarations';
 
@@ -12,6 +14,68 @@ declare var $: any;
 declare var QUnit: any;
 const VF: any = Vex.Flow;
 /* eslint-enable */
+
+export interface TestOptions {
+  elementId: string;
+  params: any /* eslint-disable-line */;
+  assert: Assert;
+  backend: number;
+}
+
+// Each test case will switch through the available fonts, and then restore the original font when done.
+let originalFontStack: Font[];
+function useTempFontStack(fontName: string): void {
+  originalFontStack = VF.DEFAULT_FONT_STACK;
+  VF.DEFAULT_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
+}
+function restoreOriginalFontStack(): void {
+  VF.DEFAULT_FONT_STACK = originalFontStack;
+}
+
+// A micro util inspired by jQuery.
+if (!global.$) {
+  // generate_png_images.js uses jsdom and does not include jQuery.
+  global.$ = (param: HTMLElement | string) => {
+    let element: HTMLElement;
+    if (typeof param !== 'string') {
+      element = param;
+    } else if (param.startsWith('<')) {
+      // Extract the tag name: e.g., <div/> => div
+      // Assume param.match returns something (! operator).
+      // eslint-disable-next-line
+      const tagName = param.match(/[A-Za-z]+/g)![0];
+      element = document.createElement(tagName);
+    } else {
+      element = document.querySelector(param) as HTMLElement;
+    }
+
+    const $element = {
+      // eslint-disable-next-line
+      get(index: number) {
+        return element;
+      },
+      addClass(c: string) {
+        element.classList.add(c);
+        return $element;
+      },
+      text(t: string) {
+        element.textContent = t;
+        return $element;
+      },
+      append(...elementsToAppend: HTMLElement[]) {
+        elementsToAppend.forEach((e) => {
+          element.appendChild(e);
+        });
+        return $element;
+      },
+      attr(attrName: string, val: string) {
+        element.setAttribute(attrName, val);
+        return $element;
+      },
+    };
+    return $element;
+  };
+}
 
 /**
  * When generating PNG images for the visual regression tests,
@@ -32,17 +96,19 @@ function setupQUnitMockObject() {
     notDeepEqual: () => true,
     strictEqual: () => true,
     notStrictEqual: () => true,
+    test: { module: { name: '' } },
   };
 
   QUMock.module = (name: string): void => {
     QUMock.current_module = name;
   };
 
-  // eslint-disable-next-line
-  QUMock.test = (name: number, func: Function): void => {
+  // See: https://api.qunitjs.com/QUnit/test/
+  QUMock.test = (name: number, callback: (assert: Assert) => void): void => {
     QUMock.current_test = name;
+    QUMock.assertions.test.module.name = name;
     VF.shims.process.stdout.write(' \u001B[0G' + QUMock.current_module + ' :: ' + name + '\u001B[0K');
-    func(QUMock.assertions);
+    callback(QUMock.assertions);
   };
 
   global.QUnit = QUMock;
@@ -59,10 +125,38 @@ function setupQUnitMockObject() {
   global.notStrictEqual = QUMock.assertions.notStrictEqual;
 }
 
-type TestFunction = (fontName: string) => (assert: Assert) => void;
+export type TestFunction = (options: TestOptions, contextBuilder: ContextBuilder) => void;
 
+/** Allow `name` to be used inside file names. */
+function sanitizeName(name: string): string {
+  return name.replace(/[^a-zA-Z0-9]/g, '_');
+}
+
+const CANVAS_TEST_CONFIG = {
+  backend: Renderer.Backends.CANVAS,
+  tagName: 'canvas',
+  testType: 'Canvas',
+  fontStacks: ['Bravura'],
+};
+
+const SVG_TEST_CONFIG = {
+  backend: Renderer.Backends.SVG,
+  tagName: 'div',
+  testType: 'SVG',
+  fontStacks: ['Bravura', 'Gonville', 'Petaluma'],
+};
+
+const NODE_TEST_CONFIG = {
+  backend: Renderer.Backends.CANVAS,
+  tagName: 'canvas',
+  testType: 'NodeCanvas',
+  fontStacks: ['Bravura', 'Gonville', 'Petaluma'],
+};
+
+/**
+ *
+ */
 class VexFlowTests {
-  // Test Options.
   static RUN_CANVAS_TESTS = true;
   static RUN_SVG_TESTS = true;
   static RUN_NODE_TESTS = false;
@@ -73,18 +167,18 @@ class VexFlowTests {
   // Default font properties for tests.
   static Font = { size: 10 };
 
-  /** Customize this array to test fewer fonts (e.g., ['Bravura', 'Petaluma']). */
-  static FONT_STACKS_TO_TEST = ['Bravura', 'Gonville', 'Petaluma'];
-
   /**
    *
    */
-  // eslint-disable-next-line
-  static FONT_STACKS: Record<string, any> = {
+  static FONT_STACKS: Record<string, Font[]> = {
     Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
     Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
     Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
   };
+
+  static set NODE_FONT_STACKS(fontStacks: string[]) {
+    NODE_TEST_CONFIG.fontStacks = fontStacks;
+  }
 
   private static NEXT_TEST_ID = 0;
 
@@ -94,72 +188,31 @@ class VexFlowTests {
   }
 
   /**
-   * @param type
-   * @param assert
-   * @param name
-   * @returns a title that will be displayed on flow.html.
-   */
-  // eslint-disable-next-line
-  static generateTestTitle(type: string, assert: Assert, name: string): string {
-    return assert.test.module.name + ' (' + type + '): ' + name;
-  }
-
-  /**
    * Run `func` inside a QUnit test for each of the enabled rendering backends.
    * @param name
-   * @param func
+   * @param testFunc
    * @param params
    */
   // eslint-disable-next-line
-  static runTests(name: string, func: Function, params?: any): void {
-    if (VexFlowTests.RUN_CANVAS_TESTS) {
-      VexFlowTests.runCanvasTest(name, func, params);
-    }
-    if (VexFlowTests.RUN_SVG_TESTS) {
-      VexFlowTests.runSVGTest(name, func, params);
-    }
-    if (VexFlowTests.RUN_NODE_TESTS) {
-      VexFlowTests.runNodeTest(name, func, params);
-    }
+  static runTests(name: string, testFunc: TestFunction, params?: any): void {
+    VexFlowTests.runCanvasTest(name, testFunc, params);
+    VexFlowTests.runSVGTest(name, testFunc, params);
+    VexFlowTests.runNodeTest(name, testFunc, params);
   }
 
   /**
-   * These are for interactivity tests, and currently only work with the SVG backend.
-   * See: stavenote_tests.ts.
-   * @param name
-   * @param func
-   * @param params
-   */
-  // eslint-disable-next-line
-  static runUITests(name: string, func: Function, params: any): void {
-    if (VexFlowTests.RUN_SVG_TESTS) {
-      VexFlowTests.runSVGTest(name, func, params);
-    }
-  }
-
-  /**
-   * Use jQuery to append a <div> which contains the test case.
-   * @param testId
+   * Append a <div/> which contains the test case title and rendered output.
+   * See flow.html and flow.css.
+   * @param elementId
    * @param testTitle
    * @param tagName
    */
-  static createTest(testId: string, testTitle: string, tagName: string): void {
-    const testContainer = $('<div></div>').addClass('testcanvas'); // See flow.css for div.testcanvas
-    testContainer.append($('<div></div>').addClass('name').text(testTitle));
-    testContainer.append($(`<${tagName}></${tagName}>`).addClass('vex-tabdiv').attr('id', testId));
-    $('#vexflow_testoutput').append(testContainer); // See flow.html
-  }
-
-  /**
-   * Currently unused.
-   * @param elementId
-   * @param width
-   * @param height
-   */
-  static resizeCanvas(elementId: string, width: number, height: number): void {
-    $('#' + elementId).width(width);
-    $('#' + elementId).attr('width', width);
-    $('#' + elementId).attr('height', height);
+  static createTest(elementId: string, testTitle: string, tagName: string): HTMLElement {
+    const title = $('<div/>').addClass('name').text(testTitle).get(0);
+    const vexOutput = $(`<${tagName}/>`).addClass('vex-tabdiv').attr('id', elementId).get(0);
+    const container = $('<div/>').addClass('testcanvas').append(title, vexOutput).get(0);
+    $('#vexflow_testoutput').append(container);
+    return vexOutput;
   }
 
   /**
@@ -183,142 +236,78 @@ class VexFlowTests {
     });
   }
 
-  /**
-   *
-   * @param name
-   * @param func
-   * @param params
-   */
   // eslint-disable-next-line
-  static runCanvasTest(name: string, func: Function, params: any): void {
-    // Set to true if you want to test all fonts on the CANVAS context.
-    // By default we only test all fonts on the SVG context.
-    const TEST_ALL_FONTS = false;
+  static runCanvasTest(name: string, testFunc: TestFunction, params: any): void {
+    if (VexFlowTests.RUN_CANVAS_TESTS) {
+      // eslint-disable-next-line
+      VexFlowTests.runWithParams({ ...CANVAS_TEST_CONFIG, name, testFunc, params, helper: () => {} });
+    }
+  }
 
-    const testFunc: TestFunction = (fontName: string) => (assert: Assert) => {
-      const defaultFontStack = VF.DEFAULT_FONT_STACK;
-      VF.DEFAULT_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
-      const elementId = VexFlowTests.generateTestID('canvas_' + fontName);
-      const title = VexFlowTests.generateTestTitle('Canvas ' + fontName, assert, name);
+  // eslint-disable-next-line
+  static runSVGTest(name: string, testFunc: TestFunction, params?: any): void {
+    if (VexFlowTests.RUN_SVG_TESTS) {
+      // eslint-disable-next-line
+      VexFlowTests.runWithParams({ ...SVG_TEST_CONFIG, name, testFunc, params, helper: () => {} });
+    }
+  }
 
-      VexFlowTests.createTest(elementId, title, 'canvas');
-
-      const testOptions = {
-        elementId: elementId,
-        backend: VF.Renderer.Backends.CANVAS,
-        params: params,
-        assert: assert,
-      };
-
-      func(testOptions, VF.Renderer.getCanvasContext);
-      VF.DEFAULT_FONT_STACK = defaultFontStack;
-    };
-
-    if (TEST_ALL_FONTS) {
-      VexFlowTests.runTestWithFonts(name, testFunc);
-    } else {
-      QUnit.test(name, testFunc('Bravura'));
+  // eslint-disable-next-line
+  static runNodeTest(name: string, testFunc: TestFunction, params: any): void {
+    if (VexFlowTests.RUN_NODE_TESTS) {
+      VexFlowTests.runWithParams({
+        ...NODE_TEST_CONFIG,
+        name,
+        testFunc,
+        params,
+        helper: VexFlowTests.runNodeTestHelper,
+      });
     }
   }
 
   /**
-   *
-   * @param name
-   * @param func
-   * @param params
+   * Save the PNG file.
+   * @param fontName
+   * @param element
    */
-  // eslint-disable-next-line
-  static runSVGTest(name: string, func: Function, params?: any): void {
-    if (!VexFlowTests.RUN_SVG_TESTS) return;
+  static runNodeTestHelper(fontName: string, element: HTMLElement): void {
+    if (VF.Renderer.lastContext !== undefined) {
+      const moduleName = sanitizeName(QUnit.current_module);
+      const testName = sanitizeName(QUnit.current_test);
+      // If we are only testing Bravura, we OMIT the font name from the
+      // output image file name, which allows visual diffs against
+      // the previous release: version 3.0.9. In the future, if we decide
+      // to test all fonts by default, we can remove this check.
+      const onlyBravura = NODE_TEST_CONFIG.fontStacks.length === 1 && fontName === 'Bravura';
+      const fontInfo = onlyBravura ? '' : `.${fontName}`;
+      const fileName = `${VexFlowTests.NODE_IMAGEDIR}/${moduleName}.${testName}${fontInfo}.png`;
 
-    const testFunc: TestFunction = (fontName: string) => (assert: Assert) => {
-      const defaultFontStack = VF.DEFAULT_FONT_STACK;
-      VF.DEFAULT_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
-      const elementId = VexFlowTests.generateTestID('svg_' + fontName);
-      const title = VexFlowTests.generateTestTitle('SVG ' + fontName, assert, name);
+      const imageData = (element as HTMLCanvasElement).toDataURL().split(';base64,').pop();
+      const imageBuffer = Buffer.from(imageData as string, 'base64');
 
-      VexFlowTests.createTest(elementId, title, 'div');
-
-      const testOptions = {
-        elementId: elementId,
-        backend: VF.Renderer.Backends.SVG,
-        params: params,
-        assert: assert,
-      };
-
-      func(testOptions, VF.Renderer.getSVGContext);
-      VF.DEFAULT_FONT_STACK = defaultFontStack;
-    };
-
-    VexFlowTests.runTestWithFonts(name, testFunc);
-  }
-
-  /**
-   * @param name
-   * @param func
-   * @param params
-   */
-  // eslint-disable-next-line
-  static runNodeTest(name: string, func: Function, params: any): void {
-    const fs = VF.shims.fs;
-
-    // Allow `name` to be used inside file names.
-    function sanitizeName(name: string): string {
-      return name.replace(/[^a-zA-Z0-9]/g, '_');
+      VF.shims.fs.writeFileSync(fileName, imageBuffer, { encoding: 'base64' });
     }
-
-    // Use an arrow function sequence (currying) to handle tests for all three fonts.
-    // This is the same approach as seen above in runSVGTest(...).
-    const testFunc: TestFunction = (fontName: string) => (assert: Assert) => {
-      const defaultFontStack = VF.DEFAULT_FONT_STACK;
-      VF.DEFAULT_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
-      const elementId = VexFlowTests.generateTestID('nodecanvas_');
-      const canvas = document.createElement('canvas');
-      canvas.setAttribute('id', elementId);
-      document.body.appendChild(canvas);
-
-      const testOptions = {
-        elementId: elementId,
-        backend: VF.Renderer.Backends.CANVAS,
-        params: params,
-        assert: assert,
-      };
-
-      func(testOptions, VF.Renderer.getCanvasContext);
-      VF.DEFAULT_FONT_STACK = defaultFontStack;
-
-      if (VF.Renderer.lastContext !== null) {
-        const moduleName = sanitizeName(QUnit.current_module);
-        const testName = sanitizeName(QUnit.current_test);
-        let fileName;
-        if (fontName === 'Bravura' && VexFlowTests.FONT_STACKS_TO_TEST.length === 1) {
-          // If we are only testing Bravura, we do not add the font name
-          // to the output image file's name, which allows visual diffs against
-          // the previous release: version 3.0.9. In the future, if we decide
-          // to test all fonts by default, we can remove this check.
-          fileName = `${VexFlowTests.NODE_IMAGEDIR}/${moduleName}.${testName}.png`;
-        } else {
-          fileName = `${VexFlowTests.NODE_IMAGEDIR}/${moduleName}.${testName}.${fontName}.png`;
-        }
-
-        const imageData = canvas.toDataURL().split(';base64,').pop();
-        const image = Buffer.from(imageData as string, 'base64');
-
-        fs.writeFileSync(fileName, image, { encoding: 'base64' });
-      }
-    };
-
-    VexFlowTests.runTestWithFonts(name, testFunc);
   }
 
-  /**
-   * Run QUnit.test() for each font that is included in VexFlowTests.FONT_STACKS_TO_TEST.
-   * @param name
-   * @param func
-   */
-  static runTestWithFonts(name: string, func: TestFunction): void {
-    VexFlowTests.FONT_STACKS_TO_TEST.forEach((fontName) => {
-      QUnit.test(name, func(fontName));
+  // Defined in run.js
+  // static run() { ... }
+
+  /** Run QUnit.test(...) for each font. */
+  // eslint-disable-next-line
+  static runWithParams({ fontStacks, testFunc, name, params, backend, tagName, testType, helper }: any): void {
+    fontStacks.forEach((fontStackName: string) => {
+      QUnit.test(name, (assert: Assert) => {
+        useTempFontStack(fontStackName);
+        const elementId = VexFlowTests.generateTestID(`${testType.toLowerCase()}_` + fontStackName);
+        const title = assert.test.module.name + ' / ' + name + ` / ${testType} + ${fontStackName}`;
+        const element = VexFlowTests.createTest(elementId, title, tagName);
+        const options: TestOptions = { elementId, params, assert, backend };
+        const isSVG = backend === Renderer.Backends.SVG;
+        const contextBuilder: ContextBuilder = isSVG ? VF.Renderer.getSVGContext : VF.Renderer.getCanvasContext;
+        testFunc(options, contextBuilder);
+        restoreOriginalFontStack();
+        helper(fontStackName, element);
+      });
     });
   }
 
@@ -364,9 +353,11 @@ if (!global.QUnit) {
 }
 
 /** Currently unused. */
+/*
 global.almostEqual = (value: number, expectedValue: number, errorMargin: number): boolean => {
   return global.equal(Math.abs(value - expectedValue) < errorMargin, true);
 };
+*/
 
 global.VF = VF;
 global.VF.Test = VexFlowTests;

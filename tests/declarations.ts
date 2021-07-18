@@ -45,8 +45,3 @@ export interface Assert {
   raises(block: () => void, expected?: any, message?: any): void;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
-
-// See: vexflow_test_helpers.
-export interface TestOptions {
-  assert: Assert;
-}
