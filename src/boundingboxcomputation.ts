@@ -1,14 +1,15 @@
-// ## Description
-//
-// Object which computes metrics for a bounding box by continuously
-// taking canvas path commands
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 
-// Warning: This file is merely a crutch to get bounding box information without
-// explicit metadata. This is likely to get deprecated following SMuFL support.
-//
-// taken from: https://github.com/gabelerner/canvg/blob/860e418aca67b9a41e858a223d74d375793ec364/ca
-// nvg.js#L449
-
+/**
+ * BoundingBoxComputation computes metrics for a bounding box by continuously
+ * taking canvas path commands.
+ *
+ * Warning: This class is merely a crutch to get bounding box information without
+ * explicit metadata. This is likely to get deprecated following SMuFL support.
+ *
+ * based on: https://github.com/canvg/canvg/blob/master/src/BoundingBox.ts (MIT License)
+ */
 export class BoundingBoxComputation {
   protected x1: number;
   protected y1: number;
@@ -26,26 +27,32 @@ export class BoundingBoxComputation {
     this.addPoint(x2, y2);
   }
 
+  /** Get calculated X1. */
   getX1(): number {
     return this.x1;
   }
 
+  /** Get calculated Y1. */
   getY1(): number {
     return this.y1;
   }
 
+  /** Get calculated width. */
   width(): number {
     return this.x2 - this.x1;
   }
 
+  /** Get calculated height. */
   height(): number {
     return this.y2 - this.y1;
   }
 
+  /** Do nothing. */
   noOp(): void {
     // do nothing
   }
 
+  /** Add point to BoundingBox. */
   addPoint(x: number | undefined, y: number | undefined): void {
     if (x != undefined) {
       if (isNaN(this.x1) || isNaN(this.x2)) {
@@ -66,14 +73,17 @@ export class BoundingBoxComputation {
     }
   }
 
+  /** Add X to BoundingBox. */
   addX(x: number): void {
     this.addPoint(x, undefined);
   }
 
+  /** Add Y to BoundingBox. */
   addY(y: number): void {
     this.addPoint(undefined, y);
   }
 
+  /** Add quadratic curve to BoundingBox. */
   addQuadraticCurve(p0x: number, p0y: number, p1x: number, p1y: number, p2x: number, p2y: number): void {
     const cp1x = p0x + (2 / 3) * (p1x - p0x); // CP1 = QP0 + 2/3 *(QP1-QP0)
     const cp1y = p0y + (2 / 3) * (p1y - p0y); // CP1 = QP0 + 2/3 *(QP1-QP0)
@@ -82,6 +92,7 @@ export class BoundingBoxComputation {
     this.addBezierCurve(p0x, p0y, cp1x, cp1y, cp2x, cp2y, p2x, p2y);
   }
 
+  /** Add bezier curve to BoundingBox. */
   addBezierCurve(
     p0x: number,
     p0y: number,
