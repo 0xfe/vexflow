@@ -1121,7 +1121,7 @@ export class StaveNote extends StemmableNote {
       ctx.stroke();
     };
 
-    const style = { ...stave.getStyle(), ...this.getLedgerLineStyle() };
+    const style = { ...stave.getDefaultLedgerLineStyle(), ...this.getLedgerLineStyle() };
     this.applyStyle(ctx, style);
 
     // Draw ledger lines below the staff:
