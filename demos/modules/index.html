@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module" src="vexflow-debug.js"></script>
+    <script type="module">
+      console.log(Vex.Flow.BUILD);
+
+      const vf = new Vex.Flow.Factory({
+        renderer: { elementId: 'output', width: 500, height: 200 },
+      });
+
+      const score = vf.EasyScore();
+      const system = vf.System();
+
+      system
+        .addStave({
+          voices: [
+            score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+            score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+          ],
+        })
+        .addClef('treble')
+        .addTimeSignature('4/4');
+
+      vf.draw();
+    </script>
+  </head>
+  <body>
+    <div id="output"></div>
+  </body>
+</html>
