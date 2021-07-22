@@ -239,29 +239,24 @@ class VexFlowTests {
   // eslint-disable-next-line
   static runCanvasTest(name: string, testFunc: TestFunction, params: any): void {
     if (VexFlowTests.RUN_CANVAS_TESTS) {
-      // eslint-disable-next-line
-      VexFlowTests.runWithParams({ ...CANVAS_TEST_CONFIG, name, testFunc, params, helper: () => {} });
+      const helper = null;
+      VexFlowTests.runWithParams({ ...CANVAS_TEST_CONFIG, name, testFunc, params, helper });
     }
   }
 
   // eslint-disable-next-line
   static runSVGTest(name: string, testFunc: TestFunction, params?: any): void {
     if (VexFlowTests.RUN_SVG_TESTS) {
-      // eslint-disable-next-line
-      VexFlowTests.runWithParams({ ...SVG_TEST_CONFIG, name, testFunc, params, helper: () => {} });
+      const helper = null;
+      VexFlowTests.runWithParams({ ...SVG_TEST_CONFIG, name, testFunc, params, helper });
     }
   }
 
   // eslint-disable-next-line
   static runNodeTest(name: string, testFunc: TestFunction, params: any): void {
     if (VexFlowTests.RUN_NODE_TESTS) {
-      VexFlowTests.runWithParams({
-        ...NODE_TEST_CONFIG,
-        name,
-        testFunc,
-        params,
-        helper: VexFlowTests.runNodeTestHelper,
-      });
+      const helper = VexFlowTests.runNodeTestHelper;
+      VexFlowTests.runWithParams({ ...NODE_TEST_CONFIG, name, testFunc, params, helper });
     }
   }
 
@@ -306,7 +301,7 @@ class VexFlowTests {
         const contextBuilder: ContextBuilder = isSVG ? VF.Renderer.getSVGContext : VF.Renderer.getCanvasContext;
         testFunc(options, contextBuilder);
         restoreOriginalFontStack();
-        helper(fontStackName, element);
+        if (helper) helper(fontStackName, element);
       });
     });
   }
