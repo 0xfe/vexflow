@@ -1,17 +1,20 @@
-import { BravuraFont } from './fonts/bravura_glyphs';
-import { BravuraMetrics } from './fonts/bravura_metrics';
-import { GonvilleFont } from './fonts/gonville_glyphs';
-import { GonvilleMetrics } from './fonts/gonville_metrics';
-import { PetalumaFont } from './fonts/petaluma_glyphs';
-import { PetalumaMetrics } from './fonts/petaluma_metrics';
-import { CustomFont } from './fonts/custom_glyphs';
-import { CustomMetrics } from './fonts/custom_metrics';
+import { RuntimeError } from './util';
+import { loadBravura } from '@bravura';
+import { loadGonville } from '@gonville';
+import { loadPetaluma } from '@petaluma';
+import { loadCustom } from '@custom';
 
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
   fontFamily?: string;
   resolution: number;
   generatedOn?: string;
+}
+
+export interface FontDataMetrics {
+  fontData?: FontData;
+  // eslint-disable-next-line
+  metrics?: Record<string, any>;
 }
 
 export interface FontGlyph {
@@ -28,15 +31,29 @@ export interface FontGlyph {
 
 class Font {
   protected name: string;
-  // eslint-disable-next-line
-  protected metrics: Record<string, any>;
-  protected readonly fontData: FontData;
+  protected fontDataMetrics: FontDataMetrics;
 
   // eslint-disable-next-line
-  constructor(name: string, metrics: Record<string, any>, fontData: FontData) {
+  constructor(name: string, metrics?: Record<string, any>, fontData?: FontData) {
     this.name = name;
-    this.metrics = metrics;
-    this.fontData = fontData;
+    this.fontDataMetrics = { fontData: undefined, metrics: undefined };
+    switch (name) {
+      case 'Bravura':
+        loadBravura(this.fontDataMetrics);
+        break;
+      case 'Custom':
+        loadCustom(this.fontDataMetrics);
+        break;
+      case 'Gonville':
+        loadGonville(this.fontDataMetrics);
+        break;
+      case 'Petaluma':
+        loadPetaluma(this.fontDataMetrics);
+        break;
+      default:
+        this.fontDataMetrics.metrics = metrics;
+        this.fontDataMetrics.fontData = fontData;
+    }
   }
 
   getName(): string {
@@ -44,18 +61,21 @@ class Font {
   }
 
   getResolution(): number {
-    return this.fontData.resolution;
+    if (!this.fontDataMetrics.fontData) throw new RuntimeError('Missing metrics or font data');
+    return this.fontDataMetrics.fontData.resolution;
   }
 
   // eslint-disable-next-line
   getMetrics(): Record<string, any> {
-    return this.metrics;
+    if (!this.fontDataMetrics.metrics) throw new RuntimeError('Missing metrics or font data');
+    return this.fontDataMetrics.metrics;
   }
 
   // eslint-disable-next-line
   lookupMetric(key: string, defaultValue?: Record<string, any> | number): any {
+    if (!this.fontDataMetrics.metrics) throw new RuntimeError('Missing metrics or font data');
     const parts = key.split('.');
-    let val = this.metrics;
+    let val = this.fontDataMetrics.metrics;
     // console.log('lookupMetric:', key);
     for (let i = 0; i < parts.length; i++) {
       if (val[parts[i]] === undefined) {
@@ -69,19 +89,29 @@ class Font {
   }
 
   getFontData(): FontData {
-    return this.fontData;
+    if (!this.fontDataMetrics.fontData) throw new RuntimeError('Missing metrics or font data');
+    return this.fontDataMetrics.fontData;
   }
 
   getGlyphs(): Record<string, FontGlyph> {
-    return this.fontData.glyphs;
+    if (!this.fontDataMetrics.fontData) throw new RuntimeError('Missing metrics or font data');
+    return this.fontDataMetrics.fontData.glyphs;
   }
 }
 
 const Fonts = {
-  Bravura: new Font('Bravura', BravuraMetrics, BravuraFont),
-  Gonville: new Font('Gonville', GonvilleMetrics, GonvilleFont),
-  Petaluma: new Font('Petaluma', PetalumaMetrics, PetalumaFont),
-  Custom: new Font('Custom', CustomMetrics, CustomFont),
+  Bravura: (): Font => {
+    return new Font('Bravura');
+  },
+  Gonville: (): Font => {
+    return new Font('Gonville');
+  },
+  Petaluma: (): Font => {
+    return new Font('Petaluma');
+  },
+  Custom: (): Font => {
+    return new Font('Custom');
+  },
 };
 
 export { Fonts, Font };

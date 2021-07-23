@@ -44,7 +44,7 @@
       var canvas = document.getElementById("glyphs");
       var x = 0;
 
-      const glyphs = Vex.Flow.Fonts.Gonville.getGlyphs();
+      const glyphs = Vex.Flow.Fonts.Gonville().getGlyphs();
 
       // Get number of glyphs and rename elements
       var counter = Object.keys(glyphs).length;
@@ -83,7 +83,7 @@
         ctx.fillStyle = "green";
 
         if (glyphs[glyph].o) {
-          g = new Vex.Flow.Glyph(glyph, 38, { font: Vex.Flow.Fonts.Gonville });
+          g = new Vex.Flow.Glyph(glyph, 38, { font: Vex.Flow.Fonts.Gonville() });
           g.render(ctx, x, y);
           ctx.save();
           ctx.font = "6pt Arial";

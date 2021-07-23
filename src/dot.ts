@@ -12,7 +12,6 @@ import { ModifierContextState } from './modifiercontext';
 import { GraceNote } from './gracenote';
 
 export class Dot extends Modifier {
-  protected note?: Note;
   protected radius: number;
   protected dot_shiftY: number;
 

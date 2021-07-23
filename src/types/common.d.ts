@@ -1,3 +1,5 @@
+import { Note } from '../note';
+
 export interface FontInfo {
   size: number;
   weight: string;

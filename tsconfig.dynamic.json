@@ -10,12 +10,13 @@
     "skipLibCheck": true,                           /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,       /* Disallow inconsistently-cased references to the same file. */
     "moduleResolution": "node",
+    "importHelpers": true,
     "baseUrl": "./src",
     "paths": {
-      "@bravura": ["fonts/loadStatic"],
-      "@gonville": ["fonts/loadStatic"],
-      "@petaluma": ["fonts/loadStatic"],
-      "@custom": ["fonts/loadStatic"]
-    }
+      "@bravura": ["fonts/loadDynamic"],
+      "@gonville": ["fonts/loadDynamic"],
+      "@petaluma": ["fonts/loadDynamic"],
+      "@custom": ["fonts/loadDynamic"]
+    },
   }
 }
