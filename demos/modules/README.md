@@ -1,16 +1,16 @@
 # Using VexFlow with ES Modules
 
-Copy the vexflow-debug.js into this folder.
+Use `test.sh`to build and copy `vexflow-debug.js` into this folder. Or do this manually:
 
 ```
-cp ../../build/vexflow-debug.js .
+grunt
+cp ../../build/vexflow-debug.js vexflow-debug.js
 ```
 
-Start a web server in this folder (e.g., https://www.npmjs.com/package/http-server).
+Start a web server in this folder.
 
 ```
-http-server
-
+npx http-server
 
 Starting up http-server, serving ./
 Available on:
