@@ -1,4 +1,4 @@
-import { RuntimeError, log } from './util';
+import { RuntimeError } from './util';
 import { loadBravura } from '@bravura';
 import { loadGonville } from '@gonville';
 import { loadPetaluma } from '@petaluma';
