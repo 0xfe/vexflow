@@ -171,9 +171,9 @@ class VexFlowTests {
    *
    */
   static FONT_STACKS: Record<string, Font[]> = {
-    Bravura: [VF.Fonts.Bravura, VF.Fonts.Gonville, VF.Fonts.Custom],
-    Gonville: [VF.Fonts.Gonville, VF.Fonts.Bravura, VF.Fonts.Custom],
-    Petaluma: [VF.Fonts.Petaluma, VF.Fonts.Gonville, VF.Fonts.Custom],
+    Bravura: [VF.Fonts.Bravura(), VF.Fonts.Gonville(), VF.Fonts.Custom()],
+    Gonville: [VF.Fonts.Gonville(), VF.Fonts.Bravura(), VF.Fonts.Custom()],
+    Petaluma: [VF.Fonts.Petaluma(), VF.Fonts.Gonville(), VF.Fonts.Custom()],
   };
 
   static set NODE_FONT_STACKS(fontStacks: string[]) {
