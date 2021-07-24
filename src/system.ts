@@ -3,7 +3,7 @@
 
 import { Element } from './element';
 import { Factory } from './factory';
-import { Formatter, FormatterOptions } from './formatter';
+import { FormatOptions, Formatter, FormatterOptions } from './formatter';
 import { Note } from './note';
 import { Stave, StaveOptions } from './stave';
 import { StaveConnector } from './staveconnector';
@@ -45,6 +45,7 @@ export interface SystemOptions {
   width: number;
   y: number;
   details: SystemFormatterOptions;
+  formatOptions: FormatOptions;
   noJustification: boolean;
 }
 
@@ -86,6 +87,9 @@ export class System extends Element {
         alpha: 0.5, // formatter tuner learning/shifting rate
         ...options.details,
       },
+      formatOptions: {
+        ...options.formatOptions,
+      },
     };
     if (this.options.noJustification === false && typeof options.width === 'undefined') {
       this.options.autoWidth = true;
@@ -114,16 +118,16 @@ export class System extends Element {
     return this.connector;
   }
 
-  /** 
+  /**
    * Add stave to the system.
-   * 
+   *
    * Examples:
    *  (one voice)
    * `system.addStave({voices: [score.voice(score.notes('C#5/q, B4, A4, G#4'))]});`
    *  (two voices)
    * `system.addStave({voices: [`
    *  `score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),`
-   *  `score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))]});` 
+   *  `score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))]});`
    */
   addStave(paramsItems: Partial<SystemParams>): Stave {
     let stave = paramsItems.stave;
@@ -209,7 +213,7 @@ export class System extends Element {
         ? this.options.width - this.options.x
         : this.options.width - (startX - this.options.x) - Stave.defaultPadding;
     }
-    formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth);
+    formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth, this.options.formatOptions);
 
     for (let i = 0; i < this.options.formatIterations; i++) {
       formatter.tune({ alpha: this.options.details.alpha });
