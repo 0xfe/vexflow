@@ -1,4 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 
 import { RuntimeError } from './util';
 import { Element, ElementStyle } from './element';
@@ -484,7 +485,7 @@ export class Stave extends Element {
     return this;
   }
 
-  setTimeSignature(timeSpec: string, customPadding: number, position?: number): this {
+  setTimeSignature(timeSpec: string, customPadding?: number, position?: number): this {
     if (position === undefined) {
       position = StaveModifier.Position.BEGIN;
     }
@@ -504,6 +505,16 @@ export class Stave extends Element {
     return this;
   }
 
+  /**
+   * Add a key signature to the stave.
+   *
+   * Example:
+   * `stave.addKeySignature('Db');`
+   * @param keySpec new key specitication `[A-G][b|#]?`
+   * @param cancelKeySpec
+   * @param position
+   * @returns
+   */
   addKeySignature(keySpec: string, cancelKeySpec?: string, position?: number): this {
     if (position === undefined) {
       position = StaveModifier.Position.BEGIN;
@@ -512,6 +523,17 @@ export class Stave extends Element {
     return this;
   }
 
+  /**
+   * Add a clef to the stave.
+   *
+   * Example:
+   * stave.addClef('treble')
+   * @param clef clef (treble|bass|...) see {@link Clef.types}
+   * @param size
+   * @param annotation
+   * @param position
+   * @returns
+   */
   addClef(clef: string, size?: string, annotation?: string, position?: number): this {
     if (position === undefined || position === StaveModifier.Position.BEGIN) {
       this.clef = clef;
@@ -528,6 +550,16 @@ export class Stave extends Element {
     return this;
   }
 
+  /**
+   * Add a time signature to the stave
+   *
+   * Example:
+   * `stave.addTimeSignature('4/4');`
+   * @param timeSpec time signature specification `(C\||C|\d\/\d)`
+   * @param customPadding
+   * @param position
+   * @returns
+   */
   addTimeSignature(timeSpec: string, customPadding?: number, position?: number): this {
     this.addModifier(new TimeSignature(timeSpec, customPadding), position);
     return this;

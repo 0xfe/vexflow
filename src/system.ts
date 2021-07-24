@@ -114,7 +114,17 @@ export class System extends Element {
     return this.connector;
   }
 
-  /** Add stave to the system. */
+  /** 
+   * Add stave to the system.
+   * 
+   * Examples:
+   *  (one voice)
+   * `system.addStave({voices: [score.voice(score.notes('C#5/q, B4, A4, G#4'))]});`
+   *  (two voices)
+   * `system.addStave({voices: [`
+   *  `score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),`
+   *  `score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))]});` 
+   */
   addStave(paramsItems: Partial<SystemParams>): Stave {
     let stave = paramsItems.stave;
     if (!stave) {
