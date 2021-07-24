@@ -161,7 +161,7 @@ export class Grammar {
     return { token: "['][^']*[']" };
   }
   NOTENAME(): Rule {
-    return { token: '[a-gA-G]' };
+    return { token: '[a-gA-GrR]' };
   }
   OCTAVE(): Rule {
     return { token: '[0-9]+' };
