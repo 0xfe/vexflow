@@ -294,7 +294,7 @@ class VexFlowTests {
       QUnit.test(name, (assert: Assert) => {
         useTempFontStack(fontStackName);
         const elementId = VexFlowTests.generateTestID(`${testType.toLowerCase()}_` + fontStackName);
-        const title = assert.test.module.name + ' / ' + name + ` / ${testType} + ${fontStackName}`;
+        const title = assert.test.module.name + ' › ' + name + ` › ${testType} + ${fontStackName}`;
         const element = VexFlowTests.createTest(elementId, title, tagName);
         const options: TestOptions = { elementId, params, assert, backend };
         const isSVG = backend === Renderer.Backends.SVG;

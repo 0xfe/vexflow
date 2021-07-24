@@ -18,14 +18,14 @@ const RestsTests = {
   Start: function (): void {
     QUnit.module('Rests');
     const runTests = VexFlowTests.runTests;
-    runTests('Rests - Dotted', RestsTests.basic);
-    runTests('Auto Align Rests - Beamed Notes Stems Up', RestsTests.beamsUp);
-    runTests('Auto Align Rests - Beamed Notes Stems Down', RestsTests.beamsDown);
-    runTests('Auto Align Rests - Tuplets Stems Up', RestsTests.tupletsUp);
-    runTests('Auto Align Rests - Tuplets Stems Down', RestsTests.tupletsDown);
-    runTests('Auto Align Rests - Single Voice (Default)', RestsTests.singleVoiceDefaultAlignment);
-    runTests('Auto Align Rests - Single Voice (Align All)', RestsTests.singleVoiceAlignAll);
-    runTests('Auto Align Rests - Multi Voice', RestsTests.multiVoice);
+    runTests('Dotted', RestsTests.basic);
+    runTests('Auto Align - Beamed Notes Stems Up', RestsTests.beamsUp);
+    runTests('Auto Align - Beamed Notes Stems Down', RestsTests.beamsDown);
+    runTests('Auto Align - Tuplets Stems Up', RestsTests.tupletsUp);
+    runTests('Auto Align - Tuplets Stems Down', RestsTests.tupletsDown);
+    runTests('Auto Align - Single Voice (Default)', RestsTests.singleVoiceDefaultAlignment);
+    runTests('Auto Align - Single Voice (Align All)', RestsTests.singleVoiceAlignAll);
+    runTests('Auto Align - Multi Voice', RestsTests.multiVoice);
   },
 
   /**
