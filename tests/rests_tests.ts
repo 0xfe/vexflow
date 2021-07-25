@@ -1,14 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Vex } from '../src/vex';
+import { Vex } from 'vex';
 import { QUnit, ok } from './declarations';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { RenderContext } from '../src/types/common';
-import { Flow } from '../src/flow';
-import { StaveNoteStruct } from '../src/stavenote';
-import { Stave } from '../src/stave';
-import { ContextBuilder } from '../src/renderer';
+import { RenderContext } from 'types/common';
+import { Flow } from 'flow';
+import { StaveNoteStruct } from 'stavenote';
+import { Stave } from 'stave';
+import { ContextBuilder } from 'renderer';
 
 const VF: any = Vex.Flow;
 

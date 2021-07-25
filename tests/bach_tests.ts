@@ -1,18 +1,23 @@
-/**
- * VexFlow - Auto-beaming Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+/* eslint-disable */
+
+import { Vex } from 'vex';
+import { StaveNote } from 'stavenote';
+import { QUnit, ok } from './declarations';
+import { VexFlowTests } from './vexflow_test_helpers';
 
 const VF = Vex.Flow;
 
 const BachDemoTests = (function () {
-  function concat(a, b) {
+  function concat(a: StaveNote[], b: StaveNote[]) {
     return a.concat(b);
   }
 
   var BachDemo = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('Bach Demo');
       runTests('Minuet 1', BachDemo.minuet1);
     },
@@ -20,7 +25,7 @@ const BachDemoTests = (function () {
     minuet1: function (options) {
       var registry = new VF.Registry();
       VF.Registry.enableDefaultRegistry(registry);
-      var vf = VF.Test.makeFactory(options, 1100, 900);
+      var vf = VexFlowTests.makeFactory(options, 1100, 900);
       var score = vf.EasyScore({ throwOnError: true });
 
       var voice = score.voice.bind(score);
@@ -443,5 +448,5 @@ const BachDemoTests = (function () {
 
   return BachDemo;
 })();
-VF.Test.BachDemo = BachDemoTests;
+
 export { BachDemoTests };

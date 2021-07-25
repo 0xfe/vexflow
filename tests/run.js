@@ -1,4 +1,4 @@
-import { Vex } from '../src/vex';
+import { Vex } from 'vex';
 import { VexFlowTests } from './vexflow_test_helpers';
 import { AccidentalTests } from './accidental_tests';
 import { StaveNoteTests } from './stavenote_tests';
