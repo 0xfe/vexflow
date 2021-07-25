@@ -1,6 +1,11 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+import { QUnit, ok } from './declarations';
+import { VexFlowTests } from './vexflow_test_helpers';
+
 /**
- * VexFlow - Accidental Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ * Accidental Tests
  */
 const AccidentalTests = (function () {
   function hasAccidental(note) {
@@ -19,34 +24,28 @@ const AccidentalTests = (function () {
   var Accidental = {
     Start: function () {
       QUnit.module('Accidental');
-      Vex.Flow.Test.runTests('Accidental Padding', Vex.Flow.Test.Accidental.formatAccidentalSpaces);
-      Vex.Flow.Test.runTests('Basic', Vex.Flow.Test.Accidental.basic);
-      Vex.Flow.Test.runTests('Stem Down', Vex.Flow.Test.Accidental.basicStemDown);
-      Vex.Flow.Test.runTests('Cautionary Accidental', Vex.Flow.Test.Accidental.cautionary);
-      Vex.Flow.Test.runTests('Accidental Arrangement Special Cases', Vex.Flow.Test.Accidental.specialCases);
-      Vex.Flow.Test.runTests('Multi Voice', Vex.Flow.Test.Accidental.multiVoice);
-      Vex.Flow.Test.runTests('Microtonal', Vex.Flow.Test.Accidental.microtonal);
-      Vex.Flow.Test.runTests('Microtonal (Iranian)', Vex.Flow.Test.Accidental.microtonal_iranian);
-      Vex.Flow.Test.runTests('Sagittal', Vex.Flow.Test.Accidental.sagittal);
-      test('Automatic Accidentals - Simple Tests', Vex.Flow.Test.Accidental.autoAccidentalWorking);
-      Vex.Flow.Test.runTests('Automatic Accidentals', Vex.Flow.Test.Accidental.automaticAccidentals0);
-      Vex.Flow.Test.runTests(
-        'Automatic Accidentals - C major scale in Ab',
-        Vex.Flow.Test.Accidental.automaticAccidentals1
-      );
-      Vex.Flow.Test.runTests(
-        'Automatic Accidentals - No Accidentals Necsesary',
-        Vex.Flow.Test.Accidental.automaticAccidentals2
-      );
-      Vex.Flow.Test.runTests(
+      VexFlowTests.runTests('Accidental Padding', Accidental.formatAccidentalSpaces);
+      VexFlowTests.runTests('Basic', Accidental.basic);
+      VexFlowTests.runTests('Stem Down', Accidental.basicStemDown);
+      VexFlowTests.runTests('Cautionary Accidental', Accidental.cautionary);
+      VexFlowTests.runTests('Accidental Arrangement Special Cases', Accidental.specialCases);
+      VexFlowTests.runTests('Multi Voice', Accidental.multiVoice);
+      VexFlowTests.runTests('Microtonal', Accidental.microtonal);
+      VexFlowTests.runTests('Microtonal (Iranian)', Accidental.microtonal_iranian);
+      VexFlowTests.runTests('Sagittal', Accidental.sagittal);
+      QUnit.test('Automatic Accidentals - Simple Tests', Accidental.autoAccidentalWorking);
+      VexFlowTests.runTests('Automatic Accidentals', Accidental.automaticAccidentals0);
+      VexFlowTests.runTests('Automatic Accidentals - C major scale in Ab', Accidental.automaticAccidentals1);
+      VexFlowTests.runTests('Automatic Accidentals - No Accidentals Necsesary', Accidental.automaticAccidentals2);
+      VexFlowTests.runTests(
         'Automatic Accidentals - Multi Voice Inline',
-        Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceInline
+        Accidental.automaticAccidentalsMultiVoiceInline
       );
-      Vex.Flow.Test.runTests(
+      VexFlowTests.runTests(
         'Automatic Accidentals - Multi Voice Offset',
-        Vex.Flow.Test.Accidental.automaticAccidentalsMultiVoiceOffset
+        Accidental.automaticAccidentalsMultiVoiceOffset
       );
-      Vex.Flow.Test.runTests('Factory API', Vex.Flow.Test.Accidental.factoryAPI);
+      VexFlowTests.runTests('Factory API', Accidental.factoryAPI);
     },
     formatAccidentalSpaces: function (options) {
       var vf = VF.Test.makeFactory(options, 750, 280);
@@ -173,7 +172,7 @@ const AccidentalTests = (function () {
       VF.Formatter.SimpleFormat(notes, 10, { paddingBetween: 45 });
 
       notes.forEach(function (note, index) {
-        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        VexFlowTests.plotNoteWidth(vf.getContext(), note, 140);
         ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function (accid, index) {
           ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -182,7 +181,7 @@ const AccidentalTests = (function () {
 
       vf.draw();
 
-      Vex.Flow.Test.plotLegendForNoteWidth(vf.getContext(), 480, 140);
+      VexFlowTests.plotLegendForNoteWidth(vf.getContext(), 480, 140);
 
       ok(true, 'Full Accidental');
     },
@@ -268,7 +267,7 @@ const AccidentalTests = (function () {
       VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 20 });
 
       notes.forEach(function (note, index) {
-        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        VexFlowTests.plotNoteWidth(vf.getContext(), note, 140);
         ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function (accid, index) {
           ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -277,7 +276,7 @@ const AccidentalTests = (function () {
 
       vf.draw();
 
-      Vex.Flow.Test.plotLegendForNoteWidth(vf.getContext(), 480, 140);
+      VexFlowTests.plotLegendForNoteWidth(vf.getContext(), 480, 140);
 
       ok(true, 'Full Accidental');
     },
@@ -317,7 +316,7 @@ const AccidentalTests = (function () {
       VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 30 });
 
       notes.forEach(function (note, index) {
-        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        VexFlowTests.plotNoteWidth(vf.getContext(), note, 140);
         ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function (accid, index) {
           ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -326,7 +325,7 @@ const AccidentalTests = (function () {
 
       vf.draw();
 
-      Vex.Flow.Test.plotLegendForNoteWidth(vf.getContext(), 480, 140);
+      VexFlowTests.plotLegendForNoteWidth(vf.getContext(), 480, 140);
 
       ok(true, 'Full Accidental');
     },
@@ -341,8 +340,8 @@ const AccidentalTests = (function () {
       note1.setContext(ctx).draw();
       note2.setContext(ctx).draw();
 
-      Vex.Flow.Test.plotNoteWidth(ctx, note1, 180);
-      Vex.Flow.Test.plotNoteWidth(ctx, note2, 15);
+      VexFlowTests.plotNoteWidth(ctx, note1, 180);
+      VexFlowTests.plotNoteWidth(ctx, note2, 15);
     },
 
     multiVoice: function (options) {
@@ -367,7 +366,7 @@ const AccidentalTests = (function () {
         .addAccidental(2, newAccid('##'))
         .setStave(stave);
 
-      Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 60);
+      Accidental.showNotes(note1, note2, stave, ctx, 60);
 
       note1 = vf
         .StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
@@ -381,7 +380,7 @@ const AccidentalTests = (function () {
         .addAccidental(0, newAccid('b'))
         .setStave(stave);
 
-      Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 150);
+      Accidental.showNotes(note1, note2, stave, ctx, 150);
 
       note1 = vf
         .StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
@@ -395,8 +394,8 @@ const AccidentalTests = (function () {
         .addAccidental(0, newAccid('b'))
         .setStave(stave);
 
-      Vex.Flow.Test.Accidental.showNotes(note1, note2, stave, ctx, 250);
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 350, 150);
+      Accidental.showNotes(note1, note2, stave, ctx, 250);
+      VexFlowTests.plotLegendForNoteWidth(ctx, 350, 150);
 
       ok(true, 'Full Accidental');
     },
@@ -456,7 +455,7 @@ const AccidentalTests = (function () {
       VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
 
       notes.forEach(function (note, index) {
-        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        VexFlowTests.plotNoteWidth(vf.getContext(), note, 140);
         assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function (accid, index) {
           assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -465,7 +464,7 @@ const AccidentalTests = (function () {
 
       vf.draw();
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
+      VexFlowTests.plotLegendForNoteWidth(ctx, 580, 140);
       ok(true, 'Microtonal Accidental');
     },
 
@@ -521,7 +520,7 @@ const AccidentalTests = (function () {
       VF.Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
 
       notes.forEach(function (note, index) {
-        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        VexFlowTests.plotNoteWidth(vf.getContext(), note, 140);
         assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function (accid, index) {
           assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -530,7 +529,7 @@ const AccidentalTests = (function () {
 
       vf.draw();
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
+      VexFlowTests.plotLegendForNoteWidth(ctx, 580, 140);
       ok(true, 'Microtonal Accidental (Iranian)');
     },
 
@@ -623,7 +622,7 @@ const AccidentalTests = (function () {
       VF.Formatter.SimpleFormat(notes);
 
       notes.forEach(function (note, index) {
-        Vex.Flow.Test.plotNoteWidth(vf.getContext(), note, 140);
+        VexFlowTests.plotNoteWidth(vf.getContext(), note, 140);
         assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
         note.getAccidentals().forEach(function (accid, index) {
           assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -632,7 +631,7 @@ const AccidentalTests = (function () {
 
       vf.draw();
 
-      Vex.Flow.Test.plotLegendForNoteWidth(ctx, 580, 140);
+      VexFlowTests.plotLegendForNoteWidth(ctx, 580, 140);
       ok(true, 'Sagittal');
     },
 
@@ -842,6 +841,9 @@ const AccidentalTests = (function () {
       ok(true);
     },
 
+    /**
+     *
+     */
     autoAccidentalWorking: function () {
       function makeNote(noteStruct) {
         return new VF.StaveNote(noteStruct);
@@ -990,5 +992,5 @@ const AccidentalTests = (function () {
 
   return Accidental;
 })();
-Vex.Flow.Test.Accidental = AccidentalTests;
+
 export { AccidentalTests };
