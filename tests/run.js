@@ -120,7 +120,7 @@ VexFlowTests.run = function () {
   // ParserTests.Start();
   // EasyScoreTests.Start();
   // RegistryTests.Start();
-  // BachDemoTests.Start();
+  BachDemoTests.Start();
   // GlyphNoteTests.Start();
 };
 
