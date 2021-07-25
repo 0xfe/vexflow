@@ -18,7 +18,7 @@ const StaveNoteTests = (function () {
       test('Width', StaveNote.width);
       test('TickContext', StaveNote.tickContext);
 
-      VF.Test.runUITests('Interactive Mouseover StaveNote', StaveNote.draw, {
+      VF.Test.runSVGTest('Interactive Mouseover StaveNote', StaveNote.draw, {
         clef: 'treble',
         octaveShift: 0,
         restKey: 'r/4',

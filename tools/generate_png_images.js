@@ -6,7 +6,7 @@
   `tools/visual_regression.sh`.
 */
 const { JSDOM } = require('jsdom');
-const dom = new JSDOM(`<!DOCTYPE html></html>`);
+const dom = new JSDOM(`<!DOCTYPE html><body><div id="vexflow_testoutput"></div></body>`);
 window = dom.window;
 document = dom.window.document;
 
@@ -17,7 +17,7 @@ const [scriptDir, imageDir] = process.argv.slice(2, 4);
 // For example:
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=petaluma
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville
-const ALL_FONTS = ['Bravura', 'Petaluma', 'Gonville'];
+const ALL_FONTS = ['Bravura', 'Gonville', 'Petaluma'];
 let fontStacksToTest = ALL_FONTS;
 if (process.argv.length >= 5) {
   const fontsOption = process.argv[4].toLowerCase();
@@ -27,8 +27,8 @@ if (process.argv.length >= 5) {
   }
 }
 
+// TODO: After vexflow-tests.js is fully migrated to TS, we will need to remove vexflow-debug.js from here.
 global['Vex'] = require(`${scriptDir}/vexflow-debug.js`);
-
 require(`${scriptDir}/vexflow-tests.js`);
 
 const VF = Vex.Flow;
@@ -37,13 +37,12 @@ VF.shims = {
   process,
 };
 
-// Tell VexFlow that we're outside the browser -- just run
-// the Node tests.
+// Tell VexFlow that we're outside the browser. Just run the Node tests.
 VF.Test.RUN_CANVAS_TESTS = false;
 VF.Test.RUN_SVG_TESTS = false;
 VF.Test.RUN_NODE_TESTS = true;
 VF.Test.NODE_IMAGEDIR = imageDir;
-VF.Test.FONT_STACKS_TO_TEST = fontStacksToTest;
+VF.Test.NODE_FONT_STACKS = fontStacksToTest;
 
 // Create the image directory if it doesn't exist.
 fs.mkdirSync(VF.Test.NODE_IMAGEDIR, { recursive: true });

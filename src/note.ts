@@ -106,9 +106,7 @@ export abstract class Note extends Tickable {
     return 'note';
   }
 
-  /** Debug helper. Displays various note metrics for the given
-   * note.
-   */
+  /** Debug helper. Displays various note metrics for the given note. */
   static plotMetrics(ctx: RenderContext, note: Note, yPos: number): void {
     const metrics = note.getMetrics();
     const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.leftDisplacedHeadPx;

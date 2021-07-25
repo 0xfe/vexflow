@@ -1,22 +1,21 @@
-/**
- * VexFlow - EasyScore Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](https://vexflow.com/) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// EasyScore Tests
+
 import { EasyScore } from '../src/easyscore';
 import { StaveNote } from '../src/stavenote';
 import { System } from '../src/system';
 import { FretHandFinger } from '../src/frethandfinger';
-import { QUnit, expect, Assert, TestOptions } from './declarations';
+import { QUnit, expect, Assert } from './declarations';
 import { Articulation } from '../src/articulation';
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 
 // eslint-disable-next-line
-declare const VF: any; // TODO: Remove after migrating vexflow_test_helpers.js.
-// eslint-disable-next-line
-declare let Vex: any; // TODO: Remove after migrating vex.js.
+declare const VF: any; // TODO: Remove soon!
 
 const EasyScoreTests = {
   Start: function (): void {
-    const VFT = Vex.Flow.Test;
     QUnit.module('EasyScore');
     QUnit.test('Basic', EasyScoreTests.basic);
     QUnit.test('Accidentals', EasyScoreTests.accidentals);
@@ -24,13 +23,13 @@ const EasyScoreTests = {
     QUnit.test('Chords', EasyScoreTests.chords);
     QUnit.test('Dots', EasyScoreTests.dots);
     QUnit.test('Options', EasyScoreTests.options);
-    VFT.runTests('Draw Basic', EasyScoreTests.drawBasicTest);
-    VFT.runTests('Draw Accidentals', EasyScoreTests.drawAccidentalsTest);
-    VFT.runTests('Draw Beams', EasyScoreTests.drawBeamsTest);
-    VFT.runTests('Draw Tuplets', EasyScoreTests.drawTupletsTest);
-    VFT.runTests('Draw Dots', EasyScoreTests.drawDotsTest);
-    VFT.runTests('Draw Options', EasyScoreTests.drawOptionsTest);
-    VFT.runTests('Draw Fingerings', EasyScoreTests.drawFingeringsTest);
+    VexFlowTests.runTests('Draw Basic', EasyScoreTests.drawBasicTest);
+    VexFlowTests.runTests('Draw Accidentals', EasyScoreTests.drawAccidentalsTest);
+    VexFlowTests.runTests('Draw Beams', EasyScoreTests.drawBeamsTest);
+    VexFlowTests.runTests('Draw Tuplets', EasyScoreTests.drawTupletsTest);
+    VexFlowTests.runTests('Draw Dots', EasyScoreTests.drawDotsTest);
+    VexFlowTests.runTests('Draw Options', EasyScoreTests.drawOptionsTest);
+    VexFlowTests.runTests('Draw Fingerings', EasyScoreTests.drawFingeringsTest);
   },
 
   basic: function (assert: Assert): void {
@@ -410,7 +409,5 @@ const EasyScoreTests = {
     assert.equal(note3_modifier2.getPosition(), VF.Modifier.Position.LEFT);
   },
 };
-
-// Vex.Flow.Test.EasyScore = EasyScoreTests;
 
 export { EasyScoreTests };

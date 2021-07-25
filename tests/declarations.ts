@@ -21,6 +21,7 @@ export const notStrictEqual = global.notStrictEqual;
 // TODO: npm install @types/qunit
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Assert {
+  test: any;
   expect(amount: number): void;
   ok(state: any, message?: string): void;
   notOk(state: any, message?: string): void;
@@ -44,8 +45,3 @@ export interface Assert {
   raises(block: () => void, expected?: any, message?: any): void;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
-
-// See: vexflow_test_helpers.
-export interface TestOptions {
-  assert: Assert;
-}
