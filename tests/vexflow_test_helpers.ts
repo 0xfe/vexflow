@@ -3,6 +3,7 @@
 //
 // VexFlow Test Support Library
 
+import { Vex } from '../src/vex';
 import { Font } from '../src/font';
 import { ContextBuilder, Renderer } from '../src/renderer';
 import { RenderContext } from '../src/types/common';

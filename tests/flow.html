@@ -37,16 +37,24 @@
           .attr('href', vexURL)
           .text('VexFlow Source' + info);
 
-        loadScript(vexURL)
-          .then(function () {
-            return loadScript(testsURL);
-          })
-          .then(function () {
-            // Show only failed tests.
-            QUnit.config.hidepassed = true;
-            QUnit.config.noglobals = true;
-            VF.Test.run();
-          });
+        //   loadScript(vexURL)
+        //     .then(function () {
+        //       return loadScript(testsURL);
+        //     })
+        //     .then(function () {
+        //       // Show only failed tests.
+        //       QUnit.config.hidepassed = true;
+        //       QUnit.config.noglobals = true;
+        //       VF.Test.run();
+        //     });
+        // });
+
+        loadScript(testsURL).then(function () {
+          // Show only failed tests.
+          QUnit.config.hidepassed = true;
+          QUnit.config.noglobals = true;
+          Vex.Flow.Test.run();
+        });
       });
     </script>
   </head>

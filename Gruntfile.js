@@ -69,9 +69,13 @@ module.exports = (grunt) => {
             ? `import { Vex } from './src/vex';`
             : `import { VexFlowTests } from './tests/vexflow_test_helpers';`;
           const vf = isVexSRC ? 'Vex.Flow' : 'Vex.Flow.Test';
-          return `${importVex}
-            ${vf}.VERSION = "${packageJSON.version}";
-            ${vf}.BUILD = "${GIT_COMMIT_HASH}";`;
+
+          return '';
+
+          // TODO: Fix this!
+          // return `${importVex}
+          //   ${vf}.VERSION = "${packageJSON.version}";
+          //   ${vf}.BUILD = "${GIT_COMMIT_HASH}";`;
         }),
         // Add a banner at the top of the file.
         new webpack.BannerPlugin(BANNER),
@@ -117,7 +121,7 @@ module.exports = (grunt) => {
     'tsconfig.json',
     MODULE_ENTRY_TESTS,
     'development',
-    'VFTests'
+    'Vex' /* Previously VFTests. TODO: Remove this! */
   );
 
   grunt.initConfig({

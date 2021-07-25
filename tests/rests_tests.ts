@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+
+import { Vex } from '../src/vex';
 import { QUnit, ok } from './declarations';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { RenderContext } from '../src/types/common';
@@ -8,8 +10,7 @@ import { StaveNoteStruct } from '../src/stavenote';
 import { Stave } from '../src/stave';
 import { ContextBuilder } from '../src/renderer';
 
-// TODO: Fix later! Currently we need to prepend all classes with VF.
-const VF: any = Vex.Flow; // eslint-disable-line
+const VF: any = Vex.Flow;
 
 // Optional: arrow function to make your code more concise.
 const note = (s: StaveNoteStruct) => new VF.StaveNote(s);
