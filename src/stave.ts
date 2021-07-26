@@ -510,7 +510,7 @@ export class Stave extends Element {
    *
    * Example:
    * `stave.addKeySignature('Db');`
-   * @param keySpec new key specitication `[A-G][b|#]?`
+   * @param keySpec new key specification `[A-G][b|#]?`
    * @param cancelKeySpec
    * @param position
    * @returns
