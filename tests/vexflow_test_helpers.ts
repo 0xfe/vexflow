@@ -3,12 +3,12 @@
 //
 // VexFlow Test Support Library
 
-import { Vex } from '../src/vex';
-import { Font } from '../src/font';
-import { ContextBuilder, Renderer } from '../src/renderer';
-import { RenderContext } from '../src/types/common';
-import { Assert } from './declarations';
+import { Vex } from 'vex';
+import { Font } from 'font';
+import { ContextBuilder, Renderer } from 'renderer';
+import { RenderContext } from 'types/common';
 import { Factory } from 'factory';
+import { Assert } from './declarations';
 
 /* eslint-disable */
 declare var global: any;

@@ -1,9 +1,18 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+/* eslint-disable */
+// @ts-nocheck
+
+import { VexFlowTests } from './vexflow_test_helpers';
+import { QUnit } from './declarations';
+import { Registry } from 'registry';
+
 /**
- * VexFlow - GlyphNote Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ * GlyphNote Tests
  */
 const GlyphNoteTests = (function () {
-  var run = VF.Test.runTests;
+  const run = VexFlowTests.runTests;
 
   var GlyphNote = {
     Start: function () {
@@ -14,10 +23,10 @@ const GlyphNoteTests = (function () {
       run('GlyphNote RepeatNote', GlyphNote.repeatNote, { debug: false, noPadding: true });
     },
     chordChanges: function (options) {
-      VF.Registry.enableDefaultRegistry(new VF.Registry());
+      Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 300, 200);
-      var system = vf.System({
+      const vf = VF.Test.makeFactory(options, 300, 200);
+      const system = vf.System({
         x: 50,
         width: 250,
         debugFormatter: options.params.debug,
@@ -25,9 +34,9 @@ const GlyphNoteTests = (function () {
         options: { alpha: options.params.alpha },
       });
 
-      var score = vf.EasyScore();
+      const score = vf.EasyScore();
 
-      var notes = [
+      const notes = [
         vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: 'q' }),
         vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: 'q' }),
         vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: 'q' }),
@@ -57,8 +66,8 @@ const GlyphNoteTests = (function () {
     basic: function (options) {
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 300, 400);
-      var system = vf.System({
+      const vf = VF.Test.makeFactory(options, 300, 400);
+      const system = vf.System({
         x: 50,
         width: 250,
         debugFormatter: options.params.debug,
@@ -66,17 +75,17 @@ const GlyphNoteTests = (function () {
         options: { alpha: options.params.alpha },
       });
 
-      var score = vf.EasyScore();
+      const score = vf.EasyScore();
 
-      var newVoice = function (notes) {
+      const newVoice = function (notes) {
         return score.voice(notes, { time: '1/4' });
       };
 
-      var newStave = function (voice) {
+      const newStave = function (voice) {
         return system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
       };
 
-      var voices = [
+      const voices = [
         [vf.GlyphNote(new VF.Glyph('repeat1Bar', 40), { duration: 'q' }, { line: 4 })],
         [vf.GlyphNote(new VF.Glyph('repeat2Bars', 40), { duration: 'q', align_center: true })],
         [
@@ -99,8 +108,8 @@ const GlyphNoteTests = (function () {
     repeatNote: function (options) {
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 300, 500);
-      var system = vf.System({
+      const vf = VF.Test.makeFactory(options, 300, 500);
+      const system = vf.System({
         x: 50,
         width: 250,
         debugFormatter: options.params.debug,
@@ -108,17 +117,17 @@ const GlyphNoteTests = (function () {
         options: { alpha: options.params.alpha },
       });
 
-      var score = vf.EasyScore();
+      const score = vf.EasyScore();
 
-      var newVoice = function (notes) {
+      const newVoice = function (notes) {
         return score.voice(notes, { time: '1/4' });
       };
 
-      var newStave = function (voice) {
+      const newStave = function (voice) {
         return system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
       };
 
-      var voices = [
+      const voices = [
         [vf.RepeatNote('1')],
         [vf.RepeatNote('2')],
         [vf.RepeatNote('4')],
@@ -142,5 +151,5 @@ const GlyphNoteTests = (function () {
 
   return GlyphNote;
 })();
-VF.Test.GlyphNote = GlyphNoteTests;
+
 export { GlyphNoteTests };
